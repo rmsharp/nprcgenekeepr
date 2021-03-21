@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -118,7 +118,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/rmsharp/nprcgenekeepr/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -144,7 +144,7 @@
     <p>Filters a kinship matrix to include only the egos listed in 'ids'</p>
     </div>
 
-    <pre class="usage"><span class='fu'>filterKinMatrix</span>(<span class='no'>ids</span>, <span class='no'>kmat</span>)</pre>
+    <pre class="usage"><span class='fu'>filterKinMatrix</span><span class='op'>(</span><span class='va'>ids</span>, <span class='va'>kmat</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -168,14 +168,18 @@ rows and columns (row and col names are 'ids').</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>nprcgenekeepr</span>)
-<span class='no'>ped</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>nprcgenekeepr</span><span class='kw ns'>::</span><span class='no'><a href='qcPed.html'>qcPed</a></span>
-<span class='no'>ped</span>$<span class='no'>gen</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='findGeneration.html'>findGeneration</a></span>(<span class='no'>ped</span>$<span class='no'>id</span>, <span class='no'>ped</span>$<span class='no'>sire</span>, <span class='no'>ped</span>$<span class='no'>dam</span>)
-<span class='no'>kmat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='kinship.html'>kinship</a></span>(<span class='no'>ped</span>$<span class='no'>id</span>, <span class='no'>ped</span>$<span class='no'>sire</span>, <span class='no'>ped</span>$<span class='no'>dam</span>, <span class='no'>ped</span>$<span class='no'>gen</span>,
-                <span class='kw'>sparse</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='no'>ids</span> <span class='kw'>&lt;-</span> <span class='no'>ped</span>$<span class='no'>id</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>189</span>, <span class='fl'>192</span>, <span class='fl'>194</span>, <span class='fl'>195</span>)]
-<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span>(<span class='no'>kmat</span>)</div><div class='output co'>#&gt; [1] 280</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span>(<span class='no'>kmat</span>)</div><div class='output co'>#&gt; [1] 280</div><div class='input'><span class='no'>kmatFiltered</span> <span class='kw'>&lt;-</span> <span class='fu'>filterKinMatrix</span>(<span class='no'>ids</span>, <span class='no'>kmat</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span>(<span class='no'>kmatFiltered</span>)</div><div class='output co'>#&gt; [1] 4</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span>(<span class='no'>kmatFiltered</span>)</div><div class='output co'>#&gt; [1] 4</div><div class='input'># }
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rmsharp.github.io/nprcgenekeepr/'>nprcgenekeepr</a></span><span class='op'>)</span>
+<span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='qcPed.html'>qcPed</a></span>
+<span class='va'>ped</span><span class='op'>$</span><span class='va'>gen</span> <span class='op'>&lt;-</span> <span class='fu'><a href='findGeneration.html'>findGeneration</a></span><span class='op'>(</span><span class='va'>ped</span><span class='op'>$</span><span class='va'>id</span>, <span class='va'>ped</span><span class='op'>$</span><span class='va'>sire</span>, <span class='va'>ped</span><span class='op'>$</span><span class='va'>dam</span><span class='op'>)</span>
+<span class='va'>kmat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='kinship.html'>kinship</a></span><span class='op'>(</span><span class='va'>ped</span><span class='op'>$</span><span class='va'>id</span>, <span class='va'>ped</span><span class='op'>$</span><span class='va'>sire</span>, <span class='va'>ped</span><span class='op'>$</span><span class='va'>dam</span>, <span class='va'>ped</span><span class='op'>$</span><span class='va'>gen</span>,
+                sparse <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='va'>ids</span> <span class='op'>&lt;-</span> <span class='va'>ped</span><span class='op'>$</span><span class='va'>id</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>189</span>, <span class='fl'>192</span>, <span class='fl'>194</span>, <span class='fl'>195</span><span class='op'>)</span><span class='op'>]</span>
+<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>kmat</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 280</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>kmat</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 280</div><div class='input'><span class='va'>kmatFiltered</span> <span class='op'>&lt;-</span> <span class='fu'>filterKinMatrix</span><span class='op'>(</span><span class='va'>ids</span>, <span class='va'>kmat</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>kmatFiltered</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 4</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>kmatFiltered</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 4</div><div class='input'><span class='co'># }</span>
 
 </div></pre>
   </div>
@@ -193,7 +197,7 @@ rows and columns (row and col names are 'ids').</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

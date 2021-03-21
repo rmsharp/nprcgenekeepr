@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Choose date based on <code>earlier</code> flag. — chooseDate • nprcgenekeepr</title>
+<title>Choose date based on earlier flag. — chooseDate • nprcgenekeepr</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Choose date based on <code>earlier</code> flag. — chooseDate" />
+<meta property="og:title" content="Choose date based on earlier flag. — chooseDate" />
 <meta property="og:description" content="Part of Pedigree Curation" />
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -118,7 +118,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/rmsharp/nprcgenekeepr/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -144,7 +144,7 @@
     <p>Part of Pedigree Curation</p>
     </div>
 
-    <pre class="usage"><span class='fu'>chooseDate</span>(<span class='no'>d1</span>, <span class='no'>d2</span>, <span class='kw'>earlier</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>chooseDate</span><span class='op'>(</span><span class='va'>d1</span>, <span class='va'>d2</span>, earlier <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -177,12 +177,15 @@ possible.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>nprcgenekeepr</span>)
-<span class='no'>someDates</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>lubridate</span><span class='kw ns'>::</span><span class='fu'><a href='http://lubridate.tidyverse.org/reference/ymd.html'>mdy</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fl'>1</span>:<span class='fl'>12</span>, <span class='fl'>2</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), <span class='st'>"-"</span>,
-                                   <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fl'>1</span>:<span class='fl'>28</span>, <span class='fl'>2</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), <span class='st'>"-"</span>,
-                                   <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>15</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>3</span>), <span class='fl'>2</span>,
-                                          <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) + <span class='fl'>2000</span>))
-<span class='no'>someDates</span></div><div class='output co'>#&gt; [1] "2015-03-11" "2015-06-12"</div><div class='input'><span class='fu'>chooseDate</span>(<span class='no'>someDates</span>[<span class='fl'>1</span>], <span class='no'>someDates</span>[<span class='fl'>2</span>], <span class='kw'>earlier</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] "2015-03-11"</div><div class='input'><span class='fu'>chooseDate</span>(<span class='no'>someDates</span>[<span class='fl'>1</span>], <span class='no'>someDates</span>[<span class='fl'>2</span>], <span class='kw'>earlier</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; [1] "2015-06-12"</div><div class='input'># }
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rmsharp.github.io/nprcgenekeepr/'>nprcgenekeepr</a></span><span class='op'>)</span>
+<span class='va'>someDates</span> <span class='op'>&lt;-</span> <span class='fu'>lubridate</span><span class='fu'>::</span><span class='fu'><a href='http://lubridate.tidyverse.org/reference/ymd.html'>mdy</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>12</span>, <span class='fl'>2</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>, <span class='st'>"-"</span>,
+                                   <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>28</span>, <span class='fl'>2</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>, <span class='st'>"-"</span>,
+                                   <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>15</span>, by <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>, <span class='fl'>2</span>,
+                                          replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='op'>+</span> <span class='fl'>2000</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>someDates</span>
+</div><div class='output co'>#&gt; [1] "2015-03-11" "2015-06-12"</div><div class='input'><span class='fu'>chooseDate</span><span class='op'>(</span><span class='va'>someDates</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>, <span class='va'>someDates</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>]</span>, earlier <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "2015-03-11"</div><div class='input'><span class='fu'>chooseDate</span><span class='op'>(</span><span class='va'>someDates</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>, <span class='va'>someDates</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>]</span>, earlier <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "2015-06-12"</div><div class='input'><span class='co'># }</span>
 
 </div></pre>
   </div>
@@ -200,7 +203,7 @@ possible.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

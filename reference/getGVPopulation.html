@@ -73,7 +73,7 @@ that information is incorporated via the ped$population column." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ that information is incorporated via the ped$population column." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -119,7 +119,7 @@ that information is incorporated via the ped$population column." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/rmsharp/nprcgenekeepr/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -146,7 +146,7 @@ that information is incorporated via the ped$population column." />
 that information is incorporated via the <code>ped$population</code> column.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>getGVPopulation</span>(<span class='no'>ped</span>, <span class='no'>pop</span>)</pre>
+    <pre class="usage"><span class='fu'>getGVPopulation</span><span class='op'>(</span><span class='va'>ped</span>, <span class='va'>pop</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -172,16 +172,17 @@ animal IDs provided to the function in <code>pop</code>.</p>
 <span class='co'>## Example from Analysis of Founder Representation in Pedigrees: Founder</span>
 <span class='co'>## Equivalents and Founder Genome Equivalents.</span>
 <span class='co'>## Zoo Biology 8:111-123, (1989) by Robert C. Lacy</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>nprcgenekeepr</span>)
-<span class='no'>ped</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
-<span class='kw'>id</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"A"</span>, <span class='st'>"B"</span>, <span class='st'>"C"</span>, <span class='st'>"D"</span>, <span class='st'>"E"</span>, <span class='st'>"F"</span>, <span class='st'>"G"</span>),
-<span class='kw'>sire</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>NA</span>, <span class='fl'>NA</span>, <span class='st'>"A"</span>, <span class='st'>"A"</span>, <span class='fl'>NA</span>, <span class='st'>"D"</span>, <span class='st'>"D"</span>),
-<span class='kw'>dam</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>NA</span>, <span class='fl'>NA</span>, <span class='st'>"B"</span>, <span class='st'>"B"</span>, <span class='fl'>NA</span>, <span class='st'>"E"</span>, <span class='st'>"E"</span>),
-<span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)
-<span class='no'>ped</span>[<span class='st'>"gen"</span>] <span class='kw'>&lt;-</span> <span class='fu'><a href='findGeneration.html'>findGeneration</a></span>(<span class='no'>ped</span>$<span class='no'>id</span>, <span class='no'>ped</span>$<span class='no'>sire</span>, <span class='no'>ped</span>$<span class='no'>dam</span>)
-<span class='no'>ped</span>$<span class='no'>population</span> <span class='kw'>&lt;-</span> <span class='fu'>getGVPopulation</span>(<span class='no'>ped</span>, <span class='kw'>NULL</span>)
-<span class='co'># }</span></div></pre>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rmsharp.github.io/nprcgenekeepr/'>nprcgenekeepr</a></span><span class='op'>)</span>
+<span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>
+id <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"A"</span>, <span class='st'>"B"</span>, <span class='st'>"C"</span>, <span class='st'>"D"</span>, <span class='st'>"E"</span>, <span class='st'>"F"</span>, <span class='st'>"G"</span><span class='op'>)</span>,
+sire <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>NA</span>, <span class='cn'>NA</span>, <span class='st'>"A"</span>, <span class='st'>"A"</span>, <span class='cn'>NA</span>, <span class='st'>"D"</span>, <span class='st'>"D"</span><span class='op'>)</span>,
+dam <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>NA</span>, <span class='cn'>NA</span>, <span class='st'>"B"</span>, <span class='st'>"B"</span>, <span class='cn'>NA</span>, <span class='st'>"E"</span>, <span class='st'>"E"</span><span class='op'>)</span>,
+stringsAsFactors <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span>
+<span class='va'>ped</span><span class='op'>[</span><span class='st'>"gen"</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='findGeneration.html'>findGeneration</a></span><span class='op'>(</span><span class='va'>ped</span><span class='op'>$</span><span class='va'>id</span>, <span class='va'>ped</span><span class='op'>$</span><span class='va'>sire</span>, <span class='va'>ped</span><span class='op'>$</span><span class='va'>dam</span><span class='op'>)</span>
+<span class='va'>ped</span><span class='op'>$</span><span class='va'>population</span> <span class='op'>&lt;-</span> <span class='fu'>getGVPopulation</span><span class='op'>(</span><span class='va'>ped</span>, <span class='cn'>NULL</span><span class='op'>)</span>
+<span class='co'># }</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -197,7 +198,7 @@ animal IDs provided to the function in <code>pop</code>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

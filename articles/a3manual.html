@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -77,7 +77,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/rmsharp/nprcgenekeepr/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -91,7 +91,7 @@
 
       
 
-      </header><script src="a3manual_files/header-attrs-2.1/header-attrs.js"></script><div class="row">
+      </header><script src="a3manual_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Genetic Management Tools Manual</h1>
@@ -171,16 +171,18 @@ A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install the development version of <strong>nprcgenekeepr</strong> from GitHub from the R console prompt with:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"devtools"</span>)
-<span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"rmsharp/nprcgenekeepr"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"rmsharp/nprcgenekeepr"</span><span class="op">)</span></code></pre></div>
 <p>All missing dependencies should be automatically installed.</p>
 </div>
 <div id="running-shiny-application" class="section level2">
 <h2 class="hasAnchor">
 <a href="#running-shiny-application" class="anchor"></a>Running Shiny Application</h2>
 <p>The toolset available within nprcgenekeepr can be used inside standard R scripts. However, it was originally designed to be used within a Shiny application that can be started with:</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">nprcgenekeepr</span>)
-<span class="fu"><a href="../reference/runGeneKeepR.html">runGeneKeepR</a></span>()</pre></body></html></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/">nprcgenekeepr</a></span><span class="op">)</span>
+<span class="fu"><a href="../reference/runGeneKeepR.html">runGeneKeepR</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="input" class="section level2">
 <h2 class="hasAnchor">
@@ -393,7 +395,7 @@ paternal allele vectors are added together.<br>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

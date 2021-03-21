@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Converts columns of dates in text form to <code>Date</code> object columns — getDateErrorsAndConvertDatesInPed • nprcgenekeepr</title>
+<title>Converts columns of dates in text form to Date object columns — getDateErrorsAndConvertDatesInPed • nprcgenekeepr</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Converts columns of dates in text form to <code>Date</code> object columns — getDateErrorsAndConvertDatesInPed" />
+<meta property="og:title" content="Converts columns of dates in text form to Date object columns — getDateErrorsAndConvertDatesInPed" />
 <meta property="og:description" content="Finds date errors in columns defined in
 convertDate as dates and converts date strings to Date objects." />
 
@@ -73,7 +73,7 @@ convertDate as dates and converts date strings to Date objects." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ convertDate as dates and converts date strings to Date objects." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -119,7 +119,7 @@ convertDate as dates and converts date strings to Date objects." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/rmsharp/nprcgenekeepr/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -146,7 +146,7 @@ convertDate as dates and converts date strings to Date objects." />
 <code>convertDate</code> as dates and converts date strings to <code>Date</code> objects.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>getDateErrorsAndConvertDatesInPed</span>(<span class='no'>sb</span>, <span class='no'>errorLst</span>)</pre>
+    <pre class="usage"><span class='fu'>getDateErrorsAndConvertDatesInPed</span><span class='op'>(</span><span class='va'>sb</span>, <span class='va'>errorLst</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -174,9 +174,10 @@ calculated and added to the pedigree otherwise the pedigree is not updated.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>nprcgenekeepr</span>)
-<span class='no'>ped</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>nprcgenekeepr</span><span class='kw ns'>::</span><span class='no'><a href='pedInvalidDates.html'>pedInvalidDates</a></span>
-<span class='no'>ped</span></div><div class='output co'>#&gt;   id sire  dam sex      birth
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rmsharp.github.io/nprcgenekeepr/'>nprcgenekeepr</a></span><span class='op'>)</span>
+<span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='pedInvalidDates.html'>pedInvalidDates</a></span>
+<span class='va'>ped</span>
+</div><div class='output co'>#&gt;   id sire  dam sex      birth
 #&gt; 1 s1 &lt;NA&gt; &lt;NA&gt;   M 2000-07-18
 #&gt; 2 d1 &lt;NA&gt; &lt;NA&gt;   F 2003-04-13
 #&gt; 3 s2 &lt;NA&gt; &lt;NA&gt;   M  205-06-19
@@ -184,11 +185,12 @@ calculated and added to the pedigree otherwise the pedigree is not updated.</p>
 #&gt; 5 o1   s1   d1   F 2015-02-04
 #&gt; 6 o2   s1   d2   F 2009-03-17
 #&gt; 7 o3   s2   d2   F 2012-04-11
-#&gt; 8 o4   s2   d2   M 2008-04-13</div><div class='input'><span class='no'>errorLst</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getEmptyErrorLst.html'>getEmptyErrorLst</a></span>()
-<span class='no'>colNamesAndErrors</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fixColumnNames.html'>fixColumnNames</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>ped</span>), <span class='no'>errorLst</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>ped</span>) <span class='kw'>&lt;-</span> <span class='no'>colNamesAndErrors</span>$<span class='no'>newColNames</span>
-<span class='no'>pedAndErrors</span> <span class='kw'>&lt;-</span> <span class='fu'>getDateErrorsAndConvertDatesInPed</span>(<span class='no'>ped</span>, <span class='no'>errorLst</span>)
-<span class='no'>pedAndErrors</span>$<span class='no'>sb</span></div><div class='output co'>#&gt;   id sire  dam sex      birth exit
+#&gt; 8 o4   s2   d2   M 2008-04-13</div><div class='input'><span class='va'>errorLst</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getEmptyErrorLst.html'>getEmptyErrorLst</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>colNamesAndErrors</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fixColumnNames.html'>fixColumnNames</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>ped</span><span class='op'>)</span>, <span class='va'>errorLst</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>ped</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>colNamesAndErrors</span><span class='op'>$</span><span class='va'>newColNames</span>
+<span class='va'>pedAndErrors</span> <span class='op'>&lt;-</span> <span class='fu'>getDateErrorsAndConvertDatesInPed</span><span class='op'>(</span><span class='va'>ped</span>, <span class='va'>errorLst</span><span class='op'>)</span>
+<span class='va'>pedAndErrors</span><span class='op'>$</span><span class='va'>sb</span>
+</div><div class='output co'>#&gt;   id sire  dam sex      birth exit
 #&gt; 1 s1 &lt;NA&gt; &lt;NA&gt;   M 2000-07-18 &lt;NA&gt;
 #&gt; 2 d1 &lt;NA&gt; &lt;NA&gt;   F 2003-04-13 &lt;NA&gt;
 #&gt; 3 s2 &lt;NA&gt; &lt;NA&gt;   M       &lt;NA&gt; &lt;NA&gt;
@@ -196,7 +198,8 @@ calculated and added to the pedigree otherwise the pedigree is not updated.</p>
 #&gt; 5 o1   s1   d1   F 2015-02-04 &lt;NA&gt;
 #&gt; 6 o2   s1   d2   F 2009-03-17 &lt;NA&gt;
 #&gt; 7 o3   s2   d2   F 2012-04-11 &lt;NA&gt;
-#&gt; 8 o4   s2   d2   M 2008-04-13 &lt;NA&gt;</div><div class='input'><span class='no'>pedAndErrors</span>$<span class='no'>errorLst</span></div><div class='output co'>#&gt; $failedDatabaseConnection
+#&gt; 8 o4   s2   d2   M 2008-04-13 &lt;NA&gt;</div><div class='input'><span class='va'>pedAndErrors</span><span class='op'>$</span><span class='va'>errorLst</span>
+</div><div class='output co'>#&gt; $failedDatabaseConnection
 #&gt; character(0)
 #&gt; 
 #&gt; $missingColumns
@@ -254,9 +257,18 @@ calculated and added to the pedigree otherwise the pedigree is not updated.</p>
 #&gt; $changedCols$deathdateToDeath
 #&gt; character(0)
 #&gt; 
+#&gt; $changedCols$recordstatusToRecordStatus
+#&gt; character(0)
+#&gt; 
+#&gt; $changedCols$fromcenterToFromCenter
+#&gt; character(0)
+#&gt; 
+#&gt; $changedCols$geographicoriginToGeographicOrigin
+#&gt; character(0)
+#&gt; 
 #&gt; 
 #&gt; attr(,"class")
-#&gt; [1] "list"             "nprcgenekeeprErr"</div><div class='input'># }
+#&gt; [1] "list"             "nprcgenekeeprErr"</div><div class='input'><span class='co'># }</span>
 
 </div></pre>
   </div>
@@ -274,7 +286,7 @@ calculated and added to the pedigree otherwise the pedigree is not updated.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

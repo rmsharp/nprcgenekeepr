@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -118,7 +118,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/rmsharp/nprcgenekeepr/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -144,7 +144,7 @@
     <p>Assign parent alleles randomly</p>
     </div>
 
-    <pre class="usage"><span class='fu'>assignAlleles</span>(<span class='no'>alleles</span>, <span class='no'>parentType</span>, <span class='no'>parent</span>, <span class='no'>id</span>, <span class='no'>n</span>)</pre>
+    <pre class="usage"><span class='fu'>assignAlleles</span><span class='op'>(</span><span class='va'>alleles</span>, <span class='va'>parentType</span>, <span class='va'>parent</span>, <span class='va'>id</span>, <span class='va'>n</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -183,10 +183,11 @@ randomly assigned alleles to each <code>id</code> based on dam and sire genotype
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='no'>alleles</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>alleles</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(), <span class='kw'>counter</span> <span class='kw'>=</span> <span class='fl'>1</span>)
-<span class='no'>alleles</span> <span class='kw'>&lt;-</span> <span class='fu'>assignAlleles</span>(<span class='no'>alleles</span>, <span class='kw'>parentType</span> <span class='kw'>=</span> <span class='st'>"sire"</span>, <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-                         <span class='kw'>id</span> <span class='kw'>=</span> <span class='st'>"o1"</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>4</span>)
-<span class='no'>alleles</span></div><div class='output co'>#&gt; $alleles
+<span class='va'>alleles</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>alleles <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>, counter <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>alleles</span> <span class='op'>&lt;-</span> <span class='fu'>assignAlleles</span><span class='op'>(</span><span class='va'>alleles</span>, parentType <span class='op'>=</span> <span class='st'>"sire"</span>, parent <span class='op'>=</span> <span class='cn'>NA</span>,
+                         id <span class='op'>=</span> <span class='st'>"o1"</span>, n <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span>
+<span class='va'>alleles</span>
+</div><div class='output co'>#&gt; $alleles
 #&gt; $alleles$o1
 #&gt; $alleles$o1$sire
 #&gt; [1] 1 1 1 1
@@ -195,9 +196,10 @@ randomly assigned alleles to each <code>id</code> based on dam and sire genotype
 #&gt; 
 #&gt; $counter
 #&gt; [1] 2
-#&gt; </div><div class='input'><span class='no'>alleles</span> <span class='kw'>&lt;-</span> <span class='fu'>assignAlleles</span>(<span class='no'>alleles</span>, <span class='kw'>parentType</span> <span class='kw'>=</span> <span class='st'>"dam"</span>, <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-                         <span class='kw'>id</span> <span class='kw'>=</span> <span class='st'>"o1"</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>4</span>)
-<span class='no'>alleles</span></div><div class='output co'>#&gt; $alleles
+#&gt; </div><div class='input'><span class='va'>alleles</span> <span class='op'>&lt;-</span> <span class='fu'>assignAlleles</span><span class='op'>(</span><span class='va'>alleles</span>, parentType <span class='op'>=</span> <span class='st'>"dam"</span>, parent <span class='op'>=</span> <span class='cn'>NA</span>,
+                         id <span class='op'>=</span> <span class='st'>"o1"</span>, n <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span>
+<span class='va'>alleles</span>
+</div><div class='output co'>#&gt; $alleles
 #&gt; $alleles$o1
 #&gt; $alleles$o1$sire
 #&gt; [1] 1 1 1 1
@@ -209,7 +211,7 @@ randomly assigned alleles to each <code>id</code> based on dam and sire genotype
 #&gt; 
 #&gt; $counter
 #&gt; [1] 3
-#&gt; </div><div class='input'># }
+#&gt; </div><div class='input'><span class='co'># }</span>
 
 </div></pre>
   </div>
@@ -227,7 +229,7 @@ randomly assigned alleles to each <code>id</code> based on dam and sire genotype
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

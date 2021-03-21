@@ -76,7 +76,7 @@ NA for both sire and dam of the added back ID." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -84,7 +84,7 @@ NA for both sire and dam of the added back ID." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -122,7 +122,7 @@ NA for both sire and dam of the added back ID." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/rmsharp/nprcgenekeepr/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -152,7 +152,7 @@ known. The parents are added back to the pedigree as an ID record with
 NA for both sire and dam of the added back ID.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>addBackSecondParents</span>(<span class='no'>uPed</span>, <span class='no'>ped</span>)</pre>
+    <pre class="usage"><span class='fu'>addBackSecondParents</span><span class='op'>(</span><span class='va'>uPed</span>, <span class='va'>ped</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -173,17 +173,20 @@ NA for both sire and dam of the added back ID.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='no'>examplePedigree</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>nprcgenekeepr</span><span class='kw ns'>::</span><span class='no'><a href='examplePedigree.html'>examplePedigree</a></span>
-<span class='no'>breederPed</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='qcStudbook.html'>qcStudbook</a></span>(<span class='no'>examplePedigree</span>, <span class='kw'>minParentAge</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-                         <span class='kw'>reportChanges</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-                         <span class='kw'>reportErrors</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='no'>probands</span> <span class='kw'>&lt;-</span> <span class='no'>breederPed</span>$<span class='no'>id</span>[!(<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>breederPed</span>$<span class='no'>sire</span>) <span class='kw'>&amp;</span>
-                               <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>breederPed</span>$<span class='no'>dam</span>)) <span class='kw'>&amp;</span>
-                               <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='no'>breederPed</span>$<span class='no'>exit</span>)]
-<span class='no'>ped</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getProbandPedigree.html'>getProbandPedigree</a></span>(<span class='no'>probands</span>, <span class='no'>breederPed</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span>(<span class='no'>ped</span>)</div><div class='output co'>#&gt; [1] 704</div><div class='input'><span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='removeUninformativeFounders.html'>removeUninformativeFounders</a></span>(<span class='no'>ped</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span>(<span class='no'>p</span>)</div><div class='output co'>#&gt; [1] 509</div><div class='input'><span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fu'>addBackSecondParents</span>(<span class='no'>p</span>, <span class='no'>ped</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span>(<span class='no'>p</span>)</div><div class='output co'>#&gt; [1] 690</div><div class='input'># }
+<span class='va'>examplePedigree</span> <span class='op'>&lt;-</span> <span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='examplePedigree.html'>examplePedigree</a></span>
+<span class='va'>breederPed</span> <span class='op'>&lt;-</span> <span class='fu'><a href='qcStudbook.html'>qcStudbook</a></span><span class='op'>(</span><span class='va'>examplePedigree</span>, minParentAge <span class='op'>=</span> <span class='fl'>2</span>,
+                         reportChanges <span class='op'>=</span> <span class='cn'>FALSE</span>,
+                         reportErrors <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='va'>probands</span> <span class='op'>&lt;-</span> <span class='va'>breederPed</span><span class='op'>$</span><span class='va'>id</span><span class='op'>[</span><span class='op'>!</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>breederPed</span><span class='op'>$</span><span class='va'>sire</span><span class='op'>)</span> <span class='op'>&amp;</span>
+                               <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>breederPed</span><span class='op'>$</span><span class='va'>dam</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>&amp;</span>
+                               <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>breederPed</span><span class='op'>$</span><span class='va'>exit</span><span class='op'>)</span><span class='op'>]</span>
+<span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getProbandPedigree.html'>getProbandPedigree</a></span><span class='op'>(</span><span class='va'>probands</span>, <span class='va'>breederPed</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>ped</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 704</div><div class='input'><span class='va'>p</span> <span class='op'>&lt;-</span> <span class='fu'><a href='removeUninformativeFounders.html'>removeUninformativeFounders</a></span><span class='op'>(</span><span class='va'>ped</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>p</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 509</div><div class='input'><span class='va'>p</span> <span class='op'>&lt;-</span> <span class='fu'>addBackSecondParents</span><span class='op'>(</span><span class='va'>p</span>, <span class='va'>ped</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>p</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 690</div><div class='input'><span class='co'># }</span>
 
 </div></pre>
   </div>
@@ -201,7 +204,7 @@ NA for both sire and dam of the added back ID.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

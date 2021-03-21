@@ -74,7 +74,7 @@ From PedigreeSampling.R
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -82,7 +82,7 @@ From PedigreeSampling.R
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -120,7 +120,7 @@ From PedigreeSampling.R
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/rmsharp/nprcgenekeepr/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -148,7 +148,7 @@ From PedigreeSampling.R
 2016-01-28</p>
     </div>
 
-    <pre class="usage"><span class='fu'>countLoops</span>(<span class='no'>loops</span>, <span class='no'>ptree</span>)</pre>
+    <pre class="usage"><span class='fu'>countLoops</span><span class='op'>(</span><span class='va'>loops</span>, <span class='va'>ptree</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -185,15 +185,18 @@ each individual to calculate the number of loops for each individual.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>nprcgenekeepr</span>)
-<span class='no'>exampleTree</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='createPedTree.html'>createPedTree</a></span>(<span class='kw pkg'>nprcgenekeepr</span><span class='kw ns'>::</span><span class='no'><a href='examplePedigree.html'>examplePedigree</a></span>)
-<span class='no'>exampleLoops</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='findLoops.html'>findLoops</a></span>(<span class='no'>exampleTree</span>)
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rmsharp.github.io/nprcgenekeepr/'>nprcgenekeepr</a></span><span class='op'>)</span>
+<span class='va'>exampleTree</span> <span class='op'>&lt;-</span> <span class='fu'><a href='createPedTree.html'>createPedTree</a></span><span class='op'>(</span><span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='examplePedigree.html'>examplePedigree</a></span><span class='op'>)</span>
+<span class='va'>exampleLoops</span> <span class='op'>&lt;-</span> <span class='fu'><a href='findLoops.html'>findLoops</a></span><span class='op'>(</span><span class='va'>exampleTree</span><span class='op'>)</span>
 <span class='co'>## You can count how many animals are in loops with the following code.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>exampleLoops</span>[<span class='no'>exampleLoops</span> <span class='kw'>==</span> <span class='fl'>TRUE</span>])</div><div class='output co'>#&gt; [1] 145</div><div class='input'><span class='co'>## You can count how many loops you have with the following code.</span>
-<span class='no'>nLoops</span> <span class='kw'>&lt;-</span> <span class='fu'>countLoops</span>(<span class='no'>exampleLoops</span>, <span class='no'>exampleTree</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></span>(<span class='no'>nLoops</span>[<span class='no'>nLoops</span> <span class='kw'>&gt;</span> <span class='fl'>0</span>]))</div><div class='output co'>#&gt; [1] 258</div><div class='input'><span class='co'>## You can list the first 10 sets of ids, sires and dams in loops with</span>
+<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>exampleLoops</span><span class='op'>[</span><span class='va'>exampleLoops</span> <span class='op'>==</span> <span class='cn'>TRUE</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 145</div><div class='input'><span class='co'>## You can count how many loops you have with the following code.</span>
+<span class='va'>nLoops</span> <span class='op'>&lt;-</span> <span class='fu'>countLoops</span><span class='op'>(</span><span class='va'>exampleLoops</span>, <span class='va'>exampleTree</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></span><span class='op'>(</span><span class='va'>nLoops</span><span class='op'>[</span><span class='va'>nLoops</span> <span class='op'>&gt;</span> <span class='fl'>0</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 258</div><div class='input'><span class='co'>## You can list the first 10 sets of ids, sires and dams in loops with</span>
 <span class='co'>## the following line of code:</span>
-<span class='no'>examplePedigree</span>[<span class='no'>exampleLoops</span> <span class='kw'>==</span> <span class='fl'>TRUE</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"id"</span>, <span class='st'>"sire"</span>, <span class='st'>"dam"</span>)][<span class='fl'>1</span>:<span class='fl'>10</span>, ]</div><div class='output co'>#&gt;          id   sire    dam
+<span class='va'>examplePedigree</span><span class='op'>[</span><span class='va'>exampleLoops</span> <span class='op'>==</span> <span class='cn'>TRUE</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"id"</span>, <span class='st'>"sire"</span>, <span class='st'>"dam"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>, <span class='op'>]</span>
+</div><div class='output co'>#&gt;          id   sire    dam
 #&gt; 2367 MRC4BF 7ZEGLB L1VRM7
 #&gt; 2369 SZ05LQ 7ZEGLB 4H5RS1
 #&gt; 2705 6FDURN B2CKHA L1VRM7
@@ -203,7 +206,7 @@ each individual to calculate the number of loops for each individual.</p>
 #&gt; 2765 EZ2F8A 7ZEGLB DCJJYS
 #&gt; 2775 X4UZJS B2CKHA L1VRM7
 #&gt; 2956 L9SI7Z TYNVJP C1K9WN
-#&gt; 2969 3SKITJ 3PU50K G5SZDC</div><div class='input'># }
+#&gt; 2969 3SKITJ 3PU50K G5SZDC</div><div class='input'><span class='co'># }</span>
 
 </div></pre>
   </div>
@@ -221,7 +224,7 @@ each individual to calculate the number of loops for each individual.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

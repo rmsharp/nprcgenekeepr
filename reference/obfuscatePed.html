@@ -76,7 +76,7 @@ birthdate can be shifted (maxDelta)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -84,7 +84,7 @@ birthdate can be shifted (maxDelta)." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -122,7 +122,7 @@ birthdate can be shifted (maxDelta)." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/rmsharp/nprcgenekeepr/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -151,13 +151,13 @@ used for alias IDs (<code>size</code>), and the maximum number of days that the
 birthdate can be shifted (<code>maxDelta</code>).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>obfuscatePed</span>(
-  <span class='no'>ped</span>,
-  <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>6</span>,
-  <span class='kw'>maxDelta</span> <span class='kw'>=</span> <span class='fl'>30</span>,
-  <span class='kw'>existingIds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>),
-  <span class='kw'>map</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>obfuscatePed</span><span class='op'>(</span>
+  <span class='va'>ped</span>,
+  size <span class='op'>=</span> <span class='fl'>6</span>,
+  maxDelta <span class='op'>=</span> <span class='fl'>30</span>,
+  existingIds <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span>,
+  map <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -193,26 +193,28 @@ and the values being the new alias values. Defaults to <code>FALSE</code>.</p></
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>nprcgenekeepr</span>)
-<span class='no'>ped</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='qcStudbook.html'>qcStudbook</a></span>(<span class='kw pkg'>nprcgenekeepr</span><span class='kw ns'>::</span><span class='no'><a href='pedGood.html'>pedGood</a></span>)
-<span class='no'>obfuscatedPed</span> <span class='kw'>&lt;-</span> <span class='fu'>obfuscatePed</span>(<span class='no'>ped</span>)
-<span class='no'>ped</span></div><div class='output co'>#&gt;   id sire  dam sex gen      birth exit  age recordStatus
-#&gt; 1 d1 &lt;NA&gt; &lt;NA&gt;   F   0 2003-04-13 &lt;NA&gt; 17.1     original
-#&gt; 2 d2 &lt;NA&gt; &lt;NA&gt;   F   0 2002-06-22 &lt;NA&gt; 17.9     original
-#&gt; 3 s1 &lt;NA&gt; &lt;NA&gt;   M   0 2000-07-18 &lt;NA&gt; 19.9     original
-#&gt; 4 s2 &lt;NA&gt; &lt;NA&gt;   M   0 2005-06-19 &lt;NA&gt; 14.9     original
-#&gt; 5 o1   s1   d1   F   1 2015-02-04 &lt;NA&gt;  5.3     original
-#&gt; 6 o2   s1   d2   F   1 2009-03-17 &lt;NA&gt; 11.2     original
-#&gt; 7 o3   s2   d2   F   1 2012-04-11 &lt;NA&gt;  8.1     original
-#&gt; 8 o4   s2   d2   M   1 2008-04-13 &lt;NA&gt; 12.1     original</div><div class='input'><span class='no'>obfuscatedPed</span></div><div class='output co'>#&gt;       id   sire    dam sex gen      birth exit  age recordStatus
-#&gt; 1 LS7SJB   &lt;NA&gt;   &lt;NA&gt;   F   0 2003-03-17 &lt;NA&gt; 17.2     original
-#&gt; 2 P4MENX   &lt;NA&gt;   &lt;NA&gt;   F   0 2002-05-29 &lt;NA&gt; 18.0     original
-#&gt; 3 NZZUQQ   &lt;NA&gt;   &lt;NA&gt;   M   0 2000-07-10 &lt;NA&gt; 19.9     original
-#&gt; 4 KV6EPH   &lt;NA&gt;   &lt;NA&gt;   M   0 2005-05-30 &lt;NA&gt; 15.0     original
-#&gt; 5 QER817 NZZUQQ LS7SJB   F   1 2015-01-22 &lt;NA&gt;  5.3     original
-#&gt; 6 RWRDIS NZZUQQ P4MENX   F   1 2009-02-26 &lt;NA&gt; 11.2     original
-#&gt; 7 N7TLJ2 KV6EPH P4MENX   F   1 2012-03-27 &lt;NA&gt;  8.2     original
-#&gt; 8 ZFC1WF KV6EPH P4MENX   M   1 2008-03-24 &lt;NA&gt; 12.2     original</div><div class='input'># }
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rmsharp.github.io/nprcgenekeepr/'>nprcgenekeepr</a></span><span class='op'>)</span>
+<span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'><a href='qcStudbook.html'>qcStudbook</a></span><span class='op'>(</span><span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='pedGood.html'>pedGood</a></span><span class='op'>)</span>
+<span class='va'>obfuscatedPed</span> <span class='op'>&lt;-</span> <span class='fu'>obfuscatePed</span><span class='op'>(</span><span class='va'>ped</span><span class='op'>)</span>
+<span class='va'>ped</span>
+</div><div class='output co'>#&gt;   id sire  dam sex gen      birth exit  age recordStatus
+#&gt; 1 d1 &lt;NA&gt; &lt;NA&gt;   F   0 2003-04-13 &lt;NA&gt; 17.9     original
+#&gt; 2 d2 &lt;NA&gt; &lt;NA&gt;   F   0 2002-06-22 &lt;NA&gt; 18.7     original
+#&gt; 3 s1 &lt;NA&gt; &lt;NA&gt;   M   0 2000-07-18 &lt;NA&gt; 20.7     original
+#&gt; 4 s2 &lt;NA&gt; &lt;NA&gt;   M   0 2005-06-19 &lt;NA&gt; 15.8     original
+#&gt; 5 o1   s1   d1   F   1 2015-02-04 &lt;NA&gt;  6.1     original
+#&gt; 6 o2   s1   d2   F   1 2009-03-17 &lt;NA&gt; 12.0     original
+#&gt; 7 o3   s2   d2   F   1 2012-04-11 &lt;NA&gt;  8.9     original
+#&gt; 8 o4   s2   d2   M   1 2008-04-13 &lt;NA&gt; 12.9     original</div><div class='input'><span class='va'>obfuscatedPed</span>
+</div><div class='output co'>#&gt;       id   sire    dam sex gen      birth exit  age recordStatus
+#&gt; 1 LS7SJB   &lt;NA&gt;   &lt;NA&gt;   F   0 2003-03-17 &lt;NA&gt; 18.0     original
+#&gt; 2 P4MENX   &lt;NA&gt;   &lt;NA&gt;   F   0 2002-05-29 &lt;NA&gt; 18.8     original
+#&gt; 3 NZZUQQ   &lt;NA&gt;   &lt;NA&gt;   M   0 2000-07-10 &lt;NA&gt; 20.7     original
+#&gt; 4 KV6EPH   &lt;NA&gt;   &lt;NA&gt;   M   0 2005-05-30 &lt;NA&gt; 15.8     original
+#&gt; 5 QER817 NZZUQQ LS7SJB   F   1 2015-01-22 &lt;NA&gt;  6.2     original
+#&gt; 6 RWRDIS NZZUQQ P4MENX   F   1 2009-02-26 &lt;NA&gt; 12.1     original
+#&gt; 7 N7TLJ2 KV6EPH P4MENX   F   1 2012-03-27 &lt;NA&gt;  9.0     original
+#&gt; 8 ZFC1WF KV6EPH P4MENX   M   1 2008-03-24 &lt;NA&gt; 13.0     original</div><div class='input'><span class='co'># }</span>
 
 </div></pre>
   </div>
@@ -230,7 +232,7 @@ and the values being the new alias values. Defaults to <code>FALSE</code>.</p></
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

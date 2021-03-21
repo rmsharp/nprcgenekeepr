@@ -76,7 +76,7 @@ based on the name of the example pedigree." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -84,7 +84,7 @@ based on the name of the example pedigree." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -122,7 +122,7 @@ based on the name of the example pedigree." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/rmsharp/nprcgenekeepr/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -151,7 +151,7 @@ exist. It then proceeds to write each example pedigree into a CSV file named
 based on the name of the example pedigree.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>createExampleFiles</span>()</pre>
+    <pre class="usage"><span class='fu'>createExampleFiles</span><span class='op'>(</span><span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -160,8 +160,9 @@ based on the name of the example pedigree.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>nprcgenekeepr</span>)
-<span class='no'>files</span> <span class='kw'>&lt;-</span> <span class='fu'>createExampleFiles</span>()</div><div class='output co'>#&gt; <span class='message'>Example pedigree files examplePedigree, focalAnimals, lacy1989Ped, pedDuplicateIds, pedFemaleSireMaleDam, pedGood, pedInvalidDates, pedMissingBirth, pedOne, pedSameMaleIsSireAndDam, pedSix, pedWithGenotype, qcBreeders, qcPed, and smallPed will be created in /var/folders/y3/5z1skj6s5tq0pktmsq6x80v80000gn/T//RtmpIaEoUn/ExamplePedigrees.</span></div><div class='input'># }
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rmsharp.github.io/nprcgenekeepr/'>nprcgenekeepr</a></span><span class='op'>)</span>
+<span class='va'>files</span> <span class='op'>&lt;-</span> <span class='fu'>createExampleFiles</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Example pedigree files examplePedigree, focalAnimals, lacy1989Ped, pedDuplicateIds, pedFemaleSireMaleDam, pedGood, pedInvalidDates, pedMissingBirth, pedOne, pedSameMaleIsSireAndDam, pedSix, pedWithGenotype, qcBreeders, qcPed, and smallPed will be created in /var/folders/y3/5z1skj6s5tq0pktmsq6x80v80000gn/T//RtmpSVoGeQ/ExamplePedigrees.</span></div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -178,7 +179,7 @@ based on the name of the example pedigree.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

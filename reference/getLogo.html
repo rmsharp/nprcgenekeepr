@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -118,7 +118,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/rmsharp/nprcgenekeepr/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -144,7 +144,7 @@
     <p>Get Logo file name</p>
     </div>
 
-    <pre class="usage"><span class='fu'>getLogo</span>()</pre>
+    <pre class="usage"><span class='fu'>getLogo</span><span class='op'>(</span><span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -155,15 +155,16 @@ file is not found.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='no'>result</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/conditions.html'>tryCatch</a></span>({
-  <span class='fu'>getLogo</span>()
-}, <span class='kw'>warning</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>w</span>) {
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"Warning in getLogo: "</span>, <span class='no'>w</span>, <span class='st'>". File is to be "</span>,
-             <span class='fu'><a href='https://rdrr.io/r/base/warning.html'>suppressWarnings</a></span>(<span class='fu'>getLogo</span>())$<span class='no'>file</span>))
-}, <span class='kw'>error</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>e</span>) {
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"Error in in getLogo: "</span>, <span class='no'>e</span>))
-})</div><div class='output co'>#&gt; [1] "Warning in getLogo: simpleWarning in getSiteInfo(): The nprcgenekeepr configuration file is missing.\nIt is required when the LabKey API is to be used.\nThe file should be named: ~/.nprcgenekeepr_config.\n\n. File is to be ../nprcgenekeepr_2_color_logo.jpg"</div><div class='input'>
-# }
+<span class='va'>result</span> <span class='op'>=</span> <span class='kw'><a href='https://rdrr.io/r/base/conditions.html'>tryCatch</a></span><span class='op'>(</span><span class='op'>{</span>
+  <span class='fu'>getLogo</span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>}</span>, warning <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>w</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"Warning in getLogo: "</span>, <span class='va'>w</span>, <span class='st'>". File is to be "</span>,
+             <span class='fu'><a href='https://rdrr.io/r/base/warning.html'>suppressWarnings</a></span><span class='op'>(</span><span class='fu'>getLogo</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>$</span><span class='va'>file</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>}</span>, error <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>e</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"Error in in getLogo: "</span>, <span class='va'>e</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>}</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "Warning in getLogo: simpleWarning in getSiteInfo(): The nprcgenekeepr configuration file is missing.\nIt is required when the LabKey API is to be used.\nThe file should be named: ~/.nprcgenekeepr_config.\n\n. File is to be ../nprcgenekeepr_2_color_logo.jpg"</div><div class='input'>
+<span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -180,7 +181,7 @@ file is not found.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

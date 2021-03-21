@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -118,7 +118,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/rmsharp/nprcgenekeepr/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -144,7 +144,7 @@
     <p>hasBothParents checks to see if both parents are identified.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>hasBothParents</span>(<span class='no'>id</span>, <span class='no'>ped</span>)</pre>
+    <pre class="usage"><span class='fu'>hasBothParents</span><span class='op'>(</span><span class='va'>id</span>, <span class='va'>ped</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -165,11 +165,13 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>nprcgenekeepr</span>)
-<span class='no'>ped</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>nprcgenekeepr</span><span class='kw ns'>::</span><span class='no'><a href='pedOne.html'>pedOne</a></span>
-<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>ped</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"id"</span>, <span class='st'>"sire"</span>, <span class='st'>"dam"</span>, <span class='st'>"sex"</span>, <span class='st'>"birth"</span>)
-<span class='fu'>hasBothParents</span>(<span class='st'>"o2"</span>, <span class='no'>ped</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='no'>ped</span>$<span class='no'>sire</span>[<span class='no'>ped</span>$<span class='no'>id</span> <span class='kw'>==</span> <span class='st'>"o2"</span>] <span class='kw'>&lt;-</span> <span class='fl'>NA</span>
-<span class='fu'>hasBothParents</span>(<span class='st'>"o2"</span>, <span class='no'>ped</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'># }
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rmsharp.github.io/nprcgenekeepr/'>nprcgenekeepr</a></span><span class='op'>)</span>
+<span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='pedOne.html'>pedOne</a></span>
+<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>ped</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"id"</span>, <span class='st'>"sire"</span>, <span class='st'>"dam"</span>, <span class='st'>"sex"</span>, <span class='st'>"birth"</span><span class='op'>)</span>
+<span class='fu'>hasBothParents</span><span class='op'>(</span><span class='st'>"o2"</span>, <span class='va'>ped</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='va'>ped</span><span class='op'>$</span><span class='va'>sire</span><span class='op'>[</span><span class='va'>ped</span><span class='op'>$</span><span class='va'>id</span> <span class='op'>==</span> <span class='st'>"o2"</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>NA</span>
+<span class='fu'>hasBothParents</span><span class='op'>(</span><span class='st'>"o2"</span>, <span class='va'>ped</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='co'># }</span>
 
 </div></pre>
   </div>
@@ -187,7 +189,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

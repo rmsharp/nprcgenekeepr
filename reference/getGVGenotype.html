@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -118,7 +118,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/rmsharp/nprcgenekeepr/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -144,7 +144,7 @@
     <p>Extracts genotype data if available otherwise NULL is returned.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>getGVGenotype</span>(<span class='no'>ped</span>)</pre>
+    <pre class="usage"><span class='fu'>getGVGenotype</span><span class='op'>(</span><span class='va'>ped</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -166,22 +166,24 @@ returned.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 <span class='co'>## We usually defined `n` to be &gt;= 5000</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>nprcgenekeepr</span>)
-<span class='no'>ped</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>nprcgenekeepr</span><span class='kw ns'>::</span><span class='no'><a href='lacy1989Ped.html'>lacy1989Ped</a></span>
-<span class='no'>allelesNew</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='geneDrop.html'>geneDrop</a></span>(<span class='no'>ped</span>$<span class='no'>id</span>, <span class='no'>ped</span>$<span class='no'>sire</span>, <span class='no'>ped</span>$<span class='no'>dam</span>, <span class='no'>ped</span>$<span class='no'>gen</span>,
-                      <span class='kw'>genotype</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>updateProgress</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
-<span class='no'>genotype</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>ped</span>$<span class='no'>id</span>,
-                       <span class='kw'>first_allele</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>NA</span>, <span class='fl'>NA</span>, <span class='st'>"A001_B001"</span>, <span class='st'>"A001_B002"</span>,
-                                        <span class='fl'>NA</span>, <span class='st'>"A001_B002"</span>, <span class='st'>"A001_B001"</span>),
-                       <span class='kw'>second_allele</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>NA</span>, <span class='fl'>NA</span>, <span class='st'>"A010_B001"</span>, <span class='st'>"A001_B001"</span>,
-                                         <span class='fl'>NA</span>, <span class='fl'>NA</span>, <span class='fl'>NA</span>),
-                       <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='no'>pedWithGenotype</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='addGenotype.html'>addGenotype</a></span>(<span class='no'>ped</span>, <span class='no'>genotype</span>)
-<span class='no'>pedGenotype</span> <span class='kw'>&lt;-</span> <span class='fu'>getGVGenotype</span>(<span class='no'>pedWithGenotype</span>)
-<span class='no'>allelesNewGen</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='geneDrop.html'>geneDrop</a></span>(<span class='no'>ped</span>$<span class='no'>id</span>, <span class='no'>ped</span>$<span class='no'>sire</span>, <span class='no'>ped</span>$<span class='no'>dam</span>, <span class='no'>ped</span>$<span class='no'>gen</span>,
-                         <span class='kw'>genotype</span> <span class='kw'>=</span> <span class='no'>pedGenotype</span>,
-                         <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>updateProgress</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
-<span class='co'># }</span></div></pre>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rmsharp.github.io/nprcgenekeepr/'>nprcgenekeepr</a></span><span class='op'>)</span>
+<span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='lacy1989Ped.html'>lacy1989Ped</a></span>
+<span class='va'>allelesNew</span> <span class='op'>&lt;-</span> <span class='fu'><a href='geneDrop.html'>geneDrop</a></span><span class='op'>(</span><span class='va'>ped</span><span class='op'>$</span><span class='va'>id</span>, <span class='va'>ped</span><span class='op'>$</span><span class='va'>sire</span>, <span class='va'>ped</span><span class='op'>$</span><span class='va'>dam</span>, <span class='va'>ped</span><span class='op'>$</span><span class='va'>gen</span>,
+                      genotype <span class='op'>=</span> <span class='cn'>NULL</span>, n <span class='op'>=</span> <span class='fl'>50</span>, updateProgress <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+<span class='va'>genotype</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>id <span class='op'>=</span> <span class='va'>ped</span><span class='op'>$</span><span class='va'>id</span>,
+                       first_allele <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>NA</span>, <span class='cn'>NA</span>, <span class='st'>"A001_B001"</span>, <span class='st'>"A001_B002"</span>,
+                                        <span class='cn'>NA</span>, <span class='st'>"A001_B002"</span>, <span class='st'>"A001_B001"</span><span class='op'>)</span>,
+                       second_allele <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>NA</span>, <span class='cn'>NA</span>, <span class='st'>"A010_B001"</span>, <span class='st'>"A001_B001"</span>,
+                                         <span class='cn'>NA</span>, <span class='cn'>NA</span>, <span class='cn'>NA</span><span class='op'>)</span>,
+                       stringsAsFactors <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='va'>pedWithGenotype</span> <span class='op'>&lt;-</span> <span class='fu'><a href='addGenotype.html'>addGenotype</a></span><span class='op'>(</span><span class='va'>ped</span>, <span class='va'>genotype</span><span class='op'>)</span>
+<span class='va'>pedGenotype</span> <span class='op'>&lt;-</span> <span class='fu'>getGVGenotype</span><span class='op'>(</span><span class='va'>pedWithGenotype</span><span class='op'>)</span>
+<span class='va'>allelesNewGen</span> <span class='op'>&lt;-</span> <span class='fu'><a href='geneDrop.html'>geneDrop</a></span><span class='op'>(</span><span class='va'>ped</span><span class='op'>$</span><span class='va'>id</span>, <span class='va'>ped</span><span class='op'>$</span><span class='va'>sire</span>, <span class='va'>ped</span><span class='op'>$</span><span class='va'>dam</span>, <span class='va'>ped</span><span class='op'>$</span><span class='va'>gen</span>,
+                         genotype <span class='op'>=</span> <span class='va'>pedGenotype</span>,
+                         n <span class='op'>=</span> <span class='fl'>5</span>, updateProgress <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+<span class='co'># }</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -197,7 +199,7 @@ returned.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
