@@ -14,6 +14,17 @@ library(rmsutilityr)
 library(nprcgenekeepr)
 ```
 Provided in reverse chronological order
+## 20210806
+1.  Preparation notes
+    a.   Mark has not created the function to create the Tukey five number 
+         summary.
+    a.   Mark has created __createSimKinships__ that uses __make_SimPed__ and
+         __kinship__ makes a list object of kinship matrices from simulated 
+         pedigrees of possible parents for animals with unknown parents.
+    a.   Mark has created __cumulateSimKinships__ to makes a list object of 
+         kinship matrices from simulated pedigrees of possible parents for 
+         animals with unknown parents
+#' parents for animals with unknown parents
 
 
 ## 20210514

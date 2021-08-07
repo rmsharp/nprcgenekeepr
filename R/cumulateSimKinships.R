@@ -1,9 +1,12 @@
-#' Makes a list object of kinship matrices from simulated pedigrees of possible
-#' parents for animals with unknown parents
+#' Makes a list object containing kinship summary statistics using the list
+#' object from __createSimKinships__.
 #'
-#' \code{createSimKinships} uses \code{makeSimPed} with the \code{ped} object
-#' and the \code{allSimParents} object to create a set of kinship matrices to
-#' be used in forming the \emph{Monte Carlo} estimates for the kinship values.
+#'
+#' \code{cumulateSimKinships} creates a named
+#' list of length 4 is generated where the first element is the mean of the
+#' simulated kinships, the second element is the standard deviation of the
+#' simulated kinships the third element is the minimum value of the kinships,
+#' and the forth element is the maximum value of the kinships.
 #'
 #' @examples
 #' \donttest{
@@ -30,21 +33,40 @@
 #' interest. The default is NULL.
 #' @param n integer value of the number of simulated pedigrees to generate.
 #' @export
-createSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L) {
+cumulateSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L) {
   ## If user has limited the population of interest by defining 'pop',
   ## that information is incorporated via the 'population' column.
   ped$population <- getGVPopulation(ped, pop)
 
   # Get the list of animals in the population to consider
+  probands <- as.character(ped$id[ped$population])
   nIds <- nrow(ped)
   squaredKinship <- sumKinship <- matrix(data = 0, nrow = nIds, ncol = nIds)
+  kVC <- list(kinshipValues = numeric(0), kinshipCounts = numeric(0))
   simKinships <- list(n)
   first_time <- TRUE
 
   for (i in seq_len(n)) {
     simPed <- makeSimPed(ped, allSimParents)
-    simKinships[[i]] <- kinship(simPed$id, simPed$sire,
-                                simPed$dam, simPed$gen)
+    kmat <- kinship(simPed$id, simPed$sire,
+                    simPed$dam, simPed$gen)
+    if (first_time) { # initializes minKinship correctly and adds IDs
+      minKinship <- kmat
+      maxKinship <- kmat
+      first_time <- FALSE
+    } else {
+      minKinship <- pmin(minKinship, kmat)
+      maxKinship <- pmax(maxKinship, kmat)
+    }
+    sumKinship <- sumKinship + kmat
+    squaredKinship <- squaredKinship + kmat^2
   }
-  simKinships
+  list(meanKinship = sumKinship / n,
+       sdKinship = sqrt(
+         ((n * squaredKinship) - sumKinship^2) /
+           (n * (n - 1))
+       ),
+       minKinship = minKinship,
+       maxKinship = maxKinship
+  )
 }

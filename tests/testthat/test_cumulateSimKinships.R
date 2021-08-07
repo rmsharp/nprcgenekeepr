@@ -1,7 +1,7 @@
 #' Copyright(c) 2017-2021 R. Mark Sharp
 #' This file is part of nprcgenekeepr
 library(testthat)
-context("createSimKinships")
+context("cumulateSimKinships")
 
 ped <- nprcgenekeepr::smallPed
 simParent_1 <- list(id = "A",
@@ -32,20 +32,18 @@ extractKinship <- function(simKinships, id1, id2) {
              seq_along(ped$id)[ped$id == id2]]},
          FUN.VALUE = numeric(1))
 }
+set_seed(seed = 2)
+n <- 100
+simKinships <- cumulateSimKinships(ped, allSimParents, pop = ped$id, n = n)
+test_EN <- simKinships$meanKinship[seq_along(ped$id)[ped$id == "E"],
+                                   seq_along(ped$id)[ped$id == "N"]]
 
-set_seed(seed = 1)
-n <- 10
-simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
-test_EN <- extractKinship(simKinships, "E", "N")
-test_BN <- extractKinship(simKinships, "B", "N")
-test_JN <- extractKinship(simKinships, "J", "N")
-test_KN <- extractKinship(simKinships, "K", "N")
-test_BK <- extractKinship(simKinships, "B", "K")
-test_EK <- extractKinship(simKinships, "E", "K")
-
-test_that("createSimKinships creates the correct kinship matrices structure", {
-  expect_equal(length(simKinships), n)
-  expect_equal(length(simKinships[[1]]), 17 * 17)
-  expect_equal(nrow(simKinships[[1]]), 17)
-  expect_equal(test_EN, c(0.125, 0, 0, 0, 0.125, 0.125, 0, 0, 0, 0.125))
+test_that("cumulateSimKinships creates the correct kinship summary structure", {
+  expect_equal(test_EN, 0.041250, tolerance = 0.000001)
+  expect_equal(length(simKinships), 4)
+  expect_equal(names(simKinships), c("meanKinship", "sdKinship", "minKinship",
+                                     "maxKinship"))
+  expect_equal(length(simKinships$meanKinship), 17 * 17)
+  expect_equal(nrow(simKinships$sdKinship), 17)
 })
+
