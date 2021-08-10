@@ -2,7 +2,19 @@
 title: "Meeting Notes and Things To Do"
 author: "R. Mark Sharp"
 date: "03/16/2020"
-output: html_document
+header-includes:
+  - \usepackage{enumitem}
+  - \setlistdepth{20}
+  - \renewlist{itemize}{itemize}{20}
+  - \renewlist{enumerate}{enumerate}{20}
+  - \setlist[itemize]{label=$\cdot$}
+  - \setlist[itemize,1]{label=\textbullet}
+  - \setlist[itemize,2]{label=--}
+  - \setlist[itemize,3]{label=*}
+output:
+  pdf_document: 
+      keep_tex: yes
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -119,23 +131,27 @@ Provided in reverse chronological order
             
 Simple metrics for the Original Version (20160816) and Current Version 1.0.3 
 (20200526).
+```
 Source	       Files	Lines	  Code	 Blank Lines	Document Lines	Comment Lines
 Original Files	   8	 3621	  1927	         531	             0	         1163
 Version 1.0.3	   293  13776	  7775	         441	          4613	          947
+```
 
 Simple metrics for the Original Version (20160816) and Current Version 1.0.3 
 (20200526) and current version groups of functions.
+```
 Source	        Files	 Lines  Code	 Blank Lines	Document Lines	Comment Lines
 Original Files	    8	  3621  1927	         531               0	         1163
 Version 1.0.3	    293	 13776	7775	         441	          4613	          947
 1.0.3: functions  163	  8272	3007	         226	          4406	          633
 1.0.3: ui	         11	  1782	1506	          98	             2	          176
 1.0.3: tests    	119	  3722	3262	         117	           205	          138
+```
 
 ## 20200423
 1.  Submission to CRAN was rejected with the following revision requests
     1.  considerably reduce the check time of your package to stay below the
-threshold of 10 minutes. This can for example be achieved by:
+        threshold of 10 minutes. This can for example be achieved by:
 	      -  Omitting the less important and lengthy tests by only running them
            conditionally if some environment variable is set that you only 
            define on your machine.
@@ -154,18 +170,18 @@ threshold of 10 minutes. This can for example be achieved by:
         abbreviations/acronyms in the description text of your 
         DESCRIPTION file. e.g. -- electronic health records
     1.  Missing Rd-tags:
-        -  addGenotype.Rd: \value
-        -  agePyramidPlot.Rd: \value
-        -  allTrueNoNA.Rd: \value
-        -  assignAlleles.Rd: \value
-        -  calcFE.Rd: \value
-        -  calcFEFG.Rd: \value
-        -  calcFG.Rd: \value
-        -  calcRetention.Rd: \value
-        -  checkGenotypeFile.Rd: \value
-        -  convertSexCodes.Rd: \value
-        -  create_wkbk.Rd: \value
-        -  createExampleFiles.Rd: \arguments,  \value
+        -  addGenotype.Rd: \\value
+        -  agePyramidPlot.Rd: \\value
+        -  allTrueNoNA.Rd: \\value
+        -  assignAlleles.Rd: \\value
+        -  calcFE.Rd: \\value
+        -  calcFEFG.Rd: \\value
+        -  calcFG.Rd: \\value
+        -  calcRetention.Rd: \\value
+        -  checkGenotypeFile.Rd: \\value
+        -  convertSexCodes.Rd: \\value
+        -  create_wkbk.Rd: \\value
+        -  createExampleFiles.Rd: \\arguments,  \]value
         -  ...
     1.  You have examples for unexported functions which cannot run in this way.
         Please either add nprcgenekeepr::: to the function calls in the 
@@ -419,18 +435,18 @@ kable(sectionCodeChanges,
     d.  Production = Births / Dams
     e.  Production Status (color)
         1.   Shelter and pens
-             1.   Red -- < 0.51
-             1.   Yellow -- >= 0.51 & < 0.54
-             1.   Green -- >= 0.54
+             1.   Red -- "< 0.51"
+             1.   Yellow -- ">= 0.51 & < 0.54"
+             1.   Green -- ">= 0.54"
         1.  Corrals
-            1.   Red -- < 0.61
-            1.   Yellow -- >= 0.61 & < 0.65
-            1.   Green -- >= 0.65
+            1.   Red -- "< 0.61"
+            1.   Yellow -- ">= 0.61 & < 0.65"
+            1.   Green -- ">= 0.65"
 2.   __Genetic Production__
 
-     Percent of females >= 3.5 at the start of the 2 calendar year period that
+     Percent of females ">= 3.5 at the start of the 2 calendar year period that
      have not produced offspring in the past 2 calendar years. Filter out 
-     animals over ?? (start with 18) years old.
+     animals over ?? (start with 18) years old."
 
 3.   __Genetic Value Analysis__
      Have Mark look at algorithm and develop simple options for handling 
