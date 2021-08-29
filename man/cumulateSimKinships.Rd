@@ -2,8 +2,8 @@
 % Please edit documentation in R/cumulateSimKinships.R
 \name{cumulateSimKinships}
 \alias{cumulateSimKinships}
-\title{Makes a list object of kinship matrices from simulated pedigrees of possible
-parents for animals with unknow parents}
+\title{Makes a list object containing kinship summary statistics using the list
+object from __createSimKinships__.}
 \usage{
 cumulateSimKinships(ped, allSimParents, pop = NULL, n = 10L)
 }
@@ -20,12 +20,7 @@ interest. The default is NULL.}
 \item{n}{integer value of the number of simulated pedigrees to generate.}
 }
 \description{
-\code{createSimKinships} uses \code{makeSimPed} with the \code{ped} object
-and the \code{allSimParents} object to create a set of kinship matrices to
-be used in forming the \emph{Monte Carlo} estimates for the kinship values.
-}
-\details{
-A a named
+\code{cumulateSimKinships} creates a named
 list of length 4 is generated where the first element is the mean of the
 simulated kinships, the second element is the standard deviation of the
 simulated kinships the third element is the minimum value of the kinships,
