@@ -48,7 +48,6 @@ extractKValue <- function(kValue, id1, id2, simulation) {
   kValue[kValue$id_1 ==  id1 & kValue$id_2 == id2, paste0("sim_", simulation)]
 }
 
-set_seed(seed = 1)
 n <- 10
 simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
 kValue <- kinshipMatricesToKValues(simKinships)

@@ -9,7 +9,6 @@
 #'
 #' @examples
 #' \donttest{
-#' set_seed(1)
 #' ped <- qcStudbook(nprcgenekeepr::pedSix)
 #' obfuscated <- obfuscatePed(ped, map = TRUE)
 #' someIds <- c("s1", "s2", "d1", "d1")

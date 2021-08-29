@@ -14,7 +14,7 @@
 #' @examples
 #' \donttest{
 #' library(lubridate)
-#' set_seed(10)
+#' set.seed(10)
 #' someBirthDates <- paste0(sample(seq(0, 15, by = 3), 10,
 #'                                 replace = TRUE) + 2000, "-",
 #'                          sample(1:12, 10, replace = TRUE), "-",
