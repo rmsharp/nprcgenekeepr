@@ -45,11 +45,11 @@ breederPedCsv <- read.table(
 
 breederPedCsv$fromCenter <- "TRUE"
 breederPedCsv$fromCenter[
-  sample(which(is.na(breederPedCsv$sire) &
+  suppressWarnings(sample(which(is.na(breederPedCsv$sire) &
                  is.na(breederPedCsv$dam)), 
          round(0.8 * length(which(
            is.na(breederPedCsv$sire) & 
-             is.na(breederPedCsv$dam)))))] <- "FALSE"
+             is.na(breederPedCsv$dam))))))] <- "FALSE"
 
 
 ## ----row-count----------------------------------------------------------------
