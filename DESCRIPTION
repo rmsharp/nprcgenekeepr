@@ -52,6 +52,7 @@ Imports:
 Suggests:
     covr,
     dplyr,
+    DT,
     ggplot2,
     grid,
     kableExtra,
