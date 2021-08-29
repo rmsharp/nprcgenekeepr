@@ -31,5 +31,7 @@ test_that("convertFromCenter makes correct transformations", {
   expect_equal(fromCenter[19], FALSE)
   expect_equal(fromCenter[20], FALSE)
   expect_equal(fromCenter[21], NA)
-
+})
+test_that("convertFromCenter detects ambiguous entries", {
+  expect_error(convertFromCenter("si"), "fromCenter field has ambiguous values")
 })
