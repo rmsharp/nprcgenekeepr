@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5.9001</span>
       </span>
     </div>
 
@@ -162,36 +162,37 @@ Grandparent-Grandchild, Full-Cousins, Cousin - Other, Full-Avuncular,
 Avuncular - Other, Other, and No Relation.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rmsharp.github.io/nprcgenekeepr/'>nprcgenekeepr</a></span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/message.html'>suppressMessages</a></span><span class='op'>(</span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='va'>qcPed</span> <span class='op'>&lt;-</span> <span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='qcPed.html'>qcPed</a></span>
-<span class='va'>bkmat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='kinship.html'>kinship</a></span><span class='op'>(</span><span class='va'>qcPed</span><span class='op'>$</span><span class='va'>id</span>, <span class='va'>qcPed</span><span class='op'>$</span><span class='va'>sire</span>, <span class='va'>qcPed</span><span class='op'>$</span><span class='va'>dam</span>, <span class='va'>qcPed</span><span class='op'>$</span><span class='va'>gen</span>,
-                 sparse <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-<span class='va'>kin</span> <span class='op'>&lt;-</span> <span class='fu'><a href='convertRelationships.html'>convertRelationships</a></span><span class='op'>(</span><span class='va'>bkmat</span>, <span class='va'>qcPed</span><span class='op'>)</span>
-<span class='va'>relClasses</span> <span class='op'>&lt;-</span> <span class='fu'>makeRelationClassesTable</span><span class='op'>(</span><span class='va'>kin</span><span class='op'>)</span>
-<span class='va'>relClasses</span><span class='op'>$</span><span class='va'>`Relationship Class`</span> <span class='op'>&lt;-</span>
-   <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='va'>relClasses</span><span class='op'>$</span><span class='va'>`Relationship Class`</span><span class='op'>)</span>
-<span class='va'>relClassTbl</span> <span class='op'>&lt;-</span> <span class='va'>kin</span><span class='op'>[</span><span class='op'>!</span><span class='va'>kin</span><span class='op'>$</span><span class='va'>relation</span> <span class='op'>==</span> <span class='st'>"Self"</span>, <span class='op'>]</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>relation</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span><span class='op'>(</span>count <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/context.html'>n</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>relClassTbl</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 10 x 2</span><span>
-#&gt;    relation               count
-#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                  </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> Avuncular - Other        117
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> Cousin - Other            51
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> Full-Avuncular             9
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> Full-Cousins               5
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> Full-Siblings              3
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> Grandparent-Grandchild   301
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> Half-Siblings            105
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> No Relation            </span><span style='text-decoration: underline;'>37</span><span>531
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> Other                    626
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> Parent-Offspring         312</div><div class='input'><span class='co'># }</span>
-
-</div></span></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># \donttest{</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rmsharp.github.io/nprcgenekeepr/'>nprcgenekeepr</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/message.html'>suppressMessages</a></span><span class='op'>(</span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>qcPed</span> <span class='op'>&lt;-</span> <span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='qcPed.html'>qcPed</a></span></span>
+<span class='r-in'><span class='va'>bkmat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='kinship.html'>kinship</a></span><span class='op'>(</span><span class='va'>qcPed</span><span class='op'>$</span><span class='va'>id</span>, <span class='va'>qcPed</span><span class='op'>$</span><span class='va'>sire</span>, <span class='va'>qcPed</span><span class='op'>$</span><span class='va'>dam</span>, <span class='va'>qcPed</span><span class='op'>$</span><span class='va'>gen</span>,</span>
+<span class='r-in'>                 sparse <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>kin</span> <span class='op'>&lt;-</span> <span class='fu'><a href='convertRelationships.html'>convertRelationships</a></span><span class='op'>(</span><span class='va'>bkmat</span>, <span class='va'>qcPed</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>relClasses</span> <span class='op'>&lt;-</span> <span class='fu'>makeRelationClassesTable</span><span class='op'>(</span><span class='va'>kin</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>relClasses</span><span class='op'>$</span><span class='va'>`Relationship Class`</span> <span class='op'>&lt;-</span></span>
+<span class='r-in'>   <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='va'>relClasses</span><span class='op'>$</span><span class='va'>`Relationship Class`</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>relClassTbl</span> <span class='op'>&lt;-</span> <span class='va'>kin</span><span class='op'>[</span><span class='op'>!</span><span class='va'>kin</span><span class='op'>$</span><span class='va'>relation</span> <span class='op'>==</span> <span class='st'>"Self"</span>, <span class='op'>]</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>relation</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span class='r-in'>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span><span class='op'>(</span>count <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/context.html'>n</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>relClassTbl</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'># A tibble: 10 × 2</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    relation               count</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>                  <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 1</span> Avuncular - Other        117</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 2</span> Cousin - Other            51</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 3</span> Full-Avuncular             9</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 4</span> Full-Cousins               5</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 5</span> Full-Siblings              3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 6</span> Grandparent-Grandchild   301</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 7</span> Half-Siblings            105</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 8</span> No Relation            <span style='text-decoration: underline;'>37</span>531</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'> 9</span> Other                    626</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>10</span> Parent-Offspring         312</span>
+<span class='r-in'><span class='co'># }</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -203,7 +204,7 @@ Avuncular - Other, Other, and No Relation.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
+  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">

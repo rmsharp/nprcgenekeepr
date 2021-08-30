@@ -73,7 +73,7 @@ converting columns id, sire, and dam." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5.9001</span>
       </span>
     </div>
 
@@ -156,7 +156,7 @@ character.</p></td>
     <tr>
       <th>headers</th>
       <td><p>character vector with the columns to be converted to
-character class. Defaults to <code><a href='https://rdrr.io/r/base/c.html'>c("id", "sire", "dam")</a></code>/</p></td>
+character class. Defaults to <code>c("id", "sire", "dam")</code>/</p></td>
     </tr>
     </table>
 
@@ -166,16 +166,18 @@ character class. Defaults to <code><a href='https://rdrr.io/r/base/c.html'>c("id
 "character" for display with xtables (in shiny)</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rmsharp.github.io/nprcgenekeepr/'>nprcgenekeepr</a></span><span class='op'>)</span>
-<span class='va'>pedGood</span> <span class='op'>&lt;-</span> <span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='pedGood.html'>pedGood</a></span>
-<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>pedGood</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"id"</span>, <span class='st'>"sire"</span>, <span class='st'>"dam"</span>, <span class='st'>"sex"</span>, <span class='st'>"birth"</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>pedGood</span><span class='op'>[[</span><span class='st'>"id"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "factor"</div><div class='input'><span class='va'>pedGood</span> <span class='op'>&lt;-</span> <span class='fu'>toCharacter</span><span class='op'>(</span><span class='va'>pedGood</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>pedGood</span><span class='op'>[[</span><span class='st'>"id"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "character"</div><div class='input'><span class='co'># }</span>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># \donttest{</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rmsharp.github.io/nprcgenekeepr/'>nprcgenekeepr</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pedGood</span> <span class='op'>&lt;-</span> <span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='pedGood.html'>pedGood</a></span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>pedGood</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"id"</span>, <span class='st'>"sire"</span>, <span class='st'>"dam"</span>, <span class='st'>"sex"</span>, <span class='st'>"birth"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>pedGood</span><span class='op'>[[</span><span class='st'>"id"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "factor"</span>
+<span class='r-in'><span class='va'>pedGood</span> <span class='op'>&lt;-</span> <span class='fu'>toCharacter</span><span class='op'>(</span><span class='va'>pedGood</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>pedGood</span><span class='op'>[[</span><span class='st'>"id"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "character"</span>
+<span class='r-in'><span class='co'># }</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -187,7 +189,7 @@ character class. Defaults to <code><a href='https://rdrr.io/r/base/c.html'>c("id
 
       <footer>
       <div class="copyright">
-  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
+  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">

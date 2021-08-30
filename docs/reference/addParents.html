@@ -74,7 +74,7 @@ that lack their own line entry and generate one." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5.9001</span>
       </span>
     </div>
 
@@ -168,25 +168,26 @@ with <code>NA</code>.</p>
 used by <code>addParents</code></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='va'>pedTwo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>id <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"d1"</span>, <span class='st'>"s2"</span>, <span class='st'>"d2"</span>, <span class='st'>"o1"</span>, <span class='st'>"o2"</span>, <span class='st'>"o3"</span>, <span class='st'>"o4"</span><span class='op'>)</span>,
-                     sire <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>NA</span>, <span class='cn'>NA</span>, <span class='cn'>NA</span>, <span class='st'>"s1"</span>, <span class='st'>"s1"</span>, <span class='st'>"s2"</span>, <span class='st'>"s2"</span><span class='op'>)</span>,
-                     dam <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>NA</span>, <span class='cn'>NA</span>, <span class='cn'>NA</span>, <span class='st'>"d1"</span>, <span class='st'>"d2"</span>, <span class='st'>"d2"</span>, <span class='st'>"d2"</span><span class='op'>)</span>,
-                     sex <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"F"</span>, <span class='st'>"M"</span>, <span class='st'>"F"</span>, <span class='st'>"F"</span>, <span class='st'>"F"</span>, <span class='st'>"F"</span>, <span class='st'>"M"</span><span class='op'>)</span>,
-                     stringsAsFactors <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-<span class='va'>newPed</span> <span class='op'>&lt;-</span> <span class='fu'>addParents</span><span class='op'>(</span><span class='va'>pedTwo</span><span class='op'>)</span>
-<span class='va'>newPed</span>
-</div><div class='output co'>#&gt;   id sire  dam sex recordStatus
-#&gt; 1 d1 &lt;NA&gt; &lt;NA&gt;   F     original
-#&gt; 2 s2 &lt;NA&gt; &lt;NA&gt;   M     original
-#&gt; 3 d2 &lt;NA&gt; &lt;NA&gt;   F     original
-#&gt; 4 o1   s1   d1   F     original
-#&gt; 5 o2   s1   d2   F     original
-#&gt; 6 o3   s2   d2   F     original
-#&gt; 7 o4   s2   d2   M     original
-#&gt; 8 s1 &lt;NA&gt; &lt;NA&gt;   M        added</div><div class='input'><span class='co'># }</span>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># \donttest{</span></span>
+<span class='r-in'><span class='va'>pedTwo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>id <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"d1"</span>, <span class='st'>"s2"</span>, <span class='st'>"d2"</span>, <span class='st'>"o1"</span>, <span class='st'>"o2"</span>, <span class='st'>"o3"</span>, <span class='st'>"o4"</span><span class='op'>)</span>,</span>
+<span class='r-in'>                     sire <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>NA</span>, <span class='cn'>NA</span>, <span class='cn'>NA</span>, <span class='st'>"s1"</span>, <span class='st'>"s1"</span>, <span class='st'>"s2"</span>, <span class='st'>"s2"</span><span class='op'>)</span>,</span>
+<span class='r-in'>                     dam <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>NA</span>, <span class='cn'>NA</span>, <span class='cn'>NA</span>, <span class='st'>"d1"</span>, <span class='st'>"d2"</span>, <span class='st'>"d2"</span>, <span class='st'>"d2"</span><span class='op'>)</span>,</span>
+<span class='r-in'>                     sex <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"F"</span>, <span class='st'>"M"</span>, <span class='st'>"F"</span>, <span class='st'>"F"</span>, <span class='st'>"F"</span>, <span class='st'>"F"</span>, <span class='st'>"M"</span><span class='op'>)</span>,</span>
+<span class='r-in'>                     stringsAsFactors <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>newPed</span> <span class='op'>&lt;-</span> <span class='fu'>addParents</span><span class='op'>(</span><span class='va'>pedTwo</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>newPed</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   id sire  dam sex recordStatus</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1 d1 &lt;NA&gt; &lt;NA&gt;   F     original</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2 s2 &lt;NA&gt; &lt;NA&gt;   M     original</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3 d2 &lt;NA&gt; &lt;NA&gt;   F     original</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4 o1   s1   d1   F     original</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5 o2   s1   d2   F     original</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6 o3   s2   d2   F     original</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7 o4   s2   d2   M     original</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8 s1 &lt;NA&gt; &lt;NA&gt;   M        added</span>
+<span class='r-in'><span class='co'># }</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -198,7 +199,7 @@ used by <code>addParents</code></p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
+  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">

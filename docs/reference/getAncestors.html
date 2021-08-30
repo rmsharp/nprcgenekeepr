@@ -74,7 +74,7 @@ From PedigreeSampling.R
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5.9001</span>
       </span>
     </div>
 
@@ -157,7 +157,7 @@ From PedigreeSampling.R
     <tr>
       <th>ptree</th>
       <td><p>a list of lists forming a pedigree tree as constructed by
-<code><a href='createPedTree.html'>createPedTree(ped)</a></code> where <code>ped</code> is a standard pedigree dataframe.</p></td>
+<code>createPedTree(ped)</code> where <code>ped</code> is a standard pedigree dataframe.</p></td>
     </tr>
     </table>
 
@@ -174,56 +174,58 @@ amount of time required to perform calculations with
 SIMWALK2 or similar programs.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rmsharp.github.io/nprcgenekeepr/'>nprcgenekeepr</a></span><span class='op'>)</span>
-<span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='qcPed.html'>qcPed</a></span>
-<span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'><a href='qcStudbook.html'>qcStudbook</a></span><span class='op'>(</span><span class='va'>ped</span>, minParentAge <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>
-<span class='va'>pedTree</span> <span class='op'>&lt;-</span> <span class='fu'><a href='createPedTree.html'>createPedTree</a></span><span class='op'>(</span><span class='va'>ped</span><span class='op'>)</span>
-<span class='va'>pedLoops</span> <span class='op'>&lt;-</span> <span class='fu'><a href='findLoops.html'>findLoops</a></span><span class='op'>(</span><span class='va'>pedTree</span><span class='op'>)</span>
-<span class='va'>ids</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>pedTree</span><span class='op'>)</span>
-<span class='va'>allAncestors</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>
-
-<span class='kw'>for</span> <span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_along</a></span><span class='op'>(</span><span class='va'>ids</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
-  <span class='va'>id</span> <span class='op'>&lt;-</span> <span class='va'>ids</span><span class='op'>[[</span><span class='va'>i</span><span class='op'>]</span><span class='op'>]</span>
-  <span class='va'>anc</span> <span class='op'>&lt;-</span> <span class='fu'>getAncestors</span><span class='op'>(</span><span class='va'>id</span>, <span class='va'>pedTree</span><span class='op'>)</span>
-  <span class='va'>allAncestors</span><span class='op'>[[</span><span class='va'>id</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='va'>anc</span>
-<span class='op'>}</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>allAncestors</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $`0K7VJN`
-#&gt; [1] "UN3A1F" "YAYD44"
-#&gt; 
-#&gt; $`0NG81L`
-#&gt; [1] "OC8QQZ" "LG9I3M"
-#&gt; 
-#&gt; $`168Q0A`
-#&gt; [1] "HRBVOE" "P4CQ2T"
-#&gt; 
-#&gt; $`2FUS6G`
-#&gt; [1] "UI9CUS" "YKG4ZM"
-#&gt; 
-#&gt; $`3CQZ3E`
-#&gt; [1] "UONB0Y" "MBJMH1"
-#&gt; 
-#&gt; $`3O7TMT`
-#&gt; [1] "WORLYK" "FHY041"
-#&gt; </div><div class='input'><span class='va'>countOfAncestors</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>allAncestors</span>, <span class='va'>length</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>idsWithMostAncestors</span> <span class='op'>&lt;-</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>allAncestors</span><span class='op'>)</span><span class='op'>[</span><span class='va'>countOfAncestors</span> <span class='op'>==</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>countOfAncestors</span><span class='op'>)</span><span class='op'>]</span>
-<span class='va'>allAncestors</span><span class='op'>[</span><span class='va'>idsWithMostAncestors</span><span class='op'>]</span>
-</div><div class='output co'>#&gt; $HLI95R
-#&gt;  [1] "WMUJC5" "H00H7D" "ZWBMTP" "HRBVOE" "RD6KMA" "K7QBLH" "UL1ZA5" "VHXHVH"
-#&gt;  [9] "NY9FEC" "ZWBMTP" "HRBVOE" "RD6KMA" "TINMGJ" "UKKA3A" "6MXDVM" "AXDMJM"
-#&gt; [17] "L6D4ZC" "5EP5AL" "HB9B30" "I31V3S" "3O7TMT" "WORLYK" "FHY041" "43TUN9"
-#&gt; [25] "5EP5AL" "HB9B30" "I31V3S" "8G72QV"
-#&gt; 
-#&gt; $I9TQ0T
-#&gt;  [1] "CN4GMN" "QBLTI6" "F0YSEE" "SA1ZC1" "ZXJQQ5" "6MIRJI" "UKK94T" "596J7E"
-#&gt;  [9] "82IE3M" "F0YSEE" "SA1ZC1" "ZXJQQ5" "JNWPY2" "MQB1AE" "ZXJQQ5" "BNMWNZ"
-#&gt; [17] "DZ3B9K" "CQMWGX" "N2XF08" "P9GZ32" "HKOSVZ" "ZQ0DRX" "RX08B3" "N2XF08"
-#&gt; [25] "P9GZ32" "HKOSVZ" "1B71NB" "BRLQFI"
-#&gt; </div><div class='input'><span class='co'># }</span>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># \donttest{</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rmsharp.github.io/nprcgenekeepr/'>nprcgenekeepr</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='qcPed.html'>qcPed</a></span></span>
+<span class='r-in'><span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'><a href='qcStudbook.html'>qcStudbook</a></span><span class='op'>(</span><span class='va'>ped</span>, minParentAge <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pedTree</span> <span class='op'>&lt;-</span> <span class='fu'><a href='createPedTree.html'>createPedTree</a></span><span class='op'>(</span><span class='va'>ped</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pedLoops</span> <span class='op'>&lt;-</span> <span class='fu'><a href='findLoops.html'>findLoops</a></span><span class='op'>(</span><span class='va'>pedTree</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>ids</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>pedTree</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>allAncestors</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='kw'>for</span> <span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_along</a></span><span class='op'>(</span><span class='va'>ids</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'>  <span class='va'>id</span> <span class='op'>&lt;-</span> <span class='va'>ids</span><span class='op'>[[</span><span class='va'>i</span><span class='op'>]</span><span class='op'>]</span></span>
+<span class='r-in'>  <span class='va'>anc</span> <span class='op'>&lt;-</span> <span class='fu'>getAncestors</span><span class='op'>(</span><span class='va'>id</span>, <span class='va'>pedTree</span><span class='op'>)</span></span>
+<span class='r-in'>  <span class='va'>allAncestors</span><span class='op'>[[</span><span class='va'>id</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='va'>anc</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>allAncestors</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $`0K7VJN`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "UN3A1F" "YAYD44"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $`0NG81L`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "OC8QQZ" "LG9I3M"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $`168Q0A`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "HRBVOE" "P4CQ2T"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $`2FUS6G`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "UI9CUS" "YKG4ZM"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $`3CQZ3E`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "UONB0Y" "MBJMH1"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $`3O7TMT`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "WORLYK" "FHY041"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'><span class='va'>countOfAncestors</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>allAncestors</span>, <span class='va'>length</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>idsWithMostAncestors</span> <span class='op'>&lt;-</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>allAncestors</span><span class='op'>)</span><span class='op'>[</span><span class='va'>countOfAncestors</span> <span class='op'>==</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>countOfAncestors</span><span class='op'>)</span><span class='op'>]</span></span>
+<span class='r-in'><span class='va'>allAncestors</span><span class='op'>[</span><span class='va'>idsWithMostAncestors</span><span class='op'>]</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $HLI95R</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1] "WMUJC5" "H00H7D" "ZWBMTP" "HRBVOE" "RD6KMA" "K7QBLH" "UL1ZA5" "VHXHVH"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [9] "NY9FEC" "ZWBMTP" "HRBVOE" "RD6KMA" "TINMGJ" "UKKA3A" "6MXDVM" "AXDMJM"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [17] "L6D4ZC" "5EP5AL" "HB9B30" "I31V3S" "3O7TMT" "WORLYK" "FHY041" "43TUN9"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [25] "5EP5AL" "HB9B30" "I31V3S" "8G72QV"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $I9TQ0T</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1] "CN4GMN" "QBLTI6" "F0YSEE" "SA1ZC1" "ZXJQQ5" "6MIRJI" "UKK94T" "596J7E"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [9] "82IE3M" "F0YSEE" "SA1ZC1" "ZXJQQ5" "JNWPY2" "MQB1AE" "ZXJQQ5" "BNMWNZ"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [17] "DZ3B9K" "CQMWGX" "N2XF08" "P9GZ32" "HKOSVZ" "ZQ0DRX" "RX08B3" "N2XF08"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [25] "P9GZ32" "HKOSVZ" "1B71NB" "BRLQFI"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'><span class='co'># }</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -235,7 +237,7 @@ SIMWALK2 or similar programs.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
+  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">

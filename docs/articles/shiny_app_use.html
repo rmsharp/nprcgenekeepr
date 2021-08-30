@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5.9001</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
 
       
 
-      </header><script src="shiny_app_use_files/header-attrs-2.7/header-attrs.js"></script><script src="shiny_app_use_files/kePrint-0.0.1/kePrint.js"></script><link href="shiny_app_use_files/lightable-0.0.1/lightable.css" rel="stylesheet">
+      </header><script src="shiny_app_use_files/header-attrs-2.10/header-attrs.js"></script><script src="shiny_app_use_files/kePrint-0.0.1/kePrint.js"></script><link href="shiny_app_use_files/lightable-0.0.1/lightable.css" rel="stylesheet">
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
@@ -377,27 +377,27 @@ Columns that have been changed to conform to internal naming conventions and wha
 <a href="#breeding-group-formation" class="anchor"></a>Breeding Group Formation</h2>
 <p>Selecting the <strong>Breeding Group Formation</strong> tab brings forward the screen shown below. In this screen you can form breeding groups using one of three ways based on your source of animals selected under <strong>Choose one group formation workflow:</strong>.</p>
 <p>Additionally, you must specify how you want to construct the breeding groups with regard to the groups’ sex ratios. The third of the three options (<em>User specified sex ratio of breeders</em>) causes the appearance of the field where you can fill in the sex ratio (F/M) that you want to have in the formed breeding groups. The sex ratio algorithm will form a group as nearly to the selected ratio as possible given the size of the group. Limits in the availability of either sex will restrict the size of the groups formed.</p>
-<p><img src="shiny_app_use_files/figure-html/breeding-group-first-view-1.png" width="672"></p>
+<p><img src="shiny_app_use_files/figure-html/bg-first-view-1.png" width="672"></p>
 <hr>
 <p>The <strong>Make Groups</strong> button appears once you select the source of animals you are going to use. However, you probably will be making additional selections using other controls on the screen.</p>
 <p>The most common source of animals will be the high-value animals found by the genetic analysis.</p>
 <p>You can either type in the number of groups that you want to form or select the number of groups using the arrows on the right edge of the <strong>Number of Groups Desired</strong> field, which is outlined in blue in the image below.</p>
-<p><img src="shiny_app_use_files/figure-html/breeding-group-1-1.png" width="768"></p>
+<p><img src="shiny_app_use_files/figure-html/bg-1-1.png" width="768"></p>
 <hr>
 <p>There are often behavioral constraints, such as preexisting social groups, that dictate the need to have some animals maintained together. This need is readily accommodated by pre-seeding groups with those social groups. You may select the <strong>Optional: Seed Groups with Specific Animals</strong> field if you decide to place some animals together within the groups because you know them to be compatible with each other.</p>
 <p>This has been done in the example below using six groups with differing numbers of seed animals. Note the selection of having animals below the minimum parent age of two being grouped with their mother.</p>
 <hr>
-<p><img src="shiny_app_use_files/figure-html/breeding-group-6-infants-with-dam-1.png" width="576"></p>
+<p><img src="shiny_app_use_files/figure-html/bg-6-infants-with-dam-1.png" width="576"></p>
 <hr>
 <p>Each group has all of the seed animals that were assigned to it plus additional animals that could be added while satisfying the requirements imposed by the selected settings. I have indicated the seed animals for the first group with red rectangles.</p>
-<p><img src="shiny_app_use_files/figure-html/breeding-group-first-group-no-kinship-seeds-indicated-1.png" width="816"></p>
+<p><img src="shiny_app_use_files/figure-html/bg-first-group-no-kinship-seeds-indicated-1.png" width="816"></p>
 <hr>
 <p>Display of kinship values requires that the <strong>Include kinship in display of groups</strong> checkbox be selected prior to group formation.</p>
 <p>A group of ten animals was formed in the next run after choosing to include kinship and selecting the <strong>Make Groups</strong> button.</p>
-<p><img src="shiny_app_use_files/figure-html/breeding-group-6-seed-grps-grp-6-kinship-1.png" width="816"></p>
+<p><img src="shiny_app_use_files/figure-html/bg-6-seed-grps-grp-6-kinship-1.png" width="816"></p>
 <hr>
 <p>The option to select a desired sex ratio allows you to select any ratio desired. However, the ratio obtained is limited by the availability of animals that meet all criteria you have set.</p>
-<p><img src="shiny_app_use_files/figure-html/breeding-group-sex-ratio-specification-1.png" width="528"></p>
+<p><img src="shiny_app_use_files/figure-html/bg-sex-ratio-specification-1.png" width="528"></p>
 <p>Selecting a sex ratio of 2.5 with 6 groups as is illustrated resulted in 5 groups of 20 with a ratio of 14:6 (2.3) and 1 group of 23 with a ratio of 16:7 (2.3).</p>
 <p>Groups can be individually exported into file names and locations of your choosing. The corresponding kinship matrix for each group can also be exported.</p>
 </div>
@@ -414,7 +414,7 @@ Columns that have been changed to conform to internal naming conventions and wha
 
 
       <footer><div class="copyright">
-  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
+  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">

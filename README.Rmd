@@ -1,7 +1,7 @@
 ---
 title: "README"
 author: "R. Mark Sharp"
-date: "04/21/2021"
+date: "`r Sys.Date()`"
 output: github_document
 ---
 [![Rdoc](https://www.rdocumentation.org/badges/version/nprcgenekeepr)](https://www.rdocumentation.org/packages/nprcgenekeepr)

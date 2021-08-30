@@ -81,7 +81,7 @@ of iterations." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5.9001</span>
       </span>
     </div>
 
@@ -269,140 +269,141 @@ that is specific for each group formed.</p>
     <p>Part of Group Formation</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rmsharp.github.io/nprcgenekeepr/'>nprcgenekeepr</a></span><span class='op'>)</span>
-<span class='va'>examplePedigree</span> <span class='op'>&lt;-</span> <span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='examplePedigree.html'>examplePedigree</a></span>
-<span class='va'>breederPed</span> <span class='op'>&lt;-</span> <span class='fu'><a href='qcStudbook.html'>qcStudbook</a></span><span class='op'>(</span><span class='va'>examplePedigree</span>, minParentAge <span class='op'>=</span> <span class='fl'>2</span>,
-                        reportChanges <span class='op'>=</span> <span class='cn'>FALSE</span>,
-                        reportErrors <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-<span class='va'>focalAnimals</span> <span class='op'>&lt;-</span> <span class='va'>breederPed</span><span class='op'>$</span><span class='va'>id</span><span class='op'>[</span><span class='op'>!</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>breederPed</span><span class='op'>$</span><span class='va'>sire</span><span class='op'>)</span> <span class='op'>&amp;</span>
-                                 <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>breederPed</span><span class='op'>$</span><span class='va'>dam</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>&amp;</span>
-                               <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>breederPed</span><span class='op'>$</span><span class='va'>exit</span><span class='op'>)</span><span class='op'>]</span>
-<span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'><a href='setPopulation.html'>setPopulation</a></span><span class='op'>(</span>ped <span class='op'>=</span> <span class='va'>breederPed</span>, ids <span class='op'>=</span> <span class='va'>focalAnimals</span><span class='op'>)</span>
-<span class='va'>trimmedPed</span> <span class='op'>&lt;-</span> <span class='fu'><a href='trimPedigree.html'>trimPedigree</a></span><span class='op'>(</span><span class='va'>focalAnimals</span>, <span class='va'>breederPed</span><span class='op'>)</span>
-<span class='va'>probands</span> <span class='op'>&lt;-</span> <span class='va'>ped</span><span class='op'>$</span><span class='va'>id</span><span class='op'>[</span><span class='va'>ped</span><span class='op'>$</span><span class='va'>population</span><span class='op'>]</span>
-<span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'><a href='trimPedigree.html'>trimPedigree</a></span><span class='op'>(</span><span class='va'>probands</span>, <span class='va'>ped</span>, removeUninformative <span class='op'>=</span> <span class='cn'>FALSE</span>,
-                   addBackParents <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-<span class='va'>geneticValue</span> <span class='op'>&lt;-</span> <span class='fu'><a href='reportGV.html'>reportGV</a></span><span class='op'>(</span><span class='va'>ped</span>, guIter <span class='op'>=</span> <span class='fl'>50</span>, <span class='co'># should be &gt;= 1000</span>
-                        guThresh <span class='op'>=</span> <span class='fl'>3</span>,
-                        byID <span class='op'>=</span> <span class='cn'>TRUE</span>,
-                        updateProgress <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
-<span class='va'>trimmedGeneticValue</span> <span class='op'>&lt;-</span> <span class='fu'><a href='reportGV.html'>reportGV</a></span><span class='op'>(</span><span class='va'>trimmedPed</span>, guIter <span class='op'>=</span> <span class='fl'>50</span>, <span class='co'># should be &gt;= 1000</span>
-                               guThresh <span class='op'>=</span> <span class='fl'>3</span>,
-                               byID <span class='op'>=</span> <span class='cn'>TRUE</span>,
-                               updateProgress <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
-<span class='va'>candidates</span> <span class='op'>&lt;-</span> <span class='va'>trimmedPed</span><span class='op'>$</span><span class='va'>id</span><span class='op'>[</span><span class='va'>trimmedPed</span><span class='op'>$</span><span class='va'>birth</span> <span class='op'>&lt;</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2013-01-01"</span><span class='op'>)</span> <span class='op'>&amp;</span>
-                            <span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>trimmedPed</span><span class='op'>$</span><span class='va'>birth</span><span class='op'>)</span> <span class='op'>&amp;</span>
-                            <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>trimmedPed</span><span class='op'>$</span><span class='va'>exit</span><span class='op'>)</span><span class='op'>]</span>
-<span class='va'>haremGrp</span> <span class='op'>&lt;-</span> <span class='fu'>groupAddAssign</span><span class='op'>(</span>candidates <span class='op'>=</span> <span class='va'>candidates</span>,
-                          kmat <span class='op'>=</span> <span class='va'>trimmedGeneticValue</span><span class='op'>[[</span><span class='st'>"kinship"</span><span class='op'>]</span><span class='op'>]</span>,
-                          ped <span class='op'>=</span> <span class='va'>trimmedPed</span>,
-                          iter <span class='op'>=</span> <span class='fl'>10</span>, <span class='co'># should be &gt;= 1000</span>
-                          numGp <span class='op'>=</span> <span class='fl'>6</span>,
-                          harem <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='va'>haremGrp</span><span class='op'>$</span><span class='va'>group</span>
-</div><div class='output co'>#&gt; [[1]]
-#&gt;  [1] "IRFJ09" "SHG3RB" "CMMUKU" "NN3GDQ" "D9P18Y" "KEA4QG" "87AQLF" "DPXEQE"
-#&gt;  [9] "FG0SFA" "WI38KZ" "92UG4N" "0IIAEN" "CS23RV" "YLRNIK" "EMV4P6" "MH88T6"
-#&gt; [17] "QCENKM" "GTLA8R" "PYPM1W" "8JUUJ9" "F7I2ED" "6KWVRI" "WTE53B" "3DTD2N"
-#&gt; [25] "50D77I" "PBAFJF" "RJ4JPC" "YFCIHJ" "S5H1GC" "R5AYJK" "1SPLS8" "MKY9TK"
-#&gt; 
-#&gt; [[2]]
-#&gt;  [1] "XZH41H" "G25E3F" "ILVQVB" "Q17CG3" "465ERA" "PI4VHT" "RVHVTZ" "FB5L3N"
-#&gt;  [9] "QRZK48" "99BMJW" "3GECJJ" "PJ72W1" "S7IWWA" "CLSVU6" "1KJ2MG" "CHK1ZX"
-#&gt; [17] "321LLB" "T3QPW5" "B1WVCN" "01QRQ4" "0SGJ12" "5ERY5Z" "ZATMEE" "Y6DB6L"
-#&gt; [25] "DHNQ1W" "TXZUKC" "N5QBWD" "SCFSBF" "WLMGS1" "0XTZQ1" "WNEAS6" "N79QXB"
-#&gt; [33] "C18V6I" "5W621W" "2Z4YLY"
-#&gt; 
-#&gt; [[3]]
-#&gt;  [1] "6MEP2C" "7B9CA6" "3YJIMV" "9P0DES" "1GF3GM" "3SKITJ" "S056D5" "PU7RSG"
-#&gt;  [9] "1QVS67" "AW400C" "FL170P" "Q7U139" "46ZHKN" "XYRDKV" "DCJJYS" "Y0TCYX"
-#&gt; [17] "G8MCV7" "1SSCJC" "DH9WJQ" "30J3CQ" "HE0SCR" "BCJJKN" "JLFKV8" "TEACA3"
-#&gt; [25] "Z904TJ" "LVYYNY" "5KWNMZ" "WJXIH9" "NK802Y"
-#&gt; 
-#&gt; [[4]]
-#&gt;  [1] "A6A1M1" "0X4W26" "QW2Z3R" "5EDIEE" "N4NV8B" "1CZM30" "BS3RLE" "6F9FB8"
-#&gt;  [9] "414N7M" "LYSLPP" "KZY6PD" "D4B0RM" "W6MDVK" "K3TNHP" "FJS7RQ" "QCA36T"
-#&gt; [17] "AP1YLW" "PVY432" "DRXMW4" "B134XZ" "XEC0M5" "EX5K0S" "GIIEUD" "ZH3YG1"
-#&gt; [25] "MFKT9C" "MPIQ4N" "5EDLL7" "MTCAIG" "967Y3D" "QQMBT1" "IH1KPA" "38K2SR"
-#&gt; [33] "7NE2UT" "MB6NYQ" "I8ABC7"
-#&gt; 
-#&gt; [[5]]
-#&gt;  [1] "6KLWVC" "J3F6PD" "83HQBN" "5IAFMK" "I5CI33" "WKY2SZ" "6X6BG9" "ZPS15A"
-#&gt;  [9] "AZ3L0D" "D33J06" "GAS52W" "E5Q33K" "TYEWF1" "KX0RJ3" "7RA57Q" "MX4J7G"
-#&gt; [17] "1VP3UC" "X694YR" "S3EBGZ" "72LYDE" "AIHJ8Z" "0HYZ23" "BKWE4D" "MYUMMX"
-#&gt; [25] "W5WIRP" "M9PVG5" "1CIRC9" "XFWVVX" "Q8U9LB" "GCBYDW"
-#&gt; 
-#&gt; [[6]]
-#&gt;  [1] "FTVE03" "13B1QL" "W0GUKI" "EZ2F8A" "AR17R5" "CRPXY7" "9MG040" "YTJ2UL"
-#&gt;  [9] "7ZNY75" "5BPBUI" "SH3FB7" "1FAZ0K" "QWKFBH" "AR5U44" "WK89I9" "TQEMY6"
-#&gt; [17] "S222R3" "DKIM6U" "B228Q6" "LS184H" "VWC5ZH" "2F6J3U" "ESUIAF" "ZQXZYB"
-#&gt; [25] "F45799" "G58RGY" "AFZKBS" "H2J6UA" "DI4AHD"
-#&gt; 
-#&gt; [[7]]
-#&gt; [1] NA
-#&gt; </div><div class='input'><span class='va'>sexRatioGrp</span> <span class='op'>&lt;-</span> <span class='fu'>groupAddAssign</span><span class='op'>(</span>candidates <span class='op'>=</span> <span class='va'>candidates</span>,
-                             kmat <span class='op'>=</span> <span class='va'>trimmedGeneticValue</span><span class='op'>[[</span><span class='st'>"kinship"</span><span class='op'>]</span><span class='op'>]</span>,
-                             ped <span class='op'>=</span> <span class='va'>trimmedPed</span>,
-                             iter <span class='op'>=</span> <span class='fl'>10</span>, <span class='co'># should be &gt;= 1000</span>
-                             numGp <span class='op'>=</span> <span class='fl'>6</span>,
-                             sexRatio <span class='op'>=</span> <span class='fl'>9</span><span class='op'>)</span>
-<span class='va'>sexRatioGrp</span><span class='op'>$</span><span class='va'>group</span>
-</div><div class='output co'>#&gt; [[1]]
-#&gt;  [1] "JLFKV8" "PHB6TE" "VWC5ZH" "ESUIAF" "92UG4N" "N79QXB" "99BMJW" "967Y3D"
-#&gt;  [9] "0XTZQ1" "3DTD2N" "1CIRC9" "1VP3UC" "YLRNIK" "ZW2X4N" "X694YR" "S3EBGZ"
-#&gt; [17] "9MG040" "C18V6I" "5W621W" "0IIAEN" "6X6BG9" "Y0TCYX" "FJS7RQ" "Q17CG3"
-#&gt; [25] "KZM9RB" "G25E3F" "H2J6UA" "5IAFMK" "ILVQVB" "R5AYJK" "3SKITJ" "AZ3L0D"
-#&gt; [33] "SHG3RB" "8JUUJ9" "KXHGRH"
-#&gt; 
-#&gt; [[2]]
-#&gt;  [1] "6F9FB8" "ZDRSG0" "RJ4JPC" "PJ72W1" "MPIQ4N" "1SPLS8" "NN3GDQ" "LVYYNY"
-#&gt;  [9] "Z904TJ" "LS184H" "ZQXZYB" "DHNQ1W" "I8ABC7" "LN1DLY" "RVHVTZ" "1CZM30"
-#&gt; [17] "321LLB" "EX5K0S" "MH88T6" "WJXIH9" "MTCAIG" "38K2SR" "XEC0M5" "465ERA"
-#&gt; [25] "CFD12A" "QWKFBH" "XYRDKV" "I5CI33" "01QRQ4"
-#&gt; 
-#&gt; [[3]]
-#&gt;  [1] "N4NV8B" "LMJWTN" "QQMBT1" "1KJ2MG" "DI4AHD" "1QVS67" "FL170P" "2F6J3U"
-#&gt;  [9] "S5H1GC" "6KWVRI" "F7I2ED" "30J3CQ" "DRXMW4" "9FRCIE" "ZH3YG1" "LYSLPP"
-#&gt; [17] "1GF3GM" "DCJJYS" "7ZNY75" "5BPBUI" "S056D5" "S7IWWA" "SH3FB7" "MYUMMX"
-#&gt; [25] "5KFB90"
-#&gt; 
-#&gt; [[4]]
-#&gt;  [1] "46ZHKN" "Z7NBA2" "83HQBN" "7B9CA6" "DH9WJQ" "WI38KZ" "PI4VHT" "BS3RLE"
-#&gt;  [9] "72LYDE" "BKWE4D" "AFZKBS" "GTLA8R" "1FAZ0K" "A6A1M1" "QCENKM" "D4B0RM"
-#&gt; [17] "AR5U44" "CHK1ZX" "GAS52W" "ZPS15A" "GIIEUD" "KZY6PD" "N5QBWD" "EMV4P6"
-#&gt; [25] "A98D7P"
-#&gt; 
-#&gt; [[5]]
-#&gt;  [1] "TYEWF1" "3QHAFI" "XFWVVX" "AIHJ8Z" "AR17R5" "PU7RSG" "QRZK48" "5EDLL7"
-#&gt;  [9] "QW2Z3R" "13B1QL" "50D77I" "WNEAS6" "CRPXY7" "K7900I" "PVY432" "W6MDVK"
-#&gt; [17] "1SSCJC" "IH1KPA" "M9PVG5" "G8MCV7" "WKY2SZ" "MKY9TK" "414N7M" "7RA57Q"
-#&gt; [25] "R6HV9A"
-#&gt; 
-#&gt; [[6]]
-#&gt;  [1] "D33J06" "G2GYST" "Q8U9LB" "B1WVCN" "W5WIRP" "AP1YLW" "F45799" "7NE2UT"
-#&gt;  [9] "QCA36T" "Q7U139" "NK802Y" "0X4W26" "TQEMY6" "JSAP3H" "MX4J7G" "9P0DES"
-#&gt; [17] "E5Q33K" "5ERY5Z" "WLMGS1" "B134XZ" "CMMUKU" "B228Q6" "0HYZ23" "W0GUKI"
-#&gt; [25] "T38W6H" "ZATMEE"
-#&gt; 
-#&gt; [[7]]
-#&gt;   [1] "WTE53B" "CLSVU6" "HLQ9SY" "B2CKHA" "BCJJKN" "DKIM6U" "FB5L3N" "GCBYDW"
-#&gt;   [9] "GDXWJ1" "MB6NYQ" "TR5L57" "WK89I9" "XC304E" "1E8KD1" "5PW7WT" "AEP5EG"
-#&gt;  [17] "AW400C" "BW10CL" "CHJ9D2" "D9P18Y" "EZ2F8A" "FTVE03" "IRFJ09" "J3F6PD"
-#&gt;  [25] "PBAFJF" "Q9LWGX" "RNQU14" "S222R3" "SCFSBF" "TEACA3" "09LFE4" "3GECJJ"
-#&gt;  [33] "3MMZD4" "55BPSE" "5XVTVH" "8IG767" "ER464J" "FFGPS4" "FG6L7S" "HE0SCR"
-#&gt;  [41] "NHWTJ9" "P7RBPI" "TBCE78" "YFCIHJ" "YI16QD" "2F1IV1" "2Z4YLY" "3YJIMV"
-#&gt;  [49] "4LHK19" "59NYZE" "5EDIEE" "5IYDXN" "6KLWVC" "80F2MI" "8TV4MT" "AZ4D19"
-#&gt;  [57] "BTTHAJ" "CHSCFG" "DPXEQE" "EEGLWY" "FG0SFA" "FX9E4X" "G58RGY" "G91ZM6"
-#&gt;  [65] "J1R2EW" "K3TNHP" "KX0RJ3" "LDND6J" "MFKT9C" "MQT080" "NSIC4I" "PYPM1W"
-#&gt;  [73] "QRWYQZ" "RY1AZM" "TXZUKC" "WHQLH5" "WQUN84" "XL658N" "XX0GYV" "YHHVC7"
-#&gt;  [81] "YP910X" "YTJ2UL" "0SGJ12" "0V4SAC" "0X1RZ9" "3YHBC1" "55VDSQ" "5KWNMZ"
-#&gt;  [89] "653J82" "6MEP2C" "76DIT4" "80KACX" "87AQLF" "B2YJJP" "CS23RV" "E3JP0C"
-#&gt;  [97] "FLIZQI" "GM371F" "IZDV8K" "KEA4QG" "MEUZ85" "PA9F3J" "SXSVEH" "T3QPW5"
-#&gt; [105] "TJN1AD" "WNKKW3" "XY2CK7" "XZH41H" "Y6DB6L" "YDRD81" "Z25D52" "3P9BX6"
-#&gt; [113] "7D09WH" "DGZLV3" "S63QDN"
-#&gt; </div><div class='input'><span class='co'># }</span>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># \donttest{</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rmsharp.github.io/nprcgenekeepr/'>nprcgenekeepr</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>examplePedigree</span> <span class='op'>&lt;-</span> <span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='examplePedigree.html'>examplePedigree</a></span></span>
+<span class='r-in'><span class='va'>breederPed</span> <span class='op'>&lt;-</span> <span class='fu'><a href='qcStudbook.html'>qcStudbook</a></span><span class='op'>(</span><span class='va'>examplePedigree</span>, minParentAge <span class='op'>=</span> <span class='fl'>2</span>,</span>
+<span class='r-in'>                        reportChanges <span class='op'>=</span> <span class='cn'>FALSE</span>,</span>
+<span class='r-in'>                        reportErrors <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>focalAnimals</span> <span class='op'>&lt;-</span> <span class='va'>breederPed</span><span class='op'>$</span><span class='va'>id</span><span class='op'>[</span><span class='op'>!</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>breederPed</span><span class='op'>$</span><span class='va'>sire</span><span class='op'>)</span> <span class='op'>&amp;</span></span>
+<span class='r-in'>                                 <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>breederPed</span><span class='op'>$</span><span class='va'>dam</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>&amp;</span></span>
+<span class='r-in'>                               <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>breederPed</span><span class='op'>$</span><span class='va'>exit</span><span class='op'>)</span><span class='op'>]</span></span>
+<span class='r-in'><span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'><a href='setPopulation.html'>setPopulation</a></span><span class='op'>(</span>ped <span class='op'>=</span> <span class='va'>breederPed</span>, ids <span class='op'>=</span> <span class='va'>focalAnimals</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>trimmedPed</span> <span class='op'>&lt;-</span> <span class='fu'><a href='trimPedigree.html'>trimPedigree</a></span><span class='op'>(</span><span class='va'>focalAnimals</span>, <span class='va'>breederPed</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>probands</span> <span class='op'>&lt;-</span> <span class='va'>ped</span><span class='op'>$</span><span class='va'>id</span><span class='op'>[</span><span class='va'>ped</span><span class='op'>$</span><span class='va'>population</span><span class='op'>]</span></span>
+<span class='r-in'><span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'><a href='trimPedigree.html'>trimPedigree</a></span><span class='op'>(</span><span class='va'>probands</span>, <span class='va'>ped</span>, removeUninformative <span class='op'>=</span> <span class='cn'>FALSE</span>,</span>
+<span class='r-in'>                   addBackParents <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>geneticValue</span> <span class='op'>&lt;-</span> <span class='fu'><a href='reportGV.html'>reportGV</a></span><span class='op'>(</span><span class='va'>ped</span>, guIter <span class='op'>=</span> <span class='fl'>50</span>, <span class='co'># should be &gt;= 1000</span></span>
+<span class='r-in'>                        guThresh <span class='op'>=</span> <span class='fl'>3</span>,</span>
+<span class='r-in'>                        byID <span class='op'>=</span> <span class='cn'>TRUE</span>,</span>
+<span class='r-in'>                        updateProgress <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>trimmedGeneticValue</span> <span class='op'>&lt;-</span> <span class='fu'><a href='reportGV.html'>reportGV</a></span><span class='op'>(</span><span class='va'>trimmedPed</span>, guIter <span class='op'>=</span> <span class='fl'>50</span>, <span class='co'># should be &gt;= 1000</span></span>
+<span class='r-in'>                               guThresh <span class='op'>=</span> <span class='fl'>3</span>,</span>
+<span class='r-in'>                               byID <span class='op'>=</span> <span class='cn'>TRUE</span>,</span>
+<span class='r-in'>                               updateProgress <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>candidates</span> <span class='op'>&lt;-</span> <span class='va'>trimmedPed</span><span class='op'>$</span><span class='va'>id</span><span class='op'>[</span><span class='va'>trimmedPed</span><span class='op'>$</span><span class='va'>birth</span> <span class='op'>&lt;</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2013-01-01"</span><span class='op'>)</span> <span class='op'>&amp;</span></span>
+<span class='r-in'>                            <span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>trimmedPed</span><span class='op'>$</span><span class='va'>birth</span><span class='op'>)</span> <span class='op'>&amp;</span></span>
+<span class='r-in'>                            <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>trimmedPed</span><span class='op'>$</span><span class='va'>exit</span><span class='op'>)</span><span class='op'>]</span></span>
+<span class='r-in'><span class='va'>haremGrp</span> <span class='op'>&lt;-</span> <span class='fu'>groupAddAssign</span><span class='op'>(</span>candidates <span class='op'>=</span> <span class='va'>candidates</span>,</span>
+<span class='r-in'>                          kmat <span class='op'>=</span> <span class='va'>trimmedGeneticValue</span><span class='op'>[[</span><span class='st'>"kinship"</span><span class='op'>]</span><span class='op'>]</span>,</span>
+<span class='r-in'>                          ped <span class='op'>=</span> <span class='va'>trimmedPed</span>,</span>
+<span class='r-in'>                          iter <span class='op'>=</span> <span class='fl'>10</span>, <span class='co'># should be &gt;= 1000</span></span>
+<span class='r-in'>                          numGp <span class='op'>=</span> <span class='fl'>6</span>,</span>
+<span class='r-in'>                          harem <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>haremGrp</span><span class='op'>$</span><span class='va'>group</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[1]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1] "653J82" "99BMJW" "MFKT9C" "I8ABC7" "PJ72W1" "1CIRC9" "EX5K0S" "6F9FB8"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [9] "ILVQVB" "PVY432" "EZ2F8A" "WTE53B" "3GECJJ" "KEA4QG" "QW2Z3R" "PI4VHT"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [17] "ZPS15A" "AR17R5" "S5H1GC" "CS23RV" "SH3FB7" "8JUUJ9" "1CZM30" "D4B0RM"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [25] "N79QXB" "5ERY5Z" "T3QPW5" "1GF3GM" "WK89I9"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[2]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1] "TJN1AD" "CRPXY7" "WJXIH9" "ZATMEE" "FJS7RQ" "WI38KZ" "S222R3" "FB5L3N"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [9] "87AQLF" "GTLA8R" "GAS52W" "B1WVCN" "BS3RLE" "TXZUKC" "7RA57Q" "RJ4JPC"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [17] "1SPLS8" "AW400C" "N4NV8B" "ZH3YG1" "YTJ2UL" "83HQBN" "J3F6PD" "B228Q6"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [25] "CHK1ZX" "ESUIAF" "7B9CA6" "Y0TCYX" "5EDLL7" "0X4W26" "IH1KPA" "F45799"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [33] "1QVS67" "1FAZ0K" "B134XZ" "F7I2ED"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[3]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1] "GDXWJ1" "N5QBWD" "PYPM1W" "R5AYJK" "GCBYDW" "QQMBT1" "5KWNMZ" "6KWVRI"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [9] "30J3CQ" "TYEWF1" "Q17CG3" "XEC0M5" "EMV4P6" "VWC5ZH" "YFCIHJ" "2Z4YLY"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [17] "MH88T6" "QRZK48" "WNEAS6" "D33J06" "5EDIEE" "AZ3L0D" "W5WIRP" "6X6BG9"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [25] "414N7M" "9MG040" "TQEMY6" "DHNQ1W" "QCA36T" "MX4J7G" "C18V6I"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[4]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1] "YI16QD" "0IIAEN" "13B1QL" "MTCAIG" "MPIQ4N" "50D77I" "W0GUKI" "DH9WJQ"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [9] "DCJJYS" "QCENKM" "XFWVVX" "CMMUKU" "1VP3UC" "BKWE4D" "5IAFMK" "38K2SR"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [17] "G58RGY" "W6MDVK" "LS184H" "MKY9TK" "2F6J3U" "WLMGS1" "LYSLPP" "01QRQ4"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [25] "PU7RSG" "RVHVTZ" "AFZKBS" "X694YR" "1KJ2MG"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[5]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1] "LN1DLY" "MB6NYQ" "72LYDE" "46ZHKN" "AR5U44" "G8MCV7" "DPXEQE" "0XTZQ1"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [9] "S3EBGZ" "NK802Y" "9P0DES" "FG0SFA" "3DTD2N" "7ZNY75" "5W621W" "JLFKV8"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [17] "0SGJ12" "CLSVU6" "HE0SCR" "G25E3F" "DI4AHD" "GIIEUD" "DRXMW4" "D9P18Y"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [25] "NN3GDQ" "ZQXZYB" "K3TNHP" "SHG3RB"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[6]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1] "ZDRSG0" "321LLB" "KZY6PD" "1SSCJC" "Y6DB6L" "Z904TJ" "DKIM6U" "SCFSBF"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [9] "TEACA3" "FL170P" "S7IWWA" "LVYYNY" "I5CI33" "QWKFBH" "0HYZ23" "3YJIMV"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [17] "AIHJ8Z" "H2J6UA" "YLRNIK" "XYRDKV" "E5Q33K" "S056D5" "5BPBUI" "92UG4N"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [25] "WKY2SZ" "BCJJKN" "MYUMMX" "KX0RJ3" "7NE2UT" "Q7U139" "3SKITJ" "M9PVG5"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [33] "465ERA" "AP1YLW" "967Y3D" "Q8U9LB" "PBAFJF"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[7]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] NA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'><span class='va'>sexRatioGrp</span> <span class='op'>&lt;-</span> <span class='fu'>groupAddAssign</span><span class='op'>(</span>candidates <span class='op'>=</span> <span class='va'>candidates</span>,</span>
+<span class='r-in'>                             kmat <span class='op'>=</span> <span class='va'>trimmedGeneticValue</span><span class='op'>[[</span><span class='st'>"kinship"</span><span class='op'>]</span><span class='op'>]</span>,</span>
+<span class='r-in'>                             ped <span class='op'>=</span> <span class='va'>trimmedPed</span>,</span>
+<span class='r-in'>                             iter <span class='op'>=</span> <span class='fl'>10</span>, <span class='co'># should be &gt;= 1000</span></span>
+<span class='r-in'>                             numGp <span class='op'>=</span> <span class='fl'>6</span>,</span>
+<span class='r-in'>                             sexRatio <span class='op'>=</span> <span class='fl'>9</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>sexRatioGrp</span><span class='op'>$</span><span class='va'>group</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[1]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1] "1SSCJC" "P7RBPI" "7NE2UT" "Y6DB6L" "MH88T6" "ILVQVB" "NN3GDQ" "0HYZ23"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [9] "PU7RSG" "CS23RV" "W5WIRP" "3GECJJ" "I5CI33" "KZM9RB" "TQEMY6" "N5QBWD"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [17] "XYRDKV" "BKWE4D" "72LYDE" "KX0RJ3" "YLRNIK" "Q17CG3" "S7IWWA" "S222R3"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [25] "LN1DLY" "7RA57Q" "F7I2ED" "RJ4JPC" "I8ABC7" "0XTZQ1" "MX4J7G" "AIHJ8Z"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [33] "DKIM6U" "8JUUJ9" "JSAP3H"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[2]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1] "1QVS67" "0V4SAC" "M9PVG5" "1FAZ0K" "CLSVU6" "B1WVCN" "967Y3D" "5EDIEE"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [9] "SH3FB7" "DI4AHD" "MPIQ4N" "F45799" "LVYYNY" "TR5L57" "3YJIMV" "7B9CA6"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [17] "PVY432" "D9P18Y" "6F9FB8" "6KWVRI" "XEC0M5" "2Z4YLY" "B134XZ" "BCJJKN"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [25] "IZDV8K" "38K2SR"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[3]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1] "DRXMW4" "FTVE03" "SHG3RB" "321LLB" "PBAFJF" "Y0TCYX" "5BPBUI" "WK89I9"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [9] "1GF3GM" "VWC5ZH" "GAS52W" "BS3RLE" "D4B0RM" "9FRCIE" "WI38KZ" "0X4W26"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [17] "FJS7RQ" "QRZK48" "1SPLS8" "MB6NYQ" "IH1KPA" "H2J6UA" "AP1YLW" "S056D5"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [25] "5XVTVH" "G8MCV7"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[4]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1] "MFKT9C" "55VDSQ" "N4NV8B" "MKY9TK" "D33J06" "W0GUKI" "LYSLPP" "1CZM30"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [9] "QCENKM" "EMV4P6" "414N7M" "K3TNHP" "B228Q6" "G2GYST" "W6MDVK" "AR17R5"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [17] "MTCAIG" "WKY2SZ" "PJ72W1" "CRPXY7" "JLFKV8" "YTJ2UL" "LS184H" "G25E3F"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [25] "3MMZD4" "5W621W"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[5]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1] "XFWVVX" "5PW7WT" "ESUIAF" "DHNQ1W" "83HQBN" "5ERY5Z" "WJXIH9" "WNEAS6"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [9] "SCFSBF" "DCJJYS" "GCBYDW" "J3F6PD" "R5AYJK" "Z25D52" "QQMBT1" "CMMUKU"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [17] "9MG040" "RVHVTZ" "3SKITJ" "EZ2F8A" "1VP3UC" "01QRQ4" "0IIAEN" "13B1QL"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [25] "KXHGRH" "AFZKBS" "GIIEUD" "5IAFMK" "9P0DES" "46ZHKN" "FL170P" "QWKFBH"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [33] "TXZUKC" "C18V6I" "K7900I"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[6]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1] "PI4VHT" "WHQLH5" "YFCIHJ" "T3QPW5" "E5Q33K" "TYEWF1" "Z904TJ" "S3EBGZ"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [9] "FB5L3N" "50D77I" "99BMJW" "1KJ2MG" "X694YR" "R6HV9A" "DH9WJQ" "ZH3YG1"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [17] "ZATMEE" "WTE53B" "QCA36T" "Q8U9LB" "AZ3L0D" "ZPS15A" "G58RGY" "AR5U44"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [25] "A6A1M1" "CHK1ZX" "30J3CQ" "PYPM1W" "KZY6PD" "S5H1GC" "QW2Z3R" "2F6J3U"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[7]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [1] "HLQ9SY" "6X6BG9" "B2CKHA" "GDXWJ1" "XC304E" "Z7NBA2" "1E8KD1" "5KFB90"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   [9] "AEP5EG" "AW400C" "BW10CL" "CFD12A" "CHJ9D2" "IRFJ09" "LMJWTN" "MYUMMX"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [17] "Q9LWGX" "RNQU14" "TEACA3" "09LFE4" "1CIRC9" "3DTD2N" "3QHAFI" "55BPSE"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [25] "8IG767" "ER464J" "FFGPS4" "FG6L7S" "GTLA8R" "HE0SCR" "N79QXB" "NHWTJ9"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [33] "TBCE78" "YI16QD" "2F1IV1" "4LHK19" "59NYZE" "5EDLL7" "5IYDXN" "6KLWVC"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [41] "80F2MI" "8TV4MT" "A98D7P" "AZ4D19" "BTTHAJ" "CHSCFG" "DPXEQE" "EEGLWY"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [49] "FG0SFA" "FX9E4X" "G91ZM6" "J1R2EW" "LDND6J" "MQT080" "NK802Y" "NSIC4I"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [57] "PHB6TE" "Q7U139" "QRWYQZ" "RY1AZM" "WLMGS1" "WQUN84" "XL658N" "XX0GYV"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [65] "YHHVC7" "YP910X" "ZQXZYB" "0SGJ12" "0X1RZ9" "3YHBC1" "465ERA" "5KWNMZ"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [73] "653J82" "6MEP2C" "76DIT4" "7ZNY75" "80KACX" "87AQLF" "92UG4N" "B2YJJP"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [81] "E3JP0C" "EX5K0S" "FLIZQI" "GM371F" "KEA4QG" "MEUZ85" "PA9F3J" "SXSVEH"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [89] "T38W6H" "TJN1AD" "WNKKW3" "XY2CK7" "XZH41H" "YDRD81" "ZDRSG0" "3P9BX6"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [97] "7D09WH" "DGZLV3" "S63QDN" "ZW2X4N"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'><span class='co'># }</span></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -414,7 +415,7 @@ that is specific for each group formed.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
+  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">

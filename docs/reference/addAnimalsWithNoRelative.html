@@ -75,7 +75,7 @@ following: in groupAddAssign" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5.9001</span>
       </span>
     </div>
 
@@ -172,28 +172,30 @@ animal without a relative.</p>
     <p><code>available[[i]] &lt;- setdiff(available[[i]], kin[[id]])</code></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='va'>examplePedigree</span> <span class='op'>&lt;-</span> <span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='examplePedigree.html'>examplePedigree</a></span>
-<span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'><a href='qcStudbook.html'>qcStudbook</a></span><span class='op'>(</span><span class='va'>examplePedigree</span>, minParentAge <span class='op'>=</span> <span class='fl'>2</span>, reportChanges <span class='op'>=</span> <span class='cn'>FALSE</span>,
-                  reportErrors <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-<span class='va'>kmat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='kinship.html'>kinship</a></span><span class='op'>(</span><span class='va'>ped</span><span class='op'>$</span><span class='va'>id</span>, <span class='va'>ped</span><span class='op'>$</span><span class='va'>sire</span>, <span class='va'>ped</span><span class='op'>$</span><span class='va'>dam</span>, <span class='va'>ped</span><span class='op'>$</span><span class='va'>gen</span>, sparse <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-<span class='va'>currentGroups</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
-<span class='va'>currentGroups</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='va'>examplePedigree</span><span class='op'>$</span><span class='va'>id</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>]</span>
-<span class='va'>candidates</span> <span class='op'>&lt;-</span> <span class='va'>examplePedigree</span><span class='op'>$</span><span class='va'>id</span><span class='op'>[</span><span class='va'>examplePedigree</span><span class='op'>$</span><span class='va'>status</span> <span class='op'>==</span> <span class='st'>"ALIVE"</span><span class='op'>]</span>
-<span class='va'>threshold</span> <span class='op'>&lt;-</span> <span class='fl'>0.015625</span>
-<span class='va'>kin</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getAnimalsWithHighKinship.html'>getAnimalsWithHighKinship</a></span><span class='op'>(</span><span class='va'>kmat</span>, <span class='va'>ped</span>, <span class='va'>threshold</span>, <span class='va'>currentGroups</span>,
-                                 ignore <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"F"</span>, <span class='st'>"F"</span><span class='op'>)</span><span class='op'>)</span>, minAge <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
-<span class='co'># Filtering out candidates related to current group members</span>
-<span class='va'>conflicts</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></span><span class='op'>(</span><span class='va'>kin</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></span><span class='op'>(</span><span class='va'>currentGroups</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>,
-                                 <span class='fu'><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></span><span class='op'>(</span><span class='va'>currentGroups</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>candidates</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sets.html'>setdiff</a></span><span class='op'>(</span><span class='va'>candidates</span>, <span class='va'>conflicts</span><span class='op'>)</span>
-<span class='va'>kin</span> <span class='op'>&lt;-</span> <span class='fu'>addAnimalsWithNoRelative</span><span class='op'>(</span><span class='va'>kin</span>, <span class='va'>candidates</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>kin</span><span class='op'>)</span> <span class='co'># should be 2416</span>
-</div><div class='output co'>#&gt; [1] 2416</div><div class='input'><span class='va'>kin</span><span class='op'>[[</span><span class='st'>"1SPLS8"</span><span class='op'>]</span><span class='op'>]</span> <span class='co'># should have 14 IDs</span>
-</div><div class='output co'>#&gt;  [1] "U9APLW" "UXP8J1" "T8A10R" "09LFE4" "3QHAFI" "LNVD11" "9MVUD5" "CHSCFG"
-#&gt;  [9] "FCLNFN" "RY1AZM" "SJCRF2" "653J82" "9BFQSJ" "9Z4SSW"</div><div class='input'><span class='co'># }</span>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># \donttest{</span></span>
+<span class='r-in'><span class='va'>examplePedigree</span> <span class='op'>&lt;-</span> <span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='examplePedigree.html'>examplePedigree</a></span></span>
+<span class='r-in'><span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'><a href='qcStudbook.html'>qcStudbook</a></span><span class='op'>(</span><span class='va'>examplePedigree</span>, minParentAge <span class='op'>=</span> <span class='fl'>2</span>, reportChanges <span class='op'>=</span> <span class='cn'>FALSE</span>,</span>
+<span class='r-in'>                  reportErrors <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>kmat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='kinship.html'>kinship</a></span><span class='op'>(</span><span class='va'>ped</span><span class='op'>$</span><span class='va'>id</span>, <span class='va'>ped</span><span class='op'>$</span><span class='va'>sire</span>, <span class='va'>ped</span><span class='op'>$</span><span class='va'>dam</span>, <span class='va'>ped</span><span class='op'>$</span><span class='va'>gen</span>, sparse <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>currentGroups</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>currentGroups</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='va'>examplePedigree</span><span class='op'>$</span><span class='va'>id</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>]</span></span>
+<span class='r-in'><span class='va'>candidates</span> <span class='op'>&lt;-</span> <span class='va'>examplePedigree</span><span class='op'>$</span><span class='va'>id</span><span class='op'>[</span><span class='va'>examplePedigree</span><span class='op'>$</span><span class='va'>status</span> <span class='op'>==</span> <span class='st'>"ALIVE"</span><span class='op'>]</span></span>
+<span class='r-in'><span class='va'>threshold</span> <span class='op'>&lt;-</span> <span class='fl'>0.015625</span></span>
+<span class='r-in'><span class='va'>kin</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getAnimalsWithHighKinship.html'>getAnimalsWithHighKinship</a></span><span class='op'>(</span><span class='va'>kmat</span>, <span class='va'>ped</span>, <span class='va'>threshold</span>, <span class='va'>currentGroups</span>,</span>
+<span class='r-in'>                                 ignore <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"F"</span>, <span class='st'>"F"</span><span class='op'>)</span><span class='op'>)</span>, minAge <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></span>
+<span class='r-in'><span class='co'># Filtering out candidates related to current group members</span></span>
+<span class='r-in'><span class='va'>conflicts</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></span><span class='op'>(</span><span class='va'>kin</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></span><span class='op'>(</span><span class='va'>currentGroups</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>,</span>
+<span class='r-in'>                                 <span class='fu'><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></span><span class='op'>(</span><span class='va'>currentGroups</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>candidates</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sets.html'>setdiff</a></span><span class='op'>(</span><span class='va'>candidates</span>, <span class='va'>conflicts</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>kin</span> <span class='op'>&lt;-</span> <span class='fu'>addAnimalsWithNoRelative</span><span class='op'>(</span><span class='va'>kin</span>, <span class='va'>candidates</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>kin</span><span class='op'>)</span> <span class='co'># should be 2416</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 2416</span>
+<span class='r-in'><span class='va'>kin</span><span class='op'>[[</span><span class='st'>"1SPLS8"</span><span class='op'>]</span><span class='op'>]</span> <span class='co'># should have 14 IDs</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1] "U9APLW" "UXP8J1" "T8A10R" "09LFE4" "3QHAFI" "LNVD11" "9MVUD5" "CHSCFG"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [9] "FCLNFN" "RY1AZM" "SJCRF2" "653J82" "9BFQSJ" "9Z4SSW"</span>
+<span class='r-in'><span class='co'># }</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -205,7 +207,7 @@ animal without a relative.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
+  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">

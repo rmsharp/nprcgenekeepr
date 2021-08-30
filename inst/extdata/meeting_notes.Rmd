@@ -1,7 +1,7 @@
 ---
 title: "Meeting Notes and Things To Do"
 author: "R. Mark Sharp"
-date: "03/16/2020"
+date: "`r Sys.Date()`"
 header-includes:
   - \usepackage{enumitem}
   - \setlistdepth{20}
@@ -26,6 +26,34 @@ library(rmsutilityr)
 library(nprcgenekeepr)
 ```
 Provided in reverse chronological order
+
+## 20210827
+1.  Mark presented progress on countKinshipValues.R, which is still had a minor
+    error, which was corrected after the meeting.
+1.  Matt had already sent a large a deidentified rhesus pedigree that Mark was 
+    able to locate. Once Matt has provided a file with potential parents, Mark
+    can use it to test the code with large files. Changes to allow large 
+    pedigrees and large simulations are expected. Currently with small pedigrees
+    simulations of > 100,000 iterations are possible.
+1.  Matt presented ideas regarding updating of the current website. Much of the 
+    basic material is still accurate but information regarding installation and
+    running the application is dated.
+    -   Instructions on creating the pedigrees should be largely correct, 
+        however, use of Excel files and LabKey are missing from the 
+        instructions.
+    -   There is a need to add some short instructional videos with the idea
+        that the subjects be very specific and the videos be less than three
+        minutes long.
+1.  After the meeting, Mark corrected the countKinshipValues functions, added
+    a set of unit tests for the function, and added over 20 more unit tests to 
+    eight other functions. Current coverage is just over 95%.
+1.  A clean build: 0 errors, 0 warnings, 0 notes with 
+    updated website pages will be uploaded. However, since this is on the 
+    issue8 development branch, it should not affect the current GitHub website.
+1.  Next for Mark is to create the function to use the output of 
+    __countKinshipValues__ to get summary statistics and a function to create
+    histograms. The function to create histograms is of lower priority.
+    
 ## 20210806
 1.  Preparation notes
     a.   Mark has not created the function to create the Tukey five number 
@@ -33,11 +61,10 @@ Provided in reverse chronological order
     a.   Mark has created __createSimKinships__ that uses __make_SimPed__ and
          __kinship__ makes a list object of kinship matrices from simulated 
          pedigrees of possible parents for animals with unknown parents.
-    a.   Mark has created __cumulateSimKinships__ to makes a list object of 
+    a.   Mark has created __cumulateSimKinships__, which makes a list object of 
          kinship matrices from simulated pedigrees of possible parents for 
-         animals with unknown parents
-#' parents for animals with unknown parents
-
+         animals with unknown parents.
+1. 
 
 ## 20210514
 1.  Discussed issue 8 - adding fromCenter to calculate unknown parents kinship 

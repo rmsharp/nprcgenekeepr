@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5.9001</span>
       </span>
     </div>
 
@@ -171,66 +171,71 @@ list of list where each sublist is a type of error found.</p></td>
 conform to the format <!-- %Y%m%d are set to NA. NA values are left as NA. --></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://lubridate.tidyverse.org'>lubridate</a></span><span class='op'>)</span>
-<span class='fu'><a href='set_seed.html'>set_seed</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span>
-<span class='va'>someBirthDates</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>15</span>, by <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>, <span class='fl'>10</span>,
-                                replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='op'>+</span> <span class='fl'>2000</span>, <span class='st'>"-"</span>,
-                         <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>12</span>, <span class='fl'>10</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>, <span class='st'>"-"</span>,
-                         <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>28</span>, <span class='fl'>10</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>someBadBirthDates</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>12</span>, <span class='fl'>10</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>, <span class='st'>"-"</span>,
-                            <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>28</span>, <span class='fl'>10</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>, <span class='st'>"-"</span>,
-                            <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>15</span>, by <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>, <span class='fl'>10</span>,
-                                   replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='op'>+</span> <span class='fl'>2000</span><span class='op'>)</span>
-<span class='va'>someDeathDates</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='va'>someBirthDates</span>, <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>someBirthDates</span><span class='op'>)</span>,
-                         replace <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-<span class='va'>someDepartureDates</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='va'>someBirthDates</span>, <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>someBirthDates</span><span class='op'>)</span>,
-                             replace <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-<span class='va'>ped1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>birth <span class='op'>=</span> <span class='va'>someBadBirthDates</span>, death <span class='op'>=</span> <span class='va'>someDeathDates</span>,
-                   departure <span class='op'>=</span> <span class='va'>someDepartureDates</span><span class='op'>)</span>
-<span class='va'>someDates</span> <span class='op'>&lt;-</span> <span class='fu'><a href='http://lubridate.tidyverse.org/reference/ymd.html'>ymd</a></span><span class='op'>(</span><span class='va'>someBirthDates</span><span class='op'>)</span>
-<span class='va'>ped2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>birth <span class='op'>=</span> <span class='va'>someDates</span>, death <span class='op'>=</span> <span class='va'>someDeathDates</span>,
-                   departure <span class='op'>=</span> <span class='va'>someDepartureDates</span><span class='op'>)</span>
-<span class='va'>ped3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>birth <span class='op'>=</span> <span class='va'>someBirthDates</span>, death <span class='op'>=</span> <span class='va'>someDeathDates</span>,
-                   departure <span class='op'>=</span> <span class='va'>someDepartureDates</span><span class='op'>)</span>
-<span class='va'>someNADeathDates</span> <span class='op'>&lt;-</span> <span class='va'>someDeathDates</span>
-<span class='va'>someNADeathDates</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>5</span><span class='op'>)</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='st'>""</span>
-<span class='va'>someNABirthDates</span> <span class='op'>&lt;-</span> <span class='va'>someDates</span>
-<span class='va'>someNABirthDates</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>4</span>, <span class='fl'>6</span><span class='op'>)</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>NA</span>
-<span class='va'>ped4</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>birth <span class='op'>=</span> <span class='va'>someNABirthDates</span>, death <span class='op'>=</span> <span class='va'>someNADeathDates</span>,
-                   departure <span class='op'>=</span> <span class='va'>someDepartureDates</span><span class='op'>)</span>
-
-<span class='co'>## convertDate identifies bad dates</span>
-<span class='va'>result</span> <span class='op'>=</span> <span class='kw'><a href='https://rdrr.io/r/base/conditions.html'>tryCatch</a></span><span class='op'>(</span><span class='op'>{</span>
-  <span class='fu'>convertDate</span><span class='op'>(</span><span class='va'>ped1</span><span class='op'>)</span>
-<span class='op'>}</span>, warning <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>w</span><span class='op'>)</span> <span class='op'>{</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='st'>"Warning in date"</span><span class='op'>)</span>
-<span class='op'>}</span>, error <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>e</span><span class='op'>)</span> <span class='op'>{</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='st'>"Error in date"</span><span class='op'>)</span>
-<span class='op'>}</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "Error in date"</div><div class='input'>
-<span class='co'>## convertDate with error flag returns error list and not an error</span>
-<span class='fu'>convertDate</span><span class='op'>(</span><span class='va'>ped1</span>, reportErrors <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;  [1] "1"  "2"  "3"  "4"  "5"  "6"  "7"  "8"  "9"  "10"</div><div class='input'>
-<span class='co'>## convertDate recognizes good dates</span>
-<span class='fu'><a href='https://rdrr.io/r/base/all.html'>all</a></span><span class='op'>(</span><span class='fu'><a href='http://lubridate.tidyverse.org/reference/date_utils.html'>is.Date</a></span><span class='op'>(</span><span class='fu'>convertDate</span><span class='op'>(</span><span class='va'>ped2</span><span class='op'>)</span><span class='op'>$</span><span class='va'>birth</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/all.html'>all</a></span><span class='op'>(</span><span class='fu'><a href='http://lubridate.tidyverse.org/reference/date_utils.html'>is.Date</a></span><span class='op'>(</span><span class='fu'>convertDate</span><span class='op'>(</span><span class='va'>ped3</span><span class='op'>)</span><span class='op'>$</span><span class='va'>birth</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
-<span class='co'>## convertDate handles NA and empty character string values correctly</span>
-<span class='fu'>convertDate</span><span class='op'>(</span><span class='va'>ped4</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;         birth      death  departure
-#&gt; 1  2009-08-25       &lt;NA&gt; 2009-08-25
-#&gt; 2        &lt;NA&gt; 2003-07-18 2000-05-12
-#&gt; 3  2006-02-22       &lt;NA&gt; 2003-06-20
-#&gt; 4        &lt;NA&gt; 2006-02-22 2012-08-10
-#&gt; 5  2000-05-12       &lt;NA&gt; 2006-11-10
-#&gt; 6        &lt;NA&gt; 2003-04-07 2006-02-22
-#&gt; 7  2003-01-24 2003-01-24 2003-07-18
-#&gt; 8  2003-04-07 2009-05-22 2009-05-22
-#&gt; 9  2009-05-22 2006-11-10 2003-04-07
-#&gt; 10 2006-11-10 2000-05-12 2003-01-24</div><div class='input'><span class='co'># }</span>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># \donttest{</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://lubridate.tidyverse.org'>lubridate</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>someBirthDates</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>15</span>, by <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>, <span class='fl'>10</span>,</span>
+<span class='r-in'>                                replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='op'>+</span> <span class='fl'>2000</span>, <span class='st'>"-"</span>,</span>
+<span class='r-in'>                         <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>12</span>, <span class='fl'>10</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>, <span class='st'>"-"</span>,</span>
+<span class='r-in'>                         <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>28</span>, <span class='fl'>10</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>someBadBirthDates</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>12</span>, <span class='fl'>10</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>, <span class='st'>"-"</span>,</span>
+<span class='r-in'>                            <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>28</span>, <span class='fl'>10</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>, <span class='st'>"-"</span>,</span>
+<span class='r-in'>                            <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>15</span>, by <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>, <span class='fl'>10</span>,</span>
+<span class='r-in'>                                   replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='op'>+</span> <span class='fl'>2000</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>someDeathDates</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='va'>someBirthDates</span>, <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>someBirthDates</span><span class='op'>)</span>,</span>
+<span class='r-in'>                         replace <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>someDepartureDates</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='va'>someBirthDates</span>, <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>someBirthDates</span><span class='op'>)</span>,</span>
+<span class='r-in'>                             replace <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>ped1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>birth <span class='op'>=</span> <span class='va'>someBadBirthDates</span>, death <span class='op'>=</span> <span class='va'>someDeathDates</span>,</span>
+<span class='r-in'>                   departure <span class='op'>=</span> <span class='va'>someDepartureDates</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>someDates</span> <span class='op'>&lt;-</span> <span class='fu'><a href='http://lubridate.tidyverse.org/reference/ymd.html'>ymd</a></span><span class='op'>(</span><span class='va'>someBirthDates</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>ped2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>birth <span class='op'>=</span> <span class='va'>someDates</span>, death <span class='op'>=</span> <span class='va'>someDeathDates</span>,</span>
+<span class='r-in'>                   departure <span class='op'>=</span> <span class='va'>someDepartureDates</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>ped3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>birth <span class='op'>=</span> <span class='va'>someBirthDates</span>, death <span class='op'>=</span> <span class='va'>someDeathDates</span>,</span>
+<span class='r-in'>                   departure <span class='op'>=</span> <span class='va'>someDepartureDates</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>someNADeathDates</span> <span class='op'>&lt;-</span> <span class='va'>someDeathDates</span></span>
+<span class='r-in'><span class='va'>someNADeathDates</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>5</span><span class='op'>)</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='st'>""</span></span>
+<span class='r-in'><span class='va'>someNABirthDates</span> <span class='op'>&lt;-</span> <span class='va'>someDates</span></span>
+<span class='r-in'><span class='va'>someNABirthDates</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>4</span>, <span class='fl'>6</span><span class='op'>)</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>NA</span></span>
+<span class='r-in'><span class='va'>ped4</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>birth <span class='op'>=</span> <span class='va'>someNABirthDates</span>, death <span class='op'>=</span> <span class='va'>someNADeathDates</span>,</span>
+<span class='r-in'>                   departure <span class='op'>=</span> <span class='va'>someDepartureDates</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'>## convertDate identifies bad dates</span></span>
+<span class='r-in'><span class='va'>result</span> <span class='op'>=</span> <span class='kw'><a href='https://rdrr.io/r/base/conditions.html'>tryCatch</a></span><span class='op'>(</span><span class='op'>{</span></span>
+<span class='r-in'>  <span class='fu'>convertDate</span><span class='op'>(</span><span class='va'>ped1</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span>, warning <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>w</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='st'>"Warning in date"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span>, error <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>e</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='st'>"Error in date"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "Error in date"</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'>## convertDate with error flag returns error list and not an error</span></span>
+<span class='r-in'><span class='fu'>convertDate</span><span class='op'>(</span><span class='va'>ped1</span>, reportErrors <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1] "1"  "2"  "3"  "4"  "5"  "6"  "7"  "8"  "9"  "10"</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'>## convertDate recognizes good dates</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/all.html'>all</a></span><span class='op'>(</span><span class='fu'><a href='http://lubridate.tidyverse.org/reference/date_utils.html'>is.Date</a></span><span class='op'>(</span><span class='fu'>convertDate</span><span class='op'>(</span><span class='va'>ped2</span><span class='op'>)</span><span class='op'>$</span><span class='va'>birth</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] TRUE</span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/all.html'>all</a></span><span class='op'>(</span><span class='fu'><a href='http://lubridate.tidyverse.org/reference/date_utils.html'>is.Date</a></span><span class='op'>(</span><span class='fu'>convertDate</span><span class='op'>(</span><span class='va'>ped3</span><span class='op'>)</span><span class='op'>$</span><span class='va'>birth</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] TRUE</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'>## convertDate handles NA and empty character string values correctly</span></span>
+<span class='r-in'><span class='fu'>convertDate</span><span class='op'>(</span><span class='va'>ped4</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         birth      death  departure</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1  2006-08-18       &lt;NA&gt; 2015-11-26</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2        &lt;NA&gt; 2003-06-26 2003-02-07</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3  2003-06-26       &lt;NA&gt; 2003-06-26</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4        &lt;NA&gt; 2003-05-26 2006-06-01</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5  2015-11-26       &lt;NA&gt; 2006-08-18</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6        &lt;NA&gt; 2006-06-01 2000-07-13</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7  2003-02-07 2012-12-25 2003-05-26</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8  2003-05-26 2003-09-18 2012-12-25</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 9  2003-09-18 2009-07-05 2009-07-05</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10 2012-12-25 2015-11-26 2003-09-18</span>
+<span class='r-in'><span class='co'># }</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -242,7 +247,7 @@ conform to the format <!-- %Y%m%d are set to NA. NA values are left as NA. --></
 
       <footer>
       <div class="copyright">
-  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
+  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">

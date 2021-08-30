@@ -74,7 +74,7 @@ of information." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5.9001</span>
       </span>
     </div>
 
@@ -162,23 +162,26 @@ information. The fields <code>sire</code> and <code>dam</code> are required.</p>
     <p>A reduced pedigree.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='va'>examplePedigree</span> <span class='op'>&lt;-</span> <span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='examplePedigree.html'>examplePedigree</a></span>
-<span class='va'>breederPed</span> <span class='op'>&lt;-</span> <span class='fu'><a href='qcStudbook.html'>qcStudbook</a></span><span class='op'>(</span><span class='va'>examplePedigree</span>, minParentAge <span class='op'>=</span> <span class='fl'>2</span>,
-                         reportChanges <span class='op'>=</span> <span class='cn'>FALSE</span>,
-                         reportErrors <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-<span class='va'>probands</span> <span class='op'>&lt;-</span> <span class='va'>breederPed</span><span class='op'>$</span><span class='va'>id</span><span class='op'>[</span><span class='op'>!</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>breederPed</span><span class='op'>$</span><span class='va'>sire</span><span class='op'>)</span> <span class='op'>&amp;</span>
-                               <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>breederPed</span><span class='op'>$</span><span class='va'>dam</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>&amp;</span>
-                               <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>breederPed</span><span class='op'>$</span><span class='va'>exit</span><span class='op'>)</span><span class='op'>]</span>
-<span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getProbandPedigree.html'>getProbandPedigree</a></span><span class='op'>(</span><span class='va'>probands</span>, <span class='va'>breederPed</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>ped</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 704</div><div class='input'><span class='va'>p</span> <span class='op'>&lt;-</span> <span class='fu'>removeUninformativeFounders</span><span class='op'>(</span><span class='va'>ped</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>p</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 509</div><div class='input'><span class='va'>p</span> <span class='op'>&lt;-</span> <span class='fu'><a href='addBackSecondParents.html'>addBackSecondParents</a></span><span class='op'>(</span><span class='va'>p</span>, <span class='va'>ped</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>p</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 690</div><div class='input'><span class='co'># }</span>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># \donttest{</span></span>
+<span class='r-in'><span class='va'>examplePedigree</span> <span class='op'>&lt;-</span> <span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='examplePedigree.html'>examplePedigree</a></span></span>
+<span class='r-in'><span class='va'>breederPed</span> <span class='op'>&lt;-</span> <span class='fu'><a href='qcStudbook.html'>qcStudbook</a></span><span class='op'>(</span><span class='va'>examplePedigree</span>, minParentAge <span class='op'>=</span> <span class='fl'>2</span>,</span>
+<span class='r-in'>                         reportChanges <span class='op'>=</span> <span class='cn'>FALSE</span>,</span>
+<span class='r-in'>                         reportErrors <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>probands</span> <span class='op'>&lt;-</span> <span class='va'>breederPed</span><span class='op'>$</span><span class='va'>id</span><span class='op'>[</span><span class='op'>!</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>breederPed</span><span class='op'>$</span><span class='va'>sire</span><span class='op'>)</span> <span class='op'>&amp;</span></span>
+<span class='r-in'>                               <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>breederPed</span><span class='op'>$</span><span class='va'>dam</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>&amp;</span></span>
+<span class='r-in'>                               <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>breederPed</span><span class='op'>$</span><span class='va'>exit</span><span class='op'>)</span><span class='op'>]</span></span>
+<span class='r-in'><span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getProbandPedigree.html'>getProbandPedigree</a></span><span class='op'>(</span><span class='va'>probands</span>, <span class='va'>breederPed</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>ped</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 704</span>
+<span class='r-in'><span class='va'>p</span> <span class='op'>&lt;-</span> <span class='fu'>removeUninformativeFounders</span><span class='op'>(</span><span class='va'>ped</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>p</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 509</span>
+<span class='r-in'><span class='va'>p</span> <span class='op'>&lt;-</span> <span class='fu'><a href='addBackSecondParents.html'>addBackSecondParents</a></span><span class='op'>(</span><span class='va'>p</span>, <span class='va'>ped</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>p</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 690</span>
+<span class='r-in'><span class='co'># }</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -190,7 +193,7 @@ information. The fields <code>sire</code> and <code>dam</code> are required.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
+  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">

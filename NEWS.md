@@ -1,7 +1,21 @@
 NEWS
 ================
 R. Mark Sharp
-03/28/2021
+2021-08-29
+
+# nprcgenekeepr 1.0.5.9001 (20210829)
+
+-   Major changes
+    -   Added ability to use simulation to estimate the kinship values
+        of animals with incomplete parental information that are known
+        to have been born within the colony. These animals may have 0 or
+        1 known parents but have a value in the pedigree file or
+        database for the *fromcenter* or *fromCenter* field of “Y”,
+        “YES”, “T”, or “TRUE”.
+-   Minor changes
+    -   Increase unit test coverage primarily to include more rare
+        events and events that should not happen and are trapped and
+        result in errors.
 
 # nprcgenekeepr 1.0.5 (20210328)
 
@@ -77,7 +91,7 @@ R. Mark Sharp
                 .netrc or \_netrc authentication file.
         -   I have exchanged dontrun for donttest for the following
             examples:
-            -   create\_wkbk()
+            -   create_wkbk()
             -   createPedTree()
             -   findLoops()
             -   countLoops()
@@ -139,7 +153,7 @@ R. Mark Sharp
 -   Minor changes
     -   Build failed on Travis-ci due to unit test failure but the test
         has never failed and does not fail on other builds. Removed
-        set\_seed() to see if that helps.
+        set_seed() to see if that helps.
     -   Fixed GitHub issue 3
     -   Added additional explanatory text from Matt Schultz edits for
         the Colony Manager version of the Shiny tutorial.
@@ -150,7 +164,7 @@ R. Mark Sharp
 -   Minor changes
     -   Added code to address issue 1 (GitHub). See comment 1 for
         details, but more should be done.
-    -   Refreshed Shiny\_app\_use.Rmd to reflect changes since
+    -   Refreshed Shiny_app_use.Rmd to reflect changes since
         November 2019.
 
 # nprcgenekeepr 0.5.42.9009 (20200402)
@@ -166,8 +180,8 @@ R. Mark Sharp
 
 -   Major changes – none
 -   Minor changes
-    -   Changed dependency to R &gt;= 3.6 since caTools is not available
-        for R &lt; 3.6.
+    -   Changed dependency to R >= 3.6 since caTools is not available
+        for R \< 3.6.
 
 # nprcgenekeepr 0.5.42.9007 (20200319)
 
@@ -190,7 +204,7 @@ R. Mark Sharp
 -   Minor changes
     -   Added examples to function documentation
     -   Added ColonyManagerTutorial.Rmd initial draft, which is copy of
-        shiny\_app\_use.Rmd. It is to be converted for use by colony
+        shiny_app_use.Rmd. It is to be converted for use by colony
         managers.
 
 # nprcgenekeepr 0.5.42.9004 (20200201)
@@ -213,7 +227,7 @@ R. Mark Sharp
 -   Major changes
     -   Changed name of package to nprcgenekeepr. This required changing
         of many of the supporting files and functions. Having good unit
-        test coverage of the functions (739 test with &gt; 90 percent
+        test coverage of the functions (739 test with > 90 percent
         coverage) made this possible.
     -   This is the last version under the nprcmanager repository name.
     -   Conversion worked
@@ -262,7 +276,7 @@ R. Mark Sharp
 
 # nprcmanager 0.5.40.9001 (20191115)
 
--   Added unit test for **create\_wkbk** from
+-   Added unit test for **create_wkbk** from
     github.com/rmsharp/rmsutilityr
 -   Fixed bug in Genetic Value Analysis tab were failure to remove all
     white space in Filter View Id window did not clear filter.
@@ -272,8 +286,8 @@ R. Mark Sharp
 -   Added **createExampleFiles** and **saveDataframesAsFiles** to allow
     the user to generate all of the example pedigrees and other files
     used in testing and in tutorials.
--   Removed **Development\_Plans.Rmd** from build because it has has
-    been replaced by adding issues on our GitHub issue tracker.
+-   Removed **Development_Plans.Rmd** from build because it has has been
+    replaced by adding issues on our GitHub issue tracker.
 
 # nprcmanager 0.5.40.9000 (20191115)
 
@@ -324,7 +338,7 @@ R. Mark Sharp
 
 # nprcmanager 0.5.32 (20191004)
 
--   Corrected ancestry to sexCodes in test\_convertSexCodes()
+-   Corrected ancestry to sexCodes in test_convertSexCodes()
 
 # nprcmanager 0.5.31 (20191003)
 
@@ -362,7 +376,7 @@ R. Mark Sharp
 
 # nprcmanager 0.5.26 (20190707)
 
--   Updated and corrected *\_software\_development.Rmd*
+-   Updated and corrected *\_software_development.Rmd*
 -   Corrected summary statistics descriptions
 -   Added expectConfigFile argument to **getSiteInfo()** and associated
     unit test to allow user to avoid a warning when configuration file
@@ -378,7 +392,7 @@ R. Mark Sharp
 # nprcmanager 0.5.24 (20190630)
 
 -   Renamed resetPopulation to setPopulation
--   Added sections to interactive\_use\_tutorial
+-   Added sections to interactive_use_tutorial
 
 # nprcmanager 0.5.23 (20190624)
 
@@ -386,12 +400,12 @@ R. Mark Sharp
 
 # nprcmanager 0.5.22 (20190624)
 
--   Corrected and augmented unit tests for print\_summary\_nprcmanagGV
-    and summary.nprcmanagGV
+-   Corrected and augmented unit tests for print_summary_nprcmanagGV and
+    summary.nprcmanagGV
 
 # nprcmanager 0.5.21 (20190624)
 
--   Added unit tests for print\_summary\_nprcmanagGV and
+-   Added unit tests for print_summary_nprcmanagGV and
     summary.nprcmanagGV
 
 # nprcmanager 0.5.20 (20190622)
@@ -447,13 +461,13 @@ R. Mark Sharp
         file is used and no error or warning is given.
 -   Improved checkRequiredCols, toCharacter and getDatedFileName
     functions
--   Exported set\_seed. This will be moved into rmsutilityr
+-   Exported set_seed. This will be moved into rmsutilityr
 -   Removed erroneous toCharacter documentation
--   Added set\_seed
+-   Added set_seed
     -   Tried unsuccessfully to use the RNGkind function and the
         sample.kind argument to set.seed, but found neither existed
         prior to R 3.6.
-    -   Created a R version sensitive version of set\_seed that
+    -   Created a R version sensitive version of set_seed that
         duplicates the pre-R version 3.6 set.seed function. This is only
         useful for creating data structures for testing purposes and
         should not be used to set seeds for large simulations
@@ -504,7 +518,7 @@ R. Mark Sharp
     generated seed animal groups.
 -   Added global definition of MAXGROUPS, which is current set as 10 and
     allows up to six seed animal groups.
--   Corrected test\_fillBins, which was erroneously using a current date
+-   Corrected test_fillBins, which was erroneously using a current date
     instead of a fixed date for calculating age.
 
 # nprcmanager 0.5.04 (20190225)

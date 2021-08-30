@@ -47,7 +47,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5.9001</span>
       </span>
     </div>
 
@@ -110,7 +110,7 @@
 <div id="readme" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#readme" class="anchor"></a>README</h1></div>
-<p>R. Mark Sharp 03/28/2021</p>
+<p>R. Mark Sharp 2021-08-29</p>
 <p><a href="https://www.rdocumentation.org/packages/nprcgenekeepr"><img src="https://www.rdocumentation.org/badges/version/nprcgenekeepr" alt="Rdoc"></a> <a href="https://www.repostatus.org/#active"><img src="https://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed."></a> <a href="https://travis-ci.org/rmsharp/nprcgenekeepr"><img src="https://travis-ci.org/rmsharp/nprcgenekeepr.svg?branch=master" alt="Build Status"></a> <a href="https://codecov.io/gh/rmsharp/nprcgenekeepr?branch=master"><img src="https://codecov.io/gh/rmsharp/nprcgenekeepr/branch/master/graph/badge.svg" alt="Codecov test coverage"></a> <!--[![](https://www.r-pkg.org/badges/version/nprcgenekeepr)](https://cran.r-project.org/package=nprcgenekeepr)
 
 <!--[![Rdoc](https://www.rdocumentation.org/badges/version/RDocumentation)](https://www.rdocumentation.org/packages/RDocumentation)
@@ -118,9 +118,9 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file --></p>
 </div>
-<div id="nprcgenekeepr--version-105-20210322" class="section level1">
+<div id="nprcgenekeepr--version-1059001-20210829" class="section level1">
 <h1 class="hasAnchor">
-<a href="#nprcgenekeepr--version-105-20210322" class="anchor"></a>nprcgenekeepr – Version 1.0.5 (20210322)</h1>
+<a href="#nprcgenekeepr--version-1059001-20210829" class="anchor"></a>nprcgenekeepr – Version 1.0.5.9001 (20210829)</h1>
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
@@ -143,8 +143,12 @@ A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>You can install the development version of <strong>nprcgenekeepr</strong> from GitHub from the R console prompt with:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<p>You can install the CRAN version of <strong>nprcgenekeepr</strong> from the R console prompt with:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"nprcgenekeepr"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>You can install the development version of <span class="sc">**</span>nprcgenekeepr<span class="sc">**</span> from GitHub from</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>the R console prompt with<span class="sc">:</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"rmsharp/nprcgenekeepr"</span><span class="op">)</span></code></pre></div>
 <p>All missing dependencies should be automatically installed.</p>
@@ -162,7 +166,7 @@ A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity
 <h2 class="hasAnchor">
 <a href="#running-shiny-application" class="anchor"></a>Running Shiny Application</h2>
 <p>The toolset available within nprcgenekeepr can be used inside standard R scripts. However, it was originally designed to be used within a Shiny application that can be started with:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/">nprcgenekeepr</a></span><span class="op">)</span>
 <span class="fu"><a href="reference/runGeneKeepR.html">runGeneKeepR</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
@@ -181,7 +185,7 @@ A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity
 <p>The user can enter a list of focal animals in a CSV file that will be used to create a pedigree containing all direct relative (ancestors and descendants) via the <strong>labkey.selectRows</strong> function within the <strong>Rlabkey</strong> package if a database connection is provided via a configuration file and the user has read permission on a LabKey server with the demographic data in an <strong>EHR</strong> (Electronic Health Record) module.</p>
 <p>Two configuration files are needed to use the database features of nprcgenekeepr with LabKey. The first file is named <strong>_netrc</strong> on Microsoft Windows operating systems and <strong>.netrc</strong> otherwise, allows the user to authenticate with LabKey through the LabKey API and is fully described by <a href="https://www.labkey.org/Documentation/wiki-page.view?name=netrc">LabKey documentation</a></p>
 <p>The second file is named <strong>_nprcgenekeepr_config</strong> on Microsoft Windows operating systems and <strong>.nprcgenekeepr_config</strong> otherwise and is the <code>nprcgenekeepr</code> <a href="https://github.com/rmsharp/nprcgenekeepr/blob/master/inst/extdata/example_nprcgenekeepr_config">configuration file</a> An image of this example configuration file is included as a data object and can be loaded and viewed with the following lines of R code in the R console.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"exampleNprcgenekeeprConfig"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/View.html">View</a></span><span class="op">(</span><span class="va">exampleNprcgenekeeprConfig</span><span class="op">)</span></code></pre></div>
 </div>
@@ -248,6 +252,7 @@ A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity
 <li>Terry Therneau <br><small class="roles"> Author </small>  </li>
 <li>Amanda Vinson <br><small class="roles"> Author, data contributor </small>  </li>
 <li>R. Mark Sharp <br><small class="roles"> Author, maintainer, copyright holder, data contributor </small> <a href="https://orcid.org/0000-0002-6170-6942" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Matthew Schultz <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-5103-4305" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Southwest National Primate Research Center NIH grant P51 RR13986 <br><small class="roles"> Funder </small>  </li>
 <li>Oregon National Primate Research Center grant P51 OD011092 <br><small class="roles"> Funder </small>  </li>
 </ul>
@@ -258,7 +263,7 @@ A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity
 
 
       <footer><div class="copyright">
-  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
+  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">

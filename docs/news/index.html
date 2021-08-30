@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5.9001</span>
       </span>
     </div>
 
@@ -135,9 +135,26 @@
       <small>Source: <a href='https://github.com/rmsharp/nprcgenekeepr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="nprcgenekeepr-1059001-20210829" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.5.9001">
+<a href="#nprcgenekeepr-1059001-20210829" class="anchor"></a>nprcgenekeepr 1.0.5.9001 (20210829)<small> Unreleased </small>
+</h1>
+<ul>
+<li>Major changes
+<ul>
+<li>Added ability to use simulation to estimate the kinship values of animals with incomplete parental information that are known to have been born within the colony. These animals may have 0 or 1 known parents but have a value in the pedigree file or database for the <em>fromcenter</em> or <em>fromCenter</em> field of “Y”, “YES”, “T”, or “TRUE”.</li>
+</ul>
+</li>
+<li>Minor changes
+<ul>
+<li>Increase unit test coverage primarily to include more rare events and events that should not happen and are trapped and result in errors.</li>
+</ul>
+</li>
+</ul>
+</div>
     <div id="nprcgenekeepr-105-20210328" class="section level1">
 <h1 class="page-header" data-toc-text="1.0.5">
-<a href="#nprcgenekeepr-105-20210328" class="anchor"></a>nprcgenekeepr 1.0.5 (20210328)<small> Unreleased </small>
+<a href="#nprcgenekeepr-105-20210328" class="anchor"></a>nprcgenekeepr 1.0.5 (20210328)<small> 2021-03-31 </small>
 </h1>
 <ul>
 <li>Major changes – none</li>
@@ -375,7 +392,7 @@
 <li>Minor changes
 <ul>
 <li>Completed examples in function documentation</li>
-<li>Corrected spelling of several word throughout found with <code><a href="https://docs.ropensci.org/spelling/reference/spell_check_package.html">spelling::spell_check_package(".")</a></code>.</li>
+<li>Corrected spelling of several word throughout found with <code>spelling::spell_check_package(".")</code>.</li>
 </ul>
 </li>
 </ul>
@@ -449,7 +466,7 @@
 <li>Minor changes
 <ul>
 <li>Adding small executable examples in <code>roxygen2</code> comments that will go into the Rd-files. Since I have tests, I am wrapping the examples in .</li>
-<li>Added code prior to changing <code><a href="https://rdrr.io/r/graphics/par.html">par()</a></code> in <em>getPyramidPlot.R</em> to reset <code><a href="https://rdrr.io/r/graphics/par.html">par()</a></code> with<br><code>opar &lt;- par(no.readonly =TRUE)</code><br><code><a href="https://rdrr.io/r/base/on.exit.html">on.exit(par(opar))</a></code><br>
+<li>Added code prior to changing <code><a href="https://rdrr.io/r/graphics/par.html">par()</a></code> in <em>getPyramidPlot.R</em> to reset <code><a href="https://rdrr.io/r/graphics/par.html">par()</a></code> with<br><code>opar &lt;- par(no.readonly =TRUE)</code><br><code>on.exit(par(opar))</code><br>
 </li>
 <li>Removed the word “Implements” from the title.</li>
 <li>Reworded the first sentence of the Description element and therein removing “implements” and “nprcmanager” as unnecessary words.</li>
@@ -968,7 +985,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
+  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">

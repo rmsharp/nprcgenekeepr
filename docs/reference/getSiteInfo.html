@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5.9001</span>
       </span>
     </div>
 
@@ -172,64 +172,66 @@ configuration is looked for. Default value is <code>TRUE</code>.</p></td>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rmsharp.github.io/nprcgenekeepr/'>nprcgenekeepr</a></span><span class='op'>)</span>
-<span class='fu'>getSiteInfo</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: The nprcgenekeepr configuration file is missing.</span>
-#&gt; <span class='warning'>It is required when the LabKey API is to be used.</span>
-#&gt; <span class='warning'>The file should be named: ~/.nprcgenekeepr_config.</span></div><div class='output co'>#&gt; $center
-#&gt; [1] "ONPRC"
-#&gt; 
-#&gt; $baseUrl
-#&gt; [1] "https://primeuat.ohsu.edu"
-#&gt; 
-#&gt; $schemaName
-#&gt; [1] "study"
-#&gt; 
-#&gt; $folderPath
-#&gt; [1] "/ONPRC/EHR"
-#&gt; 
-#&gt; $queryName
-#&gt; [1] "demographics"
-#&gt; 
-#&gt; $lkPedColumns
-#&gt; [1] "Id"              "gender"          "birth"           "death"          
-#&gt; [5] "lastDayAtCenter" "Id/parents/dam"  "Id/parents/sire"
-#&gt; 
-#&gt; $mapPedColumns
-#&gt; [1] "id"    "sex"   "birth" "death" "exit"  "dam"   "sire" 
-#&gt; 
-#&gt; $sysname
-#&gt; [1] "Darwin"
-#&gt; 
-#&gt; $release
-#&gt; [1] "20.2.0"
-#&gt; 
-#&gt; $version
-#&gt; [1] "Darwin Kernel Version 20.2.0: Wed Dec  2 20:39:59 PST 2020; root:xnu-7195.60.75~1/RELEASE_X86_64"
-#&gt; 
-#&gt; $nodename
-#&gt; [1] "prefect.satx.rr.com"
-#&gt; 
-#&gt; $machine
-#&gt; [1] "x86_64"
-#&gt; 
-#&gt; $login
-#&gt; [1] "root"
-#&gt; 
-#&gt; $user
-#&gt; [1] "msharp"
-#&gt; 
-#&gt; $effective_user
-#&gt; [1] "msharp"
-#&gt; 
-#&gt; $homeDir
-#&gt; [1] "~/"
-#&gt; 
-#&gt; $configFile
-#&gt; [1] "~/.nprcgenekeepr_config"
-#&gt; </div><div class='input'><span class='co'># }</span>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># \donttest{</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rmsharp.github.io/nprcgenekeepr/'>nprcgenekeepr</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>getSiteInfo</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>The nprcgenekeepr configuration file is missing.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> It is required when the LabKey API is to be used.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> The file should be named: ~/.nprcgenekeepr_config.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $center</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "ONPRC"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $baseUrl</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "https://primeuat.ohsu.edu"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $schemaName</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "study"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $folderPath</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/ONPRC/EHR"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $queryName</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "demographics"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $lkPedColumns</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "Id"              "gender"          "birth"           "death"          </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [5] "lastDayAtCenter" "Id/parents/dam"  "Id/parents/sire"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $mapPedColumns</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "id"    "sex"   "birth" "death" "exit"  "dam"   "sire" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $sysname</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "Darwin"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $release</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "20.6.0"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $version</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "Darwin Kernel Version 20.6.0: Wed Jun 23 00:26:31 PDT 2021; root:xnu-7195.141.2~5/RELEASE_X86_64"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $nodename</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "prefect.satx.rr.com"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $machine</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "x86_64"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $login</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "root"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $user</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "msharp"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $effective_user</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "msharp"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $homeDir</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "~/"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $configFile</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "~/.nprcgenekeepr_config"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'><span class='co'># }</span></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -241,7 +243,7 @@ configuration is looked for. Default value is <code>TRUE</code>.</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
+  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">

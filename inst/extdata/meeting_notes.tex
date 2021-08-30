@@ -1,0 +1,2509 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Meeting Notes and Things To Do},
+  pdfauthor={R. Mark Sharp},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{enumitem}
+\setlistdepth{20}
+\renewlist{itemize}{itemize}{20}
+\renewlist{enumerate}{enumerate}{20}
+\setlist[itemize]{label=$\cdot$}
+\setlist[itemize,1]{label=\textbullet}
+\setlist[itemize,2]{label=--}
+\setlist[itemize,3]{label=*}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Meeting Notes and Things To Do}
+\author{R. Mark Sharp}
+\date{2021-08-29}
+
+\begin{document}
+\maketitle
+
+Provided in reverse chronological order
+
+\hypertarget{section}{%
+\subsection{20210827}\label{section}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Mark presented progress on countKinshipValues.R, which is still had a
+  minor error, which was corrected after the meeting.
+\item
+  Matt had already sent a large a deidentified rhesus pedigree that Mark
+  was able to locate. Once Matt has provided a file with potential
+  parents, Mark can use it to test the code with large files. Changes to
+  allow large pedigrees and large simulations are expected. Currently
+  with small pedigrees simulations of \textgreater{} 100,000 iterations
+  are possible.
+\item
+  Matt presented ideas regarding updating of the current website. Much
+  of the basic material is still accurate but information regarding
+  installation and running the application is dated.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Instructions on creating the pedigrees should be largely correct,
+    however, use of Excel files and LabKey are missing from the
+    instructions.
+  \item
+    There is a need to add some short instructional videos with the idea
+    that the subjects be very specific and the videos be less than three
+    minutes long.
+  \end{itemize}
+\item
+  After the meeting, Mark corrected the countKinshipValues functions,
+  added a set of unit tests for the function, and added over 20 more
+  unit tests to eight other functions. A clean build: 0 errors, 0
+  warnings, 0 notes with updated website pages will be uploaded.
+  However, since this is on the issue8 development branch, it should not
+  affect the current GitHub website.
+\item
+  Next function for Mark is to create the function to use the output of
+  \textbf{countKinshipValues} to get summary statistics and a function
+  to create histograms. The function to create histograms is of lower
+  priority.
+\end{enumerate}
+
+\hypertarget{section-1}{%
+\subsection{20210806}\label{section-1}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Preparation notes
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii}.}
+  \tightlist
+  \item
+    Mark has not created the function to create the Tukey five number
+    summary.
+  \item
+    Mark has created \textbf{createSimKinships} that uses
+    \textbf{make\_SimPed} and \textbf{kinship} makes a list object of
+    kinship matrices from simulated pedigrees of possible parents for
+    animals with unknown parents.
+  \item
+    Mark has created \textbf{cumulateSimKinships}, which makes a list
+    object of kinship matrices from simulated pedigrees of possible
+    parents for animals with unknown parents.
+  \end{enumerate}
+\item
+\end{enumerate}
+
+\hypertarget{section-2}{%
+\subsection{20210514}\label{section-2}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Discussed issue 8 - adding fromCenter to calculate unknown parents
+  kinship value
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii}.}
+  \tightlist
+  \item
+    Matt to work on function to find potential sires and dams for
+    animals lacking parents to be used in the kinship simulation,
+    \textbf{kinship.R}.
+
+    \begin{enumerate}
+    \def\labelenumiii{\arabic{enumiii}.}
+    \tightlist
+    \item
+      Only object needed by the function is \textbf{ped}.
+    \end{enumerate}
+  \item
+    Matt to work on a function to find animals born here but lack
+    parents.
+
+    \begin{enumerate}
+    \def\labelenumiii{\arabic{enumiii}.}
+    \tightlist
+    \item
+      The function will create a list object with three vectors of IDs:
+      animals missing both parents, animals missing the dam, and animals
+      missing the sire.
+    \end{enumerate}
+  \item
+    Matt to work on a function to find parents for those identified
+    above
+
+    \begin{enumerate}
+    \def\labelenumiii{\arabic{enumiii}.}
+    \tightlist
+    \item
+      Use ped, list, argument
+    \item
+      Argument:
+
+      \begin{itemize}
+      \tightlist
+      \item
+        Sires with any offspring within plus or minus 1 yr of birth.
+      \item
+        Dams with any offspring within plus or minus 1 yr of birth but
+        did not have an offspring in focal birth year. This will work
+        for rhesus but needs to be made so that the exclusion period is
+        variable. For example, potential baboon dams would need to be
+        excluded if they had an offspring within 6 months of birth.
+        Thus, the plus or minus period needs to be an optional parameter
+        with a default ot 1 year and the dam exclusion period should
+        default to the gestational length for the species.
+      \end{itemize}
+    \end{enumerate}
+  \item
+    Matt to work on a function to put them together into a list object
+    \textbf{allSimParents} made up of lists where the internal list has
+    the offspring ID (\textbf{id}), a vector of representative sires
+    (\textbf{sires}), and a vector of representative dams
+    (\textbf{dams}). In those cases where the sire or dam is known the
+    vector will contain the known respective sire or dam ID.
+  \item
+    Mark to create a function (\textbf{makeSimPed()}) to use the list
+    object of \textbf{allSimParents} to make the simulated pedigree
+    along with the associated unit tests.
+  \item
+    Mark will create a function to run the simulation. It will take the
+    \textbf{allSimParents} and use \textbf{makeSimPed()} to create a
+    list of simulated kinship matrices. If memory becomes an issue,
+    summary statistics will have to be accumulated. The simmulated
+    kinship coefficients for any one animal will be normally destributed
+    so this is straight forward.
+  \item
+    Mark will create a function to take the simulated kinship matrices
+    and generate Tukey's five number summary for each.
+  \end{enumerate}
+\end{enumerate}
+
+\hypertarget{section-3}{%
+\subsection{20201130}\label{section-3}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Mark met with Amanda to discuss the parent exclusion project and to
+  discuss writing of a paper about nprcgenekeepr.
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii}.}
+  \tightlist
+  \item
+    The possible journals she thought of are listed below.
+
+    \begin{enumerate}
+    \def\labelenumiii{\arabic{enumiii}.}
+    \tightlist
+    \item
+      ILAR
+    \item
+      Molecular Ecology
+    \item
+      Zoo Biology
+    \item
+      Journal of Medical Primatology - probably not good for software
+    \item
+      Journal of Genomics - check
+    \end{enumerate}
+  \end{enumerate}
+\end{enumerate}
+
+\hypertarget{section-4}{%
+\subsection{20201120}\label{section-4}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Mark and Matt met with the Genetics and Genomics Consortium to present
+  a brief summary of work to date and to discuss potential work going
+  forward.
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    Provided a table of statistics describing the growth of the software
+    from a set of 8 scripts to a mature package published on CRAN.
+  \item
+    Near term plans
+
+    \begin{enumerate}
+    \def\labelenumiii{\arabic{enumiii}.}
+    \tightlist
+    \item
+      Plans to correctly handle false founders made up of animals from
+      within the colony that do not have one or both parents identified.
+    \item
+      Offered to help with LabKey integration at each site using LabKey.
+    \item
+      Offered to train users and improve tutorials based on user
+      feedback.
+    \item
+      Will refactor user interface code to use Shiny modules.
+    \end{enumerate}
+  \item
+    Parent exclusion software
+
+    \begin{enumerate}
+    \def\labelenumiii{\arabic{enumiii}.}
+    \tightlist
+    \item
+      Nearly done with conversion of Java scripts to R
+    \item
+      Plan to make standalone Shiny Application
+    \item
+      May integrate into \texttt{nprcgenekeepr}
+    \end{enumerate}
+  \item
+    Possible long term plan is to provide predictive modeling of
+    breeding strategies via simulation.
+  \item
+    Obtained requests from users
+
+    \begin{enumerate}
+    \def\labelenumiii{\arabic{enumiii}.}
+    \tightlist
+    \item
+      ARMS connectivity
+    \item
+      Oracle connectivity
+    \item
+      Add tracking of individual alleles
+
+      \begin{enumerate}
+      \def\labelenumiv{\arabic{enumiv}.}
+      \tightlist
+      \item
+        The internal code already does this if the animal has geneotypes
+        assigned. However, the user interface is minimal and does not
+        provide output regarding statistical summaries of probabilities
+        for those individual genes being in the current potential
+        breeders.
+      \end{enumerate}
+    \item
+      Group from common colony - assign kinship coefficients (matrix)
+      based on genetic data. Mark does not remember the meaning of this
+      request and needs to find someone who can provide more
+      explanation.
+    \end{enumerate}
+  \end{enumerate}
+\end{enumerate}
+
+\hypertarget{section-5}{%
+\subsection{20201117}\label{section-5}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Preparation for Friday's meeting with the Genetics and Genomics
+  Consortium.
+\item
+  Review of progress to date
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \item
+\begin{verbatim}
+Software changes
+\end{verbatim}
+  \end{enumerate}
+\end{enumerate}
+
+Simple metrics for the Original Version (20160816) and Current Version
+1.0.3 (20200526).
+
+\begin{verbatim}
+Source         Files    Lines     Code   Blank Lines    Document Lines  Comment Lines
+Original Files     8     3621     1927           531                 0           1163
+Version 1.0.3      293  13776     7775           441              4613            947
+\end{verbatim}
+
+Simple metrics for the Original Version (20160816) and Current Version
+1.0.3 (20200526) and current version groups of functions.
+
+\begin{verbatim}
+Source          Files    Lines  Code     Blank Lines    Document Lines  Comment Lines
+Original Files      8     3621  1927             531               0             1163
+Version 1.0.3       293  13776  7775             441              4613            947
+1.0.3: functions  163     8272  3007             226              4406            633
+1.0.3: ui            11   1782  1506              98                 2            176
+1.0.3: tests        119   3722  3262             117               205            138
+\end{verbatim}
+
+\hypertarget{section-6}{%
+\subsection{20200423}\label{section-6}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Submission to CRAN was rejected with the following revision requests
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    considerably reduce the check time of your package to stay below the
+    threshold of 10 minutes. This can for example be achieved by:
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Omitting the less important and lengthy tests by only running them
+      conditionally if some environment variable is set that you only
+      define on your machine.
+    \item
+      Using precomputed results for the computational intensive parts in
+      vignettes.
+    \item
+      Ensure that even after this change the package still includes
+      illustrative examples of the use of the user-facing functions.
+      Please aim at trying to test and also illustrate the use of as
+      much functionality of the package as possible while making
+      considerate use of the computational resources.
+    \end{itemize}
+  \item
+    Single quotes are used to mark non-English usage, package names,
+    software names, API names and paper titles. Not for names or
+    abbreviations/acronyms. Please omit them where not accurate,
+    e.g.~--\textgreater{} Raboin, API,\ldots{}
+  \item
+    Please only capitalize names, sentence beginnings and
+    abbreviations/acronyms in the description text of your DESCRIPTION
+    file. e.g.~-- electronic health records
+  \item
+    Missing Rd-tags:
+
+    \begin{itemize}
+    \tightlist
+    \item
+      addGenotype.Rd: \textbackslash value
+    \item
+      agePyramidPlot.Rd: \textbackslash value
+    \item
+      allTrueNoNA.Rd: \textbackslash value
+    \item
+      assignAlleles.Rd: \textbackslash value
+    \item
+      calcFE.Rd: \textbackslash value
+    \item
+      calcFEFG.Rd: \textbackslash value
+    \item
+      calcFG.Rd: \textbackslash value
+    \item
+      calcRetention.Rd: \textbackslash value
+    \item
+      checkGenotypeFile.Rd: \textbackslash value
+    \item
+      convertSexCodes.Rd: \textbackslash value
+    \item
+      create\_wkbk.Rd: \textbackslash value
+    \item
+      createExampleFiles.Rd: \textbackslash arguments, {]}value
+    \item
+      \ldots{}
+    \end{itemize}
+  \item
+    You have examples for unexported functions which cannot run in this
+    way. Please either add nprcgenekeepr::: to the function calls in the
+    examples, omit these examples or export these functions.
+  \item
+    Please fix and resubmit, and document what was changed in the
+    submission comments.
+  \end{enumerate}
+\item
+  I will work toward getting these changes in as soon as possible and
+  resubmit.
+\item
+  I have not heard from you regarding the user acceptance testing and am
+  curious as whether or not you are going to go forward with that in
+  this period of social distancing.
+\end{enumerate}
+
+\hypertarget{section-7}{%
+\subsection{20200320}\label{section-7}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Notes of things to do prior to submission
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    Correct spelling package wide - Done 2020319
+  \item
+    Update Development\_Plans.Rmd
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Updated and cleaned up a bit on 20200319 in preparation.
+    \item
+      Sent out a request to Amanda and Matt for input on 20200319. Their
+      input may not arrive before this submission.
+    \end{itemize}
+  \end{enumerate}
+\end{enumerate}
+
+\hypertarget{section-8}{%
+\subsection{20200316}\label{section-8}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Matt will work on colony manager tutorial during last two weeks of
+  March.
+\item
+  Mark will provide user acceptance test questions.
+\item
+  Mark will provide colony manager tutorial material to Matt.
+\item
+  Mark will submit to CRAN during week of March 16, 2020.
+\item
+  Amanda will administer the user acceptance testing to collect feedback
+  on using the application. What causes problems, what can and cannot be
+  done, what is missing, what is too complex, etc.
+\end{enumerate}
+
+\hypertarget{section-9}{%
+\subsection{20200203}\label{section-9}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Is the tutorial for CRAN or the Consortium users. need overview of tab
+  structure and order (left to right).
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \item
+    Notes regarding feedback from Amanda on 20200204 I am willing to
+    change ``reading'' to ``uploading'', but they do not mean the same
+    thing. When you upload a file, there is no inference of paying
+    attention to the contents. When reading a file, the contents are
+    examined. Reading is the more accurate descriptor in our case.
+
+    I am going to write a separate tutorial explicitly for the
+    consortium members as typical R users would want conventional use of
+    terms and descriptors. For example, Shiny apps are always described
+    as Shiny apps.
+  \end{enumerate}
+\end{enumerate}
+
+\hypertarget{section-10}{%
+\subsection{20200106}\label{section-10}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Mark will convert nprcmanager to nprcgenekeepr before any other
+  changes.
+\item
+  Amanda will provide notes for the Shiny application tutorial with the
+  following goals.
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii}.}
+  \tightlist
+  \item
+    Address the specific needs of consortium members.
+  \item
+    Reduce the complexity of the presentation where possible.
+  \item
+    Ensure there are no major components left out.
+  \end{enumerate}
+\item
+  Amanda will talk to Dave Lawrence about using his code to guide R
+  development of the \emph{Diversity Report}.
+\item
+  Mark will complete submission to CRAN for publication to the
+  consortium.
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii}.}
+  \tightlist
+  \item
+    Mark expects that the package will be accepted on CRAN once examples
+    have been provided for all exported functions. This is not a trivial
+    matter as there are currently 142 exported functions.
+  \item
+    Mark will remove exporting of functions that do not need to be
+    exported.
+  \item
+    Mark will use code from the unit tests for many of the examples.
+  \end{enumerate}
+\item
+  Mark has completed only the first of the four items from the 20191120
+  meeting. These will be addressed after the submission to CRAN is
+  successful.
+\end{enumerate}
+
+\hypertarget{section-11}{%
+\subsection{20191218}\label{section-11}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Added ability to export each of the six figures on the \textbf{Summary
+  Statistics} page.
+\item
+  Need to update shiny application tutorial to reflect the ability to
+  export each of the six figures on the \textbf{Summary Statistics}
+  page.
+\end{enumerate}
+
+\hypertarget{section-12}{%
+\subsection{20191130}\label{section-12}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  See if
+  \url{https://www.semanticscholar.org/paper/Management-of-genetic-diversity-using-gene-dropping-Khaldari-Javaremi/43dd1975193830b9243c8eef672db134e42e871d/figure/3}
+  is figure that would be beneficial.
+\end{enumerate}
+
+\hypertarget{section-13}{%
+\subsection{20191120}\label{section-13}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Export all graphics
+\item
+  Create, error check and export dawn of time pedigree
+\item
+  Add heuristic to removed recent progeny as founders.
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii}.}
+  \tightlist
+  \item
+    Add a column - something like ``from center'' so that ``born at
+    site'' can be ascertained.
+  \end{enumerate}
+\item
+  Provide a way to clear focal animals added in \textbf{Pedigree
+  Browser} tab so that full pedigree is again available. This will also
+  allow a new pedigree to be added via the \textbf{Input} tab.
+\end{enumerate}
+
+\hypertarget{section-14}{%
+\subsection{20191115}\label{section-14}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Clear out empty text field (\emph{Filter View}) on \_Genetic Value
+  Analysis\_\_ tab. Done 20191115
+\end{enumerate}
+
+\hypertarget{section-15}{%
+\subsection{20191111}\label{section-15}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Send example pedigrees with errors to Amanda.Done 20191111
+\item
+  To meet Friday at 4 PM Pacific to go through entire presentation.
+\item
+  Code changes since August 16, 2016.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Initial package construction was in March of 2017.
+  \item
+    Start of code additions in August 2017.
+  \item
+    There are now 736 unit tests covering over 92\% of the code.
+  \item
+    Two tutorials have been developed. One to guide R users in the
+    interactive use of the package functions (public API) and one to
+    guide users of the Shiny application.
+  \item
+    Available via GitHub with MIT license.
+  \end{itemize}
+\end{enumerate}
+
+\begin{verbatim}
+## Usually it is recommended to use column_spec before collapse_rows, especially in LaTeX, to get a desired result.
+\end{verbatim}
+
+\begin{table}
+
+\caption{\label{tab:code-change-table}Simple metrics for the Original Version (20160816) and Current Version 1.0.5.9000 (20210421).}
+\begin{tabular}[t]{l|r|>{\raggedleft\arraybackslash}p{5em}|r|r|r|r}
+\hline
+Source & Files & Lines & Code & Blank Lines & Document Lines & Comment Lines\\
+\hline
+Original Files & 8 & 3621 & 1927 & 531 & 0 & 1163\\
+
+Version 1.0.5.9000 & 309 & 14687 & 8334 & 478 & 4910 & 965\\
+\hline
+\end{tabular}
+\end{table}
+\begin{table}
+
+\caption{\label{tab:detail-code-change-table}Simple metrics for the Original Version (20160816) and Current Version 1.0.5.9000 (20210421) and current version groups of functions.}
+\begin{tabular}[t]{l|r|>{\raggedleft\arraybackslash}p{5em}|r|r|r|r}
+\hline
+Source & Files & Lines & Code & Blank Lines & Document Lines & Comment Lines\\
+\hline
+Original Files & 8 & 3621 & 1927 & 531 & 0 & 1163\\
+\hline
+Version 1.0.5.9000 & 309 & 14687 & 8334 & 478 & 4910 & 965\\
+\hline
+\hline
+1.0.5.9000: functions & 170 & 8660 & 3107 & 229 & 4686 & 638\\
+\hline
+1.0.5.9000: ui & 11 & 1790 & 1514 & 98 & 2 & 176\\
+\hline
+1.0.5.9000: tests & 128 & 4237 & 3713 & 151 & 222 & 151\\
+\hline
+\end{tabular}
+\end{table}
+
+\hypertarget{section-16}{%
+\subsection{20191014}\label{section-16}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Progress Since Last Meeting}
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii}.}
+  \tightlist
+  \item
+    Code changes
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Added filter to pedigree IDs available for breeding group
+      formation so that only animals at the institution (exit == NA) and
+      animals with recorded birth dates (birth != NA) are potential
+      breeding group members.
+    \end{itemize}
+  \item
+    Documentation Updates
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Shiny application tutorial first draft is nearly complete.
+      Breeding group formation remains.
+    \end{itemize}
+  \item
+    CRAN submission preparation
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Have begun using RHUB tools to prepare for the CRAN submission.
+
+      \begin{itemize}
+      \tightlist
+      \item
+        library(rhub)
+      \item
+        library(usethis)
+      \item
+        cran\_prep \textless- check\_for\_cran()
+      \item
+        cran\_prep\$cran\_summary()
+      \item
+        usethis::use\_cran\_comments()
+      \end{itemize}
+    \end{itemize}
+  \end{enumerate}
+\item
+  \textbf{Meeting Notes}
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii}.}
+  \tightlist
+  \item
+    Mark will fly up on 19th leave 21st
+  \item
+    Need to ensure access to WiFi and video.
+  \item
+    Finish Shiny tutorial
+  \item
+    Recheck all files to ensure animals are deidentified via
+    obfuscations of IDs, birth dates, and exit dates.
+  \item
+    Plan to have a CRAN submission prior to November 20, 2019, meeting.
+  \item
+    Want to develop a better name. This should be done prior to CRAN
+    submission.
+  \item
+    Matt is to test LabKey connection.
+  \item
+    Amanda and Mark will see if Wayne can move forward on Mark's access
+    to PRIMe
+  \item
+    Mark will work on \textbf{Genetic Production}, \textbf{Genetic Value
+    Analysis}, and \textbf{Founders} as described in the meeting notes
+    for 20190916.
+  \end{enumerate}
+\end{enumerate}
+
+\hypertarget{section-17}{%
+\subsection{20190916}\label{section-17}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Production Calculation}
+
+  Amanda corrected and clarified how to calculate \emph{Production}
+  using the
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii}.}
+  \tightlist
+  \item
+    The Production Status is calculated on September 09, 2019.
+  \item
+    Births = count of all animals in group born since January 1, 2017
+    through December 31, 2018, that lived at least 30 days. Animals born
+    after December 31, 2018, are not counted.
+  \item
+    Dams = count of all females in group that have a birth date on or
+    prior to September 09, 2016.
+  \item
+    Production = Births / Dams
+  \item
+    Production Status (color)
+
+    \begin{enumerate}
+    \def\labelenumiii{\arabic{enumiii}.}
+    \tightlist
+    \item
+      Shelter and pens
+
+      \begin{enumerate}
+      \def\labelenumiv{\arabic{enumiv}.}
+      \tightlist
+      \item
+        Red -- ``\textless{} 0.51''
+      \item
+        Yellow -- ``\textgreater= 0.51 \& \textless{} 0.54''
+      \item
+        Green -- ``\textgreater= 0.54''
+      \end{enumerate}
+    \item
+      Corrals
+
+      \begin{enumerate}
+      \def\labelenumiv{\arabic{enumiv}.}
+      \tightlist
+      \item
+        Red -- ``\textless{} 0.61''
+      \item
+        Yellow -- ``\textgreater= 0.61 \& \textless{} 0.65''
+      \item
+        Green -- ``\textgreater= 0.65''
+      \end{enumerate}
+    \end{enumerate}
+  \end{enumerate}
+\item
+  \textbf{Genetic Production}
+
+  Percent of females ``\textgreater= 3.5 at the start of the 2 calendar
+  year period that have not produced offspring in the past 2 calendar
+  years. Filter out animals over ?? (start with 18) years old.''
+\item
+  \textbf{Genetic Value Analysis} Have Mark look at algorithm and
+  develop simple options for handling progeny that are missing parental
+  information.
+
+  One option is to not calculate genetic value of animals \textless{}
+  minParentAge.
+\item
+  \textbf{Founders} We need to get a better understanding of the issues
+  surrounding the identification of founders and how founders affect the
+  genetic value analysis. As a first step Mark will develop code to list
+  the founders and the count of male and female founders. See how they
+  affect the genetic value analysis.
+
+  In the very short table below \textbf{x123} has a founder as a dam
+  while \textbf{x122} does not have a founder for a sire because of the
+  respective values of \emph{dam\_from\_center} and
+  \emph{sire\_from\_center}.
+\end{enumerate}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule
+id & sire & sire\_from\_center & dam & dam\_from\_center & birth \\
+\midrule
+\endhead
+x123 & s123 & Y & & N & 1988/04/21 \\
+x122 & & Y & d123 & Y & 1989/08/18 \\
+\bottomrule
+\end{longtable}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\item
+  \textbf{Matt Schultz and R Setup for nprcmanager}
+
+  Mark is to contact Matt to arrange a time to work with him to make
+  sure he get nprcmanger set up as a repository on his computer.
+
+  Mark will also send the interactive tutorial to him and Amanda. Done
+  20190916.
+\end{enumerate}
+
+\hypertarget{section-18}{%
+\subsection{20190826}\label{section-18}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Genetic Diversity Graphic
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii}.}
+  \tightlist
+  \item
+    Labels Done 20190908
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Breeding Group
+    \item
+      High-Low - Value
+    \item
+      Indian Origin - Origin
+    \item
+      Fecundity - Production
+    \item
+      Kinship With Male - Inbreeding
+    \item
+      Genotype Phenotype - Flags
+    \end{itemize}
+  \item
+    Labels of groups on left
+  \item
+    Labels of genetic diversity labels top and 45 degree angle
+  \item
+    Genetic Diversity - Genetic Diversity Report
+  \end{enumerate}
+\item
+  Send list of errors that can be detected. Done 20190826
+\item
+  Send rhesus MHC data pedigrees Done 20190826
+\item
+\end{enumerate}
+
+\hypertarget{section-19}{%
+\subsection{20190810}\label{section-19}}
+
+This was an \emph{ad hoc} meeting to get clarification on heat map
+development for genetic diversity reporting. This meeting was a response
+to questions in a July 18, 2019, email from Mark in response to an email
+from Amanda with the subject of ``genetic diversity reporting
+questions''.
+
+As a result of this meeting, the following columns are defined as
+follows
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  GENETIC DIVERSITY REPORTING
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    What are the proportions of high and low genetic value breeding-age
+    adults in the group?
+
+    \begin{enumerate}
+    \def\labelenumiii{\arabic{enumiii}.}
+    \tightlist
+    \item
+      RED \textgreater{} 0.5 LOW VALUE
+    \item
+      0.5 \textgreater= YELLOW \textgreater= 0.30 LOW VALUE
+    \item
+      GREEN =\textless{} 0.3 LOW VALUE
+    \end{enumerate}
+  \item
+    Are all members of the breeding group Indian-origin rhesus macaques?
+
+    \begin{enumerate}
+    \def\labelenumiii{\arabic{enumiii}.}
+    \tightlist
+    \item
+      RED -- \textgreater= 1 HYBRID OR CHINESE ANIMALS
+    \item
+      YELLOW -- \textgreater= 1 BORDERLINE HYBRID ANCESTRY \& 0 HYBRID
+      OR CHINESE ANIMALS
+    \item
+      GREEN -- 0 HYBRID OR CHINESE ANIMALS \& 0 BORDERLINE HYBRID
+      ANCESTRY
+    \end{enumerate}
+
+    \begin{quote}
+    = 10\% \textless= 15\% chinese: Proportion of chinese ancestry is
+    borderline Yellow; Red \textgreater{} 15\%; This information is
+    found under animal history under genetics main tab -- genetic
+    ancestry.
+    \end{quote}
+  \item
+    Among all females in group age \textgreater= 3 years what is
+    percentage with a kinship coefficient \textless= 0.0156 with at
+    least 1 male \textgreater= 5 years old in the group.
+
+    \begin{enumerate}
+    \def\labelenumiii{\arabic{enumiii}.}
+    \tightlist
+    \item
+      Denomonator = count of females \textgreater= 3 years of age
+    \item
+      Numerator = count of females with kinship coefficient \textless=
+      0.0156 with at least 1 male \textgreater= 5 years old in the
+      group.
+    \item
+      Thresholds
+
+      \begin{enumerate}
+      \def\labelenumiv{\arabic{enumiv}.}
+      \tightlist
+      \item
+        Red -- \textless{} 0.6
+      \item
+        Yellow -- \textgreater= 0.6 \& \textless= 0.9
+      \item
+        Green -- \textgreater{} 0.9
+      \end{enumerate}
+    \end{enumerate}
+  \item
+    Fecundity
+
+    \begin{enumerate}
+    \def\labelenumiii{\arabic{enumiii}.}
+    \tightlist
+    \item
+      Denominator = count of females \textgreater= 3 years of age
+    \item
+      Numerator = count of births that live \textgreater{} 30 days
+    \item
+      Thresholds
+
+      \begin{enumerate}
+      \def\labelenumiv{\arabic{enumiv}.}
+      \tightlist
+      \item
+        Shelter and pens
+
+        \begin{enumerate}
+        \def\labelenumv{\arabic{enumv}.}
+        \tightlist
+        \item
+          Red -- \textless{} 0.6
+        \item
+          Yellow -- \textgreater= 0.6 \& \textless= 0.63
+        \item
+          Green -- \textgreater{} 0.63
+        \end{enumerate}
+      \item
+        Corrals
+
+        \begin{enumerate}
+        \def\labelenumv{\arabic{enumv}.}
+        \tightlist
+        \item
+          Red -- \textless{} 0.5
+        \item
+          Yellow -- \textgreater= 0.5 \& \textless= 0.53
+        \item
+          Green -- \textgreater{} 0.53
+        \end{enumerate}
+      \end{enumerate}
+    \end{enumerate}
+  \item
+    Flagged for genotype of phenotype
+
+    \begin{enumerate}
+    \def\labelenumiii{\arabic{enumiii}.}
+    \tightlist
+    \item
+      Thresholds
+
+      \begin{enumerate}
+      \def\labelenumiv{\arabic{enumiv}.}
+      \tightlist
+      \item
+        Red -- \textgreater= 3 group members flagged
+      \item
+        Yellow -- \textless{} 3 and \textgreater= 1 group members
+        flagged
+      \item
+        Green -- 0 group members flagged
+      \end{enumerate}
+    \end{enumerate}
+  \end{enumerate}
+\end{enumerate}
+
+\hypertarget{section-20}{%
+\subsection{20190715}\label{section-20}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  To prepare for the meeting
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    Work on tutorial to go through the Goldilocks path.
+  \item
+    Work on tutorial to look at all possible data input errors
+  \item
+    Submit new version to GitHub and Travis-ci
+  \end{enumerate}
+\item
+  We discussed heat map type issues with regard to realtime examination
+  of kinship relationships within breeding groups
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    Amanda is to send Mark a pedigree with breeding group information
+    and an updated version of the questions in an Excel workbook
+  \item
+    Mark is to use those data and the questions to develop some
+    visualizations for Amanda's review.
+  \end{enumerate}
+\item
+  The interactive tutorial was discussed a bit.
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    Priscilla Williams, a current graduate student, who Mark has worked
+    with for several years is working through the tutorial.
+  \item
+    This discussion brought up the topic of making use of the Shiny
+    application as simple as possible.
+  \end{enumerate}
+\item
+  Mark is going to put together the Shiny application tutorial next
+\end{enumerate}
+
+\hypertarget{section-21}{%
+\subsection{20190603}\label{section-21}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Joint Working Group Meeting week before Thanksgiving. We will meet
+  with the Breeding Colony Managers Group. November 19-21, 2019.
+\item
+  Work on loop code: have list of animals involved in loops with counts,
+  number of loops, number of animals in loops. Not high priority.
+\item
+  DCM wants to report on problems in current breeding groups prior
+  occurrence.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Amanda has developed an initial set of questions.
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Are all Indian origin?
+    \item
+      Has alpha male been in group \textgreater{} 3 years.
+    \item
+      Are kinship coefficients of \textgreater=0.0156 between male and
+      females \textgreater= 2.5 years old (settable) within a breeding
+      group.
+    \item
+      Are kinship coefficients of \textgreater=0.0156 between males
+      \textgreater= 2.5 years old (settable) within a breeding group.
+    \item
+      Are offspring equally distributed among female breeders.
+    \item
+      Are any members flagged to be genotyped. This likely does not
+      reside in demographics.
+    \end{itemize}
+  \end{itemize}
+\item
+  Does Amanda know what the \emph{2014-10-16\_ResPed\_v1.1.txt},
+  \emph{BreedingGroups1\_4MendozaTest.csv},
+  \emph{Jmac\_studbook\_20180711.csv},
+  \emph{Jmac\_studbook\_20180711.txt}, and
+  \emph{MendozaC1C2newharemstest.csv} files represent? Can they be use
+  for instruction? We are not going to use them. Done 20190622 Are some
+  to be used with the Example\_Pedigree file? We are not going to use
+  them. Done 20190622
+\item
+  Decide which pedigree files to leave in package. Done 20190622
+
+  \begin{itemize}
+  \tightlist
+  \item
+    All pedigree files except an obfuscated baboon (qcPed) and an
+    obfuscated rhesus (examplePedigree) were moved out of the package.
+  \item
+    The qcPed and examplePedigree are in the package as data, which can
+    be obtained by the user with
+
+    \begin{itemize}
+    \tightlist
+    \item
+      \textbf{qcPed \textless- nprcmanager::qcPed}
+    \item
+      \textbf{examplePedigree \textless- nprcmanager::examplePedigree}
+    \end{itemize}
+  \item
+    Three versions of the qcPed pedigree were included as actual files
+    for the getPedigree() unit tests.
+  \end{itemize}
+\item
+  Figure out how to best provide example pedigree files. See point
+  immediately above. Done 20190622
+\item
+  Items brought forward from previous meetings to prevent forgetting
+  them.
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    From 20190311
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Amanda sent Mark the 2015-02-14\_Genetic\_metrics\_white
+      paper\_Final.docx paper for him to review and collect ideas for a
+      renewed ORIP Reporting tab. Amanda suggested that we need to
+      propose collection of these metrics from all primate centers.
+      Genetic and Genomics Working Group website:
+      \url{https://nprcresearch.org/primate/genetics-genomics/genetics-genomics-working-group.php}
+    \end{itemize}
+  \item
+    From 20190408
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Consider adding the ability to ignore founders if the user selects
+      that option.
+    \item
+      Go through all primary data structure names and definitions to
+      update and correct.
+    \item
+      Edit all function descriptions to update and correct
+    \end{itemize}
+  \end{enumerate}
+\end{enumerate}
+
+\hypertarget{section-22}{%
+\subsection{20190429}\label{section-22}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Updated Amanda's R, R packages, and installed version 0.5.10
+  (20190428) of nprcmanager.
+\item
+  Demonstrated that new version of nprcmanager displayed suspicious
+  parent table in ErrorTab. Done 20190428
+\item
+  Decided on new wording of ``One or both parents are below the minimum
+  parental age. Check both parent and offspring birth dates.'' to place
+  before the Suspicious Parents table. Done 20190428
+\item
+  Removed row label column in Suspicious Parents table. Done 20190428
+\item
+  Plan to add ability to read in pedigrees in Excel format to Input tab.
+  Done 20190519
+\item
+  Still need to complete items listed in 20190408 meeting notes. (See
+  below.)
+\item
+  Will provide a ``Goldilocks'' tutorial of Shiny application first.
+\end{enumerate}
+
+\hypertarget{section-23}{%
+\subsection{20190408}\label{section-23}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Test for error when pedigree is not available when forming groups
+\item
+  Make sure harems are formed correctly when males are in seed animals
+\item
+  List of things found prior to the meeting to do before next meeting:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Unit test for fillGroupMembersWithSexRatio() Done 20190328
+  \item
+    Go through all primary data structure names and definitions to
+    update and correct.
+  \item
+    Edit all function descriptions to update and correct
+  \item
+    Correct nprcmanager.R file. This includes the following and more.
+    Check, correct, and create where needed function lists including
+    lists of all functions, pedigree file testing functions, genetic
+    value functions, plotting functions, breeding group formation
+    functions, and gene dropping functions (if possible). Done 20190515
+  \item
+    Consider making a summary function for the gvReport structure. Done
+    20190602
+  \item
+    Consider adding the ability to ignore founders if the user selects
+    that option.
+  \end{itemize}
+\end{enumerate}
+
+Ballou \& Lacy describe genome uniqueness as ``the proportion of
+simulations in which an individual receives the only copy of a founder
+allele.'' We have interpreted this as meaning that genome uniqueness
+should only be calculated for living, non-founder animals. Alleles
+possessed by living founders are not considered when calculating genome
+uniqueness.
+
+We have a differing view on this, since a living founder can still
+contribute to the population. The function below calculates genome
+uniqueness for all living animals and considers all alleles. It does not
+ignore living founders and their alleles.
+
+Our results for genome uniqueness will, therefore differ slightly from
+those returned by Pedscope. Pedscope calculates genome uniqueness only
+for non-founders and ignores the contribution of any founders in the
+population. This will cause Pedscope's genome uniqueness estimates to
+possibly be slightly higher for non-founders than what this function
+will calculate.
+
+\hypertarget{section-24}{%
+\subsection{20190311}\label{section-24}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Remove explanatory text above sex ratio radio buttons. Done 20190311
+\item
+  Ignore kinship between females at or above the minimum parent age
+  (Yes/No). Done 20190311.
+\item
+  Invoice for Jan 12 - Mar 11, 2019 sent 20190311.
+\item
+  Renamed (Pyramid Plot to Age Pyramid Plot) and moved to the right of
+  Pedigree Browser. Done 20190311
+\item
+  Amanda sent Mark the 2015-02-14\_Genetic\_metrics\_white
+  paper\_Final.docx paper for him to review and collect ideas for a
+  renewed ORIP Reporting tab. Amanda suggested that we need to propose
+  collection of these metrics from all primate centers. Genetic and
+  Genomics Working Group website:
+  \url{https://nprcresearch.org/primate/genetics-genomics/genetics-genomics-working-group.php}
+\item
+  Still have two features to add and one graphic element to correct.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Allow user to enter the number of groups of seed animals to be
+    entered. See \emph{Seed Groups} from last month's notes. Done
+    20190406
+  \item
+    Add \textbf{minParentAge} to check box for \emph{Use minimum parent
+    age for age of animals to be grouped with the mother}. Done 20190406
+  \end{itemize}
+\item
+  To meet again on 20190325 if Mark makes sufficient progress otherwise
+  we will meet on 20190408 at 4PM PAC.
+\end{enumerate}
+
+\hypertarget{section-25}{%
+\subsection{20190225}\label{section-25}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Mark to add additional unit tests for new seed group formation code.
+\item
+  Items to add to instructions:
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii}.}
+  \tightlist
+  \item
+    Discuss what to do about overlapping group formation. Instruct the
+    user to run the Make Groups command again to get a new set of
+    groups. The new set will overlap with the prior results, but will be
+    mutually exclusive within a run.
+  \end{enumerate}
+\item
+  Mark to send an invoice at end of February. Amanda will send the
+  amount of funding available. Done 20190311
+\item
+  Seed Groups
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Have user enter number of seed groups to form and then present that
+    number of windows.
+  \item
+    Change label to ``Optional: Seed Groups with Specific Animals''.
+    Done 20190311
+  \item
+    Have it in its own gray box
+  \end{itemize}
+\item
+  Pull downs to right in one column: Done 20190309
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii}.}
+  \tightlist
+  \item
+    Number of groups desired
+  \item
+    Animals will be grouped with mother that are below age (years):
+    {[}{]} Use minimum parent age. \textless-- default -- Have not
+    figured out how to have \textbf{minParentAge} from Input tab to show
+    up in the BreedingGroupFormation tab. Have dropdown disappear if
+    checkbox above is selected.
+  \item
+    Animals with kinship above \ldots.
+  \item
+    Dropdown with
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Ignore females at or above the minimum parent age
+    \item
+      Do not ignore females at or above the minimum parent age
+    \end{itemize}
+  \item
+    Modify kinship dropdown to add common relationship nomenclature in
+    parentheses.
+  \item
+    Number of simulations
+  \end{enumerate}
+\item
+  Left column input: Done 20190309
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii}.}
+  \tightlist
+  \item
+    Make Groups in color and larger
+  \item
+    Enter the group to view
+  \item
+    Export Current Group
+  \item
+    Export Current Group Kinship Matrix
+  \end{enumerate}
+\item
+  Example emails
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii}.}
+  \tightlist
+  \item
+    Example: Whether or not one of 10 females would work with a
+    particular male.
+  \item
+    Amanda is to collect other similar emails to use as ideas for
+    development of vignettes.
+  \end{enumerate}
+\item
+  Next meeting March 11, 2019, at 4PM PAC.
+\end{enumerate}
+
+\hypertarget{section-26}{%
+\subsection{20190114}\label{section-26}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Amanda provided a new logo to use, which represents all of the
+  National Primate Research Centers. This is necessary because the ONPRC
+  parent organization does not allow them to have a logo. Mark will
+  incorporate that logo into the application and add some comments
+  regarding development supported by ONPRC and SNPRC. Added 20190119.
+\item
+  Discussed harem formation and formation of groups with a set sex
+  ratio. Done 20190103.
+\item
+  Discussed what to do about overlapping group formation. Decided to
+  instruct the user to run the Make Groups command again to get a new
+  set of groups. The new set will overlap with the prior results, but
+  will be mutually exclusive within a run. Added to things to do for
+  20190225 meeting 20190224
+\item
+  Discussed layout of breeding group formation tab by using a mockup
+  tool. Decided to have six workflows selectable in a radio button
+  configuration. The user interface will redraw based on the radio
+  button selected to reflect the user interface elements needed within
+  the selected workflow. Done 20190224
+\item
+  Need to test group formation with a candidate animal not in the
+  pedigree or not in the genetic analysis. Found that this causes a
+  application crash. Done 20190224
+\item
+  Need to test group formation with a candidate animal not in the
+  pedigree or not in the genetic analysis. Found that groups are not
+  formed, but an error is not displayed. The user must remove the false
+  Id to get group formation to work. Done 20190224.
+\item
+  Make an error reporting function that informs the user what has
+  occurred when an animal not in the pedigree or not in the genetic
+  analysis is entered as a seed animal or a candidate animal.
+\item
+  Change ``Animals will be ignored below this age'' to ``Animals will be
+  grouped with the mother below age''. Done 20190224.
+\item
+  Change to Animals with kinship above this value will be excluded. Done
+  20190224.
+\item
+  Change to Include kinship in display of groups. Done 20190224.
+\item
+  Disable breeding group formation tab until genetic value analysis has
+  occurred. Have disabled tab display text explaining that genetic value
+  analysis must be performed first.
+\item
+  Have 6 boxes for seed animals. User can provide seed animals for up to
+  six groups. Done 20190224
+\item
+  The next meeting will be 20190211 at 4 PM Pacific time.
+\end{enumerate}
+
+\hypertarget{section-27}{%
+\subsection{20181210}\label{section-27}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Mark reported that he was having trouble implementing the user
+  interface elements needed for items 4 and 5 of the 20181105 meeting
+  notes. Specifically the need to have dynamically generated text input
+  boxes for the number of groups to be formed is the issue. He has not
+  figured out either the desired interface behavior or the technical
+  methods needed for this feature. This is going to delay getting the
+  tutorials written, which he had hoped to complete in first draft form
+  during December.
+\end{enumerate}
+
+After some discussion, all agreed that the features described in items 4
+and 5 are sufficiently important to delay the preparation of the
+tutorials and subsequent technical paper a few weeks. Thus, Mark will
+work on getting these implemented in December with plans on working on
+the tutorials in January.
+
+Ability to form harems. Done 20181230.
+
+Ability to form breeding groups with specified sex ratios. Done
+20180103.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Amanda and Mark had fairly extensive discussions regarding how group
+  selection is to be done. The current software forms groups so that
+  there is no overlap of animals among any of the groups. The plan is
+  for Mark to implement a group selection procedure that will make two
+  types of groups.
+\end{enumerate}
+
+One group type is what is currently done by the software (no overlap of
+animals among any of the groups formed.) These groups will be made up of
+all of the animals that can be used in groups based on kinship and sex
+ratio criteria such that none of the groups have any individuals in
+common.
+
+The second type of group is a collection of sub-groups where each
+sub-group is a group of the first type. Thus, there is no overlap of
+animals within any one sub-group of groups and there is potential
+overlay among the various subgroups. This is complected and hard to
+follow so it is illustrated with the list below where each letter
+represent a specific animal. Overlapping Groups 1-4 have within them
+sets of animal that have no animals in common with other unique sets
+within the group.
+
+For example, animal \textbf{H} appears in set 1 of each overlapping
+group, but it does not appear more than once in any on group. Also,
+animal \textbf{E} appears in group 1, 2, and 4 and not in group 3.
+
+\begin{itemize}
+\tightlist
+\item
+  Overlapping Group 1 - Unique Set 1: I,B,J,L,H - Unique Set 2:
+  D,G,U,S,Q - Unique Set 3: E,P,F,A,C
+\item
+  Overlapping Group 2 - Unique Set 1: M,V,H,Z,K - Unique Set 2:
+  O,T,W,D,X - Unique Set 3: C,J,E,F,B
+\item
+  Overlapping Group 3 - Unique Set 1: H,I,F,X,K - Unique Set 2:
+  Q,Y,A,D,S - Unique Set 3: T,B,C,G,M
+\item
+  Overlapping Group 4 - Unique Set 1: H,V,I,T,Z - Unique Set 2:
+  E,W,M,N,O - Unique Set 3: P,Q,J,G,U
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Amanda and Mark are to develop a better descriptor for the button that
+  causes the pedigree information to be read in tested and sent to the
+  pedigree browser function. Mark has changed it to \emph{Read and Check
+  Pedigree} for now. Done 20181212.
+\item
+  Mark is to reorganize the \textbf{Input} tab to place the description
+  of the minimum parent age in hovertext and make the check pedigree
+  button more evident. Done 20181212.
+\item
+  The next meeting will be 20190114 at 4 PM Pacific time.
+\end{enumerate}
+
+\hypertarget{section-28}{%
+\subsection{20181105}\label{section-28}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Do not report as an error the wrong sex for animals added into the
+  pedigree and appear as both a sire and dam without an ego record.
+  These need to be reported as an error because they are both a sire and
+  a dam. Done 20181208
+\item
+  Make a combined logo for Oregon and SNPRC. Have ONPRC on top using
+  blue and green. Check on the University of Oregon website for a color
+  palette. Have ONPRC in the lighter color similar to the SNPRC color
+  scheme. Have the macaque and oval in the same blue color. Clean up the
+  resolution of the Oregon logo as it is currently fuzzy. Some research
+  found the following link
+  \href{https://www.ohsu.edu/xd/digital-identity/global-elements-design/color-palette.cfm}{OHSU
+  Color Palette}.
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  Alert \#C34D36
+\item
+  Body text \#555555
+\item
+  Button text \#805B16
+\item
+  Button pre-fade \#FFD769
+\item
+  Button post-fade \#FFC529
+\item
+  ``Currently accepting patients'' marker \#67B445
+\item
+  Desktop navigation hover (darker blue) \#093561
+\item
+  Desktop primary navigation \#0E4D8F
+\item
+  Footer background \#0E4D8F
+\item
+  Footer link text \#B9B5B5
+\item
+  Form error handling \#C34D36
+\item
+  Glossary Definition background \#FDFDE2
+\item
+  Glossary Definition border \#F5F26B
+\item
+  Link \#0072FF
+\item
+  Link hover state \#0E4D8F
+\item
+  Navigation active (current page) link \#A4CAFA
+\item
+  Navigation background darker \#E5E4E4
+\item
+  Navigation background lighter \#F3F3F3
+\item
+  Promo background \#F3F3F3
+\item
+  Subsite name in header type \#0E4D8F Done 20181208
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Check the outliers found in the first box and whisker plot when the
+  file ``Example\_Pedigree.csv'' is analyzed. The outliers are exactly
+  as described: Data beyond the end of the whiskers are called
+  ``outlying'' points and are plotted individually. The jittered points
+  are overlaid on top of the boxplot and its outliers. Done 20181112
+\item
+  Add the ability to select a sex ratio for group formation. Ratios are
+  to be female to male starting with 1:1 and progressing by 0.5 on the
+  female side, holding the male side at 1. Go up to a ratio of 10:1. The
+  progression will look something like 1:1, 1.5:1, 2:1, 2.5:1 \ldots{}
+  10:1.
+\item
+  Add the ability to use harems with 1 male and any number of females.
+  One way to do this would be to put any number of males in with the
+  females in the list of candidates and then specify that single male
+  harems are to be formed with a specified number of groups formed. This
+  will allow the select of the best males to be selected from the excess
+  male candidates.
+\item
+  Beth is to contact Mark at least a week prior to the next meeting to
+  set up a time to diagnose why her installation of the software is not
+  working. Rcpp package was not being replaced during installation and
+  update of other packages. This prevented nprcmanager from being
+  installed. Beth manually removed the old version of the Rcpp package,
+  installed a newer version and then installed nprcmanager and
+  rmsutilityr. Mark will do some research to see if others have reported
+  similar problems. Working with Beth prompted the development of a
+  function that reports the version of the application on the input tab
+  so users can easily find out which version they are using. Done
+  20181109.
+\item
+  Until we work on LabKey connectivity again, we have decided to
+  postpone Item 2 from two meetings ago: Give user the option to save a
+  skeleton configuration file to their home directory if they do not
+  have a configuration file.
+\item
+  We reaffirmed the plan for Mark to finish the tutorials (one for an
+  interactive use of the software and one for using the Shiny
+  application) and to get a draft of a technical paper written by the
+  end of the year.
+\item
+  Not discussed during the meeting was the need to develop additional
+  unit tests to cover all of the new functions created to handle the
+  PEDSYS and military formatted dates (YYYYMMDD), which look like an
+  integer. Most of those unit tests have been made, but additional ones
+  are needed to provide full or near full coverage. Done 20181112
+\item
+  Miscellaneous
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  Found that breeding groups being formed included unknown animals that
+  had been added as placeholders for unknown parents. Those were removed
+  from consideration. Done 20181119
+\item
+  Worked with Terry Hawkins on 20181119 and 20181120 to make sure the
+  LabKey code was working. He had an error in his base URL specification
+  so that initial efforts failed and the error message was misleading. I
+  have trapped the error with a tryCatch function and am sending a
+  message to the log file. This needs to be tested.
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{10}
+\tightlist
+\item
+  The next meeting is scheduled for 20181126. Due to conflicts in Mark's
+  schedule, we rescheduled for 20181210.
+\end{enumerate}
+
+\hypertarget{section-29}{%
+\subsection{20181022}\label{section-29}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Allow the use of Ego for ID. Done 20181022
+\item
+  Remove the display of the change columns. Done 20181103
+\item
+  Remove old error tabs each time a file browsing occurs. Done 20181103
+\item
+  List columns that should be there id, sire, dam, sex, birth when
+  columns are listed as missing. Done 20181103
+\item
+  Improve the reporting of multiple errors of the same type. Perhaps
+  ``The first 5 records have the following errors: . In total there were
+  records with the same type of error. Please check and correct the
+  pedigree file.'' Changes are improved over the suggestions above, but
+  similar. Done 20181103
+\item
+  Correct ``Genetic Uniqueness Score'' to ``Genome Uniqueness Score''.
+  Done 20181022
+\item
+  Item 2 from last meeting list: Give user the option to save a skeleton
+  configuration file to their home directory if they do not have a
+  configuration file.
+\item
+  During the next meeting, we will work with Beth on clearly defining
+  how breeding group formation tab should work. In the mean time, Mark
+  will examine the current behavior and code so that he understands
+  exactly what is being done.
+\item
+  The near term goal is to produce a technical paper within the next six
+  months that describes the software. Mark will get this started by
+  completing two tutorial documents. The first will be a tutorial on how
+  to use the major functions from the R console in an interactive mode.
+  The second will be a tutorial on how to use the Shiny application. The
+  first tutorial should be completed some time in December.
+\item
+  Amanda and Mark discussed the goal of enhancing the scope of software
+  to include the ability to do phenotype -- genotype association
+  studies. Amanda has some ideas regarding direction. Mark needs some
+  guidance as to what techniques to investigate.
+\end{enumerate}
+
+Below are some relevant articles found from a simple web search with the
+Google search engine using the search elements: ``genetic association
+studies in pedigrees'' *
+\url{https://www.stats.ox.ac.uk/~mcvean/gwa4.pdf} *
+\url{https://dx.doi.org/10.1186\%2F1753-6561-8-S1-S26} *
+\url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1459209/} *
+\url{https://www.ncbi.nlm.nih.gov/pubmed/12687644} 11. Not mentioned
+during the meeting but taken from other correspondence. Mark will
+Contact Daniel Nicolalde
+(\href{mailto:fdnicolalde@primate.wisc.edu}{\nolinkurl{fdnicolalde@primate.wisc.edu}};
+(608) 890-4592; INFORMATICS AND DATA SERVICES) to see if he will assist
+in getting the LabKey interface working with the Wisconsin National
+Primate Research Center system. 12. The next meeting is scheduled for
+November 5, 2018 at 4 PM Pacific Time.
+
+\hypertarget{section-30}{%
+\subsection{20180917}\label{section-30}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Change Pedigree browser button label to say ``Trim pedigree based on
+  focal animals''. Done 20180917
+\item
+  Give user the option to save a skeleton configuration file to their
+  home directory if they do not have a configuration file.
+\item
+  Incorporate the error detection functions into the shiny application
+  so that if a defective pedigree file is selected by the user a new tab
+  is created with a description of the errors detected.
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  The user should be moved to the error report tab. Done 20181020
+\item
+  The error report tab should be placed immediately after the input tab.
+  Changed to immediately before the input tab. Done 20181020
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Beth is to try the current (0.3.31) or later version of nprcmanager
+  with the pedigree file that has been failing.
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  If that file still causes an error, Beth is to send it to Mark.
+  Received file from Beth 20181018.
+\item
+  Mark will change the code to better handle the issues observed, update
+  the package, and have Beth test again. All code changes made for all
+  known file errors completed 20181020.
+\end{enumerate}
+
+\hypertarget{section-31}{%
+\subsection{20180820}\label{section-31}}
+
+Meeting was canceled.
+
+Topics I wanted to bring up.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Check on ability of Beth and Amanda to install package.
+\item
+  Demonstrate use of \textbf{qcStudbook} in interactive mode.
+\item
+  See if I should follow up with users who have had trouble loading a
+  file.
+\item
+  Demonstration to genetics and genomics group
+\item
+  Breeding group formation. Workflow and goals
+\item
+  Genetic value analyses. Workflow and goals
+\end{enumerate}
+
+\hypertarget{meeting-notes}{%
+\subsection{20180711 Meeting Notes}\label{meeting-notes}}
+
+\hypertarget{summary-statistics-tab}{%
+\subsubsection{Summary Statistics tab}\label{summary-statistics-tab}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Use default box and whisker plot with red dots for outliers.
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Changes made. Done 2018-07-14
+\item
+  Hover text to box and whisker plots added. Done 2018-07-14
+\end{enumerate}
+
+\hypertarget{pedigree-browser-tab}{%
+\subsubsection{Pedigree Browser tab}\label{pedigree-browser-tab}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Change Update breeding colony button to ``\,'' Waiting on Amanda.
+  Changed to ``Update Focal Animals'' based on instructions from Amanda.
+  Done 2018-08-04
+\item
+  Add function to ``Update Breeding Colony'' button to browse for a
+  file; add animal IDs to the window where they could be pasted. Started
+  2018-07-29 getting file not updating window. Done 2018-08-15
+\item
+  Change first bullet point to reflect change in function of the
+  ``Update Focal Animal'' button. Done 2018-08-15
+\item
+  Move first bullet point to far right. Done 2018-08-15
+\item
+  Remove second bullet point. However, provide this information when the
+  file has any type of error. This is complete for one error at a time.
+  Currently the \textbf{qcStudbook} function does not continue scanning
+  the file when an error is found. Done 2018-07-17
+\item
+  Change ``Display UIDs for partial parentage'' to ``Display UIDs''.
+  Consider coming up with a better name than ``UID''. Add hovertext to
+  explain what this button does. Proposed explanatory text: ``Unknown
+  IDs are created by the application for all animals with only one
+  parent. They begin with a capital \textbf{U}.'' Done 2018-08-15
+\item
+  Change ``Trim pedigree based on specified population'' to ``Trim
+  Pedigree''. Add hovertext to explain what this button does. See what
+  ``Trim Pedigree'' button does. Does it remove animals? Its intent is
+  to reduce the number of animals being examined. It does reduce the
+  number by removing all individuals not related to the focal animals.
+  Does it change genetic analysis. It does not change the genetic
+  analysis for the animals left. Obviously for animals removed, it does.
+  The name of this button will likely follow from what the new name for
+  ``Update Breeding Colony'' button. Done 2018-08-16
+\item
+  Add a better description for the Search field. Done 2018-08-16
+\end{enumerate}
+
+\hypertarget{error-handling}{%
+\subsubsection{Error Handling}\label{error-handling}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Develop a full set of error messages appropriate for all types of
+  input files.
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Added improved error detection and reporting for missing required
+  columns - Done 2018-07-17
+\item
+  Added the ability to call qcStudbook interactively with a flag
+  (\textbf{reportErrors}) set to TRUE that causes qcStudbook to report
+  back a list with all errors detected within the input file. Not all
+  errors can be detected in a single pass because some errors preclude
+  checking for others. For example, if the birth date column has an
+  invalid format, the parental age cannot be checked. If no errors are
+  found with \textbf{reportErrors} set to TRUE and NULL value is
+  returned. \textbf{reportErrors} defaults to \textbf{FALSE}.
+\item
+  This emphasizes the need for a good set of corrupt input files for
+  testing and unit test development.
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Amanda and Beth will provide me with some files with errors.
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Amanda provided a file with two error types: bad birth date type -
+  integer instead of character representation of a date and animal
+  appearing as a sire and a dam. Done 20180720
+\item
+  Both errors were caught, but the first error was only seen after
+  correcting the first. It would be better to report all errors and set
+  a flag that told the program to stop at the end of parsing the entire
+  pedigree.
+\item
+  Three files were added to the example files:
+  \emph{Example\_Pedigree.csv},
+  \emph{Pedigree\_File\_Example\_134M\_dam\_removed.csv}, and
+  \emph{Pedigree\_File\_Example\_CSV.csv} Done 20180721
+\item
+  These files need to be documented.
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Refactored some code within \textbf{qcStudbook} to a separate function
+  \textbf{unknown2NA}. Done 2018-07-18
+\item
+  Added bad date string format detection in \textbf{convertDates}, which
+  is now \textbf{convertDate}. Also added unit tests for
+  \textbf{convertDate}. Done 2018-07-21
+\item
+  Added ability to handle dates with NA to \textbf{convertDates} Done
+  2018-07-22
+\item
+  Added unit test coverage of \textbf{updateProgress} calls in
+  \emph{test\_reportGV.R} Done 2018-07-22
+\item
+  Corrected a bug and added corollary unit test for
+  \textbf{rankSubjects}. Done 2018-07-29
+\item
+  Added test for missing \textbf{age} column in \emph{orderReport}
+  function. This also allows correct ordering when the age column is
+  missing. Done 2018-07-29
+\item
+  Added unit tests for \emph{findLoops} function. Done 2018-07-30
+\item
+  Added check for class on objects in \emph{convertDates} function,
+  because it was failing when objects were already dates. It now passes
+  those objects through untouched. Done 2018-08-04
+\item
+  Added some debug code for updating focal animals (still named breeding
+  colony update in code) Done 2018-08-15
+\end{enumerate}
+
+\hypertarget{multiple-tabs}{%
+\subsubsection{Multiple tabs}\label{multiple-tabs}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Come up with a different word for ``Breeders''. What do you think
+  about \emph{Managed Animals}
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Amanda suggested \emph{Focal Animals} -- this is being adopted.
+\end{enumerate}
+
+\hypertarget{miscellaneous-items}{%
+\subsubsection{Miscellaneous items}\label{miscellaneous-items}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Added automatic generation of a web site
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  2018-07-17 first draft
+\item
+  Need to first move content that has been prepared to the correct
+  location. Done 2018-08-16
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Changed read.csv to read.table in code to emphasize we are able to
+  read multiple file types.
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  2018-07-17
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Amended documentation for the \textbf{addGenotype} function to
+  indicate that it is assuming the \emph{genotype} object was opened by
+  \textbf{checkGenotypeFile}. 2018-07-17
+\item
+  Added use of convenience functions \textbf{get\_and\_or\_list} and
+  \textbf{is\_valid\_data\_str} from the
+  \emph{github/rmsharp/rmsharp/rmsutilityr} repository. 2018-07-21
+\item
+  Added documentation for data elements \textbf{finalRpt} and
+  \textbf{rpt}, which are both created by the \emph{reportGV} function.
+  2018-07-29
+\item
+  Added brief tutorial on how to use \emph{findLoops} function.
+  2018-08-04
+\end{enumerate}
+
+\hypertarget{questions-that-came-up-after-the-meeting}{%
+\subsubsection{Questions that came up after the
+meeting}\label{questions-that-came-up-after-the-meeting}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  What is the meaning of the following:
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Text under \textbf{Export} button on \emph{Pedigree Browser} tab. ``A
+  population must be defined before proceeding to the Genetic Value
+  Analysis'\,'.
+\item
+  Check box above \textbf{Export} button on \emph{Pedigree Browser} tab.
+  ``Trim pedigree based on specified population'\,'. Its intent is to
+  reduce the number of animals being examined. It does reduce the number
+  by removing all individuals not related to the focal animals. Does it
+  change genetic analysis. It does not change the genetic analysis for
+  the animals left. Obviously for animals removed, it does. Done
+  2018-08-16
+\end{enumerate}
+
+\hypertarget{meeting-notes-1}{%
+\subsection{20180611 Meeting Notes}\label{meeting-notes-1}}
+
+\hypertarget{input-tab}{%
+\subsubsection{Input tab}\label{input-tab}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Move Column content into description column separate with colon - Done
+\item
+  Change Column Name to Allowable Name - Done
+\item
+  Names have alphanumeric plus ``\_``,''-``, and'' ``. - Done
+\item
+  Remove '' Other characters have not been tested.'' - Done
+\item
+  Change ``Any animals listed as a Sire or Dam that do not have their
+  own row or line entry as an Ego will be added.'' to A new row entry
+  will be added for any Sire or Dam that do not already have their own
+  row as an Ego. - Done
+\item
+  Change ``Parents will be checked to ensure their own Ego entry is the
+  correct sex.'' to ``Animals will be checked to ensure that their sex
+  is consistent throughout the file.'''' - Done
+\item
+  Use Allele\_1 Allele\_2 - Done
+\end{enumerate}
+
+\hypertarget{summary-statistics-tab-1}{%
+\subsubsection{Summary Statistics tab}\label{summary-statistics-tab-1}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Remove background on histograms - Done
+\item
+  Add box and whisker plot to right of summary statistics histograms -
+  Done
+\item
+  Use Glossary for definition of terms
+\end{enumerate}
+
+\hypertarget{meeting-notes-2}{%
+\subsection{20180501 Meeting Notes}\label{meeting-notes-2}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  The second bullet point under the Input File Handling section of the
+  Input tab says ``Please be aware that animals with no parents will be
+  treated as founders in these calculations, i.e., sources of new
+  genetic variation in the colony.''
+\end{enumerate}
+
+I am assuming that this is fine and stated only to keep users aware that
+if they have parental information it has to be entered.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  The third bullet point under the Input File Handling section of the
+  Input tab says ``Designation of two alleles is required as currently
+  there is no accommodation for partial genetic information for an
+  individual.''
+\end{enumerate}
+
+Is this will be a problem that needs to be addressed?
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Reminder for Mark only: The third bullet point under the Input File
+  Handling section of the Input tab says ``If the Age column is
+  provided, the program will use the user-specified age.''
+\end{enumerate}
+
+Make sure this is true. I may also want to check for internal
+inconsistencies.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  In the Input File Handling section of the Input tab the last bullet
+  point immediately above the first table says ``Genotype data may be
+  supplied within the pedigree file or in a separate genotype file. Only
+  two additional columns (first and second) are required when the
+  genotypes are provided within the pedigree file.''
+\end{enumerate}
+
+This should be explained more fully and the program behavior may need to
+be changed. Currently the program assumes the columns first and second
+are there and are correctly formed. Currently there is no check to
+ensure that first\_name and second\_name data elements are consistent
+with first and second data elements.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  In the Input File Handling section of the Input tab and under the
+  first table of column names, there is a section describing what is
+  done by the qcStudbook function to correct data and create new
+  columns.
+\end{enumerate}
+
+Should we provide a summary of changes made to the input data such as
+changes in column names, sex identifiers, etc., removal of duplicated
+rows and columns that are added?
+
+Need name for genotype (first\_name, second\_name) Need new name for
+breeders only file type. Reword ``Animals without birth dates are not
+considered.'' When minimum parent age is included, animals without birth
+dates are not rejected.
+
+Change update breeding colony (pedigree browser) by adding explanatory
+text.
+
+\hypertarget{miscellaneous-accomplishments}{%
+\subsection{Miscellaneous
+Accomplishments}\label{miscellaneous-accomplishments}}
+
+These should be stored elsewhere
+
+\hypertarget{section-32}{%
+\paragraph{20180429}\label{section-32}}
+
+Test coverage is 86.32\%.
+
+\hypertarget{section-33}{%
+\paragraph{20171004}\label{section-33}}
+
+Unit test coverage is 84.79\%.
+
+\hypertarget{section-34}{%
+\paragraph{20170921}\label{section-34}}
+
+Unit test coverage is about 15\%.
+
+\hypertarget{section-35}{%
+\paragraph{20170919}\label{section-35}}
+
+We have successfully installed and used \emph{nprcmanager} on Microsoft
+(MS) Windows 7, MS Windows 10, and MacOS 10.12.6 running R 3.4.1.
+
+\hypertarget{section-36}{%
+\paragraph{20170917}\label{section-36}}
+
+I discovered why the plot of genetic uniqueness scores was not as
+expected. It was from an analysis where 0 was the threshold setting,
+which I think we should consider removing as an option. I have set the
+default to 3, which is what Amanda Vinson's paper indicated that ONPRC
+typically used.
+
+I got the logging system integrated into the package. I am using the
+package futile.logger (funny name). Note the check box at the bottom of
+the side panel on the two attached images. When the Debug on check box
+is checked (it is not checked by default), the application writes to a
+file in the users home directory named \emph{nprcmanager.log}. Currently
+I am only logging events occurring the the \emph{server.R} file, because
+that is where I tend to have most of my problems show up. I have
+attached an example file in which turned on logging at the debug level
+and then read in a couple of pedigree files.
+
+I added code coverage reports to the automated build system running on
+Travis-CI.org. Currently we only have 5.68\% of the code being tested
+with the unit tests I created thus far. I do not know the code well
+enough to know what percentage we will have when I feel comfortable, but
+I know most of the functions have no tests at all.
+
+\hypertarget{section-37}{%
+\paragraph{20170916}\label{section-37}}
+
+Can now assign known genotypes to individuals and to incorporate that
+information into the gene dropping routine. This has been done at the
+function level in the \emph{geneDrop} function. The pedigree submitted
+via the UI can optionally contain genetic information.
+
+\hypertarget{section-38}{%
+\paragraph{20170915}\label{section-38}}
+
+Added a genetic uniqueness plot to the Summary Statistics tab.
+
+\hypertarget{section-39}{%
+\paragraph{20170911}\label{section-39}}
+
+I have connected the Travis CI (continuous integration) tool to my
+github.com/rmsharp/nprcmanager so that when I check in code it
+automatically tries to build it from scratch using packages from CRAN.
+Travis CI is now automatically building nprcmanager without errors or
+warnings. This puts us considerably closer to being able to offer the
+package via CRAN if we want.
+
+\hypertarget{meeting-notes-3}{%
+\subsection{20170323 Meeting notes}\label{meeting-notes-3}}
+
+I met with Jack Kent, Deborah Newman, and Charles Peterson about how to
+use genetic data in a gene dropping simulation.
+
+From: R. Mark Sharp
+\href{mailto:msharp@TxBiomed.org}{\nolinkurl{msharp@TxBiomed.org}}
+
+Subject: Re: Genetic management of colonies
+
+Date: March 23, 2017 at 5:01:07 PM CDT
+
+To: Jack Kent
+\href{mailto:jkent@txbiomed.org}{\nolinkurl{jkent@txbiomed.org}}
+
+Cc: Deborah Newman
+\href{mailto:dnewman@txbiomedgenetics.org}{\nolinkurl{dnewman@txbiomedgenetics.org}},
+Charles Peterson
+\href{mailto:charlesp@txbiomed.org}{\nolinkurl{charlesp@txbiomed.org}}
+
+Jack, Debbie, and Charles,
+
+Thank you for meeting with me. I appreciate your help in clarifying the
+various stages of the issues associated with providing genetic
+management guidance via simulation with partially known MHC data.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  I will look more closely into what will be needed to add genetic
+  information and gene frequency information into the gene dropping
+  routines in the kinship2 package. The initial implementation will use
+  only a single locus, which should be a sufficient for MHC data
+
+  A. First step will be to ensure we get expected proportions of genes
+  in children of individuals when we provide genetic data to all
+  founders using a gene frequency based algorithm.
+
+  B. Second step will be to ensure we get expected proportions of genes
+  in children when all parental generations have fully known genotypes.
+
+  C. Third step will be to ensure we get expected proportions of genes
+  in children when parental generations have partially known genotypes
+  and all other genotypes are uninformative.
+
+  D. Fourth step will be to ensure we get expected proportions of genes
+  in children when parental generations have partially known genotypes
+  and remaining parental genes are determined by gene frequency.
+\item
+  We will not worry about getting rid of genes in the pedigrees since
+  colony managers need only not breed animals that carry unwanted
+  alleles.
+\item
+  I will produce a small number of pedigree drawings using the data
+  Debbie has provided to get feedback on preferences and additional
+  requirements.
+\item
+  I will not deal with paternity and maternity issues within the
+  pedigrees at this time.
+\end{enumerate}
+
+Thanks again.
+
+\end{document}

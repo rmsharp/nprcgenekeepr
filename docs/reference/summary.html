@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5.9001</span>
       </span>
     </div>
 
@@ -166,75 +166,78 @@
 <p>object of class summary.nprcgenekeeprGV</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='va'>errorList</span> <span class='op'>&lt;-</span> <span class='fu'><a href='qcStudbook.html'>qcStudbook</a></span><span class='op'>(</span><span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='pedOne.html'>pedOne</a></span>, minParentAge <span class='op'>=</span> <span class='fl'>0</span>,
-reportChanges <span class='op'>=</span> <span class='cn'>TRUE</span>,
-reportErrors <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>errorList</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Error: The animal listed as a sire and also listed as a female is: s1.
-#&gt; Error: The animal listed as a dam and also listed as a male is: d1.
-#&gt; Change: The column where space was removed is: si re to sire.
-#&gt; Change: The columns where underscore was removed are: ego_id, dam_id, and birth_date to egoid, damid, and birthdate.
-#&gt; Change: The column changed from: egoid to id.
-#&gt; Change: The column changed from: damid to dam.
-#&gt; Change: The column changed from: birthdate to birth.
-#&gt; 
-#&gt; Please check and correct the pedigree file.
-#&gt;  
-#&gt; Animal records where parent records are suspicous because of dates.
-#&gt; One or more parents appear too young at time of birth.
-#&gt;   dam sire id sex      birth recordStatus exit  sireBirth   damBirth sireAge
-#&gt; 2  d2   s1 o2   F 2009-03-17     original &lt;NA&gt; 2000-07-18 2015-09-16    8.66
-#&gt; 3  d2   s2 o3   F 2012-04-11     original &lt;NA&gt; 2006-06-19 2015-09-16    5.81
-#&gt; 4  d2   s2 o4   M 2006-04-13     original &lt;NA&gt; 2006-06-19 2015-09-16   -0.18
-#&gt;   damAge
-#&gt; 2   -6.5
-#&gt; 3   -3.4
-#&gt; 4   -9.4</div><div class='input'><span class='co'># }</span>
-
-<span class='co'># \donttest{</span>
-<span class='va'>examplePedigree</span> <span class='op'>&lt;-</span> <span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='examplePedigree.html'>examplePedigree</a></span>
-<span class='va'>breederPed</span> <span class='op'>&lt;-</span> <span class='fu'><a href='qcStudbook.html'>qcStudbook</a></span><span class='op'>(</span><span class='va'>examplePedigree</span>, minParentAge <span class='op'>=</span> <span class='fl'>2</span>,
-                         reportChanges <span class='op'>=</span> <span class='cn'>FALSE</span>,
-                         reportErrors <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-<span class='va'>focalAnimals</span> <span class='op'>&lt;-</span> <span class='va'>breederPed</span><span class='op'>$</span><span class='va'>id</span><span class='op'>[</span><span class='op'>!</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>breederPed</span><span class='op'>$</span><span class='va'>sire</span><span class='op'>)</span> <span class='op'>&amp;</span>
-                                  <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>breederPed</span><span class='op'>$</span><span class='va'>dam</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>&amp;</span>
-                                <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>breederPed</span><span class='op'>$</span><span class='va'>exit</span><span class='op'>)</span><span class='op'>]</span>
-<span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'><a href='setPopulation.html'>setPopulation</a></span><span class='op'>(</span>ped <span class='op'>=</span> <span class='va'>breederPed</span>, ids <span class='op'>=</span> <span class='va'>focalAnimals</span><span class='op'>)</span>
-<span class='va'>trimmedPed</span> <span class='op'>&lt;-</span> <span class='fu'><a href='trimPedigree.html'>trimPedigree</a></span><span class='op'>(</span><span class='va'>focalAnimals</span>, <span class='va'>breederPed</span><span class='op'>)</span>
-<span class='va'>probands</span> <span class='op'>&lt;-</span> <span class='va'>ped</span><span class='op'>$</span><span class='va'>id</span><span class='op'>[</span><span class='va'>ped</span><span class='op'>$</span><span class='va'>population</span><span class='op'>]</span>
-<span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'><a href='trimPedigree.html'>trimPedigree</a></span><span class='op'>(</span><span class='va'>probands</span>, <span class='va'>ped</span>, removeUninformative <span class='op'>=</span> <span class='cn'>FALSE</span>,
-                    addBackParents <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-<span class='va'>geneticValue</span> <span class='op'>&lt;-</span> <span class='fu'><a href='reportGV.html'>reportGV</a></span><span class='op'>(</span><span class='va'>ped</span>, guIter <span class='op'>=</span> <span class='fl'>50</span>, <span class='co'># should be &gt;= 1000</span>
-                         guThresh <span class='op'>=</span> <span class='fl'>3</span>,
-                         byID <span class='op'>=</span> <span class='cn'>TRUE</span>,
-                         updateProgress <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
-<span class='va'>trimmedGeneticValue</span> <span class='op'>&lt;-</span> <span class='fu'><a href='reportGV.html'>reportGV</a></span><span class='op'>(</span><span class='va'>trimmedPed</span>, guIter <span class='op'>=</span> <span class='fl'>50</span>, <span class='co'># should be &gt;= 1000</span>
-                                guThresh <span class='op'>=</span> <span class='fl'>3</span>,
-                                byID <span class='op'>=</span> <span class='cn'>TRUE</span>,
-                                updateProgress <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>geneticValue</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; The genetic value report 
-#&gt; Individuals in Pedigree: 327 
-#&gt; Male Founders: 3
-#&gt; Female Founders: 17
-#&gt; Total Founders: 20 
-#&gt; Founder Equivalents: 109.67 
-#&gt; Founder Genome Equivalents: 47.6 
-#&gt; Live Offspring: 321 
-#&gt; High Value Individuals: 225 
-#&gt; Low Value Individuals: 102 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>trimmedGeneticValue</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; The genetic value report 
-#&gt; Individuals in Pedigree: 704 
-#&gt; Male Founders: 3
-#&gt; Female Founders: 17
-#&gt; Total Founders: 20 
-#&gt; Founder Equivalents: 116.8 
-#&gt; Founder Genome Equivalents: 65.67 
-#&gt; Live Offspring: 1004 
-#&gt; High Value Individuals: 455 
-#&gt; Low Value Individuals: 249 </div><div class='input'><span class='co'># }</span>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># \donttest{</span></span>
+<span class='r-in'><span class='va'>errorList</span> <span class='op'>&lt;-</span> <span class='fu'><a href='qcStudbook.html'>qcStudbook</a></span><span class='op'>(</span><span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='pedOne.html'>pedOne</a></span>, minParentAge <span class='op'>=</span> <span class='fl'>0</span>,</span>
+<span class='r-in'>reportChanges <span class='op'>=</span> <span class='cn'>TRUE</span>,</span>
+<span class='r-in'>reportErrors <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>errorList</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Error: The animal listed as a sire and also listed as a female is: s1.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Error: The animal listed as a dam and also listed as a male is: d1.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Change: The column where space was removed is: si re to sire.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Change: The columns where underscore was removed are: ego_id, dam_id, and birth_date to egoid, damid, and birthdate.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Change: The column changed from: egoid to id.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Change: The column changed from: damid to dam.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Change: The column changed from: birthdate to birth.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Please check and correct the pedigree file.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Animal records where parent records are suspicous because of dates.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> One or more parents appear too young at time of birth.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   dam sire id sex      birth recordStatus exit  sireBirth   damBirth sireAge</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2  d2   s1 o2   F 2009-03-17     original &lt;NA&gt; 2000-07-18 2015-09-16    8.66</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3  d2   s2 o3   F 2012-04-11     original &lt;NA&gt; 2006-06-19 2015-09-16    5.81</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4  d2   s2 o4   M 2006-04-13     original &lt;NA&gt; 2006-06-19 2015-09-16   -0.18</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   damAge</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2   -6.5</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3   -3.4</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4   -9.4</span>
+<span class='r-in'><span class='co'># }</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># \donttest{</span></span>
+<span class='r-in'><span class='va'>examplePedigree</span> <span class='op'>&lt;-</span> <span class='fu'>nprcgenekeepr</span><span class='fu'>::</span><span class='va'><a href='examplePedigree.html'>examplePedigree</a></span></span>
+<span class='r-in'><span class='va'>breederPed</span> <span class='op'>&lt;-</span> <span class='fu'><a href='qcStudbook.html'>qcStudbook</a></span><span class='op'>(</span><span class='va'>examplePedigree</span>, minParentAge <span class='op'>=</span> <span class='fl'>2</span>,</span>
+<span class='r-in'>                         reportChanges <span class='op'>=</span> <span class='cn'>FALSE</span>,</span>
+<span class='r-in'>                         reportErrors <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>focalAnimals</span> <span class='op'>&lt;-</span> <span class='va'>breederPed</span><span class='op'>$</span><span class='va'>id</span><span class='op'>[</span><span class='op'>!</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>breederPed</span><span class='op'>$</span><span class='va'>sire</span><span class='op'>)</span> <span class='op'>&amp;</span></span>
+<span class='r-in'>                                  <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>breederPed</span><span class='op'>$</span><span class='va'>dam</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>&amp;</span></span>
+<span class='r-in'>                                <span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>breederPed</span><span class='op'>$</span><span class='va'>exit</span><span class='op'>)</span><span class='op'>]</span></span>
+<span class='r-in'><span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'><a href='setPopulation.html'>setPopulation</a></span><span class='op'>(</span>ped <span class='op'>=</span> <span class='va'>breederPed</span>, ids <span class='op'>=</span> <span class='va'>focalAnimals</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>trimmedPed</span> <span class='op'>&lt;-</span> <span class='fu'><a href='trimPedigree.html'>trimPedigree</a></span><span class='op'>(</span><span class='va'>focalAnimals</span>, <span class='va'>breederPed</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>probands</span> <span class='op'>&lt;-</span> <span class='va'>ped</span><span class='op'>$</span><span class='va'>id</span><span class='op'>[</span><span class='va'>ped</span><span class='op'>$</span><span class='va'>population</span><span class='op'>]</span></span>
+<span class='r-in'><span class='va'>ped</span> <span class='op'>&lt;-</span> <span class='fu'><a href='trimPedigree.html'>trimPedigree</a></span><span class='op'>(</span><span class='va'>probands</span>, <span class='va'>ped</span>, removeUninformative <span class='op'>=</span> <span class='cn'>FALSE</span>,</span>
+<span class='r-in'>                    addBackParents <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>geneticValue</span> <span class='op'>&lt;-</span> <span class='fu'><a href='reportGV.html'>reportGV</a></span><span class='op'>(</span><span class='va'>ped</span>, guIter <span class='op'>=</span> <span class='fl'>50</span>, <span class='co'># should be &gt;= 1000</span></span>
+<span class='r-in'>                         guThresh <span class='op'>=</span> <span class='fl'>3</span>,</span>
+<span class='r-in'>                         byID <span class='op'>=</span> <span class='cn'>TRUE</span>,</span>
+<span class='r-in'>                         updateProgress <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>trimmedGeneticValue</span> <span class='op'>&lt;-</span> <span class='fu'><a href='reportGV.html'>reportGV</a></span><span class='op'>(</span><span class='va'>trimmedPed</span>, guIter <span class='op'>=</span> <span class='fl'>50</span>, <span class='co'># should be &gt;= 1000</span></span>
+<span class='r-in'>                                guThresh <span class='op'>=</span> <span class='fl'>3</span>,</span>
+<span class='r-in'>                                byID <span class='op'>=</span> <span class='cn'>TRUE</span>,</span>
+<span class='r-in'>                                updateProgress <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>geneticValue</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> The genetic value report </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Individuals in Pedigree: 327 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Male Founders: 3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Female Founders: 17</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Total Founders: 20 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Founder Equivalents: 109.67 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Founder Genome Equivalents: 47.6 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Live Offspring: 321 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> High Value Individuals: 225 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Low Value Individuals: 102 </span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>trimmedGeneticValue</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> The genetic value report </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Individuals in Pedigree: 704 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Male Founders: 3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Female Founders: 17</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Total Founders: 20 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Founder Equivalents: 116.8 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Founder Genome Equivalents: 65.67 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Live Offspring: 1004 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> High Value Individuals: 455 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Low Value Individuals: 249 </span>
+<span class='r-in'><span class='co'># }</span></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -246,7 +249,7 @@ reportErrors <span class='op'>=</span> <span class='cn'>TRUE</span><span class='
 
       <footer>
       <div class="copyright">
-  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
+  <p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
