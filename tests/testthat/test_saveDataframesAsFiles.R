@@ -54,3 +54,12 @@ test_that("makeExamplePedigreeFile creates Excel files", {
   expect_equal(row.names.data.frame(pedCsv_2),
                row.names.data.frame(nprcgenekeepr::pedGood))
 })
+test_that("makeExamplePedigreeFile detects a non-dataframe object", {
+  dfList <- list(
+  lacy1989Ped = nprcgenekeepr::lacy1989Ped,
+  pedGood = nprcgenekeepr::pedGood,
+  charVector = c("not a data.frame"))
+  expect_error(saveDataframesAsFiles(dfList, baseDir = tempdir(),
+                                     fileType = "excel"),
+               "dfList must be a list containing only dataframes")
+})
