@@ -39,4 +39,8 @@ test_that("calculateSexRatio calculates correctly", {
   expect_equal(calculateSexRatio(ids = character(0), ped = pedWithGenotype,
                                  additionalMales = 2,
                                  additionalFemales = 1), 0.5)
+  expect_equal(calculateSexRatio(ids = character(0), ped = pedWithGenotype,
+                                 additionalMales = 0,
+                                 additionalFemales = 0), NA)
+
 })

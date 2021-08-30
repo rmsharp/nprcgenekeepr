@@ -59,5 +59,8 @@ test_that(
   }
   expect_equal(calculateSexRatio(groupMembers[[1]], ped), 2.0,
                tolerance = .1, scale = 1)
+  expect_equal(calculateSexRatio(groupMembers[[1]], ped, additionalMales = 0,
+                                 additionalFemales = 0), 2.0,
+               tolerance = .1, scale = 1)
 
   })

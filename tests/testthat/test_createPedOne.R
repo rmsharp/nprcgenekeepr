@@ -8,7 +8,7 @@ test_that("createPedOne makes the right pedigree", {
   expect_equal(ncol(pedOne), 6)
   expect_equal(names(pedOne)[1], "ego_id")
 })
-pedOne <- nprcgenekeepr:::createPedOne(savePed = TRUE)
+pedOne <- suppressMessages(nprcgenekeepr:::createPedOne(savePed = TRUE))
 test_that("createPedOne makes the right pedigree when saving file", {
   expect_equal(nrow(pedOne), 8)
   expect_equal(ncol(pedOne), 6)
