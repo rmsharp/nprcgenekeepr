@@ -1,5 +1,19 @@
-#' Counts the number of occurrences of each kinship value seen for a pair of
-#' individuals in a series of simulated pedigrees.
+#' Summary statistics for imputed kinship values
+#'
+#' Makes a data.frame object containing simulated kinship summary statistics
+#' using the counts of kinship values list from \code{countKinshipValues}.
+#'
+#' @returns a data.frame with one row of summary statistics for each imputed
+#' kinship value. The columns are as follows:
+#'  \code{id_1},
+#'  \code{id_2},
+#'  \code{min},
+#'  \code{secondQuartile},
+#'  \code{mean},
+#'  \code{median},
+#'  \code{thirdQuartile},
+#'  \code{max}, and
+#'  \code{sd}.
 #'
 #' @examples
 #' \donttest{
@@ -40,27 +54,35 @@
 #' kValues <- kinshipMatricesToKValues(simKinships)
 #' extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1:n)
 #' counts <- countKinshipValues(kValues)
+#' stats <- summarizeKinshipValues(counts)
 #' }
 #'
-#' @param kValues matrix of kinship values from simulated pedigrees where each
-#'        row represents a pair of individuals in the pedigree and each column
-#'        represents the vector of kinship values generated in a simulated
-#'        pedigree.
-#' \emph{nprcgenekeepr})
+#' @param countedKValues list object from countKinshipValues function that
+#' containes the lists \code{kinshipIds}, \code{kinshipValues},
+#' and \code{kinshipCounts}.
 #' @export
-countKinshipValues <- function(kValues) {
-  idCols <- c("id_1", "id_2")
-  valueCols <- names(kValues)[!is.element(names(kValues), idCols)]
-  kinshipIds <- kinshipValues <- kinshipCounts <-
-    vector(mode = "list", length = nrow(kValues))
+summarizeKinshipValues <- function(countedKValues) {
+  if (!all(is.element(names(countedKValues), c("kinshipIds", "kinshipValues",
+                                  "kinshipCounts"))))
+    stop("summarizeKinshipValues received wrong object")
+  stats <- data.frame()
 
-  for (row in seq_len(nrow(kValues))) {
-    valuesTable <- table(as.numeric(kValues[row, valueCols]))
-    kinshipIds[[row]] <- as.character(kValues[row, idCols])
-    kinshipValues[[row]] <- as.numeric(names(valuesTable))
-    kinshipCounts[[row]] <- as.numeric(valuesTable)
+  for (i in seq_along(countedKValues$kinshipIds)) {
+    numbers <- rep(unlist(countedKValues$kinshipValues[i]),
+                   unlist(countedKValues$kinshipCounts[i]))
+    if (any(is.na(numbers), is.na(mean(numbers))))
+      cat(paste0("i = ", i))
+    tukeys <- fivenum(numbers)
+    stats <- rbind(stats, data.frame(
+      id_1 = countedKValues$kinshipIds[[i]][1],
+      id_2 = countedKValues$kinshipIds[[i]][2],
+      min = tukeys[1],
+      secondQuartile = tukeys[1],
+      mean = mean(numbers),
+      median = tukeys[3],
+      thirdQuartile = tukeys[4],
+      max = tukeys[5],
+      sd = sd(numbers)))
   }
-  list(kinshipIds = kinshipIds,
-       kinshipValues = kinshipValues,
-       kinshipCounts = kinshipCounts)
+  stats
 }

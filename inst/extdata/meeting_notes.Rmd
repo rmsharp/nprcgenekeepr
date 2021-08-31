@@ -50,9 +50,10 @@ Provided in reverse chronological order
 1.  A clean build: 0 errors, 0 warnings, 0 notes with 
     updated website pages will be uploaded. However, since this is on the 
     issue8 development branch, it should not affect the current GitHub website.
-1.  Next for Mark is to create the function to use the output of 
-    __countKinshipValues__ to get summary statistics and a function to create
-    histograms. The function to create histograms is of lower priority.
+1.  Mark made __summarizeKinshipValues__ that uses the output of 
+    __countKinshipValues__ to return a dataframe of summary statistics
+1.  Mark is to make a function to create histograms of the simulated kinship
+    values. This function is of low priority.
     
 ## 20210806
 1.  Preparation notes

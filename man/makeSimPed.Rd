@@ -11,10 +11,16 @@ makeSimPed(ped, allSimParents)
 
 \item{allSimParents}{list made up of lists where the internal list
 has the offspring ID \code{id}, a vector of representative sires
-(\code{sires}), and a vector of representative dams(\code{dams}).}
+(\code{sires}), and a vector of representative dams (\code{dams}).}
 }
 \description{
 For each \code{id} in \code{allSimParents} with one or more unknow parents
 each unknown parent is replaced with a random sire or dam as needed from
 the corresponding parent vector (\code{sires} or \code{dams}).
+}
+\details{
+The algorithm assigns parents randomly from the lists of possible sires and
+dams and does not prevent a dam from being selected more than once within
+the same breeding period. While this is probably not introducing a large
+error, it is not ideal.
 }

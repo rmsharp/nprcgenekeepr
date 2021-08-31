@@ -97,7 +97,7 @@
 
 \title{Meeting Notes and Things To Do}
 \author{R. Mark Sharp}
-\date{2021-08-29}
+\date{2021-08-30}
 
 \begin{document}
 \maketitle
@@ -139,15 +139,19 @@ Provided in reverse chronological order
 \item
   After the meeting, Mark corrected the countKinshipValues functions,
   added a set of unit tests for the function, and added over 20 more
-  unit tests to eight other functions. A clean build: 0 errors, 0
-  warnings, 0 notes with updated website pages will be uploaded.
-  However, since this is on the issue8 development branch, it should not
-  affect the current GitHub website.
+  unit tests to eight other functions. Current coverage is just over
+  95\%.
 \item
-  Next function for Mark is to create the function to use the output of
-  \textbf{countKinshipValues} to get summary statistics and a function
-  to create histograms. The function to create histograms is of lower
-  priority.
+  A clean build: 0 errors, 0 warnings, 0 notes with updated website
+  pages will be uploaded. However, since this is on the issue8
+  development branch, it should not affect the current GitHub website.
+\item
+  Mark made \textbf{summarizeKinshipValues} that uses the output of
+  \textbf{countKinshipValues} to return a dataframe of summary
+  statistics
+\item
+  Mark is to make a function to create histograms of the simulated
+  kinship values. This function is of low priority.
 \end{enumerate}
 
 \hypertarget{section-1}{%
@@ -736,34 +740,34 @@ Version 1.0.3       293  13776  7775             441              4613          
 
 \begin{table}
 
-\caption{\label{tab:code-change-table}Simple metrics for the Original Version (20160816) and Current Version 1.0.5.9000 (20210421).}
+\caption{\label{tab:code-change-table}Simple metrics for the Original Version (20160816) and Current Version 1.0.5.9001 (20210829).}
 \begin{tabular}[t]{l|r|>{\raggedleft\arraybackslash}p{5em}|r|r|r|r}
 \hline
 Source & Files & Lines & Code & Blank Lines & Document Lines & Comment Lines\\
 \hline
 Original Files & 8 & 3621 & 1927 & 531 & 0 & 1163\\
 
-Version 1.0.5.9000 & 309 & 14687 & 8334 & 478 & 4910 & 965\\
+Version 1.0.5.9001 & 311 & 14837 & 8412 & 485 & 4975 & 965\\
 \hline
 \end{tabular}
 \end{table}
 \begin{table}
 
-\caption{\label{tab:detail-code-change-table}Simple metrics for the Original Version (20160816) and Current Version 1.0.5.9000 (20210421) and current version groups of functions.}
+\caption{\label{tab:detail-code-change-table}Simple metrics for the Original Version (20160816) and Current Version 1.0.5.9001 (20210829) and current version groups of functions.}
 \begin{tabular}[t]{l|r|>{\raggedleft\arraybackslash}p{5em}|r|r|r|r}
 \hline
 Source & Files & Lines & Code & Blank Lines & Document Lines & Comment Lines\\
 \hline
 Original Files & 8 & 3621 & 1927 & 531 & 0 & 1163\\
 \hline
-Version 1.0.5.9000 & 309 & 14687 & 8334 & 478 & 4910 & 965\\
+Version 1.0.5.9001 & 311 & 14837 & 8412 & 485 & 4975 & 965\\
 \hline
 \hline
-1.0.5.9000: functions & 170 & 8660 & 3107 & 229 & 4686 & 638\\
+1.0.5.9001: functions & 171 & 8748 & 3131 & 230 & 4749 & 638\\
 \hline
-1.0.5.9000: ui & 11 & 1790 & 1514 & 98 & 2 & 176\\
+1.0.5.9001: ui & 11 & 1790 & 1514 & 98 & 2 & 176\\
 \hline
-1.0.5.9000: tests & 128 & 4237 & 3713 & 151 & 222 & 151\\
+1.0.5.9001: tests & 129 & 4299 & 3767 & 157 & 224 & 151\\
 \hline
 \end{tabular}
 \end{table}
