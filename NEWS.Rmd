@@ -11,7 +11,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# nprcgenekeepr 1.0.5.9001 (20210829)
+# nprcgenekeepr 1.0.5.9001 (20210830)
 -   Major changes
     -   Added ability to use simulation to estimate the kinship values of 
         animals with incomplete parental information that are known to have

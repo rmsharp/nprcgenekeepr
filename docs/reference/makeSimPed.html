@@ -158,10 +158,16 @@ the corresponding parent vector (<code>sires</code> or <code>dams</code>).</p>
       <th>allSimParents</th>
       <td><p>list made up of lists where the internal list
 has the offspring ID <code>id</code>, a vector of representative sires
-(<code>sires</code>), and a vector of representative dams(<code>dams</code>).</p></td>
+(<code>sires</code>), and a vector of representative dams (<code>dams</code>).</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The algorithm assigns parents randomly from the lists of possible sires and
+dams and does not prevent a dam from being selected more than once within
+the same breeding period. While this is probably not introducing a large
+error, it is not ideal.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

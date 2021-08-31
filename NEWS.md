@@ -1,9 +1,9 @@
 NEWS
 ================
 R. Mark Sharp
-2021-08-29
+2021-08-30
 
-# nprcgenekeepr 1.0.5.9001 (20210829)
+# nprcgenekeepr 1.0.5.9001 (20210830)
 
 -   Major changes
     -   Added ability to use simulation to estimate the kinship values
