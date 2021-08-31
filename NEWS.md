@@ -1,7 +1,7 @@
 NEWS
 ================
 R. Mark Sharp
-2021-08-30
+2021-08-31
 
 # nprcgenekeepr 1.0.5.9001 (20210830)
 
@@ -16,6 +16,7 @@ R. Mark Sharp
     -   Increase unit test coverage primarily to include more rare
         events and events that should not happen and are trapped and
         result in errors.
+    -   Changed to travis-ci.com
 
 # nprcgenekeepr 1.0.5 (20210328)
 
