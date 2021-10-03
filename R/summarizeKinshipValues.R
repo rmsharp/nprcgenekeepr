@@ -60,6 +60,7 @@
 #' @param countedKValues list object from countKinshipValues function that
 #' containes the lists \code{kinshipIds}, \code{kinshipValues},
 #' and \code{kinshipCounts}.
+#' @importFrom stats fivenum sd
 #' @export
 summarizeKinshipValues <- function(countedKValues) {
   if (!all(is.element(names(countedKValues), c("kinshipIds", "kinshipValues",
