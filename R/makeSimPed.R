@@ -18,10 +18,23 @@ makeSimPed <- function(ped, allSimParents) {
   nIds <- length(allSimParents)
 
   for (i in seq_len(nIds)) {
-    ped$sire[ped$id == allSimParents[[i]]$id] <-
-      sample(allSimParents[[i]]$sires, size = 1)
-    ped$dam[ped$id == allSimParents[[i]]$id] <-
-      sample(allSimParents[[i]]$dams, size = 1)
+    if (length(allSimParents[[i]]$sires) == 0) {
+      ped$sire[ped$id == allSimParents[[i]]$id] <- NA
+      cat(paste0("id #", i, " is ", allSimParents[[i]]$id,
+                 " and has no sire\n"))
+    }
+    else {
+      ped$sire[ped$id == allSimParents[[i]]$id] <-
+        sample(allSimParents[[i]]$sires, size = 1)
+    }
+    if (length(allSimParents[[i]]$dams) == 0) {
+      ped$dam[ped$id == allSimParents[[i]]$id] <- NA
+      cat(paste0("id #", i, " is ", allSimParents[[i]]$id,
+                 " and has no dam\n"))
+    } else {
+      ped$dam[ped$id == allSimParents[[i]]$id] <-
+        sample(allSimParents[[i]]$dams, size = 1)
+    }
   }
   ped
 }
