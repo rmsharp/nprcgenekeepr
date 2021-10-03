@@ -37,8 +37,7 @@ createSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L) {
 
   # Get the list of animals in the population to consider
   nIds <- nrow(ped)
-  squaredKinship <- sumKinship <- matrix(data = 0, nrow = nIds, ncol = nIds)
-  simKinships <- list(n)
+  simKinships <- vector(mode = "list", length = n)
   first_time <- TRUE
 
   for (i in seq_len(n)) {
