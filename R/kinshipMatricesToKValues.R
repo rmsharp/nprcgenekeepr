@@ -4,7 +4,6 @@
 #' matrix and one column for each kinship matrix.
 #' @examples
 #' \donttest{
-#' library(nprcgenekeepr)
 #' ped <- nprcgenekeepr::smallPed
 #' simParent_1 <- list(id = "A",
 #'                     sires = c("s1_1", "s1_2", "s1_3"),
@@ -37,23 +36,28 @@
 #'   kValue[kValue$id_1 ==  id1 & kValue$id_2 == id2, paste0("sim_", simulation)]
 #' }
 #'
-#' simPed <- makeSimPed(ped, allSimParents)
-#' simKinship <- kinship(simPed$id, simPed$sire,
-#'                             simPed$dam, simPed$gen)
-#' kValues <- kinshipMatrixToKValues(simKinship)
+#' n <- 10
+#' simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
+#' kValue <- kinshipMatricesToKValues(simKinships)
+#' extractKValue(kValue, id1 = "A", id2 = "F", simulation = 1:n)
 #' }
 #'
-#' @param kinshipMatrix square kinship matrix. May or
+#' @param kinshipMatrices list of square matrices of kinship values. May or
 #' may not have named rows and columns.
-#' @importFrom gdata lowerTriangle upperTriangle
 #' @export
-kinshipMatrixToKValues <- function(kinshipMatrix) {
-  lowerTriangle(kinshipMatrix, byrow = TRUE) <- NA
-  kValues <- as.data.frame(as.table(kinshipMatrix))
-  kValues <- kValues[!is.na(kValues$Freq), ]
-  kValues <- kValues[order(kValues$Var1, kValues$Var2), ]
-  names(kValues) <- c("id_1", "id_2", "kinship")
-  kValues$id_1 <- as.character(kValues$id_1)
-  kValues$id_2 <- as.character(kValues$id_2)
-  kValues
+kinshipMatricesToKValues <- function(kinshipMatrices) {
+  first <- TRUE
+  for (i in seq_along(kinshipMatrices)) {
+    if (first) {
+      kValue <- as.data.frame(as.table(kinshipMatrices[[i]]))
+      names(kValue) <- c("id_1", "id_2", "sim_1")
+      first <- FALSE
+    } else { # only need kinship value
+      kValue[paste0("sim_", i)] <-
+        as.numeric(as.data.frame(as.table(kinshipMatrices[[i]]))$Freq)
+    }
+  }
+  kValue$id_1 <- as.character(kValue$id_1)
+  kValue$id_2 <- as.character(kValue$id_2)
+  kValue
 }

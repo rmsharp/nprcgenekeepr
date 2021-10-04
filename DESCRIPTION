@@ -39,6 +39,7 @@ Depends:
 Imports:
     anytime,
     futile.logger,
+    gdata,
     htmlTable,
     lubridate,
     Matrix,
