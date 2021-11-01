@@ -1,7 +1,7 @@
 #' Makes a list object of matrices made up of upper and lower triangles a list
 #' of kinship matraces.
 #'
-#' @returns one matrix for each pair of input matracies with the upper triangle
+#' @return one matrix for each pair of input matracies with the upper triangle
 #' coming from the upper triangle and the diagnal of the odd matrix and
 #' the lower triangle coming from the even matrix.
 #'

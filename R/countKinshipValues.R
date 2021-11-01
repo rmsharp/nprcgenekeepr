@@ -40,15 +40,22 @@
 #' kValues <- kinshipMatricesToKValues(simKinships)
 #' extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1:n)
 #' counts <- countKinshipValues(kValues)
+#' n <- 10
+#' simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
+#' kValues <- kinshipMatricesToKValues(simKinships)
+#' extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1:n)
+#' cummulatedCounts <- countKinshipValues(kValues, counts)
 #' }
 #'
 #' @param kValues matrix of kinship values from simulated pedigrees where each
 #'        row represents a pair of individuals in the pedigree and each column
 #'        represents the vector of kinship values generated in a simulated
 #'        pedigree.
-#' \emph{nprcgenekeepr})
+#' @param cummulatedKValueCounts list object with same structure as that
+#' returned by this function.
+#'
 #' @export
-countKinshipValues <- function(kValues) {
+countKinshipValues <- function(kValues, cummulatedKValueCounts) {
   idCols <- c("id_1", "id_2")
   valueCols <- names(kValues)[!is.element(names(kValues), idCols)]
   kinshipIds <- kinshipValues <- kinshipCounts <-
@@ -60,7 +67,34 @@ countKinshipValues <- function(kValues) {
     kinshipValues[[row]] <- as.numeric(names(valuesTable))
     kinshipCounts[[row]] <- as.numeric(valuesTable)
   }
-  list(kinshipIds = kinshipIds,
-       kinshipValues = kinshipValues,
-       kinshipCounts = kinshipCounts)
+  kValueCounts <- list(
+    kinshipIds = kinshipIds,
+    kinshipValues = kinshipValues,
+    kinshipCounts = kinshipCounts
+  )
+  if (!is.null(cummulatedKValueCounts)) {
+    if (all(kinshipIds == cummulatedKValueCounts$kinshipIds)) {
+      for (i in seq_along(kinshipCounts)) {
+        valueDiffs <- setdiff(cummulatedKValueCounts$kinshipValues[[i]],
+                              kinshipValues[[i]])
+        for (value in cummulatedKValueCounts$kinshipValues[[i]]) {
+          if (any(kinshipValues == value))
+            cummulatedKValueCounts$kinshipCounts <-
+              cummulatedKValueCounts$kinshipCounts +
+              kinshipCounts[kinshipValues == value]
+        }
+        cummulatedKValueCounts$kinshipValues[[i]] <-
+          c(cummulatedKValueCounts$kinshipValues[[i]], valueDiffs)
+        cummulatedKValueCounts$kinshipCounts[[i]] <-
+          c(cummulatedKValueCounts$kinshipCounts[[i]],
+            kinshipCounts[[i]][kinshipValues == valueDiffs])
+
+        cummulatedKValueCounts$kinshipCounts[[i]] <-
+        cummulatedKValueCounts$kinshipCounts[[i]] <- countDiffs
+        cummulatedKValueCounts$kinshipValues[[i]] <-
+          kinshipValues[[i]][kinshipCounts[[i]] == countDiffs]
+      }
+    }
+  }
+  cummulatedKValueCounts
 }
