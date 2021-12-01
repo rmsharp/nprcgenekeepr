@@ -3,7 +3,7 @@
 #' Makes a data.frame object containing simulated kinship summary statistics
 #' using the counts of kinship values list from \code{countKinshipValues}.
 #'
-#' @returns a data.frame with one row of summary statistics for each imputed
+#' @return a data.frame with one row of summary statistics for each imputed
 #' kinship value. The columns are as follows:
 #'  \code{id_1},
 #'  \code{id_2},

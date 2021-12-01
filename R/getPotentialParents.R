@@ -1,7 +1,7 @@
 #' Get the lists of portential parents for all individuals born in the colonly
 #' with one or two unknown parents.
 #'
-#' @returns a list of list with each internal list being made up of an animal
+#' @return a list of list with each internal list being made up of an animal
 #' id (\code{id}), a vector of possible sires (\code{sire}) and a vector of
 #' possible dams (\code{dam}). The \code{id} must be defined while the
 #' vectors \code{sire} and \code{dam} can be empty.
