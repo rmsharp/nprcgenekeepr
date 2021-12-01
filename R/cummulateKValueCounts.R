@@ -1,3 +1,3 @@
-cummulateKValueCounts <- function(kValues, cummulatedKValueCounts) {
-  cummulatedKValuesCounts <-
-}
+#cummulateKValueCounts <- function(kValues, cummulatedKValueCounts) {
+#  cummulatedKValuesCounts <-
+#}

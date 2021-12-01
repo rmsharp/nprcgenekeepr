@@ -7,8 +7,8 @@
 kinshipMatrixToKValues(kinshipMatrix)
 }
 \arguments{
-\item{kinshipMatrix}{square kinship matrix. May or
-may not have named rows and columns.}
+\item{kinshipMatrix}{square kinship matrix. May or may not have named
+rows and columns.}
 }
 \description{
 A `kValue` matrix has one row for each pair of individuals in the kinship
