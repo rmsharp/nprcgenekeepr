@@ -134,7 +134,7 @@ matrix and one column for each kinship matrix." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Forms kValue matrix from list of kinship matrices</h1>
-    <small class="dont-index">Source: <a href='https://github.com/rmsharp/nprcgenekeepr/blob/master/R/kinshipMatrixToKValues.R'><code>R/kinshipMatrixToKValues.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/rmsharp/nprcgenekeepr/blob/master/R/kinshipMatricesToKValues.R'><code>R/kinshipMatricesToKValues.R</code></a></small>
     <div class="hidden name"><code>kinshipMatricesToKValues.Rd</code></div>
     </div>
 
@@ -195,7 +195,7 @@ may not have named rows and columns.</p></td>
 <span class='r-in'><span class='va'>kValue</span> <span class='op'>&lt;-</span> <span class='fu'>kinshipMatricesToKValues</span><span class='op'>(</span><span class='va'>simKinships</span><span class='op'>)</span></span>
 <span class='r-in'><span class='fu'>extractKValue</span><span class='op'>(</span><span class='va'>kValue</span>, id1 <span class='op'>=</span> <span class='st'>"A"</span>, id2 <span class='op'>=</span> <span class='st'>"F"</span>, simulation <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='va'>n</span><span class='op'>)</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>    sim_1 sim_2 sim_3 sim_4 sim_5 sim_6 sim_7 sim_8 sim_9 sim_10</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 86  0.25 0.125 0.125  0.25 0.125 0.125 0.125 0.125  0.25  0.125</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 86  0.25 0.125  0.25 0.125 0.125 0.125  0.25 0.125  0.25   0.25</span>
 <span class='r-in'><span class='co'># }</span></span>
 <span class='r-in'></span>
 </pre>

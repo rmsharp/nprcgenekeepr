@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Creates a pyramid plot of the pedigree provided. — getPyramidPlot • nprcgenekeepr</title>
+<title>Get the lists of portential parents for all individuals born in the colonly
+with one or two unknown parents. — getPotentialParents • nprcgenekeepr</title>
 
 
 <!-- jquery -->
@@ -39,10 +40,10 @@
 
 
 
-<meta property="og:title" content="Creates a pyramid plot of the pedigree provided. — getPyramidPlot" />
-<meta property="og:description" content="The pedigree provided must have the following columns: sex and
-age. This needs to be augmented to allow pedigrees structures that
-are provided by the nprcgenekeepr package." />
+<meta property="og:title" content="Get the lists of portential parents for all individuals born in the colonly
+with one or two unknown parents. — getPotentialParents" />
+<meta property="og:description" content="Get the lists of portential parents for all individuals born in the colonly
+with one or two unknown parents." />
 
 
 
@@ -134,42 +135,43 @@ are provided by the nprcgenekeepr package." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Creates a pyramid plot of the pedigree provided.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/rmsharp/nprcgenekeepr/blob/master/R/getPyramidPlot.R'><code>R/getPyramidPlot.R</code></a></small>
-    <div class="hidden name"><code>getPyramidPlot.Rd</code></div>
+    <h1>Get the lists of portential parents for all individuals born in the colonly
+with one or two unknown parents.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/rmsharp/nprcgenekeepr/blob/master/R/getPotentialParents.R'><code>R/getPotentialParents.R</code></a></small>
+    <div class="hidden name"><code>getPotentialParents.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>The pedigree provided must have the following columns: <code>sex</code> and
-<code>age</code>. This needs to be augmented to allow pedigrees structures that
-are provided by the nprcgenekeepr package.</p>
+    <p>Get the lists of portential parents for all individuals born in the colonly
+with one or two unknown parents.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>getPyramidPlot</span><span class='op'>(</span>ped <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>getPotentialParents</span><span class='op'>(</span><span class='va'>ped</span>, <span class='va'>minParentAge</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>ped</th>
-      <td><p>dataframe with pedigree data.</p></td>
+      <td><p>the pedigree information in datatable format.  Pedigree
+(req. fields: id, sire, dam, gen, population).
+This requires complete pedigree information.</p></td>
+    </tr>
+    <tr>
+      <th>minParentAge</th>
+      <td><p>numeric values to set the minimum age in years for
+an animal to have an offspring. Defaults to 2 years. The check is not
+performed for animals with missing birth dates.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The return value of par("mar") when the function was called.</p>
+    <p>a list of list with each internal list being made up of an animal
+id (<code>id</code>), a vector of possible sires (<code>sire</code>) and a vector of
+possible dams (<code>dam</code>). The <code>id</code> must be defined while the
+vectors <code>sire</code> and <code>dam</code> can be empty.</p>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='r-in'><span class='co'># \donttest{</span></span>
-<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rmsharp.github.io/nprcgenekeepr/'>nprcgenekeepr</a></span><span class='op'>)</span></span>
-<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>qcPed</span><span class='op'>)</span></span>
-<span class='r-in'><span class='fu'>getPyramidPlot</span><span class='op'>(</span><span class='va'>qcPed</span><span class='op'>)</span></span>
-<span class='r-plt img'><img src='getPyramidPlot-1.png' alt='' width='700' height='433' /></span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> 15 15 </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 5.1 4.1 4.1 2.1</span>
-<span class='r-in'><span class='co'># }</span></span>
-</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
