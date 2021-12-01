@@ -64,7 +64,7 @@
 #' @export
 summarizeKinshipValues <- function(countedKValues) {
   if (!all(is.element(names(countedKValues), c("kIds", "kValues",
-                                  "kCounts"))))
+                                               "kCounts"))))
     stop("summarizeKinshipValues received wrong object")
   stats <- data.frame()
 
@@ -74,16 +74,20 @@ summarizeKinshipValues <- function(countedKValues) {
     if (any(is.na(numbers), is.na(mean(numbers))))
       cat(paste0("i = ", i))
     tukeys <- fivenum(numbers)
-    stats <- rbind(stats, data.frame(
-      id_1 = countedKValues$kIds[[i]][1],
-      id_2 = countedKValues$kIds[[i]][2],
-      min = tukeys[1],
-      secondQuartile = tukeys[1],
-      mean = mean(numbers),
-      median = tukeys[3],
-      thirdQuartile = tukeys[4],
-      max = tukeys[5],
-      sd = sd(numbers)))
+    stats <- rbind(
+      stats,
+      data.frame(
+        id_1 = countedKValues$kIds[[i]][1],
+        id_2 = countedKValues$kIds[[i]][2],
+        min = tukeys[1],
+        secondQuartile = tukeys[1],
+        mean = mean(numbers),
+        median = tukeys[3],
+        thirdQuartile = tukeys[4],
+        max = tukeys[5],
+        sd = sd(numbers)
+      )
+    )
   }
   stats
 }

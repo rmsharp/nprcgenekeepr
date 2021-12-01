@@ -7,6 +7,7 @@
 #'
 #' @examples
 #' \donttest{
+#' library(nprcgenekeepr)
 #' ped <- nprcgenekeepr::smallPed
 #' simParent_1 <- list(id = "A",
 #'                     sires = c("s1_1", "s1_2", "s1_3"),

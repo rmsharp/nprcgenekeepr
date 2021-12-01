@@ -1,7 +1,9 @@
-#' Forms kValue matrix from kinship matrix
+#' Extracts a dataframe with a row for each kinship coeficient in the kinship
+#' matrix
 #'
 #' A `kValue` matrix has one row for each pair of individuals in the kinship
 #' matrix and one column for each kinship matrix.
+#'
 #' @examples
 #' \donttest{
 #' library(nprcgenekeepr)
@@ -39,10 +41,16 @@
 #'
 #' simPed <- makeSimPed(ped, allSimParents)
 #' simKinship <- kinship(simPed$id, simPed$sire,
-#'                             simPed$dam, simPed$gen)
+#'                       simPed$dam, simPed$gen)
 #' kValues <- kinshipMatrixToKValues(simKinship)
 #' }
 #'
+#' @return data.frame object with columns \code{id_1}, \code{id_2}, and
+#' \code{kinship} where the first two columns contain the IDs of the
+#' individuals in the kinship matrix provided to the function and the
+#' \code{kinship} columm contains the corresponding kinship coefficient.
+#' In contrast to the kinship matrix. Each possible pairing of IDs appears
+#' once.
 #' @param kinshipMatrix square kinship matrix. May or may not have named
 #' rows and columns.
 #' @importFrom gdata lowerTriangle
