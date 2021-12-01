@@ -1,4 +1,4 @@
-#' Forms kValue matrix from list of kinship matrices
+#' Forms kValue matrix from kinship matrix
 #'
 #' A `kValue` matrix has one row for each pair of individuals in the kinship
 #' matrix and one column for each kinship matrix.
