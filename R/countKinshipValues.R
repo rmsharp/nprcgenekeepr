@@ -1,6 +1,8 @@
 #' Counts the number of occurrences of each kinship value seen for a pair of
 #' individuals in a series of simulated pedigrees.
 #'
+#' @return list of three lists named \code{kIds} (kinship IDs), \code{kValues}
+#' (kinship values), and \code{kCounts} (kinship counts).
 #' @examples
 #' \donttest{
 #' ped <- nprcgenekeepr::smallPed
@@ -47,7 +49,7 @@
 #' cummulatedCounts <- countKinshipValues(kValues, counts)
 #' }
 #'
-#' @param kValues matrix of kinship values from simulated pedigrees where each
+#' @param kinshipValues matrix of kinship values from simulated pedigrees where each
 #'        row represents a pair of individuals in the pedigree and each column
 #'        represents the vector of kinship values generated in a simulated
 #'        pedigree.
@@ -55,44 +57,59 @@
 #' returned by this function.
 #'
 #' @export
-countKinshipValues <- function(kValues, cummulatedKValueCounts) {
+countKinshipValues <- function(kinshipValues, cummulatedKValueCounts = NULL) {
   idCols <- c("id_1", "id_2")
-  valueCols <- names(kValues)[!is.element(names(kValues), idCols)]
-  kinshipIds <- kinshipValues <- kinshipCounts <-
-    vector(mode = "list", length = nrow(kValues))
+  valueCols <- names(kinshipValues)[!is.element(names(kinshipValues), idCols)]
+  kIds <- kValues <- kCounts <-
+    vector(mode = "list", length = nrow(kinshipValues))
 
-  for (row in seq_len(nrow(kValues))) {
-    valuesTable <- table(as.numeric(kValues[row, valueCols]))
-    kinshipIds[[row]] <- as.character(kValues[row, idCols])
-    kinshipValues[[row]] <- as.numeric(names(valuesTable))
-    kinshipCounts[[row]] <- as.numeric(valuesTable)
+  for (row in seq_len(nrow(kinshipValues))) {
+    valuesTable <- table(as.numeric(kinshipValues[row, valueCols]))
+    kIds[[row]] <- as.character(kinshipValues[row, idCols])
+    kValues[[row]] <- as.numeric(names(valuesTable))
+    kCounts[[row]] <- as.numeric(valuesTable)
   }
   kValueCounts <- list(
-    kinshipIds = kinshipIds,
-    kinshipValues = kinshipValues,
-    kinshipCounts = kinshipCounts
+    kIds = kIds,
+    kValues = kValues,
+    kCounts = kCounts
   )
-  if (!is.null(cummulatedKValueCounts)) {
-    if (all(kinshipIds == cummulatedKValueCounts$kinshipIds)) {
-      for (i in seq_along(kinshipCounts)) {
-        valueDiffs <- setdiff(cummulatedKValueCounts$kinshipValues[[i]],
-                              kinshipValues[[i]])
-        for (value in cummulatedKValueCounts$kinshipValues[[i]]) {
-          if (any(kinshipValues == value))
-            cummulatedKValueCounts$kinshipCounts <-
-              cummulatedKValueCounts$kinshipCounts +
-              kinshipCounts[kinshipValues == value]
-        }
-        cummulatedKValueCounts$kinshipValues[[i]] <-
-          c(cummulatedKValueCounts$kinshipValues[[i]], valueDiffs)
-        cummulatedKValueCounts$kinshipCounts[[i]] <-
-          c(cummulatedKValueCounts$kinshipCounts[[i]],
-            kinshipCounts[[i]][kinshipValues == valueDiffs])
+  if (is.null(cummulatedKValueCounts)) {
+    cummulatedKValueCounts <- kValueCounts
+  } else {
+    if (!all(unique(unlist(kIds)) ==
+             unique(unlist(cummulatedKValueCounts$kIds))))
+      stop(
+        paste0(
+          "ID pairs in simulated pedigrees do not match: ",
+          setdiff(unique(unlist(kIds)),
+                  unique(
+                    unlist(cummulatedKValueCounts$kIds)
+                  )),
+          " found in only one set of simulated pedigrees."
+        )
+      )
+    for (index in seq_along(kCounts)) {
+      valueDiffs <- setdiff(kValues[[index]],
+                            cummulatedKValueCounts$kValues[[index]])
+      for (value in cummulatedKValueCounts$kValues[[index]]) {
+        cummulatedKValueCounts <-
+          addKinshipValueCount(cummulatedKValueCounts,
+                               kValues,
+                               kCounts,
+                               index,
+                               value)
+      }
+      if (length(valueDiffs) > 0) {
+        cummulatedKValueCounts$kValues[[index]] <-
+          c(cummulatedKValueCounts$kValues[[index]], valueDiffs)
 
-        cummulatedKValueCounts$kinshipCounts[[i]] <-
-        cummulatedKValueCounts$kinshipCounts[[i]] <- countDiffs
-        cummulatedKValueCounts$kinshipValues[[i]] <-
-          kinshipValues[[i]][kinshipCounts[[i]] == countDiffs]
+        countDiffs <- integer(length(valueDiffs))
+        for (value in valueDiffs)
+          countDiffs[index] <- kCounts[[index]][kValues[[index]] == value]
+
+        cummulatedKValueCounts$kCounts[[index]] <-
+          c(cummulatedKValueCounts$kCounts[[index]], countDiffs)
       }
     }
   }
