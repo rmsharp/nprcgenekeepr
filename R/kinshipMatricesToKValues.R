@@ -25,6 +25,7 @@
 #'                     dams = c("d3_1", "B"))
 #' allSimParents <- list(simParent_1, simParent_2, simParent_3,
 #'                       simParent_4, simParent_5, simParent_6)
+#'
 #' extractKinship <- function(simKinships, id1, id2, simulation) {
 #'   ids <- dimnames(simKinships[[simulation]])[[1]]
 #'   simKinships[[simulation]][seq_along(ids)[ids == id1],

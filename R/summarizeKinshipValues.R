@@ -63,19 +63,14 @@
 #' @importFrom stats fivenum sd
 #' @export
 summarizeKinshipValues <- function(countedKValues) {
-  if (!all(is.element(
-    names(countedKValues),
-    c("kIds", "kValues",
-      "kCounts")
-  )))
+  if (!all(is.element(names(countedKValues), c("kIds", "kValues",
+                                               "kCounts"))))
     stop("summarizeKinshipValues received wrong object")
   stats <- data.frame()
 
   for (i in seq_along(countedKValues$kIds)) {
-    numbers <- rep(
-      unlist(countedKValues$kValues[i]),
-      unlist(countedKValues$kCounts[i])
-    )
+    numbers <- rep(unlist(countedKValues$kValues[i]),
+                   unlist(countedKValues$kCounts[i]))
     if (any(is.na(numbers), is.na(mean(numbers))))
       cat(paste0("i = ", i))
     tukeys <- fivenum(numbers)

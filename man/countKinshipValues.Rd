@@ -5,14 +5,20 @@
 \title{Counts the number of occurrences of each kinship value seen for a pair of
 individuals in a series of simulated pedigrees.}
 \usage{
-countKinshipValues(kValues)
+countKinshipValues(kinshipValues, cummulatedKValueCounts = NULL)
 }
 \arguments{
-\item{kValues}{matrix of kinship values from simulated pedigrees where each
-       row represents a pair of individuals in the pedigree and each column
-       represents the vector of kinship values generated in a simulated
-       pedigree.
-\emph{nprcgenekeepr})}
+\item{kinshipValues}{matrix of kinship values from simulated pedigrees where each
+row represents a pair of individuals in the pedigree and each column
+represents the vector of kinship values generated in a simulated
+pedigree.}
+
+\item{cummulatedKValueCounts}{list object with same structure as that
+returned by this function.}
+}
+\value{
+list of three lists named \code{kIds} (kinship IDs), \code{kValues}
+(kinship values), and \code{kCounts} (kinship counts).
 }
 \description{
 Counts the number of occurrences of each kinship value seen for a pair of
@@ -57,6 +63,11 @@ simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
 kValues <- kinshipMatricesToKValues(simKinships)
 extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1:n)
 counts <- countKinshipValues(kValues)
+n <- 10
+simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
+kValues <- kinshipMatricesToKValues(simKinships)
+extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1:n)
+cummulatedCounts <- countKinshipValues(kValues, counts)
 }
 
 }
