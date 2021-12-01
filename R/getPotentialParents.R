@@ -15,82 +15,81 @@
 #' @export
 getPotentialParents <- function(ped, minParentAge) {
   pUnknown <- ped[ped$fromCenter &
-                       (is.na(ped$sire) | is.na(ped$dam)), ]
-  pUnknown <- pUnknown[!is.na(pUnknown$id), ]
+                    (is.na(ped$sire) | is.na(ped$dam)),]
+  pUnknown <- pUnknown[!is.na(pUnknown$id),]
 
-  dYear <- 365 #Days in a years
+  dYear <- 365 # used for number of days in a year
 
-  #add calcs for births and pre allocate mem
+  ## add calcs for births and pre-allocate memory
 
   potentialParents <- vector(mode = "list", length = nrow(pUnknown))
 
   for (i in 1:nrow(pUnknown)) {
-    #Calculating breading age potential parents
+    ## Calculating breading age potential parents
     ba <-
-      ped[ped$birth <= pUnknown$birth[i] - (dYear * minParentAge), ]
-    ba <- ba[!is.na(ba$id), ]
+      ped[ped$birth <= pUnknown$birth[i] - (dYear * minParentAge),]
+    ba <- ba[!is.na(ba$id),]
 
-    #Selecting sires
-    puSires <- ba[ba$sex == "M" &
-                   (is.na(ba$exit) == TRUE |
-                      ba$exit >= pUnknown$birth[i])
-                 , "id"]
+    ## finding potential sires
+    potentialSires <- ba[ba$sex == "M" &
+                           (is.na(ba$exit) == TRUE |
+                              ba$exit >= pUnknown$birth[i]), "id"]
 
     #if (nrow(puSire) > 0) {
     #  puSire <- cbind.data.frame(puSire$id, pUnknown$id[i], puSire$sex)
     #  colnames(puSire) <- c("potential_parent", "id", "sex")
     #  puOffspringSire <- rbind.data.frame(puOffspringSire, puSire)
     #}
-    #Selecting dams
-    puDam <- ba[ba$sex == "F" &
-                  (is.na(ba$exit) == TRUE |
-                     ba$exit >= pUnknown$birth[i])
-                , ]
+    ## Selecting dams
+    potentialDams <- ba[ba$sex == "F" &
+                          (is.na(ba$exit) == TRUE |
+                             ba$exit >= pUnknown$birth[i])
+                        ,]
 
     births <-
       ped[ped$birth > pUnknown$birth[i] - (dYear / 2) &
-               ped$birth < pUnknown$birth[i] + (dYear / 2), ]
+            ped$birth < pUnknown$birth[i] + (dYear / 2),]
 
     births_plus_minus_one <-
-      ped[(
-        ped$birth < pUnknown$birth[i] + (dYear * 1.5) &
-          ped$birth > pUnknown$birth[i] + (dYear / 2)
-      ) |
-        (
-          ped$birth > pUnknown$birth[i] - (dYear * 1.5) &
-            ped$birth < pUnknown$birth[i] - (dYear / 2)
-        ), ]
+      ped[(ped$birth < pUnknown$birth[i] + (dYear * 1.5) &
+             ped$birth > pUnknown$birth[i] + (dYear / 2)) |
+            (ped$birth > pUnknown$birth[i] - (dYear * 1.5) &
+               ped$birth < pUnknown$birth[i] - (dYear / 2)),]
     births_plus_minus_one <-
-      births_plus_minus_one[!duplicated(births_plus_minus_one$dam), ]
+      births_plus_minus_one[!duplicated(births_plus_minus_one$dam),]
 
-    puDam <- puDam[!puDam$id %in% births$dam, ]
-    puDam <- puDam[puDam$id %in% births_plus_minus_one$dam, ]
+    potentialDams <-
+      potentialDams[!potentialDams$id %in% births$dam,]
+    potentialDams <- potentialDams[potentialDams$id %in%
+                                     births_plus_minus_one$dam,]
 
-    #if (nrow(puDam) > 0) {
+    #if (nrow(potentialDams) > 0) {
     #  potentialParents <- list( "id" = pUnknown$id[i][1],
-    #                 "dam" = puDam$id,
+    #                 "dam" = potentialDams$id,
     #                 "sire" = puSire$id
     #  )
-    #  puDam <- cbind.data.frame(puDam$id, pUnknown$id[i], puDam$sex)
-    #  colnames(puDam) <- c("potential_parent", "id", "sex")
-    #  puOffspringDam <- rbind.data.frame(puOffspringDam, puDam)
+    #  potentialDams <- cbind.data.frame(potentialDams$id, pUnknown$id[i],
+    #                                    potentialDams$sex)
+    #  colnames(potentialDams) <- c("potential_parent", "id", "sex")
+    #  puOffspringDam <- rbind.data.frame(puOffspringDam, potentialDams)
     #} else {
-    #  puDam <- ba[ba$sex == "F" &
+    #  potentialDams <- ba[ba$sex == "F" &
     #                (is.na(ba$exit) == TRUE |
     #                ba$exit >= pUnknown$birth[i])
     #              , ]
-    #  puDam <- puDam[!puDam$id %in% births$dam, ]
-    #  if (nrow(puDam) > 0) {
-    #    puDam <- cbind.data.frame(puDam$id, pUnknown$id[i], puDam$sex)
-    #    colnames(puDam) <- c("potential_parent", "id", "sex")
-    #    puOffspringDam <- rbind.data.frame(puOffspringDam, puDam)
+    #  potentialDams <- potentialDams[!potentialDams$id %in% births$dam, ]
+    #  if (nrow(potentialDams) > 0) {
+    #    potentialDams <- cbind.data.frame(potentialDams$id, pUnknown$id[i],
+    #                                      potentialDams$sex)
+    #    colnames(potentialDams) <- c("potential_parent", "id", "sex")
+    #    puOffspringDam <- rbind.data.frame(puOffspringDam, potentialDams)
     #  }
     #}
     potentialParents[[i]] <- list(
       "counter" = i,
       "id" = pUnknown$id[i],
-      "sires" = puSires,
-      "dams" = puDam$id
+      "sires" = potentialSires,
+      "dams" = potentialDams$id
     )
   }
   potentialParents
