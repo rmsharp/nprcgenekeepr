@@ -63,27 +63,36 @@
 #' @importFrom stats fivenum sd
 #' @export
 summarizeKinshipValues <- function(countedKValues) {
-  if (!all(is.element(names(countedKValues), c("kinshipIds", "kinshipValues",
-                                  "kinshipCounts"))))
+  if (!all(is.element(
+    names(countedKValues),
+    c("kIds", "kValues",
+      "kCounts")
+  )))
     stop("summarizeKinshipValues received wrong object")
   stats <- data.frame()
 
-  for (i in seq_along(countedKValues$kinshipIds)) {
-    numbers <- rep(unlist(countedKValues$kinshipValues[i]),
-                   unlist(countedKValues$kinshipCounts[i]))
+  for (i in seq_along(countedKValues$kIds)) {
+    numbers <- rep(
+      unlist(countedKValues$kValues[i]),
+      unlist(countedKValues$kCounts[i])
+    )
     if (any(is.na(numbers), is.na(mean(numbers))))
       cat(paste0("i = ", i))
     tukeys <- fivenum(numbers)
-    stats <- rbind(stats, data.frame(
-      id_1 = countedKValues$kinshipIds[[i]][1],
-      id_2 = countedKValues$kinshipIds[[i]][2],
-      min = tukeys[1],
-      secondQuartile = tukeys[1],
-      mean = mean(numbers),
-      median = tukeys[3],
-      thirdQuartile = tukeys[4],
-      max = tukeys[5],
-      sd = sd(numbers)))
+    stats <- rbind(
+      stats,
+      data.frame(
+        id_1 = countedKValues$kIds[[i]][1],
+        id_2 = countedKValues$kIds[[i]][2],
+        min = tukeys[1],
+        secondQuartile = tukeys[1],
+        mean = mean(numbers),
+        median = tukeys[3],
+        thirdQuartile = tukeys[4],
+        max = tukeys[5],
+        sd = sd(numbers)
+      )
+    )
   }
   stats
 }

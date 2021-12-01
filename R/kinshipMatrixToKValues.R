@@ -2,7 +2,7 @@
 #' matrix
 #'
 #' A `kValue` matrix has one row for each pair of individuals in the kinship
-#' matrix and one column for the kinship matrix.
+#' matrix and one column for each kinship matrix.
 #'
 #' @examples
 #' \donttest{
@@ -30,32 +30,33 @@
 #'                       simParent_4, simParent_5, simParent_6)
 #'
 #' extractKinship <- function(simKinships, id1, id2, simulation) {
-#'  ids <- dimnames(simKinships[[simulation]])[[1]]
-#'  simKinships[[simulation]][seq_along(ids)[ids == id1],
-#'                            seq_along(ids)[ids == id2]]
+#'   ids <- dimnames(simKinships[[simulation]])[[1]]
+#'   simKinships[[simulation]][seq_along(ids)[ids == id1],
+#'                             seq_along(ids)[ids == id2]]
 #' }
 #'
 #' extractKValue <- function(kValue, id1, id2, simulation) {
-#'  kValue[kValue$id_1 ==  id1 & kValue$id_2 == id2, paste0("sim_", simulation)]
+#'   kValue[kValue$id_1 ==  id1 & kValue$id_2 == id2, paste0("sim_", simulation)]
 #' }
 #'
 #' simPed <- makeSimPed(ped, allSimParents)
 #' simKinship <- kinship(simPed$id, simPed$sire,
-#'                           simPed$dam, simPed$gen)
+#'                       simPed$dam, simPed$gen)
 #' kValues <- kinshipMatrixToKValues(simKinship)
 #' }
+#'
 #' @return data.frame object with columns \code{id_1}, \code{id_2}, and
 #' \code{kinship} where the first two columns contain the IDs of the
 #' individuals in the kinship matrix provided to the function and the
 #' \code{kinship} columm contains the corresponding kinship coefficient.
 #' In contrast to the kinship matrix. Each possible pairing of IDs appears
 #' once.
-#' @param kinshipMatrix square kinship matrix. May or
-#' may not have named rows and columns.
-#' @importFrom gdata lowerTriangle upperTriangle
+#' @param kinshipMatrix square kinship matrix. May or may not have named
+#' rows and columns.
+#' @importFrom gdata lowerTriangle
 #' @export
 kinshipMatrixToKValues <- function(kinshipMatrix) {
-  lowerTriangle(kinshipMatrix, byrow = TRUE) <- NA
+  gdata::lowerTriangle(kinshipMatrix, byrow = TRUE) <- NA
   kValues <- as.data.frame(as.table(kinshipMatrix))
   kValues <- kValues[!is.na(kValues$Freq), ]
   kValues <- kValues[order(kValues$Var1, kValues$Var2), ]
