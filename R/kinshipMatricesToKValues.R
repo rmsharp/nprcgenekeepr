@@ -30,13 +30,14 @@
 #'   simKinships[[simulation]][seq_along(ids)[ids == id1],
 #'                             seq_along(ids)[ids == id2]]
 #' }
+#'
 #' extractKValue <- function(kValue, id1, id2, simulation) {
 #'   kValue[kValue$id_1 ==  id1 & kValue$id_2 == id2, paste0("sim_", simulation)]
 #' }
 #' n <- 10
 #' simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
-#' kValues <- kinshipMatricesToKValues(simKinships)
-#' extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1:n)
+#' kValue <- kinshipMatricesToKValues(simKinships)
+#' extractKValue(kValue, id1 = "A", id2 = "F", simulation = 1:n)
 #' }
 #'
 #' @param kinshipMatrices list of square matrices of kinship values. May or
@@ -46,15 +47,15 @@ kinshipMatricesToKValues <- function(kinshipMatrices) {
   first <- TRUE
   for (i in seq_along(kinshipMatrices)) {
     if (first) {
-      kValues <- as.data.frame(as.table(kinshipMatrices[[i]]))
-      names(kValues) <- c("id_1", "id_2", "sim_1")
+      kValue <- as.data.frame(as.table(kinshipMatrices[[i]]))
+      names(kValue) <- c("id_1", "id_2", "sim_1")
       first <- FALSE
     } else { # only need kinship value
-      kValues[paste0("sim_", i)] <-
+      kValue[paste0("sim_", i)] <-
         as.numeric(as.data.frame(as.table(kinshipMatrices[[i]]))$Freq)
     }
   }
-  kValues$id_1 <- as.character(kValues$id_1)
-  kValues$id_2 <- as.character(kValues$id_2)
-  kValues
+  kValue$id_1 <- as.character(kValues$id_1)
+  kValue$id_2 <- as.character(kValues$id_2)
+  kValue
 }
