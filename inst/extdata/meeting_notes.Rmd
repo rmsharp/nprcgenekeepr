@@ -27,6 +27,15 @@ library(nprcgenekeepr)
 ```
 Provided in reverse chronological order
 
+## 20211201
+1.  Mark presented progress on acummulation of kinship values from simulated 
+    pedigrees. We now have the ability to accumulate kinship values from at 
+    least hundreds of simulated pedigrees.
+1.  After the meeting Mark resolved issue28, which reduced to one the number of 
+    times a missing configuration file is reported when the shiny application 
+    runs.
+1.  Matt provided the updated version of getPotentialParents, which Mark 
+    incorporated into the issue8 branch.
 ## 20210827
 1.  Mark presented progress on countKinshipValues.R, which is still had a minor
     error, which was corrected after the meeting.
