@@ -1,14 +1,14 @@
 #' Work around for unit tests using sample() among various versions of R
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2021 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' The change in how `set.seed` works in R 3.6 prompted the creation of this
 #' R version agnostic replacement to get unit test code to work on multiple
 #' versions of R in a Travis-CI build.
 #'
-#' It seems RNGkind(sample.kind="Rounding”) does not work prior to version
-#' 3.6 so I resorted to using version dependent construction of the argument
-#' list to set.seed() in do.call().
+#' It seems \code{RNGkind(sample.kind="Rounding")} does not work prior to
+#' version 3.6 so I resorted to using version dependent construction of the
+#' argument list to set.seed() in do.call().
 #'
 #' @return NULL, invisibly.
 #'
@@ -28,5 +28,5 @@ set_seed <- function(seed = 1) {
   } else {
     args <- list(seed)
   }
-  suppressWarnings(do.call(set.seed, args))
+  suppressMessages(suppressWarnings(do.call(set.seed, args)))
 }
