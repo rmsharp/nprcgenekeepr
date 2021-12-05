@@ -16,7 +16,7 @@
 getPotentialParents <- function(ped, minParentAge) {
   pUnknown <- ped[ped$fromCenter &
                     (is.na(ped$sire) | is.na(ped$dam)),]
-  pUnknown <- pUnknown[!is.na(pUnknown$id),]
+  pUnknown <- pUnknown[!is.na(pUnknown$id), ]
 
   dYear <- 365 # used for number of days in a year
 
@@ -26,8 +26,7 @@ getPotentialParents <- function(ped, minParentAge) {
 
   for (i in 1:nrow(pUnknown)) {
     ## Calculating breading age potential parents
-    ba <-
-      ped[ped$birth <= pUnknown$birth[i] - (dYear * minParentAge),]
+    ba <- ped[ped$birth <= pUnknown$birth[i] - (dYear * minParentAge),]
     ba <- ba[!is.na(ba$id),]
 
     ## finding potential sires
