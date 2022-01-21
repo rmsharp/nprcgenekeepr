@@ -5,7 +5,7 @@
 \title{Counts the number of occurrences of each kinship value seen for a pair of
 individuals in a series of simulated pedigrees.}
 \usage{
-countKinshipValues(kinshipValues, cummulatedKValueCounts = NULL)
+countKinshipValues(kinshipValues, accummulatedKValueCounts = NULL)
 }
 \arguments{
 \item{kinshipValues}{matrix of kinship values from simulated pedigrees where each
@@ -13,7 +13,7 @@ row represents a pair of individuals in the pedigree and each column
 represents the vector of kinship values generated in a simulated
 pedigree.}
 
-\item{cummulatedKValueCounts}{list object with same structure as that
+\item{accummulatedKValueCounts}{list object with same structure as that
 returned by this function.}
 }
 \value{
@@ -67,7 +67,7 @@ n <- 10
 simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
 kValues <- kinshipMatricesToKValues(simKinships)
 extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1:n)
-cummulatedCounts <- countKinshipValues(kValues, counts)
+accummulatedCounts <- countKinshipValues(kValues, counts)
 }
 
 }

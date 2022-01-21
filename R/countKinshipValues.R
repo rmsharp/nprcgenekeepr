@@ -46,18 +46,18 @@
 #' simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
 #' kValues <- kinshipMatricesToKValues(simKinships)
 #' extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1:n)
-#' cummulatedCounts <- countKinshipValues(kValues, counts)
+#' accummulatedCounts <- countKinshipValues(kValues, counts)
 #' }
 #'
 #' @param kinshipValues matrix of kinship values from simulated pedigrees where each
 #'        row represents a pair of individuals in the pedigree and each column
 #'        represents the vector of kinship values generated in a simulated
 #'        pedigree.
-#' @param cummulatedKValueCounts list object with same structure as that
+#' @param accummulatedKValueCounts list object with same structure as that
 #' returned by this function.
 #'
 #' @export
-countKinshipValues <- function(kinshipValues, cummulatedKValueCounts = NULL) {
+countKinshipValues <- function(kinshipValues, accummulatedKValueCounts = NULL) {
   idCols <- c("id_1", "id_2")
   valueCols <- names(kinshipValues)[!is.element(names(kinshipValues), idCols)]
   kIds <- kValues <- kCounts <-
@@ -74,44 +74,45 @@ countKinshipValues <- function(kinshipValues, cummulatedKValueCounts = NULL) {
     kValues = kValues,
     kCounts = kCounts
   )
-  if (is.null(cummulatedKValueCounts)) {
-    cummulatedKValueCounts <- kValueCounts
+  if (is.null(accummulatedKValueCounts)) {
+    accummulatedKValueCounts <- kValueCounts
   } else {
     if (!all(unique(unlist(kIds)) ==
-             unique(unlist(cummulatedKValueCounts$kIds))))
+             unique(unlist(accummulatedKValueCounts$kIds))))
       stop(
         paste0(
           "ID pairs in simulated pedigrees do not match: ",
           setdiff(unique(unlist(kIds)),
                   unique(
-                    unlist(cummulatedKValueCounts$kIds)
+                    unlist(accummulatedKValueCounts$kIds)
                   )),
           " found in only one set of simulated pedigrees."
         )
       )
     for (index in seq_along(kCounts)) {
+      cat(paste0("index from seq_along(kCounts): ", index, "\n"))
       valueDiffs <- setdiff(kValues[[index]],
-                            cummulatedKValueCounts$kValues[[index]])
-      for (value in cummulatedKValueCounts$kValues[[index]]) {
-        cummulatedKValueCounts <-
-          addKinshipValueCount(cummulatedKValueCounts,
+                            accummulatedKValueCounts$kValues[[index]])
+      for (value in accummulatedKValueCounts$kValues[[index]]) {
+        accummulatedKValueCounts <-
+          addKinshipValueCount(accummulatedKValueCounts,
                                kValues,
                                kCounts,
                                index,
                                value)
       }
       if (length(valueDiffs) > 0) {
-        cummulatedKValueCounts$kValues[[index]] <-
-          c(cummulatedKValueCounts$kValues[[index]], valueDiffs)
+        accummulatedKValueCounts$kValues[[index]] <-
+          c(accummulatedKValueCounts$kValues[[index]], valueDiffs)
 
         countDiffs <- integer(length(valueDiffs))
         for (value in valueDiffs)
           countDiffs[index] <- kCounts[[index]][kValues[[index]] == value]
 
-        cummulatedKValueCounts$kCounts[[index]] <-
-          c(cummulatedKValueCounts$kCounts[[index]], countDiffs)
+        accummulatedKValueCounts$kCounts[[index]] <-
+          c(accummulatedKValueCounts$kCounts[[index]], countDiffs)
       }
     }
   }
-  cummulatedKValueCounts
+  accummulatedKValueCounts
 }
