@@ -4,14 +4,17 @@
 \alias{makeSimPed}
 \title{Makes a simulated pedigree using representative sires and dams}
 \usage{
-makeSimPed(ped, allSimParents)
+makeSimPed(ped, allSimParents, verbose = FALSE)
 }
 \arguments{
-\item{ped}{The pedigree information in data.frame format}
+\item{ped}{pedigree information in data.frame format}
 
 \item{allSimParents}{list made up of lists where the internal list
 has the offspring ID \code{id}, a vector of representative sires
 (\code{sires}), and a vector of representative dams (\code{dams}).}
+
+\item{verbose}{logical vector of length one that indicates whether or not
+to print out when an animal is missing a sire or a dam.}
 }
 \description{
 For each \code{id} in \code{allSimParents} with one or more unknow parents
