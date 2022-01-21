@@ -11,6 +11,7 @@ images/*
 inst/extdata/BaboonLivingForMetrics.csv
 inst/extdata/RhesusMasterForMetrics.csv
 inst/extdata/Notes.txt
+inst/extdata/.Rapp.history
 inst/extdata/PSCPO*.*
 inst/extdata/notes.*
 !inst/extdata/notes.Rmd
