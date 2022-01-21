@@ -30,8 +30,11 @@
 #' @param pop Character vector with animal IDs to consider as the population of
 #' interest. The default is NULL.
 #' @param n integer value of the number of simulated pedigrees to generate.
+#' @param verbose logical vector of length one that indicates whether or not
+#'        to print out when an animal is missing a sire or a dam.
 #' @export
-createSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L) {
+createSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L,
+                              verbose = FALSE) {
   ## If user has limited the population of interest by defining 'pop',
   ## that information is incorporated via the 'population' column.
   ped$population <- getGVPopulation(ped, pop)
@@ -42,7 +45,7 @@ createSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L) {
   first_time <- TRUE
 
   for (i in seq_len(n)) {
-    simPed <- makeSimPed(ped, allSimParents)
+    simPed <- makeSimPed(ped, allSimParents, verbose = verbose)
     simKinships[[i]] <- kinship(simPed$id, simPed$sire,
                                 simPed$dam, simPed$gen)
   }

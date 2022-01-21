@@ -5,7 +5,7 @@
 \title{Makes a list object of kinship matrices from simulated pedigrees of possible
 parents for animals with unknown parents}
 \usage{
-createSimKinships(ped, allSimParents, pop = NULL, n = 10L)
+createSimKinships(ped, allSimParents, pop = NULL, n = 10L, verbose = FALSE)
 }
 \arguments{
 \item{ped}{The pedigree information in data.frame format}
@@ -18,6 +18,9 @@ has the offspring ID \code{id}, a vector of representative sires
 interest. The default is NULL.}
 
 \item{n}{integer value of the number of simulated pedigrees to generate.}
+
+\item{verbose}{logical vector of length one that indicates whether or not
+to print out when an animal is missing a sire or a dam.}
 }
 \description{
 \code{createSimKinships} uses \code{makeSimPed} with the \code{ped} object
