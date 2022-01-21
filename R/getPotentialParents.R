@@ -6,7 +6,7 @@
 #' possible dams (\code{dam}). The \code{id} must be defined while the
 #' vectors \code{sire} and \code{dam} can be empty.
 #'
-#' @param ped the pedigree information in data.frame format.  Pedigree
+#' @param ped the pedigree information in data.frame format. Pedigree
 #' (req. fields: id, sire, dam, gen, population).
 #' This requires complete pedigree information.
 #' @param minParentAge numeric values to set the minimum age in years for
@@ -41,12 +41,14 @@ getPotentialParents <- function(ped, minParentAge, maxGestationalPeriod) {
 
   potentialParents <- vector(mode = "list", length = nrow(pUnknown))
   if (nrow(pUnknown) > 0) {
+    j <- 0 # counter for potentialParents; used to prevent NULL entries
     for (i in 1:nrow(pUnknown)) {
       ## Calculating breeding age potential parents
       ba <- ped[ped$birth <= (pUnknown$birth[i] - (dYear * minParentAge)), ]
       ba <- ba[!is.na(ba$id), ]
       if (nrow(ba) == 0)
         next
+      j <- j + 1
       ## Selecting sires
       potentialSires <- ba[ba$sex == "M" &
                       (is.na(ba$exit) |
@@ -92,12 +94,15 @@ getPotentialParents <- function(ped, minParentAge, maxGestationalPeriod) {
           ba[ba$sex == "F" & (is.na(ba$exit) | ba$exit >= pUnknown$birth[i]), ]
       }
 
-      potentialParents[[i]] <- list(
+      potentialParents[[j]] <- list(
         "id" = pUnknown$id[i][1],
         "sires" = potentialSires,
         "dams" = potentialDams$id
       )
     }
   }
-  potentialParents
+  if (j > 0)
+    potentialParents[1:j]
+  else
+    NULL
 }

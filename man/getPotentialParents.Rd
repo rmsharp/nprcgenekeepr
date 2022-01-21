@@ -8,7 +8,7 @@ with one or two unknown parents.}
 getPotentialParents(ped, minParentAge, maxGestationalPeriod)
 }
 \arguments{
-\item{ped}{the pedigree information in data.frame format.  Pedigree
+\item{ped}{the pedigree information in data.frame format. Pedigree
 (req. fields: id, sire, dam, gen, population).
 This requires complete pedigree information.}
 
