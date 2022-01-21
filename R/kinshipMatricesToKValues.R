@@ -49,15 +49,16 @@ kinshipMatricesToKValues <- function(kinshipMatrices) {
   first <- TRUE
   for (i in seq_along(kinshipMatrices)) {
     if (first) {
-      kValue <- as.data.frame(as.table(kinshipMatrices[[i]]))
-      names(kValue) <- c("id_1", "id_2", "sim_1")
+      kValues <- kinshipMatrixToKValues(kinshipMatrices[[i]])
       first <- FALSE
     } else { # only need kinship value
-      kValue[paste0("sim_", i)] <-
-        as.numeric(as.data.frame(as.table(kinshipMatrices[[i]]))$Freq)
+      kValues <-
+        cbind(kValues,
+              kinshipMatrixToKValues(kinshipMatrices[[i]])[ , "kinship"])
     }
   }
-  kValue$id_1 <- as.character(kValue$id_1)
-  kValue$id_2 <- as.character(kValue$id_2)
-  kValue
+  names(kValues) <- c(as.character(kValues$id_1),
+                      as.character(kValues$id_2),
+                      paste0("sim_", seq_along(kinshipMatrices)))
+  kValues
 }
