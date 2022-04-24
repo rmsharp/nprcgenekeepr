@@ -1,7 +1,7 @@
 #' Copyright(c) 2017-2020 R. Mark Sharp
 #' This file is part of nprcgenekeepr
-context("checkParentAge")
 library(testthat)
+context("checkParentAge")
 qcPed <- nprcgenekeepr::qcPed
 
 test_that("checkParentAge identifies the over aged parents", {
@@ -27,6 +27,7 @@ test_that("checkParentAge requires birth column to be potential date", {
   ped <- qcPed
   ped$birth <- ped$birth > "2000-01-01"
   expect_error(checkParentAge(ped, minParentAge = 3))
+  expect_error(checkParentAge(ped, minParentAge = 3), reportErrors = TRUE)
 }
 )
 test_that("checkParentAge allows birth column to be character", {

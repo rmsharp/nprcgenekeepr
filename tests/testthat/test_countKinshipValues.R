@@ -42,6 +42,11 @@ simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
 kValues <- kinshipMatricesToKValues(simKinships)
 cummulatedCounts <- countKinshipValues(kValues, counts)
 
+test_that("countKinshipValues detects contaminated ID list", {
+  counts$kIds[[1]] <- c("badID_1", "badID_2")
+  suppressWarnings(expect_error(countKinshipValues(kValues, counts),
+               "ID pairs in simulated pedigrees do not match:"))
+})
 test_that("countKinshipValues makes correct structure", {
   expect_equal(length(counts), 3)
   expect_equal(names(counts), c("kIds", "kValues", "kCounts"))

@@ -2,7 +2,7 @@
 #' This file is part of nprcgenekeepr
 context("alleleFreq")
 library(testthat)
-data("ped1Alleles")
+ped1Alleles <- nprcgenekeepr::ped1Alleles
 ids <- ped1Alleles$id
 alleles <- ped1Alleles[, !(names(ped1Alleles) %in% c("id", "parent"))]
 test_that("alleleFreq forms dataframe with correct calculations", {
