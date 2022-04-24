@@ -57,8 +57,7 @@ kinshipMatricesToKValues <- function(kinshipMatrices) {
               kinshipMatrixToKValues(kinshipMatrices[[i]])[ , "kinship"])
     }
   }
-  names(kValues) <- c(as.character(kValues$id_1),
-                      as.character(kValues$id_2),
+  names(kValues) <- c(names(kValues[ , 1:2]),
                       paste0("sim_", seq_along(kinshipMatrices)))
   kValues
 }

@@ -17,7 +17,7 @@
 #'        to print out when an animal is missing a sire or a dam.
 #' @export
 makeSimPed <- function(ped, allSimParents, verbose = FALSE) {
-  nIds <- length(allSimParents$id)
+  nIds <- length(allSimParents)
 
   for (i in seq_len(nIds)) {
     if (length(allSimParents[[i]]$sires) == 0) {

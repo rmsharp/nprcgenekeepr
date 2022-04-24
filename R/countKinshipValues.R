@@ -90,7 +90,6 @@ countKinshipValues <- function(kinshipValues, accummulatedKValueCounts = NULL) {
         )
       )
     for (index in seq_along(kCounts)) {
-      cat(paste0("index from seq_along(kCounts): ", index, "\n"))
       valueDiffs <- setdiff(kValues[[index]],
                             accummulatedKValueCounts$kValues[[index]])
       for (value in accummulatedKValueCounts$kValues[[index]]) {

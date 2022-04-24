@@ -46,12 +46,12 @@ test_that("summarizeKinshipValues makes correct structure", {
   expect_equal(names(stats), c("id_1", "id_2", "min", "secondQuartile",
                                "mean", "median", "thirdQuartile", "max", "sd"))
 
-  expect_equal(length(stats$id_1), 289)
+  expect_equal(length(stats$id_1), 153)
 })
 
 test_that("summarizeKinshipValues summarizes kinship values correctly", {
-  expect_equal(stats$id_1[10], "J")
-  expect_equal(stats$id_2[10], "A")
+  expect_equal(stats$id_1[10], "A")
+  expect_equal(stats$id_2[10], "J")
   expect_equal(stats$min[10], 0)
   expect_equal(stats$secondQuartile[10], 0)
   expect_equal(stats$mean[10], 0,01)
@@ -60,3 +60,4 @@ test_that("summarizeKinshipValues summarizes kinship values correctly", {
   expect_equal(stats$max[10], 0.25)
   expect_equal(stats$sd[10], 0.1290994, tolerance = 0.00001)
 })
+

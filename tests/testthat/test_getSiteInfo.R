@@ -28,3 +28,4 @@ test_that("getSiteInfo handle expectConfigFile parameter", {
   expect_warning(getSiteInfo(expectConfigFile = TRUE))
   expect_silent(getSiteInfo(expectConfigFile = FALSE))
 })
+

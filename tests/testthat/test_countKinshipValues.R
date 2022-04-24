@@ -33,7 +33,6 @@ extractKinship <- function(simKinships, id1, id2, simulation) {
 extractKValue <- function(kValue, id1, id2, simulation) {
   kValue[kValue$id_1 ==  id1 & kValue$id_2 == id2, paste0("sim_", simulation)]
 }
-
 set_seed(seed = 1)
 n <- 10
 simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
@@ -46,23 +45,24 @@ cummulatedCounts <- countKinshipValues(kValues, counts)
 test_that("countKinshipValues makes correct structure", {
   expect_equal(length(counts), 3)
   expect_equal(names(counts), c("kIds", "kValues", "kCounts"))
-  expect_equal(length(counts$kIds), 289)
+  expect_equal(length(counts$kIds), 153)
 })
 
 test_that("countKinshipValues counts kinship values correctly", {
   expect_equal(counts$kCounts[[10]], c(6, 4))
   expect_equal(counts$kValues[[7]], c(0.125, 0.25))
-  expect_equal(as.character(counts$kIds[[3]]), c("C", "A"))
+  expect_equal(as.character(counts$kIds[[3]]), c("A", "C"))
 })
 
 test_that("countKinshipValues makes correct structure", {
   expect_equal(length(cummulatedCounts), 3)
   expect_equal(names(cummulatedCounts), c("kIds", "kValues", "kCounts"))
-  expect_equal(length(cummulatedCounts$kIds), 289)
+  expect_equal(length(cummulatedCounts$kIds), 153)
 })
 
 test_that("countKinshipValues counts kinship values correctly", {
   expect_equal(cummulatedCounts$kCounts[[10]], c(14, 6))
   expect_equal(cummulatedCounts$kValues[[7]], c(0.125, 0.25))
-  expect_equal(as.character(cummulatedCounts$kIds[[3]]), c("C", "A"))
+  expect_equal(as.character(cummulatedCounts$kIds[[3]]), c("A", "C"))
 })
+
