@@ -15,9 +15,12 @@
 #'        (\code{sires}), and a vector of representative dams (\code{dams}).
 #' @param verbose logical vector of length one that indicates whether or not
 #'        to print out when an animal is missing a sire or a dam.
+#' @importFrom data.table setDT
 #' @export
 makeSimPed <- function(ped, allSimParents, verbose = FALSE) {
   nIds <- length(allSimParents)
+  if (!any("data.table" %in% class(ped)))
+    setDT(ped)
 
   for (i in seq_len(nIds)) {
     if (length(allSimParents[[i]]$sires) == 0) {

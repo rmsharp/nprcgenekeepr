@@ -64,8 +64,9 @@ countKinshipValues <- function(kinshipValues, accummulatedKValueCounts = NULL) {
     vector(mode = "list", length = nrow(kinshipValues))
 
   for (row in seq_len(nrow(kinshipValues))) {
-    valuesTable <- table(as.numeric(kinshipValues[row, valueCols]))
-    kIds[[row]] <- as.character(kinshipValues[row, idCols])
+    valuesTable <-
+      table(as.numeric(kinshipValues[row, valueCols, with = FALSE]))
+    kIds[[row]] <- as.character(kinshipValues[row, idCols, with = FALSE])
     kValues[[row]] <- as.numeric(names(valuesTable))
     kCounts[[row]] <- as.numeric(valuesTable)
   }

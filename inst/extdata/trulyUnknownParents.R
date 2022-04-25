@@ -6,15 +6,15 @@ pedOne_file <- stri_c("/Users/msharp/Documents/Projects/Active_Projects/",
                       "nprcgenekeepr_project/Deidentified\ Pedegrees/",
                       "2021-01-06_Deidentified_Pedigree.csv")
 pedOne <- read.csv(file = pedOne_file, header = TRUE, sep = ",")
-minParentAge <- 2 #Min breeding age
+minParentAge <- 2L #Min breeding age
 pedOne <- qcStudbook(pedOne, minParentAge = minParentAge)
 pedOne$fromCenter[is.na(pedOne$fromCenter)] <- TRUE
 
 #calc list of births prior to loop
 #pre allocate mem for containers - create matrix with NAs - make ids factors
 potentialParents <-
-  getPotentialParents(ped = pedOne, minParentAge = 2,
-                      maxGestationalPeriod = 210)
+  getPotentialParents(ped = pedOne, minParentAge = 2L,
+                      maxGestationalPeriod = 210L)
 for (i in c(1390, 1508, 1629, 1644, 1813)) {
   cat(paste0("#", i, " is counter: ", potentialParents[[i]]$counter,
              "; id: ", potentialParents[[i]]$id, "; dams are ",

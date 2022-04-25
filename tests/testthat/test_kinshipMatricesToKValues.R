@@ -32,7 +32,7 @@ extractKinship <- function(simKinships, id1, id2, simulation) {
 }
 
 extractKValue <- function(kValue, id1, id2, simulation) {
-  kValue[kValue$id_1 ==  id1 & kValue$id_2 == id2, paste0("sim_", simulation)]
+  kValue[id_1 ==  id1 & id_2 == id2, paste0("sim_", simulation), with = FALSE][[1]]
 }
 
 set_seed(seed = 1)

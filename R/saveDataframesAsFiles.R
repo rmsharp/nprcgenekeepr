@@ -19,7 +19,7 @@
 #' @export
 saveDataframesAsFiles <- function(dfList, baseDir, fileType = "csv") {
   if (!(class(dfList) == "list" &
-      all(vapply(dfList, function(df) {class(df) == "data.frame"},
+      all(vapply(dfList, function(df) {any("data.frame" %in% class(df))},
                  logical(1)))))
       stop("dfList must be a list containing only dataframes.")
   stopifnot(any(fileType %in% c("txt", "csv", "excel")))

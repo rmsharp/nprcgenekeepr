@@ -33,6 +33,10 @@ extractKinship <- function(simKinships, id1, id2, simulation) {
 extractKValue <- function(kValue, id1, id2, simulation) {
   kValue[kValue$id_1 ==  id1 & kValue$id_2 == id2, paste0("sim_", simulation)]
 }
+extractKValue <- function(kValue, id1, id2, simulation) {
+  kValue[id_1 ==  id1 & id_2 == id2, paste0("sim_", simulation), with = FALSE][[1]]
+}
+
 set_seed(seed = 1)
 n <- 10
 simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
@@ -49,7 +53,7 @@ test_that("countKinshipValues detects contaminated ID list", {
 })
 test_that("countKinshipValues makes correct structure", {
   expect_equal(length(counts), 3)
-  expect_equal(names(counts), c("kIds", "kValues", "kCounts"))
+  expect_equal(names(counts), c("kIds", "kValues", "kCounts"), with = FALSE)
   expect_equal(length(counts$kIds), 153)
 })
 

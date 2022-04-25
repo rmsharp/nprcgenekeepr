@@ -54,12 +54,13 @@
 #' @param kinshipMatrix square kinship matrix. May or may not have named
 #' rows and columns.
 #' @importFrom gdata lowerTriangle
+#' @importFrom data.table as.data.table
 #' @export
 kinshipMatrixToKValues <- function(kinshipMatrix) {
   gdata::lowerTriangle(kinshipMatrix, byrow = TRUE) <- NA
-  kValues <- as.data.frame(as.table(kinshipMatrix))
-  kValues <- kValues[!is.na(kValues$Freq), ]
-  kValues <- kValues[order(kValues$Var1, kValues$Var2), ]
+  kValues <- as.data.table(as.table(kinshipMatrix))
+  kValues <- kValues[!is.na(kValues$N), ]
+  kValues <- kValues[order(kValues$V1, kValues$V2), ]
   names(kValues) <- c("id_1", "id_2", "kinship")
   kValues$id_1 <- as.character(kValues$id_1)
   kValues$id_2 <- as.character(kValues$id_2)
