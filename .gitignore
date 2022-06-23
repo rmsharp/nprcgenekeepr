@@ -2,7 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
-^cran-comments\.md$
+cran-comments\.md
 docs/*.svg
 docs/*.yml
 docc/*.js
@@ -20,9 +20,10 @@ R/groupAddition.R
 R/depricated_groupAssign.R
 R/depricated_groupAddition.R
 R/depricated_gene.drop.R
-^vignettes/interactive_cache$
-^vignettes/shiny_app_use_cache$
+vignettes/interactive_cache
+vignettes/shiny_app_use_cache
 vignettes/tutorials/*
-vignettes/*.tex$
-vignettes/*.html$
-vignettes/*.pdf$
+vignettes/*.tex
+vignettes/*.html
+vignettes/*.pdf
+*counts\.xlsx

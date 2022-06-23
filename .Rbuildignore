@@ -48,3 +48,5 @@ README\.*\.png$
 ^images$
 ^images/*$
 ^LICENSE\.md$
+^\.*counts.xlsx$
+

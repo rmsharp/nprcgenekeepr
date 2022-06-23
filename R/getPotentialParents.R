@@ -20,6 +20,8 @@
 #' @importFrom stringi stri_sub
 #' @export
 getPotentialParents <- function(ped, minParentAge, maxGestationalPeriod) {
+  birth <- exit <- fromCenter <- id <- sex <- NULL
+
   ## No point in looking at animals without a birth record.
   setDT(ped)
   ped <- ped[!is.na(ped$birth), ]

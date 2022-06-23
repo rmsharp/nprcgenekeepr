@@ -1,7 +1,15 @@
 NEWS
 ================
 R. Mark Sharp
-2021-08-31
+2022-04-25
+
+# nprcgenekeepr 1.0.5.9002 (20220425)
+
+-   Minor changes
+    -   Added use of data.table in an effort to reduce memory use and
+        CPU use for estimation of kinship values.
+    -   Functions were refactored and the ability to handle larger
+        simulations resulted.
 
 # nprcgenekeepr 1.0.5.9001 (20210830)
 
@@ -165,8 +173,8 @@ R. Mark Sharp
 -   Minor changes
     -   Added code to address issue 1 (GitHub). See comment 1 for
         details, but more should be done.
-    -   Refreshed Shiny_app_use.Rmd to reflect changes since
-        November 2019.
+    -   Refreshed Shiny_app_use.Rmd to reflect changes since November
+        2019.
 
 # nprcgenekeepr 0.5.42.9009 (20200402)
 
@@ -181,7 +189,7 @@ R. Mark Sharp
 
 -   Major changes – none
 -   Minor changes
-    -   Changed dependency to R >= 3.6 since caTools is not available
+    -   Changed dependency to R \>= 3.6 since caTools is not available
         for R \< 3.6.
 
 # nprcgenekeepr 0.5.42.9007 (20200319)
@@ -228,7 +236,7 @@ R. Mark Sharp
 -   Major changes
     -   Changed name of package to nprcgenekeepr. This required changing
         of many of the supporting files and functions. Having good unit
-        test coverage of the functions (739 test with > 90 percent
+        test coverage of the functions (739 test with \> 90 percent
         coverage) made this possible.
     -   This is the last version under the nprcmanager repository name.
     -   Conversion worked

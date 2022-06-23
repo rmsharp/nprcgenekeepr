@@ -26,6 +26,47 @@ library(rmsutilityr)
 library(nprcgenekeepr)
 ```
 Provided in reverse chronological order
+## 2022????
+1.  For both the full pedigree and the focal animals (e.g., live in breeding 
+    colony), provide number of animals with known and unknown sire, dam, or both
+    parents. Use the segmentation category of "from center".
+    
+    Enumerate animals with known parentage and their kinship coefficient.
+    
+    Find out how to trim the pedigree to remove animals that are not connected
+    to the rest of the colony.
+    
+    Have user provide a file of potential parents with id, parent, and parent sex (not required)
+    
+    Have radio buttons to allow trimming potential parent list by only including
+    animals that have had offspring.
+    
+    
+1.  Run the following before the meeting:
+classify_code_lines(files = c(list.files(".", full.names = TRUE), list.files("R/", full.names = TRUE), list.files("inst/application/", full.names = TRUE)))
+
+As of 20220512 
+            files             lines              code       blank_lines 
+              187             11405              5197               430 
+roxygen_doc_lines          comments 
+             4869               909 
+
+## 20220425
+1.  Mark showed the limited results from the large rhesus OHSU pedigree in the
+    file 2022-04-25_02_22_37_counts.xlsx.
+1.  Mark has added the use of data.table to getPotentialParents(), 
+    kinshipMatrixToKValues(), createSimKinships(), and makeSimPed(). This has 
+    not solved the memory issue associated with large pedigrees. Mark will 
+    examine the code again to try to identify additional uses that may be 
+    beneficial. Testing is needed to see if any benefit is realized.
+1.  Matt is to provide a smaller pedigree to complete development. He will 
+    obfuscate the data prior to sending it.
+1.  Mark will begin shiny integration.
+1.  Mark to clean up current package for issue8 and submit to the GitHub 
+    repository issue8 branch. It will not be merged into the master branch at
+    this time. Further testing is required before we are satisfied that the 
+    code is sufficiently robust. We may wait until shiny integration is 
+    complete.
 
 ## 20211201
 1.  Mark presented progress on acummulation of kinship values from simulated 
@@ -420,7 +461,7 @@ kable(sectionCodeChanges,
 
 ```
 
-       
+
 ## 20191014
 
 1.  __Progress Since Last Meeting__

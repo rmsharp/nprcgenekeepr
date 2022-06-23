@@ -12,8 +12,8 @@
 #' within parentheses is appended.
 #' @export
 getVersion <- function(date = TRUE) {
-  version <- "1.0.5.9001"
-  version_date <- "20210829"
+  version <- "1.0.5.9002"
+  version_date <- "20220425"
   if (date) {
     paste0(version, " (", version_date, ")")
   } else {

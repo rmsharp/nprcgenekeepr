@@ -1,6 +1,6 @@
 #' Makes a simulated pedigree using representative sires and dams
 #'
-#' For each \code{id} in \code{allSimParents} with one or more unknow parents
+#' For each \code{id} in \code{allSimParents} with one or more unknown parents
 #' each unknown parent is replaced with a random sire or dam as needed from
 #' the corresponding parent vector (\code{sires} or \code{dams}).
 #'

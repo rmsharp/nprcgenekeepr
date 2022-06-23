@@ -97,19 +97,65 @@
 
 \title{Meeting Notes and Things To Do}
 \author{R. Mark Sharp}
-\date{2021-08-30}
+\date{2022-05-12}
 
 \begin{document}
 \maketitle
 
-Provided in reverse chronological order
+Provided in reverse chronological order \#\# 2022???? 1. Run the
+following before the meeting: classify\_code\_lines(files =
+c(list.files(``.'', full.names = TRUE), list.files(``R/'', full.names =
+TRUE), list.files(``inst/application/'', full.names = TRUE)))
+
+As of 20220512 files lines code blank\_lines 187 11405 5197 430
+roxygen\_doc\_lines comments 4869 909
 
 \hypertarget{section}{%
-\subsection{20210827}\label{section}}
+\subsection{20220425}\label{section}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
+\item
+  Mark showed the limited results from the large rhesus OHSU pedigree in
+  the file 2022-04-25\_02\_22\_37\_counts.xlsx.
+\item
+  Mark has added the use of data.table to getPotentialParents(),
+  kinshipMatrixToKValues(), createSimKinships(), and makeSimPed(). This
+  has not solved the memory issue associated with large pedigrees. Mark
+  will examine the code again to try to identify additional uses that
+  may be beneficial. Testing is needed to see if any benefit is
+  realized.
+\item
+  Matt is to provide a smaller pedigree to complete development. He will
+  obfuscate the data prior to sending it.
+\item
+  Mark will begin shiny integration.
+\item
+  Mark to clean up current package for issue8 and submit to the GitHub
+  repository issue8 branch. It will not be merged into the master branch
+  at this time. Further testing is required before we are satisfied that
+  the code is sufficiently robust. We may wait until shiny integration
+  is complete.
+\end{enumerate}
+
+\hypertarget{section-1}{%
+\subsection{20211201}\label{section-1}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Mark presented progress on acummulation of kinship values from
+  simulated pedigrees. We now have the ability to accumulate kinship
+  values from at least hundreds of simulated pedigrees.
+\item
+  After the meeting Mark resolved issue28, which reduced to one the
+  number of times a missing configuration file is reported when the
+  shiny application runs.
+\item
+  Matt provided the updated version of getPotentialParents, which Mark
+  incorporated into the issue8 branch. \#\# 20210827
 \item
   Mark presented progress on countKinshipValues.R, which is still had a
   minor error, which was corrected after the meeting.
@@ -154,8 +200,8 @@ Provided in reverse chronological order
   kinship values. This function is of low priority.
 \end{enumerate}
 
-\hypertarget{section-1}{%
-\subsection{20210806}\label{section-1}}
+\hypertarget{section-2}{%
+\subsection{20210806}\label{section-2}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -182,8 +228,8 @@ Provided in reverse chronological order
 \item
 \end{enumerate}
 
-\hypertarget{section-2}{%
-\subsection{20210514}\label{section-2}}
+\hypertarget{section-3}{%
+\subsection{20210514}\label{section-3}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -269,8 +315,8 @@ Provided in reverse chronological order
   \end{enumerate}
 \end{enumerate}
 
-\hypertarget{section-3}{%
-\subsection{20201130}\label{section-3}}
+\hypertarget{section-4}{%
+\subsection{20201130}\label{section-4}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -302,8 +348,8 @@ Provided in reverse chronological order
   \end{enumerate}
 \end{enumerate}
 
-\hypertarget{section-4}{%
-\subsection{20201120}\label{section-4}}
+\hypertarget{section-5}{%
+\subsection{20201120}\label{section-5}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -384,8 +430,8 @@ Provided in reverse chronological order
   \end{enumerate}
 \end{enumerate}
 
-\hypertarget{section-5}{%
-\subsection{20201117}\label{section-5}}
+\hypertarget{section-6}{%
+\subsection{20201117}\label{section-6}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -426,8 +472,8 @@ Version 1.0.3       293  13776  7775             441              4613          
 1.0.3: tests        119   3722  3262             117               205            138
 \end{verbatim}
 
-\hypertarget{section-6}{%
-\subsection{20200423}\label{section-6}}
+\hypertarget{section-7}{%
+\subsection{20200423}\label{section-7}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -516,8 +562,8 @@ Version 1.0.3       293  13776  7775             441              4613          
   this period of social distancing.
 \end{enumerate}
 
-\hypertarget{section-7}{%
-\subsection{20200320}\label{section-7}}
+\hypertarget{section-8}{%
+\subsection{20200320}\label{section-8}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -544,8 +590,8 @@ Version 1.0.3       293  13776  7775             441              4613          
   \end{enumerate}
 \end{enumerate}
 
-\hypertarget{section-8}{%
-\subsection{20200316}\label{section-8}}
+\hypertarget{section-9}{%
+\subsection{20200316}\label{section-9}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -565,8 +611,8 @@ Version 1.0.3       293  13776  7775             441              4613          
   done, what is missing, what is too complex, etc.
 \end{enumerate}
 
-\hypertarget{section-9}{%
-\subsection{20200203}\label{section-9}}
+\hypertarget{section-10}{%
+\subsection{20200203}\label{section-10}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -591,8 +637,8 @@ Version 1.0.3       293  13776  7775             441              4613          
   \end{enumerate}
 \end{enumerate}
 
-\hypertarget{section-10}{%
-\subsection{20200106}\label{section-10}}
+\hypertarget{section-11}{%
+\subsection{20200106}\label{section-11}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -640,8 +686,8 @@ Version 1.0.3       293  13776  7775             441              4613          
   successful.
 \end{enumerate}
 
-\hypertarget{section-11}{%
-\subsection{20191218}\label{section-11}}
+\hypertarget{section-12}{%
+\subsection{20191218}\label{section-12}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -655,8 +701,8 @@ Version 1.0.3       293  13776  7775             441              4613          
   page.
 \end{enumerate}
 
-\hypertarget{section-12}{%
-\subsection{20191130}\label{section-12}}
+\hypertarget{section-13}{%
+\subsection{20191130}\label{section-13}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -667,8 +713,8 @@ Version 1.0.3       293  13776  7775             441              4613          
   is figure that would be beneficial.
 \end{enumerate}
 
-\hypertarget{section-13}{%
-\subsection{20191120}\label{section-13}}
+\hypertarget{section-14}{%
+\subsection{20191120}\label{section-14}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -693,8 +739,8 @@ Version 1.0.3       293  13776  7775             441              4613          
   allow a new pedigree to be added via the \textbf{Input} tab.
 \end{enumerate}
 
-\hypertarget{section-14}{%
-\subsection{20191115}\label{section-14}}
+\hypertarget{section-15}{%
+\subsection{20191115}\label{section-15}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -704,8 +750,8 @@ Version 1.0.3       293  13776  7775             441              4613          
   Analysis\_\_ tab. Done 20191115
 \end{enumerate}
 
-\hypertarget{section-15}{%
-\subsection{20191111}\label{section-15}}
+\hypertarget{section-16}{%
+\subsection{20191111}\label{section-16}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -740,40 +786,40 @@ Version 1.0.3       293  13776  7775             441              4613          
 
 \begin{table}
 
-\caption{\label{tab:code-change-table}Simple metrics for the Original Version (20160816) and Current Version 1.0.5.9001 (20210829).}
+\caption{\label{tab:code-change-table}Simple metrics for the Original Version (20160816) and Current Version 1.0.5.9002 (20220425).}
 \begin{tabular}[t]{l|r|>{\raggedleft\arraybackslash}p{5em}|r|r|r|r}
 \hline
 Source & Files & Lines & Code & Blank Lines & Document Lines & Comment Lines\\
 \hline
 Original Files & 8 & 3621 & 1927 & 531 & 0 & 1163\\
 
-Version 1.0.5.9001 & 311 & 14837 & 8412 & 485 & 4975 & 965\\
+Version 1.0.5.9002 & 315 & 15246 & 8650 & 516 & 5095 & 985\\
 \hline
 \end{tabular}
 \end{table}
 \begin{table}
 
-\caption{\label{tab:detail-code-change-table}Simple metrics for the Original Version (20160816) and Current Version 1.0.5.9001 (20210829) and current version groups of functions.}
+\caption{\label{tab:detail-code-change-table}Simple metrics for the Original Version (20160816) and Current Version 1.0.5.9002 (20220425) and current version groups of functions.}
 \begin{tabular}[t]{l|r|>{\raggedleft\arraybackslash}p{5em}|r|r|r|r}
 \hline
 Source & Files & Lines & Code & Blank Lines & Document Lines & Comment Lines\\
 \hline
 Original Files & 8 & 3621 & 1927 & 531 & 0 & 1163\\
 \hline
-Version 1.0.5.9001 & 311 & 14837 & 8412 & 485 & 4975 & 965\\
+Version 1.0.5.9002 & 315 & 15246 & 8650 & 516 & 5095 & 985\\
 \hline
 \hline
-1.0.5.9001: functions & 171 & 8748 & 3131 & 230 & 4749 & 638\\
+1.0.5.9002: functions & 174 & 9047 & 3278 & 244 & 4867 & 658\\
 \hline
-1.0.5.9001: ui & 11 & 1790 & 1514 & 98 & 2 & 176\\
+1.0.5.9002: ui & 11 & 1791 & 1515 & 98 & 2 & 176\\
 \hline
-1.0.5.9001: tests & 129 & 4299 & 3767 & 157 & 224 & 151\\
+1.0.5.9002: tests & 130 & 4408 & 3857 & 174 & 226 & 151\\
 \hline
 \end{tabular}
 \end{table}
 
-\hypertarget{section-16}{%
-\subsection{20191014}\label{section-16}}
+\hypertarget{section-17}{%
+\subsection{20191014}\label{section-17}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -858,8 +904,8 @@ Version 1.0.5.9001 & 311 & 14837 & 8412 & 485 & 4975 & 965\\
   \end{enumerate}
 \end{enumerate}
 
-\hypertarget{section-17}{%
-\subsection{20190916}\label{section-17}}
+\hypertarget{section-18}{%
+\subsection{20190916}\label{section-18}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -966,8 +1012,8 @@ x122 & & Y & d123 & Y & 1989/08/18 \\
   20190916.
 \end{enumerate}
 
-\hypertarget{section-18}{%
-\subsection{20190826}\label{section-18}}
+\hypertarget{section-19}{%
+\subsection{20190826}\label{section-19}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1010,8 +1056,8 @@ x122 & & Y & d123 & Y & 1989/08/18 \\
 \item
 \end{enumerate}
 
-\hypertarget{section-19}{%
-\subsection{20190810}\label{section-19}}
+\hypertarget{section-20}{%
+\subsection{20190810}\label{section-20}}
 
 This was an \emph{ad hoc} meeting to get clarification on heat map
 development for genetic diversity reporting. This meeting was a response
@@ -1163,8 +1209,8 @@ follows
   \end{enumerate}
 \end{enumerate}
 
-\hypertarget{section-20}{%
-\subsection{20190715}\label{section-20}}
+\hypertarget{section-21}{%
+\subsection{20190715}\label{section-21}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1213,8 +1259,8 @@ follows
   Mark is going to put together the Shiny application tutorial next
 \end{enumerate}
 
-\hypertarget{section-21}{%
-\subsection{20190603}\label{section-21}}
+\hypertarget{section-22}{%
+\subsection{20190603}\label{section-22}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1325,8 +1371,8 @@ follows
   \end{enumerate}
 \end{enumerate}
 
-\hypertarget{section-22}{%
-\subsection{20190429}\label{section-22}}
+\hypertarget{section-23}{%
+\subsection{20190429}\label{section-23}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1353,8 +1399,8 @@ follows
   Will provide a ``Goldilocks'' tutorial of Shiny application first.
 \end{enumerate}
 
-\hypertarget{section-23}{%
-\subsection{20190408}\label{section-23}}
+\hypertarget{section-24}{%
+\subsection{20190408}\label{section-24}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1409,8 +1455,8 @@ population. This will cause Pedscope's genome uniqueness estimates to
 possibly be slightly higher for non-founders than what this function
 will calculate.
 
-\hypertarget{section-24}{%
-\subsection{20190311}\label{section-24}}
+\hypertarget{section-25}{%
+\subsection{20190311}\label{section-25}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1450,8 +1496,8 @@ will calculate.
   we will meet on 20190408 at 4PM PAC.
 \end{enumerate}
 
-\hypertarget{section-25}{%
-\subsection{20190225}\label{section-25}}
+\hypertarget{section-26}{%
+\subsection{20190225}\label{section-26}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1551,8 +1597,8 @@ will calculate.
   Next meeting March 11, 2019, at 4PM PAC.
 \end{enumerate}
 
-\hypertarget{section-26}{%
-\subsection{20190114}\label{section-26}}
+\hypertarget{section-27}{%
+\subsection{20190114}\label{section-27}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1609,8 +1655,8 @@ will calculate.
   The next meeting will be 20190211 at 4 PM Pacific time.
 \end{enumerate}
 
-\hypertarget{section-27}{%
-\subsection{20181210}\label{section-27}}
+\hypertarget{section-28}{%
+\subsection{20181210}\label{section-28}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1699,8 +1745,8 @@ animal \textbf{E} appears in group 1, 2, and 4 and not in group 3.
   The next meeting will be 20190114 at 4 PM Pacific time.
 \end{enumerate}
 
-\hypertarget{section-28}{%
-\subsection{20181105}\label{section-28}}
+\hypertarget{section-29}{%
+\subsection{20181105}\label{section-29}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1843,8 +1889,8 @@ animal \textbf{E} appears in group 1, 2, and 4 and not in group 3.
   schedule, we rescheduled for 20181210.
 \end{enumerate}
 
-\hypertarget{section-29}{%
-\subsection{20181022}\label{section-29}}
+\hypertarget{section-30}{%
+\subsection{20181022}\label{section-30}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1905,8 +1951,8 @@ in getting the LabKey interface working with the Wisconsin National
 Primate Research Center system. 12. The next meeting is scheduled for
 November 5, 2018 at 4 PM Pacific Time.
 
-\hypertarget{section-30}{%
-\subsection{20180917}\label{section-30}}
+\hypertarget{section-31}{%
+\subsection{20180917}\label{section-31}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1954,8 +2000,8 @@ November 5, 2018 at 4 PM Pacific Time.
   known file errors completed 20181020.
 \end{enumerate}
 
-\hypertarget{section-31}{%
-\subsection{20180820}\label{section-31}}
+\hypertarget{section-32}{%
+\subsection{20180820}\label{section-32}}
 
 Meeting was canceled.
 
@@ -2377,29 +2423,29 @@ Accomplishments}\label{miscellaneous-accomplishments}}
 
 These should be stored elsewhere
 
-\hypertarget{section-32}{%
-\paragraph{20180429}\label{section-32}}
+\hypertarget{section-33}{%
+\paragraph{20180429}\label{section-33}}
 
 Test coverage is 86.32\%.
 
-\hypertarget{section-33}{%
-\paragraph{20171004}\label{section-33}}
+\hypertarget{section-34}{%
+\paragraph{20171004}\label{section-34}}
 
 Unit test coverage is 84.79\%.
 
-\hypertarget{section-34}{%
-\paragraph{20170921}\label{section-34}}
+\hypertarget{section-35}{%
+\paragraph{20170921}\label{section-35}}
 
 Unit test coverage is about 15\%.
 
-\hypertarget{section-35}{%
-\paragraph{20170919}\label{section-35}}
+\hypertarget{section-36}{%
+\paragraph{20170919}\label{section-36}}
 
 We have successfully installed and used \emph{nprcmanager} on Microsoft
 (MS) Windows 7, MS Windows 10, and MacOS 10.12.6 running R 3.4.1.
 
-\hypertarget{section-36}{%
-\paragraph{20170917}\label{section-36}}
+\hypertarget{section-37}{%
+\paragraph{20170917}\label{section-37}}
 
 I discovered why the plot of genetic uniqueness scores was not as
 expected. It was from an analysis where 0 was the threshold setting,
@@ -2423,21 +2469,21 @@ with the unit tests I created thus far. I do not know the code well
 enough to know what percentage we will have when I feel comfortable, but
 I know most of the functions have no tests at all.
 
-\hypertarget{section-37}{%
-\paragraph{20170916}\label{section-37}}
+\hypertarget{section-38}{%
+\paragraph{20170916}\label{section-38}}
 
 Can now assign known genotypes to individuals and to incorporate that
 information into the gene dropping routine. This has been done at the
 function level in the \emph{geneDrop} function. The pedigree submitted
 via the UI can optionally contain genetic information.
 
-\hypertarget{section-38}{%
-\paragraph{20170915}\label{section-38}}
+\hypertarget{section-39}{%
+\paragraph{20170915}\label{section-39}}
 
 Added a genetic uniqueness plot to the Summary Statistics tab.
 
-\hypertarget{section-39}{%
-\paragraph{20170911}\label{section-39}}
+\hypertarget{section-40}{%
+\paragraph{20170911}\label{section-40}}
 
 I have connected the Travis CI (continuous integration) tool to my
 github.com/rmsharp/nprcmanager so that when I check in code it
