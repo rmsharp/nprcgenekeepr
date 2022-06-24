@@ -14,7 +14,7 @@ First right and left space trimmed token from first character vector
 element.
 }
 \description{
-## Copyright(c) 2017-2020 R. Mark Sharp
+Gets tokens from character vector of lines
 }
 \examples{
 \donttest{

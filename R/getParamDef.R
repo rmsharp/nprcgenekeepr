@@ -1,6 +1,6 @@
 #' Get parameter definitions from tokens found in configuration file.
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2022 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' @param tokenList list of parameters and their definitions, which are
 #' character vectors

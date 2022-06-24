@@ -1,6 +1,6 @@
 #' Remove group numbers when all available animals have been used
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2022 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #'  @return The grpNum list after removing any list element corresponding to a

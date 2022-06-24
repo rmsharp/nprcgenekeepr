@@ -1,6 +1,6 @@
 #' Append the rows of one dataframe to another.
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2022 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Part of Pedigree Curation
 #'
@@ -23,7 +23,7 @@ rbindFill <- function(df1, df2) {
       col <- df1[[add.headers[i]]] # We want to extract not subset
       col.type <- mode(col)
       if (col.type == "numeric") {
-        if (class(col) == "Date") {
+        if (inherits(col, "Date")) {
           df2[, add.headers[i]] <- as.Date(NA, origin = as.Date("1970-01-01"))
         } else{
           df2[, add.headers[i]] <- NA

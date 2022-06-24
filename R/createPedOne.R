@@ -1,6 +1,6 @@
 #' createPedOne makes the pedOne data object
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2022 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' @param savePed logical value if TRUE the pedigree is saved into the

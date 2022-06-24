@@ -1,6 +1,6 @@
 #' Converts columns of dates in text form to \code{Date} object columns
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2022 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Finds date errors in columns defined in
 #' \code{convertDate} as dates and converts date strings to \code{Date} objects.

@@ -1,6 +1,6 @@
 #' Generates a genetic value report for a provided pedigree.
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2022 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' This is the main function for the Genetic Value Analysis.
 #'

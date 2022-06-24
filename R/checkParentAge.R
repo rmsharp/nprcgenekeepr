@@ -1,6 +1,6 @@
 #' Check parent ages to be at least \code{minParentAge}
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2022 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Ensure parents are sufficiently older than offspring
 #'
@@ -52,7 +52,7 @@ checkParentAge <- function(sb, minParentAge = 2, reportErrors = FALSE) {
     } else {
       stop("Birth column must be of class 'Date', 'POSIXct', or 'character'")
     }
-  } else if (class(sb$birth) == "character") {
+  } else if (is.character(sb$birth)) {
     sb$birth <- anytime(sb$birth)
   } else {
     sb$birth <- as.Date(sb$birth)

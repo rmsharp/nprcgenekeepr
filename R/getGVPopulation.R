@@ -1,6 +1,6 @@
 #' Get the population of interest for the Genetic Value analysis.
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2022 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' If user has limited the population of interest by defining \code{pop},
 #' that information is incorporated via the \code{ped$population} column.

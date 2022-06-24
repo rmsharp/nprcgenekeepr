@@ -1,6 +1,6 @@
 #' Get Logo file name
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2022 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' @return A character vector of length one having the name of the logo file

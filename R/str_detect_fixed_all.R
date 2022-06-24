@@ -1,6 +1,6 @@
 #' Returns a logical vector with results of stri_detect() for each pattern in
 #' second parameters character vector.
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2022 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' @usage str_detect_fixed_all(strings, patterns, ignore_na, ...)

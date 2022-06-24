@@ -11,6 +11,10 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# nprcgenekeepr 1.0.5.9003 (20220623)
+-   Minor changes
+    -   Removed dependency on gdata. 
+
 # nprcgenekeepr 1.0.5.9002 (20220425)
 -   Minor changes
     -   Added use of data.table in an effort to reduce memory use and CPU

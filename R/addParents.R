@@ -1,6 +1,6 @@
 #' Add parents
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2022 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Pedigree curation function
 #' Given a pedigree, find any IDs listed in the "sire" or "dam" columns

@@ -1,6 +1,6 @@
 #' Get Genetic Value Genotype data structure for reportGV function.
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2022 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Extracts genotype data if available otherwise NULL is returned.
 #'

@@ -1,7 +1,7 @@
 #' Returns a one element character string with correct punctuation for
 #' a list made up of the elements of the character vector argument.
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2022 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' @return A character vector of length one containing the a single correctly

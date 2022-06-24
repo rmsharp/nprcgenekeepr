@@ -1,6 +1,6 @@
 #' Converts date columns formatted as characters to be of type datetime
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2022 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Part of Pedigree Curation
 #'
@@ -89,11 +89,11 @@ convertDate <- function(ped, time.origin = as.Date("1970-01-01"),
     if (any(class(dates) %in% c("factor","logical", "integer"))) {
       dates <- as.character(dates)
     }
-    if (class(dates) == "Date") {
+    if (inherits(dates, 'Date')) {
       dates <- removeEarlyDates(dates, 1000)
       originalNAs <- is.na(dates)
       dates <- dates[!originalNAs]
-    } else if (class(dates) == "character") {
+    } else if (is.character(dates)) {
       dates[stri_trim_both(dates) == ""] <- NA
       ped[[header]] <- dates
       originalNAs <- is.na(dates)

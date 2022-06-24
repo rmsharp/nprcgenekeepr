@@ -1,6 +1,6 @@
 #' Creates a pyramid plot of the pedigree provided.
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2022 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' The pedigree provided must have the following columns: \code{sex} and
 #' \code{age}. This needs to be augmented to allow pedigrees structures that

@@ -1,6 +1,6 @@
 #' Generates a kinship matrix.
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2022 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' The function previously had an internal call to the kindepth function in

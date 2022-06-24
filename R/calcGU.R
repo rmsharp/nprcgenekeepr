@@ -1,6 +1,6 @@
 #' Calculates genome uniqueness for each ID that is part of the population.
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2022 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Part of Genetic Value Analysis
 #'

@@ -1,6 +1,6 @@
 #' insertSeparators inserts the character "-" between year and month and
 #' between month and day portions of a date string in \%Y\%m\%d format.
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2022 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' This function is not exported because it is not general purpose and

@@ -1,7 +1,7 @@
 Package: nprcgenekeepr
 Type: Package
 Title: Genetic Tools for Colony Management
-Version: 1.0.5.9002
+Version: 1.0.5.9003
 Authors@R: c(
     person("Michael", "Raboin", role = c("aut")),
     person("Terry", "Therneau", role = c("aut")),
@@ -40,7 +40,6 @@ Imports:
     anytime,
     data.table,
     futile.logger,
-    gdata,
     htmlTable,
     lubridate,
     Matrix,

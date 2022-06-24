@@ -1,6 +1,6 @@
 #' Forms breeding group(s) with an effort to match a specified sex ratio
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2022 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' @description The sex ratio is the ratio of females to males.
 #'
