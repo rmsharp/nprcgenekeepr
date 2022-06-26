@@ -2,7 +2,7 @@
 % Please edit documentation in R/getLkDirectRelatives.R
 \name{getLkDirectRelatives}
 \alias{getLkDirectRelatives}
-\title{Get the direct ancestors of selected animals}
+\title{Get the direct ancestors from LabKey of selected animals.}
 \usage{
 getLkDirectRelatives(ids, unrelatedParents = FALSE)
 }

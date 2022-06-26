@@ -1,4 +1,4 @@
-#' Get the direct ancestors of selected animals
+#' Get the direct ancestors of selected animals from supplied pedigree.
 #'
 ## Copyright(c) 2017-2022 R. Mark Sharp
 ## This file is part of nprcgenekeepr
@@ -17,7 +17,7 @@
 #' }
 #'
 #' @param ids character vector with Ids.
-#' @param pedSourceDf pedigree dataframe object that is used as the source of
+#' @param ped pedigree dataframe object that is used as the source of
 #' pedigree information.
 #' @param unrelatedParents logical vector when \code{FALSE} the unrelated
 #' parents of offspring do not get a record as an ego; when \code{TRUE}
@@ -25,29 +25,39 @@
 #' \code{dam}) IDs are set to \code{NA}.
 #'
 #' @import futile.logger
+#' @importFrom data.table rbindlist
 #' @importFrom stringi stri_c
 #' @export
-getPedDirectRelatives <- function(ids, pedSourceDf, unrelatedParents = FALSE) {
-  if (is.null(pedSourceDf))
+getPedDirectRelatives <- function(ids, ped, unrelatedParents = FALSE) {
+  if (missing(ids))
+    stop("Need to specify IDs in 'id' parameter.")
+
+  if (missing(ped))
+    stop("Need to specify pedigree in 'ped' parameter.")
+
+  if (is.null(ped))
     return(NULL)
+
+  if (!is.data.frame(ped))
+    stop("ped must be a data.frame object.")
+
+
   parents <- ids
   offspring <- ids
   len <- length(parents)
-  relativesDf <- pedSourceDf[pedSourceDf$id %in% ids, ]
+  relativesDf <- ped[ped$id %in% ids, ]
   while (len > 0) {
-    parents <- getParents(pedSourceDf, parents)
-    offspring <- getOffspring(pedSourceDf, offspring)
+    parents <- getParents(ped, parents)
+    offspring <- getOffspring(ped, offspring)
     len <- length(parents) + length(offspring)
     if (len > 0) {
       if (length(parents) > 0) {
-        relativesDf <- rbind(relativesDf,
-                             pedSourceDf[pedSourceDf$id %in% parents, ],
-                             stringsAsFactors = FALSE)
+        relativesDf <- rbindlist(list(relativesDf,
+                             ped[ped$id %in% parents, ]))
       }
       if (length(offspring) > 0) {
-        relativesDf <- rbind(relativesDf,
-                             pedSourceDf[pedSourceDf$id %in% offspring, ],
-                             stringsAsFactors = FALSE)
+        relativesDf <- rbindlist(list(relativesDf,
+                             ped[ped$id %in% offspring, ]))
       }
       relativesDf <- relativesDf[!duplicated(relativesDf$id), ]
     }
@@ -55,5 +65,5 @@ getPedDirectRelatives <- function(ids, pedSourceDf, unrelatedParents = FALSE) {
   unrelated <- unique(c(
     relativesDf$sire[!relativesDf$sire %in% relativesDf$id],
     relativesDf$dam[!relativesDf$dam %in% relativesDf$id]))
-  addIdRecords(ids = unrelated, fullPed = pedSourceDf, partialPed = relativesDf)
+  addIdRecords(ids = unrelated, fullPed = ped, partialPed = relativesDf)
 }

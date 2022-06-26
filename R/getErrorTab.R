@@ -7,6 +7,7 @@
 #'
 #' @param errorLst list of errors and changes made by \code{qcStudbook}
 #' @param pedigreeFileName name of file provided by user on Input tab
+#' @importFrom shiny div HTML tabPanel
 #' @export
 getErrorTab <- function(errorLst, pedigreeFileName) {
   tabPanel("Error List",

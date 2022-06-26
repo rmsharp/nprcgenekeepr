@@ -1,4 +1,4 @@
-#' Get the direct ancestors of selected animals
+#' Get the direct ancestors from LabKey of selected animals.
 #'
 ## Copyright(c) 2017-2022 R. Mark Sharp
 ## This file is part of nprcgenekeepr
@@ -42,30 +42,5 @@ getLkDirectRelatives <- function(ids, unrelatedParents = FALSE) {
   if (is.null(pedSourceDf))
     return(NULL)
   names(pedSourceDf) <- siteInfo$mapPedColumns
-  parents <- ids
-  offspring <- ids
-  len <- length(parents)
-  relativesDf <- pedSourceDf[pedSourceDf$id %in% ids, ]
-  while (len > 0) {
-    parents <- getParents(pedSourceDf, parents)
-    offspring <- getOffspring(pedSourceDf, offspring)
-    len <- length(parents) + length(offspring)
-    if (len > 0) {
-      if (length(parents) > 0) {
-        relativesDf <- rbind(relativesDf,
-                             pedSourceDf[pedSourceDf$id %in% parents, ],
-                             stringsAsFactors = FALSE)
-      }
-      if (length(offspring) > 0) {
-        relativesDf <- rbind(relativesDf,
-                             pedSourceDf[pedSourceDf$id %in% offspring, ],
-                             stringsAsFactors = FALSE)
-      }
-      relativesDf <- relativesDf[!duplicated(relativesDf$id), ]
-    }
-  }
-  unrelated <- unique(c(
-    relativesDf$sire[!relativesDf$sire %in% relativesDf$id],
-    relativesDf$dam[!relativesDf$dam %in% relativesDf$id]))
-  addIdRecords(ids = unrelated, fullPed = pedSourceDf, partialPed = relativesDf)
+  getPedDirectRelatives(ids, pedSourceDf, unrelatedParents = unrelatedParents)
 }

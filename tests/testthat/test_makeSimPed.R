@@ -29,17 +29,13 @@ test_that("makeSimPed creates a correct pedigree structure", {
   expect_equal(simPed$dam[simPed$id == "E"], "d3_4")
 })
 
-simParent_4 <- list(id = "B",
-                    sires = "",
-                    dams = c("d2_1", "d2_2", "d2_3", "d2_4"))
-allSimParents <- list(simParent_1, simParent_4, simParent_3)
 set_seed(seed = 1)
 
-simPed <- makeSimPed(ped, allSimParents)
+simPed <- makeSimPed(ped, allSimParents, verbose = TRUE)
 
 test_that("makeSimPed creates a correct pedigree structure", {
   expect_equal(simPed$sire[simPed$id == "A"], "s1_1")
-  expect_equal(simPed$sire[simPed$id == "B"], "")
+  expect_equal(simPed$sire[simPed$id == "B"], "s2_2")
   expect_equal(simPed$sire[simPed$id == "E"], "s3_1")
 
   expect_equal(simPed$dam[simPed$id == "A"], "d1_2")
@@ -47,22 +43,68 @@ test_that("makeSimPed creates a correct pedigree structure", {
   expect_equal(simPed$dam[simPed$id == "E"], "d3_4")
 })
 
-simParent_5 <- list(id = "B",
-                    sires = c("s2_1", "s2_2", "s2_3"),
-                    dams = "")
-
+simParent_4 <- list(id = "B",
+                    sires = NULL,
+                    dams = c("d2_1", "d2_2", "d2_3", "d2_4"))
 allSimParents <- list(simParent_1, simParent_4, simParent_3)
 set_seed(seed = 1)
 
 simPed <- makeSimPed(ped, allSimParents)
 
-test_that("makeSimPed creates a correct pedigree structure", {
+test_that("makeSimPed creates a correct pedigree structure with no sires", {
   expect_equal(simPed$sire[simPed$id == "A"], "s1_1")
-  expect_equal(simPed$sire[simPed$id == "B"], "")
-  expect_equal(simPed$sire[simPed$id == "E"], "s3_1")
+  expect_true(is.na(simPed$sire[simPed$id == "B"]))
+  expect_equal(simPed$sire[simPed$id == "E"], "s3_3")
 
   expect_equal(simPed$dam[simPed$id == "A"], "d1_2")
-  expect_equal(simPed$dam[simPed$id == "B"], "d2_4")
-  expect_equal(simPed$dam[simPed$id == "E"], "d3_4")
+  expect_equal(simPed$dam[simPed$id == "B"], "d2_3")
+  expect_equal(simPed$dam[simPed$id == "E"], "d3_1")
+})
+
+set_seed(seed = 1)
+
+simPed <- makeSimPed(ped, allSimParents, verbose = TRUE)
+
+test_that("makeSimPed creates a correct pedigree structure with no sires", {
+  expect_equal(simPed$sire[simPed$id == "A"], "s1_1")
+  expect_true(is.na(simPed$sire[simPed$id == "B"]))
+  expect_equal(simPed$sire[simPed$id == "E"], "s3_3")
+
+  expect_equal(simPed$dam[simPed$id == "A"], "d1_2")
+  expect_equal(simPed$dam[simPed$id == "B"], "d2_3")
+  expect_equal(simPed$dam[simPed$id == "E"], "d3_1")
+})
+
+simParent_5 <- list(id = "B",
+                    sires = c("s2_1", "s2_2", "s2_3"),
+                    dams = NULL)
+
+allSimParents <- list(simParent_1, simParent_5, simParent_3)
+set_seed(seed = 1)
+
+simPed <- makeSimPed(ped, allSimParents)
+
+test_that("makeSimPed creates a correct pedigree structure with no dams", {
+  expect_equal(simPed$sire[simPed$id == "A"], "s1_1")
+  expect_equal(simPed$sire[simPed$id == "B"], "s2_2")
+  expect_equal(simPed$sire[simPed$id == "E"], "s3_3")
+
+  expect_equal(simPed$dam[simPed$id == "A"], "d1_2")
+  expect_true(is.na(simPed$dam[simPed$id == "B"]))
+  expect_equal(simPed$dam[simPed$id == "E"], "d3_1")
+})
+
+set_seed(seed = 1)
+
+simPed <- makeSimPed(ped, allSimParents, verbose = TRUE)
+
+test_that("makeSimPed creates a correct pedigree structure with no dams", {
+  expect_equal(simPed$sire[simPed$id == "A"], "s1_1")
+  expect_equal(simPed$sire[simPed$id == "B"], "s2_2")
+  expect_equal(simPed$sire[simPed$id == "E"], "s3_3")
+
+  expect_equal(simPed$dam[simPed$id == "A"], "d1_2")
+  expect_true(is.na(simPed$dam[simPed$id == "B"]))
+  expect_equal(simPed$dam[simPed$id == "E"], "d3_1")
 })
 

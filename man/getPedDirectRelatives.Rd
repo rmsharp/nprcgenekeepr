@@ -2,14 +2,14 @@
 % Please edit documentation in R/getPedDirectRelatives.R
 \name{getPedDirectRelatives}
 \alias{getPedDirectRelatives}
-\title{Get the direct ancestors of selected animals}
+\title{Get the direct ancestors of selected animals from supplied pedigree.}
 \usage{
-getPedDirectRelatives(ids, pedSourceDf, unrelatedParents = FALSE)
+getPedDirectRelatives(ids, ped, unrelatedParents = FALSE)
 }
 \arguments{
 \item{ids}{character vector with Ids.}
 
-\item{pedSourceDf}{pedigree dataframe object that is used as the source of
+\item{ped}{pedigree dataframe object that is used as the source of
 pedigree information.}
 
 \item{unrelatedParents}{logical vector when \code{FALSE} the unrelated

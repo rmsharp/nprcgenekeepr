@@ -1,7 +1,15 @@
 NEWS
 ================
 R. Mark Sharp
-2022-04-25
+2022-06-25
+
+# nprcgenekeepr 1.0.5.9003 (20220623)
+
+-   Minor changes
+    -   Removed dependency on gdata.
+    -   Removed getMinParentAge as it was never used.
+    -   Starting to replace rbind() with rbindlist() from data.table
+        were possible.
 
 # nprcgenekeepr 1.0.5.9002 (20220425)
 

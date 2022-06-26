@@ -7,6 +7,12 @@ test_that("getVersion returns a version", {
   version <- getVersion()
   expect_true(stri_detect_regex(version, # version
                                 pattern = "^[0-9]{1,2}([.][0-9]{1,2})"))
-  expect_true(stri_detect_regex(version, pattern = "[0-9]{4}")) # date
+  expect_true(stri_detect_regex(version, pattern = "[0-9]{8}")) # date
+})
+test_that("getVersion returns a version", {
+  version <- getVersion(date = FALSE)
+  expect_true(stri_detect_regex(version, # version
+                                pattern = "^[0-9]{1,2}([.][0-9]{1,2})"))
+  expect_false(stri_detect_regex(version, pattern = "[0-9]{8}")) # date
 })
 
