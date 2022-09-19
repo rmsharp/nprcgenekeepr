@@ -68,7 +68,7 @@ test_that(paste0(
       ped = pedWithGenotype, harem = TRUE,
       minAge = 2)
     expect_true(length(groupMembers) == 3)
-    expect_equal(class(groupMembers[[1]][1]), "character")
+    expect_true(inherits(groupMembers[[1]][1], "character"))
     expect_equal(length(groupMembers[[1]][1]), 1)
   }
 )

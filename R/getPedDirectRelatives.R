@@ -42,28 +42,25 @@ getPedDirectRelatives <- function(ids, ped, unrelatedParents = FALSE) {
     stop("ped must be a data.frame object.")
 
 
-  parents <- ids
-  offspring <- ids
-  len <- length(parents)
-  relativesDf <- ped[ped$id %in% ids, ]
+  relatives <- offspring <- parents <- ids
+  len <- length(ids)
   while (len > 0) {
-    parents <- getParents(ped, parents)
-    offspring <- getOffspring(ped, offspring)
-    len <- length(parents) + length(offspring)
-    if (len > 0) {
-      if (length(parents) > 0) {
-        relativesDf <- rbindlist(list(relativesDf,
-                             ped[ped$id %in% parents, ]))
-      }
-      if (length(offspring) > 0) {
-        relativesDf <- rbindlist(list(relativesDf,
-                             ped[ped$id %in% offspring, ]))
-      }
-      relativesDf <- relativesDf[!duplicated(relativesDf$id), ]
-    }
+    parents <- getParents(ped, ids)
+    offspring <- getOffspring(ped, ids)
+    added <- unique(union(parents, offspring))
+    added <- setdiff(added, ids)
+    len <- length(added)
+    if (len == 0)
+      break
+    ids <- union(added, ids)
+    ids <- ids[!is.na(ids)]
   }
-  unrelated <- unique(c(
-    relativesDf$sire[!relativesDf$sire %in% relativesDf$id],
-    relativesDf$dam[!relativesDf$dam %in% relativesDf$id]))
-  addIdRecords(ids = unrelated, fullPed = ped, partialPed = relativesDf)
+
+  if (unrelatedParents) {
+    unrelated <- unique(ids[!ids %in% ped$id])
+    unrelated <- unrelated[!is.na(unrelated)]
+    addIdRecords(ids = unrelated, fullPed = ped,
+                 partialPed = ped[ped$id %in% ids, ])
+  }
+  ped[ped$id %in% ids, ]
 }

@@ -11,7 +11,14 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# nprcgenekeepr 1.0.5.9003 (20220623)
+# nprcgenekeepr 
+-   Minor changes
+    -   Changed method used to test class of object to use inherits().
+    -   Corrected getPedDirectRelative() so that all direct relatives are found.
+        Supplemented unit tests for more direct relative types.
+    -   Added unit tests for trimPedigree().
+    
+# nprcgenekeepr 1.0.5.9003 (20220625)
 -   Minor changes
     -   Removed dependency on gdata.
     -   Removed getMinParentAge as it was never used.

@@ -6,10 +6,10 @@ library(stringi)
 
 pedOne <- nprcgenekeepr::pedOne
 test_that("summary.nprcgenekeeprErr provides expected classes of output", {
-  expect_equal(class(summary(qcStudbook(pedOne, reportErrors = TRUE))$txt),
-               "character")
-  expect_equal(class(summary(qcStudbook(pedOne, reportErrors = TRUE))$sp),
-               "data.frame")
+  expect_true(inherits(summary(qcStudbook(pedOne, reportErrors = TRUE))$txt,
+               "character"))
+  expect_true(inherits(summary(qcStudbook(pedOne, reportErrors = TRUE))$sp,
+               "data.frame"))
 })
 test_that("summary.nprcgenekeeprErr provides expected output", {
   expect_equal(length(summary(qcStudbook(pedOne, reportErrors = TRUE))$txt), 1)

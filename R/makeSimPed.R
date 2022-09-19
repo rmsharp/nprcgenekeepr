@@ -19,7 +19,7 @@
 #' @export
 makeSimPed <- function(ped, allSimParents, verbose = FALSE) {
   nIds <- length(allSimParents)
-  if (!any("data.table" %in% class(ped)))
+  if (!inherits(ped, "data.table"))
     setDT(ped)
 
   for (i in seq_len(nIds)) {

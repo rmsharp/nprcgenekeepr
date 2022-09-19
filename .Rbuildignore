@@ -12,6 +12,7 @@
 ^20200510_cran-comments\.md$
 ^20200415_cran-comments\.md$
 ^codecov\.yml$
+^NOTES\ todo\.txt$
 ^docs$
 inst/extdata/meeting_notes\.html$
 ^\.gitignore$

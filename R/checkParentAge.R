@@ -45,7 +45,7 @@ checkParentAge <- function(sb, minParentAge = 2, reportErrors = FALSE) {
       return(sb)
     }
   }
-  if (!any(class(sb$birth) %in% c("Date", "POSIXct", "character"))) {
+  if (!inherits(sb$birth, c("Date", "POSIXct", "character"))) {
     if (reportErrors) {
       ## Bad birth date column precludes checking parent age
       return(NULL)

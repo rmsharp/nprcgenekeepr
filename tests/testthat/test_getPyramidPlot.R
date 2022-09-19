@@ -5,12 +5,12 @@ library(testthat)
 recPlot <- function(expr) {
   pdf(NULL)
   on.exit(dev.off())
-  dev.control(displaylist="enable")
+  dev.control(displaylist = "enable")
   expr
   recordPlot()
 }
 agePlot <- recPlot(getPyramidPlot(nprcgenekeepr::qcPed))
 test_that("getPyramidPlot generates a plot with or without pedigree", {
-  expect_equal(class(agePlot), "recordedplot")
-  expect_equal(class(recPlot(getPyramidPlot(NULL))), "recordedplot")
+  expect_true(inherits(agePlot, "recordedplot"))
+  expect_true(inherits(recPlot(getPyramidPlot(NULL)), "recordedplot"))
 })

@@ -17,10 +17,10 @@ test_that("obfuscatePed creates correctly obfuscated pedigree", {
 test_that("obfuscatePed creates ID map on request", {
   pedSix <- qcStudbook(nprcgenekeepr::pedSix)
   ped <- obfuscatePed(pedSix, size = 3, maxDelta = 20, map = TRUE)
-  expect_true(class(ped) == "list")
+  expect_true(inherits(ped, "list"))
   expect_equal(names(ped), c("ped", "map"))
-  expect_equal(class(ped$ped), "data.frame")
-  expect_equal(class(ped$map), "character")
+  expect_true(inherits(ped$ped, "data.frame"))
+  expect_true(inherits(ped$map, "character"))
   expect_equal(names(ped$map), pedSix$id)
   expect_equal(as.character(ped$map), ped$ped$id)
 })

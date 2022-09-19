@@ -36,22 +36,54 @@ test_that("getPedDirectRelatives throws an error with no pedigree", {
 
 ped <- nprcgenekeepr::lacy1989Ped
 ids <- "E"
-ancestors <- getPedDirectRelatives(ids = ids, ped = ped,
+relatives <- getPedDirectRelatives(ids = ids, ped = ped,
                                    unrelatedParents = FALSE)
 test_that("getPedDirectRelatives creates correct pedigree", {
-  expect_setequal(ancestors$id, c("D", "E", "F", "G"))
+  expect_setequal(relatives$id, c("A", "B", "C", "D", "E", "F", "G"))
 })
 
 ids <- "B"
-ancestors <- getPedDirectRelatives(ids = ids, ped = ped,
+relatives <- getPedDirectRelatives(ids = ids, ped = ped,
                                    unrelatedParents = FALSE)
 test_that("getPedDirectRelatives creates correct pedigree", {
-  expect_setequal(ancestors$id, c("A", "B", "C", "D", "E", "F", "G"))
+  expect_setequal(relatives$id, c("A", "B", "C", "D", "E", "F", "G"))
 })
 ids <- "C"
-ancestors <- getPedDirectRelatives(ids = ids, ped = ped,
+relatives <- getPedDirectRelatives(ids = ids, ped = ped,
                                    unrelatedParents = FALSE)
 test_that("getPedDirectRelatives creates correct pedigree", {
-  expect_setequal(ancestors$id, c("A", "B", "C"))
+  expect_setequal(relatives$id, c("A", "B", "C", "D", "E", "F", "G"))
+})
+
+ped2 <- rbind(ped, data.frame(id = c("H", "I", "J", "K", "L", "M"),
+                              sire = c("K", "K", "L", NA, NA, NA),
+                              dam = c(NA, "M", "M", NA, NA, NA),
+                              gen = rep(2, 6),
+                              population = rep(TRUE, 6)))
+
+ids <- "E"
+relatives <- getPedDirectRelatives(ids = ids, ped = ped2,
+                                   unrelatedParents = FALSE)
+test_that("getPedDirectRelatives creates correct pedigree", {
+  expect_setequal(relatives$id, c("A", "B", "C", "D", "E", "F", "G"))
+})
+
+ids <- "B"
+relatives <- getPedDirectRelatives(ids = ids, ped = ped2,
+                                   unrelatedParents = FALSE)
+test_that("getPedDirectRelatives creates correct pedigree", {
+  expect_setequal(relatives$id, c("A", "B", "C", "D", "E", "F", "G"))
+})
+ids <- "C"
+relatives <- getPedDirectRelatives(ids = ids, ped = ped2,
+                                   unrelatedParents = FALSE)
+test_that("getPedDirectRelatives creates correct pedigree", {
+  expect_setequal(relatives$id, c("A", "B", "C", "D", "E", "F", "G"))
+})
+ids <- "M"
+relatives <- getPedDirectRelatives(ids = ids, ped = ped2,
+                                   unrelatedParents = FALSE)
+test_that("getPedDirectRelatives creates correct pedigree", {
+  expect_setequal(relatives$id, c("H", "I", "J", "K", "L", "M"))
 })
 

@@ -17,6 +17,18 @@ trim3 <- trimPedigree(c("C", "K", "L", "D", "E"), ped,
 trim4 <- trimPedigree(c("C", "K", "L", "D", "E"), ped,
                       removeUninformative = TRUE,
                       addBackParents = TRUE)
+ped1 <- getPedDirectRelatives(c("C", "K", "L", "D", "E"), ped,
+                              unrelatedParents = FALSE)
+ped2 <- getPedDirectRelatives(c("C", "K", "L", "D", "E"), ped,
+                              unrelatedParents = TRUE)
+ped3 <- getPedDirectRelatives(c("C", "K", "L", "D", "E"), ped,
+                              unrelatedParents = FALSE)
+ped4 <- getPedDirectRelatives(c("C", "K", "L", "D", "E"), ped,
+                              unrelatedParents = TRUE)
+pPed1 <- getProbandPedigree(c("C", "K", "L", "D", "E"), ped)
+pPed2 <- getProbandPedigree(c("C", "K", "L", "D", "E"), ped)
+pPed3 <- getProbandPedigree(c("C", "K", "L", "D", "E"), ped)
+pPed4 <- getProbandPedigree(c("C", "K", "L", "D", "E"), ped)
 eTrim1 <- c("A", "B", "C", "D", "E", "K", "L", "Q")
 eTrim2 <- c("A", "B", "C", "D", "E", "L")
 eTrim3 <- c("A", "B", "C", "D", "E", "K", "L", "Q")

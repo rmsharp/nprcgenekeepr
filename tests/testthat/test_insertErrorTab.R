@@ -18,7 +18,7 @@ pedOne <- data.frame(
   stringsAsFactors = FALSE, check.names = FALSE)
 errorLst <- qcStudbook(pedOne, reportErrors = TRUE)
 test_that("insertErrorTab forms a character vector", {
-  expect_equal(class(insertErrorTab(errorLst, "test_file")), "character")
+  expect_true(inherits(insertErrorTab(errorLst, "test_file"), "character"))
 })
 test_that("insertErrorTab provides expected output", {
   expect_equal(stri_sub(insertErrorTab(errorLst, "test_file"), 1, 5), "<h3>E")

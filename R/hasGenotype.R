@@ -35,10 +35,10 @@ hasGenotype <- function(genotype) {
   } else if (!any(tolower(cols) %in% "second")) {
     return(FALSE) # "Genotype  must have a column named 'second'
   } else {
-    if (!any(class(genotype$first) %in% c("numeric", "integer"))) {
+    if (!inherits(genotype$first, c("numeric", "integer"))) {
       return(FALSE)  # genotype representation (indirection) should be integer
       # at this point
-    } else if (!any(class(genotype$second) %in% c("numeric", "integer"))) {
+    } else if (!inherits(genotype$second, c("numeric", "integer"))) {
       return(FALSE)  # genotype representation (indirection) should be integer
     } else {
       return(TRUE)

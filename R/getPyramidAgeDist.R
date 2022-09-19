@@ -36,18 +36,18 @@ getPyramidAgeDist <- function(ped = NULL) {
   colNames <- c("id", "sire", "dam", "sex", "birth", "exit_date")
   names(ped) <- colNames
   ped <- ped[ , colNames]
-  if (!any(class(ped$birth) %in% c("Date", "POSIXct", "character"))) {
+  if (!inherits(ped$birth, c("Date", "POSIXct", "character"))) {
     stop("birth column must be of class 'Date', 'POSIXct', or 'character'")
-  } else if (class(ped$birth)[[1]] == "character") {
+  } else if (inherits(ped$birth,"character")) {
     ped$birth <- anytime::anytime(ped$birth)
   } else {
     ped$birth <- as.Date(ped$birth)
   }
   ped$status[is.na(ped$exit_date)] <- "ALIVE"
   ped$status[!is.na(ped$exit_date) | is.na(ped$birth)] <- "DECEASED"
-  if (!any(class(ped$exit_date) %in% c("Date", "POSIXct", "character"))) {
+  if (!inherits(ped$exit_date, c("Date", "POSIXct", "character"))) {
     stop("exit_date column must be of class 'Date', 'POSIXct', or 'character'")
-  } else if (class(ped$exit_date)[[1]] == "character") {
+  } else if (inherits(ped$exit_date, "character")) {
     ped$status[ped$exit_date == "9999999999"] <- "DECEASED"
     ped$exit_date[ped$exit_date == "" | ped$exit_date == "9999999999"] <- NA
     ped$exit_date <- anytime::anytime(ped$exit_date)

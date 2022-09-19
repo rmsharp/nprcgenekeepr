@@ -35,7 +35,7 @@ obfuscatePed <- function(ped, size = 6, maxDelta = 30,
   ped$dam <- alias[ped$dam]
   ped$id <- alias
   for (col in names(ped)) {
-    if (any("Date" %in% class(ped[[col]]))) {
+    if (inherits(ped[[col]], "Date")) {
       ped[[col]] <- obfuscateDate(ped[[col]], maxDelta = maxDelta)
     }
   }
