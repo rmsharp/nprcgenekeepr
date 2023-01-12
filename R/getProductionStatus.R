@@ -105,4 +105,3 @@ getProductionStatus <- function(ped, minParentAge = 3, maxOffspringAge = NULL,
   }
   list(production = production, color = color, colorIndex = colorIndex)
 }
-
