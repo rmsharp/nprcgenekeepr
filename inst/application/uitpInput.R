@@ -101,6 +101,6 @@ uitpInput <-
         ),
       # Main Panel
       mainPanel(#style = "margin-left:425px;padding:10px;",
-        includeHTML("../extdata/input_format.html"))
+        includeHTML("../extdata/ui_guidance/input_format.html"))
     )
   )

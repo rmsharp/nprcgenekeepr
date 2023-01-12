@@ -16,7 +16,7 @@ uitpSummaryStatistics <-
              "border: 1px solid lightgray; background-color: #EDEDED;",
              "border-radius: 25px; box-shadow: 0 0 5px 2px #888"
             ),
-            withMathJax(includeHTML("../extdata/summary_stats.html"))
+            withMathJax(includeHTML("../extdata/ui_guidance/summary_stats.html"))
      )),
    br(),
    fluidRow(
@@ -128,7 +128,7 @@ uitpSummaryStatistics <-
               "border-radius: 25px; box-shadow: 0 0 5px 2px #888"
             ),
             withMathJax(
-              includeHTML("../extdata/population_genetics_terms.html"))
+              includeHTML("../extdata/ui_guidance/population_genetics_terms.html"))
      ))
 
 )

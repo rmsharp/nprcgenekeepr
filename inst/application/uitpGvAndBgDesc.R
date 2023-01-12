@@ -1,3 +1,3 @@
 uitpGvAndBgDesc <-
   tabPanel("Genetic Value Analysis and Breeding Group Description",
-           includeHTML("../extdata/gvAndBgDesc.html"))
+           includeHTML("../extdata/ui_guidance/gvAndBgDesc.html"))

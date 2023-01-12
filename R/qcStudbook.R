@@ -59,7 +59,7 @@
 #' \code{FALSE}.
 #' @param reportErrors logical value if \code{TRUE} will scan the entire file
 #' and report back changes made to input and errors in a
-#' list of list where each sublist is a type of change or error found.
+#' list of lists where each sublist is a type of change or error found.
 #' Changes will include column names, case of categorical values (male,
 #' female, unknown), etc.
 #' Errors will include missing columns, invalid date rows, male dams,
@@ -178,7 +178,7 @@ qcStudbook <- function(sb, minParentAge = 2, reportChanges = FALSE,
   sb <- unknown2NA(sb)
   sb <- addUIds(sb)
   sb <- addParents(sb) # add parent record for parents that don't have
-                       #their own line entry
+                       # their own line entry
   # Add and standardize needed fields
   sb$sex <- convertSexCodes(sb$sex)
   if (reportErrors) {

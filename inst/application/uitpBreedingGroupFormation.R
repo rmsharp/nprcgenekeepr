@@ -206,7 +206,7 @@ uitpBreedingGroupFormation <-
           "border: 1px solid lightgray; background-color: #EDEDED; ",
           "border-radius: 15px; box-shadow: 0 0 5px 2px #888"
         ),
-        includeHTML("../extdata/group_formation.html")
+        includeHTML("../extdata/ui_guidance/group_formation.html")
       )
     )
   )
