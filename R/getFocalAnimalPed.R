@@ -44,7 +44,7 @@ getFocalAnimalPed <- function(fileName, sep = ",") {
                       "nrow(focalAnimals) = ",
                       nrow(focalAnimals), "\n"), name = "nprcgenekeepr")
   }
-  focalAnimals <- as.character(focalAnimals[ , 1])
+  focalAnimals <- as.character(focalAnimals[, 1])
   ped <- getLkDirectRelatives(ids = focalAnimals)
   if (is.null(ped)) {
     flog.debug(paste0("in getFocalAnimalPed after getLkDirectRelatives, which ",

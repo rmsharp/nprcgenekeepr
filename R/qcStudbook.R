@@ -168,7 +168,7 @@ qcStudbook <- function(sb, minParentAge = 2, reportChanges = FALSE,
   if (reportChanges == FALSE) # remove changed columns
     errorLst$changedCols <- getEmptyErrorLst()$changedCols
   missingColumns <- checkRequiredCols(cols, reportErrors)
-  if (reportErrors & !is.null(missingColumns)) {
+  if (reportErrors && !is.null(missingColumns)) {
     errorLst$missingColumns <- missingColumns
     return(errorLst)
   }
@@ -184,8 +184,8 @@ qcStudbook <- function(sb, minParentAge = 2, reportChanges = FALSE,
   if (reportErrors) {
     testVal <- correctParentSex(sb$id, sb$sire, sb$dam, sb$sex,
                                 sb$recordStatus, reportErrors)
-    if (is.null(testVal$femaleSires) & is.null(testVal$maleDams)
-        & is.null(testVal$sireAndDam)) {
+    if (is.null(testVal$femaleSires) && is.null(testVal$maleDams)
+        && is.null(testVal$sireAndDam)) {
       sb$sex <- correctParentSex(sb$id, sb$sire, sb$dam, sb$sex,
                                  sb$recordStatus, reportErrors = FALSE)
     } else {

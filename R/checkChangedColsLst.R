@@ -29,21 +29,20 @@
 #' \code{qcStudbook}.
 #' @export
 checkChangedColsLst <- function(changedCols) {
-  if (length(changedCols$caseChange) > 0 |
-      length(changedCols$spaceRemoved) > 0 |
-      length(changedCols$periodRemoved) > 0 |
-      length(changedCols$underScoreRemoved) > 0 |
-      length(changedCols$egoToId) > 0 |
-      length(changedCols$egoidToId) > 0 |
-      length(changedCols$sireIdToSire) > 0 |
-      length(changedCols$damIdToDam) > 0 |
-      length(changedCols$birthdateToBirth) > 0 |
-      length(changedCols$deathdateToDeath) > 0 |
-      length(changedCols$recordstatusToRecordStatus) > 0 |
+  if (length(changedCols$caseChange) > 0 ||
+      length(changedCols$spaceRemoved) > 0 ||
+      length(changedCols$periodRemoved) > 0 ||
+      length(changedCols$underScoreRemoved) > 0 ||
+      length(changedCols$egoToId) > 0 ||
+      length(changedCols$egoidToId) > 0 ||
+      length(changedCols$sireIdToSire) > 0 ||
+      length(changedCols$damIdToDam) > 0 ||
+      length(changedCols$birthdateToBirth) > 0 ||
+      length(changedCols$deathdateToDeath) > 0 ||
+      length(changedCols$recordstatusToRecordStatus) > 0 ||
       length(changedCols$fromcenterToFromCenter) > 0) {
     return(TRUE)
   } else {
     return(FALSE)
   }
 }
-

@@ -53,7 +53,7 @@ dataframe2string <- function(object, ..., digits = NULL, row.names = TRUE) {
     if (isTRUE(row.names))
       m <- cbind(rowNames, m)
     # max-length per-column
-    maxLen <- apply(apply(m, c(1,2), stri_length), 2, max,
+    maxLen <- apply(apply(m, c(1, 2), stri_length), 2, max,
                     na.rm = TRUE)
 
     # add right padding

@@ -11,12 +11,15 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# nprcgenekeepr 
+# nprcgenekeepr 1.0.5.9004 (20221213)
 -   Minor changes
     -   Changed method used to test class of object to use inherits().
     -   Corrected getPedDirectRelative() so that all direct relatives are found.
         Supplemented unit tests for more direct relative types.
     -   Added unit tests for trimPedigree().
+    -   Changed call as.character(date_object) to format(date_object) in
+        getDatedFileName.R to prepare for newer code in development version of
+        R.
     
 # nprcgenekeepr 1.0.5.9003 (20220625)
 -   Minor changes

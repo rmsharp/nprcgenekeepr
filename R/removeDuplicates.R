@@ -42,7 +42,7 @@ removeDuplicates <- function(ped, reportErrors = FALSE) {
     p <- unique(ped)
     if (sum(duplicated(p$id)) == 0) {
       return(p)
-    } else{
+    } else {
       stop("Duplicate IDs with mismatched information present")
     }
   }

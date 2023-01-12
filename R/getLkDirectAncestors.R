@@ -32,7 +32,8 @@ getLkDirectAncestors <- function(ids) {
                           error = function(eCond) {
                             flog.debug(stri_c("Error", source, eCond),
                                        name = "nprcgenekeepr")
-                            return(NULL)}
+                            return(NULL)
+                          }
   )
   if (is.null(pedSourceDf))
     return(NULL)

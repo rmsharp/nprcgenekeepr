@@ -9,7 +9,7 @@
 #' @param errorLst list with fields for each type of changed column and
 #' error detectable by \code{qcStudbook}.
 checkChangedColAndErrorLst <- function(errorLst) {
-  if (checkErrorLst(errorLst) |
+  if (checkErrorLst(errorLst) ||
       checkChangedColsLst(errorLst$changedCols))
     return(errorLst)
   else

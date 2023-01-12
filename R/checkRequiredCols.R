@@ -28,7 +28,7 @@
 checkRequiredCols <- function(cols, reportErrors) {
   requiredCols <- getRequiredCols()
   # Checking for the required fields (id, sire, dam, sex)
-  if (!all(str_detect_fixed_all(cols, requiredCols)) |
+  if (!all(str_detect_fixed_all(cols, requiredCols)) ||
       length(cols) < length(requiredCols)) {
     if (reportErrors) {
       missingColumns <-

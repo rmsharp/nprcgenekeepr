@@ -5,7 +5,7 @@ library(testthat)
 library(lubridate)
 library(stringi)
 dateStamp <- stri_replace_all_fixed(
-  stri_replace_all_fixed(as.character(now()), " ", "_"), ":", "_")
+  stri_replace_all_fixed(format(now()), " ", "_"), ":", "_")
 test_that("getDatedFilename form correctly dated file name", {
   expect_equal(stri_sub(getDatedFilename("testName"), 1, 13),
                stri_sub(stri_c(dateStamp, "_", "testName"), 1, 13))

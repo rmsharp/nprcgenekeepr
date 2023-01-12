@@ -33,8 +33,8 @@ getPotentialParents <- function(ped, minParentAge, maxGestationalPeriod) {
   ## an initial "U" at the beginning of an ID to a function call so that actual
   ## ID that start with a "U" are possible.
   ped <- ped[!stri_sub(ped$id, 1, 1)  == "U", ]
-  ped$sire[stri_sub(ped$sire, 1, 1)  == "U" ] <- NA
-  ped$dam[stri_sub(ped$dam, 1, 1)  == "U" ] <- NA
+  ped$sire[stri_sub(ped$sire, 1, 1)  == "U"] <- NA
+  ped$dam[stri_sub(ped$dam, 1, 1)  == "U"] <- NA
 
   ## pUnknown becomes the pedigree records of animals with at least one unknown
   ## parent
@@ -49,7 +49,7 @@ getPotentialParents <- function(ped, minParentAge, maxGestationalPeriod) {
   potentialParents <- vector(mode = "list", length = nrow(pUnknown))
   if (nrow(pUnknown) > 0) {
     j <- 0 # counter for potentialParents; used to prevent NULL entries
-    for (i in 1:nrow(pUnknown)) {
+    for (i in seq_len(nrow(pUnknown))) {
       ## Calculating breeding age potential parents
       ba <- ped[birth <= (pUnknown$birth[i] - (dYear * minParentAge)), ]
       ba <- ba[!is.na(ba$id), ]

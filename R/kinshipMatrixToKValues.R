@@ -36,7 +36,8 @@
 #' }
 #'
 #' extractKValue <- function(kValue, id1, id2, simulation) {
-#'   kValue[kValue$id_1 ==  id1 & kValue$id_2 == id2, paste0("sim_", simulation)]
+#'   kValue[kValue$id_1 ==  id1 & kValue$id_2 == id2,
+#'          paste0("sim_", simulation)]
 #' }
 #'
 #' simPed <- makeSimPed(ped, allSimParents)

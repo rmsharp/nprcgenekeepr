@@ -78,5 +78,5 @@ calcFEFG <- function(ped, alleles) {
   p <- colMeans(d)
 
   r <- calcRetention(ped, alleles)
-  return(list(FE = 1 / sum(p ^ 2), FG = 1 / sum( (p ^ 2) / r, na.rm = TRUE)))
+  return(list(FE = 1 / sum(p ^ 2), FG = 1 / sum((p ^ 2) / r, na.rm = TRUE)))
 }

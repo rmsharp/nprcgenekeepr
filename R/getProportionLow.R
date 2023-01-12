@@ -17,7 +17,7 @@ getProportionLow <- function(geneticValues) {
   if (proportion > 0.5) {
     color <- "red"
     colorIndex <- 1
-  } else if (proportion <= 0.5 & proportion >= 0.3) {
+  } else if (proportion <= 0.5 && proportion >= 0.3) {
     color <- "yellow"
     colorIndex <- 2
   }else if (proportion < 0.3) {

@@ -33,7 +33,8 @@
 #' }
 #'
 #' extractKValue <- function(kValue, id1, id2, simulation) {
-#'   kValue[kValue$id_1 ==  id1 & kValue$id_2 == id2, paste0("sim_", simulation)]
+#'   kValue[kValue$id_1 ==  id1 & kValue$id_2 == id2, paste0("sim_",
+#'          simulation)]
 #' }
 #'
 #' n <- 10
@@ -54,10 +55,10 @@ kinshipMatricesToKValues <- function(kinshipMatrices) {
     } else { # only need kinship value
       kValues <-
         cbind(kValues,
-              kinshipMatrixToKValues(kinshipMatrices[[i]])[ , "kinship"])
+              kinshipMatrixToKValues(kinshipMatrices[[i]])[, "kinship"])
     }
   }
-  names(kValues) <- c(names(kValues[ , 1:2]),
+  names(kValues) <- c(names(kValues[, 1:2]),
                       paste0("sim_", seq_along(kinshipMatrices)))
   kValues
 }

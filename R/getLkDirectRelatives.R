@@ -37,7 +37,8 @@ getLkDirectRelatives <- function(ids, unrelatedParents = FALSE) {
                           error = function(cond) {
                             flog.debug(stri_c("Error", source, cond),
                                        name = "nprcgenekeepr")
-                            return(NULL)}
+                            return(NULL)
+                          }
   )
   if (is.null(pedSourceDf))
     return(NULL)

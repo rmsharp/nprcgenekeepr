@@ -42,19 +42,11 @@ addBackSecondParents <- function(uPed, ped) {
       if (is.na(uPed$sire[uPed$id == id])) {
         addBack <- c(addBack, ped$sire[ped$id == id])
         uPed[(uPed$id == id), "sire"] <- ped$sire[ped$id == id]
-      } else{
+      } else {
         addBack <- c(addBack, ped$dam[ped$id == id])
         uPed[(uPed$id == id), "dam"] <- ped$dam[ped$id == id]
       }
     }
   }
   addIdRecords(ids = addBack, fullPed = ped, partialPed = uPed)
-  # if (length(addBack) > 0) {
-  #   addBack <- ped[(ped$id %in% addBack), ]
-  #   addBack$sire <- NA
-  #   addBack$dam <- NA
-  #
-  #   uPed <- rbind(uPed, addBack)
-  # }
-  # return(uPed)
 }

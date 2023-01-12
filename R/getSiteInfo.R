@@ -55,7 +55,7 @@ getSiteInfo <- function(expectConfigFile = TRUE) {
       homeDir = config[["homeDir"]],
       configFile = config[["configFile"]])
   } else {
-    if (expectConfigFile & isConfigFileMissing) {
+    if (expectConfigFile && isConfigFileMissing) {
       warning(paste0("The nprcgenekeepr configuration file is missing.\n",
                      "It is required when the LabKey API is to be used.\n",
                      "The file should be named: ",

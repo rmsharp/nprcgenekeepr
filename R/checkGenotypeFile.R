@@ -42,7 +42,7 @@ checkGenotypeFile <- function(genotype) {
     stop("Genotype file cannot have a column named 'first' or 'second'.")
   } else {
     for (i in 2:3) {
-      alleles <- unique(genotype[ , i][!is.na(genotype[ , i])])
+      alleles <- unique(genotype[, i][!is.na(genotype[, i])])
       numbers <- suppressWarnings(as.integer(alleles))
       numbers <- numbers[!is.na(numbers)]
       if (any(numbers > 10000)) {

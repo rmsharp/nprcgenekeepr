@@ -86,10 +86,10 @@ convertDate <- function(ped, time.origin = as.Date("1970-01-01"),
   invalid_date_rows <- NULL
   for (header in headers) {
     dates <- ped[[header]]
-    if (inherits(dates, c("factor","logical", "integer"))) {
+    if (inherits(dates, c("factor", "logical", "integer"))) {
       dates <- as.character(dates)
     }
-    if (inherits(dates, 'Date')) {
+    if (inherits(dates, "Date")) {
       dates <- removeEarlyDates(dates, 1000)
       originalNAs <- is.na(dates)
       dates <- dates[!originalNAs]

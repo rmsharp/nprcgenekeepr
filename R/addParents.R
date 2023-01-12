@@ -15,11 +15,13 @@
 #'
 #' @examples
 #' \donttest{
-#' pedTwo <- data.frame(id = c("d1", "s2", "d2", "o1", "o2", "o3", "o4"),
-#'                      sire = c(NA, NA, NA, "s1", "s1", "s2", "s2"),
-#'                      dam = c(NA, NA, NA, "d1", "d2", "d2", "d2"),
-#'                      sex = c("F", "M", "F", "F", "F", "F", "M"),
-#'                      stringsAsFactors = FALSE)
+#' pedTwo <- data.frame(
+#'   id = c("d1", "s2", "d2", "o1", "o2", "o3", "o4"),
+#'   sire = c(NA, NA, NA, "s1", "s1", "s2", "s2"),
+#'   dam = c(NA, NA, NA, "d1", "d2", "d2", "d2"),
+#'   sex = c("F", "M", "F", "F", "F", "F", "M"),
+#'   stringsAsFactors = FALSE
+#' )
 #' newPed <- addParents(pedTwo)
 #' newPed
 #' }
@@ -41,15 +43,9 @@ addParents <- function(ped) {
   a2 <- data.frame(id = a2, stringsAsFactors = FALSE)
 
   # Add recordStatus to identify original records
-  # if (length(ped) > 4) {
-  #   ped <- cbind(ped[ , c("id", "sire", "dam", "sex")],
-  #                recordStatus = "original",
-  #                ped[ , names(ped)[5:length(ped)], drop = FALSE],
-  #                stringsAsFactors = FALSE)
-  # } else {
-    ped <- ped[ , !names(ped) %in% "recordStatus"]
-    ped <- cbind(ped, recordStatus = "original", stringsAsFactors = FALSE)
-  #}
+  ped <- ped[, !names(ped) %in% "recordStatus"]
+  ped <- cbind(ped, recordStatus = "original", stringsAsFactors = FALSE)
+
   # Adding line entries for these parents
   if (nrow(a1) > 0) {
     a1$sire <- NA

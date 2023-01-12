@@ -20,5 +20,5 @@ chooseAlleles <- function(a1, a2) {
   s1 <- sample(c(0, 1), length(a1), replace = TRUE)
   s2 <- 1 - s1
 
-  return( (a1 * s1) + (a2 * s2) )
+  return((a1 * s1) + (a2 * s2))
 }

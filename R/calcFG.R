@@ -84,5 +84,5 @@ calcFG <- function(ped, alleles) {
   p <- colMeans(d)
 
   r <- calcRetention(ped, alleles)
-  return(1 / sum( (p ^ 2) / r, na.rm = TRUE))
+  return(1 / sum((p ^ 2) / r, na.rm = TRUE))
 }

@@ -37,7 +37,7 @@
 #' @importFrom lubridate dyears
 #' @export
 checkParentAge <- function(sb, minParentAge = 2, reportErrors = FALSE) {
-  if (nrow(sb) == 0 |
+  if (nrow(sb) == 0 ||
       !all(c("id", "sire", "dam") %in% names(sb))) {
     if (reportErrors == TRUE) {
       return(NULL)

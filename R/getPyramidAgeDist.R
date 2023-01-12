@@ -35,10 +35,10 @@ getPyramidAgeDist <- function(ped = NULL) {
   }
   colNames <- c("id", "sire", "dam", "sex", "birth", "exit_date")
   names(ped) <- colNames
-  ped <- ped[ , colNames]
+  ped <- ped[, colNames]
   if (!inherits(ped$birth, c("Date", "POSIXct", "character"))) {
     stop("birth column must be of class 'Date', 'POSIXct', or 'character'")
-  } else if (inherits(ped$birth,"character")) {
+  } else if (inherits(ped$birth, "character")) {
     ped$birth <- anytime::anytime(ped$birth)
   } else {
     ped$birth <- as.Date(ped$birth)

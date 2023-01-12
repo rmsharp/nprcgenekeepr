@@ -26,8 +26,7 @@ createPedOne <- function(savePed = TRUE) {
     pedigree_dir <- paste0(pedigree_dir, "/data")
     cat(paste0("pedigreeOne written into ", pedigree_dir, "/\n"))
     suppressWarnings(dir.create(pedigree_dir))
-    save(pedOne,file = stri_c(pedigree_dir, "/pedOne.RData"))
+    save(pedOne, file = stri_c(pedigree_dir, "/pedOne.RData"))
   }
   pedOne
 }
-

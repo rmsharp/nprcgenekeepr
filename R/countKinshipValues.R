@@ -34,11 +34,13 @@
 #' }
 #'
 #' extractKValue <- function(kValue, id1, id2, simulation) {
-#'   kValue[kValue$id_1 ==  id1 & kValue$id_2 == id2, paste0("sim_", simulation)]
+#'   kValue[kValue$id_1 ==  id1 & kValue$id_2 == id2,
+#'          paste0("sim_", simulation)]
 #' }
 #'
 #' n <- 10
-#' simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
+#' simKinships <- createSimKinships(ped, allSimParents,
+#'                                  pop = ped$id, n = n)
 #' kValues <- kinshipMatricesToKValues(simKinships)
 #' extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1:n)
 #' counts <- countKinshipValues(kValues)
@@ -49,12 +51,12 @@
 #' accummulatedCounts <- countKinshipValues(kValues, counts)
 #' }
 #'
-#' @param kinshipValues matrix of kinship values from simulated pedigrees where each
-#'        row represents a pair of individuals in the pedigree and each column
-#'        represents the vector of kinship values generated in a simulated
-#'        pedigree.
+#' @param kinshipValues matrix of kinship values from simulated pedigrees where
+#'  each row represents a pair of individuals in the pedigree and each column
+#'  represents the vector of kinship values generated in a simulated
+#'  pedigree.
 #' @param accummulatedKValueCounts list object with same structure as that
-#' returned by this function.
+#'  returned by this function.
 #'
 #' @export
 countKinshipValues <- function(kinshipValues, accummulatedKValueCounts = NULL) {

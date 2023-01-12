@@ -78,8 +78,7 @@ kinship <- function(id, father.id, mother.id, pdepth, sparse = FALSE) {
     stop("All id values must be unique")
   if (sparse) {
     kmat <- Diagonal(n + 1) / 2
-  }
-  else {
+  } else {
     kmat <- diag(n + 1) / 2
   }
 

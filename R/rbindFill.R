@@ -25,14 +25,12 @@ rbindFill <- function(df1, df2) {
       if (col.type == "numeric") {
         if (inherits(col, "Date")) {
           df2[, add.headers[i]] <- as.Date(NA, origin = as.Date("1970-01-01"))
-        } else{
+        } else {
           df2[, add.headers[i]] <- NA
         }
-      }
-      else if (col.type %in% c("character", "logical")) {
+      } else if (col.type %in% c("character", "logical")) {
         df2[, add.headers[i]] <- NA
-      }
-      else{
+      } else {
         stop(col.type, " : unknown column type")
       }
     }

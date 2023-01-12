@@ -44,5 +44,3 @@ convertFromCenter <- function(fromCenter) {
   }
   fromCenter
 }
-
-

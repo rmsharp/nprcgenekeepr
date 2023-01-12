@@ -135,7 +135,7 @@ reportGV <- function(ped, guIter = 5000, guThresh = 1, pop = NULL,
                     nMaleFounders = nrow(males),
                     nFemaleFounders = nrow(females),
                     total = (nrow(males) + nrow(females)))
-  class(finalData) <- append(class(finalData),"nprcgenekeeprGV")
+  class(finalData) <- append(class(finalData), "nprcgenekeeprGV")
 
   return(finalData)
 }

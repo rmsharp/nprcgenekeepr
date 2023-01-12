@@ -37,8 +37,8 @@ getDateErrorsAndConvertDatesInPed <- function(sb, errorLst) {
     invalidAndAdded <- c(as.integer(invalidDateRows),
                          getRecordStatusIndex(sb, "added"))
     if (nrow(sb[-invalidAndAdded, ]) > 0) {
-      sb[ , names(sb) %in% getDateColNames()] <-
-        as.Date(sb[ , names(sb) %in% getDateColNames()], origin="1970-01-01")
+      sb[, names(sb) %in% getDateColNames()] <-
+        as.Date(sb[, names(sb) %in% getDateColNames()], origin = "1970-01-01")
       sb <- convertDate(sb, time.origin = as.Date("1970-01-01"),
                         reportErrors = FALSE)
       sb <- setExit(sb, time.origin = as.Date("1970-01-01"))
