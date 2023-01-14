@@ -8,8 +8,8 @@ individuals in a series of simulated pedigrees.}
 countKinshipValues(kinshipValues, accummulatedKValueCounts = NULL)
 }
 \arguments{
-\item{kinshipValues}{matrix of kinship values from simulated pedigrees where each
-row represents a pair of individuals in the pedigree and each column
+\item{kinshipValues}{matrix of kinship values from simulated pedigrees where
+each row represents a pair of individuals in the pedigree and each column
 represents the vector of kinship values generated in a simulated
 pedigree.}
 
@@ -55,11 +55,13 @@ extractKinship <- function(simKinships, id1, id2, simulation) {
 }
 
 extractKValue <- function(kValue, id1, id2, simulation) {
-  kValue[kValue$id_1 ==  id1 & kValue$id_2 == id2, paste0("sim_", simulation)]
+  kValue[kValue$id_1 ==  id1 & kValue$id_2 == id2,
+         paste0("sim_", simulation)]
 }
 
 n <- 10
-simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
+simKinships <- createSimKinships(ped, allSimParents,
+                                 pop = ped$id, n = n)
 kValues <- kinshipMatricesToKValues(simKinships)
 extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1:n)
 counts <- countKinshipValues(kValues)

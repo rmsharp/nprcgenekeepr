@@ -26,11 +26,13 @@ used by \code{addParents}
 }
 \examples{
 \donttest{
-pedTwo <- data.frame(id = c("d1", "s2", "d2", "o1", "o2", "o3", "o4"),
-                     sire = c(NA, NA, NA, "s1", "s1", "s2", "s2"),
-                     dam = c(NA, NA, NA, "d1", "d2", "d2", "d2"),
-                     sex = c("F", "M", "F", "F", "F", "F", "M"),
-                     stringsAsFactors = FALSE)
+pedTwo <- data.frame(
+  id = c("d1", "s2", "d2", "o1", "o2", "o3", "o4"),
+  sire = c(NA, NA, NA, "s1", "s1", "s2", "s2"),
+  dam = c(NA, NA, NA, "d1", "d2", "d2", "d2"),
+  sex = c("F", "M", "F", "F", "F", "F", "M"),
+  stringsAsFactors = FALSE
+)
 newPed <- addParents(pedTwo)
 newPed
 }

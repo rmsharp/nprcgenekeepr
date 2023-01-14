@@ -53,7 +53,7 @@ contains the list of changes made to the column names. Default is
 
 \item{reportErrors}{logical value if \code{TRUE} will scan the entire file
 and report back changes made to input and errors in a
-list of list where each sublist is a type of change or error found.
+list of lists where each sublist is a type of change or error found.
 Changes will include column names, case of categorical values (male,
 female, unknown), etc.
 Errors will include missing columns, invalid date rows, male dams,

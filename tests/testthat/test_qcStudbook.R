@@ -66,7 +66,7 @@ test_that("qcStudbook detects missing required column names", {
   expect_error(suppressWarnings(qcStudbook(pedOne[ , -3])))
 })
 test_that(
-  "qcStudbook returns list of bad column names when reportErrors == TRUE", {
+  "qcStudbook returns list of missing column names when reportErrors == TRUE", {
   expect_equal(qcStudbook(pedOne[ , -3], reportErrors = TRUE)$missingColumns,
   "dam")
 })
