@@ -39,10 +39,8 @@ cumulateSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L) {
   ped$population <- getGVPopulation(ped, pop)
 
   # Get the list of animals in the population to consider
-  probands <- as.character(ped$id[ped$population])
   nIds <- nrow(ped)
   squaredKinship <- sumKinship <- matrix(data = 0, nrow = nIds, ncol = nIds)
-  kVC <- list(kinshipValues = numeric(0), kinshipCounts = numeric(0))
   simKinships <- list(n)
   first_time <- TRUE
 

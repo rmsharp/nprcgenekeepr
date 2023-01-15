@@ -42,9 +42,7 @@ createSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L,
   ped$population <- getGVPopulation(ped, pop)
 
   # Get the list of animals in the population to consider
-  nIds <- nrow(ped)
   simKinships <- vector(mode = "list", length = n)
-  first_time <- TRUE
 
   for (i in seq_len(n)) {
     simPed <- makeSimPed(ped, allSimParents, verbose = verbose)

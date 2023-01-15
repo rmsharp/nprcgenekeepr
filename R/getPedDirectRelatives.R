@@ -42,7 +42,7 @@ getPedDirectRelatives <- function(ids, ped, unrelatedParents = FALSE) {
     stop("ped must be a data.frame object.")
 
 
-  relatives <- offspring <- parents <- ids
+  offspring <- parents <- ids
   len <- length(ids)
   while (len > 0) {
     parents <- getParents(ped, ids)

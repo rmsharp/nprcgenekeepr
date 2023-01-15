@@ -22,7 +22,7 @@
 print.summary.nprcgenekeeprErr <- function(x, ...) {
   cl <- oldClass(x)
   txt <- x
-  #cat("This is a summary printout from nprcgenekeepr\n\n")
+
   for (x in txt$txt) {
     cat(x, "\n")
   }
@@ -33,7 +33,7 @@ print.summary.nprcgenekeeprErr <- function(x, ...) {
     print(txt$sp, digits = 2, row.names = TRUE, ...)
   }
   oldClass(txt) <- cl[cl != "nprcgenekeeprErr"]
-  #NextMethod("print")
+
   invisible(txt)
 }
 #' @rdname print
@@ -50,11 +50,10 @@ print.summary.nprcgenekeeprErr <- function(x, ...) {
 #' @export
 print.summary.nprcgenekeeprGV <- function(x, ...) {
   cl <- oldClass(x)
-  #cat("This is a summary printout from nprcgenekeeprGV\n\n")
+
   for (line in x) {
     cat(line, "\n")
   }
   oldClass(x) <- cl[cl != "nprcgenekeeprGV"]
-  #NextMethod("print")
   invisible(x)
 }

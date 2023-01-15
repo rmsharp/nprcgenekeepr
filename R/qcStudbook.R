@@ -259,7 +259,7 @@ qcStudbook <- function(sb, minParentAge = 2, reportChanges = FALSE,
   novelCols <- colnames(sb)[!colnames(sb) %in% cols]
   sb <- sb[, c(cols, novelCols)]
   sb <- sb[with(sb, order(gen, id)), ]
-  rownames(sb) <- seq(length.out = nrow(sb))
+  rownames(sb) <- seq_len(nrow(sb))
 
   # Ensuring the IDs are stored as characters
   sb <- toCharacter(sb, headers = c("id", "sire", "dam"))
