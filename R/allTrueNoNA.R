@@ -7,9 +7,7 @@
 #' Considers NA values the same as false
 #' @param v logical vector
 allTrueNoNA <- function(v) {
-  # v <- all(v)
-  # v <- if (is.na(v)) FALSE else v
-  # return(v)
-  # The following is equivalent and should be a bit faster
+  ## The code was: v <- all(v); v <- if (is.na(v)) FALSE else v
+  ## The following is equivalent and should be a bit faster
   return(all(c(v, all(!is.na(v))), na.rm = TRUE))
 }

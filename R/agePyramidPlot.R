@@ -40,10 +40,6 @@ agePyramidPlot <- function(males, females, ageLabels, mcol, fcol, laxlab,
                laxlab = laxlab,
                raxlab = raxlab,
                gap = gap,
-               # use for PT species
-               # gap=40,
-               # laxlab = seq(0, 100, by = 10),
-               # raxlab = seq(0, 100, by = 10),
                unit = "Number of Animals",
                show.values = TRUE, ndig = 0)
 }
