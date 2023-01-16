@@ -11,6 +11,10 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# nprcgenekeepr 1.0.6 (20230115)
+-   Minor changes
+    -   Update version in preparation for CRAN submission
+    
 # nprcgenekeepr 1.0.5.9004 (20221213)
 -   Minor changes
     -   Changed method used to test class of object to use inherits().

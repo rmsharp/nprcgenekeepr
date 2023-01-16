@@ -21,7 +21,7 @@ be used in forming the Monte Carlo estimates for the kinship values."><!-- mathj
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -79,46 +79,55 @@ be used in forming the <em>Monte Carlo</em> estimates for the kinship values.</p
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">createSimKinships</span><span class="op">(</span><span class="va">ped</span>, <span class="va">allSimParents</span>, pop <span class="op">=</span> <span class="cn">NULL</span>, n <span class="op">=</span> <span class="fl">10L</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">createSimKinships</span><span class="op">(</span><span class="va">ped</span>, <span class="va">allSimParents</span>, pop <span class="op">=</span> <span class="cn">NULL</span>, n <span class="op">=</span> <span class="fl">10L</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ped</dt>
 <dd><p>The pedigree information in data.frame format</p></dd>
+
+
 <dt>allSimParents</dt>
 <dd><p>list made up of lists where the internal list
 has the offspring ID <code>id</code>, a vector of representative sires
 (<code>sires</code>), and a vector of representative dams(<code>dams</code>).</p></dd>
+
+
 <dt>pop</dt>
 <dd><p>Character vector with animal IDs to consider as the population of
 interest. The default is NULL.</p></dd>
+
+
 <dt>n</dt>
 <dd><p>integer value of the number of simulated pedigrees to generate.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>logical vector of length one that indicates whether or not
 to print out when an animal is missing a sire or a dam.</p></dd>
+
 </dl></div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="smallPed.html">smallPed</a></span></span>
-<span class="r-in"><span class="va">simParent_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"A"</span>,</span>
-<span class="r-in">                    sires <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1_1"</span>, <span class="st">"s1_2"</span>, <span class="st">"s1_3"</span><span class="op">)</span>,</span>
-<span class="r-in">                    dams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d1_1"</span>, <span class="st">"d1_2"</span>, <span class="st">"d1_3"</span>, <span class="st">"d1_4"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">simParent_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"B"</span>,</span>
-<span class="r-in">                    sires <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s2_1"</span>, <span class="st">"s2_2"</span>, <span class="st">"s2_3"</span><span class="op">)</span>,</span>
-<span class="r-in">                    dams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d2_1"</span>, <span class="st">"d2_2"</span>, <span class="st">"d2_3"</span>, <span class="st">"d2_4"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">simParent_3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"E"</span>,</span>
-<span class="r-in">                    sires <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s3_1"</span>, <span class="st">"s3_2"</span>, <span class="st">"s3_3"</span><span class="op">)</span>,</span>
-<span class="r-in">                    dams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d3_1"</span>, <span class="st">"d3_2"</span>, <span class="st">"d3_3"</span>, <span class="st">"d3_4"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">allSimParents</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">simParent_1</span>, <span class="va">simParent_2</span>, <span class="va">simParent_3</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">pop</span> <span class="op">&lt;-</span> <span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span></span>
-<span class="r-in"><span class="va">simKinships</span> <span class="op">&lt;-</span> <span class="fu">createSimKinships</span><span class="op">(</span><span class="va">ped</span>, <span class="va">allSimParents</span>, <span class="va">pop</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># }</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="smallPed.html">smallPed</a></span></span></span>
+<span class="r-in"><span><span class="va">simParent_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"A"</span>,</span></span>
+<span class="r-in"><span>                    sires <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1_1"</span>, <span class="st">"s1_2"</span>, <span class="st">"s1_3"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                    dams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d1_1"</span>, <span class="st">"d1_2"</span>, <span class="st">"d1_3"</span>, <span class="st">"d1_4"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">simParent_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"B"</span>,</span></span>
+<span class="r-in"><span>                    sires <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s2_1"</span>, <span class="st">"s2_2"</span>, <span class="st">"s2_3"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                    dams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d2_1"</span>, <span class="st">"d2_2"</span>, <span class="st">"d2_3"</span>, <span class="st">"d2_4"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">simParent_3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"E"</span>,</span></span>
+<span class="r-in"><span>                    sires <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s3_1"</span>, <span class="st">"s3_2"</span>, <span class="st">"s3_3"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                    dams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d3_1"</span>, <span class="st">"d3_2"</span>, <span class="st">"d3_3"</span>, <span class="st">"d3_4"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">allSimParents</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">simParent_1</span>, <span class="va">simParent_2</span>, <span class="va">simParent_3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pop</span> <span class="op">&lt;-</span> <span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">simKinships</span> <span class="op">&lt;-</span> <span class="fu">createSimKinships</span><span class="op">(</span><span class="va">ped</span>, <span class="va">allSimParents</span>, <span class="va">pop</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -129,15 +138,11 @@ to print out when an animal is missing a sire or a dam.</p></dd>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

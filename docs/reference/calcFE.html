@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">calcFE</span><span class="op">(</span><span class="va">ped</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calcFE</span><span class="op">(</span><span class="va">ped</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -80,10 +80,16 @@
     <dl><dt>ped</dt>
 <dd><p>the pedigree information in datatable format.  Pedigree
 (req. fields: id, sire, dam, gen, population).</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>The founder equivalents <code>FE = 1 / sum(p ^ 2)</code>, where <code>p</code>is average number of descendants and <code>r</code> is the mean number of founder
+    
+
+<p>The founder equivalents <code>FE = 1 / sum(p ^ 2)</code>, where <code>p</code></p>
+
+
+<p>is average number of descendants and <code>r</code> is the mean number of founder
 alleles retained in the gene dropping experiment.</p>
     </div>
     <div id="details">
@@ -93,32 +99,32 @@ alleles retained in the gene dropping experiment.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="co">## Example from Analysis of Founder Representation in Pedigrees: Founder</span></span>
-<span class="r-in"><span class="co">## Equivalents and Founder Genome Equivalents.</span></span>
-<span class="r-in"><span class="co">## Zoo Biology 8:111-123, (1989) by Robert C. Lacy</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span class="r-in">id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>, <span class="st">"E"</span>, <span class="st">"F"</span>, <span class="st">"G"</span><span class="op">)</span>,</span>
-<span class="r-in">sire <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="cn">NA</span>, <span class="st">"D"</span>, <span class="st">"D"</span><span class="op">)</span>,</span>
-<span class="r-in">dam <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="cn">NA</span>, <span class="st">"E"</span>, <span class="st">"E"</span><span class="op">)</span>,</span>
-<span class="r-in">stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="va">ped</span><span class="op">[</span><span class="st">"gen"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="findGeneration.html">findGeneration</a></span><span class="op">(</span><span class="va">ped</span><span class="op">$</span><span class="va">id</span>, <span class="va">ped</span><span class="op">$</span><span class="va">sire</span>, <span class="va">ped</span><span class="op">$</span><span class="va">dam</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ped</span><span class="op">$</span><span class="va">population</span> <span class="op">&lt;-</span> <span class="fu"><a href="getGVPopulation.html">getGVPopulation</a></span><span class="op">(</span><span class="va">ped</span>, <span class="cn">NULL</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">pedFactors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span class="r-in">  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>, <span class="st">"E"</span>, <span class="st">"F"</span>, <span class="st">"G"</span><span class="op">)</span>,</span>
-<span class="r-in">  sire <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="cn">NA</span>, <span class="st">"D"</span>, <span class="st">"D"</span><span class="op">)</span>,</span>
-<span class="r-in">  dam <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="cn">NA</span>, <span class="st">"E"</span>, <span class="st">"E"</span><span class="op">)</span>,</span>
-<span class="r-in">  stringsAsFactors <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="va">pedFactors</span><span class="op">[</span><span class="st">"gen"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="findGeneration.html">findGeneration</a></span><span class="op">(</span><span class="va">pedFactors</span><span class="op">$</span><span class="va">id</span>, <span class="va">pedFactors</span><span class="op">$</span><span class="va">sire</span>,</span>
-<span class="r-in">                                    <span class="va">pedFactors</span><span class="op">$</span><span class="va">dam</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">pedFactors</span><span class="op">$</span><span class="va">population</span> <span class="op">&lt;-</span> <span class="fu"><a href="getGVPopulation.html">getGVPopulation</a></span><span class="op">(</span><span class="va">pedFactors</span>, <span class="cn">NULL</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">fe</span> <span class="op">&lt;-</span> <span class="fu">calcFE</span><span class="op">(</span><span class="va">ped</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">feFactors</span> <span class="op">&lt;-</span> <span class="fu">calcFE</span><span class="op">(</span><span class="va">pedFactors</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># }</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="co">## Example from Analysis of Founder Representation in Pedigrees: Founder</span></span></span>
+<span class="r-in"><span><span class="co">## Equivalents and Founder Genome Equivalents.</span></span></span>
+<span class="r-in"><span><span class="co">## Zoo Biology 8:111-123, (1989) by Robert C. Lacy</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>, <span class="st">"E"</span>, <span class="st">"F"</span>, <span class="st">"G"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>sire <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="cn">NA</span>, <span class="st">"D"</span>, <span class="st">"D"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>dam <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="cn">NA</span>, <span class="st">"E"</span>, <span class="st">"E"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ped</span><span class="op">[</span><span class="st">"gen"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="findGeneration.html">findGeneration</a></span><span class="op">(</span><span class="va">ped</span><span class="op">$</span><span class="va">id</span>, <span class="va">ped</span><span class="op">$</span><span class="va">sire</span>, <span class="va">ped</span><span class="op">$</span><span class="va">dam</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ped</span><span class="op">$</span><span class="va">population</span> <span class="op">&lt;-</span> <span class="fu"><a href="getGVPopulation.html">getGVPopulation</a></span><span class="op">(</span><span class="va">ped</span>, <span class="cn">NULL</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pedFactors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>, <span class="st">"E"</span>, <span class="st">"F"</span>, <span class="st">"G"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  sire <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="cn">NA</span>, <span class="st">"D"</span>, <span class="st">"D"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  dam <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="cn">NA</span>, <span class="st">"E"</span>, <span class="st">"E"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  stringsAsFactors <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pedFactors</span><span class="op">[</span><span class="st">"gen"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="findGeneration.html">findGeneration</a></span><span class="op">(</span><span class="va">pedFactors</span><span class="op">$</span><span class="va">id</span>, <span class="va">pedFactors</span><span class="op">$</span><span class="va">sire</span>,</span></span>
+<span class="r-in"><span>                                    <span class="va">pedFactors</span><span class="op">$</span><span class="va">dam</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pedFactors</span><span class="op">$</span><span class="va">population</span> <span class="op">&lt;-</span> <span class="fu"><a href="getGVPopulation.html">getGVPopulation</a></span><span class="op">(</span><span class="va">pedFactors</span>, <span class="cn">NULL</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fe</span> <span class="op">&lt;-</span> <span class="fu">calcFE</span><span class="op">(</span><span class="va">ped</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">feFactors</span> <span class="op">&lt;-</span> <span class="fu">calcFE</span><span class="op">(</span><span class="va">pedFactors</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -129,15 +135,11 @@ alleles retained in the gene dropping experiment.</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

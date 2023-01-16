@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -192,8 +192,8 @@ code in the R console.</p>
 <div class="section level3">
 <h3 id="display-of-an-age-by-sex-pyramid-plot">Display of an age by sex pyramid plot<a class="anchor" aria-label="anchor" href="#display-of-an-age-by-sex-pyramid-plot"></a>
 </h3>
-<p>Adapted from on 20190603. Written by Matt Rosenberg. Updated May 07,
-2019</p>
+<p>Adapted from on 20190603. Written by Matt Rosenberg. Updated December
+12, 2019</p>
 <p>The most important demographic characteristic of a population is its
 age-sex structure. Age-sex pyramids (also known as population pyramids)
 graphically display this information to improve understanding and make
@@ -253,11 +253,11 @@ forming groups and restricts the number of males to one per group.</p>
 <p>You can install the CRAN version of <strong>nprcgenekeepr</strong>
 from the R console prompt with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"rmsharp/nprcgenekeepr"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"rmsharp/nprcgenekeepr"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"rmsharp/nprcgenekeepr"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"rmsharp/nprcgenekeepr"</span><span class="op">)</span></span></code></pre></div>
 <p>All missing dependencies should be automatically installed.</p>
 </div>
 <div class="section level2">
@@ -267,8 +267,8 @@ from the R console prompt with:</p>
 standard R scripts. However, it was originally designed to be used
 within a Shiny application that can be started with:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span>
-<span class="fu"><a href="../reference/runGeneKeepR.html">runGeneKeepR</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/runGeneKeepR.html">runGeneKeepR</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="input">Input<a class="anchor" aria-label="anchor" href="#input"></a>
@@ -679,16 +679,12 @@ discovered. As of 20190701 94.31 percent of the lines are covered.</p>
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+<p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

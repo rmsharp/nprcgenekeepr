@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">calcGU</span><span class="op">(</span><span class="va">alleles</span>, threshold <span class="op">=</span> <span class="fl">1</span>, byID <span class="op">=</span> <span class="cn">FALSE</span>, pop <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calcGU</span><span class="op">(</span><span class="va">alleles</span>, threshold <span class="op">=</span> <span class="fl">1</span>, byID <span class="op">=</span> <span class="cn">FALSE</span>, pop <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -88,23 +88,35 @@ It contains the following columns:</p><ul><li><p>id --- A character vector of ID
 <li><p>... --- Unnamed integer columns representing alleles.</p></li>
 <li><p>Vn --- Unnamed integer column representing the nth column.</p></li>
 </ul></dd>
+
+
 <dt>threshold</dt>
 <dd><p>an integer indicating the maximum number of copies of an
 allele that can be present in the population for it to be considered rare.
 Default is 1.</p></dd>
+
+
 <dt>byID</dt>
 <dd><p>logical variable of length 1 that is passed through to
 eventually be used by <code><a href="alleleFreq.html">alleleFreq()</a></code>, which calculates the count of each
 allele in the provided vector. If <code>byID</code> is TRUE and ids are provided,
 the function will only count the unique alleles for an individual
 (homozygous alleles will be counted as 1).</p></dd>
+
+
 <dt>pop</dt>
 <dd><p>character vector with animal IDs to consider as the population of
 interest, otherwise all animals will be considered. The default is NULL.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Dataframe <code>rows: id, col: gu</code> A single-column table of genome uniqueness values as percentages.
+    
+
+<p>Dataframe <code>rows: id, col: gu</code></p>
+
+
+<p>A single-column table of genome uniqueness values as percentages.
  Rownames are set to 'id' values that are part of the population.</p>
     </div>
     <div id="details">
@@ -145,15 +157,15 @@ Columbia University Press.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ped1Alleles</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="ped1Alleles.html">ped1Alleles</a></span></span>
-<span class="r-in"><span class="va">gu_1</span> <span class="op">&lt;-</span> <span class="fu">calcGU</span><span class="op">(</span><span class="va">ped1Alleles</span>, threshold <span class="op">=</span> <span class="fl">1</span>, byID <span class="op">=</span> <span class="cn">FALSE</span>, pop <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">gu_2</span> <span class="op">&lt;-</span> <span class="fu">calcGU</span><span class="op">(</span><span class="va">ped1Alleles</span>, threshold <span class="op">=</span> <span class="fl">3</span>, byID <span class="op">=</span> <span class="cn">FALSE</span>, pop <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">gu_3</span> <span class="op">&lt;-</span> <span class="fu">calcGU</span><span class="op">(</span><span class="va">ped1Alleles</span>, threshold <span class="op">=</span> <span class="fl">3</span>, byID <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span class="r-in">               pop <span class="op">=</span> <span class="va">ped1Alleles</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="fl">20</span><span class="op">:</span><span class="fl">60</span><span class="op">]</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># }</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ped1Alleles</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="ped1Alleles.html">ped1Alleles</a></span></span></span>
+<span class="r-in"><span><span class="va">gu_1</span> <span class="op">&lt;-</span> <span class="fu">calcGU</span><span class="op">(</span><span class="va">ped1Alleles</span>, threshold <span class="op">=</span> <span class="fl">1</span>, byID <span class="op">=</span> <span class="cn">FALSE</span>, pop <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">gu_2</span> <span class="op">&lt;-</span> <span class="fu">calcGU</span><span class="op">(</span><span class="va">ped1Alleles</span>, threshold <span class="op">=</span> <span class="fl">3</span>, byID <span class="op">=</span> <span class="cn">FALSE</span>, pop <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">gu_3</span> <span class="op">&lt;-</span> <span class="fu">calcGU</span><span class="op">(</span><span class="va">ped1Alleles</span>, threshold <span class="op">=</span> <span class="fl">3</span>, byID <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>               pop <span class="op">=</span> <span class="va">ped1Alleles</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="fl">20</span><span class="op">:</span><span class="fl">60</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -164,15 +176,11 @@ Columbia University Press.</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

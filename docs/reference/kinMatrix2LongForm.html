@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">kinMatrix2LongForm</span><span class="op">(</span><span class="va">kinMatrix</span>, rm.dups <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">kinMatrix2LongForm</span><span class="op">(</span><span class="va">kinMatrix</span>, rm.dups <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -80,31 +80,36 @@
     <dl><dt>kinMatrix</dt>
 <dd><p>numerical matrix of pairwise kinship values. The row and
 column names correspond to animal IDs.</p></dd>
+
+
 <dt>rm.dups</dt>
 <dd><p>logical value indication whether or not reverse-order ID
 pairs be filtered out? (i.e., "ID1 ID2 kin_val" and "ID2 ID1 kin_val" will
 be collapsed into a single entry if rm.dups = TRUE)</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A dataframe with columns <code>id1</code>, <code>id2</code>, and <code>kinship</code>.
+    
+
+<p>A dataframe with columns <code>id1</code>, <code>id2</code>, and <code>kinship</code>.
 This is the kinship data reformatted from a matrix, to a long-format table.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="lacy1989Ped.html">lacy1989Ped</a></span></span>
-<span class="r-in"><span class="va">ped</span><span class="op">$</span><span class="va">gen</span> <span class="op">&lt;-</span> <span class="fu"><a href="findGeneration.html">findGeneration</a></span><span class="op">(</span><span class="va">ped</span><span class="op">$</span><span class="va">id</span>, <span class="va">ped</span><span class="op">$</span><span class="va">sire</span>, <span class="va">ped</span><span class="op">$</span><span class="va">dam</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">kmat</span> <span class="op">&lt;-</span> <span class="fu"><a href="kinship.html">kinship</a></span><span class="op">(</span><span class="va">ped</span><span class="op">$</span><span class="va">id</span>, <span class="va">ped</span><span class="op">$</span><span class="va">sire</span>, <span class="va">ped</span><span class="op">$</span><span class="va">dam</span>, <span class="va">ped</span><span class="op">$</span><span class="va">gen</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">reformattedKmat</span> <span class="op">&lt;-</span> <span class="fu">kinMatrix2LongForm</span><span class="op">(</span><span class="va">kmat</span>, rm.dups <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">reformattedKmat</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="lacy1989Ped.html">lacy1989Ped</a></span></span></span>
+<span class="r-in"><span><span class="va">ped</span><span class="op">$</span><span class="va">gen</span> <span class="op">&lt;-</span> <span class="fu"><a href="findGeneration.html">findGeneration</a></span><span class="op">(</span><span class="va">ped</span><span class="op">$</span><span class="va">id</span>, <span class="va">ped</span><span class="op">$</span><span class="va">sire</span>, <span class="va">ped</span><span class="op">$</span><span class="va">dam</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">kmat</span> <span class="op">&lt;-</span> <span class="fu"><a href="kinship.html">kinship</a></span><span class="op">(</span><span class="va">ped</span><span class="op">$</span><span class="va">id</span>, <span class="va">ped</span><span class="op">$</span><span class="va">sire</span>, <span class="va">ped</span><span class="op">$</span><span class="va">dam</span>, <span class="va">ped</span><span class="op">$</span><span class="va">gen</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">reformattedKmat</span> <span class="op">&lt;-</span> <span class="fu">kinMatrix2LongForm</span><span class="op">(</span><span class="va">kmat</span>, rm.dups <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">reformattedKmat</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 49</span>
-<span class="r-in"><span class="va">reformattedNoDupsKmat</span> <span class="op">&lt;-</span> <span class="fu">kinMatrix2LongForm</span><span class="op">(</span><span class="va">kmat</span>, rm.dups <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">reformattedNoDupsKmat</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">reformattedNoDupsKmat</span> <span class="op">&lt;-</span> <span class="fu">kinMatrix2LongForm</span><span class="op">(</span><span class="va">kmat</span>, rm.dups <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">reformattedNoDupsKmat</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 28</span>
-<span class="r-in"><span class="co"># }</span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -115,15 +120,11 @@ This is the kinship data reformatted from a matrix, to a long-format table.</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

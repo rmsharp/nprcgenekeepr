@@ -1,6 +1,6 @@
 #' Calculates the sex ratio (number of non-males / number of males) given
 #' animal Ids and their pedigree
-## Copyright(c) 2017-2022 R. Mark Sharp
+## Copyright(c) 2017-2023 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' @description The Males are counted when the \code{ped$sex} value is

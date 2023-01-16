@@ -1,6 +1,6 @@
 #' getVersion Get the version number of nprcgenekeepr
 #'
-## Copyright(c) 2017-2022 R. Mark Sharp
+## Copyright(c) 2017-2023 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' @return Current Version
 #' @examples
@@ -12,8 +12,14 @@
 #' within parentheses is appended.
 #' @export
 getVersion <- function(date = TRUE) {
-  version <- "1.0.5.9003"
-  version_date <- "20220623"
+  .Deprecated(
+    new,
+    package=NULL,
+    msg = paste0("`getVersion()` will be removed in the next ",
+                 "release of `nprcgenekeepr`. Use `packageVersion()`."),
+    old = as.character(sys.call(sys.parent()))[1L])
+  version <- "1.0.6"
+  version_date <- "20230115"
   if (date) {
     paste0(version, " (", version_date, ")")
   } else {

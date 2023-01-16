@@ -18,7 +18,7 @@ matrix and one column for each kinship matrix."><!-- mathjax --><script src="htt
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -74,7 +74,7 @@ matrix and one column for each kinship matrix.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">kinshipMatricesToKValues</span><span class="op">(</span><span class="va">kinshipMatrices</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">kinshipMatricesToKValues</span><span class="op">(</span><span class="va">kinshipMatrices</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -82,51 +82,53 @@ matrix and one column for each kinship matrix.</p>
     <dl><dt>kinshipMatrices</dt>
 <dd><p>list of square matrices of kinship values. May or
 may not have named rows and columns.</p></dd>
+
 </dl></div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="smallPed.html">smallPed</a></span></span>
-<span class="r-in"><span class="va">simParent_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"A"</span>,</span>
-<span class="r-in">                    sires <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1_1"</span>, <span class="st">"s1_2"</span>, <span class="st">"s1_3"</span><span class="op">)</span>,</span>
-<span class="r-in">                    dams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d1_1"</span>, <span class="st">"d1_2"</span>, <span class="st">"d1_3"</span>, <span class="st">"d1_4"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">simParent_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"B"</span>,</span>
-<span class="r-in">                    sires <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1_1"</span>, <span class="st">"s1_2"</span>, <span class="st">"s1_3"</span><span class="op">)</span>,</span>
-<span class="r-in">                    dams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d1_1"</span>, <span class="st">"d1_2"</span>, <span class="st">"d1_3"</span>, <span class="st">"d1_4"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">simParent_3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"E"</span>,</span>
-<span class="r-in">                    sires <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"C"</span>, <span class="st">"s1_1"</span><span class="op">)</span>,</span>
-<span class="r-in">                    dams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d3_1"</span>, <span class="st">"B"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">simParent_4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"J"</span>,</span>
-<span class="r-in">                    sires <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"C"</span>, <span class="st">"s1_1"</span><span class="op">)</span>,</span>
-<span class="r-in">                    dams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d3_1"</span>, <span class="st">"B"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">simParent_5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"K"</span>,</span>
-<span class="r-in">                    sires <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"C"</span>, <span class="st">"s1_1"</span><span class="op">)</span>,</span>
-<span class="r-in">                    dams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d3_1"</span>, <span class="st">"B"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">simParent_6</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"N"</span>,</span>
-<span class="r-in">                    sires <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"C"</span>, <span class="st">"s1_1"</span><span class="op">)</span>,</span>
-<span class="r-in">                    dams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d3_1"</span>, <span class="st">"B"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">allSimParents</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">simParent_1</span>, <span class="va">simParent_2</span>, <span class="va">simParent_3</span>,</span>
-<span class="r-in">                      <span class="va">simParent_4</span>, <span class="va">simParent_5</span>, <span class="va">simParent_6</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">extractKinship</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">simKinships</span>, <span class="va">id1</span>, <span class="va">id2</span>, <span class="va">simulation</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in">  <span class="va">ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames</a></span><span class="op">(</span><span class="va">simKinships</span><span class="op">[[</span><span class="va">simulation</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span class="r-in">  <span class="va">simKinships</span><span class="op">[[</span><span class="va">simulation</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">ids</span><span class="op">)</span><span class="op">[</span><span class="va">ids</span> <span class="op">==</span> <span class="va">id1</span><span class="op">]</span>,</span>
-<span class="r-in">                            <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">ids</span><span class="op">)</span><span class="op">[</span><span class="va">ids</span> <span class="op">==</span> <span class="va">id2</span><span class="op">]</span><span class="op">]</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">extractKValue</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">kValue</span>, <span class="va">id1</span>, <span class="va">id2</span>, <span class="va">simulation</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in">  <span class="va">kValue</span><span class="op">[</span><span class="va">kValue</span><span class="op">$</span><span class="va">id_1</span> <span class="op">==</span>  <span class="va">id1</span> <span class="op">&amp;</span> <span class="va">kValue</span><span class="op">$</span><span class="va">id_2</span> <span class="op">==</span> <span class="va">id2</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"sim_"</span>, <span class="va">simulation</span><span class="op">)</span><span class="op">]</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">10</span></span>
-<span class="r-in"><span class="va">simKinships</span> <span class="op">&lt;-</span> <span class="fu"><a href="createSimKinships.html">createSimKinships</a></span><span class="op">(</span><span class="va">ped</span>, <span class="va">allSimParents</span>, pop <span class="op">=</span> <span class="va">ped</span><span class="op">$</span><span class="va">id</span>, n <span class="op">=</span> <span class="va">n</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">kValue</span> <span class="op">&lt;-</span> <span class="fu">kinshipMatricesToKValues</span><span class="op">(</span><span class="va">simKinships</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">extractKValue</span><span class="op">(</span><span class="va">kValue</span>, id1 <span class="op">=</span> <span class="st">"A"</span>, id2 <span class="op">=</span> <span class="st">"F"</span>, simulation <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">n</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="smallPed.html">smallPed</a></span></span></span>
+<span class="r-in"><span><span class="va">simParent_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"A"</span>,</span></span>
+<span class="r-in"><span>                    sires <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1_1"</span>, <span class="st">"s1_2"</span>, <span class="st">"s1_3"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                    dams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d1_1"</span>, <span class="st">"d1_2"</span>, <span class="st">"d1_3"</span>, <span class="st">"d1_4"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">simParent_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"B"</span>,</span></span>
+<span class="r-in"><span>                    sires <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1_1"</span>, <span class="st">"s1_2"</span>, <span class="st">"s1_3"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                    dams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d1_1"</span>, <span class="st">"d1_2"</span>, <span class="st">"d1_3"</span>, <span class="st">"d1_4"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">simParent_3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"E"</span>,</span></span>
+<span class="r-in"><span>                    sires <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"C"</span>, <span class="st">"s1_1"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                    dams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d3_1"</span>, <span class="st">"B"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">simParent_4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"J"</span>,</span></span>
+<span class="r-in"><span>                    sires <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"C"</span>, <span class="st">"s1_1"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                    dams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d3_1"</span>, <span class="st">"B"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">simParent_5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"K"</span>,</span></span>
+<span class="r-in"><span>                    sires <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"C"</span>, <span class="st">"s1_1"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                    dams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d3_1"</span>, <span class="st">"B"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">simParent_6</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"N"</span>,</span></span>
+<span class="r-in"><span>                    sires <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"C"</span>, <span class="st">"s1_1"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                    dams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d3_1"</span>, <span class="st">"B"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">allSimParents</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">simParent_1</span>, <span class="va">simParent_2</span>, <span class="va">simParent_3</span>,</span></span>
+<span class="r-in"><span>                      <span class="va">simParent_4</span>, <span class="va">simParent_5</span>, <span class="va">simParent_6</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">extractKinship</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">simKinships</span>, <span class="va">id1</span>, <span class="va">id2</span>, <span class="va">simulation</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="va">ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames</a></span><span class="op">(</span><span class="va">simKinships</span><span class="op">[[</span><span class="va">simulation</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
+<span class="r-in"><span>  <span class="va">simKinships</span><span class="op">[[</span><span class="va">simulation</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">ids</span><span class="op">)</span><span class="op">[</span><span class="va">ids</span> <span class="op">==</span> <span class="va">id1</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>                            <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">ids</span><span class="op">)</span><span class="op">[</span><span class="va">ids</span> <span class="op">==</span> <span class="va">id2</span><span class="op">]</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">extractKValue</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">kValue</span>, <span class="va">id1</span>, <span class="va">id2</span>, <span class="va">simulation</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="va">kValue</span><span class="op">[</span><span class="va">kValue</span><span class="op">$</span><span class="va">id_1</span> <span class="op">==</span>  <span class="va">id1</span> <span class="op">&amp;</span> <span class="va">kValue</span><span class="op">$</span><span class="va">id_2</span> <span class="op">==</span> <span class="va">id2</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"sim_"</span>,</span></span>
+<span class="r-in"><span>         <span class="va">simulation</span><span class="op">)</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">10</span></span></span>
+<span class="r-in"><span><span class="va">simKinships</span> <span class="op">&lt;-</span> <span class="fu"><a href="createSimKinships.html">createSimKinships</a></span><span class="op">(</span><span class="va">ped</span>, <span class="va">allSimParents</span>, pop <span class="op">=</span> <span class="va">ped</span><span class="op">$</span><span class="va">id</span>, n <span class="op">=</span> <span class="va">n</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">kValue</span> <span class="op">&lt;-</span> <span class="fu">kinshipMatricesToKValues</span><span class="op">(</span><span class="va">simKinships</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">extractKValue</span><span class="op">(</span><span class="va">kValue</span>, id1 <span class="op">=</span> <span class="st">"A"</span>, id2 <span class="op">=</span> <span class="st">"F"</span>, simulation <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">n</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "sim_1"  "sim_2"  "sim_3"  "sim_4"  "sim_5"  "sim_6"  "sim_7"  "sim_8" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "sim_9"  "sim_10"</span>
-<span class="r-in"><span class="co"># }</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -137,15 +139,11 @@ may not have named rows and columns.</p></dd>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

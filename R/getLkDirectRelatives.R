@@ -1,6 +1,6 @@
 #' Get the direct ancestors from LabKey of selected animals.
 #'
-## Copyright(c) 2017-2022 R. Mark Sharp
+## Copyright(c) 2017-2023 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Gets direct ancestors from labkey \code{study} schema and \code{demographics}
 #' table.

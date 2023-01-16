@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">assignAlleles</span><span class="op">(</span><span class="va">alleles</span>, <span class="va">parentType</span>, <span class="va">parent</span>, <span class="va">id</span>, <span class="va">n</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">assignAlleles</span><span class="op">(</span><span class="va">alleles</span>, <span class="va">parentType</span>, <span class="va">parent</span>, <span class="va">id</span>, <span class="va">n</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -82,30 +82,41 @@
 of list containing the alleles for each individual's sire and dam that have
 been assigned thus far and <code>alleles$counter</code> that is the counter used
 to track the lists of<code>alleles$alleles</code>.</p></dd>
+
+
 <dt>parentType</dt>
 <dd><p>character vector of length one with value of
 <code>"sire"</code> or <code>"dam"</code>.</p></dd>
+
+
 <dt>parent</dt>
 <dd><p>either <code>ped[id, "sire"]</code> or <code>ped[id, "dam"]</code>.</p></dd>
+
+
 <dt>id</dt>
 <dd><p>character vector of length one containing the animal ID</p></dd>
+
+
 <dt>n</dt>
 <dd><p>integer indicating the number of iterations to simulate.
 Default is 5000.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>The original list <code>alleles</code> passed into the function with newly
+    
+
+<p>The original list <code>alleles</code> passed into the function with newly
 randomly assigned alleles to each <code>id</code> based on dam and sire genotypes.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="va">alleles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>alleles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, counter <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">alleles</span> <span class="op">&lt;-</span> <span class="fu">assignAlleles</span><span class="op">(</span><span class="va">alleles</span>, parentType <span class="op">=</span> <span class="st">"sire"</span>, parent <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span class="r-in">                         id <span class="op">=</span> <span class="st">"o1"</span>, n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">alleles</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="va">alleles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>alleles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, counter <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">alleles</span> <span class="op">&lt;-</span> <span class="fu">assignAlleles</span><span class="op">(</span><span class="va">alleles</span>, parentType <span class="op">=</span> <span class="st">"sire"</span>, parent <span class="op">=</span> <span class="cn">NA</span>,</span></span>
+<span class="r-in"><span>                         id <span class="op">=</span> <span class="st">"o1"</span>, n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">alleles</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $alleles</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $alleles$o1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $alleles$o1$sire</span>
@@ -116,9 +127,9 @@ randomly assigned alleles to each <code>id</code> based on dam and sire genotype
 <span class="r-out co"><span class="r-pr">#&gt;</span> $counter</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="va">alleles</span> <span class="op">&lt;-</span> <span class="fu">assignAlleles</span><span class="op">(</span><span class="va">alleles</span>, parentType <span class="op">=</span> <span class="st">"dam"</span>, parent <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span class="r-in">                         id <span class="op">=</span> <span class="st">"o1"</span>, n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">alleles</span></span>
+<span class="r-in"><span><span class="va">alleles</span> <span class="op">&lt;-</span> <span class="fu">assignAlleles</span><span class="op">(</span><span class="va">alleles</span>, parentType <span class="op">=</span> <span class="st">"dam"</span>, parent <span class="op">=</span> <span class="cn">NA</span>,</span></span>
+<span class="r-in"><span>                         id <span class="op">=</span> <span class="st">"o1"</span>, n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">alleles</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $alleles</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $alleles$o1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $alleles$o1$sire</span>
@@ -132,8 +143,8 @@ randomly assigned alleles to each <code>id</code> based on dam and sire genotype
 <span class="r-out co"><span class="r-pr">#&gt;</span> $counter</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="co"># }</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -144,15 +155,11 @@ randomly assigned alleles to each <code>id</code> based on dam and sire genotype
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

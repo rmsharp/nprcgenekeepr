@@ -19,7 +19,7 @@ From PedigreeSampling.R
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -76,21 +76,28 @@ From PedigreeSampling.R
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">makesLoop</span><span class="op">(</span><span class="va">id</span>, <span class="va">ptree</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">makesLoop</span><span class="op">(</span><span class="va">id</span>, <span class="va">ptree</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>id</dt>
 <dd><p>character vector of length 1 having the ID of interest</p></dd>
+
+
 <dt>ptree</dt>
 <dd><p>a list of lists forming a pedigree tree as constructed by
 <code>createPedTree(ped)</code> where <code>ped</code> is a standard pedigree dataframe.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>TRUE if there is one or more common ancestors for the sire and dam.
-Tests to see if sires and dams for an individual in a ptree have a common
+    
+
+<p>TRUE if there is one or more common ancestors for the sire and dam.</p>
+
+
+<p>Tests to see if sires and dams for an individual in a ptree have a common
 ancestor.</p>
     </div>
     <div id="details">
@@ -111,15 +118,11 @@ SIMWALK2 or similar programs.</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

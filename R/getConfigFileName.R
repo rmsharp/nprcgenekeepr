@@ -1,6 +1,6 @@
 #' getConfigFileName returns the configuration file name appropriate for
 #' the system.
-## Copyright(c) 2017-2022 R. Mark Sharp
+## Copyright(c) 2017-2023 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' @return Character vector with expected configuration file

@@ -20,7 +20,7 @@ pedigree"><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/ma
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -77,39 +77,44 @@ pedigree</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">addSexAndAgeToGroup</span><span class="op">(</span><span class="va">ids</span>, <span class="va">ped</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">addSexAndAgeToGroup</span><span class="op">(</span><span class="va">ids</span>, <span class="va">ped</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ids</dt>
 <dd><p>character vector of animal Ids</p></dd>
+
+
 <dt>ped</dt>
 <dd><p>datatable that is the `Pedigree`. It contains pedigree
 information including the IDs listed in <code>candidates</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Dataframe with Id, Sex, and Current Age</p>
+    
+
+<p>Dataframe with Id, Sex, and Current Age</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"qcBreeders"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"qcPed"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">addSexAndAgeToGroup</span><span class="op">(</span>ids <span class="op">=</span> <span class="va">qcBreeders</span>, ped <span class="op">=</span> <span class="va">qcPed</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"qcBreeders"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"qcPed"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">addSexAndAgeToGroup</span><span class="op">(</span>ids <span class="op">=</span> <span class="va">qcBreeders</span>, ped <span class="op">=</span> <span class="va">qcPed</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           ids sex       age</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Q0RGP7 Q0RGP7   F 17.196441</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> C1ICXL C1ICXL   F  6.173854</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> J3D3N5 J3D3N5   M 21.245722</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> VFS0XB VFS0XB   M 16.240931</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> HP3E04 HP3E04   M 15.088296</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2KULR3 2KULR3   F  8.851472</span>
-<span class="r-in"><span class="co"># }</span></span>
-<span class="r-in"></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Q0RGP7 Q0RGP7   F 17.924709</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> C1ICXL C1ICXL   F  6.902122</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> J3D3N5 J3D3N5   M 21.973990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> VFS0XB VFS0XB   M 16.969199</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> HP3E04 HP3E04   M 15.816564</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2KULR3 2KULR3   F  9.579740</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -120,15 +125,11 @@ information including the IDs listed in <code>candidates</code>.</p></dd>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

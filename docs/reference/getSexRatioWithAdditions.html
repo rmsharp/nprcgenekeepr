@@ -19,7 +19,7 @@ This is a helper routine for the main one calculateSexRatio."><!-- mathjax --><s
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -76,24 +76,31 @@ This is a helper routine for the main one <code>calculateSexRatio</code>.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">getSexRatioWithAdditions</span><span class="op">(</span><span class="va">ids</span>, <span class="va">ped</span>, <span class="va">additionalMales</span>, <span class="va">additionalFemales</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getSexRatioWithAdditions</span><span class="op">(</span><span class="va">ids</span>, <span class="va">ped</span>, <span class="va">additionalMales</span>, <span class="va">additionalFemales</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ids</dt>
 <dd><p>character vector of animal Ids</p></dd>
+
+
 <dt>ped</dt>
 <dd><p>datatable that is the `Pedigree`. It contains pedigree
 information including the IDs listed in <code>candidates</code>.</p></dd>
+
+
 <dt>additionalMales</dt>
 <dd><p>Integer value of males to add to those within the
 group when calculating the ratio. Ignored if calculated ratio is 0 or Inf.
 Default is 0.</p></dd>
+
+
 <dt>additionalFemales</dt>
 <dd><p>Integer value of females to add to those within the
 group when calculating the ratio. Ignored if calculated ratio is 0 or Inf.
 Default is 0.</p></dd>
+
 </dl></div>
 
   </div>
@@ -104,15 +111,11 @@ Default is 0.</p></dd>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

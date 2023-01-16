@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">initializeHaremGroups</span><span class="op">(</span><span class="va">numGp</span>, <span class="va">currentGroups</span>, <span class="va">candidates</span>, <span class="va">ped</span>, <span class="va">minAge</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">initializeHaremGroups</span><span class="op">(</span><span class="va">numGp</span>, <span class="va">currentGroups</span>, <span class="va">candidates</span>, <span class="va">ped</span>, <span class="va">minAge</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -80,24 +80,35 @@
     <dl><dt>numGp</dt>
 <dd><p>integer value indicating the number of groups that should be
 formed from the list of IDs. Default is 1.</p></dd>
+
+
 <dt>currentGroups</dt>
 <dd><p>list of character vectors of IDs of animals currently
 assigned to the group. Defaults to character(0) assuming no groups are
 existent.</p></dd>
+
+
 <dt>candidates</dt>
 <dd><p>character vector of IDs of the animals available for
 use in the group.</p></dd>
+
+
 <dt>ped</dt>
 <dd><p>dataframe that is the `Pedigree`. It contains pedigree
 information including the IDs listed in <code>candidates</code>.</p></dd>
+
+
 <dt>minAge</dt>
 <dd><p>integer value indicating the minimum age to consider in group
 formation. Pairwise kinships involving an animal of this age or younger will
  be ignored. Default is 1 year.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Initial groupMembers list</p>
+    
+
+<p>Initial groupMembers list</p>
     </div>
 
   </div>
@@ -108,15 +119,11 @@ formation. Pairwise kinships involving an animal of this age or younger will
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

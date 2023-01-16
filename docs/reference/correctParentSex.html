@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -72,74 +72,87 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">correctParentSex</span><span class="op">(</span><span class="va">id</span>, <span class="va">sire</span>, <span class="va">dam</span>, <span class="va">sex</span>, <span class="va">recordStatus</span>, reportErrors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">correctParentSex</span><span class="op">(</span><span class="va">id</span>, <span class="va">sire</span>, <span class="va">dam</span>, <span class="va">sex</span>, <span class="va">recordStatus</span>, reportErrors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>id</dt>
 <dd><p>character vector with unique identifier for an individual</p></dd>
+
+
 <dt>sire</dt>
 <dd><p>character vector with unique identifier for an
 individual's father (<code>NA</code> if unknown).</p></dd>
+
+
 <dt>dam</dt>
 <dd><p>character vector with unique identifier for an
 individual's mother (<code>NA</code> if unknown).</p></dd>
+
+
 <dt>sex</dt>
 <dd><p>factor with levels: "M", "F", "U". Sex specifier for an
 individual.</p></dd>
+
+
 <dt>recordStatus</dt>
 <dd><p>character vector with value of <code>"added"</code> or
 <code>"original"</code>, which indicates whether an animal was added or an
 original animal.</p></dd>
+
+
 <dt>reportErrors</dt>
 <dd><p>logical value if TRUE will scan the entire file and
 make a list of all errors found. The errors will be returned in a
 list of list where each sublist is a type of error found.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A factor with levels: "M", "F", "H", and "U"
+    
+
+<p>A factor with levels: "M", "F", "H", and "U"
 representing the sex codes for the ids provided</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">pedOne</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1"</span>, <span class="st">"d1"</span>, <span class="st">"s2"</span>, <span class="st">"d2"</span>, <span class="st">"o1"</span>, <span class="st">"o2"</span>, <span class="st">"o3"</span>, <span class="st">"o4"</span><span class="op">)</span>,</span>
-<span class="r-in">                     sire <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="st">"s0"</span>, <span class="st">"s4"</span>, <span class="cn">NA</span>, <span class="st">"s1"</span>, <span class="st">"s1"</span>, <span class="st">"s2"</span>, <span class="st">"s2"</span><span class="op">)</span>,</span>
-<span class="r-in">                     dam <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="st">"d0"</span>, <span class="st">"d4"</span>, <span class="cn">NA</span>, <span class="st">"d1"</span>, <span class="st">"d2"</span>, <span class="st">"d2"</span>, <span class="st">"d2"</span><span class="op">)</span>,</span>
-<span class="r-in">                     sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"M"</span>, <span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"M"</span><span class="op">)</span>,</span>
-<span class="r-in">                     recordStatus <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"original"</span>, <span class="fl">8</span><span class="op">)</span>,</span>
-<span class="r-in">                     stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">pedTwo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1"</span>, <span class="st">"d1"</span>, <span class="st">"s2"</span>, <span class="st">"d2"</span>, <span class="st">"o1"</span>, <span class="st">"o2"</span>, <span class="st">"o3"</span>, <span class="st">"o4"</span><span class="op">)</span>,</span>
-<span class="r-in">                     sire <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="st">"s0"</span>, <span class="st">"s4"</span>, <span class="cn">NA</span>, <span class="st">"s1"</span>, <span class="st">"s1"</span>, <span class="st">"s2"</span>, <span class="st">"s2"</span><span class="op">)</span>,</span>
-<span class="r-in">                     dam <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d0"</span>, <span class="st">"d0"</span>, <span class="st">"d4"</span>, <span class="cn">NA</span>, <span class="st">"d1"</span>, <span class="st">"d2"</span>, <span class="st">"d2"</span>, <span class="st">"d2"</span><span class="op">)</span>,</span>
-<span class="r-in">                     sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"M"</span>, <span class="st">"M"</span>, <span class="st">"M"</span>, <span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"M"</span><span class="op">)</span>,</span>
-<span class="r-in">                     recordStatus <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"original"</span>, <span class="fl">8</span><span class="op">)</span>,</span>
-<span class="r-in">                     stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">pedOneCorrected</span> <span class="op">&lt;-</span> <span class="va">pedOne</span></span>
-<span class="r-in"><span class="va">pedOneCorrected</span><span class="op">$</span><span class="va">sex</span> <span class="op">&lt;-</span> <span class="fu">correctParentSex</span><span class="op">(</span><span class="va">pedOne</span><span class="op">$</span><span class="va">id</span>, <span class="va">pedOne</span><span class="op">$</span><span class="va">sire</span>, <span class="va">pedOne</span><span class="op">$</span><span class="va">dam</span>,</span>
-<span class="r-in">                                        <span class="va">pedOne</span><span class="op">$</span><span class="va">sex</span>, <span class="va">pedOne</span><span class="op">$</span><span class="va">recordStatus</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">pedOne</span><span class="op">[</span><span class="va">pedOne</span><span class="op">$</span><span class="va">sex</span> <span class="op">!=</span> <span class="va">pedOneCorrected</span><span class="op">$</span><span class="va">sex</span>, <span class="op">]</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pedOne</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1"</span>, <span class="st">"d1"</span>, <span class="st">"s2"</span>, <span class="st">"d2"</span>, <span class="st">"o1"</span>, <span class="st">"o2"</span>, <span class="st">"o3"</span>, <span class="st">"o4"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                     sire <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="st">"s0"</span>, <span class="st">"s4"</span>, <span class="cn">NA</span>, <span class="st">"s1"</span>, <span class="st">"s1"</span>, <span class="st">"s2"</span>, <span class="st">"s2"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                     dam <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="st">"d0"</span>, <span class="st">"d4"</span>, <span class="cn">NA</span>, <span class="st">"d1"</span>, <span class="st">"d2"</span>, <span class="st">"d2"</span>, <span class="st">"d2"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                     sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"M"</span>, <span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"M"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                     recordStatus <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"original"</span>, <span class="fl">8</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                     stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pedTwo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1"</span>, <span class="st">"d1"</span>, <span class="st">"s2"</span>, <span class="st">"d2"</span>, <span class="st">"o1"</span>, <span class="st">"o2"</span>, <span class="st">"o3"</span>, <span class="st">"o4"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                     sire <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="st">"s0"</span>, <span class="st">"s4"</span>, <span class="cn">NA</span>, <span class="st">"s1"</span>, <span class="st">"s1"</span>, <span class="st">"s2"</span>, <span class="st">"s2"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                     dam <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d0"</span>, <span class="st">"d0"</span>, <span class="st">"d4"</span>, <span class="cn">NA</span>, <span class="st">"d1"</span>, <span class="st">"d2"</span>, <span class="st">"d2"</span>, <span class="st">"d2"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                     sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"M"</span>, <span class="st">"M"</span>, <span class="st">"M"</span>, <span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"M"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                     recordStatus <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"original"</span>, <span class="fl">8</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                     stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pedOneCorrected</span> <span class="op">&lt;-</span> <span class="va">pedOne</span></span></span>
+<span class="r-in"><span><span class="va">pedOneCorrected</span><span class="op">$</span><span class="va">sex</span> <span class="op">&lt;-</span> <span class="fu">correctParentSex</span><span class="op">(</span><span class="va">pedOne</span><span class="op">$</span><span class="va">id</span>, <span class="va">pedOne</span><span class="op">$</span><span class="va">sire</span>, <span class="va">pedOne</span><span class="op">$</span><span class="va">dam</span>,</span></span>
+<span class="r-in"><span>                                        <span class="va">pedOne</span><span class="op">$</span><span class="va">sex</span>, <span class="va">pedOne</span><span class="op">$</span><span class="va">recordStatus</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pedOne</span><span class="op">[</span><span class="va">pedOne</span><span class="op">$</span><span class="va">sex</span> <span class="op">!=</span> <span class="va">pedOneCorrected</span><span class="op">$</span><span class="va">sex</span>, <span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id sire  dam sex recordStatus</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 s1 &lt;NA&gt; &lt;NA&gt;   F     original</span>
-<span class="r-in"><span class="va">pedOneCorrected</span><span class="op">[</span><span class="va">pedOne</span><span class="op">$</span><span class="va">sex</span> <span class="op">!=</span> <span class="va">pedOneCorrected</span><span class="op">$</span><span class="va">sex</span>, <span class="op">]</span></span>
+<span class="r-in"><span><span class="va">pedOneCorrected</span><span class="op">[</span><span class="va">pedOne</span><span class="op">$</span><span class="va">sex</span> <span class="op">!=</span> <span class="va">pedOneCorrected</span><span class="op">$</span><span class="va">sex</span>, <span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id sire  dam sex recordStatus</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 s1 &lt;NA&gt; &lt;NA&gt;   M     original</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">pedTwoCorrected</span> <span class="op">&lt;-</span> <span class="va">pedTwo</span></span>
-<span class="r-in"><span class="va">pedTwoCorrected</span><span class="op">$</span><span class="va">sex</span> <span class="op">&lt;-</span> <span class="fu">correctParentSex</span><span class="op">(</span><span class="va">pedTwo</span><span class="op">$</span><span class="va">id</span>, <span class="va">pedTwo</span><span class="op">$</span><span class="va">sire</span>, <span class="va">pedTwo</span><span class="op">$</span><span class="va">dam</span>,</span>
-<span class="r-in">                                        <span class="va">pedTwo</span><span class="op">$</span><span class="va">sex</span>, <span class="va">pedOne</span><span class="op">$</span><span class="va">recordStatus</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">pedTwo</span><span class="op">[</span><span class="va">pedTwo</span><span class="op">$</span><span class="va">sex</span> <span class="op">!=</span> <span class="va">pedTwoCorrected</span><span class="op">$</span><span class="va">sex</span>, <span class="op">]</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">pedTwoCorrected</span> <span class="op">&lt;-</span> <span class="va">pedTwo</span></span></span>
+<span class="r-in"><span><span class="va">pedTwoCorrected</span><span class="op">$</span><span class="va">sex</span> <span class="op">&lt;-</span> <span class="fu">correctParentSex</span><span class="op">(</span><span class="va">pedTwo</span><span class="op">$</span><span class="va">id</span>, <span class="va">pedTwo</span><span class="op">$</span><span class="va">sire</span>, <span class="va">pedTwo</span><span class="op">$</span><span class="va">dam</span>,</span></span>
+<span class="r-in"><span>                                        <span class="va">pedTwo</span><span class="op">$</span><span class="va">sex</span>, <span class="va">pedOne</span><span class="op">$</span><span class="va">recordStatus</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pedTwo</span><span class="op">[</span><span class="va">pedTwo</span><span class="op">$</span><span class="va">sex</span> <span class="op">!=</span> <span class="va">pedTwoCorrected</span><span class="op">$</span><span class="va">sex</span>, <span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id sire dam sex recordStatus</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 d1   s0  d0   M     original</span>
-<span class="r-in"><span class="va">pedTwoCorrected</span><span class="op">[</span><span class="va">pedTwo</span><span class="op">$</span><span class="va">sex</span> <span class="op">!=</span> <span class="va">pedTwoCorrected</span><span class="op">$</span><span class="va">sex</span>, <span class="op">]</span></span>
+<span class="r-in"><span><span class="va">pedTwoCorrected</span><span class="op">[</span><span class="va">pedTwo</span><span class="op">$</span><span class="va">sex</span> <span class="op">!=</span> <span class="va">pedTwoCorrected</span><span class="op">$</span><span class="va">sex</span>, <span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id sire dam sex recordStatus</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 d1   s0  d0   F     original</span>
-<span class="r-in"><span class="co"># }</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -150,15 +163,11 @@ representing the sex codes for the ids provided</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

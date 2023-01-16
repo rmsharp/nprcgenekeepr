@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -185,14 +185,14 @@ genotypes.</p></td>
         <td><p>smallPedTree is a pedigree tree made from <code>smallPed</code></p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="major-features-and-functions">Major Features and Functions <a href="#major-features-and-functions" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p><p>Brief codebook and Major Functions</p>
+          <p class="section-desc"></p><p>Brief codebook and major functions</p>
         </th>
       </tr></tbody><tbody><tr><td>
           <p><code><a href="nprcgenekeepr.html">nprcgenekeepr</a></code> </p>
         </td>
         <td><p>Genetic Management Functions</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
-          <h2 id="primary-interactive-functions">Primary interactive functions <a href="#primary-interactive-functions" class="anchor" aria-hidden="true"></a></h2>
+          <h2 id="primary-interactive-functions">Primary Interactive Functions <a href="#primary-interactive-functions" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p><p>Funtions designed for interactive use</p>
         </th>
       </tr></tbody><tbody><tr><td>
@@ -279,13 +279,6 @@ used to demonstrate the package.</p></td>
         </td>
         <td><p>Create a pedigree tree (PedTree).</p></td>
       </tr><tr><td>
-          <p><code><a href="finalRpt.html">finalRpt</a></code> </p>
-        </td>
-        <td><p>finalRpt is a list object created from the list object <em>rpt</em> prepared
-by <code>reportGV</code>. It is created inside <code>orderReport</code>. This version
-is at the state just prior to calling <code>rankSubjects</code> inside
-<code>orderReport</code>.</p></td>
-      </tr><tr><td>
           <p><code><a href="findGeneration.html">findGeneration()</a></code> </p>
         </td>
         <td><p>Determines the generation number for each id.</p></td>
@@ -340,7 +333,7 @@ is at the state just prior to calling <code>rankSubjects</code> inside
       </tr><tr><td>
           <p><code><a href="getLkDirectRelatives.html">getLkDirectRelatives()</a></code> </p>
         </td>
-        <td><p>Get the direct ancestors of selected animals</p></td>
+        <td><p>Get the direct ancestors from LabKey of selected animals.</p></td>
       </tr><tr><td>
           <p><code><a href="getPedigree.html">getPedigree()</a></code> </p>
         </td>
@@ -435,8 +428,8 @@ individuals</p></td>
         </td>
         <td><p>summary.nprcgenekeeprErr Summary function for class nprcgenekeeprErr</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
-          <h2 id="all-exposed-functions">All exposed functions <a href="#all-exposed-functions" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p>
+          <h2 id="all-exposed-functions">All Exposed Functions <a href="#all-exposed-functions" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>All exposed functions</p>
         </th>
       </tr></tbody><tbody><tr><td>
           <p><code><a href="addAnimalsWithNoRelative.html">addAnimalsWithNoRelative()</a></code> </p>
@@ -446,6 +439,10 @@ individuals</p></td>
           <p><code><a href="addBackSecondParents.html">addBackSecondParents()</a></code> </p>
         </td>
         <td><p>Add back single parents trimmed pedigree</p></td>
+      </tr><tr><td>
+          <p><code><a href="addErrTxt.html">addErrTxt()</a></code> </p>
+        </td>
+        <td><p>Concatenates any errors from nprcgenekeeprErr into narrative form</p></td>
       </tr><tr><td>
           <p><code><a href="addGenotype.html">addGenotype()</a></code> </p>
         </td>
@@ -463,6 +460,10 @@ individuals</p></td>
         </td>
         <td><p>Add to count the number of occurrences of a kinship value seen for a pair of
 individuals in one or more simulated pedigrees.</p></td>
+      </tr><tr><td>
+          <p><code><a href="addParents.html">addParents()</a></code> </p>
+        </td>
+        <td><p>Add parents</p></td>
       </tr><tr><td>
           <p><code><a href="addSexAndAgeToGroup.html">addSexAndAgeToGroup()</a></code> </p>
         </td>
@@ -607,6 +608,10 @@ individuals in a series of simulated pedigrees.</p></td>
         </td>
         <td><p>Count the number of loops in a pedigree tree.</p></td>
       </tr><tr><td>
+          <p><code><a href="create_wkbk.html">create_wkbk()</a></code> </p>
+        </td>
+        <td><p>Creates an Excel workbook with worksheets.</p></td>
+      </tr><tr><td>
           <p><code><a href="createExampleFiles.html">createExampleFiles()</a></code> </p>
         </td>
         <td><p>Creates a folder with CSV files containing example pedigrees and ID lists
@@ -628,10 +633,6 @@ used to demonstrate the package.</p></td>
         </td>
         <td><p>Makes a list object of kinship matrices from simulated pedigrees of possible
 parents for animals with unknown parents</p></td>
-      </tr><tr><td>
-          <p><code><a href="create_wkbk.html">create_wkbk()</a></code> </p>
-        </td>
-        <td><p>Creates an Excel workbook with worksheets.</p></td>
       </tr><tr><td>
           <p><code><a href="cumulateSimKinships.html">cumulateSimKinships()</a></code> </p>
         </td>
@@ -799,7 +800,7 @@ sire or a dam</p></td>
       </tr><tr><td>
           <p><code><a href="getLkDirectRelatives.html">getLkDirectRelatives()</a></code> </p>
         </td>
-        <td><p>Get the direct ancestors of selected animals</p></td>
+        <td><p>Get the direct ancestors from LabKey of selected animals.</p></td>
       </tr><tr><td>
           <p><code><a href="getLogo.html">getLogo()</a></code> </p>
         </td>
@@ -809,10 +810,6 @@ sire or a dam</p></td>
         </td>
         <td><p>Get the maximum of the absolute values of the negative (males) and positive
 (female) animal counts.</p></td>
-      </tr><tr><td>
-          <p><code><a href="getMinParentAge.html">getMinParentAge()</a></code> </p>
-        </td>
-        <td><p>Get minimum parent age.</p></td>
       </tr><tr><td>
           <p><code><a href="getOffspring.html">getOffspring()</a></code> </p>
         </td>
@@ -826,14 +823,9 @@ sire or a dam</p></td>
         </td>
         <td><p>Get parents to corresponding animal IDs provided</p></td>
       </tr><tr><td>
-          <p><code><a href="getPotentialParents.html">getPotentialParents()</a></code> </p>
+          <p><code><a href="getPedDirectRelatives.html">getPedDirectRelatives()</a></code> </p>
         </td>
-        <td><p>Get the lists of portential parents for all individuals born in the colony
-with one or two unknown parents.</p></td>
-      </tr><tr><td>
-          <p><code><a href="addParents.html">addParents()</a></code> </p>
-        </td>
-        <td><p>Add parents</p></td>
+        <td><p>Get the direct ancestors of selected animals from supplied pedigree.</p></td>
       </tr><tr><td>
           <p><code><a href="getPedigree.html">getPedigree()</a></code> </p>
         </td>
@@ -846,6 +838,11 @@ with one or two unknown parents.</p></td>
           <p><code><a href="getPossibleCols.html">getPossibleCols()</a></code> </p>
         </td>
         <td><p>Get possible column names for a studbook.</p></td>
+      </tr><tr><td>
+          <p><code><a href="getPotentialParents.html">getPotentialParents()</a></code> </p>
+        </td>
+        <td><p>Get the lists of portential parents for all individuals born in the colony
+with one or two unknown parents.</p></td>
       </tr><tr><td>
           <p><code><a href="getPotentialSires.html">getPotentialSires()</a></code> </p>
         </td>
@@ -884,6 +881,10 @@ searching pedigree.</p></td>
         </td>
         <td><p>Get required column names for a studbook.</p></td>
       </tr><tr><td>
+          <p><code><a href="getSexRatioWithAdditions.html">getSexRatioWithAdditions()</a></code> </p>
+        </td>
+        <td><p>getSexRatioWithAdditions returns the sex ratio of a group.</p></td>
+      </tr><tr><td>
           <p><code><a href="getSiteInfo.html">getSiteInfo()</a></code> </p>
         </td>
         <td><p>Get site information</p></td>
@@ -904,13 +905,13 @@ searching pedigree.</p></td>
         </td>
         <td><p>Forms return list of groupAddAssign function</p></td>
       </tr><tr><td>
-          <p><code><a href="hasGenotype.html">hasGenotype()</a></code> </p>
-        </td>
-        <td><p>Check for genotype data in dataframe</p></td>
-      </tr><tr><td>
           <p><code><a href="hasBothParents.html">hasBothParents()</a></code> </p>
         </td>
         <td><p>hasBothParents checks to see if both parents are identified.</p></td>
+      </tr><tr><td>
+          <p><code><a href="hasGenotype.html">hasGenotype()</a></code> </p>
+        </td>
+        <td><p>Check for genotype data in dataframe</p></td>
       </tr><tr><td>
           <p><code><a href="headerDisplayNames.html">headerDisplayNames()</a></code> </p>
         </td>
@@ -935,13 +936,17 @@ pedigree file</p></td>
         <td><p>insertSeparators inserts the character "-" between year and month and
 between month and day portions of a date string in %Y%m%d format.</p></td>
       </tr><tr><td>
+          <p><code><a href="is_valid_date_str.html">is_valid_date_str()</a></code> </p>
+        </td>
+        <td><p>Returns TRUE if the string is a valid date.</p></td>
+      </tr><tr><td>
           <p><code><a href="isEmpty.html">isEmpty()</a></code> </p>
         </td>
         <td><p>Is vector empty or all NA values.</p></td>
       </tr><tr><td>
-          <p><code><a href="is_valid_date_str.html">is_valid_date_str()</a></code> </p>
+          <p><code><a href="kinMatrix2LongForm.html">kinMatrix2LongForm()</a></code> </p>
         </td>
-        <td><p>Returns TRUE if the string is a valid date.</p></td>
+        <td><p>Reformats a kinship matrix into a long-format table.</p></td>
       </tr><tr><td>
           <p><code><a href="kinship.html">kinship()</a></code> </p>
         </td>
@@ -1038,18 +1043,6 @@ adjusts all date within a specified amount.</p></td>
         </td>
         <td><p>Append the rows of one dataframe to another.</p></td>
       </tr><tr><td>
-          <p><code><a href="removeGroupIfNoAvailableAnimals.html">removeGroupIfNoAvailableAnimals()</a></code> </p>
-        </td>
-        <td><p>Remove group numbers when all available animals have been used</p></td>
-      </tr><tr><td>
-          <p><code><a href="removeSelectedAnimalFromAvailableAnimals.html">removeSelectedAnimalFromAvailableAnimals()</a></code> </p>
-        </td>
-        <td><p>Updates list of available animals by removing the selected animal</p></td>
-      </tr><tr><td>
-          <p><code><a href="kinMatrix2LongForm.html">kinMatrix2LongForm()</a></code> </p>
-        </td>
-        <td><p>Reformats a kinship matrix into a long-format table.</p></td>
-      </tr><tr><td>
           <p><code><a href="readExcelPOSIXToCharacter.html">readExcelPOSIXToCharacter()</a></code> </p>
         </td>
         <td><p>Read in Excel file and convert POSIX dates to character</p></td>
@@ -1062,9 +1055,17 @@ adjusts all date within a specified amount.</p></td>
         </td>
         <td><p>removeEarlyDates removes dates before a specified year</p></td>
       </tr><tr><td>
+          <p><code><a href="removeGroupIfNoAvailableAnimals.html">removeGroupIfNoAvailableAnimals()</a></code> </p>
+        </td>
+        <td><p>Remove group numbers when all available animals have been used</p></td>
+      </tr><tr><td>
           <p><code><a href="removePotentialSires.html">removePotentialSires()</a></code> </p>
         </td>
         <td><p>Removes potential sires from list of Ids</p></td>
+      </tr><tr><td>
+          <p><code><a href="removeSelectedAnimalFromAvailableAnimals.html">removeSelectedAnimalFromAvailableAnimals()</a></code> </p>
+        </td>
+        <td><p>Updates list of available animals by removing the selected animal</p></td>
       </tr><tr><td>
           <p><code><a href="removeUninformativeFounders.html">removeUninformativeFounders()</a></code> </p>
         </td>
@@ -1096,17 +1097,13 @@ placeholders for unknown parents.</p></td>
         </td>
         <td><p>Population designation function</p></td>
       </tr><tr><td>
-          <p><code><a href="getSexRatioWithAdditions.html">getSexRatioWithAdditions()</a></code> </p>
+          <p><code><a href="set_seed.html">set_seed()</a></code> </p>
         </td>
-        <td><p>getSexRatioWithAdditions returns the sex ratio of a group.</p></td>
+        <td><p>Work around for unit tests using sample() among various versions of R</p></td>
       </tr><tr><td>
           <p><code><a href="setExit.html">setExit()</a></code> </p>
         </td>
         <td><p>Sets the exit date, if there is no exit column in the table</p></td>
-      </tr><tr><td>
-          <p><code><a href="set_seed.html">set_seed()</a></code> </p>
-        </td>
-        <td><p>Work around for unit tests using sample() among various versions of R</p></td>
       </tr><tr><td>
           <p><code><a href="str_detect_fixed_all.html">str_detect_fixed_all()</a></code> </p>
         </td>
@@ -1146,15 +1143,11 @@ individuals</p></td>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

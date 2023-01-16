@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -72,33 +72,40 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for nprcgenekeeprErr</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for nprcgenekeeprGV</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for nprcgenekeeprErr</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for nprcgenekeeprGV</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>object</dt>
 <dd><p>object of class nprcgenekeeprErr and class list</p></dd>
+
+
 <dt>...</dt>
 <dd><p>additional arguments for the <code>summary.default</code> statement</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Object of class summary.nprcgenekeeprErr
-object of class summary.nprcgenekeeprGV</p>
+    
+
+<p>Object of class summary.nprcgenekeeprErr</p>
+
+
+<p>object of class summary.nprcgenekeeprGV</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="va">errorList</span> <span class="op">&lt;-</span> <span class="fu"><a href="qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="pedOne.html">pedOne</a></span>, minParentAge <span class="op">=</span> <span class="fl">0</span>,</span>
-<span class="r-in">reportChanges <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span class="r-in">reportErrors <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">errorList</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="va">errorList</span> <span class="op">&lt;-</span> <span class="fu"><a href="qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="pedOne.html">pedOne</a></span>, minParentAge <span class="op">=</span> <span class="fl">0</span>,</span></span>
+<span class="r-in"><span>reportChanges <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>reportErrors <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">errorList</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Error: The animal listed as a sire and also listed as a female is: s1.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Error: The animal listed as a dam and also listed as a male is: d1.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change: The column where space was removed is: si re to sire.</span>
@@ -119,30 +126,30 @@ object of class summary.nprcgenekeeprGV</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   -6.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3   -3.4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   -9.4</span>
-<span class="r-in"><span class="co"># }</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="va">examplePedigree</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="examplePedigree.html">examplePedigree</a></span></span>
-<span class="r-in"><span class="va">breederPed</span> <span class="op">&lt;-</span> <span class="fu"><a href="qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">examplePedigree</span>, minParentAge <span class="op">=</span> <span class="fl">2</span>,</span>
-<span class="r-in">                         reportChanges <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span class="r-in">                         reportErrors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">focalAnimals</span> <span class="op">&lt;-</span> <span class="va">breederPed</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPed</span><span class="op">$</span><span class="va">sire</span><span class="op">)</span> <span class="op">&amp;</span></span>
-<span class="r-in">                                  <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPed</span><span class="op">$</span><span class="va">dam</span><span class="op">)</span><span class="op">)</span> <span class="op">&amp;</span></span>
-<span class="r-in">                                <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPed</span><span class="op">$</span><span class="va">exit</span><span class="op">)</span><span class="op">]</span></span>
-<span class="r-in"><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="setPopulation.html">setPopulation</a></span><span class="op">(</span>ped <span class="op">=</span> <span class="va">breederPed</span>, ids <span class="op">=</span> <span class="va">focalAnimals</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">trimmedPed</span> <span class="op">&lt;-</span> <span class="fu"><a href="trimPedigree.html">trimPedigree</a></span><span class="op">(</span><span class="va">focalAnimals</span>, <span class="va">breederPed</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">probands</span> <span class="op">&lt;-</span> <span class="va">ped</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="va">ped</span><span class="op">$</span><span class="va">population</span><span class="op">]</span></span>
-<span class="r-in"><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="trimPedigree.html">trimPedigree</a></span><span class="op">(</span><span class="va">probands</span>, <span class="va">ped</span>, removeUninformative <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span class="r-in">                    addBackParents <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">geneticValue</span> <span class="op">&lt;-</span> <span class="fu"><a href="reportGV.html">reportGV</a></span><span class="op">(</span><span class="va">ped</span>, guIter <span class="op">=</span> <span class="fl">50</span>, <span class="co"># should be &gt;= 1000</span></span>
-<span class="r-in">                         guThresh <span class="op">=</span> <span class="fl">3</span>,</span>
-<span class="r-in">                         byID <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span class="r-in">                         updateProgress <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">trimmedGeneticValue</span> <span class="op">&lt;-</span> <span class="fu"><a href="reportGV.html">reportGV</a></span><span class="op">(</span><span class="va">trimmedPed</span>, guIter <span class="op">=</span> <span class="fl">50</span>, <span class="co"># should be &gt;= 1000</span></span>
-<span class="r-in">                                guThresh <span class="op">=</span> <span class="fl">3</span>,</span>
-<span class="r-in">                                byID <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span class="r-in">                                updateProgress <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">geneticValue</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="va">examplePedigree</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="examplePedigree.html">examplePedigree</a></span></span></span>
+<span class="r-in"><span><span class="va">breederPed</span> <span class="op">&lt;-</span> <span class="fu"><a href="qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">examplePedigree</span>, minParentAge <span class="op">=</span> <span class="fl">2</span>,</span></span>
+<span class="r-in"><span>                         reportChanges <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>                         reportErrors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">focalAnimals</span> <span class="op">&lt;-</span> <span class="va">breederPed</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPed</span><span class="op">$</span><span class="va">sire</span><span class="op">)</span> <span class="op">&amp;</span></span></span>
+<span class="r-in"><span>                                  <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPed</span><span class="op">$</span><span class="va">dam</span><span class="op">)</span><span class="op">)</span> <span class="op">&amp;</span></span></span>
+<span class="r-in"><span>                                <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPed</span><span class="op">$</span><span class="va">exit</span><span class="op">)</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="setPopulation.html">setPopulation</a></span><span class="op">(</span>ped <span class="op">=</span> <span class="va">breederPed</span>, ids <span class="op">=</span> <span class="va">focalAnimals</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">trimmedPed</span> <span class="op">&lt;-</span> <span class="fu"><a href="trimPedigree.html">trimPedigree</a></span><span class="op">(</span><span class="va">focalAnimals</span>, <span class="va">breederPed</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">probands</span> <span class="op">&lt;-</span> <span class="va">ped</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="va">ped</span><span class="op">$</span><span class="va">population</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="trimPedigree.html">trimPedigree</a></span><span class="op">(</span><span class="va">probands</span>, <span class="va">ped</span>, removeUninformative <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>                    addBackParents <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">geneticValue</span> <span class="op">&lt;-</span> <span class="fu"><a href="reportGV.html">reportGV</a></span><span class="op">(</span><span class="va">ped</span>, guIter <span class="op">=</span> <span class="fl">50</span>, <span class="co"># should be &gt;= 1000</span></span></span>
+<span class="r-in"><span>                         guThresh <span class="op">=</span> <span class="fl">3</span>,</span></span>
+<span class="r-in"><span>                         byID <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>                         updateProgress <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">trimmedGeneticValue</span> <span class="op">&lt;-</span> <span class="fu"><a href="reportGV.html">reportGV</a></span><span class="op">(</span><span class="va">trimmedPed</span>, guIter <span class="op">=</span> <span class="fl">50</span>, <span class="co"># should be &gt;= 1000</span></span></span>
+<span class="r-in"><span>                                guThresh <span class="op">=</span> <span class="fl">3</span>,</span></span>
+<span class="r-in"><span>                                byID <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>                                updateProgress <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">geneticValue</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> The genetic value report </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Individuals in Pedigree: 327 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Male Founders: 3</span>
@@ -153,7 +160,7 @@ object of class summary.nprcgenekeeprGV</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Live Offspring: 321 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> High Value Individuals: 231 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Low Value Individuals: 96 </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">trimmedGeneticValue</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">trimmedGeneticValue</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> The genetic value report </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Individuals in Pedigree: 704 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Male Founders: 3</span>
@@ -164,7 +171,7 @@ object of class summary.nprcgenekeeprGV</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Live Offspring: 1004 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> High Value Individuals: 451 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Low Value Individuals: 253 </span>
-<span class="r-in"><span class="co"># }</span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -175,15 +182,11 @@ object of class summary.nprcgenekeeprGV</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

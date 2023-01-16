@@ -1,7 +1,7 @@
 README
 ================
 R. Mark Sharp
-2022-12-13
+2023-01-15
 
 [![Rdoc](https://www.rdocumentation.org/badges/version/nprcgenekeepr)](https://www.rdocumentation.org/packages/nprcgenekeepr)
 [![Project Status: Active – The project has reached a stable, usable
@@ -10,7 +10,7 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![Build
 Status](https://travis-ci.org/rmsharp/nprcgenekeepr.svg?branch=master)](https://travis-ci.org/rmsharp/nprcgenekeepr)
 [![Codecov test
-coverage](https://codecov.io/gh/rmsharp/nprcgenekeepr/branch/master/graph/badge.svg)](https://codecov.io/gh/rmsharp/nprcgenekeepr?branch=master)
+coverage](https://app.codecov.io/gh/rmsharp/nprcgenekeepr?branch=master)](https://app.codecov.io/gh/rmsharp/nprcgenekeepr?branch=master)
 <!--[![](https://www.r-pkg.org/badges/version/nprcgenekeepr)](https://cran.r-project.org/package=nprcgenekeepr)
 
 <!--[![Rdoc](https://www.rdocumentation.org/badges/version/RDocumentation)](https://www.rdocumentation.org/packages/RDocumentation)
@@ -18,7 +18,7 @@ coverage](https://codecov.io/gh/rmsharp/nprcgenekeepr/branch/master/graph/badge.
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# nprcgenekeepr – Version 1.0.5.9003 (20220623)
+# nprcgenekeepr – Version 1.0.6
 
 ## Introduction
 
@@ -160,8 +160,8 @@ View(exampleNprcgenekeeprConfig)
 
 ### Display of an age by sex pyramid plot
 
-Adapted from on 20190603. Written by Matt Rosenberg. Updated May 07,
-2019
+Adapted from on 20190603. Written by Matt Rosenberg. Updated December
+12, 2019
 
 The most important demographic characteristic of a population is its
 age-sex structure. Age-sex pyramids (also known as population pyramids)

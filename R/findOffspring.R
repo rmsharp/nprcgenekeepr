@@ -1,6 +1,6 @@
 #' Finds the number of total offspring for each animal in the provided pedigree.
 #'
-## Copyright(c) 2017-2022 R. Mark Sharp
+## Copyright(c) 2017-2023 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Part of Genetic Value Analysis
 #'

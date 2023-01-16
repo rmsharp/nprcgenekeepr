@@ -1,6 +1,6 @@
 #' Determines the generation number for each id.
 #'
-## Copyright(c) 2017-2022 R. Mark Sharp
+## Copyright(c) 2017-2023 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' @return An integer vector indication the generation numbers for each id,

@@ -21,7 +21,7 @@ kCounts."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/ma
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -79,7 +79,7 @@ three lists <code>cKVC</code>, <code>kValues</code>, and
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">addKinshipValueCount</span><span class="op">(</span><span class="va">cKVC</span>, <span class="va">kValues</span>, <span class="va">kCounts</span>, <span class="va">index</span>, <span class="va">value</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">addKinshipValueCount</span><span class="op">(</span><span class="va">cKVC</span>, <span class="va">kValues</span>, <span class="va">kCounts</span>, <span class="va">index</span>, <span class="va">value</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -87,19 +87,28 @@ three lists <code>cKVC</code>, <code>kValues</code>, and
     <dl><dt>cKVC</dt>
 <dd><p>list object of cummulated Kinship Value Counts with same
 structure as that returned by this function.</p></dd>
+
+
 <dt>kValues</dt>
 <dd><p>list of unique kValues found in one set of
 kinship matricies.</p></dd>
+
+
 <dt>kCounts</dt>
 <dd><p>list of unique kCounts found in one set of
 kinship matricies.</p></dd>
+
+
 <dt>index</dt>
 <dd><p>list index for the set of kValues to compare and count
 that is common among the three lists <code>cKVC</code>,
 <code>kValues</code>, and <code>kCounts</code>.</p></dd>
+
+
 <dt>value</dt>
 <dd><p>one element of vector of unique kinship values at position
 <code>index</code> within <code>cKVC</code>.</p></dd>
+
 </dl></div>
 
   </div>
@@ -110,15 +119,11 @@ that is common among the three lists <code>cKVC</code>,
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

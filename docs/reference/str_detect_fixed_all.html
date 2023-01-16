@@ -20,7 +20,7 @@ second parameters character vector."><!-- mathjax --><script src="https://cdnjs.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -77,7 +77,7 @@ second parameters character vector.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">str_detect_fixed_all</span><span class="op">(</span><span class="va">strings</span>, <span class="va">patterns</span>, <span class="va">ignore_na</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">str_detect_fixed_all</span><span class="op">(</span><span class="va">strings</span>, <span class="va">patterns</span>, <span class="va">ignore_na</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -85,16 +85,23 @@ second parameters character vector.</p>
     <dl><dt>strings</dt>
 <dd><p>input vector. This must be an atomic vector and will be
 coerced to a character vector.</p></dd>
+
+
 <dt>patterns</dt>
 <dd><p>patterns to look for, as defined by a POSIX regular
 expression. See fixed, ignore.case and perl sections
 for details. See  <em>Extended Regular Expressions</em> for how to use regular
 expressions for matching.</p></dd>
+
+
 <dt>ignore_na</dt>
 <dd><p>if TRUE NA values are trimmed out of <code>strings</code> and
 <code>patterns</code> before comparison</p></dd>
+
+
 <dt>...</dt>
 <dd><p>further arguments for stri_detect_fixed</p></dd>
+
 </dl></div>
 
   </div>
@@ -105,15 +112,11 @@ expressions for matching.</p></dd>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

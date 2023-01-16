@@ -20,7 +20,7 @@ with one or two unknown parents."><!-- mathjax --><script src="https://cdnjs.clo
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -77,7 +77,7 @@ with one or two unknown parents.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">getPotentialParents</span><span class="op">(</span><span class="va">ped</span>, <span class="va">minParentAge</span>, <span class="va">maxGestationalPeriod</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getPotentialParents</span><span class="op">(</span><span class="va">ped</span>, <span class="va">minParentAge</span>, <span class="va">maxGestationalPeriod</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -86,19 +86,26 @@ with one or two unknown parents.</p>
 <dd><p>the pedigree information in data.frame format. Pedigree
 (req. fields: id, sire, dam, gen, population).
 This requires complete pedigree information.</p></dd>
+
+
 <dt>minParentAge</dt>
 <dd><p>numeric values to set the minimum age in years for
 an animal to have an offspring. Defaults to 2 years. The check is not
 performed for animals with missing birth dates.</p></dd>
+
+
 <dt>maxGestationalPeriod</dt>
 <dd><p>integer value describing the days between
 conception and birth. This will be used to prevent the removal of sires
 who exit the colony between date of conception and birth. Need to decide
 where this will come from.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a list of list with each internal list being made up of an animal
+    
+
+<p>a list of list with each internal list being made up of an animal
 id (<code>id</code>), a vector of possible sires (<code>sire</code>) and a vector of
 possible dams (<code>dam</code>). The <code>id</code> must be defined while the
 vectors <code>sire</code> and <code>dam</code> can be empty.</p>
@@ -112,15 +119,11 @@ vectors <code>sire</code> and <code>dam</code> can be empty.</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

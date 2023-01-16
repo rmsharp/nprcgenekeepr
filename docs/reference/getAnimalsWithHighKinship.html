@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">getAnimalsWithHighKinship</span><span class="op">(</span><span class="va">kmat</span>, <span class="va">ped</span>, <span class="va">threshold</span>, <span class="va">currentGroups</span>, <span class="va">ignore</span>, <span class="va">minAge</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getAnimalsWithHighKinship</span><span class="op">(</span><span class="va">kmat</span>, <span class="va">ped</span>, <span class="va">threshold</span>, <span class="va">currentGroups</span>, <span class="va">ignore</span>, <span class="va">minAge</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -80,53 +80,66 @@
     <dl><dt>kmat</dt>
 <dd><p>numeric matrix of pairwise kinship values. Rows and columns
 are named with animal IDs.</p></dd>
+
+
 <dt>ped</dt>
 <dd><p>dataframe that is the `Pedigree`. It contains pedigree
 information including the IDs listed in <code>candidates</code>.</p></dd>
+
+
 <dt>threshold</dt>
 <dd><p>numeric value indicating the minimum kinship level to be
 considered in group formation. Pairwise kinship below this level will be
 ignored.</p></dd>
+
+
 <dt>currentGroups</dt>
 <dd><p>list of character vectors of IDs of animals currently
 assigned
 to the group. Defaults to character(0) assuming no groups are existent.</p></dd>
+
+
 <dt>ignore</dt>
 <dd><p>list of character vectors representing the sex combinations
 to be ignored. If provided, the vectors in the list specify if pairwise
 kinship should be ignored between certain sexes.
 Default is to ignore all pairwise kinship between females.</p></dd>
+
+
 <dt>minAge</dt>
 <dd><p>integer value indicating the minimum age to consider in group
 formation. Pairwise kinships involving an animal of this age or younger will
  be ignored. Default is 1 year.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list of named character vectors where each name is an animal Id
+    
+
+<p>A list of named character vectors where each name is an animal Id
 and the character vectors are made up of animals sharing a kinship value
 greater than our equal to the <code>threshold</code> value.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="va">examplePedigree</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="examplePedigree.html">examplePedigree</a></span></span>
-<span class="r-in"><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">examplePedigree</span>, minParentAge <span class="op">=</span> <span class="fl">2</span>, reportChanges <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span class="r-in">                  reportErrors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">kmat</span> <span class="op">&lt;-</span> <span class="fu"><a href="kinship.html">kinship</a></span><span class="op">(</span><span class="va">ped</span><span class="op">$</span><span class="va">id</span>, <span class="va">ped</span><span class="op">$</span><span class="va">sire</span>, <span class="va">ped</span><span class="op">$</span><span class="va">dam</span>, <span class="va">ped</span><span class="op">$</span><span class="va">gen</span>, sparse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">currentGroups</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">currentGroups</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">examplePedigree</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span>
-<span class="r-in"><span class="va">candidates</span> <span class="op">&lt;-</span> <span class="va">examplePedigree</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="va">examplePedigree</span><span class="op">$</span><span class="va">status</span> <span class="op">==</span> <span class="st">"ALIVE"</span><span class="op">]</span></span>
-<span class="r-in"><span class="va">threshold</span> <span class="op">&lt;-</span> <span class="fl">0.015625</span></span>
-<span class="r-in"><span class="va">kin</span> <span class="op">&lt;-</span> <span class="fu">getAnimalsWithHighKinship</span><span class="op">(</span><span class="va">kmat</span>, <span class="va">ped</span>, <span class="va">threshold</span>, <span class="va">currentGroups</span>,</span>
-<span class="r-in">                                 ignore <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"F"</span>, <span class="st">"F"</span><span class="op">)</span><span class="op">)</span>, minAge <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">kin</span><span class="op">)</span> <span class="co"># should be 2412</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="va">examplePedigree</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="examplePedigree.html">examplePedigree</a></span></span></span>
+<span class="r-in"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">examplePedigree</span>, minParentAge <span class="op">=</span> <span class="fl">2</span>, reportChanges <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>                  reportErrors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">kmat</span> <span class="op">&lt;-</span> <span class="fu"><a href="kinship.html">kinship</a></span><span class="op">(</span><span class="va">ped</span><span class="op">$</span><span class="va">id</span>, <span class="va">ped</span><span class="op">$</span><span class="va">sire</span>, <span class="va">ped</span><span class="op">$</span><span class="va">dam</span>, <span class="va">ped</span><span class="op">$</span><span class="va">gen</span>, sparse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">currentGroups</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">currentGroups</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">examplePedigree</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">candidates</span> <span class="op">&lt;-</span> <span class="va">examplePedigree</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="va">examplePedigree</span><span class="op">$</span><span class="va">status</span> <span class="op">==</span> <span class="st">"ALIVE"</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">threshold</span> <span class="op">&lt;-</span> <span class="fl">0.015625</span></span></span>
+<span class="r-in"><span><span class="va">kin</span> <span class="op">&lt;-</span> <span class="fu">getAnimalsWithHighKinship</span><span class="op">(</span><span class="va">kmat</span>, <span class="va">ped</span>, <span class="va">threshold</span>, <span class="va">currentGroups</span>,</span></span>
+<span class="r-in"><span>                                 ignore <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"F"</span>, <span class="st">"F"</span><span class="op">)</span><span class="op">)</span>, minAge <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">kin</span><span class="op">)</span> <span class="co"># should be 2412</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2412</span>
-<span class="r-in"><span class="va">kin</span><span class="op">[[</span><span class="st">"1SPLS8"</span><span class="op">]</span><span class="op">]</span> <span class="co"># should have 14 IDs</span></span>
+<span class="r-in"><span><span class="va">kin</span><span class="op">[[</span><span class="st">"1SPLS8"</span><span class="op">]</span><span class="op">]</span> <span class="co"># should have 14 IDs</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "U9APLW" "UXP8J1" "T8A10R" "09LFE4" "3QHAFI" "LNVD11" "9MVUD5" "CHSCFG"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "FCLNFN" "RY1AZM" "SJCRF2" "653J82" "9BFQSJ" "9Z4SSW"</span>
-<span class="r-in"><span class="co"># }</span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -137,15 +150,11 @@ greater than our equal to the <code>threshold</code> value.</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

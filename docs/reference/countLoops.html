@@ -19,7 +19,7 @@ From PedigreeSampling.R
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -76,7 +76,7 @@ From PedigreeSampling.R
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">countLoops</span><span class="op">(</span><span class="va">loops</span>, <span class="va">ptree</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">countLoops</span><span class="op">(</span><span class="va">loops</span>, <span class="va">ptree</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -86,13 +86,18 @@ From PedigreeSampling.R
 named with an <code>id</code> from <code>ptree</code>. The value of the list element
 is set to <code>TRUE</code> if the <code>id</code> has a loop in the pedigree.
 Loops occur when an animal's sire and dam have a common ancestor.</p></dd>
+
+
 <dt>ptree</dt>
 <dd><p>a list of lists forming a pedigree tree as constructed by
 <code>createPedTree(ped)</code> where <code>ped</code> is a standard pedigree dataframe.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list indexed with each ID in the pedigree tree (<code>ptree</code>)
+    
+
+<p>A list indexed with each ID in the pedigree tree (<code>ptree</code>)
 containing the number of loops for each individual.</p>
     </div>
     <div id="details">
@@ -110,20 +115,20 @@ each individual to calculate the number of loops for each individual.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">exampleTree</span> <span class="op">&lt;-</span> <span class="fu"><a href="createPedTree.html">createPedTree</a></span><span class="op">(</span><span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="examplePedigree.html">examplePedigree</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">exampleLoops</span> <span class="op">&lt;-</span> <span class="fu"><a href="findLoops.html">findLoops</a></span><span class="op">(</span><span class="va">exampleTree</span><span class="op">)</span></span>
-<span class="r-in"><span class="co">## You can count how many animals are in loops with the following code.</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">exampleLoops</span><span class="op">[</span><span class="va">exampleLoops</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">]</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">exampleTree</span> <span class="op">&lt;-</span> <span class="fu"><a href="createPedTree.html">createPedTree</a></span><span class="op">(</span><span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="examplePedigree.html">examplePedigree</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">exampleLoops</span> <span class="op">&lt;-</span> <span class="fu"><a href="findLoops.html">findLoops</a></span><span class="op">(</span><span class="va">exampleTree</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">## You can count how many animals are in loops with the following code.</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">exampleLoops</span><span class="op">[</span><span class="va">exampleLoops</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 145</span>
-<span class="r-in"><span class="co">## You can count how many loops you have with the following code.</span></span>
-<span class="r-in"><span class="va">nLoops</span> <span class="op">&lt;-</span> <span class="fu">countLoops</span><span class="op">(</span><span class="va">exampleLoops</span>, <span class="va">exampleTree</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">nLoops</span><span class="op">[</span><span class="va">nLoops</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="co">## You can count how many loops you have with the following code.</span></span></span>
+<span class="r-in"><span><span class="va">nLoops</span> <span class="op">&lt;-</span> <span class="fu">countLoops</span><span class="op">(</span><span class="va">exampleLoops</span>, <span class="va">exampleTree</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">nLoops</span><span class="op">[</span><span class="va">nLoops</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 258</span>
-<span class="r-in"><span class="co">## You can list the first 10 sets of ids, sires and dams in loops with</span></span>
-<span class="r-in"><span class="co">## the following line of code:</span></span>
-<span class="r-in"><span class="va">examplePedigree</span><span class="op">[</span><span class="va">exampleLoops</span> <span class="op">==</span> <span class="cn">TRUE</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"sire"</span>, <span class="st">"dam"</span><span class="op">)</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="op">]</span></span>
+<span class="r-in"><span><span class="co">## You can list the first 10 sets of ids, sires and dams in loops with</span></span></span>
+<span class="r-in"><span><span class="co">## the following line of code:</span></span></span>
+<span class="r-in"><span><span class="va">examplePedigree</span><span class="op">[</span><span class="va">exampleLoops</span> <span class="op">==</span> <span class="cn">TRUE</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"sire"</span>, <span class="st">"dam"</span><span class="op">)</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          id   sire    dam</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2367 MRC4BF 7ZEGLB L1VRM7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2369 SZ05LQ 7ZEGLB 4H5RS1</span>
@@ -135,8 +140,8 @@ each individual to calculate the number of loops for each individual.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2775 X4UZJS B2CKHA L1VRM7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2956 L9SI7Z TYNVJP C1K9WN</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2969 3SKITJ 3PU50K G5SZDC</span>
-<span class="r-in"><span class="co"># }</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -147,15 +152,11 @@ each individual to calculate the number of loops for each individual.</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

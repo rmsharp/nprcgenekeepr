@@ -19,7 +19,7 @@ formed from malformed character representations such as a date in
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -76,20 +76,25 @@ formed from malformed character representations such as a date in
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">removeEarlyDates</span><span class="op">(</span><span class="va">dates</span>, <span class="va">firstYear</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">removeEarlyDates</span><span class="op">(</span><span class="va">dates</span>, <span class="va">firstYear</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>dates</dt>
 <dd><p>vector of dates</p></dd>
+
+
 <dt>firstYear</dt>
 <dd><p>integer value of first (earliest) year in the allowed
 date range.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A vector of dates after the year indicated by the numeric value of
+    
+
+<p>A vector of dates after the year indicated by the numeric value of
 <code>firstYear</code>.</p>
     </div>
     <div id="details">
@@ -99,17 +104,17 @@ date range.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="va">dates</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12361</span>, <span class="fl">14400</span>, <span class="fl">15413</span>, <span class="cn">NA</span>, <span class="fl">11189</span>, <span class="cn">NA</span>, <span class="fl">13224</span>, <span class="fl">10971</span>,</span>
-<span class="r-in">                     <span class="op">-</span><span class="fl">432000</span>, <span class="fl">13262</span><span class="op">)</span>, class <span class="op">=</span> <span class="st">"Date"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">cleanedDates</span> <span class="op">&lt;-</span> <span class="fu">removeEarlyDates</span><span class="op">(</span><span class="va">dates</span>, firstYear <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">dates</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="va">dates</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12361</span>, <span class="fl">14400</span>, <span class="fl">15413</span>, <span class="cn">NA</span>, <span class="fl">11189</span>, <span class="cn">NA</span>, <span class="fl">13224</span>, <span class="fl">10971</span>,</span></span>
+<span class="r-in"><span>                     <span class="op">-</span><span class="fl">432000</span>, <span class="fl">13262</span><span class="op">)</span>, class <span class="op">=</span> <span class="st">"Date"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">cleanedDates</span> <span class="op">&lt;-</span> <span class="fu">removeEarlyDates</span><span class="op">(</span><span class="va">dates</span>, firstYear <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dates</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "2003-11-05" "2009-06-05" "2012-03-14" NA           "2000-08-20"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [6] NA           "2006-03-17" "2000-01-15" "0787-03-24" "2006-04-24"</span>
-<span class="r-in"><span class="va">cleanedDates</span></span>
+<span class="r-in"><span><span class="va">cleanedDates</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "2003-11-05" "2009-06-05" "2012-03-14" NA           "2000-08-20"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [6] NA           "2006-03-17" "2000-01-15" NA           "2006-04-24"</span>
-<span class="r-in"><span class="co"># }</span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -120,15 +125,11 @@ date range.</p></dd>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

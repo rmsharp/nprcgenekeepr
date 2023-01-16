@@ -123,7 +123,7 @@
 "lacy1989PedAlleles"
 #' ped1Alleles is a dataframe created by the geneDrop function
 #'
-## Copyright(c) 2017-2022 R. Mark Sharp
+## Copyright(c) 2017-2023 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' @format A dataframe with 554 rows and 6 variables
 #' \describe{

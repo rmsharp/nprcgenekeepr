@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">createPedTree</span><span class="op">(</span><span class="va">ped</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">createPedTree</span><span class="op">(</span><span class="va">ped</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -82,10 +82,13 @@
 containing columns indicating the birth and death dates of an individual.
 The table may also contain dates of sale (departure). Optional columns
 are <code>birth</code>, <code>death</code>, <code>departure</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list of named lists forming a pedigree tree (PedTree or ptree).
+    
+
+<p>A list of named lists forming a pedigree tree (PedTree or ptree).
 Each sublist represents an ID in the pedigree and contains the sire ID and
 the dam ID as named elements.</p>
     </div>
@@ -106,12 +109,12 @@ SIMWALK2 or similar programs.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">exampleTree</span> <span class="op">&lt;-</span> <span class="fu">createPedTree</span><span class="op">(</span><span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="examplePedigree.html">examplePedigree</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">exampleLoops</span> <span class="op">&lt;-</span> <span class="fu"><a href="findLoops.html">findLoops</a></span><span class="op">(</span><span class="va">exampleTree</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># }</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">exampleTree</span> <span class="op">&lt;-</span> <span class="fu">createPedTree</span><span class="op">(</span><span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="examplePedigree.html">examplePedigree</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">exampleLoops</span> <span class="op">&lt;-</span> <span class="fu"><a href="findLoops.html">findLoops</a></span><span class="op">(</span><span class="va">exampleTree</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -122,15 +125,11 @@ SIMWALK2 or similar programs.</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

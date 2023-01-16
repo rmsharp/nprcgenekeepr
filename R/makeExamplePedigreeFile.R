@@ -1,6 +1,6 @@
 #' Write copy of nprcgenekeepr::examplePedigree into a file
 #'
-## Copyright(c) 2017-2022 R. Mark Sharp
+## Copyright(c) 2017-2023 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Uses \code{examplePedigree} data structure to create an example data file
 #'

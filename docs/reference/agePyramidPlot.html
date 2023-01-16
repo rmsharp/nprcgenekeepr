@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -72,17 +72,17 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">agePyramidPlot</span><span class="op">(</span>
-  <span class="va">males</span>,
-  <span class="va">females</span>,
-  <span class="va">ageLabels</span>,
-  <span class="va">mcol</span>,
-  <span class="va">fcol</span>,
-  <span class="va">laxlab</span>,
-  <span class="va">raxlab</span>,
-  <span class="va">gap</span>,
-  <span class="va">currentDate</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">agePyramidPlot</span><span class="op">(</span></span>
+<span>  <span class="va">males</span>,</span>
+<span>  <span class="va">females</span>,</span>
+<span>  <span class="va">ageLabels</span>,</span>
+<span>  <span class="va">mcol</span>,</span>
+<span>  <span class="va">fcol</span>,</span>
+<span>  <span class="va">laxlab</span>,</span>
+<span>  <span class="va">raxlab</span>,</span>
+<span>  <span class="va">gap</span>,</span>
+<span>  <span class="va">currentDate</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -90,32 +90,51 @@
     <dl><dt>males</dt>
 <dd><p>integer vector with the number of males in age groups
 corresponding to the position in the vector</p></dd>
+
+
 <dt>females</dt>
 <dd><p>integer vector with the number of females in age groups
 corresponding to the position in the vector</p></dd>
+
+
 <dt>ageLabels</dt>
 <dd><p>character vector of labels for the categories represented
 by each pair of bars. There should be a label for each lx or rx value,
 even if empty. If labels is a matrix or data frame, the first two columns
 will be used for the left and right category labels respectively.</p></dd>
+
+
 <dt>mcol</dt>
 <dd><p>color for the male (left) side of the plot</p></dd>
+
+
 <dt>fcol</dt>
 <dd><p>color for the female (right) side of the plot</p></dd>
+
+
 <dt>laxlab</dt>
 <dd><p>label for the male (left) side of the plot</p></dd>
+
+
 <dt>raxlab</dt>
 <dd><p>label for the female (right) side of the plot</p></dd>
+
+
 <dt>gap</dt>
 <dd><p>numeric value for one half of the space between the two sets
 of bars for the <code>ageLabels</code> in user units</p></dd>
+
+
 <dt>currentDate</dt>
 <dd><p>POSIXct date object indicating the date corresponding to
 the date the pedigree census occurred.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>The return value of par("mar") when the function was called.</p>
+    
+
+<p>The return value of par("mar") when the function was called.</p>
     </div>
 
   </div>
@@ -126,15 +145,11 @@ the date the pedigree census occurred.</p></dd>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

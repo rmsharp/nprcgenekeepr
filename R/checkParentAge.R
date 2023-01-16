@@ -1,6 +1,6 @@
 #' Check parent ages to be at least \code{minParentAge}
 #'
-## Copyright(c) 2017-2022 R. Mark Sharp
+## Copyright(c) 2017-2023 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Ensure parents are sufficiently older than offspring
 #'

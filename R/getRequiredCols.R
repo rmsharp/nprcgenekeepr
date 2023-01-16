@@ -1,6 +1,6 @@
 #' Get required column names for a studbook.
 #'
-## Copyright(c) 2017-2022 R. Mark Sharp
+## Copyright(c) 2017-2023 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Pedigree curation function
 #' @return A character vector of the required columns that can be in a studbook.

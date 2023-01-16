@@ -1,6 +1,6 @@
 #' Get production status of group
 #'
-## Copyright(c) 2017-2022 R. Mark Sharp
+## Copyright(c) 2017-2023 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' @return \code{production} -- Ratio of the number of births that live >30

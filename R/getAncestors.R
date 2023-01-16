@@ -1,6 +1,6 @@
 #' Recursively create a character vector of ancestors for an individual ID.
 #'
-## Copyright(c) 2017-2022 R. Mark Sharp
+## Copyright(c) 2017-2023 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Part of Pedigree Sampling
 #' From PedigreeSampling.R

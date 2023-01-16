@@ -23,7 +23,7 @@ females.'><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/ma
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -83,66 +83,75 @@ females.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">calculateSexRatio</span><span class="op">(</span><span class="va">ids</span>, <span class="va">ped</span>, additionalMales <span class="op">=</span> <span class="fl">0</span>, additionalFemales <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calculateSexRatio</span><span class="op">(</span><span class="va">ids</span>, <span class="va">ped</span>, additionalMales <span class="op">=</span> <span class="fl">0</span>, additionalFemales <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ids</dt>
 <dd><p>character vector of animal Ids</p></dd>
+
+
 <dt>ped</dt>
 <dd><p>datatable that is the `Pedigree`. It contains pedigree
 information including the IDs listed in <code>candidates</code>.</p></dd>
+
+
 <dt>additionalMales</dt>
 <dd><p>Integer value of males to add to those within the
 group when calculating the ratio. Ignored if calculated ratio is 0 or Inf.
 Default is 0.</p></dd>
+
+
 <dt>additionalFemales</dt>
 <dd><p>Integer value of females to add to those within the
 group when calculating the ratio. Ignored if calculated ratio is 0 or Inf.
 Default is 0.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Numeric value of sex ratio of the animals provided.</p>
+    
+
+<p>Numeric value of sex ratio of the animals provided.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"qcBreeders"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"pedWithGenotype"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">available</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"JGPN6K"</span>, <span class="st">"8KM1MP"</span>, <span class="st">"I9TQ0T"</span>, <span class="st">"Q0RGP7"</span>, <span class="st">"VFS0XB"</span>, <span class="st">"CQC133"</span>,</span>
-<span class="r-in">               <span class="st">"2KULR3"</span>, <span class="st">"HOYW0S"</span>, <span class="st">"FHV13N"</span>, <span class="st">"OUM6QF"</span>, <span class="st">"6Z7MD9"</span>, <span class="st">"CFPEEU"</span>,</span>
-<span class="r-in">               <span class="st">"HLI95R"</span>, <span class="st">"RI0O7F"</span>, <span class="st">"7M51X5"</span>, <span class="st">"DR5GXB"</span>, <span class="st">"170ZTZ"</span>, <span class="st">"C1ICXL"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">nonMales</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"JGPN6K"</span>, <span class="st">"8KM1MP"</span>, <span class="st">"I9TQ0T"</span>, <span class="st">"Q0RGP7"</span>, <span class="st">"CQC133"</span>,</span>
-<span class="r-in">              <span class="st">"2KULR3"</span>, <span class="st">"HOYW0S"</span>, <span class="st">"FHV13N"</span>, <span class="st">"OUM6QF"</span>, <span class="st">"6Z7MD9"</span>, <span class="st">"CFPEEU"</span>,</span>
-<span class="r-in">              <span class="st">"HLI95R"</span>, <span class="st">"RI0O7F"</span>, <span class="st">"7M51X5"</span>, <span class="st">"DR5GXB"</span>, <span class="st">"170ZTZ"</span>, <span class="st">"C1ICXL"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">male</span> <span class="op">&lt;-</span> <span class="st">"VFS0XB"</span></span>
-<span class="r-in"><span class="fu">calculateSexRatio</span><span class="op">(</span>ids <span class="op">=</span> <span class="va">male</span>, ped <span class="op">=</span> <span class="va">pedWithGenotype</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"qcBreeders"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"pedWithGenotype"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">available</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"JGPN6K"</span>, <span class="st">"8KM1MP"</span>, <span class="st">"I9TQ0T"</span>, <span class="st">"Q0RGP7"</span>, <span class="st">"VFS0XB"</span>, <span class="st">"CQC133"</span>,</span></span>
+<span class="r-in"><span>               <span class="st">"2KULR3"</span>, <span class="st">"HOYW0S"</span>, <span class="st">"FHV13N"</span>, <span class="st">"OUM6QF"</span>, <span class="st">"6Z7MD9"</span>, <span class="st">"CFPEEU"</span>,</span></span>
+<span class="r-in"><span>               <span class="st">"HLI95R"</span>, <span class="st">"RI0O7F"</span>, <span class="st">"7M51X5"</span>, <span class="st">"DR5GXB"</span>, <span class="st">"170ZTZ"</span>, <span class="st">"C1ICXL"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">nonMales</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"JGPN6K"</span>, <span class="st">"8KM1MP"</span>, <span class="st">"I9TQ0T"</span>, <span class="st">"Q0RGP7"</span>, <span class="st">"CQC133"</span>,</span></span>
+<span class="r-in"><span>              <span class="st">"2KULR3"</span>, <span class="st">"HOYW0S"</span>, <span class="st">"FHV13N"</span>, <span class="st">"OUM6QF"</span>, <span class="st">"6Z7MD9"</span>, <span class="st">"CFPEEU"</span>,</span></span>
+<span class="r-in"><span>              <span class="st">"HLI95R"</span>, <span class="st">"RI0O7F"</span>, <span class="st">"7M51X5"</span>, <span class="st">"DR5GXB"</span>, <span class="st">"170ZTZ"</span>, <span class="st">"C1ICXL"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">male</span> <span class="op">&lt;-</span> <span class="st">"VFS0XB"</span></span></span>
+<span class="r-in"><span><span class="fu">calculateSexRatio</span><span class="op">(</span>ids <span class="op">=</span> <span class="va">male</span>, ped <span class="op">=</span> <span class="va">pedWithGenotype</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
-<span class="r-in"><span class="fu">calculateSexRatio</span><span class="op">(</span>ids <span class="op">=</span> <span class="va">nonMales</span>, ped <span class="op">=</span> <span class="va">pedWithGenotype</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">calculateSexRatio</span><span class="op">(</span>ids <span class="op">=</span> <span class="va">nonMales</span>, ped <span class="op">=</span> <span class="va">pedWithGenotype</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] Inf</span>
-<span class="r-in"><span class="fu">calculateSexRatio</span><span class="op">(</span>ids <span class="op">=</span> <span class="va">available</span>, ped <span class="op">=</span> <span class="va">pedWithGenotype</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">calculateSexRatio</span><span class="op">(</span>ids <span class="op">=</span> <span class="va">available</span>, ped <span class="op">=</span> <span class="va">pedWithGenotype</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 17</span>
-<span class="r-in"><span class="fu">calculateSexRatio</span><span class="op">(</span>ids <span class="op">=</span> <span class="va">available</span>, ped <span class="op">=</span> <span class="va">pedWithGenotype</span>,</span>
-<span class="r-in">                        additionalMales <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">calculateSexRatio</span><span class="op">(</span>ids <span class="op">=</span> <span class="va">available</span>, ped <span class="op">=</span> <span class="va">pedWithGenotype</span>,</span></span>
+<span class="r-in"><span>                        additionalMales <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 8.5</span>
-<span class="r-in"><span class="fu">calculateSexRatio</span><span class="op">(</span>ids <span class="op">=</span> <span class="va">available</span>, ped <span class="op">=</span> <span class="va">pedWithGenotype</span>,</span>
-<span class="r-in">                  additionalFemales <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">calculateSexRatio</span><span class="op">(</span>ids <span class="op">=</span> <span class="va">available</span>, ped <span class="op">=</span> <span class="va">pedWithGenotype</span>,</span></span>
+<span class="r-in"><span>                  additionalFemales <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 18</span>
-<span class="r-in"><span class="fu">calculateSexRatio</span><span class="op">(</span>ids <span class="op">=</span> <span class="va">available</span>, ped <span class="op">=</span> <span class="va">pedWithGenotype</span>,</span>
-<span class="r-in">                  additionalMales <span class="op">=</span> <span class="fl">1</span>, additionalFemales <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">calculateSexRatio</span><span class="op">(</span>ids <span class="op">=</span> <span class="va">available</span>, ped <span class="op">=</span> <span class="va">pedWithGenotype</span>,</span></span>
+<span class="r-in"><span>                  additionalMales <span class="op">=</span> <span class="fl">1</span>, additionalFemales <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 9</span>
-<span class="r-in"><span class="fu">calculateSexRatio</span><span class="op">(</span>ids <span class="op">=</span> <span class="va">nonMales</span>, ped <span class="op">=</span> <span class="va">pedWithGenotype</span>,</span>
-<span class="r-in">                  additionalMales <span class="op">=</span> <span class="fl">1</span>, additionalFemales <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">calculateSexRatio</span><span class="op">(</span>ids <span class="op">=</span> <span class="va">nonMales</span>, ped <span class="op">=</span> <span class="va">pedWithGenotype</span>,</span></span>
+<span class="r-in"><span>                  additionalMales <span class="op">=</span> <span class="fl">1</span>, additionalFemales <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 17</span>
-<span class="r-in"><span class="fu">calculateSexRatio</span><span class="op">(</span>ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>, ped <span class="op">=</span> <span class="va">pedWithGenotype</span>,</span>
-<span class="r-in">                additionalMales <span class="op">=</span> <span class="fl">1</span>, additionalFemales <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">calculateSexRatio</span><span class="op">(</span>ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>, ped <span class="op">=</span> <span class="va">pedWithGenotype</span>,</span></span>
+<span class="r-in"><span>                additionalMales <span class="op">=</span> <span class="fl">1</span>, additionalFemales <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
-<span class="r-in"><span class="co"># }</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -153,15 +162,11 @@ Default is 0.</p></dd>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

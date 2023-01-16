@@ -27,3 +27,4 @@ vignettes/*.tex
 vignettes/*.html
 vignettes/*.pdf
 *counts\.xlsx
+docs

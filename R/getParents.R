@@ -1,6 +1,6 @@
 #' Get parents to corresponding animal IDs provided
 #'
-## Copyright(c) 2017-2022 R. Mark Sharp
+## Copyright(c) 2017-2023 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' @return A character vector with the IDs of the parents of the provided ID

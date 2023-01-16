@@ -19,7 +19,7 @@ a value designation for each animal of "high value" or "low value"'><!-- mathjax
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -76,7 +76,7 @@ a value designation for each animal of "high value" or "low value"</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">rankSubjects</span><span class="op">(</span><span class="va">rpt</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">rankSubjects</span><span class="op">(</span><span class="va">rpt</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -86,32 +86,35 @@ a value designation for each animal of "high value" or "low value"</p>
 value data for the population. Dataframes separate out those animals that
 are imports, those that have high genome uniqueness (gu &gt; 10<!-- %), those that -->
 have low mean kinship (mk &lt; 0.25), and the remainder.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list of dataframes with value and ranking information added.</p>
+    
+
+<p>A list of dataframes with value and ranking information added.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">finalRpt</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="finalRpt.html">finalRpt</a></span></span>
-<span class="r-in"><span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu">rankSubjects</span><span class="op">(</span><span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="finalRpt.html">finalRpt</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">rpt</span><span class="op">[[</span><span class="st">"highGu"</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span>, <span class="st">"value"</span><span class="op">]</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">finalRpt</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="finalRpt.html">finalRpt</a></span></span></span>
+<span class="r-in"><span><span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu">rankSubjects</span><span class="op">(</span><span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="finalRpt.html">finalRpt</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">rpt</span><span class="op">[[</span><span class="st">"highGu"</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span>, <span class="st">"value"</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "High Value"</span>
-<span class="r-in"><span class="va">rpt</span><span class="op">[[</span><span class="st">"highGu"</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span>, <span class="st">"rank"</span><span class="op">]</span></span>
+<span class="r-in"><span><span class="va">rpt</span><span class="op">[[</span><span class="st">"highGu"</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span>, <span class="st">"rank"</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
-<span class="r-in"><span class="va">rpt</span><span class="op">[[</span><span class="st">"lowMk"</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span>, <span class="st">"value"</span><span class="op">]</span></span>
+<span class="r-in"><span><span class="va">rpt</span><span class="op">[[</span><span class="st">"lowMk"</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span>, <span class="st">"value"</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "High Value"</span>
-<span class="r-in"><span class="va">rpt</span><span class="op">[[</span><span class="st">"lowMk"</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span>, <span class="st">"rank"</span><span class="op">]</span></span>
+<span class="r-in"><span><span class="va">rpt</span><span class="op">[[</span><span class="st">"lowMk"</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span>, <span class="st">"rank"</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 122</span>
-<span class="r-in"><span class="va">rpt</span><span class="op">[[</span><span class="st">"lowVal"</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span>, <span class="st">"value"</span><span class="op">]</span></span>
+<span class="r-in"><span><span class="va">rpt</span><span class="op">[[</span><span class="st">"lowVal"</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span>, <span class="st">"value"</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Low Value"</span>
-<span class="r-in"><span class="va">rpt</span><span class="op">[[</span><span class="st">"lowVal"</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span>, <span class="st">"rank"</span><span class="op">]</span></span>
+<span class="r-in"><span><span class="va">rpt</span><span class="op">[[</span><span class="st">"lowVal"</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span>, <span class="st">"rank"</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 190</span>
-<span class="r-in"><span class="co"># }</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -122,15 +125,11 @@ have low mean kinship (mk &lt; 0.25), and the remainder.</p></dd>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

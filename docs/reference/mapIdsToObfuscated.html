@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -72,33 +72,38 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">mapIdsToObfuscated</span><span class="op">(</span><span class="va">ids</span>, <span class="va">map</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mapIdsToObfuscated</span><span class="op">(</span><span class="va">ids</span>, <span class="va">map</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ids</dt>
 <dd><p>character vector with original IDs</p></dd>
+
+
 <dt>map</dt>
 <dd><p>named character vector where the values are the obfuscated IDs
 and the vector of names (<code>names(map)</code>) is the vector of original names.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A dataframe or vector with original IDs replaced by their obfuscated
+    
+
+<p>A dataframe or vector with original IDs replaced by their obfuscated
 counterparts.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="pedSix.html">pedSix</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">obfuscated</span> <span class="op">&lt;-</span> <span class="fu"><a href="obfuscatePed.html">obfuscatePed</a></span><span class="op">(</span><span class="va">ped</span>, map <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">someIds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1"</span>, <span class="st">"s2"</span>, <span class="st">"d1"</span>, <span class="st">"d1"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">mapIdsToObfuscated</span><span class="op">(</span><span class="va">someIds</span>, <span class="va">obfuscated</span><span class="op">$</span><span class="va">map</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="pedSix.html">pedSix</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">obfuscated</span> <span class="op">&lt;-</span> <span class="fu"><a href="obfuscatePed.html">obfuscatePed</a></span><span class="op">(</span><span class="va">ped</span>, map <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">someIds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1"</span>, <span class="st">"s2"</span>, <span class="st">"d1"</span>, <span class="st">"d1"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">mapIdsToObfuscated</span><span class="op">(</span><span class="va">someIds</span>, <span class="va">obfuscated</span><span class="op">$</span><span class="va">map</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "GK0712" "E80VA0" "8899HA" "8899HA"</span>
-<span class="r-in"><span class="co"># }</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -109,15 +114,11 @@ counterparts.</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

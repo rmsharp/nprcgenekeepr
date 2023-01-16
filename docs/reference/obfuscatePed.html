@@ -21,7 +21,7 @@ birthdate can be shifted (maxDelta)."><!-- mathjax --><script src="https://cdnjs
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -79,64 +79,75 @@ birthdate can be shifted (<code>maxDelta</code>).</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">obfuscatePed</span><span class="op">(</span>
-  <span class="va">ped</span>,
-  size <span class="op">=</span> <span class="fl">6</span>,
-  maxDelta <span class="op">=</span> <span class="fl">30</span>,
-  existingIds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,
-  map <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">obfuscatePed</span><span class="op">(</span></span>
+<span>  <span class="va">ped</span>,</span>
+<span>  size <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>  maxDelta <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>  existingIds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  map <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ped</dt>
 <dd><p>pedigree object</p></dd>
+
+
 <dt>size</dt>
 <dd><p>integer value indicating number of characters in alias IDs</p></dd>
+
+
 <dt>maxDelta</dt>
 <dd><p>integer value indicating maximum number of days that
 the birthdate can be shifted</p></dd>
+
+
 <dt>existingIds</dt>
 <dd><p>character vector of existing aliases to avoid duplication.</p></dd>
+
+
 <dt>map</dt>
 <dd><p>logical if <code>TRUE</code> a list object is returned with the new
 pedigree and a named character vector with the names being the original IDs
 and the values being the new alias values. Defaults to <code>FALSE</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An obfuscated pedigree</p>
+    
+
+<p>An obfuscated pedigree</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="pedGood.html">pedGood</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">obfuscatedPed</span> <span class="op">&lt;-</span> <span class="fu">obfuscatePed</span><span class="op">(</span><span class="va">ped</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ped</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="pedGood.html">pedGood</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">obfuscatedPed</span> <span class="op">&lt;-</span> <span class="fu">obfuscatePed</span><span class="op">(</span><span class="va">ped</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ped</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id sire  dam sex gen      birth exit  age recordStatus</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 d1 &lt;NA&gt; &lt;NA&gt;   F   0 2003-04-13 &lt;NA&gt; 19.0     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 d2 &lt;NA&gt; &lt;NA&gt;   F   0 2002-06-22 &lt;NA&gt; 19.8     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 s1 &lt;NA&gt; &lt;NA&gt;   M   0 2000-07-18 &lt;NA&gt; 21.8     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 s2 &lt;NA&gt; &lt;NA&gt;   M   0 2005-06-19 &lt;NA&gt; 16.8     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 o1   s1   d1   F   1 2015-02-04 &lt;NA&gt;  7.2     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 o2   s1   d2   F   1 2009-03-17 &lt;NA&gt; 13.1     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7 o3   s2   d2   F   1 2012-04-11 &lt;NA&gt; 10.0     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8 o4   s2   d2   M   1 2008-04-13 &lt;NA&gt; 14.0     original</span>
-<span class="r-in"><span class="va">obfuscatedPed</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 d1 &lt;NA&gt; &lt;NA&gt;   F   0 2003-04-13 &lt;NA&gt; 19.8     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 d2 &lt;NA&gt; &lt;NA&gt;   F   0 2002-06-22 &lt;NA&gt; 20.6     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 s1 &lt;NA&gt; &lt;NA&gt;   M   0 2000-07-18 &lt;NA&gt; 22.5     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 s2 &lt;NA&gt; &lt;NA&gt;   M   0 2005-06-19 &lt;NA&gt; 17.6     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 o1   s1   d1   F   1 2015-02-04 &lt;NA&gt;  7.9     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 o2   s1   d2   F   1 2009-03-17 &lt;NA&gt; 13.8     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7 o3   s2   d2   F   1 2012-04-11 &lt;NA&gt; 10.8     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8 o4   s2   d2   M   1 2008-04-13 &lt;NA&gt; 14.8     original</span>
+<span class="r-in"><span><span class="va">obfuscatedPed</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       id   sire    dam sex gen      birth exit  age recordStatus</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 76ZYBB   &lt;NA&gt;   &lt;NA&gt;   F   0 2003-03-20 &lt;NA&gt; 19.1     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 VJ53TR   &lt;NA&gt;   &lt;NA&gt;   F   0 2002-06-23 &lt;NA&gt; 19.8     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 E259K9   &lt;NA&gt;   &lt;NA&gt;   M   0 2000-08-06 &lt;NA&gt; 21.7     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 3D59BL   &lt;NA&gt;   &lt;NA&gt;   M   0 2005-06-10 &lt;NA&gt; 16.9     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 0Z0IPT E259K9 76ZYBB   F   1 2015-02-03 &lt;NA&gt;  7.2     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 ADAUAK E259K9 VJ53TR   F   1 2009-02-27 &lt;NA&gt; 13.2     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7 98VPVU 3D59BL VJ53TR   F   1 2012-03-29 &lt;NA&gt; 10.1     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8 30IEZS 3D59BL VJ53TR   M   1 2008-05-03 &lt;NA&gt; 14.0     original</span>
-<span class="r-in"><span class="co"># }</span></span>
-<span class="r-in"></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 76ZYBB   &lt;NA&gt;   &lt;NA&gt;   F   0 2003-03-20 &lt;NA&gt; 19.8     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 VJ53TR   &lt;NA&gt;   &lt;NA&gt;   F   0 2002-06-23 &lt;NA&gt; 20.6     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 E259K9   &lt;NA&gt;   &lt;NA&gt;   M   0 2000-08-06 &lt;NA&gt; 22.4     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 3D59BL   &lt;NA&gt;   &lt;NA&gt;   M   0 2005-06-10 &lt;NA&gt; 17.6     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 0Z0IPT E259K9 76ZYBB   F   1 2015-02-03 &lt;NA&gt;  8.0     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 ADAUAK E259K9 VJ53TR   F   1 2009-02-27 &lt;NA&gt; 13.9     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7 98VPVU 3D59BL VJ53TR   F   1 2012-03-29 &lt;NA&gt; 10.8     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8 30IEZS 3D59BL VJ53TR   M   1 2008-05-03 &lt;NA&gt; 14.7     original</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -147,15 +158,11 @@ and the values being the new alias values. Defaults to <code>FALSE</code>.</p></
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">checkChangedColsLst</span><span class="op">(</span><span class="va">changedCols</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">checkChangedColsLst</span><span class="op">(</span><span class="va">changedCols</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -80,39 +80,43 @@
     <dl><dt>changedCols</dt>
 <dd><p>list with fields for each type of column change
 <code>qcStudbook</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Returns <code>NULL</code> if all fields are empty
+    
+
+<p>Returns <code>NULL</code> if all fields are empty
 else the entire list is returned.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lubridate.tidyverse.org" class="external-link">lubridate</a></span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lubridate.tidyverse.org" class="external-link">lubridate</a></span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: timechange</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘lubridate’</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:base’:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     date, intersect, setdiff, union</span>
-<span class="r-in"><span class="va">pedOne</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>ego_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1"</span>, <span class="st">"d1"</span>, <span class="st">"s2"</span>, <span class="st">"d2"</span>, <span class="st">"o1"</span>, <span class="st">"o2"</span>, <span class="st">"o3"</span>,</span>
-<span class="r-in">                                <span class="st">"o4"</span><span class="op">)</span>,</span>
-<span class="r-in">                    `si re` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="st">"s1"</span>, <span class="st">"s1"</span>, <span class="st">"s2"</span>, <span class="st">"s2"</span><span class="op">)</span>,</span>
-<span class="r-in">                    dam_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="st">"d1"</span>, <span class="st">"d2"</span>, <span class="st">"d2"</span>, <span class="st">"d2"</span><span class="op">)</span>,</span>
-<span class="r-in">                     sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"F"</span>, <span class="st">"M"</span>, <span class="st">"M"</span>, <span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"M"</span><span class="op">)</span>,</span>
-<span class="r-in">                     birth_date <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd.html" class="external-link">mdy</a></span><span class="op">(</span></span>
-<span class="r-in">                       <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span>, <span class="fl">8</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="st">"-"</span>,</span>
-<span class="r-in">                              <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">28</span>, <span class="fl">8</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="st">"-"</span>,</span>
-<span class="r-in">                              <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">15</span>, by <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>, <span class="fl">8</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">                                <span class="fl">2000</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">                     stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">errorLst</span> <span class="op">&lt;-</span> <span class="fu"><a href="qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">pedOne</span>, reportErrors <span class="op">=</span> <span class="cn">TRUE</span>, reportChanges <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">checkChangedColsLst</span><span class="op">(</span><span class="va">errorLst</span><span class="op">$</span><span class="va">changedCols</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">pedOne</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>ego_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1"</span>, <span class="st">"d1"</span>, <span class="st">"s2"</span>, <span class="st">"d2"</span>, <span class="st">"o1"</span>, <span class="st">"o2"</span>, <span class="st">"o3"</span>,</span></span>
+<span class="r-in"><span>                                <span class="st">"o4"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                    `si re` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="st">"s1"</span>, <span class="st">"s1"</span>, <span class="st">"s2"</span>, <span class="st">"s2"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                    dam_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="st">"d1"</span>, <span class="st">"d2"</span>, <span class="st">"d2"</span>, <span class="st">"d2"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                     sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"F"</span>, <span class="st">"M"</span>, <span class="st">"M"</span>, <span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"F"</span>, <span class="st">"M"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                     birth_date <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd.html" class="external-link">mdy</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>                       <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span>, <span class="fl">8</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="st">"-"</span>,</span></span>
+<span class="r-in"><span>                              <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">28</span>, <span class="fl">8</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="st">"-"</span>,</span></span>
+<span class="r-in"><span>                              <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">15</span>, by <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>, <span class="fl">8</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>                                <span class="fl">2000</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                     stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">errorLst</span> <span class="op">&lt;-</span> <span class="fu"><a href="qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">pedOne</span>, reportErrors <span class="op">=</span> <span class="cn">TRUE</span>, reportChanges <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">checkChangedColsLst</span><span class="op">(</span><span class="va">errorLst</span><span class="op">$</span><span class="va">changedCols</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"><span class="co"># }</span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -123,15 +127,11 @@ else the entire list is returned.</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

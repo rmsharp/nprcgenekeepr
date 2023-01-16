@@ -20,7 +20,7 @@ alleles to sire or dam"><!-- mathjax --><script src="https://cdnjs.cloudflare.co
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">nprcgenekeepr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.6</span>
       </span>
     </div>
 
@@ -77,7 +77,7 @@ alleles to sire or dam</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">getGenoDefinedParentGenotypes</span><span class="op">(</span><span class="va">alleles</span>, <span class="va">genotype</span>, <span class="va">id</span>, <span class="va">sire</span>, <span class="va">dam</span>, <span class="va">n</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getGenoDefinedParentGenotypes</span><span class="op">(</span><span class="va">alleles</span>, <span class="va">genotype</span>, <span class="va">id</span>, <span class="va">sire</span>, <span class="va">dam</span>, <span class="va">n</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -88,28 +88,46 @@ A data.frame providing the maternal and paternal alleles for an animal
 for each iteration. The first two columns provide the animal's ID and
 whether the allele came from the sire or dam. These are followed by
 <code>n</code> columns indicating the allele for that iteration.</p></dd>
+
+
 <dt>genotype</dt>
 <dd><p>A dataframe containing known genotypes. It has three
 columns:  <code>id</code>, <code>first</code>, and <code>second</code>. The second and third
 columns contain the integers indicating the observed genotypes.</p></dd>
+
+
 <dt>id</dt>
 <dd><p>A character vector of length one having the ID of interest</p></dd>
+
+
 <dt>sire</dt>
 <dd><p>character vector with unique identifier for an
 individual's father (<code>NA</code> if unknown).</p></dd>
+
+
 <dt>dam</dt>
 <dd><p>character vector with unique identifier for an
 individual's mother (<code>NA</code> if unknown).</p></dd>
+
+
 <dt>n</dt>
 <dd><p>integer indicating the number of iterations to simulate.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>data.frame <code>id, parent, V1 ... Vn</code>A data.frame providing the maternal and paternal alleles for an animal
+    
+
+<p>data.frame <code>id, parent, V1 ... Vn</code></p>
+
+
+<p>A data.frame providing the maternal and paternal alleles for an animal
 for each iteration. The first two columns provide the animal's ID and
 whether the allele came from the sire or dam. These are followed by
-<code>n</code> columns indicating the allele for that iteration.
-This is not correct for situations where one haplotype is not known.</p>
+<code>n</code> columns indicating the allele for that iteration.</p>
+
+
+<p>This is not correct for situations where one haplotype is not known.</p>
     </div>
 
   </div>
@@ -120,15 +138,11 @@ This is not correct for situations where one haplotype is not known.</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark
-Sharp, Matthew Schultz, Southwest National Primate Research Center NIH
-grant P51 RR13986, Oregon National Primate Research Center grant P51
-OD011092.</p>
+  <p></p><p>Developed by Michael Raboin, Terry Therneau, Amanda Vinson, R. Mark Sharp, Matthew Schultz, Southwest National Primate Research Center NIH grant P51 RR13986, Oregon National Primate Research Center grant P51 OD011092.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

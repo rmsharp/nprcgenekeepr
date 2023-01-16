@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# nprcgenekeepr -- Version `r nprcgenekeepr::getVersion()`
+# nprcgenekeepr -- Version `r packageVersion("nprcgenekeepr")`
 ```{r child = "vignettes/manual_components/_introduction.Rmd", ref = "introduction"}
 ```
 ```{r child = "vignettes/manual_components/_installation.Rmd", ref = "installation"}

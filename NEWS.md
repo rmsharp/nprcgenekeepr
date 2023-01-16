@@ -1,7 +1,12 @@
 NEWS
 ================
 R. Mark Sharp
-2022-12-13
+2023-01-15
+
+# nprcgenekeepr 1.0.6 (20230115)
+
+- Minor changes
+  - Update version in preparation for CRAN submission
 
 # nprcgenekeepr 1.0.5.9004 (20221213)
 
@@ -14,6 +19,7 @@ R. Mark Sharp
     getDatedFileName.R to prepare for newer code in development version
     of
     18. 
+  - Technical edits of R code based on lintr::lint_dir(“R”)
 
 # nprcgenekeepr 1.0.5.9003 (20220625)
 
