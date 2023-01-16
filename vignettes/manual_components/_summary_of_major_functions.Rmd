@@ -68,7 +68,7 @@ View(exampleNprcgenekeeprConfig)
 ```
 
 ### Display of an age by sex pyramid plot  
-Adapted from \url{https://www.thoughtco.com/age-sex-pyramids-and-population-pyramids-1435272} on 20190603. Written by Matt Rosenberg. Updated May 07, 2019
+Adapted from \url{https://www.thoughtco.com/age-sex-pyramids-and-population-pyramids-1435272} on 20190603. Written by Matt Rosenberg. Updated December 12, 2019
 
 The most important demographic characteristic of a population is its age-sex structure. 
 Age-sex pyramids (also known as population pyramids) graphically display this information to improve understanding and make comparison easy. The population pyramid sometimes has a distinctive pyramid-like shape when displaying a growing population. 

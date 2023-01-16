@@ -53,3 +53,4 @@ README\.*\.png$
 2022-04-25_02_22_37_counts.xlsx
 ^inst/extdata/script_used_to_look_for_gdata_dependency.R$
 ^inst/extdata/trulyUnknownParents.R$
+^\.github$

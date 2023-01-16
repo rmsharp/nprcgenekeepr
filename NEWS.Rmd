@@ -20,6 +20,7 @@ knitr::opts_chunk$set(echo = TRUE)
     -   Changed call as.character(date_object) to format(date_object) in
         getDatedFileName.R to prepare for newer code in development version of
         R.
+    -   Technical edits of R code based on lintr::lint_dir("R")
     
 # nprcgenekeepr 1.0.5.9003 (20220625)
 -   Minor changes
