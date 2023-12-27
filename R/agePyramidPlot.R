@@ -26,20 +26,30 @@
 #' @importFrom plotrix pyramid.plot
 agePyramidPlot <- function(males, females, ageLabels, mcol, fcol, laxlab,
                            raxlab, gap, currentDate) {
-  pyramid.plot(lx = males, rx = females, labels = ageLabels,
-               main = stri_c("Total on ",
-                             year(currentDate), "-",
-                             month(currentDate, label = TRUE), "-",
-                             day(currentDate),
-                             ": ", sum(c(males, females))),
-               top.labels = c(
-                 stri_c("Male = ", sum(males)),
-                 "Age",
-                 stri_c("Female = ", sum(females))),
-               lxcol = mcol, rxcol = fcol,
-               laxlab = laxlab,
-               raxlab = raxlab,
-               gap = gap,
-               unit = "Number of Animals",
-               show.values = TRUE, ndig = 0)
+  pyramid.plot(
+    lx = males,
+    rx = females,
+    labels = ageLabels,
+    main = stri_c(
+      "Total on ",
+      year(currentDate),
+      "-",
+      month(currentDate, label = TRUE),
+      "-",
+      day(currentDate),
+      ": ",
+      sum(c(males, females))
+    ),
+    top.labels = c(stri_c("Male = ", sum(males)),
+                   "Age",
+                   stri_c("Female = ", sum(females))),
+    lxcol = mcol,
+    rxcol = fcol,
+    laxlab = laxlab,
+    raxlab = raxlab,
+    gap = gap,
+    unit = "Number of Animals",
+    show.values = TRUE,
+    ndig = 0
+  )
 }
