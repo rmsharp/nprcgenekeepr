@@ -20,7 +20,7 @@
 makeSimPed <- function(ped, allSimParents, verbose = FALSE) {
   nIds <- length(allSimParents)
   if (!inherits(ped, "data.table"))
-    setDT(ped)
+    data.table::setDT(ped)
 
   for (i in seq_len(nIds)) {
     if (length(allSimParents[[i]]$sires) == 0) {

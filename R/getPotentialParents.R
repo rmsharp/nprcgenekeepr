@@ -23,7 +23,7 @@ getPotentialParents <- function(ped, minParentAge, maxGestationalPeriod) {
   birth <- exit <- fromCenter <- id <- sex <- NULL
 
   ## No point in looking at animals without a birth record.
-  setDT(ped)
+  data.table::setDT(ped)
   ped <- ped[!is.na(ped$birth), ]
   ## No point in looking for potential parents without a "fromCenter" column.
   if (!any(names(ped) == "fromCenter"))
