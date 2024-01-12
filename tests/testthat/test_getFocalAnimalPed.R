@@ -22,7 +22,7 @@ test_that(stri_c(
   "focal animals"
 ),
 {
-  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   expect_true(stri_detect_fixed(capture.output(tryCatch(
     getFocalAnimalPed(fileName = qcPed_xlsx)$failedDatabaseConnection,
     warning = function(wCond) {
@@ -43,7 +43,7 @@ test_that(stri_c(
   "focal animals"
 ),
 {
-  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   expect_true(stri_detect_fixed(capture.output(tryCatch(
     getFocalAnimalPed(fileName = qcPed_csv)$failedDatabaseConnection,
     warning = function(wCond) {
@@ -63,7 +63,7 @@ test_that(stri_c(
   "focal animals"
 ),
 {
-  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   expect_true(stri_detect_fixed(capture.output(tryCatch(
     getFocalAnimalPed(fileName = qcPed_txt)$failedDatabaseConnection,
     warning = function(wCond) {

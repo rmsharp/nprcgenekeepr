@@ -3,7 +3,7 @@ library(rmsutilityr)
 library(stringi)
 library(here)
 # Reading in large ped file and transforming columns and values - delete from script
-##pedOne_file <- stri_c("/Users/msharp/Documents/Projects/Active_Projects/",
+##pedOne_file <- stri_c("/Users/rmsharp/Documents/Projects/Active_Projects/",
 ##                      "nprcgenekeepr_project/Deidentified\ Pedegrees/",
 ##                      "2021-01-06_Deidentified_Pedigree.csv")
 #pedOne_file <- stri_c(here("inst", "extdata", "deidentified_jmac_ped_edited.csv"))

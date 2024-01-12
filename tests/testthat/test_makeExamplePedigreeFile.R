@@ -3,14 +3,14 @@
 context("makeExamplePedigreeFile")
 library(testthat)
 test_that("makeExamplePedigreeFile creates file when defaults are used", {
-  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   pedigreeFile <- suppressMessages(makeExamplePedigreeFile())
   expect_true(all(file.exists(pedigreeFile)))
 })
 test_that(
   paste0("makeExamplePedigreeFile creates correct file contents when ",
          "defaults are used"), {
-  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   pedigreeFile <- suppressMessages(makeExamplePedigreeFile())
   pedCsv <- read.table(pedigreeFile, sep = ",", header = TRUE,
                               stringsAsFactors = FALSE)
@@ -20,7 +20,7 @@ test_that(
 test_that(
   paste0("makeExamplePedigreeFile creates correct file when Excel file ",
          "is requested"), {
-  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   pedigreeFile <- suppressMessages(makeExamplePedigreeFile(
     file = file.path(tempdir(), "examplePedigree.xlsx"), fileType = "excel"))
   expect_true(all(file.exists(pedigreeFile)))
@@ -33,7 +33,7 @@ test_that(
 test_that(
   paste0("makeExamplePedigreeFile creates correct file when text file ",
          "is requested"), {
-           skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+           skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
            pedigreeFile <- suppressMessages(makeExamplePedigreeFile(
              file = file.path(tempdir(), "examplePedigree.txt"),
              fileType = "txt"))

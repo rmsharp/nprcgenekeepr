@@ -10,7 +10,7 @@ tokens <- structure(list(
     "SNPRC", "http://vger/labkey", "study", "/SNPRC", "demographics",
     c("Id", "gender", "birth", "death", "lastDayAtCenter", "dam", "sire"),
     c("id", "sex", "birth", "death", "exit", "dam", "sire"),
-    "frogstar-vortex-animal-msharp",
+    "frogstar-vortex-animal-rmsharp",
     c("select", "m.id", "m.sex", "convertchar12", "m.birth_date", "110",
       "as", "birth", "convertchar12", "m.death_date", "110", "as", "death",
       "CASE", "WHEN"),

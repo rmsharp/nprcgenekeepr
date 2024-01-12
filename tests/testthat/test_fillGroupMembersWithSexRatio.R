@@ -4,7 +4,7 @@ context("fillGroupMembersWithSexRatio")
 
 test_that(
   "fillGroupMembersWithSexRatio adds animals in the specified sex ratio", {
-  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
 
   examplePedigree <- nprcgenekeepr::examplePedigree
   set_seed(10)

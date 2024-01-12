@@ -11,7 +11,7 @@ skip_if_not(exists("pedWithGenotype"))
 skip_if_not(exists("pedWithGenotypeReport"))
 set_seed(10)
 test_that("groupAddAssign forms the correct groups", {
-  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   currentGroups <- list(1)
   currentGroups[[1]] <- qcBreeders[1:3]
   groupAddTest <- groupAddAssign(
@@ -29,7 +29,7 @@ test_that("groupAddAssign forms the correct groups", {
 )
 set_seed(10)
 test_that("groupAddAssign (numGp = 2) forms the correct groups", {
-  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   groupAssignTest <- groupAddAssign(
     candidates = qcBreeders,
     currentGroups = character(0),
@@ -51,7 +51,7 @@ set_seed(10)
 test_that(paste0("groupAddAssign (numGp = 1) forms the correct groups with ",
                  "kinship matrices"),
           {
-            skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+            skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
             currentGroups <- list(1)
             currentGroups[[1]] <- qcBreeders[1:3]
             groupAddKTest <- groupAddAssign(
@@ -72,7 +72,7 @@ test_that(paste0("groupAddAssign (numGp = 1) forms the correct groups with ",
           })
 set_seed(10)
 test_that("groupAddAssign forms the correct groups with kinship matrices", {
-  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   groupAssignKTest <- groupAddAssign(
     candidates = qcBreeders,
     currentGroups = character(0),
@@ -99,7 +99,7 @@ test_that(paste0(
   "groupAddAssign fails when no potential sires exist for harem creation"
 ),
 {
-  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   expect_error(
     groupAddAssign(
       candidates = noSires,
@@ -121,7 +121,7 @@ test_that(
     "in the candidates during harem creation"
   ),
   {
-    skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+    skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
     group <- groupAddAssign(
       candidates = qcBreeders,
       currentGroups = character(0),
@@ -145,7 +145,7 @@ test_that(
     "the number of groups to be formed"
   ),
   {
-    skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+    skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
     currentGroups <- list(3)
     currentGroups[[1]] <- qcBreeders[1:3]
     currentGroups[[2]] <- qcBreeders[4:6]
