@@ -43,6 +43,7 @@ Imports:
     htmlTable,
     lubridate,
     Matrix,
+    methods,
     plotrix,
     readxl,
     Rlabkey,

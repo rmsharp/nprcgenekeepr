@@ -54,5 +54,5 @@ README\.*\.png$
 ^inst/extdata/script_used_to_look_for_gdata_dependency.R$
 ^inst/extdata/trulyUnknownParents.R$
 ^\.github$
-^R\.lintr$
+^R/\.lintr$
 ^pkgdown$
