@@ -1,7 +1,7 @@
 README
 ================
 R. Mark Sharp
-2023-01-15
+2024-01-17
 
 [![Rdoc](https://www.rdocumentation.org/badges/version/nprcgenekeepr)](https://www.rdocumentation.org/packages/nprcgenekeepr)
 [![Project Status: Active – The project has reached a stable, usable
