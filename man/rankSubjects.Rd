@@ -7,7 +7,7 @@
 rankSubjects(rpt)
 }
 \arguments{
-\item{rpt}{a list of data.frame {req. colnames: value} containing genetic
+\item{rpt}{a list of data.frame (req. colnames: value) containing genetic
 value data for the population. Dataframes separate out those animals that
 are imports, those that have high genome uniqueness (gu > 10%), those that
 have low mean kinship (mk < 0.25), and the remainder.}
