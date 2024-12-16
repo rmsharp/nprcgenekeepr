@@ -2,6 +2,7 @@
 % Please edit documentation in R/nprcgenekeeper.R
 \docType{package}
 \name{nprcgenekeepr}
+\alias{nprcgenekeepr-package}
 \alias{nprcgenekeepr}
 \title{Genetic Management Functions}
 \description{
@@ -105,4 +106,22 @@ Breeding Group Formation Functions
 \item{\link{meanKinship}} {--- Calculates the mean kinship for each animal
 in a kinship matrix}
 }
+}
+\author{
+\strong{Maintainer}: R. Mark Sharp \email{rmsharp@me.com} (\href{https://orcid.org/0000-0002-6170-6942}{ORCID}) [copyright holder, data contributor]
+
+Authors:
+\itemize{
+  \item Michael Raboin
+  \item Terry Therneau
+  \item Amanda Vinson [data contributor]
+  \item Matthew Schultz (\href{https://orcid.org/0000-0001-5103-4305}{ORCID})
+}
+
+Other contributors:
+\itemize{
+  \item Southwest National Primate Research Center NIH grant P51 RR13986 [funder]
+  \item Oregon National Primate Research Center grant P51 OD011092 [funder]
+}
+
 }
