@@ -31,16 +31,11 @@ uitpInput <-
           "margin-left: 3px;",
           "border-radius: 25px; box-shadow: 0 0 5px 2px #888"
         ),
-        helpText(
-          "Select how you are submitting data."
-        ),
+        helpText("Select how you are submitting data."),
         prettyRadioButtons(
           "fileType",
           label = "File Type",
-          choices = list(
-            "Excel" = "fileTypeExcel",
-            "Text" = "fileTypeText"
-          ),
+          choices = list("Excel" = "fileTypeExcel", "Text" = "fileTypeText"),
           selected = NULL,
           outline = TRUE
         ),
@@ -68,7 +63,8 @@ uitpInput <-
             ),
             selected = ",",
             outline = TRUE
-          )),
+          )
+        ),
         conditionalPanel(
           condition = "input.fileContent == 'pedFile'",
           fileInput("pedigreeFileOne", label = "Select Pedigree File")
@@ -86,21 +82,26 @@ uitpInput <-
           condition = "input.fileContent == 'focalAnimals'",
           fileInput("breederFile", label = "Select Focal Animals File")
         ),
-        shinyBS::popify(textInput("minParentAge", label = "Minimum Parent Age (years)",
-                  value = "2.0"), NULL,
-               paste("Parents must be at least as old as the minimum parent",
-                     "age at the birthdate of an offspring. If not, the",
-                     "file will not be accepted and a file named",
-                     "<b>lowParentAge.csv</b> containing a list of parents",
-                     "below the minimum age will",
-                     "be written to the user&#39s home directory. Animals",
-                     "without birthdates are not affected by this rule.")),
+        shinyBS::popify(
+          textInput("minParentAge", label = "Minimum Parent Age (years)",
+                    value = "2.0"),
+          NULL,
+          paste(
+            "Parents must be at least as old as the minimum parent",
+            "age at the birthdate of an offspring. If not, the",
+            "file will not be accepted and a file named",
+            "<b>lowParentAge.csv</b> containing a list of parents",
+            "below the minimum age will",
+            "be written to the user&#39s home directory. Animals",
+            "without birthdates are not affected by this rule."
+          )
+        ),
 
         actionButton("getData", "Read and Check Pedigree"),
         checkboxInput("debugger", label = "Debug on", value = FALSE)#,
-        ),
+      ),
       # Main Panel
-      mainPanel(#style = "margin-left:425px;padding:10px;",
-        includeHTML("../extdata/input_format.html"))
+      mainPanel(#style = "margin-left:425px;padding:10px;", # nolint
+               includeHTML("../extdata/input_format.html"))
     )
   )

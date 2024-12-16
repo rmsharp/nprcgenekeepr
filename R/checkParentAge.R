@@ -52,7 +52,7 @@ checkParentAge <- function(sb, minParentAge = 2, reportErrors = FALSE) {
     } else {
       stop("Birth column must be of class 'Date', 'POSIXct', or 'character'")
     }
-  } else if (class(sb$birth) == "character") {
+  } else if (inherits(sb$birth, "character")) {
     sb$birth <- anytime(sb$birth)
   } else {
     sb$birth <- as.Date(sb$birth)

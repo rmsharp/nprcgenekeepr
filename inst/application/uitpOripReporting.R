@@ -14,7 +14,7 @@ uitpOripReporting <-
         "This tab will eventually contain a report formatted
         for submission to ORIP."
       )
-      ),
+    ),
 
     # Main Panel
     div(
@@ -26,4 +26,4 @@ uitpOripReporting <-
       )
     )
 
-    )
+  )

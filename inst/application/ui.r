@@ -4,7 +4,7 @@ library(shinyWidgets)
 library(DT)
 library(stringi)
 source("../application/uitpInput.R")
-#source("../application/uitpErrorTab.R")
+#source("../application/uitpErrorTab.R") # nolint: commented_code_linter
 source("../application/uitpPedigreeBrowser.R")
 source("../application/uitpGeneticValueAnalysis.R")
 source("../application/uitpSummaryStatistics.R")
@@ -21,7 +21,7 @@ if (getSiteInfo()$center == "ONPRC") {
     uitpGeneticValueAnalysis,
     uitpSummaryStatistics,
     uitpBreedingGroupFormation,
-#    uitpOripReporting,
+    # uitpOripReporting, # nolint: commented_code_linter
     uitpGvAndBgDesc,
     id = "tab_pages"
   )
@@ -41,11 +41,11 @@ if (getSiteInfo()$center == "ONPRC") {
 
 shinyUI(tagList(
   tags$head(tags$style(src = "app_style.js")),
-  #tags$head(tags$script(src = "add_tabs.js")),
+  #tags$head(tags$script(src = "add_tabs.js")), # nolint: commented_code_linter
   # Important! : 'Freshly baked' tabs first enter here.
-  # uiOutput("navbarPage", style = "display: none;"),
+  # uiOutput("navbarPage", style = "display: none;"), # nolint: commented_code_linter
   # End Important
 
   do.call(navbarPage, navbarPageArgs)
 
-  ))
+))

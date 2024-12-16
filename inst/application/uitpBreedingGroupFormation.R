@@ -2,95 +2,104 @@ uitpBreedingGroupFormation <-
   tabPanel(
     "Breeding Group Formation",
     div(
-      fluidRow(column(
-        4,
-        offset = 1,
-        style = paste0(
-          "border: 1px solid lightgray; background-color: #EDEDED; ",
-          "border-radius: 1px; box-shadow: 0 0 5px 2px #888"
-        ),
-        prettyRadioButtons(
-          "group_formation_rb",
-          "Choose one group formation workflow:",
-          choiceNames = list(
-            paste0(
-              "Randomly select from only high-value ",
-              "animals in genetic value analysis"
-            ),
-            paste0("Randomly select from all animals in  ",
-                   "genetic value analysis"),
-            paste0("Use candidate animals entered below  ",
-                   "to form groups")
-          ),
-          choiceValues = list("high-value", "all", "candidates"),
-          width = "650px",
-          selected = character(0),
-          outline = TRUE
-        ),
-        conditionalPanel(
-          condition = paste0("input.group_formation_rb == 'candidates' "),
-          div(
-            style = "display:inline-block;width:350px;padding:5px",
-            helpText("Enter IDs of candidates to be added to new group(s):"),
-            tags$textarea(id = "grpIds", rows = 10, cols = 40, "")
-          )
-        )
-      )),
-      fluidRow(column(
-        4,
-        offset = 1,
-        style = paste(
-          "border: 1px solid lightgray; background-color: #EDEDED;",
-          "border-radius: 1px; box-shadow: 0 0 5px 2px #888"
-        ),
-        prettyRadioButtons(
-          "group_sex_rb",
-          "Sex of animals in groups:",
-          choiceNames = list(
-            "Ignore sex when forming groups ",
-            "Form harems (one male)",
-            "User specified sex ratio of breeders"
-          ),
-          choiceValues = list("ignore-sex", "harems", "sex-ratio"),
-          width = "350px",
-          selected = "ignore-sex",
-          outline = TRUE
-        ),
-        conditionalPanel(
-          condition = "input.group_sex_rb == 'sex-ratio'",
-          div(shinyBS::popify(
-            numericInput(
-              "sexRatio",
-              label = "Sex Ratio (F/M):",
-              value = 0.0,
-              min = 0.5,
-              max = 20,
-              step = 0.5
-            ),
-            NULL,
-            paste0(
-              "Final sex ratios are approximate but are guaranteed to be ",
-              "the nearest possible value given creation of the largest ",
-              "group possible."
-            )
-          ))))),
-      fluidRow(
-        column(4, offset = 1,
-        style = paste0("padding-top:1px;display:inline-block;",
-                         "padding-bottom:1px"),
-               checkboxInput("seedAnimals",
-                             label = paste0("Optional: Seed Groups with ",
-                                            "Specific Animals"),
-                             width = "150%",
-                             value = FALSE)
-               )
-        ),
       fluidRow(
         column(
           4,
           offset = 1,
-          style = paste0("padding-top:1px;display:inline-block;",
-                         "width:400px;padding-bottom:1px"),
+          style = paste0(
+            "border: 1px solid lightgray; background-color: #EDEDED; ",
+            "border-radius: 1px; box-shadow: 0 0 5px 2px #888"
+          ),
+          prettyRadioButtons(
+            "group_formation_rb",
+            "Choose one group formation workflow:",
+            choiceNames = list(
+              paste0(
+                "Randomly select from only high-value ",
+                "animals in genetic value analysis"
+              ),
+              paste0("Randomly select from all animals in  ",
+                     "genetic value analysis"),
+              paste0("Use candidate animals entered below  ", "to form groups")
+            ),
+            choiceValues = list("high-value", "all", "candidates"),
+            width = "650px",
+            selected = character(0),
+            outline = TRUE
+          ),
+          conditionalPanel(
+            condition = paste0("input.group_formation_rb == 'candidates' "),
+            div(
+              style = "display:inline-block;width:350px;padding:5px",
+              helpText("Enter IDs of candidates to be added to new group(s):"),
+              tags$textarea(id = "grpIds", rows = 10, cols = 40, "")
+            )
+          )
+        )
+      ),
+      fluidRow(
+        column(
+          4,
+          offset = 1,
+          style = paste(
+            "border: 1px solid lightgray; background-color: #EDEDED;",
+            "border-radius: 1px; box-shadow: 0 0 5px 2px #888"
+          ),
+          prettyRadioButtons(
+            "group_sex_rb",
+            "Sex of animals in groups:",
+            choiceNames = list(
+              "Ignore sex when forming groups ",
+              "Form harems (one male)",
+              "User specified sex ratio of breeders"
+            ),
+            choiceValues = list("ignore-sex", "harems", "sex-ratio"),
+            width = "350px",
+            selected = "ignore-sex",
+            outline = TRUE
+          ),
+          conditionalPanel(condition = "input.group_sex_rb == 'sex-ratio'", div(
+            shinyBS::popify(
+              numericInput(
+                "sexRatio",
+                label = "Sex Ratio (F/M):",
+                value = 0.0,
+                min = 0.5,
+                max = 20,
+                step = 0.5
+              ),
+              NULL,
+              paste0(
+                "Final sex ratios are approximate but are guaranteed to be ",
+                "the nearest possible value given creation of the largest ",
+                "group possible."
+              )
+            )
+          ))
+        )
+      ),
+      fluidRow(column(
+        4,
+        offset = 1,
+        style = paste0(
+          "padding-top:1px;display:inline-block;",
+          "padding-bottom:1px"
+        ),
+        checkboxInput(
+          "seedAnimals",
+          label = paste0("Optional: Seed Groups with ", "Specific Animals"),
+          width = "150%",
+          value = FALSE
+        )
+      )),
+      fluidRow(
+        column(
+          4,
+          offset = 1,
+          style = paste0(
+            "padding-top:1px;display:inline-block;",
+            "width:400px;padding-bottom:1px"
+          ),
           numericInput(
             "numGp",
             label = "Number of Groups Desired:",
@@ -100,9 +109,8 @@ uitpBreedingGroupFormation <-
             step = 1.0
           ),
           uiOutput("minParentAge", inline = FALSE),
-          conditionalPanel(
-            condition = "!input.useMinParentAge",
-            div(shinyBS::popify(
+          conditionalPanel(condition = "!input.useMinParentAge", div(
+            shinyBS::popify(
               numericInput(
                 "minAge",
                 label = "Animals will be grouped with the mother below age:",
@@ -112,11 +120,10 @@ uitpBreedingGroupFormation <-
                 step = 0.1
               ),
               NULL,
-              paste0(
-                "Animals will be groups with the mother below the age you ",
-                "select."
-              )
-            ))),
+              paste0("Animals will be groups with the mother below the age ",
+                     "you select.")
+            )
+          )),
           div(
             selectInput(
               "kinThresh",
@@ -130,7 +137,8 @@ uitpBreedingGroupFormation <-
                 "0.25 (parent/child)" = 0.25
               ),
               selected = 1
-            )),
+            )
+          ),
           div(
             selectInput(
               "ffRel",
@@ -148,33 +156,42 @@ uitpBreedingGroupFormation <-
               value = 10,
               min = 1,
               max = 1000000
-            )),
-                    conditionalPanel(
-          condition = "input.group_formation_rb == 'high-value' |
+            )
+          ),
+          conditionalPanel(
+            condition = "input.group_formation_rb == 'high-value' |
                        input.group_formation_rb == 'all' |
                        input.group_formation_rb == 'candidates'",
-          div(
-            style = paste0("padding-top:5px;padding-bottom:5px;",
-                           "border:1px solid #4BCEEF;background-color:#4BCEEF;",
-                           "border-radius:1px; box-shadow: 0 0 5px 2px #888"),
-            actionButton("grpSim", label = "Make Groups", width = "100%",
-                         height = "120%",
-                         style = "color: #fff; background-color: #4BCEEF;
-                                 border-color: #4BCEEF;font-size:150%;
-                                 font:bold")
-          )),
-          div(style = "display:inline-block;width:250px;padding:5px",
-              numericInput(
-                "viewGrp",
-                label = "Enter the group to view:",
-                value = 1,
-                min = 1,
-                max = MAXGROUPS,
-                step = 1
+            div(
+              style = paste0(
+                "padding-top:5px;padding-bottom:5px;",
+                "border:1px solid #4BCEEF;background-color:#4BCEEF;",
+                "border-radius:1px; box-shadow: 0 0 5px 2px #888"
               ),
-              downloadButton("downloadGroup", "Export Current Group"),
-              downloadButton("downloadGroupKin",
-                             "Export Current Group Kinship Matrix")
+              actionButton(
+                "grpSim",
+                label = "Make Groups",
+                width = "100%",
+                height = "120%",
+                style = "color: #fff; background-color: #4BCEEF;
+                                 border-color: #4BCEEF;font-size:150%;
+                                 font:bold"
+              )
+            )
+          ),
+          div(
+            style = "display:inline-block;width:250px;padding:5px",
+            numericInput(
+              "viewGrp",
+              label = "Enter the group to view:",
+              value = 1,
+              min = 1,
+              max = MAXGROUPS,
+              step = 1
+            ),
+            downloadButton("downloadGroup", "Export Current Group"),
+            downloadButton("downloadGroupKin",
+                           "Export Current Group Kinship Matrix")
           )
 
         ),
@@ -183,13 +200,11 @@ uitpBreedingGroupFormation <-
           5,
           offset = 0,
           style = "padding-top:5px",
-               conditionalPanel(
-                 condition = "input.seedAnimals == true",
-                 div(
-                   uiOutput("currentGroups")
-                   )
-                 )
-        )        )),
+          conditionalPanel(condition = "input.seedAnimals == true",
+                           div(uiOutput("currentGroups")))
+        )
+      )
+    ),
     fluidRow(
       column(
         width = 10,
@@ -198,15 +213,13 @@ uitpBreedingGroupFormation <-
         DT::dataTableOutput("breedingGroupKin")
       )
     ),
-    fluidRow(
-      column(
-        width = 10,
-        offset = 1,
-        style = paste0(
-          "border: 1px solid lightgray; background-color: #EDEDED; ",
-          "border-radius: 15px; box-shadow: 0 0 5px 2px #888"
-        ),
-        includeHTML("../extdata/group_formation.html")
-      )
-    )
+    fluidRow(column(
+      width = 10,
+      offset = 1,
+      style = paste0(
+        "border: 1px solid lightgray; background-color: #EDEDED; ",
+        "border-radius: 15px; box-shadow: 0 0 5px 2px #888"
+      ),
+      includeHTML("../extdata/group_formation.html")
+    ))
   )
