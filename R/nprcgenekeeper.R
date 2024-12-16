@@ -102,6 +102,8 @@
 #' \item{\link{meanKinship}} {--- Calculates the mean kinship for each animal
 #' in a kinship matrix}
 #' }
-#' @docType package
+#' @keywords internal
+"_PACKAGE"
 #' @name nprcgenekeepr
+#' @title Genetic Tools for Colony Management
 NULL

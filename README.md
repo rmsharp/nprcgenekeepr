@@ -1,7 +1,7 @@
 README
 ================
 R. Mark Sharp
-04/21/2021
+2024-01-17
 
 [![Rdoc](https://www.rdocumentation.org/badges/version/nprcgenekeepr)](https://www.rdocumentation.org/packages/nprcgenekeepr)
 [![Project Status: Active – The project has reached a stable, usable
@@ -10,7 +10,7 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![Build
 Status](https://travis-ci.org/rmsharp/nprcgenekeepr.svg?branch=master)](https://travis-ci.org/rmsharp/nprcgenekeepr)
 [![Codecov test
-coverage](https://codecov.io/gh/rmsharp/nprcgenekeepr/branch/master/graph/badge.svg)](https://codecov.io/gh/rmsharp/nprcgenekeepr?branch=master)
+coverage](https://app.codecov.io/gh/rmsharp/nprcgenekeepr?branch=master)](https://app.codecov.io/gh/rmsharp/nprcgenekeepr?branch=master)
 <!--[![](https://www.r-pkg.org/badges/version/nprcgenekeepr)](https://cran.r-project.org/package=nprcgenekeepr)
 
 <!--[![Rdoc](https://www.rdocumentation.org/badges/version/RDocumentation)](https://www.rdocumentation.org/packages/RDocumentation)
@@ -18,7 +18,7 @@ coverage](https://codecov.io/gh/rmsharp/nprcgenekeepr/branch/master/graph/badge.
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# nprcgenekeepr – Version 1.0.5.9000 (20210421)
+# nprcgenekeepr – Version 1.0.6
 
 ## Introduction
 
@@ -64,10 +64,10 @@ prompt with:
 
 ``` r
 install.packages("nprcgenekeepr")
-```
 
-You can install the development version of **nprcgenekeepr** from GitHub
-from the R console prompt with:
+You can install the development version of **nprcgenekeepr** from GitHub from
+the R console prompt with:
+```
 
 ``` r
 install.packages("devtools")
@@ -145,9 +145,9 @@ user to authenticate with LabKey through the LabKey API and is fully
 described by [LabKey
 documentation](https://www.labkey.org/Documentation/wiki-page.view?name=netrc)
 
-The second file is named **\_nprcgenekeepr\_config** on Microsoft
-Windows operating systems and **.nprcgenekeepr\_config** otherwise and
-is the `nprcgenekeepr` [configuration
+The second file is named **\_nprcgenekeepr_config** on Microsoft Windows
+operating systems and **.nprcgenekeepr_config** otherwise and is the
+`nprcgenekeepr` [configuration
 file](https://github.com/rmsharp/nprcgenekeepr/blob/master/inst/extdata/example_nprcgenekeepr_config)
 An image of this example configuration file is included as a data object
 and can be loaded and viewed with the following lines of R code in the R
@@ -160,8 +160,8 @@ View(exampleNprcgenekeeprConfig)
 
 ### Display of an age by sex pyramid plot
 
-Adapted from on 20190603. Written by Matt Rosenberg. Updated May 07,
-2019
+Adapted from on 20190603. Written by Matt Rosenberg. Updated December
+12, 2019
 
 The most important demographic characteristic of a population is its
 age-sex structure. Age-sex pyramids (also known as population pyramids)

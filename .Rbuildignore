@@ -22,6 +22,8 @@ inst/extdata/meeting_notes\.html$
 ^vignettes/.*\.log$
 ^vignettes/.*\.aux$
 ^vignettes/.*\.out$
+^\.Rhistory$
+^\.Rhistory\ 2$
 ^vignettes/shiny_app_use_original$
 ^vignettes/shiny_app_use_original/.*\.png$
 ^vignettes/shiny_app_use$
@@ -36,9 +38,12 @@ README\.*\.png$
 ^cran-comments\.md$
 # A news file written in RMarkdown
 ^NEWS\.Rmd$
+^NOTES\ todo\.txt$
 # Used for continuous integration testing with travis
 ^\.travis\.yml$
+^\.github$
 ^inst/extdata/.*\.docx$
+^inst/extdata/script_used_to_look_for_gdata_dependency\.R$
 ^inst/extdata/meeting_notes\.
 ^inst/extdata/rhesus_studbook*$
 ^CODE_OF_CONDUCT\.md$
@@ -49,4 +54,6 @@ README\.*\.png$
 ^images/*$
 ^LICENSE\.md$
 ^CRAN-RELEASE$
+^\.lintr$
+
 

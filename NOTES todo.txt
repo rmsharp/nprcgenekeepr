@@ -1,0 +1,1 @@
+Need to compare what trimPedigree() does to getPedDirectRelatives()

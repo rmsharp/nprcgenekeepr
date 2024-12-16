@@ -11,6 +11,56 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+2024-01-17
+
+# nprcgenekeepr 1.0.6 (20230115)
+
+- Minor changes
+  - Update version in preparation for CRAN submission
+
+# nprcgenekeepr 1.0.5.9004 (20221213)
+
+- Minor changes
+  - Changed method used to test class of object to use inherits().
+  - Corrected getPedDirectRelative() so that all direct relatives are
+    found. Supplemented unit tests for more direct relative types.
+  - Added unit tests for trimPedigree().
+  - Changed call as.character(date_object) to format(date_object) in
+    getDatedFileName.R to prepare for newer code in development version
+    of
+    18. 
+  - Technical edits of R code based on lintr::lint_dir(“R”)
+
+# nprcgenekeepr 1.0.5.9003 (20220625)
+
+- Minor changes
+  - Removed dependency on gdata.
+  - Removed getMinParentAge as it was never used.
+  - Starting to replace rbind() with rbindlist() from data.table were
+    possible.
+
+# nprcgenekeepr 1.0.5.9002 (20220425)
+
+- Minor changes
+  - Added use of data.table in an effort to reduce memory use and CPU
+    use for estimation of kinship values.
+  - Functions were refactored and the ability to handle larger
+    simulations resulted.
+
+# nprcgenekeepr 1.0.5.9001 (20210830)
+
+- Major changes
+  - Added ability to use simulation to estimate the kinship values of
+    animals with incomplete parental information that are known to have
+    been born within the colony. These animals may have 0 or 1 known
+    parents but have a value in the pedigree file or database for the
+    *fromcenter* or *fromCenter* field of “Y”, “YES”, “T”, or “TRUE”.
+- Minor changes
+  - Increase unit test coverage primarily to include more rare events
+    and events that should not happen and are trapped and result in
+    errors.
+  - Changed to travis-ci.com
+
 # nprcgenekeepr 1.0.5 (20210328)
 -   Major changes -- none
 -   Minor changes
