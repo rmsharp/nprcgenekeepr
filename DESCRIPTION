@@ -38,6 +38,7 @@ Depends:
     R (>= 3.6.0)
 Imports:
     anytime,
+    data.table,
     futile.logger,
     htmlTable,
     lubridate,
@@ -68,6 +69,6 @@ Suggests:
 Language: en-US
 Encoding: UTF-8
 License: MIT + file LICENSE
-RoxygenNote: 7.1.1
+RoxygenNote: 7.3.2
 LazyData: TRUE
 VignetteBuilder: knitr, rmarkdown
