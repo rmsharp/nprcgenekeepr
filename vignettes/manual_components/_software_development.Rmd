@@ -28,7 +28,7 @@ are not stable or complete, it is uncommon for the application not to run
 and perform functions that were working before. However, make sure the 
 build was passing by looking for a green _Build Passing_ badge at the top
 of the README file at
-[travis-ci.org/rmsharp/nprcgenekeepr](https://travis-ci.org/rmsharp/nprcgenekeepr).
+[app.travis-ci.com/rmsharp/nprcgenekeepr](https://app.travis-ci.com/rmsharp/nprcgenekeepr).
 
 ### Debug Logging  
 

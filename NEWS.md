@@ -1,9 +1,11 @@
 NEWS
 ================
 R. Mark Sharp
+03/28/2021
+
 2024-01-17
 
-# nprcgenekeepr 1.0.6 (20230115)
+# nprcgenekeepr 1.0.6 (20241215)
 
 - Minor changes
   - Update version in preparation for CRAN submission

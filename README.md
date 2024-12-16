@@ -1,16 +1,16 @@
 README
 ================
 R. Mark Sharp
-2024-01-17
+04/21/2021
 
 [![Rdoc](https://www.rdocumentation.org/badges/version/nprcgenekeepr)](https://www.rdocumentation.org/packages/nprcgenekeepr)
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![Build
-Status](https://travis-ci.org/rmsharp/nprcgenekeepr.svg?branch=master)](https://travis-ci.org/rmsharp/nprcgenekeepr)
+Status](https://app.travis-ci.com/rmsharp/nprcgenekeepr.svg?branch=master)](https://app.travis-ci.com/rmsharp/nprcgenekeepr)
 [![Codecov test
-coverage](https://app.codecov.io/gh/rmsharp/nprcgenekeepr?branch=master)](https://app.codecov.io/gh/rmsharp/nprcgenekeepr?branch=master)
+coverage](https://codecov.io/gh/rmsharp/nprcgenekeepr/branch/master/graph/badge.svg)](https://codecov.io/gh/rmsharp/nprcgenekeepr?branch=master)
 <!--[![](https://www.r-pkg.org/badges/version/nprcgenekeepr)](https://cran.r-project.org/package=nprcgenekeepr)
 
 <!--[![Rdoc](https://www.rdocumentation.org/badges/version/RDocumentation)](https://www.rdocumentation.org/packages/RDocumentation)
@@ -18,7 +18,7 @@ coverage](https://app.codecov.io/gh/rmsharp/nprcgenekeepr?branch=master)](https:
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# nprcgenekeepr – Version 1.0.6
+# nprcgenekeepr – Version 1.0.6 (2024-12-16)
 
 ## Introduction
 
@@ -64,10 +64,10 @@ prompt with:
 
 ``` r
 install.packages("nprcgenekeepr")
-
-You can install the development version of **nprcgenekeepr** from GitHub from
-the R console prompt with:
 ```
+
+You can install the development version of **nprcgenekeepr** from GitHub
+from the R console prompt with:
 
 ``` r
 install.packages("devtools")
@@ -160,8 +160,8 @@ View(exampleNprcgenekeeprConfig)
 
 ### Display of an age by sex pyramid plot
 
-Adapted from on 20190603. Written by Matt Rosenberg. Updated December
-12, 2019
+Adapted from on 20190603. Written by Matt Rosenberg. Updated May 07,
+2019
 
 The most important demographic characteristic of a population is its
 age-sex structure. Age-sex pyramids (also known as population pyramids)

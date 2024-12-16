@@ -43,11 +43,7 @@
 #' other statistics.
 #' }
 #'
-#' @author {Terry Therneau, original version}
-#'
-#'
-#' @references {Main website}
-#' \url{https://www.mayo.edu/research/faculty/therneau-terry-m-ph-d/bio-00025991}
+#' @author {Terry M. Therneau, Mayo Clinic (mayo.edu), original version}
 #'
 #'
 #' @references {S-Plus/R Function Page}

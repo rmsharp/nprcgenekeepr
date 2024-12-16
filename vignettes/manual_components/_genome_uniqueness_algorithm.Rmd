@@ -81,4 +81,4 @@ sum all of the scores for an animal and divide by the total number of alleles
 being considered (2 * number of simulations).
 
 
-![Generation of a vector of five gametes from one parent. Showing how the transmission vectors (row 2) determine which alleles are passed from the parental alleles or haplotypes (row 1) to form complementary vectors (row 3) that are combined by adding corresponding elements to form the final vector of transmitted alleles (row 4).](../inst/application/www/GeneDrop.png)
+![Generation of a vector of five gametes from one parent. Showing how the transmission vectors (row 2) determine which alleles are passed from the parental alleles or haplotypes (row 1) to form complementary vectors (row 3) that are combined by adding corresponding elements to form the final vector of transmitted alleles (row 4).](../man/figures/GeneDrop.png)
