@@ -33,7 +33,7 @@ test_that("summary.nprcgenekeeprErr provides expected output", {
 })
 test_that(
   "summary.nprcgenekeeprErr identifies individual bad dates in date columns", {
-  birth <- as.character(pedOne$birth_date, format = "%Y-%m-%d")
+  birth <- format(pedOne$birth_date, format = "%Y-%m-%d")
   birth[5] <- "04-02-2015"
   birth[6] <- "03-17-2009"
   pedEight <- pedOne
@@ -45,7 +45,7 @@ test_that(
                                 "rows having an invalid date are: 5 and 6"))
 })
 test_that("summary.nprcgenekeeprErr identifies bad database connection", {
-  birth <- as.character(pedOne$birth_date, format = "%Y-%m-%d")
+  birth <- format(pedOne$birth_date, format = "%Y-%m-%d")
   birth[5] <- "04-02-2015"
   birth[6] <- "03-17-2009"
   pedEight <- pedOne

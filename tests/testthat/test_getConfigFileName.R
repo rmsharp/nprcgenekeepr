@@ -11,8 +11,8 @@ sysInfoUnix <-
                      "PDT 2018; root:xnu-4570.71.2~1/RELEASE_X86_64"),
     nodename = "prefect.local",
     machine = "x86_64",
-    login = "msharp",
-    user = "msharp", effective_user = "msharp")
+    login = "rmsharp",
+    user = "rmsharp", effective_user = "rmsharp")
 sysInfoWindows <-
   c(sysname = "Windows",
     release = "17.7.0",
@@ -20,17 +20,17 @@ sysInfoWindows <-
     "root:xnu-4570.71.2~1/RELEASE_X86_64",
     nodename = "prefect.local",
     machine = "x86_64",
-    login = "msharp",
-    user = "msharp",
-    effective_user = "msharp")
+    login = "rmsharp",
+    user = "rmsharp",
+    effective_user = "rmsharp")
 test_that("getConfigFile got correct file name", {
-  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   expect_equal(getConfigFileName(sysInfoWindows)[["configFile"]],
-               "/Users/msharp/_nprcgenekeepr_config")
+               "/Users/rmsharp/_nprcgenekeepr_config")
   expect_equal(getConfigFileName(sysInfoUnix)[["configFile"]],
                "~/.nprcgenekeepr_config")
   expect_equal(getConfigFileName(sysInfoWindows)[["homeDir"]],
-               "/Users/msharp/")
+               "/Users/rmsharp/")
   expect_equal(getConfigFileName(sysInfoUnix)[["homeDir"]],
                "~/")
 })

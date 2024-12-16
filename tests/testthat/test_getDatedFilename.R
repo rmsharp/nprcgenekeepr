@@ -9,5 +9,7 @@ dateStamp <- stri_replace_all_fixed(
 test_that("getDatedFilename form correctly dated file name", {
   expect_equal(stri_sub(getDatedFilename("testName"), 1, 13),
                stri_sub(stri_c(dateStamp, "_", "testName"), 1, 13))
-  expect_equal(stri_sub(getDatedFilename("testName"), 21), "testName")
+  root_name <- stri_split_fixed(getDatedFilename("testName"), "_",
+                                simplify = TRUE)
+  expect_equal(root_name[length(root_name)], "testName")
 })

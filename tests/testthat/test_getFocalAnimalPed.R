@@ -19,7 +19,7 @@ qcPed_txt <- system.file("testdata", "qcPed.txt",
 test_that(
   stri_c("getFocalAnimalPed can open an Excel file fails to get ",
          "focal animals"), {
-           skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+           skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
            expect_true(
              stri_detect_fixed(capture.output(tryCatch(
                getFocalAnimalPed(fileName = qcPed_xlsx),
@@ -41,7 +41,7 @@ test_that(
   stri_c("getFocalAnimalPed can open a CSV file fails to get ",
          "focal animals"),
   {
-    skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+    skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
     expect_true(
       stri_detect_fixed(capture.output(tryCatch(
         getFocalAnimalPed(fileName = qcPed_csv),
@@ -62,7 +62,7 @@ test_that(
   stri_c("getFocalAnimalPed can open a TXT file fails to get ",
          "focal animals"),
   {
-    skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+    skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
     expect_true(
       stri_detect_fixed(capture.output(tryCatch(
         getFocalAnimalPed(fileName = qcPed_txt),

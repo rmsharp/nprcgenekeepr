@@ -4,7 +4,7 @@ context("fillGroupMembers")
 
 
 test_that("fillGroupMembers adds animals in the specified sex ratio", {
-  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   examplePedigree <- nprcgenekeepr::examplePedigree
   set_seed(10)
   ped <- qcStudbook(examplePedigree, minParentAge = 2, reportChanges = FALSE,

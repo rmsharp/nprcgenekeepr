@@ -8,7 +8,7 @@ dfList <- list(
 )
 
 test_that("makeExamplePedigreeFile creates CSV files", {
-  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   files_csv <- saveDataframesAsFiles(dfList, baseDir = tempdir(),
                                      fileType = "csv")
   pedCsv_1 <- read.table(files_csv[1], sep = ",", header = TRUE,
@@ -25,7 +25,7 @@ test_that("makeExamplePedigreeFile creates CSV files", {
 
 })
 test_that("makeExamplePedigreeFile creates TXT files", {
-  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   files_csv <- saveDataframesAsFiles(dfList, baseDir = tempdir(),
                                      fileType = "txt")
   pedCsv_1 <- read.table(files_csv[1], sep = "\t", header = TRUE,
@@ -40,7 +40,7 @@ test_that("makeExamplePedigreeFile creates TXT files", {
                row.names.data.frame(nprcgenekeepr::pedGood))
 })
 test_that("makeExamplePedigreeFile creates Excel files", {
-  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   files_csv <- saveDataframesAsFiles(dfList, baseDir = tempdir(),
                                      fileType = "excel")
   pedCsv_1 <- suppressWarnings(getPedigree(files_csv[1]))

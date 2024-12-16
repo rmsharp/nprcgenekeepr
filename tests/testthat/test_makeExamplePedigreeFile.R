@@ -3,12 +3,12 @@
 context("makeExamplePedigreeFile")
 library(testthat)
 test_that("makeExamplePedigreeFile creates file", {
-  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   pedigreeFile <- suppressMessages(makeExamplePedigreeFile())
   expect_true(all(file.exists(pedigreeFile)))
 })
 test_that("makeExamplePedigreeFile creates correct file contents", {
-  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "msharp")
+  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   pedigreeFile <- suppressMessages(makeExamplePedigreeFile())
   pedCsv <- read.table(pedigreeFile, sep = ",", header = TRUE,
                               stringsAsFactors = FALSE)
