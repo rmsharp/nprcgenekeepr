@@ -221,20 +221,20 @@ threshold of 10 minutes. This can for example be achieved by:
 ```{r code-changes, include=FALSE}
 
 if (Sys.Date() > "2020-08-01") {
-  path <- "/Users/msharp/Documents/Development/R/r_workspace/"
+  path <- "/Users/rmsharp/Documents/Development/R/r_workspace/"
 } else {
-  path <- "/Users/msharp/Documents/Development/R/r_workspace/library/"
+  path <- "/Users/rmsharp/Documents/Development/R/r_workspace/library/"
 }
 
-originalFiles <- stri_c("/Users/msharp/Documents/Projects/Active_Projects/",
-                       "nprcgenekeepr_project/20160816_GeneticManagementTools")
+originalFiles <- stri_c("/Users/rmsharp/Documents/Projects/Active_Projects/",
+                        "nprcgenekeepr_project/20160816_GeneticManagementTools")
 functions <- stri_c(path, "nprcgenekeepr/R")
 tests <- stri_c(path, "nprcgenekeepr/tests/testthat")
 ui <- stri_c(path, "nprcgenekeepr/inst/application")
 
-paths <- c(originalFiles = originalFiles, 
-           functions = functions, 
-           ui = ui, 
+paths <- c(originalFiles = originalFiles,
+           functions = functions,
+           ui = ui,
            tests = tests)
 codeCounts <- data.frame()
 for (path in paths) {
@@ -267,7 +267,7 @@ codeChanges <-
       codeCounts$roxygen_doc_lines[names(paths) == "originalFiles"],
       sum(codeCounts$roxygen_doc_lines[names(paths) != "originalFiles"])
     ),
-    `Comment Lines` = 
+    `Comment Lines` =
       c(codeCounts$comments[names(paths) == "originalFiles"],
         sum(codeCounts$comments[names(paths) != "originalFiles"])),
     check.names = FALSE,
@@ -275,25 +275,25 @@ codeChanges <-
   )
 save_names <- names(codeChanges)
 names(codeChanges) <- names(codeCounts)
-sectionCodeChanges <- rbind(codeChanges, 
-                            codeCounts[-1, ], 
+sectionCodeChanges <- rbind(codeChanges,
+                            codeCounts[-1, ],
                             make.row.names = FALSE)
-sectionCodeChanges$section[is.element(sectionCodeChanges$section, 
+sectionCodeChanges$section[is.element(sectionCodeChanges$section,
                                       c("functions", "ui", "tests"))] <-
-  paste0(getVersion(date = FALSE), ": ", 
-         sectionCodeChanges$section[is.element(sectionCodeChanges$section, 
+  paste0(getVersion(date = FALSE), ": ",
+         sectionCodeChanges$section[is.element(sectionCodeChanges$section,
                                       c("functions", "ui", "tests"))])
 names(sectionCodeChanges) <- save_names
 names(codeChanges) <- save_names
 
 ```
 ```{r code-change-table, echo = FALSE}
-kable(codeChanges, 
+kable(codeChanges,
       caption = stri_c("Simple metrics for the Original Version (",
-                       "20160816) and Current Version ", 
+                       "20160816) and Current Version ",
                        getVersion(date = TRUE),
                                     ".")) %>%
-  kable_styling(full_width = FALSE, position = "left") %>% 
+  kable_styling(full_width = FALSE, position = "left") %>%
                 collapse_rows(latex_hline = "none") %>%
   column_spec(3, width = "5em")
 ## version was 0.5.37 (20191108) at the time of writing.
@@ -301,15 +301,14 @@ kable(codeChanges,
 ```
 ```{r detail-code-change-table, echo = FALSE}
 
-kable(sectionCodeChanges, 
+kable(sectionCodeChanges,
                 caption = stri_c("Simple metrics for the Original Version (",
-                       "20160816) and Current Version ", 
+                       "20160816) and Current Version ",
                        getVersion(date = TRUE), " and current version groups ",
                                  "of functions.")) %>%
-  kable_styling(full_width = FALSE, position = "left",) %>%
+  kable_styling(full_width = FALSE, position = "left", ) %>%
   column_spec(3, width = "5em") %>%
   row_spec(2, hline_after = TRUE)
-
 ```
 
        
@@ -768,18 +767,17 @@ overlapping_groups <- list()
 for (i in 1:4) {
  unique <- sample(LETTERS, 15, replace = FALSE)
  group <- stri_c("Overlap_Group_", i)
- overlapping_groups[[group]] <- data.frame(unique_set_1 = unique[1:5], 
-                unique_set_2 = unique[6:10],
-                unique_set_3 = unique[11:15], 
-                stringsAsFactors = FALSE )
+ overlapping_groups[[group]] <- data.frame(unique_set_1 = unique[1:5],
+                                           unique_set_2 = unique[6:10],
+                                           unique_set_3 = unique[11:15],
+                                           stringsAsFactors = FALSE )
 }
 overlapping_str <- vapply(overlapping_groups, function(x) {
- stri_c("Unique Set 1: ", stri_c(x[[1]], collapse = ","), "\n",
-     "Unique Set 2: ", stri_c(x[[2]], collapse = ","), "\n",
-     "Unique Set 3: ", stri_c(x[[3]], collapse = ","), "\n")
+  stri_c("Unique Set 1: ", stri_c(x[[1]], collapse = ","), "\n",
+         "Unique Set 2: ", stri_c(x[[2]], collapse = ","), "\n",
+         "Unique Set 3: ", stri_c(x[[3]], collapse = ","), "\n")
 }, character(1))
 cat(overlapping_str)
-
 ```
 
   -  Overlapping Group 1
