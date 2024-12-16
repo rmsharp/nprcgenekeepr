@@ -1,9 +1,19 @@
 uitpPedigreeBrowser <-
   tabPanel("Pedigree Browser", div(
     div(
+      # Side Panel
+      div(
+        style = paste(
+          "float: left; width: 350px; height: 295px; padding: 10px;",
+          "border: 1px solid lightgray; background-color: #EDEDED;",
+          "margin-left:3px; margin-top: 3px; margin-bottom: 3px;",
+          "border-radius: 25px; box-shadow: 0 0 5px 2px #888"
+        ),
+        includeHTML("../extdata/ui_guidance/pedigree_browser.html")
+      ),
       # Main Panel
       div(
-        style = "float: left; width: 500px; padding: 1px;",
+        style = "margin-left: 425px; padding: 10px;",
         helpText(
           paste0(
             "IDs of selected focal animals may be manually ",
@@ -18,7 +28,8 @@ uitpPedigreeBrowser <-
           "focalAnimalUpdate",
           "Choose CSV file with focal animals",
           multiple = FALSE,
-          accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")
+          accept = c("text/csv", "text/comma-separated-values,text/plain",
+                     ".csv")
         ),
         shinyBS::popify(
           actionButton("specifyFocalAnimal", label = "Update Focal Animals"),
