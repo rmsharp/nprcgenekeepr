@@ -57,3 +57,4 @@ README\.*\.png$
 ^\.lintr$
 
 
+^pkgdown$
