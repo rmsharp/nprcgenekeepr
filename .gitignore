@@ -25,3 +25,6 @@ vignettes/tutorials/*
 vignettes/*.tex$
 vignettes/*.html$
 vignettes/*.pdf$
+vignettes/*.R$
+
+docs
