@@ -315,6 +315,8 @@ diversity we seek, we have to remain cognizant of the age and sex distributions
 within the colonies we manage.
 
 ```{r plot-focal-age-sex-pyramid, include = TRUE}
+#| fig.alt: >
+#|   Age Sex Pyramid Plot.
 getPyramidPlot(ped = trimmedPed[is.na(trimmedPed$exit), ])
 
 ```
@@ -442,12 +444,18 @@ _mean kinship_, and _z-scores_ (normalized _mean kinship_ values).
 Creation of the boxplot for the _genetic uniqueness_ values is shown below.
 
 ```{r genetic-uniqueness-boxplot}
+#| fig.alt: >
+#|   Genetic Uniqueness Box Plot.
 gu <- rpt[, "gu"]
 guBox <- ggplot(data.frame(gu = gu), aes(x = "", y = gu)) +
   geom_boxplot(
     color = "darkblue",
     fill = "lightblue",
-    notch = TRUE,
+    notch = TRUE,#| fig.alt: >
+#|   Histogram of time between eruptions for Old Faithful. 
+#|   It is a bimodal distribution with peaks at 50-55 and 
+#|   80-90 minutes.
+
     outlier.color = "red",
     outlier.shape = 1
   ) +

@@ -76,6 +76,8 @@ Most of the screen is filled with information about formatting a text or
 Excel worksheet pedigree file.
 
 ```{r eopening-screen-top, eval = TRUE, fig.width = 5.5, fig.height = 7, echo = FALSE}
+#| fig.alt: >
+#|   Primate Centers Logo.
 img <- readPNG("./shiny_app_use/opening_screen_top.png")
 grid.raster(img)
 
