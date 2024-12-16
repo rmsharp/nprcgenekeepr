@@ -23,7 +23,7 @@ rbindFill <- function(df1, df2) {
       col <- df1[[add.headers[i]]] # We want to extract not subset
       col.type <- mode(col)
       if (col.type == "numeric") {
-        if (class(col) == "Date") {
+        if (inherits(col, "Date")) {
           df2[, add.headers[i]] <- as.Date(NA, origin = as.Date("1970-01-01"))
         } else{
           df2[, add.headers[i]] <- NA
