@@ -56,9 +56,6 @@ kmat
 
 }
 \references{
-{Main website}
-\url{https://www.mayo.edu/research/faculty/therneau-terry-m-ph-d/bio-00025991}
-
 {S-Plus/R Function Page}
 \emph{www.mayo.edu/research/departments-divisions/department-health-sciences-research/division-biomedical-statistics-informatics/software/}
  @description {s-plus-r-functions} {Downloaded 2014-08-26}
@@ -78,7 +75,7 @@ $Id: kinship.s,v 1.5 2003/01/04 19:07:53 therneau Exp $
  Springer, 1997, p 71-72.}
 }
 \author{
-{Terry Therneau, original version}
+{Terry M. Therneau, Mayo Clinic (mayo.edu), original version}
 
 {as modified by, M Raboin, 2014-09-08 14:44:26}
 }
