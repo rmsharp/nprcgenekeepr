@@ -26,6 +26,7 @@ vignettes/*.tex
 vignettes/*.html
 vignettes/*.pdf
 vignettes/*.R
+vignettes/\.DS\_Store$
 inst/extdata/meeting_notes.html
 inst/extdata/meeting_notes.tex
 inst/extdata/meeting_notes.pdf
