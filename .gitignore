@@ -22,9 +22,13 @@ R/depricated_gene.drop.R
 ^vignettes/interactive_cache$
 ^vignettes/shiny_app_use_cache$
 vignettes/tutorials/*
-vignettes/*.tex$
-vignettes/*.html$
-vignettes/*.pdf$
-vignettes/*.R$
+vignettes/*.tex
+vignettes/*.html
+vignettes/*.pdf
+vignettes/*.R
+inst/extdata/meeting_notes.html
+inst/extdata/meeting_notes.tex
+inst/extdata/meeting_notes.pdf
+inst/extdata/simulatedKValues.pdf
 
 docs
