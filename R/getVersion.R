@@ -10,6 +10,7 @@
 #' }
 #' @param date A logical value when TRUE (default) a date in YYYYMMDD format
 #' within parentheses is appended.
+#' @importFrom utils packageDate packageVersion
 #' @export
 getVersion <- function(date = TRUE) {
   version <- packageVersion("nprcgenekeepr")

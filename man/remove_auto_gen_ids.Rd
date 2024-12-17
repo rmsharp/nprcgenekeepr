@@ -22,7 +22,7 @@ ID that start with a "U" are possible.
 }
 \examples{
 examplePedigree <- nprcgenekeepr::examplePedigree
-length(ped$id)
+length(examplePedigree$id)
 ped <- remove_auto_gen_ids(examplePedigree)
 length(ped$id)
 
