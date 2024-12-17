@@ -29,12 +29,7 @@ getPotentialParents <- function(ped, minParentAge, maxGestationalPeriod) {
   if (!any(names(ped) == "fromCenter"))
     return(NULL)
   ## Remove the records of automatically generated IDs
-  ## TODO change identification of automatically generated IDs from looking for
-  ## an initial "U" at the beginning of an ID to a function call so that actual
-  ## ID that start with a "U" are possible.
-  ped <- ped[!stri_sub(ped$id, 1, 1)  == "U", ]
-  ped$sire[stri_sub(ped$sire, 1, 1)  == "U"] <- NA
-  ped$dam[stri_sub(ped$dam, 1, 1)  == "U"] <- NA
+  ped <- remove_auto_gen_ids(ped)
 
   ## pUnknown becomes the pedigree records of animals with at least one unknown
   ## parent
@@ -89,6 +84,8 @@ getPotentialParents <- function(ped, minParentAge, maxGestationalPeriod) {
 
       ## Remove from consideration those dams who gave birth within 1/2 year
       ## of birth date
+      ## TODO: This is a bit of a hack. We should be able to do this in a more
+      ## principled way using gestational length.
       potentialDams <- potentialDams[!id %in% births$dam, ]
       ## Preferrentially accept dams that are proven breeders near the time of
       ## the birth.
