@@ -1,8 +1,15 @@
 ---
 title: "Quick Example of Simulated Kinships with Partial Parentage"
+subtitle: "nprcgenekeepr: an R Package for the Genetic Management of Colonies"
 author: "R. Mark Sharp"
 date: "8/29/2021"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown_notangle} 
+  %\VignetteIndexEntry{Simulated Kinships with Partial Parentage} 
+  %\usepackage[UTF-8]{inputenc}
 ---
 
 ## Small Example

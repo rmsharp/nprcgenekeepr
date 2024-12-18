@@ -23,7 +23,7 @@
 #' @importFrom stringi stri_pad_both
 #' @export
 dataframe2string <- function(object, ..., digits = NULL, addRowNames = TRUE) {
-  nRows <- length(addRowNames(object))
+  nRows <- length(row.names(object))
   if (length(object) == 0L) {
     return(paste(
       sprintf(ngettext(nRows, "data frame with 0 columns and %d row",
@@ -32,7 +32,7 @@ dataframe2string <- function(object, ..., digits = NULL, addRowNames = TRUE) {
       , "\\n", sep = "")
     )
   } else if (nRows == 0L) {
-    return(gettext("<0 rows> (or 0-length rowNames)\\n"))
+    return(gettext("<0 rows> (or 0-length row names)\\n"))
   } else {
     # get text-formatted version of the data.frame
     m <- as.matrix(format.data.frame(object, digits = digits,

@@ -17,6 +17,6 @@ getVersion <- function(date = TRUE) {
   if (date) {
     paste0(version, " (", packageDate("nprcgenekeepr"), ")")
   } else {
-    version
+    paste0(version)
   }
 }
