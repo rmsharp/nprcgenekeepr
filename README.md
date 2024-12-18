@@ -1,22 +1,15 @@
 README
 ================
 R. Mark Sharp
-04/21/2021
+2024-12-17
 
 [![Rdoc](https://www.rdocumentation.org/badges/version/nprcgenekeepr)](https://www.rdocumentation.org/packages/nprcgenekeepr)
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![Build
-Status](https://app.travis-ci.com/rmsharp/nprcgenekeepr.svg?branch=master)](https://app.travis-ci.com/rmsharp/nprcgenekeepr)
+[![R-CMD-check](https://github.com/rmsharp/nprcgenekeepr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rmsharp/nprcgenekeepr/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/rmsharp/nprcgenekeepr/branch/master/graph/badge.svg)](https://codecov.io/gh/rmsharp/nprcgenekeepr?branch=master)
-<!--[![](https://www.r-pkg.org/badges/version/nprcgenekeepr)](https://cran.r-project.org/package=nprcgenekeepr)
-
-<!--[![Rdoc](https://www.rdocumentation.org/badges/version/RDocumentation)](https://www.rdocumentation.org/packages/RDocumentation)
-<!--[![Rdoc](https://www.rdocumentation.org/badges/version/nprcgenekeepr)](https://www.rdocumentation.org/packages/gh/rmsharp/nprcgenekeepr)
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+coverage](https://codecov.io/gh/rmsharp/nprcgenekeepr/graph/badge.svg)](https://app.codecov.io/gh/rmsharp/nprcgenekeepr)
 
 # nprcgenekeepr – Version 1.0.6 (2024-12-16)
 
@@ -119,8 +112,9 @@ dates are added if possible and are consistent with other information
 such as departure dates and death dates. Current ages of animals that
 are still alive are added if a database connection is provided via a
 configuration file and the user has read permission on a LabKey server
-with the demographic data in an **EHR** (Electronic Health Record)
-module. See
+with the demographic data in an *EHR* (Electronic Health Record) module.
+See [LabKey
+documentation](https://www.labkey.org/Documentation/wiki-page.view?name=netrc).
 
 Parents with ages below a user selected threshold are identified. A
 minimum parent age in years is set by the user and is used to ensure
@@ -128,7 +122,7 @@ each parent is at least that age on the birth date of an offspring. The
 minimum parent age defaults to 2 years. This check is not performed for
 animals with missing birth dates.
 
-### Creation of Pedigree From a List of Potential Breeders and LabKey Integration
+### Creation of Pedigree From a List of Potential Breeders and LabKey 
 
 The user can enter a list of focal animals in a CSV file that will be
 used to create a pedigree containing all direct relative (ancestors and
@@ -160,8 +154,9 @@ View(exampleNprcgenekeeprConfig)
 
 ### Display of an age by sex pyramid plot
 
-Adapted from on 20190603. Written by Matt Rosenberg. Updated May 07,
-2019
+Adapted from
+<https://www.thoughtco.com/age-sex-pyramids-and-population-pyramids-1435272%7d>
+on 20190603. Written by Matt Rosenberg. Updated May 07, 2019.
 
 The most important demographic characteristic of a population is its
 age-sex structure. Age-sex pyramids (also known as population pyramids)
