@@ -17,6 +17,23 @@ knitr::opts_chunk$set(echo = TRUE)
 
 - Minor changes
   - Update version in preparation for CRAN submission
+  - Added article demonstrating Simulated Kinships with Partial Parentage
+  - Added use of CICD pipeline as GitHub Actions
+    - lintr pipeline
+    - R CMD check pipeline with multiple R environments and versions
+    - pkgdown pipeline
+  - Added several unit tests
+  - Cleaned up code based on lintr feedback
+  - Added example deidentified pedigree data
+    2022-05-02_Deidentified_Pedigree.xlsx, 
+    2022-05-02_Deidentified_Pedigree_focal_animals.csv, 
+    deidentified_jmac_ped.csv (text, except for dates, are in double quotes),
+    deidentified_jmac_ped_edited.csv (edited to remove double quotes).
+  - Made getVersion() more robust.
+  - Abstracted out removal of auto generated Ids in preparation of allowing 
+    the user to define how auto generated Ids will be formed.
+  - Added some quality assurance badges to README.
+  
 
 # nprcgenekeepr 1.0.5.9004 (20221213)
 
