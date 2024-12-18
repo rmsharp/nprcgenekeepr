@@ -47,7 +47,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">kinMatrix2LongForm</span><span class="op">(</span><span class="va">kinMatrix</span>, rm.dups <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">kinMatrix2LongForm</span><span class="op">(</span><span class="va">kinMatrix</span>, removeDups <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -59,10 +59,10 @@
 column names correspond to animal IDs.</p></dd>
 
 
-<dt id="arg-rm-dups">rm.dups<a class="anchor" aria-label="anchor" href="#arg-rm-dups"></a></dt>
+<dt id="arg-removedups">removeDups<a class="anchor" aria-label="anchor" href="#arg-removedups"></a></dt>
 <dd><p>logical value indication whether or not reverse-order ID
 pairs be filtered out? (i.e., "ID1 ID2 kin_val" and "ID2 ID1 kin_val" will
-be collapsed into a single entry if rm.dups = TRUE)</p></dd>
+be collapsed into a single entry if removeDups = TRUE)</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -78,10 +78,10 @@ This is the kinship data reformatted from a matrix, to a long-format table.</p>
 <span class="r-in"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="lacy1989Ped.html">lacy1989Ped</a></span></span></span>
 <span class="r-in"><span><span class="va">ped</span><span class="op">$</span><span class="va">gen</span> <span class="op">&lt;-</span> <span class="fu"><a href="findGeneration.html">findGeneration</a></span><span class="op">(</span><span class="va">ped</span><span class="op">$</span><span class="va">id</span>, <span class="va">ped</span><span class="op">$</span><span class="va">sire</span>, <span class="va">ped</span><span class="op">$</span><span class="va">dam</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">kmat</span> <span class="op">&lt;-</span> <span class="fu"><a href="kinship.html">kinship</a></span><span class="op">(</span><span class="va">ped</span><span class="op">$</span><span class="va">id</span>, <span class="va">ped</span><span class="op">$</span><span class="va">sire</span>, <span class="va">ped</span><span class="op">$</span><span class="va">dam</span>, <span class="va">ped</span><span class="op">$</span><span class="va">gen</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">reformattedKmat</span> <span class="op">&lt;-</span> <span class="fu">kinMatrix2LongForm</span><span class="op">(</span><span class="va">kmat</span>, rm.dups <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">reformattedKmat</span> <span class="op">&lt;-</span> <span class="fu">kinMatrix2LongForm</span><span class="op">(</span><span class="va">kmat</span>, removeDups <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">reformattedKmat</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 49</span>
-<span class="r-in"><span><span class="va">reformattedNoDupsKmat</span> <span class="op">&lt;-</span> <span class="fu">kinMatrix2LongForm</span><span class="op">(</span><span class="va">kmat</span>, rm.dups <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">reformattedNoDupsKmat</span> <span class="op">&lt;-</span> <span class="fu">kinMatrix2LongForm</span><span class="op">(</span><span class="va">kmat</span>, removeDups <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">reformattedNoDupsKmat</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 28</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>

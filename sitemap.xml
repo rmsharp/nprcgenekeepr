@@ -187,6 +187,7 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/rankSubjects.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/rbindFill.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/readExcelPOSIXToCharacter.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/removeEarlyDates.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/removeGroupIfNoAvailableAnimals.html</loc></url>
@@ -194,7 +195,6 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/removeSelectedAnimalFromAvailableAnimals.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/removeUninformativeFounders.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.html</loc></url>
-<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/remove_auto_gen_ids.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/resetGroup.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/rhesusGenotypes.html</loc></url>
