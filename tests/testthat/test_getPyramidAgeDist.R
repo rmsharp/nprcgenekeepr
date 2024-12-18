@@ -6,7 +6,7 @@ library(lubridate)
 library(stringi)
 
 qcPed <- nprcgenekeepr::qcPed
-ped <- qcPed[ , c("id", "sire", "dam", "sex", "birth", "exit")]
+ped <- qcPed[, c("id", "sire", "dam", "sex", "birth", "exit")]
 ped <- getPyramidAgeDist(ped)
 test_that("getPyramidAgeDist classifies and ages animals correctly", {
   expect_equal(as.numeric(table(ped$status)[[1]]), 46)
@@ -19,7 +19,7 @@ test_that("getPyramidAgeDist gets qcPed by default", {
   expect_true(ped$age[ped$id == "YIAD2N"] > 19.0 &
                 ped$age[ped$id == "YIAD2N"] < 20.0)
 })
-ped <- qcPed[ , c("id", "sire", "dam", "sex", "birth", "exit")]
+ped <- qcPed[, c("id", "sire", "dam", "sex", "birth", "exit")]
 charDatePed <- ped
 charDatePed$birth <- format(charDatePed$birth, format = "%Y-%m-%d")
 ped <- getPyramidAgeDist(charDatePed)
@@ -28,7 +28,7 @@ test_that("getPyramidAgeDist converts character based birth date", {
   expect_true(ped$age[ped$id == "YIAD2N"] > 19.0 &
                 ped$age[ped$id == "YIAD2N"] < 20.0)
 })
-ped <- qcPed[ , c("id", "sire", "dam", "sex", "birth", "exit")]
+ped <- qcPed[, c("id", "sire", "dam", "sex", "birth", "exit")]
 charDatePed <- ped
 charDatePed$exit <- format(charDatePed$exit, format = "%Y-%m-%d")
 charDatePed$exit[176] <- "9999999999"
@@ -65,4 +65,3 @@ test_that("getPyramidAgeDist detect exit column of wrong type ", {
                stri_c("exit_date column must be of class 'Date', ",
                       "'POSIXct', or 'character'"))
 })
-

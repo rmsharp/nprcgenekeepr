@@ -5,7 +5,7 @@ library(testthat)
 recPlot <- function(expr) {
   pdf(NULL)
   on.exit(dev.off())
-  dev.control(displaylist="enable")
+  dev.control(displaylist = "enable")
   expr
   recordPlot()
 }

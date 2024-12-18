@@ -32,6 +32,7 @@
 #' @param n integer value of the number of simulated pedigrees to generate.
 #' @importFrom gdata lowerTriangle upperTriangle
 #' @export
+# nlint start: commented_code_linter.
 # combineKinshipTriangles <- function(simKinships) {
 #   n <- length(simKinships)
 #   m <- n + (n %% 2)
@@ -51,3 +52,4 @@
 #
 #   cKinships
 # }
+# nolint end: commented_code_linter.

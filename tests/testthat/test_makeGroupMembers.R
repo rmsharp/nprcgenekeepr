@@ -114,4 +114,3 @@ test_that(paste0(
     expect_equal(groupMembers[[1]], c(noSires[1:10], sires[1]))
   }
 )
-

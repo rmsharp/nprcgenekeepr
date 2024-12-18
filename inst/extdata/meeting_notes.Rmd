@@ -226,30 +226,37 @@ if (Sys.Date() > "2020-08-01") {
   path <- "/Users/rmsharp/Documents/Development/R/r_workspace/library/"
 }
 
-originalFiles <- stri_c("/Users/rmsharp/Documents/Projects/Active_Projects/",
-                        "nprcgenekeepr_project/20160816_GeneticManagementTools")
+originalFiles <- stri_c(
+  "/Users/rmsharp/Documents/Projects/Active_Projects/",
+  "nprcgenekeepr_project/20160816_GeneticManagementTools"
+)
 functions <- stri_c(path, "nprcgenekeepr/R")
 tests <- stri_c(path, "nprcgenekeepr/tests/testthat")
 ui <- stri_c(path, "nprcgenekeepr/inst/application")
 
-paths <- c(originalFiles = originalFiles,
-           functions = functions,
-           ui = ui,
-           tests = tests)
+paths <- c(
+  originalFiles = originalFiles,
+  functions = functions,
+  ui = ui,
+  tests = tests
+)
 codeCounts <- data.frame()
 for (path in paths) {
   counts <- classify_code_lines(files = ".", path = path)
-  codeCounts <- rbind(codeCounts,
-                      data.frame(
-                        section = names(paths)[paths == path],
-                          files = counts["files"],
-                          lines = counts["lines"],
-                          code = counts["code"],
-                          blank_lines = counts["blank_lines"],
-                          roxygen_doc_lines = counts["roxygen_doc_lines"],
-                          comments = counts["comments"],
-                          check.names = FALSE,
-                          stringsAsFactors = FALSE))
+  codeCounts <- rbind(
+    codeCounts,
+    data.frame(
+      section = names(paths)[paths == path],
+      files = counts["files"],
+      lines = counts["lines"],
+      code = counts["code"],
+      blank_lines = counts["blank_lines"],
+      roxygen_doc_lines = counts["roxygen_doc_lines"],
+      comments = counts["comments"],
+      check.names = FALSE,
+      stringsAsFactors = FALSE
+    )
+  )
 }
 codeChanges <-
   data.frame(
@@ -261,8 +268,8 @@ codeChanges <-
     Code = c(codeCounts$code[names(paths) == "originalFiles"],
              sum(codeCounts$code[names(paths) != "originalFiles"])),
     `Blank Lines` = c(codeCounts$blank_lines[names(paths) == "originalFiles"],
-                      sum(codeCounts$blank_lines[
-                        names(paths) != "originalFiles"])),
+                      sum(codeCounts$blank_lines[names(paths) !=
+                                                   "originalFiles"])),
     `Document Lines` = c(
       codeCounts$roxygen_doc_lines[names(paths) == "originalFiles"],
       sum(codeCounts$roxygen_doc_lines[names(paths) != "originalFiles"])
@@ -275,14 +282,13 @@ codeChanges <-
   )
 save_names <- names(codeChanges)
 names(codeChanges) <- names(codeCounts)
-sectionCodeChanges <- rbind(codeChanges,
-                            codeCounts[-1, ],
+sectionCodeChanges <- rbind(codeChanges, codeCounts[-1, ],
                             make.row.names = FALSE)
 sectionCodeChanges$section[is.element(sectionCodeChanges$section,
                                       c("functions", "ui", "tests"))] <-
   paste0(getVersion(date = FALSE), ": ",
          sectionCodeChanges$section[is.element(sectionCodeChanges$section,
-                                      c("functions", "ui", "tests"))])
+                                               c("functions", "ui", "tests"))])
 names(sectionCodeChanges) <- save_names
 names(codeChanges) <- save_names
 
@@ -770,7 +776,7 @@ for (i in 1:4) {
  overlapping_groups[[group]] <- data.frame(unique_set_1 = unique[1:5],
                                            unique_set_2 = unique[6:10],
                                            unique_set_3 = unique[11:15],
-                                           stringsAsFactors = FALSE )
+                                           stringsAsFactors = FALSE)
 }
 overlapping_str <- vapply(overlapping_groups, function(x) {
   stri_c("Unique Set 1: ", stri_c(x[[1]], collapse = ","), "\n",

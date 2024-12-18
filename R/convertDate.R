@@ -64,13 +64,13 @@
 #' @param ped a dataframe of pedigree information that may contain birth,
 #' death, departure, or exit dates. The fields are optional, but will be used
 #' if present.(optional fields: birth, death, departure, and exit).
-#' @param time.origin date object used by \code{as.Date} to set \code{origin}.
+#' @param timeOrigin date object used by \code{as.Date} to set \code{origin}.
 #' @param reportErrors logical value if TRUE will scan the entire file and
 #' make a list of all errors found. The errors will be returned in a
 #' list of list where each sublist is a type of error found.
 #' @importFrom stringi stri_trim_both stri_c
 #' @export
-convertDate <- function(ped, time.origin = as.Date("1970-01-01"),
+convertDate <- function(ped, timeOrigin = as.Date("1970-01-01"),
                         reportErrors = FALSE) {
   ## Ignore records added because of unknown parents
   if (any("recordStatus" %in% names(ped))) {
@@ -86,7 +86,7 @@ convertDate <- function(ped, time.origin = as.Date("1970-01-01"),
   invalid_date_rows <- NULL
   for (header in headers) {
     dates <- ped[[header]]
-    if (any(class(dates) %in% c("factor","logical", "integer"))) {
+    if (any(class(dates) %in% c("factor", "logical", "integer"))) {
       dates <- as.character(dates)
     }
     if (inherits(dates, "Date")) {
@@ -100,7 +100,7 @@ convertDate <- function(ped, time.origin = as.Date("1970-01-01"),
       dates <- dates[!originalNAs]
       if (length(dates) > 0) {
         dates <- insertSeparators(dates)
-        dates <- as.Date(dates, format = format, origin = time.origin,
+        dates <- as.Date(dates, format = format, origin = timeOrigin,
                          optional = TRUE)
         dates <- removeEarlyDates(dates, 1000)
       }
@@ -126,7 +126,7 @@ convertDate <- function(ped, time.origin = as.Date("1970-01-01"),
     }
     ped[!originalNAs, header] <- dates
     ped[originalNAs, header] <- NA # For those NAs from dates <= 1000 CE
-    ped[[header]] <- as.Date(as.integer(ped[[header]]), origin = time.origin)
+    ped[[header]] <- as.Date(as.integer(ped[[header]]), origin = timeOrigin)
   }
   if (reportErrors) {
     if (!is.null(invalid_date_rows))

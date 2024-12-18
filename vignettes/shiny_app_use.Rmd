@@ -18,7 +18,8 @@ library(kableExtra)
 library(grid)
 library(stringi)
 library(nprcgenekeepr)
-knitr::opts_chunk$set(eval = FALSE, echo = TRUE, results = "markup", cache = FALSE)
+knitr::opts_chunk$set(eval = FALSE, echo = TRUE, results = "markup",
+                      cache = FALSE)
 pdf.options(useDingbats = TRUE)
 start_time <- proc.time()
 
@@ -199,24 +200,22 @@ errorDescriptions <- c(
   "Values, which are supposed to be dates, cannot be interpreted as a date.",
   "Parents were too young on the date of birth of to have been the parent.",
   "Individuals listed as female or hermaphroditic and as a sire.",
-  "Individuals are listed as male and as a dam.", 
+  "Individuals are listed as male and as a dam.",
   "Individuals who are listed as both a sire and a dam.",
   "IDs listed more than once.",
-  stri_c("Fatal Errors. These are unanticipated errors that should be ", 
+  stri_c("Fatal Errors. These are unanticipated errors that should be ",
          "reported to the package maintainer"),
   stri_c("Columns that have been changed to conform to internal naming ",
   "conventions and what they were changed to.")
 )
-errorTbl <- data.frame(`Error` = errorTypes, Definition = errorDescriptions, 
-                       stringsAsFactors = FALSE) 
-
+errorTbl <- data.frame(`Error` = errorTypes, Definition = errorDescriptions,
+                       stringsAsFactors = FALSE)
 ```
 ```{r print-error-definition-tbl, eval = TRUE, echo=FALSE, include = TRUE, results='markup'}
 knitr::kable(errorTbl)  %>%
-  kable_styling(full_width = F) %>%
-  column_spec(1, bold = T, color = "blue") %>%
+  kable_styling(full_width = FALSE) %>%
+  column_spec(1, bold = TRUE, color = "blue") %>%
   column_spec(2, width = "30em")
-
 ```
 
 *********
@@ -280,7 +279,6 @@ animals of interest (_focal animals_).
 ```{r focal-animal-text-box, eval = TRUE, fig.width = 5, echo = FALSE}
 img <- png::readPNG("./shiny_app_use/pb_focal_animal_text_box.png")
 grid::grid.raster(img)
-                                                                                      
 ```
 
 *********
@@ -291,8 +289,8 @@ Deselect the __Display Unknown IDs__ checkbox and select the
 __Trim pedigree based on focal animals__ checkbox.
 (See top right of image below).
 
-Trimming the pedigree based on focal animals will keep only animals in the pedigree
-that are related to the focal animals selected.
+Trimming the pedigree based on focal animals will keep only animals in the
+pedigree that are related to the focal animals selected.
 
 Select the __Update Focal Animals__ button to tell the application to read
 your list of animals, trim the pedigree based on that list, and display the 
@@ -304,7 +302,6 @@ You will end up with 54 animals in your pedigree.
 ```{r pedigree-browser-5-focal-animals-small, eval = TRUE, fig.width = 8.0, echo = FALSE}
 img <- png::readPNG("./shiny_app_use/pb_5_focal_animals_small.png")
 grid::grid.raster(img)
-
 ```
 
 *********
@@ -629,10 +626,10 @@ animals that could be added while satisfying the requirements imposed by the
 selected settings. I have indicated the seed animals for the first group with
 red rectangles.
 
-```{r breeding-group-first-group-no-kinship-seeds-indicated, eval = TRUE, fig.width = 8.5, echo = FALSE}
-img <- png::readPNG("./shiny_app_use/breeding_group_first_group_no_kinship_seeds_indicated.png")
+```{r bg-no-kinship-seeds-indicated, eval = TRUE, fig.width = 8.5, echo = FALSE}
+img <- png::readPNG(
+  "./shiny_app_use/breeding_group_first_group_no_kinship_seeds_indicated.png")
 grid::grid.raster(img)
-
 ```                                                                                      
 
 *********
@@ -645,8 +642,9 @@ A group of ten animals was formed in the next run after choosing to include
 kinship and selecting the __Make Groups__ button.
 
 
-```{r breeding-group-6-seed-grps-grp-6-kinship, eval = TRUE, fig.width = 8.5, echo = FALSE}
-img <- png::readPNG("./shiny_app_use/breeding_group_6_seed_grps_grp_6_kinship.png")
+```{r bg-6-seed-grps-grp-6-kinship, eval = TRUE, fig.width = 8.5, echo = FALSE}
+img <-
+  png::readPNG("./shiny_app_use/breeding_group_6_seed_grps_grp_6_kinship.png")
 grid::grid.raster(img)
 
 ```                                                                                      
@@ -658,10 +656,10 @@ desired.
 However, the ratio obtained is limited by the availability of animals that
 meet all criteria you have set.
 
-```{r breeding-group-sex-ratio-specification, eval = TRUE, fig.width = 5.5, echo = FALSE}
-img <- png::readPNG("./shiny_app_use/breeding_group_sex_ratio_specification.png")
+```{r bg-sex-ratio-specification, eval = TRUE, fig.width = 5.5, echo = FALSE}
+img <-
+  png::readPNG("./shiny_app_use/breeding_group_sex_ratio_specification.png")
 grid::grid.raster(img)
-
 ```                                                                                      
 
 Selecting a sex ratio of 2.5 with 6 groups as is illustrated resulted in 5 

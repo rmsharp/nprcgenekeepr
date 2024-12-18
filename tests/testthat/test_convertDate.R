@@ -43,7 +43,8 @@ test_that("convertDate with error flag returns NULL with good dates", {
   expect_true(all(is.null(convertDate(ped2, reportErrors = TRUE))))
   expect_true(all(is.null(convertDate(ped3, reportErrors = TRUE))))
 })
-test_that("convertDate handles NA and empty character string values correctly", {
+test_that(paste0("convertDate handles NA and empty character string values ",
+                 "correctly"), {
   expect_null(convertDate(ped4, reportErrors = TRUE))
 })
 test_that("convertDate ignores added records", {
@@ -64,7 +65,7 @@ test_that("classifies dates <= 1000 CE as errors", {
   expect_true(any(3 %in% rowsWithBadDates))
 })
 pedWithNAs <- ped
-pedWithNAs[ , "birth"] <- as.Date(pedWithNAs[ , "birth"], origin="1970-01-01")
+pedWithNAs[, "birth"] <- as.Date(pedWithNAs[, "birth"], origin = "1970-01-01")
 
 pedWithNAs <- convertDate(pedWithNAs, reportErrors = FALSE)
 test_that("classifies dates <= 1000 CE as errors", {

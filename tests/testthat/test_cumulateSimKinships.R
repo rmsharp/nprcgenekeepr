@@ -3,6 +3,7 @@
 library(testthat)
 context("cumulateSimKinships")
 
+# nolint start: object_name_linter
 ped <- nprcgenekeepr::smallPed
 simParent_1 <- list(id = "A",
                     sires = c("s1_1", "s1_2", "s1_3"),
@@ -32,18 +33,18 @@ extractKinship <- function(simKinships, id1, id2) {
              seq_along(ped$id)[ped$id == id2]]},
          FUN.VALUE = numeric(1))
 }
+# nolint end: object_name_linter
 set_seed(seed = 2)
 n <- 100
 simKinships <- cumulateSimKinships(ped, allSimParents, pop = ped$id, n = n)
-test_EN <- simKinships$meanKinship[seq_along(ped$id)[ped$id == "E"],
+testEN <- simKinships$meanKinship[seq_along(ped$id)[ped$id == "E"],
                                    seq_along(ped$id)[ped$id == "N"]]
 
 test_that("cumulateSimKinships creates the correct kinship summary structure", {
-  expect_equal(test_EN, 0.041250, tolerance = 0.000001)
+  expect_equal(testEN, 0.041250, tolerance = 0.000001)
   expect_equal(length(simKinships), 4)
   expect_equal(names(simKinships), c("meanKinship", "sdKinship", "minKinship",
                                      "maxKinship"))
   expect_equal(length(simKinships$meanKinship), 17 * 17)
   expect_equal(nrow(simKinships$sdKinship), 17)
 })
-

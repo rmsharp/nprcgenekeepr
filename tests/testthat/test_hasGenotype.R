@@ -38,7 +38,7 @@ genotype <- data.frame(ego = stri_c(2500 + 1:20),
                        second_name = stri_c("second_name", 1:20),
                        stringsAsFactors = FALSE)
 expect_true(hasGenotype(genotype))
-expect_false(hasGenotype(genotype[ , 1:2]))
+expect_false(hasGenotype(genotype[, 1:2]))
 genotype <- data.frame(ego = stri_c(2500 + 1:20),
                        id = stri_c(2500 + 1:20),
                        first_name = stri_c("first_name", 1:20),

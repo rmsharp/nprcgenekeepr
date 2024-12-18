@@ -46,8 +46,10 @@
 #' @author {Terry M. Therneau, Mayo Clinic (mayo.edu), original version}
 #'
 #'
-#' @references {S-Plus/R Function Page}
+#' @references {S-Plus/R Function Page}'
+# nolint start: line_length_linter
 #' \emph{www.mayo.edu/research/departments-divisions/department-health-sciences-research/division-biomedical-statistics-informatics/software/}
+# nolint end: line_length_linter
 #'  @description {s-plus-r-functions} {Downloaded 2014-08-26}
 #'  This page address is now (2019-10-03) stale.
 #'
@@ -67,15 +69,14 @@
 #'
 #' @import Matrix
 #' @export
-kinship <- function(id, father.id, mother.id, pdepth, sparse = FALSE) {
+kinship <- function(id, father.id, mother.id, pdepth, sparse = FALSE) { # nolint: object_name_linter
   # Returns: Matrix (row and col names are 'id')
   n <- length(id)
   if (any(duplicated(id)))
     stop("All id values must be unique")
   if (sparse) {
     kmat <- Diagonal(n + 1) / 2
-  }
-  else {
+  } else {
     kmat <- diag(n + 1) / 2
   }
 

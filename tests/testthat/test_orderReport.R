@@ -7,7 +7,7 @@ pedWithGenotypeReport <- nprcgenekeepr::pedWithGenotypeReport
 ped <- nprcgenekeepr::qcPed
 rpt <- pedWithGenotypeReport$report
 countUnk <- function(ids) {
-  length(ids[grepl("^U",ids, ignore.case = TRUE)])
+  length(ids[grepl("^U", ids, ignore.case = TRUE)])
 }
 test_that("orderReport correctly orders the report", {
   rpt1 <- nprcgenekeepr:::orderReport(rpt, ped)
@@ -22,7 +22,7 @@ test_that("orderReport correctly orders the report", {
   expect_equal(countUnk(rpt1$id[1:100]), 34)
   expect_equal(countUnk(rpt$id[1:50]), 21)
 })
-rpt <- rpt[ , !names(rpt) %in% "age" ]
+rpt <- rpt[, !names(rpt) %in% "age"]
 test_that("orderReport correctly orders the report without age column", {
   rpt1 <- nprcgenekeepr:::orderReport(rpt, ped)
   expect_equal(nrow(rpt1), nrow(rpt))
@@ -36,4 +36,3 @@ test_that("orderReport correctly orders the report without age column", {
   expect_equal(countUnk(rpt1$id[1:100]), 34)
   expect_equal(countUnk(rpt$id[1:50]), 21)
 })
-

@@ -6,8 +6,8 @@ library(testthat)
 ped <- nprcgenekeepr::lacy1989Ped
 ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
-reformattedKmat <- kinMatrix2LongForm(kmat, rm.dups = FALSE)
-reformattedNoDupsKmat <- kinMatrix2LongForm(kmat, rm.dups = TRUE)
+reformattedKmat <- kinMatrix2LongForm(kmat, removeDups = FALSE)
+reformattedNoDupsKmat <- kinMatrix2LongForm(kmat, removeDups = TRUE)
 
 test_that("kinMatrix2LongForm makes correct transformation", {
   expect_equal(reformattedKmat[1, 3], as.numeric(kmat[1, 1]))

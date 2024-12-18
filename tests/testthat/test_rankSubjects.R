@@ -11,4 +11,3 @@ test_that("rankSubjects ranks subject correctly", {
   expect_equal(rpt[[3]][1, "rank"], 190)
   expect_equal(rpt[["lowMk"]][68, "rank"], 189)
  })
-

@@ -46,7 +46,7 @@ pedFour <- data.frame(id = c("s1", NA, NA, "d2", "o1", "o2", "o3", "o4"),
 pedFour <- pedFour[!is.na(pedFour$id), ]
 test_that("qcStudbook detects errors in column names", {
   expect_error(suppressWarnings(qcStudbook(pedOne)))
-  expect_error(suppressWarnings(qcStudbook(pedOne[ , -1], minParentAge = NULL)))
+  expect_error(suppressWarnings(qcStudbook(pedOne[, -1], minParentAge = NULL)))
 })
 test_that(
   "qcStudbook returns list of suspicious parents when reportErrors == TRUE", {
@@ -58,16 +58,16 @@ test_that(
 test_that(
   "qcStudbook returns list of missing column names when reportErrors == TRUE", {
     expect_equal(suppressWarnings(
-    qcStudbook(pedOne[ , -1], minParentAge = NULL,
+    qcStudbook(pedOne[, -1], minParentAge = NULL,
                reportErrors = TRUE)$missingColumns),
     "id")
 })
 test_that("qcStudbook detects missing required column names", {
-  expect_error(suppressWarnings(qcStudbook(pedOne[ , -3])))
+  expect_error(suppressWarnings(qcStudbook(pedOne[, -3])))
 })
 test_that(
   "qcStudbook returns list of bad column names when reportErrors == TRUE", {
-  expect_equal(qcStudbook(pedOne[ , -3], reportErrors = TRUE)$missingColumns,
+  expect_equal(qcStudbook(pedOne[, -3], reportErrors = TRUE)$missingColumns,
   "dam")
 })
 test_that("qcStudbook corrects column names", {
@@ -167,7 +167,7 @@ test_that("qcStudbook returns pedigree date errors with reportErrors == TRUE", {
                                replace = FALSE)
   ped1 <- data.frame(birth = someBadBirthDates, death = someDeathDates,
                      departure = someDepartureDates)
-  pedSix <- data.frame(pedFive[ , names(pedFive) != "birth"], ped1)
+  pedSix <- data.frame(pedFive[, names(pedFive) != "birth"], ped1)
   ped6 <- suppressWarnings(qcStudbook(pedSix, minParentAge = NULL,
                                       reportErrors = TRUE))
   expect_equal(

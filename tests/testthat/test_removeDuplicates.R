@@ -34,4 +34,3 @@ test_that(stri_c("removeDuplicates returns NULL reportErrors flag == TRUE ",
   ped <- rbind(ped, ped2)
   expect_equal(removeDuplicates(ped, reportErrors = TRUE), c("A", "B", "C"))
 })
-

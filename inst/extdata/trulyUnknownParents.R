@@ -2,17 +2,18 @@ library(nprcgenekeepr)
 library(rmsutilityr)
 library(stringi)
 library(here)
-# Reading in large ped file and transforming columns and values - delete from script
-##pedOne_file <- stri_c("/Users/rmsharp/Documents/Projects/Active_Projects/",
-##                      "nprcgenekeepr_project/Deidentified\ Pedegrees/",
-##                      "2021-01-06_Deidentified_Pedigree.csv")
-#pedOne_file <- stri_c(here("inst", "extdata", "deidentified_jmac_ped_edited.csv"))
-pedOne_file <- stri_c(
-  here("inst", "extdata",
-       "2022-05-02_Deidentified_Pedigree.xlsx"))
-#pedOne <- read.csv(file = pedOne_file, header = TRUE, sep = ",")
-pedOne <- nprcgenekeepr:::readExcelPOSIXToCharacter(pedOne_file)
-minParentAge <- 2L #Min breeding age
+## Reading in large ped file and transforming columns and values - delete from
+## script
+file_names <- c("2021-01-06_Deidentified_Pedigree.csv",
+                "deidentified_jmac_ped_edited.csv",
+                "2022-05-02_Deidentified_Pedigree.xlsx")
+pedOneFile <- stri_c(here("inst", "extdata", file_names[3]))
+if (tools::file_ext(pedOneFile) == ".csv") {
+  pedOne <- read.csv(file = pedOneFile, header = TRUE, sep = ",")
+} else {
+  pedOne <- nprcgenekeepr:::readExcelPOSIXToCharacter(pedOneFile)
+}
+minParentAge <- 2L # Min breeding age
 pedOne <- qcStudbook(pedOne, minParentAge = minParentAge)
 pedOne$fromCenter[is.na(pedOne$fromCenter)] <- TRUE
 
@@ -27,13 +28,17 @@ potentialParents <-
 ##             get_and_or_list(potentialParents[[i]]$dams), "; sires are ",
 ##             get_and_or_list(potentialParents[[i]]$sires), ".\n"))
 ##}
-potential_sire_length <- sapply(potentialParents, function(x) {
-  length(x$sires)})
+potential_sire_length <-
+  sapply(potentialParents, function(x) {
+    length(x$sires)
+  })
 plot(density(potential_sire_length))
 hist(potential_sire_length)
 
-potential_dam_length <- sapply(potentialParents, function(x) {
-  length(x$dams)})
+potential_dam_length <-
+  sapply(potentialParents, function(x) {
+    length(x$dams)
+  })
 plot(density(potential_dam_length))
 hist(potential_dam_length)
 

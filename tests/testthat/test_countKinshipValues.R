@@ -2,6 +2,7 @@
 #' This file is part of nprcgenekeepr
 library(testthat)
 context("countKinshipValues")
+# nolint start: object_name_linter
 ped <- nprcgenekeepr::smallPed
 simParent_1 <- list(id = "A",
                     sires = c("s1_1", "s1_2", "s1_3"),
@@ -36,7 +37,7 @@ extractKValue <- function(kValue, id1, id2, simulation) {
 extractKValue <- function(kValue, id1, id2, simulation) {
   kValue[id_1 ==  id1 & id_2 == id2, paste0("sim_", simulation), with = FALSE][[1]]
 }
-
+# nolint end: object_name_linter
 set_seed(seed = 1)
 n <- 10
 simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
@@ -74,4 +75,3 @@ test_that("countKinshipValues counts kinship values correctly", {
   expect_equal(cummulatedCounts$kValues[[7]], c(0.125, 0.25))
   expect_equal(as.character(cummulatedCounts$kIds[[3]]), c("A", "C"))
 })
-

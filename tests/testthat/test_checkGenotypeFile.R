@@ -15,7 +15,7 @@ test_that("checkGenotypeFile allows correct dataframe", {
   expect_error(checkGenotypeFile(genotype), NA)
 })
 test_that("checkGenotypeFile disallows dataframe with < 3 columns", {
-  expect_error(checkGenotypeFile(genotype[ , c("id", "first_name")]),
+  expect_error(checkGenotypeFile(genotype[, c("id", "first_name")]),
                "Genotype file must have at least three columns.")
 })
 test_that("checkGenotypeFile ensures 'id' as the first column.", {

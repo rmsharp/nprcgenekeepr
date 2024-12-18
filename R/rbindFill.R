@@ -15,25 +15,23 @@
 rbindFill <- function(df1, df2) {
 
   # Find columns in df1 not in df2
-  add.headers <- setdiff(names(df1), names(df2))
+  addHeaders <- setdiff(names(df1), names(df2))
 
   # Add the missing columns to df2 (containing NA values)
-  if (!isEmpty(add.headers)) {
-    for (i in seq_len(length(add.headers))) {
-      col <- df1[[add.headers[i]]] # We want to extract not subset
-      col.type <- mode(col)
-      if (col.type == "numeric") {
+  if (!isEmpty(addHeaders)) {
+    for (i in seq_len(length(addHeaders))) {
+      col <- df1[[addHeaders[i]]] # We want to extract not subset
+      colType <- mode(col)
+      if (colType == "numeric") {
         if (inherits(col, "Date")) {
-          df2[, add.headers[i]] <- as.Date(NA, origin = as.Date("1970-01-01"))
-        } else{
-          df2[, add.headers[i]] <- NA
+          df2[, addHeaders[i]] <- as.Date(NA, origin = as.Date("1970-01-01"))
+        } else {
+          df2[, addHeaders[i]] <- NA
         }
-      }
-      else if (col.type %in% c("character", "logical")) {
-        df2[, add.headers[i]] <- NA
-      }
-      else{
-        stop(col.type, " : unknown column type")
+      } else if (colType %in% c("character", "logical")) {
+        df2[, addHeaders[i]] <- NA
+      } else {
+        stop(colType, " : unknown column type")
       }
     }
   }

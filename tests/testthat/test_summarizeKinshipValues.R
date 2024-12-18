@@ -3,6 +3,7 @@
 library(testthat)
 context("summarizeKinshipValues")
 ped <- nprcgenekeepr::smallPed
+# nolint start: object_name_linter.
 simParent_1 <- list(id = "A",
                    sires = c("s1_1", "s1_2", "s1_3"),
                    dams = c("d1_1", "d1_2", "d1_3", "d1_4"))
@@ -48,16 +49,16 @@ test_that("summarizeKinshipValues makes correct structure", {
 
   expect_equal(length(stats$id_1), 153)
 })
+# nolint end: object_name_linter.
 
 test_that("summarizeKinshipValues summarizes kinship values correctly", {
   expect_equal(stats$id_1[10], "A")
   expect_equal(stats$id_2[10], "J")
   expect_equal(stats$min[10], 0)
   expect_equal(stats$secondQuartile[10], 0)
-  expect_equal(stats$mean[10], 0,01)
+  expect_equal(stats$mean[10], 0, 01)
   expect_equal(stats$median[10], 0)
   expect_equal(stats$thirdQuartile[10], 0.25)
   expect_equal(stats$max[10], 0.25)
   expect_equal(stats$sd[10], 0.1290994, tolerance = 0.00001)
 })
-

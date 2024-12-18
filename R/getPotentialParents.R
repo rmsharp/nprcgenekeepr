@@ -29,7 +29,7 @@ getPotentialParents <- function(ped, minParentAge, maxGestationalPeriod) {
   if (!any(names(ped) == "fromCenter"))
     return(NULL)
   ## Remove the records of automatically generated IDs
-  ped <- remove_auto_gen_ids(ped)
+  ped <- removeAutoGenIds(ped)
 
   ## pUnknown becomes the pedigree records of animals with at least one unknown
   ## parent

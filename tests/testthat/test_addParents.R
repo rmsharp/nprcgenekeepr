@@ -49,5 +49,5 @@ test_that("addParents adds parents correctly", {
 #   expect_equal(nrow(pedFive) + 2, nrow(newPed)) # 1 sire and 1 dam added
 # })
 test_that("addParents fails if a unknow column type is in the pedigree", {
-  expect_error(addParents(cbind(pedTwo, complx = runif(nrow(pedTwo)) * 1+4i)))
+  expect_error(addParents(cbind(pedTwo, complx = runif(nrow(pedTwo)) * 1 + 4i)))
 })

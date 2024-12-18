@@ -16,16 +16,14 @@ fillBins <- function(ageDist, lowerAges, upperAges = NULL) {
   maleBins <- c()
   femaleBins <- c()
   for (bin in seq_along(lowerAges)) {
-    maleBins <- c(maleBins,
-                   nrow(ageDist[ageDist$sex == "M" &
-                                   ageDist$age >= lowerAges[bin] &
-                                   ageDist$age < upperAges[bin] &
-                                   !is.na(ageDist$age), ]))
-    femaleBins <- c(femaleBins,
-                     nrow(ageDist[ageDist$sex == "F" &
-                                     ageDist$age >= lowerAges[bin] &
-                                     ageDist$age < upperAges[bin] &
-                                     !is.na(ageDist$age), ]))
+    maleBins <- c(maleBins, nrow(ageDist[ageDist$sex == "M" &
+                                           ageDist$age >= lowerAges[bin] &
+                                           ageDist$age < upperAges[bin] &
+                                           !is.na(ageDist$age), ]))
+    femaleBins <- c(femaleBins, nrow(ageDist[ageDist$sex == "F" &
+                                               ageDist$age >= lowerAges[bin] &
+                                               ageDist$age < upperAges[bin] &
+                                               !is.na(ageDist$age), ]))
   }
   list(males = maleBins, females = femaleBins)
 }

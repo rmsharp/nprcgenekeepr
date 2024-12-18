@@ -30,15 +30,15 @@
 calcA <- function(alleles, threshold = 1, byID = FALSE) {
   ids <- alleles$id
   alleles <- alleles[, !(names(alleles) %in% c("id", "parent"))]
-#'
+
   countRare <- function(a) {
     if (byID) {
       f <- alleleFreq(a, ids)
     } else {
       f <- alleleFreq(a)
     }
-    rare.alleles <- f$allele[f$freq <= threshold]
-    a <- (a %in% rare.alleles)
+    rareAlleles <- f$allele[f$freq <= threshold]
+    a <- (a %in% rareAlleles)
     return(tapply(a, ids, sum))
   }
 

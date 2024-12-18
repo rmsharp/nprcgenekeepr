@@ -27,5 +27,5 @@ calcAge <- function(birth, exit) {
   if (length(birth) == 0)
     return(birth)
   exit[is.na(exit)] <- Sys.Date()
-  return(round( (as.double(exit - birth) / 365.25), 1))
+  return(round((as.double(exit - birth) / 365.25), 1))
 }

@@ -37,7 +37,7 @@ initializeHaremGroups <- function(numGp, currentGroups, candidates, ped,
                   i, "."))
     }
   }
-  if (length(getPotentialSires(candidates, minAge, ped)) < numGp &
+  if (length(getPotentialSires(candidates, minAge, ped)) < numGp &&
       length(getPotentialSires(unlist(currentGroups), minAge, ped)) == 0)
     # makeFatalErrorTab(
     #   paste0("Fatal Error: User selected to form harems with more than one ",

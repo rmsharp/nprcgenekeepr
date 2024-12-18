@@ -4,15 +4,15 @@
 \alias{kinMatrix2LongForm}
 \title{Reformats a kinship matrix into a long-format table.}
 \usage{
-kinMatrix2LongForm(kinMatrix, rm.dups = FALSE)
+kinMatrix2LongForm(kinMatrix, removeDups = FALSE)
 }
 \arguments{
 \item{kinMatrix}{numerical matrix of pairwise kinship values. The row and
 column names correspond to animal IDs.}
 
-\item{rm.dups}{logical value indication whether or not reverse-order ID
+\item{removeDups}{logical value indication whether or not reverse-order ID
 pairs be filtered out? (i.e., "ID1 ID2 kin_val" and "ID2 ID1 kin_val" will
-be collapsed into a single entry if rm.dups = TRUE)}
+be collapsed into a single entry if removeDups = TRUE)}
 }
 \value{
 A dataframe with columns \code{id1}, \code{id2}, and \code{kinship}.
@@ -27,9 +27,9 @@ library(nprcgenekeepr)
 ped <- nprcgenekeepr::lacy1989Ped
 ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
-reformattedKmat <- kinMatrix2LongForm(kmat, rm.dups = FALSE)
+reformattedKmat <- kinMatrix2LongForm(kmat, removeDups = FALSE)
 nrow(reformattedKmat)
-reformattedNoDupsKmat <- kinMatrix2LongForm(kmat, rm.dups = TRUE)
+reformattedNoDupsKmat <- kinMatrix2LongForm(kmat, removeDups = TRUE)
 nrow(reformattedNoDupsKmat)
 }
 }

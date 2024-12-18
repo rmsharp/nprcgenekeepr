@@ -40,16 +40,9 @@ addParents <- function(ped) {
   a1 <- data.frame(id = a1, stringsAsFactors = FALSE)
   a2 <- data.frame(id = a2, stringsAsFactors = FALSE)
 
-  # Add recordStatus to identify original records
-  # if (length(ped) > 4) {
-  #   ped <- cbind(ped[ , c("id", "sire", "dam", "sex")],
-  #                recordStatus = "original",
-  #                ped[ , names(ped)[5:length(ped)], drop = FALSE],
-  #                stringsAsFactors = FALSE)
-  # } else {
-    ped <- ped[ , !names(ped) %in% "recordStatus"]
-    ped <- cbind(ped, recordStatus = "original", stringsAsFactors = FALSE)
-  #}
+  ped <- ped[, !names(ped) %in% "recordStatus"]
+  ped <- cbind(ped, recordStatus = "original", stringsAsFactors = FALSE)
+
   # Adding line entries for these parents
   if (nrow(a1) > 0) {
     a1$sire <- NA

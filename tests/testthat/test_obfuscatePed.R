@@ -24,5 +24,3 @@ test_that("obfuscatePed creates ID map on request", {
   expect_equal(names(ped$map), pedSix$id)
   expect_equal(as.character(ped$map), ped$ped$id)
 })
-
-

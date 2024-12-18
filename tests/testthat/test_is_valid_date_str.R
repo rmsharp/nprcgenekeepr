@@ -23,4 +23,3 @@ test_that("is_valid_date_str returns correct logical values", {
                                  optional = FALSE),
                c(FALSE, FALSE))
 })
-

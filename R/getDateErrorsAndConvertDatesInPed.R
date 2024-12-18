@@ -29,24 +29,24 @@
 #' @param errorLst object with placeholders for error types found in a pedigree
 #' file by \code{qcStudbook} through the functions it calls.
 #' @export
-getDateErrorsAndConvertDatesInPed <- function(sb, errorLst) {
-  invalidDateRows <- convertDate(sb, time.origin = as.Date("1970-01-01"),
+getDateErrorsAndConvertDatesInPed <- function(sb, errorLst) { # nolint: object_length_linter
+  invalidDateRows <- convertDate(sb, timeOrigin = as.Date("1970-01-01"),
                                  reportErrors = TRUE)
   if (!is.null(invalidDateRows)) {
     errorLst$invalidDateRows <- invalidDateRows
     invalidAndAdded <- c(as.integer(invalidDateRows),
                          getRecordStatusIndex(sb, "added"))
     if (nrow(sb[-invalidAndAdded, ]) > 0) {
-      sb[ , names(sb) %in% getDateColNames()] <-
-        as.Date(sb[ , names(sb) %in% getDateColNames()], origin="1970-01-01")
-      sb <- convertDate(sb, time.origin = as.Date("1970-01-01"),
+      sb[, names(sb) %in% getDateColNames()] <-
+        as.Date(sb[, names(sb) %in% getDateColNames()], origin = "1970-01-01")
+      sb <- convertDate(sb, timeOrigin = as.Date("1970-01-01"),
                         reportErrors = FALSE)
-      sb <- setExit(sb, time.origin = as.Date("1970-01-01"))
+      sb <- setExit(sb, timeOrigin = as.Date("1970-01-01"))
     }
   } else {
-    sb <- convertDate(sb, time.origin = as.Date("1970-01-01"),
+    sb <- convertDate(sb, timeOrigin = as.Date("1970-01-01"),
                       reportErrors = FALSE)
-    sb <- setExit(sb, time.origin = as.Date("1970-01-01"))
+    sb <- setExit(sb, timeOrigin = as.Date("1970-01-01"))
   }
   list(sb = sb, errorLst = errorLst)
 }

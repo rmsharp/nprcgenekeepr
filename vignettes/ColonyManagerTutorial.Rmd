@@ -18,7 +18,8 @@ library(kableExtra)
 library(grid)
 library(stringi)
 library(nprcgenekeepr)
-knitr::opts_chunk$set(eval = FALSE, echo = TRUE, results = "markup", cache = FALSE)
+knitr::opts_chunk$set(eval = FALSE, echo = TRUE, results = "markup",
+                      cache = FALSE)
 pdf.options(useDingbats = TRUE)
 start_time <- proc.time()
 
@@ -201,23 +202,23 @@ errorDescriptions <- c(
   "Values, which are supposed to be dates, cannot be interpreted as a date.",
   "Parents were too young on the date of birth of to have been the parent.",
   "Individuals listed as female or hermaphroditic and as a sire.",
-  "Individuals are listed as male and as a dam.", 
+  "Individuals are listed as male and as a dam.",
   "Individuals who are listed as both a sire and a dam.",
   "IDs listed more than once.",
-  stri_c("System Crash. These are unanticipated errors that should be ", 
+  stri_c("System Crash. These are unanticipated errors that should be ",
          "reported to the package maintainer"),
-  stri_c("Columns that have been changed to conform to the program (ex: id -> Ego ID).")
+  stri_c("Columns that have been changed to conform to the program",
+         "(ex: id -> Ego ID).")
 )
-errorTbl <- data.frame(`Error` = errorTypes, Definition = errorDescriptions, 
-                       stringsAsFactors = FALSE) 
-
+errorTbl <- data.frame(`Error` = errorTypes, Definition = errorDescriptions,
+                       stringsAsFactors = FALSE)
 ```
-```{r print-error-definition-tbl, eval = TRUE, echo=FALSE, include = TRUE, results='markup'}
+```{r tbl-error-defs, eval = TRUE, echo=FALSE, include = TRUE, results='markup'}
+# print-error-definition-tbl
 knitr::kable(errorTbl)  %>%
-  kable_styling(full_width = F) %>%
-  column_spec(1, bold = T, color = "blue") %>%
+  kable_styling(full_width = FALSE) %>%
+  column_spec(1, bold = TRUE, color = "blue") %>%
   column_spec(2, width = "30em")
-
 ```
 
 *********
@@ -608,10 +609,11 @@ selected settings. I have indicated the seed animals for the first group with
 red rectangles.
 
 
-```{r breeding-group-first-group-no-kinship-seeds-indicated, eval = TRUE, fig.width = 6, fig.height = 5.5, echo = FALSE}
-img <- readPNG("./shiny_app_use/breeding_group_first_group_no_kinship_seeds_indicated.png")
+```{r fig-bg, eval = TRUE, fig.width = 6, fig.height = 5.5, echo = FALSE}
+# breeding-group-first-group-no-kinship-seeds-indicated
+img <- readPNG(
+  "./shiny_app_use/breeding_group_first_group_no_kinship_seeds_indicated.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -639,10 +641,10 @@ However, the ratio obtained is limited by the availability of animals that
 meet all criteria you have set.
 
 
-```{r breeding-group-sex-ratio-specification, eval = TRUE, fig.width = 5.5, echo = FALSE}
-img <- png::readPNG("./shiny_app_use/breeding_group_sex_ratio_specification.png")
+```{r bg-sex-ratio-specification, eval = TRUE, fig.width = 5.5, echo = FALSE}
+img <-
+  png::readPNG("./shiny_app_use/breeding_group_sex_ratio_specification.png")
 grid::grid.raster(img)
-
 ```                                                                                      
 
 Selecting a sex ratio of 2.5 with 6 groups as is illustrated resulted in 5 

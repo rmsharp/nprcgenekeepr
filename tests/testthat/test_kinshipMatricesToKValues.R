@@ -4,6 +4,7 @@ library(testthat)
 context("kinshipMatricesToKValues")
 
 ped <- nprcgenekeepr::smallPed
+# nolint start: object_name_linter.
 simParent_1 <- list(id = "A",
                     sires = c("s1_1", "s1_2", "s1_3"),
                     dams = c("d1_1", "d1_2", "d1_3", "d1_4"))
@@ -32,9 +33,12 @@ extractKinship <- function(simKinships, id1, id2, simulation) {
 }
 
 extractKValue <- function(kValue, id1, id2, simulation) {
-  kValue[id_1 ==  id1 & id_2 == id2, paste0("sim_", simulation), with = FALSE][[1]]
+  # nolint start: object_usage_linter.
+  kValue[id_1 ==  id1 & id_2 == id2, paste0("sim_", simulation),
+         with = FALSE][[1]]
+  # nolint end: object_usage_linter.
 }
-
+# nolint end: object_usage_linter.
 set_seed(seed = 1)
 n <- 10
 simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)

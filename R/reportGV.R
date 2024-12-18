@@ -103,11 +103,11 @@ reportGV <- function(ped, guIter = 5000, guThresh = 1, pop = NULL,
   # Get a data.frame of offspring counts for the probands
   offspring <- offspringCounts(probands, ped, considerPop = TRUE)
 
-  include.cols <- intersect(getIncludeColumns(), names(ped))
+  includeCols <- intersect(getIncludeColumns(), names(ped))
 
   # Subsetting out the needed demographic information from the pedigree
   rownames(ped) <- ped$id
-  demographics <- ped[probands, include.cols]
+  demographics <- ped[probands, includeCols]
 
   if (!is.null(updateProgress)) {
     updateProgress(detail = "Calculating Founder Equivalents", value = 1,
@@ -135,7 +135,7 @@ reportGV <- function(ped, guIter = 5000, guThresh = 1, pop = NULL,
                     nMaleFounders = nrow(males),
                     nFemaleFounders = nrow(females),
                     total = (nrow(males) + nrow(females)))
-  class(finalData) <- append(class(finalData),"nprcgenekeeprGV")
+  class(finalData) <- append(class(finalData), "nprcgenekeeprGV")
 
   return(finalData)
 }

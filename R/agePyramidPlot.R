@@ -24,26 +24,42 @@
 #' @importFrom lubridate year month day
 #' @importFrom stringi stri_c
 #' @importFrom plotrix pyramid.plot
-agePyramidPlot <- function(males, females, ageLabels, mcol, fcol, laxlab,
-                           raxlab, gap, currentDate) {
-  pyramid.plot(lx = males, rx = females, labels = ageLabels,
-               main = stri_c("Total on ",
-                             year(currentDate), "-",
-                             month(currentDate, label = TRUE), "-",
-                             day(currentDate),
-                             ": ", sum(c(males, females))),
-               top.labels = c(
-                 stri_c("Male = ", sum(males)),
-                 "Age",
-                 stri_c("Female = ", sum(females))),
-               lxcol = mcol, rxcol = fcol,
-               laxlab = laxlab,
-               raxlab = raxlab,
-               gap = gap,
-               # use for PT species
-               # gap=40,
-               # laxlab = seq(0, 100, by = 10),
-               # raxlab = seq(0, 100, by = 10),
-               unit = "Number of Animals",
-               show.values = TRUE, ndig = 0)
+agePyramidPlot <- function(males,
+                           females,
+                           ageLabels,
+                           mcol,
+                           fcol,
+                           laxlab,
+                           raxlab,
+                           gap,
+                           currentDate) {
+  pyramid.plot(
+    lx = males,
+    rx = females,
+    labels = ageLabels,
+    main = stri_c(
+      "Total on ",
+      year(currentDate),
+      "-",
+      month(currentDate, label = TRUE),
+      "-",
+      day(currentDate),
+      ": ",
+      sum(c(males, females))
+    ),
+    top.labels = c(stri_c("Male = ", sum(males)), "Age", stri_c("Female = ",
+                                                                sum(females))),
+    lxcol = mcol,
+    rxcol = fcol,
+    laxlab = laxlab,
+    raxlab = raxlab,
+    gap = gap,
+    # TODO for chimpanzees (PT == species)
+    # set gap to 40,
+    # laxlab to seq(0, 100, by = 10),
+    # raxlab to seq(0, 100, by = 10),
+    unit = "Number of Animals",
+    show.values = TRUE,
+    ndig = 0
+  )
 }

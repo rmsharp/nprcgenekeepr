@@ -38,7 +38,7 @@ findLoops <- function(ptree) {
   for (id in ids) {
     if (makesLoop(id, ptree)) {
       loops[[id]] <- TRUE
-    } else{
+    } else {
       loops[[id]] <- FALSE
     }
   }

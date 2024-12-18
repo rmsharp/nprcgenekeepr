@@ -168,7 +168,7 @@ qcStudbook <- function(sb, minParentAge = 2, reportChanges = FALSE,
   if (reportChanges == FALSE) # remove changed columns
     errorLst$changedCols <- getEmptyErrorLst()$changedCols
   missingColumns <- checkRequiredCols(cols, reportErrors)
-  if (reportErrors & !is.null(missingColumns)) {
+  if (reportErrors && !is.null(missingColumns)) {
     errorLst$missingColumns <- missingColumns
     return(errorLst)
   }
@@ -184,8 +184,8 @@ qcStudbook <- function(sb, minParentAge = 2, reportChanges = FALSE,
   if (reportErrors) {
     testVal <- correctParentSex(sb$id, sb$sire, sb$dam, sb$sex,
                                 sb$recordStatus, reportErrors)
-    if (is.null(testVal$femaleSires) & is.null(testVal$maleDams)
-        & is.null(testVal$sireAndDam)) {
+    if (is.null(testVal$femaleSires) && is.null(testVal$maleDams) &&
+        is.null(testVal$sireAndDam)) {
       sb$sex <- correctParentSex(sb$id, sb$sire, sb$dam, sb$sex,
                                  sb$recordStatus, reportErrors = FALSE)
     } else {
@@ -212,8 +212,8 @@ qcStudbook <- function(sb, minParentAge = 2, reportChanges = FALSE,
     sb <- sbAndErrors$sb
     errorLst <- sbAndErrors$errorLst
   } else {
-    sb <- convertDate(sb, time.origin = as.Date("1970-01-01"))
-    sb <- setExit(sb, time.origin = as.Date("1970-01-01"))
+    sb <- convertDate(sb, timeOrigin = as.Date("1970-01-01"))
+    sb <- setExit(sb, timeOrigin = as.Date("1970-01-01"))
   }
 
   # ensure parents are older than offspring
@@ -259,7 +259,7 @@ qcStudbook <- function(sb, minParentAge = 2, reportChanges = FALSE,
   novelCols <- colnames(sb)[!colnames(sb) %in% cols]
   sb <- sb[, c(cols, novelCols)]
   sb <- sb[with(sb, order(gen, id)), ]
-  rownames(sb) <- seq(length.out = nrow(sb))
+  rownames(sb) <- seq_len(length.out = nrow(sb))
 
   # Ensuring the IDs are stored as characters
   sb <- toCharacter(sb, headers = c("id", "sire", "dam"))

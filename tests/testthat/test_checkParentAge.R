@@ -20,8 +20,9 @@ test_that("checkParentAge identifies the over aged parents", {
     all(underAgeTen$sire[underAgeTen$sireAge < 10 &
                            !is.na(underAgeTen$sireAge)] %in%
           c("HRQJQR", "HBEMKY", "0RZ5LL", "F0YSEE", "HP3E04", "716P7O",
-            "WMUJC5", "TNAWBK", "QDY8I7", "V8VU31", "H00H7D", "YIAD2N", "HRBVOE",
-            "48YAZ5", "CQMWGX", "549AEC", "H0UP6R", "ODSV6N", "IZ0ELE")))
+            "WMUJC5", "TNAWBK", "QDY8I7", "V8VU31", "H00H7D", "YIAD2N",
+            "HRBVOE", "48YAZ5", "CQMWGX", "549AEC", "H0UP6R", "ODSV6N",
+            "IZ0ELE")))
 })
 test_that("checkParentAge requires birth column to be potential date", {
   ped <- qcPed
@@ -37,17 +38,19 @@ test_that("checkParentAge allows birth column to be character", {
   ped$birth <- format(ped$birth, format = "%m-%d-%Y")
   expect_equal(nrow(checkParentAge(ped, minParentAge = 6)), 6)
 })
-test_that("checkParentAge returns unchanged dataframe if required column is missing", {
-  ped <- checkParentAge(qcPed[ , !names(qcPed) %in% "id"])
-  expect_equal(ncol(ped), ncol(qcPed[ , !names(qcPed) %in% "id"]))
-  expect_equal(ped, qcPed[ , !names(qcPed) %in% "id"])
+test_that(paste0("checkParentAge returns unchanged dataframe if required ",
+                 "column is missing"), {
+  ped <- checkParentAge(qcPed[, !names(qcPed) %in% "id"])
+  expect_equal(ncol(ped), ncol(qcPed[, !names(qcPed) %in% "id"]))
+  expect_equal(ped, qcPed[, !names(qcPed) %in% "id"])
 })
-test_that("checkParentAge returns NULL if required column is missing and reportErrors == TRUE", {
-  ped <- checkParentAge(qcPed[ , !names(qcPed) %in% "id"], reportErrors = TRUE)
+test_that(paste0("checkParentAge returns NULL if required column is missing ",
+                 "and reportErrors == TRUE"), {
+  ped <- checkParentAge(qcPed[, !names(qcPed) %in% "id"], reportErrors = TRUE)
   expect_true(is.null(ped))
 })
-test_that("checkParentAge returns NULL if required dataframe has no rows and reportErrors == TRUE", {
+test_that(paste0("checkParentAge returns NULL if required dataframe has no ",
+                 "rows  and reportErrors == TRUE"), {
   ped <- checkParentAge(qcPed[0, ], reportErrors = TRUE)
   expect_true(is.null(ped))
 })
-

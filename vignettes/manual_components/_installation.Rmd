@@ -27,7 +27,6 @@ the R console prompt with:
 ```{r gh-installation, eval = FALSE, echo=TRUE}
 install.packages("devtools")
 devtools::install_github("rmsharp/nprcgenekeepr")
-
 ```
 
 All missing dependencies should be automatically installed.

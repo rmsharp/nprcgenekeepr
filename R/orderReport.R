@@ -37,8 +37,7 @@ orderReport <- function(rpt, ped) {
     rpt <- rpt[!i, ]
     if ("age" %in% names(rpt)) {
       finalRpt$imports <- imports[with(imports, order(age)), ]
-    }
-    else {
+    } else {
       finalRpt$imports <- imports[with(imports, order(id)), ]
     }
 
@@ -50,8 +49,7 @@ orderReport <- function(rpt, ped) {
     rpt <- rpt[!i, ]
     if ("age" %in% names(rpt)) {
       finalRpt$noParentage <- noParentage[with(noParentage, order(age)), ]
-    }
-    else {
+    } else {
       finalRpt$noParentage <- noParentage[with(noParentage, order(id)), ]
     }
   }
@@ -77,6 +75,6 @@ orderReport <- function(rpt, ped) {
   finalRpt <- finalRpt[includeCols]
   finalRpt <- rankSubjects(finalRpt)
   finalRpt <- do.call("rbind", finalRpt)
-  rownames(finalRpt) <- seq(nrow(finalRpt))
+  rownames(finalRpt) <- seq_len(nrow(finalRpt))
   return(finalRpt)
 }

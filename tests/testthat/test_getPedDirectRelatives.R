@@ -4,7 +4,7 @@ context("getPedDirectRelatives")
 
 test_that("getPedDirectRelatives throws an error with no pedigree", {
   expect_error(getPedDirectRelatives(),
-               'Need to specify IDs')
+               "Need to specify IDs")
 })
 
 test_that("getPedDirectRelatives throws an error with no pedigree", {
@@ -14,24 +14,24 @@ test_that("getPedDirectRelatives throws an error with no pedigree", {
 ped <- c("A", "B")
 test_that("getPedDirectRelatives throws an error with no IDs", {
   expect_error(getPedDirectRelatives(ped = ped),
-               'Need to specify IDs')
+               "Need to specify IDs")
 })
 
 test_that("getPedDirectRelatives throws an error with pedigree argument", {
   expect_error(getPedDirectRelatives(ids = "E"),
-               'Need to specify pedigree')
+               "Need to specify pedigree")
 })
 
 test_that(paste0("getPedDirectRelatives throws an error with no data.frame ",
                  "for pedigree"), {
                    expect_error(getPedDirectRelatives(ids = "E", ped = ped),
-                                'ped must be a data.frame object')
+                                "ped must be a data.frame object")
                  })
 
 ped <- nprcgenekeepr::lacy1989Ped
 test_that("getPedDirectRelatives throws an error with no pedigree", {
   expect_error(getPedDirectRelatives(ped = ped),
-               'Need to specify IDs')
+               "Need to specify IDs")
 })
 
 ped <- nprcgenekeepr::lacy1989Ped
@@ -86,4 +86,3 @@ relatives <- getPedDirectRelatives(ids = ids, ped = ped2,
 test_that("getPedDirectRelatives creates correct pedigree", {
   expect_setequal(relatives$id, c("H", "I", "J", "K", "L", "M"))
 })
-

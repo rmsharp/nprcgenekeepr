@@ -34,7 +34,7 @@
 #' @export
 getGVGenotype <- function(ped) {
   if (hasGenotype(ped)) {
-    genotype <- ped[ , c("id", "first", "second")]
+    genotype <- ped[, c("id", "first", "second")]
   } else {
     genotype <- NULL
   }

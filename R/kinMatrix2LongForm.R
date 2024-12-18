@@ -13,21 +13,21 @@
 #' ped <- nprcgenekeepr::lacy1989Ped
 #' ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 #' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
-#' reformattedKmat <- kinMatrix2LongForm(kmat, rm.dups = FALSE)
+#' reformattedKmat <- kinMatrix2LongForm(kmat, removeDups = FALSE)
 #' nrow(reformattedKmat)
-#' reformattedNoDupsKmat <- kinMatrix2LongForm(kmat, rm.dups = TRUE)
+#' reformattedNoDupsKmat <- kinMatrix2LongForm(kmat, removeDups = TRUE)
 #' nrow(reformattedNoDupsKmat)
 #' }
 #' @param kinMatrix numerical matrix of pairwise kinship values. The row and
 #' column names correspond to animal IDs.
-#' @param rm.dups logical value indication whether or not reverse-order ID
+#' @param removeDups logical value indication whether or not reverse-order ID
 #' pairs be filtered out? (i.e., "ID1 ID2 kin_val" and "ID2 ID1 kin_val" will
-#' be collapsed into a single entry if rm.dups = TRUE)
+#' be collapsed into a single entry if removeDups = TRUE)
 #'
 #' @importFrom utils stack
 #' @export
-kinMatrix2LongForm <- function(kinMatrix, rm.dups = FALSE) {
-  if (rm.dups) {
+kinMatrix2LongForm <- function(kinMatrix, removeDups = FALSE) {
+  if (removeDups) {
     kinMatrix[upper.tri(kinMatrix)] <- NA
   }
 

@@ -35,9 +35,9 @@
 #' containing columns indicating the birth and death dates of an individual.
 #' The table may also contain dates of sale (departure). Optional columns
 #' are \code{birth}, \code{death}, and \code{departure}.
-#' @param time.origin date object used by \code{as.Date} to set \code{origin}.
+#' @param timeOrigin date object used by \code{as.Date} to set \code{origin}.
 #' @export
-setExit <- function(ped, time.origin = as.Date("1970-01-01")) {
+setExit <- function(ped, timeOrigin = as.Date("1970-01-01")) {
   headers <- tolower(names(ped))
   if (nrow(ped) == 0)
     return(ped)
@@ -49,13 +49,13 @@ setExit <- function(ped, time.origin = as.Date("1970-01-01")) {
       # as.Date("1970-01-01") is used to counter this and maintain Dates
       # properly
       ped$exit <- as.Date(mapply(chooseDate, ped$death, ped$departure),
-                          origin = time.origin)
+                          origin = timeOrigin)
     } else if ("death" %in% headers) {
       ped$exit <- ped$death
     } else if ("departure" %in% headers) {
       ped$exit <- ped$departure
     } else {
-      ped$exit <- as.Date(NA, origin = time.origin)
+      ped$exit <- as.Date(NA, origin = timeOrigin)
     }
   }
   return(ped)

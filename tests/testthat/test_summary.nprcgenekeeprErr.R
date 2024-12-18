@@ -58,4 +58,3 @@ test_that("summary.nprcgenekeeprErr identifies bad database connection", {
   expect_true(stri_detect_fixed(summary(ped8)$txt,
                                 "Database connection failed"))
 })
-

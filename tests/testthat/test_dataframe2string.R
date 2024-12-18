@@ -19,7 +19,7 @@ test_that("dataframe2string forms single character vector from dataframe", {
                                                  row.names = FALSE,
                                                  digits = 2),
                                 "(or 0-length row.names)"))
-  expect_true(stri_detect_regex(dataframe2string(text$sp[ , 0],
+  expect_true(stri_detect_regex(dataframe2string(text$sp[, 0],
                                                  row.names = FALSE,
                                                  digits = 2),
                                 "data frame with 0 columns and 3 rows"))

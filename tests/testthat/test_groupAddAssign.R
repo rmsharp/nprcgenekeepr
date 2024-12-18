@@ -117,8 +117,8 @@ test_that(paste0(
 })
 test_that(
   paste0(
-    "groupAddAssign add 1 sire at most when there are multiple potential sires ",
-    "in the candidates during harem creation"
+    "groupAddAssign add 1 sire at most when there are multiple potential ",
+    "sires in the candidates during harem creation"
   ),
   {
     skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")

@@ -32,14 +32,15 @@
 #' relationship categories included for each pair.
 #' @export
 makeRelationClassesTable <- function(kin) {
-  rel.class <- c("Self", "Parent-Offspring", "Full-Siblings", "Half-Siblings",
-                 "Grandparent-Grandchild", "Full-Cousins", "Cousin - Other",
-                 "Full-Avuncular", "Avuncular - Other", "Other", "No Relation")
+  relationClass <- c("Self", "Parent-Offspring", "Full-Siblings",
+                     "Half-Siblings", "Grandparent-Grandchild", "Full-Cousins",
+                     "Cousin - Other", "Full-Avuncular", "Avuncular - Other",
+                     "Other", "No Relation")
 
   kin <- kin[kin$relation != "Self", ]
   r <- as.data.frame(table(kin$relation))
   colnames(r) <- c("Relationship Class", "Frequency")
 
-  rel.class <- rel.class[rel.class %in% r[, "Relationship Class"]]
-  return(r[match(rel.class, r[, "Relationship Class"]), ])
+  relationClass <- relationClass[relationClass %in% r[, "Relationship Class"]]
+  return(r[match(relationClass, r[, "Relationship Class"]), ])
 }

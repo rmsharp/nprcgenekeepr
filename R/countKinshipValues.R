@@ -60,7 +60,8 @@
 #'  returned by this function.
 #'
 #' @export
-countKinshipValues <- function(kinshipValues, accummulatedKValueCounts = NULL) {
+countKinshipValues <- function(kinshipValues,
+                               accummulatedKValueCounts = NULL) {
   idCols <- c("id_1", "id_2")
   valueCols <- names(kinshipValues)[!is.element(names(kinshipValues), idCols)]
   kIds <- kValues <- kCounts <-
@@ -73,11 +74,9 @@ countKinshipValues <- function(kinshipValues, accummulatedKValueCounts = NULL) {
     kValues[[row]] <- as.numeric(names(valuesTable))
     kCounts[[row]] <- as.numeric(valuesTable)
   }
-  kValueCounts <- list(
-    kIds = kIds,
-    kValues = kValues,
-    kCounts = kCounts
-  )
+  kValueCounts <- list(kIds = kIds,
+                       kValues = kValues,
+                       kCounts = kCounts)
   if (is.null(accummulatedKValueCounts)) {
     accummulatedKValueCounts <- kValueCounts
   } else {
@@ -86,10 +85,9 @@ countKinshipValues <- function(kinshipValues, accummulatedKValueCounts = NULL) {
       stop(
         paste0(
           "ID pairs in simulated pedigrees do not match: ",
-          setdiff(unique(unlist(kIds)),
-                  unique(
-                    unlist(accummulatedKValueCounts$kIds)
-                  )),
+          setdiff(unique(unlist(kIds)), unique(
+            unlist(accummulatedKValueCounts$kIds)
+          )),
           " found in only one set of simulated pedigrees."
         )
       )
@@ -119,4 +117,3 @@ countKinshipValues <- function(kinshipValues, accummulatedKValueCounts = NULL) {
   }
   accummulatedKValueCounts
 }
-

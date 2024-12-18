@@ -33,4 +33,3 @@ test_that("convertFromCenter() detects input error", {
   original <- c("y", "&")
   expect_error(convertFromCenter(original), "fromCenter field has ambiguous")
 })
-

@@ -55,14 +55,14 @@ getAncestors <- function(id, ptree) {
   if (!is.na(sire)) {
     sAnc <- getAncestors(sire, ptree)
     sireLineage <- c(sire, sAnc)
-  } else{
+  } else {
     sireLineage <- c()
   }
 
   if (!is.na(dam)) {
     dAnc <- getAncestors(dam, ptree)
     damLineage <- c(dam, dAnc)
-  } else{
+  } else {
     damLineage <- c()
   }
 

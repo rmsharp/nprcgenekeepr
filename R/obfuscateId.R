@@ -32,7 +32,7 @@ obfuscateId <- function(id, size = 10, existingIds = character(0)) {
   for (i in seq_along(id)) {
     counter <- 0
     repeat {
-      if (grepl("^U",id[i], ignore.case = TRUE)) {
+      if (grepl("^U", id[i], ignore.case = TRUE)) {
         obfuscatedId[i] <- stri_c(c("U", sample(c(noOInLetters, stri_c(0:9)),
                                               size = size - 1, replace = TRUE)),
                                   collapse = "")
@@ -42,9 +42,9 @@ obfuscateId <- function(id, size = 10, existingIds = character(0)) {
                                          replace = TRUE), collapse = "")
       }
       ## grepl is ensuring both IDs are Unknown or known
-      if (!any(obfuscatedId[i] %in% existingIds) &
-          (grepl("^U",obfuscatedId[i], ignore.case = TRUE) ==
-           grepl("^U",id[i], ignore.case = TRUE)))
+      if (!any(obfuscatedId[i] %in% existingIds) &&
+          (grepl("^U", obfuscatedId[i], ignore.case = TRUE) ==
+           grepl("^U", id[i], ignore.case = TRUE)))
         break
       counter <- counter + 1
       if (counter > 100)

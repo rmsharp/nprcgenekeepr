@@ -8,4 +8,3 @@ test_that("headerDisplayNames makes the correct mapping", {
   expect_equal(headerDisplayNames(c("spf", "second_name", "value")),
                c("SPF", "Second Allele", "Value Designation"))
 })
-

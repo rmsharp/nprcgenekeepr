@@ -31,7 +31,7 @@ library(nprcgenekeepr)
 ped <- nprcgenekeepr::lacy1989Ped
 ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
-kin <- kinMatrix2LongForm(kmat, rm.dups = FALSE)
+kin <- kinMatrix2LongForm(kmat, removeDups = FALSE)
 threshold <- 0.1
 kin <- filterThreshold(kin, threshold = threshold)
 ped$sex <- c("M", "F", "M", "M", "F", "F", "M")

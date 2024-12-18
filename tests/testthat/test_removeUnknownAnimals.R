@@ -21,4 +21,3 @@ test_that(stri_c("removeUnknownAnimals removes \"added\" ",
   expect_false(nrow(ped2) == nrow(addedPed))
   expect_true(nrow(ped2) + 3 == nrow(addedPed))
 })
-

@@ -12,7 +12,7 @@
 #' seq_len(numGrp).
 #' @param available is a list of numGrp named members and each member is
 #' initially defined as the character vector made up of candidate animal Ids.
-removeGroupIfNoAvailableAnimals <- function(grpNum, available) {
+removeGroupIfNoAvailableAnimals <- function(grpNum, available) { # nolint: object_length_linter
   remainingGrpNum <- grpNum
   for (i in remainingGrpNum) {
     if (isEmpty(available[[i]])) {

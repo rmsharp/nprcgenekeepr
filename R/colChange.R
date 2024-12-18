@@ -11,9 +11,8 @@
 ## ##  get_and_or_list
 #' @importFrom stringi stri_c
 colChange <- function(orgCols, cols) {
-  desc <- stri_c(
-    get_and_or_list(orgCols[!orgCols %in% cols]), " to ",
-    get_and_or_list(cols[!orgCols %in% cols]))
+  desc <- stri_c(get_and_or_list(orgCols[!orgCols %in% cols]), " to ",
+                 get_and_or_list(cols[!orgCols %in% cols]))
   if (desc == " to ")
     desc <- character(0)
   desc

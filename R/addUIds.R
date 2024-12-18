@@ -38,8 +38,7 @@ addUIds <- function(ped) {
     k <- length(s)
     sireIds <- paste("U", sprintf("%04d", 1:k), sep = "")
     ped[s, "sire"] <- sireIds
-  }
-  else{
+  } else {
     k <- 0
   }
 

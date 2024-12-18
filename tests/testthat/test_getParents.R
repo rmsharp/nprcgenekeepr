@@ -9,7 +9,7 @@ test_that("getParents correctly returns correct IDs", {
   parents <- getParents(ped, "D")
   expect_true(all(parents %in% c("A", "B")))
   expect_true(all(c("A", "B") %in% parents))
-  parents <- getParents(ped, c("D","A"))
+  parents <- getParents(ped, c("D", "A"))
   expect_true(all(parents %in% c("A", "B", "Q")))
   expect_true(all(c("A", "B", "Q") %in% parents))
 })

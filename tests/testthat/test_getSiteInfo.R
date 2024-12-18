@@ -14,9 +14,9 @@ test_that("getSiteInfo handled Windows and non-windows opperating systems", {
   siteInfo <- suppressWarnings(getSiteInfo())
   if (stri_detect_fixed(toupper(siteInfo$sysname), "WIND")) {
     expect_equal(siteInfo$homeDir,
-                 paste0(gsub('\\\\', '/', Sys.getenv("HOME")), "/"))
+                 paste0(gsub("\\\\", "/", Sys.getenv("HOME")), "/"))
     expect_equal(siteInfo$configFile,
-                 paste0(gsub('\\\\', '/', Sys.getenv("HOME")), "/",
+                 paste0(gsub("\\\\", "/", Sys.getenv("HOME")), "/",
                                     "_nprcgenekeepr_config"))
   } else {
     expect_equal(siteInfo$homeDir, "~/")

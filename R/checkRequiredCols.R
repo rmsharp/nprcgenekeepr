@@ -28,19 +28,23 @@
 checkRequiredCols <- function(cols, reportErrors) {
   requiredCols <- getRequiredCols()
   # Checking for the required fields (id, sire, dam, sex)
-  if (!all(str_detect_fixed_all(cols, requiredCols)) |
+  if (!all(str_detect_fixed_all(cols, requiredCols)) ||
       length(cols) < length(requiredCols)) {
     if (reportErrors) {
       missingColumns <-
         as.character(unlist(sapply(requiredCols, function(col) {
-          if (!any(col == cols)) col})))
+          if (!any(col == cols))
+            col
+        })))
 
       if (length(missingColumns) > 0)
         return(missingColumns)
     } else {
-      stop(paste0("Required field(s) missing: ", paste0(requiredCols[
-        !str_detect_fixed_all(cols, requiredCols, ignore_na = TRUE)],
-        collapse = ", "), "."))
+      stop(paste0(
+        "Required field(s) missing: ",
+        paste0(requiredCols[!str_detect_fixed_all(cols, requiredCols,
+                                                  ignore_na = TRUE)],
+               collapse = ", "), "."))
     }
   }
   return(NULL)

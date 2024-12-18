@@ -18,7 +18,7 @@
 ## ## rmsutilityr create_wkbk
 #' @export
 saveDataframesAsFiles <- function(dfList, baseDir, fileType = "csv") {
-  if (!(inherits(dfList, "list") &
+  if (!(inherits(dfList, "list") &&
       all(vapply(dfList, function(df) inherits(df, "data.frame"),
                  logical(1)))))
       stop("dfList must be a list containing only dataframes.")

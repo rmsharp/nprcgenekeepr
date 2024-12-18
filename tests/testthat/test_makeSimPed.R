@@ -4,6 +4,7 @@ context("makeSimPed")
 library(testthat)
 
 ped <- nprcgenekeepr::lacy1989Ped
+# nolint start: object_name_linter.
 simParent_1 <- list(id = "A",
                     sires = c("s1_1", "s1_2", "s1_3"),
                     dams = c("d1_1", "d1_2", "d1_3", "d1_4"))
@@ -106,5 +107,5 @@ test_that("makeSimPed creates a correct pedigree structure with no dams", {
   expect_equal(simPed$dam[simPed$id == "A"], "d1_2")
   expect_true(is.na(simPed$dam[simPed$id == "B"]))
   expect_equal(simPed$dam[simPed$id == "E"], "d3_1")
+  # nolint end: object_name_linter.
 })
-

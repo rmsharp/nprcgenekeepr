@@ -78,7 +78,7 @@ test_that("getProductionStatus calculates correctly", {
   expect_equal(status$production, 1.12698412698413)
   expect_equal(status$color, "green")
 })
-badPed <- pedWith71[ , -1]
+badPed <- pedWith71[, -1]
 test_that("getProductionStatus detects missing column", {
   expect_error(getProductionStatus(
     badPed, minParentAge = 3, maxOffspringAge = NULL,

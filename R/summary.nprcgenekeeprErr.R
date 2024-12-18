@@ -193,7 +193,8 @@ summary.nprcgenekeeprGV <- function(object, ...) {
   gvReport <- object
   stopifnot(inherits(gvReport, "nprcgenekeeprGV"))
   rpt <- gvReport[["report"]]
-  kmat <- gvReport[["kinship"]]
+  # Not currently including kmat; may add later
+  kmat <- gvReport[["kinship"]] # nolint: object_usage_linter
   f <- gvReport[["total"]]
   mf <- gvReport[["nMaleFounders"]]
   ff <- gvReport[["nFemaleFounders"]]
@@ -218,10 +219,10 @@ summary.nprcgenekeeprGV <- function(object, ...) {
     c(txt, stri_c("Live Offspring: ", sum(rpt$livingOffspring)))
   txt <-
     c(txt, stri_c("High Value Individuals: ",
-                  nrow(rpt[rpt$value == "High Value",])))
+                  nrow(rpt[rpt$value == "High Value", ])))
   txt <-
     c(txt, stri_c("Low Value Individuals: ",
-                  nrow(rpt[rpt$value == "Low Value",])))
+                  nrow(rpt[rpt$value == "Low Value", ])))
   class(txt) <- "summary.nprcgenekeeprGV"
   txt
 }

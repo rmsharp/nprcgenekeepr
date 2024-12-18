@@ -11,7 +11,8 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,include = TRUE, results = "markup", cache = FALSE)
+knitr::opts_chunk$set(echo = TRUE, include = TRUE, results = "markup",
+                      cache = FALSE)
 pdf.options(useDingbats = TRUE)
 start_time <- proc.time()
 
@@ -147,10 +148,10 @@ For example, to select living animals at the facility with at least one parent,
 the following can be used.
 
 ```{r select-focal-animals-from-pedigree, results='asis'}
-focalAnimals <- breederPed$id[!(is.na(breederPed$sire) & 
+focalAnimals <- breederPed$id[!(is.na(breederPed$sire) &
                                   is.na(breederPed$dam)) &
                                 is.na(breederPed$exit)]
-print(stri_c("There are ", length(focalAnimals), 
+print(stri_c("There are ", length(focalAnimals),
              " animals in the vector _focalAnimals_."))
 
 ```
@@ -159,7 +160,7 @@ As can be seen, these animals have at least one parent and have not left the
 facility.
 
 ```{r short-pedigree-list-of-focal-animals}
-breederPed[breederPed$id %in% 
+breederPed[breederPed$id %in%
              focalAnimals, c("id", "sire", "dam", "exit")][1:10, ]
 
 ```
@@ -187,7 +188,8 @@ individuals who are in the ID list or are ancestors of those individuals.
 
 ```{r trim-pedigree}
 trimmedPed <- trimPedigree(focalAnimals, breederPed)
-nrow(breederPed); nrow(trimmedPed)
+nrow(breederPed)
+nrow(trimmedPed)
 
 ```
 
@@ -218,12 +220,11 @@ We will first make sure we have all of the parents by getting our list of
 parents from the entire pedigree. 
 We then demonstrate that they are all in the trimmed pedigree.
 ```{r find-focal-parents}
-allFocalParents <- c(breederPed$sire[breederPed$id %in% focalAnimals], 
+allFocalParents <- c(breederPed$sire[breederPed$id %in% focalAnimals],
                        breederPed$dam[breederPed$id %in% focalAnimals])
-trimmedFocalParents <- c(trimmedPed$sire[trimmedPed$id %in% focalAnimals], 
+trimmedFocalParents <- c(trimmedPed$sire[trimmedPed$id %in% focalAnimals],
                        trimmedPed$dam[trimmedPed$id %in% focalAnimals])
 all.equal(allFocalParents, trimmedFocalParents) # Are the IDs the same?
-
 ```
 
 However, not all of the animals in the trimmed pedigree are either
@@ -231,10 +232,9 @@ the focal animals or their parents. They are more distant ancestors
 as we will show.
 
 ```{r find-non-focal-non-focal-parent}
-notFocalNotParent <- 
+notFocalNotParent <-
   trimmedPed$id[!trimmedPed$id %in% c(focalAnimals, allFocalParents)]
 length(notFocalNotParent)
-
 ```
 
 
@@ -242,14 +242,13 @@ length(notFocalNotParent)
 allFocalGrandParents <- c(breederPed$sire[breederPed$id %in% allFocalParents],
                           breederPed$dam[breederPed$id %in% allFocalParents])
 ## Not all parents are known so the unknown individuals (NA) are removed.
-allFocalGrandParents <- allFocalGrandParents[!is.na(allFocalGrandParents)] 
-trimmedFocalGrandParents <- 
+allFocalGrandParents <- allFocalGrandParents[!is.na(allFocalGrandParents)]
+trimmedFocalGrandParents <-
   c(trimmedPed$sire[trimmedPed$id %in% allFocalParents],
     trimmedPed$dam[trimmedPed$id %in% allFocalParents])
-trimmedFocalGrandParents <- 
-  trimmedFocalGrandParents[!is.na(trimmedFocalGrandParents)] 
+trimmedFocalGrandParents <-
+  trimmedFocalGrandParents[!is.na(trimmedFocalGrandParents)]
 all.equal(allFocalGrandParents, trimmedFocalGrandParents)
-
 ```
 
 Since the trimming process is supposed to retain the focal animals
@@ -258,17 +257,17 @@ that at least some of the remaining animals are grandparents of the focal
 animals. _Hint: there are `r length(trimmedFocalGrandParents)` grandparents
 in both the trimmed and the complete pedigree_.
 
-```{r get-informative-and-uninformative-added-animals, echo=FALSE, include=FALSE, eval=TRUE}
+```{r added-animals, echo=FALSE, include=FALSE, eval=TRUE}
+# get-informative-and-uninformative-added-animals
 trimmedPedInformative <- trimPedigree(focalAnimals, breederPed,
                                             removeUninformative = TRUE)
 uninformative <- trimmedPed$id[!trimmedPed$id %in% trimmedPedInformative$id]
 notFocalInTrimmedPed <- trimmedPed$id[!trimmedPed$id %in% focalAnimals]
 additionalAnimals <- nrow(trimmedPed) - length(focalAnimals)
-geneticallyInformative <- 
-  nrow(trimPedigree(focalAnimals, breederPed, 
-                                 removeUninformative = TRUE)) - 
+geneticallyInformative <-
+  nrow(trimPedigree(focalAnimals, breederPed,
+                                 removeUninformative = TRUE)) -
   length(focalAnimals)
-
 ```
 
 As you can see from the number of rows in the full pedigree 
@@ -281,7 +280,7 @@ provide genetic information while the others
 
 ```{r animals-no-birth-no-exit, echo = FALSE, eval = TRUE, include=FALSE}
 unknownBirth <- breederPed$id[is.na(breederPed$birth)]
-unknownBirthOrExit <- 
+unknownBirthOrExit <-
   breederPed$id[is.na(breederPed$birth) | !is.na(breederPed$exit)]
 knownPed <- breederPed[!breederPed$id %in% unknownBirthOrExit, ]
 otherIds <- knownPed$id[!knownPed$id %in% trimmedPed$id[is.na(trimmedPed$exit)]]
@@ -295,14 +294,13 @@ living animals are still in the colony but are not in the trimmed pedigree.[^3]
 
 ```{r show-living-animals-not-in-trimmed-pedigree, results = 'asis'}
 unknownBirth <- breederPed$id[is.na(breederPed$birth)]
-knownExit <- breederPed$id[ !is.na(breederPed$exit)]
-unknownBirthKnownExit <- 
+knownExit <- breederPed$id[!is.na(breederPed$exit)]
+unknownBirthKnownExit <-
   breederPed$id[is.na(breederPed$birth) | !is.na(breederPed$exit)]
 knownPed <- breederPed[!breederPed$id %in% unknownBirthKnownExit, ]
 otherIds <- knownPed$id[!knownPed$id %in% trimmedPed$id[is.na(trimmedPed$exit)]]
 print(stri_c("The living animals in the pedigree that are not in the trimmed ",
              "pedigree are ", get_and_or_list(otherIds), "."))
-
 ```
 
 ## Age Sex Pyramid Plot
@@ -451,9 +449,9 @@ guBox <- ggplot(data.frame(gu = gu), aes(x = "", y = gu)) +
   geom_boxplot(
     color = "darkblue",
     fill = "lightblue",
-    notch = TRUE,#| fig.alt: >
-#|   Histogram of time between eruptions for Old Faithful. 
-#|   It is a bimodal distribution with peaks at 50-55 and 
+    notch = TRUE, #| fig.alt: >
+#|   Histogram of time between eruptions for Old Faithful.
+#|   It is a bimodal distribution with peaks at 50-55 and
 #|   80-90 minutes.
 
     outlier.color = "red",
@@ -625,7 +623,7 @@ animals in the individual groups.
 
 ```{r harem-count-and-sexratios}
 lines <- sapply(haremGrp$group, function(ids) {
-  paste0("Count: ", length(ids), " Sex Ratio: ", 
+  paste0("Count: ", length(ids), " Sex Ratio: ",
          round(calculateSexRatio(ids, trimmedPed), 2))})
 for (line in lines) print(line)
 ```
@@ -663,7 +661,7 @@ We can also see the number of animals and the sex ratios created in each group.
 
 ```{r list-count-and-sexratios}
 lines <- sapply(sexRatioGrp$group, function(ids) {
-  paste0("Count: ", length(ids), " Sex Ratio: ", 
+  paste0("Count: ", length(ids), " Sex Ratio: ",
          round(calculateSexRatio(ids, trimmedPed), 2))})
 for (line in lines) print(line)
 ```
@@ -692,19 +690,19 @@ errorDescriptions <- c(
   "Values, which are supposed to be dates, cannot be interpreted as a date.",
   "Parents were too young on the date of birth of to have been the parent.",
   "Individuals listed as female or hermaphroditic and as a sire.",
-  "Individuals are listed as male and as a dam.", 
+  "Individuals are listed as male and as a dam.",
   "Individuals who are listed as both a sire and a dam.",
   "IDs listed more than once.",
   "Fatal Errors.",
   stri_c("Columns that have been changed to conform to internal naming ",
   "conventions and what they were changed to.")
 )
-errorTbl <- data.frame(`Error` = errorTypes, Definition = errorDescriptions, 
+errorTbl <- data.frame(`Error` = errorTypes, Definition = errorDescriptions,
                        stringsAsFactors = FALSE)
 
 ```
 ```{r print-error-definition-tbl, echo=FALSE}
-knitr::kable(errorTbl) 
+knitr::kable(errorTbl)
 
 ```
 
@@ -736,7 +734,7 @@ ped <- qcStudbook(pedOne, minParentAge = 0)
 The contents of _lowParentAge.csv_ is shown below.
 
 ```{r read-lowParentAge.csv, echo = FALSE, include = FALSE}
-lowParentAge <- read.csv(paste0(tempdir(),"/lowParentAge.csv"))
+lowParentAge <- read.csv(paste0(tempdir(), "/lowParentAge.csv"))
 ```
 ```{r print-lowParentAge.csv, echo = FALSE}
 knitr::kable(lowParentAge)
@@ -760,7 +758,6 @@ _id_'s in __pedOne__ and __ped__ respectively.
 ```{r display-corrected-birth-records}
 ped <- qcStudbook(pedOne, minParentAge = 0)
 ped[ped$id %in% c("s2", "d2", "o3", "o4"), ]
-
 ```
 
 However, the preferred method of creating the standardized studbook format
@@ -771,7 +768,7 @@ studbook format be identified by setting _reportChanges_ and _reportErrors_ to
 \code{TRUE}.
 
 ```{r look-for-errors}
-errorList <- qcStudbook(pedOne, minParentAge = 0, reportChanges = TRUE, 
+errorList <- qcStudbook(pedOne, minParentAge = 0, reportChanges = TRUE,
                         reportErrors = TRUE)
 summary(errorList)
 ```
@@ -788,7 +785,7 @@ __summary__ function.
 
 ```{r look-for-errors-only}
 pedOne <- nprcgenekeepr::pedOne
-errorList <- qcStudbook(pedOne, minParentAge = 0, reportChanges = FALSE, 
+errorList <- qcStudbook(pedOne, minParentAge = 0, reportChanges = FALSE,
                         reportErrors = TRUE)
 options(width = 90)
 summary(errorList)
@@ -821,7 +818,6 @@ You can count how many loops you have with the following code.
 length(exampleLoops[exampleLoops == TRUE])
 nLoops <- countLoops(exampleLoops, exampleTree)
 sum(unlist(nLoops[nLoops > 0]))
-
 ```
 
 You can list the first 10 sets of ids, sires and dams in loops with the following line of code:
@@ -829,8 +825,6 @@ You can list the first 10 sets of ids, sires and dams in loops with the followin
 ```{r listLoops}
 
 examplePedigree[exampleLoops == TRUE, c("id", "sire", "dam")][1:10, ]
-
-
 ```
 ```{r elapsed-time}
 elapsed_time <- get_elapsed_time_str(start_time)
@@ -840,5 +834,4 @@ this document was `r elapsed_time`.
 
 ```{r session-info}
 sessionInfo()
-
 ```

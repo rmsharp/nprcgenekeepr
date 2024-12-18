@@ -8,7 +8,7 @@
 #' @param available list of available animals for each group
 #' @param ids character vector having the selected animal Ids
 #' @param numGp integer indicating the number of groups being formed.
-removeSelectedAnimalFromAvailableAnimals <- function(available, ids, numGp) {
+removeSelectedAnimalFromAvailableAnimals <- function(available, ids, numGp) { # nolint: object_length_linter
   # Remove the selected animal from consideration
   for (j in 1:numGp) {
     available[[j]] <- setdiff(available[[j]], ids)

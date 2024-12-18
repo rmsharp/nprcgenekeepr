@@ -4,7 +4,7 @@
 \alias{dataframe2string}
 \title{dataframe2string converts a data.frame object to a character vector}
 \usage{
-dataframe2string(object, ..., digits = NULL, row.names = TRUE)
+dataframe2string(object, ..., digits = NULL, addRowNames = TRUE)
 }
 \arguments{
 \item{object}{dataframe}
@@ -14,8 +14,8 @@ dataframe2string(object, ..., digits = NULL, row.names = TRUE)
 \item{digits}{the minimum number of significant digits to be used:
 see print.default.}
 
-\item{row.names}{logical (or character vector), indicating whether (or what)
-row names should be printed.}
+\item{addRowNames}{logical (or character vector), indicating whether
+(or what) row names should be printed.}
 }
 \value{
 A character vector representation of the data.frame provided to the

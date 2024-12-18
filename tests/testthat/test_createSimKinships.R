@@ -3,6 +3,7 @@
 library(testthat)
 context("createSimKinships")
 
+# nolint start: object_name_linter
 ped <- nprcgenekeepr::smallPed
 simParent_1 <- list(id = "A",
                     sires = c("s1_1", "s1_2", "s1_3"),
@@ -42,6 +43,7 @@ test_JN <- extractKinship(simKinships, "J", "N")
 test_KN <- extractKinship(simKinships, "K", "N")
 test_BK <- extractKinship(simKinships, "B", "K")
 test_EK <- extractKinship(simKinships, "E", "K")
+# nolint end: object_name_linter
 
 test_that("createSimKinships creates the correct kinship matrices structure", {
   expect_equal(length(simKinships), n)

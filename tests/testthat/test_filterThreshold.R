@@ -7,7 +7,7 @@ ped <- lacy1989Ped
 
 ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
-kin <- kinMatrix2LongForm(kmat, rm.dups = FALSE)
+kin <- kinMatrix2LongForm(kmat, removeDups = FALSE)
 threshold <- 0.1
 kinFiltered <- filterThreshold(kin, threshold = threshold)
 

@@ -50,4 +50,3 @@ test_that("getIndianOriginStatus returns the correct values", {
                  unknown = 0,
                  other = 0), color = "red", colorIndex = 1))
 })
-

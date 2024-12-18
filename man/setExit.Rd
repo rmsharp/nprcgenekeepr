@@ -4,7 +4,7 @@
 \alias{setExit}
 \title{Sets the exit date, if there is no exit column in the table}
 \usage{
-setExit(ped, time.origin = as.Date("1970-01-01"))
+setExit(ped, timeOrigin = as.Date("1970-01-01"))
 }
 \arguments{
 \item{ped}{dataframe of pedigree and demographic information potentially
@@ -12,7 +12,7 @@ containing columns indicating the birth and death dates of an individual.
 The table may also contain dates of sale (departure). Optional columns
 are \code{birth}, \code{death}, and \code{departure}.}
 
-\item{time.origin}{date object used by \code{as.Date} to set \code{origin}.}
+\item{timeOrigin}{date object used by \code{as.Date} to set \code{origin}.}
 }
 \value{
 A dataframe with an updated pedigree with exit dates specified based

@@ -21,9 +21,9 @@ ped <- data.frame(
   departure = departure,
   stringsAsFactors = FALSE)
 ped_1 <- setExit(ped)
-ped_2 <- setExit(ped[ , -3])
-ped_3 <- setExit(ped[ , -4])
-ped_4 <- setExit(ped[ , c(-3, -4)])
+ped_2 <- setExit(ped[, -3])
+ped_3 <- setExit(ped[, -4])
+ped_4 <- setExit(ped[, c(-3, -4)])
 test_that("setExit picks the correct date", {
   expect_true(all(is.na(ped_4$exit)))
   expect_equal(format(ped_3$exit[[2]], format = "%Y-%m-%d"), "2009-04-16")

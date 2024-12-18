@@ -45,4 +45,3 @@ test_that("fillGroupMembers adds animals in the specified sex ratio", {
   expect_equal(calculateSexRatio(groupMembers[[1]], ped), 1.0,
                tolerance = .1, scale = 1)
 })
-

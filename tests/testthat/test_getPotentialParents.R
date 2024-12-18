@@ -42,4 +42,3 @@ test_that("getPotentialParents forms list with correct lists", {
   expect_equal(potentialParents[[1]]$sires, sires$BRI2MW)
   expect_equal(potentialParents[[4]]$sires, sires$FEEN9W)
 })
-

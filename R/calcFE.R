@@ -43,7 +43,9 @@
 calcFE <- function(ped) {
   ped <- toCharacter(ped, headers = c("id", "sire", "dam"))
   founders <- ped$id[is.na(ped$sire) & is.na(ped$dam)]
+  # nolint start: commented_code_linter.
   ## UID.founders <- founders[grepl("^U", founders, ignore.case = TRUE)]
+  # nolint end: commented_code_linter.
   ## UID.founders is not used; It may be a mistake, but it could be vestiges of
   ## something planned that was not done.
   descendants <- ped$id[!(ped$id %in% founders)]

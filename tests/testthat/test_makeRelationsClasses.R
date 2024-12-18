@@ -14,7 +14,7 @@ relClassTbl <- kin[!kin$relation == "Self", ] %>%
   group_by(relation) %>%
   summarise(count = n())
 test_that("makeRelationsClasses retains the correct counts", {
-  for (rel in relClasses[ , "Relationship Class"]) {
+  for (rel in relClasses[, "Relationship Class"]) {
     expect_equal(relClasses$Frequency[relClasses$`Relationship Class` == rel],
                  relClassTbl$count[relClassTbl$relation == rel])
   }

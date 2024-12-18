@@ -78,24 +78,24 @@ getProductionStatus <- function(ped, minParentAge = 3, maxOffspringAge = NULL,
   }
 
   if (housing == "shelter_pens") {
-    if (is.na(production) | production > 0.63) {
+    if (is.na(production) || production > 0.63) {
       color <- "green"
       colorIndex <- 3
     } else if (production < 0.6) {
       color <- "red"
       colorIndex <- 1
-    } else if (production >= 0.6 & production <= 0.63) {
+    } else if (production >= 0.6 && production <= 0.63) {
       color <- "yellow"
       colorIndex <- 2
     }
   } else if (housing == "corral") {
-    if (is.na(production) | production > 0.53) {
+    if (is.na(production) || production > 0.53) {
       color <- "green"
       colorIndex <- 3
     } else if (production < 0.5) {
       color <- "red"
       colorIndex <- 1
-    } else if (production >= 0.5 & production <= 0.53) {
+    } else if (production >= 0.5 && production <= 0.53) {
       color <- "yellow"
       colorIndex <- 2
     }
@@ -105,4 +105,3 @@ getProductionStatus <- function(ped, minParentAge = 3, maxOffspringAge = NULL,
   }
   list(production = production, color = color, colorIndex = colorIndex)
 }
-

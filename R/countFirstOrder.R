@@ -46,12 +46,12 @@ countFirstOrder <- function(ped, ids = NULL) {
     sire <- ped[i, "sire"]
     dam <- ped[i, "dam"]
 
-    p <- sum(c( (sire %in% ped$id), (dam %in% ped$id)))
-    o <- sum( (ped$sire %in% id) | (ped$dam %in% id))
-    if (is.na(sire) | is.na(dam)) {
+    p <- sum(c((sire %in% ped$id), (dam %in% ped$id)))
+    o <- sum((ped$sire %in% id) | (ped$dam %in% id))
+    if (is.na(sire) || is.na(dam)) {
       s <- 0
     } else {
-      s <- sum( (ped$sire %in% sire) & (ped$dam %in% dam)) - 1
+      s <- sum((ped$sire %in% sire) & (ped$dam %in% dam)) - 1
     }
 
     parents <- c(parents, p)
