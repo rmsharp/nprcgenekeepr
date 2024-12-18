@@ -72,10 +72,7 @@ Amanda Vinson, and R. Mark Sharp</h4>
     
     
 <p><a href="#introduction">Introduction</a><br><a href="#summary-of-major-functions">Summary of Major
-Functions</a><br>
-[Installation]<br>
-[Running Shiny Application]<br>
-[Input]<br><a href="#pedigree-browser">Pedigree Browser</a><br><a href="#genetic-value-analysis">Genetic Value Analysis</a><br><a href="#summary-statistics">Summary Statistics</a><br><a href="#breeding-group-formation">Breeding Group Formation</a><br><a href="#orip-reporting">ORIP Reporting</a><br><a href="#algorithm-breeding-group-formation">Algorithm: Breeding Group
+Functions</a><br><a href="#installation">Installation</a><br><a href="#running-shiny-application">Running Shiny Application</a><br><a href="#input">Input</a><br><a href="#pedigree-browser">Pedigree Browser</a><br><a href="#genetic-value-analysis">Genetic Value Analysis</a><br><a href="#summary-statistics">Summary Statistics</a><br><a href="#breeding-group-formation">Breeding Group Formation</a><br><a href="#orip-reporting">ORIP Reporting</a><br><a href="#algorithm-breeding-group-formation">Algorithm: Breeding Group
 Formation</a><br><a href="#algorithm-genome-uniqueness">Algorithm: Genome
 Uniqueness</a></p>
 <div class="section level2">
@@ -130,8 +127,9 @@ addition, exit dates are added if possible and are consistent with other
 information such as departure dates and death dates. Current ages of
 animals that are still alive are added if a database connection is
 provided via a configuration file and the user has read permission on a
-LabKey server with the demographic data in an <strong>EHR</strong>
-(Electronic Health Record) module. See</p>
+LabKey server with the demographic data in an <em>EHR</em> (Electronic
+Health Record) module. See <a href="https://www.labkey.org/Documentation/wiki-page.view?name=netrc" class="external-link">LabKey
+documentation</a>.</p>
 <p>Parents with ages below a user selected threshold are identified. A
 minimum parent age in years is set by the user and is used to ensure
 each parent is at least that age on the birth date of an offspring. The
@@ -139,8 +137,8 @@ minimum parent age defaults to 2 years. This check is not performed for
 animals with missing birth dates.</p>
 </div>
 <div class="section level3">
-<h3 id="creation-of-pedigree-from-a-list-of-potential-breeders-and-labkey-integration">Creation of Pedigree From a List of Potential Breeders and LabKey
-Integration<a class="anchor" aria-label="anchor" href="#creation-of-pedigree-from-a-list-of-potential-breeders-and-labkey-integration"></a>
+<h3 id="creation-of-pedigree-from-a-list-of-potential-breeders-and-labkey">Creation of Pedigree From a List of Potential Breeders and
+LabKey<br><a class="anchor" aria-label="anchor" href="#creation-of-pedigree-from-a-list-of-potential-breeders-and-labkey"></a>
 </h3>
 <p>The user can enter a list of focal animals in a CSV file that will be
 used to create a pedigree containing all direct relative (ancestors and
@@ -166,13 +164,112 @@ code in the R console.</p>
 <div class="section level3">
 <h3 id="display-of-an-age-by-sex-pyramid-plot">Display of an age by sex pyramid plot<a class="anchor" aria-label="anchor" href="#display-of-an-age-by-sex-pyramid-plot"></a>
 </h3>
-<p>Adapted from for specifying the population of interest can be toggled
-through this panel, however. Normally, the breeding colony is restricted
-to Indian-origin, SPF 4 animals. These two restrictions can be turned
-off by setting the options on this panel.</p>
+<p>Adapted from <a href="https://www.thoughtco.com/age-sex-pyramids-and-population-pyramids-1435272%7d" class="external-link">https://www.thoughtco.com/age-sex-pyramids-and-population-pyramids-1435272%7d</a>
+on 20190603. Written by Matt Rosenberg. Updated May 07, 2019.</p>
+<p>The most important demographic characteristic of a population is its
+age-sex structure. Age-sex pyramids (also known as population pyramids)
+graphically display this information to improve understanding and make
+comparison easy. The population pyramid sometimes has a distinctive
+pyramid-like shape when displaying a growing population.</p>
+<div class="section level4">
+<h4 id="how-to-read-the-age-sex-graph">How to Read the Age-Sex Graph<a class="anchor" aria-label="anchor" href="#how-to-read-the-age-sex-graph"></a>
+</h4>
+<p>An age-sex pyramid breaks down a population into male and female
+genders and age ranges. Usually, you’ll find the left side of the
+pyramid graphing the male population and the right side of the pyramid
+displaying the female population.</p>
+<p>Along the horizontal axis (x-axis) of a population pyramid, the graph
+displays the population either as a total population of that age or as a
+percentage of the population at that age. The center of the pyramid
+starts at zero population and extends out to the left for males and
+right for females in increasing size, or proportion of the
+population.</p>
+<p>Along the vertical axis (y-axis), age-sex pyramids display two-year
+age increments, from birth at the bottom to old age at the top.</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="genetic-value-analysis-reports">Genetic Value Analysis Reports<a class="anchor" aria-label="anchor" href="#genetic-value-analysis-reports"></a>
+</h3>
+<p>The Genetic Value Analysis is a ranking scheme developed at ONPRC to
+indicate the relative breeding value of animals in the colony. The
+scheme uses the mean kinship for each animal to indicate how
+inter-related it is with the rest of the current breeding colony
+members. Genome uniqueness is used to provide an indication of whether
+or not an animal is likely to possess alleles at risk of being lost from
+the colony. Under the scheme, animals with low mean kinship or high
+genome uniqueness are ranked more highly.</p>
+</div>
+<div class="section level3">
+<h3 id="breeding-group-formation">Breeding Group Formation<a class="anchor" aria-label="anchor" href="#breeding-group-formation"></a>
+</h3>
+<p>One of the goals in breeding group formation is to avoid the
+potential for mating of closely related animals. Since behavioral
+concerns and housing constraints will also be taken into account in the
+group formation process, it is our goal to provide the largest number of
+animals possible from a list of candidates that can be housed together
+without risk of consanguineous mating. To that end, this function uses
+information from the Genetic Value Analysis to search for the largest
+combinations of animals that can be produced from a list of
+candidates.</p>
+<p>The default options do not consider the sex of individuals when
+forming the groups, though this has likely been a consideration by the
+user in selecting the candidate group members. Optionally the user may
+select to form harem groups, which considers the sex of individuals when
+forming groups and restricts the number of males to one per group.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>You can install the CRAN version of <strong>nprcgenekeepr</strong>
+from the R console prompt with:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rmsharp/nprcgenekeepr"</span><span class="op">)</span></span></code></pre></div>
+<p>You can install the development version of
+<strong>nprcgenekeepr</strong> from GitHub from the R console prompt
+with:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rmsharp/nprcgenekeepr"</span><span class="op">)</span></span></code></pre></div>
+<p>All missing dependencies should be automatically installed.</p>
+</div>
+<div class="section level2">
+<h2 id="running-shiny-application">Running Shiny Application<a class="anchor" aria-label="anchor" href="#running-shiny-application"></a>
+</h2>
+<p>The toolset available within nprcgenekeepr can be used inside
+standard R scripts. However, it was originally designed to be used
+within a Shiny application that can be started with:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/runGeneKeepR.html">runGeneKeepR</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="input">Input<a class="anchor" aria-label="anchor" href="#input"></a>
+</h2>
+<p>The Input tab is the starting point for all analyses. The file should
+be a delimited, regular text file with a header row specifying the
+columns. The tab provides information on the allowable columns in input
+files, and how the columns will be used in quality control of the data.
+Quality control of studbook data occurs automatically upon file
+upload.</p>
+<p>Presently, the only columns required are those specifying the Ego ID,
+Sire ID, Dam ID, and Sex. The remaining columns listed are optional, but
+will be used if they are present in the uploaded file. The table of the
+tab describes how these optional columns will be used. Additionally, the
+panel on the left of this tab provides options that can be used during
+the upload and QC process, such as specifying the field separator used
+in the uploaded file.</p>
+<p>During quality control, a flag is added for the current, living
+population. This flag is generated based on the information columns
+provided and is fairly specific to how the breeding population is
+defined at ONPRC. Two of the options for specifying the population of
+interest can be toggled through this panel, however. Normally, the
+breeding colony is restricted to Indian-origin, SPF 4 animals. These two
+restrictions can be turned off by setting the options on this panel.</p>
 <p>Additionally, the population of interest can be specified directly in
 either the input file, or entered on the Pedigree Browser tab.</p>
-</div>
 </div>
 <div class="section level2">
 <h2 id="pedigree-browser">Pedigree Browser<a class="anchor" aria-label="anchor" href="#pedigree-browser"></a>
@@ -250,7 +347,7 @@ mean kinship coefficient Z-scores, Distribution of genome uniqueness
 values.</p>
 </div>
 <div class="section level2">
-<h2 id="breeding-group-formation">Breeding Group Formation<a class="anchor" aria-label="anchor" href="#breeding-group-formation"></a>
+<h2 id="breeding-group-formation-1">Breeding Group Formation<a class="anchor" aria-label="anchor" href="#breeding-group-formation-1"></a>
 </h2>
 <p>The last major function of the R-package is to aid in generating
 breeding groups that avoid inter-animal relatedness. This tab allows you
