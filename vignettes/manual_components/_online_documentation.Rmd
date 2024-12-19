@@ -1,6 +1,6 @@
 ---
 title: "Online Documentation - GitHub Pages"
-author: "R. Mark Sharp"
+author: "R. Mark Sharp, Ph.D."
 date: "03/29/2020"
 output: 
    - rmarkdown::html_vignette

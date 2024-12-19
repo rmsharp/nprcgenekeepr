@@ -1,6 +1,6 @@
 #' Returns TRUE if the string is a valid date.
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Taken from github.com/rmsharp/rmsutilityr
 #'
@@ -27,10 +27,10 @@ is_valid_date_str <- function(date_str, format = "%d-%m-%Y %H:%M:%S",
       return(rep(FALSE, length(date_str)))
   }
   if (optional) {
-    result <- !is.na(anytime(date_str, useR = TRUE))
+    result <- !is.na(suppressWarnings(anytime(date_str, useR = TRUE)))
     result[result == FALSE] <- NA
   } else {
-    result <- !is.na(anytime(date_str, useR = TRUE))
+    result <- !is.na(suppressWarnings(anytime(date_str, useR = TRUE)))
   }
   result
 }

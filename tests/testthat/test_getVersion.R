@@ -1,10 +1,13 @@
-#' Copyright(c) 2017-2020 R. Mark Sharp
+#' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
 context("getVersion")
 library(testthat)
 library(stringi)
-test_that("getVersion returns a version", {
-  version1 <- getVersion()
+version1 <- getVersion()
+
+test_that(paste0("getVersion returns a version:", version1), {
+  #version1 <- getVersion()
+  #cat(version1)
   expect_true(stri_detect_regex(version1, # version
                                 pattern = "^[0-9]{1,2}([.][0-9]{1,2})"))
   expect_true(stri_detect_fixed(version1, pattern = "("))

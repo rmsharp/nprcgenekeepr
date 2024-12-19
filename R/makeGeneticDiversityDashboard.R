@@ -1,6 +1,6 @@
 #' Make genetic diversity dashboard
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' @param geneticDiversityStats named vector of genetic diversity statistics
 #' @param file filename to store image in. Defaults to

@@ -11,7 +11,9 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![Codecov test
 coverage](https://codecov.io/gh/rmsharp/nprcgenekeepr/graph/badge.svg)](https://app.codecov.io/gh/rmsharp/nprcgenekeepr)
 
-# nprcgenekeepr – Version 1.0.6 (2024-12-16)
+# nprcgenekeepr
+
+Version1.0.6 (2024-12-19)
 
 ## Introduction
 

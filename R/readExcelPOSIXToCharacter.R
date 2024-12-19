@@ -1,6 +1,6 @@
 #' Read in Excel file and convert POSIX dates to character
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' @return A pedigree file compatible with others in this package.
@@ -9,7 +9,8 @@
 #' @importFrom stringi stri_detect_fixed
 #' @importFrom readxl read_excel
 readExcelPOSIXToCharacter <- function(fileName) {
-  pedigree <- as.data.frame(read_excel(path = fileName, na = "NA"),
+  pedigree <- as.data.frame(read_excel(path = fileName, na = "NA",
+                                       col_types = "text"),
                             stringsAsFactors = FALSE)
   cols <- vapply(pedigree, function(col) {
     stri_c(class(col), collapse = "")

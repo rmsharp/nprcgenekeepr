@@ -1,6 +1,6 @@
 #' fillBins Fill bins represented by list of two lists \code{males} and
 #' \code{females}.
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' @param ageDist dataframe with \code{sex} and \code{age} columns

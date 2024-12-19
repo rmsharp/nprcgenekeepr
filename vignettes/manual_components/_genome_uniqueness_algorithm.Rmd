@@ -1,6 +1,6 @@
 ---
 title: "Algorithm: Genome Uniqueness"
-author: "Amanda Vinson"
+author: "Amanda Vinson, Ph.D."
 date: "10/2/2017"
 output: 
    - rmarkdown::pdf_document

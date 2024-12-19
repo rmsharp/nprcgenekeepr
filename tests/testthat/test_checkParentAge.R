@@ -1,4 +1,4 @@
-#' Copyright(c) 2017-2020 R. Mark Sharp
+#' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
 context("checkParentAge")
 library(testthat)
@@ -54,3 +54,4 @@ test_that(paste0("checkParentAge returns NULL if required dataframe has no ",
   ped <- checkParentAge(qcPed[0, ], reportErrors = TRUE)
   expect_true(is.null(ped))
 })
+

@@ -1,6 +1,6 @@
 ---
 title: "NEWS"
-author: "R. Mark Sharp"
+author: "R. Mark Sharp, Ph.D."
 date: "03/28/2021"
 output:
    github_document: default

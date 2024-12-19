@@ -1,6 +1,6 @@
 ---
 title: "Meeting Notes and Things To Do"
-author: "R. Mark Sharp"
+author: "R. Mark Sharp, Ph.D."
 date: "03/16/2020"
 output: html_document
 ---

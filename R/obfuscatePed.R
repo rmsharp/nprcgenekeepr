@@ -1,6 +1,6 @@
 #' obfuscatePed takes a pedigree object and creates aliases for all IDs and
 #' adjusts all date within a specified amount.
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' User provides a pedigree object (\code{ped}), the number of characters to be

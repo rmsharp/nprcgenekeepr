@@ -1,6 +1,6 @@
 #' Forms a list of animal Ids and animals related to them
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' @return A list of named character vectors where each name is an animal Id

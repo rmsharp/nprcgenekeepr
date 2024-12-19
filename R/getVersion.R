@@ -10,12 +10,15 @@
 #' }
 #' @param date A logical value when TRUE (default) a date in YYYYMMDD format
 #' within parentheses is appended.
-#' @importFrom utils packageDate packageVersion
+#' @importFrom utils packageVersion
+#' @importFrom sessioninfo package_info
 #' @export
 getVersion <- function(date = TRUE) {
   version <- packageVersion("nprcgenekeepr")
   if (date) {
-    paste0(version, " (", packageDate("nprcgenekeepr"), ")")
+    pkg_date <- sessioninfo::package_info("nprcgenekeepr")
+    pkg_date <- pkg_date[["date"]][pkg_date[["package"]] == "nprcgenekeepr"]
+    paste0(version, " (", pkg_date, ")")
   } else {
     paste0(version)
   }

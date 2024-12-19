@@ -1,4 +1,4 @@
-#' Copyright(c) 2017-2020 R. Mark Sharp
+#' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
 context("getLogo")
 library(testthat)
@@ -13,29 +13,84 @@ test_that("getLogo returns reasonalble values", {
 ## See also: Drop-in replacement for testthat::with_mock()
 ## https://krlmlr.github.io/mockr
 ## mock getSiteInfo()
+sysInfo <- Sys.info()
+homeDir <- paste0("~/")
+configFile <- paste0(homeDir, ".nprcgenekeepr_config")
+config <- c(homeDir = homeDir, configFile = configFile)
 test_that("getLogo returns reasonalble values with SNPRC mock", {
-  with_mock(
+  local_mocked_bindings(
     getSiteInfo = function() {
-      list(center = "SNPRC")
-    },
-    logo <- suppressWarnings(getLogo()),
-    expect_true(is.integer(logo$height)),
-    expect_true(is.integer(logo$width)),
-    expect_true(logo$height > 0),
-    expect_true(logo$width > 0),
+      list(
+        center = "SNPRC",
+        baseUrl = "http://deepthought:8080/labkey",
+        schemaName = "study",
+        folderPath = "/snprcEHR",
+        queryName = "demographics",
+        lkPedColumns = c(
+          "Id",
+          "gender",
+          "birth",
+          "death",
+          "lastDayAtCenter",
+          "dam",
+          "sire"
+        ),
+        mapPedColumns = c("id", "sex", "birth", "death", "exit", "dam", "sire"),
+        sysname  = sysInfo[["sysname"]],
+        release = sysInfo[["release"]],
+        version  = sysInfo[["version"]],
+        nodename = sysInfo[["nodename"]],
+        machine = sysInfo[["machine"]],
+        login = sysInfo[["login"]],
+        user = sysInfo[["user"]],
+        effective_user = sysInfo[["effective_user"]],
+        homeDir = config[["homeDir"]],
+        configFile = config[["configFile"]]
+      )
+    })
+    logo <- suppressWarnings(getLogo())
+    expect_true(is.integer(logo$height))
+    expect_true(is.integer(logo$width))
+    expect_true(logo$height > 0)
+    expect_true(logo$width > 0)
     expect_true(is.character(logo$file))
-  )
 })
 test_that("getLogo returns reasonalble values with ONPRC mock", {
-  with_mock(
+  local_mocked_bindings(
     getSiteInfo = function() {
-      list(center = "ONPRC")
-    },
-    logo <- suppressWarnings(getLogo()),
-    expect_true(is.integer(logo$height)),
-    expect_true(is.integer(logo$width)),
-    expect_true(logo$height > 0),
-    expect_true(logo$width > 0),
-    expect_true(is.character(logo$file))
+      list(
+        center = "ONPRC",
+        baseUrl = "https://primeuat.ohsu.edu",
+        schemaName = "study",
+        folderPath = "/ONPRC/EHR",
+        queryName = "demographics",
+        lkPedColumns = c(
+          "Id",
+          "gender",
+          "birth",
+          "death",
+          "lastDayAtCenter",
+          "Id/parents/dam",
+          "Id/parents/sire"
+        ),
+        mapPedColumns = c("id", "sex", "birth", "death", "exit", "dam", "sire"),
+        sysname  = sysInfo[["sysname"]],
+        release = sysInfo[["release"]],
+        version  = sysInfo[["version"]],
+        nodename = sysInfo[["nodename"]],
+        machine = sysInfo[["machine"]],
+        login = sysInfo[["login"]],
+        user = sysInfo[["user"]],
+        effective_user = sysInfo[["effective_user"]],
+        homeDir = config[["homeDir"]],
+        configFile = config[["configFile"]]
+      )
+    }
   )
+    logo <- suppressWarnings(getLogo())
+    expect_true(is.integer(logo$height))
+    expect_true(is.integer(logo$width))
+    expect_true(logo$height > 0)
+    expect_true(logo$width > 0)
+    expect_true(is.character(logo$file))
 })

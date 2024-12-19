@@ -1,6 +1,6 @@
 ---
 title: "Breeding Group Algorithm"
-author: "Amanda Vinson"
+author: "Amanda Vinson, Ph.D."
 date: "10/2/2017"
 output: 
    - rmarkdown::html_vignette

@@ -1,6 +1,6 @@
 #' Returns the elapsed time since start_time.
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Taken from github.com/rmsharp/rmsutilityr
 #'

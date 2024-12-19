@@ -1,6 +1,6 @@
 ---
 title: "Input"
-author: "R. Mark Sharp"
+author: "R. Mark Sharp, Ph.D."
 date: "10/2/2017"
 output: 
    - rmarkdown::html_vignette

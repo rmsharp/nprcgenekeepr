@@ -1,6 +1,6 @@
 #' Check parent ages to be at least \code{minParentAge}
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Ensure parents are sufficiently older than offspring
 #'
@@ -56,9 +56,9 @@ checkParentAge <- function(sb,
       stop("Birth column must be of class 'Date', 'POSIXct', or 'character'")
     }
   } else if (inherits(sb$birth, "character")) {
-    sb$birth <- anytime(sb$birth)
+    sb$birth <- suppressWarnings(anytime(sb$birth))
   } else {
-    sb$birth <- as.Date(sb$birth)
+    sb$birth <- suppressWarnings(as.Date(sb$birth))
   }
 
   sireBirth <- data.frame(

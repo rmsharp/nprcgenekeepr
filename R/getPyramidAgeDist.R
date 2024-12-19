@@ -1,6 +1,6 @@
 #' Get the age distribution for the pedigree
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Forms a dataframe with columns \code{id}, \code{birth}, \code{sex},
 #' and \code{age} for those animals with a status of \code{Alive} in the pedigree.
@@ -39,9 +39,9 @@ getPyramidAgeDist <- function(ped = NULL) {
   if (!any(class(ped$birth) %in% c("Date", "POSIXct", "character"))) {
     stop("birth column must be of class 'Date', 'POSIXct', or 'character'")
   } else if (class(ped$birth)[[1]] == "character") {
-    ped$birth <- anytime::anytime(ped$birth)
+    ped$birth <- suppressWarnings(anytime::anytime(ped$birth))
   } else {
-    ped$birth <- as.Date(ped$birth)
+    ped$birth <- suppressWarnings(as.Date(ped$birth))
   }
   ped$status[is.na(ped$exit_date)] <- "ALIVE"
   ped$status[!is.na(ped$exit_date) | is.na(ped$birth)] <- "DECEASED"
@@ -50,9 +50,9 @@ getPyramidAgeDist <- function(ped = NULL) {
   } else if (class(ped$exit_date)[[1]] == "character") {
     ped$status[ped$exit_date == "9999999999"] <- "DECEASED"
     ped$exit_date[ped$exit_date == "" | ped$exit_date == "9999999999"] <- NA
-    ped$exit_date <- anytime::anytime(ped$exit_date)
+    ped$exit_date <- suppressWarnings(anytime::anytime(ped$exit_date))
   } else {
-    ped$exit_date <- as.Date(ped$exit_date)
+    ped$exit_date <- suppressWarnings(as.Date(ped$exit_date))
   }
   ped$age[is.na(ped$exit_date) & !is.na(ped$birth)] <-
     interval(start = ped$birth[is.na(ped$exit_date) &

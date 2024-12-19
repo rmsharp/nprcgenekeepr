@@ -1,6 +1,6 @@
 #' Removes potential sires from list of Ids
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #'  @return character vector of Ids with any potential sire Ids removed.

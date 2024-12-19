@@ -1,6 +1,6 @@
 ---
 title: "Software Development"
-author: "R. Mark Sharp"
+author: "R. Mark Sharp, Ph.D."
 date: "07/01/2019"
 output: 
    - rmarkdown::pdf_document

@@ -47,6 +47,7 @@ Imports:
     plotrix,
     readxl,
     Rlabkey,
+    sessioninfo,
     shiny,
     stringi,
     utils,

@@ -1,7 +1,7 @@
 ---
 title: "Quick Example of Simulated Kinships with Partial Parentage"
 subtitle: "nprcgenekeepr: an R Package for the Genetic Management of Colonies"
-author: "R. Mark Sharp"
+author: "R. Mark Sharp, Ph.D."
 date: "8/29/2021"
 output:
   html_document:

@@ -1,6 +1,6 @@
 ---
 title: "Genetic Value Analysis and Breeding Group Formation Description"
-author: "R. Mark Sharp"
+author: "R. Mark Sharp, Ph.D."
 date: "10/2/2017"
 output: 
    - rmarkdown::pdf_document

@@ -1,6 +1,6 @@
 ---
 title: "Summary of Major Functions"
-author: "R. Mark Sharp"
+author: "R. Mark Sharp, Ph.D."
 date: "2024-12-17"
 output: 
    - rmarkdown::pdf_document

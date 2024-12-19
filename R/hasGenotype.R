@@ -1,6 +1,6 @@
 #' Check for genotype data in dataframe
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Checks to ensure the content and structure are appropriate for genotype
 #' data are in the dataframe and ready for the \code{geneDrop} function by

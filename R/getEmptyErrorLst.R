@@ -1,6 +1,6 @@
 #' Creates a empty errorLst object
 #'
-## Copyright(c) 2017-2020 R. Mark Sharp
+## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
 #' @return An errorLst object with placeholders for error types found in a
