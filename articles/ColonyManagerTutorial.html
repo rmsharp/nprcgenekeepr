@@ -59,12 +59,11 @@
 <script src="ColonyManagerTutorial_files/kePrint-0.0.1/kePrint.js"></script><link href="ColonyManagerTutorial_files/lightable-0.0.1/lightable.css" rel="stylesheet">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-
-      <h1>GeneKeepR: A Colony Manager's Tutorial</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>GeneKeepR: A Colony Manager's Tutorial</h1>
             <h3 data-toc-skip class="subtitle">National Primate Research
 Centers’ Application for Genetic Management of Colonies</h3>
-                        <h4 data-toc-skip class="author">R. Mark
-Sharp</h4>
+                        <h4 data-toc-skip class="author">R. Mark Sharp,
+Ph.D.</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rmsharp/nprcgenekeepr/blob/master/vignettes/ColonyManagerTutorial.Rmd"><code>vignettes/ColonyManagerTutorial.Rmd</code></a></small>
@@ -109,7 +108,7 @@ administrative permissions on the computer.</p>
 console with</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span>
-<span><span class="fu">runGeneKeepR</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/runGeneKeepR.html">runGeneKeepR</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>This will result in the opening screen where you tell the application
 how to find the pedigree you will be using.</p>
 </div>
@@ -126,16 +125,16 @@ or Excel worksheet pedigree file.</p>
 <hr>
 <p>Scrolling down to the middle of the opening screen exposes a table
 that describes a pedigree file and further instructions.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/eopening-screen-middle-1.png" width="528">
+<p><img src="ColonyManagerTutorial_files/figure-html/eopening-screen-middle-1.png" alt="Middle of opening screen." width="528">
 *********</p>
 <p>Scrolling down to the bottom of the opening screen exposes more
 pedigree file instructions, a table that describes a genotype file and
 instructions regarding use of a genotype file.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/eopening-screen-bottom-1.png" width="528"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/eopening-screen-bottom-1.png" alt="Bottom of opening screen." width="528"></p>
 <hr>
 <p>The following is an example of the pedigree file format.</p>
-<p>Without genotypes:<br><img src="ColonyManagerTutorial_files/figure-html/eexamplePedigreeTutorial-1.png" width="528"></p>
-<p>With genotypes:<br><img src="ColonyManagerTutorial_files/figure-html/eexamplePedigreeTutorial-with_alleles-1.png" width="528"></p>
+<p>Without genotypes:<br><img src="ColonyManagerTutorial_files/figure-html/eexamplePedigreeTutorial-1.png" alt="Example pedigree tutorial." width="528"></p>
+<p>With genotypes:<br><img src="ColonyManagerTutorial_files/figure-html/eexamplePedigreeTutorial-with_alleles-1.png" alt="Example pedigree tutorial with alleles." width="528"></p>
 <hr>
 </div>
 <div class="section level3">
@@ -144,7 +143,7 @@ instructions regarding use of a genotype file.</p>
 <p>In this introductory tutorial, we will use an Excel file containing a
 hypothetical pedigree of macaques. We will work with the gray box on the
 left at the top of the screen.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/eopening-screen-top-red-oval-1.png" width="528"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/eopening-screen-top-red-oval-1.png" alt="Red oval at top of opening screen." width="528"></p>
 <hr>
 <p>A Microsoft Excel workbook with a single worksheet is the default
 file type; though comma (.csv), semi-colon (.txt), and tab (.txt)
@@ -154,16 +153,16 @@ file created as shown below and then saved in an Excel format.
 Alternatively, you may download this example pedigree from the nprc
 consortium web page.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">makeExamplePedigreeFile</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/makeExamplePedigreeFile.html">makeExamplePedigreeFile</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Select the <strong>Browse</strong> button and select the pedigree
 file from your file system.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/example-pedigree-1.png" width="240"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/example-pedigree-1.png" alt="Input of Excel verson of example pedigree file." width="240"></p>
 <hr>
 <p>It is important to make sure the minimum parent age is low enough for
 the animals in your pedigree. For our example pedigree, we are changing
 it from 4 years to 2 years of age since these macaques may reproduce as
 early as two years of age.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/example-pedigree-minParentAgeSequence-1.png" width="1056"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/example-pedigree-minParentAgeSequence-1.png" alt="Input of minimum parent age." width="1056"></p>
 <hr>
 </div>
 <div class="section level3">
@@ -172,7 +171,7 @@ early as two years of age.</p>
 <p>Selected <strong>Read and Check Pedigree</strong> will read in the
 file and test to see if the pedigree file has all of the columns needed
 and the pedigree is internally consistent.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/read-and-check-pedigree-1.png" width="240"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/read-and-check-pedigree-1.png" alt="Read and check example pedigree." width="240"></p>
 <hr>
 <p>Several error types, shown below, are detected the application.</p>
 <table class="table table" style="width: auto !important; margin-left: auto; margin-right: auto;">
@@ -281,7 +280,7 @@ rows of the pedigree at a time, but you can choose to display 10, 25,
 displayed. UNKNOWN IDs (UIDs) are used to label unknown parents of
 animals with one known parent. The program calculates additional columns
 based on the input pedigree.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/pb-10-rows-display-unknown-ids-1.png" width="528"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/pb-10-rows-display-unknown-ids-1.png" alt="Pedigree browser with 10 rows displayed and unknown IDs shown." width="528"></p>
 <hr>
 <div class="section level3">
 <h3 id="unknown-ids">Unknown IDs<a class="anchor" aria-label="anchor" href="#unknown-ids"></a>
@@ -290,14 +289,14 @@ based on the input pedigree.</p>
 list below for clarity. These IDs have no meaning other than they all
 begin with the letter <em>U</em> and are following with a left
 alphanumeric string of five places.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/unknown-displayed-1.png" width="480"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/unknown-displayed-1.png" alt="Pedigree browser unknown IDs displayed" width="480"></p>
 <hr>
 <p>In this example pedigree, when you deselect the <strong>Display
 Unknown IDs</strong> checkbox. The number of rows reduces from 3,694 to
 2,322, because there were 1,372 UNKNOWN animals generated when
 constructing the pedigree to provide sire and dam placeholders for all
 animals.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/no-unknown-displayed-1.png" width="480"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/no-unknown-displayed-1.png" alt="Pedigree browser no unknown IDs displayed" width="480"></p>
 <hr>
 </div>
 <div class="section level3">
@@ -306,7 +305,7 @@ animals.</p>
 <p>The <strong>Pedigree Browser</strong> tab displays the full pedigree
 by default but allows you to select a subset of the pedigree by entering
 a list of animals of interest (<em>focal animals</em>).</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/focal-animal-text-box-1.png" width="480"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/focal-animal-text-box-1.png" alt="Focal animal text box" width="480"></p>
 <hr>
 <p>You can enter in the animal IDs by typing them into the text box
 directly as shown below (FJS7RQ, H6T2FF, HEVL3L, I04JZV, S63QDN).
@@ -319,7 +318,7 @@ in the pedigree that are related to the focal animals selected.</p>
 application to read your list of animals, trim the pedigree based on
 that list, and display the trimmed pedigree below. You will end up with
 54 animals in your pedigree.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/pedigree-browser-5-focal-animals-small-1.png" width="768"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/pedigree-browser-5-focal-animals-small-1.png" alt="Pedigree browser 5 focal animals" width="768"></p>
 <hr>
 <p>Also, you can import a list of focal animals by selecting the
 <strong>Browse</strong> button under <strong>Choose CSV file with focal
@@ -332,14 +331,16 @@ in the breeding population. By selecting focal animals, the number of
 pedigree entrees does not change, but the population membership flag
 will be set to “true” for the focal animals, and “false” for all other
 animals.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/selection-large-focal-group-1.png" width="384"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/selection-large-focal-group-1.png" alt="Pedigree browser selection large focal group" width="384"></p>
 <hr>
 <p>After entering your list of focal animals, you can select to trim the
 pedigree so that it will only include relatives of the focal animals you
 have selected. This will reduce the number of members within the
 pedigree to all animals required to connect all of the focal animals in
 the pedigree.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/select-trim-for-focal-animals-1.png" width="576"></p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fig_alt_txt</span> <span class="op">&lt;-</span> <span class="st">"Pedigree browser selecting to trim pedigree for focal animals"</span></span></code></pre></div>
+<p><img src="ColonyManagerTutorial_files/figure-html/select-trim-for-focal-animals-1.png" alt="Pedigree browser selecting to trim pedigree for focal animals" width="576"></p>
 <hr>
 <p>A pedigree trimmed based on focal animals will have only the
 relatives of those animals remaining. In this instance there are only a
@@ -349,14 +350,18 @@ original pedigree file uploaded indicates a common ancestor for them.
 Otherwise, focal animals and their relatives will be sorted into
 separate pedigrees in the output, with each separate pedigree indicated
 by its own number.</em></p>
-<p><img src="ColonyManagerTutorial_files/figure-html/trimmed-for-focal-animals-1.png" width="384"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/trimmed-for-focal-animals-1.png" alt="Pedigree browser trimmed for focal animals" width="384"></p>
 <hr>
 <p>You can remove the animals from the list of focal animals by
 selecting the <strong>Clear Focal Animals</strong> checkbox and
 selecting the <strong>Update Focal Animals</strong> button. This will
 read in an empty ID list, clear the box of IDs, and bring back all of
 the trimmed away IDs.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/cleared-of-focal-animals-1.png" width="576"></p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fig_alt_txt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Pedigree browser showing two screens; one with focal "</span>,</span>
+<span>                      <span class="st">"animals displayed and one with them cleared out of "</span>,</span>
+<span>                      <span class="st">"the display box."</span><span class="op">)</span></span></code></pre></div>
+<p><img src="ColonyManagerTutorial_files/figure-html/cleared-of-focal-animals-1.png" alt="Pedigree browser showing two screens; one with focal animals displayed and one with them cleared out of the display box." width="576"></p>
 <p>Deselect the <strong>Clear Focal Animals</strong> checkbox and
 reselect the <strong>Update Focal Animals</strong> button before
 continuing with the tutorial so that we will be working with the trimmed
@@ -371,7 +376,7 @@ pedigree.</p>
 pyramid plot for the pedigree as selected in the <strong>Pedigree
 Browser</strong> tab. This is showing 332 living animals from the entire
 example pedigree.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/age-plot-1.png" width="528"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/age-plot-1.png" alt="Pedigree age plot" width="528"></p>
 <hr>
 </div>
 <div class="section level2">
@@ -396,7 +401,7 @@ simulations is recommended. A genome uniqueness threshold value between
 <p>Select the <strong>Begin Analysis</strong> button to start the gene
 dropping process, which you can monitor with the progress meter in the
 lower right corner of the display.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/gva-calculating-1.png" width="672"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/gva-calculating-1.png" alt="Calculation on genetic value analysis tab" width="672"></p>
 <hr>
 <p>As soon as the calculations are completed, a table showing the
 results of the analysis is displayed in 10 rows. The calculations for
@@ -408,7 +413,7 @@ values in the <strong>Show entries</strong> selection tool, or you may
 view results for a specific set of animals by entering their IDs in the
 box above. The default is to display the analysis for the list of focal
 animals.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/gva-first-high-value-1.png" width="576"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/gva-first-high-value-1.png" alt="Genetic value analysis display of high value animals" width="576"></p>
 <hr>
 <p>Searching down the table of results in the <strong>Value
 Designation</strong> column you can see starting at row 268 the values
@@ -418,7 +423,7 @@ Designation</strong> column means the animal did not have parentage
 information. Infants or very young animals without assigned parents are
 given an “Undetermined” designation. Founders also do not have parentage
 information but are high value by definition.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/gva-high-and-low-value-1.png" width="528"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/gva-high-and-low-value-1.png" alt="Genetic value analysis display of low value animals" width="528"></p>
 <hr>
 </div>
 <div class="section level2">
@@ -431,20 +436,20 @@ Analysis and Breeding Group Description</strong> tab. Additionally,
 definitions of founder equivalents and founder genome equivalents are
 located at the bottom of the <strong>Summary Statistics and
 Plots</strong> tab.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/ss-first-view-1.png" width="528"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/ss-first-view-1.png" alt="Genetic value analysis display of low value animals" width="528"></p>
 <hr>
 <p>The <strong>Export Kinship Matrix</strong> button creates a CSV file
 that has a row and column for each individual in the genetic analysis
 plus a first row and first column each containing the IDs.</p>
 <p>The first few rows of such a file are shown below.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/ss-kinship-matrix-1.png" width="576"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/ss-kinship-matrix-1.png" alt="Kinship matrix" width="576"></p>
 <hr>
 <p>The <strong>First-Order Relationships</strong> button creates a CSV
 file that has the following columns defined: an unnamed column for row
 number, <em>id</em>, <em>parents</em>, <em>offspring</em>,
 <em>siblings</em>, and <em>total</em>. Counts are based off known
 relationships. The first few rows of such a file are shown below.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/first-order-relationships-1.png" width="480"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/first-order-relationships-1.png" alt="First order relationships" width="480"></p>
 <hr>
 <p>The <strong>Export Female Founders</strong> and <strong>Export Male
 Founders</strong> buttons creates a CSV file that has the following
@@ -453,12 +458,12 @@ columns defined: an unnamed column for row number, <em>id</em>,
 <em>birth</em>, <em>exit</em>, <em>age</em>, <em>recordStatus</em>,
 <em>population</em>, and <em>pedNum</em>. The first few rows of such a
 file are shown below.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/female-founders-1.png" width="480"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/female-founders-1.png" alt="First order relationships" width="480"></p>
 <hr>
 <p>The six plots provide histograms and boxplots for the kinship
 coefficients, the Z-scores of the kinship coefficients, and the genome
 uniqueness scores. These plots may also be downloaded as desired.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/ss-trimmed-all-plots-1.png" width="480"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/ss-trimmed-all-plots-1.png" alt="Trimmed all plots" width="480"></p>
 <hr>
 </div>
 <div class="section level2">
@@ -477,7 +482,7 @@ you want to have in the formed breeding groups. The sex ratio algorithm
 will form a group as nearly to the selected ratio as possible given the
 size of the group. Limits in the availability of either sex will
 restrict the size of the groups formed.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/breeding-group-first-view-1.png" width="672"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/breeding-group-first-view-1.png" alt="Breeding group formation; initial view" width="672"></p>
 <hr>
 <p>The <strong>Make Groups</strong> button appears once you select the
 source of animals you are going to use. However, you probably will be
@@ -488,7 +493,7 @@ found by the genetic analysis.</p>
 select the number of groups using the arrows on the right edge of the
 <strong>Number of Groups Desired</strong> field, which is outlined in
 blue in the image below.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/breeding-group-1-1.png" width="768"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/breeding-group-1-1.png" alt="Breeding group formation; 1 group desired" width="768"></p>
 <hr>
 <p>There are often behavioral constraints, such as preexisting social
 groups, that dictate the need to have some animals maintained together.
@@ -501,13 +506,13 @@ each other.</p>
 differing numbers of seed animals. Note the selection of having animals
 below the minimum parent age of two being grouped with their mother.</p>
 <hr>
-<p><img src="ColonyManagerTutorial_files/figure-html/breeding-group-6-infants-with-dam-1.png" width="576"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/breeding-group-6-infants-with-dam-1.png" alt="Breeding group formation; 6 groups with seed animals" width="576"></p>
 <hr>
 <p>Each group has all of the seed animals that were assigned to it plus
 additional animals that could be added while satisfying the requirements
 imposed by the selected settings. I have indicated the seed animals for
 the first group with red rectangles.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/fig-bg-1.png" width="576"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/fig-bg-1.png" alt="Breeding group formation; view of group one" width="576"></p>
 <hr>
 <p>Display of kinship values requires that the <strong>Include kinship
 in display of groups</strong> checkbox be selected prior to group
@@ -515,12 +520,15 @@ formation.</p>
 <p>A group of ten animals was formed in the next run after choosing to
 include kinship and selecting the <strong>Make Groups</strong>
 button.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/breeding-group-6-seed-grps-grp-6-kinship-1.png" width="528"></p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fig_alt_txt</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Breeding group formation of 6 breeding groups."</span><span class="op">)</span></span></code></pre></div>
+<p><img src="ColonyManagerTutorial_files/figure-html/breeding-group-6-seed-grps-grp-6-kinship-1.png" alt="Breeding group formation of 6 breeding groups." width="528"></p>
 <hr>
 <p>The option to select a desired sex ratio allows you to select any
 ratio desired. However, the ratio obtained is limited by the
 availability of animals that meet all criteria you have set.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/bg-sex-ratio-specification-1.png" width="528"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/bg-sex-ratio-specification-1.png" alt="breeding group sex ratio specification" width="528"></p>
 <p>Selecting a sex ratio of 2.5 with 6 groups as is illustrated resulted
 in 5 groups of 20 with a ratio of 14:6 (2.3) and 1 group of 23 with a
 ratio of 16:7 (2.3).</p>
