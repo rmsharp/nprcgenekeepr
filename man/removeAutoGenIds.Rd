@@ -7,7 +7,7 @@
 removeAutoGenIds(ped)
 }
 \arguments{
-\item{ped}{datatable that is the `Pedigree`. It contains pedigree
+\item{ped}{datatable that is the \code{Pedigree}. It contains pedigree
 information. The \code{id}, \code{sire}, and \code{dame} columns are
 required.}
 }

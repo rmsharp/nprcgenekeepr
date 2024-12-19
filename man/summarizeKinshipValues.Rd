@@ -14,15 +14,15 @@ and \code{kinshipCounts}.}
 \value{
 a data.frame with one row of summary statistics for each imputed
 kinship value. The columns are as follows:
- \code{id_1},
- \code{id_2},
- \code{min},
- \code{secondQuartile},
- \code{mean},
- \code{median},
- \code{thirdQuartile},
- \code{max}, and
- \code{sd}.
+\code{id_1},
+\code{id_2},
+\code{min},
+\code{secondQuartile},
+\code{mean},
+\code{median},
+\code{thirdQuartile},
+\code{max}, and
+\code{sd}.
 }
 \description{
 Makes a data.frame object containing simulated kinship summary statistics

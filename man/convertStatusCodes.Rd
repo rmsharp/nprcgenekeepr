@@ -12,7 +12,7 @@ status as alive, dead, sold, etc.}
 }
 \value{
 A factor vector of the standardized status codes with levels:
-`ALIVE`, `DECEASED`, `SHIPPED`, and `UNKNOWN`.
+\code{ALIVE}, \code{DECEASED}, \code{SHIPPED}, and \code{UNKNOWN}.
 }
 \description{
 Part of Pedigree Curation

@@ -10,7 +10,7 @@ getAnimalsWithHighKinship(kmat, ped, threshold, currentGroups, ignore, minAge)
 \item{kmat}{numeric matrix of pairwise kinship values. Rows and columns
 are named with animal IDs.}
 
-\item{ped}{dataframe that is the `Pedigree`. It contains pedigree
+\item{ped}{dataframe that is the \code{Pedigree}. It contains pedigree
 information including the IDs listed in \code{candidates}.}
 
 \item{threshold}{numeric value indicating the minimum kinship level to be
@@ -28,7 +28,7 @@ Default is to ignore all pairwise kinship between females.}
 
 \item{minAge}{integer value indicating the minimum age to consider in group
 formation. Pairwise kinships involving an animal of this age or younger will
- be ignored. Default is 1 year.}
+be ignored. Default is 1 year.}
 }
 \value{
 A list of named character vectors where each name is an animal Id

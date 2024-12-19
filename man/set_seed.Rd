@@ -13,7 +13,7 @@ set_seed(seed = 1)
 NULL, invisibly.
 }
 \description{
-The change in how `set.seed` works in R 3.6 prompted the creation of this
+The change in how \code{set.seed} works in R 3.6 prompted the creation of this
 R version agnostic replacement to get unit test code to work on multiple
 versions of R in a Travis-CI build.
 }

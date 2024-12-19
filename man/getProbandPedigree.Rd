@@ -10,7 +10,7 @@ getProbandPedigree(probands, ped)
 \item{probands}{a character vector with the list of animals whose ancestors
 should be included in the final pedigree.}
 
-\item{ped}{datatable that is the `Pedigree`. It contains pedigree
+\item{ped}{datatable that is the \code{Pedigree}. It contains pedigree
 information. The fields \code{sire} and \code{dam} are required.}
 }
 \value{

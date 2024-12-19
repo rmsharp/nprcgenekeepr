@@ -20,7 +20,7 @@ In contrast to the kinship matrix. Each possible pairing of IDs appears
 once.
 }
 \description{
-A `kValue` matrix has one row for each pair of individuals in the kinship
+A \code{kValue} matrix has one row for each pair of individuals in the kinship
 matrix and one column for each kinship matrix.
 }
 \examples{

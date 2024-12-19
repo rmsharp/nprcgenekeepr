@@ -3,8 +3,8 @@
 \docType{data}
 \name{focalAnimals}
 \alias{focalAnimals}
-\title{focalAnimals is a dataframe with one column (_id_) containing the of animal
-Ids from the __examplePedigree__ pedigree.}
+\title{focalAnimals is a dataframe with one column (\emph{id}) containing the of animal
+Ids from the \strong{examplePedigree} pedigree.}
 \format{
 An object of class \code{data.frame} with 327 rows and 1 columns.
 }

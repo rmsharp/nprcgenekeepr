@@ -14,7 +14,7 @@ in \code{alleles} belongs.}
 }
 \value{
 A data.frame with columns \code{allele} and \code{freq}. This is a
- table of allele counts within the population.
+table of allele counts within the population.
 }
 \description{
 Part of Genetic Value Analysis

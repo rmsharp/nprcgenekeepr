@@ -32,7 +32,7 @@ columns contain the integers indicating the observed genotypes.
 
 The gene dropping method from \emph{Pedigree analysis by computer simulation}
 by Jean W MacCluer, John L Vandeberg, and Oliver A Ryder (1986)
-<doi:10.1002/zoo.1430050209> is used in the genetic value calculations.
+\url{doi:10.1002/zoo.1430050209} is used in the genetic value calculations.
 
 Currently there is no means of handling knowing only one haplotype.
 It will be easy to add another column to handle situations where only one

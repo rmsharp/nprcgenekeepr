@@ -3,7 +3,7 @@
 \name{cumulateSimKinships}
 \alias{cumulateSimKinships}
 \title{Makes a list object containing kinship summary statistics using the list
-object from __createSimKinships__.}
+object from \strong{createSimKinships}.}
 \usage{
 cumulateSimKinships(ped, allSimParents, pop = NULL, n = 10L)
 }

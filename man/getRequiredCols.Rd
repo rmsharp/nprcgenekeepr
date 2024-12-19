@@ -10,15 +10,15 @@ getRequiredCols()
 A character vector of the required columns that can be in a studbook.
 The required columns are as follows:
 \itemize{
-\item{id} {-- character vector with unique identifier for an individual}
-\item{sire} {-- character vector with unique identifier for an
-individual's father (\code{NA} if unknown).}
-\item{dam} {-- character vector with unique identifier for an
-individual's mother (\code{NA} if unknown).}
-\item{sex} {-- factor {levels: "M", "F", "U"} Sex specifier for an
-individual}
-\item{birth} {-- Date or \code{NA} (optional) with the individual's birth
-date}
+\item\{id\} \{-- character vector with unique identifier for an individual\}
+\item\{sire\} \{-- character vector with unique identifier for an
+individual's father (\code{NA} if unknown).\}
+\item\{dam\} \{-- character vector with unique identifier for an
+individual's mother (\code{NA} if unknown).\}
+\item\{sex\} \{-- factor \{levels: "M", "F", "U"\} Sex specifier for an
+individual\}
+\item\{birth\} \{-- Date or \code{NA} (optional) with the individual's birth
+date\}
 }
 }
 \description{

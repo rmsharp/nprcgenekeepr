@@ -14,13 +14,13 @@ reportGV with 10,000 iterations.
 pedWithGenotypeReport is a simple example report for use in
 examples and unit tests.
 It was created using the following commands.
-  \itemize{
-    \item set_seed(10)
-    \item pedWithGenotypeReport <- reportGV(nprcgenekeepr::pedWithGenotype,
-          guIter = 10000)
-    \item save(pedWithGenotypeReport,
-               file = "data/pedWithGenotypeReport.RData")
-  }
+\itemize{
+\item set_seed(10)
+\item pedWithGenotypeReport <- reportGV(nprcgenekeepr::pedWithGenotype,
+guIter = 10000)
+\item save(pedWithGenotypeReport,
+file = "data/pedWithGenotypeReport.RData")
+}
 }
 \usage{
 pedWithGenotypeReport

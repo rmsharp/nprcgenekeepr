@@ -19,10 +19,10 @@ This requires complete pedigree information..}
 A dataframe, which is \code{rpt} sorted according to the ranking
 scheme:
 \itemize{
- \item imported animals with no offspring
- \item animals with genome uniqueness above 10%, ranked by descending gu
- \item animals with mean kinship less than 0.25, ranked by ascending mk
- \item all remaining animals, ranked by ascending mk
+\item imported animals with no offspring
+\item animals with genome uniqueness above 10\%, ranked by descending gu
+\item animals with mean kinship less than 0.25, ranked by ascending mk
+\item all remaining animals, ranked by ascending mk
 }
 }
 \description{

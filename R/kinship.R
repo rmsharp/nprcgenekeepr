@@ -36,21 +36,21 @@
 #' used to make a unit diagonal matrix. If \code{FALSE}, \code{base::diag()} is
 #' used to make a unit square matrix.
 #'
-#' @description {Kinship Matrix Functions} {
+#' @description \{Kinship Matrix Functions\} \{
 #' The code for the kinship function was written by Terry Therneau
 #' at the Mayo clinic and taken from his website. This function is part of a
 #' package written in S (and later ported to R) for calculating kinship and
 #' other statistics.
-#' }
+#' \}
 #'
-#' @author {Terry M. Therneau, Mayo Clinic (mayo.edu), original version}
+#' @author \{Terry M. Therneau, Mayo Clinic (mayo.edu), original version\}
 #'
 #'
-#' @references {S-Plus/R Function Page}
+#' @references \{S-Plus/R Function Page\}
 # nolint start: line_length_linter
 #' \emph{www.mayo.edu/research/departments-divisions/department-health-sciences-research/division-biomedical-statistics-informatics/software/}
 # nolint end: line_length_linter
-#'  @description {s-plus-r-functions} {Downloaded 2014-08-26}
+#'  @description \{s-plus-r-functions\} \{Downloaded 2014-08-26\}
 #'  This page address is now (2019-10-03) stale.
 #'
 #' All of the code on the S-Plus page was stated to be released under the
@@ -61,11 +61,11 @@
 #'
 #' $Id: kinship.s,v 1.5 2003/01/04 19:07:53 therneau Exp $
 #'
-#' @references {Create the kinship matrix, using the algorithm of K Lange,
+#' @references \{Create the kinship matrix, using the algorithm of K Lange,
 #'  Mathematical and Statistical Methods for Genetic Analysis,
-#'  Springer, 1997, p 71-72.}
+#'  Springer, 1997, p 71-72.\}
 #'
-#' @author {as modified by, M Raboin, 2014-09-08 14:44:26}
+#' @author \{as modified by, M Raboin, 2014-09-08 14:44:26\}
 #'
 #' @import Matrix
 #' @export

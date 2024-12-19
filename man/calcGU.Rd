@@ -12,12 +12,13 @@ table of allele information produced by \code{geneDrop()}.
 An AlleleTable contains information about alleles an ego has inherited.
 It contains the following columns:
 \itemize{
- \item {id} {--- A character vector of IDs for a set of animals.}
- \item {parent} {--- A factor with levels of sire and dam.}
- \item {V1} {--- Unnamed integer column representing allele 1.}
- \item {V2} {--- Unnamed integer column representing allele 2.}
- \item {...} {--- Unnamed integer columns representing alleles.}
- \item {Vn} {--- Unnamed integer column representing the nth column.}}}
+\item \{id\} \{--- A character vector of IDs for a set of animals.\}
+\item \{parent\} \{--- A factor with levels of sire and dam.\}
+\item \{V1\} \{--- Unnamed integer column representing allele 1.\}
+\item \{V2\} \{--- Unnamed integer column representing allele 2.\}
+\item \{...\} \{--- Unnamed integer columns representing alleles.\}
+\item \{Vn\} \{--- Unnamed integer column representing the nth column.\}
+}}
 
 \item{threshold}{an integer indicating the maximum number of copies of an
 allele that can be present in the population for it to be considered rare.
@@ -34,11 +35,11 @@ interest, otherwise all animals will be considered. The default is NULL.}
 }
 \value{
 Dataframe \code{rows: id, col: gu}
- A single-column table of genome uniqueness values as percentages.
- Rownames are set to 'id' values that are part of the population.
+A single-column table of genome uniqueness values as percentages.
+Rownames are set to 'id' values that are part of the population.
 }
 \description{
-{Genome Uniqueness Functions}{}
+\{Genome Uniqueness Functions\}\{\}
 }
 \details{
 Part of Genetic Value Analysis

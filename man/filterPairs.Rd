@@ -3,7 +3,7 @@
 \name{filterPairs}
 \alias{filterPairs}
 \title{Filters kinship values from a long-format kinship table based on the sexes
- of the two animals involved.}
+of the two animals involved.}
 \usage{
 filterPairs(kin, ped, ignore = list(c("F", "F")))
 }

@@ -7,7 +7,7 @@
 setPopulation(ped, ids)
 }
 \arguments{
-\item{ped}{datatable that is the `Pedigree`. It contains pedigree
+\item{ped}{datatable that is the \code{Pedigree}. It contains pedigree
 information. The \code{id} column is required.}
 
 \item{ids}{character vector of IDs to be flagged as part of the population

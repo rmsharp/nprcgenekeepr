@@ -33,7 +33,6 @@ loops in the resulting pedigree, and thus, reduce the
 amount of time required to perform calculations with
 SIMWALK2 or similar programs.
 
-
 This function uses only \code{id}, \code{sire}, and \code{dam} columns.
 }
 \examples{

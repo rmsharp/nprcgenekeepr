@@ -23,7 +23,8 @@ relatives otherwise an error would occur because
 following: in \strong{groupAddAssign}
 }
 \details{
-\code{available[[i]] <- setdiff(available[[i]], kin[[id]])}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{\code{available[[i]] <- setdiff(available[[i]], kin[[id]])}
+}\if{html}{\out{</div>}}
 }
 \examples{
 \donttest{

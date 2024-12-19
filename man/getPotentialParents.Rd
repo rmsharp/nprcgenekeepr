@@ -28,6 +28,5 @@ possible dams (\code{dam}). The \code{id} must be defined while the
 vectors \code{sire} and \code{dam} can be empty.
 }
 \description{
-Get the lists of portential parents for all individuals born in the colony
-with one or two unknown parents.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 }

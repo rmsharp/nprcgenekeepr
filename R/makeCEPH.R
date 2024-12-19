@@ -14,27 +14,28 @@
 #' Relationships categories:
 #' For each ID in the pair, find a CEPH-style pedigree and compare them
 #' \itemize{
-#' \item {If one is the parent of the other}
-#'     {--- Designate the relationship as \code{parent-offspring}}
-#' \item {Else if both parents are shared}
-#'     {--- Designate the relationship as \code{full-siblings}}
-#' \item {Else if one parent is shared}
-#'     {--- Designate the relationship as \code{half-siblings}}
-#' \item {Else if one is the grandparent of the other}
-#'     {--- Designate the relationship as \code{grandparent-grandchild}}
-#' \item {Else if both grand parents are shared}
-#'     {--- Designate the relationship as \code{cousin}}
-#' \item {Else if at least one grand parent is shared}
-#'     {--- Designate the relationship as \code{cousin - other}}
-#' \item {Else if the parents of one are the grandparents of the other}
-#'     {--- Designate the relationship as \code{full-avuncular}}
-#' \item {Else if a single parent of one is the grandparent of the other}
-#'     {--- Designate the relationship as \code{avuncular - other}}
-#' \item {Else if the kinship is greater than 0, but the pair don't fall into
-#' the above categories}
-#'     {--- Designate the relationship as \code{other}}
-#' \item {Else}
-#'     {--- Designate the relationships as \code{no relation.}}}
+#' \item \{If one is the parent of the other\}
+#'     \{--- Designate the relationship as \code{parent-offspring}\}
+#' \item \{Else if both parents are shared\}
+#'     \{--- Designate the relationship as \code{full-siblings}\}
+#' \item \{Else if one parent is shared\}
+#'     \{--- Designate the relationship as \code{half-siblings}\}
+#' \item \{Else if one is the grandparent of the other\}
+#'     \{--- Designate the relationship as \code{grandparent-grandchild}\}
+#' \item \{Else if both grand parents are shared\}
+#'     \{--- Designate the relationship as \code{cousin}\}
+#' \item \{Else if at least one grand parent is shared\}
+#'     \{--- Designate the relationship as \code{cousin - other}\}
+#' \item \{Else if the parents of one are the grandparents of the other\}
+#'     \{--- Designate the relationship as \code{full-avuncular}\}
+#' \item \{Else if a single parent of one is the grandparent of the other\}
+#'     \{--- Designate the relationship as \code{avuncular - other}\}
+#' \item \{Else if the kinship is greater than 0, but the pair don't fall into
+#' the above categories\}
+#'     \{--- Designate the relationship as \code{other}\}
+#' \item \{Else\}
+#'     \{--- Designate the relationships as \code{no relation.}\}
+#' }
 #'
 #' @return List of lists: \{fields: id, \{subfields: parents, pgp, mgp\}\}.
 #' Pedigree information converted into a CEPH-style list. The top level

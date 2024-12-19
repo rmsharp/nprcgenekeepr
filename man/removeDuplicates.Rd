@@ -7,7 +7,7 @@
 removeDuplicates(ped, reportErrors = FALSE)
 }
 \arguments{
-\item{ped}{dataframe that is the `Pedigree`. It contains pedigree
+\item{ped}{dataframe that is the \code{Pedigree}. It contains pedigree
 information. The \code{id} column is required.}
 
 \item{reportErrors}{logical value if TRUE will scan the entire file and

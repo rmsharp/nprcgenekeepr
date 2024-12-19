@@ -2,8 +2,7 @@
 % Please edit documentation in R/insertSeparators.R
 \name{insertSeparators}
 \alias{insertSeparators}
-\title{insertSeparators inserts the character "-" between year and month and
-between month and day portions of a date string in \%Y\%m\%d format.}
+\title{Inserts "-" between year, month, and day of YYYYMMDD formatted dates.}
 \usage{
 insertSeparators(dates)
 }
@@ -11,9 +10,13 @@ insertSeparators(dates)
 \item{dates}{character vector of potential dates}
 }
 \value{
-A character vector of potential dates in \%Y-\%m-\%d format.
+A character vector of potential dates in \\%Y-\\%m-\\%d format.
 }
 \description{
+Inserts "-" between year, month, and day of a date string in dates formatted
+as YYYYMMDD to form YYYY-MM-DD formatted dates.
+}
+\details{
 This function is not exported because it is not general purpose and
 is missing several defensive programming measures.
 }

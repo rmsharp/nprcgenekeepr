@@ -41,6 +41,7 @@ Imports:
     data.table,
     futile.logger,
     htmlTable,
+    lifecycle,
     lubridate,
     Matrix,
     plotrix,
@@ -71,3 +72,4 @@ License: MIT + file LICENSE
 RoxygenNote: 7.3.2
 LazyData: TRUE
 VignetteBuilder: knitr, rmarkdown
+Roxygen: list(markdown = TRUE)

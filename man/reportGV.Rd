@@ -28,9 +28,9 @@ interest. The default is NULL.}
 
 \item{byID}{Logical variable of length 1 that is passed through to
 eventually be used by \code{alleleFreq()}, which calculates the count of each
- allele in the provided vector. If \code{byID} is TRUE and ids are provided,
- the function will only count the unique alleles for an individual
-  (homozygous alleles will be counted as 1).}
+allele in the provided vector. If \code{byID} is TRUE and ids are provided,
+the function will only count the unique alleles for an individual
+(homozygous alleles will be counted as 1).}
 
 \item{updateProgress}{Function or NULL. If this function is defined, it
 will be called during each iteration to update a

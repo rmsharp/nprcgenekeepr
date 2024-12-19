@@ -26,12 +26,12 @@ used to make a unit square matrix.}
 A kinship square matrix
 }
 \description{
-{Kinship Matrix Functions} {
+\{Kinship Matrix Functions\} \{
 The code for the kinship function was written by Terry Therneau
 at the Mayo clinic and taken from his website. This function is part of a
 package written in S (and later ported to R) for calculating kinship and
 other statistics.
-}
+\}
 }
 \details{
 The function previously had an internal call to the kindepth function in
@@ -40,9 +40,9 @@ requires the generation number to be calculated elsewhere and passed into
 the function.
 
 The rows (cols) of founders are just .5 * identity matrix, no further
-   processing is needed for them.
+processing is needed for them.
 Parents must be processed before their children, and then a child's
-   kinship is just a sum of the kinship's for his/her parents.
+kinship is just a sum of the kinship's for his/her parents.
 }
 \examples{
 \donttest{
@@ -56,10 +56,10 @@ kmat
 
 }
 \references{
-{S-Plus/R Function Page}
+\{S-Plus/R Function Page\}
 \emph{www.mayo.edu/research/departments-divisions/department-health-sciences-research/division-biomedical-statistics-informatics/software/}
- @description {s-plus-r-functions} {Downloaded 2014-08-26}
- This page address is now (2019-10-03) stale.
+@description \{s-plus-r-functions\} \{Downloaded 2014-08-26\}
+This page address is now (2019-10-03) stale.
 
 All of the code on the S-Plus page was stated to be released under the
 GNU General Public License (version 2 or later).
@@ -70,12 +70,12 @@ The R version became the kinship2 package available on CRAN:
 
 $Id: kinship.s,v 1.5 2003/01/04 19:07:53 therneau Exp $
 
-{Create the kinship matrix, using the algorithm of K Lange,
- Mathematical and Statistical Methods for Genetic Analysis,
- Springer, 1997, p 71-72.}
+\{Create the kinship matrix, using the algorithm of K Lange,
+Mathematical and Statistical Methods for Genetic Analysis,
+Springer, 1997, p 71-72.\}
 }
 \author{
-{Terry M. Therneau, Mayo Clinic (mayo.edu), original version}
+\{Terry M. Therneau, Mayo Clinic (mayo.edu), original version\}
 
-{as modified by, M Raboin, 2014-09-08 14:44:26}
+\{as modified by, M Raboin, 2014-09-08 14:44:26\}
 }

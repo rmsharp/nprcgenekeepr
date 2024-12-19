@@ -6,18 +6,18 @@
 #'
 #' Currently this returns the following character strings in a named list.
 #' \enumerate{
-#'   \item{center}{One of "SNPRC" or "ONPRC"}
-#'   \item{baseUrl}{If \code{center} is "SNPRC", baseUrl is one of
+#'   \item\{center\}\{One of "SNPRC" or "ONPRC"\}
+#'   \item\{baseUrl\}\{If \code{center} is "SNPRC", baseUrl is one of
 #'   "https://boomer.txbiomed.local:8080/labkey" or
 #'   "https://vger.txbiomed.local:8080/labkey".
 #'   To allow testing, if \code{center} is "ONPRC" baseUrl is
-#'   "https://boomer.txbiomed.local:8080/labkey".}
-#'   \item{schemaName}{If \code{center} is "SNPRC", schemaName is "study".
-#'   If \code{center} is "ONPRC", schemaName is "study"}
-#'   \item{folderPath} {If \code{center} is "SNPRC", folderPath is "/SNPRC".
-#'   If \code{center} is "ONPRC", folderPath is "/ONPRC"}
-#'   \item{queryName}{is "demographics"}
-#'}
+#'   "https://boomer.txbiomed.local:8080/labkey".\}
+#'   \item\{schemaName\}\{If \code{center} is "SNPRC", schemaName is "study".
+#'   If \code{center} is "ONPRC", schemaName is "study"\}
+#'   \item\{folderPath\} \{If \code{center} is "SNPRC", folderPath is "/SNPRC".
+#'   If \code{center} is "ONPRC", folderPath is "/ONPRC"\}
+#'   \item\{queryName\} \{is "demographics"\}
+#' }
 #'
 #' @examples
 #' \donttest{

@@ -36,7 +36,7 @@
 #' local.}
 #' \item{status}{-- character vector or NA. Flag indicating an individual's
 #' status as alive, dead, sold, etc. Transformed to
-#'  factor {levels: ALIVE, DECEASED, SHIPPED, UNKNOWN}. Vector of
+#'  factor \{levels: ALIVE, DECEASED, SHIPPED, UNKNOWN\}. Vector of
 #' standardized status codes with the possible values
 #' ALIVE, DECEASED, SHIPPED, or UNKNOWN}
 #' \item{recordStats}{-- character vector with value of \code{"added"} or

@@ -11,7 +11,7 @@ kinshipMatricesToKValues(kinshipMatrices)
 may not have named rows and columns.}
 }
 \description{
-A `kValue` matrix has one row for each pair of individuals in the kinship
+A \code{kValue} matrix has one row for each pair of individuals in the kinship
 matrix and one column for each kinship matrix.
 }
 \examples{

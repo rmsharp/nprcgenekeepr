@@ -7,7 +7,7 @@
 countFirstOrder(ped, ids = NULL)
 }
 \arguments{
-\item{ped}{: `Pedigree`
+\item{ped}{: \code{Pedigree}
 Standardized pedigree information in a table.}
 
 \item{ids}{character vector of IDs or NULL

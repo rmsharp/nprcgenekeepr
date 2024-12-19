@@ -33,7 +33,7 @@ group being formed) assuming no groups are prepopulated.}
 \item{kmat}{Numeric matrix of pairwise kinship values. Rows and columns
 are named with animal IDs.}
 
-\item{ped}{Dataframe that is the `Pedigree`. It contains pedigree
+\item{ped}{Dataframe that is the \code{Pedigree}. It contains pedigree
 information including the IDs listed in \code{candidates}.}
 
 \item{threshold}{Numeric value indicating the minimum kinship level to be
@@ -47,7 +47,7 @@ Default is to ignore all pairwise kinship between females.}
 
 \item{minAge}{Integer value indicating the minimum age to consider in group
 formation. Pairwise kinships involving an animal of this age or younger will
- be ignored. Default is 1 year.}
+be ignored. Default is 1 year.}
 
 \item{iter}{Integer indicating the number of times to perform the random
 group formation process. Default value is 1000 iterations.}

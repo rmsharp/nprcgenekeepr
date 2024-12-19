@@ -33,7 +33,7 @@
 #' calculated by this function should match the "founder genome uniqueness"
 #' measure calculated by Pedscope.
 #'
-#' @description {Genome Uniqueness Functions}{}
+#' @description \{Genome Uniqueness Functions\}\{\}
 #'
 #' @references Ballou JD, Lacy RC.  1995. Identifying genetically important
 #' individuals for management of genetic variation in pedigreed populations,
@@ -61,12 +61,13 @@
 #' An AlleleTable contains information about alleles an ego has inherited.
 #' It contains the following columns:
 #' \itemize{
-#'  \item {id} {--- A character vector of IDs for a set of animals.}
-#'  \item {parent} {--- A factor with levels of sire and dam.}
-#'  \item {V1} {--- Unnamed integer column representing allele 1.}
-#'  \item {V2} {--- Unnamed integer column representing allele 2.}
-#'  \item {...} {--- Unnamed integer columns representing alleles.}
-#'  \item {Vn} {--- Unnamed integer column representing the nth column.}}
+#'  \item \{id\} \{--- A character vector of IDs for a set of animals.\}
+#'  \item \{parent\} \{--- A factor with levels of sire and dam.\}
+#'  \item \{V1\} \{--- Unnamed integer column representing allele 1.\}
+#'  \item \{V2\} \{--- Unnamed integer column representing allele 2.\}
+#'  \item \{...\} \{--- Unnamed integer columns representing alleles.\}
+#'  \item \{Vn\} \{--- Unnamed integer column representing the nth column.\}
+#'  }
 #'
 #' @param threshold an integer indicating the maximum number of copies of an
 #' allele that can be present in the population for it to be considered rare.

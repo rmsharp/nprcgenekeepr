@@ -14,7 +14,7 @@
 #' rare <- calcA(nprcgenekeepr::ped1Alleles, threshold = 3, byID = FALSE)
 #' }
 #'
-#' @param alleles a matrix with {id, parent, V1 ... Vn} providing the alleles
+#' @param alleles a matrix with \{id, parent, V1 ... Vn\} providing the alleles
 #' an animal received during each simulation.
 #' The first 2 columns provide the animal ID and the parent the allele came
 #' from. Remaining columns provide alleles.

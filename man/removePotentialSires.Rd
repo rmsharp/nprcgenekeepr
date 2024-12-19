@@ -11,9 +11,9 @@ removePotentialSires(ids, minAge, ped)
 
 \item{minAge}{integer value indicating the minimum age to consider in group
 formation. Pairwise kinships involving an animal of this age or younger will
- be ignored. Default is 1 year.}
+be ignored. Default is 1 year.}
 
-\item{ped}{dataframe that is the `Pedigree`. It contains pedigree
+\item{ped}{dataframe that is the \code{Pedigree}. It contains pedigree
 information including the IDs listed in \code{candidates}.}
 }
 \description{

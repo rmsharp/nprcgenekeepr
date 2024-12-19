@@ -1,6 +1,8 @@
 #' Get the lists of portential parents for all individuals born in the colony
 #' with one or two unknown parents.
 #'
+#' `r lifecycle::badge('experimental')`
+#'
 #' @return a list of list with each internal list being made up of an animal
 #' id (\code{id}), a vector of possible sires (\code{sire}) and a vector of
 #' possible dams (\code{dam}). The \code{id} must be defined while the

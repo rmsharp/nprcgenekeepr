@@ -7,7 +7,7 @@
 addParents(ped)
 }
 \arguments{
-\item{ped}{datatable that is the `Pedigree`. It contains pedigree
+\item{ped}{datatable that is the \code{Pedigree}. It contains pedigree
 information including the IDs listed in \code{candidates}.}
 }
 \value{

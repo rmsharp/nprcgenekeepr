@@ -10,7 +10,7 @@ calculateSexRatio(ids, ped, additionalMales = 0, additionalFemales = 0)
 \arguments{
 \item{ids}{character vector of animal Ids}
 
-\item{ped}{datatable that is the `Pedigree`. It contains pedigree
+\item{ped}{datatable that is the \code{Pedigree}. It contains pedigree
 information including the IDs listed in \code{candidates}.}
 
 \item{additionalMales}{Integer value of males to add to those within the

@@ -14,8 +14,8 @@ pedWithGenotype
 \description{
 \describe{
 A dataframe containing 280 records with 12 columns: \code{id}, \code{sire},
- \code{dam}, \code{sex}, \code{gen}, \code{birth}, \code{exit}, \code{age},
- \code{first}, \code{second}, \code{first_name}, and \code{second_name}.
+\code{dam}, \code{sex}, \code{gen}, \code{birth}, \code{exit}, \code{age},
+\code{first}, \code{second}, \code{first_name}, and \code{second_name}.
 }
 }
 \keyword{datasets}

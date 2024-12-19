@@ -20,7 +20,7 @@ list of list where each sublist is a type of error found.}
 \value{
 A dataframe with an updated table with date columns converted from
 \code{character} data type to \code{Date} data type. Values that do not
-conform to the format %Y%m%d are set to NA. NA values are left as NA.
+conform to the format \%Y\%m\%d are set to NA. NA values are left as NA.
 }
 \description{
 Part of Pedigree Curation

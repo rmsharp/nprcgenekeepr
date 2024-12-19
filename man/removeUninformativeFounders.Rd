@@ -7,7 +7,7 @@
 removeUninformativeFounders(ped)
 }
 \arguments{
-\item{ped}{datatable that is the `Pedigree`. It contains pedigree
+\item{ped}{datatable that is the \code{Pedigree}. It contains pedigree
 information. The fields \code{sire} and \code{dam} are required.}
 }
 \value{

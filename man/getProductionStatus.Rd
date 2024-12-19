@@ -13,7 +13,7 @@ getProductionStatus(
 )
 }
 \arguments{
-\item{ped}{Dataframe that is the `Pedigree`. It contains pedigree
+\item{ped}{Dataframe that is the \code{Pedigree}. It contains pedigree
 information. The \code{id}, \code{dam}, \code{sex} and \code{age}
 (in years) columns are required.}
 
@@ -43,27 +43,27 @@ Description of how Production and Production Status (color) is
 calculated.
 \enumerate{
 \item  The Production Status is calculated on September 09, 2019,
-       Births = count of all animals in group born since January 1,
-       2017 through December 31, 2018, that lived at least 30 days.
+Births = count of all animals in group born since January 1,
+2017 through December 31, 2018, that lived at least 30 days.
 \item  Dams = count of all females in group that have a birth date on or
-       prior to September 09, 2016.
+prior to September 09, 2016.
 \item  Production = Births / Dams
 \item  Production Status (color)
-    \enumerate{
-    \item  Shelter and pens
-        \enumerate{
-        \item   Production < 0.6; Red
-        \item   Production >= 0.6 and Production <= 0.63; Yellow
-        \item   Production > 0.63; Green
-    }
-    \item  Corrals
-        \enumerate{
-        \item   Production < 0.5; Red
-        \item   Production >= 0.5 and Production <= 0.53; Yellow
-        \item   Production > 0.53; Green
-        }
-    }
- }
+\enumerate{
+\item  Shelter and pens
+\enumerate{
+\item   Production < 0.6; Red
+\item   Production >= 0.6 and Production <= 0.63; Yellow
+\item   Production > 0.63; Green
+}
+\item  Corrals
+\enumerate{
+\item   Production < 0.5; Red
+\item   Production >= 0.5 and Production <= 0.53; Yellow
+\item   Production > 0.53; Green
+}
+}
+}
 
 This code may need to be modified to allow the user to supply a list
 of IDs to include as group members. Currently each animal in the

@@ -20,9 +20,9 @@ column.}
 \item{gen}{generation number (integers beginning with 0 for the founder
 generation) of the animal indicated by the \code{id} column.}
 \item{birth}{birth date in \code{Date} format of the animal indicated by the
- \code{id} column.}
+\code{id} column.}
 \item{exit}{exit date in \code{Date} format of the animal indicated by the
- \code{id} column.}
+\code{id} column.}
 \item{age}{age in year (numeric) of the animal indicated by the \code{id}
 column.}
 }

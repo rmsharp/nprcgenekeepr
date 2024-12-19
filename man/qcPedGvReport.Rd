@@ -14,11 +14,11 @@ qcPedGvReport
 qcPedGvReport is a genetic value report for illustrative purposes only.
 It is used in examples and unit tests with the nprcgenekeepr package.
 It was created using the following commands.
-  \itemize{
-    \item set_seed(10)
-    \item qcPedGvReport <- reportGV(nprcgenekeepr::qcPed, guIter = 10000)
-    \item save(qcPedGvReport, file = "data/qcPedGvReport.RData")
-  }
+\itemize{
+\item set_seed(10)
+\item qcPedGvReport <- reportGV(nprcgenekeepr::qcPed, guIter = 10000)
+\item save(qcPedGvReport, file = "data/qcPedGvReport.RData")
+}
 }
 \examples{
 \donttest{
