@@ -13,7 +13,6 @@ name: pkgdown.yaml
 permissions: read-all
 
 jobs:
-  clean:
   pkgdown:
     runs-on: ubuntu-latest
     # Only restrict concurrency for non-PR jobs
