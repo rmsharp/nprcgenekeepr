@@ -17,7 +17,8 @@ The \code{exit} column values have been remapped to valid dates or \code{NA}.
 }
 \description{
 Forms a dataframe with columns \code{id}, \code{birth}, \code{sex},
-and \code{age} for those animals with a status of \code{Alive} in the pedigree.
+and \code{age} for those animals with a status of \code{Alive} in the
+pedigree.
 }
 \details{
 The lubridate package is used here because of the way the modern Gregorian

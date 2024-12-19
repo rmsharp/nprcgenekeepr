@@ -11,6 +11,8 @@ Contains studbook information for a number of individuals.
 ASSUME: All IDs listed in the sire or dam columns must have a row entry in
 the id column
 
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Provides genetic tools for colony management and is a derivation of the work in Amanda Vinson and Michael J Raboin (2015) \url{https://pmc.ncbi.nlm.nih.gov/articles/PMC4671785/} "A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity in a Large Colony of Captive Rhesus Macaques ('Macaca' 'mulatto')". It provides a 'Shiny' application with an exposed API. The application supports five groups of functions: (1) Quality control of studbooks contained in text files or 'Excel' workbooks and of pedigrees within 'LabKey' Electronic Health Records (EHR); (2) Creation of pedigrees from a list of animals using the 'LabKey' EHR integration; (3) Creation and display of an age by sex pyramid plot of the living animals within the designated pedigree; (4) Generation of genetic value analysis reports; and (5) Creation of potential breeding groups with and without proscribed sex ratios and defined maximum kinships.
 }
 \seealso{
@@ -93,8 +95,8 @@ randomly selecting one allele or the other at each position.\}
 \item\{\link{filterKinMatrix}\} \{--- Filters a kinship matrix to include
 only the egos listed in 'ids'\}
 \item\{\link{kinship}\} \{--- Generates a kinship matrix\}
-\item\{\link{reportGV}\} \{--- Generates a genetic value report for a provided
-pedigree.\}
+\item\{\link{reportGV}\} \{--- Generates a genetic value report for a
+provided pedigree.\}
 }
 Plotting Functions
 
