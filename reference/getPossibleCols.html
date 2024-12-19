@@ -53,40 +53,40 @@
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>@return A character vector of the possible columns that can be in a
- studbook.
-The possible columns are as follows:</p><ul><li><p>id – character vector with unique identifier for an individual</p></li>
-<li><p>sire – character vector with unique identifier for an
-individual's father (<code>NA</code> if unknown).</p></li>
-<li><p>dam – character vector with unique identifier for an
-individual's mother (<code>NA</code> if unknown).</p></li>
-<li><p>sex – factor levels: "M", "F", "U" Sex specifier for an
-individual</p></li>
-<li><p>gen – integer vector with the generation number of the individual</p></li>
-<li><p>birth – Date or <code>NA</code> (optional) with the individual's birth
-date</p></li>
-<li><p>exit – Date or <code>NA</code> (optional) with the individual's exit date
-(death, or departure if applicable)</p></li>
-<li><p>ancestry – character vector or <code>NA</code> (optional) that indicates
-the geographic population to which the individual belongs.</p></li>
-<li><p>age – numeric or <code>NA</code> (optional) indicating the individual's
-current age or age at exit.</p></li>
-<li><p>population – an optional logical argument indicating whether or not
-the <code>id</code> is part of the extant population.</p></li>
-<li><p>origin – character vector or <code>NA</code> (optional) that indicates
+studbook.
+The possible columns are as follows:</p><ul><li><p>{id} {– character vector with unique identifier for an individual}</p></li>
+<li><p>{sire} {– character vector with unique identifier for an
+individual's father (<code>NA</code> if unknown).}</p></li>
+<li><p>{dam} {– character vector with unique identifier for an
+individual's mother (<code>NA</code> if unknown).}</p></li>
+<li><p>{sex} {– factor {levels: "M", "F", "U"} Sex specifier for an
+individual}</p></li>
+<li><p>{gen} {– integer vector with the generation number of the individual}</p></li>
+<li><p>{birth} {– Date or <code>N</code> (optional) with the individual's birth
+date}</p></li>
+<li><p>{exit} {– Date or <code>NA</code> (optional) with the individual's exit date
+(death, or departure if applicable)}</p></li>
+<li><p>{ancestry} {– character vector or <code>NA</code> (optional) that indicates
+the geographic population to which the individual belongs.}</p></li>
+<li><p>{age} {– numeric or <code>NA</code> (optional) indicating the individual's
+current age or age at exit.}</p></li>
+<li><p>{population} {– an optional logical argument indicating whether or not
+the <code>id</code> is part of the extant population.}</p></li>
+<li><p>{origin} {– character vector or <code>NA</code> (optional) that indicates
 the name of the facility that the individual was imported from.
-<code>NA</code> indicates the individual was not imported.</p></li>
-<li><p>status – an optional factor indicating the status of an individual
-with levels <code>ALIVE</code>, <code>DEAD</code>, and <code>SHIPPED</code>.</p></li>
-<li><p>condition –  character vector or <code>NA</code> (optional) that indicates
+<code>NA</code> indicates the individual was not imported.}</p></li>
+<li><p>{status} {– an optional factor indicating the status of an individual
+with levels <code>ALIVE</code>, <code>DEAD</code>, and <code>SHIPPED</code>.}</p></li>
+<li><p>{condition} {–  character vector or <code>NA</code> (optional) that indicates
 the restricted status of an animal. "Nonrestricted" animals
-are generally assumed to be naive.</p></li>
-<li><p>spf – character vector or <code>NA</code> (optional) indicating the
-specific pathogen-free status of an individual.</p></li>
-<li><p>vasxOvx – character vector indicating the vasectomy/ovariectomy
+are generally assumed to be naive.}</p></li>
+<li><p>{spf} {– character vector or <code>NA</code> (optional) indicating the
+specific pathogen-free status of an individual.}</p></li>
+<li><p>{vasxOvx} {– character vector indicating the vasectomy/ovariectomy
 status of an animal where <code>NA</code> indicates an intact animal and all other
-values indicate surgical alteration.</p></li>
-<li><p>pedNum – integer vector indicating generation numbers for each id,
-starting at 0 for individuals lacking IDs for both parents.</p></li>
+values indicate surgical alteration.}</p></li>
+<li><p>{pedNum} {– integer vector indicating generation numbers for each id,
+starting at 0 for individuals lacking IDs for both parents.}</p></li>
 </ul></div>
 
     <div class="section level2">

@@ -55,7 +55,7 @@
 
 
 <dl><dt id="arg-alleles">alleles<a class="anchor" aria-label="anchor" href="#arg-alleles"></a></dt>
-<dd><p>a matrix with id, parent, V1 ... Vn providing the alleles
+<dd><p>a matrix with {id, parent, V1 ... Vn} providing the alleles
 an animal received during each simulation.
 The first 2 columns provide the animal ID and the parent the allele came
 from. Remaining columns provide alleles.</p></dd>
@@ -70,15 +70,15 @@ Default is 1.</p></dd>
 <dt id="arg-byid">byID<a class="anchor" aria-label="anchor" href="#arg-byid"></a></dt>
 <dd><p>logical variable of length 1 that is passed through to
 eventually be used by <code><a href="alleleFreq.html">alleleFreq()</a></code>, which calculates the count of each
- allele in the provided vector. If <code>byID</code> is TRUE and ids are provided,
- the function will only count the unique alleles for an individual
-  (homozygous alleles will be counted as 1).</p></dd>
+allele in the provided vector. If <code>byID</code> is TRUE and ids are provided,
+the function will only count the unique alleles for an individual
+(homozygous alleles will be counted as 1).</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A matrix with named rows indicating the number of unique alleles
-  an animal had during each round of simulation (indicated in columns).</p>
+an animal had during each round of simulation (indicated in columns).</p>
     </div>
 
     <div class="section level2">

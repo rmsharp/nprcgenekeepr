@@ -62,17 +62,17 @@ configuration is looked for. Default value is <code>TRUE</code>.</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list of site specific information used by the application.</p>
-<p>Currently this returns the following character strings in a named list.</p><ol><li><p>centerOne of "SNPRC" or "ONPRC"</p></li>
-<li><p>baseUrlIf <code>center</code> is "SNPRC", baseUrl is one of
-  "https://boomer.txbiomed.local:8080/labkey" or
-  "https://vger.txbiomed.local:8080/labkey".
-  To allow testing, if <code>center</code> is "ONPRC" baseUrl is
-  "https://boomer.txbiomed.local:8080/labkey".</p></li>
-<li><p>schemaNameIf <code>center</code> is "SNPRC", schemaName is "study".
-  If <code>center</code> is "ONPRC", schemaName is "study"</p></li>
-<li><p>folderPath If <code>center</code> is "SNPRC", folderPath is "/SNPRC".
-  If <code>center</code> is "ONPRC", folderPath is "/ONPRC"</p></li>
-<li><p>queryNameis "demographics"</p></li>
+<p>Currently this returns the following character strings in a named list.</p><ol><li><p>{center}{One of "SNPRC" or "ONPRC"}</p></li>
+<li><p>{baseUrl}{If <code>center</code> is "SNPRC", baseUrl is one of
+"https://boomer.txbiomed.local:8080/labkey" or
+"https://vger.txbiomed.local:8080/labkey".
+To allow testing, if <code>center</code> is "ONPRC" baseUrl is
+"https://boomer.txbiomed.local:8080/labkey".}</p></li>
+<li><p>{schemaName}{If <code>center</code> is "SNPRC", schemaName is "study".
+If <code>center</code> is "ONPRC", schemaName is "study"}</p></li>
+<li><p>{folderPath} {If <code>center</code> is "SNPRC", folderPath is "/SNPRC".
+If <code>center</code> is "ONPRC", folderPath is "/ONPRC"}</p></li>
+<li><p>{queryName} {is "demographics"}</p></li>
 </ol></div>
 
     <div class="section level2">
@@ -115,7 +115,7 @@ configuration is looked for. Default value is <code>TRUE</code>.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "#26~22.04.1-Ubuntu SMP Thu Jul 11 22:33:04 UTC 2024"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $nodename</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "fv-az1759-932"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "fv-az698-388"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $machine</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "x86_64"</span>

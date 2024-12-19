@@ -62,33 +62,33 @@ pedigree information</p>
 information.</p>
 <p>The function recognizes the following columns (optional columns
 will be used if present, but are not required):</p>
-<ul><li><p>id — Character vector with Unique identifier for all individuals</p></li>
-<li><p>sire — Character vector with unique identifier for the father of
-the current id</p></li>
-<li><p>dam — Character vector with unique identifier for the mother of
-the current id</p></li>
-<li><p>sex — Factor levels: "M", "F", "U" Sex specifier for an
-individual</p></li>
-<li><p>birth — Date or <code>NA</code> (optional) with the individual's birth
-date</p></li>
-<li><p>departure — Date or <code>NA</code> (optional) an individual was sold
-or shipped from the colony</p></li>
-<li><p>death — date or <code>NA</code> (optional)
- Date of death, if applicable</p></li>
-<li><p>status — Factor levels: ALIVE, DEAD, SHIPPED (optional)
- Status of an individual</p></li>
-<li><p>origin — Character or <code>NA</code> (optional)
- Facility an individual originated from, if other than ONPRC</p></li>
-<li><p>ancestry — Character or <code>NA</code> (optional)
- Geographic population to which the individual belongs</p></li>
-<li><p>spf — Character or <code>NA</code> (optional)
- Specific pathogen-free status of an individual</p></li>
-<li><p>vasxOvx — Character or <code>NA</code> (optional)
- Indicator of the vasectomy/ovariectomy status of an animal; <code>NA</code> if
- animal is intact, assume all other values indicate surgical alteration</p></li>
-<li><p>condition — Character or <code>NA</code> (optional)
- Indicator of the restricted status of an animal. "Nonrestricted" animals
- are generally assumed to be naive.</p></li>
+<ul><li><p>{id} {— Character vector with Unique identifier for all individuals}</p></li>
+<li><p>{sire} {— Character vector with unique identifier for the father of
+the current id}</p></li>
+<li><p>{dam} {— Character vector with unique identifier for the mother of
+the current id}</p></li>
+<li><p>{sex} {— Factor {levels: "M", "F", "U"} Sex specifier for an
+individual}</p></li>
+<li><p>{birth} {— Date or <code>NA</code> (optional) with the individual's birth
+date}</p></li>
+<li><p>{departure} {— Date or <code>NA</code> (optional) an individual was sold
+or shipped from the colony}</p></li>
+<li><p>{death} {— date or <code>NA</code> (optional)
+Date of death, if applicable}</p></li>
+<li><p>{status} {— Factor {levels: ALIVE, DEAD, SHIPPED} (optional)
+Status of an individual}</p></li>
+<li><p>{origin} {— Character or <code>NA</code> (optional)
+Facility an individual originated from, if other than ONPRC}</p></li>
+<li><p>{ancestry} {— Character or <code>NA</code> (optional)
+Geographic population to which the individual belongs}</p></li>
+<li><p>{spf} {— Character or <code>NA</code> (optional)
+Specific pathogen-free status of an individual}</p></li>
+<li><p>{vasxOvx} {— Character or <code>NA</code> (optional)
+Indicator of the vasectomy/ovariectomy status of an animal; <code>NA</code> if
+animal is intact, assume all other values indicate surgical alteration}</p></li>
+<li><p>{condition} {— Character or <code>NA</code> (optional)
+Indicator of the restricted status of an animal. "Nonrestricted" animals
+are generally assumed to be naive.}</p></li>
 </ul></dd>
 
 
@@ -114,11 +114,11 @@ Errors will include missing columns, invalid date rows, male dams,
 female sires, and records with one or more parents  below minimum age
 of parents.</p>
 <p>The following changes are made to the cols.</p>
-<ul><li><p>Column cols are converted to all lower case</p></li>
-<li><p>Periods (".") within column cols are collapsed to no space ""</p></li>
-<li><p><code>egoid</code> is converted to <code>id</code></p></li>
-<li><p><code>sireid</code> is convert to <code>sire</code></p></li>
-<li><p><code>damid</code> is converted to <code>dam</code></p></li>
+<ul><li><p>{Column cols are converted to all lower case}</p></li>
+<li><p>{Periods (".") within column cols are collapsed to no space ""}</p></li>
+<li><p>{<code>egoid</code> is converted to <code>id</code>}</p></li>
+<li><p>{<code>sireid</code> is convert to <code>sire</code>}</p></li>
+<li><p>{<code>damid</code> is converted to <code>dam</code>}</p></li>
 </ul><p>If the dataframe (<code>sb</code> does not contain the five required columns
 (<code>id</code>, <code>sire</code>, <code>dam</code>, <code>sex</code>), and
 <code>birth</code> the function throws an error by calling <code><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop()</a></code>.</p>
@@ -136,31 +136,31 @@ their own record in the pedigree.</p>
 <p>The function <code>convertSexCodes</code> is used with <code>ignoreHerm == TRUE</code>
 to convert sex codes according to the following factors of standardized
 codes:</p>
-<ul><li><p>F – replacing "FEMALE" or "2"</p></li>
-<li><p>M – replacing "MALE" or "1"</p></li>
-<li><p>H – replacing "HERMAPHRODITE" or "4", if ignore.herm == FALSE</p></li>
-<li><p>U – replacing "HERMAPHRODITE" or "4", if ignore.herm == TRUE</p></li>
-<li><p>U – replacing "UNKNOWN" or "3"</p></li>
+<ul><li><p>{F} {– replacing "FEMALE" or "2"}</p></li>
+<li><p>{M} {– replacing "MALE" or "1"}</p></li>
+<li><p>{H} {– replacing "HERMAPHRODITE" or "4", if ignore.herm == FALSE}</p></li>
+<li><p>{U} {– replacing "HERMAPHRODITE" or "4", if ignore.herm == TRUE}</p></li>
+<li><p>{U} {– replacing "UNKNOWN" or "3"}</p></li>
 </ul><p>The function <code>correctParentSex</code> is used to ensure no parent is both
 a sire and a dam. If this error is detected, the function throws an error
 and halts the program.</p>
 <p>The function <code>convertStatusCodes</code> converts status indicators to the
 following factors of standardized codes. Case of the original status value
 is ignored.</p>
-<ul><li><p>"ALIVE" — replacing "alive", "A" and "1"</p></li>
-<li><p>"DECEASED" — replacing "deceased", "DEAD", "D", "2"</p></li>
-<li><p>"SHIPPED" — replacing "shipped", "sold", "sale", "s", "3"</p></li>
-<li><p>"UNKNOWN" — replacing is.na(status)</p></li>
-<li><p>"UNKNOWN" — replacing "unknown", "U", "4"</p></li>
+<ul><li><p>{"ALIVE"} {— replacing "alive", "A" and "1"}</p></li>
+<li><p>{"DECEASED"} {— replacing "deceased", "DEAD", "D", "2"}</p></li>
+<li><p>{"SHIPPED"} {— replacing "shipped", "sold", "sale", "s", "3"}</p></li>
+<li><p>{"UNKNOWN"} {— replacing is.na(status)}</p></li>
+<li><p>{"UNKNOWN"} {— replacing "unknown", "U", "4"}</p></li>
 </ul><p>The function <code>convertAncestry</code> coverts ancestry indicators using
 regular expressions such that the following conversions are made from
 character strings that match selected substrings to the following factors.</p>
-<ul><li><p>"INDIAN" — replacing "ind" and not "chin"</p></li>
-<li><p>"CHINESE" — replacing "chin" and not "ind"</p></li>
-<li><p>"HYBRID" — replacing "hyb" or "chin" and "ind"</p></li>
-<li><p>"JAPANESE" — replacing "jap"</p></li>
-<li><p>"UNKNOWN" — replacing <code>NA</code></p></li>
-<li><p>"OTHER" — replacing not matching any of the above</p></li>
+<ul><li><p>{"INDIAN"} {— replacing "ind" and not "chin"}</p></li>
+<li><p>{"CHINESE"} {— replacing "chin" and not "ind"}</p></li>
+<li><p>{"HYBRID"} {— replacing "hyb" or "chin" and "ind"}</p></li>
+<li><p>{"JAPANESE"} {— replacing "jap"}</p></li>
+<li><p>{"UNKNOWN"} {— replacing <code>NA</code>}</p></li>
+<li><p>{"OTHER"} {— replacing not matching any of the above}</p></li>
 </ul><p>The function <code>convertDate</code> converts character representations of
 dates in the columns <code>birth</code>, <code>death</code>, <code>departure</code>, and
 <code>exit</code> to dates using the <code>as.Date</code> function.</p>
