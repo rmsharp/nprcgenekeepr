@@ -88,8 +88,8 @@
 #' \item\{\link{filterKinMatrix}\} \{--- Filters a kinship matrix to include
 #' only the egos listed in 'ids'\}
 #' \item\{\link{kinship}\} \{--- Generates a kinship matrix\}
-#' \item\{\link{reportGV}\} \{--- Generates a genetic value report for a provided
-#' pedigree.\}
+#' \item\{\link{reportGV}\} \{--- Generates a genetic value report for a
+#' provided pedigree.\}
 #' }
 #' Plotting Functions
 #'

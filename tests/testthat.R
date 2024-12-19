@@ -3,4 +3,4 @@
 library(testthat)
 library(nprcgenekeepr)
 test_check("nprcgenekeepr")
-Sys.setenv(R_TESTS="")
+Sys.setenv(R_TESTS = "")

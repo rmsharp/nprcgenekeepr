@@ -698,7 +698,7 @@ A group of ten animals was formed in the next run after choosing to include
 kinship and selecting the __Make Groups__ button.
 
 ```{r}
-fig_alt_txt <- 
+fig_alt_txt <-
   paste0("Breeding group formation of 6 breeding groups.")
 ```
 

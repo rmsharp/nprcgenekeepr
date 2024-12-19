@@ -16,7 +16,7 @@ test_that("makeExamplePedigreeFile creates correct file contents", {
 })
 test_that("makeExamplePedigreeFile creates file", {
   skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
-  filePath <- file.path(tempdir(),"exampleFile.xlsx")
+  filePath <- file.path(tempdir(), "exampleFile.xlsx")
   if (file.exists(filePath)) {
     file.remove(filePath)
   }
@@ -30,7 +30,7 @@ test_that("makeExamplePedigreeFile creates file", {
 })
 test_that("makeExamplePedigreeFile creates correct file contents", {
   skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
-  filePath <- file.path(tempdir(),"exampleFile.xlsx")
+  filePath <- file.path(tempdir(), "exampleFile.xlsx")
   if (file.exists(filePath)) {
     file.remove(filePath)
   }
@@ -59,4 +59,3 @@ test_that("makeExamplePedigreeFile creates correct file contents", {
                               stringsAsFactors = FALSE)
   expect_equal(nrow(pedTxt), 3694)
 })
-

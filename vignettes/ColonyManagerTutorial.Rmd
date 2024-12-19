@@ -681,14 +681,13 @@ A group of ten animals was formed in the next run after choosing to include
 kinship and selecting the __Make Groups__ button.
 
 ```{r , eval = TRUE}
-fig_alt_txt <- 
+fig_alt_txt <-
   paste0("Breeding group formation of 6 breeding groups.")
 ```
 
 ```{r breeding-group-6-seed-grps-grp-6-kinship, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 5.5, fig.height = 5.5, echo = FALSE}
 img <- readPNG("./shiny_app_use/breeding_group_6_seed_grps_grp_6_kinship.png")
 grid.raster(img)
-
 ```
 
 

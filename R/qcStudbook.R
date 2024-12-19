@@ -23,7 +23,8 @@
 #' will be used if present, but are not required):
 #'
 #' \itemize{
-#' \item\{id\} \{--- Character vector with Unique identifier for all individuals\}
+#' \item\{id\} \{--- Character vector with Unique identifier for all
+#' individuals\}
 #' \item\{sire\} \{--- Character vector with unique identifier for the father of
 #' the current id\}
 #' \item\{dam\} \{--- Character vector with unique identifier for the mother of

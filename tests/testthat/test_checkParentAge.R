@@ -54,4 +54,3 @@ test_that(paste0("checkParentAge returns NULL if required dataframe has no ",
   ped <- checkParentAge(qcPed[0, ], reportErrors = TRUE)
   expect_true(is.null(ped))
 })
-
