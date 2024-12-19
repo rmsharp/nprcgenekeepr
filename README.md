@@ -1,7 +1,13 @@
 README
 ================
-R. Mark Sharp
+R. Mark Sharp, Ph.D.
 2024-12-17
+
+# nprcgenekeepr <a href="https://github.com/rmsharp/nprcgenekeepr"><img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
+
+Version1.0.6 (2024-12-19)
+
+<!-- badges: start -->
 
 [![Rdoc](https://www.rdocumentation.org/badges/version/nprcgenekeepr)](https://www.rdocumentation.org/packages/nprcgenekeepr)
 [![Project Status: Active – The project has reached a stable, usable
@@ -11,9 +17,7 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![Codecov test
 coverage](https://codecov.io/gh/rmsharp/nprcgenekeepr/graph/badge.svg)](https://app.codecov.io/gh/rmsharp/nprcgenekeepr)
 
-# nprcgenekeepr
-
-Version1.0.6 (2024-12-19)
+<!-- badges: end -->
 
 ## Introduction
 
