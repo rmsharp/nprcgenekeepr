@@ -38,7 +38,7 @@ jobs:
 
       - name: Build site
         run: |
-          rm -r docs
+          system("rm -r docs")
           pkgdown::build_site_github_pages(new_process = FALSE, clean = TRUE, \
             install = FALSE)
         shell: Rscript {0}
