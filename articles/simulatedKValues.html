@@ -85,7 +85,7 @@ Sharp</h4>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stringi.gagolewski.com/" class="external-link">stringi</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="../reference/smallPed.html">smallPed</a></span></span>
+<span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va">smallPed</span></span>
 <span><span class="va">simParent_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"A"</span>, <span class="co"># nolint: object_name_linter</span></span>
 <span>                    sires <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1_1"</span>, <span class="st">"s1_2"</span>, <span class="st">"s1_3"</span><span class="op">)</span>,</span>
 <span>                    dams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d1_1"</span>, <span class="st">"d1_2"</span>, <span class="st">"d1_3"</span>, <span class="st">"d1_4"</span><span class="op">)</span><span class="op">)</span></span>
@@ -121,13 +121,13 @@ values that vary.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">10</span></span>
-<span><span class="va">simKinships</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/createSimKinships.html">createSimKinships</a></span><span class="op">(</span><span class="va">ped</span>, <span class="va">allSimParents</span>, pop <span class="op">=</span> <span class="va">ped</span><span class="op">$</span><span class="va">id</span>, n <span class="op">=</span> <span class="va">n</span><span class="op">)</span></span>
-<span><span class="va">kValues</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kinshipMatricesToKValues.html">kinshipMatricesToKValues</a></span><span class="op">(</span><span class="va">simKinships</span><span class="op">)</span></span>
+<span><span class="va">simKinships</span> <span class="op">&lt;-</span> <span class="fu">createSimKinships</span><span class="op">(</span><span class="va">ped</span>, <span class="va">allSimParents</span>, pop <span class="op">=</span> <span class="va">ped</span><span class="op">$</span><span class="va">id</span>, n <span class="op">=</span> <span class="va">n</span><span class="op">)</span></span>
+<span><span class="va">kValues</span> <span class="op">&lt;-</span> <span class="fu">kinshipMatricesToKValues</span><span class="op">(</span><span class="va">simKinships</span><span class="op">)</span></span>
 <span><span class="fu">extractKValue</span><span class="op">(</span><span class="va">kValues</span>, id1 <span class="op">=</span> <span class="st">"A"</span>, id2 <span class="op">=</span> <span class="st">"F"</span>, simulation <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">n</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] "sim_1"  "sim_2"  "sim_3"  "sim_4"  "sim_5"  "sim_6"  "sim_7"  "sim_8" </span></span>
 <span><span class="co">##  [9] "sim_9"  "sim_10"</span></span></code></pre>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/countKinshipValues.html">countKinshipValues</a></span><span class="op">(</span><span class="va">kValues</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">counts</span> <span class="op">&lt;-</span> <span class="fu">countKinshipValues</span><span class="op">(</span><span class="va">kValues</span><span class="op">)</span></span>
 <span><span class="va">counts</span><span class="op">$</span><span class="va">kinshipIds</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">## NULL</span></span></code></pre>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -137,7 +137,7 @@ values that vary.</p>
 <code class="sourceCode R"><span><span class="va">counts</span><span class="op">$</span><span class="va">kinshipCounts</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">## NULL</span></span></code></pre>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">stats_10</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarizeKinshipValues.html">summarizeKinshipValues</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">stats_10</span> <span class="op">&lt;-</span> <span class="fu">summarizeKinshipValues</span><span class="op">(</span><span class="va">counts</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">stats_10</span><span class="op">[</span><span class="va">stats_10</span><span class="op">$</span><span class="va">sd</span> <span class="op">&gt;</span> <span class="fl">0.0</span>, <span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 88</span></span></code></pre>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
@@ -3000,13 +3000,13 @@ P
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
-<span><span class="va">simKinships</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/createSimKinships.html">createSimKinships</a></span><span class="op">(</span><span class="va">ped</span>, <span class="va">allSimParents</span>, pop <span class="op">=</span> <span class="va">ped</span><span class="op">$</span><span class="va">id</span>, n <span class="op">=</span> <span class="va">n</span><span class="op">)</span></span>
-<span><span class="va">kValues</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kinshipMatricesToKValues.html">kinshipMatricesToKValues</a></span><span class="op">(</span><span class="va">simKinships</span><span class="op">)</span></span>
+<span><span class="va">simKinships</span> <span class="op">&lt;-</span> <span class="fu">createSimKinships</span><span class="op">(</span><span class="va">ped</span>, <span class="va">allSimParents</span>, pop <span class="op">=</span> <span class="va">ped</span><span class="op">$</span><span class="va">id</span>, n <span class="op">=</span> <span class="va">n</span><span class="op">)</span></span>
+<span><span class="va">kValues</span> <span class="op">&lt;-</span> <span class="fu">kinshipMatricesToKValues</span><span class="op">(</span><span class="va">simKinships</span><span class="op">)</span></span>
 <span><span class="fu">extractKValue</span><span class="op">(</span><span class="va">kValues</span>, id1 <span class="op">=</span> <span class="st">"A"</span>, id2 <span class="op">=</span> <span class="st">"F"</span>, simulation <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] "sim_1"  "sim_2"  "sim_3"  "sim_4"  "sim_5"  "sim_6"  "sim_7"  "sim_8" </span></span>
 <span><span class="co">##  [9] "sim_9"  "sim_10"</span></span></code></pre>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/countKinshipValues.html">countKinshipValues</a></span><span class="op">(</span><span class="va">kValues</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">counts</span> <span class="op">&lt;-</span> <span class="fu">countKinshipValues</span><span class="op">(</span><span class="va">kValues</span><span class="op">)</span></span>
 <span><span class="va">counts</span><span class="op">$</span><span class="va">kinshipIds</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">## NULL</span></span></code></pre>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
@@ -3016,7 +3016,7 @@ P
 <code class="sourceCode R"><span><span class="va">counts</span><span class="op">$</span><span class="va">kinshipCounts</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">## NULL</span></span></code></pre>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">stats_100</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarizeKinshipValues.html">summarizeKinshipValues</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">stats_100</span> <span class="op">&lt;-</span> <span class="fu">summarizeKinshipValues</span><span class="op">(</span><span class="va">counts</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">stats_100</span><span class="op">[</span><span class="va">stats_100</span><span class="op">$</span><span class="va">sd</span> <span class="op">&gt;</span> <span class="fl">0.0</span>, <span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 88</span></span></code></pre>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
@@ -5879,13 +5879,13 @@ P
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
-<span><span class="va">simKinships</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/createSimKinships.html">createSimKinships</a></span><span class="op">(</span><span class="va">ped</span>, <span class="va">allSimParents</span>, pop <span class="op">=</span> <span class="va">ped</span><span class="op">$</span><span class="va">id</span>, n <span class="op">=</span> <span class="va">n</span><span class="op">)</span></span>
-<span><span class="va">kValues</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kinshipMatricesToKValues.html">kinshipMatricesToKValues</a></span><span class="op">(</span><span class="va">simKinships</span><span class="op">)</span></span>
+<span><span class="va">simKinships</span> <span class="op">&lt;-</span> <span class="fu">createSimKinships</span><span class="op">(</span><span class="va">ped</span>, <span class="va">allSimParents</span>, pop <span class="op">=</span> <span class="va">ped</span><span class="op">$</span><span class="va">id</span>, n <span class="op">=</span> <span class="va">n</span><span class="op">)</span></span>
+<span><span class="va">kValues</span> <span class="op">&lt;-</span> <span class="fu">kinshipMatricesToKValues</span><span class="op">(</span><span class="va">simKinships</span><span class="op">)</span></span>
 <span><span class="fu">extractKValue</span><span class="op">(</span><span class="va">kValues</span>, id1 <span class="op">=</span> <span class="st">"A"</span>, id2 <span class="op">=</span> <span class="st">"F"</span>, simulation <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] "sim_1"  "sim_2"  "sim_3"  "sim_4"  "sim_5"  "sim_6"  "sim_7"  "sim_8" </span></span>
 <span><span class="co">##  [9] "sim_9"  "sim_10"</span></span></code></pre>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/countKinshipValues.html">countKinshipValues</a></span><span class="op">(</span><span class="va">kValues</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">counts</span> <span class="op">&lt;-</span> <span class="fu">countKinshipValues</span><span class="op">(</span><span class="va">kValues</span><span class="op">)</span></span>
 <span><span class="va">counts</span><span class="op">$</span><span class="va">kinshipIds</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">## NULL</span></span></code></pre>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
@@ -5895,7 +5895,7 @@ P
 <code class="sourceCode R"><span><span class="va">counts</span><span class="op">$</span><span class="va">kinshipCounts</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">## NULL</span></span></code></pre>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">stats_1000</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarizeKinshipValues.html">summarizeKinshipValues</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">stats_1000</span> <span class="op">&lt;-</span> <span class="fu">summarizeKinshipValues</span><span class="op">(</span><span class="va">counts</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">stats_1000</span><span class="op">[</span><span class="va">stats_1000</span><span class="op">$</span><span class="va">sd</span> <span class="op">&gt;</span> <span class="fl">0.0</span>, <span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 88</span></span></code></pre>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
