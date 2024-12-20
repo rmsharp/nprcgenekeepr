@@ -15,7 +15,7 @@ NULL, invisibly.
 \description{
 The change in how \code{set.seed} works in R 3.6 prompted the creation of this
 R version agnostic replacement to get unit test code to work on multiple
-versions of R in a Travis-CI build.
+versions of R in a CICD test build.
 }
 \details{
 It seems RNGkind(sample.kind="Rounding”) does not work prior to version

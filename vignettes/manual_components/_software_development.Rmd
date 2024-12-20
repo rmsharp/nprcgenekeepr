@@ -1,7 +1,7 @@
 ---
 title: "Software Development"
 author: "R. Mark Sharp, Ph.D."
-date: "07/01/2019"
+date: "2024-12-19"
 output: 
    - rmarkdown::pdf_document
    - rmarkdown::latex_document
@@ -20,15 +20,15 @@ environment. Users can see all of the code at [github.com/rmsharp/nprcgenekeepr]
 and can submit suggestions and bug reports on our issue tracker at 
 [github.com/rmsharp/nprcgenekeepr/issues](https://github.com/rmsharp/nprcgenekeepr/issues).
 
-### Travis-ci Use
+### CICD Pipeline Use
 
 The application and associated website is being continuously integrated 
 at each push to the online repository. While often new features being added
 are not stable or complete, it is uncommon for the application not to run 
 and perform functions that were working before. However, make sure the 
-build was passing by looking for a green _Build Passing_ badge at the top
-of the README file at
-[app.travis-ci.com/rmsharp/nprcgenekeepr](https://app.travis-ci.com/rmsharp/nprcgenekeepr).
+build was passing by looking for a green _R-CMD-check.yaml Passing_ badge at
+the top of the README file at
+[https://github.com/rmsharp/nprcgenekeepr/](https://github.com/rmsharp/nprcgenekeepr/).
 
 ### Debug Logging  
 
@@ -43,12 +43,12 @@ _server.R_ file are logged as that is where most errors are exposed.
 
 ### Code Coverage
 
-Code coverage reports are part of the automated build system running on 
-Travis-CI.org. We are using the __testthat__ package for unit tests.
+Code coverage reports are part of the automated build system running in 
+GitHub Actions. We are using the __testthat__ package for unit tests.
 Currently all code returning values that do not access 
 a database or the file system have coverage with unit tests. 
 Many of these have
 100 percent of the lines covered. However, the unit tests are not 
 exhaustive. The practice is to add further tests as errors are detected
 or when working on the code and a new unit test possibility is 
-discovered. As of 20190701 94.31 percent of the lines are covered.
+discovered. As of 20241219 95.40 percent of the lines are covered.

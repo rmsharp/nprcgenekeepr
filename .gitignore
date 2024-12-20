@@ -19,6 +19,7 @@ R/depricated_gene.drop.R
 ^vignettes/interactive_cache$
 ^vignettes/shiny_app_use_cache$
 vignettes/tutorials/*
+vignettes/*.md
 vignettes/*.tex
 vignettes/*.html
 vignettes/*.pdf

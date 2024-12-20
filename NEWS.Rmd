@@ -34,7 +34,8 @@ knitr::opts_chunk$set(echo = TRUE)
     the user to define how auto generated Ids will be formed.
   - Added some quality assurance badges to README.
   - Added CRAN status badge to README.
-  - Added Rhub.yaml file for checking on Rhub.
+  - Stopped using travis-ci and started using GitHub Actions with Rhub.yaml
+    file for checking on Rhub.
   
 
 # nprcgenekeepr 1.0.5.9004 (20221213)

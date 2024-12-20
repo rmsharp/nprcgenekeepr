@@ -4,7 +4,7 @@
 ## This file is part of nprcgenekeepr
 #' The change in how `set.seed` works in R 3.6 prompted the creation of this
 #' R version agnostic replacement to get unit test code to work on multiple
-#' versions of R in a Travis-CI build.
+#' versions of R in a CICD test build.
 #'
 #' It seems RNGkind(sample.kind="Rounding”) does not work prior to version
 #' 3.6 so I resorted to using version dependent construction of the argument
