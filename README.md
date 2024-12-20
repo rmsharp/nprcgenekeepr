@@ -5,7 +5,7 @@ R. Mark Sharp, Ph.D.
 
 # nprcgenekeepr <a href="https://github.com/rmsharp/nprcgenekeepr"><img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
 
-Version1.0.6 (2024-12-19)
+Version1.0.6 (2024-12-20)
 
 <!-- badges: start -->
 
@@ -16,7 +16,8 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![R-CMD-check](https://github.com/rmsharp/nprcgenekeepr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rmsharp/nprcgenekeepr/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/rmsharp/nprcgenekeepr/graph/badge.svg)](https://app.codecov.io/gh/rmsharp/nprcgenekeepr)
-
+[![CRAN
+status](https://www.r-pkg.org/badges/version/nprcgenekeepr)](https://CRAN.R-project.org/package=nprcgenekeepr)
 <!-- badges: end -->
 
 ## Introduction
@@ -161,7 +162,7 @@ View(exampleNprcgenekeeprConfig)
 ### Display of an age by sex pyramid plot
 
 Adapted from
-<https://www.thoughtco.com/age-sex-pyramids-and-population-pyramids-1435272%7d>
+<https://www.thoughtco.com/age-sex-pyramids-and-population-pyramids-1435272>
 on 20190603. Written by Matt Rosenberg. Updated May 07, 2019.
 
 The most important demographic characteristic of a population is its

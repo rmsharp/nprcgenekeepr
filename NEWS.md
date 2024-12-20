@@ -1,7 +1,7 @@
 NEWS
 ================
-R. Mark Sharp
-03/28/2021
+R. Mark Sharp, Ph.D.
+2024-12-19
 
 2024-01-17
 
@@ -27,6 +27,8 @@ R. Mark Sharp
   - Abstracted out removal of auto generated Ids in preparation of
     allowing the user to define how auto generated Ids will be formed.
   - Added some quality assurance badges to README.
+  - Added CRAN status badge to README.
+  - Added Rhub.yaml file for checking on Rhub.
 
 # nprcgenekeepr 1.0.5.9004 (20221213)
 
