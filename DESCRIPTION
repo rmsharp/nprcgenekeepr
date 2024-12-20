@@ -66,6 +66,7 @@ Suggests:
     roxygen2 (>= 7.3.2),
     shinyBS,
     shinyWidgets,
+    spelling,
     testthat
 Language: en-US
 Encoding: UTF-8

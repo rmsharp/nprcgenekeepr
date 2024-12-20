@@ -29,3 +29,6 @@ inst/extdata/meeting_notes.tex
 inst/extdata/meeting_notes.pdf
 inst/extdata/simulatedKValues.pdf
 docs
+/doc/
+/Meta/
+revdep/
