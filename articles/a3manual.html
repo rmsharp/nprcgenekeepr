@@ -607,14 +607,15 @@ corresponding elements to form the final vector of transmitted alleles
 open software environment. Users can see all of the code at <a href="https://github.com/rmsharp/nprcgenekeepr">github.com/rmsharp/nprcgenekeepr</a>
 and can submit suggestions and bug reports on our issue tracker at <a href="https://github.com/rmsharp/nprcgenekeepr/issues">github.com/rmsharp/nprcgenekeepr/issues</a>.</p>
 <div class="section level3">
-<h3 id="travis-ci-use">Travis-ci Use<a class="anchor" aria-label="anchor" href="#travis-ci-use"></a>
+<h3 id="cicd-pipeline-use">CICD Pipeline Use<a class="anchor" aria-label="anchor" href="#cicd-pipeline-use"></a>
 </h3>
 <p>The application and associated website is being continuously
 integrated at each push to the online repository. While often new
 features being added are not stable or complete, it is uncommon for the
 application not to run and perform functions that were working before.
 However, make sure the build was passing by looking for a green
-<em>Build Passing</em> badge at the top of the README file at <a href="https://app.travis-ci.com/rmsharp/nprcgenekeepr" class="external-link">app.travis-ci.com/rmsharp/nprcgenekeepr</a>.</p>
+<em>R-CMD-check.yaml Passing</em> badge at the top of the README file at
+<a href="https://github.com/rmsharp/nprcgenekeepr/">https://github.com/rmsharp/nprcgenekeepr/</a>.</p>
 </div>
 <div class="section level3">
 <h3 id="debug-logging">Debug Logging<a class="anchor" aria-label="anchor" href="#debug-logging"></a>
@@ -631,13 +632,13 @@ are logged as that is where most errors are exposed.</p>
 <h3 id="code-coverage">Code Coverage<a class="anchor" aria-label="anchor" href="#code-coverage"></a>
 </h3>
 <p>Code coverage reports are part of the automated build system running
-on Travis-CI.org. We are using the <strong>testthat</strong> package for
-unit tests. Currently all code returning values that do not access a
+in GitHub Actions. We are using the <strong>testthat</strong> package
+for unit tests. Currently all code returning values that do not access a
 database or the file system have coverage with unit tests. Many of these
 have 100 percent of the lines covered. However, the unit tests are not
 exhaustive. The practice is to add further tests as errors are detected
 or when working on the code and a new unit test possibility is
-discovered. As of 20190701 94.31 percent of the lines are covered.</p>
+discovered. As of 20241219 95.40 percent of the lines are covered.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
