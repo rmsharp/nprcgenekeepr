@@ -8,3 +8,7 @@ test_that("createPedSix makes the right pedigree", {
   expect_equal(ncol(pedSix), 7)
   expect_equal(names(pedSix)[1], "Ego Id")
 })
+pedSix <- createPedSix(savePed = TRUE)
+test_that("createPedSix makes the right pedigree and saves it", {
+  expect_equal(names(pedSix)[1], "Ego Id")
+})

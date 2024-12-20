@@ -58,3 +58,4 @@ README\.*\.png$
 
 
 ^pkgdown$
+^dev$

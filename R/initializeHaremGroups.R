@@ -24,31 +24,19 @@ initializeHaremGroups <- function(numGp, currentGroups, candidates, ped,
     for (i in seq_len(length(currentGroups))) {
       currentGroup <- currentGroups[[i]]
       if (length(getPotentialSires(currentGroup, minAge, ped)) > 1)
-        # makeFatalErrorTab(
-        #   paste0("Fatal Error: User selected to form harems with more than ",
-        #          "one male, There are ",
-        #          length(getPotentialSires(currentGroup, minAge, ped)),
-        #          " at least ", minAge, " years old in the current group ",
-        #          i, "."))
-      stop(paste0("User selected to form harems with more than one male, ",
-                  "There are ",
-                  length(getPotentialSires(currentGroup, minAge, ped)),
-                  " at least ", minAge, " years old in the current group ",
-                  i, "."))
+        stop(paste0("User selected to form harems with more than one male, ",
+                    "There are ",
+                    length(getPotentialSires(currentGroup, minAge, ped)),
+                    " at least ", minAge, " years old in the current group ",
+                    i, "."))
     }
   }
   if (length(getPotentialSires(candidates, minAge, ped)) < numGp &&
       length(getPotentialSires(unlist(currentGroups), minAge, ped)) == 0)
-    # makeFatalErrorTab(
-    #   paste0("Fatal Error: User selected to form harems with more than one ",
-    #          "male. There are ",
-    #          length(getPotentialSires(currentGroup, minAge, ped)),
-    #          " at least ", minAge, " years old in the current group ",
-    #          i, "."))
-  stop(paste0("User selected to form harems in ", numGp, " groups with ",
-              "only ", length(getPotentialSires(candidates, minAge, ped)),
-              " males at least ",
-              minAge, " years old in the list of candidates."))
+    stop(paste0("User selected to form harems in ", numGp, " groups with ",
+                "only ", length(getPotentialSires(candidates, minAge, ped)),
+                " males at least ",
+                minAge, " years old in the list of candidates."))
 
   if (length(getPotentialSires(unlist(currentGroups), minAge, ped)) == 0) {
     ped <- ped[!is.na(ped$birth), ]

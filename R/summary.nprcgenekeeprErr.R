@@ -23,12 +23,6 @@
 summary.nprcgenekeeprErr <- function(object, ...) {
   errorLst <- object
   stopifnot(inherits(errorLst, "nprcgenekeeprErr"))
-  if (length(errorLst$fatalError) > 0) {
-    txt <- errorLst$fatalError
-    txt <- list(txt = txt, sp = errorLst$suspiciousParents)
-    class(txt) <- "summary.nprcgenekeeprErr"
-    return(txt)
-  }
   txt <- ""
   txt <- addErrTxt(
     txt,
