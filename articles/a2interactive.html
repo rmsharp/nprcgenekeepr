@@ -125,7 +125,15 @@ your file system.</p>
 <strong>read.table</strong> what file to read.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">breederPedCsv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="va">pedigreeFile</span>, sep <span class="op">=</span> <span class="st">","</span>, header <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                            stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span>                            stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">breederPedCsv</span><span class="op">$</span><span class="va">fromCenter</span> <span class="op">&lt;-</span> <span class="st">"TRUE"</span></span>
+<span><span class="va">breederPedCsv</span><span class="op">$</span><span class="va">fromCenter</span><span class="op">[</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPedCsv</span><span class="op">$</span><span class="va">sire</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>                 <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPedCsv</span><span class="op">$</span><span class="va">dam</span><span class="op">)</span><span class="op">)</span>, </span>
+<span>         <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">0.8</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span></span>
+<span>           <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPedCsv</span><span class="op">$</span><span class="va">sire</span><span class="op">)</span> <span class="op">&amp;</span> </span>
+<span>             <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPedCsv</span><span class="op">$</span><span class="va">dam</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"FALSE"</span></span></code></pre></div>
 <p>Note the number of rows read. Each row represents an individual
 within the pedigree.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -334,10 +342,10 @@ individual (homozygous alleles will be counted as 1).</p></li>
 <span><span class="co">## Female Founders: 122</span></span>
 <span><span class="co">## Total Founders: 263 </span></span>
 <span><span class="co">## Founder Equivalents: 241.84 </span></span>
-<span><span class="co">## Founder Genome Equivalents: 163.62 </span></span>
+<span><span class="co">## Founder Genome Equivalents: 164.01 </span></span>
 <span><span class="co">## Live Offspring: 4052 </span></span>
-<span><span class="co">## High Value Individuals: 2957 </span></span>
-<span><span class="co">## Low Value Individuals: 737</span></span></code></pre>
+<span><span class="co">## High Value Individuals: 2947 </span></span>
+<span><span class="co">## Low Value Individuals: 747</span></span></code></pre>
 <p>What happens if we limit our analysis to the trimmed pedigree?
 Remember that the trimmed pedigree still contains all of the genetic
 information that the full pedigree has for the focal animals.</p>
@@ -353,10 +361,10 @@ information that the full pedigree has for the focal animals.</p>
 <span><span class="co">## Female Founders: 17</span></span>
 <span><span class="co">## Total Founders: 20 </span></span>
 <span><span class="co">## Founder Equivalents: 109.67 </span></span>
-<span><span class="co">## Founder Genome Equivalents: 47.44 </span></span>
+<span><span class="co">## Founder Genome Equivalents: 47.49 </span></span>
 <span><span class="co">## Live Offspring: 321 </span></span>
-<span><span class="co">## High Value Individuals: 223 </span></span>
-<span><span class="co">## Low Value Individuals: 104</span></span></code></pre>
+<span><span class="co">## High Value Individuals: 226 </span></span>
+<span><span class="co">## Low Value Individuals: 101</span></span></code></pre>
 <p>It is clear that limiting your analysis to the animals of interest
 reduces the effort required to examine the animals of interest.</p>
 <div class="section level3">
@@ -437,7 +445,7 @@ lines are included.</p>
 <td align="left"></td>
 <td align="right">0.00329</td>
 <td align="right">-1.90</td>
-<td align="right">90</td>
+<td align="right">92</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="left">High Value</td>
@@ -453,7 +461,7 @@ lines are included.</p>
 <td align="left"></td>
 <td align="right">0.00287</td>
 <td align="right">-1.97</td>
-<td align="right">87</td>
+<td align="right">90</td>
 <td align="right">1</td>
 <td align="right">1</td>
 <td align="left">High Value</td>
@@ -469,7 +477,7 @@ lines are included.</p>
 <td align="left"></td>
 <td align="right">0.00373</td>
 <td align="right">-1.83</td>
-<td align="right">83</td>
+<td align="right">84</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="left">High Value</td>
@@ -485,7 +493,7 @@ lines are included.</p>
 <td align="left"></td>
 <td align="right">0.00582</td>
 <td align="right">-1.49</td>
-<td align="right">78</td>
+<td align="right">80</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="left">High Value</td>
@@ -501,7 +509,7 @@ lines are included.</p>
 <td align="left"></td>
 <td align="right">0.00485</td>
 <td align="right">-1.65</td>
-<td align="right">76</td>
+<td align="right">77</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="left">High Value</td>
@@ -517,7 +525,7 @@ lines are included.</p>
 <td align="left"></td>
 <td align="right">0.00373</td>
 <td align="right">-1.83</td>
-<td align="right">75</td>
+<td align="right">74</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="left">High Value</td>
@@ -540,6 +548,38 @@ lines are included.</p>
 <td align="right">7</td>
 </tr>
 <tr class="even">
+<td align="left">R6HV9A</td>
+<td align="left">M</td>
+<td align="right">22.1</td>
+<td align="left">1997-05-13</td>
+<td align="left">NA</td>
+<td align="left">TRUE</td>
+<td align="left"></td>
+<td align="right">0.00625</td>
+<td align="right">-1.42</td>
+<td align="right">73</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">High Value</td>
+<td align="right">8</td>
+</tr>
+<tr class="odd">
+<td align="left">CFD12A</td>
+<td align="left">M</td>
+<td align="right">20.8</td>
+<td align="left">1998-08-25</td>
+<td align="left">NA</td>
+<td align="left">TRUE</td>
+<td align="left"></td>
+<td align="right">0.00509</td>
+<td align="right">-1.61</td>
+<td align="right">71</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">High Value</td>
+<td align="right">9</td>
+</tr>
+<tr class="even">
 <td align="left">3MMZD4</td>
 <td align="left">M</td>
 <td align="right">12.2</td>
@@ -549,38 +589,6 @@ lines are included.</p>
 <td align="left"></td>
 <td align="right">0.00536</td>
 <td align="right">-1.57</td>
-<td align="right">73</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="left">High Value</td>
-<td align="right">8</td>
-</tr>
-<tr class="odd">
-<td align="left">G2GYST</td>
-<td align="left">M</td>
-<td align="right">19.1</td>
-<td align="left">2000-05-16</td>
-<td align="left">NA</td>
-<td align="left">TRUE</td>
-<td align="left"></td>
-<td align="right">0.00488</td>
-<td align="right">-1.64</td>
-<td align="right">71</td>
-<td align="right">2</td>
-<td align="right">2</td>
-<td align="left">High Value</td>
-<td align="right">9</td>
-</tr>
-<tr class="even">
-<td align="left">CHK1ZX</td>
-<td align="left">F</td>
-<td align="right">7.8</td>
-<td align="left">2011-09-06</td>
-<td align="left">NA</td>
-<td align="left">TRUE</td>
-<td align="left"></td>
-<td align="right">0.00481</td>
-<td align="right">-1.66</td>
 <td align="right">70</td>
 <td align="right">0</td>
 <td align="right">0</td>
@@ -768,43 +776,42 @@ done by setting <strong>harem</strong> to . Setting <code>iter</code> to
 <span>                     harem <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">haremGrp</span><span class="op">$</span><span class="va">group</span></span></code></pre></div>
 <pre><code><span><span class="co">## [[1]]</span></span>
-<span><span class="co">##  [1] "G2GYST" "XEC0M5" "RJ4JPC" "72LYDE" "SCFSBF" "13B1QL" "1QVS67" "0HYZ23"</span></span>
-<span><span class="co">##  [9] "BKWE4D" "321LLB" "NN3GDQ" "DCJJYS" "XYRDKV" "7NE2UT" "PYPM1W" "ESUIAF"</span></span>
-<span><span class="co">## [17] "AFZKBS" "3DTD2N" "YTJ2UL" "2F6J3U" "0IIAEN" "PBAFJF" "W5WIRP" "N5QBWD"</span></span>
-<span><span class="co">## [25] "PVY432" "W0GUKI" "D9P18Y" "G8MCV7"</span></span>
+<span><span class="co">##  [1] "S63QDN" "TQEMY6" "XYRDKV" "ZATMEE" "AW400C" "AR5U44" "CHK1ZX" "414N7M"</span></span>
+<span><span class="co">##  [9] "EZ2F8A" "WLMGS1" "MYUMMX" "DHNQ1W" "1KJ2MG" "KZY6PD" "0SGJ12" "CS23RV"</span></span>
+<span><span class="co">## [17] "AP1YLW" "38K2SR" "VWC5ZH" "GTLA8R" "1CIRC9" "YLRNIK" "5KWNMZ" "83HQBN"</span></span>
+<span><span class="co">## [25] "465ERA" "Y6DB6L" "7NE2UT" "EX5K0S" "MTCAIG"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[2]]</span></span>
-<span><span class="co">##  [1] "1E8KD1" "S222R3" "X694YR" "CMMUKU" "WNEAS6" "DI4AHD" "Q8U9LB" "GCBYDW"</span></span>
-<span><span class="co">##  [9] "WTE53B" "QW2Z3R" "LS184H" "B228Q6" "TQEMY6" "LYSLPP" "BS3RLE" "1SSCJC"</span></span>
-<span><span class="co">## [17] "B1WVCN" "5ERY5Z" "EZ2F8A" "N4NV8B" "CHK1ZX" "S056D5" "Y6DB6L" "D4B0RM"</span></span>
-<span><span class="co">## [25] "QCA36T" "83HQBN" "E5Q33K" "TYEWF1" "9MG040" "MPIQ4N" "EMV4P6" "WLMGS1"</span></span>
-<span><span class="co">## [33] "30J3CQ"</span></span>
+<span><span class="co">##  [1] "CHJ9D2" "T3QPW5" "XEC0M5" "YFCIHJ" "S222R3" "BKWE4D" "S3EBGZ" "8JUUJ9"</span></span>
+<span><span class="co">##  [9] "72LYDE" "6X6BG9" "CRPXY7" "FB5L3N" "87AQLF" "QCENKM" "MX4J7G" "BCJJKN"</span></span>
+<span><span class="co">## [17] "WKY2SZ" "QRZK48" "01QRQ4" "SCFSBF" "AFZKBS" "WI38KZ" "DH9WJQ" "BS3RLE"</span></span>
+<span><span class="co">## [25] "Y0TCYX" "30J3CQ" "MFKT9C"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[3]]</span></span>
-<span><span class="co">##  [1] "WNKKW3" "T3QPW5" "S5H1GC" "FJS7RQ" "KX0RJ3" "3GECJJ" "1SPLS8" "DPXEQE"</span></span>
-<span><span class="co">##  [9] "3SKITJ" "QQMBT1" "46ZHKN" "VWC5ZH" "I5CI33" "ZH3YG1" "5KWNMZ" "H2J6UA"</span></span>
-<span><span class="co">## [17] "5W621W" "N79QXB" "G58RGY" "AIHJ8Z" "G25E3F" "F45799" "8JUUJ9" "JLFKV8"</span></span>
-<span><span class="co">## [25] "TEACA3" "3YJIMV" "PI4VHT" "KEA4QG" "WKY2SZ" "MKY9TK"</span></span>
+<span><span class="co">##  [1] "FX9E4X" "B228Q6" "CMMUKU" "7B9CA6" "N4NV8B" "MH88T6" "I5CI33" "M9PVG5"</span></span>
+<span><span class="co">##  [9] "1SSCJC" "WNEAS6" "46ZHKN" "967Y3D" "2F6J3U" "E5Q33K" "C18V6I" "3YJIMV"</span></span>
+<span><span class="co">## [17] "N5QBWD" "AIHJ8Z" "1CZM30" "DI4AHD" "YTJ2UL" "SHG3RB" "AZ3L0D" "X694YR"</span></span>
+<span><span class="co">## [25] "1FAZ0K" "DRXMW4" "D4B0RM" "Z904TJ" "0XTZQ1" "GCBYDW" "FL170P" "50D77I"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[4]]</span></span>
-<span><span class="co">##  [1] "CHJ9D2" "GAS52W" "HE0SCR" "ZQXZYB" "DHNQ1W" "1CZM30" "87AQLF" "WK89I9"</span></span>
-<span><span class="co">##  [9] "IH1KPA" "XFWVVX" "MH88T6" "ZPS15A" "YLRNIK" "QWKFBH" "967Y3D" "MYUMMX"</span></span>
-<span><span class="co">## [17] "C18V6I" "J3F6PD" "7ZNY75" "EX5K0S" "1VP3UC" "AR17R5" "6F9FB8" "Y0TCYX"</span></span>
-<span><span class="co">## [25] "D33J06" "WI38KZ" "MX4J7G" "BCJJKN" "Q7U139" "ILVQVB" "QRZK48" "38K2SR"</span></span>
-<span><span class="co">## [33] "2Z4YLY" "MB6NYQ"</span></span>
+<span><span class="co">##  [1] "Z25D52" "NK802Y" "IH1KPA" "PJ72W1" "Q8U9LB" "B134XZ" "RJ4JPC" "MKY9TK"</span></span>
+<span><span class="co">##  [9] "S7IWWA" "QW2Z3R" "D9P18Y" "5W621W" "3GECJJ" "S056D5" "SH3FB7" "HE0SCR"</span></span>
+<span><span class="co">## [17] "H2J6UA" "TYEWF1" "WTE53B" "GIIEUD" "D33J06" "PU7RSG" "3SKITJ" "6F9FB8"</span></span>
+<span><span class="co">## [25] "W6MDVK" "J3F6PD" "R5AYJK" "Q7U139" "7RA57Q" "5EDLL7" "RVHVTZ" "WJXIH9"</span></span>
+<span><span class="co">## [33] "PVY432"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[5]]</span></span>
-<span><span class="co">##  [1] "T38W6H" "R5AYJK" "0SGJ12" "SHG3RB" "AP1YLW" "GIIEUD" "5IAFMK" "CLSVU6"</span></span>
-<span><span class="co">##  [9] "5BPBUI" "S3EBGZ" "FG0SFA" "NK802Y" "92UG4N" "FB5L3N" "ZATMEE" "1GF3GM"</span></span>
-<span><span class="co">## [17] "KZY6PD" "Z904TJ" "TXZUKC" "0XTZQ1" "AZ3L0D" "465ERA" "6X6BG9" "5EDIEE"</span></span>
-<span><span class="co">## [25] "50D77I" "1KJ2MG" "7RA57Q" "CS23RV" "I8ABC7" "1CIRC9" "0X4W26" "QCENKM"</span></span>
-<span><span class="co">## [33] "01QRQ4" "MTCAIG" "M9PVG5" "PJ72W1"</span></span>
+<span><span class="co">##  [1] "YDRD81" "G58RGY" "5ERY5Z" "1SPLS8" "6KWVRI" "321LLB" "K3TNHP" "TEACA3"</span></span>
+<span><span class="co">##  [9] "2Z4YLY" "FJS7RQ" "9MG040" "JLFKV8" "N79QXB" "5EDIEE" "13B1QL" "QWKFBH"</span></span>
+<span><span class="co">## [17] "QCA36T" "WK89I9" "I8ABC7" "LYSLPP" "MB6NYQ" "1GF3GM" "DKIM6U" "99BMJW"</span></span>
+<span><span class="co">## [25] "KX0RJ3" "0HYZ23" "QQMBT1" "92UG4N" "GAS52W" "DPXEQE" "G25E3F" "PYPM1W"</span></span>
+<span><span class="co">## [33] "EMV4P6" "TXZUKC" "S5H1GC" "1QVS67" "CLSVU6" "LVYYNY" "5BPBUI"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[6]]</span></span>
-<span><span class="co">##  [1] "AZ4D19" "7B9CA6" "K3TNHP" "S7IWWA" "CRPXY7" "MFKT9C" "PU7RSG" "W6MDVK"</span></span>
-<span><span class="co">##  [9] "LVYYNY" "FL170P" "9P0DES" "WJXIH9" "DH9WJQ" "DKIM6U" "GTLA8R" "AR5U44"</span></span>
-<span><span class="co">## [17] "Q17CG3" "6KWVRI" "SH3FB7" "B134XZ" "414N7M" "DRXMW4" "99BMJW" "1FAZ0K"</span></span>
-<span><span class="co">## [25] "YFCIHJ" "AW400C" "RVHVTZ" "F7I2ED" "5EDLL7"</span></span>
+<span><span class="co">##  [1] "XY2CK7" "F45799" "NN3GDQ" "KEA4QG" "LS184H" "9P0DES" "MPIQ4N" "B1WVCN"</span></span>
+<span><span class="co">##  [9] "W5WIRP" "3DTD2N" "5IAFMK" "DCJJYS" "PI4VHT" "0X4W26" "FG0SFA" "7ZNY75"</span></span>
+<span><span class="co">## [17] "G8MCV7" "ZQXZYB" "PBAFJF" "ZPS15A" "ILVQVB" "ZH3YG1" "Q17CG3" "W0GUKI"</span></span>
+<span><span class="co">## [25] "F7I2ED" "AR17R5" "XFWVVX" "1VP3UC" "0IIAEN" "ESUIAF"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[7]]</span></span>
 <span><span class="co">## [1] NA</span></span></code></pre>
@@ -814,22 +821,22 @@ code.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">haremGrp</span><span class="op">$</span><span class="va">group</span>, <span class="kw">function</span><span class="op">(</span><span class="va">ids</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">ids</span><span class="op">[</span><span class="va">ids</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">trimmedPed</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="va">trimmedPed</span><span class="op">$</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"M"</span><span class="op">]</span><span class="op">]</span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [[1]]</span></span>
-<span><span class="co">## [1] "G2GYST"</span></span>
+<span><span class="co">## [1] "S63QDN"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[2]]</span></span>
-<span><span class="co">## [1] "1E8KD1"</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## [[3]]</span></span>
-<span><span class="co">## [1] "WNKKW3"</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## [[4]]</span></span>
 <span><span class="co">## [1] "CHJ9D2"</span></span>
 <span><span class="co">## </span></span>
+<span><span class="co">## [[3]]</span></span>
+<span><span class="co">## [1] "FX9E4X"</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## [[4]]</span></span>
+<span><span class="co">## [1] "Z25D52"</span></span>
+<span><span class="co">## </span></span>
 <span><span class="co">## [[5]]</span></span>
-<span><span class="co">## [1] "T38W6H"</span></span>
+<span><span class="co">## [1] "YDRD81"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[6]]</span></span>
-<span><span class="co">## [1] "AZ4D19"</span></span>
+<span><span class="co">## [1] "XY2CK7"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[7]]</span></span>
 <span><span class="co">## logical(0)</span></span></code></pre>
@@ -843,14 +850,14 @@ by the number of animals in the individual groups.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Count: "</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ids</span><span class="op">)</span>, <span class="st">" Sex Ratio: "</span>,</span>
 <span>         <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="../reference/calculateSexRatio.html">calculateSexRatio</a></span><span class="op">(</span><span class="va">ids</span>, <span class="va">trimmedPed</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">line</span> <span class="kw">in</span> <span class="va">lines</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">line</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "Count: 28 Sex Ratio: 27"</span></span>
+<pre><code><span><span class="co">## [1] "Count: 29 Sex Ratio: 28"</span></span>
+<span><span class="co">## [1] "Count: 27 Sex Ratio: 26"</span></span>
+<span><span class="co">## [1] "Count: 32 Sex Ratio: 31"</span></span>
 <span><span class="co">## [1] "Count: 33 Sex Ratio: 32"</span></span>
+<span><span class="co">## [1] "Count: 39 Sex Ratio: 38"</span></span>
 <span><span class="co">## [1] "Count: 30 Sex Ratio: 29"</span></span>
-<span><span class="co">## [1] "Count: 34 Sex Ratio: 33"</span></span>
-<span><span class="co">## [1] "Count: 36 Sex Ratio: 35"</span></span>
-<span><span class="co">## [1] "Count: 29 Sex Ratio: 28"</span></span>
 <span><span class="co">## [1] "Count: 1 Sex Ratio: Inf"</span></span></code></pre>
-<p>Examination of this table shows that of the 184 females 157 are
+<p>Examination of this table shows that of the 184 females 156 are
 included.</p>
 </div>
 <div class="section level3">
@@ -867,92 +874,91 @@ done by setting <strong>harem</strong> to .</p>
 <span>                     sexRatio <span class="op">=</span> <span class="fl">9</span><span class="op">)</span></span>
 <span><span class="va">sexRatioGrp</span><span class="op">$</span><span class="va">group</span></span></code></pre></div>
 <pre><code><span><span class="co">## [[1]]</span></span>
-<span><span class="co">##  [1] "SH3FB7" "EEGLWY" "N5QBWD" "WKY2SZ" "9MG040" "Y6DB6L" "DH9WJQ" "QCA36T"</span></span>
-<span><span class="co">##  [9] "R5AYJK" "GIIEUD" "RJ4JPC" "Q17CG3" "PI4VHT" "A98D7P" "7RA57Q" "GCBYDW"</span></span>
-<span><span class="co">## [17] "PBAFJF" "DI4AHD" "EMV4P6" "92UG4N" "VWC5ZH" "1KJ2MG" "BCJJKN" "5EDIEE"</span></span>
-<span><span class="co">## [25] "A6A1M1"</span></span>
+<span><span class="co">##  [1] "SHG3RB" "8TV4MT" "QRZK48" "D9P18Y" "414N7M" "SH3FB7" "0XTZQ1" "3YJIMV"</span></span>
+<span><span class="co">##  [9] "BKWE4D" "83HQBN" "Z904TJ" "6KWVRI" "NN3GDQ" "KZM9RB" "BS3RLE" "5EDIEE"</span></span>
+<span><span class="co">## [17] "KEA4QG" "DRXMW4" "87AQLF" "2Z4YLY" "0X4W26" "ESUIAF" "1CIRC9" "WNEAS6"</span></span>
+<span><span class="co">## [25] "HLQ9SY" "1SPLS8" "PU7RSG" "S7IWWA" "S222R3" "5BPBUI" "WLMGS1" "J3F6PD"</span></span>
+<span><span class="co">## [33] "MPIQ4N" "WJXIH9" "G2GYST"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[2]]</span></span>
-<span><span class="co">##  [1] "6F9FB8" "0V4SAC" "5EDLL7" "1FAZ0K" "5BPBUI" "01QRQ4" "0X4W26" "W0GUKI"</span></span>
-<span><span class="co">##  [9] "CRPXY7" "1QVS67" "FJS7RQ" "HE0SCR" "F45799" "KXHGRH" "RVHVTZ" "XEC0M5"</span></span>
-<span><span class="co">## [17] "3YJIMV" "99BMJW" "YLRNIK" "K3TNHP" "2Z4YLY" "LVYYNY" "EZ2F8A" "B134XZ"</span></span>
-<span><span class="co">## [25] "R6HV9A"</span></span>
+<span><span class="co">##  [1] "Y6DB6L" "XY2CK7" "1KJ2MG" "XEC0M5" "DHNQ1W" "KZY6PD" "5KWNMZ" "B228Q6"</span></span>
+<span><span class="co">##  [9] "5EDLL7" "Y0TCYX" "CRPXY7" "G8MCV7" "GIIEUD" "R6HV9A" "W6MDVK" "CS23RV"</span></span>
+<span><span class="co">## [17] "1SSCJC" "01QRQ4" "MB6NYQ" "1CZM30" "WKY2SZ" "VWC5ZH" "PBAFJF" "Q7U139"</span></span>
+<span><span class="co">## [25] "CFD12A" "MYUMMX"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[3]]</span></span>
-<span><span class="co">##  [1] "83HQBN" "MEUZ85" "BKWE4D" "Q7U139" "1SSCJC" "PU7RSG" "IH1KPA" "LYSLPP"</span></span>
-<span><span class="co">##  [9] "50D77I" "FL170P" "465ERA" "FB5L3N" "EX5K0S" "GDXWJ1" "KX0RJ3" "BS3RLE"</span></span>
-<span><span class="co">## [17] "T3QPW5" "YFCIHJ" "TQEMY6" "PJ72W1" "G8MCV7" "46ZHKN" "8JUUJ9" "GAS52W"</span></span>
-<span><span class="co">## [25] "5KFB90"</span></span>
+<span><span class="co">##  [1] "XYRDKV" "5XVTVH" "QCA36T" "RVHVTZ" "3SKITJ" "WK89I9" "FG0SFA" "DI4AHD"</span></span>
+<span><span class="co">##  [9] "WTE53B" "XFWVVX" "C18V6I" "MH88T6" "321LLB" "YHHVC7" "TQEMY6" "Q17CG3"</span></span>
+<span><span class="co">## [17] "50D77I" "AFZKBS" "3DTD2N" "ZATMEE" "30J3CQ" "EMV4P6" "DPXEQE" "8JUUJ9"</span></span>
+<span><span class="co">## [25] "K7900I"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[4]]</span></span>
-<span><span class="co">##  [1] "1CZM30" "80F2MI" "1VP3UC" "G58RGY" "W5WIRP" "ZPS15A" "3SKITJ" "MPIQ4N"</span></span>
-<span><span class="co">##  [9] "XYRDKV" "B1WVCN" "W6MDVK" "1SPLS8" "AR17R5" "ZW2X4N" "XFWVVX" "6X6BG9"</span></span>
-<span><span class="co">## [17] "S3EBGZ" "414N7M" "C18V6I" "Y0TCYX" "S222R3" "72LYDE" "E5Q33K" "ILVQVB"</span></span>
-<span><span class="co">## [25] "KZM9RB"</span></span>
+<span><span class="co">##  [1] "MKY9TK" "2F1IV1" "1QVS67" "MTCAIG" "1GF3GM" "YFCIHJ" "W0GUKI" "465ERA"</span></span>
+<span><span class="co">##  [9] "EX5K0S" "6F9FB8" "YTJ2UL" "PVY432" "D33J06" "IZDV8K" "99BMJW" "AZ3L0D"</span></span>
+<span><span class="co">## [17] "R5AYJK" "N5QBWD" "NK802Y" "N79QXB" "46ZHKN" "WI38KZ" "72LYDE" "0HYZ23"</span></span>
+<span><span class="co">## [25] "3MMZD4"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[5]]</span></span>
-<span><span class="co">##  [1] "87AQLF" "3QHAFI" "0SGJ12" "MTCAIG" "AFZKBS" "WNEAS6" "38K2SR" "DPXEQE"</span></span>
-<span><span class="co">##  [9] "321LLB" "WTE53B" "S5H1GC" "MKY9TK" "I5CI33" "IZDV8K" "S056D5" "AP1YLW"</span></span>
-<span><span class="co">## [17] "5ERY5Z" "DKIM6U" "PVY432" "ZH3YG1" "3GECJJ" "I8ABC7" "NN3GDQ" "ZATMEE"</span></span>
-<span><span class="co">## [25] "G2GYST"</span></span>
+<span><span class="co">##  [1] "DH9WJQ" "XL658N" "QQMBT1" "X694YR" "AIHJ8Z" "7RA57Q" "LVYYNY" "0IIAEN"</span></span>
+<span><span class="co">##  [9] "1VP3UC" "Q8U9LB" "GCBYDW" "MX4J7G" "FL170P" "T38W6H" "PI4VHT" "S5H1GC"</span></span>
+<span><span class="co">## [17] "5ERY5Z" "JLFKV8" "ZQXZYB" "13B1QL" "7NE2UT" "GTLA8R" "PJ72W1" "DKIM6U"</span></span>
+<span><span class="co">## [25] "LN1DLY" "EZ2F8A" "G25E3F" "KX0RJ3" "7ZNY75" "LS184H" "9MG040" "ZH3YG1"</span></span>
+<span><span class="co">## [33] "N4NV8B" "B134XZ" "Z7NBA2"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[6]]</span></span>
-<span><span class="co">##  [1] "MB6NYQ" "CHSCFG" "ESUIAF" "7NE2UT" "WI38KZ" "7B9CA6" "TYEWF1" "FG0SFA"</span></span>
-<span><span class="co">##  [9] "B228Q6" "CS23RV" "QCENKM" "QRZK48" "MX4J7G" "K7900I" "KZY6PD" "MH88T6"</span></span>
-<span><span class="co">## [17] "967Y3D" "M9PVG5" "MFKT9C" "QWKFBH" "AZ3L0D" "D9P18Y" "5KWNMZ" "1CIRC9"</span></span>
-<span><span class="co">## [25] "LN1DLY" "AW400C" "MYUMMX" "X694YR" "N79QXB" "TXZUKC" "S7IWWA" "J3F6PD"</span></span>
-<span><span class="co">## [33] "LS184H" "Q8U9LB" "JSAP3H"</span></span>
+<span><span class="co">##  [1] "38K2SR" "B2CKHA" "QCENKM" "AP1YLW" "CHK1ZX" "YLRNIK" "QWKFBH" "D4B0RM"</span></span>
+<span><span class="co">##  [9] "GAS52W" "TXZUKC" "G58RGY" "967Y3D" "CLSVU6" "7D09WH" "1FAZ0K" "ILVQVB"</span></span>
+<span><span class="co">## [17] "B1WVCN" "RJ4JPC" "T3QPW5" "S3EBGZ" "AR17R5" "LYSLPP" "F7I2ED" "FJS7RQ"</span></span>
+<span><span class="co">## [25] "5PW7WT" "FB5L3N" "HE0SCR" "H2J6UA" "BCJJKN" "K3TNHP" "S056D5"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[7]]</span></span>
-<span><span class="co">##   [1] "CLSVU6" "5IAFMK" "HLQ9SY" "B2CKHA" "DCJJYS" "TR5L57" "WK89I9" "XC304E"</span></span>
-<span><span class="co">##   [9] "Z7NBA2" "1E8KD1" "5PW7WT" "AEP5EG" "BW10CL" "CFD12A" "CHJ9D2" "D33J06"</span></span>
-<span><span class="co">##  [17] "D4B0RM" "FTVE03" "IRFJ09" "LMJWTN" "N4NV8B" "Q9LWGX" "RNQU14" "SCFSBF"</span></span>
-<span><span class="co">##  [25] "TEACA3" "09LFE4" "13B1QL" "1GF3GM" "2F6J3U" "3DTD2N" "3MMZD4" "55BPSE"</span></span>
-<span><span class="co">##  [33] "5XVTVH" "6KWVRI" "8IG767" "9FRCIE" "ER464J" "F7I2ED" "FFGPS4" "FG6L7S"</span></span>
-<span><span class="co">##  [41] "G25E3F" "GTLA8R" "H2J6UA" "NHWTJ9" "P7RBPI" "TBCE78" "YI16QD" "0HYZ23"</span></span>
-<span><span class="co">##  [49] "2F1IV1" "30J3CQ" "4LHK19" "59NYZE" "5IYDXN" "6KLWVC" "8TV4MT" "AZ4D19"</span></span>
-<span><span class="co">##  [57] "BTTHAJ" "CHK1ZX" "DHNQ1W" "DRXMW4" "FX9E4X" "G91ZM6" "J1R2EW" "JLFKV8"</span></span>
-<span><span class="co">##  [65] "LDND6J" "MQT080" "NK802Y" "NSIC4I" "PHB6TE" "PYPM1W" "QRWYQZ" "QW2Z3R"</span></span>
-<span><span class="co">##  [73] "RY1AZM" "SHG3RB" "WHQLH5" "WLMGS1" "WQUN84" "XL658N" "XX0GYV" "YHHVC7"</span></span>
-<span><span class="co">##  [81] "YP910X" "YTJ2UL" "Z904TJ" "ZQXZYB" "0IIAEN" "0X1RZ9" "0XTZQ1" "3YHBC1"</span></span>
-<span><span class="co">##  [89] "55VDSQ" "5W621W" "653J82" "6MEP2C" "76DIT4" "7ZNY75" "80KACX" "9P0DES"</span></span>
-<span><span class="co">##  [97] "AIHJ8Z" "B2YJJP" "CMMUKU" "E3JP0C" "FLIZQI" "GM371F" "KEA4QG" "PA9F3J"</span></span>
-<span><span class="co">## [105] "QQMBT1" "SXSVEH" "T38W6H" "TJN1AD" "WJXIH9" "WNKKW3" "XY2CK7" "XZH41H"</span></span>
-<span><span class="co">## [113] "YDRD81" "Z25D52" "ZDRSG0" "3P9BX6" "7D09WH" "AR5U44" "DGZLV3" "S63QDN"</span></span></code></pre>
+<span><span class="co">##   [1] "5IAFMK" "6X6BG9" "DCJJYS" "GDXWJ1" "JSAP3H" "TR5L57" "XC304E" "1E8KD1"</span></span>
+<span><span class="co">##   [9] "5KFB90" "A6A1M1" "AEP5EG" "AW400C" "BW10CL" "CHJ9D2" "FTVE03" "IH1KPA"</span></span>
+<span><span class="co">##  [17] "IRFJ09" "KXHGRH" "LMJWTN" "M9PVG5" "Q9LWGX" "RNQU14" "SCFSBF" "TEACA3"</span></span>
+<span><span class="co">##  [25] "TYEWF1" "W5WIRP" "ZPS15A" "09LFE4" "2F6J3U" "3GECJJ" "3QHAFI" "55BPSE"</span></span>
+<span><span class="co">##  [33] "7B9CA6" "8IG767" "9FRCIE" "ER464J" "FFGPS4" "FG6L7S" "NHWTJ9" "P7RBPI"</span></span>
+<span><span class="co">##  [41] "TBCE78" "YI16QD" "4LHK19" "59NYZE" "5IYDXN" "6KLWVC" "80F2MI" "A98D7P"</span></span>
+<span><span class="co">##  [49] "AZ4D19" "BTTHAJ" "CHSCFG" "EEGLWY" "FX9E4X" "G91ZM6" "I5CI33" "I8ABC7"</span></span>
+<span><span class="co">##  [57] "J1R2EW" "LDND6J" "MFKT9C" "MQT080" "NSIC4I" "PHB6TE" "PYPM1W" "QRWYQZ"</span></span>
+<span><span class="co">##  [65] "QW2Z3R" "RY1AZM" "WHQLH5" "WQUN84" "XX0GYV" "YP910X" "0SGJ12" "0V4SAC"</span></span>
+<span><span class="co">##  [73] "0X1RZ9" "3YHBC1" "55VDSQ" "5W621W" "653J82" "6MEP2C" "76DIT4" "80KACX"</span></span>
+<span><span class="co">##  [81] "92UG4N" "9P0DES" "B2YJJP" "CMMUKU" "E3JP0C" "E5Q33K" "F45799" "FLIZQI"</span></span>
+<span><span class="co">##  [89] "GM371F" "MEUZ85" "PA9F3J" "SXSVEH" "TJN1AD" "WNKKW3" "XZH41H" "YDRD81"</span></span>
+<span><span class="co">##  [97] "Z25D52" "ZDRSG0" "3P9BX6" "AR5U44" "DGZLV3" "S63QDN" "ZW2X4N"</span></span></code></pre>
 <p>Again we can identify and list the males in each group with the
 following code.</p>
 <div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">sexRatioGrp</span><span class="op">$</span><span class="va">group</span>, <span class="kw">function</span><span class="op">(</span><span class="va">ids</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">ids</span><span class="op">[</span><span class="va">ids</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">trimmedPed</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="va">trimmedPed</span><span class="op">$</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"M"</span><span class="op">]</span><span class="op">]</span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [[1]]</span></span>
-<span><span class="co">## [1] "EEGLWY" "A98D7P" "A6A1M1"</span></span>
+<span><span class="co">## [1] "8TV4MT" "KZM9RB" "HLQ9SY" "G2GYST"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[2]]</span></span>
-<span><span class="co">## [1] "0V4SAC" "KXHGRH" "R6HV9A"</span></span>
+<span><span class="co">## [1] "XY2CK7" "R6HV9A" "CFD12A"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[3]]</span></span>
-<span><span class="co">## [1] "MEUZ85" "GDXWJ1" "5KFB90"</span></span>
+<span><span class="co">## [1] "5XVTVH" "YHHVC7" "K7900I"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[4]]</span></span>
-<span><span class="co">## [1] "80F2MI" "ZW2X4N" "KZM9RB"</span></span>
+<span><span class="co">## [1] "2F1IV1" "IZDV8K" "3MMZD4"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[5]]</span></span>
-<span><span class="co">## [1] "3QHAFI" "IZDV8K" "G2GYST"</span></span>
+<span><span class="co">## [1] "XL658N" "T38W6H" "LN1DLY" "Z7NBA2"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[6]]</span></span>
-<span><span class="co">## [1] "CHSCFG" "K7900I" "LN1DLY" "JSAP3H"</span></span>
+<span><span class="co">## [1] "B2CKHA" "7D09WH" "5PW7WT"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[7]]</span></span>
-<span><span class="co">##  [1] "HLQ9SY" "B2CKHA" "TR5L57" "XC304E" "Z7NBA2" "1E8KD1" "5PW7WT" "AEP5EG"</span></span>
-<span><span class="co">##  [9] "BW10CL" "CFD12A" "CHJ9D2" "FTVE03" "IRFJ09" "LMJWTN" "Q9LWGX" "RNQU14"</span></span>
-<span><span class="co">## [17] "09LFE4" "3MMZD4" "55BPSE" "5XVTVH" "8IG767" "9FRCIE" "ER464J" "FFGPS4"</span></span>
-<span><span class="co">## [25] "FG6L7S" "NHWTJ9" "P7RBPI" "TBCE78" "YI16QD" "2F1IV1" "4LHK19" "59NYZE"</span></span>
-<span><span class="co">## [33] "5IYDXN" "6KLWVC" "8TV4MT" "AZ4D19" "BTTHAJ" "FX9E4X" "G91ZM6" "J1R2EW"</span></span>
-<span><span class="co">## [41] "LDND6J" "MQT080" "NSIC4I" "PHB6TE" "QRWYQZ" "RY1AZM" "WHQLH5" "WQUN84"</span></span>
-<span><span class="co">## [49] "XL658N" "XX0GYV" "YHHVC7" "YP910X" "0X1RZ9" "3YHBC1" "55VDSQ" "653J82"</span></span>
-<span><span class="co">## [57] "6MEP2C" "76DIT4" "80KACX" "B2YJJP" "E3JP0C" "FLIZQI" "GM371F" "PA9F3J"</span></span>
-<span><span class="co">## [65] "SXSVEH" "T38W6H" "TJN1AD" "WNKKW3" "XY2CK7" "XZH41H" "YDRD81" "Z25D52"</span></span>
-<span><span class="co">## [73] "ZDRSG0" "3P9BX6" "7D09WH" "DGZLV3" "S63QDN"</span></span></code></pre>
+<span><span class="co">##  [1] "GDXWJ1" "JSAP3H" "TR5L57" "XC304E" "1E8KD1" "5KFB90" "A6A1M1" "AEP5EG"</span></span>
+<span><span class="co">##  [9] "BW10CL" "CHJ9D2" "FTVE03" "IRFJ09" "KXHGRH" "LMJWTN" "Q9LWGX" "RNQU14"</span></span>
+<span><span class="co">## [17] "09LFE4" "3QHAFI" "55BPSE" "8IG767" "9FRCIE" "ER464J" "FFGPS4" "FG6L7S"</span></span>
+<span><span class="co">## [25] "NHWTJ9" "P7RBPI" "TBCE78" "YI16QD" "4LHK19" "59NYZE" "5IYDXN" "6KLWVC"</span></span>
+<span><span class="co">## [33] "80F2MI" "A98D7P" "AZ4D19" "BTTHAJ" "CHSCFG" "EEGLWY" "FX9E4X" "G91ZM6"</span></span>
+<span><span class="co">## [41] "J1R2EW" "LDND6J" "MQT080" "NSIC4I" "PHB6TE" "QRWYQZ" "RY1AZM" "WHQLH5"</span></span>
+<span><span class="co">## [49] "WQUN84" "XX0GYV" "YP910X" "0V4SAC" "0X1RZ9" "3YHBC1" "55VDSQ" "653J82"</span></span>
+<span><span class="co">## [57] "6MEP2C" "76DIT4" "80KACX" "B2YJJP" "E3JP0C" "FLIZQI" "GM371F" "MEUZ85"</span></span>
+<span><span class="co">## [65] "PA9F3J" "SXSVEH" "TJN1AD" "WNKKW3" "XZH41H" "YDRD81" "Z25D52" "ZDRSG0"</span></span>
+<span><span class="co">## [73] "3P9BX6" "DGZLV3" "S63QDN" "ZW2X4N"</span></span></code></pre>
 <p>We can also see the number of animals and the sex ratios created in
 each group.</p>
 <div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
@@ -960,14 +966,14 @@ each group.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Count: "</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ids</span><span class="op">)</span>, <span class="st">" Sex Ratio: "</span>,</span>
 <span>         <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="../reference/calculateSexRatio.html">calculateSexRatio</a></span><span class="op">(</span><span class="va">ids</span>, <span class="va">trimmedPed</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">line</span> <span class="kw">in</span> <span class="va">lines</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">line</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "Count: 25 Sex Ratio: 7.33"</span></span>
-<span><span class="co">## [1] "Count: 25 Sex Ratio: 7.33"</span></span>
-<span><span class="co">## [1] "Count: 25 Sex Ratio: 7.33"</span></span>
+<pre><code><span><span class="co">## [1] "Count: 35 Sex Ratio: 7.75"</span></span>
+<span><span class="co">## [1] "Count: 26 Sex Ratio: 7.67"</span></span>
 <span><span class="co">## [1] "Count: 25 Sex Ratio: 7.33"</span></span>
 <span><span class="co">## [1] "Count: 25 Sex Ratio: 7.33"</span></span>
 <span><span class="co">## [1] "Count: 35 Sex Ratio: 7.75"</span></span>
-<span><span class="co">## [1] "Count: 120 Sex Ratio: 0.56"</span></span></code></pre>
-<p>Examination of this table shows that of the 184 females 249 are
+<span><span class="co">## [1] "Count: 31 Sex Ratio: 9.33"</span></span>
+<span><span class="co">## [1] "Count: 103 Sex Ratio: 0.36"</span></span></code></pre>
+<p>Examination of this table shows that of the 184 females 239 are
 included.</p>
 </div>
 </div>
@@ -1124,7 +1130,7 @@ that have generated the errors.</p>
 <div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pedOne</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="../reference/pedOne.html">pedOne</a></span> <span class="co"># put it in the local environment</span></span>
 <span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">pedOne</span>, minParentAge <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in qcStudbook(pedOne, minParentAge = 0): Parents with low age at birth of offspring are listed in /tmp/RtmpHLW5Dk/lowParentAge.csv.</span></span></code></pre>
+<pre><code><span><span class="co">## Error in qcStudbook(pedOne, minParentAge = 0): Parents with low age at birth of offspring are listed in /tmp/RtmpFkxC4X/lowParentAge.csv.</span></span></code></pre>
 <p>The contents of <em>lowParentAge.csv</em> is shown below.</p>
 <table class="table">
 <colgroup>
@@ -1304,7 +1310,7 @@ the following line of code:</p>
 <span><span class="co">## 2941 0VLW56 6KPKH7 MMEHXV</span></span></code></pre>
 <div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">elapsed_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_elapsed_time_str.html">get_elapsed_time_str</a></span><span class="op">(</span><span class="va">start_time</span><span class="op">)</span></span></code></pre></div>
-<p>The current date and time is 2024-12-20 10:25:40.499428. The
+<p>The current date and time is 2024-12-22 07:14:24.748093. The
 processing time for this document was 14 seconds..</p>
 <div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -1337,7 +1343,7 @@ processing time for this document was 14 seconds..</p>
 <span><span class="co">## [1] nprcgenekeepr_1.0.6 knitr_1.49          ggplot2_3.5.1       stringi_1.8.4      </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##  [1] gtable_0.3.6         anytime_0.3.10       xfun_0.49            bslib_0.8.0         </span></span>
+<span><span class="co">##  [1] gtable_0.3.6         anytime_0.3.11       xfun_0.49            bslib_0.8.0         </span></span>
 <span><span class="co">##  [5] htmlwidgets_1.6.4    lattice_0.22-6       vctrs_0.6.5          tools_4.4.2         </span></span>
 <span><span class="co">##  [9] generics_0.1.3       tibble_3.2.1         pkgconfig_2.0.3      Matrix_1.7-1        </span></span>
 <span><span class="co">## [13] data.table_1.16.4    checkmate_2.3.2      desc_1.4.3           readxl_1.4.3        </span></span>
