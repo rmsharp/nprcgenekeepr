@@ -5,7 +5,8 @@ library(testthat)
 library(stringi)
 version1 <- getVersion()
 version2 <- getVersion(date = FALSE)
-test_that(paste0("getVersion by default returns a version with date:", version1), {
+test_that(paste0("getVersion by default returns a version with date:",
+                 version1), {
   expect_true(stri_detect_regex(version1, # version
                                 pattern = "^[0-9]{1,2}([.][0-9]{1,2})"))
   expect_true(stri_detect_fixed(version1, pattern = "("))
@@ -18,5 +19,3 @@ test_that(paste0("getVersion returns a version without date:", version2), {
   expect_equal(length(stri_split_fixed(version2, pattern = "(")[[1]]), 1)
   expect_false(stri_detect_fixed(version2, pattern = "("))
 })
-
-

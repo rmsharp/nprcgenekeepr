@@ -53,5 +53,3 @@ test_that("getPotentialParents works with records with no potential parent", {
                              maxGestationalPeriod = 210)
   expect_equal(potentialParents[[1]]$id, ids[1])
 })
-
-
