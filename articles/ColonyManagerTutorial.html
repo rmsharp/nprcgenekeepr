@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">nprcgenekeepr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.6.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,7 +36,6 @@
 <li><a class="dropdown-item" href="../articles/a2interactive.html">Interactive Use of nprcgenekeepr</a></li>
     <li><a class="dropdown-item" href="../articles/a3manual.html">Genetic Management Tools Manual</a></li>
     <li><a class="dropdown-item" href="../articles/ColonyManagerTutorial.html">GeneKeepR: A Colony Manager's Tutorial</a></li>
-    <li><a class="dropdown-item" href="../articles/shiny_app_use.html">GeneKeepR Tutorial</a></li>
     <li><a class="dropdown-item" href="../articles/simulatedKValues.html">Quick Example of Simulated Kinships with Partial Parentage</a></li>
   </ul>
 </li>
@@ -104,14 +103,37 @@ administrative permissions on the computer.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rmsharp/nprcgenekeepr"</span><span class="op">)</span></span></code></pre></div>
 <p>All missing packages should be automatically installed.</p>
-<p>You can start <strong>GeneKeepR</strong> from the <strong>R</strong>
-console with</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="online-documentation">Online Documentation<a class="anchor" aria-label="anchor" href="#online-documentation"></a>
+</h2>
+<p>You can find the complete online documentation at <a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">https://rmsharp.github.io/nprcgenekeepr/</a>.</p>
+<p>At the top of the page are three menus to the right of the
+<code>Home</code> icon: <code>Reference</code>, <code>Articles</code>,
+and <code>Changelog</code>.</p>
+<p>The <code>Reference</code> menu at the top of the page brings up the
+list of documentation for <code>Data objects</code>,
+<code>Major Features and Functions</code>,
+<code>Primary interactive functions</code> and
+<code>All exposed functions</code>.</p>
+<p>The <code>Articles</code> menu brings up the list of vignettes, which
+are, except for <code>Development Plans</code>, tutorials for using the
+package.</p>
+<p>The <code>Changelog</code> brings up a copy of the NEWS file of the
+package, which records the major changes made for each version.</p>
+</div>
+<div class="section level2">
+<h2 id="running-shiny-application">Running Shiny Application<a class="anchor" aria-label="anchor" href="#running-shiny-application"></a>
+</h2>
+<p>The toolset available within nprcgenekeepr can be used inside
+standard R scripts. However, it was originally designed to be used
+within a Shiny application that can be started with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/runGeneKeepR.html">runGeneKeepR</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>This will result in the opening screen where you tell the application
 how to find the pedigree you will be using.</p>
-</div>
 </div>
 <div class="section level2">
 <h2 id="uploading-a-pedigree-file">Uploading a Pedigree File<a class="anchor" aria-label="anchor" href="#uploading-a-pedigree-file"></a>
@@ -133,8 +155,8 @@ instructions regarding use of a genotype file.</p>
 <p><img src="ColonyManagerTutorial_files/figure-html/eopening-screen-bottom-1.png" alt="Bottom of opening screen." width="528"></p>
 <hr>
 <p>The following is an example of the pedigree file format.</p>
-<p>Without genotypes:<br><img src="ColonyManagerTutorial_files/figure-html/eexamplePedigreeTutorial-1.png" alt="Example pedigree tutorial." width="528"></p>
-<p>With genotypes:<br><img src="ColonyManagerTutorial_files/figure-html/eexamplePedigreeTutorial-with_alleles-1.png" alt="Example pedigree tutorial with alleles." width="528"></p>
+<p>Without genotypes:<br><img src="ColonyManagerTutorial_files/figure-html/eexamplePedigreeTutorial-1.png" alt="Example pedigree tutorial without genotypes." width="528"></p>
+<p>With genotypes:<br><img src="ColonyManagerTutorial_files/figure-html/eexamplePedigreeTutorial-with-alleles-1.png" alt="Example pedigree tutorial with genotypes." width="528"></p>
 <hr>
 </div>
 <div class="section level3">
@@ -162,6 +184,9 @@ file from your file system.</p>
 the animals in your pedigree. For our example pedigree, we are changing
 it from 4 years to 2 years of age since these macaques may reproduce as
 early as two years of age.</p>
+<p>This is shown below in three progressive images with the center image
+demonstrating how the hovertext provides an explanation of how this
+value is used.</p>
 <p><img src="ColonyManagerTutorial_files/figure-html/example-pedigree-minParentAgeSequence-1.png" alt="Input of minimum parent age." width="1056"></p>
 <hr>
 </div>
@@ -173,7 +198,8 @@ file and test to see if the pedigree file has all of the columns needed
 and the pedigree is internally consistent.</p>
 <p><img src="ColonyManagerTutorial_files/figure-html/read-and-check-pedigree-1.png" alt="Read and check example pedigree." width="240"></p>
 <hr>
-<p>Several error types, shown below, are detected the application.</p>
+<p>Several error types, shown below, are detected by the
+application.</p>
 <table class="table table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -253,8 +279,8 @@ IDs listed more than once.
 changedCols
 </td>
 <td style="text-align:left;width: 30em; ">
-Columns that have been changed to conform to the program(ex: id -&gt;
-Ego ID).
+Columns that have been changed to conform to internal naming conventions
+and what they were changed to.
 </td>
 </tr>
 </tbody>
@@ -269,17 +295,21 @@ Ego ID).
 rows of the pedigree at a time, but you can choose to display 10, 25,
 50, or 100 rows. You can choose to display UNKNOWN IDs in the rows
 displayed. UNKNOWN IDs (UIDs) are used to label unknown parents of
-animals with one known parent. The program calculates additional columns
-based on the input pedigree.</p>
+animals with one known parent.</p>
+<p>The program calculates additional columns based on the input
+pedigree.</p>
 <p><img src="ColonyManagerTutorial_files/figure-html/pb-10-rows-display-unknown-ids-1.png" alt="Pedigree browser with 10 rows displayed and unknown IDs shown." width="528"></p>
 <hr>
 <div class="section level3">
 <h3 id="unknown-ids">Unknown IDs<a class="anchor" aria-label="anchor" href="#unknown-ids"></a>
 </h3>
 <p>I have place red lines under the UNKNOWN IDs in the partial pedigree
-list below for clarity. These IDs have no meaning other than they all
-begin with the letter <em>U</em> and are following with a left
-alphanumeric string of five places.</p>
+list below for clarity. UNKNOWN IDs are used to label unknown parents of
+animals with one known parent. (Note these are found near the end of the
+pedigree list,) These IDs have no meaning other than they all begin with
+the letter <em>U</em> and are following with a left alphanumeric string
+of five places.</p>
+<!--RMS TODO replace this text when the UNKNOWN IDs are more robustly defined -->
 <p><img src="ColonyManagerTutorial_files/figure-html/unknown-displayed-1.png" alt="Pedigree browser unknown IDs displayed" width="480"></p>
 <hr>
 <p>In this example pedigree, when you deselect the <strong>Display
@@ -392,6 +422,14 @@ simulations is recommended. A genome uniqueness threshold value between
 <p>Select the <strong>Begin Analysis</strong> button to start the gene
 dropping process, which you can monitor with the progress meter in the
 lower right corner of the display.</p>
+<p>We are not aware of a systematic study of pedigree structure with
+this algorithm and have not performed extensive studies with pedigrees
+of various structures, but 1000 iterations has seemed to provide
+reproducible results for out pedigrees. It must be emphasized that
+pedigree structure is expected to affect precision when iterations are
+held constant.</p>
+<!--  Come up wit a definition of reproducible and see if we can run and -->
+<!-- automated test to find the needed number of iterations.-->
 <p><img src="ColonyManagerTutorial_files/figure-html/gva-calculating-1.png" alt="Calculation on genetic value analysis tab" width="672"></p>
 <hr>
 <p>As soon as the calculations are completed, a table showing the
@@ -454,7 +492,11 @@ file are shown below.</p>
 <p>The six plots provide histograms and boxplots for the kinship
 coefficients, the Z-scores of the kinship coefficients, and the genome
 uniqueness scores. These plots may also be downloaded as desired.</p>
-<p><img src="ColonyManagerTutorial_files/figure-html/ss-trimmed-all-plots-1.png" alt="Trimmed all plots" width="480"></p>
+<p><img src="ColonyManagerTutorial_files/figure-html/ss-trimmed-all-plots-1.png" alt="Trimmed all plots" width="480">
+*********</p>
+<p>Each of the plots can be exported as a PNG file to a directory you
+choose.</p>
+<p><img src="ColonyManagerTutorial_files/figure-html/ss-export-mean-kinship-coef-hist-plot-1.png" alt="Export mean kinship coefficient histogram plot" width="480"></p>
 <hr>
 </div>
 <div class="section level2">

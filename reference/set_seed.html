@@ -11,7 +11,7 @@ versions of R in a CICD test build."><meta property="og:image" content="https://
 
     <a class="navbar-brand me-2" href="../index.html">nprcgenekeepr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.6.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,7 +25,6 @@ versions of R in a CICD test build."><meta property="og:image" content="https://
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/a2interactive.html">Interactive Use of nprcgenekeepr</a></li>
     <li><a class="dropdown-item" href="../articles/a3manual.html">Genetic Management Tools Manual</a></li>
     <li><a class="dropdown-item" href="../articles/ColonyManagerTutorial.html">GeneKeepR: A Colony Manager's Tutorial</a></li>
-    <li><a class="dropdown-item" href="../articles/shiny_app_use.html">GeneKeepR Tutorial</a></li>
     <li><a class="dropdown-item" href="../articles/simulatedKValues.html">Quick Example of Simulated Kinships with Partial Parentage</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -69,9 +68,9 @@ versions of R in a CICD test build.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>It seems RNGkind(sample.kind="Rounding”) does not work prior to version
-3.6 so I resorted to using version dependent construction of the argument
-list to set.seed() in do.call().</p>
+    <p>It seems <code>RNGkind(sample.kind="Rounding")</code> does not work prior to
+version 3.6 so I resorted to using version dependent construction of the
+argument list to set.seed() in do.call().#'</p>
     </div>
 
     <div class="section level2">
