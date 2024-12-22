@@ -22,6 +22,7 @@
 #' \code{n} columns indicating the allele for that iteration.
 #'
 #' This is not correct for situations where one haplotype is not known.
+#' @noRd
 getGenoDefinedParentGenotypes <- function(alleles, genotype, id, sire, dam, n) {
   if (is.na(genotype$first[genotype$id == id])) {
     alleles <- assignAlleles(alleles, "sire", sire, id, n)

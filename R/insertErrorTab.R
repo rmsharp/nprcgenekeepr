@@ -10,6 +10,7 @@
 #' @importFrom htmlTable htmlTable
 #' @importFrom stringi stri_c stri_trim_both
 #' @importFrom stringi stri_split_regex
+#' @noRd
 insertErrorTab <- function(errorLst, pedigreeFileName) {
   text <- summary(errorLst)
   if (checkChangedColsLst(errorLst$changedCols)) {

@@ -16,6 +16,7 @@
 #' @param a2 vector with second parent alleles for each individual
 #' \code{a1} and \code{a2} are equal length vectors of alleles for one
 #' individual
+#' @noRd
 chooseAllelesChar <- function(a1, a2) {
   s <- sample(1:(2 * length(a1)), length(a1), replace = FALSE)
   return(c(a1, a2)[s])

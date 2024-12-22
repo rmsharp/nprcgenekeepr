@@ -10,6 +10,7 @@
 #' @param cols character vector with transformed column names
 ## ##  get_and_or_list
 #' @importFrom stringi stri_c
+#' @noRd
 colChange <- function(orgCols, cols) {
   desc <- stri_c(get_and_or_list(orgCols[!orgCols %in% cols]), " to ",
                  get_and_or_list(cols[!orgCols %in% cols]))

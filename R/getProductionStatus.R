@@ -50,6 +50,7 @@
 #' @param currentDate Date to be used for calculating age. Defaults to
 #'        \code{Sys.Date()}.
 #' @importFrom lubridate as.duration ddays interval mdy year
+#' @noRd
 getProductionStatus <- function(ped, minParentAge = 3, maxOffspringAge = NULL,
                                 housing = "shelter_pens",
                                 currentDate = Sys.Date()) {

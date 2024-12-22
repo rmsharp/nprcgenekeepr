@@ -4,17 +4,19 @@ context("getVersion")
 library(testthat)
 library(stringi)
 version1 <- getVersion()
-
-test_that(paste0("getVersion returns a version:", version1), {
-  #version1 <- getVersion()
-  #cat(version1)
+version2 <- getVersion(date = FALSE)
+test_that(paste0("getVersion by default returns a version with date:", version1), {
   expect_true(stri_detect_regex(version1, # version
                                 pattern = "^[0-9]{1,2}([.][0-9]{1,2})"))
   expect_true(stri_detect_fixed(version1, pattern = "("))
-  expect_true(stri_detect_regex(version1, pattern = "[0-9]{4}")) # date
-  version2 <- getVersion(date = FALSE)
+  expect_equal(length(stri_split_fixed(version1, pattern = "(")[[1]]), 2)
+  expect_true(stri_detect_regex(version1, pattern = "[0-9]{4}"))
+})
+test_that(paste0("getVersion returns a version without date:", version2), {
   expect_true(stri_detect_regex(version2, # version
                                 pattern = "^[0-9]{1,2}([.][0-9]{1,2})"))
-  expect_false(stri_detect_regex(version2, pattern = "[0-9]{4}")) # date
+  expect_equal(length(stri_split_fixed(version2, pattern = "(")[[1]]), 1)
   expect_false(stri_detect_fixed(version2, pattern = "("))
 })
+
+

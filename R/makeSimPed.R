@@ -8,7 +8,8 @@
 #' dams and does not prevent a dam from being selected more than once within
 #' the same breeding period. While this is probably not introducing a large
 #' error, it is not ideal.
-
+#' @return simulated pedigree in data.frame format with the id, sire, and dam.
+#'
 #' @param ped pedigree information in data.frame format
 #' @param allSimParents list made up of lists where the internal list
 #'        has the offspring ID \code{id}, a vector of representative sires

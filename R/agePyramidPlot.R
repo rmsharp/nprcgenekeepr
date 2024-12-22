@@ -24,6 +24,7 @@
 #' @importFrom lubridate year month day
 #' @importFrom stringi stri_c
 #' @importFrom plotrix pyramid.plot
+#' @noRd
 agePyramidPlot <- function(males,
                            females,
                            ageLabels,

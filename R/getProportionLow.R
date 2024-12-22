@@ -10,6 +10,7 @@
 #' is to have already been filtered to remove animals that should not be
 #' included in the calculation.
 #' @importFrom stringi stri_detect_fixed
+#' @noRd
 getProportionLow <- function(geneticValues) {
   proportion <-
     length(geneticValues[stri_detect_fixed(geneticValues, "Low")]) /

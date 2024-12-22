@@ -12,6 +12,7 @@
 #' @param pluralTxt character string with text used when the
 #' length of err is greater than 1.
 #' @importFrom stringi stri_c stri_detect_fixed
+#' @noRd
 addErrTxt <- function(txt, err, singularTxt, pluralTxt) {
   if (length(err) == 1) {
     if (stri_detect_fixed(err, "and")) {

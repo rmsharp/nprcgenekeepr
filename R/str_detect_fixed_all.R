@@ -14,6 +14,7 @@
 #' \code{patterns} before comparison
 #' @param ... further arguments for stri_detect_fixed
 #' @importFrom stringi stri_detect_fixed
+#' @noRd
 str_detect_fixed_all <- function(strings, patterns, ignore_na = FALSE, ...) {
   if (ignore_na) {
     strings <- strings[!is.na(strings)]

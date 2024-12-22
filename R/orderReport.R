@@ -22,6 +22,7 @@
 #' @param ped the pedigree information in datatable format with required
 #' colnames \code{id}, \code{sire}, \code{dam}, \code{gen}, \code{population}).
 #' This requires complete pedigree information..
+#' @noRd
 orderReport <- function(rpt, ped) {
 
   finalRpt <- list()

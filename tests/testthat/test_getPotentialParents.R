@@ -42,3 +42,16 @@ test_that("getPotentialParents forms list with correct lists", {
   expect_equal(potentialParents[[1]]$sires, sires$BRI2MW)
   expect_equal(potentialParents[[4]]$sires, sires$FEEN9W)
 })
+test_that("getPotentialParents detects pedigree without fromCenter column", {
+  pedOne$fromCenter <- NULL
+  expect_null(getPotentialParents(ped = pedOne, minParentAge = 2,
+                                  maxGestationalPeriod = 210))
+})
+test_that("getPotentialParents works with records with no potential parent", {
+  pedOne$birth[1] <- as.Date("1950-01-01")
+  ped <- getPotentialParents(ped = pedOne, minParentAge = 2,
+                             maxGestationalPeriod = 210)
+  expect_equal(potentialParents[[1]]$id, ids[1])
+})
+
+

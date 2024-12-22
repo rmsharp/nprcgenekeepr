@@ -6,6 +6,7 @@
 #'
 #' Considers NA values the same as false
 #' @param v logical vector
+#' @noRd
 allTrueNoNA <- function(v) {
   # nolint start: commented_code_linter.
   # v <- all(v)

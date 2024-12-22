@@ -5,6 +5,7 @@
 #'
 #' @param int integer vector
 #' @param modulus integer value to use as the divisor.
+#' @noRd
 makeRoundUp <- function(int, modulus) {
   int + modulus - int %% modulus
 }

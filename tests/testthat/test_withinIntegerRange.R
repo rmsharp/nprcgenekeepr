@@ -17,3 +17,9 @@ test_that("withinIntegerRange forces value to integer within range", {
   expect_equal(withinIntegerRange(, 0, 10, na = "max"), 0)
   expect_equal(withinIntegerRange(NULL, 0, 10, na = "max"), 0)
 })
+test_that(paste0("withinIntegerRange forces value to integer within range; ",
+                 "bad na value is correctly replaced"), {
+  expect_equal(withinIntegerRange(c(0, 2.6, -1, NA), 0, 2,
+                                  na = "bad_entry"),
+               c(0, 2, 0, 0))
+})

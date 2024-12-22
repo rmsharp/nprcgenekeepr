@@ -11,6 +11,7 @@
 #' in "candidates".
 #' @param minAge numeric value representing minimum years of age of
 #' animals to retain.
+#' @noRd
 filterAge <- function(kin, ped, minAge = 1) {
   kin$sort.col <- seq_len(nrow(kin))
 

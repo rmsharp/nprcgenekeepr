@@ -6,6 +6,7 @@
 #' @return \code{TRUE} if x is a zero-length vector else \code{FALSE}.
 #'
 #' @param x vector of any type.
+#' @noRd
 isEmpty <- function(x) {
   x <- x[!is.na(x)]
   return(length(x) == 0)

@@ -54,3 +54,8 @@ test_that(paste0("checkParentAge returns NULL if required dataframe has no ",
   ped <- checkParentAge(qcPed[0, ], reportErrors = TRUE)
   expect_true(is.null(ped))
 })
+test_that("checkParentAge invalid date field class", {
+  qcPed$birth <- as.numeric(qcPed$birth)
+  ped <- checkParentAge(qcPed, reportErrors = TRUE)
+  expect_true(is.null(ped))
+})

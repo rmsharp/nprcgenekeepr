@@ -12,6 +12,7 @@
 #' information. The \code{id} column is required.
 #' @param ids character vector of IDs to be flagged as part of the group under
 #' consideration.
+#' @noRd
 resetGroup <- function(ped, ids) {
   ped$group <- FALSE
   ped$group[ped$id %in% ids] <- TRUE

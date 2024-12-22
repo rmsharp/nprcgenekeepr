@@ -8,6 +8,7 @@
 #' by age. Animals that do not have an age are ignored.
 #' @param input shiny's input
 #' @import shiny
+#' @noRd
 getMinParentAge <- function(input) {
   minParentAge <- as.numeric(renderText({
     input$minParentAge

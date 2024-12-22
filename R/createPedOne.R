@@ -7,6 +7,7 @@
 #' packages \code{data} directory
 #' @importFrom lubridate mdy
 #' @importFrom stringi stri_c
+#' @noRd
 createPedOne <- function(savePed = TRUE) {
   set_seed(10)
   pedOne <- data.frame(

@@ -16,6 +16,7 @@
 #' \code{kValues}, and \code{kCounts}.
 #' @param value one element of vector of unique kinship values at position
 #' \code{index} within \code{cKVC}.
+#' @noRd
 addKinshipValueCount <- function(cKVC,
                                  kValues,
                                  kCounts,

@@ -13,6 +13,7 @@
 #' when \code{TRUE}.
 #' @param kmat numeric matrix of pairwise kinship values. Rows and columns
 #' are named with animal IDs.
+#' @noRd
 groupMembersReturn <- function(savedGroupMembers, savedScore, withKin, kmat) {
   if (withKin) {
     groupKin <- list()

@@ -9,6 +9,7 @@
 #' @param axModulus integer value used in the modulus function to determine
 #' the interval between possible maxAx values.
 #'
+#' @noRd
 getMaxAx <- function(bins, axModulus) {
   makeRoundUp(max(max(bins$male), max(bins$female)), axModulus)
 }

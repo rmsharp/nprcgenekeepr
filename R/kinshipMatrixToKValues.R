@@ -52,6 +52,7 @@
 #' \code{kinship} columm contains the corresponding kinship coefficient.
 #' In contrast to the kinship matrix. Each possible pairing of IDs appears
 #' once.
+
 #' @param kinshipMatrix square kinship matrix. May or may not have named
 #' rows and columns.
 #' @importFrom data.table as.data.table

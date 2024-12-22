@@ -23,6 +23,7 @@
 #' @param id character vector of length 1 having the ID of interest
 #' @param ptree a list of lists forming a pedigree tree as constructed by
 #' \code{createPedTree(ped)} where \code{ped} is a standard pedigree dataframe.
+#' @noRd
 makesLoop <- function(id, ptree) {
 
   sAnc <- getAncestors(ptree[[id]]$sire, ptree)

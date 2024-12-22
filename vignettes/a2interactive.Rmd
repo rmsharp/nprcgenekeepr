@@ -104,9 +104,9 @@ breederPedCsv <- read.table(pedigreeFile, sep = ",", header = TRUE,
 breederPedCsv$fromCenter <- "TRUE"
 breederPedCsv$fromCenter[
   suppressWarnings(sample(which(is.na(breederPedCsv$sire) &
-                 is.na(breederPedCsv$dam)), 
+                 is.na(breederPedCsv$dam)),
          round(0.8 * length(which(
-           is.na(breederPedCsv$sire) & 
+           is.na(breederPedCsv$sire) &
              is.na(breederPedCsv$dam))))))] <- "FALSE"
 ```
 Note the number of rows read. Each row represents an individual within the 

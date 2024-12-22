@@ -7,6 +7,7 @@
 #' packages \code{data} directory
 #' @importFrom lubridate mdy dyears ymd
 #' @importFrom stringi stri_c
+#' @noRd
 createPedSix <- function(savePed = TRUE) {
   set_seed(10)
   someBirthDates <-

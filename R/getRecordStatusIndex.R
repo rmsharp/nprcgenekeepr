@@ -9,6 +9,7 @@
 #' @param ped pedigree dataframe
 #' @param status character vector with value of \code{"added"} or
 #' \code{"original"}.
+#' @noRd
 getRecordStatusIndex <- function(ped, status = "added") {
   if (any("recordStatus" %in% names(ped)))
     seq_along(ped$recordStatus)[ped$recordStatus == status]

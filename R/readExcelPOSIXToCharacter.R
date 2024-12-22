@@ -8,6 +8,7 @@
 #' @param fileName character vector of temporary file path.
 #' @importFrom stringi stri_detect_fixed
 #' @importFrom readxl read_excel
+#' @noRd
 readExcelPOSIXToCharacter <- function(fileName) {
   pedigree <- as.data.frame(read_excel(path = fileName, na = "NA",
                                        col_types = "text"),

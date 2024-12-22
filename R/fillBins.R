@@ -8,6 +8,7 @@
 #' length as \code{upperAges}
 #' @param upperAges integer vector of upper age boundaries; must be the same
 #' length as \code{lowerAges}
+#' @noRd
 fillBins <- function(ageDist, lowerAges, upperAges = NULL) {
   if (any(names(ageDist) == "exit"))
     ageDist <- ageDist[is.na(ageDist$exit), ]

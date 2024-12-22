@@ -16,6 +16,9 @@ has the offspring ID \code{id}, a vector of representative sires
 \item{verbose}{logical vector of length one that indicates whether or not
 to print out when an animal is missing a sire or a dam.}
 }
+\value{
+simulated pedigree in data.frame format with the id, sire, and dam.
+}
 \description{
 For each \code{id} in \code{allSimParents} with one or more unknown parents
 each unknown parent is replaced with a random sire or dam as needed from
