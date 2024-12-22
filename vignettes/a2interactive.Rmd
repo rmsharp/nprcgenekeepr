@@ -97,6 +97,14 @@ to tell __read.table__ what file to read.
 ```{r read-in-example-pedigree}
 breederPedCsv <- read.table(pedigreeFile, sep = ",", header = TRUE,
                             stringsAsFactors = FALSE)
+
+breederPedCsv$fromCenter <- "TRUE"
+breederPedCsv$fromCenter[
+  suppressWarnings(sample(which(is.na(breederPedCsv$sire) &
+                 is.na(breederPedCsv$dam)), 
+         round(0.8 * length(which(
+           is.na(breederPedCsv$sire) & 
+             is.na(breederPedCsv$dam))))))] <- "FALSE"
 ```
 Note the number of rows read. Each row represents an individual within the 
 pedigree.
