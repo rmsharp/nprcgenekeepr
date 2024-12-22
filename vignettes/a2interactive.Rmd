@@ -39,7 +39,10 @@ R who wants to better understand how the Shiny application works or
 to perform some actions not directly supported by the Shiny application.
 
 Please provide any comments, questions, or bug reports through the GitHub
-issue tracker at \url{https://github.com/rmsharp/nprcgenekeepr/issues}.
+issue tracker at 
+[https://github.com/rmsharp/nprcgenekeepr/issues](
+https://github.com/rmsharp/nprcgenekeepr/issues).
+
 
 ## Installation and Help
 

@@ -58,11 +58,12 @@ devtools::install_github("rmsharp/nprcgenekeepr")
 
 All missing packages should be automatically installed.
 
-You can start **GeneKeepR** from the __R__ console with 
 
-```{r start, echo = TRUE, include=TRUE, eval = FALSE}
-library(nprcgenekeepr)
-runGeneKeepR()
+```{r child = "./manual_components/_online_documentation.Rmd", ref = "online_documentation", include = TRUE, eval = TRUE}
+
+```
+
+```{r child = "./manual_components/_running_shiny_application.Rmd", ref = "running_shiny_application", include = TRUE, eval = TRUE}
 
 ```
 
@@ -117,16 +118,16 @@ The following is an example of the pedigree file format.
 Without genotypes:  
 ```{r eexamplePedigreeTutorial, eval = TRUE, fig.width = 5.5, fig.height = 7, echo = FALSE}
 #| fig.alt: >
-#|   Example pedigree tutorial.
+#|   Example pedigree tutorial without genotypes.
 img <- readPNG("./shiny_app_use/examplePedigreeTutorial.png")
 grid.raster(img)
 
 ```
   
 With genotypes:  
-```{r eexamplePedigreeTutorial-with_alleles, eval = TRUE, fig.width = 5.5, fig.height = 7, echo = FALSE}
+```{r eexamplePedigreeTutorial-with-alleles, eval = TRUE, fig.width = 5.5, fig.height = 7, echo = FALSE}
 #| fig.alt: >
-#|   Example pedigree tutorial with alleles.
+#|   Example pedigree tutorial with genotypes.
 img <- readPNG("./shiny_app_use/examplePedigreeTutorial_with_alleles.png")
 grid.raster(img)
 
@@ -179,6 +180,9 @@ animals in your pedigree. For our example pedigree, we are changing it from
 4 years to 2 years of age since these macaques may reproduce as early as two 
 years of age.
 
+This is shown below in three progressive images with the center image 
+demonstrating how the hovertext provides an explanation of how this value is 
+used.
 
 
 ```{r example-pedigree-minParentAgeSequence, eval = TRUE, fig.width = 11, fig.height = 6, echo = FALSE}
@@ -208,7 +212,7 @@ grid.raster(img)
 
 *********
 
-Several error types, shown below, are detected the application.
+Several error types, shown below, are detected by the application.
 
 ```{r make-errorList-definition-tbl, echo = FALSE, eval=TRUE}
 errorTypes <- names(getEmptyErrorLst())
@@ -221,8 +225,8 @@ errorDescriptions <- c(
   "Individuals are listed as male and as a dam.",
   "Individuals who are listed as both a sire and a dam.",
   "IDs listed more than once.",
-  stri_c("Columns that have been changed to conform to the program",
-         "(ex: id -> Ego ID).")
+  stri_c("Columns that have been changed to conform to internal naming ",
+  "conventions and what they were changed to.")
 )
 errorTbl <- data.frame(`Error` = errorTypes, Definition = errorDescriptions,
                        stringsAsFactors = FALSE)
@@ -246,6 +250,7 @@ at a time, but you can choose to display 10, 25, 50, or 100 rows.
 You can choose to display UNKNOWN IDs in the rows displayed. UNKNOWN IDs (UIDs)
 are used to label unknown parents of animals with one known
 parent.
+
 The program calculates additional columns based on the input pedigree.
 
 
@@ -262,9 +267,12 @@ grid.raster(img)
 ### Unknown IDs
 
 I have place red lines under the UNKNOWN IDs in the partial pedigree list below
-for clarity. These IDs have no meaning other than they all begin with the letter
+for clarity. UNKNOWN IDs are used to label unknown parents of animals with one known
+parent. (Note these are found near the end of the pedigree list,)
+These IDs have no meaning other than they all begin with the letter
 _U_ and are following with a left alphanumeric string of five places. 
 
+<!--RMS TODO replace this text when the UNKNOWN IDs are more robustly defined -->
 
 ```{r unknown-displayed, eval = TRUE, fig.width = 5, fig.height = 3.5, echo = FALSE}
 #| fig.alt: >
@@ -327,9 +335,7 @@ You will end up with 54 animals in your pedigree.
 ```{r pedigree-browser-5-focal-animals-small, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 8.0, echo = FALSE}
 img <- png::readPNG("./shiny_app_use/pb_5_focal_animals_small.png")
 grid::grid.raster(img)
-
 ```
-
 
 *********
 
@@ -349,7 +355,6 @@ the population membership flag will be set to "true" for the focal animals, and
 ```{r selection-large-focal-group, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 4, fig.height = 4, echo = FALSE}
 img <- readPNG("./shiny_app_use/pb_selection_large_focal_group.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -452,6 +457,15 @@ Select the __Begin Analysis__ button to start the gene dropping
 process, which you can monitor with the progress meter in the 
 lower right corner of the display. 
 
+We are not aware of a systematic study of pedigree structure with this 
+algorithm and have not performed extensive studies with pedigrees of various 
+structures, but 1000 iterations has seemed to provide reproducible results for
+out pedigrees. It must be emphasized that pedigree structure is expected to 
+affect precision when iterations are held constant.
+
+<!--  Come up wit a definition of reproducible and see if we can run and -->
+<!-- automated test to find the needed number of iterations.-->
+
 `r fig_alt_txt <- "Calculation on genetic value analysis tab"`
 
 ```{r gva-calculating, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 7, fig.height = 5.5, echo = FALSE}
@@ -470,7 +484,8 @@ animals using a MacBook Pro (Mid 2014), 2.8 GHz Intel Core i7 with 16 GB of
 1600 MHz DDR3 memory.
 
 Again you can select how many rows to display at once by changing the values in the 
-__Show entries__ selection tool, or you may view results for a specific set of animals by entering their IDs in the box above.
+__Show entries__ selection tool, or you may view results for a specific set of animals
+ by entering their IDs in the box above.
 The default is to display the analysis for the list of focal animals.
 
 `r fig_alt_txt <- "Genetic value analysis display of high value animals"`
@@ -487,7 +502,9 @@ Searching down the table of results in the __Value Designation__ column you can
 see starting at row 268 the values change from _High Value_ to _Low Value_.
 Though not shown here, the value of _Undetermined_ in the __Value Designation__ 
 column means the animal did not have parentage information. 
-Infants or very young animals without assigned parents are given an "Undetermined" designation. Founders also do not have parentage information but are high value by definition.
+Infants or very young animals without assigned parents are given an
+"Undetermined" designation. Founders also do not have parentage information 
+but are high value by definition.
 
 `r fig_alt_txt <- "Genetic value analysis display of low value animals"`
 
@@ -578,6 +595,18 @@ img <- readPNG("./shiny_app_use/ss_trimmed_all_plots.png")
 grid.raster(img)
 
 ```
+*********
+
+Each of the plots can be exported as a PNG file to a directory you choose.
+
+`r fig_alt_txt <- "Export mean kinship coefficient histogram plot"`
+
+```{r ss-export-mean-kinship-coef-hist-plot, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 5, echo = FALSE}
+img <- png::readPNG(
+  "./shiny_app_use/ss_export_mean_kinship_coefficient_histogram.png")
+grid::grid.raster(img)
+
+```                                                                                      
 
 *********
 
