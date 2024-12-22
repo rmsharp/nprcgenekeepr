@@ -179,7 +179,7 @@ qcStudbook <- function(sb, minParentAge = 2, reportChanges = FALSE,
   sb <- unknown2NA(sb)
   sb <- addUIds(sb)
   sb <- addParents(sb) # add parent record for parents that don't have
-                       #their own line entry
+                       # their own line entry
   # Add and standardize needed fields
   sb$sex <- convertSexCodes(sb$sex)
   if (reportErrors) {

@@ -28,14 +28,14 @@
 #' @param fullPed a trimmed pedigree
 #' @param partialPed a trimmed pedigree dataframe with uninformative founders
 #' removed.
+#' @importFrom data.table rbindlist
 #' @export
 addIdRecords <- function(ids, fullPed, partialPed) {
   if (length(ids[!all(is.na(ids))]) > 0) {
     addToPed <- fullPed[is.element(fullPed$id, ids), ]
     addToPed$sire <- NA
     addToPed$dam <- NA
-    partialPed <- rbind(partialPed, addToPed,
-                        stringsAsFactors = FALSE)
+    partialPed <- rbindlist(list(partialPed, addToPed))
   }
   partialPed[!duplicated(partialPed$id), ]
 }

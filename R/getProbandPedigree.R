@@ -34,15 +34,6 @@ getProbandPedigree <- function(probands, ped) {
     added <- setdiff(parents, probands)
     if (length(added) == 0)
       break
-    # if (identical(added, character(0))) {
-    #   break
-    # }
-    # if (identical(added, numeric(0))) {
-    #   break
-    # }
-    # if (identical(added, integer(0))) {
-    #   break
-    # }
     probands <- union(probands, parents)
   }
 

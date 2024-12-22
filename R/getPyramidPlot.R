@@ -41,6 +41,8 @@ getPyramidPlot <- function(ped = NULL) {
   currentDate <- now()
   axBy <- maxAx / axModulas
   axGap <- axBy * 0.6
+  ## The following values have worked well for chimpanzees:
+  ## gap=40, laxlab = seq(0, 100, by = 10), and raxlab = seq(0, 100, by = 10)
   gap <- axGap
   laxlab <- seq(0, maxAx, by = axBy)
   raxlab <- seq(0, maxAx, by = axBy)

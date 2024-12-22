@@ -6,10 +6,9 @@
 #' R version agnostic replacement to get unit test code to work on multiple
 #' versions of R in a CICD test build.
 #'
-#' It seems RNGkind(sample.kind="Rounding”) does not work prior to version
-#' 3.6 so I resorted to using version dependent construction of the argument
-#' list to set.seed() in do.call().
-#'
+#' It seems \code{RNGkind(sample.kind="Rounding")} does not work prior to
+#' version 3.6 so I resorted to using version dependent construction of the
+#' argument list to set.seed() in do.call().#'
 #' @return NULL, invisibly.
 #'
 #' @examples
@@ -28,5 +27,5 @@ set_seed <- function(seed = 1) {
   } else {
     args <- list(seed)
   }
-  suppressWarnings(do.call(set.seed, args))
+  suppressMessages(suppressWarnings(do.call(set.seed, args)))
 }
