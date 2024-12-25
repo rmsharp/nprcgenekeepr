@@ -13,6 +13,23 @@ may not have named rows and columns.}
 \description{
 A \code{kValue} matrix has one row for each pair of individuals in the kinship
 matrix and one column for each kinship matrix.
+A \code{kValue} matrix has one row for each pair of individuals in the kinship
+matrix and one column for each kinship matrix. Thus, in a kinshp matrix with
+20 individuals the kinship matrix will have 20 rows by 20 columns but only
+the upper or lower triangle has unique information as the diaganol values are
+by definition all 1.0 and the upper triangle has the same values as the
+lower triangle. The \code{kValue} table will have \eqn{20 + (20 * 19) / 2} elements
+with the 20 values from the kinship coeficient matrix diagonal and
+\eqn{\frac{2*19}{2}} elements from one of the two triangles.
+The \code{kValue} matrix for 1
+kinship matrix for 20 individuals will have 190 rows and 3 columns. The
+first two columns are dedicated to the ID pairs and the third column contains
+the pair's kinship coefficient.
+}
+\details{
+Thus, the number of rows in the kValues matrix will
+be \eqn{n + \frac{n(n-1)}{2}} and the number of columns will be 2 plus one
+additional column for each kinship matrix (\eqn{2 + n}).
 }
 \examples{
 \donttest{
@@ -54,5 +71,4 @@ simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
 kValue <- kinshipMatricesToKValues(simKinships)
 extractKValue(kValue, id1 = "A", id2 = "F", simulation = 1:n)
 }
-
 }

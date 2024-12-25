@@ -11,16 +11,22 @@ createSimKinships(ped, allSimParents, pop = NULL, n = 10L, verbose = FALSE)
 \item{ped}{The pedigree information in data.frame format}
 
 \item{allSimParents}{list made up of lists where the internal list
-has the offspring ID \code{id}, a vector of representative sires
-(\code{sires}), and a vector of representative dams(\code{dams}).}
+has the offspring ID, \code{id}, a vector of representative sires
+(\code{sires}), and a vector of representative dams (\code{dams}).}
 
 \item{pop}{Character vector with animal IDs to consider as the population of
-interest. The default is NULL.}
+interest. This allows you to provide a pedigree in \code{ped} that
+has more animals than you want to use in the simulation by defining
+\code{pop} with the subset of interest. The default is NULL.}
 
 \item{n}{integer value of the number of simulated pedigrees to generate.}
 
 \item{verbose}{logical vector of length one that indicates whether or not
 to print out when an animal is missing a sire or a dam.}
+}
+\value{
+A list of \code{n} lists with each internal list containing a
+kinship matrix.
 }
 \description{
 \code{createSimKinships} uses \code{makeSimPed} with the \code{ped} object

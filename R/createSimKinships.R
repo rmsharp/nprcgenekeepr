@@ -5,6 +5,23 @@
 #' and the \code{allSimParents} object to create a set of kinship matrices to
 #' be used in forming the \emph{Monte Carlo} estimates for the kinship values.
 #'
+#' @param ped The pedigree information in data.frame format
+#' @param allSimParents list made up of lists where the internal list
+#'        has the offspring ID, \code{id}, a vector of representative sires
+#'        (\code{sires}), and a vector of representative dams (\code{dams}).
+#' @param pop Character vector with animal IDs to consider as the population of
+#'        interest. This allows you to provide a pedigree in \code{ped} that
+#'        has more animals than you want to use in the simulation by defining
+#'        \code{pop} with the subset of interest. The default is NULL.
+#' @param n integer value of the number of simulated pedigrees to generate.
+#' @param verbose logical vector of length one that indicates whether or not
+#'        to print out when an animal is missing a sire or a dam.
+#' @importFrom data.table setDT
+#'
+#' @returns A list of \code{n} lists with each internal list containing a
+#'          kinship matrix.
+#' @export
+#'
 #' @examples
 #' \donttest{
 #' library(nprcgenekeepr)
@@ -23,17 +40,6 @@
 #' simKinships <- createSimKinships(ped, allSimParents, pop, n = 10)
 #' }
 #'
-#' @param ped The pedigree information in data.frame format
-#' @param allSimParents list made up of lists where the internal list
-#'        has the offspring ID \code{id}, a vector of representative sires
-#'        (\code{sires}), and a vector of representative dams(\code{dams}).
-#' @param pop Character vector with animal IDs to consider as the population of
-#' interest. The default is NULL.
-#' @param n integer value of the number of simulated pedigrees to generate.
-#' @param verbose logical vector of length one that indicates whether or not
-#'        to print out when an animal is missing a sire or a dam.
-#' @importFrom data.table setDT
-#' @export
 createSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L,
                               verbose = FALSE) {
   ## If user has limited the population of interest by defining 'pop',

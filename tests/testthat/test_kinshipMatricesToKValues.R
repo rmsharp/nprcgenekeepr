@@ -41,8 +41,19 @@ extractKValue <- function(kValue, id1, id2, simulation) {
 # nolint end: object_usage_linter.
 set_seed(seed = 1)
 n <- 10
-simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
+pop <- ped$id
+nPop <- length(pop)
+expected_nRows <- nPop + nPop * (nPop - 1) / 2
+expected_nCols <- 2 + n
+simKinships <- createSimKinships(ped, allSimParents, pop = pop, n = n)
 kValue <- kinshipMatricesToKValues(simKinships)
+test_that("kinshipMatricesToKValues gets correct number of rows", {
+  expect_equal(nrow(kValue), expected_nRows)
+})
+test_that("kinshipMatricesToKValues gets correct number of columns", {
+  expect_equal(length(kValue), expected_nCols)
+})
+
 test_that("kinshipMatricesToKValues gets correct kinship values", {
   expect_equal(extractKinship(simKinships, "A", "B", 2),
     extractKValue(kValue, id1 = "A", id2 = "B", simulation = 2))
