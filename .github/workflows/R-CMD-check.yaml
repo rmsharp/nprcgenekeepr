@@ -11,8 +11,8 @@ permissions: read-all
 
 jobs:
   R-CMD-check:
+    if: ${{ vars.all_pipelines }} == 'true'
     runs-on: ${{ matrix.config.os }}
-
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
     strategy:
