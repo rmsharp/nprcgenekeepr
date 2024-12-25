@@ -14,7 +14,7 @@ vignette: >
 
 ## Introduction
 
-This vignette provides a quick example of how to estimate kinship cooefficients
+This vignette provides a quick example of how to estimate kinship coefficients
 using simulation. One simulation uses 100 iterations and the other uses the 
 same setup with 1000 simulations to illustrate the type of kinship coefficient
 estimate variance you can expect with a simple pedigree exhibiting partial 
@@ -54,15 +54,15 @@ to identify potential parents.
 with regard to potential dams. While it is possible for two animals to be 
 switched near the time of birth so that dam and sire are not know with certainty
 and still have a limited number of potential parents. This is not a common
-occurance in colonies of which we are aware.
+occurrence in colonies of which we are aware.
 
 The example is based on the following simple pedigree setup. In the pedigree 
 given below, all of the original animals have identifiers that are single
 letters of the alphabet.:
 
-Only those IDs that have unknown parents are included in the simParent_n lists.
-For those IDs with one known parent, the known parent is included in the 
-simParent_n. See \code{simParent_1} for ID \code{A}. 
+Only those IDs that have unknown parents are included in the \code{simParent_n}
+lists. For those IDs with one known parent, the known parent is included in the 
+\code{simParent_n}. See \code{simParent_1} for ID \code{A}. 
 Note also that potential parents
 can either come from the pedigree being augmented by simulation or from outside
 the pedigree. See \code{simParent_3}, \code{simParent_4}, \code{simParent_5},
@@ -70,7 +70,7 @@ and \code{simParent_6} for examples of this.
 
 Currently, if you want to provide differential weights for the different 
 potential parents, you will need to do this directly by modifying the
-number of times each parent is included in the simParent_n list.
+number of times each parent is included in the \code{simParent_n} list.
 
 Animals \code{E}, \code{J}, and \code{N}
 <!-- TODO explain the use of the simParent_n lists -->

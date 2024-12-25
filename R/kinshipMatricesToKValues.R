@@ -3,27 +3,37 @@
 #' A `kValue` matrix has one row for each pair of individuals in the kinship
 #' matrix and one column for each kinship matrix.
 #' A `kValue` matrix has one row for each pair of individuals in the kinship
-#' matrix and one column for each kinship matrix. Thus, in a kinshp matrix with
+#' matrix and one column for each kinship matrix. Thus, in a kinship matrix with
 #' 20 individuals the kinship matrix will have 20 rows by 20 columns but only
-#' the upper or lower triangle has unique information as the diaganol values are
+#' the upper or lower triangle has unique information as the diagonal values are
 #' by definition all 1.0 and the upper triangle has the same values as the
-#' lower triangle. The `kValue` table will have \eqn{20 + (20 * 19) / 2} elements
+#' lower triangle. The `kValue` table will have \eqn{20 + (20 * 19) / 2}
 #' with the 20 values from the kinship coeficient matrix diagonal and
-#' \eqn{\frac{2*19}{2}} elements from one of the two triangles.
+#' elements \eqn{2*19}{2} elements from one of the two triangles.
+
 #' The `kValue` matrix for 1
 #' kinship matrix for 20 individuals will have 190 rows and 3 columns. The
 #' first two columns are dedicated to the ID pairs and the third column contains
 #' the pair's kinship coefficient.
 #'
 #' Thus, the number of rows in the kValues matrix will
-#'  be \eqn{n + \frac{n(n-1)}{2}} and the number of columns will be 2 plus one
+#'  be \eqn{n + \eqn{n(n-1)}{2}} and the number of columns will be 2 plus one
 #'  additional column for each kinship matrix (\eqn{2 + n}).
+#
+#' @return data.frame object with columns \code{id_1}, \code{id_2}, and one
+#' \code{kinship} column for each kinship matrix in \code{kinshipMatricies}
+#' where the first two columns contain the IDs of the
+#' individuals in the kinship matrix provided to the function and the
+#' \code{kinship} columms contain the corresponding kinship coefficients.
+#' In contrast to the kinship matrix. Each possible pairing of IDs appears
+#' once.
 #'
 #' @param kinshipMatrices list of square matrices of kinship values. May or
 #' may not have named rows and columns.
 #' @export
 #' @examples
 #' \donttest{
+#' library(nprcgenekeepr)
 #' ped <- nprcgenekeepr::smallPed
 #' simParent_1 <- list(id = "A",
 #'                     sires = c("s1_1", "s1_2", "s1_3"),

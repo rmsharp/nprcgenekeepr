@@ -2,21 +2,34 @@
 #' matrix
 #'
 #' A `kValue` matrix has one row for each pair of individuals in the kinship
-#' matrix and one column for each kinship matrix. Thus, in a kinshp matrix with
+#' matrix and one column for each kinship matrix. Thus, in a kinship matrix with
 #' 20 individuals the kinship matrix will have 20 rows by 20 columns but only
-#' the upper or lower triangle has unique information as the diaganol values are
+#' the upper or lower triangle has unique information as the diagonal values are
 #' by definition all 1.0 and the upper triangle has the same values as the
-#' lower triangle. The `kValue` table will have $20 + (20 * 19) / 2$ elements
+#' lower triangle. The `kValue` table will have \eqn{20 + (20 * 19) / 2} elements
 #' with the 20 values from the kinship coeficient matrix diagonal and
-#' $\frac{2*19}{2}$ elements from one of the two triangles.
+#' \eqn{2*19}{2} elements from one of the two triangles.
+#'
 #' The `kValue` matrix for 1
 #' kinship matrix for 20 individuals will have 190 rows and 3 columns. The
 #' first two columns are dedicated to the ID pairs and the third column contains
 #' the pair's kinship coefficient.
 #'
 #' Thus, the number of rows in the kValues matrix from one kinship matrix will
-#'  be $n + \frac{n(n-1)}{2}$ and the number of columns will be 3.
+#'  be \eqn{n + \eqn{n(n-1)}{2}} and the number of columns will be 3.
 #'
+#'
+#' @return data.frame object with columns \code{id_1}, \code{id_2}, and
+#' \code{kinship} where the first two columns contain the IDs of the
+#' individuals in the kinship matrix provided to the function and the
+#' \code{kinship} columm contains the corresponding kinship coefficient.
+#' In contrast to the kinship matrix. Each possible pairing of IDs appears
+#' once.
+
+#' @param kinshipMatrix square kinship matrix. May or may not have named
+#' rows and columns.
+#' @importFrom data.table as.data.table
+#' @export
 #' @examples
 #' \donttest{
 #' library(nprcgenekeepr)
@@ -58,18 +71,6 @@
 #'                       simPed$dam, simPed$gen)
 #' kValues <- kinshipMatrixToKValues(simKinship)
 #' }
-#'
-#' @return data.frame object with columns \code{id_1}, \code{id_2}, and
-#' \code{kinship} where the first two columns contain the IDs of the
-#' individuals in the kinship matrix provided to the function and the
-#' \code{kinship} columm contains the corresponding kinship coefficient.
-#' In contrast to the kinship matrix. Each possible pairing of IDs appears
-#' once.
-
-#' @param kinshipMatrix square kinship matrix. May or may not have named
-#' rows and columns.
-#' @importFrom data.table as.data.table
-#' @export
 kinshipMatrixToKValues <- function(kinshipMatrix) {
   # gdata::lowerTriangle(kinshipMatrix, byrow = TRUE) <- NA was replaced
   # with the next three lines
