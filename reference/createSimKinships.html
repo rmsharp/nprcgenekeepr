@@ -64,13 +64,15 @@ be used in forming the <em>Monte Carlo</em> estimates for the kinship values.</p
 
 <dt id="arg-allsimparents">allSimParents<a class="anchor" aria-label="anchor" href="#arg-allsimparents"></a></dt>
 <dd><p>list made up of lists where the internal list
-has the offspring ID <code>id</code>, a vector of representative sires
-(<code>sires</code>), and a vector of representative dams(<code>dams</code>).</p></dd>
+has the offspring ID, <code>id</code>, a vector of representative sires
+(<code>sires</code>), and a vector of representative dams (<code>dams</code>).</p></dd>
 
 
 <dt id="arg-pop">pop<a class="anchor" aria-label="anchor" href="#arg-pop"></a></dt>
 <dd><p>Character vector with animal IDs to consider as the population of
-interest. The default is NULL.</p></dd>
+interest. This allows you to provide a pedigree in <code>ped</code> that
+has more animals than you want to use in the simulation by defining
+<code>pop</code> with the subset of interest. The default is NULL.</p></dd>
 
 
 <dt id="arg-n">n<a class="anchor" aria-label="anchor" href="#arg-n"></a></dt>
@@ -82,6 +84,11 @@ interest. The default is NULL.</p></dd>
 to print out when an animal is missing a sire or a dam.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>A list of <code>n</code> lists with each internal list containing a
+kinship matrix.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
