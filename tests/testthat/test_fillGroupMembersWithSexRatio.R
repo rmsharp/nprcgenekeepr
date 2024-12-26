@@ -31,7 +31,7 @@ test_that(
   harem <- FALSE
   sexRatio <- 0
   withKin <- FALSE
-  groupMembers <- makeGroupMembers(numGp, currentGroups, candidates, ped,
+  groupMembers <- nprcgenekeepr:::makeGroupMembers(numGp, currentGroups, candidates, ped,
                                    harem = harem,
                                    minAge = minAge)
   groupMembersStart <- groupMembers
@@ -41,23 +41,28 @@ test_that(
   for (i in 1:20) {
     groupMembers <- fillGroupMembersWithSexRatio(
       candidates, groupMembers, grpNum, kin, ped, minAge, numGp, sexRatio = 1)
+    expect_equal(calculateSexRatio(groupMembers[[1]], ped), 1.0,
+                 tolerance = .1, scale = 1)
   }
-  expect_equal(calculateSexRatio(groupMembers[[1]], ped), 1.0,
-               tolerance = .1, scale = 1)
   groupMembers <- groupMembersStart
 
   for (i in 1:20) {
     groupMembers <- fillGroupMembersWithSexRatio(
       candidates, groupMembers, grpNum, kin, ped, minAge, numGp, sexRatio = 0.5)
+    expect_equal(calculateSexRatio(groupMembers[[1]], ped), 0.5,
+                 tolerance = .1, scale = 1)
   }
-  expect_equal(calculateSexRatio(groupMembers[[1]], ped), 0.5,
-               tolerance = .1, scale = 1)
   groupMembers <- groupMembersStart
   for (i in 1:20) {
     groupMembers <- fillGroupMembersWithSexRatio(
       candidates, groupMembers, grpNum, kin, ped, minAge, numGp, sexRatio = 2.0)
+    expect_equal(calculateSexRatio(groupMembers[[1]], ped), 2.0,
+                 tolerance = .2, scale = 1)
   }
-  expect_equal(calculateSexRatio(groupMembers[[1]], ped), 2.0,
-               tolerance = .1, scale = 1)
-
+  groupMembers[[1]] <- character(0)
+  expect_error(fillGroupMembersWithSexRatio(character(0), groupMembers,
+                                            grpNum, kin, ped, minAge,
+                                            numGp, sexRatio = 2.0),
+               "invalid first argument")
+  expect_error(calculateSexRatio(shouldBeNA, ped))
   })

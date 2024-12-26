@@ -5,7 +5,7 @@
 #'
 #' @description The Males are counted when the \code{ped$sex} value is
 #' \code{"M"}.
-#' When females are counted when the \code{ped$sex} value is not
+#' Females are counted when the \code{ped$sex} value is not
 #' \code{"M"}. This means animals with ambiguous sex are counted with the
 #' females.
 #'

@@ -15,6 +15,7 @@
 #'
 #' @examples
 #' \donttest{
+#' library(nprcgenekeepr)
 #' examplePedigree <- nprcgenekeepr::examplePedigree
 #' ped <- qcStudbook(examplePedigree, minParentAge = 2, reportChanges = FALSE,
 #'                   reportErrors = FALSE)
