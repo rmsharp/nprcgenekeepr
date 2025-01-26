@@ -8,8 +8,11 @@
 #' @return A logical vector corresponding to the IDs in the vector of
 #' animal IDs provided to the function in \code{pop}.
 #'
+#' @param ped the pedigree information in datatable format
+#' @param pop character vector with animal IDs to consider as the population of
+#' interest. The default is NULL.
+#' @export
 #' @examples
-#' \donttest{
 #' ## Example from Analysis of Founder Representation in Pedigrees: Founder
 #' ## Equivalents and Founder Genome Equivalents.
 #' ## Zoo Biology 8:111-123, (1989) by Robert C. Lacy
@@ -22,11 +25,6 @@
 #' )
 #' ped["gen"] <- findGeneration(ped$id, ped$sire, ped$dam)
 #' ped$population <- getGVPopulation(ped, NULL)
-#' }
-#' @param ped the pedigree information in datatable format
-#' @param pop character vector with animal IDs to consider as the population of
-#' interest. The default is NULL.
-#' @export
 getGVPopulation <- function(ped, pop) {
   if (!is.null(pop)) {
     ped$population <- FALSE

@@ -8,14 +8,6 @@
 #' @return A data.frame with pedigree structure having all of the direct
 #' ancestors for the Ids provided.
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' ## Have to a vector of focal animals
-#' focalAnimals <- c("1X2701", "1X0101")
-#' suppressWarnings(getLkDirectRelatives(ids = focalAnimals))
-#' }
-#'
 #' @param ids character vector with Ids.
 #' @param ped pedigree dataframe object that is used as the source of
 #' pedigree information.
@@ -28,6 +20,11 @@
 #' @importFrom data.table rbindlist
 #' @importFrom stringi stri_c
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ## Have to a vector of focal animals
+#' focalAnimals <- c("1X2701", "1X0101")
+#' suppressWarnings(getLkDirectRelatives(ids = focalAnimals))
 getPedDirectRelatives <- function(ids, ped, unrelatedParents = FALSE) {
   if (missing(ids))
     stop("Need to specify IDs in 'id' parameter.")

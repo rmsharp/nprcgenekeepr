@@ -30,7 +30,6 @@ relationship categories included for each pair.
 Part of Relations
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::smallPed
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
@@ -43,6 +42,4 @@ bkmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen,
                  sparse = FALSE)
 relBIds <- convertRelationships(bkmat, ped, c("4LFS70", "DD1U77"))
 relBIds
-}
-
 }

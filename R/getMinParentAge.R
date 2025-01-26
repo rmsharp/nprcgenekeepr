@@ -6,6 +6,7 @@
 #'
 #' Set to 0 if you do not want to enforce parents being sexually mature
 #' by age. Animals that do not have an age are ignored.
+#' @return A numeric value indicating the minimum age of a parent.
 #' @param input shiny's input
 #' @import shiny
 #' @noRd

@@ -9,12 +9,10 @@
 #'
 #' @return A vector of the names of the files written.
 #'
+#' @export
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' files <- createExampleFiles()
-#' }
-#' @export
 createExampleFiles <- function() {
   examplePedigrees <-
     list(examplePedigree = nprcgenekeepr::examplePedigree,

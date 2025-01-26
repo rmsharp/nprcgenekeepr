@@ -29,9 +29,7 @@ generation) of the animal indicated by the \code{id} column.}
 }
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 data("rhesusPedigree")
-}
 }
 \keyword{datasets}

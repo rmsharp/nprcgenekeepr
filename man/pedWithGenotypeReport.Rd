@@ -29,8 +29,6 @@ pedWithGenotypeReport
 pedWithGenotypeReport is a list containing the output of \code{reportGV}.
 }
 \examples{
-\donttest{
 pedWithGenotypeReport <- nprcgenekeepr::pedWithGenotypeReport
-}
 }
 \keyword{datasets}

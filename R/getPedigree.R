@@ -5,19 +5,16 @@
 #'
 #' @return A pedigree file compatible with others in this package.
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' ped <- getPedigree(fileName = system.file("testdata", "qcPed.csv",
-#'                    package="nprcgenekeepr"))
-#' }
-#'
 #' @param fileName character vector of temporary file path.
 #' @param sep column separator in CSV file
 #' @import futile.logger
 #' @importFrom readxl excel_format
 #' @importFrom utils read.table
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ped <- getPedigree(fileName = system.file("testdata", "qcPed.csv",
+#'                    package="nprcgenekeepr"))
 getPedigree <- function(fileName, sep = ",") {
   flog.debug(paste0("in getPedigree\n"),
              name = "nprcgenekeepr")

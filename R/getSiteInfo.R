@@ -19,14 +19,14 @@
 #'   \item\{queryName\} \{is "demographics"\}
 #' }
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' getSiteInfo()
-#' }
 #' @param expectConfigFile logical parameter when set to \code{FALSE}, no
 #' configuration is looked for. Default value is \code{TRUE}.
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ## default sends warning if configuration file is missing
+#' suppressWarnings(getSiteInfo())
+#' getSiteInfo(expectConfigFile = FALSE)
 getSiteInfo <- function(expectConfigFile = TRUE) {
   sysInfo <- Sys.info()
   config <- getConfigFileName(sysInfo)

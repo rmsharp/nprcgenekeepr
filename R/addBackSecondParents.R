@@ -11,7 +11,6 @@
 #' @return A dataframe with pedigree with single parents added.
 #'
 #' @examples
-#' \donttest{
 #' examplePedigree <- nprcgenekeepr::examplePedigree
 #' breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
 #'                          reportChanges = FALSE,
@@ -25,7 +24,6 @@
 #' nrow(p)
 #' p <- addBackSecondParents(p, ped)
 #' nrow(p)
-#' }
 #'
 #' @param uPed a trimmed pedigree dataframe with uninformative founders removed.
 #' @param ped a trimmed pedigree

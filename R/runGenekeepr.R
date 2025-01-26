@@ -7,14 +7,13 @@
 #' @return Returns the error condition of the Shiny application when it
 #' terminates.
 #'
+#' @importFrom shiny runApp
+#' @export
 #' @examples
-#' \dontrun{
+#' \donttest{ # Shiny apps don't run in R CMD check
 #' library(nprcgenekeepr)
 #' runGeneKeepR()
 #' }
-#'
-#' @importFrom shiny runApp
-#' @export
 runGeneKeepR <- function() {
   appDir <- system.file("application", package = "nprcgenekeepr")
   if (appDir == "") {

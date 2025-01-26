@@ -11,17 +11,14 @@
 #' argument list to set.seed() in do.call().#'
 #' @return NULL, invisibly.
 #'
-#' @examples
-#' \donttest{
-#' set_seed(1)
-#' rnorm(5)
-#' }
-#'
 #' @param seed argument to \code{set.seed}
 #' @export
+#' @examples
+#' set_seed(1)
+#' rnorm(5)
 set_seed <- function(seed = 1) {
-  version <- as.integer(R.Version()$major) +
-    (as.numeric(R.Version()$minor) / 10.0)
+  version <- as.integer(my_R_Version()$major) +
+    (as.numeric(my_R_Version()$minor) / 10.0)
   if (version >= 3.6) {
     args <- list(seed, sample.kind = "Rounding")
   } else {
@@ -29,3 +26,9 @@ set_seed <- function(seed = 1) {
   }
   suppressMessages(suppressWarnings(do.call(set.seed, args)))
 }
+#' My wrapper for R.version
+#'
+#' @returns R.version
+#' @examples
+#' nprcgenekeepr:::my_R_Version()
+my_R_Version <- R.Version

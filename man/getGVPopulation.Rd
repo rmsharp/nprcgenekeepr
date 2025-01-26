@@ -21,7 +21,6 @@ If user has limited the population of interest by defining \code{pop},
 that information is incorporated via the \code{ped$population} column.
 }
 \examples{
-\donttest{
 ## Example from Analysis of Founder Representation in Pedigrees: Founder
 ## Equivalents and Founder Genome Equivalents.
 ## Zoo Biology 8:111-123, (1989) by Robert C. Lacy
@@ -34,5 +33,4 @@ stringsAsFactors = FALSE
 )
 ped["gen"] <- findGeneration(ped$id, ped$sire, ped$dam)
 ped$population <- getGVPopulation(ped, NULL)
-}
 }

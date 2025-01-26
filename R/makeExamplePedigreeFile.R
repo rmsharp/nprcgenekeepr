@@ -6,11 +6,6 @@
 #'
 #' @return Full path name of file saved.
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' pedigreeFile <- makeExamplePedigreeFile()
-#' }
 #' @param file character vector of length one providing the file name
 #' @param fileType character vector of length one with possible values of
 #' \code{"txt"}, \code{"csv"}, or \code{"xlsx"}. Default value is \code{"csv"}.
@@ -18,6 +13,9 @@
 #' @importFrom utils write.table write.csv
 ## ## rmsutilityr create_wkbk
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' pedigreeFile <- makeExamplePedigreeFile()
 makeExamplePedigreeFile <- function(file = file.path(tempdir(),
                                                      "examplePedigree.csv"),
                                     fileType = "csv") {

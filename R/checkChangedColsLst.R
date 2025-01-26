@@ -6,8 +6,10 @@
 #' @return Returns \code{NULL} if all fields are empty
 #' else the entire list is returned.
 #'
+#' @param changedCols list with fields for each type of column change
+#' \code{qcStudbook}.
+#' @export
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' library(lubridate)
 #' pedOne <- data.frame(ego_id = c("s1", "d1", "s2", "d2", "o1", "o2", "o3",
@@ -24,10 +26,6 @@
 #'
 #' errorLst <- qcStudbook(pedOne, reportErrors = TRUE, reportChanges = TRUE)
 #' checkChangedColsLst(errorLst$changedCols)
-#' }
-#' @param changedCols list with fields for each type of column change
-#' \code{qcStudbook}.
-#' @export
 checkChangedColsLst <- function(changedCols) {
   if (length(changedCols$caseChange) > 0 ||
       length(changedCols$spaceRemoved) > 0 ||

@@ -19,16 +19,13 @@
 #' is set to \code{TRUE} if the \code{id} has a loop in the pedigree.
 #' Loops occur when an animal's sire and dam have a common ancestor.
 #'
-###' @examples
-###' \donttest{
-###' data("examplePedigree")
-###' exampleTree <- createPedTree(examplePedigree)
-###' exampleLoops <- findLoops(exampleTree)
-###' }
-#'
 #' @param ptree a list of lists forming a pedigree tree as constructed by
 #' \code{createPedTree(ped)} where \code{ped} is a standard pedigree dataframe.
 #' @export
+#' @examples
+#' data("examplePedigree")
+#' exampleTree <- createPedTree(examplePedigree)
+#' exampleLoops <- findLoops(exampleTree)
 findLoops <- function(ptree) {
 
   ids <- names(ptree)

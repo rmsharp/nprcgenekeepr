@@ -22,7 +22,6 @@ updated by being set to \code{TRUE} for the animal IDs in \code{ped$id} and
 Part of the pedigree filtering toolset.
 }
 \examples{
-\donttest{
 examplePedigree <- nprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
                          reportChanges = FALSE,
@@ -32,6 +31,4 @@ focalAnimals <- breederPed$id[!(is.na(breederPed$sire) &
                                 is.na(breederPed$exit)]
 breederPed <- setPopulation(ped = breederPed, ids = focalAnimals)
 nrow(breederPed[breederPed$population, ])
-}
-
 }

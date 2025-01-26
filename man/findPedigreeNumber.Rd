@@ -23,7 +23,6 @@ starting at 0 for individuals lacking IDs for both parents.
 One of Pedigree Curation functions
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 library(stringi)
 ped <- nprcgenekeepr::lacy1989Ped
@@ -40,7 +39,5 @@ ped3$dam <- stri_c(ped$dam, "3")
 ped <- rbind(ped, ped2)
 ped <- rbind(ped, ped3)
 ped$pedigree <- findPedigreeNumber(ped$id, ped$sire, ped$dam)
-ped
-}
-
+ped$pedigree
 }

@@ -29,7 +29,6 @@ Makes a data.frame object containing simulated kinship summary statistics
 using the counts of kinship values list from \code{countKinshipValues}.
 }
 \examples{
-\donttest{
 ped <- nprcgenekeepr::smallPed
 simParent_1 <- list(id = "A",
                     sires = c("s1_1", "s1_2", "s1_3"),
@@ -69,6 +68,4 @@ kValues <- kinshipMatricesToKValues(simKinships)
 extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1:n)
 counts <- countKinshipValues(kValues)
 stats <- summarizeKinshipValues(counts)
-}
-
 }

@@ -19,7 +19,6 @@ pedigree are uninformative and can be removed from a pedigree without loss
 of information.
 }
 \examples{
-\donttest{
 examplePedigree <- nprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
                          reportChanges = FALSE,
@@ -33,6 +32,4 @@ p <- removeUninformativeFounders(ped)
 nrow(p)
 p <- addBackSecondParents(p, ped)
 nrow(p)
-}
-
 }

@@ -7,14 +7,11 @@
 #'
 #' @return Updated list of column names
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' headerDisplayNames(headers = c("id", "sire", "dam", "sex", "birth", "age"))
-#' }
-#'
 #' @param headers a character vector of column (header) names
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' headerDisplayNames(headers = c("id", "sire", "dam", "sex", "birth", "age"))
 headerDisplayNames <- function(headers) {
   nameConversion <- c(
     id = "Ego ID",

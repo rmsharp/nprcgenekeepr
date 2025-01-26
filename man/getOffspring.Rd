@@ -22,9 +22,7 @@ Get offspring to corresponding animal IDs provided
 }
 \examples{
 library(nprcgenekeepr)
-\donttest{
 pedOne <- nprcgenekeepr::pedOne
 names(pedOne) <- c("id", "sire", "dam", "sex", "birth")
 getOffspring(pedOne, c("s1", "d2"))
-}
 }

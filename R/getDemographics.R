@@ -8,7 +8,7 @@
 #' specified in the single parameter provided.
 #'
 #' @examples
-#' \donttest{
+#' \donttest{ ## Needs a connection to a LabKey server
 #' library(nprcgenekeepr)
 #' siteInfo <- getSiteInfo()
 #' colSet <- siteInfo$lkPedColumns

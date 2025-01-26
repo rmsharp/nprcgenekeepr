@@ -7,13 +7,11 @@
 #' @return A pedigree object with genotype data added.
 #'
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' rhesusPedigree <- nprcgenekeepr::rhesusPedigree
 #' rhesusGenotypes <- nprcgenekeepr::rhesusGenotypes
 #' pedWithGenotypes <- addGenotype(ped = rhesusPedigree,
 #'                                 genotype = rhesusGenotypes)
-#' }
 #'
 #' @param ped pedigree dataframe. \code{ped} is to be provided by
 #' \code{qcStudbook} so it is not checked.

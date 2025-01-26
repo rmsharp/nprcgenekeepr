@@ -26,7 +26,8 @@ to print out when an animal is missing a sire or a dam.}
 }
 \value{
 A list of \code{n} lists with each internal list containing a
-kinship matrix.
+kinship matrixn from simulated pedigrees of possible
+parents for animals with unknown parents.
 }
 \description{
 \code{createSimKinships} uses \code{makeSimPed} with the \code{ped} object
@@ -34,7 +35,6 @@ and the \code{allSimParents} object to create a set of kinship matrices to
 be used in forming the \emph{Monte Carlo} estimates for the kinship values.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::smallPed
 simParent_1 <- list(id = "A",
@@ -49,6 +49,4 @@ simParent_3 <- list(id = "E",
 allSimParents <- list(simParent_1, simParent_2, simParent_3)
 pop <- LETTERS[1:7]
 simKinships <- createSimKinships(ped, allSimParents, pop, n = 10)
-}
-
 }

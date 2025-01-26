@@ -24,11 +24,9 @@ User has the option of providing a character vector of aliases to avoid
 using.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 integerIds <- 1:10
 obfuscateId(integerIds, size = 4)
 characterIds <- paste0(paste0(sample(LETTERS, 1, replace = FALSE)), 1:10)
 obfuscateId(characterIds, size = 4)
-}
 }

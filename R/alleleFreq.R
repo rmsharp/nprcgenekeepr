@@ -11,20 +11,17 @@
 #' @return A data.frame with columns \code{allele} and \code{freq}. This is a
 #'  table of allele counts within the population.
 #'
+#' @param alleles an integer vector of alleles in the population
+#' @param ids character vector of IDs indicating to which animal each allele
+#' in \code{alleles} belongs.
+#' @export
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' data("ped1Alleles")
 #' ids <- ped1Alleles$id
 #' alleles <- ped1Alleles[, !(names(ped1Alleles) %in% c("id", "parent"))]
 #' aF <- alleleFreq(alleles[[1]], ids = NULL)
 #' aF[aF$freq >= 10, ]
-#' }
-#'
-#' @param alleles an integer vector of alleles in the population
-#' @param ids character vector of IDs indicating to which animal each allele
-#' in \code{alleles} belongs.
-#' @export
 alleleFreq <- function(alleles, ids = NULL) {
   if (!is.null(ids)) {
     alleles <- unlist(tapply(alleles, as.factor(ids), unique))

@@ -12,18 +12,16 @@
 #' contains genotypic data that can be used. Non-standard column names are
 #' accepted for this assessment.
 #'
+#' @param genotype dataframe with genotype data
+#' @importFrom stringi stri_detect_fixed
+#' @export
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' rhesusPedigree <- nprcgenekeepr::rhesusPedigree
 #' rhesusGenotypes <- nprcgenekeepr::rhesusGenotypes
 #' pedWithGenotypes <- addGenotype(ped = rhesusPedigree,
 #'                                genotype = rhesusGenotypes)
 #' hasGenotype(pedWithGenotypes)
-#' }
-#' @param genotype dataframe with genotype data
-#' @importFrom stringi stri_detect_fixed
-#' @export
 hasGenotype <- function(genotype) {
   cols <- names(genotype)
   if (length(cols) < 3) {

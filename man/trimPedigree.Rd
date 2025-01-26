@@ -45,7 +45,6 @@ the pedigree back in time starting from a group of probands, then moves
 back down the tree trimming off uninformative ancestors.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 examplePedigree <- nprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
@@ -61,6 +60,4 @@ trimmedPedInformative <- trimPedigree(focalAnimals, breederPed,
 nrow(breederPed)
 nrow(trimmedPed)
 nrow(trimmedPedInformative)
-}
-
 }

@@ -4,43 +4,6 @@
 ## This file is part of nprcgenekeepr
 #' Part of Genetic Value Analysis
 #'
-#' @return A data.frame \code{id, parent, V1 ... Vn}
-#' A data.frame providing the maternal and paternal alleles for an animal
-#' for each iteration. The first two columns provide the animal's ID and
-#' whether the allele came from the sire or dam. These are followed by
-#' \code{n} columns indicating the allele for that iteration.
-#'
-#' @examples
-#' \donttest{
-#' ## We usually defined `n` to be >= 5000
-#' library(nprcgenekeepr)
-#' ped <- nprcgenekeepr::lacy1989Ped
-#' allelesNew <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,
-#'                       genotype = NULL, n = 50, updateProgress = NULL)
-#' genotype <- data.frame(id = ped$id,
-#'                        first_allele = c(NA, NA, "A001_B001", "A001_B002",
-#'                                         NA, "A001_B002", "A001_B001"),
-#'                        second_allele = c(NA, NA, "A010_B001", "A001_B001",
-#'                                          NA, NA, NA),
-#'                        stringsAsFactors = FALSE)
-#' pedWithGenotype <- addGenotype(ped, genotype)
-#' pedGenotype <- getGVGenotype(pedWithGenotype)
-#' allelesNewGen <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,
-#'                          genotype = pedGenotype,
-#'                          n = 5, updateProgress = NULL)
-#' }
-#'
-#' @param ids A character vector of IDs for a set of animals.
-#' @param sires A character vector with IDS of the sires for the set of
-#'  animals. \code{NA} is used for missing sires.
-#' @param dams A character vector with IDS of the dams for the set of
-#'  animals. \code{NA} is used for missing dams.
-#' @param gen An integer vector indicating the generation number for each
-#' animal.
-#' @param genotype A dataframe containing known genotypes. It has three
-#' columns:  \code{id}, \code{first}, and \code{second}. The second and third
-#' columns contain the integers indicating the observed genotypes.
-#'
 #' The gene dropping method from \emph{Pedigree analysis by computer simulation}
 #' by Jean W MacCluer, John L Vandeberg, and Oliver A Ryder (1986)
 #' <doi:10.1002/zoo.1430050209> is used in the genetic value calculations.
@@ -58,6 +21,24 @@
 #' Adding additional columns to \code{genotype} does not significantly affect
 #' the time require. Thus, it is convenient to add the corresponding haplotype
 #' names to the dataframe using \code{first_name} and \code{second_name}.
+
+#' @return A data.frame \code{id, parent, V1 ... Vn}
+#' A data.frame providing the maternal and paternal alleles for an animal
+#' for each iteration. The first two columns provide the animal's ID and
+#' whether the allele came from the sire or dam. These are followed by
+#' \code{n} columns indicating the allele for that iteration.
+#'
+#' @param ids A character vector of IDs for a set of animals.
+#' @param sires A character vector with IDS of the sires for the set of
+#'  animals. \code{NA} is used for missing sires.
+#' @param dams A character vector with IDS of the dams for the set of
+#'  animals. \code{NA} is used for missing dams.
+#' @param gen An integer vector indicating the generation number for each
+#' animal.
+#' @param genotype A dataframe containing known genotypes. It has three
+#' columns:  \code{id}, \code{first}, and \code{second}. The second and third
+#' columns contain the integers indicating the observed genotypes.
+#'
 #' @param n integer indicating the number of iterations to simulate.
 #' Default is 5000.
 #' @param updateProgress function or NULL. If this function is defined, it
@@ -65,6 +46,23 @@
 #' \code{shiny::Progress} object.
 #'
 #' @export
+#' @examples
+#' ## We usually defined `n` to be >= 5000
+#' library(nprcgenekeepr)
+#' ped <- nprcgenekeepr::lacy1989Ped
+#' allelesNew <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,
+#'                       genotype = NULL, n = 50, updateProgress = NULL)
+#' genotype <- data.frame(id = ped$id,
+#'                        first_allele = c(NA, NA, "A001_B001", "A001_B002",
+#'                                         NA, "A001_B002", "A001_B001"),
+#'                        second_allele = c(NA, NA, "A010_B001", "A001_B001",
+#'                                          NA, NA, NA),
+#'                        stringsAsFactors = FALSE)
+#' pedWithGenotype <- addGenotype(ped, genotype)
+#' pedGenotype <- getGVGenotype(pedWithGenotype)
+#' allelesNewGen <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,
+#'                          genotype = pedGenotype,
+#'                          n = 5, updateProgress = NULL)
 geneDrop <- function(ids, sires, dams, gen, genotype = NULL, n = 5000,
                      updateProgress = NULL) {
   ## Sort the IDs by generation so older generations are first

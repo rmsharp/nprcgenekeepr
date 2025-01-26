@@ -4,6 +4,8 @@
 ## This file is part of nprcgenekeepr
 #'
 #' @usage str_detect_fixed_all(strings, patterns, ignore_na, ...)
+#' @return logical vector with results of stri_detect() for each pattern in
+#' the character vector in the parameter \code{patterns}.
 #' @param strings input vector. This must be an atomic vector and will be
 #' coerced to a character vector.
 #' @param patterns patterns to look for, as defined by a POSIX regular

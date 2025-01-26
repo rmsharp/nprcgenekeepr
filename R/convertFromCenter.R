@@ -8,18 +8,15 @@
 #' @return A logical vector specifying TRUE if an animal
 #' is from the center otherwise FALSE.
 #'
-#' @examples
-#' \donttest{
-#' original <- c("y", "yes", "Y", "Yes", "YES", "n", "N", "No", "NO", "no",
-#'              "t", "T", "True", "true", "TRUE", "f", "F", "false", "False",
-#'              "FALSE")
-#' convertFromCenter(original)
-#' }
-#'
 #' @param fromCenter character or logical vector or NA indicating whether or
 #' not the animal is from the center.
 #' @importFrom stringi stri_c stri_detect_fixed
 #' @export
+#' @examples
+#' original <- c("y", "yes", "Y", "Yes", "YES", "n", "N", "No", "NO", "no",
+#'              "t", "T", "True", "true", "TRUE", "f", "F", "false", "False",
+#'              "FALSE")
+#' convertFromCenter(original)
 convertFromCenter <- function(fromCenter) {
   trueValues <- c("Y", "YES", "T", "TRUE")
   falseValues <- c("N", "NO", "F", "FALSE")

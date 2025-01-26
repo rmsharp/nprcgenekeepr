@@ -6,16 +6,13 @@
 #' @return Returns \code{NULL} is all fields are empty
 #' else the entire list is returned.
 #'
-#' @examples
-#' \donttest{
-#' errorLst <- qcStudbook(nprcgenekeepr::pedFemaleSireMaleDam,
-#'                        reportErrors = TRUE)
-#' checkErrorLst(errorLst)
-#' }
-#'
 #' @param errorLst list with fields for each type of error detectable by
 #' \code{qcStudbook}.
 #' @export
+#' @examples
+#' errorLst <- qcStudbook(nprcgenekeepr::pedFemaleSireMaleDam,
+#'                        reportErrors = TRUE)
+#' checkErrorLst(errorLst)
 checkErrorLst <- function(errorLst) {
   if (is.null(errorLst))
     return(FALSE)

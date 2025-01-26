@@ -17,17 +17,14 @@
 #' which has the animal's age in years or \code{NA} if it cannot be calculated.
 #' The \code{exit} column values have been remapped to valid dates or \code{NA}.
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' ped <- getPyramidAgeDist()
-#' }
-#'
 #' @param ped dataframe with pedigree
 #' @importFrom anytime anytime
 #' @importFrom lubridate interval duration
 #' @importFrom utils read.csv
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ped <- getPyramidAgeDist()
 getPyramidAgeDist <- function(ped = NULL) {
   if (is.null(ped)) {
     ped <- nprcgenekeepr::qcPed

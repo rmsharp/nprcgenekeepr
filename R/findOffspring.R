@@ -7,8 +7,13 @@
 #' @return A named vector containing the offspring counts for each animal in
 #' \code{probands}. Rownames are set to the IDs from \code{probands}.
 #'
+#' @param probands character vector of egos for which offspring should be
+#' counted and returned.
+#' @param ped the pedigree information in datatable format.  Pedigree
+#' (req. fields: id, sire, dam, gen, population).
+#' This requires complete pedigree information.
+#' @export
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' examplePedigree <- nprcgenekeepr::examplePedigree
 #' breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
@@ -21,14 +26,6 @@
 #' trimmedPed <- trimPedigree(focalAnimals, breederPed)
 #' probands <- ped$id[ped$population]
 #' totalOffspring <- findOffspring(probands, ped)
-#' }
-#'
-#' @param probands character vector of egos for which offspring should be
-#' counted and returned.
-#' @param ped the pedigree information in datatable format.  Pedigree
-#' (req. fields: id, sire, dam, gen, population).
-#' This requires complete pedigree information.
-#' @export
 findOffspring <- function(probands, ped) {
   sires <- tapply(ped$id, as.factor(ped$sire), length)
   dams <- tapply(ped$id, as.factor(ped$dam), length)

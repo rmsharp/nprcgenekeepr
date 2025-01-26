@@ -29,18 +29,12 @@ Provides list of potential sires
 Provides list of potential sires
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::pedWithGenotype
 ids <- nprcgenekeepr::qcBreeders
 getPotentialSires(ids, minAge = 1, ped)
-}
-
-\donttest{
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::pedWithGenotype
 ids <- nprcgenekeepr::qcBreeders
 getPotentialSires(ids, minAge = 1, ped)
-}
-
 }

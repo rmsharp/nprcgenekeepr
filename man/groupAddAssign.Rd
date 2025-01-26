@@ -99,7 +99,6 @@ of iterations.
 Part of Group Formation
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 examplePedigree <- nprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
@@ -138,5 +137,4 @@ sexRatioGrp <- groupAddAssign(candidates = candidates,
                              numGp = 6,
                              sexRatio = 9)
 sexRatioGrp$group
-}
 }

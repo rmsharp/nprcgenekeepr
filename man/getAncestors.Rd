@@ -30,7 +30,6 @@ amount of time required to perform calculations with
 SIMWALK2 or similar programs.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::qcPed
 ped <- qcStudbook(ped, minParentAge = 0)
@@ -49,6 +48,4 @@ countOfAncestors <- unlist(lapply(allAncestors, length))
 idsWithMostAncestors <-
   names(allAncestors)[countOfAncestors == max(countOfAncestors)]
 allAncestors[idsWithMostAncestors]
-}
-
 }

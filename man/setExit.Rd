@@ -22,7 +22,6 @@ on date information that was available.
 Part of Pedigree Curation
 }
 \examples{
-\donttest{
 library(lubridate)
 library(nprcgenekeepr)
 death <- mdy(paste0(sample(1:12, 10, replace = TRUE), "-",
@@ -42,5 +41,4 @@ ped <- data.frame(
   departure = departure,
   stringsAsFactors = FALSE)
 pedWithExit <- setExit(ped)
-}
 }

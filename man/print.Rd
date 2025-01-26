@@ -23,18 +23,12 @@ object to send to generic print function
 print.summary.nprcgenekeepr print.summary.nprcgenekeeprGV
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 errorLst <- qcStudbook(nprcgenekeepr::pedInvalidDates,
                        reportChanges = TRUE, reportErrors = TRUE)
 summary(errorLst)
-}
-
-\donttest{
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::pedGood
 ped <- suppressWarnings(qcStudbook(ped, reportErrors = FALSE))
 summary(reportGV(ped, guIter = 10))
-}
-
 }

@@ -31,7 +31,6 @@
 #' @importFrom data.table as.data.table
 #' @export
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' ped <- nprcgenekeepr::smallPed
 #' simParent_1 <- list(id = "A",
@@ -70,7 +69,6 @@
 #' simKinship <- kinship(simPed$id, simPed$sire,
 #'                       simPed$dam, simPed$gen)
 #' kValues <- kinshipMatrixToKValues(simKinship)
-#' }
 kinshipMatrixToKValues <- function(kinshipMatrix) {
   # gdata::lowerTriangle(kinshipMatrix, byrow = TRUE) <- NA was replaced
   # with the next three lines

@@ -7,12 +7,6 @@
 #' @return A character vector representation of the data.frame provided to the
 #' function.
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' dataframe2string(nprcgenekeepr::pedOne)
-#' }
-#'
 #' @param object dataframe
 #' @param ... optional arguments to print or plot methods.
 #' @param digits the minimum number of significant digits to be used:
@@ -22,6 +16,9 @@
 #' @importFrom stringi stri_length
 #' @importFrom stringi stri_pad_both
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' dataframe2string(nprcgenekeepr::pedOne)
 dataframe2string <- function(object, ..., digits = NULL, addRowNames = TRUE) {
   nRows <- length(row.names(object))
   if (length(object) == 0L) {

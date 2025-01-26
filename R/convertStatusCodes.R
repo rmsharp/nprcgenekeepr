@@ -7,19 +7,16 @@
 #' @return A factor vector of the standardized status codes with levels:
 #' `ALIVE`, `DECEASED`, `SHIPPED`, and `UNKNOWN`.
 #'
+#' @param status character vector or NA. Flag indicating an individual's
+#' status as alive, dead, sold, etc.
+#' @export
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' original <- c("A", "alive", "Alive", "1", "S", "Sale", "sold", "shipped",
 #'               "D", "d", "dead", "died", "deceased", "2",
 #'               "shiped", "3", "U", "4", "unknown", NA,
 #'               "Unknown", "H", "hermaphrodite", "U", "Unknown", "4")
 #' convertStatusCodes(original)
-#' }
-#'
-#' @param status character vector or NA. Flag indicating an individual's
-#' status as alive, dead, sold, etc.
-#' @export
 convertStatusCodes <- function(status) {
   status <- toupper(status)
   status[is.na(status)] <- "UNKNOWN"

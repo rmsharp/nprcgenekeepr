@@ -26,7 +26,6 @@ in the gene dropping experiment.
 Part of the Genetic Value Analysis
 }
 \examples{
-\donttest{
 data(lacy1989Ped)
 ## Example from Analysis of Founder Representation in Pedigrees: Founder
 ## Equivalents and Founder Genome Equivalents.
@@ -48,6 +47,4 @@ allelesFactors <- geneDrop(pedFactors$id, pedFactors$sire, pedFactors$dam,
                            updateProgress = NULL)
 feFg <- calcFEFG(ped, alleles)
 feFgFactors <- calcFEFG(pedFactors, allelesFactors)
-}
-
 }

@@ -2,12 +2,13 @@
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
-#' @return \code{ancestry} list of number of Chinese animals (\code{chinese}),
-#' number of hybrid (\code{hybrid}),
-#' number of borderline hybrid animals (\code{borderline}),
-#' number of Indian ancestry animals (\code{indian}),
-#' and the dashboard color (\code{color)} to be assigned based on the
-#' number of animals of each type counted.
+#' @return A list with a list named \code{ancestry} having named integer values
+#'         corresponding to the origin types and the count of each type
+#'         found in the function argument \code{origin}, the \code{color}
+#'         used for the heat map where "red" indicates "Chinese" or "Hybrid"
+#'         origin, "yellow" indicates "Borderline", and "green" otherwise; and
+#'         the \code{color_index) values are \code{1}, \code{2}, or \code{3}
+#'         corresponding to "red", "yellow", and "green".
 #' @param origin character vector of the animal origins. This vector
 #' is to have already been filtered to remove animals that should not be
 #' included in the calculation.

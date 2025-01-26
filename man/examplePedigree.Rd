@@ -40,11 +40,9 @@ ALIVE, DECEASED, SHIPPED, or UNKNOWN}
 }
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 data("examplePedigree")
 exampleTree <- createPedTree(examplePedigree)
 exampleLoops <- findLoops(exampleTree)
-}
 }
 \keyword{datasets}

@@ -19,10 +19,8 @@ in their home directory. Instructions are embedded as comments
 within the file.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 data("exampleNprcgenekeeprConfig")
 head(exampleNprcgenekeeprConfig)
-}
 }
 \keyword{datasets}

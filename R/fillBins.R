@@ -2,7 +2,8 @@
 #' \code{females}.
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
-#'
+
+#' @return  A list with two TODO: RMS provide description
 #' @param ageDist dataframe with \code{sex} and \code{age} columns
 #' @param lowerAges integer vector of lower age boundaries; must be the same
 #' length as \code{upperAges}

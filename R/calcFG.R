@@ -9,8 +9,13 @@
 #' descendants and \code{r} is the mean number of founder alleles retained
 #' in the gene dropping experiment.
 #'
+#' @param ped the pedigree information in datatable format.  Pedigree
+#' (req. fields: id, sire, dam, gen, population).
+#' It is assumed that the pedigree has no partial parentage
+#' @param alleles dataframe contains an \code{AlleleTable}. This is a
+#' table of allele information produced by \code{geneDrop()}.
+#' @export
 #' @examples
-#' \donttest{
 #' ## Example from Analysis of Founder Representation in Pedigrees: Founder
 #' ## Equivalents and Founder Genome Equivalents.
 #' ## Zoo Biology 8:111-123, (1989) by Robert C. Lacy
@@ -40,14 +45,6 @@
 #'                            updateProgress = NULL)
 #' fg <- calcFG(ped, alleles)
 #' fgFactors <- calcFG(pedFactors, allelesFactors)
-#' }
-#'
-#' @param ped the pedigree information in datatable format.  Pedigree
-#' (req. fields: id, sire, dam, gen, population).
-#' It is assumed that the pedigree has no partial parentage
-#' @param alleles dataframe contains an \code{AlleleTable}. This is a
-#' table of allele information produced by \code{geneDrop()}.
-#' @export
 calcFG <- function(ped, alleles) {
   ped <- toCharacter(ped, headers = c("id", "sire", "dam"))
   founders <- ped$id[is.na(ped$sire) & is.na(ped$dam)]

@@ -23,9 +23,6 @@ version 3.6 so I resorted to using version dependent construction of the
 argument list to set.seed() in do.call().#'
 }
 \examples{
-\donttest{
 set_seed(1)
 rnorm(5)
-}
-
 }

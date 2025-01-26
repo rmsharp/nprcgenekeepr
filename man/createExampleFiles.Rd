@@ -16,8 +16,6 @@ exist. It then proceeds to write each example pedigree into a CSV file named
 based on the name of the example pedigree.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 files <- createExampleFiles()
-}
 }

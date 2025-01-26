@@ -20,7 +20,7 @@
 #'  be \eqn{n + \eqn{n(n-1)}{2}} and the number of columns will be 2 plus one
 #'  additional column for each kinship matrix (\eqn{2 + n}).
 #
-#' @return data.frame object with columns \code{id_1}, \code{id_2}, and one
+#' @return Dataframe object with columns \code{id_1}, \code{id_2}, and one
 #' \code{kinship} column for each kinship matrix in \code{kinshipMatricies}
 #' where the first two columns contain the IDs of the
 #' individuals in the kinship matrix provided to the function and the
@@ -32,7 +32,6 @@
 #' may not have named rows and columns.
 #' @export
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' ped <- nprcgenekeepr::smallPed
 #' simParent_1 <- list(id = "A",
@@ -71,7 +70,6 @@
 #' simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
 #' kValue <- kinshipMatricesToKValues(simKinships)
 #' extractKValue(kValue, id1 = "A", id2 = "F", simulation = 1:n)
-#' }
 kinshipMatricesToKValues <- function(kinshipMatrices) {
   first <- TRUE
   for (i in seq_along(kinshipMatrices)) {

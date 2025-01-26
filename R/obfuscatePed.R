@@ -9,15 +9,6 @@
 #'
 #' @return An obfuscated pedigree
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' ped <- qcStudbook(nprcgenekeepr::pedGood)
-#' obfuscatedPed <- obfuscatePed(ped)
-#' ped
-#' obfuscatedPed
-#' }
-#'
 #' @param ped pedigree object
 #' @param size integer value indicating number of characters in alias IDs
 #' @param maxDelta integer value indicating maximum number of days that
@@ -28,6 +19,12 @@
 #' and the values being the new alias values. Defaults to \code{FALSE}.
 #' @importFrom lubridate is.Date
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ped <- qcStudbook(nprcgenekeepr::pedGood)
+#' obfuscatedPed <- obfuscatePed(ped)
+#' ped
+#' obfuscatedPed
 obfuscatePed <- function(ped, size = 6, maxDelta = 30,
                          existingIds = character(0), map = FALSE) {
   alias <- obfuscateId(ped$id, size = size, existingIds = existingIds)

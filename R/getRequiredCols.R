@@ -16,12 +16,10 @@
 #' \item\{birth\} \{-- Date or \code{NA} (optional) with the individual's birth
 #' date\}
 #' }
+#' @export
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' getRequiredCols()
-#' }
-#' @export
 getRequiredCols <- function() {
   c("id", "sire", "dam", "sex", "birth")
 }

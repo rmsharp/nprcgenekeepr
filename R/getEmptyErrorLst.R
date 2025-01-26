@@ -6,13 +6,10 @@
 #' @return An errorLst object with placeholders for error types found in a
 #' pedigree file by \code{qcStudbook}.
 #'
+#' @export
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' getEmptyErrorLst()
-#' }
-#'
-#' @export
 getEmptyErrorLst <- function() {
   emptyErrorLst <- list(
     failedDatabaseConnection = character(0),

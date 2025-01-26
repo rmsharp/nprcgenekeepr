@@ -13,17 +13,6 @@
 #' counts, broken down to indicate the number of parents, offspring, and
 #' siblings that are part of the subset under consideration.
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' ped <- nprcgenekeepr::lacy1989Ped
-#' ids <- c("B", "D", "E", "F", "G")
-#' countIds <- countFirstOrder(ped, ids)
-#' countIds
-#' count <- countFirstOrder(ped, NULL)
-#' count
-#' }
-#'
 #' @param ped : `Pedigree`
 #'   Standardized pedigree information in a table.
 #' @param ids character vector of IDs or NULL
@@ -32,6 +21,14 @@
 #'   consider relationships within the subset. If NULL, the analysis will
 #'   include all IDs in the pedigree.
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ped <- nprcgenekeepr::lacy1989Ped
+#' ids <- c("B", "D", "E", "F", "G")
+#' countIds <- countFirstOrder(ped, ids)
+#' countIds
+#' count <- countFirstOrder(ped, NULL)
+#' count
 countFirstOrder <- function(ped, ids = NULL) {
   if (!is.null(ids)) {
     ped <- ped[ped$id %in% ids, ]

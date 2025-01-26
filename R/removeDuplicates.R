@@ -10,8 +10,13 @@
 #'
 #' @return Pedigree object with all duplicates removed.
 #'
+#' @param ped dataframe that is the `Pedigree`. It contains pedigree
+#' information. The \code{id} column is required.
+#' @param reportErrors logical value if TRUE will scan the entire file and
+#' make a list of all errors found. The errors will be returned in a
+#' list of list where each sublist is a type of error found.
+#' @export
 #' @examples
-#' \donttest{
 #' ped <- nprcgenekeepr::smallPed
 #' newPed <- cbind(ped, recordStatus = rep("original", nrow(ped)))
 #' ped1 <- removeDuplicates(newPed)
@@ -21,14 +26,6 @@
 #' ped2 <- removeDuplicates(pedWithDups)
 #' nrow(pedWithDups)
 #' nrow(ped2)
-#' }
-#'
-#' @param ped dataframe that is the `Pedigree`. It contains pedigree
-#' information. The \code{id} column is required.
-#' @param reportErrors logical value if TRUE will scan the entire file and
-#' make a list of all errors found. The errors will be returned in a
-#' list of list where each sublist is a type of error found.
-#' @export
 removeDuplicates <- function(ped, reportErrors = FALSE) {
   if (!all(c("id", "recordStatus") %in% names(ped)))
     stop("ped must have columns \"id\" and \"recordStatus\".")

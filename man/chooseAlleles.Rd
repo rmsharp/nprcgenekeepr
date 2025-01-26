@@ -23,8 +23,5 @@ Combines two vectors of alleles by randomly selecting one allele
 or the other at each position.
 }
 \examples{
-\donttest{
 chooseAlleles(0:4, 5:9)
-}
-
 }

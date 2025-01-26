@@ -28,7 +28,6 @@ it occurred earlier or later than the other. \code{NAs} are ignored if
 possible.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 someDates <- lubridate::mdy(paste0(sample(1:12, 2, replace = TRUE), "-",
                                    sample(1:28, 2, replace = TRUE), "-",
@@ -37,6 +36,4 @@ someDates <- lubridate::mdy(paste0(sample(1:12, 2, replace = TRUE), "-",
 someDates
 chooseDate(someDates[1], someDates[2], earlier = TRUE)
 chooseDate(someDates[1], someDates[2], earlier = FALSE)
-}
-
 }

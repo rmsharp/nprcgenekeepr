@@ -11,17 +11,14 @@
 #' @return A named numeric vector of average kinship coefficients for each
 #' animal ID. Elements are named with the IDs from the columns of kmat.
 #'
+#' @param kmat a numeric matrix of pairwise kinship coefficients.
+#' Animal IDs are the row and column names.
+#' @export
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' ped <- nprcgenekeepr::qcPed
 #' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
 #' head(meanKinship(kmat))
-#' }
-#'
-#' @param kmat a numeric matrix of pairwise kinship coefficients.
-#' Animal IDs are the row and column names.
-#' @export
 meanKinship <- function(kmat) {
   return(colMeans(kmat, na.rm = TRUE))
 }

@@ -10,19 +10,17 @@
 #' @return A named character vector of aliases where the name is the original
 #' ID value.
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' integerIds <- 1:10
-#' obfuscateId(integerIds, size = 4)
-#' characterIds <- paste0(paste0(sample(LETTERS, 1, replace = FALSE)), 1:10)
-#' obfuscateId(characterIds, size = 4)
-#' }
 #' @param id character vector of IDs to be obfuscated (alias creation).
 #' @param size character length of each alias
 #' @param existingIds character vector of existing aliases to avoid duplication.
 #' @importFrom stringi stri_c
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' integerIds <- 1:10
+#' obfuscateId(integerIds, size = 4)
+#' characterIds <- paste0(paste0(sample(LETTERS, 1, replace = FALSE)), 1:10)
+#' obfuscateId(characterIds, size = 4)
 obfuscateId <- function(id, size = 10, existingIds = character(0)) {
   noOInLetters <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
                     "M", "N", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",

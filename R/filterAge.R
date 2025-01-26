@@ -1,8 +1,11 @@
-#' Removes kinship values where an animal is less than the minAge
+#' Removes animal pairs and their kinship values from a dataframe where an
+#' animal is less than the minAge
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Part of Group Formation
+#' @return a dataframe with columns \code{id1}, \code{id2}, and \code{kinship}
+#' with all animals greater than or equal to the minimum age.
 #'
 #' @param kin a dataframe with columns \code{id1}, \code{id2}, and
 #' \code{kinship}. This is the kinship data reformatted from a matrix,

@@ -9,20 +9,17 @@
 #' vector with commas between if there are more than two elements with the
 #' last two elements joined by the selected conjunction.
 #'
-#' @examples
-#' \donttest{
-#' get_and_or_list(c("Bob", "John")) # "Bob and John"
-#' get_and_or_list(c("Bob", "John"), "or") # "Bob or John"
-#' get_and_or_list(c("Bob", "John", "Sam", "Bill"), "or")
-#' # "Bob, John, Sam, or Bill"
-#' }
-#'
 #' @param c_vector Character vector containing the list of words
 #' to be put in a list.
 #' @param conjunction The conjunction to be used as the connector.
 #' This is usually `and' or `or' with `and' being the default.
 #' @importFrom stringi stri_c
 #' @export
+#' @examples
+#' get_and_or_list(c("Bob", "John")) # "Bob and John"
+#' get_and_or_list(c("Bob", "John"), "or") # "Bob or John"
+#' get_and_or_list(c("Bob", "John", "Sam", "Bill"), "or")
+#' # "Bob, John, Sam, or Bill"
 get_and_or_list <- function(c_vector, conjunction = "and") {
   len <- length(c_vector)
   c_str <- ""

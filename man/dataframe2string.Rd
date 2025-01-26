@@ -25,9 +25,6 @@ function.
 Adapted from print.data.frame
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 dataframe2string(nprcgenekeepr::pedOne)
-}
-
 }

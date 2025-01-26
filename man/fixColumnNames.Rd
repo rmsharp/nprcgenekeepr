@@ -21,10 +21,7 @@ a record of all changes made.
 fixColumnNames changes original column names and into standardized names.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 fixColumnNames(c("Sire_ID", "EGO", "DAM", "Id", "birth_date"),
                errorLst = getEmptyErrorLst())
-}
-
 }

@@ -10,8 +10,10 @@
 #' is average number of descendants and \code{r} is the mean number of founder
 #' alleles retained in the gene dropping experiment.
 #'
+#' @param ped the pedigree information in datatable format.  Pedigree
+#' (req. fields: id, sire, dam, gen, population).
+#' @export
 #' @examples
-#' \donttest{
 #' ## Example from Analysis of Founder Representation in Pedigrees: Founder
 #' ## Equivalents and Founder Genome Equivalents.
 #' ## Zoo Biology 8:111-123, (1989) by Robert C. Lacy
@@ -35,11 +37,6 @@
 #' pedFactors$population <- getGVPopulation(pedFactors, NULL)
 #' fe <- calcFE(ped)
 #' feFactors <- calcFE(pedFactors)
-#' }
-#'
-#' @param ped the pedigree information in datatable format.  Pedigree
-#' (req. fields: id, sire, dam, gen, population).
-#' @export
 calcFE <- function(ped) {
   ped <- toCharacter(ped, headers = c("id", "sire", "dam"))
   founders <- ped$id[is.na(ped$sire) & is.na(ped$dam)]

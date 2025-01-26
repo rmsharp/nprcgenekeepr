@@ -21,7 +21,6 @@ Avuncular - Other, Other, and No Relation.
 From Relations
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 suppressMessages(library(dplyr))
 
@@ -36,6 +35,4 @@ relClassTbl <- kin[!kin$relation == "Self", ] \%>\%
   group_by(relation) \%>\%
   summarise(count = n())
 relClassTbl
-}
-
 }

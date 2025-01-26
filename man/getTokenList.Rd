@@ -17,7 +17,6 @@ element.
 Gets tokens from character vector of lines
 }
 \examples{
-\donttest{
 lines <- c("center = \"SNPRC\"",
            " baseUrl = \"https://boomer.txbiomed.local:8080/labkey\"",
            " schemaName = \"study\"", " folderPath = \"/SNPRC\"",
@@ -32,6 +31,4 @@ mapVec <- c("id", "sex", "birth", "death", "exit", "dam", "sire")
 tokenList <- getTokenList(lines)
 params <- tokenList$param
 tokenVectors <- tokenList$tokenVec
-}
-
 }

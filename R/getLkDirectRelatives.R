@@ -8,14 +8,6 @@
 #' @return A data.frame with pedigree structure having all of the direct
 #' ancestors for the Ids provided.
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' ## Have to a vector of focal animals
-#' focalAnimals <- c("1X2701", "1X0101")
-#' suppressWarnings(getLkDirectRelatives(ids = focalAnimals))
-#' }
-#'
 #' @param ids character vector with Ids.
 #' @param unrelatedParents logical vector when \code{FALSE} the unrelated
 #' parents of offspring do not get a record as an ego; when \code{TRUE}
@@ -25,6 +17,13 @@
 #' @import futile.logger
 #' @importFrom stringi stri_c
 #' @export
+#' @examples
+#' \donttest{ # Requires LabKey connection
+#' library(nprcgenekeepr)
+#' ## Have to a vector of focal animals
+#' focalAnimals <- c("1X2701", "1X0101")
+#' suppressWarnings(getLkDirectRelatives(ids = focalAnimals))
+#' }
 getLkDirectRelatives <- function(ids, unrelatedParents = FALSE) {
   siteInfo <- getSiteInfo()
   colSet <- siteInfo$lkPedColumns

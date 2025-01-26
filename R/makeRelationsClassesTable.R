@@ -9,8 +9,11 @@
 #' Grandparent-Grandchild, Full-Cousins, Cousin - Other, Full-Avuncular,
 #' Avuncular - Other, Other, and No Relation.
 #'
+#' @param kin a dataframe with columns \code{id1}, \code{id2}, \code{kinship},
+#' and \code{relation}. It is a long-form table of pairwise kinships, with
+#' relationship categories included for each pair.
+#' @export
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' suppressMessages(library(dplyr))
 #'
@@ -25,12 +28,6 @@
 #'   group_by(relation) %>%
 #'   summarise(count = n())
 #' relClassTbl
-#' }
-#'
-#' @param kin a dataframe with columns \code{id1}, \code{id2}, \code{kinship},
-#' and \code{relation}. It is a long-form table of pairwise kinships, with
-#' relationship categories included for each pair.
-#' @export
 makeRelationClassesTable <- function(kin) {
   relationClass <- c("Self", "Parent-Offspring", "Full-Siblings",
                      "Half-Siblings", "Grandparent-Grandchild", "Full-Cousins",

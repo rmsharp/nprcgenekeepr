@@ -29,7 +29,7 @@ The second time through this loop finds all of the animals that do
 not have a sire or do not have a dam and at least one parent
 is in the vector of parents defined the first time through.
 The ids that were not assigned as parents in the previous loop
-are given the incremented generation number.}
+are given the incremented generation number.
 
 Subsequent trips in the loop repeat what was done the second time
 through until no further animals can be added to the \code{nextGen}
@@ -37,12 +37,10 @@ vector.
 
 This does not work if the pedigree does not have all parent IDs as ego IDs.
 }
+}
 \examples{
-\donttest{
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::lacy1989Ped[ , c("id", "sire", "dam")]
 ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 ped
-}
-
 }

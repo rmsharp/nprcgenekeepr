@@ -11,8 +11,12 @@
 #' @return A list with the pedigree, \code{sb}, and the \code{errorLst} with
 #' invalid date rows (\code{errorLst$invalidDateRows})
 #'
+#' @param sb A dataframe containing a table of pedigree and demographic
+#' information.
+#' @param errorLst object with placeholders for error types found in a pedigree
+#' file by \code{qcStudbook} through the functions it calls.
+#' @export
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' ped <- nprcgenekeepr::pedInvalidDates
 #' ped
@@ -22,13 +26,6 @@
 #' pedAndErrors <- getDateErrorsAndConvertDatesInPed(ped, errorLst)
 #' pedAndErrors$sb
 #' pedAndErrors$errorLst
-#' }
-#'
-#' @param sb A dataframe containing a table of pedigree and demographic
-#' information.
-#' @param errorLst object with placeholders for error types found in a pedigree
-#' file by \code{qcStudbook} through the functions it calls.
-#' @export
 getDateErrorsAndConvertDatesInPed <- function(sb, errorLst) { # nolint: object_length_linter
   invalidDateRows <- convertDate(sb, timeOrigin = as.Date("1970-01-01"),
                                  reportErrors = TRUE)

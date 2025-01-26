@@ -7,16 +7,6 @@
 #' @return A vector of the mean number of founder alleles retained in the
 #' gene dropping simulation.
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' data("lacy1989Ped")
-#' data("lacy1989PedAlleles")
-#' ped <- lacy1989Ped
-#' alleles <- lacy1989PedAlleles
-#' retention <- calcRetention(ped, alleles)
-#' }
-#'
 #' @param ped the pedigree information in datatable format.  Pedigree
 #' (req. fields: id, sire, dam, gen, population).
 #'
@@ -24,6 +14,13 @@
 #' @param alleles dataframe of containing an \code{AlleleTable}. This is a
 #' table of allele information produced by \code{geneDrop()}.
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' data("lacy1989Ped")
+#' data("lacy1989PedAlleles")
+#' ped <- lacy1989Ped
+#' alleles <- lacy1989PedAlleles
+#' retention <- calcRetention(ped, alleles)
 calcRetention <- function(ped, alleles) {
   # ASSUME: Pedigree has no partial parentage
   founders <- ped$id[is.na(ped$sire) & is.na(ped$dam)]

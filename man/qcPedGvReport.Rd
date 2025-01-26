@@ -21,8 +21,6 @@ It was created using the following commands.
 }
 }
 \examples{
-\donttest{
 qcPedGvReport <- nprcgenekeepr::qcPedGvReport
-}
 }
 \keyword{datasets}

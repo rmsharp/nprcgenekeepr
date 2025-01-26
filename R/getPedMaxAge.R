@@ -6,18 +6,15 @@
 #' @return Numeric value representing the maximum age of animals in the
 #' pedigree.
 #'
+#' @param ped dataframe with pedigree
+#' @export
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' examplePedigree <- nprcgenekeepr::examplePedigree
 #' ped <- qcStudbook(examplePedigree, minParentAge = 2,
 #'                         reportChanges = FALSE,
 #'                         reportErrors = FALSE)
 #' getPedMaxAge(ped)
-#' }
-#'
-#' @param ped dataframe with pedigree
-#' @export
 getPedMaxAge <- function(ped) {
   max(ped$age, na.rm = TRUE)
 }

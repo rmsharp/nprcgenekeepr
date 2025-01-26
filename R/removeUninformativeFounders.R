@@ -8,8 +8,10 @@
 #'
 #' @return A reduced pedigree.
 #'
+#' @param ped datatable that is the `Pedigree`. It contains pedigree
+#' information. The fields \code{sire} and \code{dam} are required.
+#' @export
 #' @examples
-#' \donttest{
 #' examplePedigree <- nprcgenekeepr::examplePedigree
 #' breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
 #'                          reportChanges = FALSE,
@@ -23,11 +25,6 @@
 #' nrow(p)
 #' p <- addBackSecondParents(p, ped)
 #' nrow(p)
-#' }
-#'
-#' @param ped datatable that is the `Pedigree`. It contains pedigree
-#' information. The fields \code{sire} and \code{dam} are required.
-#' @export
 removeUninformativeFounders <- function(ped) {
   required <- c("id", "sire", "dam")
   if (!all(required %in% names(ped)))

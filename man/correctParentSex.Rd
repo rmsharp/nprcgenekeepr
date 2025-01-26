@@ -34,7 +34,6 @@ representing the sex codes for the ids provided
 Part of Pedigree Curation
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 pedOne <- data.frame(id = c("s1", "d1", "s2", "d2", "o1", "o2", "o3", "o4"),
                      sire = c(NA, "s0", "s4", NA, "s1", "s1", "s2", "s2"),
@@ -59,6 +58,4 @@ pedTwoCorrected$sex <- correctParentSex(pedTwo$id, pedTwo$sire, pedTwo$dam,
                                         pedTwo$sex, pedOne$recordStatus)
 pedTwo[pedTwo$sex != pedTwoCorrected$sex, ]
 pedTwoCorrected[pedTwo$sex != pedTwoCorrected$sex, ]
-}
-
 }

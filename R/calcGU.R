@@ -46,16 +46,6 @@
 #'  A single-column table of genome uniqueness values as percentages.
 #'  Rownames are set to 'id' values that are part of the population.
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' ped1Alleles <- nprcgenekeepr::ped1Alleles
-#' gu_1 <- calcGU(ped1Alleles, threshold = 1, byID = FALSE, pop = NULL)
-#' gu_2 <- calcGU(ped1Alleles, threshold = 3, byID = FALSE, pop = NULL)
-#' gu_3 <- calcGU(ped1Alleles, threshold = 3, byID = FALSE,
-#'                pop = ped1Alleles$id[20:60])
-#' }
-#'
 #' @param alleles dataframe of containing an \code{AlleleTable}. This is a
 #' table of allele information produced by \code{geneDrop()}.
 #' An AlleleTable contains information about alleles an ego has inherited.
@@ -80,6 +70,13 @@
 #' @param pop character vector with animal IDs to consider as the population of
 #' interest, otherwise all animals will be considered. The default is NULL.
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ped1Alleles <- nprcgenekeepr::ped1Alleles
+#' gu_1 <- calcGU(ped1Alleles, threshold = 1, byID = FALSE, pop = NULL)
+#' gu_2 <- calcGU(ped1Alleles, threshold = 3, byID = FALSE, pop = NULL)
+#' gu_3 <- calcGU(ped1Alleles, threshold = 3, byID = FALSE,
+#'                pop = ped1Alleles$id[20:60])
 calcGU <- function(alleles, threshold = 1, byID = FALSE, pop = NULL) {
   if (!is.null(pop)) {
     alleles <- alleles[alleles$id %in% pop, ]

@@ -8,22 +8,12 @@
 #' requires the generation number to be calculated elsewhere and passed into
 #' the function.
 #'
-#' The rows (cols) of founders are just .5 * identity matrix, no further
+#' The rows (cols) of founders are just 0.5 * identity matrix, no further
 #'    processing is needed for them.
 #' Parents must be processed before their children, and then a child's
-#'    kinship is just a sum of the kinship's for his/her parents.
+#'    kinship is just a sum of the kinship's for his or her parents.
 #'
 #' @return A kinship square matrix
-#'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' ped <- nprcgenekeepr::lacy1989Ped
-#' ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
-#' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
-#' ped
-#' kmat
-#' }
 #'
 #' @param id character vector of IDs for a set of animals.
 #' @param father.id character vector or NA for the IDs of the sires for the set
@@ -69,6 +59,13 @@
 #'
 #' @import Matrix
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ped <- nprcgenekeepr::lacy1989Ped
+#' ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+#' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
+#' ped
+#' kmat
 kinship <- function(id, father.id, mother.id, pdepth, sparse = FALSE) { # nolint: object_name_linter
   # Returns: Matrix (row and col names are 'id')
   n <- length(id)

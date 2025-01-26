@@ -160,11 +160,8 @@ Main pedigree curation function that performs basic quality control on
 pedigree information
 }
 \examples{
-\donttest{
 examplePedigree <- nprcgenekeepr::examplePedigree
 ped <- qcStudbook(examplePedigree, minParentAge = 2, reportChanges = FALSE,
                   reportErrors = FALSE)
 names(ped)
-}
-
 }

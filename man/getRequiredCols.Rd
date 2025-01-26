@@ -25,8 +25,6 @@ date\}
 Pedigree curation function
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 getRequiredCols()
-}
 }

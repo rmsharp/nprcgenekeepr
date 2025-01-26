@@ -22,13 +22,10 @@ Converts designated columns of a dataframe to character. Defaults to
 converting columns \code{id}, \code{sire}, and \code{dam}.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 pedGood <- nprcgenekeepr::pedGood
 names(pedGood) <- c("id", "sire", "dam", "sex", "birth")
 class(pedGood[["id"]])
 pedGood <- toCharacter(pedGood)
 class(pedGood[["id"]])
-}
-
 }

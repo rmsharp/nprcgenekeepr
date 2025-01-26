@@ -1,10 +1,18 @@
 #' Counts the number of occurrences of each kinship value seen for a pair of
 #' individuals in a series of simulated pedigrees.
 #'
-#' @return list of three lists named \code{kIds} (kinship IDs), \code{kValues}
-#' (kinship values), and \code{kCounts} (kinship counts).
+#' @return A list of three lists named \code{kIds} (kinship IDs), \code{kValues}
+#'         (kinship values), and \code{kCounts} (kinship counts).
+#'
+#' @param kinshipValues matrix of kinship values from simulated pedigrees where
+#'  each row represents a pair of individuals in the pedigree and each column
+#'  represents the vector of kinship values generated in a simulated
+#'  pedigree.
+#' @param accummulatedKValueCounts list object with same structure as that
+#'  returned by this function.
+#'
+#' @export
 #' @examples
-#' \donttest{
 #'  library(nprcgenekeepr)
 #'  ped <- nprcgenekeepr::smallPed
 #'  simParent_1 <- list(id = "A",
@@ -50,16 +58,6 @@
 #'  kValues <- kinshipMatricesToKValues(simKinships)
 #'  extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1:n)
 #'  accummulatedCounts <- countKinshipValues(kValues, counts)
-#' }
-#'
-#' @param kinshipValues matrix of kinship values from simulated pedigrees where
-#'  each row represents a pair of individuals in the pedigree and each column
-#'  represents the vector of kinship values generated in a simulated
-#'  pedigree.
-#' @param accummulatedKValueCounts list object with same structure as that
-#'  returned by this function.
-#'
-#' @export
 countKinshipValues <- function(kinshipValues,
                                accummulatedKValueCounts = NULL) {
   idCols <- c("id_1", "id_2")

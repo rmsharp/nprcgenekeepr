@@ -5,6 +5,10 @@
 #' and the \code{allSimParents} object to create a set of kinship matrices to
 #' be used in forming the \emph{Monte Carlo} estimates for the kinship values.
 #'
+#' @return A list of \code{n} lists with each internal list containing a
+#'         kinship matrixn from simulated pedigrees of possible
+#'         parents for animals with unknown parents.
+#'
 #' @param ped The pedigree information in data.frame format
 #' @param allSimParents list made up of lists where the internal list
 #'        has the offspring ID, \code{id}, a vector of representative sires
@@ -17,13 +21,8 @@
 #' @param verbose logical vector of length one that indicates whether or not
 #'        to print out when an animal is missing a sire or a dam.
 #' @importFrom data.table setDT
-#'
-#' @returns A list of \code{n} lists with each internal list containing a
-#'          kinship matrix.
 #' @export
-#'
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' ped <- nprcgenekeepr::smallPed
 #' simParent_1 <- list(id = "A",
@@ -38,8 +37,6 @@
 #' allSimParents <- list(simParent_1, simParent_2, simParent_3)
 #' pop <- LETTERS[1:7]
 #' simKinships <- createSimKinships(ped, allSimParents, pop, n = 10)
-#' }
-#'
 createSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L,
                               verbose = FALSE) {
   ## If user has limited the population of interest by defining 'pop',

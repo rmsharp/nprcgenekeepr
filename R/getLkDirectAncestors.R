@@ -8,18 +8,17 @@
 #' @return data.frame with pedigree structure having all of the direct ancestors
 #' for the Ids provided.
 #'
+#' @param ids character vector with Ids.
+#' @import futile.logger
+#' @importFrom stringi stri_c
+#' @export
 #' @examples
-#' \donttest{
+#' \donttest{ # Requires LabKey connection
 #' library(nprcgenekeepr)
 #' ## Have to a vector of focal animals
 #' focalAnimals <- c("1X2701", "1X0101")
 #' suppressWarnings(getLkDirectAncestors(ids = focalAnimals))
 #' }
-#'
-#' @param ids character vector with Ids.
-#' @import futile.logger
-#' @importFrom stringi stri_c
-#' @export
 getLkDirectAncestors <- function(ids) {
   siteInfo <- getSiteInfo()
   colSet <- siteInfo$lkPedColumns

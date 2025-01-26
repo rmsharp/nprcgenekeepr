@@ -8,18 +8,16 @@
 #'
 #' @return The return value of par("mar") when the function was called.
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' data(qcPed)
-#' getPyramidPlot(qcPed)
-#' }
 #' @param ped dataframe with pedigree data.
 #' @importFrom lubridate now
 #' @importFrom plotrix color.gradient
 #' @importFrom stringi stri_c
 #' @importFrom graphics par
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' data(qcPed)
+#' getPyramidPlot(qcPed)
 getPyramidPlot <- function(ped = NULL) {
 
   if (is.null(ped))

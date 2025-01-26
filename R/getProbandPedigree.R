@@ -10,20 +10,17 @@
 #'
 #' @return A reduced pedigree.
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' ped <- nprcgenekeepr::pedWithGenotype
-#' ids <- nprcgenekeepr::qcBreeders
-#' sires <- getPotentialSires(ids, minAge = 1, ped)
-#' head(getProbandPedigree(probands = sires, ped = ped))
-#' }
-#'
 #' @param probands a character vector with the list of animals whose ancestors
 #' should be included in the final pedigree.
 #' @param ped datatable that is the `Pedigree`. It contains pedigree
 #' information. The fields \code{sire} and \code{dam} are required.
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ped <- nprcgenekeepr::pedWithGenotype
+#' ids <- nprcgenekeepr::qcBreeders
+#' sires <- getPotentialSires(ids, minAge = 1, ped)
+#' head(getProbandPedigree(probands = sires, ped = ped))
 getProbandPedigree <- function(probands, ped) {
   while (TRUE) {
     sires <- ped$sire[ped$id %in% probands]

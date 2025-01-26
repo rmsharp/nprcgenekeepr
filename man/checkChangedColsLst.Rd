@@ -18,7 +18,6 @@ else the entire list is returned.
 checkChangedColsLst examines list for non-empty fields
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 library(lubridate)
 pedOne <- data.frame(ego_id = c("s1", "d1", "s2", "d2", "o1", "o2", "o3",
@@ -35,5 +34,4 @@ pedOne <- data.frame(ego_id = c("s1", "d1", "s2", "d2", "o1", "o2", "o3",
 
 errorLst <- qcStudbook(pedOne, reportErrors = TRUE, reportChanges = TRUE)
 checkChangedColsLst(errorLst$changedCols)
-}
 }

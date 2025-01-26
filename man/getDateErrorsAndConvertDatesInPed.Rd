@@ -26,7 +26,6 @@ If there are no errors that prevent the calculation of exit dates, they are
 calculated and added to the pedigree otherwise the pedigree is not updated.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::pedInvalidDates
 ped
@@ -36,6 +35,4 @@ names(ped) <- colNamesAndErrors$newColNames
 pedAndErrors <- getDateErrorsAndConvertDatesInPed(ped, errorLst)
 pedAndErrors$sb
 pedAndErrors$errorLst
-}
-
 }

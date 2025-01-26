@@ -16,11 +16,13 @@ be ignored. Default is 1 year.}
 \item{ped}{dataframe that is the \code{Pedigree}. It contains pedigree
 information including the IDs listed in \code{candidates}.}
 }
+\value{
+character vector of Ids with any potential sire Ids removed.
+}
 \description{
-@return character vector of Ids with any potential sire Ids removed.
+Removes potential sires from list of Ids
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 qcBreeders <- nprcgenekeepr::qcBreeders
 pedWithGenotype <- nprcgenekeepr::pedWithGenotype
@@ -29,6 +31,4 @@ noSires <- removePotentialSires(ids = qcBreeders, minAge = 2,
 sires <- getPotentialSires(qcBreeders, minAge = 2, ped = pedWithGenotype)
 pedWithGenotype[pedWithGenotype$id \%in\% noSires, c("sex", "age")]
 pedWithGenotype[pedWithGenotype$id \%in\% sires, c("sex", "age")]
-}
-
 }

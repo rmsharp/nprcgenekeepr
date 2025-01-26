@@ -39,7 +39,6 @@ greater than our equal to the \code{threshold} value.
 Forms a list of animal Ids and animals related to them
 }
 \examples{
-\donttest{
 examplePedigree <- nprcgenekeepr::examplePedigree
 ped <- qcStudbook(examplePedigree, minParentAge = 2, reportChanges = FALSE,
                   reportErrors = FALSE)
@@ -52,5 +51,4 @@ kin <- getAnimalsWithHighKinship(kmat, ped, threshold, currentGroups,
                                  ignore = list(c("F", "F")), minAge = 1)
 length(kin) # should be 2412
 kin[["1SPLS8"]] # should have 14 IDs
-}
 }

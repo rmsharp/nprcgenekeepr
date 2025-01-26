@@ -9,8 +9,10 @@
 #' number required are present. The returned genotype file has the first column
 #' name forced to "id".
 #'
+#' @param genotype dataframe with genotype data
+#' @importFrom stringi stri_c stri_detect_fixed stri_detect_regex
+#' @export
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' ped <- nprcgenekeepr::qcPed
 #' ped <- ped[order(ped$id), ]
@@ -27,11 +29,6 @@
 #'   }, error = function(e) {
 #'     cat("Error produced")
 #' })
-#' }
-#'
-#' @param genotype dataframe with genotype data
-#' @importFrom stringi stri_c stri_detect_fixed stri_detect_regex
-#' @export
 checkGenotypeFile <- function(genotype) {
   cols <- names(genotype)
   if (length(cols) < 3) {

@@ -6,7 +6,6 @@
 #' @return Pedigree with Ego records added having NAs for parent IDs
 #'
 #' @examples
-#' \donttest{
 #' uPedOne <- data.frame(id = c("d1", "s2", "d2", "o1", "o2", "o3", "o4"),
 #'                       sire = c("s0", "s4", NA, "s1", "s1", "s2", "s2"),
 #'                       dam = c("d0", "d4", NA, "d1", "d2", "d2", "d2"),
@@ -21,7 +20,6 @@
 #' newPed <- addIdRecords(ids = "s1", pedOne, uPedOne)
 #' pedOne[!pedOne$id %in% newPed$id, ]
 #' newPed[newPed$id == "s1", ]
-#' }
 #'
 #' @param ids character vector of IDs to be added as Ego records having
 #' NAs for parent IDs

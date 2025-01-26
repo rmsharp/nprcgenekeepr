@@ -26,7 +26,6 @@ Real values are truncated. Non-numerics are forced to minimum without
 warning.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 withinIntegerRange()
 withinIntegerRange( , 0, 10)
@@ -39,6 +38,4 @@ withinIntegerRange(c(0, 2.6, -1), 0, 2)
 withinIntegerRange(c(0, 2.6, -1, NA), 0, 2)
 withinIntegerRange(c(0, 2.6, -1, NA), 0, 2, na = "max")
 withinIntegerRange(c(0, 2.6, -1, NA), 0, 2, na = "min")
-}
-
 }

@@ -21,7 +21,6 @@ Adds a column to \code{rpt} containing integers from 1 to nrow, and provides
 a value designation for each animal of "high value" or "low value"
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 finalRpt <- nprcgenekeepr::finalRpt
 rpt <- rankSubjects(nprcgenekeepr::finalRpt)
@@ -31,6 +30,4 @@ rpt[["lowMk"]][1, "value"]
 rpt[["lowMk"]][1, "rank"]
 rpt[["lowVal"]][1, "value"]
 rpt[["lowVal"]][1, "rank"]
-}
-
 }

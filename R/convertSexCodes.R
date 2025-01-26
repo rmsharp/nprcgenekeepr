@@ -16,21 +16,18 @@
 #' @return A vector of factors representing standardized sex codes after
 #' transformation from non-standard codes.
 #'
+#' @param sex factor with levels: "M", "F", "U". Sex specifier for an
+#' individual.
+#' @param ignoreHerm logical flag indicating if hermaphrodites should be
+#' treated as unknown sex ("U"), default is \code{TRUE}.
+#' @export
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' original <- c("m", "male", "1", "MALE", "M", "F", "f", "female",
 #'               "FemAle", "U", "Unknown", "H", "hermaphrodite",
 #'               "U", "Unknown", "3", "4")
 #' sexCodes <- convertSexCodes(original)
 #' sexCodes
-#' }
-#'
-#' @param sex factor with levels: "M", "F", "U". Sex specifier for an
-#' individual.
-#' @param ignoreHerm logical flag indicating if hermaphrodites should be
-#' treated as unknown sex ("U"), default is \code{TRUE}.
-#' @export
 convertSexCodes <- function(sex, ignoreHerm = TRUE) {
   sex <- toupper(sex)
   sex[is.na(sex)] <- "U"

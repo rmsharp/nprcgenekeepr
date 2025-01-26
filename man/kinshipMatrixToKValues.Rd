@@ -39,7 +39,6 @@ Thus, the number of rows in the kValues matrix from one kinship matrix will
 be \eqn{n + \eqn{n(n-1)}{2}} and the number of columns will be 3.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::smallPed
 simParent_1 <- list(id = "A",
@@ -78,5 +77,4 @@ simPed <- makeSimPed(ped, allSimParents)
 simKinship <- kinship(simPed$id, simPed$sire,
                       simPed$dam, simPed$gen)
 kValues <- kinshipMatrixToKValues(simKinship)
-}
 }

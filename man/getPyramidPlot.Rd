@@ -18,9 +18,7 @@ The pedigree provided must have the following columns: \code{sex} and
 are provided by the nprcgenekeepr package.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 data(qcPed)
 getPyramidPlot(qcPed)
-}
 }

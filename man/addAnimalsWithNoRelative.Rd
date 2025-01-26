@@ -27,7 +27,7 @@ following: in \strong{groupAddAssign}
 }\if{html}{\out{</div>}}
 }
 \examples{
-\donttest{
+library(nprcgenekeepr)
 examplePedigree <- nprcgenekeepr::examplePedigree
 ped <- qcStudbook(examplePedigree, minParentAge = 2, reportChanges = FALSE,
                   reportErrors = FALSE)
@@ -45,6 +45,5 @@ candidates <- setdiff(candidates, conflicts)
 kin <- addAnimalsWithNoRelative(kin, candidates)
 length(kin) # should be 2416
 kin[["1SPLS8"]] # should have 14 IDs
-}
 
 }

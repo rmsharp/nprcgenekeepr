@@ -32,8 +32,8 @@ If \code{center} is "ONPRC", folderPath is "/ONPRC"\}
 Get site information
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
-getSiteInfo()
-}
+## default sends warning if configuration file is missing
+suppressWarnings(getSiteInfo())
+getSiteInfo(expectConfigFile = FALSE)
 }

@@ -18,10 +18,7 @@ A pedigree file compatible with others in this package.
 Get pedigree from file
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 ped <- getPedigree(fileName = system.file("testdata", "qcPed.csv",
                    package="nprcgenekeepr"))
-}
-
 }

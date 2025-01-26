@@ -7,8 +7,8 @@
 #' used in the \code{Input} tab. A warning is returned if the configuration
 #' file is not found.
 #'
+#' @export
 #' @examples
-#' \donttest{
 #' result = tryCatch({
 #'   getLogo()
 #' }, warning = function(w) {
@@ -17,9 +17,6 @@
 #' }, error = function(e) {
 #' print(paste0("Error in in getLogo: ", e))
 #' })
-#'
-#' }
-#' @export
 getLogo <- function() {
   logo <- list()
   if (getSiteInfo()$center == "SNPRC") {

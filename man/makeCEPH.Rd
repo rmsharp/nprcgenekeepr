@@ -59,11 +59,9 @@ the above categories\}
 }
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::lacy1989Ped
 pedCEPH <- makeCEPH(ped$id, ped$sire, ped$dam)
 head(ped)
 head(pedCEPH$F)
-}
 }

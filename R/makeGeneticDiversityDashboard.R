@@ -8,7 +8,7 @@
 #' @importFrom gplots heatmap.2
 #' @import RColorBrewer
 #' @importFrom grDevices colorRampPalette dev.off png
-#' @export
+#' @noRd
 ##makeGeneticDiversityDashboard <- function(geneticDiversityStats,
 ##                                      file = "images/geneticDiversity.png") {
 ##  my_palette <- colorRampPalette(c("red", "yellow", "green"))(n = 3)

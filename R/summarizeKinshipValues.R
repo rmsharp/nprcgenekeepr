@@ -15,8 +15,12 @@
 #'  \code{max}, and
 #'  \code{sd}.
 #'
+#' @param countedKValues list object from countKinshipValues function that
+#' containes the lists \code{kinshipIds}, \code{kinshipValues},
+#' and \code{kinshipCounts}.
+#' @importFrom stats fivenum sd
+#' @export
 #' @examples
-#' \donttest{
 #' ped <- nprcgenekeepr::smallPed
 #' simParent_1 <- list(id = "A",
 #'                     sires = c("s1_1", "s1_2", "s1_3"),
@@ -56,13 +60,6 @@
 #' extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1:n)
 #' counts <- countKinshipValues(kValues)
 #' stats <- summarizeKinshipValues(counts)
-#' }
-#'
-#' @param countedKValues list object from countKinshipValues function that
-#' containes the lists \code{kinshipIds}, \code{kinshipValues},
-#' and \code{kinshipCounts}.
-#' @importFrom stats fivenum sd
-#' @export
 summarizeKinshipValues <- function(countedKValues) {
   if (!all(is.element(names(countedKValues), c("kIds", "kValues",
                                                "kCounts"))))

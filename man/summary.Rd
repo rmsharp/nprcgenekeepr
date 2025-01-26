@@ -23,14 +23,10 @@ object of class summary.nprcgenekeeprGV
 summary.nprcgenekeeprErr Summary function for class nprcgenekeeprErr
 }
 \examples{
-\donttest{
 errorList <- qcStudbook(nprcgenekeepr::pedOne, minParentAge = 0,
 reportChanges = TRUE,
 reportErrors = TRUE)
 summary(errorList)
-}
-
-\donttest{
 examplePedigree <- nprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
                          reportChanges = FALSE,
@@ -53,5 +49,4 @@ trimmedGeneticValue <- reportGV(trimmedPed, guIter = 50, # should be >= 1000
                                 updateProgress = NULL)
 summary(geneticValue)
 summary(trimmedGeneticValue)
-}
 }

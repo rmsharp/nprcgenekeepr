@@ -39,21 +39,18 @@ order to provide the parameter pdepth (the generation number). This version
 requires the generation number to be calculated elsewhere and passed into
 the function.
 
-The rows (cols) of founders are just .5 * identity matrix, no further
+The rows (cols) of founders are just 0.5 * identity matrix, no further
 processing is needed for them.
 Parents must be processed before their children, and then a child's
-kinship is just a sum of the kinship's for his/her parents.
+kinship is just a sum of the kinship's for his or her parents.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::lacy1989Ped
 ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
 ped
 kmat
-}
-
 }
 \references{
 \{S-Plus/R Function Page\}

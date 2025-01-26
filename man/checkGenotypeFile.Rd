@@ -19,7 +19,6 @@ Checks to ensure the content and structure are appropriate for a genotype
 file. These checks are simply based on expected columns and legal domains.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::qcPed
 ped <- ped[order(ped$id), ]
@@ -36,6 +35,4 @@ tryCatch({
   }, error = function(e) {
     cat("Error produced")
 })
-}
-
 }

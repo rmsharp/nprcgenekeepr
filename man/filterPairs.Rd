@@ -26,7 +26,6 @@ A dataframe representing a filtered long-format kinship table.
 Part of Group Formation
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::lacy1989Ped
 ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
@@ -40,6 +39,4 @@ kinMM <- filterPairs(kin, ped, ignore = list(c("M", "M")))
 ped
 kin[kin$id1 == "C", ]
 kinMM[kinMM$id1 == "C", ]
-}
-
 }

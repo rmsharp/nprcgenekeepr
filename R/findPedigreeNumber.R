@@ -7,8 +7,13 @@
 #' @return Integer vector indicating generation numbers for each id,
 #' starting at 0 for individuals lacking IDs for both parents.
 #'
+#' @param id character vector with unique identifier for an individual
+#' @param sire character vector with unique identifier for an
+#' individual's father (\code{NA} if unknown).
+#' @param dam character vector with unique identifier for an
+#' individual's mother (\code{NA} if unknown).
+#' @export
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' library(stringi)
 #' ped <- nprcgenekeepr::lacy1989Ped
@@ -25,15 +30,7 @@
 #' ped <- rbind(ped, ped2)
 #' ped <- rbind(ped, ped3)
 #' ped$pedigree <- findPedigreeNumber(ped$id, ped$sire, ped$dam)
-#' ped
-#' }
-#'
-#' @param id character vector with unique identifier for an individual
-#' @param sire character vector with unique identifier for an
-#' individual's father (\code{NA} if unknown).
-#' @param dam character vector with unique identifier for an
-#' individual's mother (\code{NA} if unknown).
-#' @export
+#' ped$pedigree
 findPedigreeNumber <- function(id, sire, dam) {
   founders <- id[is.na(sire) & is.na(dam)]
   pedNum <- rep(NA, length(id))

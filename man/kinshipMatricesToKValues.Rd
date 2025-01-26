@@ -11,7 +11,7 @@ kinshipMatricesToKValues(kinshipMatrices)
 may not have named rows and columns.}
 }
 \value{
-data.frame object with columns \code{id_1}, \code{id_2}, and one
+Dataframe object with columns \code{id_1}, \code{id_2}, and one
 \code{kinship} column for each kinship matrix in \code{kinshipMatricies}
 where the first two columns contain the IDs of the
 individuals in the kinship matrix provided to the function and the
@@ -41,7 +41,6 @@ be \eqn{n + \eqn{n(n-1)}{2}} and the number of columns will be 2 plus one
 additional column for each kinship matrix (\eqn{2 + n}).
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::smallPed
 simParent_1 <- list(id = "A",
@@ -80,5 +79,4 @@ n <- 10
 simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
 kValue <- kinshipMatricesToKValues(simKinships)
 extractKValue(kValue, id1 = "A", id2 = "F", simulation = 1:n)
-}
 }

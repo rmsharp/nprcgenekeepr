@@ -23,9 +23,7 @@ pedigree from \emph{rhesusGenotypes.csv}.
 }
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 data("rhesusGenotypes")
-}
 }
 \keyword{datasets}

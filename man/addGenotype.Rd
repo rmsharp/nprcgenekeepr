@@ -20,12 +20,10 @@ A pedigree object with genotype data added.
 Assumes genotype has been opened by \code{checkGenotypeFile}
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 rhesusPedigree <- nprcgenekeepr::rhesusPedigree
 rhesusGenotypes <- nprcgenekeepr::rhesusGenotypes
 pedWithGenotypes <- addGenotype(ped = rhesusPedigree,
                                 genotype = rhesusGenotypes)
-}
 
 }

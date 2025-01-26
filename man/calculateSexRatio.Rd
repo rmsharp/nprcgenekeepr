@@ -27,12 +27,11 @@ Numeric value of sex ratio of the animals provided.
 \description{
 The Males are counted when the \code{ped$sex} value is
 \code{"M"}.
-When females are counted when the \code{ped$sex} value is not
+Females are counted when the \code{ped$sex} value is not
 \code{"M"}. This means animals with ambiguous sex are counted with the
 females.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 data("qcBreeders")
 data("pedWithGenotype")
@@ -56,6 +55,4 @@ calculateSexRatio(ids = nonMales, ped = pedWithGenotype,
                   additionalMales = 1, additionalFemales = 0)
 calculateSexRatio(ids = character(0), ped = pedWithGenotype,
                 additionalMales = 1, additionalFemales = 0)
-}
-
 }

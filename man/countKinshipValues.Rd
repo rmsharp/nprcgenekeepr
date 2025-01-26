@@ -17,7 +17,7 @@ pedigree.}
 returned by this function.}
 }
 \value{
-list of three lists named \code{kIds} (kinship IDs), \code{kValues}
+A list of three lists named \code{kIds} (kinship IDs), \code{kValues}
 (kinship values), and \code{kCounts} (kinship counts).
 }
 \description{
@@ -25,7 +25,6 @@ Counts the number of occurrences of each kinship value seen for a pair of
 individuals in a series of simulated pedigrees.
 }
 \examples{
-\donttest{
  library(nprcgenekeepr)
  ped <- nprcgenekeepr::smallPed
  simParent_1 <- list(id = "A",
@@ -71,6 +70,4 @@ individuals in a series of simulated pedigrees.
  kValues <- kinshipMatricesToKValues(simKinships)
  extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1:n)
  accummulatedCounts <- countKinshipValues(kValues, counts)
-}
-
 }

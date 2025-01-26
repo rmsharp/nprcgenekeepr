@@ -23,13 +23,10 @@ gene dropping simulation.
 Part of Genetic Value Analysis
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 data("lacy1989Ped")
 data("lacy1989PedAlleles")
 ped <- lacy1989Ped
 alleles <- lacy1989PedAlleles
 retention <- calcRetention(ped, alleles)
-}
-
 }

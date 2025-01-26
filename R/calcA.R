@@ -8,12 +8,6 @@
 #' @return A matrix with named rows indicating the number of unique alleles
 #'   an animal had during each round of simulation (indicated in columns).
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' rare <- calcA(nprcgenekeepr::ped1Alleles, threshold = 3, byID = FALSE)
-#' }
-#'
 #' @param alleles a matrix with \{id, parent, V1 ... Vn\} providing the alleles
 #' an animal received during each simulation.
 #' The first 2 columns provide the animal ID and the parent the allele came
@@ -27,6 +21,9 @@
 #'  the function will only count the unique alleles for an individual
 #'   (homozygous alleles will be counted as 1).
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' rare <- calcA(nprcgenekeepr::ped1Alleles, threshold = 3, byID = FALSE)
 calcA <- function(alleles, threshold = 1, byID = FALSE) {
   ids <- alleles$id
   alleles <- alleles[, !(names(alleles) %in% c("id", "parent"))]

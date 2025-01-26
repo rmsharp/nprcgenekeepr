@@ -4,6 +4,8 @@
 ## This file is part of nprcgenekeepr
 #' Someone started entering "unknown" for unknown parents instead of leaving
 #' the field blank in PRIMe.
+#' @return A dataframe with "UNKNOWN" values in the columns \code{id},
+#' \code{sire}, and \code{dam} replaced with NA
 #' @param ped  A dataframe containing at least and "id" field
 #' @noRd
 unknown2NA <- function(ped) {

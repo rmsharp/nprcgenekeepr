@@ -13,8 +13,11 @@
 #' @return A dataframe with kinships in long form after adding a row for each
 #' animal without a relative.
 #'
+#' @param kin dataframe with kinship values
+#' @param candidates character vector of IDs of the animals available for
+#' use in the group.
+#' @export
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' examplePedigree <- nprcgenekeepr::examplePedigree
 #' ped <- qcStudbook(examplePedigree, minParentAge = 2, reportChanges = FALSE,
@@ -33,12 +36,7 @@
 #' kin <- addAnimalsWithNoRelative(kin, candidates)
 #' length(kin) # should be 2416
 #' kin[["1SPLS8"]] # should have 14 IDs
-#' }
 #'
-#' @param kin dataframe with kinship values
-#' @param candidates character vector of IDs of the animals available for
-#' use in the group.
-#' @export
 addAnimalsWithNoRelative <- function(kin, candidates) {
 
   # adding animals with no relatives

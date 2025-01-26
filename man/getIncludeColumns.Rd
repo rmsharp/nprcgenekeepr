@@ -16,8 +16,5 @@ Part of Genetic Value Functions
 Replaces INCLUDE.COLUMNS data statement.
 }
 \examples{
-\donttest{
 getIncludeColumns()
-}
-
 }

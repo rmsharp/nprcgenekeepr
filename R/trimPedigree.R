@@ -11,25 +11,6 @@
 #' @return A pedigree that has been trimmed, had uninformative founders
 #' removed and single parents added back.
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' examplePedigree <- nprcgenekeepr::examplePedigree
-#' breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
-#'                          reportChanges = FALSE,
-#'                          reportErrors = FALSE)
-#' focalAnimals <- breederPed$id[!(is.na(breederPed$sire) &
-#'                                   is.na(breederPed$dam)) &
-#'                                 is.na(breederPed$exit)]
-#' breederPed <- setPopulation(ped = breederPed, ids = focalAnimals)
-#' trimmedPed <- trimPedigree(focalAnimals, breederPed)
-#' trimmedPedInformative <- trimPedigree(focalAnimals, breederPed,
-#'                                       removeUninformative = TRUE)
-#' nrow(breederPed)
-#' nrow(trimmedPed)
-#' nrow(trimmedPedInformative)
-#' }
-#'
 #' @param probands a character vector with the list of animals whose ancestors
 #' should be included in the final pedigree.
 #' @param ped datatable that is the `Pedigree`. It contains pedigree
@@ -48,6 +29,22 @@
 #' \code{p} dataframe, which has all uninformative parents removed to add
 #' back single parents to the \code{p} dataframe.
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' examplePedigree <- nprcgenekeepr::examplePedigree
+#' breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
+#'                          reportChanges = FALSE,
+#'                          reportErrors = FALSE)
+#' focalAnimals <- breederPed$id[!(is.na(breederPed$sire) &
+#'                                   is.na(breederPed$dam)) &
+#'                                 is.na(breederPed$exit)]
+#' breederPed <- setPopulation(ped = breederPed, ids = focalAnimals)
+#' trimmedPed <- trimPedigree(focalAnimals, breederPed)
+#' trimmedPedInformative <- trimPedigree(focalAnimals, breederPed,
+#'                                       removeUninformative = TRUE)
+#' nrow(breederPed)
+#' nrow(trimmedPed)
+#' nrow(trimmedPedInformative)
 trimPedigree <- function(probands, ped, removeUninformative = FALSE,
                           addBackParents = FALSE) {
   ped <- getProbandPedigree(probands, ped)

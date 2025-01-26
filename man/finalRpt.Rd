@@ -20,10 +20,8 @@ is at the state just prior to calling \code{rankSubjects} inside
 \code{orderReport}.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 data("finalRpt")
 finalRpt <- rankSubjects(finalRpt)
-}
 }
 \keyword{datasets}

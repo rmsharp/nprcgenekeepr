@@ -22,12 +22,10 @@ and \code{second}. These checks are simply based on expected columns
 and legal domains.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 rhesusPedigree <- nprcgenekeepr::rhesusPedigree
 rhesusGenotypes <- nprcgenekeepr::rhesusGenotypes
 pedWithGenotypes <- addGenotype(ped = rhesusPedigree,
                                genotype = rhesusGenotypes)
 hasGenotype(pedWithGenotypes)
-}
 }

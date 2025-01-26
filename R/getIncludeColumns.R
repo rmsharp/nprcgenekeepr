@@ -8,12 +8,9 @@
 #'
 #' @return Superset of columns that can be in a pedigree file.
 #'
-#' @examples
-#' \donttest{
-#' getIncludeColumns()
-#' }
-#'
 #' @export
+#' @examples
+#' getIncludeColumns()
 getIncludeColumns <- function() {
   c("id", "sex", "age", "birth", "exit", "population", "condition", "origin",
     "first_name", "second_name")

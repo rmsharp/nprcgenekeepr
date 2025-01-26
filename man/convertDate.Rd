@@ -26,7 +26,6 @@ conform to the format \%Y\%m\%d are set to NA. NA values are left as NA.
 Part of Pedigree Curation
 }
 \examples{
-\donttest{
 library(lubridate)
 set_seed(10)
 someBirthDates <- paste0(sample(seq(0, 15, by = 3), 10,
@@ -73,6 +72,4 @@ all(is.Date(convertDate(ped3)$birth))
 
 ## convertDate handles NA and empty character string values correctly
 convertDate(ped4)
-}
-
 }

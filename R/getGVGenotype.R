@@ -10,8 +10,9 @@
 #' If the pedigree object does not contain genotypic data the \code{NULL} is
 #' returned.
 #'
+#' @param ped the pedigree information in datatable format
+#' @export
 #' @examples
-#' \donttest{
 #' ## We usually defined `n` to be >= 5000
 #' library(nprcgenekeepr)
 #' ped <- nprcgenekeepr::lacy1989Ped
@@ -28,10 +29,6 @@
 #' allelesNewGen <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,
 #'                          genotype = pedGenotype,
 #'                          n = 5, updateProgress = NULL)
-#' }
-#'
-#' @param ped the pedigree information in datatable format
-#' @export
 getGVGenotype <- function(ped) {
   if (hasGenotype(ped)) {
     genotype <- ped[, c("id", "first", "second")]

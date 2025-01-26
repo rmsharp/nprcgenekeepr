@@ -14,9 +14,7 @@ smallPedTree
 Access it using the following commands.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 data("smallPedTree")
-}
 }
 \keyword{datasets}

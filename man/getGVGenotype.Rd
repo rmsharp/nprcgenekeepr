@@ -20,7 +20,6 @@ returned.
 Extracts genotype data if available otherwise NULL is returned.
 }
 \examples{
-\donttest{
 ## We usually defined `n` to be >= 5000
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::lacy1989Ped
@@ -37,6 +36,4 @@ pedGenotype <- getGVGenotype(pedWithGenotype)
 allelesNewGen <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,
                          genotype = pedGenotype,
                          n = 5, updateProgress = NULL)
-}
-
 }

@@ -6,14 +6,12 @@
 #' @return Character vector with expected configuration file
 #'
 #' @param sysInfo object returned by Sys.info()
+#' @importFrom stringi stri_detect_fixed
+#' @export
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' sysInfo <- Sys.info()
 #' config <- getConfigFileName(sysInfo)
-#' }
-#' @importFrom stringi stri_detect_fixed
-#' @export
 getConfigFileName <- function(sysInfo) {
   if (stri_detect_fixed(toupper(sysInfo[["sysname"]]), "WIND")) {
     homeDir <- paste0(gsub("\\\\", "/", Sys.getenv("HOME")), "/")

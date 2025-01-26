@@ -14,7 +14,6 @@
 #' with \code{NA}.
 #'
 #' @examples
-#' \donttest{
 #' pedTwo <- data.frame(id = c("d1", "s2", "d2", "o1", "o2", "o3", "o4"),
 #'                      sire = c(NA, NA, NA, "s1", "s1", "s2", "s2"),
 #'                      dam = c(NA, NA, NA, "d1", "d2", "d2", "d2"),
@@ -22,7 +21,6 @@
 #'                      stringsAsFactors = FALSE)
 #' newPed <- addParents(pedTwo)
 #' newPed
-#' }
 #'
 #' @param ped datatable that is the `Pedigree`. It contains pedigree
 #' information including the IDs listed in \code{candidates}.

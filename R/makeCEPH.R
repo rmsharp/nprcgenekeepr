@@ -43,20 +43,18 @@
 #' elements: parents (sire, dam), paternal grandparents (pgp: sire, dam),
 #' and maternal grandparents (mgp: sire, dam).
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' ped <- nprcgenekeepr::lacy1989Ped
-#' pedCEPH <- makeCEPH(ped$id, ped$sire, ped$dam)
-#' head(ped)
-#' head(pedCEPH$F)
-#' }
 #' @param id character vector with unique identifier for an individual
 #' @param sire character vector with unique identifier for an
 #' individual's father (\code{NA} if unknown).
 #' @param dam character vector with unique identifier for an
 #' individual's mother (\code{NA} if unknown).
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ped <- nprcgenekeepr::lacy1989Ped
+#' pedCEPH <- makeCEPH(ped$id, ped$sire, ped$dam)
+#' head(ped)
+#' head(pedCEPH$F)
 makeCEPH <- function(id, sire, dam) {
   ped <- data.frame(sire = sire, dam = dam, row.names = id,
                     stringsAsFactors = FALSE)

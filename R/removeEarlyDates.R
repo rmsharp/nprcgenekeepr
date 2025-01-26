@@ -11,19 +11,17 @@
 #' @return A vector of dates after the year indicated by the numeric value of
 #' \code{firstYear}.
 #'
-#' @examples
-#' \donttest{
-#' dates <- structure(c(12361, 14400, 15413, NA, 11189, NA, 13224, 10971,
-#'                      -432000, 13262), class = "Date")
-#' cleanedDates <- removeEarlyDates(dates, firstYear = 1000)
-#' dates
-#' cleanedDates
-#' }
 #' @param dates vector of dates
 #' @param firstYear integer value of first (earliest) year in the allowed
 #' date range.
 #' @importFrom lubridate year
 #' @export
+#' @examples
+#' dates <- structure(c(12361, 14400, 15413, NA, 11189, NA, 13224, 10971,
+#'                      -432000, 13262), class = "Date")
+#' cleanedDates <- removeEarlyDates(dates, firstYear = 1000)
+#' dates
+#' cleanedDates
 removeEarlyDates <- function(dates, firstYear) {
   dates[year(dates) < firstYear & !is.na(dates)] <- NA
   dates

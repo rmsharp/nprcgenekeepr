@@ -16,7 +16,6 @@ They can be used to illustrate the identification of a population of
 interest as is shown in the example below.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 data("focalAnimals")
 data("examplePedigree")
@@ -27,6 +26,5 @@ examplePedigree <- setPopulation(ped = examplePedigree,
 any(names(examplePedigree) == "population")
 nrow(examplePedigree)
 nrow(examplePedigree[examplePedigree$population, ])
-}
 }
 \keyword{datasets}

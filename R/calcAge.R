@@ -10,19 +10,16 @@
 #' @return A numeric vector (\code{NA} allowed) indicating age in decimal years
 #' from "birth" to "exit" or the current date if "exit" is NA.
 #'
+#' @param birth Date vector of birth dates
+#' @param exit Date vector of exit dates.
+#'
+#' @export
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #' qcPed <- nprcgenekeepr::qcPed
 #' originalAge <- qcPed$age ## ages calculated at time of data collection
 #' currentAge <- calcAge(qcPed$birth, qcPed$exit) ## assumes no changes in
 #'                                                ## colony
-#' }
-#'
-#' @param birth Date vector of birth dates
-#' @param exit Date vector of exit dates.
-#'
-#' @export
 calcAge <- function(birth, exit) {
   if (length(birth) == 0)
     return(birth)

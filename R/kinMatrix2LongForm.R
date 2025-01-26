@@ -7,17 +7,6 @@
 #' @return A dataframe with columns \code{id1}, \code{id2}, and \code{kinship}.
 #' This is the kinship data reformatted from a matrix, to a long-format table.
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' ped <- nprcgenekeepr::lacy1989Ped
-#' ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
-#' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
-#' reformattedKmat <- kinMatrix2LongForm(kmat, removeDups = FALSE)
-#' nrow(reformattedKmat)
-#' reformattedNoDupsKmat <- kinMatrix2LongForm(kmat, removeDups = TRUE)
-#' nrow(reformattedNoDupsKmat)
-#' }
 #' @param kinMatrix numerical matrix of pairwise kinship values. The row and
 #' column names correspond to animal IDs.
 #' @param removeDups logical value indication whether or not reverse-order ID
@@ -26,6 +15,15 @@
 #'
 #' @importFrom utils stack
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ped <- nprcgenekeepr::lacy1989Ped
+#' ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+#' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
+#' reformattedKmat <- kinMatrix2LongForm(kmat, removeDups = FALSE)
+#' nrow(reformattedKmat)
+#' reformattedNoDupsKmat <- kinMatrix2LongForm(kmat, removeDups = TRUE)
+#' nrow(reformattedNoDupsKmat)
 kinMatrix2LongForm <- function(kinMatrix, removeDups = FALSE) {
   if (removeDups) {
     kinMatrix[upper.tri(kinMatrix)] <- NA

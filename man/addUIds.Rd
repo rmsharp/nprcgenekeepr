@@ -19,7 +19,6 @@ This must be run prior to \code{addParents} since the IDs made herein are
 used by \code{addParents}
 }
 \examples{
-\donttest{
 pedTwo <- data.frame(id = c("s1", "d1", "s2", "d2", "o1", "o2", "o3", "o4"),
                      sire = c(NA, "s0", "s4", NA, "s1", "s1", "s2", "s2"),
                      dam = c("d0", "d0", "d4", NA, "d1", "d2", "d2", "d2"),
@@ -35,6 +34,4 @@ pedThree <-
              stringsAsFactors = FALSE)
 newPed <- addUIds(pedThree)
 newPed[newPed$id == "s1", ]
-}
-
 }

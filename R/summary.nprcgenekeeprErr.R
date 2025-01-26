@@ -5,14 +5,6 @@
 #'
 #' @return Object of class summary.nprcgenekeeprErr
 #'
-#' @examples
-#' \donttest{
-#' errorList <- qcStudbook(nprcgenekeepr::pedOne, minParentAge = 0,
-#' reportChanges = TRUE,
-#' reportErrors = TRUE)
-#' summary(errorList)
-#' }
-#'
 #' @rdname summary
 #' @method summary nprcgenekeeprErr
 #' @param object object of class nprcgenekeeprErr and class list
@@ -20,6 +12,11 @@
 #' @importFrom stringi stri_c stri_length
 ## ##  rmsutilityr get_and_or_list
 #' @export
+#' @examples
+#' errorList <- qcStudbook(nprcgenekeepr::pedOne, minParentAge = 0,
+#' reportChanges = TRUE,
+#' reportErrors = TRUE)
+#' summary(errorList)
 summary.nprcgenekeeprErr <- function(object, ...) {
   errorLst <- object
   stopifnot(inherits(errorLst, "nprcgenekeeprErr"))
@@ -155,8 +152,10 @@ summary.nprcgenekeeprErr <- function(object, ...) {
 }
 #' @rdname summary
 #' @return object of class summary.nprcgenekeeprGV
+#' @method summary nprcgenekeeprGV
+#' @importFrom stringi stri_c
+#' @export
 #' @examples
-#' \donttest{
 #' examplePedigree <- nprcgenekeepr::examplePedigree
 #' breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
 #'                          reportChanges = FALSE,
@@ -179,10 +178,6 @@ summary.nprcgenekeeprErr <- function(object, ...) {
 #'                                 updateProgress = NULL)
 #' summary(geneticValue)
 #' summary(trimmedGeneticValue)
-#' }
-#' @method summary nprcgenekeeprGV
-#' @importFrom stringi stri_c
-#' @export
 summary.nprcgenekeeprGV <- function(object, ...) {
   gvReport <- object
   stopifnot(inherits(gvReport, "nprcgenekeeprGV"))

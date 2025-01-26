@@ -25,11 +25,9 @@ formed from malformed character representations such as a date in
 NA values are ignored and not changed.
 }
 \examples{
-\donttest{
 dates <- structure(c(12361, 14400, 15413, NA, 11189, NA, 13224, 10971,
                      -432000, 13262), class = "Date")
 cleanedDates <- removeEarlyDates(dates, firstYear = 1000)
 dates
 cleanedDates
-}
 }

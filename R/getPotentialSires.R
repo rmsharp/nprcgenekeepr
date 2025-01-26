@@ -5,14 +5,6 @@
 #'
 #' @return A character vector of potential sire Ids
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' ped <- nprcgenekeepr::pedWithGenotype
-#' ids <- nprcgenekeepr::qcBreeders
-#' getPotentialSires(ids, minAge = 1, ped)
-#' }
-#'
 #' @param ids character vector of IDs of the animals
 #' @param minAge integer value indicating the minimum age to consider in group
 #' formation. Pairwise kinships involving an animal of this age or younger will
@@ -20,6 +12,11 @@
 #' @param ped dataframe that is the `Pedigree`. It contains pedigree
 #' information including the IDs listed in \code{candidates}.
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ped <- nprcgenekeepr::pedWithGenotype
+#' ids <- nprcgenekeepr::qcBreeders
+#' getPotentialSires(ids, minAge = 1, ped)
 getPotentialSires <- function(ids, minAge = 1, ped) {
   ped <- ped[!is.na(ped$birth), ]
   ped$id[ped$id %in% ids & ped$sex == "M" & getCurrentAge(ped$birth) >= minAge &

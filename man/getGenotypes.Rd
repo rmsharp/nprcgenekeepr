@@ -18,10 +18,7 @@ A genotype file compatible with others in this package.
 Get genotypes from file
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 pedCsv <- getGenotypes(fileName = system.file("testdata", "qcPed.csv",
                        package="nprcgenekeepr"))
-}
-
 }

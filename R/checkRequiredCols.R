@@ -6,17 +6,6 @@
 #' @return NULL is returned if all required columns are present. See description
 #' of \code{reportErrors} for return values when required columns are missing.
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' requiredCols <- getRequiredCols()
-#' cols <-
-#'   paste0("id,sire,siretype,dam,damtype,sex,numberofparentsknown,birth,",
-#'          "arrivalatcenter,death,departure,status,ancestry,fromcenter?,",
-#'          "origin")
-#' all(requiredCols %in% checkRequiredCols(cols, reportErrors = TRUE))
-#' }
-#'
 #' @param cols character vector of column names
 #' @param reportErrors logical value when \code{TRUE} and missing columns are
 #' found
@@ -25,6 +14,14 @@
 #' the program is stopped.
 ## ## rmsutilityr str_detect_fixed_all
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' requiredCols <- getRequiredCols()
+#' cols <-
+#'   paste0("id,sire,siretype,dam,damtype,sex,numberofparentsknown,birth,",
+#'          "arrivalatcenter,death,departure,status,ancestry,fromcenter?,",
+#'          "origin")
+#' all(requiredCols %in% checkRequiredCols(cols, reportErrors = TRUE))
 checkRequiredCols <- function(cols, reportErrors) {
   requiredCols <- getRequiredCols()
   # Checking for the required fields (id, sire, dam, sex)

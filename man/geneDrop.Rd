@@ -28,25 +28,7 @@ animal.}
 
 \item{genotype}{A dataframe containing known genotypes. It has three
 columns:  \code{id}, \code{first}, and \code{second}. The second and third
-columns contain the integers indicating the observed genotypes.
-
-The gene dropping method from \emph{Pedigree analysis by computer simulation}
-by Jean W MacCluer, John L Vandeberg, and Oliver A Ryder (1986)
-\url{doi:10.1002/zoo.1430050209} is used in the genetic value calculations.
-
-Currently there is no means of handling knowing only one haplotype.
-It will be easy to add another column to handle situations where only one
-allele is observed and it is not known to be homozygous or heterozygous. The
-new fourth column could have a frequency for homozygosity that could be
-used in the gene dropping algorithm.
-
-The genotypes are using indirection (integer instead of character) to
-indicate the genes because the manipulation of character strings was found
-to take 20-35 times longer to perform.
-
-Adding additional columns to \code{genotype} does not significantly affect
-the time require. Thus, it is convenient to add the corresponding haplotype
-names to the dataframe using \code{first_name} and \code{second_name}.}
+columns contain the integers indicating the observed genotypes.}
 
 \item{n}{integer indicating the number of iterations to simulate.
 Default is 5000.}
@@ -65,8 +47,26 @@ whether the allele came from the sire or dam. These are followed by
 \description{
 Part of Genetic Value Analysis
 }
+\details{
+The gene dropping method from \emph{Pedigree analysis by computer simulation}
+by Jean W MacCluer, John L Vandeberg, and Oliver A Ryder (1986)
+\url{doi:10.1002/zoo.1430050209} is used in the genetic value calculations.
+
+Currently there is no means of handling knowing only one haplotype.
+It will be easy to add another column to handle situations where only one
+allele is observed and it is not known to be homozygous or heterozygous. The
+new fourth column could have a frequency for homozygosity that could be
+used in the gene dropping algorithm.
+
+The genotypes are using indirection (integer instead of character) to
+indicate the genes because the manipulation of character strings was found
+to take 20-35 times longer to perform.
+
+Adding additional columns to \code{genotype} does not significantly affect
+the time require. Thus, it is convenient to add the corresponding haplotype
+names to the dataframe using \code{first_name} and \code{second_name}.
+}
 \examples{
-\donttest{
 ## We usually defined `n` to be >= 5000
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::lacy1989Ped
@@ -83,6 +83,4 @@ pedGenotype <- getGVGenotype(pedWithGenotype)
 allelesNewGen <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,
                          genotype = pedGenotype,
                          n = 5, updateProgress = NULL)
-}
-
 }

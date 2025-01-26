@@ -7,16 +7,13 @@
 #' @return A character vector describing the passage of time in hours, minutes,
 #' and seconds.
 #'
-#' @examples
-#' \donttest{
-#' start_time <- proc.time()
-#' ## do something
-#' elapsed_time <- get_elapsed_time_str(start_time)
-#' }
-#'
 #' @param start_time a POSIXct time object
 #' @importFrom stringi stri_c
 #' @export
+#' @examples
+#' start_time <- proc.time()
+#' ## do something
+#' elapsed_time <- get_elapsed_time_str(start_time)
 get_elapsed_time_str <- function(start_time) {
   # To use: collect the start_time at the beginning of the script with
   # start_time <- proc.time()

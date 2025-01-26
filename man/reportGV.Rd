@@ -44,7 +44,6 @@ in order of descending value.
 This is the main function for the Genetic Value Analysis.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 examplePedigree <- nprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
@@ -75,6 +74,4 @@ nmf <- trimmedGeneticValue[["nMaleFounders"]]
 nff <- trimmedGeneticValue[["nFemaleFounders"]]
 fe <- trimmedGeneticValue[["fe"]]
 fg <- trimmedGeneticValue[["fg"]]
-}
-
 }

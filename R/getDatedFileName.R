@@ -6,16 +6,13 @@
 #' @return A character string with a file name prepended with the date and time
 #' in YYYY-MM-DD_hh_mm_ss_basename format.
 #'
-#' @examples
-#' \donttest{
-#' library(nprcgenekeepr)
-#' getDatedFilename("testName")
-#' }
-#'
 #' @param filename character vector with name to use in file name
 #' @importFrom lubridate now
 #' @importFrom stringi stri_c stri_replace_all_fixed
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' getDatedFilename("testName")
 getDatedFilename <- function(filename) {
   dateStamp <- stri_replace_all_fixed(
     stri_replace_all_fixed(as.character(now()), " ", "_"), ":", "_")

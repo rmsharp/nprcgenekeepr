@@ -6,8 +6,15 @@
 #' @return TRUE if the Excel file was successfully created. FALSE if any errors
 #' occurred.
 #'
+#' @param file filename of workbook to be created
+#' @param df_list list of data frames to be added as worksheets to workbook
+#' @param sheetnames character vector of worksheet names
+#' @param replace Specifies if the file should be replaced if it
+#' already exist (default is FALSE).
+#' @importFrom stringi stri_c
+#' @importFrom WriteXLS WriteXLS
+#' @export
 #' @examples
-#' \donttest{
 #' library(nprcgenekeepr)
 #'
 #' make_df_list <- function(size) {
@@ -24,23 +31,26 @@
 #' }
 #' df_list <- make_df_list(3)
 #' sheetnames <- names(df_list)
-#' create_wkbk(file = file.path(tempdir(), "example_excel_wkbk.xlsx"),
-#'             df_list = df_list,
-#'             sheetnames = sheetnames, replace = FALSE)
+#' if (file.exists(file.path(tempdir(), "example_excel_wkbk.xlsx"))) {
+#'   file.remove(file.path(tempdir(), "example_excel_wkbk.xlsx"))
+#'   create_wkbk(
+#'     file = file.path(tempdir(), "example_excel_wkbk.xlsx"),
+#'     df_list = df_list,
+#'     sheetnames = sheetnames,
+#'     replace = FALSE
+#'   )
 #' }
-#'
-#' @param file filename of workbook to be created
-#' @param df_list list of data frames to be added as worksheets to workbook
-#' @param sheetnames character vector of worksheet names
-#' @param replace Specifies if the file should be replaced if it
-#' already exist (default is FALSE).
-#' @importFrom stringi stri_c
-#' @importFrom WriteXLS WriteXLS
-#' @export
+#' if (file.exists(file.path(tempdir(), "example_excel_wkbk.xlsx"))) {
+#'   file.remove(file.path(tempdir(), "example_excel_wkbk.xlsx"))
+#' }
 create_wkbk <- function(file, df_list, sheetnames, replace = FALSE) {
   if (length(df_list) != length(sheetnames))
-    stop(stri_c("Number of 'sheetnames' specified does not equal the number ",
-                "of data frames in 'df_list'."))
+    stop(
+      stri_c(
+        "Number of 'sheetnames' specified does not equal the number ",
+        "of data frames in 'df_list'."
+      )
+    )
 
   if (file.exists(file)) {
     if (replace) {
@@ -50,6 +60,12 @@ create_wkbk <- function(file, df_list, sheetnames, replace = FALSE) {
       return(FALSE)
     }
   }
-  WriteXLS(x = df_list, ExcelFileName = file, SheetNames = sheetnames,
-           Encoding = "UTF-8", col.names = TRUE, AdjWidth = TRUE)
+  WriteXLS(
+    x = df_list,
+    ExcelFileName = file,
+    SheetNames = sheetnames,
+    Encoding = "UTF-8",
+    col.names = TRUE,
+    AdjWidth = TRUE
+  )
 }

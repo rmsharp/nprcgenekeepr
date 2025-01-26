@@ -22,7 +22,6 @@ This is the kinship data reformatted from a matrix, to a long-format table.
 Part of Group Formation
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::lacy1989Ped
 ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
@@ -31,5 +30,4 @@ reformattedKmat <- kinMatrix2LongForm(kmat, removeDups = FALSE)
 nrow(reformattedKmat)
 reformattedNoDupsKmat <- kinMatrix2LongForm(kmat, removeDups = TRUE)
 nrow(reformattedNoDupsKmat)
-}
 }

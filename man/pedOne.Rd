@@ -15,10 +15,8 @@ pedOne
 This is used for testing and demonstration.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 data("pedOne")
 head(pedOne)
-}
 }
 \keyword{datasets}

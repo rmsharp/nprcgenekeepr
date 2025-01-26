@@ -31,9 +31,6 @@ an animal had during each round of simulation (indicated in columns).
 Part of Genetic Value Analysis
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 rare <- calcA(nprcgenekeepr::ped1Alleles, threshold = 3, byID = FALSE)
-}
-
 }

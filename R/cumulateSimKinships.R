@@ -1,15 +1,24 @@
 #' Makes a list object containing kinship summary statistics using the list
 #' object from __createSimKinships__.
 #'
-#'
 #' \code{cumulateSimKinships} creates a named
 #' list of length 4 is generated where the first element is the mean of the
 #' simulated kinships, the second element is the standard deviation of the
 #' simulated kinships the third element is the minimum value of the kinships,
 #' and the forth element is the maximum value of the kinships.
 #'
+#' @return List object containing the meanKinship, sdKinship, minKinship, and
+#'         maxKinship.
+#'
+#' @param ped The pedigree information in data.frame format
+#' @param allSimParents list made up of lists where the internal list
+#'        has the offspring ID \code{id}, a vector of representative sires
+#'        (\code{sires}), and a vector of representative dams(\code{dams}).
+#' @param pop Character vector with animal IDs to consider as the population of
+#' interest. The default is NULL.
+#' @param n integer value of the number of simulated pedigrees to generate.
+#' @export
 #' @examples
-#' \donttest{
 #' ped <- nprcgenekeepr::smallPed
 #' simParent_1 <- list(id = "A",
 #'                     sires = c("s1_1", "s1_2", "s1_3"),
@@ -23,16 +32,6 @@
 #' allSimParents <- list(simParent_1, simParent_2, simParent_3)
 #' pop <- LETTERS[1:7]
 #' simKinships <- createSimKinships(ped, allSimParents, pop, n = 10)
-#' }
-#'
-#' @param ped The pedigree information in data.frame format
-#' @param allSimParents list made up of lists where the internal list
-#'        has the offspring ID \code{id}, a vector of representative sires
-#'        (\code{sires}), and a vector of representative dams(\code{dams}).
-#' @param pop Character vector with animal IDs to consider as the population of
-#' interest. The default is NULL.
-#' @param n integer value of the number of simulated pedigrees to generate.
-#' @export
 cumulateSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L) {
   ## If user has limited the population of interest by defining 'pop',
   ## that information is incorporated via the 'population' column.

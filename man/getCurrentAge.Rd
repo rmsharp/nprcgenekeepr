@@ -16,10 +16,6 @@ Age in years using the provided birthdate.
 Assumes current date for calculating age.
 }
 \examples{
-\donttest{
 library(nprcgenekeepr)
 age <- getCurrentAge(birth = as.Date("06/02/2000", format = "\%m/\%d/\%Y"))
-}
-
-
 }
