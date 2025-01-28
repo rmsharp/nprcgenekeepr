@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">nprcgenekeepr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.6.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -1129,7 +1129,7 @@ that have generated the errors.</p>
 <div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pedOne</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="../reference/pedOne.html">pedOne</a></span> <span class="co"># put it in the local environment</span></span>
 <span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">pedOne</span>, minParentAge <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in qcStudbook(pedOne, minParentAge = 0): Parents with low age at birth of offspring are listed in /tmp/RtmpZaPPe4/lowParentAge.csv.</span></span></code></pre>
+<pre><code><span><span class="co">## Error in qcStudbook(pedOne, minParentAge = 0): Parents with low age at birth of offspring are listed in /tmp/Rtmpldf2wU/lowParentAge.csv.</span></span></code></pre>
 <p>The contents of <em>lowParentAge.csv</em> is shown below.</p>
 <table class="table">
 <colgroup>
@@ -1217,10 +1217,10 @@ in <strong>pedOne</strong> and <strong>ped</strong> respectively.</p>
 <code class="sourceCode R"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">pedOne</span>, minParentAge <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">ped</span><span class="op">[</span><span class="va">ped</span><span class="op">$</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s2"</span>, <span class="st">"d2"</span>, <span class="st">"o3"</span>, <span class="st">"o4"</span><span class="op">)</span>, <span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##   id sire  dam sex gen      birth exit  age recordStatus</span></span>
-<span><span class="co">## 2 d2 &lt;NA&gt; &lt;NA&gt;   F   0 2006-04-13 &lt;NA&gt; 18.7     original</span></span>
-<span><span class="co">## 4 s2 &lt;NA&gt; &lt;NA&gt;   M   0 2006-06-19 &lt;NA&gt; 18.5     original</span></span>
-<span><span class="co">## 7 o3   s2   d2   F   1 2012-04-11 &lt;NA&gt; 12.7     original</span></span>
-<span><span class="co">## 8 o4   s2   d2   M   1 2015-09-16 &lt;NA&gt;  9.3     original</span></span></code></pre>
+<span><span class="co">## 2 d2 &lt;NA&gt; &lt;NA&gt;   F   0 2006-04-13 &lt;NA&gt; 18.8     original</span></span>
+<span><span class="co">## 4 s2 &lt;NA&gt; &lt;NA&gt;   M   0 2006-06-19 &lt;NA&gt; 18.6     original</span></span>
+<span><span class="co">## 7 o3   s2   d2   F   1 2012-04-11 &lt;NA&gt; 12.8     original</span></span>
+<span><span class="co">## 8 o4   s2   d2   M   1 2015-09-16 &lt;NA&gt;  9.4     original</span></span></code></pre>
 <p>However, the preferred method of creating the standardized studbook
 format with <strong>qcStudbook</strong> is to examine all errors found
 and correcting them before proceeding. This is done by explicitly
@@ -1309,17 +1309,17 @@ the following line of code:</p>
 <span><span class="co">## 2941 0VLW56 6KPKH7 MMEHXV</span></span></code></pre>
 <div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">elapsed_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_elapsed_time_str.html">get_elapsed_time_str</a></span><span class="op">(</span><span class="va">start_time</span><span class="op">)</span></span></code></pre></div>
-<p>The current date and time is 2024-12-25 09:53:10.94601. The
+<p>The current date and time is 2025-01-28 22:12:30.99523. The
 processing time for this document was 14 seconds..</p>
 <div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.4.2 (2024-10-31)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>
-<span><span class="co">## Running under: Ubuntu 22.04.5 LTS</span></span>
+<span><span class="co">## Running under: Ubuntu 24.04.1 LTS</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Matrix products: default</span></span>
 <span><span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
-<span><span class="co">## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so;  LAPACK version 3.10.0</span></span>
+<span><span class="co">## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Random number generation:</span></span>
 <span><span class="co">##  RNG:     Mersenne-Twister </span></span>
@@ -1339,28 +1339,27 @@ processing time for this document was 14 seconds..</p>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] nprcgenekeepr_1.0.6.9000 knitr_1.49               ggplot2_3.5.1           </span></span>
-<span><span class="co">## [4] stringi_1.8.4           </span></span>
+<span><span class="co">## [1] nprcgenekeepr_1.0.7 knitr_1.49          ggplot2_3.5.1       stringi_1.8.4      </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##  [1] gtable_0.3.6         anytime_0.3.11       xfun_0.49            bslib_0.8.0         </span></span>
+<span><span class="co">##  [1] gtable_0.3.6         anytime_0.3.11       xfun_0.50            bslib_0.8.0         </span></span>
 <span><span class="co">##  [5] htmlwidgets_1.6.4    lattice_0.22-6       vctrs_0.6.5          tools_4.4.2         </span></span>
 <span><span class="co">##  [9] generics_0.1.3       tibble_3.2.1         pkgconfig_2.0.3      Matrix_1.7-1        </span></span>
 <span><span class="co">## [13] data.table_1.16.4    checkmate_2.3.2      desc_1.4.3           readxl_1.4.3        </span></span>
 <span><span class="co">## [17] lifecycle_1.0.4      farver_2.1.2         compiler_4.4.2       stringr_1.5.1       </span></span>
-<span><span class="co">## [21] textshaping_0.4.1    munsell_0.5.1        Rlabkey_3.4.1        httpuv_1.6.15       </span></span>
+<span><span class="co">## [21] textshaping_1.0.0    munsell_0.5.1        Rlabkey_3.4.1        httpuv_1.6.15       </span></span>
 <span><span class="co">## [25] htmltools_0.5.8.1    sass_0.4.9           yaml_2.3.10          htmlTable_2.4.3     </span></span>
-<span><span class="co">## [29] later_1.4.1          pillar_1.10.0        pkgdown_2.1.1        jquerylib_0.1.4     </span></span>
+<span><span class="co">## [29] later_1.4.1          pillar_1.10.1        pkgdown_2.1.1        jquerylib_0.1.4     </span></span>
 <span><span class="co">## [33] cachem_1.1.0         sessioninfo_1.2.2    mime_0.12            tidyselect_1.2.1    </span></span>
 <span><span class="co">## [37] digest_0.6.37        dplyr_1.1.4          labeling_0.4.3       WriteXLS_6.7.0      </span></span>
 <span><span class="co">## [41] fastmap_1.2.0        grid_4.4.2           colorspace_2.1-1     cli_3.6.3           </span></span>
 <span><span class="co">## [45] magrittr_2.0.3       withr_3.0.2          scales_1.3.0         promises_1.3.2      </span></span>
 <span><span class="co">## [49] backports_1.5.0      plotrix_3.8-4        lubridate_1.9.4      timechange_0.3.0    </span></span>
 <span><span class="co">## [53] rmarkdown_2.29       lambda.r_1.2.4       httr_1.4.7           futile.logger_1.4.3 </span></span>
-<span><span class="co">## [57] cellranger_1.1.0     ragg_1.3.3           shiny_1.10.0         evaluate_1.0.1      </span></span>
-<span><span class="co">## [61] rlang_1.1.4          futile.options_1.0.1 Rcpp_1.0.13-1        xtable_1.8-4        </span></span>
+<span><span class="co">## [57] cellranger_1.1.0     ragg_1.3.3           shiny_1.10.0         evaluate_1.0.3      </span></span>
+<span><span class="co">## [61] rlang_1.1.5          futile.options_1.0.1 Rcpp_1.0.14          xtable_1.8-4        </span></span>
 <span><span class="co">## [65] glue_1.8.0           formatR_1.14         rstudioapi_0.17.1    jsonlite_1.8.9      </span></span>
-<span><span class="co">## [69] R6_2.5.1             systemfonts_1.1.0    fs_1.6.5</span></span></code></pre>
+<span><span class="co">## [69] R6_2.5.1             systemfonts_1.2.1    fs_1.6.5</span></span></code></pre>
 </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -4,15 +4,15 @@ matrix and one column for each kinship matrix. Thus, in a kinship matrix with
 20 individuals the kinship matrix will have 20 rows by 20 columns but only
 the upper or lower triangle has unique information as the diagonal values are
 by definition all 1.0 and the upper triangle has the same values as the
-lower triangle. The kValue table will have \(20 + (20 * 19) / 2\) elements
-with the 20 values from the kinship coeficient matrix diagonal and
+lower triangle. The kValue table will have \(20 + (20 * 19) / 2\)
+elements with the 20 values from the kinship coeficient matrix diagonal and
 \(2*19\) elements from one of the two triangles."><meta property="og:description" content="A kValue matrix has one row for each pair of individuals in the kinship
 matrix and one column for each kinship matrix. Thus, in a kinship matrix with
 20 individuals the kinship matrix will have 20 rows by 20 columns but only
 the upper or lower triangle has unique information as the diagonal values are
 by definition all 1.0 and the upper triangle has the same values as the
-lower triangle. The kValue table will have \(20 + (20 * 19) / 2\) elements
-with the 20 values from the kinship coeficient matrix diagonal and
+lower triangle. The kValue table will have \(20 + (20 * 19) / 2\)
+elements with the 20 values from the kinship coeficient matrix diagonal and
 \(2*19\) elements from one of the two triangles."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
@@ -21,7 +21,7 @@ with the 20 values from the kinship coeficient matrix diagonal and
 
     <a class="navbar-brand me-2" href="../index.html">nprcgenekeepr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.6.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,8 +59,8 @@ matrix and one column for each kinship matrix. Thus, in a kinship matrix with
 20 individuals the kinship matrix will have 20 rows by 20 columns but only
 the upper or lower triangle has unique information as the diagonal values are
 by definition all 1.0 and the upper triangle has the same values as the
-lower triangle. The <code>kValue</code> table will have \(20 + (20 * 19) / 2\) elements
-with the 20 values from the kinship coeficient matrix diagonal and
+lower triangle. The <code>kValue</code> table will have \(20 + (20 * 19) / 2\)
+elements with the 20 values from the kinship coeficient matrix diagonal and
 \(2*19\) elements from one of the two triangles.</p>
     </div>
 
@@ -99,8 +99,7 @@ be \(n + \eqn{n(n-1)}{2}\) and the number of columns will be 3.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="smallPed.html">smallPed</a></span></span></span>
 <span class="r-in"><span><span class="va">simParent_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"A"</span>,</span></span>
 <span class="r-in"><span>                    sires <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1_1"</span>, <span class="st">"s1_2"</span>, <span class="st">"s1_3"</span><span class="op">)</span>,</span></span>
@@ -138,7 +137,6 @@ be \(n + \eqn{n(n-1)}{2}\) and the number of columns will be 3.</p>
 <span class="r-in"><span><span class="va">simKinship</span> <span class="op">&lt;-</span> <span class="fu"><a href="kinship.html">kinship</a></span><span class="op">(</span><span class="va">simPed</span><span class="op">$</span><span class="va">id</span>, <span class="va">simPed</span><span class="op">$</span><span class="va">sire</span>,</span></span>
 <span class="r-in"><span>                      <span class="va">simPed</span><span class="op">$</span><span class="va">dam</span>, <span class="va">simPed</span><span class="op">$</span><span class="va">gen</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">kValues</span> <span class="op">&lt;-</span> <span class="fu">kinshipMatrixToKValues</span><span class="op">(</span><span class="va">simKinship</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -11,7 +11,7 @@ formed from malformed character representations such as a date in
 
     <a class="navbar-brand me-2" href="../index.html">nprcgenekeepr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.6.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,8 +79,7 @@ date range.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
-<span class="r-in"><span><span class="va">dates</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12361</span>, <span class="fl">14400</span>, <span class="fl">15413</span>, <span class="cn">NA</span>, <span class="fl">11189</span>, <span class="cn">NA</span>, <span class="fl">13224</span>, <span class="fl">10971</span>,</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dates</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12361</span>, <span class="fl">14400</span>, <span class="fl">15413</span>, <span class="cn">NA</span>, <span class="fl">11189</span>, <span class="cn">NA</span>, <span class="fl">13224</span>, <span class="fl">10971</span>,</span></span>
 <span class="r-in"><span>                     <span class="op">-</span><span class="fl">432000</span>, <span class="fl">13262</span><span class="op">)</span>, class <span class="op">=</span> <span class="st">"Date"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">cleanedDates</span> <span class="op">&lt;-</span> <span class="fu">removeEarlyDates</span><span class="op">(</span><span class="va">dates</span>, firstYear <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">dates</span></span></span>
@@ -89,7 +88,6 @@ date range.</p></dd>
 <span class="r-in"><span><span class="va">cleanedDates</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "2003-11-05" "2009-06-05" "2012-03-14" NA           "2000-08-20"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [6] NA           "2006-03-17" "2000-01-15" NA           "2006-04-24"</span>
-<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

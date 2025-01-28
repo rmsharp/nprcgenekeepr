@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">nprcgenekeepr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.6.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,8 +64,7 @@ element.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
-<span class="r-in"><span><span class="va">lines</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"center = \"SNPRC\""</span>,</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">lines</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"center = \"SNPRC\""</span>,</span></span>
 <span class="r-in"><span>           <span class="st">" baseUrl = \"https://boomer.txbiomed.local:8080/labkey\""</span>,</span></span>
 <span class="r-in"><span>           <span class="st">" schemaName = \"study\""</span>, <span class="st">" folderPath = \"/SNPRC\""</span>,</span></span>
 <span class="r-in"><span>           <span class="st">" queryName = \"demographics\""</span>,</span></span>
@@ -79,8 +78,6 @@ element.</p>
 <span class="r-in"><span><span class="va">tokenList</span> <span class="op">&lt;-</span> <span class="fu">getTokenList</span><span class="op">(</span><span class="va">lines</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">params</span> <span class="op">&lt;-</span> <span class="va">tokenList</span><span class="op">$</span><span class="va">param</span></span></span>
 <span class="r-in"><span><span class="va">tokenVectors</span> <span class="op">&lt;-</span> <span class="va">tokenList</span><span class="op">$</span><span class="va">tokenVec</span></span></span>
-<span class="r-in"><span><span class="co"># }</span></span></span>
-<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -25,7 +25,7 @@ of iterations."><meta property="og:image" content="https://github.com/rmsharp/np
 
     <a class="navbar-brand me-2" href="../index.html">nprcgenekeepr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.6.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -185,8 +185,7 @@ that is specific for each group formed.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">examplePedigree</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="examplePedigree.html">examplePedigree</a></span></span></span>
 <span class="r-in"><span><span class="va">breederPed</span> <span class="op">&lt;-</span> <span class="fu"><a href="qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">examplePedigree</span>, minParentAge <span class="op">=</span> <span class="fl">2</span>,</span></span>
 <span class="r-in"><span>                        reportChanges <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
@@ -218,42 +217,42 @@ that is specific for each group formed.</p>
 <span class="r-in"><span>                          harem <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">haremGrp</span><span class="op">$</span><span class="va">group</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "ER464J" "SH3FB7" "N5QBWD" "M9PVG5" "6KWVRI" "DI4AHD" "5W621W" "KEA4QG"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "MKY9TK" "NN3GDQ" "0HYZ23" "7B9CA6" "H2J6UA" "LYSLPP" "8JUUJ9" "3YJIMV"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "S222R3" "1FAZ0K" "CLSVU6" "Q8U9LB" "AR5U44" "R5AYJK" "1CIRC9" "0XTZQ1"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "5IAFMK" "1SSCJC"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "NSIC4I" "TXZUKC" "CMMUKU" "PJ72W1" "D9P18Y" "GAS52W" "87AQLF" "DPXEQE"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "DRXMW4" "WI38KZ" "92UG4N" "0IIAEN" "CS23RV" "YTJ2UL" "EMV4P6" "MH88T6"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "QCENKM" "G25E3F" "NN3GDQ" "7NE2UT" "BKWE4D" "6KWVRI" "WTE53B" "3DTD2N"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "1QVS67" "PVY432" "QWKFBH" "1VP3UC" "S5H1GC" "N79QXB" "1SPLS8"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "2F1IV1" "ZATMEE" "D4B0RM" "967Y3D" "KX0RJ3" "EX5K0S" "46ZHKN" "B1WVCN"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "LVYYNY" "Y6DB6L" "RVHVTZ" "9MG040" "FB5L3N" "BS3RLE" "GIIEUD" "ILVQVB"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "5ERY5Z" "1KJ2MG" "GAS52W" "QW2Z3R" "5KWNMZ" "J3F6PD" "G8MCV7" "30J3CQ"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "AP1YLW" "7ZNY75" "3SKITJ" "CS23RV" "9P0DES" "CHK1ZX" "87AQLF" "X694YR"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [33] "E5Q33K" "B228Q6" "XFWVVX" "38K2SR" "72LYDE" "CRPXY7"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "3MMZD4" "GIIEUD" "NK802Y" "QQMBT1" "F7I2ED" "HE0SCR" "Q7U139" "465ERA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "PI4VHT" "RVHVTZ" "FB5L3N" "QRZK48" "99BMJW" "3GECJJ" "PYPM1W" "S7IWWA"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "CLSVU6" "1GF3GM" "CHK1ZX" "AR5U44" "WJXIH9" "9MG040" "01QRQ4" "0SGJ12"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "50D77I" "WK89I9" "Y6DB6L" "B1WVCN" "Q17CG3" "N4NV8B" "SCFSBF" "W6MDVK"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [33] "0XTZQ1" "XYRDKV" "ILVQVB" "EX5K0S" "5W621W"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[3]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "WHQLH5" "QWKFBH" "MPIQ4N" "7RA57Q" "PU7RSG" "G58RGY" "BCJJKN" "D9P18Y"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "1CZM30" "SCFSBF" "3GECJJ" "QCENKM" "NK802Y" "RJ4JPC" "0X4W26" "T3QPW5"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "PJ72W1" "C18V6I" "D33J06" "FL170P" "DRXMW4" "414N7M" "FJS7RQ" "DPXEQE"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "QQMBT1" "VWC5ZH" "W6MDVK" "MB6NYQ" "ZPS15A" "FG0SFA" "YLRNIK" "EZ2F8A"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "FTVE03" "M9PVG5" "7B9CA6" "5EDIEE" "9P0DES" "1KJ2MG" "3SKITJ" "SHG3RB"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "PU7RSG" "ZATMEE" "5ERY5Z" "F45799" "QW2Z3R" "46ZHKN" "YLRNIK" "DCJJYS"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "ZPS15A" "G8MCV7" "0HYZ23" "DH9WJQ" "30J3CQ" "H2J6UA" "BCJJKN" "JLFKV8"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "W5WIRP" "ZQXZYB" "IH1KPA" "5KWNMZ" "T3QPW5" "MTCAIG"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[4]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "LMJWTN" "S056D5" "S3EBGZ" "GCBYDW" "GTLA8R" "DKIM6U" "1VP3UC" "1SPLS8"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Y0TCYX" "1GF3GM" "AW400C" "MFKT9C" "S7IWWA" "TQEMY6" "01QRQ4" "SHG3RB"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "DH9WJQ" "YFCIHJ" "83HQBN" "50D77I" "92UG4N" "EMV4P6" "3DTD2N" "KZY6PD"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "PVY432" "XEC0M5"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "XZH41H" "13B1QL" "S056D5" "3YJIMV" "N5QBWD" "1CZM30" "BS3RLE" "6F9FB8"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "414N7M" "LYSLPP" "KZY6PD" "D4B0RM" "WLMGS1" "K3TNHP" "FJS7RQ" "QCA36T"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "AP1YLW" "Q8U9LB" "DI4AHD" "B134XZ" "XEC0M5" "C18V6I" "G58RGY" "ZH3YG1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "MFKT9C" "MPIQ4N" "5EDLL7" "MKY9TK" "967Y3D" "FL170P" "GCBYDW" "38K2SR"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [33] "2Z4YLY"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[5]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "WNKKW3" "MTCAIG" "WK89I9" "S5H1GC" "TXZUKC" "0SGJ12" "AIHJ8Z" "F7I2ED"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "2Z4YLY" "N79QXB" "DCJJYS" "TEACA3" "WLMGS1" "BKWE4D" "ESUIAF" "G25E3F"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "MX4J7G" "Q17CG3" "IH1KPA" "QCA36T" "WKY2SZ" "JLFKV8" "WI38KZ" "321LLB"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "I8ABC7" "PBAFJF" "WTE53B" "5EDIEE" "F45799" "HE0SCR" "W5WIRP" "13B1QL"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [33] "6X6BG9" "MH88T6" "YTJ2UL" "1QVS67" "B134XZ" "I5CI33" "7NE2UT"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "BW10CL" "R5AYJK" "AW400C" "J3F6PD" "83HQBN" "5IAFMK" "I5CI33" "WKY2SZ"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "6X6BG9" "Y0TCYX" "AZ3L0D" "D33J06" "KEA4QG" "E5Q33K" "TYEWF1" "KX0RJ3"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "7RA57Q" "MYUMMX" "1SSCJC" "X694YR" "S3EBGZ" "72LYDE" "AIHJ8Z" "YFCIHJ"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "GTLA8R" "PBAFJF" "TEACA3" "LVYYNY" "MX4J7G" "DKIM6U"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[6]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "1E8KD1" "2F6J3U" "DHNQ1W" "AZ3L0D" "PI4VHT" "6F9FB8" "TYEWF1" "XYRDKV"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "AR17R5" "CMMUKU" "ZQXZYB" "Q7U139" "MYUMMX" "PYPM1W" "Z904TJ" "0IIAEN"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "WNEAS6" "99BMJW" "465ERA" "QRZK48" "AFZKBS" "5EDLL7" "ZH3YG1" "WJXIH9"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "LS184H" "W0GUKI" "5BPBUI" "N4NV8B" "K3TNHP"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "NHWTJ9" "1CIRC9" "W0GUKI" "EZ2F8A" "AR17R5" "CRPXY7" "8JUUJ9" "Z904TJ"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "7ZNY75" "5BPBUI" "RJ4JPC" "1FAZ0K" "MB6NYQ" "321LLB" "SH3FB7" "TQEMY6"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "S222R3" "B228Q6" "XFWVVX" "LS184H" "VWC5ZH" "2F6J3U" "ESUIAF" "WNEAS6"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "I8ABC7" "DHNQ1W" "0X4W26" "AFZKBS" "FG0SFA"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[7]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
@@ -266,58 +265,58 @@ that is specific for each group formed.</p>
 <span class="r-in"><span>                             sexRatio <span class="op">=</span> <span class="fl">9</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">sexRatioGrp</span><span class="op">$</span><span class="va">group</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "D33J06" "CFD12A" "Q17CG3" "FB5L3N" "ZQXZYB" "7RA57Q" "KEA4QG" "7NE2UT"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "CHK1ZX" "KX0RJ3" "CS23RV" "ZPS15A" "ZH3YG1" "JSAP3H" "CMMUKU" "3GECJJ"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "B1WVCN" "8JUUJ9" "B134XZ" "DCJJYS" "T3QPW5" "Q7U139" "5EDLL7" "BS3RLE"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "FLIZQI" "AR5U44" "9P0DES" "321LLB" "FJS7RQ" "38K2SR" "PYPM1W"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "RJ4JPC" "A6A1M1" "WKY2SZ" "N5QBWD" "EMV4P6" "8JUUJ9" "FJS7RQ" "PI4VHT"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "X694YR" "I5CI33" "967Y3D" "B228Q6" "6X6BG9" "JSAP3H" "414N7M" "DPXEQE"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "SCFSBF" "5EDIEE" "G58RGY" "KZY6PD" "QRZK48" "M9PVG5" "1SSCJC" "DH9WJQ"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "3MMZD4" "QCENKM" "C18V6I" "CMMUKU" "0X4W26" "6KWVRI"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "W5WIRP" "G2GYST" "ILVQVB" "MFKT9C" "92UG4N" "R5AYJK" "01QRQ4" "GTLA8R"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "G25E3F" "G58RGY" "D9P18Y" "SH3FB7" "0SGJ12" "R6HV9A" "AW400C" "JLFKV8"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "WTE53B" "CLSVU6" "6F9FB8" "2F6J3U" "Y6DB6L" "PI4VHT" "I5CI33" "SCFSBF"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "K7900I" "DKIM6U" "5BPBUI" "J3F6PD" "D4B0RM" "XYRDKV" "414N7M" "6X6BG9"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [33] "QCA36T" "AZ3L0D" "A6A1M1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "FL170P" "FFGPS4" "QQMBT1" "TXZUKC" "WNEAS6" "FG0SFA" "N79QXB" "S3EBGZ"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "XEC0M5" "1KJ2MG" "MB6NYQ" "GCBYDW" "92UG4N" "SXSVEH" "CRPXY7" "WTE53B"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "5ERY5Z" "2Z4YLY" "MFKT9C" "PYPM1W" "JLFKV8" "ZPS15A" "EZ2F8A" "9MG040"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "K7900I" "TYEWF1" "W6MDVK" "87AQLF" "AIHJ8Z" "WK89I9" "0XTZQ1" "6F9FB8"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [33] "S7IWWA" "GIIEUD" "9FRCIE"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[3]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "5ERY5Z" "LMJWTN" "13B1QL" "FG0SFA" "1CIRC9" "PBAFJF" "DRXMW4" "MKY9TK"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "SHG3RB" "QW2Z3R" "1SSCJC" "Q8U9LB" "VWC5ZH" "3QHAFI" "0IIAEN" "N79QXB"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "M9PVG5" "PJ72W1" "1CZM30" "NN3GDQ" "DI4AHD" "46ZHKN" "DPXEQE" "FL170P"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "KZM9RB" "MH88T6" "465ERA" "RVHVTZ" "LS184H" "PVY432" "BCJJKN"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "LYSLPP" "BW10CL" "321LLB" "DCJJYS" "46ZHKN" "WI38KZ" "N4NV8B" "T3QPW5"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "PBAFJF" "BKWE4D" "B134XZ" "VWC5ZH" "S056D5" "XX0GYV" "IH1KPA" "QWKFBH"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "FB5L3N" "D4B0RM" "ILVQVB" "BS3RLE" "DI4AHD" "Q17CG3" "1GF3GM" "5BPBUI"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "R6HV9A" "GTLA8R"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[4]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "AR17R5" "YP910X" "WJXIH9" "WLMGS1" "1VP3UC" "MTCAIG" "99BMJW" "EMV4P6"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "XEC0M5" "E5Q33K" "S5H1GC" "DHNQ1W" "MPIQ4N" "IZDV8K" "F45799" "5EDIEE"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "B228Q6" "H2J6UA" "AFZKBS" "WNEAS6" "X694YR" "5W621W" "QCENKM" "TXZUKC"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "KXHGRH" "6KWVRI" "1KJ2MG" "GCBYDW" "1FAZ0K" "KZY6PD" "967Y3D" "K3TNHP"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [33] "S222R3" "0XTZQ1" "3MMZD4"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "50D77I" "XZH41H" "3GECJJ" "0HYZ23" "SHG3RB" "YTJ2UL" "Y6DB6L" "38K2SR"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "3SKITJ" "AW400C" "YFCIHJ" "MYUMMX" "1VP3UC" "AZ4D19" "1SPLS8" "ESUIAF"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "7NE2UT" "CLSVU6" "TQEMY6" "HE0SCR" "SH3FB7" "BCJJKN" "R5AYJK" "Q8U9LB"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "IZDV8K" "ZATMEE" "Y0TCYX" "F45799" "W0GUKI" "7B9CA6"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[5]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "7B9CA6" "EEGLWY" "MB6NYQ" "83HQBN" "PU7RSG" "0X4W26" "9MG040" "QQMBT1"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "TEACA3" "XFWVVX" "BKWE4D" "TQEMY6" "GAS52W" "5XVTVH" "S3EBGZ" "N5QBWD"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "RJ4JPC" "1SPLS8" "MX4J7G" "CRPXY7" "LVYYNY" "C18V6I" "I8ABC7" "5IAFMK"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "Z25D52" "EZ2F8A" "WK89I9" "WI38KZ" "MYUMMX" "ZATMEE" "DH9WJQ" "2Z4YLY"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [33] "IH1KPA" "YLRNIK" "ZW2X4N"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "72LYDE" "G2GYST" "AZ3L0D" "MKY9TK" "MPIQ4N" "7RA57Q" "WLMGS1" "13B1QL"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "B1WVCN" "1CZM30" "D9P18Y" "83HQBN" "S5H1GC" "KXHGRH" "LS184H" "YLRNIK"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "5IAFMK" "Q7U139" "MH88T6" "I8ABC7" "01QRQ4" "PU7RSG" "ZH3YG1" "0IIAEN"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "GDXWJ1" "AR17R5" "F7I2ED" "S222R3" "AR5U44" "E5Q33K" "LVYYNY" "99BMJW"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [33] "QW2Z3R" "WJXIH9" "NHWTJ9"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[6]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "50D77I" "HLQ9SY" "YTJ2UL" "Z904TJ" "G8MCV7" "S7IWWA" "EX5K0S" "S056D5"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "3YJIMV" "QWKFBH" "LYSLPP" "7ZNY75" "GIIEUD" "4LHK19" "3SKITJ" "WKY2SZ"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "1GF3GM" "1QVS67" "HE0SCR" "5KWNMZ" "TYEWF1" "87AQLF" "W6MDVK" "0HYZ23"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "A98D7P"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "EX5K0S" "1E8KD1" "G25E3F" "5EDLL7" "QCA36T" "J3F6PD" "30J3CQ" "3YJIMV"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "AFZKBS" "NN3GDQ" "CS23RV" "7ZNY75" "W5WIRP" "4LHK19" "K3TNHP" "5W621W"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "DHNQ1W" "5KWNMZ" "3DTD2N" "G8MCV7" "MX4J7G" "ZQXZYB" "DKIM6U" "D33J06"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "KZM9RB" "2F6J3U"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[7]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "B2CKHA" "GDXWJ1" "TR5L57" "XC304E" "Z7NBA2" "1E8KD1" "5KFB90" "5PW7WT"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "AEP5EG" "BW10CL" "CHJ9D2" "ESUIAF" "FTVE03" "IRFJ09" "N4NV8B" "Q9LWGX"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "RNQU14" "Y0TCYX" "09LFE4" "3DTD2N" "55BPSE" "72LYDE" "8IG767" "9FRCIE"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "ER464J" "F7I2ED" "FFGPS4" "FG6L7S" "NHWTJ9" "P7RBPI" "TBCE78" "YFCIHJ"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [33] "YI16QD" "2F1IV1" "30J3CQ" "59NYZE" "5IYDXN" "6KLWVC" "80F2MI" "8TV4MT"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [41] "AZ4D19" "BTTHAJ" "CHSCFG" "FX9E4X" "G91ZM6" "J1R2EW" "LDND6J" "LN1DLY"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [49] "MQT080" "NK802Y" "NSIC4I" "PHB6TE" "QRWYQZ" "RY1AZM" "WHQLH5" "WQUN84"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [57] "XL658N" "XX0GYV" "YHHVC7" "0V4SAC" "0X1RZ9" "3YHBC1" "55VDSQ" "653J82"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [65] "6MEP2C" "76DIT4" "80KACX" "AIHJ8Z" "AP1YLW" "B2YJJP" "E3JP0C" "GM371F"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [73] "MEUZ85" "PA9F3J" "QRZK48" "SXSVEH" "T38W6H" "TJN1AD" "W0GUKI" "WNKKW3"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [81] "XY2CK7" "XZH41H" "YDRD81" "ZDRSG0" "3P9BX6" "7D09WH" "DGZLV3" "S63QDN"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "HLQ9SY" "XFWVVX" "B2CKHA" "TR5L57" "XC304E" "Z7NBA2" "1QVS67" "5KFB90"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "5PW7WT" "AEP5EG" "CFD12A" "CHJ9D2" "FTVE03" "IRFJ09" "LMJWTN" "PVY432"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "Q9LWGX" "RNQU14" "TEACA3" "09LFE4" "1CIRC9" "3QHAFI" "55BPSE" "5XVTVH"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "8IG767" "ER464J" "FG6L7S" "H2J6UA" "P7RBPI" "RVHVTZ" "TBCE78" "YI16QD"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [33] "1FAZ0K" "2F1IV1" "59NYZE" "5IYDXN" "6KLWVC" "80F2MI" "8TV4MT" "A98D7P"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [41] "BTTHAJ" "CHK1ZX" "CHSCFG" "DRXMW4" "EEGLWY" "FX9E4X" "G91ZM6" "J1R2EW"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [49] "KX0RJ3" "LDND6J" "LN1DLY" "MQT080" "MTCAIG" "NK802Y" "NSIC4I" "PHB6TE"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [57] "PJ72W1" "QRWYQZ" "RY1AZM" "WHQLH5" "WQUN84" "XL658N" "XYRDKV" "YHHVC7"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [65] "YP910X" "Z904TJ" "0SGJ12" "0V4SAC" "0X1RZ9" "3YHBC1" "465ERA" "55VDSQ"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [73] "653J82" "6MEP2C" "76DIT4" "80KACX" "9P0DES" "AP1YLW" "B2YJJP" "E3JP0C"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [81] "FLIZQI" "GAS52W" "GM371F" "KEA4QG" "MEUZ85" "PA9F3J" "T38W6H" "TJN1AD"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [89] "WNKKW3" "XY2CK7" "YDRD81" "Z25D52" "ZDRSG0" "3P9BX6" "7D09WH" "DGZLV3"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [97] "S63QDN" "ZW2X4N"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -35,33 +35,37 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="logo.png" class="logo" alt=""><h1>NA</h1>
-      <small class="dont-index">Source: <a href="https://github.com/rmsharp/nprcgenekeepr/blob/master/20210330_cran-comments.md"><code>20210330_cran-comments.md</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/rmsharp/nprcgenekeepr/blob/master/20241220_cran-comments.md"><code>20241220_cran-comments.md</code></a></small>
     </div>
 
 
 <div class="section level2">
-<h2 id="resubmission">Resubmission<a class="anchor" aria-label="anchor" href="#resubmission"></a></h2>
-<ul><li>Changed http to https in </li>
-<li>Removed direct reference to old GitLab issue tracker site entirely.</li>
-<li>All tests were repeated with the results recorded in “Test environments” immediately below.</li>
+<h2 id="bug-fix-and-additional-unit-tests">Bug fix and additional unit tests<a class="anchor" aria-label="anchor" href="#bug-fix-and-additional-unit-tests"></a></h2>
+<ul><li>Escaped braces in roxygen2 comments to prevent lost braces errors</li>
+<li>Cleaned code based in lintr feedback and added use of lintr in GitHub Actions CICD pipeline</li>
+<li>Added additional unit tests</li>
+<li>Added some experimental functions for simulation use</li>
+<li>Added two example deidentified pedigree data sets</li>
+<li>Added Rhub.yaml file for checking on Rhub.</li>
 </ul></div>
 <div class="section level2">
 <h2 id="test-environments">Test environments<a class="anchor" aria-label="anchor" href="#test-environments"></a></h2>
-<ul><li>local OS X install, R 4.0.4 – 0 errors | 0 warnings | 0 note</li>
-<li>travis-ci R version 4.0.2 (2020-06-22) platform: x86_64-pc-linux-gnu (64-bit)</li>
-<li>travis-ci R Under development (unstable) (2021-03-19 r80100) platform: x86_64-pc-linux-gnu (64-bit)</li>
-<li>travis-ci R version 4.0.4 (2021-02-15) using platform: x86_64-apple-darwin17.0 (64-bit)</li>
-<li>R-hub Fedora Linux, R-devel, clang, gfortran – OK</li>
-<li>R-hub Ubuntu Linux 20.04.1 LTS, R-release, GCC</li>
-<li>R-hub Windows Server 2008 R2 SP1, R-devel, 32/64 bit – OK</li>
-<li>winbuilder using R version 3.6.3 (2020-02-29) using platform: x86_64-w64-mingw32 (64-bit) – Status: OK</li>
-<li>winbuilder R Under development (unstable) (2021-03-27 r80128) using platform: x86_64-w64-mingw32 (64-bit) – Status: OK</li>
-<li>winbuilder R version 4.0.4 (2021-02-15) using platform: x86_64-w64-mingw32 (64-bit) – Status: OK</li>
+<ul><li>winbuilder using R Under development (unstable) (2024-12-19 r87451 ucrt) using platform: x86_64-w64-mingw32 (64-bit)</li>
+<li>winbuilder using R version 4.4.2 (2024-10-31 ucrt) using platform: x86_64-w64-mingw32</li>
+<li>winbuilder using R version 4.3.3 (2024-02-29 ucrt) using platform: x86_64-w64-mingw32 (64-bit)</li>
+<li>Rhub environments on 2024-12-19
+<ul><li>success:
+<ul><li>linux, macos, macos-arm64, windows, atlas, c23, clang-asan, clang16, clang17, clang18, clang19, clang20, donttest, gcc13, gcc14, intel, mkl, nold, noremap, ubuntu-clang, ubuntu-gcc12, ubuntu-next, ubuntu-release, valgrind</li>
+</ul></li>
+<li>failed:
+<ul><li>nosuggests, rchk</li>
+</ul></li>
+</ul></li>
 </ul></div>
 <div class="section level2">
 <h2 id="r-cmd-check-results">R CMD check results<a class="anchor" aria-label="anchor" href="#r-cmd-check-results"></a></h2>
-<p>0 errors | 0 warnings | 0 note</p>
-<ul><li>Some test systems are reading historical sections of the NEWS file and falsely identifying an old URL as possibly incorrect. Please ignore the note.</li>
+<p>0 errors | 0 warnings | 1 note</p>
+<ul><li>Words identified as possible misspellings in DESCRIPTION: EHR, Raboin, and kinships are all correctly spelled.</li>
 </ul></div>
 <div class="section level2">
 <h2 id="reverse-dependencies">Reverse dependencies<a class="anchor" aria-label="anchor" href="#reverse-dependencies"></a></h2>
