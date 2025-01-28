@@ -12,6 +12,7 @@
 ^20200517_cran-comments\.md$
 ^20200510_cran-comments\.md$
 ^20200415_cran-comments\.md$
+^20241220_cran-comments\.md$
 ^codecov\.yml$
 ^docs$
 inst/extdata/meeting_notes\.html$
@@ -44,6 +45,7 @@ README\.*\.png$
 ^\.travis\.yml$
 ^\.github$
 ^inst/extdata/.*\.docx$
+^inst/extdata/code_under_development$
 ^inst/extdata/script_used_to_look_for_gdata_dependency\.R$
 ^inst/extdata/meeting_notes\.
 ^inst/extdata/rhesus_studbook*$
@@ -63,3 +65,4 @@ README\.*\.png$
 ^doc$
 ^Meta$
 ^revdep$
+^tests/testthat/_snaps$
