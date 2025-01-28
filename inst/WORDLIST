@@ -180,6 +180,7 @@ kindepth
 kinships
 kmat
 labkey
+lifecycle
 lintr
 lowParentAge
 lubridate
@@ -188,10 +189,13 @@ makeGeneticDiversityDashboard
 maleFounders
 mapIdsToObfuscated
 matriline
+maxKinship
 md
+meanKinship
 mendelian
 mgp
 minAge
+minKinship
 minParentAge
 mk
 na
@@ -262,6 +266,7 @@ runGeneKeepr
 saveDataframesAsFiles
 sb
 schemaName
+sdKinship
 selectRows
 setPopulation
 sexCodes
