@@ -6,7 +6,7 @@
 #' be used in forming the \emph{Monte Carlo} estimates for the kinship values.
 #'
 #' @return A list of \code{n} lists with each internal list containing a
-#'         kinship matrixn from simulated pedigrees of possible
+#'         kinship matrix from simulated pedigrees of possible
 #'         parents for animals with unknown parents.
 #'
 #' @param ped The pedigree information in data.frame format
