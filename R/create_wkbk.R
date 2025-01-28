@@ -31,7 +31,7 @@
 #' }
 #' df_list <- make_df_list(3)
 #' sheetnames <- names(df_list)
-#' if (file.exists(file.path(tempdir(), "example_excel_wkbk.xlsx"))) {
+#' if (any(file.exists(file.path(tempdir(), "example_excel_wkbk.xlsx")))) {
 #'   file.remove(file.path(tempdir(), "example_excel_wkbk.xlsx"))
 #'   create_wkbk(
 #'     file = file.path(tempdir(), "example_excel_wkbk.xlsx"),
@@ -40,7 +40,7 @@
 #'     replace = FALSE
 #'   )
 #' }
-#' if (file.exists(file.path(tempdir(), "example_excel_wkbk.xlsx"))) {
+#' if (any(file.exists(file.path(tempdir(), "example_excel_wkbk.xlsx")))) {
 #'   file.remove(file.path(tempdir(), "example_excel_wkbk.xlsx"))
 #' }
 create_wkbk <- function(file, df_list, sheetnames, replace = FALSE) {
