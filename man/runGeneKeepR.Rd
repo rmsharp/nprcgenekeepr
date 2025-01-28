@@ -16,7 +16,7 @@ Allows running \code{shiny} application with
 \code{nprcgenekeepr::runGeneKeepR()}
 }
 \examples{
-\donttest{ # Shiny apps don't run in R CMD check
+\dontrun{ # Shiny apps don't run in R CMD check
 library(nprcgenekeepr)
 runGeneKeepR()
 }

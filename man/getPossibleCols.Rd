@@ -9,13 +9,12 @@ getPossibleCols()
 \value{
 A character vector of the possible columns that can be in a
 studbook. The possible columns are as follows:
-\itemize{
 \item{id}{ -- character vector with unique identifier for an individual}
 \item{sire}{ -- character vector with unique identifier for an
 individual's father (\code{NA} if unknown).}
 \item{dam}{ -- character vector with unique identifier for an
 individual's mother (\code{NA} if unknown).}
-\item{sex}{ -- factor {levels: "M", "F", "U"} Sex specifier for an
+\item{sex}{ -- factor (levels: "M", "F", "U") Sex specifier for an
 individual}
 \item{gen}{ -- integer vector with the generation number of the
 individual}
@@ -45,7 +44,6 @@ status of an animal where \code{NA} indicates an intact animal and all other
 values indicate surgical alteration.}
 \item{pedNum}{ -- integer vector indicating generation numbers for each
 id, starting at 0 for individuals lacking IDs for both parents.}
-}
 }
 \description{
 Pedigree curation function

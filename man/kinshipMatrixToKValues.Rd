@@ -25,8 +25,8 @@ matrix and one column for each kinship matrix. Thus, in a kinship matrix with
 20 individuals the kinship matrix will have 20 rows by 20 columns but only
 the upper or lower triangle has unique information as the diagonal values are
 by definition all 1.0 and the upper triangle has the same values as the
-lower triangle. The \code{kValue} table will have \eqn{20 + (20 * 19) / 2} elements
-with the 20 values from the kinship coeficient matrix diagonal and
+lower triangle. The \code{kValue} table will have \eqn{20 + (20 * 19) / 2}
+elements with the 20 values from the kinship coeficient matrix diagonal and
 \eqn{2*19}{2} elements from one of the two triangles.
 }
 \details{

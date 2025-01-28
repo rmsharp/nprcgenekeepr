@@ -26,7 +26,7 @@ to print out when an animal is missing a sire or a dam.}
 }
 \value{
 A list of \code{n} lists with each internal list containing a
-kinship matrixn from simulated pedigrees of possible
+kinship matrix from simulated pedigrees of possible
 parents for animals with unknown parents.
 }
 \description{
