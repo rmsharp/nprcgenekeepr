@@ -1,18 +1,16 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
 context("set_seed")
-library(testthat)
-library(mockery)
 
 test_that("set_seed handle R versions < 3.6", {
   local_mocked_bindings(
-    my_R_Version = function() {
+    R_version = function() {
       list(major = "4", minor = "4.2")
     }
   )
   newSeed <- set_seed(1)
   local_mocked_bindings(
-    my_R_Version = function() {
+    R_version = function() {
       list(major = "3", minor = "5.3")
     }
   )
