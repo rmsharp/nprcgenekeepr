@@ -10,7 +10,7 @@
 #' @importFrom shiny runApp
 #' @export
 #' @examples
-#' \dontrun{ # Shiny apps don't run in R CMD check
+#' if (interactive()) {
 #' library(nprcgenekeepr)
 #' runGeneKeepR()
 #' }

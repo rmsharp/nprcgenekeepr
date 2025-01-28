@@ -3,20 +3,8 @@ Study simulatedKvalues with partial parentage (simulatedKValues.Rmd);
   ensure it is being displayed as an article.
 Ran from terminal to find files in R directory that do not have "@return"
 rmsharp$ grep -L "@return" *
-allTrueNoNA.R
-data.R
-fillBins.R
-fillGroupMembersWithSexRatio.R
-filterAge.R
-filterKinDuplicates.R
-fixGenotypeCols.R
-getMaxAx.R
-getMinParentAge.R
-getParamDef.R
-getSexRatioWithAdditions.R
-makeGeneticDiversityDashboard.R
-makeRoundUp.R
-nprcgenekeeper.R
-nprcgenekeepr-package.R
-str_detect_fixed_all.R
-unknown2NA.R
+Add to test coverage: found should be able to add to tests for /
+ fixColumnNames.R, summarizeKinshipValues.R, saveDataframesAsFiles.R,
+ makeExamplePedigreeFile.R, maybe rankSubjects.R, getPotentialParents.R,
+ perhaps groupAddAssign.R
+Check for error in dataframe2string.R where NROWS is all caps.

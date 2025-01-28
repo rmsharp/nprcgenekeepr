@@ -29,6 +29,9 @@ This is a resubmission. In this version I have:
        - data.R
        - nprcgenekeeper.R
        - nprcgenekeepr-package.R
+    -  Running checkhelper::find_missing_tags() found there is no missing or
+       empty return value for exported functions and no missing `@export` or 
+       `@noRd` in the documentation
   - Request: Please unwrap the examples if they are executable in < 5 sec, or
     replace dontrun{} with \donttest{}.
     \dontrun{} should only be used if the example really cannot be executed
@@ -36,8 +39,10 @@ This is a resubmission. In this version I have:
     user. That's why wrapping examples in \dontrun{} adds the comment 
     ("# Not run:") as a warning for the user. Does not seem necessary. 
     Please replace \dontrun with \donttest.
-    -   I have removed all instances of \dontrun
-    
+    -   I have removed all instances of \dontrun.
+    -   I have replaced \dontrun with wrapping with if (interactive()) {} for 
+        its use in the example for runGeneKeepR() because Shiny apps don't run 
+        in R CMD check.
   - Request: Please do not set a seed to a specific number within a function.
     For more details: <https://contributor.r-project.org/cran-cookbook/code_issues.html#setting-a-specific-seed>
     -  I have not made any changes based on this request as I have restricted 
@@ -46,14 +51,8 @@ This is a resubmission. In this version I have:
        testing purposes. In both cases, producing identical results each time
        is critical to the purpose of the function.
 
-
-
 * I have incremented the version from 1.0.6 to 1.0.7, updated NEWS to reflect
   the changes, and updated all documentation to reflect the version change.
-
-## Bug fix and additional unit tests
-
-* 
 
 ## Test environments
 * winbuilder using R Under development (unstable) (2024-12-19 r87451 ucrt)
