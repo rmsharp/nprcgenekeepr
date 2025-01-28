@@ -3,8 +3,8 @@
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
-#' @return The \code{grpNum} list after removing any list element corresponding to a
-#' group with no available animals left using in filling a group.
+#' @return The \code{grpNum} list after removing any list element corresponding
+#' to a group with no available animals left using in filling a group.
 #'
 #' @param grpNum as list of integer vectors initially populated with one list
 #' named by the integers 1:\code{numGrp}, where \code{numGrp} is the number of
