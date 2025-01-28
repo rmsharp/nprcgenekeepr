@@ -31,9 +31,12 @@ test_that(
   harem <- FALSE
   sexRatio <- 0
   withKin <- FALSE
-  groupMembers <- nprcgenekeepr:::makeGroupMembers(numGp, currentGroups, candidates, ped,
-                                   harem = harem,
-                                   minAge = minAge)
+  groupMembers <- nprcgenekeepr:::makeGroupMembers(numGp,
+                                                   currentGroups,
+                                                   candidates,
+                                                   ped,
+                                                   harem = harem,
+                                                   minAge = minAge)
   groupMembersStart <- groupMembers
   grpNum <- nprcgenekeepr:::makeGrpNum(numGp)
 

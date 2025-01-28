@@ -43,15 +43,15 @@ set_seed(seed = 1)
 n <- 10
 pop <- ped$id
 nPop <- length(pop)
-expected_nRows <- nPop + nPop * (nPop - 1) / 2
-expected_nCols <- 2 + n
+expectedNRows <- nPop + nPop * (nPop - 1) / 2
+expectedNCols <- 2 + n
 simKinships <- createSimKinships(ped, allSimParents, pop = pop, n = n)
 kValue <- kinshipMatricesToKValues(simKinships)
 test_that("kinshipMatricesToKValues gets correct number of rows", {
-  expect_equal(nrow(kValue), expected_nRows)
+  expect_equal(nrow(kValue), expectedNRows)
 })
 test_that("kinshipMatricesToKValues gets correct number of columns", {
-  expect_equal(length(kValue), expected_nCols)
+  expect_equal(length(kValue), expectedNCols)
 })
 
 test_that("kinshipMatricesToKValues gets correct kinship values", {

@@ -1,7 +1,6 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
 context("getLogo")
-library(testthat)
 logo <- suppressWarnings(getLogo())
 test_that("getLogo returns reasonalble values", {
   expect_true(is.integer(logo$height))
@@ -10,9 +9,6 @@ test_that("getLogo returns reasonalble values", {
   expect_true(logo$width > 0)
   expect_true(is.character(logo$file))
 })
-## See also: Drop-in replacement for testthat::with_mock()
-## https://krlmlr.github.io/mockr
-## mock getSiteInfo()
 sysInfo <- Sys.info()
 homeDir <- paste0("~/")
 configFile <- paste0(homeDir, ".nprcgenekeepr_config")
