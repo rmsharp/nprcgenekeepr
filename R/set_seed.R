@@ -30,7 +30,6 @@ set_seed <- function(seed = 1) {
 #'
 #' @returns R.Version() output
 #' @noRd
-R_version <- function() {
+R_version <- function() { # nolint: object_name_linter.
   R.Version()
 }
-
