@@ -19,26 +19,29 @@
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
-#' examplePedigree <- nprcgenekeepr::examplePedigree
-#' ped <- qcStudbook(examplePedigree, minParentAge = 2, reportChanges = FALSE,
-#'                   reportErrors = FALSE)
+#' qcPed <- nprcgenekeepr::qcPed
+#' ped <- qcStudbook(qcPed,
+#'   minParentAge = 2, reportChanges = FALSE,
+#'   reportErrors = FALSE
+#' )
 #' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
 #' currentGroups <- list(1)
 #' currentGroups[[1]] <- examplePedigree$id[1:3]
 #' candidates <- examplePedigree$id[examplePedigree$status == "ALIVE"]
 #' threshold <- 0.015625
 #' kin <- getAnimalsWithHighKinship(kmat, ped, threshold, currentGroups,
-#'                                  ignore = list(c("F", "F")), minAge = 1)
+#'   ignore = list(c("F", "F")), minAge = 1
+#' )
 #' # Filtering out candidates related to current group members
-#' conflicts <- unique(c(unlist(kin[unlist(currentGroups)]),
-#'                                  unlist(currentGroups)))
+#' conflicts <- unique(c(
+#'   unlist(kin[unlist(currentGroups)]),
+#'   unlist(currentGroups)
+#' ))
 #' candidates <- setdiff(candidates, conflicts)
 #' kin <- addAnimalsWithNoRelative(kin, candidates)
-#' length(kin) # should be 2416
-#' kin[["1SPLS8"]] # should have 14 IDs
-#'
+#' length(kin) # should be 259
+#' kin[["0DAV0I"]] # should have 34 IDs
 addAnimalsWithNoRelative <- function(kin, candidates) {
-
   # adding animals with no relatives
   for (cand in setdiff(candidates, names(kin))) {
     kin[[cand]] <- c(NA)

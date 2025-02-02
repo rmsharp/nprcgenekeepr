@@ -27,18 +27,21 @@
 #'
 #' @export
 #' @examples
-#' examplePedigree <- nprcgenekeepr::examplePedigree
-#' ped <- qcStudbook(examplePedigree, minParentAge = 2, reportChanges = FALSE,
-#'                   reportErrors = FALSE)
+#' qcPed <- nprcgenekeepr::qcPed
+#' ped <- qcStudbook(qcPed,
+#'   minParentAge = 2L, reportChanges = FALSE,
+#'   reportErrors = FALSE
+#' )
 #' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
-#' currentGroups <- list(1)
-#' currentGroups[[1]] <- examplePedigree$id[1:3]
+#' currentGroups <- list(1L)
+#' currentGroups[[1L]] <- examplePedigree$id[1L:3L]
 #' candidates <- examplePedigree$id[examplePedigree$status == "ALIVE"]
 #' threshold <- 0.015625
 #' kin <- getAnimalsWithHighKinship(kmat, ped, threshold, currentGroups,
-#'                                  ignore = list(c("F", "F")), minAge = 1)
-#' length(kin) # should be 2412
-#' kin[["1SPLS8"]] # should have 14 IDs
+#'   ignore = list(c("F", "F")), minAge = 1.0
+#' )
+#' length(kin) # should be 259
+#' kin[["0DAV0I"]] # should have 34 IDs
 getAnimalsWithHighKinship <- function(kmat, ped, threshold, currentGroups,
                                       ignore, minAge) {
   kin <- kinMatrix2LongForm(kmat)
@@ -52,7 +55,7 @@ getAnimalsWithHighKinship <- function(kmat, ped, threshold, currentGroups,
 
   # Ignore kinship between current group members
   kin <- kin[!((kin$id1 %in% unlist(currentGroups)) &
-                 (kin$id2 %in% unlist(currentGroups))), ]
+    (kin$id2 %in% unlist(currentGroups))), ]
 
   # Converting the kinships to a list
   kin <- tapply(kin$id2, kin$id1, c)

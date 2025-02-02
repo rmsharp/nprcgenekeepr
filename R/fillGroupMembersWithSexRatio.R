@@ -26,9 +26,12 @@
 #' from 0.5 to 20 by increments of 0.5.
 #' @export
 #' @examples
-#' examplePedigree <- nprcgenekeepr::examplePedigree
-#' ped <- qcStudbook(examplePedigree, minParentAge = 2, reportChanges = FALSE,
-#'                   reportErrors = FALSE)
+#' library(nprcgenekeepr)
+#' qcPed <- nprcgenekeepr::qcPed
+#' ped <- qcStudbook(qcPed,
+#'   minParentAge = 2, reportChanges = FALSE,
+#'   reportErrors = FALSE
+#' )
 #'
 #' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
 #' currentGroups <- list(1)
@@ -36,75 +39,84 @@
 #' candidates <- examplePedigree$id[examplePedigree$status == "ALIVE"]
 #' threshold <- 0.015625
 #' kin <- getAnimalsWithHighKinship(kmat, ped, threshold, currentGroups,
-#'                                  ignore = list(c("F", "F")), minAge = 1)
+#'   ignore = list(c("F", "F")), minAge = 1
+#' )
 #' # Filtering out candidates related to current group members
-#' conflicts <- unique(c(unlist(kin[unlist(currentGroups)]),
-#'                       unlist(currentGroups)))
+#' conflicts <- unique(c(
+#'   unlist(kin[unlist(currentGroups)]),
+#'   unlist(currentGroups)
+#' ))
 #' candidates <- setdiff(candidates, conflicts)
 #'
 #' kin <- addAnimalsWithNoRelative(kin, candidates)
 #'
 #' ignore <- NULL
-#' minAge <- 1
-#' numGp <- 1
+#' minAge <- 1.0
+#' numGp <- 1L
 #' harem <- FALSE
-#' sexRatio <- 0
+#' sexRatio <- 0.0
 #' withKin <- FALSE
 #' groupMembers <- nprcgenekeepr:::makeGroupMembers(numGp,
-#'                                                  currentGroups,
-#'                                                  candidates,
-#'                                                  ped,
-#'                                                  harem = harem,
-#'                                                  minAge = minAge)
+#'   currentGroups,
+#'   candidates,
+#'   ped,
+#'   harem = harem,
+#'   minAge = minAge
+#' )
 #' groupMembersStart <- groupMembers
 #' grpNum <- nprcgenekeepr:::makeGrpNum(numGp)
 #'
 #' groupMembers <- fillGroupMembersWithSexRatio(
-#'   candidates, groupMembers, grpNum, kin, ped, minAge, numGp, sexRatio = 1)
+#'   candidates, groupMembers, grpNum, kin, ped, minAge, numGp,
+#'   sexRatio = 1
+#' )
 fillGroupMembersWithSexRatio <-
   function(candidates, groupMembers, grpNum, kin, ped, minAge, numGp,
            sexRatio) {
-  potentialSires <- getPotentialSires(candidates, minAge, ped)
-  availableMales <- makeAvailable(potentialSires, numGp)
-  availableFemales <- makeAvailable(setdiff(candidates, potentialSires), numGp)
+    potentialSires <- getPotentialSires(candidates, minAge, ped)
+    availableMales <- makeAvailable(potentialSires, numGp)
+    availableFemales <- makeAvailable(setdiff(candidates, potentialSires), numGp)
 
-  while (TRUE) {
-    if (isEmpty(grpNum)) {
-      break
-    }
+    while (TRUE) {
+      if (isEmpty(grpNum)) {
+        break
+      }
 
-    # Select a group at random
-    i <- sample(grpNum, 1)[[1]]
+      # Select a group at random
+      i <- sample(grpNum, 1L)[[1L]]
 
-    # Select an animal that can be added to this group and add it
-    ratio <- calculateSexRatio(groupMembers[[i]], ped)
-    if (is.na(ratio))
-      ratio <- 0 ## no seed animals
+      # Select an animal that can be added to this group and add it
+      ratio <- calculateSexRatio(groupMembers[[i]], ped)
+      if (is.na(ratio)) {
+        ratio <- 0.0
+      } ## no seed animals
 
-    if (ratio < sexRatio) { ## need female
-      id <- sample(availableFemales[[i]], 1)
-      availableFemales <-
-        removeSelectedAnimalFromAvailableAnimals(availableFemales, id, numGp)
-    } else { # may need male
-      if (abs(sexRatio - calculateSexRatio(groupMembers[[i]], ped,
-                                           additionalMales = 1)) <
-          abs(sexRatio - calculateSexRatio(groupMembers[[i]], ped,
-                                           additionalFemales = 1))) {
-        id <- sample(availableMales[[i]], 1)
-        availableMales <-
-          removeSelectedAnimalFromAvailableAnimals(availableMales, id, numGp)
-      } else {
-        id <- sample(availableFemales[[i]], 1)
+      if (ratio < sexRatio) { ## need female
+        id <- sample(availableFemales[[i]], 1L)
         availableFemales <-
           removeSelectedAnimalFromAvailableAnimals(availableFemales, id, numGp)
+      } else { # may need male
+        if (abs(sexRatio - calculateSexRatio(groupMembers[[i]], ped,
+          additionalMales = 1L
+        )) <
+          abs(sexRatio - calculateSexRatio(groupMembers[[i]], ped,
+            additionalFemales = 1L
+          ))) {
+          id <- sample(availableMales[[i]], 1L)
+          availableMales <-
+            removeSelectedAnimalFromAvailableAnimals(availableMales, id, numGp)
+        } else {
+          id <- sample(availableFemales[[i]], 1L)
+          availableFemales <-
+            removeSelectedAnimalFromAvailableAnimals(availableFemales, id, numGp)
+        }
       }
+      groupMembers[[i]] <- c(groupMembers[[i]], id)
+      # Remove all relatives from consideration for the group it was added to
+      availableMales[[i]] <- setdiff(availableMales[[i]], kin[[id]])
+      availableFemales[[i]] <- setdiff(availableFemales[[i]], kin[[id]])
+      grpNum <- removeGroupIfNoAvailableAnimals(grpNum, availableMales)
+      grpNum <- removeGroupIfNoAvailableAnimals(grpNum, availableFemales)
     }
-    groupMembers[[i]] <- c(groupMembers[[i]], id)
-    # Remove all relatives from consideration for the group it was added to
-    availableMales[[i]] <- setdiff(availableMales[[i]], kin[[id]])
-    availableFemales[[i]] <- setdiff(availableFemales[[i]], kin[[id]])
-    grpNum <- removeGroupIfNoAvailableAnimals(grpNum, availableMales)
-    grpNum <- removeGroupIfNoAvailableAnimals(grpNum, availableFemales)
+    groupMembers
   }
-  groupMembers
-}
