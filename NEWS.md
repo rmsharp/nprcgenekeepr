@@ -1,9 +1,19 @@
 NEWS
 ================
 R. Mark Sharp, Ph.D.
-2024-12-19
+2025-04-06
 
-2024-01-17
+2025-05-06
+
+# nprcgenekeepr 1.0.7 (20250506)
+
+- Minor changes
+  - Added returned value descriptions for all functions where formerly
+    missing.
+  - Removed extraneous spaces from DESCRIPTION file.
+  - Exposed all examples in roxygen2 comments by removing and and . The
+    example with `runGeneKeepR()` is protected with if (interactive())
+    {}.
 
 # nprcgenekeepr 1.0.6 (20241215)
 
@@ -28,7 +38,8 @@ R. Mark Sharp, Ph.D.
     allowing the user to define how auto generated Ids will be formed.
   - Added some quality assurance badges to README.
   - Added CRAN status badge to README.
-  - Added Rhub.yaml file for checking on Rhub.
+  - Stopped using travis-ci and started using GitHub Actions with
+    Rhub.yaml file for checking on Rhub.
 
 # nprcgenekeepr 1.0.5.9004 (20221213)
 
