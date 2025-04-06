@@ -16,12 +16,14 @@
 #' @examples
 #' library(nprcgenekeepr)
 #' examplePedigree <- nprcgenekeepr::examplePedigree
-#' breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
-#'                          reportChanges = FALSE,
-#'                          reportErrors = FALSE)
+#' breederPed <- qcStudbook(examplePedigree,
+#'   minParentAge = 2,
+#'   reportChanges = FALSE,
+#'   reportErrors = FALSE
+#' )
 #' focalAnimals <- breederPed$id[!(is.na(breederPed$sire) &
-#'                                   is.na(breederPed$dam)) &
-#'                                 is.na(breederPed$exit)]
+#'   is.na(breederPed$dam)) &
+#'   is.na(breederPed$exit)]
 #' ped <- setPopulation(ped = breederPed, ids = focalAnimals)
 #' trimmedPed <- trimPedigree(focalAnimals, breederPed)
 #' probands <- ped$id[ped$population]
@@ -34,7 +36,7 @@ findOffspring <- function(probands, ped) {
   idx <- match(probands, names(offspring))
   offspring <- offspring[idx]
   names(offspring)[is.na(idx)] <- probands[is.na(idx)]
-  offspring[is.na(idx)] <- 0
+  offspring[is.na(idx)] <- 0L
 
-  return(offspring)
+  offspring
 }

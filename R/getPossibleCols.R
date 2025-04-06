@@ -46,8 +46,10 @@
 #' library(nprcgenekeepr)
 #' getPossibleCols()
 getPossibleCols <- function() {
-  c("id", "sire", "dam", "sex", "gen", "birth", "exit", "death", "age",
+  c(
+    "id", "sire", "dam", "sex", "gen", "birth", "exit", "death", "age",
     "ancestry", "population", "origin", "status", "condition", "departure",
     "spf", "vasxOvx", "pedNum", "first", "second", "first_name",
-    "second_name", "recordStatus")
+    "second_name", "recordStatus"
+  )
 }

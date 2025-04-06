@@ -16,8 +16,10 @@
 #' names(pedOne) <- c("id", "sire", "dam", "sex", "birth")
 #' getParents(pedOne, c("o1", "d4"))
 getParents <- function(pedSourceDf, ids) {
-  unique(c(pedSourceDf$sire[(is.element(pedSourceDf$id, ids) &
-                                 !is.na(pedSourceDf$sire))],
-           pedSourceDf$dam[(is.element(pedSourceDf$id, ids) &
-                                !is.na(pedSourceDf$dam))]))
+  unique(c(
+    pedSourceDf$sire[(is.element(pedSourceDf$id, ids) &
+      !is.na(pedSourceDf$sire))],
+    pedSourceDf$dam[(is.element(pedSourceDf$id, ids) &
+      !is.na(pedSourceDf$dam))]
+  ))
 }

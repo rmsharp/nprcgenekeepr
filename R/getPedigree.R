@@ -14,23 +14,30 @@
 #' @examples
 #' library(nprcgenekeepr)
 #' ped <- getPedigree(fileName = system.file("testdata", "qcPed.csv",
-#'                    package="nprcgenekeepr"))
+#'   package = "nprcgenekeepr"
+#' ))
 getPedigree <- function(fileName, sep = ",") {
   flog.debug(paste0("in getPedigree\n"),
-             name = "nprcgenekeepr")
+    name = "nprcgenekeepr"
+  )
   if (excel_format(fileName) %in% c("xls", "xlsx")) {
     pedigree <- readExcelPOSIXToCharacter(fileName)
-    flog.debug(paste0("in getPedigree after readxl, nrow(pedigree) = ",
-                      nrow(pedigree), "\n"), name = "nprcgenekeepr")
+    flog.debug(paste0(
+      "in getPedigree after readxl, nrow(pedigree) = ",
+      nrow(pedigree), "\n"
+    ), name = "nprcgenekeepr")
   } else {
     pedigree <- read.table(fileName,
-                         header = TRUE,
-                         sep = sep,
-                         stringsAsFactors = FALSE,
-                         na.strings = c("", "NA"),
-                         check.names = FALSE)
-    flog.debug(paste0("in getPedigree after read.csv, nrow(pedigree) = ",
-                      nrow(pedigree), "\n"), name = "nprcgenekeepr")
+      header = TRUE,
+      sep = sep,
+      stringsAsFactors = FALSE,
+      na.strings = c("", "NA"),
+      check.names = FALSE
+    )
+    flog.debug(paste0(
+      "in getPedigree after read.csv, nrow(pedigree) = ",
+      nrow(pedigree), "\n"
+    ), name = "nprcgenekeepr")
   }
   pedigree
 }

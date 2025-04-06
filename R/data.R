@@ -66,8 +66,10 @@
 #' data("examplePedigree")
 #' any(names(examplePedigree) == "population")
 #' nrow(examplePedigree)
-#' examplePedigree <- setPopulation(ped = examplePedigree,
-#'                                  ids = focalAnimals$id)
+#' examplePedigree <- setPopulation(
+#'   ped = examplePedigree,
+#'   ids = focalAnimals$id
+#' )
 #' any(names(examplePedigree) == "population")
 #' nrow(examplePedigree)
 #' nrow(examplePedigree[examplePedigree$population, ])
@@ -291,7 +293,7 @@
 #' It has the following structure:
 #' structure(list(id = c("A", "B", "C", "D", "E", "F", "G", "H",
 #' "I", "J", "K", "L", "M", "N", "O", "P", "Q"), sire = c("Q", NA,
-#'"A", "A", NA, "D", "D", "A", "A", NA, NA, "C", "A", NA, NA, "M", NA),
+#' "A", "A", NA, "D", "D", "A", "A", NA, NA, "C", "A", NA, NA, "M", NA),
 #' dam = c(NA, NA, "B", "B", NA, "E", "E", "B", "J", NA, NA,
 #' "K", "N", NA, NA, "O", NA), sex = c("M", "F", "M", "M", "F",
 #'  "F", "F", "M", "F", "F", "F", "F", "M", "F", "F", "F", "M"),

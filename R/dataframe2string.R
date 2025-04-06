@@ -22,18 +22,24 @@
 dataframe2string <- function(object, ..., digits = NULL, addRowNames = TRUE) {
   nRows <- length(row.names(object))
   if (length(object) == 0L) {
-    return(paste(
-      sprintf(ngettext(nRows, "data frame with 0 columns and %d row",
-                       "data frame with 0 columns and %d rows")
-              , nRows)
-      , "\\n", sep = "")
-    )
+    return(paste0(
+      sprintf(
+        ngettext(
+          nRows, "data frame with 0 columns and %d row",
+          "data frame with 0 columns and %d rows"
+        ),
+        nRows
+      ),
+      "\\n"
+    ))
   } else if (nRows == 0L) {
     return(gettext("<0 rows> (or 0-length row names)\\n"))
   } else {
     # get text-formatted version of the data.frame
-    m <- as.matrix(format.data.frame(object, digits = digits,
-                                     na.encode = TRUE))
+    m <- as.matrix(format.data.frame(object,
+      digits = digits,
+      na.encode = TRUE
+    ))
     # define rowNames (if required)
     if (isTRUE(addRowNames)) {
       rowNames <- dimnames(object)[[1L]]
@@ -45,21 +51,23 @@ dataframe2string <- function(object, ..., digits = NULL, addRowNames = TRUE) {
       rowNames <- c("", rowNames)
     }
     # add column headers
-    m <- rbind(dimnames(m)[[2]], m)
+    m <- rbind(dimnames(m)[[2L]], m)
     # add row headers
-    if (isTRUE(addRowNames))
+    if (isTRUE(addRowNames)) {
       m <- cbind(rowNames, m)
+    }
     # max-length per-column
-    maxLen <- apply(apply(m, c(1, 2), stri_length), 2, max,
-                    na.rm = TRUE)
+    maxLen <- apply(apply(m, c(1L, 2L), stri_length), 2L, max,
+      na.rm = TRUE
+    )
 
     # add right padding
     ##  t is needed because "If each call to FUN returns a vector
     ##  of length n, then apply returns an array of dimension
     ##  c(n, dim(X)[MARGIN])"
-    m <- t(apply(m, 1, stri_pad_both, width = maxLen))
+    m <- t(apply(m, 1L, stri_pad_both, width = maxLen))
     # merge columns
-    m <- apply(m, 1, paste, collapse = "")
+    m <- apply(m, 1L, paste, collapse = "")
     # merge rows (and return)
     return(paste(m, collapse = "\n"))
   }

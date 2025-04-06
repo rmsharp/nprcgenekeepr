@@ -40,5 +40,5 @@ createPedTree <- function(ped) {
     pedTree[[ped$id[i]]]$sire <- ped$sire[i]
     pedTree[[ped$id[i]]]$dam <- ped$dam[i]
   }
-  return(pedTree)
+  pedTree
 }

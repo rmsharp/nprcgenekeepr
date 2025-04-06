@@ -23,7 +23,7 @@ addSexAndAgeToGroup <- function(ids, ped) {
     }),
     age = vapply(ids, function(id) {
       getCurrentAge(ped$birth[ped$id == id])
-    }, numeric(1)),
+    }, numeric(1L)),
     stringsAsFactors = FALSE
   )
   group

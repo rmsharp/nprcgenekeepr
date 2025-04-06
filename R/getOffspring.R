@@ -17,8 +17,10 @@
 #' names(pedOne) <- c("id", "sire", "dam", "sex", "birth")
 #' getOffspring(pedOne, c("s1", "d2"))
 getOffspring <- function(pedSourceDf, ids) {
-  unique(c(pedSourceDf$id[(is.element(pedSourceDf$sire, ids) &
-                                 !is.na(pedSourceDf$sire))],
-           pedSourceDf$id[(is.element(pedSourceDf$dam, ids) &
-                                !is.na(pedSourceDf$dam))]))
+  unique(c(
+    pedSourceDf$id[(is.element(pedSourceDf$sire, ids) &
+      !is.na(pedSourceDf$sire))],
+    pedSourceDf$id[(is.element(pedSourceDf$dam, ids) &
+      !is.na(pedSourceDf$dam))]
+  ))
 }

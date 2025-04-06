@@ -21,27 +21,34 @@
 #' @export
 makeSimPed <- function(ped, allSimParents, verbose = FALSE) {
   nIds <- length(allSimParents)
-  if (!inherits(ped, "data.table"))
+  if (!inherits(ped, "data.table")) {
     data.table::setDT(ped)
+  }
 
   for (i in seq_len(nIds)) {
-    if (length(allSimParents[[i]]$sires) == 0) {
+    if (length(allSimParents[[i]]$sires) == 0L) {
       ped$sire[ped$id == allSimParents[[i]]$id] <- NA
-      if (verbose)
-        cat(paste0("id #", i, " is ", allSimParents[[i]]$id,
-                   " and has no sire\n"))
+      if (verbose) {
+        cat(paste0(
+          "id #", i, " is ", allSimParents[[i]]$id,
+          " and has no sire\n"
+        ))
+      }
     } else {
       ped$sire[ped$id == allSimParents[[i]]$id] <-
-        sample(allSimParents[[i]]$sires, size = 1)
+        sample(allSimParents[[i]]$sires, size = 1L)
     }
-    if (length(allSimParents[[i]]$dams) == 0) {
+    if (length(allSimParents[[i]]$dams) == 0L) {
       ped$dam[ped$id == allSimParents[[i]]$id] <- NA
-      if (verbose)
-        cat(paste0("id #", i, " is ", allSimParents[[i]]$id,
-                   " and has no dam\n"))
+      if (verbose) {
+        cat(paste0(
+          "id #", i, " is ", allSimParents[[i]]$id,
+          " and has no dam\n"
+        ))
+      }
     } else {
       ped$dam[ped$id == allSimParents[[i]]$id] <-
-        sample(allSimParents[[i]]$dams, size = 1)
+        sample(allSimParents[[i]]$dams, size = 1L)
     }
   }
   ped

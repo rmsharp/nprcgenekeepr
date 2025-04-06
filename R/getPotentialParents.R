@@ -28,15 +28,16 @@ getPotentialParents <- function(ped, minParentAge, maxGestationalPeriod) {
   data.table::setDT(ped)
   ped <- ped[!is.na(ped$birth), ]
   ## No point in looking for potential parents without a "fromCenter" column.
-  if (!any(names(ped) == "fromCenter"))
+  if (!any(names(ped) == "fromCenter")) {
     return(NULL)
+  }
   ## Remove the records of automatically generated IDs
   ped <- removeAutoGenIds(ped)
 
   ## pUnknown becomes the pedigree records of animals with at least one unknown
   ## parent
   pUnknown <- ped[fromCenter &
-                    (is.na(ped$sire) | is.na(ped$dam)), ]
+    (is.na(ped$sire) | is.na(ped$dam)), ]
   pUnknown <- pUnknown[!is.na(pUnknown$id), ]
 
   dYear <- 365L # used for number of days in a year
@@ -44,31 +45,33 @@ getPotentialParents <- function(ped, minParentAge, maxGestationalPeriod) {
   ## add calcs for births and pre-allocate memory
 
   potentialParents <- vector(mode = "list", length = nrow(pUnknown))
-  if (nrow(pUnknown) > 0) {
-    j <- 0 # counter for potentialParents; used to prevent NULL entries
+  if (nrow(pUnknown) > 0L) {
+    j <- 0L # counter for potentialParents; used to prevent NULL entries
     for (i in seq_len(nrow(pUnknown))) {
       ## Calculating breeding age potential parents
       ba <- ped[birth <= (pUnknown$birth[i] - (dYear * minParentAge)), ]
       ba <- ba[!is.na(ba$id), ]
-      if (nrow(ba) == 0)
+      if (nrow(ba) == 0L) {
         next
-      j <- j + 1
+      }
+      j <- j + 1L
       ## Selecting sires
-      potentialSires <- ba[sex == "M" &
-                      (is.na(ba$exit) |
-                         exit >= (pUnknown$birth[i] - maxGestationalPeriod))
-                    , id]
+      potentialSires <- ba[
+        sex == "M" &
+          (is.na(ba$exit) |
+            exit >= (pUnknown$birth[i] - maxGestationalPeriod)),
+        id
+      ]
 
       ## Selecting dams
       potentialDams <- ba[sex == "F" &
-                    (is.na(ba$exit) |
-                       exit >= pUnknown$birth[i])
-                  , ]
+        (is.na(ba$exit) |
+          exit >= pUnknown$birth[i]), ]
 
       ## Females who had an offspring in rolling year of focal offspring birth
       births <-
         ped[birth >= pUnknown$birth[i] - (dYear / 2L) &
-              birth <= pUnknown$birth[i] + (dYear / 2L), ]
+          birth <= pUnknown$birth[i] + (dYear / 2L), ]
 
       ## Females who had an offspring in the year prior or year after
       births_plus_minus_one <-
@@ -94,20 +97,21 @@ getPotentialParents <- function(ped, minParentAge, maxGestationalPeriod) {
       potentialDams <- potentialDams[id %in% births_plus_minus_one$dam, ]
       ## If no potential dams have been identified thus far, accept all females
       ## old enough to be the dam.
-      if (nrow(potentialDams) == 0) {
+      if (nrow(potentialDams) == 0L) {
         potentialDams <-
           ba[sex == "F" & (is.na(ba$exit) | exit >= pUnknown$birth[i]), ]
       }
 
       potentialParents[[j]] <- list(
-        "id" = pUnknown$id[i][1],
-        "sires" = potentialSires,
-        "dams" = potentialDams$id
+        id = pUnknown$id[i][1L],
+        sires = potentialSires,
+        dams = potentialDams$id
       )
     }
   }
-  if (j > 0)
-    potentialParents[1:j]
-  else
+  if (j > 0L) {
+    potentialParents[1L:j]
+  } else {
     NULL
+  }
 }

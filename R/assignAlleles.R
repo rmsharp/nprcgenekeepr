@@ -19,11 +19,15 @@
 #' @export
 #' @examples
 #' alleles <- list(alleles = list(), counter = 1)
-#' alleles <- assignAlleles(alleles, parentType = "sire", parent = NA,
-#'                          id = "o1", n = 4)
+#' alleles <- assignAlleles(alleles,
+#'   parentType = "sire", parent = NA,
+#'   id = "o1", n = 4
+#' )
 #' alleles
-#' alleles <- assignAlleles(alleles, parentType = "dam", parent = NA,
-#'                          id = "o1", n = 4)
+#' alleles <- assignAlleles(alleles,
+#'   parentType = "dam", parent = NA,
+#'   id = "o1", n = 4
+#' )
 #' alleles
 assignAlleles <- function(alleles, parentType, parent, id, n) {
   if (is.na(parent)) {
@@ -32,8 +36,9 @@ assignAlleles <- function(alleles, parentType, parent, id, n) {
     alleles$counter <- alleles$counter + 1L
   } else {
     if (is.null(alleles$alleles[[parent]][["sire"]]) ||
-        is.null(alleles$alleles[[parent]][["dam"]]))
+      is.null(alleles$alleles[[parent]][["dam"]])) {
       stop("sire and dam must have had alleles assigned: logic error")
+    }
     # Otherwise get his two sets of alleles and randomly select one
     # for each iteration
     p1 <- alleles$alleles[[parent]][["sire"]]

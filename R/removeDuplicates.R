@@ -27,17 +27,18 @@
 #' nrow(pedWithDups)
 #' nrow(ped2)
 removeDuplicates <- function(ped, reportErrors = FALSE) {
-  if (!all(c("id", "recordStatus") %in% names(ped)))
+  if (!all(c("id", "recordStatus") %in% names(ped))) {
     stop("ped must have columns \"id\" and \"recordStatus\".")
+  }
   if (reportErrors) {
-    if (sum(duplicated(ped$id[ped$recordStatus == "original"])) == 0) {
+    if (sum(duplicated(ped$id[ped$recordStatus == "original"])) == 0L) {
       return(NULL)
     } else {
       return(ped$id[duplicated(ped$id[ped$recordStatus == "original"])])
     }
   } else {
     p <- unique(ped)
-    if (sum(duplicated(p$id)) == 0) {
+    if (sum(duplicated(p$id)) == 0L) {
       return(p)
     } else {
       stop("Duplicate IDs with mismatched information present")

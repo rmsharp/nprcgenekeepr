@@ -11,8 +11,9 @@
 #' @noRd
 checkChangedColAndErrorLst <- function(errorLst) {
   if (checkErrorLst(errorLst) ||
-      checkChangedColsLst(errorLst$changedCols))
-    return(errorLst)
-  else
-    return(NULL)
+    checkChangedColsLst(errorLst$changedCols)) {
+    errorLst
+  } else {
+    NULL
+  }
 }

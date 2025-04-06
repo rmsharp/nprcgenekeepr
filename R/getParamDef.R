@@ -10,9 +10,11 @@
 #' @noRd
 getParamDef <- function(tokenList, param) {
   if (!any(tolower(tokenList$param) == tolower(param))) {
-    stop(paste0("Could not find ", param, " in configuration file. ",
-                "Check spelling carefully.\n"))
+    stop("Could not find ",
+         param,
+         " in configuration file. ",
+         "Check spelling carefully.\n")
   } else {
-    tokenList$tokenVec[tokenList$param == param][[1]]
+    tokenList$tokenVec[tokenList$param == param][[1L]]
   }
 }

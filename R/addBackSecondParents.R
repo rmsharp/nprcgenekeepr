@@ -12,12 +12,14 @@
 #'
 #' @examples
 #' examplePedigree <- nprcgenekeepr::examplePedigree
-#' breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
-#'                          reportChanges = FALSE,
-#'                          reportErrors = FALSE)
+#' breederPed <- qcStudbook(examplePedigree,
+#'   minParentAge = 2,
+#'   reportChanges = FALSE,
+#'   reportErrors = FALSE
+#' )
 #' probands <- breederPed$id[!(is.na(breederPed$sire) &
-#'                                is.na(breederPed$dam)) &
-#'                                is.na(breederPed$exit)]
+#'   is.na(breederPed$dam)) &
+#'   is.na(breederPed$exit)]
 #' ped <- getProbandPedigree(probands, breederPed)
 #' nrow(ped)
 #' p <- removeUninformativeFounders(ped)
@@ -29,10 +31,9 @@
 #' @param ped a trimmed pedigree
 #' @export
 addBackSecondParents <- function(uPed, ped) {
-
   # Adding back second parents where one is known
   idsWithOneParent <- getIdsWithOneParent(uPed)
-  addBack <- c()
+  addBack <- character(0L)
   ## Within this loop, the second parent is added to uPed as the sire
   ## or dam as is found in ped.
   for (id in idsWithOneParent) {

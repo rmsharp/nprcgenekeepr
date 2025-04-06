@@ -27,19 +27,19 @@
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
-#' qcPed <- nprcgenekeepr::qcPed
-#' ped <- qcStudbook(qcPed,
-#'   minParentAge = 2, reportChanges = FALSE,
+#' examplePedigree <- nprcgenekeepr::examplePedigree
+#' ped <- qcStudbook(examplePedigree,
+#'   minParentAge = 2L, reportChanges = FALSE,
 #'   reportErrors = FALSE
 #' )
 #'
 #' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
 #' currentGroups <- list(1)
-#' currentGroups[[1]] <- examplePedigree$id[1:3]
+#' currentGroups[[1]] <- examplePedigree$id[1L:3L]
 #' candidates <- examplePedigree$id[examplePedigree$status == "ALIVE"]
 #' threshold <- 0.015625
 #' kin <- getAnimalsWithHighKinship(kmat, ped, threshold, currentGroups,
-#'   ignore = list(c("F", "F")), minAge = 1
+#'   ignore = list(c("F", "F")), minAge = 1L
 #' )
 #' # Filtering out candidates related to current group members
 #' conflicts <- unique(c(
@@ -68,16 +68,17 @@
 #'
 #' groupMembers <- fillGroupMembersWithSexRatio(
 #'   candidates, groupMembers, grpNum, kin, ped, minAge, numGp,
-#'   sexRatio = 1
+#'   sexRatio = 1.0
 #' )
 fillGroupMembersWithSexRatio <-
   function(candidates, groupMembers, grpNum, kin, ped, minAge, numGp,
            sexRatio) {
     potentialSires <- getPotentialSires(candidates, minAge, ped)
     availableMales <- makeAvailable(potentialSires, numGp)
-    availableFemales <- makeAvailable(setdiff(candidates, potentialSires), numGp)
+    availableFemales <- makeAvailable(setdiff(candidates, potentialSires),
+                                      numGp)
 
-    while (TRUE) {
+    repeat {
       if (isEmpty(grpNum)) {
         break
       }
@@ -108,7 +109,8 @@ fillGroupMembersWithSexRatio <-
         } else {
           id <- sample(availableFemales[[i]], 1L)
           availableFemales <-
-            removeSelectedAnimalFromAvailableAnimals(availableFemales, id, numGp)
+            removeSelectedAnimalFromAvailableAnimals(availableFemales, id,
+                                                     numGp)
         }
       }
       groupMembers[[i]] <- c(groupMembers[[i]], id)

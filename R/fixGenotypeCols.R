@@ -11,10 +11,10 @@
 #' @param ped the pedigree information in datatable format
 #' @noRd
 fixGenotypeCols <- function(ped) {
-  if (any(tolower(names(ped)) %in% "firstname")) {
+  if (any(tolower(names(ped)) == "firstname")) {
     names(ped)[names(ped) == "firstname"] <- "first_name"
   }
-  if (any(tolower(names(ped)) %in% "secondname")) {
+  if (any(tolower(names(ped)) == "secondname")) {
     names(ped)[names(ped) == "secondname"] <- "second_name"
   }
   ped

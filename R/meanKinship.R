@@ -20,5 +20,5 @@
 #' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
 #' head(meanKinship(kmat))
 meanKinship <- function(kmat) {
-  return(colMeans(kmat, na.rm = TRUE))
+  colMeans(kmat, na.rm = TRUE)
 }

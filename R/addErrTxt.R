@@ -14,17 +14,20 @@
 #' @importFrom stringi stri_c stri_detect_fixed
 #' @noRd
 addErrTxt <- function(txt, err, singularTxt, pluralTxt) {
-  if (length(err) == 1) {
+  if (length(err) == 1L) {
     if (stri_detect_fixed(err, "and")) {
       txt <- stri_c(txt, pluralTxt, ": ", err, ".\n")
     } else {
       txt <- stri_c(txt, singularTxt, ": ", err, ".\n")
     }
-  } else if (length(err) > 1) {
-    if (length(err) > 5)
-      err <- err[1:5]
-    txt <- stri_c(txt, pluralTxt, ": ",
-                  get_and_or_list(err), ".\n")
+  } else if (length(err) > 1L) {
+    if (length(err) > 5L) {
+      err <- err[1L:5L]
+    }
+    txt <- stri_c(
+      txt, pluralTxt, ": ",
+      get_and_or_list(err), ".\n"
+    )
   }
   txt
 }

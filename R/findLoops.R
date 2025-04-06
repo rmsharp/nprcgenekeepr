@@ -27,7 +27,6 @@
 #' exampleTree <- createPedTree(examplePedigree)
 #' exampleLoops <- findLoops(exampleTree)
 findLoops <- function(ptree) {
-
   ids <- names(ptree)
   loops <- vector("list", length(ids))
   names(loops) <- ids
@@ -39,5 +38,5 @@ findLoops <- function(ptree) {
       loops[[id]] <- FALSE
     }
   }
-  return(loops)
+  loops
 }

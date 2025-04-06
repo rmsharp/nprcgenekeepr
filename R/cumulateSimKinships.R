@@ -20,15 +20,21 @@
 #' @export
 #' @examples
 #' ped <- nprcgenekeepr::smallPed
-#' simParent_1 <- list(id = "A",
-#'                     sires = c("s1_1", "s1_2", "s1_3"),
-#'                     dams = c("d1_1", "d1_2", "d1_3", "d1_4"))
-#' simParent_2 <- list(id = "B",
-#'                     sires = c("s2_1", "s2_2", "s2_3"),
-#'                     dams = c("d2_1", "d2_2", "d2_3", "d2_4"))
-#' simParent_3 <- list(id = "E",
-#'                     sires = c("s3_1", "s3_2", "s3_3"),
-#'                     dams = c("d3_1", "d3_2", "d3_3", "d3_4"))
+#' simParent_1 <- list(
+#'   id = "A",
+#'   sires = c("s1_1", "s1_2", "s1_3"),
+#'   dams = c("d1_1", "d1_2", "d1_3", "d1_4")
+#' )
+#' simParent_2 <- list(
+#'   id = "B",
+#'   sires = c("s2_1", "s2_2", "s2_3"),
+#'   dams = c("d2_1", "d2_2", "d2_3", "d2_4")
+#' )
+#' simParent_3 <- list(
+#'   id = "E",
+#'   sires = c("s3_1", "s3_2", "s3_3"),
+#'   dams = c("d3_1", "d3_2", "d3_3", "d3_4")
+#' )
 #' allSimParents <- list(simParent_1, simParent_2, simParent_3)
 #' pop <- LETTERS[1:7]
 #' simKinships <- createSimKinships(ped, allSimParents, pop, n = 10)
@@ -39,13 +45,15 @@ cumulateSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L) {
 
   # Get the list of animals in the population to consider
   nIds <- nrow(ped)
-  squaredKinship <- sumKinship <- matrix(data = 0, nrow = nIds, ncol = nIds)
+  squaredKinship <- sumKinship <- matrix(data = 0L, nrow = nIds, ncol = nIds)
   first_time <- TRUE
 
   for (i in seq_len(n)) {
     simPed <- makeSimPed(ped, allSimParents)
-    kmat <- kinship(simPed$id, simPed$sire,
-                    simPed$dam, simPed$gen)
+    kmat <- kinship(
+      simPed$id, simPed$sire,
+      simPed$dam, simPed$gen
+    )
     if (first_time) { # initializes minKinship correctly and adds IDs
       minKinship <- kmat
       maxKinship <- kmat
@@ -55,14 +63,15 @@ cumulateSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L) {
       maxKinship <- pmax(maxKinship, kmat)
     }
     sumKinship <- sumKinship + kmat
-    squaredKinship <- squaredKinship + kmat^2
+    squaredKinship <- squaredKinship + kmat^2L
   }
-  list(meanKinship = sumKinship / n,
-       sdKinship = sqrt(
-         ((n * squaredKinship) - sumKinship^2) /
-           (n * (n - 1))
-       ),
-       minKinship = minKinship,
-       maxKinship = maxKinship
+  list(
+    meanKinship = sumKinship / n,
+    sdKinship = sqrt(
+      ((n * squaredKinship) - sumKinship^2L) /
+        (n * (n - 1L))
+    ),
+    minKinship = minKinship,
+    maxKinship = maxKinship
   )
 }

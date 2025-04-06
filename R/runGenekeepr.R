@@ -11,16 +11,18 @@
 #' @export
 #' @examples
 #' if (interactive()) {
-#' library(nprcgenekeepr)
-#' runGeneKeepR()
+#'   library(nprcgenekeepr)
+#'   runGeneKeepR()
 #' }
 runGeneKeepR <- function() {
   appDir <- system.file("application", package = "nprcgenekeepr")
   if (appDir == "") {
-    stop(paste0("Could not find application directory. ",
-                "Try re-installing `nprcgenekeepr`."),
-         call. = FALSE)
+    stop(
+        "Could not find application directory. ",
+        "Try re-installing `nprcgenekeepr`.",
+      call. = FALSE
+    )
   }
 
-  shiny::runApp(appDir, display.mode = "normal", port = 6012)
+  shiny::runApp(appDir, display.mode = "normal", port = 6012L)
 }

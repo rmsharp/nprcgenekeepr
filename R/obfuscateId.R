@@ -17,37 +17,47 @@
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
-#' integerIds <- 1:10
-#' obfuscateId(integerIds, size = 4)
-#' characterIds <- paste0(paste0(sample(LETTERS, 1, replace = FALSE)), 1:10)
-#' obfuscateId(characterIds, size = 4)
-obfuscateId <- function(id, size = 10, existingIds = character(0)) {
-  noOInLetters <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
-                    "M", "N", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",
-                    "Z")
+#' integerIds <- 1L:10L
+#' obfuscateId(integerIds, size = 4L)
+#' characterIds <- paste0(paste0(sample(LETTERS, 1L, replace = FALSE)), 1L:10L)
+#' obfuscateId(characterIds, size = 4L)
+obfuscateId <- function(id, size = 10L, existingIds = character(0L)) {
+  noOInLetters <- c(
+    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
+    "M", "N", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",
+    "Z"
+  )
   existingIds <- c(character(length(id)), existingIds)
   obfuscatedId <- character(length(id))
   for (i in seq_along(id)) {
-    counter <- 0
+    counter <- 0L
     repeat {
       if (grepl("^U", id[i], ignore.case = TRUE)) {
-        obfuscatedId[i] <- stri_c(c("U", sample(c(noOInLetters, stri_c(0:9)),
-                                              size = size - 1, replace = TRUE)),
-                                  collapse = "")
+        obfuscatedId[i] <- stri_c(
+          c("U", sample(c(noOInLetters, stri_c(0L:9L)),
+            size = size - 1L, replace = TRUE
+          )),
+          collapse = ""
+        )
       } else {
-        obfuscatedId[i] <- stri_c(sample(c(noOInLetters, stri_c(0:9)),
-                                         size = size,
-                                         replace = TRUE), collapse = "")
+        obfuscatedId[i] <- stri_c(sample(c(noOInLetters, stri_c(0L:9L)),
+          size = size,
+          replace = TRUE
+        ), collapse = "")
       }
       ## grepl is ensuring both IDs are Unknown or known
       if (!any(obfuscatedId[i] %in% existingIds) &&
-          (grepl("^U", obfuscatedId[i], ignore.case = TRUE) ==
-           grepl("^U", id[i], ignore.case = TRUE)))
+        (grepl("^U", obfuscatedId[i], ignore.case = TRUE) ==
+          grepl("^U", id[i], ignore.case = TRUE))) {
         break
-      counter <- counter + 1
-      if (counter > 100)
-        stop(paste0("Character length of alias IDs is too short to easily ",
-                    "avoid duplicates"))
+      }
+      counter <- counter + 1L
+      if (counter > 100L) {
+        stop(
+          "Character length of alias IDs is too short to easily ",
+          "avoid duplicates"
+        )
+      }
     }
     existingIds[i] <- obfuscatedId[i]
   }

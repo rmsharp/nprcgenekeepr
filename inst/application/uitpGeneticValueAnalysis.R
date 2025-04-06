@@ -26,9 +26,9 @@ uitpGeneticValueAnalysis <-
             "iterations",
             label = paste0("Enter the number of simulations for the ",
                            "gene-drop analysis:"),
-            value = 1000,
-            min = 2,
-            max = 100000
+            value = 1000L,
+            min = 2L,
+            max = 100000L
           )
         ),
         div(
@@ -38,13 +38,13 @@ uitpGeneticValueAnalysis <-
             "threshold",
             label = "Enter the genome uniqueness threshold:",
             choices = list(
-              "0" = 1,
-              "1" = 2,
-              "2" = 3,
-              "3" = 4,
-              "4" = 5
+              "0" = 1L,
+              "1" = 2L,
+              "2" = 3L,
+              "3" = 4L,
+              "4" = 5L
             ),
-            selected = 4
+            selected = 4L
           )
         ),
         helpText("Analysis may take a significant amount of time (>20 min)"),
@@ -57,7 +57,7 @@ uitpGeneticValueAnalysis <-
         helpText("(Leave blank to view all)"),
         div(
           style = "display:inline-block;width:250px;padding:10px",
-          tags$textarea(id = "viewIds", rows = 5, cols = 20, ""),
+          tags$textarea(id = "viewIds", rows = 5L, cols = 20L, ""),
           actionButton("view", label = "Filter View")
         ),
         div(

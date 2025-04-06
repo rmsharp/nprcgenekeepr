@@ -12,10 +12,10 @@
 #' individual
 #' @export
 #' @examples
-#' chooseAlleles(0:4, 5:9)
+#' chooseAlleles(0L:4L, 5L:9L)
 chooseAlleles <- function(a1, a2) {
-  s1 <- sample(c(0, 1), length(a1), replace = TRUE)
-  s2 <- 1 - s1
+  s1 <- sample(c(0L, 1L), length(a1), replace = TRUE)
+  s2 <- 1L - s1
 
-  return((a1 * s1) + (a2 * s2))
+  (a1 * s1) + (a2 * s2)
 }

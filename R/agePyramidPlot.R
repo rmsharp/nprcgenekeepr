@@ -48,8 +48,10 @@ agePyramidPlot <- function(males,
       ": ",
       sum(c(males, females))
     ),
-    top.labels = c(stri_c("Male = ", sum(males)), "Age", stri_c("Female = ",
-                                                                sum(females))),
+    top.labels = c(stri_c("Male = ", sum(males)), "Age", stri_c(
+      "Female = ",
+      sum(females)
+    )),
     lxcol = mcol,
     rxcol = fcol,
     laxlab = laxlab,
@@ -61,6 +63,6 @@ agePyramidPlot <- function(males,
     # raxlab to seq(0, 100, by = 10),
     unit = "Number of Animals",
     show.values = TRUE,
-    ndig = 0
+    ndig = 0L
   )
 }

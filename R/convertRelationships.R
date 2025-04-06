@@ -29,7 +29,8 @@
 #' head(rel)
 #' ped <- nprcgenekeepr::qcPed
 #' bkmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen,
-#'                  sparse = FALSE)
+#'   sparse = FALSE
+#' )
 #' relBIds <- convertRelationships(bkmat, ped, c("4LFS70", "DD1U77"))
 #' relBIds
 convertRelationships <- function(kmat, ped, ids = NULL, updateProgress = NULL) {
@@ -38,7 +39,7 @@ convertRelationships <- function(kmat, ped, ids = NULL, updateProgress = NULL) {
   }
   kin <- kinMatrix2LongForm(kmat, removeDups = TRUE)
   ped <- makeCEPH(ped$id, ped$sire, ped$dam)
-  r <- c()
+  r <- character(0L)
 
   for (i in seq_len(nrow(kin))) {
     id1 <- kin$id1[i]
@@ -58,30 +59,32 @@ convertRelationships <- function(kmat, ped, ids = NULL, updateProgress = NULL) {
       # at least 1 parent is shared
       relation <- "Half-Siblings"
     } else if (id1 %in% c(ceph2$pgp, ceph2$mgp) ||
-               id2 %in% c(ceph1$pgp, ceph1$mgp)) {
+      id2 %in% c(ceph1$pgp, ceph1$mgp)) {
       # one animals is the grandparent of the other
       relation <- "Grandparent-Grandchild"
     } else if (allTrueNoNA(ceph1$pgp == ceph2$pgp) ||
-               allTrueNoNA(ceph1$pgp == ceph2$mgp) ||
-               allTrueNoNA(ceph1$mgp == ceph2$pgp) ||
-               allTrueNoNA(ceph1$mgp == ceph2$mgp)) {
+      allTrueNoNA(ceph1$pgp == ceph2$mgp) ||
+      allTrueNoNA(ceph1$mgp == ceph2$pgp) ||
+      allTrueNoNA(ceph1$mgp == ceph2$mgp)) {
       # When a full set of grandparents are shared
       relation <- "Full-Cousins"
-    } else if (!isEmpty(intersect(c(ceph1$pgp, ceph1$mgp),
-                                  c(ceph2$pgp, ceph2$mgp)))) {
+    } else if (!isEmpty(intersect(
+      c(ceph1$pgp, ceph1$mgp),
+      c(ceph2$pgp, ceph2$mgp)
+    ))) {
       # When at least one grandparent is in common
       relation <- "Cousin - Other"
     } else if (allTrueNoNA(ceph1$parents == ceph2$pgp) ||
-               allTrueNoNA(ceph1$parents == ceph2$mgp) ||
-               allTrueNoNA(ceph2$parents == ceph1$pgp) ||
-               allTrueNoNA(ceph2$parents == ceph1$mgp)) {
+      allTrueNoNA(ceph1$parents == ceph2$mgp) ||
+      allTrueNoNA(ceph2$parents == ceph1$pgp) ||
+      allTrueNoNA(ceph2$parents == ceph1$mgp)) {
       # When parents of one proband are the grandparents of the other
       relation <- "Full-Avuncular"
     } else if (!isEmpty(intersect(ceph1$parents, c(ceph2$pgp, ceph2$mgp))) ||
-               !isEmpty(intersect(ceph2$parents, c(ceph1$pgp, ceph1$mgp)))) {
+      !isEmpty(intersect(ceph2$parents, c(ceph1$pgp, ceph1$mgp)))) {
       # When at least one parent of a proband is the grandparent of the other
       relation <- "Avuncular - Other"
-    } else if (kin$kinship[i] > 0) {
+    } else if (kin$kinship[i] > 0L) {
       relation <- "Other"
     } else {
       relation <- "No Relation"

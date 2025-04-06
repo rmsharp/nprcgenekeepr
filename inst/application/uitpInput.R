@@ -35,7 +35,7 @@ uitpInput <-
         prettyRadioButtons(
           "fileType",
           label = "File Type",
-          choices = list("Excel" = "fileTypeExcel", "Text" = "fileTypeText"),
+          choices = list(Excel = "fileTypeExcel", Text = "fileTypeText"),
           selected = NULL,
           outline = TRUE
         ),
@@ -57,9 +57,9 @@ uitpInput <-
             "separator",
             label = "Separator",
             choices = list(
-              "Comma" = ",",
-              "Semicolon" = ";",
-              "Tab" = "\t"
+              Comma = ",",
+              Semicolon = ";",
+              Tab = "\t"
             ),
             selected = ",",
             outline = TRUE
@@ -102,6 +102,7 @@ uitpInput <-
       ),
       # Main Panel
       mainPanel(#style = "margin-left:425px;padding:10px;", # nolint
-                includeHTML("../extdata/ui_guidance/input_format.html"))
+                includeHTML(file.path("..", "extdata", "ui_guidance",
+                                      "input_format.html")))
     )
   )

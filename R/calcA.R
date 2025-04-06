@@ -24,7 +24,7 @@
 #' @examples
 #' library(nprcgenekeepr)
 #' rare <- calcA(nprcgenekeepr::ped1Alleles, threshold = 3, byID = FALSE)
-calcA <- function(alleles, threshold = 1, byID = FALSE) {
+calcA <- function(alleles, threshold = 1L, byID = FALSE) {
   ids <- alleles$id
   alleles <- alleles[, !(names(alleles) %in% c("id", "parent"))]
 
@@ -36,8 +36,8 @@ calcA <- function(alleles, threshold = 1, byID = FALSE) {
     }
     rareAlleles <- f$allele[f$freq <= threshold]
     a <- (a %in% rareAlleles)
-    return(tapply(a, ids, sum))
+    tapply(a, ids, sum)
   }
 
-  return(apply(alleles, 2, countRare))
+  return(apply(alleles, 2L, countRare))
 }

@@ -15,17 +15,18 @@
 #' @importFrom anytime anytime
 #' @export
 #' @examples
-#' is_valid_date_str(c("13-21-1995", "20-13-98", "5-28-1014",
-#'   "1-21-15", "2-13-2098", "25-28-2014"), format = "%m-%d-%y")
+#' is_valid_date_str(c(
+#'   "13-21-1995", "20-13-98", "5-28-1014",
+#'   "1-21-15", "2-13-2098", "25-28-2014"
+#' ), format = "%m-%d-%y")
 is_valid_date_str <- function(date_str, format = "%d-%m-%Y %H:%M:%S",
                               optional = FALSE) {
-  if (!is.character(date_str)) {
-    if (is.numeric(date_str))
+  if (!is.character(date_str) && is.numeric(date_str)) {
       return(rep(FALSE, length(date_str)))
   }
   if (optional) {
     result <- !is.na(suppressWarnings(anytime(date_str, useR = TRUE)))
-    result[result == FALSE] <- NA
+    result[result == FALSE] <- NA # nolint redundant_equals_linter
   } else {
     result <- !is.na(suppressWarnings(anytime(date_str, useR = TRUE)))
   }

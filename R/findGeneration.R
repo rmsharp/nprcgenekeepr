@@ -30,17 +30,17 @@
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
-#' ped <- nprcgenekeepr::lacy1989Ped[ , c("id", "sire", "dam")]
+#' ped <- nprcgenekeepr::lacy1989Ped[, c("id", "sire", "dam")]
 #' ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 #' ped
 findGeneration <- function(id, sire, dam) {
-  parents <- c()
+  parents <- character(0L)
   gen <- rep(NA, length(id))
-  i <- 0
+  i <- 0L
 
-  while (TRUE) {
+  repeat {
     cumulativeParents <- id[(is.na(sire) | (sire %in% parents)) &
-                               (is.na(dam) | (dam %in% parents))]
+      (is.na(dam) | (dam %in% parents))]
     nextGen <- setdiff(cumulativeParents, parents)
 
     if (isEmpty(nextGen)) {
@@ -48,9 +48,9 @@ findGeneration <- function(id, sire, dam) {
     }
 
     gen[id %in% nextGen] <- i
-    i <- i + 1
+    i <- i + 1L
 
     parents <- cumulativeParents
   }
-  return(gen)
+  gen
 }

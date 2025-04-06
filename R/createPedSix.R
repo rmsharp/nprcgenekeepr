@@ -10,22 +10,22 @@
 #' @importFrom stringi stri_c
 #' @noRd
 createPedSix <- function(savePed = TRUE) {
-  set_seed(10)
+  set_seed(10L)
   someBirthDates <-
     ymd(paste0(
-      sample(seq(0, 15, by = 3), 8, replace = TRUE) + 2000,
+      sample(seq(0L, 15L, by = 3L), 8L, replace = TRUE) + 2000L,
       "-",
-      sample(1:12, 8, replace = TRUE),
+      sample.int(12L, 8L, replace = TRUE),
       "-",
-      sample(1:28, 8, replace = TRUE)
+      sample.int(28L, 8L, replace = TRUE)
     ))
   someBadBirthDates <-
     mdy(paste0(
-      sample(1:12, 8, replace = TRUE),
+      sample.int(12L, 8L, replace = TRUE),
       "-",
-      sample(1:28, 8, replace = TRUE),
+      sample.int(28L, 8L, replace = TRUE),
       "-",
-      sample(seq(0, 15, by = 3), 8, replace = TRUE) + 2000
+      sample(seq(0L, 15L, by = 3L), 8L, replace = TRUE) + 2000L
     ))
   someDeathDates <-
     sample(someBirthDates, length(someBirthDates), replace = FALSE)
@@ -45,34 +45,37 @@ createPedSix <- function(savePed = TRUE) {
       dam = c(NA, "d0", "d4", NA, "d1", "d2", "d2", "d2"),
       sex = c("F", "F", "M", "F", "F", "F", "F", "M"),
       birth = mdy(paste0(
-        sample(1:12, 8, replace = TRUE),
+        sample.int(12L, 8L, replace = TRUE),
         "-",
-        sample(1:28, 8, replace = TRUE),
+        sample.int(28L, 8L, replace = TRUE),
         "-",
-        sample(seq(0, 15, by = 3), 8, replace = TRUE) +
-          2000
+        sample(seq(0L, 15L, by = 3L), 8L, replace = TRUE) +
+          2000L
       )),
       stringsAsFactors = FALSE
     )
   pedSix <-
     data.frame(pedFive[, names(pedFive) != "birth"], pedOne,
-               stringsAsFactors = FALSE)
+      stringsAsFactors = FALSE
+    )
   pedSix$birth[pedSix$id %in% c("s1", "s2", "d1", "d2")] <-
-    pedSix$birth[pedSix$id %in% c("s1", "s2", "d1", "d2")] - dyears(20)
+    pedSix$birth[pedSix$id %in% c("s1", "s2", "d1", "d2")] - dyears(20L)
   names(pedSix) <-
-    c("Ego Id",
+    c(
+      "Ego Id",
       "Sire Id",
       "Dam",
       "Sex",
       "Birth Date",
       "Departure",
-      "Death")
+      "Death"
+    )
   if (savePed) {
     pedigree_dir <- tempdir()
     suppressWarnings(dir.create(pedigree_dir))
-    pedigree_dir <- paste0(pedigree_dir, "/data")
+    pedigree_dir <- file.path(pedigree_dir, "data")
     suppressWarnings(dir.create(pedigree_dir))
-    save(pedSix, file = stri_c(pedigree_dir, "/pedSix.RData"))
+    save(pedSix, file = file.path(pedigree_dir, "pedSix.RData"))
   }
   pedSix
 }

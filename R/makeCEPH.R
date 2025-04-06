@@ -56,8 +56,10 @@
 #' head(ped)
 #' head(pedCEPH$F)
 makeCEPH <- function(id, sire, dam) {
-  ped <- data.frame(sire = sire, dam = dam, row.names = id,
-                    stringsAsFactors = FALSE)
+  ped <- data.frame(
+    sire = sire, dam = dam, row.names = id,
+    stringsAsFactors = FALSE
+  )
 
   ceph <- list()
   for (i in id) {
@@ -80,5 +82,5 @@ makeCEPH <- function(id, sire, dam) {
     ceph[[i]] <- list(parents = parents, pgp = pgp, mgp = mgp)
   }
 
-  return(ceph)
+  ceph
 }

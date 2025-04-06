@@ -12,10 +12,12 @@
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
-#' original <- c("A", "alive", "Alive", "1", "S", "Sale", "sold", "shipped",
-#'               "D", "d", "dead", "died", "deceased", "2",
-#'               "shiped", "3", "U", "4", "unknown", NA,
-#'               "Unknown", "H", "hermaphrodite", "U", "Unknown", "4")
+#' original <- c(
+#'   "A", "alive", "Alive", "1", "S", "Sale", "sold", "shipped",
+#'   "D", "d", "dead", "died", "deceased", "2",
+#'   "shiped", "3", "U", "4", "unknown", NA,
+#'   "Unknown", "H", "hermaphrodite", "U", "Unknown", "4"
+#' )
 #' convertStatusCodes(original)
 convertStatusCodes <- function(status) {
   status <- toupper(status)
@@ -26,7 +28,9 @@ convertStatusCodes <- function(status) {
     "SHIPPED"
   status[status %in% c("UNKNOWN", "U", "4")] <- "UNKNOWN"
 
-  status <- factor(status, levels = c("ALIVE", "DECEASED", "SHIPPED",
-                                      "UNKNOWN"))
-  return(status)
+  status <- factor(status, levels = c(
+    "ALIVE", "DECEASED", "SHIPPED",
+    "UNKNOWN"
+  ))
+  status
 }

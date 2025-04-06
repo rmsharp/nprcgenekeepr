@@ -29,15 +29,17 @@ calcRetention <- function(ped, alleles) {
   founders <- alleles[(alleles$id %in% founders), c("id", "V1")]
   colnames(founders) <- c("id", "allele")
 
-  alleles <- alleles[(alleles$id %in% descendants),
-                     !(colnames(alleles) %in% c("id", "parent"))]
+  alleles <- alleles[
+    (alleles$id %in% descendants),
+    !(colnames(alleles) %in% c("id", "parent"))
+  ]
 
-  retained <- apply(alleles, 2, function(a) {
+  retained <- apply(alleles, 2L, function(a) {
     founders$allele %in% a
   })
   retained <- rowSums(retained, na.rm = TRUE) / ncol(retained)
   founders <- cbind(founders, retained)
 
   founders <- tapply(founders$retained, founders$id, mean)
-  return(founders)
+  founders
 }

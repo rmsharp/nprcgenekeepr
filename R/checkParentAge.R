@@ -29,23 +29,23 @@
 #' @examples
 #' library(nprcgenekeepr)
 #' qcPed <- nprcgenekeepr::qcPed
-#' checkParentAge(qcPed, minParentAge = 2)
-#' checkParentAge(qcPed, minParentAge = 3)
-#' checkParentAge(qcPed, minParentAge = 5)
-#' checkParentAge(qcPed, minParentAge = 6)
-#' head(checkParentAge(qcPed, minParentAge = 10))
+#' checkParentAge(qcPed, minParentAge = 2L)
+#' checkParentAge(qcPed, minParentAge = 3L)
+#' checkParentAge(qcPed, minParentAge = 5L)
+#' checkParentAge(qcPed, minParentAge = 6L)
+#' head(checkParentAge(qcPed, minParentAge = 10L))
 checkParentAge <- function(sb,
-                           minParentAge = 2,
+                           minParentAge = 2L,
                            reportErrors = FALSE) {
-  if (nrow(sb) == 0 ||
-      !all(c("id", "sire", "dam") %in% names(sb))) {
-    if (reportErrors == TRUE) {
+  if (nrow(sb) == 0L ||
+    !all(c("id", "sire", "dam") %in% names(sb))) {
+    if (reportErrors) {
       return(NULL)
     } else {
       return(sb)
     }
   }
-  if (!any(class(sb$birth) %in% c("Date", "POSIXct", "character"))) {
+  if (!any(inherits(sb$birth, c("Date", "POSIXct", "character")))) {
     if (reportErrors) {
       ## Bad birth date column precludes checking parent age
       return(NULL)
@@ -69,28 +69,30 @@ checkParentAge <- function(sb,
     stringsAsFactors = FALSE
   )
   sb <- merge(sb,
-              sireBirth,
-              by.x = "sire",
-              by.y = "id",
-              all = TRUE)
+    sireBirth,
+    by.x = "sire",
+    by.y = "id",
+    all = TRUE
+  )
   sb <- merge(sb,
-              damBirth,
-              by.x = "dam",
-              by.y = "id",
-              all = TRUE)
+    damBirth,
+    by.x = "dam",
+    by.y = "id",
+    all = TRUE
+  )
   sb$sireAge <- NA
   sb$sireAge[!is.na(sb$sireBirth)] <-
     (sb$birth[!is.na(sb$sireBirth)] -
-       sb$sireBirth[!is.na(sb$sireBirth)]) / dyears(1)
+      sb$sireBirth[!is.na(sb$sireBirth)]) / dyears(1L)
   sb$damAge <- NA
   sb$damAge[!is.na(sb$damBirth)] <-
     (sb$birth[!is.na(sb$damBirth)] -
-       sb$damBirth[!is.na(sb$damBirth)]) / dyears(1)
+      sb$damBirth[!is.na(sb$damBirth)]) / dyears(1L)
   sb <- sb[!is.na(sb$birth), ]
   sb <- sb[(sb$sireAge < minParentAge & !is.na(sb$sireBirth)) |
-             (sb$damAge < minParentAge & !is.na(sb$damBirth)), ]
+    (sb$damAge < minParentAge & !is.na(sb$damBirth)), ]
   sb$exit <- as.character(sb$exit)
-  sb$sireAge <- round(sb$sireAge, 2)
-  sb$damAge <- round(sb$damAge, 2)
+  sb$sireAge <- round(sb$sireAge, 2L)
+  sb$damAge <- round(sb$damAge, 2L)
   sb
 }

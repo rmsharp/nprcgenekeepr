@@ -15,25 +15,25 @@ imports <- c("anytime",
              "utils",
              "WriteXLS")
 #pack["ggplot2","Depends"]
-test <- pack[imports %in% dimnames(pack)[[1]], c("Imports")]
+test <- pack[imports %in% dimnames(pack)[[1L]], "Imports"]
 library(stringi)
 get_simple_dependencies <- function(name, types) {
   dependencies <- pack[name, types]
-  dependencies <- stri_split_fixed(dependencies, pattern = ",")[[1]]
+  dependencies <- stri_split_fixed(dependencies, pattern = ",")[[1L]]
   dependencies <- stri_trim_both(dependencies)
   dependencies <- stri_split_fixed(dependencies,
                                    pattern = " ", simplify = TRUE)
   dependencies <- stri_split_fixed(dependencies,
-                                   pattern = "\\", simplify = TRUE)[, 1]
+                                   pattern = "\\", simplify = TRUE)[, 1L]
   #dependencies <- stri_split_fixed(dependencies,
   #                                 pattern = " ",
   #                                 n = 1, omit_empty = TRUE,
   #                                 simplify = TRUE)
-  dependencies[!dependencies %in% c("utils")]
+  dependencies[!dependencies %in% "utils"]
 }
-imports <- imports[!imports %in% c("utils")]
+imports <- imports[!imports %in% "utils"]
 new_imports <- imports
-while (TRUE) {
+repeat {
   imports_len <- length(new_imports)
   for (i in seq_along(imports)) {
     new_imports <- unique(c(new_imports,

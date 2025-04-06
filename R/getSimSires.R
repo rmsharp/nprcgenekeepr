@@ -17,8 +17,8 @@
 #' ped <- nprcgenekeepr::pedWithGenotype
 #' ids <- nprcgenekeepr::qcBreeders
 #' getPotentialSires(ids, minAge = 1, ped)
-getPotentialSires <- function(ids, minAge = 1, ped) {
+getPotentialSires <- function(ids, minAge = 1L, ped) {
   ped <- ped[!is.na(ped$birth), ]
   ped$id[ped$id %in% ids & ped$sex == "M" & getCurrentAge(ped$birth) >= minAge &
-           !is.na(ped$birth)]
+    !is.na(ped$birth)]
 }

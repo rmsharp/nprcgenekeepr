@@ -14,7 +14,7 @@
 #' config <- getConfigFileName(sysInfo)
 getConfigFileName <- function(sysInfo) {
   if (stri_detect_fixed(toupper(sysInfo[["sysname"]]), "WIND")) {
-    homeDir <- paste0(gsub("\\\\", "/", Sys.getenv("HOME")), "/")
+    homeDir <- paste0(gsub("\\\\", "/", Sys.getenv("HOME"), fixed = TRUE), "/")
     configFile <- paste0(homeDir, "_nprcgenekeepr_config")
   } else {
     homeDir <- paste0("~/")

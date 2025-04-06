@@ -25,9 +25,10 @@ addKinshipValueCount <- function(cKVC,
                                  kValues,
                                  kCounts,
                                  index, value) {
-  if (any(kValues[[index]] == value))
+  if (any(kValues[[index]] == value)) {
     cKVC$kCounts[[index]][cKVC$kValues[[index]] == value] <-
       cKVC$kCounts[[index]][cKVC$kValues[[index]] == value] +
       kCounts[[index]][kValues[[index]] == value]
+  }
   cKVC
 }

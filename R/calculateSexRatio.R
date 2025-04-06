@@ -19,59 +19,79 @@
 #' Default is 0.
 #' @param additionalFemales Integer value of females to add to those within the
 #' group when calculating the ratio. Ignored if calculated ratio is 0 or Inf.
-#'Default is 0.
+#' Default is 0.
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
 #' data("qcBreeders")
 #' data("pedWithGenotype")
-#' available <- c("JGPN6K", "8KM1MP", "I9TQ0T", "Q0RGP7", "VFS0XB", "CQC133",
-#'                "2KULR3", "HOYW0S", "FHV13N", "OUM6QF", "6Z7MD9", "CFPEEU",
-#'                "HLI95R", "RI0O7F", "7M51X5", "DR5GXB", "170ZTZ", "C1ICXL")
-#' nonMales <- c("JGPN6K", "8KM1MP", "I9TQ0T", "Q0RGP7", "CQC133",
-#'               "2KULR3", "HOYW0S", "FHV13N", "OUM6QF", "6Z7MD9", "CFPEEU",
-#'               "HLI95R", "RI0O7F", "7M51X5", "DR5GXB", "170ZTZ", "C1ICXL")
+#' available <- c(
+#'   "JGPN6K", "8KM1MP", "I9TQ0T", "Q0RGP7", "VFS0XB", "CQC133",
+#'   "2KULR3", "HOYW0S", "FHV13N", "OUM6QF", "6Z7MD9", "CFPEEU",
+#'   "HLI95R", "RI0O7F", "7M51X5", "DR5GXB", "170ZTZ", "C1ICXL"
+#' )
+#' nonMales <- c(
+#'   "JGPN6K", "8KM1MP", "I9TQ0T", "Q0RGP7", "CQC133",
+#'   "2KULR3", "HOYW0S", "FHV13N", "OUM6QF", "6Z7MD9", "CFPEEU",
+#'   "HLI95R", "RI0O7F", "7M51X5", "DR5GXB", "170ZTZ", "C1ICXL"
+#' )
 #' male <- "VFS0XB"
 #' calculateSexRatio(ids = male, ped = pedWithGenotype)
 #' calculateSexRatio(ids = nonMales, ped = pedWithGenotype)
 #' calculateSexRatio(ids = available, ped = pedWithGenotype)
-#' calculateSexRatio(ids = available, ped = pedWithGenotype,
-#'                         additionalMales = 1)
-#' calculateSexRatio(ids = available, ped = pedWithGenotype,
-#'                   additionalFemales = 1)
-#' calculateSexRatio(ids = available, ped = pedWithGenotype,
-#'                   additionalMales = 1, additionalFemales = 1)
-#' calculateSexRatio(ids = nonMales, ped = pedWithGenotype,
-#'                   additionalMales = 1, additionalFemales = 0)
-#' calculateSexRatio(ids = character(0), ped = pedWithGenotype,
-#'                 additionalMales = 1, additionalFemales = 0)
-calculateSexRatio <- function(ids, ped, additionalMales = 0,
-                              additionalFemales = 0) {
-  if (length(ids) == 0) {
-    if (additionalFemales > 0) {
-      if (additionalMales == 0) {
+#' calculateSexRatio(
+#'   ids = available, ped = pedWithGenotype,
+#'   additionalMales = 1L
+#' )
+#' calculateSexRatio(
+#'   ids = available, ped = pedWithGenotype,
+#'   additionalFemales = 1L
+#' )
+#' calculateSexRatio(
+#'   ids = available, ped = pedWithGenotype,
+#'   additionalMales = 1, additionalFemales = 1L
+#' )
+#' calculateSexRatio(
+#'   ids = nonMales, ped = pedWithGenotype,
+#'   additionalMales = 1, additionalFemales = 0L
+#' )
+#' calculateSexRatio(
+#'   ids = character(0), ped = pedWithGenotype,
+#'   additionalMales = 1, additionalFemales = 0L
+#' )
+calculateSexRatio <- function(ids, ped, additionalMales = 0L,
+                              additionalFemales = 0L) {
+  if (length(ids) == 0L) {
+    if (additionalFemales > 0L) {
+      if (additionalMales == 0L) {
         ratio <- Inf
-      } else if (additionalMales > 0) {
-        ratio <- getSexRatioWithAdditions(ids, ped, additionalMales,
-                                          additionalFemales)
+      } else if (additionalMales > 0L) {
+        ratio <- getSexRatioWithAdditions(
+          ids, ped, additionalMales,
+          additionalFemales
+        )
       }
-    } else if (additionalFemales == 0) {
-      if (additionalMales == 0) {
+    } else if (additionalFemales == 0L) {
+      if (additionalMales == 0L) {
         ratio <- NA
       } else {
         ratio <- 0.0
       }
     }
-  } else if (length(ped$sex[ped$id %in% ids & ped$sex == "M"]) == 0) { #no males
-    if (additionalMales > 0) {
-      ratio <- getSexRatioWithAdditions(ids, ped, additionalMales,
-                                        additionalFemales)
+  } else if (length(ped$sex[ped$id %in% ids & ped$sex == "M"]) == 0L) {#no males
+    if (additionalMales > 0L) {
+      ratio <- getSexRatioWithAdditions(
+        ids, ped, additionalMales,
+        additionalFemales
+      )
     } else {
       ratio <- Inf
     }
   } else {
-    ratio <- getSexRatioWithAdditions(ids, ped, additionalMales,
-                                      additionalFemales)
+    ratio <- getSexRatioWithAdditions(
+      ids, ped, additionalMales,
+      additionalFemales
+    )
   }
 
   ratio

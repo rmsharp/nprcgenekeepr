@@ -16,5 +16,5 @@
 resetGroup <- function(ped, ids) {
   ped$group <- FALSE
   ped$group[ped$id %in% ids] <- TRUE
-  return(ped)
+  ped
 }

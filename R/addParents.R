@@ -14,11 +14,13 @@
 #' with \code{NA}.
 #'
 #' @examples
-#' pedTwo <- data.frame(id = c("d1", "s2", "d2", "o1", "o2", "o3", "o4"),
-#'                      sire = c(NA, NA, NA, "s1", "s1", "s2", "s2"),
-#'                      dam = c(NA, NA, NA, "d1", "d2", "d2", "d2"),
-#'                      sex = c("F", "M", "F", "F", "F", "F", "M"),
-#'                      stringsAsFactors = FALSE)
+#' pedTwo <- data.frame(
+#'   id = c("d1", "s2", "d2", "o1", "o2", "o3", "o4"),
+#'   sire = c(NA, NA, NA, "s1", "s1", "s2", "s2"),
+#'   dam = c(NA, NA, NA, "d1", "d2", "d2", "d2"),
+#'   sex = c("F", "M", "F", "F", "F", "F", "M"),
+#'   stringsAsFactors = FALSE
+#' )
 #' newPed <- addParents(pedTwo)
 #' newPed
 #'
@@ -38,11 +40,11 @@ addParents <- function(ped) {
   a1 <- data.frame(id = a1, stringsAsFactors = FALSE)
   a2 <- data.frame(id = a2, stringsAsFactors = FALSE)
 
-  ped <- ped[, !names(ped) %in% "recordStatus"]
+  ped <- ped[, names(ped) != "recordStatus"]
   ped <- cbind(ped, recordStatus = "original", stringsAsFactors = FALSE)
 
   # Adding line entries for these parents
-  if (nrow(a1) > 0) {
+  if (nrow(a1) > 0L) {
     a1$sire <- NA
     a1$dam <- NA
     a1$sex <- "M"
@@ -50,12 +52,12 @@ addParents <- function(ped) {
     ped <- rbindFill(ped, a1)
   }
 
-  if (nrow(a2) > 0) {
+  if (nrow(a2) > 0L) {
     a2$sire <- NA
     a2$dam <- NA
     a2$sex <- "F"
     a2$recordStatus <- "added"
     ped <- rbindFill(ped, a2)
   }
-  return(ped)
+  ped
 }

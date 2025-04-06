@@ -16,15 +16,15 @@
 #' @examples
 #' set_seed(1)
 #' rnorm(5)
-set_seed <- function(seed = 1) {
+set_seed <- function(seed = 1L) {
   version <- as.integer(R_version()$major) +
     (as.numeric(R_version()$minor) / 10.0)
   if (version >= 3.6) {
-    args <- list(seed, sample.kind = "Rounding")
+    arguments <- list(seed, sample.kind = "Rounding")
   } else {
-    args <- list(seed)
+    arguments <- list(seed)
   }
-  suppressMessages(suppressWarnings(do.call(set.seed, args)))
+  suppressMessages(suppressWarnings(do.call(set.seed, arguments)))
 }
 #' Wrapper for R.Version
 #'

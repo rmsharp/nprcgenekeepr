@@ -16,23 +16,30 @@
 #' @examples
 #' library(nprcgenekeepr)
 #' pedigreeFile <- makeExamplePedigreeFile()
-makeExamplePedigreeFile <- function(file = file.path(tempdir(),
-                                                     "examplePedigree.csv"),
+makeExamplePedigreeFile <- function(file = file.path(
+                                      tempdir(),
+                                      "examplePedigree.csv"
+                                    ),
                                     fileType = "csv") {
   stopifnot(any(fileType %in% c("txt", "csv", "excel")))
   if (fileType == "csv") {
     write.csv(nprcgenekeepr::examplePedigree,
-              file = file, row.names = FALSE)
+      file = file, row.names = FALSE
+    )
   } else if (fileType == "excel") {
     status <-
-      create_wkbk(file = file,
-                  df_list = list(nprcgenekeepr::examplePedigree),
-                  sheetnames = "Example_Pedigree", replace = FALSE)
-    if (!status)
-      stop(paste0("Failed to write example data out to ", file, "."))
+      create_wkbk(
+        file = file,
+        df_list = list(nprcgenekeepr::examplePedigree),
+        sheetnames = "Example_Pedigree", replace = FALSE
+      )
+    if (!status) {
+      stop("Failed to write example data out to ", file, ".")
+    }
   } else {
     write.table(nprcgenekeepr::examplePedigree,
-              file = file, row.names = FALSE, sep = "\t")
+      file = file, row.names = FALSE, sep = "\t"
+    )
   }
   file
 }

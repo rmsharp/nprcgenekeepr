@@ -9,7 +9,7 @@
 #' @import RColorBrewer
 #' @importFrom grDevices colorRampPalette dev.off png
 #' @noRd
-##makeGeneticDiversityDashboard <- function(geneticDiversityStats,
+## makeGeneticDiversityDashboard <- function(geneticDiversityStats,
 ##                                      file = "images/geneticDiversity.png") {
 ##  my_palette <- colorRampPalette(c("red", "yellow", "green"))(n = 3)
 ##  rnames <- geneticDiversityStats[,1]  # assign labels in column 1 to "rnames"
@@ -52,5 +52,5 @@
 ##            Colv="NA")
 ##  grDevices::dev.off()               # close the PNG device
 ##
-##}
+## }
 ##

@@ -1,4 +1,4 @@
 #' global variables
 #'
-globalMinParentAge <- 3
-MAXGROUPS <- 20
+globalMinParentAge <- 3.0
+MAXGROUPS <- 20L

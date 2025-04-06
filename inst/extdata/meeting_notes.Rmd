@@ -282,7 +282,7 @@ codeChanges <-
   )
 save_names <- names(codeChanges)
 names(codeChanges) <- names(codeCounts)
-sectionCodeChanges <- rbind(codeChanges, codeCounts[-1, ],
+sectionCodeChanges <- rbind(codeChanges, codeCounts[-1L, ],
                             make.row.names = FALSE)
 sectionCodeChanges$section[is.element(sectionCodeChanges$section,
                                       c("functions", "ui", "tests"))] <-
@@ -301,7 +301,7 @@ kable(codeChanges,
                                     ".")) %>%
   kable_styling(full_width = FALSE, position = "left") %>%
                 collapse_rows(latex_hline = "none") %>%
-  column_spec(3, width = "5em")
+  column_spec(3L, width = "5em")
 ## version was 0.5.37 (20191108) at the time of writing.
 
 ```
@@ -312,9 +312,9 @@ kable(sectionCodeChanges,
                        "20160816) and Current Version ",
                        getVersion(date = TRUE), " and current version groups ",
                                  "of functions.")) %>%
-  kable_styling(full_width = FALSE, position = "left", ) %>%
-  column_spec(3, width = "5em") %>%
-  row_spec(2, hline_after = TRUE)
+  kable_styling(full_width = FALSE, position = "left") %>%
+  column_spec(3L, width = "5em") %>%
+  row_spec(2L, hline_after = TRUE)
 ```
 
        
@@ -770,19 +770,19 @@ slightly higher for non-founders than what this function will calculate.
 ```{r group-formation, include = FALSE, echo = FALSE}
 library(stringi)
 overlapping_groups <- list()
-for (i in 1:4) {
- unique <- sample(LETTERS, 15, replace = FALSE)
+for (i in 1L:4L) {
+ unique <- sample(LETTERS, 15L, replace = FALSE)
  group <- stri_c("Overlap_Group_", i)
- overlapping_groups[[group]] <- data.frame(unique_set_1 = unique[1:5],
-                                           unique_set_2 = unique[6:10],
-                                           unique_set_3 = unique[11:15],
+ overlapping_groups[[group]] <- data.frame(unique_set_1 = unique[1L:5L],
+                                           unique_set_2 = unique[6L:10L],
+                                           unique_set_3 = unique[11L:15L],
                                            stringsAsFactors = FALSE)
 }
 overlapping_str <- vapply(overlapping_groups, function(x) {
-  stri_c("Unique Set 1: ", stri_c(x[[1]], collapse = ","), "\n",
-         "Unique Set 2: ", stri_c(x[[2]], collapse = ","), "\n",
-         "Unique Set 3: ", stri_c(x[[3]], collapse = ","), "\n")
-}, character(1))
+  stri_c("Unique Set 1: ", stri_c(x[[1L]], collapse = ","), "\n",
+         "Unique Set 2: ", stri_c(x[[2L]], collapse = ","), "\n",
+         "Unique Set 3: ", stri_c(x[[3L]], collapse = ","), "\n")
+}, character(1L))
 cat(overlapping_str)
 ```
 

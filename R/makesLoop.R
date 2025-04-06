@@ -25,10 +25,9 @@
 #' \code{createPedTree(ped)} where \code{ped} is a standard pedigree dataframe.
 #' @noRd
 makesLoop <- function(id, ptree) {
-
   sAnc <- getAncestors(ptree[[id]]$sire, ptree)
   dAnc <- getAncestors(ptree[[id]]$dam, ptree)
   overlap <- intersect(sAnc, dAnc)
 
-  return(length(overlap) > 0)
+  length(overlap) > 0L
 }

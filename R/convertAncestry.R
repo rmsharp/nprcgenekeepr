@@ -19,11 +19,14 @@ convertAncestry <- function(ancestry) {
   ancestry <- tolower(ancestry)
 
   # Find entries containing non-standardized indications of population
-  chinese <- grepl("chin", ancestry) & !grepl("ind", ancestry)
-  indian <- !grepl("chin", ancestry) & grepl("ind", ancestry)
-  hybrid <- ((grepl("chin", ancestry) & grepl("ind", ancestry)) |
-               grepl("hyb", ancestry))
-  japanese <- grepl("jap", ancestry)
+  chinese <- grepl("chin", ancestry, fixed = TRUE) &
+    !grepl("ind", ancestry, fixed = TRUE)
+  indian <- !grepl("chin", ancestry, fixed = TRUE) &
+    grepl("ind", ancestry, fixed = TRUE)
+  hybrid <- ((grepl("chin", ancestry, fixed = TRUE) &
+                grepl("ind", ancestry, fixed = TRUE)) |
+    grepl("hyb", ancestry, fixed = TRUE))
+  japanese <- grepl("jap", ancestry, fixed = TRUE)
   unknown <- is.na(ancestry)
 
   other <- !(chinese | indian | hybrid | japanese) & !unknown
@@ -35,7 +38,9 @@ convertAncestry <- function(ancestry) {
   ancestry[unknown] <- "UNKNOWN"
   ancestry[other] <- "OTHER"
 
-  ancestry <- factor(ancestry, levels = c("CHINESE", "INDIAN", "HYBRID",
-                                          "JAPANESE", "OTHER", "UNKNOWN"))
-  return(ancestry)
+  ancestry <- factor(ancestry, levels = c(
+    "CHINESE", "INDIAN", "HYBRID",
+    "JAPANESE", "OTHER", "UNKNOWN"
+  ))
+  ancestry
 }

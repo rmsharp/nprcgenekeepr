@@ -25,10 +25,10 @@
 #' rpt[["lowVal"]][1, "value"]
 #' rpt[["lowVal"]][1, "rank"]
 rankSubjects <- function(rpt) {
-  rnk <- 1
+  rnk <- 1L
 
   for (i in seq_len(length(rpt))) {
-    if (nrow(rpt[[i]]) == 0) {
+    if (nrow(rpt[[i]]) == 0L) {
       next
     }
 
@@ -43,10 +43,9 @@ rankSubjects <- function(rpt) {
     if (names(rpt[i]) == "noParentage") {
       rpt[[i]][, "rank"] <- NA
     } else {
-      rpt[[i]][, "rank"] <- rnk:(rnk + nrow(rpt[[i]]) - 1)
+      rpt[[i]][, "rank"] <- rnk:(rnk + nrow(rpt[[i]]) - 1L)
       rnk <- rnk + nrow(rpt[[i]])
     }
-
   }
-  return(rpt)
+  rpt
 }

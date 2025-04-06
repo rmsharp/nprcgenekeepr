@@ -15,7 +15,7 @@
 #' @param minAge numeric value representing minimum years of age of
 #' animals to retain.
 #' @noRd
-filterAge <- function(kin, ped, minAge = 1) {
+filterAge <- function(kin, ped, minAge = 1L) {
   kin$sort.col <- seq_len(nrow(kin))
 
   a1 <- merge(kin, ped, by.x = "id1", by.y = "id", all.x = TRUE, all.y = FALSE)
@@ -28,7 +28,8 @@ filterAge <- function(kin, ped, minAge = 1) {
 
   kin$sort.col <- NULL
   kin <- kin[keep, ]
-  if (nrow(kin) > 0)
+  if (nrow(kin) > 0L) {
     rownames(kin) <- seq_len(nrow(kin))
+  }
   return(kin)
 }

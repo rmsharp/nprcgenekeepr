@@ -25,21 +25,20 @@
 #' obfuscatedPed <- obfuscatePed(ped)
 #' ped
 #' obfuscatedPed
-obfuscatePed <- function(ped, size = 6, maxDelta = 30,
-                         existingIds = character(0), map = FALSE) {
+obfuscatePed <- function(ped, size = 6L, maxDelta = 30L,
+                         existingIds = character(0L), map = FALSE) {
   alias <- obfuscateId(ped$id, size = size, existingIds = existingIds)
   ped$sire <- alias[ped$sire]
   ped$dam <- alias[ped$dam]
   ped$id <- alias
   for (col in names(ped)) {
-    if (any("Date" %in% class(ped[[col]]))) {
+    if (any(inherits(ped[[col]], "Date"))) {
       ped[[col]] <- obfuscateDate(ped[[col]], maxDelta = maxDelta)
     }
   }
   if (any("age" %in% names(ped)) && any("birth" %in% names(ped)) &&
-      any("exit" %in% names(ped))) {
-    if (all(is.Date(ped$birth)))
-      ped["age"] <- calcAge(ped$birth, ped$exit)
+      any("exit" %in% names(ped)) && all(is.Date(ped$birth))) {
+    ped["age"] <- calcAge(ped$birth, ped$exit)
   }
   if (map) {
     list(ped = ped, map = alias)

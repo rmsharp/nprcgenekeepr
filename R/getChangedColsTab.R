@@ -9,6 +9,8 @@
 #' @param pedigreeFileName name of file provided by user on Input tab
 #' @export
 getChangedColsTab <- function(errorLst, pedigreeFileName) {
-  tabPanel("Changed Columns",
-           div(HTML(insertChangedColsTab(errorLst, pedigreeFileName))))
+  tabPanel(
+    "Changed Columns",
+    div(HTML(insertChangedColsTab(errorLst, pedigreeFileName)))
+  )
 }

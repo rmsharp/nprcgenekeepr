@@ -9,14 +9,20 @@
 #'
 #' @export
 #' @examples
-#' result = tryCatch({
-#'   getLogo()
-#' }, warning = function(w) {
-#' print(paste0("Warning in getLogo: ", w, ". File is to be ",
-#'              suppressWarnings(getLogo())$file))
-#' }, error = function(e) {
-#' print(paste0("Error in in getLogo: ", e))
-#' })
+#' result <- tryCatch(
+#'   {
+#'     getLogo()
+#'   },
+#'   warning = function(w) {
+#'     print(paste0(
+#'       "Warning in getLogo: ", w, ". File is to be ",
+#'       suppressWarnings(getLogo())$file
+#'     ))
+#'   },
+#'   error = function(e) {
+#'     print(paste0("Error in in getLogo: ", e))
+#'   }
+#' )
 getLogo <- function() {
   logo <- list()
   if (getSiteInfo()$center == "SNPRC") {

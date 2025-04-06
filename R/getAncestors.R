@@ -41,9 +41,8 @@
 #'   names(allAncestors)[countOfAncestors == max(countOfAncestors)]
 #' allAncestors[idsWithMostAncestors]
 getAncestors <- function(id, ptree) {
-
   if (is.na(id)) {
-    return(c())
+    return(character(0L))
   }
 
   sire <- ptree[[id]]$sire
@@ -53,15 +52,15 @@ getAncestors <- function(id, ptree) {
     sAnc <- getAncestors(sire, ptree)
     sireLineage <- c(sire, sAnc)
   } else {
-    sireLineage <- c()
+    sireLineage <- character(0L)
   }
 
   if (!is.na(dam)) {
     dAnc <- getAncestors(dam, ptree)
     damLineage <- c(dam, dAnc)
   } else {
-    damLineage <- c()
+    damLineage <- character(0L)
   }
 
-  return(c(sireLineage, damLineage))
+  c(sireLineage, damLineage)
 }

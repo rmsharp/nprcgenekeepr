@@ -75,9 +75,11 @@
 #' ped1Alleles <- nprcgenekeepr::ped1Alleles
 #' gu_1 <- calcGU(ped1Alleles, threshold = 1, byID = FALSE, pop = NULL)
 #' gu_2 <- calcGU(ped1Alleles, threshold = 3, byID = FALSE, pop = NULL)
-#' gu_3 <- calcGU(ped1Alleles, threshold = 3, byID = FALSE,
-#'                pop = ped1Alleles$id[20:60])
-calcGU <- function(alleles, threshold = 1, byID = FALSE, pop = NULL) {
+#' gu_3 <- calcGU(ped1Alleles,
+#'   threshold = 3, byID = FALSE,
+#'   pop = ped1Alleles$id[20:60]
+#' )
+calcGU <- function(alleles, threshold = 1L, byID = FALSE, pop = NULL) {
   if (!is.null(pop)) {
     alleles <- alleles[alleles$id %in% pop, ]
   }
@@ -86,10 +88,10 @@ calcGU <- function(alleles, threshold = 1, byID = FALSE, pop = NULL) {
   # each simulation and average across all simulated alleles.
   rare <- calcA(alleles, threshold, byID)
   iterations <- sum(!(colnames(alleles) %in% c("id", "parent")))
-  gu <- rowSums(rare) / (2 * iterations)
+  gu <- rowSums(rare) / (2L * iterations)
 
   # convert to a percentage
-  gu <- gu * 100
+  gu <- gu * 100L
   gu <- as.data.frame(gu)
 
   return(gu)

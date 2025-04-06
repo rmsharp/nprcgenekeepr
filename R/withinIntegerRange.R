@@ -16,9 +16,9 @@
 #' @examples
 #' library(nprcgenekeepr)
 #' withinIntegerRange()
-#' withinIntegerRange( , 0, 10)
+#' withinIntegerRange(, 0, 10)
 #' withinIntegerRange(NA, 0, 10, na = "max")
-#' withinIntegerRange( , 0, 10, na = "max") # no argument is not NA
+#' withinIntegerRange(, 0, 10, na = "max") # no argument is not NA
 #' withinIntegerRange(LETTERS, 0, 10)
 #' withinIntegerRange(2.6, 1, 5)
 #' withinIntegerRange(2.6, 0, 2)
@@ -26,16 +26,20 @@
 #' withinIntegerRange(c(0, 2.6, -1, NA), 0, 2)
 #' withinIntegerRange(c(0, 2.6, -1, NA), 0, 2, na = "max")
 #' withinIntegerRange(c(0, 2.6, -1, NA), 0, 2, na = "min")
-withinIntegerRange <- function(int = 0, minimum = 0, maximum = 0, na = "min") {
-  if (!na %in% c("min", "max"))
+withinIntegerRange <- function(int = 0L, minimum = 0L, maximum = 0L,
+                               na = "min") {
+  if (!na %in% c("min", "max")) {
     na <- "min"
-  if (na == "max")
+  }
+  if (na == "max") {
     naValue <- maximum
-  else
+  } else {
     naValue <- minimum
+  }
 
-  if (is.null(int))
-    int <- 0
+  if (is.null(int)) {
+    int <- 0L
+  }
 
   int <- suppressWarnings(as.integer(int))
   int <- ifelse(is.na(int), naValue, int)

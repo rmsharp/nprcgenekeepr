@@ -22,10 +22,10 @@
 #'
 #' library(nprcgenekeepr)
 #' ped <- data.frame(
-#' id = c("A", "B", "C", "D", "E", "F", "G"),
-#' sire = c(NA, NA, "A", "A", NA, "D", "D"),
-#' dam = c(NA, NA, "B", "B", NA, "E", "E"),
-#' stringsAsFactors = FALSE
+#'   id = c("A", "B", "C", "D", "E", "F", "G"),
+#'   sire = c(NA, NA, "A", "A", NA, "D", "D"),
+#'   dam = c(NA, NA, "B", "B", NA, "E", "E"),
+#'   stringsAsFactors = FALSE
 #' )
 #' ped["gen"] <- findGeneration(ped$id, ped$sire, ped$dam)
 #' ped$population <- getGVPopulation(ped, NULL)
@@ -35,14 +35,20 @@
 #'   dam = c(NA, NA, "B", "B", NA, "E", "E"),
 #'   stringsAsFactors = TRUE
 #' )
-#' pedFactors["gen"] <- findGeneration(pedFactors$id, pedFactors$sire,
-#'                                     pedFactors$dam)
+#' pedFactors["gen"] <- findGeneration(
+#'   pedFactors$id, pedFactors$sire,
+#'   pedFactors$dam
+#' )
 #' pedFactors$population <- getGVPopulation(pedFactors, NULL)
-#' alleles <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen, genotype = NULL,
-#'                     n = 5000, updateProgress = NULL)
+#' alleles <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,
+#'   genotype = NULL,
+#'   n = 5000, updateProgress = NULL
+#' )
 #' allelesFactors <- geneDrop(pedFactors$id, pedFactors$sire, pedFactors$dam,
-#'                            pedFactors$gen, genotype = NULL, n = 5000,
-#'                            updateProgress = NULL)
+#'   pedFactors$gen,
+#'   genotype = NULL, n = 5000,
+#'   updateProgress = NULL
+#' )
 #' fg <- calcFG(ped, alleles)
 #' fgFactors <- calcFG(pedFactors, allelesFactors)
 calcFG <- function(ped, alleles) {
@@ -55,7 +61,7 @@ calcFG <- function(ped, alleles) {
   ## something planned that was not done.
   descendants <- ped$id[!(ped$id %in% founders)]
 
-  d <- matrix(0, nrow = length(descendants), ncol = length(founders))
+  d <- matrix(0L, nrow = length(descendants), ncol = length(founders))
   colnames(d) <- founders
   rownames(d) <- descendants
 
@@ -74,7 +80,7 @@ calcFG <- function(ped, alleles) {
       ego <- gen$id[j]
       sire <- gen$sire[j]
       dam <- gen$dam[j]
-      d[ego, ] <- (d[sire, ] + d[dam, ]) / 2
+      d[ego, ] <- (d[sire, ] + d[dam, ]) / 2L
     }
   }
 
@@ -83,5 +89,5 @@ calcFG <- function(ped, alleles) {
   p <- colMeans(d)
 
   r <- calcRetention(ped, alleles)
-  return(1 / sum((p ^ 2) / r, na.rm = TRUE))
+  1L / sum((p^2L) / r, na.rm = TRUE)
 }

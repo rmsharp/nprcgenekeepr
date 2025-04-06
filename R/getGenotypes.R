@@ -14,23 +14,30 @@
 #' @examples
 #' library(nprcgenekeepr)
 #' pedCsv <- getGenotypes(fileName = system.file("testdata", "qcPed.csv",
-#'                        package="nprcgenekeepr"))
+#'   package = "nprcgenekeepr"
+#' ))
 getGenotypes <- function(fileName, sep = ",") {
   flog.debug(paste0("in getGenotypes\n"),
-             name = "nprcgenekeepr")
+    name = "nprcgenekeepr"
+  )
   if (excel_format(fileName) %in% c("xls", "xlsx")) {
     genotypes <- readExcelPOSIXToCharacter(fileName)
-    flog.debug(paste0("in getGenotypes after readxl, nrow(genotypes) = ",
-                      nrow(genotypes), "\n"), name = "nprcgenekeepr")
+    flog.debug(paste0(
+      "in getGenotypes after readxl, nrow(genotypes) = ",
+      nrow(genotypes), "\n"
+    ), name = "nprcgenekeepr")
   } else {
     genotypes <- read.table(fileName,
-                         header = TRUE,
-                         sep = sep,
-                         stringsAsFactors = FALSE,
-                         na.strings = c("", "NA"),
-                         check.names = FALSE)
-    flog.debug(paste0("in getGenotypes after read.csv, nrow(genotypes) = ",
-                      nrow(genotypes), "\n"), name = "nprcgenekeepr")
+      header = TRUE,
+      sep = sep,
+      stringsAsFactors = FALSE,
+      na.strings = c("", "NA"),
+      check.names = FALSE
+    )
+    flog.debug(paste0(
+      "in getGenotypes after read.csv, nrow(genotypes) = ",
+      nrow(genotypes), "\n"
+    ), name = "nprcgenekeepr")
   }
   genotypes
 }

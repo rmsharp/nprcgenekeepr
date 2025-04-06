@@ -26,10 +26,12 @@ makeGroupMembers <- function(numGp, currentGroups, candidates, ped, harem,
   if (harem) {
     ## Since harems only have a single male, they are inserted during
     ## initialization.
-    groupMembers <- initializeHaremGroups(numGp, currentGroups, candidates,
-                                          ped, minAge)
+    groupMembers <- initializeHaremGroups(
+      numGp, currentGroups, candidates,
+      ped, minAge
+    )
   } else {
-    for (i in 1:numGp) {
+    for (i in 1L:numGp) {
       if (length(currentGroups) >= i) {
         groupMembers[[i]] <- currentGroups[[i]]
       } else {

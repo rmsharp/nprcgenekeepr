@@ -26,29 +26,34 @@
 #' focalAnimals <- c("1X2701", "1X0101")
 #' suppressWarnings(getLkDirectRelatives(ids = focalAnimals))
 getPedDirectRelatives <- function(ids, ped, unrelatedParents = FALSE) {
-  if (missing(ids))
+  if (missing(ids)) {
     stop("Need to specify IDs in 'id' parameter.")
+  }
 
-  if (missing(ped))
+  if (missing(ped)) {
     stop("Need to specify pedigree in 'ped' parameter.")
+  }
 
-  if (is.null(ped))
+  if (is.null(ped)) {
     return(NULL)
+  }
 
-  if (!is.data.frame(ped))
+  if (!is.data.frame(ped)) {
     stop("ped must be a data.frame object.")
+  }
 
 
   offspring <- parents <- ids
   len <- length(ids)
-  while (len > 0) {
+  while (len > 0L) {
     parents <- getParents(ped, ids)
     offspring <- getOffspring(ped, ids)
     added <- unique(union(parents, offspring))
     added <- setdiff(added, ids)
     len <- length(added)
-    if (len == 0)
+    if (len == 0L) {
       break
+    }
     ids <- union(added, ids)
     ids <- ids[!is.na(ids)]
   }
@@ -56,8 +61,10 @@ getPedDirectRelatives <- function(ids, ped, unrelatedParents = FALSE) {
   if (unrelatedParents) {
     unrelated <- unique(ids[!ids %in% ped$id])
     unrelated <- unrelated[!is.na(unrelated)]
-    addIdRecords(ids = unrelated, fullPed = ped,
-                 partialPed = ped[ped$id %in% ids, ])
+    addIdRecords(
+      ids = unrelated, fullPed = ped,
+      partialPed = ped[ped$id %in% ids, ]
+    )
   }
   ped[ped$id %in% ids, ]
 }

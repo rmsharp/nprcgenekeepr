@@ -15,27 +15,33 @@
 #' files <- createExampleFiles()
 createExampleFiles <- function() {
   examplePedigrees <-
-    list(examplePedigree = nprcgenekeepr::examplePedigree,
-         focalAnimals = nprcgenekeepr::focalAnimals,
-         lacy1989Ped = nprcgenekeepr::lacy1989Ped,
-         pedDuplicateIds = nprcgenekeepr::pedDuplicateIds,
-         pedFemaleSireMaleDam = nprcgenekeepr::pedFemaleSireMaleDam,
-         pedGood = nprcgenekeepr::pedGood,
-         pedInvalidDates = nprcgenekeepr::pedInvalidDates,
-         pedMissingBirth = nprcgenekeepr::pedMissingBirth,
-         pedOne = nprcgenekeepr::pedOne,
-         pedSameMaleIsSireAndDam = nprcgenekeepr::pedSameMaleIsSireAndDam,
-         pedSix = nprcgenekeepr::pedSix,
-         pedWithGenotype = nprcgenekeepr::pedWithGenotype,
-         qcBreeders = as.data.frame(nprcgenekeepr::qcBreeders, drop = FALSE),
-         qcPed = nprcgenekeepr::qcPed,
-         smallPed = nprcgenekeepr::smallPed)
-  pedigreeDir <-  tempdir()
+    list(
+      examplePedigree = nprcgenekeepr::examplePedigree,
+      focalAnimals = nprcgenekeepr::focalAnimals,
+      lacy1989Ped = nprcgenekeepr::lacy1989Ped,
+      pedDuplicateIds = nprcgenekeepr::pedDuplicateIds,
+      pedFemaleSireMaleDam = nprcgenekeepr::pedFemaleSireMaleDam,
+      pedGood = nprcgenekeepr::pedGood,
+      pedInvalidDates = nprcgenekeepr::pedInvalidDates,
+      pedMissingBirth = nprcgenekeepr::pedMissingBirth,
+      pedOne = nprcgenekeepr::pedOne,
+      pedSameMaleIsSireAndDam = nprcgenekeepr::pedSameMaleIsSireAndDam,
+      pedSix = nprcgenekeepr::pedSix,
+      pedWithGenotype = nprcgenekeepr::pedWithGenotype,
+      qcBreeders = as.data.frame(nprcgenekeepr::qcBreeders, drop = FALSE),
+      qcPed = nprcgenekeepr::qcPed,
+      smallPed = nprcgenekeepr::smallPed
+    )
+  pedigreeDir <- tempdir()
   suppressWarnings(dir.create(pedigreeDir))
-  pedigreeDir <- paste0(pedigreeDir, "/ExamplePedigrees")
+  pedigreeDir <- file.path(pedigreeDir, "ExamplePedigrees")
   suppressWarnings(dir.create(pedigreeDir))
-  message(paste0("Example pedigree files ",
-                 get_and_or_list(names(examplePedigrees)),
-                 " will be created in ", pedigreeDir, ".\n"))
+  message(
+    "Example pedigree files ",
+    get_and_or_list(names(examplePedigrees)),
+    " will be created in ",
+    pedigreeDir,
+    ".\n"
+  )
   saveDataframesAsFiles(examplePedigrees, baseDir = pedigreeDir, "csv")
 }

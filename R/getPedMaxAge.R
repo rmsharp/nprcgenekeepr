@@ -11,9 +11,11 @@
 #' @examples
 #' library(nprcgenekeepr)
 #' examplePedigree <- nprcgenekeepr::examplePedigree
-#' ped <- qcStudbook(examplePedigree, minParentAge = 2,
-#'                         reportChanges = FALSE,
-#'                         reportErrors = FALSE)
+#' ped <- qcStudbook(examplePedigree,
+#'   minParentAge = 2,
+#'   reportChanges = FALSE,
+#'   reportErrors = FALSE
+#' )
 #' getPedMaxAge(ped)
 getPedMaxAge <- function(ped) {
   max(ped$age, na.rm = TRUE)

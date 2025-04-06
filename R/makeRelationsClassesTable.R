@@ -19,25 +19,28 @@
 #'
 #' qcPed <- nprcgenekeepr::qcPed
 #' bkmat <- kinship(qcPed$id, qcPed$sire, qcPed$dam, qcPed$gen,
-#'                  sparse = FALSE)
+#'   sparse = FALSE
+#' )
 #' kin <- convertRelationships(bkmat, qcPed)
 #' relClasses <- makeRelationClassesTable(kin)
 #' relClasses$`Relationship Class` <-
-#'    as.character(relClasses$`Relationship Class`)
+#'   as.character(relClasses$`Relationship Class`)
 #' relClassTbl <- kin[!kin$relation == "Self", ] %>%
 #'   group_by(relation) %>%
 #'   summarise(count = n())
 #' relClassTbl
 makeRelationClassesTable <- function(kin) {
-  relationClass <- c("Self", "Parent-Offspring", "Full-Siblings",
-                     "Half-Siblings", "Grandparent-Grandchild", "Full-Cousins",
-                     "Cousin - Other", "Full-Avuncular", "Avuncular - Other",
-                     "Other", "No Relation")
+  relationClass <- c(
+    "Self", "Parent-Offspring", "Full-Siblings",
+    "Half-Siblings", "Grandparent-Grandchild", "Full-Cousins",
+    "Cousin - Other", "Full-Avuncular", "Avuncular - Other",
+    "Other", "No Relation"
+  )
 
   kin <- kin[kin$relation != "Self", ]
   r <- as.data.frame(table(kin$relation))
   colnames(r) <- c("Relationship Class", "Frequency")
 
   relationClass <- relationClass[relationClass %in% r[, "Relationship Class"]]
-  return(r[match(relationClass, r[, "Relationship Class"]), ])
+  r[match(relationClass, r[, "Relationship Class"]), ]
 }

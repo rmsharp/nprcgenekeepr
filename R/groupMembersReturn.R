@@ -21,10 +21,12 @@ groupMembersReturn <- function(savedGroupMembers, savedScore, withKin, kmat) {
   if (withKin) {
     groupKin <- list()
     for (i in seq_along(savedGroupMembers)) {
-      groupKin[[i]] <-   filterKinMatrix(savedGroupMembers[[i]], kmat)
+      groupKin[[i]] <- filterKinMatrix(savedGroupMembers[[i]], kmat)
     }
-    value <- list(group = savedGroupMembers, score = savedScore,
-                groupKin = groupKin)
+    value <- list(
+      group = savedGroupMembers, score = savedScore,
+      groupKin = groupKin
+    )
   } else {
     value <- list(group = savedGroupMembers, score = savedScore)
   }

@@ -31,8 +31,7 @@
 #' kin[kin$id1 == "C", ]
 #' kinMM[kinMM$id1 == "C", ]
 filterPairs <- function(kin, ped, ignore = list(c("F", "F"))) {
-
-  if (length(ignore) == 0) {
+  if (length(ignore) == 0L) {
     return(kin)
   }
   kin["sort.col"] <- seq_len(nrow(kin))
@@ -47,15 +46,16 @@ filterPairs <- function(kin, ped, ignore = list(c("F", "F"))) {
 
   for (i in seq_len(length(ignore))) {
     rel <- ignore[[i]]
-    k <- !(((g1 == rel[1]) &
-               (g2 == rel[2])) |
-             ((g1 == rel[2]) &
-                (g2 == rel[1])))
+    k <- !(((g1 == rel[1L]) &
+      (g2 == rel[2L])) |
+      ((g1 == rel[2L]) &
+        (g2 == rel[1L])))
     keep <- keep & k
   }
   kin$sort.col <- NULL
   kin <- kin[keep, ]
-  if (nrow(kin) > 0)
+  if (nrow(kin) > 0L) {
     rownames(kin) <- seq_len(nrow(kin))
-  return(kin[!is.na(kin[[1]]), ])
+  }
+  return(kin[!is.na(kin[[1L]]), ])
 }

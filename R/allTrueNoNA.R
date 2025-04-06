@@ -15,5 +15,5 @@ allTrueNoNA <- function(v) {
   # return(v)
   # nolint end: commented_code_linter.
   # The following is equivalent and should be a bit faster
-  return(all(c(v, all(!is.na(v))), na.rm = TRUE))
+  all(c(v, !anyNA(v)), na.rm = TRUE)
 }

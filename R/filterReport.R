@@ -15,5 +15,5 @@
 #' rpt <- nprcgenekeepr::pedWithGenotypeReport$report
 #' rpt1 <- filterReport(c("GHH9LB", "BD41WW"), rpt)
 filterReport <- function(ids, rpt) {
-  return(rpt[rpt$id %in% ids, ])
+  rpt[rpt$id %in% ids, ]
 }

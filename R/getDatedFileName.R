@@ -15,6 +15,7 @@
 #' getDatedFilename("testName")
 getDatedFilename <- function(filename) {
   dateStamp <- stri_replace_all_fixed(
-    stri_replace_all_fixed(as.character(now()), " ", "_"), ":", "_")
+    stri_replace_all_fixed(as.character(now()), " ", "_"), ":", "_"
+  )
   stri_c(dateStamp, "_", filename)
 }

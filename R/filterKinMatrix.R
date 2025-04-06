@@ -16,7 +16,8 @@
 #' ped <- nprcgenekeepr::qcPed
 #' ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 #' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen,
-#'                 sparse = FALSE)
+#'   sparse = FALSE
+#' )
 #' ids <- ped$id[c(189, 192, 194, 195)]
 #' ncol(kmat)
 #' nrow(kmat)
@@ -24,5 +25,5 @@
 #' ncol(kmatFiltered)
 #' nrow(kmatFiltered)
 filterKinMatrix <- function(ids, kmat) {
-  return(kmat[(rownames(kmat) %in% ids), (colnames(kmat) %in% ids)])
+  kmat[(rownames(kmat) %in% ids), (colnames(kmat) %in% ids)]
 }

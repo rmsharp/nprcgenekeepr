@@ -9,5 +9,5 @@
 #' @noRd
 isEmpty <- function(x) {
   x <- x[!is.na(x)]
-  return(length(x) == 0)
+  length(x) == 0L
 }

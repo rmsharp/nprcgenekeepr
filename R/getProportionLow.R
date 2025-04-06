@@ -14,16 +14,16 @@
 getProportionLow <- function(geneticValues) {
   proportion <-
     length(geneticValues[stri_detect_fixed(geneticValues, "Low")]) /
-    length(geneticValues)
+      length(geneticValues)
   if (proportion > 0.5) {
     color <- "red"
-    colorIndex <- 1
+    colorIndex <- 1L
   } else if (proportion <= 0.5 && proportion >= 0.3) {
     color <- "yellow"
-    colorIndex <- 2
-  }else if (proportion < 0.3) {
+    colorIndex <- 2L
+  } else if (proportion < 0.3) {
     color <- "green"
-    colorIndex <- 3
+    colorIndex <- 3L
   }
   list(proportion = proportion, color = color, colorIndex = colorIndex)
 }

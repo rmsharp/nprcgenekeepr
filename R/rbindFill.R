@@ -14,7 +14,6 @@
 #' @param df2 the the donor dataframe information should be appended from
 #' @noRd
 rbindFill <- function(df1, df2) {
-
   # Find columns in df1 not in df2
   addHeaders <- setdiff(names(df1), names(df2))
 
@@ -36,5 +35,5 @@ rbindFill <- function(df1, df2) {
       }
     }
   }
-  return(rbind(df1, df2))
+  rbind(df1, df2)
 }

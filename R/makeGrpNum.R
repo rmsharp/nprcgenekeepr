@@ -10,6 +10,6 @@
 #' @noRd
 makeGrpNum <- function(numGp) {
   grpNum <- list()
-  grpNum[1:numGp] <- 1:numGp
+  grpNum[1L:numGp] <- 1L:numGp
   grpNum
 }

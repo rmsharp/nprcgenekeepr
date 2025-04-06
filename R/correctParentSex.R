@@ -23,27 +23,35 @@
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
-#' pedOne <- data.frame(id = c("s1", "d1", "s2", "d2", "o1", "o2", "o3", "o4"),
-#'                      sire = c(NA, "s0", "s4", NA, "s1", "s1", "s2", "s2"),
-#'                      dam = c(NA, "d0", "d4", NA, "d1", "d2", "d2", "d2"),
-#'                      sex = c("F", "F", "M", "F", "F", "F", "F", "M"),
-#'                      recordStatus = rep("original", 8),
-#'                      stringsAsFactors = FALSE)
-#' pedTwo <- data.frame(id = c("s1", "d1", "s2", "d2", "o1", "o2", "o3", "o4"),
-#'                      sire = c(NA, "s0", "s4", NA, "s1", "s1", "s2", "s2"),
-#'                      dam = c("d0", "d0", "d4", NA, "d1", "d2", "d2", "d2"),
-#'                      sex = c("M", "M", "M", "F", "F", "F", "F", "M"),
-#'                      recordStatus = rep("original", 8),
-#'                      stringsAsFactors = FALSE)
+#' pedOne <- data.frame(
+#'   id = c("s1", "d1", "s2", "d2", "o1", "o2", "o3", "o4"),
+#'   sire = c(NA, "s0", "s4", NA, "s1", "s1", "s2", "s2"),
+#'   dam = c(NA, "d0", "d4", NA, "d1", "d2", "d2", "d2"),
+#'   sex = c("F", "F", "M", "F", "F", "F", "F", "M"),
+#'   recordStatus = rep("original", 8),
+#'   stringsAsFactors = FALSE
+#' )
+#' pedTwo <- data.frame(
+#'   id = c("s1", "d1", "s2", "d2", "o1", "o2", "o3", "o4"),
+#'   sire = c(NA, "s0", "s4", NA, "s1", "s1", "s2", "s2"),
+#'   dam = c("d0", "d0", "d4", NA, "d1", "d2", "d2", "d2"),
+#'   sex = c("M", "M", "M", "F", "F", "F", "F", "M"),
+#'   recordStatus = rep("original", 8),
+#'   stringsAsFactors = FALSE
+#' )
 #' pedOneCorrected <- pedOne
-#' pedOneCorrected$sex <- correctParentSex(pedOne$id, pedOne$sire, pedOne$dam,
-#'                                         pedOne$sex, pedOne$recordStatus)
+#' pedOneCorrected$sex <- correctParentSex(
+#'   pedOne$id, pedOne$sire, pedOne$dam,
+#'   pedOne$sex, pedOne$recordStatus
+#' )
 #' pedOne[pedOne$sex != pedOneCorrected$sex, ]
 #' pedOneCorrected[pedOne$sex != pedOneCorrected$sex, ]
 #'
 #' pedTwoCorrected <- pedTwo
-#' pedTwoCorrected$sex <- correctParentSex(pedTwo$id, pedTwo$sire, pedTwo$dam,
-#'                                         pedTwo$sex, pedOne$recordStatus)
+#' pedTwoCorrected$sex <- correctParentSex(
+#'   pedTwo$id, pedTwo$sire, pedTwo$dam,
+#'   pedTwo$sex, pedOne$recordStatus
+#' )
 #' pedTwo[pedTwo$sex != pedTwoCorrected$sex, ]
 #' pedTwoCorrected[pedTwo$sex != pedTwoCorrected$sex, ]
 correctParentSex <- function(id, sire, dam, sex, recordStatus,
@@ -56,24 +64,27 @@ correctParentSex <- function(id, sire, dam, sex, recordStatus,
 
   # Check if any ids are listed in both the sire and dam columns (error)
   sireAndDam <- intersect(sires, dams)
-  if (length(sireAndDam > 0)) {
-    if (!reportErrors) {
-      stop(sireAndDam, " : Subject(s) listed as both sire and dam")
-    }
+  if ((length(sireAndDam) > 0L) && !reportErrors) {
+    stop(sireAndDam, " : Subject(s) listed as both sire and dam")
   }
   if (reportErrors) {
     femaleSires <- id[(id %in% sires) & (!sex %in% c("H", "U", "M")) &
-                        recordStatus == "original"]
+      recordStatus == "original"]
     maleDams <- id[(id %in% dams) & (!sex %in% c("H", "U", "F")) &
-                     recordStatus == "original"]
-    if (length(femaleSires) == 0)
+      recordStatus == "original"]
+    if (length(femaleSires) == 0L) {
       femaleSires <- NULL
-    if (length(maleDams) == 0)
+    }
+    if (length(maleDams) == 0L) {
       maleDams <- NULL
-    if (length(sireAndDam) == 0)
+    }
+    if (length(sireAndDam) == 0L) {
       sireAndDam <- NULL
-    list(sireAndDam = sireAndDam, femaleSires = femaleSires,
-         maleDams = maleDams)
+    }
+    list(
+      sireAndDam = sireAndDam, femaleSires = femaleSires,
+      maleDams = maleDams
+    )
   } else {
     # Update gender for sires and dams
     sex[((id %in% sires) & (sex != "M"))] <- "M"

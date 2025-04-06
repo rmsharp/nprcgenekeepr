@@ -155,16 +155,19 @@
 #' @export
 #' @examples
 #' examplePedigree <- nprcgenekeepr::examplePedigree
-#' ped <- qcStudbook(examplePedigree, minParentAge = 2, reportChanges = FALSE,
-#'                   reportErrors = FALSE)
+#' ped <- qcStudbook(examplePedigree,
+#'   minParentAge = 2.0, reportChanges = FALSE,
+#'   reportErrors = FALSE
+#' )
 #' names(ped)
-qcStudbook <- function(sb, minParentAge = 2, reportChanges = FALSE,
+qcStudbook <- function(sb, minParentAge = 2.0, reportChanges = FALSE,
                        reportErrors = FALSE) {
   newColumns <- fixColumnNames(names(sb), getEmptyErrorLst())
   cols <- newColumns$newColNames
   errorLst <- newColumns$errorLst
-  if (reportChanges == FALSE) # remove changed columns
+  if (!reportChanges) { # remove changed columns
     errorLst$changedCols <- getEmptyErrorLst()$changedCols
+  }
   missingColumns <- checkRequiredCols(cols, reportErrors)
   if (reportErrors && !is.null(missingColumns)) {
     errorLst$missingColumns <- missingColumns
@@ -176,16 +179,20 @@ qcStudbook <- function(sb, minParentAge = 2, reportChanges = FALSE,
   sb <- unknown2NA(sb)
   sb <- addUIds(sb)
   sb <- addParents(sb) # add parent record for parents that don't have
-                       # their own line entry
+  # their own line entry
   # Add and standardize needed fields
   sb$sex <- convertSexCodes(sb$sex)
   if (reportErrors) {
-    testVal <- correctParentSex(sb$id, sb$sire, sb$dam, sb$sex,
-                                sb$recordStatus, reportErrors)
+    testVal <- correctParentSex(
+      sb$id, sb$sire, sb$dam, sb$sex,
+      sb$recordStatus, reportErrors
+    )
     if (is.null(testVal$femaleSires) && is.null(testVal$maleDams) &&
-        is.null(testVal$sireAndDam)) {
+      is.null(testVal$sireAndDam)) {
       sb$sex <- correctParentSex(sb$id, sb$sire, sb$dam, sb$sex,
-                                 sb$recordStatus, reportErrors = FALSE)
+        sb$recordStatus,
+        reportErrors = FALSE
+      )
     } else {
       errorLst$femaleSires <- testVal$femaleSires
       errorLst$maleDams <- testVal$maleDams
@@ -217,24 +224,24 @@ qcStudbook <- function(sb, minParentAge = 2, reportChanges = FALSE,
   # ensure parents are older than offspring
   suspiciousParents <- checkParentAge(sb, minParentAge, reportErrors)
   if (reportErrors) {
-    if (!is.null(suspiciousParents)) {
-      if (nrow(suspiciousParents) > 0)
-        errorLst$suspiciousParents <- suspiciousParents
+    if (!is.null(suspiciousParents) && nrow(suspiciousParents) > 0L) {
+      errorLst$suspiciousParents <- suspiciousParents
     }
-  } else {
-    if (nrow(suspiciousParents) > 0) {
-      fileName <- paste0(tempdir(), "/lowParentAge.csv")
+  } else if (nrow(suspiciousParents) > 0L) {
+      fileName <- file.path(tempdir(), "lowParentAge.csv")
       write.csv(suspiciousParents,
-                file = fileName, row.names = FALSE)
+        file = fileName, row.names = FALSE
+      )
 
-      stop(paste0("Parents with low age at birth of offspring are listed in ",
-                  fileName, ".\n"))
-    }
+      stop(
+        "Parents with low age at birth of offspring are listed in ",
+        fileName, ".\n", call. = TRUE
+      )
   }
   # setting age:
   # uses current date as the end point if no exit date is available
-  if (any(("birth" %in% cols)) && !any(("age" %in% cols))) {
-    if (all(is.Date(sb$birth)))
+  if (any(("birth" %in% cols)) && !any(("age" %in% cols)) &&
+      all(is.Date(sb$birth))) {
       sb["age"] <- calcAge(sb$birth, sb$exit)
   }
 

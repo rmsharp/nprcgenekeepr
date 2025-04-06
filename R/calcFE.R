@@ -19,10 +19,10 @@
 #' ## Zoo Biology 8:111-123, (1989) by Robert C. Lacy
 #' library(nprcgenekeepr)
 #' ped <- data.frame(
-#' id = c("A", "B", "C", "D", "E", "F", "G"),
-#' sire = c(NA, NA, "A", "A", NA, "D", "D"),
-#' dam = c(NA, NA, "B", "B", NA, "E", "E"),
-#' stringsAsFactors = FALSE
+#'   id = c("A", "B", "C", "D", "E", "F", "G"),
+#'   sire = c(NA, NA, "A", "A", NA, "D", "D"),
+#'   dam = c(NA, NA, "B", "B", NA, "E", "E"),
+#'   stringsAsFactors = FALSE
 #' )
 #' ped["gen"] <- findGeneration(ped$id, ped$sire, ped$dam)
 #' ped$population <- getGVPopulation(ped, NULL)
@@ -32,8 +32,10 @@
 #'   dam = c(NA, NA, "B", "B", NA, "E", "E"),
 #'   stringsAsFactors = TRUE
 #' )
-#' pedFactors["gen"] <- findGeneration(pedFactors$id, pedFactors$sire,
-#'                                     pedFactors$dam)
+#' pedFactors["gen"] <- findGeneration(
+#'   pedFactors$id, pedFactors$sire,
+#'   pedFactors$dam
+#' )
 #' pedFactors$population <- getGVPopulation(pedFactors, NULL)
 #' fe <- calcFE(ped)
 #' feFactors <- calcFE(pedFactors)
@@ -47,7 +49,7 @@ calcFE <- function(ped) {
   ## something planned that was not done.
   descendants <- ped$id[!(ped$id %in% founders)]
 
-  d <- matrix(0, nrow = length(descendants), ncol = length(founders))
+  d <- matrix(0L, nrow = length(descendants), ncol = length(founders))
   colnames(d) <- founders
   rownames(d) <- descendants
 
@@ -66,7 +68,7 @@ calcFE <- function(ped) {
       ego <- gen$id[j]
       sire <- gen$sire[j]
       dam <- gen$dam[j]
-      d[ego, ] <- (d[sire, ] + d[dam, ]) / 2
+      d[ego, ] <- (d[sire, ] + d[dam, ]) / 2L
     }
   }
 
@@ -74,5 +76,5 @@ calcFE <- function(ped) {
   d <- d[currentDesc, ]
   p <- colMeans(d)
 
-  return(1 / sum(p ^ 2))
+  1L / sum(p^2L)
 }

@@ -23,9 +23,11 @@
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
-#' original <- c("m", "male", "1", "MALE", "M", "F", "f", "female",
-#'               "FemAle", "U", "Unknown", "H", "hermaphrodite",
-#'               "U", "Unknown", "3", "4")
+#' original <- c(
+#'   "m", "male", "1", "MALE", "M", "F", "f", "female",
+#'   "FemAle", "U", "Unknown", "H", "hermaphrodite",
+#'   "U", "Unknown", "3", "4"
+#' )
 #' sexCodes <- convertSexCodes(original)
 #' sexCodes
 convertSexCodes <- function(sex, ignoreHerm = TRUE) {

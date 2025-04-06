@@ -12,28 +12,28 @@
 #' getEmptyErrorLst()
 getEmptyErrorLst <- function() {
   emptyErrorLst <- list(
-    failedDatabaseConnection = character(0),
-    missingColumns = character(0),
-    invalidDateRows = character(0),
+    failedDatabaseConnection = character(0L),
+    missingColumns = character(0L),
+    invalidDateRows = character(0L),
     suspiciousParents = data.frame(),
-    femaleSires = character(0),
-    maleDams = character(0),
-    sireAndDam = character(0),
-    duplicateIds = character(0),
+    femaleSires = character(0L),
+    maleDams = character(0L),
+    sireAndDam = character(0L),
+    duplicateIds = character(0L),
     changedCols = list(
-      caseChange = character(0),
-      spaceRemoved = character(0),
-      periodRemoved = character(0),
-      underScoreRemoved = character(0),
-      egoToId = character(0),
-      egoidToId = character(0),
-      sireIdToSire = character(0),
-      damIdToDam =  character(0),
-      birthdateToBirth = character(0),
-      deathdateToDeath = character(0),
-      recordstatusToRecordStatus = character(0),
-      fromcenterToFromCenter = character(0),
-      geographicoriginToGeographicOrigin = character(0)
+      caseChange = character(0L),
+      spaceRemoved = character(0L),
+      periodRemoved = character(0L),
+      underScoreRemoved = character(0L),
+      egoToId = character(0L),
+      egoidToId = character(0L),
+      sireIdToSire = character(0L),
+      damIdToDam = character(0L),
+      birthdateToBirth = character(0L),
+      deathdateToDeath = character(0L),
+      recordstatusToRecordStatus = character(0L),
+      fromcenterToFromCenter = character(0L),
+      geographicoriginToGeographicOrigin = character(0L)
     )
   )
   class(emptyErrorLst) <-

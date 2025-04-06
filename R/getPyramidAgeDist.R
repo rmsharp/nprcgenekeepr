@@ -36,32 +36,36 @@ getPyramidAgeDist <- function(ped = NULL) {
   ped <- ped[, colNames]
   if (!any(class(ped$birth) %in% c("Date", "POSIXct", "character"))) {
     stop("birth column must be of class 'Date', 'POSIXct', or 'character'")
-  } else if (class(ped$birth)[[1]] == "character") {
+  } else if (class(ped$birth)[[1L]] == "character") {
     ped$birth <- suppressWarnings(anytime::anytime(ped$birth))
   } else {
     ped$birth <- suppressWarnings(as.Date(ped$birth))
   }
   ped$status[is.na(ped$exit_date)] <- "ALIVE"
   ped$status[!is.na(ped$exit_date) | is.na(ped$birth)] <- "DECEASED"
-  if (!any(class(ped$exit_date) %in% c("Date", "POSIXct", "character"))) {
+  if (!any(inherits(ped$exit_date, c("Date", "POSIXct", "character")))) {
     stop("exit_date column must be of class 'Date', 'POSIXct', or 'character'")
-  } else if (class(ped$exit_date)[[1]] == "character") {
+  } else if (class(ped$exit_date)[[1L]] == "character") {
     ped$status[ped$exit_date == "9999999999"] <- "DECEASED"
-    ped$exit_date[ped$exit_date == "" | ped$exit_date == "9999999999"] <- NA
+    ped$exit_date[!nzchar(ped$exit_date) | ped$exit_date == "9999999999"] <- NA
     ped$exit_date <- suppressWarnings(anytime::anytime(ped$exit_date))
   } else {
     ped$exit_date <- suppressWarnings(as.Date(ped$exit_date))
   }
   ped$age[is.na(ped$exit_date) & !is.na(ped$birth)] <-
-    interval(start = ped$birth[is.na(ped$exit_date) &
-                                 !is.na(ped$birth)],
-             end = now()) / duration(num = 1, units = "years")
+    interval(
+      start = ped$birth[is.na(ped$exit_date) &
+        !is.na(ped$birth)],
+      end = now()
+    ) / duration(num = 1L, units = "years")
   ped$age[!is.na(ped$exit_date) & !is.na(ped$birth)] <-
-    interval(start = ped$birth[!is.na(ped$exit_date) &
-                                 !is.na(ped$birth)],
-             end = ped$exit_date[!is.na(ped$exit_date) &
-                                       !is.na(ped$birth)]) /
-    duration(num = 1, units = "years")
+    interval(
+      start = ped$birth[!is.na(ped$exit_date) &
+        !is.na(ped$birth)],
+      end = ped$exit_date[!is.na(ped$exit_date) &
+        !is.na(ped$birth)]
+    ) /
+      duration(num = 1L, units = "years")
   names(ped)[names(ped) == "exit_date"] <- "exit"
   ped
 }

@@ -18,8 +18,8 @@
 #' length(ped$id)
 #'
 removeAutoGenIds <- function(ped) {
-  ped <- ped[!stri_sub(ped$id, 1, 1)  == "U", ]
-  ped$sire[stri_sub(ped$sire, 1, 1)  == "U"] <- NA
-  ped$dam[stri_sub(ped$dam, 1, 1)  == "U"] <- NA
+  ped <- ped[stri_sub(ped$id, 1L, 1L) != "U", ]
+  ped$sire[stri_sub(ped$sire, 1L, 1L) == "U"] <- NA
+  ped$dam[stri_sub(ped$dam, 1L, 1L) == "U"] <- NA
   ped
 }

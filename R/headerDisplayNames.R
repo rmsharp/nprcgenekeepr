@@ -37,7 +37,6 @@ headerDisplayNames <- function(headers) {
     value = "Value Designation",
     status = "Status",
     vasxOvx = "Vasectomy or Ovariectomy Status",
-    ancestry = "Ancestry",
     gu = "Genome Uniqueness (%)",
     pedNum = "Pedigree #",
     spf = "SPF",
@@ -53,5 +52,5 @@ headerDisplayNames <- function(headers) {
     second_name = "Second Allele",
     recordStatus = "Original/ Added"
   )
-  return(as.character(nameConversion[headers]))
+  as.character(nameConversion[headers])
 }

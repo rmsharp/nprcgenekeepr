@@ -51,23 +51,33 @@
 #' library(nprcgenekeepr)
 #' ped <- nprcgenekeepr::lacy1989Ped
 #' allelesNew <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,
-#'                       genotype = NULL, n = 50, updateProgress = NULL)
-#' genotype <- data.frame(id = ped$id,
-#'                        first_allele = c(NA, NA, "A001_B001", "A001_B002",
-#'                                         NA, "A001_B002", "A001_B001"),
-#'                        second_allele = c(NA, NA, "A010_B001", "A001_B001",
-#'                                          NA, NA, NA),
-#'                        stringsAsFactors = FALSE)
+#'   genotype = NULL, n = 50, updateProgress = NULL
+#' )
+#' genotype <- data.frame(
+#'   id = ped$id,
+#'   first_allele = c(
+#'     NA, NA, "A001_B001", "A001_B002",
+#'     NA, "A001_B002", "A001_B001"
+#'   ),
+#'   second_allele = c(
+#'     NA, NA, "A010_B001", "A001_B001",
+#'     NA, NA, NA
+#'   ),
+#'   stringsAsFactors = FALSE
+#' )
 #' pedWithGenotype <- addGenotype(ped, genotype)
 #' pedGenotype <- getGVGenotype(pedWithGenotype)
 #' allelesNewGen <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,
-#'                          genotype = pedGenotype,
-#'                          n = 5, updateProgress = NULL)
-geneDrop <- function(ids, sires, dams, gen, genotype = NULL, n = 5000,
+#'   genotype = pedGenotype,
+#'   n = 5, updateProgress = NULL
+#' )
+geneDrop <- function(ids, sires, dams, gen, genotype = NULL, n = 5000L,
                      updateProgress = NULL) {
   ## Sort the IDs by generation so older generations are first
-  ped <- data.frame(id = ids, sire = sires, dam = dams, gen,
-                    stringsAsFactors = FALSE)
+  ped <- data.frame(
+    id = ids, sire = sires, dam = dams, gen,
+    stringsAsFactors = FALSE
+  )
   ped <- toCharacter(ped, headers = c("id", "sire", "dam"))
   rownames(ped) <- ids
   ped <- ped[order(gen), ]
@@ -78,11 +88,13 @@ geneDrop <- function(ids, sires, dams, gen, genotype = NULL, n = 5000,
     genoDefined <- FALSE
   }
 
-  alleles <- list(alleles = list(), counter = 1)
+  alleles <- list(alleles = list(), counter = 1L)
 
   if (!is.null(updateProgress)) {
-    updateProgress(detail = "Performing Gene-drop Simulation", value = 0,
-                   reset = TRUE)
+    updateProgress(
+      detail = "Performing Gene-drop Simulation", value = 0L,
+      reset = TRUE
+    )
   }
 
   ## Iterate through each ID and get the maternal and paternal alleles
@@ -91,12 +103,10 @@ geneDrop <- function(ids, sires, dams, gen, genotype = NULL, n = 5000,
     sire <- ped[id, "sire"]
     dam <- ped[id, "dam"]
     assigned <- FALSE
-    if (genoDefined) {
-      if (any(genotype$id == id)) {
-        alleles <- getGenoDefinedParentGenotypes(alleles, genotype, id, sire,
-                                                 dam, n)
-        assigned <- TRUE
-      }
+    if (genoDefined && any(genotype$id == id)) {
+      alleles <- getGenoDefinedParentGenotypes(alleles, genotype, id, sire,
+                                               dam, n)
+      assigned <- TRUE
     }
     if (!assigned) {
       alleles <- assignAlleles(alleles, "sire", sire, id, n)
@@ -112,12 +122,12 @@ geneDrop <- function(ids, sires, dams, gen, genotype = NULL, n = 5000,
   alleles <- as.data.frame(t(data.frame(alleles$alleles, check.names = FALSE)))
   keys <- strsplit(rownames(alleles), ".", fixed = TRUE)
 
-  id <- c()
-  parent <- c()
+  id <- character(0L)
+  parent <- character(0L)
   for (i in seq_len(length(keys))) {
     key <- keys[[i]]
-    id <- c(id, key[1])
-    parent <- c(parent, key[2])
+    id <- c(id, key[1L])
+    parent <- c(parent, key[2L])
   }
 
   alleles$id <- id

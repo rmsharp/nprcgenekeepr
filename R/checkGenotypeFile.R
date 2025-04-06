@@ -16,35 +16,42 @@
 #' library(nprcgenekeepr)
 #' ped <- nprcgenekeepr::qcPed
 #' ped <- ped[order(ped$id), ]
-#' genotype <- data.frame(id = ped$id[50 + 1:20],
-#'                        first_name = paste0("first_name", 1:20),
-#'                        second_name = paste0("second_name", 1:20),
-#'                        stringsAsFactors = FALSE)
+#' genotype <- data.frame(
+#'   id = ped$id[50 + 1:20],
+#'   first_name = paste0("first_name", 1:20),
+#'   second_name = paste0("second_name", 1:20),
+#'   stringsAsFactors = FALSE
+#' )
 #'
 #' ## checkGenotypeFile disallows dataframe with < 3 columns
-#' tryCatch({
-#'   checkGenotypeFile(genotype[ , c("id", "first_name")])
-#'   }, warning = function(w) {
+#' tryCatch(
+#'   {
+#'     checkGenotypeFile(genotype[, c("id", "first_name")])
+#'   },
+#'   warning = function(w) {
 #'     cat("Warning produced")
-#'   }, error = function(e) {
+#'   },
+#'   error = function(e) {
 #'     cat("Error produced")
-#' })
+#'   }
+#' )
 checkGenotypeFile <- function(genotype) {
   cols <- names(genotype)
-  if (length(cols) < 3) {
+  if (length(cols) < 3L) {
     stop("Genotype file must have at least three columns.")
-  } else if (!stri_detect_fixed(tolower(cols[1]), "id")) {
+  } else if (!stri_detect_fixed(tolower(cols[1L]), "id")) {
     stop("Genotype file must have 'id' as the first column.")
   } else if (any(tolower(cols) %in% c("first", "second"))) {
     stop("Genotype file cannot have a column named 'first' or 'second'.")
   } else {
-    for (i in 2:3) {
+    for (i in 2L:3L) {
       alleles <- unique(genotype[, i][!is.na(genotype[, i])])
       numbers <- suppressWarnings(as.integer(alleles))
       numbers <- numbers[!is.na(numbers)]
-      if (any(numbers > 10000)) {
-        numberStr <- stri_c(format(numbers[numbers > 10000],
-                                   scientific = FALSE), sep = ", ")
+      if (any(numbers > 10000L)) {
+        numberStr <- stri_c(format(numbers[numbers > 10000L],
+          scientific = FALSE
+        ), sep = ", ")
         stop(stri_c("Possible collision on allele(s) interpreted as a number
                     > 10000: ", numberStr, collapse = ", "))
       }
@@ -55,6 +62,6 @@ checkGenotypeFile <- function(genotype) {
       # }
     }
   }
-  names(genotype) <- c("id", cols[2:length(cols)])
+  names(genotype) <- c("id", cols[2L:length(cols)])
   genotype
 }

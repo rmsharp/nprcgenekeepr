@@ -18,24 +18,28 @@
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
-#' someDates <- rep(as.Date(c("2009-2-16", "2016-2-16"), format = "%Y-%m-%d"),
-#'                  10)
+#' someDates <- rep(
+#'   as.Date(c("2009-2-16", "2016-2-16"), format = "%Y-%m-%d"),
+#'   10
+#' )
 #' minBirthDate <- rep(as.Date("2009-2-16", format = "%Y-%m-%d"), 20)
 #' obfuscateDate(someDates, 30, minBirthDate)
-obfuscateDate <- function(baseDate, maxDelta = 30, minDate) {
-  if (length(maxDelta) == 1) {
+obfuscateDate <- function(baseDate, maxDelta = 30L, minDate) {
+  if (length(maxDelta) == 1L) {
     maxDelta <- rep(maxDelta, length(baseDate))
   }
-  if (length(baseDate) != length(maxDelta))
+  if (length(baseDate) != length(maxDelta)) {
     stop("Length of minDate must be 1 or the same as baseDate.")
+  }
   if (missing(minDate)) {
     minDate <- baseDate
     for (i in seq_along(baseDate)) {
       minDate[[i]] <- as.Date(baseDate[[i]] - ddays(maxDelta[[i]]))
     }
   }
-  if (length(baseDate) != length(minDate))
+  if (length(baseDate) != length(minDate)) {
     stop("Length of baseDate and minDate must be the same.")
+  }
 
   obfuscatedDates <- baseDate
   for (i in seq_along(baseDate)) {
@@ -43,10 +47,13 @@ obfuscateDate <- function(baseDate, maxDelta = 30, minDate) {
       obfuscatedDate <- NA
     } else {
       repeat {
-        obfuscatedDate <- as.Date(baseDate[[i]] + ddays(runif(1, -maxDelta[i],
-                                                              maxDelta[i])))
-        if (obfuscatedDate >= minDate[[i]])
+        obfuscatedDate <- as.Date(baseDate[[i]] + ddays(runif(
+          1L, -maxDelta[i],
+          maxDelta[i]
+        )))
+        if (obfuscatedDate >= minDate[[i]]) {
           break
+        }
       }
     }
     obfuscatedDates[[i]] <- obfuscatedDate

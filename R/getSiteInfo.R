@@ -42,40 +42,47 @@ getSiteInfo <- function(expectConfigFile = TRUE) {
       queryName = getParamDef(tokenList, "queryName"),
       lkPedColumns = getParamDef(tokenList, "lkPedColumns"),
       mapPedColumns = getParamDef(tokenList, "mapPedColumns"),
-      sysname  = sysInfo[["sysname"]],
+      sysname = sysInfo[["sysname"]],
       release = sysInfo[["release"]],
-      version  = sysInfo[["version"]],
+      version = sysInfo[["version"]],
       nodename = sysInfo[["nodename"]],
       machine = sysInfo[["machine"]],
       login = sysInfo[["login"]],
       user = sysInfo[["user"]],
       effective_user = sysInfo[["effective_user"]],
       homeDir = config[["homeDir"]],
-      configFile = config[["configFile"]])
+      configFile = config[["configFile"]]
+    )
   } else {
     if (expectConfigFile) {
-      warning(paste0("The nprcgenekeepr configuration file is missing.\n",
-                     "It is required when the LabKey API is to be used.\n",
-                     "The file should be named: ",
-                     config[["configFile"]], ".\n"))
+      warning(
+        "The nprcgenekeepr configuration file is missing.\n",
+        "It is required when the LabKey API is to be used.\n",
+        "The file should be named: ",
+        config[["configFile"]], ".\n"
+      )
     }
-    list(center = "ONPRC",
+    list(
+      center = "ONPRC",
       baseUrl = "https://primeuat.ohsu.edu",
       schemaName = "study",
       folderPath = "/ONPRC/EHR",
       queryName = "demographics",
-      lkPedColumns = c("Id", "gender", "birth", "death", "lastDayAtCenter",
-                       "Id/parents/dam", "Id/parents/sire"),
+      lkPedColumns = c(
+        "Id", "gender", "birth", "death", "lastDayAtCenter",
+        "Id/parents/dam", "Id/parents/sire"
+      ),
       mapPedColumns = c("id", "sex", "birth", "death", "exit", "dam", "sire"),
-      sysname  = sysInfo[["sysname"]],
+      sysname = sysInfo[["sysname"]],
       release = sysInfo[["release"]],
-      version  = sysInfo[["version"]],
+      version = sysInfo[["version"]],
       nodename = sysInfo[["nodename"]],
       machine = sysInfo[["machine"]],
       login = sysInfo[["login"]],
       user = sysInfo[["user"]],
       effective_user = sysInfo[["effective_user"]],
       homeDir = config[["homeDir"]],
-      configFile = config[["configFile"]])
+      configFile = config[["configFile"]]
+    )
   }
 }

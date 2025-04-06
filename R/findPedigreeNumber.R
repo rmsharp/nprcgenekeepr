@@ -34,17 +34,19 @@
 findPedigreeNumber <- function(id, sire, dam) {
   founders <- id[is.na(sire) & is.na(dam)]
   pedNum <- rep(NA, length(id))
-  n <- 1
+  n <- 1L
 
   while (!isEmpty(founders)) {
-    population <- founders[1]
+    population <- founders[1L]
 
-    while (TRUE) {
-      parents <- union(sire[id %in% population],
-                       dam[id %in% population])
+    repeat {
+      parents <- union(
+        sire[id %in% population],
+        dam[id %in% population]
+      )
       parents <- parents[!is.na(parents)]
 
-      offspring <- id[(sire %in% population)  | (dam %in% population)]
+      offspring <- id[(sire %in% population) | (dam %in% population)]
 
       added <- setdiff(union(offspring, parents), population)
 
@@ -55,9 +57,9 @@ findPedigreeNumber <- function(id, sire, dam) {
       population <- union(population, union(parents, offspring))
     }
     pedNum[id %in% population] <- n
-    n <- n + 1
+    n <- n + 1L
 
     founders <- setdiff(founders, population)
   }
-  return(pedNum)
+  pedNum
 }

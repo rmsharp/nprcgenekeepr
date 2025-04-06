@@ -11,8 +11,8 @@ uitpSummaryStatistics <-
     #    "border-radius: 25px; box-shadow: 0 0 5px 2px #888"
     #  ),
     fluidRow(column(
-      10,
-      offset = 1,
+      10L,
+      offset = 1L,
       style = paste(
         "border: 1px solid lightgray; background-color: #EDEDED;",
         "border-radius: 25px; box-shadow: 0 0 5px 2px #888"
@@ -21,7 +21,7 @@ uitpSummaryStatistics <-
     )),
     br(),
     fluidRow(
-      column(1, offset = 1, shinyBS::popify(
+      column(1L, offset = 1L, shinyBS::popify(
         downloadButton("downloadKinship", "Export Kinship Matrix"),
         NULL,
         #"Exports Kinship Matrix as CSV",
@@ -30,7 +30,7 @@ uitpSummaryStatistics <-
           "in the users home directory"
         )
       )),
-      column(1, offset = 1, shinyBS::popify(
+      column(1L, offset = 1L, shinyBS::popify(
         downloadButton("downloadMaleFounders", "Export Male Founders"),
         NULL,
         #"Exports Male Founder records as CSV",
@@ -39,7 +39,7 @@ uitpSummaryStatistics <-
           "a CSV file to the user selected directory."
         )
       )),
-      column(1, offset = 1, shinyBS::popify(
+      column(1L, offset = 1L, shinyBS::popify(
         downloadButton("downloadFemaleFounders", "Export Female Founders"),
         NULL,
         #"Exports Female Founder records as CSV",
@@ -48,7 +48,7 @@ uitpSummaryStatistics <-
           "to a CSV file to the user selected directory."
         )
       )),
-      column(2, offset = 1, shinyBS::popify(
+      column(2L, offset = 1L, shinyBS::popify(
         downloadButton("downloadFirstOrder",
                        "Export First-Order Relationships"),
         NULL,
@@ -62,7 +62,7 @@ uitpSummaryStatistics <-
     br(),
     # nolint start: commented_code_linter
     # fluidRow(
-    #   column(2, offset = 1,
+    #   column(2L, offset = 1L,
     #        style = paste0("padding-top:1px;display:inline-block;",
     #                       "padding-bottom:1px"),
     #        checkboxInput("displayRelations",
@@ -73,9 +73,9 @@ uitpSummaryStatistics <-
     # )),
     # nolint end: commented_code_linter
     fluidRow(
-      column(10, offset = 1, htmlOutput("summaryStats")),
+      column(10L, offset = 1L, htmlOutput("summaryStats")),
       # nolint start: commented_code_linter
-      #   column(10, offset = 1,
+      #   column(10L, offset = 1L,
       #          DT::dataTableOutput("relations")
       #          # DT::dataTableOutput("relations"),
       #          # DT::dataTableOutput("maleFounders"),
@@ -87,8 +87,8 @@ uitpSummaryStatistics <-
       fluidRow(
         # Main Panel
         column(
-          5,
-          offset = 1,
+          5L,
+          offset = 1L,
           # style = "margin-left:425px;padding:10px;", # nolint: commented_code_linter
           plotOutput("mkHist", width = "400px", height = "400px"),
           br(),
@@ -136,7 +136,7 @@ uitpSummaryStatistics <-
           br()
         ),
         column(
-          5,
+          5L,
           plotOutput("mkBox", width = "400px", height = "400px"),
           br(),
           shinyBS::popify(
@@ -184,8 +184,8 @@ uitpSummaryStatistics <-
         )
       ),
       fluidRow(column(
-        10,
-        offset = 1,
+        10L,
+        offset = 1L,
         style = paste(
           "border: 1px solid lightgray; background-color: #EDEDED;",
           "border-radius: 25px; box-shadow: 0 0 5px 2px #888"

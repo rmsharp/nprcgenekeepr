@@ -27,7 +27,8 @@
 #' kinFiltered_0.1 <- filterThreshold(kin, threshold = 0.1)
 filterThreshold <- function(kin, threshold = 0.015625) {
   kin <- kin[kin$kinship >= threshold, ]
-  if (nrow(kin) > 0)
+  if (nrow(kin) > 0L) {
     rownames(kin) <- seq_len(nrow(kin))
+  }
   return(kin)
 }

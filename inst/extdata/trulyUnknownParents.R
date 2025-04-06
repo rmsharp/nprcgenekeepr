@@ -7,7 +7,7 @@ library(here)
 file_names <- c("2021-01-06_Deidentified_Pedigree.csv",
                 "deidentified_jmac_ped_edited.csv",
                 "2022-05-02_Deidentified_Pedigree.xlsx")
-pedOneFile <- stri_c(here("inst", "extdata", file_names[3]))
+pedOneFile <- stri_c(here("inst", "extdata", file_names[3L]))
 if (tools::file_ext(pedOneFile) == ".csv") {
   pedOne <- read.csv(file = pedOneFile, header = TRUE, sep = ",")
 } else {
@@ -42,9 +42,9 @@ potential_dam_length <-
 plot(density(potential_dam_length))
 hist(potential_dam_length)
 
-n <- 1
+n <- 1L
 counts <- NULL
-for (i in 1:5) {
+for (i in 1L:5L) {
   simKinships <- createSimKinships(ped = pedOne,
                                    allSimParents = potentialParents,
                                    pop = pedOne$id, n = n, verbose = TRUE)

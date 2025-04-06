@@ -19,10 +19,13 @@
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
-#' someDates <- lubridate::mdy(paste0(sample(1:12, 2, replace = TRUE), "-",
-#'                                    sample(1:28, 2, replace = TRUE), "-",
-#'                                    sample(seq(0, 15, by = 3), 2,
-#'                                           replace = TRUE) + 2000))
+#' someDates <- lubridate::mdy(paste0(
+#'   sample(1:12, 2, replace = TRUE), "-",
+#'   sample(1:28, 2, replace = TRUE), "-",
+#'   sample(seq(0, 15, by = 3), 2,
+#'     replace = TRUE
+#'   ) + 2000
+#' ))
 #' someDates
 #' chooseDate(someDates[1], someDates[2], earlier = TRUE)
 #' chooseDate(someDates[1], someDates[2], earlier = FALSE)

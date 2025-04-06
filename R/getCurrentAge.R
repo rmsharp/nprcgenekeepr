@@ -15,5 +15,5 @@
 #' age <- getCurrentAge(birth = as.Date("06/02/2000", format = "%m/%d/%Y"))
 getCurrentAge <- function(birth) {
   as.numeric(interval(start = birth, end = today()) /
-    duration(num = 1, units = "years"))
+    duration(num = 1L, units = "years"))
 }

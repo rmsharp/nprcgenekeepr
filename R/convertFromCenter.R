@@ -13,9 +13,11 @@
 #' @importFrom stringi stri_c stri_detect_fixed
 #' @export
 #' @examples
-#' original <- c("y", "yes", "Y", "Yes", "YES", "n", "N", "No", "NO", "no",
-#'              "t", "T", "True", "true", "TRUE", "f", "F", "false", "False",
-#'              "FALSE")
+#' original <- c(
+#'   "y", "yes", "Y", "Yes", "YES", "n", "N", "No", "NO", "no",
+#'   "t", "T", "True", "true", "TRUE", "f", "F", "false", "False",
+#'   "FALSE"
+#' )
 #' convertFromCenter(original)
 convertFromCenter <- function(fromCenter) {
   trueValues <- c("Y", "YES", "T", "TRUE")
@@ -26,14 +28,19 @@ convertFromCenter <- function(fromCenter) {
   # NA values back before returning.
   if (!is.logical(fromCenter)) {
     fromCenterTrue <- grepl(paste(trueValues, collapse = "|"), fromCenter,
-                            ignore.case = TRUE)
+      ignore.case = TRUE
+    )
     fromCenterFalse <- grepl(paste(falseValues, collapse = "|"), fromCenter,
-                             ignore.case = TRUE)
+      ignore.case = TRUE
+    )
     fromCenterFalse[is.na(fromCenter)] <- TRUE
     if (any(fromCenterTrue == fromCenterFalse)) {
-      stop(stri_c("fromCenter field has ambiguous values in row(s) ",
-                  get_and_or_list(seq_along(fromCenter)[
-                    !(!fromCenterTrue == fromCenterFalse)])))
+      stop(
+        "fromCenter field has ambiguous values in row(s) ",
+        get_and_or_list(seq_along(fromCenter)[
+          !(fromCenterTrue != fromCenterFalse)
+        ])
+      )
     } else {
       fromCenterTrue[is.na(fromCenter)] <- NA
       fromCenter <- fromCenterTrue

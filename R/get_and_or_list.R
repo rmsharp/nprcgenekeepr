@@ -23,13 +23,17 @@
 get_and_or_list <- function(c_vector, conjunction = "and") {
   len <- length(c_vector)
   c_str <- ""
-  if (len == 1)
+  if (len == 1L) {
     c_str <- c_vector
-  if (len == 2)
-    c_str <- stri_c(c_vector[[1]], conjunction, c_vector[[2]], sep = " ")
-  if (len > 2) {
-    c_str <- stri_c(c(c_vector[1:(len - 1)], conjunction), sep = "",
-                    collapse = ", ")
+  }
+  if (len == 2L) {
+    c_str <- stri_c(c_vector[[1L]], conjunction, c_vector[[2L]], sep = " ")
+  }
+  if (len > 2L) {
+    c_str <- stri_c(c(c_vector[1L:(len - 1L)], conjunction),
+      sep = "",
+      collapse = ", "
+    )
     c_str <- stri_c(c_str, " ", c_vector[[len]], sep = "", collapse = " ")
   }
   c_str

@@ -97,8 +97,7 @@ shinyServer(function(input, output, session) {
           flog.debug(paste0("after getFocalAnimalPed: ", pedigreeFile$name,
                             "; contents rows: ", nrow(breederPed),
                             ", columns: ", ncol(breederPed), "; col names: '",
-                            paste(names(breederPed), collapse = "', '"), "'",
-                            sep = ""),
+                            paste(names(breederPed), collapse = "', '"), "'"),
                      name = "nprcgenekeepr")
         }
       } else {
@@ -107,8 +106,7 @@ shinyServer(function(input, output, session) {
                           pedigreeFile$name,
                           "; contents rows: ", nrow(breederPed),
                           ", columns: ", ncol(breederPed), "; col names: '",
-                          paste(names(breederPed), collapse = "', '"), "'",
-                          sep = ""),
+                          paste(names(breederPed), collapse = "', '"), "'"),
                    name = "nprcgenekeepr")
       }
 
@@ -120,15 +118,13 @@ shinyServer(function(input, output, session) {
                           genotypeFile$datapath,
                           "; contents rows: ", nrow(breederPed),
                           ", columns: ", ncol(breederPed), "; col names: '",
-                          paste(names(breederPed), collapse = "', '"), "'",
-                          sep = ""),
+                          paste(names(breederPed), collapse = "', '"), "'"),
                    name = "nprcgenekeepr")
         genotype <- getGenotypes(genotypeFile$datapath, sep = sep)
         flog.debug(paste0("genotype$name: ", genotype$name,
                           "; contents rows: ", nrow(genotype),
                           ", columns: ", ncol(genotype), "; col names: '",
-                          paste(names(genotype), collapse = "', '"), "'",
-                          sep = ""),
+                          paste(names(genotype), collapse = "', '"), "'"),
                    name = "nprcgenekeepr")
         genotype <- tryCatch(
           checkGenotypeFile(genotype),
@@ -149,8 +145,7 @@ shinyServer(function(input, output, session) {
                           genotypeFile$name,
                           "; contents rows: ", nrow(breederPed),
                           ", columns: ", ncol(breederPed), "; col names: '",
-                          paste(names(breederPed), collapse = "', '"), "'",
-                          sep = ""),
+                          paste(names(breederPed), collapse = "', '"), "'"),
                    name = "nprcgenekeepr")
       } else {
         flog.debug(paste0("Setting genotype to NULL."),
@@ -160,16 +155,14 @@ shinyServer(function(input, output, session) {
       flog.debug(paste0("Data files may have been read.\n",
                         "contents rows: ", nrow(breederPed),
                         ", columns: ", ncol(breederPed), "; col names: '",
-                        paste(names(breederPed), collapse = "', '"), "'",
-                        sep = ""),
+                        paste(names(breederPed), collapse = "', '"), "'"),
                  name = "nprcgenekeepr")
 
       if (!is.null(minParentAge)) {
         flog.debug(paste0("Before qcStudbook.\n",
                           "contents rows: ", nrow(breederPed),
                           ", columns: ", ncol(breederPed), "; col names: '",
-                          paste(names(breederPed), collapse = "', '"), "'",
-                          sep = ""),
+                          paste(names(breederPed), collapse = "', '"), "'"),
                    name = "nprcgenekeepr")
         if (!checkErrorLst(errorLst)) {
           errorLst <- tryCatch(
@@ -219,8 +212,7 @@ shinyServer(function(input, output, session) {
               ncol(breederPed),
               "; col names: '",
               paste(names(breederPed), collapse = "', '"),
-              "'",
-              sep = ""
+              "'"
             ),
             name = "nprcgenekeepr"
           )
@@ -397,7 +389,7 @@ shinyServer(function(input, output, session) {
       )
       ped <- focalAnimalUpdateDf
     }
-    if (length(ped) == 0) {
+    if (length(ped) == 0L) {
       return(NULL)
     } else {
       return(ped)
@@ -407,7 +399,7 @@ shinyServer(function(input, output, session) {
   # Download handler to download the full or trimmed pedigree
   output$downloadPedigree <- downloadHandler(
     filename = function() {
-      paste("Pedigree", ".csv", sep = "")
+      paste0("Pedigree", ".csv")
     },
     content = function(file) {
       write.csv(getPed(), file, na = "", row.names = FALSE)
@@ -429,20 +421,20 @@ shinyServer(function(input, output, session) {
                         removeUninformative = FALSE,
                         addBackParents = FALSE)
 
-    validate(need(length(probands) != 0, "Error: No population specified"))
+    validate(need(length(probands) != 0L, "Error: No population specified"))
 
     # Setting up the progress bar
     progress <- shiny::Progress$new()
     on.exit(progress$close())
 
-    updateProgress <- function(n = 1,
+    updateProgress <- function(n = 1L,
                                detail = NULL,
-                               value = 0,
+                               value = 0L,
                                reset = FALSE) {
       if (reset) {
         progress$set(detail = detail, value = value)
       } else {
-        progress$inc(amount = 1 / n)
+        progress$inc(amount = 1L / n)
       }
     }
     #
@@ -469,12 +461,12 @@ shinyServer(function(input, output, session) {
     if (is.null(rpt())) {
       return(NULL)
     }
-    if (input$view == 0) {
+    if (input$view == 0L) {
       return(rpt())
     } else {
       ids <- unlist(strsplit(isolate(input$viewIds), "[ ,;\t\n]"))
       ids <- ids[stri_trim(ids) != ""]
-      if (length(ids) == 0) {
+      if (length(ids) == 0L) {
         return(rpt())
       } else {
         return(filterReport(ids, rpt()))
@@ -488,9 +480,9 @@ shinyServer(function(input, output, session) {
     }
 
     g <- gvaView()
-    g$indivMeanKin <- round(g$indivMeanKin, 5)
-    g$zScores <- round(g$zScores, 2)
-    g$gu <- round(g$gu, 5)
+    g$indivMeanKin <- round(g$indivMeanKin, 5L)
+    g$zScores <- round(g$zScores, 2L)
+    g$gu <- round(g$gu, 5L)
     g <- toCharacter(g)
     names(g) <- headerDisplayNames(names(g))
 
@@ -500,7 +492,7 @@ shinyServer(function(input, output, session) {
   # Download handlers for all or a subset of the Genetic Value Analysis
   output$downloadGVAFull <- downloadHandler(
     filename = function() {
-      paste("GVA_full", ".csv", sep = "")
+      paste0("GVA_full", ".csv")
     },
     content = function(file) {
       write.csv(rpt(), file, na = "", row.names = FALSE)
@@ -509,7 +501,7 @@ shinyServer(function(input, output, session) {
 
   output$downloadGVASubset <- downloadHandler(
     filename = function() {
-      paste("GVA_subset", ".csv", sep = "")
+      paste0("GVA_subset", ".csv")
     },
     content = function(file) {
       write.csv(gvaView(), file, na = "", row.names = FALSE)
@@ -530,7 +522,7 @@ shinyServer(function(input, output, session) {
   # Download handler for the kinship matrix
   output$downloadKinship <- downloadHandler(
     filename = function() {
-      paste("Kinship", ".csv", sep = "")
+      paste0("Kinship", ".csv")
     },
     content = function(file) {
       write.csv(kmat(), file, na = "")
@@ -571,8 +563,8 @@ shinyServer(function(input, output, session) {
       td(as.character(f)),
       td(as.character(nff)),
       td(as.character(nmf)),
-      td(as.character(round(fe, digits = 2))),
-      td(as.character(round(fg, digits = 2)))
+      td(as.character(round(fe, digits = 2L))),
+      td(as.character(round(fg, digits = 2L)))
     )))
 
     header <- paste(
@@ -591,22 +583,22 @@ shinyServer(function(input, output, session) {
       "<tr>",
       "<td>Mean Kinship</td>",
       "<td>",
-      as.character(round(mk["Min."], 4)),
+      as.character(round(mk["Min."], 4L)),
       "</td>",
       "<td>",
-      as.character(round(mk["1st Qu."], 4)),
+      as.character(round(mk["1st Qu."], 4L)),
       "</td>",
       "<td>",
-      as.character(round(mk["Mean"], 4)),
+      as.character(round(mk["Mean"], 4L)),
       "</td>",
       "<td>",
-      as.character(round(mk["Median"], 4)),
+      as.character(round(mk["Median"], 4L)),
       "</td>",
       "<td>",
-      as.character(round(mk["3rd Qu."], 4)),
+      as.character(round(mk["3rd Qu."], 4L)),
       "</td>",
       "<td>",
-      as.character(round(mk["Max."], 4)),
+      as.character(round(mk["Max."], 4L)),
       "</td>",
       "</tr>"
     )
@@ -615,22 +607,22 @@ shinyServer(function(input, output, session) {
       "<tr>",
       "<td>Genome Uniqueness</td>",
       "<td>",
-      as.character(round(gu["Min."], 4)),
+      as.character(round(gu["Min."], 4L)),
       "</td>",
       "<td>",
-      as.character(round(gu["1st Qu."], 4)),
+      as.character(round(gu["1st Qu."], 4L)),
       "</td>",
       "<td>",
-      as.character(round(gu["Mean"], 4)),
+      as.character(round(gu["Mean"], 4L)),
       "</td>",
       "<td>",
-      as.character(round(gu["Median"], 4)),
+      as.character(round(gu["Median"], 4L)),
       "</td>",
       "<td>",
-      as.character(round(gu["3rd Qu."], 4)),
+      as.character(round(gu["3rd Qu."], 4L)),
       "</td>",
       "<td>",
-      as.character(round(gu["Max."], 4)),
+      as.character(round(gu["Max."], 4L)),
       "</td>",
       "</tr>"
     )
@@ -642,13 +634,13 @@ shinyServer(function(input, output, session) {
     avg <- mean(mk, na.rm = TRUE)
     # nolint start: commented_code_linter.
     # std.dev <- sd(mk, na.rm = TRUE)
-    # upper <- avg + (2 * std.dev)
-    # lower <- avg - (2 * std.dev)
+    # upper <- avg + (2L * std.dev)
+    # lower <- avg - (2L * std.dev)
     # nolint end: commented_code_linter
-    brx <- pretty(range(mk), 25)
+    brx <- pretty(range(mk), 25L)
     ggplot(data.frame(mk = mk), aes(x = mk, y = ..density..)) +
       geom_histogram(
-        bins = 25,
+        bins = 25L,
         color = "darkblue",
         fill = "lightblue",
         breaks = brx
@@ -671,14 +663,14 @@ shinyServer(function(input, output, session) {
     avg <- mean(z, na.rm = TRUE)
     # nolint start: commented_code_linter.
     # std.dev <- sd(z, na.rm = TRUE)
-    # upper <- avg + (2 * std.dev)
-    # lower <- avg - (2 * std.dev)
+    # upper <- avg + (2L * std.dev)
+    # lower <- avg - (2L * std.dev)
     # nolint end: commented_code_linter
 
-    brx <- pretty(range(z), 25)
+    brx <- pretty(range(z), 25L)
     ggplot(data.frame(z = z), aes(x = z, y = ..density..)) +
       geom_histogram(
-        bins = 25,
+        bins = 25L,
         color = "darkblue",
         fill = "lightblue",
         breaks = brx
@@ -706,7 +698,7 @@ shinyServer(function(input, output, session) {
     # lower <- avg - (2 * std.dev)
     # nolint end: commented_code_linter
 
-    brx <- pretty(range(gu), 25)
+    brx <- pretty(range(gu), 25L)
     ggplot(data.frame(gu = gu), aes(x = gu, y = ..density..)) +
       geom_histogram(
         color = "darkblue",
@@ -729,13 +721,13 @@ shinyServer(function(input, output, session) {
 
   meanKinshipBoxPlot <- function() {
     gu <- rpt()[, "indivMeanKin"]
-    ggplot(data.frame(gu = gu), aes(x = 0, y = gu)) +
+    ggplot(data.frame(gu = gu), aes(x = 0L, y = gu)) +
       geom_boxplot(
         color = "darkblue",
         fill = "lightblue",
         notch = FALSE,
         outlier.color = "red",
-        outlier.shape = 1
+        outlier.shape = 1L
       ) +
       theme_classic() + geom_jitter(width = 0.2) + coord_flip() +
       ylab("Kinship")  +
@@ -751,13 +743,13 @@ shinyServer(function(input, output, session) {
   })
   zscoreBoxPlot <- function() {
     gu <- rpt()[, "zScores"]
-    ggplot(data.frame(gu = gu), aes(x = 0, y = gu)) +
+    ggplot(data.frame(gu = gu), aes(x = 0L, y = gu)) +
       geom_boxplot(
         color = "darkblue",
         fill = "lightblue",
         notch = FALSE,
         outlier.color = "red",
-        outlier.shape = 1
+        outlier.shape = 1L
       ) +
       theme_classic() + geom_jitter(width = 0.2) + coord_flip() +
       ylab("Z-Score") +
@@ -772,13 +764,13 @@ shinyServer(function(input, output, session) {
   })
   guBoxPlot <- function() {
     gu <- rpt()[, "gu"]
-    ggplot(data.frame(gu = gu), aes(x = 0, y = gu)) +
+    ggplot(data.frame(gu = gu), aes(x = 0L, y = gu)) +
       geom_boxplot(
         color = "darkblue",
         fill = "lightblue",
         notch = FALSE,
         outlier.color = "red",
-        outlier.shape = 1
+        outlier.shape = 1L
       ) +
       theme_classic() + geom_jitter(width = 0.2) + coord_flip() +
       ylab("Genome Uniquness")  + ggtitle("Boxplot of Genome Uniqueness") +
@@ -862,7 +854,7 @@ shinyServer(function(input, output, session) {
   # Download handler for the male founders
   output$downloadMaleFounders <- downloadHandler(
     filename = function() {
-      paste("maleFounders", ".csv", sep = "")
+      paste0("maleFounders", ".csv")
     },
     content = function(file) {
       mf <- geneticValue()[["maleFounders"]]
@@ -872,7 +864,7 @@ shinyServer(function(input, output, session) {
   # Download handler for the male founders
   output$downloadFemaleFounders <- downloadHandler(
     filename = function() {
-      paste("femaleFounders", ".csv", sep = "")
+      paste0("femaleFounders", ".csv")
     },
     content = function(file) {
       ff <- geneticValue()[["femaleFounders"]]
@@ -883,7 +875,7 @@ shinyServer(function(input, output, session) {
   # Download handler for the first-order relationships
   output$downloadFirstOrder <- downloadHandler(
     filename = function() {
-      paste("FirstOrder", ".csv", sep = "")
+      paste0("FirstOrder", ".csv")
     },
     content = function(file) {
       ped <- getPed()
@@ -894,7 +886,7 @@ shinyServer(function(input, output, session) {
 
   output$downloadRelations <- downloadHandler(
     filename = function() {
-      paste("Relations", ".csv", sep = "")
+      paste0("Relations", ".csv")
     },
     content = function(file) {
       ped <- getPed()
@@ -912,7 +904,7 @@ shinyServer(function(input, output, session) {
           ...,
           width = width,
           height = height,
-          res = 300,
+          res = 300L,
           units = "in"
         )
       }
@@ -927,7 +919,7 @@ shinyServer(function(input, output, session) {
           ...,
           width = width,
           height = height,
-          res = 300,
+          res = 300L,
           units = "in"
         )
       }
@@ -942,7 +934,7 @@ shinyServer(function(input, output, session) {
           ...,
           width = width,
           height = height,
-          res = 300,
+          res = 300L,
           units = "in"
         )
       }
@@ -957,7 +949,7 @@ shinyServer(function(input, output, session) {
           ...,
           width = width,
           height = height,
-          res = 300,
+          res = 300L,
           units = "in"
         )
       }
@@ -972,7 +964,7 @@ shinyServer(function(input, output, session) {
           ...,
           width = width,
           height = height,
-          res = 300,
+          res = 300L,
           units = "in"
         )
       }
@@ -987,7 +979,7 @@ shinyServer(function(input, output, session) {
           ...,
           width = width,
           height = height,
-          res = 300,
+          res = 300L,
           units = "in"
         )
       }
@@ -1023,27 +1015,27 @@ shinyServer(function(input, output, session) {
   #############################################################################
   # Functions for handling the breeding group formation process
   textAreaWidget <- eventReactive(input$seedAnimals, {
-    seedAnimalList <- lapply(1:input$numGp, function(i) {
+    seedAnimalList <- lapply(1L:input$numGp, function(i) {
       inputName <- paste0("curGrp", i)
       textInputRow <- function(inputId, value) {
         textAreaInput(
           inputId = inputName,
           paste0("Seed animals ", i),
           value = "",
-          rows = 5,
-          cols = 20,
+          rows = 5L,
+          cols = 20L,
           resize = "both"
         )
       }
-      column(2, offset = 0, textInputRow(inputName, ""))
+      column(2L, offset = 0L, textInputRow(inputName, ""))
     })
     do.call(tagList, seedAnimalList)
   }, ignoreInit = FALSE)
 
   getCurrentGroups <- reactive({
     currentGroups <- vapply(seq_len(input$numGp),
-                            function(i) character(0),
-                            character(0))
+                            function(i) character(0L),
+                            character(0L))
     for (i in seq_along(input$numGp)) {
       inputName <- paste0("curGrp", i)
       if (is.null(input[[inputName]]))
@@ -1089,11 +1081,11 @@ shinyServer(function(input, output, session) {
     ped <- getPed()
     # Filter out unknown animals added into ped
     ped <- removeUnknownAnimals(ped)
-    ids <- character(0)
+    ids <- character(0L)
     if (input$group_formation_rb == "candidates")
       ids <- unlist(strsplit(input$grpIds, "[, \t\n]"))
 
-    if (length(ids) > 0) {
+    if (length(ids) > 0L) {
       ped <- resetGroup(ped, ids)
       candidates <- ids
     } else {
@@ -1101,7 +1093,7 @@ shinyServer(function(input, output, session) {
     }
 
     # Assume an animal that is in the group can't also be a candidate
-    if (length(currentGroupIds) > 0) {
+    if (length(currentGroupIds) > 0L) {
       candidates <- setdiff(candidates, currentGroupIds)
     }
 
@@ -1116,11 +1108,11 @@ shinyServer(function(input, output, session) {
 
     harem <- input$group_sex_rb == "harems"
 
-    validate(need(length(candidates == 0), "No candidates defined"),
+    validate(need(length(candidates == 0L), "No candidates defined"),
              need(
                !(length(setdiff(
                  candidates, ped$id
-               )) > 0),
+               )) > 0L),
                paste(
                  "Group candidates present that are",
                  "not in the provided pedigree\n",
@@ -1130,7 +1122,7 @@ shinyServer(function(input, output, session) {
              need(
                !(length(setdiff(
                  currentGroupIds, ped$id
-               )) > 0),
+               )) > 0L),
                paste(
                  "Current group members present that",
                  "are not in the provided pedigree\n",
@@ -1161,13 +1153,13 @@ shinyServer(function(input, output, session) {
     # Setting up the progress bar
     progress <- shiny::Progress$new()
     on.exit(progress$close())
-    progress$set(message = "Generating Groups", value = 0)
+    progress$set(message = "Generating Groups", value = 0L)
 
-    n <- 1
+    n <- 1L
     updateProgress <- function() {
-      progress$inc(amount = 1 / iter,
+      progress$inc(amount = 1L / iter,
                    detail = paste("Iteration:", n))
-      n <<- n + 1
+      n <<- n + 1L
     }
 
     grp <- groupAddAssign(
@@ -1204,9 +1196,9 @@ shinyServer(function(input, output, session) {
     if (!is.null(bg())) {
       x <- length(bg()$group)
 
-      if (x > 1) {
+      if (x > 1L) {
         gp <- list()
-        for (i in 1:(x - 1)) {
+        for (i in 1L:(x - 1L)) {
           gp[paste("Group", as.character(i))] <- i
         }
         gp["Unused"] <- x
@@ -1216,23 +1208,23 @@ shinyServer(function(input, output, session) {
           "viewGrp",
           label = "Enter the group to view:",
           choices = gp,
-          selected = 1
+          selected = 1L
         )
-      } else if (x == 1) {
+      } else if (x == 1L) {
         updateSelectInput(
           session,
           "viewGrp",
           label = "Enter the group to view:",
-          choices = list("Unused" = 1),
-          selected = 1
+          choices = list(Unused = 1L),
+          selected = 1L
         )
       } else {
         updateSelectInput(
           session,
           "viewGrp",
           label = "Enter the group to view:",
-          choices = list(" " = 1),
-          selected = 1
+          choices = list(" " = 1L),
+          selected = 1L
         )
       }
     }
@@ -1243,15 +1235,15 @@ shinyServer(function(input, output, session) {
       return(NULL)
     }
     i <- withinIntegerRange(input$viewGrp,
-                            minimum = 1,
-                            maximum = input$numGp)[1]
+                            minimum = 1L,
+                            maximum = input$numGp)[1L]
     gp <- bg()$group[[i]]
     ped <- getPed()
     gp <- addSexAndAgeToGroup(gp, ped)
-    gp$age <- round(gp$age, 1)
+    gp$age <- round(gp$age, 1L)
     colnames(gp) <- c("Ego ID", "Sex", "Age in Years")
 
-    if (nrow(gp) == 0) {
+    if (nrow(gp) == 0L) {
       return(NULL)
     } else {
       return(gp[order(gp$`Ego ID`), , drop = FALSE])
@@ -1263,9 +1255,9 @@ shinyServer(function(input, output, session) {
     }
     i <- as.numeric(input$viewGrp)
     kmat <- bg()$groupKin[[i]]
-    kmat <- as.data.frame(round(kmat, 6))
+    kmat <- as.data.frame(round(kmat, 6L))
 
-    if (nrow(kmat) == 0) {
+    if (nrow(kmat) == 0L) {
       return(NULL)
     } else {
       return(kmat)

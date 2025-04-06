@@ -15,21 +15,23 @@
 #' @export
 #' @examples
 #' examplePedigree <- nprcgenekeepr::examplePedigree
-#' breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
-#'                          reportChanges = FALSE,
-#'                          reportErrors = FALSE)
+#' breederPed <- qcStudbook(examplePedigree,
+#'   minParentAge = 2,
+#'   reportChanges = FALSE,
+#'   reportErrors = FALSE
+#' )
 #' focalAnimals <- breederPed$id[!(is.na(breederPed$sire) &
-#'                                   is.na(breederPed$dam)) &
-#'                                 is.na(breederPed$exit)]
+#'   is.na(breederPed$dam)) &
+#'   is.na(breederPed$exit)]
 #' breederPed <- setPopulation(ped = breederPed, ids = focalAnimals)
 #' nrow(breederPed[breederPed$population, ])
 setPopulation <- function(ped, ids) {
   ped$population <- FALSE
 
-  if (length(ids) == 0) {
+  if (length(ids) == 0L) {
     ped$population <- TRUE
   } else {
     ped$population[ped$id %in% ids] <- TRUE
   }
-  return(ped)
+  ped
 }

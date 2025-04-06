@@ -50,5 +50,5 @@ countLoops <- function(loops, ptree) {
     l <- loops[c(id, anc)]
     counts[id] <- sum(unlist(l))
   }
-  return(counts)
+  counts
 }

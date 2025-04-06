@@ -19,31 +19,35 @@
 #' data(qcPed)
 #' getPyramidPlot(qcPed)
 getPyramidPlot <- function(ped = NULL) {
-
-  if (is.null(ped))
+  if (is.null(ped)) {
     ped <- getPyramidAgeDist()
+  }
   opar <- par(no.readonly = TRUE)
   on.exit(par(opar))
   par(bg = "#FFF8DC")
-  binWidth <- 2
-  axModulas <- 5
-  upperAges <- seq(binWidth,
-                    makeRoundUp(getPedMaxAge(ped), binWidth), binWidth)
+  binWidth <- 2L
+  axModulas <- 5L
+  upperAges <- seq(
+    binWidth,
+    makeRoundUp(getPedMaxAge(ped), binWidth), binWidth
+  )
   lowerAges <- upperAges - binWidth
 
   bins <- fillBins(ped, lowerAges, upperAges)
   maxAx <- max(getMaxAx(bins, axModulas))
-  ageLabels <- stri_c(lowerAges, " - ", upperAges - 1)
-  mcol <- color.gradient(0, 0, 0.5)
-  fcol <- color.gradient(1, 0.5, 0.5)
+  ageLabels <- stri_c(lowerAges, " - ", upperAges - 1L)
+  mcol <- color.gradient(0L, 0L, 0.5)
+  fcol <- color.gradient(1L, 0.5, 0.5)
   currentDate <- now()
   axBy <- maxAx / axModulas
   axGap <- axBy * 0.6
   ## The following values have worked well for chimpanzees:
   ## gap=40, laxlab = seq(0, 100, by = 10), and raxlab = seq(0, 100, by = 10)
   gap <- axGap
-  laxlab <- seq(0, maxAx, by = axBy)
-  raxlab <- seq(0, maxAx, by = axBy)
-  agePyramidPlot(bins$males, bins$females, ageLabels, mcol, fcol,
-                  laxlab, raxlab, gap, currentDate)
+  laxlab <- seq(0L, maxAx, by = axBy)
+  raxlab <- seq(0L, maxAx, by = axBy)
+  agePyramidPlot(
+    bins$males, bins$females, ageLabels, mcol, fcol,
+    laxlab, raxlab, gap, currentDate
+  )
 }

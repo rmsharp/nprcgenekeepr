@@ -12,7 +12,7 @@
 #' @noRd
 makeAvailable <- function(candidates, numGp) {
   available <- list()
-  for (i in 1:numGp) {
+  for (i in 1L:numGp) {
     available[[i]] <- candidates
   }
   available

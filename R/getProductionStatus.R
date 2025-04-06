@@ -51,28 +51,29 @@
 #'        \code{Sys.Date()}.
 #' @importFrom lubridate as.duration ddays interval mdy year
 #' @noRd
-getProductionStatus <- function(ped, minParentAge = 3, maxOffspringAge = NULL,
+getProductionStatus <- function(ped, minParentAge = 3L, maxOffspringAge = NULL,
                                 housing = "shelter_pens",
                                 currentDate = Sys.Date()) {
   expectedCols <- c("id", "dam", "sex", "age")
   if (!all(expectedCols %in%
-           names(ped))) {
+    names(ped))) {
     missingCol <- expectedCols[!expectedCols %in% names(ped)]
-    stop(paste0("ped is missing: ", missingCol))
+    stop("ped is missing: ", missingCol)
   }
   nDam <- nrow(ped[ped$sex == "F" & ped$age >= minParentAge, ])
   if (is.null(maxOffspringAge)) {
-    maxOffspringAge <- mdy(paste0("1/1/", year(currentDate) - 2))
-    startDate <- mdy(paste0("1/1/", year(currentDate) - 2))
-    endDate <- mdy(paste0("12/31/", year(currentDate) - 1))
+    maxOffspringAge <- mdy(paste0("1/1/", year(currentDate) - 2L))
+    startDate <- mdy(paste0("1/1/", year(currentDate) - 2L))
+    endDate <- mdy(paste0("12/31/", year(currentDate) - 1L))
   }
   ped <- ped[!(is.na(ped$birth) | is.na(ped$exit)), ]
   nOffspring <-
     nrow(ped[ped$birth >= startDate &
-               ped$birth <= endDate &
-                  as.numeric(as.duration(
-                    interval(ped$birth, ped$exit)) / ddays(1)) >= 30, ])
-  if (nDam > 0) {
+      ped$birth <= endDate &
+      as.numeric(as.duration(
+        interval(ped$birth, ped$exit)
+      ) / ddays(1L)) >= 30L, ])
+  if (nDam > 0L) {
     production <- nOffspring / nDam
   } else {
     production <- NA
@@ -81,28 +82,30 @@ getProductionStatus <- function(ped, minParentAge = 3, maxOffspringAge = NULL,
   if (housing == "shelter_pens") {
     if (is.na(production) || production > 0.63) {
       color <- "green"
-      colorIndex <- 3
+      colorIndex <- 3L
     } else if (production < 0.6) {
       color <- "red"
-      colorIndex <- 1
+      colorIndex <- 1L
     } else if (production >= 0.6 && production <= 0.63) {
       color <- "yellow"
-      colorIndex <- 2
+      colorIndex <- 2L
     }
   } else if (housing == "corral") {
     if (is.na(production) || production > 0.53) {
       color <- "green"
-      colorIndex <- 3
+      colorIndex <- 3L
     } else if (production < 0.5) {
       color <- "red"
-      colorIndex <- 1
+      colorIndex <- 1L
     } else if (production >= 0.5 && production <= 0.53) {
       color <- "yellow"
-      colorIndex <- 2
+      colorIndex <- 2L
     }
   } else {
-    stop(paste0("Undefined housing type in getProduction status is: ",
-                housing))
+    stop(
+      "Undefined housing type in getProduction status is: ",
+      housing
+    )
   }
   list(production = production, color = color, colorIndex = colorIndex)
 }

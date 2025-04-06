@@ -10,7 +10,8 @@ uitpPyramidPlot <-
                  "margin-left:3px; margin-top: 3px; margin-bottom: 3px;",
                  "border-radius: 25px; box-shadow: 0 0 5px 2px #888"
                ),
-               includeHTML("../extdata/ui_guidance/pyramidPlot.html")
+               includeHTML(file.path("..", "extdata", "ui_guidance",
+                                     "pyramidPlot.html"))
              )#,
              # # Main Panel
              # div(style = "margin-left:425px;padding:10px;",

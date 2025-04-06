@@ -26,9 +26,10 @@ addGroupOfUnusedAnimals <- function(savedGroupMembers, candidates, ped,
   }
 
   # Adding a group for the unused animals
-  n <- length(savedGroupMembers) + 1
+  n <- length(savedGroupMembers) + 1L
   savedGroupMembers[[n]] <-
     ifelse(isEmpty(setdiff(candidates, unlist(savedGroupMembers))),
-           c(NA), list(setdiff(candidates, unlist(savedGroupMembers))))[[1]]
+      NA, list(setdiff(candidates, unlist(savedGroupMembers)))
+    )[[1L]]
   savedGroupMembers
 }

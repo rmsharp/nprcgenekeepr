@@ -11,7 +11,6 @@
 #' @param sheetnames character vector of worksheet names
 #' @param replace Specifies if the file should be replaced if it
 #' already exist (default is FALSE).
-#' @importFrom stringi stri_c
 #' @importFrom WriteXLS WriteXLS
 #' @export
 #' @examples
@@ -19,8 +18,9 @@
 #'
 #' make_df_list <- function(size) {
 #'   df_list <- list(size)
-#'   if (size <= 0)
+#'   if (size <= 0) {
 #'     return(df_list)
+#'   }
 #'   for (i in seq_len(size)) {
 #'     n <- sample(2:10, 2, replace = TRUE)
 #'     df <- data.frame(matrix(data = rnorm(n[1] * n[2]), ncol = n[1]))
@@ -44,19 +44,18 @@
 #'   file.remove(file.path(tempdir(), "example_excel_wkbk.xlsx"))
 #' }
 create_wkbk <- function(file, df_list, sheetnames, replace = FALSE) {
-  if (length(df_list) != length(sheetnames))
+  if (length(df_list) != length(sheetnames)) {
     stop(
-      stri_c(
         "Number of 'sheetnames' specified does not equal the number ",
         "of data frames in 'df_list'."
-      )
     )
+  }
 
   if (file.exists(file)) {
     if (replace) {
       file.remove(file)
     } else {
-      warning(stri_c("File, ", file, " exists and was not overwritten."))
+      warning("File, ", file, " exists and was not overwritten.")
       return(FALSE)
     }
   }

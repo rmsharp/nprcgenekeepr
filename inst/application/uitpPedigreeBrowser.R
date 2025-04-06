@@ -23,7 +23,7 @@ uitpPedigreeBrowser <-
             "of focal animals."
           )
         ),
-        tags$textarea(id = "focalAnimalIds", rows = 5, cols = 60, ""),
+        tags$textarea(id = "focalAnimalIds", rows = 5L, cols = 60L, ""),
         fileInput(
           "focalAnimalUpdate",
           "Choose CSV file with focal animals",

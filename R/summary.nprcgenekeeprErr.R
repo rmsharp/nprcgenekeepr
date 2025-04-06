@@ -13,9 +13,11 @@
 ## ##  rmsutilityr get_and_or_list
 #' @export
 #' @examples
-#' errorList <- qcStudbook(nprcgenekeepr::pedOne, minParentAge = 0,
-#' reportChanges = TRUE,
-#' reportErrors = TRUE)
+#' errorList <- qcStudbook(nprcgenekeepr::pedOne,
+#'   minParentAge = 0,
+#'   reportChanges = TRUE,
+#'   reportErrors = TRUE
+#' )
 #' summary(errorList)
 summary.nprcgenekeeprErr <- function(object, ...) {
   errorLst <- object
@@ -27,22 +29,25 @@ summary.nprcgenekeeprErr <- function(object, ...) {
     "Error: The missing column is",
     "Error: The missing columns are"
   )
-  if (length(errorLst$missingColumns) > 0)
-    txt <- stri_c(txt,
-                  " The required columns are: ",
-                  get_and_or_list(getRequiredCols()),
-                  ".\n")
-  if (length(errorLst$invalidDateRows) > 5) {
+  if (length(errorLst$missingColumns) > 0L) {
+    txt <- stri_c(
+      txt,
+      " The required columns are: ",
+      get_and_or_list(getRequiredCols()),
+      ".\n"
+    )
+  }
+  if (length(errorLst$invalidDateRows) > 5L) {
     manyErrorsTxt <- stri_c(
       "There are ",
       length(errorLst$invalidDateRows),
       " rows having an ",
       "invalid date. The first five records having bad dates are on rows ",
-      get_and_or_list(errorLst$invalidDateRows[1:5]),
+      get_and_or_list(errorLst$invalidDateRows[1L:5L]),
       ".\n"
     )
     txt <- stri_c(txt, manyErrorsTxt)
-  } else if (length(errorLst$invalidDateRows) > 0) {
+  } else if (length(errorLst$invalidDateRows) > 0L) {
     txt <- addErrTxt(
       txt,
       errorLst$invalidDateRows,
@@ -139,12 +144,14 @@ summary.nprcgenekeeprErr <- function(object, ...) {
     "Change: The column changed from",
     "Change: The columns changed from"
   )
-  if (stri_length(txt) > 0)
+  if (stri_length(txt) > 0L) {
     txt <-
-    stri_c(txt, "\nPlease check and correct the pedigree file.\n")
-  if (length(errorLst$failedDatabaseConnection) > 0)
+      stri_c(txt, "\nPlease check and correct the pedigree file.\n")
+  }
+  if (length(errorLst$failedDatabaseConnection) > 0L) {
     txt <-
-    stri_c(txt, "\n", errorLst$failedDatabaseConnection, "\n")
+      stri_c(txt, "\n", errorLst$failedDatabaseConnection, "\n")
+  }
   txt <- list(txt = txt, sp = errorLst$suspiciousParents)
 
   class(txt) <- "summary.nprcgenekeeprErr"
@@ -157,25 +164,33 @@ summary.nprcgenekeeprErr <- function(object, ...) {
 #' @export
 #' @examples
 #' examplePedigree <- nprcgenekeepr::examplePedigree
-#' breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
-#'                          reportChanges = FALSE,
-#'                          reportErrors = FALSE)
+#' breederPed <- qcStudbook(examplePedigree,
+#'   minParentAge = 2L,
+#'   reportChanges = FALSE,
+#'   reportErrors = FALSE
+#' )
 #' focalAnimals <- breederPed$id[!(is.na(breederPed$sire) &
-#'                                   is.na(breederPed$dam)) &
-#'                                 is.na(breederPed$exit)]
+#'   is.na(breederPed$dam)) &
+#'   is.na(breederPed$exit)]
 #' ped <- setPopulation(ped = breederPed, ids = focalAnimals)
 #' trimmedPed <- trimPedigree(focalAnimals, breederPed)
 #' probands <- ped$id[ped$population]
-#' ped <- trimPedigree(probands, ped, removeUninformative = FALSE,
-#'                     addBackParents = FALSE)
-#' geneticValue <- reportGV(ped, guIter = 50, # should be >= 1000
-#'                          guThresh = 3,
-#'                          byID = TRUE,
-#'                          updateProgress = NULL)
-#' trimmedGeneticValue <- reportGV(trimmedPed, guIter = 50, # should be >= 1000
-#'                                 guThresh = 3,
-#'                                 byID = TRUE,
-#'                                 updateProgress = NULL)
+#' ped <- trimPedigree(probands, ped,
+#'   removeUninformative = FALSE,
+#'   addBackParents = FALSE
+#' )
+#' geneticValue <- reportGV(ped,
+#'   guIter = 50L, # should be >= 1000L
+#'   guThresh = 3L,
+#'   byID = TRUE,
+#'   updateProgress = NULL
+#' )
+#' trimmedGeneticValue <- reportGV(trimmedPed,
+#'   guIter = 50L, # should be >= 1000L
+#'   guThresh = 3L,
+#'   byID = TRUE,
+#'   updateProgress = NULL
+#' )
 #' summary(geneticValue)
 #' summary(trimmedGeneticValue)
 summary.nprcgenekeeprGV <- function(object, ...) {
@@ -192,7 +207,8 @@ summary.nprcgenekeeprGV <- function(object, ...) {
   txt <- "The genetic value report"
   txt <- c(txt, stri_c("Individuals in Pedigree: ", nrow(rpt)))
   txt <-
-    c(txt,
+    c(
+      txt,
       stri_c(
         "Male Founders: ",
         mf,
@@ -200,18 +216,23 @@ summary.nprcgenekeeprGV <- function(object, ...) {
         ff,
         "\nTotal Founders: ",
         f
-      ))
-  txt <- c(txt, stri_c("Founder Equivalents: ", round(fe, 2)))
+      )
+    )
+  txt <- c(txt, stri_c("Founder Equivalents: ", round(fe, 2L)))
   txt <-
-    c(txt, stri_c("Founder Genome Equivalents: ", round(fg, 2)))
+    c(txt, stri_c("Founder Genome Equivalents: ", round(fg, 2L)))
   txt <-
     c(txt, stri_c("Live Offspring: ", sum(rpt$livingOffspring)))
   txt <-
-    c(txt, stri_c("High Value Individuals: ",
-                  nrow(rpt[rpt$value == "High Value", ])))
+    c(txt, stri_c(
+      "High Value Individuals: ",
+      nrow(rpt[rpt$value == "High Value", ])
+    ))
   txt <-
-    c(txt, stri_c("Low Value Individuals: ",
-                  nrow(rpt[rpt$value == "Low Value", ])))
+    c(txt, stri_c(
+      "Low Value Individuals: ",
+      nrow(rpt[rpt$value == "Low Value", ])
+    ))
   class(txt) <- "summary.nprcgenekeeprGV"
   txt
 }

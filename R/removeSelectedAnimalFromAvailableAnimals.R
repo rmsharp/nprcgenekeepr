@@ -11,7 +11,7 @@
 #' @noRd
 removeSelectedAnimalFromAvailableAnimals <- function(available, ids, numGp) { # nolint: object_length_linter
   # Remove the selected animal from consideration
-  for (j in 1:numGp) {
+  for (j in 1L:numGp) {
     available[[j]] <- setdiff(available[[j]], ids)
   }
   available

@@ -18,31 +18,37 @@
 #' library(nprcgenekeepr)
 #' requiredCols <- getRequiredCols()
 #' cols <-
-#'   paste0("id,sire,siretype,dam,damtype,sex,numberofparentsknown,birth,",
-#'          "arrivalatcenter,death,departure,status,ancestry,fromcenter?,",
-#'          "origin")
+#'   paste0(
+#'     "id,sire,siretype,dam,damtype,sex,numberofparentsknown,birth,",
+#'     "arrivalatcenter,death,departure,status,ancestry,fromcenter?,",
+#'     "origin"
+#'   )
 #' all(requiredCols %in% checkRequiredCols(cols, reportErrors = TRUE))
 checkRequiredCols <- function(cols, reportErrors) {
   requiredCols <- getRequiredCols()
   # Checking for the required fields (id, sire, dam, sex)
   if (!all(str_detect_fixed_all(cols, requiredCols)) ||
-      length(cols) < length(requiredCols)) {
+    length(cols) < length(requiredCols)) {
     if (reportErrors) {
       missingColumns <-
         as.character(unlist(sapply(requiredCols, function(col) {
-          if (!any(col == cols))
+          if (!any(col == cols)) {
             col
+          }
         })))
 
-      if (length(missingColumns) > 0)
+      if (length(missingColumns) > 0L) {
         return(missingColumns)
+      }
     } else {
-      stop(paste0(
+      stop(
         "Required field(s) missing: ",
-        paste0(requiredCols[!str_detect_fixed_all(cols, requiredCols,
-                                                  ignore_na = TRUE)],
-               collapse = ", "), "."))
+        toString(
+          requiredCols[!str_detect_fixed_all(cols, requiredCols,
+            ignore_na = TRUE
+          )]), "."
+      )
     }
   }
-  return(NULL)
+  NULL
 }

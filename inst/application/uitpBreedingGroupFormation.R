@@ -4,8 +4,8 @@ uitpBreedingGroupFormation <-
     div(
       fluidRow(
         column(
-          4,
-          offset = 1,
+          4L,
+          offset = 1L,
           style = paste0(
             "border: 1px solid lightgray; background-color: #EDEDED; ",
             "border-radius: 1px; box-shadow: 0 0 5px 2px #888"
@@ -24,7 +24,7 @@ uitpBreedingGroupFormation <-
             ),
             choiceValues = list("high-value", "all", "candidates"),
             width = "650px",
-            selected = character(0),
+            selected = character(0L),
             outline = TRUE
           ),
           conditionalPanel(
@@ -32,15 +32,15 @@ uitpBreedingGroupFormation <-
             div(
               style = "display:inline-block;width:350px;padding:5px",
               helpText("Enter IDs of candidates to be added to new group(s):"),
-              tags$textarea(id = "grpIds", rows = 10, cols = 40, "")
+              tags$textarea(id = "grpIds", rows = 10L, cols = 40L, "")
             )
           )
         )
       ),
       fluidRow(
         column(
-          4,
-          offset = 1,
+          4L,
+          offset = 1L,
           style = paste(
             "border: 1px solid lightgray; background-color: #EDEDED;",
             "border-radius: 1px; box-shadow: 0 0 5px 2px #888"
@@ -65,7 +65,7 @@ uitpBreedingGroupFormation <-
                 label = "Sex Ratio (F/M):",
                 value = 0.0,
                 min = 0.5,
-                max = 20,
+                max = 20L,
                 step = 0.5
               ),
               NULL,
@@ -79,8 +79,8 @@ uitpBreedingGroupFormation <-
         )
       ),
       fluidRow(column(
-        4,
-        offset = 1,
+        4L,
+        offset = 1L,
         style = paste0(
           "padding-top:1px;display:inline-block;",
           "padding-bottom:1px"
@@ -94,8 +94,8 @@ uitpBreedingGroupFormation <-
       )),
       fluidRow(
         column(
-          4,
-          offset = 1,
+          4L,
+          offset = 1L,
           style = paste0(
             "padding-top:1px;display:inline-block;",
             "width:400px;padding-bottom:1px"
@@ -103,8 +103,8 @@ uitpBreedingGroupFormation <-
           numericInput(
             "numGp",
             label = "Number of Groups Desired:",
-            value = 1,
-            min = 1,
+            value = 1L,
+            min = 1L,
             max = MAXGROUPS,
             step = 1.0
           ),
@@ -114,9 +114,9 @@ uitpBreedingGroupFormation <-
               numericInput(
                 "minAge",
                 label = "Animals will be grouped with the mother below age:",
-                value = 1,
-                min = 0,
-                max = 40,
+                value = 1L,
+                min = 0L,
+                max = 40L,
                 step = 0.1
               ),
               NULL,
@@ -136,7 +136,7 @@ uitpBreedingGroupFormation <-
                   0.125,
                 "0.25 (parent/child)" = 0.25
               ),
-              selected = 1
+              selected = 1L
             )
           ),
           div(
@@ -144,8 +144,8 @@ uitpBreedingGroupFormation <-
               "ffRel",
               label = paste0("Ignore females at or above the ",
                              "minimum parent age:"),
-              choices = list("Yes" = TRUE, "No" = FALSE),
-              selected = 0
+              choices = list(Yes = TRUE, No = FALSE),
+              selected = 0L
             ),
             checkboxInput("withKin",
                           label = "Include kinship in display of groups",
@@ -153,9 +153,9 @@ uitpBreedingGroupFormation <-
             numericInput(
               "gpIter",
               label = "Number of simulations:",
-              value = 10,
-              min = 1,
-              max = 1000000
+              value = 10L,
+              min = 1L,
+              max = 1000000L
             )
           ),
           conditionalPanel(
@@ -184,10 +184,10 @@ uitpBreedingGroupFormation <-
             numericInput(
               "viewGrp",
               label = "Enter the group to view:",
-              value = 1,
-              min = 1,
+              value = 1L,
+              min = 1L,
               max = MAXGROUPS,
-              step = 1
+              step = 1L
             ),
             downloadButton("downloadGroup", "Export Current Group"),
             downloadButton("downloadGroupKin",
@@ -195,10 +195,10 @@ uitpBreedingGroupFormation <-
           )
 
         ),
-        column(1),
+        column(1L),
         column(
-          5,
-          offset = 0,
+          5L,
+          offset = 0L,
           style = "padding-top:5px",
           conditionalPanel(condition = "input.seedAnimals == true",
                            div(uiOutput("currentGroups")))
@@ -207,15 +207,15 @@ uitpBreedingGroupFormation <-
     ),
     fluidRow(
       column(
-        width = 10,
-        offset = 1,
+        width = 10L,
+        offset = 1L,
         DT::dataTableOutput("breedingGroups"),
         DT::dataTableOutput("breedingGroupKin")
       )
     ),
     fluidRow(column(
-      width = 10,
-      offset = 1,
+      width = 10L,
+      offset = 1L,
       style = paste0(
         "border: 1px solid lightgray; background-color: #EDEDED; ",
         "border-radius: 15px; box-shadow: 0 0 5px 2px #888"

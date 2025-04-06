@@ -10,8 +10,10 @@
 #' library(nprcgenekeepr)
 #' rhesusPedigree <- nprcgenekeepr::rhesusPedigree
 #' rhesusGenotypes <- nprcgenekeepr::rhesusGenotypes
-#' pedWithGenotypes <- addGenotype(ped = rhesusPedigree,
-#'                                 genotype = rhesusGenotypes)
+#' pedWithGenotypes <- addGenotype(
+#'   ped = rhesusPedigree,
+#'   genotype = rhesusGenotypes
+#' )
 #'
 #' @param ped pedigree dataframe. \code{ped} is to be provided by
 #' \code{qcStudbook} so it is not checked.
@@ -19,14 +21,17 @@
 #' \code{checkGenotypeFile} so it is not checked.
 #' @export
 addGenotype <- function(ped, genotype) {
-  genotypeNames <- names(genotype)[2:3]
-  geno <- sort(unique(c(genotype[, genotypeNames[1]],
-                        genotype[, genotypeNames[2]])))
-  genoDict <- seq_along(geno) + 10000
+  genotypeNames <- names(genotype)[2L:3L]
+  geno <- sort(unique(c(
+    genotype[, genotypeNames[1L]],
+    genotype[, genotypeNames[2L]]
+  )))
+  genoDict <- seq_along(geno) + 10000L
   names(genoDict) <- geno
   genotype <- cbind(genotype,
-                    first = as.integer(genoDict[genotype[, 2]]),
-                    second = as.integer(genoDict[genotype[, 3]]))
+    first = as.integer(genoDict[genotype[, 2L]]),
+    second = as.integer(genoDict[genotype[, 3L]])
+  )
   newPed <- merge(ped, genotype, by = "id", all = TRUE)
   newPed
 }

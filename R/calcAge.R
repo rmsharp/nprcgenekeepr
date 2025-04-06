@@ -19,10 +19,11 @@
 #' qcPed <- nprcgenekeepr::qcPed
 #' originalAge <- qcPed$age ## ages calculated at time of data collection
 #' currentAge <- calcAge(qcPed$birth, qcPed$exit) ## assumes no changes in
-#'                                                ## colony
+#' ## colony
 calcAge <- function(birth, exit) {
-  if (length(birth) == 0)
+  if (length(birth) == 0L) {
     return(birth)
+  }
   exit[is.na(exit)] <- Sys.Date()
-  return(round((as.double(exit - birth) / 365.25), 1))
+  round((as.double(exit - birth) / 365.25), 1L)
 }

@@ -33,38 +33,42 @@ fillGroupMembers <- function(candidates,
                              minAge,
                              numGp,
                              sexRatio) {
-  groupMembers <- makeGroupMembers(numGp, currentGroups, candidates, ped,
-                                   harem, minAge)
+  groupMembers <- makeGroupMembers(
+    numGp, currentGroups, candidates, ped,
+    harem, minAge
+  )
   grpNum <- makeGrpNum(numGp)
 
   if (harem) {
     # Sires were added to groupMembers
     candidates <- removePotentialSires(candidates, minAge, ped)
   }
-  if (sexRatio != 0) {
-    groupMembers <- fillGroupMembersWithSexRatio(candidates,
-                                                 groupMembers,
-                                                 grpNum,
-                                                 kin,
-                                                 ped,
-                                                 minAge,
-                                                 numGp,
-                                                 sexRatio)
+  if (sexRatio != 0.0) {
+    groupMembers <- fillGroupMembersWithSexRatio(
+      candidates,
+      groupMembers,
+      grpNum,
+      kin,
+      ped,
+      minAge,
+      numGp,
+      sexRatio
+    )
     return(groupMembers)
   } else {
     available <- makeAvailable(candidates, numGp)
   }
 
-  while (TRUE) {
+  repeat {
     if (isEmpty(grpNum)) {
       break
     }
 
     # Select a group at random
-    i <- sample(grpNum, 1)[[1]]
+    i <- sample(grpNum, 1L)[[1L]]
 
     # Select an animal that can be added to this group and add it
-    id <- sample(available[[i]], 1)
+    id <- sample(available[[i]], 1L)
     groupMembers[[i]] <- c(groupMembers[[i]], id)
     available <-
       removeSelectedAnimalFromAvailableAnimals(available, id, numGp)
