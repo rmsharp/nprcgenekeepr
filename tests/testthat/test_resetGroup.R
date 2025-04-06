@@ -6,9 +6,9 @@ data("smallPed")
 ped <- smallPed
 test_that("resetGroup correctly returns correct IDs", {
   ped1 <- resetGroup(ped = ped, ids = NULL)
-  expect_true(all(!ped1$group))
+  expect_true(!any(ped1$group))
   ped1 <- resetGroup(ped = ped, ids = c("A", "B", "I"))
   expect_true(all(ped1$group[ped1$id %in%
-                                    c("A", "B", "I")]))
-  expect_true(length(setdiff(ped1$id[ped1$group], c("A", "B", "I"))) == 0)
+    c("A", "B", "I")]))
+  expect_length(setdiff(ped1$id[ped1$group], c("A", "B", "I")), 0L)
 })

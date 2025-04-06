@@ -11,10 +11,11 @@ test_that("getGenotypes recognizes and opens Excel files.", {
   pedExcel <-
     suppressWarnings(getGenotypes(
       fileName = system.file("testdata", "qcPed.xlsx",
-                             package =
-                               "nprcgenekeepr")
+        package =
+          "nprcgenekeepr"
+      )
     ))
-  expect_equal(nrow(pedExcel), 280)
+  expect_identical(nrow(pedExcel), 280L)
 })
 test_that(
   paste0(
@@ -24,9 +25,10 @@ test_that(
   {
     pedCsv <-
       getGenotypes(fileName = system.file("testdata", "qcPed.csv",
-                                          package =
-                                            "nprcgenekeepr"))
-    expect_equal(nrow(pedCsv), 280)
+        package =
+          "nprcgenekeepr"
+      ))
+    expect_identical(nrow(pedCsv), 280L)
   }
 )
 test_that(
@@ -38,11 +40,12 @@ test_that(
     pedCsv2 <-
       getGenotypes(
         fileName = system.file("testdata", "qcPed.csv",
-                               package =
-                                 "nprcgenekeepr"),
+          package =
+            "nprcgenekeepr"
+        ),
         sep = ","
       )
-    expect_equal(nrow(pedCsv2), 280)
+    expect_identical(nrow(pedCsv2), 280L)
   }
 )
 test_that(
@@ -54,10 +57,11 @@ test_that(
     pedTxt <-
       getGenotypes(
         fileName = system.file("testdata", "qcPed.txt",
-                               package =
-                                 "nprcgenekeepr"),
+          package =
+            "nprcgenekeepr"
+        ),
         sep = "\t"
       )
-    expect_equal(nrow(pedTxt), 280)
+    expect_identical(nrow(pedTxt), 280L)
   }
 )

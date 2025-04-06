@@ -4,13 +4,13 @@
 # This file is part of nprcgenekeepr
 context("meanKinship")
 library(testthat)
-set_seed(10)
-samp <- c(0, 0.5, 0.25, 0.125, 0.0625, 0.03125, 0.015625)
-kmat <- sample(samp, 25, replace = TRUE)
-kmat <- matrix(kmat, nrow = 5)
+set_seed(10L)
+samp <- c(0.0, 0.5, 0.25, 0.125, 0.0625, 0.03125, 0.015625)
+kmat <- sample(samp, 25L, replace = TRUE)
+kmat <- matrix(kmat, nrow = 5L)
 
 test_that("meanKinship averages column correctly", {
-  expect_equal(kmat[[1]], mean(kmat[[1]]))
-  expect_equal(kmat[[2]], mean(kmat[[2]]))
-  expect_equal(kmat[[5]], mean(kmat[[5]]))
+  expect_identical(kmat[[1L]], mean(kmat[[1L]]))
+  expect_identical(kmat[[2L]], mean(kmat[[2L]]))
+  expect_identical(kmat[[5L]], mean(kmat[[5L]]))
 })

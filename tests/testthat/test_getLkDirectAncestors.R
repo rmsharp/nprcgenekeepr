@@ -4,6 +4,8 @@ context("getLkDirectAncestors")
 
 test_that("getLkDirectAncestors throws an error with no nprcgenekeepr
           configuration file", {
-  expect_warning(getLkDirectAncestors(),
-                 "The file should be named:")
+  expect_warning(
+    getLkDirectAncestors(),
+    "The file should be named:"
+  )
 })

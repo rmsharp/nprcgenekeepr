@@ -1,7 +1,7 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
 context("calcFEFG")
-library(testthat)
+
 data(lacy1989Ped)
 data(lacy1989PedAlleles)
 ped <- lacy1989Ped
@@ -15,8 +15,10 @@ pedFactors <- data.frame(
   stringsAsFactors = TRUE
 )
 allelesFactors <- geneDrop(pedFactors$id, pedFactors$sire, pedFactors$dam,
-                           pedFactors$gen, genotype = NULL, n = 5000,
-                           updateProgress = NULL)
+  pedFactors$gen,
+  genotype = NULL, n = 5000L,
+  updateProgress = NULL
+)
 feFg <- calcFEFG(ped, alleles)
 feFgFactors <- calcFEFG(pedFactors, allelesFactors)
 
@@ -31,9 +33,8 @@ feFgFactors <- calcFEFG(pedFactors, allelesFactors)
 ## for this specific comparison.
 test_that("calcFEFG correctly calculates the number of founder genetic
 equivalents in the pedigree", {
-            expect_true(abs(feFg$FG - feFgFactors$FG) < 0.2)
-            expect_true(abs(feFg$FG - 2.18) < 0.2)
-            expect_equal(feFg$FE, feFgFactors$FE)
-            expect_equal(feFg$FE, 2.9090909091)
-
+  expect_lt(abs(feFg$FG - feFgFactors$FG), 0.2)
+  expect_lt(abs(feFg$FG - 2.18), 0.2)
+  expect_identical(feFg$FE, feFgFactors$FE)
+  expect_equal(feFg$FE, 2.9090909091)
 })

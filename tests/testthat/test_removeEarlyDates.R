@@ -3,10 +3,14 @@
 context("removeEarlyDates")
 library(testthat)
 
-dates <- structure(c(12361, 14400, 15413, NA, 11189, NA, 13224, 10971, -432000,
-                     + 13262), class = "Date")
-result <- structure(c(12361, 14400, 15413, NA, 11189, NA, 13224, 10971, NA,
-                      + 13262), class = "Date")
+dates <- structure(c(
+  12361L, 14400L, 15413L, NA, 11189L, NA, 13224L, 10971L, -432000L,
+  +13262L
+), class = "Date")
+result <- structure(c(
+  12361L, 14400L, 15413L, NA, 11189L, NA, 13224L, 10971L, NA,
+  +13262L
+), class = "Date")
 test_that("removeEarlyDates changes early dates to NA", {
-  expect_equal(removeEarlyDates(dates, firstYear = 1000), result)
+  expect_equal(removeEarlyDates(dates, firstYear = 1000L), result)
 })

@@ -11,6 +11,6 @@ recPlot <- function(expr) {
 }
 agePlot <- recPlot(getPyramidPlot(nprcgenekeepr::qcPed))
 test_that("getPyramidPlot generates a plot with or without pedigree", {
-  expect_equal(class(agePlot), "recordedplot")
-  expect_equal(class(recPlot(getPyramidPlot(NULL))), "recordedplot")
+  expect_s3_class(agePlot, "recordedplot")
+  expect_s3_class(recPlot(getPyramidPlot(NULL)), "recordedplot")
 })

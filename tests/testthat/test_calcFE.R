@@ -16,8 +16,10 @@ pedFactors <- data.frame(
   dam = c(NA, NA, "B", "B", NA, "E", "E"),
   stringsAsFactors = TRUE
 )
-pedFactors["gen"] <- findGeneration(pedFactors$id, pedFactors$sire,
-                                    pedFactors$dam)
+pedFactors["gen"] <- findGeneration(
+  pedFactors$id, pedFactors$sire,
+  pedFactors$dam
+)
 pedFactors$population <- getGVPopulation(pedFactors, NULL)
 fe <- calcFE(ped)
 feFactors <- calcFE(pedFactors)
@@ -32,6 +34,6 @@ feFactors <- calcFE(pedFactors)
 ## specific comparison.
 test_that("calcFE correctly calculates the number of founder equivalents in
           the pedigree", {
-            expect_equal(fe, feFactors)
-            expect_equal(fe, 2.9090909091)
+  expect_identical(fe, feFactors)
+  expect_equal(fe, 2.9090909091)
 })

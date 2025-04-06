@@ -1,7 +1,7 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
 context("calcFG")
-library(testthat)
+
 ped <- data.frame(
   id = c("A", "B", "C", "D", "E", "F", "G"),
   sire = c(NA, NA, "A", "A", NA, "D", "D"),
@@ -16,14 +16,20 @@ pedFactors <- data.frame(
   dam = c(NA, NA, "B", "B", NA, "E", "E"),
   stringsAsFactors = TRUE
 )
-pedFactors["gen"] <- findGeneration(pedFactors$id, pedFactors$sire,
-                                    pedFactors$dam)
+pedFactors["gen"] <- findGeneration(
+  pedFactors$id, pedFactors$sire,
+  pedFactors$dam
+)
 pedFactors$population <- getGVPopulation(pedFactors, NULL)
-alleles <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen, genotype = NULL,
-                    n = 5000, updateProgress = NULL)
+alleles <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,
+  genotype = NULL,
+  n = 5000L, updateProgress = NULL
+)
 allelesFactors <- geneDrop(pedFactors$id, pedFactors$sire, pedFactors$dam,
-                           pedFactors$gen, genotype = NULL, n = 5000,
-                           updateProgress = NULL)
+  pedFactors$gen,
+  genotype = NULL, n = 5000L,
+  updateProgress = NULL
+)
 fg <- calcFG(ped, alleles)
 fgFactors <- calcFG(pedFactors, allelesFactors)
 
@@ -38,6 +44,6 @@ fgFactors <- calcFG(pedFactors, allelesFactors)
 ## for this specific comparison.
 test_that("calcFG correctly calculates the number of founder genetic
 equivalents in the pedigree", {
-            expect_true(abs(fg - fgFactors) < 0.2)
-            expect_true(abs(fg - 2.18) < 0.2)
+  expect_lt(abs(fg - fgFactors), 0.2)
+  expect_lt(abs(fg - 2.18), 0.2)
 })

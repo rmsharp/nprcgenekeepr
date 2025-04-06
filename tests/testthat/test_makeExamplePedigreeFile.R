@@ -10,9 +10,11 @@ test_that("makeExamplePedigreeFile creates file", {
 test_that("makeExamplePedigreeFile creates correct file contents", {
   skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   pedigreeFile <- suppressMessages(makeExamplePedigreeFile())
-  pedCsv <- read.table(pedigreeFile, sep = ",", header = TRUE,
-                              stringsAsFactors = FALSE)
-  expect_equal(nrow(pedCsv), 3694)
+  pedCsv <- read.table(pedigreeFile,
+    sep = ",", header = TRUE,
+    stringsAsFactors = FALSE
+  )
+  expect_identical(nrow(pedCsv), 3694L)
 })
 test_that("makeExamplePedigreeFile creates file", {
   skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
@@ -21,8 +23,10 @@ test_that("makeExamplePedigreeFile creates file", {
     file.remove(filePath)
   }
   pedigreeFile <-
-    suppressMessages(makeExamplePedigreeFile(file = filePath,
-                                             fileType = "excel"))
+    suppressMessages(makeExamplePedigreeFile(
+      file = filePath,
+      fileType = "excel"
+    ))
   expect_true(all(file.exists(pedigreeFile)))
   if (file.exists(filePath)) {
     file.remove(filePath)
@@ -35,10 +39,12 @@ test_that("makeExamplePedigreeFile creates correct file contents", {
     file.remove(filePath)
   }
   pedigreeFile <-
-    suppressMessages(makeExamplePedigreeFile(file = filePath,
-                                             fileType = "excel"))
+    suppressMessages(makeExamplePedigreeFile(
+      file = filePath,
+      fileType = "excel"
+    ))
   pedExcel <- nprcgenekeepr:::readExcelPOSIXToCharacter(pedigreeFile)
-  expect_equal(nrow(pedExcel), 3694)
+  expect_identical(nrow(pedExcel), 3694L)
   if (file.exists(filePath)) {
     file.remove(filePath)
   }
@@ -46,16 +52,22 @@ test_that("makeExamplePedigreeFile creates correct file contents", {
 test_that("makeExamplePedigreeFile creates file", {
   skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   pedigreeFile <-
-    suppressMessages(makeExamplePedigreeFile(file = "exampleFile.txt",
-                                             fileType = "txt"))
+    suppressMessages(makeExamplePedigreeFile(
+      file = "exampleFile.txt",
+      fileType = "txt"
+    ))
   expect_true(all(file.exists(pedigreeFile)))
 })
 test_that("makeExamplePedigreeFile creates correct file contents", {
   skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   pedigreeFile <-
-    suppressMessages(makeExamplePedigreeFile(file = "exampleFile.txt",
-                                             fileType = "txt"))
-  pedTxt <- read.table(pedigreeFile, sep = ",", header = TRUE,
-                              stringsAsFactors = FALSE)
-  expect_equal(nrow(pedTxt), 3694)
+    suppressMessages(makeExamplePedigreeFile(
+      file = "exampleFile.txt",
+      fileType = "txt"
+    ))
+  pedTxt <- read.table(pedigreeFile,
+    sep = ",", header = TRUE,
+    stringsAsFactors = FALSE
+  )
+  expect_identical(nrow(pedTxt), 3694L)
 })

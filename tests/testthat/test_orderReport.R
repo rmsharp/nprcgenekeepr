@@ -2,7 +2,6 @@
 # This file is part of nprcgenekeepr
 context("orderReport")
 library(testthat)
-library(stringi)
 pedWithGenotypeReport <- nprcgenekeepr::pedWithGenotypeReport
 ped <- nprcgenekeepr::qcPed
 rpt <- pedWithGenotypeReport$report
@@ -11,28 +10,36 @@ countUnk <- function(ids) {
 }
 test_that("orderReport correctly orders the report", {
   rpt1 <- nprcgenekeepr:::orderReport(rpt, ped)
-  expect_equal(nrow(rpt1), nrow(rpt))
+  expect_identical(nrow(rpt1), nrow(rpt))
   expect_true(all(rpt1$id %in% rpt1$id))
-  set_seed(100)
-  rpt$origin <- ifelse(sample(c(TRUE, FALSE), size = nrow(rpt), replace = TRUE,
-                              prob = c(0.8, 0.2)), "TEXAS", NA)
-  rpt$totalOffspring <- sample(0:3, size = nrow(rpt), replace = TRUE,
-                              prob = c(0.8, 0.05, 0.05, 0.1))
+  set_seed(100L)
+  rpt$origin <- ifelse(sample(c(TRUE, FALSE),
+    size = nrow(rpt), replace = TRUE,
+    prob = c(0.8, 0.2)
+  ), "TEXAS", NA)
+  rpt$totalOffspring <- sample(0L:3L,
+    size = nrow(rpt), replace = TRUE,
+    prob = c(0.8, 0.05, 0.05, 0.1)
+  )
   rpt1 <- nprcgenekeepr:::orderReport(rpt, ped)
-  expect_equal(countUnk(rpt1$id[1:100]), 34)
-  expect_equal(countUnk(rpt$id[1:50]), 21)
+  expect_identical(countUnk(rpt1$id[1L:100L]), 34L)
+  expect_identical(countUnk(rpt$id[1L:50L]), 21L)
 })
-rpt <- rpt[, !names(rpt) %in% "age"]
+rpt <- rpt[, !names(rpt) == "age"]
 test_that("orderReport correctly orders the report without age column", {
   rpt1 <- nprcgenekeepr:::orderReport(rpt, ped)
-  expect_equal(nrow(rpt1), nrow(rpt))
+  expect_identical(nrow(rpt1), nrow(rpt))
   expect_true(all(rpt1$id %in% rpt1$id))
-  set_seed(100)
-  rpt$origin <- ifelse(sample(c(TRUE, FALSE), size = nrow(rpt), replace = TRUE,
-                              prob = c(0.8, 0.2)), "TEXAS", NA)
-  rpt$totalOffspring <- sample(0:3, size = nrow(rpt), replace = TRUE,
-                               prob = c(0.8, 0.05, 0.05, 0.1))
+  set_seed(100L)
+  rpt$origin <- ifelse(sample(c(TRUE, FALSE),
+    size = nrow(rpt), replace = TRUE,
+    prob = c(0.8, 0.2)
+  ), "TEXAS", NA)
+  rpt$totalOffspring <- sample(0L:3L,
+    size = nrow(rpt), replace = TRUE,
+    prob = c(0.8, 0.05, 0.05, 0.1)
+  )
   rpt1 <- nprcgenekeepr:::orderReport(rpt, ped)
-  expect_equal(countUnk(rpt1$id[1:100]), 34)
-  expect_equal(countUnk(rpt$id[1:50]), 21)
+  expect_identical(countUnk(rpt1$id[1L:100L]), 34L)
+  expect_identical(countUnk(rpt$id[1L:50L]), 21L)
 })

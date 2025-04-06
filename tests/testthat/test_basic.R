@@ -2,8 +2,8 @@
 #' This file is part of nprcgenekeepr
 context("basic")
 
-#library(RSelenium)
-#library(testthat)
+# library(RSelenium)
+# library(testthat)
 
 # remDr <- remoteDriver()
 # remDr$open(silent = TRUE)

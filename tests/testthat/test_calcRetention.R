@@ -20,8 +20,9 @@ retention <- calcRetention(ped, alleles)
 ## for this specific comparison.
 test_that(stri_c(
   "calcRetention correctly calculates mean number of alleles retained from ",
-  "each founder"), {
-    expect_equal(retention[["A"]], 0.7500)
-    expect_equal(retention[["B"]], 0.7507)
-    expect_equal(retention[["E"]], 0.7452)
-  })
+  "each founder"
+), {
+  expect_equal(retention[["A"]], 0.7500)
+  expect_equal(retention[["B"]], 0.7507)
+  expect_equal(retention[["E"]], 0.7452)
+})

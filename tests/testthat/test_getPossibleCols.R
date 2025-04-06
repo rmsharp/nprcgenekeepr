@@ -2,16 +2,19 @@
 #' This file is part of nprcgenekeepr
 context("getPossibleCols")
 library(testthat)
-library(stringi)
-cols <- c("id", "sire", "dam", "sex", "gen", "birth", "exit", "age",
-          "ancestry", "population", "origin", "status", "condition",
-          "spf", "vasxOvx", "pedNum", "first", "second", "first_name",
-          "second_name", "recordStatus")
-cols <- c("id", "sire", "dam", "sex", "gen", "birth", "exit", "death",
-          "age", "ancestry", "population", "origin", "status", "condition",
-          "departure", "spf", "vasxOvx", "pedNum", "first", "second",
-          "first_name",
-          "second_name", "recordStatus")
+cols <- c(
+  "id", "sire", "dam", "sex", "gen", "birth", "exit", "age",
+  "ancestry", "population", "origin", "status", "condition",
+  "spf", "vasxOvx", "pedNum", "first", "second", "first_name",
+  "second_name", "recordStatus"
+)
+cols <- c(
+  "id", "sire", "dam", "sex", "gen", "birth", "exit", "death",
+  "age", "ancestry", "population", "origin", "status", "condition",
+  "departure", "spf", "vasxOvx", "pedNum", "first", "second",
+  "first_name",
+  "second_name", "recordStatus"
+)
 test_that("getPossibleCols returns the right columns", {
-  expect_equal(getPossibleCols(), cols)
+  expect_identical(getPossibleCols(), cols)
 })

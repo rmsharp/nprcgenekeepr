@@ -5,9 +5,9 @@ logo <- suppressWarnings(getLogo())
 test_that("getLogo returns reasonalble values", {
   expect_true(is.integer(logo$height))
   expect_true(is.integer(logo$width))
-  expect_true(logo$height > 0)
-  expect_true(logo$width > 0)
-  expect_true(is.character(logo$file))
+  expect_gt(logo$height, 0L)
+  expect_gt(logo$width, 0L)
+  expect_type(logo$file, "character")
 })
 sysInfo <- Sys.info()
 homeDir <- paste0("~/")
@@ -32,9 +32,9 @@ test_that("getLogo returns reasonalble values with SNPRC mock", {
           "sire"
         ),
         mapPedColumns = c("id", "sex", "birth", "death", "exit", "dam", "sire"),
-        sysname  = sysInfo[["sysname"]],
+        sysname = sysInfo[["sysname"]],
         release = sysInfo[["release"]],
-        version  = sysInfo[["version"]],
+        version = sysInfo[["version"]],
         nodename = sysInfo[["nodename"]],
         machine = sysInfo[["machine"]],
         login = sysInfo[["login"]],
@@ -43,13 +43,14 @@ test_that("getLogo returns reasonalble values with SNPRC mock", {
         homeDir = config[["homeDir"]],
         configFile = config[["configFile"]]
       )
-    })
-    logo <- suppressWarnings(getLogo())
-    expect_true(is.integer(logo$height))
-    expect_true(is.integer(logo$width))
-    expect_true(logo$height > 0)
-    expect_true(logo$width > 0)
-    expect_true(is.character(logo$file))
+    }
+  )
+  logo <- suppressWarnings(getLogo())
+  expect_type(logo$height, "integer")
+  expect_type(logo$width, "integer")
+  expect_gt(logo$height, 0L)
+  expect_gt(logo$width, 0L)
+  expect_type(logo$file, "character")
 })
 test_that("getLogo returns reasonalble values with ONPRC mock", {
   local_mocked_bindings(
@@ -70,9 +71,9 @@ test_that("getLogo returns reasonalble values with ONPRC mock", {
           "Id/parents/sire"
         ),
         mapPedColumns = c("id", "sex", "birth", "death", "exit", "dam", "sire"),
-        sysname  = sysInfo[["sysname"]],
+        sysname = sysInfo[["sysname"]],
         release = sysInfo[["release"]],
-        version  = sysInfo[["version"]],
+        version = sysInfo[["version"]],
         nodename = sysInfo[["nodename"]],
         machine = sysInfo[["machine"]],
         login = sysInfo[["login"]],
@@ -83,10 +84,10 @@ test_that("getLogo returns reasonalble values with ONPRC mock", {
       )
     }
   )
-    logo <- suppressWarnings(getLogo())
-    expect_true(is.integer(logo$height))
-    expect_true(is.integer(logo$width))
-    expect_true(logo$height > 0)
-    expect_true(logo$width > 0)
-    expect_true(is.character(logo$file))
+  logo <- suppressWarnings(getLogo())
+  expect_type(logo$height, "integer")
+  expect_type(logo$width, "integer")
+  expect_gt(logo$height, 0L)
+  expect_gt(logo$width, 0L)
+  expect_type(logo$file, "character")
 })

@@ -7,19 +7,28 @@ qcPed <- nprcgenekeepr::qcPed
 
 qcPed <- qcPed[order(qcPed$id), ]
 ped <- qcPed
-genotype <- data.frame(id = ped$id[50 + 1:20],
-                       first_name = stri_c("first", 1:20),
-                       second_name = stri_c("second", 1:20),
-                       stringsAsFactors = FALSE)
+genotype <- data.frame(
+  id = ped$id[50L + 1L:20L],
+  first_name = stri_c("first", 1L:20L),
+  second_name = stri_c("second", 1L:20L),
+  stringsAsFactors = FALSE
+)
 
 test_that("addGenotype forms correct dataframe", {
   newPed <- addGenotype(ped, genotype)
   newPed <- newPed[order(newPed$id), ]
-  expect_equal(as.character(newPed$first[newPed$id == ped$id[50 + 1]]), "10001")
-  expect_equal(as.character(newPed$second[newPed$id == ped$id[50 + 1]]),
-               "10021")
-  expect_equal(as.character(newPed$first[newPed$id == ped$id[50 + 2]]),
-               "10012")
-  expect_equal(as.character(newPed$second[newPed$id == ped$id[50 + 2]]),
-               "10032")
+  expect_identical(as.character(newPed$first[newPed$id == ped$id[50L + 1L]]),
+                   "10001")
+  expect_identical(
+    as.character(newPed$second[newPed$id == ped$id[50L + 1L]]),
+    "10021"
+  )
+  expect_identical(
+    as.character(newPed$first[newPed$id == ped$id[50L + 2L]]),
+    "10012"
+  )
+  expect_identical(
+    as.character(newPed$second[newPed$id == ped$id[50L + 2L]]),
+    "10032"
+  )
 })

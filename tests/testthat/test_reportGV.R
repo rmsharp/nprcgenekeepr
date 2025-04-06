@@ -3,36 +3,48 @@
 context("reportGV")
 library(testthat)
 qcPed <- nprcgenekeepr::qcPed
-gvReport <- reportGV(qcPed, guIter = 100)
+gvReport <- reportGV(qcPed, guIter = 100L)
 test_that("reportGV forms correct genetic value report", {
-  expect_equal(names(gvReport), c("report", "kinship", "gu", "fe", "fg",
-                                  "maleFounders", "femaleFounders",
-                                  "nMaleFounders", "nFemaleFounders", "total"))
-  expect_equal(names(gvReport$report),
-               c("id", "sex", "age", "birth", "exit", "population",
-                 "indivMeanKin", "zScores", "gu", "totalOffspring",
-                 "livingOffspring", "value", "rank"))
-  expect_equal(nrow(gvReport$report), nrow(qcPed))
-  expect_equal(nrow(gvReport$gu), nrow(qcPed))
-  expect_equal(gvReport$nMaleFounders, 20)
-  expect_equal(gvReport$nFemaleFounders, 61)
+  expect_named(gvReport, c(
+    "report", "kinship", "gu", "fe", "fg",
+    "maleFounders", "femaleFounders",
+    "nMaleFounders", "nFemaleFounders", "total"
+  ))
+  expect_named(gvReport$report,
+    c(
+      "id", "sex", "age", "birth", "exit", "population",
+      "indivMeanKin", "zScores", "gu", "totalOffspring",
+      "livingOffspring", "value", "rank"
+    )
+  )
+  expect_identical(nrow(gvReport$report), nrow(qcPed))
+  expect_identical(nrow(gvReport$gu), nrow(qcPed))
+  expect_identical(gvReport$nMaleFounders, 20L)
+  expect_identical(gvReport$nFemaleFounders, 61L)
 })
-updateProgress <- function(n = 1, detail = NULL, value = 0, reset = FALSE) {
+updateProgress <- function(n = 1L, detail = NULL, value = 0L, reset = FALSE) {
   "stub"
 }
 
-gvReport <- reportGV(qcPed, guIter = 100, updateProgress = updateProgress)
+gvReport <- reportGV(qcPed, guIter = 100L, updateProgress = updateProgress)
 test_that(
-  "reportGV forms correct genetic value report with updateProgress defined", {
-  expect_equal(names(gvReport), c("report", "kinship", "gu", "fe", "fg",
-                                  "maleFounders", "femaleFounders",
-                                  "nMaleFounders", "nFemaleFounders", "total"))
-  expect_equal(names(gvReport$report),
-               c("id", "sex", "age", "birth", "exit", "population",
-                 "indivMeanKin", "zScores", "gu", "totalOffspring",
-                 "livingOffspring", "value", "rank"))
-  expect_equal(nrow(gvReport$report), nrow(qcPed))
-  expect_equal(nrow(gvReport$gu), nrow(qcPed))
-  expect_equal(gvReport$nMaleFounders, 20)
-  expect_equal(gvReport$nFemaleFounders, 61)
-})
+  "reportGV forms correct genetic value report with updateProgress defined",
+  {
+    expect_named(gvReport, c(
+      "report", "kinship", "gu", "fe", "fg",
+      "maleFounders", "femaleFounders",
+      "nMaleFounders", "nFemaleFounders", "total"
+    ))
+    expect_named(gvReport$report,
+      c(
+        "id", "sex", "age", "birth", "exit", "population",
+        "indivMeanKin", "zScores", "gu", "totalOffspring",
+        "livingOffspring", "value", "rank"
+      )
+    )
+    expect_identical(nrow(gvReport$report), nrow(qcPed))
+    expect_identical(nrow(gvReport$gu), nrow(qcPed))
+    expect_identical(gvReport$nMaleFounders, 20L)
+    expect_identical(gvReport$nFemaleFounders, 61L)
+  }
+)

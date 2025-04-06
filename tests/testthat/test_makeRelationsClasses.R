@@ -6,7 +6,8 @@ suppressMessages(library(dplyr))
 
 qcPed <- nprcgenekeepr::qcPed
 bkmat <- kinship(qcPed$id, qcPed$sire, qcPed$dam, qcPed$gen,
-                 sparse = FALSE)
+  sparse = FALSE
+)
 kin <- convertRelationships(bkmat, qcPed)
 relClasses <- as.data.frame(makeRelationClassesTable(kin))
 relClasses$`Relationship Class` <- as.character(relClasses$`Relationship Class`)
@@ -15,7 +16,9 @@ relClassTbl <- kin[!kin$relation == "Self", ] %>%
   summarise(count = n())
 test_that("makeRelationsClasses retains the correct counts", {
   for (rel in relClasses[, "Relationship Class"]) {
-    expect_equal(relClasses$Frequency[relClasses$`Relationship Class` == rel],
-                 relClassTbl$count[relClassTbl$relation == rel])
+    expect_identical(
+      relClasses$Frequency[relClasses$`Relationship Class` == rel],
+      relClassTbl$count[relClassTbl$relation == rel]
+    )
   }
 })

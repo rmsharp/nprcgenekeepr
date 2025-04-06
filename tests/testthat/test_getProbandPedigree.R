@@ -2,20 +2,20 @@
 #' This file is part of nprcgenekeepr
 context("getProbandPedigree")
 library(testthat)
-library(stringi)
+
 data("lacy1989Ped")
 ped <- lacy1989Ped
 test_that("getProbandPedigree returns the correct pedigree", {
   expect_true(all(getProbandPedigree(probands = c("A", "B"), ped)$id %in%
-                    c("A", "B")))
+    c("A", "B")))
   expect_true(all(getProbandPedigree(probands = c("A", "B", "E"), ped)$id %in%
-                    c("A", "B", "E")))
-  expect_true(all(getProbandPedigree(probands = c("F"), ped)$id %in%
-                    c("A", "B", "D", "E", "F")))
+    c("A", "B", "E")))
+  expect_true(all(getProbandPedigree(probands = "F", ped)$id %in%
+    c("A", "B", "D", "E", "F")))
   expect_true(all(c("A", "B", "D", "E", "F") %in%
-                    getProbandPedigree(probands = c("F"), ped)$id))
-  expect_true(all(getProbandPedigree(probands = c("D"), ped)$id %in%
-                    c("A", "B", "D")))
+    getProbandPedigree(probands = c("F"), ped)$id))
+  expect_true(all(getProbandPedigree(probands = "D", ped)$id %in%
+    c("A", "B", "D")))
   expect_true(all(c("A", "B", "D") %in%
-                    getProbandPedigree(probands = c("D"), ped)$id))
+    getProbandPedigree(probands = "D", ped)$id))
 })

@@ -9,108 +9,110 @@ pedWithGenotypeReport <- nprcgenekeepr::pedWithGenotypeReport
 skip_if_not(exists("qcBreeders"))
 skip_if_not(exists("pedWithGenotype"))
 skip_if_not(exists("pedWithGenotypeReport"))
-set_seed(10)
+set_seed(10L)
 test_that("groupAddAssign forms the correct groups", {
   skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
-  currentGroups <- list(1)
-  currentGroups[[1]] <- qcBreeders[1:3]
+  currentGroups <- list(1L)
+  currentGroups[[1L]] <- qcBreeders[1L:3L]
   groupAddTest <- groupAddAssign(
     candidates = qcBreeders,
     currentGroups = currentGroups,
     kmat = pedWithGenotypeReport$kinship,
     ped = pedWithGenotype,
-    ignore = NULL, minAge = 1, numGp = 1,
-    harem = FALSE, sexRatio = 0, withKin = FALSE)
-  expect_equal(length(groupAddTest$group[[1]]), 11)
-  expect_equal(length(groupAddTest$group[[2]]), 14)
-  #expect_equal(length(groupAddTest$group[[2]]), 10)
-  expect_null(groupAddTest$groupKin[[1]])
-}
-)
-set_seed(10)
+    ignore = NULL, minAge = 1.0, numGp = 1L,
+    harem = FALSE, sexRatio = 0L, withKin = FALSE
+  )
+  expect_length(groupAddTest$group[[1L]], 11L)
+  expect_length(groupAddTest$group[[2L]], 14L)
+  # expect_equal(length(groupAddTest$group[[2L]]), 10L)
+  expect_null(groupAddTest$groupKin[[1L]])
+})
+set_seed(10L)
 test_that("groupAddAssign (numGp = 2) forms the correct groups", {
   skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   groupAssignTest <- groupAddAssign(
     candidates = qcBreeders,
-    currentGroups = character(0),
+    currentGroups = character(0L),
     kmat = pedWithGenotypeReport$kinship,
     ped = pedWithGenotype,
     ignore = NULL,
-    minAge = 1,
-    numGp = 2,
+    minAge = 1L,
+    numGp = 2L,
     harem = FALSE,
-    sexRatio = 0,
+    sexRatio = 0.0,
     withKin = FALSE
   )
-  expect_equal(length(groupAssignTest$group[[1]]), 9)
-  #expect_equal(length(groupAssignTest$group[[2]]), 10)
-  expect_equal(length(groupAssignTest$group[[2]]), 9)
-  expect_null(groupAssignTest$groupKin[[1]])
+  expect_length(groupAssignTest$group[[1L]], 9L)
+  # expect_equal(length(groupAssignTest$group[[2L]]), 10L)
+  expect_length(groupAssignTest$group[[2L]], 9L)
+  expect_null(groupAssignTest$groupKin[[1L]])
 })
-set_seed(10)
-test_that(paste0("groupAddAssign (numGp = 1) forms the correct groups with ",
-                 "kinship matrices"),
-          {
-            skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
-            currentGroups <- list(1)
-            currentGroups[[1]] <- qcBreeders[1:3]
-            groupAddKTest <- groupAddAssign(
-              candidates = qcBreeders,
-              currentGroups = currentGroups,
-              kmat = pedWithGenotypeReport$kinship,
-              ped = pedWithGenotype,
-              ignore = NULL,
-              minAge = 1,
-              numGp = 1,
-              harem = FALSE,
-              sexRatio = 0,
-              withKin = TRUE
-            )
-            expect_equal(length(groupAddKTest$group[[1]]), 11)
-            expect_equal(length(groupAddKTest$group[[2]]), 14)
-            #expect_equal(length(groupAddKTest$group[[2]]), 10)
-          })
-set_seed(10)
+set_seed(10L)
+test_that(paste0(
+  "groupAddAssign (numGp = 1) forms the correct groups with ",
+  "kinship matrices"
+), {
+  skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
+  currentGroups <- list(1L)
+  currentGroups[[1L]] <- qcBreeders[1L:3L]
+  groupAddKTest <- groupAddAssign(
+    candidates = qcBreeders,
+    currentGroups = currentGroups,
+    kmat = pedWithGenotypeReport$kinship,
+    ped = pedWithGenotype,
+    ignore = NULL,
+    minAge = 1L,
+    numGp = 1L,
+    harem = FALSE,
+    sexRatio = 0.0,
+    withKin = TRUE
+  )
+  expect_length(groupAddKTest$group[[1L]], 11L)
+  expect_length(groupAddKTest$group[[2L]], 14L)
+  # expect_equal(length(groupAddKTest$group[[2L]]), 10L)
+})
+set_seed(10L)
 test_that("groupAddAssign forms the correct groups with kinship matrices", {
   skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   groupAssignKTest <- groupAddAssign(
     candidates = qcBreeders,
-    currentGroups = character(0),
+    currentGroups = character(0L),
     kmat = pedWithGenotypeReport$kinship,
     ped = pedWithGenotype,
     ignore = NULL,
-    minAge = 1,
-    numGp = 2,
+    minAge = 1.0,
+    numGp = 2L,
     harem = FALSE,
-    sexRatio = 0,
+    sexRatio = 0.0,
     withKin = TRUE
   )
-  expect_equal(length(groupAssignKTest$group[[1]]), 9)
-  expect_equal(length(groupAssignKTest$group[[2]]), 9)
-  #expect_equal(length(groupAssignKTest$group[[2]]), 10)
-  expect_equal(length(groupAssignKTest$groupKin[[1]]), 81)
+  expect_equal(length(groupAssignKTest$group[[1L]]), 9L)
+  expect_length(groupAssignKTest$group[[2L]], 9L)
+  # expect_equal(length(groupAssignKTest$group[[2L]]), 10L)
+  expect_length(groupAssignKTest$groupKin[[1L]], 81L)
 })
-set_seed(10)
-noSires <- removePotentialSires(qcBreeders, minAge = 2,
-                                pedWithGenotype)
-sires <- getPotentialSires(qcBreeders, minAge = 2, pedWithGenotype)
+set_seed(10L)
+noSires <- removePotentialSires(qcBreeders,
+  minAge = 2.0,
+  pedWithGenotype
+)
+sires <- getPotentialSires(qcBreeders, minAge = 2.0, pedWithGenotype)
 
 test_that(paste0(
   "groupAddAssign fails when no potential sires exist for harem creation"
-),
-{
+), {
   skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   expect_error(
     groupAddAssign(
       candidates = noSires,
-      currentGroups = character(0),
+      currentGroups = character(0L),
       kmat = pedWithGenotypeReport$kinship,
       ped = pedWithGenotype,
       ignore = NULL,
-      minAge = 1,
-      numGp = 2,
+      minAge = 1.0,
+      numGp = 2L,
       harem = TRUE,
-      sexRatio = 0,
+      sexRatio = 0.0,
       withKin = TRUE
     )
   )
@@ -124,19 +126,21 @@ test_that(
     skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
     group <- groupAddAssign(
       candidates = qcBreeders,
-      currentGroups = character(0),
+      currentGroups = character(0L),
       kmat = pedWithGenotypeReport$kinship,
       ped = pedWithGenotype,
       ignore = NULL,
-      minAge = 1,
-      numGp = 2,
+      minAge = 1.0,
+      numGp = 2L,
       harem = TRUE,
-      sexRatio = 0,
+      sexRatio = 0.0,
       withKin = TRUE
     )
-    expect_true(length(group) == 3)
-    expect_equal(sum(seq_along(group[[1]][[3]])[group[[1]][[3]] %in% sires]), 0)
-    expect_equal(sum(seq_along(group[[1]][[3]])[group[[1]][[2]] %in% sires]), 1)
+    expect_true(length(group) == 3L)
+    expect_identical(sum(seq_along(group[[1L]][[3L]])[group[[1L]][[3L]] %in%
+                                                  sires]), 0L)
+    expect_identical(sum(seq_along(group[[1L]][[3L]])[group[[1L]][[2L]] %in%
+                                                    sires]), 1L)
   }
 )
 test_that(
@@ -146,10 +150,10 @@ test_that(
   ),
   {
     skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
-    currentGroups <- list(3)
-    currentGroups[[1]] <- qcBreeders[1:3]
-    currentGroups[[2]] <- qcBreeders[4:6]
-    currentGroups[[3]] <- qcBreeders[7:9]
+    currentGroups <- list(3L)
+    currentGroups[[1L]] <- qcBreeders[1L:3L]
+    currentGroups[[2L]] <- qcBreeders[4L:6L]
+    currentGroups[[3L]] <- qcBreeders[7L:9L]
     expect_error(
       groupAddAssign(
         candidates = noSires,
@@ -157,10 +161,10 @@ test_that(
         kmat = pedWithGenotypeReport$kinship,
         ped = pedWithGenotype,
         ignore = NULL,
-        minAge = 1,
-        numGp = 2,
+        minAge = 1.0,
+        numGp = 2L,
         harem = FALSE,
-        sexRatio = 0,
+        sexRatio = 0L,
         withKin = TRUE
       )
     )
