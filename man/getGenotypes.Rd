@@ -20,5 +20,6 @@ Get genotypes from file
 \examples{
 library(nprcgenekeepr)
 pedCsv <- getGenotypes(fileName = system.file("testdata", "qcPed.csv",
-                       package="nprcgenekeepr"))
+  package = "nprcgenekeepr"
+))
 }

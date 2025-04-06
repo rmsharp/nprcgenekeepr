@@ -20,8 +20,10 @@ placeholders for unknown parents.
 \examples{
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::smallPed
-addedPed <- cbind(ped, recordStatus = rep("original", nrow(ped)),
-                stringsAsFactors = FALSE)
+addedPed <- cbind(ped,
+  recordStatus = rep("original", nrow(ped)),
+  stringsAsFactors = FALSE
+)
 addedPed[1:3, "recordStatus"] <- "added"
 ped2 <- removeUnknownAnimals(addedPed)
 nrow(ped)

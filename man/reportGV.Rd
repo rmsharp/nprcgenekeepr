@@ -6,8 +6,8 @@
 \usage{
 reportGV(
   ped,
-  guIter = 5000,
-  guThresh = 1,
+  guIter = 5000L,
+  guThresh = 1L,
   pop = NULL,
   byID = TRUE,
   updateProgress = NULL
@@ -46,25 +46,33 @@ This is the main function for the Genetic Value Analysis.
 \examples{
 library(nprcgenekeepr)
 examplePedigree <- nprcgenekeepr::examplePedigree
-breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
-                         reportChanges = FALSE,
-                         reportErrors = FALSE)
+breederPed <- qcStudbook(examplePedigree,
+  minParentAge = 2,
+  reportChanges = FALSE,
+  reportErrors = FALSE
+)
 focalAnimals <- breederPed$id[!(is.na(breederPed$sire) &
-                                  is.na(breederPed$dam)) &
-                                is.na(breederPed$exit)]
+  is.na(breederPed$dam)) &
+  is.na(breederPed$exit)]
 ped <- setPopulation(ped = breederPed, ids = focalAnimals)
 trimmedPed <- trimPedigree(focalAnimals, breederPed)
 probands <- ped$id[ped$population]
-ped <- trimPedigree(probands, ped, removeUninformative = FALSE,
-                    addBackParents = FALSE)
-geneticValue <- reportGV(ped, guIter = 50, # should be >= 1000
-                         guThresh = 3,
-                         byID = TRUE,
-                         updateProgress = NULL)
-trimmedGeneticValue <- reportGV(trimmedPed, guIter = 50, # should be >= 1000
-                                guThresh = 3,
-                                byID = TRUE,
-                                updateProgress = NULL)
+ped <- trimPedigree(probands, ped,
+  removeUninformative = FALSE,
+  addBackParents = FALSE
+)
+geneticValue <- reportGV(ped,
+  guIter = 50, # should be >= 1000
+  guThresh = 3,
+  byID = TRUE,
+  updateProgress = NULL
+)
+trimmedGeneticValue <- reportGV(trimmedPed,
+  guIter = 50, # should be >= 1000
+  guThresh = 3,
+  byID = TRUE,
+  updateProgress = NULL
+)
 rpt <- trimmedGeneticValue[["report"]]
 kmat <- trimmedGeneticValue[["kinship"]]
 f <- trimmedGeneticValue[["total"]]

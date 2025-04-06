@@ -23,5 +23,6 @@ fixColumnNames changes original column names and into standardized names.
 \examples{
 library(nprcgenekeepr)
 fixColumnNames(c("Sire_ID", "EGO", "DAM", "Id", "birth_date"),
-               errorLst = getEmptyErrorLst())
+  errorLst = getEmptyErrorLst()
+)
 }

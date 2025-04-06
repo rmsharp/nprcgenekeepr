@@ -161,7 +161,9 @@ pedigree information
 }
 \examples{
 examplePedigree <- nprcgenekeepr::examplePedigree
-ped <- qcStudbook(examplePedigree, minParentAge = 2, reportChanges = FALSE,
-                  reportErrors = FALSE)
+ped <- qcStudbook(examplePedigree,
+  minParentAge = 2.0, reportChanges = FALSE,
+  reportErrors = FALSE
+)
 names(ped)
 }

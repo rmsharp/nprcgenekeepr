@@ -4,7 +4,7 @@
 \alias{calcGU}
 \title{Calculates genome uniqueness for each ID that is part of the population.}
 \usage{
-calcGU(alleles, threshold = 1, byID = FALSE, pop = NULL)
+calcGU(alleles, threshold = 1L, byID = FALSE, pop = NULL)
 }
 \arguments{
 \item{alleles}{dataframe of containing an \code{AlleleTable}. This is a
@@ -78,8 +78,10 @@ library(nprcgenekeepr)
 ped1Alleles <- nprcgenekeepr::ped1Alleles
 gu_1 <- calcGU(ped1Alleles, threshold = 1, byID = FALSE, pop = NULL)
 gu_2 <- calcGU(ped1Alleles, threshold = 3, byID = FALSE, pop = NULL)
-gu_3 <- calcGU(ped1Alleles, threshold = 3, byID = FALSE,
-               pop = ped1Alleles$id[20:60])
+gu_3 <- calcGU(ped1Alleles,
+  threshold = 3, byID = FALSE,
+  pop = ped1Alleles$id[20:60]
+)
 }
 \references{
 Ballou JD, Lacy RC.  1995. Identifying genetically important

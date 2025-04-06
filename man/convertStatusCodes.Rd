@@ -19,9 +19,11 @@ Part of Pedigree Curation
 }
 \examples{
 library(nprcgenekeepr)
-original <- c("A", "alive", "Alive", "1", "S", "Sale", "sold", "shipped",
-              "D", "d", "dead", "died", "deceased", "2",
-              "shiped", "3", "U", "4", "unknown", NA,
-              "Unknown", "H", "hermaphrodite", "U", "Unknown", "4")
+original <- c(
+  "A", "alive", "Alive", "1", "S", "Sale", "sold", "shipped",
+  "D", "d", "dead", "died", "deceased", "2",
+  "shiped", "3", "U", "4", "unknown", NA,
+  "Unknown", "H", "hermaphrodite", "U", "Unknown", "4"
+)
 convertStatusCodes(original)
 }

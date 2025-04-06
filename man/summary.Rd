@@ -23,30 +23,40 @@ object of class summary.nprcgenekeeprGV
 summary.nprcgenekeeprErr Summary function for class nprcgenekeeprErr
 }
 \examples{
-errorList <- qcStudbook(nprcgenekeepr::pedOne, minParentAge = 0,
-reportChanges = TRUE,
-reportErrors = TRUE)
+errorList <- qcStudbook(nprcgenekeepr::pedOne,
+  minParentAge = 0,
+  reportChanges = TRUE,
+  reportErrors = TRUE
+)
 summary(errorList)
 examplePedigree <- nprcgenekeepr::examplePedigree
-breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
-                         reportChanges = FALSE,
-                         reportErrors = FALSE)
+breederPed <- qcStudbook(examplePedigree,
+  minParentAge = 2L,
+  reportChanges = FALSE,
+  reportErrors = FALSE
+)
 focalAnimals <- breederPed$id[!(is.na(breederPed$sire) &
-                                  is.na(breederPed$dam)) &
-                                is.na(breederPed$exit)]
+  is.na(breederPed$dam)) &
+  is.na(breederPed$exit)]
 ped <- setPopulation(ped = breederPed, ids = focalAnimals)
 trimmedPed <- trimPedigree(focalAnimals, breederPed)
 probands <- ped$id[ped$population]
-ped <- trimPedigree(probands, ped, removeUninformative = FALSE,
-                    addBackParents = FALSE)
-geneticValue <- reportGV(ped, guIter = 50, # should be >= 1000
-                         guThresh = 3,
-                         byID = TRUE,
-                         updateProgress = NULL)
-trimmedGeneticValue <- reportGV(trimmedPed, guIter = 50, # should be >= 1000
-                                guThresh = 3,
-                                byID = TRUE,
-                                updateProgress = NULL)
+ped <- trimPedigree(probands, ped,
+  removeUninformative = FALSE,
+  addBackParents = FALSE
+)
+geneticValue <- reportGV(ped,
+  guIter = 50L, # should be >= 1000L
+  guThresh = 3L,
+  byID = TRUE,
+  updateProgress = NULL
+)
+trimmedGeneticValue <- reportGV(trimmedPed,
+  guIter = 50L, # should be >= 1000L
+  guThresh = 3L,
+  byID = TRUE,
+  updateProgress = NULL
+)
 summary(geneticValue)
 summary(trimmedGeneticValue)
 }

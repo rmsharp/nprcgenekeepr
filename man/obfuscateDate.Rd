@@ -4,7 +4,7 @@
 \alias{obfuscateDate}
 \title{obfucateDate adds a random number of days bounded by plus and minus max delta}
 \usage{
-obfuscateDate(baseDate, maxDelta = 30, minDate)
+obfuscateDate(baseDate, maxDelta = 30L, minDate)
 }
 \arguments{
 \item{baseDate}{list of Date objects with dates to be obfuscated}
@@ -25,8 +25,10 @@ Insure the resulting date is as least as large as the min_date.
 }
 \examples{
 library(nprcgenekeepr)
-someDates <- rep(as.Date(c("2009-2-16", "2016-2-16"), format = "\%Y-\%m-\%d"),
-                 10)
+someDates <- rep(
+  as.Date(c("2009-2-16", "2016-2-16"), format = "\%Y-\%m-\%d"),
+  10
+)
 minBirthDate <- rep(as.Date("2009-2-16", format = "\%Y-\%m-\%d"), 20)
 obfuscateDate(someDates, 30, minBirthDate)
 }

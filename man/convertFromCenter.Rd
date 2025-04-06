@@ -18,8 +18,10 @@ is from the center otherwise FALSE.
 Part of Pedigree Curation
 }
 \examples{
-original <- c("y", "yes", "Y", "Yes", "YES", "n", "N", "No", "NO", "no",
-             "t", "T", "True", "true", "TRUE", "f", "F", "false", "False",
-             "FALSE")
+original <- c(
+  "y", "yes", "Y", "Yes", "YES", "n", "N", "No", "NO", "no",
+  "t", "T", "True", "true", "TRUE", "f", "F", "false", "False",
+  "FALSE"
+)
 convertFromCenter(original)
 }

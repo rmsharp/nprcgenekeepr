@@ -19,19 +19,23 @@ This must be run prior to \code{addParents} since the IDs made herein are
 used by \code{addParents}
 }
 \examples{
-pedTwo <- data.frame(id = c("s1", "d1", "s2", "d2", "o1", "o2", "o3", "o4"),
-                     sire = c(NA, "s0", "s4", NA, "s1", "s1", "s2", "s2"),
-                     dam = c("d0", "d0", "d4", NA, "d1", "d2", "d2", "d2"),
-                     sex = c("M", "F", "M", "F", "F", "F", "F", "M"),
-                     stringsAsFactors = FALSE)
+pedTwo <- data.frame(
+  id = c("s1", "d1", "s2", "d2", "o1", "o2", "o3", "o4"),
+  sire = c(NA, "s0", "s4", NA, "s1", "s1", "s2", "s2"),
+  dam = c("d0", "d0", "d4", NA, "d1", "d2", "d2", "d2"),
+  sex = c("M", "F", "M", "F", "F", "F", "F", "M"),
+  stringsAsFactors = FALSE
+)
 newPed <- addUIds(pedTwo)
 newPed[newPed$id == "s1", ]
 pedThree <-
-  data.frame(id = c("s1", "d1", "s2", "d2", "o1", "o2", "o3", "o4"),
-             sire = c("s0", "s0", "s4", NA, "s1", "s1", "s2", "s2"),
-             dam = c(NA, "d0", "d4", NA, "d1", "d2", "d2", "d2"),
-             sex = c("M", "F", "M", "F", "F", "F", "F", "M"),
-             stringsAsFactors = FALSE)
+  data.frame(
+    id = c("s1", "d1", "s2", "d2", "o1", "o2", "o3", "o4"),
+    sire = c("s0", "s0", "s4", NA, "s1", "s1", "s2", "s2"),
+    dam = c(NA, "d0", "d4", NA, "d1", "d2", "d2", "d2"),
+    sex = c("M", "F", "M", "F", "F", "F", "F", "M"),
+    stringsAsFactors = FALSE
+  )
 newPed <- addUIds(pedThree)
 newPed[newPed$id == "s1", ]
 }

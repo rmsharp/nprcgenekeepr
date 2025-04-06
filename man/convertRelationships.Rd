@@ -39,7 +39,8 @@ rel <- convertRelationships(kmat, ped, updateProgress = function() {})
 head(rel)
 ped <- nprcgenekeepr::qcPed
 bkmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen,
-                 sparse = FALSE)
+  sparse = FALSE
+)
 relBIds <- convertRelationships(bkmat, ped, c("4LFS70", "DD1U77"))
 relBIds
 }

@@ -40,7 +40,7 @@ This does not work if the pedigree does not have all parent IDs as ego IDs.
 }
 \examples{
 library(nprcgenekeepr)
-ped <- nprcgenekeepr::lacy1989Ped[ , c("id", "sire", "dam")]
+ped <- nprcgenekeepr::lacy1989Ped[, c("id", "sire", "dam")]
 ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 ped
 }

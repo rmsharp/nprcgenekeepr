@@ -4,9 +4,9 @@
 \alias{getPotentialSires}
 \title{Provides list of potential sires}
 \usage{
-getPotentialSires(ids, minAge = 1, ped)
+getPotentialSires(ids, minAge = 1L, ped)
 
-getPotentialSires(ids, minAge = 1, ped)
+getPotentialSires(ids, minAge = 1L, ped)
 }
 \arguments{
 \item{ids}{character vector of IDs of the animals}
@@ -32,7 +32,7 @@ Provides list of potential sires
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::pedWithGenotype
 ids <- nprcgenekeepr::qcBreeders
-getPotentialSires(ids, minAge = 1, ped)
+getPotentialSires(ids, minAge = 1L, ped)
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::pedWithGenotype
 ids <- nprcgenekeepr::qcBreeders

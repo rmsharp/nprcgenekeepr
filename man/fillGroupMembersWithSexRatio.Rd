@@ -50,39 +50,48 @@ specified by \code{sexRatio}.
 The sex ratio is the ratio of females to males.
 }
 \examples{
+library(nprcgenekeepr)
 examplePedigree <- nprcgenekeepr::examplePedigree
-ped <- qcStudbook(examplePedigree, minParentAge = 2, reportChanges = FALSE,
-                  reportErrors = FALSE)
+ped <- qcStudbook(examplePedigree,
+  minParentAge = 2L, reportChanges = FALSE,
+  reportErrors = FALSE
+)
 
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
 currentGroups <- list(1)
-currentGroups[[1]] <- examplePedigree$id[1:3]
+currentGroups[[1]] <- examplePedigree$id[1L:3L]
 candidates <- examplePedigree$id[examplePedigree$status == "ALIVE"]
 threshold <- 0.015625
 kin <- getAnimalsWithHighKinship(kmat, ped, threshold, currentGroups,
-                                 ignore = list(c("F", "F")), minAge = 1)
+  ignore = list(c("F", "F")), minAge = 1L
+)
 # Filtering out candidates related to current group members
-conflicts <- unique(c(unlist(kin[unlist(currentGroups)]),
-                      unlist(currentGroups)))
+conflicts <- unique(c(
+  unlist(kin[unlist(currentGroups)]),
+  unlist(currentGroups)
+))
 candidates <- setdiff(candidates, conflicts)
 
 kin <- addAnimalsWithNoRelative(kin, candidates)
 
 ignore <- NULL
-minAge <- 1
-numGp <- 1
+minAge <- 1.0
+numGp <- 1L
 harem <- FALSE
-sexRatio <- 0
+sexRatio <- 0.0
 withKin <- FALSE
 groupMembers <- nprcgenekeepr:::makeGroupMembers(numGp,
-                                                 currentGroups,
-                                                 candidates,
-                                                 ped,
-                                                 harem = harem,
-                                                 minAge = minAge)
+  currentGroups,
+  candidates,
+  ped,
+  harem = harem,
+  minAge = minAge
+)
 groupMembersStart <- groupMembers
 grpNum <- nprcgenekeepr:::makeGrpNum(numGp)
 
 groupMembers <- fillGroupMembersWithSexRatio(
-  candidates, groupMembers, grpNum, kin, ped, minAge, numGp, sexRatio = 1)
+  candidates, groupMembers, grpNum, kin, ped, minAge, numGp,
+  sexRatio = 1.0
+)
 }

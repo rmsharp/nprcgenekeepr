@@ -4,7 +4,7 @@
 \alias{checkParentAge}
 \title{Check parent ages to be at least \code{minParentAge}}
 \usage{
-checkParentAge(sb, minParentAge = 2, reportErrors = FALSE)
+checkParentAge(sb, minParentAge = 2L, reportErrors = FALSE)
 }
 \arguments{
 \item{sb}{A dataframe containing a table of pedigree and demographic
@@ -36,9 +36,9 @@ Ensure parents are sufficiently older than offspring
 \examples{
 library(nprcgenekeepr)
 qcPed <- nprcgenekeepr::qcPed
-checkParentAge(qcPed, minParentAge = 2)
-checkParentAge(qcPed, minParentAge = 3)
-checkParentAge(qcPed, minParentAge = 5)
-checkParentAge(qcPed, minParentAge = 6)
-head(checkParentAge(qcPed, minParentAge = 10))
+checkParentAge(qcPed, minParentAge = 2L)
+checkParentAge(qcPed, minParentAge = 3L)
+checkParentAge(qcPed, minParentAge = 5L)
+checkParentAge(qcPed, minParentAge = 6L)
+head(checkParentAge(qcPed, minParentAge = 10L))
 }

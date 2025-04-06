@@ -4,7 +4,7 @@
 \alias{set_seed}
 \title{Work around for unit tests using sample() among various versions of R}
 \usage{
-set_seed(seed = 1)
+set_seed(seed = 1L)
 }
 \arguments{
 \item{seed}{argument to \code{set.seed}}

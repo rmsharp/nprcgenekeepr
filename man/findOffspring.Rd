@@ -24,12 +24,14 @@ Part of Genetic Value Analysis
 \examples{
 library(nprcgenekeepr)
 examplePedigree <- nprcgenekeepr::examplePedigree
-breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
-                         reportChanges = FALSE,
-                         reportErrors = FALSE)
+breederPed <- qcStudbook(examplePedigree,
+  minParentAge = 2,
+  reportChanges = FALSE,
+  reportErrors = FALSE
+)
 focalAnimals <- breederPed$id[!(is.na(breederPed$sire) &
-                                  is.na(breederPed$dam)) &
-                                is.na(breederPed$exit)]
+  is.na(breederPed$dam)) &
+  is.na(breederPed$exit)]
 ped <- setPopulation(ped = breederPed, ids = focalAnimals)
 trimmedPed <- trimPedigree(focalAnimals, breederPed)
 probands <- ped$id[ped$population]

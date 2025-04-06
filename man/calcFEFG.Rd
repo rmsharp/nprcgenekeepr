@@ -43,8 +43,10 @@ pedFactors <- data.frame(
   stringsAsFactors = TRUE
 )
 allelesFactors <- geneDrop(pedFactors$id, pedFactors$sire, pedFactors$dam,
-                           pedFactors$gen, genotype = NULL, n = 5000,
-                           updateProgress = NULL)
+  pedFactors$gen,
+  genotype = NULL, n = 5000,
+  updateProgress = NULL
+)
 feFg <- calcFEFG(ped, alleles)
 feFgFactors <- calcFEFG(pedFactors, allelesFactors)
 }

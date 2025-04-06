@@ -5,7 +5,7 @@
 \title{Calculates \code{a}, the number of an individual's alleles that are rare in
 each simulation.}
 \usage{
-calcA(alleles, threshold = 1, byID = FALSE)
+calcA(alleles, threshold = 1L, byID = FALSE)
 }
 \arguments{
 \item{alleles}{a matrix with \{id, parent, V1 ... Vn\} providing the alleles

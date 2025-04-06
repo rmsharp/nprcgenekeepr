@@ -23,7 +23,9 @@ Assumes genotype has been opened by \code{checkGenotypeFile}
 library(nprcgenekeepr)
 rhesusPedigree <- nprcgenekeepr::rhesusPedigree
 rhesusGenotypes <- nprcgenekeepr::rhesusGenotypes
-pedWithGenotypes <- addGenotype(ped = rhesusPedigree,
-                                genotype = rhesusGenotypes)
+pedWithGenotypes <- addGenotype(
+  ped = rhesusPedigree,
+  genotype = rhesusGenotypes
+)
 
 }

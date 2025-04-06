@@ -23,12 +23,14 @@ Part of the pedigree filtering toolset.
 }
 \examples{
 examplePedigree <- nprcgenekeepr::examplePedigree
-breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
-                         reportChanges = FALSE,
-                         reportErrors = FALSE)
+breederPed <- qcStudbook(examplePedigree,
+  minParentAge = 2,
+  reportChanges = FALSE,
+  reportErrors = FALSE
+)
 focalAnimals <- breederPed$id[!(is.na(breederPed$sire) &
-                                  is.na(breederPed$dam)) &
-                                is.na(breederPed$exit)]
+  is.na(breederPed$dam)) &
+  is.na(breederPed$exit)]
 breederPed <- setPopulation(ped = breederPed, ids = focalAnimals)
 nrow(breederPed[breederPed$population, ])
 }

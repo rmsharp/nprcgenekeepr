@@ -17,16 +17,20 @@ element.
 Gets tokens from character vector of lines
 }
 \examples{
-lines <- c("center = \"SNPRC\"",
-           " baseUrl = \"https://boomer.txbiomed.local:8080/labkey\"",
-           " schemaName = \"study\"", " folderPath = \"/SNPRC\"",
-           " queryName = \"demographics\"",
-           "lkPedColumns = (\"Id\", \"gender\", \"birth\", \"death\",",
-           "              \"lastDayAtCenter\", \"dam\", \"sire\")",
-           "mapPedColumns = (\"id\", \"sex\", \"birth\", \"death\", ",
-           "  \"exit\", \"dam\", \"sire\")")
-lkVec <- c("Id", "gender", "birth", "death",
-           "lastDayAtCenter", "dam", "sire")
+lines <- c(
+  "center = \"SNPRC\"",
+  " baseUrl = \"https://boomer.txbiomed.local:8080/labkey\"",
+  " schemaName = \"study\"", " folderPath = \"/SNPRC\"",
+  " queryName = \"demographics\"",
+  "lkPedColumns = (\"Id\", \"gender\", \"birth\", \"death\",",
+  "              \"lastDayAtCenter\", \"dam\", \"sire\")",
+  "mapPedColumns = (\"id\", \"sex\", \"birth\", \"death\", ",
+  "  \"exit\", \"dam\", \"sire\")"
+)
+lkVec <- c(
+  "Id", "gender", "birth", "death",
+  "lastDayAtCenter", "dam", "sire"
+)
 mapVec <- c("id", "sex", "birth", "death", "exit", "dam", "sire")
 tokenList <- getTokenList(lines)
 params <- tokenList$param

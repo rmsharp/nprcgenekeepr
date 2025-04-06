@@ -17,7 +17,7 @@ Allows running \code{shiny} application with
 }
 \examples{
 if (interactive()) {
-library(nprcgenekeepr)
-runGeneKeepR()
+  library(nprcgenekeepr)
+  runGeneKeepR()
 }
 }

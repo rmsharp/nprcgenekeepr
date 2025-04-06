@@ -4,7 +4,7 @@
 \alias{withinIntegerRange}
 \title{Get integer within a range}
 \usage{
-withinIntegerRange(int = 0, minimum = 0, maximum = 0, na = "min")
+withinIntegerRange(int = 0L, minimum = 0L, maximum = 0L, na = "min")
 }
 \arguments{
 \item{int}{value to be forced within a range}
@@ -28,9 +28,9 @@ warning.
 \examples{
 library(nprcgenekeepr)
 withinIntegerRange()
-withinIntegerRange( , 0, 10)
+withinIntegerRange(, 0, 10)
 withinIntegerRange(NA, 0, 10, na = "max")
-withinIntegerRange( , 0, 10, na = "max") # no argument is not NA
+withinIntegerRange(, 0, 10, na = "max") # no argument is not NA
 withinIntegerRange(LETTERS, 0, 10)
 withinIntegerRange(2.6, 1, 5)
 withinIntegerRange(2.6, 0, 2)

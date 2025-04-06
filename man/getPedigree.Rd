@@ -20,5 +20,6 @@ Get pedigree from file
 \examples{
 library(nprcgenekeepr)
 ped <- getPedigree(fileName = system.file("testdata", "qcPed.csv",
-                   package="nprcgenekeepr"))
+  package = "nprcgenekeepr"
+))
 }

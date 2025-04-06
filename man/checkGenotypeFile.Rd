@@ -22,17 +22,23 @@ file. These checks are simply based on expected columns and legal domains.
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::qcPed
 ped <- ped[order(ped$id), ]
-genotype <- data.frame(id = ped$id[50 + 1:20],
-                       first_name = paste0("first_name", 1:20),
-                       second_name = paste0("second_name", 1:20),
-                       stringsAsFactors = FALSE)
+genotype <- data.frame(
+  id = ped$id[50 + 1:20],
+  first_name = paste0("first_name", 1:20),
+  second_name = paste0("second_name", 1:20),
+  stringsAsFactors = FALSE
+)
 
 ## checkGenotypeFile disallows dataframe with < 3 columns
-tryCatch({
-  checkGenotypeFile(genotype[ , c("id", "first_name")])
-  }, warning = function(w) {
+tryCatch(
+  {
+    checkGenotypeFile(genotype[, c("id", "first_name")])
+  },
+  warning = function(w) {
     cat("Warning produced")
-  }, error = function(e) {
+  },
+  error = function(e) {
     cat("Error produced")
-})
+  }
+)
 }

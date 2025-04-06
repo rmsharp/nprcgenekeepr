@@ -21,60 +21,83 @@ once.
 }
 \description{
 A \code{kValue} matrix has one row for each pair of individuals in the kinship
+matrix and one column for each kinship matrix.
+A \code{kValue} matrix has one row for each pair of individuals in the kinship
 matrix and one column for each kinship matrix. Thus, in a kinship matrix with
 20 individuals the kinship matrix will have 20 rows by 20 columns but only
 the upper or lower triangle has unique information as the diagonal values are
 by definition all 1.0 and the upper triangle has the same values as the
-lower triangle. The \code{kValue} table will have \eqn{20 + (20 * 19) / 2}
-elements with the 20 values from the kinship coeficient matrix diagonal and
-\eqn{2*19}{2} elements from one of the two triangles.
+lower triangle. The \code{kValue} table will have 210 rows. The calculation for
+the number or row in the \code{kValue} table is  \eqn{20 + (20 * 19) / 2}
+rows with the 20 values from the kinship coeficient matrix diagonal and
+\eqn{(20 * 19) / 2} elements from one of either of the two triangles.
 }
 \details{
 The \code{kValue} matrix for 1
-kinship matrix for 20 individuals will have 190 rows and 3 columns. The
+kinship matrix for 20 individuals will have 210 rows and 3 columns. The
 first two columns are dedicated to the ID pairs and the third column contains
 the pair's kinship coefficient.
 
-Thus, the number of rows in the kValues matrix from one kinship matrix will
-be \eqn{n + \eqn{n(n-1)}{2}} and the number of columns will be 3.
+Thus, the number of rows in the kValues matrix will
+be \eqn{n + n(n-1) / 2} and the number of columns will be 3.
 }
 \examples{
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::smallPed
-simParent_1 <- list(id = "A",
-                    sires = c("s1_1", "s1_2", "s1_3"),
-                    dams = c("d1_1", "d1_2", "d1_3", "d1_4"))
-simParent_2 <- list(id = "B",
-                    sires = c("s1_1", "s1_2", "s1_3"),
-                    dams = c("d1_1", "d1_2", "d1_3", "d1_4"))
-simParent_3 <- list(id = "E",
-                    sires = c("A", "C", "s1_1"),
-                    dams = c("d3_1", "B"))
-simParent_4 <- list(id = "J",
-                    sires = c("A", "C", "s1_1"),
-                    dams = c("d3_1", "B"))
-simParent_5 <- list(id = "K",
-                    sires = c("A", "C", "s1_1"),
-                    dams = c("d3_1", "B"))
-simParent_6 <- list(id = "N",
-                    sires = c("A", "C", "s1_1"),
-                    dams = c("d3_1", "B"))
-allSimParents <- list(simParent_1, simParent_2, simParent_3,
-                      simParent_4, simParent_5, simParent_6)
+simParent_1 <- list(
+  id = "A",
+  sires = c("s1_1", "s1_2", "s1_3"),
+  dams = c("d1_1", "d1_2", "d1_3", "d1_4")
+)
+simParent_2 <- list(
+  id = "B",
+  sires = c("s1_1", "s1_2", "s1_3"),
+  dams = c("d1_1", "d1_2", "d1_3", "d1_4")
+)
+simParent_3 <- list(
+  id = "E",
+  sires = c("A", "C", "s1_1"),
+  dams = c("d3_1", "B")
+)
+simParent_4 <- list(
+  id = "J",
+  sires = c("A", "C", "s1_1"),
+  dams = c("d3_1", "B")
+)
+simParent_5 <- list(
+  id = "K",
+  sires = c("A", "C", "s1_1"),
+  dams = c("d3_1", "B")
+)
+simParent_6 <- list(
+  id = "N",
+  sires = c("A", "C", "s1_1"),
+  dams = c("d3_1", "B")
+)
+allSimParents <- list(
+  simParent_1, simParent_2, simParent_3,
+  simParent_4, simParent_5, simParent_6
+)
 
 extractKinship <- function(simKinships, id1, id2, simulation) {
   ids <- dimnames(simKinships[[simulation]])[[1]]
-  simKinships[[simulation]][seq_along(ids)[ids == id1],
-                            seq_along(ids)[ids == id2]]
+  simKinships[[simulation]][
+    seq_along(ids)[ids == id1],
+    seq_along(ids)[ids == id2]
+  ]
 }
 
 extractKValue <- function(kValue, id1, id2, simulation) {
-  kValue[kValue$id_1 ==  id1 & kValue$id_2 == id2,
-         paste0("sim_", simulation)]
+  kValue[
+    kValue$id_1 == id1 & kValue$id_2 == id2,
+    paste0("sim_", simulation)
+  ]
 }
 
 simPed <- makeSimPed(ped, allSimParents)
-simKinship <- kinship(simPed$id, simPed$sire,
-                      simPed$dam, simPed$gen)
+simKinship <- kinship(
+  simPed$id, simPed$sire,
+  simPed$dam, simPed$gen
+)
 kValues <- kinshipMatrixToKValues(simKinship)
 }

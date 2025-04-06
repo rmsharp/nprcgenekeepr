@@ -7,9 +7,9 @@ adjusts all date within a specified amount.}
 \usage{
 obfuscatePed(
   ped,
-  size = 6,
-  maxDelta = 30,
-  existingIds = character(0),
+  size = 6L,
+  maxDelta = 30L,
+  existingIds = character(0L),
   map = FALSE
 )
 }

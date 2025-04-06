@@ -26,8 +26,10 @@ Removes potential sires from list of Ids
 library(nprcgenekeepr)
 qcBreeders <- nprcgenekeepr::qcBreeders
 pedWithGenotype <- nprcgenekeepr::pedWithGenotype
-noSires <- removePotentialSires(ids = qcBreeders, minAge = 2,
-                                ped = pedWithGenotype)
+noSires <- removePotentialSires(
+  ids = qcBreeders, minAge = 2,
+  ped = pedWithGenotype
+)
 sires <- getPotentialSires(qcBreeders, minAge = 2, ped = pedWithGenotype)
 pedWithGenotype[pedWithGenotype$id \%in\% noSires, c("sex", "age")]
 pedWithGenotype[pedWithGenotype$id \%in\% sires, c("sex", "age")]

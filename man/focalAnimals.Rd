@@ -21,8 +21,10 @@ data("focalAnimals")
 data("examplePedigree")
 any(names(examplePedigree) == "population")
 nrow(examplePedigree)
-examplePedigree <- setPopulation(ped = examplePedigree,
-                                 ids = focalAnimals$id)
+examplePedigree <- setPopulation(
+  ped = examplePedigree,
+  ids = focalAnimals$id
+)
 any(names(examplePedigree) == "population")
 nrow(examplePedigree)
 nrow(examplePedigree[examplePedigree$population, ])

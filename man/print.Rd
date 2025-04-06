@@ -25,7 +25,8 @@ print.summary.nprcgenekeepr print.summary.nprcgenekeeprGV
 \examples{
 library(nprcgenekeepr)
 errorLst <- qcStudbook(nprcgenekeepr::pedInvalidDates,
-                       reportChanges = TRUE, reportErrors = TRUE)
+  reportChanges = TRUE, reportErrors = TRUE
+)
 summary(errorLst)
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::pedGood

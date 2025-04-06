@@ -23,12 +23,14 @@ NA for both sire and dam of the added back ID.
 }
 \examples{
 examplePedigree <- nprcgenekeepr::examplePedigree
-breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
-                         reportChanges = FALSE,
-                         reportErrors = FALSE)
+breederPed <- qcStudbook(examplePedigree,
+  minParentAge = 2,
+  reportChanges = FALSE,
+  reportErrors = FALSE
+)
 probands <- breederPed$id[!(is.na(breederPed$sire) &
-                               is.na(breederPed$dam)) &
-                               is.na(breederPed$exit)]
+  is.na(breederPed$dam)) &
+  is.na(breederPed$exit)]
 ped <- getProbandPedigree(probands, breederPed)
 nrow(ped)
 p <- removeUninformativeFounders(ped)

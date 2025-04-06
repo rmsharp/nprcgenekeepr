@@ -6,14 +6,14 @@
 \usage{
 groupAddAssign(
   candidates,
-  currentGroups = list(character(0)),
+  currentGroups = list(character(0L)),
   kmat,
   ped,
   threshold = 0.015625,
   ignore = list(c("F", "F")),
   minAge = 1,
-  iter = 1000,
-  numGp = 1,
+  iter = 1000L,
+  numGp = 1L,
   harem = FALSE,
   sexRatio = 0,
   withKin = FALSE,
@@ -101,40 +101,52 @@ Part of Group Formation
 \examples{
 library(nprcgenekeepr)
 examplePedigree <- nprcgenekeepr::examplePedigree
-breederPed <- qcStudbook(examplePedigree, minParentAge = 2,
-                        reportChanges = FALSE,
-                        reportErrors = FALSE)
+breederPed <- qcStudbook(examplePedigree,
+  minParentAge = 2,
+  reportChanges = FALSE,
+  reportErrors = FALSE
+)
 focalAnimals <- breederPed$id[!(is.na(breederPed$sire) &
-                                 is.na(breederPed$dam)) &
-                               is.na(breederPed$exit)]
+  is.na(breederPed$dam)) &
+  is.na(breederPed$exit)]
 ped <- setPopulation(ped = breederPed, ids = focalAnimals)
 trimmedPed <- trimPedigree(focalAnimals, breederPed)
 probands <- ped$id[ped$population]
-ped <- trimPedigree(probands, ped, removeUninformative = FALSE,
-                   addBackParents = FALSE)
-geneticValue <- reportGV(ped, guIter = 50, # should be >= 1000
-                        guThresh = 3,
-                        byID = TRUE,
-                        updateProgress = NULL)
-trimmedGeneticValue <- reportGV(trimmedPed, guIter = 50, # should be >= 1000
-                               guThresh = 3,
-                               byID = TRUE,
-                               updateProgress = NULL)
+ped <- trimPedigree(probands, ped,
+  removeUninformative = FALSE,
+  addBackParents = FALSE
+)
+geneticValue <- reportGV(ped,
+  guIter = 50, # should be >= 1000
+  guThresh = 3,
+  byID = TRUE,
+  updateProgress = NULL
+)
+trimmedGeneticValue <- reportGV(trimmedPed,
+  guIter = 50, # should be >= 1000
+  guThresh = 3,
+  byID = TRUE,
+  updateProgress = NULL
+)
 candidates <- trimmedPed$id[trimmedPed$birth < as.Date("2013-01-01") &
-                            !is.na(trimmedPed$birth) &
-                            is.na(trimmedPed$exit)]
-haremGrp <- groupAddAssign(candidates = candidates,
-                          kmat = trimmedGeneticValue[["kinship"]],
-                          ped = trimmedPed,
-                          iter = 10, # should be >= 1000
-                          numGp = 6,
-                          harem = TRUE)
+  !is.na(trimmedPed$birth) &
+  is.na(trimmedPed$exit)]
+haremGrp <- groupAddAssign(
+  candidates = candidates,
+  kmat = trimmedGeneticValue[["kinship"]],
+  ped = trimmedPed,
+  iter = 10, # should be >= 1000
+  numGp = 6,
+  harem = TRUE
+)
 haremGrp$group
-sexRatioGrp <- groupAddAssign(candidates = candidates,
-                             kmat = trimmedGeneticValue[["kinship"]],
-                             ped = trimmedPed,
-                             iter = 10, # should be >= 1000
-                             numGp = 6,
-                             sexRatio = 9)
+sexRatioGrp <- groupAddAssign(
+  candidates = candidates,
+  kmat = trimmedGeneticValue[["kinship"]],
+  ped = trimmedPed,
+  iter = 10L, # should be >= 1000L
+  numGp = 6L,
+  sexRatio = 9.0
+)
 sexRatioGrp$group
 }

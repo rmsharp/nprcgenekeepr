@@ -25,7 +25,9 @@ and legal domains.
 library(nprcgenekeepr)
 rhesusPedigree <- nprcgenekeepr::rhesusPedigree
 rhesusGenotypes <- nprcgenekeepr::rhesusGenotypes
-pedWithGenotypes <- addGenotype(ped = rhesusPedigree,
-                               genotype = rhesusGenotypes)
+pedWithGenotypes <- addGenotype(
+  ped = rhesusPedigree,
+  genotype = rhesusGenotypes
+)
 hasGenotype(pedWithGenotypes)
 }

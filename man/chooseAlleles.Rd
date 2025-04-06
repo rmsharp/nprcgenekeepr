@@ -23,5 +23,5 @@ Combines two vectors of alleles by randomly selecting one allele
 or the other at each position.
 }
 \examples{
-chooseAlleles(0:4, 5:9)
+chooseAlleles(0L:4L, 5L:9L)
 }

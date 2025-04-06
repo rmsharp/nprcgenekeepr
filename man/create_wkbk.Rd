@@ -28,8 +28,9 @@ library(nprcgenekeepr)
 
 make_df_list <- function(size) {
   df_list <- list(size)
-  if (size <= 0)
+  if (size <= 0) {
     return(df_list)
+  }
   for (i in seq_len(size)) {
     n <- sample(2:10, 2, replace = TRUE)
     df <- data.frame(matrix(data = rnorm(n[1] * n[2]), ncol = n[1]))
