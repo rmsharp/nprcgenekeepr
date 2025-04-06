@@ -101,7 +101,7 @@ administrative permissions on the computer.</p>
 <strong>GeneKeepR</strong> from GitHub with the following code.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rmsharp/nprcgenekeepr"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"rmsharp"</span>, <span class="st">"nprcgenekeepr"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>All missing packages should be automatically installed.</p>
 </div>
 </div>
@@ -379,9 +379,11 @@ selecting the <strong>Update Focal Animals</strong> button. This will
 read in an empty ID list, clear the box of IDs, and bring back all of
 the trimmed away IDs.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fig_alt_txt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Pedigree browser showing two screens; one with focal "</span>,</span>
-<span>                      <span class="st">"animals displayed and one with them cleared out of "</span>,</span>
-<span>                      <span class="st">"the display box."</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fig_alt_txt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
+<span>  <span class="st">"Pedigree browser showing two screens; one with focal "</span>,</span>
+<span>  <span class="st">"animals displayed and one with them cleared out of "</span>,</span>
+<span>  <span class="st">"the display box."</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="ColonyManagerTutorial_files/figure-html/cleared-of-focal-animals-1.png" alt="Pedigree browser showing two screens; one with focal animals displayed and one with them cleared out of the display box." width="576"></p>
 <p>Deselect the <strong>Clear Focal Animals</strong> checkbox and
 reselect the <strong>Update Focal Animals</strong> button before

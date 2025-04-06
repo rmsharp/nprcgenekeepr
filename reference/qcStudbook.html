@@ -190,8 +190,10 @@ information.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">examplePedigree</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="examplePedigree.html">examplePedigree</a></span></span></span>
-<span class="r-in"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu">qcStudbook</span><span class="op">(</span><span class="va">examplePedigree</span>, minParentAge <span class="op">=</span> <span class="fl">2</span>, reportChanges <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
-<span class="r-in"><span>                  reportErrors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu">qcStudbook</span><span class="op">(</span><span class="va">examplePedigree</span>,</span></span>
+<span class="r-in"><span>  minParentAge <span class="op">=</span> <span class="fl">2.0</span>, reportChanges <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>  reportErrors <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">ped</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "id"           "sire"         "dam"          "sex"          "gen"         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "birth"        "exit"         "age"          "ancestry"     "origin"      </span>

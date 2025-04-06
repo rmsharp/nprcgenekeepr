@@ -123,16 +123,22 @@ your file system.</p>
 <strong>makeExamplePedigreeFile</strong> function to tell
 <strong>read.table</strong> what file to read.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">breederPedCsv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="va">pedigreeFile</span>, sep <span class="op">=</span> <span class="st">","</span>, header <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                            stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">breederPedCsv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="va">pedigreeFile</span>,</span>
+<span>  sep <span class="op">=</span> <span class="st">","</span>, header <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">breederPedCsv</span><span class="op">$</span><span class="va">fromCenter</span> <span class="op">&lt;-</span> <span class="st">"TRUE"</span></span>
 <span><span class="va">breederPedCsv</span><span class="op">$</span><span class="va">fromCenter</span><span class="op">[</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPedCsv</span><span class="op">$</span><span class="va">sire</span><span class="op">)</span> <span class="op">&amp;</span></span>
-<span>                 <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPedCsv</span><span class="op">$</span><span class="va">dam</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>         <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">0.8</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span></span>
-<span>           <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPedCsv</span><span class="op">$</span><span class="va">sire</span><span class="op">)</span> <span class="op">&amp;</span></span>
-<span>             <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPedCsv</span><span class="op">$</span><span class="va">dam</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"FALSE"</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPedCsv</span><span class="op">$</span><span class="va">sire</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPedCsv</span><span class="op">$</span><span class="va">dam</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">0.8</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPedCsv</span><span class="op">$</span><span class="va">sire</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPedCsv</span><span class="op">$</span><span class="va">dam</span><span class="op">)</span></span>
+<span>    <span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"FALSE"</span></span></code></pre></div>
 <p>Note the number of rows read. Each row represents an individual
 within the pedigree.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -158,7 +164,7 @@ cause an error along with the creation of a file
 &lt;em&gt;~/lowParentAge.csv&lt;/em&gt; that will list the parents with low age at
 the birth of an offspring.&lt;/p&gt;"><sup>1</sup></a></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">breederPed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">breederPedCsv</span>, minParentAge <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">breederPed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">breederPedCsv</span>, minParentAge <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span></span></code></pre></div>
 <p>If <strong>qcStudbook</strong> reports an error, change the call by
 adding the <strong>reportErrors</strong> argument set to
 <strong>TRUE</strong> and examine the returned object. More on this is
@@ -176,16 +182,18 @@ have selected.</p>
 one parent, the following can be used.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">focalAnimals</span> <span class="op">&lt;-</span> <span class="va">breederPed</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPed</span><span class="op">$</span><span class="va">sire</span><span class="op">)</span> <span class="op">&amp;</span></span>
-<span>                                  <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPed</span><span class="op">$</span><span class="va">dam</span><span class="op">)</span><span class="op">)</span> <span class="op">&amp;</span></span>
-<span>                                <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPed</span><span class="op">$</span><span class="va">exit</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/stringi/man/stri_join.html" class="external-link">stri_c</a></span><span class="op">(</span><span class="st">"There are "</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">focalAnimals</span><span class="op">)</span>,</span>
-<span>             <span class="st">" animals in the vector _focalAnimals_."</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPed</span><span class="op">$</span><span class="va">dam</span><span class="op">)</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPed</span><span class="op">$</span><span class="va">exit</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/stringi/man/stri_join.html" class="external-link">stri_c</a></span><span class="op">(</span></span>
+<span>  <span class="st">"There are "</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">focalAnimals</span><span class="op">)</span>,</span>
+<span>  <span class="st">" animals in the vector _focalAnimals_."</span></span>
+<span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>[1] “There are 327 animals in the vector <em>focalAnimals</em>.”</p>
 <p>As can be seen, these animals have at least one parent and have not
 left the facility.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">breederPed</span><span class="op">[</span><span class="va">breederPed</span><span class="op">$</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span></span>
-<span>             <span class="va">focalAnimals</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"sire"</span>, <span class="st">"dam"</span>, <span class="st">"exit"</span><span class="op">)</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="op">]</span></span></code></pre></div>
+<span>  <span class="va">focalAnimals</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"sire"</span>, <span class="st">"dam"</span>, <span class="st">"exit"</span><span class="op">)</span><span class="op">]</span><span class="op">[</span><span class="fl">1L</span><span class="op">:</span><span class="fl">10L</span>, <span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##          id   sire    dam exit</span></span>
 <span><span class="co">## 1669 01QRQ4 VDBGDP TH7HTY &lt;NA&gt;</span></span>
 <span><span class="co">## 1743 CLSVU6 ULV9M7 SUFWJI &lt;NA&gt;</span></span>
@@ -228,7 +236,8 @@ genotypic information is ignored by
 <strong>trimPedigree</strong></em>).</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trimmedPedInformative</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/trimPedigree.html">trimPedigree</a></span><span class="op">(</span><span class="va">focalAnimals</span>, <span class="va">breederPed</span>,</span>
-<span>                                      removeUninformative <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  removeUninformative <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">trimmedPedInformative</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 509</span></span></code></pre>
 <p>We can find all of the animals that are in the trimmed pedigree but
@@ -242,10 +251,14 @@ make sure we have all of the parents by getting our list of parents from
 the entire pedigree. We then demonstrate that they are all in the
 trimmed pedigree.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">allFocalParents</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">breederPed</span><span class="op">$</span><span class="va">sire</span><span class="op">[</span><span class="va">breederPed</span><span class="op">$</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">focalAnimals</span><span class="op">]</span>,</span>
-<span>                       <span class="va">breederPed</span><span class="op">$</span><span class="va">dam</span><span class="op">[</span><span class="va">breederPed</span><span class="op">$</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">focalAnimals</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="va">trimmedFocalParents</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">trimmedPed</span><span class="op">$</span><span class="va">sire</span><span class="op">[</span><span class="va">trimmedPed</span><span class="op">$</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">focalAnimals</span><span class="op">]</span>,</span>
-<span>                       <span class="va">trimmedPed</span><span class="op">$</span><span class="va">dam</span><span class="op">[</span><span class="va">trimmedPed</span><span class="op">$</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">focalAnimals</span><span class="op">]</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">allFocalParents</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="va">breederPed</span><span class="op">$</span><span class="va">sire</span><span class="op">[</span><span class="va">breederPed</span><span class="op">$</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">focalAnimals</span><span class="op">]</span>,</span>
+<span>  <span class="va">breederPed</span><span class="op">$</span><span class="va">dam</span><span class="op">[</span><span class="va">breederPed</span><span class="op">$</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">focalAnimals</span><span class="op">]</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">trimmedFocalParents</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="va">trimmedPed</span><span class="op">$</span><span class="va">sire</span><span class="op">[</span><span class="va">trimmedPed</span><span class="op">$</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">focalAnimals</span><span class="op">]</span>,</span>
+<span>  <span class="va">trimmedPed</span><span class="op">$</span><span class="va">dam</span><span class="op">[</span><span class="va">trimmedPed</span><span class="op">$</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">focalAnimals</span><span class="op">]</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">allFocalParents</span>, <span class="va">trimmedFocalParents</span><span class="op">)</span> <span class="co"># Are the IDs the same?</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] TRUE</span></span></code></pre>
 <p>However, not all of the animals in the trimmed pedigree are either
@@ -274,8 +287,10 @@ animals are still in the colony but are not in the trimmed pedigree.<a class="fo
 <span>  <span class="va">breederPed</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPed</span><span class="op">$</span><span class="va">birth</span><span class="op">)</span> <span class="op">|</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">breederPed</span><span class="op">$</span><span class="va">exit</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="va">knownPed</span> <span class="op">&lt;-</span> <span class="va">breederPed</span><span class="op">[</span><span class="op">!</span><span class="va">breederPed</span><span class="op">$</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">unknownBirthKnownExit</span>, <span class="op">]</span></span>
 <span><span class="va">otherIds</span> <span class="op">&lt;-</span> <span class="va">knownPed</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="op">!</span><span class="va">knownPed</span><span class="op">$</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">trimmedPed</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">trimmedPed</span><span class="op">$</span><span class="va">exit</span><span class="op">)</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/stringi/man/stri_join.html" class="external-link">stri_c</a></span><span class="op">(</span><span class="st">"The living animals in the pedigree that are not in the trimmed "</span>,</span>
-<span>             <span class="st">"pedigree are "</span>, <span class="fu"><a href="../reference/get_and_or_list.html">get_and_or_list</a></span><span class="op">(</span><span class="va">otherIds</span><span class="op">)</span>, <span class="st">"."</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/stringi/man/stri_join.html" class="external-link">stri_c</a></span><span class="op">(</span></span>
+<span>  <span class="st">"The living animals in the pedigree that are not in the trimmed "</span>,</span>
+<span>  <span class="st">"pedigree are "</span>, <span class="fu"><a href="../reference/get_and_or_list.html">get_and_or_list</a></span><span class="op">(</span><span class="va">otherIds</span><span class="op">)</span>, <span class="st">"."</span></span>
+<span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>[1] “The living animals in the pedigree that are not in the trimmed
 pedigree are 0ZX29Q, 1QBKW9, 5PWJ0G, and Y3CJ5A.”</p>
 </div>
@@ -308,8 +323,10 @@ population of interest by setting the <em>population</em> column to
 created.</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">probands</span> <span class="op">&lt;-</span> <span class="va">ped</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="va">ped</span><span class="op">$</span><span class="va">population</span><span class="op">]</span></span>
-<span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/trimPedigree.html">trimPedigree</a></span><span class="op">(</span><span class="va">probands</span>, <span class="va">ped</span>, removeUninformative <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>                    addBackParents <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/trimPedigree.html">trimPedigree</a></span><span class="op">(</span><span class="va">probands</span>, <span class="va">ped</span>,</span>
+<span>  removeUninformative <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  addBackParents <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>The arguments to <strong>reportGV</strong> are all optional except
 for <em>ped</em>, but you may often want to non-default values.</p>
 <ul>
@@ -330,10 +347,12 @@ provided, the function will only count the unique alleles for an
 individual (homozygous alleles will be counted as 1).</p></li>
 </ul>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">geneticValue</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/reportGV.html">reportGV</a></span><span class="op">(</span><span class="va">ped</span>, guIter <span class="op">=</span> <span class="fl">50</span>,</span>
-<span>                         guThresh <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>                         byID <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                         updateProgress <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">geneticValue</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/reportGV.html">reportGV</a></span><span class="op">(</span><span class="va">ped</span>,</span>
+<span>  guIter <span class="op">=</span> <span class="fl">50L</span>,</span>
+<span>  guThresh <span class="op">=</span> <span class="fl">3L</span>,</span>
+<span>  byID <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  updateProgress <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">geneticValue</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## The genetic value report </span></span>
 <span><span class="co">## Individuals in Pedigree: 3694 </span></span>
@@ -349,10 +368,12 @@ individual (homozygous alleles will be counted as 1).</p></li>
 Remember that the trimmed pedigree still contains all of the genetic
 information that the full pedigree has for the focal animals.</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">trimmedGeneticValue</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/reportGV.html">reportGV</a></span><span class="op">(</span><span class="va">trimmedPed</span>, guIter <span class="op">=</span> <span class="fl">50</span>,</span>
-<span>                         guThresh <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>                         byID <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                         updateProgress <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">trimmedGeneticValue</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/reportGV.html">reportGV</a></span><span class="op">(</span><span class="va">trimmedPed</span>,</span>
+<span>  guIter <span class="op">=</span> <span class="fl">50L</span>,</span>
+<span>  guThresh <span class="op">=</span> <span class="fl">3L</span>,</span>
+<span>  byID <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  updateProgress <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">trimmedGeneticValue</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## The genetic value report </span></span>
 <span><span class="co">## Individuals in Pedigree: 327 </span></span>
@@ -394,12 +415,12 @@ columns to characters for display as a table where only the first 10
 lines are included.</p>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rpt</span> <span class="op">&lt;-</span> <span class="va">trimmedGeneticValue</span><span class="op">[[</span><span class="st">"report"</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="va">rpt</span><span class="op">$</span><span class="va">indivMeanKin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">$</span><span class="va">indivMeanKin</span>, <span class="fl">5</span><span class="op">)</span></span>
-<span><span class="va">rpt</span><span class="op">$</span><span class="va">zScores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">$</span><span class="va">zScores</span>, <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="va">rpt</span><span class="op">$</span><span class="va">gu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">$</span><span class="va">gu</span>, <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="va">rpt</span><span class="op">$</span><span class="va">indivMeanKin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">$</span><span class="va">indivMeanKin</span>, <span class="fl">5L</span><span class="op">)</span></span>
+<span><span class="va">rpt</span><span class="op">$</span><span class="va">zScores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">$</span><span class="va">zScores</span>, <span class="fl">2L</span><span class="op">)</span></span>
+<span><span class="va">rpt</span><span class="op">$</span><span class="va">gu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">$</span><span class="va">gu</span>, <span class="fl">5L</span><span class="op">)</span></span>
 <span><span class="va">rpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/toCharacter.html">toCharacter</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/headerDisplayNames.html">headerDisplayNames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="op">]</span><span class="op">)</span> <span class="co"># needs more work for display purposes.</span></span></code></pre></div>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">rpt</span><span class="op">[</span><span class="fl">1L</span><span class="op">:</span><span class="fl">10L</span>, <span class="op">]</span><span class="op">)</span> <span class="co"># needs more work for display purposes.</span></span></code></pre></div>
 <table style="width:100%;" class="table">
 <colgroup>
 <col width="3%">
@@ -623,15 +644,18 @@ shown below.</p>
 <span>    color <span class="op">=</span> <span class="st">"darkblue"</span>,</span>
 <span>    fill <span class="op">=</span> <span class="st">"lightblue"</span>,</span>
 <span>    notch <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co">#| fig.alt: &gt;</span></span>
-<span><span class="co">#|   Histogram of time between eruptions for Old Faithful.</span></span>
-<span><span class="co">#|   It is a bimodal distribution with peaks at 50-55 and</span></span>
-<span><span class="co">#|   80-90 minutes.</span></span>
+<span>    <span class="co">#|   Histogram of time between eruptions for Old Faithful.</span></span>
+<span>    <span class="co">#|   It is a bimodal distribution with peaks at 50-55 and</span></span>
+<span>    <span class="co">#|   80-90 minutes.</span></span>
 <span></span>
 <span>    outlier.color <span class="op">=</span> <span class="st">"red"</span>,</span>
-<span>    outlier.shape <span class="op">=</span> <span class="fl">1</span></span>
+<span>    outlier.shape <span class="op">=</span> <span class="fl">1L</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">theme_classic</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_jitter</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span> <span class="fu">coord_flip</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Score"</span><span class="op">)</span>  <span class="op">+</span> <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Genetic Uniqueness"</span><span class="op">)</span></span>
+<span>  <span class="fu">theme_classic</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_jitter</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">coord_flip</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Score"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Genetic Uniqueness"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">guBox</span><span class="op">)</span></span></code></pre></div>
 <p><img src="a2interactive_files/figure-html/genetic-uniqueness-boxplot-1.png" alt="Genetic Uniqueness Box Plot." width="700"></p>
 <p>Extraction of the individual <em>mean kinship</em> values and their
@@ -742,8 +766,8 @@ selecting animals at least 2 years old at the time this pedigree was
 sampled (01-01-2015).</p>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">candidates</span> <span class="op">&lt;-</span> <span class="va">trimmedPed</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="va">trimmedPed</span><span class="op">$</span><span class="va">birth</span> <span class="op">&lt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2013-01-01"</span><span class="op">)</span> <span class="op">&amp;</span></span>
-<span>                              <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">trimmedPed</span><span class="op">$</span><span class="va">birth</span><span class="op">)</span> <span class="op">&amp;</span></span>
-<span>                              <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">trimmedPed</span><span class="op">$</span><span class="va">exit</span><span class="op">)</span><span class="op">]</span></span>
+<span>  <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">trimmedPed</span><span class="op">$</span><span class="va">birth</span><span class="op">)</span> <span class="op">&amp;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">trimmedPed</span><span class="op">$</span><span class="va">exit</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">trimmedPed</span><span class="op">$</span><span class="va">sex</span><span class="op">[</span><span class="va">trimmedPed</span><span class="op">$</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">candidates</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">##   F   M   H   U </span></span>
@@ -767,12 +791,14 @@ default value of 0.015625.</p>
 done by setting <strong>harem</strong> to . Setting <code>iter</code> to
 100 or more will increase optimal composition of breeding groups</p>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">haremGrp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/groupAddAssign.html">groupAddAssign</a></span><span class="op">(</span>candidates <span class="op">=</span> <span class="va">candidates</span>,</span>
-<span>                     kmat <span class="op">=</span> <span class="va">trimmedGeneticValue</span><span class="op">[[</span><span class="st">"kinship"</span><span class="op">]</span><span class="op">]</span>,</span>
-<span>                     ped <span class="op">=</span> <span class="va">trimmedPed</span>,</span>
-<span>                     iter <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>                     numGp <span class="op">=</span> <span class="fl">6</span>,</span>
-<span>                     harem <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">haremGrp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/groupAddAssign.html">groupAddAssign</a></span><span class="op">(</span></span>
+<span>  candidates <span class="op">=</span> <span class="va">candidates</span>,</span>
+<span>  kmat <span class="op">=</span> <span class="va">trimmedGeneticValue</span><span class="op">[[</span><span class="st">"kinship"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>  ped <span class="op">=</span> <span class="va">trimmedPed</span>,</span>
+<span>  iter <span class="op">=</span> <span class="fl">10L</span>,</span>
+<span>  numGp <span class="op">=</span> <span class="fl">6L</span>,</span>
+<span>  harem <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="va">haremGrp</span><span class="op">$</span><span class="va">group</span></span></code></pre></div>
 <pre><code><span><span class="co">## [[1]]</span></span>
 <span><span class="co">##  [1] "S63QDN" "TQEMY6" "XYRDKV" "ZATMEE" "AW400C" "AR5U44" "CHK1ZX" "414N7M"</span></span>
@@ -818,7 +844,8 @@ done by setting <strong>harem</strong> to . Setting <code>iter</code> to
 code.</p>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">haremGrp</span><span class="op">$</span><span class="va">group</span>, <span class="kw">function</span><span class="op">(</span><span class="va">ids</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">ids</span><span class="op">[</span><span class="va">ids</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">trimmedPed</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="va">trimmedPed</span><span class="op">$</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"M"</span><span class="op">]</span><span class="op">]</span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="va">ids</span><span class="op">[</span><span class="va">ids</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">trimmedPed</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="va">trimmedPed</span><span class="op">$</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"M"</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [[1]]</span></span>
 <span><span class="co">## [1] "S63QDN"</span></span>
 <span><span class="co">## </span></span>
@@ -846,8 +873,11 @@ each group. Since these are harem groups the sex ratios are determined
 by the number of animals in the individual groups.</p>
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lines</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">haremGrp</span><span class="op">$</span><span class="va">group</span>, <span class="kw">function</span><span class="op">(</span><span class="va">ids</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Count: "</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ids</span><span class="op">)</span>, <span class="st">" Sex Ratio: "</span>,</span>
-<span>         <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="../reference/calculateSexRatio.html">calculateSexRatio</a></span><span class="op">(</span><span class="va">ids</span>, <span class="va">trimmedPed</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">}</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Count: "</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ids</span><span class="op">)</span>, <span class="st">" Sex Ratio: "</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="../reference/calculateSexRatio.html">calculateSexRatio</a></span><span class="op">(</span><span class="va">ids</span>, <span class="va">trimmedPed</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">line</span> <span class="kw">in</span> <span class="va">lines</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">line</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Count: 29 Sex Ratio: 28"</span></span>
 <span><span class="co">## [1] "Count: 27 Sex Ratio: 26"</span></span>
@@ -865,12 +895,14 @@ included.</p>
 <p>The following group assignments will be forming harem groups. This is
 done by setting <strong>harem</strong> to .</p>
 <div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sexRatioGrp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/groupAddAssign.html">groupAddAssign</a></span><span class="op">(</span>candidates <span class="op">=</span> <span class="va">candidates</span>,</span>
-<span>                     kmat <span class="op">=</span> <span class="va">trimmedGeneticValue</span><span class="op">[[</span><span class="st">"kinship"</span><span class="op">]</span><span class="op">]</span>,</span>
-<span>                     ped <span class="op">=</span> <span class="va">trimmedPed</span>,</span>
-<span>                     iter <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>                     numGp <span class="op">=</span> <span class="fl">6</span>,</span>
-<span>                     sexRatio <span class="op">=</span> <span class="fl">9</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">sexRatioGrp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/groupAddAssign.html">groupAddAssign</a></span><span class="op">(</span></span>
+<span>  candidates <span class="op">=</span> <span class="va">candidates</span>,</span>
+<span>  kmat <span class="op">=</span> <span class="va">trimmedGeneticValue</span><span class="op">[[</span><span class="st">"kinship"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>  ped <span class="op">=</span> <span class="va">trimmedPed</span>,</span>
+<span>  iter <span class="op">=</span> <span class="fl">10L</span>,</span>
+<span>  numGp <span class="op">=</span> <span class="fl">6L</span>,</span>
+<span>  sexRatio <span class="op">=</span> <span class="fl">9.0</span></span>
+<span><span class="op">)</span></span>
 <span><span class="va">sexRatioGrp</span><span class="op">$</span><span class="va">group</span></span></code></pre></div>
 <pre><code><span><span class="co">## [[1]]</span></span>
 <span><span class="co">##  [1] "SHG3RB" "8TV4MT" "QRZK48" "D9P18Y" "414N7M" "SH3FB7" "0XTZQ1" "3YJIMV"</span></span>
@@ -928,7 +960,8 @@ done by setting <strong>harem</strong> to .</p>
 following code.</p>
 <div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">sexRatioGrp</span><span class="op">$</span><span class="va">group</span>, <span class="kw">function</span><span class="op">(</span><span class="va">ids</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">ids</span><span class="op">[</span><span class="va">ids</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">trimmedPed</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="va">trimmedPed</span><span class="op">$</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"M"</span><span class="op">]</span><span class="op">]</span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="va">ids</span><span class="op">[</span><span class="va">ids</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">trimmedPed</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="va">trimmedPed</span><span class="op">$</span><span class="va">sex</span> <span class="op">==</span> <span class="st">"M"</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [[1]]</span></span>
 <span><span class="co">## [1] "8TV4MT" "KZM9RB" "HLQ9SY" "G2GYST"</span></span>
 <span><span class="co">## </span></span>
@@ -962,8 +995,11 @@ following code.</p>
 each group.</p>
 <div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lines</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">sexRatioGrp</span><span class="op">$</span><span class="va">group</span>, <span class="kw">function</span><span class="op">(</span><span class="va">ids</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Count: "</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ids</span><span class="op">)</span>, <span class="st">" Sex Ratio: "</span>,</span>
-<span>         <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="../reference/calculateSexRatio.html">calculateSexRatio</a></span><span class="op">(</span><span class="va">ids</span>, <span class="va">trimmedPed</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">}</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Count: "</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ids</span><span class="op">)</span>, <span class="st">" Sex Ratio: "</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="../reference/calculateSexRatio.html">calculateSexRatio</a></span><span class="op">(</span><span class="va">ids</span>, <span class="va">trimmedPed</span><span class="op">)</span>, <span class="fl">2L</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">line</span> <span class="kw">in</span> <span class="va">lines</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">line</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Count: 35 Sex Ratio: 7.75"</span></span>
 <span><span class="co">## [1] "Count: 26 Sex Ratio: 7.67"</span></span>
@@ -1128,8 +1164,8 @@ of a file in the R sessions temporary directory that lists the records
 that have generated the errors.</p>
 <div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pedOne</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="../reference/pedOne.html">pedOne</a></span> <span class="co"># put it in the local environment</span></span>
-<span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">pedOne</span>, minParentAge <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in qcStudbook(pedOne, minParentAge = 0): Parents with low age at birth of offspring are listed in /tmp/RtmpzOtV7I/lowParentAge.csv.</span></span></code></pre>
+<span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">pedOne</span>, minParentAge <span class="op">=</span> <span class="fl">0.0</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Error in qcStudbook(pedOne, minParentAge = 0): Parents with low age at birth of offspring are listed in /tmp/RtmpIG3aKT/lowParentAge.csv.</span></span></code></pre>
 <p>The contents of <em>lowParentAge.csv</em> is shown below.</p>
 <table class="table">
 <colgroup>
@@ -1214,13 +1250,13 @@ we get from <strong>qcStudbook</strong>. We have chosen to limit the
 displayed pedigree by selecting the <em>ego_id</em>’s and <em>id</em>’s
 in <strong>pedOne</strong> and <strong>ped</strong> respectively.</p>
 <div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">pedOne</span>, minParentAge <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">pedOne</span>, minParentAge <span class="op">=</span> <span class="fl">0.0</span><span class="op">)</span></span>
 <span><span class="va">ped</span><span class="op">[</span><span class="va">ped</span><span class="op">$</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s2"</span>, <span class="st">"d2"</span>, <span class="st">"o3"</span>, <span class="st">"o4"</span><span class="op">)</span>, <span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##   id sire  dam sex gen      birth exit  age recordStatus</span></span>
-<span><span class="co">## 2 d2 &lt;NA&gt; &lt;NA&gt;   F   0 2006-04-13 &lt;NA&gt; 18.8     original</span></span>
-<span><span class="co">## 4 s2 &lt;NA&gt; &lt;NA&gt;   M   0 2006-06-19 &lt;NA&gt; 18.6     original</span></span>
-<span><span class="co">## 7 o3   s2   d2   F   1 2012-04-11 &lt;NA&gt; 12.8     original</span></span>
-<span><span class="co">## 8 o4   s2   d2   M   1 2015-09-16 &lt;NA&gt;  9.4     original</span></span></code></pre>
+<span><span class="co">## 2 d2 &lt;NA&gt; &lt;NA&gt;   F   0 2006-04-13 &lt;NA&gt; 19.0     original</span></span>
+<span><span class="co">## 4 s2 &lt;NA&gt; &lt;NA&gt;   M   0 2006-06-19 &lt;NA&gt; 18.8     original</span></span>
+<span><span class="co">## 7 o3   s2   d2   F   1 2012-04-11 &lt;NA&gt; 13.0     original</span></span>
+<span><span class="co">## 8 o4   s2   d2   M   1 2015-09-16 &lt;NA&gt;  9.6     original</span></span></code></pre>
 <p>However, the preferred method of creating the standardized studbook
 format with <strong>qcStudbook</strong> is to examine all errors found
 and correcting them before proceeding. This is done by explicitly
@@ -1228,8 +1264,10 @@ requesting that all aspects inconsistent with the studbook format be
 identified by setting <em>reportChanges</em> and <em>reportErrors</em>
 to .</p>
 <div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">errorList</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">pedOne</span>, minParentAge <span class="op">=</span> <span class="fl">0</span>, reportChanges <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                        reportErrors <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">errorList</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">pedOne</span>,</span>
+<span>  minParentAge <span class="op">=</span> <span class="fl">0.0</span>, reportChanges <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  reportErrors <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">errorList</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Error: The animal listed as a sire and also listed as a female is: s1.</span></span>
 <span><span class="co">## Error: The animal listed as a dam and also listed as a male is: d1.</span></span>
@@ -1252,9 +1290,11 @@ suspicious parents are reported by the <strong>summary</strong>
 function.</p>
 <div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pedOne</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="../reference/pedOne.html">pedOne</a></span></span>
-<span><span class="va">errorList</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">pedOne</span>, minParentAge <span class="op">=</span> <span class="fl">0</span>, reportChanges <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>                        reportErrors <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">90</span><span class="op">)</span></span>
+<span><span class="va">errorList</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">pedOne</span>,</span>
+<span>  minParentAge <span class="op">=</span> <span class="fl">0L</span>, reportChanges <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  reportErrors <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">90L</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">errorList</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Error: The animal listed as a sire and also listed as a female is: s1.</span></span>
 <span><span class="co">## Error: The animal listed as a dam and also listed as a male is: d1.</span></span>
@@ -1286,16 +1326,16 @@ continuing to use the example pedigree that comes with the software
 <span><span class="va">exampleLoops</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/findLoops.html">findLoops</a></span><span class="op">(</span><span class="va">exampleTree</span><span class="op">)</span></span></code></pre></div>
 <p>You can count how many loops you have with the following code.</p>
 <div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">exampleLoops</span><span class="op">[</span><span class="va">exampleLoops</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 145</span></span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">exampleLoops</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 3694</span></span></code></pre>
 <div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nLoops</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/countLoops.html">countLoops</a></span><span class="op">(</span><span class="va">exampleLoops</span>, <span class="va">exampleTree</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">nLoops</span><span class="op">[</span><span class="va">nLoops</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">nLoops</span><span class="op">[</span><span class="va">nLoops</span> <span class="op">&gt;</span> <span class="fl">0L</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 258</span></span></code></pre>
 <p>You can list the first 10 sets of ids, sires and dams in loops with
 the following line of code:</p>
 <div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">examplePedigree</span><span class="op">[</span><span class="va">exampleLoops</span> <span class="op">==</span> <span class="cn">TRUE</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"sire"</span>, <span class="st">"dam"</span><span class="op">)</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="op">]</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">examplePedigree</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">exampleLoops</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"sire"</span>, <span class="st">"dam"</span><span class="op">)</span><span class="op">]</span><span class="op">[</span><span class="fl">1L</span><span class="op">:</span><span class="fl">10L</span>, <span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##          id   sire    dam</span></span>
 <span><span class="co">## 2519 V49H3Y UFI88T 9T7Y2Z</span></span>
 <span><span class="co">## 2572 61FUGE UDQ5WC GL88CF</span></span>
@@ -1309,13 +1349,13 @@ the following line of code:</p>
 <span><span class="co">## 2941 0VLW56 6KPKH7 MMEHXV</span></span></code></pre>
 <div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">elapsed_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_elapsed_time_str.html">get_elapsed_time_str</a></span><span class="op">(</span><span class="va">start_time</span><span class="op">)</span></span></code></pre></div>
-<p>The current date and time is 2025-01-29 02:24:37.092805. The
-processing time for this document was 14 seconds..</p>
+<p>The current date and time is 2025-04-06 03:57:24.086288. The
+processing time for this document was 13 seconds..</p>
 <div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## R version 4.4.2 (2024-10-31)</span></span>
+<pre><code><span><span class="co">## R version 4.4.3 (2025-02-28)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>
-<span><span class="co">## Running under: Ubuntu 24.04.1 LTS</span></span>
+<span><span class="co">## Running under: Ubuntu 24.04.2 LTS</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Matrix products: default</span></span>
 <span><span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
@@ -1339,27 +1379,27 @@ processing time for this document was 14 seconds..</p>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] nprcgenekeepr_1.0.7 knitr_1.49          ggplot2_3.5.1       stringi_1.8.4      </span></span>
+<span><span class="co">## [1] nprcgenekeepr_1.0.7 knitr_1.50          ggplot2_3.5.1       stringi_1.8.7      </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##  [1] gtable_0.3.6         anytime_0.3.11       xfun_0.50            bslib_0.8.0         </span></span>
-<span><span class="co">##  [5] htmlwidgets_1.6.4    lattice_0.22-6       vctrs_0.6.5          tools_4.4.2         </span></span>
-<span><span class="co">##  [9] generics_0.1.3       tibble_3.2.1         pkgconfig_2.0.3      Matrix_1.7-1        </span></span>
-<span><span class="co">## [13] data.table_1.16.4    checkmate_2.3.2      desc_1.4.3           readxl_1.4.3        </span></span>
-<span><span class="co">## [17] lifecycle_1.0.4      farver_2.1.2         compiler_4.4.2       stringr_1.5.1       </span></span>
-<span><span class="co">## [21] textshaping_1.0.0    munsell_0.5.1        Rlabkey_3.4.1        httpuv_1.6.15       </span></span>
+<span><span class="co">##  [1] gtable_0.3.6         anytime_0.3.11       xfun_0.52            bslib_0.9.0         </span></span>
+<span><span class="co">##  [5] htmlwidgets_1.6.4    lattice_0.22-6       vctrs_0.6.5          tools_4.4.3         </span></span>
+<span><span class="co">##  [9] generics_0.1.3       tibble_3.2.1         pkgconfig_2.0.3      Matrix_1.7-2        </span></span>
+<span><span class="co">## [13] data.table_1.17.0    checkmate_2.3.2      desc_1.4.3           readxl_1.4.5        </span></span>
+<span><span class="co">## [17] lifecycle_1.0.4      farver_2.1.2         compiler_4.4.3       stringr_1.5.1       </span></span>
+<span><span class="co">## [21] textshaping_1.0.0    munsell_0.5.1        Rlabkey_3.4.2        httpuv_1.6.15       </span></span>
 <span><span class="co">## [25] htmltools_0.5.8.1    sass_0.4.9           yaml_2.3.10          htmlTable_2.4.3     </span></span>
 <span><span class="co">## [29] later_1.4.1          pillar_1.10.1        pkgdown_2.1.1        jquerylib_0.1.4     </span></span>
-<span><span class="co">## [33] cachem_1.1.0         sessioninfo_1.2.2    mime_0.12            tidyselect_1.2.1    </span></span>
+<span><span class="co">## [33] cachem_1.1.0         sessioninfo_1.2.3    mime_0.13            tidyselect_1.2.1    </span></span>
 <span><span class="co">## [37] digest_0.6.37        dplyr_1.1.4          labeling_0.4.3       WriteXLS_6.7.0      </span></span>
-<span><span class="co">## [41] fastmap_1.2.0        grid_4.4.2           colorspace_2.1-1     cli_3.6.3           </span></span>
+<span><span class="co">## [41] fastmap_1.2.0        grid_4.4.3           colorspace_2.1-1     cli_3.6.4           </span></span>
 <span><span class="co">## [45] magrittr_2.0.3       withr_3.0.2          scales_1.3.0         promises_1.3.2      </span></span>
 <span><span class="co">## [49] backports_1.5.0      plotrix_3.8-4        lubridate_1.9.4      timechange_0.3.0    </span></span>
 <span><span class="co">## [53] rmarkdown_2.29       lambda.r_1.2.4       httr_1.4.7           futile.logger_1.4.3 </span></span>
 <span><span class="co">## [57] cellranger_1.1.0     ragg_1.3.3           shiny_1.10.0         evaluate_1.0.3      </span></span>
 <span><span class="co">## [61] rlang_1.1.5          futile.options_1.0.1 Rcpp_1.0.14          xtable_1.8-4        </span></span>
-<span><span class="co">## [65] glue_1.8.0           formatR_1.14         rstudioapi_0.17.1    jsonlite_1.8.9      </span></span>
-<span><span class="co">## [69] R6_2.5.1             systemfonts_1.2.1    fs_1.6.5</span></span></code></pre>
+<span><span class="co">## [65] glue_1.8.0           formatR_1.14         rstudioapi_0.17.1    jsonlite_2.0.0      </span></span>
+<span><span class="co">## [69] R6_2.6.1             systemfonts_1.2.2    fs_1.6.5</span></span></code></pre>
 </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -53,9 +53,9 @@ birthdate can be shifted (<code>maxDelta</code>).</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">obfuscatePed</span><span class="op">(</span></span>
 <span>  <span class="va">ped</span>,</span>
-<span>  size <span class="op">=</span> <span class="fl">6</span>,</span>
-<span>  maxDelta <span class="op">=</span> <span class="fl">30</span>,</span>
-<span>  existingIds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  size <span class="op">=</span> <span class="fl">6L</span>,</span>
+<span>  maxDelta <span class="op">=</span> <span class="fl">30L</span>,</span>
+<span>  existingIds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0L</span><span class="op">)</span>,</span>
 <span>  map <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -99,24 +99,24 @@ and the values being the new alias values. Defaults to <code>FALSE</code>.</p></
 <span class="r-in"><span><span class="va">obfuscatedPed</span> <span class="op">&lt;-</span> <span class="fu">obfuscatePed</span><span class="op">(</span><span class="va">ped</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">ped</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id sire  dam sex gen      birth exit  age recordStatus</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 d1 &lt;NA&gt; &lt;NA&gt;   F   0 2003-04-13 &lt;NA&gt; 21.8     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 d2 &lt;NA&gt; &lt;NA&gt;   F   0 2002-06-22 &lt;NA&gt; 22.6     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 s1 &lt;NA&gt; &lt;NA&gt;   M   0 2000-07-18 &lt;NA&gt; 24.5     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 s2 &lt;NA&gt; &lt;NA&gt;   M   0 2005-06-19 &lt;NA&gt; 19.6     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 o1   s1   d1   F   1 2015-02-04 &lt;NA&gt; 10.0     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 o2   s1   d2   F   1 2009-03-17 &lt;NA&gt; 15.9     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7 o3   s2   d2   F   1 2012-04-11 &lt;NA&gt; 12.8     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8 o4   s2   d2   M   1 2008-04-13 &lt;NA&gt; 16.8     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 d1 &lt;NA&gt; &lt;NA&gt;   F   0 2003-04-13 &lt;NA&gt; 22.0     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 d2 &lt;NA&gt; &lt;NA&gt;   F   0 2002-06-22 &lt;NA&gt; 22.8     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 s1 &lt;NA&gt; &lt;NA&gt;   M   0 2000-07-18 &lt;NA&gt; 24.7     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 s2 &lt;NA&gt; &lt;NA&gt;   M   0 2005-06-19 &lt;NA&gt; 19.8     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 o1   s1   d1   F   1 2015-02-04 &lt;NA&gt; 10.2     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 o2   s1   d2   F   1 2009-03-17 &lt;NA&gt; 16.1     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7 o3   s2   d2   F   1 2012-04-11 &lt;NA&gt; 13.0     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8 o4   s2   d2   M   1 2008-04-13 &lt;NA&gt; 17.0     original</span>
 <span class="r-in"><span><span class="va">obfuscatedPed</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       id   sire    dam sex gen      birth exit  age recordStatus</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 LS7SJB   &lt;NA&gt;   &lt;NA&gt;   F   0 2003-03-17 &lt;NA&gt; 21.9     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 P4MENX   &lt;NA&gt;   &lt;NA&gt;   F   0 2002-05-29 &lt;NA&gt; 22.7     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 NZZUQQ   &lt;NA&gt;   &lt;NA&gt;   M   0 2000-07-10 &lt;NA&gt; 24.6     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 KV6EPH   &lt;NA&gt;   &lt;NA&gt;   M   0 2005-05-30 &lt;NA&gt; 19.7     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 QER817 NZZUQQ LS7SJB   F   1 2015-01-22 &lt;NA&gt; 10.0     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 RWRDIS NZZUQQ P4MENX   F   1 2009-02-26 &lt;NA&gt; 15.9     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7 N7TLJ2 KV6EPH P4MENX   F   1 2012-03-27 &lt;NA&gt; 12.8     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8 ZFC1WF KV6EPH P4MENX   M   1 2008-03-24 &lt;NA&gt; 16.9     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 LS7SJB   &lt;NA&gt;   &lt;NA&gt;   F   0 2003-03-17 &lt;NA&gt; 22.1     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 P4MENX   &lt;NA&gt;   &lt;NA&gt;   F   0 2002-05-29 &lt;NA&gt; 22.9     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 NZZUQQ   &lt;NA&gt;   &lt;NA&gt;   M   0 2000-07-10 &lt;NA&gt; 24.7     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 KV6EPH   &lt;NA&gt;   &lt;NA&gt;   M   0 2005-05-30 &lt;NA&gt; 19.9     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 QER817 NZZUQQ LS7SJB   F   1 2015-01-22 &lt;NA&gt; 10.2     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 RWRDIS NZZUQQ P4MENX   F   1 2009-02-26 &lt;NA&gt; 16.1     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7 N7TLJ2 KV6EPH P4MENX   F   1 2012-03-27 &lt;NA&gt; 13.0     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8 ZFC1WF KV6EPH P4MENX   M   1 2008-03-24 &lt;NA&gt; 17.0     original</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

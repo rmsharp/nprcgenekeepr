@@ -91,8 +91,10 @@ in the gene dropping experiment.</p>
 <span class="r-in"><span>  stringsAsFactors <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">allelesFactors</span> <span class="op">&lt;-</span> <span class="fu"><a href="geneDrop.html">geneDrop</a></span><span class="op">(</span><span class="va">pedFactors</span><span class="op">$</span><span class="va">id</span>, <span class="va">pedFactors</span><span class="op">$</span><span class="va">sire</span>, <span class="va">pedFactors</span><span class="op">$</span><span class="va">dam</span>,</span></span>
-<span class="r-in"><span>                           <span class="va">pedFactors</span><span class="op">$</span><span class="va">gen</span>, genotype <span class="op">=</span> <span class="cn">NULL</span>, n <span class="op">=</span> <span class="fl">5000</span>,</span></span>
-<span class="r-in"><span>                           updateProgress <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">pedFactors</span><span class="op">$</span><span class="va">gen</span>,</span></span>
+<span class="r-in"><span>  genotype <span class="op">=</span> <span class="cn">NULL</span>, n <span class="op">=</span> <span class="fl">5000</span>,</span></span>
+<span class="r-in"><span>  updateProgress <span class="op">=</span> <span class="cn">NULL</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">feFg</span> <span class="op">&lt;-</span> <span class="fu">calcFEFG</span><span class="op">(</span><span class="va">ped</span>, <span class="va">alleles</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">feFgFactors</span> <span class="op">&lt;-</span> <span class="fu">calcFEFG</span><span class="op">(</span><span class="va">pedFactors</span>, <span class="va">allelesFactors</span><span class="op">)</span></span></span>
 </code></pre></div>
