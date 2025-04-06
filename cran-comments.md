@@ -63,12 +63,36 @@ This is a resubmission. In this version I have:
   using platform: x86_64-w64-mingw32 (64-bit)
 * Rhub environments on 2024-12-19
   * success:
-    * linux, macos, macos-arm64, windows, atlas, c23, clang-asan, 
-      clang16, clang17, clang18, clang19, clang20, donttest, 
-      gcc13, gcc14, intel, mkl, nold, noremap, ubuntu-clang, 
-      ubuntu-gcc12, ubuntu-next, ubuntu-release, valgrind
+     * linux          R-* (any version)                     ubuntu-latest on GitHub
+     * macos          R-* (any version)                     macos-13 on GitHub
+     * macos-arm64    R-* (any version)                     macos-latest on GitHub
+     * windows        R-* (any version)                     windows-latest on GitHub
+     * atlas          R-devel (2025-01-27 r87654)           Fedora Linux 38 (Container Image)
+     * c23            R-devel (2025-01-27 r87654)           Ubuntu 22.04.5 LTS
+     * clang-asan     R-devel (2025-01-27 r87654)           Ubuntu 22.04.5 LTS
+     * clang16        R-devel (2025-01-27 r87654)           Ubuntu 22.04.5 LTS
+     * clang17        R-devel (2025-01-26 r87642)           Ubuntu 22.04.5 LTS
+     * clang18        R-devel (2025-01-27 r87654)           Ubuntu 22.04.5 LTS
+     * clang19        R-devel (2025-01-26 r87642)           Ubuntu 22.04.5 LTS
+     * clang20        R-devel (2024-10-09 r87215)           Ubuntu 22.04.5 LTS
+     * donttest       R-devel (2025-01-26 r87642)           Ubuntu 22.04.5 LTS
+     * gcc13          R-devel (2025-01-27 r87654)           Fedora Linux 38 (Container Image)
+     * gcc14          R-devel (2025-01-27 r87654)           Fedora Linux 40 (Container Image)
+     * intel          R-devel (2025-01-27 r87654)           Fedora Linux 38 (Container Image)
+     * mkl            R-devel (2025-01-27 r87654)           Fedora Linux 38 (Container Image)
+     * nold           R-devel (2025-01-27 r87654)           Ubuntu 22.04.5 LTS
+     * noremap        R-devel (2025-01-26 r87642)           Ubuntu 22.04.5 LTS
+     * nosuggests     R-devel (2025-01-27 r87654)           Fedora Linux 38 (Container Image)
+     * rchk           R-devel (2025-01-27 r87654)           Ubuntu 22.04.5 LTS
+     * ubuntu-clang   R-devel (2025-01-27 r87654)           Ubuntu 22.04.5 LTS
+     * ubuntu-gcc12   R-devel (2025-01-27 r87654)           Ubuntu 22.04.5 LTS
+     * ubuntu-next    R-4.4.2 (patched) (2025-01-26 r87654) Ubuntu 22.04.5 LTS
+     * ubuntu-release R-4.4.2 (2024-10-31)                  Ubuntu 22.04.5 LTS
+     * valgrind       R-devel (2025-01-27 r87654)           Fedora Linux 38 (Container Image)
   * failed:
-    * nosuggests, rchk
+    * nosuggests     R-devel (2025-01-27 r87654)           Fedora Linux 38 (Container Image)
+    * rchk           R-devel (2025-01-27 r87654)           Ubuntu 22.04.5 LTS
+
     
 ## R CMD check results
 0 errors | 0 warnings | 1 note

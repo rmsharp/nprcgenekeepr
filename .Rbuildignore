@@ -37,12 +37,10 @@ README\.*\.png$
 # An Rmarkdown file used to generate README.md
 ^README\.Rmd$
 # Comments for CRAN submission
-^cran-comments\.md$
 # A news file written in RMarkdown
 ^NEWS\.Rmd$
 ^NOTES\ todo\.txt$
 # Used for continuous integration testing with travis
-^\.travis\.yml$
 ^\.github$
 ^inst/extdata/.*\.docx$
 ^inst/extdata/code_under_development$
@@ -56,9 +54,7 @@ README\.*\.png$
 ^images$
 ^images/*$
 ^LICENSE\.md$
-^CRAN-RELEASE$
 ^\.lintr$
-
 
 ^pkgdown$
 ^dev$
@@ -66,3 +62,4 @@ README\.*\.png$
 ^Meta$
 ^revdep$
 ^tests/testthat/_snaps$
+^CITATION\.cff$
