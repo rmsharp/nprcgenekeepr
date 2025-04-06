@@ -18,11 +18,12 @@ library(kableExtra)
 library(grid)
 library(stringi)
 library(nprcgenekeepr)
-knitr::opts_chunk$set(eval = FALSE, echo = TRUE, results = "markup",
-                      cache = FALSE)
+knitr::opts_chunk$set(
+  eval = FALSE, echo = TRUE, results = "markup",
+  cache = FALSE
+)
 pdf.options(useDingbats = TRUE)
 start_time <- proc.time()
-
 ```
 
 ## Introduction
@@ -52,19 +53,16 @@ GitHub with the following code.
 
 ```{r gh-installation}
 install.packages("devtools")
-devtools::install_github("rmsharp/nprcgenekeepr")
-
+devtools::install_github(file.path("rmsharp", "nprcgenekeepr"))
 ```
 
 All missing packages should be automatically installed.
 
 
 ```{r child = "./manual_components/_online_documentation.Rmd", ref = "online_documentation", include = TRUE, eval = TRUE}
-
 ```
 
 ```{r child = "./manual_components/_running_shiny_application.Rmd", ref = "running_shiny_application", include = TRUE, eval = TRUE}
-
 ```
 
 This will result in the opening screen where you tell the application how to 
@@ -82,7 +80,6 @@ Excel worksheet pedigree file.
 #|   Primate Centers Logo.
 img <- readPNG("./shiny_app_use/opening_screen_top.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -95,7 +92,6 @@ describes a pedigree file and further instructions.
 #|   Middle of opening screen.
 img <- readPNG("./shiny_app_use/opening_screen_middle.png")
 grid.raster(img)
-
 ```
 *********
 
@@ -108,7 +104,6 @@ use of a genotype file.
 #|   Bottom of opening screen.
 img <- readPNG("./shiny_app_use/opening_screen_bottom.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -121,7 +116,6 @@ Without genotypes:
 #|   Example pedigree tutorial without genotypes.
 img <- readPNG("./shiny_app_use/examplePedigreeTutorial.png")
 grid.raster(img)
-
 ```
   
 With genotypes:  
@@ -130,7 +124,6 @@ With genotypes:
 #|   Example pedigree tutorial with genotypes.
 img <- readPNG("./shiny_app_use/examplePedigreeTutorial_with_alleles.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -146,7 +139,6 @@ We will work with the gray box on the left at the top of the screen.
 #|   Red oval at top of opening screen.
 img <- readPNG("./shiny_app_use/opening_screen_top_red_oval.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -160,7 +152,6 @@ shown below and then saved in an Excel format. Alternatively, you may download t
 
 ```{r make-example-file}
 makeExamplePedigreeFile()
-
 ```
 
 Select the __Browse__ button and select the pedigree file from your file system.
@@ -170,7 +161,6 @@ Select the __Browse__ button and select the pedigree file from your file system.
 #|   Input of Excel verson of example pedigree file.
 img <- readPNG("./shiny_app_use/input_example_pedigree_xlsx.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -190,7 +180,6 @@ used.
 #|   Input of minimum parent age.
 img <- readPNG("./shiny_app_use/input_minParentAgeSequence.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -207,7 +196,6 @@ internally consistent.
 #|   Read and check example pedigree.
 img <- readPNG("./shiny_app_use/read_and_check_pedigree.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -225,20 +213,24 @@ errorDescriptions <- c(
   "Individuals are listed as male and as a dam.",
   "Individuals who are listed as both a sire and a dam.",
   "IDs listed more than once.",
-  stri_c("Columns that have been changed to conform to internal naming ",
-  "conventions and what they were changed to.")
+  stri_c(
+    "Columns that have been changed to conform to internal naming ",
+    "conventions and what they were changed to."
+  )
 )
-errorTbl <- data.frame(`Error` = errorTypes, Definition = errorDescriptions,
-                       stringsAsFactors = FALSE)
+errorTbl <- data.frame(
+  Error = errorTypes, Definition = errorDescriptions,
+  stringsAsFactors = FALSE
+)
 ```
 ```{r tbl-error-defs, eval = TRUE, echo=FALSE, include = TRUE, results='markup'}
 #| tbl.alt: >
 #|   Error definitions.
 # print-error-definition-tbl
-knitr::kable(errorTbl)  %>%
+knitr::kable(errorTbl) %>%
   kable_styling(full_width = FALSE) %>%
-  column_spec(1, bold = TRUE, color = "blue") %>%
-  column_spec(2, width = "30em")
+  column_spec(1L, bold = TRUE, color = "blue") %>%
+  column_spec(2L, width = "30em")
 ```
 
 *********
@@ -259,7 +251,6 @@ The program calculates additional columns based on the input pedigree.
 #|   Pedigree browser with 10 rows displayed and unknown IDs shown.
 img <- readPNG("./shiny_app_use/pb_10_rows_display_unknown_ids.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -279,7 +270,6 @@ _U_ and are following with a left alphanumeric string of five places.
 #|   Pedigree browser unknown IDs displayed
 img <- readPNG("./shiny_app_use/pb_unknown_displayed.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -295,7 +285,6 @@ and dam placeholders for all animals.
 ```{r no-unknown-displayed, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 5, fig.height = 3.5, echo = FALSE}
 img <- readPNG("./shiny_app_use/pb_no_unknown_displayed.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -311,7 +300,6 @@ animals of interest (_focal animals_).
 ```{r focal-animal-text-box, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 5, fig.height = 3.5, echo = FALSE}
 img <- readPNG("./shiny_app_use/pb_focal_animal_text_box.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -370,7 +358,6 @@ fig_alt_txt <- "Pedigree browser selecting to trim pedigree for focal animals"
 ```{r select-trim-for-focal-animals, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 6, fig.height = 4, echo = FALSE}
 img <- readPNG("./shiny_app_use/pb_select_trim_for_focal_animals.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -389,7 +376,6 @@ pedigree indicated by its own number._
 ```{r trimmed-for-focal-animals, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 4, fig.height = 2.5, echo = FALSE}
 img <- readPNG("./shiny_app_use/pb_trimmed_for_focal_animals.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -400,14 +386,15 @@ button. This will read in an empty ID list, clear the box of IDs, and bring back
 all of the trimmed away IDs.
 
 ```{r , eval = TRUE}
-fig_alt_txt <- paste0("Pedigree browser showing two screens; one with focal ",
-                      "animals displayed and one with them cleared out of ",
-                      "the display box.")
+fig_alt_txt <- paste0(
+  "Pedigree browser showing two screens; one with focal ",
+  "animals displayed and one with them cleared out of ",
+  "the display box."
+)
 ```
 ```{r cleared-of-focal-animals, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 6, echo = FALSE}
 img <- png::readPNG("./shiny_app_use/pb_cleared_focal_animals_combined.png")
 grid::grid.raster(img)
-
 ```                                                                                      
 
 Deselect the __Clear Focal Animals__ checkbox and reselect the 
@@ -428,7 +415,6 @@ This is showing 332 living animals from the entire example pedigree.
 ```{r age-plot, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 5.5, fig.height = 7, echo = FALSE}
 img <- readPNG("./shiny_app_use/age_plot.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -471,7 +457,6 @@ affect precision when iterations are held constant.
 ```{r gva-calculating, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 7, fig.height = 5.5, echo = FALSE}
 img <- readPNG("./shiny_app_use/gva_calculating.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -493,7 +478,6 @@ The default is to display the analysis for the list of focal animals.
 ```{r gva-first-high-value, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 6, fig.height = 5.5, echo = FALSE}
 img <- readPNG("./shiny_app_use/gva_first_high_value.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -511,7 +495,6 @@ but are high value by definition.
 ```{r gva-high-and-low-value, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 5.5, fig.height = 4, echo = FALSE}
 img <- readPNG("./shiny_app_use/gva_high_and_low_value.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -531,7 +514,6 @@ Plots__ tab.
 ```{r ss-first-view, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 5.5, fig.height = 5.5, echo = FALSE}
 img <- readPNG("./shiny_app_use/ss_first_view.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -547,7 +529,6 @@ The first few rows of such a file are shown below.
 ```{r ss-kinship-matrix, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 6, fig.height = 4.5, echo = FALSE}
 img <- readPNG("./shiny_app_use/ss_kinship_matrix.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -563,7 +544,6 @@ The first few rows of such a file are shown below.
 ```{r first-order-relationships, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 5, fig.height = 5, echo = FALSE}
 img <- readPNG("./shiny_app_use/ss_first_order_relationships.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -579,7 +559,6 @@ The first few rows of such a file are shown below.
 ```{r female-founders, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 5, fig.height = 5, echo = FALSE}
 img <- readPNG("./shiny_app_use/ss_female_founders.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -593,7 +572,6 @@ These plots may also be downloaded as desired.
 ```{r ss-trimmed-all-plots, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 5, fig.height = 5.5, echo = FALSE}
 img <- readPNG("./shiny_app_use/ss_trimmed_all_plots.png")
 grid.raster(img)
-
 ```
 *********
 
@@ -603,9 +581,9 @@ Each of the plots can be exported as a PNG file to a directory you choose.
 
 ```{r ss-export-mean-kinship-coef-hist-plot, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 5, echo = FALSE}
 img <- png::readPNG(
-  "./shiny_app_use/ss_export_mean_kinship_coefficient_histogram.png")
+  "./shiny_app_use/ss_export_mean_kinship_coefficient_histogram.png"
+)
 grid::grid.raster(img)
-
 ```                                                                                      
 
 *********
@@ -632,7 +610,6 @@ formed.
 ```{r breeding-group-first-view, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 7, fig.height = 5.5, echo = FALSE}
 img <- readPNG("./shiny_app_use/breeding_group_first_view.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -655,7 +632,6 @@ below.
 ```{r breeding-group-1, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 8, fig.height = 7.5, echo = FALSE}
 img <- readPNG("./shiny_app_use/breeding_group_1.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -679,7 +655,6 @@ age of two being grouped with their mother.
 ```{r breeding-group-6-infants-with-dam, eval = TRUE, fig.alt = fig_alt_txt, fig.width = 6, fig.height = 5.5, echo = FALSE}
 img <- readPNG("./shiny_app_use/breeding_group_6_infants_with_dam.png")
 grid.raster(img)
-
 ```
 
 *********
@@ -694,7 +669,8 @@ red rectangles.
 ```{r fig-bg, eval = TRUE, fig.alt = fig_alt_txt, fig.alt = fig_alt_txt, fig.width = 6, fig.height = 5.5, echo = FALSE}
 # breeding-group-first-group-no-kinship-seeds-indicated
 img <- readPNG(
-  "./shiny_app_use/breeding_group_first_group_no_kinship_seeds_indicated.png")
+  "./shiny_app_use/breeding_group_first_group_no_kinship_seeds_indicated.png"
+)
 grid.raster(img)
 ```
 

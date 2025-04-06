@@ -83,37 +83,52 @@ library(nprcgenekeepr)
 library(stringi)
 
 ped <- nprcgenekeepr::smallPed
-simParent_1 <- list(id = "A", # nolint: object_name_linter
-                    sires = "Q",
-                    dams = c("d1_1", "d1_2", "d1_3", "d1_4"))
-simParent_2 <- list(id = "B", # nolint: object_name_linter
-                    sires = c("s1_1", "s1_2", "s1_3"),
-                    dams = c("d1_1", "d1_2", "d1_3", "d1_4"))
-simParent_3 <- list(id = "E", # nolint: object_name_linter
-                    sires = c("A", "C", "s1_1"),
-                    dams = c("d3_1", "B"))
-simParent_4 <- list(id = "J", # nolint: object_name_linter
-                    sires = c("A", "C", "s1_1"),
-                    dams = c("d3_1", "B"))
-simParent_5 <- list(id = "K", # nolint: object_name_linter
-                    sires = c("A", "C", "s1_1"),
-                    dams = c("d3_1", "d1_2"))
-simParent_6 <- list(id = "N", # nolint: object_name_linter
-                    sires = c("A", "C", "s1_2"),
-                    dams = c("d3_1", "B"))
-allSimParents <- list(simParent_1, simParent_2, simParent_3,
-                      simParent_4, simParent_5, simParent_6)
+simParent_1 <- list( # nolint: object_name_linter
+  id = "A", # nolint: object_name_linter
+  sires = "Q",
+  dams = c("d1_1", "d1_2", "d1_3", "d1_4")
+)
+simParent_2 <- list( # nolint: object_name_linter
+  id = "B", # nolint: object_name_linter
+  sires = c("s1_1", "s1_2", "s1_3"),
+  dams = c("d1_1", "d1_2", "d1_3", "d1_4")
+)
+simParent_3 <- list( # nolint: object_name_linter
+  id = "E", # nolint: object_name_linter
+  sires = c("A", "C", "s1_1"),
+  dams = c("d3_1", "B")
+)
+simParent_4 <- list( # nolint: object_name_linter
+  id = "J", # nolint: object_name_linter
+  sires = c("A", "C", "s1_1"),
+  dams = c("d3_1", "B")
+)
+simParent_5 <- list( # nolint: object_name_linter
+  id = "K", # nolint: object_name_linter
+  sires = c("A", "C", "s1_1"),
+  dams = c("d3_1", "d1_2")
+)
+simParent_6 <- list( # nolint: object_name_linter
+  id = "N", # nolint: object_name_linter
+  sires = c("A", "C", "s1_2"),
+  dams = c("d3_1", "B")
+)
+allSimParents <- list(
+  simParent_1, simParent_2, simParent_3,
+  simParent_4, simParent_5, simParent_6
+)
 
 extractKinship <- function(simKinships, id1, id2, simulation) {
-  ids <- dimnames(simKinships[[simulation]])[[1]]
-  simKinships[[simulation]][seq_along(ids)[ids == id1],
-                            seq_along(ids)[ids == id2]]
+  ids <- dimnames(simKinships[[simulation]])[[1L]]
+  simKinships[[simulation]][
+    seq_along(ids)[ids == id1],
+    seq_along(ids)[ids == id2]
+  ]
 }
 
 extractKValue <- function(kValue, id1, id2, simulation) {
-  kValue[kValue$id_1 ==  id1 & kValue$id_2 == id2, paste0("sim_", simulation)]
+  kValue[kValue$id_1 == id1 & kValue$id_2 == id2, paste0("sim_", simulation)]
 }
-
 ```
 
 
@@ -133,72 +148,74 @@ descriptions to see what they are expecting as arguments and what they return.
 ?extractKValue
 ```
 ```{r small-simulation}
-
 # Only set this seed if you want to get the same simulation results each time.
-set.seed(1)
-n <- 10
+set.seed(1L)
+n <- 10L
 simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
 kValues <- kinshipMatricesToKValues(simKinships)
-extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1:n)
+extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1L:n)
 counts <- countKinshipValues(kValues)
-counts$kinshipIds[1:3]
-counts$kinshipValues[1:3]
-counts$kinshipCounts[1:3]
+counts$kinshipIds[1L:3L]
+counts$kinshipValues[1L:3L]
+counts$kinshipCounts[1L:3L]
 
 stats_10 <- summarizeKinshipValues(counts)
 nrow(stats_10[stats_10$sd > 0.0, ])
 
 kable(stats_10[stats_10$sd > 0.0, ], longtable = TRUE) %>%
-  kable_styling(latex_options = c("striped", "repeat_header"),
-                repeat_header_method = "replace",
-                repeat_header_text = "\\textit{(continued)}")
-
+  kable_styling(
+    latex_options = c("striped", "repeat_header"),
+    repeat_header_method = "replace",
+    repeat_header_text = "\\textit{(continued)}"
+  )
 ```
 A larger simulation
 
 ```{r larger-simulation}
-set.seed(1)
-n <- 100
+set.seed(1L)
+n <- 100L
 simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
 kValues <- kinshipMatricesToKValues(simKinships)
-extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1:10)
+extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1L:10L)
 counts <- countKinshipValues(kValues)
-counts$kinshipIds[1:3]
-counts$kinshipValues[1:3]
-counts$kinshipCounts[1:3]
+counts$kinshipIds[1L:3L]
+counts$kinshipValues[1L:3L]
+counts$kinshipCounts[1L:3L]
 
 stats_100 <- summarizeKinshipValues(counts)
 nrow(stats_100[stats_100$sd > 0.0, ])
 
 kable(stats_100[stats_100$sd > 0.0, ], longtable = TRUE) %>%
-  kable_styling(latex_options = c("striped", "repeat_header"),
-                repeat_header_method = "replace",
-                repeat_header_text = "\\textit{(continued)}")
-
+  kable_styling(
+    latex_options = c("striped", "repeat_header"),
+    repeat_header_method = "replace",
+    repeat_header_text = "\\textit{(continued)}"
+  )
 ```
 
 
 A much larger simulation
 
 ```{r much-larger-simulation}
-set.seed(1)
-n <- 1000
+set.seed(1L)
+n <- 1000L
 simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
 kValues <- kinshipMatricesToKValues(simKinships)
-extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1:10)
+extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1L:10L)
 counts <- countKinshipValues(kValues)
-counts$kinshipIds[1:3]
-counts$kinshipValues[1:3]
-counts$kinshipCounts[1:3]
+counts$kinshipIds[1L:3L]
+counts$kinshipValues[1L:3L]
+counts$kinshipCounts[1L:3L]
 
 stats_1000 <- summarizeKinshipValues(counts)
 nrow(stats_1000[stats_1000$sd > 0.0, ])
 
 kable(stats_1000[stats_1000$sd > 0.0, ], longtable = TRUE) %>%
-  kable_styling(latex_options = c("striped", "repeat_header"),
-                repeat_header_method = "replace",
-                repeat_header_text = "\\textit{(continued)}")
-
+  kable_styling(
+    latex_options = c("striped", "repeat_header"),
+    repeat_header_method = "replace",
+    repeat_header_text = "\\textit{(continued)}"
+  )
 ```
 
 
@@ -209,8 +226,9 @@ stats_short <- stats_10[stats_10$sd > 0.0, ]
 stats_long <- stats_1000[stats_1000$sd > 0.0, ]
 
 if (any(stats_short$id_1 != stats_long$id_1) ||
-      any(stats_short$id_2 != stats_long$id_2))
+  any(stats_short$id_2 != stats_long$id_2)) {
   cat("At least one row represents a different animal pair")
+}
 
 comprison <- data.frame(
   id_1 = stats_short$id_1,
@@ -223,15 +241,20 @@ comprison <- data.frame(
   sdKinDelta = abs(stats_short$sd - stats_long$sd)
 )
 
-kable(comprison, longtable = TRUE,
-      digits = c(0, 0, 4, 4, 4, 4, 4, 4),
-      caption = stri_c("Comparision of estimated kinships between simulations ",
-                       "of 10 (short) and 1000 (long)")) %>%
-  kable_styling(latex_options = c("striped", "repeat_header"),
-                repeat_header_method = "replace",
-                repeat_header_text = "\\textit{(continued)}",
-                font_size = 10)
-
+kable(comprison,
+  longtable = TRUE,
+  digits = c(0L, 0L, 4L, 4L, 4L, 4L, 4L, 4L),
+  caption = stri_c(
+    "Comparision of estimated kinships between simulations ",
+    "of 10 (short) and 1000 (long)"
+  )
+) %>%
+  kable_styling(
+    latex_options = c("striped", "repeat_header"),
+    repeat_header_method = "replace",
+    repeat_header_text = "\\textit{(continued)}",
+    font_size = 10L
+  )
 ```
 
 ```{r comparison-100-1000}
@@ -239,8 +262,9 @@ stats_short <- stats_100[stats_100$sd > 0.0, ]
 stats_long <- stats_1000[stats_1000$sd > 0.0, ]
 
 if (any(stats_short$id_1 != stats_long$id_1) ||
-      any(stats_short$id_2 != stats_long$id_2))
+  any(stats_short$id_2 != stats_long$id_2)) {
   cat("At least one row represents a different animal pair")
+}
 
 comprison <- data.frame(
   id_1 = stats_short$id_1,
@@ -253,12 +277,18 @@ comprison <- data.frame(
   sdKinDelta = abs(stats_short$sd - stats_long$sd)
 )
 
-kable(comprison, longtable = TRUE,
-      digits = c(0, 0, 4, 4, 4, 4, 4, 4),
-      caption = stri_c("Comparision of estimated kinships between simulations ",
-                       "of 100 (short) and 1000 (long)")) %>%
-  kable_styling(latex_options = c("striped", "repeat_header"),
-                repeat_header_method = "replace",
-                repeat_header_text = "\\textit{(continued)}",
-                font_size = 10)
+kable(comprison,
+  longtable = TRUE,
+  digits = c(0L, 0L, 4L, 4L, 4L, 4L, 4L, 4L),
+  caption = stri_c(
+    "Comparision of estimated kinships between simulations ",
+    "of 100 (short) and 1000 (long)"
+  )
+) %>%
+  kable_styling(
+    latex_options = c("striped", "repeat_header"),
+    repeat_header_method = "replace",
+    repeat_header_text = "\\textit{(continued)}",
+    font_size = 10L
+  )
 ```
