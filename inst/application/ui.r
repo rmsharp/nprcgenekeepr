@@ -1,8 +1,10 @@
+# nolint start: undesirable_function_linter
 library(shiny)
 library(shinyBS)
 library(shinyWidgets)
 library(DT)
 library(stringi)
+# nolint end: undesirable_function_linter
 source("../application/uitpInput.R")
 #source("../application/uitpErrorTab.R") # nolint: commented_code_linter
 source("../application/uitpPedigreeBrowser.R")

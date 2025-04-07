@@ -19,18 +19,15 @@ test_that("getSiteInfo handled Windows and non-windows opperating systems", {
   if (stri_detect_fixed(toupper(siteInfo$sysname), "WIND")) {
     expect_equal(
       siteInfo$homeDir,
-      paste0(gsub("\\\\", "/", Sys.getenv("HOME")), "/")
+      file.path(Sys.getenv("HOME"))
     )
     expect_equal(
       siteInfo$configFile,
-      paste0(
-        gsub("\\\\", "/", Sys.getenv("HOME")), "/",
-        "_nprcgenekeepr_config"
-      )
+      file.path(Sys.getenv("HOME"), "_nprcgenekeepr_config")
     )
   } else {
     expect_equal(siteInfo$homeDir, "~/")
-    expect_equal(siteInfo$configFile, "~/.nprcgenekeepr_config")
+    expect_equal(siteInfo$configFile, file.path("~", ".nprcgenekeepr_config"))
   }
 })
 test_that("getSiteInfo handle expectConfigFile parameter", {

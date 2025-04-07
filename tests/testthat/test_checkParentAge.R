@@ -45,7 +45,7 @@ test_that(paste0(
   "checkParentAge returns unchanged dataframe if required ",
   "column is missing"
 ), {
-  ped <- checkParentAge(qcPed[, !names(qcPed) =="id"])
+  ped <- checkParentAge(qcPed[, !names(qcPed) == "id"])
   expect_equal(ncol(ped), ncol(qcPed[, !names(qcPed) == "id"]))
   expect_equal(ped, qcPed[, !names(qcPed) == "id"])
 })

@@ -6,12 +6,15 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
+# nolint start undesirable_function_linter
 library(knitr)
 library(kableExtra)
-knitr::opts_chunk$set(echo = TRUE)
 library(stringi)
 library(rmsutilityr)
 library(nprcgenekeepr)
+library(stringi)
+# nolint end undesirable_function_linter
+knitr::opts_chunk$set(echo = TRUE)
 ```
 Provided in reverse chronological order
 
@@ -221,18 +224,20 @@ threshold of 10 minutes. This can for example be achieved by:
 ```{r code-changes, include=FALSE}
 
 if (Sys.Date() > "2020-08-01") {
-  path <- "/Users/rmsharp/Documents/Development/R/r_workspace/"
+  path <- file.path("/Users", "rmsharp", "Documents", "Development", "R", 
+                    "r_workspace")
 } else {
-  path <- "/Users/rmsharp/Documents/Development/R/r_workspace/library/"
+  path <- file.path("/Users", "rmsharp", "Documents", "Development", "R", 
+                    "r_workspace", "library")
 }
 
-originalFiles <- stri_c(
-  "/Users/rmsharp/Documents/Projects/Active_Projects/",
-  "nprcgenekeepr_project/20160816_GeneticManagementTools"
+originalFiles <- file.path(
+  "/Users", "rmsharp", "Documents", "Projects", "Active_Projects",
+  "nprcgenekeepr_project", "20160816_GeneticManagementTools"
 )
-functions <- stri_c(path, "nprcgenekeepr/R")
-tests <- stri_c(path, "nprcgenekeepr/tests/testthat")
-ui <- stri_c(path, "nprcgenekeepr/inst/application")
+functions <- file.path(path, "nprcgenekeepr", "R")
+tests <- file.path(path, "nprcgenekeepr", "tests", "testthat")
+ui <- file.path(path, "nprcgenekeepr", "inst", "application")
 
 paths <- c(
   originalFiles = originalFiles,
@@ -768,7 +773,6 @@ slightly higher for non-founders than what this function will calculate.
   __E__ appears in group 1, 2, and 4 and not in group 3.
 
 ```{r group-formation, include = FALSE, echo = FALSE}
-library(stringi)
 overlapping_groups <- list()
 for (i in 1L:4L) {
  unique <- sample(LETTERS, 15L, replace = FALSE)

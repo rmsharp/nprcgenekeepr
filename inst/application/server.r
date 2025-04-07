@@ -1,9 +1,11 @@
 `%then%` <- rlang::`%||%`
-library(nprcgenekeepr)
+# nolint start: undesirable_function_linter
+library(nprcgenekeepr) #
 library(futile.logger)
 library(ggplot2)
 library(stringi)
 suppressMessages(library(DT))
+# nolint end: undesirable_function_linter
 shinyServer(function(input, output, session) {
   errorLst <- getEmptyErrorLst()
   nprcgenekeeprLog <- paste0(getSiteInfo()$homeDir, "nprcgenekeepr.log")

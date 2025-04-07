@@ -96,7 +96,7 @@ fillGroupMembersWithSexRatio <-
         id <- sample(availableFemales[[i]], 1L)
         availableFemales <-
           removeSelectedAnimalFromAvailableAnimals(availableFemales, id, numGp)
-      } else { # may need male
+      } else { # may need male # nolint unnecessary_nesting_linter
         if (abs(sexRatio - calculateSexRatio(groupMembers[[i]], ped,
           additionalMales = 1L
         )) <

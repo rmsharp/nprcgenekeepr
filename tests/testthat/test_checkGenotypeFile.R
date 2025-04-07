@@ -1,7 +1,7 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
 context("checkGenotypeFile")
-library(stringi)
+library(stringi) # nolint undesirable_function_linter.
 
 ped <- nprcgenekeepr::qcPed
 ped <- ped[order(ped$id), ]
@@ -45,7 +45,7 @@ genotype <- data.frame(
   stringsAsFactors = FALSE
 )
 test_that("checkGenotypeFile detects a bad dataframe", {
-  expect_true(is.data.frame(checkGenotypeFile(genotype)))
+  expect_true(inherits(checkGenotypeFile(genotype), "data.frame"))
 })
 genotype <- data.frame(
   id = ped$id[50L + 1L:20L],

@@ -19,13 +19,13 @@
 fixColumnNames <- function(orgCols, errorLst) {
   cols <- tolower(orgCols)
   errorLst$changedCols$caseChange <- colChange(orgCols, cols)
-  newCols <- gsub(" ", "", cols, fixed = FALSE)
+  newCols <- gsub(" ", "", cols, fixed = FALSE) # nolint fixed_regex_linter
   errorLst$changedCols$spaceRemoved <- colChange(cols, newCols)
   cols <- newCols
-  newCols <- gsub("\\.", "", cols, fixed = FALSE)
+  newCols <- gsub("\\.", "", cols, fixed = FALSE) # nolint fixed_regex_linter
   errorLst$changedCols$periodRemoved <- colChange(cols, newCols)
   cols <- newCols
-  newCols <- gsub("_", "", cols, fixed = FALSE)
+  newCols <- gsub("_", "", cols, fixed = FALSE) # nolint fixed_regex_linter
 
   ## Clean up possible overreach
   if (any(tolower(cols) == "firstname")) {
