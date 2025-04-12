@@ -55,7 +55,6 @@ README\.*\.png$
 ^images/*$
 ^LICENSE\.md$
 ^\.lintr$
-
 ^pkgdown$
 ^dev$
 ^doc$

@@ -1,313 +1,111 @@
-plot(jitter(target, 0.4), b)
-target <- jitter(rep(1:10, 10), 0.4)
-pred_1 <- runif(100)
-pred_2 <- ifelse(target > 4, target * exp(pred_1), target - pred_1)
-plot(target, pred_1)
-my_df <- data.frame(target = target, pred_1 = pred_1, pred_2 = pred_2)
-model_1 <- glm(target ~ pred_1, my_df)
-?glm
-model_1 <- glm(target ~ pred_1, "gaussian", data = my_df)
-model_2 <- glm(target ~ pred_2, "gaussian", data = my_df)
-model_3 <- glm(target ~ pred_1 + pred_2, data = my_df)
-model_4 <- glm(target ~ pred_1 * pred_2, data = my_df)
-summary(model_1); summary(model_2); summary(model_3); summary(model_4)
-history()
-?history
-model_1 <- glm(target ~ pred_1, my_df)
-library(nprcmanager)#
-## You can use a file browser#
-pedigreeFile <- file.choose()#
-## or you will have to change this to point to a pedigree file that you have#
-#pedigreeFile <- "/Users/msharp/Documents/Development/R/r_workspace/library/nprcmanager/inst/extdata/baboon_breeders_qc_ped.csv"#
-breederPedCsv <- read.table(pedigreeFile, sep = “,", header = TRUE)#
-breederPed <- qcStudbook(breederPedCsv, minParentAge = 0)
-pedigreeFile <- file.choose()
-pedigreeFile
-breederPedCsv <- read.table(pedigreeFile, sep = “,", header = TRUE)
-breederPedCsv <- read.table(pedigreeFile, sep = ",", header = TRUE)
-breederPed <- qcStudbook(breederPedCsv, minParentAge)
-library(nprcmanager)
-pedigreeFile <- file.choose()
-breederPedCsv <- read.table(pedigreeFile, sep = ",", header = TRUE)
-breederPed <- qcStudbook(breederPedCsv, minParentAge)
-?message
-install.packages("CASdatasets", repos = "http://casuqam.ca/pub/R")
-install.packages("CASdatasets", repos = "http://casuqam.ca/pub/R", type = "source")
-update.packages()
-?update.packages
-update.packages(ask = FALSE)
-library("quantreg")
-n <- 1000
-A <- matrix(seq(1, n^2), n, n)
-B <- matrix(seq(1, n^2), n, n)
-system.time(A%*%B)
-benchmark(A*B, A%*%B, times = 10)
-library(rbenchmark)
-install.packages("rbenchmark")
-library(rbenchmark)
-benchmark(A*B, A%*%B, times = 10)
-benchmark(A*B, A%*%B, replications = 1)[, c(1, 3, 4)]
-library(microbenchmark)
-microbenchmark(A*B, A%*%B, times = 10)
-1378620/420
-library(sensitivity)
-citation("sensitivity")
-class(1+4i)
-class(runif(4) * 1+4i)
-runif(4) * 1+4i
-loans <- c(163, 400, 500)
-phone <- 272
-electric <- 250
-loans <- c(loans, 200)
-loans
-sum(loans)
-6.25*3.5*80
-1740/144
-library(nprcmanager)
-citation("nprcmanager")
-vignettes("nprcmanager")
-vignette("nprcmanager")
-browseVignettes("nprcmanager")
-?PearsonDS
-??PearsonDS
-?actuar
-??actuar
-vignette(package = "actuar")
-demo(package = "actuar")
-demo("credibility", "actuar")
-??actuar
-summary.lm
-summary.data.frame
-summary.lm
-interest <- function(P, r, n, t) {P * (1 + (r / n))^(n * t)}
-interest(3000, .1, 24, 0.25)
-interest(3000, .1, 1000, 0.25)
-interest(3000, .1, 10000, 0.25)
-interest(3000, .1, 10000, 0.5)
-interest(2000, .136, 10000, 0.5)
-interest(2000, .136, 10000, 0.25)
-interest(2000, .10, 10000, 0.5)
-print.lm
-print.summary.lm
-print.lm
-methods(print)
-?summary.lm*
-?summary.lm
-?print.summary.lm
-print.summary.lm
-?methods
-methods(print.summary.lm)
-methods(print)
-methods(print, "summary.lm")
-?getS3method
-library(devtools)
-install_github("rmsharp/nprcmanager")
-y <- "x"
-d <- data.frame(y = 2)
-str(d)
-d$y
-d[ , y, drop = FALSE]
-dput(d)
-y <- "x"
-d <- data.frame(x = 1, y = 2)
-dput(d)
-d[ , y, drop = FALSE]
-dput(d)
-d1 <- d[ , y, drop = FALSE]
-dput(d1)
-y <- "x"
-d[[x]]
-d1[[x]]
-d1[["x"]]
-library(nprcmanager)
-?getLogo
-getLog
-getLogo()
-?duplicated
-library(nprcmanager)
-version("nprcmanager")
-devtools::install_github(nprcmanager)
-devtools::install_github("nprcmanager")
-devtools::install_github("rmsharp/nprcmanager")
-sessionInfo()
-32/28
-32/60
-quine.hi <- aov(log(Days + 2.5) ~ .^4, quine)#
-quine.nxt <- update(quine.hi, . ~ . - Eth:Sex:Age:Lrn)#
-quine.stp <- stepAIC(quine.nxt,#
-    scope = list(upper = ~Eth*Sex*Age*Lrn, lower = ~1),#
-    trace = FALSE)#
-quine.stp$anova#
-#
-cpus1 <- cpus#
-attach(cpus)#
-for(v in names(cpus)[2:7])#
-  cpus1[[v]] <- cut(cpus[[v]], unique(quantile(cpus[[v]])),#
-                    include.lowest = TRUE)#
-detach()#
-cpus0 <- cpus1[, 2:8]  # excludes names, authors' predictions#
-cpus.samp <- sample(1:209, 100)#
-cpus.lm <- lm(log10(perf) ~ ., data = cpus1[cpus.samp,2:8])#
-cpus.lm2 <- stepAIC(cpus.lm, trace = FALSE)#
-cpus.lm2$anova
-library(MASS)
-quine.hi <- aov(log(Days + 2.5) ~ .^4, quine)#
-quine.nxt <- update(quine.hi, . ~ . - Eth:Sex:Age:Lrn)#
-quine.stp <- stepAIC(quine.nxt,#
-    scope = list(upper = ~Eth*Sex*Age*Lrn, lower = ~1),#
-    trace = FALSE)#
-quine.stp$anova#
-#
-cpus1 <- cpus#
-attach(cpus)#
-for(v in names(cpus)[2:7])#
-  cpus1[[v]] <- cut(cpus[[v]], unique(quantile(cpus[[v]])),#
-                    include.lowest = TRUE)#
-detach()#
-cpus0 <- cpus1[, 2:8]  # excludes names, authors' predictions#
-cpus.samp <- sample(1:209, 100)#
-cpus.lm <- lm(log10(perf) ~ ., data = cpus1[cpus.samp,2:8])#
-cpus.lm2 <- stepAIC(cpus.lm, trace = FALSE)#
-cpus.lm2$anova
-summary(cpus.lm2)
-coef(cpus.lm2)
-str(cpus.lm2)
-example(birthwt)#
-birthwt.glm <- glm(low ~ ., family = binomial, data = bwt)#
-birthwt.step <- stepAIC(birthwt.glm, trace = FALSE)#
-birthwt.step$anova#
-birthwt.step2 <- stepAIC(birthwt.glm, ~ .^2 + I(scale(age)^2)#
-    + I(scale(lwt)^2), trace = FALSE)#
-birthwt.step2$anova#
-#
-quine.nb <- glm.nb(Days ~ .^4, data = quine)#
-quine.nb2 <- stepAIC(quine.nb)#
-quine.nb2$anova
-install.packages("devtools")#
-devtools::install_github("rmsharp/stepwiser")
-library(rmsutilityr)
-get_pkg_list()
-1627/1756
-1652/1756
-payments <- c(3200)
-balance <- 8806
-balance = payments
-balance <- 8806
-balance - payments
-payments <- c(3200, 1900)
-balance - sum(payments)
-total <- 3720
-invoices <- c(812, 1015, 1015)
-total - sum(invoices)
-1600 + 878
-total <- 2554
-rate <- 67.67
-total/rate
-37.75 * rate
-3300*0.021
-citation("fortunes")
-fortune(author = "Brian")
+5429.47*2
+5429.47*26/12
+install.packages("lintr")
+2+3
+install.packages("lintr")
+install.packages(c("gWidgetsRGtkZ", "DBI", "RGtk2", "igraph', gWidgets"))
+install.packages(Exact)
+install.packages("Exact")
+library(Exact)
+install.packages("ExactData", repos="https://pclhoun1.github.io/drat/", type = "source")
+install.packages(c('covr', 'DT', 'png', 'shinyBS', 'shinyWidgets'))
+remotes::install_github("rstudio/tensorflow")
+reticulate::install_python()
+library(tensorflow)#
+install_tensorflow(envname = "r-tensorflow")
+install.packages("keras")#
+library(keras)#
+install_keras()
+library(tensorflow)
+packageVersion("tensorflow")
+install.packages("available")
+library(available)
+available("mtssimulator")
+?install.packages
+install.packages("withr", type = "source")
+?remotes
+install.packages("remotes")
+?remotes
+?remotes::install_deps
 library(fortunes)
-fortune(author = "Brian")
-fortune(which = "SAS", author = "Brian")
-fortune(which = "SAS", author = "Harrell")
-library(rmsutilityr)
-rmsutilityr::get_pkg_descriptions("leaflet")
-rmsutilityr::get_pkg_descriptions("leaflet")$License
-lib.loc
-lib.loc <- "/Library/Frameworks/R.framework/Versions/3.5/Resources/library"
-to_install <- unname(installed.packages(lib.loc = lib_loc)[, "Package"])
-lib_loc <- "/Library/Frameworks/R.framework/Versions/3.5/Resources/library"
-to_install <- unname(installed.packages(lib.loc = lib_loc)[, "Package"])
-to_install
-install.packages(pkgs = to_install)
-bill <- c(146.29, 163, 84.89, 69.75)
-sum(bill)
-devtools::install_github("rmsharp/snprcspf")
-library(rstuidoapi)
-library(rstudioapi)
-askForPassword("Enter")
-.rs.api.askForPassword()
-library(scidb)
-lscidbconnect(..., password = readline())
-scidbconnect(..., password = readline())
-library(scidb)
-scidbconnect(..., password = readline())
-?scidbconnect
-scidbconnect(password = readline())
-?scidbconnect
-test <- scidbconnect(username = "plu7553", password=readline(prompt ="password:"), port = 8083)
-get_password <- function() {#
-cat("Password: ")#
-system("stty -echo")#
-a <- readline()#
-system("stty echo")#
-cat("\n")#
-return(a)#
-}
-test <- get_password()
-test
-options(echo = FALSE)
-this is it
-get_password()
-options(echo = TRUE)
-load("/Users/msharp/Downloads/packages.rds")
-dir.choose()
-?file.choose
-install.packages('rsconnect')
-rsconnect::setAccountInfo(name='rmsharp',#
-			  token='21E645EB902782EE92D38460CF40411A',#
-			  secret='XviFVJkAbaT9LayjCm89Aq6JVXYDGL0Qme7Ldnn4')
-library(rsconnect)#
-rsconnect::deployApp("https://github.com/rmsharp/nprcmanager")
-library(nprcmanager)
-?nprcmanager
-library(shiny)
-library(bookdown)
-library(pkgdown)
-81.79/10700.45
-(12 * 81.79)/10700.45
-library(nprcmanager)
-makeExamplePedigreeFile(fileType = "txt")
-library(devtools)
-?save
-data("exampleNprcgenekeeprConfig")#
-View(exampleNprcgenekeeprConfig)
-library(nprcgenekeepr)
-data("exampleNprcgenekeeprConfig")#
-View(exampleNprcgenekeeprConfig)
-?colors
-colors()
-?color
-??color
-colours()
-?colours
-demo("colors")
-?pkgdown::build_site
-library(nprcgenekeepr)
-nprcgenekeepr:::checkedChangedColList
-nprcgenekeepr:::checkChangedColList
-nprcgenekeepr:::checkChangedColsList
-nprcgenekeepr:::checkChangedColsLst
-devtools::install_github("rmsharp/nprcmanager")
-devtools::install_github("rmsharp/nprcgenekeepr")
-devtools::install_github("rmsharp/snprcgenekeepr")
-devtools::install_github("rmsharp/snprcspf")
-16 * 2.25 / 27
-1.75 / 27
-1.75 * 16 / 27
-flour_cups <- 16 * 2.25 /27
-wheat_bran_T <- 1.75 * 16 / 27
-wheat_germ_T <- 1.25 * 16 / 27
-nonfat_dry_milk <- 4 * 16 / 27
-nonfat_dry_milk_T <- 4 * 16 / 27
-nonfat_dry_milk <- NULL
-salt_t <- 2.67 * 3 / 27
-sugar_T <- 3 * 16 / 27
-baking_powder_T <- 16 / 27
-canola_oil_c <- 3.5 / 27
-a= c(1..25,.25,1.251.75)
-a= c(1.25,.25,1.251.75)
-a= c(1.25,.25,1.25,1.75)
-sum(a)
-getwd()
+library(fortune)
+library(fortunes)
+fortune("Harrell")
+fortune("SAS")
+fortune(c("SAS", "Harrell"))
+fortune("Harrell")
+R.version$arch
+reticulate::install_python()
+library(tensorflow)
+tf$config$list_physical_devices("GPU")
+135/25.4
+5/16
+294589.97+1630643.03
+50000*(1.0 - 0.34)
+rcompendium::new_package()
+rcompendium::new_package("pkg")
+?rcompendium::new_package
+library(tools)
+db <- Rd_db("base")
+grep("print.Rd", names(db), value = TRUE)
+db[grep("/print.Rd", names(db))]
+lapply(db, tools:::.Rd_get_metadata, "name")
+db[["print.Rd"]]
+db[["print.default.Rd"]]
+db[["print.values.Rd"]]
+db[["print.tables.Rd"]]
+db[["print.factor.Rd"]]
+db[["print.Rd"]]
+9550/25
+342/2
+50000/150
+paste0(1:26, collapse = ",")
+paste(1:30, collapse = ", ")
+?rhub::rhub_check
+rhub::rhub_platforms()
+testthis::use_testdata()
+system(paste0("rm -r ~/tests"))
+library(testthat)
+?find_includes
+??find_includes
+?roxygen2::find_includes
+?roxygen2:::find_includes
+roxygen2::find_includes
+roxygen2:::find_includes
+?roxygen2:::find_includes
+??roxygen2:::find_includes
+?roxygen2
+library(ggplot2)
+n <- nrow(mtcars)
+ratios <- rep(NA_real_, n)
+NA_real_
+ratios
+for (car in seq_along(ratios)) {ratios[car] <- log(mtcars$mpg[car]/mtcars$wt[car])}
+head(ratios)
+paste(1:30, collapse = ", ")
+rhub::rhub_platforms()
+paste(1:30, collapse = ", ")
+# _win devel CRAN#
+devtools::check_win_devel()#
+# _win release CRAN#
+devtools::check_win_release()#
+# _macos CRAN#
+# Need to follow the URL proposed to see the results#
+devtools::check_mac_release()
+setwd("/Users/rmsharp/Documents/Development/R/r_workspace/nprcgenekeepr")
+# _win devel CRAN#
+devtools::check_win_devel()#
+# _win release CRAN#
+devtools::check_win_release()#
+# _macos CRAN#
+# Need to follow the URL proposed to see the results#
+devtools::check_mac_release()
+devtools::check_win_release()
+devtools::check_mac_release()
+remotes::install_github("r-lib/revdepcheck")
+usethis::use_git_ignore("revdep/")#
+usethis::use_build_ignore("revdep/")#
+#
+devtools::revdep()#
+library(revdepcheck)
+exit()

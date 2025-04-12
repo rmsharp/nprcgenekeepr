@@ -55,52 +55,60 @@ This is a resubmission. In this version I have:
   the changes, and updated all documentation to reflect the version change.
 
 ## Test environments
-* winbuilder using R Under development (unstable) (2024-12-19 r87451 ucrt)
-  using platform: x86_64-w64-mingw32 (64-bit)
-* winbuilder using R version 4.4.2 (2024-10-31 ucrt)
-  using platform: x86_64-w64-mingw32
-* winbuilder using R version 4.3.3 (2024-02-29 ucrt)
-  using platform: x86_64-w64-mingw32 (64-bit)
-* Rhub environments on 2024-12-19
-  * success:
-     * linux          R-* (any version)                     ubuntu-latest on GitHub
-     * macos          R-* (any version)                     macos-13 on GitHub
-     * macos-arm64    R-* (any version)                     macos-latest on GitHub
-     * windows        R-* (any version)                     windows-latest on GitHub
-     * atlas          R-devel (2025-01-27 r87654)           Fedora Linux 38 (Container Image)
-     * c23            R-devel (2025-01-27 r87654)           Ubuntu 22.04.5 LTS
-     * clang-asan     R-devel (2025-01-27 r87654)           Ubuntu 22.04.5 LTS
-     * clang16        R-devel (2025-01-27 r87654)           Ubuntu 22.04.5 LTS
-     * clang17        R-devel (2025-01-26 r87642)           Ubuntu 22.04.5 LTS
-     * clang18        R-devel (2025-01-27 r87654)           Ubuntu 22.04.5 LTS
-     * clang19        R-devel (2025-01-26 r87642)           Ubuntu 22.04.5 LTS
-     * clang20        R-devel (2024-10-09 r87215)           Ubuntu 22.04.5 LTS
-     * donttest       R-devel (2025-01-26 r87642)           Ubuntu 22.04.5 LTS
-     * gcc13          R-devel (2025-01-27 r87654)           Fedora Linux 38 (Container Image)
-     * gcc14          R-devel (2025-01-27 r87654)           Fedora Linux 40 (Container Image)
-     * intel          R-devel (2025-01-27 r87654)           Fedora Linux 38 (Container Image)
-     * mkl            R-devel (2025-01-27 r87654)           Fedora Linux 38 (Container Image)
-     * nold           R-devel (2025-01-27 r87654)           Ubuntu 22.04.5 LTS
-     * noremap        R-devel (2025-01-26 r87642)           Ubuntu 22.04.5 LTS
-     * nosuggests     R-devel (2025-01-27 r87654)           Fedora Linux 38 (Container Image)
-     * rchk           R-devel (2025-01-27 r87654)           Ubuntu 22.04.5 LTS
-     * ubuntu-clang   R-devel (2025-01-27 r87654)           Ubuntu 22.04.5 LTS
-     * ubuntu-gcc12   R-devel (2025-01-27 r87654)           Ubuntu 22.04.5 LTS
-     * ubuntu-next    R-4.4.2 (patched) (2025-01-26 r87654) Ubuntu 22.04.5 LTS
-     * ubuntu-release R-4.4.2 (2024-10-31)                  Ubuntu 22.04.5 LTS
-     * valgrind       R-devel (2025-01-27 r87654)           Fedora Linux 38 (Container Image)
-  * failed:
-    * nosuggests     R-devel (2025-01-27 r87654)           Fedora Linux 38 (Container Image)
-    * rchk           R-devel (2025-01-27 r87654)           Ubuntu 22.04.5 LTS
-
+* Rhub environments on 2025-04-12
+  * success with R Under development (unstable) (2025-04-04 r88112):
+     * atlas on Fedora Linux 38
+     * c23 on Ubuntu 22.04.5
+     * clang-asan on Ubuntu 22.04.5
+     * clang-ubsan on Ubuntu 22.04.5
+     * clang16 on Ubuntu 22.04.5
+     * clang17 on Ubuntu 22.04.5
+     * clang18 on Ubuntu 22.04.5
+     * clang19 on Ubuntu 22.04.5
+     * clang20 on Ubuntu 22.04.5
+     * donttest on Ubuntu 22.04.5
+     * gcc-asan on Fedora Linux 40
+     * gcc13 on Fedora Linux 38
+     * gcc14 on Fedora Linux 40
+     * intel on Fedora Linux 38
+     * mkl on Fedora Linux 38
+     * nold on Ubuntu 22.04.5
+     * noremap on Ubuntu 22.04.5
+     * valgrind on Fedora Linux 38
+  * success on Ubuntu 22.04.5
+     * ubuntu-clang  [r-devel-linux-x86_64-debian-clang]
+     * ubuntu-gcc12  [r-devel-linux-x86_64-debian-gcc]
+     * ubuntu-next  [r-next, r-patched, r-patched-linux-x86_64]
+     * ubuntu-release  [r-release, r-release-linux-x86_64, ubuntu] R version 4.4.3 (2025-02-28)
+  * success windows R Under development (unstable) (2025-04-11 r88138 ucrt)
+  * failure with R Under development (unstable) (2025-04-04 r88112):
+     * gcc15 on Fedora Linux 42 dependency httpuv could not be built
+     * nosuggests on Fedora Linux 38 dplyr was not available (in Suggests)
+     * rchk on Ubuntu 22.04.5 I was unable to understand the output
+* devtools::check_mac_release()
+  * Build system: r-release-macosx-arm64|4.4.2|macosx|macOS 13.3.1 (22E261)|
+    Mac mini|Apple M1||en_US.UTF-8|macOS 11.3|clang-1403.0.22.14.1|
+    GNU Fortran (GCC) 14.2.0
+  * Status OK
+* devtools::check_win_devel() and devtools::check_win_release() both had the 
+  same two notes. The 1st about possible misspelled words is addressed below.
+  The 2nd indicates that an URL may be inaccessable and it is accessable as of
+  2025-04-12 15:58:38 CDT
     
 ## R CMD check results
-0 errors | 0 warnings | 1 note
+── R CMD check results ───────────────────────────────────────────────── nprcgenekeepr 1.0.7 ────
+Duration: 1m 40.2s
+
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
 * Words identified as possible misspellings in DESCRIPTION: EHR, Raboin, and 
   kinships are all correctly spelled.
    
 ## Reverse dependencies
+### revdepcheck results
 
-* There are currently no downstream dependencies for this package.
+We checked 0 reverse dependencies, comparing R CMD check results across CRAN 
+and dev versions of this package.
 
+ * We saw 0 new problems
+ * We failed to check 0 packages
