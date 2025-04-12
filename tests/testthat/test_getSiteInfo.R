@@ -26,8 +26,9 @@ test_that("getSiteInfo handled Windows and non-windows opperating systems", {
       file.path(Sys.getenv("HOME"), "_nprcgenekeepr_config")
     )
   } else {
-    expect_equal(siteInfo$homeDir, "~/")
-    expect_equal(siteInfo$configFile, file.path("~", ".nprcgenekeepr_config"))
+    expect_equal(siteInfo$homeDir, Sys.getenv("HOME"))
+    expect_equal(siteInfo$configFile, file.path(Sys.getenv("HOME"),
+                                                ".nprcgenekeepr_config"))
   }
 })
 test_that("getSiteInfo handle expectConfigFile parameter", {

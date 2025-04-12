@@ -36,14 +36,14 @@ test_that("getConfigFile got correct file name", {
   )
   expect_identical(
     getConfigFileName(sysInfoUnix)[["configFile"]],
-    "~/.nprcgenekeepr_config"
+    "/Users/rmsharp/.nprcgenekeepr_config"
   )
   expect_identical(
     getConfigFileName(sysInfoWindows)[["homeDir"]],
-    "/Users/rmsharp/"
+    "/Users/rmsharp"
   )
   expect_identical(
     getConfigFileName(sysInfoUnix)[["homeDir"]],
-    "~/"
+    "/Users/rmsharp"
   )
 })
