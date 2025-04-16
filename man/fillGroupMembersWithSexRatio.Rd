@@ -52,6 +52,7 @@ The sex ratio is the ratio of females to males.
 \examples{
 library(nprcgenekeepr)
 examplePedigree <- nprcgenekeepr::examplePedigree
+examplePedigree <- examplePedigree[1:300, ] # Comment out for full example
 ped <- qcStudbook(examplePedigree,
   minParentAge = 2L, reportChanges = FALSE,
   reportErrors = FALSE

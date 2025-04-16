@@ -18,6 +18,7 @@
 #' suppressMessages(library(dplyr))
 #'
 #' qcPed <- nprcgenekeepr::qcPed
+#' qcPed <- qcPed[1:50, ] # Comment out for full example
 #' bkmat <- kinship(qcPed$id, qcPed$sire, qcPed$dam, qcPed$gen,
 #'   sparse = FALSE
 #' )
