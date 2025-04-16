@@ -2,6 +2,11 @@
 This is a resubmission. In this version I have:
 
 * Responded to each request provided by the reviewer
+  - Request from 20250415: Please reduce each example to less than 5 sec.
+    I have dramatically shortened the example code run time for
+    makeRelationClassesTable and fillGroupMembersWithSexRatio by truncating
+    the pedigrees used. I have added a comment to the user to comment out the
+    truncation code to see a more genetically realistic example.
   - Request: please write 'Shiny' as 'shiny', as package names are 
     case-sensitive.
     -   I have not changed the capitalization of `Shiny` in the description 
