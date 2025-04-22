@@ -157,6 +157,8 @@ getSiteInfo
 getVersion
 github
 groupAddAssign
+groupMembers
+grpNum
 gu
 guIter
 guThresh

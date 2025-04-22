@@ -37,7 +37,7 @@ test_that(
     harem <- FALSE
     sexRatio <- 0
     withKin <- FALSE
-    groupMembers <- nprcgenekeepr:::makeGroupMembers(numGp,
+    groupMembers <- nprcgenekeepr::makeGroupMembers(numGp,
       currentGroups,
       candidates,
       ped,
@@ -45,7 +45,7 @@ test_that(
       minAge = minAge
     )
     groupMembersStart <- groupMembers
-    grpNum <- nprcgenekeepr:::makeGrpNum(numGp)
+    grpNum <- nprcgenekeepr::makeGrpNum(numGp)
 
     expect_equal(groupMembers[[1]], c("N54ICI", "VJ08BW", "2ZMHG7"))
     for (i in 1L:20L) {

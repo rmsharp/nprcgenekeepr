@@ -2,6 +2,26 @@
 This is a resubmission. In this version I have:
 
 * Responded to each request provided by the reviewer
+  - Requests from 20250419:
+    -  Used ::: in documentation:
+         man/fillGroupMembersWithSexRatio.Rd:
+            groupMembers <- nprcgenekeepr:::makeGroupMembers(numGp, 
+              currentGroups, candidates, ped, harem = harem, minAge = minAge)
+         man/fillGroupMembersWithSexRatio.Rd:
+            grpNum <- nprcgenekeepr:::makeGrpNum(numGp)
+         Please omit one colon.
+      - I have exported both makeGroupMembers() and makeGrpNum() to remove the 
+        use of ::: in the documentation.
+    - Use suppressable messages to the console.
+      - I have changed the use of cat() to message() in R/createPedOne.R and
+        R/makeSimPed.R
+  - Please do not set a seed to a specific number within a function.
+    -> R/createPedOne.R; R/createPedSix.R
+    -  These two functions are dynamically generating pedigrees with functions
+       that use psuedo-random number generators. The purpose of these functions
+       is to generate the same pedigrees each time for testing and instructional
+       purposes. Thus, I continue to set the seed to a specific number within
+       these functions.
   - Request from 20250415: Please reduce each example to less than 5 sec.
     I have dramatically shortened the example code run time for
     makeRelationClassesTable and fillGroupMembersWithSexRatio by truncating

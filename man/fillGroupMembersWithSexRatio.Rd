@@ -81,7 +81,7 @@ numGp <- 1L
 harem <- FALSE
 sexRatio <- 0.0
 withKin <- FALSE
-groupMembers <- nprcgenekeepr:::makeGroupMembers(numGp,
+groupMembers <- nprcgenekeepr::makeGroupMembers(numGp,
   currentGroups,
   candidates,
   ped,
@@ -89,7 +89,7 @@ groupMembers <- nprcgenekeepr:::makeGroupMembers(numGp,
   minAge = minAge
 )
 groupMembersStart <- groupMembers
-grpNum <- nprcgenekeepr:::makeGrpNum(numGp)
+grpNum <- nprcgenekeepr::makeGrpNum(numGp)
 
 groupMembers <- fillGroupMembersWithSexRatio(
   candidates, groupMembers, grpNum, kin, ped, minAge, numGp,
