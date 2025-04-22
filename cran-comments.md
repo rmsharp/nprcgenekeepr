@@ -80,49 +80,54 @@ This is a resubmission. In this version I have:
   the changes, and updated all documentation to reflect the version change.
 
 ## Test environments
-* Rhub environments on 2025-04-12
-  * success with R Under development (unstable) (2025-04-04 r88112):
-     * atlas on Fedora Linux 38
-     * c23 on Ubuntu 22.04.5
-     * clang-asan on Ubuntu 22.04.5
-     * clang-ubsan on Ubuntu 22.04.5
-     * clang16 on Ubuntu 22.04.5
-     * clang17 on Ubuntu 22.04.5
-     * clang18 on Ubuntu 22.04.5
-     * clang19 on Ubuntu 22.04.5
-     * clang20 on Ubuntu 22.04.5
-     * donttest on Ubuntu 22.04.5
-     * gcc-asan on Fedora Linux 40
-     * gcc13 on Fedora Linux 38
-     * gcc14 on Fedora Linux 40
-     * intel on Fedora Linux 38
-     * mkl on Fedora Linux 38
-     * nold on Ubuntu 22.04.5
-     * noremap on Ubuntu 22.04.5
-     * valgrind on Fedora Linux 38
+* Rhub environments on 2025-04-21
+  * success with R Under development (2025-04-19):
+     * atlas on Fedora Linux 38 (r88162)
+     * c23 on Ubuntu 22.04.5 (r88161)
+     * clang-asan on Ubuntu 22.04.5 (r88162)
+     * clang-ubsan on Ubuntu 22.04.5 (r88162)
+     * clang16 on Ubuntu 22.04.5 (r88161)
+     * clang17 on Ubuntu 22.04.5 (r88161)
+     * clang18 on Ubuntu 22.04.5 (r88161)
+     * clang19 on Ubuntu 22.04.5 (r88161)
+     * clang20 on Ubuntu 22.04.5 (r88161)
+     * donttest on Ubuntu 22.04.5 (r88161)
+     * gcc-asan on Fedora Linux 40 (r88162)
+     * gcc13 on Fedora Linux 38 (r88162)
+     * gcc14 on Fedora Linux 40 (r88162)
+     * intel on Fedora Linux 38 (r88162)
+     * mkl on Fedora Linux 38 (r88162)
+     * nold on Ubuntu 22.04.5 (r88162)
+     * noremap on Ubuntu 22.04.5 (r88161)
+     * valgrind on Fedora Linux 38 (r88162)
   * success on Ubuntu 22.04.5
-     * ubuntu-clang  [r-devel-linux-x86_64-debian-clang]
      * ubuntu-gcc12  [r-devel-linux-x86_64-debian-gcc]
      * ubuntu-next  [r-next, r-patched, r-patched-linux-x86_64]
      * ubuntu-release  [r-release, r-release-linux-x86_64, ubuntu] R version 4.4.3 (2025-02-28)
   * success windows R Under development (unstable) (2025-04-11 r88138 ucrt)
-  * failure with R Under development (unstable) (2025-04-04 r88112):
-     * gcc15 on Fedora Linux 42 dependency httpuv could not be built
-     * nosuggests on Fedora Linux 38 dplyr was not available (in Suggests)
-     * rchk on Ubuntu 22.04.5 I was unable to understand the output
-* devtools::check_mac_release()
-  * Build system: r-release-macosx-arm64|4.4.2|macosx|macOS 13.3.1 (22E261)|
-    Mac mini|Apple M1||en_US.UTF-8|macOS 11.3|clang-1403.0.22.14.1|
-    GNU Fortran (GCC) 14.2.0
-  * Status OK
-* devtools::check_win_devel() and devtools::check_win_release() both had the 
-  same two notes. The 1st about possible misspelled words is addressed below.
-  The 2nd indicates that an URL may be inaccessable and it is accessable as of
-  2025-04-12 15:58:38 CDT
+  * failure with R-devel (2025-04-15 r88147) Fedora Linux 42
+     * gcc15 on Fedora Linux 42 error in pak subprocess
+       Caused by error in `file(con, "rb")`: ! cannot open the connection
+     * nosuggests R-devel (2025-04-19 r88162) Fedora Linux 38
+       Error in `library(dplyr)`: there is no package called 'dplyr'
+  * failure with rchk on Ubuntu 22.04.5 I was unable to understand the output
+       Warning: No files were found with the provided path: check. 
+       No artifacts will be uploaded.
+  * failure with ubuntu-clang R-devel (2025-04-19 r88162) Ubuntu 22.04.5 LTS
+    error in pak subprocess
+    Caused by error in `file(con, "rb")`: ! cannot open the connection
+  * failure m1-san and macos-arm64 (R-devel) ERROR: compilation failed for package ‘httpuv’
+* devtools::check_mac_release() 2025-04-21
+  * macOS builder results Build system: r-release-macosx-arm64|4.4.2|macosx|
+    macOS 13.3.1 (22E261)|Mac mini|Apple M1||en_US.UTF-8|macOS 11.3|
+    clang-1403.0.22.14.1|GNU Fortran (GCC) 14.2.0
+    Status OK
+* devtools::check_win_devel() and devtools::check_win_release() 2025-04-21 
+  both had the same note about possible misspelled words is addressed below.
     
 ## R CMD check results
-── R CMD check results ───────────────────────────────────────────────── nprcgenekeepr 1.0.7 ────
-Duration: 1m 40.2s
+── R CMD check results ─────────────────────────────────────── nprcgenekeepr 1.0.7 ────
+Duration: 1m 51.5s
 
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
