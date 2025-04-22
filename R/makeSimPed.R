@@ -29,10 +29,7 @@ makeSimPed <- function(ped, allSimParents, verbose = FALSE) {
     if (length(allSimParents[[i]]$sires) == 0L) {
       ped$sire[ped$id == allSimParents[[i]]$id] <- NA
       if (verbose) {
-        cat(paste0(
-          "id #", i, " is ", allSimParents[[i]]$id,
-          " and has no sire\n"
-        ))
+        message("id #", i, " is ", allSimParents[[i]]$id, " and has no sire\n")
       }
     } else {
       ped$sire[ped$id == allSimParents[[i]]$id] <-
@@ -41,7 +38,7 @@ makeSimPed <- function(ped, allSimParents, verbose = FALSE) {
     if (length(allSimParents[[i]]$dams) == 0L) {
       ped$dam[ped$id == allSimParents[[i]]$id] <- NA
       if (verbose) {
-        cat(paste0(
+        message(paste0(
           "id #", i, " is ", allSimParents[[i]]$id,
           " and has no dam\n"
         ))
