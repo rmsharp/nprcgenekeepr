@@ -1,13 +1,12 @@
 library(nprcgenekeepr)
 library(rmsutilityr)
-library(stringi)
 library(here)
 ## Reading in large ped file and transforming columns and values - delete from
 ## script
 file_names <- c("2021-01-06_Deidentified_Pedigree.csv",
                 "deidentified_jmac_ped_edited.csv",
                 "2022-05-02_Deidentified_Pedigree.xlsx")
-pedOneFile <- stri_c(here("inst", "extdata", file_names[3L]))
+pedOneFile <- stringi::stri_c(here("inst", "extdata", file_names[3L]))
 if (tools::file_ext(pedOneFile) == ".csv") {
   pedOne <- read.csv(file = pedOneFile, header = TRUE, sep = ",")
 } else {

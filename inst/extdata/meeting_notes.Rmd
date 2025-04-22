@@ -224,10 +224,10 @@ threshold of 10 minutes. This can for example be achieved by:
 ```{r code-changes, include=FALSE}
 
 if (Sys.Date() > "2020-08-01") {
-  path <- file.path("/Users", "rmsharp", "Documents", "Development", "R", 
+  path <- file.path("/Users", "rmsharp", "Documents", "Development", "R",
                     "r_workspace")
 } else {
-  path <- file.path("/Users", "rmsharp", "Documents", "Development", "R", 
+  path <- file.path("/Users", "rmsharp", "Documents", "Development", "R",
                     "r_workspace", "library")
 }
 
