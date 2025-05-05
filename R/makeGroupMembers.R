@@ -19,7 +19,7 @@
 #' @param minAge integer value indicating the minimum age to consider in group
 #' formation. Pairwise kinships involving an animal of this age or younger will
 #'  be ignored. Default is 1 year.
-#' @noRd
+#' @export
 makeGroupMembers <- function(numGp, currentGroups, candidates, ped, harem,
                              minAge) {
   groupMembers <- list()
@@ -31,7 +31,7 @@ makeGroupMembers <- function(numGp, currentGroups, candidates, ped, harem,
       ped, minAge
     )
   } else {
-    for (i in 1L:numGp) {
+    for (i in seq_len(numGp)) {
       if (length(currentGroups) >= i) {
         groupMembers[[i]] <- currentGroups[[i]]
       } else {

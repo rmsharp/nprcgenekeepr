@@ -32,7 +32,7 @@ createPedOne <- function(savePed = TRUE) {
     pedigree_dir <- tempdir()
     suppressWarnings(dir.create(pedigree_dir))
     pedigree_dir <- file.path(pedigree_dir, "data")
-    cat(paste0("pedigreeOne written into ", pedigree_dir, "/\n"))
+    message("pedigreeOne written into ", pedigree_dir, "/\n")
     suppressWarnings(dir.create(pedigree_dir))
     save(pedOne, file = stri_c(pedigree_dir, "/pedOne.RData"))
   }
