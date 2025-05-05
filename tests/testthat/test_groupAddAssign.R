@@ -16,9 +16,9 @@ test_that("groupAddAssign forms the correct groups", {
   currentGroups[[1L]] <- qcBreeders[1L:3L]
   groupAddTest <- groupAddAssign(
     candidates = qcBreeders,
-    currentGroups = currentGroups,
     kmat = pedWithGenotypeReport$kinship,
     ped = pedWithGenotype,
+    currentGroups = currentGroups,
     ignore = NULL, minAge = 1.0, numGp = 1L,
     harem = FALSE, sexRatio = 0L, withKin = FALSE
   )
@@ -32,9 +32,9 @@ test_that("groupAddAssign (numGp = 2) forms the correct groups", {
   skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   groupAssignTest <- groupAddAssign(
     candidates = qcBreeders,
-    currentGroups = character(0L),
     kmat = pedWithGenotypeReport$kinship,
     ped = pedWithGenotype,
+    currentGroups = character(0L),
     ignore = NULL,
     minAge = 1L,
     numGp = 2L,
@@ -57,9 +57,9 @@ test_that(paste0(
   currentGroups[[1L]] <- qcBreeders[1L:3L]
   groupAddKTest <- groupAddAssign(
     candidates = qcBreeders,
-    currentGroups = currentGroups,
     kmat = pedWithGenotypeReport$kinship,
     ped = pedWithGenotype,
+    currentGroups = currentGroups,
     ignore = NULL,
     minAge = 1L,
     numGp = 1L,
@@ -76,9 +76,9 @@ test_that("groupAddAssign forms the correct groups with kinship matrices", {
   skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   groupAssignKTest <- groupAddAssign(
     candidates = qcBreeders,
-    currentGroups = character(0L),
     kmat = pedWithGenotypeReport$kinship,
     ped = pedWithGenotype,
+    currentGroups = character(0L),
     ignore = NULL,
     minAge = 1.0,
     numGp = 2L,
@@ -96,7 +96,7 @@ noSires <- removePotentialSires(qcBreeders,
   minAge = 2.0,
   pedWithGenotype
 )
-sires <- getPotentialSires(qcBreeders, minAge = 2.0, pedWithGenotype)
+sires <- getPotentialSires(qcBreeders, pedWithGenotype, minAge = 2.0)
 
 test_that(paste0(
   "groupAddAssign fails when no potential sires exist for harem creation"
@@ -105,9 +105,9 @@ test_that(paste0(
   expect_error(
     groupAddAssign(
       candidates = noSires,
-      currentGroups = character(0L),
       kmat = pedWithGenotypeReport$kinship,
       ped = pedWithGenotype,
+      currentGroups = character(0L),
       ignore = NULL,
       minAge = 1.0,
       numGp = 2L,
@@ -126,9 +126,9 @@ test_that(
     skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
     group <- groupAddAssign(
       candidates = qcBreeders,
-      currentGroups = character(0L),
       kmat = pedWithGenotypeReport$kinship,
       ped = pedWithGenotype,
+      currentGroups = character(0L),
       ignore = NULL,
       minAge = 1.0,
       numGp = 2L,
@@ -157,9 +157,9 @@ test_that(
     expect_error(
       groupAddAssign(
         candidates = noSires,
-        currentGroups = currentGroups,
         kmat = pedWithGenotypeReport$kinship,
         ped = pedWithGenotype,
+        currentGroups = currentGroups,
         ignore = NULL,
         minAge = 1.0,
         numGp = 2L,

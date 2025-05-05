@@ -27,6 +27,6 @@ uninformative.
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::pedWithGenotype
 ids <- nprcgenekeepr::qcBreeders
-sires <- getPotentialSires(ids, minAge = 1, ped)
+sires <- getPotentialSires(ids, ped, minAge = 1)
 head(getProbandPedigree(probands = sires, ped = ped))
 }

@@ -74,7 +74,7 @@
 fillGroupMembersWithSexRatio <-
   function(candidates, groupMembers, grpNum, kin, ped, minAge, numGp,
            sexRatio) {
-    potentialSires <- getPotentialSires(candidates, minAge, ped)
+    potentialSires <- getPotentialSires(candidates, ped, minAge)
     availableMales <- makeAvailable(potentialSires, numGp)
     availableFemales <- makeAvailable(setdiff(candidates, potentialSires),
                                       numGp)

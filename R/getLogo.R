@@ -26,11 +26,11 @@
 getLogo <- function() {
   logo <- list()
   if (getSiteInfo()$center == "SNPRC") {
-    logo$file <- "../nprcgenekeepr_2_color_logo.jpg"
+    logo$file <- file.path("..", "nprcgenekeepr_2_color_logo.jpg")
     logo$height <- 200L
     logo$width <- 350L
   } else {
-    logo$file <- "../nprcgenekeepr_2_color_logo.jpg"
+    logo$file <- file.path("..", "nprcgenekeepr_2_color_logo.jpg")
     logo$height <- 200L
     logo$width <- 350L
   }

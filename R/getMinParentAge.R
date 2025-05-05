@@ -16,7 +16,6 @@ getMinParentAge <- function(input) {
   }))
   if (minParentAge < 0L) {
     stop("Minimum Parent Age must be >= 0.")
-  } else {
-    minParentAge
   }
+  minParentAge
 }

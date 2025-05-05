@@ -20,9 +20,9 @@
 #'   ids = qcBreeders, minAge = 2,
 #'   ped = pedWithGenotype
 #' )
-#' sires <- getPotentialSires(qcBreeders, minAge = 2, ped = pedWithGenotype)
+#' sires <- getPotentialSires(qcBreeders, ped = pedWithGenotype, minAge = 2)
 #' pedWithGenotype[pedWithGenotype$id %in% noSires, c("sex", "age")]
 #' pedWithGenotype[pedWithGenotype$id %in% sires, c("sex", "age")]
 removePotentialSires <- function(ids, minAge, ped) {
-  setdiff(ids, getPotentialSires(ids, minAge, ped))
+  setdiff(ids, getPotentialSires(ids, ped, minAge))
 }

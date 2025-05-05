@@ -4,19 +4,19 @@
 \alias{getPotentialSires}
 \title{Provides list of potential sires}
 \usage{
-getPotentialSires(ids, minAge = 1L, ped)
+getPotentialSires(ids, ped, minAge = 1L)
 
-getPotentialSires(ids, minAge = 1L, ped)
+getPotentialSires(ids, ped, minAge = 1L)
 }
 \arguments{
 \item{ids}{character vector of IDs of the animals}
 
+\item{ped}{dataframe that is the \code{Pedigree}. It contains pedigree
+information including the IDs listed in \code{candidates}.}
+
 \item{minAge}{integer value indicating the minimum age to consider in group
 formation. Pairwise kinships involving an animal of this age or younger will
 be ignored. Default is 1 year.}
-
-\item{ped}{dataframe that is the \code{Pedigree}. It contains pedigree
-information including the IDs listed in \code{candidates}.}
 }
 \value{
 A character vector of potential sire Ids
@@ -32,9 +32,9 @@ Provides list of potential sires
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::pedWithGenotype
 ids <- nprcgenekeepr::qcBreeders
-getPotentialSires(ids, minAge = 1L, ped)
+getPotentialSires(ids, ped, minAge = 1L)
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::pedWithGenotype
 ids <- nprcgenekeepr::qcBreeders
-getPotentialSires(ids, minAge = 1, ped)
+getPotentialSires(ids, ped, minAge = 1)
 }

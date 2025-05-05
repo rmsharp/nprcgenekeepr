@@ -1165,10 +1165,10 @@ shinyServer(function(input, output, session) {
     }
 
     grp <- groupAddAssign(
-      candidates = candidates,
       currentGroups = currentGroups,
       kmat = kmat(),
       ped = ped,
+      candidates = candidates,
       threshold = threshold,
       ignore = ignore,
       minAge = minAge,

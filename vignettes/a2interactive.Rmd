@@ -619,9 +619,9 @@ will increase optimal composition of breeding groups
 
 ```{r create-harem-groups}
 haremGrp <- groupAddAssign(
-  candidates = candidates,
   kmat = trimmedGeneticValue[["kinship"]],
   ped = trimmedPed,
+  candidates = candidates,
   iter = 10L,
   numGp = 6L,
   harem = TRUE
@@ -665,9 +665,9 @@ This is done by setting __harem__ to \code{TRUE}.
 
 ```{r create-sexratio-groups}
 sexRatioGrp <- groupAddAssign(
-  candidates = candidates,
   kmat = trimmedGeneticValue[["kinship"]],
   ped = trimmedPed,
+  candidates = candidates,
   iter = 10L,
   numGp = 6L,
   sexRatio = 9.0

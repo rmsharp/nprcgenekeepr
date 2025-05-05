@@ -99,26 +99,27 @@
 #'   !is.na(trimmedPed$birth) &
 #'   is.na(trimmedPed$exit)]
 #' haremGrp <- groupAddAssign(
-#'   candidates = candidates,
 #'   kmat = trimmedGeneticValue[["kinship"]],
 #'   ped = trimmedPed,
+#'   candidates = candidates,
 #'   iter = 10, # should be >= 1000
 #'   numGp = 6,
 #'   harem = TRUE
 #' )
 #' haremGrp$group
 #' sexRatioGrp <- groupAddAssign(
-#'   candidates = candidates,
 #'   kmat = trimmedGeneticValue[["kinship"]],
 #'   ped = trimmedPed,
+#'   candidates = candidates,
 #'   iter = 10L, # should be >= 1000L
 #'   numGp = 6L,
 #'   sexRatio = 9.0
 #' )
 #' sexRatioGrp$group
-groupAddAssign <- function(candidates, currentGroups = list(character(0L)),
+groupAddAssign <- function(candidates,
                            kmat,
                            ped,
+                           currentGroups = list(character(0L)),
                            threshold = 0.015625, ignore = list(c("F", "F")),
                            minAge = 1.0, iter = 1000L,
                            numGp = 1L, harem = FALSE,
@@ -146,12 +147,12 @@ groupAddAssign <- function(candidates, currentGroups = list(character(0L)),
 
   kin <- addAnimalsWithNoRelative(kin, candidates)
   if (harem &&
-      length(getPotentialSires(candidates, minAge, ped)) < numGp) {
+      length(getPotentialSires(candidates, ped, minAge)) < numGp) {
     stop(
       "User selected to form ",
       numGp,
       " harems with only ",
-      length(getPotentialSires(candidates, minAge, ped)),
+      length(getPotentialSires(candidates, ped, minAge)),
       " males at least ",
       minAge,
       " years old in the list of candidates."
