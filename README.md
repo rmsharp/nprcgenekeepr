@@ -1,18 +1,18 @@
 README
 ================
 R. Mark Sharp, Ph.D.
-2024-12-17
+2025-04-21
 
 # nprcgenekeepr <a href="https://github.com/rmsharp/nprcgenekeepr"><img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
 
-Version1.0.6 (2024-12-20)
+Version1.0.7 (2025-04-22)
 
 <!-- badges: start -->
 
-[![Rdoc](https://www.rdocumentation.org/badges/version/nprcgenekeepr)](https://www.rdocumentation.org/packages/nprcgenekeepr)
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![R-CMD-check](https://github.com/rmsharp/nprcgenekeepr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rmsharp/nprcgenekeepr/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/rmsharp/nprcgenekeepr/graph/badge.svg)](https://app.codecov.io/gh/rmsharp/nprcgenekeepr)
@@ -71,7 +71,7 @@ from the R console prompt with:
 
 ``` r
 install.packages("devtools")
-devtools::install_github("rmsharp/nprcgenekeepr")
+devtools::install_github(file.path("rmsharp", "nprcgenekeepr"))
 ```
 
 All missing dependencies should be automatically installed.
