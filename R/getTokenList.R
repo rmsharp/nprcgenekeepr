@@ -42,7 +42,7 @@ getTokenList <- function(lines) {
   )
   tokens <- c(tokens, stri_split_regex(
     line,
-    pattern = "[[\\p{WHITE_SPACE},]]+"
+    pattern = "[[\\p{WHITE_SPACE},]]+" # nolint: nonportable_path_linter
   )[[1L]])
   tokens <- tokens[nzchar(tokens)]
   parLocations <- seq_along(tokens)[tokens == "="] - 1L

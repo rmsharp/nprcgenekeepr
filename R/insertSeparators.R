@@ -22,13 +22,13 @@ insertSeparators <- function(dates) {
                              !is.na(as.integer(dates[!is.na(dates)]))))) {
       dates <- vapply(dates, function(x) {
         stri_c(
-          stri_sub(x, from = 1, to = 4),
+          stri_sub(x, from = 1L, to = 4L),
           "-",
-          stri_sub(x, from = 5, to = 6),
+          stri_sub(x, from = 5L, to = 6L),
           "-",
-          stri_sub(x, from = 7, to = 8)
+          stri_sub(x, from = 7L, to = 8L)
         )
-      }, character(1))
+      }, character(1L))
     }
   }
   dates

@@ -29,13 +29,13 @@ getLkDirectAncestors <- function(ids) {
       flog.debug(stri_c("Warning", source, wCond),
         name = "nprcgenekeepr"
       )
-      return(NULL)
+      NULL
     },
     error = function(eCond) {
       flog.debug(stri_c("Error", source, eCond),
         name = "nprcgenekeepr"
       )
-      return(NULL)
+      NULL
     }
   )
   if (is.null(pedSourceDf)) {

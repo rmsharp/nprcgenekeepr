@@ -75,7 +75,7 @@ test_that(
       as.Date("2003-10-03", format = "%Y-%m-%d")
     )
     expect_error(
-      obfuscateDate(targetDate, c(10L, 20L, 30L), minBirthDate),
+      obfuscateDate(targetDate, minBirthDate, c(10L, 20L, 30L)),
       "Length of minDate must be 1 or the same as baseDate."
     )
   }
