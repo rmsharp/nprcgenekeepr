@@ -11,7 +11,7 @@ birthdate can be shifted (maxDelta)."><meta property="og:image" content="https:/
 
     <a class="navbar-brand me-2" href="../index.html">nprcgenekeepr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -99,24 +99,24 @@ and the values being the new alias values. Defaults to <code>FALSE</code>.</p></
 <span class="r-in"><span><span class="va">obfuscatedPed</span> <span class="op">&lt;-</span> <span class="fu">obfuscatePed</span><span class="op">(</span><span class="va">ped</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">ped</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id sire  dam sex gen      birth exit  age recordStatus</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 d1 &lt;NA&gt; &lt;NA&gt;   F   0 2003-04-13 &lt;NA&gt; 22.1     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 d2 &lt;NA&gt; &lt;NA&gt;   F   0 2002-06-22 &lt;NA&gt; 22.9     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 s1 &lt;NA&gt; &lt;NA&gt;   M   0 2000-07-18 &lt;NA&gt; 24.8     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 s2 &lt;NA&gt; &lt;NA&gt;   M   0 2005-06-19 &lt;NA&gt; 19.9     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 o1   s1   d1   F   1 2015-02-04 &lt;NA&gt; 10.2     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 o2   s1   d2   F   1 2009-03-17 &lt;NA&gt; 16.1     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7 o3   s2   d2   F   1 2012-04-11 &lt;NA&gt; 13.1     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8 o4   s2   d2   M   1 2008-04-13 &lt;NA&gt; 17.1     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 d1 &lt;NA&gt; &lt;NA&gt;   F   0 2003-04-13 &lt;NA&gt; 22.3     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 d2 &lt;NA&gt; &lt;NA&gt;   F   0 2002-06-22 &lt;NA&gt; 23.1     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 s1 &lt;NA&gt; &lt;NA&gt;   M   0 2000-07-18 &lt;NA&gt; 25.0     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 s2 &lt;NA&gt; &lt;NA&gt;   M   0 2005-06-19 &lt;NA&gt; 20.1     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 o1   s1   d1   F   1 2015-02-04 &lt;NA&gt; 10.5     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 o2   s1   d2   F   1 2009-03-17 &lt;NA&gt; 16.4     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7 o3   s2   d2   F   1 2012-04-11 &lt;NA&gt; 13.3     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8 o4   s2   d2   M   1 2008-04-13 &lt;NA&gt; 17.3     original</span>
 <span class="r-in"><span><span class="va">obfuscatedPed</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       id   sire    dam sex gen      birth exit  age recordStatus</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 LS7SJB   &lt;NA&gt;   &lt;NA&gt;   F   0 2003-03-17 &lt;NA&gt; 22.1     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 P4MENX   &lt;NA&gt;   &lt;NA&gt;   F   0 2002-05-29 &lt;NA&gt; 22.9     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 NZZUQQ   &lt;NA&gt;   &lt;NA&gt;   M   0 2000-07-10 &lt;NA&gt; 24.8     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 KV6EPH   &lt;NA&gt;   &lt;NA&gt;   M   0 2005-05-30 &lt;NA&gt; 19.9     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 QER817 NZZUQQ LS7SJB   F   1 2015-01-22 &lt;NA&gt; 10.3     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 RWRDIS NZZUQQ P4MENX   F   1 2009-02-26 &lt;NA&gt; 16.2     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7 N7TLJ2 KV6EPH P4MENX   F   1 2012-03-27 &lt;NA&gt; 13.1     original</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8 ZFC1WF KV6EPH P4MENX   M   1 2008-03-24 &lt;NA&gt; 17.1     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 JBP4ME   &lt;NA&gt;   &lt;NA&gt;   F   0 2003-03-31 &lt;NA&gt; 22.3     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 NXNZZU   &lt;NA&gt;   &lt;NA&gt;   F   0 2002-06-03 &lt;NA&gt; 23.1     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 QQKV6E   &lt;NA&gt;   &lt;NA&gt;   M   0 2000-07-03 &lt;NA&gt; 25.1     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 PHQER8   &lt;NA&gt;   &lt;NA&gt;   M   0 2005-05-30 &lt;NA&gt; 20.2     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 17RWRD QQKV6E JBP4ME   F   1 2015-02-02 &lt;NA&gt; 10.5     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 ISN7TL QQKV6E NXNZZU   F   1 2009-04-02 &lt;NA&gt; 16.3     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7 J2ZFC1 PHQER8 NXNZZU   F   1 2012-03-13 &lt;NA&gt; 13.4     original</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8 WFCDNF PHQER8 NXNZZU   M   1 2008-04-14 &lt;NA&gt; 17.3     original</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -128,7 +128,7 @@ and the values being the new alias values. Defaults to <code>FALSE</code>.</p></
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>
