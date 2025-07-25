@@ -1,3 +1,4 @@
+Config/renv/profiles/dev/dependencies: checkhelper,devtools, httpuv, qpdf, markdown, roxygen2, spelling, usethis
 Package: nprcgenekeepr
 Type: Package
 Title: Genetic Tools for Colony Management
