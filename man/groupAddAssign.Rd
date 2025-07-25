@@ -6,9 +6,9 @@
 \usage{
 groupAddAssign(
   candidates,
-  currentGroups = list(character(0L)),
   kmat,
   ped,
+  currentGroups = list(character(0L)),
   threshold = 0.015625,
   ignore = list(c("F", "F")),
   minAge = 1,
@@ -25,16 +25,16 @@ groupAddAssign(
 use in forming the groups. The animals that may be present in
 \code{currentGroups} are not included within \code{candidates}.}
 
-\item{currentGroups}{List of character vectors of IDs of animals currently
-assigned to groups.
-Defaults to a list with character(0) in each sublist element (one for each
-group being formed) assuming no groups are prepopulated.}
-
 \item{kmat}{Numeric matrix of pairwise kinship values. Rows and columns
 are named with animal IDs.}
 
 \item{ped}{Dataframe that is the \code{Pedigree}. It contains pedigree
 information including the IDs listed in \code{candidates}.}
+
+\item{currentGroups}{List of character vectors of IDs of animals currently
+assigned to groups.
+Defaults to a list with character(0) in each sublist element (one for each
+group being formed) assuming no groups are prepopulated.}
 
 \item{threshold}{Numeric value indicating the minimum kinship level to be
 considered in group formation. Pairwise kinship below this level will be
@@ -132,18 +132,18 @@ candidates <- trimmedPed$id[trimmedPed$birth < as.Date("2013-01-01") &
   !is.na(trimmedPed$birth) &
   is.na(trimmedPed$exit)]
 haremGrp <- groupAddAssign(
-  candidates = candidates,
   kmat = trimmedGeneticValue[["kinship"]],
   ped = trimmedPed,
+  candidates = candidates,
   iter = 10, # should be >= 1000
   numGp = 6,
   harem = TRUE
 )
 haremGrp$group
 sexRatioGrp <- groupAddAssign(
-  candidates = candidates,
   kmat = trimmedGeneticValue[["kinship"]],
   ped = trimmedPed,
+  candidates = candidates,
   iter = 10L, # should be >= 1000L
   numGp = 6L,
   sexRatio = 9.0

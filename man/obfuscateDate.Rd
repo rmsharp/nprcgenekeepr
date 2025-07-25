@@ -4,16 +4,16 @@
 \alias{obfuscateDate}
 \title{obfucateDate adds a random number of days bounded by plus and minus max delta}
 \usage{
-obfuscateDate(baseDate, maxDelta = 30L, minDate)
+obfuscateDate(baseDate, minDate, maxDelta = 30L)
 }
 \arguments{
 \item{baseDate}{list of Date objects with dates to be obfuscated}
 
-\item{maxDelta}{integer vector that is used to create min and max arguments
-to \code{runif} (\code{runif(n, min = 0, max = 1)})}
-
 \item{minDate}{list object of Date objects that has the lower bound of
 resulting obfuscated dates}
+
+\item{maxDelta}{integer vector that is used to create min and max arguments
+to \code{runif} (\code{runif(n, min = 0, max = 1)})}
 }
 \value{
 A vector of dates that have be obfuscated.
@@ -30,5 +30,5 @@ someDates <- rep(
   10
 )
 minBirthDate <- rep(as.Date("2009-2-16", format = "\%Y-\%m-\%d"), 20)
-obfuscateDate(someDates, 30, minBirthDate)
+obfuscateDate(someDates, minBirthDate, 30L)
 }

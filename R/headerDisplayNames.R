@@ -50,7 +50,7 @@ headerDisplayNames <- function(headers) {
     second = "Second Allele Code",
     first_name = "First Allele",
     second_name = "Second Allele",
-    recordStatus = "Original/ Added"
+    recordStatus = "Original/ Added" # nolint: nonportable_path_linter
   )
   as.character(nameConversion[headers])
 }

@@ -38,7 +38,7 @@ convertFromCenter <- function(fromCenter) {
       stop(
         "fromCenter field has ambiguous values in row(s) ",
         get_and_or_list(seq_along(fromCenter)[
-          !(fromCenterTrue != fromCenterFalse)
+          (fromCenterTrue == fromCenterFalse)
         ])
       )
     } else {

@@ -104,7 +104,7 @@ convertDate <- function(ped, timeOrigin = as.Date("1970-01-01"),
   invalid_date_rows <- NULL
   for (header in headers) {
     dates <- ped[[header]]
-    if (any(class(dates) %in% c("factor", "logical", "integer"))) {
+    if (any(inherits(dates, c("factor", "logical", "integer")))) {
       dates <- as.character(dates)
     }
     if (inherits(dates, "Date")) {

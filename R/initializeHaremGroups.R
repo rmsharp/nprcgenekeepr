@@ -24,30 +24,30 @@ initializeHaremGroups <- function(numGp, currentGroups, candidates, ped,
   if (length(currentGroups) > 0L) {
     for (i in seq_len(length(currentGroups))) {
       currentGroup <- currentGroups[[i]]
-      if (length(getPotentialSires(currentGroup, minAge, ped)) > 1L) {
+      if (length(getPotentialSires(currentGroup, ped, minAge)) > 1L) {
         stop(
           "User selected to form harems with more than one male, ",
           "There are ",
-          length(getPotentialSires(currentGroup, minAge, ped)),
+          length(getPotentialSires(currentGroup, ped, minAge)),
           " at least ", minAge, " years old in the current group ",
           i, "."
         )
       }
     }
   }
-  if (length(getPotentialSires(candidates, minAge, ped)) < numGp &&
-    length(getPotentialSires(unlist(currentGroups), minAge, ped)) == 0L) {
+  if (length(getPotentialSires(candidates, ped, minAge)) < numGp &&
+    length(getPotentialSires(unlist(currentGroups), ped, minAge)) == 0L) {
     stop(
       "User selected to form harems in ", numGp, " groups with ",
-      "only ", length(getPotentialSires(candidates, minAge, ped)),
+      "only ", length(getPotentialSires(candidates, ped, minAge)),
       " males at least ",
       minAge, " years old in the list of candidates."
     )
   }
 
-  if (length(getPotentialSires(unlist(currentGroups), minAge, ped)) == 0L) {
+  if (length(getPotentialSires(unlist(currentGroups), ped, minAge)) == 0L) {
     ped <- ped[!is.na(ped$birth), ]
-    sires <- sample(getPotentialSires(candidates, minAge, ped), numGp,
+    sires <- sample(getPotentialSires(candidates, ped, minAge), numGp,
       replace = FALSE
     )
     for (i in 1L:numGp) {
@@ -58,7 +58,7 @@ initializeHaremGroups <- function(numGp, currentGroups, candidates, ped,
     for (i in seq_len(length(currentGroups))) {
       currentGroup <- currentGroups[[i]]
       if (length(currentGroup) > 0L) {
-        if (length(getPotentialSires(currentGroup, minAge, ped)) > 0L) {
+        if (length(getPotentialSires(currentGroup, ped, minAge)) > 0L) {
           groupMembers[[i]] <- currentGroup
         } else {
           groupMembers[[i]] <- c(groupMembers[[i]], currentGroup)

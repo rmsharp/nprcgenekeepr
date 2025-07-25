@@ -14,7 +14,6 @@ getParamDef <- function(tokenList, param) {
          param,
          " in configuration file. ",
          "Check spelling carefully.\n")
-  } else {
-    tokenList$tokenVec[tokenList$param == param][[1L]]
   }
+  tokenList$tokenVec[tokenList$param == param][[1L]]
 }

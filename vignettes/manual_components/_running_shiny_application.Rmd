@@ -20,6 +20,6 @@ However, it was originally designed to be used within a Shiny application
 that can be started with:
 
 ```{r running-shiny-application, echo = TRUE, eval = FALSE}
-library(nprcgenekeepr)
+library(nprcgenekeepr) # nolint: undesirable_function_linter
 runGeneKeepR()
 ```

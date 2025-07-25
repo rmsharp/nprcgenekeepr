@@ -3,7 +3,7 @@ uitpInput <-
     "Input",
 
     tags$style(
-      type = "text/css",
+      type = "text/css", # nolint: nonportable_path_linter
       "table {border: 1px solid black; width: 100%; padding: 15px;}",
       "tr, td, th {border: 1px solid black; padding: 5px;}",
       "th {font-weight: bold; background-color: #7CFC00;}",

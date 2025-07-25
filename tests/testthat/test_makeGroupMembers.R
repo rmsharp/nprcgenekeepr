@@ -59,7 +59,7 @@ test_that(paste0(
     ids = qcBreeders, minAge = 2L,
     ped = pedWithGenotype
   )
-  sires <- getPotentialSires(qcBreeders, minAge = 2.0, ped = pedWithGenotype)
+  sires <- getPotentialSires(qcBreeders, ped = pedWithGenotype, minAge = 2.0)
   currentGroups[[1L]] <- c(noSires[1L:10L], sires[1L])
   candidates <- c(noSires[11L:length(noSires)], sires[-1L])
   groupMembers <- makeGroupMembers(
@@ -96,7 +96,7 @@ test_that(paste0(
     ids = qcBreeders, minAge = 2.0,
     ped = pedWithGenotype
   )
-  sires <- getPotentialSires(qcBreeders, minAge = 2.0, ped = pedWithGenotype)
+  sires <- getPotentialSires(qcBreeders, ped = pedWithGenotype, minAge = 2.0)
   currentGroups[[1L]] <- c(noSires[1L:10L])
   candidates <- c(noSires[11L:length(noSires)], sires)
   groupMembers <- makeGroupMembers(
@@ -125,7 +125,7 @@ test_that(paste0(
     ids = qcBreeders, minAge = 2L,
     ped = pedWithGenotype
   )
-  sires <- getPotentialSires(qcBreeders, minAge = 2L, ped = pedWithGenotype)
+  sires <- getPotentialSires(qcBreeders, ped = pedWithGenotype, minAge = 2L)
   currentGroups[[1L]] <- c(noSires[1L:10L], sires[1L])
   candidates <- noSires[11L:length(noSires)]
   groupMembers <- makeGroupMembers(

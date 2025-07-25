@@ -77,10 +77,10 @@ Animals \code{E}, \code{J}, and \code{N}
 
 ```{r setup}
 knitr::opts_chunk$set(echo = TRUE)
-library(kableExtra)
-library(magrittr)
-library(nprcgenekeepr)
-library(stringi)
+library(kableExtra) # nolint: undesirable_function_linter
+library(magrittr) # nolint: undesirable_function_linter
+library(nprcgenekeepr) # nolint: undesirable_function_linter
+library(stringi) # nolint: undesirable_function_linter
 
 ped <- nprcgenekeepr::smallPed
 simParent_1 <- list( # nolint: object_name_linter

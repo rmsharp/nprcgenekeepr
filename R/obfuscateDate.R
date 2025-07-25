@@ -9,10 +9,10 @@
 #' @return A vector of dates that have be obfuscated.
 #'
 #' @param baseDate list of Date objects with dates to be obfuscated
-#' @param maxDelta integer vector that is used to create min and max arguments
-#' to \code{runif} (\code{runif(n, min = 0, max = 1)})
 #' @param minDate list object of Date objects that has the lower bound of
 #' resulting obfuscated dates
+#' @param maxDelta integer vector that is used to create min and max arguments
+#' to \code{runif} (\code{runif(n, min = 0, max = 1)})
 #' @importFrom lubridate ddays
 #' @importFrom stats runif
 #' @export
@@ -23,8 +23,8 @@
 #'   10
 #' )
 #' minBirthDate <- rep(as.Date("2009-2-16", format = "%Y-%m-%d"), 20)
-#' obfuscateDate(someDates, 30, minBirthDate)
-obfuscateDate <- function(baseDate, maxDelta = 30L, minDate) {
+#' obfuscateDate(someDates, minBirthDate, 30L)
+obfuscateDate <- function(baseDate, minDate, maxDelta = 30L) {
   if (length(maxDelta) == 1L) {
     maxDelta <- rep(maxDelta, length(baseDate))
   }

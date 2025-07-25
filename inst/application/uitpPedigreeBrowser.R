@@ -9,7 +9,8 @@ uitpPedigreeBrowser <-
           "margin-left:3px; margin-top: 3px; margin-bottom: 3px;",
           "border-radius: 25px; box-shadow: 0 0 5px 2px #888"
         ),
-        includeHTML("../extdata/ui_guidance/pedigree_browser.html")
+        includeHTML(file.path("..", "extdata", "ui_guidance",
+                              "pedigree_browser.html"))
       ),
       # Main Panel
       div(
@@ -28,8 +29,10 @@ uitpPedigreeBrowser <-
           "focalAnimalUpdate",
           "Choose CSV file with focal animals",
           multiple = FALSE,
+          # nolint start: nonportable_path_linter
           accept = c("text/csv", "text/comma-separated-values,text/plain",
                      ".csv")
+          # nolint end
         ),
         shinyBS::popify(
           actionButton("specifyFocalAnimal", label = "Update Focal Animals"),

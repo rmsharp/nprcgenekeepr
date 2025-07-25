@@ -1,5 +1,6 @@
 library(hexSticker) # nolint: undesirable_function_linter.
-imgurl <- system.file(file.path("man", "figures", "card.png"), package = "nprcgenekeepr")
+imgurl <- system.file(file.path("man", "figures", "card.png"),
+                      package = "nprcgenekeepr")
 sticker(
   imgurl,
   package = "nprcgenekeepr",

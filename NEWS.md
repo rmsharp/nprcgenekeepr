@@ -1,9 +1,15 @@
 NEWS
 ================
 R. Mark Sharp, Ph.D.
-2025-04-06
+2025-07-23
 
-2025-05-06
+# nprcgenekeepr 1.0.8 (20250723)
+
+- Minor changes
+  - Added returned value descriptions for all functions where formerly
+    missing.
+  - Changed unit test for get_elapsed_time_str() to use a mocked version
+    of proc.time
 
 # nprcgenekeepr 1.0.7 (20250506)
 

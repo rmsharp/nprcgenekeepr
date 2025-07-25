@@ -38,10 +38,10 @@ makeSimPed <- function(ped, allSimParents, verbose = FALSE) {
     if (length(allSimParents[[i]]$dams) == 0L) {
       ped$dam[ped$id == allSimParents[[i]]$id] <- NA
       if (verbose) {
-        message(paste0(
+        message(
           "id #", i, " is ", allSimParents[[i]]$id,
           " and has no dam\n"
-        ))
+        )
       }
     } else {
       ped$dam[ped$id == allSimParents[[i]]$id] <-

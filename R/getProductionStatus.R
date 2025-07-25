@@ -62,9 +62,11 @@ getProductionStatus <- function(ped, minParentAge = 3L, maxOffspringAge = NULL,
   }
   nDam <- nrow(ped[ped$sex == "F" & ped$age >= minParentAge, ])
   if (is.null(maxOffspringAge)) {
+    # nolint start: nonportable_path_linter
     maxOffspringAge <- mdy(paste0("1/1/", year(currentDate) - 2L))
     startDate <- mdy(paste0("1/1/", year(currentDate) - 2L))
     endDate <- mdy(paste0("12/31/", year(currentDate) - 1L))
+    # nolint end:
   }
   ped <- ped[!(is.na(ped$birth) | is.na(ped$exit)), ]
   nOffspring <-

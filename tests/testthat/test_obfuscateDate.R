@@ -7,7 +7,7 @@ test_that("obfuscateDate creates new date within accepted range", {
   targetDate <- as.Date("2009-2-28", format = "%Y-%m-%d")
   minBirthDate <- as.Date("2009-2-14", format = "%Y-%m-%d")
   for (i in 1L:10L) {
-    obDate <- obfuscateDate(targetDate, 30L, minBirthDate)
+    obDate <- obfuscateDate(targetDate, minBirthDate, 30L)
     expect_gte(obDate, as.Date("2009-02-14", format = "%Y-%m-%d"))
     expect_lte(obDate, as.Date("2009-03-30", format = "%Y-%m-%d"))
   }
@@ -24,7 +24,7 @@ test_that(
       as.Date("2003-10-03", format = "%Y-%m-%d")
     )
     for (i in 1L:10L) {
-      obDate <- obfuscateDate(targetDate, 30L, minBirthDate)
+      obDate <- obfuscateDate(targetDate, minBirthDate, 30L)
       expect_gte(obDate[[1L]], as.Date("2009-02-14", format = "%Y-%m-%d"))
       expect_lte(obDate[[1L]], as.Date("2009-03-30", format = "%Y-%m-%d"))
       expect_gte(obDate[[2L]], as.Date("2003-10-03", format = "%Y-%m-%d"))
@@ -46,7 +46,7 @@ test_that(
       as.Date("2009-2-14", format = "%Y-%m-%d")
     )
     expect_error(
-      obfuscateDate(targetDate, 10L, minBirthDate),
+      obfuscateDate(targetDate, minBirthDate, 10L),
       "Length of baseDate and minDate must be the same."
     )
     minBirthDate <- list(
@@ -55,7 +55,7 @@ test_that(
       as.Date("2003-10-03", format = "%Y-%m-%d")
     )
     expect_error(
-      obfuscateDate(targetDate, 10L, minBirthDate),
+      obfuscateDate(targetDate, minBirthDate, 10L),
       "Length of baseDate and minDate must be the same."
     )
   }
@@ -75,7 +75,7 @@ test_that(
       as.Date("2003-10-03", format = "%Y-%m-%d")
     )
     expect_error(
-      obfuscateDate(targetDate, c(10L, 30L, 20L), minBirthDate),
+      obfuscateDate(targetDate, minBirthDate, c(10L, 20L, 30L)),
       "Length of minDate must be 1 or the same as baseDate."
     )
   }

@@ -130,10 +130,12 @@ uitpBreedingGroupFormation <-
               label = "Animals with kinship above this value will be excluded:",
               choices = list(
                 "0.015625 (second cousins)" = 0.015625,
+                # nolint start: nonportable_path_linter
                 "0.0625 (great-grandparent/great-grandchild; first cousins)" =
                   0.0625,
                 "0.125 (grandparent/grandchild; half-siblings; avuncular)" =
                   0.125,
+                # nolint end
                 "0.25 (parent/child)" = 0.25
               ),
               selected = 1L
@@ -220,6 +222,8 @@ uitpBreedingGroupFormation <-
         "border: 1px solid lightgray; background-color: #EDEDED; ",
         "border-radius: 15px; box-shadow: 0 0 5px 2px #888"
       ),
+      # nolint start: nonportable_path_linter
       includeHTML("../extdata/ui_guidance/group_formation.html")
+      # nolint end
     ))
   )
