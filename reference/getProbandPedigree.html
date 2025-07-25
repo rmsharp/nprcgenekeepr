@@ -15,7 +15,7 @@ uninformative."><meta property="og:image" content="https://github.com/rmsharp/np
 
     <a class="navbar-brand me-2" href="../index.html">nprcgenekeepr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,7 @@ information. The fields <code>sire</code> and <code>dam</code> are required.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="pedWithGenotype.html">pedWithGenotype</a></span></span></span>
 <span class="r-in"><span><span class="va">ids</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="qcBreeders.html">qcBreeders</a></span></span></span>
-<span class="r-in"><span><span class="va">sires</span> <span class="op">&lt;-</span> <span class="fu"><a href="getPotentialSires.html">getPotentialSires</a></span><span class="op">(</span><span class="va">ids</span>, minAge <span class="op">=</span> <span class="fl">1</span>, <span class="va">ped</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sires</span> <span class="op">&lt;-</span> <span class="fu"><a href="getPotentialSires.html">getPotentialSires</a></span><span class="op">(</span><span class="va">ids</span>, <span class="va">ped</span>, minAge <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">getProbandPedigree</span><span class="op">(</span>probands <span class="op">=</span> <span class="va">sires</span>, ped <span class="op">=</span> <span class="va">ped</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         id sire  dam sex gen      birth       exit  age first second first_name</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 91  6EJ6RI &lt;NA&gt; &lt;NA&gt;   F   0 1964-12-02 1989-09-04 24.8    NA     NA       &lt;NA&gt;</span>
