@@ -41,8 +41,9 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.8" id="nprcgenekeepr-108-20250723">nprcgenekeepr 1.0.8 (20250723)<a class="anchor" aria-label="anchor" href="#nprcgenekeepr-108-20250723"></a></h2>
 <ul><li>Minor changes
-<ul><li>Added returned value descriptions for all functions where formerly missing.</li>
-<li>Changed unit test for get_elapsed_time_str() to use a mocked version of proc.time</li>
+<ul><li>Added returned value descriptions for all functions within R directory where formerly missing.</li>
+<li>Changed unit test for <code><a href="../reference/get_elapsed_time_str.html">get_elapsed_time_str()</a></code> to use a mocked version of <code><a href="https://rdrr.io/r/base/proc.time.html" class="external-link">proc.time()</a></code>
+</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -50,7 +51,7 @@
 <ul><li>Minor changes
 <ul><li>Added returned value descriptions for all functions where formerly missing.</li>
 <li>Removed extraneous spaces from DESCRIPTION file.</li>
-<li>Exposed all examples in roxygen2 comments by removing and and . The example with <code><a href="../reference/runGeneKeepR.html">runGeneKeepR()</a></code> is protected with if (interactive()) {}.</li>
+<li>Exposed all examples in roxygen2 comments by removing and and . The example with <code><a href="../reference/runGeneKeepR.html">runGeneKeepR()</a></code> is protected with <code>if (interactive()) {}</code>.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -66,7 +67,7 @@
 <li>Added several unit tests</li>
 <li>Cleaned up code based on lintr feedback</li>
 <li>Added example deidentified pedigree data 2022-05-02_Deidentified_Pedigree.xlsx, 2022-05-02_Deidentified_Pedigree_focal_animals.csv, deidentified_jmac_ped.csv (text, except for dates, are in double quotes), deidentified_jmac_ped_edited.csv (edited to remove double quotes).</li>
-<li>Made getVersion() more robust.</li>
+<li>Made <code><a href="../reference/getVersion.html">getVersion()</a></code> more robust.</li>
 <li>Abstracted out removal of auto generated Ids in preparation of allowing the user to define how auto generated Ids will be formed.</li>
 <li>Added some quality assurance badges to README.</li>
 <li>Added CRAN status badge to README.</li>
@@ -77,20 +78,21 @@
 <h2 class="pkg-version" data-toc-text="1.0.5.9004" id="nprcgenekeepr-1059004-20221213">nprcgenekeepr 1.0.5.9004 (20221213)<a class="anchor" aria-label="anchor" href="#nprcgenekeepr-1059004-20221213"></a></h2>
 <ul><li>Minor changes
 <ul><li>Changed method used to test class of object to use inherits().</li>
-<li>Corrected getPedDirectRelative() so that all direct relatives are found. Supplemented unit tests for more direct relative types.</li>
-<li>Added unit tests for trimPedigree().</li>
-<li>Changed call as.character(date_object) to format(date_object) in getDatedFileName.R to prepare for newer code in development version of
+<li>Corrected <code>getPedDirectRelative()</code> so that all direct relatives are found. Supplemented unit tests for more direct relative types.</li>
+<li>Added unit tests for <code><a href="../reference/trimPedigree.html">trimPedigree()</a></code>.</li>
+<li>Changed call <code>as.character(date_object)</code> to <code>format(date_object)</code> in getDatedFileName.R to prepare for newer code in development version of
 <ol start="18" style="list-style-type: decimal"><li>
 </li></ol></li>
-<li>Technical edits of R code based on lintr::lint_dir(“R”)</li>
+<li>Technical edits of R code based on <code>lintr::lint_dir(“R”)</code>
+</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.5.9003" id="nprcgenekeepr-1059003-20220625">nprcgenekeepr 1.0.5.9003 (20220625)<a class="anchor" aria-label="anchor" href="#nprcgenekeepr-1059003-20220625"></a></h2>
 <ul><li>Minor changes
 <ul><li>Removed dependency on gdata.</li>
-<li>Removed getMinParentAge as it was never used.</li>
-<li>Starting to replace rbind() with rbindlist() from data.table were possible.</li>
+<li>Removed <code>getMinParentAge()</code> as it was never used.</li>
+<li>Starting to replace <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind()</a></code> with <code>rbindlist()</code> from <code>data.table</code> were possible.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -156,16 +158,18 @@
 <ul><li>CRAN re-submission: responded to all requests provided by reviewer
 <ul><li>I have not changed the capitalization of <code>Shiny</code> in the description section of the DESCRIPTION file as it is the name of the type of application and is not being used as the name of the package. The use of the capitalization is consistent with the capitalization used within the documentation for the <code>shiny</code> package (?shiny, See the Details section, first sentence where it is used as the type of tutorial.) and all documentation and tutorials provided by the author and RStudio where it is capitalized everywhere except when referring to the package.</li>
 <li>I have continued to use dontrun for the following examples:
-<ul><li>runGeneKeepr(), which starts the Shiny application</li>
-<li>getFocalAnimalPed(), which is dependent on a valid LabKey instance, a proper configuration file, and a .netrc or _netrc authentication file.</li>
+<ul><li>
+<code>runGeneKeepr()</code>, which starts the Shiny application</li>
+<li>
+<code><a href="../reference/getFocalAnimalPed.html">getFocalAnimalPed()</a></code>, which is dependent on a valid LabKey instance, a proper configuration file, and a .netrc or _netrc authentication file.</li>
 </ul></li>
 <li>I have exchanged dontrun for donttest for the following examples:
-<ul><li>create_wkbk()</li>
-<li>createPedTree()</li>
-<li>findLoops()</li>
-<li>countLoops()</li>
+<ul><li><code><a href="../reference/create_wkbk.html">create_wkbk()</a></code></li>
+<li><code><a href="../reference/createPedTree.html">createPedTree()</a></code></li>
+<li><code><a href="../reference/findLoops.html">findLoops()</a></code></li>
+<li><code><a href="../reference/countLoops.html">countLoops()</a></code></li>
 <li>All 11 examples in data.R</li>
-<li>makeExamplePedigreeFile</li>
+<li><code><a href="../reference/makeExamplePedigreeFile.html">makeExamplePedigreeFile()</a></code></li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -178,12 +182,12 @@
 <ul><li>Reduced the time required for unit test from over 12 minutes to 21.6 seconds by skipping those test dependent on stochastic creation of simulated pedigrees and breeding groups when not running on my system.</li>
 <li>Reduced the time to run examples and create vignettes by reducing the number of stochastic modeling iterations by orders of magnitude without reducing the examples provided for user-facing functions.</li>
 <li>Checking (–as-cran –run-donttest) Duration: 2m 21.8s on my system.</li>
-<li>The files with the Rd-tag of missing do not take arguments.</li>
-<li>Corrected private referencing (:::) for exported functions.</li>
-<li>Exported all functions used in examples to remove private referencing (:::).</li>
+<li>The files with the Rd-tag of <code>\arguments</code> missing do not take arguments.</li>
+<li>Corrected private referencing (<code>:::</code>) for exported functions.</li>
+<li>Exported all functions used in examples to remove private referencing (<code>:::</code>).</li>
 <li>Removed all single quotes on names, abbreviations, initialisms, and, acronyms.</li>
 <li>The phrase Electronic Health Records (EHR) is the name of a module within LabKey, which this software can use as a source of pedigree information so the capitalization is appropriate.</li>
-<li>Two exported functions used by server.R to call tabpanel() do not have examples.</li>
+<li>Two exported functions used by server.R to call <code>tabpanel()</code> do not have examples.</li>
 </ul></li>
 </ul></li>
 </ul></div>
