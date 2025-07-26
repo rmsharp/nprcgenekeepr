@@ -1,13 +1,13 @@
 ---
 title: "README"
 author: "R. Mark Sharp, Ph.D."
-date: "2025-04-21"
+date: "2025-07-25"
 output: github_document
 ---
 
 # nprcgenekeepr <a href="https://github.com/rmsharp/nprcgenekeepr"><img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
 
-`r paste0("\n Version", nprcgenekeepr::getVersion())`
+`r paste0("\n Version ", nprcgenekeepr::getVersion())`
 
 <!-- badges: start -->
 

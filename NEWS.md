@@ -6,10 +6,10 @@ R. Mark Sharp, Ph.D.
 # nprcgenekeepr 1.0.8 (20250723)
 
 - Minor changes
-  - Added returned value descriptions for all functions where formerly
-    missing.
-  - Changed unit test for get_elapsed_time_str() to use a mocked version
-    of proc.time
+  - Added returned value descriptions for all functions within R
+    directory where formerly missing.
+  - Changed unit test for `get_elapsed_time_str()` to use a mocked
+    version of `proc.time()`
 
 # nprcgenekeepr 1.0.7 (20250506)
 
@@ -18,8 +18,8 @@ R. Mark Sharp, Ph.D.
     missing.
   - Removed extraneous spaces from DESCRIPTION file.
   - Exposed all examples in roxygen2 comments by removing and and . The
-    example with `runGeneKeepR()` is protected with if (interactive())
-    {}.
+    example with `runGeneKeepR()` is protected with
+    `if (interactive()) {}`.
 
 # nprcgenekeepr 1.0.6 (20241215)
 
@@ -39,7 +39,7 @@ R. Mark Sharp, Ph.D.
     deidentified_jmac_ped.csv (text, except for dates, are in double
     quotes), deidentified_jmac_ped_edited.csv (edited to remove double
     quotes).
-  - Made getVersion() more robust.
+  - Made `getVersion()` more robust.
   - Abstracted out removal of auto generated Ids in preparation of
     allowing the user to define how auto generated Ids will be formed.
   - Added some quality assurance badges to README.
@@ -51,22 +51,22 @@ R. Mark Sharp, Ph.D.
 
 - Minor changes
   - Changed method used to test class of object to use inherits().
-  - Corrected getPedDirectRelative() so that all direct relatives are
+  - Corrected `getPedDirectRelative()` so that all direct relatives are
     found. Supplemented unit tests for more direct relative types.
-  - Added unit tests for trimPedigree().
-  - Changed call as.character(date_object) to format(date_object) in
+  - Added unit tests for `trimPedigree()`.
+  - Changed call `as.character(date_object)` to `format(date_object)` in
     getDatedFileName.R to prepare for newer code in development version
     of
     18. 
-  - Technical edits of R code based on lintr::lint_dir(“R”)
+  - Technical edits of R code based on `lintr::lint_dir(“R”)`
 
 # nprcgenekeepr 1.0.5.9003 (20220625)
 
 - Minor changes
   - Removed dependency on gdata.
-  - Removed getMinParentAge as it was never used.
-  - Starting to replace rbind() with rbindlist() from data.table were
-    possible.
+  - Removed `getMinParentAge()` as it was never used.
+  - Starting to replace `rbind()` with `rbindlist()` from `data.table`
+    were possible.
 
 # nprcgenekeepr 1.0.5.9002 (20220425)
 
@@ -155,17 +155,17 @@ R. Mark Sharp, Ph.D.
       tutorials provided by the author and RStudio where it is
       capitalized everywhere except when referring to the package.
     - I have continued to use dontrun for the following examples:
-      - runGeneKeepr(), which starts the Shiny application
-      - getFocalAnimalPed(), which is dependent on a valid LabKey
+      - `runGeneKeepr()`, which starts the Shiny application
+      - `getFocalAnimalPed()`, which is dependent on a valid LabKey
         instance, a proper configuration file, and a .netrc or \_netrc
         authentication file.
     - I have exchanged dontrun for donttest for the following examples:
-      - create_wkbk()
-      - createPedTree()
-      - findLoops()
-      - countLoops()
+      - `create_wkbk()`
+      - `createPedTree()`
+      - `findLoops()`
+      - `countLoops()`
       - All 11 examples in data.R
-      - makeExamplePedigreeFile
+      - `makeExamplePedigreeFile()`
 
 # nprcgenekeepr 1.0.1 (20200510)
 
@@ -181,17 +181,18 @@ R. Mark Sharp, Ph.D.
       magnitude without reducing the examples provided for user-facing
       functions.
     - Checking (–as-cran –run-donttest) Duration: 2m 21.8s on my system.
-    - The files with the Rd-tag of missing do not take arguments.
-    - Corrected private referencing (:::) for exported functions.
+    - The files with the Rd-tag of `\arguments` missing do not take
+      arguments.
+    - Corrected private referencing (`:::`) for exported functions.
     - Exported all functions used in examples to remove private
-      referencing (:::).
+      referencing (`:::`).
     - Removed all single quotes on names, abbreviations, initialisms,
       and, acronyms.
     - The phrase Electronic Health Records (EHR) is the name of a module
       within LabKey, which this software can use as a source of pedigree
       information so the capitalization is appropriate.
-    - Two exported functions used by server.R to call tabpanel() do not
-      have examples.
+    - Two exported functions used by server.R to call `tabpanel()` do
+      not have examples.
 
 # nprcgenekeepr 1.0 (20200415)
 

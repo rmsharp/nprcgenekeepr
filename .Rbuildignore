@@ -8,13 +8,14 @@
 ^\.httr-oauth$
 ^\.Rprofile$
 ^cran-comments\.md$
+^20250504_cran-comments\.md$
+^20241220_cran-comments\.md$
 ^20210330_cran-comments\.md$
 ^20210324_cran-comments\.md$
 ^20201107_cran-comments\.md$
 ^20200517_cran-comments\.md$
 ^20200510_cran-comments\.md$
 ^20200415_cran-comments\.md$
-^20241220_cran-comments\.md$
 ^codecov\.yml$
 ^docs$
 inst/extdata/meeting_notes\.html$

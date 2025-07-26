@@ -1,11 +1,11 @@
 README
 ================
 R. Mark Sharp, Ph.D.
-2025-04-21
+2025-07-25
 
 # nprcgenekeepr <a href="https://github.com/rmsharp/nprcgenekeepr"><img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
 
-Version1.0.7 (2025-04-22)
+Version 1.0.8 (2025-07-25)
 
 <!-- badges: start -->
 
@@ -34,7 +34,9 @@ Southwest National Primate Research Center and P51 OD011092 to the
 Oregon National Primate Research Center.
 
 <!--It is now managed and maintained as a joint effort between ONPRC-->
+
 <!--and Southwest National Primate Research Center (SNPRC) with the -->
+
 <!--coding being done by R. Mark Sharp, Ph.D.-->
 
 At present, the application supports 5 functions:
@@ -101,7 +103,7 @@ scripts. However, it was originally designed to be used within a Shiny
 application that can be started with:
 
 ``` r
-library(nprcgenekeepr)
+library(nprcgenekeepr) # nolint: undesirable_function_linter
 runGeneKeepR()
 ```
 
