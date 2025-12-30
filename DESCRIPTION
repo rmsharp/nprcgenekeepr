@@ -39,6 +39,7 @@ Depends:
     R (>= 3.6.0)
 Imports:
     anytime,
+    DT,
     data.table,
     futile.logger,
     htmlTable,

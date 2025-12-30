@@ -1,0 +1,626 @@
+---
+title: "Claude Code - Converting nprcgenekeepr to Shiny Modules"
+format: html
+---
+# Converting nprcgenekeepr to Shiny Modules
+
+## Overview
+
+  This guide provides a strategy for converting the nprcgenekeepr Shiny application to use Shiny modules, which will improve code organization, reusability, and maintainability.
+
+## Benefits of Shiny Modules
+
+1. **Namespace isolation**: Prevents ID conflicts between UI elements
+2. **Code reusability**: Modules can be used multiple times in the same app
+3. **Better organization**: Each feature gets its own file
+4. **Easier testing**: Modules can be tested independently
+5. **Team collaboration**: Different team members can work on different modules
+
+## Recommended Module Structure
+
+Based on the 5 main features of nprcgenekeepr, here's the proposed structure:
+
+```
+R/
+├── modQc.R                    # Quality Control module
+├── modPedigree.R              # Pedigree Creation module
+├── modPyramid.R               # Age-Sex Pyramid module
+├── modGeneticValue.R         # Genetic Value Analysis module
+├── modBreedingGroups.R       # Breeding Group Formation module
+├── modDataUpload.R           # Shared data upload functionality
+├── runApp.R                   # Main app launcher
+└── appUI.R                    # Main UI assembly
+└── appServer.R                # Main server logic
+```
+
+## Module Template
+
+Every Shiny module consists of two functions:
+
+```r
+# UI Function - defines the user interface
+modNameUI <- function(id) {
+  ns <- NS(id)
+
+  tagList(
+    # UI elements here, wrapping IDs with ns()
+    textInput(ns("input_id"), "Label"),
+    actionButton(ns("button_id"), "Click"),
+    plotOutput(ns("plot_id"))
+  )
+}
+
+# Server Function - defines the server logic
+modNameServer <- function(id, shared_data = NULL) {
+  moduleServer(id, function(input, output, session) {
+    # Server logic here
+    # Access inputs as: input$input_id (NOT ns("input_id"))
+
+    # Return reactive values if needed by other modules
+    return(
+      list(
+        result = reactive({ ... })
+      )
+    )
+  })
+}
+```
+
+## Example Module: Quality Control
+
+Here's a complete example for the Quality Control module:
+
+  ### File: `R/modQc.R`
+
+  ```r
+#' Quality Control Module - UI
+#'
+#' @param id Module namespace ID
+#'
+#' @export
+modQcUI <- function(id) {
+  ns <- NS(id)
+
+  tagList(
+    h3("Studbook Quality Control"),
+
+    fluidRow(
+      column(
+        width = 4,
+        wellPanel(
+          h4("Data Input"),
+          fileInput(
+            ns("file_input"),
+            "Upload Studbook File",
+            accept = c(".txt", ".csv", ".xlsx")
+          ),
+          numericInput(
+            ns("min_parent_age"),
+            "Minimum Parent Age (years)",
+            value = 2,
+            min = 0,
+            max = 10
+          ),
+          checkboxInput(
+            ns("use_database"),
+            "Use LabKey Database",
+            value = FALSE
+          ),
+          actionButton(
+            ns("run_qc"),
+            "Run Quality Control",
+            class = "btn-primary"
+          )
+        )
+      ),
+
+      column(
+        width = 8,
+        tabsetPanel(
+          id = ns("results_tabs"),
+          tabPanel(
+            "Summary",
+            verbatimTextOutput(ns("qc_summary"))
+          ),
+          tabPanel(
+            "Errors",
+            DT::dataTableOutput(ns("qc_errors"))
+          ),
+          tabPanel(
+            "Warnings",
+            DT::dataTableOutput(ns("qc_warnings"))
+          ),
+          tabPanel(
+            "Cleaned Data",
+            DT::dataTableOutput(ns("cleaned_data"))
+          )
+        )
+      )
+    ),
+
+    fluidRow(
+      column(
+        width = 12,
+        downloadButton(ns("download_cleaned"), "Download Cleaned Data")
+      )
+    )
+  )
+}
+
+#' Quality Control Module - Server
+#'
+#' @param id Module namespace ID
+#' @param config_data Reactive containing configuration data
+#'
+#' @export
+modQcServer <- function(id, config_data = NULL) {
+  moduleServer(id, function(input, output, session) {
+
+    # Reactive to store uploaded data
+    uploaded_data <- reactive({
+      req(input$file_input)
+
+      file_path <- input$file_input$datapath
+      file_ext <- tools::file_ext(input$file_input$name)
+
+      if (file_ext == "xlsx") {
+        data <- readxl::read_excel(file_path)
+      } else {
+        data <- read.csv(file_path, stringsAsFactors = FALSE)
+      }
+
+      return(data)
+    })
+
+    # Reactive to store QC results
+    qc_results <- eventReactive(input$run_qc, {
+      req(uploaded_data())
+
+      withProgress(message = "Running quality control...", {
+
+        # Call your existing QC functions
+        results <- list()
+
+        incProgress(0.2, detail = "Checking parent entries")
+        # results$parent_check <- check_parents(uploaded_data())
+
+        incProgress(0.2, detail = "Validating sex")
+        # results$sex_check <- check_sex_consistency(uploaded_data())
+
+        incProgress(0.2, detail = "Removing duplicates")
+        # results$dedup <- remove_duplicates(uploaded_data())
+
+        incProgress(0.2, detail = "Validating dates")
+        # results$date_check <- validate_dates(uploaded_data())
+
+        incProgress(0.2, detail = "Finalizing")
+        # Run your actual QC pipeline here
+        # results$cleaned <- qcStudbook(
+        #   uploaded_data(),
+        #   minParentAge = input$min_parent_age
+        # )
+
+        results
+      })
+    })
+
+    # Output: Summary statistics
+    output$qc_summary <- renderPrint({
+      req(qc_results())
+
+      cat("Quality Control Summary\n")
+      cat("=======================\n\n")
+      cat("Records processed:", nrow(uploaded_data()), "\n")
+      cat("Errors found:", "X", "\n")  # Replace with actual count
+      cat("Warnings:", "Y", "\n")
+      cat("Records after cleaning:", "Z", "\n")
+    })
+
+    # Output: Error table
+    output$qc_errors <- DT::renderDataTable({
+      req(qc_results())
+      # Return errors dataframe
+      # qc_results()$errors
+      data.frame(
+        Row = c(1, 2),
+        Error = c("Missing parent", "Invalid date"),
+        Details = c("Sire ID 123 not found", "Birth date after death date")
+      )
+    }, options = list(pageLength = 10))
+
+    # Output: Warnings table
+    output$qc_warnings <- DT::renderDataTable({
+      req(qc_results())
+      # Return warnings dataframe
+      data.frame(
+        Row = c(3),
+        Warning = c("Young parent"),
+        Details = c("Parent age < 2 years")
+      )
+    }, options = list(pageLength = 10))
+
+    # Output: Cleaned data
+    output$cleaned_data <- DT::renderDataTable({
+      req(qc_results())
+      # Return cleaned data
+      # qc_results()$cleaned
+      uploaded_data()
+    }, options = list(pageLength = 25))
+
+    # Download handler
+    output$download_cleaned <- downloadHandler(
+      filename = function() {
+        paste0("cleaned_studbook_", Sys.Date(), ".csv")
+      },
+      content = function(file) {
+        # write.csv(qc_results()$cleaned, file, row.names = FALSE)
+        write.csv(uploaded_data(), file, row.names = FALSE)
+      }
+    )
+
+    # Return cleaned data for use by other modules
+    return(
+      list(
+        cleaned_data = reactive({
+          req(qc_results())
+          # qc_results()$cleaned
+          uploaded_data()
+        }),
+        qc_summary = reactive({
+          req(qc_results())
+          qc_results()
+        })
+      )
+    )
+  })
+}
+```
+
+## Example Module: Age-Sex Pyramid
+
+### File: `R/modPyramid.R`
+
+```r
+#' Age-Sex Pyramid Module - UI
+#'
+#' @param id Module namespace ID
+#'
+#' @export
+modPyramidUI <- function(id) {
+  ns <- NS(id)
+
+  tagList(
+    h3("Age-Sex Pyramid Plot"),
+
+    fluidRow(
+      column(
+        width = 3,
+        wellPanel(
+          h4("Plot Options"),
+          selectInput(
+            ns("age_unit"),
+            "Age Unit",
+            choices = c("Years", "Months"),
+            selected = "Years"
+          ),
+          numericInput(
+            ns("age_bin"),
+            "Age Bin Size",
+            value = 2,
+            min = 1,
+            max = 10
+          ),
+          checkboxInput(
+            ns("show_labels"),
+            "Show Count Labels",
+            value = TRUE
+          ),
+          actionButton(
+            ns("generate_plot"),
+            "Generate Plot",
+            class = "btn-primary"
+          )
+        )
+      ),
+
+      column(
+        width = 9,
+        plotOutput(ns("pyramid_plot"), height = "600px"),
+        hr(),
+        verbatimTextOutput(ns("pyramid_stats"))
+      )
+    )
+  )
+}
+
+#' Age-Sex Pyramid Module - Server
+#'
+#' @param id Module namespace ID
+#' @param pedigree_data Reactive containing pedigree data
+#'
+#' @export
+modPyramidServer <- function(id, pedigree_data = NULL) {
+  moduleServer(id, function(input, output, session) {
+
+    # Calculate age-sex distribution
+    pyramid_data <- reactive({
+      req(pedigree_data())
+
+      data <- pedigree_data()
+
+      # Filter for living animals
+      living <- data[is.na(data$exit_date) | data$exit_date == "", ]
+
+      # Calculate ages
+      # ages <- calculate_age(living$birth_date)
+
+      # Create age bins
+      # binned <- create_age_bins(ages, bin_size = input$age_bin)
+
+      # Return processed data
+      # pyramid_prep(living, age_unit = input$age_unit)
+      living
+    })
+
+    # Generate plot
+    output$pyramid_plot <- renderPlot({
+      req(pyramid_data())
+      input$generate_plot  # Trigger on button click
+
+      isolate({
+        # Call your pyramid plotting function
+        # plot_age_pyramid(
+        #   pyramid_data(),
+        #   age_bin = input$age_bin,
+        #   show_labels = input$show_labels
+        # )
+
+        # Placeholder plot
+        plot(1:10, main = "Age-Sex Pyramid")
+      })
+    })
+
+    # Statistics output
+    output$pyramid_stats <- renderPrint({
+      req(pyramid_data())
+
+      cat("Population Statistics\n")
+      cat("=====================\n\n")
+      cat("Total living animals:", nrow(pyramid_data()), "\n")
+      cat("Males:", "X", "\n")
+      cat("Females:", "Y", "\n")
+      cat("Sex ratio:", "Z", "\n")
+    })
+
+    # Return data for other modules
+    return(
+      list(
+        pyramid_data = pyramid_data
+      )
+    )
+  })
+}
+```
+
+## Main App Structure
+
+### File: `R/appUI.R`
+
+```r
+#' Main Application UI
+#'
+#' @export
+appUI <- function() {
+  fluidPage(
+    theme = bslib::bs_theme(version = 4),
+
+    # Application title
+    titlePanel(
+      div(
+        img(src = "www/logo.png", height = "50px"),
+        "NPRCgenekeeper - Genetic Tools for Colony Management"
+      )
+    ),
+
+    # Navigation
+    navbarPage(
+      "",
+
+      # Home tab
+      tabPanel(
+        "Home",
+        h2("Welcome to NPRCgenekeeper"),
+        p("Select a tool from the tabs above to get started.")
+      ),
+
+      # Quality Control tab
+      tabPanel(
+        "Quality Control",
+        modQcUI("qcModule")
+      ),
+
+      # Pedigree Creation tab
+      tabPanel(
+        "Pedigree Creation",
+        modPedigreeUI("pedigreeModule")
+      ),
+
+      # Age-Sex Pyramid tab
+      tabPanel(
+        "Age-Sex Pyramid",
+        modPyramidUI("pyramidModule")
+      ),
+
+      # Genetic Value Analysis tab
+      tabPanel(
+        "Genetic Value Analysis",
+        modGeneticValueUI("geneticValueModule")
+      ),
+
+      # Breeding Groups tab
+      tabPanel(
+        "Breeding Groups",
+        modBreedingGroupsUI("breedingGroupsModule")
+      ),
+
+      # Settings tab
+      tabPanel(
+        "Settings",
+        h3("Application Settings"),
+        # Add settings UI here
+      )
+    )
+  )
+}
+```
+
+### File: `R/appServer.R`
+
+```r
+#' Main Application Server
+#'
+#' @param input Shiny input
+#' @param output Shiny output
+#' @param session Shiny session
+#'
+#' @export
+appServer <- function(input, output, session) {
+
+  # Shared reactive values
+  shared_data <- reactiveValues(
+    config = NULL,
+    current_pedigree = NULL,
+    current_studbook = NULL
+  )
+
+  # Load configuration
+  observe({
+    # Load config file if exists
+    # shared_data$config <- load_config()
+  })
+
+  # Call modules and connect them
+  qc_results <- modQcServer("qc_module")
+
+  pedigree_results <- modPedigreeServer(
+    "pedigree_module",
+    cleaned_data = qc_results$cleaned_data
+  )
+
+  pyramidResults <- modPyramidServer(
+    "pyramidModule",
+    pedigree_data = pedigree_results$pedigree
+  )
+
+  geneticValueResults <- modGeneticValueServer(
+    "genetic_value_module",
+    pedigree_data = pedigree_results$pedigree
+  )
+
+  breedingGroupsResults <- modBreedingGroupsServer(
+    "breedingGroupsModule",
+    pedigree_data = pedigree_results$pedigree,
+    genetic_values = genetic_value_results$values
+  )
+
+  # Update shared data when modules produce results
+  observe({
+    req(qc_results$cleaned_data())
+    shared_data$current_studbook <- qc_results$cleaned_data()
+  })
+
+  observe({
+    req(pedigree_results$pedigree())
+    shared_data$current_pedigree <- pedigree_results$pedigree()
+  })
+}
+```
+
+### File: `R/run_app.R`
+
+```r
+#' Run the nprcgenekeepr Shiny Application
+#'
+#' @param ... Additional arguments passed to shiny::runApp()
+#'
+#' @export
+runGeneKeepR <- function(...) {
+
+  # Add resource path for www directory
+  shiny::addResourcePath(
+    'www',
+    system.file('www', package = 'nprcgenekeepr')
+  )
+
+  # Create and run the app
+  app <- shiny::shinyApp(
+    ui = appUI(),
+    server = appServer
+  )
+
+  shiny::runApp(app, ...)
+}
+```
+
+## Migration Strategy
+
+### Phase 1: Setup (Week 1)
+1. Create module template files
+2. Set up new directory structure
+3. Create `appUI.R` and `appServer.R`
+
+### Phase 2: Convert Core Modules (Weeks 2-3)
+1. Start with the simplest module (Age-Sex Pyramid)
+2. Convert Quality Control module
+3. Test each module independently
+
+### Phase 3: Convert Remaining Modules (Weeks 4-5)
+1. Convert Pedigree Creation
+2. Convert Genetic Value Analysis
+3. Convert Breeding Groups
+
+### Phase 4: Integration & Testing (Week 6)
+1. Connect all modules
+2. Test inter-module communication
+3. Update documentation
+
+### Phase 5: Cleanup (Week 7)
+1. Remove old code
+2. Update examples and vignettes
+3. Final testing
+
+## Testing Modules
+
+Create test files in `tests/testthat/`:
+
+  ```r
+# tests/testthat/test-mod_qc.R
+
+test_that("QC module UI creates proper structure", {
+  ui <- mod_qc_ui("test")
+  expect_s3_class(ui, "shiny.tag.list")
+})
+
+test_that("QC module server validates data correctly", {
+  testServer(mod_qc_server, {
+    # Test server logic
+  })
+})
+```
+
+## Best Practices
+
+1. **Naming Convention**: Use `mod_feature_ui` and `mod_feature_server`
+2. **Namespace**: Always use `ns <- NS(id)` in UI and wrap IDs with `ns()`
+3. **Return Values**: Have modules return reactive values that other modules need
+4. **Documentation**: Document each module with roxygen2 comments
+5. **Self-Contained**: Each module should be as independent as possible
+6. **Communication**: Use reactive values to pass data between modules
+7. **Testing**: Write unit tests for each module
+
+## Resources
+
+- [Shiny Modules Documentation](https://shiny.rstudio.com/articles/modules.html)
+- [Mastering Shiny - Modules Chapter](https://mastering-shiny.org/scaling-modules.html)
+- [Engineering Production-Grade Shiny Apps](https://engineering-shiny.org/)
+- [Golem Framework](https://thinkr-open.github.io/golem/)

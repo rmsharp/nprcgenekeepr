@@ -1299,6 +1299,7 @@ shinyServer(function(input, output, session) {
   #############################################################################
   # Function to handle display of pyramid plot
   flog.debug("before renderPlot(getPyramidPlot(ped)))", name = "nprcgenekeepr")
-  output$pyramidPlot <- renderPlot(getPyramidPlot(getPed()))
+  pyramidResults <- modPyramidDerver("pyramid1", ped)
+  #output$pyramidPlot <- renderPlot(getPyramidPlot(getPed()))
   flog.debug("after renderPlot(getPyramidPlot(ped)))", name = "nprcgenekeepr")
 })

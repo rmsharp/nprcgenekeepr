@@ -11,7 +11,8 @@ source("../application/uitpPedigreeBrowser.R")
 source("../application/uitpGeneticValueAnalysis.R")
 source("../application/uitpSummaryStatistics.R")
 source("../application/uitpBreedingGroupFormation.R")
-source("../application/uitpPyramidPlot.R")
+#source("../application/uitpPyramidPlot.R")
+source("../application/modPyramid.R")
 source("../application/uitpGvAndBgDesc.R")
 if (getSiteInfo()$center == "ONPRC") {
   source("../application/uitpOripReporting.R")
@@ -19,7 +20,8 @@ if (getSiteInfo()$center == "ONPRC") {
     title = stri_c("Genetic Management Tools - Version ", getVersion()),
     uitpInput,
     uitpPedigreeBrowser,
-    uitpPyramidPlot,
+    #    uitpPyramidPlot,
+    modPyramidUI("pyramid1"),
     uitpGeneticValueAnalysis,
     uitpSummaryStatistics,
     uitpBreedingGroupFormation,
@@ -32,7 +34,8 @@ if (getSiteInfo()$center == "ONPRC") {
     title = stri_c("Genetic Management Tools - Version ", getVersion()),
     uitpInput,
     uitpPedigreeBrowser,
-    uitpPyramidPlot,
+#    uitpPyramidPlot,
+    modPyramidUI("pyramid1"),
     uitpGeneticValueAnalysis,
     uitpSummaryStatistics,
     uitpBreedingGroupFormation,

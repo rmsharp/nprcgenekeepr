@@ -4,25 +4,42 @@
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
-#' @return Returns the error condition of the Shiny application when it
-#' terminates.
+# ============================================================================
+# FILE: R/runGeneKeepR.R
+# App Launcher - MODIFY YOUR EXISTING FUNCTION
+# ============================================================================
+
+#' Run the GeneKeepR Shiny Application
 #'
-#' @importFrom shiny runApp
+#' @param ... Additional arguments passed to shiny::runApp()
+#'
 #' @export
 #' @examples
-#' if (interactive()) {
-#'   library(nprcgenekeepr)
-#'   runGeneKeepR()
+#' \dontrun{
+#' library(nprcgenekeepr)
+#' runGeneKeepR()
 #' }
-runGeneKeepR <- function() {
-  appDir <- system.file("application", package = "nprcgenekeepr")
-  if (appDir == "") {
-    stop(
-        "Could not find application directory. ",
-        "Try re-installing `nprcgenekeepr`.",
-      call. = FALSE
-    )
+runGeneKeepR <- function(...) {
+
+  # Ensure required packages are loaded
+  requireNamespace("shiny", quietly = TRUE)
+  requireNamespace("ggplot2", quietly = TRUE)
+  requireNamespace("dplyr", quietly = TRUE)
+  requireNamespace("DT", quietly = TRUE)
+
+  # Add resource paths if you have www directory
+  www_path <- system.file("www", package = "nprcgenekeepr")
+  if (dir.exists(www_path)) {
+    shiny::addResourcePath("www", www_path)
   }
 
-  shiny::runApp(appDir, display.mode = "normal", port = 6012L)
+  # Create the app
+  app <- shiny::shinyApp(
+    ui = appUI(),
+    server = appServer,
+    options = list(...)
+  )
+
+  # Run the app
+  shiny::runApp(app, ...)
 }
