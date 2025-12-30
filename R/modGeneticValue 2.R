@@ -6,7 +6,7 @@
 #' Genetic Value Analysis Module - UI Function
 #'
 #' Copyright(c) 2017-2025 R. Mark Sharp
-#' This file is part of mprcgenekeepr
+#' This file is part of nprcgenekeepr
 #'
 #' @return A \code{div} containing genetic value analysis UI.
 #'
@@ -22,7 +22,7 @@
 #' @importFrom DT DTOutput renderDT
 #' @importFrom shiny NS div h3 fluidRow column wellPanel
 #'   h4 icon numericInput checkboxInput sliderInput actionButton
-#'   tabsetPanel tabPanel br downloadButton plotOutput tableOutput includeHTML
+#'   tabsetPanel tabPanel br downloadButton plotOutput tableOutput
 #' @export
 modGeneticValueUI <- function(id) {
   ns <- NS(id)
@@ -50,17 +50,6 @@ modGeneticValueUI <- function(id) {
                tags$ul(
                  tags$li(strong("Mean Kinship:"), " Lower is better"),
                  tags$li(strong("Genome Uniqueness:"), " Higher is better")
-               )
-             ),
-             div(
-               style = paste(
-                 "padding: 10px; border: 1px solid lightgray;",
-                 "background-color: #EDEDED; border-radius: 25px;",
-                 "box-shadow: 0 0 5px 2px #888; margin-top: 10px;"
-               ),
-               includeHTML(
-                 system.file("extdata", "ui_guidance", "genetic_value.html",
-                             package = "nprcgenekeepr")
                )
              )
       ),

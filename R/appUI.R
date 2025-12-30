@@ -42,10 +42,10 @@ appUI <- function() {
           width = 4,
           div(
             class = "panel panel-primary",
-            div(class = "panel-heading", h4("Quality Control")),
+            div(class = "panel-heading", h4("Data Input")),
             div(class = "panel-body",
-                p("Validate and clean studbook data"),
-                actionButton("goto_qc", "Go to QC",
+                p("Upload and validate studbook data"),
+                actionButton("goto_input", "Go to Input",
                              class = "btn-primary btn-block"))
           )
         ),
@@ -53,9 +53,9 @@ appUI <- function() {
           width = 4,
           div(
             class = "panel panel-info",
-            div(class = "panel-heading", h4("Pedigree Creation")),
+            div(class = "panel-heading", h4("Pedigree Browser")),
             div(class = "panel-body",
-                p("Build pedigrees from animal lists"),
+                p("Browse and filter pedigree data"),
                 actionButton("goto_pedigree", "Go to Pedigree",
                              class = "btn-info btn-block"))
           )
@@ -75,19 +75,19 @@ appUI <- function() {
     ),
 
     # ====================
-    # Quality Control Tab
+    # Input and Quality Control Tab
     # ====================
     tabPanel(
-      "Quality Control",
-      icon = icon("check-circle"),
-      modQcUI("qc")
+      "Input",
+      icon = icon("upload"),
+      modInputUI("input")
     ),
 
     # ====================
-    # Pedigree Creation Tab
+    # Pedigree Browser Tab
     # ====================
     tabPanel(
-      "Pedigree Creation",
+      "Pedigree Browser",
       icon = icon("sitemap"),
       modPedigreeUI("pedigree")
     ),

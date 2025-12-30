@@ -13,6 +13,9 @@
 #' @param id character vector of length 1. Module namespace identifier.
 #'
 #' @seealso \code{\link{modPyramidServer}}
+#' @importFrom shiny NS div h3 fluidRow column wellPanel selectInput
+#'   numericInput hr checkboxInput downloadButton tabsetPanel
+#'   tabPanel plotOutput tableOutput includeHTML sliderInput uiOutput helpText
 #' @export
 modPyramidUI <- function(id) {
   ns <- NS(id)
@@ -29,15 +32,32 @@ modPyramidUI <- function(id) {
                            choices = c("Default" = "default", "Viridis" = "viridis")),
                hr(),
                checkboxInput(ns("showCounts"), "Show counts", TRUE),
-               checkboxInput(ns("showGridlines"), "Show gridlines", TRUE),
-               actionButton(ns("generatePlot"), "Generate Plot",
-                            icon = icon("chart-bar"), class = "btn-primary btn-block"),
+               hr(),
+               sliderInput(ns("plotHeight"), "Plot Height (pixels):",
+                           min = 400, max = 1500, value = 600, step = 50),
+               helpText("Increase height for better visibility with many age groups",
+                        style = "font-size: 11px; color: #666;"),
+               hr(),
+               sliderInput(ns("ageLabelSize"), "Age Label Size:",
+                           min = 0.5, max = 2.0, value = 1.0, step = 0.1),
+               hr(),
                downloadButton(ns("downloadPlot"), "Download Plot")
+             ),
+             div(
+               style = paste(
+                 "padding: 10px; border: 1px solid lightgray;",
+                 "background-color: #EDEDED; border-radius: 25px;",
+                 "box-shadow: 0 0 5px 2px #888; margin-top: 10px;"
+               ),
+               includeHTML(
+                 system.file("extdata", "ui_guidance", "pyramidPlot.html",
+                             package = "nprcgenekeepr")
+               )
              )
       ),
       column(9,
              tabsetPanel(
-               tabPanel("Plot", plotOutput(ns("pyramidPlot"), height = "600px")),
+               tabPanel("Plot", uiOutput(ns("pyramidPlotUI"))),
                tabPanel("Statistics", tableOutput(ns("pyramidStats")))
              )
       )
@@ -55,38 +75,41 @@ modPyramidUI <- function(id) {
 #' @seealso \code{\link{modPyramidUI}}
 #' @importFrom grDevices dev.off png
 #' @importFrom shiny moduleServer reactive eventReactive renderPlot renderTable
-#'   downloadHandler req isolate tagList
+#'   downloadHandler req isolate tagList renderUI
 #' @importFrom graphics text
 #' @export
 modPyramidServer <- function(id, pedigreeData) {
   moduleServer(id, function(input, output, session) {
 
-    livingAnimals <- reactive({
-      req(pedigreeData())
-      data <- pedigreeData()
-      data[is.na(data$exit_date) | data$exit_date == "", ]
+    ns <- session$ns
+
+    # Dynamic plot container with adjustable height
+    output$pyramidPlotUI <- renderUI({
+      height <- if (!is.null(input$plotHeight)) input$plotHeight else 600
+      plotOutput(ns("pyramidPlot"), height = paste0(height, "px"))
     })
 
+    # Render pyramid plot with UI options
     output$pyramidPlot <- renderPlot({
-      req(livingAnimals())
-      input$generatePlot
-
-      isolate({
-        plot(1:10, main = "Age-Sex Pyramid",
-             xlab = paste("Count (", input$ageUnit, ")"),
-             ylab = "Age Group")
-        text(5, 5, "Replace with plotAgePyramid()")
-      })
+      req(pedigreeData())
+      getPyramidPlot(
+        ped = pedigreeData(),
+        binWidth = input$ageBin,
+        ageUnit = input$ageUnit,
+        colorScheme = input$colorScheme,
+        showCounts = input$showCounts,
+        ageLabelCex = input$ageLabelSize
+      )
     })
 
     output$pyramidStats <- renderTable({
-      req(livingAnimals())
-      data <- livingAnimals()
+      req(pedigreeData())
+      ped <- pedigreeData()
       data.frame(
         Metric = c("Total", "Males", "Females"),
-        Value = c(nrow(data),
-                  sum(data$sex == "M", na.rm = TRUE),
-                  sum(data$sex == "F", na.rm = TRUE)),
+        Value = c(nrow(ped),
+                  sum(ped$sex == "M", na.rm = TRUE),
+                  sum(ped$sex == "F", na.rm = TRUE)),
         stringsAsFactors = FALSE
       )
     })
@@ -94,16 +117,25 @@ modPyramidServer <- function(id, pedigreeData) {
     output$downloadPlot <- downloadHandler(
       filename = function() paste0("pyramid_", Sys.Date(), ".png"),
       content = function(file) {
-        png(file, width = 1200, height = 800)
-        plot(1:10, main = "Age-Sex Pyramid")
+        # Scale PNG dimensions based on user's plot height selection
+        plotHeight <- if (!is.null(input$plotHeight)) input$plotHeight else 600
+        # Maintain aspect ratio: width = height * 1.5
+        png(file, width = as.integer(plotHeight * 1.5), height = plotHeight)
+        getPyramidPlot(
+          ped = pedigreeData(),
+          binWidth = input$ageBin,
+          ageUnit = input$ageUnit,
+          colorScheme = input$colorScheme,
+          showCounts = input$showCounts,
+          ageLabelCex = input$ageLabelSize
+        )
         dev.off()
       }
     )
 
     return(list(
-      data = reactive({ NULL }),
-      plot = reactive({ NULL }),
-      livingCount = reactive({ nrow(livingAnimals()) })
+      pedigree = reactive({ pedigreeData() }),
+      animalCount = reactive({ nrow(pedigreeData()) })
     ))
   })
 }

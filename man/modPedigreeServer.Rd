@@ -2,22 +2,24 @@
 % Please edit documentation in R/modPedigree.R
 \name{modPedigreeServer}
 \alias{modPedigreeServer}
-\title{Pedigree Creation Module - Server Function}
+\title{Pedigree Browser Module - Server Function}
 \usage{
-modPedigreeServer(id, studbook = NULL, config = NULL)
+modPedigreeServer(id, studbook, config = NULL)
 }
 \arguments{
 \item{id}{character vector of length 1. Module namespace identifier.}
 
-\item{studbook}{optional reactive returning studbook data.}
+\item{studbook}{reactive returning the cleaned studbook data from modInput.}
 
 \item{config}{optional reactive returning configuration.}
 }
 \value{
-List with \code{pedigree} and \code{nAnimals} reactives.
+List with \code{pedigree}, \code{focalAnimals}, and \code{nAnimals}
+reactives.
 }
 \description{
-Pedigree Creation Module - Server Function
+Server logic for pedigree browser module handling focal animal
+selection, pedigree filtering, and data export.
 }
 \seealso{
 \code{\link{modPedigreeUI}}

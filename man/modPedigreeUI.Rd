@@ -2,7 +2,7 @@
 % Please edit documentation in R/modPedigree.R
 \name{modPedigreeUI}
 \alias{modPedigreeUI}
-\title{Pedigree Creation Module - UI Function}
+\title{Pedigree Browser Module - UI Function}
 \usage{
 modPedigreeUI(id)
 }
@@ -10,14 +10,15 @@ modPedigreeUI(id)
 \item{id}{character vector of length 1. Module namespace identifier.}
 }
 \value{
-A \code{div} object containing pedigree creation UI.
+A \code{div} object containing pedigree browser UI.
 }
 \description{
 Copyright(c) 2017-2025 R. Mark Sharp
-This file is part of mprcgenekeepr
+This file is part of nprcgenekeepr
 }
 \details{
-Creates user interface for pedigree creation from focal animal lists.
+Creates user interface for browsing and filtering pedigree data,
+including focal animal selection, trimming options, and export.
 }
 \seealso{
 \code{\link{modPedigreeServer}} for server logic.

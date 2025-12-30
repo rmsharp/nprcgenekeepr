@@ -42,12 +42,12 @@ appServer <- function(input, output, session) {
   # ========================================
   # Navigation Button Handlers
   # ========================================
-  observeEvent(input$goto_qc, {
-    updateNavbarPage(session, "mainNavbar", selected = "Quality Control")
+  observeEvent(input$goto_input, {
+    updateNavbarPage(session, "mainNavbar", selected = "Input")
   })
 
   observeEvent(input$goto_pedigree, {
-    updateNavbarPage(session, "mainNavbar", selected = "Pedigree Creation")
+    updateNavbarPage(session, "mainNavbar", selected = "Pedigree Browser")
   })
 
   observeEvent(input$goto_pyramid, {
@@ -58,17 +58,17 @@ appServer <- function(input, output, session) {
   # Initialize Modules
   # ========================================
 
-  # Quality Control Module
-  qcResults <- modQcServer("qc", config = reactive(shared$config))
+  # Input and Quality Control Module
+  inputResults <- modInputServer("input", config = reactive(shared$config))
 
-  # Update shared data when QC completes
+  # Update shared data when input/QC completes
   observe({
-    req(qcResults$cleanedData())
-    shared$currentStudbook <- qcResults$cleanedData()
-    shared$qcResults <- qcResults$qcSummary()
+    req(inputResults$cleanedStudbook())
+    shared$currentStudbook <- inputResults$cleanedStudbook()
+    shared$qcResults <- inputResults$qcSummary()
   })
 
-  # Pedigree Creation Module
+  # Pedigree Browser Module
   pedigreeResults <- modPedigreeServer(
     "pedigree",
     studbook = reactive(shared$currentStudbook),

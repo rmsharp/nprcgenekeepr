@@ -20,7 +20,7 @@
 #' @importFrom DT DTOutput renderDT
 #' @importFrom shiny NS div h3 fluidRow column wellPanel radioButtons
 #'             conditionalPanel numericInput actionButton tabsetPanel
-#'             tabPanel uiOutput tableOutput icon includeHTML
+#'             tabPanel uiOutput tableOutput icon
 #' @export
 modBreedingGroupsUI <- function(id) {
   ns <- NS(id)
@@ -58,21 +58,6 @@ modBreedingGroupsUI <- function(id) {
                tabPanel("Groups", br(), uiOutput(ns("groupsDisplay"))),
                tabPanel("Statistics", br(), tableOutput(ns("groupStats")))
              )
-      )
-    ),
-    fluidRow(
-      column(
-        width = 10,
-        offset = 1,
-        style = paste0(
-          "border: 1px solid lightgray; background-color: #EDEDED; ",
-          "border-radius: 15px; box-shadow: 0 0 5px 2px #888; ",
-          "margin-top: 15px; padding: 10px;"
-        ),
-        includeHTML(
-          system.file("extdata", "ui_guidance", "group_formation.html",
-                      package = "nprcgenekeepr")
-        )
       )
     )
   )
