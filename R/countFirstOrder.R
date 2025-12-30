@@ -1,7 +1,7 @@
 #' Count first-order relatives.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' Part of Relations
 #'
 #' Tallies the number of first-order relatives for each member of the provided
@@ -22,8 +22,8 @@
 #'   include all IDs in the pedigree.
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
-#' ped <- nprcgenekeepr::lacy1989Ped
+#' library(mprcgenekeepr)
+#' ped <- mprcgenekeepr::lacy1989Ped
 #' ids <- c("B", "D", "E", "F", "G")
 #' countIds <- countFirstOrder(ped, ids)
 #' countIds

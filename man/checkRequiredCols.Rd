@@ -23,7 +23,7 @@ of \code{reportErrors} for return values when required columns are missing.
 Examines column names, \code{cols} for required column names
 }
 \examples{
-library(nprcgenekeepr)
+library(mprcgenekeepr)
 requiredCols <- getRequiredCols()
 cols <-
   paste0(

@@ -1,5 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+#' This file is part of mprcgenekeepr
 context("makeExamplePedigreeFile")
 library(testthat)
 test_that("makeExamplePedigreeFile creates file", {
@@ -43,7 +43,7 @@ test_that("makeExamplePedigreeFile creates correct file contents", {
       file = filePath,
       fileType = "excel"
     ))
-  pedExcel <- nprcgenekeepr:::readExcelPOSIXToCharacter(pedigreeFile)
+  pedExcel <- mprcgenekeepr:::readExcelPOSIXToCharacter(pedigreeFile)
   expect_identical(nrow(pedExcel), 3694L)
   if (file.exists(filePath)) {
     file.remove(filePath)

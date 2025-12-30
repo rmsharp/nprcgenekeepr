@@ -2,7 +2,7 @@
 #' used to demonstrate the package.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' Creates a folder named \code{~/tmp/ExamplePedigrees} if it does not already
 #' exist. It then proceeds to write each example pedigree into a CSV file named
 #' based on the name of the example pedigree.
@@ -11,26 +11,26 @@
 #'
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
+#' library(mprcgenekeepr)
 #' files <- createExampleFiles()
 createExampleFiles <- function() {
   examplePedigrees <-
     list(
-      examplePedigree = nprcgenekeepr::examplePedigree,
-      focalAnimals = nprcgenekeepr::focalAnimals,
-      lacy1989Ped = nprcgenekeepr::lacy1989Ped,
-      pedDuplicateIds = nprcgenekeepr::pedDuplicateIds,
-      pedFemaleSireMaleDam = nprcgenekeepr::pedFemaleSireMaleDam,
-      pedGood = nprcgenekeepr::pedGood,
-      pedInvalidDates = nprcgenekeepr::pedInvalidDates,
-      pedMissingBirth = nprcgenekeepr::pedMissingBirth,
-      pedOne = nprcgenekeepr::pedOne,
-      pedSameMaleIsSireAndDam = nprcgenekeepr::pedSameMaleIsSireAndDam,
-      pedSix = nprcgenekeepr::pedSix,
-      pedWithGenotype = nprcgenekeepr::pedWithGenotype,
-      qcBreeders = as.data.frame(nprcgenekeepr::qcBreeders, drop = FALSE),
-      qcPed = nprcgenekeepr::qcPed,
-      smallPed = nprcgenekeepr::smallPed
+      examplePedigree = mprcgenekeepr::examplePedigree,
+      focalAnimals = mprcgenekeepr::focalAnimals,
+      lacy1989Ped = mprcgenekeepr::lacy1989Ped,
+      pedDuplicateIds = mprcgenekeepr::pedDuplicateIds,
+      pedFemaleSireMaleDam = mprcgenekeepr::pedFemaleSireMaleDam,
+      pedGood = mprcgenekeepr::pedGood,
+      pedInvalidDates = mprcgenekeepr::pedInvalidDates,
+      pedMissingBirth = mprcgenekeepr::pedMissingBirth,
+      pedOne = mprcgenekeepr::pedOne,
+      pedSameMaleIsSireAndDam = mprcgenekeepr::pedSameMaleIsSireAndDam,
+      pedSix = mprcgenekeepr::pedSix,
+      pedWithGenotype = mprcgenekeepr::pedWithGenotype,
+      qcBreeders = as.data.frame(mprcgenekeepr::qcBreeders, drop = FALSE),
+      qcPed = mprcgenekeepr::qcPed,
+      smallPed = mprcgenekeepr::smallPed
     )
   pedigreeDir <- tempdir()
   suppressWarnings(dir.create(pedigreeDir))

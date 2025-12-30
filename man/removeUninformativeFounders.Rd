@@ -19,7 +19,7 @@ pedigree are uninformative and can be removed from a pedigree without loss
 of information.
 }
 \examples{
-examplePedigree <- nprcgenekeepr::examplePedigree
+examplePedigree <- mprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree,
   minParentAge = 2,
   reportChanges = FALSE,

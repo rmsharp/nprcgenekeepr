@@ -1,7 +1,7 @@
 #' Get genotypes from file
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #'
 #' @return A genotype file compatible with others in this package.
 #'
@@ -12,20 +12,20 @@
 #' @importFrom utils read.table
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
+#' library(mprcgenekeepr)
 #' pedCsv <- getGenotypes(fileName = system.file("testdata", "qcPed.csv",
-#'   package = "nprcgenekeepr"
+#'   package = "mprcgenekeepr"
 #' ))
 getGenotypes <- function(fileName, sep = ",") {
   flog.debug(paste0("in getGenotypes\n"),
-    name = "nprcgenekeepr"
+    name = "mprcgenekeepr"
   )
   if (excel_format(fileName) %in% c("xls", "xlsx")) {
     genotypes <- readExcelPOSIXToCharacter(fileName)
     flog.debug(paste0(
       "in getGenotypes after readxl, nrow(genotypes) = ",
       nrow(genotypes), "\n"
-    ), name = "nprcgenekeepr")
+    ), name = "mprcgenekeepr")
   } else {
     genotypes <- read.table(fileName,
       header = TRUE,
@@ -37,7 +37,7 @@ getGenotypes <- function(fileName, sep = ",") {
     flog.debug(paste0(
       "in getGenotypes after read.csv, nrow(genotypes) = ",
       nrow(genotypes), "\n"
-    ), name = "nprcgenekeepr")
+    ), name = "mprcgenekeepr")
   }
   genotypes
 }

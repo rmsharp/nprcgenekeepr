@@ -1,9 +1,9 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+#' This file is part of mprcgenekeepr
 context("addGenotype")
 library(testthat)
 library(stringi)
-qcPed <- nprcgenekeepr::qcPed
+qcPed <- mprcgenekeepr::qcPed
 
 qcPed <- qcPed[order(qcPed$id), ]
 ped <- qcPed

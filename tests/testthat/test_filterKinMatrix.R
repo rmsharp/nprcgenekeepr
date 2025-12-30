@@ -1,8 +1,8 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+#' This file is part of mprcgenekeepr
 context("filterKinMatrix")
 
-ped <- nprcgenekeepr::qcPed
+ped <- mprcgenekeepr::qcPed
 ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen,
   sparse = FALSE

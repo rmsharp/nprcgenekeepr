@@ -30,7 +30,7 @@ Standard sex codes are
 \item\{U\} \{-- replacing "UNKNOWN" or "3"\}}
 }
 \examples{
-library(nprcgenekeepr)
+library(mprcgenekeepr)
 original <- c(
   "m", "male", "1", "MALE", "M", "F", "f", "female",
   "FemAle", "U", "Unknown", "H", "hermaphrodite",

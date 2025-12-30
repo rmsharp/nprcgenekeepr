@@ -1,14 +1,14 @@
 #' Creates a empty errorLst object
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 
 #' @return An errorLst object with placeholders for error types found in a
 #' pedigree file by \code{qcStudbook}.
 #'
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
+#' library(mprcgenekeepr)
 #' getEmptyErrorLst()
 getEmptyErrorLst <- function() {
   emptyErrorLst <- list(
@@ -37,6 +37,6 @@ getEmptyErrorLst <- function() {
     )
   )
   class(emptyErrorLst) <-
-    append(class(emptyErrorLst), "nprcgenekeeprErr")
+    append(class(emptyErrorLst), "mprcgenekeeprErr")
   emptyErrorLst
 }

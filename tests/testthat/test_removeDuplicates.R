@@ -1,9 +1,9 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-# This file is part of nprcgenekeepr
+# This file is part of mprcgenekeepr
 context("removeDuplicates")
 library(testthat)
 library(stringi)
-ped <- nprcgenekeepr::smallPed
+ped <- mprcgenekeepr::smallPed
 newPed <- cbind(ped, recordStatus = rep("original", nrow(ped)))
 
 test_that("removeDuplicates removes nothing with no duplicates", {

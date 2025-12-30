@@ -23,7 +23,7 @@ Part of Pedigree Curation
 }
 \examples{
 library(lubridate)
-library(nprcgenekeepr)
+library(mprcgenekeepr)
 death <- mdy(paste0(
   sample(1:12, 10, replace = TRUE), "-",
   sample(1:28, 10, replace = TRUE), "-",

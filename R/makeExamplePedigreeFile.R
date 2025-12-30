@@ -1,7 +1,7 @@
-#' Write copy of nprcgenekeepr::examplePedigree into a file
+#' Write copy of mprcgenekeepr::examplePedigree into a file
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' Uses \code{examplePedigree} data structure to create an example data file
 #'
 #' @return Full path name of file saved.
@@ -14,7 +14,7 @@
 ## ## rmsutilityr create_wkbk
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
+#' library(mprcgenekeepr)
 #' pedigreeFile <- makeExamplePedigreeFile()
 makeExamplePedigreeFile <- function(file = file.path(
                                       tempdir(),
@@ -23,21 +23,21 @@ makeExamplePedigreeFile <- function(file = file.path(
                                     fileType = "csv") {
   stopifnot(any(fileType %in% c("txt", "csv", "excel")))
   if (fileType == "csv") {
-    write.csv(nprcgenekeepr::examplePedigree,
+    write.csv(mprcgenekeepr::examplePedigree,
       file = file, row.names = FALSE
     )
   } else if (fileType == "excel") {
     status <-
       create_wkbk(
         file = file,
-        df_list = list(nprcgenekeepr::examplePedigree),
+        df_list = list(mprcgenekeepr::examplePedigree),
         sheetnames = "Example_Pedigree", replace = FALSE
       )
     if (!status) {
       stop("Failed to write example data out to ", file, ".")
     }
   } else {
-    write.table(nprcgenekeepr::examplePedigree,
+    write.table(mprcgenekeepr::examplePedigree,
       file = file, row.names = FALSE, sep = "\t"
     )
   }

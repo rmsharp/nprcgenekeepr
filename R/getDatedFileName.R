@@ -1,7 +1,7 @@
 #' Returns a character vector with an file name having the date prepended.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #'
 #' @return A character string with a file name prepended with the date and time
 #' in YYYY-MM-DD_hh_mm_ss_basename format.
@@ -11,7 +11,7 @@
 #' @importFrom stringi stri_c stri_replace_all_fixed
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
+#' library(mprcgenekeepr)
 #' getDatedFilename("testName")
 getDatedFilename <- function(filename) {
   dateStamp <- stri_replace_all_fixed(

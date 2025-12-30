@@ -42,8 +42,8 @@ Thus, the number of rows in the kValues matrix will
 be \eqn{n + n(n-1) / 2} and the number of columns will be 3.
 }
 \examples{
-library(nprcgenekeepr)
-ped <- nprcgenekeepr::smallPed
+library(mprcgenekeepr)
+ped <- mprcgenekeepr::smallPed
 simParent_1 <- list(
   id = "A",
   sires = c("s1_1", "s1_2", "s1_3"),

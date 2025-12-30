@@ -1,7 +1,7 @@
 #' obfuscatePed takes a pedigree object and creates aliases for all IDs and
 #' adjusts all date within a specified amount.
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #'
 #' User provides a pedigree object (\code{ped}), the number of characters to be
 #' used for alias IDs (\code{size}), and the maximum number of days that the
@@ -20,8 +20,8 @@
 #' @importFrom lubridate is.Date
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
-#' ped <- qcStudbook(nprcgenekeepr::pedGood)
+#' library(mprcgenekeepr)
+#' ped <- qcStudbook(mprcgenekeepr::pedGood)
 #' obfuscatedPed <- obfuscatePed(ped)
 #' ped
 #' obfuscatedPed

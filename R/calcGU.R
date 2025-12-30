@@ -1,7 +1,7 @@
 #' Calculates genome uniqueness for each ID that is part of the population.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' Part of Genetic Value Analysis
 #'
 #' The following functions calculate genome uniqueness according to the equation
@@ -71,8 +71,8 @@
 #' interest, otherwise all animals will be considered. The default is NULL.
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
-#' ped1Alleles <- nprcgenekeepr::ped1Alleles
+#' library(mprcgenekeepr)
+#' ped1Alleles <- mprcgenekeepr::ped1Alleles
 #' gu_1 <- calcGU(ped1Alleles, threshold = 1, byID = FALSE, pop = NULL)
 #' gu_2 <- calcGU(ped1Alleles, threshold = 3, byID = FALSE, pop = NULL)
 #' gu_3 <- calcGU(ped1Alleles,

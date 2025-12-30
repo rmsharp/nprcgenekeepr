@@ -52,18 +52,18 @@ is provided via a configuration file and the user has read permission on a
 LabKey server with the demographic data in an __EHR__ (Electronic Health Record) 
 module.
 
-Two configuration files are needed to use the database features of nprcgenekeepr
+Two configuration files are needed to use the database features of mprcgenekeepr
 with LabKey. 
 The first file is named **\_netrc** on Microsoft Windows operating systems and 
 **.netrc** otherwise, allows the user to authenticate with LabKey through the 
 LabKey API and is fully 
 described by [LabKey documentation](https://www.labkey.org/Documentation/wiki-page.view?name=netrc)
 
-The second file is named **\_nprcgenekeepr_config** on Microsoft Windows 
-operating systems and **.nprcgenekeepr_config** otherwise and is the 
-`nprcgenekeepr` 
+The second file is named **\_mprcgenekeepr_config** on Microsoft Windows 
+operating systems and **.mprcgenekeepr_config** otherwise and is the 
+`mprcgenekeepr` 
 [configuration file](
-https://github.com/rmsharp/nprcgenekeepr/blob/master/inst/extdata/example_nprcgenekeepr_config)
+https://github.com/rmsharp/mprcgenekeepr/blob/master/inst/extdata/example_mprcgenekeepr_config)
 An image of this example configuration file is included as a data object and can 
 be loaded and viewed with the following lines of R code in the R console.
 

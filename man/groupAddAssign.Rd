@@ -99,8 +99,8 @@ of iterations.
 Part of Group Formation
 }
 \examples{
-library(nprcgenekeepr)
-examplePedigree <- nprcgenekeepr::examplePedigree
+library(mprcgenekeepr)
+examplePedigree <- mprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree,
   minParentAge = 2,
   reportChanges = FALSE,

@@ -1,15 +1,15 @@
 #' Add genotype data to pedigree file
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' Assumes genotype has been opened by \code{checkGenotypeFile}
 #'
 #' @return A pedigree object with genotype data added.
 #'
 #' @examples
-#' library(nprcgenekeepr)
-#' rhesusPedigree <- nprcgenekeepr::rhesusPedigree
-#' rhesusGenotypes <- nprcgenekeepr::rhesusGenotypes
+#' library(mprcgenekeepr)
+#' rhesusPedigree <- mprcgenekeepr::rhesusPedigree
+#' rhesusGenotypes <- mprcgenekeepr::rhesusGenotypes
 #' pedWithGenotypes <- addGenotype(
 #'   ped = rhesusPedigree,
 #'   genotype = rhesusGenotypes

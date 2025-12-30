@@ -35,8 +35,8 @@ and the \code{allSimParents} object to create a set of kinship matrices to
 be used in forming the \emph{Monte Carlo} estimates for the kinship values.
 }
 \examples{
-library(nprcgenekeepr)
-ped <- nprcgenekeepr::smallPed
+library(mprcgenekeepr)
+ped <- mprcgenekeepr::smallPed
 simParent_1 <- list(
   id = "A",
   sires = c("s1_1", "s1_2", "s1_3"),

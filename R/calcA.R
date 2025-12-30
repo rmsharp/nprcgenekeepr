@@ -1,7 +1,7 @@
 #' Calculates \code{a}, the number of an individual's alleles that are rare in
 #' each simulation.
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #'
 #' Part of Genetic Value Analysis
 #'
@@ -22,8 +22,8 @@
 #'   (homozygous alleles will be counted as 1).
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
-#' rare <- calcA(nprcgenekeepr::ped1Alleles, threshold = 3, byID = FALSE)
+#' library(mprcgenekeepr)
+#' rare <- calcA(mprcgenekeepr::ped1Alleles, threshold = 3, byID = FALSE)
 calcA <- function(alleles, threshold = 1L, byID = FALSE) {
   ids <- alleles$id
   alleles <- alleles[, !(names(alleles) %in% c("id", "parent"))]

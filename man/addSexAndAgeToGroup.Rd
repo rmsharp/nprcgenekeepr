@@ -21,7 +21,7 @@ Forms a dataframe with Id, Sex, and current Age given a list of Ids and a
 pedigree
 }
 \examples{
-library(nprcgenekeepr)
+library(mprcgenekeepr)
 data("qcBreeders")
 data("qcPed")
 df <- addSexAndAgeToGroup(ids = qcBreeders, ped = qcPed)

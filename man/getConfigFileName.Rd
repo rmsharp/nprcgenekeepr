@@ -18,7 +18,7 @@ getConfigFileName returns the configuration file name appropriate for
 the system.
 }
 \examples{
-library(nprcgenekeepr)
+library(mprcgenekeepr)
 sysInfo <- Sys.info()
 config <- getConfigFileName(sysInfo)
 }

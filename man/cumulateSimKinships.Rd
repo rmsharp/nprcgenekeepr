@@ -31,7 +31,7 @@ simulated kinships the third element is the minimum value of the kinships,
 and the forth element is the maximum value of the kinships.
 }
 \examples{
-ped <- nprcgenekeepr::smallPed
+ped <- mprcgenekeepr::smallPed
 simParent_1 <- list(
   id = "A",
   sires = c("s1_1", "s1_2", "s1_3"),

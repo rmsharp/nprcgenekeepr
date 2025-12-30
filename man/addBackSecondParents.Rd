@@ -22,7 +22,7 @@ known. The parents are added back to the pedigree as an ID record with
 NA for both sire and dam of the added back ID.
 }
 \examples{
-examplePedigree <- nprcgenekeepr::examplePedigree
+examplePedigree <- mprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree,
   minParentAge = 2,
   reportChanges = FALSE,

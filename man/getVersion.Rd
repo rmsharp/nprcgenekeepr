@@ -2,7 +2,7 @@
 % Please edit documentation in R/getVersion.R
 \name{getVersion}
 \alias{getVersion}
-\title{getVersion Get the version number of nprcgenekeepr}
+\title{getVersion Get the version number of mprcgenekeepr}
 \usage{
 getVersion(date = TRUE)
 }
@@ -14,9 +14,9 @@ within parentheses is appended.}
 Current Version
 }
 \description{
-getVersion Get the version number of nprcgenekeepr
+getVersion Get the version number of mprcgenekeepr
 }
 \examples{
-library(nprcgenekeepr)
+library(mprcgenekeepr)
 getVersion()
 }

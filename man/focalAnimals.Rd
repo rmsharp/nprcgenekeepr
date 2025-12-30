@@ -16,7 +16,7 @@ They can be used to illustrate the identification of a population of
 interest as is shown in the example below.
 }
 \examples{
-library(nprcgenekeepr)
+library(mprcgenekeepr)
 data("focalAnimals")
 data("examplePedigree")
 any(names(examplePedigree) == "population")

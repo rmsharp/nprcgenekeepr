@@ -1,7 +1,7 @@
 #' Get the population of interest for the Genetic Value analysis.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' If user has limited the population of interest by defining \code{pop},
 #' that information is incorporated via the \code{ped$population} column.
 #'
@@ -16,7 +16,7 @@
 #' ## Example from Analysis of Founder Representation in Pedigrees: Founder
 #' ## Equivalents and Founder Genome Equivalents.
 #' ## Zoo Biology 8:111-123, (1989) by Robert C. Lacy
-#' library(nprcgenekeepr)
+#' library(mprcgenekeepr)
 #' ped <- data.frame(
 #'   id = c("A", "B", "C", "D", "E", "F", "G"),
 #'   sire = c(NA, NA, "A", "A", NA, "D", "D"),

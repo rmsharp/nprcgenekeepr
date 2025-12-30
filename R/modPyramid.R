@@ -6,7 +6,7 @@
 #' Age-Sex Pyramid Module - UI Function
 #'
 #' Copyright(c) 2017-2025 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+#' This file is part of mprcgenekeepr
 #'
 #' @return A \code{div} containing age-sex pyramid UI.
 #'

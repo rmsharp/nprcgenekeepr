@@ -14,7 +14,7 @@ A \code{div} object containing pedigree creation UI.
 }
 \description{
 Copyright(c) 2017-2025 R. Mark Sharp
-This file is part of nprcgenekeepr
+This file is part of mprcgenekeepr
 }
 \details{
 Creates user interface for pedigree creation from focal animal lists.

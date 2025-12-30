@@ -1,7 +1,7 @@
 #' Quality Control for the Studbook or pedigree
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' Main pedigree curation function that performs basic quality control on
 #' pedigree information
 #'
@@ -154,7 +154,7 @@
 ## ##  rmsutilityr str_detect_fixed_all
 #' @export
 #' @examples
-#' examplePedigree <- nprcgenekeepr::examplePedigree
+#' examplePedigree <- mprcgenekeepr::examplePedigree
 #' ped <- qcStudbook(examplePedigree,
 #'   minParentAge = 2.0, reportChanges = FALSE,
 #'   reportErrors = FALSE

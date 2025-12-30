@@ -2,10 +2,10 @@
 % Please edit documentation in R/appUI.R
 \name{appUI}
 \alias{appUI}
-\title{Main Application UI for nprcgenekeepr}
+\title{Main Application UI for mprcgenekeepr}
 \usage{
 appUI()
 }
 \description{
-Main Application UI for nprcgenekeepr
+Main Application UI for mprcgenekeepr
 }

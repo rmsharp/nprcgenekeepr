@@ -1,10 +1,10 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+#' This file is part of mprcgenekeepr
 context("fillGroupMembers")
 
 test_that("fillGroupMembers adds animals in the specified sex ratio", {
   skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
-  examplePedigree <- nprcgenekeepr::examplePedigree
+  examplePedigree <- mprcgenekeepr::examplePedigree
   set_seed(10L)
   ped <- qcStudbook(examplePedigree,
     minParentAge = 2.0, reportChanges = FALSE,
@@ -36,7 +36,7 @@ test_that("fillGroupMembers adds animals in the specified sex ratio", {
   withKin <- FALSE
 
   sexRatio <- 0.0
-  groupMembers <- nprcgenekeepr:::fillGroupMembers(
+  groupMembers <- mprcgenekeepr:::fillGroupMembers(
     candidates, currentGroups, kin, ped, harem,
     minAge, numGp, sexRatio
   )
@@ -45,7 +45,7 @@ test_that("fillGroupMembers adds animals in the specified sex ratio", {
     tolerance = 0.1, scale = 1.0
   )
   sexRatio <- 1L
-  groupMembers <- nprcgenekeepr:::fillGroupMembers(
+  groupMembers <- mprcgenekeepr:::fillGroupMembers(
     candidates, currentGroups, kin, ped, harem,
     minAge, numGp, sexRatio
   )

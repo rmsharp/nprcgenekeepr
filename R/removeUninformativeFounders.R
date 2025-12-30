@@ -1,7 +1,7 @@
 #' Remove uninformative founders.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' Founders (having unknown sire and dam) that appear only one time in a
 #' pedigree are uninformative and can be removed from a pedigree without loss
 #' of information.
@@ -12,7 +12,7 @@
 #' information. The fields \code{sire} and \code{dam} are required.
 #' @export
 #' @examples
-#' examplePedigree <- nprcgenekeepr::examplePedigree
+#' examplePedigree <- mprcgenekeepr::examplePedigree
 #' breederPed <- qcStudbook(examplePedigree,
 #'   minParentAge = 2,
 #'   reportChanges = FALSE,

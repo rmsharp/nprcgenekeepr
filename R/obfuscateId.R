@@ -1,7 +1,7 @@
 #' obfucateId creates a vector of ID aliases of specified length
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' ID aliases are pseudorandom sequences of alphanumeric upper case characters
 #' where the letter "O" is not included for readability..
 #' User has the option of providing a character vector of aliases to avoid
@@ -16,7 +16,7 @@
 #' @importFrom stringi stri_c
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
+#' library(mprcgenekeepr)
 #' integerIds <- 1L:10L
 #' obfuscateId(integerIds, size = 4L)
 #' characterIds <- paste0(paste0(sample(LETTERS, 1L, replace = FALSE)), 1L:10L)

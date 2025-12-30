@@ -1,10 +1,10 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+#' This file is part of mprcgenekeepr
 context("getPedMaxAge")
 library(testthat)
 library(lubridate)
 
-pedOne <- nprcgenekeepr::pedOne
+pedOne <- mprcgenekeepr::pedOne
 pedOne$age <- (mdy("10-05-2017", tz = "America/Chicago") -
   as.POSIXct(pedOne$birth)) / dyears(1L)
 

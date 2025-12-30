@@ -1,7 +1,7 @@
 #' Gene drop simulation based on the provided pedigree information
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' Part of Genetic Value Analysis
 #'
 #' The gene dropping method from \emph{Pedigree analysis by computer simulation}
@@ -48,8 +48,8 @@
 #' @export
 #' @examples
 #' ## We usually defined `n` to be >= 5000
-#' library(nprcgenekeepr)
-#' ped <- nprcgenekeepr::lacy1989Ped
+#' library(mprcgenekeepr)
+#' ped <- mprcgenekeepr::lacy1989Ped
 #' allelesNew <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,
 #'   genotype = NULL, n = 50, updateProgress = NULL
 #' )

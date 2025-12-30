@@ -19,8 +19,8 @@ Checks to ensure the content and structure are appropriate for a genotype
 file. These checks are simply based on expected columns and legal domains.
 }
 \examples{
-library(nprcgenekeepr)
-ped <- nprcgenekeepr::qcPed
+library(mprcgenekeepr)
+ped <- mprcgenekeepr::qcPed
 ped <- ped[order(ped$id), ]
 genotype <- data.frame(
   id = ped$id[50 + 1:20],

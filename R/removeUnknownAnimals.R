@@ -1,15 +1,15 @@
 #' removeUnknownAnimals Removes unknown animals added to pedigree that serve as
 #' placeholders for unknown parents.
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #'
 #' @return Pedigree with unknown animals removed
 #'
 #' @param ped pedigree dataframe
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
-#' ped <- nprcgenekeepr::smallPed
+#' library(mprcgenekeepr)
+#' ped <- mprcgenekeepr::smallPed
 #' addedPed <- cbind(ped,
 #'   recordStatus = rep("original", nrow(ped)),
 #'   stringsAsFactors = FALSE

@@ -1,10 +1,10 @@
 #' Creates a pyramid plot of the pedigree provided.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' The pedigree provided must have the following columns: \code{sex} and
 #' \code{age}. This needs to be augmented to allow pedigrees structures that
-#' are provided by the nprcgenekeepr package.
+#' are provided by the mprcgenekeepr package.
 #'
 #' @return The return value of par("mar") when the function was called.
 #'
@@ -15,7 +15,7 @@
 #' @importFrom graphics par
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
+#' library(mprcgenekeepr)
 #' data(qcPed)
 #' getPyramidPlot(qcPed)
 getPyramidPlot <- function(ped = NULL) {

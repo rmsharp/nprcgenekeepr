@@ -1,7 +1,7 @@
 #' Get the age distribution for the pedigree
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' Forms a dataframe with columns \code{id}, \code{birth}, \code{sex},
 #' and \code{age} for those animals with a status of \code{Alive} in the
 #' pedigree.
@@ -23,11 +23,11 @@
 #' @importFrom utils read.csv
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
+#' library(mprcgenekeepr)
 #' ped <- getPyramidAgeDist()
 getPyramidAgeDist <- function(ped = NULL) {
   if (is.null(ped)) {
-    ped <- nprcgenekeepr::qcPed
+    ped <- mprcgenekeepr::qcPed
     ped$age <- NULL
     ped$gen <- NULL
   }

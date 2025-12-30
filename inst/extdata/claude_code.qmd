@@ -1,12 +1,12 @@
 ---
-title: "Claude Code - Converting nprcgenekeepr to Shiny Modules"
+title: "Claude Code - Converting mprcgenekeepr to Shiny Modules"
 format: html
 ---
-# Converting nprcgenekeepr to Shiny Modules
+# Converting mprcgenekeepr to Shiny Modules
 
 ## Overview
 
-  This guide provides a strategy for converting the nprcgenekeepr Shiny application to use Shiny modules, which will improve code organization, reusability, and maintainability.
+  This guide provides a strategy for converting the mprcgenekeepr Shiny application to use Shiny modules, which will improve code organization, reusability, and maintainability.
 
 ## Benefits of Shiny Modules
 
@@ -18,7 +18,7 @@ format: html
 
 ## Recommended Module Structure
 
-Based on the 5 main features of nprcgenekeepr, here's the proposed structure:
+Based on the 5 main features of mprcgenekeepr, here's the proposed structure:
 
 ```
 R/
@@ -539,7 +539,7 @@ appServer <- function(input, output, session) {
 ### File: `R/run_app.R`
 
 ```r
-#' Run the nprcgenekeepr Shiny Application
+#' Run the mprcgenekeepr Shiny Application
 #'
 #' @param ... Additional arguments passed to shiny::runApp()
 #'
@@ -549,7 +549,7 @@ runGeneKeepR <- function(...) {
   # Add resource path for www directory
   shiny::addResourcePath(
     'www',
-    system.file('www', package = 'nprcgenekeepr')
+    system.file('www', package = 'mprcgenekeepr')
   )
 
   # Create and run the app

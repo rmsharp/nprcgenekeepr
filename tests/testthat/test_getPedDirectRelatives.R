@@ -1,5 +1,5 @@
 #' Copyright(c) 2017-2023 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+#' This file is part of mprcgenekeepr
 context("getPedDirectRelatives")
 
 test_that("getPedDirectRelatives throws an error with no pedigree", {
@@ -38,7 +38,7 @@ test_that(paste0(
   )
 })
 
-ped <- nprcgenekeepr::lacy1989Ped
+ped <- mprcgenekeepr::lacy1989Ped
 test_that("getPedDirectRelatives throws an error with no pedigree", {
   expect_error(
     getPedDirectRelatives(ped = ped),
@@ -46,7 +46,7 @@ test_that("getPedDirectRelatives throws an error with no pedigree", {
   )
 })
 
-ped <- nprcgenekeepr::lacy1989Ped
+ped <- mprcgenekeepr::lacy1989Ped
 ids <- "E"
 relatives <- getPedDirectRelatives(
   ids = ids, ped = ped,

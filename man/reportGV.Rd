@@ -44,8 +44,8 @@ in order of descending value.
 This is the main function for the Genetic Value Analysis.
 }
 \examples{
-library(nprcgenekeepr)
-examplePedigree <- nprcgenekeepr::examplePedigree
+library(mprcgenekeepr)
+examplePedigree <- mprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree,
   minParentAge = 2,
   reportChanges = FALSE,

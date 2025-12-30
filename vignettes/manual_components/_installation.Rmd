@@ -14,19 +14,19 @@ vignette: >
 ---
 ## Installation
 
-You can install the CRAN version of **nprcgenekeepr** from
+You can install the CRAN version of **mprcgenekeepr** from
 the R console prompt with:
 
 ```{r cran-installation, eval = FALSE, echo=TRUE}
-install.packages("nprcgenekeepr")
+install.packages("mprcgenekeepr")
 ```
 
-You can install the development version of **nprcgenekeepr** from GitHub from
+You can install the development version of **mprcgenekeepr** from GitHub from
 the R console prompt with:
 
 ```{r gh-installation, eval = FALSE, echo=TRUE}
 install.packages("devtools")
-devtools::install_github(file.path("rmsharp", "nprcgenekeepr"))
+devtools::install_github(file.path("rmsharp", "mprcgenekeepr"))
 ```
 
 All missing dependencies should be automatically installed.

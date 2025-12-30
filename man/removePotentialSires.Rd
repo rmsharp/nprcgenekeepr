@@ -23,9 +23,9 @@ character vector of Ids with any potential sire Ids removed.
 Removes potential sires from list of Ids
 }
 \examples{
-library(nprcgenekeepr)
-qcBreeders <- nprcgenekeepr::qcBreeders
-pedWithGenotype <- nprcgenekeepr::pedWithGenotype
+library(mprcgenekeepr)
+qcBreeders <- mprcgenekeepr::qcBreeders
+pedWithGenotype <- mprcgenekeepr::pedWithGenotype
 noSires <- removePotentialSires(
   ids = qcBreeders, minAge = 2,
   ped = pedWithGenotype

@@ -1,7 +1,7 @@
 #' Find loops in a pedigree tree
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' Part of Pedigree Sampling
 #' From PedigreeSampling.R
 #' 2016-01-28

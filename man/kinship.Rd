@@ -45,8 +45,8 @@ Parents must be processed before their children, and then a child's
 kinship is just a sum of the kinship's for his or her parents.
 }
 \examples{
-library(nprcgenekeepr)
-ped <- nprcgenekeepr::lacy1989Ped
+library(mprcgenekeepr)
+ped <- mprcgenekeepr::lacy1989Ped
 ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
 ped

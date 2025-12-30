@@ -1,5 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+#' This file is part of mprcgenekeepr
 context("convertDate")
 library(lubridate)
 set_seed(10L)
@@ -78,7 +78,7 @@ test_that("convertDate fails when date column class is real", {
   expect_error(convertDate(ped5))
 })
 
-ped <- nprcgenekeepr::pedInvalidDates
+ped <- mprcgenekeepr::pedInvalidDates
 rowsWithBadDates <- convertDate(ped, reportErrors = TRUE)
 test_that("classifies dates <= 1000 CE as errors", {
   expect_true(any(3L %in% rowsWithBadDates))

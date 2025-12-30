@@ -1,7 +1,7 @@
 #' Determines the generation number for each id.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' One of Pedigree Curation functions
 #'
 #' @return Integer vector indicating generation numbers for each id,
@@ -14,9 +14,9 @@
 #' individual's mother (\code{NA} if unknown).
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
+#' library(mprcgenekeepr)
 #' library(stringi)
-#' ped <- nprcgenekeepr::lacy1989Ped
+#' ped <- mprcgenekeepr::lacy1989Ped
 #' ped$gen <- NULL
 #' ped$population <- NULL
 #' ped2 <- ped

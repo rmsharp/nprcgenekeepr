@@ -25,6 +25,6 @@ function.
 Adapted from print.data.frame
 }
 \examples{
-library(nprcgenekeepr)
-dataframe2string(nprcgenekeepr::pedOne)
+library(mprcgenekeepr)
+dataframe2string(mprcgenekeepr::pedOne)
 }

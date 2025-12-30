@@ -15,7 +15,7 @@ pedSix
 This is used for testing and demonstration.
 }
 \examples{
-library(nprcgenekeepr)
+library(mprcgenekeepr)
 data("pedSix")
 head(pedSix)
 }

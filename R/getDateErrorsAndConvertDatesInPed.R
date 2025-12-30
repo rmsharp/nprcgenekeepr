@@ -1,7 +1,7 @@
 #' Converts columns of dates in text form to \code{Date} object columns
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' Finds date errors in columns defined in
 #' \code{convertDate} as dates and converts date strings to \code{Date} objects.
 #'
@@ -17,8 +17,8 @@
 #' file by \code{qcStudbook} through the functions it calls.
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
-#' ped <- nprcgenekeepr::pedInvalidDates
+#' library(mprcgenekeepr)
+#' ped <- mprcgenekeepr::pedInvalidDates
 #' ped
 #' errorLst <- getEmptyErrorLst()
 #' colNamesAndErrors <- fixColumnNames(names(ped), errorLst)

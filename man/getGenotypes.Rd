@@ -18,8 +18,8 @@ A genotype file compatible with others in this package.
 Get genotypes from file
 }
 \examples{
-library(nprcgenekeepr)
+library(mprcgenekeepr)
 pedCsv <- getGenotypes(fileName = system.file("testdata", "qcPed.csv",
-  package = "nprcgenekeepr"
+  package = "mprcgenekeepr"
 ))
 }

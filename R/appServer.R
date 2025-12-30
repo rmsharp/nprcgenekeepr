@@ -3,7 +3,7 @@
 # Main Server Logic - Connects all modules
 # ============================================================================
 
-#' Main Application Server for nprcgenekeepr
+#' Main Application Server for mprcgenekeepr
 #'
 #' @param input Shiny input
 #' @param output Shiny output
@@ -30,7 +30,7 @@ appServer <- function(input, output, session) {
   observe({
     # Attempt to load configuration file
     sysInfo <- Sys.info()
-    configFile <- nprcgenekeepr::getConfigFileName(sysInfo)
+    configFile <- mprcgenekeepr::getConfigFileName(sysInfo)[["configFile"]]
     if (!is.null(configFile) && file.exists(configFile)) {
       shared$config <- read.table(configFile,
                                   header = TRUE,

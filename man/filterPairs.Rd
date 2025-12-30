@@ -26,8 +26,8 @@ A dataframe representing a filtered long-format kinship table.
 Part of Group Formation
 }
 \examples{
-library(nprcgenekeepr)
-ped <- nprcgenekeepr::lacy1989Ped
+library(mprcgenekeepr)
+ped <- mprcgenekeepr::lacy1989Ped
 ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
 kin <- kinMatrix2LongForm(kmat, removeDups = FALSE)

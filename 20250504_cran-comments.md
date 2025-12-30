@@ -5,10 +5,10 @@ This is a resubmission. In this version I have:
   - Requests from 20250419:
     -  Used ::: in documentation:
          man/fillGroupMembersWithSexRatio.Rd:
-            groupMembers <- nprcgenekeepr:::makeGroupMembers(numGp, 
+            groupMembers <- mprcgenekeepr:::makeGroupMembers(numGp, 
               currentGroups, candidates, ped, harem = harem, minAge = minAge)
          man/fillGroupMembersWithSexRatio.Rd:
-            grpNum <- nprcgenekeepr:::makeGrpNum(numGp)
+            grpNum <- mprcgenekeepr:::makeGrpNum(numGp)
          Please omit one colon.
       - I have exported both makeGroupMembers() and makeGrpNum() to remove the 
         use of ::: in the documentation.
@@ -53,7 +53,7 @@ This is a resubmission. In this version I have:
        which are documentation elements:
        - data.R
        - nprcgenekeeper.R
-       - nprcgenekeepr-package.R
+       - mprcgenekeepr-package.R
     -  Running checkhelper::find_missing_tags() found there is no missing or
        empty return value for exported functions and no missing `@export` or 
        `@noRd` in the documentation
@@ -126,7 +126,7 @@ This is a resubmission. In this version I have:
   both had the same note about possible misspelled words is addressed below.
     
 ## R CMD check results
-── R CMD check results ─────────────────────────────────────── nprcgenekeepr 1.0.7 ────
+── R CMD check results ─────────────────────────────────────── mprcgenekeepr 1.0.7 ────
 Duration: 1m 51.5s
 
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔

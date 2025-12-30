@@ -18,7 +18,7 @@ else the entire list is returned.
 checkChangedColsLst examines list for non-empty fields
 }
 \examples{
-library(nprcgenekeepr)
+library(mprcgenekeepr)
 library(lubridate)
 pedOne <- data.frame(
   ego_id = c(

@@ -36,8 +36,8 @@ used for alias IDs (\code{size}), and the maximum number of days that the
 birthdate can be shifted (\code{maxDelta}).
 }
 \examples{
-library(nprcgenekeepr)
-ped <- qcStudbook(nprcgenekeepr::pedGood)
+library(mprcgenekeepr)
+ped <- qcStudbook(mprcgenekeepr::pedGood)
 obfuscatedPed <- obfuscatePed(ped)
 ped
 obfuscatedPed

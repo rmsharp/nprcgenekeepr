@@ -20,7 +20,7 @@ A copy of report specific to the specified animals.
 Filters a genetic value report down to only the specified animals
 }
 \examples{
-library(nprcgenekeepr)
-rpt <- nprcgenekeepr::pedWithGenotypeReport$report
+library(mprcgenekeepr)
+rpt <- mprcgenekeepr::pedWithGenotypeReport$report
 rpt1 <- filterReport(c("GHH9LB", "BD41WW"), rpt)
 }

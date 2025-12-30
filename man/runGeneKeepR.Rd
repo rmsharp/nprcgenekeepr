@@ -3,21 +3,19 @@
 \name{runGeneKeepR}
 \alias{runGeneKeepR}
 \title{Allows running \code{shiny} application with
-\code{nprcgenekeepr::runGeneKeepR()}}
+\code{mprcgenekeepr::runGeneKeepR()}}
 \usage{
-runGeneKeepR()
+runGeneKeepR(...)
 }
-\value{
-Returns the error condition of the Shiny application when it
-terminates.
+\arguments{
+\item{...}{Additional arguments passed to shiny::runApp()}
 }
 \description{
-Allows running \code{shiny} application with
-\code{nprcgenekeepr::runGeneKeepR()}
+Run the GeneKeepR Shiny Application
 }
 \examples{
-if (interactive()) {
-  library(nprcgenekeepr)
-  runGeneKeepR()
+\dontrun{
+library(mprcgenekeepr)
+runGeneKeepR()
 }
 }

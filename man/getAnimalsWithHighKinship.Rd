@@ -39,7 +39,7 @@ greater than our equal to the \code{threshold} value.
 Forms a list of animal Ids and animals related to them
 }
 \examples{
-qcPed <- nprcgenekeepr::qcPed
+qcPed <- mprcgenekeepr::qcPed
 ped <- qcStudbook(qcPed,
   minParentAge = 2L, reportChanges = FALSE,
   reportErrors = FALSE

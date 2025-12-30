@@ -14,7 +14,7 @@
 #' If not either "min" or "max" it is forced to "min".
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
+#' library(mprcgenekeepr)
 #' withinIntegerRange()
 #' withinIntegerRange(, 0, 10)
 #' withinIntegerRange(NA, 0, 10, na = "max")

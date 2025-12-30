@@ -1,7 +1,7 @@
 #' Forms and fills list of animals groups based on provided constraints
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #'
 #' @return A list of animal groups and their member animals
 #'

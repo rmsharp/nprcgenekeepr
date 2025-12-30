@@ -21,7 +21,7 @@ an initial "U" at the beginning of an ID to a function call so that actual
 ID that start with a "U" are possible.
 }
 \examples{
-examplePedigree <- nprcgenekeepr::examplePedigree
+examplePedigree <- mprcgenekeepr::examplePedigree
 length(examplePedigree$id)
 ped <- removeAutoGenIds(examplePedigree)
 length(ped$id)

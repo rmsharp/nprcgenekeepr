@@ -1,7 +1,7 @@
 #' Recursively create a character vector of ancestors for an individual ID.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' Part of Pedigree Sampling
 #' From PedigreeSampling.R
 #' 2016-01-28
@@ -22,8 +22,8 @@
 #'
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
-#' ped <- nprcgenekeepr::qcPed
+#' library(mprcgenekeepr)
+#' ped <- mprcgenekeepr::qcPed
 #' ped <- qcStudbook(ped, minParentAge = 0)
 #' pedTree <- createPedTree(ped)
 #' pedLoops <- findLoops(pedTree)

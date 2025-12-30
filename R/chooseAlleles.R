@@ -1,7 +1,7 @@
 #' Combines two vectors of alleles by randomly selecting one allele
 #' or the other at each position.
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #'
 #' @return An integer vector with the result of sampling from \code{a1}
 #' and \code{a2} according to Mendelian inheritance.

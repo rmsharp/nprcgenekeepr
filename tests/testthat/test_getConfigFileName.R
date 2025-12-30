@@ -1,5 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+#' This file is part of mprcgenekeepr
 context("getConfigFileName")
 
 ## These are just stub values
@@ -32,11 +32,11 @@ test_that("getConfigFile got correct file name", {
   skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   expect_identical(
     getConfigFileName(sysInfoWindows)[["configFile"]],
-    "/Users/rmsharp/_nprcgenekeepr_config"
+    "/Users/rmsharp/_mprcgenekeepr_config"
   )
   expect_identical(
     getConfigFileName(sysInfoUnix)[["configFile"]],
-    "/Users/rmsharp/.nprcgenekeepr_config"
+    "/Users/rmsharp/.mprcgenekeepr_config"
   )
   expect_identical(
     getConfigFileName(sysInfoWindows)[["homeDir"]],

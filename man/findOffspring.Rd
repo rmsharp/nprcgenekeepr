@@ -22,8 +22,8 @@ A named vector containing the offspring counts for each animal in
 Part of Genetic Value Analysis
 }
 \examples{
-library(nprcgenekeepr)
-examplePedigree <- nprcgenekeepr::examplePedigree
+library(mprcgenekeepr)
+examplePedigree <- mprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree,
   minParentAge = 2,
   reportChanges = FALSE,

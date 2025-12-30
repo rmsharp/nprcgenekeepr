@@ -4,7 +4,7 @@
 #' as YYYYMMDD to form YYYY-MM-DD formatted dates.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #'
 #' This function is not exported because it is not general purpose and
 #' is missing several defensive programming measures.

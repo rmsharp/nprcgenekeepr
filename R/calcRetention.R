@@ -1,7 +1,7 @@
 #' Calculates Allelic Retention
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' Part of Genetic Value Analysis
 #'
 #' @return A vector of the mean number of founder alleles retained in the
@@ -15,7 +15,7 @@
 #' table of allele information produced by \code{geneDrop()}.
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
+#' library(mprcgenekeepr)
 #' data("lacy1989Ped")
 #' data("lacy1989PedAlleles")
 #' ped <- lacy1989Ped

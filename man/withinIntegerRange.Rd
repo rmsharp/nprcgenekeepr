@@ -26,7 +26,7 @@ Real values are truncated. Non-numerics are forced to minimum without
 warning.
 }
 \examples{
-library(nprcgenekeepr)
+library(mprcgenekeepr)
 withinIntegerRange()
 withinIntegerRange(, 0, 10)
 withinIntegerRange(NA, 0, 10, na = "max")

@@ -1,9 +1,9 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-# This file is part of nprcgenekeepr
+# This file is part of mprcgenekeepr
 context("kinMatrix2LongForm")
 library(testthat)
 
-ped <- nprcgenekeepr::lacy1989Ped
+ped <- mprcgenekeepr::lacy1989Ped
 ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
 reformattedKmat <- kinMatrix2LongForm(kmat, removeDups = FALSE)

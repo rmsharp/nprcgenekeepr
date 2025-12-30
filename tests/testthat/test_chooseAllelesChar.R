@@ -1,5 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+#' This file is part of mprcgenekeepr
 context("chooseAllelesChar")
 library(testthat)
 test_that("chooseAllelesChar returns a vector of characters of the right size

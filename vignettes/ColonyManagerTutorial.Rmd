@@ -17,7 +17,7 @@ library(png) # nolint: undesirable_function_linter
 library(kableExtra) # nolint: undesirable_function_linter
 library(grid) # nolint: undesirable_function_linter
 library(stringi) # nolint: undesirable_function_linter
-library(nprcgenekeepr) # nolint: undesirable_function_linter
+library(mprcgenekeepr) # nolint: undesirable_function_linter
 knitr::opts_chunk$set(
   eval = FALSE, echo = TRUE, results = "markup",
   cache = FALSE
@@ -28,14 +28,14 @@ start_time <- proc.time()
 
 ## Introduction
 This tutorial demonstrates the major functions used 
-within **GeneKeepR** provided by the __nprcgenekeepr__ package.
+within **GeneKeepR** provided by the __mprcgenekeepr__ package.
 This is a brief tutorial that illustrates a typical workflow and does
 not explore all possible workflows.
 
 Please provide any comments, questions, or bug reports through the GitHub
 issue tracker at 
-[https://github.com/rmsharp/nprcgenekeepr/issues](
-https://github.com/rmsharp/nprcgenekeepr/issues).
+[https://github.com/rmsharp/mprcgenekeepr/issues](
+https://github.com/rmsharp/mprcgenekeepr/issues).
 
 ## Installation and Help  
   
@@ -53,7 +53,7 @@ GitHub with the following code.
 
 ```{r gh-installation}
 install.packages("devtools")
-devtools::install_github(file.path("rmsharp", "nprcgenekeepr"))
+devtools::install_github(file.path("rmsharp", "mprcgenekeepr"))
 ```
 
 All missing packages should be automatically installed.

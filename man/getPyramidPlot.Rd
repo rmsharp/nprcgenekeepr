@@ -15,10 +15,10 @@ The return value of par("mar") when the function was called.
 \description{
 The pedigree provided must have the following columns: \code{sex} and
 \code{age}. This needs to be augmented to allow pedigrees structures that
-are provided by the nprcgenekeepr package.
+are provided by the mprcgenekeepr package.
 }
 \examples{
-library(nprcgenekeepr)
+library(mprcgenekeepr)
 data(qcPed)
 getPyramidPlot(qcPed)
 }

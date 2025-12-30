@@ -1,5 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+#' This file is part of mprcgenekeepr
 context("getGenotypes")
 ## This is identical to getPedigree and needs to be strengthened. However,
 ## function does not do any data quality checks at this time.
@@ -12,7 +12,7 @@ test_that("getGenotypes recognizes and opens Excel files.", {
     suppressWarnings(getGenotypes(
       fileName = system.file("testdata", "qcPed.xlsx",
         package =
-          "nprcgenekeepr"
+          "mprcgenekeepr"
       )
     ))
   expect_identical(nrow(pedExcel), 280L)
@@ -26,7 +26,7 @@ test_that(
     pedCsv <-
       getGenotypes(fileName = system.file("testdata", "qcPed.csv",
         package =
-          "nprcgenekeepr"
+          "mprcgenekeepr"
       ))
     expect_identical(nrow(pedCsv), 280L)
   }
@@ -41,7 +41,7 @@ test_that(
       getGenotypes(
         fileName = system.file("testdata", "qcPed.csv",
           package =
-            "nprcgenekeepr"
+            "mprcgenekeepr"
         ),
         sep = ","
       )
@@ -58,7 +58,7 @@ test_that(
       getGenotypes(
         fileName = system.file("testdata", "qcPed.txt",
           package =
-            "nprcgenekeepr"
+            "mprcgenekeepr"
         ),
         sep = "\t"
       )

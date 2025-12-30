@@ -1,9 +1,9 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-# This file is part of nprcgenekeepr
+# This file is part of mprcgenekeepr
 context("rankSubjects")
 library(testthat)
 ## reportGV() unit test is weak.
-rpt <- rankSubjects(nprcgenekeepr::finalRpt)
+rpt <- rankSubjects(mprcgenekeepr::finalRpt)
 test_that("rankSubjects ranks subject correctly", {
   expect_identical(nrow(rpt[[2L]]), 68L)
   expect_identical(rpt[[1L]][1L, "value"], "High Value")

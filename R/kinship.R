@@ -1,7 +1,7 @@
 #' Generates a kinship matrix.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #'
 #' The function previously had an internal call to the kindepth function in
 #' order to provide the parameter pdepth (the generation number). This version
@@ -60,8 +60,8 @@
 #' @import Matrix
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
-#' ped <- nprcgenekeepr::lacy1989Ped
+#' library(mprcgenekeepr)
+#' ped <- mprcgenekeepr::lacy1989Ped
 #' ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 #' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
 #' ped

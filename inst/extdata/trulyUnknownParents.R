@@ -1,4 +1,4 @@
-library(nprcgenekeepr)
+library(mprcgenekeepr)
 library(rmsutilityr)
 library(stringi)
 library(here)
@@ -11,7 +11,7 @@ pedOneFile <- stri_c(here("inst", "extdata", file_names[3L]))
 if (tools::file_ext(pedOneFile) == ".csv") {
   pedOne <- read.csv(file = pedOneFile, header = TRUE, sep = ",")
 } else {
-  pedOne <- nprcgenekeepr:::readExcelPOSIXToCharacter(pedOneFile)
+  pedOne <- mprcgenekeepr:::readExcelPOSIXToCharacter(pedOneFile)
 }
 minParentAge <- 2L # Min breeding age
 pedOne <- qcStudbook(pedOne, minParentAge = minParentAge)
@@ -52,6 +52,6 @@ for (i in 1L:5L) {
   counts <- countKinshipValues(kValues, counts)
   stats <- summarizeKinshipValues(counts)
   filename <- get_dated_excel_name("counts")
-  nprcgenekeepr::create_wkbk(file = filename, df_list = list(stats),
+  mprcgenekeepr::create_wkbk(file = filename, df_list = list(stats),
                              sheetnames = "stats", replace = TRUE)
 }

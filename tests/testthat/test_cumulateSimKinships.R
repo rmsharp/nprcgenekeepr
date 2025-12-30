@@ -1,9 +1,9 @@
 #' Copyright(c) 2017-2023 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+#' This file is part of mprcgenekeepr
 context("cumulateSimKinships")
 
 # nolint start: object_name_linter
-ped <- nprcgenekeepr::smallPed
+ped <- mprcgenekeepr::smallPed
 simParent_1 <- list(
   id = "A",
   sires = c("s1_1", "s1_2", "s1_3"),

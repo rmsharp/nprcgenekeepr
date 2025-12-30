@@ -1,14 +1,14 @@
 #' getIdsWithOneParent extracts IDs of animals pedigree without either a
 #' sire or a dam
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #'
 #' @return Character vector of all single parents
 #'
 #' @param uPed a trimmed pedigree dataframe with uninformative founders removed.
 #' @export
 #' @examples
-#' examplePedigree <- nprcgenekeepr::examplePedigree
+#' examplePedigree <- mprcgenekeepr::examplePedigree
 #' breederPed <- qcStudbook(examplePedigree,
 #'   minParentAge = 2,
 #'   reportChanges = FALSE,

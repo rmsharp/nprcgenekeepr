@@ -1,7 +1,7 @@
 #' addGroupOfUnusedAnimals adds a group to the saved groups if needed
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 
 #' @return A list of groups, which are each lists of animal Ids that are unused
 #' animals at the end of the iteration.

@@ -25,7 +25,7 @@ table.
 \examples{
 \donttest{
 # Requires LabKey connection
-library(nprcgenekeepr)
+library(mprcgenekeepr)
 ## Have to a vector of focal animals
 focalAnimals <- c("1X2701", "1X0101")
 suppressWarnings(getLkDirectRelatives(ids = focalAnimals))

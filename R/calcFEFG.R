@@ -1,7 +1,7 @@
 #' Calculates Founder Equivalents and Founder Genome Equivalents
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' Part of the Genetic Value Analysis
 #'
 #' @return The list containing the founder equivalents,
@@ -23,8 +23,8 @@
 #' ## Equivalents and Founder Genome Equivalents.
 #' ## Zoo Biology 8:111-123, (1989) by Robert C. Lacy
 #'
-#' library(nprcgenekeepr)
-#' ped <- nprcgenekeepr::lacy1989Ped
+#' library(mprcgenekeepr)
+#' ped <- mprcgenekeepr::lacy1989Ped
 #' alleles <- lacy1989PedAlleles
 #' pedFactors <- data.frame(
 #'   id = as.factor(ped$id),

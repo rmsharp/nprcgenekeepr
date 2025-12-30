@@ -1,6 +1,6 @@
 ---
 title: "Quick Example of Simulated Kinships with Partial Parentage"
-subtitle: "nprcgenekeepr: an R Package for the Genetic Management of Colonies"
+subtitle: "mprcgenekeepr: an R Package for the Genetic Management of Colonies"
 author: "R. Mark Sharp, Ph.D."
 date: "8/29/2021"
 output:
@@ -79,10 +79,10 @@ Animals \code{E}, \code{J}, and \code{N}
 knitr::opts_chunk$set(echo = TRUE)
 library(kableExtra) # nolint: undesirable_function_linter
 library(magrittr) # nolint: undesirable_function_linter
-library(nprcgenekeepr) # nolint: undesirable_function_linter
+library(mprcgenekeepr) # nolint: undesirable_function_linter
 library(stringi) # nolint: undesirable_function_linter
 
-ped <- nprcgenekeepr::smallPed
+ped <- mprcgenekeepr::smallPed
 simParent_1 <- list( # nolint: object_name_linter
   id = "A", # nolint: object_name_linter
   sires = "Q",

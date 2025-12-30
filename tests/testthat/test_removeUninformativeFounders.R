@@ -1,5 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-# This file is part of nprcgenekeepr
+# This file is part of mprcgenekeepr
 context("removeUninformativeFounders")
 library(testthat)
 pedOne <- data.frame(
@@ -10,7 +10,7 @@ pedOne <- data.frame(
   stringsAsFactors = FALSE, check.names = FALSE
 )
 
-qcPed <- nprcgenekeepr::qcPed
+qcPed <- mprcgenekeepr::qcPed
 
 test_that("removeUninformativeFounders removes correct records", {
   expect_error(removeUninformativeFounders(pedOne))

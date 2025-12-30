@@ -1,7 +1,7 @@
 #' Determines the generation number for each id.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' @description{This loops through the entire pedigree one generation at a
 #' time. It finds the zeroth generation during first loop.
 #' The first time through this loop no sire or dam is in parents.
@@ -29,8 +29,8 @@
 #' individual's mother (\code{NA} if unknown).
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
-#' ped <- nprcgenekeepr::lacy1989Ped[, c("id", "sire", "dam")]
+#' library(mprcgenekeepr)
+#' ped <- mprcgenekeepr::lacy1989Ped[, c("id", "sire", "dam")]
 #' ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 #' ped
 findGeneration <- function(id, sire, dam) {

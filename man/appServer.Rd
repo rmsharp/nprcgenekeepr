@@ -2,7 +2,7 @@
 % Please edit documentation in R/appServer.R
 \name{appServer}
 \alias{appServer}
-\title{Main Application Server for nprcgenekeepr}
+\title{Main Application Server for mprcgenekeepr}
 \usage{
 appServer(input, output, session)
 }
@@ -14,5 +14,5 @@ appServer(input, output, session)
 \item{session}{Shiny session}
 }
 \description{
-Main Application Server for nprcgenekeepr
+Main Application Server for mprcgenekeepr
 }

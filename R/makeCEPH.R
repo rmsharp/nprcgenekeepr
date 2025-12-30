@@ -1,7 +1,7 @@
 #' Make a CEPH-style pedigree for each id
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' Part of Relations
 #'
 #' Creates a CEPH-style pedigree for each id, consisting of three generations:
@@ -50,8 +50,8 @@
 #' individual's mother (\code{NA} if unknown).
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
-#' ped <- nprcgenekeepr::lacy1989Ped
+#' library(mprcgenekeepr)
+#' ped <- mprcgenekeepr::lacy1989Ped
 #' pedCEPH <- makeCEPH(ped$id, ped$sire, ped$dam)
 #' head(ped)
 #' head(pedCEPH$F)

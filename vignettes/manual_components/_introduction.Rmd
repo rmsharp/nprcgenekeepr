@@ -13,7 +13,7 @@ vignette: >
   %\usepackage[UTF-8]{inputenc}
 ---
 ## Introduction  
-The goal of __nprcgenekeepr__ is to implement Genetic Tools for Colony Management.
+The goal of __mprcgenekeepr__ is to implement Genetic Tools for Colony Management.
 It was initially conceived and developed as a Shiny web application at
 the Oregon National Primate Research Center (ONPRC) to facilitate some of
 the analyses they perform regularly.

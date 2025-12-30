@@ -1,7 +1,7 @@
 #' Create a pedigree tree (PedTree).
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' The PedTree is a list containing sire and dam information for an individual.
 #'
 #' Part of Pedigree Sampling
@@ -29,8 +29,8 @@
 #' are \code{birth}, \code{death}, \code{departure}.
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
-#' exampleTree <- createPedTree(nprcgenekeepr::examplePedigree)
+#' library(mprcgenekeepr)
+#' exampleTree <- createPedTree(mprcgenekeepr::examplePedigree)
 #' exampleLoops <- findLoops(exampleTree)
 createPedTree <- function(ped) {
   pedTree <- rep(list(list(sire = NA, dam = NA)), nrow(ped))

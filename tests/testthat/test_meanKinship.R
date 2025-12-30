@@ -1,7 +1,7 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-# This file is part of nprcgenekeepr
+# This file is part of mprcgenekeepr
 #' Copyright(c) 2017-2024 R. Mark Sharp
-# This file is part of nprcgenekeepr
+# This file is part of mprcgenekeepr
 context("meanKinship")
 library(testthat)
 set_seed(10L)

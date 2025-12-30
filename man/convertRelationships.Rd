@@ -30,14 +30,14 @@ relationship categories included for each pair.
 Part of Relations
 }
 \examples{
-library(nprcgenekeepr)
-ped <- nprcgenekeepr::smallPed
+library(mprcgenekeepr)
+ped <- mprcgenekeepr::smallPed
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
 ids <- c("A", "B", "D", "E", "F", "G", "I", "J", "L", "M", "O", "P")
 relIds <- convertRelationships(kmat, ped, ids)
 rel <- convertRelationships(kmat, ped, updateProgress = function() {})
 head(rel)
-ped <- nprcgenekeepr::qcPed
+ped <- mprcgenekeepr::qcPed
 bkmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen,
   sparse = FALSE
 )

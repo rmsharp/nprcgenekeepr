@@ -18,7 +18,7 @@ A factor vector of the standardized status codes with levels:
 Part of Pedigree Curation
 }
 \examples{
-library(nprcgenekeepr)
+library(mprcgenekeepr)
 original <- c(
   "A", "alive", "Alive", "1", "S", "Sale", "sold", "shipped",
   "D", "d", "dead", "died", "deceased", "2",

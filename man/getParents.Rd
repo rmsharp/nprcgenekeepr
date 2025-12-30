@@ -20,8 +20,8 @@ list.
 Get parents to corresponding animal IDs provided
 }
 \examples{
-library(nprcgenekeepr)
-pedOne <- nprcgenekeepr::pedOne
+library(mprcgenekeepr)
+pedOne <- mprcgenekeepr::pedOne
 names(pedOne) <- c("id", "sire", "dam", "sex", "birth")
 getParents(pedOne, c("o1", "d4"))
 }

@@ -6,7 +6,7 @@
 #' Quality Control Module - UI Function
 #'
 #' Copyright(c) 2017-2025 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+#' This file is part of mprcgenekeepr
 #'
 #' Creates the user interface for the quality control module.
 #'
@@ -14,7 +14,7 @@
 #'
 #' @examples
 #' \donttest{
-#' library(nprcgenekeepr)
+#' library(mprcgenekeepr)
 #' library(shiny)
 #' ui <- navbarPage("GeneKeepR", tabPanel("QC", modQcUI("qc")))
 #' }

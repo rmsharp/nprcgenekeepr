@@ -1,7 +1,7 @@
 #' Filters kinship values from a long-format kinship table based on the sexes
 #'  of the two animals involved.
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #'
 #' Part of Group Formation
 #'
@@ -17,8 +17,8 @@
 #' Defaults to \code{list(c("F", "F"))}.
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
-#' ped <- nprcgenekeepr::lacy1989Ped
+#' library(mprcgenekeepr)
+#' ped <- mprcgenekeepr::lacy1989Ped
 #' ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 #' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
 #' kin <- kinMatrix2LongForm(kmat, removeDups = FALSE)

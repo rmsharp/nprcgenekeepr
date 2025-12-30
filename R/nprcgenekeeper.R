@@ -1,7 +1,7 @@
 #' Genetic Management Functions
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #'
 ###############################################################################
 #' @description Primary Data Structure --- Pedigree
@@ -105,6 +105,6 @@
 #' }
 #' @keywords internal
 "_PACKAGE"
-#' @name nprcgenekeepr
+#' @name mprcgenekeepr
 #' @title Genetic Tools for Colony Management
 NULL

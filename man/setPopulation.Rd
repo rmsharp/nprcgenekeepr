@@ -22,7 +22,7 @@ updated by being set to \code{TRUE} for the animal IDs in \code{ped$id} and
 Part of the pedigree filtering toolset.
 }
 \examples{
-examplePedigree <- nprcgenekeepr::examplePedigree
+examplePedigree <- mprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree,
   minParentAge = 2,
   reportChanges = FALSE,

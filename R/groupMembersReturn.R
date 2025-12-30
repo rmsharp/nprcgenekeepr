@@ -1,7 +1,7 @@
 #' Forms return list of groupAddAssign function
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #'
 #' @return A list with two or three elements \code{group}, \code{score}, and
 #' optionally \code{groupKin} where

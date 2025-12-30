@@ -1,7 +1,7 @@
 #' Finds the number of total offspring for each animal in the provided pedigree.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' Part of Genetic Value Analysis
 #'
 #' @return A named vector containing the offspring counts for each animal in
@@ -14,8 +14,8 @@
 #' This requires complete pedigree information.
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
-#' examplePedigree <- nprcgenekeepr::examplePedigree
+#' library(mprcgenekeepr)
+#' examplePedigree <- mprcgenekeepr::examplePedigree
 #' breederPed <- qcStudbook(examplePedigree,
 #'   minParentAge = 2,
 #'   reportChanges = FALSE,

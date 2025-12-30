@@ -1,7 +1,7 @@
 #' Check for genotype data in dataframe
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' Checks to ensure the content and structure are appropriate for genotype
 #' data are in the dataframe and ready for the \code{geneDrop} function by
 #' already being mapped to integers and placed in columns named \code{first}
@@ -16,9 +16,9 @@
 #' @importFrom stringi stri_detect_fixed
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
-#' rhesusPedigree <- nprcgenekeepr::rhesusPedigree
-#' rhesusGenotypes <- nprcgenekeepr::rhesusGenotypes
+#' library(mprcgenekeepr)
+#' rhesusPedigree <- mprcgenekeepr::rhesusPedigree
+#' rhesusGenotypes <- mprcgenekeepr::rhesusGenotypes
 #' pedWithGenotypes <- addGenotype(
 #'   ped = rhesusPedigree,
 #'   genotype = rhesusGenotypes

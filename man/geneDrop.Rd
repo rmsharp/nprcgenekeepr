@@ -68,8 +68,8 @@ names to the dataframe using \code{first_name} and \code{second_name}.
 }
 \examples{
 ## We usually defined `n` to be >= 5000
-library(nprcgenekeepr)
-ped <- nprcgenekeepr::lacy1989Ped
+library(mprcgenekeepr)
+ped <- mprcgenekeepr::lacy1989Ped
 allelesNew <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,
   genotype = NULL, n = 50, updateProgress = NULL
 )

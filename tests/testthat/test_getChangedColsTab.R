@@ -1,11 +1,11 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+#' This file is part of mprcgenekeepr
 context("getChangedColsTab")
 library(testthat)
 library(stringi)
 
 set_seed(10L)
-pedSix <- nprcgenekeepr::pedSix
+pedSix <- mprcgenekeepr::pedSix
 changedColsTab <- getChangedColsTab(qcStudbook(pedSix,
   reportChanges = TRUE,
   reportErrors = TRUE

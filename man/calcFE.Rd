@@ -25,7 +25,7 @@ It is assumed that the pedigree has no partial parentage
 ## Example from Analysis of Founder Representation in Pedigrees: Founder
 ## Equivalents and Founder Genome Equivalents.
 ## Zoo Biology 8:111-123, (1989) by Robert C. Lacy
-library(nprcgenekeepr)
+library(mprcgenekeepr)
 ped <- data.frame(
   id = c("A", "B", "C", "D", "E", "F", "G"),
   sire = c(NA, NA, "A", "A", NA, "D", "D"),

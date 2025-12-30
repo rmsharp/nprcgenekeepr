@@ -1,8 +1,8 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+#' This file is part of mprcgenekeepr
 context("addAnimalsWithNoRelative")
 library(testthat)
-examplePedigree <- nprcgenekeepr::examplePedigree
+examplePedigree <- mprcgenekeepr::examplePedigree
 ped <- qcStudbook(examplePedigree,
   minParentAge = 2L, reportChanges = FALSE,
   reportErrors = FALSE

@@ -1,8 +1,8 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+#' This file is part of mprcgenekeepr
 context("getProductionStatus")
 library(testthat)
-library(nprcgenekeepr)
+library(mprcgenekeepr)
 data("examplePedigree")
 ped <- examplePedigree
 minParentAge <- 3.0

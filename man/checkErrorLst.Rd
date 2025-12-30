@@ -18,7 +18,7 @@ else the entire list is returned.
 checkErrorLst examines list for non-empty fields
 }
 \examples{
-errorLst <- qcStudbook(nprcgenekeepr::pedFemaleSireMaleDam,
+errorLst <- qcStudbook(mprcgenekeepr::pedFemaleSireMaleDam,
   reportErrors = TRUE
 )
 checkErrorLst(errorLst)

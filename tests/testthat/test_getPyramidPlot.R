@@ -1,5 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+#' This file is part of mprcgenekeepr
 context("getPyramidPlot")
 library(testthat)
 recPlot <- function(expr) {
@@ -9,7 +9,7 @@ recPlot <- function(expr) {
   expr
   recordPlot()
 }
-agePlot <- recPlot(getPyramidPlot(nprcgenekeepr::qcPed))
+agePlot <- recPlot(getPyramidPlot(mprcgenekeepr::qcPed))
 test_that("getPyramidPlot generates a plot with or without pedigree", {
   expect_s3_class(agePlot, "recordedplot")
   expect_s3_class(recPlot(getPyramidPlot(NULL)), "recordedplot")

@@ -1,5 +1,5 @@
 #' Copyright(c) 2017-2021 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+#' This file is part of mprcgenekeepr
 context("addSecondParents")
 
 uPedOne <- data.frame(

@@ -29,7 +29,7 @@ Makes a data.frame object containing simulated kinship summary statistics
 using the counts of kinship values list from \code{countKinshipValues}.
 }
 \examples{
-ped <- nprcgenekeepr::smallPed
+ped <- mprcgenekeepr::smallPed
 simParent_1 <- list(
   id = "A",
   sires = c("s1_1", "s1_2", "s1_3"),

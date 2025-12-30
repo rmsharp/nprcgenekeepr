@@ -17,6 +17,6 @@ in YYYY-MM-DD_hh_mm_ss_basename format.
 Returns a character vector with an file name having the date prepended.
 }
 \examples{
-library(nprcgenekeepr)
+library(mprcgenekeepr)
 getDatedFilename("testName")
 }

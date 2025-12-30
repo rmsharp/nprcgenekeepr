@@ -1,7 +1,7 @@
 #' Make relation classes table from \code{kin} dataframe.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' From Relations
 #'
 #' @return A data.frame with the number of instances of following relationship
@@ -14,10 +14,10 @@
 #' relationship categories included for each pair.
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
+#' library(mprcgenekeepr)
 #' suppressMessages(library(dplyr))
 #'
-#' qcPed <- nprcgenekeepr::qcPed
+#' qcPed <- mprcgenekeepr::qcPed
 #' qcPed <- qcPed[1:50, ] # Comment out for full example
 #' bkmat <- kinship(qcPed$id, qcPed$sire, qcPed$dam, qcPed$gen,
 #'   sparse = FALSE

@@ -23,8 +23,8 @@ in which the summation is over all animals, \emph{j}, including the kinship
 of animal \emph{i} to itself.
 }
 \examples{
-library(nprcgenekeepr)
-ped <- nprcgenekeepr::qcPed
+library(mprcgenekeepr)
+ped <- mprcgenekeepr::qcPed
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
 head(meanKinship(kmat))
 }

@@ -24,7 +24,7 @@ If ids are provided, the function will only count the unique alleles
 for an individual (homozygous alleles will be counted as 1).
 }
 \examples{
-library(nprcgenekeepr)
+library(mprcgenekeepr)
 data("ped1Alleles")
 ids <- ped1Alleles$id
 alleles <- ped1Alleles[, !(names(ped1Alleles) \%in\% c("id", "parent"))]

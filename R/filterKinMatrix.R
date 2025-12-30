@@ -1,7 +1,7 @@
 #' Filters a kinship matrix to include only the egos listed in 'ids'
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #'
 #' @return A numeric matrix that is the reduced kinship matrix with named
 #' rows and columns (row and col names are 'ids').
@@ -12,8 +12,8 @@
 #' Rows and columns should be named with IDs.
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
-#' ped <- nprcgenekeepr::qcPed
+#' library(mprcgenekeepr)
+#' ped <- mprcgenekeepr::qcPed
 #' ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 #' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen,
 #'   sparse = FALSE

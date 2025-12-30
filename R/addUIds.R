@@ -1,7 +1,7 @@
 #' Eliminates partial parentage situations by adding unique placeholder
 #' IDs for the unknown parent.
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #'
 #' This must be run prior to \code{addParents} since the IDs made herein are
 #' used by \code{addParents}

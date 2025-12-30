@@ -1,7 +1,7 @@
 #' Count the number of loops in a pedigree tree.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' Part of Pedigree Sampling
 #' From PedigreeSampling.R
 #' 2016-01-28
@@ -29,8 +29,8 @@
 #' \code{createPedTree(ped)} where \code{ped} is a standard pedigree dataframe.
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
-#' examplePedigree <- nprcgenekeepr::examplePedigree
+#' library(mprcgenekeepr)
+#' examplePedigree <- mprcgenekeepr::examplePedigree
 #' exampleTree <- createPedTree(examplePedigree)
 #' exampleLoops <- findLoops(exampleTree)
 #' ## You can count how many animals are in loops with the following code.

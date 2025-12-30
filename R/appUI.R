@@ -3,7 +3,7 @@
 # Main UI Assembly - Compatible with navbarPage
 # ============================================================================
 
-#' Main Application UI for nprcgenekeepr
+#' Main Application UI for mprcgenekeepr
 #' @importFrom bslib bs_theme
 #' @importFrom shiny navbarPage tabPanel icon fluidRow column div h1 p hr
 #'             actionButton navbarMenu
@@ -148,7 +148,7 @@ appUI <- function() {
         h3("Documentation"),
         p("For help, see:",
           a("Online Documentation",
-            href = "https://rmsharp.github.io/nprcgenekeepr/",
+            href = "https://rmsharp.github.io/mprcgenekeepr/",
             target = "_blank"))
       )
     )

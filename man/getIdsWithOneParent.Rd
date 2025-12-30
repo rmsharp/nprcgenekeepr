@@ -18,7 +18,7 @@ getIdsWithOneParent extracts IDs of animals pedigree without either a
 sire or a dam
 }
 \examples{
-examplePedigree <- nprcgenekeepr::examplePedigree
+examplePedigree <- mprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree,
   minParentAge = 2,
   reportChanges = FALSE,

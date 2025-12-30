@@ -18,8 +18,8 @@ removeUnknownAnimals Removes unknown animals added to pedigree that serve as
 placeholders for unknown parents.
 }
 \examples{
-library(nprcgenekeepr)
-ped <- nprcgenekeepr::smallPed
+library(mprcgenekeepr)
+ped <- mprcgenekeepr::smallPed
 addedPed <- cbind(ped,
   recordStatus = rep("original", nrow(ped)),
   stringsAsFactors = FALSE

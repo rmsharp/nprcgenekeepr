@@ -1,5 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+#' This file is part of mprcgenekeepr
 
 test_that("getIndianOriginStatus returns the correct values", {
   origin <- c("INDIAN", "INDIAN", "INDIAN", "INDIAN", "INDIAN")

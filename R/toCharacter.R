@@ -1,7 +1,7 @@
 #' Force dataframe columns to character
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' Converts designated columns of a dataframe to character. Defaults to
 #' converting columns \code{id}, \code{sire}, and \code{dam}.
 #'
@@ -14,8 +14,8 @@
 #' character class. Defaults to \code{c("id", "sire", "dam")}/
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
-#' pedGood <- nprcgenekeepr::pedGood
+#' library(mprcgenekeepr)
+#' pedGood <- mprcgenekeepr::pedGood
 #' names(pedGood) <- c("id", "sire", "dam", "sex", "birth")
 #' class(pedGood[["id"]])
 #' pedGood <- toCharacter(pedGood)

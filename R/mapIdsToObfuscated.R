@@ -1,7 +1,7 @@
 #' Map IDs to Obfuscated IDs
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #' This is not robust as it fails if all IDs are found not within \code{map}.
 #'
 #' @return A dataframe or vector with original IDs replaced by their obfuscated
@@ -13,7 +13,7 @@
 #' @export
 #' @examples
 #' set_seed(1)
-#' ped <- qcStudbook(nprcgenekeepr::pedSix)
+#' ped <- qcStudbook(mprcgenekeepr::pedSix)
 #' obfuscated <- obfuscatePed(ped, map = TRUE)
 #' someIds <- c("s1", "s2", "d1", "d1")
 #' mapIdsToObfuscated(someIds, obfuscated$map)

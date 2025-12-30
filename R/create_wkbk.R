@@ -1,7 +1,7 @@
 #' Creates an Excel workbook with worksheets.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+## This file is part of mprcgenekeepr
 #'
 #' @return TRUE if the Excel file was successfully created. FALSE if any errors
 #' occurred.
@@ -14,7 +14,7 @@
 #' @importFrom WriteXLS WriteXLS
 #' @export
 #' @examples
-#' library(nprcgenekeepr)
+#' library(mprcgenekeepr)
 #'
 #' make_df_list <- function(size) {
 #'   df_list <- list(size)

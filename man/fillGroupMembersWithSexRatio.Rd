@@ -50,8 +50,8 @@ specified by \code{sexRatio}.
 The sex ratio is the ratio of females to males.
 }
 \examples{
-library(nprcgenekeepr)
-examplePedigree <- nprcgenekeepr::examplePedigree
+library(mprcgenekeepr)
+examplePedigree <- mprcgenekeepr::examplePedigree
 examplePedigree <- examplePedigree[1:300, ] # Comment out for full example
 ped <- qcStudbook(examplePedigree,
   minParentAge = 2L, reportChanges = FALSE,
@@ -81,7 +81,7 @@ numGp <- 1L
 harem <- FALSE
 sexRatio <- 0.0
 withKin <- FALSE
-groupMembers <- nprcgenekeepr::makeGroupMembers(numGp,
+groupMembers <- mprcgenekeepr::makeGroupMembers(numGp,
   currentGroups,
   candidates,
   ped,
@@ -89,7 +89,7 @@ groupMembers <- nprcgenekeepr::makeGroupMembers(numGp,
   minAge = minAge
 )
 groupMembersStart <- groupMembers
-grpNum <- nprcgenekeepr::makeGrpNum(numGp)
+grpNum <- mprcgenekeepr::makeGrpNum(numGp)
 
 groupMembers <- fillGroupMembersWithSexRatio(
   candidates, groupMembers, grpNum, kin, ped, minAge, numGp,

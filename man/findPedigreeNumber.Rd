@@ -23,9 +23,9 @@ starting at 0 for individuals lacking IDs for both parents.
 One of Pedigree Curation functions
 }
 \examples{
-library(nprcgenekeepr)
+library(mprcgenekeepr)
 library(stringi)
-ped <- nprcgenekeepr::lacy1989Ped
+ped <- mprcgenekeepr::lacy1989Ped
 ped$gen <- NULL
 ped$population <- NULL
 ped2 <- ped

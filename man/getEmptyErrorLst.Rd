@@ -14,6 +14,6 @@ pedigree file by \code{qcStudbook}.
 Creates a empty errorLst object
 }
 \examples{
-library(nprcgenekeepr)
+library(mprcgenekeepr)
 getEmptyErrorLst()
 }

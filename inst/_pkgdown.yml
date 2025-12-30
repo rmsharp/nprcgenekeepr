@@ -29,7 +29,7 @@ reference:
 - title: "Major Features and Functions"
   desc: "Brief codebook and Major Functions"
   contents:
-    - '`nprcgenekeepr`'
+    - '`mprcgenekeepr`'
 - title: "Primary interactive functions"
   desc: "Funtions designed for interactive use"
   contents:
@@ -79,8 +79,8 @@ reference:
   - '`obfuscateDate`'
   - '`obfuscateId`'
   - '`obfuscatePed`'
-  - '`print.summary.nprcgenekeeprErr`'
-  - '`print.summary.nprcgenekeeprGV`'
+  - '`print.summary.mprcgenekeeprErr`'
+  - '`print.summary.mprcgenekeeprGV`'
   - '`qcStudbook`'
   - '`rankSubjects`'
   - '`kinMatrix2LongForm`'
@@ -89,8 +89,8 @@ reference:
   - '`removeUnknownAnimals`'
   - '`runGeneKeepR`'
   - '`trimPedigree`'
-  - '`summary.nprcgenekeeprErr`'
-  - '`summary.nprcgenekeeprGV`'
+  - '`summary.mprcgenekeeprErr`'
+  - '`summary.mprcgenekeeprGV`'
 - title: All exposed functions
   desc: ~
   contents:
@@ -225,8 +225,8 @@ reference:
   - '`obfuscateId`'
   - '`obfuscatePed`'
   - '`orderReport`'
-  - '`print.summary.nprcgenekeeprErr`'
-  - '`print.summary.nprcgenekeeprGV`'
+  - '`print.summary.mprcgenekeeprErr`'
+  - '`print.summary.mprcgenekeeprGV`'
   - '`qcStudbook`'
   - '`rankSubjects`'
   - '`rbindFill`'
@@ -248,8 +248,8 @@ reference:
   - '`setExit`'
   - '`set_seed`'
   - '`str_detect_fixed_all`'
-  - '`summary.nprcgenekeeprErr`'
-  - '`summary.nprcgenekeeprGV`'
+  - '`summary.mprcgenekeeprErr`'
+  - '`summary.mprcgenekeeprGV`'
   - '`toCharacter`'
   - '`trimPedigree`'
   - '`unknown2NA`'

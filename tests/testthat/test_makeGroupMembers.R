@@ -1,11 +1,11 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-# This file is part of nprcgenekeepr
+# This file is part of mprcgenekeepr
 context("makeGroupMembers")
 library(testthat)
-library(nprcgenekeepr)
-qcBreeders <- nprcgenekeepr::qcBreeders
-pedWithGenotype <- nprcgenekeepr::pedWithGenotype
-pedWithGenotypeReport <- nprcgenekeepr::pedWithGenotypeReport
+library(mprcgenekeepr)
+qcBreeders <- mprcgenekeepr::qcBreeders
+pedWithGenotype <- mprcgenekeepr::pedWithGenotype
+pedWithGenotypeReport <- mprcgenekeepr::pedWithGenotypeReport
 skip_if_not(exists("qcBreeders"))
 skip_if_not(exists("pedWithGenotype"))
 skip_if_not(exists("pedWithGenotypeReport"))
