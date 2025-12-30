@@ -138,7 +138,7 @@ modSummaryStatsUI <- function(id) {
 #' @seealso \code{\link{modSummaryStatsUI}} for the user interface.
 #' @importFrom shiny moduleServer reactive renderPlot renderUI downloadHandler req
 #' @importFrom grDevices dev.off png
-#' @importFrom graphics hist boxplot par
+#' @importFrom graphics hist boxplot par plot.new text
 #' @importFrom stats median
 #' @export
 modSummaryStatsServer <- function(id, geneticValues, pedigree,

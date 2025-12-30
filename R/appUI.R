@@ -1,8 +1,3 @@
-# ============================================================================
-# FILE: R/appUI.R
-# Main UI Assembly - Compatible with navbarPage
-# ============================================================================
-
 #' Main Application UI for mprcgenekeepr
 #' @importFrom bslib bs_theme
 #' @importFrom shiny navbarPage tabPanel icon fluidRow column div h1 p hr
@@ -13,7 +8,7 @@ appUI <- function() {
   navbarPage(
     title = "GeneKeepR",
     id = "mainNavbar",
-    theme = bslib::bs_theme(version = 4, bootswatch = "flatly"),
+    theme = bslib::bs_theme(version = 4L, bootswatch = "flatly"),
 
     # ====================
     # Home Tab
@@ -24,22 +19,23 @@ appUI <- function() {
 
       fluidRow(
         column(
-          width = 12,
+          width = 12L,
           div(
             class = "jumbotron",
             h1("Welcome to GeneKeepR"),
             p(class = "lead",
               paste0("Genetic Management Tools - Version ", getVersion())),
             hr(),
-            p("This application provides tools for managing genetic diversity ",
-              "in captive breeding programs. Select a tool from the tabs above.")
+            p(paste0("This application provides tools for managing genetic ",
+                     "diversity in captive breeding programs. ",
+                     "Select a tool from the tabs above."))
           )
         )
       ),
 
       fluidRow(
         column(
-          width = 4,
+          width = 4L,
           div(
             class = "panel panel-primary",
             div(class = "panel-heading", h4("Data Input")),
@@ -50,7 +46,7 @@ appUI <- function() {
           )
         ),
         column(
-          width = 4,
+          width = 4L,
           div(
             class = "panel panel-info",
             div(class = "panel-heading", h4("Pedigree Browser")),
@@ -61,7 +57,7 @@ appUI <- function() {
           )
         ),
         column(
-          width = 4,
+          width = 4L,
           div(
             class = "panel panel-success",
             div(class = "panel-heading", h4("Population Analysis")),
@@ -154,4 +150,3 @@ appUI <- function() {
     )
   )
 }
-

@@ -4,11 +4,6 @@
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of mprcgenekeepr
 #'
-# ============================================================================
-# FILE: R/runGeneKeepR.R
-# App Launcher - MODIFY YOUR EXISTING FUNCTION
-# ============================================================================
-
 #' Run the GeneKeepR Shiny Application
 #'
 #' @param ... Additional arguments passed to shiny::runApp()

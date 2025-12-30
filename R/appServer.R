@@ -1,8 +1,3 @@
-# ============================================================================
-# FILE: R/appServer.R
-# Main Server Logic - Connects all modules
-# ============================================================================
-
 #' Main Application Server for mprcgenekeepr
 #'
 #' @param input Shiny input
@@ -82,7 +77,7 @@ appServer <- function(input, output, session) {
   })
 
   # Age-Sex Pyramid Module
-  pyramidResults <- modPyramidServer(
+  modPyramidServer(
     "pyramid",
     pedigreeData = reactive(shared$currentPedigree)
   )
@@ -100,7 +95,7 @@ appServer <- function(input, output, session) {
   })
 
   # Breeding Groups Module
-  breedingResults <- modBreedingGroupsServer(
+  modBreedingGroupsServer(
     "breedingGroups",
     pedigree = reactive(shared$currentPedigree),
     geneticValues = reactive(shared$geneticValues)

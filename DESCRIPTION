@@ -54,6 +54,7 @@ Imports:
     shiny,
     stringi,
     utils,
+    withr,
     WriteXLS
 Suggests:
     covr,

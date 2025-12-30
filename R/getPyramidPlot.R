@@ -21,7 +21,7 @@
 #' @importFrom lubridate now interval duration
 #' @importFrom plotrix color.gradient
 #' @importFrom stringi stri_c
-#' @importFrom graphics par
+#' @importFrom withr with_par
 #' @export
 #' @examples
 #' library(mprcgenekeepr)
@@ -34,21 +34,17 @@ getPyramidPlot <- function(ped = NULL, binWidth = 2L, ageUnit = "years",
   if (is.null(ped)) {
     ped <- getPyramidAgeDist()
   }
-  opar <- par(no.readonly = TRUE)
-  on.exit(par(opar))
-  par(bg = "#FFF8DC")
+  withr::with_par(list(bg = "#FFF8DC"), {
+    # Convert binWidth to integer
+    binWidth <- as.integer(binWidth)
+    if (binWidth < 1L) binWidth <- 1L
 
-  # Convert binWidth to integer
-  binWidth <- as.integer(binWidth)
-  if (binWidth < 1L) binWidth <- 1L
+    # Make a copy of ped to avoid modifying the original
+    pedWork <- ped
 
-  # Make a copy of ped to avoid modifying the original
-  pedWork <- ped
-
-  # Calculate ages if not present in data
-  if (!"age" %in% names(pedWork)) {
-    # Need birth column to calculate ages
-    if ("birth" %in% names(pedWork)) {
+    # Calculate ages if not present in data
+    if (!"age" %in% names(pedWork) && "birth" %in% names(pedWork)) {
+      # Need birth column to calculate ages
       currentTime <- now()
       # Determine which column indicates animal is deceased
       exitCol <- if ("exit" %in% names(pedWork)) "exit" else
@@ -82,60 +78,61 @@ getPyramidPlot <- function(ped = NULL, binWidth = 2L, ageUnit = "years",
         ) / duration(num = 1L, units = "years")
       }
     }
-  }
 
-  # Filter to living animals only (those without exit date)
-  if ("exit" %in% names(pedWork)) {
-    pedWork <- pedWork[is.na(pedWork$exit), ]
-  } else if ("exit_date" %in% names(pedWork)) {
-    pedWork <- pedWork[is.na(pedWork$exit_date), ]
-  }
+    # Filter to living animals only (those without exit date)
+    if ("exit" %in% names(pedWork)) {
+      pedWork <- pedWork[is.na(pedWork$exit), ]
+    } else if ("exit_date" %in% names(pedWork)) {
+      pedWork <- pedWork[is.na(pedWork$exit_date), ]
+    }
 
-  # Convert ages to months if requested
-  if (ageUnit == "months" && "age" %in% names(pedWork)) {
-    pedWork$age <- pedWork$age * 12
-  }
+    # Convert ages to months if requested
+    if (ageUnit == "months" && "age" %in% names(pedWork)) {
+      pedWork$age <- pedWork$age * 12L
+    }
 
-  maxAge <- getPedMaxAge(pedWork)
+    maxAge <- getPedMaxAge(pedWork)
 
-  axModulas <- 5L
-  upperAges <- seq(
-    binWidth,
-    makeRoundUp(maxAge, binWidth), binWidth
-  )
-  lowerAges <- upperAges - binWidth
+    axModulas <- 5L
+    upperAges <- seq(
+      binWidth,
+      makeRoundUp(maxAge, binWidth), binWidth
+    )
+    lowerAges <- upperAges - binWidth
 
-  bins <- fillBins(pedWork, lowerAges, upperAges)
-  maxAx <- max(getMaxAx(bins, axModulas))
+    bins <- fillBins(pedWork, lowerAges, upperAges)
+    maxAx <- max(getMaxAx(bins, axModulas))
 
-  # Create age labels with appropriate unit suffix
-  if (ageUnit == "months") {
-    ageLabels <- stri_c(lowerAges, " - ", upperAges - 1L, " mo")
-  } else {
-    ageLabels <- stri_c(lowerAges, " - ", upperAges - 1L, " yr")
-  }
+    # Create age labels with appropriate unit suffix
+    if (ageUnit == "months") {
+      ageLabels <- stri_c(lowerAges, " - ", upperAges - 1L, " mo")
+    } else {
+      ageLabels <- stri_c(lowerAges, " - ", upperAges - 1L, " yr")
+    }
 
-  # Set colors based on colorScheme
-  if (colorScheme == "viridis") {
-    mcol <- color.gradient(0.3, 0.5, 0.2)
-    fcol <- color.gradient(0.5, 0.2, 0.6)
-  } else {
-    # default blue/red
-    mcol <- color.gradient(0L, 0L, 0.5)
-    fcol <- color.gradient(1L, 0.5, 0.5)
-  }
+    # Set colors based on colorScheme
+    if (colorScheme == "viridis") {
+      mcol <- color.gradient(0.3, 0.5, 0.2)
+      fcol <- color.gradient(0.5, 0.2, 0.6)
+    } else {
+      # default blue/red
+      mcol <- color.gradient(0L, 0L, 0.5)
+      fcol <- color.gradient(1L, 0.5, 0.5)
+    }
 
-  currentDate <- now()
-  axBy <- maxAx / axModulas
-  axGap <- axBy * 0.6
-  ## The following values have worked well for chimpanzees:
-  ## gap=40, laxlab = seq(0, 100, by = 10), and raxlab = seq(0, 100, by = 10)
-  gap <- axGap
-  laxlab <- seq(0L, maxAx, by = axBy)
-  raxlab <- seq(0L, maxAx, by = axBy)
-  agePyramidPlot(
-    bins$males, bins$females, ageLabels, mcol, fcol,
-    laxlab, raxlab, gap, currentDate, showCounts = showCounts,
-    ageLabelCex = ageLabelCex
-  )
-}
+    currentDate <- now()
+    axBy <- maxAx / axModulas
+    axGap <- axBy * 0.6
+    ## The following values have worked well for chimpanzees:
+    ## gap=40, laxlab = seq(0, 100, by = 10), and raxlab = seq(0, 100, by = 10)
+    gap <- axGap
+    laxlab <- seq(0L, maxAx, by = axBy)
+    raxlab <- seq(0L, maxAx, by = axBy)
+    agePyramidPlot(
+      bins$males, bins$females, ageLabels, mcol, fcol,
+      laxlab, raxlab, gap, currentDate, showCounts = showCounts,
+      ageLabelCex = ageLabelCex
+    )
+  })
+
+ }
