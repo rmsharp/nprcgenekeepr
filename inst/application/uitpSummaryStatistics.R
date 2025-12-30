@@ -77,10 +77,10 @@ uitpSummaryStatistics <-
       column(10L, offset = 1L, htmlOutput("summaryStats")),
       # nolint start: commented_code_linter
       #   column(10L, offset = 1L,
-      #          DT::dataTableOutput("relations")
-      #          # DT::dataTableOutput("relations"),
-      #          # DT::dataTableOutput("maleFounders"),
-      #          # DT::dataTableOutput("femaleFounders")
+      #          DT::DTOutput("relations")
+      #          # DT::DTOutput("relations"),
+      #          # DT::DTOutput("maleFounders"),
+      #          # DT::DTOutput("femaleFounders")
       #   ),
       # nolint end: commented_code_linter),
       br(),

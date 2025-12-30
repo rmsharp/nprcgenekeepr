@@ -1,6 +1,7 @@
 `%then%` <- rlang::`%||%`
 # nolint start: undesirable_function_linter
 library(nprcgenekeepr) #
+library(DT)
 library(futile.logger)
 library(ggplot2)
 library(stringi)
@@ -315,7 +316,7 @@ shinyServer(function(input, output, session) {
   })
 
   # Creating the pedigree table to be displayed on the Pedigree Browser tab
-  output$pedigree <- DT::renderDataTable(DT::datatable({
+  output$pedigree <- DT::renderDT(DT::datatable({
     if (is.null(getPed())) {
       return(NULL)
     }
@@ -476,7 +477,7 @@ shinyServer(function(input, output, session) {
     }
   })
 
-  output$gva <- DT::renderDataTable(DT::datatable({
+  output$gva <- DT::renderDT(DT::datatable({
     if (is.null(rpt())) {
       return(NULL)
     }
@@ -829,7 +830,7 @@ shinyServer(function(input, output, session) {
 
   # nolint start: commented_code_linter.
   # output$relations <- eventReactive(input$displayRelations, {
-  #   DT::renderDataTable(DT::datatable({
+  #   DT::renderDT(DT::datatable({
   #     if (is.null(kmat())) {
   #       return(NULL)
   #     }
@@ -993,7 +994,7 @@ shinyServer(function(input, output, session) {
   # nolint start: commented_code_linter.
   # ### Display Founders
   # # Creating the male founder table for display on the Summary Statistics tab
-  # output$maleFounders <- DT::renderDataTable(DT::datatable({
+  # output$maleFounders <- DT::renderDT(DT::datatable({
   #   if (is.null(geneticValue()[["maleFounders"]])) {
   #     return(NULL)
   #   }
@@ -1003,7 +1004,7 @@ shinyServer(function(input, output, session) {
   #   ped
   # }))
   # # Creating the male founder table for display on the Summary Statistics tab
-  # output$femaleFounders <- DT::renderDataTable(DT::datatable({
+  # output$femaleFounders <- DT::renderDT(DT::datatable({
   #   if (is.null(geneticValue()[["femaleFounders"]])) {
   #     return(NULL)
   #   }
@@ -1266,13 +1267,13 @@ shinyServer(function(input, output, session) {
     }
   })
 
-  output$breedingGroups <- DT::renderDataTable(DT::datatable({
+  output$breedingGroups <- DT::renderDT(DT::datatable({
     if (is.null(bg())) {
       return(NULL)
     }
     return(bgGroupView())
   }))
-  output$breedingGroupKin <- DT::renderDataTable(DT::datatable({
+  output$breedingGroupKin <- DT::renderDT(DT::datatable({
     if (is.null(bg()$groupKin)) {
       return(NULL)
     }

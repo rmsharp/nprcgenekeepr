@@ -15,6 +15,7 @@
 #' @examples
 #' \donttest{
 #' library(nprcgenekeepr)
+#' library(shiny)
 #' ui <- navbarPage("GeneKeepR", tabPanel("QC", modQcUI("qc")))
 #' }
 #'
@@ -22,7 +23,10 @@
 #'
 #' @seealso \code{\link{modQcServer}} for the server logic.
 #' @seealso \code{\link{qcStudbook}} for the underlying QC function.
-#'
+#' @importFrom shiny NS div h3 p fluidRow column wellPanel fileInput
+#'   numericInput checkboxInput actionButton tabsetPanel tabPanel br
+#'   uiOutput downloadButton navbarPage tabPanel
+#' @importFrom DT DTOutput
 #' @export
 modQcUI <- function(id) {
   ns <- NS(id)
@@ -54,13 +58,13 @@ modQcUI <- function(id) {
           tabPanel("Summary", br(), uiOutput(ns("qcSummaryUI"))),
           tabPanel("Errors", br(),
                    downloadButton(ns("downloadErrors"), "Download"),
-                   br(), br(), DT::dataTableOutput(ns("qcErrors"))),
+                   br(), br(), DT::DTOutput(ns("qcErrors"))),
           tabPanel("Warnings", br(),
                    downloadButton(ns("downloadWarnings"), "Download"),
-                   br(), br(), DT::dataTableOutput(ns("qcWarnings"))),
+                   br(), br(), DT::DTOutput(ns("qcWarnings"))),
           tabPanel("Cleaned Data", br(),
                    downloadButton(ns("downloadCleaned"), "Download"),
-                   br(), br(), DT::dataTableOutput(ns("cleanedDataTable")))
+                   br(), br(), DT::DTOutput(ns("cleanedDataTable")))
         )
       )
     )
@@ -80,7 +84,7 @@ modQcUI <- function(id) {
 #' @seealso \code{\link{modQcUI}} for the user interface.
 #'
 #' @importFrom shiny moduleServer reactive eventReactive req
-#' @importFrom DT renderDataTable
+#' @importFrom DT renderDT
 #' @export
 modQcServer <- function(id, config = NULL) {
   moduleServer(id, function(input, output, session) {
@@ -146,9 +150,9 @@ modQcServer <- function(id, config = NULL) {
       )
     })
 
-    output$qcErrors <- DT::renderDataTable(qcResults()$errors)
-    output$qcWarnings <- DT::renderDataTable(qcResults()$warnings)
-    output$cleanedDataTable <- DT::renderDataTable(qcResults()$cleaned)
+    output$qcErrors <- DT::renderDT(qcResults()$errors)
+    output$qcWarnings <- DT::renderDT(qcResults()$warnings)
+    output$cleanedDataTable <- DT::renderDT(qcResults()$cleaned)
 
     output$downloadCleaned <- downloadHandler(
       filename = function() paste0("cleaned_studbook_", Sys.Date(), ".csv"),

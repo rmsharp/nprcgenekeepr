@@ -13,11 +13,8 @@ modGeneticValueUI(id)
 A \code{div} containing genetic value analysis UI.
 }
 \description{
-\subsection{Copyright(c) 2017-2025 R. Mark Sharp}{
-}
-
-\subsection{This file is part of nprcgenekeepr}{
-}
+Copyright(c) 2017-2025 R. Mark Sharp
+This file is part of nprcgenekeepr
 }
 \references{
 Vinson, A. and Raboin, M.J. (2015)
@@ -26,8 +23,6 @@ Vinson, A. and Raboin, M.J. (2015)
 }
 \seealso{
 \code{\link{modGeneticValueServer}}
-
-\code{\link{calcGV}} for genetic value calculation.
 
 \code{\link{geneDrop}} for gene dropping simulation.
 }

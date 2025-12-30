@@ -15,6 +15,10 @@
 #' @param id character vector of length 1. Module namespace identifier.
 #'
 #' @seealso \code{\link{modPedigreeServer}} for server logic.
+#' @importFrom shiny NS div h3 fluidRow column wellPanel
+#'   radioButtons conditionalPanel fileInput numericInput actionButton
+#'   tabsetPanel tabPanel uiOutput
+#' @importFrom DT DTOutput
 #' @export
 modPedigreeUI <- function(id) {
   ns <- NS(id)
@@ -41,7 +45,7 @@ modPedigreeUI <- function(id) {
       column(8,
              tabsetPanel(
                tabPanel("Summary", uiOutput(ns("pedigreeSummary"))),
-               tabPanel("Table", DT::dataTableOutput(ns("pedigreeTable")))
+               tabPanel("Table", DT::DTOutput(ns("pedigreeTable")))
              )
       )
     )
@@ -58,6 +62,8 @@ modPedigreeUI <- function(id) {
 #'
 #' @seealso \code{\link{modPedigreeUI}}
 #' @importFrom shiny moduleServer reactive eventReactive
+#'  renderUI div h4 h2
+#' @importFrom DT renderDT
 #' @export
 modPedigreeServer <- function(id, studbook = NULL, config = NULL) {
   moduleServer(id, function(input, output, session) {
@@ -85,7 +91,7 @@ modPedigreeServer <- function(id, studbook = NULL, config = NULL) {
           div(class = "panel-body", h2(nrow(pedigreeData()))))
     })
 
-    output$pedigreeTable <- DT::renderDataTable(pedigreeData())
+    output$pedigreeTable <- DT::renderDT(pedigreeData())
 
     return(list(
       pedigree = reactive({ pedigreeData() }),

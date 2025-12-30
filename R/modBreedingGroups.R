@@ -17,7 +17,10 @@
 #'
 #' @references
 #' Vinson, A. and Raboin, M.J. (2015)
-#'
+#' @importFrom DT DTOutput renderDT
+#' @importFrom shiny NS div h3 fluidRow column wellPanel radioButtons
+#'             conditionalPanel numericInput actionButton tabsetPanel
+#'             tabPanel uiOutput tableOutput icon
 #' @export
 modBreedingGroupsUI <- function(id) {
   ns <- NS(id)
@@ -119,7 +122,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
             div(class = "panel-heading",
                 h4(sprintf("Group %d (%d animals)", i, nrow(group)))),
             div(class = "panel-body",
-                DT::dataTableOutput(session$ns(paste0("groupTable", i))))
+                DT::DTOutput(session$ns(paste0("groupTable", i))))
         )
       })
       do.call(tagList, groupsList)
@@ -128,7 +131,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
     observe({
       req(breedingGroups())
       lapply(seq_along(breedingGroups()), function(i) {
-        output[[paste0("groupTable", i)]] <- DT::renderDataTable({
+        output[[paste0("groupTable", i)]] <- DT::renderDT({
           breedingGroups()[[i]]
         }, options = list(pageLength = 10, dom = 't'))
       })

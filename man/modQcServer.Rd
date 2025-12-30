@@ -16,13 +16,6 @@ A list with reactive components \code{cleanedData} and
 \code{qcSummary}.
 }
 \description{
-\subsection{Copyright(c) 2017-2025 R. Mark Sharp}{
-}
-
-\subsection{This file is part of nprcgenekeepr}{
-}
-}
-\details{
 Server logic for quality control module.
 }
 \seealso{

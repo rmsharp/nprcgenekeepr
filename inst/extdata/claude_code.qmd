@@ -124,15 +124,15 @@ modQcUI <- function(id) {
           ),
           tabPanel(
             "Errors",
-            DT::dataTableOutput(ns("qc_errors"))
+            DT::DTOutput(ns("qc_errors"))
           ),
           tabPanel(
             "Warnings",
-            DT::dataTableOutput(ns("qc_warnings"))
+            DT::DTOutput(ns("qc_warnings"))
           ),
           tabPanel(
             "Cleaned Data",
-            DT::dataTableOutput(ns("cleaned_data"))
+            DT::DTOutput(ns("cleaned_data"))
           )
         )
       )
@@ -217,7 +217,7 @@ modQcServer <- function(id, config_data = NULL) {
     })
 
     # Output: Error table
-    output$qc_errors <- DT::renderDataTable({
+    output$qc_errors <- DT::renderDT({
       req(qc_results())
       # Return errors dataframe
       # qc_results()$errors
@@ -229,7 +229,7 @@ modQcServer <- function(id, config_data = NULL) {
     }, options = list(pageLength = 10))
 
     # Output: Warnings table
-    output$qc_warnings <- DT::renderDataTable({
+    output$qc_warnings <- DT::renderDT({
       req(qc_results())
       # Return warnings dataframe
       data.frame(
@@ -240,7 +240,7 @@ modQcServer <- function(id, config_data = NULL) {
     }, options = list(pageLength = 10))
 
     # Output: Cleaned data
-    output$cleaned_data <- DT::renderDataTable({
+    output$cleaned_data <- DT::renderDT({
       req(qc_results())
       # Return cleaned data
       # qc_results()$cleaned

@@ -16,11 +16,7 @@ List with \code{geneticValues}, \code{topAnimals}, and
 \code{nAnalyzed}.
 }
 \description{
-\subsection{Copyright(c) 2017-2025 R. Mark Sharp}{
-}
-
-\subsection{This file is part of nprcgenekeepr}{
-}
+Genetic Value Analysis Module - Server Function
 }
 \references{
 Lacy, R.C. (1989) \emph{Zoo Biology}, \strong{8}, 111-123.

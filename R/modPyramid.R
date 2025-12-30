@@ -53,7 +53,10 @@ modPyramidUI <- function(id) {
 #' @param pedigreeData reactive returning pedigree data frame.
 #'
 #' @seealso \code{\link{modPyramidUI}}
-#' @importFrom shiny moduleServer reactive eventReactive
+#' @importFrom grDevices dev.off png
+#' @importFrom shiny moduleServer reactive eventReactive renderPlot renderTable
+#'   downloadHandler req isolate tagList
+#' @importFrom graphics text
 #' @export
 modPyramidServer <- function(id, pedigreeData) {
   moduleServer(id, function(input, output, session) {

@@ -17,11 +17,7 @@ modBreedingGroupsServer(id, pedigree, geneticValues = NULL)
 List with \code{groups}, \code{nGroups}, and \code{unassigned}.
 }
 \description{
-\subsection{Copyright(c) 2017-2025 R. Mark Sharp}{
-}
-
-\subsection{This file is part of nprcgenekeepr}{
-}
+Breeding Groups Module - Server Function
 }
 \seealso{
 \code{\link{modBreedingGroupsUI}}

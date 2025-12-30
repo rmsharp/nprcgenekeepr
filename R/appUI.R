@@ -5,6 +5,8 @@
 
 #' Main Application UI for nprcgenekeepr
 #' @importFrom bslib bs_theme
+#' @importFrom shiny navbarPage tabPanel icon fluidRow column div h1 p hr
+#'             actionButton navbarMenu
 #' @export
 appUI <- function() {
 

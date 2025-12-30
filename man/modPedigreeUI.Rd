@@ -13,11 +13,8 @@ modPedigreeUI(id)
 A \code{div} object containing pedigree creation UI.
 }
 \description{
-\subsection{Copyright(c) 2017-2025 R. Mark Sharp}{
-}
-
-\subsection{This file is part of nprcgenekeepr}{
-}
+Copyright(c) 2017-2025 R. Mark Sharp
+This file is part of nprcgenekeepr
 }
 \details{
 Creates user interface for pedigree creation from focal animal lists.

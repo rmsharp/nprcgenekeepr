@@ -13,14 +13,16 @@
 #' @param id character vector of length 1. Module namespace identifier.
 #'
 #' @seealso \code{\link{modGeneticValueServer}}
-#' @seealso \code{\link{calcGV}} for genetic value calculation.
 #' @seealso \code{\link{geneDrop}} for gene dropping simulation.
 #'
 #' @references
 #' Vinson, A. and Raboin, M.J. (2015)
 #' \emph{Journal of the American Association for Laboratory Animal Science},
 #' \strong{54}(6), 700-707.
-#'
+#' @importFrom DT DTOutput renderDT
+#' @importFrom shiny NS div h3 fluidRow column wellPanel
+#'   h4 icon numericInput checkboxInput sliderInput actionButton
+#'   tabsetPanel tabPanel br downloadButton plotOutput tableOutput
 #' @export
 modGeneticValueUI <- function(id) {
   ns <- NS(id)
@@ -58,7 +60,7 @@ modGeneticValueUI <- function(id) {
                         numericInput(ns("topN"), "Show top N:", value = 20, min = 5),
                         downloadButton(ns("downloadRankings"), "Download"),
                         br(), br(),
-                        DT::dataTableOutput(ns("rankingsTable"))
+                        DT::DTOutput(ns("rankingsTable"))
                ),
                tabPanel("Visualizations",
                         br(),
@@ -124,7 +126,7 @@ modGeneticValueServer <- function(id, pedigree) {
       })
     })
 
-    output$rankingsTable <- DT::renderDataTable({
+    output$rankingsTable <- DT::renderDT({
       req(gvResults())
       data <- gvResults()
       if (input$topN < nrow(data)) data <- data[1:input$topN, ]

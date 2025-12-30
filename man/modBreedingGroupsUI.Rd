@@ -13,11 +13,8 @@ modBreedingGroupsUI(id)
 A \code{div} containing breeding group formation UI.
 }
 \description{
-\subsection{Copyright(c) 2017-2025 R. Mark Sharp}{
-}
-
-\subsection{This file is part of nprcgenekeepr}{
-}
+Copyright(c) 2017-2025 R. Mark Sharp
+This file is part of nprcgenekeepr
 }
 \references{
 Vinson, A. and Raboin, M.J. (2015)

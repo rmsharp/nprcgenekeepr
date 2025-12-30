@@ -15,11 +15,7 @@ modPyramidServer(id, pedigreeData)
 List with \code{data}, \code{plot}, and \code{livingCount}.
 }
 \description{
-\subsection{Copyright(c) 2017-2025 R. Mark Sharp}{
-}
-
-\subsection{This file is part of nprcgenekeepr}{
-}
+Age-Sex Pyramid Module - Server Function
 }
 \seealso{
 \code{\link{modPyramidUI}}

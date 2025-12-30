@@ -17,11 +17,7 @@ modPedigreeServer(id, studbook = NULL, config = NULL)
 List with \code{pedigree} and \code{nAnimals} reactives.
 }
 \description{
-\subsection{Copyright(c) 2017-2025 R. Mark Sharp}{
-}
-
-\subsection{This file is part of nprcgenekeepr}{
-}
+Pedigree Creation Module - Server Function
 }
 \seealso{
 \code{\link{modPedigreeUI}}

@@ -211,8 +211,8 @@ uitpBreedingGroupFormation <-
       column(
         width = 10L,
         offset = 1L,
-        DT::dataTableOutput("breedingGroups"),
-        DT::dataTableOutput("breedingGroupKin")
+        DT::DTOutput("breedingGroups"),
+        DT::DTOutput("breedingGroupKin")
       )
     ),
     fluidRow(column(

@@ -13,11 +13,8 @@ modPyramidUI(id)
 A \code{div} containing age-sex pyramid UI.
 }
 \description{
-\subsection{Copyright(c) 2017-2025 R. Mark Sharp}{
-}
-
-\subsection{This file is part of nprcgenekeepr}{
-}
+Copyright(c) 2017-2025 R. Mark Sharp
+This file is part of nprcgenekeepr
 }
 \seealso{
 \code{\link{modPyramidServer}}

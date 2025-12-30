@@ -13,11 +13,8 @@ modQcUI(id)
 A \code{div} object containing the quality control UI elements.
 }
 \description{
-\subsection{Copyright(c) 2017-2025 R. Mark Sharp}{
-}
-
-\subsection{This file is part of nprcgenekeepr}{
-}
+Copyright(c) 2017-2025 R. Mark Sharp
+This file is part of nprcgenekeepr
 }
 \details{
 Creates the user interface for the quality control module.
@@ -25,6 +22,7 @@ Creates the user interface for the quality control module.
 \examples{
 \donttest{
 library(nprcgenekeepr)
+library(shiny)
 ui <- navbarPage("GeneKeepR", tabPanel("QC", modQcUI("qc")))
 }
 

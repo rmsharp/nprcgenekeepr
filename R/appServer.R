@@ -8,7 +8,8 @@
 #' @param input Shiny input
 #' @param output Shiny output
 #' @param session Shiny session
-#'
+#' @importFrom shiny reactiveValues observeEvent updateNavbarPage reactive
+#'         observe req
 #' @export
 appServer <- function(input, output, session) {
 
@@ -28,7 +29,8 @@ appServer <- function(input, output, session) {
   # ========================================
   observe({
     # Attempt to load configuration file
-    configFile <- getConfigFile()
+    sysInfo <- Sys.info()
+    configFile <- nprcgenekeepr::getConfigFileName(sysInfo)
     if (!is.null(configFile) && file.exists(configFile)) {
       shared$config <- read.table(configFile,
                                   header = TRUE,
