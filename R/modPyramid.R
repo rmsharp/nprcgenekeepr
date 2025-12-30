@@ -1,7 +1,4 @@
-# ============================================================================
-# FILE: R/modPyramid.R
 # Age-Sex Pyramid Shiny Module
-# ============================================================================
 
 #' Age-Sex Pyramid Module - UI Function
 #'
@@ -35,8 +32,10 @@ modPyramidUI <- function(id) {
                hr(),
                sliderInput(ns("plotHeight"), "Plot Height (pixels):",
                            min = 400, max = 1500, value = 600, step = 50),
-               helpText("Increase height for better visibility with many age groups",
-                        style = "font-size: 11px; color: #666;"),
+               helpText(
+                 "Increase height for better visibility with many age groups",
+                        style =
+                   "font-size: 14px; color: darblue; font-weight: bold;"),
                hr(),
                sliderInput(ns("ageLabelSize"), "Age Label Size:",
                            min = 0.5, max = 2.0, value = 1.0, step = 0.1),

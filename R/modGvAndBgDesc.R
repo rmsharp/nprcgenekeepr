@@ -1,7 +1,4 @@
-# ============================================================================
-# FILE: R/modGvAndBgDesc.R
 # Genetic Value and Breeding Group Description Shiny Module
-# ============================================================================
 
 #' Genetic Value and Breeding Group Description Module - UI Function
 #'
@@ -21,8 +18,6 @@
 #' @importFrom shiny NS div h3 includeHTML
 #' @export
 modGvAndBgDescUI <- function(id) {
-  ns <- NS(id)
-
   div(
     h3("Genetic Value Analysis and Breeding Group Description"),
     div(

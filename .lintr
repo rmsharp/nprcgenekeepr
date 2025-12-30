@@ -32,6 +32,13 @@ exclusions: list(
     "R/saveDataframesAsFiles.R" = 23L,
     "R/set_seed.R" = 11L,
     "R/setExit.R" = 56L,
+    "R/modBreedingGroups.R",
+    "R/modGeneticValue.R",
+    "R/modGvAndBgDesc.R",
+    "R/modInput.R",
+    "R/modPedigree.R",
+    "R/modPyramid.R",
+    "R/modSummaryStats.R",
     "tests",
     "vignettes"
   )

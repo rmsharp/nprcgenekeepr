@@ -1,7 +1,4 @@
-# ============================================================================
-# FILE: R/modSummaryStats.R
 # Summary Statistics Shiny Module
-# ============================================================================
 
 #' Summary Statistics Module - UI Function
 #'

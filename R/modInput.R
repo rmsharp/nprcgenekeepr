@@ -1,7 +1,4 @@
-# ============================================================================
-# FILE: R/modInput.R
 # Data Input and Quality Control Shiny Module
-# ============================================================================
 
 #' Data Input and Quality Control Module - UI Function
 #'
@@ -313,13 +310,13 @@ modInputServer <- function(id, config = NULL) {
         )
 
         # Basic validation checks
-        requiredCols <- c("id")
+        requiredCols <- "id"
         missingCols <- setdiff(requiredCols, tolower(names(rawData)))
         if (length(missingCols) > 0) {
           results$errors <- rbind(results$errors, data.frame(
             Row = NA,
             Error = "Missing required columns",
-            Details = paste("Missing:", paste(missingCols, collapse = ", ")),
+            Details = paste("Missing:", toString(missingCols)),
             stringsAsFactors = FALSE
           ))
         }

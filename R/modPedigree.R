@@ -1,7 +1,4 @@
-# ============================================================================
-# FILE: R/modPedigree.R
 # Pedigree Browser Shiny Module
-# ============================================================================
 
 #' Pedigree Browser Module - UI Function
 #'
@@ -56,7 +53,8 @@ modPedigreeUI <- function(id) {
               "not needed. IDs may be pasted from Excel or you ",
               "can browse for and select a file containing the list ",
               "of focal animals."
-            )
+            ),
+            style = "color: darkblue; font-weight: bold;"
           ),
           tags$textarea(
             id = ns("focalAnimalIds"),
@@ -89,7 +87,7 @@ modPedigreeUI <- function(id) {
               "The search field below will search all columns for ",
               "matches to any text or number entered."
             ),
-            style = "color:blue"
+            style = "color: darkblue; font-weight: bold;"
           )
         )
       ),
@@ -105,7 +103,7 @@ modPedigreeUI <- function(id) {
             value = TRUE
           ),
           helpText(
-            style = "font-size: 11px; color: #666;",
+            style = "font-size: 14px; color: darkblue; font-weight: bold;",
             paste0(
               "Unknown IDs, beginning with a capital U, are created ",
               "by the application for all animals with only one parent."
@@ -118,7 +116,7 @@ modPedigreeUI <- function(id) {
             value = FALSE
           ),
           helpText(
-            style = "font-size: 11px; color: #666;",
+            style = "font-size: 14px; color: darkblue; font-weight: bold;",
             paste0(
               "Trim the pedigree to include only relatives of the focal ",
               "animals provided."
@@ -134,7 +132,7 @@ modPedigreeUI <- function(id) {
           helpText(
             "A population must be defined before proceeding to the ",
             "Genetic Value Analysis.",
-            style = "color:blue"
+            style = "color: darkblue; font-weight: bold;"
           )
         )
       )
@@ -189,11 +187,11 @@ modPedigreeServer <- function(id, studbook, config = NULL) {
 
       # Get IDs from text area
       textIds <- input$focalAnimalIds
-      if (!is.null(textIds) && nchar(trimws(textIds)) > 0) {
+      if (!is.null(textIds) && nzchar(trimws(textIds))) {
         # Split by newlines, commas, semicolons, or tabs
         ids <- unlist(strsplit(textIds, "[,;\t\n\r]+"))
         ids <- trimws(ids)
-        ids <- ids[nchar(ids) > 0]
+        ids <- ids[nzchar(ids)]
       }
 
       # Get IDs from uploaded file
@@ -205,7 +203,7 @@ modPedigreeServer <- function(id, studbook, config = NULL) {
           if (ncol(fileData) >= 1) {
             fileIds <- as.character(fileData[[1]])
             fileIds <- trimws(fileIds)
-            fileIds <- fileIds[nchar(fileIds) > 0]
+            fileIds <- fileIds[nzchar(fileIds)]
             ids <- unique(c(ids, fileIds))
           }
         }, error = function(e) {
@@ -239,7 +237,7 @@ modPedigreeServer <- function(id, studbook, config = NULL) {
       # Filter out unknown IDs if requested
       if (!input$displayUnknownIds) {
         # Unknown IDs typically start with "U"
-        ped <- ped[!grepl("^U", ped$id, ignore.case = FALSE), ]
+        ped <- ped[!startsWith(ped$id, "U"), ]
       }
 
       # Trim to focal animals and their relatives if requested

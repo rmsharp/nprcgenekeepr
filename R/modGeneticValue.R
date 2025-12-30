@@ -1,7 +1,4 @@
-# ============================================================================
-# FILE: R/modGeneticValue.R
 # Genetic Value Analysis Shiny Module
-# ============================================================================
 
 #' Genetic Value Analysis Module - UI Function
 #'
@@ -132,7 +129,7 @@ modGeneticValueServer <- function(id, pedigree) {
         results$rank <- rank(-results$genomeUniqueness +
                                (1 - results$meanKinship))
         results <- results[order(results$rank), ]
-        results$rank <- 1:nrow(results)
+        results$rank <- seq_len(nrow(results))
         results
       })
     })

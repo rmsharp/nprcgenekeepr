@@ -29,7 +29,7 @@ appUI <- function() {
             class = "jumbotron",
             h1("Welcome to GeneKeepR"),
             p(class = "lead",
-              "Genetic Tools for Colony Management"),
+              paste0("Genetic Management Tools - Version ", getVersion())),
             hr(),
             p("This application provides tools for managing genetic diversity ",
               "in captive breeding programs. Select a tool from the tabs above.")

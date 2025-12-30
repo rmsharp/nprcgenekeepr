@@ -1,7 +1,4 @@
-# ============================================================================
-# FILE: R/modBreedingGroups.R
 # Breeding Group Formation Shiny Module
-# ============================================================================
 
 #' Breeding Groups Module - UI Function
 #'
