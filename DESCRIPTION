@@ -71,6 +71,7 @@ Suggests:
     roxygen2 (>= 7.3.2),
     shinyBS,
     shinyWidgets,
+    shinytest2,
     spelling,
     testthat
 Language: en-US
