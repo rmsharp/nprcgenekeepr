@@ -1,4 +1,4 @@
-#' Main Application Server for mprcgenekeepr
+#' Main Application Server for nprcgenekeepr
 #'
 #' @param input Shiny input
 #' @param output Shiny output
@@ -25,7 +25,7 @@ appServer <- function(input, output, session) {
   observe({
     # Attempt to load configuration file
     sysInfo <- Sys.info()
-    configFile <- mprcgenekeepr::getConfigFileName(sysInfo)[["configFile"]]
+    configFile <- nprcgenekeepr::getConfigFileName(sysInfo)[["configFile"]]
     if (!is.null(configFile) && file.exists(configFile)) {
       shared$config <- read.table(configFile,
                                   header = TRUE,

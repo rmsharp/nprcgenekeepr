@@ -17,8 +17,8 @@ pedigree.
 Get the maximum age of live animals in the pedigree.
 }
 \examples{
-library(mprcgenekeepr)
-examplePedigree <- mprcgenekeepr::examplePedigree
+library(nprcgenekeepr)
+examplePedigree <- nprcgenekeepr::examplePedigree
 ped <- qcStudbook(examplePedigree,
   minParentAge = 2,
   reportChanges = FALSE,

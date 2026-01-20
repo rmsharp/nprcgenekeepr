@@ -2,7 +2,7 @@
 #' individuals
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Filters a pedigree down to only the ancestors of the provided group,
 #' removing unnecessary individuals from the studbook. This version builds
 #' the pedigree back in time starting from a group of probands, then moves
@@ -30,8 +30,8 @@
 #' back single parents to the \code{p} dataframe.
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
-#' examplePedigree <- mprcgenekeepr::examplePedigree
+#' library(nprcgenekeepr)
+#' examplePedigree <- nprcgenekeepr::examplePedigree
 #' breederPed <- qcStudbook(examplePedigree,
 #'   minParentAge = 2,
 #'   reportChanges = FALSE,

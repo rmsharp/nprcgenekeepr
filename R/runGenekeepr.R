@@ -1,8 +1,8 @@
 #' Allows running \code{shiny} application with
-#' \code{mprcgenekeepr::runGeneKeepR()}
+#' \code{nprcgenekeepr::runGeneKeepR()}
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #'
 #' Run the GeneKeepR Shiny Application
 #'
@@ -11,7 +11,7 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' runGeneKeepR()
 #' }
 runGeneKeepR <- function(...) {
@@ -23,7 +23,7 @@ runGeneKeepR <- function(...) {
   requireNamespace("DT", quietly = TRUE)
 
   # Add resource paths if you have www directory
-  www_path <- system.file("www", package = "mprcgenekeepr")
+  www_path <- system.file("www", package = "nprcgenekeepr")
   if (dir.exists(www_path)) {
     shiny::addResourcePath("www", www_path)
   }

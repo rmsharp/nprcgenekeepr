@@ -1,7 +1,7 @@
 #' Returns \code{TRUE} if every member of the vector is \code{TRUE}.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Part of Relations
 #' @return \code{TRUE} if every member of the vector is \code{TRUE} else it
 #' returns \code{FALSE}.

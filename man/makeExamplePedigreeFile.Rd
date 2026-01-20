@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeExamplePedigreeFile.R
 \name{makeExamplePedigreeFile}
 \alias{makeExamplePedigreeFile}
-\title{Write copy of mprcgenekeepr::examplePedigree into a file}
+\title{Write copy of nprcgenekeepr::examplePedigree into a file}
 \usage{
 makeExamplePedigreeFile(
   file = file.path(tempdir(), "examplePedigree.csv"),
@@ -22,6 +22,6 @@ Full path name of file saved.
 Uses \code{examplePedigree} data structure to create an example data file
 }
 \examples{
-library(mprcgenekeepr)
+library(nprcgenekeepr)
 pedigreeFile <- makeExamplePedigreeFile()
 }

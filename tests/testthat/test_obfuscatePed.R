@@ -1,9 +1,9 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-# This file is part of mprcgenekeepr
+# This file is part of nprcgenekeepr
 library(testthat)
 
 test_that("obfuscatePed creates correctly obfuscated pedigree", {
-  pedSix <- qcStudbook(mprcgenekeepr::pedSix)
+  pedSix <- qcStudbook(nprcgenekeepr::pedSix)
   ped <- obfuscatePed(pedSix, size = 3L, maxDelta = 20L)
   expect_identical(nrow(ped), nrow(pedSix))
   expect_identical(ncol(ped), ncol(pedSix))
@@ -14,7 +14,7 @@ test_that("obfuscatePed creates correctly obfuscated pedigree", {
     ped$birth[!is.na(ped$birth)])) <= 20L)
 })
 test_that("obfuscatePed creates ID map on request", {
-  pedSix <- qcStudbook(mprcgenekeepr::pedSix)
+  pedSix <- qcStudbook(nprcgenekeepr::pedSix)
   ped <- obfuscatePed(pedSix, size = 3L, maxDelta = 20L, map = TRUE)
   expect_true(class(ped) == "list")
   expect_named(ped, c("ped", "map"))

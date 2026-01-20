@@ -14,7 +14,7 @@ smallPedTree
 Access it using the following commands.
 }
 \examples{
-library(mprcgenekeepr)
+library(nprcgenekeepr)
 data("smallPedTree")
 }
 \keyword{datasets}

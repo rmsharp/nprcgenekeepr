@@ -1,6 +1,6 @@
 #' Copyright(c) 2017-2023 R. Mark Sharp
-#' This file is part of mprcgenekeepr
-pedOne <- mprcgenekeepr::rhesusPedigree
+#' This file is part of nprcgenekeepr
+pedOne <- nprcgenekeepr::rhesusPedigree
 pedOne$id <- as.character(pedOne$id)
 pedOne$sire <- as.character(pedOne$sire)
 pedOne$dam <- as.character(pedOne$dam)

@@ -1,7 +1,7 @@
 #' Calculates the count of each allele in the provided vector.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Part of Genetic Value Analysis
 #'
 #'  If ids are provided, the function will only count the unique alleles
@@ -16,7 +16,7 @@
 #' in \code{alleles} belongs.
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' data("ped1Alleles")
 #' ids <- ped1Alleles$id
 #' alleles <- ped1Alleles[, !(names(ped1Alleles) %in% c("id", "parent"))]

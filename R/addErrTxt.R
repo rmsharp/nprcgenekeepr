@@ -1,9 +1,9 @@
-#' Concatenates any errors from mprcgenekeeprErr into narrative form
+#' Concatenates any errors from nprcgenekeeprErr into narrative form
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 
-#' @return Error from mprcgenekeepr
+#' @return Error from nprcgenekeepr
 #'
 #' @param txt character string with initial error description value
 #' @param err ve from errorLst

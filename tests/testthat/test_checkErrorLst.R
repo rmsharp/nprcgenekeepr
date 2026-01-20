@@ -1,8 +1,8 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
+#' This file is part of nprcgenekeepr
 library(lubridate)
 test_that("checkErrorLst sees errors when reported", {
-  errorLst <- qcStudbook(mprcgenekeepr::pedGood, reportErrors = TRUE)
+  errorLst <- qcStudbook(nprcgenekeepr::pedGood, reportErrors = TRUE)
   expect_false(checkErrorLst(errorLst))
 })
 test_that("checkErrorLst does not see errors when notreported", {
@@ -22,7 +22,7 @@ test_that("checkErrorLst does not see errors when notreported", {
   )
   errorLst <- qcStudbook(pedOne, reportErrors = TRUE)
   expect_true(checkErrorLst(errorLst))
-  errorLst <- qcStudbook(mprcgenekeepr::pedFemaleSireMaleDam,
+  errorLst <- qcStudbook(nprcgenekeepr::pedFemaleSireMaleDam,
     reportErrors = TRUE
   )
   expect_true(checkErrorLst(errorLst))

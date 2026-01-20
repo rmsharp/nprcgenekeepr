@@ -1,7 +1,7 @@
 #' Creates a pyramid plot of the pedigree provided.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' The pedigree provided must have columns: \code{sex} and either \code{age}
 #' or \code{birth} (with optional \code{exit} or \code{exit_date}).
 #' If \code{age} is not present, it will be calculated from \code{birth}.
@@ -24,7 +24,7 @@
 #' @importFrom withr with_par
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' data(qcPed)
 #' getPyramidPlot(qcPed)
 #' getPyramidPlot(qcPed, binWidth = 5, colorScheme = "viridis")

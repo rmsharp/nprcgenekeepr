@@ -39,7 +39,7 @@ or \code{birth} (with optional \code{exit} or \code{exit_date}).
 If \code{age} is not present, it will be calculated from \code{birth}.
 }
 \examples{
-library(mprcgenekeepr)
+library(nprcgenekeepr)
 data(qcPed)
 getPyramidPlot(qcPed)
 getPyramidPlot(qcPed, binWidth = 5, colorScheme = "viridis")

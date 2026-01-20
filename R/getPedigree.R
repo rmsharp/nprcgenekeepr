@@ -1,7 +1,7 @@
 #' Get pedigree from file
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #'
 #' @return A pedigree file compatible with others in this package.
 #'
@@ -12,20 +12,20 @@
 #' @importFrom utils read.table
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' ped <- getPedigree(fileName = system.file("testdata", "qcPed.csv",
-#'   package = "mprcgenekeepr"
+#'   package = "nprcgenekeepr"
 #' ))
 getPedigree <- function(fileName, sep = ",") {
   flog.debug(paste0("in getPedigree\n"),
-    name = "mprcgenekeepr"
+    name = "nprcgenekeepr"
   )
   if (excel_format(fileName) %in% c("xls", "xlsx")) {
     pedigree <- readExcelPOSIXToCharacter(fileName)
     flog.debug(paste0(
       "in getPedigree after readxl, nrow(pedigree) = ",
       nrow(pedigree), "\n"
-    ), name = "mprcgenekeepr")
+    ), name = "nprcgenekeepr")
   } else {
     pedigree <- read.table(fileName,
       header = TRUE,
@@ -37,7 +37,7 @@ getPedigree <- function(fileName, sep = ",") {
     flog.debug(paste0(
       "in getPedigree after read.csv, nrow(pedigree) = ",
       nrow(pedigree), "\n"
-    ), name = "mprcgenekeepr")
+    ), name = "nprcgenekeepr")
   }
   pedigree
 }

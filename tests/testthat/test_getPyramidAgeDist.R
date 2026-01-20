@@ -1,10 +1,10 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
+#' This file is part of nprcgenekeepr
 library(testthat)
 library(lubridate)
 library(stringi)
 
-qcPed <- mprcgenekeepr::qcPed
+qcPed <- nprcgenekeepr::qcPed
 ped <- qcPed[, c("id", "sire", "dam", "sex", "birth", "exit")]
 ped <- getPyramidAgeDist(ped)
 test_that("getPyramidAgeDist classifies and ages animals correctly", {

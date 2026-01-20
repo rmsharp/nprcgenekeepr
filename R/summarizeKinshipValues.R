@@ -21,7 +21,7 @@
 #' @importFrom stats fivenum sd
 #' @export
 #' @examples
-#' ped <- mprcgenekeepr::smallPed
+#' ped <- nprcgenekeepr::smallPed
 #' simParent_1 <- list(
 #'   id = "A",
 #'   sires = c("s1_1", "s1_2", "s1_3"),

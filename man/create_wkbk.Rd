@@ -24,7 +24,7 @@ occurred.
 Creates an Excel workbook with worksheets.
 }
 \examples{
-library(mprcgenekeepr)
+library(nprcgenekeepr)
 
 make_df_list <- function(size) {
   df_list <- list(size)

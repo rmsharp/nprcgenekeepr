@@ -1,7 +1,7 @@
 #' checkErrorLst examines list for non-empty fields
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #'
 #' @return Returns FALSE if all fields are empty or the list is NULL
 #' else the entire list is returned.
@@ -10,7 +10,7 @@
 #' \code{qcStudbook}.
 #' @export
 #' @examples
-#' errorLst <- qcStudbook(mprcgenekeepr::pedFemaleSireMaleDam,
+#' errorLst <- qcStudbook(nprcgenekeepr::pedFemaleSireMaleDam,
 #'   reportErrors = TRUE
 #' )
 #' checkErrorLst(errorLst)

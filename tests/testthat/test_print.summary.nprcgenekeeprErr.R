@@ -1,5 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-# This file is part of mprcgenekeepr
+# This file is part of nprcgenekeepr
 library(testthat)
 library(lubridate)
 
@@ -19,7 +19,7 @@ pedOne <- data.frame(
   ),
   stringsAsFactors = FALSE, check.names = FALSE
 )
-test_that("print.summary.mprcgenekeeprErr prints expected output", {
+test_that("print.summary.nprcgenekeeprErr prints expected output", {
   pedClean <- qcStudbook(pedOne, minParentAge = NULL)
   expect_success(expect_output(summary(qcStudbook(
     pedClean,

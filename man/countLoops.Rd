@@ -37,8 +37,8 @@ Uses the \code{loops} data structure and the list of all ancestors for
 each individual to calculate the number of loops for each individual.
 }
 \examples{
-library(mprcgenekeepr)
-examplePedigree <- mprcgenekeepr::examplePedigree
+library(nprcgenekeepr)
+examplePedigree <- nprcgenekeepr::examplePedigree
 exampleTree <- createPedTree(examplePedigree)
 exampleLoops <- findLoops(exampleTree)
 ## You can count how many animals are in loops with the following code.

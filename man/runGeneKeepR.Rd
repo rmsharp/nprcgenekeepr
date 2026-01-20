@@ -3,7 +3,7 @@
 \name{runGeneKeepR}
 \alias{runGeneKeepR}
 \title{Allows running \code{shiny} application with
-\code{mprcgenekeepr::runGeneKeepR()}}
+\code{nprcgenekeepr::runGeneKeepR()}}
 \usage{
 runGeneKeepR(...)
 }
@@ -15,7 +15,7 @@ Run the GeneKeepR Shiny Application
 }
 \examples{
 \dontrun{
-library(mprcgenekeepr)
+library(nprcgenekeepr)
 runGeneKeepR()
 }
 }

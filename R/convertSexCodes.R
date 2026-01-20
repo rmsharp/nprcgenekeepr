@@ -1,7 +1,7 @@
 #' Converts sex indicator for an individual to a standardized codes.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Part of Pedigree Curation
 #'
 #'
@@ -22,7 +22,7 @@
 #' treated as unknown sex ("U"), default is \code{TRUE}.
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' original <- c(
 #'   "m", "male", "1", "MALE", "M", "F", "f", "female",
 #'   "FemAle", "U", "Unknown", "H", "hermaphrodite",

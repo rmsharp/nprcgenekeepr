@@ -2,7 +2,7 @@
 #' a list made up of the elements of the character vector argument.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #'
 #' @return A character vector of length one containing the a single correctly
 #' punctuated character string that list each element in the first arguments

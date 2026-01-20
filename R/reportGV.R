@@ -1,7 +1,7 @@
 #' Generates a genetic value report for a provided pedigree.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' This is the main function for the Genetic Value Analysis.
 #'
 #' @return A dataframe with the genetic value report. Animals are ranked
@@ -25,8 +25,8 @@
 #' \code{shiny::Progress} object.
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
-#' examplePedigree <- mprcgenekeepr::examplePedigree
+#' library(nprcgenekeepr)
+#' examplePedigree <- nprcgenekeepr::examplePedigree
 #' breederPed <- qcStudbook(examplePedigree,
 #'   minParentAge = 2,
 #'   reportChanges = FALSE,
@@ -154,7 +154,7 @@ reportGV <- function(ped, guIter = 5000L, guThresh = 1L, pop = NULL,
     nFemaleFounders = nrow(females),
     total = (nrow(males) + nrow(females))
   )
-  class(finalData) <- append(class(finalData), "mprcgenekeeprGV")
+  class(finalData) <- append(class(finalData), "nprcgenekeeprGV")
 
   return(finalData)
 }

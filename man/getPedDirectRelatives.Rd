@@ -26,7 +26,7 @@ Gets direct ancestors from labkey \code{study} schema and \code{demographics}
 table.
 }
 \examples{
-library(mprcgenekeepr)
+library(nprcgenekeepr)
 ## Have to a vector of focal animals
 focalAnimals <- c("1X2701", "1X0101")
 suppressWarnings(getLkDirectRelatives(ids = focalAnimals))

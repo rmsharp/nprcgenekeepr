@@ -1,7 +1,7 @@
 #' Get Indian-origin status of group
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' @return A list with a list named \code{ancestry} having named integer values
 #'         corresponding to the origin types and the count of each type
 #'         found in the function argument \code{origin}, the \code{color}

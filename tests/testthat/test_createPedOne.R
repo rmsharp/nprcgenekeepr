@@ -1,5 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
+#' This file is part of nprcgenekeepr
 pedOne <- createPedOne(savePed = FALSE)
 test_that("createPedOne makes the right pedigree", {
   expect_identical(nrow(pedOne), 8L)

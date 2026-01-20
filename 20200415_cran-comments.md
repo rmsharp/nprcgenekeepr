@@ -12,7 +12,7 @@ This is a resubmission. In this version I have:
      using a path provided by tempdir()
 *    Major changes
      -   Changed the name of the package from **nprcmanager** to 
-         **mprcgenekeepr**
+         **nprcgenekeepr**
      -   Added ability to export figures
 *    Minor changes
      -   Made changes to allow a clean build and check --as-cran under R 4.0.0

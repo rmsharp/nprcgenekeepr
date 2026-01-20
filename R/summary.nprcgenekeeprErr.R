@@ -1,27 +1,27 @@
-#' summary.mprcgenekeeprErr Summary function for class mprcgenekeeprErr
+#' summary.nprcgenekeeprErr Summary function for class nprcgenekeeprErr
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #'
-#' @return Object of class summary.mprcgenekeeprErr
+#' @return Object of class summary.nprcgenekeeprErr
 #'
 #' @rdname summary
-#' @method summary mprcgenekeeprErr
-#' @param object object of class mprcgenekeeprErr and class list
+#' @method summary nprcgenekeeprErr
+#' @param object object of class nprcgenekeeprErr and class list
 #' @param ... additional arguments for the \code{summary.default} statement
 #' @importFrom stringi stri_c stri_length
 ## ##  rmsutilityr get_and_or_list
 #' @export
 #' @examples
-#' errorList <- qcStudbook(mprcgenekeepr::pedOne,
+#' errorList <- qcStudbook(nprcgenekeepr::pedOne,
 #'   minParentAge = 0,
 #'   reportChanges = TRUE,
 #'   reportErrors = TRUE
 #' )
 #' summary(errorList)
-summary.mprcgenekeeprErr <- function(object, ...) {
+summary.nprcgenekeeprErr <- function(object, ...) {
   errorLst <- object
-  stopifnot(inherits(errorLst, "mprcgenekeeprErr"))
+  stopifnot(inherits(errorLst, "nprcgenekeeprErr"))
   txt <- ""
   txt <- addErrTxt(
     txt,
@@ -154,16 +154,16 @@ summary.mprcgenekeeprErr <- function(object, ...) {
   }
   txt <- list(txt = txt, sp = errorLst$suspiciousParents)
 
-  class(txt) <- "summary.mprcgenekeeprErr"
+  class(txt) <- "summary.nprcgenekeeprErr"
   txt
 }
 #' @rdname summary
-#' @return object of class summary.mprcgenekeeprGV
-#' @method summary mprcgenekeeprGV
+#' @return object of class summary.nprcgenekeeprGV
+#' @method summary nprcgenekeeprGV
 #' @importFrom stringi stri_c
 #' @export
 #' @examples
-#' examplePedigree <- mprcgenekeepr::examplePedigree
+#' examplePedigree <- nprcgenekeepr::examplePedigree
 #' breederPed <- qcStudbook(examplePedigree,
 #'   minParentAge = 2L,
 #'   reportChanges = FALSE,
@@ -193,9 +193,9 @@ summary.mprcgenekeeprErr <- function(object, ...) {
 #' )
 #' summary(geneticValue)
 #' summary(trimmedGeneticValue)
-summary.mprcgenekeeprGV <- function(object, ...) {
+summary.nprcgenekeeprGV <- function(object, ...) {
   gvReport <- object
-  stopifnot(inherits(gvReport, "mprcgenekeeprGV"))
+  stopifnot(inherits(gvReport, "nprcgenekeeprGV"))
   rpt <- gvReport[["report"]]
   # Not currently including kmat; may add later
   kmat <- gvReport[["kinship"]] # nolint: object_usage_linter
@@ -233,6 +233,6 @@ summary.mprcgenekeeprGV <- function(object, ...) {
       "Low Value Individuals: ",
       nrow(rpt[rpt$value == "Low Value", ])
     ))
-  class(txt) <- "summary.mprcgenekeeprGV"
+  class(txt) <- "summary.nprcgenekeeprGV"
   txt
 }

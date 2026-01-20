@@ -1,7 +1,7 @@
 #' Remove group numbers when all available animals have been used
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #'
 #' @return The \code{grpNum} list after removing any list element corresponding
 #' to a group with no available animals left using in filling a group.

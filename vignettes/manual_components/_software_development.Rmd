@@ -16,9 +16,9 @@ vignette: >
 ## Software Issues
 
 Our goal is to use current R software development practices in an open software
-environment. Users can see all of the code at [github.com/rmsharp/mprcgenekeepr](https://github.com/rmsharp/mprcgenekeepr)
+environment. Users can see all of the code at [github.com/rmsharp/nprcgenekeepr](https://github.com/rmsharp/nprcgenekeepr)
 and can submit suggestions and bug reports on our issue tracker at 
-[github.com/rmsharp/mprcgenekeepr/issues](https://github.com/rmsharp/mprcgenekeepr/issues).
+[github.com/rmsharp/nprcgenekeepr/issues](https://github.com/rmsharp/nprcgenekeepr/issues).
 
 ### CICD Pipeline Use
 
@@ -28,7 +28,7 @@ are not stable or complete, it is uncommon for the application not to run
 and perform functions that were working before. However, make sure the 
 build was passing by looking for a green _R-CMD-check.yaml Passing_ badge at
 the top of the README file at
-[https://github.com/rmsharp/mprcgenekeepr/](https://github.com/rmsharp/mprcgenekeepr/).
+[https://github.com/rmsharp/nprcgenekeepr/](https://github.com/rmsharp/nprcgenekeepr/).
 
 ### Debug Logging  
 
@@ -37,7 +37,7 @@ package **futile.logger**. Note the checkbox at the
 bottom of the side panel on the _Input_ tab.
 When the _Debug on_ checkbox is checked (it is not checked by default), 
 the application writes to a file named 
-_mprcgenekeepr.log_ in the users home directory. 
+_nprcgenekeepr.log_ in the users home directory. 
 Currently, events occurring the the 
 _server.R_ file are logged as that is where most errors are exposed. 
 

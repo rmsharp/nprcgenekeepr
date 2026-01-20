@@ -1,7 +1,7 @@
 #' Population designation function
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Part of the pedigree filtering toolset.
 #'
 #' @return An updated pedigree with the \code{population} column added or
@@ -14,7 +14,7 @@
 #' under consideration.
 #' @export
 #' @examples
-#' examplePedigree <- mprcgenekeepr::examplePedigree
+#' examplePedigree <- nprcgenekeepr::examplePedigree
 #' breederPed <- qcStudbook(examplePedigree,
 #'   minParentAge = 2,
 #'   reportChanges = FALSE,

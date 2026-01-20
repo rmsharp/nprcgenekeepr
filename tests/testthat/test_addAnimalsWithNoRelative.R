@@ -1,7 +1,7 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
+#' This file is part of nprcgenekeepr
 library(testthat)
-examplePedigree <- mprcgenekeepr::examplePedigree
+examplePedigree <- nprcgenekeepr::examplePedigree
 ped <- qcStudbook(examplePedigree,
   minParentAge = 2L, reportChanges = FALSE,
   reportErrors = FALSE

@@ -34,8 +34,8 @@ in the original \code{sb} dataframe with the following added columns:
 Ensure parents are sufficiently older than offspring
 }
 \examples{
-library(mprcgenekeepr)
-qcPed <- mprcgenekeepr::qcPed
+library(nprcgenekeepr)
+qcPed <- nprcgenekeepr::qcPed
 checkParentAge(qcPed, minParentAge = 2L)
 checkParentAge(qcPed, minParentAge = 3L)
 checkParentAge(qcPed, minParentAge = 5L)

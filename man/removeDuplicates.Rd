@@ -26,7 +26,7 @@ Returns an updated dataframe with duplicate rows removed.
 Returns an error if the table has duplicate IDs with differing data.
 }
 \examples{
-ped <- mprcgenekeepr::smallPed
+ped <- nprcgenekeepr::smallPed
 newPed <- cbind(ped, recordStatus = rep("original", nrow(ped)))
 ped1 <- removeDuplicates(newPed)
 nrow(newPed)

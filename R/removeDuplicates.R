@@ -1,7 +1,7 @@
 #' Remove duplicate records from pedigree
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Part of Pedigree Curation
 #'
 #' Returns an updated dataframe with duplicate rows removed.
@@ -17,7 +17,7 @@
 #' list of list where each sublist is a type of error found.
 #' @export
 #' @examples
-#' ped <- mprcgenekeepr::smallPed
+#' ped <- nprcgenekeepr::smallPed
 #' newPed <- cbind(ped, recordStatus = rep("original", nrow(ped)))
 #' ped1 <- removeDuplicates(newPed)
 #' nrow(newPed)

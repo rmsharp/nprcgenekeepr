@@ -1,7 +1,7 @@
 #' Converts status indicators to a Standardized code
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Part of Pedigree Curation
 #'
 #' @return A factor vector of the standardized status codes with levels:
@@ -11,7 +11,7 @@
 #' status as alive, dead, sold, etc.
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' original <- c(
 #'   "A", "alive", "Alive", "1", "S", "Sale", "sold", "shipped",
 #'   "D", "d", "dead", "died", "deceased", "2",

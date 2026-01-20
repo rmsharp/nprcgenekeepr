@@ -34,8 +34,8 @@
 #' @importFrom data.table as.data.table
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
-#' ped <- mprcgenekeepr::smallPed
+#' library(nprcgenekeepr)
+#' ped <- nprcgenekeepr::smallPed
 #' simParent_1 <- list(
 #'   id = "A",
 #'   sires = c("s1_1", "s1_2", "s1_3"),

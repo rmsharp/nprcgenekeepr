@@ -26,8 +26,8 @@ Filters kinship values less than the specified threshold from a long-format
 table of kinship values.
 }
 \examples{
-library(mprcgenekeepr)
-ped <- mprcgenekeepr::lacy1989Ped
+library(nprcgenekeepr)
+ped <- nprcgenekeepr::lacy1989Ped
 ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
 kin <- kinMatrix2LongForm(kmat, removeDups = FALSE)

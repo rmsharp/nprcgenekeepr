@@ -1,8 +1,8 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-# This file is part of mprcgenekeepr
+# This file is part of nprcgenekeepr
 library(testthat)
 library(stringi)
-ped <- mprcgenekeepr::smallPed
+ped <- nprcgenekeepr::smallPed
 newPed <- cbind(ped,
   recordStatus = rep("original", nrow(ped)),
   stringsAsFactors = FALSE

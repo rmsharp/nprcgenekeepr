@@ -1,7 +1,7 @@
 #' Forms breeding group(s) with an effort to match a specified sex ratio
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' @description The sex ratio is the ratio of females to males.
 #'
 #' @return A list containing one character vector of animal IDs such that the
@@ -26,8 +26,8 @@
 #' from 0.5 to 20 by increments of 0.5.
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
-#' examplePedigree <- mprcgenekeepr::examplePedigree
+#' library(nprcgenekeepr)
+#' examplePedigree <- nprcgenekeepr::examplePedigree
 #' examplePedigree <- examplePedigree[1:300, ] # Comment out for full example
 #' ped <- qcStudbook(examplePedigree,
 #'   minParentAge = 2L, reportChanges = FALSE,
@@ -57,7 +57,7 @@
 #' harem <- FALSE
 #' sexRatio <- 0.0
 #' withKin <- FALSE
-#' groupMembers <- mprcgenekeepr::makeGroupMembers(numGp,
+#' groupMembers <- nprcgenekeepr::makeGroupMembers(numGp,
 #'   currentGroups,
 #'   candidates,
 #'   ped,
@@ -65,7 +65,7 @@
 #'   minAge = minAge
 #' )
 #' groupMembersStart <- groupMembers
-#' grpNum <- mprcgenekeepr::makeGrpNum(numGp)
+#' grpNum <- nprcgenekeepr::makeGrpNum(numGp)
 #'
 #' groupMembers <- fillGroupMembersWithSexRatio(
 #'   candidates, groupMembers, grpNum, kin, ped, minAge, numGp,

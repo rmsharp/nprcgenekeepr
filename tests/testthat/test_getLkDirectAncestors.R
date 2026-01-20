@@ -1,7 +1,7 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
+#' This file is part of nprcgenekeepr
 
-test_that("getLkDirectAncestors throws an error with no mprcgenekeepr
+test_that("getLkDirectAncestors throws an error with no nprcgenekeepr
           configuration file", {
   expect_warning(
     getLkDirectAncestors(),

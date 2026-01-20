@@ -1,26 +1,26 @@
-#' print.summary.mprcgenekeepr print.summary.mprcgenekeeprGV
+#' print.summary.nprcgenekeepr print.summary.nprcgenekeeprGV
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #'
 #' @return An object to send to the generic print function
 #'
 #' @rdname print
-#' @method print summary.mprcgenekeeprErr
-#' @param x object of class summary.mprcgenekeeprErr and class list
+#' @method print summary.nprcgenekeeprErr
+#' @param x object of class summary.nprcgenekeeprErr and class list
 #' @param ... additional arguments for the \code{summary.default} statement
 #' @importFrom stringi stri_c
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
-#' errorLst <- qcStudbook(mprcgenekeepr::pedInvalidDates,
+#' library(nprcgenekeepr)
+#' errorLst <- qcStudbook(nprcgenekeepr::pedInvalidDates,
 #'   reportChanges = TRUE, reportErrors = TRUE
 #' )
 #' summary(errorLst)
-print.summary.mprcgenekeeprErr <- function(x, ...) {
+print.summary.nprcgenekeeprErr <- function(x, ...) {
   cl <- oldClass(x)
   txt <- x
-  # cat("This is a summary printout from mprcgenekeepr\n\n")
+  # cat("This is a summary printout from nprcgenekeepr\n\n")
   for (x in txt$txt) {
     cat(x, "\n")
   }
@@ -32,26 +32,26 @@ print.summary.mprcgenekeeprErr <- function(x, ...) {
     ))
     print(txt$sp, digits = 2L, row.names = TRUE, ...)
   }
-  oldClass(txt) <- cl[cl != "mprcgenekeeprErr"]
+  oldClass(txt) <- cl[cl != "nprcgenekeeprErr"]
   # NextMethod("print")
   invisible(txt)
 }
 #' @rdname print
 #' @return object to send to generic print function
-#' @method print summary.mprcgenekeeprGV
+#' @method print summary.nprcgenekeeprGV
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
-#' ped <- mprcgenekeepr::pedGood
+#' library(nprcgenekeepr)
+#' ped <- nprcgenekeepr::pedGood
 #' ped <- suppressWarnings(qcStudbook(ped, reportErrors = FALSE))
 #' summary(reportGV(ped, guIter = 10))
-print.summary.mprcgenekeeprGV <- function(x, ...) {
+print.summary.nprcgenekeeprGV <- function(x, ...) {
   cl <- oldClass(x)
-  # cat("This is a summary printout from mprcgenekeeprGV\n\n")
+  # cat("This is a summary printout from nprcgenekeeprGV\n\n")
   for (line in x) {
     cat(line, "\n")
   }
-  oldClass(x) <- cl[cl != "mprcgenekeeprGV"]
+  oldClass(x) <- cl[cl != "nprcgenekeeprGV"]
   # NextMethod("print")
   invisible(x)
 }

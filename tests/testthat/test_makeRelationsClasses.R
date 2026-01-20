@@ -1,9 +1,9 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-# This file is part of mprcgenekeepr
+# This file is part of nprcgenekeepr
 library(testthat)
 suppressMessages(library(dplyr))
 
-qcPed <- mprcgenekeepr::qcPed
+qcPed <- nprcgenekeepr::qcPed
 bkmat <- kinship(qcPed$id, qcPed$sire, qcPed$dam, qcPed$gen,
   sparse = FALSE
 )

@@ -1,7 +1,7 @@
 #' Convert internal column names to display or header names.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Converts the column names of a Pedigree or Genetic value Report to
 #' something more descriptive.
 #'
@@ -10,7 +10,7 @@
 #' @param headers a character vector of column (header) names
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' headerDisplayNames(headers = c("id", "sire", "dam", "sex", "birth", "age"))
 headerDisplayNames <- function(headers) {
   nameConversion <- c(

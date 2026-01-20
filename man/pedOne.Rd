@@ -15,7 +15,7 @@ pedOne
 This is used for testing and demonstration.
 }
 \examples{
-library(mprcgenekeepr)
+library(nprcgenekeepr)
 data("pedOne")
 head(pedOne)
 }

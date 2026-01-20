@@ -21,7 +21,7 @@ This is not robust as it fails if all IDs are found not within \code{map}.
 }
 \examples{
 set_seed(1)
-ped <- qcStudbook(mprcgenekeepr::pedSix)
+ped <- qcStudbook(nprcgenekeepr::pedSix)
 obfuscated <- obfuscatePed(ped, map = TRUE)
 someIds <- c("s1", "s2", "d1", "d1")
 mapIdsToObfuscated(someIds, obfuscated$map)

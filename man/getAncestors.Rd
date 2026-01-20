@@ -30,8 +30,8 @@ amount of time required to perform calculations with
 SIMWALK2 or similar programs.
 }
 \examples{
-library(mprcgenekeepr)
-ped <- mprcgenekeepr::qcPed
+library(nprcgenekeepr)
+ped <- nprcgenekeepr::qcPed
 ped <- qcStudbook(ped, minParentAge = 0)
 pedTree <- createPedTree(ped)
 pedLoops <- findLoops(pedTree)

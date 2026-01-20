@@ -1,7 +1,7 @@
 #' Choose date based on \code{earlier} flag.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Part of Pedigree Curation
 #'
 #' Given two dates, one is selected to be returned based on whether
@@ -18,7 +18,7 @@
 #' \code{TRUE}.
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' someDates <- lubridate::mdy(paste0(
 #'   sample(1:12, 2, replace = TRUE), "-",
 #'   sample(1:28, 2, replace = TRUE), "-",

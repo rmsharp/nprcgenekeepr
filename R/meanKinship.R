@@ -1,7 +1,7 @@
 #' Calculates the mean kinship for each animal in a kinship matrix
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Part of Genetic Value Analysis
 #'
 #' The mean kinship of animal \emph{i} is \deqn{MK_i = \Sigma f_ij / N},
@@ -15,8 +15,8 @@
 #' Animal IDs are the row and column names.
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
-#' ped <- mprcgenekeepr::qcPed
+#' library(nprcgenekeepr)
+#' ped <- nprcgenekeepr::qcPed
 #' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
 #' head(meanKinship(kmat))
 meanKinship <- function(kmat) {

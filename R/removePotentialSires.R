@@ -1,7 +1,7 @@
 #' Removes potential sires from list of Ids
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #'
 #' @return character vector of Ids with any potential sire Ids removed.
 #'
@@ -13,9 +13,9 @@
 #' information including the IDs listed in \code{candidates}.
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
-#' qcBreeders <- mprcgenekeepr::qcBreeders
-#' pedWithGenotype <- mprcgenekeepr::pedWithGenotype
+#' library(nprcgenekeepr)
+#' qcBreeders <- nprcgenekeepr::qcBreeders
+#' pedWithGenotype <- nprcgenekeepr::pedWithGenotype
 #' noSires <- removePotentialSires(
 #'   ids = qcBreeders, minAge = 2,
 #'   ped = pedWithGenotype

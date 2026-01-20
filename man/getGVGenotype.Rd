@@ -21,8 +21,8 @@ Extracts genotype data if available otherwise NULL is returned.
 }
 \examples{
 ## We usually defined `n` to be >= 5000
-library(mprcgenekeepr)
-ped <- mprcgenekeepr::lacy1989Ped
+library(nprcgenekeepr)
+ped <- nprcgenekeepr::lacy1989Ped
 allelesNew <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,
   genotype = NULL, n = 50, updateProgress = NULL
 )

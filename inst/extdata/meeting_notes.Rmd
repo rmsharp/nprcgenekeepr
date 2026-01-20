@@ -11,7 +11,7 @@ library(knitr)
 library(kableExtra)
 library(stringi)
 library(rmsutilityr)
-library(mprcgenekeepr)
+library(nprcgenekeepr)
 library(stringi)
 # nolint end undesirable_function_linter
 knitr::opts_chunk$set(echo = TRUE)
@@ -20,7 +20,7 @@ Provided in reverse chronological order
 
 ## 20201130
 1.   Mark met with Amanda to discuss the parent exclusion project and to 
-     discuss writing of a paper about mprcgenekeepr. 
+     discuss writing of a paper about nprcgenekeepr. 
      a.   The possible journals she thought of are listed below.
           1. ILAR
           1. Molecular Ecology
@@ -44,7 +44,7 @@ Provided in reverse chronological order
      1.  Parent exclusion software
          1.  Nearly done with conversion of Java scripts to R
          1.  Plan to make standalone Shiny Application
-         1.  May integrate into `mprcgenekeepr`
+         1.  May integrate into `nprcgenekeepr`
      1.  Possible long term plan is to provide predictive modeling of breeding
          strategies via simulation.
      1.  Obtained requests from users
@@ -116,7 +116,7 @@ threshold of 10 minutes. This can for example be achieved by:
         -  createExampleFiles.Rd: \arguments,  \value
         -  ...
     1.  You have examples for unexported functions which cannot run in this way.
-        Please either add mprcgenekeepr::: to the function calls in the 
+        Please either add nprcgenekeepr::: to the function calls in the 
         examples, omit these examples or export these functions.
     1.  Please fix and resubmit, and document what was changed in the 
         submission comments.
@@ -160,7 +160,7 @@ threshold of 10 minutes. This can for example be achieved by:
 
 
 ## 20200106 
-1.  Mark will convert nprcmanager to mprcgenekeepr before any other changes.
+1.  Mark will convert nprcmanager to nprcgenekeepr before any other changes.
 1.  Amanda will provide notes for the Shiny application tutorial with the 
     following goals.
     a.  Address the specific needs of consortium members.
@@ -233,11 +233,11 @@ if (Sys.Date() > "2020-08-01") {
 
 originalFiles <- file.path(
   "/Users", "rmsharp", "Documents", "Projects", "Active_Projects",
-  "mprcgenekeepr_project", "20160816_GeneticManagementTools"
+  "nprcgenekeepr_project", "20160816_GeneticManagementTools"
 )
-functions <- file.path(path, "mprcgenekeepr", "R")
-tests <- file.path(path, "mprcgenekeepr", "tests", "testthat")
-ui <- file.path(path, "mprcgenekeepr", "inst", "application")
+functions <- file.path(path, "nprcgenekeepr", "R")
+tests <- file.path(path, "nprcgenekeepr", "tests", "testthat")
+ui <- file.path(path, "nprcgenekeepr", "inst", "application")
 
 paths <- c(
   originalFiles = originalFiles,

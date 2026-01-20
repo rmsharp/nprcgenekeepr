@@ -1,5 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
+#' This file is part of nprcgenekeepr
 library(stringi)
 test_that("getSiteInfo at least returns the right elements", {
   expect_equal(
@@ -22,12 +22,12 @@ test_that("getSiteInfo handled Windows and non-windows opperating systems", {
     )
     expect_equal(
       siteInfo$configFile,
-      file.path(Sys.getenv("HOME"), "_mprcgenekeepr_config")
+      file.path(Sys.getenv("HOME"), "_nprcgenekeepr_config")
     )
   } else {
     expect_equal(siteInfo$homeDir, Sys.getenv("HOME"))
     expect_equal(siteInfo$configFile, file.path(Sys.getenv("HOME"),
-                                                ".mprcgenekeepr_config"))
+                                                ".nprcgenekeepr_config"))
   }
 })
 test_that("getSiteInfo handle expectConfigFile parameter", {

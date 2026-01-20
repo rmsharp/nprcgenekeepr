@@ -1,7 +1,7 @@
 #' dataframe2string converts a data.frame object to a character vector
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Adapted from print.data.frame
 #'
 #' @return A character vector representation of the data.frame provided to the
@@ -17,8 +17,8 @@
 #' @importFrom stringi stri_pad_both
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
-#' dataframe2string(mprcgenekeepr::pedOne)
+#' library(nprcgenekeepr)
+#' dataframe2string(nprcgenekeepr::pedOne)
 dataframe2string <- function(object, ..., digits = NULL, addRowNames = TRUE) {
   nRows <- length(row.names(object))
   if (length(object) == 0L) {

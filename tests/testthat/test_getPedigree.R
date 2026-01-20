@@ -1,5 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
+#' This file is part of nprcgenekeepr
 
 test_that("getPedigree recognizes no file and wrong file arguments", {
   expect_error(getPedigree(), "\"fileName\" is missing, with no default")
@@ -7,7 +7,7 @@ test_that("getPedigree recognizes no file and wrong file arguments", {
 test_that("getPedigree recognizes and opens Excel files.", {
   pedExcel <- suppressWarnings(
     getPedigree(fileName = system.file("testdata", "qcPed.xlsx",
-      package = "mprcgenekeepr"
+      package = "nprcgenekeepr"
     ))
   )
   expect_identical(nrow(pedExcel), 280L)
@@ -20,7 +20,7 @@ test_that(
   {
     pedCsv <-
       getPedigree(fileName = system.file("testdata", "qcPed.csv",
-        package = "mprcgenekeepr"
+        package = "nprcgenekeepr"
       ))
     expect_identical(nrow(pedCsv), 280L)
   }
@@ -35,7 +35,7 @@ test_that(
       getPedigree(
         fileName = system.file("testdata",
           "qcPed.csv",
-          package = "mprcgenekeepr"
+          package = "nprcgenekeepr"
         ),
         sep = ","
       )
@@ -51,7 +51,7 @@ test_that(
     pedTxt <-
       getPedigree(
         fileName = system.file("testdata", "qcPed.txt",
-          package = "mprcgenekeepr"
+          package = "nprcgenekeepr"
         ),
         sep = "\t"
       )

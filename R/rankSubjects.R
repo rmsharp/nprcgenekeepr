@@ -1,7 +1,7 @@
 #' Ranks animals based on genetic value.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Part of Genetic Value Analysis
 #' Adds a column to \code{rpt} containing integers from 1 to nrow, and provides
 #' a value designation for each animal of "high value" or "low value"
@@ -15,9 +15,9 @@
 #'
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
-#' finalRpt <- mprcgenekeepr::finalRpt
-#' rpt <- rankSubjects(mprcgenekeepr::finalRpt)
+#' library(nprcgenekeepr)
+#' finalRpt <- nprcgenekeepr::finalRpt
+#' rpt <- rankSubjects(nprcgenekeepr::finalRpt)
 #' rpt[["highGu"]][1, "value"]
 #' rpt[["highGu"]][1, "rank"]
 #' rpt[["lowMk"]][1, "value"]

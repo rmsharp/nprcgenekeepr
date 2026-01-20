@@ -12,7 +12,7 @@
 #' @export
 #'
 #' @examples
-#' examplePedigree <- mprcgenekeepr::examplePedigree
+#' examplePedigree <- nprcgenekeepr::examplePedigree
 #' length(examplePedigree$id)
 #' ped <- removeAutoGenIds(examplePedigree)
 #' length(ped$id)

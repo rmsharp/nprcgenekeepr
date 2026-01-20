@@ -1,5 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
+#' This file is part of nprcgenekeepr
 library(testthat)
 original <- c(
   "m", "male", "1", "MALE", "M", "F", "f", "female", "FemAle", "U",
