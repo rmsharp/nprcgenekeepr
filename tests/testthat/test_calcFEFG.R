@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of mprcgenekeepr
-context("calcFEFG")
 
 data(lacy1989Ped)
 data(lacy1989PedAlleles)

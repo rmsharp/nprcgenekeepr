@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2023 R. Mark Sharp
 #' This file is part of mprcgenekeepr
-context("getPotentialPartents")
 pedOne <- mprcgenekeepr::rhesusPedigree
 pedOne$id <- as.character(pedOne$id)
 pedOne$sire <- as.character(pedOne$sire)

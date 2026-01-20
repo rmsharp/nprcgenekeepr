@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 # This file is part of mprcgenekeepr
-context("kinMatrix2LongForm")
 library(testthat)
 
 ped <- mprcgenekeepr::lacy1989Ped

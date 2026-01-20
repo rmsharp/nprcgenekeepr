@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 # This file is part of mprcgenekeepr
-context("test_is_valid_date_str")
 library(testthat)
 
 dates <- c(

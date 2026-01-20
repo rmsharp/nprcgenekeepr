@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of mprcgenekeepr
-context("fillGroupMembersWithSexRatio")
 
 test_that(
   "fillGroupMembersWithSexRatio adds animals in the specified sex ratio",
@@ -54,7 +53,7 @@ test_that(
         sexRatio = 1.0
       )
       expect_equal(calculateSexRatio(groupMembers[[1]], ped), 1.0,
-        tolerance = .1, scale = 1L
+        tolerance = 0.1
       )
     }
     groupMembers <- groupMembersStart
@@ -65,7 +64,7 @@ test_that(
         sexRatio = 0.5
       )
       expect_equal(calculateSexRatio(groupMembers[[1L]], ped), 0.5,
-        tolerance = .1, scale = 1L
+        tolerance = 0.1
       )
     }
     groupMembers <- groupMembersStart
@@ -75,7 +74,7 @@ test_that(
         sexRatio = 2.0
       )
       expect_equal(calculateSexRatio(groupMembers[[1L]], ped), 2.0,
-        tolerance = .2, scale = 1L
+        tolerance = 0.2
       )
     }
     groupMembers[[1]] <- character(0L)

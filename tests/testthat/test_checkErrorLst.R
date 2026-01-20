@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of mprcgenekeepr
-context("checkErrorLst")
 library(lubridate)
 test_that("checkErrorLst sees errors when reported", {
   errorLst <- qcStudbook(mprcgenekeepr::pedGood, reportErrors = TRUE)

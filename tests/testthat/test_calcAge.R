@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of mprcgenekeepr
-context("calcAge")
 
 suppressMessages(library(lubridate))
 set_seed(10L)

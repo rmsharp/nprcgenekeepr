@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2023 R. Mark Sharp
 #' This file is part of mprcgenekeepr
-context("cumulateSimKinships")
 
 # nolint start: object_name_linter
 ped <- mprcgenekeepr::smallPed

@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of mprcgenekeepr
-context("calcFG")
 
 ped <- data.frame(
   id = c("A", "B", "C", "D", "E", "F", "G"),

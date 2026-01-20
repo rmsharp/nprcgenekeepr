@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2023 R. Mark Sharp
 #' This file is part of mprcgenekeepr
-context("getPedDirectRelatives")
 
 test_that("getPedDirectRelatives throws an error with no pedigree", {
   expect_error(

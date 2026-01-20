@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of mprcgenekeepr
-context("dataframe2string")
 library(stringi)
 ## See change in calendar result for sire age; changed 20200412
 pedOne <- mprcgenekeepr::pedOne

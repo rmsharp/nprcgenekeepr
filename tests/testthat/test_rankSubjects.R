@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 # This file is part of mprcgenekeepr
-context("rankSubjects")
 library(testthat)
 ## reportGV() unit test is weak.
 rpt <- rankSubjects(mprcgenekeepr::finalRpt)

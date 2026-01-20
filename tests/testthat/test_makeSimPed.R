@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2023 R. Mark Sharp
 #' This file is part of mprcgenekeepr
-context("makeSimPed")
 library(testthat)
 
 ped <- mprcgenekeepr::lacy1989Ped

@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 # This file is part of mprcgenekeepr
-context("print.summary.mprcgenekeeprGV")
 library(testthat)
 
 test_that("print.summary.mprcgenekeeprGV prints expected output", {
