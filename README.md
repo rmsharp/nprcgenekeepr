@@ -16,7 +16,9 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![CRAN_version](https://www.r-pkg.org/badges/version/mprcgenekeepr)](https://cran.r-project.org/package=mprcgenekeepr)
 [![CRAN_download](https://cranlogs.r-pkg.org/badges/mprcgenekeepr)](https://cran.r-project.org/package=mprcgenekeepr)
 [![CRAN_download_total](https://cranlogs.r-pkg.org/badges/grand-total/kableExtra)](https://cran.r-project.org/package=mprcgenekeepr)
-\[[![R-CMD-check](https://github.com/rmsharp/mprcgenekeepr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rmsharp/mprcgenekeepr/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/rmsharp/mprcgenekeepr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rmsharp/mprcgenekeepr/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check-scheduled](https://github.com/rmsharp/mprcgenekeepr/actions/workflows/R-CMD-check-scheduled.yaml/badge.svg)](https://github.com/rmsharp/mprcgenekeepr/actions/workflows/R-CMD-check-scheduled.yaml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![DOI](https://img.shields.io/badge/doi-10.32614-green.svg)](https://doi.org/10.32614)
 [![Codecov test
 coverage](https://codecov.io/gh/rmsharp/mprcgenekeepr/graph/badge.svg)](https://app.codecov.io/gh/rmsharp/mprcgenekeepr)
