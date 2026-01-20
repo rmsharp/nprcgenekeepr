@@ -80,3 +80,4 @@ RoxygenNote: 7.3.2
 LazyData: TRUE
 VignetteBuilder: knitr, rmarkdown
 Roxygen: list(markdown = TRUE)
+Config/testthat/edition: 3
