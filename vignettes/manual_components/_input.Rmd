@@ -1,12 +1,11 @@
 ---
-title: "Input"
+title: "Data Input and Quality Control"
 author: "R. Mark Sharp, Ph.D."
-date: "10/2/2017"
-output: 
+date: "2025-01-01"
+output:
    - rmarkdown::html_vignette
    - rmarkdown::pdf_document
    - rmarkdown::latex_document
-   - rmarkdown::html_vignette
    - rmarkdown::word_document
 vignette: >
   %\VignetteEngine{knitr::knitr}
@@ -14,28 +13,58 @@ vignette: >
   %\usepackage[UTF-8]{inputenc}
 ---
 
-## Input  
-The Input tab is the starting point for all analyses. The file
-should be a delimited, regular text file with a header row specifying the
-columns. The tab provides information on the allowable columns in input
-files, and how the columns will be used in quality control of the data.
-Quality control of studbook data occurs automatically upon file upload.
+## Data Input and Quality Control
 
-Presently, the only columns required are those specifying the Ego ID,
-Sire ID, Dam ID, and Sex. The remaining columns listed are optional,
-but will be used if they are present in the uploaded file. The table
-of the tab describes how these optional columns will be used. Additionally,
-the panel on the left of this tab provides options that can be used during
-the upload and QC process, such as specifying the field separator used in the 
-uploaded file.
+The Data Input and Quality Control tab is the starting point for all analyses.
+This module (`modInput`) provides a comprehensive interface for uploading and
+validating pedigree and genotype data.
 
-During quality control, a flag is added for the current, living population.
-This flag is generated based on the information columns provided and is fairly
-specific to how the breeding population is defined at ONPRC. Two of the options
-for specifying the population of interest can be toggled through this panel,
-however. Normally, the breeding colony is restricted to Indian-origin, SPF 4 animals.
-These two restrictions can be turned off by setting the options on this panel.
+### File Type Options
 
-Additionally, the population of interest can be specified directly in either
-the input file, or entered on the Pedigree Browser tab.
+The sidebar panel allows you to select how you are submitting data:
+
+- **File Type**: Choose between Excel (.xlsx, .xls) or Text (.csv, .txt) formats
+- **File Content**: Select from four options:
+  - Pedigree(s) file only; genotypes not provided
+  - Pedigree(s) and genotypes in one file
+  - Pedigree(s) and genotypes in separate files
+  - Focal animals only; pedigree built from database
+
+For text files, you can specify the separator (Comma, Semicolon, or Tab).
+
+### Required and Optional Columns
+
+The only columns required are those specifying the Ego ID, Sire ID, Dam ID,
+and Sex. The remaining columns listed are optional but will be used if they
+are present in the uploaded file. The Input Format tab provides detailed
+information on allowable columns and how they will be used in quality control.
+
+### Minimum Parent Age
+
+You can specify the minimum parent age (in years) that parents must be at
+the birthdate of an offspring. The default is 2.0 years. This helps identify
+potential data entry errors where parents appear too young.
+
+### Quality Control Results
+
+After clicking "Read and Check Pedigree", the module processes your data and
+displays results across multiple tabs:
+
+- **QC Summary**: Shows counts of records processed, errors found, and warnings
+- **Errors**: Lists critical issues that must be fixed before proceeding
+- **Warnings**: Lists potential issues that may need review
+- **Cleaned Data**: Preview of the validated studbook data
+
+Each results tab includes a download button to export the data for offline review.
+
+### Module Interface
+
+The `modInput` module returns reactive values that can be used by downstream
+modules:
+
+- `cleanedStudbook`: The QC-cleaned studbook data frame
+- `genotypeData`: Genotype data if provided
+- `qcSummary`: Summary counts of errors, warnings, and records
+- `minParentAge`: The minimum parent age value
+- `isReady`: Logical indicating if data passed QC and is ready for analysis
 
