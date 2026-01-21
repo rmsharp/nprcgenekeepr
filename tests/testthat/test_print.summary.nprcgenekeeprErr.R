@@ -32,6 +32,6 @@ test_that("print.summary.nprcgenekeeprErr prints expected output", {
       ))),
       NA
     ),
-    "produced output"
+    "output"
   )
 })
