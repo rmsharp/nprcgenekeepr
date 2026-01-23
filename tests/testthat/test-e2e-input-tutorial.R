@@ -10,27 +10,13 @@ test_that("E2E: Input has minimum parent age control", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_input_min_parent_age",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_input_min_parent_age")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Input")
+  if (!success) skip("Could not navigate to Input tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Input"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Input tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   # Tutorial emphasizes minimum parent age setting (e.g., 2 years for macaques)
   has_min_parent_age <- grepl(
     "Minimum.*Parent.*Age|minParentAge|parent.*age|years",
@@ -46,27 +32,13 @@ test_that("E2E: Input has Read and Check Pedigree button", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_input_read_check",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_input_read_check")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Input")
+  if (!success) skip("Could not navigate to Input tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Input"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Input tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   has_read_check <- grepl(
     "Read.*Check.*Pedigree|Check.*Pedigree|getData|Upload.*Validate",
     html,
@@ -81,27 +53,13 @@ test_that("E2E: Input has file format documentation", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_input_format_docs",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_input_format_docs")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Input")
+  if (!success) skip("Could not navigate to Input tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Input"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Input tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   # Tutorial shows extensive file format documentation
   has_format_docs <- grepl(
     "format|column|required|optional|ego_id|id|sire|dam|birth",
@@ -117,27 +75,13 @@ test_that("E2E: Input supports Excel workbook", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_input_excel_support",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_input_excel_support")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Input")
+  if (!success) skip("Could not navigate to Input tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Input"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Input tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   has_excel <- grepl(
     "Excel|xlsx|xls|workbook",
     html,
@@ -152,27 +96,13 @@ test_that("E2E: Input supports comma-separated values", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_input_csv_support",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_input_csv_support")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Input")
+  if (!success) skip("Could not navigate to Input tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Input"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Input tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   has_csv <- grepl(
     "csv|comma|separated|delimiter",
     html,
@@ -187,27 +117,13 @@ test_that("E2E: Input supports tab-separated values", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_input_tab_support",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_input_tab_support")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Input")
+  if (!success) skip("Could not navigate to Input tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Input"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Input tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   has_tab <- grepl(
     "tab|txt|text|separator",
     html,
@@ -222,27 +138,13 @@ test_that("E2E: Input has error detection for missing columns", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_input_missing_cols_error",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_input_missing_cols_error")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Input")
+  if (!success) skip("Could not navigate to Input tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Input"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Input tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   # Tutorial lists error types including missingColumns
   has_error_detection <- grepl(
     "error|warning|missing|required|validation",
@@ -258,27 +160,13 @@ test_that("E2E: Input has genotype file support", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_input_genotype_file",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_input_genotype_file")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Input")
+  if (!success) skip("Could not navigate to Input tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Input"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Input tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   # Tutorial shows pedigree with genotypes option
   has_genotype <- grepl(
     "genotype|allele|genetic|marker",

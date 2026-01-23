@@ -9,27 +9,13 @@ test_that("E2E: Pyramid module has age bin controls", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_pyramid_bins",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_pyramid_bins")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Age-Sex Pyramid", "Pyramid")
+  if (!success) skip("Could not navigate to Age-Sex Pyramid tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Age-Sex Pyramid"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Age-Sex Pyramid tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   expect_true(
     grepl("age|bin|interval|year", html, ignore.case = TRUE),
     info = "Should have age bin controls"
@@ -42,27 +28,13 @@ test_that("E2E: Pyramid module displays male/female labels", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_pyramid_sex_labels",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_pyramid_sex_labels")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Age-Sex Pyramid", "Pyramid")
+  if (!success) skip("Could not navigate to Age-Sex Pyramid tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Age-Sex Pyramid"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Age-Sex Pyramid tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   expect_true(
     grepl("male|female|sex", html, ignore.case = TRUE),
     info = "Should display male/female labels"
@@ -75,27 +47,13 @@ test_that("E2E: Pyramid module has maximum age setting", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_pyramid_max_age",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_pyramid_max_age")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Age-Sex Pyramid", "Pyramid")
+  if (!success) skip("Could not navigate to Age-Sex Pyramid tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Age-Sex Pyramid"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Age-Sex Pyramid tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   expect_true(
     grepl("max|maximum|age|limit", html, ignore.case = TRUE),
     info = "Should have maximum age setting"
@@ -108,27 +66,13 @@ test_that("E2E: Pyramid module has plot export option", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_pyramid_export_plot",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_pyramid_export_plot")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Age-Sex Pyramid", "Pyramid")
+  if (!success) skip("Could not navigate to Age-Sex Pyramid tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Age-Sex Pyramid"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Age-Sex Pyramid tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   has_export <- grepl("export|download|save|png|pdf", html, ignore.case = TRUE)
   expect_true(TRUE, info = "Pyramid tab loaded successfully")
 })
@@ -139,27 +83,13 @@ test_that("E2E: Pyramid module has population description", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_pyramid_desc",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_pyramid_desc")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Age-Sex Pyramid", "Pyramid")
+  if (!success) skip("Could not navigate to Age-Sex Pyramid tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Age-Sex Pyramid"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Age-Sex Pyramid tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   expect_true(
     grepl("population|distribution|pyramid|demographic", html, ignore.case = TRUE),
     info = "Should have population description"
@@ -172,28 +102,14 @@ test_that("E2E: Pyramid module shows data requirement message", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_pyramid_data_msg",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_pyramid_data_msg")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
-
-  tryCatch({
-    app$click(selector = 'a[data-value="Age-Sex Pyramid"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Age-Sex Pyramid tab")
-  })
+  success <- navigate_to_tab(app, "Age-Sex Pyramid", "Pyramid")
+  if (!success) skip("Could not navigate to Age-Sex Pyramid tab")
 
   # Without data loaded, should show placeholder or instruction
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   has_content <- nchar(html) > 100
   expect_true(has_content, info = "Pyramid module should render content")
 })

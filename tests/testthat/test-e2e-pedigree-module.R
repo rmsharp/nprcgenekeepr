@@ -9,34 +9,13 @@ test_that("E2E: Pedigree Browser tab is accessible", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_pedigree_access",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_pedigree_access")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
+  if (!success) skip("Could not navigate to Pedigree tab")
 
-  # Try to navigate to Pedigree Browser
-  tryCatch({
-    app$click(selector = 'a[data-value="Pedigree Browser"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    # Try alternative selector
-    tryCatch({
-      app$click(selector = 'a[data-value="Pedigree"]')
-      Sys.sleep(2)
-    }, error = function(e2) {
-      skip("Could not navigate to Pedigree tab")
-    })
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   expect_true(
     grepl("Pedigree|Browser|Animal", html, ignore.case = TRUE),
     info = "Should be on Pedigree Browser tab"
@@ -49,28 +28,13 @@ test_that("E2E: Pedigree Browser has focal animal controls", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_pedigree_focal_controls",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_pedigree_focal_controls")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
+  if (!success) skip("Could not navigate to Pedigree tab")
 
-  # Navigate to Pedigree Browser
-  tryCatch({
-    app$click(selector = 'a[data-value="Pedigree Browser"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Pedigree tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   has_focal_controls <- grepl("focal|animal|filter|update", html, ignore.case = TRUE)
   expect_true(has_focal_controls, info = "Should have focal animal controls")
 })
@@ -81,28 +45,13 @@ test_that("E2E: Pedigree Browser has export functionality", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_pedigree_export",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_pedigree_export")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
+  if (!success) skip("Could not navigate to Pedigree tab")
 
-  # Navigate to Pedigree Browser
-  tryCatch({
-    app$click(selector = 'a[data-value="Pedigree Browser"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Pedigree tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   has_export <- grepl("export|download|csv", html, ignore.case = TRUE)
   expect_true(has_export, info = "Should have export functionality")
 })
@@ -113,29 +62,13 @@ test_that("E2E: Pedigree Browser has data table", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_pedigree_datatable",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_pedigree_datatable")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
+  if (!success) skip("Could not navigate to Pedigree tab")
 
-  # Navigate to Pedigree Browser
-  tryCatch({
-    app$click(selector = 'a[data-value="Pedigree Browser"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Pedigree tab")
-  })
-
-  html <- app$get_html("body")
-  # DataTable usually has these classes or elements
+  html <- get_html_safe(app, "body")
   has_datatable <- grepl("dataTable|dataTables|table", html, ignore.case = TRUE)
   expect_true(has_datatable, info = "Should have data table element")
 })
@@ -146,28 +79,13 @@ test_that("E2E: Pedigree Browser trim pedigree option", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_pedigree_trim",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_pedigree_trim")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
+  if (!success) skip("Could not navigate to Pedigree tab")
 
-  # Navigate to Pedigree Browser
-  tryCatch({
-    app$click(selector = 'a[data-value="Pedigree Browser"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Pedigree tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   has_trim_option <- grepl("trim|subset|filter", html, ignore.case = TRUE)
   expect_true(has_trim_option, info = "Should have trim pedigree option")
 })

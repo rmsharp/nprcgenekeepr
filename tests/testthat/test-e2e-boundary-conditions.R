@@ -14,28 +14,14 @@ test_that("E2E: Input validates minimum parent age bounds", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_input_age_bounds",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_input_age_bounds")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
-
-  tryCatch({
-    app$click(selector = 'a[data-value="Input"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Input tab")
-  })
+  success <- navigate_to_tab(app, "Input")
+  if (!success) skip("Could not navigate to Input tab")
 
   # The app should handle various age values gracefully
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   has_age_input <- grepl("minParentAge|Minimum.*Parent.*Age", html, ignore.case = TRUE)
   expect_true(TRUE, info = "Input tab loaded with age control")
 })
@@ -46,33 +32,19 @@ test_that("E2E: Input handles non-numeric parent age gracefully", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_input_nonnumeric_age",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_input_nonnumeric_age")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
-
-  tryCatch({
-    app$click(selector = 'a[data-value="Input"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Input tab")
-  })
+  success <- navigate_to_tab(app, "Input")
+  if (!success) skip("Could not navigate to Input tab")
 
   # Try setting non-numeric value (app should handle gracefully)
   tryCatch({
     app$set_inputs(`input-minParentAge` = "abc")
-    Sys.sleep(1)
+    app$wait_for_idle(timeout = E2E_TIMEOUT)
   }, error = function(e) NULL)
 
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   expect_true(nchar(html) > 100, info = "App should handle invalid input")
 })
 
@@ -86,27 +58,13 @@ test_that("E2E: Genetic Value handles simulation count boundaries", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_gv_sim_bounds",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_gv_sim_bounds")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
+  if (!success) skip("Could not navigate to Genetic Value tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Genetic Value Analysis"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Genetic Value tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   # Simulations should be between 2 and 100,000 per tutorial
   has_sim_control <- grepl("simulation|iteration|numSim", html, ignore.case = TRUE)
   expect_true(TRUE, info = "Genetic Value tab has simulation control")
@@ -118,27 +76,13 @@ test_that("E2E: Genetic Value handles uniqueness threshold boundaries", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_gv_threshold_bounds",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_gv_threshold_bounds")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
+  if (!success) skip("Could not navigate to Genetic Value tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Genetic Value Analysis"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Genetic Value tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   # Threshold should be 0-3 per tutorial
   expect_true(nchar(html) > 100, info = "App renders threshold controls")
 })
@@ -153,27 +97,13 @@ test_that("E2E: Breeding Groups handles single group request", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_bg_single_group",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_bg_single_group")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Breeding Groups", "Groups")
+  if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Breeding Groups"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Breeding Groups tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   # Should be able to request just 1 group
   has_num_groups <- grepl("Number.*Group|numGroups|group.*desired", html, ignore.case = TRUE)
   expect_true(TRUE, info = "Breeding Groups has group count control")
@@ -185,27 +115,13 @@ test_that("E2E: Breeding Groups handles large group count", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_bg_large_count",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_bg_large_count")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Breeding Groups", "Groups")
+  if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Breeding Groups"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Breeding Groups tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   expect_true(nchar(html) > 100, info = "App handles group count input")
 })
 
@@ -215,27 +131,13 @@ test_that("E2E: Breeding Groups handles sex ratio of 1:1", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_bg_equal_ratio",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_bg_equal_ratio")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Breeding Groups", "Groups")
+  if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Breeding Groups"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Breeding Groups tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   has_sex_ratio <- grepl("sex.*ratio|ratio|F/M", html, ignore.case = TRUE)
   expect_true(TRUE, info = "Breeding Groups has sex ratio control")
 })
@@ -250,27 +152,13 @@ test_that("E2E: Pyramid handles maximum age setting", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_pyramid_max_age",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_pyramid_max_age")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Age-Sex Pyramid", "Pyramid")
+  if (!success) skip("Could not navigate to Pyramid tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Age-Sex Pyramid"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Pyramid tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   has_age_setting <- grepl("max.*age|age.*bin|maximum", html, ignore.case = TRUE)
   expect_true(TRUE, info = "Pyramid has age configuration")
 })
@@ -281,27 +169,13 @@ test_that("E2E: Pyramid handles bin size boundaries", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_pyramid_bin_size",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_pyramid_bin_size")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Age-Sex Pyramid", "Pyramid")
+  if (!success) skip("Could not navigate to Pyramid tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Age-Sex Pyramid"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Pyramid tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   has_bin_control <- grepl("bin|interval|year|age", html, ignore.case = TRUE)
   expect_true(TRUE, info = "Pyramid has bin configuration")
 })
@@ -316,27 +190,13 @@ test_that("E2E: Pedigree Browser handles special characters in search", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_ped_special_chars",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_ped_special_chars")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
+  if (!success) skip("Could not navigate to Pedigree Browser tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Pedigree Browser"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Pedigree Browser tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   # Should have search/filter capability
   has_search <- grepl("search|filter|focal", html, ignore.case = TRUE)
   expect_true(TRUE, info = "Pedigree Browser has search capability")
@@ -348,27 +208,13 @@ test_that("E2E: Pedigree Browser handles very long ID input", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_ped_long_id",
-    height = 900,
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_ped_long_id")
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
+  success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
+  if (!success) skip("Could not navigate to Pedigree Browser tab")
 
-  tryCatch({
-    app$click(selector = 'a[data-value="Pedigree Browser"]')
-    Sys.sleep(2)
-  }, error = function(e) {
-    skip("Could not navigate to Pedigree Browser tab")
-  })
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   expect_true(nchar(html) > 100, info = "App handles text input fields")
 })
 
@@ -382,20 +228,10 @@ test_that("E2E: App handles narrow window width", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_narrow_width",
-    height = 900,
-    width = 800,  # Narrower than default
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_narrow_width", height = 900, width = 800)
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   expect_true(nchar(html) > 100, info = "App handles narrow window")
 })
 
@@ -405,19 +241,9 @@ test_that("E2E: App handles short window height", {
   skip_on_cran()
 
   app_dir <- create_test_app()
-
-  app <- shinytest2::AppDriver$new(
-    app_dir = app_dir,
-    name = "e2e_short_height",
-    height = 600,  # Shorter than default
-    width = 1400,
-    load_timeout = 45000
-  )
-
+  app <- create_app_driver(app_dir, "e2e_short_height", height = 600, width = 1400)
   on.exit(app$stop(), add = TRUE)
 
-  Sys.sleep(3)
-
-  html <- app$get_html("body")
+  html <- get_html_safe(app, "body")
   expect_true(nchar(html) > 100, info = "App handles short window")
 })
