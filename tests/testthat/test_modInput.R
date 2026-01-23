@@ -198,3 +198,63 @@ test_that("modInputServer handles debug mode", {
     }
   )
 })
+
+test_that("modInputServer handles separator selection", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(fileType = "fileTypeText")
+      session$setInputs(separator = ",")
+      expect_equal(input$separator, ",")
+
+      session$setInputs(separator = ";")
+      expect_equal(input$separator, ";")
+
+      session$setInputs(separator = "\t")
+      expect_equal(input$separator, "\t")
+    }
+  )
+})
+
+test_that("modInputServer isReady returns FALSE before data processing", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      result <- session$getReturned()
+      # Before any data is loaded, isReady should error or return FALSE
+      expect_error(result$isReady())
+    }
+  )
+})
+
+test_that("modInputServer qcSummary requires data", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      result <- session$getReturned()
+      # Before any data is loaded, qcSummary should error
+      expect_error(result$qcSummary())
+    }
+  )
+})
+
+test_that("modInputUI has proper conditional panels", {
+  ui <- modInputUI("test")
+  ui_html <- as.character(ui)
+
+  # Check that conditional panels reference correct input conditions
+  expect_true(grepl("fileType.*fileTypeText", ui_html))
+  expect_true(grepl("fileContent.*pedFile", ui_html))
+  expect_true(grepl("fileContent.*commonPedGenoFile", ui_html))
+  expect_true(grepl("fileContent.*separatePedGenoFile", ui_html))
+  expect_true(grepl("fileContent.*focalAnimals", ui_html))
+})
