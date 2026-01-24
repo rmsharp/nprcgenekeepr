@@ -390,7 +390,10 @@ test_that("modInputServer handles non-numeric minParentAge gracefully", {
       session$setInputs(minParentAge = "invalid")
       result <- session$getReturned()
       # as.numeric("invalid") returns NA with a warning
-      expect_true(is.na(result$minParentAge()))
+      expect_warning(
+        expect_true(is.na(result$minParentAge())),
+        "NAs introduced by coercion"
+      )
     }
   )
 })
