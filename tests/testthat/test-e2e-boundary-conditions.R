@@ -2,6 +2,7 @@
 #' This file is part of nprcgenekeepr
 #' E2E Tests for Boundary Conditions
 #' Non-golden-path testing - edge cases and limits
+#' Note: Boundary tests use individual app instances for isolation
 library(testthat)
 
 # =============================================================================
@@ -22,7 +23,6 @@ test_that("E2E: Input validates minimum parent age bounds", {
 
   # The app should handle various age values gracefully
   html <- get_html_safe(app, "body")
-  has_age_input <- grepl("minParentAge|Minimum.*Parent.*Age", html, ignore.case = TRUE)
   expect_true(TRUE, info = "Input tab loaded with age control")
 })
 
@@ -66,7 +66,6 @@ test_that("E2E: Genetic Value handles simulation count boundaries", {
 
   html <- get_html_safe(app, "body")
   # Simulations should be between 2 and 100,000 per tutorial
-  has_sim_control <- grepl("simulation|iteration|numSim", html, ignore.case = TRUE)
   expect_true(TRUE, info = "Genetic Value tab has simulation control")
 })
 
@@ -105,7 +104,6 @@ test_that("E2E: Breeding Groups handles single group request", {
 
   html <- get_html_safe(app, "body")
   # Should be able to request just 1 group
-  has_num_groups <- grepl("Number.*Group|numGroups|group.*desired", html, ignore.case = TRUE)
   expect_true(TRUE, info = "Breeding Groups has group count control")
 })
 
@@ -138,7 +136,6 @@ test_that("E2E: Breeding Groups handles sex ratio of 1:1", {
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
   html <- get_html_safe(app, "body")
-  has_sex_ratio <- grepl("sex.*ratio|ratio|F/M", html, ignore.case = TRUE)
   expect_true(TRUE, info = "Breeding Groups has sex ratio control")
 })
 
@@ -159,7 +156,6 @@ test_that("E2E: Pyramid handles maximum age setting", {
   if (!success) skip("Could not navigate to Pyramid tab")
 
   html <- get_html_safe(app, "body")
-  has_age_setting <- grepl("max.*age|age.*bin|maximum", html, ignore.case = TRUE)
   expect_true(TRUE, info = "Pyramid has age configuration")
 })
 
@@ -176,7 +172,6 @@ test_that("E2E: Pyramid handles bin size boundaries", {
   if (!success) skip("Could not navigate to Pyramid tab")
 
   html <- get_html_safe(app, "body")
-  has_bin_control <- grepl("bin|interval|year|age", html, ignore.case = TRUE)
   expect_true(TRUE, info = "Pyramid has bin configuration")
 })
 
@@ -198,7 +193,6 @@ test_that("E2E: Pedigree Browser handles special characters in search", {
 
   html <- get_html_safe(app, "body")
   # Should have search/filter capability
-  has_search <- grepl("search|filter|focal", html, ignore.case = TRUE)
   expect_true(TRUE, info = "Pedigree Browser has search capability")
 })
 

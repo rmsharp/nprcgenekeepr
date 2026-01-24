@@ -4,6 +4,103 @@ This file documents significant development work, decisions, and results from Cl
 
 ---
 
+## 2026-01-24: E2E Test Shared App Instance Optimization
+
+### Summary
+Further optimized E2E tests by implementing shared app instances across tests that navigate to the same tab. This builds on the previous event-driven wait refactoring.
+
+### Motivation
+- Each of the 156 E2E tests was creating and starting a new Shiny app instance
+- App startup takes ~8 seconds per instance
+- Tests on the same tab don't need separate app instances for simple content verification
+- Goal: Reduce redundant app startups while maintaining test isolation where needed
+
+### Changes Made
+
+#### New Helper Functions (tests/testthat/helper-shinytest2.R)
+Added shared app instance management:
+
+| Function | Purpose |
+|----------|---------|
+| `.e2e_shared_apps` | Environment to cache app instances by tab |
+| `get_shared_app()` | Get or create cached app instance for a tab |
+| `stop_shared_apps()` | Clean up all cached app instances |
+| `expect_tab_content()` | One-liner to test for pattern in tab HTML |
+| `run_tab_tests()` | Run batch of pattern tests on shared app |
+| `%||%` | Null coalescing operator |
+
+#### Error Recovery
+Added automatic recovery from Chrome/chromote connection errors:
+- `get_html_safe()` returns empty string on error instead of throwing
+- `get_shared_app()` detects broken connections and recreates app
+- Invalid cache entries are automatically cleared and recreated
+
+#### Test File Pattern
+Tests now use a shared app pattern:
+
+```r
+# At file top - cleanup when file completes
+local({
+  withr::defer(stop_shared_apps(), envir = parent.frame())
+})
+
+# Simple content tests use expect_tab_content()
+test_that("E2E: Tab has feature X", {
+  skip_if_not_installed("shinytest2")
+  skip_if_not_installed("chromote")
+  skip_on_cran()
+
+  expect_tab_content("Tab Name", "pattern|to|match",
+                     alt_tab = "Alt", info = "Should have feature X")
+})
+
+# Tests needing app reference use get_shared_app()
+test_that("E2E: Tab loads successfully", {
+  skip_if_not_installed("shinytest2")
+  skip_if_not_installed("chromote")
+  skip_on_cran()
+
+  shared <- get_shared_app("Tab Name", "Alt")
+  if (is.null(shared)) skip("Could not navigate to tab")
+  expect_true(nchar(shared$html) > 100)
+})
+```
+
+#### Tests Kept Isolated
+Some tests intentionally use individual app instances for proper isolation:
+- **Workflow integration tests** - Test cross-tab navigation and state transitions
+- **Error state tests** - Test error handling in isolated environments
+- **Boundary condition tests** - Test edge cases that might affect app state
+- **Navigation button tests** - Test clicking buttons that change tabs
+
+### Timing Results
+
+| Metric | Previous (event-driven) | After (shared apps) | Improvement |
+|--------|------------------------|---------------------|-------------|
+| Total test suite | ~1200+ seconds | 649.4 seconds | **~46% faster** |
+| Per-tab tests | ~8s per test | ~1-2s per test | **~75% faster for grouped tests** |
+
+### Test Results (2026-01-24)
+```
+[ FAIL 0 | WARN 0 | SKIP 0 | PASS 156 ]
+
+Total test time: 649.4 seconds
+```
+
+**All 156 E2E tests passed.** The shared app pattern successfully reduces execution time while maintaining reliability.
+
+### Files Refactored (20 total)
+All E2E test files were updated to use the shared app pattern where appropriate.
+
+### Technical Notes
+- Shared apps are cached by `tab_name_alt_tab` key in `.e2e_shared_apps` environment
+- `withr::defer()` ensures cleanup even if tests fail
+- Chrome websocket errors (seen occasionally) are now handled gracefully
+- Tests that modify app state still use individual instances for isolation
+- The ~650 second runtime includes ~30+ tests that still use individual apps for isolation
+
+---
+
 ## 2026-01-23: E2E Test Refactoring for Speed and Reliability
 
 ### Summary

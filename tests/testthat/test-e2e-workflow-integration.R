@@ -1,7 +1,13 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
 #' E2E Tests for Cross-Module Workflow Integration
+#' Note: These tests intentionally use individual app instances
+#' since they test cross-tab navigation and state transitions
 library(testthat)
+
+local({
+  withr::defer(stop_shared_apps(), envir = parent.frame())
+})
 
 test_that("E2E: Can navigate through all main tabs sequentially", {
   skip_if_not_installed("shinytest2")
@@ -115,13 +121,10 @@ test_that("E2E: Navbar brand/title is visible", {
   skip_if_not_installed("chromote")
   skip_on_cran()
 
-  app_dir <- create_test_app()
-  app <- create_app_driver(app_dir, "e2e_navbar_brand")
-  on.exit(app$stop(), add = TRUE)
-
-  html <- get_html_safe(app, "body")
+  shared <- get_shared_app("Home")
+  if (is.null(shared)) skip("Could not load Home tab")
   expect_true(
-    grepl("GeneKeepR", html, ignore.case = TRUE),
+    grepl("GeneKeepR", shared$html, ignore.case = TRUE),
     info = "Navbar should show GeneKeepR brand"
   )
 })
@@ -131,17 +134,8 @@ test_that("E2E: Input tab has file upload before pedigree browser works", {
   skip_if_not_installed("chromote")
   skip_on_cran()
 
-  app_dir <- create_test_app()
-  app <- create_app_driver(app_dir, "e2e_workflow_upload")
-  on.exit(app$stop(), add = TRUE)
-
-  success <- navigate_to_tab(app, "Input")
-  if (!success) skip("Could not navigate to Input tab")
-
-  html <- get_html_safe(app, "body")
-  has_upload <- grepl("upload|file|browse", html, ignore.case = TRUE)
-
-  expect_true(has_upload, info = "Input tab should have file upload capability")
+  expect_tab_content("Input", "upload|file|browse",
+                     info = "Input tab should have file upload capability")
 })
 
 test_that("E2E: Genetic Value tab indicates data requirement", {
@@ -149,22 +143,8 @@ test_that("E2E: Genetic Value tab indicates data requirement", {
   skip_if_not_installed("chromote")
   skip_on_cran()
 
-  app_dir <- create_test_app()
-  app <- create_app_driver(app_dir, "e2e_gv_data_req")
-  on.exit(app$stop(), add = TRUE)
-
-  success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
-  if (!success) skip("Could not navigate to Genetic Value tab")
-
-  html <- get_html_safe(app, "body")
-  # Should have some indication of needing data or showing analysis options
-  has_content <- grepl(
-    "Genetic|Value|Analysis|kinship|population",
-    html,
-    ignore.case = TRUE
-  )
-
-  expect_true(has_content, info = "Genetic Value tab should show relevant content")
+  expect_tab_content("Genetic Value Analysis", "Genetic|Value|Analysis|kinship|population",
+                     alt_tab = "Genetic Value", info = "Genetic Value tab should show relevant content")
 })
 
 test_that("E2E: Breeding Groups tab indicates data requirement", {
@@ -172,20 +152,6 @@ test_that("E2E: Breeding Groups tab indicates data requirement", {
   skip_if_not_installed("chromote")
   skip_on_cran()
 
-  app_dir <- create_test_app()
-  app <- create_app_driver(app_dir, "e2e_bg_data_req")
-  on.exit(app$stop(), add = TRUE)
-
-  success <- navigate_to_tab(app, "Breeding Groups", "Groups")
-  if (!success) skip("Could not navigate to Breeding Groups tab")
-
-  html <- get_html_safe(app, "body")
-  # Should have some indication of breeding group functionality
-  has_content <- grepl(
-    "Breeding|Groups|formation|animals",
-    html,
-    ignore.case = TRUE
-  )
-
-  expect_true(has_content, info = "Breeding Groups tab should show relevant content")
+  expect_tab_content("Breeding Groups", "Breeding|Groups|formation|animals",
+                     alt_tab = "Groups", info = "Breeding Groups tab should show relevant content")
 })

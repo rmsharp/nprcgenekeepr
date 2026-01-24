@@ -1,23 +1,22 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
 #' E2E Tests for Genetic Value Analysis Module
+#' Optimized: Uses shared app instance for all tests on this tab
 library(testthat)
+
+local({
+  withr::defer(stop_shared_apps(), envir = parent.frame())
+})
 
 test_that("E2E: Genetic Value Analysis tab is accessible", {
   skip_if_not_installed("shinytest2")
   skip_if_not_installed("chromote")
   skip_on_cran()
 
-  app_dir <- create_test_app()
-  app <- create_app_driver(app_dir, "e2e_gv_access")
-  on.exit(app$stop(), add = TRUE)
-
-  success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
-  if (!success) skip("Could not navigate to Genetic Value tab")
-
-  html <- get_html_safe(app, "body")
+  shared <- get_shared_app("Genetic Value Analysis", "Genetic Value")
+  expect_false(is.null(shared), info = "Should be able to access Genetic Value tab")
   expect_true(
-    grepl("Genetic|Value|Analysis|Kinship", html, ignore.case = TRUE),
+    grepl("Genetic|Value|Analysis|Kinship", shared$html, ignore.case = TRUE),
     info = "Should be on Genetic Value Analysis tab"
   )
 })
@@ -27,16 +26,8 @@ test_that("E2E: Genetic Value has gene drop iterations control", {
   skip_if_not_installed("chromote")
   skip_on_cran()
 
-  app_dir <- create_test_app()
-  app <- create_app_driver(app_dir, "e2e_gv_iterations")
-  on.exit(app$stop(), add = TRUE)
-
-  success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
-  if (!success) skip("Could not navigate to Genetic Value tab")
-
-  html <- get_html_safe(app, "body")
-  has_iterations <- grepl("iteration|gene drop|simulation", html, ignore.case = TRUE)
-  expect_true(has_iterations, info = "Should have gene drop iterations control")
+  expect_tab_content("Genetic Value Analysis", "iteration|gene drop|simulation",
+                     alt_tab = "Genetic Value", info = "Should have gene drop iterations control")
 })
 
 test_that("E2E: Genetic Value has metric checkboxes", {
@@ -44,16 +35,8 @@ test_that("E2E: Genetic Value has metric checkboxes", {
   skip_if_not_installed("chromote")
   skip_on_cran()
 
-  app_dir <- create_test_app()
-  app <- create_app_driver(app_dir, "e2e_gv_metrics")
-  on.exit(app$stop(), add = TRUE)
-
-  success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
-  if (!success) skip("Could not navigate to Genetic Value tab")
-
-  html <- get_html_safe(app, "body")
-  has_metrics <- grepl("genome uniqueness|mean kinship|uniqueness|kinship", html, ignore.case = TRUE)
-  expect_true(has_metrics, info = "Should have genetic metric options")
+  expect_tab_content("Genetic Value Analysis", "genome uniqueness|mean kinship|uniqueness|kinship",
+                     alt_tab = "Genetic Value", info = "Should have genetic metric options")
 })
 
 test_that("E2E: Genetic Value has minimum breeding age control", {
@@ -61,16 +44,8 @@ test_that("E2E: Genetic Value has minimum breeding age control", {
   skip_if_not_installed("chromote")
   skip_on_cran()
 
-  app_dir <- create_test_app()
-  app <- create_app_driver(app_dir, "e2e_gv_min_age")
-  on.exit(app$stop(), add = TRUE)
-
-  success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
-  if (!success) skip("Could not navigate to Genetic Value tab")
-
-  html <- get_html_safe(app, "body")
-  has_min_age <- grepl("minimum|breeding|age", html, ignore.case = TRUE)
-  expect_true(has_min_age, info = "Should have minimum breeding age control")
+  expect_tab_content("Genetic Value Analysis", "minimum|breeding|age",
+                     alt_tab = "Genetic Value", info = "Should have minimum breeding age control")
 })
 
 test_that("E2E: Genetic Value has run analysis button", {
@@ -78,16 +53,8 @@ test_that("E2E: Genetic Value has run analysis button", {
   skip_if_not_installed("chromote")
   skip_on_cran()
 
-  app_dir <- create_test_app()
-  app <- create_app_driver(app_dir, "e2e_gv_run_button")
-  on.exit(app$stop(), add = TRUE)
-
-  success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
-  if (!success) skip("Could not navigate to Genetic Value tab")
-
-  html <- get_html_safe(app, "body")
-  has_run_button <- grepl("run|analyze|calculate|start", html, ignore.case = TRUE)
-  expect_true(has_run_button, info = "Should have run analysis button")
+  expect_tab_content("Genetic Value Analysis", "run|analyze|calculate|start",
+                     alt_tab = "Genetic Value", info = "Should have run analysis button")
 })
 
 test_that("E2E: Genetic Value has rankings display", {
@@ -95,16 +62,8 @@ test_that("E2E: Genetic Value has rankings display", {
   skip_if_not_installed("chromote")
   skip_on_cran()
 
-  app_dir <- create_test_app()
-  app <- create_app_driver(app_dir, "e2e_gv_rankings")
-  on.exit(app$stop(), add = TRUE)
-
-  success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
-  if (!success) skip("Could not navigate to Genetic Value tab")
-
-  html <- get_html_safe(app, "body")
-  has_rankings <- grepl("ranking|top|result", html, ignore.case = TRUE)
-  expect_true(has_rankings, info = "Should have rankings display area")
+  expect_tab_content("Genetic Value Analysis", "ranking|top|result",
+                     alt_tab = "Genetic Value", info = "Should have rankings display area")
 })
 
 test_that("E2E: Genetic Value has download functionality", {
@@ -112,14 +71,6 @@ test_that("E2E: Genetic Value has download functionality", {
   skip_if_not_installed("chromote")
   skip_on_cran()
 
-  app_dir <- create_test_app()
-  app <- create_app_driver(app_dir, "e2e_gv_download")
-  on.exit(app$stop(), add = TRUE)
-
-  success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
-  if (!success) skip("Could not navigate to Genetic Value tab")
-
-  html <- get_html_safe(app, "body")
-  has_download <- grepl("download|export|save", html, ignore.case = TRUE)
-  expect_true(has_download, info = "Should have download functionality")
+  expect_tab_content("Genetic Value Analysis", "download|export|save",
+                     alt_tab = "Genetic Value", info = "Should have download functionality")
 })

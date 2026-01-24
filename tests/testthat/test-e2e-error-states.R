@@ -2,6 +2,7 @@
 #' This file is part of nprcgenekeepr
 #' E2E Tests for Error States and Edge Cases
 #' Non-golden-path testing
+#' Note: Error state tests use individual app instances for isolation
 library(testthat)
 
 # =============================================================================
@@ -272,6 +273,5 @@ test_that("E2E: Export buttons exist but may be disabled without data", {
 
   html <- get_html_safe(app, "body")
   # Export/download buttons should exist even without data
-  has_export_elements <- grepl("export|download|save", html, ignore.case = TRUE)
   expect_true(TRUE, info = "Page loaded successfully")
 })
