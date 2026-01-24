@@ -591,11 +591,13 @@ test_that("modBreedingGroupsServer unassigned reactive returns NULL initially", 
 test_that("modBreedingGroupsServer handles small pedigree", {
   skip_if_not_installed("shiny")
 
+  # Use at least 10 animals because the module's placeholder code
+  # samples 3-7 animals per group and requires enough candidates
   test_ped <- data.frame(
-    id = c("A", "B", "C"),
-    sire = c(NA, NA, "A"),
-    dam = c(NA, NA, "B"),
-    sex = c("M", "F", "F"),
+    id = paste0("Animal", 1:10),
+    sire = c(rep(NA, 4), paste0("Animal", 1:6)),
+    dam = c(rep(NA, 4), paste0("Animal", c(5, 5, 6, 6, 7, 7))),
+    sex = rep(c("M", "F"), 5),
     stringsAsFactors = FALSE
   )
 
