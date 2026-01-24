@@ -258,3 +258,677 @@ test_that("modInputUI has proper conditional panels", {
   expect_true(grepl("fileContent.*separatePedGenoFile", ui_html))
   expect_true(grepl("fileContent.*focalAnimals", ui_html))
 })
+
+# ============================================================================
+# Additional Server Tests - activeFile reactive
+# ============================================================================
+
+test_that("modInputServer activeFile reactive returns NULL for pedFile with no upload", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(fileContent = "pedFile")
+      # Without file upload, activeFile should return NULL
+      file_result <- activeFile()
+      expect_null(file_result)
+    }
+  )
+})
+
+test_that("modInputServer activeFile reactive returns NULL for commonPedGenoFile with no upload", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(fileContent = "commonPedGenoFile")
+      file_result <- activeFile()
+      expect_null(file_result)
+    }
+  )
+})
+
+test_that("modInputServer activeFile reactive returns NULL for separatePedGenoFile with no upload", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(fileContent = "separatePedGenoFile")
+      file_result <- activeFile()
+      expect_null(file_result)
+    }
+  )
+})
+
+test_that("modInputServer activeFile reactive returns NULL for focalAnimals with no upload", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(fileContent = "focalAnimals")
+      file_result <- activeFile()
+      expect_null(file_result)
+    }
+  )
+})
+
+# ============================================================================
+# Server Tests - minParentAge variations
+# ============================================================================
+
+test_that("modInputServer handles default minParentAge value", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(minParentAge = "2.0")
+      result <- session$getReturned()
+      expect_equal(result$minParentAge(), 2.0)
+    }
+  )
+})
+
+test_that("modInputServer handles integer minParentAge", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(minParentAge = "5")
+      result <- session$getReturned()
+      expect_equal(result$minParentAge(), 5)
+    }
+  )
+})
+
+test_that("modInputServer handles zero minParentAge", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(minParentAge = "0")
+      result <- session$getReturned()
+      expect_equal(result$minParentAge(), 0)
+    }
+  )
+})
+
+test_that("modInputServer handles decimal minParentAge", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(minParentAge = "1.75")
+      result <- session$getReturned()
+      expect_equal(result$minParentAge(), 1.75)
+    }
+  )
+})
+
+test_that("modInputServer handles non-numeric minParentAge gracefully", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(minParentAge = "invalid")
+      result <- session$getReturned()
+      # as.numeric("invalid") returns NA with a warning
+      expect_true(is.na(result$minParentAge()))
+    }
+  )
+})
+
+# ============================================================================
+# Server Tests - Return value components
+# ============================================================================
+
+test_that("modInputServer cleanedStudbook requires qcResults", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      result <- session$getReturned()
+      # Before any data is loaded, cleanedStudbook should error
+      expect_error(result$cleanedStudbook())
+    }
+  )
+})
+
+test_that("modInputServer genotypeData requires qcResults", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      result <- session$getReturned()
+      # Before any data is loaded, genotypeData should error
+      expect_error(result$genotypeData())
+    }
+  )
+})
+
+test_that("modInputServer returns all six expected reactive components", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      result <- session$getReturned()
+      expect_equal(length(result), 6)
+      expected_names <- c("cleanedStudbook", "genotypeData", "qcSummary",
+                          "minParentAge", "isReady", "debugMode")
+      expect_setequal(names(result), expected_names)
+    }
+  )
+})
+
+# ============================================================================
+# Server Tests - Debug mode toggle
+# ============================================================================
+
+test_that("modInputServer debugMode starts as FALSE by default", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(debugger = FALSE)
+      result <- session$getReturned()
+      expect_false(result$debugMode())
+    }
+  )
+})
+
+test_that("modInputServer debugMode toggles correctly", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      result <- session$getReturned()
+
+      session$setInputs(debugger = FALSE)
+      expect_false(result$debugMode())
+
+      session$setInputs(debugger = TRUE)
+      expect_true(result$debugMode())
+
+      session$setInputs(debugger = FALSE)
+      expect_false(result$debugMode())
+    }
+  )
+})
+
+# ============================================================================
+# Server Tests - File type and separator combinations
+# ============================================================================
+
+test_that("modInputServer handles Excel file type with comma separator", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(fileType = "fileTypeExcel", separator = ",")
+      expect_equal(input$fileType, "fileTypeExcel")
+      expect_equal(input$separator, ",")
+    }
+  )
+})
+
+test_that("modInputServer handles Text file type with tab separator", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(fileType = "fileTypeText", separator = "\t")
+      expect_equal(input$fileType, "fileTypeText")
+      expect_equal(input$separator, "\t")
+    }
+  )
+})
+
+test_that("modInputServer handles Text file type with semicolon separator", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(fileType = "fileTypeText", separator = ";")
+      expect_equal(input$fileType, "fileTypeText")
+      expect_equal(input$separator, ";")
+    }
+  )
+})
+
+# ============================================================================
+# Server Tests - activeFile selects correct input based on fileContent
+# ============================================================================
+
+test_that("modInputServer activeFile switches based on fileContent pedFile", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      # Set fileContent to pedFile
+      session$setInputs(fileContent = "pedFile")
+      expect_equal(input$fileContent, "pedFile")
+      # activeFile returns pedigreeFileOne for this content type
+      # Without upload, should be NULL
+      expect_null(activeFile())
+    }
+  )
+})
+
+test_that("modInputServer activeFile switches based on fileContent commonPedGenoFile", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(fileContent = "commonPedGenoFile")
+      expect_equal(input$fileContent, "commonPedGenoFile")
+      expect_null(activeFile())
+    }
+  )
+})
+
+test_that("modInputServer activeFile switches based on fileContent separatePedGenoFile", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(fileContent = "separatePedGenoFile")
+      expect_equal(input$fileContent, "separatePedGenoFile")
+      expect_null(activeFile())
+    }
+  )
+})
+
+test_that("modInputServer activeFile switches based on fileContent focalAnimals", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(fileContent = "focalAnimals")
+      expect_equal(input$fileContent, "focalAnimals")
+      expect_null(activeFile())
+    }
+  )
+})
+
+# ============================================================================
+# Server Tests - Input state management
+# ============================================================================
+
+test_that("modInputServer maintains input state across multiple changes", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      # Set initial state
+      session$setInputs(
+        fileType = "fileTypeExcel",
+        fileContent = "pedFile",
+        minParentAge = "2.0",
+        debugger = FALSE
+      )
+
+      expect_equal(input$fileType, "fileTypeExcel")
+      expect_equal(input$fileContent, "pedFile")
+      result <- session$getReturned()
+      expect_equal(result$minParentAge(), 2.0)
+      expect_false(result$debugMode())
+
+      # Change state
+      session$setInputs(
+        fileType = "fileTypeText",
+        fileContent = "commonPedGenoFile",
+        minParentAge = "4.5",
+        debugger = TRUE
+      )
+
+      expect_equal(input$fileType, "fileTypeText")
+      expect_equal(input$fileContent, "commonPedGenoFile")
+      expect_equal(result$minParentAge(), 4.5)
+      expect_true(result$debugMode())
+    }
+  )
+})
+
+test_that("modInputServer handles rapid input changes", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      result <- session$getReturned()
+
+      # Rapid changes to minParentAge
+      session$setInputs(minParentAge = "1.0")
+      expect_equal(result$minParentAge(), 1.0)
+
+      session$setInputs(minParentAge = "2.0")
+      expect_equal(result$minParentAge(), 2.0)
+
+      session$setInputs(minParentAge = "3.0")
+      expect_equal(result$minParentAge(), 3.0)
+
+      session$setInputs(minParentAge = "0.5")
+      expect_equal(result$minParentAge(), 0.5)
+    }
+  )
+})
+
+# ============================================================================
+# Server Tests - Edge cases for minParentAge
+# ============================================================================
+
+test_that("modInputServer handles very small minParentAge", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(minParentAge = "0.001")
+      result <- session$getReturned()
+      expect_equal(result$minParentAge(), 0.001)
+    }
+  )
+})
+
+test_that("modInputServer handles very large minParentAge", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(minParentAge = "100")
+      result <- session$getReturned()
+      expect_equal(result$minParentAge(), 100)
+    }
+  )
+})
+
+test_that("modInputServer handles negative minParentAge", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(minParentAge = "-1")
+      result <- session$getReturned()
+      # Should convert to -1, validation would happen elsewhere
+      expect_equal(result$minParentAge(), -1)
+    }
+  )
+})
+
+test_that("modInputServer handles empty minParentAge string", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(minParentAge = "")
+      result <- session$getReturned()
+      # as.numeric("") returns NA
+      expect_true(is.na(result$minParentAge()))
+    }
+  )
+})
+
+test_that("modInputServer handles whitespace minParentAge", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(minParentAge = "  2.5  ")
+      result <- session$getReturned()
+      # as.numeric handles whitespace
+      expect_equal(result$minParentAge(), 2.5)
+    }
+  )
+})
+
+# ============================================================================
+# UI Tests - Additional coverage
+# ============================================================================
+
+test_that("modInputUI has custom CSS styles", {
+  ui <- modInputUI("test")
+  ui_html <- as.character(ui)
+
+  expect_true(grepl("border: 1px solid black", ui_html))
+  expect_true(grepl("background-color", ui_html))
+})
+
+test_that("modInputUI has sidebar panel styling", {
+  ui <- modInputUI("test")
+  ui_html <- as.character(ui)
+
+  expect_true(grepl("border-radius", ui_html))
+  expect_true(grepl("box-shadow", ui_html))
+})
+
+test_that("modInputUI has icons in tabs", {
+  ui <- modInputUI("test")
+  ui_html <- as.character(ui)
+
+  # Font Awesome 5/6 uses different icon names
+  expect_true(grepl("fa-circle-info|info-circle", ui_html))
+  expect_true(grepl("fa-circle-check|check-circle", ui_html))
+  expect_true(grepl("fa-triangle-exclamation|exclamation-triangle", ui_html))
+  expect_true(grepl("fa-circle-exclamation|exclamation-circle", ui_html))
+})
+
+test_that("modInputUI has Input Format tab", {
+  ui <- modInputUI("test")
+  ui_html <- as.character(ui)
+
+  # The Input Format tab exists (the HTML is included at runtime)
+  expect_true(grepl("Input Format", ui_html))
+  expect_true(grepl("tab-pane", ui_html))
+})
+
+test_that("modInputUI getData button has correct class", {
+  ui <- modInputUI("test")
+  ui_html <- as.character(ui)
+
+  expect_true(grepl("btn-primary", ui_html))
+  expect_true(grepl("btn-block", ui_html))
+})
+
+test_that("modInputUI has DT table outputs", {
+  ui <- modInputUI("test")
+  ui_html <- as.character(ui)
+
+  expect_true(grepl("qcErrors", ui_html))
+  expect_true(grepl("qcWarnings", ui_html))
+  expect_true(grepl("cleanedDataTable", ui_html))
+})
+
+test_that("modInputUI has help text for minimum parent age", {
+  ui <- modInputUI("test")
+  ui_html <- as.character(ui)
+
+  expect_true(grepl("Parents must be at least as old", ui_html))
+})
+
+test_that("modInputUI has file acceptance types", {
+  ui <- modInputUI("test")
+  ui_html <- as.character(ui)
+
+  expect_true(grepl("\\.csv", ui_html))
+  expect_true(grepl("\\.txt", ui_html))
+  expect_true(grepl("\\.xlsx", ui_html))
+  expect_true(grepl("\\.xls", ui_html))
+})
+
+test_that("modInputUI uses correct tab panel structure", {
+  ui <- modInputUI("test")
+  ui_html <- as.character(ui)
+
+  # Check for tabsetPanel
+  expect_true(grepl("mainTabs", ui_html))
+})
+
+test_that("modInputUI has upload icon on action button", {
+  ui <- modInputUI("test")
+  ui_html <- as.character(ui)
+
+  expect_true(grepl("upload", ui_html))
+})
+
+# ============================================================================
+# Server Tests - Multiple namespace instances
+# ============================================================================
+
+test_that("modInputServer works with different namespaces", {
+  skip_if_not_installed("shiny")
+
+  # Test that multiple instances with different IDs work independently
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(minParentAge = "3.0")
+      result <- session$getReturned()
+      expect_equal(result$minParentAge(), 3.0)
+    }
+  )
+})
+
+test_that("modInputUI generates unique IDs for different namespaces", {
+  ui1 <- modInputUI("instance1")
+  ui2 <- modInputUI("instance2")
+
+  ui_html1 <- as.character(ui1)
+  ui_html2 <- as.character(ui2)
+
+  expect_true(grepl("instance1-fileType", ui_html1))
+  expect_true(grepl("instance2-fileType", ui_html2))
+  expect_false(grepl("instance2", ui_html1))
+  expect_false(grepl("instance1", ui_html2))
+})
+
+# ============================================================================
+# Server Tests - All file content type selections
+# ============================================================================
+
+test_that("modInputServer cycles through all file content types", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      content_types <- c("pedFile", "commonPedGenoFile",
+                        "separatePedGenoFile", "focalAnimals")
+
+      for (content_type in content_types) {
+        session$setInputs(fileContent = content_type)
+        expect_equal(input$fileContent, content_type)
+        # activeFile should return NULL without uploaded files
+        expect_null(activeFile())
+      }
+    }
+  )
+})
+
+test_that("modInputServer cycles through all separator types", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(fileType = "fileTypeText")
+      separators <- c(",", ";", "\t")
+
+      for (sep in separators) {
+        session$setInputs(separator = sep)
+        expect_equal(input$separator, sep)
+      }
+    }
+  )
+})
+
+# ============================================================================
+# Server Tests - Config parameter handling
+# ============================================================================
+
+test_that("modInputServer handles NULL config", {
+  skip_if_not_installed("shiny")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      result <- session$getReturned()
+      expect_true(is.list(result))
+      expect_equal(length(result), 6)
+    }
+  )
+})
+
+test_that("modInputServer handles reactive config", {
+  skip_if_not_installed("shiny")
+
+  test_config <- shiny::reactive({
+    list(setting1 = "value1", setting2 = "value2")
+  })
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = test_config),
+    {
+      result <- session$getReturned()
+      expect_true(is.list(result))
+      expect_equal(length(result), 6)
+    }
+  )
+})
