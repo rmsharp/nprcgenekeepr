@@ -1112,3 +1112,453 @@ test_that("modSummaryStatsServer handles bimodal distribution data", {
     }
   )
 })
+
+# =============================================================================
+# Server Tests - Additional Edge Cases
+# =============================================================================
+
+test_that("modSummaryStatsServer handles zero values", {
+  skip_if_not_installed("shiny")
+
+  test_gv <- data.frame(
+    id = c("A", "B", "C"),
+    meanKinship = c(0.0, 0.0, 0.0),
+    genomeUniqueness = c(0.0, 0.0, 0.0),
+    stringsAsFactors = FALSE
+  )
+
+  test_ped <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modSummaryStatsServer,
+    args = list(
+      geneticValues = shiny::reactive({ test_gv }),
+      pedigree = shiny::reactive({ test_ped }),
+      kinshipMatrix = NULL
+    ),
+    {
+      result <- session$getReturned()
+      summary_data <- result$summaryData()
+
+      expect_equal(summary_data$nAnimals, 3)
+      expect_equal(summary_data$meanMK, 0.0)
+      expect_equal(summary_data$meanGU, 0.0)
+    }
+  )
+})
+
+test_that("modSummaryStatsServer handles boundary values (0 and 1)", {
+  skip_if_not_installed("shiny")
+
+  test_gv <- data.frame(
+    id = c("A", "B", "C", "D"),
+    meanKinship = c(0.0, 0.5, 0.5, 1.0),
+    genomeUniqueness = c(1.0, 0.5, 0.5, 0.0),
+    stringsAsFactors = FALSE
+  )
+
+  test_ped <- data.frame(
+    id = c("A", "B", "C", "D"),
+    sire = c(NA, NA, "A", "A"),
+    dam = c(NA, NA, "B", "B"),
+    sex = c("M", "F", "F", "M"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modSummaryStatsServer,
+    args = list(
+      geneticValues = shiny::reactive({ test_gv }),
+      pedigree = shiny::reactive({ test_ped }),
+      kinshipMatrix = NULL
+    ),
+    {
+      result <- session$getReturned()
+      summary_data <- result$summaryData()
+
+      expect_equal(summary_data$nAnimals, 4)
+      expect_equal(summary_data$meanMK, 0.5)
+      expect_equal(summary_data$meanGU, 0.5)
+      # Plots should handle boundary values
+      expect_no_error(output$mkHist)
+      expect_no_error(output$guHist)
+    }
+  )
+})
+
+test_that("modSummaryStatsServer handles two animals (minimum for meaningful stats)", {
+  skip_if_not_installed("shiny")
+
+  test_gv <- data.frame(
+    id = c("A", "B"),
+    meanKinship = c(0.1, 0.3),
+    genomeUniqueness = c(0.9, 0.7),
+    stringsAsFactors = FALSE
+  )
+
+  test_ped <- data.frame(
+    id = c("A", "B"),
+    sire = c(NA, NA),
+    dam = c(NA, NA),
+    sex = c("M", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modSummaryStatsServer,
+    args = list(
+      geneticValues = shiny::reactive({ test_gv }),
+      pedigree = shiny::reactive({ test_ped }),
+      kinshipMatrix = NULL
+    ),
+    {
+      result <- session$getReturned()
+      summary_data <- result$summaryData()
+
+      expect_equal(summary_data$nAnimals, 2)
+      expect_equal(summary_data$meanMK, 0.2)
+      expect_equal(summary_data$meanGU, 0.8)
+    }
+  )
+})
+
+test_that("modSummaryStatsServer handles half-founders (one parent known)", {
+  skip_if_not_installed("shiny")
+
+  test_gv <- data.frame(
+    id = c("A", "B", "C", "D"),
+    meanKinship = c(0.15, 0.20, 0.25, 0.30),
+    genomeUniqueness = c(0.85, 0.80, 0.75, 0.70),
+    stringsAsFactors = FALSE
+  )
+
+  # A and B are true founders, C has only sire known, D has only dam known
+  test_ped <- data.frame(
+    id = c("A", "B", "C", "D"),
+    sire = c(NA, NA, "A", NA),
+    dam = c(NA, NA, NA, "B"),
+    sex = c("M", "F", "M", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modSummaryStatsServer,
+    args = list(
+      geneticValues = shiny::reactive({ test_gv }),
+      pedigree = shiny::reactive({ test_ped }),
+      kinshipMatrix = NULL
+    ),
+    {
+      # Half-founders (one parent known) should NOT be counted as founders
+      ped <- pedigree()
+      founders <- ped[is.na(ped$sire) & is.na(ped$dam), ]
+      expect_equal(nrow(founders), 2)
+      expect_true(all(c("A", "B") %in% founders$id))
+    }
+  )
+})
+
+test_that("modSummaryStatsServer handles genetic values with extra columns", {
+  skip_if_not_installed("shiny")
+
+  test_gv <- data.frame(
+    id = c("A", "B", "C"),
+    meanKinship = c(0.1, 0.2, 0.3),
+    genomeUniqueness = c(0.9, 0.8, 0.7),
+    extraColumn1 = c("x", "y", "z"),
+    extraColumn2 = c(100, 200, 300),
+    rank = c(1, 2, 3),
+    stringsAsFactors = FALSE
+  )
+
+  test_ped <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modSummaryStatsServer,
+    args = list(
+      geneticValues = shiny::reactive({ test_gv }),
+      pedigree = shiny::reactive({ test_ped }),
+      kinshipMatrix = NULL
+    ),
+    {
+      result <- session$getReturned()
+      summary_data <- result$summaryData()
+
+      # Should work regardless of extra columns
+      expect_equal(summary_data$nAnimals, 3)
+      expect_equal(summary_data$meanMK, 0.2)
+      expect_equal(summary_data$meanGU, 0.8)
+    }
+  )
+})
+
+test_that("modSummaryStatsServer handles extreme outliers", {
+  skip_if_not_installed("shiny")
+
+  test_gv <- data.frame(
+    id = c("A", "B", "C", "D", "E"),
+    meanKinship = c(0.001, 0.2, 0.2, 0.2, 0.999),
+    genomeUniqueness = c(0.999, 0.5, 0.5, 0.5, 0.001),
+    stringsAsFactors = FALSE
+  )
+
+  test_ped <- data.frame(
+    id = c("A", "B", "C", "D", "E"),
+    sire = c(NA, NA, "A", "A", "B"),
+    dam = c(NA, NA, "B", NA, NA),
+    sex = c("M", "F", "F", "M", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modSummaryStatsServer,
+    args = list(
+      geneticValues = shiny::reactive({ test_gv }),
+      pedigree = shiny::reactive({ test_ped }),
+      kinshipMatrix = NULL
+    ),
+    {
+      result <- session$getReturned()
+      summary_data <- result$summaryData()
+
+      expect_equal(summary_data$nAnimals, 5)
+      # Outliers should affect mean
+      expect_true(summary_data$meanMK > 0 && summary_data$meanMK < 1)
+      # Box plots should handle outliers
+      expect_no_error(output$mkBox)
+      expect_no_error(output$guBox)
+    }
+  )
+})
+
+test_that("modSummaryStatsServer handles very small values", {
+  skip_if_not_installed("shiny")
+
+  test_gv <- data.frame(
+    id = c("A", "B", "C"),
+    meanKinship = c(0.0001, 0.0002, 0.0003),
+    genomeUniqueness = c(0.9997, 0.9998, 0.9999),
+    stringsAsFactors = FALSE
+  )
+
+  test_ped <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modSummaryStatsServer,
+    args = list(
+      geneticValues = shiny::reactive({ test_gv }),
+      pedigree = shiny::reactive({ test_ped }),
+      kinshipMatrix = NULL
+    ),
+    {
+      result <- session$getReturned()
+      summary_data <- result$summaryData()
+
+      expect_equal(summary_data$nAnimals, 3)
+      expect_true(summary_data$meanMK < 0.001)
+      expect_true(summary_data$meanGU > 0.999)
+    }
+  )
+})
+
+test_that("modSummaryStatsServer handles pedigree with only male founders", {
+  skip_if_not_installed("shiny")
+
+  test_gv <- data.frame(
+    id = c("M1", "M2", "M3"),
+    meanKinship = c(0.1, 0.2, 0.3),
+    genomeUniqueness = c(0.9, 0.8, 0.7),
+    stringsAsFactors = FALSE
+  )
+
+  test_ped <- data.frame(
+    id = c("M1", "M2", "M3"),
+    sire = c(NA, NA, NA),
+    dam = c(NA, NA, NA),
+    sex = c("M", "M", "M"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modSummaryStatsServer,
+    args = list(
+      geneticValues = shiny::reactive({ test_gv }),
+      pedigree = shiny::reactive({ test_ped }),
+      kinshipMatrix = NULL
+    ),
+    {
+      ped <- pedigree()
+      males <- ped[ped$sex == "M" & is.na(ped$sire) & is.na(ped$dam), ]
+      females <- ped[ped$sex == "F" & is.na(ped$sire) & is.na(ped$dam), ]
+
+      expect_equal(nrow(males), 3)
+      expect_equal(nrow(females), 0)
+    }
+  )
+})
+
+test_that("modSummaryStatsServer handles pedigree with only female founders", {
+  skip_if_not_installed("shiny")
+
+  test_gv <- data.frame(
+    id = c("F1", "F2", "F3"),
+    meanKinship = c(0.1, 0.2, 0.3),
+    genomeUniqueness = c(0.9, 0.8, 0.7),
+    stringsAsFactors = FALSE
+  )
+
+  test_ped <- data.frame(
+    id = c("F1", "F2", "F3"),
+    sire = c(NA, NA, NA),
+    dam = c(NA, NA, NA),
+    sex = c("F", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modSummaryStatsServer,
+    args = list(
+      geneticValues = shiny::reactive({ test_gv }),
+      pedigree = shiny::reactive({ test_ped }),
+      kinshipMatrix = NULL
+    ),
+    {
+      ped <- pedigree()
+      males <- ped[ped$sex == "M" & is.na(ped$sire) & is.na(ped$dam), ]
+      females <- ped[ped$sex == "F" & is.na(ped$sire) & is.na(ped$dam), ]
+
+      expect_equal(nrow(males), 0)
+      expect_equal(nrow(females), 3)
+    }
+  )
+})
+
+test_that("modSummaryStatsServer handles z-scores with NA values", {
+  skip_if_not_installed("shiny")
+
+  test_gv <- data.frame(
+    id = c("A", "B", "C", "D"),
+    meanKinship = c(0.1, 0.2, 0.3, 0.4),
+    genomeUniqueness = c(0.9, 0.8, 0.7, 0.6),
+    zScore = c(-1.0, NA, 1.0, NA),
+    stringsAsFactors = FALSE
+  )
+
+  test_ped <- data.frame(
+    id = c("A", "B", "C", "D"),
+    sire = c(NA, NA, "A", "A"),
+    dam = c(NA, NA, "B", "B"),
+    sex = c("M", "F", "F", "M"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modSummaryStatsServer,
+    args = list(
+      geneticValues = shiny::reactive({ test_gv }),
+      pedigree = shiny::reactive({ test_ped }),
+      kinshipMatrix = NULL
+    ),
+    {
+      result <- session$getReturned()
+      summary_data <- result$summaryData()
+
+      expect_equal(summary_data$nAnimals, 4)
+      # Z-score plots should handle NA values
+      expect_no_error(output$zscoreHist)
+      expect_no_error(output$zscoreBox)
+    }
+  )
+})
+
+test_that("modSummaryStatsServer handles large kinship matrix", {
+  skip_if_not_installed("shiny")
+
+  n <- 50
+  test_gv <- data.frame(
+    id = paste0("A", seq_len(n)),
+    meanKinship = runif(n, 0.1, 0.4),
+    genomeUniqueness = runif(n, 0.5, 0.9),
+    stringsAsFactors = FALSE
+  )
+
+  test_ped <- data.frame(
+    id = paste0("A", seq_len(n)),
+    sire = rep(NA, n),
+    dam = rep(NA, n),
+    sex = rep(c("M", "F"), length.out = n),
+    stringsAsFactors = FALSE
+  )
+
+  # Create a symmetric kinship matrix
+  test_kmat <- matrix(runif(n * n, 0, 0.5), nrow = n, ncol = n)
+  test_kmat <- (test_kmat + t(test_kmat)) / 2  # Make symmetric
+  diag(test_kmat) <- 0.5  # Self-kinship
+  rownames(test_kmat) <- colnames(test_kmat) <- paste0("A", seq_len(n))
+
+  shiny::testServer(
+    modSummaryStatsServer,
+    args = list(
+      geneticValues = shiny::reactive({ test_gv }),
+      pedigree = shiny::reactive({ test_ped }),
+      kinshipMatrix = shiny::reactive({ test_kmat })
+    ),
+    {
+      result <- session$getReturned()
+      summary_data <- result$summaryData()
+
+      expect_equal(summary_data$nAnimals, n)
+    }
+  )
+})
+
+# =============================================================================
+# UI Tests - Additional Coverage
+# =============================================================================
+
+test_that("modSummaryStatsUI generates unique IDs for different namespaces", {
+  ui1 <- modSummaryStatsUI("stats1")
+  ui2 <- modSummaryStatsUI("stats2")
+
+  ui_html1 <- as.character(ui1)
+  ui_html2 <- as.character(ui2)
+
+  expect_true(grepl("stats1-mkHist", ui_html1))
+  expect_true(grepl("stats2-mkHist", ui_html2))
+  expect_false(grepl("stats2", ui_html1))
+  expect_false(grepl("stats1", ui_html2))
+})
+
+test_that("modSummaryStatsUI has proper column layout", {
+  ui <- modSummaryStatsUI("test")
+  ui_html <- as.character(ui)
+
+  # Check for Bootstrap column classes
+  expect_true(grepl("col-sm-", ui_html) || grepl("column", ui_html))
+})
+
+test_that("modSummaryStatsUI has proper styling", {
+  ui <- modSummaryStatsUI("test")
+  ui_html <- as.character(ui)
+
+  expect_true(grepl("border-radius", ui_html))
+  expect_true(grepl("box-shadow", ui_html))
+})
