@@ -94,6 +94,14 @@ appServer <- function(input, output, session) {
     shared$geneticValues <- gvResults$geneticValues()
   })
 
+  # Summary Statistics Module
+  modSummaryStatsServer(
+    "summaryStats",
+    geneticValues = reactive(shared$geneticValues),
+    pedigree = reactive(shared$currentPedigree),
+    kinshipMatrix = NULL
+  )
+
   # Breeding Groups Module
   modBreedingGroupsServer(
     "breedingGroups",

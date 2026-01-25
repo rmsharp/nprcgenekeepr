@@ -107,6 +107,15 @@ appUI <- function() {
     ),
 
     # ====================
+    # Summary Statistics Tab
+    # ====================
+    tabPanel(
+      "Summary Statistics",
+      icon = icon("chart-line"),
+      modSummaryStatsUI("summaryStats")
+    ),
+
+    # ====================
     # Breeding Groups Tab
     # ====================
     tabPanel(

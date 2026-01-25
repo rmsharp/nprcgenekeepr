@@ -1015,3 +1015,202 @@ test_that("modGeneticValueServer handles pedigree with special character IDs", {
     }
   )
 })
+
+# ============================================================================
+# TDD Tests - reportGV Integration (these should fail until implemented)
+# Tests to ensure modGeneticValueServer uses real reportGV() function
+# ============================================================================
+
+test_that("modGeneticValueServer returns full reportGV structure", {
+  skip_if_not_installed("shiny")
+
+  # Create a proper pedigree for reportGV
+  test_ped <- nprcgenekeepr::qcStudbook(
+    nprcgenekeepr::examplePedigree[1:50, ],
+    minParentAge = 2,
+    reportChanges = FALSE,
+    reportErrors = FALSE
+  )
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped })
+    ),
+    {
+      session$setInputs(nIterations = 50)  # Low iterations for test speed
+      session$setInputs(runAnalysis = 1)
+
+      result <- session$getReturned()
+
+      # Should return full results including kinshipMatrix and founderStats
+      expect_true("kinshipMatrix" %in% names(result))
+      expect_true("founderStats" %in% names(result))
+    }
+  )
+})
+
+test_that("modGeneticValueServer returns kinship matrix", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- nprcgenekeepr::qcStudbook(
+    nprcgenekeepr::examplePedigree[1:50, ],
+    minParentAge = 2,
+    reportChanges = FALSE,
+    reportErrors = FALSE
+  )
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped })
+    ),
+    {
+      session$setInputs(nIterations = 50)
+      session$setInputs(runAnalysis = 1)
+
+      result <- session$getReturned()
+      kmat <- result$kinshipMatrix()
+
+      # kinshipMatrix should be a matrix
+      expect_true(is.matrix(kmat))
+      # Should be symmetric
+      expect_equal(nrow(kmat), ncol(kmat))
+    }
+  )
+})
+
+test_that("modGeneticValueServer returns founder statistics", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- nprcgenekeepr::qcStudbook(
+    nprcgenekeepr::examplePedigree[1:50, ],
+    minParentAge = 2,
+    reportChanges = FALSE,
+    reportErrors = FALSE
+  )
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped })
+    ),
+    {
+      session$setInputs(nIterations = 50)
+      session$setInputs(runAnalysis = 1)
+
+      result <- session$getReturned()
+      fStats <- result$founderStats()
+
+      # founderStats should include FE and FG
+      expect_true("fe" %in% names(fStats))
+      expect_true("fg" %in% names(fStats))
+      expect_true("total" %in% names(fStats))
+      expect_true("nMaleFounders" %in% names(fStats))
+      expect_true("nFemaleFounders" %in% names(fStats))
+    }
+  )
+})
+
+test_that("modGeneticValueServer returns male and female founders", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- nprcgenekeepr::qcStudbook(
+    nprcgenekeepr::examplePedigree[1:50, ],
+    minParentAge = 2,
+    reportChanges = FALSE,
+    reportErrors = FALSE
+  )
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped })
+    ),
+    {
+      session$setInputs(nIterations = 50)
+      session$setInputs(runAnalysis = 1)
+
+      result <- session$getReturned()
+
+      expect_true("maleFounders" %in% names(result))
+      expect_true("femaleFounders" %in% names(result))
+
+      mf <- result$maleFounders()
+      ff <- result$femaleFounders()
+
+      expect_true(is.data.frame(mf))
+      expect_true(is.data.frame(ff))
+    }
+  )
+})
+
+test_that("modGeneticValueServer geneticValues has indivMeanKin column", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- nprcgenekeepr::qcStudbook(
+    nprcgenekeepr::examplePedigree[1:50, ],
+    minParentAge = 2,
+    reportChanges = FALSE,
+    reportErrors = FALSE
+  )
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped })
+    ),
+    {
+      session$setInputs(nIterations = 50)
+      session$setInputs(runAnalysis = 1)
+
+      result <- session$getReturned()
+      gv <- result$geneticValues()
+
+      # Should have column names matching reportGV output
+      expect_true("indivMeanKin" %in% names(gv))
+      expect_true("zScores" %in% names(gv))
+      expect_true("gu" %in% names(gv))
+    }
+  )
+})
+
+test_that("modGeneticValueServer uses real kinship calculation", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- nprcgenekeepr::qcStudbook(
+    nprcgenekeepr::examplePedigree[1:50, ],
+    minParentAge = 2,
+    reportChanges = FALSE,
+    reportErrors = FALSE
+  )
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped })
+    ),
+    {
+      session$setInputs(nIterations = 50)
+      session$setInputs(runAnalysis = 1)
+
+      result <- session$getReturned()
+      gv <- result$geneticValues()
+
+      # indivMeanKin should NOT be random (check consistency)
+      # Run analysis again
+      session$setInputs(runAnalysis = 2)
+      gv2 <- result$geneticValues()
+
+      # With real kinship, values should be deterministic
+      # (unlike random placeholder values)
+      # Check that the ids match and kinship values are consistent
+      expect_equal(sort(gv$id), sort(gv2$id))
+      # indivMeanKin should be the same between runs
+      # (kinship is deterministic, unlike random placeholder)
+      gv_sorted <- gv[order(gv$id), ]
+      gv2_sorted <- gv2[order(gv2$id), ]
+      expect_equal(gv_sorted$indivMeanKin, gv2_sorted$indivMeanKin)
+    }
+  )
+})
