@@ -1482,9 +1482,23 @@ test_that("modSummaryStatsServer handles z-scores with NA values", {
       summary_data <- result$summaryData()
 
       expect_equal(summary_data$nAnimals, 4)
-      # Z-score plots should handle NA values
-      expect_no_error(output$zscoreHist)
-      expect_no_error(output$zscoreBox)
+
+      # Z-score plots should handle NA values gracefully
+      # ggplot2 warns when removing rows with NA values - this is expected behavior
+      # Use expect_warning to verify the expected warnings are produced
+      expect_warning(
+        expect_warning(
+          expect_warning(
+            {
+              output$zscoreHist
+              output$zscoreBox
+            },
+            regexp = "Removed.*rows.*stat_bin"
+          ),
+          regexp = "Removed.*rows.*stat_boxplot"
+        ),
+        regexp = "Removed.*rows.*(geom_point|missing)"
+      )
     }
   )
 })
