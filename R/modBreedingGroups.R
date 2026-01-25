@@ -77,62 +77,175 @@ modBreedingGroupsUI <- function(id) {
 
 #' Breeding Groups Module - Server Function
 #'
-#' @return List with \code{groups}, \code{nGroups}, and \code{unassigned}.
+#' Server logic for breeding group formation using the groupAddAssign algorithm.
+#' This module integrates with the kinship-based maximal independent set (MIS)
+#' algorithm to form optimal breeding groups that minimize relatedness within
+#' groups while maximizing group sizes.
+#'
+#' The module supports multiple configuration options:
+#' \itemize{
+#'   \item \strong{Animal source}: Select top-ranked animals or all available
+#'   \item \strong{Kinship threshold}: Maximum allowed kinship within groups
+#'   \item \strong{Harem mode}: Form groups with exactly one male each
+#'   \item \strong{Sex ratio}: Target female-to-male ratio in groups
+#' }
+#'
+#' @return List with reactive components:
+#' \itemize{
+#'   \item \code{groups} - List of character vectors with animal IDs per group
+#'   \item \code{nGroups} - Number of groups formed
+#'   \item \code{score} - Optimization score from groupAddAssign (minimum group size)
+#'   \item \code{unassigned} - Character vector of candidate IDs not placed in groups
+#'   \item \code{groupKinship} - List of kinship matrices per group (if withKin=TRUE)
+#' }
 #'
 #' @param id character vector of length 1. Module namespace identifier.
-#' @param pedigree reactive returning pedigree data frame.
-#' @param geneticValues optional reactive returning genetic value results.
+#' @param pedigree reactive returning pedigree data frame with columns:
+#'   id, sire, dam, sex, and optionally birth, exit, gen.
+#' @param geneticValues optional reactive returning genetic value results
+#'   from \code{\link{modGeneticValueServer}}. If provided and contains a
+#'   kinship matrix, it will be used instead of calculating one.
 #'
-#' @seealso \code{\link{modBreedingGroupsUI}}
-#' @seealso \code{\link{modGeneticValueServer}}
+#' @seealso \code{\link{modBreedingGroupsUI}} for the UI component
+#' @seealso \code{\link{groupAddAssign}} for the underlying MIS algorithm
+#' @seealso \code{\link{modGeneticValueServer}} for genetic value analysis
+#' @seealso \code{\link{kinship}} for kinship matrix calculation
 #'
-#' @importFrom shiny moduleServer reactive eventReactive
+#' @importFrom shiny moduleServer reactive eventReactive reactiveVal withProgress
+#'   incProgress req showNotification
 #' @export
 modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
   moduleServer(id, function(input, output, session) {
+
+    # Store results from groupAddAssign
+    groupResults <- reactiveVal(NULL)
+
+    # Helper: Get kinship matrix from geneticValues or calculate from pedigree
+    getKinshipMatrix <- function(ped, gvReactive) {
+      # Try to get kinship from geneticValues module
+      if (!is.null(gvReactive) && is.function(gvReactive)) {
+        gvData <- tryCatch(gvReactive(), error = function(e) NULL)
+        if (!is.null(gvData) && "kinship" %in% names(gvData)) {
+          return(gvData$kinship)
+        }
+      }
+
+      # Calculate kinship from pedigree
+      if (!"gen" %in% names(ped)) {
+        ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+      }
+      kinship(ped$id, ped$sire, ped$dam, ped$gen)
+    }
+
+    # Helper: Parse sex ratio from UI input
+    parseSexRatio <- function(sexRatioInput) {
+      if (is.null(sexRatioInput) || sexRatioInput %in% c("none", "harem")) {
+        return(0.0)
+      }
+      sexRatioNum <- suppressWarnings(as.numeric(sexRatioInput))
+      if (is.na(sexRatioNum)) 0.0 else sexRatioNum
+    }
+
+    # Helper: Filter out NA/empty groups from groupAddAssign result
+    filterValidGroups <- function(groupList) {
+      validGroups <- lapply(groupList, function(g) {
+        if (length(g) == 0 || all(is.na(g))) return(NULL)
+        g[!is.na(g)]
+      })
+      validGroups[!sapply(validGroups, is.null)]
+    }
 
     breedingGroups <- eventReactive(input$formGroups, {
       req(pedigree())
 
       withProgress(message = "Forming breeding groups...", {
+        ped <- pedigree()
 
-        if (input$animalSource == "topRanked") {
+        # Get candidate IDs based on source selection
+        candidateIds <- if (input$animalSource == "topRanked") {
           req(geneticValues())
-          candidateIds <- geneticValues()$id[1:input$nTopAnimals]
+          gv <- geneticValues()
+          gv$id[seq_len(min(input$nTopAnimals, length(gv$id)))]
         } else {
-          candidateIds <- pedigree()$id
+          ped$id
         }
 
-        incProgress(0.4, detail = "Calculating kinship")
-        # kmat <- kinship(...)
+        incProgress(0.2, detail = "Calculating kinship")
+        kmat <- getKinshipMatrix(ped, geneticValues)
 
-        incProgress(0.4, detail = "Forming groups")
-        # groups <- groupAddAssign(candidateIds, kmat, ...)
+        incProgress(0.3, detail = "Running group formation algorithm")
 
-        # Placeholder
-        groups <- lapply(1:input$nGroups, function(i) {
-          nAnimals <- sample(3:7, 1)
-          data.frame(
-            group = i,
-            id = sample(candidateIds, min(nAnimals, length(candidateIds))),
-            sex = sample(c("M", "F"), nAnimals, replace = TRUE),
-            stringsAsFactors = FALSE
+        # Parse groupAddAssign parameters
+        threshold <- input$maxKinship
+        numGp <- input$nGroups
+        harem <- (input$sexRatio == "harem")
+        sexRatio <- parseSexRatio(input$sexRatio)
+        minAge <- if (!is.null(input$minAge)) input$minAge else 1.0
+        iter <- if (!is.null(input$nIterations)) input$nIterations else 1000L
+        withKin <- if (!is.null(input$withKinship)) input$withKinship else FALSE
+
+        # Progress callback for groupAddAssign
+        updateProgress <- function(n = 1L, detail = NULL, value = 0L,
+                                   reset = FALSE) {
+          incProgress(amount = 0.001, detail = detail)
+        }
+
+        # Run the MIS-based group formation algorithm
+        result <- tryCatch({
+          groupAddAssign(
+            candidates = candidateIds,
+            kmat = kmat,
+            ped = ped,
+            currentGroups = list(character(0L)),
+            threshold = threshold,
+            ignore = list(c("F", "F")),
+            minAge = minAge,
+            iter = iter,
+            numGp = numGp,
+            harem = harem,
+            sexRatio = sexRatio,
+            withKin = withKin,
+            updateProgress = updateProgress
           )
+        }, error = function(e) {
+          showNotification(
+            paste("Could not form breeding groups. Error:",
+                  e$message,
+                  "Please check your input data and try again."),
+            type = "error",
+            duration = 10
+          )
+          list(group = list(character(0)), score = 0)
         })
 
-        incProgress(0.2, detail = "Complete")
-        groups
+        # Process results
+        validGroups <- filterValidGroups(result$group)
+        assignedIds <- unlist(validGroups)
+        unassignedIds <- setdiff(candidateIds, assignedIds)
+
+        # Store full results for other reactives
+        groupResults(list(
+          group = validGroups,
+          score = result$score,
+          groupKin = result$groupKin,
+          unassigned = unassignedIds
+        ))
+
+        incProgress(0.5, detail = "Complete")
+        validGroups
       })
     })
 
     output$groupsDisplay <- renderUI({
       req(breedingGroups())
+      ped <- pedigree()
 
       groupsList <- lapply(seq_along(breedingGroups()), function(i) {
-        group <- breedingGroups()[[i]]
+        groupIds <- breedingGroups()[[i]]
+        nAnimals <- length(groupIds)
         div(class = "panel panel-primary",
             div(class = "panel-heading",
-                h4(sprintf("Group %d (%d animals)", i, nrow(group)))),
+                h4(sprintf("Group %d (%d animals)", i, nAnimals))),
             div(class = "panel-body",
                 DT::DTOutput(session$ns(paste0("groupTable", i))))
         )
@@ -142,22 +255,31 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
 
     observe({
       req(breedingGroups())
+      ped <- pedigree()
+
       lapply(seq_along(breedingGroups()), function(i) {
         output[[paste0("groupTable", i)]] <- DT::renderDT({
-          breedingGroups()[[i]]
+          groupIds <- breedingGroups()[[i]]
+          # Create display data frame from IDs
+          groupData <- ped[ped$id %in% groupIds,
+                           c("id", "sex", "birth", "sire", "dam")]
+          groupData
         }, options = list(pageLength = 10, dom = 't'))
       })
     })
 
     output$groupStats <- renderTable({
       req(breedingGroups())
+      ped <- pedigree()
+
       stats <- lapply(seq_along(breedingGroups()), function(i) {
-        group <- breedingGroups()[[i]]
+        groupIds <- breedingGroups()[[i]]
+        sexes <- ped$sex[ped$id %in% groupIds]
         data.frame(
           Group = i,
-          Total = nrow(group),
-          Males = sum(group$sex == "M"),
-          Females = sum(group$sex == "F"),
+          Total = length(groupIds),
+          Males = sum(sexes == "M", na.rm = TRUE),
+          Females = sum(sexes == "F", na.rm = TRUE),
           stringsAsFactors = FALSE
         )
       })
@@ -167,7 +289,21 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
     return(list(
       groups = reactive({ breedingGroups() }),
       nGroups = reactive({ length(breedingGroups()) }),
-      unassigned = reactive({ NULL })
+      score = reactive({
+        res <- groupResults()
+        if (is.null(res)) return(0)
+        res$score
+      }),
+      unassigned = reactive({
+        res <- groupResults()
+        if (is.null(res)) return(character(0))
+        res$unassigned
+      }),
+      groupKinship = reactive({
+        res <- groupResults()
+        if (is.null(res)) return(NULL)
+        res$groupKin
+      })
     ))
   })
 }

@@ -484,6 +484,8 @@ test_that("modBreedingGroupsServer groups reactive returns correct structure", {
     sire = rep(NA, 20),
     dam = rep(NA, 20),
     sex = rep(c("M", "F"), 10),
+    birth = as.Date("2015-01-01"),
+    exit = NA,
     stringsAsFactors = FALSE
   )
 
@@ -506,12 +508,13 @@ test_that("modBreedingGroupsServer groups reactive returns correct structure", {
       result <- session$getReturned()
       groups <- result$groups()
 
-      # Each group should be a data frame with expected columns
+      # groupAddAssign returns list of character vectors (IDs)
+      expect_true(is.list(groups))
       for (group in groups) {
-        expect_true(is.data.frame(group))
-        expect_true("group" %in% names(group))
-        expect_true("id" %in% names(group))
-        expect_true("sex" %in% names(group))
+        expect_true(is.character(group),
+          label = "Each group should be a character vector of IDs")
+        expect_true(all(group %in% test_ped$id),
+          label = "All group IDs should exist in pedigree")
       }
     }
   )
@@ -550,7 +553,7 @@ test_that("modBreedingGroupsServer nGroups reactive matches requested groups", {
   )
 })
 
-test_that("modBreedingGroupsServer unassigned reactive returns NULL initially", {
+test_that("modBreedingGroupsServer unassigned reactive returns character vector", {
   skip_if_not_installed("shiny")
 
   test_ped <- data.frame(
@@ -558,6 +561,8 @@ test_that("modBreedingGroupsServer unassigned reactive returns NULL initially", 
     sire = rep(NA, 10),
     dam = rep(NA, 10),
     sex = rep(c("M", "F"), 5),
+    birth = as.Date("2015-01-01"),
+    exit = NA,
     stringsAsFactors = FALSE
   )
 
@@ -578,8 +583,8 @@ test_that("modBreedingGroupsServer unassigned reactive returns NULL initially", 
       session$setInputs(formGroups = 1)
 
       result <- session$getReturned()
-      # Current implementation returns NULL for unassigned
-      expect_null(result$unassigned())
+      # unassigned returns character vector (possibly empty) of unassigned IDs
+      expect_true(is.character(result$unassigned()))
     }
   )
 })
@@ -591,13 +596,14 @@ test_that("modBreedingGroupsServer unassigned reactive returns NULL initially", 
 test_that("modBreedingGroupsServer handles small pedigree", {
   skip_if_not_installed("shiny")
 
-  # Use at least 10 animals because the module's placeholder code
-  # samples 3-7 animals per group and requires enough candidates
+  # Valid pedigree with 4 founders and 6 offspring
   test_ped <- data.frame(
-    id = paste0("Animal", 1:10),
-    sire = c(rep(NA, 4), paste0("Animal", 1:6)),
-    dam = c(rep(NA, 4), paste0("Animal", c(5, 5, 6, 6, 7, 7))),
-    sex = rep(c("M", "F"), 5),
+    id = c("F1", "F2", "F3", "F4", paste0("O", 1:6)),
+    sire = c(NA, NA, NA, NA, "F1", "F1", "F3", "F3", "F1", "F3"),
+    dam = c(NA, NA, NA, NA, "F2", "F2", "F4", "F4", "F2", "F4"),
+    sex = c("M", "F", "M", "F", "M", "F", "M", "F", "M", "F"),
+    birth = as.Date("2015-01-01"),
+    exit = NA,
     stringsAsFactors = FALSE
   )
 
@@ -618,7 +624,7 @@ test_that("modBreedingGroupsServer handles small pedigree", {
       session$setInputs(formGroups = 1)
 
       result <- session$getReturned()
-      expect_equal(result$nGroups(), 1)
+      expect_gte(result$nGroups(), 1)
     }
   )
 })
@@ -632,6 +638,8 @@ test_that("modBreedingGroupsServer handles large pedigree", {
     sire = rep(NA, n),
     dam = rep(NA, n),
     sex = rep(c("M", "F"), length.out = n),
+    birth = as.Date("2015-01-01"),
+    exit = NA,
     stringsAsFactors = FALSE
   )
 

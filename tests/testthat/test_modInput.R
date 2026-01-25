@@ -430,7 +430,7 @@ test_that("modInputServer genotypeData requires qcResults", {
   )
 })
 
-test_that("modInputServer returns all six expected reactive components", {
+test_that("modInputServer returns all seven expected reactive components", {
   skip_if_not_installed("shiny")
 
   shiny::testServer(
@@ -438,9 +438,9 @@ test_that("modInputServer returns all six expected reactive components", {
     args = list(config = NULL),
     {
       result <- session$getReturned()
-      expect_equal(length(result), 6)
+      expect_equal(length(result), 7)
       expected_names <- c("cleanedStudbook", "genotypeData", "qcSummary",
-                          "minParentAge", "isReady", "debugMode")
+                          "minParentAge", "isReady", "debugMode", "changedCols")
       expect_setequal(names(result), expected_names)
     }
   )
@@ -913,7 +913,7 @@ test_that("modInputServer handles NULL config", {
     {
       result <- session$getReturned()
       expect_true(is.list(result))
-      expect_equal(length(result), 6)
+      expect_equal(length(result), 7)
     }
   )
 })
@@ -931,7 +931,7 @@ test_that("modInputServer handles reactive config", {
     {
       result <- session$getReturned()
       expect_true(is.list(result))
-      expect_equal(length(result), 6)
+      expect_equal(length(result), 7)
     }
   )
 })

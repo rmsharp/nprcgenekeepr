@@ -288,38 +288,24 @@ modInputServer <- function(id, config = NULL) {
 
         incProgress(0.3, detail = "Running quality control")
 
-        # Run QC on the data
-        # TODO: Replace with actual qcStudbook() call when available
-        # qcResult <- qcStudbook(rawData, minParentAge = as.numeric(input$minParentAge))
+        # Run QC on the data using qcStudbook
+        minAge <- as.numeric(input$minParentAge)
+        if (is.na(minAge)) minAge <- 2.0
 
-        # Placeholder QC logic - replace with actual implementation
+        qcResult <- runQcStudbook(
+          rawData,
+          minParentAge = minAge,
+          reportChanges = TRUE
+        )
+
+        # Build results structure
         results <- list()
-        results$cleaned <- rawData
+        results$cleaned <- qcResult$cleaned
         results$genotype <- genotypeData
-        results$errors <- data.frame(
-          Row = integer(0),
-          Error = character(0),
-          Details = character(0),
-          stringsAsFactors = FALSE
-        )
-        results$warnings <- data.frame(
-          Row = integer(0),
-          Warning = character(0),
-          Details = character(0),
-          stringsAsFactors = FALSE
-        )
-
-        # Basic validation checks
-        requiredCols <- "id"
-        missingCols <- setdiff(requiredCols, tolower(names(rawData)))
-        if (length(missingCols) > 0) {
-          results$errors <- rbind(results$errors, data.frame(
-            Row = NA,
-            Error = "Missing required columns",
-            Details = paste("Missing:", toString(missingCols)),
-            stringsAsFactors = FALSE
-          ))
-        }
+        results$errors <- qcResult$qcResult$errors
+        results$warnings <- qcResult$qcResult$warnings
+        results$changedCols <- qcResult$qcResult$changedCols
+        results$hasChangedCols <- qcResult$qcResult$hasChangedCols
 
         incProgress(0.4, detail = "Complete")
         results
@@ -416,10 +402,11 @@ modInputServer <- function(id, config = NULL) {
       }),
       qcSummary = reactive({
         req(qcResults())
+        nRecords <- if (!is.null(qcResults()$cleaned)) nrow(qcResults()$cleaned) else 0L
         list(
           errors = nrow(qcResults()$errors),
           warnings = nrow(qcResults()$warnings),
-          records = nrow(qcResults()$cleaned)
+          records = nRecords
         )
       }),
       minParentAge = reactive({
@@ -429,7 +416,11 @@ modInputServer <- function(id, config = NULL) {
         req(qcResults())
         nrow(qcResults()$errors) == 0 && !is.null(qcResults()$cleaned)
       }),
-      debugMode = reactive({ input$debugger })
+      debugMode = reactive({ input$debugger }),
+      changedCols = reactive({
+        req(qcResults())
+        qcResults()$changedCols
+      })
     ))
   })
 }
