@@ -271,18 +271,7 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
     # ========================================
     # Box and Whisker Plot Description for Popovers
     # ========================================
-    box_and_whisker_desc <- paste0(
-      "The upper whisker extends from the hinge to ",
-      "the largest value no further than 1.5 * IQR ",
-      "from the hinge (where IQR is the ",
-      "inter-quartile range, or distance between ",
-      "the first and third quartiles). The lower ",
-      "whisker extends from the hinge to the ",
-      "smallest value at most 1.5 * IQR of the ",
-      "hinge. Data beyond the end of the whiskers ",
-      "are called \"outlying\" points and are plotted ",
-      "individually."
-    )
+    box_and_whisker_desc <- getBoxWhiskerDescription()
 
     # Add popovers to boxplot outputs
     shinyBS::addPopover(

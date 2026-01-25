@@ -69,10 +69,22 @@ test_that("boxplot popovers explain interquartile range", {
 
   source_text <- paste(source_lines, collapse = "\n")
 
-  # Should contain IQR explanation
-  has_iqr <- grepl("IQR|inter-quartile|interquartile", source_text,
+ # Should reference getBoxWhiskerDescription (IQR content now in helper)
+  has_helper_call <- grepl("getBoxWhiskerDescription", source_text)
+
+  # Also check the helper function file has IQR content
+  helper_file <- system.file("R", "getBoxWhiskerDescription.R",
+                              package = "nprcgenekeepr")
+  if (helper_file == "") {
+    helper_lines <- readLines("../../R/getBoxWhiskerDescription.R")
+  } else {
+    helper_lines <- readLines(helper_file)
+  }
+  helper_text <- paste(helper_lines, collapse = "\n")
+  has_iqr <- grepl("IQR|inter-quartile|interquartile", helper_text,
                    ignore.case = TRUE)
 
+  expect_true(has_helper_call || has_iqr)
   expect_true(has_iqr)
 })
 
@@ -154,7 +166,7 @@ test_that("getBoxWhiskerDescription returns expected content", {
   # Should contain key terms about boxplots
   expect_true(grepl("whisker", desc, ignore.case = TRUE))
   expect_true(grepl("IQR|quartile", desc, ignore.case = TRUE))
-  expect_true(grepl("outlier", desc, ignore.case = TRUE))
+  expect_true(grepl("outlying|outlier", desc, ignore.case = TRUE))
 })
 
 test_that("popover content is not empty", {
