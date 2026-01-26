@@ -17,16 +17,17 @@ Before beginning UAT:
    ```
 
 2. Prepare test data files (located in `inst/extdata/`):
-   - `testPedigree.csv` - Standard pedigree file
-   - `qcPed.csv` - Pedigree with QC errors
-   - `qcPedGood.csv` - Clean pedigree
-   - Excel versions if available
+   - `ExamplePedigree.csv` - Large standard pedigree file (clean)
+   - `pedOne.csv` - Small pedigree with non-standard column names (triggers QC)
+   - `2022-05-02_Deidentified_Pedigree.xlsx` - Excel pedigree file
+   - `focalAnimals.csv` - Focal animals list
 
-3. Launch the application:
+3. Launch the modular application:
    ```r
    library(nprcgenekeepr)
-   runGeneKeepr()
+   runModularApp()
    ```
+   Or for the original version: `runGeneKeepR()`
 
 ---
 
@@ -44,12 +45,15 @@ For each test case:
 
 | ID | Test Case | Steps | Expected Result | Status | Notes |
 |----|-----------|-------|-----------------|--------|-------|
-| 1.1 | Home tab displays on launch | Launch app | Home tab is visible and selected by default | [ ] PASS [ ] FAIL | |
-| 1.2 | Welcome message present | View Home tab | Welcome message with application name and version displayed | [ ] PASS [ ] FAIL | |
-| 1.3 | Data Input navigation button | Click "Data Input" button on Home tab | Navigates to Input tab | [ ] PASS [ ] FAIL | |
-| 1.4 | Pedigree Browser navigation button | Click "Pedigree Browser" button on Home tab | Navigates to Pedigree tab | [ ] PASS [ ] FAIL | |
-| 1.5 | Population Analysis navigation button | Click "Population Analysis" button on Home tab | Navigates to Genetic Value tab | [ ] PASS [ ] FAIL | |
-| 1.6 | Visual design | Inspect Home tab layout | Jumbotron design with clear action panels | [ ] PASS [ ] FAIL | |
+| 1.1 | Home tab displays on launch | Launch app | Home tab is visible and selected by default | [x] PASS [ ] FAIL | |
+| 1.2 | Welcome message present | View Home tab | Welcome message with application name and version displayed | [x] PASS [ ] FAIL | |
+| 1.3 | Data Input navigation button | Click "Data Input" button on Home tab | Navigates to Input tab | [x] PASS [ ] FAIL | |
+| 1.4 | Pedigree Browser navigation button | Click "Pedigree Browser" button on Home tab | Navigates to Pedigree tab | [x] PASS [ ] FAIL | |
+| 1.5 | Age-Sex Pyramid navigation button | Click "Go to Pyramid" button on Home tab | Navigates to Age-Sex Pyramid tab | [x] PASS [ ] FAIL | |
+| 1.6 | Genetic Value Analysis | Click "Go to Genetic Value" button on Home tab | Navigates to Genetic Value Analysis tab | [x] PASS [ ] FAIL | |
+| 1.7 | Summary Statistics navigation button | Click "Go to Summary" button on Home tab | Navigates to Summary Statistics tab | [x] PASS [ ] FAIL | |
+| 1.8 | Breeding Groups navigation button | Click "Go to Breeding Groups" button on Home tab | Navigates to Breeding Groups tab | [x] PASS [ ] FAIL | |
+| 1.9 | Visual design | Inspect Home tab layout | Jumbotron design with clear action panels | [x] PASS [ ] FAIL | |
 
 ---
 
@@ -59,17 +63,17 @@ For each test case:
 
 | ID | Test Case | Steps | Expected Result | Status | Notes |
 |----|-----------|-------|-----------------|--------|-------|
-| 2.1.1 | Upload CSV pedigree | Select "Text File", upload testPedigree.csv | File uploads successfully, data preview shown | [ ] PASS [ ] FAIL | |
-| 2.1.2 | Separator detection | Upload comma-separated file | Comma separator auto-detected or selectable | [ ] PASS [ ] FAIL | |
-| 2.1.3 | Tab-separated file | Upload TSV file | Tab separator works correctly | [ ] PASS [ ] FAIL | |
-| 2.1.4 | Semicolon-separated file | Upload semicolon-delimited file | Semicolon separator works correctly | [ ] PASS [ ] FAIL | |
+| 2.1.1 | Upload CSV pedigree | Select "Text File", upload ExamplePedigree.csv | File uploads successfully, data preview shown | [x] PASS [ ] FAIL | |
+| 2.1.2 | Separator detection | Upload comma-separated file | Comma separator auto-detected or selectable | [x] PASS [ ] FAIL | |
+| 2.1.3 | Tab-separated file | Upload TSV file | Tab separator works correctly | [x] PASS [ ] FAIL | |
+| 2.1.4 | Semicolon-separated file | Upload semicolon-delimited file | Semicolon separator works correctly | [ ] PASS [ ] FAIL [x] SKIP | |
 
 ### 2.2 Excel File Input
 
 | ID | Test Case | Steps | Expected Result | Status | Notes |
 |----|-----------|-------|-----------------|--------|-------|
-| 2.2.1 | Upload Excel file | Select "Excel File", upload .xlsx | File uploads and parses correctly | [ ] PASS [ ] FAIL | |
-| 2.2.2 | Sheet selection | Upload multi-sheet Excel | Sheet selector appears if multiple sheets | [ ] PASS [ ] FAIL | |
+| 2.2.1 | Upload Excel file | Select "Excel File", upload .xlsx | File uploads and parses correctly | [x] PASS [ ] FAIL | |
+| 2.2.2 | Sheet selection | Upload multi-sheet Excel | Sheet selector appears if multiple sheets | [ ] PASS [ ] FAIL [x] SKIP | |
 
 ### 2.3 File Content Types
 
@@ -88,18 +92,18 @@ For each test case:
 
 | ID | Test Case | Steps | Expected Result | Status | Notes |
 |----|-----------|-------|-----------------|--------|-------|
-| 3.1.1 | QC Summary appears | Upload qcPed.csv (file with errors) | QC Summary tab/section displays | [ ] PASS [ ] FAIL | |
+| 3.1.1 | QC Summary appears | Upload pedOne.csv (has non-standard column names) | QC Summary tab/section displays | [ ] PASS [ ] FAIL | |
 | 3.1.2 | Error count displayed | View QC Summary | Total error count shown | [ ] PASS [ ] FAIL | |
 | 3.1.3 | Warning count displayed | View QC Summary | Total warning count shown | [ ] PASS [ ] FAIL | |
-| 3.1.4 | Clean file summary | Upload qcPedGood.csv | Summary shows 0 errors, 0 warnings | [ ] PASS [ ] FAIL | |
+| 3.1.4 | Clean file summary | Upload ExamplePedigree.csv | Summary shows 0 errors, 0 warnings | [ ] PASS [ ] FAIL | |
 
 ### 3.2 Dynamic Error Tab (NEW FEATURE)
 
 | ID | Test Case | Steps | Expected Result | Status | Notes |
 |----|-----------|-------|-----------------|--------|-------|
-| 3.2.1 | Error tab appears when errors exist | Upload file with QC errors | "Errors" tab dynamically inserted | [ ] PASS [ ] FAIL | |
-| 3.2.2 | Error tab shows error details | Click Errors tab | Table listing each error with Type, ID, Description | [ ] PASS [ ] FAIL | |
-| 3.2.3 | Error tab hidden when no errors | Upload clean file | Errors tab not visible | [ ] PASS [ ] FAIL | |
+| 3.2.1 | Error tab appears when errors exist | Upload file with QC errors | "Errors" tab dynamically inserted | [x] PASS [ ] FAIL | |
+| 3.2.2 | Error tab shows error details | Click Errors tab | Table listing each error with Type, ID, Description | [x] PASS [ ] FAIL | |
+| 3.2.3 | Error tab hidden when no errors | Upload clean file | Errors tab not visible | [x] PASS [ ] FAIL | |
 | 3.2.4 | Female sire detection | Upload file with female listed as sire | "Female Sire" error displayed | [ ] PASS [ ] FAIL | |
 | 3.2.5 | Male dam detection | Upload file with male listed as dam | "Male Dam" error displayed | [ ] PASS [ ] FAIL | |
 | 3.2.6 | Download errors | Click "Download Errors" button | CSV file downloads with error list | [ ] PASS [ ] FAIL | |
