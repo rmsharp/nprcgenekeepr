@@ -56,30 +56,44 @@ test_that("boxplot popovers explain interquartile range", {
   # The popover content should explain IQR and outliers
   # This is a content check - verify the description exists in the codebase
 
-  # Read the source file
+  # Read the source file - try multiple paths
   source_file <- system.file("R", "modSummaryStats.R", package = "nprcgenekeepr")
 
-  # If not installed as package, read from local
-
+  # If not installed as package, try testthat helper path
   if (source_file == "") {
-    source_lines <- readLines("../../R/modSummaryStats.R")
-  } else {
-    source_lines <- readLines(source_file)
+    local_path <- file.path(testthat::test_path(), "..", "..", "R",
+                            "modSummaryStats.R")
+    if (file.exists(local_path)) {
+      source_file <- local_path
+    }
   }
 
+  if (source_file == "" || !file.exists(source_file)) {
+    skip("Could not locate modSummaryStats.R source file")
+  }
+
+  source_lines <- readLines(source_file)
   source_text <- paste(source_lines, collapse = "\n")
 
- # Should reference getBoxWhiskerDescription (IQR content now in helper)
+  # Should reference getBoxWhiskerDescription (IQR content now in helper)
   has_helper_call <- grepl("getBoxWhiskerDescription", source_text)
 
   # Also check the helper function file has IQR content
   helper_file <- system.file("R", "getBoxWhiskerDescription.R",
                               package = "nprcgenekeepr")
   if (helper_file == "") {
-    helper_lines <- readLines("../../R/getBoxWhiskerDescription.R")
-  } else {
-    helper_lines <- readLines(helper_file)
+    local_helper <- file.path(testthat::test_path(), "..", "..", "R",
+                              "getBoxWhiskerDescription.R")
+    if (file.exists(local_helper)) {
+      helper_file <- local_helper
+    }
   }
+
+  if (helper_file == "" || !file.exists(helper_file)) {
+    skip("Could not locate getBoxWhiskerDescription.R source file")
+  }
+
+  helper_lines <- readLines(helper_file)
   helper_text <- paste(helper_lines, collapse = "\n")
   has_iqr <- grepl("IQR|inter-quartile|interquartile", helper_text,
                    ignore.case = TRUE)
@@ -170,26 +184,32 @@ test_that("getBoxWhiskerDescription returns expected content", {
 })
 
 test_that("popover content is not empty", {
+
   skip_if_not_installed("shiny")
   skip_if_not_installed("shinyBS")
 
   # Verify popover content strings exist and are non-empty
   # This is tested through the existence of descriptive text in the source
 
-  source_lines <- tryCatch(
-    readLines("../../R/modSummaryStats.R"),
-    error = function(e) character(0)
-  )
-
-  if (length(source_lines) > 0) {
-    source_text <- paste(source_lines, collapse = "\n")
-
-    # Should have export descriptions
-    has_export_desc <- grepl("export|Export", source_text)
-    expect_true(has_export_desc)
-  } else {
-    skip("Could not read source file")
+  source_file <- system.file("R", "modSummaryStats.R", package = "nprcgenekeepr")
+  if (source_file == "") {
+    local_path <- file.path(testthat::test_path(), "..", "..", "R",
+                            "modSummaryStats.R")
+    if (file.exists(local_path)) {
+      source_file <- local_path
+    }
   }
+
+  if (source_file == "" || !file.exists(source_file)) {
+    skip("Could not locate modSummaryStats.R source file")
+  }
+
+  source_lines <- readLines(source_file)
+  source_text <- paste(source_lines, collapse = "\n")
+
+  # Should have export descriptions
+  has_export_desc <- grepl("export|Export", source_text)
+  expect_true(has_export_desc)
 })
 
 # =============================================================================

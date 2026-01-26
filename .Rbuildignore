@@ -66,3 +66,5 @@ README\.*\.png$
 ^tests/testthat/_snaps$
 ^CITATION\.cff$
 ^CRAN-SUBMISSION$
+^\.claude$
+^CLAUDE\.md$

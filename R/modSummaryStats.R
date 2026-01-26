@@ -1,5 +1,8 @@
 # Summary Statistics Shiny Module
 
+# Global variables used in ggplot2 aes() calls
+utils::globalVariables(c("x", "y"))
+
 #' Summary Statistics Module - UI Function
 #'
 #' Copyright(c) 2017-2025 R. Mark Sharp
@@ -441,9 +444,11 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
     meanKinshipBoxPlotGG <- reactive({
       req(geneticValues())
       gv <- geneticValues()
+      if (!"meanKinship" %in% names(gv)) return(NULL)
       mk <- gv$meanKinship
 
-      ggplot2::ggplot(data.frame(mk = mk), ggplot2::aes(x = 0L, y = mk)) +
+      df <- data.frame(x = "", y = mk)
+      ggplot2::ggplot(df, ggplot2::aes(x = x, y = y)) +
         ggplot2::geom_boxplot(
           color = "darkblue",
           fill = "lightblue",
@@ -451,7 +456,7 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
           outlier.color = "red",
           outlier.shape = 1L
         ) +
-        ggplot2::geom_jitter(width = 0.2) +
+        ggplot2::geom_jitter(ggplot2::aes(y = y), width = 0.2) +
         ggplot2::theme_classic() +
         ggplot2::coord_flip() +
         ggplot2::ylab("Kinship") +
@@ -470,8 +475,9 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
       }
 
       z <- gv$zScore
+      df <- data.frame(x = "", y = z)
 
-      ggplot2::ggplot(data.frame(z = z), ggplot2::aes(x = 0L, y = z)) +
+      ggplot2::ggplot(df, ggplot2::aes(x = x, y = y)) +
         ggplot2::geom_boxplot(
           color = "darkblue",
           fill = "lightblue",
@@ -479,7 +485,7 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
           outlier.color = "red",
           outlier.shape = 1L
         ) +
-        ggplot2::geom_jitter(width = 0.2) +
+        ggplot2::geom_jitter(ggplot2::aes(y = y), width = 0.2) +
         ggplot2::theme_classic() +
         ggplot2::coord_flip() +
         ggplot2::ylab("Z-Score") +
@@ -491,9 +497,11 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
     guBoxPlotGG <- reactive({
       req(geneticValues())
       gv <- geneticValues()
+      if (!"genomeUniqueness" %in% names(gv)) return(NULL)
       gu <- gv$genomeUniqueness
 
-      ggplot2::ggplot(data.frame(gu = gu), ggplot2::aes(x = 0L, y = gu)) +
+      df <- data.frame(x = "", y = gu)
+      ggplot2::ggplot(df, ggplot2::aes(x = x, y = y)) +
         ggplot2::geom_boxplot(
           color = "darkblue",
           fill = "lightblue",
@@ -501,7 +509,7 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
           outlier.color = "red",
           outlier.shape = 1L
         ) +
-        ggplot2::geom_jitter(width = 0.2) +
+        ggplot2::geom_jitter(ggplot2::aes(y = y), width = 0.2) +
         ggplot2::theme_classic() +
         ggplot2::coord_flip() +
         ggplot2::ylab("Genome Uniqueness") +

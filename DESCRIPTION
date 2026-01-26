@@ -2,7 +2,7 @@ Config/renv/profiles/dev/dependencies: checkhelper,devtools, httpuv, qpdf, markd
 Package: nprcgenekeepr
 Type: Package
 Title: Genetic Tools for Colony Management
-Version: 1.0.9.9000
+Version: 1.0.8
 Authors@R: c(
     person("Michael", "Raboin", role = c("aut")),
     person("Terry", "Therneau", role = c("aut")),
@@ -40,9 +40,10 @@ Depends:
 Imports:
     anytime,
     bslib,
-    DT,
     data.table,
+    DT,
     futile.logger,
+    ggplot2,
     htmlTable,
     lifecycle,
     lubridate,
@@ -54,13 +55,12 @@ Imports:
     shiny,
     stringi,
     utils,
-    withr,
     WriteXLS
 Suggests:
     covr,
     dplyr,
-    ggplot2,
     grid,
+    shinytest2,
     kableExtra,
     knitr,
     markdown,
@@ -71,7 +71,6 @@ Suggests:
     roxygen2 (>= 7.3.2),
     shinyBS,
     shinyWidgets,
-    shinytest2,
     spelling,
     testthat
 Language: en-US
@@ -81,4 +80,3 @@ RoxygenNote: 7.3.2
 LazyData: TRUE
 VignetteBuilder: knitr, rmarkdown
 Roxygen: list(markdown = TRUE)
-Config/testthat/edition: 3
