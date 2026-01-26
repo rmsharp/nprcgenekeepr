@@ -11,23 +11,6 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# nprcgenekeepr 1.0.9 (20251230)
-- Major changes
-  - Updated to use testthat 3.x syntax
-  - Refactored shiny code to use modules
-- Minor changes
-  -  testthat 3.x syntax updates:
-     - Removed all context() calls (118 files)
-     - Added Config/testthat/edition: 3 to DESCRIPTION
-     - Fixed expect_equal() calls with deprecated scale argument
-       (5 occurrences)
-     - Fixed expect_equal() with deprecated with argument (1 occurrence)
-     - Fixed expect_equal(stats$mean[10L], 0, 01) → expect_equal(..., 0.1,
-       tolerance = 0.01) (old positional tolerance syntax)
-     - Test skip handling:
-    -  Added skip_if_not_installed("mockery") for test requiring mockery
-       package
-       
 # nprcgenekeepr 1.0.8 (20250723)
 - Minor changes
   - Added returned value descriptions for all functions within R directory

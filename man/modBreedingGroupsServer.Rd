@@ -9,18 +9,44 @@ modBreedingGroupsServer(id, pedigree, geneticValues = NULL)
 \arguments{
 \item{id}{character vector of length 1. Module namespace identifier.}
 
-\item{pedigree}{reactive returning pedigree data frame.}
+\item{pedigree}{reactive returning pedigree data frame with columns:
+id, sire, dam, sex, and optionally birth, exit, gen.}
 
-\item{geneticValues}{optional reactive returning genetic value results.}
+\item{geneticValues}{optional reactive returning genetic value results
+from \code{\link{modGeneticValueServer}}. If provided and contains a
+kinship matrix, it will be used instead of calculating one.}
 }
 \value{
-List with \code{groups}, \code{nGroups}, and \code{unassigned}.
+List with reactive components:
+\itemize{
+\item \code{groups} - List of character vectors with animal IDs per group
+\item \code{nGroups} - Number of groups formed
+\item \code{score} - Optimization score from groupAddAssign (minimum group size)
+\item \code{unassigned} - Character vector of candidate IDs not placed in groups
+\item \code{groupKinship} - List of kinship matrices per group (if withKin=TRUE)
+}
 }
 \description{
-Breeding Groups Module - Server Function
+Server logic for breeding group formation using the groupAddAssign algorithm.
+This module integrates with the kinship-based maximal independent set (MIS)
+algorithm to form optimal breeding groups that minimize relatedness within
+groups while maximizing group sizes.
+}
+\details{
+The module supports multiple configuration options:
+\itemize{
+\item \strong{Animal source}: Select top-ranked animals or all available
+\item \strong{Kinship threshold}: Maximum allowed kinship within groups
+\item \strong{Harem mode}: Form groups with exactly one male each
+\item \strong{Sex ratio}: Target female-to-male ratio in groups
+}
 }
 \seealso{
-\code{\link{modBreedingGroupsUI}}
+\code{\link{modBreedingGroupsUI}} for the UI component
 
-\code{\link{modGeneticValueServer}}
+\code{\link{groupAddAssign}} for the underlying MIS algorithm
+
+\code{\link{modGeneticValueServer}} for genetic value analysis
+
+\code{\link{kinship}} for kinship matrix calculation
 }

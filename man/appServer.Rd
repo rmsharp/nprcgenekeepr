@@ -7,12 +7,35 @@
 appServer(input, output, session)
 }
 \arguments{
-\item{input}{Shiny input}
+\item{input}{Shiny input object}
 
-\item{output}{Shiny output}
+\item{output}{Shiny output object}
 
-\item{session}{Shiny session}
+\item{session}{Shiny session object}
 }
 \description{
-Main Application Server for nprcgenekeepr
+Server function for the main GeneKeepR Shiny application. Initializes
+all modules and manages shared reactive state between them.
+}
+\details{
+The server handles:
+\itemize{
+\item Configuration loading from site-specific config files
+\item Navigation button handlers for the home page
+\item Dynamic tab management for QC errors and changed columns
+\item Module initialization and data flow between modules
+}
+}
+\seealso{
+\code{\link{appUI}} for the corresponding UI function
+
+\code{\link{modInputServer}} for data input module
+
+\code{\link{modPedigreeServer}} for pedigree browser module
+
+\code{\link{modGeneticValueServer}} for genetic value analysis
+
+\code{\link{shouldShowErrorTab}} for error tab logic
+
+\code{\link{shouldShowChangedColsTab}} for changed columns tab logic
 }
