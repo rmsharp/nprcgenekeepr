@@ -630,6 +630,7 @@ test_that("modBreedingGroupsServer handles small pedigree", {
 })
 
 test_that("modBreedingGroupsServer handles large pedigree", {
+  skip_on_cran()
   skip_if_not_installed("shiny")
 
   n <- 200

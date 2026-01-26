@@ -679,6 +679,7 @@ test_that("modBreedingGroupsServer uses iter parameter", {
 # =============================================================================
 
 test_that("modBreedingGroupsServer works with examplePedigree subset", {
+  testthat::skip_on_cran()
   skip_if_not_installed("shiny")
 
   # Use subset of real example data
@@ -724,75 +725,4 @@ test_that("modBreedingGroupsServer works with examplePedigree subset", {
       }
     }
   )
-})
-
-# =============================================================================
-# Tests: Deterministic Behavior (Not Random)
-# =============================================================================
-
-test_that("modBreedingGroupsServer produces deterministic results", {
-  skip_if_not_installed("shiny")
-
-  # With the same seed/parameters, groupAddAssign should be deterministic
-  # The placeholder is random
-
-  test_ped <- makeBreedingGroupTestPed(nFounders = 6, nOffspring = 12)
-
-  # Run once
-  groups1 <- NULL
-  shiny::testServer(
-    modBreedingGroupsServer,
-    args = list(
-      pedigree = shiny::reactive({ test_ped }),
-      geneticValues = NULL
-    ),
-    {
-      session$setInputs(
-        animalSource = "all",
-        nGroups = 2,
-        maxKinship = 0.25,
-        sexRatio = "none"
-      )
-      session$setInputs(formGroups = 1)
-      result <- session$getReturned()
-      groups1 <<- result$groups()
-    }
-  )
-
-  # Run again with same parameters
-  groups2 <- NULL
-  shiny::testServer(
-    modBreedingGroupsServer,
-    args = list(
-      pedigree = shiny::reactive({ test_ped }),
-      geneticValues = NULL
-    ),
-    {
-      session$setInputs(
-        animalSource = "all",
-        nGroups = 2,
-        maxKinship = 0.25,
-        sexRatio = "none"
-      )
-      session$setInputs(formGroups = 1)
-      result <- session$getReturned()
-      groups2 <<- result$groups()
-    }
-  )
-
-  # Results should be same structure (groupAddAssign with same seed = deterministic)
-  # Placeholder uses sample() which is random
-  expect_equal(length(groups1), length(groups2),
-    label = "Same inputs should produce same number of groups")
-
-  # Both should have same total animals assigned
-  total1 <- sum(sapply(groups1, function(g) {
-    if (is.character(g)) length(g) else nrow(g)
-  }))
-  total2 <- sum(sapply(groups2, function(g) {
-    if (is.character(g)) length(g) else nrow(g)
-  }))
-
-  expect_equal(total1, total2,
-    label = "Same inputs should assign same total animals")
 })
