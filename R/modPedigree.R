@@ -22,6 +22,10 @@ modPedigreeUI <- function(id) {
   ns <- NS(id)
 
   div(
+    id = ns("moduleContainer"),
+    `data-ready` = "false",
+    `data-module` = "pedigree",
+
     h3("Pedigree Browser"),
 
     fluidRow(
@@ -306,6 +310,15 @@ modPedigreeServer <- function(id, studbook, config = NULL) {
       scrollX = TRUE,
       search = list(regex = TRUE)
     ))
+
+    # Signal data-ready when pedigree is available (for E2E testing)
+    observe({
+      req(pedigreeData())
+      session$sendCustomMessage("setDataReady", list(
+        selector = paste0("#", session$ns("moduleContainer")),
+        ready = TRUE
+      ))
+    })
 
     # Export handler
     output$exportPedigree <- downloadHandler(

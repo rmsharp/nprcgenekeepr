@@ -23,6 +23,10 @@ modSummaryStatsUI <- function(id) {
   ns <- NS(id)
 
   div(
+    id = ns("moduleContainer"),
+    `data-ready` = "false",
+    `data-module` = "summaryStats",
+
     h3("Summary Statistics and Plots"),
 
     # Summary stats HTML guidance at top
@@ -532,6 +536,15 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
                         sprintf("%.4f", mean(gv$genomeUniqueness, na.rm = TRUE))))
         )
       )
+    })
+
+    # Signal data-ready when summary stats are available (for E2E testing)
+    observe({
+      req(geneticValues())
+      session$sendCustomMessage("setDataReady", list(
+        selector = paste0("#", session$ns("moduleContainer")),
+        ready = TRUE
+      ))
     })
 
     # Mean Kinship Histogram (using ggplot2)

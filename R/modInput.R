@@ -26,6 +26,10 @@ modInputUI <- function(id) {
   ns <- NS(id)
 
   div(
+    id = ns("moduleContainer"),
+    `data-ready` = "false",
+    `data-module` = "input",
+
     # Custom CSS for tables in the HTML documentation
     tags$style(
       type = "text/css",
@@ -383,6 +387,12 @@ modInputServer <- function(id, config = NULL) {
         warnings = qcResult$qcResult$warnings,
         changedCols = qcResult$qcResult$changedCols,
         hasChangedCols = qcResult$qcResult$hasChangedCols
+      ))
+
+      # Signal that QC processing is complete (for E2E testing)
+      session$sendCustomMessage("setDataReady", list(
+        selector = paste0("#", session$ns("moduleContainer")),
+        ready = TRUE
       ))
     })
 

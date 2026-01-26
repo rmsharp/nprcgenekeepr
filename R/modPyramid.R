@@ -18,6 +18,10 @@ modPyramidUI <- function(id) {
   ns <- NS(id)
 
   div(
+    id = ns("moduleContainer"),
+    `data-ready` = "false",
+    `data-module` = "pyramid",
+
     h3("Age-Sex Pyramid Analysis"),
     fluidRow(
       column(3,
@@ -111,6 +115,15 @@ modPyramidServer <- function(id, pedigreeData) {
                   sum(ped$sex == "F", na.rm = TRUE)),
         stringsAsFactors = FALSE
       )
+    })
+
+    # Signal data-ready when pyramid is rendered (for E2E testing)
+    observe({
+      req(pedigreeData())
+      session$sendCustomMessage("setDataReady", list(
+        selector = paste0("#", session$ns("moduleContainer")),
+        ready = TRUE
+      ))
     })
 
     output$downloadPlot <- downloadHandler(

@@ -1,11 +1,19 @@
 #' Main Application UI for nprcgenekeepr
 #' @importFrom bslib bs_theme
 #' @importFrom shiny navbarPage tabPanel icon fluidRow column div h1 p hr
-#'             actionButton navbarMenu
+#'             actionButton navbarMenu tags includeScript
 #' @export
 appUI <- function() {
 
-  navbarPage(
+  # Include data-ready JavaScript for E2E testing
+  dataReadyJS <- system.file("www", "js", "data-ready.js",
+                              package = "nprcgenekeepr")
+
+  tagList(
+    # Include the data-ready JavaScript if it exists
+    if (file.exists(dataReadyJS)) tags$head(includeScript(dataReadyJS)),
+
+    navbarPage(
     title = "GeneKeepR",
     id = "mainNavbar",
     theme = bslib::bs_theme(version = 4L, bootswatch = "flatly"),
@@ -193,5 +201,5 @@ appUI <- function() {
             target = "_blank"))
       )
     )
-  )
+  ))
 }

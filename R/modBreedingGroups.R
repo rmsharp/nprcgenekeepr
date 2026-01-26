@@ -23,6 +23,10 @@ modBreedingGroupsUI <- function(id) {
   ns <- NS(id)
 
   div(
+    id = ns("moduleContainer"),
+    `data-ready` = "false",
+    `data-module` = "breedingGroups",
+
     h3("Breeding Group Formation"),
     fluidRow(
       column(4,
@@ -232,6 +236,13 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
         ))
 
         incProgress(0.5, detail = "Complete")
+
+        # Signal that breeding group formation is complete (for E2E testing)
+        session$sendCustomMessage("setDataReady", list(
+          selector = paste0("#", session$ns("moduleContainer")),
+          ready = TRUE
+        ))
+
         validGroups
       })
     })

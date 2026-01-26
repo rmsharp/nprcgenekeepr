@@ -25,6 +25,10 @@ modGeneticValueUI <- function(id) {
   ns <- NS(id)
 
   div(
+    id = ns("moduleContainer"),
+    `data-ready` = "false",
+    `data-module` = "geneticValue",
+
     h3("Genetic Value Analysis"),
     fluidRow(
       column(4,
@@ -177,6 +181,12 @@ modGeneticValueServer <- function(id, pedigree) {
         report$rank <- rank(report$indivMeanKin - report$gu)
         report <- report[order(report$rank), ]
         report$rank <- seq_len(nrow(report))
+
+        # Signal that genetic value analysis is complete (for E2E testing)
+        session$sendCustomMessage("setDataReady", list(
+          selector = paste0("#", session$ns("moduleContainer")),
+          ready = TRUE
+        ))
 
         report
       })
