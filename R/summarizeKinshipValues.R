@@ -92,8 +92,9 @@ summarizeKinshipValues <- function(countedKValues) {
       unlist(countedKValues$kValues[i]),
       unlist(countedKValues$kCounts[i])
     )
+    # Skip entries with NA values
     if (any(is.na(numbers), is.na(mean(numbers)))) {
-      cat(paste0("i = ", i))
+      next
     }
     tukeys <- fivenum(numbers)
     stats <- rbind(

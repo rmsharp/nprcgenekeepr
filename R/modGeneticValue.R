@@ -245,9 +245,21 @@ modGeneticValueServer <- function(id, pedigree) {
     )
 
     return(list(
-      geneticValues = reactive({ gvResults() }),
+      geneticValues = reactive({
+        gv <- gvResults()
+        if (is.null(gv)) return(NULL)
+        # Rename columns to standard names expected by other modules
+        if ("indivMeanKin" %in% names(gv)) {
+          names(gv)[names(gv) == "indivMeanKin"] <- "meanKinship"
+        }
+        if ("gu" %in% names(gv)) {
+          names(gv)[names(gv) == "gu"] <- "genomeUniqueness"
+        }
+        gv
+      }),
       topAnimals = reactive({
         gv <- gvResults()
+        if (is.null(gv)) return(NULL)
         gv[gv$rank <= 10, ]
       }),
       nAnalyzed = reactive({ nrow(gvResults()) }),

@@ -88,7 +88,7 @@ modPyramidServer <- function(id, pedigreeData) {
       plotOutput(ns("pyramidPlot"), height = paste0(height, "px"))
     })
 
-    # Render pyramid plot with UI options
+    # Render pyramid plot with UI controls
     output$pyramidPlot <- renderPlot({
       req(pedigreeData())
       getPyramidPlot(

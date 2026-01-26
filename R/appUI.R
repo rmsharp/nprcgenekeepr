@@ -60,11 +60,47 @@ appUI <- function() {
           width = 4L,
           div(
             class = "panel panel-success",
-            div(class = "panel-heading", h4("Population Analysis")),
+            div(class = "panel-heading", h4("Age-Sex Pyramid")),
             div(class = "panel-body",
                 p("Analyze age and sex distribution"),
                 actionButton("goto_pyramid", "Go to Pyramid",
                              class = "btn-success btn-block"))
+          )
+        )
+      ),
+
+      fluidRow(
+        column(
+          width = 4L,
+          div(
+            class = "panel panel-warning",
+            div(class = "panel-heading", h4("Genetic Value Analysis")),
+            div(class = "panel-body",
+                p("Calculate kinship and genome uniqueness"),
+                actionButton("goto_genetic", "Go to Genetic Value",
+                             class = "btn-warning btn-block"))
+          )
+        ),
+        column(
+          width = 4L,
+          div(
+            class = "panel panel-danger",
+            div(class = "panel-heading", h4("Summary Statistics")),
+            div(class = "panel-body",
+                p("View genetic diversity metrics and plots"),
+                actionButton("goto_summary", "Go to Summary",
+                             class = "btn-danger btn-block"))
+          )
+        ),
+        column(
+          width = 4L,
+          div(
+            class = "panel panel-default",
+            div(class = "panel-heading", h4("Breeding Groups")),
+            div(class = "panel-body",
+                p("Form breeding groups to minimize inbreeding"),
+                actionButton("goto_breeding", "Go to Breeding Groups",
+                             class = "btn-default btn-block"))
           )
         )
       )
@@ -76,7 +112,7 @@ appUI <- function() {
     tabPanel(
       "Input",
       icon = icon("upload"),
-      modInputUI("input")
+      modInputUI("dataInput")
     ),
 
     # ====================
