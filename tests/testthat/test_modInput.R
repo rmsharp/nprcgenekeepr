@@ -438,9 +438,10 @@ test_that("modInputServer returns all seven expected reactive components", {
     args = list(config = NULL),
     {
       result <- session$getReturned()
-      expect_equal(length(result), 7)
+      expect_equal(length(result), 9)
       expected_names <- c("cleanedStudbook", "genotypeData", "qcSummary",
-                          "minParentAge", "isReady", "debugMode", "changedCols")
+                          "minParentAge", "isReady", "debugMode", "changedCols",
+                          "errorLst", "pedigreeFileName")
       expect_setequal(names(result), expected_names)
     }
   )
@@ -913,7 +914,7 @@ test_that("modInputServer handles NULL config", {
     {
       result <- session$getReturned()
       expect_true(is.list(result))
-      expect_equal(length(result), 7)
+      expect_equal(length(result), 9)
     }
   )
 })
@@ -931,7 +932,7 @@ test_that("modInputServer handles reactive config", {
     {
       result <- session$getReturned()
       expect_true(is.list(result))
-      expect_equal(length(result), 7)
+      expect_equal(length(result), 9)
     }
   )
 })

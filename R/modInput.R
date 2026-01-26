@@ -18,8 +18,9 @@
 #' @importFrom shiny NS div h3 h4 tags fluidRow column sidebarLayout sidebarPanel
 #'   mainPanel helpText radioButtons conditionalPanel fileInput textInput
 #'   actionButton checkboxInput icon includeHTML br hr tabsetPanel tabPanel
-#'   uiOutput downloadButton
+#'   uiOutput downloadButton updateTabsetPanel observeEvent
 #' @importFrom DT DTOutput
+#' @importFrom futile.logger flog.debug flog.threshold DEBUG INFO
 #' @export
 modInputUI <- function(id) {
   ns <- NS(id)
@@ -221,6 +222,15 @@ modInputServer <- function(id, config = NULL) {
 
   moduleServer(id, function(input, output, session) {
 
+    # Create a reactiveVal to store QC results
+    storedResults <- reactiveVal(NULL)
+
+    # Store raw errorLst for dynamic tab display
+    storedErrorLst <- reactiveVal(NULL)
+
+    # Store the pedigree file name
+    storedFileName <- reactiveVal(NULL)
+
     # Determine which file input to use based on content type
     activeFile <- reactive({
       switch(input$fileContent,
@@ -238,17 +248,42 @@ modInputServer <- function(id, config = NULL) {
       tryCatch({
         fileExt <- tools::file_ext(file$name)
 
+        futile.logger::flog.debug(
+          paste0("readDataFile - fileExt: ", fileExt,
+                 ", fileType: ", fileType,
+                 ", separator: '", separator, "'"),
+          name = "nprcgenekeepr"
+        )
+
         if (fileExt %in% c("xlsx", "xls")) {
+          futile.logger::flog.debug("Reading Excel file", name = "nprcgenekeepr")
           data <- readxl::read_excel(file$datapath)
         } else if (fileType == "fileTypeText") {
+          futile.logger::flog.debug(
+            paste0("Reading text file with separator: '", separator, "'"),
+            name = "nprcgenekeepr"
+          )
           data <- read.table(file$datapath, header = TRUE, sep = separator,
-                             stringsAsFactors = FALSE)
+                             stringsAsFactors = FALSE, fill = TRUE,
+                             quote = "\"")
         } else {
+          futile.logger::flog.debug("Reading CSV file", name = "nprcgenekeepr")
           data <- read.csv(file$datapath, stringsAsFactors = FALSE)
         }
 
+        futile.logger::flog.debug(
+          paste0("File read successfully. Rows: ", nrow(data),
+                 ", Cols: ", ncol(data),
+                 ", Column names: ", paste(names(data), collapse = ", ")),
+          name = "nprcgenekeepr"
+        )
+
         as.data.frame(data)
       }, error = function(e) {
+        futile.logger::flog.debug(
+          paste0("Error reading file: ", e$message),
+          name = "nprcgenekeepr"
+        )
         showNotification(
           paste("Error reading file:", e$message),
           type = "error",
@@ -258,68 +293,123 @@ modInputServer <- function(id, config = NULL) {
       })
     }
 
-    # Process data and run QC when button is clicked
-    qcResults <- eventReactive(input$getData, {
-      req(activeFile())
+    # Process data when button is clicked
+    observeEvent(input$getData, {
+      # Get the active file
+      file <- activeFile()
 
-      withProgress(message = "Processing data...", {
+      if (is.null(file)) {
+        showNotification("Please select a file first.", type = "warning")
+        return()
+      }
 
-        # Read primary file
-        incProgress(0.2, detail = "Reading file")
-        rawData <- readDataFile(activeFile(), input$fileType, input$separator)
+      # Store the file name for dynamic tabs
+      storedFileName(file$name)
 
-        if (is.null(rawData)) {
-          return(list(
-            cleaned = NULL,
-            errors = data.frame(Row = 1, Error = "File read error",
-                                Details = "Could not read the uploaded file",
-                                stringsAsFactors = FALSE),
-            warnings = data.frame(Row = integer(0), Warning = character(0),
-                                  Details = character(0), stringsAsFactors = FALSE)
-          ))
-        }
+      # Read the file
+      rawData <- readDataFile(file, input$fileType, input$separator)
 
-        # Read genotype file if separate files were selected
-        genotypeData <- NULL
-        if (input$fileContent == "separatePedGenoFile" && !is.null(input$genotypeFile)) {
-          incProgress(0.1, detail = "Reading genotype file")
-          genotypeData <- readDataFile(input$genotypeFile, input$fileType, input$separator)
-        }
+      if (is.null(rawData)) {
+        storedResults(list(
+          cleaned = NULL,
+          errors = data.frame(
+            Row = NA_integer_,
+            Error = "File Read Error",
+            Details = "Could not read the uploaded file.",
+            stringsAsFactors = FALSE
+          ),
+          warnings = data.frame(
+            Row = integer(0), Warning = character(0),
+            Details = character(0), stringsAsFactors = FALSE
+          ),
+          changedCols = NULL,
+          hasChangedCols = FALSE
+        ))
+        storedErrorLst(NULL)
+        return()
+      }
 
-        incProgress(0.3, detail = "Running quality control")
+      # Get minimum parent age
+      minAge <- tryCatch(
+        as.numeric(input$minParentAge),
+        error = function(e) 2.0,
+        warning = function(w) 2.0
+      )
+      if (is.na(minAge)) minAge <- 2.0
 
-        # Run QC on the data using qcStudbook
-        minAge <- as.numeric(input$minParentAge)
-        if (is.na(minAge)) minAge <- 2.0
-
-        qcResult <- runQcStudbook(
+      # Get raw errorLst for dynamic tab display
+      rawErrorLst <- tryCatch({
+        qcStudbook(
           rawData,
           minParentAge = minAge,
-          reportChanges = TRUE
+          reportChanges = TRUE,
+          reportErrors = TRUE
         )
-
-        # Build results structure
-        results <- list()
-        results$cleaned <- qcResult$cleaned
-        results$genotype <- genotypeData
-        results$errors <- qcResult$qcResult$errors
-        results$warnings <- qcResult$qcResult$warnings
-        results$changedCols <- qcResult$qcResult$changedCols
-        results$hasChangedCols <- qcResult$qcResult$hasChangedCols
-
-        incProgress(0.4, detail = "Complete")
-        results
+      }, error = function(e) {
+        getEmptyErrorLst()
+      }, warning = function(w) {
+        getEmptyErrorLst()
       })
+      storedErrorLst(rawErrorLst)
+
+      # Run QC
+      qcResult <- tryCatch({
+        runQcStudbook(rawData, minParentAge = minAge, reportChanges = TRUE)
+      }, error = function(e) {
+        list(
+          cleaned = NULL,
+          qcResult = list(
+            errors = data.frame(
+              Row = NA_integer_,
+              Error = "QC Processing Error",
+              Details = e$message,
+              stringsAsFactors = FALSE
+            ),
+            warnings = data.frame(
+              Row = integer(0), Warning = character(0),
+              Details = character(0), stringsAsFactors = FALSE
+            ),
+            changedCols = NULL,
+            hasErrors = TRUE,
+            hasChangedCols = FALSE
+          )
+        )
+      })
+
+      # Store results in expected format
+      storedResults(list(
+        cleaned = qcResult$cleaned,
+        errors = qcResult$qcResult$errors,
+        warnings = qcResult$qcResult$warnings,
+        changedCols = qcResult$qcResult$changedCols,
+        hasChangedCols = qcResult$qcResult$hasChangedCols
+      ))
     })
 
-    # QC Summary UI
-    output$qcSummaryUI <- renderUI({
-      req(qcResults())
-      results <- qcResults()
+    # Keep qcResults as a simple reactive that reads storedResults (for compatibility)
+    qcResults <- reactive({
+      storedResults()
+    })
 
-      nErrors <- nrow(results$errors)
-      nWarnings <- nrow(results$warnings)
-      nRecords <- if (!is.null(results$cleaned)) nrow(results$cleaned) else 0
+    # QC Summary UI - show results immediately after processing
+    output$qcSummaryUI <- renderUI({
+      tryCatch({
+        futile.logger::flog.debug(
+          "qcSummaryUI renderUI triggered",
+          name = "nprcgenekeepr"
+        )
+        req(qcResults())
+        results <- qcResults()
+
+        nErrors <- nrow(results$errors)
+        nWarnings <- nrow(results$warnings)
+        nRecords <- if (!is.null(results$cleaned)) nrow(results$cleaned) else 0
+
+        futile.logger::flog.debug(
+          paste0("qcSummaryUI rendering. Errors: ", nErrors,
+                 ", Warnings: ", nWarnings, ", Records: ", nRecords),
+          name = "nprcgenekeepr"
+        )
 
       div(
         fluidRow(
@@ -350,12 +440,26 @@ modInputServer <- function(id, config = NULL) {
           )
         }
       )
+      }, error = function(e) {
+        futile.logger::flog.debug(
+          paste0("qcSummaryUI error: ", e$message),
+          name = "nprcgenekeepr"
+        )
+        div(class = "alert alert-danger", paste("Error rendering QC summary:", e$message))
+      })
     })
 
     # Render QC results tables
     output$qcErrors <- DT::renderDT({
       req(qcResults())
-      qcResults()$errors
+      errors <- qcResults()$errors
+      futile.logger::flog.debug(
+        paste0("Rendering qcErrors table. Rows: ", nrow(errors),
+               ", Cols: ", ncol(errors),
+               if (nrow(errors) > 0) paste0(", First error: ", errors$Error[1]) else ""),
+        name = "nprcgenekeepr"
+      )
+      errors
     }, options = list(pageLength = 10))
 
     output$qcWarnings <- DT::renderDT({
@@ -420,6 +524,13 @@ modInputServer <- function(id, config = NULL) {
       changedCols = reactive({
         req(qcResults())
         qcResults()$changedCols
+      }),
+      # For dynamic tab management
+      errorLst = reactive({
+        storedErrorLst()
+      }),
+      pedigreeFileName = reactive({
+        storedFileName()
       })
     ))
   })
