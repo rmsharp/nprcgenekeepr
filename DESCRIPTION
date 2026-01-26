@@ -2,7 +2,7 @@ Config/renv/profiles/dev/dependencies: checkhelper,devtools, httpuv, qpdf, markd
 Package: nprcgenekeepr
 Type: Package
 Title: Genetic Tools for Colony Management
-Version: 1.0.8
+Version: 1.1.0.9000
 Authors@R: c(
     person("Michael", "Raboin", role = c("aut")),
     person("Terry", "Therneau", role = c("aut")),

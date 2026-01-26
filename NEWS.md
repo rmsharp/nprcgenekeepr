@@ -1,7 +1,67 @@
 NEWS
 ================
 R. Mark Sharp, Ph.D.
-2025-07-23
+2026-01-26
+
+# nprcgenekeepr 1.1.0.9000 (20260126)
+
+- Major changes
+  - Architectural Changes
+    - Modular Shiny Architecture
+      - Refactored monolithic Shiny application into discrete, testable
+        modules using shiny::moduleServer()  
+      - New module files:
+        - modInput.R - Data input and QC processing  
+        - modPedigree.R - Pedigree browser with trim/filter
+          capabilities  
+        - modPyramid.R - Age-sex pyramid visualization  
+        - modGeneticValue.R - Genetic value analysis (mean kinship,
+          genome uniqueness)  
+        - modSummaryStats.R - Summary statistics with interactive
+          visualizations
+        - modBreedingGroups.R - Breeding group formation using
+          groupAddAssign()
+        - modORIPReporting.R - ORIP reporting module  
+      - New appServer.R and appUI.R orchestrate module communication via
+        shared reactive values
+      - runModularApp() provides entry point for modular application
+  - New Features
+    - Dynamic Tab Management
+      - Error List and Changed Columns tabs appear/disappear dynamically
+        based on QC results  
+      - Uses insertTab()/removeTab() for cleaner UI when no errors
+        present
+    - Enhanced QC Pipeline
+      - runQcStudbook() wrapper provides UI-friendly error reporting  
+      - processQcStudbookResult() transforms QC output for display  
+      - shouldShowErrorTab() and shouldShowChangedColsTab() helper
+        functions
+    - Improved Visualizations
+      - getBoxWhiskerDescription() provides educational popover content
+        for box plots
+      - savePlotToFile() supports PNG, PDF, and SVG export  
+      - Enhanced pyramid plots with getPyramidPlot()
+    - Utility Functions
+      - safeExecute() - Error-handling wrapper for module operations  
+      - logModuleEvent() - Structured logging with futile.logger
+        integration
+      - makeFounderStatsTable(), makeGeneticSummaryTable() - Table
+        generators
+  - Testing Improvements
+    - Added shiny::testServer() unit tests  
+    - ~145 new/modified test files with comprehensive module coverage  
+    - Tests for edge cases: NULL inputs, empty pedigrees, single-animal
+      scenarios
+    - Strict TDD development process used for all new features  
+- Minor changes
+  - New Dependencies
+    - Added to Imports: bslib, DT, ggplot2  
+    - Added to Suggests: shinytest2
+  - Bug Fixes
+    - Fixed undefined global variables in ggplot2 aes() calls
+    - Fixed column name expectations in genetic value tests
+      (meanKinship/genomeUniqueness)
+    - Network-dependent tests now skip gracefully
 
 # nprcgenekeepr 1.0.8 (20250723)
 
