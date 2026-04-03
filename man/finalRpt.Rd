@@ -20,7 +20,7 @@ is at the state just prior to calling \code{rankSubjects} inside
 \code{orderReport}.
 }
 \examples{
-library(mprcgenekeepr)
+library(nprcgenekeepr)
 data("finalRpt")
 finalRpt <- rankSubjects(finalRpt)
 }

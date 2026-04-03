@@ -91,5 +91,5 @@ uitpPedigreeBrowser <-
         style = "color:blue"
       )
     ),
-    DT::DTOutput("pedigree")
+    DT::dataTableOutput("pedigree")
   ))

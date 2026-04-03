@@ -9,19 +9,52 @@ modSummaryStatsServer(id, geneticValues, pedigree, kinshipMatrix = NULL)
 \arguments{
 \item{id}{character vector of length 1. Module namespace identifier.}
 
-\item{geneticValues}{reactive returning genetic value analysis results.}
+\item{geneticValues}{reactive returning genetic value analysis results.
+Must be a data frame with columns \code{id}, \code{meanKinship}, and
+\code{genomeUniqueness}. Optional \code{zScore} column enables z-score plots.}
 
-\item{pedigree}{reactive returning pedigree data frame.}
+\item{pedigree}{reactive returning pedigree data frame with columns
+\code{id}, \code{sire}, \code{dam}, and \code{sex}. Optionally \code{gen}.}
 
-\item{kinshipMatrix}{optional reactive returning kinship matrix.}
+\item{kinshipMatrix}{optional reactive returning kinship matrix. If NULL,
+the module will calculate kinship from the pedigree.}
 }
 \value{
-A list with reactive components for export.
+A list with reactive components:
+\itemize{
+\item \code{summaryData} - Summary statistics (nAnimals, meanMK, meanGU)
+\item \code{relationships} - Pairwise relationship designations from
+\code{convertRelationships()}
+\item \code{relationClasses} - Relationship class frequency table from
+\code{makeRelationClassesTable()}
+\item \code{firstOrderCounts} - First-order relative counts per animal from
+\code{countFirstOrder()}
+}
 }
 \description{
 Server logic for summary statistics module displaying genetic analysis
-results including kinship statistics, histograms, and box plots.
+results including kinship statistics, histograms, box plots, and
+relationship designation analysis.
+}
+\details{
+This module provides:
+\itemize{
+\item Summary statistics (counts, mean kinship, genome uniqueness)
+\item Histograms and box plots for genetic value distributions
+\item Relationship classification using \code{convertRelationships()}
+\item Relationship class frequency tables using \code{makeRelationClassesTable()}
+\item First-order relative counts using \code{countFirstOrder()}
+\item Export functionality for kinship matrix, founders, and relationships
+}
 }
 \seealso{
-\code{\link{modSummaryStatsUI}} for the user interface.
+\code{\link{modSummaryStatsUI}} for the user interface
+
+\code{\link{convertRelationships}} for relationship classification
+
+\code{\link{makeRelationClassesTable}} for relationship class summary
+
+\code{\link{countFirstOrder}} for first-order relative counting
+
+\code{\link{kinship}} for kinship matrix calculation
 }

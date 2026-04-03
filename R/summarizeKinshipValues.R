@@ -21,7 +21,7 @@
 #' @importFrom stats fivenum sd
 #' @export
 #' @examples
-#' ped <- mprcgenekeepr::smallPed
+#' ped <- nprcgenekeepr::smallPed
 #' simParent_1 <- list(
 #'   id = "A",
 #'   sires = c("s1_1", "s1_2", "s1_3"),
@@ -92,8 +92,9 @@ summarizeKinshipValues <- function(countedKValues) {
       unlist(countedKValues$kValues[i]),
       unlist(countedKValues$kCounts[i])
     )
+    # Skip entries with NA values
     if (any(is.na(numbers), is.na(mean(numbers)))) {
-      cat(paste0("i = ", i))
+      next
     }
     tukeys <- fivenum(numbers)
     stats <- rbind(

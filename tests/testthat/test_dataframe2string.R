@@ -1,9 +1,8 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
-context("dataframe2string")
+#' This file is part of nprcgenekeepr
 library(stringi)
 ## See change in calendar result for sire age; changed 20200412
-pedOne <- mprcgenekeepr::pedOne
+pedOne <- nprcgenekeepr::pedOne
 errorLst <- qcStudbook(pedOne, reportErrors = TRUE)
 text <- summary(errorLst)
 lines <- dataframe2string(text$sp, rowNames = FALSE, digits = 2L)

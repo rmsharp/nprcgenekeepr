@@ -4,7 +4,7 @@
 #' (female) animal counts and then round that up to the nearest multiple of the
 #' modulus greater than or equal to the maximum value.
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #'
 #' @return Integer value equal to the nearest multiple of \code{axModulus} that
 #' is greater than or equal to the maximum of the absolute values of the

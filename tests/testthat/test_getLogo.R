@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
-context("getLogo")
+#' This file is part of nprcgenekeepr
 logo <- suppressWarnings(getLogo())
 test_that("getLogo returns reasonalble values", {
   expect_true(is.integer(logo$height))
@@ -11,7 +10,7 @@ test_that("getLogo returns reasonalble values", {
 })
 sysInfo <- Sys.info()
 homeDir <- paste0("~/")
-configFile <- paste0(homeDir, ".mprcgenekeepr_config")
+configFile <- paste0(homeDir, ".nprcgenekeepr_config")
 config <- c(homeDir = homeDir, configFile = configFile)
 test_that("getLogo returns reasonalble values with SNPRC mock", {
   local_mocked_bindings(

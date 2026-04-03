@@ -1,7 +1,7 @@
 #' Get site information
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' @return{A list of site specific information used by the application.}
 #'
 #' Currently this returns the following character strings in a named list.
@@ -23,7 +23,7 @@
 #' configuration is looked for. Default value is \code{TRUE}.
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' ## default sends warning if configuration file is missing
 #' suppressWarnings(getSiteInfo())
 #' getSiteInfo(expectConfigFile = FALSE)
@@ -56,7 +56,7 @@ getSiteInfo <- function(expectConfigFile = TRUE) {
   } else {
     if (expectConfigFile) {
       warning(
-        "The mprcgenekeepr configuration file is missing.\n",
+        "The nprcgenekeepr configuration file is missing.\n",
         "It is required when the LabKey API is to be used.\n",
         "The file should be named: ",
         config[["configFile"]], ".\n"

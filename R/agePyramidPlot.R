@@ -1,7 +1,7 @@
 #' Form age pyramid plot
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #'
 #' @return The return value of par("mar") when the function was called.
 #'
@@ -21,10 +21,6 @@
 #' of bars for the \code{ageLabels} in user units
 #' @param currentDate POSIXct date object indicating the date corresponding to
 #' the date the pedigree census occurred.
-#' @param showCounts logical whether to show count values on bars.
-#'   Default is TRUE.
-#' @param ageLabelCex numeric character expansion factor for age labels.
-#'   Default is 1.0.
 #' @importFrom lubridate year month day
 #' @importFrom stringi stri_c
 #' @importFrom plotrix pyramid.plot
@@ -37,12 +33,8 @@ agePyramidPlot <- function(males,
                            laxlab,
                            raxlab,
                            gap,
-                           currentDate,
-                           showCounts = TRUE,
-                           ageLabelCex = 1.0) {
-
-  # Draw the pyramid plot
-  result <- pyramid.plot(
+                           currentDate) {
+  pyramid.plot(
     lx = males,
     rx = females,
     labels = ageLabels,
@@ -70,10 +62,7 @@ agePyramidPlot <- function(males,
     # laxlab to seq(0, 100, by = 10),
     # raxlab to seq(0, 100, by = 10),
     unit = "Number of Animals",
-    show.values = showCounts,
-    ndig = 0L,
-    labelcex = ageLabelCex
+    show.values = TRUE,
+    ndig = 0L
   )
-
-  result
 }

@@ -1,8 +1,8 @@
 ---
 title: "Genetic Value Analysis and Breeding Group Formation Description"
 author: "R. Mark Sharp, Ph.D."
-date: "10/2/2017"
-output: 
+date: "2025-01-01"
+output:
    - rmarkdown::pdf_document
    - rmarkdown::latex_document
    - rmarkdown::html_vignette
@@ -12,6 +12,45 @@ vignette: >
   %\VignetteIndexEntry{Genetic Management Tools}
   %\usepackage[UTF-8]{inputenc}
 ---
-## Genetic Value Analysis and Breeding Group Formation Description  
-This tab contains more in-depth descriptions of how the Genetic Value Analysis
-is created, and how breeding groups are formed by the program.
+
+## Genetic Value Analysis and Breeding Group Formation Description
+
+The GV & BG Description tab (`modGvAndBgDesc`) provides comprehensive documentation
+about the algorithms and methodologies used in genetic value analysis and breeding
+group formation.
+
+### Purpose
+
+This informational module serves as a reference for users who want to understand
+the scientific basis behind the calculations performed by the application. It
+displays detailed HTML documentation loaded from the package's guidance files.
+
+### Content Overview
+
+The documentation explains:
+
+1. **Genetic Value Analysis Algorithms**:
+   - How mean kinship coefficients are calculated
+   - The gene-drop simulation methodology for genome uniqueness
+   - Interpretation of genetic value metrics
+
+2. **Breeding Group Formation**:
+   - The optimization algorithm for minimizing within-group relatedness
+   - How sex ratio constraints are applied
+   - The iterative assignment process
+
+### Module Interface
+
+The `modGvAndBgDesc` module is primarily informational:
+
+- `modGvAndBgDescUI`: Renders the documentation panel with styled HTML content
+- `modGvAndBgDescServer`: Minimal server logic (no reactive outputs)
+
+This module does not return reactive values as it serves only as a documentation
+reference for the other analysis modules.
+
+### Related Modules
+
+- See `modGeneticValue` for performing genetic value analysis
+- See `modBreedingGroups` for forming breeding groups
+- See `modSummaryStats` for viewing analysis results

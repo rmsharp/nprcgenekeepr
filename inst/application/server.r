@@ -1,7 +1,6 @@
 `%then%` <- rlang::`%||%`
 # nolint start: undesirable_function_linter
-library(mprcgenekeepr) #
-library(DT)
+library(nprcgenekeepr) #
 library(futile.logger)
 library(ggplot2)
 library(stringi)
@@ -9,37 +8,37 @@ suppressMessages(library(DT))
 # nolint end: undesirable_function_linter
 shinyServer(function(input, output, session) {
   errorLst <- getEmptyErrorLst()
-  mprcgenekeeprLog <- paste0(getSiteInfo()$homeDir, "mprcgenekeepr.log")
-  flog.logger("mprcgenekeepr", INFO,
-              appender = appender.file(mprcgenekeeprLog))
+  nprcgenekeeprLog <- paste0(getSiteInfo()$homeDir, "nprcgenekeepr.log")
+  flog.logger("nprcgenekeepr", INFO,
+              appender = appender.file(nprcgenekeeprLog))
 
   #############################################################################
   # Functions for handling initial pedigree upload and QC
   getSelectedBreeders <- reactive({
     input$getData # This button starts it all
     if (input$debugger) {
-      flog.threshold(DEBUG, name = "mprcgenekeepr")
+      flog.threshold(DEBUG, name = "nprcgenekeepr")
     } else {
-      flog.threshold(INFO, name = "mprcgenekeepr")
+      flog.threshold(INFO, name = "nprcgenekeepr")
     }
     isolate({
       flog.debug(paste0("1st. input$fileContent: ", input$fileContent,
                         "; input$fileType: ", input$fileType,
                         "; input$separator: ", input$separator),
-                 name = "mprcgenekeepr")
+                 name = "nprcgenekeepr")
       sep <- input$separator
       if (input$fileContent == "pedFile") {
         pedigreeFile <- input$pedigreeFileOne
         flog.debug(paste0("pedigreeFile - pedigreeFile$name: ",
                           pedigreeFile$name,
                           "; pedigreeFile$datapath: ", pedigreeFile$datapath),
-                   name = "mprcgenekeepr")
+                   name = "nprcgenekeepr")
       } else if (input$fileContent == "commonPedGenoFile") {
         pedigreeFile <- input$pedigreeFileTwo
         flog.debug(paste0("pedigreeFileTwo - pedigreeFile$name: ",
                           pedigreeFile$name,
                           "; pedigreeFile$datapath: ", pedigreeFile$datapath),
-                   name = "mprcgenekeepr")
+                   name = "nprcgenekeepr")
       } else if (input$fileContent == "separatePedGenoFile") {
         pedigreeFile <- input$pedigreeFileThree
         genotypeFile <- input$genotypeFile
@@ -48,20 +47,20 @@ shinyServer(function(input, output, session) {
                           "; pedigreeFile$datapath: ", pedigreeFile$datapath,
                           "; genotypeFile$name: ", genotypeFile$name,
                           "; genotypeFile$datapath: ", genotypeFile$datapath),
-                   name = "mprcgenekeepr")
+                   name = "nprcgenekeepr")
       } else if (input$fileContent == "focalAnimals") {
         pedigreeFile <- input$breederFile
         flog.debug(paste0("breederFile - pedigreeFile$name: ",
                           pedigreeFile$name, "; ",
                           "pedigreeFile$datapath: ", pedigreeFile$datapath),
-                   name = "mprcgenekeepr")
+                   name = "nprcgenekeepr")
       } else {
         stop("Data source was not defined.")
       }
       # The minParentAge -- numeric values to set the minimum age in years for
       # an animal to have an offspring. Defaults to 2 years. The check is not
       # performed for animals with missing birth dates. See qcStudbook().
-      flog.debug("sep: %s", sep, name = "mprcgenekeepr")
+      flog.debug("sep: %s", sep, name = "nprcgenekeepr")
       minParentAge <- tryCatch(
         as.numeric(input$minParentAge),
         warning = function(cond) {
@@ -73,7 +72,7 @@ shinyServer(function(input, output, session) {
       )
       globalMinParentAge <<- minParentAge
       flog.debug(paste0("minParentAge: ", minParentAge),
-                 name = "mprcgenekeepr")
+                 name = "nprcgenekeepr")
 
       # pedigreeFile and breederFile will be NULL initially.
       # After the user selects a file, it will be a filepath.
@@ -82,11 +81,11 @@ shinyServer(function(input, output, session) {
       }
       flog.debug(paste0("before Load pedigree table ",
                         input$fileContent),
-                 name = "mprcgenekeepr")
+                 name = "nprcgenekeepr")
       # Load pedigree table
       if (input$fileContent == "focalAnimals") {
         flog.debug(paste0("before getFocalAnimalPed: ", pedigreeFile$name),
-                   name = "mprcgenekeepr")
+                   name = "nprcgenekeepr")
         breederPed <- getFocalAnimalPed(pedigreeFile$datapath, sep = sep)
         if (is.element("nprckeepErr", class(breederPed))) {
           errorLst <- breederPed
@@ -95,13 +94,13 @@ shinyServer(function(input, output, session) {
           flog.debug(paste0("after getFocalAnimalPed: ", pedigreeFile$name,
                             "; NULL was returned by getFocalAnimalPed ",
                             "function"),
-                     name = "mprcgenekeepr")
+                     name = "nprcgenekeepr")
         } else {
           flog.debug(paste0("after getFocalAnimalPed: ", pedigreeFile$name,
                             "; contents rows: ", nrow(breederPed),
                             ", columns: ", ncol(breederPed), "; col names: '",
                             paste(names(breederPed), collapse = "', '"), "'"),
-                     name = "mprcgenekeepr")
+                     name = "nprcgenekeepr")
         }
       } else {
         breederPed <- getPedigree(pedigreeFile$datapath, sep = sep)
@@ -110,7 +109,7 @@ shinyServer(function(input, output, session) {
                           "; contents rows: ", nrow(breederPed),
                           ", columns: ", ncol(breederPed), "; col names: '",
                           paste(names(breederPed), collapse = "', '"), "'"),
-                   name = "mprcgenekeepr")
+                   name = "nprcgenekeepr")
       }
 
       if (is.null(input$fileContent)) {
@@ -122,13 +121,13 @@ shinyServer(function(input, output, session) {
                           "; contents rows: ", nrow(breederPed),
                           ", columns: ", ncol(breederPed), "; col names: '",
                           paste(names(breederPed), collapse = "', '"), "'"),
-                   name = "mprcgenekeepr")
+                   name = "nprcgenekeepr")
         genotype <- getGenotypes(genotypeFile$datapath, sep = sep)
         flog.debug(paste0("genotype$name: ", genotype$name,
                           "; contents rows: ", nrow(genotype),
                           ", columns: ", ncol(genotype), "; col names: '",
                           paste(names(genotype), collapse = "', '"), "'"),
-                   name = "mprcgenekeepr")
+                   name = "nprcgenekeepr")
         genotype <- tryCatch(
           checkGenotypeFile(genotype),
           warning = function(cond) {
@@ -140,7 +139,7 @@ shinyServer(function(input, output, session) {
           finally = {
             flog.debug(paste0("   tryCatch checkGenotype ", "file. ",
                               geterrmessage()),
-                       name = "mprcgenekeepr")
+                       name = "nprcgenekeepr")
           }
         )
         breederPed <- addGenotype(breederPed, genotype)
@@ -149,24 +148,24 @@ shinyServer(function(input, output, session) {
                           "; contents rows: ", nrow(breederPed),
                           ", columns: ", ncol(breederPed), "; col names: '",
                           paste(names(breederPed), collapse = "', '"), "'"),
-                   name = "mprcgenekeepr")
+                   name = "nprcgenekeepr")
       } else {
         flog.debug(paste0("Setting genotype to NULL."),
-                   name = "mprcgenekeepr")
+                   name = "nprcgenekeepr")
         genotype <- NULL
       }
       flog.debug(paste0("Data files may have been read.\n",
                         "contents rows: ", nrow(breederPed),
                         ", columns: ", ncol(breederPed), "; col names: '",
                         paste(names(breederPed), collapse = "', '"), "'"),
-                 name = "mprcgenekeepr")
+                 name = "nprcgenekeepr")
 
       if (!is.null(minParentAge)) {
         flog.debug(paste0("Before qcStudbook.\n",
                           "contents rows: ", nrow(breederPed),
                           ", columns: ", ncol(breederPed), "; col names: '",
                           paste(names(breederPed), collapse = "', '"), "'"),
-                   name = "mprcgenekeepr")
+                   name = "nprcgenekeepr")
         if (!checkErrorLst(errorLst)) {
           errorLst <- tryCatch(
             qcStudbook(
@@ -217,11 +216,11 @@ shinyServer(function(input, output, session) {
               paste(names(breederPed), collapse = "', '"),
               "'"
             ),
-            name = "mprcgenekeepr"
+            name = "nprcgenekeepr"
           )
         }
       }
-      flog.debug(paste0("before validate()."), name = "mprcgenekeepr")
+      flog.debug(paste0("before validate()."), name = "nprcgenekeepr")
       validate(need(
         !is.null(minParentAge),
         paste0("   Error uploading data. ", geterrmessage())
@@ -240,7 +239,7 @@ shinyServer(function(input, output, session) {
           "; ncol(breederPed): ",
           ncol(breederPed)
         ),
-        name = "mprcgenekeepr"
+        name = "nprcgenekeepr"
       )
       breederPed
     })
@@ -249,7 +248,7 @@ shinyServer(function(input, output, session) {
   # Load and QA-QC the pedigree once a file has been specified
 
   getPed <- reactive({
-    flog.debug(paste0("In ped <- reactive()\n"), name = "mprcgenekeepr")
+    flog.debug(paste0("In ped <- reactive()\n"), name = "nprcgenekeepr")
     if (is.null(getSelectedBreeders())) {
       return(NULL)
     }
@@ -258,21 +257,21 @@ shinyServer(function(input, output, session) {
         "In ped <- reactive() and ",
         "!is.null(getSelectedBreeders()) == TRUE\n"
       ),
-      name = "mprcgenekeepr"
+      name = "nprcgenekeepr"
     )
 
     ped <- getSelectedBreeders()
     flog.debug(paste0("column names: '", paste(names(ped), collapse = "', '"),
-                      "'"), name = "mprcgenekeepr")
+                      "'"), name = "nprcgenekeepr")
     flog.debug(" - after ped <- getSelectedBreeders() before tryCatch with ",
                "setPopulation.",
-               name = "mprcgenekeepr")
+               name = "nprcgenekeepr")
     ped <- tryCatch({
       ped <- getSelectedBreeders()
       flog.debug(paste0("column names: '", paste(names(ped),
                                                  collapse = "', '"),
-                        "'"), name = "mprcgenekeepr")
-      flog.debug(" - in tryCatch before setPopulation.", name = "mprcgenekeepr")
+                        "'"), name = "nprcgenekeepr")
+      flog.debug(" - in tryCatch before setPopulation.", name = "nprcgenekeepr")
       ## setPopulation adds the population column if not already present
       ## setPopulation indicates all id to be in the population if
       ##  specifyFocalAnimals() is NULL
@@ -281,8 +280,8 @@ shinyServer(function(input, output, session) {
       ped <- setPopulation(ped, specifyFocalAnimals())
       flog.debug(paste0("column names: '", paste0(names(ped),
                                                   collapse = "', '"), "'"),
-                 name = "mprcgenekeepr")
-      flog.debug(paste0("setPopulation() called\n"), name = "mprcgenekeepr")
+                 name = "nprcgenekeepr")
+      flog.debug(paste0("setPopulation() called\n"), name = "nprcgenekeepr")
 
       if (input$trim) {
         probands <- ped$id[ped$population]
@@ -292,7 +291,7 @@ shinyServer(function(input, output, session) {
                             addBackParents = FALSE)
         #ped <- trimPedigree(probands, ped, removeUninformative = TRUE,
         #                  addBackParents = TRUE)
-        flog.debug(paste0("trimPedigree() called\n"), name = "mprcgenekeepr")
+        flog.debug(paste0("trimPedigree() called\n"), name = "nprcgenekeepr")
       }
 
       ped["pedNum"] <- findPedigreeNumber(ped$id, ped$sire, ped$dam)
@@ -316,7 +315,7 @@ shinyServer(function(input, output, session) {
   })
 
   # Creating the pedigree table to be displayed on the Pedigree Browser tab
-  output$pedigree <- DT::renderDT(DT::datatable({
+  output$pedigree <- DT::renderDataTable(DT::datatable({
     if (is.null(getPed())) {
       return(NULL)
     }
@@ -348,14 +347,14 @@ shinyServer(function(input, output, session) {
             "focalAnimalUpdate$datapath: ",
             focalAnimalUpdate$datapath
           ),
-          name = "mprcgenekeepr"
+          name = "nprcgenekeepr"
         )
       } else {
         focalAnimalUpdate <-
           list(
             name = "emptyFocalAnimals.csv",
             datapath = system.file("extdata", "emptyFocalAnimals.csv",
-                                   package  = "mprcgenekeepr")
+                                   package  = "nprcgenekeepr")
           )
 
         flog.debug(
@@ -366,7 +365,7 @@ shinyServer(function(input, output, session) {
             "focalAnimalUpdate$datapath: ",
             focalAnimalUpdate$datapath
           ),
-          name = "mprcgenekeepr"
+          name = "nprcgenekeepr"
         )
       }
       focalAnimalUpdateDf <- unlist(
@@ -383,7 +382,7 @@ shinyServer(function(input, output, session) {
         "focalAnimalUpdate - focalAnimalUpdateDf: ",
         focalAnimalUpdateDf
       ),
-      name = "mprcgenekeepr")
+      name = "nprcgenekeepr")
       updateTextAreaInput(
         session,
         "focalAnimalIds",
@@ -477,7 +476,7 @@ shinyServer(function(input, output, session) {
     }
   })
 
-  output$gva <- DT::renderDT(DT::datatable({
+  output$gva <- DT::renderDataTable(DT::datatable({
     if (is.null(rpt())) {
       return(NULL)
     }
@@ -830,7 +829,7 @@ shinyServer(function(input, output, session) {
 
   # nolint start: commented_code_linter.
   # output$relations <- eventReactive(input$displayRelations, {
-  #   DT::renderDT(DT::datatable({
+  #   DT::renderDataTable(DT::datatable({
   #     if (is.null(kmat())) {
   #       return(NULL)
   #     }
@@ -994,7 +993,7 @@ shinyServer(function(input, output, session) {
   # nolint start: commented_code_linter.
   # ### Display Founders
   # # Creating the male founder table for display on the Summary Statistics tab
-  # output$maleFounders <- DT::renderDT(DT::datatable({
+  # output$maleFounders <- DT::renderDataTable(DT::datatable({
   #   if (is.null(geneticValue()[["maleFounders"]])) {
   #     return(NULL)
   #   }
@@ -1004,7 +1003,7 @@ shinyServer(function(input, output, session) {
   #   ped
   # }))
   # # Creating the male founder table for display on the Summary Statistics tab
-  # output$femaleFounders <- DT::renderDT(DT::datatable({
+  # output$femaleFounders <- DT::renderDataTable(DT::datatable({
   #   if (is.null(geneticValue()[["femaleFounders"]])) {
   #     return(NULL)
   #   }
@@ -1267,13 +1266,13 @@ shinyServer(function(input, output, session) {
     }
   })
 
-  output$breedingGroups <- DT::renderDT(DT::datatable({
+  output$breedingGroups <- DT::renderDataTable(DT::datatable({
     if (is.null(bg())) {
       return(NULL)
     }
     return(bgGroupView())
   }))
-  output$breedingGroupKin <- DT::renderDT(DT::datatable({
+  output$breedingGroupKin <- DT::renderDataTable(DT::datatable({
     if (is.null(bg()$groupKin)) {
       return(NULL)
     }
@@ -1299,8 +1298,7 @@ shinyServer(function(input, output, session) {
 
   #############################################################################
   # Function to handle display of pyramid plot
-  flog.debug("before renderPlot(getPyramidPlot(ped)))", name = "mprcgenekeepr")
-  pyramidResults <- modPyramidDerver("pyramid1", ped)
-  #output$pyramidPlot <- renderPlot(getPyramidPlot(getPed()))
-  flog.debug("after renderPlot(getPyramidPlot(ped)))", name = "mprcgenekeepr")
+  flog.debug("before renderPlot(getPyramidPlot(ped)))", name = "nprcgenekeepr")
+  output$pyramidPlot <- renderPlot(getPyramidPlot(getPed()))
+  flog.debug("after renderPlot(getPyramidPlot(ped)))", name = "nprcgenekeepr")
 })

@@ -1,9 +1,8 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
-context("checkGenotypeFile")
+#' This file is part of nprcgenekeepr
 library(stringi) # nolint undesirable_function_linter.
 
-ped <- mprcgenekeepr::qcPed
+ped <- nprcgenekeepr::qcPed
 ped <- ped[order(ped$id), ]
 genotype <- data.frame(
   id = ped$id[50L + 1L:20L],

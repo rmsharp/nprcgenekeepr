@@ -1,4 +1,75 @@
-Need to compare what trimPedigree() does to getPedDirectRelatives()
+⏺ Analysis: Why These Tests Are Slow
+
+  Both test files run modBreedingGroupsServer which calls groupAddAssign() - a computationally expensive
+  algorithm that:
+
+  1. Calculates kinship matrix - O(n²) for n animals
+  2. Runs MIS (Maximal Independent Set) optimization - Multiple iterations
+
+  Key Performance Issues:
+  Test: Large pedigree test
+  Issue: 200 animals
+  Animals: 200
+  Location: test_modBreedingGroups.R:632-666
+  ────────────────────────────────────────
+  Test: examplePedigree test
+  Issue: Real dataset
+  Animals: 30+
+  Location: test_modBreedingGroups_groupAddAssign.R:681-727
+  ────────────────────────────────────────
+  Test: Deterministic test
+  Issue: Runs algorithm TWICE
+  Animals: 18
+  Location: test_modBreedingGroups_groupAddAssign.R:733-798
+  ────────────────────────────────────────
+  Test: Many small tests
+  Issue: Cumulative overhead
+  Animals: 10-50 each
+  Location: Both files
+  Specific Slow Tests:
+
+  1. test_modBreedingGroups.R line 632: Test with 200 animals
+  2. test_modBreedingGroups_groupAddAssign.R line 681: Uses real example data
+  3. test_modBreedingGroups_groupAddAssign.R line 733: Runs twice for "deterministic" check
+
+  Recommendations:
+
+  1. Reduce pedigree sizes to 10-20 animals max
+  2. Skip slow tests on CRAN with skip_on_cran()
+  3. Remove duplicate algorithm runs in deterministic test
+  4. Mock groupAddAssign for structural tests that don't need real results
+
+  Would you like me to optimize these tests?
+************************************
+
+
+⏺ Done. Both branches are now available:
+  ┌────────┬─────────────────────────────────────────────────────────────────────────┬──────────┐
+  │ Branch │                                Directory                                │  Commit  │
+  ├────────┼─────────────────────────────────────────────────────────────────────────┼──────────┤
+  │ module │ /Users/rmsharp/Documents/Development/R/r_workspace/nprcgenekeepr        │ 0b758660 │
+  ├────────┼─────────────────────────────────────────────────────────────────────────┼──────────┤
+  │ master │ /Users/rmsharp/Documents/Development/R/r_workspace/nprcgenekeepr-master │ 4790b64f │
+  └────────┴─────────────────────────────────────────────────────────────────────────┴──────────┘
+  To run both apps simultaneously:
+
+  R Session 1 (module branch):
+  setwd("/Users/rmsharp/Documents/Development/R/r_workspace/nprcgenekeepr")
+  devtools::load_all()
+  runGeneKeepR(port = 3838)
+  # Access at: http://127.0.0.1:3838
+
+  R Session 2 (master branch):
+  setwd("/Users/rmsharp/Documents/Development/R/r_workspace/nprcgenekeepr-master")
+  devtools::load_all()
+  runGeneKeepR(port = 3839)
+  # Access at: http://127.0.0.1:3839
+
+  When done testing, you can remove the worktree with:
+  git worktree remove ../nprcgenekeepr-master
+
+**********
+  Need to compare what trimPedigree() does to getPedDirectRelatives()
 Study simulatedKvalues with partial parentage (simulatedKValues.Rmd);
   ensure it is being displayed as an article.
 Ran from terminal to find files in R directory that do not have "@return"

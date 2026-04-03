@@ -45,8 +45,8 @@ the pedigree back in time starting from a group of probands, then moves
 back down the tree trimming off uninformative ancestors.
 }
 \examples{
-library(mprcgenekeepr)
-examplePedigree <- mprcgenekeepr::examplePedigree
+library(nprcgenekeepr)
+examplePedigree <- nprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree,
   minParentAge = 2,
   reportChanges = FALSE,

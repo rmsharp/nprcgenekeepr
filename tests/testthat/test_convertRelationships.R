@@ -1,13 +1,12 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
-context("convertRelationships")
+#' This file is part of nprcgenekeepr
 library(testthat)
-ped <- mprcgenekeepr::smallPed
+ped <- nprcgenekeepr::smallPed
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
 ids <- c("A", "B", "D", "E", "F", "G", "I", "J", "L", "M", "O", "P")
 relIds <- convertRelationships(kmat, ped, ids)
 rel <- convertRelationships(kmat, ped, updateProgress = function() {})
-ped <- mprcgenekeepr::qcPed
+ped <- nprcgenekeepr::qcPed
 bkmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen,
   sparse = FALSE
 )

@@ -1,8 +1,8 @@
 ---
 title: "Genetic Value Analysis"
 author: "R. Mark Sharp, Ph.D."
-date: "10/2/2017"
-output: 
+date: "2025-01-01"
+output:
    - rmarkdown::pdf_document
    - rmarkdown::latex_document
    - rmarkdown::html_vignette
@@ -12,41 +12,68 @@ vignette: >
   %\VignetteIndexEntry{Genetic Management Tools}
   %\usepackage[UTF-8]{inputenc}
 ---
-## Genetic Value Analysis  
 
-The Genetic Value Analysis tab provides all of the options needed for producing 
-a genetic value analysis report. The specifics of generating the genetic value 
-analysis report are described on the ___Genetic Value Analysis and Breeding Group
-Description___ tab.
+## Genetic Value Analysis
 
-When the analysis is begun, it will generate a genetic value analysis for the
-currently-specified population in the pedigree. 
-If no population has been specified,
-the entire pedigree will go into the analysis. 
-This can be problematic, as the function
-for calculating the pairwise kinship matrix cannot handle large pedigrees. 
-The kinship
-calculation is known to handle pedigree files containing up to 6000 individuals. 
-It
-will not, however, handle the whole ONPRC rhesus studbook (~24,000 animals). 
-The exact
-maximum pedigree size is not currently known and will need to be tested. 
-Due to these
-problems, the input studbook will automatically be trimmed to the ancestors of 
-the currently-specified population before the genetic value analysis is begun.
+The Genetic Value Analysis tab (`modGeneticValue`) provides tools for computing
+genetic value metrics for your population. This module calculates Mean Kinship
+and Genome Uniqueness scores to help identify genetically valuable animals.
 
-The genome uniqueness threshold input box allows the user to specify what 
-constitutes a 'unique' allele in the gene-drop simulation. 
-The algorithm description later in this document provides a more in-depth 
-explanation of how the genome uniqueness calculation
-uses this information. 
-By default, the gene-drop simulation underlying the genome
-uniqueness calculation considers an individual as unique if no other members of
-the current population have inherited the same allele during an iteration of the
-gene-drop. 
-This can be adjusted using the drop-down box to allow up to four other animals
-to have inherited the allele and still consider it unique.
+### Analysis Options
 
-After the report has been generated, it can be subset to view a specific group 
-of the animals using the text input box. Both the currently-viewed subset and 
-the full report can be exported to a file from here.
+The left panel contains controls for configuring the analysis:
+
+- **Gene Drop Iterations**: Number of iterations for the gene-drop simulation
+  (default: 5000, range: 100-10,000). More iterations provide more accurate
+  genome uniqueness estimates but take longer to compute.
+
+- **Calculate Genome Uniqueness**: Toggle whether to run the gene-drop simulation
+  to estimate genome uniqueness values.
+
+- **Calculate Mean Kinship**: Toggle whether to compute pairwise kinship
+  coefficients and individual mean kinship values.
+
+- **Minimum Breeding Age**: Slider to set the minimum age (in years) for animals
+  to be considered in the breeding population (default: 2 years).
+
+- **Run Analysis**: Click to start the genetic value computation.
+
+### Understanding Genetic Values
+
+The information panel explains the key metrics:
+
+- **Mean Kinship**: The average kinship coefficient between an individual and
+  all other members of the population. **Lower values are better** as they
+  indicate the animal is less related to the population.
+
+- **Genome Uniqueness**: The proportion of an individual's genome that is unique
+  in the population based on gene-drop simulation. **Higher values are better**
+  as they indicate the animal carries rare genetic material.
+
+### Results Tabs
+
+After running the analysis, results are displayed across three tabs:
+
+1. **Rankings**: Interactive table showing animals ranked by genetic value.
+   - Adjust "Show top N" to view more or fewer animals
+   - Download button exports the full rankings to CSV
+
+2. **Visualizations**: Scatter plot showing the relationship between
+   mean kinship and genome uniqueness values.
+
+3. **Summary**: Statistical summary of genetic value metrics including
+   means, standard deviations, and distributions.
+
+### Module Interface
+
+The `modGeneticValue` module returns reactive values for downstream use:
+
+- `geneticValues`: Data frame with genetic value metrics for all animals
+- `topAnimals`: Subset of highest-value animals
+- `nAnalyzed`: Count of animals included in the analysis
+
+### Performance Notes
+
+The kinship calculation can handle pedigrees up to approximately 6,000 individuals.
+For larger pedigrees, the input studbook will automatically be trimmed to the
+ancestors of the currently-specified population before analysis begins.

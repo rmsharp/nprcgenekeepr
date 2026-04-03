@@ -1,7 +1,7 @@
 #' Sets sex for animals listed as either a sire or dam.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Part of Pedigree Curation
 #'
 #' @return A factor with levels: "M", "F", "H", and "U"
@@ -22,7 +22,7 @@
 #' original animal.
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' pedOne <- data.frame(
 #'   id = c("s1", "d1", "s2", "d2", "o1", "o2", "o3", "o4"),
 #'   sire = c(NA, "s0", "s4", NA, "s1", "s1", "s2", "s2"),

@@ -17,6 +17,6 @@ Converts the column names of a Pedigree or Genetic value Report to
 something more descriptive.
 }
 \examples{
-library(mprcgenekeepr)
+library(nprcgenekeepr)
 headerDisplayNames(headers = c("id", "sire", "dam", "sex", "birth", "age"))
 }

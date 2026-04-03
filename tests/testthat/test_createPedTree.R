@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
-context("createPedTree")
+#' This file is part of nprcgenekeepr
 data("smallPed")
 ped <- smallPed
 pedTree <- createPedTree(ped)

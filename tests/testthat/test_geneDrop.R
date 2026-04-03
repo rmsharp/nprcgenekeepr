@@ -1,10 +1,9 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
-context("geneDrop")
+#' This file is part of nprcgenekeepr
 set_seed(10L)
 ## This test is entirely dependent on repeatable pseudorandom sequence
 ## generation. If this is disturbed, it will need to be rewritten.
-ped <- mprcgenekeepr::lacy1989Ped
+ped <- nprcgenekeepr::lacy1989Ped
 nDrops <- 5L
 pedFactors <- data.frame(
   id = as.factor(ped$id),

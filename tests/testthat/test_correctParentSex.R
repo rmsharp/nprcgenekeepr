@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
-context("correctParentSex")
+#' This file is part of nprcgenekeepr
 library(testthat)
 pedOne <- data.frame(
   id = c("s1", "d1", "s2", "d2", "o1", "o2", "o3", "o4"),

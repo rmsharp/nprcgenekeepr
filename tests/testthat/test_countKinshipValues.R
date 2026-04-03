@@ -1,9 +1,8 @@
 #' Copyright(c) 2017-2023 R. Mark Sharp
-#' This file is part of mprcgenekeepr
+#' This file is part of nprcgenekeepr
 
-context("countKinshipValues")
 # nolint start: object_name_linter
-ped <- mprcgenekeepr::smallPed
+ped <- nprcgenekeepr::smallPed
 simParent_1 <- list(
   id = "A",
   sires = c("s1_1", "s1_2", "s1_3"),
@@ -73,7 +72,7 @@ test_that("countKinshipValues detects contaminated ID list", {
 })
 test_that("countKinshipValues makes correct structure", {
   expect_length(counts, 3L)
-  expect_equal(names(counts), c("kIds", "kValues", "kCounts"), with = FALSE)
+  expect_equal(names(counts), c("kIds", "kValues", "kCounts"))
   expect_length(counts$kIds, 153L)
 })
 

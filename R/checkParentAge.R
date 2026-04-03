@@ -1,7 +1,7 @@
 #' Check parent ages to be at least \code{minParentAge}
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Ensure parents are sufficiently older than offspring
 #'
 #' @return A dataframe containing rows for each animal where one or more
@@ -27,8 +27,8 @@
 #' @importFrom lubridate dyears
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
-#' qcPed <- mprcgenekeepr::qcPed
+#' library(nprcgenekeepr)
+#' qcPed <- nprcgenekeepr::qcPed
 #' checkParentAge(qcPed, minParentAge = 2L)
 #' checkParentAge(qcPed, minParentAge = 3L)
 #' checkParentAge(qcPed, minParentAge = 5L)

@@ -1,8 +1,8 @@
 Config/renv/profiles/dev/dependencies: checkhelper,devtools, httpuv, qpdf, markdown, pak, roxygen2, spelling, usethis
-Package: mprcgenekeepr
+Package: nprcgenekeepr
 Type: Package
 Title: Genetic Tools for Colony Management
-Version: 1.0.9.9000
+Version: 1.1.0.9000
 Authors@R: c(
     person("Michael", "Raboin", role = c("aut")),
     person("Terry", "Therneau", role = c("aut")),
@@ -40,9 +40,10 @@ Depends:
 Imports:
     anytime,
     bslib,
-    DT,
     data.table,
+    DT,
     futile.logger,
+    ggplot2,
     htmlTable,
     lifecycle,
     lubridate,
@@ -54,13 +55,12 @@ Imports:
     shiny,
     stringi,
     utils,
-    withr,
     WriteXLS
 Suggests:
     covr,
     dplyr,
-    ggplot2,
     grid,
+    shinytest2,
     kableExtra,
     knitr,
     markdown,

@@ -1,11 +1,10 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-# This file is part of mprcgenekeepr
-context("summary.mprcgenekeeprErr")
+# This file is part of nprcgenekeepr
 library(testthat)
 library(stringi)
 
-pedOne <- mprcgenekeepr::pedOne
-test_that("summary.mprcgenekeeprErr provides expected classes of output", {
+pedOne <- nprcgenekeepr::pedOne
+test_that("summary.nprcgenekeeprErr provides expected classes of output", {
   expect_type(summary(qcStudbook(pedOne, reportErrors = TRUE))$txt,
     "character"
   )
@@ -13,7 +12,7 @@ test_that("summary.mprcgenekeeprErr provides expected classes of output", {
     "data.frame"
   )
 })
-test_that("summary.mprcgenekeeprErr provides expected output", {
+test_that("summary.nprcgenekeeprErr provides expected output", {
   expect_length(summary(qcStudbook(pedOne,
                                              reportErrors = TRUE))$txt, 1L)
   expect_identical(nrow(summary(qcStudbook(pedOne,
@@ -41,7 +40,7 @@ test_that("summary.mprcgenekeeprErr provides expected output", {
   ))
 })
 test_that(
-  "summary.mprcgenekeeprErr identifies individual bad dates in date columns",
+  "summary.nprcgenekeeprErr identifies individual bad dates in date columns",
   {
     birth <- format(pedOne$birth_date, format = "%Y-%m-%d")
     birth[5L] <- "04-02-2015"
@@ -57,7 +56,7 @@ test_that(
     ))
   }
 )
-test_that("summary.mprcgenekeeprErr identifies bad database connection", {
+test_that("summary.nprcgenekeeprErr identifies bad database connection", {
   birth <- format(pedOne$birth_date, format = "%Y-%m-%d")
   birth[5L] <- "04-02-2015"
   birth[6L] <- "03-17-2009"

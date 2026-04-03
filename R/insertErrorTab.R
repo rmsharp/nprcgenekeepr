@@ -1,7 +1,7 @@
 #' insertErrorTab insert a list of errors found by \code{qcStudbook} in the
 #' pedigree file
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #'
 #' @return Text of the error list formatted as an HTML page
 #'

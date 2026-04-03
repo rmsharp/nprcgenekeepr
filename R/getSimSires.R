@@ -1,7 +1,7 @@
 #' Provides list of potential sires
 #'
 ## Copyright(c) 2017-2023 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #'
 #' @return A character vector of potential sire Ids
 #'
@@ -13,9 +13,9 @@
 #' be ignored. Default is 1 year.
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
-#' ped <- mprcgenekeepr::pedWithGenotype
-#' ids <- mprcgenekeepr::qcBreeders
+#' library(nprcgenekeepr)
+#' ped <- nprcgenekeepr::pedWithGenotype
+#' ids <- nprcgenekeepr::qcBreeders
 #' getPotentialSires(ids, ped, minAge = 1)
 getPotentialSires <- function(ids, ped, minAge = 1L) {
   ped <- ped[!is.na(ped$birth), ]

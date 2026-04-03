@@ -1,7 +1,7 @@
 #' Reformats a kinship matrix into a long-format table.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Part of Group Formation
 #'
 #' @return A dataframe with columns \code{id1}, \code{id2}, and \code{kinship}.
@@ -16,8 +16,8 @@
 #' @importFrom utils stack
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
-#' ped <- mprcgenekeepr::lacy1989Ped
+#' library(nprcgenekeepr)
+#' ped <- nprcgenekeepr::lacy1989Ped
 #' ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 #' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
 #' reformattedKmat <- kinMatrix2LongForm(kmat, removeDups = FALSE)

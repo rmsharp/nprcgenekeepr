@@ -31,8 +31,8 @@ data(lacy1989Ped)
 ## Equivalents and Founder Genome Equivalents.
 ## Zoo Biology 8:111-123, (1989) by Robert C. Lacy
 
-library(mprcgenekeepr)
-ped <- mprcgenekeepr::lacy1989Ped
+library(nprcgenekeepr)
+ped <- nprcgenekeepr::lacy1989Ped
 alleles <- lacy1989PedAlleles
 pedFactors <- data.frame(
   id = as.factor(ped$id),

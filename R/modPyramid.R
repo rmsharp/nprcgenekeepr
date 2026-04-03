@@ -3,7 +3,7 @@
 #' Age-Sex Pyramid Module - UI Function
 #'
 #' Copyright(c) 2017-2025 R. Mark Sharp
-#' This file is part of mprcgenekeepr
+#' This file is part of nprcgenekeepr
 #'
 #' @return A \code{div} containing age-sex pyramid UI.
 #'
@@ -18,6 +18,10 @@ modPyramidUI <- function(id) {
   ns <- NS(id)
 
   div(
+    id = ns("moduleContainer"),
+    `data-ready` = "false",
+    `data-module` = "pyramid",
+
     h3("Age-Sex Pyramid Analysis"),
     fluidRow(
       column(3,
@@ -88,7 +92,7 @@ modPyramidServer <- function(id, pedigreeData) {
       plotOutput(ns("pyramidPlot"), height = paste0(height, "px"))
     })
 
-    # Render pyramid plot with UI options
+    # Render pyramid plot with UI controls
     output$pyramidPlot <- renderPlot({
       req(pedigreeData())
       getPyramidPlot(
@@ -111,6 +115,15 @@ modPyramidServer <- function(id, pedigreeData) {
                   sum(ped$sex == "F", na.rm = TRUE)),
         stringsAsFactors = FALSE
       )
+    })
+
+    # Signal data-ready when pyramid is rendered (for E2E testing)
+    observe({
+      req(pedigreeData())
+      session$sendCustomMessage("setDataReady", list(
+        selector = paste0("#", session$ns("moduleContainer")),
+        ready = TRUE
+      ))
     })
 
     output$downloadPlot <- downloadHandler(

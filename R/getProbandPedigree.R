@@ -1,7 +1,7 @@
 #' Gets pedigree to ancestors of provided group leaving uninformative ancestors.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Filters a pedigree down to only the ancestors of the provided group,
 #' removing unnecessary individuals from the studbook. This version builds
 #' the pedigree back in time starting from a group of probands. This will
@@ -16,9 +16,9 @@
 #' information. The fields \code{sire} and \code{dam} are required.
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
-#' ped <- mprcgenekeepr::pedWithGenotype
-#' ids <- mprcgenekeepr::qcBreeders
+#' library(nprcgenekeepr)
+#' ped <- nprcgenekeepr::pedWithGenotype
+#' ids <- nprcgenekeepr::qcBreeders
 #' sires <- getPotentialSires(ids, ped, minAge = 1)
 #' head(getProbandPedigree(probands = sires, ped = ped))
 getProbandPedigree <- function(probands, ped) {

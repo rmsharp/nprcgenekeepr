@@ -1,9 +1,8 @@
 #' Copyright(c) 2017-2023 R. Mark Sharp
-#' This file is part of mprcgenekeepr
+#' This file is part of nprcgenekeepr
 library(testthat)
-context("kinshipMatricesToKValues")
 
-ped <- mprcgenekeepr::smallPed
+ped <- nprcgenekeepr::smallPed
 # nolint start: object_name_linter.
 simParent_1 <- list(
   id = "A",

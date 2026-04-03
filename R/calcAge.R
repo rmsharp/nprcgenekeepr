@@ -1,7 +1,7 @@
 #' Calculate animal ages.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Part of Pedigree Curation
 #'
 #' Given vectors of birth and exit dates, calculate an individuals age. If no
@@ -15,8 +15,8 @@
 #'
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
-#' qcPed <- mprcgenekeepr::qcPed
+#' library(nprcgenekeepr)
+#' qcPed <- nprcgenekeepr::qcPed
 #' originalAge <- qcPed$age ## ages calculated at time of data collection
 #' currentAge <- calcAge(qcPed$birth, qcPed$exit) ## assumes no changes in
 #' ## colony

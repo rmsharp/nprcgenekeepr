@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-# This file is part of mprcgenekeepr
-context("obfuscateDate")
+# This file is part of nprcgenekeepr
 library(testthat)
 
 test_that("obfuscateDate creates new date within accepted range", {

@@ -1,13 +1,13 @@
 #' exampleNprcgenekeeprConfig is a loadable version of the example
-#' configuration file \code{example_mprcgenekeepr_config}
+#' configuration file \code{example_nprcgenekeepr_config}
 #'
-#' It contains a working version of a \strong{mprcgenekeepr} configuration
+#' It contains a working version of a \strong{nprcgenekeepr} configuration
 #' file created the SNPRC.
 #' Users of LabKey's EHR can adapt it to their systems and put it
 #' in their home directory. Instructions are embedded as comments
 #' within the file.
 #' @examples
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' data("exampleNprcgenekeeprConfig")
 #' head(exampleNprcgenekeeprConfig)
 "exampleNprcgenekeeprConfig"
@@ -41,7 +41,7 @@
 #'  \code{"original"}.}
 #' }
 #' @examples
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' data("examplePedigree")
 #' exampleTree <- createPedTree(examplePedigree)
 #' exampleLoops <- findLoops(exampleTree)
@@ -51,7 +51,7 @@
 #' is at the state just prior to calling \code{rankSubjects} inside
 #' \code{orderReport}.
 #' @examples
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' data("finalRpt")
 #' finalRpt <- rankSubjects(finalRpt)
 "finalRpt"
@@ -61,7 +61,7 @@
 #' They can be used to illustrate the identification of a population of
 #' interest as is shown in the example below.
 #' @examples
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' data("focalAnimals")
 #' data("examplePedigree")
 #' any(names(examplePedigree) == "population")
@@ -118,7 +118,7 @@
 #' ped1Alleles is a dataframe created by the geneDrop function
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' @format A dataframe with 554 rows and 6 variables
 #' \describe{
 #' \item{V1}{alleles assigned to the parents of the animals identified in
@@ -195,7 +195,7 @@
 #'
 #' This is used for testing and demonstration.
 #' @examples
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' data("pedOne")
 #' head(pedOne)
 "pedOne"
@@ -213,7 +213,7 @@
 #'
 #' This is used for testing and demonstration.
 #' @examples
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' data("pedSix")
 #' head(pedSix)
 "pedSix"
@@ -236,14 +236,14 @@
 #' It was created using the following commands.
 #'   \itemize{
 #'     \item set_seed(10)
-#'     \item pedWithGenotypeReport <- reportGV(mprcgenekeepr::pedWithGenotype,
+#'     \item pedWithGenotypeReport <- reportGV(nprcgenekeepr::pedWithGenotype,
 #'           guIter = 10000)
 #'     \item save(pedWithGenotypeReport,
 #'                file = "data/pedWithGenotypeReport.RData")
 #'   }
 #'
 #' @examples
-#' pedWithGenotypeReport <- mprcgenekeepr::pedWithGenotypeReport
+#' pedWithGenotypeReport <- nprcgenekeepr::pedWithGenotypeReport
 "pedWithGenotypeReport"
 #' qcBreeders is a list of 29 baboon IDs that are potential breeders
 #'
@@ -277,16 +277,16 @@
 #'
 #'
 #' qcPedGvReport is a genetic value report for illustrative purposes only.
-#' It is used in examples and unit tests with the mprcgenekeepr package.
+#' It is used in examples and unit tests with the nprcgenekeepr package.
 #' It was created using the following commands.
 #'   \itemize{
 #'     \item set_seed(10)
-#'     \item qcPedGvReport <- reportGV(mprcgenekeepr::qcPed, guIter = 10000)
+#'     \item qcPedGvReport <- reportGV(nprcgenekeepr::qcPed, guIter = 10000)
 #'     \item save(qcPedGvReport, file = "data/qcPedGvReport.RData")
 #'   }
 #'
 #' @examples
-#' qcPedGvReport <- mprcgenekeepr::qcPedGvReport
+#' qcPedGvReport <- nprcgenekeepr::qcPedGvReport
 "qcPedGvReport"
 #' smallPed is a hypothetical pedigree
 #'
@@ -307,7 +307,7 @@
 #'
 #' Access it using the following commands.
 #' @examples
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' data("smallPedTree")
 "smallPedTree"
 #' rhesusGenotypes is a dataframe with two haplotypes per animal
@@ -322,7 +322,7 @@
 #' \item{second_name}{-- a generic name for the second haplotype}
 #' }
 #' @examples
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' data("rhesusGenotypes")
 "rhesusGenotypes"
 #' rhesusPedigree is a pedigree object
@@ -344,6 +344,6 @@
 #' \item{age}{-- numerical vector of age in years}
 #' }
 #' @examples
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' data("rhesusPedigree")
 "rhesusPedigree"

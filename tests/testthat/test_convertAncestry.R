@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
-context("convertAncestry")
+#' This file is part of nprcgenekeepr
 
 original <- c("china", "india", "hybridized", NA, "human", "gorilla")
 ancestry <- convertAncestry(original)

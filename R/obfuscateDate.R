@@ -1,7 +1,7 @@
 #' obfucateDate adds a random number of days bounded by plus and minus max delta
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Get the base_date add a random number of days taken from a uniform
 #' distribution bounded by -max_delta and max_delta.
 #' Insure the resulting date is as least as large as the min_date.
@@ -17,7 +17,7 @@
 #' @importFrom stats runif
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' someDates <- rep(
 #'   as.Date(c("2009-2-16", "2016-2-16"), format = "%Y-%m-%d"),
 #'   10

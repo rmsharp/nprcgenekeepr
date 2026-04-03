@@ -2,20 +2,21 @@
 % Please edit documentation in R/runGenekeepr.R
 \name{runGeneKeepR}
 \alias{runGeneKeepR}
-\title{Allows running \code{shiny} application with
-\code{mprcgenekeepr::runGeneKeepR()}}
+\title{Run the GeneKeepR Shiny Application}
 \usage{
-runGeneKeepR(...)
+runGeneKeepR()
 }
-\arguments{
-\item{...}{Additional arguments passed to shiny::runApp()}
+\value{
+Returns the error condition of the Shiny application when it
+terminates.
 }
 \description{
-Run the GeneKeepR Shiny Application
+Launches the nprcgenekeepr Shiny application for pedigree analysis
+and genetic value calculations.
 }
 \examples{
-\dontrun{
-library(mprcgenekeepr)
-runGeneKeepR()
+if (interactive()) {
+  library(nprcgenekeepr)
+  runGeneKeepR()
 }
 }

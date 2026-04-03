@@ -22,6 +22,10 @@ modPedigreeUI <- function(id) {
   ns <- NS(id)
 
   div(
+    id = ns("moduleContainer"),
+    `data-ready` = "false",
+    `data-module` = "pedigree",
+
     h3("Pedigree Browser"),
 
     fluidRow(
@@ -152,16 +156,36 @@ modPedigreeUI <- function(id) {
 #' Pedigree Browser Module - Server Function
 #'
 #' Server logic for pedigree browser module handling focal animal
-#' selection, pedigree filtering, and data export.
+#' selection, pedigree processing, filtering, and data export.
 #'
-#' @return List with \code{pedigree}, \code{focalAnimals}, and \code{nAnimals}
-#'   reactives.
+#' This module processes the studbook by:
+#' \itemize{
+#'   \item Adding a \code{population} column via \code{setPopulation()}
+#'   \item Adding a \code{pedNum} column via \code{findPedigreeNumber()}
+#'   \item Ensuring a \code{gen} column exists via \code{findGeneration()}
+#'   \item Optionally trimming to ancestors of focal animals via \code{trimPedigree()}
+#' }
+#'
+#' @return A list of reactive values:
+#' \itemize{
+#'   \item \code{pedigree} - Filtered pedigree for display (respects trim/unknown settings)
+#'   \item \code{processedPedigree} - Full pedigree with population, pedNum, gen columns
+#'   \item \code{focalAnimals} - Character vector of focal animal IDs
+#'   \item \code{nAnimals} - Count of animals in filtered pedigree
+#'   \item \code{populationCount} - Count of animals marked as population
+#'   \item \code{isReady} - Logical indicating if pedigree data is ready
+#' }
 #'
 #' @param id character vector of length 1. Module namespace identifier.
 #' @param studbook reactive returning the cleaned studbook data from modInput.
 #' @param config optional reactive returning configuration.
 #'
-#' @seealso \code{\link{modPedigreeUI}}
+#' @seealso \code{\link{modPedigreeUI}} for the UI component
+#' @seealso \code{\link{setPopulation}} for population marking
+#' @seealso \code{\link{trimPedigree}} for pedigree trimming
+#' @seealso \code{\link{findPedigreeNumber}} for pedigree numbering
+#' @seealso \code{\link{findGeneration}} for generation calculation
+#'
 #' @importFrom shiny moduleServer reactive reactiveVal eventReactive observe
 #'   renderUI req showNotification updateCheckboxInput
 #' @importFrom DT renderDT
@@ -229,10 +253,32 @@ modPedigreeServer <- function(id, studbook, config = NULL) {
       }
     })
 
-    # Get the filtered pedigree data
-    pedigreeData <- reactive({
+    # Process the pedigree with population marking and additional columns
+    processedPedigree <- reactive({
       req(studbook())
       ped <- studbook()
+
+      # Add population column using setPopulation
+      # If no focal animals, all animals are in population
+      # If focal animals specified, only those are marked as population
+      focal <- focalIds()
+      ped <- setPopulation(ped, focal)
+
+      # Add pedNum column to identify separate pedigrees
+      ped$pedNum <- findPedigreeNumber(ped$id, ped$sire, ped$dam)
+
+      # Ensure gen column exists
+      if (!"gen" %in% names(ped)) {
+        ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+      }
+
+      ped
+    })
+
+    # Get the filtered pedigree data for display
+    pedigreeData <- reactive({
+      req(processedPedigree())
+      ped <- processedPedigree()
 
       # Filter out unknown IDs if requested
       if (!input$displayUnknownIds) {
@@ -240,16 +286,15 @@ modPedigreeServer <- function(id, studbook, config = NULL) {
         ped <- ped[!startsWith(ped$id, "U"), ]
       }
 
-      # Trim to focal animals and their relatives if requested
+      # Trim to focal animals and their ancestors if requested
       if (input$trimPedigree && length(focalIds()) > 0) {
-        # Get focal animals and their ancestors/descendants
-        # This is a placeholder - implement actual pedigree trimming logic
-        # using trimPedigree() or similar function from the package
-        focalMatches <- ped$id %in% focalIds()
-        if (any(focalMatches)) {
-          # For now, just filter to focal animals
-          # TODO: Include ancestors and descendants
-          ped <- ped[focalMatches, ]
+        focal <- focalIds()
+        # Get focal animals that exist in pedigree
+        probands <- focal[focal %in% ped$id]
+        if (length(probands) > 0) {
+          # Use trimPedigree to include ancestors of focal animals
+          ped <- trimPedigree(probands, ped, removeUninformative = FALSE,
+                              addBackParents = FALSE)
         }
       }
 
@@ -266,6 +311,15 @@ modPedigreeServer <- function(id, studbook, config = NULL) {
       search = list(regex = TRUE)
     ))
 
+    # Signal data-ready when pedigree is available (for E2E testing)
+    observe({
+      req(pedigreeData())
+      session$sendCustomMessage("setDataReady", list(
+        selector = paste0("#", session$ns("moduleContainer")),
+        ready = TRUE
+      ))
+    })
+
     # Export handler
     output$exportPedigree <- downloadHandler(
       filename = function() {
@@ -279,8 +333,13 @@ modPedigreeServer <- function(id, studbook, config = NULL) {
     # Return reactive values for use by other modules
     return(list(
       pedigree = reactive({ pedigreeData() }),
+      processedPedigree = reactive({ processedPedigree() }),
       focalAnimals = reactive({ focalIds() }),
       nAnimals = reactive({ nrow(pedigreeData()) }),
+      populationCount = reactive({
+        ped <- processedPedigree()
+        sum(ped$population, na.rm = TRUE)
+      }),
       isReady = reactive({
         !is.null(pedigreeData()) && nrow(pedigreeData()) > 0
       })

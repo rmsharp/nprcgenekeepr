@@ -1,8 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-# This file is part of mprcgenekeepr
-#' Copyright(c) 2017-2024 R. Mark Sharp
-# This file is part of mprcgenekeepr
-context("meanKinship")
+# This file is part of nprcgenekeepr
 library(testthat)
 set_seed(10L)
 samp <- c(0.0, 0.5, 0.25, 0.125, 0.0625, 0.03125, 0.015625)

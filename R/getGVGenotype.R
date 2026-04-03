@@ -1,7 +1,7 @@
 #' Get Genetic Value Genotype data structure for reportGV function.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Extracts genotype data if available otherwise NULL is returned.
 #'
 #' @return A data.frame with the columns \code{id}, \code{first}, and
@@ -14,8 +14,8 @@
 #' @export
 #' @examples
 #' ## We usually defined `n` to be >= 5000
-#' library(mprcgenekeepr)
-#' ped <- mprcgenekeepr::lacy1989Ped
+#' library(nprcgenekeepr)
+#' ped <- nprcgenekeepr::lacy1989Ped
 #' allelesNew <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,
 #'   genotype = NULL, n = 50, updateProgress = NULL
 #' )

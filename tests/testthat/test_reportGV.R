@@ -1,8 +1,7 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-# This file is part of mprcgenekeepr
-context("reportGV")
+# This file is part of nprcgenekeepr
 library(testthat)
-qcPed <- mprcgenekeepr::qcPed
+qcPed <- nprcgenekeepr::qcPed
 gvReport <- reportGV(qcPed, guIter = 100L)
 test_that("reportGV forms correct genetic value report", {
   expect_named(gvReport, c(

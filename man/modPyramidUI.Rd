@@ -14,7 +14,7 @@ A \code{div} containing age-sex pyramid UI.
 }
 \description{
 Copyright(c) 2017-2025 R. Mark Sharp
-This file is part of mprcgenekeepr
+This file is part of nprcgenekeepr
 }
 \seealso{
 \code{\link{modPyramidServer}}

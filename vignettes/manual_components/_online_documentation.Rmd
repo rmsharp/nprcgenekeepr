@@ -11,7 +11,7 @@ vignette: >
 ---
 ## Online Documentation
 
-You can find the complete online documentation at [https://rmsharp.github.io/mprcgenekeepr/](https://rmsharp.github.io/mprcgenekeepr/).
+You can find the complete online documentation at [https://rmsharp.github.io/nprcgenekeepr/](https://rmsharp.github.io/nprcgenekeepr/).
 
 At the top of the page are three menus to the right of the `Home` icon: 
 `Reference`, `Articles`, and `Changelog`.

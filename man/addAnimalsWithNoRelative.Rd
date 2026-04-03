@@ -27,8 +27,8 @@ following: in \strong{groupAddAssign}
 }\if{html}{\out{</div>}}
 }
 \examples{
-library(mprcgenekeepr)
-qcPed <- mprcgenekeepr::qcPed
+library(nprcgenekeepr)
+qcPed <- nprcgenekeepr::qcPed
 ped <- qcStudbook(qcPed,
   minParentAge = 2.0, reportChanges = FALSE,
   reportErrors = FALSE

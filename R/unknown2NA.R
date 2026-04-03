@@ -1,7 +1,7 @@
 #' Removing IDs having "UNKNOWN" regardless of case
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Someone started entering "unknown" for unknown parents instead of leaving
 #' the field blank in PRIMe.
 #' @return A dataframe with "UNKNOWN" values in the columns \code{id},

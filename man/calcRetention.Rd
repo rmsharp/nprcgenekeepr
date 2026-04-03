@@ -23,7 +23,7 @@ gene dropping simulation.
 Part of Genetic Value Analysis
 }
 \examples{
-library(mprcgenekeepr)
+library(nprcgenekeepr)
 data("lacy1989Ped")
 data("lacy1989PedAlleles")
 ped <- lacy1989Ped

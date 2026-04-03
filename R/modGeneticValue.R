@@ -3,7 +3,7 @@
 #' Genetic Value Analysis Module - UI Function
 #'
 #' Copyright(c) 2017-2025 R. Mark Sharp
-#' This file is part of mprcgenekeepr
+#' This file is part of nprcgenekeepr
 #'
 #' @return A \code{div} containing genetic value analysis UI.
 #'
@@ -25,6 +25,10 @@ modGeneticValueUI <- function(id) {
   ns <- NS(id)
 
   div(
+    id = ns("moduleContainer"),
+    `data-ready` = "false",
+    `data-module` = "geneticValue",
+
     h3("Genetic Value Analysis"),
     fluidRow(
       column(4,
@@ -86,8 +90,9 @@ modGeneticValueUI <- function(id) {
 
 #' Genetic Value Analysis Module - Server Function
 #'
-#' @return List with \code{geneticValues}, \code{topAnimals}, and
-#' \code{nAnalyzed}.
+#' @return List with \code{geneticValues}, \code{topAnimals},
+#' \code{nAnalyzed}, \code{kinshipMatrix}, \code{founderStats},
+#' \code{maleFounders}, and \code{femaleFounders}.
 #'
 #' @param id character vector of length 1. Module namespace identifier.
 #' @param pedigree reactive returning pedigree data frame.
@@ -98,10 +103,13 @@ modGeneticValueUI <- function(id) {
 #' @references
 #' Lacy, R.C. (1989) \emph{Zoo Biology}, \strong{8}, 111-123.
 #'
-#' @importFrom shiny moduleServer reactive eventReactive
+#' @importFrom shiny moduleServer reactive eventReactive withProgress incProgress
 #' @export
 modGeneticValueServer <- function(id, pedigree) {
   moduleServer(id, function(input, output, session) {
+
+    # Store full reportGV results
+    fullResults <- reactiveVal(NULL)
 
     gvResults <- eventReactive(input$runAnalysis, {
       req(pedigree())
@@ -109,28 +117,78 @@ modGeneticValueServer <- function(id, pedigree) {
       withProgress(message = "Running genetic value analysis...", {
         ped <- pedigree()
 
-        incProgress(0.3, detail = "Calculating kinship")
-        # kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
+        # Create progress update function compatible with reportGV
+        updateProgress <- function(n = 1L, detail = NULL, value = 0L,
+                                   reset = FALSE) {
+          if (reset) {
+            incProgress(0, detail = detail)
+          } else {
+            incProgress(amount = 0.01, detail = detail)
+          }
+        }
 
-        incProgress(0.4, detail = "Gene dropping")
-        # geneDrop <- geneDrop(ped, n = input$nIterations)
+        incProgress(0.1, detail = "Preparing pedigree")
 
-        incProgress(0.3, detail = "Computing values")
-        # gv <- calcGV(ped, kmat, geneDrop)
+        # Ensure pedigree has required columns
+        if (!"population" %in% names(ped)) {
+          # Set all living animals as the population
+          if ("exit" %in% names(ped)) {
+            ped$population <- is.na(ped$exit)
+          } else {
+            ped$population <- TRUE
+          }
+        }
 
-        # Placeholder
-        nAnimals <- min(50, nrow(ped))
-        results <- data.frame(
-          id = ped$id[1:nAnimals],
-          meanKinship = runif(nAnimals, 0.1, 0.5),
-          genomeUniqueness = runif(nAnimals, 0.3, 0.9),
-          stringsAsFactors = FALSE
+        # Get probands and trim pedigree for analysis
+        probands <- ped$id[ped$population]
+        if (length(probands) == 0L) {
+          probands <- ped$id
+          ped$population <- TRUE
+        }
+
+        incProgress(0.2, detail = "Trimming pedigree")
+        ped <- trimPedigree(probands, ped,
+                            removeUninformative = FALSE,
+                            addBackParents = FALSE)
+
+        # Add generation if not present
+        if (!"gen" %in% names(ped)) {
+          ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+        }
+
+        incProgress(0.2, detail = "Running genetic value analysis")
+
+        # Call the real reportGV function
+        gvReport <- reportGV(
+          ped,
+          guIter = input$nIterations,
+          guThresh = 1L,
+          byID = TRUE,
+          updateProgress = updateProgress
         )
-        results$rank <- rank(-results$genomeUniqueness +
-                               (1 - results$meanKinship))
-        results <- results[order(results$rank), ]
-        results$rank <- seq_len(nrow(results))
-        results
+
+        # Store full results
+        fullResults(gvReport)
+
+        # Return the report data frame with added rank column
+        report <- gvReport$report
+        if (!"indivMeanKin" %in% names(report)) {
+          # Handle edge case where report might not have expected columns
+          return(report)
+        }
+
+        # Add rank based on genetic value (low kinship + high uniqueness)
+        report$rank <- rank(report$indivMeanKin - report$gu)
+        report <- report[order(report$rank), ]
+        report$rank <- seq_len(nrow(report))
+
+        # Signal that genetic value analysis is complete (for E2E testing)
+        session$sendCustomMessage("setDataReady", list(
+          selector = paste0("#", session$ns("moduleContainer")),
+          ready = TRUE
+        ))
+
+        report
       })
     })
 
@@ -144,20 +202,48 @@ modGeneticValueServer <- function(id, pedigree) {
     output$gvSummary <- renderTable({
       req(gvResults())
       results <- gvResults()
-      data.frame(
+      fullRes <- fullResults()
+
+      # Use indivMeanKin and gu column names from reportGV
+      mkCol <- if ("indivMeanKin" %in% names(results)) "indivMeanKin" else "meanKinship"
+      guCol <- if ("gu" %in% names(results)) "gu" else "genomeUniqueness"
+
+      summaryData <- data.frame(
         Metric = c("Animals Analyzed", "Mean Kinship (avg)",
                    "Genome Uniqueness (avg)"),
         Value = c(nrow(results),
-                  sprintf("%.3f", mean(results$meanKinship)),
-                  sprintf("%.3f", mean(results$genomeUniqueness))),
+                  sprintf("%.4f", mean(results[[mkCol]], na.rm = TRUE)),
+                  sprintf("%.4f", mean(results[[guCol]], na.rm = TRUE))),
         stringsAsFactors = FALSE
       )
+
+      # Add founder statistics if available
+      if (!is.null(fullRes)) {
+        founderData <- data.frame(
+          Metric = c("Total Founders", "Male Founders", "Female Founders",
+                     "Founder Equivalents (FE)", "Founder Genome Equiv. (FG)"),
+          Value = c(as.character(fullRes$total),
+                    as.character(fullRes$nMaleFounders),
+                    as.character(fullRes$nFemaleFounders),
+                    sprintf("%.2f", fullRes$fe),
+                    sprintf("%.2f", fullRes$fg)),
+          stringsAsFactors = FALSE
+        )
+        summaryData <- rbind(summaryData, founderData)
+      }
+
+      summaryData
     })
 
     output$gvScatterPlot <- renderPlot({
       req(gvResults())
       results <- gvResults()
-      plot(results$meanKinship, results$genomeUniqueness,
+
+      # Use correct column names
+      mkCol <- if ("indivMeanKin" %in% names(results)) "indivMeanKin" else "meanKinship"
+      guCol <- if ("gu" %in% names(results)) "gu" else "genomeUniqueness"
+
+      plot(results[[mkCol]], results[[guCol]],
            xlab = "Mean Kinship", ylab = "Genome Uniqueness",
            main = "Genetic Value Analysis",
            pch = 19, col = ifelse(results$rank <= 10, "red", "blue"))
@@ -169,9 +255,47 @@ modGeneticValueServer <- function(id, pedigree) {
     )
 
     return(list(
-      geneticValues = reactive({ gvResults() }),
-      topAnimals = reactive({ gvResults()[gvResults()$rank <= 10, ] }),
-      nAnalyzed = reactive({ nrow(gvResults()) })
+      geneticValues = reactive({
+        gv <- gvResults()
+        if (is.null(gv)) return(NULL)
+        # Rename columns to standard names expected by other modules
+        if ("indivMeanKin" %in% names(gv)) {
+          names(gv)[names(gv) == "indivMeanKin"] <- "meanKinship"
+        }
+        if ("gu" %in% names(gv)) {
+          names(gv)[names(gv) == "gu"] <- "genomeUniqueness"
+        }
+        gv
+      }),
+      topAnimals = reactive({
+        gv <- gvResults()
+        if (is.null(gv)) return(NULL)
+        gv[gv$rank <= 10, ]
+      }),
+      nAnalyzed = reactive({ nrow(gvResults()) }),
+      kinshipMatrix = reactive({
+        req(fullResults())
+        fullResults()$kinship
+      }),
+      founderStats = reactive({
+        req(fullResults())
+        fr <- fullResults()
+        list(
+          fe = fr$fe,
+          fg = fr$fg,
+          total = fr$total,
+          nMaleFounders = fr$nMaleFounders,
+          nFemaleFounders = fr$nFemaleFounders
+        )
+      }),
+      maleFounders = reactive({
+        req(fullResults())
+        fullResults()$maleFounders
+      }),
+      femaleFounders = reactive({
+        req(fullResults())
+        fullResults()$femaleFounders
+      })
     ))
   })
 }

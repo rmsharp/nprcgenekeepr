@@ -28,7 +28,7 @@ it occurred earlier or later than the other. \code{NAs} are ignored if
 possible.
 }
 \examples{
-library(mprcgenekeepr)
+library(nprcgenekeepr)
 someDates <- lubridate::mdy(paste0(
   sample(1:12, 2, replace = TRUE), "-",
   sample(1:28, 2, replace = TRUE), "-",

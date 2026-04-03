@@ -16,30 +16,27 @@ getPyramidPlot(
 \arguments{
 \item{ped}{dataframe with pedigree data.}
 
-\item{binWidth}{integer width of age bins in years. Default is 2.}
+\item{binWidth}{numeric bin width for age groups (default 2).}
 
-\item{ageUnit}{character either "years" or "months" for age display.
-Default is "years".}
+\item{ageUnit}{character either "years" (default) or "months".}
 
-\item{colorScheme}{character color scheme for the plot. Either "default"
-(blue/red) or "viridis". Default is "default".}
+\item{colorScheme}{character color scheme: "default" (blue/pink) or
+"viridis" (colorblind-friendly).}
 
-\item{showCounts}{logical whether to show count values on bars.
-Default is TRUE.}
+\item{showCounts}{logical whether to show count values on bars (default TRUE).}
 
-\item{ageLabelCex}{numeric character expansion factor for age labels.
-Default is 1.0.}
+\item{ageLabelCex}{numeric expansion factor for age labels (default 1.0).}
 }
 \value{
 The return value of par("mar") when the function was called.
 }
 \description{
-The pedigree provided must have columns: \code{sex} and either \code{age}
-or \code{birth} (with optional \code{exit} or \code{exit_date}).
-If \code{age} is not present, it will be calculated from \code{birth}.
+The pedigree provided must have the following columns: \code{sex} and
+\code{age}. This needs to be augmented to allow pedigrees structures that
+are provided by the nprcgenekeepr package.
 }
 \examples{
-library(mprcgenekeepr)
+library(nprcgenekeepr)
 data(qcPed)
 getPyramidPlot(qcPed)
 getPyramidPlot(qcPed, binWidth = 5, colorScheme = "viridis")

@@ -5,20 +5,20 @@ date: "2025-07-25"
 output: github_document
 ---
 
-# mprcgenekeepr <a href="https://github.com/rmsharp/mprcgenekeepr"><img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
+# nprcgenekeepr <a href="https://github.com/rmsharp/nprcgenekeepr"><img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
 
-`r paste0("\n Version ", mprcgenekeepr::getVersion())`
+`r paste0("\n Version ", nprcgenekeepr::getVersion())`
 
 <!-- badges: start -->
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-[![CRAN_version](https://www.r-pkg.org/badges/version/mprcgenekeepr)](https://cran.r-project.org/package=mprcgenekeepr)
-[![CRAN_download](https://cranlogs.r-pkg.org/badges/mprcgenekeepr)](https://cran.r-project.org/package=mprcgenekeepr)
-[![CRAN_download_total](https://cranlogs.r-pkg.org/badges/grand-total/kableExtra)](https://cran.r-project.org/package=mprcgenekeepr)
-[[![R-CMD-check](https://github.com/rmsharp/mprcgenekeepr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rmsharp/mprcgenekeepr/actions/workflows/R-CMD-check.yaml)
+[![CRAN_version](https://www.r-pkg.org/badges/version/nprcgenekeepr)](https://cran.r-project.org/package=nprcgenekeepr)
+[![CRAN_download](https://cranlogs.r-pkg.org/badges/nprcgenekeepr)](https://cran.r-project.org/package=nprcgenekeepr)
+[![CRAN_download_total](https://cranlogs.r-pkg.org/badges/grand-total/kableExtra)](https://cran.r-project.org/package=nprcgenekeepr)
+[[![R-CMD-check](https://github.com/rmsharp/nprcgenekeepr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rmsharp/nprcgenekeepr/actions/workflows/R-CMD-check.yaml)
 [![DOI](https://img.shields.io/badge/doi-10.32614-green.svg)](https://doi.org/10.32614)
-[![Codecov test coverage](https://codecov.io/gh/rmsharp/mprcgenekeepr/graph/badge.svg)](https://app.codecov.io/gh/rmsharp/mprcgenekeepr)
+[![Codecov test coverage](https://codecov.io/gh/rmsharp/nprcgenekeepr/graph/badge.svg)](https://app.codecov.io/gh/rmsharp/nprcgenekeepr)
 <!-- badges: end -->
 
 ```{r, echo = FALSE}

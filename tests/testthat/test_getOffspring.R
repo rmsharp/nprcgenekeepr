@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
-context("getOffspring")
+#' This file is part of nprcgenekeepr
 library(testthat)
 data("smallPed")
 test_that("getOffspring returns the correct IDs", {

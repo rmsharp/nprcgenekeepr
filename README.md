@@ -3,7 +3,7 @@ README
 R. Mark Sharp, Ph.D.
 2025-07-25
 
-# mprcgenekeepr <a href="https://github.com/rmsharp/mprcgenekeepr"><img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
+# nprcgenekeepr <a href="https://github.com/rmsharp/nprcgenekeepr"><img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
 
 Version 1.0.8 (2025-07-26)
 
@@ -13,18 +13,18 @@ Version 1.0.8 (2025-07-26)
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-[![CRAN_version](https://www.r-pkg.org/badges/version/mprcgenekeepr)](https://cran.r-project.org/package=mprcgenekeepr)
-[![CRAN_download](https://cranlogs.r-pkg.org/badges/mprcgenekeepr)](https://cran.r-project.org/package=mprcgenekeepr)
-[![CRAN_download_total](https://cranlogs.r-pkg.org/badges/grand-total/kableExtra)](https://cran.r-project.org/package=mprcgenekeepr)
-\[[![R-CMD-check](https://github.com/rmsharp/mprcgenekeepr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rmsharp/mprcgenekeepr/actions/workflows/R-CMD-check.yaml)
+[![CRAN_version](https://www.r-pkg.org/badges/version/nprcgenekeepr)](https://cran.r-project.org/package=nprcgenekeepr)
+[![CRAN_download](https://cranlogs.r-pkg.org/badges/nprcgenekeepr)](https://cran.r-project.org/package=nprcgenekeepr)
+[![CRAN_download_total](https://cranlogs.r-pkg.org/badges/grand-total/kableExtra)](https://cran.r-project.org/package=nprcgenekeepr)
+\[[![R-CMD-check](https://github.com/rmsharp/nprcgenekeepr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rmsharp/nprcgenekeepr/actions/workflows/R-CMD-check.yaml)
 [![DOI](https://img.shields.io/badge/doi-10.32614-green.svg)](https://doi.org/10.32614)
 [![Codecov test
-coverage](https://codecov.io/gh/rmsharp/mprcgenekeepr/graph/badge.svg)](https://app.codecov.io/gh/rmsharp/mprcgenekeepr)
+coverage](https://codecov.io/gh/rmsharp/nprcgenekeepr/graph/badge.svg)](https://app.codecov.io/gh/rmsharp/nprcgenekeepr)
 <!-- badges: end -->
 
 ## Introduction
 
-The goal of **mprcgenekeepr** is to implement Genetic Tools for Colony
+The goal of **nprcgenekeepr** is to implement Genetic Tools for Colony
 Management. It was initially conceived and developed as a Shiny web
 application at the Oregon National Primate Research Center (ONPRC) to
 facilitate some of the analyses they perform regularly. It has been
@@ -63,19 +63,19 @@ Reviewed Journal\]
 
 ## Installation
 
-You can install the CRAN version of **mprcgenekeepr** from the R console
+You can install the CRAN version of **nprcgenekeepr** from the R console
 prompt with:
 
 ``` r
-install.packages("mprcgenekeepr")
+install.packages("nprcgenekeepr")
 ```
 
-You can install the development version of **mprcgenekeepr** from GitHub
+You can install the development version of **nprcgenekeepr** from GitHub
 from the R console prompt with:
 
 ``` r
 install.packages("devtools")
-devtools::install_github(file.path("rmsharp", "mprcgenekeepr"))
+devtools::install_github(file.path("rmsharp", "nprcgenekeepr"))
 ```
 
 All missing dependencies should be automatically installed.
@@ -83,7 +83,7 @@ All missing dependencies should be automatically installed.
 ## Online Documentation
 
 You can find the complete online documentation at
-<https://rmsharp.github.io/mprcgenekeepr/>.
+<https://rmsharp.github.io/nprcgenekeepr/>.
 
 At the top of the page are three menus to the right of the `Home` icon:
 `Reference`, `Articles`, and `Changelog`.
@@ -100,12 +100,12 @@ records the major changes made for each version.
 
 ## Running Shiny Application
 
-The toolset available within mprcgenekeepr can be used inside standard R
+The toolset available within nprcgenekeepr can be used inside standard R
 scripts. However, it was originally designed to be used within a Shiny
 application that can be started with:
 
 ``` r
-library(mprcgenekeepr) # nolint: undesirable_function_linter
+library(nprcgenekeepr) # nolint: undesirable_function_linter
 runGeneKeepR()
 ```
 
@@ -144,16 +144,16 @@ with the demographic data in an **EHR** (Electronic Health Record)
 module.
 
 Two configuration files are needed to use the database features of
-mprcgenekeepr with LabKey. The first file is named **\_netrc** on
+nprcgenekeepr with LabKey. The first file is named **\_netrc** on
 Microsoft Windows operating systems and **.netrc** otherwise, allows the
 user to authenticate with LabKey through the LabKey API and is fully
 described by [LabKey
 documentation](https://www.labkey.org/Documentation/wiki-page.view?name=netrc)
 
-The second file is named **\_mprcgenekeepr_config** on Microsoft Windows
-operating systems and **.mprcgenekeepr_config** otherwise and is the
-`mprcgenekeepr` [configuration
-file](https://github.com/rmsharp/mprcgenekeepr/blob/master/inst/extdata/example_mprcgenekeepr_config)
+The second file is named **\_nprcgenekeepr_config** on Microsoft Windows
+operating systems and **.nprcgenekeepr_config** otherwise and is the
+`nprcgenekeepr` [configuration
+file](https://github.com/rmsharp/nprcgenekeepr/blob/master/inst/extdata/example_nprcgenekeepr_config)
 An image of this example configuration file is included as a data object
 and can be loaded and viewed with the following lines of R code in the R
 console.

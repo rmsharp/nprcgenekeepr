@@ -1,10 +1,9 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
-context("fillGroupMembers")
+#' This file is part of nprcgenekeepr
 
 test_that("fillGroupMembers adds animals in the specified sex ratio", {
   skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
-  examplePedigree <- mprcgenekeepr::examplePedigree
+  examplePedigree <- nprcgenekeepr::examplePedigree
   set_seed(10L)
   ped <- qcStudbook(examplePedigree,
     minParentAge = 2.0, reportChanges = FALSE,
@@ -36,16 +35,16 @@ test_that("fillGroupMembers adds animals in the specified sex ratio", {
   withKin <- FALSE
 
   sexRatio <- 0.0
-  groupMembers <- mprcgenekeepr:::fillGroupMembers(
+  groupMembers <- nprcgenekeepr:::fillGroupMembers(
     candidates, currentGroups, kin, ped, harem,
     minAge, numGp, sexRatio
   )
   expect_equal(groupMembers[[1L]][1L:3L], c("N54ICI", "VJ08BW", "2ZMHG7"))
   expect_equal(calculateSexRatio(groupMembers[[1L]], ped), 52.5,
-    tolerance = 0.1, scale = 1.0
+    tolerance = 0.1
   )
   sexRatio <- 1L
-  groupMembers <- mprcgenekeepr:::fillGroupMembers(
+  groupMembers <- nprcgenekeepr:::fillGroupMembers(
     candidates, currentGroups, kin, ped, harem,
     minAge, numGp, sexRatio
   )
@@ -54,6 +53,6 @@ test_that("fillGroupMembers adds animals in the specified sex ratio", {
     c("N54ICI", "VJ08BW", "2ZMHG7", "CS23RV")
   )
   expect_equal(calculateSexRatio(groupMembers[[1]], ped), 1.0,
-    tolerance = 0.1, scale = 1.0
+    tolerance = 0.1
   )
 })

@@ -1,7 +1,7 @@
 #' Finds the total number of offspring for each animal in the pedigree
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Optionally find the number that are part of the population of interest.
 #'
 #' @return A dataframe with at least \code{id} and \code{totalOffspring}
@@ -17,8 +17,8 @@
 #' Default is \code{FALSE}.
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
-#' examplePedigree <- mprcgenekeepr::examplePedigree
+#' library(nprcgenekeepr)
+#' examplePedigree <- nprcgenekeepr::examplePedigree
 #' breederPed <- qcStudbook(examplePedigree,
 #'   minParentAge = 2,
 #'   reportChanges = FALSE,

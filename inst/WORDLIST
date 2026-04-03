@@ -61,8 +61,6 @@ Reformats
 Rhub
 Rlabkey
 Rmd
-reactives
-runApp
 SIMWALK
 SNPRC
 Springer
@@ -202,12 +200,10 @@ minAge
 minKinship
 minParentAge
 mk
-modInput
 na
 nd
 netrc
 nprc
-nprcgenekeepr
 nprcgenekeeprErr
 nprcgenekeeprGV
 nprcmanagGV

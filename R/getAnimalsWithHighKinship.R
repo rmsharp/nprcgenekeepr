@@ -1,7 +1,7 @@
 #' Forms a list of animal Ids and animals related to them
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #'
 #' @return A list of named character vectors where each name is an animal Id
 #' and the character vectors are made up of animals sharing a kinship value
@@ -27,7 +27,7 @@
 #'
 #' @export
 #' @examples
-#' qcPed <- mprcgenekeepr::qcPed
+#' qcPed <- nprcgenekeepr::qcPed
 #' ped <- qcStudbook(qcPed,
 #'   minParentAge = 2L, reportChanges = FALSE,
 #'   reportErrors = FALSE

@@ -1,7 +1,7 @@
 #' Adds an NA value for all animals without a relative
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #'
 #' This allows \code{kin} to be used with \code{setdiff} when there are no
 #' relatives otherwise an error would occur because
@@ -18,8 +18,8 @@
 #' use in the group.
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
-#' qcPed <- mprcgenekeepr::qcPed
+#' library(nprcgenekeepr)
+#' qcPed <- nprcgenekeepr::qcPed
 #' ped <- qcStudbook(qcPed,
 #'   minParentAge = 2.0, reportChanges = FALSE,
 #'   reportErrors = FALSE

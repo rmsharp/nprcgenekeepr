@@ -40,7 +40,7 @@ ALIVE, DECEASED, SHIPPED, or UNKNOWN}
 }
 }
 \examples{
-library(mprcgenekeepr)
+library(nprcgenekeepr)
 data("examplePedigree")
 exampleTree <- createPedTree(examplePedigree)
 exampleLoops <- findLoops(exampleTree)

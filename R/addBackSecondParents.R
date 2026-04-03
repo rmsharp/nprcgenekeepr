@@ -1,7 +1,7 @@
 #' Add back single parents trimmed pedigree
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Uses the \code{ped} dataframe, which has full complement of parents and the
 #' \code{uPed} dataframe, which has all uninformative parents removed to
 #' add back single parents to the \code{uPed} dataframe where one parent is
@@ -11,7 +11,7 @@
 #' @return A dataframe with pedigree with single parents added.
 #'
 #' @examples
-#' examplePedigree <- mprcgenekeepr::examplePedigree
+#' examplePedigree <- nprcgenekeepr::examplePedigree
 #' breederPed <- qcStudbook(examplePedigree,
 #'   minParentAge = 2,
 #'   reportChanges = FALSE,

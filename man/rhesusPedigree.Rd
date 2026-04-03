@@ -29,7 +29,7 @@ generation) of the animal indicated by the \code{id} column.}
 }
 }
 \examples{
-library(mprcgenekeepr)
+library(nprcgenekeepr)
 data("rhesusPedigree")
 }
 \keyword{datasets}

@@ -28,6 +28,6 @@ usage meaning that a person’s age should always be an integer that
 increases exactly on a birthday.
 }
 \examples{
-library(mprcgenekeepr)
+library(nprcgenekeepr)
 ped <- getPyramidAgeDist()
 }

@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
-context("set_seed")
+#' This file is part of nprcgenekeepr
 
 test_that("set_seed handle R versions < 3.6", {
   local_mocked_bindings(

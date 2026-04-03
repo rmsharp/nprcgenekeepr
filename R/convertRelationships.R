@@ -1,7 +1,7 @@
 #' Converts pairwise kinship values to a relationship category descriptor.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Part of Relations
 #'
 #' @return A dataframe with columns \code{id1}, \code{id2}, \code{kinship},
@@ -20,14 +20,14 @@
 #' \code{shiny::Progress} object.
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
-#' ped <- mprcgenekeepr::smallPed
+#' library(nprcgenekeepr)
+#' ped <- nprcgenekeepr::smallPed
 #' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
 #' ids <- c("A", "B", "D", "E", "F", "G", "I", "J", "L", "M", "O", "P")
 #' relIds <- convertRelationships(kmat, ped, ids)
 #' rel <- convertRelationships(kmat, ped, updateProgress = function() {})
 #' head(rel)
-#' ped <- mprcgenekeepr::qcPed
+#' ped <- nprcgenekeepr::qcPed
 #' bkmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen,
 #'   sparse = FALSE
 #' )

@@ -32,7 +32,7 @@ Females are counted when the \code{ped$sex} value is not
 females.
 }
 \examples{
-library(mprcgenekeepr)
+library(nprcgenekeepr)
 data("qcBreeders")
 data("pedWithGenotype")
 available <- c(

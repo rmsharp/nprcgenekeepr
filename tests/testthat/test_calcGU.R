@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
-context("calcGU")
+#' This file is part of nprcgenekeepr
 data("ped1Alleles")
 test_that("calcGU forms dataframe with correct calculations", {
   gu_1 <- calcGU(ped1Alleles, threshold = 1L, byID = FALSE, pop = NULL)

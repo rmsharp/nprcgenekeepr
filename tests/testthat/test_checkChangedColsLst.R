@@ -1,7 +1,6 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
-context("checkChangedColsLst")
-library(mprcgenekeepr)
+#' This file is part of nprcgenekeepr
+library(nprcgenekeepr)
 library(lubridate)
 pedOne <- data.frame(
   ego_id = c(

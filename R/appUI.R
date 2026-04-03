@@ -1,11 +1,19 @@
-#' Main Application UI for mprcgenekeepr
+#' Main Application UI for nprcgenekeepr
 #' @importFrom bslib bs_theme
 #' @importFrom shiny navbarPage tabPanel icon fluidRow column div h1 p hr
-#'             actionButton navbarMenu
+#'             actionButton navbarMenu tags includeScript
 #' @export
 appUI <- function() {
 
-  navbarPage(
+  # Include data-ready JavaScript for E2E testing
+  dataReadyJS <- system.file("www", "js", "data-ready.js",
+                              package = "nprcgenekeepr")
+
+  tagList(
+    # Include the data-ready JavaScript if it exists
+    if (file.exists(dataReadyJS)) tags$head(includeScript(dataReadyJS)),
+
+    navbarPage(
     title = "GeneKeepR",
     id = "mainNavbar",
     theme = bslib::bs_theme(version = 4L, bootswatch = "flatly"),
@@ -60,11 +68,47 @@ appUI <- function() {
           width = 4L,
           div(
             class = "panel panel-success",
-            div(class = "panel-heading", h4("Population Analysis")),
+            div(class = "panel-heading", h4("Age-Sex Pyramid")),
             div(class = "panel-body",
                 p("Analyze age and sex distribution"),
                 actionButton("goto_pyramid", "Go to Pyramid",
                              class = "btn-success btn-block"))
+          )
+        )
+      ),
+
+      fluidRow(
+        column(
+          width = 4L,
+          div(
+            class = "panel panel-warning",
+            div(class = "panel-heading", h4("Genetic Value Analysis")),
+            div(class = "panel-body",
+                p("Calculate kinship and genome uniqueness"),
+                actionButton("goto_genetic", "Go to Genetic Value",
+                             class = "btn-warning btn-block"))
+          )
+        ),
+        column(
+          width = 4L,
+          div(
+            class = "panel panel-danger",
+            div(class = "panel-heading", h4("Summary Statistics")),
+            div(class = "panel-body",
+                p("View genetic diversity metrics and plots"),
+                actionButton("goto_summary", "Go to Summary",
+                             class = "btn-danger btn-block"))
+          )
+        ),
+        column(
+          width = 4L,
+          div(
+            class = "panel panel-default",
+            div(class = "panel-heading", h4("Breeding Groups")),
+            div(class = "panel-body",
+                p("Form breeding groups to minimize inbreeding"),
+                actionButton("goto_breeding", "Go to Breeding Groups",
+                             class = "btn-default btn-block"))
           )
         )
       )
@@ -76,7 +120,7 @@ appUI <- function() {
     tabPanel(
       "Input",
       icon = icon("upload"),
-      modInputUI("input")
+      modInputUI("dataInput")
     ),
 
     # ====================
@@ -104,6 +148,15 @@ appUI <- function() {
       "Genetic Value Analysis",
       icon = icon("dna"),
       modGeneticValueUI("geneticValue")
+    ),
+
+    # ====================
+    # Summary Statistics Tab
+    # ====================
+    tabPanel(
+      "Summary Statistics",
+      icon = icon("chart-line"),
+      modSummaryStatsUI("summaryStats")
     ),
 
     # ====================
@@ -144,9 +197,9 @@ appUI <- function() {
         h3("Documentation"),
         p("For help, see:",
           a("Online Documentation",
-            href = "https://rmsharp.github.io/mprcgenekeepr/",
+            href = "https://rmsharp.github.io/nprcgenekeepr/",
             target = "_blank"))
       )
     )
-  )
+  ))
 }

@@ -24,9 +24,9 @@ include all ancestors of the probands, even ones that might be
 uninformative.
 }
 \examples{
-library(mprcgenekeepr)
-ped <- mprcgenekeepr::pedWithGenotype
-ids <- mprcgenekeepr::qcBreeders
+library(nprcgenekeepr)
+ped <- nprcgenekeepr::pedWithGenotype
+ids <- nprcgenekeepr::qcBreeders
 sires <- getPotentialSires(ids, ped, minAge = 1)
 head(getProbandPedigree(probands = sires, ped = ped))
 }

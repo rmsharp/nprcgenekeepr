@@ -1,7 +1,7 @@
 #' Sets the exit date, if there is no exit column in the table
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #'
 #' Part of Pedigree Curation
 #'
@@ -17,7 +17,7 @@
 #' @export
 #' @examples
 #' library(lubridate)
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' death <- mdy(paste0(
 #'   sample(1:12, 10, replace = TRUE), "-",
 #'   sample(1:28, 10, replace = TRUE), "-",

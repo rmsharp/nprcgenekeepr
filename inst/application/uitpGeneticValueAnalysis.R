@@ -71,5 +71,5 @@ uitpGeneticValueAnalysis <-
 
       )
     ),
-    DT::DTOutput("gva")
+    DT::dataTableOutput("gva")
   )

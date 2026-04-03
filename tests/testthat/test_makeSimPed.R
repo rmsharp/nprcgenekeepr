@@ -1,9 +1,8 @@
 #' Copyright(c) 2017-2023 R. Mark Sharp
-#' This file is part of mprcgenekeepr
-context("makeSimPed")
+#' This file is part of nprcgenekeepr
 library(testthat)
 
-ped <- mprcgenekeepr::lacy1989Ped
+ped <- nprcgenekeepr::lacy1989Ped
 # nolint start: object_name_linter.
 simParent_1 <- list(
   id = "A",

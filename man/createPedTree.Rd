@@ -36,7 +36,7 @@ SIMWALK2 or similar programs.
 This function uses only \code{id}, \code{sire}, and \code{dam} columns.
 }
 \examples{
-library(mprcgenekeepr)
-exampleTree <- createPedTree(mprcgenekeepr::examplePedigree)
+library(nprcgenekeepr)
+exampleTree <- createPedTree(nprcgenekeepr::examplePedigree)
 exampleLoops <- findLoops(exampleTree)
 }

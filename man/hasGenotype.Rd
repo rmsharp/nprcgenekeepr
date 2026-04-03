@@ -22,9 +22,9 @@ and \code{second}. These checks are simply based on expected columns
 and legal domains.
 }
 \examples{
-library(mprcgenekeepr)
-rhesusPedigree <- mprcgenekeepr::rhesusPedigree
-rhesusGenotypes <- mprcgenekeepr::rhesusGenotypes
+library(nprcgenekeepr)
+rhesusPedigree <- nprcgenekeepr::rhesusPedigree
+rhesusGenotypes <- nprcgenekeepr::rhesusGenotypes
 pedWithGenotypes <- addGenotype(
   ped = rhesusPedigree,
   genotype = rhesusGenotypes

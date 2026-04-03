@@ -21,8 +21,8 @@ and duplicates are removed.
 Get offspring to corresponding animal IDs provided
 }
 \examples{
-library(mprcgenekeepr)
-pedOne <- mprcgenekeepr::pedOne
+library(nprcgenekeepr)
+pedOne <- nprcgenekeepr::pedOne
 names(pedOne) <- c("id", "sire", "dam", "sex", "birth")
 getOffspring(pedOne, c("s1", "d2"))
 }

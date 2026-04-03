@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of mprcgenekeepr
-context("getVersion")
+#' This file is part of nprcgenekeepr
 library(stringi)
 version1 <- getVersion()
 version2 <- getVersion(date = FALSE)

@@ -12,8 +12,9 @@ modGeneticValueServer(id, pedigree)
 \item{pedigree}{reactive returning pedigree data frame.}
 }
 \value{
-List with \code{geneticValues}, \code{topAnimals}, and
-\code{nAnalyzed}.
+List with \code{geneticValues}, \code{topAnimals},
+\code{nAnalyzed}, \code{kinshipMatrix}, \code{founderStats},
+\code{maleFounders}, and \code{femaleFounders}.
 }
 \description{
 Genetic Value Analysis Module - Server Function

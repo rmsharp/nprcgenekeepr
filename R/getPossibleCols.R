@@ -1,7 +1,7 @@
 #' Get possible column names for a studbook.
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #' Pedigree curation function
 #'
 #' @return A character vector of the possible columns that can be in a
@@ -43,7 +43,7 @@
 #' id, starting at 0 for individuals lacking IDs for both parents.}
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
+#' library(nprcgenekeepr)
 #' getPossibleCols()
 getPossibleCols <- function() {
   c(

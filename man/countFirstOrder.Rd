@@ -31,8 +31,8 @@ pedigree. If 'ids' is provided, the analysis is restricted to only the
 specified subset.
 }
 \examples{
-library(mprcgenekeepr)
-ped <- mprcgenekeepr::lacy1989Ped
+library(nprcgenekeepr)
+ped <- nprcgenekeepr::lacy1989Ped
 ids <- c("B", "D", "E", "F", "G")
 countIds <- countFirstOrder(ped, ids)
 countIds

@@ -29,12 +29,12 @@ Provides list of potential sires
 Provides list of potential sires
 }
 \examples{
-library(mprcgenekeepr)
-ped <- mprcgenekeepr::pedWithGenotype
-ids <- mprcgenekeepr::qcBreeders
+library(nprcgenekeepr)
+ped <- nprcgenekeepr::pedWithGenotype
+ids <- nprcgenekeepr::qcBreeders
 getPotentialSires(ids, ped, minAge = 1L)
-library(mprcgenekeepr)
-ped <- mprcgenekeepr::pedWithGenotype
-ids <- mprcgenekeepr::qcBreeders
+library(nprcgenekeepr)
+ped <- nprcgenekeepr::pedWithGenotype
+ids <- nprcgenekeepr::qcBreeders
 getPotentialSires(ids, ped, minAge = 1)
 }

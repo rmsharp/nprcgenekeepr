@@ -1,12 +1,12 @@
 ---
-title: "Interactive Use of mprcgenekeepr"
+title: "Interactive Use of nprcgenekeepr"
 subtitle: "An R Package for the Genetic Management of Colonies"
 output:
   html_document:
     df_print: paged
 vignette: >
   %\VignetteEngine{knitr::rmarkdown_notangle} 
-  %\VignetteIndexEntry{Interactive Use of mprcgenekeepr} 
+  %\VignetteIndexEntry{Interactive Use of nprcgenekeepr} 
   %\usepackage[UTF-8]{inputenc}
 ---
 
@@ -24,13 +24,13 @@ library(stringi)
 # library(rmsutilityr)
 suppressMessages(library(ggplot2))
 library(knitr)
-library(mprcgenekeepr)
+library(nprcgenekeepr)
 set_seed(1L)
 ```
 
 ## Introduction
 This tutorial demonstrates the major functions used 
-within the Shiny application provided by the __mprcgenekeepr__ package and
+within the Shiny application provided by the __nprcgenekeepr__ package and
 provides sufficient insight into those functions that they may be used
 independently.
 
@@ -40,19 +40,19 @@ to perform some actions not directly supported by the Shiny application.
 
 Please provide any comments, questions, or bug reports through the GitHub
 issue tracker at 
-[https://github.com/rmsharp/mprcgenekeepr/issues](
-https://github.com/rmsharp/mprcgenekeepr/issues).
+[https://github.com/rmsharp/nprcgenekeepr/issues](
+https://github.com/rmsharp/nprcgenekeepr/issues).
 
 
 ## Installation and Help
 
-You can install **mprcgenekeepr** from GitHub with the following code.
+You can install **nprcgenekeepr** from GitHub with the following code.
 
 ```{r gh-installation, eval = FALSE, echo=TRUE}
-install.packages(mprcgenekeepr)
+install.packages(nprcgenekeepr)
 ## Use the following code to get the development version
 # install.packages("devtools")
-# devtools::install_github("rmsharp/mprcgenekeepr")
+# devtools::install_github("rmsharp/nprcgenekeepr")
 ```
 
 All missing dependencies should be automatically installed.
@@ -60,9 +60,9 @@ All missing dependencies should be automatically installed.
 You can get help from the __R__ console with 
 
 ```{r gh-help, eval = FALSE, echo=TRUE}
-?mprcgenekeepr
+?nprcgenekeepr
 ```
-__The help provided by this (_mprcgenekeepr.R_) needs to be more complete 
+__The help provided by this (_nprcgenekeepr.R_) needs to be more complete 
 and include links to the tutorials.__
 
 ## Reading in a Pedigree
@@ -80,7 +80,7 @@ _pedigreeFile_.
 Note: the user will select where to store the file.
 
 ```{r make-example-pedigree, eval = FALSE, include = TRUE}
-library(mprcgenekeepr)
+library(nprcgenekeepr)
 pedigreeFile <- makeExamplePedigreeFile()
 ```
 This writes _ExamplePedigree.csv_ to a place you select within your file
@@ -498,13 +498,13 @@ as an exercise.
 
 ## Breeding Group Formation
 
-The primary purpose of __mprcgenekeepr__ is to form breeding groups 
+The primary purpose of __nprcgenekeepr__ is to form breeding groups 
 according to our best information regarding maintaining the genetic
 characteristics we desire and the realities associated with other animal
 husbandry needs.
 
 There are several options you must consider when forming groups using
-__mprcgenekeepr__, which we will examine using code below.
+__nprcgenekeepr__, which we will examine using code below.
 
 -   Animals used to form groups
     -   _high-value_: Randomly select from only high-value animals in genetic 
@@ -747,7 +747,7 @@ Obviously dates or IDs may be incorrect.
 This is the pedigree. _(We will discuss the column names shortly.)_
 
 ```{r list-pedOne}
-knitr::kable(mprcgenekeepr::pedOne)
+knitr::kable(nprcgenekeepr::pedOne)
 ```
 
 If we try to convert this pedigree file into the standardized studbook format, 
@@ -756,7 +756,7 @@ creation of a file in the R sessions temporary directory that lists the records
 that have generated the errors. 
 
 ```{r summary-pedOne-no-errors, error = TRUE}
-pedOne <- mprcgenekeepr::pedOne # put it in the local environment
+pedOne <- nprcgenekeepr::pedOne # put it in the local environment
 ped <- qcStudbook(pedOne, minParentAge = 0.0)
 ```
 
@@ -815,7 +815,7 @@ __pedOne__ to see how the suspicious parents are reported by the
 __summary__ function.
 
 ```{r look-for-errors-only}
-pedOne <- mprcgenekeepr::pedOne
+pedOne <- nprcgenekeepr::pedOne
 errorList <- qcStudbook(pedOne,
   minParentAge = 0L, reportChanges = FALSE,
   reportErrors = TRUE

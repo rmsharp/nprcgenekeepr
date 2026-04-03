@@ -23,7 +23,7 @@ pedigree from \emph{rhesusGenotypes.csv}.
 }
 }
 \examples{
-library(mprcgenekeepr)
+library(nprcgenekeepr)
 data("rhesusGenotypes")
 }
 \keyword{datasets}

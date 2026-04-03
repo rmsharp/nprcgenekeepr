@@ -1,9 +1,69 @@
 NEWS
 ================
 R. Mark Sharp, Ph.D.
-2025-07-23
+2026-01-26
 
-# mprcgenekeepr 1.0.8 (20250723)
+# nprcgenekeepr 1.1.0.9000 (20260126)
+
+- Major changes
+  - Architectural Changes
+    - Modular Shiny Architecture
+      - Refactored monolithic Shiny application into discrete, testable
+        modules using shiny::moduleServer()  
+      - New module files:
+        - modInput.R - Data input and QC processing  
+        - modPedigree.R - Pedigree browser with trim/filter
+          capabilities  
+        - modPyramid.R - Age-sex pyramid visualization  
+        - modGeneticValue.R - Genetic value analysis (mean kinship,
+          genome uniqueness)  
+        - modSummaryStats.R - Summary statistics with interactive
+          visualizations
+        - modBreedingGroups.R - Breeding group formation using
+          groupAddAssign()
+        - modORIPReporting.R - ORIP reporting module  
+      - New appServer.R and appUI.R orchestrate module communication via
+        shared reactive values
+      - runModularApp() provides entry point for modular application
+  - New Features
+    - Dynamic Tab Management
+      - Error List and Changed Columns tabs appear/disappear dynamically
+        based on QC results  
+      - Uses insertTab()/removeTab() for cleaner UI when no errors
+        present
+    - Enhanced QC Pipeline
+      - runQcStudbook() wrapper provides UI-friendly error reporting  
+      - processQcStudbookResult() transforms QC output for display  
+      - shouldShowErrorTab() and shouldShowChangedColsTab() helper
+        functions
+    - Improved Visualizations
+      - getBoxWhiskerDescription() provides educational popover content
+        for box plots
+      - savePlotToFile() supports PNG, PDF, and SVG export  
+      - Enhanced pyramid plots with getPyramidPlot()
+    - Utility Functions
+      - safeExecute() - Error-handling wrapper for module operations  
+      - logModuleEvent() - Structured logging with futile.logger
+        integration
+      - makeFounderStatsTable(), makeGeneticSummaryTable() - Table
+        generators
+  - Testing Improvements
+    - Added shiny::testServer() unit tests  
+    - ~145 new/modified test files with comprehensive module coverage  
+    - Tests for edge cases: NULL inputs, empty pedigrees, single-animal
+      scenarios
+    - Strict TDD development process used for all new features  
+- Minor changes
+  - New Dependencies
+    - Added to Imports: bslib, DT, ggplot2  
+    - Added to Suggests: shinytest2
+  - Bug Fixes
+    - Fixed undefined global variables in ggplot2 aes() calls
+    - Fixed column name expectations in genetic value tests
+      (meanKinship/genomeUniqueness)
+    - Network-dependent tests now skip gracefully
+
+# nprcgenekeepr 1.0.8 (20250723)
 
 - Minor changes
   - Added returned value descriptions for all functions within R
@@ -11,7 +71,7 @@ R. Mark Sharp, Ph.D.
   - Changed unit test for `get_elapsed_time_str()` to use a mocked
     version of `proc.time()`
 
-# mprcgenekeepr 1.0.7 (20250506)
+# nprcgenekeepr 1.0.7 (20250506)
 
 - Minor changes
   - Added returned value descriptions for all functions where formerly
@@ -21,7 +81,7 @@ R. Mark Sharp, Ph.D.
     example with `runGeneKeepR()` is protected with
     `if (interactive()) {}`.
 
-# mprcgenekeepr 1.0.6 (20241215)
+# nprcgenekeepr 1.0.6 (20241215)
 
 - Minor changes
   - Update version in preparation for CRAN submission
@@ -47,7 +107,7 @@ R. Mark Sharp, Ph.D.
   - Stopped using travis-ci and started using GitHub Actions with
     Rhub.yaml file for checking on Rhub.
 
-# mprcgenekeepr 1.0.5.9004 (20221213)
+# nprcgenekeepr 1.0.5.9004 (20221213)
 
 - Minor changes
   - Changed method used to test class of object to use inherits().
@@ -60,7 +120,7 @@ R. Mark Sharp, Ph.D.
     18. 
   - Technical edits of R code based on `lintr::lint_dir(“R”)`
 
-# mprcgenekeepr 1.0.5.9003 (20220625)
+# nprcgenekeepr 1.0.5.9003 (20220625)
 
 - Minor changes
   - Removed dependency on gdata.
@@ -68,7 +128,7 @@ R. Mark Sharp, Ph.D.
   - Starting to replace `rbind()` with `rbindlist()` from `data.table`
     were possible.
 
-# mprcgenekeepr 1.0.5.9002 (20220425)
+# nprcgenekeepr 1.0.5.9002 (20220425)
 
 - Minor changes
   - Added use of data.table in an effort to reduce memory use and CPU
@@ -76,7 +136,7 @@ R. Mark Sharp, Ph.D.
   - Functions were refactored and the ability to handle larger
     simulations resulted.
 
-# mprcgenekeepr 1.0.5.9001 (20210830)
+# nprcgenekeepr 1.0.5.9001 (20210830)
 
 - Major changes
   - Added ability to use simulation to estimate the kinship values of
@@ -90,7 +150,7 @@ R. Mark Sharp, Ph.D.
     errors.
   - Changed to travis-ci.com
 
-# mprcgenekeepr 1.0.5 (20210328)
+# nprcgenekeepr 1.0.5 (20210328)
 
 - Major changes – none
 - Minor changes
@@ -105,7 +165,7 @@ R. Mark Sharp, Ph.D.
     to 1.0.5, updated NEWS to reflect the changes, and updated all
     documentation to reflect the version change.
 
-# mprcgenekeepr 1.0.4.9003 (20210318)
+# nprcgenekeepr 1.0.4.9003 (20210318)
 
 - Major changes – none
 - Minor changes
@@ -114,7 +174,7 @@ R. Mark Sharp, Ph.D.
   - Cleaned up .travis.yml in response to syntax checking on travis.org.
   - Added `markdown` to suggest due to new changes in `knitr`.
 
-# mprcgenekeepr 1.0.4 (20210318)
+# nprcgenekeepr 1.0.4 (20210318)
 
 - Major changes – none
 - Minor changes
@@ -125,7 +185,7 @@ R. Mark Sharp, Ph.D.
     the update to 1.6 of shiny broke the code. Thanks to Dan Metzger of
     Wisconsin National Primate Research Center.
 
-# mprcgenekeepr 1.0.3 (20200526)
+# nprcgenekeepr 1.0.3 (20200526)
 
 - Major changes – none
 - Minor changes
@@ -140,7 +200,7 @@ R. Mark Sharp, Ph.D.
     reflect the changes, and updated all documentation to reflect the
     version change.
 
-# mprcgenekeepr 1.0.2 (20200517)
+# nprcgenekeepr 1.0.2 (20200517)
 
 - Major changes – none
 - Minor changes
@@ -167,7 +227,7 @@ R. Mark Sharp, Ph.D.
       - All 11 examples in data.R
       - `makeExamplePedigreeFile()`
 
-# mprcgenekeepr 1.0.1 (20200510)
+# nprcgenekeepr 1.0.1 (20200510)
 
 - Major changes – none
 - Minor changes
@@ -194,19 +254,19 @@ R. Mark Sharp, Ph.D.
     - Two exported functions used by server.R to call `tabpanel()` do
       not have examples.
 
-# mprcgenekeepr 1.0 (20200415)
+# nprcgenekeepr 1.0 (20200415)
 
 - Major changes – none
 - Minor changes
   - CRAN submission
 
-# mprcgenekeepr 0.5.43 (20200414)
+# nprcgenekeepr 0.5.43 (20200414)
 
 - Major changes – none
 - Minor changes
   - Final preparation for CRAN submission
 
-# mprcgenekeepr 0.5.42.9012 (20200412)
+# nprcgenekeepr 0.5.42.9012 (20200412)
 
 - Major changes – none
 - Minor changes
@@ -214,7 +274,7 @@ R. Mark Sharp, Ph.D.
     of a sire from 8.67 to 8.66 years.
   - Renamed tutorials.
 
-# mprcgenekeepr 0.5.42.9011 (20200409)
+# nprcgenekeepr 0.5.42.9011 (20200409)
 
 - Major changes – none
 - Minor changes
@@ -225,7 +285,7 @@ R. Mark Sharp, Ph.D.
   - Added additional explanatory text from Matt Schultz edits for the
     Colony Manager version of the Shiny tutorial.
 
-# mprcgenekeepr 0.5.42.9010 (20200405)
+# nprcgenekeepr 0.5.42.9010 (20200405)
 
 - Major changes – none
 - Minor changes
@@ -233,7 +293,7 @@ R. Mark Sharp, Ph.D.
     but more should be done.
   - Refreshed Shiny_app_use.Rmd to reflect changes since November 2019.
 
-# mprcgenekeepr 0.5.42.9009 (20200402)
+# nprcgenekeepr 0.5.42.9009 (20200402)
 
 - Major changes – none
 - Minor changes
@@ -241,21 +301,21 @@ R. Mark Sharp, Ph.D.
     because R 4.0.0 alpha was leaving the side effect of the dataframe
     stored in a CSV file named as the text of the next line.
 
-# mprcgenekeepr 0.5.42.9008 (20200321)
+# nprcgenekeepr 0.5.42.9008 (20200321)
 
 - Major changes – none
 - Minor changes
   - Changed dependency to R \>= 3.6 since caTools is not available for R
     \< 3.6.
 
-# mprcgenekeepr 0.5.42.9007 (20200319)
+# nprcgenekeepr 0.5.42.9007 (20200319)
 
 - Major changes – none
 - Minor changes
   - Changed warnings unit test for getLkDirectAncestors to work with
     Windows.
 
-# mprcgenekeepr 0.5.42.9006 (20200319)
+# nprcgenekeepr 0.5.42.9006 (20200319)
 
 - Major changes – none
 - Minor changes
@@ -263,7 +323,7 @@ R. Mark Sharp, Ph.D.
   - Corrected spelling of several word throughout found with
     `spelling::spell_check_package(".")`.
 
-# mprcgenekeepr 0.5.42.9005 (20200201)
+# nprcgenekeepr 0.5.42.9005 (20200201)
 
 - Major changes – none
 - Minor changes
@@ -271,7 +331,7 @@ R. Mark Sharp, Ph.D.
   - Added ColonyManagerTutorial.Rmd initial draft, which is copy of
     shiny_app_use.Rmd. It is to be converted for use by colony managers.
 
-# mprcgenekeepr 0.5.42.9004 (20200201)
+# nprcgenekeepr 0.5.42.9004 (20200201)
 
 - Major changes – none
 - Minor changes
@@ -279,17 +339,17 @@ R. Mark Sharp, Ph.D.
   - Added obfuscated rhesus pedigree and rhesus haplotypes to use in
     examples
 
-# mprcgenekeepr 0.5.42.9003
+# nprcgenekeepr 0.5.42.9003
 
 - Major changes – none
 - Minor changes
   - Renamed local and remote repositories from nprcmanager to
-    mprcgenekeepr.
+    nprcgenekeepr.
 
-# mprcgenekeepr 0.5.42.9002
+# nprcgenekeepr 0.5.42.9002
 
 - Major changes
-  - Changed name of package to mprcgenekeepr. This required changing of
+  - Changed name of package to nprcgenekeepr. This required changing of
     many of the supporting files and functions. Having good unit test
     coverage of the functions (739 test with \> 90 percent coverage)
     made this possible.

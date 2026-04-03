@@ -1,7 +1,7 @@
 #' Filters kinship to remove rows with kinship values less than the specified
 #' threshold
 ## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of mprcgenekeepr
+## This file is part of nprcgenekeepr
 #'
 #' Part of Group Formation
 #' Filters kinship values less than the specified threshold from a long-format
@@ -18,8 +18,8 @@
 #' ignored.
 #' @export
 #' @examples
-#' library(mprcgenekeepr)
-#' ped <- mprcgenekeepr::lacy1989Ped
+#' library(nprcgenekeepr)
+#' ped <- nprcgenekeepr::lacy1989Ped
 #' ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 #' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
 #' kin <- kinMatrix2LongForm(kmat, removeDups = FALSE)
