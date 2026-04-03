@@ -66,3 +66,12 @@ README\.*\.png$
 ^tests/testthat/_snaps$
 ^CITATION\.cff$
 ^CRAN-SUBMISSION$
+^\.claude$
+^CLAUDE\.md$
+^SESSION_RUNNER\.md$
+^SAFEGUARDS\.md$
+^SESSION_NOTES\.md$
+^BACKLOG\.md$
+^methodology_dashboard\.py$
+^dashboard\.html$
+^docs/methodology$
