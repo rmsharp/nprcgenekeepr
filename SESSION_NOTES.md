@@ -11,11 +11,13 @@
 **Workstream:** `docs/methodology/workstreams/AUDIT_WORKSTREAM.md`
 
 ### What You Must Do
-Wait for the user to assign the next deliverable. With PED and GV now audited, the technical-debt audit is functionally complete across all 11 clusters. Strong next candidates, in rough priority order:
-1. **Quick-win under strict TDD:** extract a `getFounders(ped)`/`isFounder(ped)` helper (PED-1 / GV-3 / Session 1 KIN-2) — the most-duplicated idiom in the package. ⚠ Do NOT naively unify the adjacent `descendants` lines (`calcRetention.R:27` filters by `ped$population`; the `calc*` copies do not).
-2. **Correctness fixes (test-first):** GV-8 (`summarizeKinshipValues.R:106` second-quartile assigned the minimum), GV-7 (delete dead `makeGeneticDiversityDashboard.R`), GV-5 (`getProportionLow` undefined `color` on empty input), PED-8 (`findGeneration` silent NA).
-3. **Duplication consolidation:** GV-1 (calcFE/calcFG delegate to calcFEFG).
-4. **Planning session** for XARCH-1 (two coexisting Shiny apps).
+Wait for the user to assign the next deliverable. With PED and GV now audited, the technical-debt audit is functionally complete across all 11 clusters. The PED/GV re-audit surfaced **one HIGH-severity correctness bug** plus several latent ones. Strong next candidates, in priority order:
+1. **Fix the HIGH bug under strict TDD — NEW-15:** `countKinshipValues.R:133` writes `countDiffs[index]` using the OUTER loop variable inside an inner `for (value in valueDiffs)` loop, so every iteration overwrites the same slot. The path is real but UNTESTED (the test only exercises equal value-sets). Write the failing test first (accumulate differing value-sets across simulation batches).
+2. **Other correctness fixes (test-first):** NEW-34 (`getPotentialParents` unbound `j` → crash when no animal has a missing parent), NEW-40 (`findGeneration` silent NA), NEW-37 (`correctParentSex` silently rewrites H/U→M/F), NEW-45 (`geneDrop` period-in-id allele mis-assignment), NEW-48 (`calcFEFG` NA propagation), NEW-53 (`makeSimPed` mutates caller's ped in place), NEW-52 (`cumulateSimKinships` sd n=1 → NaN), NEW-25 (`getProportionLow` empty-input crash).
+3. **Dead code — NEW-20:** delete `makeGeneticDiversityDashboard.R` (+ its fully-commented test).
+4. **Quick-win duplication:** extract `getFounders(ped)`/`isFounder(ped)` (PED-1 / NEW-17 / Session 1 KIN-2). ⚠ Do NOT naively unify the adjacent `descendants` lines — `calcRetention.R:27` filters by `ped$population`; the `calc*` copies do not.
+5. **Consolidation / overhauls (own sessions):** NEW-13/23 (calcFE/calcFG delegate to calcFEFG), NEW-12 / XARCH-3 (Shiny progress hook), XARCH-1 (two coexisting Shiny apps — planning session).
+All findings + per-finding verdicts are in `PED_GV_AUDIT_2026-05-30.md` and the workflow artifact `…/tasks/w9oz3tkdf.output`.
 
 ### How You Will Be Evaluated
 The user rates every session's handoff on:
@@ -40,19 +42,19 @@ The user rates every session's handoff on:
 ### What Session 2 Did
 **Deliverable:** `PED_GV_AUDIT_2026-05-30.md` — re-audit of the PED and GV clusters that returned 0 findings in Session 1 due to sub-agent failures. (COMPLETE)
 **Date:** 2026-05-30. **Branch:** `add-methodology`.
-**What was produced:** `PED_GV_AUDIT_2026-05-30.md` — 11 PED findings + 13 GV findings, a deduped distinct-issues view, correctness/dead-code highlights, coverage + test-gap lists, and updated PED/GV cluster-overview rows. **No source code modified.**
-**How:** multi-agent workflow `wf_8077a831-96f`: 4 parallel auditors (2 GV lenses, 1 PED cross-check, 1 deep-dive critic) → adversarial per-finding verification (63 candidates → **61 confirmed, 2 refuted**; 67 agents). PLUS the author independently read all 24 GV-cluster files end-to-end (every GV citation verified directly), specifically to avoid repeating Session 1's silent-agent-failure.
-**Key results:** PED is largely clean (no high severity); themes: founders idiom (PED-1), hardcoded sex codes M/F/U/H (PED-2), inconsistent error/return conventions (PED-5/6), `getPotentialParents` complexity + leap-year math (PED-4). GV is well-factored but has: `calcFE`/`calcFG`/`calcFEFG` verbatim triplication (GV-1); `reportGV` length + Shiny-progress coupling (GV-2, extends XARCH-3); inline ranking constants gu>10/z<=0.25 (GV-4); and a correctness/dead-code cluster — GV-7 (entirely dead `makeGeneticDiversityDashboard.R`), GV-8 (`summarizeKinshipValues.R:106` secondQuartile=min), GV-9 (`countKinshipValues.R:133` outer-loop index), GV-5 (`getProportionLow` empty-input undefined color), PED-8 (`findGeneration` silent NA).
+**What was produced:** `PED_GV_AUDIT_2026-05-30.md` — the full verified finding set (**61 confirmed, 2 refuted** of 63 candidates), deduped to ~24 distinct issues, with a correctness/dead-code section, a refuted-findings appendix, coverage + test-gap lists, and updated PED/GV cluster-overview rows. **No source code modified.**
+**How:** multi-agent workflow `wf_8077a831-96f` — 4 parallel auditors (2 GV lenses, 1 PED cross-check, 1 deep-dive critic) → adversarial per-finding verification (63 → 61 confirmed / 2 refuted; 67 agents). PLUS the author independently read all 24 GV files end-to-end and corroborated every spot-checked finding.
+**Key results:** PED is largely clean (0 high; themes: founders idiom PED-1, sex codes PED-2, error/return PED-5/6, `getPotentialParents` PED-4). GV is well-factored but carries the audit's **only HIGH-severity bug — NEW-15** (`countKinshipValues.R:133` wrong loop index, untested path). Other notable correctness items: NEW-34 (`getPotentialParents` crash), NEW-40 (`findGeneration` NA), NEW-37 (`correctParentSex` H/U overwrite), NEW-45 (`geneDrop` period-in-id), NEW-48 (`calcFEFG` NA), NEW-53 (`makeSimPed` in-place mutation), NEW-52 (sd n=1), NEW-25 (`getProportionLow` empty). Plus NEW-20 dead file (`makeGeneticDiversityDashboard.R`) and NEW-13/23 calcFE/FG/FEFG triplication. Four confirmed findings have no test: NEW-20, NEW-41, NEW-44, NEW-58.
 **Key files:**
-- `PED_GV_AUDIT_2026-05-30.md` — the deliverable.
-- Workflow artifact `…/18efd281-…/tasks/w9oz3tkdf.output` — per-finding verdict JSON, including the 2 REFUTED findings (not reproduced in the report).
+- `PED_GV_AUDIT_2026-05-30.md` — the deliverable (full finding tables + refuted appendix).
+- Workflow artifact `…/18efd281-…/tasks/w9oz3tkdf.output` — per-finding verdict JSON (incl. the 2 refuted, NEW-49 / NEW-60, with rationales).
 - Workflow script `…/workflows/scripts/ped-gv-audit-rerun-wf_8077a831-96f.js` (resumable).
 **GOTCHAS for the next session:**
-1. **Tool-output rendering lagged badly** in this autonomous session — Bash/Read returned empty for many consecutive turns and flushed in batches only on external events. Write/Edit and subagents worked normally. If it recurs, delegate reads to a subagent (its final message returns reliably) instead of looping on Bash.
-2. The **2 refuted findings are NOT in the report**; they are in the workflow artifact `w9oz3tkdf.output`. Read it if you need them.
-3. **GV-8 and GV-9 are PROBABLE bugs** pending a check of whether the affected column (`secondQuartile`) / accumulation path is consumed downstream — verify before "fixing".
-4. Severities are a floor: PED = 6 medium / 5 low; GV = 5 medium / 8 low (the one GV medium that is a correctness item is GV-8).
-**Self-assessment: 8.5/10.** (+) Avoided Session 1's failure mode by independently reading every GV file rather than trusting agents; adversarial verification (61/63) kept the floor high. (+) Surfaced 4-5 genuine correctness/dead-code items beyond pure debt. (−) Could not render the 2 refuted findings inline due to harness output lag (pointed to the artifact instead). (−) Spent excessive turns fighting the output lag before pivoting to subagent delegation.
+1. **Tool-output rendering lagged badly** in this autonomous session — Bash/Read returned empty for many consecutive turns, flushing in batches only on external events (user messages, background-task notifications). Write/Edit and subagents worked normally. Countermeasure: delegate reads/parsing to a subagent (its final message returns reliably), or trigger a flush with a `run_in_background` command.
+2. **NEW-15 is the one HIGH bug and is UNTESTED** — its buggy branch is never hit by the current test (only equal value-sets). Write the failing test first.
+3. **Verify reachability before "fixing" latent items** — several medium correctness items (NEW-45/48/53) are masked by upstream invariants/non-default inputs; confirm with real data first.
+4. **The 2 refuted findings (NEW-49, NEW-60)** are in the report's appendix and the artifact — refuted because their causal mechanism didn't hold (not a tooling failure).
+**Self-assessment: 8.5/10.** (+) Avoided Session 1's failure mode by independently reading every GV file rather than trusting agents; adversarial verification (61/63) kept the floor high and caught 2 plausible-but-wrong candidates. (+) Surfaced one HIGH bug + ~10 latent correctness items beyond pure debt. (−) Wrote a first version of the report before the full verification data had rendered (harness output lag), then had to expand and re-commit it. (−) Spent excessive turns fighting the output lag before pivoting to subagent delegation.
 
 ### What Session 1 Did
 **Deliverable:** Read-only Senior-Architect technical-debt & refactoring-viability audit
