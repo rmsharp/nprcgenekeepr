@@ -36,7 +36,7 @@ Description: Provides genetic tools for colony management and is a derivation
 URL: https://rmsharp.github.io/nprcgenekeepr/, https://github.com/rmsharp/nprcgenekeepr
 BugReports: https://github.com/rmsharp/nprcgenekeepr/issues
 Depends:
-    R (>= 3.6.0)
+    R (>= 4.1.0)
 Imports:
     anytime,
     bslib,
