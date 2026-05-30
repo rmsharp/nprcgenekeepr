@@ -93,3 +93,57 @@ test_that("countKinshipValues counts kinship values correctly", {
   expect_equal(cummulatedCounts$kValues[[7]], c(0.125, 0.25))
   expect_identical(as.character(cummulatedCounts$kIds[[3L]]), c("A", "C"))
 })
+
+# Regression test for NEW-15. When a later simulation batch introduced kinship
+# values not present in the accumulated set, countKinshipValues wrote the new
+# counts to `countDiffs[index]` using the OUTER loop variable (the row index)
+# instead of a per-value position. That overwrote a single slot (and, for any
+# row index > 1, wrote out of bounds), corrupting the counts and desynchronising
+# the lengths of kValues and kCounts. The buggy branch is only reached when
+# setdiff(new values, accumulated values) is non-empty -- a case the seed-based
+# fixtures above never produce, which is why the bug went undetected.
+test_that("countKinshipValues merges new kinship values into correct slots", {
+  ## Batch 1: two ID pairs, four simulations, a single kinship value per pair.
+  ##   (A, B) -> 0.25  x4 ; (A, C) -> 0.125 x4
+  batchOne <- data.table::data.table(
+    id_1  = c("A", "A"),
+    id_2  = c("B", "C"),
+    sim_1 = c(0.25, 0.125),
+    sim_2 = c(0.25, 0.125),
+    sim_3 = c(0.25, 0.125),
+    sim_4 = c(0.25, 0.125)
+  )
+  ## Batch 2: same pairs, each introducing previously unseen kinship values.
+  ##   (A, B) gains TWO new values (0.0625, 0.125) -> exposes the same-slot
+  ##          overwrite at row index 1.
+  ##   (A, C) gains ONE new value (0.0625) at row index 2 -> exposes the
+  ##          out-of-bounds write that desynchronises the list lengths.
+  batchTwo <- data.table::data.table(
+    id_1  = c("A", "A"),
+    id_2  = c("B", "C"),
+    sim_1 = c(0.0625, 0.0625),
+    sim_2 = c(0.125,  0.0625),
+    sim_3 = c(0.25,   0.125),
+    sim_4 = c(0.25,   0.125)
+  )
+
+  accumulated <- countKinshipValues(batchOne)
+  merged <- countKinshipValues(batchTwo, accumulated)
+
+  ## kValues and kCounts must stay the same length for every pair.
+  expect_equal(lengths(merged$kValues), lengths(merged$kCounts))
+
+  ## Pair (A, B): 0.25 accumulates 4 + 2 = 6; each new value occurs once.
+  expect_identical(as.character(merged$kIds[[1L]]), c("A", "B"))
+  expect_equal(merged$kValues[[1L]], c(0.25, 0.0625, 0.125))
+  expect_equal(merged$kCounts[[1L]], c(6, 1, 1))
+
+  ## Pair (A, C): 0.125 accumulates 4 + 2 = 6; new value 0.0625 occurs twice.
+  expect_identical(as.character(merged$kIds[[2L]]), c("A", "C"))
+  expect_equal(merged$kValues[[2L]], c(0.125, 0.0625))
+  expect_equal(merged$kCounts[[2L]], c(6, 2))
+
+  ## Every observation is retained: batch1 (4) + batch2 (4) = 8 per pair.
+  expect_equal(sum(merged$kCounts[[1L]]), 8)
+  expect_equal(sum(merged$kCounts[[2L]]), 8)
+})
