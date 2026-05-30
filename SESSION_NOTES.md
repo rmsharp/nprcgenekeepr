@@ -5,18 +5,18 @@
 ---
 
 ## ACTIVE TASK
-**Task:** None — Session 2 (PED + GV cluster re-audit) is COMPLETE. No task in progress.
+**Task:** None — Session 3 (fix NEW-15 + regression test) is COMPLETE. No task in progress.
 **Status:** Awaiting user direction for next session.
-**Deliverable produced:** `PED_GV_AUDIT_2026-05-30.md` (closes the Session 1 PED/GV coverage gap; supersedes the "0/0/0" PED and GV rows in `TECH_DEBT_AUDIT_2026-05-30.md`).
-**Workstream:** `docs/methodology/workstreams/AUDIT_WORKSTREAM.md`
+**Deliverable produced:** NEW-15 fix in `R/countKinshipValues.R` (corrected `countDiffs` loop index) + a deterministic regression test in `tests/testthat/test_countKinshipValues.R`. Committed as `b05133ca`. The audit's only HIGH-severity bug is now resolved.
+**Workstream:** strict TDD (`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`).
 
 ### What You Must Do
-Wait for the user to assign the next deliverable. With PED and GV now audited, the technical-debt audit is functionally complete across all 11 clusters. The PED/GV re-audit surfaced **one HIGH-severity correctness bug** plus several latent ones. Strong next candidates, in priority order:
-1. **Fix the HIGH bug under strict TDD — NEW-15:** `countKinshipValues.R:133` writes `countDiffs[index]` using the OUTER loop variable inside an inner `for (value in valueDiffs)` loop, so every iteration overwrites the same slot. The path is real but UNTESTED (the test only exercises equal value-sets). Write the failing test first (accumulate differing value-sets across simulation batches).
-2. **Other correctness fixes (test-first):** NEW-34 (`getPotentialParents` unbound `j` → crash when no animal has a missing parent), NEW-40 (`findGeneration` silent NA), NEW-37 (`correctParentSex` silently rewrites H/U→M/F), NEW-45 (`geneDrop` period-in-id allele mis-assignment), NEW-48 (`calcFEFG` NA propagation), NEW-53 (`makeSimPed` mutates caller's ped in place), NEW-52 (`cumulateSimKinships` sd n=1 → NaN), NEW-25 (`getProportionLow` empty-input crash).
-3. **Dead code — NEW-20:** delete `makeGeneticDiversityDashboard.R` (+ its fully-commented test).
-4. **Quick-win duplication:** extract `getFounders(ped)`/`isFounder(ped)` (PED-1 / NEW-17 / Session 1 KIN-2). ⚠ Do NOT naively unify the adjacent `descendants` lines — `calcRetention.R:27` filters by `ped$population`; the `calc*` copies do not.
-5. **Consolidation / overhauls (own sessions):** NEW-13/23 (calcFE/calcFG delegate to calcFEFG), NEW-12 / XARCH-3 (Shiny progress hook), XARCH-1 (two coexisting Shiny apps — planning session).
+Wait for the user to assign the next deliverable. NEW-15 (the only HIGH bug) is fixed. Remaining correctness/debt candidates from `PED_GV_AUDIT_2026-05-30.md`, in priority order:
+1. **Other correctness fixes (test-first):** NEW-34 (`getPotentialParents` unbound `j` → crash when no animal has a missing parent), NEW-40 (`findGeneration` silent NA), NEW-37 (`correctParentSex` silently rewrites H/U→M/F), NEW-45 (`geneDrop` period-in-id allele mis-assignment), NEW-48 (`calcFEFG` NA propagation), NEW-53 (`makeSimPed` mutates caller's ped in place), NEW-52 (`cumulateSimKinships` sd n=1 → NaN), NEW-25 (`getProportionLow` empty-input crash). ⚠ Several are masked by upstream invariants/non-default inputs — verify reachability with real data BEFORE "fixing."
+2. **Dead code — NEW-20:** delete `makeGeneticDiversityDashboard.R` (+ its fully-commented test).
+3. **Quick-win duplication:** extract `getFounders(ped)`/`isFounder(ped)` (PED-1 / NEW-17 / Session 1 KIN-2). ⚠ Do NOT naively unify the adjacent `descendants` lines — `calcRetention.R:27` filters by `ped$population`; the `calc*` copies do not.
+4. **Consolidation / overhauls (own sessions):** NEW-13/23 (calcFE/calcFG delegate to calcFEFG), NEW-12 / XARCH-3 (Shiny progress hook), XARCH-1 (two coexisting Shiny apps — planning session).
+5. **Pre-existing test-infra debt (FOUND this session, NOT fixed):** the 22 `test-app-*` / `test-e2e-*` files all call `create_test_app()`, which is **defined nowhere in the repo** → 154 suite ERRORS whenever `shinytest2`+`chromote` are installed (they are on this machine). Independent of any compute code. Either define the missing helper or gate the tests behind `skip_if_not_installed`/existence checks. Worth its own session.
 All findings + per-finding verdicts are in `PED_GV_AUDIT_2026-05-30.md` and the workflow artifact `…/tasks/w9oz3tkdf.output`.
 
 ### How You Will Be Evaluated
@@ -29,6 +29,33 @@ The user rates every session's handoff on:
 ---
 
 *Session history accumulates below this line. Newest session at the top.*
+
+---
+
+### Session 2 Handoff Evaluation (by Session 3)
+**Score: 9/10.**
+- **What helped:** The ACTIVE TASK block named NEW-15 as the #1 priority with the file:line (`countKinshipValues.R:133`), the precise mechanism (outer loop var overwrites the slot), and the key insight that the path is UNTESTED because the existing fixtures only exercise *equal* value-sets. That one paragraph scoped the whole session — I knew immediately I had to construct *differing* value-sets to reach the buggy branch. Gotcha #2 ("NEW-15 is UNTESTED — write the failing test first") was exactly right.
+- **What helped (process):** Gotcha #3 ("verify reachability before fixing latent items") reinforced confirming the bug empirically — I ran the buggy function against constructed inputs and observed the corrupted output before writing the test.
+- **What was slightly off:** The line drifted by one — the wrong write is at `countKinshipValues.R:132`, not 133. Trivial; the file:function pointer landed me in <1 min.
+- **What was missing:** No warning that the broad suite has 154 pre-existing `create_test_app` ERRORS — I had to discover and rule those out to confirm zero regressions. Now documented (ACTIVE TASK #5) so the next session won't re-derive it.
+- **ROI:** Strongly positive — turned a HIGH-severity bug hunt into a targeted 2-line fix.
+
+### What Session 3 Did
+**Deliverable:** Fixed NEW-15 (the audit's only HIGH-severity bug) under strict TDD, with a regression test. (COMPLETE)
+**Date:** 2026-05-30. **Branch:** `add-methodology`. **Commit:** `b05133ca`.
+**The bug:** `R/countKinshipValues.R` accumulation branch — `countDiffs[index] <- kCounts[[index]][kValues[[index]] == value]` used the OUTER row-loop variable `index` to subscript `countDiffs` (a vector sized to `length(valueDiffs)`). When a later simulation batch introduced kinship value(s) not already accumulated for a pair, this (a) overwrote one slot when >1 new value existed, and (b) wrote out of bounds for any row `index > 1`, padding with 0/NA and desynchronising the lengths of `kValues` and `kCounts` — which then breaks `summarizeKinshipValues()` downstream (`rep(values, counts)`).
+**The fix (minimal):** `for (i in seq_along(valueDiffs))` with `countDiffs[i] <- kCounts[[index]][kValues[[index]] == valueDiffs[i]]`. Kept the function's explicit-loop idiom.
+**TDD trail:** RED — added `test_that("countKinshipValues merges new kinship values into correct slots")`; it failed against the original code with the exact bug signatures (count `c(6,1,0)` vs `c(6,1,1)`; length desync 3≠2; observation sum 7≠8), empirically confirmed first. GREEN — after the fix the file passes 22/22. REFACTOR — none needed (already minimal/idiomatic, lint-clean).
+**Verification:** full suite = **0 expectation failures**, 1941 passing assertions / 866 tests; lint = 0 on both changed files. The only suite errors (154) are PRE-EXISTING, all in the 22 `test-app-*`/`test-e2e-*` files from the undefined `create_test_app()` (confirmed undefined at HEAD *before* my change; `shinytest2`+`chromote` installed so they don't skip) — structurally independent of `countKinshipValues`. Blast radius: only the two changed files; kinship/simulation cluster (countKinshipValues, summarizeKinshipValues, createSimKinships, cumulateSimKinships, geneDrop, meanKinship) all green.
+**Key files:**
+- `R/countKinshipValues.R:131-135` — the fix.
+- `tests/testthat/test_countKinshipValues.R:96-149` — the regression test. Deterministic: builds two `data.table` batches with dyadic kinship values (1/4, 1/8, 1/16) that round-trip exactly through `table()`; exercises both the index-1 overwrite and index-2 out-of-bounds modes.
+**GOTCHAS for the next session:**
+1. **`testthat::test_local()` records errors in a separate `error` column, NOT `failed`.** Summing only `df$failed` hides the 154 `create_test_app` errors (I hit this — a first tally showed "0 fail" and looked clean). Always sum `failed` AND `error`.
+2. **The 154 `create_test_app` errors are pre-existing infra debt, not regressions** — don't chase them when verifying a compute fix. The real fix is ACTIVE TASK #5.
+3. **HEAD git worktrees don't load here:** the worktree lacks `renv/activate.R`, so its `.Rprofile` errors and `pkgload::load_all` won't run. For a baseline, revert the one file in place or use a structural argument (e.g. `git grep` proving a symbol is undefined at HEAD) instead of a worktree suite run.
+4. **Fast single-file test:** `Rscript -e 'suppressMessages(pkgload::load_all(".", quiet=TRUE)); testthat::test_file("tests/testthat/test_X.R", reporter="summary")'`. The "out-of-sync renv" warning is benign.
+**Self-assessment: 9/10.** (+) Strict TDD honored — empirically confirmed the buggy output, wrote a test that fails for the RIGHT reason, then the minimal fix; declared every phase. (+) Did not trust a green-looking "0 fail" tally — chased the run-to-run discrepancy until I found the `error`-vs-`failed` column issue, and *structurally proved* the e2e errors pre-existing rather than asserting it. (+) Stopped before commit per the user's explicit request; kept the review diff to the two relevant files. (+) One deliverable; flagged (did not fix) the `create_test_app` debt. (−) Burned several turns fighting the renv-broken worktree before pivoting to `git grep`-on-HEAD — should have reached for the structural proof sooner. (−) Skipped the Phase 1B session stub at task receipt (claimed the session only at close-out); low risk since I handed back cleanly, but a protocol miss to avoid next time.
 
 ---
 
