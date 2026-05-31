@@ -17,11 +17,16 @@ has the offspring ID \code{id}, a vector of representative sires
 \item{pop}{Character vector with animal IDs to consider as the population of
 interest. The default is NULL.}
 
-\item{n}{integer value of the number of simulated pedigrees to generate.}
+\item{n}{integer value of the number of simulated pedigrees to generate.
+Must be at least 1 (\code{n < 1} is an error); the standard deviation
+requires \code{n >= 2}.}
 }
 \value{
 List object containing the meanKinship, sdKinship, minKinship, and
-maxKinship.
+maxKinship. \code{sdKinship} is the sample standard deviation across
+the \code{n} simulations; it is undefined for a single simulation, so
+when \code{n < 2} it is returned as \code{NA} (with a warning), as
+base R \code{sd()} does for a length-one vector.
 }
 \description{
 \code{cumulateSimKinships} creates a named
