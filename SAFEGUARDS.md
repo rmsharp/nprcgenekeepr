@@ -83,8 +83,6 @@ Every project has a "build equivalent" — the command that confirms the deliver
 
 | Project Type | Build Equivalent | Verification |
 |---|---|---|
-| **R package (this project)** | `devtools::check()` or `R CMD check` | No errors, no warnings, no notes (ideally) |
-| **R package tests** | `devtools::test()` or `testthat::test_local()` | All tests pass |
 | Software | `make`, `npm run build`, `cargo build` | Compilation succeeds |
 | Documentation (Quarto, LaTeX) | `quarto render`, `pdflatex` | Document renders without errors |
 | Data pipeline | Pipeline execution | Output data are produced correctly |
@@ -93,6 +91,19 @@ Every project has a "build equivalent" — the command that confirms the deliver
 **Identify your project's build equivalent during setup and run it after every substantive change.** A deliverable that doesn't pass its build equivalent is broken, regardless of how correct it looks in the source.
 
 For documentation projects, rendering also verifies cross-references, citations, and figure generation — failures in any of these indicate broken content that must be fixed before committing.
+
+### Verify Render-Dependency Completeness
+
+**Build success is not asset-use success.** A render can succeed while silently using different assets than configured: a font family resolves to its Regular face but missing Italic / Bold faces fall back to a default; a CSL file resolves but is the wrong style version; a LaTeX template resolves but a missing class option is silently ignored; a figure-generation script imports a library version different from the one specified. The output looks valid and the build exits cleanly. The defect is invisible unless something checks for it.
+
+If your build produces rendered output that depends on external assets (fonts, citation styles, templates, figure libraries), the build-equivalent check above is necessary but not sufficient. Two additional checks apply:
+
+| When | Check | Rule | Why |
+|---|---|---|---|
+| **Post-render** (every build) | Confirm the rendered output uses the assets it was configured to use (e.g., `pdffonts` shows all expected font faces embedded, not just the family name) | **Hard rule** — part of the build-equivalent step. Failure blocks the commit. | Catches silent fallback that survives correct-looking static config. |
+| **Pre-render / setup** (when render-dep config changes) | Confirm each configured asset actually provides the faces / version / features the document uses (e.g., `fc-list "<family>"` returns each expected face; `kpsewhich <Italic-file>` resolves; the CSL version matches the cited style) | **Soft prompt** — surfaces at Phase 0 when render-dep config changes; project decides response based on its toolchain. | Catches mis-configuration without requiring a render. |
+
+A deliverable that compiles, renders, and embeds the right assets is correct. A deliverable that compiles and renders but embeds fallback assets is broken in a way the build will not tell you about — find it before the reader does. See domain workstreams (e.g., `docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md` for research papers) for toolchain-specific verification commands.
 
 ---
 
@@ -103,7 +114,7 @@ For documentation projects, rendering also verifies cross-references, citations,
 ### Step 1: Orient (Read Only — Change Nothing)
 ```
 1. Read SESSION_NOTES.md          — What was the last session doing?
-2. Read BACKLOG.md                — What are the current priorities?
+2. Check GitHub Issues (`gh issue list`) — What are the current priorities? (Fall back to BACKLOG.md if no repo. BACKLOG.md should contain only open work items — for history see `CHANGELOG.md`, for feature inventory see `ROADMAP.md`.)
 3. Read SAFEGUARDS.md             — Refresh the rules (this file)
 4. git status                     — What's committed? What's not?
 5. git log --oneline -10          — What were the recent commits?
