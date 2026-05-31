@@ -9,7 +9,8 @@ calcFG(ped, alleles)
 \arguments{
 \item{ped}{the pedigree information in datatable format.  Pedigree
 (req. fields: id, sire, dam, gen, population).
-It is assumed that the pedigree has no partial parentage}
+The pedigree must have no partial parentage (every animal has both parents
+known or both unknown); \code{calcFG} stops with an error otherwise.}
 
 \item{alleles}{dataframe contains an \code{AlleleTable}. This is a
 table of allele information produced by \code{geneDrop()}.}

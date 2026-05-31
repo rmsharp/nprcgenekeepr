@@ -13,7 +13,8 @@
 #' @param ped the pedigree information in datatable format.  Pedigree
 #' (req. fields: id, sire, dam, gen, population).
 #'
-#' It is assumed that the pedigree has no partial parentage
+#' The pedigree must have no partial parentage (every animal has both parents
+#' known or both unknown); \code{calcFEFG} stops with an error otherwise.
 #' @param alleles dataframe contains an \code{AlleleTable}. This is a
 #' table of allele information produced by \code{geneDrop()}.
 #' @export
@@ -43,6 +44,13 @@
 #' feFgFactors <- calcFEFG(pedFactors, allelesFactors)
 calcFEFG <- function(ped, alleles) {
   ped <- toCharacter(ped, headers = c("id", "sire", "dam"))
+  partial <- xor(is.na(ped$sire), is.na(ped$dam))
+  if (any(partial)) {
+    stop("calcFEFG requires complete parentage (no partial parentage): ",
+         "id(s) with exactly one known parent: ", toString(ped$id[partial]),
+         ". Resolve partial parentage upstream ",
+         "(e.g., qcStudbook() or addUIds()) before calling calcFEFG().")
+  }
   founders <- ped$id[is.na(ped$sire) & is.na(ped$dam)]
   # nolint start: commented_code_linter.
   ## UID.founders <- founders[grepl("^U", founders, ignore.case = TRUE)]

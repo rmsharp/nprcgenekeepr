@@ -36,3 +36,17 @@ test_that("calcFE correctly calculates the number of founder equivalents in
   expect_identical(fe, feFactors)
   expect_equal(fe, 2.9090909091)
 })
+
+## --- NEW-48 (Session 7): reject partial parentage (identical bug, R/calcFE.R:71)
+## The complete-parentage test above doubles as the no-false-positive guard.
+test_that("calcFE stops with a clear error on partial parentage", {
+  partialPed <- data.frame(
+    id   = c("A", "B", "C", "D"),
+    sire = c(NA,  NA,  "A", NA),   # D: sire NA, dam B  -> partial
+    dam  = c(NA,  NA,  NA,  "B"),  # C: sire A,  dam NA -> partial
+    gen  = c(0L,  0L,  1L,  1L),
+    population = c(TRUE, TRUE, TRUE, TRUE),
+    stringsAsFactors = FALSE
+  )
+  expect_error(calcFE(partialPed), regexp = "partial parentage")
+})

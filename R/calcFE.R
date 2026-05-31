@@ -4,7 +4,8 @@
 ## This file is part of nprcgenekeepr
 #' Part of the Genetic Value Analysis
 #'
-#' It is assumed that the pedigree has no partial parentage
+#' The pedigree must have no partial parentage (every animal has both parents
+#' known or both unknown); \code{calcFE} stops with an error otherwise.
 #'
 #' @return The founder equivalents \code{FE = 1 / sum(p ^ 2)}, where \code{p}
 #' is average number of descendants and \code{r} is the mean number of founder
@@ -41,6 +42,13 @@
 #' feFactors <- calcFE(pedFactors)
 calcFE <- function(ped) {
   ped <- toCharacter(ped, headers = c("id", "sire", "dam"))
+  partial <- xor(is.na(ped$sire), is.na(ped$dam))
+  if (any(partial)) {
+    stop("calcFE requires complete parentage (no partial parentage): ",
+         "id(s) with exactly one known parent: ", toString(ped$id[partial]),
+         ". Resolve partial parentage upstream ",
+         "(e.g., qcStudbook() or addUIds()) before calling calcFE().")
+  }
   founders <- ped$id[is.na(ped$sire) & is.na(ped$dam)]
   # nolint start: commented_code_linter.
   ## UID.founders <- founders[grepl("^U", founders, ignore.case = TRUE)]
