@@ -45,8 +45,8 @@ getPotentialParents <- function(ped, minParentAge, maxGestationalPeriod) {
   ## add calcs for births and pre-allocate memory
 
   potentialParents <- vector(mode = "list", length = nrow(pUnknown))
+  j <- 0L # counter for potentialParents; used to prevent NULL entries
   if (nrow(pUnknown) > 0L) {
-    j <- 0L # counter for potentialParents; used to prevent NULL entries
     for (i in seq_len(nrow(pUnknown))) {
       ## Calculating breeding age potential parents
       ba <- ped[birth <= (pUnknown$birth[i] - (dYear * minParentAge)), ]

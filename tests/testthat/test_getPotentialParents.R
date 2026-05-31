@@ -66,3 +66,26 @@ test_that("getPotentialParents works with records with no potential parent", {
   )
   expect_equal(potentialParents[[1L]]$id, ids[1L])
 })
+test_that("getPotentialParents returns NULL when no from-center animal has a missing parent", {
+  ## NEW-34 regression: founders A and B have unknown parents but are NOT
+  ## from-center, so they are excluded from pUnknown; the only from-center
+  ## animal, C, has both parents known. pUnknown is therefore empty, the
+  ## per-animal loop never runs, and the function must fall through to its
+  ## NULL return. Before the fix this crashed with "object 'j' not found"
+  ## because the loop counter `j` was bound only inside the
+  ## `if (nrow(pUnknown) > 0L)` branch yet read unconditionally afterwards.
+  ped <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    birth = as.Date(c("2000-01-01", "2000-01-01", "2003-01-01")),
+    exit = as.Date(NA),
+    fromCenter = c(FALSE, FALSE, TRUE),
+    stringsAsFactors = FALSE
+  )
+  expect_null(getPotentialParents(
+    ped = ped, minParentAge = 2L,
+    maxGestationalPeriod = 210L
+  ))
+})
