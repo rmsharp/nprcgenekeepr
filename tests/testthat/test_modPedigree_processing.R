@@ -663,15 +663,21 @@ test_that("modPedigreeServer handles pedigree with circular reference gracefully
       config = NULL
     ),
     {
-      session$setInputs(
-        displayUnknownIds = TRUE,
-        trimPedigree = FALSE
+      # findGeneration now emits a warning for ids it cannot place (NEW-40);
+      # a circular reference is exactly such a case. The module must surface
+      # the diagnostic yet still handle it gracefully (warn, do not crash).
+      expect_warning(
+        session$setInputs(
+          displayUnknownIds = TRUE,
+          trimPedigree = FALSE
+        ),
+        regexp = "could not be assigned a generation"
       )
 
       result <- session$getReturned()
 
       # Should not crash, should return some result
-      expect_no_error(result$pedigree())
+      expect_no_error(suppressWarnings(result$pedigree()))
     }
   )
 })

@@ -17,7 +17,10 @@ individual's mother (\code{NA} if unknown).}
 }
 \value{
 An integer vector indication the generation numbers for each id,
-starting at 0 for individuals lacking IDs for both parents.
+starting at 0 for individuals lacking IDs for both parents. Any id that
+cannot be placed --- e.g. when the pedigree contains a cycle or references
+a parent ID that is not itself present as an ego ID --- is returned as
+\code{NA} and triggers a \code{warning} naming the affected ids.
 }
 \description{
 {This loops through the entire pedigree one generation at a
