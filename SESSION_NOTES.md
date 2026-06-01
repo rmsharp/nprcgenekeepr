@@ -5,7 +5,7 @@
 ---
 
 ## ACTIVE TASK
-**Task:** None in progress — **Session 11 (NEW-53 fix) is COMPLETE.** Ready for the next deliverable.
+**Task:** None in progress — **Session 12 (TDD phase-gate `AskUserQuestion` convention) is COMPLETE**; Session 11 (NEW-53 fix) likewise COMPLETE. Ready for the next deliverable.
 **Status:** NEW-53 fixed under strict TDD and committed. The three exported functions (`makeSimPed`, `getPotentialParents`, `createSimKinships`) no longer mutate the caller's `ped` by reference (`setDT(ped)` → `ped <- data.table::as.data.table(ped)`). Full suite **0 failed / 0 error / 1943 passed**; lint 0; NAMESPACE regenerated (dropped now-unused `setDT` import); no `.Rd` churn. Full handoff in "What Session 11 Did" below.
 **⚠ Still-open tracker reconciliation (carried from S10):** the audit follow-ups (NEW-45, NEW-20, … in `BACKLOG.md`) are NOT GitHub issues; the live tracker is #1–#38. Decide with the user whether to file the audit items as issues or keep them in BACKLOG. They currently coexist.
 **Prior code campaign (Sessions 1–11, all resolved; summarized in `CHANGELOG.md`):** NEW-15 (S3 `b05133ca`, the only HIGH bug), NEW-34 (S4 `dc695a3b`), NEW-40 (S5 `ea5d28fa`), NEW-37 (S6 `6b0ae333`), NEW-48 (S7 `19350559`), NEW-25 (S8 `587ba042`), NEW-52 (S9 `e3c7e8b3`), NEW-53 (S11 — this session).
@@ -35,6 +35,19 @@ The user rates every session's handoff on:
 ---
 
 *Session history accumulates below this line. Newest session at the top.*
+
+---
+
+### What Session 12 Did
+**Deliverable:** Added the **TDD Phase-gate format** convention to `CLAUDE.md`'s Development Process Contract — at every phase transition, ask permission via `AskUserQuestion` (structured), not a prose question. (COMPLETE)
+**Date:** 2026-05-31. **Branch:** `add-methodology`. **Commit:** `docs:` close-out (this entry's commit).
+**Why:** the user runs a parallel TDD session that gates each transition with a structured `AskUserQuestion` (option 1 "Yes, proceed to <TO>" enumerating the exact next-phase actions + downstream verify; option 2 "Hold / alternative"; harness auto-adds "Other") and asked to adopt it here. In *this* conversation Session 11 had used prose gates ("May I proceed to GREEN?").
+**Decision (USER):** gate **all three** transitions — `PRE-RED→RED`, `RED→GREEN`, `GREEN→REFACTOR` (not just the two source/doc gates). A pre-RED scope/approach decision stays a *separate* `AskUserQuestion`.
+**Mechanism note (important for a future session tempted to "automate" it):** this is a followed CLAUDE.md convention, **NOT** a `settings.json` hook — there is no "phase transition" harness event, and a hook can't author context-specific options. Per Learning #11 it lives in `CLAUDE.md`, never in the synced `SESSION_RUNNER.md`/`SAFEGUARDS.md`.
+**Key file:** `CLAUDE.md` "Development Process Contract" → new **"### Phase-gate format"** subsection (right after Enforcement Rules); the "MUST ask permission before transitioning" bullet now points to it.
+**Verification:** docs-only; no code/tests touched, so no TDD cycle and no suite run (markdown convention — nothing to test). `CLAUDE.md` reads coherently.
+**3A note:** intentionally skipped the formal previous-handoff evaluation — Session 11's handoff was written minutes earlier in this same conversation, so a fresh-read evaluation would add nothing.
+**Self-assessment: 9/10.** (+) Right-sized a small process change: surfaced the one genuine design choice (which transitions) via `AskUserQuestion` with preview-rendered convention text, explained why a hook cannot implement it, and kept it in `CLAUDE.md` per the synced-files rule (Learning #11). (−) Proportionately light close-out (no full 6-part handoff) — appropriate for a one-paragraph doc convention, but flagged explicitly so it is not mistaken for protocol erosion (FM #17).
 
 ---
 

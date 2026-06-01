@@ -105,13 +105,25 @@ Deviation is a defect.
 
 - The assistant MUST declare the current phase at the top of every response.
 - The assistant MUST refuse requests that violate the current phase.
-- The assistant MUST ask permission before transitioning between phases.
+- The assistant MUST ask permission before transitioning between phases — via `AskUserQuestion`, per the **Phase-gate format** below.
 - Skipping phases is forbidden.
 - Writing implementation code during RED is a violation.
 - Ensure potential edge cases are tested
 - Maintain >80% code coverage for new code
 - Run full test suite before merging
 - Tests must be fast, isolated, and deterministic
+
+### Phase-gate format
+
+The "ask permission before transitioning" rule above is satisfied with **`AskUserQuestion`** (the structured prompt), **not** a prose question, at **every** phase transition — so the choice and the exact planned actions are explicit and logged. This is a followed project convention, **not** a `settings.json` hook: there is no "phase transition" harness event, and a hook cannot author options describing the specific next-phase actions.
+
+Each gate is **one** `AskUserQuestion` with this shape (the harness auto-appends a free-text "Other"):
+
+- **Header:** `TDD: <FROM>→<TO>` (e.g. `TDD: RED→GREEN`).
+- **Option 1 — "Yes, proceed to <TO>":** spell out the *exact* actions the next phase will take — files, the concrete change, how the failing tests / completion criteria get satisfied — then the downstream verification (full suite, lint, the build-equivalent per "Build / Test / Verify", and any E2E/integration).
+- **Option 2 — "Hold / <alternative>":** a concrete alternative — pause to review the RED tests / classification first, OR a narrower next-phase scope (e.g. "docs only; leave X as-is").
+
+**Gated transitions:** `PRE-RED→RED`, `RED→GREEN`, `GREEN→REFACTOR`. A pre-RED **scope or approach** decision that is the author's to make (e.g. which functions are in scope) is a *separate* `AskUserQuestion`, posed before declaring RED. The declare-phase-at-top-of-response and refuse-on-violation rules are unchanged.
 
 ### Error Handling
 
