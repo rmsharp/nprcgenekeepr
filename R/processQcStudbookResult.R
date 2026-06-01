@@ -9,8 +9,9 @@
 #' @param errorLst list object returned by \code{qcStudbook} with
 #'   \code{reportErrors = TRUE}, or NULL. Expected to be of class
 #'   \code{nprcgenekeeprErr} containing error fields such as femaleSires,
-#'   maleDams, sireAndDam, duplicateIds, missingColumns, invalidDateRows,
-#'   suspiciousParents, failedDatabaseConnection, and changedCols.
+#'   maleDams, sireAndDam, duplicateIds, invalidIdChars, missingColumns,
+#'   invalidDateRows, suspiciousParents, failedDatabaseConnection, and
+#'   changedCols.
 #'
 #' @return A list with the following components:
 #' \itemize{
@@ -126,6 +127,15 @@ processQcStudbookResult <- function(errorLst) {
       result$errors,
       makeErrorRow("Duplicate IDs found",
                    paste(errorLst$duplicateIds, collapse = ", "))
+    )
+  }
+
+  # Check for IDs containing a disallowed period
+  if (length(errorLst$invalidIdChars) > 0L) {
+    result$errors <- rbind(
+      result$errors,
+      makeErrorRow("IDs contain a disallowed period (\".\")",
+                   toString(errorLst$invalidIdChars))
     )
   }
 

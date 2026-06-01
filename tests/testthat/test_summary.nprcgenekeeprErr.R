@@ -72,3 +72,9 @@ test_that("summary.nprcgenekeeprErr identifies bad database connection", {
     "Database connection failed"
   ))
 })
+test_that("summary.nprcgenekeeprErr reports IDs containing a period (NEW-45)", {
+  el <- getEmptyErrorLst()
+  el$invalidIdChars <- c("o1.2")
+  expect_true(stri_detect_fixed(summary(el)$txt, "period"))
+  expect_true(stri_detect_fixed(summary(el)$txt, "o1.2"))
+})

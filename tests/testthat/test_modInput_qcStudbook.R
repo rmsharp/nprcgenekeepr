@@ -64,6 +64,18 @@ test_that("processQcStudbookResult detects duplicate IDs", {
   expect_true(any(grepl("duplicate", result$errors$Error, ignore.case = TRUE)))
 })
 
+test_that("processQcStudbookResult detects IDs containing a period (NEW-45)", {
+  errorLst <- getEmptyErrorLst()
+  errorLst$invalidIdChars <- c("A.1", "C.3")
+
+  result <- processQcStudbookResult(errorLst)
+
+  expect_true(result$hasErrors)
+  expect_true(nrow(result$errors) > 0)
+  expect_true(any(grepl("period", result$errors$Error, ignore.case = TRUE)))
+  expect_true(any(grepl("A.1", result$errors$Details, fixed = TRUE)))
+})
+
 test_that("processQcStudbookResult detects missing columns", {
   errorLst <- getEmptyErrorLst()
   errorLst$missingColumns <- c("id", "sire")
