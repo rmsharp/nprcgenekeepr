@@ -33,11 +33,6 @@ calcFounderContributions <- function(ped, caller = "calcFEFG") {
          "(e.g., qcStudbook() or addUIds()) before calling ", caller, "().")
   }
   founders <- getFounders(ped)
-  # nolint start: commented_code_linter.
-  ## UID.founders <- founders[grepl("^U", founders, ignore.case = TRUE)]
-  # nolint end: commented_code_linter.
-  ## UID.founders is not used; It may be a mistake, but it could be vestiges of
-  ## something planned that was not done.
   descendants <- ped$id[!(ped$id %in% founders)]
 
   d <- matrix(0L, nrow = length(descendants), ncol = length(founders))
@@ -48,6 +43,8 @@ calcFounderContributions <- function(ped, caller = "calcFEFG") {
   colnames(founderMatrix) <- rownames(founderMatrix) <- founders
 
   d <- rbind(founderMatrix, d)
+  ## Free the founders-by-founders identity block before the generation loop:
+  ## it has been copied into d above and is never referenced again.
   founderMatrix <- NULL
   ## Note: skips generation 0.
   ## The references inside matrix d do not work if ped$sire and ped$dam and
@@ -59,6 +56,8 @@ calcFounderContributions <- function(ped, caller = "calcFEFG") {
       ego <- gen$id[j]
       sire <- gen$sire[j]
       dam <- gen$dam[j]
+      ## Mendelian 1/2: an individual's founder contributions are the mean of
+      ## its two parents' (each parent transmits half of its genome).
       d[ego, ] <- (d[sire, ] + d[dam, ]) / 2L
     }
   }
