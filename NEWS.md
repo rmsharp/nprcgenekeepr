@@ -18,6 +18,12 @@ R. Mark Sharp, Ph.D.
     `removeDuplicates()` and by `kinship()`); a duplicate id previously triggered
     the cryptic base-R error "duplicate 'row.names' are not allowed". (NEW-46)
 
+- Genetic value analysis
+  - `summarizeKinshipValues()` now reports the `secondQuartile` column as the
+    lower hinge (`fivenum()[2]`, approximately the first quartile) instead of
+    silently duplicating `min` (`fivenum()[1]`). The `thirdQuartile` column
+    (the upper hinge) was already correct. (NEW-16)
+
 - Major changes
   - Architectural Changes
     - Modular Shiny Architecture

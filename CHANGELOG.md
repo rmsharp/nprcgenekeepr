@@ -14,6 +14,27 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-01 — Fix lower-quartile mislabel + bind-once refactor in summarizeKinshipValues (NEW-16, Session 15)
+- Fixed NEW-16: `summarizeKinshipValues()` reported the `secondQuartile` column
+  as `fivenum()[1]` (the minimum) instead of `fivenum()[2]` (the lower hinge),
+  so the lower-quartile column silently duplicated `min`. It affected 5 of 153
+  rows in the documented example pipeline. As with NEW-45, the audit's mechanism
+  and prescribed fix were both correct; the pre-existing test happened to pass on
+  the buggy output (its row-10 lower hinge equals that row's min), so a new
+  synthetic test (`numbers = 1:5`, where the lower hinge 2 ≠ the min 1) was added
+  to detect the mislabel. Fixed by `tukeys[1L]` → `tukeys[2L]`
+  (`R/summarizeKinshipValues.R:106`); `thirdQuartile` (the upper hinge) was
+  already correct.
+- Refactored the O(n²) `rbind`-in-loop into a preallocated row list bound once
+  with `do.call(rbind, …)` (O(n)). Proven behaviour-preserving: `identical()`
+  output on the seeded example pipeline, the synthetic input, and the
+  all-skipped/empty case (which still returns an empty `data.frame()`).
+- Decision (author): `R/makeGeneticDiversityDashboard.R` (NEW-20) is **retained**
+  as early-development work rather than deleted. It is already excluded from the
+  package build via `.Rbuildignore` and defines no live function, so NEW-20 is
+  closed as won't-delete (not the audit's "delete dead code"). A whitespace-only
+  comment realignment in that file was committed first (`926f4606`).
+
 ### 2026-06-01 — Reject duplicate animal IDs in geneDrop (NEW-46, Session 14)
 - Fixed NEW-46: `geneDrop()` crashed with the cryptic base-R error
   "duplicate 'row.names' are not allowed" (at `rownames(ped) <- ids`,

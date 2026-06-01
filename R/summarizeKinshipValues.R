@@ -15,6 +15,12 @@
 #'  \code{max}, and
 #'  \code{sd}.
 #'
+#'  The five-number-summary columns are taken from
+#'  \code{\link[stats]{fivenum}}: \code{secondQuartile} is the lower hinge
+#'  (\code{fivenum()[2]}, approximately the first quartile) and
+#'  \code{thirdQuartile} is the upper hinge (\code{fivenum()[4]}, approximately
+#'  the third quartile).
+#'
 #' @param countedKValues list object from countKinshipValues function that
 #' containes the lists \code{kinshipIds}, \code{kinshipValues},
 #' and \code{kinshipCounts}.
@@ -85,7 +91,7 @@ summarizeKinshipValues <- function(countedKValues) {
   )))) {
     stop("summarizeKinshipValues received wrong object", call. = TRUE)
   }
-  stats <- data.frame()
+  rows <- vector("list", length(countedKValues$kIds))
 
   for (i in seq_along(countedKValues$kIds)) {
     numbers <- rep(
@@ -97,20 +103,24 @@ summarizeKinshipValues <- function(countedKValues) {
       next
     }
     tukeys <- fivenum(numbers)
-    stats <- rbind(
-      stats,
-      data.frame(
-        id_1 = countedKValues$kIds[[i]][1L],
-        id_2 = countedKValues$kIds[[i]][2L],
-        min = tukeys[1L],
-        secondQuartile = tukeys[1L],
-        mean = mean(numbers),
-        median = tukeys[3L],
-        thirdQuartile = tukeys[4L],
-        max = tukeys[5L],
-        sd = sd(numbers)
-      )
+    rows[[i]] <- data.frame(
+      id_1 = countedKValues$kIds[[i]][1L],
+      id_2 = countedKValues$kIds[[i]][2L],
+      min = tukeys[1L],
+      secondQuartile = tukeys[2L],
+      mean = mean(numbers),
+      median = tukeys[3L],
+      thirdQuartile = tukeys[4L],
+      max = tukeys[5L],
+      sd = sd(numbers)
     )
+  }
+  # Bind once (O(n) instead of the previous O(n^2) rbind-in-loop). rbind()
+  # drops the NULL entries left by skipped (NA) rows; an all-skipped input
+  # yields NULL, which we restore to the empty-data.frame() contract.
+  stats <- do.call(rbind, rows)
+  if (is.null(stats)) {
+    stats <- data.frame()
   }
   stats
 }
