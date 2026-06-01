@@ -89,3 +89,22 @@ test_that("getPotentialParents returns NULL when no from-center animal has a mis
     maxGestationalPeriod = 210L
   ))
 })
+test_that("getPotentialParents does not mutate the caller's pedigree (NEW-53)", {
+  ## NEW-53: getPotentialParents must not flip the caller's data.frame to a
+  ## data.table by reference (setDT at getPotentialParents.R:28).
+  pedDF <- nprcgenekeepr::rhesusPedigree
+  pedDF$id <- as.character(pedDF$id)
+  pedDF$sire <- as.character(pedDF$sire)
+  pedDF$dam <- as.character(pedDF$dam)
+  pedDF$birth <- as.Date(pedDF$birth)
+  pedDF$fromCenter <- TRUE
+  pedDF <- as.data.frame(pedDF)
+  expect_identical(class(pedDF), "data.frame") # precondition
+  namesSnapshot <- paste0(names(pedDF), collapse = "\r")
+  invisible(getPotentialParents(
+    ped = pedDF, minParentAge = 2.0, maxGestationalPeriod = 210L
+  ))
+  expect_false(inherits(pedDF, "data.table"))
+  expect_identical(class(pedDF), "data.frame")
+  expect_identical(paste0(names(pedDF), collapse = "\r"), namesSnapshot)
+})

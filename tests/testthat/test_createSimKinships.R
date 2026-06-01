@@ -68,3 +68,17 @@ test_that("createSimKinships creates the correct kinship matrices structure", {
   expect_equal(test_EN, c(0.125, 0.0, 0.0, 0.0, 0.125, 0.125, 0.0, 0.0, 0.0,
                           0.125))
 })
+
+test_that("createSimKinships does not mutate the caller's pedigree (NEW-53)", {
+  ## NEW-53: createSimKinships must not flip the caller's data.frame to a
+  ## data.table by reference (setDT at createSimKinships.R:50).
+  pedDF <- as.data.frame(nprcgenekeepr::smallPed)
+  expect_identical(class(pedDF), "data.frame") # precondition
+  localParents <- list(
+    list(id = "A", sires = c("s1_1", "s1_2"), dams = c("d1_1", "d1_2"))
+  )
+  set_seed(seed = 1L)
+  invisible(createSimKinships(pedDF, localParents, pop = pedDF$id, n = 2L))
+  expect_false(inherits(pedDF, "data.table"))
+  expect_identical(class(pedDF), "data.frame")
+})

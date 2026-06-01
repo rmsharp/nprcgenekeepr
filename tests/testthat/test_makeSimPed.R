@@ -118,3 +118,22 @@ test_that("makeSimPed creates a correct pedigree structure with no dams", {
   expect_identical(simPed$dam[simPed$id == "E"], "d3_1")
   # nolint end: object_name_linter.
 })
+
+test_that("makeSimPed does not mutate the caller's pedigree (NEW-53)", {
+  ## NEW-53: makeSimPed must not flip the caller's data.frame to a data.table
+  ## by reference (setDT mutates the argument in place). Content is preserved
+  ## either way (empirically only the class leaked), so the class is the
+  ## discriminating assertion; the sire snapshot guards the content contract.
+  pedDF <- as.data.frame(nprcgenekeepr::lacy1989Ped)
+  expect_identical(class(pedDF), "data.frame") # precondition
+  sireSnapshot <- paste0(pedDF$sire, collapse = "\r")
+  localParents <- list(
+    list(id = "A", sires = c("s1_1", "s1_2"), dams = c("d1_1", "d1_2")),
+    list(id = "B", sires = c("s2_1", "s2_2"), dams = c("d2_1", "d2_2"))
+  )
+  set_seed(seed = 1L)
+  invisible(makeSimPed(pedDF, localParents))
+  expect_false(inherits(pedDF, "data.table"))
+  expect_identical(class(pedDF), "data.frame")
+  expect_identical(paste0(pedDF$sire, collapse = "\r"), sireSnapshot)
+})
