@@ -28,6 +28,13 @@ knitr::opts_chunk$set(echo = TRUE)
     lower hinge (`fivenum()[2]`, approximately the first quartile) instead of
     silently duplicating `min` (`fivenum()[1]`). The `thirdQuartile` column
     (the upper hinge) was already correct. (NEW-16)
+- Pedigree curation
+  - Added two exported helpers, `isFounder()` and `getFounders()`, that
+    identify pedigree founders (animals whose sire and dam are both unknown).
+    `isFounder(ped)` returns the logical mask and `getFounders(ped)` returns
+    the founder `id` values. The founder predicate had been written inline in
+    a dozen places; it is now defined once and reused throughout the
+    genetic-value and reporting functions. (PED-1 / NEW-17)
 - Major changes
   - Architectural Changes
     - Modular Shiny Architecture      

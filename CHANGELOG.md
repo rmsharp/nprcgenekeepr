@@ -14,6 +14,35 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-01 — Extract getFounders()/isFounder() founder-detection helpers (PED-1/NEW-17, Session 16)
+- Added two exported helper functions that define the founder predicate (an
+  animal whose sire and dam are both unknown) in a single place:
+  `isFounder(ped)` returns the logical mask `is.na(ped$sire) & is.na(ped$dam)`,
+  and `getFounders(ped)` returns `ped$id[isFounder(ped)]`.
+- Replaced the inline founder-detection idiom at 12 call sites across 9 files:
+  `getFounders()` in `calcFE()`, `calcFEFG()`, `calcFG()`, `calcRetention()`,
+  `orderReport()`, and `removeUninformativeFounders()`; `isFounder()` for the
+  founder-row subset in `reportGV()`, the male/female founder exports in
+  `modSummaryStats` (×2), and the founder counts in `modORIPReporting` (×4).
+  `findPedigreeNumber()` was left as-is: it operates on bare `id`/`sire`/`dam`
+  vectors with no `ped` object, so the `ped`-argument helpers do not fit it.
+  `calcRetention()`'s adjacent `descendants` line was deliberately untouched —
+  it alone filters by `ped$population`.
+- Behaviour-preserving by construction and verified empirically: every
+  refactored output proven `identical()` to a pre-refactor reference — the four
+  `calc*` functions on the lacy1989 fixture, the full seeded `reportGV()` output,
+  and the Shiny-module expressions on the qcPed fixture. Full suite
+  0 failed / 0 error / 1991 passed; lint net-zero on all 11 files (the two new
+  files and the seven compute files are lint-free; the two Shiny modules carry
+  only pre-existing style debt, count unchanged between HEAD~1 and HEAD).
+- An independent 4-angle completeness sweep (read-only workflow) re-derived the
+  founder-detection inventory and converged on a single remaining inline site —
+  `findPedigreeNumber.R:35`, the intentional exclusion — confirming no `R/` site
+  was missed.
+- Done under strict TDD (RED→GREEN→REFACTOR). Commits: `2758ffe6` (helpers +
+  tests + NAMESPACE + man), `77f13d51` (calc* + orderReport), `a95828d6`
+  (reportGV + removeUninformativeFounders + Shiny modules), plus this close-out.
+
 ### 2026-06-01 — Fix lower-quartile mislabel + bind-once refactor in summarizeKinshipValues (NEW-16, Session 15)
 - Fixed NEW-16: `summarizeKinshipValues()` reported the `secondQuartile` column
   as `fivenum()[1]` (the minimum) instead of `fivenum()[2]` (the lower hinge),
