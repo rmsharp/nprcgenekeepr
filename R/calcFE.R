@@ -41,48 +41,7 @@
 #' fe <- calcFE(ped)
 #' feFactors <- calcFE(pedFactors)
 calcFE <- function(ped) {
-  ped <- toCharacter(ped, headers = c("id", "sire", "dam"))
-  partial <- xor(is.na(ped$sire), is.na(ped$dam))
-  if (any(partial)) {
-    stop("calcFE requires complete parentage (no partial parentage): ",
-         "id(s) with exactly one known parent: ", toString(ped$id[partial]),
-         ". Resolve partial parentage upstream ",
-         "(e.g., qcStudbook() or addUIds()) before calling calcFE().")
-  }
-  founders <- getFounders(ped)
-  # nolint start: commented_code_linter.
-  ## UID.founders <- founders[grepl("^U", founders, ignore.case = TRUE)]
-  # nolint end: commented_code_linter.
-  ## UID.founders is not used; It may be a mistake, but it could be vestiges of
-  ## something planned that was not done.
-  descendants <- ped$id[!(ped$id %in% founders)]
-
-  d <- matrix(0L, nrow = length(descendants), ncol = length(founders))
-  colnames(d) <- founders
-  rownames(d) <- descendants
-
-  founderMatrix <- diag(length(founders))
-  colnames(founderMatrix) <- rownames(founderMatrix) <- founders
-
-  d <- rbind(founderMatrix, d)
-  founderMatrix <- NULL
-  ## Note: skips generation 0.
-  ## The references inside matrix d do not work if ped$sire and ped$dam and
-  ## thus gen$sire and gen$dam are factors. See test_calcFE.R
-  for (i in seq_len(max(ped$gen))) {
-    gen <- ped[(ped$gen == i), ]
-
-    for (j in seq_len(nrow(gen))) {
-      ego <- gen$id[j]
-      sire <- gen$sire[j]
-      dam <- gen$dam[j]
-      d[ego, ] <- (d[sire, ] + d[dam, ]) / 2L
-    }
-  }
-
-  currentDesc <- ped$id[ped$population & !(ped$id %in% founders)]
-  d <- d[currentDesc, ]
-  p <- colMeans(d)
-
-  1L / sum(p^2L)
+  ## Founder-contribution algorithm + partial-parentage guard are shared with
+  ## calcFG()/calcFEFG() via calcFounderContributions() (NEW-13/NEW-23).
+  1L / sum(calcFounderContributions(ped, "calcFE")$p^2L)
 }
