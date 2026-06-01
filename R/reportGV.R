@@ -133,7 +133,7 @@ reportGV <- function(ped, guIter = 5000L, guThresh = 1L, pop = NULL,
   feFg <- calcFEFG(ped, alleles)
 
   # Calculating known founders
-  founders <- ped[is.na(ped$sire) & is.na(ped$dam), ]
+  founders <- ped[isFounder(ped), ]
   males <- founders[(founders$sex == "M") & !grepl("^U", founders$id,
     ignore.case = TRUE
   ), ]

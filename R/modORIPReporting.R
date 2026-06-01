@@ -182,11 +182,9 @@ modORIPReportingServer <- function(id, pedigree = NULL, geneticValues = NULL,
       nUnknown <- nTotal - nMales - nFemales
 
       # Founders (animals with no known parents)
-      nFounders <- sum(is.na(ped$sire) & is.na(ped$dam), na.rm = TRUE)
-      nMaleFounders <- sum(is.na(ped$sire) & is.na(ped$dam) &
-                             ped$sex == "M", na.rm = TRUE)
-      nFemaleFounders <- sum(is.na(ped$sire) & is.na(ped$dam) &
-                               ped$sex == "F", na.rm = TRUE)
+      nFounders <- sum(isFounder(ped))
+      nMaleFounders <- sum(isFounder(ped) & ped$sex == "M", na.rm = TRUE)
+      nFemaleFounders <- sum(isFounder(ped) & ped$sex == "F", na.rm = TRUE)
 
       data.frame(
         Metric = c("Total Animals", "Males", "Females", "Unknown Sex",
@@ -317,7 +315,7 @@ modORIPReportingServer <- function(id, pedigree = NULL, geneticValues = NULL,
           nTotal = nrow(ped),
           nMales = sum(ped$sex == "M", na.rm = TRUE),
           nFemales = sum(ped$sex == "F", na.rm = TRUE),
-          nFounders = sum(is.na(ped$sire) & is.na(ped$dam), na.rm = TRUE)
+          nFounders = sum(isFounder(ped))
         )
       })
     ))
