@@ -14,6 +14,29 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-01 — Document the Mendelian ½ factor; drop the dead UID.founders block (NEW-22/NEW-30, Session 18)
+- **NEW-22 (Mendelian ½ "hardcoded in 5 places"):** Session 17's NEW-13/NEW-23
+  consolidation already removed the `calcFE`/`calcFG`/`calcFEFG` triplication, so
+  the remaining `/ 2L` sites are *distinct* Mendelian formulas (parental-
+  contribution average, parental-kinship average, self-kinship `(1+f)/2`, founder
+  self-kinship init), **not** duplicated logic. Per the package author's decision
+  the self-documenting literals are kept and a one-line Mendelian-½ comment is
+  added at each site in `calcFounderContributions.R` and `kinship.R`; **no** named
+  constant — one would over-couple distinct formulas across the GV compute and the
+  kinship engine.
+- **NEW-30 (dead/unused computed variables):** removed the genuinely-dead
+  `## UID.founders <- …` commented block (and its `# nolint: commented_code_linter`
+  wrapper) from `calcFounderContributions.R`. **Kept** `founderMatrix <- NULL` — it
+  is an intentional memory free (drops the founders×founders identity block before
+  the generation loop), not a dead variable as the audit claimed — now annotated.
+- Comment + dead-code only; **zero behavior change**, proven byte-`identical()` on
+  `calcFE`/`calcFG`/`calcFEFG` (character+factor), `calcFounderContributions` `$p`
+  and `$ped`, `kinship()` dense+sparse, and the full `set.seed(42)` `reportGV()`
+  object. Full suite under `load_all`: 0 failed / 0 error, 2001 passed; lint
+  net-zero on both files; `document()` produced no man/NAMESPACE change. No
+  `NEWS.md` entry — the change is internal-only with no user-facing effect.
+  Commit `04115d97`.
+
 ### 2026-06-01 — Consolidate calcFE/calcFG/calcFEFG founder-contribution code (NEW-13/NEW-23, Session 17)
 - The founder-contribution algorithm that `calcFE()`, `calcFG()`, and
   `calcFEFG()` shared near-verbatim (~45 lines each), together with the
