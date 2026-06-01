@@ -14,6 +14,25 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-05-31 — Enforce "no period in IDs" rule (NEW-45, Session 13)
+- Fixed NEW-45: `geneDrop()` silently corrupted allele assignment for any `id`
+  containing a period (".") — it rebuilt the id/parent columns by splitting
+  flattened data.frame rownames on ".", so a period-bearing id was truncated and
+  lost its sire/dam distinction. The documented ID domain forbids "."
+  (`inst/extdata/ui_guidance/input_format.html`: id/sire/dam are "Alphanumeric
+  characters (no symbols)").
+- Enforced the rule rather than re-engineering `geneDrop` to support periods.
+  New internal `hasInvalidIdChar()` defines the rule once and is used by:
+  `qcStudbook()` (rejects period-bearing `id`/`sire`/`dam` at data input —
+  `stop()` in default mode, `errorLst$invalidIdChars` when `reportErrors = TRUE`)
+  and `geneDrop()` (defense-in-depth `stop()` for callers that bypass
+  `qcStudbook`, e.g. the genetic-value Shiny module). Auto-generated IDs
+  (`addUIds` `U####`, `obfuscateId`) are already period-free; locked with tests.
+- Documented the feature with rationale (periods break across software
+  environments) in roxygen, the live `input_format.html` spec, and `NEWS`.
+- Strict TDD (RED→GREEN→REFACTOR). Full suite 0 failed / 0 error / 1961 passed;
+  lint 0. Code commit `5e228bd9` (fix) + docs commit.
+
 ### 2026-05-31 — Methodology framework update (Session 10)
 - Updated the embedded methodology to canonical `rmsharp/methodology` `f32d780`: synced
   `SESSION_RUNNER.md`, `SAFEGUARDS.md`, and `methodology_dashboard.py` byte-identical to

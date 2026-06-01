@@ -5,6 +5,15 @@ R. Mark Sharp, Ph.D.
 
 # nprcgenekeepr 1.1.0.9000 (20260126)
 
+- Data input / quality control
+  - IDs may no longer contain a period ("."). `qcStudbook()` and `geneDrop()`
+    now reject `id`/`sire`/`dam` values that contain a period; with
+    `reportErrors = TRUE`, the offending values are reported in
+    `errorLst$invalidIdChars`. Periods cause problems across software
+    environments (R column-name/formula parsing, file extensions, namespaces,
+    regular expressions). All automatically generated IDs remain period-free.
+    (NEW-45)
+
 - Major changes
   - Architectural Changes
     - Modular Shiny Architecture

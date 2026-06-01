@@ -6,6 +6,11 @@
 #' This must be run prior to \code{addParents} since the IDs made herein are
 #' used by \code{addParents}
 #'
+#' The generated placeholder IDs have the form \code{Unnnn} (a leading "U" plus
+#' a zero-padded integer), so they are alphanumeric and never contain a period
+#' ("."), honoring the ID rule enforced at data input by
+#' \code{\link{qcStudbook}}.
+#'
 #' @return The updated pedigree with partial parentage removed.
 #'
 #' @param ped datatable that is the `Pedigree`. It contains pedigree

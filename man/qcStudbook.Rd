@@ -74,6 +74,15 @@ If the dataframe (\code{sb} does not contain the five required columns
 (\code{id}, \code{sire}, \code{dam}, \code{sex}), and
 \code{birth} the function throws an error by calling \code{stop()}.
 
+Animal IDs (\code{id}, \code{sire}, \code{dam}) must be alphanumeric with no
+symbols; in particular a period (".") is not allowed. Periods cause problems
+across software environments (R column-name and formula parsing, file-name
+extensions, programming-language namespaces, and regular expressions), so any
+\code{id}, \code{sire}, or \code{dam} value containing a period is treated as
+an error. With \code{reportErrors == TRUE} the offending values are returned
+in \code{errorLst$invalidIdChars}; otherwise the function throws an error.
+All automatically generated IDs (see \code{addUIds}) honor this rule.
+
 If the \code{id} field has the string \emph{UNKNOWN} (any case) or both
 the fields \code{sire} or \code{dam} have \code{NA} or \emph{UNKNOWN}
 (any case), the record is removed.

@@ -18,6 +18,12 @@ The updated pedigree with partial parentage removed.
 This must be run prior to \code{addParents} since the IDs made herein are
 used by \code{addParents}
 }
+\details{
+The generated placeholder IDs have the form \code{Unnnn} (a leading "U" plus
+a zero-padded integer), so they are alphanumeric and never contain a period
+("."), honoring the ID rule enforced at data input by
+\code{\link{qcStudbook}}.
+}
 \examples{
 pedTwo <- data.frame(
   id = c("s1", "d1", "s2", "d2", "o1", "o2", "o3", "o4"),

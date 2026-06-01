@@ -45,6 +45,15 @@
 		examples and output.
 	</li>
 	<li style="padding-bottom: 15px">
+		<i>Ego ID, Sire ID,</i> and <i>Dam ID</i> values must be alphanumeric
+		with no symbols. In particular, a period (".") is <b>not allowed</b> in
+		an ID and is rejected during quality control. Periods cause problems
+		across software environments (column-name and formula parsing in R,
+		file-name extensions, programming-language namespaces, and regular
+		expressions). This rule is enforced when data are read in
+		(<i>qcStudbook</i>) and is honored by all automatically generated IDs.
+	</li>
+	<li style="padding-bottom: 15px">
 		If the <i>Age</i> column is provided, the program will use the
 		user-specified age.
 	</li>
@@ -84,17 +93,17 @@
 	<tr bgcolor="#CCCCFF">
 		<td>id, egoid, ego_id</td>
 		<td>Ego ID: Unique animal identifier</td>
-		<td>Alphanumeric characters (no symbols)</td>
+		<td>Alphanumeric characters (no symbols, including no period ".")</td>
 	</tr>
 	<tr bgcolor="#CCCCFF">
 		<td>sire, sireid, sire_id</td>
 		<td>Sire ID: Unique identifier of the ego's father</td>
-		<td>Alphanumeric characters (no symbols)</td>
+		<td>Alphanumeric characters (no symbols, including no period ".")</td>
 	</tr>
 	<tr bgcolor="#CCCCFF">
 		<td>dam, damid, dam_id</td>
 		<td>Dam ID: Unique identifier of the ego's mother</td>
-		<td>Alphanumeric characters (no symbols)</td>
+		<td>Alphanumeric characters (no symbols, including no period ".")</td>
 	</tr>
 	<tr bgcolor="#CCCCFF">
 		<td>sex</td>
@@ -248,7 +257,7 @@ cannot be present.</p>.
 	<tr bgcolor="#CCCCFF">
 		<td>id</td>
 		<td>ID: Unique animal identifier</td>
-		<td>Alphanumeric characters (no symbols)</td>
+		<td>Alphanumeric characters (no symbols, including no period ".")</td>
 	</tr>
 	<tr bgcolor="#CCCCFF">
 		<td>allele_1</td>

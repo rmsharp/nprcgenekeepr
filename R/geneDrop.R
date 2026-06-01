@@ -21,6 +21,16 @@
 #' Adding additional columns to \code{genotype} does not significantly affect
 #' the time require. Thus, it is convenient to add the corresponding haplotype
 #' names to the dataframe using \code{first_name} and \code{second_name}.
+#'
+#' Animal IDs (\code{ids}) must not contain a period ("."). A period is
+#' disallowed because it causes problems across software environments (R
+#' column-name and formula parsing, file-name extensions, programming-language
+#' namespaces, and regular expressions); \code{geneDrop} additionally relies on
+#' the period internally to recover the id and parent of each allele row, so a
+#' period-bearing id would silently corrupt the result. IDs containing a period
+#' are therefore rejected with an error. The same rule is enforced at data
+#' input by \code{\link{qcStudbook}} and honored by all automatically generated
+#' IDs.
 
 #' @return A data.frame \code{id, parent, V1 ... Vn}
 #' A data.frame providing the maternal and paternal alleles for an animal
