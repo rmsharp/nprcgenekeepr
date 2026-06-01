@@ -13,6 +13,10 @@ R. Mark Sharp, Ph.D.
     environments (R column-name/formula parsing, file extensions, namespaces,
     regular expressions). All automatically generated IDs remain period-free.
     (NEW-45)
+  - `geneDrop()` now rejects duplicate animal IDs with a clear error. Animal IDs
+    uniquely identify animals (already enforced upstream by `qcStudbook()` via
+    `removeDuplicates()` and by `kinship()`); a duplicate id previously triggered
+    the cryptic base-R error "duplicate 'row.names' are not allowed". (NEW-46)
 
 - Major changes
   - Architectural Changes

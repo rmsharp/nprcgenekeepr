@@ -14,6 +14,26 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-01 — Reject duplicate animal IDs in geneDrop (NEW-46, Session 14)
+- Fixed NEW-46: `geneDrop()` crashed with the cryptic base-R error
+  "duplicate 'row.names' are not allowed" (at `rownames(ped) <- ids`,
+  `geneDrop.R:97`) when given duplicate animal ids — before any allele logic
+  ran. The audit's "parent lookup by rowname; duplicate ids → wrong values" was
+  empirically a hard crash, not silent corruption, and at the rownames
+  assignment rather than the lookup (the NEW-48 pattern: audit mechanism wrong).
+- Added an upfront guard (alongside the NEW-45 period guard) that rejects
+  duplicate ids with a clear, actionable message ("animal IDs must be unique;
+  duplicated id(s): …"), consistent with `kinship()` ("All id values must be
+  unique") and `removeDuplicates()`. The unique-id invariant is a domain rule.
+- Reachability was direct-`geneDrop()`-call only: the canonical
+  `qcStudbook → reportGV → geneDrop` path is doubly masked — `removeDuplicates()`
+  (qcStudbook) and `kinship()`'s own unique-id guard (called in `reportGV` before
+  `geneDrop`). So no reportGV change was needed.
+- Contract-preserving: today's behavior is already a crash, so no
+  currently-succeeding call changes — only the diagnostic improves (Learning #8b).
+- Strict TDD (RED→GREEN→REFACTOR). Full suite 0 failed / 0 error / 1971 passed;
+  lint net-zero; `man/geneDrop.Rd` regenerated; no NAMESPACE change.
+
 ### 2026-05-31 — Enforce "no period in IDs" rule (NEW-45, Session 13)
 - Fixed NEW-45: `geneDrop()` silently corrupted allele assignment for any `id`
   containing a period (".") — it rebuilt the id/parent columns by splitting

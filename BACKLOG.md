@@ -13,9 +13,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Audit follow-ups
 *(From `PED_GV_AUDIT_2026-05-30.md`; see `SESSION_NOTES.md` "What You Must Do" for the
-per-item reachability notes and traps. Suggested next: NEW-46 or NEW-20.)*
-- [ ] **NEW-46** — `geneDrop.R:82-104` parent lookup by rowname; duplicate ids → wrong
-      values (the sibling of the now-fixed NEW-45 in consensus issue #7).
+per-item reachability notes and traps. Suggested next: NEW-20 or NEW-16.)*
 - [ ] **NEW-20** — delete dead `makeGeneticDiversityDashboard.R` (+ its fully-commented test).
 - [ ] **PED-1 / NEW-17** — extract `getFounders(ped)` / `isFounder(ped)`.
       ⚠ Do NOT naively unify the adjacent `descendants` lines — `calcRetention.R:27` filters
