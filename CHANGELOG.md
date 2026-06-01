@@ -14,6 +14,27 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-01 — Consolidate calcFE/calcFG/calcFEFG founder-contribution code (NEW-13/NEW-23, Session 17)
+- The founder-contribution algorithm that `calcFE()`, `calcFG()`, and
+  `calcFEFG()` shared near-verbatim (~45 lines each), together with the
+  triplicated Session-7 partial-parentage `stop()` guard, now lives once in a
+  new `@noRd` helper `calcFounderContributions(ped, caller)` that returns
+  `list(p, ped)`. The three functions become thin wrappers (net -118 lines).
+- Behaviour-preserving with no public-API change: signatures, return types, and
+  the per-function error messages are byte-identical, and `calcFE()` stays
+  gene-drop-free. Proven `identical()` on FE/FG over lacy1989Ped (character AND
+  factor), the full `set.seed(42)` `reportGV()` object (the live `calcFEFG`
+  caller), and all three guard messages; independently re-verified by a 3-agent
+  adversarial equivalence workflow (static body-diff, 20 empirical OLD-vs-NEW
+  edge tests, contract/guard/namespace) with 0 divergences.
+- Full suite under `load_all`: 0 failed / 0 error, 2001 passed (+10 helper
+  assertions). Lint net-zero; no man/NAMESPACE churn (`@noRd`).
+- Out of scope (sibling audit items, not opted into): NEW-22 (hardcoded
+  Mendelian 1/2), NEW-30 (dead vars - the `UID.founders` comment block was
+  relocated intact), NEW-29/61 (founder-definition `^U` handling).
+- Done under strict TDD (RED->GREEN->REFACTOR). Commits: `022afc8b` (helper +
+  tests, GREEN), `2b27f4c3` (thin wrappers, REFACTOR), plus this close-out.
+
 ### 2026-06-01 — Extract getFounders()/isFounder() founder-detection helpers (PED-1/NEW-17, Session 16)
 - Added two exported helper functions that define the founder predicate (an
   animal whose sire and dam are both unknown) in a single place:

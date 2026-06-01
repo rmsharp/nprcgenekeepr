@@ -23,6 +23,10 @@ R. Mark Sharp, Ph.D.
     lower hinge (`fivenum()[2]`, approximately the first quartile) instead of
     silently duplicating `min` (`fivenum()[1]`). The `thirdQuartile` column
     (the upper hinge) was already correct. (NEW-16)
+  - `calcFE()`, `calcFG()`, and `calcFEFG()` no longer duplicate the founder-
+    contribution algorithm and the partial-parentage guard they shared
+    verbatim; both now live in a single internal helper. Results, signatures,
+    and error messages are unchanged. (NEW-13 / NEW-23)
 
 - Pedigree curation
   - Added two exported helpers, `isFounder()` and `getFounders()`, that
