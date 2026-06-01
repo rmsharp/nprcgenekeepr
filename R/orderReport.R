@@ -26,7 +26,7 @@
 orderReport <- function(rpt, ped) {
   finalRpt <- list()
 
-  founders <- ped$id[is.na(ped$sire) & is.na(ped$dam)]
+  founders <- getFounders(ped)
 
   if ("origin" %in% names(rpt)) {
     # imports with no offspring

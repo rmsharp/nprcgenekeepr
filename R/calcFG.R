@@ -61,7 +61,7 @@ calcFG <- function(ped, alleles) {
          ". Resolve partial parentage upstream ",
          "(e.g., qcStudbook() or addUIds()) before calling calcFG().")
   }
-  founders <- ped$id[is.na(ped$sire) & is.na(ped$dam)]
+  founders <- getFounders(ped)
   # nolint start: commented_code_linter.
   ## UID.founders <- founders[grepl("^U", founders, ignore.case = TRUE)]
   # nolint end: commented_code_linter.

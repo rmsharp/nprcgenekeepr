@@ -23,7 +23,7 @@
 #' retention <- calcRetention(ped, alleles)
 calcRetention <- function(ped, alleles) {
   # ASSUME: Pedigree has no partial parentage
-  founders <- ped$id[is.na(ped$sire) & is.na(ped$dam)]
+  founders <- getFounders(ped)
   descendants <- ped$id[ped$population & !(ped$id %in% founders)]
 
   founders <- alleles[(alleles$id %in% founders), c("id", "V1")]
