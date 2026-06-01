@@ -30,3 +30,11 @@ test_that("obfuscateId replaces unknown ID with unknown IDs (start with 'U'", {
   expect_true(all(stri_detect_regex(alias[1L:3L], "^U")))
   expect_false(stri_detect_regex(alias[4L], "^U"))
 })
+
+## NEW-45 guarantee: obfuscated (de-identified) IDs must never contain a
+## period ('.'). obfuscateId samples letters + digits only, so this holds on
+## current code and must continue to hold (characterization guard).
+test_that("obfuscateId generates period-free IDs (NEW-45 guarantee)", {
+  ids <- obfuscateId(c("abc123", "george", "autumn"), size = 6L)
+  expect_false(any(grepl(".", ids, fixed = TRUE)))
+})

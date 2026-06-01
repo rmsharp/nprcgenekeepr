@@ -932,11 +932,12 @@ test_that("modGeneticValueServer handles multi-generation pedigree", {
 test_that("modGeneticValueServer handles pedigree with special character IDs", {
   skip_if_not_installed("shiny")
 
-  # Valid pedigree with special characters in IDs
-  # A-001 (M), B_002 (F) are founders
-  # C.003 is their offspring
+  # Valid pedigree with (still-allowed) special characters in IDs.
+  # A-001 (M), B_002 (F) are founders; C-003 is their offspring.
+  # NB: a period ('.') is disallowed in IDs (NEW-45), so the previous 'C.003'
+  # is now 'C-003'; dash/underscore/space/slash remain allowed.
   test_ped <- data.frame(
-    id = c("A-001", "B_002", "C.003", "D 004", "E/005"),
+    id = c("A-001", "B_002", "C-003", "D 004", "E/005"),
     sire = c(NA, NA, "A-001", "A-001", "A-001"),
     dam = c(NA, NA, "B_002", "B_002", "B_002"),
     sex = c("M", "F", "M", "F", "M"),
@@ -955,6 +956,34 @@ test_that("modGeneticValueServer handles pedigree with special character IDs", {
       results <- gvResults()
       expect_true(is.data.frame(results))
       expect_true("A-001" %in% results$id)
+    }
+  )
+})
+
+test_that("modGeneticValueServer rejects IDs containing a period (NEW-45)", {
+  skip_if_not_installed("shiny")
+
+  # A period in an ID is disallowed (input_format.html "no symbols"). This
+  # module path reaches geneDrop without passing through qcStudbook, so the
+  # geneDrop guard must reject the period rather than silently corrupt the
+  # gene-drop output.
+  test_ped <- data.frame(
+    id = c("A-001", "B_002", "C.003"),
+    sire = c(NA, NA, "A-001"),
+    dam = c(NA, NA, "B_002"),
+    sex = c("M", "F", "M"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped })
+    ),
+    {
+      session$setInputs(nIterations = 100)
+      session$setInputs(runAnalysis = 1)
+      expect_error(gvResults(), "must not contain a period")
     }
   )
 })

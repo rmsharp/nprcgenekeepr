@@ -25,6 +25,7 @@ checkErrorLst <- function(errorLst) {
     length(errorLst$femaleSires) > 0L ||
     length(errorLst$maleDams) > 0L ||
     length(errorLst$duplicateIds) > 0L ||
+    length(errorLst$invalidIdChars) > 0L ||
     nrow(errorLst$suspiciousParents) > 0L) {
     TRUE
   } else {

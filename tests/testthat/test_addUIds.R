@@ -32,3 +32,13 @@ test_that("addUIds modifies the correct IDs in the right way", {
   newPed <- addUIds(pedThree)
   expect_equal(newPed$dam[newPed$id == "s1"], "U0001")
 })
+
+## NEW-45 guarantee: auto-generated placeholder IDs (U####) must never contain
+## a period ('.'). pedTwo/pedThree force U-id generation. This property holds on
+## current code and must continue to hold (characterization guard).
+test_that("addUIds generates period-free IDs (NEW-45 guarantee)", {
+  npTwo <- addUIds(pedTwo)
+  npThree <- addUIds(pedThree)
+  expect_false(any(grepl(".", npTwo$sire[!is.na(npTwo$sire)], fixed = TRUE)))
+  expect_false(any(grepl(".", npThree$dam[!is.na(npThree$dam)], fixed = TRUE)))
+})

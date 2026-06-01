@@ -73,6 +73,11 @@
 #' )
 geneDrop <- function(ids, sires, dams, gen, genotype = NULL, n = 5000L,
                      updateProgress = NULL) {
+  badIds <- hasInvalidIdChar(as.character(ids))
+  if (any(badIds)) {
+    stop("geneDrop(): animal IDs must not contain a period ('.'); ",
+         "offending id(s): ", toString(unique(as.character(ids)[badIds])))
+  }
   ## Sort the IDs by generation so older generations are first
   ped <- data.frame(
     id = ids, sire = sires, dam = dams, gen,

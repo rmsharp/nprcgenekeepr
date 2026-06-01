@@ -177,6 +177,15 @@ qcStudbook <- function(sb, minParentAge = 2.0, reportChanges = FALSE,
 
   sb <- toCharacter(sb, headers = c("id", "sire", "dam"))
   sb <- unknown2NA(sb)
+  idVals <- c(sb$id, sb$sire, sb$dam)
+  invalidIds <- unique(idVals[hasInvalidIdChar(idVals)])
+  if (length(invalidIds) > 0L) {
+    if (!reportErrors) {
+      stop("qcStudbook(): animal IDs must not contain a period ('.'); ",
+           "offending value(s): ", toString(invalidIds), call. = TRUE)
+    }
+    errorLst$invalidIdChars <- invalidIds
+  }
   sb <- addUIds(sb)
   sb <- addParents(sb) # add parent record for parents that don't have
   # their own line entry
