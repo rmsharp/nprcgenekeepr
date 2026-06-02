@@ -14,6 +14,33 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-02 — Resolve the E2E test-infra debt: add `create_test_app()` with an opt-in gate (Session 19)
+- **Root cause:** the 23 `test-app-*`/`test-e2e-*` files call `create_test_app()`
+  at **154 sites**, but the helper was never defined (it never existed in git
+  history; the e2e scaffolding landed in `7da01afe` without it). Result: **154
+  suite ERRORS** under `devtools::test()`/CI (`NOT_CRAN=true`), masked only by
+  `skip_on_cran()` under a bare `testthat::test_dir()` — a suite that was clean
+  or broken depending on the runner.
+- **Fix (strict TDD, RED→GREEN; no REFACTOR needed):** define `create_test_app()`
+  in `tests/testthat/helper-shinytest2.R`. It **skips** the calling test unless
+  `NPRC_RUN_E2E=true`, and when opted in returns the existing `inst/shinytest`
+  app dir (`app.R` = `shinyApp(appUI(), appServer)`) for `shinytest2::AppDriver`.
+  The browser E2E suite stays **opt-in** (slow, needs Chrome, and depends on the
+  modular-vs-monolith consolidation, XARCH-1) but is now one env var away from
+  running; the default suite is honestly clean (154 errors → skips).
+- **Discovery:** the prior E2E effort was ~90% complete, not lost scaffolding —
+  the app is instrumented (`data-ready.js` + all six modules signal readiness),
+  159 `test_that` blocks + wait/upload helpers + `.github/workflows/shinytest2.yaml`
+  CI all exist; only `create_test_app()` was missing. Captured the remaining
+  campaign (validate the 159 tests; wire CI; sequence with XARCH-1) as **GitHub
+  issue #39** so the plan can't be lost again.
+- **Verification:** new browser-free `tests/testthat/test_create_test_app.R` (opt-in
+  returns app dir; gate raises a `skip` condition). Full suite under `load_all` +
+  `NOT_CRAN=true`: **0 failed / 0 error**, 154 e2e errors → skips, zero non-e2e
+  offenders, 2047 passed, 5 pre-existing `modPyramid` warnings. Lint net-zero
+  (helper-shinytest2.R = 0 in-place). No `document()` (test helper, not package API).
+- Commits: `a1ee8497` (test: helper + tests), + this `docs:` close-out.
+
 ### 2026-06-01 — Document the Mendelian ½ factor; drop the dead UID.founders block (NEW-22/NEW-30, Session 18)
 - **NEW-22 (Mendelian ½ "hardcoded in 5 places"):** Session 17's NEW-13/NEW-23
   consolidation already removed the `calcFE`/`calcFG`/`calcFEFG` triplication, so
