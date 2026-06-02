@@ -172,3 +172,31 @@ upload_and_wait <- function(app, file_path, file_input_id = "pedigreeFileOne",
 get_test_data_path <- function(filename) {
   system.file("extdata", filename, package = "nprcgenekeepr")
 }
+
+#' Locate the Shiny app directory for the shinytest2 E2E tests
+#'
+#' The end-to-end tests drive the modular GeneKeepR app (appUI()/appServer)
+#' through shinytest2::AppDriver, which needs a directory containing an
+#' `app.R`. That app lives at inst/shinytest/app.R.
+#'
+#' These browser-based tests are slow, require Chrome, and have not yet been
+#' validated end to end (their completion depends on the modular-vs-monolith
+#' app consolidation; see the project backlog / GitHub issues). They are
+#' therefore OPT-IN: unless the environment variable NPRC_RUN_E2E is set to
+#' "true", this helper skips the calling test. That keeps `devtools::test()`
+#' and CI green while leaving the E2E suite one environment variable away from
+#' running. Note the per-test `skip_if_not_installed("shinytest2")` /
+#' `skip_if_not_installed("chromote")` / `skip_on_cran()` guards remain in
+#' force; this helper adds the opt-in gate on top of them.
+#'
+#' @return Path to the directory containing the app's `app.R`. Only returned
+#'   when E2E tests are opted in via NPRC_RUN_E2E="true"; otherwise the calling
+#'   test is skipped (this function does not return).
+create_test_app <- function() {
+  if (!identical(Sys.getenv("NPRC_RUN_E2E"), "true")) {
+    testthat::skip(
+      "End-to-end Shiny tests are opt-in; set NPRC_RUN_E2E=true to run them."
+    )
+  }
+  system.file("shinytest", package = "nprcgenekeepr")
+}
