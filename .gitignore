@@ -32,6 +32,8 @@ inst/extdata/simulatedKValues.pdf
 docs/*
 !docs/methodology/
 !docs/methodology/**
+!docs/planning/
+!docs/planning/**
 dashboard.html
 /doc/
 /Meta/

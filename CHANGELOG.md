@@ -14,6 +14,28 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-02 — PLAN: complete the Shiny-module conversion (XARCH-1 / issue #27) (Session 21)
+- **Deliverable (planning, not implementation):** `docs/planning/shiny-module-conversion-plan.md`
+  — a 9-phase, vertical-slice plan to declare the modular app (`runModularApp`/`appUI`/
+  `appServer`/`mod*`) canonical, reach feature parity with the legacy monolith
+  (`inst/application/`), enable the shinytest2 E2E tier, then delete the monolith and make
+  `runGeneKeepR()` a `lifecycle::deprecate_soft` alias. Followed the ARCHITECTURE workstream +
+  the SESSION_RUNNER Planning protocol (evidence-based grep inventory, per-phase done-criteria,
+  vertical slices). The project's first planning/architecture deliverable.
+- **Method:** a read-only 8-mapper discovery workflow + firsthand verification of every
+  load-bearing claim + a 3-agent completeness-critic that caught 4 real parity gaps the
+  single-pass synthesis missed (dead kinship-download button; dropped MK/GU quartile tables;
+  FE/FG founder-table placement; a 100× breeding-`gpIter` default drift).
+- **Author scope decisions (via `AskUserQuestion`):** full conversion (parity + E2E + retire);
+  exclude ORIP/Settings (parity = match the monolith); re-expose the GU-threshold selector
+  (default 4).
+- **Key findings (reframe the audit):** the modular app is far more complete than
+  `TECH_DEBT_AUDIT_2026-05-30.md` implied; the audit's "do XARCH-3/4/7 before XARCH-1"
+  sequencing is moot (verified); the E2E suite is unwritten scaffolding (its driver helpers are
+  defined nowhere) — this is the real scope of issue #39; issue #34 ("integrate qcStudbook in
+  modInput") is stale (already integrated). No code changed this session.
+- **Next:** implement **Phase 1 only** (Summary Statistics tab parity) under strict TDD.
+
 ### 2026-06-02 — Fix vacuous "no potential parent" assertion in `test_getPotentialParents.R` (Session 20)
 - **Defect (found Session 4, fixed now):** the test "works with records with no
   potential parent" pushed BRI2MW's birth to 1950 into a local `ped` but then
