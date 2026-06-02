@@ -14,6 +14,29 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-02 — Fix vacuous "no potential parent" assertion in `test_getPotentialParents.R` (Session 20)
+- **Defect (found Session 4, fixed now):** the test "works with records with no
+  potential parent" pushed BRI2MW's birth to 1950 into a local `ped` but then
+  asserted the old top-level `potentialParents[[1L]]$id` from the *unmodified*
+  fixture — a tautology already covered by the first test that never inspected
+  `ped` and verified nothing about its named scenario (copy/paste slip).
+- **Fix (REFACTOR-only under strict TDD; no production change):** replace the
+  assertion with a discriminating one. BRI2MW is a from-center founder with both
+  parents unknown that normally appears in the output; with its birth at 1950 its
+  breeding-age candidate set is empty, so `getPotentialParents` correctly drops it
+  via the no-breeding-age-candidate skip. The test now asserts BRI2MW is present
+  in the unmodified fixture (precondition), absent from the scenario result, and
+  that the result has exactly one fewer entry (50 → 49).
+- **Why REFACTOR-only:** `getPotentialParents` is already correct, so a correct
+  assertion is green-on-arrival; strict TDD forbids declaring RED on a passing
+  test, and forcing a fail with a wrong expectation would be a synthetic RED
+  (Learning #18c). Rigor instead came from a mutation check: disabling the skip
+  makes both new assertions fail, proving the test discriminates (the old
+  assertion passed against that same mutant).
+- **Verification:** full suite under `load_all` + `NOT_CRAN=true`: **0 failed /
+  0 error**, zero non-e2e offenders, **2049 passed** (+2 vs Session 19), 5
+  pre-existing `modPyramid` warnings, e2e files skipped. Commit `6049445d`.
+
 ### 2026-06-02 — Resolve the E2E test-infra debt: add `create_test_app()` with an opt-in gate (Session 19)
 - **Root cause:** the 23 `test-app-*`/`test-e2e-*` files call `create_test_app()`
   at **154 sites**, but the helper was never defined (it never existed in git
