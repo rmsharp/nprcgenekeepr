@@ -59,12 +59,21 @@ test_that("getPotentialParents detects pedigree without fromCenter column", {
   ))
 })
 test_that("getPotentialParents works with records with no potential parent", {
+  ## BRI2MW is a from-center founder with both parents unknown, so it normally
+  ## appears in the output (the first entry). Pushing its birth back to 1950
+  ## empties its breeding-age candidate set, so getPotentialParents must drop
+  ## it (the early-skip when no breeding-age candidate exists) rather than emit
+  ## a NULL or empty entry.
+  globalIds <- vapply(potentialParents, function(x) x$id, character(1L))
+  expect_true("BRI2MW" %in% globalIds) # precondition: normally present
   pedOne$birth[1] <- as.Date("1950-01-01")
   ped <- getPotentialParents(
     ped = pedOne, minParentAge = 2L,
     maxGestationalPeriod = 210L
   )
-  expect_equal(potentialParents[[1L]]$id, ids[1L])
+  scenarioIds <- vapply(ped, function(x) x$id, character(1L))
+  expect_false("BRI2MW" %in% scenarioIds) # dropped (no potential parent)
+  expect_equal(length(ped), length(potentialParents) - 1L) # exactly one fewer
 })
 test_that("getPotentialParents returns NULL when no from-center animal has a missing parent", {
   ## NEW-34 regression: founders A and B have unknown parents but are NOT
