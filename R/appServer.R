@@ -275,7 +275,8 @@ appServer <- function(input, output, session) {
     "summaryStats",
     geneticValues = reactive(shared$geneticValues),
     pedigree = reactive(shared$currentPedigree),
-    kinshipMatrix = NULL
+    kinshipMatrix = NULL,
+    founderStats = gvResults$founderStats
   )
 
   # Breeding Groups Module

@@ -247,6 +247,8 @@ modSummaryStatsUI <- function(id) {
 #'     \code{makeRelationClassesTable()}
 #'   \item \code{firstOrderCounts} - First-order relative counts per animal from
 #'     \code{countFirstOrder()}
+#'   \item \code{mkSummary} - Six-number summary of mean kinship
+#'   \item \code{guSummary} - Six-number summary of genome uniqueness
 #' }
 #'
 #' @param id character vector of length 1. Module namespace identifier.
@@ -257,6 +259,10 @@ modSummaryStatsUI <- function(id) {
 #'   \code{id}, \code{sire}, \code{dam}, and \code{sex}. Optionally \code{gen}.
 #' @param kinshipMatrix optional reactive returning kinship matrix. If NULL,
 #'   the module will calculate kinship from the pedigree.
+#' @param founderStats optional reactive returning a list of founder statistics
+#'   (\code{fe}, \code{fg}, \code{total}, \code{nMaleFounders},
+#'   \code{nFemaleFounders}). When supplied, a founder summary table is rendered
+#'   on the Summary Statistics tab (monolith parity). If NULL, it is omitted.
 #'
 #' @seealso \code{\link{modSummaryStatsUI}} for the user interface
 #' @seealso \code{\link{convertRelationships}} for relationship classification
@@ -272,7 +278,7 @@ modSummaryStatsUI <- function(id) {
 #'   geom_vline theme_classic xlab ylab ggtitle coord_flip ggsave
 #' @export
 modSummaryStatsServer <- function(id, geneticValues, pedigree,
-                                   kinshipMatrix = NULL) {
+                                   kinshipMatrix = NULL, founderStats = NULL) {
   moduleServer(id, function(input, output, session) {
 
     # ========================================
@@ -392,12 +398,19 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
       req(geneticValues())
       gv <- geneticValues()
 
-      # Handle missing zScore column
-      if (!"zScore" %in% names(gv)) {
+      # reportGV emits "zScores" (plural); accept the legacy "zScore" too.
+      zCol <- if ("zScores" %in% names(gv)) {
+        "zScores"
+      } else if ("zScore" %in% names(gv)) {
+        "zScore"
+      } else {
+        NULL
+      }
+      if (is.null(zCol)) {
         return(NULL)
       }
 
-      z <- gv$zScore
+      z <- gv[[zCol]]
       avg <- mean(z, na.rm = TRUE)
       brx <- pretty(range(z, na.rm = TRUE), 25L)
 
@@ -473,12 +486,19 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
       req(geneticValues())
       gv <- geneticValues()
 
-      # Handle missing zScore column
-      if (!"zScore" %in% names(gv)) {
+      # reportGV emits "zScores" (plural); accept the legacy "zScore" too.
+      zCol <- if ("zScores" %in% names(gv)) {
+        "zScores"
+      } else if ("zScore" %in% names(gv)) {
+        "zScore"
+      } else {
+        NULL
+      }
+      if (is.null(zCol)) {
         return(NULL)
       }
 
-      z <- gv$zScore
+      z <- gv[[zCol]]
       df <- data.frame(x = "", y = z)
 
       ggplot2::ggplot(df, ggplot2::aes(x = x, y = y)) +
@@ -521,10 +541,76 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
         ggplot2::ggtitle("Boxplot of Genome Uniqueness")
     })
 
+    # Six-number summaries of mean kinship and genome uniqueness
+    # (monolith Summary Statistics tab parity, server.r:545-630)
+    mkSummaryData <- reactive({
+      req(geneticValues())
+      summary(geneticValues()$meanKinship)
+    })
+
+    guSummaryData <- reactive({
+      req(geneticValues())
+      summary(geneticValues()$genomeUniqueness)
+    })
+
+    # One distribution-table row: label + Min/1stQ/Mean/Median/3rdQ/Max
+    quartileRow <- function(label, s) {
+      tags$tr(
+        tags$td(label),
+        tags$td(sprintf("%.4f", s["Min."])),
+        tags$td(sprintf("%.4f", s["1st Qu."])),
+        tags$td(sprintf("%.4f", s["Mean"])),
+        tags$td(sprintf("%.4f", s["Median"])),
+        tags$td(sprintf("%.4f", s["3rd Qu."])),
+        tags$td(sprintf("%.4f", s["Max."]))
+      )
+    }
+
     # Summary statistics HTML output
     output$summaryStats <- renderUI({
       req(geneticValues())
       gv <- geneticValues()
+      fs <- if (!is.null(founderStats)) founderStats() else NULL
+
+      # Founder summary table (Known/Female/Male counts + FE + FG), rendered
+      # only when founderStats is threaded in (monolith server.r:558-570).
+      founderTbl <- if (!is.null(fs)) {
+        tags$table(
+          class = "display",
+          tags$thead(tags$tr(
+            tags$th("Known Founders"),
+            tags$th("Known Female Founders"),
+            tags$th("Known Male Founders"),
+            tags$th("Founder Equivalents"),
+            tags$th("Founder Genome Equivalents")
+          )),
+          tags$tbody(tags$tr(
+            tags$td(as.character(fs$total)),
+            tags$td(as.character(fs$nFemaleFounders)),
+            tags$td(as.character(fs$nMaleFounders)),
+            tags$td(sprintf("%.2f", fs$fe)),
+            tags$td(sprintf("%.2f", fs$fg))
+          ))
+        )
+      }
+
+      # Mean-kinship / genome-uniqueness quartile distribution tables.
+      distTbl <- tags$table(
+        class = "display",
+        tags$thead(tags$tr(
+          tags$th(""),
+          tags$th("Min"),
+          tags$th("1st Quartile"),
+          tags$th("Mean"),
+          tags$th("Median"),
+          tags$th("3rd Quartile"),
+          tags$th("Max")
+        )),
+        tags$tbody(
+          quartileRow("Mean Kinship", mkSummaryData()),
+          quartileRow("Genome Uniqueness", guSummaryData())
+        )
+      )
 
       div(
         h4("Population Summary"),
@@ -534,7 +620,10 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
                         sprintf("%.4f", mean(gv$meanKinship, na.rm = TRUE)))),
           tags$li(paste("Genome uniqueness (average):",
                         sprintf("%.4f", mean(gv$genomeUniqueness, na.rm = TRUE))))
-        )
+        ),
+        founderTbl,
+        br(),
+        distTbl
       )
     })
 
@@ -593,8 +682,7 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
     output$downloadKinship <- downloadHandler(
       filename = function() paste0("kinship_matrix_", Sys.Date(), ".csv"),
       content = function(file) {
-        req(kinshipMatrix)
-        write.csv(kinshipMatrix(), file)
+        write.csv(getKinshipMatrix(), file)
       }
     )
 
@@ -710,6 +798,8 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
       relationships = reactive({ relationshipData() }),
       relationClasses = reactive({ relationClassData() }),
       firstOrderCounts = reactive({ firstOrderData() }),
+      mkSummary = mkSummaryData,
+      guSummary = guSummaryData,
       # ggplot2-based plot reactives for download handlers
       mkHistogram = reactive({ mkHistogramPlot() }),
       zscoreHistogram = reactive({ zscoreHistogramPlot() }),

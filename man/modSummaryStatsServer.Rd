@@ -4,7 +4,13 @@
 \alias{modSummaryStatsServer}
 \title{Summary Statistics Module - Server Function}
 \usage{
-modSummaryStatsServer(id, geneticValues, pedigree, kinshipMatrix = NULL)
+modSummaryStatsServer(
+  id,
+  geneticValues,
+  pedigree,
+  kinshipMatrix = NULL,
+  founderStats = NULL
+)
 }
 \arguments{
 \item{id}{character vector of length 1. Module namespace identifier.}
@@ -18,6 +24,11 @@ Must be a data frame with columns \code{id}, \code{meanKinship}, and
 
 \item{kinshipMatrix}{optional reactive returning kinship matrix. If NULL,
 the module will calculate kinship from the pedigree.}
+
+\item{founderStats}{optional reactive returning a list of founder statistics
+(\code{fe}, \code{fg}, \code{total}, \code{nMaleFounders},
+\code{nFemaleFounders}). When supplied, a founder summary table is rendered
+on the Summary Statistics tab (monolith parity). If NULL, it is omitted.}
 }
 \value{
 A list with reactive components:
@@ -29,6 +40,8 @@ A list with reactive components:
 \code{makeRelationClassesTable()}
 \item \code{firstOrderCounts} - First-order relative counts per animal from
 \code{countFirstOrder()}
+\item \code{mkSummary} - Six-number summary of mean kinship
+\item \code{guSummary} - Six-number summary of genome uniqueness
 }
 }
 \description{
