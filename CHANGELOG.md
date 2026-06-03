@@ -14,6 +14,35 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-03 — Implement Phase 1 of the Shiny-module conversion: Summary Statistics tab parity (Session 22)
+- **Deliverable (implementation):** brought the modular app's **Summary Statistics tab**
+  (`R/modSummaryStats.R`) to legacy-monolith parity across four verified gaps (plan §9 Phase 1):
+  1. **Z-score plots** now render. `reportGV()` emits the column `zScores` (plural), but
+     `modSummaryStats` checked `zScore` (singular) — so the z-score histogram + boxplot were
+     always NULL ("Z-scores not available"). Fixed with a dual-name lookup (prefer `zScores`,
+     fall back to `zScore`), matching `modGeneticValue`'s existing `indivMeanKin`/`meanKinship`
+     idiom. (Real column name confirmed empirically before the fix.)
+  2. **Mean-Kinship / Genome-Uniqueness quartile tables** (Min/1st-Q/Mean/Median/3rd-Q/Max)
+     rendered on the Summary tab (monolith `server.r:545-630`); previously only 3 scalars showed.
+  3. **Founder table** (Known/Female/Male counts + FE + FG) rendered on the Summary tab
+     (monolith `server.r:558-570`) by threading `modGeneticValue`'s `founderStats` reactive into
+     `modSummaryStatsServer` (new `founderStats` param; wired in `R/appServer.R`).
+  4. **Kinship-matrix download** fixed: was a dead button (`req()` on a NULL `kinshipMatrix`
+     arg with `appServer.R` passing `NULL`); now writes the module's internal `getKinshipMatrix()`.
+- **TDD:** strict RED→GREEN (REFACTOR skipped — author decision). New discriminating tests in
+  `tests/testthat/test_modSummaryStats_parity.R` (6 tests / 22 expectations); the z-score test
+  uses ONLY the real `zScores` column so it fails on the singular-name bug — a pre-existing
+  `_ggplots` test passed on the bug because its fixture injects both names (Learning #15/#20).
+- **Author decisions (`AskUserQuestion`):** founder table → add to Summary tab (keep GVA subtab);
+  kinship download → use the module's internal kinship (smallest change, no relationship-basis
+  change — avoided the plan's "thread reportGV kinship" dragon).
+- **Verification:** full suite under `pkgload::load_all` + `NOT_CRAN=true` = 0 failed / 0 error,
+  2071 passed (+22), e2e skipped; lint net-zero (modSummaryStats 60=60, appServer 18=18);
+  `devtools::document()` (only `man/modSummaryStatsServer.Rd`); runtime smoke — `runModularApp()`
+  binds + HTTP 200. NEWS deferred to the Phase 9 canonical switch (modular app not yet canonical).
+- **Files:** `R/modSummaryStats.R`, `R/appServer.R`, `man/modSummaryStatsServer.Rd`,
+  `tests/testthat/test_modSummaryStats_parity.R`. Plan: `docs/planning/shiny-module-conversion-plan.md` §9 Phase 1.
+
 ### 2026-06-02 — PLAN: complete the Shiny-module conversion (XARCH-1 / issue #27) (Session 21)
 - **Deliverable (planning, not implementation):** `docs/planning/shiny-module-conversion-plan.md`
   — a 9-phase, vertical-slice plan to declare the modular app (`runModularApp`/`appUI`/

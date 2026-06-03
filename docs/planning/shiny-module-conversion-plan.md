@@ -151,8 +151,10 @@ Each phase: one TDD session (RED→GREEN→REFACTOR with gates), leaves the app 
 
 ---
 
-### Phase 1 — Summary Statistics tab parity · risk LOW–MEDIUM
+### Phase 1 — Summary Statistics tab parity · risk LOW–MEDIUM · ✅ DONE (Session 22, commit `596f6bc9`)
 This phase brings the modular **Summary Statistics tab** to monolith parity across **four** verified gaps (all in `modSummaryStats`). **May split into 1a/1b if one TDD session runs long** (see split note).
+
+> **✅ Implemented in Session 22 (`596f6bc9`), all four items, no split.** Decisions taken: founder table **added to the Summary tab** (§16.6) + kinship download uses the **module-internal `getKinshipMatrix()`** (§16.8 — avoided the thread-`reportGV`-kinship dragon). The z-score column is confirmed **`zScores`** (plural) end-to-end; fixed via a dual-name lookup. Tests: `tests/testthat/test_modSummaryStats_parity.R` (6 / 22). Suite 0/0, runtime-smoked. **Next: Phase 2.**
 - **Goal (four items):**
   1. **Z-score plots:** the z-score histogram + boxplot (+ popover + 2 PNG downloads) render. Resolve the `zScores`(plural, `reportGV.R:89,144`)/`zScore`(singular, `modSummaryStats.R:396,400,477,481`) mismatch. ⚠ **Trace the real column name first:** data flows `reportGV` (`zScores`) → `modGeneticValue` (renames *some* cols — confirm it passes `zScores` through unchanged) → `modSummaryStats`; read the name that **actually arrives** (print `names(gv)`).
   2. **MK/GU distribution tables:** render the Mean-Kinship and Genome-Uniqueness Min/1st-Q/Mean/Median/3rd-Q/Max tables (`summary()` of each), matching server.r:545-630. Currently `modSummaryStats.R:532-535` shows only 3 scalars.
@@ -353,4 +355,4 @@ Also stale: **issue #34** ("Integrate `qcStudbook()` in modInput") — `modInput
 
 ---
 
-*End of plan. Next session implements **Phase 1** only (z-score plot fix). Do not bundle phases.*
+*End of plan. **Phase 1 complete (Session 22).** Next session implements **Phase 2** only (wire the `modGvAndBgDesc` description tab). Do not bundle phases.*

@@ -8,8 +8,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 - [ ] **Complete the monolith → Shiny-module conversion (XARCH-1 / issue #27)** — **PLANNED (S21):**
-      `docs/planning/shiny-module-conversion-plan.md` (9 vertical-slice phases). **Next: implement
-      Phase 1 only** (Summary Statistics tab parity). One phase per session; do not bundle.
+      `docs/planning/shiny-module-conversion-plan.md` (9 vertical-slice phases). One phase per
+      session; do not bundle. **Phase 1 ✅ DONE (S22, `596f6bc9`)** — Summary Statistics tab parity
+      (z-score plots, MK/GU quartile tables, founder table, kinship download). **Next: implement
+      Phase 2 only** (wire the `modGvAndBgDesc` description tab into `appUI`/`appServer`; risk LOW).
 - [ ] Integration testing for the modularized Shiny app — **= Phase 8 of the conversion plan**
       (author the missing shinytest2 driver helpers + run the E2E tier; this is **GitHub issue #39**).
 - [ ] CRAN submission preparation
