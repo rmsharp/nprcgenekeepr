@@ -14,6 +14,32 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-03 — Implement Phase 2 of the Shiny-module conversion: wire the GvAndBgDesc description tab (Session 23)
+- **Deliverable (implementation):** mounted the already-built `modGvAndBgDesc` module as a navbar
+  tab so the modular app gains the monolith's **Genetic Value Analysis and Breeding Group
+  Description** tab (plan §9 Phase 2).
+  - `R/appUI.R`: a `tabPanel` after "Breeding Groups" (monolith-parity placement, per
+    `inst/application/ui.r`) calling `modGvAndBgDescUI("gvAndBgDesc")`.
+  - `R/appServer.R`: `modGvAndBgDescServer("gvAndBgDesc")` (informational module — returns NULL,
+    no reactive state).
+- **TDD:** strict RED→GREEN (REFACTOR skipped — author decision; the change is minimal/idiomatic).
+  Two new integration tests in `tests/testthat/test_modGvAndBgDesc.R`.
+- **Discriminating-RED gotcha (verify-first, Learning #15/#20/#23):** the module's H3 heading
+  ("Genetic Value Analysis and Breeding Group Description") is NOT a discriminating marker —
+  `genetic_value.html`, already mounted by `modGeneticValue`, contains that exact phrase, so a
+  naive heading assertion is a tautology that passes at HEAD. The discriminating marker is
+  `gvAndBgDesc.html`'s own body text (`"kinship coefficients"` / `"genetic value analysis
+  proceeds"`), unique among the mounted guidance HTML and absent from `appUI()` at HEAD.
+  (`modGvAndBgDescUI` does not call `NS()`, so there is no namespaced container to assert on —
+  the included content IS the mount marker.)
+- **Verification:** `test_modGvAndBgDesc.R` 10/10, `test_appServer_dynamicTabs.R` 23/23 (the
+  dynamic insert/remove-tab interaction is unaffected — the new tab is far from the "Input"
+  insert target); full suite under `pkgload::load_all` + `NOT_CRAN=true` = 0 failed / 0 error,
+  2073 passed (+2), e2e skipped (156), 5 pre-existing `modPyramid` warnings; lint net-zero
+  (appUI 0=0, appServer 18=18); `document()` no man/NAMESPACE delta; Phase 3E runtime smoke —
+  `runModularApp()` binds + HTTP 200. Commit `ef6a9f4c`.
+- **NEWS deferred** to the Phase 9 canonical switch (modular app not yet canonical).
+
 ### 2026-06-03 — Implement Phase 1 of the Shiny-module conversion: Summary Statistics tab parity (Session 22)
 - **Deliverable (implementation):** brought the modular app's **Summary Statistics tab**
   (`R/modSummaryStats.R`) to legacy-monolith parity across four verified gaps (plan §9 Phase 1):

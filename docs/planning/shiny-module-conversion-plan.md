@@ -86,7 +86,7 @@ Status legend: ✅ parity · ◐ partial/broken · ✗ missing in modular · ⊖
 | Pedigree browser (DT, focal textarea, trim, U-id toggle, export) | ✅ | server.r:250-335,402-409 | `modPedigree.R:194-348` — full match incl. export | — |
 | Age-Sex pyramid | ✅ (modular is superset) | server.r:1302 (bare plot, no controls/download) | `modPyramid.R:84-153` real `getPyramidPlot` + controls + stats + PNG | — |
 | **Z-score histogram + boxplot** | ◐ **dead bug** | server.r:664,747 read `zScores` correctly | `modSummaryStats.R:396,477` check `"zScore"` (singular); `reportGV.R:89,144` emit `zScores` (plural) → plots return NULL | **1** |
-| GvAndBgDesc info tab | ✗ (not wired) | `uitpGvAndBgDesc.R` live tab | `modGvAndBgDesc` built + tested (`test_modGvAndBgDesc.R`, 6 tests) but **not mounted** in appUI/appServer | **2** |
+| GvAndBgDesc info tab | ✅ (mounted S23) | `uitpGvAndBgDesc.R` live tab | `modGvAndBgDesc` built + tested; **mounted** in appUI/appServer (S23 `ef6a9f4c`) | **2 ✅** |
 | GVA genome-uniqueness threshold | ◐ | user `selectInput` default 4 (`uitpGeneticValueAnalysis.R:38-49`) | hardcoded `guThresh=1L` (`modGeneticValue.R:165`), no control | **3** |
 | GVA subset/filter view + "Export Subset" | ✗ | `gvaView`+`filterReport`+`downloadGVASubset` (server.r:462-511) | absent | **3** |
 | **Genotype file merge** (separate / common ped+geno) | ✗ | `getGenotypes`/`checkGenotypeFile`/`addGenotype` (server.r:117-156) | UI offers the radio options but `activeFile` ignores `genotypeFile`; **no `getGenotypes`/`addGenotype` call anywhere in modular** | **4** |
@@ -166,7 +166,9 @@ This phase brings the modular **Summary Statistics tab** to monolith parity acro
 - **Split note (one-deliverable safety, cf. FM #18):** if the single session runs long, split into **1a** (visualizations: z-score plots + popovers) and **1b** (tables + download: MK/GU quartile tables, founder table threading, kinship-download fix). Each is independently shippable.
 - **Session boundary:** close out when the Summary Statistics tab matches the monolith + regression clean.
 
-### Phase 2 — Wire the GvAndBgDesc description tab · risk LOW
+### Phase 2 — Wire the GvAndBgDesc description tab · risk LOW · ✅ DONE (Session 23, commit `ef6a9f4c`)
+
+> **✅ Implemented in Session 23 (`ef6a9f4c`).** Mounted `modGvAndBgDescUI("gvAndBgDesc")` as a `tabPanel` after "Breeding Groups" (monolith-parity placement, per `inst/application/ui.r`) in `appUI`, and `modGvAndBgDescServer("gvAndBgDesc")` in `appServer`. **Verify-first gotcha (Learning #23):** the module's H3 heading collides with `genetic_value.html` (mounted by `modGeneticValue`), so the discriminating RED keys on `gvAndBgDesc.html`'s unique body text, not the heading. `modGvAndBgDescUI` does not call `NS()` → no namespaced container; the included content is the mount marker. Dynamic insert/remove tabs unaffected (new tab far from the "Input" target). Suite 0/0, runtime-smoked (HTTP 200). **Next: Phase 3.**
 - **Goal:** mount the already-built `modGvAndBgDesc` as a tab so the modular app has the monolith's GV-and-BG description tab.
 - **RED:** assert `appUI()` HTML contains the GvAndBgDesc tab/namespaced container (currently absent — `grep GvAndBgDesc R/appUI.R` = none).
 - **DONE:** `appUI` renders the tab via `modGvAndBgDescUI`; `appServer` calls `modGvAndBgDescServer`; content shows; **tab order documented** and its interaction with the dynamic insert/remove tabs (after "Input") confirmed not to break `test_appServer_dynamicTabs.R`.
@@ -355,4 +357,4 @@ Also stale: **issue #34** ("Integrate `qcStudbook()` in modInput") — `modInput
 
 ---
 
-*End of plan. **Phase 1 complete (Session 22).** Next session implements **Phase 2** only (wire the `modGvAndBgDesc` description tab). Do not bundle phases.*
+*End of plan. **Phases 1–2 complete (Sessions 22–23).** Next session implements **Phase 3** only (GVA GU-threshold control + subset/filter export — note the Phase-3 offset-mapping trap and the §16.1 gene-drop-iterations-default decision). Do not bundle phases.*
