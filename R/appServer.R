@@ -285,4 +285,7 @@ appServer <- function(input, output, session) {
     pedigree = reactive(shared$currentPedigree),
     geneticValues = reactive(shared$geneticValues)
   )
+
+  # GV & BG Description Module (informational - no reactive state)
+  modGvAndBgDescServer("gvAndBgDesc")
 }

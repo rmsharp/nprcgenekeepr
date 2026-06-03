@@ -169,6 +169,15 @@ appUI <- function() {
     ),
 
     # ====================
+    # GV & BG Description Tab
+    # ====================
+    tabPanel(
+      "Genetic Value Analysis and Breeding Group Description",
+      icon = icon("book"),
+      modGvAndBgDescUI("gvAndBgDesc")
+    ),
+
+    # ====================
     # Settings/About Tab
     # ====================
     navbarMenu(
