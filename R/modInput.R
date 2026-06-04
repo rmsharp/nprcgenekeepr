@@ -333,6 +333,27 @@ modInputServer <- function(id, config = NULL) {
         return()
       }
 
+      # Merge an uploaded genotype file (separate pedigree/genotype mode) into
+      # the raw pedigree BEFORE qcStudbook, mirroring the monolith
+      # (inst/application/server.r:117-156): read with getGenotypes, validate
+      # with checkGenotypeFile (degrade to NULL on warning/error), then merge
+      # with addGenotype so the integer first/second columns ride the cleaned
+      # studbook into reportGV via getGVGenotype()/hasGenotype(). The merge is
+      # guarded against a NULL genotype (addGenotype(ped, NULL) errors).
+      if (identical(input$fileContent, "separatePedGenoFile") &&
+            !is.null(input$genotypeFile)) {
+        sep <- if (is.null(input$separator)) "," else input$separator
+        genotype <- getGenotypes(input$genotypeFile$datapath, sep = sep)
+        genotype <- tryCatch(
+          checkGenotypeFile(genotype),
+          warning = function(w) NULL,
+          error = function(e) NULL
+        )
+        if (!is.null(genotype)) {
+          rawData <- addGenotype(rawData, genotype)
+        }
+      }
+
       # Get minimum parent age
       minAge <- tryCatch(
         as.numeric(input$minParentAge),
@@ -380,13 +401,16 @@ modInputServer <- function(id, config = NULL) {
         )
       })
 
-      # Store results in expected format
+      # Store results in expected format. genotypeData() exposes the
+      # id/first/second extract (getGVGenotype() returns NULL when the cleaned
+      # studbook carries no genotype, preserving the prior contract).
       storedResults(list(
         cleaned = qcResult$cleaned,
         errors = qcResult$qcResult$errors,
         warnings = qcResult$qcResult$warnings,
         changedCols = qcResult$qcResult$changedCols,
-        hasChangedCols = qcResult$qcResult$hasChangedCols
+        hasChangedCols = qcResult$qcResult$hasChangedCols,
+        genotype = getGVGenotype(qcResult$cleaned)
       ))
 
       # Signal that QC processing is complete (for E2E testing)

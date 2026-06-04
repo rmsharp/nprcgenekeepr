@@ -495,3 +495,98 @@ test_that("modInputServer returns changedCols information", {
     }
   )
 })
+
+# ============================================================================
+# Phase 4 - Genotype file merge (separatePedGenoFile mode)
+# ============================================================================
+
+test_that("modInputServer merges an uploaded genotype file in separate mode", {
+  skip_if_not_installed("shiny")
+
+  # Shipped fixtures: 375-row pedigree + 31-row genotype whose ids are a
+  # subset of the pedigree ids (0 orphan rows, 0 QC errors on merge).
+  pedPath <- system.file("extdata", "obfuscated_rhesus_mhc_ped.csv",
+                         package = "nprcgenekeepr")
+  genoPath <- system.file("extdata",
+                          "obfuscated_rhesus_mhc_breeder_genotypes.csv",
+                          package = "nprcgenekeepr")
+  skip_if(pedPath == "" || genoPath == "")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(
+        fileContent = "separatePedGenoFile",
+        fileType = "fileTypeExcel",
+        separator = ",",
+        minParentAge = "2.0"
+      )
+      # .csv temp paths route through readDataFile's read.csv branch and
+      # getGenotypes' read.table branch (excel_format(.csv) is NA).
+      session$setInputs(
+        pedigreeFileThree = list(name = basename(pedPath), datapath = pedPath),
+        genotypeFile = list(name = basename(genoPath), datapath = genoPath)
+      )
+      session$setInputs(getData = 1)
+
+      result <- session$getReturned()
+      cleaned <- result$cleanedStudbook()
+
+      # The integer genotype columns must ride the cleaned studbook so that
+      # reportGV()'s getGVGenotype()/hasGenotype() path uses real genotypes.
+      expect_true(all(c("first", "second") %in% names(cleaned)))
+      expect_true(nprcgenekeepr::hasGenotype(cleaned))
+      expect_true(is.integer(cleaned$first))
+
+      # genotypeData() reactive is populated (id/first/second extract).
+      geno <- result$genotypeData()
+      expect_false(is.null(geno))
+      expect_setequal(names(geno), c("id", "first", "second"))
+    }
+  )
+})
+
+test_that("modInputServer degrades gracefully on a malformed genotype file", {
+  skip_if_not_installed("shiny")
+
+  pedPath <- system.file("extdata", "obfuscated_rhesus_mhc_ped.csv",
+                         package = "nprcgenekeepr")
+  skip_if(pedPath == "")
+
+  # Malformed genotype: fewer than three columns -> checkGenotypeFile stop()s.
+  badGeno <- tempfile(fileext = ".csv")
+  write.csv(
+    data.frame(id = "AAA", first_name = "A001", stringsAsFactors = FALSE),
+    badGeno, row.names = FALSE
+  )
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(
+        fileContent = "separatePedGenoFile",
+        fileType = "fileTypeExcel",
+        separator = ",",
+        minParentAge = "2.0"
+      )
+      session$setInputs(
+        pedigreeFileThree = list(name = basename(pedPath), datapath = pedPath),
+        genotypeFile = list(name = basename(badGeno), datapath = badGeno)
+      )
+      # A bad genotype file must not crash the QC run.
+      expect_no_error(session$setInputs(getData = 1))
+
+      result <- session$getReturned()
+      cleaned <- result$cleanedStudbook()
+
+      # Pedigree still processed; genotype silently ignored (no merge).
+      expect_true(is.data.frame(cleaned))
+      expect_false(any(c("first", "second") %in% names(cleaned)))
+      expect_null(result$genotypeData())
+    }
+  )
+
+  unlink(badGeno)
+})
