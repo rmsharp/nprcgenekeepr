@@ -72,6 +72,19 @@ R. Mark Sharp, Ph.D.
         for box plots
       - savePlotToFile() supports PNG, PDF, and SVG export  
       - Enhanced pyramid plots with getPyramidPlot()
+    - Genetic Value Analysis tab parity (modular app)
+      - Exposed the genome-uniqueness threshold as a user control with a
+        default of 4, matching the legacy application. The modular app
+        previously hard-coded a threshold of 1, so default
+        genome-uniqueness values from `runModularApp()` now match the
+        legacy app. (The analytical `reportGV()` default, `guThresh = 1`,
+        is unchanged.)
+      - Added a subset filter (view by animal IDs) and an "Export Subset"
+        download, matching the legacy "Filter View" / "Export Current
+        Subset".
+      - Changed the default gene-drop iterations to 1000 for legacy
+        parity (was 5000); removed an inert "Minimum breeding age" slider
+        that had no effect on the analysis.
     - Utility Functions
       - safeExecute() - Error-handling wrapper for module operations  
       - logModuleEvent() - Structured logging with futile.logger

@@ -87,8 +87,8 @@ Status legend: ✅ parity · ◐ partial/broken · ✗ missing in modular · ⊖
 | Age-Sex pyramid | ✅ (modular is superset) | server.r:1302 (bare plot, no controls/download) | `modPyramid.R:84-153` real `getPyramidPlot` + controls + stats + PNG | — |
 | **Z-score histogram + boxplot** | ◐ **dead bug** | server.r:664,747 read `zScores` correctly | `modSummaryStats.R:396,477` check `"zScore"` (singular); `reportGV.R:89,144` emit `zScores` (plural) → plots return NULL | **1** |
 | GvAndBgDesc info tab | ✅ (mounted S23) | `uitpGvAndBgDesc.R` live tab | `modGvAndBgDesc` built + tested; **mounted** in appUI/appServer (S23 `ef6a9f4c`) | **2 ✅** |
-| GVA genome-uniqueness threshold | ◐ | user `selectInput` default 4 (`uitpGeneticValueAnalysis.R:38-49`) | hardcoded `guThresh=1L` (`modGeneticValue.R:165`), no control | **3** |
-| GVA subset/filter view + "Export Subset" | ✗ | `gvaView`+`filterReport`+`downloadGVASubset` (server.r:462-511) | absent | **3** |
+| GVA genome-uniqueness threshold | ✅ (S24) | user `selectInput` default 4 (`uitpGeneticValueAnalysis.R:38-49`) | `selectInput` (choices 1–5, default 4) threaded via `guThreshold()` reactive (`modGeneticValue.R`); replaced hardcoded `1L` (S24 `596f6bc9`→Phase 3) | **3 ✅** |
+| GVA subset/filter view + "Export Subset" | ✅ (S24) | `gvaView`+`filterReport`+`downloadGVASubset` (server.r:462-511) | `gvaView()` + `viewIds` textarea + "Filter View" + `downloadGVASubset` added to the Rankings tab (S24) | **3 ✅** |
 | **Genotype file merge** (separate / common ped+geno) | ✗ | `getGenotypes`/`checkGenotypeFile`/`addGenotype` (server.r:117-156) | UI offers the radio options but `activeFile` ignores `genotypeFile`; **no `getGenotypes`/`addGenotype` call anywhere in modular** | **4** |
 | Breeding groups: downloads (group CSV, group-kinship CSV) | ✗ | server.r:1283-1297 | **0 download handlers** in `modBreedingGroups.R` | **5** |
 | Breeding groups: per-group kinship matrix + `viewGrp` selector | ✗ | server.r:1197-1280 | Statistics tab is counts-only (`modBreedingGroups.R:282-300`) | **5** |
@@ -175,7 +175,22 @@ This phase brings the modular **Summary Statistics tab** to monolith parity acro
 - **Verify:** `testthat::test_file("tests/testthat/test_appServer_dynamicTabs.R")` + a new appUI-contains-tab test + regression read.
 - **Session boundary:** close out when the tab renders + dynamic-tab tests pass.
 
-### Phase 3 — GVA parity: GU-threshold control + subset/filter export · risk MEDIUM
+### Phase 3 — GVA parity: GU-threshold control + subset/filter export · risk MEDIUM · ✅ DONE (Session 24)
+
+> **✅ Implemented in Session 24, whole phase (no split).** All in `R/modGeneticValue.R`.
+> Author decisions (USER): **direct** threshold mapping (`selectInput` choices 1–5, `selected=4` →
+> threads the integer 4 directly, dropping the monolith's confusing label-offset while keeping
+> numeric parity); gene-drop iterations default **1000**; **remove** the inert `minAge` slider
+> (the 2 sibling inert checkboxes `calcGenomeUniqueness`/`calcMeanKinship` deferred — same class,
+> noted for a future cleanup); whole Phase 3 in one session. Threshold threaded via a new
+> `guThreshold()` reactive (default `is.null`-guarded to 4L). Subset = `gvaView()` filtering
+> `gvResults()` by parsed `viewIds` (base `trimws`, not the unimported `stri_trim`) via the
+> exported `filterReport()`; `downloadGVASubset` writes it; `downloadRankings` relabeled
+> "Export All". **Discriminating-RED**: keyed the threshold on the internal `guThreshold()`
+> reactive (no existing test pinned guThresh → all passed on the buggy `1L`); the iterations
+> assertion re-keyed on `value="1000"` (`grepl("1000")` matched `max="10000"`). Suite 0/0;
+> lint net-zero; `document()` no delta; runtime-smoked (HTTP 200, controls render, minAge gone).
+> **Next: Phase 4.**
 - **Goal:** re-expose the genome-uniqueness threshold as a user `selectInput` **default 4** (decision §3), threading `guThresh` from input (replacing `modGeneticValue.R:165` `1L`); add the filtered-subset view (`filterReport` by selected ids) + an "Export Subset" download (monolith `gvaView`/`downloadGVASubset`, server.r:462-511). Resolve the inert `minAge` slider (`modGeneticValue.R:43`, `input$minAge` never read) — wire it or remove it.
 - **⚠ Offset-mapping trap:** the monolith `selectInput` maps **display label N → value N+1** (`uitpGeneticValueAnalysis.R:38-49`: choices `"0"=1L … "4"=5L`, `selected=4L`) and threads `guThresh = as.integer(input$threshold)` (server.r:447). So "default 4" means the **threaded integer `guThresh` = 4** (which the monolith displays as label "3"). Decide whether to preserve this confusing offset or use a direct `0..4`/`1..5` mapping — and make the RED assert the **threaded integer**, not the selectInput label.
 - **RED:** (a) `reportGV` called with `guThresh = the threaded integer` (= 4, not 1L) — assert on a fixture where threshold 4 vs 1 give different `gu`; (b) subset filter returns the filtered rows; (c) the inert-slider decision is tested (read or gone).
@@ -335,7 +350,7 @@ Also stale: **issue #34** ("Integrate `qcStudbook()` in modInput") — `modInput
 ---
 
 ## 16. Open decisions deferred INTO phases (not blockers for this plan)
-1. **Gene-drop iterations default** (Phase 3): 1000 (monolith) vs 5000 (modular) — recommend 1000 for parity; owner confirms.
+1. **Gene-drop iterations default** (Phase 3): ✅ RESOLVED (Session 24) → **1000** (monolith parity; owner confirmed via `AskUserQuestion`).
 2. **Focal-animal/LabKey** (Phase 7): mock vs live vs descope-the-radio-option — owner consult at phase start (likely a sub-plan).
 3. **`shouldShowErrorTab`** (Phase 9): delete the bypassed path vs refactor appServer to use it.
 4. **`modMinimalTest`** (Phase 9): delete vs keep as a documented module template.
@@ -357,4 +372,4 @@ Also stale: **issue #34** ("Integrate `qcStudbook()` in modInput") — `modInput
 
 ---
 
-*End of plan. **Phases 1–2 complete (Sessions 22–23).** Next session implements **Phase 3** only (GVA GU-threshold control + subset/filter export — note the Phase-3 offset-mapping trap and the §16.1 gene-drop-iterations-default decision). Do not bundle phases.*
+*End of plan. **Phases 1–3 complete (Sessions 22–24).** Next session implements **Phase 4** only (Input parity: genotype file merge — wire `getGenotypes`/`checkGenotypeFile`/`addGenotype` so `input$genotypeFile` is read and merged; see §9 Phase 4). Do not bundle phases.*

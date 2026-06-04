@@ -14,6 +14,46 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-04 — Implement Phase 3 of the Shiny-module conversion: GVA genome-uniqueness threshold + subset/filter export (Session 24)
+- **Deliverable (implementation):** brought the modular **Genetic Value Analysis** tab to
+  monolith parity across four verified gaps, all in `R/modGeneticValue.R` (plan §9 Phase 3).
+  1. **Genome-uniqueness threshold control.** Added a `selectInput(ns("threshold"))` (choices
+     1–5, default 4) threaded via a new `guThreshold()` reactive into `reportGV()`, replacing the
+     hard-coded `guThresh = 1L`. This changes default genome-uniqueness output for the modular
+     app (intended parity — the monolith default is the threaded integer 4).
+  2. **Subset/filter view.** Added a `viewIds` textarea + "Filter View" button + a `gvaView()`
+     reactive that filters the report by entered IDs via the exported `filterReport()` (monolith
+     `gvaView`/`filterReport`, server.r:462-477); the rankings table now reflects the filter.
+  3. **Export Subset.** Added `downloadGVASubset` (writes the filtered view, `na=""`); relabeled
+     the existing `downloadRankings` "Download" → "Export All" to pair with it.
+  4. **Gene-drop iterations default** 5000 → 1000 (monolith parity); **removed** the inert
+     `minAge` slider (never read; no monolith GVA counterpart).
+- **Author decisions (USER, via `AskUserQuestion`):** direct threshold mapping (choices 1–5,
+  default 4 — drops the monolith's confusing label-offset while keeping the threaded integer 4);
+  iterations default 1000; remove minAge only (the 2 sibling inert checkboxes
+  `calcGenomeUniqueness`/`calcMeanKinship` deferred); whole Phase 3 in one session.
+- **TDD:** strict RED→GREEN→REFACTOR with phase gates (each via `AskUserQuestion`). 6 new
+  discriminating tests in `tests/testthat/test_modGeneticValue.R`; minAge removal in REFACTOR
+  deleted 2 tautological tests + 3 assertion lines (no real coverage lost — they only echoed the
+  inert input back).
+- **Discriminating-RED traps (verify-first, Learnings #15/#20):** (a) no existing test pinned the
+  threshold, so all pass on the buggy `guThresh=1L` — the RED keys on the threaded integer via an
+  internal `guThreshold()` reactive (empirically guThresh 1 vs 4 changes every `gu` row); (b) the
+  flipped iterations assertion `grepl("1000")` first PASSED on the bug because `max="10000"`
+  contains "1000" — re-keyed on the rendered `value="1000"` attribute.
+- **Recon:** a read-only discovery + adversarial-completeness workflow (`wf_a1f5fdb4-b8e`, 4
+  agents) re-derived the parity surface and flagged three implementation blockers, all verified
+  firsthand: `%||%` is not portable (not in shiny/this package; base only since R 4.4) → used an
+  explicit `is.null` guard; `stri_trim` is not the imported symbol (`stri_trim_both` is) → used
+  base `trimws`; `import(shiny)` (NAMESPACE:168) covers the new `selectInput`/`textAreaInput`.
+- **Verification:** `test_modGeneticValue.R` 53/53; full suite under `pkgload::load_all` +
+  `NOT_CRAN=true` = 0 failed / 0 error, 0 non-e2e offenders, e2e skipped (156), 5 pre-existing
+  `modPyramid` warnings; lint net-zero on `R/modGeneticValue.R` (HEAD 23 = NOW 23, via
+  touched-file stash); `document()` no man/NAMESPACE delta; Phase 3E runtime smoke —
+  `runModularApp()` binds + HTTP 200, the new threshold/viewIds/Export-Subset controls render and
+  the minAge slider is gone. NEWS bullet added (the plan reserves NEWS for this numeric change).
+  Commit `280d1df0` (impl) + the `docs:` close-out.
+
 ### 2026-06-03 — Implement Phase 2 of the Shiny-module conversion: wire the GvAndBgDesc description tab (Session 23)
 - **Deliverable (implementation):** mounted the already-built `modGvAndBgDesc` module as a navbar
   tab so the modular app gains the monolith's **Genetic Value Analysis and Breeding Group

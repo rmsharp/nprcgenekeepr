@@ -12,8 +12,12 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       session; do not bundle. **Phase 1 ✅ DONE (S22, `596f6bc9`)** — Summary Statistics tab parity
       (z-score plots, MK/GU quartile tables, founder table, kinship download).
       **Phase 2 ✅ DONE (S23, `ef6a9f4c`)** — wired the `modGvAndBgDesc` description tab into
-      `appUI`/`appServer`. **Next: implement Phase 3 only** (GVA GU-threshold control + subset/filter
-      export; risk MEDIUM — note the Phase-3 offset-mapping trap + the §16.1 gene-drop-iterations default).
+      `appUI`/`appServer`.
+      **Phase 3 ✅ DONE (S24)** — GVA parity in `R/modGeneticValue.R`: genome-uniqueness threshold
+      `selectInput` (choices 1–5, default 4) threaded via `guThreshold()` (replaced hardcoded `1L`);
+      `viewIds`/Filter-View subset + `downloadGVASubset` ("Export Subset"); iterations default
+      5000→1000; removed the inert `minAge` slider. **Next: implement Phase 4 only** (Input parity:
+      genotype file merge — wire `getGenotypes`/`checkGenotypeFile`/`addGenotype`; risk MEDIUM).
 - [ ] Integration testing for the modularized Shiny app — **= Phase 8 of the conversion plan**
       (author the missing shinytest2 driver helpers + run the E2E tier; this is **GitHub issue #39**).
 - [ ] CRAN submission preparation
