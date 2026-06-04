@@ -85,6 +85,17 @@ R. Mark Sharp, Ph.D.
       - Changed the default gene-drop iterations to 1000 for legacy
         parity (was 5000); removed an inert "Minimum breeding age" slider
         that had no effect on the analysis.
+    - Breeding group formation tab parity (modular app)
+      - Exposed the seed-animal "current groups" widget (pre-seed groups
+        with specific animals before formation), and the minimum breeding
+        age, number of simulations, and "include kinship in display"
+        controls. The server already read these but no UI declared them,
+        so they had silently used their defaults.
+      - Changed the default number of breeding-group simulations to 10 for
+        legacy parity (was 1000). This is the breeding-group MIS sampler
+        count, distinct from the gene-drop iterations above.
+      - Seed animals that are not in the pedigree are now rejected with a
+        clear message instead of producing a malformed group.
     - Utility Functions
       - safeExecute() - Error-handling wrapper for module operations  
       - logModuleEvent() - Structured logging with futile.logger

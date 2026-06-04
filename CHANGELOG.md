@@ -14,6 +14,50 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-04 — Implement Phase 6 of the Shiny-module conversion: Breeding Groups parity B (Session 27)
+- **Deliverable (implementation):** brought the modular **Breeding Group Formation** module to
+  monolith parity for seed-group pre-seeding and the previously-inert formation controls, all in
+  `R/modBreedingGroups.R` (plan §9 Phase 6):
+  1. **Seed-group "current groups" widget** — a `seedGroups` checkbox reveals one per-group
+     `textAreaInput` (`curGrp1..N`, count driven by `nGroups`). Their IDs build a length-`numGp`
+     `currentGroups` list passed to `groupAddAssign()` in place of the hardcoded
+     `list(character(0L))`, so groups can be pre-seeded (the monolith's `textAreaWidget`/
+     `getCurrentGroups`, server.r:1019-1056).
+  2. **Exposed three previously-inert controls** the server already read (`modBreedingGroups.R`
+     L201-203) but no UI declared, so they had silently defaulted: `minAge` (numericInput, value 1),
+     `nIterations` (numericInput, value 10L), `withKinship` (checkbox). The new control ids match the
+     server reads (`minAge`/`nIterations`/`withKinship`), **not** the monolith's `gpIter`/`withKin`.
+  3. **Breeding-sim iteration default `1000L → 10L`** — the modular fallback was a 100× drift from
+     the monolith's `gpIter` (value=10L); now matches. This is a **real numeric change** to formed
+     groups (the MIS sampler runs 100× fewer iterations by default).
+- **Built robustly, not faithfully.** The monolith's `getCurrentGroups` is doubly buggy
+  (`seq_along(input$numGp)` is a length-1 scalar → only `curGrp1` is ever read; `vapply(...)` yields
+  a matrix not a list); the modular widget uses `seq_len(numGp)` so every group's textarea is honored
+  (RED test asserts the 2nd seed group is honored). `length(currentGroups)` can never exceed `numGp`
+  (built with `seq_len(numGp)` + truncation), so `groupAddAssign`'s length guard is unreachable.
+- **More robust than the monolith — validate-and-block.** Seed IDs absent from the pedigree are
+  rejected with a notification and formation aborts. Verified: a phantom seed otherwise survives into
+  the group and **crashes** the Phase-5 Group Detail member view (`addSexAndAgeToGroup` →
+  `getCurrentAge` on a length-0 birth). The monolith has only a partial `validate(need())` guard
+  (server.r:1124-1133); the modular module previously had none.
+- **Strict TDD** (RED→GREEN→REFACTOR, all gated + 4 pre-RED author-decision `AskUserQuestion`s):
+  7 new tests — 5 RED at HEAD (UI controls present; `nIterations` renders `value="10"`; seeding lands
+  animals in their group; multi-group seeding [proves the `curGrp1`-only bug not copied]; phantom seed
+  blocks formation) + 2 green-at-HEAD coverage (blank-seed no-op; `withKinship=TRUE`→non-NULL kinship,
+  green-at-HEAD because the server already reads `input$withKinship`). REFACTOR considered + skipped.
+- **Verification:** `test_modBreedingGroups.R` 41 tests **0 failed / 0 error / 0 warning**; full suite
+  under `pkgload::load_all` + `NOT_CRAN=true` **0 failed / 0 error**, e2e skipped (156), only the 5
+  pre-existing `modPyramid` warnings. R6 validate-and-block guard **mutation-verified** (disabling it
+  lets the phantom seed survive). Lint **net-zero** on `R/modBreedingGroups.R` (31 = 31, touched-file
+  stash); `document()` zero man/NAMESPACE delta (`import(shiny)` covers the new controls); **Phase 3E
+  runtime smoke** — `runModularApp()` HTTP 200 with `seedGroups`/`minAge`/`nIterations` (value 10)/
+  `withKinship`/`seedTextareas` rendered and the Phase-5 Group Detail tab intact.
+- A read-only 5-agent discovery + adversarial-completeness recon (`wf_e8e1176c-320`) confirmed the
+  parity surface and sharpened the dragon (the phantom-seed crash); every load-bearing claim was
+  verified firsthand.
+- **Files:** `R/modBreedingGroups.R`, `tests/testthat/test_modBreedingGroups.R`. **Next: Phase 7**
+  (focal-animal / LabKey pedigree build — risk HIGH 🐉, owner consult at phase start; see plan §9).
+
 ### 2026-06-04 — Implement Phase 5 of the Shiny-module conversion: Breeding Groups parity A (Session 26)
 - **Deliverable (implementation):** brought the modular **Breeding Group Formation** module to
   monolith parity for the per-group display/export half, all in `R/modBreedingGroups.R` (plan §9
