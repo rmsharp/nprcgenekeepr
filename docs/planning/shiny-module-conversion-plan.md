@@ -89,7 +89,7 @@ Status legend: ✅ parity · ◐ partial/broken · ✗ missing in modular · ⊖
 | GvAndBgDesc info tab | ✅ (mounted S23) | `uitpGvAndBgDesc.R` live tab | `modGvAndBgDesc` built + tested; **mounted** in appUI/appServer (S23 `ef6a9f4c`) | **2 ✅** |
 | GVA genome-uniqueness threshold | ✅ (S24) | user `selectInput` default 4 (`uitpGeneticValueAnalysis.R:38-49`) | `selectInput` (choices 1–5, default 4) threaded via `guThreshold()` reactive (`modGeneticValue.R`); replaced hardcoded `1L` (S24 `596f6bc9`→Phase 3) | **3 ✅** |
 | GVA subset/filter view + "Export Subset" | ✅ (S24) | `gvaView`+`filterReport`+`downloadGVASubset` (server.r:462-511) | `gvaView()` + `viewIds` textarea + "Filter View" + `downloadGVASubset` added to the Rankings tab (S24) | **3 ✅** |
-| **Genotype file merge** (separate / common ped+geno) | ✗ | `getGenotypes`/`checkGenotypeFile`/`addGenotype` (server.r:117-156) | UI offers the radio options but `activeFile` ignores `genotypeFile`; **no `getGenotypes`/`addGenotype` call anywhere in modular** | **4** |
+| **Genotype file merge** (separate / common ped+geno) | ✅ (S25) | `getGenotypes`/`checkGenotypeFile`/`addGenotype` (server.r:117-156) | `modInput.R` `observeEvent(getData)` now reads `input$genotypeFile` via `getGenotypes`→`checkGenotypeFile`(tryCatch→NULL)→**NULL-guarded** `addGenotype` before QC (separate mode); `genotypeData()` populated via `getGVGenotype(cleaned)` (S25 → Phase 4). Common-mode proven at parity (no-op in both apps) | **4 ✅** |
 | Breeding groups: downloads (group CSV, group-kinship CSV) | ✗ | server.r:1283-1297 | **0 download handlers** in `modBreedingGroups.R` | **5** |
 | Breeding groups: per-group kinship matrix + `viewGrp` selector | ✗ | server.r:1197-1280 | Statistics tab is counts-only (`modBreedingGroups.R:282-300`) | **5** |
 | Breeding groups: seed-animal "current groups" pre-seeding | ✗ | `textAreaWidget`/`getCurrentGroups`/`output$currentGroups` (server.r:1019-1051) | `currentGroups=list(character(0))` hardcoded (`modBreedingGroups.R:203`) | **6** |
@@ -200,7 +200,31 @@ This phase brings the modular **Summary Statistics tab** to monolith parity acro
 - **Split note:** Phase 3 bundles three separable sub-features (GU-threshold thread; subset/filter view + Export Subset; inert-`minAge` resolution). They share `modGeneticValue` + one TDD cycle, but if the session runs long, split **3a** (GU-threshold thread — the highest-value numeric-parity item) and **3b** (subset view + Export Subset + `minAge`).
 - **Session boundary:** close out when threshold control + subset export work.
 
-### Phase 4 — Input parity: genotype file merge · risk MEDIUM
+### Phase 4 — Input parity: genotype file merge · risk MEDIUM · ✅ DONE (Session 25)
+
+> **✅ Implemented in Session 25, all in `R/modInput.R`.** In `observeEvent(input$getData)`,
+> after `rawData` is read and before `qcStudbook`/`runQcStudbook`, the `separatePedGenoFile`
+> path reads `input$genotypeFile` via `getGenotypes(datapath, sep)`, validates with
+> `checkGenotypeFile` (degrade-to-NULL on warning/error, monolith-style — `getGenotypes` is
+> OUTSIDE the tryCatch, `checkGenotypeFile` INSIDE), and **NULL-guarded** `addGenotype(rawData,
+> genotype)` merges integer `first`/`second` into the raw pedigree before QC. `genotypeData()`
+> populated via `genotype = getGVGenotype(qcResult$cleaned)` in `storedResults`.
+> **Scope-narrowing discoveries (firsthand + 5-agent recon `wf_37c91d78-d24`):** (a)
+> **common-mode needs NO change** — PROVEN that neither app integer-codes string `first_name`/
+> `second_name` for a combined file (only `addGenotype` builds numeric first/second, and the
+> monolith never calls it for `commonPedGenoFile`), so common-mode genotypes never reach
+> `reportGV`'s gene-drop in EITHER app; adding `addGenotype` to the common branch would be a
+> behavior change beyond parity. (b) **`genotypeData()` has zero downstream consumers** — the
+> GV-uses-genotypes outcome rides 100% on `cleanedStudbook` carrying numeric first/second; the
+> populate is contract-completeness (author opted in). (c) **`addGenotype(ped, NULL)` crashes**
+> (`"'by' must specify a uniquely valid column"`) — the monolith has this latent unguarded crash;
+> the modular app is now MORE robust. Author decisions (USER): populate `genotypeData()` too;
+> reader = `getGenotypes()`. **Discriminating RED** keyed on the deterministic `cleanedStudbook`
+> (`first`/`second` present + `hasGenotype` TRUE + `genotypeData` = id/first/second), not the
+> stochastic gene-drop output. Tests in `tests/testthat/test_modInput_qcStudbook.R` (Test A
+> happy-path; Test B malformed-genotype graceful-degradation, NULL-guard mutation-verified).
+> Suite 0/0 (2085 passed); lint net-zero (41=41); `document()` no delta; runtime-smoked (HTTP 200).
+> **Next: Phase 5.**
 - **Goal:** make the `separatePedGenoFile` and `commonPedGenoFile` paths actually merge genotypes — wire `getGenotypes`/`checkGenotypeFile`/`addGenotype` (none called in modular today) so `input$genotypeFile` is read and merged, and `genotypeData` (`modInput.R:513-516`, currently always NULL) is populated.
 - **RED:** assert that uploading a pedigree + a genotype file yields a studbook with the genotype columns attached (`modInput`'s `genotypeData()` non-NULL; cleaned studbook carries genotypes) — fails today because `activeFile` drops `genotypeFile`.
 - **DONE:** genotype merge works for both common and separate file modes; QC + downstream GV unaffected when no genotype file is supplied.
@@ -372,4 +396,4 @@ Also stale: **issue #34** ("Integrate `qcStudbook()` in modInput") — `modInput
 
 ---
 
-*End of plan. **Phases 1–3 complete (Sessions 22–24).** Next session implements **Phase 4** only (Input parity: genotype file merge — wire `getGenotypes`/`checkGenotypeFile`/`addGenotype` so `input$genotypeFile` is read and merged; see §9 Phase 4). Do not bundle phases.*
+*End of plan. **Phases 1–4 complete (Sessions 22–25).** Next session implements **Phase 5** only (Breeding Groups parity A: downloads + per-group kinship matrix + `viewGrp` group selector — add `downloadGroup`/`downloadGroupKin` handlers and render the per-group kinship view; monolith server.r:1197-1297; `grep downloadHandler R/modBreedingGroups.R` = 0 today; see §9 Phase 5. **Dragon:** if threading `gvResults$kinshipMatrix`, prove `identical()` — the group-formation compute path must be unchanged). Do not bundle phases.*

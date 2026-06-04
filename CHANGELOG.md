@@ -14,6 +14,42 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-04 — Implement Phase 4 of the Shiny-module conversion: genotype file merge in modInput (Session 25)
+- **Deliverable (implementation):** brought the modular **Data Input** module to monolith parity
+  for the **separate pedigree/genotype** upload path, all in `R/modInput.R` (plan §9 Phase 4).
+  1. **Genotype file merge.** Inside `observeEvent(input$getData)`, before the `qcStudbook`/
+     `runQcStudbook` calls, the `separatePedGenoFile` path now reads `input$genotypeFile` via
+     `getGenotypes()`, validates with `checkGenotypeFile()` (degrading to no-merge on
+     warning/error, mirroring the monolith), and merges it into the raw pedigree via
+     `addGenotype()`. The integer `first`/`second` columns then ride the cleaned studbook into
+     `reportGV()` (via `getGVGenotype()`/`hasGenotype()`), so genome-uniqueness uses the real
+     genotypes. Previously `activeFile()` silently dropped `input$genotypeFile`.
+  2. **`genotypeData()` populated.** Added `genotype = getGVGenotype(qcResult$cleaned)` to the
+     module's stored results, so the `genotypeData()` reactive (formerly always NULL) returns the
+     id/first/second extract (NULL when no genotype, preserving the prior contract).
+  3. **More robust than the monolith.** The merge is **NULL-guarded** — `addGenotype(ped, NULL)`
+     crashes (`"'by' must specify a uniquely valid column"`), a latent unguarded crash in the
+     monolith; a malformed genotype file now degrades to no-merge instead of crashing the QC run.
+  - **Common-mode unchanged (proven at parity):** neither app integer-codes string allele names
+    for a combined ped+genotype file, so common-mode genotypes never reach `reportGV`'s gene-drop
+    in either app — adding `addGenotype` to the common branch would be a behavior change beyond
+    parity. Phase 4 touches only the `separatePedGenoFile` path.
+- **Tests:** 2 new tests in `tests/testthat/test_modInput_qcStudbook.R` — a discriminating
+  happy-path (upload the shipped `obfuscated_rhesus_mhc_ped.csv` + `…_breeder_genotypes.csv`;
+  assert the cleaned studbook gains `first`/`second`, `hasGenotype()` TRUE, `genotypeData()`
+  populated) and a malformed-genotype graceful-degradation test (NULL-guard mutation-verified).
+- **Method (TDD, ultracode):** RED→GREEN→REFACTOR with all gates + 2 pre-RED author decisions via
+  `AskUserQuestion` (populate `genotypeData()` too; reader = `getGenotypes()`); a 5-agent
+  read-only discovery + adversarial-completeness recon (`wf_37c91d78-d24`) settled the
+  common-mode/NULL-crash/testServer-harness questions, all verified firsthand.
+- **Verification:** full suite under `pkgload::load_all` + `NOT_CRAN=true` = 0 failed / 0 error,
+  0 non-e2e offenders, 2085 passed, e2e skipped (156); lint net-zero on `R/modInput.R` (41 = 41);
+  `devtools::document()` no man/NAMESPACE delta; **Phase 3E runtime smoke** `runModularApp()`
+  binds + HTTP 200 (modInput mounts with the `genotypeFile` input). No NEWS bullet (modular app
+  not yet canonical; no analytical-pipeline numeric change).
+- **Files:** `R/modInput.R`, `tests/testthat/test_modInput_qcStudbook.R`. **Next: Phase 5**
+  (Breeding Groups downloads + per-group kinship + group selector).
+
 ### 2026-06-04 — Implement Phase 3 of the Shiny-module conversion: GVA genome-uniqueness threshold + subset/filter export (Session 24)
 - **Deliverable (implementation):** brought the modular **Genetic Value Analysis** tab to
   monolith parity across four verified gaps, all in `R/modGeneticValue.R` (plan §9 Phase 3).

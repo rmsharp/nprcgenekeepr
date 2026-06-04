@@ -16,8 +16,12 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       **Phase 3 ✅ DONE (S24)** — GVA parity in `R/modGeneticValue.R`: genome-uniqueness threshold
       `selectInput` (choices 1–5, default 4) threaded via `guThreshold()` (replaced hardcoded `1L`);
       `viewIds`/Filter-View subset + `downloadGVASubset` ("Export Subset"); iterations default
-      5000→1000; removed the inert `minAge` slider. **Next: implement Phase 4 only** (Input parity:
-      genotype file merge — wire `getGenotypes`/`checkGenotypeFile`/`addGenotype`; risk MEDIUM).
+      5000→1000; removed the inert `minAge` slider.
+      **Phase 4 ✅ DONE (S25)** — Input parity: genotype file merge in `R/modInput.R` (separate
+      pedigree/genotype mode reads `input$genotypeFile` via `getGenotypes`→`checkGenotypeFile`→
+      NULL-guarded `addGenotype` before QC; `genotypeData()` populated via `getGVGenotype(cleaned)`).
+      Common-mode unchanged (proven at parity). **Next: implement Phase 5 only** (Breeding Groups
+      parity A: downloads + per-group kinship matrix + `viewGrp` selector; risk MEDIUM).
 - [ ] Integration testing for the modularized Shiny app — **= Phase 8 of the conversion plan**
       (author the missing shinytest2 driver helpers + run the E2E tier; this is **GitHub issue #39**).
 - [ ] CRAN submission preparation
