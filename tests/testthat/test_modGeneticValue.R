@@ -54,7 +54,6 @@ test_that("modGeneticValueUI contains expected elements", {
   expect_true(grepl("nIterations", ui_html))
   expect_true(grepl("calcGenomeUniqueness", ui_html))
   expect_true(grepl("calcMeanKinship", ui_html))
-  expect_true(grepl("minAge", ui_html))
 
   # Check for action button
   expect_true(grepl("runAnalysis", ui_html))
@@ -149,9 +148,6 @@ test_that("modGeneticValueServer handles input changes", {
 
       session$setInputs(calcMeanKinship = TRUE)
       expect_true(input$calcMeanKinship)
-
-      session$setInputs(minAge = 3.5)
-      expect_equal(input$minAge, 3.5)
 
       session$setInputs(topN = 15)
       expect_equal(input$topN, 15)
@@ -550,32 +546,6 @@ test_that("modGeneticValueServer handles maximum nIterations", {
   )
 })
 
-test_that("modGeneticValueServer handles minAge variations", {
-  skip_if_not_installed("shiny")
-
-  test_ped <- makeValidTestPed(nFounders = 6, nOffspring = 9)
-
-  shiny::testServer(
-    modGeneticValueServer,
-    args = list(
-      pedigree = shiny::reactive({ test_ped })
-    ),
-    {
-      # Test minimum age
-      session$setInputs(minAge = 0)
-      expect_equal(input$minAge, 0)
-
-      # Test different age
-      session$setInputs(minAge = 5)
-      expect_equal(input$minAge, 5)
-
-      # Test maximum age
-      session$setInputs(minAge = 10)
-      expect_equal(input$minAge, 10)
-    }
-  )
-})
-
 test_that("modGeneticValueServer handles checkbox combinations", {
   skip_if_not_installed("shiny")
 
@@ -808,15 +778,10 @@ test_that("modGeneticValueUI has numeric input constraints", {
 
   # nIterations should have min/max
   expect_true(grepl("nIterations", ui_html))
-  expect_true(grepl("5000", ui_html))  # default value
-})
-
-test_that("modGeneticValueUI has slider input", {
-  ui <- modGeneticValueUI("test")
-  ui_html <- as.character(ui)
-
-  expect_true(grepl("minAge", ui_html))
-  expect_true(grepl("slider", ui_html, ignore.case = TRUE))
+  # default value (Phase 3: monolith parity, was 5000). Key on the rendered
+  # value attribute so "1000" cannot match the max="10000" substring.
+  expect_true(grepl("value=\"1000\"", ui_html))
+  expect_false(grepl("value=\"5000\"", ui_html))
 })
 
 test_that("modGeneticValueUI has plot output", {
@@ -1198,4 +1163,118 @@ test_that("modGeneticValueServer uses real kinship calculation", {
       expect_equal(gv_sorted$indivMeanKin, gv2_sorted$indivMeanKin)
     }
   )
+})
+
+# ============================================================================
+# Phase 3 - GVA parity: genome-uniqueness threshold control (default 4)
+# ============================================================================
+# RED: the modular module hardcodes guThresh = 1L (R/modGeneticValue.R:165) with
+# no user control; the monolith exposes a selectInput threaded as
+# guThresh = as.integer(input$threshold), default = integer 4
+# (uitpGeneticValueAnalysis.R:38-49, selected = 4L). "Default 4" is the THREADED
+# INTEGER, not a selectInput label (Learning #15/#20: no existing test pins the
+# threshold, so they all pass on the buggy 1L). Empirically guThresh 1 vs 4
+# changes every gu row, so the discriminating hook is the threaded integer,
+# surfaced via an internal reactive `guThreshold`.
+
+test_that("modGeneticValueServer threads genome-uniqueness threshold default 4", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeValidTestPed(nFounders = 4, nOffspring = 6)
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped })
+    ),
+    {
+      # Default threaded integer is 4 (monolith parity), NOT the hardcoded 1L
+      expect_equal(guThreshold(), 4L)
+
+      # And it tracks the control
+      session$setInputs(threshold = 2L)
+      expect_equal(guThreshold(), 2L)
+    }
+  )
+})
+
+test_that("modGeneticValueUI has genome-uniqueness threshold control", {
+  ui <- modGeneticValueUI("test")
+  ui_html <- as.character(ui)
+
+  # Namespaced threshold selectInput present
+  expect_true(grepl("test-threshold", ui_html))
+})
+
+# ============================================================================
+# Phase 3 - GVA parity: subset/filter view + Export Subset download
+# ============================================================================
+# RED: the monolith filters the report by user-entered IDs (gvaView/filterReport,
+# server.r:462-477) and exports the current subset (downloadGVASubset,
+# server.r:504-511). Neither exists in the modular module.
+
+test_that("modGeneticValueServer gvaView filters report by viewIds", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeValidTestPed(nFounders = 6, nOffspring = 14)
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped })
+    ),
+    {
+      session$setInputs(nIterations = 100)
+      session$setInputs(topN = 100)
+      session$setInputs(runAnalysis = 1)
+
+      full <- gvResults()
+      wanted <- full$id[1:2]
+
+      # Filter View pressed with two IDs -> only those rows
+      session$setInputs(viewIds = paste(wanted, collapse = ", "), view = 1)
+      fv <- gvaView()
+      expect_setequal(fv$id, wanted)
+      expect_equal(nrow(fv), 2L)
+
+      # Empty filter -> full report
+      session$setInputs(viewIds = "", view = 2)
+      expect_equal(nrow(gvaView()), nrow(full))
+    }
+  )
+})
+
+test_that("modGeneticValueServer downloadGVASubset writes filtered subset", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeValidTestPed(nFounders = 6, nOffspring = 14)
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped })
+    ),
+    {
+      session$setInputs(nIterations = 100)
+      session$setInputs(topN = 100)
+      session$setInputs(runAnalysis = 1)
+
+      full <- gvResults()
+      wanted <- full$id[1:3]
+      session$setInputs(viewIds = paste(wanted, collapse = ", "), view = 1)
+
+      # downloadHandler content runs and returns the written file path
+      path <- output$downloadGVASubset
+      df <- utils::read.csv(path, stringsAsFactors = FALSE)
+      expect_setequal(as.character(df$id), wanted)
+    }
+  )
+})
+
+test_that("modGeneticValueUI has subset filter and export controls", {
+  ui <- modGeneticValueUI("test")
+  ui_html <- as.character(ui)
+
+  expect_true(grepl("test-viewIds", ui_html))
+  expect_true(grepl("test-downloadGVASubset", ui_html))
 })

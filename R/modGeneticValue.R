@@ -35,13 +35,14 @@ modGeneticValueUI <- function(id) {
              wellPanel(
                h4(icon("dna"), "Analysis Options"),
                numericInput(ns("nIterations"), "Gene Drop Iterations:",
-                            value = 5000, min = 100, max = 10000, step = 100),
+                            value = 1000, min = 100, max = 10000, step = 100),
+               selectInput(ns("threshold"),
+                           "Genome Uniqueness Threshold:",
+                           choices = c(1L, 2L, 3L, 4L, 5L), selected = 4L),
                checkboxInput(ns("calcGenomeUniqueness"),
                              "Calculate Genome Uniqueness", TRUE),
                checkboxInput(ns("calcMeanKinship"),
                              "Calculate Mean Kinship", TRUE),
-               sliderInput(ns("minAge"), "Minimum breeding age (years):",
-                           min = 0, max = 10, value = 2, step = 0.5),
                actionButton(ns("runAnalysis"), "Run Analysis",
                             icon = icon("play"), class = "btn-primary btn-block")
              ),
@@ -70,7 +71,14 @@ modGeneticValueUI <- function(id) {
                tabPanel("Rankings",
                         br(),
                         numericInput(ns("topN"), "Show top N:", value = 20, min = 5),
-                        downloadButton(ns("downloadRankings"), "Download"),
+                        textAreaInput(
+                          ns("viewIds"),
+                          paste("Filter by IDs (comma, space, semicolon, or",
+                                "newline separated; blank = all):"),
+                          rows = 2),
+                        actionButton(ns("view"), "Filter View"),
+                        downloadButton(ns("downloadRankings"), "Export All"),
+                        downloadButton(ns("downloadGVASubset"), "Export Subset"),
                         br(), br(),
                         DT::DTOutput(ns("rankingsTable"))
                ),
@@ -110,6 +118,13 @@ modGeneticValueServer <- function(id, pedigree) {
 
     # Store full reportGV results
     fullResults <- reactiveVal(NULL)
+
+    # Genome-uniqueness threshold (monolith parity: default 4, user-selectable).
+    # Threaded as guThresh into reportGV, replacing the former hardcoded 1L.
+    guThreshold <- reactive({
+      thr <- input$threshold
+      if (is.null(thr)) 4L else as.integer(thr)
+    })
 
     gvResults <- eventReactive(input$runAnalysis, {
       req(pedigree())
@@ -162,7 +177,7 @@ modGeneticValueServer <- function(id, pedigree) {
         gvReport <- reportGV(
           ped,
           guIter = input$nIterations,
-          guThresh = 1L,
+          guThresh = guThreshold(),
           byID = TRUE,
           updateProgress = updateProgress
         )
@@ -192,9 +207,28 @@ modGeneticValueServer <- function(id, pedigree) {
       })
     })
 
+    # Subset/filter view (monolith parity: gvaView/filterReport). When "Filter
+    # View" is pressed with one or more IDs, restrict the report to those rows;
+    # otherwise (button unpressed or no IDs entered) the full report.
+    gvaView <- reactive({
+      rpt <- gvResults()
+      if (is.null(rpt)) {
+        return(NULL)
+      }
+      if (is.null(input$view) || input$view == 0L) {
+        return(rpt)
+      }
+      ids <- unlist(strsplit(isolate(input$viewIds), "[ ,;\t\n]"))
+      ids <- ids[trimws(ids) != ""]
+      if (length(ids) == 0L) {
+        return(rpt)
+      }
+      filterReport(ids, rpt)
+    })
+
     output$rankingsTable <- DT::renderDT({
-      req(gvResults())
-      data <- gvResults()
+      req(gvaView())
+      data <- gvaView()
       if (input$topN < nrow(data)) data <- data[1:input$topN, ]
       data
     })
@@ -252,6 +286,13 @@ modGeneticValueServer <- function(id, pedigree) {
     output$downloadRankings <- downloadHandler(
       filename = function() paste0("geneticValues_", Sys.Date(), ".csv"),
       content = function(file) write.csv(gvResults(), file, row.names = FALSE)
+    )
+
+    output$downloadGVASubset <- downloadHandler(
+      filename = function() paste0("GVA_subset_", Sys.Date(), ".csv"),
+      content = function(file) {
+        write.csv(gvaView(), file, na = "", row.names = FALSE)
+      }
     )
 
     return(list(
