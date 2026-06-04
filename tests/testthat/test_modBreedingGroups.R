@@ -1123,3 +1123,177 @@ test_that("viewGrp out-of-range selection clamps to the last group", {
     }
   )
 })
+
+# =============================================================================
+# Phase 6 - Breeding Groups parity B: seed-group "current groups" widget +
+# expose the inert minAge / nIterations / withKinship controls + breeding-sim
+# iteration default 1000 -> 10 (monolith gpIter value=10L). Parity with
+# monolith server.r:1019-1056 (textAreaWidget/getCurrentGroups) and
+# uitpBreedingGroupFormation.R:88-93,152-161. The new UI control ids match the
+# ids the server already reads (minAge/nIterations/withKinship), NOT the
+# monolith's gpIter/withKin. The founders fixture makeBgViewPed (all unrelated:
+# kinship 0.5 diag / 0 off-diag, has birth/exit) makes formation deterministic
+# under set.seed across the testServer eventReactive boundary (Learning #26a).
+# =============================================================================
+
+test_that("modBreedingGroupsUI exposes seedGroups + minAge/nIterations/withKinship controls", {
+  ui_html <- as.character(modBreedingGroupsUI("bg"))
+
+  expect_true(grepl("bg-seedGroups", ui_html))    # R1: seed-group widget gate
+  expect_true(grepl("bg-minAge", ui_html))        # R2: previously-inert control
+  expect_true(grepl("bg-nIterations", ui_html))   # R2
+  expect_true(grepl("bg-withKinship", ui_html))   # R2
+})
+
+test_that("modBreedingGroupsUI nIterations default renders value 10, not 1000", {
+  ui_html <- as.character(modBreedingGroupsUI("bg"))
+
+  # R3: exact rendered token (avoid the bare-number substring trap, Learning
+  # #24b). max="1000000" does not contain value="1000"; value="10" matches only
+  # an exact value of 10.
+  expect_true(grepl('value="10"', ui_html, fixed = TRUE))
+  expect_false(grepl('value="1000"', ui_html, fixed = TRUE))
+})
+
+test_that("seed-group widget seeds the specified animals into their group", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeBgViewPed(14L)
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      geneticValues = NULL
+    ),
+    {
+      session$setInputs(
+        animalSource = "all", nGroups = 3, maxKinship = 0.25,
+        sexRatio = "none", seedGroups = TRUE, curGrp1 = "A1, A2 A3"
+      )
+      set.seed(42)
+      session$setInputs(formGroups = 1)
+
+      # R4: all three seeded animals land in group 1 (deterministic under the
+      # seed; at HEAD the seeds are ignored and they do not all land in group 1).
+      g <- session$getReturned()$groups()
+      expect_true(all(c("A1", "A2", "A3") %in% g[[1L]]))
+    }
+  )
+})
+
+test_that("seed-group widget honors groups beyond the first (not the monolith curGrp1-only bug)", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeBgViewPed(14L)
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      geneticValues = NULL
+    ),
+    {
+      session$setInputs(
+        animalSource = "all", nGroups = 3, maxKinship = 0.25,
+        sexRatio = "none", seedGroups = TRUE,
+        curGrp1 = "A1", curGrp2 = "A2"
+      )
+      # seed 7: at HEAD (seeds ignored) neither A1 lands in g1 nor A2 in g2, so
+      # this fails at HEAD and only passes once both seeds are honored.
+      set.seed(7)
+      session$setInputs(formGroups = 1)
+
+      # R5: the monolith getCurrentGroups reads only curGrp1 (seq_along bug);
+      # the modular widget must honor every seed textarea.
+      g <- session$getReturned()$groups()
+      expect_true("A1" %in% g[[1L]])
+      expect_true("A2" %in% g[[2L]])
+    }
+  )
+})
+
+test_that("seed ids not in the pedigree block formation (validate-and-block)", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeBgViewPed(14L)
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      geneticValues = NULL
+    ),
+    {
+      session$setInputs(
+        animalSource = "all", nGroups = 3, maxKinship = 0.25,
+        sexRatio = "none", seedGroups = TRUE, curGrp1 = "ZZZ_NOT_IN_PED"
+      )
+      session$setInputs(formGroups = 1)
+
+      # R6 (dragon): a phantom seed id silently survives into the group and
+      # crashes the Phase-5 member view (addSexAndAgeToGroup -> getCurrentAge on
+      # a length-0 birth). Validate-and-block must abort formation instead.
+      g <- session$getReturned()$groups()
+      expect_equal(length(g), 0L)
+    }
+  )
+})
+
+test_that("blank seed textareas behave exactly like no seeding", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeBgViewPed(14L)
+
+  formWith <- function(seedGroups, curGrp1) {
+    out <- NULL
+    shiny::testServer(
+      modBreedingGroupsServer,
+      args = list(
+        pedigree = shiny::reactive({ test_ped }),
+        geneticValues = NULL
+      ),
+      {
+        session$setInputs(
+          animalSource = "all", nGroups = 3, maxKinship = 0.25,
+          sexRatio = "none", seedGroups = seedGroups, curGrp1 = curGrp1
+        )
+        set.seed(99)
+        session$setInputs(formGroups = 1)
+        out <<- lapply(session$getReturned()$groups(), sort)
+      }
+    )
+    out
+  }
+
+  # Green-at-HEAD coverage (NOT a RED): a whitespace-only seed must parse to
+  # character(0) so formation is identical to the unseeded run at the same seed.
+  expect_equal(formWith(TRUE, "   "), formWith(FALSE, ""))
+})
+
+test_that("withKinship=TRUE threads through to a non-NULL per-group kinship", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeBgViewPed(14L)
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      geneticValues = NULL
+    ),
+    {
+      session$setInputs(
+        animalSource = "all", nGroups = 3, maxKinship = 0.25,
+        sexRatio = "none", withKinship = TRUE
+      )
+      session$setInputs(formGroups = 1)
+
+      # Green-at-HEAD regression (NOT a RED): the server already reads
+      # input$withKinship (L203), so setting it TRUE flips groupKinship()
+      # non-NULL even at HEAD. The DISCRIMINATING withKinship RED is the
+      # UI-control-presence assertion (R2) above.
+      expect_false(is.null(session$getReturned()$groupKinship()))
+    }
+  )
+})

@@ -50,6 +50,19 @@ modBreedingGroupsUI <- function(id) {
                             choices = c("None" = "none",
                                         "Harem (1M:NF)" = "harem",
                                         "Custom" = "custom")),
+               numericInput(ns("minAge"),
+                            "Minimum breeding age (years):",
+                            value = 1L, min = 0L, max = 40L, step = 0.1),
+               numericInput(ns("nIterations"),
+                            "Number of simulations:",
+                            value = 10L, min = 1L, max = 1000000L),
+               checkboxInput(ns("withKinship"),
+                             "Include kinship in display of groups",
+                             value = FALSE),
+               checkboxInput(ns("seedGroups"),
+                             "Seed groups with specific animals",
+                             value = FALSE),
+               uiOutput(ns("seedTextareas")),
                actionButton(ns("formGroups"), "Form Groups",
                             icon = icon("users"), class = "btn-primary btn-block")
              )
@@ -199,8 +212,44 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
         harem <- (input$sexRatio == "harem")
         sexRatio <- parseSexRatio(input$sexRatio)
         minAge <- if (!is.null(input$minAge)) input$minAge else 1.0
-        iter <- if (!is.null(input$nIterations)) input$nIterations else 1000L
+        iter <- if (!is.null(input$nIterations)) {
+          as.integer(input$nIterations)
+        } else {
+          10L
+        }
         withKin <- if (!is.null(input$withKinship)) input$withKinship else FALSE
+
+        # Seed groups ("current groups") parity (monolith server.r:1019-1056):
+        # build a length-numGp list of seed-animal IDs from the per-group
+        # textareas when seeding is enabled. seq_len() honors every group's
+        # textarea (the monolith's seq_along(input$numGp) is a length-1 scalar,
+        # so it only ever reads curGrp1). Building here ties the list length to
+        # the same numGp passed to groupAddAssign, so length(currentGroups) can
+        # never exceed numGp (its length guard).
+        currentGroups <- if (isTRUE(input$seedGroups)) {
+          lapply(seq_len(numGp), function(i) {
+            raw <- input[[paste0("curGrp", i)]]
+            if (is.null(raw) || !nzchar(trimws(raw))) {
+              return(character(0L))
+            }
+            ids <- trimws(unlist(strsplit(raw, "[ ,;\t\n]")))
+            ids[nzchar(ids)]
+          })
+        } else {
+          list(character(0L))
+        }
+        if (length(currentGroups) > numGp) {
+          currentGroups <- currentGroups[seq_len(numGp)]
+        }
+
+        # Seeded animals are not also candidates (monolith server.r:1098-1100;
+        # groupAddAssign also drops them and their relatives internally).
+        candidateIds <- setdiff(candidateIds, unlist(currentGroups))
+
+        # Seed IDs absent from the pedigree are rejected (validate-and-block):
+        # a phantom seed otherwise survives into the group and crashes the
+        # Group Detail member view (addSexAndAgeToGroup -> getCurrentAge).
+        badSeeds <- setdiff(unlist(currentGroups), ped$id)
 
         # Progress callback for groupAddAssign
         updateProgress <- function(n = 1L, detail = NULL, value = 0L,
@@ -208,33 +257,44 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
           incProgress(amount = 0.001, detail = detail)
         }
 
-        # Run the MIS-based group formation algorithm
-        result <- tryCatch({
-          groupAddAssign(
-            candidates = candidateIds,
-            kmat = kmat,
-            ped = ped,
-            currentGroups = list(character(0L)),
-            threshold = threshold,
-            ignore = list(c("F", "F")),
-            minAge = minAge,
-            iter = iter,
-            numGp = numGp,
-            harem = harem,
-            sexRatio = sexRatio,
-            withKin = withKin,
-            updateProgress = updateProgress
-          )
-        }, error = function(e) {
+        # Run the MIS-based group formation algorithm. When any seed ID is not
+        # in the pedigree, block formation with a clear notification rather than
+        # forming a group with a phantom member.
+        result <- if (length(badSeeds) > 0L) {
           showNotification(
-            paste("Could not form breeding groups. Error:",
-                  e$message,
-                  "Please check your input data and try again."),
+            paste("Seed animals not in the pedigree:", toString(badSeeds)),
             type = "error",
-            duration = 10
+            duration = 10L
           )
-          list(group = list(character(0)), score = 0)
-        })
+          list(group = list(character(0L)), score = 0L)
+        } else {
+          tryCatch({
+            groupAddAssign(
+              candidates = candidateIds,
+              kmat = kmat,
+              ped = ped,
+              currentGroups = currentGroups,
+              threshold = threshold,
+              ignore = list(c("F", "F")),
+              minAge = minAge,
+              iter = iter,
+              numGp = numGp,
+              harem = harem,
+              sexRatio = sexRatio,
+              withKin = withKin,
+              updateProgress = updateProgress
+            )
+          }, error = function(e) {
+            showNotification(
+              paste("Could not form breeding groups. Error:",
+                    e$message,
+                    "Please check your input data and try again."),
+              type = "error",
+              duration = 10
+            )
+            list(group = list(character(0)), score = 0)
+          })
+        }
 
         # Process results
         validGroups <- filterValidGroups(result$group)
@@ -270,6 +330,20 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
 
         validGroups
       })
+    })
+
+    # Seed-group textareas: one per requested group, shown only when seeding is
+    # enabled. Namespaced via session$ns so each dynamically-created input reads
+    # back as input[["curGrp<i>"]] inside this module.
+    output$seedTextareas <- renderUI({
+      req(isTRUE(input$seedGroups))
+      numGp <- input$nGroups
+      req(!is.null(numGp), !is.na(numGp), numGp >= 1L)
+      do.call(tagList, lapply(seq_len(numGp), function(i) {
+        textAreaInput(session$ns(paste0("curGrp", i)),
+                      label = paste("Seed animals", i),
+                      value = "", rows = 3L)
+      }))
     })
 
     output$groupsDisplay <- renderUI({
