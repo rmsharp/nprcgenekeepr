@@ -57,7 +57,21 @@ modBreedingGroupsUI <- function(id) {
       column(8,
              tabsetPanel(
                tabPanel("Groups", br(), uiOutput(ns("groupsDisplay"))),
-               tabPanel("Statistics", br(), tableOutput(ns("groupStats")))
+               tabPanel("Statistics", br(), tableOutput(ns("groupStats"))),
+               tabPanel(
+                 "Group Detail", br(),
+                 selectInput(ns("viewGrp"), "Group to view:", choices = NULL),
+                 h4("Group members"),
+                 DT::DTOutput(ns("groupMemberTable")),
+                 br(),
+                 h4("Within-group kinship"),
+                 DT::DTOutput(ns("groupKinTable")),
+                 br(),
+                 downloadButton(ns("downloadGroup"),
+                                "Export Current Group"),
+                 downloadButton(ns("downloadGroupKin"),
+                                "Export Current Group Kinship Matrix")
+               )
              )
       )
     ),
@@ -227,12 +241,23 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
         assignedIds <- unlist(validGroups)
         unassignedIds <- setdiff(candidateIds, assignedIds)
 
-        # Store full results for other reactives
+        # The unused-animals group is the last element appended by
+        # addGroupOfUnusedAnimals(); it survives filterValidGroups() only when
+        # it is non-empty, in which case it is the last element of validGroups.
+        lastRaw <- result$group[[length(result$group)]]
+        hasUnused <- !(length(lastRaw) == 0L || all(is.na(lastRaw)))
+
+        # Store full results for other reactives. kmat is retained so the
+        # Group Detail tab can derive each group's kinship submatrix via
+        # filterKinMatrix() without re-deriving the matrix (display-only;
+        # the group-formation result above is unchanged).
         groupResults(list(
           group = validGroups,
           score = result$score,
           groupKin = result$groupKin,
-          unassigned = unassignedIds
+          unassigned = unassignedIds,
+          kmat = kmat,
+          hasUnused = hasUnused
         ))
 
         incProgress(0.5, detail = "Complete")
@@ -296,6 +321,80 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
       })
       do.call(rbind, stats)
     })
+
+    # ---- Group Detail tab: viewGrp selector + per-group member/kinship views
+
+    # Selected group index, clamped to the number of groups actually formed.
+    # length() rather than req(breedingGroups()) because an empty result is a
+    # zero-length list, which req() treats as truthy.
+    selectedGroup <- reactive({
+      req(length(breedingGroups()) >= 1L)
+      withinIntegerRange(input$viewGrp, minimum = 1L,
+                         maximum = length(breedingGroups()))[1L]
+    })
+
+    # Populate the group selector when groups are (re)formed. When a non-empty
+    # group of unused animals is present it is the last element, labelled
+    # "Unused"; otherwise every element is labelled "Group i".
+    observe({
+      n <- length(breedingGroups())
+      req(n >= 1L)
+      res <- groupResults()
+      labels <- paste("Group", seq_len(n))
+      if (isTRUE(res$hasUnused)) {
+        labels[n] <- "Unused"
+      }
+      updateSelectInput(session, "viewGrp",
+                        choices = stats::setNames(seq_len(n), labels),
+                        selected = 1L)
+    })
+
+    # Annotated members (Ego ID / Sex / Age in Years) of the selected group.
+    bgGroupView <- reactive({
+      req(breedingGroups())
+      ids <- breedingGroups()[[selectedGroup()]]
+      gp <- addSexAndAgeToGroup(ids, pedigree())
+      gp$age <- round(gp$age, 1L)
+      colnames(gp) <- c("Ego ID", "Sex", "Age in Years")
+      gp[order(gp$`Ego ID`), , drop = FALSE]
+    })
+
+    # Within-group kinship submatrix of the selected group, derived from the
+    # retained full kinship matrix (identical to groupAddAssign's groupKin
+    # because the group's members are a subset of the candidate set).
+    bgGroupKinView <- reactive({
+      req(breedingGroups())
+      res <- groupResults()
+      req(!is.null(res$kmat))
+      ids <- breedingGroups()[[selectedGroup()]]
+      as.data.frame(as.matrix(round(filterKinMatrix(ids, res$kmat), 6L)))
+    })
+
+    output$groupMemberTable <- DT::renderDT(
+      bgGroupView(),
+      options = list(pageLength = 25L, dom = "t")
+    )
+    output$groupKinTable <- DT::renderDT(
+      bgGroupKinView(),
+      options = list(pageLength = 25L, dom = "t")
+    )
+
+    output$downloadGroup <- downloadHandler(
+      filename = function() {
+        getDatedFilename(paste0("Group-", input$viewGrp, ".csv"))
+      },
+      content = function(file) {
+        write.csv(bgGroupView(), file, na = "", row.names = FALSE)
+      }
+    )
+    output$downloadGroupKin <- downloadHandler(
+      filename = function() {
+        getDatedFilename(paste0("GroupKin-", input$viewGrp, ".csv"))
+      },
+      content = function(file) {
+        write.csv(bgGroupKinView(), file, na = "", row.names = TRUE)
+      }
+    )
 
     return(list(
       groups = reactive({ breedingGroups() }),

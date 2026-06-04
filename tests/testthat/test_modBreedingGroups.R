@@ -962,3 +962,164 @@ test_that("modBreedingGroupsServer handles maximum kinship threshold", {
     }
   )
 })
+
+# =============================================================================
+# Phase 5 - Group Detail tab: viewGrp selector, per-group member + kinship
+# views, and downloadGroup / downloadGroupKin handlers (parity with monolith
+# server.r:1196-1297). Founders give a deterministic kinship submatrix
+# (0.5 diagonal / 0 off-diagonal) so assertions are deterministic despite the
+# stochastic MIS formation; content assertions key on the ACTUAL formed group.
+# =============================================================================
+
+# Founders-with-birth fixture: addSexAndAgeToGroup needs ped$birth (getCurrentAge)
+makeBgViewPed <- function(n = 14L) {
+  data.frame(
+    id = paste0("A", seq_len(n)),
+    sire = NA_character_,
+    dam = NA_character_,
+    sex = rep(c("M", "F"), length.out = n),
+    birth = as.Date("2015-01-01") - seq_len(n) * 90L,
+    exit = as.Date(NA),
+    stringsAsFactors = FALSE
+  )
+}
+
+test_that("modBreedingGroupsUI has Group Detail tab with selector, views, downloads", {
+  ui_html <- as.character(modBreedingGroupsUI("bg"))
+
+  expect_true(grepl("Group Detail", ui_html))
+  expect_true(grepl("bg-viewGrp", ui_html))
+  expect_true(grepl("bg-groupMemberTable", ui_html))
+  expect_true(grepl("bg-groupKinTable", ui_html))
+  expect_true(grepl("Export Current Group", ui_html))
+  expect_true(grepl("Export Current Group Kinship", ui_html))
+})
+
+test_that("downloadGroup writes the selected group's annotated members", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeBgViewPed(14L)
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      geneticValues = NULL
+    ),
+    {
+      session$setInputs(
+        animalSource = "all", nGroups = 3, maxKinship = 0.25,
+        sexRatio = "none"
+      )
+      session$setInputs(formGroups = 1)
+      session$setInputs(viewGrp = "1")
+
+      grp1 <- session$getReturned()$groups()[[1L]]
+
+      path <- output$downloadGroup
+      df <- utils::read.csv(path, check.names = FALSE,
+                            stringsAsFactors = FALSE)
+
+      expect_equal(colnames(df), c("Ego ID", "Sex", "Age in Years"))
+      expect_setequal(as.character(df[["Ego ID"]]), grp1)
+      expect_true(all(df[["Sex"]] %in% c("M", "F")))
+      expect_true(is.numeric(df[["Age in Years"]]))
+      expect_true(all(df[["Age in Years"]] > 0))
+    }
+  )
+})
+
+test_that("downloadGroupKin writes the group's kinship submatrix (== filterKinMatrix)", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeBgViewPed(14L)
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      geneticValues = NULL
+    ),
+    {
+      session$setInputs(
+        animalSource = "all", nGroups = 3, maxKinship = 0.25,
+        sexRatio = "none"
+      )
+      session$setInputs(formGroups = 1)
+      session$setInputs(viewGrp = "1")
+
+      grp1 <- session$getReturned()$groups()[[1L]]
+
+      path <- output$downloadGroupKin
+      km <- utils::read.csv(path, row.names = 1, check.names = FALSE)
+
+      expect_equal(nrow(km), length(grp1))
+      expect_equal(ncol(km), length(grp1))
+      expect_setequal(rownames(km), grp1)
+      expect_setequal(colnames(km), grp1)
+
+      # Equivalence to filterKinMatrix on the full kinship matrix (the dragon):
+      p2 <- test_ped
+      p2$gen <- findGeneration(p2$id, p2$sire, p2$dam)
+      fullk <- kinship(p2$id, p2$sire, p2$dam, p2$gen)
+      expected <- as.matrix(filterKinMatrix(grp1, fullk))
+      got <- as.matrix(km)[rownames(expected), colnames(expected), drop = FALSE]
+      expect_equal(round(unname(got), 6), round(unname(expected), 6))
+    }
+  )
+})
+
+test_that("viewGrp selector switches the displayed group", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeBgViewPed(14L)
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      geneticValues = NULL
+    ),
+    {
+      session$setInputs(
+        animalSource = "all", nGroups = 3, maxKinship = 0.25,
+        sexRatio = "none"
+      )
+      session$setInputs(formGroups = 1)
+      session$setInputs(viewGrp = "2")
+
+      grp2 <- session$getReturned()$groups()[[2L]]
+      df <- utils::read.csv(output$downloadGroup, check.names = FALSE,
+                            stringsAsFactors = FALSE)
+      expect_setequal(as.character(df[["Ego ID"]]), grp2)
+    }
+  )
+})
+
+test_that("viewGrp out-of-range selection clamps to the last group", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeBgViewPed(14L)
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      geneticValues = NULL
+    ),
+    {
+      session$setInputs(
+        animalSource = "all", nGroups = 3, maxKinship = 0.25,
+        sexRatio = "none"
+      )
+      session$setInputs(formGroups = 1)
+      session$setInputs(viewGrp = "99")
+
+      gs <- session$getReturned()$groups()
+      lastGrp <- gs[[length(gs)]]
+      df <- utils::read.csv(output$downloadGroup, check.names = FALSE,
+                            stringsAsFactors = FALSE)
+      expect_setequal(as.character(df[["Ego ID"]]), lastGrp)
+    }
+  )
+})
