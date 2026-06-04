@@ -14,6 +14,48 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-04 — Implement Phase 5 of the Shiny-module conversion: Breeding Groups parity A (Session 26)
+- **Deliverable (implementation):** brought the modular **Breeding Group Formation** module to
+  monolith parity for the per-group display/export half, all in `R/modBreedingGroups.R` (plan §9
+  Phase 5). A new **"Group Detail" tab** (additive — the existing all-groups "Groups" and
+  "Statistics" tabs are untouched) adds:
+  1. **`viewGrp` group selector** (`selectInput`), populated when groups form ("Group 1..N",
+     with the last labelled "Unused" only when the appended unused-animals group is non-empty).
+  2. **Per-group annotated member view** — `addSexAndAgeToGroup()` → rounded age → columns
+     "Ego ID"/"Sex"/"Age in Years", ordered by ID (the monolith's `bgGroupView`).
+  3. **Per-group kinship matrix view** — `filterKinMatrix(groupIds, kmat)` rounded to 6 dp
+     (the monolith's `bgGroupKinView`).
+  4. **`downloadGroup`** (member CSV, `na=""`/`row.names=FALSE`) and **`downloadGroupKin`**
+     (kinship CSV, `na=""`/`row.names=TRUE`) handlers.
+- **Dragon (threading the kinship matrix) discharged.** The kinship view computes each group's
+  submatrix from the module's already-computed full `kmat` (now retained in `groupResults` with a
+  `hasUnused` flag), NOT from `result$groupKin` (still NULL — `withKin` defaults FALSE until the
+  Phase-6 `withKinship` control). This is **byte-identical** to the monolith's `groupKin[[i]]`
+  (each group's members ⊆ candidates), and the group-**formation** compute path is **unchanged** —
+  proven `identical()` across three `set.seed`ed scenarios (nGroups 3/4/1) vs a pre-change
+  reference (`groups`/`score`/`unassigned`/`nGroups`). Display/download only.
+- **More robust than the monolith.** Both views clamp `viewGrp` via
+  `withinIntegerRange(., 1, length(breedingGroups()))` (the monolith clamps the member view to the
+  *requested* `numGp` and leaves the kinship view unclamped — a latent out-of-range bug). The
+  selector-populating `observe` guards on `length(breedingGroups()) >= 1L` (an empty result is a
+  zero-length list, which `req()` treats as truthy — the naive guard warned on the degenerate
+  harem-with-no-eligible-sires case).
+- **TDD:** 5 new tests in `tests/testthat/test_modBreedingGroups.R` (UI structure; member-download
+  content; kinship-download content + `filterKinMatrix`-equivalence; selector switches group;
+  out-of-range clamp) — all red at HEAD, green after. Founders-with-birth fixture gives a
+  deterministic kinship submatrix (0.5 diagonal / 0 off-diagonal); assertions key on the *actual*
+  formed group. Full suite under `pkgload::load_all` + `NOT_CRAN=true`: **0 failed / 0 error**,
+  156 e2e skipped, 5 pre-existing `modPyramid` warnings, 2264 passed. Lint net-zero on
+  `R/modBreedingGroups.R` (31 = 31); `document()` zero man/NAMESPACE delta; **Phase 3E runtime
+  smoke** — `runModularApp()` HTTP 200 with the Group Detail tab + selector + downloads rendered.
+- **Housekeeping:** removed two stray untracked macOS "filename 2" duplicates
+  (`R/modBreedingGroups 2.R`, `tests/testthat/test_modBreedingGroups 2.R`) that had appeared
+  mid-session and were doubling the generated `.Rd` docs and double-running the test file
+  (moved aside to `/tmp`, not in git).
+- **No `NEWS.md` bullet** — this is display/download parity for the not-yet-canonical modular app
+  with no change to the analytical pipeline (NEWS is reserved for numeric changes + the Phase 9
+  deprecation). Plan §9 Phase 5 → DONE; next is Phase 6 (seed-groups + inert controls).
+
 ### 2026-06-04 — Implement Phase 4 of the Shiny-module conversion: genotype file merge in modInput (Session 25)
 - **Deliverable (implementation):** brought the modular **Data Input** module to monolith parity
   for the **separate pedigree/genotype** upload path, all in `R/modInput.R` (plan §9 Phase 4).

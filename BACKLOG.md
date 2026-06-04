@@ -20,8 +20,15 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       **Phase 4 ✅ DONE (S25)** — Input parity: genotype file merge in `R/modInput.R` (separate
       pedigree/genotype mode reads `input$genotypeFile` via `getGenotypes`→`checkGenotypeFile`→
       NULL-guarded `addGenotype` before QC; `genotypeData()` populated via `getGVGenotype(cleaned)`).
-      Common-mode unchanged (proven at parity). **Next: implement Phase 5 only** (Breeding Groups
-      parity A: downloads + per-group kinship matrix + `viewGrp` selector; risk MEDIUM).
+      Common-mode unchanged (proven at parity).
+      **Phase 5 ✅ DONE (S26)** — Breeding Groups parity A in `R/modBreedingGroups.R`: a new
+      "Group Detail" tab with the `viewGrp` selector, per-group member view + per-group kinship
+      matrix (`filterKinMatrix` from the stored full `kmat`, byte-identical to `groupKin`), and
+      `downloadGroup`/`downloadGroupKin` handlers. Formation provably unchanged (`identical()` on
+      seeded `groups()`); both views clamp to `length(breedingGroups())`. **Next: implement Phase 6
+      only** (Breeding Groups parity B: seed-group pre-seeding + expose the inert
+      `minAge`/`nIterations`/`withKinship` controls; **breeding-sim iteration default = 10 not 1000**;
+      risk MEDIUM).
 - [ ] Integration testing for the modularized Shiny app — **= Phase 8 of the conversion plan**
       (author the missing shinytest2 driver helpers + run the E2E tier; this is **GitHub issue #39**).
 - [ ] CRAN submission preparation
