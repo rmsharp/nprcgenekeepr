@@ -18,6 +18,21 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 - [ ] **Integration testing for the modularized Shiny app** — **= Phase 8 of the conversion plan**
       (author the missing shinytest2 driver helpers + run the E2E tier; this is **GitHub issue #39**).
 - [ ] **CRAN submission preparation**
+- [ ] **Trim `CLAUDE.md` without loss of information** (user-requested 2026-06-04, S27) — dedicated
+      session. The file is ~84 KB (~21K tokens), loaded in full every session; the 27-row
+      "Project-specific Learnings" table is ~89% of it (~75 KB). **Plan:** (1) add a short
+      **"Recurring reflexes" glossary** defining the ~10 reflexes the rows repeat verbatim
+      (verify-firsthand; discriminating-RED [a pre-existing test passes on the bug];
+      `NOT_CRAN`+`load_all` regression read; touched-file-stash net-zero lint;
+      `import(shiny)`/`document()` zero-delta; `set.seed` deterministic across the `testServer`
+      boundary; recon-then-verify; `* 2.*` dupe scan; REFACTOR-only / no-faked-RED;
+      stop-vs-warning-by-baseline; CHANGELOG-vs-BACKLOG placement); (2) rewrite each learning to keep
+      its **unique** content (specific finding, file:line citations, the actual bug mechanism, per-item
+      verdict) and **reference** the shared reflexes by tag; merge the redundant "When to Apply"
+      restatement into the finding. Preserve every specific fact (inline or moved to the glossary).
+      Target ~40–48 KB. **⚠ Do NOT touch the synced files** (`SESSION_RUNNER.md`/`SAFEGUARDS.md`/
+      `methodology_dashboard.py`) — `CLAUDE.md` is project-owned; this is delicate/high-stakes (it
+      governs every session).
 
 ## Audit follow-ups
 *(From `PED_GV_AUDIT_2026-05-30.md`; the audit compute/test items are all resolved — see
