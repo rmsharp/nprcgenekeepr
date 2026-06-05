@@ -14,6 +14,30 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-05 — PLAN: Phase 8 sub-plan — enable the shinytest2 E2E harness (XARCH-1 / issue #39) (Session 30)
+- **Deliverable (planning, not implementation):** `docs/planning/phase8-e2e-harness-subplan.md` —
+  a sub-plan for the conversion campaign's Phase 8 (make the dormant shinytest2 browser E2E tier
+  executable). The campaign's second planning/architecture deliverable. No code written (FM #18/#19).
+- **Corrected the parent plan §9 Phase 8** via firsthand discovery (greps + R one-liners + a read-only
+  workflow: 5-agent census of all 23 E2E files + adversarial completeness-critic, 16 findings
+  re-verified firsthand): the gap is **6 undefined helpers + 1 undefined constant** (`create_app_driver`
+  with `...`→height/width, `navigate_to_tab(app, label, fallback=NULL)` [109/137 calls 3-arg],
+  `get_html_safe`, `click_element_safe`, `navigate_to_menu_item`, `get_values_safe`, `E2E_TIMEOUT`),
+  **not the "3 helpers"** the parent plan claimed — and Phase 8 is a **4-session mini-campaign (8a–8d)**,
+  not one session.
+- **Key findings:** the `navbarPage` renders ALL tabs' static UI into the DOM at boot
+  (`appUI()` = 85 KB), so the suite's dominant `grepl(keyword, "body")` checks **pass trivially once the
+  app boots** → "harness runs green" ≠ "validates behavior" (41 `expect_true(TRUE)` tautologies;
+  `summary-statistics-module` navigates to the wrong tab in 7/8 tests yet passes). The `input` vs
+  `dataInput` namespace mismatch is real but **inert** (polling helpers never called).
+- **Owner decisions (`AskUserQuestion`):** (1) scope = **harness-enable (8a–8d)** → assertion-strengthening
+  filed as a separate follow-on issue ("8e"); (2) CI gating = **scheduled + manual dispatch** (not per-PR),
+  drop `continue-on-error`, keep fast unit CI as the per-PR gate.
+- **Plan structure:** 8a helpers/constant (browser-free RED→GREEN) · 8b boot-smoke + CI rewire (first
+  browser run) · 8c 15 shallow per-module files · 8d 5 interaction/menu files → close #39. Each sub-phase
+  has DONE + verify-command + session boundary; 23 files / 159 tests fully assigned. Updated parent plan
+  §9 + `BACKLOG.md` to point at the sub-plan. Learning #30.
+
 ### 2026-06-05 — Implement Phase 7 of the Shiny-module conversion: Input parity, focal-animal / LabKey pedigree build (Session 29)
 - **Deliverable (implementation):** wired the modular **Data Input** module's "Focal animals only;
   pedigree built from database" path so an uploaded focal-animal ID list builds a pedigree from the

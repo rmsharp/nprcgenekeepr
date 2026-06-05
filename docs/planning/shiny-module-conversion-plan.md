@@ -266,6 +266,9 @@ This phase brings the modular **Summary Statistics tab** to monolith parity acro
 - **Session boundary:** close out when the focal path works under mock (or is descoped).
 
 ### Phase 8 — Enable the shinytest2 E2E harness end-to-end · risk HIGH 🐉
+
+> **⚠ EXPANDED INTO A SUB-PLAN (Session 30):** firsthand discovery found **6 undefined helpers + 1 undefined constant** (not the 3 helpers this section assumed) and that Phase 8 is a **4-session mini-campaign (8a–8d)**, not one session. **Follow [`phase8-e2e-harness-subplan.md`](phase8-e2e-harness-subplan.md)** — it carries the verified inventory, the 6 helper interface contracts, the 8a–8d decomposition (+ 8e deferred to a separate issue), and the owner decisions (scope = harness-enable; CI = scheduled + manual dispatch). The bullets below are the original Session-21 sketch, retained for context.
+
 - **Goal:** make the E2E tier executable. Author the **missing driver helpers** `create_app_driver`/`navigate_to_tab`/`get_html_safe` (defined nowhere; never in git — verified), fix the namespace mismatch, get the suite to run green (or skip cleanly) under `NPRC_RUN_E2E=true`.
 - **🐉 DRAGONS (verified):**
   - **The E2E suite is unwritten theatre:** 20/22 AppDriver files (155 `test_that`) call the 3 undefined helpers → they **error before asserting**. "shinytest2 coverage exists" is false; authoring the helpers is the deliverable.

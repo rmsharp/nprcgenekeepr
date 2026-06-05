@@ -11,13 +11,15 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       plan: `docs/planning/shiny-module-conversion-plan.md` (9 vertical-slice phases; one phase
       per session, do **not** bundle). **Phases 1–7 complete** (see `CHANGELOG.md`; Phase 7 = focal-animal /
       LabKey input parity, mock-wired into `modInput`, S29).
-      **Next: Phase 8** — enable the shinytest2 E2E harness end-to-end (author the missing
-      `create_app_driver`/`navigate_to_tab`/`get_html_safe` helpers + fix the namespace mismatch + run
-      the suite opt-in under `NPRC_RUN_E2E=true`; this is **GitHub issue #39**). **Risk HIGH 🐉** —
-      browser-dependent, never run; may need a sub-plan. Then Phase 9 (declare canonical: alias
-      `runGeneKeepR`, delete the monolith — irreversible, its own commit).
+      **Next: Phase 8** — enable the shinytest2 E2E harness end-to-end (**GitHub issue #39**).
+      **Now has a sub-plan: `docs/planning/phase8-e2e-harness-subplan.md`** (S30) — discovery found
+      **6 undefined helpers + 1 constant** (not 3) → a **4-session mini-campaign 8a–8d** (8a helpers/constant
+      browser-free · 8b boot-smoke + CI · 8c per-module shallow · 8d interaction/menu → close #39), with
+      assertion-strengthening deferred to a separate issue (8e). Owner decisions: scope = harness-enable;
+      CI = scheduled + manual dispatch. **Risk HIGH 🐉** — browser-dependent, never run. Then Phase 9
+      (declare canonical: alias `runGeneKeepR`, delete the monolith — irreversible, its own commit).
 - [ ] **Integration testing for the modularized Shiny app** — **= Phase 8 of the conversion plan**
-      (author the missing shinytest2 driver helpers + run the E2E tier; this is **GitHub issue #39**).
+      (= issue #39; see `docs/planning/phase8-e2e-harness-subplan.md`).
 - [ ] **CRAN submission preparation**
 
 ## Audit follow-ups
