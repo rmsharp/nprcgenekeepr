@@ -14,6 +14,44 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-05 — Implement Phase 7 of the Shiny-module conversion: Input parity, focal-animal / LabKey pedigree build (Session 29)
+- **Deliverable (implementation):** wired the modular **Data Input** module's "Focal animals only;
+  pedigree built from database" path so an uploaded focal-animal ID list builds a pedigree from the
+  ONPRC LabKey EHR — bringing modular `modInput` to monolith parity (plan §9 Phase 7; monolith
+  server.r:86-113). All in `R/modInput.R`, inside `observeEvent(input$getData)`:
+  1. **Server-side gap fixed.** The UI option already existed (`modInput.R:70` radio /
+     `:111-116` `breederFile` / `:244` `activeFile`) but was **broken**: the focal-ID file was read
+     *as a pedigree* by `readDataFile()` → a spurious "missing columns" QC error. Now, when
+     `input$fileContent == "focalAnimals"`, the module calls `getFocalAnimalPed(file$datapath, sep)`
+     to build the pedigree from the EHR, then feeds it into the existing `qcStudbook`/`runQcStudbook`
+     machinery unchanged.
+  2. **DB-failure routing.** A `getLkDirectRelatives` connection failure makes `getFocalAnimalPed`
+     return an `nprcgenekeeprErr` errorLst; the module routes it to `storedErrorLst()` (cleaned =
+     NULL, early return) so the already-wired appServer dynamic **Error List** tab surfaces
+     `failedDatabaseConnection` ("Database connection failed…"). No new renderer/appServer code.
+- **Built more correctly than the monolith.** The monolith detects the error shape with
+  `is.element("nprckeepErr", class(...))` — a **typo** (the real class is `nprcgenekeeprErr`), so its
+  DB-failure branch never fired. The modular wiring uses `inherits(built, "nprcgenekeeprErr")` and
+  drops the monolith's dead bare-`NULL` branch (`getFocalAnimalPed` only returns a data.frame or an
+  errorLst).
+- **Strict TDD** (RED→GREEN→REFACTOR, all gated + 2 pre-RED author-decision `AskUserQuestion`s — the
+  owner-consult fork [mock-wire vs live-integration vs descope] → **mock-wire/full parity**): 2 new
+  tests in `tests/testthat/test_modInput.R` drive `testServer(modInputServer)` and mock the LabKey seam
+  via `testthat::local_mocked_bindings(getLkDirectRelatives = …, .package = "nprcgenekeepr")` so the
+  real `getFocalAnimalPed` body runs (no live EHR). Both **RED at HEAD** (happy: `cleaned` NULL because
+  the focal file is read as a 1-column pedigree; sad: `failedDatabaseConnection` never set), **GREEN**
+  after. REFACTOR gated, skipped (minimal/idiomatic).
+- **Verification:** `test_modInput.R` 0/0/0 (162 passed); full suite under `pkgload::load_all` +
+  `NOT_CRAN=true` = **0 failed / 0 error**, 0 non-e2e offenders, e2e skipped (156), only the 5
+  pre-existing `modPyramid` warnings (added zero), **2122 passed**. Lint **net-zero** on `R/modInput.R`
+  (41 = 41, touched-file stash; explicit-`L` on the copied empty-warnings df), `document()` **zero**
+  man/NAMESPACE delta, no macOS `* 2.*` dupes, **Phase-3E runtime smoke** — `runModularApp()` binds +
+  HTTP 200, served HTML renders `dataInput-breederFile`/`-fileContent`/`-getData` + `value="focalAnimals"`.
+  **Verification is environmentally limited** (no live EHR): the mock covers everything on the module's
+  side of the ONPRC boundary; the live `getLkDirectRelatives` → `getDemographics` call is owner-verifiable
+  only (stated, not skipped — not FM #24). **No NEWS bullet** — input-wiring/display parity for the
+  modular app, no analytical-pipeline numeric change (consistent with S22/S23/S25).
+
 ### 2026-06-04 — Implement Phase 6 of the Shiny-module conversion: Breeding Groups parity B (Session 27)
 - **Deliverable (implementation):** brought the modular **Breeding Group Formation** module to
   monolith parity for seed-group pre-seeding and the previously-inert formation controls, all in
