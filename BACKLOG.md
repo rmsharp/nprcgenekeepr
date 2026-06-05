@@ -9,15 +9,17 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 ## Up Next
 - [ ] **Complete the monolith → Shiny-module conversion (XARCH-1 / issue #27)** —
       plan: `docs/planning/shiny-module-conversion-plan.md` (9 vertical-slice phases; one phase
-      per session, do **not** bundle). **Phases 1–7 complete** (see `CHANGELOG.md`; Phase 7 = focal-animal /
-      LabKey input parity, mock-wired into `modInput`, S29).
-      **Next: Phase 8** — enable the shinytest2 E2E harness end-to-end (**GitHub issue #39**).
-      **Now has a sub-plan: `docs/planning/phase8-e2e-harness-subplan.md`** (S30) — discovery found
-      **6 undefined helpers + 1 constant** (not 3) → a **4-session mini-campaign 8a–8d** (8a helpers/constant
-      browser-free · 8b boot-smoke + CI · 8c per-module shallow · 8d interaction/menu → close #39), with
-      assertion-strengthening deferred to a separate issue (8e). Owner decisions: scope = harness-enable;
-      CI = scheduled + manual dispatch. **Risk HIGH 🐉** — browser-dependent, never run. Then Phase 9
-      (declare canonical: alias `runGeneKeepR`, delete the monolith — irreversible, its own commit).
+      per session, do **not** bundle). **Phases 1–7 + 8a complete** (see `CHANGELOG.md`; Phase 7 =
+      focal-animal / LabKey input parity into `modInput`, S29; Phase 8a = the 6 E2E driver helpers +
+      `E2E_TIMEOUT` defined browser-free in `tests/testthat/helper-shinytest2.R`, S31).
+      **Next: Phase 8b** — boot-smoke tier + CI rewire (the FIRST browser run) — part of enabling the
+      shinytest2 E2E harness end-to-end (**GitHub issue #39**).
+      **Sub-plan: `docs/planning/phase8-e2e-harness-subplan.md`** (S30) — a **4-session mini-campaign
+      8a–8d** (**8a ✅ helpers/constant browser-free, S31** · 8b boot-smoke + CI 🐉 first browser run ·
+      8c per-module shallow · 8d interaction/menu → close #39), with assertion-strengthening deferred to
+      a separate issue (8e). Owner decisions: scope = harness-enable; CI = scheduled + manual dispatch.
+      **Risk MEDIUM-HIGH 🐉** — browser-dependent, never run (8b is the first browser execution). Then
+      Phase 9 (declare canonical: alias `runGeneKeepR`, delete the monolith — irreversible, its own commit).
 - [ ] **Integration testing for the modularized Shiny app** — **= Phase 8 of the conversion plan**
       (= issue #39; see `docs/planning/phase8-e2e-harness-subplan.md`).
 - [ ] **CRAN submission preparation**

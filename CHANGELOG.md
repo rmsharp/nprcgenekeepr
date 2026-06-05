@@ -14,6 +14,31 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-05 — Implement Phase 8a of the conversion E2E harness: define the 6 driver helpers + E2E_TIMEOUT (issue #39) (Session 31)
+- **Deliverable (implementation):** the first sub-phase of the Phase 8 E2E mini-campaign
+  (`docs/planning/phase8-e2e-harness-subplan.md` §5(8a)) — defined the 6 shinytest2 driver helpers
+  + the `E2E_TIMEOUT` constant in `tests/testthat/helper-shinytest2.R`, **browser-free RED→GREEN**
+  under strict TDD (resumed after the two planning sessions #21/#30).
+- **Helpers added:** `create_app_driver(app_dir, name, height=800, width=1200, ...)`,
+  `navigate_to_tab(app, tab_label, fallback=NULL)` (sets `mainNavbar`, returns TRUE only if the tab
+  reads back — catches a silent no-op nav), `get_html_safe`/`get_values_safe`/`click_element_safe`
+  (`tryCatch`-guarded → `""`/`list()`/`FALSE`), `navigate_to_menu_item` (provisional delegate to
+  `navigate_to_tab`; finalized in 8d), and `E2E_TIMEOUT <- 30000L`.
+- **Caught a latent bug in the plan's §4 pseudo-code** ([verify-first] on the approved plan): the
+  literal `create_app_driver(app_dir, name, ...)` hardcodes `height`/`width` then splices `...`, so the
+  2 `test-e2e-boundary-conditions.R` calls passing `height=`/`width=` would duplicate-crash
+  `AppDriver$new` (*"formal argument 'height' matched by multiple actual arguments"* — verified that
+  `AppDriver$new` has explicit `height`/`width` formals). Fixed by exposing them as named formals; the
+  deviation was approved in the PRE-RED→RED phase gate.
+- **Tests (browser-free, new file `tests/testthat/test_helper_shinytest2.R`):** 14 `test_that` /
+  32 assertions using fake-AppDriver `list()` stubs (throwing / recording-ok / silent-no-op) to
+  discriminate the existence, signature, `*_safe` error, success, and read-back contracts — no Chrome
+  needed (mirrors `test_create_test_app.R`). All RED at HEAD, GREEN after.
+- **Verification:** full non-e2e suite `0 failed / 0 error`, **2154 passed** (+32), e2e skipped (156),
+  only the 5 pre-existing `modPyramid` warnings; `document()` zero `man/`/`NAMESPACE` delta; `tests/`
+  is `.lintr`-excluded → lint-exempt. Phase 3E N/A (helpers live only in the test tree — the suite is
+  the runtime). Learning #31. **Next: Phase 8b** (boot-smoke tier + CI rewire — first browser run).
+
 ### 2026-06-05 — PLAN: Phase 8 sub-plan — enable the shinytest2 E2E harness (XARCH-1 / issue #39) (Session 30)
 - **Deliverable (planning, not implementation):** `docs/planning/phase8-e2e-harness-subplan.md` —
   a sub-plan for the conversion campaign's Phase 8 (make the dormant shinytest2 browser E2E tier
