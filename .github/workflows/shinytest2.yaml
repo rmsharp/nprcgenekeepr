@@ -1,11 +1,21 @@
 # Workflow for shinytest2 Shiny application tests
-# Runs browser-based tests for the GeneKeepR Shiny application
+# Runs browser-based E2E tests for the GeneKeepR modular Shiny application.
+#
+# Opt-in tier (issue #39, Phase 8): every browser test is gated by
+# create_test_app() on the NPRC_RUN_E2E env var. Per the Phase 8 sub-plan owner
+# decision (docs/planning/phase8-e2e-harness-subplan.md sec 7), this runs on a
+# nightly schedule + manual dispatch (NOT per-PR) because browser tests are slow
+# and Chrome-flaky; the fast unit CI (R-CMD-check, test-coverage) remains the
+# per-PR gate. It currently runs the Phase-8b boot-smoke tier (3 files); broaden
+# the filter to the full ^(app|e2e)- tier once sub-phases 8c/8d land.
+#
+# NOTE: schedule + workflow_dispatch only fire once this workflow is on the
+# default branch (master). On the feature branch it cannot be GitHub-triggered.
 
 on:
-  push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
+  schedule:
+    # 07:00 UTC nightly (runs on the default branch only).
+    - cron: '0 7 * * *'
   workflow_dispatch:
 
 name: shinytest2
@@ -16,9 +26,26 @@ jobs:
   shinytest2:
     runs-on: ubuntu-latest
 
+    timeout-minutes: 30
+
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      # Opt-in gate: create_test_app() returns the app dir only when this is "true".
+      # Set at job level so it is visible to every step (sub-plan sec 7).
+      NPRC_RUN_E2E: 'true'
+      # The 3 boot-smoke files all call skip_on_cran(); testthat::on_cran() is TRUE
+      # on a non-interactive Rscript runner unless NOT_CRAN is set -- which would make
+      # every E2E test SILENTLY SKIP (stop_on_failure does not catch skips, so the job
+      # would go green having run nothing). Set it so the tests actually execute
+      # (matches every sub-plan verify command).
+      NOT_CRAN: 'true'
+      # The repo's tracked .Rprofile activates the renv autoloader, which forces
+      # .libPaths()[1] to renv's PRIVATE library. Disable it so setup-r-dependencies,
+      # R CMD INSTALL, and the test run all target the standard site library -- so the
+      # AppDriver subprocess (which starts in the installed shinytest/ dir, with no
+      # project .Rprofile) can resolve library(nprcgenekeepr). DESCRIPTION-driven (R7).
+      RENV_CONFIG_AUTOLOADER_ENABLED: 'false'
 
     steps:
       - uses: actions/checkout@v4
@@ -37,27 +64,64 @@ jobs:
             any::chromote
           needs: check
 
-      - name: Install Chromium
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y chromium-browser
+      # The app subprocess (inst/shinytest/app.R) does library(nprcgenekeepr) and
+      # create_test_app() resolves system.file("shinytest", package = "nprcgenekeepr"),
+      # so the package itself must be installed -- not just its dependencies.
+      - name: Install nprcgenekeepr
+        run: R CMD INSTALL --no-multiarch --with-keep.source .
+        shell: bash
 
-      - name: Run shinytest2 tests
-        run: |
-          # Set up chromote to use installed Chromium
-          Sys.setenv(CHROMOTE_CHROME = "/usr/bin/chromium-browser")
+      # Provision a pinned, reproducible Chrome-for-Testing (replaces the snap
+      # chromium-browser, which is headless-CI flaky -- sub-plan R5).
+      # install-dependencies pulls Chrome's required system libraries.
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v2
+        id: setup-chrome
+        with:
+          install-dependencies: true
 
-          # Run only shinytest2 tests
-          testthat::test_file(
-            "tests/testthat/test-app-loading.R",
-            reporter = testthat::CheckReporter$new()
-          )
-          testthat::test_file(
-            "tests/testthat/test-app-navigation.R",
-            reporter = testthat::CheckReporter$new()
-          )
+      # chromote::find_chrome() honours CHROMOTE_CHROME first; point it at the
+      # action's installed binary (its name is not guaranteed to be on PATH).
+      - name: Point chromote at the installed Chrome
+        run: echo "CHROMOTE_CHROME=${{ steps.setup-chrome.outputs.chrome-path }}" >> "$GITHUB_ENV"
+
+      - name: Assert Chrome is resolvable by chromote
+        run: |
+          chrome <- Sys.getenv("CHROMOTE_CHROME")
+          cat("CHROMOTE_CHROME =", chrome, "\n")
+          found <- chromote::find_chrome()
+          cat("chromote::find_chrome() =", if (is.null(found)) "<NULL>" else found, "\n")
+          # find_chrome() returns NULL when nothing is found, and returns CHROMOTE_CHROME
+          # unchecked when set -- so verify it is a single, existing path (nzchar alone
+          # passes vacuously on NULL: stopifnot(nzchar(NULL)) does not error).
+          if (length(found) != 1L || !nzchar(found) || !file.exists(found)) {
+            stop("Chrome not resolvable by chromote: ",
+                 if (is.null(found)) "NULL" else found)
+          }
         shell: Rscript {0}
-        continue-on-error: true
+
+      # Phase-8b boot-smoke tier: the 3 files that need no derived helpers
+      # (test-app-loading.R, test-app-navigation.R, test-e2e-data-ready.R).
+      # stop_on_failure = TRUE makes any failure fail the job; continue-on-error
+      # was removed so scheduled-run failures are visible (sub-plan R6).
+      - name: Run shinytest2 boot-smoke tests (opt-in)
+        run: |
+          res <- as.data.frame(testthat::test_dir(
+            "tests/testthat",
+            filter = "^(app-loading|app-navigation|e2e-data-ready)$",
+            stop_on_failure = TRUE
+          ))
+          cat("boot-smoke: passed =", sum(res$passed),
+              " failed =", sum(res$failed),
+              " skipped =", sum(res$skipped),
+              " error =", sum(res$error), "\n")
+          # stop_on_failure catches failures/errors but NOT an all-skipped run
+          # (skip != failure). Guard the silent-skip class: if nothing executed,
+          # fail loud (e.g. NOT_CRAN/NPRC_RUN_E2E misconfigured, or filter drift).
+          if (sum(res$passed) == 0L) {
+            stop("No E2E boot-smoke tests executed (all skipped) -- check NOT_CRAN / NPRC_RUN_E2E.")
+          }
+        shell: Rscript {0}
 
       - name: Upload test artifacts
         if: always()

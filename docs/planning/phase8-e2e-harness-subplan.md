@@ -195,14 +195,16 @@ Per the owner's scope decision, this is a **separate deliverable**, not part of 
 
 ---
 
-## 7. CI design (owner decision: scheduled + manual)
+## 7. CI design (owner decision: scheduled + manual) — IMPLEMENTED in 8b (S32)
 
 Rework `.github/workflows/shinytest2.yaml`:
-- **Triggers:** replace `push`/`pull_request` with `schedule` (nightly cron) + `workflow_dispatch`. Remove the per-PR triggers (keep the fast unit CI — `R-CMD-check.yaml`, `test-coverage.yaml` — as the per-PR gate).
-- **Opt-in:** add `NPRC_RUN_E2E: 'true'` to the **job-level `env:`** block (not inside the Rscript) so `create_test_app()` actually returns the app dir.
-- **Visibility:** **remove `continue-on-error: true`** so failures fail the scheduled job (otherwise 8b "DONE = green" is unfalsifiable).
-- **Chrome provisioning:** prefer `r-lib/actions` browser setup or `google-chrome-stable` over the snap `chromium-browser`; assert `chromote::find_chrome()` resolves before running. Keep the `_snaps/` + `*.png` artifact upload.
-- **What it runs (8a–8d done):** the full opt-in tier (`filter="^(app|e2e)-"`), or at minimum the 8b smoke files; decide final breadth at 8b based on runtime/flake.
+- **Triggers:** replace `push`/`pull_request` with `schedule` (nightly cron `0 7 * * *`) + `workflow_dispatch`. Remove the per-PR triggers (keep the fast unit CI — `R-CMD-check.yaml`, `test-coverage.yaml` — as the per-PR gate). NB: `schedule`/`workflow_dispatch` only fire once this workflow is on the **default branch** (master).
+- **Opt-in:** add `NPRC_RUN_E2E: 'true'` to the **job-level `env:`** block (not inside the Rscript) so `create_test_app()` actually returns the app dir. **⚠ ALSO add `NOT_CRAN: 'true'`** (this spec originally omitted it — S32): the 3 smoke files all call `skip_on_cran()`, and `testthat::on_cran()` is TRUE on the **non-interactive `Rscript` runner** unless `NOT_CRAN` is set → every E2E test would **silently skip** (and `stop_on_failure` does NOT catch skips → green-on-nothing). Confirmed firsthand.
+- **Visibility:** **remove `continue-on-error: true`** so failures fail the scheduled job. Run the tests via `res <- as.data.frame(testthat::test_dir(..., stop_on_failure = TRUE))` and **also `stop()` if `sum(res$passed) == 0L`** — `stop_on_failure` is blind to an all-skip run, so this guard makes the silent-skip class fail loud.
+- **Package install (ADDED, S32 — was missing):** add `R CMD INSTALL --no-multiarch --with-keep.source .` **after** `setup-r-dependencies`. The app subprocess (`inst/shinytest/app.R`) does `library(nprcgenekeepr)` and `create_test_app()` resolves `system.file("shinytest", package = "nprcgenekeepr")`, so the package itself (not just its deps) must be installed. Pure-R package → fast install (no `src/`).
+- **renv autoloader (ADDED, S32):** set `RENV_CONFIG_AUTOLOADER_ENABLED: 'false'` at job level. The tracked `.Rprofile` activates renv's autoloader, which forces `.libPaths()[1]` to renv's **private** library; with it disabled, deps + `R CMD INSTALL` + the test run all target the standard **site** library so the AppDriver subprocess (starts in the installed `shinytest/` dir, no project `.Rprofile`) can resolve `library(nprcgenekeepr)`. This realizes R7's "DESCRIPTION-driven, not renv" intent. **⚠ Live-run watch item:** the lib-path / subprocess interaction is the one thing not statically verifiable — confirm on the first GitHub run.
+- **Chrome provisioning:** chosen = `browser-actions/setup-chrome@v2` (`install-dependencies: true` → Chrome-for-Testing + system libs; `chrome-path` output → set `CHROMOTE_CHROME` via `$GITHUB_ENV`) over the snap `chromium-browser`; **assert `chromote::find_chrome()` resolves** (single, existing path — not bare `nzchar`, which passes vacuously on `NULL`) before running. Keep the `_snaps/` + `*.png` artifact upload. NB: on CI `chromote` auto-adds `--no-sandbox` (it sets it when `CI` is set), so no manual flag is needed on ubuntu 24.04.
+- **What it runs (8a–8d done):** the full opt-in tier (`filter="^(app|e2e)-"`), or at minimum the 8b smoke files; decide final breadth at 8b based on runtime/flake. **8b runs only the 3 smoke files** (`filter="^(app-loading|app-navigation|e2e-data-ready)$"`); broaden the filter as 8c/8d land.
 
 ---
 
