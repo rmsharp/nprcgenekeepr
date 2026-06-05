@@ -14,6 +14,45 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-05 — Implement Phase 8b of the conversion E2E harness: first browser run + CI rewire (issue #39) (Session 32)
+- **Deliverable (implementation):** the second sub-phase of the Phase 8 E2E mini-campaign
+  (`docs/planning/phase8-e2e-harness-subplan.md` §5(8b)) — the **first-ever real browser run** of the
+  modular GeneKeepR app under `shinytest2`/`chromote`, plus the **CI rewire** of
+  `.github/workflows/shinytest2.yaml`. **Config-only** (TDD code-phases INAPPLICABLE — approved gate):
+  the 3 boot-smoke files use `create_test_app()` + `AppDriver$new` directly / `testServer` (no new
+  helpers), so the deliverable is the empirical spike + the CI YAML, not RED→GREEN code.
+- **🐉 First browser run — green opt-in.** With `NPRC_RUN_E2E=true NOT_CRAN=true`, all 3 boot-smoke
+  files run green: `test-app-loading.R` (2), `test-app-navigation.R` (3), `test-e2e-data-ready.R` (32)
+  = **37 tests, 0 fail / 0 error / 0 skip.** Chrome launches and the modular app boots. The
+  **navigation spike (§8.1) resolved positively** — `a[data-value="Input"]` clicks against the live
+  bslib navbar (no self-skip).
+- **CI `shinytest2.yaml` rewired** (owner decision: scheduled + manual): triggers → `schedule`
+  (`0 7 * * *`) + `workflow_dispatch` (dropped per-PR push/pull_request); `NPRC_RUN_E2E:'true'` at
+  **job-level `env:`**; `continue-on-error` **removed**; Chrome via **`browser-actions/setup-chrome@v2`**
+  (`install-dependencies:true`) + `CHROMOTE_CHROME` via `$GITHUB_ENV` + a `find_chrome()` resolve-assert;
+  runs only the 3 smoke files with `stop_on_failure=TRUE`; `_snaps/`+`*.png` artifact upload kept.
+- **Adversarial review caught a HIGH blocker I missed** (4-lens + completeness-critic workflow,
+  re-verified firsthand): the rewrite added `NPRC_RUN_E2E` but **not `NOT_CRAN`** → on the non-interactive
+  `Rscript` runner `skip_on_cran()` fires → all 3 files **silently skip** → `stop_on_failure` doesn't
+  catch skips → the job goes green having run nothing. Reproduced firsthand (NOT_CRAN unset → 4 skipped,
+  0 run). Fixed: `NOT_CRAN:'true'` at job env. Also hardened: (a) `RENV_CONFIG_AUTOLOADER_ENABLED:'false'`
+  so the package installs to the **site** lib (the renv autoloader otherwise targets renv's private lib,
+  which the AppDriver subprocess can't see); (b) an **executed-count guard** (`stop()` if
+  `sum(res$passed)==0`) to make the silent-skip class fail loud; (c) a stronger `find_chrome()` assert
+  (single existing path, not bare `nzchar` which passes vacuously on `NULL`).
+- **Package-install step added** (was missing): `R CMD INSTALL .` after `setup-r-dependencies`, since the
+  app subprocess does `library(nprcgenekeepr)` and `create_test_app()` uses `system.file(package=)`.
+- **No R/test code changed** (sub-plan §11 — the E2E files are run/triaged, not rewritten). Full non-e2e
+  suite under `pkgload::load_all`+`NOT_CRAN=true` = **0 failed / 0 error**, 0 non-e2e offenders, e2e
+  skipped (156), only the 5 pre-existing `modPyramid` warnings — unchanged from the S31 baseline.
+- **Verification limit (stated, not skipped — not FM #24):** the CI YAML is verified **statically** (YAML
+  parse + 4-lens adversarial review + the exact run-step R validated locally) but **not by a live GitHub
+  run** — branch `add-methodology` isn't on the remote and a live run would create a remote feature branch
+  (owner chose static + adversarial only). The renv lib-path / AppDriver-subprocess interaction is the #1
+  item to confirm on the first live run. `schedule`/`workflow_dispatch` activate once merged to master.
+- **Files:** `.github/workflows/shinytest2.yaml` (rewritten); `docs/planning/phase8-e2e-harness-subplan.md`
+  §7 (synced — the spec had omitted `NOT_CRAN`). Next: **Phase 8c** (15 shallow per-module files).
+
 ### 2026-06-05 — Implement Phase 8a of the conversion E2E harness: define the 6 driver helpers + E2E_TIMEOUT (issue #39) (Session 31)
 - **Deliverable (implementation):** the first sub-phase of the Phase 8 E2E mini-campaign
   (`docs/planning/phase8-e2e-harness-subplan.md` §5(8a)) — defined the 6 shinytest2 driver helpers
