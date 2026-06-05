@@ -310,8 +310,45 @@ modInputServer <- function(id, config = NULL) {
       # Store the file name for dynamic tabs
       storedFileName(file$name)
 
-      # Read the file
-      rawData <- readDataFile(file, input$fileType, input$separator)
+      # Read the file. The focal-animal path is special: the upload is a list
+      # of focal animal IDs, not a pedigree, so build the pedigree from the
+      # LabKey EHR via getFocalAnimalPed() (mirrors monolith server.r:86-113,
+      # but branches on the CORRECT errorLst class -- the monolith's
+      # is.element("nprckeepErr", ...) is a typo that never matched).
+      sep <- if (is.null(input$separator)) "," else input$separator
+      if (identical(input$fileContent, "focalAnimals")) {
+        built <- getFocalAnimalPed(file$datapath, sep = sep)
+        if (inherits(built, "nprcgenekeeprErr")) {
+          # getLkDirectRelatives returned NULL: a database connection failure.
+          # Route the errorLst to storedErrorLst() so the already-wired
+          # appServer dynamic Error tab surfaces failedDatabaseConnection.
+          storedErrorLst(built)
+          storedResults(list(
+            cleaned = NULL,
+            errors = data.frame(
+              Row = NA_integer_,
+              Error = "Database Connection Error",
+              Details = built$failedDatabaseConnection,
+              stringsAsFactors = FALSE
+            ),
+            warnings = data.frame(
+              Row = integer(0L), Warning = character(0L),
+              Details = character(0L), stringsAsFactors = FALSE
+            ),
+            changedCols = NULL,
+            hasChangedCols = FALSE,
+            genotype = NULL
+          ))
+          session$sendCustomMessage("setDataReady", list(
+            selector = paste0("#", session$ns("moduleContainer")),
+            ready = TRUE
+          ))
+          return()
+        }
+        rawData <- built
+      } else {
+        rawData <- readDataFile(file, input$fileType, input$separator)
+      }
 
       if (is.null(rawData)) {
         storedResults(list(

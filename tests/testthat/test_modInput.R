@@ -936,3 +936,102 @@ test_that("modInputServer handles reactive config", {
     }
   )
 })
+
+# ============================================================================
+# Phase 7 - Focal-animal / LabKey "build pedigree from database" path
+# ============================================================================
+# When fileContent == "focalAnimals", the uploaded file is a LIST OF FOCAL
+# ANIMAL IDS (not a pedigree). modInputServer must call getFocalAnimalPed(),
+# which builds the pedigree from the ONPRC EHR via getLkDirectRelatives().
+# There is no live EHR here, so we mock the getLkDirectRelatives seam (exactly
+# as test_getFocalAnimalPed.R does) and let the REAL getFocalAnimalPed body run.
+
+test_that("modInputServer focalAnimals path builds pedigree from the EHR (mocked)", {
+  skip_if_not_installed("shiny")
+  shortlist <- system.file("extdata", "focalAnimalsShortList.csv",
+                           package = "nprcgenekeepr")
+  focal_ids <- as.character(read.csv(shortlist, stringsAsFactors = FALSE)[, 1L])
+
+  # Mock the LabKey/EHR seam so the real getFocalAnimalPed body runs. The mock
+  # returns getLkDirectRelatives' 7-column positional contract (id, sex, birth,
+  # death, departure, dam, sire) for the focal animals as unrelated founders.
+  mk_lk <- function(ids, ...) {
+    n <- length(ids)
+    data.frame(
+      ids,
+      rep(c("M", "F"), length.out = n),
+      as.Date(rep("2010-01-01", n)),
+      as.Date(rep(NA, n)),
+      as.Date(rep(NA, n)),
+      rep(NA_character_, n),
+      rep(NA_character_, n),
+      stringsAsFactors = FALSE
+    )
+  }
+  testthat::local_mocked_bindings(getLkDirectRelatives = mk_lk,
+                                  .package = "nprcgenekeepr")
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(
+        fileContent = "focalAnimals",
+        fileType = "fileTypeText",
+        separator = ",",
+        minParentAge = "2.0"
+      )
+      session$setInputs(
+        breederFile = list(name = basename(shortlist), datapath = shortlist)
+      )
+      session$setInputs(getData = 1)
+
+      res <- storedResults()
+      # The EHR-built pedigree is QC-cleaned (NOT the raw 1-column focal-id file,
+      # which would fail QC for missing sire/dam/sex/birth columns).
+      expect_false(is.null(res$cleaned))
+      expect_true(is.data.frame(res$cleaned))
+      expect_true(all(c("id", "sire", "dam", "sex", "gen") %in% names(res$cleaned)))
+      expect_true(all(focal_ids %in% res$cleaned$id))
+    }
+  )
+})
+
+test_that("modInputServer focalAnimals path surfaces the EHR-failure errorLst", {
+  skip_if_not_installed("shiny")
+  shortlist <- system.file("extdata", "focalAnimalsShortList.csv",
+                           package = "nprcgenekeepr")
+
+  # A NULL from the LabKey seam makes getFocalAnimalPed return an
+  # nprcgenekeeprErr with failedDatabaseConnection populated
+  # (getFocalAnimalPed.R:59-67).
+  testthat::local_mocked_bindings(
+    getLkDirectRelatives = function(ids, ...) NULL,
+    .package = "nprcgenekeepr"
+  )
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(
+        fileContent = "focalAnimals",
+        fileType = "fileTypeText",
+        separator = ",",
+        minParentAge = "2.0"
+      )
+      session$setInputs(
+        breederFile = list(name = basename(shortlist), datapath = shortlist)
+      )
+      session$setInputs(getData = 1)
+
+      # The DB-failure errorLst is routed to storedErrorLst() so the
+      # already-wired appServer dynamic Error tab surfaces the message.
+      el <- storedErrorLst()
+      expect_s3_class(el, "nprcgenekeeprErr")
+      expect_true(nzchar(el$failedDatabaseConnection))
+      # The failure path must NOT produce a (garbage) cleaned pedigree.
+      expect_true(is.null(storedResults()$cleaned))
+    }
+  )
+})
