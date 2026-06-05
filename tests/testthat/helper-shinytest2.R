@@ -200,3 +200,104 @@ create_test_app <- function() {
   }
   system.file("shinytest", package = "nprcgenekeepr")
 }
+
+# ---------------------------------------------------------------------------
+# AppDriver construction + navigation helpers (Phase 8a, GitHub issue #39)
+#
+# These drive the modular GeneKeepR app through shinytest2::AppDriver in the
+# opt-in E2E suite (test-e2e-*/test-app-*). Signatures are derived from the call
+# sites across tests/testthat (docs/planning/phase8-e2e-harness-subplan.md sec 4).
+# The *_safe helpers never throw: they return a safe default so a missing
+# selector self-skips rather than erroring (matching the test code's
+# `if (!success) skip(...)` idiom).
+# ---------------------------------------------------------------------------
+
+# Shared AppDriver load/idle timeout budget (milliseconds).
+E2E_TIMEOUT <- 30000L
+
+#' Construct an AppDriver for the modular app
+#'
+#' height/width are named parameters (not just absorbed by `...`) so a per-test
+#' override (e.g. boundary-conditions.R passing height=/width=) binds here
+#' instead of duplicating the defaults in the AppDriver$new() call. `...`
+#' forwards any other AppDriver argument (e.g. seed).
+#'
+#' @param app_dir Directory containing the app's app.R (from create_test_app()).
+#' @param name AppDriver instance name (used for logs).
+#' @param height,width Viewport size; defaults 800x1200, overridable per test.
+#' @param ... Further arguments passed to shinytest2::AppDriver$new().
+#' @return A shinytest2::AppDriver object.
+create_app_driver <- function(app_dir, name, height = 800, width = 1200, ...) {
+  shinytest2::AppDriver$new(
+    app_dir,
+    name = name,
+    height = height,
+    width = width,
+    load_timeout = E2E_TIMEOUT,
+    screenshot_args = FALSE,
+    ...
+  )
+}
+
+#' Switch the navbarPage tab and confirm the switch actually occurred
+#'
+#' tab_label is the tabPanel title, which equals the mainNavbar input value
+#' (appUI.R). `fallback` is accepted for call-site compatibility (109 of 137
+#' calls pass a 3rd argument) but is a no-op given titles == values.
+#'
+#' @param app AppDriver object.
+#' @param tab_label Tab title to switch to.
+#' @param fallback Accepted for call-site compatibility; unused.
+#' @return TRUE only if mainNavbar reads back as tab_label after the switch;
+#'   FALSE on any error or a silent no-op navigation.
+navigate_to_tab <- function(app, tab_label, fallback = NULL) {
+  tryCatch({
+    app$set_inputs(mainNavbar = tab_label)
+    app$wait_for_idle(timeout = E2E_TIMEOUT)
+    identical(app$get_value(input = "mainNavbar"), tab_label)
+  }, error = function(e) FALSE)
+}
+
+#' Get the HTML of a selector, returning "" on error
+#'
+#' @param app AppDriver object.
+#' @param selector CSS selector.
+#' @return The element HTML, or "" if the lookup errors.
+get_html_safe <- function(app, selector) {
+  tryCatch(app$get_html(selector), error = function(e) "")
+}
+
+#' Click an element, returning TRUE/FALSE for success
+#'
+#' @param app AppDriver object.
+#' @param selector CSS selector of the element to click.
+#' @return TRUE if the click + idle wait succeed, FALSE on error.
+click_element_safe <- function(app, selector) {
+  tryCatch({
+    app$click(selector = selector)
+    app$wait_for_idle(timeout = E2E_TIMEOUT)
+    TRUE
+  }, error = function(e) FALSE)
+}
+
+#' Navigate to a navbarMenu ("More") child item (Settings/About/Help)
+#'
+#' Provisional Phase 8a body: treats the menu child like a top-level tab. The
+#' navbarMenu dropdown-navigation spike (does set_inputs(mainNavbar=) reach a
+#' child, or is a DOM dropdown-open + click required?) is resolved in 8d
+#' (sub-plan sec 8.2), where this body is finalized.
+#'
+#' @param app AppDriver object.
+#' @param item Menu item label (e.g. "Settings").
+#' @return TRUE if the item is reached (per navigate_to_tab's read-back).
+navigate_to_menu_item <- function(app, item) {
+  navigate_to_tab(app, item)
+}
+
+#' Get all input/output values, returning list() on error
+#'
+#' @param app AppDriver object.
+#' @return app$get_values(), or list() if it errors.
+get_values_safe <- function(app) {
+  tryCatch(app$get_values(), error = function(e) list())
+}
