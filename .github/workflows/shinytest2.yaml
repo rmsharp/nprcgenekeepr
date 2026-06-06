@@ -6,8 +6,9 @@
 # decision (docs/planning/phase8-e2e-harness-subplan.md sec 7), this runs on a
 # nightly schedule + manual dispatch (NOT per-PR) because browser tests are slow
 # and Chrome-flaky; the fast unit CI (R-CMD-check, test-coverage) remains the
-# per-PR gate. It currently runs the Phase-8b boot-smoke tier (3 files); broaden
-# the filter to the full ^(app|e2e)- tier once sub-phases 8c/8d land.
+# per-PR gate. It runs the Phase-8b boot-smoke + Phase-8c per-module tier
+# (18 files: the 3 smoke files + the 15 shallow per-module files); broaden the
+# filter to the full ^(app|e2e)- tier once sub-phase 8d lands.
 #
 # NOTE: schedule + workflow_dispatch only fire once this workflow is on the
 # default branch (master). On the feature branch it cannot be GitHub-triggered.
@@ -34,7 +35,7 @@ jobs:
       # Opt-in gate: create_test_app() returns the app dir only when this is "true".
       # Set at job level so it is visible to every step (sub-plan sec 7).
       NPRC_RUN_E2E: 'true'
-      # The 3 boot-smoke files all call skip_on_cran(); testthat::on_cran() is TRUE
+      # The E2E files all call skip_on_cran(); testthat::on_cran() is TRUE
       # on a non-interactive Rscript runner unless NOT_CRAN is set -- which would make
       # every E2E test SILENTLY SKIP (stop_on_failure does not catch skips, so the job
       # would go green having run nothing). Set it so the tests actually execute
@@ -100,18 +101,22 @@ jobs:
           }
         shell: Rscript {0}
 
-      # Phase-8b boot-smoke tier: the 3 files that need no derived helpers
-      # (test-app-loading.R, test-app-navigation.R, test-e2e-data-ready.R).
+      # Phase-8b boot-smoke tier (test-app-loading.R, test-app-navigation.R,
+      # test-e2e-data-ready.R) + Phase-8c per-module shallow tier (the 15
+      # test-e2e-{input,pedigree,pyramid,genetic-value,summary-statistics,
+      # breeding-groups}-*.R files). The 5 Phase-8d interaction/menu files
+      # (home-navigation, settings-about, workflow-integration, error-states,
+      # boundary-conditions) are excluded until 8d verifies them.
       # stop_on_failure = TRUE makes any failure fail the job; continue-on-error
       # was removed so scheduled-run failures are visible (sub-plan R6).
-      - name: Run shinytest2 boot-smoke tests (opt-in)
+      - name: Run shinytest2 boot-smoke + per-module tests (opt-in)
         run: |
           res <- as.data.frame(testthat::test_dir(
             "tests/testthat",
-            filter = "^(app-loading|app-navigation|e2e-data-ready)$",
+            filter = "^(app-loading|app-navigation|e2e-data-ready|e2e-input|e2e-pedigree|e2e-pyramid|e2e-genetic-value|e2e-summary-statistics|e2e-breeding-groups)",
             stop_on_failure = TRUE
           ))
-          cat("boot-smoke: passed =", sum(res$passed),
+          cat("e2e 8b+8c: passed =", sum(res$passed),
               " failed =", sum(res$failed),
               " skipped =", sum(res$skipped),
               " error =", sum(res$error), "\n")
@@ -119,7 +124,7 @@ jobs:
           # (skip != failure). Guard the silent-skip class: if nothing executed,
           # fail loud (e.g. NOT_CRAN/NPRC_RUN_E2E misconfigured, or filter drift).
           if (sum(res$passed) == 0L) {
-            stop("No E2E boot-smoke tests executed (all skipped) -- check NOT_CRAN / NPRC_RUN_E2E.")
+            stop("No E2E tests executed (all skipped) -- check NOT_CRAN / NPRC_RUN_E2E.")
           }
         shell: Rscript {0}
 
