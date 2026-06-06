@@ -14,6 +14,52 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-06 — Implement Phase 8d of the conversion E2E harness: interaction/menu tier green + CI filter broadened to the full tier + #39 CLOSED (Session 34)
+- **Deliverable (implementation):** the FINAL sub-phase of the Phase 8 E2E mini-campaign
+  (`docs/planning/phase8-e2e-harness-subplan.md` §5(8d)) — the **5 interaction/menu E2E files**
+  (home-navigation, settings-about, workflow-integration, error-states, boundary-conditions; 47 blocks /
+  53 expectations) green-or-clean-skip opt-in, **broaden the CI run-step filter** to the full
+  `^(app|e2e)-` tier (all 23 files), **close issue #39**, and file the 8e follow-on (#40).
+  **Config / run-and-observe** (TDD code-phases INAPPLICABLE — owner-approved gate, like 8b/8c): the
+  §8.2 navbarMenu spike + the 53/53 green run proved the provisional `navigate_to_menu_item` is already
+  correct, so the only code touch is a comment-only docstring + the CI YAML filter — no R unit to write
+  test-first.
+- **§8.2 navbarMenu spike — RESOLVED (verify-first, before classifying).**
+  `set_inputs(mainNavbar="Settings"/"About"/"Help")` → `get_value(input="mainNavbar")` reads back the
+  child label TRUE for all 3 → `navigate_to_menu_item`'s delegate-to-`navigate_to_tab` body is final
+  (no DOM dropdown-open+click). `click("#goto_input")` navigates for real. **Honesty nuance (→ 8e/#40):**
+  the input value reaches the navbarMenu child but the VISIBLE pane does not truly switch — `grepl(body)`
+  passes only via the §2.3 hidden-DOM (§8.3 navigation-false-positive).
+- **The 5 8d files — green opt-in.** `NPRC_RUN_E2E=true NOT_CRAN=true` → 47 test_that blocks /
+  53 expectations, 0 fail / 0 error / 0 skip. All four S33 Watch items confirmed benign firsthand
+  (E2E_TIMEOUT defined + only used inside test blocks; the 6 `#goto_*` observers wired `appServer.R:73-95`;
+  boundary's named `height/width` handled by `create_app_driver`; the `input-` selectors stay
+  tryCatch-swallowed no-ops — 8e).
+- **CI filter broadened** to `^(app|e2e)-` (verified firsthand it selects EXACTLY the 23 test-{app,e2e}-*
+  files — replicating testthat's stripped-name match in R — and excludes the `appServer` near-miss via
+  the trailing `-`); job env + `stop_on_failure=TRUE` + the `sum(passed)==0` silent-skip guard unchanged.
+  Full tier re-validated in ONE process: **193 passed / 0 fail / 0 error / 0 skip**, 23 files.
+- **⚠ Low-rate Chrome process-count FLAKE found + handled.** An ultracode 4-lens adversarial review
+  (`wf_ef031b1d-edc`) caught that the 23-in-one-process run is intermittently flaky — ~1 transient Chrome
+  error in 5 local full-tier runs (`workflow-integration.R` "App maintains state when switching tabs";
+  isolated 8/8/8) — the §5(8c)/R2 dragon; under `stop_on_failure=TRUE` it can red the scheduled job.
+  Reproduced firsthand (2 fresh dedicated runs clean → low-rate + contention-sensitive). **Owner decision
+  (`AskUserQuestion`): close #39 now + document the flake**; CI-stability hardening (per-group fresh
+  processes) routed to #40.
+- **Issue tracker:** **#39 CLOSED** (`--reason completed`, with a validation/watch-item comment).
+  **8e filed as #40** ("Strengthen shinytest2 E2E assertions…", label `enhancement`) capturing the
+  §2.4/§2.5/§6 deferred items + today's navbarMenu false-positive, plus a CI-stability comment for the flake.
+- **Validation:** §8.2 read-backs TRUE; 53/53 8d green; 193/0/0/0 full-tier single-process; non-e2e
+  regression (`NOT_CRAN=true`, NPRC_RUN_E2E unset → e2e clean-skip) = **0 failed / 0 error**, 0 non-e2e
+  offenders, 2159 passed, 156 e2e-skipped, 5 pre-existing `modPyramid` warnings (unchanged
+  S31/S32/S33 baseline). Diff is comment-only (helper docstring) + the CI filter → `document()` N/A,
+  `tests/`+`.github` lint-exempt, no `* 2.*` source dupes; committed `d254a91c` with **explicit
+  `git add`** of only the 2 files (the review's `.DS_Store` BLOCKER). **Live GitHub run DEFERRED**
+  (branch not on remote) — TWO watch items now (renv lib-path + the flake).
+- **Next:** parent **Phase 9** (declare the modular app canonical + DELETE the monolith — IRREVERSIBLE,
+  its own session, do NOT bundle; confirm with the owner + grep-inventory first). The #39 E2E
+  mini-campaign (8a–8d) is COMPLETE.
+
 ### 2026-06-05 — Implement Phase 8c of the conversion E2E harness: per-module shallow tier green + CI filter broadened (issue #39) (Session 33)
 - **Deliverable (implementation):** the third sub-phase of the Phase 8 E2E mini-campaign
   (`docs/planning/phase8-e2e-harness-subplan.md` §5(8c)) — run-and-observe the **15 shallow per-module
