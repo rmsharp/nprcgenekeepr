@@ -19,7 +19,6 @@
 #' @seealso \code{\link{modInputServer}} for data input module
 #' @seealso \code{\link{modPedigreeServer}} for pedigree browser module
 #' @seealso \code{\link{modGeneticValueServer}} for genetic value analysis
-#' @seealso \code{\link{shouldShowErrorTab}} for error tab logic
 #' @seealso \code{\link{shouldShowChangedColsTab}} for changed columns tab logic
 #'
 #' @importFrom shiny reactiveValues reactiveVal observeEvent updateNavbarPage
@@ -168,13 +167,6 @@ appServer <- function(input, output, session) {
     errorLst <- tryCatch(inputResults$errorLst(), error = function(e) NULL)
     fileName <- tryCatch(inputResults$pedigreeFileName(), error = function(e) NULL)
     changedCols <- tryCatch(inputResults$changedCols(), error = function(e) NULL)
-
-    # Build qcResults structure for shouldShowErrorTab
-    qcResults <- if (!is.null(errorLst)) {
-      list(errors = tryCatch(inputResults$qcSummary(), error = function(e) NULL))
-    } else {
-      NULL
-    }
 
     # Check if we should show the Error List tab
     showErrors <- !is.null(errorLst) && !is.null(fileName) &&

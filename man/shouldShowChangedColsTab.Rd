@@ -28,7 +28,5 @@ be inserted into the application navigation. The tab is shown when column
 names were modified during QC processing.
 }
 \seealso{
-\code{\link{shouldShowErrorTab}} for error tab logic
-
 \code{\link{checkChangedColsLst}} for the original implementation
 }

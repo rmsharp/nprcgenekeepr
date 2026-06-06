@@ -2,21 +2,32 @@
 % Please edit documentation in R/runGenekeepr.R
 \name{runGeneKeepR}
 \alias{runGeneKeepR}
-\title{Run the GeneKeepR Shiny Application}
+\title{Run the GeneKeepR Shiny Application (Deprecated)}
 \usage{
-runGeneKeepR()
+runGeneKeepR(port = 6013L, launch.browser = TRUE)
+}
+\arguments{
+\item{port}{Integer port number for the Shiny server (default 6013).}
+
+\item{launch.browser}{Logical; whether to launch a browser (default TRUE).}
 }
 \value{
 Returns the error condition of the Shiny application when it
-terminates.
+terminates (from \code{\link{runModularApp}}).
 }
 \description{
-Launches the nprcgenekeepr Shiny application for pedigree analysis
-and genetic value calculations.
+The original monolithic Shiny application has been retired.
+\code{runGeneKeepR()} is now a soft-deprecated alias that launches the
+modular application via \code{\link{runModularApp}}. Existing
+zero-argument callers continue to work.
 }
 \examples{
 if (interactive()) {
   library(nprcgenekeepr)
   runGeneKeepR()
 }
+}
+\seealso{
+\code{\link{runModularApp}} for the modular application this
+now launches.
 }

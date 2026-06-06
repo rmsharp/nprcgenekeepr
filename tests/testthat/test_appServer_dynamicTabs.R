@@ -5,43 +5,6 @@
 # Tests for tab visibility logic helper functions
 # =============================================================================
 
-test_that("shouldShowErrorTab returns TRUE when there are QC errors", {
-  # Simulate QC results with errors
-  qcResults <- list(
-    errors = data.frame(
-      Type = c("Female Sire", "Male Dam"),
-      ID = c("A001", "B002"),
-      Description = c("Animal is female but listed as sire",
-                      "Animal is male but listed as dam"),
-      stringsAsFactors = FALSE
-    ),
-    warnings = data.frame(Type = character(0), ID = character(0),
-                          stringsAsFactors = FALSE)
-  )
-
-  expect_true(shouldShowErrorTab(qcResults))
-})
-
-test_that("shouldShowErrorTab returns FALSE when no errors", {
-  # Simulate QC results without errors
-  qcResults <- list(
-    errors = data.frame(Type = character(0), ID = character(0),
-                        stringsAsFactors = FALSE),
-    warnings = data.frame(Type = "Warning", ID = "A001",
-                          stringsAsFactors = FALSE)
-  )
-
-  expect_false(shouldShowErrorTab(qcResults))
-})
-
-test_that("shouldShowErrorTab returns FALSE for NULL input", {
-  expect_false(shouldShowErrorTab(NULL))
-})
-
-test_that("shouldShowErrorTab returns FALSE for empty list", {
-  expect_false(shouldShowErrorTab(list()))
-})
-
 test_that("shouldShowChangedColsTab returns TRUE when columns were changed", {
   # Simulate changed columns list (as returned by qcStudbook)
   changedCols <- list(
@@ -210,20 +173,6 @@ test_that("appServer observes QC results for tab management", {
 # Tests for edge cases
 # =============================================================================
 
-test_that("shouldShowErrorTab handles errors data frame with various structures", {
-  # Test with different column names that might occur
-  qcResults <- list(
-    errors = data.frame(
-      type = "Error",
-      message = "Test error",
-      stringsAsFactors = FALSE
-    )
-  )
-
-  # Should return TRUE because errors has rows
-  expect_true(shouldShowErrorTab(qcResults))
-})
-
 test_that("shouldShowChangedColsTab handles partial changedCols list", {
   # Only some fields present
   changedCols <- list(
@@ -234,36 +183,9 @@ test_that("shouldShowChangedColsTab handles partial changedCols list", {
   expect_true(shouldShowChangedColsTab(changedCols))
 })
 
-test_that("shouldShowErrorTab handles errors as NULL within list", {
-  qcResults <- list(
-    errors = NULL,
-    warnings = data.frame(Type = "Warning", stringsAsFactors = FALSE)
-  )
-
-  expect_false(shouldShowErrorTab(qcResults))
-})
-
 # =============================================================================
 # Tests for integration with checkErrorLst and checkChangedColsLst
 # =============================================================================
-
-test_that("shouldShowErrorTab is consistent with checkErrorLst for errorLst format", {
-  # Test with actual qcStudbook errorLst format
-  errorLst <- getEmptyErrorLst()
-  errorLst$femaleSires <- c("A001", "B002")
-
-  # Both functions should agree
-  checkResult <- checkErrorLst(errorLst)
-  shouldShowResult <- shouldShowErrorTab(list(errors = data.frame(
-    Type = rep("Female Sire", 2),
-    ID = c("A001", "B002"),
-    stringsAsFactors = FALSE
-  )))
-
-  # Both should indicate errors present
-  expect_true(checkResult)
-  expect_true(shouldShowResult)
-})
 
 test_that("shouldShowChangedColsTab is consistent with checkChangedColsLst", {
   changedCols <- list(

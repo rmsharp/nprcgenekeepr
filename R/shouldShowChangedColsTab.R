@@ -17,7 +17,6 @@
 #'   \code{birthdateToBirth}, \code{deathdateToDeath},
 #'   \code{recordstatusToRecordStatus}, \code{fromcenterToFromCenter}.
 #'
-#' @seealso \code{\link{shouldShowErrorTab}} for error tab logic
 #' @seealso \code{\link{checkChangedColsLst}} for the original implementation
 #' @export
 shouldShowChangedColsTab <- function(changedCols) {
