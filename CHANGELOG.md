@@ -14,6 +14,49 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-06 — Phase 9: retire the legacy monolithic Shiny app (declare modular canonical) + #27 CLOSED (Session 35)
+- **Deliverable (implementation):** the FINAL phase of the shiny-module conversion
+  (`docs/planning/shiny-module-conversion-plan.md` §9 Phase 9) — retire the monolith now that the
+  modular app is canonical and at parity (Phases 1–8). Strict TDD (RED→GREEN gated) + 4 owner
+  `AskUserQuestion` gates + the pre-RED→RED / RED→GREEN TDD gates. **This completes the entire
+  XARCH-1 / issue-#27 modularization campaign (Phases 1–9).**
+- **`runGeneKeepR()` → deprecated alias.** Rewrote it as a `lifecycle::deprecate_soft()` alias
+  launching `runModularApp(port=6013L, launch.browser=TRUE)`; zero-arg callers keep working. New
+  `tests/testthat/test_runGeneKeepR_alias.R` (deprecation + delegation + port/launch.browser
+  forwarding) and `test_monolith_removed.R` (`system.file("application")==""`).
+- **Deleted `inst/application/`** (server.r, ui.r, global.R, 8 uitp*.R, example_1.R, the dead
+  modPyramid.R stub, www/ — 17 tracked files) as its own revertible commit (§15). `inst/www/`
+  (the modular app's `data-ready.js`) preserved.
+- **Removed confirmed orphans (owner-approved):** `getMinParentAge` (unexported, 0 callers),
+  `getLogo` (exported, monolith-only — a public-API removal), `shouldShowErrorTab` (exported but
+  bypassed by `checkErrorLst`; also dropped the dead `qcResults` build in appServer.R + the
+  `@seealso` refs), `modMinimalTest` (unmounted scaffold) + their tests. `document()` dropped 4
+  exports + 4 man pages.
+- **NAMESPACE fallout fixed:** `getMinParentAge.R` was the SOLE carrier of `@import shiny`, so its
+  deletion dropped `import(shiny)` and the modular UI failed (`h5` not found); relocated
+  `@import shiny` to `R/nprcgenekeepr-package.R`. Caught by the regression run, not the inventory
+  (Learning #35).
+- **Pre-flight (irreversible delete):** re-ran the §10 grep-inventory as a read-only multi-modal
+  sweep + completeness critic (`wf_48a6f152-f0f`); firsthand-verified the sole `system.file`
+  reference, `inst/www` ≠ `inst/application/www`, the lifecycle dep, and that all 17 files are
+  tracked/revertible.
+- **Docs:** `_pkgdown.yml` (drop getLogo/getMinParentAge), `inst/WORDLIST`, `CLAUDE.md`,
+  `ROADMAP.md` (milestone marked complete), `NEWS.Rmd`/`NEWS.md` (monolith-retirement bullet),
+  vignette `_running_shiny_application.Rmd` → `runModularApp()`; `README.md` re-knit.
+  (`a3manual`/`a2interactive` `.md/.html/.R` are stale-by-design release artifacts — rebuilt from
+  source at release; `check()` builds vignettes from source regardless.)
+- **Verification:** non-e2e regression **2135 passed / 0 failed / 0 error** (5 pre-existing
+  modPyramid warnings); runtime smoke `runGeneKeepR()` → modular app **HTTP 200**;
+  **`devtools::check()` = 0 errors / 0 warnings**, `creating vignettes ... OK` (pre-existing NOTEs
+  only: non-standard top-level dev files; a stale `spelling.Rout.save` baseline); grep confirms no
+  `system.file("application")`.
+- **Pre-existing fix (separate `fix:` commit, owner-approved):** `a2interactive.Rmd` error-list
+  table was missing the `invalidIdChars` description (NEW-45 drift: `getEmptyErrorLst()` has 10
+  fields vs 9 hardcoded) — failed the vignette build; surfaced by the full `check()`.
+- **Issue #27 (Modularize code using shiny modules) CLOSED.**
+- Commits: `3db018d1` (refactor!: alias + orphans), `24992e0b` (feat!: delete monolith),
+  `53a9e5e0` (docs), `a1618c48` (fix: a2interactive vignette), + this `docs:` close-out.
+
 ### 2026-06-06 — Implement Phase 8d of the conversion E2E harness: interaction/menu tier green + CI filter broadened to the full tier + #39 CLOSED (Session 34)
 - **Deliverable (implementation):** the FINAL sub-phase of the Phase 8 E2E mini-campaign
   (`docs/planning/phase8-e2e-harness-subplan.md` §5(8d)) — the **5 interaction/menu E2E files**
