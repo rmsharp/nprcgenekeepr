@@ -9,19 +9,23 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 ## Up Next
 - [ ] **Complete the monolith → Shiny-module conversion (XARCH-1 / issue #27)** —
       plan: `docs/planning/shiny-module-conversion-plan.md` (9 vertical-slice phases; one phase
-      per session, do **not** bundle). **Phases 1–7 + 8a + 8b complete** (see `CHANGELOG.md`; Phase 7 =
+      per session, do **not** bundle). **Phases 1–7 + 8a + 8b + 8c complete** (see `CHANGELOG.md`; Phase 7 =
       focal-animal / LabKey input parity into `modInput`, S29; Phase 8a = the 6 E2E driver helpers +
       `E2E_TIMEOUT` browser-free, S31; Phase 8b = first browser run [3 smoke files green opt-in] + CI
-      rewire of `.github/workflows/shinytest2.yaml`, S32).
-      **Next: Phase 8c** — the 15 shallow per-module E2E files (~103 tests; run-and-observe opt-in) —
+      rewire of `.github/workflows/shinytest2.yaml`, S32; Phase 8c = 15 per-module files [103 tests] green
+      opt-in + CI filter broadened to the 18 8b+8c files, S33).
+      **Next: Phase 8d** — the 5 interaction/menu E2E files (47 tests; needs the secondary helpers +
+      the navbarMenu spike, §8.2) → **close #39** + file the 8e assertion-strengthening issue —
       part of enabling the shinytest2 E2E harness end-to-end (**GitHub issue #39**).
       **Sub-plan: `docs/planning/phase8-e2e-harness-subplan.md`** (S30) — a **4-session mini-campaign
-      8a–8d** (**8a ✅ helpers/constant browser-free, S31** · **8b ✅ boot-smoke + CI, S32** · 8c per-module
-      shallow · 8d interaction/menu → close #39), with assertion-strengthening deferred to a separate
-      issue (8e). Owner decisions: scope = harness-enable; CI = scheduled + manual dispatch.
-      **Risk: 8c MEDIUM** (browser run cost / flaky timeouts; helpers now exist + Chrome+app boot proven
-      in 8b). Then 8d (interaction/menu → close #39), then Phase 9 (declare canonical: alias
-      `runGeneKeepR`, delete the monolith — irreversible, its own commit).
+      8a–8d** (**8a ✅ helpers/constant browser-free, S31** · **8b ✅ boot-smoke + CI, S32** ·
+      **8c ✅ per-module shallow + CI filter broadened, S33** · 8d interaction/menu → close #39), with
+      assertion-strengthening deferred to a separate issue (8e). Owner decisions: scope = harness-enable;
+      CI = scheduled + manual dispatch.
+      **Risk: 8d MEDIUM-HIGH 🐉** (navbarMenu navigation harder than a plain tab; `navigate_to_menu_item`
+      is a provisional delegate awaiting the §8.2 spike). At 8d close, broaden the CI filter to the full
+      `^(app|e2e)-` tier (all 23 files). Then Phase 9 (declare canonical: alias `runGeneKeepR`, delete the
+      monolith — irreversible, its own commit).
 - [ ] **Integration testing for the modularized Shiny app** — **= Phase 8 of the conversion plan**
       (= issue #39; see `docs/planning/phase8-e2e-harness-subplan.md`).
 - [ ] **CRAN submission preparation**

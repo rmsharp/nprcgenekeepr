@@ -14,6 +14,45 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-05 — Implement Phase 8c of the conversion E2E harness: per-module shallow tier green + CI filter broadened (issue #39) (Session 33)
+- **Deliverable (implementation):** the third sub-phase of the Phase 8 E2E mini-campaign
+  (`docs/planning/phase8-e2e-harness-subplan.md` §5(8c)) — run-and-observe the **15 shallow per-module
+  E2E files** (103 tests) green opt-in, and **broaden the CI run-step filter** in
+  `.github/workflows/shinytest2.yaml` from the 3 boot-smoke files to the **18 verified 8b+8c files**.
+  **Config / run-and-observe** (TDD code-phases INAPPLICABLE — approved gate, like 8b): the 15 files +
+  the 8a helpers already exist and pass trivially via the §2.3 navbarPage hidden-DOM, so there is **no new
+  R unit to write test-first**; the browser spike is the verification and the only artifact change is the
+  CI YAML filter.
+- **8c browser spike — green opt-in.** With `NPRC_RUN_E2E=true NOT_CRAN=true`, run per module-group:
+  `e2e-input` (19), `e2e-pedigree` (19), `e2e-pyramid` (12), `e2e-genetic-value` (22),
+  `e2e-summary-statistics` (8), `e2e-breeding-groups` (23) = **103 tests across 15 files,
+  0 fail / 0 error / 0 skip.** Chrome launches and the modular app boots for every test.
+- **Helper corner-cases verified firsthand (§5(8c) DONE):** (a) `navigate_to_tab`'s 3rd arg is the
+  ignored `fallback` — the pyramid files navigate to the top-level "Age-Sex Pyramid" tab and pass
+  (modPyramid's "Plot"/"Statistics" sub-tabs are never targeted); (b) the only content-coupled assertions
+  (`pedigree-detailed.R:57`, `pedigree-tutorial.R:169`) pass on the always-rendered `pedigree_browser.html`
+  guidance — noted, not changed; (c) `summary-statistics-module`'s wrong-tab navigation (7/8 tests go to
+  "Genetic Value Analysis", §2.4) still passes via the hidden-DOM — a known 8e item, not an 8c blocker.
+- **CI filter broadened** (owner-approved): the run-step `filter` goes from
+  `^(app-loading|app-navigation|e2e-data-ready)$` to
+  `^(app-loading|app-navigation|e2e-data-ready|e2e-input|e2e-pedigree|e2e-pyramid|e2e-genetic-value|e2e-summary-statistics|e2e-breeding-groups)`.
+  Verified firsthand the regex selects **exactly the 18 files** (3 8b + 15 8c) and **excludes exactly the
+  5 Phase-8d files** (home-navigation, settings-about, workflow-integration, error-states,
+  boundary-conditions) — those enter CI only once 8d verifies them. The `stop_on_failure=TRUE` +
+  `sum(passed)==0` silent-skip guard and the job env block are unchanged.
+- **Validation:** the **exact broadened run-step re-run locally in a single process** (the §5(8c)
+  AppDriver-process-count dragon — 18 files × drivers in one `test_dir`) → **18 files, passed=140 /
+  failed=0 / skipped=0 / error=0** (37 8b + 103 8c), exit 0. Full non-e2e suite under
+  `pkgload::load_all`+`NOT_CRAN=true` = **0 failed / 0 error**, 0 non-e2e offenders, 156 e2e-skipped,
+  2154 passed, 5 pre-existing `modPyramid` warnings (unchanged S31/S32 baseline). YAML parses; no R/test
+  code changed → `document()` N/A, `tests/`+`.github` lint-exempt, no `* 2.*` source dupes. **Live GitHub
+  run deferred** (branch not on remote; same posture as S32) — the run-step is validated locally
+  end-to-end. **No adversarial workflow** (no ultracode opt-in; a one-line filter broadening validated
+  end-to-end is "already verified" — a multi-agent review would be ceremony for this change surface).
+- **Next:** Phase 8d (5 interaction/menu files, 47 tests — needs the secondary helpers + the navbarMenu
+  spike → **close #39** + file the 8e assertion-strengthening issue). Then parent Phase 9 (monolith
+  deletion, irreversible).
+
 ### 2026-06-05 — Implement Phase 8b of the conversion E2E harness: first browser run + CI rewire (issue #39) (Session 32)
 - **Deliverable (implementation):** the second sub-phase of the Phase 8 E2E mini-campaign
   (`docs/planning/phase8-e2e-harness-subplan.md` §5(8b)) — the **first-ever real browser run** of the
