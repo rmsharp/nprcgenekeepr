@@ -282,10 +282,14 @@ click_element_safe <- function(app, selector) {
 
 #' Navigate to a navbarMenu ("More") child item (Settings/About/Help)
 #'
-#' Provisional Phase 8a body: treats the menu child like a top-level tab. The
-#' navbarMenu dropdown-navigation spike (does set_inputs(mainNavbar=) reach a
-#' child, or is a DOM dropdown-open + click required?) is resolved in 8d
-#' (sub-plan sec 8.2), where this body is finalized.
+#' The navbarMenu dropdown-navigation spike (sub-plan sec 8.2) was resolved in
+#' Phase 8d: set_inputs(mainNavbar = item) DOES reach a navbarMenu("More")
+#' child, i.e. app$get_value(input = "mainNavbar") reads back the child label
+#' (Settings/About/Help) after the switch -- no DOM dropdown-open + click is
+#' required. Delegating to navigate_to_tab() is therefore the final body.
+#' Note: the input value reaches the child, but the navbarPage hidden-DOM means
+#' the body-grepl assertions pass regardless of a true visible-pane switch
+#' (shallow-coverage limit, sub-plan sec 2.3 / 8.3 -- strengthened in 8e).
 #'
 #' @param app AppDriver object.
 #' @param item Menu item label (e.g. "Settings").
