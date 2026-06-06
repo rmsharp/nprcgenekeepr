@@ -69,3 +69,12 @@ README\.*\.png$
 ^\.\.Rcheck$
 ^\.positai$
 ^\.claude$
+# Methodology framework files (tooling, not R package content)
+^PROJECT_LEARNINGS\.md$
+^CLAUDE\.md$
+^SESSION_RUNNER\.md$
+^SESSION_NOTES\.md$
+^SAFEGUARDS\.md$
+^BACKLOG\.md$
+^ROADMAP\.md$
+^CHANGELOG\.md$
