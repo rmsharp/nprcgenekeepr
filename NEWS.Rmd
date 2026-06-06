@@ -56,6 +56,13 @@ knitr::opts_chunk$set(echo = TRUE)
       - New appServer.R and appUI.R orchestrate module communication via shared
         reactive values
       - runModularApp() provides entry point for modular application
+      - **Monolith retired (Phase 9).** The legacy monolithic application
+        (`inst/application/`) has been deleted. `runGeneKeepR()` is now a
+        soft-deprecated alias that launches the modular application via
+        `runModularApp()`; existing zero-argument calls continue to work.
+        Also removed the now-unused exports `getLogo()`, `shouldShowErrorTab()`,
+        `modMinimalTestUI()`, and `modMinimalTestServer()`, plus the unexported
+        `getMinParentAge()`. (XARCH-1 / issue #27)
   - New Features
     - Dynamic Tab Management          
       - Error List and Changed Columns tabs appear/disappear dynamically based
@@ -64,7 +71,7 @@ knitr::opts_chunk$set(echo = TRUE)
     - Enhanced QC Pipeline            
       - runQcStudbook() wrapper provides UI-friendly error reporting        
       - processQcStudbookResult() transforms QC output for display          
-      - shouldShowErrorTab() and shouldShowChangedColsTab() helper functions
+      - shouldShowChangedColsTab() helper function
     - Improved Visualizations
       - getBoxWhiskerDescription() provides educational popover content for box
         plots

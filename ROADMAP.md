@@ -2,15 +2,16 @@
 
 ## Current Milestone
 **Shiny application modularization** — converting the monolithic `inst/application/`
-(server.R, ui.R) into discrete, testable Shiny modules in `R/`. The modular architecture
-is built (see `NEWS.md` 1.1.0.9000): `modInput`, `modPedigree`, `modPyramid`,
-`modGeneticValue`, `modSummaryStats`, `modBreedingGroups`, `modORIPReporting`, with
-`appServer`/`appUI` orchestrating module communication. Remaining work is finishing any
-monolithic→module conversion, integration testing, and CRAN-submission preparation.
+(server.R, ui.R) into discrete, testable Shiny modules in `R/`. **Complete (Phase 9).**
+The modular architecture (see `NEWS.md` 1.1.0.9000) — `modInput`, `modPedigree`,
+`modPyramid`, `modGeneticValue`, `modSummaryStats`, `modBreedingGroups`,
+`modORIPReporting`, with `appServer`/`appUI` orchestrating module communication — is now
+canonical, and the legacy monolith has been retired: `inst/application/` is deleted and
+`runGeneKeepR()` is a deprecated alias for `runModularApp()`. Remaining work is
+integration testing and CRAN-submission preparation.
 
 ## Planned
 *(Scoped but not started. The active task list is in `BACKLOG.md`.)*
-- Complete remaining monolithic UI/server → module conversion.
 - Integration testing for the modularized Shiny app (target >80% coverage).
 - CRAN submission preparation.
 - **Audit follow-ups** (full findings in `PED_GV_AUDIT_2026-05-30.md`; open items in

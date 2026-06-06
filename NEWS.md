@@ -6,36 +6,36 @@ R. Mark Sharp, Ph.D.
 # nprcgenekeepr 1.1.0.9000 (20260126)
 
 - Data input / quality control
-  - IDs may no longer contain a period ("."). `qcStudbook()` and `geneDrop()`
-    now reject `id`/`sire`/`dam` values that contain a period; with
-    `reportErrors = TRUE`, the offending values are reported in
-    `errorLst$invalidIdChars`. Periods cause problems across software
-    environments (R column-name/formula parsing, file extensions, namespaces,
-    regular expressions). All automatically generated IDs remain period-free.
-    (NEW-45)
-  - `geneDrop()` now rejects duplicate animal IDs with a clear error. Animal IDs
-    uniquely identify animals (already enforced upstream by `qcStudbook()` via
-    `removeDuplicates()` and by `kinship()`); a duplicate id previously triggered
-    the cryptic base-R error "duplicate 'row.names' are not allowed". (NEW-46)
-
+  - IDs may no longer contain a period (“.”). `qcStudbook()` and
+    `geneDrop()` now reject `id`/`sire`/`dam` values that contain a
+    period; with `reportErrors = TRUE`, the offending values are
+    reported in `errorLst$invalidIdChars`. Periods cause problems across
+    software environments (R column-name/formula parsing, file
+    extensions, namespaces, regular expressions). All automatically
+    generated IDs remain period-free. (NEW-45)
+  - `geneDrop()` now rejects duplicate animal IDs with a clear error.
+    Animal IDs uniquely identify animals (already enforced upstream by
+    `qcStudbook()` via `removeDuplicates()` and by `kinship()`); a
+    duplicate id previously triggered the cryptic base-R error
+    “duplicate ‘row.names’ are not allowed”. (NEW-46)
 - Genetic value analysis
-  - `summarizeKinshipValues()` now reports the `secondQuartile` column as the
-    lower hinge (`fivenum()[2]`, approximately the first quartile) instead of
-    silently duplicating `min` (`fivenum()[1]`). The `thirdQuartile` column
-    (the upper hinge) was already correct. (NEW-16)
-  - `calcFE()`, `calcFG()`, and `calcFEFG()` no longer duplicate the founder-
-    contribution algorithm and the partial-parentage guard they shared
-    verbatim; both now live in a single internal helper. Results, signatures,
-    and error messages are unchanged. (NEW-13 / NEW-23)
-
+  - `summarizeKinshipValues()` now reports the `secondQuartile` column
+    as the lower hinge (`fivenum()[2]`, approximately the first
+    quartile) instead of silently duplicating `min` (`fivenum()[1]`).
+    The `thirdQuartile` column (the upper hinge) was already correct.
+    (NEW-16)
+  - `calcFE()`, `calcFG()`, and `calcFEFG()` no longer duplicate the
+    founder- contribution algorithm and the partial-parentage guard they
+    shared verbatim; both now live in a single internal helper. Results,
+    signatures, and error messages are unchanged. (NEW-13 / NEW-23)
 - Pedigree curation
   - Added two exported helpers, `isFounder()` and `getFounders()`, that
-    identify pedigree founders (animals whose sire and dam are both unknown).
-    `isFounder(ped)` returns the logical mask and `getFounders(ped)` returns
-    the founder `id` values. The founder predicate had been written inline in
-    a dozen places; it is now defined once and reused throughout the
-    genetic-value and reporting functions. (PED-1 / NEW-17)
-
+    identify pedigree founders (animals whose sire and dam are both
+    unknown). `isFounder(ped)` returns the logical mask and
+    `getFounders(ped)` returns the founder `id` values. The founder
+    predicate had been written inline in a dozen places; it is now
+    defined once and reused throughout the genetic-value and reporting
+    functions. (PED-1 / NEW-17)
 - Major changes
   - Architectural Changes
     - Modular Shiny Architecture
@@ -56,6 +56,14 @@ R. Mark Sharp, Ph.D.
       - New appServer.R and appUI.R orchestrate module communication via
         shared reactive values
       - runModularApp() provides entry point for modular application
+      - **Monolith retired (Phase 9).** The legacy monolithic
+        application (`inst/application/`) has been deleted.
+        `runGeneKeepR()` is now a soft-deprecated alias that launches
+        the modular application via `runModularApp()`; existing
+        zero-argument calls continue to work. Also removed the
+        now-unused exports `getLogo()`, `shouldShowErrorTab()`,
+        `modMinimalTestUI()`, and `modMinimalTestServer()`, plus the
+        unexported `getMinParentAge()`. (XARCH-1 / issue \#27)
   - New Features
     - Dynamic Tab Management
       - Error List and Changed Columns tabs appear/disappear dynamically
@@ -65,37 +73,25 @@ R. Mark Sharp, Ph.D.
     - Enhanced QC Pipeline
       - runQcStudbook() wrapper provides UI-friendly error reporting  
       - processQcStudbookResult() transforms QC output for display  
-      - shouldShowErrorTab() and shouldShowChangedColsTab() helper
-        functions
+      - shouldShowChangedColsTab() helper function
     - Improved Visualizations
       - getBoxWhiskerDescription() provides educational popover content
         for box plots
-      - savePlotToFile() supports PNG, PDF, and SVG export  
+      - savePlotToFile() supports PNG, PDF, and SVG export
       - Enhanced pyramid plots with getPyramidPlot()
     - Genetic Value Analysis tab parity (modular app)
       - Exposed the genome-uniqueness threshold as a user control with a
         default of 4, matching the legacy application. The modular app
         previously hard-coded a threshold of 1, so default
         genome-uniqueness values from `runModularApp()` now match the
-        legacy app. (The analytical `reportGV()` default, `guThresh = 1`,
-        is unchanged.)
-      - Added a subset filter (view by animal IDs) and an "Export Subset"
-        download, matching the legacy "Filter View" / "Export Current
-        Subset".
+        legacy app. (The analytical `reportGV()` default,
+        `guThresh = 1`, is unchanged.)
+      - Added a subset filter (view by animal IDs) and an “Export
+        Subset” download, matching the legacy “Filter View” / “Export
+        Current Subset”.
       - Changed the default gene-drop iterations to 1000 for legacy
-        parity (was 5000); removed an inert "Minimum breeding age" slider
-        that had no effect on the analysis.
-    - Breeding group formation tab parity (modular app)
-      - Exposed the seed-animal "current groups" widget (pre-seed groups
-        with specific animals before formation), and the minimum breeding
-        age, number of simulations, and "include kinship in display"
-        controls. The server already read these but no UI declared them,
-        so they had silently used their defaults.
-      - Changed the default number of breeding-group simulations to 10 for
-        legacy parity (was 1000). This is the breeding-group MIS sampler
-        count, distinct from the gene-drop iterations above.
-      - Seed animals that are not in the pedigree are now rejected with a
-        clear message instead of producing a malformed group.
+        parity (was 5000); removed an inert “Minimum breeding age”
+        slider that had no effect on the analysis.
     - Utility Functions
       - safeExecute() - Error-handling wrapper for module operations  
       - logModuleEvent() - Structured logging with futile.logger

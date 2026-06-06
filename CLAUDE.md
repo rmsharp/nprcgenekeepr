@@ -45,8 +45,7 @@ This work has been supported in part by NIH grants P51 RR13986 to the Southwest 
 
 ### Package Structure
 
-- `R/` - Package functions and Shiny modules
-- `inst/application/` - Original monolithic Shiny application (server.R, ui.R)
+- `R/` - Package functions and Shiny modules (`appUI.R` + `appServer.R` + `mod*.R` are the canonical modular Shiny application, launched by `runModularApp()`)
 - `inst/extdata/` - Example data and configuration files
 - `tests/testthat/` - Unit tests
 
@@ -54,7 +53,7 @@ This work has been supported in part by NIH grants P51 RR13986 to the Southwest 
 
 ```r
 library(nprcgenekeepr)
-runGeneKeepR()
+runModularApp()   # runGeneKeepR() is a deprecated alias that calls this
 ```
 
 ### Key References
