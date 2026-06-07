@@ -4,7 +4,9 @@
 #' Unit tests for the shinytest2 E2E driver helpers (defined in
 #' helper-shinytest2.R): create_app_driver(), navigate_to_tab(),
 #' get_html_safe(), click_element_safe(), navigate_to_menu_item(),
-#' get_values_safe(), and the E2E_TIMEOUT constant.
+#' get_values_safe(), the E2E_TIMEOUT constant, and the active-pane helpers
+#' get_active_pane_text() / get_active_pane_value() / wait_for_active_pane() /
+#' assert_active_pane() (Phase 8e-1, GitHub issue #40).
 #'
 #' These tests are deliberately BROWSER-FREE: they exercise each helper's
 #' existence, signature, and \verb{*_safe} error/success contracts using fake
@@ -25,7 +27,8 @@ fake_app_throwing <- function() {
   boom <- function(...) stop("fake app: method failed")
   list(
     get_html = boom, get_values = boom, click = boom,
-    wait_for_idle = boom, set_inputs = boom, get_value = boom
+    wait_for_idle = boom, set_inputs = boom, get_value = boom,
+    get_js = boom, wait_for_js = boom
   )
 }
 
@@ -59,6 +62,45 @@ fake_app_noop <- function() {
     click = function(...) invisible(TRUE),
     get_html = function(selector) "",
     get_values = function(...) list()
+  )
+}
+
+# Simulates ONE active navbar pane (8e-1). get_js() returns the scripted
+# data-value or innerText, discriminated by inspecting the JS expression
+# (get_active_pane_value queries '...getAttribute("data-value")'; the text
+# helper queries '...innerText'). wait_for_js() "succeeds" only when the JS
+# asserts the active pane's OWN data_value (i.e. the requested tab IS active),
+# otherwise it throws like a real timeout. This lets assert_active_pane()'s
+# discrimination be proven without Chrome (sub-plan section 4 / 2.3).
+fake_app_pane <- function(data_value = "Summary Statistics",
+                          inner_text = "Export Kinship Matrix") {
+  list(
+    get_js = function(expr) {
+      if (grepl("data-value", expr, fixed = TRUE)) return(data_value)
+      if (grepl("innerText", expr, fixed = TRUE)) return(inner_text)
+      ""
+    },
+    wait_for_js = function(expr, ...) {
+      if (grepl(encodeString(data_value, quote = "'"), expr, fixed = TRUE)) {
+        return(invisible(TRUE))
+      }
+      stop("fake app: wait_for_js timed out (requested pane not active)")
+    }
+  )
+}
+
+# A "liar": wait_for_js() ALWAYS succeeds, but the active pane's data-value is
+# something else -> proves assert_active_pane()'s redundant
+# identical(get_active_pane_value(app), tab_label) guard rejects a wait/read
+# disagreement (defense beyond wait_for_active_pane alone).
+fake_app_pane_liar <- function() {
+  list(
+    get_js = function(expr) {
+      if (grepl("data-value", expr, fixed = TRUE)) return("Home")
+      if (grepl("innerText", expr, fixed = TRUE)) return("home content")
+      ""
+    },
+    wait_for_js = function(expr, ...) invisible(TRUE)
   )
 }
 
@@ -156,4 +198,96 @@ test_that("navigate_to_menu_item returns TRUE when the menu item is reached", {
   # Provisional 8a contract: delegates to navigate_to_tab (finalized in 8d after
   # the navbarMenu spike, sub-plan section 8.2).
   expect_true(navigate_to_menu_item(fake_app_ok(), "Settings"))
+})
+
+# ---- Active-pane helpers (8e-1, GitHub issue #40) --------------------------
+# get_active_pane_text / get_active_pane_value / wait_for_active_pane /
+# assert_active_pane: assert against the SINGLE visible navbar pane instead of
+# the whole hidden-DOM body. Browser-free here via the recording stubs above;
+# the live-Chrome behavior is confirmed by the 8e-1 spike (sub-plan section 2.3).
+
+test_that("the four active-pane helpers exist as functions", {
+  for (h in c("get_active_pane_text", "get_active_pane_value",
+              "wait_for_active_pane", "assert_active_pane")) {
+    expect_true(exists(h, mode = "function"), info = h)
+  }
+})
+
+test_that("active-pane helpers have their planned signatures", {
+  expect_equal(names(formals(get_active_pane_text)), "app")
+  expect_equal(names(formals(get_active_pane_value)), "app")
+  expect_equal(names(formals(wait_for_active_pane)),
+               c("app", "tab_label", "timeout"))
+  expect_equal(names(formals(assert_active_pane)),
+               c("app", "tab_label", "pattern", "ignore.case"))
+  # pattern defaults to NULL (pane-only assertion); ignore.case defaults TRUE.
+  expect_null(formals(assert_active_pane)$pattern)
+  expect_true(isTRUE(formals(assert_active_pane)$ignore.case))
+})
+
+# -- never-throw contracts (throwing stub: get_js / wait_for_js both error) --
+
+test_that("get_active_pane_text returns \"\" when get_js throws", {
+  res <- get_active_pane_text(fake_app_throwing())
+  expect_type(res, "character")
+  expect_identical(res, "")
+})
+
+test_that("get_active_pane_value returns \"\" when get_js throws", {
+  expect_identical(get_active_pane_value(fake_app_throwing()), "")
+})
+
+test_that("wait_for_active_pane returns FALSE when wait_for_js throws", {
+  expect_false(wait_for_active_pane(fake_app_throwing(), "Input"))
+})
+
+test_that("assert_active_pane returns FALSE when the driver throws", {
+  expect_false(assert_active_pane(fake_app_throwing(), "Input", "anything"))
+})
+
+# -- discrimination contracts (recording stub) ------------------------------
+
+test_that("get_active_pane_text / get_active_pane_value read the active pane", {
+  app <- fake_app_pane(data_value = "Summary Statistics",
+                       inner_text = "Export Kinship Matrix")
+  expect_identical(get_active_pane_value(app), "Summary Statistics")
+  expect_identical(get_active_pane_text(app), "Export Kinship Matrix")
+})
+
+test_that("wait_for_active_pane is TRUE for the active pane, FALSE otherwise", {
+  app <- fake_app_pane(data_value = "Summary Statistics")
+  expect_true(wait_for_active_pane(app, "Summary Statistics"))
+  expect_false(wait_for_active_pane(app, "Genetic Value Analysis"))
+})
+
+test_that("assert_active_pane passes only for the right pane AND right content", {
+  app <- fake_app_pane(data_value = "Summary Statistics",
+                       inner_text = "Export Kinship Matrix")
+  # right pane + matching pattern
+  expect_true(assert_active_pane(app, "Summary Statistics", "Export.*Kinship"))
+  # right pane, no pattern -> pane-only assertion passes
+  expect_true(assert_active_pane(app, "Summary Statistics"))
+  # right pane, NON-matching pattern -> FALSE (content discrimination)
+  expect_false(assert_active_pane(app, "Summary Statistics", "NoSuchText"))
+  # WRONG pane (the wrong-tab defect this whole slice targets) -> FALSE
+  expect_false(
+    assert_active_pane(app, "Genetic Value Analysis", "Export.*Kinship"))
+})
+
+test_that("assert_active_pane catches a wait/read disagreement (identical guard)", {
+  # wait_for_js 'succeeds' but the active pane's data-value is something else ->
+  # the redundant identical(get_active_pane_value, tab_label) guard must reject.
+  liar <- fake_app_pane_liar()
+  expect_false(assert_active_pane(liar, "Summary Statistics", "anything"))
+  expect_false(assert_active_pane(liar, "Summary Statistics"))
+})
+
+test_that("assert_active_pane honors ignore.case", {
+  app <- fake_app_pane(data_value = "Summary Statistics",
+                       inner_text = "Export Kinship Matrix")
+  # default ignore.case = TRUE -> lowercase pattern matches mixed-case text
+  expect_true(assert_active_pane(app, "Summary Statistics", "export kinship"))
+  # ignore.case = FALSE -> case-sensitive miss
+  expect_false(assert_active_pane(app, "Summary Statistics", "export kinship",
+                                  ignore.case = FALSE))
 })

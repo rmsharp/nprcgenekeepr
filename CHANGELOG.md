@@ -14,6 +14,35 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-07 — Phase 8e-1: active-pane assertion foundation + summary-statistics conversion (issue #40, Session 37)
+- **Deliverable (implementation):** slice 8e-1 of `docs/planning/phase8e-assertion-strengthening-subplan.md`
+  — the load-bearing foundation for converting the shinytest2 E2E suite from boot-level tautologies to
+  behavioral active-pane assertions. Strict TDD (PRE-RED→RED, RED→GREEN gated) + a spike-failure scope-fork
+  owner gate.
+- **4 active-pane helpers** added to `tests/testthat/helper-shinytest2.R` — `get_active_pane_text`,
+  `get_active_pane_value`, `wait_for_active_pane`, `assert_active_pane` (+ an internal `.active_pane_js()`
+  builder), following the existing `*_safe` never-throw convention. `assert_active_pane()` is the drop-in
+  replacement for the `get_html(app,"body")` + `grepl()` tautology: it asserts the NAMED top-level navbar
+  pane is the single visible/active one (catching a wrong-tab or silent-no-op navigation) and optionally
+  that its visible `innerText` matches a pattern. **11 browser-free unit tests / 59 expectations** in
+  `test_helper_shinytest2.R` (fake-AppDriver stubs, the Phase-8a idiom).
+- **Spike-corrected mechanism (HARD GATE).** The live-Chrome spike FALSIFIED the plan's §2.3/§4 selector
+  (`.tab-content > .tab-pane.active`): the modules nest their own `tabsetPanel`s, so `.tab-content` is
+  non-unique (5 containers; first-match `querySelector` latches onto a nested pane). Corrected to the only
+  `.tab-content` not inside a `.tab-pane` → its direct-child `.tab-pane.active` (structural; no dependence
+  on the dynamic `data-tabsetid`). Owner-approved deviation; re-confirmed 17/17 through the real helpers
+  (all navs incl. the navbarMenu "More" children; innerText honors visibility when correctly scoped).
+- **`test-e2e-summary-statistics-module.R` converted** — fixed the 7 wrong-tab navigations (tests 2–8 went
+  to "Genetic Value Analysis"; "Summary Statistics" is its own `tabPanel`, appUI.R:156-159) + dropped the
+  false "embedded in another tab" fallback, and replaced all 8 tautologies/hidden-DOM asserts with
+  `assert_active_pane()` on STATIC UI (export-button labels, the heading, the population-genetics guidance).
+  Data-bearing content (summary/founder tables, rendered plots) deferred to slice 8e-6.
+- **Verification:** helper unit tests 59/0/0; live spike 17/17; converted e2e file 8/8/0 (opt-in); mutation
+  check PASS (wrong-tab→FALSE, correct-tab→TRUE — the old `expect_true(TRUE)` passed both); non-e2e
+  regression 2122 passed / 0 failed / 0 error (159 e2e-skipped, 5 pre-existing `modPyramid` warnings).
+- **Scope:** test-infra only (no `R/` change) → `document()` N/A, `tests/` lint-exempt, CHANGELOG only (no
+  NEWS). See `PROJECT_LEARNINGS.md` Learning #37 + glossary `[hard-gate-spike]`.
+
 ### 2026-06-06 — Phase 9: retire the legacy monolithic Shiny app (declare modular canonical) + #27 CLOSED (Session 35)
 - **Deliverable (implementation):** the FINAL phase of the shiny-module conversion
   (`docs/planning/shiny-module-conversion-plan.md` §9 Phase 9) — retire the monolith now that the

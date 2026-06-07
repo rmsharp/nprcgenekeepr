@@ -305,3 +305,109 @@ navigate_to_menu_item <- function(app, item) {
 get_values_safe <- function(app) {
   tryCatch(app$get_values(), error = function(e) list())
 }
+
+# ---------------------------------------------------------------------------
+# Active-pane assertion helpers (Phase 8e-1, GitHub issue #40)
+#
+# appUI() builds navbarPage(id = "mainNavbar",
+# theme = bslib::bs_theme(version = 4L, ...)) -> Bootstrap 4. get_html/get_text
+# serialize the ENTIRE hidden tree, so the dominant
+# `grepl(keyword, get_html(app, "body"))` idiom passes once the app boots
+# regardless of the selected tab. These helpers instead read the single VISIBLE
+# top-level navbar pane via get_js against the LIVE DOM, catching a wrong-tab or
+# silent-no-op navigation that the body-grepl idiom cannot. They follow the
+# *_safe never-throw convention.
+#
+# Mechanism (8e-1 spike-confirmed; sub-plan section 2.3 + Session 37 notes): the
+# modules nest their OWN tabsetPanels, so `.tab-content` is NOT unique -- there
+# are ~5, one per nested tabset, each with its own active pane (so the naive
+# `.tab-content > .tab-pane.active` matches ~5 and a first-match querySelector
+# latches onto a nested pane). The top-level navbar tab-content is the only
+# `.tab-content` that is not itself inside a `.tab-pane`; we resolve it
+# structurally (no dependence on the dynamic data-tabsetid) and take its
+# direct-child `.tab-pane.active`. Scoped this way, data-value tracks every
+# navbar selection (incl. navbarMenu("More") children) and innerText honors CSS
+# visibility (a hidden pane returns ""). See
+# docs/planning/phase8e-assertion-strengthening-subplan.md sections 2.3 / 4.
+# ---------------------------------------------------------------------------
+
+# Build a self-contained JS expression that resolves the top-level navbar pane
+# element `p` (the active direct child of the only non-nested .tab-content, or
+# null) and returns the `read` sub-expression's value. Uses only
+# closest()/children/classList/find + an arrow IIFE -- all 8e-1-spike-confirmed
+# in chromote.
+.active_pane_js <- function(read) {
+  sprintf(paste0(
+    "(() => { ",
+    "const tc = Array.from(document.querySelectorAll('.tab-content'))",
+    ".find(t => !t.closest('.tab-pane')); ",
+    "const p = tc && Array.from(tc.children).find(",
+    "c => c.classList.contains('tab-pane') && c.classList.contains('active')); ",
+    "return %s; })()"), read)
+}
+
+#' innerText of the active/visible top-level navbar pane ("" on error/none)
+#'
+#' innerText (NOT get_html/textContent) honors CSS visibility, so hidden panes
+#' contribute nothing -- this is the REAL active-pane content.
+#'
+#' @param app AppDriver object.
+#' @return The visible active pane's innerText, or "" on error/none.
+get_active_pane_text <- function(app) {
+  tryCatch(app$get_js(.active_pane_js("(p && p.innerText) || ''")),
+           error = function(e) "")
+}
+
+#' data-value (== tabPanel title) of the active top-level pane ("" if none/error)
+#'
+#' @param app AppDriver object.
+#' @return The active pane's data-value attribute, or "" on error/none.
+get_active_pane_value <- function(app) {
+  tryCatch(
+    app$get_js(.active_pane_js("(p && p.getAttribute('data-value')) || ''")),
+    error = function(e) ""
+  )
+}
+
+#' Block until the top-level pane with data-value == tab_label is the active one
+#'
+#' Resolves the BS4 fade-transition race before asserting. wait_for_js aborts on
+#' timeout, so this wraps it in tryCatch to honor the never-throw convention.
+#'
+#' @param app AppDriver object.
+#' @param tab_label Tab title (== data-value) to wait for.
+#' @param timeout Maximum wait in milliseconds (default E2E_TIMEOUT).
+#' @return TRUE on success, FALSE on timeout/error (never throws).
+wait_for_active_pane <- function(app, tab_label, timeout = E2E_TIMEOUT) {
+  # Quote the (safe, literal) title with base-R encodeString -- NOT jsonlite
+  # (jsonlite is not a package dependency; do not add one just to quote a label).
+  q <- encodeString(tab_label, quote = "'")
+  js <- .active_pane_js(sprintf("!!p && p.getAttribute('data-value') === %s", q))
+  tryCatch({
+    app$wait_for_js(js, timeout = timeout)
+    TRUE
+  }, error = function(e) FALSE)
+}
+
+#' Assert the EXPECTED pane is active+visible AND (optionally) contains pattern
+#'
+#' Drop-in replacement for the get_html(app, "body") + grepl(...) tautology: it
+#' asserts the NAMED pane is the active/visible one (catching a wrong-tab or
+#' silent-no-op navigation) and, if pattern is supplied, that the pane's visible
+#' innerText matches it. The redundant identical(get_active_pane_value, ...)
+#' guard re-confirms with a direct read in case wait_for_js resolves on a
+#' transitional state.
+#'
+#' @param app AppDriver object.
+#' @param tab_label Expected active tab title (== data-value).
+#' @param pattern Optional regex matched against the active pane's innerText.
+#' @param ignore.case Passed to grepl (default TRUE).
+#' @return TRUE iff the named pane is active/visible and (if given) its visible
+#'   innerText matches pattern; FALSE otherwise. Never throws.
+assert_active_pane <- function(app, tab_label, pattern = NULL,
+                               ignore.case = TRUE) {
+  if (!wait_for_active_pane(app, tab_label)) return(FALSE)
+  if (!identical(get_active_pane_value(app), tab_label)) return(FALSE)
+  if (is.null(pattern)) return(TRUE)
+  grepl(pattern, get_active_pane_text(app), ignore.case = ignore.case)
+}

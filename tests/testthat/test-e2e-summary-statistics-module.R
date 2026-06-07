@@ -2,9 +2,19 @@
 #' This file is part of nprcgenekeepr
 #' E2E Tests for Summary Statistics Module
 #' Based on ColonyManagerTutorial.Rmd workflow
+#'
+#' Phase 8e-1 (GitHub issue #40): converted from boot-level tautologies
+#' (expect_true(TRUE) reached after a WRONG-tab navigation to "Genetic Value
+#' Analysis") into behavioral active-pane assertions. Each test now navigates to
+#' the real "Summary Statistics" tab and asserts, via assert_active_pane(), that
+#' THAT pane is the single visible/active one AND contains the expected STATIC UI
+#' (export-button labels, the heading, the population-genetics guidance). The
+#' data-bearing content (the summary/quartile/founder tables and the rendered
+#' plots, which require a Genetic Value Analysis run) is deferred to slice 8e-6.
+#' See the active-pane helpers in helper-shinytest2.R.
 library(testthat)
 
-test_that("E2E: Summary Statistics tab is accessible", {
+test_that("E2E: Summary Statistics tab is accessible and active", {
   skip_if_not_installed("shinytest2")
   skip_if_not_installed("chromote")
   skip_on_cran()
@@ -13,17 +23,12 @@ test_that("E2E: Summary Statistics tab is accessible", {
   app <- create_app_driver(app_dir, "e2e_ss_access")
   on.exit(app$stop(), add = TRUE)
 
-  # Try to navigate to Summary Statistics tab (may be part of Genetic Value)
-  success <- navigate_to_tab(app, "Summary Statistics", "Summary")
-  if (!success) {
-    success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
-  }
+  success <- navigate_to_tab(app, "Summary Statistics")
   if (!success) skip("Could not navigate to Summary Statistics tab")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("Summary|Statistics|Plots|Kinship", html, ignore.case = TRUE),
-    info = "Should find summary statistics content"
+    assert_active_pane(app, "Summary Statistics", "Summary Statistics and Plots"),
+    info = "Summary Statistics pane should be active and show its heading"
   )
 })
 
@@ -36,17 +41,13 @@ test_that("E2E: Summary Statistics has Export Kinship Matrix button", {
   app <- create_app_driver(app_dir, "e2e_ss_kinship_export")
   on.exit(app$stop(), add = TRUE)
 
-  # Navigate - Summary Statistics may be embedded in another tab
-  success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
-  if (!success) skip("Could not navigate to find Summary Statistics")
+  success <- navigate_to_tab(app, "Summary Statistics")
+  if (!success) skip("Could not navigate to Summary Statistics tab")
 
-  html <- get_html_safe(app, "body")
-  has_kinship_export <- grepl(
-    "Export.*Kinship|Kinship.*Matrix|kinship.*export|downloadKinship",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Summary Statistics", "Export Kinship Matrix"),
+    info = "Active Summary Statistics pane should expose the Export Kinship Matrix control"
   )
-  expect_true(TRUE, info = "Summary Statistics area accessible")
 })
 
 test_that("E2E: Summary Statistics has First-Order Relationships export", {
@@ -58,16 +59,13 @@ test_that("E2E: Summary Statistics has First-Order Relationships export", {
   app <- create_app_driver(app_dir, "e2e_ss_firstorder")
   on.exit(app$stop(), add = TRUE)
 
-  success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
-  if (!success) skip("Could not navigate")
+  success <- navigate_to_tab(app, "Summary Statistics")
+  if (!success) skip("Could not navigate to Summary Statistics tab")
 
-  html <- get_html_safe(app, "body")
-  has_firstorder <- grepl(
-    "First.*Order|Relationships|firstOrder|parents.*offspring.*siblings",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Summary Statistics", "Export First-Order Relationships"),
+    info = "Active Summary Statistics pane should expose the First-Order Relationships export"
   )
-  expect_true(TRUE, info = "Page loaded successfully")
 })
 
 test_that("E2E: Summary Statistics has Male Founders export", {
@@ -79,16 +77,13 @@ test_that("E2E: Summary Statistics has Male Founders export", {
   app <- create_app_driver(app_dir, "e2e_ss_male_founders")
   on.exit(app$stop(), add = TRUE)
 
-  success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
-  if (!success) skip("Could not navigate")
+  success <- navigate_to_tab(app, "Summary Statistics")
+  if (!success) skip("Could not navigate to Summary Statistics tab")
 
-  html <- get_html_safe(app, "body")
-  has_male_founders <- grepl(
-    "Male.*Founder|Founder.*Male|downloadMale",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Summary Statistics", "Export Male Founders"),
+    info = "Active Summary Statistics pane should expose the Export Male Founders control"
   )
-  expect_true(TRUE, info = "Page loaded successfully")
 })
 
 test_that("E2E: Summary Statistics has Female Founders export", {
@@ -100,16 +95,13 @@ test_that("E2E: Summary Statistics has Female Founders export", {
   app <- create_app_driver(app_dir, "e2e_ss_female_founders")
   on.exit(app$stop(), add = TRUE)
 
-  success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
-  if (!success) skip("Could not navigate")
+  success <- navigate_to_tab(app, "Summary Statistics")
+  if (!success) skip("Could not navigate to Summary Statistics tab")
 
-  html <- get_html_safe(app, "body")
-  has_female_founders <- grepl(
-    "Female.*Founder|Founder.*Female|downloadFemale",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Summary Statistics", "Export Female Founders"),
+    info = "Active Summary Statistics pane should expose the Export Female Founders control"
   )
-  expect_true(TRUE, info = "Page loaded successfully")
 })
 
 test_that("E2E: Summary Statistics has histogram plots area", {
@@ -121,17 +113,15 @@ test_that("E2E: Summary Statistics has histogram plots area", {
   app <- create_app_driver(app_dir, "e2e_ss_histograms")
   on.exit(app$stop(), add = TRUE)
 
-  success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
-  if (!success) skip("Could not navigate")
+  success <- navigate_to_tab(app, "Summary Statistics")
+  if (!success) skip("Could not navigate to Summary Statistics tab")
 
-  html <- get_html_safe(app, "body")
-  # Look for histogram-related elements or plot outputs
-  has_histogram_area <- grepl(
-    "histogram|Hist|plotOutput|mkHist|zscoreHist|guHist",
-    html,
-    ignore.case = TRUE
+  # The plotOutput placeholders are empty pre-data, but their export controls
+  # ("Export Mean Kinship Histogram", etc.) are static UI in the active pane.
+  expect_true(
+    assert_active_pane(app, "Summary Statistics", "Histogram"),
+    info = "Active Summary Statistics pane should expose histogram export controls"
   )
-  expect_true(TRUE, info = "Page loaded successfully")
 })
 
 test_that("E2E: Summary Statistics has boxplot plots area", {
@@ -143,17 +133,15 @@ test_that("E2E: Summary Statistics has boxplot plots area", {
   app <- create_app_driver(app_dir, "e2e_ss_boxplots")
   on.exit(app$stop(), add = TRUE)
 
-  success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
-  if (!success) skip("Could not navigate")
+  success <- navigate_to_tab(app, "Summary Statistics")
+  if (!success) skip("Could not navigate to Summary Statistics tab")
 
-  html <- get_html_safe(app, "body")
-  # Look for boxplot-related elements
-  has_boxplot_area <- grepl(
-    "boxplot|Box|mkBox|zscoreBox|guBox",
-    html,
-    ignore.case = TRUE
+  # Box-plot export controls ("Export Mean Kinship Box Plot", etc.) are static
+  # UI in the active pane (the plots themselves render only after a GVA run).
+  expect_true(
+    assert_active_pane(app, "Summary Statistics", "Box Plot"),
+    info = "Active Summary Statistics pane should expose box-plot export controls"
   )
-  expect_true(TRUE, info = "Page loaded successfully")
 })
 
 test_that("E2E: Summary Statistics has founder equivalents info", {
@@ -165,14 +153,15 @@ test_that("E2E: Summary Statistics has founder equivalents info", {
   app <- create_app_driver(app_dir, "e2e_ss_founder_equiv")
   on.exit(app$stop(), add = TRUE)
 
-  success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
-  if (!success) skip("Could not navigate")
+  success <- navigate_to_tab(app, "Summary Statistics")
+  if (!success) skip("Could not navigate to Summary Statistics tab")
 
-  html <- get_html_safe(app, "body")
-  has_fe_info <- grepl(
-    "founder.*equivalent|genome.*equivalent|FE|FGE",
-    html,
-    ignore.case = TRUE
+  # The founder-equivalents TABLE is data-dependent (deferred to 8e-6), but the
+  # population-genetics guidance HTML at the bottom of the pane statically
+  # defines "Founder Equivalents" / "Founder Genome Equivalents".
+  expect_true(
+    assert_active_pane(app, "Summary Statistics",
+                       "founder.*equivalent|genome.*equivalent"),
+    info = "Active Summary Statistics pane should define founder/genome equivalents"
   )
-  expect_true(TRUE, info = "Page loaded successfully")
 })
