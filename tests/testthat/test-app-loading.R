@@ -24,12 +24,12 @@ test_that("GeneKeepR app loads without errors", {
   # Verify app started successfully (app object exists and is valid)
   expect_true(inherits(app, "AppDriver"))
 
-  # Give the app time to fully load
-
-  Sys.sleep(2)
-
-  # Take a screenshot to verify loading
-  # app$get_screenshot()
+  # Behavioral: the app boots with the Home pane active+visible (read from the
+  # live DOM's single visible pane), not merely that the driver constructed.
+  expect_true(
+    assert_active_pane(app, "Home", "Welcome to GeneKeepR"),
+    info = "App should boot to the Home pane"
+  )
 })
 
 test_that("App UI structure is correct", {
@@ -50,9 +50,14 @@ test_that("App UI structure is correct", {
 
   on.exit(app$stop(), add = TRUE)
 
-  # Check that main navigation tabs exist
-  html <- app$get_html("body")
-
-  # Verify key navigation elements are present
-expect_true(grepl("Input|Pedigree|Pyramid", html, ignore.case = TRUE))
+  # Check that the main navbar tab anchors are wired (structural). These live
+  # outside any tab-pane (navbar <ul>), so this stays a DOM-structure check --
+  # but asserts the real tab anchors exist, not just a substring in the body
+  # (which the Home pane's "Go to Input" button text would also satisfy).
+  expect_true(
+    wait_for_element(app, 'a[data-value="Input"]') &&
+      wait_for_element(app, 'a[data-value="Pedigree Browser"]') &&
+      wait_for_element(app, 'a[data-value="Age-Sex Pyramid"]'),
+    info = "Navbar should wire the Input/Pedigree/Pyramid tab anchors"
+  )
 })

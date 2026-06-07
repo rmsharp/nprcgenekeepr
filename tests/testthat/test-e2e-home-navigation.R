@@ -12,10 +12,9 @@ test_that("E2E: Home tab loads on startup", {
   app <- create_app_driver(app_dir, "e2e_home_load")
   on.exit(app$stop(), add = TRUE)
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("Welcome|GeneKeepR|Home", html, ignore.case = TRUE),
-    info = "Home tab should load on startup"
+    assert_active_pane(app, "Home", "Welcome to GeneKeepR"),
+    info = "Home pane should be active/visible on startup"
   )
 })
 
@@ -28,10 +27,9 @@ test_that("E2E: Home tab displays version information", {
   app <- create_app_driver(app_dir, "e2e_home_version")
   on.exit(app$stop(), add = TRUE)
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("Version|Genetic Management", html, ignore.case = TRUE),
-    info = "Should display version or description"
+    assert_active_pane(app, "Home", "Version|Genetic Management"),
+    info = "Home pane should display version/description"
   )
 })
 
@@ -44,10 +42,9 @@ test_that("E2E: Home tab has Data Input panel", {
   app <- create_app_driver(app_dir, "e2e_home_input_panel")
   on.exit(app$stop(), add = TRUE)
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("Data Input|Upload|studbook", html, ignore.case = TRUE),
-    info = "Should have Data Input panel"
+    assert_active_pane(app, "Home", "Data Input|Upload|studbook"),
+    info = "Home pane should have the Data Input panel"
   )
 })
 
@@ -60,10 +57,9 @@ test_that("E2E: Home tab has Pedigree Browser panel", {
   app <- create_app_driver(app_dir, "e2e_home_pedigree_panel")
   on.exit(app$stop(), add = TRUE)
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("Pedigree Browser|Browse|filter", html, ignore.case = TRUE),
-    info = "Should have Pedigree Browser panel"
+    assert_active_pane(app, "Home", "Pedigree Browser|Browse|filter"),
+    info = "Home pane should have the Pedigree Browser panel"
   )
 })
 
@@ -76,10 +72,9 @@ test_that("E2E: Home tab has Population Analysis panel", {
   app <- create_app_driver(app_dir, "e2e_home_population_panel")
   on.exit(app$stop(), add = TRUE)
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("Population|Analysis|age|sex", html, ignore.case = TRUE),
-    info = "Should have Population Analysis panel"
+    assert_active_pane(app, "Home", "Analysis|age|sex"),
+    info = "Home pane should have the population-analysis panels"
   )
 })
 
@@ -95,10 +90,9 @@ test_that("E2E: Go to Input button navigates correctly", {
   success <- click_element_safe(app, "#goto_input")
   if (!success) skip("Could not click Go to Input button")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("Upload|File|Input", html, ignore.case = TRUE),
-    info = "Should navigate to Input tab"
+    assert_active_pane(app, "Input", "Data Input and Quality Control"),
+    info = "Go to Input should switch the active pane to Input"
   )
 })
 
@@ -114,10 +108,9 @@ test_that("E2E: Go to Pedigree button navigates correctly", {
   success <- click_element_safe(app, "#goto_pedigree")
   if (!success) skip("Could not click Go to Pedigree button")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("Pedigree|Browser|Filter", html, ignore.case = TRUE),
-    info = "Should navigate to Pedigree tab"
+    assert_active_pane(app, "Pedigree Browser", "Focal Animals|Display Options"),
+    info = "Go to Pedigree should switch the active pane to Pedigree Browser"
   )
 })
 
@@ -133,10 +126,10 @@ test_that("E2E: Go to Pyramid button navigates correctly", {
   success <- click_element_safe(app, "#goto_pyramid")
   if (!success) skip("Could not click Go to Pyramid button")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("Pyramid|Age|Sex|Population", html, ignore.case = TRUE),
-    info = "Should navigate to Pyramid tab"
+    assert_active_pane(app, "Age-Sex Pyramid",
+                       "Age-Sex Pyramid Analysis|Bin Size|Color Scheme"),
+    info = "Go to Pyramid should switch the active pane to Age-Sex Pyramid"
   )
 })
 
@@ -151,7 +144,9 @@ test_that("E2E: Navbar has all main tabs", {
 
   html <- get_html_safe(app, "body")
 
-  # Check for main navigation tabs
+  # CARVE-OUT (8e-2): these assert the navbar <ul> tab LABELS, which live
+  # outside any tab-pane, so assert_active_pane would (correctly) not match
+  # them. They stay whole-DOM grepl checks of the navbar structure.
   expect_true(grepl("Home", html), info = "Should have Home tab")
   expect_true(grepl("Input", html), info = "Should have Input tab")
   expect_true(
@@ -182,6 +177,8 @@ test_that("E2E: More menu exists in navbar", {
   on.exit(app$stop(), add = TRUE)
 
   html <- get_html_safe(app, "body")
+  # CARVE-OUT (8e-2): the "More" navbarMenu and its items are navbar dropdown
+  # labels (outside any tab-pane), so this stays a whole-DOM grepl check.
   expect_true(
     grepl("More|Settings|About|Help", html, ignore.case = TRUE),
     info = "Should have More menu or its items"

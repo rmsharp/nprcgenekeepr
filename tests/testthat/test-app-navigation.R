@@ -20,23 +20,20 @@ test_that("Navigation between tabs works", {
 
   on.exit(app$stop(), add = TRUE)
 
-  # Wait for app to load
-  Sys.sleep(2)
+  # Initial state: the app boots with the Home pane active/visible.
+  expect_true(
+    assert_active_pane(app, "Home"),
+    info = "App should boot to the Home pane"
+  )
 
-  # Get initial state
-  initial_html <- app$get_html("body")
-  expect_true(nchar(initial_html) > 0)
-
-  # Try clicking on Input tab if it exists
-  tryCatch({
-    app$click(selector = 'a[data-value="Input"]')
-    Sys.sleep(1)
-    input_html <- app$get_html("body")
-    expect_true(nchar(input_html) > 0)
-  }, error = function(e) {
-    # Tab might have different selector
-    skip("Input tab selector not found")
-  })
+  # Clicking the Input navbar tab anchor switches the active/visible pane to
+  # Input (a real navigation, not merely "the body is non-empty").
+  success <- click_element_safe(app, 'a[data-value="Input"]')
+  if (!success) skip("Input tab anchor not clickable")
+  expect_true(
+    assert_active_pane(app, "Input", "Data Input and Quality Control"),
+    info = "Clicking the Input tab should switch the active pane to Input"
+  )
 })
 
 test_that("App responds to user interactions", {
@@ -60,9 +57,10 @@ test_that("App responds to user interactions", {
   # Wait for app to load
   Sys.sleep(2)
 
-  # Get all input values
-  values <- app$get_values()
-
-  # Verify we can retrieve values (app is responsive)
-  expect_true(is.list(values))
+  # The app is responsive: get_values() returns a list, and the mainNavbar
+  # input reads back its startup default ("Home") -- a real state check, not
+  # merely "is it a list".
+  values <- get_values_safe(app)
+  expect_true(is.list(values), info = "get_values() should return a list")
+  expect_identical(app$get_value(input = "mainNavbar"), "Home")
 })

@@ -14,6 +14,36 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-07 — Phase 8e-2 (home-nav + app-file sub-slice): boot-level tautologies → behavioral active-pane assertions (issue #40, Session 38)
+- **Deliverable (implementation):** the home-navigation + light-app-file sub-slice of plan slice 8e-2
+  (`docs/planning/phase8e-assertion-strengthening-subplan.md`). 8e-2 spans 11 files / 64 browser-booting
+  `test_that` blocks (plan risk R3 / §5 8e-2 dragon = oversized) → split by owner `AskUserQuestion`; this
+  session did **home-navigation (10 blocks) + test-app-loading (2) + test-app-navigation (2)**. Input,
+  pedigree, and pyramid families remain for later 8e-2 sessions.
+- **Strict TDD — PURE run-and-observe** (no defect in scope; the app already behaves and every navigation
+  targets the correct tab) → green-on-arrival `[refactor-only]` conversion, gated `PRE-RED→run-and-observe`
+  via `AskUserQuestion`; rigor supplied by a `[mutation-check]` (no synthetic RED).
+- **`test-e2e-home-navigation.R`** — 5 Home-pane content checks → `assert_active_pane(app, "Home", …)`;
+  the 3 `#goto_*` clicks → `assert_active_pane(app, "Input" / "Pedigree Browser" / "Age-Sex Pyramid", …)`,
+  turning a no-op-tolerant body-grepl into a real pane-switch assertion (the buttons are wired to
+  `updateNavbarPage(...)`, `appServer.R:72-94`). The 2 navbar-label tests ("Navbar has all main tabs",
+  "More menu exists") stay whole-DOM `grepl` **carve-outs** (navbar `<ul>`/dropdown labels live outside
+  every `.tab-pane`; documented inline).
+- **`test-app-loading.R`** — block 1 now also asserts the app boots to the **Home pane**
+  (`assert_active_pane`); block 2's navbar body-grepl strengthened **structurally** to assert the real tab
+  anchors exist (`wait_for_element(app, 'a[data-value="Input"]')` …), not a substring the Home pane's
+  "Go to Input" button also satisfies. **`test-app-navigation.R`** — the two `nchar>0` tautologies become
+  a real Input tab-anchor click → pane-switch assertion; the `is.list(values)` check gains
+  `expect_identical(app$get_value(input="mainNavbar"), "Home")`.
+- **Static UI only** (data-bearing tables/plots deferred to 8e-6); patterns sourced from each pane's module
+  UI (`modInput.R:42`, `modPedigree.R:52,103`, `modPyramid.R:25-32`).
+- **Verification:** opt-in browser run of the 3 files **14/14 blocks GREEN, 22 expectations** (net +2 vs the
+  20-expectation baseline), 0 error / 0 skip. **Mutation check passed** — after `#goto_input`, asserting the
+  wrong pane (`"Home"`/`"Age-Sex Pyramid"`) returns FALSE and a Pyramid-only pattern (`"Color Scheme"`)
+  returns FALSE, while the old whole-body `grepl` for a Pyramid keyword passes on Input (content-blind).
+  Non-e2e regression unchanged: **2122 passed / 0 failed / 0 error** (159 e2e-skipped, 5 pre-existing
+  `modPyramid` warnings). Test-tree-only → no `document()`, no `NEWS.md` bullet, `tests/` is lint-exempt.
+
 ### 2026-06-07 — Phase 8e-1: active-pane assertion foundation + summary-statistics conversion (issue #40, Session 37)
 - **Deliverable (implementation):** slice 8e-1 of `docs/planning/phase8e-assertion-strengthening-subplan.md`
   — the load-bearing foundation for converting the shinytest2 E2E suite from boot-level tautologies to
