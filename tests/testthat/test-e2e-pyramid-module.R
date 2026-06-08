@@ -15,9 +15,8 @@ test_that("E2E: Age-Sex Pyramid tab is accessible", {
   success <- navigate_to_tab(app, "Age-Sex Pyramid", "Pyramid")
   if (!success) skip("Could not navigate to Pyramid tab")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("Pyramid|Age|Sex", html, ignore.case = TRUE),
+    assert_active_pane(app, "Age-Sex Pyramid", "Pyramid|Age|Sex"),
     info = "Should be on Age-Sex Pyramid tab"
   )
 })
@@ -34,9 +33,10 @@ test_that("E2E: Pyramid has age unit selector", {
   success <- navigate_to_tab(app, "Age-Sex Pyramid", "Pyramid")
   if (!success) skip("Could not navigate to Pyramid tab")
 
-  html <- get_html_safe(app, "body")
-  has_age_unit <- grepl("Years|Months|unit", html, ignore.case = TRUE)
-  expect_true(has_age_unit, info = "Should have age unit selector")
+  expect_true(
+    assert_active_pane(app, "Age-Sex Pyramid", "Years|Months|unit"),
+    info = "Should have age unit selector"
+  )
 })
 
 test_that("E2E: Pyramid has bin size control", {
@@ -51,9 +51,10 @@ test_that("E2E: Pyramid has bin size control", {
   success <- navigate_to_tab(app, "Age-Sex Pyramid", "Pyramid")
   if (!success) skip("Could not navigate to Pyramid tab")
 
-  html <- get_html_safe(app, "body")
-  has_bin_size <- grepl("bin|size|interval", html, ignore.case = TRUE)
-  expect_true(has_bin_size, info = "Should have bin size control")
+  expect_true(
+    assert_active_pane(app, "Age-Sex Pyramid", "bin|size|interval"),
+    info = "Should have bin size control"
+  )
 })
 
 test_that("E2E: Pyramid has color scheme option", {
@@ -68,9 +69,10 @@ test_that("E2E: Pyramid has color scheme option", {
   success <- navigate_to_tab(app, "Age-Sex Pyramid", "Pyramid")
   if (!success) skip("Could not navigate to Pyramid tab")
 
-  html <- get_html_safe(app, "body")
-  has_color <- grepl("color|viridis|scheme|palette", html, ignore.case = TRUE)
-  expect_true(has_color, info = "Should have color scheme option")
+  expect_true(
+    assert_active_pane(app, "Age-Sex Pyramid", "color|viridis|scheme|palette"),
+    info = "Should have color scheme option"
+  )
 })
 
 test_that("E2E: Pyramid has download button", {
@@ -85,9 +87,10 @@ test_that("E2E: Pyramid has download button", {
   success <- navigate_to_tab(app, "Age-Sex Pyramid", "Pyramid")
   if (!success) skip("Could not navigate to Pyramid tab")
 
-  html <- get_html_safe(app, "body")
-  has_download <- grepl("download|export|save", html, ignore.case = TRUE)
-  expect_true(has_download, info = "Should have download functionality")
+  expect_true(
+    assert_active_pane(app, "Age-Sex Pyramid", "download|export|save"),
+    info = "Should have download functionality"
+  )
 })
 
 test_that("E2E: Pyramid has plot height control", {
@@ -102,7 +105,8 @@ test_that("E2E: Pyramid has plot height control", {
   success <- navigate_to_tab(app, "Age-Sex Pyramid", "Pyramid")
   if (!success) skip("Could not navigate to Pyramid tab")
 
-  html <- get_html_safe(app, "body")
-  has_height <- grepl("height|size|dimension", html, ignore.case = TRUE)
-  expect_true(has_height, info = "Should have plot height control")
+  expect_true(
+    assert_active_pane(app, "Age-Sex Pyramid", "height|size|dimension"),
+    info = "Should have plot height control"
+  )
 })

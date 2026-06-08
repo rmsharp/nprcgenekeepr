@@ -14,6 +14,54 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-08 — Phase 8e-2 (Pyramid family — the LAST 8e-2 cut → 8e-2 COMPLETE): boot-level tautologies → behavioral active-pane assertions (issue #40, Session 41)
+- **Deliverable (implementation):** the **Pyramid family** of plan slice 8e-2
+  (`docs/planning/phase8e-assertion-strengthening-subplan.md`) — `test-e2e-pyramid-module.R` (6),
+  `test-e2e-pyramid-detailed.R` (6) = **12 browser-booting `test_that` blocks**. Completes 8e-2
+  (home-nav+app S38 + Input S39 + Pedigree S40 + Pyramid S41); the next slice is **8e-3**
+  (genetic-value / breeding-groups / menu / workflow), a separate session.
+- **Strict TDD — PURE run-and-observe** (no defect; the Pyramid pane already renders and
+  `navigate_to_tab(app, "Age-Sex Pyramid", "Pyramid")` already targets the right tab — "Age-Sex Pyramid"
+  IS the `tabPanel` title `appUI.R:139`, 3rd `fallback` arg a documented no-op `helper-shinytest2.R:250`)
+  → green-on-arrival `[refactor-only]` conversion, gated `PRE-RED→run-and-observe` via `AskUserQuestion`;
+  rigor from a `[mutation-check]` (no synthetic RED).
+- All 12 blocks converted from the content-blind `navigate_to_tab → grepl(get_html_safe(app,"body"))`
+  idiom to `assert_active_pane(app, "Age-Sex Pyramid", <pattern>)`, by the Learning #40 principled split:
+  **(i) 10 genuine `expect_true(grepl(orig))` asserts** keep their original regex verbatim, only rescoping
+  the haystack to the active pane (module L6/L25/L42/L59/L76/L93; detailed L6/L25[🐉]/L44[🐉]/L80);
+  **(ii) 2 tautologies** upgrade to a precise default-visible anchor — detailed L63 `expect_true(TRUE)` →
+  "Download Plot", detailed L99 `nchar(html) > 100` → "Age Plot".
+- **0 NULL-pattern blocks** — unlike the Pedigree family (4 NULLs). The pyramid pane's static content is
+  rich enough (sidebar controls + an UNCONDITIONAL guidance HTML panel) that every block has a
+  default-visible anchor; none of the 12 blocks targets the data-dependent rendered plot / Statistics table
+  (those `req(pedigreeData())`-gated outputs, `modPyramid.R:90-118`, are not what these tests assert), so
+  nothing defers to 8e-6.
+- **The two dragons** keep their keywords against always-rendered static text: detailed:25 `male|female|sex`
+  is satisfied by the guidance HTML ("…males are plotted on the left and females on the right",
+  `inst/extdata/ui_guidance/pyramidPlot.html` via `modPyramid.R:55-58`) + the h3 "Age-Sex Pyramid Analysis"
+  — NOT the data-dependent plot axis labels; detailed:44 `max|maximum|age|limit` ("maximum age setting") is
+  satisfied by the always-visible age labels ("Age Unit:", "Age Label Size:") — there is NO dedicated
+  max-age control, so the genuine regex is kept verbatim and rescoped rather than renamed (out of scope for
+  a haystack-rescope slice).
+- **Pre-gate adversarial verification materially CORRECTED the map** (vs S40's 0/19-refuted confirmation):
+  a 4-agent refutation workflow (3 source-grounded skeptics defaulting-to-refuted + a critic) over the
+  12-block map BEFORE the TDD gate flagged **2/12** — both proposed NULLs (D3 "maximum age setting",
+  D6 "data requirement message"). Correctly: D3's regex matches static "age" (→ KEEP, don't NULL) and D6's
+  pane has always-rendered guidance (→ anchor "Age Plot", don't NULL+defer). Adopting both corrections
+  yielded the 0-NULL outcome. The browser run remained the authoritative `[verify-first]`.
+- **Static UI only** (data-bearing plot/table deferred to 8e-6 by virtue of not being targeted here).
+- **Verification:** browser run **12/12 blocks GREEN / 12 expectations** (1:1 swap, net 0), 0 error / 0 skip
+  (`filter="^e2e-pyramid"`, env `NPRC_RUN_E2E=true NOT_CRAN=true RENV_CONFIG_AUTOLOADER_ENABLED=false`).
+  **`[mutation-check]` PASS** (inverted vs the Pedigree slice — Pyramid is now the TARGET pane) —
+  correct `(Age-Sex Pyramid,"Bin Size")`→TRUE; wrong-pane `(Pedigree Browser,"Bin Size")`→FALSE;
+  wrong-content `(Age-Sex Pyramid,"Focal Animals")`→FALSE (Pedigree-only label `modPedigree.R:52`, absent
+  from the Pyramid pane); old whole-body `grepl("Focal Animals")`→TRUE (content-blind contrast);
+  active-pane innerText grepl→FALSE (sanity). Non-e2e regression **2162 passed / 0 failed / 0 error /
+  0 non-e2e offenders** (156 skipped, 5 pre-existing `modPyramid` warnings; the e2e-only change self-skips
+  at `create_test_app()` so non-e2e counts are unaffected — S40 baseline held exactly).
+- **Test-tree-only** → no `document()`/NEWS bullet, `tests/` lint-exempt. Phase-3E satisfied by the live
+  browser run + mutation-check spike (the #31 pattern — drove the real app).
+
 ### 2026-06-08 — Phase 8e-2 (Pedigree family): boot-level tautologies → behavioral active-pane assertions (issue #40, Session 40)
 - **Deliverable (implementation):** the **Pedigree family** of plan slice 8e-2
   (`docs/planning/phase8e-assertion-strengthening-subplan.md`) — `test-e2e-pedigree-module.R` (5),
