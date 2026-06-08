@@ -15,9 +15,8 @@ test_that("E2E: Pedigree Browser tab is accessible", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree tab")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("Pedigree|Browser|Animal", html, ignore.case = TRUE),
+    assert_active_pane(app, "Pedigree Browser", "Pedigree|Browser|Animal"),
     info = "Should be on Pedigree Browser tab"
   )
 })
@@ -34,9 +33,10 @@ test_that("E2E: Pedigree Browser has focal animal controls", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree tab")
 
-  html <- get_html_safe(app, "body")
-  has_focal_controls <- grepl("focal|animal|filter|update", html, ignore.case = TRUE)
-  expect_true(has_focal_controls, info = "Should have focal animal controls")
+  expect_true(
+    assert_active_pane(app, "Pedigree Browser", "focal|animal|filter|update"),
+    info = "Should have focal animal controls"
+  )
 })
 
 test_that("E2E: Pedigree Browser has export functionality", {
@@ -51,9 +51,10 @@ test_that("E2E: Pedigree Browser has export functionality", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree tab")
 
-  html <- get_html_safe(app, "body")
-  has_export <- grepl("export|download|csv", html, ignore.case = TRUE)
-  expect_true(has_export, info = "Should have export functionality")
+  expect_true(
+    assert_active_pane(app, "Pedigree Browser", "export|download|csv"),
+    info = "Should have export functionality"
+  )
 })
 
 test_that("E2E: Pedigree Browser has data table", {
@@ -68,9 +69,13 @@ test_that("E2E: Pedigree Browser has data table", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree tab")
 
-  html <- get_html_safe(app, "body")
-  has_datatable <- grepl("dataTable|dataTables|table", html, ignore.case = TRUE)
-  expect_true(has_datatable, info = "Should have data table element")
+  # The pedigree DataTable renders only after a studbook is loaded
+  # (req(pedigreeData()) in modPedigree.R); assert the pane is active here and
+  # defer the data-bearing table content assertion to slice 8e-6.
+  expect_true(
+    assert_active_pane(app, "Pedigree Browser"),
+    info = "Pedigree Browser pane active; data table content deferred to 8e-6"
+  )
 })
 
 test_that("E2E: Pedigree Browser trim pedigree option", {
@@ -85,7 +90,8 @@ test_that("E2E: Pedigree Browser trim pedigree option", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree tab")
 
-  html <- get_html_safe(app, "body")
-  has_trim_option <- grepl("trim|subset|filter", html, ignore.case = TRUE)
-  expect_true(has_trim_option, info = "Should have trim pedigree option")
+  expect_true(
+    assert_active_pane(app, "Pedigree Browser", "trim|subset|filter"),
+    info = "Should have trim pedigree option"
+  )
 })

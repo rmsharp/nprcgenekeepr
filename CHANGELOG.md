@@ -14,6 +14,47 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-08 — Phase 8e-2 (Pedigree family): boot-level tautologies → behavioral active-pane assertions (issue #40, Session 40)
+- **Deliverable (implementation):** the **Pedigree family** of plan slice 8e-2
+  (`docs/planning/phase8e-assertion-strengthening-subplan.md`) — `test-e2e-pedigree-module.R` (5),
+  `test-e2e-pedigree-detailed.R` (6), `test-e2e-pedigree-tutorial.R` (8) = **19 browser-booting `test_that`
+  blocks**. Continues S38 (home-nav+app) and S39 (Input); 8e-2 now has only the **Pyramid family**
+  (module/detailed = 12) left, as a separate session (plan R3 / FM #18/#25).
+- **Strict TDD — PURE run-and-observe** (no defect; the Pedigree pane already renders and
+  `navigate_to_tab(app, "Pedigree Browser", "Pedigree")` already targets the right tab — "Pedigree Browser"
+  IS the `tabPanel` title `appUI.R:130`, and the 3rd `fallback` arg is an explicit no-op,
+  `helper-shinytest2.R:250`) → green-on-arrival `[refactor-only]` conversion, gated `PRE-RED→run-and-observe`
+  via `AskUserQuestion`; rigor from a `[mutation-check]` (no synthetic RED).
+- All 19 blocks converted from the content-blind `navigate_to_tab → grepl(get_html_safe(app,"body"))` idiom
+  to `assert_active_pane(app, "Pedigree Browser", <pattern>)`, by a principled split:
+  **(i) genuine `expect_true(grepl(orig))` asserts** keep their original regex verbatim, only rescoping the
+  haystack to the active pane (module L6/L25/L42/L76; detailed L6/L25/L44[🐉]/L82; tutorial L155[🐉]);
+  **(ii) `expect_true(TRUE)` tautologies** upgrade to a precise default-visible anchor — "Display Unknown IDs",
+  "Focal Animals", "Choose CSV file", "Trim pedigree", "Update Focal Animals", "Clear Focal Animals"
+  (`modPedigree.R:52,72,79,86,105,118`); **(iii) honest NULL-pattern** `assert_active_pane(app, "Pedigree Browser")`
+  for 4 blocks whose target is data-dependent or nonexistent — the DT table (module L59, detailed L63: renders
+  only after `req(pedigreeData())` → deferred to 8e-6), DataTables "Show X entries" pagination (tutorial L28
+  → 8e-6), and the "status filter" (detailed L101: no such static control exists).
+- **The two dragons** (`pedigree-detailed:57` `sire|dam|parent|offspring|ancestor|descendant`,
+  `pedigree-tutorial:174` `sire|dam|sex|birth|exit|age|gen|population`) keep their keywords — the column
+  names are listed in the always-rendered `inst/extdata/ui_guidance/pedigree_browser.html` guidance panel
+  ("Ego ID, Sire ID, Dam ID, Sex, Generation, and Population… Birth Date, Exit Date, Age").
+- **Pre-gate adversarial verification:** ran a 4-agent refutation workflow (3 per-file skeptics + critic)
+  over the 19-block map BEFORE posing the TDD gate — **0/19 refuted**, critic GO, all patterns confirmed
+  default-visible, the 4 NULLs confirmed honest, and the mutation labels "Color Scheme"/"Bin Size" confirmed
+  foreign (Pyramid-only). De-risks a slow browser cycle (`[right-sized-orchestration]` / `[completeness-workflow]`).
+- **Static UI only** (data-bearing tables/plots deferred to 8e-6).
+- **Verification:** baseline browser run 19/19 green → post-conversion **19/19 blocks GREEN / 19 expectations**
+  (1:1 swap, net 0), 0 error / 0 skip (`filter="^e2e-pedigree"`, env
+  `NPRC_RUN_E2E=true NOT_CRAN=true RENV_CONFIG_AUTOLOADER_ENABLED=false`). **`[mutation-check]` PASS** —
+  correct `(Pedigree Browser,"Focal Animals")`→TRUE; wrong-pane `(Age-Sex Pyramid,…)`→FALSE; wrong-content
+  `(Pedigree Browser,"Color Scheme")`→FALSE (Pyramid-only label, absent from the Pedigree pane); old whole-body
+  `grepl("Color Scheme")`→TRUE (content-blind contrast); active-pane innerText grepl→FALSE (sanity). Non-e2e
+  regression **2162 passed / 0 failed / 0 error / 0 non-e2e offenders** (156 skipped, 5 pre-existing
+  `modPyramid` warnings; the e2e-only change self-skips at `create_test_app()` so non-e2e counts are unaffected).
+- **Test-tree-only** → no `document()`/NEWS bullet, `tests/` lint-exempt. Phase-3E satisfied by the live
+  browser run + mutation-check spike (the #31 pattern — drove the real app).
+
 ### 2026-06-08 — Phase 8e-2 (Input family): boot-level tautologies → behavioral active-pane assertions (issue #40, Session 39)
 - **Deliverable (implementation):** the **Input family** of plan slice 8e-2
   (`docs/planning/phase8e-assertion-strengthening-subplan.md`) — `test-e2e-input-module.R` (5),

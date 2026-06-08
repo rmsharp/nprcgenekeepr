@@ -15,9 +15,8 @@ test_that("E2E: Pedigree browser has filter controls", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree Browser tab")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("filter|search|select", html, ignore.case = TRUE),
+    assert_active_pane(app, "Pedigree Browser", "filter|search|select"),
     info = "Should have filter controls"
   )
 })
@@ -34,9 +33,8 @@ test_that("E2E: Pedigree browser has ID search", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree Browser tab")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("ID|animal|identifier|search", html, ignore.case = TRUE),
+    assert_active_pane(app, "Pedigree Browser", "ID|animal|identifier|search"),
     info = "Should have ID search capability"
   )
 })
@@ -53,9 +51,11 @@ test_that("E2E: Pedigree browser shows relationship information", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree Browser tab")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("sire|dam|parent|offspring|ancestor|descendant", html, ignore.case = TRUE),
+    assert_active_pane(
+      app, "Pedigree Browser",
+      "sire|dam|parent|offspring|ancestor|descendant"
+    ),
     info = "Should show relationship information"
   )
 })
@@ -72,11 +72,12 @@ test_that("E2E: Pedigree browser has data table", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree Browser tab")
 
-  html <- get_html_safe(app, "body")
-  # DataTables or similar should be present
-  has_table <- grepl("table|dataTable|DT", html, ignore.case = TRUE) ||
-    grepl("<table", html, ignore.case = TRUE)
-  expect_true(has_table, info = "Should have data table")
+  # The pedigree DataTable renders only after a studbook is loaded; assert the
+  # pane is active and defer the data-bearing table assertion to slice 8e-6.
+  expect_true(
+    assert_active_pane(app, "Pedigree Browser"),
+    info = "Pedigree Browser pane active; data table content deferred to 8e-6"
+  )
 })
 
 test_that("E2E: Pedigree browser has sex filter option", {
@@ -91,9 +92,8 @@ test_that("E2E: Pedigree browser has sex filter option", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree Browser tab")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("sex|male|female|gender", html, ignore.case = TRUE),
+    assert_active_pane(app, "Pedigree Browser", "sex|male|female|gender"),
     info = "Should have sex filter option"
   )
 })
@@ -110,7 +110,11 @@ test_that("E2E: Pedigree browser has status filter", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree Browser tab")
 
-  html <- get_html_safe(app, "body")
-  has_status <- grepl("status|alive|dead|living|deceased", html, ignore.case = TRUE)
-  expect_true(TRUE, info = "Pedigree Browser loaded successfully")
+  # No static status/alive/dead filter exists in the Pedigree Browser UI; the
+  # original computed has_status but never asserted it (expect_true(TRUE)).
+  # Upgrade the tautology to an honest active-pane check.
+  expect_true(
+    assert_active_pane(app, "Pedigree Browser"),
+    info = "Pedigree Browser pane active (no static status-filter feature)"
+  )
 })

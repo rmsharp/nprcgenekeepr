@@ -16,13 +16,10 @@ test_that("E2E: Pedigree Browser has Display Unknown IDs checkbox", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree Browser tab")
 
-  html <- get_html_safe(app, "body")
-  has_unknown_ids <- grepl(
-    "Unknown.*ID|Display.*Unknown|showUnknown|UID",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Pedigree Browser", "Display Unknown IDs"),
+    info = "Should have Display Unknown IDs checkbox"
   )
-  expect_true(TRUE, info = "Pedigree Browser loaded")
 })
 
 test_that("E2E: Pedigree Browser has row count display options", {
@@ -37,14 +34,12 @@ test_that("E2E: Pedigree Browser has row count display options", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree Browser tab")
 
-  html <- get_html_safe(app, "body")
-  # DataTables has Show X entries dropdown
-  has_row_options <- grepl(
-    "Show.*entries|pageLength|10|25|50|100",
-    html,
-    ignore.case = TRUE
+  # DataTables "Show X entries" pagination renders only with loaded data; assert
+  # the pane is active and defer the row-count UI assertion to slice 8e-6.
+  expect_true(
+    assert_active_pane(app, "Pedigree Browser"),
+    info = "Pedigree Browser pane active; row-count options deferred to 8e-6"
   )
-  expect_true(TRUE, info = "Pedigree Browser loaded")
 })
 
 test_that("E2E: Pedigree Browser has focal animal text input", {
@@ -59,13 +54,10 @@ test_that("E2E: Pedigree Browser has focal animal text input", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree Browser tab")
 
-  html <- get_html_safe(app, "body")
-  has_focal_input <- grepl(
-    "focal.*animal|focalAnimals|animal.*ID|text.*input",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Pedigree Browser", "Focal Animals"),
+    info = "Should have focal animal text input"
   )
-  expect_true(TRUE, info = "Pedigree Browser loaded")
 })
 
 test_that("E2E: Pedigree Browser has CSV focal animal upload", {
@@ -80,13 +72,10 @@ test_that("E2E: Pedigree Browser has CSV focal animal upload", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree Browser tab")
 
-  html <- get_html_safe(app, "body")
-  has_csv_upload <- grepl(
-    "CSV.*file|focal.*file|fileInput|Choose.*CSV",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Pedigree Browser", "Choose CSV file"),
+    info = "Should have CSV focal animal upload"
   )
-  expect_true(TRUE, info = "Pedigree Browser loaded")
 })
 
 test_that("E2E: Pedigree Browser has Trim Pedigree checkbox", {
@@ -101,13 +90,10 @@ test_that("E2E: Pedigree Browser has Trim Pedigree checkbox", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree Browser tab")
 
-  html <- get_html_safe(app, "body")
-  has_trim_checkbox <- grepl(
-    "Trim.*pedigree|trimPedigree|trim.*focal",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Pedigree Browser", "Trim pedigree"),
+    info = "Should have Trim Pedigree checkbox"
   )
-  expect_true(TRUE, info = "Pedigree Browser loaded")
 })
 
 test_that("E2E: Pedigree Browser has Update Focal Animals button", {
@@ -122,13 +108,10 @@ test_that("E2E: Pedigree Browser has Update Focal Animals button", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree Browser tab")
 
-  html <- get_html_safe(app, "body")
-  has_update_button <- grepl(
-    "Update.*Focal|updateFocal|Apply|Submit",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Pedigree Browser", "Update Focal Animals"),
+    info = "Should have Update Focal Animals button"
   )
-  expect_true(TRUE, info = "Pedigree Browser loaded")
 })
 
 test_that("E2E: Pedigree Browser has Clear Focal Animals option", {
@@ -143,13 +126,10 @@ test_that("E2E: Pedigree Browser has Clear Focal Animals option", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree Browser tab")
 
-  html <- get_html_safe(app, "body")
-  has_clear_option <- grepl(
-    "Clear.*Focal|clearFocal|Reset|Clear.*Animals",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Pedigree Browser", "Clear Focal Animals"),
+    info = "Should have Clear Focal Animals option"
   )
-  expect_true(TRUE, info = "Pedigree Browser loaded")
 })
 
 test_that("E2E: Pedigree Browser shows pedigree columns", {
@@ -164,12 +144,13 @@ test_that("E2E: Pedigree Browser shows pedigree columns", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree Browser tab")
 
-  html <- get_html_safe(app, "body")
-  # Tutorial mentions these columns: id, sire, dam, sex, gen, birth, exit, age
-  has_columns <- grepl(
-    "sire|dam|sex|birth|exit|age|gen|population",
-    html,
-    ignore.case = TRUE
+  # Tutorial mentions these columns: id, sire, dam, sex, gen, birth, exit, age;
+  # they are listed in the always-rendered pedigree_browser.html guidance panel.
+  expect_true(
+    assert_active_pane(
+      app, "Pedigree Browser",
+      "sire|dam|sex|birth|exit|age|gen|population"
+    ),
+    info = "Should show pedigree columns"
   )
-  expect_true(has_columns, info = "Should show pedigree columns")
 })
