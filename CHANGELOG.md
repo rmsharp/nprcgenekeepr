@@ -14,6 +14,39 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-08 — Phase 8e-2 (Input family): boot-level tautologies → behavioral active-pane assertions (issue #40, Session 39)
+- **Deliverable (implementation):** the **Input family** of plan slice 8e-2
+  (`docs/planning/phase8e-assertion-strengthening-subplan.md`) — `test-e2e-input-module.R` (5),
+  `test-e2e-input-detailed.R` (6), `test-e2e-input-tutorial.R` (8) = **19 browser-booting `test_that`
+  blocks**. Continues S38's home-nav+app sub-slice; 8e-2 is now ~half done. Pedigree and Pyramid families
+  remain for later 8e-2 sessions (owner-directed scope: Input family only — plan R3 / FM #18/#25).
+- **Strict TDD — PURE run-and-observe** (no defect; the Input pane already renders and
+  `navigate_to_tab("Input")` already targets the right tab — "Input" IS the `tabPanel` title,
+  `appUI.R:120-124`) → green-on-arrival `[refactor-only]` conversion, gated `PRE-RED→run-and-observe`
+  via `AskUserQuestion`; rigor from a `[mutation-check]` (no synthetic RED).
+- All 19 blocks converted from the content-blind `navigate_to_tab → grepl(get_html_safe(app,"body"))`
+  idiom to `assert_active_pane(app, "Input", <static pattern>)`. Patterns sourced firsthand from the
+  **`innerText` visibility-map** of the Input pane — default-visible sidebar controls (h3 "Data Input and
+  Quality Control", "File Type", "Select Pedigree File", "Minimum Parent Age", "Read and Check Pedigree"),
+  the nested-tab nav labels ("QC Summary", "Errors", "Cleaned Data", "Input Format"), and the active
+  "Input Format" tab's `includeHTML(input_format.html)` guidance ("comma-delimited", "tab-delimited",
+  "Excel", "genotype"). Conditionally-hidden controls (the Separator radio, non-default fileInputs) and
+  non-active nested tabs are `display:none` → deliberately avoided.
+- **Honest tautology conversion:** `input-detailed` "has example data option" (`expect_true(TRUE)`) names a
+  feature the module does NOT have → converted to NULL-pattern `assert_active_pane(app, "Input")` (asserts
+  navigation genuinely landed on the visible Input pane), not a forced match on incidental doc text.
+  `input-tutorial` "genotype file support" (also a tautology) DOES have real backing → real `"genotype"`.
+- **Static UI only** (data-bearing tables/plots deferred to 8e-6).
+- **Verification:** baseline browser run 19/19 green → post-conversion **19/19 blocks GREEN / 19
+  expectations**, 0 error / 0 skip (`filter="^e2e-input"`, env
+  `NPRC_RUN_E2E=true NOT_CRAN=true RENV_CONFIG_AUTOLOADER_ENABLED=false`). **`[mutation-check]` PASS** —
+  correct→TRUE; wrong-pane `(Age-Sex Pyramid)`→FALSE; wrong-content `(Input,"Color Scheme")`→FALSE
+  (Pyramid-only label, absent from the Input pane); old whole-body `grepl("Color Scheme")`→TRUE
+  (content-blind contrast — exactly the defect the conversion closes). Non-e2e regression **2122 passed /
+  0 failed / 0 error** (159 e2e-skipped, 5 pre-existing `modPyramid` warnings — unchanged S38 baseline).
+- **Test-tree-only** → no `document()`/NEWS bullet, `tests/` lint-exempt. Phase-3E satisfied by the live
+  browser run + mutation-check spike (the #31 pattern — drove the real app).
+
 ### 2026-06-07 — Phase 8e-2 (home-nav + app-file sub-slice): boot-level tautologies → behavioral active-pane assertions (issue #40, Session 38)
 - **Deliverable (implementation):** the home-navigation + light-app-file sub-slice of plan slice 8e-2
   (`docs/planning/phase8e-assertion-strengthening-subplan.md`). 8e-2 spans 11 files / 64 browser-booting

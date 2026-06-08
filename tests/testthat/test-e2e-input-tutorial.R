@@ -16,14 +16,10 @@ test_that("E2E: Input has minimum parent age control", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  html <- get_html_safe(app, "body")
-  # Tutorial emphasizes minimum parent age setting (e.g., 2 years for macaques)
-  has_min_parent_age <- grepl(
-    "Minimum.*Parent.*Age|minParentAge|parent.*age|years",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Input", "Minimum Parent Age"),
+    info = "Input pane active with the minimum-parent-age control"
   )
-  expect_true(has_min_parent_age, info = "Should have minimum parent age control")
 })
 
 test_that("E2E: Input has Read and Check Pedigree button", {
@@ -38,13 +34,10 @@ test_that("E2E: Input has Read and Check Pedigree button", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  html <- get_html_safe(app, "body")
-  has_read_check <- grepl(
-    "Read.*Check.*Pedigree|Check.*Pedigree|getData|Upload.*Validate",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Input", "Read and Check Pedigree"),
+    info = "Input pane active with the Read and Check Pedigree button"
   )
-  expect_true(has_read_check, info = "Should have Read and Check Pedigree button")
 })
 
 test_that("E2E: Input has file format documentation", {
@@ -59,14 +52,10 @@ test_that("E2E: Input has file format documentation", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  html <- get_html_safe(app, "body")
-  # Tutorial shows extensive file format documentation
-  has_format_docs <- grepl(
-    "format|column|required|optional|ego_id|id|sire|dam|birth",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Input", "Input Format"),
+    info = "Input pane active with the file-format documentation tab"
   )
-  expect_true(has_format_docs, info = "Should have file format documentation")
 })
 
 test_that("E2E: Input supports Excel workbook", {
@@ -81,13 +70,10 @@ test_that("E2E: Input supports Excel workbook", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  html <- get_html_safe(app, "body")
-  has_excel <- grepl(
-    "Excel|xlsx|xls|workbook",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Input", "Excel"),
+    info = "Input pane active with Excel workbook support"
   )
-  expect_true(has_excel, info = "Should support Excel format")
 })
 
 test_that("E2E: Input supports comma-separated values", {
@@ -102,13 +88,10 @@ test_that("E2E: Input supports comma-separated values", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  html <- get_html_safe(app, "body")
-  has_csv <- grepl(
-    "csv|comma|separated|delimiter",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Input", "comma-delimited"),
+    info = "Input pane active; format docs indicate comma-separated support"
   )
-  expect_true(has_csv, info = "Should support CSV format")
 })
 
 test_that("E2E: Input supports tab-separated values", {
@@ -123,13 +106,10 @@ test_that("E2E: Input supports tab-separated values", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  html <- get_html_safe(app, "body")
-  has_tab <- grepl(
-    "tab|txt|text|separator",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Input", "tab-delimited"),
+    info = "Input pane active; format docs indicate tab-separated support"
   )
-  expect_true(has_tab, info = "Should support tab-separated format")
 })
 
 test_that("E2E: Input has error detection for missing columns", {
@@ -144,14 +124,10 @@ test_that("E2E: Input has error detection for missing columns", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  html <- get_html_safe(app, "body")
-  # Tutorial lists error types including missingColumns
-  has_error_detection <- grepl(
-    "error|warning|missing|required|validation",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Input", "Errors"),
+    info = "Input pane active with the QC Errors tab"
   )
-  expect_true(has_error_detection, info = "Should mention error detection")
 })
 
 test_that("E2E: Input has genotype file support", {
@@ -166,12 +142,8 @@ test_that("E2E: Input has genotype file support", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  html <- get_html_safe(app, "body")
-  # Tutorial shows pedigree with genotypes option
-  has_genotype <- grepl(
-    "genotype|allele|genetic|marker",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Input", "genotype"),
+    info = "Input pane active with genotype-file support"
   )
-  expect_true(TRUE, info = "Input tab loaded")
 })

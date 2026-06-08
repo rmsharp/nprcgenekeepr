@@ -15,10 +15,9 @@ test_that("E2E: Input tab is accessible", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("Input|Upload|Data|File", html, ignore.case = TRUE),
-    info = "Should be on Input tab"
+    assert_active_pane(app, "Input", "Data Input and Quality Control"),
+    info = "Input pane active with its data-input/QC heading"
   )
 })
 
@@ -34,9 +33,10 @@ test_that("E2E: Input tab has file upload control", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  html <- get_html_safe(app, "body")
-  has_upload <- grepl("upload|browse|file|select", html, ignore.case = TRUE)
-  expect_true(has_upload, info = "Should have file upload control")
+  expect_true(
+    assert_active_pane(app, "Input", "Select Pedigree File"),
+    info = "Input pane active with the file-upload control"
+  )
 })
 
 test_that("E2E: Input tab has file type options", {
@@ -51,10 +51,10 @@ test_that("E2E: Input tab has file type options", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  html <- get_html_safe(app, "body")
-  has_excel <- grepl("excel|xlsx", html, ignore.case = TRUE)
-  has_text <- grepl("text|csv|tab", html, ignore.case = TRUE)
-  expect_true(has_excel || has_text, info = "Should have file type options")
+  expect_true(
+    assert_active_pane(app, "Input", "File Type"),
+    info = "Input pane active with the file-type options"
+  )
 })
 
 test_that("E2E: Input tab has QC summary display", {
@@ -69,9 +69,10 @@ test_that("E2E: Input tab has QC summary display", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  html <- get_html_safe(app, "body")
-  has_qc <- grepl("QC|quality|error|warning|summary", html, ignore.case = TRUE)
-  expect_true(has_qc, info = "Should have QC summary display")
+  expect_true(
+    assert_active_pane(app, "Input", "QC Summary"),
+    info = "Input pane active with the QC summary tab"
+  )
 })
 
 test_that("E2E: Input tab has action button", {
@@ -86,7 +87,8 @@ test_that("E2E: Input tab has action button", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  html <- get_html_safe(app, "body")
-  has_button <- grepl("read|check|upload|submit|pedigree", html, ignore.case = TRUE)
-  expect_true(has_button, info = "Should have action button")
+  expect_true(
+    assert_active_pane(app, "Input", "Read and Check Pedigree"),
+    info = "Input pane active with the read-and-check action button"
+  )
 })

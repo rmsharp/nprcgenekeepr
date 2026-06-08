@@ -15,10 +15,9 @@ test_that("E2E: Input module has clear instructions", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("upload|select|choose|file", html, ignore.case = TRUE),
-    info = "Should have file selection instructions"
+    assert_active_pane(app, "Input", "Select how you are submitting data"),
+    info = "Input pane active with the data-submission instructions"
   )
 })
 
@@ -34,10 +33,9 @@ test_that("E2E: Input module supports CSV format", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("csv|comma|delimited", html, ignore.case = TRUE),
-    info = "Should indicate CSV format support"
+    assert_active_pane(app, "Input", "comma-delimited"),
+    info = "Input pane active; format docs indicate CSV/comma support"
   )
 })
 
@@ -53,10 +51,9 @@ test_that("E2E: Input module supports Excel format", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("excel|xlsx|xls|spreadsheet", html, ignore.case = TRUE),
-    info = "Should indicate Excel format support"
+    assert_active_pane(app, "Input", "Excel"),
+    info = "Input pane active with Excel file-type support"
   )
 })
 
@@ -72,10 +69,13 @@ test_that("E2E: Input module has example data option", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  html <- get_html_safe(app, "body")
-  # Many apps provide example/demo data
-  has_example <- grepl("example|demo|sample|test", html, ignore.case = TRUE)
-  expect_true(TRUE, info = "Input module loaded successfully")
+  # The Input module has no example/demo-data feature, so there is no static
+  # content to assert. Convert the tautology to the genuine behavioral fact:
+  # navigation actually landed on (and made visible) the Input pane.
+  expect_true(
+    assert_active_pane(app, "Input"),
+    info = "Input pane is the active/visible pane"
+  )
 })
 
 test_that("E2E: Input module displays quality control options", {
@@ -90,10 +90,9 @@ test_that("E2E: Input module displays quality control options", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("quality|control|QC|validation|check", html, ignore.case = TRUE),
-    info = "Should have quality control options"
+    assert_active_pane(app, "Input", "Quality Control"),
+    info = "Input pane active with quality-control options"
   )
 })
 
@@ -109,12 +108,8 @@ test_that("E2E: Input module has data preview area", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  html <- get_html_safe(app, "body")
-  # Check for table/data preview elements
-  has_preview <- grepl(
-    "table|preview|data|studbook|pedigree",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Input", "Cleaned Data"),
+    info = "Input pane active with the cleaned-data preview tab"
   )
-  expect_true(has_preview, info = "Should have data preview area")
 })
