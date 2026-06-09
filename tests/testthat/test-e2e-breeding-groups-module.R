@@ -15,9 +15,8 @@ test_that("E2E: Breeding Groups tab is accessible", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("Breeding|Group|Formation", html, ignore.case = TRUE),
+    assert_active_pane(app, "Breeding Groups", "Breeding|Group|Formation"),
     info = "Should be on Breeding Groups tab"
   )
 })
@@ -34,9 +33,10 @@ test_that("E2E: Breeding Groups has animal source selection", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  has_source <- grepl("source|top ranked|custom|all", html, ignore.case = TRUE)
-  expect_true(has_source, info = "Should have animal source selection")
+  expect_true(
+    assert_active_pane(app, "Breeding Groups", "source|top ranked|custom|all"),
+    info = "Should have animal source selection"
+  )
 })
 
 test_that("E2E: Breeding Groups has number of groups control", {
@@ -51,9 +51,10 @@ test_that("E2E: Breeding Groups has number of groups control", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  has_num_groups <- grepl("number|groups|count", html, ignore.case = TRUE)
-  expect_true(has_num_groups, info = "Should have number of groups control")
+  expect_true(
+    assert_active_pane(app, "Breeding Groups", "number|groups|count"),
+    info = "Should have number of groups control"
+  )
 })
 
 test_that("E2E: Breeding Groups has kinship threshold control", {
@@ -68,9 +69,10 @@ test_that("E2E: Breeding Groups has kinship threshold control", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  has_kinship <- grepl("kinship|threshold|maximum", html, ignore.case = TRUE)
-  expect_true(has_kinship, info = "Should have kinship threshold control")
+  expect_true(
+    assert_active_pane(app, "Breeding Groups", "kinship|threshold|maximum"),
+    info = "Should have kinship threshold control"
+  )
 })
 
 test_that("E2E: Breeding Groups has sex ratio options", {
@@ -85,9 +87,10 @@ test_that("E2E: Breeding Groups has sex ratio options", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  has_sex_ratio <- grepl("sex|ratio|harem|male|female", html, ignore.case = TRUE)
-  expect_true(has_sex_ratio, info = "Should have sex ratio options")
+  expect_true(
+    assert_active_pane(app, "Breeding Groups", "sex|ratio|harem|male|female"),
+    info = "Should have sex ratio options"
+  )
 })
 
 test_that("E2E: Breeding Groups has form groups button", {
@@ -102,9 +105,10 @@ test_that("E2E: Breeding Groups has form groups button", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  has_form_button <- grepl("form|create|make|groups", html, ignore.case = TRUE)
-  expect_true(has_form_button, info = "Should have form groups button")
+  expect_true(
+    assert_active_pane(app, "Breeding Groups", "form|create|make|groups"),
+    info = "Should have form groups button"
+  )
 })
 
 test_that("E2E: Breeding Groups has statistics display", {
@@ -119,7 +123,8 @@ test_that("E2E: Breeding Groups has statistics display", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  has_stats <- grepl("statistic|summary|total", html, ignore.case = TRUE)
-  expect_true(has_stats, info = "Should have statistics display")
+  expect_true(
+    assert_active_pane(app, "Breeding Groups", "statistic|summary|total"),
+    info = "Should have statistics display"
+  )
 })

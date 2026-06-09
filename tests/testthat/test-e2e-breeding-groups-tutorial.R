@@ -16,14 +16,14 @@ test_that("E2E: Breeding Groups has workflow selection", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  # Tutorial mentions "Choose one group formation workflow"
-  has_workflow <- grepl(
-    "workflow|group.*formation|source.*animal|Choose.*group",
-    html,
-    ignore.case = TRUE
+  # REVIVE: was expect_true(TRUE). "group.*formation" matches the always-visible
+  # h3 "Breeding Group Formation" / guidance "group formation simulation"; the
+  # dead "workflow"/"Choose.*group" framing alternatives are never rendered
+  # (pruned). "source.*animal" retained (real Source-control concept).
+  expect_true(
+    assert_active_pane(app, "Breeding Groups", "group.*formation|source.*animal"),
+    info = "Should have workflow selection"
   )
-  expect_true(TRUE, info = "Breeding Groups tab loaded")
 })
 
 test_that("E2E: Breeding Groups has sex ratio options", {
@@ -38,14 +38,12 @@ test_that("E2E: Breeding Groups has sex ratio options", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
   # Tutorial mentions three sex ratio options including user-specified
-  has_sex_ratio_opts <- grepl(
-    "sex.*ratio|ratio.*breeder|F/M|female.*male|sexRatio",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Breeding Groups",
+                       "sex.*ratio|ratio.*breeder|F/M|female.*male|sexRatio"),
+    info = "Should have sex ratio options"
   )
-  expect_true(has_sex_ratio_opts, info = "Should have sex ratio options")
 })
 
 test_that("E2E: Breeding Groups has Make Groups button", {
@@ -60,13 +58,11 @@ test_that("E2E: Breeding Groups has Make Groups button", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  has_make_groups <- grepl(
-    "Make.*Group|Form.*Group|Create.*Group|makeGroups|formGroups",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Breeding Groups",
+                       "Make.*Group|Form.*Group|Create.*Group|makeGroups|formGroups"),
+    info = "Should have Make Groups button"
   )
-  expect_true(has_make_groups, info = "Should have Make Groups button")
 })
 
 test_that("E2E: Breeding Groups has seed groups option", {
@@ -81,14 +77,15 @@ test_that("E2E: Breeding Groups has seed groups option", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  # Tutorial mentions "Seed Groups with Specific Animals"
-  has_seed <- grepl(
-    "Seed.*Group|seed.*animal|pre.*seed|seedGroups|specific.*animal",
-    html,
-    ignore.case = TRUE
+  # REVIVE: was expect_true(TRUE). The always-visible checkbox label "Seed
+  # groups with specific animals" matches "Seed.*Group"/"seed.*animal"/
+  # "specific.*animal"; the dead "pre.*seed" (never rendered) and "seedGroups"
+  # (inputId, not in innerText) alternatives are pruned.
+  expect_true(
+    assert_active_pane(app, "Breeding Groups",
+                       "Seed.*Group|seed.*animal|specific.*animal"),
+    info = "Should have seed groups option"
   )
-  expect_true(TRUE, info = "Breeding Groups tab loaded")
 })
 
 test_that("E2E: Breeding Groups has infants with dam option", {
@@ -103,14 +100,14 @@ test_that("E2E: Breeding Groups has infants with dam option", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  # Tutorial mentions keeping infants/young animals with their mother
-  has_infants_dam <- grepl(
-    "infant.*dam|infant.*mother|young.*dam|keepWithDam|with.*mother",
-    html,
-    ignore.case = TRUE
+  # NULL (pane-active only): the modular Breeding Groups UI has NO
+  # infants-with-dam control (tutorial-only concept; no faithful token is
+  # default-visible). Assert the pane is active/visible; if such a control is
+  # ever added, give it a real pattern then.
+  expect_true(
+    assert_active_pane(app, "Breeding Groups"),
+    info = "Breeding Groups pane should be active"
   )
-  expect_true(TRUE, info = "Breeding Groups tab loaded")
 })
 
 test_that("E2E: Breeding Groups has include kinship option", {
@@ -125,14 +122,14 @@ test_that("E2E: Breeding Groups has include kinship option", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  # Tutorial mentions "Include kinship in display of groups" checkbox
-  has_include_kinship <- grepl(
-    "Include.*kinship|kinship.*display|showKinship|display.*kinship",
-    html,
-    ignore.case = TRUE
+  # REVIVE: was expect_true(TRUE). The always-visible checkbox label "Include
+  # kinship in display of groups" matches "Include.*kinship"/"kinship.*display";
+  # the dead "showKinship" (inputId) and "display.*kinship" (label order is
+  # kinship-before-display, non-matching) alternatives are pruned.
+  expect_true(
+    assert_active_pane(app, "Breeding Groups", "Include.*kinship|kinship.*display"),
+    info = "Should have include kinship option"
   )
-  expect_true(TRUE, info = "Breeding Groups tab loaded")
 })
 
 test_that("E2E: Breeding Groups has group export options", {
@@ -147,14 +144,13 @@ test_that("E2E: Breeding Groups has group export options", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  # Tutorial mentions groups can be individually exported
-  has_export <- grepl(
-    "export|download|save|csv",
-    html,
-    ignore.case = TRUE
+  # NULL (pane-active only): the Export/Download buttons live in the INACTIVE
+  # "Group Detail" nested tab (display:none -> not in the active pane innerText);
+  # guidance HTML has no export text. Deferred to 8e-6 (nested-tab navigation).
+  expect_true(
+    assert_active_pane(app, "Breeding Groups"),
+    info = "Breeding Groups pane should be active"
   )
-  expect_true(TRUE, info = "Breeding Groups tab loaded")
 })
 
 test_that("E2E: Breeding Groups has high-value animals source", {
@@ -169,14 +165,14 @@ test_that("E2E: Breeding Groups has high-value animals source", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  # Tutorial mentions high-value animals as common source
-  has_high_value_source <- grepl(
-    "high.*value|value.*animal|top.*ranked|genetic.*analysis",
-    html,
-    ignore.case = TRUE
+  # REVIVE: was expect_true(TRUE). Narrow to "top.*ranked" -- the always-visible
+  # "Top ranked" animal-source radio choice. "high.*value"/"value.*animal" are
+  # never rendered and "genetic.*analysis" is foreign to this module (it is the
+  # Genetic Value pane) -- all pruned.
+  expect_true(
+    assert_active_pane(app, "Breeding Groups", "top.*ranked"),
+    info = "Should have high-value animals source"
   )
-  expect_true(TRUE, info = "Breeding Groups tab loaded")
 })
 
 test_that("E2E: Breeding Groups has kinship matrix export per group", {
@@ -191,12 +187,11 @@ test_that("E2E: Breeding Groups has kinship matrix export per group", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  # Tutorial mentions kinship matrix export for each group
-  has_kinship_export <- grepl(
-    "kinship.*matrix|matrix.*export|export.*kinship",
-    html,
-    ignore.case = TRUE
+  # NULL (pane-active only): the "Export Current Group Kinship Matrix" button is
+  # in the INACTIVE "Group Detail" nested tab (display:none); the guidance kinship
+  # table has no "matrix"/"export" tokens. Deferred to 8e-6 (nested-tab + data).
+  expect_true(
+    assert_active_pane(app, "Breeding Groups"),
+    info = "Breeding Groups pane should be active"
   )
-  expect_true(TRUE, info = "Breeding Groups tab loaded")
 })

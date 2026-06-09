@@ -14,6 +14,64 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-09 — Phase 8e-3 part B-2 (Breeding-Groups family): boot-level tautologies → behavioral active-pane assertions (issue #40, Session 43)
+- **Deliverable (implementation):** the **Breeding-Groups family** of plan slice 8e-3
+  (`docs/planning/phase8e-assertion-strengthening-subplan.md`) — `test-e2e-breeding-groups-module.R` (7),
+  `test-e2e-breeding-groups-detailed.R` (7), `test-e2e-breeding-groups-tutorial.R` (9) = **23 browser-booting
+  `test_that` blocks**. All converted from the content-blind `navigate_to_tab → grepl(get_html_safe(app,
+  "body"))` idiom to `assert_active_pane(app, "Breeding Groups", <pattern>)`. The 2nd of three 8e-3 cuts
+  (genetic-value done S42; settings-about + workflow-integration remain).
+- **Strict TDD — PURE run-and-observe** (no defect; the Breeding Groups pane already renders and
+  "Breeding Groups" IS the `tabPanel` title `appUI.R:166`) → green-on-arrival `[refactor-only]` conversion,
+  gated `PRE-RED→run-and-observe` via `AskUserQuestion`; rigor from a `[mutation-check]` (no synthetic RED).
+- **Conversion map by the Learning #40/#41/#42 split — 12 KEEP · 6 REVIVE · 1 ANCHOR · 4 NULL:**
+  - **12 genuine `grepl` asserts → keep regex verbatim, rescope haystack to the active pane** (module
+    M1–M7; detailed D1🐉/D3/D7; tutorial T2/T3).
+  - **6 tautologies with a dead computed grepl → REVIVE that pattern, rescoped + pruned** (Learning #42a):
+    D2 `harem` (✓"Harem (1M:NF)"), D4 `result|group|table|output|formed` (✓"group"; rest data-dependent →
+    8e-6), T1 `group.*formation|source.*animal` (✓h3/guidance), T4 `Seed.*Group|seed.*animal|specific.*animal`
+    (✓"Seed groups with specific animals"), T6 `Include.*kinship|kinship.*display` (✓"Include kinship in
+    display of groups"), T8 `top.*ranked` (✓"Top ranked"). Pruned: inputId artifacts (`seedGroups`,
+    `showKinship`), never-rendered framing words (`workflow`, `Choose.*group`, `pre.*seed`), and the
+    foreign-module token `genetic.*analysis`.
+  - **1 content-length tautology (`nchar(html) > 200`) → ANCHOR** to the always-visible guidance phrase
+    "algorithm" (D6; `inst/extdata/ui_guidance/group_formation.html` "The algorithm ignores...").
+  - **4 NULL-pattern (pane-active only):** D5/T7 (export) + T9 (export kinship matrix) — the
+    `downloadButton`s live in the INACTIVE "Group Detail" nested tab (`display:none`, not in active-pane
+    `innerText`; guidance has no export tokens) → defer to 8e-6 / nested-tab navigation; **T5** (infants-with-dam)
+    — no such control exists in the modular UI (tutorial-only concept). Each NULL still upgrades the old
+    `expect_true(TRUE)` by confirming the Breeding Groups pane is the active/visible one.
+- **1 dragon kept verbatim, flagged in a comment, never renamed** (Learning #41a): D1 `size|number|count|
+  animals` — no literal "size" control; matches via "number"/"animals" ("Number of groups:", "Number of top
+  animals:", "Seed groups with specific animals").
+- **Nested-tab visibility distinction (new this cut):** the nested tabsetPanel's NAV labels ("Groups",
+  "Statistics", "Group Detail") ARE in the active-pane `innerText` (always visible), so M7 `statistic` anchors
+  on the "Statistics" nav label and D4 "group" on the "Groups" nav label — but the inactive nested tabs'
+  CONTENT (the export buttons) is hidden. The pre-gate critic settled this by RENDERING the actual Shiny
+  `navbarPage`+`tabsetPanel` DOM; the browser run confirmed it firsthand (M7 GREEN).
+- **Pre-gate adversarial verification (0 corrections, dispute resolved firsthand):** a 4-agent refutation
+  workflow (3 source-grounded skeptics defaulting-to-refuted + a cross-checking critic) over the 23-block map
+  BEFORE the TDD gate confirmed all 23 verdicts. It earned its keep by resolving the one genuine dispute (M7:
+  is the nested nav label in `innerText`?) via a real Shiny DOM render and dismissing two skeptic refutations
+  that rested on the opposite false premise — robust to 2/3 skeptics hitting stream-idle timeouts (1 full
+  skeptic + 1 partial + the critic sufficed).
+- **Verification:** browser run **23/23 blocks GREEN / 23 expectations** (1:1 swap, net 0), 0 error / 0 skip
+  (`filter="^e2e-breeding-groups"`, env `NPRC_RUN_E2E=true NOT_CRAN=true RENV_CONFIG_AUTOLOADER_ENABLED=false`).
+  **[mutation-check] PASS** (inverted — Breeding Groups is the TARGET pane): correct `(Breeding Groups,"Form
+  Groups")`→TRUE; wrong-pane `(Pedigree Browser,"Form Groups")`→FALSE; wrong-content `(Breeding Groups,"Focal
+  Animals")`→FALSE ("Focal Animals" is Pedigree/Input-only `modPedigree.R:52`/`modInput.R:114`, grep-confirmed
+  foreign to BG); old whole-body `grepl("Focal Animals",body)`→TRUE (content-blind contrast); active-pane
+  innerText grepl→FALSE (sanity). Non-e2e regression (`NOT_CRAN=true`) — canonical testthat tally
+  **2162 `expectation_success` / 0 failed / 0 error / 156 skipped / 5 pre-existing `modPyramid` warnings /
+  0 non-e2e offenders** — the S40–S42 baseline held EXACTLY (the 3 BG files self-skip at `create_test_app()`).
+- **⚠ Measurement note (refines Learning #42d):** `sum(res$nb) - sum(res$failed)` is NOT the passed count —
+  `nb` counts skip and warning rows too (2162 success + 156 skip + 5 warning = 2323). The canonical passed
+  count is `expectation_success` (or the testthat reporter's `PASS` line). A "+161 pass" delta from a
+  test-only e2e edit (provably impossible) was this formula artifact, diagnosed firsthand, not a regression.
+- **Phase 3E:** test-tree-only deliverable — the live browser run (23 blocks via real AppDriver) + the live
+  mutation-check spike ARE the runtime (#31 pattern); drove the real app, not just build-clean. No `R/` change
+  → no `document()`/NEWS; `tests/` is `.lintr`-excluded.
+
 ### 2026-06-08 — Phase 8e-3 part B-1 (Genetic-Value family): boot-level tautologies → behavioral active-pane assertions (issue #40, Session 42)
 - **Deliverable (implementation):** the **Genetic-Value family** of plan slice 8e-3
   (`docs/planning/phase8e-assertion-strengthening-subplan.md`) — `test-e2e-genetic-value-module.R` (7),

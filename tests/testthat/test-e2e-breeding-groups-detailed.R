@@ -15,9 +15,12 @@ test_that("E2E: Breeding Groups has group size control", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
+  # DRAGON: no literal "size" control in modBreedingGroups; the pattern matches
+  # via "number"/"animals" ("Number of groups:", "Number of top animals:",
+  # "Seed groups with specific animals"). The test name overclaims "size" -- keep
+  # the pattern verbatim and do not rename (flag, don't retarget).
   expect_true(
-    grepl("size|number|count|animals", html, ignore.case = TRUE),
+    assert_active_pane(app, "Breeding Groups", "size|number|count|animals"),
     info = "Should have group size control"
   )
 })
@@ -34,9 +37,13 @@ test_that("E2E: Breeding Groups has harem option", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  has_harem <- grepl("harem|single male|breeding system", html, ignore.case = TRUE)
-  expect_true(TRUE, info = "Breeding Groups tab loaded successfully")
+  # REVIVE: was expect_true(TRUE) with a dead grepl. Narrow the revived pattern
+  # to "harem" -- the always-visible "Harem (1M:NF)" sex-ratio choice; the dead
+  # "single male"/"breeding system" alternatives are never rendered (pruned).
+  expect_true(
+    assert_active_pane(app, "Breeding Groups", "harem"),
+    info = "Should have harem option"
+  )
 })
 
 test_that("E2E: Breeding Groups has minimum age setting", {
@@ -51,9 +58,8 @@ test_that("E2E: Breeding Groups has minimum age setting", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("age|minimum|year|breeding", html, ignore.case = TRUE),
+    assert_active_pane(app, "Breeding Groups", "age|minimum|year|breeding"),
     info = "Should have minimum age setting"
   )
 })
@@ -70,14 +76,14 @@ test_that("E2E: Breeding Groups has results display area", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  # Should have area for displaying formed groups
-  has_results <- grepl(
-    "result|group|table|output|formed",
-    html,
-    ignore.case = TRUE
+  # REVIVE: was expect_true(TRUE) with a dead grepl. "group" matches the
+  # always-visible "Number of groups:"/"Seed groups ..."/nested "Groups" nav; the
+  # other alternatives (result/table/output/formed) are the data-dependent
+  # formed-group display rendered post-formation -> asserted in 8e-6.
+  expect_true(
+    assert_active_pane(app, "Breeding Groups", "result|group|table|output|formed"),
+    info = "Should have results display area"
   )
-  expect_true(TRUE, info = "Breeding Groups tab loaded successfully")
 })
 
 test_that("E2E: Breeding Groups has export functionality", {
@@ -92,9 +98,14 @@ test_that("E2E: Breeding Groups has export functionality", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  has_export <- grepl("export|download|save", html, ignore.case = TRUE)
-  expect_true(TRUE, info = "Breeding Groups tab loaded successfully")
+  # NULL (pane-active only): the Export/Download buttons live in the INACTIVE
+  # "Group Detail" nested tab (display:none -> not in the active pane innerText)
+  # and the guidance HTML has no export text. Assert the pane is active/visible;
+  # the export-button assertion is deferred to 8e-6 (nested-tab navigation).
+  expect_true(
+    assert_active_pane(app, "Breeding Groups"),
+    info = "Breeding Groups pane should be active"
+  )
 })
 
 test_that("E2E: Breeding Groups shows algorithm description", {
@@ -109,9 +120,14 @@ test_that("E2E: Breeding Groups shows algorithm description", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  has_content <- nchar(html) > 200
-  expect_true(has_content, info = "Breeding Groups should show interface content")
+  # ANCHOR: was a content-length tautology (nchar(html) > 200). Anchor to
+  # "algorithm" -- the always-visible guidance (group_formation.html: "The
+  # algorithm ignores between-animal kinship..."), faithful to the test's
+  # "algorithm description" intent.
+  expect_true(
+    assert_active_pane(app, "Breeding Groups", "algorithm"),
+    info = "Breeding Groups should show algorithm description"
+  )
 })
 
 test_that("E2E: Breeding Groups has kinship constraint option", {
@@ -126,9 +142,9 @@ test_that("E2E: Breeding Groups has kinship constraint option", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("kinship|threshold|maximum|constraint|related", html, ignore.case = TRUE),
+    assert_active_pane(app, "Breeding Groups",
+                       "kinship|threshold|maximum|constraint|related"),
     info = "Should have kinship constraint option"
   )
 })
