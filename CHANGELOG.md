@@ -14,6 +14,63 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-08 — Phase 8e-3 part B-1 (Genetic-Value family): boot-level tautologies → behavioral active-pane assertions (issue #40, Session 42)
+- **Deliverable (implementation):** the **Genetic-Value family** of plan slice 8e-3
+  (`docs/planning/phase8e-assertion-strengthening-subplan.md`) — `test-e2e-genetic-value-module.R` (7),
+  `test-e2e-genetic-value-detailed.R` (7), `test-e2e-genetic-value-tutorial.R` (8) = **22 browser-booting
+  `test_that` blocks**. All converted from the content-blind `navigate_to_tab → grepl(get_html_safe(app,
+  "body"))` idiom to `assert_active_pane(app, "Genetic Value Analysis", <pattern>)`.
+- **Owner-scoped to ONE family** (`AskUserQuestion`): 8e-3 censused firsthand at **8 files / ~56 blocks**
+  (~3× an 8e-2 session) — far past the family-per-session boundary the 8e-2 sessions (S38–S41) established —
+  so it is split per the plan §5 "may split if oversized" + the don't-bundle dragon (FM #18/#25). This
+  session did genetic-value only; **deferred to follow-on sessions:** breeding-groups family (3 files, ~23)
+  and settings-about + workflow-integration (the navbarMenu finalization of `navigate_to_menu_item` +
+  visit-N conversion, 2 files, ~11).
+- **Strict TDD — PURE run-and-observe** (no defect; the GV pane already renders and
+  `navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")` already targets the right tab —
+  "Genetic Value Analysis" IS the `tabPanel` title `appUI.R:148` == the module h3 `modGeneticValue.R:32`)
+  → green-on-arrival `[refactor-only]` conversion, gated `PRE-RED→run-and-observe` via `AskUserQuestion`;
+  rigor from a `[mutation-check]` (no synthetic RED).
+- **Conversion map by the Learning #40/#41 split** — 16 KEEP · 3 REVIVE · 1 ANCHOR · 2 NULL:
+  - **16 genuine `expect_true(grepl(orig))` → keep regex verbatim, rescope haystack to the active pane**
+    (module M1–M7; detailed D1/D2/D4/D5; tutorial T1–T4/T6).
+  - **3 tautologies with a DEAD computed grepl pattern → REVIVE that exact pattern, rescoped** (new
+    sub-case vs S41's "tautology → fresh anchor"): D3 `founder|equivalent|FE|genetic` (✓"founder" in the
+    guidance "rare founder alleles" + "genetic" in the h3), D6 `report|export|download|summary`
+    (✓"Export All/Subset" + "Summary" nested-tab label), T8 narrowed to `filter`
+    (✓"Filter View"/"Filter by IDs").
+  - **1 content-length tautology (`nchar(html) > 200`) → ANCHOR** to the distinctive always-rendered
+    guidance phrase "ranks animals" (D7; `inst/extdata/ui_guidance/genetic_value.html`).
+  - **2 NULL-pattern (pane-active only, data-bearing deferred to 8e-6):** T5 "Value Designation" and
+    T7 "Z-score" are data-dependent results concepts absent from the static UI/guidance — no faithful
+    default-visible pattern exists, so assert only that the GV pane is active (Learning #41a).
+- **4 dragons keep their genuine regex verbatim** (Learning #41a — flag in a comment, never rename): M4
+  `minimum|breeding|age` (no min-age control in GV; "breeding" matches guidance "breeding colony"); D1
+  `population|select|animals|subset` (population is server-derived `modGeneticValue.R:148-162`; "animals"
+  matches guidance "ranks animals" and "subset" matches "Export Subset"); T4 `dataTable|DTOutput|table|
+  results|ranking` (the rendered table is `req(gvaView())`-gated → 8e-6; "ranking" matches the static
+  "Rankings" nested-tab label).
+- **Pre-gate adversarial verification narrowed the map** (Learning #40d/#41d): a 4-agent refutation
+  workflow (3 source-grounded skeptics defaulting-to-refuted + a cross-checking critic) over the 22-block
+  map BEFORE the TDD gate confirmed 21/22 and corrected **T8** — the revived dead pattern carried four
+  alternatives (focal/display/Show.*entries/search) FOREIGN to the GV pane (copy-paste from another
+  module); only "filter" matches default-visible innerText, so the revive was narrowed to `filter`. The
+  critic also dismissed a skeptic's bogus newline-spanning false positive (R `grepl` `.` does not cross the
+  newlines `innerText` inserts) and confirmed the two NULLs.
+- **Verification:** browser run **22/22 blocks GREEN / 22 expectations** (1:1 swap, net 0), 0 error / 0 skip
+  (`filter="^e2e-genetic-value"`, env `NPRC_RUN_E2E=true NOT_CRAN=true RENV_CONFIG_AUTOLOADER_ENABLED=false`).
+  **`[mutation-check]` PASS** (inverted — Genetic Value Analysis is the TARGET pane): correct
+  `(Genetic Value Analysis,"Run Analysis")`→TRUE; wrong-pane `(Pedigree Browser,"Run Analysis")`→FALSE;
+  wrong-content `(Genetic Value Analysis,"Focal Animals")`→FALSE (Pedigree-only label `modPedigree.R:52`,
+  absent from the GV pane); old whole-body `grepl("Focal Animals")`→TRUE (content-blind contrast);
+  active-pane innerText grepl→FALSE (sanity). Non-e2e regression **2162 passed / 0 failed / 0 error /
+  0 non-e2e offenders** (156 skipped, 5 pre-existing `modPyramid` warnings; the e2e-only change self-skips
+  at `create_test_app()` `helper-shinytest2.R:196` — the 3 GV files showed 0/0/0/22-skip — so non-e2e counts
+  are unaffected; S40/S41 baseline held EXACTLY).
+- **Static UI only** (data-bearing GV outputs — rankings table, scatter plot, Summary table incl. Founder
+  Equivalents/Value-Designation — are `req()`-gated and deferred to 8e-6). Test-tree-only → no
+  `document()`/NEWS; `tests/` is lint-exempt (`.lintr:35`).
+
 ### 2026-06-08 — Phase 8e-2 (Pyramid family — the LAST 8e-2 cut → 8e-2 COMPLETE): boot-level tautologies → behavioral active-pane assertions (issue #40, Session 41)
 - **Deliverable (implementation):** the **Pyramid family** of plan slice 8e-2
   (`docs/planning/phase8e-assertion-strengthening-subplan.md`) — `test-e2e-pyramid-module.R` (6),

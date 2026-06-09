@@ -15,9 +15,11 @@ test_that("E2E: Genetic Value Analysis tab is accessible", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  html <- get_html_safe(app, "body")
+  # 8e-3: assert the Genetic Value Analysis pane is the active/visible one and
+  # carries its static heading text (replaces the content-blind body grepl).
   expect_true(
-    grepl("Genetic|Value|Analysis|Kinship", html, ignore.case = TRUE),
+    assert_active_pane(app, "Genetic Value Analysis",
+                       "Genetic|Value|Analysis|Kinship"),
     info = "Should be on Genetic Value Analysis tab"
   )
 })
@@ -34,9 +36,12 @@ test_that("E2E: Genetic Value has gene drop iterations control", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  html <- get_html_safe(app, "body")
-  has_iterations <- grepl("iteration|gene drop|simulation", html, ignore.case = TRUE)
-  expect_true(has_iterations, info = "Should have gene drop iterations control")
+  # Matches the always-visible numericInput label "Gene Drop Iterations:".
+  expect_true(
+    assert_active_pane(app, "Genetic Value Analysis",
+                       "iteration|gene drop|simulation"),
+    info = "Should have gene drop iterations control"
+  )
 })
 
 test_that("E2E: Genetic Value has metric checkboxes", {
@@ -51,9 +56,13 @@ test_that("E2E: Genetic Value has metric checkboxes", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  html <- get_html_safe(app, "body")
-  has_metrics <- grepl("genome uniqueness|mean kinship|uniqueness|kinship", html, ignore.case = TRUE)
-  expect_true(has_metrics, info = "Should have genetic metric options")
+  # Matches the static checkbox labels "Calculate Genome Uniqueness" /
+  # "Calculate Mean Kinship" and the threshold selectInput label.
+  expect_true(
+    assert_active_pane(app, "Genetic Value Analysis",
+                       "genome uniqueness|mean kinship|uniqueness|kinship"),
+    info = "Should have genetic metric options"
+  )
 })
 
 test_that("E2E: Genetic Value has minimum breeding age control", {
@@ -68,9 +77,15 @@ test_that("E2E: Genetic Value has minimum breeding age control", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  html <- get_html_safe(app, "body")
-  has_min_age <- grepl("minimum|breeding|age", html, ignore.case = TRUE)
-  expect_true(has_min_age, info = "Should have minimum breeding age control")
+  # DRAGON (Learning #41a): the GV module has NO minimum-breeding-age control;
+  # the genuine regex is kept verbatim (never renamed) because "breeding" matches
+  # the always-rendered guidance text "breeding colony"
+  # (inst/extdata/ui_guidance/genetic_value.html), which IS default-visible.
+  expect_true(
+    assert_active_pane(app, "Genetic Value Analysis",
+                       "minimum|breeding|age"),
+    info = "Should have minimum breeding age control"
+  )
 })
 
 test_that("E2E: Genetic Value has run analysis button", {
@@ -85,9 +100,13 @@ test_that("E2E: Genetic Value has run analysis button", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  html <- get_html_safe(app, "body")
-  has_run_button <- grepl("run|analyze|calculate|start", html, ignore.case = TRUE)
-  expect_true(has_run_button, info = "Should have run analysis button")
+  # Matches the always-visible actionButton "Run Analysis" / "Calculate ..."
+  # checkbox labels.
+  expect_true(
+    assert_active_pane(app, "Genetic Value Analysis",
+                       "run|analyze|calculate|start"),
+    info = "Should have run analysis button"
+  )
 })
 
 test_that("E2E: Genetic Value has rankings display", {
@@ -102,9 +121,13 @@ test_that("E2E: Genetic Value has rankings display", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  html <- get_html_safe(app, "body")
-  has_rankings <- grepl("ranking|top|result", html, ignore.case = TRUE)
-  expect_true(has_rankings, info = "Should have rankings display area")
+  # Matches the static nested-tab label "Rankings" and "Show top N:" control
+  # (the rendered rankings TABLE itself is data-dependent -> 8e-6).
+  expect_true(
+    assert_active_pane(app, "Genetic Value Analysis",
+                       "ranking|top|result"),
+    info = "Should have rankings display area"
+  )
 })
 
 test_that("E2E: Genetic Value has download functionality", {
@@ -119,7 +142,11 @@ test_that("E2E: Genetic Value has download functionality", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  html <- get_html_safe(app, "body")
-  has_download <- grepl("download|export|save", html, ignore.case = TRUE)
-  expect_true(has_download, info = "Should have download functionality")
+  # Matches the always-visible downloadButton labels "Export All" / "Export
+  # Subset".
+  expect_true(
+    assert_active_pane(app, "Genetic Value Analysis",
+                       "download|export|save"),
+    info = "Should have download functionality"
+  )
 })

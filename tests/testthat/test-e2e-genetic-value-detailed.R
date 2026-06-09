@@ -15,9 +15,13 @@ test_that("E2E: Genetic Value has population selection", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value Analysis tab")
 
-  html <- get_html_safe(app, "body")
+  # DRAGON (Learning #41a): the GV module has no population-selection control
+  # (population is derived server-side, modGeneticValue.R:148-162). The genuine
+  # regex is kept verbatim: "animals" matches the guidance "ranks animals" and
+  # "subset" matches the downloadButton "Export Subset" -- both default-visible.
   expect_true(
-    grepl("population|select|animals|subset", html, ignore.case = TRUE),
+    assert_active_pane(app, "Genetic Value Analysis",
+                       "population|select|animals|subset"),
     info = "Should have population selection"
   )
 })
@@ -34,9 +38,11 @@ test_that("E2E: Genetic Value has genome uniqueness display", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value Analysis tab")
 
-  html <- get_html_safe(app, "body")
+  # Matches the static "Genome Uniqueness Threshold:" / "Calculate Genome
+  # Uniqueness" labels.
   expect_true(
-    grepl("genome|uniqueness|GU|unique", html, ignore.case = TRUE),
+    assert_active_pane(app, "Genetic Value Analysis",
+                       "genome|uniqueness|GU|unique"),
     info = "Should have genome uniqueness display"
   )
 })
@@ -53,9 +59,16 @@ test_that("E2E: Genetic Value has founder equivalents info", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value Analysis tab")
 
-  html <- get_html_safe(app, "body")
-  has_fe <- grepl("founder|equivalent|FE|genetic", html, ignore.case = TRUE)
-  expect_true(TRUE, info = "Genetic Value tab loaded successfully")
+  # Was a tautology (expect_true(TRUE) with a dead grepl). Revives the author's
+  # pattern, rescoped to the active pane: "founder" matches the guidance "rare
+  # founder alleles" and "genetic" the h3 "Genetic Value Analysis" -- both
+  # default-visible. (The Founder-Equivalents DATA value in the Summary table is
+  # req()-gated and is asserted in 8e-6.)
+  expect_true(
+    assert_active_pane(app, "Genetic Value Analysis",
+                       "founder|equivalent|FE|genetic"),
+    info = "Should have founder equivalents info"
+  )
 })
 
 test_that("E2E: Genetic Value has kinship analysis section", {
@@ -70,9 +83,10 @@ test_that("E2E: Genetic Value has kinship analysis section", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value Analysis tab")
 
-  html <- get_html_safe(app, "body")
+  # Matches the static "Mean Kinship" labels / guidance "mean kinship".
   expect_true(
-    grepl("kinship|mean|coefficient|MK", html, ignore.case = TRUE),
+    assert_active_pane(app, "Genetic Value Analysis",
+                       "kinship|mean|coefficient|MK"),
     info = "Should have kinship analysis section"
   )
 })
@@ -89,9 +103,10 @@ test_that("E2E: Genetic Value has ranking capability", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value Analysis tab")
 
-  html <- get_html_safe(app, "body")
+  # Matches the static "Rankings" nested-tab label / h3 "Genetic Value ...".
   expect_true(
-    grepl("rank|value|score|priority", html, ignore.case = TRUE),
+    assert_active_pane(app, "Genetic Value Analysis",
+                       "rank|value|score|priority"),
     info = "Should have ranking capability"
   )
 })
@@ -108,9 +123,14 @@ test_that("E2E: Genetic Value has report generation", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value Analysis tab")
 
-  html <- get_html_safe(app, "body")
-  has_report <- grepl("report|export|download|summary", html, ignore.case = TRUE)
-  expect_true(TRUE, info = "Genetic Value tab loaded successfully")
+  # Was a tautology (expect_true(TRUE) with a dead grepl). Revives the author's
+  # pattern, rescoped: "export" matches the "Export All"/"Export Subset" download
+  # buttons and "summary" the "Summary" nested-tab label -- both default-visible.
+  expect_true(
+    assert_active_pane(app, "Genetic Value Analysis",
+                       "report|export|download|summary"),
+    info = "Should have report generation"
+  )
 })
 
 test_that("E2E: Genetic Value shows analysis instructions", {
@@ -125,7 +145,11 @@ test_that("E2E: Genetic Value shows analysis instructions", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value Analysis tab")
 
-  html <- get_html_safe(app, "body")
-  has_content <- nchar(html) > 200
-  expect_true(has_content, info = "Should show analysis instructions or interface")
+  # Was a content-length tautology (nchar(html) > 200). Anchored to the
+  # distinctive always-rendered guidance phrase "ranks animals"
+  # (inst/extdata/ui_guidance/genetic_value.html).
+  expect_true(
+    assert_active_pane(app, "Genetic Value Analysis", "ranks animals"),
+    info = "Should show analysis instructions or interface"
+  )
 })

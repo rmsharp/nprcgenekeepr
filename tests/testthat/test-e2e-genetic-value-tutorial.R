@@ -16,14 +16,15 @@ test_that("E2E: Genetic Value has number of simulations input", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  html <- get_html_safe(app, "body")
-  # Tutorial mentions 2 to 100,000 simulations, minimum 1000 recommended
-  has_num_sims <- grepl(
-    "simulation|iteration|numSim|number.*simulation|gene.*drop",
-    html,
-    ignore.case = TRUE
+  # Tutorial mentions 2 to 100,000 simulations, minimum 1000 recommended.
+  # Matches the static "Gene Drop Iterations:" numericInput label.
+  expect_true(
+    assert_active_pane(
+      app, "Genetic Value Analysis",
+      "simulation|iteration|numSim|number.*simulation|gene.*drop"
+    ),
+    info = "Should have number of simulations input"
   )
-  expect_true(has_num_sims, info = "Should have number of simulations input")
 })
 
 test_that("E2E: Genetic Value has genome uniqueness threshold", {
@@ -38,14 +39,15 @@ test_that("E2E: Genetic Value has genome uniqueness threshold", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  html <- get_html_safe(app, "body")
-  # Tutorial mentions genome uniqueness threshold 0-3
-  has_gu_threshold <- grepl(
-    "genome.*uniqueness|uniqueness.*threshold|GU|threshold",
-    html,
-    ignore.case = TRUE
+  # Tutorial mentions genome uniqueness threshold. Matches the static
+  # "Genome Uniqueness Threshold:" selectInput label.
+  expect_true(
+    assert_active_pane(
+      app, "Genetic Value Analysis",
+      "genome.*uniqueness|uniqueness.*threshold|GU|threshold"
+    ),
+    info = "Should have genome uniqueness threshold"
   )
-  expect_true(has_gu_threshold, info = "Should have genome uniqueness threshold")
 })
 
 test_that("E2E: Genetic Value has Begin Analysis button", {
@@ -60,13 +62,14 @@ test_that("E2E: Genetic Value has Begin Analysis button", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  html <- get_html_safe(app, "body")
-  has_begin_button <- grepl(
-    "Begin.*Analysis|Start.*Analysis|Run.*Analysis|Analyze|Calculate",
-    html,
-    ignore.case = TRUE
+  # Matches the static actionButton "Run Analysis" / "Calculate ..." labels.
+  expect_true(
+    assert_active_pane(
+      app, "Genetic Value Analysis",
+      "Begin.*Analysis|Start.*Analysis|Run.*Analysis|Analyze|Calculate"
+    ),
+    info = "Should have Begin Analysis button"
   )
-  expect_true(has_begin_button, info = "Should have Begin Analysis button")
 })
 
 test_that("E2E: Genetic Value has results table area", {
@@ -81,14 +84,16 @@ test_that("E2E: Genetic Value has results table area", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  html <- get_html_safe(app, "body")
-  # Results table should have dataTable or similar
-  has_results_table <- grepl(
-    "dataTable|DTOutput|table|results|ranking",
-    html,
-    ignore.case = TRUE
+  # DRAGON (Learning #41a): the rendered results table is data-dependent
+  # (req(gvaView()) -> 8e-6). The genuine regex is kept verbatim: "ranking"
+  # matches the always-visible "Rankings" nested-tab label.
+  expect_true(
+    assert_active_pane(
+      app, "Genetic Value Analysis",
+      "dataTable|DTOutput|table|results|ranking"
+    ),
+    info = "Should have results table area"
   )
-  expect_true(has_results_table, info = "Should have results table area")
 })
 
 test_that("E2E: Genetic Value mentions Value Designation", {
@@ -103,14 +108,15 @@ test_that("E2E: Genetic Value mentions Value Designation", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  html <- get_html_safe(app, "body")
-  # Tutorial mentions High Value, Low Value, Undetermined
-  has_value_designation <- grepl(
-    "Value.*Designation|High.*Value|Low.*Value|designation|valueDesignation",
-    html,
-    ignore.case = TRUE
+  # NULL pattern (Learning #41a): Value Designation (High/Low/Undetermined) is a
+  # data-dependent results concept -- it appears nowhere in the default-visible
+  # static UI or guidance, so no faithful static pattern exists. Assert only that
+  # the GV pane is the active/visible one; the data-bearing Value-Designation
+  # assertion is deferred to 8e-6 (the real-flow slice).
+  expect_true(
+    assert_active_pane(app, "Genetic Value Analysis"),
+    info = "Should be on GV pane (Value Designation assertion deferred to 8e-6)"
   )
-  expect_true(TRUE, info = "Genetic Value tab loaded")
 })
 
 test_that("E2E: Genetic Value has mean kinship display", {
@@ -125,13 +131,14 @@ test_that("E2E: Genetic Value has mean kinship display", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  html <- get_html_safe(app, "body")
-  has_mean_kinship <- grepl(
-    "mean.*kinship|kinship.*coefficient|MK|meanKinship",
-    html,
-    ignore.case = TRUE
+  # Matches the static "Mean Kinship" labels / guidance "mean kinship".
+  expect_true(
+    assert_active_pane(
+      app, "Genetic Value Analysis",
+      "mean.*kinship|kinship.*coefficient|MK|meanKinship"
+    ),
+    info = "Should reference mean kinship"
   )
-  expect_true(has_mean_kinship, info = "Should reference mean kinship")
 })
 
 test_that("E2E: Genetic Value has Z-score display", {
@@ -146,13 +153,14 @@ test_that("E2E: Genetic Value has Z-score display", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  html <- get_html_safe(app, "body")
-  has_zscore <- grepl(
-    "z-score|zscore|z.*score|standardized",
-    html,
-    ignore.case = TRUE
+  # NULL pattern (Learning #41a): a z-score is a data-dependent results concept
+  # absent from the static UI/guidance, so no faithful static pattern exists.
+  # Assert only that the GV pane is active/visible; the data-bearing assertion is
+  # deferred to 8e-6.
+  expect_true(
+    assert_active_pane(app, "Genetic Value Analysis"),
+    info = "Should be on GV pane (Z-score assertion deferred to 8e-6)"
   )
-  expect_true(TRUE, info = "Genetic Value tab loaded")
 })
 
 test_that("E2E: Genetic Value has focal animals display option", {
@@ -167,12 +175,13 @@ test_that("E2E: Genetic Value has focal animals display option", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  html <- get_html_safe(app, "body")
-  # Tutorial mentions default display for focal animals
-  has_focal_display <- grepl(
-    "focal|display|Show.*entries|search|filter",
-    html,
-    ignore.case = TRUE
+  # Was a tautology (expect_true(TRUE) with a dead grepl). The dead pattern's
+  # "focal|display|Show.*entries|search" alternatives are foreign to the GV pane
+  # (copy-paste artifacts from another module); only "filter" matches a real
+  # default-visible control -- the "Filter View" button / "Filter by IDs"
+  # textarea. Narrowed to "filter" per the pre-gate adversarial review.
+  expect_true(
+    assert_active_pane(app, "Genetic Value Analysis", "filter"),
+    info = "Should have focal animals display option"
   )
-  expect_true(TRUE, info = "Genetic Value tab loaded")
 })
