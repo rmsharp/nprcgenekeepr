@@ -8,9 +8,9 @@ savePlotToFile(
   plot,
   file,
   format = NULL,
-  width = 8,
-  height = 6,
-  dpi = 150,
+  width = 8L,
+  height = 6L,
+  dpi = 150L,
   units = "in",
   bg = "white"
 )
@@ -21,7 +21,8 @@ savePlotToFile(
 \item{file}{character. The file path to save the plot to.}
 
 \item{format}{character. Output format: "png", "pdf", or "svg".
-Defaults to "png". If not specified, format is inferred from file extension.}
+Defaults to "png". If not specified, format is inferred from file
+extension.}
 
 \item{width}{numeric. Plot width in inches. Defaults to 8.}
 
@@ -30,7 +31,8 @@ Defaults to "png". If not specified, format is inferred from file extension.}
 \item{dpi}{numeric. Resolution in dots per inch for raster formats.
 Defaults to 150 for good quality web/screen use. Use 300 for print.}
 
-\item{units}{character. Units for width and height. Defaults to "in" (inches).}
+\item{units}{character. Units for width and height. Defaults to "in"
+(inches).}
 
 \item{bg}{character. Background color. Defaults to "white".}
 }

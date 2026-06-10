@@ -35,5 +35,6 @@ The server handles:
 
 \code{\link{modGeneticValueServer}} for genetic value analysis
 
-\code{\link{shouldShowChangedColsTab}} for changed columns tab logic
+\code{\link{shouldShowChangedColsTab}} for changed columns tab
+logic
 }
