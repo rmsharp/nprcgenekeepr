@@ -14,6 +14,50 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-09 — Phase 8e-3 FINAL (Settings-About + Workflow-Integration): boot-level tautologies → behavioral active-pane assertions; navbarMenu finalized (issue #40, Session 44)
+- **Deliverable (implementation):** the **LAST two 8e-3 files** of plan slice 8e-3
+  (`docs/planning/phase8e-assertion-strengthening-subplan.md`) —
+  `test-e2e-settings-about.R` (4) + `test-e2e-workflow-integration.R` (7) = **11 browser-booting
+  `test_that` blocks**. Converts the content-blind `navigate_to_tab → grepl(get_html_safe(app,"body"))`
+  idiom to behavioral `assert_active_pane(...)`. **8e-3 is now COMPLETE** (genetic-value S42 +
+  breeding-groups S43 + settings-about/workflow S44).
+- **Dragon resolved firsthand (R1 / §2.3 item 4, carried as a 🐉 by S42/S43):** a live-DOM spike
+  (Rscript→AppDriver) confirmed a `navbarMenu("More")` child **becomes the lone active top-level
+  `.tab-pane`** via `set_inputs(mainNavbar=child)` — top-level `.tab-content` count == 1,
+  `get_active_pane_value`/innerText == the child (Settings/About/Help) content. So
+  `navigate_to_menu_item`'s delegate body was already a genuine visible-pane switch; **only its
+  docstring's shallow-coverage caveat needed retiring** (`helper-shinytest2.R:283-292`, body
+  unchanged) → PURE run-and-observe, not a helper RED→GREEN.
+- **Strict TDD — PURE run-and-observe** (no defect; all panes already render) → green-on-arrival
+  `[refactor-only]` conversion, gated `PRE-RED→run-and-observe` via `AskUserQuestion`; rigor from a
+  `[mutation-check]` (no synthetic RED).
+- **Conversion map — 10 keep-regex-rescope · 1 navbar-chrome carve-out:**
+  - **settings-about (4): all genuine grepl → keep verbatim, rescope to the navbarMenu child pane** —
+    S1 `(Settings,"Settings|Configuration|options")`, S2 `(About,"About|Version|GeneKeepR|Oregon|Primate")`,
+    S3 `(Help,"Help|Documentation|Online")`, S4 `(About,"NIH|funded|grant")`.
+  - **workflow-integration (7):** W1 "visits N tabs" loop → 6 per-pane `assert_active_pane` checks with
+    the threshold raised `>= 3` → `== 6L` (so a single failed nav reds the block); W2/W3 `is.list()`
+    responsiveness tautologies → genuine pane-switch asserts (Input-then-Home; final-pane after a
+    4-switch loop); W4 navbar brand → **CARVE-OUT** scoped to `.navbar-brand`
+    (`grepl("GeneKeepR", get_html_safe(app, ".navbar-brand"))` — strictly stronger than the old
+    whole-body grepl, since the brand lives outside any pane); W5 `(Input,"upload|file|browse")`,
+    W6 `(Genetic Value Analysis,"Genetic|Value|Analysis|kinship|population")`,
+    W7 `(Breeding Groups,"Breeding|Groups|formation|animals")`.
+- **Helper:** `navigate_to_menu_item` docstring finalized (records the 8e-3 navbarMenu confirmation;
+  no body change).
+- **Verification:** browser run **11/11 GREEN / 12 expectations** (net-0 swap), 0 error / 0 skip
+  (`filter="^e2e-(settings|workflow)"`). `[mutation-check]` PASS — settings-about arms via the spike
+  (wrong-pane→FALSE, wrong-content→FALSE); workflow arms: W1 wrong-pane→FALSE (count would miss 6L),
+  W4 scoped `grepl("Breeding", brand)`→FALSE while old whole-body `grepl("Breeding", body)`→TRUE
+  (proves the old check was content-blind). Non-e2e regression **2162 `expectation_success` / 0 failed
+  / 0 error / 156 skipped / 5 pre-existing `modPyramid` warnings / 0 non-e2e offenders** — S40–S43
+  baseline held EXACTLY (read via `expectation_success`, not `sum(nb)`, per Learning #43e). Phase-3E:
+  the live browser run + two DOM spikes + the mutation-check spike ARE the runtime (#31 pattern).
+- **Scope:** test-tree only (3 files: 2 test files + a test-helper docstring); `tests/` `.lintr`-excluded
+  → lint-exempt; no `R/` change → no `document()`/NEWS (CHANGELOG only). Next: **8e-4** (namespace
+  `input-`→`dataInput-` fix + error-states/boundary interaction revival), a separate session.
+- See `PROJECT_LEARNINGS.md` Learning #44 for the full per-block detail and the navbarMenu/brand/threshold findings.
+
 ### 2026-06-09 — Phase 8e-3 part B-2 (Breeding-Groups family): boot-level tautologies → behavioral active-pane assertions (issue #40, Session 43)
 - **Deliverable (implementation):** the **Breeding-Groups family** of plan slice 8e-3
   (`docs/planning/phase8e-assertion-strengthening-subplan.md`) — `test-e2e-breeding-groups-module.R` (7),

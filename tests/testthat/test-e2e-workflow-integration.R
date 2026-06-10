@@ -12,55 +12,44 @@ test_that("E2E: Can navigate through all main tabs sequentially", {
   app <- create_app_driver(app_dir, "e2e_sequential_nav")
   on.exit(app$stop(), add = TRUE)
 
-  tabs_visited <- 0
+  tabs_visited <- 0L
 
-  # Visit Home
-  html <- get_html_safe(app, "body")
-  if (grepl("Welcome|Home|GeneKeepR", html, ignore.case = TRUE)) {
-    tabs_visited <- tabs_visited + 1
+  # Home is the default pane on boot (no navigation needed). Each step below
+  # counts a tab only when its pane genuinely becomes the active/visible pane
+  # (was a content-blind whole-body grepl that passed on every hidden pane).
+  if (assert_active_pane(app, "Home", "Welcome|Home|GeneKeepR")) {
+    tabs_visited <- tabs_visited + 1L
   }
 
-  # Visit Input
-  if (navigate_to_tab(app, "Input")) {
-    html <- get_html_safe(app, "body")
-    if (grepl("Upload|File|Input", html, ignore.case = TRUE)) {
-      tabs_visited <- tabs_visited + 1
-    }
+  navigate_to_tab(app, "Input")
+  if (assert_active_pane(app, "Input", "Upload|File|Input")) {
+    tabs_visited <- tabs_visited + 1L
   }
 
-  # Visit Pedigree Browser
-  if (navigate_to_tab(app, "Pedigree Browser", "Pedigree")) {
-    html <- get_html_safe(app, "body")
-    if (grepl("Pedigree|Browser", html, ignore.case = TRUE)) {
-      tabs_visited <- tabs_visited + 1
-    }
+  navigate_to_tab(app, "Pedigree Browser", "Pedigree")
+  if (assert_active_pane(app, "Pedigree Browser", "Pedigree|Browser")) {
+    tabs_visited <- tabs_visited + 1L
   }
 
-  # Visit Age-Sex Pyramid
-  if (navigate_to_tab(app, "Age-Sex Pyramid", "Pyramid")) {
-    html <- get_html_safe(app, "body")
-    if (grepl("Pyramid|Age|Sex", html, ignore.case = TRUE)) {
-      tabs_visited <- tabs_visited + 1
-    }
+  navigate_to_tab(app, "Age-Sex Pyramid", "Pyramid")
+  if (assert_active_pane(app, "Age-Sex Pyramid", "Pyramid|Age|Sex")) {
+    tabs_visited <- tabs_visited + 1L
   }
 
-  # Visit Genetic Value Analysis
-  if (navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")) {
-    html <- get_html_safe(app, "body")
-    if (grepl("Genetic|Value", html, ignore.case = TRUE)) {
-      tabs_visited <- tabs_visited + 1
-    }
+  navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
+  if (assert_active_pane(app, "Genetic Value Analysis", "Genetic|Value")) {
+    tabs_visited <- tabs_visited + 1L
   }
 
-  # Visit Breeding Groups
-  if (navigate_to_tab(app, "Breeding Groups", "Groups")) {
-    html <- get_html_safe(app, "body")
-    if (grepl("Breeding|Groups", html, ignore.case = TRUE)) {
-      tabs_visited <- tabs_visited + 1
-    }
+  navigate_to_tab(app, "Breeding Groups", "Groups")
+  if (assert_active_pane(app, "Breeding Groups", "Breeding|Groups")) {
+    tabs_visited <- tabs_visited + 1L
   }
 
-  expect_true(tabs_visited >= 3, info = "Should visit at least 3 tabs successfully")
+  expect_true(
+    tabs_visited == 6L,
+    info = "All 6 main panes should each become the active visible pane in turn"
+  )
 })
 
 test_that("E2E: App maintains state when switching tabs", {
@@ -72,21 +61,19 @@ test_that("E2E: App maintains state when switching tabs", {
   app <- create_app_driver(app_dir, "e2e_state_maintain")
   on.exit(app$stop(), add = TRUE)
 
-  # Get initial values
-  values1 <- get_values_safe(app)
-
-  # Switch to another tab
+  # Switch to Input and confirm the Input pane is genuinely active/visible.
   if (!navigate_to_tab(app, "Input")) skip("Could not switch tabs")
+  expect_true(
+    assert_active_pane(app, "Input", "Upload|File|Input"),
+    info = "Switching to Input makes the Input pane active/visible"
+  )
 
-  # Switch back
+  # Switch back to Home and confirm the Home pane is active/visible again.
   if (!navigate_to_tab(app, "Home")) skip("Could not switch back")
-
-  # Get values again
-  values2 <- get_values_safe(app)
-
-  # App should still be responsive
-  expect_true(is.list(values1), info = "Initial values should be a list")
-  expect_true(is.list(values2), info = "Values after switching should be a list")
+  expect_true(
+    assert_active_pane(app, "Home", "Welcome|Home|GeneKeepR"),
+    info = "Switching back makes the Home pane active/visible"
+  )
 })
 
 test_that("E2E: App is responsive after multiple tab switches", {
@@ -100,14 +87,15 @@ test_that("E2E: App is responsive after multiple tab switches", {
 
   # Perform multiple tab switches
   tabs <- c("Input", "Home", "Input", "Home")
-
   for (tab in tabs) {
     navigate_to_tab(app, tab)
   }
 
-  # App should still be responsive
-  values <- get_values_safe(app)
-  expect_true(is.list(values), info = "App should remain responsive after multiple switches")
+  # After the switches the app should land on (and render) the final pane.
+  expect_true(
+    assert_active_pane(app, "Home", "Welcome|Home|GeneKeepR"),
+    info = "After multiple switches the final (Home) pane is active/visible"
+  )
 })
 
 test_that("E2E: Navbar brand/title is visible", {
@@ -119,10 +107,14 @@ test_that("E2E: Navbar brand/title is visible", {
   app <- create_app_driver(app_dir, "e2e_navbar_brand")
   on.exit(app$stop(), add = TRUE)
 
-  html <- get_html_safe(app, "body")
+  # CARVE-OUT: the navbar brand/title lives in `.navbar-brand`, OUTSIDE any
+  # tab-pane, so assert_active_pane does not apply. Scope the grepl to the brand
+  # element itself (not the whole hidden body, where "GeneKeepR" also appears in
+  # the Home/About panes) so this genuinely checks the brand is present.
+  brand <- get_html_safe(app, ".navbar-brand")
   expect_true(
-    grepl("GeneKeepR", html, ignore.case = TRUE),
-    info = "Navbar should show GeneKeepR brand"
+    grepl("GeneKeepR", brand),
+    info = "Navbar brand element should display the GeneKeepR title"
   )
 })
 
@@ -138,10 +130,10 @@ test_that("E2E: Input tab has file upload before pedigree browser works", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  html <- get_html_safe(app, "body")
-  has_upload <- grepl("upload|file|browse", html, ignore.case = TRUE)
-
-  expect_true(has_upload, info = "Input tab should have file upload capability")
+  expect_true(
+    assert_active_pane(app, "Input", "upload|file|browse"),
+    info = "Input pane active with file-upload capability"
+  )
 })
 
 test_that("E2E: Genetic Value tab indicates data requirement", {
@@ -156,15 +148,11 @@ test_that("E2E: Genetic Value tab indicates data requirement", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  html <- get_html_safe(app, "body")
-  # Should have some indication of needing data or showing analysis options
-  has_content <- grepl(
-    "Genetic|Value|Analysis|kinship|population",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Genetic Value Analysis",
+                       "Genetic|Value|Analysis|kinship|population"),
+    info = "Genetic Value pane active with relevant content"
   )
-
-  expect_true(has_content, info = "Genetic Value tab should show relevant content")
 })
 
 test_that("E2E: Breeding Groups tab indicates data requirement", {
@@ -179,13 +167,9 @@ test_that("E2E: Breeding Groups tab indicates data requirement", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  # Should have some indication of breeding group functionality
-  has_content <- grepl(
-    "Breeding|Groups|formation|animals",
-    html,
-    ignore.case = TRUE
+  expect_true(
+    assert_active_pane(app, "Breeding Groups",
+                       "Breeding|Groups|formation|animals"),
+    info = "Breeding Groups pane active with relevant content"
   )
-
-  expect_true(has_content, info = "Breeding Groups tab should show relevant content")
 })

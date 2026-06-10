@@ -287,9 +287,12 @@ click_element_safe <- function(app, selector) {
 #' child, i.e. app$get_value(input = "mainNavbar") reads back the child label
 #' (Settings/About/Help) after the switch -- no DOM dropdown-open + click is
 #' required. Delegating to navigate_to_tab() is therefore the final body.
-#' Note: the input value reaches the child, but the navbarPage hidden-DOM means
-#' the body-grepl assertions pass regardless of a true visible-pane switch
-#' (shallow-coverage limit, sub-plan sec 2.3 / 8.3 -- strengthened in 8e).
+#' Finalized in 8e-3 (issue #40): a live-DOM spike confirmed the navbarMenu
+#' child becomes the lone active top-level .tab-pane (data-value == child label,
+#' innerText == child content), so test-e2e-settings-about now asserts the
+#' visible-pane switch via assert_active_pane(). The sub-plan sec 2.3 / 8.3
+#' shallow-coverage caveat is resolved; navigate_to_tab() remains the correct
+#' delegate body (no DOM dropdown-open + click needed).
 #'
 #' @param app AppDriver object.
 #' @param item Menu item label (e.g. "Settings").

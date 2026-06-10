@@ -15,10 +15,9 @@ test_that("E2E: Settings tab is accessible", {
   success <- navigate_to_menu_item(app, "Settings")
   if (!success) skip("Could not navigate to Settings tab")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("Settings|Configuration|options", html, ignore.case = TRUE),
-    info = "Should be on Settings tab"
+    assert_active_pane(app, "Settings", "Settings|Configuration|options"),
+    info = "Settings pane should be the active/visible navbarMenu child"
   )
 })
 
@@ -34,10 +33,9 @@ test_that("E2E: About tab shows version and credits", {
   success <- navigate_to_menu_item(app, "About")
   if (!success) skip("Could not navigate to About tab")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("About|Version|GeneKeepR|Oregon|Primate", html, ignore.case = TRUE),
-    info = "Should show About information"
+    assert_active_pane(app, "About", "About|Version|GeneKeepR|Oregon|Primate"),
+    info = "About pane should be active and show version/credits"
   )
 })
 
@@ -53,10 +51,9 @@ test_that("E2E: Help tab has documentation link", {
   success <- navigate_to_menu_item(app, "Help")
   if (!success) skip("Could not navigate to Help tab")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("Help|Documentation|Online", html, ignore.case = TRUE),
-    info = "Should show Help documentation"
+    assert_active_pane(app, "Help", "Help|Documentation|Online"),
+    info = "Help pane should be active and show documentation"
   )
 })
 
@@ -72,9 +69,8 @@ test_that("E2E: About tab mentions NIH funding", {
   success <- navigate_to_menu_item(app, "About")
   if (!success) skip("Could not navigate to About tab")
 
-  html <- get_html_safe(app, "body")
   expect_true(
-    grepl("NIH|funded|grant", html, ignore.case = TRUE),
-    info = "Should mention NIH funding"
+    assert_active_pane(app, "About", "NIH|funded|grant"),
+    info = "Active About pane should mention NIH funding"
   )
 })
