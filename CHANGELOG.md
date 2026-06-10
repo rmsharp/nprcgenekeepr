@@ -14,6 +14,45 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-10 — Phase 8e-6b (real GVA-run flow): the 2 NULL'd Genetic-Value E2E blocks become genuine data-bearing assertions (issue #40, Session 48)
+- **Deliverable (implementation):** plan slice **8e-6b**
+  (`docs/planning/phase8e-assertion-strengthening-subplan.md` §5/§8e-6) — the **second of three vertical
+  8e-6 flows** (upload+QC ⊂ GVA ⊂ breeding). Drives the real Genetic Value Analysis pipeline opt-in:
+  `upload_and_wait(app, obfuscated_rhesus_mhc_ped.csv)` → `navigate_to_tab("Genetic Value Analysis")` →
+  set `nIterations = 100` (minimum allowed, for speed) → `click_element_safe("#geneticValue-runAnalysis")`
+  → `wait_for_module_ready("geneticValue")`, then asserts the **rendered `#geneticValue-rankingsTable`**
+  DOM. Revives the 2 NULL'd Genetic-Value blocks from Session 42 (B1
+  `test-e2e-genetic-value-tutorial.R:99` Value Designation, B2 `:144` Z-score) from pane-active-only into
+  data-bearing checks. Scope fixed by the owner's "8e-6b" instruction; full **RED→GREEN** (3
+  `AskUserQuestion` phase gates), REFACTOR declined (a reusable GVA-run helper should co-design with
+  8e-6c).
+- **Hard gate first (the GVA spike):** a live-browser spike settled the rendered-table facts before any
+  RED, correcting a static-read trap: `reportGV.R:144` `cbind(demographics, indivMeanKin, zScores, gu,
+  offspring)` shows no `value` column, but `reportGV.R:146` wraps it as `orderReport(finalData, ped)`,
+  which splits the frame → `rankSubjects()` adds the `value` ("High/Low/Undetermined") + `rank` columns →
+  `rbind` re-flattens, so the rendered DT carries both `value` and `zScores`. The spike confirmed the
+  default `topN = 20` view (`modGeneticValue.R:240`) truncates to the top-ranked (best) rows, which are
+  **all "High Value"** — "Low Value"/"Undetermined" are truncated away, so the only faithful
+  Value-designation token in the default render is `"High Value"`.
+- **Assertions (mutation-proven discriminating, RNG/seed-independent):** B1 `"High Value"` (the Value
+  designation rendered for the top-ranked rows); B2 `"zScores"` (the z-score DT column header). Both are
+  structural invariants (a fixed column header; a designation guaranteed for the top rows) — verified by
+  running GREEN with **no `NPRC_GVA_SEED`** set, so neither the 8e-5 seed hook nor value-stable RNG is
+  required.
+- **Verification:** 8/8 blocks GREEN in `test-e2e-genetic-value-tutorial.R` (the 6 static-UI blocks
+  unaffected); **[mutation-check] all pass** (correct `"High Value"`/`"zScores"` → TRUE; wrong
+  designation `"Low Value"`/`"Undetermined"` → FALSE; foreign-pane `"Form Groups"` (Breeding Groups) /
+  `"Focal Animals"` (Pedigree) → FALSE; RED re-confirmed pre-run → both FALSE). Non-e2e regression
+  **2180 `expectation_success` / 0 failed / 0 error / 156 skipped / 5 pre-existing `modPyramid`
+  warnings / 0 non-e2e offenders** — Session 47 baseline held exactly (test-only change; the e2e file
+  self-skips without `NPRC_RUN_E2E`). Phase-3E = the live GREEN AppDriver run (the real upload→QC→GVA
+  pipeline) + the mutation spike ARE the runtime check (#31). Test-tree-only → no `document()`/NEWS;
+  `tests/` lint-exempt.
+- **Lib currency:** the AppDriver subprocess resolves the package from the SYSTEM lib
+  (`/Library/Frameworks/.../R-4.5/...`) under `RENV_CONFIG_AUTOLOADER_ENABLED=false`; that install was
+  already current (`gatedSeed` present, v1.1.0.9000) because `R/` was unchanged since Session 47's
+  reinstall → no reinstall needed this session (verified currency firsthand; did not assume).
+
 ### 2026-06-10 — Phase 8e-6a (real upload+QC → pedigree-table flow): the 3 NULL'd pedigree E2E blocks become genuine data-bearing assertions (issue #40, Session 47)
 - **Deliverable (implementation):** plan slice **8e-6a**
   (`docs/planning/phase8e-assertion-strengthening-subplan.md` §5/§8e-6) — the **first of three vertical

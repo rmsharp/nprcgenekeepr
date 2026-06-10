@@ -105,17 +105,30 @@ test_that("E2E: Genetic Value mentions Value Designation", {
   app <- create_app_driver(app_dir, "e2e_gv_value_designation")
   on.exit(app$stop(), add = TRUE)
 
+  # 8e-6b: drive the real GVA pipeline so the rankings table renders. The Value
+  # designation ("High Value"/"Low Value"/"Undetermined") is added by
+  # rankSubjects() (orderReport.R) and only appears once reportGV() has run.
+  fixture <- system.file("extdata", "obfuscated_rhesus_mhc_ped.csv",
+                         package = "nprcgenekeepr")
+  if (!upload_and_wait(app, fixture)) skip("Upload/QC did not complete")
+
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  # NULL pattern (Learning #41a): Value Designation (High/Low/Undetermined) is a
-  # data-dependent results concept -- it appears nowhere in the default-visible
-  # static UI or guidance, so no faithful static pattern exists. Assert only that
-  # the GV pane is the active/visible one; the data-bearing Value-Designation
-  # assertion is deferred to 8e-6 (the real-flow slice).
-  expect_true(
-    assert_active_pane(app, "Genetic Value Analysis"),
-    info = "Should be on GV pane (Value Designation assertion deferred to 8e-6)"
+  # Minimum allowed iterations keep the gene drop fast; the Value designation is
+  # robust to RNG drift -- the top-ranked rows are always "High Value".
+  app$set_inputs(`geneticValue-nIterations` = 100)
+  if (!click_element_safe(app, "#geneticValue-runAnalysis")) {
+    skip("Could not run genetic value analysis")
+  }
+  if (!wait_for_module_ready(app, "geneticValue", timeout = 90000)) {
+    skip("Genetic value analysis did not complete")
+  }
+
+  html <- get_html_safe(app, "#geneticValue-rankingsTable")
+  expect_match(
+    html, "High Value",
+    info = "Rankings table renders the data-bearing Value designation"
   )
 })
 
@@ -150,16 +163,30 @@ test_that("E2E: Genetic Value has Z-score display", {
   app <- create_app_driver(app_dir, "e2e_gv_zscore")
   on.exit(app$stop(), add = TRUE)
 
+  # 8e-6b: drive the real GVA pipeline so the rankings table renders. zScores is
+  # a reportGV() output column (reportGV.R:144) shown as a DT header only once
+  # the analysis has run.
+  fixture <- system.file("extdata", "obfuscated_rhesus_mhc_ped.csv",
+                         package = "nprcgenekeepr")
+  if (!upload_and_wait(app, fixture)) skip("Upload/QC did not complete")
+
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  # NULL pattern (Learning #41a): a z-score is a data-dependent results concept
-  # absent from the static UI/guidance, so no faithful static pattern exists.
-  # Assert only that the GV pane is active/visible; the data-bearing assertion is
-  # deferred to 8e-6.
-  expect_true(
-    assert_active_pane(app, "Genetic Value Analysis"),
-    info = "Should be on GV pane (Z-score assertion deferred to 8e-6)"
+  # Minimum allowed iterations keep the gene drop fast; the zScores column header
+  # renders whenever the rankings table renders (RNG-independent).
+  app$set_inputs(`geneticValue-nIterations` = 100)
+  if (!click_element_safe(app, "#geneticValue-runAnalysis")) {
+    skip("Could not run genetic value analysis")
+  }
+  if (!wait_for_module_ready(app, "geneticValue", timeout = 90000)) {
+    skip("Genetic value analysis did not complete")
+  }
+
+  html <- get_html_safe(app, "#geneticValue-rankingsTable")
+  expect_match(
+    html, "zScores",
+    info = "Rankings table renders the data-bearing zScores column"
   )
 })
 
