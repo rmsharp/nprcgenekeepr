@@ -14,6 +14,44 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-10 — Phase 8e-6a (real upload+QC → pedigree-table flow): the 3 NULL'd pedigree E2E blocks become genuine data-bearing assertions (issue #40, Session 47)
+- **Deliverable (implementation):** plan slice **8e-6a**
+  (`docs/planning/phase8e-assertion-strengthening-subplan.md` §5/§8e-6) — the **first of three vertical
+  8e-6 flows** (upload+QC ⊂ GVA ⊂ breeding). Drives the real pipeline opt-in for the first time in the
+  E2E suite: `upload_and_wait(app, obfuscated_rhesus_mhc_ped.csv)` → `#dataInput-getData` →
+  `navigate_to_tab("Pedigree Browser")`, then asserts the **rendered `#pedigree-pedigreeTable`** DOM.
+  Revives the 3 NULL'd pedigree blocks from Session 40 (A1 `test-e2e-pedigree-module.R`, A2
+  `-detailed.R`, A3 `-tutorial.R`) from pane-active-only into data-bearing checks. Owner-gated scope
+  (8e-6a only); full **RED→GREEN** (4 `AskUserQuestion` gates), REFACTOR declined (idiomatic 3-line
+  driver, no helper).
+- **Hard gate first (the 8e-6 spike):** a live-browser spike settled the recon critic's blockers
+  before any RED — (G4) the default `pedFile`/`pedigreeFileOne` upload flips `dataInput` ready and QC
+  runs clean; (G5) the pedigree output is `suspendWhenHidden` (NULL until the Pedigree Browser tab is
+  active, then renders all 375 rows — so the driver must `navigate` AFTER upload); (G2)
+  `get_value(output="pedigree-pedigreeTable")` is a `json`-class string that **un-suspends to non-NULL
+  even without data**, so the genuine data discriminator is the rendered-DOM content via
+  `get_html_safe(app, "#pedigree-pedigreeTable")` — a refinement of the plan's §2.3 "output tier".
+- **Assertions (all mutation-proven discriminating):** A1 `"of 375 entries"` (row count) + `"sire"`
+  column; A2 + `"dam"` column; A3 `"dataTables_length"` (the "Show N entries" length menu) +
+  `"of 375 entries"`. A4 ("status filter") left honest pane-active — no filter control exists (the
+  table does render a `recordStatus` column, a future data-bearing option).
+- **Fixture:** `inst/extdata/obfuscated_rhesus_mhc_ped.csv` (375 rows, canonical CSV; recon-verified to
+  flow clean QC→GVA→breeding and already asserted error-free through the real `modInputServer`).
+- **Verification:** 3/3 files GREEN (module 6/6, detailed 8/8, tutorial 9/9); **[mutation-check] all
+  pass** (correct content TRUE; wrong row-counts 999/374, foreign column `genotype`, foreign-pane
+  `Breeding Groups`, and the same pattern on a different element → all FALSE). Non-e2e regression
+  **2180 `expectation_success` / 0 failed / 0 error / 156 skipped / 5 pre-existing `modPyramid`
+  warnings / 0 non-e2e offenders** — Session 46 baseline held exactly (test-only change; the e2e files
+  self-skip without `NPRC_RUN_E2E`). Phase-3E = the live GREEN AppDriver run (the real
+  upload→QC→pedigree-render pipeline) + a mutation-check spike. Test-tree-only → no
+  `document()`/NEWS; `tests/` is lint-exempt.
+- **Environment note:** the AppDriver subprocess resolves `nprcgenekeepr` from the **system library**
+  (`/Library/Frameworks/...`), not the renv cache, under `RENV_CONFIG_AUTOLOADER_ENABLED=false`;
+  current source was reinstalled there first (the prior system-lib install was from Jul 2025).
+- **Scope boundary:** GVA (8e-6b) and breeding-group (8e-6c) flows + their deferred blocks (2 GV from
+  S42, 3 BG from S43) are deliberately deferred to their own sessions (FM #18/#25). `add-methodology`
+  still not on remote.
+
 ### 2026-06-10 — Phase 8e-5 (Stochastic determinism hook): env/option-gated `set_seed()` in the GVA + breeding-group module servers — the FIRST 8e PRODUCTION `R/` change (issue #40, Session 46)
 - **Deliverable (implementation):** plan slice **8e-5**
   (`docs/planning/phase8e-assertion-strengthening-subplan.md` §7) — the **only 8e slice that edits

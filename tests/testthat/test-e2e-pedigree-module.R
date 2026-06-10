@@ -66,15 +66,25 @@ test_that("E2E: Pedigree Browser has data table", {
   app <- create_app_driver(app_dir, "e2e_pedigree_datatable")
   on.exit(app$stop(), add = TRUE)
 
+  fixture <- system.file("extdata", "obfuscated_rhesus_mhc_ped.csv",
+                         package = "nprcgenekeepr")
+  loaded <- upload_and_wait(app, fixture)
+  if (!loaded) skip("Upload/QC did not complete")
+
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree tab")
 
-  # The pedigree DataTable renders only after a studbook is loaded
-  # (req(pedigreeData()) in modPedigree.R); assert the pane is active here and
-  # defer the data-bearing table content assertion to slice 8e-6.
-  expect_true(
-    assert_active_pane(app, "Pedigree Browser"),
-    info = "Pedigree Browser pane active; data table content deferred to 8e-6"
+  # 8e-6a: assert the data-bearing rendered pedigree DataTable. The DataTable
+  # DOM (row-count info + parent columns) renders only once the Pedigree Browser
+  # tab is active AND a studbook has been loaded (req(pedigreeData())).
+  html <- get_html_safe(app, "#pedigree-pedigreeTable")
+  expect_match(
+    html, "of 375 entries",
+    info = "DataTable displays all 375 fixture pedigree rows"
+  )
+  expect_match(
+    html, "sire",
+    info = "Pedigree table includes the sire parent column"
   )
 })
 

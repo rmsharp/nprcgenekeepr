@@ -31,14 +31,24 @@ test_that("E2E: Pedigree Browser has row count display options", {
   app <- create_app_driver(app_dir, "e2e_ped_row_count")
   on.exit(app$stop(), add = TRUE)
 
+  fixture <- system.file("extdata", "obfuscated_rhesus_mhc_ped.csv",
+                         package = "nprcgenekeepr")
+  loaded <- upload_and_wait(app, fixture)
+  if (!loaded) skip("Upload/QC did not complete")
+
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree Browser tab")
 
-  # DataTables "Show X entries" pagination renders only with loaded data; assert
-  # the pane is active and defer the row-count UI assertion to slice 8e-6.
-  expect_true(
-    assert_active_pane(app, "Pedigree Browser"),
-    info = "Pedigree Browser pane active; row-count options deferred to 8e-6"
+  # 8e-6a: the DataTables "Show N entries" length menu renders only with loaded
+  # data; assert it (and the row-count info) on the real rendered table.
+  html <- get_html_safe(app, "#pedigree-pedigreeTable")
+  expect_match(
+    html, "dataTables_length",
+    info = "DataTables 'Show N entries' length menu renders with loaded data"
+  )
+  expect_match(
+    html, "of 375 entries",
+    info = "Row-count info reflects all 375 fixture pedigree rows"
   )
 })
 
