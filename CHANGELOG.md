@@ -14,6 +14,51 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-10 — Phase 8e-4 (Error-States + Boundary-Conditions): namespace fix + interaction revival; boot tautologies → behavioral active-pane assertions (issue #40, Session 45)
+- **Deliverable (implementation):** plan slice **8e-4**
+  (`docs/planning/phase8e-assertion-strengthening-subplan.md` §5) — the FIRST 8e slice that is
+  **not pure run-and-observe**: a HYBRID of **RED→GREEN** (the `input-`→`dataInput-` namespace fix)
+  and **run-and-observe** (the assertion conversions). Two files: `test-e2e-error-states.R` (13) +
+  `test-e2e-boundary-conditions.R` (13) = **26** browser-booting `test_that` blocks, plus the
+  `upload_and_wait` helper + its browser-free unit tests.
+- **Namespace fix (§2.4, RED→GREEN, 5 sites):** the input module is mounted under the **`dataInput`**
+  namespace (`appUI.R:123` `modInputUI("dataInput")`); `data-module="input"` (`modInput.R:31`) is a
+  label, not the namespace. Fixed: `helper-shinytest2.R` `upload_and_wait` default `module_id`
+  `"input"`→`"dataInput"` + the hardcoded `input-pedigreeFileOne` now DERIVED from
+  `module_id`/`file_input_id` via `do.call`; `error-states` `#input-getData`→`#dataInput-getData`
+  and `input-minParentAge`→`dataInput-minParentAge`; `boundary` `input-minParentAge`→
+  `dataInput-minParentAge`. A new browser-free recording-stub unit test in
+  `test_helper_shinytest2.R` anchors the helper fix in the always-run layer (+4 expectations).
+- **Discriminators (firsthand-spiked):** for a namespaced **textInput** the wrong-id discriminator is
+  the **value read-back** — shinytest2 `set_inputs` on an unbound id WARNS and never sets (it does
+  NOT throw), so `get_value("dataInput-minParentAge")` stays at the default with the wrong id; for the
+  **actionButton** it is the `app$click` **throw** (→ `click_element_safe`→FALSE). A no-file
+  `getData` click surfaces the transient `showNotification("Please select a file first.")` warning,
+  asserted via `#shiny-notification-panel`.
+- **Conversions (23, run-and-observe):** the `nchar(html)>100` near-tautologies + dead-grepl +
+  `interaction-noop-tryCatch` blocks now call `assert_active_pane(app, <pane>, <static-label>)` —
+  Input/Pedigree/Pyramid/GV/BG control labels confirmed against the real active-pane innerText. The
+  rapid-switch / repeat-click blocks assert the final pane (Home / Input); the narrow/short-window
+  blocks assert Home active on boot. **Zero blocks deferred to 8e-6** (all static-pane assertions are
+  available pre-data).
+- **Verification:** helper unit tests **63/0/0** (the 2 new `upload_and_wait` tests green); e2e
+  error+boundary browser run **26 blocks / 29 expectations GREEN, 0 failed / 0 error / 0 skip**
+  (`filter="^e2e-(error|boundary)"`, `NPRC_RUN_E2E=true NOT_CRAN=true`). **[mutation-check] PASS**
+  (correct GV pane→TRUE; wrong-pane / foreign-content "Number of groups"→FALSE; OLD whole-body
+  grepl→TRUE content-blind contrast; namespace read-back + notification + wrong-selector→FALSE).
+  Non-e2e regression **2166 `expectation_success` / 0 failed / 0 error / 156 skip / 5 pre-existing
+  `modPyramid` warn / 0 non-e2e offenders** — S40–S44 baseline + exactly the +4 new helper
+  expectations. Phase-3E satisfied (the live browser run + 2 spikes ARE the runtime, #31).
+- **⚠ Concurrent formatter (not part of this deliverable):** at session start the tree was clean;
+  mid-session an external automated style pass (`'…'`→`"…"`, `0`→`0L`) rewrote **14 `R/` production
+  files** and briefly broke 2 (`makeFounderStatsTable.R:68`, `makeGeneticSummaryTable.R:58` — inner
+  HTML quotes unescaped). Per SAFEGUARDS / FM #22 those unauthored uncommitted edits were NOT touched;
+  the formatter self-healed both files and settled, and the regression confirmed the reformat is
+  behaviorally inert. The 8e-4 commit stages ONLY the test-tree files + docs via explicit `git add`,
+  leaving the owner's reformat as their in-progress work.
+- **Scope:** test-tree-only (2 e2e files + helper + helper unit test) → no `document()`/NEWS;
+  `tests/` is `.lintr`-excluded. Strict TDD, gated `PRE-RED→RED` then `RED→GREEN` via `AskUserQuestion`.
+
 ### 2026-06-09 — Phase 8e-3 FINAL (Settings-About + Workflow-Integration): boot-level tautologies → behavioral active-pane assertions; navbarMenu finalized (issue #40, Session 44)
 - **Deliverable (implementation):** the **LAST two 8e-3 files** of plan slice 8e-3
   (`docs/planning/phase8e-assertion-strengthening-subplan.md`) —

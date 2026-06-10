@@ -104,6 +104,28 @@ fake_app_pane_liar <- function() {
   )
 }
 
+# Records the upload_file()/click() targets and reports data-ready "true" so
+# upload_and_wait()'s wait_for_module_ready() resolves immediately (no browser).
+# Used to prove upload_and_wait() targets the correct "dataInput" namespace
+# (sub-plan section 2.4; slice 8e-4).
+fake_app_upload_recorder <- function() {
+  state <- new.env(parent = emptyenv())
+  state$upload_name <- NA_character_
+  state$click_target <- NA_character_
+  list(
+    .state = state,
+    upload_file = function(...) {
+      state$upload_name <- names(list(...))[[1L]]
+      invisible(TRUE)
+    },
+    click = function(selector) {
+      state$click_target <- selector
+      invisible(TRUE)
+    },
+    get_js = function(...) "true"
+  )
+}
+
 # ---- E2E_TIMEOUT constant --------------------------------------------------
 
 test_that("E2E_TIMEOUT is a single positive numeric timeout (ms)", {
@@ -290,4 +312,24 @@ test_that("assert_active_pane honors ignore.case", {
   # ignore.case = FALSE -> case-sensitive miss
   expect_false(assert_active_pane(app, "Summary Statistics", "export kinship",
                                   ignore.case = FALSE))
+})
+
+# ---- upload_and_wait namespace (8e-4, sub-plan section 2.4) ----------------
+# The input module is mounted under the "dataInput" namespace
+# (appUI.R:123 modInputUI("dataInput")), so the real ids are
+# #dataInput-pedigreeFileOne / #dataInput-getData -- NOT "input-*"
+# (data-module="input" in modInput.R:31 is a label, not the namespace). These
+# prove upload_and_wait() targets that namespace, browser-free via the recording
+# stub (the helper serves the real upload flow wired in 8e-6).
+
+test_that("upload_and_wait defaults module_id to the dataInput namespace", {
+  expect_identical(formals(upload_and_wait)$module_id, "dataInput")
+})
+
+test_that("upload_and_wait uploads to and clicks the dataInput- namespaced ids", {
+  rec <- fake_app_upload_recorder()
+  ok <- upload_and_wait(rec, "/tmp/ped.csv")
+  expect_true(ok)
+  expect_identical(rec$.state$upload_name, "dataInput-pedigreeFileOne")
+  expect_identical(rec$.state$click_target, "dataInput-getData")
 })

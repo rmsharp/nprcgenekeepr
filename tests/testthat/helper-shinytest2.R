@@ -143,15 +143,20 @@ wait_for_module_ready <- function(app, module_id, timeout = 30000) {
 #' @param file_path Path to the file to upload
 #' @param file_input_id The file input ID (without namespace prefix)
 #' @param button_id The action button ID to trigger processing (without namespace prefix)
-#' @param module_id The module namespace ID (default "input")
+#' @param module_id The module namespace ID (default "dataInput", the namespace
+#'   under which appUI.R mounts modInputUI)
 #' @param timeout Maximum wait time in milliseconds (default 30000)
 #' @return TRUE if upload and processing succeeded, FALSE otherwise
 upload_and_wait <- function(app, file_path, file_input_id = "pedigreeFileOne",
-                             button_id = "getData", module_id = "input",
+                             button_id = "getData", module_id = "dataInput",
                              timeout = 30000) {
   tryCatch({
-    # Upload the file
-    app$upload_file(`input-pedigreeFileOne` = file_path)
+    # Upload the file to the namespaced file input (e.g. dataInput-pedigreeFileOne),
+    # deriving the id from module_id/file_input_id rather than hardcoding it.
+    upload_args <- stats::setNames(
+      list(file_path), sprintf("%s-%s", module_id, file_input_id)
+    )
+    do.call(app$upload_file, upload_args)
 
     # Click the process button
     app$click(sprintf("%s-%s", module_id, button_id))

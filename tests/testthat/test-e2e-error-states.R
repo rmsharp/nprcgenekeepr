@@ -20,12 +20,14 @@ test_that("E2E: Input shows message when no file selected", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  # Try clicking the action button without selecting a file
-  click_element_safe(app, "#input-getData")
+  # Click the process button with no file selected; the namespaced button must
+  # be reachable and the no-file path must surface the validation warning.
+  clicked <- click_element_safe(app, "#dataInput-getData")
+  expect_true(clicked, info = "getData button reachable at its namespaced id")
 
-  html <- get_html_safe(app, "body")
-  # App should still be responsive and not crash
-  expect_true(nchar(html) > 100, info = "App should remain responsive")
+  notif <- get_html_safe(app, "#shiny-notification-panel")
+  expect_match(notif, "select a file", ignore.case = TRUE,
+               info = "no-file click surfaces the 'select a file' warning")
 })
 
 test_that("E2E: Input handles zero minimum parent age", {
@@ -40,14 +42,15 @@ test_that("E2E: Input handles zero minimum parent age", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  # Try setting minimum parent age to 0
-  tryCatch({
-    app$set_inputs(`input-minParentAge` = "0")
-    app$wait_for_idle(timeout = E2E_TIMEOUT)
-  }, error = function(e) NULL)
+  # Set the minimum parent age to the 0 boundary and confirm the namespaced
+  # input reflects it (a real interaction, not a swallowed no-op).
+  app$set_inputs(`dataInput-minParentAge` = "0")
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
 
-  html <- get_html_safe(app, "body")
-  expect_true(nchar(html) > 100, info = "App should handle zero parent age")
+  expect_equal(app$get_value(input = "dataInput-minParentAge"), "0",
+               info = "minParentAge accepts and reflects the set value")
+  expect_true(assert_active_pane(app, "Input", "Minimum Parent Age"),
+              info = "Input pane stays active after a boundary value")
 })
 
 # =============================================================================
@@ -66,9 +69,11 @@ test_that("E2E: Pedigree Browser handles empty focal animal input", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree Browser tab")
 
-  html <- get_html_safe(app, "body")
-  # Without data loaded, should show placeholder or message
-  expect_true(nchar(html) > 100, info = "App should handle no data state")
+  # Without data loaded, the Pedigree Browser pane is still the active one
+  expect_true(
+    assert_active_pane(app, "Pedigree Browser", "Focal Animals|Pedigree Browser"),
+    info = "Pedigree Browser pane active with no data loaded"
+  )
 })
 
 test_that("E2E: Pedigree Browser state before data upload", {
@@ -83,14 +88,11 @@ test_that("E2E: Pedigree Browser state before data upload", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree Browser tab")
 
-  html <- get_html_safe(app, "body")
-  # Should show empty table or message about needing data
-  has_empty_state <- grepl(
-    "No data|upload|load|empty|0 entries|no entries",
-    html,
-    ignore.case = TRUE
-  ) || nchar(html) > 100
-  expect_true(has_empty_state, info = "Should handle empty data state gracefully")
+  # Before any upload the pane shows its static controls (Display Options)
+  expect_true(
+    assert_active_pane(app, "Pedigree Browser", "Display Options|Pedigree Browser"),
+    info = "Pedigree Browser pane active before any data upload"
+  )
 })
 
 # =============================================================================
@@ -109,9 +111,11 @@ test_that("E2E: Genetic Value before data is loaded", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  html <- get_html_safe(app, "body")
-  # Should show message about needing to load data first
-  expect_true(nchar(html) > 100, info = "App should handle no-data state")
+  # Pre-data the GV pane shows its analysis controls (Run Analysis)
+  expect_true(
+    assert_active_pane(app, "Genetic Value Analysis", "Run Analysis|Genetic Value"),
+    info = "Genetic Value pane active before data is loaded"
+  )
 })
 
 test_that("E2E: Genetic Value with minimum simulation count", {
@@ -126,9 +130,11 @@ test_that("E2E: Genetic Value with minimum simulation count", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  # Minimum simulations is 2 according to tutorial
-  html <- get_html_safe(app, "body")
-  expect_true(nchar(html) > 100, info = "App should be responsive")
+  # The Gene Drop Iterations control lives in the active GV pane
+  expect_true(
+    assert_active_pane(app, "Genetic Value Analysis", "Iterations|Gene Drop"),
+    info = "Genetic Value pane active with its simulation control"
+  )
 })
 
 # =============================================================================
@@ -147,8 +153,11 @@ test_that("E2E: Breeding Groups before data is loaded", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  expect_true(nchar(html) > 100, info = "App should handle no-data state")
+  # Pre-data the Breeding Groups pane shows its formation controls (Form Groups)
+  expect_true(
+    assert_active_pane(app, "Breeding Groups", "Form Groups|Breeding Group"),
+    info = "Breeding Groups pane active before data is loaded"
+  )
 })
 
 test_that("E2E: Breeding Groups with zero groups requested", {
@@ -163,9 +172,11 @@ test_that("E2E: Breeding Groups with zero groups requested", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  # Try setting number of groups to boundary value
-  html <- get_html_safe(app, "body")
-  expect_true(nchar(html) > 100, info = "App should handle boundary conditions")
+  # The "Number of groups" control is present in the active pane
+  expect_true(
+    assert_active_pane(app, "Breeding Groups", "Number of groups"),
+    info = "Breeding Groups pane active with its group-count control"
+  )
 })
 
 test_that("E2E: Breeding Groups with extreme sex ratio", {
@@ -180,8 +191,11 @@ test_that("E2E: Breeding Groups with extreme sex ratio", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  expect_true(nchar(html) > 100, info = "App should handle extreme values")
+  # The Sex ratio control (incl. the Harem option) is in the active pane
+  expect_true(
+    assert_active_pane(app, "Breeding Groups", "Sex ratio|Harem"),
+    info = "Breeding Groups pane active with its sex-ratio control"
+  )
 })
 
 # =============================================================================
@@ -200,9 +214,11 @@ test_that("E2E: Pyramid before data is loaded", {
   success <- navigate_to_tab(app, "Age-Sex Pyramid", "Pyramid")
   if (!success) skip("Could not navigate to Pyramid tab")
 
-  html <- get_html_safe(app, "body")
-  # Should show placeholder or message when no data
-  expect_true(nchar(html) > 100, info = "App should handle no-data state")
+  # Pre-data the Age-Sex Pyramid pane is the active one
+  expect_true(
+    assert_active_pane(app, "Age-Sex Pyramid", "Pyramid|Age|Sex"),
+    info = "Age-Sex Pyramid pane active before data is loaded"
+  )
 })
 
 # =============================================================================
@@ -231,9 +247,9 @@ test_that("E2E: App recovers from rapid tab switching", {
 
   app$wait_for_idle(timeout = E2E_TIMEOUT)
 
-  # App should still be responsive
-  html <- get_html_safe(app, "body")
-  expect_true(nchar(html) > 100, info = "App should recover from rapid switching")
+  # After the rapid sequence ending on Home, that pane must be the active one
+  expect_true(assert_active_pane(app, "Home", "Welcome|GeneKeepR"),
+              info = "App lands on the Home pane after rapid tab switching")
 })
 
 test_that("E2E: App handles clicking same tab multiple times", {
@@ -250,8 +266,8 @@ test_that("E2E: App handles clicking same tab multiple times", {
     click_element_safe(app, 'a[data-value="Input"]')
   }
 
-  html <- get_html_safe(app, "body")
-  expect_true(nchar(html) > 100, info = "App should handle repeated clicks")
+  expect_true(assert_active_pane(app, "Input", "Data Input"),
+              info = "Input pane active after repeated clicks on its tab")
 })
 
 # =============================================================================
@@ -270,8 +286,10 @@ test_that("E2E: Export buttons exist but may be disabled without data", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate")
 
-  html <- get_html_safe(app, "body")
-  # Export/download buttons should exist even without data
-  has_export_elements <- grepl("export|download|save", html, ignore.case = TRUE)
-  expect_true(TRUE, info = "Page loaded successfully")
+  # The GV export buttons (Export All / Export Subset) render in the active pane
+  # even before any analysis has been run.
+  expect_true(
+    assert_active_pane(app, "Genetic Value Analysis", "Export All|Export Subset"),
+    info = "Genetic Value export buttons present in the active pane without data"
+  )
 })

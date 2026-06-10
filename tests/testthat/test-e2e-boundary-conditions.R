@@ -20,10 +20,9 @@ test_that("E2E: Input validates minimum parent age bounds", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  # The app should handle various age values gracefully
-  html <- get_html_safe(app, "body")
-  has_age_input <- grepl("minParentAge|Minimum.*Parent.*Age", html, ignore.case = TRUE)
-  expect_true(TRUE, info = "Input tab loaded with age control")
+  # The minimum-parent-age control is present in the active Input pane
+  expect_true(assert_active_pane(app, "Input", "Minimum Parent Age"),
+              info = "Input pane active with its minimum-parent-age control")
 })
 
 test_that("E2E: Input handles non-numeric parent age gracefully", {
@@ -38,14 +37,15 @@ test_that("E2E: Input handles non-numeric parent age gracefully", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  # Try setting non-numeric value (app should handle gracefully)
-  tryCatch({
-    app$set_inputs(`input-minParentAge` = "abc")
-    app$wait_for_idle(timeout = E2E_TIMEOUT)
-  }, error = function(e) NULL)
+  # Set a non-numeric parent age; the textInput accepts the string and the app
+  # stays up (a real interaction, not a swallowed no-op).
+  app$set_inputs(`dataInput-minParentAge` = "abc")
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
 
-  html <- get_html_safe(app, "body")
-  expect_true(nchar(html) > 100, info = "App should handle invalid input")
+  expect_equal(app$get_value(input = "dataInput-minParentAge"), "abc",
+               info = "minParentAge accepts a non-numeric string value")
+  expect_true(assert_active_pane(app, "Input", "Minimum Parent Age"),
+              info = "Input pane stays active on invalid input (no crash)")
 })
 
 # =============================================================================
@@ -64,10 +64,11 @@ test_that("E2E: Genetic Value handles simulation count boundaries", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  html <- get_html_safe(app, "body")
-  # Simulations should be between 2 and 100,000 per tutorial
-  has_sim_control <- grepl("simulation|iteration|numSim", html, ignore.case = TRUE)
-  expect_true(TRUE, info = "Genetic Value tab has simulation control")
+  # The Gene Drop Iterations control lives in the active GV pane
+  expect_true(
+    assert_active_pane(app, "Genetic Value Analysis", "Iterations|Gene Drop"),
+    info = "Genetic Value pane active with its iteration control"
+  )
 })
 
 test_that("E2E: Genetic Value handles uniqueness threshold boundaries", {
@@ -82,9 +83,11 @@ test_that("E2E: Genetic Value handles uniqueness threshold boundaries", {
   success <- navigate_to_tab(app, "Genetic Value Analysis", "Genetic Value")
   if (!success) skip("Could not navigate to Genetic Value tab")
 
-  html <- get_html_safe(app, "body")
-  # Threshold should be 0-3 per tutorial
-  expect_true(nchar(html) > 100, info = "App renders threshold controls")
+  # The Genome Uniqueness Threshold control is in the active GV pane
+  expect_true(
+    assert_active_pane(app, "Genetic Value Analysis", "Threshold|Uniqueness"),
+    info = "Genetic Value pane active with its uniqueness-threshold control"
+  )
 })
 
 # =============================================================================
@@ -103,10 +106,9 @@ test_that("E2E: Breeding Groups handles single group request", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  # Should be able to request just 1 group
-  has_num_groups <- grepl("Number.*Group|numGroups|group.*desired", html, ignore.case = TRUE)
-  expect_true(TRUE, info = "Breeding Groups has group count control")
+  # The "Number of groups" control is present in the active pane
+  expect_true(assert_active_pane(app, "Breeding Groups", "Number of groups"),
+              info = "Breeding Groups pane active with its group-count control")
 })
 
 test_that("E2E: Breeding Groups handles large group count", {
@@ -121,8 +123,10 @@ test_that("E2E: Breeding Groups handles large group count", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  expect_true(nchar(html) > 100, info = "App handles group count input")
+  expect_true(
+    assert_active_pane(app, "Breeding Groups", "Number of groups|Form Groups"),
+    info = "Breeding Groups pane active for a large group count"
+  )
 })
 
 test_that("E2E: Breeding Groups handles sex ratio of 1:1", {
@@ -137,9 +141,9 @@ test_that("E2E: Breeding Groups handles sex ratio of 1:1", {
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  html <- get_html_safe(app, "body")
-  has_sex_ratio <- grepl("sex.*ratio|ratio|F/M", html, ignore.case = TRUE)
-  expect_true(TRUE, info = "Breeding Groups has sex ratio control")
+  # The Sex ratio control (incl. the Harem option) is in the active pane
+  expect_true(assert_active_pane(app, "Breeding Groups", "Sex ratio|Harem"),
+              info = "Breeding Groups pane active with its sex-ratio control")
 })
 
 # =============================================================================
@@ -158,9 +162,9 @@ test_that("E2E: Pyramid handles maximum age setting", {
   success <- navigate_to_tab(app, "Age-Sex Pyramid", "Pyramid")
   if (!success) skip("Could not navigate to Pyramid tab")
 
-  html <- get_html_safe(app, "body")
-  has_age_setting <- grepl("max.*age|age.*bin|maximum", html, ignore.case = TRUE)
-  expect_true(TRUE, info = "Pyramid has age configuration")
+  # The Age Unit / Age Label controls are in the active Pyramid pane
+  expect_true(assert_active_pane(app, "Age-Sex Pyramid", "Age Unit|Age Label"),
+              info = "Age-Sex Pyramid pane active with its age controls")
 })
 
 test_that("E2E: Pyramid handles bin size boundaries", {
@@ -175,9 +179,9 @@ test_that("E2E: Pyramid handles bin size boundaries", {
   success <- navigate_to_tab(app, "Age-Sex Pyramid", "Pyramid")
   if (!success) skip("Could not navigate to Pyramid tab")
 
-  html <- get_html_safe(app, "body")
-  has_bin_control <- grepl("bin|interval|year|age", html, ignore.case = TRUE)
-  expect_true(TRUE, info = "Pyramid has bin configuration")
+  # The Bin Size control is in the active Pyramid pane
+  expect_true(assert_active_pane(app, "Age-Sex Pyramid", "Bin Size"),
+              info = "Age-Sex Pyramid pane active with its bin-size control")
 })
 
 # =============================================================================
@@ -196,10 +200,11 @@ test_that("E2E: Pedigree Browser handles special characters in search", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree Browser tab")
 
-  html <- get_html_safe(app, "body")
-  # Should have search/filter capability
-  has_search <- grepl("search|filter|focal", html, ignore.case = TRUE)
-  expect_true(TRUE, info = "Pedigree Browser has search capability")
+  # The Pedigree Browser pane has search / focal-animal controls
+  expect_true(
+    assert_active_pane(app, "Pedigree Browser", "search|Focal Animals"),
+    info = "Pedigree Browser pane active with its search/focal control"
+  )
 })
 
 test_that("E2E: Pedigree Browser handles very long ID input", {
@@ -214,8 +219,10 @@ test_that("E2E: Pedigree Browser handles very long ID input", {
   success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
   if (!success) skip("Could not navigate to Pedigree Browser tab")
 
-  html <- get_html_safe(app, "body")
-  expect_true(nchar(html) > 100, info = "App handles text input fields")
+  expect_true(
+    assert_active_pane(app, "Pedigree Browser", "Pedigree Browser|Focal Animals"),
+    info = "Pedigree Browser pane active for long-ID input"
+  )
 })
 
 # =============================================================================
@@ -231,8 +238,9 @@ test_that("E2E: App handles narrow window width", {
   app <- create_app_driver(app_dir, "e2e_narrow_width", height = 900, width = 800)
   on.exit(app$stop(), add = TRUE)
 
-  html <- get_html_safe(app, "body")
-  expect_true(nchar(html) > 100, info = "App handles narrow window")
+  # On boot the Home pane renders active even at a narrow viewport width
+  expect_true(assert_active_pane(app, "Home", "Welcome|GeneKeepR"),
+              info = "Home pane renders active in a narrow window")
 })
 
 test_that("E2E: App handles short window height", {
@@ -244,6 +252,7 @@ test_that("E2E: App handles short window height", {
   app <- create_app_driver(app_dir, "e2e_short_height", height = 600, width = 1400)
   on.exit(app$stop(), add = TRUE)
 
-  html <- get_html_safe(app, "body")
-  expect_true(nchar(html) > 100, info = "App handles short window")
+  # On boot the Home pane renders active even at a short viewport height
+  expect_true(assert_active_pane(app, "Home", "Welcome|GeneKeepR"),
+              info = "Home pane renders active in a short window")
 })
