@@ -190,6 +190,9 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
     breedingGroups <- eventReactive(input$formGroups, {
       req(pedigree())
 
+      # E2E determinism hook (gated; no-op in production). See gatedSeed().
+      gatedSeed("nprcgenekeepr.bg_seed", "NPRC_BG_SEED")
+
       withProgress(message = "Forming breeding groups...", {
         ped <- pedigree()
 

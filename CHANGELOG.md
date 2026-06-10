@@ -14,6 +14,54 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-10 — Phase 8e-5 (Stochastic determinism hook): env/option-gated `set_seed()` in the GVA + breeding-group module servers — the FIRST 8e PRODUCTION `R/` change (issue #40, Session 46)
+- **Deliverable (implementation):** plan slice **8e-5**
+  (`docs/planning/phase8e-assertion-strengthening-subplan.md` §7) — the **only 8e slice that edits
+  production `R/`** (`modGeneticValueServer` + `modBreedingGroupsServer`, both exported). Adds an
+  **env/option-gated `set_seed()` hook** (Option A) so the stochastic GVA / breeding-group engines
+  can be made reproducible on demand for E2E exact-value assertions, while the **default path is
+  provably unchanged** (gate unset ⇒ no-op). Owner-gated (`AskUserQuestion` go/no-go chose Option A
+  over Option B's user-facing UI seed input and Option C-only's no-production-change invariants),
+  then full **RED→GREEN→REFACTOR**, every transition gated.
+- **The gate (Option A):** at the top of each `eventReactive` body, immediately after `req()` and
+  ahead of `withProgress` (so nothing between the seed and the engine consumes RNG):
+  `seed <- getOption("nprcgenekeepr.gva_seed", as.integer(Sys.getenv("NPRC_GVA_SEED", NA)));
+  if (!is.na(seed)) set_seed(seed)` — `modGeneticValue.R` ahead of `reportGV()` (gene-drop `sample`),
+  `modBreedingGroups.R` ahead of `groupAddAssign()` (MIS `sample`), with
+  `nprcgenekeepr.bg_seed` / `NPRC_BG_SEED`. Uses the existing **exported `set_seed()`** (pins
+  `sample.kind="Rounding"`). Option precedence over the env-var fallback; both unset ⇒ `NA` ⇒ no seed.
+- **REFACTOR:** the duplicated 3-line gate factored into one internal `@noRd` helper
+  `gatedSeed(optionName, envName)` in `R/set_seed.R`; both module call sites now call it. Structure
+  only — no behavior change, no new tests (the 8 tests validate the refactored helper via the
+  `set_seed` mock + determinism). `gatedSeed` is `@noRd` ⇒ **no NAMESPACE / man delta**.
+- **Tests (8 new, browser-free `testServer`; 3 RED + 1 guard per module):** determinism — with the
+  option set, two `gvResults()` / `groups()` runs are `identical` (RED at HEAD: unseeded runs differ
+  because RNG state carries across `testServer` invocations; a `length(.) > 0` assertion proves the
+  capture is non-vacuous); `set_seed` mock — called once with the seed when the option is set (RED at
+  HEAD: never called); env-var fallback — `NPRC_GVA_SEED` / `NPRC_BG_SEED` read when the option is
+  absent (RED at HEAD); and the default-path **guard** — neither option nor env set ⇒ `set_seed` not
+  called (green-on-arrival). RED confirmed firsthand (6 genuine failures + 2 guards passing) before
+  GREEN; no synthetic RED.
+- **Enabling baseline commit (separate, `d0989408`):** committed the owner's concurrent 14-file `R/`
+  + `test_modPyramid.R` automated formatter pass (integer literals, quote style) on owner request, to
+  give 8e-5 a clean baseline; re-verified behaviorally inert (regression held at 2166). A follow-on
+  `docs:` commit regenerated 3 man pages (`appServer`, `modSummaryStatsServer`, `savePlotToFile`) the
+  reformat desynced — the formatter had also rewrapped `#'` roxygen comments and changed
+  `savePlotToFile`'s defaults to integer (`width=8L`), which would have tripped `R CMD check` codoc.
+- **Verify:** non-e2e regression **2180 `expectation_success` / 0 failed / 0 error / 156 skip /
+  5 pre-existing `modPyramid` warnings / 0 non-e2e offenders** (= the 2166 baseline + 14 new
+  expectations; default analytical path unchanged — every existing test passes with the gate unset).
+  **`devtools::check()` = 0 errors / 0 warnings / 3 NOTEs** (all pre-existing or environmental: the
+  stale `spelling.Rout.save` baseline, "future file timestamps", non-standard top-level dev files —
+  the S35 baseline; no new `gatedSeed` "no visible global" NOTE, confirming the lintr single-file
+  flag is a stale-namespace artifact resolved by full-package analysis). Phase-3E runtime smoke:
+  `runModularApp()` (working-tree source via `load_all`, so the hook is active) serves **HTTP 200** on
+  the default gate-unset path. Lint net-zero on the changed `R/`.
+- **Scope / docs:** the default analytical numerics are unchanged (gate is a no-op by default) →
+  **CHANGELOG only, no `NEWS.md` bullet** (consistent with the modular-parity precedent). 8e-5
+  enables the *optional exact-value* assertion tier in 8e-6 but does not block it (8e-6 can use
+  Option-C structural invariants regardless).
+
 ### 2026-06-10 — Phase 8e-4 (Error-States + Boundary-Conditions): namespace fix + interaction revival; boot tautologies → behavioral active-pane assertions (issue #40, Session 45)
 - **Deliverable (implementation):** plan slice **8e-4**
   (`docs/planning/phase8e-assertion-strengthening-subplan.md` §5) — the FIRST 8e slice that is

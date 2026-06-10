@@ -134,6 +134,9 @@ modGeneticValueServer <- function(id, pedigree) {
     gvResults <- eventReactive(input$runAnalysis, {
       req(pedigree())
 
+      # E2E determinism hook (gated; no-op in production). See gatedSeed().
+      gatedSeed("nprcgenekeepr.gva_seed", "NPRC_GVA_SEED")
+
       withProgress(message = "Running genetic value analysis...", {
         ped <- pedigree()
 

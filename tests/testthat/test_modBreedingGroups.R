@@ -1297,3 +1297,170 @@ test_that("withKinship=TRUE threads through to a non-NULL per-group kinship", {
     }
   )
 })
+
+# ============================================================================
+# 8e-5: env/option-gated set_seed() determinism hook (issue #40)
+# Browser-free (testServer) specification of the Option-A gate placed at the
+# top of the breedingGroups eventReactive:
+#   seed <- getOption("nprcgenekeepr.bg_seed",
+#                     as.integer(Sys.getenv("NPRC_BG_SEED", NA)))
+#   if (!is.na(seed)) set_seed(seed)
+# Gate unset => no-op => default group-formation path unchanged.
+# ============================================================================
+
+test_that("modBreedingGroupsServer: bg_seed option makes group formation deterministic", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- data.frame(
+    id = paste0("Animal", 1:20),
+    sire = rep(NA, 20),
+    dam = rep(NA, 20),
+    sex = rep(c("M", "F"), 10),
+    stringsAsFactors = FALSE
+  )
+  old_opts <- options(nprcgenekeepr.bg_seed = 42L)
+  on.exit(options(old_opts), add = TRUE)
+  Sys.unsetenv("NPRC_BG_SEED")
+
+  groupsA <- NULL
+  groupsB <- NULL
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(pedigree = shiny::reactive({ test_ped }), geneticValues = NULL),
+    {
+      session$setInputs(animalSource = "all", nGroups = 3,
+                        maxKinship = 0.25, sexRatio = "none")
+      session$setInputs(formGroups = 1)
+      groupsA <<- session$getReturned()$groups()
+    }
+  )
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(pedigree = shiny::reactive({ test_ped }), geneticValues = NULL),
+    {
+      session$setInputs(animalSource = "all", nGroups = 3,
+                        maxKinship = 0.25, sexRatio = "none")
+      session$setInputs(formGroups = 1)
+      groupsB <<- session$getReturned()$groups()
+    }
+  )
+
+  # Capture must be non-vacuous (a true comparison, not NULL == NULL).
+  expect_true(length(groupsA) > 0L)
+  expect_identical(groupsA, groupsB)
+})
+
+test_that("modBreedingGroupsServer: bg_seed option triggers set_seed with that seed", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- data.frame(
+    id = paste0("Animal", 1:20),
+    sire = rep(NA, 20),
+    dam = rep(NA, 20),
+    sex = rep(c("M", "F"), 10),
+    stringsAsFactors = FALSE
+  )
+  recorder <- new.env(parent = emptyenv())
+  recorder$called <- FALSE
+  recorder$seed <- NULL
+  local_mocked_bindings(
+    set_seed = function(seed = 1L) {
+      recorder$called <- TRUE
+      recorder$seed <- seed
+      invisible(NULL)
+    }
+  )
+  old_opts <- options(nprcgenekeepr.bg_seed = 42L)
+  on.exit(options(old_opts), add = TRUE)
+  Sys.unsetenv("NPRC_BG_SEED")
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(pedigree = shiny::reactive({ test_ped }), geneticValues = NULL),
+    {
+      session$setInputs(animalSource = "all", nGroups = 3,
+                        maxKinship = 0.25, sexRatio = "none")
+      session$setInputs(formGroups = 1)
+      session$getReturned()$groups()
+    }
+  )
+
+  expect_true(recorder$called)
+  expect_equal(recorder$seed, 42L)
+})
+
+test_that("modBreedingGroupsServer: no seed set => set_seed is NOT called (default path)", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- data.frame(
+    id = paste0("Animal", 1:20),
+    sire = rep(NA, 20),
+    dam = rep(NA, 20),
+    sex = rep(c("M", "F"), 10),
+    stringsAsFactors = FALSE
+  )
+  recorder <- new.env(parent = emptyenv())
+  recorder$called <- FALSE
+  local_mocked_bindings(
+    set_seed = function(seed = 1L) {
+      recorder$called <- TRUE
+      invisible(NULL)
+    }
+  )
+  old_opts <- options(nprcgenekeepr.bg_seed = NULL)
+  on.exit(options(old_opts), add = TRUE)
+  Sys.unsetenv("NPRC_BG_SEED")
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(pedigree = shiny::reactive({ test_ped }), geneticValues = NULL),
+    {
+      session$setInputs(animalSource = "all", nGroups = 3,
+                        maxKinship = 0.25, sexRatio = "none")
+      session$setInputs(formGroups = 1)
+      session$getReturned()$groups()
+    }
+  )
+
+  expect_false(recorder$called)
+})
+
+test_that("modBreedingGroupsServer: NPRC_BG_SEED env var is read when option absent", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- data.frame(
+    id = paste0("Animal", 1:20),
+    sire = rep(NA, 20),
+    dam = rep(NA, 20),
+    sex = rep(c("M", "F"), 10),
+    stringsAsFactors = FALSE
+  )
+  recorder <- new.env(parent = emptyenv())
+  recorder$called <- FALSE
+  recorder$seed <- NULL
+  local_mocked_bindings(
+    set_seed = function(seed = 1L) {
+      recorder$called <- TRUE
+      recorder$seed <- seed
+      invisible(NULL)
+    }
+  )
+  old_opts <- options(nprcgenekeepr.bg_seed = NULL)
+  on.exit(options(old_opts), add = TRUE)
+  Sys.setenv(NPRC_BG_SEED = "7")
+  on.exit(Sys.unsetenv("NPRC_BG_SEED"), add = TRUE)
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(pedigree = shiny::reactive({ test_ped }), geneticValues = NULL),
+    {
+      session$setInputs(animalSource = "all", nGroups = 3,
+                        maxKinship = 0.25, sexRatio = "none")
+      session$setInputs(formGroups = 1)
+      session$getReturned()$groups()
+    }
+  )
+
+  expect_true(recorder$called)
+  expect_equal(recorder$seed, 7L)
+})

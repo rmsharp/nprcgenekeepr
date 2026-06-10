@@ -1278,3 +1278,143 @@ test_that("modGeneticValueUI has subset filter and export controls", {
   expect_true(grepl("test-viewIds", ui_html))
   expect_true(grepl("test-downloadGVASubset", ui_html))
 })
+
+# ============================================================================
+# 8e-5: env/option-gated set_seed() determinism hook (issue #40)
+# Browser-free (testServer) specification of the Option-A gate placed at the
+# top of the gvResults eventReactive:
+#   seed <- getOption("nprcgenekeepr.gva_seed",
+#                     as.integer(Sys.getenv("NPRC_GVA_SEED", NA)))
+#   if (!is.na(seed)) set_seed(seed)
+# Gate unset => no-op => default analytical path unchanged.
+# ============================================================================
+
+test_that("modGeneticValueServer: gva_seed option makes gvResults deterministic", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeValidTestPed(nFounders = 10, nOffspring = 20)
+  old_opts <- options(nprcgenekeepr.gva_seed = 42L)
+  on.exit(options(old_opts), add = TRUE)
+  Sys.unsetenv("NPRC_GVA_SEED")
+
+  guA <- NULL
+  guB <- NULL
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(pedigree = shiny::reactive({ test_ped })),
+    {
+      session$setInputs(nIterations = 100)
+      session$setInputs(runAnalysis = 1)
+      res <- gvResults()
+      guA <<- res[order(res$id), "gu"]
+    }
+  )
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(pedigree = shiny::reactive({ test_ped })),
+    {
+      session$setInputs(nIterations = 100)
+      session$setInputs(runAnalysis = 1)
+      res <- gvResults()
+      guB <<- res[order(res$id), "gu"]
+    }
+  )
+
+  # Capture must be non-vacuous (a true comparison, not NULL == NULL).
+  expect_true(length(guA) > 0L)
+  expect_identical(guA, guB)
+})
+
+test_that("modGeneticValueServer: gva_seed option triggers set_seed with that seed", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeValidTestPed(nFounders = 6, nOffspring = 9)
+  recorder <- new.env(parent = emptyenv())
+  recorder$called <- FALSE
+  recorder$seed <- NULL
+  local_mocked_bindings(
+    set_seed = function(seed = 1L) {
+      recorder$called <- TRUE
+      recorder$seed <- seed
+      invisible(NULL)
+    }
+  )
+  old_opts <- options(nprcgenekeepr.gva_seed = 42L)
+  on.exit(options(old_opts), add = TRUE)
+  Sys.unsetenv("NPRC_GVA_SEED")
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(pedigree = shiny::reactive({ test_ped })),
+    {
+      session$setInputs(nIterations = 50)
+      session$setInputs(runAnalysis = 1)
+      gvResults()
+    }
+  )
+
+  expect_true(recorder$called)
+  expect_equal(recorder$seed, 42L)
+})
+
+test_that("modGeneticValueServer: no seed set => set_seed is NOT called (default path)", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeValidTestPed(nFounders = 6, nOffspring = 9)
+  recorder <- new.env(parent = emptyenv())
+  recorder$called <- FALSE
+  local_mocked_bindings(
+    set_seed = function(seed = 1L) {
+      recorder$called <- TRUE
+      invisible(NULL)
+    }
+  )
+  old_opts <- options(nprcgenekeepr.gva_seed = NULL)
+  on.exit(options(old_opts), add = TRUE)
+  Sys.unsetenv("NPRC_GVA_SEED")
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(pedigree = shiny::reactive({ test_ped })),
+    {
+      session$setInputs(nIterations = 50)
+      session$setInputs(runAnalysis = 1)
+      gvResults()
+    }
+  )
+
+  expect_false(recorder$called)
+})
+
+test_that("modGeneticValueServer: NPRC_GVA_SEED env var is read when option absent", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeValidTestPed(nFounders = 6, nOffspring = 9)
+  recorder <- new.env(parent = emptyenv())
+  recorder$called <- FALSE
+  recorder$seed <- NULL
+  local_mocked_bindings(
+    set_seed = function(seed = 1L) {
+      recorder$called <- TRUE
+      recorder$seed <- seed
+      invisible(NULL)
+    }
+  )
+  old_opts <- options(nprcgenekeepr.gva_seed = NULL)
+  on.exit(options(old_opts), add = TRUE)
+  Sys.setenv(NPRC_GVA_SEED = "7")
+  on.exit(Sys.unsetenv("NPRC_GVA_SEED"), add = TRUE)
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(pedigree = shiny::reactive({ test_ped })),
+    {
+      session$setInputs(nIterations = 50)
+      session$setInputs(runAnalysis = 1)
+      gvResults()
+    }
+  )
+
+  expect_true(recorder$called)
+  expect_equal(recorder$seed, 7L)
+})
