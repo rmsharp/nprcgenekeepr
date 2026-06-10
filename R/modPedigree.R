@@ -332,16 +332,24 @@ modPedigreeServer <- function(id, studbook, config = NULL) {
 
     # Return reactive values for use by other modules
     return(list(
-      pedigree = reactive({ pedigreeData() }),
-      processedPedigree = reactive({ processedPedigree() }),
-      focalAnimals = reactive({ focalIds() }),
-      nAnimals = reactive({ nrow(pedigreeData()) }),
+      pedigree = reactive({
+        pedigreeData()
+      }),
+      processedPedigree = reactive({
+        processedPedigree()
+      }),
+      focalAnimals = reactive({
+        focalIds()
+      }),
+      nAnimals = reactive({
+        nrow(pedigreeData())
+      }),
       populationCount = reactive({
         ped <- processedPedigree()
         sum(ped$population, na.rm = TRUE)
       }),
       isReady = reactive({
-        !is.null(pedigreeData()) && nrow(pedigreeData()) > 0
+        !is.null(pedigreeData()) && nrow(pedigreeData()) > 0L
       })
     ))
   })

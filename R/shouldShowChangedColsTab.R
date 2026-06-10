@@ -41,10 +41,8 @@ shouldShowChangedColsTab <- function(changedCols) {
   )
 
   for (field in fields) {
-    if (field %in% names(changedCols)) {
-      if (length(changedCols[[field]]) > 0L) {
+    if (field %in% names(changedCols) && length(changedCols[[field]]) > 0L) {
         return(TRUE)
-      }
     }
   }
 

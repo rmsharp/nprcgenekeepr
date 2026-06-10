@@ -12,12 +12,14 @@
 #' @param plot A ggplot2 plot object to save. If NULL, returns FALSE.
 #' @param file character. The file path to save the plot to.
 #' @param format character. Output format: "png", "pdf", or "svg".
-#'   Defaults to "png". If not specified, format is inferred from file extension.
+#'   Defaults to "png". If not specified, format is inferred from file
+#'   extension.
 #' @param width numeric. Plot width in inches. Defaults to 8.
 #' @param height numeric. Plot height in inches. Defaults to 6.
 #' @param dpi numeric. Resolution in dots per inch for raster formats.
 #'   Defaults to 150 for good quality web/screen use. Use 300 for print.
-#' @param units character. Units for width and height. Defaults to "in" (inches).
+#' @param units character. Units for width and height. Defaults to "in"
+#'   (inches).
 #' @param bg character. Background color. Defaults to "white".
 #'
 #' @examples
@@ -33,7 +35,7 @@
 #' @importFrom ggplot2 ggsave
 #' @export
 savePlotToFile <- function(plot, file, format = NULL,
-                            width = 8, height = 6, dpi = 150,
+                            width = 8L, height = 6L, dpi = 150L,
                             units = "in", bg = "white") {
   # Handle NULL plot
   if (is.null(plot)) {

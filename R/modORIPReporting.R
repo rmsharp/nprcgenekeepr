@@ -307,7 +307,7 @@ modORIPReportingServer <- function(id, pedigree = NULL, geneticValues = NULL,
     )
 
     # Return reactive values
-    return(list(
+    list(
       colonySummary = reactive({
         req(pedigree)
         ped <- pedigree()
@@ -318,6 +318,6 @@ modORIPReportingServer <- function(id, pedigree = NULL, geneticValues = NULL,
           nFounders = sum(isFounder(ped))
         )
       })
-    ))
+    )
   })
 }

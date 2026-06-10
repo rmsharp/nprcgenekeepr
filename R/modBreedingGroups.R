@@ -29,7 +29,7 @@ modBreedingGroupsUI <- function(id) {
 
     h3("Breeding Group Formation"),
     fluidRow(
-      column(4,
+      column(4L,
              wellPanel(
                h4(icon("users"), "Configuration"),
                radioButtons(ns("animalSource"), "Source:",
@@ -37,15 +37,16 @@ modBreedingGroupsUI <- function(id) {
                                         "Upload list" = "custom",
                                         "All available" = "all")),
                conditionalPanel(
-                 condition = sprintf("input['%s'] == 'topRanked'", ns("animalSource")),
+                 condition = sprintf("input['%s'] == 'topRanked'",
+                                     ns("animalSource")),
                  ns = ns,
                  numericInput(ns("nTopAnimals"), "Number of top animals:",
-                              value = 20, min = 5, max = 100)
+                              value = 20L, min = 5L, max = 100L)
                ),
                numericInput(ns("nGroups"), "Number of groups:",
-                            value = 3, min = 1, max = 20),
+                            value = 3L, min = 1L, max = 20L),
                numericInput(ns("maxKinship"), "Max kinship threshold:",
-                            value = 0.25, min = 0, max = 0.5, step = 0.01),
+                            value = 0.25, min = 0L, max = 0.5, step = 0.01),
                radioButtons(ns("sexRatio"), "Sex ratio:",
                             choices = c("None" = "none",
                                         "Harem (1M:NF)" = "harem",
@@ -90,8 +91,8 @@ modBreedingGroupsUI <- function(id) {
     ),
     fluidRow(
       column(
-        width = 10,
-        offset = 1,
+        width = 10L,
+        offset = 1L,
         style = paste0(
           "border: 1px solid lightgray; background-color: #EDEDED; ",
           "border-radius: 15px; box-shadow: 0 0 5px 2px #888; ",

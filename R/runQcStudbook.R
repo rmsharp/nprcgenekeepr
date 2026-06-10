@@ -38,20 +38,22 @@
 #'
 #' @importFrom futile.logger flog.debug
 #' @export
-runQcStudbook <- function(ped, minParentAge = 2.0, reportChanges = FALSE) {
+runQcStudbook <- function(ped,
+                          minParentAge = 2.0,
+                          reportChanges = FALSE) {
   # Helper to create empty qcResult structure
   getEmptyQcResult <- function() {
     list(
       errors = data.frame(
-        Row = integer(0),
-        Error = character(0),
-        Details = character(0),
+        Row = integer(0L),
+        Error = character(0L),
+        Details = character(0L),
         stringsAsFactors = FALSE
       ),
       warnings = data.frame(
-        Row = integer(0),
-        Warning = character(0),
-        Details = character(0),
+        Row = integer(0L),
+        Warning = character(0L),
+        Details = character(0L),
         stringsAsFactors = FALSE
       ),
       changedCols = list(),
@@ -67,16 +69,16 @@ runQcStudbook <- function(ped, minParentAge = 2.0, reportChanges = FALSE) {
 
   # Handle empty pedigree - return as-is with no errors
   if (nrow(ped) == 0L) {
-    return(list(
-      cleaned = ped,
-      qcResult = getEmptyQcResult()
-    ))
+    return(list(cleaned = ped, qcResult = getEmptyQcResult()))
   }
 
   # First pass: check for errors
-  # Always use reportChanges=TRUE internally to avoid NULL return from qcStudbook
+  # Always use reportChanges=TRUE internally to avoid NULL return from
+  # qcStudbook
   futile.logger::flog.debug(
-    paste0("runQcStudbook: First pass - calling qcStudbook with reportErrors=TRUE"),
+    paste0(
+      "runQcStudbook: First pass - calling qcStudbook with reportErrors=TRUE"
+    ),
     name = "nprcgenekeepr"
   )
 
@@ -89,28 +91,28 @@ runQcStudbook <- function(ped, minParentAge = 2.0, reportChanges = FALSE) {
       reportErrors = TRUE
     ),
     warning = function(cond) {
-      futile.logger::flog.debug(
-        paste0("runQcStudbook: First pass warning: ", conditionMessage(cond)),
-        name = "nprcgenekeepr"
-      )
+      futile.logger::flog.debug(paste0(
+        "runQcStudbook: First pass warning: ",
+        conditionMessage(cond)
+      ),
+      name = "nprcgenekeepr")
       getEmptyErrorLst()
     },
     error = function(cond) {
-      futile.logger::flog.debug(
-        paste0("runQcStudbook: First pass error: ", conditionMessage(cond)),
-        name = "nprcgenekeepr"
-      )
+      futile.logger::flog.debug(paste0("runQcStudbook: First pass error: ",
+                                       conditionMessage(cond)),
+                                name = "nprcgenekeepr")
       # Store the error message to report to user
       qcError <<- conditionMessage(cond)
       getEmptyErrorLst()
     }
   )
 
-  futile.logger::flog.debug(
-    paste0("runQcStudbook: First pass returned. errorLst class: ",
-           paste(class(errorLst), collapse = ", ")),
-    name = "nprcgenekeepr"
-  )
+  futile.logger::flog.debug(paste0(
+    "runQcStudbook: First pass returned. errorLst class: ",
+    paste(class(errorLst), collapse = ", ")
+  ),
+  name = "nprcgenekeepr")
 
   # Safety check: handle NULL (shouldn't happen with reportChanges=TRUE)
   if (is.null(errorLst)) {
@@ -135,8 +137,10 @@ runQcStudbook <- function(ped, minParentAge = 2.0, reportChanges = FALSE) {
   }
 
   futile.logger::flog.debug(
-    paste0("runQcStudbook: processQcStudbookResult returned. hasErrors: ",
-           qcResult$hasErrors),
+    paste0(
+      "runQcStudbook: processQcStudbookResult returned. hasErrors: ",
+      qcResult$hasErrors
+    ),
     name = "nprcgenekeepr"
   )
 
@@ -145,24 +149,23 @@ runQcStudbook <- function(ped, minParentAge = 2.0, reportChanges = FALSE) {
     qcResult$changedCols <- list()
     qcResult$hasChangedCols <- FALSE
     qcResult$warnings <- data.frame(
-      Row = integer(0),
-      Warning = character(0),
-      Details = character(0),
+      Row = integer(0L),
+      Warning = character(0L),
+      Details = character(0L),
       stringsAsFactors = FALSE
     )
   }
 
   # If there are errors, return NULL for cleaned data
   if (qcResult$hasErrors) {
-    return(list(
-      cleaned = NULL,
-      qcResult = qcResult
-    ))
+    return(list(cleaned = NULL, qcResult = qcResult))
   }
 
   # Second pass: get the cleaned data (no error reporting needed)
   futile.logger::flog.debug(
-    paste0("runQcStudbook: Second pass - calling qcStudbook with reportErrors=FALSE"),
+    paste0(
+      "runQcStudbook: Second pass - calling qcStudbook with reportErrors=FALSE"
+    ),
     name = "nprcgenekeepr"
   )
 
@@ -174,30 +177,34 @@ runQcStudbook <- function(ped, minParentAge = 2.0, reportChanges = FALSE) {
       reportErrors = FALSE
     ),
     warning = function(cond) {
-      futile.logger::flog.debug(
-        paste0("runQcStudbook: Second pass warning: ", conditionMessage(cond)),
-        name = "nprcgenekeepr"
-      )
+      futile.logger::flog.debug(paste0(
+        "runQcStudbook: Second pass warning: ",
+        conditionMessage(cond)
+      ),
+      name = "nprcgenekeepr")
       NULL
     },
     error = function(cond) {
-      futile.logger::flog.debug(
-        paste0("runQcStudbook: Second pass error: ", conditionMessage(cond)),
-        name = "nprcgenekeepr"
-      )
+      futile.logger::flog.debug(paste0(
+        "runQcStudbook: Second pass error: ",
+        conditionMessage(cond)
+      ),
+      name = "nprcgenekeepr")
       NULL
     }
   )
 
   futile.logger::flog.debug(
-    paste0("runQcStudbook: Second pass returned. cleanedPed is NULL: ",
-           is.null(cleanedPed),
-           if (!is.null(cleanedPed)) paste0(", rows: ", nrow(cleanedPed)) else ""),
+    paste0(
+      "runQcStudbook: Second pass returned. cleanedPed is NULL: ",
+      is.null(cleanedPed),
+      if (!is.null(cleanedPed))
+        paste0(", rows: ", nrow(cleanedPed))
+      else
+        ""
+    ),
     name = "nprcgenekeepr"
   )
 
-  list(
-    cleaned = cleanedPed,
-    qcResult = qcResult
-  )
+  list(cleaned = cleanedPed, qcResult = qcResult)
 }

@@ -171,8 +171,8 @@ test_that("modPyramidServer handles input changes", {
       expect_equal(input$ageUnit, "years")
 
       # Test bin size
-      session$setInputs(ageBin = 5)
-      expect_equal(input$ageBin, 5)
+      session$setInputs(ageBin = 5L)
+      expect_equal(input$ageBin, 5L)
 
       # Test color scheme
       session$setInputs(colorScheme = "viridis")
@@ -183,8 +183,8 @@ test_that("modPyramidServer handles input changes", {
       expect_false(input$showCounts)
 
       # Test plot height
-      session$setInputs(plotHeight = 800)
-      expect_equal(input$plotHeight, 800)
+      session$setInputs(plotHeight = 800L)
+      expect_equal(input$plotHeight, 800L)
 
       # Test age label size
       session$setInputs(ageLabelSize = 1.5)

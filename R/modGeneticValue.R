@@ -31,11 +31,12 @@ modGeneticValueUI <- function(id) {
 
     h3("Genetic Value Analysis"),
     fluidRow(
-      column(4,
+      column(4L,
              wellPanel(
                h4(icon("dna"), "Analysis Options"),
                numericInput(ns("nIterations"), "Gene Drop Iterations:",
-                            value = 1000, min = 100, max = 10000, step = 100),
+                            value = 1000L, min = 100L, max = 10000L,
+                            step = 100L),
                selectInput(ns("threshold"),
                            "Genome Uniqueness Threshold:",
                            choices = c(1L, 2L, 3L, 4L, 5L), selected = 4L),
@@ -44,7 +45,8 @@ modGeneticValueUI <- function(id) {
                checkboxInput(ns("calcMeanKinship"),
                              "Calculate Mean Kinship", TRUE),
                actionButton(ns("runAnalysis"), "Run Analysis",
-                            icon = icon("play"), class = "btn-primary btn-block")
+                            icon = icon("play"),
+                            class = "btn-primary btn-block")
              ),
              wellPanel(
                style = "background-color: #f8f9fa;",
@@ -66,19 +68,21 @@ modGeneticValueUI <- function(id) {
                )
              )
       ),
-      column(8,
+      column(8L,
              tabsetPanel(
                tabPanel("Rankings",
                         br(),
-                        numericInput(ns("topN"), "Show top N:", value = 20, min = 5),
+                        numericInput(ns("topN"), "Show top N:", value = 20L,
+                                     min = 5L),
                         textAreaInput(
                           ns("viewIds"),
                           paste("Filter by IDs (comma, space, semicolon, or",
                                 "newline separated; blank = all):"),
-                          rows = 2),
+                          rows = 2L),
                         actionButton(ns("view"), "Filter View"),
                         downloadButton(ns("downloadRankings"), "Export All"),
-                        downloadButton(ns("downloadGVASubset"), "Export Subset"),
+                        downloadButton(ns("downloadGVASubset"),
+                                       "Export Subset"),
                         br(), br(),
                         DT::DTOutput(ns("rankingsTable"))
                ),
@@ -111,7 +115,8 @@ modGeneticValueUI <- function(id) {
 #' @references
 #' Lacy, R.C. (1989) \emph{Zoo Biology}, \strong{8}, 111-123.
 #'
-#' @importFrom shiny moduleServer reactive eventReactive withProgress incProgress
+#' @importFrom shiny moduleServer reactive eventReactive withProgress
+#'             incProgress
 #' @export
 modGeneticValueServer <- function(id, pedigree) {
   moduleServer(id, function(input, output, session) {
@@ -239,7 +244,10 @@ modGeneticValueServer <- function(id, pedigree) {
       fullRes <- fullResults()
 
       # Use indivMeanKin and gu column names from reportGV
-      mkCol <- if ("indivMeanKin" %in% names(results)) "indivMeanKin" else "meanKinship"
+      mkCol <- if ("indivMeanKin" %in% names(results))
+                 "indivMeanKin"
+               else
+                 "meanKinship"
       guCol <- if ("gu" %in% names(results)) "gu" else "genomeUniqueness"
 
       summaryData <- data.frame(

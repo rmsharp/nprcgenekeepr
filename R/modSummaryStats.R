@@ -32,8 +32,8 @@ modSummaryStatsUI <- function(id) {
     # Summary stats HTML guidance at top
     fluidRow(
       column(
-        10,
-        offset = 1,
+        10L,
+        offset = 1L,
         style = paste(
           "border: 1px solid lightgray; background-color: #EDEDED;",
           "border-radius: 25px; box-shadow: 0 0 5px 2px #888; padding: 10px;"
@@ -50,7 +50,7 @@ modSummaryStatsUI <- function(id) {
 
     # Export buttons row (with popover descriptions)
     fluidRow(
-      column(2, offset = 1,
+      column(2L, offset = 1L,
              shinyBS::popify(
                downloadButton(ns("downloadKinship"), "Export Kinship Matrix"),
                title = NULL,
@@ -59,27 +59,30 @@ modSummaryStatsUI <- function(id) {
                  "in the user selected directory."
                )
              )),
-      column(2,
+      column(2L,
              shinyBS::popify(
-               downloadButton(ns("downloadMaleFounders"), "Export Male Founders"),
+               downloadButton(ns("downloadMaleFounders"),
+                              "Export Male Founders"),
                title = NULL,
                content = paste0(
                  "This exports the male founder pedigree records to ",
                  "a CSV file to the user selected directory."
                )
              )),
-      column(2,
+      column(2L,
              shinyBS::popify(
-               downloadButton(ns("downloadFemaleFounders"), "Export Female Founders"),
+               downloadButton(ns("downloadFemaleFounders"),
+                              "Export Female Founders"),
                title = NULL,
                content = paste0(
                  "This exports the female founder pedigree records ",
                  "to a CSV file to the user selected directory."
                )
              )),
-      column(3,
+      column(3L,
              shinyBS::popify(
-               downloadButton(ns("downloadFirstOrder"), "Export First-Order Relationships"),
+               downloadButton(ns("downloadFirstOrder"),
+                              "Export First-Order Relationships"),
                title = NULL,
                content = paste0(
                  "This exports all first-order relations to a CSV file ",
@@ -90,18 +93,20 @@ modSummaryStatsUI <- function(id) {
     br(),
     # Additional relationship export buttons
     fluidRow(
-      column(3, offset = 1,
+      column(3L, offset = 1L,
              shinyBS::popify(
-               downloadButton(ns("downloadRelationships"), "Export All Relationships"),
+               downloadButton(ns("downloadRelationships"),
+                              "Export All Relationships"),
                title = NULL,
                content = paste0(
                  "This exports all pairwise relationship designations ",
                  "to a CSV file."
                )
              )),
-      column(3,
+      column(3L,
              shinyBS::popify(
-               downloadButton(ns("downloadRelationClasses"), "Export Relationship Classes"),
+               downloadButton(ns("downloadRelationClasses"),
+                              "Export Relationship Classes"),
                title = NULL,
                content = paste0(
                  "This exports the relationship class frequency table ",
@@ -113,7 +118,7 @@ modSummaryStatsUI <- function(id) {
 
     # Summary statistics output
     fluidRow(
-      column(10, offset = 1, htmlOutput(ns("summaryStats")))
+      column(10L, offset = 1L, htmlOutput(ns("summaryStats")))
     ),
     br(),
 
@@ -121,8 +126,8 @@ modSummaryStatsUI <- function(id) {
     fluidRow(
       # Left column - Histograms
       column(
-        5,
-        offset = 1,
+        5L,
+        offset = 1L,
         plotOutput(ns("mkHist"), width = "400px", height = "400px"),
         br(),
         shinyBS::popify(
@@ -150,7 +155,8 @@ modSummaryStatsUI <- function(id) {
         plotOutput(ns("guHist"), width = "400px", height = "400px"),
         br(),
         shinyBS::popify(
-          downloadButton(ns("downloadGuHist"), "Export Genome Uniqueness Histogram"),
+          downloadButton(ns("downloadGuHist"),
+                         "Export Genome Uniqueness Histogram"),
           title = NULL,
           content = paste0(
             "This exports the Genome Uniqueness histogram as PNG ",
@@ -162,7 +168,7 @@ modSummaryStatsUI <- function(id) {
 
       # Right column - Box plots
       column(
-        5,
+        5L,
         plotOutput(ns("mkBox"), width = "400px", height = "400px"),
         br(),
         shinyBS::popify(
@@ -190,7 +196,8 @@ modSummaryStatsUI <- function(id) {
         plotOutput(ns("guBox"), width = "400px", height = "400px"),
         br(),
         shinyBS::popify(
-          downloadButton(ns("downloadGuBox"), "Export Genome Uniqueness Box Plot"),
+          downloadButton(ns("downloadGuBox"),
+                         "Export Genome Uniqueness Box Plot"),
           title = NULL,
           content = paste0(
             "This exports Genome Uniqueness box plot as a PNG ",
@@ -205,15 +212,16 @@ modSummaryStatsUI <- function(id) {
     # Population genetics terms HTML at bottom
     fluidRow(
       column(
-        10,
-        offset = 1,
+        10L,
+        offset = 1L,
         style = paste(
           "border: 1px solid lightgray; background-color: #EDEDED;",
           "border-radius: 25px; box-shadow: 0 0 5px 2px #888; padding: 10px;"
         ),
         withMathJax(
           includeHTML(
-            system.file("extdata", "ui_guidance", "population_genetics_terms.html",
+            system.file("extdata", "ui_guidance",
+                        "population_genetics_terms.html",
                         package = "nprcgenekeepr")
           )
         )
@@ -233,7 +241,8 @@ modSummaryStatsUI <- function(id) {
 #'   \item Summary statistics (counts, mean kinship, genome uniqueness)
 #'   \item Histograms and box plots for genetic value distributions
 #'   \item Relationship classification using \code{convertRelationships()}
-#'   \item Relationship class frequency tables using \code{makeRelationClassesTable()}
+#'   \item Relationship class frequency tables using
+#'         \code{makeRelationClassesTable()}
 #'   \item First-order relative counts using \code{countFirstOrder()}
 #'   \item Export functionality for kinship matrix, founders, and relationships
 #' }
@@ -254,7 +263,8 @@ modSummaryStatsUI <- function(id) {
 #' @param id character vector of length 1. Module namespace identifier.
 #' @param geneticValues reactive returning genetic value analysis results.
 #'   Must be a data frame with columns \code{id}, \code{meanKinship}, and
-#'   \code{genomeUniqueness}. Optional \code{zScore} column enables z-score plots.
+#'   \code{genomeUniqueness}. Optional \code{zScore} column enables z-score
+#'    plots.
 #' @param pedigree reactive returning pedigree data frame with columns
 #'   \code{id}, \code{sire}, \code{dam}, and \code{sex}. Optionally \code{gen}.
 #' @param kinshipMatrix optional reactive returning kinship matrix. If NULL,
@@ -266,11 +276,13 @@ modSummaryStatsUI <- function(id) {
 #'
 #' @seealso \code{\link{modSummaryStatsUI}} for the user interface
 #' @seealso \code{\link{convertRelationships}} for relationship classification
-#' @seealso \code{\link{makeRelationClassesTable}} for relationship class summary
+#' @seealso \code{\link{makeRelationClassesTable}} for relationship class
+#'          summary
 #' @seealso \code{\link{countFirstOrder}} for first-order relative counting
 #' @seealso \code{\link{kinship}} for kinship matrix calculation
 #'
-#' @importFrom shiny moduleServer reactive renderPlot renderUI downloadHandler req
+#' @importFrom shiny moduleServer reactive renderPlot renderUI downloadHandler
+#'                   req
 #' @importFrom grDevices dev.off png
 #' @importFrom graphics hist boxplot par plot.new text
 #' @importFrom stats median
@@ -387,7 +399,8 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
         ggplot2::theme_classic() +
         ggplot2::xlab("Kinship") +
         ggplot2::ylab("Frequency") +
-        ggplot2::ggtitle("Distribution of Individual Mean Kinship Coefficients") +
+        ggplot2::ggtitle(
+          "Distribution of Individual Mean Kinship Coefficients") +
         ggplot2::geom_vline(ggplot2::aes(xintercept = avg),
                    color = "red",
                    linetype = "dashed")
@@ -619,7 +632,8 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
           tags$li(paste("Mean kinship (average):",
                         sprintf("%.4f", mean(gv$meanKinship, na.rm = TRUE)))),
           tags$li(paste("Genome uniqueness (average):",
-                        sprintf("%.4f", mean(gv$genomeUniqueness, na.rm = TRUE))))
+                        sprintf("%.4f", mean(gv$genomeUniqueness,
+                                             na.rm = TRUE))))
         ),
         founderTbl,
         br(),
@@ -707,7 +721,8 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
     )
 
     output$downloadFirstOrder <- downloadHandler(
-      filename = function() paste0("first_order_relationships_", Sys.Date(), ".csv"),
+      filename = function() paste0("first_order_relationships_", Sys.Date(),
+                                   ".csv"),
       content = function(file) {
         req(pedigree())
         counts <- firstOrderData()
@@ -724,7 +739,9 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
     )
 
     output$downloadRelationClasses <- downloadHandler(
-      filename = function() paste0("relationship_classes_", Sys.Date(), ".csv"),
+      filename = function() {
+        paste0("relationship_classes_", Sys.Date(), ".csv")
+      },
       content = function(file) {
         classes <- relationClassData()
         write.csv(classes, file, row.names = FALSE)
@@ -736,7 +753,7 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
       filename = function() paste0("mk_histogram_", Sys.Date(), ".png"),
       content = function(file) {
         ggplot2::ggsave(file, plot = mkHistogramPlot(),
-                        width = 8, height = 6, dpi = 100)
+                        width = 8L, height = 6L, dpi = 100L)
       }
     )
 
@@ -745,7 +762,8 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
       content = function(file) {
         plot <- zscoreHistogramPlot()
         if (!is.null(plot)) {
-          ggplot2::ggsave(file, plot = plot, width = 8, height = 6, dpi = 100)
+          ggplot2::ggsave(file, plot = plot, width = 8L, height = 6L,
+                          dpi = 100L)
         }
       }
     )
@@ -754,7 +772,7 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
       filename = function() paste0("gu_histogram_", Sys.Date(), ".png"),
       content = function(file) {
         ggplot2::ggsave(file, plot = guHistogramPlot(),
-                        width = 8, height = 6, dpi = 100)
+                        width = 8L, height = 6L, dpi = 100L)
       }
     )
 
@@ -762,7 +780,7 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
       filename = function() paste0("mk_boxplot_", Sys.Date(), ".png"),
       content = function(file) {
         ggplot2::ggsave(file, plot = meanKinshipBoxPlotGG(),
-                        width = 8, height = 6, dpi = 100)
+                        width = 8L, height = 6L, dpi = 100L)
       }
     )
 
@@ -771,7 +789,8 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
       content = function(file) {
         plot <- zscoreBoxPlotGG()
         if (!is.null(plot)) {
-          ggplot2::ggsave(file, plot = plot, width = 8, height = 6, dpi = 100)
+          ggplot2::ggsave(file, plot = plot, width = 8L, height = 6L,
+                          dpi = 100L)
         }
       }
     )
@@ -780,12 +799,12 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
       filename = function() paste0("gu_boxplot_", Sys.Date(), ".png"),
       content = function(file) {
         ggplot2::ggsave(file, plot = guBoxPlotGG(),
-                        width = 8, height = 6, dpi = 100)
+                        width = 8L, height = 6L, dpi = 100L)
       }
     )
 
     # Return reactive values for use by other modules
-    return(list(
+    list(
       summaryData = reactive({
         req(geneticValues())
         gv <- geneticValues()
@@ -807,6 +826,6 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
       meanKinshipBoxPlot = reactive({ meanKinshipBoxPlotGG() }),
       zscoreBoxPlot = reactive({ zscoreBoxPlotGG() }),
       guBoxPlot = reactive({ guBoxPlotGG() })
-    ))
+    )
   })
 }

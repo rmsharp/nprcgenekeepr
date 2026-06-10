@@ -24,18 +24,20 @@ modPyramidUI <- function(id) {
 
     h3("Age-Sex Pyramid Analysis"),
     fluidRow(
-      column(3,
+      column(3L,
              wellPanel(
                selectInput(ns("ageUnit"), "Age Unit:",
                            choices = c("Years" = "years", "Months" = "months")),
-               numericInput(ns("ageBin"), "Bin Size:", value = 2, min = 1, max = 10),
+               numericInput(ns("ageBin"), "Bin Size:", value = 2L, min = 1L,
+                            max = 10L),
                selectInput(ns("colorScheme"), "Color Scheme:",
-                           choices = c("Default" = "default", "Viridis" = "viridis")),
+                           choices = c("Default" = "default",
+                                       "Viridis" = "viridis")),
                hr(),
                checkboxInput(ns("showCounts"), "Show counts", TRUE),
                hr(),
                sliderInput(ns("plotHeight"), "Plot Height (pixels):",
-                           min = 400, max = 1500, value = 600, step = 50),
+                           min = 400L, max = 1500L, value = 600L, step = 50L),
                helpText(
                  "Increase height for better visibility with many age groups",
                         style =
@@ -58,7 +60,7 @@ modPyramidUI <- function(id) {
                )
              )
       ),
-      column(9,
+      column(9L,
              tabsetPanel(
                tabPanel("Plot", uiOutput(ns("pyramidPlotUI"))),
                tabPanel("Statistics", tableOutput(ns("pyramidStats")))
@@ -88,7 +90,7 @@ modPyramidServer <- function(id, pedigreeData) {
 
     # Dynamic plot container with adjustable height
     output$pyramidPlotUI <- renderUI({
-      height <- if (!is.null(input$plotHeight)) input$plotHeight else 600
+      height <- if (!is.null(input$plotHeight)) input$plotHeight else 600L
       plotOutput(ns("pyramidPlot"), height = paste0(height, "px"))
     })
 

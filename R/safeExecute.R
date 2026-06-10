@@ -64,7 +64,7 @@ safeExecute <- function(expr, module = "unknown", default = NULL,
           shiny::showNotification(
             paste("Error in", module, ":", conditionMessage(e)),
             type = "error",
-            duration = 10
+            duration = 10L
           )
         }
       }

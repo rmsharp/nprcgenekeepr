@@ -52,15 +52,15 @@ processQcStudbookResult <- function(errorLst) {
   # Initialize result structure
   result <- list(
     errors = data.frame(
-      Row = integer(0),
-      Error = character(0),
-      Details = character(0),
+      Row = integer(0L),
+      Error = character(0L),
+      Details = character(0L),
       stringsAsFactors = FALSE
     ),
     warnings = data.frame(
-      Row = integer(0),
-      Warning = character(0),
-      Details = character(0),
+      Row = integer(0L),
+      Warning = character(0L),
+      Details = character(0L),
       stringsAsFactors = FALSE
     ),
     changedCols = list(),
@@ -181,14 +181,16 @@ processQcStudbookResult <- function(errorLst) {
         result$warnings <- rbind(
           result$warnings,
           makeWarningRow("Column name case changed",
-                         paste(errorLst$changedCols$caseChange, collapse = ", "))
+                         paste(errorLst$changedCols$caseChange,
+                               collapse = ", "))
         )
       }
       if (length(errorLst$changedCols$spaceRemoved) > 0L) {
         result$warnings <- rbind(
           result$warnings,
           makeWarningRow("Spaces removed from column names",
-                         paste(errorLst$changedCols$spaceRemoved, collapse = ", "))
+                         paste(errorLst$changedCols$spaceRemoved,
+                               collapse = ", "))
         )
       }
     }

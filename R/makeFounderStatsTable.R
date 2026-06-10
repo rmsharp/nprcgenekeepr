@@ -41,24 +41,24 @@ makeFounderStatsTable <- function(founderStats) {
   }
 
   # Extract values with defaults
-  total <- if (!is.null(founderStats$total)) founderStats$total else 0
+  total <- if (!is.null(founderStats$total)) founderStats$total else 0L
   nMale <- if (!is.null(founderStats$nMaleFounders)) {
     founderStats$nMaleFounders
   } else {
-    0
+    0L
   }
   nFemale <- if (!is.null(founderStats$nFemaleFounders)) {
     founderStats$nFemaleFounders
   } else {
-    0
+    0L
   }
   fe <- if (!is.null(founderStats$fe)) {
-    round(founderStats$fe, 2)
+    round(founderStats$fe, 2L)
   } else {
     NA
   }
   fg <- if (!is.null(founderStats$fg)) {
-    round(founderStats$fg, 2)
+    round(founderStats$fg, 2L)
   } else {
     NA
   }
@@ -66,25 +66,25 @@ makeFounderStatsTable <- function(founderStats) {
   # Build HTML table
   html <- paste0(
     '<table class="table table-condensed table-striped">',
-    '<thead>',
-    '<tr>',
-    '<th>Known Founders</th>',
-    '<th>Female Founders</th>',
-    '<th>Male Founders</th>',
-    '<th>Founder Equivalents (FE)</th>',
-    '<th>Founder Genome Equivalents (FG)</th>',
-    '</tr>',
-    '</thead>',
-    '<tbody>',
-    '<tr>',
-    '<td>', as.character(total), '</td>',
-    '<td>', as.character(nFemale), '</td>',
-    '<td>', as.character(nMale), '</td>',
-    '<td>', ifelse(is.na(fe), "N/A", as.character(fe)), '</td>',
-    '<td>', ifelse(is.na(fg), "N/A", as.character(fg)), '</td>',
-    '</tr>',
-    '</tbody>',
-    '</table>'
+    "<thead>",
+    "<tr>",
+    "<th>Known Founders</th>",
+    "<th>Female Founders</th>",
+    "<th>Male Founders</th>",
+    "<th>Founder Equivalents (FE)</th>",
+    "<th>Founder Genome Equivalents (FG)</th>",
+    "</tr>",
+    "</thead>",
+    "<tbody>",
+    "<tr>",
+    "<td>", as.character(total), "</td>",
+    "<td>", as.character(nFemale), "</td>",
+    "<td>", as.character(nMale), "</td>",
+    "<td>", ifelse(is.na(fe), "N/A", as.character(fe)), "</td>",
+    "<td>", ifelse(is.na(fg), "N/A", as.character(fg)), "</td>",
+    "</tr>",
+    "</tbody>",
+    "</table>"
   )
 
   html

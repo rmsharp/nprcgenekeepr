@@ -19,12 +19,13 @@
 #' @seealso \code{\link{modInputServer}} for data input module
 #' @seealso \code{\link{modPedigreeServer}} for pedigree browser module
 #' @seealso \code{\link{modGeneticValueServer}} for genetic value analysis
-#' @seealso \code{\link{shouldShowChangedColsTab}} for changed columns tab logic
+#' @seealso \code{\link{shouldShowChangedColsTab}} for changed columns tab
+#'  logic
 #'
 #' @importFrom shiny reactiveValues reactiveVal observeEvent updateNavbarPage
 #'         updateTabsetPanel reactive observe req insertTab removeTab
-#'         showNotification tabPanel div h3 p hr icon uiOutput verbatimTextOutput
-#'         isolate
+#'         showNotification tabPanel div h3 p hr icon uiOutput
+#'         verbatimTextOutput isolate
 #' @importFrom futile.logger flog.logger flog.threshold flog.debug flog.info
 #'         INFO DEBUG appender.file
 #' @export
@@ -70,7 +71,8 @@ appServer <- function(input, output, session) {
   # Navigation Button Handlers
   # ========================================
   observeEvent(input$goto_input, {
-    futile.logger::flog.debug("goto_input button clicked", name = "nprcgenekeepr")
+    futile.logger::flog.debug("goto_input button clicked",
+                              name = "nprcgenekeepr")
     updateNavbarPage(session, "mainNavbar", selected = "Input")
   })
 
@@ -104,10 +106,12 @@ appServer <- function(input, output, session) {
   # Update shared data when input/QC completes
   # Use tryCatch to prevent errors from blocking reactive graph
   observe({
-    studbook <- tryCatch(inputResults$cleanedStudbook(), error = function(e) NULL)
+    studbook <- tryCatch(inputResults$cleanedStudbook(),
+                         error = function(e) NULL)
     if (!is.null(studbook)) {
       shared$currentStudbook <- studbook
-      shared$qcResults <- tryCatch(inputResults$qcSummary(), error = function(e) NULL)
+      shared$qcResults <- tryCatch(inputResults$qcSummary(),
+                                   error = function(e) NULL)
     }
   })
 
@@ -129,7 +133,8 @@ appServer <- function(input, output, session) {
       if (hasErrors) {
         # Show error notification and switch to Errors tab within Input module
         showNotification(
-          paste0("QC found ", qcSummary$errors, " error(s). Check the Errors tab."),
+          paste0("QC found ", qcSummary$errors,
+                 " error(s). Check the Errors tab."),
           type = "error",
           duration = 10
         )
@@ -137,7 +142,8 @@ appServer <- function(input, output, session) {
         updateTabsetPanel(session, "dataInput-mainTabs", selected = "Errors")
       } else if (hasWarnings) {
         showNotification(
-          paste0("QC found ", qcSummary$warnings, " warning(s). Check the Warnings tab."),
+          paste0("QC found ", qcSummary$warnings,
+                 " warning(s). Check the Warnings tab."),
           type = "warning",
           duration = 8
         )
@@ -148,7 +154,8 @@ appServer <- function(input, output, session) {
           type = "message",
           duration = 5
         )
-        updateTabsetPanel(session, "dataInput-mainTabs", selected = "QC Summary")
+        updateTabsetPanel(session, "dataInput-mainTabs",
+                          selected = "QC Summary")
       }
     })
   })
@@ -165,8 +172,10 @@ appServer <- function(input, output, session) {
   observe({
     # Get errorLst and file name from input module
     errorLst <- tryCatch(inputResults$errorLst(), error = function(e) NULL)
-    fileName <- tryCatch(inputResults$pedigreeFileName(), error = function(e) NULL)
-    changedCols <- tryCatch(inputResults$changedCols(), error = function(e) NULL)
+    fileName <- tryCatch(inputResults$pedigreeFileName(),
+                         error = function(e) NULL)
+    changedCols <- tryCatch(inputResults$changedCols(),
+                            error = function(e) NULL)
 
     # Check if we should show the Error List tab
     showErrors <- !is.null(errorLst) && !is.null(fileName) &&
@@ -189,7 +198,8 @@ appServer <- function(input, output, session) {
         )
       } else if (!showErrors && errorTabShown()) {
         # Remove Error List tab
-        removeTab(inputId = "mainNavbar", target = "Error List", session = session)
+        removeTab(inputId = "mainNavbar", target = "Error List",
+                  session = session)
         errorTabShown(FALSE)
         futile.logger::flog.debug(
           "Removed Error List tab",
