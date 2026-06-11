@@ -1,5 +1,12 @@
 url: https://github.com/rmsharp/nprcgenekeepr
 
+# pkgdown builds the site here instead of the default `docs/`, because
+# `docs/methodology/` and `docs/planning/` are git-tracked inside `docs/`
+# (see .gitignore). A fresh CI clone's `docs/` therefore has no pkgdown
+# sentinel, so `clean_site()` refuses to wipe it. Honored by build_site();
+# the pkgdown.yaml workflow passes a matching dest_dir to build_site_github_pages().
+destination: pkgdown_site
+
 home:
   title: Genetic Tools for Colony Management
   description: Provides genetic tools for colony management and is a derivation

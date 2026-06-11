@@ -58,6 +58,7 @@ README\.*\.png$
 ^LICENSE\.md$
 ^\.lintr$
 ^pkgdown$
+^pkgdown_site$
 ^dev$
 ^doc$
 ^Meta$
