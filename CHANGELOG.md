@@ -14,6 +14,29 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-11 — Fix issue #42: repoint pkgdown output off `docs/`; fix unmasked vignette bug; pkgdown GREEN on master (Session 52)
+- **Deliverable (CI config + vignette fix / run-and-observe):** the `pkgdown` workflow failed its Build-site step on
+  a fresh CI clone because `docs/methodology/` + `docs/planning/` are git-tracked inside pkgdown's default `docs/`
+  output dir (no `pkgdown.yml` sentinel → `clean_site()` refuses to wipe a dir it didn't build → exit 1).
+- **Fix = Option 2 (repoint pkgdown), not the issue's recommended Option 1 (relocate the doc trees).** Surfaced the
+  choice via `AskUserQuestion`: Option 1 conflicts with the methodology framework's own `docs/methodology/`
+  convention — the synced `methodology_dashboard.py` scores that path and the synced `SESSION_RUNNER.md`/
+  `SAFEGUARDS.md` cross-link it (none durably editable in-repo). Verified from pkgdown 2.1.1 source + empirically
+  that `build_site_github_pages()` overrides `_pkgdown.yml`'s `destination:` via `override = list(destination =
+  dest_dir)`, so the yml alone is insufficient for CI. Commit `fcc154e8`: workflow `dest_dir = "pkgdown_site"` +
+  deploy `folder: docs → pkgdown_site`; `_pkgdown.yml destination: pkgdown_site`; `.gitignore += pkgdown_site/`;
+  `.Rbuildignore += ^pkgdown_site$`. No file moves; `docs/methodology`/`docs/planning`/dashboard/synced cross-refs
+  untouched; gh-pages URL unchanged; no `R/` or `tests/` change.
+- **Unmasked + fixed a separate latent bug** (commit `e89975c8`): with `clean_site` resolved, the build reached
+  vignette rendering and failed on `ColonyManagerTutorial.Rmd` — its error table paired `names(getEmptyErrorLst())`
+  (10 types) with 9 hardcoded descriptions ("arguments imply differing number of rows: 10, 9"). The NEW-45 "no
+  period in IDs" feature added the `invalidIdChars` type without updating the vignette; added the missing
+  description. This vignette is `.Rbuildignore`'d, so R CMD check never builds it — only pkgdown does (it ignores
+  `.Rbuildignore`) — which is why it was green on all 5 R-CMD-check platforms yet fatal to pkgdown.
+- **Validation (firsthand):** PR #43 pkgdown run `27361729368` (fresh-clone) SUCCESS → merged `--merge` to master
+  `c6ad23dd` → master push run `27362288625` Build site **SUCCESS** + Deploy **SUCCESS**. **Closed issue #42.**
+  Remaining CI red is lint (#30, known/accepted).
+
 ### 2026-06-11 — Promote `add-methodology` → master (PR #41) and live-validate `shinytest2`; close issue #40 (Session 51)
 - **Deliverable (integration / run-and-observe):** promoted the long-lived `add-methodology` branch
   (105 commits / 356 files / +44,473−2,892; master a strict ancestor → 0 behind → clean conflict-free merge) to
