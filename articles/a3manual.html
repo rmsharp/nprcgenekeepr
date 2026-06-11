@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Genetic Management Tools Manual • nprcgenekeepr</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Genetic Management Tools Manual">
 </head>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">nprcgenekeepr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,7 +71,8 @@ Amanda Vinson, and R. Mark Sharp</h4>
     
     
 <p><a href="#introduction">Introduction</a><br><a href="#summary-of-major-functions">Summary of Major
-Functions</a><br><a href="#installation">Installation</a><br><a href="#running-shiny-application">Running Shiny Application</a><br><a href="#input">Input</a><br><a href="#pedigree-browser">Pedigree Browser</a><br><a href="#genetic-value-analysis">Genetic Value Analysis</a><br><a href="#summary-statistics">Summary Statistics</a><br><a href="#breeding-group-formation">Breeding Group Formation</a><br><a href="#orip-reporting">ORIP Reporting</a><br><a href="#algorithm-breeding-group-formation">Algorithm: Breeding Group
+Functions</a><br><a href="#installation">Installation</a><br><a href="#running-shiny-application">Running Shiny Application</a><br>
+[Input]<br><a href="#pedigree-browser">Pedigree Browser</a><br><a href="#genetic-value-analysis">Genetic Value Analysis</a><br><a href="#summary-statistics">Summary Statistics</a><br><a href="#breeding-group-formation">Breeding Group Formation</a><br><a href="#orip-reporting">ORIP Reporting</a><br><a href="#algorithm-breeding-group-formation">Algorithm: Breeding Group
 Formation</a><br><a href="#algorithm-genome-uniqueness">Algorithm: Genome
 Uniqueness</a></p>
 <div class="section level2">
@@ -242,143 +243,539 @@ standard R scripts. However, it was originally designed to be used
 within a Shiny application that can be started with:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span> <span class="co"># nolint: undesirable_function_linter</span></span>
-<span><span class="fu"><a href="../reference/runGeneKeepR.html">runGeneKeepR</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/runModularApp.html">runModularApp</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>(<code><a href="../reference/runGeneKeepR.html">runGeneKeepR()</a></code> also still launches the application but
+is deprecated in favor of <code><a href="../reference/runModularApp.html">runModularApp()</a></code>.)</p>
 </div>
 <div class="section level2">
-<h2 id="input">Input<a class="anchor" aria-label="anchor" href="#input"></a>
+<h2 id="data-input-and-quality-control">Data Input and Quality Control<a class="anchor" aria-label="anchor" href="#data-input-and-quality-control"></a>
 </h2>
-<p>The Input tab is the starting point for all analyses. The file should
-be a delimited, regular text file with a header row specifying the
-columns. The tab provides information on the allowable columns in input
-files, and how the columns will be used in quality control of the data.
-Quality control of studbook data occurs automatically upon file
-upload.</p>
-<p>Presently, the only columns required are those specifying the Ego ID,
-Sire ID, Dam ID, and Sex. The remaining columns listed are optional, but
-will be used if they are present in the uploaded file. The table of the
-tab describes how these optional columns will be used. Additionally, the
-panel on the left of this tab provides options that can be used during
-the upload and QC process, such as specifying the field separator used
-in the uploaded file.</p>
-<p>During quality control, a flag is added for the current, living
-population. This flag is generated based on the information columns
-provided and is fairly specific to how the breeding population is
-defined at ONPRC. Two of the options for specifying the population of
-interest can be toggled through this panel, however. Normally, the
-breeding colony is restricted to Indian-origin, SPF 4 animals. These two
-restrictions can be turned off by setting the options on this panel.</p>
-<p>Additionally, the population of interest can be specified directly in
-either the input file, or entered on the Pedigree Browser tab.</p>
+<p>The Data Input and Quality Control tab is the starting point for all
+analyses. This module (<code>modInput</code>) provides a comprehensive
+interface for uploading and validating pedigree and genotype data.</p>
+<div class="section level3">
+<h3 id="file-type-options">File Type Options<a class="anchor" aria-label="anchor" href="#file-type-options"></a>
+</h3>
+<p>The sidebar panel allows you to select how you are submitting
+data:</p>
+<ul>
+<li>
+<strong>File Type</strong>: Choose between Excel (.xlsx, .xls) or
+Text (.csv, .txt) formats</li>
+<li>
+<strong>File Content</strong>: Select from four options:
+<ul>
+<li>Pedigree(s) file only; genotypes not provided</li>
+<li>Pedigree(s) and genotypes in one file</li>
+<li>Pedigree(s) and genotypes in separate files</li>
+<li>Focal animals only; pedigree built from database</li>
+</ul>
+</li>
+</ul>
+<p>For text files, you can specify the separator (Comma, Semicolon, or
+Tab).</p>
+</div>
+<div class="section level3">
+<h3 id="required-and-optional-columns">Required and Optional Columns<a class="anchor" aria-label="anchor" href="#required-and-optional-columns"></a>
+</h3>
+<p>The only columns required are those specifying the Ego ID, Sire ID,
+Dam ID, and Sex. The remaining columns listed are optional but will be
+used if they are present in the uploaded file. The Input Format tab
+provides detailed information on allowable columns and how they will be
+used in quality control.</p>
+</div>
+<div class="section level3">
+<h3 id="minimum-parent-age">Minimum Parent Age<a class="anchor" aria-label="anchor" href="#minimum-parent-age"></a>
+</h3>
+<p>You can specify the minimum parent age (in years) that parents must
+be at the birthdate of an offspring. The default is 2.0 years. This
+helps identify potential data entry errors where parents appear too
+young.</p>
+</div>
+<div class="section level3">
+<h3 id="quality-control-results">Quality Control Results<a class="anchor" aria-label="anchor" href="#quality-control-results"></a>
+</h3>
+<p>After clicking “Read and Check Pedigree”, the module processes your
+data and displays results across multiple tabs:</p>
+<ul>
+<li>
+<strong>QC Summary</strong>: Shows counts of records processed,
+errors found, and warnings</li>
+<li>
+<strong>Errors</strong>: Lists critical issues that must be fixed
+before proceeding</li>
+<li>
+<strong>Warnings</strong>: Lists potential issues that may need
+review</li>
+<li>
+<strong>Cleaned Data</strong>: Preview of the validated studbook
+data</li>
+</ul>
+<p>Each results tab includes a download button to export the data for
+offline review.</p>
+</div>
+<div class="section level3">
+<h3 id="module-interface">Module Interface<a class="anchor" aria-label="anchor" href="#module-interface"></a>
+</h3>
+<p>The <code>modInput</code> module returns reactive values that can be
+used by downstream modules:</p>
+<ul>
+<li>
+<code>cleanedStudbook</code>: The QC-cleaned studbook data
+frame</li>
+<li>
+<code>genotypeData</code>: Genotype data if provided</li>
+<li>
+<code>qcSummary</code>: Summary counts of errors, warnings, and
+records</li>
+<li>
+<code>minParentAge</code>: The minimum parent age value</li>
+<li>
+<code>isReady</code>: Logical indicating if data passed QC and is
+ready for analysis</li>
+</ul>
+</div>
 </div>
 <div class="section level2">
 <h2 id="pedigree-browser">Pedigree Browser<a class="anchor" aria-label="anchor" href="#pedigree-browser"></a>
 </h2>
-<p>The Pedigree Browser tab allows the user to view the input data,
-specify a population to examine, and output the cleaned studbook or
-trimmed pedigree.</p>
-<p>Upon uploading a studbook file, the data goes through the quality
-control process described on the Input File Format tab. The cleaned
-version is displayed on this tab. By default, the entire uploaded
-studbook will be available for viewing on this tab. The first 10 rows
-will automatically be shown, but this range can be adjusted using the
-input boxes at the top. The default setting of showing only the first 10
-rows is due to the size of the full ONPRC studbook: loading all 32,000
-animals can cause the application to be slow.</p>
-<p>The tab also contains functionality for trimming the pedigree. By
-checking the provided box, the studbook that was uploaded will be
-trimmed down to just the ancestors of the currently specified
-population. This will remove any lineages that haven’t contributed to
-the focal group.</p>
-<p>As stated above, this tab will also allow the user to directly
-specify a population to examine. In the top half of the tab, there is an
-input box to specify the focal set of animals. The population flag can
-be reset by adding the desired animal IDs to the box. Once the
-population flag has been set to the desired group of animals, all
-further analyses will be relative to this group.</p>
+<p>The Pedigree Browser tab (<code>modPedigree</code>) allows users to
+view, filter, and export pedigree data after quality control validation.
+It provides a three-column layout for documentation, focal animal
+selection, and display options.</p>
+<div class="section level3">
+<h3 id="layout-overview">Layout Overview<a class="anchor" aria-label="anchor" href="#layout-overview"></a>
+</h3>
+<p>The interface is organized into three panels:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Left Panel</strong>: Displays guidance documentation
+explaining how to use the pedigree browser and interpret the data
+columns.</p></li>
+<li>
+<p><strong>Middle Panel - Focal Animals</strong>: Provides controls
+for specifying a subset of animals to focus the analysis on:</p>
+<ul>
+<li>
+<strong>Text Area</strong>: Enter animal IDs manually (one per line
+or comma-separated). IDs can be pasted directly from Excel.</li>
+<li>
+<strong>File Upload</strong>: Browse for and select a CSV file
+containing focal animal IDs.</li>
+<li>
+<strong>Update Button</strong>: Click “Update Focal Animals” to
+apply changes.</li>
+<li>
+<strong>Clear Checkbox</strong>: Check to clear all focal animals
+and reset the selection.</li>
+</ul>
+</li>
+<li>
+<p><strong>Right Panel - Display Options</strong>:</p>
+<ul>
+<li>
+<strong>Display Unknown IDs</strong>: Toggle display of unknown IDs
+(those beginning with “U”) that are created for animals with only one
+known parent.</li>
+<li>
+<strong>Trim Pedigree</strong>: When checked, trims the pedigree to
+include only the focal animals and their relatives, removing unrelated
+lineages.</li>
+<li>
+<strong>Export Button</strong>: Download the current pedigree view
+as a CSV file.</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section level3">
+<h3 id="data-table">Data Table<a class="anchor" aria-label="anchor" href="#data-table"></a>
+</h3>
+<p>Below the control panels, an interactive data table displays the
+pedigree data. Features include:</p>
+<ul>
+<li>Adjustable page length (default 15 rows)</li>
+<li>Horizontal scrolling for wide data</li>
+<li>Regex-enabled search across all columns</li>
+<li>Sortable columns</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="module-interface-1">Module Interface<a class="anchor" aria-label="anchor" href="#module-interface-1"></a>
+</h3>
+<p>The <code>modPedigree</code> module accepts input from
+<code>modInput</code> and returns reactive values for downstream
+modules:</p>
+<ul>
+<li>
+<code>pedigree</code>: The filtered pedigree data frame</li>
+<li>
+<code>focalAnimals</code>: Character vector of focal animal IDs</li>
+<li>
+<code>nAnimals</code>: Count of animals in the current view</li>
+<li>
+<code>isReady</code>: Logical indicating if pedigree data is
+available</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a>
+</h3>
+<ol style="list-style-type: decimal">
+<li>After data passes QC in the Input tab, navigate to the Pedigree
+Browser.</li>
+<li>Optionally specify focal animals to narrow your analysis.</li>
+<li>Adjust display options as needed.</li>
+<li>A population must be defined before proceeding to Genetic Value
+Analysis.</li>
+</ol>
+</div>
 </div>
 <div class="section level2">
 <h2 id="genetic-value-analysis">Genetic Value Analysis<a class="anchor" aria-label="anchor" href="#genetic-value-analysis"></a>
 </h2>
-<p>The Genetic Value Analysis tab provides all of the options needed for
-producing a genetic value analysis report. The specifics of generating
-the genetic value analysis report are described on the
-<strong><em>Genetic Value Analysis and Breeding Group
-Description</em></strong> tab.</p>
-<p>When the analysis is begun, it will generate a genetic value analysis
-for the currently-specified population in the pedigree. If no population
-has been specified, the entire pedigree will go into the analysis. This
-can be problematic, as the function for calculating the pairwise kinship
-matrix cannot handle large pedigrees. The kinship calculation is known
-to handle pedigree files containing up to 6000 individuals. It will not,
-however, handle the whole ONPRC rhesus studbook (~24,000 animals). The
-exact maximum pedigree size is not currently known and will need to be
-tested. Due to these problems, the input studbook will automatically be
-trimmed to the ancestors of the currently-specified population before
-the genetic value analysis is begun.</p>
-<p>The genome uniqueness threshold input box allows the user to specify
-what constitutes a ‘unique’ allele in the gene-drop simulation. The
-algorithm description later in this document provides a more in-depth
-explanation of how the genome uniqueness calculation uses this
-information. By default, the gene-drop simulation underlying the genome
-uniqueness calculation considers an individual as unique if no other
-members of the current population have inherited the same allele during
-an iteration of the gene-drop. This can be adjusted using the drop-down
-box to allow up to four other animals to have inherited the allele and
-still consider it unique.</p>
-<p>After the report has been generated, it can be subset to view a
-specific group of the animals using the text input box. Both the
-currently-viewed subset and the full report can be exported to a file
-from here.</p>
+<p>The Genetic Value Analysis tab (<code>modGeneticValue</code>)
+provides tools for computing genetic value metrics for your population.
+This module calculates Mean Kinship and Genome Uniqueness scores to help
+identify genetically valuable animals.</p>
+<div class="section level3">
+<h3 id="analysis-options">Analysis Options<a class="anchor" aria-label="anchor" href="#analysis-options"></a>
+</h3>
+<p>The left panel contains controls for configuring the analysis:</p>
+<ul>
+<li><p><strong>Gene Drop Iterations</strong>: Number of iterations for
+the gene-drop simulation (default: 5000, range: 100-10,000). More
+iterations provide more accurate genome uniqueness estimates but take
+longer to compute.</p></li>
+<li><p><strong>Calculate Genome Uniqueness</strong>: Toggle whether to
+run the gene-drop simulation to estimate genome uniqueness
+values.</p></li>
+<li><p><strong>Calculate Mean Kinship</strong>: Toggle whether to
+compute pairwise kinship coefficients and individual mean kinship
+values.</p></li>
+<li><p><strong>Minimum Breeding Age</strong>: Slider to set the minimum
+age (in years) for animals to be considered in the breeding population
+(default: 2 years).</p></li>
+<li><p><strong>Run Analysis</strong>: Click to start the genetic value
+computation.</p></li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="understanding-genetic-values">Understanding Genetic Values<a class="anchor" aria-label="anchor" href="#understanding-genetic-values"></a>
+</h3>
+<p>The information panel explains the key metrics:</p>
+<ul>
+<li><p><strong>Mean Kinship</strong>: The average kinship coefficient
+between an individual and all other members of the population.
+<strong>Lower values are better</strong> as they indicate the animal is
+less related to the population.</p></li>
+<li><p><strong>Genome Uniqueness</strong>: The proportion of an
+individual’s genome that is unique in the population based on gene-drop
+simulation. <strong>Higher values are better</strong> as they indicate
+the animal carries rare genetic material.</p></li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="results-tabs">Results Tabs<a class="anchor" aria-label="anchor" href="#results-tabs"></a>
+</h3>
+<p>After running the analysis, results are displayed across three
+tabs:</p>
+<ol style="list-style-type: decimal">
+<li>
+<p><strong>Rankings</strong>: Interactive table showing animals
+ranked by genetic value.</p>
+<ul>
+<li>Adjust “Show top N” to view more or fewer animals</li>
+<li>Download button exports the full rankings to CSV</li>
+</ul>
+</li>
+<li><p><strong>Visualizations</strong>: Scatter plot showing the
+relationship between mean kinship and genome uniqueness values.</p></li>
+<li><p><strong>Summary</strong>: Statistical summary of genetic value
+metrics including means, standard deviations, and
+distributions.</p></li>
+</ol>
+</div>
+<div class="section level3">
+<h3 id="module-interface-2">Module Interface<a class="anchor" aria-label="anchor" href="#module-interface-2"></a>
+</h3>
+<p>The <code>modGeneticValue</code> module returns reactive values for
+downstream use:</p>
+<ul>
+<li>
+<code>geneticValues</code>: Data frame with genetic value metrics
+for all animals</li>
+<li>
+<code>topAnimals</code>: Subset of highest-value animals</li>
+<li>
+<code>nAnalyzed</code>: Count of animals included in the
+analysis</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="performance-notes">Performance Notes<a class="anchor" aria-label="anchor" href="#performance-notes"></a>
+</h3>
+<p>The kinship calculation can handle pedigrees up to approximately
+6,000 individuals. For larger pedigrees, the input studbook will
+automatically be trimmed to the ancestors of the currently-specified
+population before analysis begins.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="summary-statistics">Summary Statistics<a class="anchor" aria-label="anchor" href="#summary-statistics"></a>
 </h2>
-<p>This tab provides some descriptions of the population being examined
-after the genetic value analysis has been run. The tab reports the
-number of known founders, female founders, male founders, founder
-equivalents, and founder genome equivalents with the first table, which
-has a single row. The second table has a row for Mean Kinship and a row
-for Genome Uniqueness. Each row has the Tukey five number summary, which
-is the minimum, 1<sup>st</sup> quartile, mean, median, 3<sup>rd</sup>
-quartile, and maximum. Lastly, the tab displays histograms and box plots
-of the distribution of mean kinship coefficients, the distribution of
-mean kinship coefficient Z-scores, Distribution of genome uniqueness
-values.</p>
+<p>The Summary Statistics tab (<code>modSummaryStats</code>) displays
+comprehensive visualizations and statistics from the genetic value
+analysis results.</p>
+<div class="section level3">
+<h3 id="interface-layout">Interface Layout<a class="anchor" aria-label="anchor" href="#interface-layout"></a>
+</h3>
+<p>The module provides a structured display with three main
+sections:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Guidance Panel</strong>: At the top, an informational
+panel explains how to interpret the statistics and
+visualizations.</p></li>
+<li>
+<p><strong>Export Buttons</strong>: A row of download buttons for
+exporting:</p>
+<ul>
+<li>Kinship Matrix (CSV)</li>
+<li>Male Founders (CSV)</li>
+<li>Female Founders (CSV)</li>
+<li>First-Order Relationships (CSV)</li>
+</ul>
+</li>
+<li>
+<p><strong>Population Summary</strong>: Dynamic HTML output
+showing:</p>
+<ul>
+<li>Total number of animals analyzed</li>
+<li>Average mean kinship across the population</li>
+<li>Average genome uniqueness across the population</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section level3">
+<h3 id="visualizations">Visualizations<a class="anchor" aria-label="anchor" href="#visualizations"></a>
+</h3>
+<p>The module displays six plots arranged in two columns:</p>
+<p><strong>Left Column - Histograms</strong>: - Mean Kinship Coefficient
+Distribution - Mean Kinship Z-Score Distribution - Genome Uniqueness
+Distribution</p>
+<p><strong>Right Column - Box Plots</strong>: - Mean Kinship Coefficient
+- Mean Kinship Z-Score - Genome Uniqueness</p>
+<p>Each plot has an accompanying download button to export as PNG.</p>
+</div>
+<div class="section level3">
+<h3 id="statistical-summaries">Statistical Summaries<a class="anchor" aria-label="anchor" href="#statistical-summaries"></a>
+</h3>
+<p>The tab reports founder statistics including: - Number of known
+founders, male founders, female founders - Founder equivalents and
+founder genome equivalents</p>
+<p>For Mean Kinship and Genome Uniqueness, displays the Tukey
+five-number summary: minimum, 1<sup>st</sup> quartile, median, mean,
+3<sup>rd</sup> quartile, and maximum.</p>
+</div>
+<div class="section level3">
+<h3 id="module-interface-3">Module Interface<a class="anchor" aria-label="anchor" href="#module-interface-3"></a>
+</h3>
+<p>The <code>modSummaryStats</code> module accepts inputs from upstream
+modules and returns:</p>
+<ul>
+<li>
+<code>summaryData</code>: Reactive list containing:
+<ul>
+<li>
+<code>nAnimals</code>: Count of animals in the analysis</li>
+<li>
+<code>meanMK</code>: Average mean kinship value</li>
+<li>
+<code>meanGU</code>: Average genome uniqueness value</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="population-genetics-terms">Population Genetics Terms<a class="anchor" aria-label="anchor" href="#population-genetics-terms"></a>
+</h3>
+<p>At the bottom, a reference panel provides definitions of key
+population genetics terms used throughout the analysis.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="breeding-group-formation-1">Breeding Group Formation<a class="anchor" aria-label="anchor" href="#breeding-group-formation-1"></a>
 </h2>
-<p>The last major function of the R-package is to aid in generating
-breeding groups that avoid inter-animal relatedness. This tab allows you
-to build a number of breeding groups from a specified list of candidate
-animals. It also has an option to build a group by adding animals from a
-list of candidates to a currently-existing group.</p>
-<p>In the top half of the tab, there are entry boxes and menus to adjust
-the options of the analysis. By default, the analysis will ignore
-relatedness between animals that is more distant than the second cousin
-level, pairwise relatedness involving an animal under 1 year of age, and
-relatedness between all females. All of these options can be adjusted
-before the analysis is run, however.</p>
-<p>If the desire is to add animals to an existing group, the IDs of the
-candidate animals can be entered into the first text box (just as they
-would be if a new group were being generated). The IDs of the current
-group members can be added into the second text box. It should be noted
-that it will cause an error if the provided candidate animals or current
-group member IDs are not part of the population for which a genetic
-value analysis was run. The kinship matrix produced for this analysis
-provides the pairwise kinship values used by the group formation
-functions.</p>
-<p>After the simulation is done, the first group will be displayed
-automatically. The group being displayed can be changed with the
-drop-down menu. Whichever group is currently being displayed can then be
-downloaded with the export button.</p>
+<p>The Breeding Group Formation tab (<code>modBreedingGroups</code>)
+helps generate breeding groups that minimize inter-animal relatedness
+while maintaining genetic diversity.</p>
+<div class="section level3">
+<h3 id="configuration-options">Configuration Options<a class="anchor" aria-label="anchor" href="#configuration-options"></a>
+</h3>
+<p>The left panel provides controls for group formation:</p>
+<ul>
+<li>
+<p><strong>Source</strong>: Select which animals to use as
+candidates:</p>
+<ul>
+<li>
+<em>Top ranked</em>: Use the highest-ranked animals from the Genetic
+Value Analysis</li>
+<li>
+<em>Upload list</em>: Provide a custom list of candidate animal
+IDs</li>
+<li>
+<em>All available</em>: Use all animals in the current
+population</li>
+</ul>
+</li>
+<li><p><strong>Number of top animals</strong>: When using “Top ranked”
+source, specify how many of the highest genetic value animals to include
+(default: 20).</p></li>
+<li><p><strong>Number of groups</strong>: How many breeding groups to
+form (default: 3, range: 1-20).</p></li>
+<li><p><strong>Max kinship threshold</strong>: Maximum allowed kinship
+coefficient between group members (default: 0.25). Lower values create
+more genetically diverse groups but may result in fewer animals being
+placed.</p></li>
+<li>
+<p><strong>Sex ratio</strong>: Control the male-to-female
+composition:</p>
+<ul>
+<li>
+<em>None</em>: No sex ratio constraint</li>
+<li>
+<em>Harem (1M:NF)</em>: One male per group with multiple
+females</li>
+<li>
+<em>Custom</em>: Specify a custom ratio</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="results-display">Results Display<a class="anchor" aria-label="anchor" href="#results-display"></a>
+</h3>
+<p>After clicking “Form Groups”, results appear in two tabs:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Groups</strong>: Visual display of each formed group
+showing:
+<ul>
+<li>Group number and size</li>
+<li>Animal IDs and their genetic values</li>
+<li>Mean kinship within the group</li>
+</ul>
+</li>
+<li>
+<strong>Statistics</strong>: Summary table showing:
+<ul>
+<li>Number of animals per group</li>
+<li>Average kinship within each group</li>
+<li>Sex composition</li>
+<li>Unassigned animals (those that couldn’t be placed without exceeding
+kinship threshold)</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section level3">
+<h3 id="module-interface-4">Module Interface<a class="anchor" aria-label="anchor" href="#module-interface-4"></a>
+</h3>
+<p>The <code>modBreedingGroups</code> module returns reactive
+values:</p>
+<ul>
+<li>
+<code>groups</code>: List of data frames, one per breeding
+group</li>
+<li>
+<code>nGroups</code>: Number of groups successfully formed</li>
+<li>
+<code>unassigned</code>: IDs of animals that couldn’t be placed</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="algorithm-notes">Algorithm Notes<a class="anchor" aria-label="anchor" href="#algorithm-notes"></a>
+</h3>
+<p>The group formation algorithm:</p>
+<ol style="list-style-type: decimal">
+<li>Calculates pairwise kinship for all candidate animals</li>
+<li>Iteratively assigns animals to groups while respecting the kinship
+threshold</li>
+<li>Optimizes for maximum genetic diversity within groups</li>
+<li>Respects sex ratio constraints when specified</li>
+</ol>
+<p>By default, the analysis ignores relatedness more distant than second
+cousins, pairwise relatedness involving animals under 1 year of age, and
+relatedness between females. The guidance panel at the bottom provides a
+table of kinship values for common relationship categories.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="genetic-value-analysis-and-breeding-group-formation-description">Genetic Value Analysis and Breeding Group Formation Description<a class="anchor" aria-label="anchor" href="#genetic-value-analysis-and-breeding-group-formation-description"></a>
 </h2>
-<p>This tab contains more in-depth descriptions of how the Genetic Value
-Analysis is created, and how breeding groups are formed by the
-program.</p>
+<p>The GV &amp; BG Description tab (<code>modGvAndBgDesc</code>)
+provides comprehensive documentation about the algorithms and
+methodologies used in genetic value analysis and breeding group
+formation.</p>
+<div class="section level3">
+<h3 id="purpose">Purpose<a class="anchor" aria-label="anchor" href="#purpose"></a>
+</h3>
+<p>This informational module serves as a reference for users who want to
+understand the scientific basis behind the calculations performed by the
+application. It displays detailed HTML documentation loaded from the
+package’s guidance files.</p>
+</div>
+<div class="section level3">
+<h3 id="content-overview">Content Overview<a class="anchor" aria-label="anchor" href="#content-overview"></a>
+</h3>
+<p>The documentation explains:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Genetic Value Analysis Algorithms</strong>:
+<ul>
+<li>How mean kinship coefficients are calculated</li>
+<li>The gene-drop simulation methodology for genome uniqueness</li>
+<li>Interpretation of genetic value metrics</li>
+</ul>
+</li>
+<li>
+<strong>Breeding Group Formation</strong>:
+<ul>
+<li>The optimization algorithm for minimizing within-group
+relatedness</li>
+<li>How sex ratio constraints are applied</li>
+<li>The iterative assignment process</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section level3">
+<h3 id="module-interface-5">Module Interface<a class="anchor" aria-label="anchor" href="#module-interface-5"></a>
+</h3>
+<p>The <code>modGvAndBgDesc</code> module is primarily
+informational:</p>
+<ul>
+<li>
+<code>modGvAndBgDescUI</code>: Renders the documentation panel with
+styled HTML content</li>
+<li>
+<code>modGvAndBgDescServer</code>: Minimal server logic (no reactive
+outputs)</li>
+</ul>
+<p>This module does not return reactive values as it serves only as a
+documentation reference for the other analysis modules.</p>
+</div>
+<div class="section level3">
+<h3 id="related-modules">Related Modules<a class="anchor" aria-label="anchor" href="#related-modules"></a>
+</h3>
+<ul>
+<li>See <code>modGeneticValue</code> for performing genetic value
+analysis</li>
+<li>See <code>modBreedingGroups</code> for forming breeding groups</li>
+<li>See <code>modSummaryStats</code> for viewing analysis results</li>
+</ul>
+</div>
 </div>
 <div class="section level2">
 <h2 id="orip-reporting">ORIP Reporting<a class="anchor" aria-label="anchor" href="#orip-reporting"></a>
@@ -651,7 +1048,7 @@ discovered. As of 20241223 95.70 percent of the lines are covered.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

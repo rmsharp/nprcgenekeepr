@@ -1,0 +1,8437 @@
+# Session Notes
+
+**Purpose:** Continuity between sessions. Each session reads this first
+and writes to it before closing out.
+
+------------------------------------------------------------------------
+
+## ACTIVE TASK
+
+**Task (Session 51 — current, 2026-06-11):** PUSH `add-methodology` →
+master and validate live (issue \#40 close-out):
+`git push -u origin add-methodology` → PR → merge → `workflow_dispatch`
+`shinytest2` on master → watch the 13 module-group folds + the two S34
+live-run watch items → CLOSE \#40 on a clean run. (DONE) **Started:**
+2026-06-11 **Status:** **DONE.** Promoted the long-lived
+`add-methodology` branch (105 commits / 356 files / +44,473−2,892;
+master a strict ancestor → 0 behind → clean, conflict-free merge) to
+**master via PR \#41** (merge commit `0363ffe3`, `--merge` to PRESERVE
+the multi-session TDD history — never squashed). **Pre-flight:** ran the
+documented build-equivalent gate
+([`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html) +
+`test_dir` non-e2e clean-regression read) = **2140 pass / 0 fail / 0 err
+/ 0 non-e2e offenders** (S49 baseline held); confirmed no branch
+protection on master. **Held the merge for the PR’s first-ever remote
+CI** instead of merging blind — it surfaced 4 reds, each triaged to root
+cause: **(1) pkgdown FAIL** = REAL & branch-introduced but
+doc-site-deploy-ONLY — `docs/methodology`+`docs/planning` are
+git-tracked inside pkgdown’s `docs/` output dir (`.gitignore:32-36`:
+`docs/*` ignored, `!docs/methodology/`/`!docs/planning/` un-ignored), so
+on a fresh clone `docs/` holds those 15 files + NO `pkgdown.yml`
+sentinel →
+[`pkgdown::clean_site()`](https://pkgdown.r-lib.org/reference/clean.html)/`check_dest_is_pkgdown()`
+refuses to clean → exit 1; **(2) lint FAIL** = known/accepted style debt
+(open issue **\#30**); **(3+4) codecov/patch+project FAIL** =
+external/advisory coverage thresholds (Shiny modules covered by opt-in
+E2E codecov doesn’t see; the `test-coverage` WORKFLOW itself passed).
+**R-CMD-check passed on ALL 5 platforms** (macOS, Windows, ubuntu
+release/devel/oldrel-1) + test-coverage passed → package correctness
+intact. Surfaced the merge decision via `AskUserQuestion`; owner chose
+**“merge now, fix pkgdown later”** → logged the pkgdown collision as
+**issue \#42** (NOT fixed this session — 1-and-done) and merged.
+**Post-merge live validation (the owner-designated gate):**
+`workflow_dispatch`-ed `shinytest2` on master → run **27356752221
+SUCCESS** (~19 min, \< 30-min timeout). Confirmed FIRSTHAND from the run
+log that all **13 per-module groups (fresh `Rscript` each)** reported
+`passed>0 failed=0 error=0` (app 7 · boundary 14 · breeding 26 ·
+data-ready 32 · error-states 15 · genetic-value 22 · home-nav 15 · input
+19 · pedigree 23 · pyramid 12 · settings-about 4 · summary-stats 8 ·
+workflow-integration 8 → “All 13 E2E module groups passed.”). **Both S34
+live-run watch items RESOLVED on the FIRST run:** (1) renv lib-path
+resolution under `RENV_CONFIG_AUTOLOADER_ENABLED=false` —
+`R CMD INSTALL` + every AppDriver subprocess booted
+[`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/);
+(2) the 23-in-one-process Chrome flake — the 8e-7 per-module
+fresh-process grouping produced ZERO transient errors (first
+environmental confirmation it holds; per-group isolation means any
+future transient reds only its own group + is independently
+re-dispatchable). **Closed \#40**
+(`gh issue close 40 --reason completed`) with a full validation comment
+(`#40 issuecomment-4682226145`). **Phase-3E = the live master
+`shinytest2` run itself** (real runner, real Chrome, real workflow —
+\#31). Close-out committed on `add-methodology` (the historical dev
+branch; SESSION_NOTES + CHANGELOG + PROJECT_LEARNINGS \#51) via explicit
+`git add` (\[macos-dupe-scan\]:
+`.DS_Store`/`..Rcheck/`/`PED_GV_AUDIT_2026-05-30.html` excluded).
+**\[news-vs-changelog\]** → CHANGELOG only. Transient (NOT committed):
+`/tmp/regression_s51.R`, `/tmp/pr_body_s51.md`, `/tmp/pkgdown_issue.md`,
+`/tmp/issue40_close.md`.
+
+**Session 50 Handoff Evaluation (by Session 51): Score 9/10.** What
+helped: the handoff named the EXACT sequence
+(push→PR→merge→dispatch→watch→close \#40), the two S34 watch items, the
+“clean (or clean-on-retry)” close criterion, the run-step line refs, and
+the precise per-group expectation (`passed>0 failed=0 error=0` × 13) —
+all mapped directly onto the deliverable and held under firsthand
+verification. The “branch NOT on remote / 105 ahead” framing was
+accurate (confirmed 105/0). What was missing (the one ding): no heads-up
+that the FIRST-EVER remote PR CI would expose pre-existing
+**pkgdown/lint/codecov** reds — S50’s work was CI-config-only and never
+pushed, so remote CI had never run against this branch’s `docs/` layout,
+and the pkgdown `docs/` collision (statically detectable from
+`.gitignore`) went unflagged; I discovered + triaged it live and
+surfaced the merge decision. What was wrong: nothing — every S50 fact
+held. ROI: very high.
+
+**Self-assessment (Session 51): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER in full, session-notes top, dashboard, git, issues)
+before any action. Pre-flight discipline: ran the build-equivalent gate
+(GREEN) + confirmed divergence/protection BEFORE the irreversible master
+merge (SAFEGUARDS “don’t start from a broken state”). Did NOT merge
+blind — held for the PR’s first remote CI, diagnosed all 4 reds to root
+cause (pkgdown `docs/` collision via `.gitignore`; lint=#30;
+codecov=advisory), surfaced the genuinely-owner’s merge decision via
+`AskUserQuestion` rather than presuming. Verified, didn’t assume:
+confirmed the merge landed (master contains `b68274d3`), confirmed each
+of the 13 folds firsthand from the run log (not “the step is green”),
+confirmed both S34 items. Stayed 1-and-done: logged the pkgdown fix as
+\#42 instead of scope-creeping it into the promotion. Honesty: stated
+plainly that one clean run confirms-but-doesn’t-prove the probabilistic
+flake is gone forever. Stakeholder corrections: 0 (the single decision
+point was posed + answered). Minor ding: a truly exhaustive pre-push
+audit could have PREDICTED the pkgdown failure from `.gitignore` before
+pushing (I read the workflow triggers and knew pkgdown would RUN, but
+didn’t predict it would FAIL until the log). Met/exceeded the S47–S50
+bar.
+
+**⇒ SUGGESTED NEXT = FIX pkgdown (issue \#42).** \#40 is CLOSED and the
+entire §8e / issue-#40 assertion-strengthening + CI-stability campaign
+is now code-complete AND live-validated on master. The cleanest
+follow-up deliverable is **\#42** — relocate `docs/methodology` +
+`docs/planning` OUT of pkgdown’s `docs/` output dir (Option 1 in \#42,
+keeps the published-site URL stable) or set a pkgdown `destination:`;
+then confirm the `pkgdown` workflow goes green on master. Other standing
+backlog candidates: **\#30** (lintr cleanup — would also green the lint
+check), **\#34** (integrate
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+in modInput, bug), **\#38/#32/#26** (configurable auto-gen ID format).
+**Branch model going forward:** the campaign is now ON master via PR
+\#41; **`add-methodology` remains the historical dev branch** and
+currently holds THIS Session 51 close-out — master got the code via the
+PR merge but NOT these close-out notes (they live on add-methodology;
+the next add-methodology→master sync, or a \#42 PR, carries them). Repo
+is left checked out on `add-methodology`. **For the executor of \#42:**
+root cause + 3 fix options are in issue \#42; after the fix, re-dispatch
+`pkgdown` (`gh workflow run pkgdown.yaml --ref master`) or push and
+watch the per-push run. **Key files:** `.gitignore:32-36` (the
+`docs/*` + un-ignore rules), `_pkgdown.yml` (no `destination:` →
+defaults to `docs/`), `.github/workflows/pkgdown.yaml`. **Gotchas:** (a)
+R-CMD-check is GREEN on master — don’t mistake the pkgdown red for a
+package-correctness problem; (b) the shinytest2 flake fix is confirmed
+on ONE live run, NOT proven-forever — if a future nightly reds a SINGLE
+group, re-dispatch (that’s the per-group isolation working, not
+necessarily a regression); (c) lint (#30) + codecov are independent
+reds, not caused by \#42.
+
+------------------------------------------------------------------------
+
+**⟢ Carried — Session 50 (8e-7 CI per-module fresh-process grouping,
+DONE; full detail below):** **Task (Session 50 — 2026-06-10):**
+IMPLEMENT slice **8e-7** (issue \#40, sub-plan §8e-7) — make
+`.github/workflows/shinytest2.yaml` run the 23 `^(app|e2e)-` E2E test
+files in **per-module groups, each in a fresh R process**, to defang the
+23-in-one-process Chrome flake (the S34 `[flake-aware-validation]`
+finding). TDD shape: **run-and-observe** (CI config; no RED→GREEN),
+gated `PRE-RED→run-and-observe` via `AskUserQuestion`. The group
+partition is statically checkable locally (select EXACTLY the 23 files,
+no overlap/gap, replicating testthat’s stripped-name match — Learning
+\#33c); the flake fix itself is **live-GitHub-runner-only** → ships
+UNVALIDATED locally (state in handoff, FM \#24’s cousin). (DONE)
+**Started:** 2026-06-10 **Status:** **DONE.** Converted the single
+23-files-in-one-process E2E run step in
+`.github/workflows/shinytest2.yaml` into a **single job that loops over
+13 per-module group regexes, each in a FRESH `Rscript` process**
+(owner-gated topology — single-job loop **over** a 13-leg matrix via
+`AskUserQuestion`; plan §8 “loop spawning Rscript per group” — 1× setup,
+faithful + cheapest). Caps any one R process at **≤3 files** (vs 23) →
+defuses the S34 “AppDriver process-count dragon” (~1 transient error / 5
+full-tier single-process runs). **Per group:**
+`test_dir(filter=rx, stop_on_failure=FALSE)` → `cat` a per-group
+`passed/failed/skipped/error` report → **fail/error\>0 ⇒
+`quit(status=1)` (checked FIRST)** → **passed==0 ⇒
+[`stop()`](https://rdrr.io/r/base/stop.html) silent-skip guard** (now
+PER GROUP — stronger than the old whole-run guard; a single-group filter
+drift can’t hide behind the others; a ZERO-match regex is separately
+caught by `test_dir`’s own “No test files found” abort). The bash loop
+runs ALL groups (full signal, one flake doesn’t skip the rest) and reds
+the job if ANY group failed — **preserving the `stop_on_failure` job
+semantics** + the job env / Chrome provisioning / `R CMD INSTALL` /
+`timeout-minutes:30` / removed `continue-on-error` (R6); each group
+wrapped in `::group::`/`::endgroup::` log folds. **TDD =
+run-and-observe** (CI config; no RED→GREEN, plan §6), gated
+`PRE-RED→run-and-observe` via `AskUserQuestion`. **\[ci-static-proof\]
+partition verified locally** (Learning \#33c — replicate testthat’s
+stripped-name `grepl` match): extracted the 13 regexes from the
+COMMITTED YAML and proved they select EXACTLY the 23 `^(app|e2e)-` files
+— **union==tier, no overlap, no gap, no stray** — applied against the
+full 182-file dir (the `app` near-misses
+`test_appServer_dynamicTabs`/`test_create_test_app` correctly untouched
+by `^app-`’s trailing dash). **YAML parses** (`yaml.safe_load`);
+**run-step `bash -n` clean**; **\[quote-safety\] the `Rscript -e '...'`
+block has ZERO single-quotes** (all R strings double-quoted; comments
+apostrophe-free — an apostrophe would close the bash single-quote and
+break the step; grep-confirmed). **\[phase-3E-smoke\] run-step LOGIC
+smoked firsthand** on a throwaway test dir (deterministic, no Chrome):
+pass→exit0, fail→exit1 (NOT mislabeled “executed nothing” — the
+fail-first reorder), skip→silent-skip guard→exit1, nomatch→`test_dir`
+abort→exit1 (all 4 branches). **⚠ The FLAKE mitigation itself is
+LIVE-RUNNER-ONLY** (environmental — FM \#24’s cousin):
+partition/guard/exit logic proven locally, but only the first live
+GitHub run can confirm the 23-in-one-process flake is gone — **NOT
+claimed fixed until a live run shows it.** **Scope = CI-config ONLY**
+(`shinytest2.yaml` + these notes); NO `R/`/`tests/` change → the suite
+is byte-identical, no regression run needed (the change alters only how
+CI INVOKES the suite). **\[news-vs-changelog\]** → CHANGELOG only.
+**Commit:** one `ci:`/`docs:` close-out (`shinytest2.yaml` + CHANGELOG +
+PROJECT_LEARNINGS \#50 + these notes) via explicit `git add`
+(\[macos-dupe-scan\]:
+`.DS_Store`/`..Rcheck/`/`PED_GV_AUDIT_2026-05-30.html` EXCLUDED). **Did
+NOT push or bundle the master push (separate deliverable; FM \#2/#18).**
+Re-proof scripts (NOT committed, transient): `/tmp/verify_8e7_yaml.R`
+(committed-list partition), `/tmp/smoke_8e7.sh` (run-step logic).
+
+**Session 49 Handoff Evaluation (by Session 50): Score 9/10.** What
+helped: named the exact file (`shinytest2.yaml`) + the design intent
+(per-module groups, fresh R process, defang the 23-in-one-process flake)
+with zero ambiguity; the **“statically checkable locally — replicate
+testthat’s stripped-name match in R, per Learning \#33c”** steer handed
+me the EXACT verification method that became the core of the
+deliverable; the **“ships UNVALIDATED locally / FM \#24 cousin / don’t
+claim the fix works until a live run”** framing pre-empted the
+over-claiming trap and correctly scoped Phase-3E to the run-step LOGIC
+(not the flake); the pointer to S34’s “What Session 34 Did” gave the
+root cause (Chrome process-count) + rate (~1/5); the plan §8e-7/§8
+references gave the preserve-list (env/guard/`stop_on_failure`) + the
+optional retry. What was missing (minor, not defects): the topology
+(separate steps vs loop vs matrix) was left open — legitimately an owner
+decision, which I surfaced as `AskUserQuestion`; and neither handoff nor
+plan flagged the guard-ORDERING subtlety (fail-check must precede the
+silent-skip guard) — I found it via the smoke (a refinement of new code,
+not a missing fact). What was wrong: nothing — all facts held under
+firsthand verification. ROI: very high — the Learning-#33c steer + the
+FM-#24-cousin framing were the two load-bearing inputs and both held.
+
+**Self-assessment (Session 50): 9/10.** Research before building: read
+SAFEGUARDS + SESSION_RUNNER in full, plan §8e-7/§8/§6/§11, S34’s flake
+characterization, and the current YAML end-to-end before any edit.
+Verified, didn’t assume: proved the partition with an executable check
+against the COMMITTED regexes (not just my draft), then smoked all 4
+run-step branches firsthand — **caught my own guard-ordering
+imperfection** (a real failure mislabeled as silent-skip) via the smoke
+and fixed it before commit, and proactively caught + neutralized a
+**quote-safety** hazard (apostrophes inside the bash-single-quoted `-e`
+block). Stakeholder corrections: 0 (both gates + the topology choice
+answered as posed). Honesty: explicitly scoped the flake fix as
+live-runner-only (did NOT claim it works) and kept the master push out
+of scope (1-and-done). Right tool: a deterministic partition is best
+proven by an executable check (the R script IS the adversarial proof),
+not an agent fan-out — used the script. Minor: my smoke HARNESS briefly
+showed false exit codes (`PIPESTATUS` inside a command substitution
+reads the assignment’s status, not Rscript’s) — I caught it because the
+results contradicted the visible R errors, root-caused it to the harness
+(the committed snippet was never wrong), and fixed it with `$?`.
+Met/exceeded the S47–S49 bar.
+
+**⇒ SUGGESTED NEXT = PUSH `add-methodology` → master** (a SEPARATE
+deliverable — NOT bundled here per FM \#2/#18). 8e-7 was the LAST slice
+in the §8e sub-plan → with it landed, the \#40 conversion + CI-stability
+campaign is code-complete. **The push is the gate that first exercises
+the TWO S34 live-run watch items:** (1) renv lib-path resolution under
+`RENV_CONFIG_AUTOLOADER_ENABLED=false` (the AppDriver subprocess
+resolving
+[`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/)
+from the SYSTEM lib), and (2) the **23-in-one-process Chrome flake** —
+now mitigated by 8e-7’s per-module fresh-process grouping but
+**UNVALIDATED until the first live run.** The `shinytest2.yaml`
+`schedule` + `workflow_dispatch` triggers only fire once the workflow is
+on the default branch (master). **For the executor:** branch
+`add-methodology` is still NOT on remote →
+`git push -u origin add-methodology`, open a PR → master, merge, then
+**manually `workflow_dispatch` the shinytest2 job** (don’t wait for
+07:00 UTC) and WATCH: each of the 13 module-group `::group::` log folds
+should report `passed>0 failed=0 error=0`; a transient Chrome error in
+ONE group now reds only that group’s line (re-dispatch to confirm
+flake-not-regression). **Only after a clean (or clean-on-retry) live
+run, CLOSE \#40** with a validation comment (per S34’s \#39-close
+precedent). **Key files for verification:**
+`.github/workflows/shinytest2.yaml` — the 8e-7 run step (`:112-173`;
+group list `:127-141`, per-group `Rscript -e` snippet `:145-167`); local
+re-proof scripts `/tmp/verify_8e7_yaml.R` + `/tmp/smoke_8e7.sh`
+(transient, not committed). **Gotchas:** (a) the per-group
+`Rscript -e '...'` snippet must stay **apostrophe-free** (bash
+single-quote) — if you edit it, re-grep for `'`; (b) check **fail/error
+BEFORE** the `passed==0` guard or a real failure gets mislabeled
+“executed nothing”; (c) the partition is re-provable with
+`Rscript /tmp/verify_8e7_yaml.R` (or rebuild it) if the file list
+changes; (d) `timeout-minutes:30` was kept as-is — if the sequential
+13-group run exceeds it on the live runner, bump it (watch item). Read
+plan §8/§8e-7 + S34’s “What Session 34 Did” FIRST.
+
+------------------------------------------------------------------------
+
+**⟢ Carried — Session 49 (8e-6c breeding-group flow, DONE; 8e-6
+COMPLETE; full detail below):** **Task (Session 49 — 2026-06-10):**
+IMPLEMENT slice **8e-6c** (issue \#40, plan §5/§8e-6) — the **BREEDING
+flow**, the THIRD and FINAL 8e-6 vertical slice. Revive the 3
+export-NULL’d BG blocks **D5**
+(`test-e2e-breeding-groups-detailed.R:89`) / **T7**
+(`test-e2e-breeding-groups-tutorial.R:135`) / **T9**
+(`test-e2e-breeding-groups-tutorial.R:178`) from pane-active-only into
+genuine **data-bearing** asserts under **RED→GREEN**, all transitions
+via `AskUserQuestion`. Spike the breeding flow firsthand BEFORE RED.
+**Started:** 2026-06-10 **Status:** **DONE — 8e-6 is now COMPLETE**
+(pedigree ✓8e-6a/S47, GV ✓8e-6b/S48, breeding ✓8e-6c/this). Revived
+D5/T7/T9 into genuine **data-bearing** asserts under **RED→GREEN** (3
+`AskUserQuestion` gates: PRE-RED→RED · RED→GREEN ·
+GREEN→REFACTOR-**declined**; scope fixed by the user’s “8e-6c”).
+**Fixture = `inst/extdata/obfuscated_rhesus_mhc_ped.csv`** (same
+canonical CSV as 8e-6a/b). **The live-browser SPIKE (the hard gate,
+`/tmp/spike_8e6c.R`) captured the recon’s two OPEN items firsthand:**
+(1) the Group-Detail nested `tabsetPanel` (`modBreedingGroups.R:72`) has
+**NO `id`** → `set_inputs` cannot drive it → activate via the UNIQUE DOM
+link **`a[data-value='Group Detail']`** (`count==1`),
+`click_element_safe → TRUE`; (2) the `viewGrp` selector auto-selects
+“Group 1” on formation (no manual selection needed). **Load-bearing
+facts:** the export `downloadButton`s are STATIC UI (in the DOM always,
+just `display:none` in the inactive nested tab) — so a
+`get_html`-on-button-id assert would pass even in RED (the trap that
+NULL’d these in S43). The data-bearing design **PAIRS** the button LABEL
+(matched via active-pane innerText — absent until the nested tab is
+activated) with the `suspendWhenHidden` rendered DT (needs BOTH group
+formation AND tab visibility) ⇒ each block genuinely needs the full
+flow, not just nested-tab nav. The spike proved the intermediate state
+(post-form, pre-activation → `Ego ID`/`Export Current Group` still
+FALSE). **`animalSource="all"`** uses `ped$id` directly, ISOLATING
+breeding from the GVA dependency (the `topRanked` branch’s
+`req(geneticValues())`, `appServer.R:272`; `shared$geneticValues` is
+only set after a GVA run). **Assertions (Option-C STRUCTURAL,
+seed-INDEPENDENT — GREEN with NO `NPRC_BG_SEED`):** D5
+`assert_active_pane(.,"Export Current Group")` +
+`grepl("Ego ID", get_html_safe("#breedingGroups-groupMemberTable"))`; T7
+`"Export Current Group"` + `"Age in Years"`; T9
+`"Export Current Group Kinship Matrix"` +
+`grepl("<table", get_html_safe("#breedingGroups-groupKinTable"))`. **NOT
+asserted:** group COUNT (requested `numGp=3` but the algo formed ONE big
+MIS group — the S43-handoff’s `{numGp,numGp+1}` is not guaranteed) and
+the within-group kinship invariant (unattainable: module hardcodes
+`ignore=F–F`). **GREEN flow** (per block):
+`upload_and_wait(app, fixture)` → `navigate_to_tab("Breeding Groups")` →
+`set_inputs(animalSource="all", nIterations=5, wait_=FALSE)` →
+`click_element_safe("#breedingGroups-formGroups")` →
+`wait_for_module_ready("breedingGroups", timeout=180000)` →
+`click_element_safe("a[data-value='Group Detail']")`. **Verification:**
+D5/T7/T9 all GREEN live (detailed **8/0/0**, tutorial **11/0/0**);
+**\[mutation-check\] 13/13 ALL PASS** (`/tmp/mutation_8e6c.R`:
+correct→TRUE; wrong export label + imaginary column +
+**right-token-WRONG-table** (`"Ego ID"` in the kin DT) → FALSE;
+foreign-pane (Pedigree Browser) → FALSE; pre-flow RED re-confirm →
+FALSE). **Non-e2e regression 2140 `expectation_success` / 0 failed / 0
+error / 159 skip / 5 `modPyramid` warn / 0 non-e2e offenders — proven
+byte-IDENTICAL pre- and post-edit via a `git stash` diff** (the edit
+touches only e2e blocks, which skip at `create_test_app()` before any
+assertion ⇒ structurally inert on the non-e2e count). **⚠ The
+2140-vs-S48’s-2180 is a MEASUREMENT-METHOD difference, NOT a
+regression:**
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)
+under renv → 2140/0-err (clean) vs
+[`library()`](https://rdrr.io/r/base/library.html) under
+`RENV_CONFIG_AUTOLOADER_ENABLED=false` (bare system lib) → ERRORs on
+tests whose Suggests deps the system lib lacks; S48’s 2180 was the other
+method. **Phase-3E:** the live GREEN AppDriver runs (real
+upload→QC→kinship→group-formation→Group-Detail render across the 2
+files) + the 13/13 mutation spike ARE the runtime (#31). Test-tree-only
+(2 e2e files) → no `document()`/NEWS; `tests/` lint-exempt. **⚠ SYSTEM
+lib was ALREADY current**
+(`gatedSeed`/`downloadGroupKin`/`viewGrp`/“Group Detail” present,
+v1.1.0.9000) since `R/` unchanged since S48 → verified firsthand **under
+the renv-bypass** (NOT plain
+[`library()`](https://rdrr.io/r/base/library.html), which renv redirects
+to the stale project lib and falsely showed `gatedSeed FALSE`), **no
+reinstall needed**. **REFACTOR (shared flow helper) DECLINED**
+(precedent of 8e-6a/8e-6b + the GVA and breeding run-flows DIVERGE on
+the nested-tab activation → a “shared” helper is messier than a clean
+abstraction). **Commit:** one `test:`/`docs:` close-out (2 e2e files +
+CHANGELOG + PROJECT_LEARNINGS \#49 + these notes), explicit `git add`
+(`.DS_Store`/`..Rcheck/`/`PED_GV_AUDIT_2026-05-30.html` excluded).
+
+**Session 48 Handoff Evaluation (by Session 49):** **Score 9/10.** What
+helped: the handoff named the exact slice (8e-6c), the exact
+blocks+lines (D5 `:89`, T7 `:135`, T9 `:178`), the spike recipe
+(boot→upload→nav→formGroups→ready→activate Group Detail), the **explicit
+“recon left the nested-tab id + `viewGrp` selector OPEN — capture
+FIRSTHAND”** flag (which correctly told me NOT to trust a remembered id
+— and indeed the tabset has NO id, so the real answer was the DOM-link
+selector I found in the spike), the `ignore=F–F`-unattainable + “assert
+export-button presence” steer (kept me from asserting the kinship
+invariant), the `{numGp,numGp+1}` caveat (explicitly hedged “NOT a hard
++1” — which saved me, since the algo actually formed ONE group), the
+`suspendWhenHidden` note, the browser env vars, and the SYSTEM-lib
+“verify firsthand, reinstall ONLY if R/ changed” method. All
+load-bearing facts held under firsthand spiking. What was missing
+(minor): the handoff phrased it as “capture its `tabsetPanel` id”
+(assuming an id exists) — there is none, so the activation is a DOM
+click; and it didn’t anticipate the regression measurement-method
+sensitivity (2140 vs 2180) — I resolved that with a stash diff. What was
+wrong: `{numGp,numGp+1}` (actual = 1 group) — but it was appropriately
+hedged and steered away from asserting count, so it never misled. ROI:
+very high — “spike firsthand BEFORE RED” + the OPEN-items flag + the
+“assert export-button presence” steer produced a clean session with 0
+stakeholder corrections.
+
+**Self-assessment (Session 49): 9/10.** Research before creative work:
+read plan §8e-6, all 3 BG e2e files, `modBreedingGroups.R` (full),
+`helper-shinytest2.R` (full), the `appServer` breeding wiring, the
+8e-6a/8e-6b upload idiom; verified system-lib currency firsthand under
+the AppDriver’s ACTUAL resolution. Read implementations not
+descriptions: traced the no-id nested tab / download buttons / `viewGrp`
+/ `suspendWhenHidden` DTs through the source and spiked the live flow
+before RED (the spike CONFIRMED every assertion-relevant fact firsthand
+— FM \#11/#20 avoided). Stakeholder corrections: 0 (all 3 gates answered
+proceed/decline-as-recommended). Got right: the no-id nested-tab
+DOM-click discovery, the PAIRED visibility-gated-label +
+suspendWhenHidden-DT data-bearing design (so each block needs the data
+flow), `animalSource="all"` isolation, seed-independence, the 13/13
+mutation matrix incl. the right-token-WRONG-table arm, and the rigorous
+**stash-diff proof** of regression inertness (caught + EXPLAINED the
+2140-vs-2180 method sensitivity rather than chasing/hand-waving the
+number — a \[regression-read\] refinement beyond S48). Minor: I first
+mis-read system-lib currency via plain
+[`library()`](https://rdrr.io/r/base/library.html) (renv-redirected →
+`gatedSeed FALSE`) before re-checking under the renv-bypass — a
+momentary detour, self-corrected in the same step. Met/exceeded the
+S47/S48 bar.
+
+**⇒ SUGGESTED NEXT = 8e-7 (CI per-module fresh-process grouping) + then
+PUSH `add-methodology` → master.** 8e-6 is COMPLETE; only **8e-7**
+remains in the plan
+(`docs/planning/phase8e-assertion-strengthening-subplan.md` §8e-7, risk
+MED, **orthogonal — can run anytime**): make
+`.github/workflows/shinytest2.yaml` run the 23 `^(app|e2e)-` files in
+**per-module groups, each in a fresh R process** (the §5/8c “run
+grouped” guidance) to defang the **23-in-one-process Chrome flake** (~1
+transient error / 5 full-tier runs; the S34 `[flake-aware-validation]`
+finding). **⚠ Ships UNVALIDATED locally** (the flake is environmental —
+state this in the handoff, FM \#24’s cousin; do NOT claim it fixes the
+flake until a live run shows it). **TDD shape:** CI config /
+run-and-observe (no RED→GREEN, like 8b–8d). Statically checkable locally
+(the group partition selects EXACTLY the 23 files with no overlap/gap —
+replicate testthat’s stripped-name match in R, per Learning \#33c); the
+flake fix itself is **live-GitHub-runner-only**. **After 8e-7:** finally
+**push `add-methodology` → master** — the FIRST master CI run exercises
+the **two S34 live-run watch items** (renv lib-path resolution + the
+23-in-one-process flake). Branch `add-methodology` is still **NOT on
+remote**. **For the executor:** the breeding-flow recipe (now proven) is
+`upload_and_wait → navigate_to_tab("Breeding Groups") → set_inputs(animalSource="all", nIterations=5, wait_=FALSE) → click "#breedingGroups-formGroups" → wait_for_module_ready("breedingGroups",180000) → click "a[data-value='Group Detail']"`;
+the Group-Detail nested tabset has **no id** (DOM-click its
+`a[data-value='Group Detail']`, never `set_inputs`); the non-e2e
+regression count is **measurement-method-sensitive** (prove a test-only
+e2e edit inert with a `git stash` diff, not the headline number); check
+SYSTEM-lib currency under `RENV_CONFIG_AUTOLOADER_ENABLED=false`, NOT
+plain [`library()`](https://rdrr.io/r/base/library.html). Browser env:
+`NPRC_RUN_E2E=true NOT_CRAN=true RENV_CONFIG_AUTOLOADER_ENABLED=false`.
+Read plan §8e-7 + S34’s “What Session 34 Did” (the flake
+characterization) FIRST.
+
+------------------------------------------------------------------------
+
+**⟢ Carried — Session 48 (8e-6b GVA-run flow, DONE; full detail
+below):** **Task (Session 48 — 2026-06-10):** IMPLEMENT slice **8e-6b**
+(issue \#40, plan §5/§8e-6) — the **GVA flow**: `upload_and_wait` → nav
+Genetic Value Analysis → click `#geneticValue-runAnalysis` → revive the
+2 NULL’d GV blocks B1 (`test-e2e-genetic-value-tutorial.R:99` Value
+Designation) + B2 (`:144` Z-score) as genuine **data-bearing** asserts
+on the rendered `#geneticValue-rankingsTable`, **RED→GREEN**, all
+transitions via `AskUserQuestion`. Keep asserts **STRUCTURAL (Option
+C)**. Spike the GVA run firsthand BEFORE RED. **Started:** 2026-06-10
+**Status:** **DONE.** Revived B1 (`test-e2e-genetic-value-tutorial.R:99`
+Value Designation) + B2 (`:144` Z-score) from pane-active-only into
+genuine **data-bearing** asserts on the rendered
+`#geneticValue-rankingsTable` under **RED→GREEN** (3 `AskUserQuestion`
+phase gates: PRE-RED→RED · RED→GREEN · GREEN→REFACTOR-declined; scope
+was fixed by the user’s “8e-6b” instruction, not re-asked). **Fixture =
+`inst/extdata/obfuscated_rhesus_mhc_ped.csv`** (same canonical CSV as
+8e-6a). **The live-browser SPIKE (the hard gate, `/tmp/spike_8e6b.R`)
+CORRECTED a static-read trap FIRST:** `reportGV.R:144`
+`cbind(demographics, indivMeanKin, zScores, gu, offspring)` shows NO
+`value` column — but `reportGV.R:146` wraps it
+`report = orderReport(finalData, ped)`, and `orderReport()`
+splits→[`rankSubjects()`](https://github.com/rmsharp/nprcgenekeepr/reference/rankSubjects.md)
+ADDS `value`(“High/Low/Undetermined”)+`rank`
+(`rankSubjects.R:36-46`)→`rbind` re-flattens, so the rendered DT carries
+`value` AND `zScores`. **NEW load-bearing fact:** the table truncates to
+`input$topN` (default **20**, `modGeneticValue.R:240`) and the module
+re-orders by `rank(indivMeanKin−gu)` ascending → the top-20 are the BEST
+animals → **all “High Value”** (spike: `"of 20 entries"`,
+`"High Value"`=TRUE, `"Low Value"`/`"Undetermined"`=FALSE). ⟹ the ONLY
+faithful Value-designation token in the DEFAULT view is **“High Value”**
+(asserting “Low Value”/“Undetermined” would RED a green flow).
+**Assertions:** B1 `get_html_safe("#geneticValue-rankingsTable")`
+matches `"High Value"`; B2 matches `"zScores"` (the z-score DT column
+header). Both **Option-C structural, seed-INDEPENDENT** — verified GREEN
+with **NO `NPRC_GVA_SEED`** set. **GREEN flow (added to both blocks):**
+`upload_and_wait(app, fixture)` →
+`navigate_to_tab("Genetic Value Analysis")` →
+`app$set_inputs(\`geneticValue-nIterations\`=100)`(min allowed, for speed) →`click_element_safe(“#geneticValue-runAnalysis”)`→`wait_for_module_ready(“geneticValue”,
+timeout=90000)`. The`gvResults`eventReactive's`setDataReady`(on`\#geneticValue-moduleContainer`) fires because the default-visible Rankings inner tab reads`gvaView()→gvResults()`on the click →`wait_for_module_ready`is the right barrier (NO inner-tabset switch needed; Summary/Visualizations stay`suspendWhenHidden`). RED proven firsthand (pre-run = empty`visibility:hidden`div → both tokens FALSE). **8/8 blocks GREEN** in the file (the 6 static-UI blocks unaffected). **[mutation-check] ALL PASS** (`/tmp/mutation_8e6b.R`: correct High Value/zScores→TRUE; wrong designation Low Value/Undetermined→FALSE; foreign-pane Form Groups[BG]/Focal Animals[Ped]→FALSE; RED re-confirm pre-run→both FALSE). **Non-e2e regression 2180`expectation_success`/ 0 failed / 0 error / 156 skip / 5`modPyramid`warn / 0 non-e2e offenders** = S47 baseline held EXACTLY (test-only; e2e self-skips without`NPRC_RUN_E2E`). **Phase-3E:** the live GREEN AppDriver run (real upload→QC→GVA) + the mutation spike ARE the runtime (#31). Test-tree-only (1 e2e file) → no`document()`/NEWS;`tests/`lint-exempt. **⚠ SYSTEM lib was ALREADY current** (`gatedSeed`present, v1.1.0.9000) since`R/`unchanged since S47's reinstall → verified firsthand, **no reinstall needed** (the AppDriver subprocess resolves`nprcgenekeepr`from`/Library/Frameworks/…/R-4.5/…`under`RENV_CONFIG_AUTOLOADER_ENABLED=false`; the reinstall ACTION is conditional on`R/`having changed). **Commit:** one`test:`/`docs:`close-out (1 e2e file + CHANGELOG + PROJECT_LEARNINGS #48 + these notes), explicit`git
+add`(`.DS_Store`/`..Rcheck/`/`PED_GV_AUDIT_2026-05-30.html\` excluded).
+
+**Session 47 Handoff Evaluation (by Session 48):** **Score 9/10.** What
+helped: the handoff named the exact slice (8e-6b), the exact files+lines
+(B1 `:99`, B2 `:144`), the critic-corrected facts (`value` levels
+High/Low/Undetermined, z-col `zScores` not `rank`), the **`topN=20`
+truncation hint** (“assert `min(topN,n)` or raise `topN`”) — which was
+the seed of this session’s load-bearing discovery — the “spike the GVA
+run firsthand BEFORE RED” directive, the `suspendWhenHidden` note for
+Summary/Visualizations, and the SYSTEM-lib reinstall caveat. All facts
+held up under firsthand spiking. What was missing (minor): the handoff
+didn’t spell out that only **“High Value”** survives the default top-N
+render (the top rows are all best-ranked → High Value; Low/Undetermined
+truncated away) — I discovered that firsthand from the `topN` hint; and
+the GVA module’s inner-tabset id was left “open” (didn’t cost me —
+`rankingsTable` is on the default-visible Rankings tab). What was wrong:
+nothing. ROI: very high — the spike CONFIRMED S47’s facts rather than
+discovering them cold, and the “spike before RED” + SYSTEM-lib notes
+prevented two known traps.
+
+**Self-assessment (Session 48): 9/10.** Research before creative work:
+read the plan §5/§8e-6, the GVA module, the helpers, and traced the
+`value` column’s provenance through
+`reportGV`→`orderReport`→`rankSubjects`→`rbind` (a description-level
+read of `reportGV.R:144` alone would have produced a WRONG “no value
+column” assertion — FM \#11/#20 avoided). Stakeholder corrections
+needed: 0 (all 3 gates answered proceed/decline-as-recommended). Got
+right: the column-provenance trace, the firsthand `topN`-truncation
+discovery (only High Value in the default view), seed-independence
+proof, foreign-pane mutation tokens, exact-baseline regression.
+Met/exceeded the S47 quality bar (same rigor: hard-gate spike,
+discriminating RED, mutation-check, Phase-3E live run). Minor: a second
+browser run for the mutation matrix (could have folded into the GREEN
+file run) — acceptable cost for a clean citable artifact.
+
+**⇒ SUGGESTED NEXT = 8e-6c (BREEDING flow)** — the THIRD and FINAL 8e-6
+vertical slice → completes 8e-6 (all deferred data-bearing asserts
+landed: pedigree S40 ✓8e-6a, GV S42 ✓8e-6b, BG S43 remaining). Revive
+the 3 export-NULL’d BG blocks **D5**
+(`test-e2e-breeding-groups-detailed.R:89`) / **T7** (`-tutorial.R:135`)
+/ **T9** (`-tutorial.R:178`). **Spike the breeding flow firsthand BEFORE
+RED** (boot→`upload_and_wait`→nav “Breeding
+Groups”→`click_element_safe("#breedingGroups-formGroups")`→`wait_for_module_ready("breedingGroups")`→activate
+the nested **“Group Detail”** tab + make a `viewGrp` selection→inspect).
+**⚠ Critic-corrected facts (carried from S47 recon `wf_855f37cd-4ac`):**
+the module’s `breedingGroups()` length is `∈ {numGp, numGp+1}`
+(`filterValidGroups` drops the empty leftover — NOT a hard +1); the
+strict within-group kinship invariant is **unattainable** (the module
+hardcodes `ignore=F–F`) ⇒ assert the WEAK form or just export-button
+presence. The D5/T7/T9 exports live in the INACTIVE “Group Detail”
+nested tab (`display:none` → not in active-pane innerText) → you must
+activate that nested tab first (capture its `tabsetPanel` id + the
+`viewGrp` selector FIRSTHAND — recon left them open). **Consider the
+deferred REFACTOR here:** 8e-6b declined factoring the upload→nav→run
+flow because a reusable run-flow helper should co-design with THIS
+breeding flow (same run-and-render shape) — if 8e-6c writes an analogous
+flow, factor a shared `helper-shinytest2.R` helper (own GREEN→REFACTOR
+gate). **⚠ Reinstall current source into the SYSTEM lib ONLY if `R/`
+changed** (8e-6c is test-only → won’t change `R/`; verify currency with
+`body(modGeneticValueServer)` grepl `gatedSeed` as this session did).
+Browser env:
+`NPRC_RUN_E2E=true NOT_CRAN=true RENV_CONFIG_AUTOLOADER_ENABLED=false`.
+Read plan §5/§8e-6 + S43’s “What Session 43 Did” (the BG static-UI
+census) FIRST. **After 8e-6 completes:** **8e-7** (CI per-module
+fresh-process grouping, orthogonal) + finally push `add-methodology` →
+master (the two S34 CI watch items — renv lib-path / 23-in-one-process
+Chrome flake — first exercise then). Branch `add-methodology` still NOT
+on remote.
+
+**⟢ Carried — Session 47 (8e-6a pedigree-table flow, DONE; full detail
+below):** **Task (Session 47 — 2026-06-10):** IMPLEMENT slice **8e-6**
+(issue \#40, plan §5/§8e-6) — wire the real analytical pipeline
+end-to-end (**upload+QC → GVA → breeding**) with **rendered-output**
+(`get_value(output="<ns>-<id>")`) + **Option-C structural-invariant**
+assertions, **RED→GREEN**, all transitions via `AskUserQuestion`. Lands
+the deferred data-bearing asserts (4 NULL’d pedigree \[S40\] + 2 NULL’d
+GV \[S42: Value Designation/Z-score\] + 3 export-NULL’d BG \[S43:
+D5/T7/T9\]). Plan §5/§8e-6 permits **per-flow close-out** (vertical
+slices) → scope (which flow\[s\] this session covers) is an owner-gated
+pre-RED decision. (IN PROGRESS) **Started:** 2026-06-10 **Status:**
+**DONE.** Revived the 3 NULL’d pedigree blocks (A1
+`test-e2e-pedigree-module.R:60`, A2 `-detailed.R:63`, A3
+`-tutorial.R:25`) as genuine **data-bearing** asserts on the rendered
+`#pedigree-pedigreeTable` under **RED→GREEN** (4 `AskUserQuestion`
+gates: scope→8e-6a · PRE-RED→RED · RED→GREEN; **REFACTOR declined** —
+factoring only the 3-line upload would break these files’ inline-setup
+style + expand scope). **Fixture =
+`inst/extdata/obfuscated_rhesus_mhc_ped.csv`** (375 rows, canonical
+CSV). **A live-browser SPIKE (the hard gate) settled the recon critic’s
+G2/G4/G5 FIRST** (`wf_855f37cd-4ac`): (G4) default
+`pedFile`/`pedigreeFileOne` upload flips `dataInput` ready; (G5) the
+pedigree OUTPUT is `suspendWhenHidden` — NULL until
+`navigate_to_tab("Pedigree Browser")` un-suspends it, then it renders
+375 rows (so the driver MUST nav AFTER upload); (G2)
+`get_value(output="pedigree-pedigreeTable")` returns a `json`-class
+string — **but it un-suspends to non-NULL even WITHOUT data, so
+[`is.null()`](https://rdrr.io/r/base/NULL.html) is NOT a data
+discriminator** → the genuine discriminator is the rendered-DOM content
+via `get_html_safe(app, "#pedigree-pedigreeTable")` (refines plan §2.3’s
+“output tier”). RED proven firsthand (empty hidden div → every content
+assert fails), then GREEN (`upload_and_wait` before nav).
+**Assertions:** A1 `"of 375 entries"` + `"sire"`; A2 + `"dam"`; A3
+`"dataTables_length"` (the Show-N-entries menu) + `"of 375 entries"`.
+**A4** (status-filter) left honest pane-active (no filter CONTROL
+exists; note the table DOES render a `recordStatus` COLUMN → a future
+session could make A4 data-bearing). **3/3 files GREEN** (module 6/6,
+detailed 8/8, tutorial 9/9). **\[mutation-check\] ALL PASS** (correct
+375/sire/dam/length-menu→TRUE; wrong 999 & off-by-one 374, foreign
+`genotype`, foreign-pane `Breeding Groups`,
+same-pattern-on-export-button → all FALSE). **Non-e2e regression 2180
+`expectation_success` / 0 failed / 0 error / 156 skip / 5 `modPyramid`
+warn / 0 non-e2e offenders** = S46 baseline held EXACTLY (test-only; e2e
+self-skips without `NPRC_RUN_E2E`). **Phase-3E:** the live GREEN
+AppDriver run (real upload→QC→pedigree-render) + the mutation spike ARE
+the runtime (#31). Test-tree-only → no `document()`/NEWS; `tests/`
+lint-exempt. **⚠ Reinstalled current source into the SYSTEM lib first**
+— the AppDriver subprocess resolves `nprcgenekeepr` to
+`/Library/Frameworks/.../R-4.5/.../library` (NOT the renv cache) under
+`RENV_CONFIG_AUTOLOADER_ENABLED=false`, and that install was **Jul-2025
+stale**. **Commit:** one `test:`/`docs:` close-out (3 e2e files +
+CHANGELOG + PROJECT_LEARNINGS \#47 + these notes), explicit `git add`
+(`.DS_Store`/`..Rcheck/`/`PED_GV_AUDIT_2026-05-30.html` excluded). **⇒
+SUGGESTED NEXT = 8e-6b (GVA flow)** — after `upload_and_wait`, click
+`#geneticValue-runAnalysis`, revive the 2 NULL’d GV blocks B1
+(`test-e2e-genetic-value-tutorial.R:99` Value Designation) + B2 (`:144`
+Z-score) on `#geneticValue-rankingsTable`. **Critic-corrected facts
+(recon `wf_855f37cd-4ac`):** the DT `value` column levels are
+`"High Value"/"Low Value"/"Undetermined"` (NOT High/Low), z-score column
+is `zScores` (NOT `rank`); `rankingsTable` truncates to `input$topN`
+(default **20**) → assert `min(topN, n)` or raise `topN`; keep asserts
+**STRUCTURAL (Option C)** — seed channel (G8) unproven + gene-drop `gu`
+RNG-margin-sensitive ⇒ `rank`/`value`/row-order not value-stable. **⚠
+Summary/Visualizations are inner-tabset `suspendWhenHidden`** — to read
+`gvSummary`/`gvScatterPlot` you must `set_inputs` the GVA module’s inner
+`tabsetPanel` id first (CAPTURE that id firsthand — recon left it open);
+`rankingsTable` is on the default-visible “Rankings” tab so it reads
+without a switch. **Spike the GVA run like 8e-6a (boot→upload→nav
+GVA→run→inspect `get_html_safe("#geneticValue-rankingsTable")`) BEFORE
+RED.** **Then 8e-6c (breeding)** — `#breedingGroups-formGroups` + the 3
+export-NULL’d BG blocks D5 (`test-e2e-breeding-groups-detailed.R:89`) /
+T7 (`-tutorial.R:135`) / T9 (`-tutorial.R:178`), which need nested
+**“Group Detail”** tab activation + a `viewGrp` selection; the module’s
+`breedingGroups()` length is `∈ {numGp, numGp+1}` (`filterValidGroups`
+drops the empty leftover — NOT a hard +1), and the strict within-group
+kinship invariant is unattainable (module hardcodes `ignore=F–F`) ⇒
+assert the weak form or just export-button presence. **⚠ ALWAYS
+reinstall current source into the SYSTEM lib before an e2e spike if `R/`
+changed.** Browser env:
+`NPRC_RUN_E2E=true NOT_CRAN=true RENV_CONFIG_AUTOLOADER_ENABLED=false`.
+Read plan §5/§8e-6 + the recon critic FIRST. Branch `add-methodology`
+still NOT on remote (two S34 CI watch items pending the first master
+run).
+
+**⟢ Carried — Session 46 (8e-5 determinism hook, DONE; full detail
+below):** **Task (Session 46 — 2026-06-10):** IMPLEMENT slice **8e-5**
+(issue \#40, plan §7) — the **FIRST 8e PRODUCTION `R/` change**
+\[production-in-disguise\]: an **env/option-gated
+[`set_seed()`](https://github.com/rmsharp/nprcgenekeepr/reference/set_seed.md)
+determinism hook** (Option A) in `modGeneticValueServer` +
+`modBreedingGroupsServer` (both EXPORTED). Owner-gated approach choice
+(`AskUserQuestion`: **Option A** env/option gate, over Option B’s
+user-facing UI seed input and Option C-only’s no-production-change
+invariants) + full **RED→GREEN→REFACTOR**, all four transitions via
+`AskUserQuestion`. **ALSO**, on owner instruction, committed the owner’s
+14-file `R/` + `test_modPyramid.R` reformat as the clean baseline
+(`d0989408`, re-verified inert) + a follow-on `docs:` commit
+regenerating 3 man pages the reformat desynced. **The gate (Option A):**
+at the top of each `eventReactive` body — immediately after `req()`,
+ahead of `withProgress`, so no intervening RNG is consumed before the
+engine —
+`seed <- getOption("nprcgenekeepr.gva_seed", as.integer(Sys.getenv("NPRC_GVA_SEED", NA))); if (!is.na(seed)) set_seed(seed)`
+(`modGeneticValue.R:135` ahead of
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md);
+`modBreedingGroups.R:191` ahead of
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md),
+with `nprcgenekeepr.bg_seed`/`NPRC_BG_SEED`), via the existing
+**exported**
+[`set_seed()`](https://github.com/rmsharp/nprcgenekeepr/reference/set_seed.md)
+(pins `sample.kind="Rounding"`). **REFACTOR** factored the duplicated
+3-line gate into `@noRd gatedSeed(optionName, envName)` in
+`R/set_seed.R` (both modules call it; `@noRd` ⇒ no NAMESPACE/man delta).
+**8 new browser-free `testServer` tests** (`test_modGeneticValue.R` +
+`test_modBreedingGroups.R`, 3 RED + 1 guard each): determinism (two runs
+`identical` on `gu`/`groups`, + a non-vacuous `length>0` guard so a
+failed capture can’t fake `identical(NULL,NULL)`), `set_seed`-mock
+called-with-seed (`local_mocked_bindings`, no `.package`), env-var
+fallback, and the default-path-not-called guard.
+
+**Status:** Done. **8/8 seed tests GREEN / 14 expectations**; RED proven
+firsthand FIRST (6 genuine failures + 2 guards passing; the `length>0`
+assertions confirm the `<<-` capture is non-vacuous and the determinism
+comparison genuinely fails — two unseeded `testServer` runs differ
+because the global RNG state carries across invocations). **Non-e2e
+regression 2180 `expectation_success` / 0 failed / 0 error / 156 skip /
+5 pre-existing `modPyramid` warn / 0 non-e2e offenders** (= 2166
+baseline + 14 new; default analytical path unchanged with the gate unset
+= the R2 risk mitigation). **`devtools::check()` 0 errors / 0 warnings /
+3 NOTEs** — all pre-existing/environmental (stale `spelling.Rout.save`
+baseline, “future file timestamps”, non-standard top-level dev files =
+the S35 baseline; **NO** new `gatedSeed` “no visible global function”
+NOTE → the lintr single-file flag is a `[stale-namespace]` artifact
+resolved by full-package analysis). **`document()`** no NAMESPACE/man
+delta for the `@noRd` helper, but it DID regenerate 3 man pages
+(`appServer`/`modSummaryStatsServer`/`savePlotToFile`) the reformat
+desynced (`savePlotToFile` `\usage` `8`→`8L` is a real codoc drift that
+would have WARNed) → separate `docs:` commit. **Phase-3E:**
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+from working-tree source (`load_all` ⇒ hook active) serves **HTTP 200**
+on the gate-unset path. Lint net-zero on changed `R/`. **Commits (3,
+explicit `git add`):** `d0989408` (`style:` owner’s reformat) → a
+`docs:` man-regen → the 8e-5 `feat:`/`test:` close-out (`R/set_seed.R` +
+`R/modGeneticValue.R` + `R/modBreedingGroups.R` + the 2 test files +
+CHANGELOG + PROJECT_LEARNINGS \#46 + these notes);
+`.DS_Store`/`..Rcheck/`/`PED_GV_AUDIT_2026-05-30.html` excluded. **⇒
+SUGGESTED NEXT = 8e-6** (the deepest slice, risk HIGH 🐉🐉; plan
+§5/§8e-6) — drive the real pipeline opt-in: **upload+QC** via the
+now-correct `upload_and_wait(app, <file>)` → `#dataInput-getData` →
+`wait_for_module_ready(app, "dataInput")` (8e-4 fixed these ids), then
+**GVA** (`#geneticValue-runAnalysis`) and **breeding**
+(`#breedingGroups-formGroups`); assert **rendered reactive outputs**
+(`get_value(output="<ns>-<id>")`; `suspendWhenHidden` ⇒ hidden outputs
+empty) + **Option-C structural invariants** (GVA: rank = permutation of
+`seq_len(n)`, `gu ∈ [0,1]`, nrow == probands; breeding:
+`nGroups == numGp`, partition no-dupes, within-group max kinship ≤
+threshold, harem ⇒ one male). **8e-5 now ENABLES optional exact-value
+assertions** — set the env var with
+`withr::local_envvar(NPRC_GVA_SEED = "42")` (and `NPRC_BG_SEED`)
+**AROUND `AppDriver$new()`** (the subprocess inherits the parent env —
+the RELIABLE channel; `AppDriver$new(seed=)` is NOT, plan §2.5); but
+**8e-6 does NOT require 8e-5** (Option-C invariants are robust to RNG
+drift and usable regardless). The deferred data-bearing asserts land
+here: 4 NULL’d pedigree \[S40\] + 2 NULL’d GV \[S42: Value
+Designation/Z-score\] + 3 export-NULL’d BG \[S43: D5/T7/T9\]. ⚠ 🐉🐉
+dragons: longest browser runtime + most flake-prone (the §7/8c Chrome
+process-count dragon; small `nIterations` via `set_inputs` for speed;
+needs a known-good fixture studbook that flows QC→GVA→breeding). **OR
+8e-7** (CI per-module fresh-process grouping, live-runner-only,
+orthogonal — can run anytime). Browser env:
+`NPRC_RUN_E2E=true NOT_CRAN=true RENV_CONFIG_AUTOLOADER_ENABLED=false`.
+Read plan §5/§8e-6 FIRST. **GOTCHAS in “What Session 46 Did” below.**
+Branch `add-methodology` still NOT on remote (two S34 CI watch items
+pending the first master run).
+
+**⟢ Carried — Session 45 (8e-4 hybrid namespace-fix + error/boundary
+revival, DONE; full detail in “What Session 45 Did” below):** **Task
+(Session 45 — 2026-06-10):** IMPLEMENT slice **8e-4** (issue \#40) —
+namespace fix (`input-`→`dataInput-`) + error-states/boundary
+interaction revival. **The FIRST 8e slice that is NOT pure
+run-and-observe: a HYBRID — RED→GREEN (namespace fix, 4 tests) +
+run-and-observe (23 conversions), gated `PRE-RED→RED` then `RED→GREEN`
+via `AskUserQuestion`.** Converted all **26 browser-booting blocks**
+across `test-e2e-error-states.R` (13) + `test-e2e-boundary-conditions.R`
+(13) from content-blind `nchar(html)>100` / dead-grepl /
+`interaction-noop-tryCatch` to behavioral `assert_active_pane(...)`, and
+fixed the `dataInput-` namespace at all 5 §2.4 sites + the
+`upload_and_wait` helper. **Namespace fix (RED→GREEN, 5 sites):**
+`helper-shinytest2.R` `upload_and_wait` default `module_id`
+`"input"`→`"dataInput"` (:155) + the hardcoded
+`` `input-pedigreeFileOne` `` now DERIVED via
+`do.call(app$upload_file, stats::setNames(list(file_path), sprintf("%s-%s", module_id, file_input_id)))`;
+`error-states` `#input-getData`→`#dataInput-getData` +
+`` `input-minParentAge` ``→`` `dataInput-minParentAge` ``; `boundary`
+`` `input-minParentAge` ``→`` `dataInput-minParentAge` ``. The input
+module is namespaced **`dataInput`** (`appUI.R:123`
+`modInputUI("dataInput")`); `data-module="input"` (`modInput.R:31`) is a
+LABEL, not the namespace. **§2.4 DO-NOT-CHANGE list respected**
+(data-ready bare ids + `data-module="input"` literal; `#goto_input`; tab
+anchors `a[data-value=]`). **⚠ Two discriminators (firsthand-spiked,
+refines the plan’s “wrong id throws”):** for the namespaced
+**textInput** the wrong-id discriminator is the **VALUE READ-BACK** —
+shinytest2
+`set_inputs(\`input-minParentAge\`)`on an unbound id **WARNS and never sets** (does NOT raise an R error), so`get_value(“dataInput-minParentAge”)`stays at the default "2.0" ≠ the set value; for the **actionButton** it is the`app\$click(“#input-getData”)`**THROW** (→`click_element_safe`→FALSE). A new browser-free recording-stub unit test in`test_helper_shinytest2.R`anchors the helper fix in the ALWAYS-RUN layer (+4 expectations: a formals default test + a recorded upload/click-target test). **Map — 4 RED→GREEN (3 e2e ns blocks + 1 helper unit) · 23 run-and-observe conversions · 0 deferred to 8e-6.** RED→GREEN e2e: es#1 "no file selected" (click`\#dataInput-getData`→ assert clickable +`\#shiny-notification-panel`matches "select a file" — the no-file path's transient`showNotification`toast,`modInput.R:305-308`, the ONLY pre-data error-state), es#2 "zero min age" + bd#2 "non-numeric age" (set`dataInput-minParentAge`→`get_value`reflects "0"/"abc" + Input pane active). Run-and-observe (each navigates as before →`assert_active_pane(app,,)`): Pedigree (`Focal
+Animals\|Display Options\|search`), GV (`Run
+Analysis\|Iterations\|Threshold\|Export All\|Export Subset`), BG (`Form
+Groups\|Number of groups\|Sex ratio\|Harem`), Pyramid (`Bin Size\|Age
+Unit\|Age Label\|Pyramid\|Age\|Sex\`), + the rapid-switch/repeat-click
+blocks asserting the FINAL pane (Home/Input) and the narrow/short-window
+blocks asserting Home active on BOOT. Every pattern
+\[verify-first\]-confirmed against the real active-pane innerText
+(spike: all cells TRUE).
+
+**Status:** Done. **Helper unit tests 63/0/0** (the 2 new
+`upload_and_wait` tests green). **e2e error+boundary 26/26 blocks GREEN
+/ 29 expectations** (es#1:2 + es#2:2 + bd#2:2 + 23×1), **0 failed / 0
+error / 0 skip** (`filter="^e2e-(error|boundary)"`). **RED→GREEN
+proven:** with the OLD `input-` ids the 3 ns e2e blocks + 2 helper tests
+FAILED (es#1 also errored on teardown after the bad click — gone in
+GREEN); with `dataInput-` they pass. **\[mutation-check\] PASS:**
+`assert_active_pane(GV,"Export All|Export Subset")`→TRUE, wrong-pane
+`(Breeding Groups,…)`→FALSE, wrong-content
+`(GV,"Number of groups")`→FALSE (“Number of groups” BG-only,
+grep-confirmed foreign), OLD whole-body
+`grepl("Number of groups",body)`→TRUE (content-blind contrast),
+active-pane grepl→FALSE (sanity); ns `dataInput-minParentAge` reflects
+“0”, notification present, wrong selector `#input-getData`→FALSE.
+**Non-e2e regression (`NOT_CRAN=true`) 2166 `expectation_success` / 0
+failed / 0 error / 156 skipped / 5 pre-existing `modPyramid` warnings /
+0 non-e2e offenders** — S40–S44 baseline (2162) + exactly the +4 new
+helper expectations (read via `expectation_success`, never
+`sum(nb)`=2327, per Learning \#43e). Phase-3E: the live browser run (26
+blocks via real AppDriver) + the 2 spikes (`/tmp/spike_8e4.R`
+DOM/namespace + `/tmp/mutation_8e4.R`) ARE the runtime (#31).
+Test-tree-only (2 e2e files + `helper-shinytest2.R` +
+`test_helper_shinytest2.R`) → no `document()`/NEWS; `tests/`
+lint-exempt. **Commit:** one `test:`/`docs:` close-out (the 4 test-tree
+files + CHANGELOG + PROJECT_LEARNINGS \#45 + these notes), staged via
+explicit `git add`. **⚠ CONCURRENT FORMATTER (NOT mine, NOT
+committed):** mid-session an external style pass rewrote **14 `R/`
+production files** (`'…'`→`"…"`, `0`→`0L`, `round(x,2)`→`round(x,2L)`)
+and briefly broke 2 (`makeFounderStatsTable.R:68` /
+`makeGeneticSummaryTable.R:58` — unescaped inner HTML quotes →
+`load_all` parse failure); per SAFEGUARDS/FM \#22 I did NOT touch them,
+surfaced + owner-gated via `AskUserQuestion`, the formatter SELF-HEALED
+both + settled (17 modified tracked), and the regression proved the
+reformat behaviorally inert (2162 baseline held). These 14 `R/` files +
+`.DS_Store` / `..Rcheck/` / `PED_GV_AUDIT_2026-05-30.html` are the
+owner’s uncommitted work — EXCLUDED from the 8e-4 commit. **⇒ SUGGESTED
+NEXT = 8e-5 OR 8e-6** (8e-4 is DONE; the `dataInput-` ids are now
+correct → 8e-6’s upload flow is unblocked). **⚠ FIRST: Phase 0 will find
+the owner’s 14-file `R/` reformat still uncommitted (behaviorally inert
+per S45’s regression) — decide with the owner whether to commit/discard
+it before starting a code slice, so the slice lands on a clean
+baseline.** **8e-5** (⚠ PRODUCTION `R/` gated `set_seed` in
+`modGeneticValue.R`/`modBreedingGroups.R` — own owner-gated full
+RED→GREEN→REFACTOR + `devtools::check()`, \[production-in-disguise\],
+plan §7; **note 8e-5 edits the SAME `R/` files the formatter just
+touched** — reconcile the reformat first). **8e-6** (real
+upload+QC/GVA/breeding flows + ALL deferred data-bearing asserts: 4
+NULL’d pedigree \[S40\] + 2 NULL’d GV \[S42: Value
+Designation/Z-score\] + 3 export-NULL’d BG \[S43: D5/T7/T9\] blocks land
+here; use the now-correct
+`upload_and_wait`→`#dataInput-getData`→`wait_for_module_ready(app,"dataInput")`,
+plan §5 8e-6 + §2.3 item 5 output-tier). **8e-7** (CI per-module
+fresh-process grouping, live-runner-only, orthogonal). Browser env:
+`NPRC_RUN_E2E=true NOT_CRAN=true RENV_CONFIG_AUTOLOADER_ENABLED=false`.
+Read plan §5 FIRST. Branch `add-methodology` still NOT on remote (two
+S34 CI watch items pending the first master run).
+
+**⟢ Carried — Session 44 (8e-3 FINAL cut, DONE; full detail in “What
+Session 44 Did” below):** **Task (Session 44 — 2026-06-09):** IMPLEMENT
+the **8e-3 FINAL cut = settings-about (4) + workflow-integration (7)**
+(issue \#40, the LAST of 3 8e-3 cuts) → **8e-3 COMPLETE**. PURE
+run-and-observe (\[refactor-only\], green-on-arrival; gated
+`PRE-RED→run-and-observe` via `AskUserQuestion`; \[mutation-check\] =
+the rigor, no synthetic RED). Converted all **11 browser-booting
+blocks** across `test-e2e-settings-about.R` (4) +
+`test-e2e-workflow-integration.R` (7) from content-blind
+`navigate_to_tab → grepl(get_html_safe(app,"body"))` to behavioral
+`assert_active_pane(...)`. **⚠ Dragon RESOLVED FIRSTHAND (R1 /
+§2.3-item-4, carried 🐉 from S42/S43):** a live-DOM spike
+(Rscript→AppDriver) confirmed a `navbarMenu("More")` child **becomes the
+lone active top-level `.tab-pane`** via `set_inputs(mainNavbar=child)` —
+top-level `.tab-content` count==**1** (children land in the SAME
+container as the 8 top-level `tabPanel`s; no separate dropdown
+container), `get_active_pane_value`/`innerText` == the child content
+(Settings=“Application Settings Configuration options will go here” ·
+About=version/credits/NIH · Help=Documentation/Online). ⟹
+`navigate_to_menu_item`’s delegate body (→`navigate_to_tab`) was ALREADY
+a genuine visible-pane switch → **body UNCHANGED, only its docstring
+caveat retired** (`helper-shinytest2.R:283-292`); this kept the cut PURE
+run-and-observe (NOT a helper RED→GREEN). **Map — 10 keep-regex-rescope
+· 1 navbar-chrome carve-out:** settings-about 4 KEEP verbatim (S1
+`(Settings,"Settings|Configuration|options")` · S2
+`(About,"About|Version|GeneKeepR|Oregon|Primate")` · S3
+`(Help,"Help|Documentation|Online")` · S4 `(About,"NIH|funded|grant")`);
+workflow-integration: **W1** “visits N tabs” loop → 6 per-pane
+`assert_active_pane` (Home `Welcome|Home|GeneKeepR` · Input
+`Upload|File|Input` · Pedigree `Pedigree|Browser` · Pyramid
+`Pyramid|Age|Sex` · GV `Genetic|Value` · BG `Breeding|Groups`) +
+threshold `>= 3`→**`== 6L`** (so a single failed nav reds the block —
+the discriminating lever is the THRESHOLD); **W2/W3**
+[`is.list()`](https://rdrr.io/r/base/list.html) responsiveness
+tautologies → genuine pane-switch asserts (Input-then-Home; final-pane
+Home after the 4-switch loop), drop unused `get_values_safe()`; **W4**
+navbar brand → **CARVE-OUT scoped to `.navbar-brand`**
+(`grepl("GeneKeepR", get_html_safe(app,".navbar-brand"))` — brand is
+`<span class="navbar-brand">GeneKeepR</span>`, OUTSIDE any `.tab-pane`;
+strictly STRONGER than the old whole-body grepl, mutation-proven);
+**W5** `(Input,"upload|file|browse")` · **W6**
+`(Genetic Value Analysis,"Genetic|Value|Analysis|kinship|population")` ·
+**W7** `(Breeding Groups,"Breeding|Groups|formation|animals")`. Every
+pattern \[verify-first\]-confirmed against the real active-pane
+innerText in spike v2 (ALL_OK). **Status:** Done. **11/11 blocks GREEN /
+12 expectations** (net 0; settings 4 + workflow
+W1:1/W2:2/W3:1/W4:1/W5:1/W6:1/W7:1=8), 0 error / 0 skip
+(`filter="^e2e-(settings|workflow)"`, env
+`NPRC_RUN_E2E=true NOT_CRAN=true RENV_CONFIG_AUTOLOADER_ENABLED=false`).
+**\[mutation-check\] PASS:** settings-about arms via the spike
+(correct→TRUE, wrong-pane `(About,…)` while Settings active→FALSE,
+wrong-content `(Settings,"Form Groups")`→FALSE, old whole-body
+grepl→TRUE contrast); workflow arms — W1 wrong-pane
+`(Pedigree Browser,…)` while Input active→FALSE (count would miss
+`==6L`), W4 scoped `grepl("Breeding", brand)`→FALSE while OLD whole-body
+`grepl("Breeding", body)`→TRUE (proves the old check content-blind —
+“GeneKeepR” also lives in the Home `<h1>` + About pane). Non-e2e
+regression (`NOT_CRAN=true`) **2162 `expectation_success` / 0 failed / 0
+error / 156 skipped / 5 pre-existing `modPyramid` warnings / 0 non-e2e
+offenders** — S40–S43 baseline held EXACTLY (read via
+`expectation_success` = `sum(nb)−failed−skipped−warning`=2162, NEVER
+`sum(nb)`=2323, per Learning \#43e). Phase-3E: the live browser run (11
+blocks via real AppDriver) + the 2 DOM spikes + the live mutation-check
+spike ARE the runtime (#31 pattern). Test-tree-only (2 test files + 1
+helper docstring) → no `document()`/NEWS; `tests/` lint-exempt. **8e-3
+COMPLETE** (GV S42 + BG S43 + settings/workflow S44). **Commit:** one
+`test:`/`docs:` close-out (the 2 test files + helper docstring +
+CHANGELOG + PROJECT_LEARNINGS \#44 + these notes), staged via explicit
+`git add` (NOT `.DS_Store`/`..Rcheck/`/`PED_GV_AUDIT_2026-05-30.html`).
+**⇒ SUGGESTED NEXT = 8e-4 (namespace fix + error/boundary interaction
+revival)** — `test-e2e-error-states.R` (13) +
+`test-e2e-boundary-conditions.R` (13). **⚠ This cut is DIFFERENT from
+8e-2/8e-3 — RED→GREEN, not pure run-and-observe (plan §5 “8e-4” +
+§2.4):** (1) apply the §2.4 namespace fixes `input-`→`dataInput-` at
+`helper-shinytest2.R:150` (`upload_and_wait` default `module_id`) +
+`:154` (hardcoded `` `input-pedigreeFileOne` ``),
+`test-e2e-error-states.R:24` (`#input-getData`) + `:45`
+(`` `input-minParentAge` ``), `test-e2e-boundary-conditions.R:43`
+(`` `input-minParentAge` ``). The input module is namespaced
+**`dataInput`** (`appUI.R:123` `modInputUI("dataInput")`);
+`data-module="input"` (`modInput.R:31`) is a LABEL, not the namespace —
+do NOT confuse. **§2.4 DO-NOT-CHANGE (verified-correct as-is):**
+`test-e2e-data-ready.R:27-32/43` (bare ids inside `testServer`; the
+`data-module="input"` literal assertion),
+`test-e2e-home-navigation.R:95` (`#goto_input` is an app-level bare
+button). (2) Then convert the `nchar>100` near-tautologies +
+`interaction-noop-tryCatch` blocks into REAL input interactions (set
+`dataInput-minParentAge`, click `#dataInput-getData`) +
+active-pane/error-state assertions. ⚠ these files probe INVALID input
+(non-numeric/zero parent age) — confirm the `modInput` validation path
+surfaces a visible error/state to assert FIRSTHAND (read `R/modInput.R`
+`observeEvent(getData)` validation ~301-419). Some boundary blocks need
+data loaded → defer those to 8e-6. **TDD:** namespace fix = RED→GREEN
+(write the assertion that needs the corrected-id interaction first →
+fails on the wrong id → fix id → green); conversions = run-and-observe +
+\[mutation-check\] (wrong id → must fail, proving the interaction is
+real, not `tryCatch`-swallowed). Read plan §5 “8e-4” + §2.4 table FIRST.
+After 8e-4: **8e-5** (⚠ PRODUCTION `R/` gated `set_seed` — own
+owner-gated full RED→GREEN→REFACTOR+`check()`,
+\[production-in-disguise\], plan §7), **8e-6** (real
+upload+QC/GVA/breeding flows + ALL deferred data-bearing asserts: 4
+NULL’d pedigree \[S40\] + 2 NULL’d GV \[S42: Value
+Designation/Z-score\] + 3 export-NULL’d BG \[S43: D5/T7/T9\] blocks land
+here — **8e-4 is its prerequisite**), **8e-7** (CI per-module
+fresh-process grouping, live-runner-only). Browser env:
+`NPRC_RUN_E2E=true NOT_CRAN=true RENV_CONFIG_AUTOLOADER_ENABLED=false`.
+Branch `add-methodology` still NOT on remote (two S34 CI watch items
+still pending the first master run).
+
+**⟢ Carried — Session 43 (8e-3 Breeding-Groups cut, DONE; full detail in
+“What Session 43 Did” below):** **Task (Session 43 — 2026-06-08/09):**
+IMPLEMENT the **BREEDING-GROUPS family of slice 8e-3** (issue \#40, the
+2nd of 3 8e-3 cuts) — DONE under strict TDD: **PURE run-and-observe**
+(no defect → green-on-arrival \[refactor-only\]; gated
+`PRE-RED→run-and-observe` via `AskUserQuestion`; \[mutation-check\] =
+the rigor, no synthetic RED). Converted all **23 blocks** across
+`test-e2e-breeding-groups-module.R` (7) + `-detailed.R` (7) +
+`-tutorial.R` (9) from content-blind
+`navigate_to_tab → grepl(get_html_safe(app,"body"))` to
+`assert_active_pane(app,"Breeding Groups",<pattern>)`. “Breeding Groups”
+IS the `tabPanel` title (`appUI.R:166`). **Map (Learning \#40–#43) — 12
+KEEP · 6 REVIVE · 1 ANCHOR · 4 NULL:** 12 genuine `grepl` KEEP regex
+verbatim, rescope (M1–M7; D1🐉/D3/D7; T2/T3); **6
+tautologies-with-a-dead-grepl REVIVE rescoped+pruned (Learning
+\#42a/#43c):** D2→`harem`, D4→`result|group|table|output|formed`
+(“group” now, rest data-dependent→8e-6),
+T1→`group.*formation|source.*animal`,
+T4→`Seed.*Group|seed.*animal|specific.*animal`,
+T6→`Include.*kinship|kinship.*display`, T8→`top.*ranked`; 1
+content-length tautology D6 `nchar>200`→ANCHOR `algorithm` (guidance
+“The algorithm ignores…”); **4 NULL** D5/T7 (export), T9 (export kinship
+matrix) — `downloadButton`s in the INACTIVE “Group Detail” nested tab
+(`display:none`→not in active-pane innerText; guidance has no export
+tokens) → defer 8e-6 — and T5 (infants-with-dam: no such control in
+modular UI, tutorial-only). **Dragon (KEEP verbatim, flag-not-rename):**
+D1 `size|number|count|animals` (no “size” control; matches
+“number”/“animals”). **⚠ Learning \#43 (the NEW facts):** (1) nested-tab
+NAV labels (“Groups”/“Statistics”/“Group Detail”) ARE in active-pane
+innerText (M7 `statistic`✓ “Statistics” nav label; D4 “group”✓ “Groups”
+nav label) while inactive nested-tab CONTENT is hidden — a THIRD NULL
+sub-case (static-but-in-inactive-nested-tab, distinct from \#39
+nonexistent + \#40 data-dependent); (2) `passed = sum(nb)−sum(failed)`
+is WRONG — `nb` counts skip+warning rows; canonical passed =
+`expectation_success`. **Pre-gate refutation (Learning \#43d):** 4-agent
+workflow (3 skeptics default-refuted + critic) confirmed 23/23 (0
+corrections) but settled M7 firsthand by RENDERING the Shiny DOM (the
+only-matcher-is-the-nav-label uncertainty); robust to 2/3 skeptic
+stream-timeouts. **Commit:** one `test:`/`docs:` close-out (the 3 test
+files + CHANGELOG + PROJECT_LEARNINGS \#43 + these notes), staged via
+explicit `git add`. **Status:** Done. **23/23 blocks GREEN / 23
+expectations** (1:1 swap, net 0), 0 error / 0 skip
+(`filter="^e2e-breeding-groups"`, env
+`NPRC_RUN_E2E=true NOT_CRAN=true RENV_CONFIG_AUTOLOADER_ENABLED=false`).
+**\[mutation-check\] PASS** (inverted — Breeding Groups is the TARGET
+pane): correct `(Breeding Groups,"Form Groups")`→TRUE, wrong-pane
+`(Pedigree Browser,"Form Groups")`→FALSE, wrong-content
+`(Breeding Groups,"Focal Animals")`→FALSE (“Focal Animals”
+Pedigree/Input-only `modPedigree.R:52`/`modInput.R:114`, grep-confirmed
+foreign to BG; “Form Groups” the BG actionButton
+`modBreedingGroups.R:66`), old whole-body
+`grepl("Focal Animals",body)`→TRUE (content-blind contrast), active-pane
+innerText grepl→FALSE (sanity). Non-e2e regression (`NOT_CRAN=true`) —
+canonical tally **2162 `expectation_success` / 0 failed / 0 error / 156
+skipped / 5 pre-existing `modPyramid` warnings / 0 non-e2e offenders** —
+S40–S42 baseline held EXACTLY (the 3 BG files self-skip at
+`create_test_app()` `helper-shinytest2.R:196`). **⚠ Learning \#43e
+(measurement trap):** my FIRST read used `sum(nb)−sum(failed)`=2323 (a
+fake +161 “jump”) — `nb` counts skip(156)+warning(5) rows
+(2162+156+5=2323); report `expectation_success` (or the testthat PASS
+line), NEVER `sum(nb)`. Phase-3E: the browser run + the live
+mutation-check spike ARE the runtime (#31 pattern). Test-tree-only → no
+`document()`/NEWS; `tests/` lint-exempt. **⚠ STILL TRUE (carried,
+load-bearing for the rest of 8e-3/8e-6): the active-pane mechanism = the
+IMPLEMENTED helper `tests/testthat/helper-shinytest2.R:339-413`**
+(`.active_pane_js` scopes to the only `.tab-content` NOT inside a
+`.tab-pane`; `innerText` honors CSS visibility). Later cuts just CALL
+`assert_active_pane`; no helper work — EXCEPT the settings-about cut,
+which FINALIZES `navigate_to_menu_item` (see ⇒ below). **⇒ SUGGESTED
+NEXT = 8e-3 FINAL cut = settings-about (4 blocks) + workflow-integration
+(7 blocks)** (`test-e2e-settings-about.R` +
+`test-e2e-workflow-integration.R`; census firsthand + read plan
+§5/§8.3). **This cut is NOT mechanical** (distinct, higher-value): (1)
+**settings-about** must convert its 4 blocks to assert a TRUE
+visible-pane switch for the `navbarMenu("More")` children
+(Settings/About/Help) via `assert_active_pane` — this RESOLVES the §8.3
+navbarMenu false-positive and FINALIZES `navigate_to_menu_item`;
+**update its docstring** `helper-shinytest2.R:283-299` (currently says
+“the body-grepl assertions pass regardless of a true visible-pane switch
+— strengthened in 8e”). ⚠ 8e-1 spike confirmed
+`set_inputs(mainNavbar=<child>)` reaches the child via read-back, but
+VERIFY FIRSTHAND that the child becomes the lone `.active` top-level
+pane (sub-plan §2.3 item 4) — if a navbarMenu child does NOT become a
+`.tab-pane.active` (it may render differently than a top-level
+`tabPanel`), `assert_active_pane` will return FALSE and you must adapt
+the helper/approach (a possible 🐉). (2) **workflow-integration**
+converts a “visits N tabs” loop (~11 navs) to per-pane active assertions
+(kills the navigation false-positive). **Same idiom + Learning \#40–#43
+split:** genuine grepl→KEEP verbatim (flag dragons, never rename);
+tautology-with-dead-grepl→REVIVE rescoped, prune inputId
+artifacts/framing words/foreign-module tokens, keep
+matching+data-dependent; no-regex tautology→guidance/label anchor;
+**NULL** when nothing default-visible matches a faithful pattern
+(incl. static-but-in-inactive-nested-tab + data-dependent + nonexistent
+— all defer/flag). **\[mutation-check\] inversion** per the target pane
+(Settings/About each their own; grep-confirm a foreign label).
+**Pre-gate refute the map** (Learning \#43d — render the DOM for any
+uncertain matcher) then gate `PRE-RED→run-and-observe`. **Read the
+regression with `expectation_success` + `NOT_CRAN=true`** (Learning
+\#42d/#43e). After 8e-3: **8e-4** (namespace fix + error/boundary),
+**8e-5** (⚠ PRODUCTION `R/` gated `set_seed` — own owner-gated full
+RED→GREEN→REFACTOR+`check()`, see \[production-in-disguise\]), **8e-6**
+(real upload+QC/GVA/breeding flows + ALL deferred data-bearing asserts:
+4 NULL’d pedigree blocks \[S40\] + 2 NULL’d GV blocks \[S42\] + the 3
+export-NULL’d BG blocks \[S43: D5/T7/T9\] land here), **8e-7** (CI
+grouping). Browser env:
+`NPRC_RUN_E2E=true NOT_CRAN=true RENV_CONFIG_AUTOLOADER_ENABLED=false`.
+Read plan §5 FIRST. Branch `add-methodology` still NOT on remote (two
+S34 CI watch items still pending the first master run).
+
+**⟢ Carried — Session 42 (8e-3 Genetic-Value cut, DONE; full detail in
+“What Session 42 Did” below):** **Task (Session 42 — 2026-06-08):**
+IMPLEMENT the **GENETIC-VALUE family of slice 8e-3** (issue \#40, the
+FIRST 8e-3 cut) — DONE under strict TDD: **PURE run-and-observe** (no
+defect → green-on-arrival \[refactor-only\]; gated
+`PRE-RED→run-and-observe` via `AskUserQuestion`; \[mutation-check\] =
+the rigor, no synthetic RED). **Owner-scoped to ONE family** (pre-RED
+scope `AskUserQuestion`): 8e-3 censused firsthand at **8 files / ~56
+blocks** (~3× an 8e-2 session) → split per plan §5 “may split if
+oversized” + don’t-bundle (FM \#18/#25). Converted all **22 blocks**
+across `test-e2e-genetic-value-module.R` (7) + `-detailed.R` (7) +
+`-tutorial.R` (8) from content-blind
+`navigate_to_tab → grepl(get_html_safe(app,"body"))` to
+`assert_active_pane(app,"Genetic Value Analysis",<pattern>)`. “Genetic
+Value Analysis” IS the `tabPanel` title (`appUI.R:148`) == module h3
+(`modGeneticValue.R:32`); `navigate_to_tab` 3rd `fallback` arg =
+documented NO-OP (`helper-shinytest2.R:250`). **Map (Learning
+\#40/#41/#42) — 16 KEEP · 3 REVIVE · 1 ANCHOR · 2 NULL:** 16 genuine
+`grepl` KEEP regex verbatim, rescope (M1–M7; D1🐉/D2/D4/D5; T1–T4🐉/T6);
+**3 tautologies-with-a-DEAD-grepl REVIVE that exact pattern rescoped
+(Learning \#42a, NEW sub-case):** D3 `founder|equivalent|FE|genetic`
+(✓“founder” guidance + “genetic” h3), D6
+`report|export|download|summary` (✓“Export All/Subset”+“Summary” tab),
+T8 narrowed→`filter` (✓“Filter View”); 1 content-length tautology D7
+`nchar>200`→ANCHOR “ranks animals” (guidance phrase); **2 NULL** T5
+(Value Designation) + T7 (Z-score) — data-dependent results concepts
+absent from static UI → pane-active only, defer 8e-6. **Dragons (KEEP
+verbatim, flag-not-rename):** M4 `minimum|breeding|age` (no min-age
+control; “breeding”←guidance “breeding colony”); D1
+`population|select|animals|subset` (population server-derived
+`modGeneticValue.R:148-162`; “animals”←guidance “ranks animals”,
+“subset”←“Export Subset”); T4 `dataTable|DTOutput|table|results|ranking`
+(table `req(gvaView())`-gated→8e-6; “ranking”←static “Rankings”
+nested-tab label). **Pre-gate refutation NARROWED the map (Learning
+\#42b):** 4-agent workflow (3 skeptics default-refuted + critic)
+confirmed 21/22, corrected **T8** — its revived pattern carried 4
+FOREIGN alternatives (focal/display/Show.\*entries/search, copy-paste
+from another module) → narrowed to `filter`; critic also dismissed a
+bogus newline-spanning false-positive + confirmed the 2 NULLs.
+**Commit:** one `test:`/`docs:` close-out (the 3 test files +
+CHANGELOG + PROJECT_LEARNINGS \#42 + these notes). **Status:** Done.
+**22/22 blocks GREEN / 22 expectations** (1:1 swap, net 0), 0 error / 0
+skip (`filter="^e2e-genetic-value"`). **\[mutation-check\] PASS**
+(inverted — Genetic Value Analysis is the TARGET pane) — correct
+`(Genetic Value Analysis,"Run Analysis")`→TRUE, wrong-pane
+`(Pedigree Browser,"Run Analysis")`→FALSE, wrong-content
+`(Genetic Value Analysis,"Focal Animals")`→FALSE (Pedigree-only
+`modPedigree.R:52`, grep-confirmed foreign to GV), old whole-body
+`grepl("Focal Animals",body)`→TRUE (content-blind contrast), active-pane
+innerText grepl→FALSE (sanity). Non-e2e regression **2162 passed / 0
+failed / 0 error / 0 non-e2e offenders** (156 skipped, 5 pre-existing
+`modPyramid` warnings; the 3 GV files showed 0/0/0/22-skip — e2e-only
+change self-skips at `create_test_app()` `helper-shinytest2.R:196` →
+non-e2e unaffected; S41 baseline held EXACTLY). **⚠ Learning \#42d
+(measurement trap):** my FIRST regression read OMITTED `NOT_CRAN=true` →
+fake 2122/159 (40-pass “drop”); a test-only e2e edit CANNOT lower
+non-e2e passes — re-ran `NOT_CRAN=true` → 2162/156 exactly. ALWAYS read
+with `NOT_CRAN=true`. Phase-3E: the browser run + the live
+mutation-check spike ARE the runtime (#31 pattern). Test-tree-only → no
+`document()`/NEWS; `tests/` lint-exempt. **⚠ STILL TRUE (carried,
+load-bearing for the rest of 8e-3/8e-6): the active-pane mechanism = the
+IMPLEMENTED helper `tests/testthat/helper-shinytest2.R:309-413`, NOT the
+plan §2.3/§4 selector text** (superseded — modules nest tabsetPanels;
+the helper scopes to the only `.tab-content` NOT inside a `.tab-pane`).
+Later cuts just CALL `assert_active_pane`; no helper work. **⇒ SUGGESTED
+NEXT = 8e-3 continue with the BREEDING-GROUPS family** (the 2nd of 3
+8e-3 cuts; ~23 blocks: `test-e2e-breeding-groups-module.R` 7 +
+`-detailed.R` 7 + `-tutorial.R` 9 — census firsthand + read plan §5
+“8e-3”). Tab title = **“Breeding Groups”** (`appUI.R:166`). Idiom
+unchanged:
+`success <- navigate_to_tab(app,"Breeding Groups","<fallback>"); if(!success) skip(...); expect_true(assert_active_pane(app,"Breeding Groups","<pattern>"), info=...)`.
+**⚠ breeding-groups content is largely DATA-DEPENDENT** (groups render
+post-formation) → assert STATIC UI (control labels, tab titles,
+guidance); data-bearing → 8e-6. Read `R/modBreedingGroups.R` for the
+static-vs-`req()`-gated surface FIRST (Phase-5/6 baked it heavily:
+seed-group widget, `minAge`/`nIterations`/`withKinship` controls, “Group
+Detail” tab, downloads). **Apply Learning \#40/#41/#42’s split:**
+genuine `grepl`→KEEP verbatim rescope; tautology-WITH-dead-grepl→REVIVE
+that pattern rescoped (Learning \#42a — prune only alternatives FOREIGN
+to the module, keep real-but-data-dependent ones, Learning \#42b);
+no-regex/content-length tautology→guidance anchor; **NULL ONLY when
+nothing default-visible matches a faithful pattern.** ⚠ Learning \#41a:
+NULL test = “does ≥1 alternative match DEFAULT-VISIBLE innerText?” NOT
+“is the named feature real?” — keep a genuine regex even when the test
+NAME overclaims (flag the dragon in a comment, never rename/retarget).
+**⚠ \[mutation-check\] inversion:** wrong-content foreign label from a
+pane OTHER than Breeding Groups (grep-confirm foreign). **Pre-gate
+refute the map** (Learning \#40d/#41d/#42b — it CORRECTS, not just
+confirms) then gate `PRE-RED→run-and-observe`. **After breeding-groups,
+the 3rd 8e-3 cut = settings-about (4) + workflow-integration (7)** — NOT
+mechanical: settings-about FINALIZES `navigate_to_menu_item` as a true
+visible-pane check (resolves the §8.3 navbarMenu false-positive; update
+its docstring `helper-shinytest2.R:283-299`), and workflow-integration
+converts a “visits N tabs” loop (11 navs) to per-pane active assertions.
+**⚠ navbarMenu “More” children** (Settings/About/Help): 8e-1 spike
+confirmed `set_inputs(mainNavbar=<child>)` reaches them
+(`navigate_to_menu_item`→`navigate_to_tab`,
+`helper-shinytest2.R:297-299`) — but verify the child becomes the lone
+`.active` pane firsthand (sub-plan §2.3 item 4). After 8e-3: **8e-4**
+(namespace fix + error/boundary), **8e-5** (⚠ PRODUCTION `R/` gated
+`set_seed` — own owner-gated full RED→GREEN→REFACTOR+`check()`, see
+\[production-in-disguise\]), **8e-6** (real upload+QC/GVA/breeding
+flows + ALL deferred data-bearing asserts: the 4 NULL’d pedigree blocks
+from S40 + the 2 NULL’d GV blocks from S42 \[Value Designation,
+Z-score\] land here), **8e-7** (CI grouping). Browser env:
+`NPRC_RUN_E2E=true NOT_CRAN=true RENV_CONFIG_AUTOLOADER_ENABLED=false`.
+Read plan §5 FIRST. Branch `add-methodology` still NOT on remote (two
+S34 CI watch items still pending the first master run).
+
+**⟢ Carried below — Session 35 (Phase 9 COMPLETE, \#27 CLOSED) +
+still-relevant baked-in notes (Phase-8 CI / Phase-7 / Phase-5/6 /
+tracker reconciliation):** **Task:** **Session 35 — IMPLEMENTED Phase 9
+of the Shiny-module conversion (the FINAL phase): retire the legacy
+monolith.**
+[`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+→ a
+[`lifecycle::deprecate_soft()`](https://lifecycle.r-lib.org/reference/deprecate_soft.html)
+alias launching `runModularApp(port=6013L, launch.browser=TRUE)`
+(zero-arg callers keep working); **deleted `inst/application/`** (17
+tracked files, standalone revertible commit per §15) + the
+owner-approved orphans
+`getMinParentAge`/`getLogo`/`shouldShowErrorTab`/`modMinimalTest`;
+docs/pkgdown/NEWS/ROADMAP/vignette updated; **issue \#27 CLOSED**.
+Strict TDD (RED→GREEN gated) + 4 owner `AskUserQuestion`s (go/no-go ·
+shouldShowErrorTab=delete · modMinimalTest=delete ·
+one-session-multi-commit) + the pre-RED→RED / RED→GREEN TDD gates. **The
+whole XARCH-1 / shiny-module conversion campaign (Phases 1–9) is
+COMPLETE.** **Commits:** `3db018d1` (refactor!: alias+orphans) ·
+`24992e0b` (feat!: delete monolith) · `53a9e5e0` (docs) · `a1618c48`
+(fix: pre-existing a2interactive vignette) + this `docs:` close-out.
+**Status:** Done. **Pre-flight** (mandatory before an irreversible
+delete): re-ran the §10 grep-inventory as a read-only multi-modal
+sweep + completeness critic (`wf_48a6f152-f0f`; inventoryConfirmed=true,
+0 new refs, 0 broken claims); firsthand-verified
+`system.file("application")` is the SOLE live ref
+(`R/runGenekeepr.R:19`), `inst/www/` (modular `data-ready.js`,
+`appUI.R:9`) ≠ the deleted `inst/application/www/`, `lifecycle` is a
+dep, all 17 files tracked/`git revert`-able. **NAMESPACE fallout (→
+Learning \#35):** deleting `getMinParentAge.R` (the SOLE carrier of
+`@import shiny`) dropped `import(shiny)` → the modular UI lost `h5`;
+FIXED by relocating `@import shiny` to `R/nprcgenekeepr-package.R` —
+caught by the regression run, NOT the inventory (a reference-grep can’t
+see what a file’s roxygen EMITS). RED = `test_runGeneKeepR_alias.R`
+(deprecation + delegation + port/launch.browser forwarding; mocks BOTH
+`runModularApp` and
+[`shiny::runApp`](https://rdrr.io/pkg/shiny/man/runApp.html) so nothing
+launches) + `test_monolith_removed.R` (`system.file("application")==""`,
+paired into the deletion commit so each commit is green). **Verify:**
+non-e2e regression **2135 passed / 0 failed / 0 error** (5 pre-existing
+`modPyramid` warnings, unchanged baseline); runtime smoke
+[`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+→ modular app **HTTP 200**; **`devtools::check()` = 0 errors / 0
+warnings**, `creating vignettes ... OK` (only pre-existing NOTEs:
+non-standard top-level dev files; a stale `spelling.Rout.save`
+baseline); grep shows no `system.file("application")`. **Pre-existing
+fix (owner-approved, separate `fix:` commit):** `a2interactive.Rmd`
+error-list table was missing the `invalidIdChars` description (NEW-45
+drift:
+[`getEmptyErrorLst()`](https://github.com/rmsharp/nprcgenekeepr/reference/getEmptyErrorLst.md)
+has 10 fields vs 9 hardcoded) — failed the vignette build, surfaced by
+the FULL check (prior sessions used only the regression-read and never
+ran full check). **⇒ SUGGESTED NEXT = pick an open GitHub issue** (the
+conversion campaign is DONE — there are no more phases). Natural
+continuation: **\#40** (strengthen the shinytest2 E2E behavioral
+assertions + harden the full-tier Chrome process-count flake — the open
+Phase-8 follow-on). Others: **\#30** (lint debt: `modSummaryStats`=60 /
+`modORIPReporting`=17 / `processQcStudbookResult`=13), **\#34**
+(Integrate qcStudbook in modInput — likely STALE: `modInput` already
+calls `qcStudbook`+`runQcStudbook` → verify + close/relabel),
+**\#35/#36** (pedigree-filtering / chimp-pyramid enhancements), **\#37**
+(unused exports), **\#9/#38**. **⚠ Two live-run CI watch items still
+ride on the first master run** (see Phase-8 CI baked-in below): the renv
+lib-path / AppDriver-subprocess interaction, and the 23-in-one-process
+Chrome flake (`stop_on_failure=TRUE`). **Orient + get direction first
+(FM \#1/#9).** **Phase-8 CI baked-in (carried — relevant if a future
+session touches `.github/workflows/shinytest2.yaml` or runs E2E in
+CI):** the CI workflow is **scheduled(`0 7 * * *`)+dispatch only**
+(fires once it’s on master). It **installs the package**
+(`R CMD INSTALL .` — the app subprocess does
+[`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/) +
+`create_test_app()` uses `system.file(package=)`), sets
+**`NOT_CRAN:'true'`** (else `skip_on_cran` silently skips everything on
+CI — the S32 blocker), **`NPRC_RUN_E2E:'true'`** +
+**`RENV_CONFIG_AUTOLOADER_ENABLED:'false'`** (else the renv autoloader
+makes `R CMD INSTALL` target renv’s PRIVATE lib, which the AppDriver
+subprocess — starting in the installed `shinytest/` dir, no project
+`.Rprofile` — can’t see). It now **runs ALL 23 E2E files** via
+`filter="^(app|e2e)-"` (S34 broadened from 18; the run-step has
+`stop_on_failure=TRUE` + **[`stop()`](https://rdrr.io/r/base/stop.html)
+if `sum(passed)==0`** silent-skip guard). **⚠ TWO LIVE-RUN WATCH ITEMS
+(never GitHub-verified — both first exercise once the branch reaches
+master):** (1) the renv lib-path / AppDriver-subprocess interaction —
+confirm the app subprocess resolves
+[`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/) on
+the first real run; (2) the **23-in-one-process Chrome flake** (~1
+transient error/5 local runs, §5(8c)/R2 dragon) — under
+`stop_on_failure=TRUE` it can red the scheduled job; if a scheduled run
+reds, FIRST check whether it’s this flake (transient Chrome error,
+passes on re-run) vs a real regression; hardening (per-group fresh
+processes) is **\#40**. To trigger: push `add-methodology` (or merge to
+master) then `gh workflow run shinytest2.yaml`. Full detail in CHANGELOG
+(S32/S33/S34) + Learnings \#32/#33/#34. **Phase-8a baked-in (carried —
+relevant if a future session touches the E2E helpers /
+`tests/testthat/helper-shinytest2.R`):** the 6 helpers +
+`E2E_TIMEOUT <- 30000L` are now defined there. **`navigate_to_menu_item`
+was FINALIZED in 8d** (S34) — the §8.2 spike confirmed
+`set_inputs(mainNavbar=<navbarMenu child>)` reaches Settings/About/Help
+via read-back, so it stays a `navigate_to_tab(app, item)` delegate
+(docstring records this; a true visible-pane switch is an 8e/#40 gap,
+§8.3). Browser helpers are TDD’d **browser-free** via fake-AppDriver
+[`list()`](https://rdrr.io/r/base/list.html) stubs (a list of functions;
+`app$method(args)` resolves `$` on a list) — `test_helper_shinytest2.R`
+has a *throwing* stub (proves
+`*_safe`→`""`/[`list()`](https://rdrr.io/r/base/list.html)/`FALSE`,
+`navigate_to_tab`→FALSE), a *recording-ok* stub
+(`set_inputs`→env→`get_value` reflects → `navigate_to_tab` read-back
+TRUE), and a *silent-no-op* stub (`get_value` never reflects →
+`navigate_to_tab` FALSE, proving the read-back discriminates a failed
+nav). `create_app_driver`’s real construction needs Chrome →
+existence+formals only in 8a (exercised in 8b). Full detail in CHANGELOG
+(S31) + Learning \#31. **Phase-7 baked-in (carried — relevant only if a
+future session touches `R/modInput.R`):** `observeEvent(input$getData)`
+branches `if (identical(input$fileContent,"focalAnimals"))` BEFORE
+`readDataFile` (~modInput.R:313-351) → `getFocalAnimalPed`;
+`nprcgenekeeprErr` → `storedErrorLst()` + cleaned NULL + early return;
+else fall through. 9 returned reactives UNCHANGED. To unit-test the
+focal path use
+`local_mocked_bindings(getLkDirectRelatives=…, .package="nprcgenekeepr")`
+(NOT [`mockery::stub`](https://rdrr.io/pkg/mockery/man/stub.html)). Full
+detail in CHANGELOG (S29) + Learning \#29 + \[testServer-mechanics\].
+**⚠ Learnings now live in `PROJECT_LEARNINGS.md`, NOT `CLAUDE.md`
+(extracted 2026-06-06 for the 40k CLAUDE.md limit; `CLAUDE.md` keeps
+only a pointer. Format unchanged since S28, for whoever next edits
+it):** Learnings are `#### Learning N — title` blocks (NOT table rows) +
+a “Recurring Reflexes (glossary)” section. When adding a Learning N+1:
+append a `#### Learning N` block **to `PROJECT_LEARNINGS.md`**, cite
+reflexes on a `**Reflexes:** [tag][tag]` line (every tag must be defined
+in the glossary), end with `**Apply:** …`. If a NEW recurring reflex
+emerges, add a `- **[tag]** (discovered #N) — …` glossary bullet. Verify
+before commit: every cited `[tag]` is defined (no dangling), no orphan
+glossary entry. See Learning \#28 for the full no-loss method if
+re-condensing. **Phase-5/6 baked-in (carried, only relevant if a future
+session touches `R/modBreedingGroups.R`):** seed-group widget
+(`curGrp1..N` by LOCAL id), inert controls surfaced
+(`minAge`/`nIterations`/`withKinship`), breeding iter `1000→10`,
+`kmat`/`hasUnused` in `groupResults`, Group Detail tab, length-clamp +
+`length()>=1L` observe guard, validate-and-block on phantom seeds. Full
+detail in CHANGELOG (S26/S27) + Learnings \#26/#27. **NEW-20 (carried,
+STILL APPLIES):** `R/makeGeneticDiversityDashboard.R` is retained
+(won’t-delete; defines no live function). Do NOT delete. **⚠ Tracker
+reconciliation (carried):** audit follow-ups (NEW-12/XARCH-3,
+XARCH-2..8) are NOT GitHub issues; live tracker is \#1–#39. Now noted in
+BACKLOG.md “Tracker reconciliation”. Decide with the user whether to
+file the remaining XARCH items. **Key finding (carried from S21):** the
+modular app is FAR more complete than `TECH_DEBT_AUDIT_2026-05-30.md`
+implied; plan against the real files, not the audit’s stale counts (plan
+§8/§11).
+
+------------------------------------------------------------------------
+
+### Carried context (pre-S27)
+
+*All Phase-5 detail is in `CHANGELOG.md` (S26) and Learning \#26; the
+lines below are retained S26 handoff context.*
+
+**Task:** **Session 26 — implement PHASE 5 of the Shiny-module
+conversion plan (Breeding Groups parity A: downloads + per-group
+kinship + group selector) is COMPLETE.** All in
+**`R/modBreedingGroups.R`**: a new **“Group Detail” tab** (additive —
+the existing all-groups “Groups” + “Statistics” tabs are untouched) with
+a **`viewGrp` `selectInput`**, a per-group **annotated member view**
+(`addSexAndAgeToGroup` → `round(age,1)` → rename to “Ego ID”/“Sex”/“Age
+in Years” → order by Ego ID), a per-group **kinship matrix view**
+(`filterKinMatrix(groupIds, kmat)` → `round(.,6)`), and
+**`downloadGroup`** (members CSV, `na=""`/`row.names=FALSE`) +
+**`downloadGroupKin`** (kinship CSV, `na=""`/`row.names=TRUE`) handlers.
+The module now stores the already-computed full **`kmat`** (+ a
+**`hasUnused`** flag) in `groupResults` so the kinship view derives each
+group’s submatrix WITHOUT re-deriving the matrix or touching formation.
+`selectedGroup()` clamps `input$viewGrp` via
+`withinIntegerRange(.,1,length(breedingGroups()))` (robust, both views);
+an `observe` populates the selector choices (“Group i”, last labelled
+“Unused” only when the unused group is non-empty). **Commits:** this
+session’s `feat:` impl (`R/modBreedingGroups.R` +
+`tests/testthat/test_modBreedingGroups.R`) + this `docs:` close-out.
+**Status:** Done under strict TDD (RED→GREEN→REFACTOR all gated + 3
+pre-RED author-decision `AskUserQuestion`s, all 3 → recommended). 5 new
+tests in `test_modBreedingGroups.R` (UI structure; member download;
+kinship download + `filterKinMatrix`-equivalence; selector switches
+group; out-of-range clamp) — all 5 RED at HEAD (Test 1 6/6 fail on
+absent UI; Tests 2-5 error on absent
+`output$downloadGroup`/`downloadGroupKin`), GREEN after. Full suite
+under
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)+`NOT_CRAN=true`
+= **0 failed / 0 error**, 0 non-e2e offenders, e2e skipped (156), 5
+pre-existing `modPyramid` warnings, **2264 passed** (`modBreedingGroups`
+file 50 tests 0/0/0). **Dragon discharged:** group-FORMATION
+byte-[`identical()`](https://rdrr.io/r/base/identical.html) across 3
+seeds (nGroups 3/4/1) vs a pre-change HEAD reference
+(groups/score/unassigned/nGroups all identical) — display/download only.
+Lint **net-zero** on `R/modBreedingGroups.R` (HEAD 31 = NOW 31 via
+touched-file stash; not `.lintr` line-excluded → \#7 trap N/A);
+`document()` **zero man/NAMESPACE delta** (no roxygen change;
+`import(shiny)` NAMESPACE:168 covers the new controls); **Phase 3E
+runtime smoke —
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+binds + HTTP 200**, the “Group Detail” tab + `breedingGroups-viewGrp` +
+both download buttons render. **No NEWS bullet** — modular app not
+canonical; display/download parity, no analytical-pipeline numeric
+change → CHANGELOG only (consistent with S22/S23/S25). **⇒ SUGGESTED
+NEXT deliverable = implement PHASE 6 only** (Breeding Groups parity B:
+**seed-group pre-seeding + expose the inert controls** — add the
+monolith’s seed-animal “current groups” widget
+\[`getCurrentGroups`/`textAreaWidget`, server.r:1019-1051\] replacing
+the hardcoded `currentGroups = list(character(0L))` in the
+`groupAddAssign` call; surface the controls the server READS but the UI
+never declares — `minAge`/`nIterations`/`withKinship` at
+`modBreedingGroups.R:187-189`). **⚠ Breeding-sim iteration default = 10,
+NOT 1000:** the monolith `gpIter` is `value=10L`
+(`uitpBreedingGroupFormation.R:155-161`) — distinct from the GVA
+gene-drop iterations (1000); the modular fallback `1000L`
+(`modBreedingGroups.R:188`) is a 100× drift → set the breeding
+`nIterations` control default to **10**. Risk MEDIUM. Read
+`docs/planning/shiny-module-conversion-plan.md` §9 Phase 6 first. **Do
+NOT bundle phases.** After Phase 6: 7/8/9 are 🐉 (focal-animal/LabKey =
+Phase 7 owner-consult; E2E harness = issue \#39 = Phase 8; monolith
+deletion = Phase 9). **⚠ Phase-5 changes now BAKED INTO
+`R/modBreedingGroups.R` (for future work):** (1) `groupResults` now ALSO
+stores **`kmat`** (the full kinship matrix from `getKinshipMatrix`) and
+**`hasUnused`** (was the appended unused-animals group non-empty) — the
+5 RETURNED reactives
+(`groups`/`nGroups`/`score`/`unassigned`/`groupKinship`) are UNCHANGED,
+and `result$groupKin` is still NULL (withKin defaults FALSE — no
+`withKinship` UI control until Phase 6). (2) **Per-group kinship is
+computed from the stored `kmat` via `filterKinMatrix(groupIds, kmat)`**,
+NOT from `result$groupKin` — byte-identical to the monolith’s
+`groupKin[[i]]` because each group’s members ⊆ candidates (so filtering
+the full vs candidate-reduced kmat yields the same submatrix). This
+makes the kinship view independent of the Phase-6 `withKinship` control.
+(3) The selector/views/downloads live in a **new “Group Detail” tab**;
+the existing all-groups “Groups” tab is untouched. (4) `selectedGroup()`
+clamps to **`length(breedingGroups())`** (more robust than the monolith,
+which clamps the member view to `input$numGp` and does NOT clamp the
+kinship view at all — Learning \#26 / \#25c). (5) The
+selector-populating `observe` **guards on
+`length(breedingGroups()) >= 1L`**, NOT `req(breedingGroups())` — an
+empty result is a zero-length
+[`list()`](https://rdrr.io/r/base/list.html), which `req()`/`isTruthy()`
+treats as TRUE, so the naive guard fired `updateSelectInput` with empty
+choices + `selected=1L` and emitted a warning on the degenerate
+harem-with-no-eligible-sires case (groups()=∅). (6)
+`addSexAndAgeToGroup` (member view) needs `ped$birth` (→
+`getCurrentAge`) — production cleaned studbooks always carry it;
+synthetic test peds must include `birth`. (7)
+`addSexAndAgeToGroup`/`filterKinMatrix`/`getDatedFilename`/`withinIntegerRange`
+are all `@export`ed same-package fns and the new shiny controls are
+covered by `import(shiny)` → no `@importFrom`/NAMESPACE change. **Key
+finding (carried from S21, reframes the audit):** the modular app is FAR
+more complete than `TECH_DEBT_AUDIT_2026-05-30.md` implied; the audit’s
+“do XARCH-3/4/7 before XARCH-1” sequencing is **MOOT** (plan §8). **Plan
+against the real files, not the audit’s stale counts** (plan §11).
+**NEW-20 (carried, STILL APPLIES):** `R/makeGeneticDiversityDashboard.R`
+is **retained** (won’t-delete; defines no live function). Its only
+consumer `getProportionLow` stays dead. **Do NOT delete.** **⚠
+Still-open tracker reconciliation (carried S10/S11/S21):** audit
+follow-ups (NEW-12/XARCH-3, XARCH-2..8 in `BACKLOG.md`/audit) are NOT
+GitHub issues; live tracker is \#1–#39. The conversion plan resolves
+**\#27/XARCH-1**, subsumes **\#39** (Phase 8), and makes **\#34** stale
+(modInput already integrates qcStudbook — plan §11). Decide with user
+whether to file the remaining XARCH items or keep in BACKLOG. **Prior
+phases:** Phase 1 (Summary Statistics tab parity) ✅ S22 `596f6bc9`. The
+audit compute/test campaign (Sessions 1–20) is fully resolved
+(`CHANGELOG.md`). The S20-detail line and “Prior code campaign” list
+below are retained as historical context. **Status:** Done under strict
+TDD as **REFACTOR-only** (no RED/GREEN — author-classified via
+`AskUserQuestion`; gated `PRE-RED→REFACTOR`). **Defect (found Session 4,
+never fixed):** the test “works with records with no potential parent”
+pushed BRI2MW’s birth to 1950 into a local `ped` but then asserted the
+old top-level `potentialParents[[1L]]$id` from the *unmodified* fixture
+— a copy/paste tautology already covered by the first test that never
+inspected `ped` and verified nothing about its named scenario. **Fix:**
+replaced it with a discriminating assertion. BRI2MW is a from-center
+founder with both parents unknown that normally appears in the output;
+at birth=1950 its breeding-age candidate set is empty, so
+`getPotentialParents` correctly DROPS it (result 50→49). New assertions:
+BRI2MW present in the unmodified fixture (precondition), absent from the
+scenario result, and result length = global−1. **Why REFACTOR-only:**
+production is already correct → a correct assertion is green-on-arrival;
+declaring RED would violate “RED tests must fail,” and a forced-fail
+would be a synthetic RED (Learning \#18c). **Rigor via MUTATION CHECK:**
+disabling the [`next`](https://rdrr.io/r/base/Control.html)-skip
+in-place (`perl -i` → `git checkout` restore, per Learning \#3) makes
+BOTH new assertions FAIL — and the OLD vacuous assertion would have
+PASSED that same mutant, which is the proof the fix added real coverage.
+**Verification:** full suite under `load_all`+`NOT_CRAN=true` = **0
+failed / 0 error**, 0 non-e2e offenders, **2049 passed** (+2 vs S19), 5
+pre-existing `modPyramid` warnings, e2e files skipped. Lint net-zero
+(`tests` is `.lintr`-excluded → exempt by config). No production change
+→ no `document()`, **no `NEWS.md` bullet** (internal/test-only).
+**Commit:** `6049445d` (test) + this `docs:` close-out. Learning \#20.
+**NEW-20 (carried, STILL APPLIES):** `R/makeGeneticDiversityDashboard.R`
+is **retained** (won’t-delete; `.Rbuildignore`’d L25, defines no live
+function). Its only consumer `getProportionLow` stays dead. **Do NOT
+delete.** **Suggested next is at the TOP of this block (Phase 3).** The
+audit compute/test campaign (S1–20) is fully resolved and the Shiny
+conversion is implemented through **Phase 2**; what remains is plan
+**Phases 3–9** (see plan §9) + open GitHub issues (#34 bug \[stale —
+modInput already integrates qcStudbook\]; \#30 lintr debt:
+`modSummaryStats`=60, `modORIPReporting`=17,
+`processQcStudbookResult`=13; \#37 unused exports; \#9 animals missing
+one parent; \#35/#36 enhancements). The “Remaining work + audit-fix
+guidance” section below is historical audit-campaign context (all NEW-\*
+resolved). **⚠ Still-open tracker reconciliation (carried from
+S10/S11):** the audit follow-ups (NEW-12/XARCH-3, … in `BACKLOG.md`) are
+NOT GitHub issues; the live tracker is \#1–#39. Decide with the user
+whether to file them or keep them in BACKLOG. They coexist. (Issue
+**\#30** lintr — pre-existing lint debt: `modSummaryStats.R`=60,
+`modORIPReporting.R`=17, `processQcStudbookResult.R`=13.) **Prior code
+campaign (Sessions 1–20, all resolved; summarized in `CHANGELOG.md`):**
+NEW-15 (S3 `b05133ca`, the only HIGH bug), NEW-34 (S4 `dc695a3b`),
+NEW-40 (S5 `ea5d28fa`), NEW-37 (S6 `6b0ae333`), NEW-48 (S7 `19350559`),
+NEW-25 (S8 `587ba042`), NEW-52 (S9 `e3c7e8b3`), NEW-53 (S11 `5f40b7af`),
+NEW-45 (S13 `5e228bd9`/`2527d6bc`/`ceab030f`), NEW-46 (S14 `adeb3a30`),
+NEW-16 (S15 `dd89998c`), PED-1/NEW-17 (S16
+`2758ffe6`/`77f13d51`/`a95828d6`), NEW-13/NEW-23 (S17
+`022afc8b`/`2b27f4c3`), NEW-22/NEW-30 (S18 `04115d97`), test-infra debt
+/ `create_test_app()` (S19 `a1ee8497`), trivial
+`test_getPotentialParents.R` assertion fix (S20 `6049445d`); NEW-20 (S15
+— won’t-delete/retained). **E2E-suite validation deferred → GitHub issue
+\#39** (depends on XARCH-1).
+
+### Remaining work + audit-fix guidance (carried forward; suggested next = NEW-20 or NEW-16)
+
+Orient per Phase 0, which **leads with GitHub Issues**: -
+**`gh issue list` works here** (remote `rmsharp/nprcgenekeepr`; open
+issues incl. #34 “Integrate qcStudbook() in modInput”, \#35 pedigree
+filtering, \#36 chimp pyramid, \#37 unused exports, \#38 autogen-ID
+format). `BACKLOG.md` is the *fallback* tracker and now holds the audit
+follow-ups + Shiny-module work. - **⚠ Reconcile the two trackers:** the
+audit follow-ups (NEW-53 etc.) are NOT GitHub issues — decide with the
+user whether to file them as issues or keep them in `BACKLOG.md`. They
+currently coexist. - **⚠ Strict TDD still governs code sessions**
+(CLAUDE.md “Development Process Contract”). The 10 prior project
+Learnings moved from `SESSION_RUNNER.md` → `CLAUDE.md` “Project-Specific
+Methodology Adaptations” (synced files must stay byte-identical to
+canonical — new Learning \#11).
+
+Suggested next *code* deliverable = **NEW-20** (delete dead
+`makeGeneticDiversityDashboard.R` + its fully-commented test) or
+**NEW-16** (`summarizeKinshipValues.R:105-106` — `secondQuartile`
+mislabeled as the minimum: both it and `min` are `fivenum()[1]`, Q1
+should be `[2]`; + `rbind`-in-loop O(n²)). (~~NEW-46~~ ✅ S14 —
+`geneDrop` rejects duplicate ids; audit’s “wrong values” was empirically
+a CRASH at `rownames(ped)<-ids` L97, doubly-masked in the pipeline by
+`removeDuplicates`+`kinship`’s guard. Learning \#14.) Remaining
+correctness/debt candidates from `PED_GV_AUDIT_2026-05-30.md` (also
+listed in `BACKLOG.md`), with the load-bearing gotchas preserved
+below: 1. **Other correctness fixes (test-first):** ~~NEW-34~~ ✅ (S4,
+`dc695a3b`). ~~NEW-40~~ ✅ (S5, `ea5d28fa`). ~~NEW-37~~ ✅ (S6,
+`6b0ae333`). ~~NEW-48~~ ✅ (S7, `19350559` — clear
+[`stop()`](https://rdrr.io/r/base/stop.html) guard in
+calcFEFG/calcFE/calcFG). ~~NEW-25~~ ✅ (S8, `587ba042` — clear
+[`stop()`](https://rdrr.io/r/base/stop.html) on empty input in
+getProportionLow). ~~NEW-52~~ ✅ (S9, `e3c7e8b3` — n\<2 sd → NA+warning,
+n\<1 → stop in cumulateSimKinships; audit’s M2 cancellation DISPROVED as
+unreachable for dyadic-rational kinship values, Learning \#10).
+Remaining: ~~NEW-53~~ ✅ (S11 — fixed in
+`makeSimPed`/`getPotentialParents`/`createSimKinships`;
+`setDT(ped)`→`ped <- as.data.table(ped)`. Audit’s “sire/dam
+overwritten” + “adds population column in place” both DISPROVEN — the
+only leak was a by-reference data.frame→data.table CLASS flip; content
+preserved by `$<-` shallow-copy. Learning \#12), ~~NEW-45~~ ✅ (S13
+`5e228bd9`/`2527d6bc`/`ceab030f` — enforce “no period in IDs” at
+qcStudbook+geneDrop+both generators+the 2 error renderers. **This time
+the audit’s mechanism was CORRECT** (period truncates the
+`strsplit(rownames, ".")` id/parent rebuild); the real decision was a
+NEW class — a **DOMAIN-DEFINITION** question (does the ID domain permit
+`.`?), settled by the project’s own spec `input_format.html`
+“Alphanumeric characters (no symbols)” → PRECLUDED → **reject, not
+support**. Learning \#13). ⚠ Several remaining items are masked by
+upstream invariants/non-default inputs — verify reachability with real
+data BEFORE “fixing”. **NEW-34/40/37/48 ALL had MIXED, per-mechanism
+verdicts** — the confirmed template: enumerate each distinct trigger and
+confirm reachability through the *full* `qcStudbook` pipeline first
+(Learning \#6), AND **empirically reproduce the ACTUAL failure mode —
+the audit’s stated mechanism AND its prescribed fix can BOTH be WRONG**
+(NEW-48 was a crash not “silent NA”; NEW-25’s “add a terminal else”
+would NOT have fixed the crash, which is at the first `if (NA)` —
+Learnings \#8a/#9). ⚠ But reachability is NOT always a pipeline-masking
+question: NEW-25’s `getProportionLow` had ZERO live callers (orphaned by
+dead NEW-20 code), so “verify reachability” meant an exhaustive
+caller-trace (incl. dynamic dispatch + commented-out consumers), not a
+`qcStudbook`-masker analysis (Learning \#9). Known maskers in
+`qcStudbook`: `addUIds` (qcStudbook.R:180 — eliminates partial
+parentage, NEW-48), `convertSexCodes` (qcStudbook.R:184 — folds H→U /
+NA→U, NEW-37/S6 gotcha \#2), `addParents` (injects founder lines for
+missing parents, NEW-40). For NEW-53, recall `checkParentAge` is NOT an
+integrity guard (drops NA-birth rows, R/checkParentAge.R:91 — S5 gotcha
+\#2). - **Small cleanup (found Session 4, NOT fixed):**
+`tests/testthat/test_getPotentialParents.R` test
+`"works with records with no potential parent"` has a copy/paste slip —
+it recomputes into a local `ped` but then asserts the OLD top-level
+`potentialParents[[1L]]$id` instead of anything about `ped`, so it
+verifies nothing about its own scenario. Trivial to fix; out of NEW-34’s
+scope. 2. **Dead code — NEW-20:** delete
+`makeGeneticDiversityDashboard.R` (+ its fully-commented test). 3.
+**Quick-win duplication:** extract `getFounders(ped)`/`isFounder(ped)`
+(PED-1 / NEW-17 / Session 1 KIN-2). ⚠ Do NOT naively unify the adjacent
+`descendants` lines — `calcRetention.R:27` filters by `ped$population`;
+the `calc*` copies do not. 4. **Consolidation / overhauls (own
+sessions):** NEW-13/23 (calcFE/calcFG delegate to calcFEFG — **when
+doing this, collapse the now-triplicated S7 partial-parentage guard into
+the single calcFEFG**; S7 deliberately kept 3 inline copies per the
+user’s scope decision), NEW-12 / XARCH-3 (Shiny progress hook), XARCH-1
+(two coexisting Shiny apps — planning session). 5. **Pre-existing
+test-infra debt (FOUND this session, NOT fixed):** the 22 `test-app-*` /
+`test-e2e-*` files all call `create_test_app()`, which is **defined
+nowhere in the repo** → 154 suite ERRORS whenever
+`shinytest2`+`chromote` are installed (they are on this machine).
+Independent of any compute code. Either define the missing helper or
+gate the tests behind `skip_if_not_installed`/existence checks. Worth
+its own session. All findings + per-finding verdicts are in
+`PED_GV_AUDIT_2026-05-30.md` and the workflow artifact
+`…/tasks/w9oz3tkdf.output`.
+
+### How You Will Be Evaluated
+
+The user rates every session’s handoff on: 1. Was the ACTIVE TASK block
+sufficient to orient the next session? 2. Were key files listed with
+line numbers? 3. Were gotchas and traps flagged? 4. Was the “what’s
+next” actionable and specific?
+
+------------------------------------------------------------------------
+
+*Session history accumulates below this line. Newest session at the
+top.*
+
+------------------------------------------------------------------------
+
+### Session 45 Handoff Evaluation (by Session 46)
+
+**Score: 9/10.** - **What helped most (load-bearing):** S45’s GOTCHA 1
+(“the 14-file `R/` reformat is uncommitted, behaviorally inert — decide
+commit/discard BEFORE starting a code slice, especially 8e-5 which edits
+the SAME files”) set the session’s entire opening move. It correctly
+framed the reconcile-first decision the owner then made (“commit
+reformat; then 8e-5”), and it’s why the reformat was committed as a
+clean baseline before any 8e-5 edit. GOTCHA 6 (“8e-5 is PRODUCTION `R/`
+→ full RED→GREEN→REFACTOR + `devtools::check()` + owner go/no-go”) + the
+⇒ line’s pointer to **plan §5/§7** were decision-complete on the
+PROCESS: I knew before reading code that this needed an owner gate + the
+full TDD cycle + a check, and the plan §2.5/§7/§8e-5 carried every
+implementation detail (the exact gate code, the hook placement, that
+`set_seed` exists and is exported, that both modules have ZERO
+`set.seed`). - **What helped (applied directly):** GOTCHA 4 (“read the
+regression as `expectation_success` with `NOT_CRAN=true`; baseline is
+2166, never `sum(nb)`”) — I read 2166 first try and correctly attributed
+the +14 to the new tests, no false jump. GOTCHA 5 + `[macos-dupe-scan]`
+(commit only your own files via explicit `git add`) — applied to all 3
+commits. GOTCHA 2 (namespace discriminators) wasn’t needed for 8e-5 but
+is good 8e-6 context. - **What was below handoff altitude (the one
+deduction):** S45 characterized the reformat as `'…'`→`"…"` / `0`→`0L` /
+`round(x,2)`→`round(x,2L)` ONLY. It did **not** mention the reformat had
+ALSO rewrapped `#'` roxygen comments and changed `savePlotToFile`’s
+formals defaults to integer (`8L`) — which desynced `man/` and surfaced
+(via `document()`) as a real `savePlotToFile` codoc drift requiring a
+regen commit to keep `check()` clean. S45 couldn’t fully have known (it
+never ran `document()` on the reformatted tree), but a note that “the
+reformat touched roxygen/signatures too — run `document()` before
+`check()`” would have saved a discovery step. Minor. - **What was
+wrong:** nothing. The reformat-is-inert claim held (re-verified
+2166→2180); the 2166 baseline, the “PRODUCTION → full check + owner
+gate” classification, and the commit-hygiene exclusions all verified
+correct firsthand. - **ROI:** strongly positive — GOTCHA 1 made the
+reconcile-first call obvious, GOTCHA 6 + the plan pointer made the
+TDD/owner-gate shape decision-complete, and the regression-read guidance
+prevented a measurement artifact.
+
+### Session 46 Handoff Evaluation (by Session 47)
+
+**Score: 9/10.** The S46 ⇒ line was a near-complete spec for 8e-6: it
+named the exact flow
+(`upload_and_wait`→`#dataInput-getData`→GVA→breeding), the
+deferred-block inventory (4 pedigree S40 + 2 GV S42 + 3 BG S43), the env
+vars, the “8e-6 does NOT require 8e-5 → use Option-C invariants” steer,
+and the 🐉🐉 dragons (runtime/flake, fixture-needed). **What helped:**
+the Option-C steer let me keep asserts structural without chasing the
+(unproven) seed channel; the deferred-block list scoped the work
+instantly; the **2180** baseline + “`expectation_success`, never
+`sum(nb)`” matched my regression EXACTLY. **What was missing (the −1):**
+no mention that the AppDriver subprocess resolves the package from the
+**SYSTEM library** (`/Library/Frameworks/...`) — NOT the renv cache —
+under `RENV_CONFIG_AUTOLOADER_ENABLED=false`, and that this install can
+be badly stale (mine was Jul-2025); I discovered this firsthand and
+reinstalled before spiking. **What was inaccurate (plan-level, not the
+handoff):** the plan’s §2.3 “output tier” framing (`get_value(output=)`
+empty when hidden) is only half-true — the output un-suspends to
+non-NULL on tab-activation *without* data, so
+[`is.null()`](https://rdrr.io/r/base/NULL.html) does not discriminate
+data; the rendered-DOM content is the real discriminator. **ROI:**
+strongly positive — the ⇒ line + recon workflow saved a half-session of
+discovery.
+
+### What Session 47 Did
+
+**Deliverable:** plan slice **8e-6a**
+(`docs/planning/phase8e-assertion-strengthening-subplan.md` §5/§8e-6,
+issue \#40) — the FIRST of three vertical 8e-6 flows: wire the **real
+upload+QC → pedigree-table** flow end-to-end and revive the 3 NULL’d
+pedigree blocks (S40) as genuine data-bearing E2E assertions.
+Owner-scoped to 8e-6a (pre-RED `AskUserQuestion`; GVA=8e-6b,
+breeding=8e-6c are later sessions per the plan’s per-flow boundary).
+**Date:** 2026-06-10. **Branch:** `add-methodology` (NOT on remote).
+**Commit (1):** one `test:`/`docs:` close-out
+(`test-e2e-pedigree-module.R` + `-detailed.R` + `-tutorial.R` +
+CHANGELOG + PROJECT_LEARNINGS \#47 + these notes), explicit `git add`.
+**TDD flow (4 `AskUserQuestion` gates):** pre-RED scope (→ 8e-6a) ·
+PRE-RED→RED · RED→GREEN · REFACTOR **declined** (the 3-line upload
+duplication is idiomatic with these files’ inline setup; factoring only
+it would be inconsistent + scope creep). RED was confirmed FIRSTHAND
+(empty/suspended `#pedigree-pedigreeTable` div → every content assert
+fails) before GREEN. **Recon first (read-only, PRE-RED):** an 8-agent
+census + adversarial completeness critic (`wf_855f37cd-4ac`, ~349k
+subagent tokens) mapped the fixture, every module output id, the
+deferred blocks, the `reportGV`/`groupAddAssign` return shapes, and the
+helper surface; the critic caught 3 category-killing errors in the raw
+census (DT `value` levels, the `numGp+1` myth, the unattainable
+strict-kinship invariant) that would have produced a wrong RED test
+downstream. Then a **live-browser SPIKE (the 8e-6 hard gate)** settled
+G2/G4/G5 (see ACTIVE TASK above). **Key files:**
+`tests/testthat/test-e2e-pedigree-module.R` (A1 “has data table” —
+upload at :71, asserts `"of 375 entries"` :82 + `"sire"` :86);
+`tests/testthat/test-e2e-pedigree-detailed.R` (A2 — upload :74,
+`"of 375 entries"` :85 + `"sire"` :89 + `"dam"` :93; A4 “status filter”
+UNCHANGED, honest pane-active);
+`tests/testthat/test-e2e-pedigree-tutorial.R` (A3 “row count display
+options” — upload :36, `"dataTables_length"` :46 + `"of 375 entries"`
+:50). Driver per block:
+`fixture <- system.file("extdata","obfuscated_rhesus_mhc_ped.csv", package="nprcgenekeepr"); loaded <- upload_and_wait(app, fixture); if (!loaded) skip(...)`
+BEFORE the existing `navigate_to_tab(app, "Pedigree Browser")`.
+Transient (NOT committed): `/tmp/spike_8e6a.R`, `/tmp/spike_8e6a_v2.R`,
+`/tmp/mutation_8e6a.R`. **Verification:** 3/3 files GREEN (module 6/6 ·
+detailed 8/8 · tutorial 9/9, 0 fail/0 error/0 skip under the e2e env).
+**\[mutation-check\] ALL PASS** (right content TRUE; wrong row-count 999
+& 374, foreign `genotype`, foreign-pane `Breeding Groups`,
+same-pattern-on-a-different-element → all FALSE). Non-e2e regression
+**2180 `expectation_success` / 0 failed / 0 error / 156 skip / 5
+`modPyramid` warn / 0 non-e2e offenders** (S46 baseline EXACT;
+test-only). Phase-3E = the live GREEN AppDriver run (#31). Reinstalled
+current source into the SYSTEM lib first (the subprocess’s library; was
+Jul-2025 stale). **Self-assessment:** strong. Ran the 8e-6 hard gate
+(the live spike) BEFORE writing any RED — exactly as the plan/8e-1
+precedent demands — and let the spike CORRECT a plan assumption (the
+`is.null` output-tier) rather than enshrine it; the resulting assertions
+are all discriminating (mutation-proven), not green-on-arrival. Caught
+the stale system-lib install before it could test phantom behavior. Held
+all 4 gates via `AskUserQuestion`. Kept strict 1-flow scope (did NOT
+bleed into 8e-6b/c despite the shared driver). Could improve: the recon
+workflow was generous (8 agents) for a slice that ultimately touched 3
+blocks — though the critic’s corrections justified it, and they seed
+8e-6b/c. **GOTCHAS for 8e-6b/c (full ⇒ plan above):** 1. **Reinstall
+current `R/` into the SYSTEM lib before any e2e spike**
+(`RENV_CONFIG_AUTOLOADER_ENABLED=false R CMD INSTALL --no-multiarch --no-docs --library=/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library .`).
+The renv-cache install is a DIFFERENT, separately-stale copy. 2.
+**`get_value(output=DToutput)` returns a `json`-class atomic string and
+un-suspends to non-NULL even with NO data** — assert rendered-DOM
+CONTENT via `get_html_safe(app, "#<ns>-<id>")` (the row-count info /
+column headers / length menu), not `is.null(get_value(...))`. 3.
+**`suspendWhenHidden`:** an output renders only once its (possibly
+NESTED) tab is active. Pedigree/Rankings are default-visible; GVA
+Summary/Visualizations + breeding Statistics/Group-Detail are hidden
+inner tabs → `set_inputs(<inner tabsetPanel id>=...)` first (the
+inner-tabset inputIds were NOT captured by recon — get them firsthand).
+4. **Fixture `obfuscated_rhesus_mhc_ped.csv` renders exactly 375
+pedigree rows** (`"of 375 entries"`); upload via the helper default
+(`pedFile`/`pedigreeFileOne`, fileType Excel routes `.csv`→`read.csv`).
+It flows clean QC→GVA→breeding (recon-verified). 5. **Commit ONLY your
+own files via explicit `git add`**
+(`.DS_Store`/`..Rcheck/`/`PED_GV_AUDIT_2026-05-30.html` are owner
+cruft).
+
+------------------------------------------------------------------------
+
+### What Session 46 Did
+
+**Deliverable:** plan slice **8e-5**
+(`docs/planning/phase8e-assertion-strengthening-subplan.md` §7, issue
+\#40) — the **FIRST 8e PRODUCTION `R/` change**
+\[production-in-disguise\]: an **env/option-gated
+[`set_seed()`](https://github.com/rmsharp/nprcgenekeepr/reference/set_seed.md)
+determinism hook** (Option A) in `modGeneticValueServer` +
+`modBreedingGroupsServer`, owner-gated (approach choice + full
+**RED→GREEN→REFACTOR**, all four transitions via `AskUserQuestion`).
+Also, on the owner’s “commit reformat; then 8e-5” instruction, committed
+the owner’s concurrent 14-file `R/` reformat as a clean baseline + a
+follow-on `docs:` man-regen the reformat desynced. **Date:** 2026-06-10.
+**Branch:** `add-methodology` (NOT on remote). **Commits (3):**
+`d0989408` (`style:` — the owner’s 14 `R/` files + `test_modPyramid.R`
+formatter pass) → a `docs:` man-regen (3 files) → the 8e-5
+`feat:`/`test:` close-out — all staged via explicit `git add`
+(`.DS_Store`/`..Rcheck/`/`PED_GV_AUDIT_2026-05-30.html` excluded). **The
+TDD flow (5 `AskUserQuestion` gates):** (1) pre-RED scope/approach —
+Option A (env/option gate) vs Option B (UI seed input) vs Option C-only
+(no production change) → **Option A**; (2) PRE-RED→RED; (3) RED→GREEN;
+(4) GREEN→REFACTOR. RED was confirmed FIRSTHAND before GREEN (6 genuine
+failures + 2 guards passing); no synthetic RED. **What was built:** the
+gate
+`seed <- getOption("nprcgenekeepr.gva_seed", as.integer(Sys.getenv("NPRC_GVA_SEED", NA))); if (!is.na(seed)) set_seed(seed)`
+(+ `bg_seed`/`NPRC_BG_SEED`) at the top of each `eventReactive` (after
+`req()`, ahead of `withProgress`); REFACTORed into one `@noRd` helper
+`gatedSeed(optionName, envName)`; 8 browser-free `testServer` tests (3
+RED + 1 guard per module). **Key files:** `R/set_seed.R` (NEW
+`@noRd gatedSeed(optionName, envName)` after `set_seed`, ~:29-44; calls
+the exported `set_seed`); `R/modGeneticValue.R:137-139`
+(`gatedSeed("nprcgenekeepr.gva_seed","NPRC_GVA_SEED")` in `gvResults`
+eventReactive, after `req(pedigree())` :135, ahead of `withProgress` —
+the engine
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+is at ~:189); `R/modBreedingGroups.R:193-195`
+(`gatedSeed("nprcgenekeepr.bg_seed","NPRC_BG_SEED")` in `breedingGroups`
+eventReactive, after `req(pedigree())` :191 — engine
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+at ~:280); `tests/testthat/test_modGeneticValue.R` (+4 tests at EOF —
+determinism/mock-called/no-op-guard/env-fallback);
+`tests/testthat/test_modBreedingGroups.R` (+4 tests at EOF, mirror);
+`man/{appServer,modSummaryStatsServer,savePlotToFile}.Rd` (regenerated —
+reformat desync, in the `docs:` commit). Transient (NOT committed):
+`/tmp/app_smoke_8e5.log`. **Verification:** 8/8 seed tests GREEN / 14
+expectations (RED proven first: 6 fail + 2 guard pass at HEAD). Non-e2e
+regression **2180 `expectation_success` / 0 failed / 0 error / 156 skip
+/ 5 pre-existing `modPyramid` warn / 0 non-e2e offenders** (2166 + 14;
+default path unchanged = R2 mitigation). **`devtools::check()` 0 errors
+/ 0 warnings / 3 NOTEs** (stale `spelling.Rout.save` +
+future-timestamps + top-level dev files = S35 baseline; no `gatedSeed`
+NOTE). Phase-3E:
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+working-tree source HTTP 200, gate unset. `document()` no delta for the
+`@noRd` helper. Lint net-zero on changed `R/`. **Self-assessment:**
+strong. Held all 5 gates (scope + 3 TDD transitions) via
+`AskUserQuestion`; confirmed RED firsthand and guarded against a vacuous
+`identical(NULL,NULL)` pass with an explicit `length>0` assertion
+(caught the subtle stochastic-RED-capture trap before it could fake
+green); committed the owner’s reformat only after RE-verifying it inert
+(didn’t trust S45’s memory, per FM \#11); diagnosed the `man/` desync to
+its true cause (reformat rewrapped `#'` comments + `savePlotToFile`
+`8L`) via `git show` rather than assuming, and committed the regen
+separately with explicit causality; correctly classified the `gatedSeed`
+lintr flag as a `[stale-namespace]` transient and confirmed via
+`check()` rather than “fixing” it; kept 1-deliverable scope (did NOT
+bleed into 8e-6). Could improve: nothing material; the `man/` desync was
+an unforeseeable second-order consequence of committing the reformat,
+handled cleanly once surfaced. **GOTCHAS for the next session (8e-6 or
+8e-7; full plan in the ⇒ line above + plan §5/§8e-6):** 1. **8e-5 is
+DONE and 8e-6’s upload ids are correct** (8e-4 fixed `dataInput-`). To
+add OPTIONAL exact-value E2E assertions, set the seed via
+`withr::local_envvar(NPRC_GVA_SEED="42")` (and `NPRC_BG_SEED`) **AROUND
+`AppDriver$new()`** — the subprocess inherits the parent env (reliable);
+`AppDriver$new(seed=)` does NOT control the click-triggered RNG (plan
+§2.5). But **8e-6 does NOT require 8e-5** — Option-C structural
+invariants are robust and usable regardless. 2. **The gate is a no-op by
+default.** With no option/env, `getOption(..., NA)` ⇒ NA ⇒ no
+`set_seed`. The 2180-pass regression IS the default-path-unchanged
+proof; don’t re-litigate it. 3. **The `gatedSeed` `object_usage_linter`
+“no visible global function” is a `[stale-namespace]` artifact**
+(single-file/installed-namespace can’t resolve a just-added cross-file
+helper). `devtools::check()` (full namespace) emits no such NOTE. Do NOT
+“fix” it; reinstall + re-lint if you must confirm. 4. **⚠ After
+committing ANY `R/` reformat, run `document()` + diff `man/`/`NAMESPACE`
+BEFORE `check()`** — a formatter can rewrap `#'` comments and change
+signature defaults (`8`→`8L`), desyncing generated docs (a codoc WARNING
+no content grep catches). This session’s `docs:` commit fixed exactly
+that. 5. **Read the regression as `expectation_success` with
+`NOT_CRAN=true` + `load_all`** — baseline is now **2180** (NOT 2166; +14
+from the 8e-5 tests). Never `sum(nb)` (Learning \#43e). 6. **Commit ONLY
+your own files via explicit `git add`** (`[macos-dupe-scan]`:
+`.DS_Store`/`..Rcheck/`/`PED_GV_AUDIT_2026-05-30.html`).
+
+------------------------------------------------------------------------
+
+### Session 44 Handoff Evaluation (by Session 45)
+
+**Score: 9/10.** - **What helped most (load-bearing):** S44’s ⇒ line was
+decision-complete on the namespace fix — it named all 5 sites with exact
+files + line numbers (`helper:150`/`:154`, `error-states:24`/`:45`,
+`boundary:43`), drew the `dataInput`-vs-`data-module="input"`
+distinction (`appUI.R:123` vs `modInput.R:31`), gave the §2.4
+DO-NOT-CHANGE list, the RED→GREEN classification, and “read
+`R/modInput.R observeEvent(getData)` validation ~301-419 FIRSTHAND” —
+which led me straight to the no-file `showNotification` path that became
+es#1’s assertion. GOTCHAS 1-7 reinforced every load-bearing point. -
+**What helped (applied directly):** the browser env triplet; “read the
+regression as `expectation_success` with `NOT_CRAN=true`” (I read it
+right the first time and correctly attributed the +4 to the new helper
+tests rather than reporting a false jump); the \[macos-dupe-scan\]
+commit-hygiene list (which became load-bearing for an UNEXPECTED reason
+— the concurrent formatter; see below). - **What was below handoff
+altitude (the deductions):** (1) the plan/handoff framed the namespace
+wrong id as one that “throws” — it actually **WARNS** (`set_inputs` on
+an unbound id) and never sets, so the real discriminator is the **value
+read-back**, not a caught throw (the click path DOES throw). (2)
+“confirm the modInput validation surfaces a visible error/state” + “some
+boundary blocks need data → defer to 8e-6” — neither fully held: WITHOUT
+a file there is NO error-state except the no-file toast; the
+zero/non-numeric-age blocks surface nothing (the `textInput` just
+reflects), so the genuine assertion is the round-trip + pane-active, not
+an error-state; and **ZERO** blocks needed 8e-6 deferral. Both surfaced
+by the firsthand spike the handoff correctly told me to run. - **What
+was wrong:** nothing material — the 5 sites, the namespace, the
+DO-NOT-CHANGE list, and the env all verified correct firsthand. -
+**ROI:** strongly positive — the namespace fix was decision-complete;
+the only surprises (warn-not-throw; no pre-data error-state; 0
+deferrals) were resolved by the spike the handoff directed me to.
+
+### What Session 45 Did
+
+**Deliverable:** plan slice **8e-4**
+(`docs/planning/phase8e-assertion-strengthening-subplan.md` §5, issue
+\#40) — the FIRST 8e slice that is NOT pure run-and-observe: a HYBRID of
+**RED→GREEN** (the `input-`→`dataInput-` namespace fix, 4 tests) +
+**run-and-observe** (23 assertion conversions). Converted all **26
+browser-booting blocks** in `test-e2e-error-states.R` (13) +
+`test-e2e-boundary-conditions.R` (13) from `nchar(html)>100` /
+dead-grepl / `interaction-noop-tryCatch` to behavioral
+`assert_active_pane(...)`, and fixed the `dataInput-` namespace at all 5
+§2.4 sites + `upload_and_wait`. Strict TDD, gated `PRE-RED→RED` then
+`RED→GREEN` via `AskUserQuestion`. **Date:** 2026-06-10. **Branch:**
+`add-methodology` (NOT on remote). **Commit:** one `test:`/`docs:`
+close-out (4 test-tree files + CHANGELOG + PROJECT_LEARNINGS \#45 +
+these notes), staged via explicit `git add`. **⚠ The session’s biggest
+non-deliverable event — a concurrent external formatter (FM \#22 in the
+wild):** orientation showed a clean tree (only `.DS_Store`), but my
+first spike’s
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)
+FAILED on a parse error in `makeFounderStatsTable.R:68`. Investigation:
+an automated style pass (`'…'`→`"…"`, `0`→`0L`) had rewritten **14 `R/`
+production files** and broke 2 by converting single-quoted HTML strings
+to double quotes without escaping the inner `class="…"`; the modified
+set was GROWING (11→13→15→17) across read-only polls → running
+CONCURRENTLY (likely an editor/`styler`/another agent on the open \#30
+lint work). Per SAFEGUARDS / FM \#22 I did NOT touch/revert/fix the
+unauthored uncommitted edits — STOPPED and gated with the owner. The
+formatter then SELF-HEALED both broken files and settled; the regression
+confirmed the reformat is behaviorally inert (2162 baseline held). The
+8e-4 commit excludes all 14 `R/` files (the owner’s in-progress work).
+**Key files:** `tests/testthat/test-e2e-error-states.R` (13 blocks
+rewritten); `tests/testthat/test-e2e-boundary-conditions.R` (13 blocks
+rewritten); `tests/testthat/helper-shinytest2.R` (`upload_and_wait`
+~:149-167 — default `module_id="dataInput"` +
+`do.call`/[`stats::setNames`](https://rdrr.io/r/stats/setNames.html)-derived
+upload id; docstring updated); `tests/testthat/test_helper_shinytest2.R`
+(new `fake_app_upload_recorder` stub + 2 `upload_and_wait` tests, +4
+expectations); `R/modInput.R:305-308` (no-file `showNotification` — the
+es#1 assertion target), `:119-121` (`minParentAge` textInput, default
+“2.0”), `:130` (`getData` actionButton); `R/appUI.R:123`
+(`modInputUI("dataInput")`). Transient (NOT committed):
+`/tmp/spike_8e4.R`, `/tmp/mutation_8e4.R`, `/tmp/regression_8e4.R`.
+**Verification:** helper unit **63/0/0**; e2e error+boundary **26 blocks
+/ 29 expectations GREEN, 0 failed / 0 error / 0 skip**. RED proven first
+(3 ns e2e blocks + 2 helper tests failed with the old `input-` ids).
+**\[mutation-check\] PASS** (wrong-pane / foreign-content → FALSE; OLD
+whole-body grepl → TRUE content-blind contrast; ns read-back +
+notification + wrong-selector). Non-e2e regression **2166 / 0 / 0 / 156
+/ 5** (= 2162 baseline + 4 new helper expectations). Phase-3E satisfied
+(live browser run + 2 spikes ARE the runtime, \#31).
+**Self-assessment:** strong. Caught the broken/concurrently-modified
+tree firsthand at the FIRST spike (didn’t blame my own work, didn’t
+silently fix the owner’s files), surfaced + gated it cleanly, and
+verified the reformat inert before resuming rather than proceeding
+blind. Held the TDD gates (two AskUserQuestion transitions), the
+spike-first discipline (refined the plan’s “throws” → “warns/read-back”
+and “needs data → 0 deferrals” firsthand), the \[mutation-check\] rigor,
+and the 1-deliverable scope (did NOT bleed into 8e-5/8e-6). Commit
+hygiene held under pressure (explicit `git add` excluded 14 unauthored
+`R/` files). Could improve: my first parse-check loop auto-printed
+successful parses (noisy) — a one-line guard fix; cost one extra
+command. **GOTCHAS for the next session (8e-5 or 8e-6; full plan in the
+⇒ line above + plan §5/§7):** 1. **⚠ The working tree carries the
+owner’s 14-file `R/` reformat (uncommitted, behaviorally inert).** Phase
+0 will see it. Decide with the owner whether to commit/discard BEFORE
+starting a code slice — especially **8e-5, which edits the SAME `R/`
+files the formatter just touched** (`modGeneticValue.R`,
+`modBreedingGroups.R`). Reconcile first to avoid mixing. 2. **Namespace
+discriminators (now firsthand-established):** namespaced **textInput** →
+`get_value` read-back (shinytest2 WARNS, never sets — does NOT throw);
+**actionButton** → `app$click` throw. Use the read-back for input
+assertions. 3. **`upload_and_wait` is now correct**
+(`module_id="dataInput"`, derived upload id) → 8e-6’s real upload flow
+is unblocked: `upload_and_wait(app, <file>)` → `#dataInput-getData` →
+`wait_for_module_ready(app, "dataInput")`. 4. **Read the regression as
+`expectation_success` with `NOT_CRAN=true`** — baseline is now **2166**
+(NOT 2162; +4 from the new helper tests). Never `sum(nb)` (Learning
+\#43e). 5. **Commit ONLY your own files via explicit `git add`**
+(\[macos-dupe-scan\]:
+`.DS_Store`/`..Rcheck/`/`PED_GV_AUDIT_2026-05-30.html` + the owner’s
+`R/` reformat must NOT ride along). 6. **8e-5 is PRODUCTION `R/` → full
+RED→GREEN→REFACTOR + `devtools::check()` + owner go/no-go** (plan §7,
+\[production-in-disguise\]). 8e-6 is RED→GREEN (flows reach real
+outputs) + Option-C structural invariants.
+
+------------------------------------------------------------------------
+
+### Session 43 Handoff Evaluation (by Session 44)
+
+**Score: 9/10.** - **What helped most (load-bearing):** S43’s ⇒ line
+named this cut precisely as “NOT mechanical” and front-loaded the
+**navbarMenu dragon** — “VERIFY FIRSTHAND that a navbarMenu(‘More’)
+child becomes the lone `.tab-pane.active`… if it renders differently,
+`assert_active_pane` returns FALSE and you must adapt the
+helper/approach (bring it to the owner, don’t silently redesign).” That
+one instruction set the session’s shape: spike the live DOM FIRST (hard
+gate) before any conversion. It resolved TRUE, keeping the cut pure
+run-and-observe (docstring-only). - **What helped (exact + applied
+directly):** the docstring location `helper-shinytest2.R:283-299`
+(precise); the `[mutation-check]` inversion idiom (I reused the spike’s
+wrong-pane/wrong-content arms verbatim); the **Learning \#43e
+measurement trap** (“report `expectation_success`, NEVER
+`sum(nb)−sum(failed)`”) — I read the regression right the first time
+because of it; the browser env; “read plan §5 FIRST”; the file/block
+counts (4+7=11, verified). - **What was below handoff altitude (the one
+deduction):** S43 framed workflow-integration as just “convert the
+visit-N loop to per-pane asserts.” That undersold its heterogeneity —
+the file also has 2 [`is.list()`](https://rdrr.io/r/base/list.html)
+responsiveness tautologies (W2/W3) and a navbar-BRAND check (W4) that
+lives OUTSIDE any pane (a carve-out, NOT active-pane). I had to census
+those firsthand and decide the brand→`.navbar-brand` scoping myself.
+Minor — plan §3 classified the file “5 hidden-DOM, 2 tautology” and S43
+said “census firsthand”, so the info was reachable. - **What was
+wrong:** nothing. The navbarMenu dragon, the docstring line range, the
+file counts, the env — all verified correct firsthand. - **ROI:**
+strongly positive — the dragon flag converted a load-bearing unknown
+into a spike-first discipline, and the \#43e warning prevented a
+`sum(nb)` measurement artifact (a fake +161 “jump”).
+
+### What Session 44 Did
+
+**Deliverable:** the **8e-3 FINAL cut**
+(`docs/planning/phase8e-assertion-strengthening-subplan.md`, issue \#40,
+the LAST of three 8e-3 cuts → **8e-3 COMPLETE**) — converted all **11
+browser-booting blocks** across `test-e2e-settings-about.R` (4) +
+`test-e2e-workflow-integration.R` (7) from the content-blind
+`navigate_to_tab → grepl(get_html_safe(app,"body"))` idiom to behavioral
+`assert_active_pane(...)`; **finalized `navigate_to_menu_item` as a
+confirmed visible-pane check.** Strict TDD, PURE run-and-observe
+(\[refactor-only\], green-on-arrival; gated `PRE-RED→run-and-observe`
+via `AskUserQuestion`; \[mutation-check\] = the rigor). **Date:**
+2026-06-09/10. **Branch:** `add-methodology` (NOT on remote).
+**Commit:** one `test:`/`docs:` close-out (the 2 test files + helper
+docstring + CHANGELOG + PROJECT_LEARNINGS \#44 + these notes), staged
+via explicit `git add` (NOT
+`.DS_Store`/`..Rcheck/`/`PED_GV_AUDIT_2026-05-30.html`). **The
+load-bearing move — the navbarMenu dragon spike (R1 / §2.3 item 4):**
+before touching any test, I rendered the live `navbarPage` DOM via two
+Rscript→AppDriver spikes. Spike 1 confirmed
+`set_inputs(mainNavbar="Settings")` makes the Settings pane the lone
+active top-level `.tab-pane` (top-level `.tab-content` count==1;
+`get_active_pane_value`/innerText == the child content) — idem
+About/Help; all 4 settings assertions + the wrong-pane/wrong-content
+mutation arms passed firsthand. Spike 2 verified every workflow pattern
+against the real active-pane innerText (ALL_OK). So
+`navigate_to_menu_item`’s delegate body was already correct →
+**docstring-only finalization, body unchanged** → the cut stayed pure
+run-and-observe (a `[hard-gate-spike]` in its CONFIRM mode, vs 8e-1’s
+falsify). **Map (10 keep-regex-rescope · 1 navbar-chrome carve-out):**
+full per-block detail in the ACTIVE TASK block above + CHANGELOG
+(2026-06-09) + PROJECT_LEARNINGS \#44. Headlines: settings-about 4 KEEP
+verbatim (navbarMenu child panes); W1 visit-N loop → 6 per-pane
+asserts + threshold `>=3`→`==6L`; W2/W3
+[`is.list()`](https://rdrr.io/r/base/list.html) tautologies →
+pane-switch asserts; **W4 navbar brand → `.navbar-brand`-scoped
+carve-out** (strictly stronger than whole-body); W5/W6/W7 KEEP verbatim.
+**Key files:** `tests/testthat/test-e2e-settings-about.R` (4 blocks
+rewritten — navbarMenu children Settings/About/Help);
+`tests/testthat/test-e2e-workflow-integration.R` (7 blocks rewritten);
+`tests/testthat/helper-shinytest2.R:283-292` (`navigate_to_menu_item`
+docstring finalized — BODY UNCHANGED, still delegates to
+`navigate_to_tab`; `assert_active_pane` :407-413, `navigate_to_tab`
+:253, `get_html_safe` :266, `create_test_app` self-skip :196 — all
+UNCHANGED, just called); `R/appUI.R:183-212` (`navbarMenu("More")` with
+static inline `tabPanel`s Settings :187-192 / About :194-201 / Help
+:203-211; brand title :17 renders as
+`<span class="navbar-brand">GeneKeepR</span>`). Transient (NOT
+committed): `/tmp/spike_navbarmenu_8e3.R`,
+`/tmp/spike_workflow_patterns.R`, `/tmp/mutation_check_8e3_final.R`.
+**Verification:** browser run **11/11 blocks GREEN / 12 expectations**
+(net 0), 0 error / 0 skip (`filter="^e2e-(settings|workflow)"`).
+**\[mutation-check\] PASS** (settings arms via spike; W1
+wrong-pane→FALSE; W4 scoped `grepl("Breeding", brand)`→FALSE while old
+whole-body→TRUE). Non-e2e regression (`NOT_CRAN=true`) **2162
+`expectation_success` / 0 failed / 0 error / 156 skipped / 5
+pre-existing `modPyramid` warnings / 0 non-e2e offenders** — S40–S43
+baseline held EXACTLY (read via `expectation_success`, not
+`sum(nb)`=2323, per Learning \#43e). **Phase 3E (runtime smoke):**
+SATISFIED — test-infra deliverable; the live browser run (11 blocks via
+real AppDriver) + the 2 DOM spikes + the live mutation-check spike ARE
+the runtime (#31 pattern). Drove the REAL app. **Self-assessment:**
+strong. Resolved the carried navbarMenu 🐉 firsthand by rendering the
+live DOM (the strongest refutation for a DOM question — it subsumed
+S43’s source-reasoning skeptic-panel idiom); pre-verified every pattern
+against the real active-pane innerText before the gate (spike v2
+ALL_OK); chose the `.navbar-brand` scoping as a genuine strengthening
+(mutation-proved stronger than the whole-body tautology it replaced)
+rather than a lazy carve-out; held the protocol (orient→one
+deliverable→close out), the TDD gate, and the 1-cut scope (did NOT bleed
+into 8e-4). Met/exceeded the S38–S43 bar. Could improve: nothing
+material this session; the heterogeneity of the workflow file (is.list
+tautologies + brand) was the only thing I had to discover rather than
+inherit. **GOTCHAS for the next session (8e-4 = namespace fix +
+error-states/boundary interaction revival; full plan in the ACTIVE TASK
+⇒ line + plan §5/§2.4):** 1. **NOT pure run-and-observe — this cut is
+RED→GREEN** (namespace fix). The corrected-id interaction newly SUCCEEDS
+where the swallowed wrong-id one did nothing → write the assertion that
+requires the real interaction first (RED on the wrong id), then fix the
+id (GREEN). 2. **The 5 namespace fix sites** (`input-`→`dataInput-`):
+`helper-shinytest2.R:150` + `:154`, `error-states:24` + `:45`,
+`boundary:43`. The input module is namespaced **`dataInput`**
+(`appUI.R:123`); `data-module="input"` (`modInput.R:31`) is a LABEL, not
+the namespace. 3. **§2.4 DO-NOT-CHANGE list** (verified-correct as-is):
+`data-ready:27-32/43`, `home-navigation:95` (`#goto_input` app-level
+button). Don’t “fix” a correct site. 4. **Read `R/modInput.R`
+`observeEvent(getData)` validation (~301-419) FIRSTHAND** — these files
+probe INVALID input (non-numeric/zero parent age); confirm the
+validation surfaces a visible error/state to assert against. Some
+boundary blocks need data loaded → defer those to 8e-6. 5.
+**\[mutation-check\]:** wrong id → must FAIL (proves the interaction is
+real, not `tryCatch`-swallowed). 6. **Read the regression as
+`expectation_success` with `NOT_CRAN=true`** — never `sum(nb)` (Learning
+\#43e/#42d). 7. **Commit ONLY the test/helper files + docs via explicit
+`git add`** (\[macos-dupe-scan\]:
+`.DS_Store`/`..Rcheck/`/`PED_GV_AUDIT_2026-05-30.html` must NOT ride
+along).
+
+------------------------------------------------------------------------
+
+### Session 42 Handoff Evaluation (by Session 43)
+
+**Score: 9/10.** - **What helped most:** S42’s
+`⇒ SUGGESTED NEXT = BREEDING-GROUPS family` line was decision-complete —
+it named the 3 files + exact counts (7/7/9=23), the tab title
+(`appUI.R:166`), the unchanged idiom template, “assert STATIC UI /
+data-bearing→8e-6”, the Learning \#40/#41/#42 split (genuine→KEEP /
+tautology-with-dead-grepl→REVIVE+prune / no-regex→anchor / NULL), the
+`[mutation-check]` inversion, the “pre-gate refute the map” instruction,
+“read `R/modBreedingGroups.R` for the static-vs-`req()`-gated surface
+FIRST”, the Phase-5/6 baked-in note (Group Detail tab + downloads +
+`minAge`/`nIterations`/`withKinship`), and the browser env. Every line
+applied directly and held against the source. - **What helped most
+(load-bearing):** (1) the **`[mutation-check]` inversion** carry — I
+reused “Focal Animals” (grep-confirmed Pedigree/Input-only, foreign to
+BG) and it discriminated on the first run. (2) **“read
+modBreedingGroups.R first”** surfaced the nested `tabsetPanel` structure
+(Groups/Statistics/Group Detail) that drove the 4 NULLs. (3) The
+**helper-mechanism carry** (`:339-413`, just CALL `assert_active_pane`)
+meant zero helper work. - **What was below handoff altitude (the one
+deduction):** S42 framed the breeding-groups NULL risk purely as
+“content is data-dependent (groups render post-formation)”. That’s true,
+but it did NOT flag that some STATIC features (the export
+`downloadButton`s) are present-but-hidden in an INACTIVE nested tab — a
+DISTINCT NULL reason from data-dependency (→ new Learning \#43a). I
+discovered it firsthand from the module read S42 directed me to, so the
+gap was minor (the pointer to read the module surfaced it). - **What was
+wrong:** nothing. File counts, tab title, idiom, the Phase-5/6 surface —
+all verified against source firsthand. - **ROI:** strongly positive —
+one read put me on the right slice with the idiom, the mutation-check
+inversion, the pre-gate discipline, and the module-read instruction in
+hand.
+
+### What Session 43 Did
+
+**Deliverable:** the **BREEDING-GROUPS family of slice 8e-3**
+(`docs/planning/phase8e-assertion-strengthening-subplan.md`, issue \#40,
+the 2nd of three 8e-3 cuts) — converted all **23 browser-booting
+blocks** across `test-e2e-breeding-groups-module.R` (7) + `-detailed.R`
+(7) + `-tutorial.R` (9) from the content-blind
+`navigate_to_tab → grepl(get_html_safe(app,"body"))` idiom to behavioral
+`assert_active_pane(app,"Breeding Groups",<pattern>)`. Strict TDD,
+**PURE run-and-observe** (\[refactor-only\], green-on-arrival; gated
+`PRE-RED→run-and-observe` via `AskUserQuestion`; \[mutation-check\] =
+the rigor, no synthetic RED). **Date:** 2026-06-08/09. **Branch:**
+`add-methodology` (NOT on remote). **Commit:** one `test:`/`docs:`
+close-out (the 3 test files + CHANGELOG + PROJECT_LEARNINGS \#43 + these
+notes), staged via explicit `git add` (NOT
+`.DS_Store`/`..Rcheck/`/`PED_GV_AUDIT_2026-05-30.html`). **Map (12 KEEP
+· 6 REVIVE · 1 ANCHOR · 4 NULL):** full per-block detail in the ACTIVE
+TASK block above + CHANGELOG (2026-06-09) + PROJECT_LEARNINGS \#43.
+Headlines: 12 genuine grepl KEEP verbatim (M1–M7, D1🐉, D3, D7, T2, T3);
+6 REVIVE rescoped+pruned (D2→`harem`,
+D4→`result|group|table|output|formed`,
+T1→`group.*formation|source.*animal`,
+T4→`Seed.*Group|seed.*animal|specific.*animal`,
+T6→`Include.*kinship|kinship.*display`, T8→`top.*ranked`); 1 ANCHOR
+(D6→`algorithm`); 4 NULL (D5/T7/T9 export buttons hidden in inactive
+“Group Detail” nested tab; T5 no infants-with-dam control). **Key
+files:**
+`tests/testthat/test-e2e-breeding-groups-{module,detailed,tutorial}.R`
+(all 3 rewritten, 23 blocks);
+`tests/testthat/helper-shinytest2.R:339-413` (active-pane helpers —
+UNCHANGED, just called; `:196` `create_test_app` NPRC_RUN_E2E self-skip;
+`:253` `navigate_to_tab` read-back); `R/modBreedingGroups.R:22-107` (UI
+— left wellPanel always-visible: h3 “Breeding Group Formation”, Source
+radios “Top ranked”/“Upload list”/“All available”, “Number of groups:”,
+“Max kinship threshold:”, “Sex ratio:”/“Harem (1M:NF)”, “Minimum
+breeding age (years):”, “Number of simulations:”, “Include kinship in
+display of groups”, “Seed groups with specific animals”, “Form Groups”;
+right nested tabset “Groups”\[default\]/“Statistics”/“Group Detail” —
+the `downloadButton`s `:83-86` live in the INACTIVE “Group Detail” tab);
+`inst/extdata/ui_guidance/group_formation.html` (always-visible
+guidance: “group formation simulation”, “The algorithm ignores…”,
+kinship/θ table); `R/appUI.R:166` (tabPanel title “Breeding Groups”).
+Transient (NOT committed): `/tmp/mutation_check_8e3_bg.R`.
+**Verification:** browser run **23/23 blocks GREEN / 23 expectations**,
+0 error / 0 skip (`filter="^e2e-breeding-groups"`). **\[mutation-check\]
+PASS** (all 5 arms, inverted — BG is the TARGET pane). Non-e2e
+regression (`NOT_CRAN=true`) — canonical tally **2162
+`expectation_success` / 0 failed / 0 error / 156 skipped / 5
+pre-existing `modPyramid` warnings / 0 non-e2e offenders** — S40–S42
+baseline held EXACTLY. **⚠ measurement trap (Learning \#43e):** my FIRST
+read used `sum(nb)−sum(failed)`=2323 (fake +161 jump; `nb` counts
+skip+warning rows) → re-tallied `expectation_success`=2162 firsthand.
+Report `expectation_success`, NEVER `sum(nb)`. **Phase 3E (runtime
+smoke):** SATISFIED — test-infra deliverable; the live browser run (23
+blocks via real AppDriver) + the live mutation-check spike ARE the
+runtime (#31 pattern). Drove the REAL app, not just build-clean.
+**Self-assessment:** strong. Censused firsthand (matched plan §5 =
+7/7/9); built the map from a firsthand read of the module UI +
+guidance + the active-pane helper; ran the pre-gate adversarial workflow
+which RESOLVED the one low-confidence matcher (M7’s nested-nav-label
+dependence) by rendering the real Shiny DOM rather than guessing; caught
+my own `sum(nb)` measurement artifact and diagnosed it firsthand rather
+than reporting a false +161 “jump” OR a false “baseline held”; held the
+protocol (orient→one deliverable→close out), the TDD gate
+(`PRE-RED→run-and-observe` `AskUserQuestion`), and the 1-family scope
+(did NOT bundle the settings-about/workflow cut). Could improve: the
+first map’s `sum(nb)` formula slip cost one extra diagnostic run (now a
+documented reflex). Met/exceeded the S38–S42 bar. **GOTCHAS for the next
+session (8e-3 FINAL cut = settings-about + workflow-integration; full
+plan in the ACTIVE TASK ⇒ line):** 1. **NOT mechanical.** settings-about
+FINALIZES `navigate_to_menu_item` as a true visible-pane check (resolve
+§8.3 navbarMenu false-positive + update docstring
+`helper-shinytest2.R:283-299`); workflow-integration converts a visit-N
+loop to per-pane active assertions. Distinct, higher-value work — do NOT
+treat it as another mechanical family conversion. 2. **⚠
+navbarMenu(“More”) children (Settings/About/Help) may be a 🐉:** 8e-1
+confirmed `set_inputs(mainNavbar=<child>)` reaches the child via
+read-back, but VERIFY FIRSTHAND that the child becomes the lone
+`.tab-pane.active` top-level pane (sub-plan §2.3 item 4). If a
+navbarMenu child renders as something OTHER than a top-level
+`.tab-pane.active`, `assert_active_pane` returns FALSE and you must
+adapt the helper/approach — bring it to the owner as a scope
+`AskUserQuestion` (\[hard-gate-spike\]/\[author-decision\]), don’t
+silently redesign. 3. **Use the IMPLEMENTED helper**
+(`helper-shinytest2.R:339-413`) — just CALL `assert_active_pane`; the
+ONLY helper change this cut is the `navigate_to_menu_item` docstring (+
+possibly its body if the navbarMenu spike falsifies the delegate). 4.
+**Apply the Learning \#40–#43 split** (genuine→KEEP verbatim, flag
+dragons; tautology-with-dead-grepl→REVIVE+prune
+inputId-artifacts/framing-words/foreign-tokens; no-regex→anchor; NULL
+\[data-dependent OR static-but-in-inactive-nested-tab OR nonexistent\] →
+pane-active + defer/flag). 5. **Pre-gate refute the map** (Learning
+\#43d — RENDER the DOM for any uncertain matcher) then gate. 6. **⚠ Read
+the regression as `expectation_success` (or the testthat PASS line) with
+`NOT_CRAN=true`** — NEVER `sum(nb)−sum(failed)` (Learning \#43e/#42d).
+7. **Commit ONLY the test files + docs via explicit `git add`**
+(\[macos-dupe-scan\]:
+`.DS_Store`/`..Rcheck/`/`PED_GV_AUDIT_2026-05-30.html` must NOT ride
+along).
+
+------------------------------------------------------------------------
+
+### Session 41 Handoff Evaluation (by Session 42)
+
+**Score: 9/10.** - **What helped most:** S41’s `⇒ SUGGESTED NEXT = 8e-3`
+line was decision-rich — it named the components (genetic-value +
+breeding-groups + menu + workflow), the idiom template, the
+data-dependent→static-UI rule, the Learning \#40/#41 split, the
+`[mutation-check]` inversion, the pre-gate-refute instruction, the
+navbarMenu note, the browser env, and “read plan §5 FIRST”. Every one
+applied directly. - **What helped most (load-bearing):** (1) the
+**`[mutation-check]` inversion** guidance (“source the wrong-content
+foreign label from a pane OTHER than the target, grep-confirm foreign”)
+— I used “Focal Animals” (Pedigree-only `modPedigree.R:52`),
+grep-confirmed it foreign to GV, and the mutation-check discriminated on
+the first run, no wasted spike. (2) The **“census firsthand”**
+instruction surfaced that 8e-3 is 8 files / ~56 blocks. (3) The
+**helper-mechanism carry** (“the active-pane mechanism = the IMPLEMENTED
+helper `:309-413`, NOT the plan selector; later cuts just CALL it”)
+meant zero helper work — I read it once to confirm the contract and
+moved on. - **What was below handoff altitude (the one deduction):** S41
+did not flag that **8e-3 is ~3× a single 8e-2 session and should be
+split one family per session.** I derived that from the firsthand
+census + plan §5’s “may split if oversized” + the S38–S41
+family-per-session precedent, then posed it as a pre-RED scope
+`AskUserQuestion`. A 10/10 handoff would have said “8e-3 is 8 files — do
+genetic-value first, then breeding-groups, then menu/workflow.” Minor
+(the plan §5 carried the “may split” note and S41 said census firsthand,
+which surfaced it). - **What was wrong:** nothing. S41 correctly noted
+it had NOT censused the 8e-3 files (correct division of labor); my
+census matched plan §5 exactly (7/7/8/7/7/9/4/7). - **ROI:** strongly
+positive — one read put me on the right slice with the idiom, the
+mutation-check inversion, the pre-gate-refute discipline, and the helper
+fact in hand.
+
+### What Session 42 Did
+
+**Deliverable:** the **GENETIC-VALUE family of slice 8e-3**
+(`docs/planning/phase8e-assertion-strengthening-subplan.md`, issue \#40,
+the FIRST of three 8e-3 cuts) — converted all **22 browser-booting
+blocks** across `test-e2e-genetic-value-module.R` (7) + `-detailed.R`
+(7) + `-tutorial.R` (8) from the content-blind
+`navigate_to_tab → grepl(get_html_safe(app,"body"))` idiom to behavioral
+`assert_active_pane(app,"Genetic Value Analysis",<pattern>)`. Strict
+TDD, **PURE run-and-observe** (\[refactor-only\], green-on-arrival;
+gated `PRE-RED→run-and-observe` via `AskUserQuestion`;
+\[mutation-check\] = the rigor, no synthetic RED). **Owner-scoped to ONE
+family** via a pre-RED scope `AskUserQuestion` (8e-3 = 8 files/~56
+blocks ≈ 3× a session). **Date:** 2026-06-08. **Branch:**
+`add-methodology` (NOT on remote). **Commit:** one `test:`/`docs:`
+close-out (the 3 test files + CHANGELOG + PROJECT_LEARNINGS \#42 + these
+notes), staged via explicit `git add` (NOT
+`.DS_Store`/`..Rcheck/`/`PED_GV_AUDIT_2026-05-30.html`). **What was
+built (3 files, 22 blocks) — split by the OLD assertion’s kind (Learning
+\#40/#41/#42):** 1. **16 genuine `expect_true(grepl(orig))` → keep regex
+verbatim, rescope haystack to the active pane:** module M1–M7
+(`Genetic|Value|Analysis|Kinship` · `iteration|gene drop|simulation` ·
+`genome uniqueness|mean kinship|uniqueness|kinship` ·
+M4🐉`minimum|breeding|age` · `run|analyze|calculate|start` ·
+`ranking|top|result` · `download|export|save`); detailed
+D1🐉`population|select|animals|subset` · D2`genome|uniqueness|GU|unique`
+· D4`kinship|mean|coefficient|MK` · D5`rank|value|score|priority`;
+tutorial T1`simulation|iteration|numSim|number.*simulation|gene.*drop` ·
+T2`genome.*uniqueness|uniqueness.*threshold|GU|threshold` ·
+T3`Begin.*Analysis|...|Calculate` ·
+T4🐉`dataTable|DTOutput|table|results|ranking` ·
+T6`mean.*kinship|...|meanKinship`. 2. **3 tautologies WITH a dead
+computed grepl → REVIVE that exact pattern rescoped (Learning \#42a, NEW
+sub-case):** D3 `founder|equivalent|FE|genetic`, D6
+`report|export|download|summary`, T8 narrowed→`filter`. 3. **1
+content-length tautology (`nchar(html)>200`) → ANCHOR** D7 → “ranks
+animals” (always-rendered guidance phrase,
+`inst/extdata/ui_guidance/genetic_value.html`). 4. **2 NULL (pane-active
+only, data-bearing deferred to 8e-6):** T5 “Value Designation” + T7
+“Z-score” — data-dependent results concepts absent from the static
+UI/guidance (Learning \#41a). **4 dragons keep their genuine regex
+verbatim, flagged in a comment, never renamed (Learning \#41a):** M4 (no
+min-age control; “breeding”←guidance “breeding colony”), D1 (population
+server-derived `modGeneticValue.R:148-162`; “animals”←guidance “ranks
+animals”, “subset”←“Export Subset”), T4 (table
+`req(gvaView())`-gated→8e-6; “ranking”←static “Rankings” nested-tab
+label). **Pre-gate adversarial verification NARROWED the map (Learning
+\#42b):** a 4-agent workflow (3 source-grounded skeptics
+defaulting-to-refuted + a cross-checking critic) over the 22-block map
+BEFORE the gate confirmed **21/22** and corrected **T8** — its revived
+dead pattern carried 4 alternatives
+(focal/display/Show.\*entries/search) FOREIGN to the GV pane (copy-paste
+from another module); only “filter” matches default-visible innerText →
+narrowed to `filter`. (Contrast D3/D6’s non-matching alternatives, which
+are REAL GV concepts rendered with data in 8e-6 → kept verbatim.) The
+critic also dismissed a skeptic’s bogus newline-spanning false positive
+(R `grepl` `.` does not cross `innerText` newlines) and confirmed the 2
+NULLs. Verified the critic firsthand against `modGeneticValue.R` + the
+guidance HTML, adopted the T8 correction. **Key files:**
+`tests/testthat/test-e2e-genetic-value-{module,detailed,tutorial}.R`
+(all 3 rewritten); `tests/testthat/helper-shinytest2.R:309-413`
+(active-pane helpers — UNCHANGED, just called; `:196` `create_test_app`
+NPRC_RUN_E2E self-skip; `:253` `navigate_to_tab` read-back);
+`R/modGeneticValue.R:27-96` (UI: left column always-visible \[h3,
+controls, “About Genetic Values”, guidance\]; right column nested tabset
+“Rankings”\[default\]/“Visualizations”/“Summary”), `:129-296` (the
+`req()`-gated data-dependent outputs → 8e-6);
+`inst/extdata/ui_guidance/genetic_value.html` (guidance: “ranks
+animals”, “breeding colony”, “rare founder alleles”); `R/appUI.R:148`
+(tabPanel title). Transient (NOT committed):
+`/tmp/mutation_check_8e3_gv.R`. **Verification:** browser run **22/22
+blocks GREEN / 22 expectations** (1:1 swap, net 0), 0 error / 0 skip
+(`filter="^e2e-genetic-value"`, env
+`NPRC_RUN_E2E=true NOT_CRAN=true RENV_CONFIG_AUTOLOADER_ENABLED=false`).
+**\[mutation-check\] PASS** (`/tmp/mutation_check_8e3_gv.R`, INVERTED —
+GV is the TARGET pane): correct
+`(Genetic Value Analysis,"Run Analysis")`→TRUE; wrong-pane
+`(Pedigree Browser,"Run Analysis")`→FALSE; wrong-content
+`(Genetic Value Analysis,"Focal Animals")`→FALSE; old whole-body
+`grepl("Focal Animals",body)`→TRUE; active-pane innerText grepl→FALSE.
+Non-e2e regression (`NOT_CRAN=true`) **2162 passed / 0 failed / 0 error
+/ 0 non-e2e offenders** (156 skipped, 5 pre-existing `modPyramid`
+warnings; the 3 GV files = 0/0/0/22-skip; S41 baseline held EXACTLY).
+**⚠ Learning \#42d:** the FIRST regression read OMITTED `NOT_CRAN=true`
+→ fake 2122/159 (looked like a 40-pass regression; impossible for a
+test-only e2e edit) → re-ran `NOT_CRAN=true` → 2162/156. ALWAYS read
+with `NOT_CRAN=true`. **Phase 3E (runtime smoke):** SATISFIED —
+test-infra deliverable; the live browser run (22 blocks via real
+AppDriver) + the live mutation-check spike ARE the runtime (#31
+pattern). Drove the REAL app, not just build-clean. **Self-assessment:**
+strong. Censused firsthand (matched plan §5); used the adversarial
+pre-gate which made a real correction (T8); caught my own `NOT_CRAN`
+measurement error rather than shipping a false “regression”; held the
+protocol (orient→one deliverable→close out), the TDD gates (scope
+`AskUserQuestion` + `PRE-RED→run-and-observe`), and the 1-family scope.
+Could improve: the first map slightly over-broad on T8 (the pre-gate
+caught it — working as designed). Met/exceeded the S38–S41 bar.
+**GOTCHAS for the next session (8e-3 cut 2 = breeding-groups family;
+full plan in the ACTIVE TASK ⇒ line):** 1. **Use the IMPLEMENTED
+helper** (`helper-shinytest2.R:309-413`), NOT the plan §2.3/§4 selector.
+Just CALL `assert_active_pane`; no helper work. 2. **Census the
+breeding-groups files firsthand** (module 7 / detailed 7 / tutorial 9 =
+~23) + read `R/modBreedingGroups.R` for the static-vs-`req()`-gated
+surface (Phase-5/6 baked a lot in: seed-group widget,
+`minAge`/`nIterations`/`withKinship`, “Group Detail” tab, downloads).
+Tab title = **“Breeding Groups”** (`appUI.R:166`). 3. **Apply the
+Learning \#40/#41/#42 split.** Genuine grepl→KEEP verbatim (flag
+dragons, never rename). Tautology-WITH-dead-grepl→REVIVE that pattern
+rescoped, but **prune alternatives FOREIGN to the module while keeping
+real-but-data-dependent ones** (Learning \#42a/#42b).
+No-regex/content-length tautology→guidance anchor. NULL only when
+nothing default-visible matches a faithful pattern (Learning \#41a: the
+test is “does ≥1 alternative match DEFAULT-VISIBLE innerText?”, not “is
+the named feature real?”). 4. **⚠ \[mutation-check\] inversion:**
+wrong-content foreign label from a pane OTHER than Breeding Groups
+(grep-confirm foreign). 5. **Pre-gate refute the map** (Learning
+\#40d/#41d/#42b) — it can CORRECT (narrow/NULL/un-NULL), not just
+confirm; adopt corrections, verify the critic firsthand, then gate
+`PRE-RED→run-and-observe`. 6. **⚠ Read the regression with
+`NOT_CRAN=true`** (Learning \#42d) — else non-e2e `skip_on_cran` tests
+silently skip and fake a pass-count drop. 7. **Do NOT bundle** the 3rd
+8e-3 cut (settings-about + workflow-integration) — it is distinct,
+higher-value work (finalize `navigate_to_menu_item` as a true
+visible-pane check; convert the workflow visit-N loop). FM \#18/#25.
+
+------------------------------------------------------------------------
+
+### Session 40 Handoff Evaluation (by Session 41)
+
+**Score: 9/10.** - **What helped most:** S40’s “⇒ SUGGESTED NEXT =
+continue 8e-2 with the PYRAMID family ONLY” was decision-complete — it
+named the 2 files (module/detailed = 12 per plan §5), the tab title
+“Age-Sex Pyramid”, the idiom, the canonical static anchors with exact
+lines (`modPyramid.R:25-47` + the `pyramidPlot.html` guidance `:55-58`),
+the browser env, and don’t-bundle-8e-3 (FM \#18/#25). Every line-ref
+held against the source (the title string is at `appUI.R:139`, within
+the `:138-139` block S40 cited — harmless). - **What helped most
+(load-bearing):** GOTCHA \#4, the **\[mutation-check\] INVERSION**
+warning — “Pyramid is the TARGET pane next session, so ‘Color
+Scheme’/‘Bin Size’ are IN-pane; the wrong-content mutant must use a
+Pedigree/Input-only label (e.g. ‘Focal Animals’).” I used “Focal
+Animals” immediately, grep-confirmed it foreign, and the mutation-check
+discriminated on the first try — no wasted spike. GOTCHA \#5 (pre-gate
+refute the map) also paid off directly: it caught 2 over-NULLs before
+the gate. - **What was below handoff altitude (NOT a defect, but the one
+deduction):** GOTCHA \#3 framed the pyramid family as needing the
+data-dependent→NULL+defer rule (“the rendered plot is data-dependent →
+assert STATIC controls only; apply Learning \#40’s
+data-dependent→NULL+defer”). That correctly told me to assert static
+only — but it subtly biased my FIRST map toward NULLing D3/D6, which the
+pre-gate refutation then had to correct. A sharper handoff might have
+noted that the pyramid pane’s static surface (controls + UNCONDITIONAL
+guidance) is rich enough that the only data-dependent thing — the
+rendered plot/table — is targeted by NONE of the 12 blocks, so 0 NULLs
+were actually needed. Minor: the handoff explicitly told me to census
+firsthand, which surfaced exactly this. - **What was slightly
+imprecise:** S40 said “did NOT census the pyramid files this session”
+and handed that to me — correct division of labor; I censused firsthand
+(6+6=12, matching plan §5). - **ROI:** strongly positive — one read put
+me on the right slice with the idiom, the mutation-check inversion, and
+the helper fact in hand; the pre-gate refutation then did the rest.
+
+### What Session 41 Did
+
+**Deliverable:** the **PYRAMID family of slice 8e-2**
+(`docs/planning/phase8e-assertion-strengthening-subplan.md`, issue \#40,
+the LAST 8e-2 cut) — converted all **12 browser-booting blocks** across
+`test-e2e-pyramid-module.R` (6) + `test-e2e-pyramid-detailed.R` (6) from
+the content-blind `navigate_to_tab → grepl(get_html_safe(app,"body"))`
+idiom to behavioral
+`assert_active_pane(app,"Age-Sex Pyramid",<pattern>)`. **COMPLETE → 8e-2
+is now COMPLETE.** Strict TDD, **PURE run-and-observe**
+(\[refactor-only\], green-on-arrival; gated `PRE-RED→run-and-observe`
+via `AskUserQuestion`; \[mutation-check\] = the rigor, no synthetic
+RED). **Date:** 2026-06-08. **Branch:** `add-methodology` (NOT on
+remote). **Commit:** one `test:`/`docs:` close-out (the 2 test files +
+CHANGELOG + PROJECT_LEARNINGS Learning \#41 + these notes). **What was
+built (2 files, 12 blocks) — split by the OLD assertion’s kind (Learning
+\#40/#41):** 1. **10 genuine `expect_true(grepl(orig))` asserts → keep
+original regex verbatim, rescope haystack to the active pane:** module
+L6 `Pyramid|Age|Sex` · L25 `Years|Months|unit` · L42 `bin|size|interval`
+· L59 `color|viridis|scheme|palette` · L76 `download|export|save` · L93
+`height|size|dimension`; detailed L6 `age|bin|interval|year` · L25
+🐉`male|female|sex` · L44 🐉`max|maximum|age|limit` · L80
+`population|distribution|pyramid|demographic`. 2. **2 tautologies →
+precise default-visible anchor:** detailed L63 `expect_true(TRUE)` →
+“Download Plot” (`modPyramid.R:47`); detailed L99 `nchar(html)>100` →
+“Age Plot” (the always-rendered guidance instruction). 3. **0 NULL.**
+The pyramid pane’s static surface is rich (sidebar controls
+`modPyramid.R:25-47` + UNCONDITIONAL `includeHTML(pyramidPlot.html)`
+`:55-58`), so every block has a default-visible anchor. None of the 12
+blocks targets the data-dependent rendered plot (`plotOutput`) or
+Statistics table (`tableOutput`), both `req(pedigreeData())`-gated
+(`modPyramid.R:90-118`) — so nothing defers to 8e-6. The **two dragons**
+keep their keywords against always-rendered static text: detailed:25
+`male|female|sex` ← guidance “…males are plotted on the left and females
+on the right” + h3 “Age-Sex Pyramid Analysis” (NOT the data-dependent
+plot axis labels); detailed:44 `max|maximum|age|limit` ← always-visible
+“Age Unit:”/“Age Label Size:”/“Age-Sex” — there is NO dedicated max-age
+control (the `max=10/1500/2.0` are numeric widget bounds, not
+innerText), so the genuine regex is kept verbatim, not renamed.
+**Pre-gate adversarial verification CORRECTED the map (Learning
+\#41d):** ran a 4-agent workflow (3 source-grounded skeptics
+defaulting-to-refuted + a cross-checking critic) over the 12-block map
+BEFORE the gate → **2/12 refuted**, both my proposed NULLs (D3 “maximum
+age setting”, D6 “data requirement message”). The skeptics were right:
+D3’s regex matches static “age” (→ KEEP, don’t NULL), and D6’s pane has
+always-rendered guidance (→ anchor “Age Plot”, don’t NULL+defer).
+Verified the critic’s reasoning firsthand against `modPyramid.R` + the
+guidance HTML, adopted both corrections → 0-NULL map. (Contrast S40’s
+0/19-refuted confirmation — this session the pre-gate EARNED its keep by
+correcting, not just confirming.) **Key files:**
+`tests/testthat/test-e2e-pyramid-module.R`, `-pyramid-detailed.R` (both
+rewritten); `tests/testthat/helper-shinytest2.R:309-413` (active-pane
+helpers — UNCHANGED, just called; `:196` `create_test_app` NPRC_RUN_E2E
+self-skip; `:250` `navigate_to_tab` fallback no-op);
+`R/modPyramid.R:25-47,55-58,90-118` (UI source for anchors; the
+data-dependent outputs); `inst/extdata/ui_guidance/pyramidPlot.html`
+(dragon “males…females” + D6 “Age Plot” anchor). Transient (NOT
+committed): `/tmp/mutation_check_8e2_pyramid.R`. **Verification:**
+browser run **12/12 blocks GREEN / 12 expectations** (1:1 swap, net 0),
+0 error / 0 skip (`filter="^e2e-pyramid"`, env
+`NPRC_RUN_E2E=true NOT_CRAN=true RENV_CONFIG_AUTOLOADER_ENABLED=false`).
+**\[mutation-check\] PASS** (`/tmp/mutation_check_8e2_pyramid.R`,
+INVERTED — Pyramid is the TARGET pane): correct
+`(Age-Sex Pyramid,"Bin Size")`→TRUE; wrong-pane
+`(Pedigree Browser,"Bin Size")`→FALSE; wrong-content
+`(Age-Sex Pyramid,"Focal Animals")`→FALSE (Pedigree-only
+`modPedigree.R:52`, grep-confirmed foreign to Pyramid); old whole-body
+`grepl("Focal Animals",body)`→TRUE (content-blind contrast); active-pane
+innerText grepl→FALSE (sanity). Non-e2e regression **2162 passed / 0
+failed / 0 error / 0 non-e2e offenders** (156 skipped, 5 pre-existing
+`modPyramid` warnings; the e2e-only change self-skips at
+`create_test_app()` so non-e2e counts are unaffected — S40 baseline held
+EXACTLY). **Phase 3E (runtime smoke):** SATISFIED — test-infra
+deliverable; the live browser run (12 blocks via real AppDriver) + the
+live mutation-check spike ARE the runtime (#31 pattern). Drove the REAL
+app, not just build-clean. **GOTCHAS for the next session (8e-3 —
+genetic-value/breeding-groups/menu/workflow; full plan in the ACTIVE
+TASK ⇒ line):** 1. **Use the IMPLEMENTED helper**
+(`helper-shinytest2.R:309-413`), NOT the plan §2.3/§4 selector
+(superseded). Just CALL `assert_active_pane`; no helper work. 2.
+**Census the 8e-3 files firsthand** — read plan §5 “8e-3” for the exact
+file list + counts (I did not census them this session); `ls`/grep
+`test_that` to confirm. 3. **Apply Learning \#40/#41’s split.** ⚠
+Learning \#41a: the NULL test is “does ≥1 alternative match
+DEFAULT-VISIBLE innerText?” NOT “is the named feature
+real/data-dependent?” — keep a genuine regex even when the test NAME
+overclaims (flag the dragon in a comment; never rename/retarget — scope
+creep). NULL ONLY for a `req()`-gated output with no default-visible
+alternative. genetic-value/breeding-groups results are largely
+data-dependent → assert STATIC UI; data-bearing → 8e-6. 4. **⚠
+\[mutation-check\] inversion:** the wrong-content foreign label must
+come from a pane OTHER than the current target (grep-confirm foreign).
+5. **Pre-gate refute the map** (Learning \#40d/#41d) — it can CORRECT,
+not just confirm; adopt corrections, verify the critic firsthand, then
+gate. 6. **Browser run is opt-in + slow** (each `test_that` boots its
+own Chrome). Do NOT bundle 8e-4+ (FM \#18/#25). 7. **⚠ navbarMenu “More”
+children** (Settings/About/Help): `navigate_to_menu_item` delegates to
+`navigate_to_tab` (`helper-shinytest2.R:297-299`); the 8e-1 spike
+confirmed `set_inputs(mainNavbar=<child>)` reaches them, but verify the
+child becomes the lone `.active` pane firsthand (sub-plan §2.3 item 4).
+8. **Branch `add-methodology` still NOT on remote.** Two S34 live-run CI
+watch items still pending the first master run (Phase-8 CI baked-in note
+in the carried context). **Self-assessment: 9/10.** (+) Oriented fully
+before touching anything; censused the pyramid files firsthand (6+6=12,
+matching plan §5); sourced every pattern from `modPyramid.R` + the
+guidance HTML. (+) Ran a pre-gate adversarial refutation that materially
+CORRECTED my map (2/12 over-NULLs caught before the gate and before the
+slow browser run) — then verified the critic firsthand rather than
+trusting it, and adopted the corrections honestly. (+) The 0-NULL
+outcome is stronger than the S40 handoff anticipated, and I named WHY
+(no block targets the data-dependent plot) rather than reflexively
+NULLing per the inherited rule. (+) \[mutation-check\] discriminating at
+all 5 arms (inverted correctly); regression held the S40 baseline
+exactly; committed only the intended files. (−) My FIRST map over-NULLed
+D3/D6 — the right answer only emerged via the refutation, not my initial
+judgment (the deduction); distilled the fix into Learning \#41a/b/c. (−)
+Did not census the 8e-3 files this session (flagged for next, same as
+S40 flagged pyramid for me). New: Learning \#41.
+
+------------------------------------------------------------------------
+
+### Session 39 Handoff Evaluation (by Session 40)
+
+**Score: 9/10.** - **What helped most:** S39’s “⇒ SUGGESTED NEXT =
+continue 8e-2 with the PEDIGREE family ONLY” was decision-complete — it
+named the 3 files with EXACT block counts (5+6+8=19), the tab title
+“Pedigree Browser”, the idiom, the canonical static anchors (h3
+“Pedigree Browser”; h4 “Focal Animals”/“Display Options”/“Export
+Pedigree” at `modPedigree.R:29,52,103,131`), the browser env, and
+don’t-bundle-pyramid (FM \#18/#25). Every count and line-ref held
+EXACTLY against the source. - **What helped most (load-bearing):** the
+**two dragons pre-named** (`pedigree-detailed:57` `sire|dam|…`,
+`pedigree-tutorial:174` `has_columns`) with the precise instruction
+“KEEP their keywords, just rescope” — and “`pedigree-tutorial` is mostly
+tautology+dead (7/8)”. Both held exactly (7 tautology + 1 real :174), so
+I knew the file’s shape before reading it. The carried **CRITICAL FACT**
+(“use the IMPLEMENTED helper `:309-413`, NOT the plan §2.3/§4 selector”)
+meant zero wasted effort on the superseded selector. - **What was
+missing (below handoff altitude, NOT a defect):** the handoff didn’t
+pre-classify the 4 NULL blocks (the 2 `req()`-gated DT tables, the
+DataTables pagination, the nonexistent “status filter”) — I derived
+those from the visibility-map. Correct division of labor: per-block
+sourcing is the executing session’s job, and “read `modPedigree.R`
+FIRST + honest-tautology rule” gave the method. One genuinely-NEW
+sub-case emerged from this (a *genuine* `grepl` assert can ALSO become
+NULL when its target is data-dependent, not just a nonexistent-feature
+tautology) → distilled into Learning \#40b. - **What was slightly
+imprecise:** it cited the tab title at “`appUI.R:129-133`”; the title
+STRING “Pedigree Browser” is at `:130` (within the cited tabPanel block
+— harmless). The “re-verify firsthand” caveat on the no-wrong-tab claim
+was right and I did (`navigate_to_tab`’s 3rd arg is a documented no-op,
+`helper-shinytest2.R:245-250`). - **ROI:** strongly positive — one read
+put me on the right slice with the idiom, the dragons, and the helper
+fact in hand; the pre-gate refutation workflow had nothing to overturn.
+
+### What Session 40 Did
+
+**Deliverable:** the **PEDIGREE family of slice 8e-2**
+(`docs/planning/phase8e-assertion-strengthening-subplan.md`, issue \#40)
+— converted all **19 browser-booting blocks** across
+`test-e2e-pedigree-module.R` (5), `-pedigree-detailed.R` (6),
+`-pedigree-tutorial.R` (8) from the content-blind
+`navigate_to_tab → grepl(get_html_safe(app,"body"))` idiom to behavioral
+`assert_active_pane(app,"Pedigree Browser",<pattern>)`. **COMPLETE.**
+Strict TDD, **PURE run-and-observe** (\[refactor-only\],
+green-on-arrival; gated `PRE-RED→run-and-observe` via `AskUserQuestion`;
+\[mutation-check\] = the rigor, no synthetic RED). **Date:** 2026-06-08.
+**Branch:** `add-methodology` (NOT on remote). **Commit:** one
+`test:`/`docs:` close-out (the 3 test files + CHANGELOG +
+PROJECT_LEARNINGS Learning \#40 + these notes). **What was built (3
+files, 19 blocks) — principled split by the OLD assertion’s kind
+(Learning \#40a):** 1. **Genuine `expect_true(grepl(orig))` asserts →
+keep the original regex, rescope haystack to the active pane:** module
+L6 `Pedigree|Browser|Animal` · L25 `focal|animal|filter|update` · L42
+`export|download|csv` · L76 `trim|subset|filter`; detailed L6
+`filter|search|select` · L25 `ID|animal|identifier|search` · L44
+🐉`sire|dam|parent|offspring|ancestor|descendant` · L82
+`sex|male|female|gender`; tutorial L155
+🐉`sire|dam|sex|birth|exit|age|gen|population`. 2. **`expect_true(TRUE)`
+tautologies → precise default-visible anchor:** tutorial L7 “Display
+Unknown IDs” · L50 “Focal Animals” · L71 “Choose CSV file” · L92 “Trim
+pedigree” · L113 “Update Focal Animals” · L134 “Clear Focal Animals”
+(`modPedigree.R:52,72,79,86,105,118`). 3. **4 honest NULL**
+`assert_active_pane(app,"Pedigree Browser")` (pane-active only) + flag —
+target data-dependent or nonexistent: module L59 + detailed L63 (the DT
+table is `req(pedigreeData())`-gated, `modPedigree.R:150,306` → deferred
+to 8e-6); tutorial L28 (DataTables “Show X entries” pagination is
+data-dependent → 8e-6); detailed L101 (no static “status filter” control
+exists — was `expect_true(TRUE)`). The **two dragons** keep their
+keywords because the column names are in the always-rendered LEFT-panel
+guidance `inst/extdata/ui_guidance/pedigree_browser.html` (`includeHTML`
+at `modPedigree.R:41-44`): “Ego ID, Sire ID, Dam ID, Sex, Generation,
+and Population… Birth Date, Exit Date, Age”. **Pre-gate adversarial
+verification (Learning \#40d):** ran a 4-agent workflow (3 per-file
+skeptics told to default-to-refuted + a cross-checking critic) over the
+whole 19-block map BEFORE the gate → **0/19 refuted**, critic GO, all
+patterns confirmed default-visible, 4 NULLs confirmed honest (no
+overlooked anchor), mutation labels confirmed foreign. (Critic caught
+one self-misquote in my draft — a helpText I described as “ancestors of
+focal animals” is really “relatives of the focal animals”; verdict
+unaffected, guidance “Sire ID, Dam ID” independently satisfies
+`sire|dam`.) **Key files:** `tests/testthat/test-e2e-pedigree-module.R`,
+`-pedigree-detailed.R`, `-pedigree-tutorial.R` (all rewritten);
+`tests/testthat/helper-shinytest2.R:309-413` (active-pane helpers —
+UNCHANGED, just called; `:196` `create_test_app` NPRC_RUN_E2E self-skip;
+`:245-250` `navigate_to_tab` fallback no-op); `R/modPedigree.R` (UI
+source for anchors); `inst/extdata/ui_guidance/pedigree_browser.html`
+(dragon column keywords). Transient (NOT committed):
+`/tmp/mutation_check_8e2_pedigree.R`. **Verification:** baseline 19/19
+GREEN → post-conversion **19/19 blocks GREEN / 19 expectations** (1:1
+swap, net 0), 0 error / 0 skip (`filter="^e2e-pedigree"`, env
+`NPRC_RUN_E2E=true NOT_CRAN=true RENV_CONFIG_AUTOLOADER_ENABLED=false`).
+**\[mutation-check\] PASS** (`/tmp/mutation_check_8e2_pedigree.R`):
+correct `(Pedigree Browser,"Focal Animals")`→TRUE; wrong-pane
+`(Age-Sex Pyramid,…)`→FALSE; wrong-content
+`(Pedigree Browser,"Color Scheme")`→FALSE (Pyramid-only
+`modPyramid.R:31-32`); old whole-body `grepl("Color Scheme",body)`→TRUE
+(content-blind contrast); active-pane innerText grepl→FALSE (sanity).
+Non-e2e regression **2162 passed / 0 failed / 0 error / 0 non-e2e
+offenders** (156 skipped, 5 pre-existing `modPyramid` warnings; the
+e2e-only change self-skips at `create_test_app()` so non-e2e counts are
+unaffected — the count is higher than S39’s reported 2122 only because
+this run set `NOT_CRAN=true`, surfacing more non-e2e tests, NOT a
+regression). **Phase 3E (runtime smoke):** SATISFIED — test-infra
+deliverable; the live browser run (19 blocks via real AppDriver) + the
+live mutation-check spike ARE the runtime (#31 pattern). Drove the REAL
+app, not just build-clean. **GOTCHAS for the next session (continue 8e-2
+— PYRAMID family ONLY, the LAST 8e-2 cut; full plan in the ACTIVE TASK ⇒
+line):** 1. **Use the IMPLEMENTED helper**
+(`helper-shinytest2.R:309-413`), NOT the plan §2.3/§4 selector
+(superseded). Just CALL `assert_active_pane`; no helper work. 2.
+**Census the pyramid files firsthand** — I asserted “module/detailed =
+12 blocks per plan §5” but did NOT census them this session
+(`ls tests/testthat/*pyramid*` + grep `test_that`). Tab title “Age-Sex
+Pyramid” (`appUI.R:138-139`); `navigate_to_tab` 3rd arg is a no-op. 3.
+**Apply Learning \#40’s split:** genuine `grepl` asserts KEEP regex
+(rescope); `expect_true(TRUE)` tautologies → precise anchor;
+**data-dependent OR nonexistent target → NULL-pattern + defer-to-8e-6**
+(the rendered pyramid `plotOutput` is data-dependent — assert STATIC
+controls only: “Age-Sex Pyramid Analysis”/“Age Unit:”/“Bin Size:”/“Color
+Scheme:”/“Show counts”/“Plot Height (pixels):”/“Age Label
+Size:”/“Download Plot”, `modPyramid.R:25-47` + the `pyramidPlot.html`
+guidance). 4. **⚠ \[mutation-check\] INVERSION:** Pyramid is the TARGET
+pane next session, so “Color Scheme”/“Bin Size” are IN-pane and CANNOT
+be the wrong-content mutant. Pick a Pedigree/Input-only label
+(e.g. “Focal Animals”/“Display Unknown IDs” from `modPedigree.R`) and
+grep-confirm it’s foreign to Pyramid. (Generalizes \#38b: the foreign
+label must be sourced relative to the CURRENT target pane.) 5.
+**Pre-gate refute the map** (Learning \#40d) — a read-only
+3-skeptic+critic workflow over the proposed patterns before the
+`AskUserQuestion`; the browser run remains the authoritative
+\[verify-first\]. 6. **Browser run is opt-in + slow** (each `test_that`
+boots its own Chrome). The pyramid family (~12 blocks) is comfortable;
+do NOT add 8e-3 files (FM \#18/#25). After 8e-2 finishes with pyramid,
+8e-3 starts (genetic-value/breeding-groups/settings-about/workflow). 7.
+**The 4 NULL’d pedigree blocks** (module L59, detailed L63/L101,
+tutorial L28) carry their real content assertion forward to **8e-6**
+(the data-bearing slice). Don’t re-open them in 8e-2. 8. **Branch
+`add-methodology` still NOT on remote.** Two S34 live-run CI watch items
+still pending the first master run (Phase-8 CI baked-in note in the
+carried context). **Self-assessment: 9/10.** (+) Oriented fully before
+touching anything; ran a pre-gate adversarial refutation of the entire
+19-block map (0/19 refuted) so the `AskUserQuestion` carried a verified
+plan, then gated `PRE-RED→run-and-observe` honestly (no synthetic RED —
+Learning \#18c/#20a). (+) Sourced every pattern firsthand from
+`modPedigree.R` + the guidance HTML; the principled genuine-vs-tautology
+split kept the genuine asserts faithful (regex preserved) while
+upgrading the tautologies to precise anchors. (+) Found and named a
+genuinely-new sub-case (a real `grepl` assert → NULL because
+data-dependent, distinct from \#39’s nonexistent-feature NULL) →
+Learning \#40b, rather than forcing a content match on the data-bearing
+DT table. (+) \[mutation-check\] discriminating at both arms; the critic
+even caught a self-misquote in my evidence (corrected, verdict
+unaffected). (+) Held the regression clean (0 failed/0 error/0
+offenders); committed only the intended files. (−) Did not census the
+pyramid files this session (flagged for next). (−) One of my draft
+evidence quotes was inaccurate (the critic caught it) — a reminder to
+quote the source, not paraphrase. New: Learning \#40.
+
+------------------------------------------------------------------------
+
+### Session 38 Handoff Evaluation (by Session 39)
+
+**Score: 9/10.** - **What helped most:** the ACTIVE TASK’s “⇒ SUGGESTED
+NEXT = continue 8e-2 with the INPUT family ONLY” was decision-complete —
+it named the 3 files with exact block counts (5+6+8=19), the idiom
+(`navigate_to_tab` → `assert_active_pane`), **“no helper work — helpers
+EXIST”** (the helper at `:309-413` was exactly as described), the
+canonical static anchors (`modInput.R:42,130`), the browser env string,
+the don’t-bundle warning (FM \#18/#25), and the CRITICAL FACT (use the
+implemented helper, not the plan §2.3/§4 selector). Every count/pointer
+held EXACTLY; I never tried the superseded selector. - **What helped
+most (Learning \#38b):** the wrong-content mutation gotcha —
+“`innerText` carries every static label; the wrong-content mutant must
+use text in NO sibling control of the pane” — **directly shaped my
+mutation-check from the start.** I picked “Color Scheme” (a Pyramid-only
+label) for the wrong-content arm immediately, sidestepping the exact
+“Focal Animals” trap S38 hit (because “Focal animals only…” IS an Input
+File-Content radio choice — an in-pane label). \#38b saved me the wasted
+spike S38 had to spend discovering this. - **What was missing (below
+handoff altitude, NOT a defect):** the handoff gave only 2 example
+anchors (“Data Input and Quality Control”/“Read and Check Pedigree”) for
+19 blocks — I had to read the full `modInput.R` UI + `input_format.html`
+to source the other 17 patterns and build the innerText visibility-map.
+Correct division of labor: per-block pattern sourcing is the executing
+session’s job; the handoff gave the canonical anchor + the method (read
+the module UI). - **What was slightly imprecise:** the idiom line
+described “Input” as “the short label is the IGNORED `fallback` arg” —
+that phrasing was copy-forward from the pedigree/pyramid case (where the
+file passes the full title + a short fallback). For Input, “Input” IS
+the actual `tabPanel` title (`appUI.R:120-124`), so
+`navigate_to_tab("Input")` is an exact match, not a fallback. Harmless —
+it worked identically; the “NO wrong-tab defect” claim held (all 19
+navigations landed on Input). - **ROI:** strongly positive — one read
+put me on the right slice with the idiom and the \#38b mutation gotcha
+already in hand.
+
+### What Session 39 Did
+
+**Deliverable:** the **INPUT family of slice 8e-2**
+(`docs/planning/phase8e-assertion-strengthening-subplan.md`, issue \#40)
+— converted all **19 browser-booting blocks** across
+`test-e2e-input-module.R` (5), `-input-detailed.R` (6),
+`-input-tutorial.R` (8) from the content-blind
+`navigate_to_tab → grepl(get_html_safe(app,"body"))` idiom to behavioral
+`assert_active_pane(app,"Input",<static>)`. **COMPLETE.** Strict TDD,
+**PURE run-and-observe** (\[refactor-only\], green-on-arrival; gated
+`PRE-RED→run-and-observe` via `AskUserQuestion`; \[mutation-check\] =
+the rigor, no synthetic RED). **Date:** 2026-06-08. **Branch:**
+`add-methodology` (NOT on remote). **Commit:** one `test:`/`docs:`
+close-out (the 3 test files + CHANGELOG + PROJECT_LEARNINGS Learning
+\#39 + these notes). **What was built (3 files, 19 blocks):** every
+block now
+`expect_true(assert_active_pane(app,"Input",<pattern>), info=...)`.
+Patterns drawn from the **innerText VISIBILITY-MAP** (Learning \#39) —
+default-visible sidebar controls, the nested-tab nav labels, and the
+active “Input Format” tab’s `includeHTML(input_format.html)` guidance.
+Two prior tautologies (`expect_true(TRUE)`): `input-detailed` “example
+data option” → **NULL-pattern `assert_active_pane(app,"Input")`** (no
+such feature exists — honest pane-active check, not a forced match);
+`input-tutorial` “genotype file support” → real `"genotype"` (backed by
+the File-Content radio + genotype-format docs). **Static-pattern sources
+(read firsthand):** `R/modInput.R` — h3 “Data Input and Quality Control”
+(:42), radio labels “File Type”/“File Content” + the visible `pedFile`
+fileInput “Select Pedigree File” (:55-93), “Minimum Parent Age” (:119),
+“Read and Check Pedigree” (:130), the nested tabsetPanel labels “Input
+Format”/“QC Summary”/“Errors”/“Warnings”/“Cleaned Data” (:142-195);
+`inst/extdata/ui_guidance/input_format.html` —
+“comma-delimited”/“tab-delimited”/“Excel”/“genotype” (the active
+nested-tab content); `R/appUI.R:120-124` (“Input” tab title). **Key
+files:** `tests/testthat/test-e2e-input-module.R`, `-input-detailed.R`
+(the NULL-pattern honest conversion is at its line ~76),
+`-input-tutorial.R` (all rewritten);
+`tests/testthat/helper-shinytest2.R:309-413` (active-pane helpers —
+UNCHANGED, just called). Transient (NOT committed):
+`/tmp/mutation_check_8e2_input.R`. **Verification:** baseline 19/19
+GREEN → post-conversion **19/19 blocks GREEN / 19 expectations** (1:1
+swap, net 0), 0 error/0 skip (`filter="^e2e-input"`, env
+`NPRC_RUN_E2E=true NOT_CRAN=true RENV_CONFIG_AUTOLOADER_ENABLED=false`).
+**\[mutation-check\] PASS** (`/tmp/mutation_check_8e2_input.R`):
+correct→TRUE; wrong-pane `(Age-Sex Pyramid)`→FALSE; wrong-content
+`(Input,"Color Scheme")`→FALSE; old whole-body
+`grepl("Color Scheme",body)`→TRUE (content-blind contrast); active-pane
+innerText grepl→FALSE (sanity). Non-e2e regression **2122 passed / 0
+failed / 0 error** (159 e2e-skipped, 5 pre-existing `modPyramid`
+warnings — unchanged S38 baseline; 0 non-e2e offenders). **Phase 3E
+(runtime smoke):** SATISFIED — test-infra deliverable; the live browser
+run (19 blocks via real AppDriver) + the live mutation-check spike ARE
+the runtime (#31 pattern). Drove the REAL app, not just build-clean.
+**GOTCHAS for the next session (continue 8e-2 — PEDIGREE family ONLY;
+see the ACTIVE TASK ⇒ line for the full plan):** 1. **Use the
+IMPLEMENTED helper** (`helper-shinytest2.R:309-413`), NOT the plan
+§2.3/§4 selector (superseded). Just CALL `assert_active_pane`; no helper
+work. 2. **innerText VISIBILITY-MAP (Learning \#39):** only
+DEFAULT-VISIBLE content is assertable — `conditionalPanel`s with a false
+condition + non-active nested tabs are `display:none` and contribute
+nothing. Read `modPedigree.R` for the DEFAULT input state BEFORE picking
+a pattern; the browser run is the \[verify-first\] (a hidden-subtree
+pattern → `assert_active_pane`=FALSE → caught). 3. **Honest-tautology
+rule (Learning \#39):** a tautology naming a NONEXISTENT feature →
+NULL-pattern `assert_active_pane(app,"<Tab>")` + flag; a real feature →
+assert it. `pedigree-tutorial` is 7/8 tautology+dead → expect several
+honest conversions. 4. **Content-coupled REAL asserts (plan §2.2):**
+`pedigree-detailed:57` and `pedigree-tutorial:174` keep their keywords —
+just rescope to the active pane (don’t NULL them). 5.
+**\[mutation-check\] a sample** every session: wrong-pane→FALSE; the
+wrong-CONTENT mutant must use text in NO sibling control of the target
+pane (`innerText` carries every static label — \#38b); SOURCE it by
+reading a DIFFERENT pane’s module UI, don’t guess. 6. **Browser run is
+opt-in + slow** (each `test_that` boots its own Chrome). 19 pedigree
+blocks is comfortable; do NOT add pyramid (FM \#18/#25). Pyramid family
+(module/detailed = 12) is a separate session. 7. **Branch
+`add-methodology` still NOT on remote.** Two S34 live-run CI watch items
+still pending the first master run (Phase-8 CI baked-in note below).
+**Self-assessment: 9/10.** (+) Oriented fully before touching anything;
+posed the pre-RED gate via `AskUserQuestion` with the COMPLETE per-block
+pattern mapping in hand, so the owner could review/adjust before any
+edit. (+) Sourced every pattern firsthand and built the innerText
+visibility-map — read the DEFAULT input state, recognized the Separator
+panel is `display:none` (fileType defaults Excel), and avoided
+“Comma”/“Tab” in favor of the guidance-HTML
+“comma-delimited”/“tab-delimited”; the 19/19 browser run confirmed the
+map on the first try (zero false picks). (+) Caught the honesty issue
+(detailed “example data” names a feature that doesn’t exist) and
+converted it to a NULL-pattern pane-active check + flag, rather than
+force-matching incidental “examples” doc text → distilled into Learning
+\#39’s honest-tautology rule. (+) \[mutation-check\] discriminating at
+both arms; applied \#38b from the start (Pyramid-only “Color Scheme”),
+avoiding the in-pane trap S38 hit. (+) Held the S38 baseline exactly;
+committed only intended files. (−) Completed 1 of the 3 remaining 8e-2
+families (Input) — but that IS the correct non-bundling boundary (plan
+R3 / FM \#18/#25); pedigree + pyramid are separate sessions. (−) The
+pre-RED gate message was long. New: Learning \#39.
+
+### Session 37 Handoff Evaluation (by Session 38)
+
+**Score: 9/10.** - **What helped most:** S37’s “⇒ SUGGESTED NEXT =
+implement slice 8e-2 ONLY” was decision-complete — it named the
+conversion idiom (`navigate_to_tab` → `assert_active_pane`), said **“no
+helper work — helpers EXIST + spike-confirmed,”** flagged the
+navbar-label carve-out, pointed at plan §5/§4 to read FIRST, and warned
+don’t-bundle (FM \#18/#25). The **CRITICAL HANDOFF FACT** (plan §2.3/§4
+selector SUPERSEDED → trust the helper, not the plan text) was
+load-bearing: I never even tried the plan’s broken selector, and the
+helper’s own inline comments (`helper-shinytest2.R:321-331`) reinforced
+it. Every count/pointer I re-derived held EXACTLY. - **What helped (the
+GOTCHAS list in “What S37 Did”):** items 1-7 were each actionable.
+**Item 5’s “split input\|pedigree\|pyramid into separate sessions if
+oversized” directly seeded my scope decision** — without it I might have
+bundled all 64 blocks. - **What was missing (below handoff altitude, NOT
+a defect):** the handoff framed 8e-2 as “input/pedigree/pyramid +
+home-navigation” but didn’t pre-state the magnitude (11 files / **64**
+browser-booting blocks) — I had to census it to discover the split was
+needed. Correct: sizing a picked-up slice is the executing session’s
+job, and “split if oversized” covered it. Minor: the carve-out was cited
+as “home-navigation:155-156” but the real carve-out is two WHOLE tests
+(“Navbar has all main tabs” 143-173 + “More menu exists” 175-189) — I
+generalized correctly. - **What was wrong:** nothing material. (The
+handoff didn’t claim pedigree/pyramid were defect-free; I verified
+firsthand they pass the FULL titles as the ignored `fallback` arg — no
+wrong-tab defect.) - **ROI:** strongly positive — one read put me on the
+right slice with the idiom, the carve-out, and the split-guidance in
+hand.
+
+### What Session 38 Did
+
+**Deliverable:** the **home-nav + light-app-file sub-slice of slice
+8e-2** (`docs/planning/phase8e-assertion-strengthening-subplan.md`,
+issue \#40) — converted boot-level body-grepl tautologies to behavioral
+`assert_active_pane` assertions in 3 files (14 `test_that` blocks).
+**COMPLETE.** Strict TDD, **PURE run-and-observe** (\[refactor-only\],
+green-on-arrival; gated `PRE-RED→run-and-observe` via `AskUserQuestion`;
+\[mutation-check\] supplies the rigor — no synthetic RED). **Date:**
+2026-06-07. **Branch:** `add-methodology` (NOT on remote). **Commit:**
+one `test:`/`docs:` close-out (the 3 test files + CHANGELOG +
+PROJECT_LEARNINGS Learning \#38 + these notes). **Scope decision (owner
+`AskUserQuestion`):** 8e-2 spans 11 files / 64 browser-booting blocks →
+plan §5 8e-2 dragon + risk R3 say SPLIT. Owner chose **home-nav +
+app-files** (14 blocks, highest behavioral value: real `#goto_*` pane
+switches). Input/pedigree/pyramid families deferred to later 8e-2
+sessions. **What was built (3 files):** 1.
+**`test-e2e-home-navigation.R`** (10 blocks): 5 Home-pane content
+asserts → `assert_active_pane(app,"Home",<pattern>)`; the **3 `#goto_*`
+clicks** →
+`assert_active_pane(app,"Input"/"Pedigree Browser"/"Age-Sex Pyramid",<static>)`
+(the marquee win — the buttons fire `updateNavbarPage`,
+`appServer.R:72-94`, so this is a REAL pane switch where the old
+body-grepl tolerated a no-op); the **2 navbar-label tests** (“Navbar has
+all main tabs” 143-173, “More menu exists” 175-189) KEPT as whole-DOM
+`grepl` carve-outs (navbar `<ul>`/dropdown labels live outside every
+`.tab-pane`; documented inline). 2. **`test-app-loading.R`** (2 blocks):
+block 1 keeps `inherits(app,"AppDriver")` + adds
+`assert_active_pane(app,"Home","Welcome to GeneKeepR")` (boots to Home
+pane); block 2’s navbar body-grepl → STRUCTURAL
+`wait_for_element(app,'a[data-value="Input"]')` × Input/Pedigree
+Browser/Age-Sex Pyramid (real tab anchors, not a substring the Home
+pane’s “Go to Input” button also satisfies). 3.
+**`test-app-navigation.R`** (2 blocks): block 1’s two `nchar>0`
+tautologies → boot-on-Home assert + click `a[data-value="Input"]` →
+`assert_active_pane(app,"Input",…)`; block 2 keeps `is.list(values)` +
+adds `expect_identical(app$get_value(input="mainNavbar"),"Home")`.
+**Static-pattern sources (read firsthand):** Input h3 “Data Input and
+Quality Control”/“Read and Check Pedigree” (`modInput.R:42,130`);
+Pedigree h3 “Pedigree Browser”/h4 “Focal Animals”/“Display
+Options”/“Export Pedigree” (`modPedigree.R:29,52,103,131`); Pyramid h3
+“Age-Sex Pyramid Analysis”/“Bin Size”/“Color Scheme”
+(`modPyramid.R:25-32`); tab titles + goto wiring (`appUI.R:24-142`,
+`appServer.R:72-94`). **Key files:**
+`tests/testthat/test-e2e-home-navigation.R` (rewritten),
+`tests/testthat/test-app-loading.R`,
+`tests/testthat/test-app-navigation.R` (edited);
+`tests/testthat/helper-shinytest2.R:309-413` (the active-pane helpers —
+UNCHANGED, just called). Transient (NOT committed):
+`/tmp/mutation_check_8e2.R`. **Verification:** baseline 14/14 GREEN (20
+expectations) → post-conversion **14/14 GREEN / 22 expectations** (net
++2), 0 error/0 skip (`filter="app-(loading|navigation)|e2e-home"`, env
+`NPRC_RUN_E2E=true NOT_CRAN=true RENV_CONFIG_AUTOLOADER_ENABLED=false`).
+**\[mutation-check\] PASS** (`/tmp/mutation_check_8e2.R`): after
+`#goto_input`, wrong-pane → FALSE (×2), wrong-content “Color Scheme” →
+FALSE, old whole-body grepl Pyramid-kw on Input → TRUE (content-blind
+contrast). Non-e2e regression **2122 passed / 0 failed / 0 error** (159
+e2e-skipped, 5 pre-existing `modPyramid` warnings — unchanged S37
+baseline; 0 non-e2e offenders). **Phase 3E (runtime smoke):** SATISFIED
+— the deliverable is test-infra; the live browser run (14 blocks via
+real AppDriver) + the live mutation-check spike ARE the runtime (#31
+pattern). Drove the REAL app, not just build-clean. **GOTCHAS for the
+next session (continue 8e-2 — INPUT family ONLY, then PEDIGREE, then
+PYRAMID, each its own session):** 1. **Use the IMPLEMENTED helper, not
+the plan §2.3/§4 selector** (superseded; `helper-shinytest2.R:309-413`).
+Just CALL `assert_active_pane`; no helper work. 2. **Idiom:**
+`success <- navigate_to_tab(app,"Input"); if(!success) skip(...); expect_true(assert_active_pane(app,"Input","<static regex>"), info=...)`.
+The pedigree/pyramid files pass the FULL title with the short label as
+the IGNORED `fallback` arg — **no wrong-tab defect** (verified). Static
+anchors are listed in the ACTIVE TASK ⇒ line. 3. **STATIC UI only**
+(control labels/headings/guidance that render WITHOUT data);
+data-bearing tables/plots = 8e-6. Confirm each pattern is static by
+reading the module UI first (plan R9). 4. **\[mutation-check\] a
+sample** every session (point one assertion at the wrong pane → must
+FALSE). ⚠ The wrong-CONTENT mutant must use text in NO sibling control
+of the target pane — `innerText` carries EVERY static label (I hit this:
+“Focal Animals” IS in the Input pane via the File-Content radio
+`modInput.R:70`; use a genuinely-foreign label like a Pyramid-only
+control). Learning \#38b. 5. **Browser run is opt-in + slow** (each
+`test_that` boots its own Chrome AppDriver). 19 input-family blocks is
+comfortable; do NOT bundle families past one session (plan R3 / FM
+\#18/#25). 6. **8e-5 (determinism) touches PRODUCTION `R/`** — its own
+owner-gated full RED→GREEN→REFACTOR+`check()` session. 7. **Branch
+`add-methodology` still NOT on remote.** Two S34 live-run CI watch items
+still pending the first master run (Phase-8 CI baked-in note).
+**Self-assessment: 9/10.** (+) Oriented fully before touching anything;
+surfaced the oversized-slice split as an owner `AskUserQuestion` rather
+than unilaterally bundling 64 blocks or silently shrinking scope. (+)
+Classified honestly as PURE run-and-observe (no defect → no synthetic
+RED; Learning \#18c/#20a) and gated it. (+) Sourced every static pattern
+by reading the module UIs (not guessing); the goto/tab-anchor
+conversions are genuine pane-switch behavioral wins. (+) The
+\[mutation-check\] proved discrimination at BOTH arms (value + pattern)
+AND demonstrated the old idiom’s content-blindness — and the one failed
+mutant became Learning \#38b (a reusable refinement) rather than being
+swept aside. (+) Held the S37 baseline exactly; committed only intended
+files. (−) My first mutation pattern was wrong (chose pane-PRESENT
+content) — cost one extra spike run; a sharper first pass would have
+read modInput.R’s radio labels before picking the “absent” string. (−)
+Did ~1/4 of 8e-2 (the split was correct, but 8e-2 now needs ~3 more
+sessions). New: Learning \#38.
+
+### Session 36 Handoff Evaluation (by Session 37)
+
+**Score: 8/10.** - **What helped most:** the ACTIVE TASK’s “⇒ SUGGESTED
+NEXT = implement slice 8e-1 ONLY” was decision-complete — it named the
+exact files, framed the **browser spike as a HARD GATE with an explicit
+STOP-if-it-fails** instruction, pointed at plan §4/§5(8e-1)/§2.3 to read
+FIRST, and warned don’t-bundle (FM \#18/#25). The plan doc was an
+executable spec: §4’s helper contracts compiled almost verbatim, and
+every firsthand-verified count held EXACTLY (7 wrong-tab at lines
+40/61/82/103/124/146/168, 8 `test_that`, the static-UI labels). - **What
+helped (reflexes via CLAUDE.md):** \[verify-first\] (re-ran the
+inventory greps + confirmed every static label in the INSTALLED package
+before asserting), the \#31 fake-AppDriver-stub idiom,
+\[author-decision\] (the spike-failure scope fork),
+\[discriminating-RED\]/\[mutation-check\], \[phase-3E-smoke\] (suite+app
+= runtime). - **What was MISSING — the load-bearing one:** the plan’s
+**§2.3/§4 active-pane mechanism was WRONG**
+(`.tab-content > .tab-pane.active` is non-unique — 5 nested
+`.tab-content`; innerText-visibility assumption mis-stated). The
+handoff/plan could NOT have known — §2.3 was explicitly flagged
+“browser-confirm pending” / R1, and the non-uniqueness is invisible on
+the static DOM the planner read. That is the spike’s job, and the gate
+WORKED (it stopped me before the conversion). Not a handoff defect — but
+the R1 dragon under-weighted that the corrected mechanism would be
+findable same-session. - **What was wrong:** nothing material — every
+count/pointer held; the one falsified thing (the selector) was the
+explicitly-unconfirmed item. - **ROI:** strongly positive — one read put
+me on the right slice with the spike correctly framed as the gate.
+
+### What Session 37 Did
+
+**Deliverable:** Implemented slice **8e-1** of
+`docs/planning/phase8e-assertion-strengthening-subplan.md` (issue \#40)
+— the load-bearing active-pane foundation. **COMPLETE.** Strict TDD, all
+transitions `AskUserQuestion`-gated (PRE-RED→RED, RED→GREEN) + a
+spike-failure scope-fork gate. **Date:** 2026-06-07. **Branch:**
+`add-methodology` (NOT on remote). **Commit:** one close-out commit (3
+test files + `PROJECT_LEARNINGS.md` Learning \#37 + glossary
+`[hard-gate-spike]` + these notes). **What was built (3 parts):** 1. **4
+active-pane helpers** in `tests/testthat/helper-shinytest2.R:310-409` —
+`get_active_pane_text`/`get_active_pane_value`/`wait_for_active_pane`/`assert_active_pane` +
+the internal `.active_pane_js(read)` JS-builder. RED→GREEN,
+browser-free. **11 new unit tests** in `test_helper_shinytest2.R`
+(fake-AppDriver stubs `fake_app_pane`/`fake_app_pane_liar` +
+`get_js`/`wait_for_js` added to `fake_app_throwing`) → **59
+expectations, 0/0**. 2. **Live-Chrome spike (HARD GATE)** — FALSIFIED
+the plan §2.3/§4 selector (see ACTIVE-TASK CRITICAL FACT), I ran a
+read-only DOM diagnostic, found the corrected structural selector,
+brought the deviation to the owner (`AskUserQuestion` → “apply fix +
+complete”), applied it, **re-confirmed 17/17** through the real helpers
+(all navs incl. navbarMenu “Settings”; hidden-pane + wrong-tab
+discrimination; innerText visibility). 3. **Converted
+`test-e2e-summary-statistics-module.R`** — fixed the 7 wrong-tab navs
+(→“Summary Statistics”), dropped the false “embedded in another tab” GVA
+fallback, replaced all 8 tautologies/hidden-DOM asserts with
+`assert_active_pane()` on STATIC UI (export labels / h3 / guidance-HTML
+founder-equivalent terms). Browser run **8/8 GREEN**; **mutation-check**
+PASS (wrong-tab→FALSE, correct-tab→TRUE). **Key files:**
+`tests/testthat/helper-shinytest2.R:310-409` (the helpers +
+`.active_pane_js` builder — THE deliverable, spike-corrected);
+`tests/testthat/test_helper_shinytest2.R:65-110,206-330` (stubs + 11
+unit tests); `tests/testthat/test-e2e-summary-statistics-module.R`
+(rewritten, 8 behavioral tests); `R/modSummaryStats.R:22-223` (static-UI
+source for the patterns); `R/appUI.R:16-19,156-159` (navbarPage BS4 +
+the SS tabPanel). Transient (NOT committed): `/tmp/spike_active_pane.R`
+(17/17 confirmation), `/tmp/spike_dom_diag.R` (DOM diagnostic),
+`/tmp/mutation_check.R`. **Phase 3E (runtime smoke):** SATISFIED — the
+deliverable is test-infra (the suite + the live AppDriver spike ARE the
+runtime, the \#31 pattern); I drove the REAL app (17/17 spike + 8/8 e2e
+browser run), not just build-clean. **GOTCHAS for the next session
+(implement 8e-2 ONLY):** 1. **The plan’s §2.3/§4 active-pane selector is
+SUPERSEDED — use the IMPLEMENTED helper, not the plan’s selector text.**
+The helper is spike-confirmed; 8e-2/8e-3/8e-6 just CALL
+`assert_active_pane(app, "<Tab>", "<pattern>")`. No helper work. 2.
+**Conversion idiom:**
+`success <- navigate_to_tab(app, "<Tab>"); if (!success) skip(...); expect_true(assert_active_pane(app, "<Tab>", "<static regex>"), info=...)`.
+Always mutation-check a sample (point one at the wrong tab → must FAIL).
+3. **Assert STATIC UI only** (labels/headings/guidance that render
+WITHOUT data); data-bearing tables/plots are 8e-6. Confirm each pattern
+is static by reading the module UI first. 4. **home-navigation:155-156
+carve-out:** those assert navbar `<ul>` labels NOT inside any pane →
+`assert_active_pane` would correctly FAIL them → leave as whole-DOM
+`grepl`. Convert only pane-CONTENT asserts; convert the 3 `#goto_*`
+clicks to assert the active pane switched (highest-value). 5. **Browser
+run is opt-in:**
+`NOT_CRAN=true NPRC_RUN_E2E=true RENV_CONFIG_AUTOLOADER_ENABLED=false Rscript -e '...test_dir(filter="^e2e-(input|pedigree|pyramid|home)"...)'`.
+`NOT_CRAN` is mandatory (else “On CRAN” abort). Each `test_that` boots
+its own AppDriver — 8e-2 is ~11 files; **split input\|pedigree\|pyramid
+into separate sessions if oversized** (plan §5 8e-2 dragon), don’t
+bundle past one comfortable session. 6. **8e-5 (determinism) still
+touches PRODUCTION `R/`** — its own owner-gated full
+RED→GREEN→REFACTOR+`check()` session. 7. **Branch `add-methodology`
+still not on remote.** **Self-assessment: 9/10.** (+) Honored the HARD
+GATE — STOPPED on spike failure instead of barrelling into the
+conversion, diagnosed the real DOM (read-only), and brought the
+mechanism deviation to the owner as a scope fork rather than silently
+redesigning (SAFEGUARDS mode-switch / FM \#8). (+) The corrected
+mechanism is fully spike-proven (17/17 through the real helpers,
+incl. the navbarMenu child the naive selector got wrong) BEFORE any
+conversion rode on it. (+) Browser-free unit tests designed to survive a
+mechanism rewrite (stubs key on JS invariants) → stayed 59/0 across the
+selector change. (+) Discriminating proof at every layer: unit
+(liar-stub guard), spike (wrong-tab=FALSE), mutation-check (test-file
+level). (+) Every TDD transition gated; static-only assertions with
+data-bearing deferred to 8e-6 as planned. (−) The browser-free unit
+tests can’t pin the SELECTOR correctness (only the contract) — selector
+truth rests on the spike, which is inherent but means a future selector
+regression wouldn’t trip the unit layer (acceptable; noted). (−) Spent
+two browser spikes (falsify, then diagnose) before the fix — unavoidable
+given the plan’s selector was wrong, but a sharper first spike could
+have counted `.tab-content` up front. New: Learning \#37 + glossary
+`[hard-gate-spike]`.
+
+### Session 35 Handoff Evaluation (by Session 36)
+
+**Score: 9/10.** - **What helped most:** the ACTIVE TASK’s “⇒ SUGGESTED
+NEXT = pick an open GitHub issue … Natural continuation: **\#40**
+(strengthen the shinytest2 E2E behavioral assertions … the open Phase-8
+follow-on)” pointed me straight to \#40 AND correctly framed it as the
+Phase-8 follow-on. The Phase-8 CI baked-in note (the two live-run watch
+items + the 23-in-one-process flake) fed directly into plan slice
+**8e-7** (CI-stability). The handoff chain implicitly pointed at
+`phase8-e2e-harness-subplan.md` §6 — which turned out to be the exact
+decomposition seed for \#40 (it IS “8e”). - **What helped (reflexes via
+CLAUDE.md):** \[verify-first\] (every handoff pointer was a target I
+re-derived firsthand — counts, namespace, seed sites),
+\[completeness-workflow\], \[author-decision\] (the plan-vs-implement
+scope gate), \[right-sized-orchestration\]. - **What was missing (NOT a
+defect — below handoff altitude):** the handoff glossed \#40 as “E2E
+behavioral assertions + harden the flake” — a 2-item gloss of a
+**6-item** (5 work items + CI), multi-session, PRODUCTION-touching
+issue. Correctly deferred — scoping a picked-up issue is the picking-up
+session’s job, and the issue body + sub-plan §6 carried the detail. It
+also didn’t flag that \#40 hides a production-code item (determinism) —
+but surfacing that is exactly what a planning session is for (Learning
+\#36). - **What was wrong:** nothing — “#40 is the open Phase-8
+follow-on”, the watch items, and the implicit sub-plan §6 pointer all
+held exactly. - **ROI:** strongly positive — one orientation read put me
+on the right issue with the right CI context; the sub-plan §6 it pointed
+to was the decomposition seed.
+
+### What Session 36 Did
+
+**Deliverable:** **Plan sub-phase 8e (GitHub issue \#40)** →
+`docs/planning/phase8e-assertion-strengthening-subplan.md` — decompose
+\#40’s 5 work items + the CI-stability comment into **7 risk-ordered
+vertical TDD slices**, with a MANDATORY grep-based evidence inventory
+and the active-pane-assertion browser spike identified. **COMPLETE.**
+(The plan is the deliverable; implementation is slices 8e-1…8e-7 in
+later sessions.) **Date:** 2026-06-07. **Branch:** `add-methodology`
+(NOT on remote). **Commit:** this `docs:` close-out (the plan +
+`PROJECT_LEARNINGS.md` Learning \#36 + glossary
+`[production-in-disguise]` + these notes). **Nature:**
+Planning/architecture session — **TDD code-phases INAPPLICABLE** (no
+test/app code changed; mirrors S30). One owner `AskUserQuestion` (plan
+vs implement-a-slice vs CI-stability → owner chose **PLAN**). One
+deliverable; did NOT start implementation (FM \#18). **Evidence base
+(firsthand + verified):** (1) firsthand greps — **41** literal
+`expect_true(TRUE)`, **≈18** `expect_true(nchar(html)>100)`
+near-tautologies, **41** dead-grepl blocks, **7** wrong-tab
+(summary-statistics-module tests 2–8: lines 40/61/82/103/124/146/168 →
+“Genetic Value Analysis”), **159** total `test_that`. (2) A 23-agent
+census workflow `wf_4ebcdb7f-f4b` (per-file census + 3 deep-dives:
+active-pane spike / namespace / determinism + an adversarial
+completeness critic). (3) An adversarial **plan-review** agent over the
+written doc → caught a §3 block-count error (table summed 163, prose
+said 159; 4 rows off-by-one from inflated census `n=`), a
+home-navigation navbar-label trap (`:155-156` assert `<ul>` labels not
+in any pane → `assert_active_pane` would correctly fail them), and a
+missing `get_js`/`wait_for_js` contract note — **all fixed**. The
+census’s “49 tautologies” was a conflation (41 literal + 8 of the nchar
+class); the plan cites the faithful **41 + ≈18**. **Key findings baked
+into the plan:** - **Active-pane mechanism (the load-bearing crux):**
+`get_html`/`body` serialize the whole hidden navbarPage DOM (BS4; every
+pane in the boot DOM) → `grepl(kw, body)` is content-blind. Only
+`app$get_js(".tab-content > .tab-pane.active … innerText")` honors
+visibility; gate on `data-value`==title. New helpers
+`get_active_pane_text`/`get_active_pane_value` +
+`wait_for_active_pane` + `assert_active_pane` (plan §4). Confirmed
+shinytest2 0.5.0 has `get_js`/`wait_for_js`; `jsonlite` NOT a dep → use
+`encodeString(x, quote="'")`. The BS4 runtime `.active` toggling +
+innerText-visibility need a **live-Chrome confirm in 8e-1 (HARD
+GATE)**. - **`input`→`dataInput` namespace fix** (helper:150/154,
+error-states:24/45, boundary:43) + a DO-NOT-CHANGE list
+(data-ready:27-32/43; home-nav:95). - **\[production-in-disguise\]:**
+\#40 item 5 (determinism) is a PRODUCTION change — both modules have
+ZERO `set.seed`; **8e-5 ADDS** a gated
+[`set_seed()`](https://github.com/rmsharp/nprcgenekeepr/reference/set_seed.md)
+(existing exported wrapper) to
+`modGeneticValue.R:177`/`modBreedingGroups.R:272`, owner-gated, full TDD
+— distinct from the test-only conversion slices. Breaks the prior “8a–8d
+test-only” boundary (flagged in plan §11). **Key files:**
+`docs/planning/phase8e-assertion-strengthening-subplan.md` (THE
+deliverable — §2 inventory, §3 per-file→slice table, §4 helper
+contracts, §5 the 7 slices, §6 TDD-classification table, §7 determinism,
+§8 CI, §9 risks); `PROJECT_LEARNINGS.md` (Learning \#36 + glossary
+`[production-in-disguise]`); evidence artifact
+`…/tasks/w8yc4nofm.output` (NOT committed). **Phase 3E (runtime
+smoke):** N/A — a planning doc changes no runtime behavior (the plan is
+the deliverable). Stated, not skipped. **GOTCHAS for the next session
+(implement 8e-1 ONLY):** 1. **Read the plan §4/§5(8e-1)/§2.3 FIRST.**
+8e-1 = 4 active-pane helpers (browser-free RED→GREEN) → CONFIRM the
+browser spike as a HARD GATE → fix summary-statistics wrong-tab +
+convert it. If the spike fails, close out with just the helper+spike
+finding (a valid deliverable) and re-plan the mechanism. 2. **Do NOT
+bundle slices** (FM \#18/#25). 8e-2/8e-3/8e-4 each need only 8e-1; 8e-6
+needs 8e-4; 8e-5 is owner-gated PRODUCTION; 8e-7 is
+orthogonal/live-runner-only. 3. **8e-5 touches `R/` production code** —
+its own owner-gated full RED→GREEN→REFACTOR+`check()` session; default
+path must stay unchanged. 4. **The two S34 live-run CI watch items still
+stand** (renv lib-path + the 23-in-one-process flake) — 8e-7 addresses
+the flake but can only be validated once the branch is on master. 5.
+**Branch `add-methodology` still not on remote.** **Self-assessment:
+9/10.** (+) Right-sized the scope decision to the owner (plan vs
+implement) before any work — \#40 was genuinely multi-session (6 items,
+a production change, a browser spike). (+) MANDATORY grep-inventory done
+firsthand AND cross-checked by a 23-agent census + adversarial critic;
+then \[verify-first\] applied to the workflow’s OWN headline counts
+(caught 49-vs-41 + 163-vs-159), reconciled against firsthand greps + the
+parent plan’s counts. (+) Ran a SECOND adversarial review over the
+SYNTHESIZED PLAN (not just the evidence) → caught + fixed the propagated
+§3 count error, the navbar-label trap, the missing get_js note. (+)
+Surfaced \[production-in-disguise\] as a new glossary reflex + isolated
+determinism as an owner-gated slice. (+) Slices are vertical,
+risk-ordered (load-bearing spike first), each with
+DONE/verify/TDD-classification. (−) The census agents inflated 4
+per-file `nTestBlocks` by 1 and I propagated them into §3 before the
+plan-review caught it — a stronger move would have been to derive §3’s
+block counts from a firsthand `grep -c test_that` from the start, not
+the census `n=`. (−) The active-pane mechanism, though
+firsthand-grounded on the static DOM + method surface, still rides on a
+live-browser confirmation deferred to 8e-1 — unavoidable for a planning
+session, but the plan’s central helper is not yet proven.
+
+### Session 34 Handoff Evaluation (by Session 35)
+
+**Score: 9/10.** - **What helped most:** the ACTIVE TASK’s “⇒ SUGGESTED
+NEXT = parent Phase 9 only” was decision-complete on the HARD parts — it
+flagged Phase 9 as 🐉 IRREVERSIBLE + its-own-session + “confirm with the
+owner before deleting anything” + the MANDATORY
+grep-evidence-inventory + “may warrant a planning session first,” and
+pointed at `docs/planning/shiny-module-conversion-plan.md` §9/§10 (which
+carried the actual file/symbol inventory, the alias design, and the §16
+open decisions). That turned my pre-flight into a RE-verification
+(sweep + firsthand) rather than a from-scratch discovery. The Phase-8 CI
+baked-in note (renv + flake watch items) correctly stayed relevant. -
+**What helped (reflexes via CLAUDE.md):** \[verify-first\] (re-ran the
+§10 inventory + firsthand-checked load-bearing claims before any
+delete), \[completeness-workflow\] (the sweep’s completeness-critic + my
+firsthand re-checks), \[author-decision\] (4 owner gates),
+\[discriminating-RED\], \[regression-read\], \[phase-3E-smoke\],
+\[right-sized-orchestration\] (a read-only sweep for the irreversible
+delete; solo edits for the rest). - **What was missing (NOT a defect —
+below handoff altitude):** the shorthand “DELETE the monolith
+`inst/application/server.R`+`ui.R`” understated the blast radius — the
+monolith is **17 tracked files** (server.r, ui.r, global.R, 8 uitp\*.R,
+example_1.R, the dead modPyramid.R, www/×4); the accurate list was in
+plan §10, which the handoff pointed to. Neither the handoff, plan §10,
+NOR my own pre-flight sweep predicted the **`@import shiny` NAMESPACE
+fallout** of deleting `getMinParentAge.R` (the regression run caught it
+— Learning \#35); a reference-grep inventory structurally can’t (it
+reasons about callers, not roxygen output). - **What was wrong:**
+nothing material — the §10 inventory held (0 new refs since S21),
+`inst/www` ≠ `inst/application/www`, `lifecycle` was a dep, all 17 files
+tracked — exactly as documented. - **ROI:** strongly positive — the
+handoff + plan §10 made an irreversible deletion safe and fast.
+
+### What Session 35 Did
+
+**Deliverable:** **Implement Phase 9** of
+`docs/planning/shiny-module-conversion-plan.md` §9 — retire the legacy
+monolith, declare the modular app canonical. (COMPLETE; the XARCH-1
+conversion campaign Phases 1–9 is DONE; **issue \#27 CLOSED**.)
+**Date:** 2026-06-06. **Branch:** `add-methodology` (NOT yet on remote).
+**Commits:** `3db018d1` (refactor!: alias+orphans) · `24992e0b` (feat!:
+delete monolith, standalone §15) · `53a9e5e0` (docs) · `a1618c48` (fix:
+a2interactive vignette) + this `docs:` close-out. **Nature:** strict TDD
+(RED→GREEN gated; the pre-RED→RED + RED→GREEN `AskUserQuestion` gates) +
+4 owner scope gates (go/no-go on the irreversible delete ·
+shouldShowErrorTab=delete · modMinimalTest=delete ·
+one-session-multi-commit) + 1 owner gate on the pre-existing-vignette
+fix. One deliverable; did not start anything beyond Phase 9.
+**Pre-flight (read-only, before any delete):** re-ran the §10 inventory
+as a multi-modal sweep + completeness critic (`wf_48a6f152-f0f`, 16
+agents) → inventoryConfirmed, 0 new refs / 0 broken claims.
+Firsthand-verified: `system.file("application")` SOLE ref
+(`R/runGenekeepr.R:19`); `inst/www/` (modular `data-ready.js`) is a
+DIFFERENT dir from `inst/application/www/` (must survive); `lifecycle` a
+dep; all 17 monolith files tracked → revertible. **Implementation
+(GREEN):** (1) `R/runGenekeepr.R` →
+`deprecate_soft(when="1.1.0", what="runGeneKeepR()", with="runModularApp()")`
+then `runModularApp(port, launch.browser)`; dropped
+`@importFrom shiny runApp`. (2) `git rm -r inst/application/` (17 files)
+— standalone commit. (3) Deleted orphans
+`getMinParentAge`/`getLogo`/`shouldShowErrorTab`/`modMinimalTest` +
+their tests; stripped the dead `qcResults` build
+(`appServer.R:172-177`) + the 2 `@seealso \link{shouldShowErrorTab}`
+refs (appServer.R, shouldShowChangedColsTab.R); removed the 7
+shouldShowErrorTab blocks from `test_appServer_dynamicTabs.R`. (4)
+`document()` → NAMESPACE drops 4 exports + 4 man pages; updates
+runGeneKeepR/appServer/shouldShowChangedColsTab .Rd. (5) Docs:
+`_pkgdown.yml`, `inst/WORDLIST`, `CLAUDE.md`, `ROADMAP.md`,
+`NEWS.Rmd`/`NEWS.md` (re-knit), vignette
+`_running_shiny_application.Rmd`→[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md),
+`README.md` (re-knit). **⚠ NAMESPACE fallout (→ Learning \#35):**
+`getMinParentAge.R` was the SOLE carrier of `@import shiny`; deleting it
+dropped `import(shiny)` → modular UI errored
+`could not find function "h5"` (caught by the regression run, NOT the
+inventory). Fixed by adding `@import shiny` to
+`R/nprcgenekeepr-package.R` + re-`document()`. **Verification:** RED
+confirmed (4 tests fail at HEAD; mocks work — no server launch). After
+GREEN: regression **2135 / 0 / 0** (5 pre-existing modPyramid warnings);
+runtime smoke
+[`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+→ modular **HTTP 200**; **`devtools::check()` 0 errors / 0 warnings**,
+`creating vignettes ... OK` (pre-existing NOTEs: non-standard top-level
+dev files; stale spelling baseline); grep no
+`system.file("application")`. **Pre-existing fix (owner-approved,
+separate commit `a1618c48`):** `a2interactive.Rmd` error-list table
+missing the `invalidIdChars` description (NEW-45 drift:
+[`getEmptyErrorLst()`](https://github.com/rmsharp/nprcgenekeepr/reference/getEmptyErrorLst.md)
+10 fields vs 9 hardcoded) — failed vignette build; the FULL check
+surfaced it (prior sessions used only the regression-read). **Key
+files:** `R/runGenekeepr.R` (alias) · `R/nprcgenekeepr-package.R:6`
+(`@import shiny` new home) · `R/appServer.R` (dropped dead qcResults +
+seealso) · `tests/testthat/test_runGeneKeepR_alias.R` +
+`test_monolith_removed.R` (new RED) ·
+`docs/planning/shiny-module-conversion-plan.md` §9 Phase 9 (marked ✅
+DONE) · pre-flight artifact `…/tasks/wstxqfam5.output` (not committed).
+**GOTCHAS for the next session (the conversion campaign is DONE — pick
+an open issue):** 1. **No more conversion phases.** Suggested: **\#40**
+(E2E behavioral assertions + harden the full-tier Chrome flake), \#30
+(lint), \#34 (likely stale — verify+close), \#35/#36/#37/#9/#38. 2.
+**Two live-run CI watch items** (never GitHub-verified; first exercise
+on the first master run): renv lib-path / AppDriver subprocess resolving
+[`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/);
+the 23-in-one-process Chrome flake under `stop_on_failure=TRUE`. See the
+Phase-8 CI baked-in note in ACTIVE TASK. 3. **Branch `add-methodology`
+is NOT on remote.** Push it (+ the Phase-9 commits) when ready; the
+first `gh workflow run shinytest2.yaml` exercises the two watch items.
+4.
+**[`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+is now a deprecated alias** — it still works (launches modular); don’t
+“fix” callers. The monolith is gone — revert `24992e0b` to restore it if
+ever needed (§15). 5. **Deletion-namespace-fallout (Learning \#35):**
+before/after deleting any R file, check what its roxygen
+`@import`/`@importFrom` uniquely contributes to NAMESPACE;
+re-`document()` + full regression/UI smoke after any deletion.
+**Self-assessment: 9/10.** (+) Pre-flighted an IRREVERSIBLE delete
+properly — re-ran the inventory as a sweep + firsthand-verified every
+load-bearing claim (the `inst/www` vs `inst/application/www` distinction
+would have broken the app if missed); gated the delete + both §16
+dispositions + session-shape with the owner. (+) Caught + fixed the
+`@import shiny` NAMESPACE fallout via the regression run and distilled
+it into Learning \#35 + a new `[deletion-namespace-fallout]` glossary
+reflex — a side-effect a reference-grep can’t see. (+) Ran the FULL
+`devtools::check()` (not just the regression-read); it earned its keep
+by surfacing a pre-existing vignette defect, fixed as a SEPARATE `fix:`
+commit (no scope-bundling). (+) 3 clean Phase-9 commits + the deletion
+isolated for single-revert (§15); explicit `git add` (no `.DS_Store`).
+(−) My pre-flight sweep, despite a completeness critic, did NOT predict
+the `@import shiny` fallout — the regression run did; a stronger
+pre-flight would grep each to-delete file’s roxygen for sole-carrier
+`@import`/`@importFrom`. (−) Left `a3manual`/`a2interactive` rendered
+outputs stale-by-design (functional but source-vs-output divergent)
+rather than a full release re-knit — a deliberate noise-avoidance call,
+noted.
+
+### Session 33 Handoff Evaluation (by Session 34)
+
+**Score: 9/10.** - **What helped most:** the ACTIVE TASK’s “⇒ SUGGESTED
+NEXT = implement PHASE 8d only” was decision-complete — it named all 5
+files with their extra deps + test counts
+(`home-navigation`/`click_element_safe` on `#goto_*`;
+`settings-about`/`navigate_to_menu_item`;
+`workflow-integration`/`get_values_safe`;
+`error-states`+`boundary-conditions`/`E2E_TIMEOUT`+`input-`), flagged
+the **navbarMenu spike §8.2** as the crux, gave the exact verify command
+(BOTH env vars), the classification hint (“classify TDD AFTER the spike
+— don’t force a synthetic RED”), four accurate “Watch” items (top-level
+`E2E_TIMEOUT`, the `#goto_*` observers `appServer.R:73-95`, boundary’s
+named `height/width`, the `input-` tryCatch no-ops), and the DONE
+criteria (green-or-clean-skip → close \#39 + file 8e → broaden CI to
+full `^(app|e2e)-`). I went orientation → spike → classification gate →
+CI broaden → validate with near-zero rediscovery; the adversarial review
+independently re-confirmed all four Watch items. - **What helped
+(reflexes via CLAUDE.md):** \[verify-first\] (the spike settled §8.2
+BEFORE I classified — and proved the helper needs NO change),
+\[author-decision\] (the config-vs-RED→GREEN gate + the CI/flake scope
+forks), \[regression-read\] (both env vars; summed failed+error+skip),
+\[completeness-workflow\] (the ultracode review CAUGHT the flake a
+single run masked), \[phase-3E-smoke\] (validated the exact run-step
+end-to-end). - **What was missing / what I’d add (NOT a defect —
+within-session discovery):** the handoff flagged the §5(8c)
+AppDriver-process-count dragon for 8c but did NOT predict that
+broadening to **23-in-one-process** would actually SURFACE it as a
+low-rate Chrome flake under `stop_on_failure=TRUE`. The handoff’s
+“broaden to full tier + **run once**” implicitly assumed the broaden was
+safe — and “run once” is exactly what hides an intermittent flake. My
+single 193/0/0/0 masked it; the 4-lens review (run \#1 = 1 error) caught
+it. - **What was wrong:** nothing — the navbarMenu read-back DID work
+(settings-about green), all Watch items held, the verify command was
+exact. - **ROI:** strongly positive — precise scope + spike-first
+discipline meant the only real “work” was the spike + the
+review-surfaced flake decision; everything else was run-and-observe.
+
+### What Session 34 Did
+
+**Deliverable:** **Implement Phase 8d** of
+`docs/planning/phase8-e2e-harness-subplan.md` §5(8d) — the 5
+interaction/menu shinytest2 E2E files green-or-clean-skip opt-in
+(navbarMenu spike §8.2 resolved), broaden the CI filter to the full
+`^(app|e2e)-` tier, **close \#39**, file the 8e issue. (COMPLETE)
+**Date:** 2026-06-06. **Branch:** `add-methodology`. **Commits:**
+`d254a91c` (`ci:` — broadened filter + finalized `navigate_to_menu_item`
+docstring) + this `docs:` close-out. **Nature:** **CONFIG /
+run-and-observe** — TDD code-phases **INAPPLICABLE** (owner-approved via
+`AskUserQuestion`, like 8b/8c / Learnings \#21a/#32/#33). The §8.2
+spike + the 53/53 green proved the provisional `navigate_to_menu_item`
+is already correct → **no R unit to write test-first**; the only code
+touch is a comment-only docstring + the CI YAML filter. One deliverable;
+did NOT start Phase 9 (FM \#18/#2). **The §8.2 navbarMenu spike
+(RESOLVED — verify-first, before classifying):**
+`set_inputs(mainNavbar="Settings"/"About"/"Help")` →
+`get_value(input="mainNavbar")` reads back the child label TRUE for all
+3 → `navigate_to_menu_item`’s delegate-to-`navigate_to_tab` body is
+FINAL (no DOM dropdown-open+click needed). `click("#goto_input")`
+navigates for real (mainNavbar==“Input”, active pane switches).
+**Honesty nuance (→ 8e/#40):** after `set_inputs` on a navbarMenu child
+the input value reaches the child but the VISIBLE pane does not truly
+switch (navbar “More” highlights; `grepl(body)` passes via §2.3
+hidden-DOM) — the §8.3 navigation-false-positive limit (do NOT overstate
+the spike as “navigation works”). **The 5 8d files — GREEN opt-in:**
+`NPRC_RUN_E2E=true NOT_CRAN=true` → home-navigation + settings-about +
+workflow-integration + error-states + boundary-conditions = **47
+test_that blocks / 53 expectations, 0 fail/0 error/0 skip**
+(block-vs-expectation gap: “Navbar has all main tabs” has 6
+`expect_true`, “App maintains state” has 2). All four S33 Watch items
+confirmed benign firsthand (E2E_TIMEOUT defined + used only inside test
+blocks; the 6 `#goto_*` observers wired; boundary’s named height/width
+handled by `create_app_driver(...,height=,width=)`; the `input-`
+selectors stay tryCatch-swallowed no-ops — 8e). **The CI broaden
+(`.github/workflows/shinytest2.yaml`):** run-step filter 18-file
+include-list → **`^(app|e2e)-`** (verified the regex selects EXACTLY the
+23 test-{app,e2e}-\* files — replicating testthat’s stripped-name match
+in R — and excludes the `appServer` near-miss via the trailing `-`).
+Step name + comments + cat label updated; job env,
+`stop_on_failure=TRUE`, the `sum(passed)==0` guard UNCHANGED. Full tier
+re-validated in ONE process: **193 passed / 0 fail/0 error/0 skip**, 23
+files. **⚠ FLAKE found + owner decision:** an **ultracode 4-lens
+adversarial review** (`wf_ef031b1d-edc`, 4 lenses: diff-minimality ‖
+\#39-close ‖ \#40-scope ‖ completeness) caught that the
+23-in-one-process run is **intermittently flaky** — review run \#1 =
+191/0/0/**1 error** (`workflow-integration.R` “App maintains state when
+switching tabs”), run \#2 clean, isolated 8/8/8 — the §5(8c)/R2
+AppDriver-process-count dragon; under `stop_on_failure=TRUE` it can red
+the scheduled job. **Reproduced firsthand** (my 2 fresh dedicated runs
+BOTH clean → low-rate ~1/5 + contention-sensitive; the review’s 4
+concurrent agents likely pressured Chrome). **Owner decision
+(`AskUserQuestion`): close \#39 now + document the flake** \[over
+harden-CI-now / keep-narrower\] — ship the broaden as-is (harness
+executable + CI wired = scope §1.1 met), record the flake as a live-run
+watch item, route CI-stability hardening (per-§5(8c) “run grouped” in
+fresh processes — can only be validated on the live runner) to \#40.
+**Close-out GitHub actions:** **\#39 CLOSED**
+(`gh issue close 39 --reason completed` + a validation/watch-item
+comment). **8e filed as \#40** (“Strengthen shinytest2 E2E assertions…”,
+label `enhancement`) — captures the §2.4/§2.5/§6 deferred items +
+today’s navbarMenu false-positive; a **CI-stability comment added to
+\#40** for the flake hardening. **Verification:** §8.2 spike (read-backs
+TRUE); 5-file 53/53 green; full-tier 193/0/0/0 single-process; **non-e2e
+regression** (`NOT_CRAN=true`, NPRC_RUN_E2E unset → e2e clean-skip) =
+**0 failed / 0 error**, 0 non-e2e offenders, 2159 passed, 156
+e2e-skipped, 5 pre-existing `modPyramid` warnings (unchanged S31/S32/S33
+baseline). The review’s Lens-1/3 confirmed the diff is comment-only +
+minimal and \#40 is complete; **Lens-4 caught a `.DS_Store` BLOCKER** →
+committed with **explicit `git add`** of only the 2 files (NOT `-A`).
+`document()` N/A (no roxygen), `tests/`+`.github` lint-exempt, no
+`* 2.*` source dupes (only `.Rproj.user/`, gitignored). **Phase 3E:**
+the suite IS the runtime for a test-infra/CI change — validated locally
+end-to-end; the **live GitHub run is DEFERRED** (branch not on remote),
+now with TWO watch items (renv lib-path + the flake). **Key files:**
+`.github/workflows/shinytest2.yaml` (broadened filter — the
+deliverable); `tests/testthat/helper-shinytest2.R:283-299`
+(`navigate_to_menu_item` docstring finalized; body unchanged =
+`navigate_to_tab(app, item)`); the 5 8d files
+`tests/testthat/test-e2e-{home-navigation,settings-about,workflow-integration,error-states,boundary-conditions}.R`
+(run-and-observe, UNCHANGED); `R/appUI.R:183-212` (the
+`navbarMenu("More")` Settings/About/Help); `R/appServer.R:73-95` (the
+`#goto_*` observers). Review artifact (NOT committed):
+`…/tasks/weckfzozz.output`. **GOTCHAS for the next session (parent Phase
+9 · 🐉 IRREVERSIBLE · its OWN session):** 1. **Phase 9 = declare the
+modular app canonical + DELETE the monolith**
+(`inst/application/server.R`+`ui.R`) — IRREVERSIBLE; its own commit; do
+NOT bundle (FM \#18). Read parent plan
+`docs/planning/shiny-module-conversion-plan.md` §9 Phase 9 FIRST +
+**confirm with the owner before deleting**. A grep-based evidence
+inventory of every monolith reference is MANDATORY (SESSION_RUNNER
+Planning protocol); Phase 9 may warrant a planning session first. 2.
+**\#39 is CLOSED; the whole 8a–8d E2E mini-campaign is DONE.** \#40 (8e)
+is the open E2E follow-on (behavioral assertions + CI-stability). TWO
+live-run watch items (both first exercise once the branch reaches
+master): (a) renv lib-path / AppDriver subprocess resolving
+[`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/);
+(b) the full-tier Chrome process-count flake under
+`stop_on_failure=TRUE`. To trigger: push `add-methodology`→master then
+`gh workflow run shinytest2.yaml`. 3. **CI now runs all 23 E2E files**
+in one process via `^(app|e2e)-` — if the scheduled job reds, FIRST
+check whether it’s the known flake (transient Chrome error, passes on
+re-run) before treating it as a regression. Hardening is \#40. 4.
+**Carried reflexes** (CLAUDE.md glossary): \[verify-first\] (spike
+before classifying — it PREVENTED needless helper work),
+\[completeness-workflow\] (the ultracode review CAUGHT the flake a
+single run masked — the workflow confirms, I verify/reproduce),
+\[author-decision\] (classification + flake scope forks),
+\[regression-read\], \[phase-3E-smoke\], \[right-sized-orchestration\]
+(ran the review BECAUSE ultracode was ON + the close was consequential —
+contrast S33’s honest decline). Learning \#34 added. **Self-assessment:
+9/10.** (+) **Verify-first spike PREVENTED work** — settled §8.2 to “no
+helper change needed” before classifying, avoiding a needless
+DOM-dropdown implementation. (+) **The ultracode adversarial review
+earned its keep** — it caught the full-tier flake my single 193/0/0/0
+masked; I REPRODUCED it firsthand (2 fresh runs) rather than trusting
+the agents, characterized it honestly (low-rate, contention-sensitive),
+and brought it to the owner as a real decision rather than silently
+shipping known-flaky CI. (+) **Honest scope** — closed \#39 on the
+owner’s actual scope (executable + wired), documented BOTH live-run
+watch items, routed hardening to \#40 instead of shipping unvalidatable
+CI complexity. (+) Committed with explicit `git add` (the review’s
+BLOCKER); one deliverable, no Phase-9 bleed. (−) My single full-tier
+validation initially masked the flake — exactly the “run once hides an
+intermittent flake” trap; the review, not I, surfaced it (reproducing +
+the owner decision recovered well). (−) The live GitHub run remains
+deferred (branch not on remote) — two watch items ride on the first real
+run.
+
+------------------------------------------------------------------------
+
+### Session 32 Handoff Evaluation (by Session 33)
+
+**Score: 9/10.** - **What helped most:** the ACTIVE TASK’s “⇒ SUGGESTED
+NEXT = implement PHASE 8c only” was decision-complete — it named all 15
+files (with the §2.3 hidden-DOM reason they pass trivially), the exact
+per-module-group verify command (carrying BOTH
+`NPRC_RUN_E2E`+`NOT_CRAN`), the classification hint (“likely
+config/run-and-observe like 8b — classify after the spike, don’t force a
+synthetic RED”), the two helper corner-cases to verify firsthand (the
+`navigate_to_tab` 3rd-arg no-op; the only content-coupled assertions at
+pedigree-detailed.R:57 / pedigree-tutorial.R:169), and the CI follow-up
+(“broaden the filter as 8c lands”). I went orientation → spike →
+classification gate → CI edit → validate with zero rediscovery. - **What
+helped (reflexes via CLAUDE.md):** \[verify-first\] (drove the per-group
+browser spike before classifying), \[regression-read\] (both env vars;
+summed failed+error+watched skipped), \[author-decision\] (the
+config-only classification gate + the CI-scope fork),
+\[right-sized-orchestration\] (the handoff’s own “review then re-verify
+firsthand” — but here I right-sized DOWN: no workflow needed),
+\[phase-3E-smoke\] (8c runs the app; I validated the exact run-step
+end-to-end). - **What was slightly off — NOT a defect (engineering
+judgment the handoff left open, correctly):** the CI follow-up said
+“broaden the filter **toward `^(app|e2e)-`** as 8c (and 8d) land” —
+taken literally that regex would include the 5 **unverified 8d** files.
+The handoff’s “(and 8d)” correctly signals incremental, and sub-plan §7
+makes the staging clear, so I narrowed to a positive 8b+8c include-list
+(excluding 8d) — a scope refinement, not a correction of an error. This
+was the one judgment call the handoff didn’t pre-resolve. - **What was
+missing (below handoff altitude, expected):** the exact broadened-filter
+regex and its firsthand 18-file/exclude-5 verification; the
+single-process 140/140 run-step validation. All within-session
+discovery. - **ROI:** strongly positive — precise scope + carried
+reflexes meant the session went straight to the spike, the
+classification gate (evidence in hand), the one-line CI edit, and
+end-to-end local validation.
+
+### What Session 33 Did
+
+**Deliverable:** **Implement Phase 8c** of
+`docs/planning/phase8-e2e-harness-subplan.md` §5(8c) — run-and-observe
+the **15 shallow per-module shinytest2 E2E files** (103 tests) green
+opt-in + **broaden the CI run-step filter** in
+`.github/workflows/shinytest2.yaml` to the 18 verified 8b+8c files.
+(COMPLETE) **Date:** 2026-06-05. **Branch:** `add-methodology`.
+**Commits:** this session’s **`ci:`** (broadened filter + synced docs) +
+this **`docs:`** close-out. **Nature:** **CONFIG / RUN-AND-OBSERVE**
+implementation — TDD code-phases declared **INAPPLICABLE** (approved via
+`AskUserQuestion`, like Learnings \#21a/#18c/#32). The 15 files + the 8a
+helpers already exist and all pass trivially via the §2.3 navbarPage
+hidden-DOM (`get_html_safe(app,"body")` returns the whole page →
+`grepl(keyword, body)` passes once the app boots), so there was **no new
+R unit to write test-first**. The verify-first browser spike IS the
+runtime verification; the only deliverable change is the CI YAML filter.
+One deliverable; did NOT start 8d (FM \#18/#2). **No ultracode opt-in**
+→ no workflow: a one-line filter broadening validated end-to-end locally
+is honestly “already verified” (\[right-sized-orchestration\]; a
+multi-agent review would be ceremony for this change surface — contrast
+S32’s 6-edit CI rewrite, where the review earned its keep). **Author
+decisions (USER, via `AskUserQuestion`, evidence in hand — the 103/103
+spike):** (1) **config/run-and-observe**, TDD code-phases INAPPLICABLE
+\[over hold/review\] — no synthetic RED; (2) **broaden the CI filter to
+the 8b+8c files now** \[over verification-only / defer-to-8d\] — so
+scheduled CI exercises the 18 verified files, leaving the 5 unverified
+8d files out until 8d. **The browser spike (8c — GREEN, run per
+module-group per §5(8c)):** `NPRC_RUN_E2E=true NOT_CRAN=true` →
+e2e-input(19: detailed 6/module 5/tutorial 8) + e2e-pedigree(19) +
+e2e-pyramid(12) + e2e-genetic-value(22) + e2e-summary-statistics(8) +
+e2e-breeding-groups(23) = **103 tests across 15 files, 0 fail/0 error/0
+skip.** Chrome + the modular app boot for every test. Helper
+corner-cases verified firsthand: (a)
+`navigate_to_tab(app, "Age-Sex Pyramid", "Pyramid")` — the 3rd arg is
+the ignored `fallback`; it navigates to the top-level tab and passes
+(modPyramid’s “Plot”/“Statistics” sub-tabs are never targeted); (b)
+pedigree-detailed.R:57 / pedigree-tutorial.R:169 pass on the
+always-rendered `pedigree_browser.html` guidance (note, don’t fix); (c)
+summary-statistics-module §2.4 wrong-tab nav (7/8 navigate to “Genetic
+Value Analysis”) still passes via hidden-DOM — a known 8e item, not an
+8c blocker. **The CI edit (`.github/workflows/shinytest2.yaml`):**
+broadened the run-step `filter` from
+`^(app-loading|app-navigation|e2e-data-ready)$` to
+`^(app-loading|app-navigation|e2e-data-ready|e2e-input|e2e-pedigree|e2e-pyramid|e2e-genetic-value|e2e-summary-statistics|e2e-breeding-groups)`;
+renamed the step “boot-smoke + per-module”; updated the header + step
+comments; relabeled the `cat` output + the silent-skip
+[`stop()`](https://rdrr.io/r/base/stop.html) message (the
+`stop_on_failure=TRUE` + `sum(passed)==0` guards UNCHANGED). Verified
+firsthand the regex selects **exactly 18 files** (3 8b + 15 8c) and
+**excludes exactly the 5 8d files** (replicated testthat’s stripped-name
+matching in R). YAML parses (Python `yaml.safe_load`); env block
+(`NPRC_RUN_E2E`/`NOT_CRAN`/`RENV_CONFIG_AUTOLOADER_ENABLED`) UNCHANGED.
+**Verification:** the **exact broadened CI run-step re-validated locally
+in a SINGLE process** (the §5(8c) AppDriver-process-count dragon — 18
+files × drivers in one `test_dir`): **18 files, passed=140 / failed=0 /
+skipped=0 / error=0**, exit 0 (both guards pass; 37 8b + 103 8c). Full
+non-e2e suite under
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)+`NOT_CRAN=true`
+= **0 failed / 0 error**, 0 non-e2e offenders, 156 e2e-skipped, **2154
+passed**, 5 pre-existing `modPyramid` warnings (unchanged S31/S32
+baseline). `document()` N/A (no roxygen touched); `tests/`+`.github`
+lint-exempt; no `* 2.*` SOURCE dupes (the `* 2.*` hits are all
+`.Rproj.user/` RStudio state, gitignored). **Phase 3E (live GitHub run)
+DEFERRED** — branch not on remote; same posture as S32 (state, NOT FM
+\#24); the broadened run-step is validated locally end-to-end (140/140).
+**Key files:** `.github/workflows/shinytest2.yaml` (broadened filter +
+comments — the deliverable). The 15 8c files
+`tests/testthat/test-e2e-{input,pedigree,pyramid,genetic-value,summary-statistics,breeding-groups}-*.R`
+(run-and-observe; **UNCHANGED**).
+`tests/testthat/helper-shinytest2.R:216-303` (the 8a helpers
+`navigate_to_tab`/`get_html_safe`/`create_app_driver` exercised here —
+UNCHANGED). `R/appUI.R:24-204` (navbar `id="mainNavbar"`; tab titles ==
+values — all 6 nav labels match real titles → real navigation, not
+clean-skip). `docs/planning/phase8-e2e-harness-subplan.md` §5(8c) (DONE
+criteria), §2.3 (hidden-DOM), §5(8d) (NEXT). Background validation
+artifact (NOT committed): `…/tasks/b74payz23.output`. **GOTCHAS for the
+next session (Phase 8d · 5 interaction/menu files · 47 tests · risk
+MEDIUM-HIGH 🐉):** 1. **Implement PHASE 8d ONLY.** Read sub-plan
+§5(8d) + §8.2 FIRST. The 5 files need the secondary helpers
+(`click_element_safe`/`navigate_to_menu_item`/`get_values_safe`, all
+defined in 8a) + the top-level `E2E_TIMEOUT` + the **navbarMenu spike**.
+Unlike 8c, this MAY need real work — the `navigate_to_menu_item` body is
+a **provisional** `navigate_to_tab` delegate
+(helper-shinytest2.R:293-295); the §8.2 spike decides if
+`set_inputs(mainNavbar="Settings")` reaches a navbarMenu(“More”) child
+or a DOM dropdown-open+click is required. Classify TDD AFTER the spike
+(don’t force a synthetic RED if it’s run-and-observe; but if the menu
+nav needs a real helper change, that’s RED→GREEN on the helper). 2.
+**Verify cmd:**
+`NPRC_RUN_E2E=true NOT_CRAN=true Rscript -e 'suppressMessages(pkgload::load_all(".")); testthat::test_dir("tests/testthat", filter="^e2e-(home|settings|workflow|error|boundary)", reporter="summary")'`.
+**Always set BOTH `NPRC_RUN_E2E=true` AND `NOT_CRAN=true`.** 3.
+**Watch:** the `#input-*` selectors in error-states/boundary-conditions
+stay `tryCatch`-swallowed no-ops (making them real is 8e, §2.5 — do NOT
+fix here); `boundary-conditions.R` passes
+`create_app_driver(..., height=, width=)` as NAMED args (the 8a
+signature handles this — formals `height=800, width=1200, ...`);
+top-level `E2E_TIMEOUT` use at error-states.R:232 is a HARD error if
+undefined (it’s defined — confirm `exists("E2E_TIMEOUT")`). Confirm the
+`#goto_*` observers navigate (appServer.R:73-95). 4. **At 8d CLOSE:**
+broaden the CI filter to the full `^(app|e2e)-` tier (all 23 files), run
+it once, **close \#39**, and **file the 8e assertion-strengthening
+issue** (sub-plan §6 has the title+body). **\#1 LIVE-RUN WATCH ITEM
+(never GitHub-verified):** the renv lib-path / AppDriver-subprocess
+interaction — confirm the app subprocess resolves
+[`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/) on
+the first real GitHub run. 5. **Carried reflexes** (CLAUDE.md glossary):
+\[verify-first\] (spike before classifying), \[regression-read\] (BOTH
+env vars; sum failed+error+watch skipped), \[author-decision\]
+(config-vs-RED→GREEN gate + scope forks), \[right-sized-orchestration\]
+(no workflow unless the change surface warrants it; ultracode was OFF
+this session), \[phase-3E-smoke\] (validate the exact run-step).
+Learning \#34 = a new `#### Learning N` block +
+`**Reflexes:**`/`**Apply:**` lines. **Self-assessment: 9/10.** (+)
+**Verify-first spike before classifying** — ran the 15 files per
+module-group first, which decisively settled config/run-and-observe (no
+synthetic RED) and confirmed all 3 §5(8c) helper corner-cases firsthand.
+(+) **Right-sized the orchestration HONESTLY** — recognized there was no
+ultracode opt-in and that a one-line filter broadening validated
+end-to-end locally is “already verified,” so I did NOT spin up a
+ceremony workflow (contrast S32, where a 6-edit rewrite warranted the
+review). (+) **Validated the EXACT CI artifact** — proved the broadened
+regex selects exactly the 18 intended files / excludes the 5 8d, then
+ran the real run-step expression in a single process (140/140, the
+process-count dragon discharged). (+) **Caught the filter-scope nuance**
+the handoff left open — narrowed “toward `^(app|e2e)-`” to a positive
+8b+8c include-list so unverified 8d files don’t enter CI. (+) One
+deliverable, classification gated, no 8d bleed. (−) The live GitHub run
+remains deferred (branch not on remote) — the renv/subprocess
+interaction is unchanged from S32’s \#1 watch item; broadening the
+filter doesn’t change that risk category, but it is one more reason to
+do the first live run soon. (−) Re-ran the 103 8c tests a second time
+(per-group, then again in the single-process run-step validation) —
+defensible (the second run validates the exact CI invocation + the
+process-count dragon) but ~+1 browser pass of cost.
+
+------------------------------------------------------------------------
+
+### Session 31 Handoff Evaluation (by Session 32)
+
+**Score: 9/10.** - **What helped most:** the ACTIVE TASK’s “⇒ SUGGESTED
+NEXT = implement PHASE 8b only” was a precise launch point — it named
+the 3 boot-smoke files (with their test counts + that they need NO
+derived helpers), the exact sub-plan sections to read (§5(8b) + §7
+(CI) + §8 (spikes)), the verify command (which **did** carry
+`NOT_CRAN=true`), every owner CI decision (job-level env, remove
+`continue-on-error`, schedule+dispatch, Chrome over snap), the
+**navigation spike §8.1** (`a[data-value="Input"]`), and the 🐉
+first-browser-run risk. I went orientation → spike → gate → review with
+zero rediscovery. - **What helped (reflexes via CLAUDE.md):**
+\[verify-first\] (drove the empirical spike before classifying the
+work), \[regression-read\] (its own NOT_CRAN note — see below),
+\[completeness-workflow\] + \[right-sized-orchestration\] (the 4-lens
+adversarial review then firsthand re-verification), \[author-decision\]
+(the config-only classification gate + the 3 owner forks),
+\[phase-3E-smoke\] (the handoff flagged “8b DOES run the app”). - **What
+was slightly off — INHERITED, not a handoff defect (and exactly a
+\[verify-first\] target):** the handoff’s CI-rewire list (and the
+sub-plan §7 it faithfully propagated) named the env vars to set but
+**omitted `NOT_CRAN` from the CI env** — it only carried `NOT_CRAN` in
+the *verify command*. That gap (skip_on_cran silently skipping the whole
+tier on CI) was the HIGH blocker the adversarial review caught. The
+handoff also said Chrome via “google-chrome-stable / r-lib browser
+setup” (directional); the concrete best-practice choice
+(`browser-actions/setup-chrome@v2`) came from this session’s research +
+the owner pick — both correctly framed as open at phase start. - **What
+was missing (below handoff altitude, expected):** the **package-install
+requirement** (CI must `R CMD INSTALL` so the app subprocess
+[`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/) +
+`system.file` resolve) and the **renv lib-path / subprocess**
+interaction — surfaced by reading `inst/shinytest/app.R` + the review. -
+**ROI:** strongly positive — the precise scope + carried reflexes meant
+the session went straight to the spike, the classification gate, and an
+evidence-in-hand owner consult; the only real work was the CI design +
+the review’s blocker fix.
+
+### What Session 32 Did
+
+**Deliverable:** **Implement Phase 8b** of
+`docs/planning/phase8-e2e-harness-subplan.md` §5(8b) — the **first-ever
+real browser run** of the modular GeneKeepR app under
+shinytest2/chromote (3 boot-smoke files green opt-in) + the **CI
+rewire** of `.github/workflows/shinytest2.yaml`. (COMPLETE) **Date:**
+2026-06-05. **Branch:** `add-methodology`. **Commits:** this session’s
+**`ci:`** (rewritten `shinytest2.yaml` + synced docs) + this **`docs:`**
+close-out. **Nature:** **CONFIG-ONLY** implementation — TDD code-phases
+declared **INAPPLICABLE** (approved via `AskUserQuestion`, like
+Learnings \#21a/#18c). The 3 boot-smoke files use
+`create_test_app()`+`AppDriver$new` directly / `testServer` (no Phase-8a
+derived helpers), and sub-plan §11 says the E2E files are *run/triaged,
+not rewritten* — so there was **no new R unit to write test-first**. The
+verify-first browser spike IS the runtime verification; the only
+deliverable change is the CI YAML. One deliverable; did NOT start 8c (FM
+\#18/#2). Ultracode: one read-only 5-agent adversarial-review workflow
+(`wf_41192b5e-c7b`, ~452K tokens, 4 lenses + completeness-critic) → it
+CAUGHT a HIGH blocker → re-verified firsthand → applied fixes
+(\[completeness-workflow\]: the workflow CONFIRMS, I verify). **Author
+decisions (USER, via `AskUserQuestion`, evidence in hand):** (1)
+**config-only CI rewrite** \[over hold/narrower\] — proceed with the 6
+edits; (2) **Chrome = `browser-actions/setup-chrome@v2`** \[over ubuntu
+pre-installed\]; (3) **static + adversarial verification only** \[over
+push+dispatch\] — do NOT push (branch not on remote); state the live-CI
+limit. **The browser spike (🐉 first run — GREEN):**
+`NPRC_RUN_E2E=true NOT_CRAN=true` → `test-app-loading.R`(2) +
+`test-app-navigation.R`(3) + `test-e2e-data-ready.R`(32) = **37 tests, 0
+fail/0 error/0 skip**. Chrome (chromote 0.5.1,
+`/Applications/Google Chrome.app`) launches; the modular app boots.
+**Nav spike §8.1 RESOLVED:** `a[data-value="Input"]` clicks the live
+bslib navbar (no self-skip — `app-navigation: ...` 3 dots, no `S`).
+**The CI rewrite (`.github/workflows/shinytest2.yaml`):** triggers
+`schedule`(`0 7 * * *`)+`workflow_dispatch` (dropped per-PR
+`push`/`pull_request`); job-env `NPRC_RUN_E2E:'true'` +
+**`NOT_CRAN:'true'`** + **`RENV_CONFIG_AUTOLOADER_ENABLED:'false'`** (+
+kept `GITHUB_PAT`/`R_KEEP_PKG_SOURCE`); `timeout-minutes:30`;
+`continue-on-error` REMOVED; **added
+`R CMD INSTALL --no-multiarch --with-keep.source .`** (after
+`setup-r-dependencies`); Chrome via
+`browser-actions/setup-chrome@v2`(`install-dependencies:true`) →
+`CHROMOTE_CHROME` via `$GITHUB_ENV` → a strengthened `find_chrome()`
+assert (single existing path, not bare `nzchar`); the run step
+`res<-as.data.frame(test_dir(filter="^(app-loading|app-navigation|e2e-data-ready)$", stop_on_failure=TRUE))` +
+**[`stop()`](https://rdrr.io/r/base/stop.html) if
+`sum(res$passed)==0`**; `_snaps/`+`*.png` artifact upload kept. **The
+HIGH blocker the review caught (re-verified firsthand):** the rewrite
+set `NPRC_RUN_E2E` but **not `NOT_CRAN`** → on the non-interactive
+`Rscript {0}` runner `testthat::on_cran()` is TRUE → all 3 files’
+`skip_on_cran()` fires → **every test silently SKIPS** →
+`stop_on_failure` doesn’t catch skips → the scheduled job goes GREEN
+running nothing. **Reproduced firsthand** (NOT_CRAN unset,
+non-interactive → `nb:4 skipped:4 failed:0`). Fix = `NOT_CRAN:'true'` at
+job env. (This is exactly the \[regression-read\] reflex; my local pass
+only held because I set NOT_CRAN.) Two further hardenings from the
+review: `RENV_CONFIG_AUTOLOADER_ENABLED:'false'` (site-lib install, see
+below) and the `sum(passed)==0` guard (silent-skip → loud fail).
+**Verification:** browser spike 37/0/0/0 (the exact CI run-step R
+re-validated locally green). Full non-e2e suite under
+`load_all`+`NOT_CRAN=true` = **0 failed / 0 error**, 0 non-e2e
+offenders, 156 e2e-skipped, 5 pre-existing `modPyramid` warnings
+(unchanged S31 baseline). YAML parses (Python); filter matches EXACTLY
+the 3 files (21 others excluded); no compiled code (pure-R install).
+`document()` N/A (no roxygen touched); `tests/`+`.github` lint-exempt;
+no `* 2.*` dupes. **Phase 3E (live GitHub run) DEFERRED** — owner chose
+static+adversarial; branch not on remote. Stated, NOT FM \#24. **Key
+files:** `.github/workflows/shinytest2.yaml` (rewritten — the
+deliverable). `tests/testthat/test-app-loading.R` /
+`test-app-navigation.R` (direct `AppDriver$new`; UNCHANGED) /
+`test-e2e-data-ready.R` (browser-free; UNCHANGED).
+`tests/testthat/helper-shinytest2.R:195-202` (`create_test_app` gate; 8a
+helpers below it — UNCHANGED). `inst/shinytest/app.R`
+([`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/) →
+why CI must install the pkg).
+`docs/planning/phase8-e2e-harness-subplan.md` §5(8b) (DONE criteria), §7
+(CI — synced this session: added NOT_CRAN/install/renv/guard). Workflow
+artifact (NOT committed): `…/tasks/w3e2wv5zq.output`. **GOTCHAS for the
+next session (Phase 8c · 15 shallow per-module files · risk
+MEDIUM):** 1. **Implement PHASE 8c ONLY.** Read sub-plan §5(8c) FIRST.
+The 15 files (~103 tests) are `grepl`-body shallow; §2.3 hidden-DOM
+means they pass trivially once the app boots (8a helpers exist;
+Chrome+app boot PROVEN in 8b). Likely **config/run-and-observe** like 8b
+— classify TDD after the spike (don’t force a synthetic RED). 2.
+**Verify cmd:**
+`NPRC_RUN_E2E=true NOT_CRAN=true Rscript -e 'suppressMessages(pkgload::load_all(".")); testthat::test_dir("tests/testthat", filter="^e2e-(input|pedigree|pyramid|genetic|summary|breeding)", reporter="summary")'`
+— run per module-group (browser runtime is the cost). **Always set BOTH
+`NPRC_RUN_E2E=true` AND `NOT_CRAN=true`** (NOT_CRAN gates `skip_on_cran`
+— the 8b blocker). 3. **Watch:** `navigate_to_tab`’s 3rd-arg is a no-op
+for non-matching sub-tabs (pyramid files pass `"Pyramid"`, modPyramid
+sub-tabs are “Plot”/“Statistics” — §5(8c) gotcha a); the only
+content-coupled real assertions = `pedigree-detailed.R:57` /
+`pedigree-tutorial.R:169` (depend on `pedigree_browser.html` — note,
+don’t fix). 4. **CI (baked in 8b):** the workflow runs only the 3 smoke
+files — **broaden the filter** toward `^(app|e2e)-` as 8c (and 8d) land.
+**\#1 LIVE-RUN WATCH ITEM (never GitHub-verified):** the renv lib-path /
+AppDriver-subprocess interaction — confirm the app subprocess resolves
+[`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/) on
+the first real GitHub run (`RENV_CONFIG_AUTOLOADER_ENABLED:'false'`
+forces site-lib install so it can; static-only this session). 5.
+**Carried reflexes** (CLAUDE.md glossary): \[verify-first\] (spike
+before classifying), \[regression-read\] (BOTH
+`NOT_CRAN`+`NPRC_RUN_E2E`; sum failed+error+watch skipped),
+\[completeness-workflow\]/\[right-sized-orchestration\] (review then
+re-verify firsthand), \[author-decision\] (config-vs-RED→GREEN gate),
+\[phase-3E-smoke\] (8c runs the app). Learning \#33 = a new
+`#### Learning N` block + `**Reflexes:**`/`**Apply:**` lines.
+**Self-assessment: 9/10.** (+) **Verify-first spike before classifying
+the work** — ran the browser tests first, which decisively settled that
+8b is config-only (no synthetic RED) and resolved the nav spike, then
+gated the classification with the owner. (+) **Adversarial review earned
+its keep** — it caught a HIGH silent-skip blocker (`NOT_CRAN`) I’d
+missed, plus the renv-lib-path and find_chrome-vacuity hardenings; I
+re-verified the blocker firsthand (reproduced the all-skip) rather than
+trusting the agents, and confirmed the 2 critic-flagged false-positives.
+(+) **Grounded the CI design in current best practice** (researched
+<setup-chrome@v2> / ubuntu Chrome / chromote –no-sandbox) and validated
+the exact run-step R + Chrome-assert R locally. (+) **Honest
+verification-limit framing** — the live GitHub run is genuinely deferred
+(owner choice + branch not on remote); flagged the renv/subprocess
+interaction as the \#1 live-run watch item rather than treating
+static-clean as runtime-clean. (+) One deliverable, all gates honored,
+no 8c bleed. (−) I shipped the `NOT_CRAN`-missing YAML into the review
+rather than catching it myself up front — though the review is precisely
+the net designed to catch it, and my own \[regression-read\] reflex
+names this exact footgun (I applied it to the local run but not the CI
+env). (−) The renv lib-path fix is reasoned + best-effort but cannot be
+GitHub-verified this session — a residual unknown carried forward
+explicitly.
+
+### Session 30 Handoff Evaluation (by Session 31)
+
+**Score: 9/10.** - **What helped most:** the ACTIVE TASK’s “⇒ SUGGESTED
+NEXT = implement PHASE 8a only” was a precise, accurate launch point —
+it named the file (`tests/testthat/helper-shinytest2.R`), all 6
+helpers + `E2E_TIMEOUT`, the `§4` reference, the browser-free
+testability recipe (“existence +
+[`formals()`](https://rdrr.io/r/base/formals.html) arity + `*_safe`
+error contracts via a fake-app stub that throws → assert safe default;
+mirrors S19’s `create_test_app` gate TDD”), “Read sub-plan §4–§5(8a)
+FIRST”, and “Do NOT bundle 8b.” The **sub-plan itself** (`§4`
+call-site-derived contracts + `§3` inventory) was decision-complete: I
+went straight to the spec. Gotcha \#2 (“`navigate_to_tab` MUST take a
+3rd `fallback=NULL` (109/137 3-arg)”; “`create_app_driver` MUST take
+`...` height/width override”) was load-bearing and accurate in INTENT. -
+**What helped (reflexes via CLAUDE.md):** \[verify-first\] (the
+handoff’s own preached reflex caught the §4 bug), \[idiom-inventory\]
+(audit by CALL FORM — extended from \#30’s planning use to execution),
+\[discriminating-RED\], \[right-sized-orchestration\],
+\[regression-read\], \[author-decision\] (the gates). All carried
+directly. - **What was slightly off (NOT a defect — exactly the
+\[verify-first\] target the handoff flags):** the `§4`
+`create_app_driver(app_dir, name, ...)` PSEUDO-CODE has a latent
+duplicate-arg bug (hardcodes `height=800/width=1200` then splices `...`
+→ `AppDriver$new` gets `height` twice on the 2 `boundary-conditions.R`
+named-arg sites → R error). The handoff’s gotcha said “height/width
+override” — correct intent, but the literal body fails it. Caught
+firsthand. Also arity stated “109/137 3-arg” (sub-plan §4: “109/27
+two-arg”); my count is 109/28 — immaterial (all confirm the 3-arg
+signature). - **What was missing (below handoff altitude, expected):**
+the exact `AppDriver$new` formals (introspected — `height`/`width` are
+explicit, NOT absorbed by its `...`, which is WHY the splice crashes);
+the fake-stub design. All within-session discovery. - **ROI:** strongly
+positive — the sub-plan + precise handoff meant zero rediscovery:
+orientation → firsthand call-form audit → RED, with the deviation
+surfaced cleanly in the PRE-RED→RED gate.
+
+### What Session 31 Did
+
+**Deliverable:** **Implement Phase 8a** of
+`docs/planning/phase8-e2e-harness-subplan.md` — define the 6 shinytest2
+E2E driver helpers + the `E2E_TIMEOUT` constant in
+`tests/testthat/helper-shinytest2.R`, browser-free RED→GREEN. (COMPLETE)
+**Date:** 2026-06-05. **Branch:** `add-methodology`. **Commits:** this
+session’s **`feat:`** (`tests/testthat/helper-shinytest2.R` + new
+`tests/testthat/test_helper_shinytest2.R`) + this **`docs:`** close-out.
+**Nature:** implementation session under strict TDD (RED→GREEN→REFACTOR,
+all 3 gates + 1 deviation surfaced in the PRE-RED→RED gate). The first
+EXECUTION sub-phase of the issue-#39 mini-campaign; strict TDD RESUMED
+after the two planning sessions (#21/#30). One deliverable; did NOT
+start 8b (FM \#18/#2). Ultracode: launched one read-only 7-agent
+call-site-audit workflow (`wf_f7563aa7-8b1`) — it FAILED on a framework
+hiccup (a subagent never emitted StructuredOutput) → did the call-form
+audit **firsthand by grep**, which CAUGHT the §4 `create_app_driver`
+duplicate-arg bug (\[right-sized-orchestration\]: when a confirmation
+workflow dies on framework mechanics and the check is deterministic
+grep, finish it by hand). **Author decision (USER, via
+`AskUserQuestion`):** all 3 TDD phase gates → proceed; the PRE-RED→RED
+gate explicitly approved the **one deviation from the literal §4 body**
+— `create_app_driver(app_dir, name, height=800, width=1200, ...)` (named
+formals) instead of `(app_dir, name, ...)`, to fix the
+duplicate-`height`/`width` crash on `boundary-conditions.R`’s 2
+named-arg call sites. REFACTOR gated → skipped (minimal/idiomatic).
+**The implementation (GREEN, all in
+`tests/testthat/helper-shinytest2.R`, a new section after
+`create_test_app`):** `E2E_TIMEOUT <- 30000L`;
+`create_app_driver(app_dir, name, height=800, width=1200, ...)` →
+`shinytest2::AppDriver$new(app_dir, name=name, height=height, width=width, load_timeout=E2E_TIMEOUT, screenshot_args=FALSE, ...)`;
+`navigate_to_tab(app, tab_label, fallback=NULL)` →
+`tryCatch({set_inputs(mainNavbar=); wait_for_idle; identical(get_value(input="mainNavbar"), tab_label)}, error→FALSE)`;
+`get_html_safe`/`get_values_safe`/`click_element_safe` as
+`tryCatch`-guarded `*_safe` helpers (→
+`""`/[`list()`](https://rdrr.io/r/base/list.html)/`FALSE` on error);
+`navigate_to_menu_item(app, item)` a **provisional delegate** to
+`navigate_to_tab` (finalized in 8d after the navbarMenu spike, sub-plan
+§8.2). **TDD trail:** PRE-RED — read sub-plan §4/§5(8a) +
+`helper-shinytest2.R` + `test_create_test_app.R` (the model);
+firsthand-verified all 6 helpers + `E2E_TIMEOUT` undefined, the
+call-form audit (create_app_driver 144 two-arg + 2 named height/width;
+navigate_to_tab 109 three-arg positional + 28 two-arg; get_html_safe
+153× `(app,"body")`; click/menu/values 5/4/3;
+return→`success`/`values`/`grepl`), and `AppDriver$new` formals
+(height/width explicit → splice crashes); gated PRE-RED→RED with the
+deviation. RED — `test_helper_shinytest2.R` (14 `test_that`, 3
+fake-AppDriver [`list()`](https://rdrr.io/r/base/list.html) stubs:
+throwing / recording-ok / silent-no-op); all RED at HEAD (exists()=FALSE
+/ “object not found”). GREEN — added the 7 symbols → all 14 green.
+REFACTOR — gated, skipped. **Verification:** `test_helper_shinytest2.R`
+**14 tests / 32 assertions 0/0/0**; full suite under
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)+`NOT_CRAN=true`
+= **0 failed / 0 error**, 0 non-e2e offenders, e2e skipped (156), only
+the 5 pre-existing `modPyramid` warnings (added 0), **2154 passed** (+32
+vs S29’s 2122). `document()` **zero man/NAMESPACE delta**; `tests/`
+`.lintr`-excluded (`.lintr:35`) → lint-exempt (direct lint = “No lints
+found”); no `* 2.*` dupes. **Phase 3E N/A** — 8a changes no running-app
+behavior (helpers live only in the test tree; the suite is the runtime)
+— stated, not skipped (not FM \#24). **No NEWS bullet** (test-infra only
+→ CHANGELOG only). **Key files:** `tests/testthat/helper-shinytest2.R`
+(the 6 helpers + `E2E_TIMEOUT` in a new section after `create_test_app`
+~L204+; the pre-existing polling helpers + `create_test_app` unchanged).
+`tests/testthat/test_helper_shinytest2.R` (NEW —
+`fake_app_throwing`/`fake_app_ok`/`fake_app_noop` stubs + 14
+browser-free tests; underscore-prefixed → runs in the default suite,
+always). `docs/planning/phase8-e2e-harness-subplan.md` §4 (contracts),
+§5(8a) (DONE criteria), §5(8b) (NEXT), §8 (browser spikes).
+`tests/testthat/test-e2e-boundary-conditions.R:231/244` (the 2
+`height=`/`width=` calls that drove the create_app_driver fix).
+`R/appUI.R` (navbarPage `id="mainNavbar"`; tab titles == values — the
+navigate_to_tab read-back contract). Workflow artifact (NOT committed,
+FAILED): `…/tasks/wyd4lrt2k.output`. **GOTCHAS for the next session
+(Phase 8b — boot-smoke + CI · risk MEDIUM 🐉 FIRST browser run):** 1.
+**Implement PHASE 8b ONLY.** Strict TDD + phase gates. Read sub-plan
+§5(8b) + §7 (CI) + §8 (spikes) FIRST. 3 files: `test-app-loading.R`,
+`test-app-navigation.R`, `test-e2e-data-ready.R`. 2. **🐉 First-ever
+browser run** — expect Chrome launch/timeout/headless triage;
+`E2E_TIMEOUT=30000`. The `a[data-value="Input"]` selector
+(test-app-navigation.R) must be confirmed against the live bslib navbar
+(spike §8.1); the `navigate_to_tab` read-back (`set_inputs(mainNavbar=)`
+→ `get_value`) also needs the browser to confirm. 3. **CI rewire**
+(owner decision): `NPRC_RUN_E2E: 'true'` at **job-level `env:`**, remove
+`continue-on-error`, `schedule`+`workflow_dispatch` (drop per-PR),
+`google-chrome-stable`/r-lib browser setup over snap chromium, assert
+[`chromote::find_chrome()`](https://rstudio.github.io/chromote/reference/find_chrome.html).
+4. **8a is solid for 8d:** the `create_app_driver` named-formals fix
+means `boundary-conditions.R`’s `height=`/`width=` calls won’t
+duplicate-crash. `navigate_to_menu_item` is still PROVISIONAL (delegates
+to navigate_to_tab) → finalize in 8d after the navbarMenu spike (§8.2).
+5. **Carried reflexes** (CLAUDE.md glossary): \[verify-first\] (the
+plan’s pseudo-code is a target), \[regression-read\]
+(`NOT_CRAN`+`load_all`, sum failed+error), \[phase-3E-smoke\] (8b DOES
+run the app → smoke applies, unlike 8a), \[right-sized-orchestration\],
+\[author-decision\]. Learning \#32 = a new `#### Learning N` block +
+`**Reflexes:**`/`**Apply:**` lines (tags glossary-defined).
+**Self-assessment: 9/10.** (+) **Treated the approved plan’s §4
+pseudo-code as a \[verify-first\] target** — re-audited every call form
+by arity/named-vs-positional firsthand and caught the
+`create_app_driver` duplicate-arg crash the literal body would have
+shipped into 8d; surfaced the one-line fix transparently in the phase
+gate. (+) **Right-sized orchestration honesty** — the verification
+workflow died on a framework hiccup; instead of fighting it I did the
+deterministic grep audit by hand (it found the bug anyway) and said so.
+(+) **Browser-free TDD of browser helpers** via 3 discriminating
+fake-AppDriver stubs (throwing / recording / silent-no-op) — the no-op
+stub proves `navigate_to_tab`’s read-back catches a silent failed
+navigation, real coverage not a tautology. (+) **Full verification arc**
+(suite 0/0, document zero-delta, lint-exempt, dupe scan) + honest
+Phase-3E-N/A framing (the helper is test infra, not app runtime — not FM
+\#24). (+) **All 3 TDD gates honored**, one deviation surfaced for
+approval, REFACTOR honestly skipped. (−) `create_app_driver`’s actual
+AppDriver construction can’t be exercised browser-free →
+existence+formals only in 8a (correctly deferred to 8b); the
+named-formals fix is structurally locked by the formals test but its
+no-duplicate-crash behavior is browser-confirmed only in 8d. (−) Spent
+~346K agent tokens on a workflow that failed before contributing —
+though the firsthand fallback fully covered it and caught the bug.
+
+### Session 29 Handoff Evaluation (by Session 30)
+
+**Score: 8/10.** - **What helped most:** the ACTIVE TASK’s “⇒ SUGGESTED
+NEXT = implement PHASE 8 / issue \#39” was a precise launch point — it
+named the plan section to read (`shiny-module-conversion-plan.md` §9
+Phase 8), the helper names, the namespace mismatch
+(`helper-shinytest2.R` hardcodes `module_id="input"`, real selectors
+`#dataInput-…`), the “unwritten theatre / 20/22 AppDriver files call the
+undefined helpers” framing, Risk HIGH 🐉, and — load-bearingly — **“may
+need its own sub-plan (smoke → per-module → assertion-strengthening).”**
+That flag is exactly the decomposition that emerged (8a–8d) and let
+Phase 0 end cleanly on the owner’s plan-vs-implement choice. The S29
+verify-cmd with the `^(app|e2e)-` hyphen-prefix gotcha was accurate and
+reused in the sub-plan. - **What helped (reflexes via CLAUDE.md):**
+\[verify-first\] + recon-then-verify-firsthand and
+\[completeness-workflow\] (S21/S29 lineage) directly shaped the
+discovery workflow; \[author-decision\] drove the 2 owner forks;
+\[right-sized-orchestration\] kept it to one read-only workflow with
+firsthand re-verification. - **What was incomplete (NOT a handoff defect
+— inherited from the parent plan, and a planning session exists to catch
+exactly this):** the **“3 helpers” count was wrong** — firsthand
+discovery found **6 undefined helpers + 1 undefined constant
+`E2E_TIMEOUT`**, plus a `navigate_to_tab` 3rd-arg and
+`create_app_driver` height/width forwarding the parent plan never
+mentioned. The S29 handoff faithfully propagated the parent plan §9
+Phase 8 (Session 21’s stale count); its “may need a sub-plan” flag is
+what set up the discovery that corrected it. Classic \[verify-first\]:
+the plan claim was stale, only firsthand probing fixed it. - **What was
+refined (not wrong, sharpened):** the namespace mismatch the handoff
+flagged as a blocker is actually **inert today** (the polling helpers
+are never called) → deferred to 8e, not 8a. Another firsthand-discovery
+refinement. - **ROI:** strongly positive — zero rediscovery; straight
+from orientation to the owner fork to evidence-based discovery, with the
+exact files + plan section pre-named.
+
+### What Session 30 Did
+
+**Deliverable:** **Planned Phase 8** of the Shiny-module conversion
+(enable the shinytest2 E2E harness; GitHub issue \#39) →
+**`docs/planning/phase8-e2e-harness-subplan.md`** (COMPLETE). The plan
+is the deliverable; **no implementation code was written** (FM
+\#18/#19). **Date:** 2026-06-05. **Branch:** `add-methodology`.
+**Commit:** this `docs:` close-out (sub-plan + parent-plan §9 pointer +
+`BACKLOG.md` + `CLAUDE.md` Learning \#30 + `SESSION_NOTES.md`).
+**Nature:** PLANNING / architecture session — TDD code-phases declared
+**INAPPLICABLE** (Learning \#21a). Ultracode: one read-only discovery
+workflow (`wf_2707f89a-906`, 7 agents, ~545K tokens: 5-agent per-file
+census of all 23 E2E files → synthesizer ‖ adversarial
+completeness-critic). One deliverable; did NOT implement 8a (FM
+\#18/#2). **The discovery (firsthand, then workflow-confirmed, then
+re-verified firsthand — Learning \#21b/c):** read `helper-shinytest2.R`,
+`appUI.R`, `inst/shinytest/app.R`, the CI workflow, issue \#39, a
+representative AppDriver test + the data-ready test + the smoke files +
+`test_create_test_app.R`; grepped the interaction-method census + all
+helper call sites. The workflow’s completeness-critic returned **16
+findings (4 HIGH)**; I re-verified every load-bearing one firsthand.
+**Net correction to the parent plan §9 Phase 8:** - **6 undefined
+helpers + 1 constant** (not 3): `create_app_driver(app_dir,name,...)`
+\[forward height/width — boundary-conditions.R:231/244\],
+`navigate_to_tab(app,label,fallback=NULL)` \[109 of 137 calls 3-arg\],
+`get_html_safe`, `click_element_safe` \[5 calls\],
+`navigate_to_menu_item` \[navbarMenu dropdown, 4 calls\],
+`get_values_safe` \[3 calls\], `E2E_TIMEOUT` \[undefined; top-level
+hard-error at error-states.R:232\]. - **Hidden-DOM**:
+[`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
+static render = 85,106 chars containing ALL tabs’ keywords →
+`grepl(kw,"body")` passes trivially once the app boots → 8a–8d =
+boot-level coverage only. - **Test-quality defects (8e, out of \#39
+scope)**: 41 `expect_true(TRUE)` tautologies;
+`summary-statistics-module` navigates to the WRONG tab (7/8 tests) yet
+passes; ~40 dead `grepl` assigns. - **Namespace mismatch** (`input` vs
+`dataInput`) real but **inert** (polling helpers never called) →
+deferred to 8e. - **CI** runs only 2 smoke files,
+`continue-on-error:true` (failures invisible), no `NPRC_RUN_E2E`
+(skips), snap-chromium (CI-flaky). **Owner decisions (USER, via
+`AskUserQuestion`, evidence in hand — Learning \#21d):** (1) **scope =
+harness-enable (8a–8d)** \[over full-incl-8e / minimal-smoke\] →
+assertion-strengthening filed as a separate follow-on issue; (2) **CI
+gating = scheduled + manual dispatch** \[over per-PR-blocking /
+dispatch-only\], drop `continue-on-error`. **Plan structure:** 4-session
+mini-campaign — **8a** helpers/constant (browser-free RED→GREEN) ·
+**8b** boot-smoke + CI rewire (🐉 first browser run) · **8c** 15 shallow
+per-module files · **8d** 5 interaction/menu files → **close \#39**;
+**8e** (assertion-strengthening + ns fix + real upload/GVA/breeding
+flows) deferred to a new issue. Each sub-phase has DONE + verify-cmd +
+session boundary; 23 files / 159 tests fully assigned (8b 3/9 · 8c
+15/103 · 8d 5/47). **Key files:**
+`docs/planning/phase8-e2e-harness-subplan.md` (THE deliverable — §3
+inventory, §4 helper contracts, §5 8a–8d, §6 8e, §7 CI, §8 spikes, §9
+risks). `docs/planning/shiny-module-conversion-plan.md` §9 Phase 8
+(added a “expanded into a sub-plan” pointer at the heading).
+`BACKLOG.md` (Up-Next Phase-8 line → sub-plan ref).
+`tests/testthat/helper-shinytest2.R` (where 8a authors the 6 helpers +
+constant; `create_test_app` + polling helpers already here).
+`R/appUI.R:16,123,183` (navbarPage id=“mainNavbar”; tab titles ==
+values; navbarMenu “More”). Workflow artifact (NOT committed):
+`…/tasks/wtl1030np.output`. **GOTCHAS for the next session (Phase 8a ·
+browser-free · risk LOW):** 1. **Implement PHASE 8a ONLY.** Strict TDD +
+phase gates RESUME (real R code). Read sub-plan §4 (interface
+contracts) + §5(8a) FIRST. No browser run in 8a — it’s pure
+helper/constant definition + browser-free unit tests. 2. **All 6 helper
+signatures are call-site-derived (sub-plan §4).** The two easy-to-miss:
+`create_app_driver` MUST take `...` (height/width override);
+`navigate_to_tab` MUST take a 3rd `fallback=NULL` (109/137 calls are
+3-arg) — else every 3-arg call errors “unused argument.” 3.
+**Browser-free testability** (the 8a RED): existence +
+[`formals()`](https://rdrr.io/r/base/formals.html) arity + the `*_safe`
+error contracts via a fake-app stub (a list/env whose
+`get_html`/`get_values`/`click` throw → assert the helper returns
+`""`/[`list()`](https://rdrr.io/r/base/list.html)/`FALSE`). Mirrors
+S19’s `create_test_app` gate TDD (`test_create_test_app.R` is the
+model). `tests/` is `.lintr`-excluded → lint-exempt. 4. **Do NOT fix the
+polling-helper namespace defaults in 8a** (inert; deferred to 8e —
+sub-plan §2.5). 5. **`navigate_to_menu_item` body is provisional in 8a**
+(finalized in 8d after the navbarMenu spike, §8). 6. **Carried
+reflexes** (CLAUDE.md glossary): \[verify-first\],
+\[completeness-workflow\], \[right-sized-orchestration\],
+\[regression-read\] (`NOT_CRAN`+`load_all`, sum failed+error),
+\[discriminating-RED\] (the 8a RED keys on the symbol not existing).
+CLAUDE.md format for Learning \#31 = a `#### Learning N` block +
+`**Reflexes:**`/`**Apply:**` lines (tags glossary-defined).
+**Self-assessment: 9/10.** (+) **Treated the parent plan as a draft and
+verified firsthand** — caught that “3 helpers” was really 6+1 (and the
+arity/forwarding constraints), exactly the \[verify-first\]/Learning
+\#21b failure a planning session exists to prevent. (+) **Discovery →
+adversarial completeness-critic → re-verify-firsthand**
+(\[completeness-workflow\]) — the critic surfaced 4 HIGH corrections a
+single-pass synthesis would have dropped; I confirmed each with
+greps/sed, did not trust it. (+) **Surfaced the 2 genuine forks to the
+owner with evidence in hand**, and framed scope honestly (8a–8d =
+boot-level coverage, not behavioral validation — did not over-sell
+“green”). (+) **Right-sized** — one read-only workflow, no
+implementation bleed, kept blast radius to planning docs. (+)
+**Decision-complete plan** — per-phase DONE/verify/boundary, all 159
+tests assigned, risks + spikes + alternatives. (−) The browser-only
+spikes (does `set_inputs(mainNavbar=)` actually switch tabs / reach
+navbarMenu children?) genuinely can’t be settled without launching
+Chrome — correctly deferred to 8b/8d as spikes, but it means a couple of
+helper-behavior details are confirmed-pending. (−) Did not exhaustively
+read all 23 files line-by-line myself (the census did, sampled); I read
+~8 firsthand + grep-verified the rest — acceptable, and the load-bearing
+claims were all firsthand-checked.
+
+### Session 28 Handoff Evaluation (by Session 29)
+
+**Score: 9/10.** - **What helped most:** the ACTIVE TASK’s “⇒ SUGGESTED
+NEXT = implement PHASE 7 only” was a precise, accurate work-list — it
+named the exact functions (`getFocalAnimalPed`/`getLkDirectRelatives`),
+the monolith ref (server.r:86-113), the load-bearing fact “none called
+in the modular path today,” AND the genuine three-way fork (mock vs
+live-integration vs descope) with the mock hint
+([`mockery::stub`](https://rdrr.io/pkg/mockery/man/stub.html) of
+`getLkDirectRelatives`, as `test_getFocalAnimalPed.R` does) — flagged as
+the 🐉 owner-consult HIGH-risk slice. That let me go straight to recon →
+owner consult with zero rediscovery. Risk HIGH was accurate. - **What
+helped (reflexes via CLAUDE.md):** \[discriminating-RED\] **on the right
+LAYER** was exactly load-bearing — the gap was server-side and a UI grep
+passes at HEAD, so the RED had to key on the reactive.
+\[verify-first\] + recon-then-verify shaped the read-only recon;
+\[author-decision\] drove the owner consult;
+\[testServer-mechanics\]/\[lint-net-zero\]/\[phase-3E-smoke\]/\[news-vs-changelog\]
+all fired directly. - **What was slightly off (corrected, not
+defects):** (1) the mock hint pointed at
+[`mockery::stub`](https://rdrr.io/pkg/mockery/man/stub.html) “as
+test_getFocalAnimalPed.R does” — that idiom (stubbing the standalone
+`getFocalAnimalPed`) does **not** transfer to the module level; the
+recon found the correct module-level mock is
+`testthat::local_mocked_bindings(.package=)`. (2) “may need its own
+sub-plan” — it didn’t; the slice was a single `modInput.R` branch. Both
+were correctly flagged as open questions for phase start, resolved by
+recon. - **What was missing (below handoff altitude, expected):** the
+monolith’s `nprckeepErr` **typo**; that the modular focal path was
+already **BROKEN** (focal-ID file read as a pedigree → spurious
+missing-columns); that errorLst surfacing is **already wired** in
+appServer. All surfaced by the recon + firsthand probes → Learning
+\#29. - **ROI:** strongly positive — precise scope + pre-flagged fork +
+carried reflexes meant the session went straight to recon, the owner
+consult, and a discriminating RED.
+
+### What Session 29 Did
+
+**Deliverable:** **Implement PHASE 7** of
+`docs/planning/shiny-module-conversion-plan.md` — Input parity:
+focal-animal / LabKey pedigree build, mock-wired into `R/modInput.R`.
+(COMPLETE) **Date:** 2026-06-05 (started 2026-06-04). **Branch:**
+`add-methodology`. **Commits:** this session’s **`feat:`**
+(`R/modInput.R` + `tests/testthat/test_modInput.R`) + this **`docs:`**
+close-out. **Nature:** implementation session under strict TDD
+(RED→GREEN→REFACTOR, all 3 gates + 2 pre-RED author-decision
+`AskUserQuestion`s). The conversion plan’s 7th implementation slice; the
+HIGH-risk owner-consult slice. One deliverable; did NOT start Phase 8
+(FM \#18/#2). Ultracode: one read-only 4-agent recon workflow
+(`wf_ae95b009-312`, ~274K tokens), all load-bearing claims verified
+firsthand. **Author decisions (USER, via `AskUserQuestion`):** (1)
+**approach = mock-wire / full parity** (over descope-the-radio-option /
+require-live-EHR-test) — the recon proved the path is fully
+unit-testable under mock, reframing the fork: descope removes a
+non-working affordance, mock-wire makes it work. (2) All 3 TDD phase
+gates (PRE-RED→RED, RED→GREEN, GREEN→REFACTOR) → proceed (REFACTOR
+skipped: minimal/idiomatic). **The implementation (GREEN, all in
+`R/modInput.R`):** inside `observeEvent(input$getData)`, replaced the
+unconditional `rawData <- readDataFile(...)` (~:313-314) with:
+`sep <- if (is.null(input$separator)) "," else input$separator`;
+`if (identical(input$fileContent, "focalAnimals")) { built <- getFocalAnimalPed(file$datapath, sep); if (inherits(built, "nprcgenekeeprErr")) { storedErrorLst(built); storedResults(list(cleaned=NULL, errors=<1-row "Database Connection Error">, warnings=<empty, integer(0L)/character(0L)>, changedCols=NULL, hasChangedCols=FALSE, genotype=NULL)); session$sendCustomMessage("setDataReady", …); return() }; rawData <- built } else { rawData <- readDataFile(...) }`.
+Success peds fall through the existing
+qcStudbook/runQcStudbook/storedResults machinery UNCHANGED; the 9
+returned reactives are UNCHANGED; appServer/renderers untouched (the
+Error-tab observer already consumes
+`errorLst()`/`checkErrorLst`/`summary.nprcgenekeeprErr`). **TDD trail:**
+PRE-RED — read plan §9 Phase 7 + `modInput.R` + `getFocalAnimalPed.R` +
+`getLkDirectRelatives.R` + `test_getFocalAnimalPed.R` + monolith
+`server.r:60-200` firsthand; ran a read-only **4-agent recon workflow**
+(wiring-gap ‖ testability-probe ‖ descope-surface ‖
+completeness-critic); **verified firsthand** (testability:
+`with_mocked_bindings(.package=)` intercepts the bare-name pkg call
+nested in `moduleServer` — mocked output = stub, unmocked = “cannot open
+file”/no-output \[mutation proof\]; monolith typo:
+`is.element("nprckeepErr", class(el))` = FALSE, real class
+`nprcgenekeeprErr`, `checkErrorLst(el)` = TRUE); surfaced the
+owner-consult `AskUserQuestion`; gated PRE-RED→RED. RED — 2 tests
+appended to `test_modInput.R`; both RED at HEAD (happy: 4 failed
+assertions on NULL `cleaned`; sad: `nzchar(failedDatabaseConnection)`
+FALSE), 0 error, 157 prior pass intact. GREEN — the `modInput.R` branch
+→ both pass (162 in-file); fixed 3 self-introduced `implicit_integer`
+lints (`integer(0)`→`integer(0L)` etc.) back to net-zero. REFACTOR —
+gated, **skipped** (minimal/idiomatic; declined extracting a shared
+error-shape helper to avoid scope-creep into the pre-existing file-read
+block). **Verification (gold standard for a module slice):**
+`test_modInput.R` **162 tests 0/0/0**; full suite under
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)+`NOT_CRAN=true`
+= **0 failed / 0 error**, 0 non-e2e offenders, e2e skipped (156), only
+the **5 pre-existing `modPyramid` warnings** (added zero), **2122
+passed**. **Lint net-zero** on `R/modInput.R` (HEAD 41 = NOW 41,
+touched-file stash + re-`load_all`; `.lintr` has no line-exclusion for
+modInput.R → \#7 N/A). `document()` **zero man/NAMESPACE delta**
+(`getFocalAnimalPed` is same-package — no import). No `* 2.*` dupes.
+**Phase 3E runtime smoke** — `runModularApp(port=6057)` HTTP 200; served
+HTML has
+`dataInput-breederFile`/`-fileContent`/`-getData`/`-minParentAge` +
+`value="focalAnimals"`; no startup errors. **Verification
+environmentally limited** (no live EHR): the mock covers everything on
+the module’s side of the ONPRC boundary; the live
+`getLkDirectRelatives`→`getDemographics` call is owner-verifiable only —
+stated, **not FM \#24**. **No NEWS bullet** (input-wiring/display
+parity, no analytical numeric change → CHANGELOG only, per S22/S23/S25).
+**Key files:** `R/modInput.R` (focal branch ~L313-351; the
+`observeEvent(input$getData)` block L301-459; returned reactives
+unchanged). `tests/testthat/test_modInput.R` (2 new tests at EOF
+~L940-1035, `local_mocked_bindings` of `getLkDirectRelatives`, fixture
+`focalAnimalsShortList.csv`). `R/getFocalAnimalPed.R` (the wired fn; 2
+return shapes — df vs `nprcgenekeeprErr` at L59-81; renames cols at
+L76). `R/getLkDirectRelatives.R` (the mocked EHR seam).
+`R/appServer.R:166-207` (already-wired Error-tab observer).
+`R/checkErrorLst.R` + `R/summary.nprcgenekeeprErr.R` (surface
+`failedDatabaseConnection`). Monolith ref:
+`inst/application/server.r:86-113` (the `nprckeepErr` typo — do NOT
+copy). Fixture: `inst/extdata/focalAnimalsShortList.csv` (5 ids). Docs:
+`CHANGELOG.md` (S29), `BACKLOG.md` (Phase 7→8, CLAUDE-trim item pruned),
+`docs/planning/shiny-module-conversion-plan.md` (§9 Phase 7 ✅DONE + §16
+\#2 resolved + closing → Phase 8), `CLAUDE.md` (Learning \#29 +
+\[testServer-mechanics\] extended). Recon artifact (NOT committed):
+`…/tasks/wkcitc08s.output`. **GOTCHAS for the next session (Phase 8 —
+shinytest2 E2E harness · risk HIGH 🐉):** 1. **Implement PHASE 8 ONLY.**
+Strict TDD + phase gates RESUME (real R code). See plan §9 Phase 8. =
+**GitHub issue \#39**. 2. **Author the 3 missing driver helpers**
+`create_app_driver`/`navigate_to_tab`/`get_html_safe` (defined nowhere,
+never in git) + **fix the namespace mismatch**: `appUI` mounts input as
+namespace `dataInput` (real selectors `#dataInput-…`), but
+`helper-shinytest2.R` hardcodes `module_id="input"` (the static
+`data-module="input"` attr is NOT the namespace). The e2e files are
+unwritten theatre (20/22 AppDriver files call the 3 undefined helpers →
+error before asserting). 3. **Gate behind `NPRC_RUN_E2E=true`** (S19’s
+opt-in gate) so non-E2E CI stays green; browser-dependent
+(chromote/Chromium) — triage first-run failures iteratively; may need a
+sub-plan (smoke → per-module → assertion-strengthening). 4. **Verify
+cmd:**
+`NPRC_RUN_E2E=true NOT_CRAN=true Rscript -e 'suppressMessages(pkgload::load_all(".")); testthat::test_dir("tests/testthat", filter="^(app|e2e)-", reporter="summary")'`
+— 0 “could not find function”. (Use the **hyphen** prefix `^(app|e2e)-`;
+a bare `e2e|app` also pulls in unit files.) 5. **Carried reflexes**
+(CLAUDE.md glossary): \[regression-read\] (`NOT_CRAN`+`load_all`, sum
+failed+error), \[phase-3E-smoke\], \[macos-dupe-scan\] before commit,
+\[news-vs-changelog\] (prune BACKLOG to open-only),
+\[right-sized-orchestration\]. CLAUDE.md format for Learning \#30 = a
+new `#### Learning N` block + `**Reflexes:**`/`**Apply:**` lines (tags
+glossary-defined). **Self-assessment: 9/10.** (+) **Owner-consult with
+evidence in hand** — ran the recon FIRST, proved testability, which
+reframed the mock-vs-descope fork honestly (descope removes a
+non-working affordance). (+) **discriminating-RED on the right LAYER** —
+keyed on the server reactive (`storedResults()`/`storedErrorLst()`), not
+the UI (which passes at HEAD). (+) **Ported the feature not the bug** —
+found + fixed the monolith’s `nprckeepErr` typo, used the correct class,
+dropped its dead NULL branch. (+) **Full verification arc**
+(suite/lint-net-zero/document/dupe/Phase-3E) + honest, explicit
+environmental-limit statement (not FM \#24). (+) **Net-zero lint via
+explicit-`L`**, not the lint-tripping idiom. (+) **Right-sized
+orchestration** — one read-only recon workflow, every load-bearing claim
+verified firsthand, no over-orchestration; REFACTOR honestly skipped.
+(−) Could not exercise the **live** EHR (environmental) — but the wiring
+is unit-proven and the surfacing channel pre-existing. (−) The
+happy-path mock is synthetic all-founders (the test targets the WIRING,
+not qcStudbook’s handling of structured pedigrees) — acceptable; the
+real `getFocalAnimalPed` body still runs over it.
+
+### Session 27 Handoff Evaluation (by Session 28)
+
+**Score: 9/10.** - **What helped most:** the ACTIVE TASK block carried
+the CLAUDE.md trim as an explicit, well-specified queued task — it named
+the deliverable (“trim without loss of information”), the scale (“~89%
+of the 84 KB file”), and the *exact approach* (“extract a ‘Recurring
+reflexes’ glossary + condense each row to its unique content (finding /
+<file:line> / mechanism / verdict), referencing the repeated reflexes by
+tag”). That spec was correct and load-bearing — it became this session’s
+structure verbatim. It also flagged the genuine fork (“Phase 7 OR the
+CLAUDE.md trim — not both”), so Phase 0 ended cleanly with the user
+choosing. - **What helped (reflexes via CLAUDE.md):** the
+\[completeness-workflow\] and \[right-sized-orchestration\] reflexes
+(S21/S24/S26 lineage) directly shaped the no-loss-audit design;
+\[author-decision\] drove the one format `AskUserQuestion`. - **What was
+slightly off:** the queued spec said “~89%” of the file was the table —
+actual is ~90% (75.6 KB of 84.1 KB); immaterial. It also implied a
+bigger trim than turned out feasible (the rows are fact-dense → 18%, not
+50%) — but that’s a discovery this session made, not a handoff defect. -
+**ROI:** strongly positive — zero rediscovery; went straight from Phase
+0 to authoring against a correct, pre-approved spec.
+
+### What Session 28 Did
+
+**Deliverable:** **CLAUDE.md information-preserving trim** — restructure
+the Learnings section (27-row table, ~90% of the 84 KB file) into a
+stated-once “Recurring Reflexes” glossary + 27 sectioned
+`#### Learning N` blocks, without loss of information. (COMPLETE)
+**Date:** 2026-06-04. **Branch:** `add-methodology`. **Commit:** this
+`docs:` (CLAUDE.md + SESSION_NOTES.md). **Nature:** the campaign’s first
+DOC-CONDENSATION deliverable. TDD code-phases declared INAPPLICABLE (no
+R code — markdown instruction doc, like a planning session). Ultracode
+effort: two adversarial no-loss audits (28 agents each, ~2.6M subagent
+tokens total). One deliverable; did NOT start Phase 7 (FM \#18/#2).
+**Author decision (USER, via `AskUserQuestion`):** Learnings format =
+**sectioned `#### Learning N` blocks** (over keeping the markdown table)
+— more readable, condenses multi-point rows cleanly. The glossary +
+condense-to-unique-content approach was already specified by S27’s
+queued plan (not re-litigated). **Method (the reusable no-loss technique
+— now CLAUDE.md Learning \#28):** (1) extract a **mechanical baseline**
+— all `file.R:NN` refs (22), audit/issue IDs (51), backtick symbols
+(205) from the old Learnings region. (2) Author the glossary (21
+reflexes) + 27 condensed blocks. (3) **Mechanical token gate**:
+`comm -23` old⊆new for refs/IDs/symbols — caught 2 dropped Learning
+cross-refs (#10/#12), restored. (4) **1st adversarial audit**
+(`wf_e64f8612-c90`, 27 per-Learning critics + 1 glossary-fidelity):
+glossary FAITHFUL, but the first draft (30% smaller) had dropped genuine
+unique facts in 20/27 rows. (5) **Rewrote** all flagged rows restoring
+high+medium facts (exact error messages, algebraic equivalences, named
+fixtures, the `git show HEAD:path` lint-verify cmd, methodology
+narratives). (6) **2nd confirmation audit** (`wf_9688b77c-cf8`, same
+shape): converged — 11 rows clean, glossary FAITHFUL, residual flags
+addressed in a 2nd surgical round (16 edits across 13 rows). (7) Final
+gates: mechanical 0 refs/IDs lost; tag integrity (every cited `[tag]`
+defined, 0 dangling, 0 orphan); head/tail `diff -q` byte-identical; 27
+blocks intact. **Result:** **84,144 → 69,062 bytes (18% / ~15 KB
+trimmed).** The structural win is the glossary (21 reflexes were
+re-explained inline 3–10× each → stated once); per-row unique facts are
+all preserved (fact-dense rows don’t compress to 50%). **Key files:**
+`CLAUDE.md` (lines 1–169 + Failure-Modes tail BYTE-IDENTICAL; the “###
+Project-specific Learnings” section 170–282 rewritten: glossary at
+~176–197, `#### Learning 1..28` blocks after). `SESSION_NOTES.md` (this
+handoff). Throwaway (`/tmp`, NOT committed): `CLAUDE.md.bak`,
+`claude_head.md`, `claude_tail.md`, `claude_learnings_old.txt`,
+`claude_learnings_new.md`. Audit artifacts (NOT committed):
+`…/tasks/wzw1vx3f4.output`, `…/tasks/w43g0lmau.output`. **GOTCHAS for
+the next session (Phase 7 — focal-animal / LabKey · risk HIGH 🐉):** 1.
+**Implement PHASE 7 ONLY.** Strict TDD + phase gates RESUME (Phase 7 is
+real R code, unlike S28). See plan §9 Phase 7. Wire
+`getFocalAnimalPed`/`getLkDirectRelatives` so the “Focal animals only;
+pedigree built from database” path builds a pedigree from the LabKey EHR
+(monolith server.r:86-113). NONE of these are called in the modular path
+today. 2. **🐉 OWNER CONSULT at phase start — do NOT just start
+coding.** Requires `Rlabkey` + a live or mocked EHR; cannot be
+unit/E2E-tested without a LabKey mock
+([`mockery::stub`](https://rdrr.io/pkg/mockery/man/stub.html) of
+`getLkDirectRelatives`, as `tests/testthat/test_getFocalAnimalPed.R`
+already does) vs a live integration test vs **descope** (remove the
+focal-animal radio option, RED = “option absent”). Surface via
+`AskUserQuestion` before RED. May warrant its own sub-plan. 3.
+**Verification will be LIMITED** (no live EHR) — state explicitly
+(environmental, not FM \#24). 4. **CLAUDE.md format changed** (see
+ACTIVE TASK ⚠ block): Learnings are now `#### Learning N` blocks + a
+Reflexes glossary; adding Learning \#29 = a new block +
+`**Reflexes:**`/`**Apply:**` lines, tags must be glossary-defined. 5.
+**Carried reflexes** (now in the CLAUDE.md glossary):
+\[discriminating-RED\] on the right LAYER, \[verify-first\],
+recon-then-verify-firsthand for a HIGH-risk slice, \[regression-read\]
+(`NOT_CRAN`+`load_all`), \[phase-3E-smoke\] for wiring,
+\[news-vs-changelog\] (prune BACKLOG to open-only). **Self-assessment:
+9/10.** (+) **Treated “without loss of information” as a hard, *checked*
+gate** — not eyeballed: a mechanical token gate PLUS two independent
+28-agent adversarial audits, with every flagged high/medium fact
+restored and re-confirmed to convergence. (+) **Caught my own
+over-compression** — the 1st draft (30%) dropped real facts in 20/27
+rows; the audit + restoration landed at an honest 18%, preserving
+everything. (+) **Right-sized the orchestration** — ran a 2nd
+confirmation audit (warranted) but STOPPED before a 3rd (diminishing
+phrasing nitpicks; \[right-sized-orchestration\]). (+) **Kept the blast
+radius minimal** — head/tail byte-identical, single diff hunk, did not
+touch the untracked `..Rcheck/`/audit-HTML or `.DS_Store` (per
+SAFEGUARDS: pre-existing, not mine). (+) **Asked the one decision that
+mattered** (format) and didn’t re-litigate the already-specified
+approach. (−) The trim is more modest (18%) than the queued spec implied
+— but that’s the correct outcome given fact density, not under-delivery;
+a more aggressive cut would lose information. (−) Did not
+render/spell-check the markdown beyond structural checks (no renderer
+for a `.md` instruction file; tag-integrity + seam inspection
+substitute). (−) Several agent tokens spent (2.6M) for a doc task —
+justified by the “no loss” hard gate under ultracode, but worth noting.
+
+------------------------------------------------------------------------
+
+### Session 26 Handoff Evaluation (by Session 27)
+
+**Score: 9/10.** - **What helped most:** S26’s “⇒ SUGGESTED NEXT =
+implement PHASE 6 only” was a precise, accurate work-list — it named the
+exact deliverable (seed-group pre-seeding + expose the inert
+`minAge`/`nIterations`/`withKinship` controls), the monolith refs
+(`getCurrentGroups`/`textAreaWidget` server.r:1019-1051), and —
+load-bearingly — the **iteration-default trap** (`gpIter` value=10L, a
+100× drift from the modular `1000L` fallback) WITH the explicit note
+that, unlike Phase 5, this DOES change formed groups → “NEWS-bullet
+candidate; surface to the user.” That flag drove the NEWS decision
+correctly. Risk MEDIUM was accurate. - **What helped (reflexes
+transferred):** **recon-then-verify** (#21/#24d/#25/#26) earned its keep
+— the 5-agent discovery+adversarial-completeness workflow
+(`wf_e8e1176c-320`) confirmed the parity surface AND sharpened the
+dragon (the phantom-seed crash), and every load-bearing claim was
+verified firsthand. **Discriminating-RED** (#15/#20/#24/#25/#26) drove
+the UI-layer keying once I found the server already reads the 3 inputs.
+The `NOT_CRAN`+`load_all` regression read, the touched-file-stash lint,
+the seed-determinism-across-the-eventReactive-boundary (#26a), and the
+`* 2.*` dupe scan (#26c) all fired directly from S26’s gotchas. - **What
+was missing (expected — below handoff altitude):** the **UI-ONLY-gap**
+insight (the server at L201-203 ALREADY reads the 3 inputs, so a
+testServer input-effect RED passes at HEAD — the RED must key on the
+UI); the **monolith `getCurrentGroups` dual-bug** (`seq_along` scalar →
+only `curGrp1`; `vapply` matrix); the **phantom-seed crash** in the
+Phase-5 member view; and the **testServer dynamic-input-by-LOCAL-id**
+mechanics. All surfaced by the recon + firsthand probes → Learning
+\#27. - **What was slightly off:** S26 cited the inert-control reads at
+“`modBreedingGroups.R:187-189`” — actual is **L201-203** (~14 lines off,
+pre-Phase-5 numbering); directionally exact, found instantly. No
+material error. - **ROI:** strongly positive — the precise scope + the
+pre-flagged iteration/NEWS trap + the carried reflexes meant the session
+went straight to a focused recon, four author decisions, and a
+discriminating RED with zero rediscovery.
+
+### What Session 27 Did
+
+**Deliverable:** **Implement PHASE 6** of
+`docs/planning/shiny-module-conversion-plan.md` — Breeding Groups parity
+B in `R/modBreedingGroups.R`: the seed-group “current groups” widget +
+exposing the inert `minAge`/`nIterations`/`withKinship` controls + the
+breeding-sim iteration default `1000L → 10L`. (COMPLETE) **Date:**
+2026-06-04. **Branch:** `add-methodology`. **Commits:** `22dcf8f1`
+(**`feat:`** — `R/modBreedingGroups.R` +
+`tests/testthat/test_modBreedingGroups.R`) + this `docs:` close-out.
+**Nature:** implementation session under strict TDD (RED→GREEN→REFACTOR,
+all 3 gates + 4 pre-RED author-decision `AskUserQuestion`s). The
+conversion plan’s 6th implementation slice; MEDIUM-risk multi-feature
+with a dragon (dynamic namespaced seed textareas + phantom-seed
+corruption). One deliverable; did NOT bundle Phase 7+ (FM \#18).
+Ultracode effort. **Author decisions (USER, via `AskUserQuestion`, all →
+recommended):** (1) **seed-id validation = validate-and-block** (seed
+ids ∉ pedigree → notification + abort) over notify-and-drop / none —
+confirmed a phantom seed crashes the Phase-5 member view; (2) **seed UI
+= checkbox-gated `renderUI`** over always-shown; (3) **minAge = plain
+`numericInput`** over porting the monolith
+`useMinParentAge`/`globalMinParentAge=3.0` override (out of scope); (4)
+**NEWS + CHANGELOG** over CHANGELOG-only — the iter change is a real
+numeric change and NEWS.md:85 already carries the parallel modular GVA
+iter 5000→1000 bullet. Lead defaults (not asked): mirror the monolith’s
+explicit `setdiff` of seeds from candidates; keep as one session. **The
+implementation (GREEN, all in `R/modBreedingGroups.R`):** UI — added (in
+the Configuration wellPanel)
+`numericInput(ns("minAge"), value=1L, min=0L, max=40L, step=0.1)`,
+`numericInput(ns("nIterations"), value=10L, min=1L, max=1000000L)`,
+`checkboxInput(ns("withKinship"))`, `checkboxInput(ns("seedGroups"))`,
+and `uiOutput(ns("seedTextareas"))`. Server — inside the `formGroups`
+eventReactive, after `numGp <- input$nGroups`: build `currentGroups` (if
+`seedGroups` → `lapply(seq_len(numGp), …)` reading
+`input[["curGrp" i]]`, base `strsplit("[ ,;\t\n]")` + `trimws`/`nzchar`;
+else `list(character(0L))`; truncate to `numGp`),
+`candidateIds <- setdiff(candidateIds, unlist(currentGroups))`,
+`badSeeds <- setdiff(unlist(currentGroups), ped$id)`; the `result <-`
+block now branches `if (length(badSeeds) > 0L)` → notification +
+`list(group=list(character(0L)), score=0L)` else the existing
+`tryCatch(groupAddAssign(… currentGroups = currentGroups …))`; iter
+fallback `1000L → 10L` (+ `as.integer`). Added
+`output$seedTextareas <- renderUI({ req(isTRUE(input$seedGroups)); req(valid nGroups); tagList(textAreaInput(session$ns(paste0("curGrp", i)), …)) })`.
+**TDD trail:** PRE-RED — read plan §9 Phase 6 + `modBreedingGroups.R` +
+monolith server.r:1019-1184 + `uitpBreedingGroupFormation.R` +
+`groupAddAssign`/`makeGroupMembers`/`fillGroupMembers` firsthand;
+**firsthand probes** (seeding deterministically places seeds in their
+group + differs from empty; `withKin=TRUE`→non-NULL groupKin;
+`length(currentGroups)>numGp`→stop; phantom seed silently survives;
+**server already reads the 3 inputs** \[withKinship=TRUE flips
+groupKinship non-NULL at HEAD\]; seeds hardcoded-ignored at HEAD;
+seeding deterministic in-module + fails at HEAD for seeds 1/7/42/99/123;
+`filterKinMatrix` silently drops absent ids; phantom seed CRASHES
+`addSexAndAgeToGroup`; NEWS.md:85 precedent verified; `.lintr` no
+line-exclusion); ran a read-only **5-agent
+discovery+adversarial-completeness workflow** (`wf_e8e1176c-320`, ~456K
+tok) → confirmed the parity surface + sharpened the dragon, all verified
+firsthand (Learning \#21); surfaced the 4 author decisions via
+`AskUserQuestion`; gated PRE-RED→RED. RED — 7 tests appended; 5 RED at
+HEAD (UI controls; `nIterations` `value="10"`; seeding; multi-group
+seeding \[seed 7, after 42 passed by chance\]; phantom-seed block) + 2
+green-at-HEAD coverage. GREEN — the edits → all pass; fixed 7
+self-introduced lints (minAge implicit ints → explicit L; duplicated
+empty-result line → `0L`/`10L`; `!= ""` → `nzchar`) back to net-zero.
+REFACTOR — gated, **skipped** (minimal/idiomatic; the one repeated
+empty-result literal would require touching the out-of-scope error
+handler). **Verification (gold standard for a module slice):**
+`test_modBreedingGroups.R` **41 tests 0/0/0**; full suite under
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)+`NOT_CRAN=true`
+= **0 failed / 0 error**, 0 non-e2e offenders, e2e skipped (156), only
+the **5 pre-existing `modPyramid` warnings** (the iter 1000→10 change
+added ZERO warnings, per recon Finder 4). **R6 validate-and-block guard
+mutation-verified** (disable `if (length(badSeeds)>0L)` → phantom
+survives → R6 fails; restored). **Lint net-zero** (HEAD 31 = NOW 31,
+touched-file stash; `.lintr` no line-exclusion → \#7 N/A). `document()`
+**zero man/NAMESPACE delta** (`import(shiny)` NAMESPACE:168 covers the
+new controls). No `* 2.*` stray dupes. **Phase 3E runtime smoke** —
+`runModularApp(port=6042)` HTTP 200; served HTML has
+`breedingGroups-seedGroups`/`-minAge`/`-nIterations`
+(`value="10"`)/`-withKinship`/`-seedTextareas` AND the Phase-5
+`-viewGrp` (no regression). **NEWS bullet ADDED** (new “Breeding group
+formation tab parity (modular app)” sub-heading). **BACKLOG.md pruned to
+open-only** (user-flagged: completed work → CHANGELOG, not BACKLOG;
+verified each removed item already in CHANGELOG; → memory
+`backlog-vs-changelog-placement`). **Key files:**
+`R/modBreedingGroups.R` (UI controls ~L49-65; seed build + setdiff +
+badSeeds ~L210-250; result branch ~L255-290; `output$seedTextareas`
+renderUI ~L335-350; iter fallback in the params block).
+`tests/testthat/test_modBreedingGroups.R` (7 new tests appended at EOF,
+~L1126-1300; reuses the `makeBgViewPed` founders fixture). Algorithm
+contract: `R/groupAddAssign.R:119-192` (currentGroups length-guard L128;
+seeds removed from candidates L134-145), `R/makeGroupMembers.R:34-40`
+(seeds group i with `currentGroups[[i]]`). Monolith ref:
+server.r:1019-1056 (`textAreaWidget`/`getCurrentGroups` — DOUBLY BUGGY,
+do not copy), uitpBreedingGroupFormation.R:88-161. Docs: `CHANGELOG.md`
+(S27), `NEWS.md` (breeding-group parity bullet), `BACKLOG.md` (pruned),
+`CLAUDE.md` (Learning \#27),
+`docs/planning/shiny-module-conversion-plan.md` (§9 Phase 6 → DONE +
+closing → Phase 7). Throwaway (`/tmp`, NOT committed):
+`probe[2-6]_s27.R`, `smoke_s27.*`. Recon artifact (NOT committed):
+`…/tasks/wyg1nio4h.output`. **GOTCHAS for the next session (Phase 7 —
+focal-animal / LabKey · risk HIGH 🐉):** 1. **Implement PHASE 7 ONLY.**
+Strict TDD + phase gates. See plan §9 Phase 7. Wire
+`getFocalAnimalPed`/`getLkDirectRelatives` so the “Focal animals only;
+pedigree built from database” path builds a pedigree from the LabKey EHR
+(monolith server.r:86-113). NONE of these are called in the modular path
+today. 2. **🐉 OWNER CONSULT at phase start — do NOT just start
+coding.** Requires `Rlabkey` + a **live or mocked** EHR; ONPRC-specific;
+cannot be unit/E2E tested without a LabKey mock. The fork: mock
+([`mockery::stub`](https://rdrr.io/pkg/mockery/man/stub.html) of
+`getLkDirectRelatives`, as `tests/testthat/test_getFocalAnimalPed.R`
+already does) vs a live integration test vs **descope** (owner decides
+focal-animal isn’t required for the modular app → remove the radio
+option, RED becomes “option absent”). Surface via `AskUserQuestion`
+before RED. May warrant its own sub-plan. 3. **Verification will be
+LIMITED** (no live EHR) — state this explicitly in the notes (it is NOT
+FM \#24 — the limitation is environmental, not skipped work). 4.
+**Phase-6 baked-in** (see ACTIVE TASK ⚠ block): `currentGroups` built in
+the eventReactive from `seedGroups`+`curGrp*`; `output$seedTextareas`
+renderUI; the 3 controls exist; iter fallback 10L; validate-and-block on
+bad seeds. 5. **Carried reflexes:** discriminating-RED on the right
+LAYER (a server read may already work → RED on the UI/output);
+recon-then-verify-firsthand for a HIGH-risk slice; `NOT_CRAN`+`load_all`
+regression; touched-file-stash lint; `document()` zero-delta + `* 2.*`
+scan; Phase-3E runtime smoke for any wiring change; **completed work →
+CHANGELOG (prune BACKLOG to open-only)**. **Self-assessment: 9/10.** (+)
+**Strict TDD honored** — declared the phase atop every response; gated
+the 4 pre-RED author decisions + PRE-RED→RED→GREEN→REFACTOR; RED failed
+for the right reasons (and I PROBED HEAD to swap seed 42→7 when R5
+passed by chance — the \#15/#20 methodology); GREEN minimal; REFACTOR
+considered+skipped. (+) **Discriminating RED on the correct LAYER** —
+caught firsthand that the server already reads the 3 inputs (so a
+testServer input-effect would pass at HEAD) and keyed the RED on the UI
+HTML instead. (+) **Dragon discharged + mutation-verified** — reproduced
+the phantom-seed CRASH before choosing validate-and-block, then proved
+the guard load-bearing by disabling it. (+) **Did NOT replicate the
+monolith’s `getCurrentGroups` dual-bug** — used `seq_len` + a proper
+list and RED-tested the 2nd seed group. (+) **Recon right-sized** —
+5-agent workflow for this MEDIUM/dragon slice; every load-bearing claim
+verified firsthand (the recon’s biggest value: the UI-only-gap framing +
+sharpening the dragon to a crash). (+) Net-zero lint (caught + fixed my
+7 self-introduced lints), `document()` zero-delta, Phase-3E HTTP 200,
+NEWS bullet on verified precedent. (+) **Addressed the user’s
+mid-session file-placement correction** — explained the root cause
+(pruning lapse, not file confusion), pruned BACKLOG to open-only
+(history verified in CHANGELOG first), and saved a feedback memory. (−)
+Did **not** run full `devtools::check()` (e2e `create_test_app`
+baseline; S7–S26 precedent) — mitigated by the `NOT_CRAN` `load_all`
+0/0 + lint + `document()` + runtime smoke. (−) Browser-level interactive
+parity (check seedGroups → type ids → form → see seeded groups) is
+unverified here — Phase 8 / issue \#39 E2E tier; covered by `testServer`
+(incl. dynamic-input seeding) + the runtime smoke (controls render). (−)
+Several user interactions (4 author decisions + 3 phase gates + the
+file-placement exchange) — mandated by strict TDD + a genuine process
+correction.
+
+------------------------------------------------------------------------
+
+### Session 25 Handoff Evaluation (by Session 26)
+
+**Score: 9/10.** - **What helped most:** S25’s “⇒ SUGGESTED NEXT =
+implement PHASE 5 only” was a precise, accurate work-list — it named the
+exact deliverable (downloads + per-group kinship + `viewGrp` selector),
+the handlers (`downloadGroup`/`downloadGroupKin`), the monolith
+reference (server.r:1197-1297), the **dragon** (thread the kinship
+matrix → **prove
+[`identical()`](https://rdrr.io/r/base/identical.html)** vs current
+`groups()`), `grep downloadHandler = 0` today, and risk MEDIUM. The
+GOTCHAS block (#1-7: Phase-5-ONLY;
+prove-[`identical()`](https://rdrr.io/r/base/identical.html);
+Phase-4-baked-in; discriminating-RED reflex; recon-then-verify reflex;
+`testServer` downloadHandler→written-path; verify under
+`NOT_CRAN`+`load_all`) was directly operative — every clause held up
+firsthand. - **What helped (reflexes transferred):**
+**recon-then-verify** (#21/#24d/#25) earned its keep — a 5-agent
+discovery+adversarial-completeness workflow confirmed the parity
+surface, self-corrected two over-scoped critic recommendations
+(mass-editing all fixtures; the `viewGrp` clamp claim), and flagged
+nothing I hadn’t already found firsthand. **Discriminating-RED**
+(#15/#20/#24/#25) drove keying the RED on deterministic observables
+(founder kinship 0.5/0 + the ACTUAL formed group via Strategy-2
+post-computation), not the stochastic formation. The
+`NOT_CRAN`+`load_all` regression (#15b/#19b), touched-file-stash lint
+(#16c), and **seeded-reference
+[`identical()`](https://rdrr.io/r/base/identical.html)** (#15c/#16b/#17d
+— I verified `set.seed` IS deterministic across the `testServer`
+`eventReactive` boundary, then captured a HEAD reference) all fired. -
+**What was missing (expected — below handoff altitude):** the
+load-bearing facts the recon/probes surfaced — `withKin` does NOT affect
+formation (only the return); `filterKinMatrix(group, FULL_kmat)` == the
+monolith’s candidate-reduced `groupKin[[i]]`; the variable-length
+**unused-group** semantics needing a `hasUnused` flag; the
+empty-`groups()` `observe` **warning** (`req(list())` is truthy →
+`updateSelectInput` with empty choices warns on the degenerate harem
+case); `addSexAndAgeToGroup` needs `ped$birth`. AND — un-anticipatable —
+the **two stray macOS `* 2.R` duplicate files** that appeared
+mid-session and polluted `document()`/build/the test run. → Learning
+\#26. - **What was wrong:** nothing material. The dragon framing
+(“thread `gvResults$kinshipMatrix`”) was slightly imprecise — the
+cleaner path threads the module’s OWN already-computed `kmat` (not
+`gvResults`) — but the
+**prove-[`identical()`](https://rdrr.io/r/base/identical.html)**
+discipline it flagged was exactly right. The monolith ref “1197-1297”
+was ~1 line off (the `viewGrp` observe begins ~1196) — directionally
+exact. - **ROI:** strongly positive — the precise scope + the dragon
+flag + the carried reflexes meant the session went straight to a focused
+recon, three author decisions, and a discriminating RED with zero
+rediscovery.
+
+### What Session 26 Did
+
+**Deliverable:** **Implement PHASE 5** of
+`docs/planning/shiny-module-conversion-plan.md` — Breeding Groups parity
+A: a new “Group Detail” tab with the `viewGrp` group selector, per-group
+annotated member view + per-group kinship matrix view, and
+`downloadGroup`/`downloadGroupKin` handlers (monolith
+server.r:1196-1297). (COMPLETE) **Date:** 2026-06-04. **Branch:**
+`add-methodology`. **Commits:** this session’s **`feat:`** impl (2
+files: `R/modBreedingGroups.R` +
+`tests/testthat/test_modBreedingGroups.R`) + this `docs:` close-out.
+**Nature:** implementation session under strict TDD (RED→GREEN→REFACTOR,
+all 3 gates + 3 pre-RED author-decision `AskUserQuestion`s). The
+conversion plan’s 5th implementation slice; MEDIUM-risk multi-feature
+with a dragon. One deliverable; did NOT bundle Phase 6+ (FM \#18).
+Ultracode effort. **Author decisions (USER, via `AskUserQuestion`, all →
+recommended):** (1) **per-group kinship source = compute-from-`kmat`**
+(store the full kmat in `groupResults`, derive
+`filterKinMatrix(groupIds, kmat)`; display-only, formation untouched,
+byte-identical to `groupKin`, no Phase-6 dependency) over threading
+`groupKin`/`withKin=TRUE`; (2) **UI placement = new “Group Detail” tab**
+(additive; keep the existing Groups/Statistics tabs) over replacing the
+all-groups display with a filtered single view; (3) **selector
+robustness = length-based** (choices + clamp from
+`length(breedingGroups())`, “Unused” only when non-empty) over
+monolith-literal (which clamps the member view to `input$numGp` and
+leaves the kinship view unclamped). **The implementation (GREEN, all in
+`R/modBreedingGroups.R`):** UI — a third `tabPanel("Group Detail")` with
+`selectInput(ns("viewGrp"))`, `DT::DTOutput(ns("groupMemberTable"))` +
+`DT::DTOutput(ns("groupKinTable"))`, and
+`downloadButton(ns("downloadGroup"),"Export Current Group")` +
+`downloadButton(ns("downloadGroupKin"),"Export Current Group Kinship Matrix")`.
+Server — `groupResults` now also stores `kmat` + `hasUnused`;
+`selectedGroup()` =
+`withinIntegerRange(input$viewGrp,1L,length(breedingGroups()))[1L]`
+guarded by `req(length(breedingGroups())>=1L)`; an `observe` (guarded
+the same way) `updateSelectInput`s choices to
+`setNames(seq_len(n), labels)` with the last labelled “Unused” when
+`hasUnused`; `bgGroupView()` = `addSexAndAgeToGroup` → `round(age,1)` →
+rename “Ego ID”/“Sex”/“Age in Years” → order; `bgGroupKinView()` =
+`as.data.frame(as.matrix(round(filterKinMatrix(ids,kmat),6L)))`; two DT
+outputs; two `downloadHandler`s (member CSV `na=""`/`row.names=FALSE`;
+kinship CSV `na=""`/`row.names=TRUE`). The group-FORMATION block
+(`groupAddAssign` call, `filterValidGroups`, `unassignedIds`) is
+byte-unchanged. **TDD trail:** PRE-RED — read plan §9 Phase 5 +
+`R/modBreedingGroups.R` + monolith server.r:1186-1297 +
+`uitpBreedingGroupFormation.R` +
+`groupAddAssign`/`groupMembersReturn`/`filterKinMatrix`/`addGroupOfUnusedAnimals`/`addSexAndAgeToGroup`/`getCurrentAge`/`withinIntegerRange`/`getDatedFilename`
+firsthand; **firsthand probes** (formed-group structure via
+`testServer`: groups()=N when all assigned \[empty unused dropped\], N+1
+when some unassigned; `groupKinship()` NULL; founder kinship 0.5/0;
+`set.seed` deterministic across the `formGroups` boundary → captured a
+seeded HEAD reference); ran a read-only **5-agent
+discovery+adversarial-completeness workflow** (`wf_9f046794-b6a`, ~233K
+tok) → confirmed parity surface + dragon proof obligations, all verified
+firsthand (Learning \#21); surfaced the 3 author decisions via
+`AskUserQuestion`; gated PRE-RED→RED. RED — appended 5 tests + a
+`makeBgViewPed` founders-with-birth fixture; all 5 fail at HEAD (Test 1
+6/6 on absent UI; Tests 2-5 error on absent
+`output$downloadGroup`/`downloadGroupKin`). GREEN — the 3 edits → all 5
+pass; caught + fixed a self-introduced warning (the empty-`groups()`
+harem case — `req(list())` is truthy, so guarded on `length()>=1L`
+instead) and the 4 self-introduced lints (renderDT single-expr braces +
+`pageLength=25`→`25L`). REFACTOR — gated, **skipped**
+(minimal/idiomatic, no duplication). **Verification (gold standard for a
+module slice):** 5 new tests pass; `modBreedingGroups` file 50 tests
+0/0/0; full suite under
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)+`NOT_CRAN=true`
+= **0 failed / 0 error**, 0 non-e2e offenders, e2e skipped (156), 5
+pre-existing `modPyramid` warnings, **2264 passed**. **Dragon
+[`identical()`](https://rdrr.io/r/base/identical.html) proof:** seeded
+formation (nGroups 3/seed123, 4/seed7, 1/seed99) byte-identical to the
+pre-change HEAD reference (`/tmp/head_ref_s26.rds`) for
+groups/score/unassigned/nGroups. **Lint net-zero** (HEAD 31 = NOW 31,
+touched-file stash). `document()` **zero man/NAMESPACE delta** (no
+roxygen change; `import(shiny)` covers the new controls). **Phase 3E
+runtime smoke:** `runModularApp(port=6041)` binds + **HTTP 200**, served
+HTML contains “Group Detail”, `breedingGroups-viewGrp`, both
+`breedingGroups-downloadGroup*` buttons, “Export Current Group”. **No
+NEWS bullet** (display/download parity, modular app not canonical →
+CHANGELOG only, per S22/S23/S25). **⚠ STRAY-FILE DISCOVERY (handled,
+user-approved):** two **untracked** macOS “filename 2” duplicates
+appeared mid-session — `R/modBreedingGroups 2.R` (12:55, an intermediate
+snapshot of my edits) and `tests/testthat/test_modBreedingGroups 2.R`
+(12:44, a byte-copy of my test file). The R dupe sorts BEFORE the real
+file (space 0x20 \< period 0x2E) so the real file loaded last and won
+(tests valid); the test dupe was collected by `test_dir` (matches
+`^test.*\.R`) and double-ran my Phase-5 tests (inflated pass count, no
+hidden failures); BOTH doubled every `.Rd` section under `document()`
+(roxygen merged “R/modBreedingGroups 2.R, R/modBreedingGroups.R”). After
+confirming via `AskUserQuestion`, **moved both to
+`/tmp/s26_stray_dupes/`** (reversible), reverted the doubled `.Rd`
+churn, and re-ran `document()` → **zero-delta** + a clean full suite.
+Cause unknown (likely a sync service / editor / a hook) — **watch for
+these recurring**; `git status` for `* 2.*` before `document()`/commit.
+**Key files:** `R/modBreedingGroups.R` (UI tab ~L58-77; `groupResults`
+kmat/hasUnused ~L226-243;
+selectedGroup/observe/bgGroupView/bgGroupKinView/outputs/downloads
+~L327-402), `tests/testthat/test_modBreedingGroups.R` (5 new tests +
+`makeBgViewPed` appended at EOF, ~L966-1135). Helpers (all `@export`ed):
+`addSexAndAgeToGroup`, `filterKinMatrix`, `getDatedFilename`,
+`withinIntegerRange`. Docs: `CHANGELOG.md` (S26), `CLAUDE.md` (Learning
+\#26), `docs/planning/shiny-module-conversion-plan.md` (§9 Phase 5 →
+DONE + closing pointer → Phase 6). Throwaway (`/tmp`, NOT committed):
+`head_ref_s26.rds`, `modapp_smoke_s26.log`, `modapp_body_s26.html`,
+`s26_stray_dupes/`. Recon artifact (NOT committed):
+`…/tasks/ww1vdir8g.output`. **GOTCHAS for the next session (Phase 6 —
+seed-groups + inert controls):** 1. **Implement PHASE 6 ONLY** (risk
+MEDIUM). Strict TDD + phase gates. See plan §9 Phase 6. Add the
+seed-animal “current groups” widget
+(`getCurrentGroups`/`textAreaWidget`, monolith server.r:1019-1051)
+replacing the hardcoded `currentGroups = list(character(0L))`; surface
+`minAge`/`nIterations`/`withKinship` (the server reads them at
+`modBreedingGroups.R:187-189` but no UI declares them). 2. **⚠
+Breeding-sim iteration default = 10, NOT 1000** (`gpIter` value=10L,
+`uitpBreedingGroupFormation.R:155-161`) — the modular `1000L` fallback
+(L188) is a 100× drift. Set the breeding `nIterations` control default
+to **10**. This DOES change the formed groups (iteration count affects
+the MIS sampling) → it’s a real numeric behavior change (unlike Phase 5)
+— expect a NEWS bullet candidate; surface to the user. 3. **Phase-5
+baked-in** (see ACTIVE TASK ⚠ block): `groupResults` carries
+`kmat`+`hasUnused`; kinship view computes from `kmat` (not
+`result$groupKin`, still NULL); the new tab/selector/views/downloads are
+in “Group Detail”; `selectedGroup()` clamps to
+`length(breedingGroups())`; the selector `observe` guards on
+`length()>=1L` (NOT `req(breedingGroups())` — truthy on empty list). 4.
+**Seed-groups DRAGON (plan §6):** the dynamic variable-count seed
+textareas (monolith builds `input$numGp` of them) are fiddly and feed
+`currentGroups` into formation — RED-test seeded-vs-empty difference;
+`groupAddAssign` [`stop()`](https://rdrr.io/r/base/stop.html)s if
+`length(currentGroups) > numGp`. 5. **Discriminating-RED reflex:** key
+on a deterministic observable (e.g. seeded groups WITH vs WITHOUT a seed
+list differ; the 3 controls are actually READ by `groupAddAssign`, not
+the 1.0/1000/FALSE fallbacks); `set.seed` IS deterministic across the
+`testServer` `formGroups` boundary (proven this session) — usable for a
+seeded-difference RED. 6. **Verify under `NOT_CRAN=true` +
+`pkgload::load_all(".")`** (#15b/#19b); runtime-smoke any UI/wiring
+change (Phase 3E); lint via touched-file stash (#16c). **CHECK for
+`* 2.*` stray dupes before `document()`/commit** (Learning \#26).
+**Self-assessment: 9/10.** (+) **Strict TDD honored** — declared the
+phase atop every response; gated the 3 pre-RED author decisions +
+PRE-RED→RED→GREEN→REFACTOR via `AskUserQuestion`; RED failed for the
+right reasons; GREEN minimal; REFACTOR considered+skipped. (+) **Dragon
+discharged rigorously** — proved `set.seed` determinism first, captured
+a HEAD reference, then
+byte-[`identical()`](https://rdrr.io/r/base/identical.html) across 3
+seeds; the kinship view’s `filterKinMatrix`-equivalence is also asserted
+in a RED test. (+) **Recon-then-verify, right-sized** — a 5-agent
+workflow for this MEDIUM multi-feature/dragon slice, every load-bearing
+claim verified firsthand (the recon caught nothing wrong but
+self-corrected 2 over-scoped critic items). (+) **Discriminating RED on
+deterministic observables** (founder 0.5/0 kinship +
+actual-formed-group), confirmed no existing test pinned them. (+)
+**Caught + fixed my own GREEN defects** — the empty-`groups()` `observe`
+warning (the subtle `req(list())`-is-truthy trap) and 4 self-introduced
+lints → net-zero. (+) **Handled an unexpected stray-file hazard
+cleanly** — surfaced via `AskUserQuestion`, moved reversibly to `/tmp`,
+restored zero-delta `document()`. (+) Net-zero lint, `document()`
+zero-delta, **Phase 3E HTTP 200**. (+) 1B stub landed (overwritten
+here). (+) SAFEGUARDS-clean: will commit the 2 impl files before the
+multi-file doc change; left the pre-existing `dev`-branch `stash@{0}`,
+`.DS_Store`/`..Rcheck/`/`.claude/`/audit-html untouched. (−) Did **not**
+run full `devtools::check()` (e2e `create_test_app` baseline; S7–S25
+precedent) — mitigated by the `NOT_CRAN=true` `load_all` 0/0 + lint +
+`document()` + runtime smoke. (−) Browser-level interactive parity (form
+groups → pick a group → see members+kinship → download both) is
+unverified here — Phase 8 / issue \#39 E2E tier; covered by `testServer`
+(incl. the written download files) + the runtime smoke (controls
+render). (−) Several user interactions (3 author decisions + 3 phase
+gates + 1 stray-file decision) — mandated by strict TDD + a genuine
+artifact surprise; the recurring minor.
+
+------------------------------------------------------------------------
+
+### Session 24 Handoff Evaluation (by Session 25)
+
+**Score: 10/10.** - **What helped most:** S24’s “GOTCHAS for the next
+session (Phase 4)” block was a near-perfect work-list — it named the
+exact change (wire `getGenotypes`/`checkGenotypeFile`/`addGenotype` so
+`input$genotypeFile` is read + merged), the precise root cause
+(`activeFile` ignores `genotypeFile`; `genotypeData()` always NULL), the
+monolith reference (server.r:117-156), the risk (MEDIUM), and the RED
+shape (“uploading ped + genotype file yields a studbook carrying
+genotype columns — fails today”). Every clause held up firsthand. The
+“Phase 4 ONLY / do NOT bundle” + “verify under
+`NOT_CRAN=true`+`load_all`” + “runtime-smoke any UI/wiring change”
+reminders were all directly operative. - **What helped (reflexes
+transferred):** the carried **recon-then-verify** reflex (Learnings
+\#21/#24d) — S24 gotcha \#4 explicitly said “for a MEDIUM multi-feature
+slice a discovery+adversarial-completeness workflow earns its keep, but
+VERIFY its flagged blockers firsthand.” That played out exactly: the
+recon flagged the COMMON-mode parity question, the
+`addGenotype(ped,NULL)` crash, and the `testServer` fileInput harness —
+all of which I verified firsthand before trusting. The
+**discriminating-RED** reflex (#15/#20/#24) drove keying the RED on the
+deterministic `cleanedStudbook` `first`/`second` + `hasGenotype`, not
+the stochastic GV output. The `NOT_CRAN`+`load_all` regression
+(#15b/#19b), touched-file-stash lint (#16c), and
+in-place-mutation-not-worktree (#3) reflexes all fired. - **What was
+missing (expected — below handoff altitude):** S24 couldn’t anticipate
+the load-bearing reachability findings the recon surfaced — that
+**common-mode is proven at parity by no-op** (so Phase 4 narrows to
+separate-mode + `genotypeData`), that **`genotypeData()` has zero
+downstream consumers** (so the GV outcome rides entirely on
+`cleanedStudbook`), and the **`addGenotype(ped,NULL)` crash** mandating
+a NULL guard the monolith lacks. These are sub-handoff-altitude details
+found via the recon workflow + firsthand probes. → Learning \#25. -
+**What was wrong:** nothing. The Phase 4 pointer, root cause, monolith
+reference, and RED shape were all exactly right. - **ROI:** strongly
+positive — the precise scope + the carried
+recon-then-verify/discriminating-RED reflexes meant the session went
+straight to a focused recon, two author decisions, and a discriminating
+RED with zero rediscovery.
+
+### What Session 25 Did
+
+**Deliverable:** **Implement PHASE 4** of
+`docs/planning/shiny-module-conversion-plan.md` — Input parity: genotype
+file merge in `R/modInput.R` (wire
+`getGenotypes`/`checkGenotypeFile`/`addGenotype` so an uploaded
+`input$genotypeFile` is read + merged in `separatePedGenoFile` mode;
+populate the always-NULL `genotypeData()`). (COMPLETE) **Date:**
+2026-06-04. **Branch:** `add-methodology`. **Commits:** this session’s
+**`feat:`** impl (2 files: `R/modInput.R` +
+`tests/testthat/test_modInput_qcStudbook.R`) + this `docs:` close-out.
+**Nature:** implementation session under strict TDD (RED→GREEN→REFACTOR,
+all 3 gates + 2 pre-RED author-decision `AskUserQuestion`s). The
+conversion plan’s 4th implementation slice. One deliverable; did NOT
+bundle Phase 5+ (FM \#18). Ultracode effort. **Author decisions (USER,
+via `AskUserQuestion`):** (1) **populate `genotypeData()` too** (=
+`getGVGenotype(cleaned)`, id/first/second; NULL when no genotype) in
+addition to the cleaned-studbook merge — matches the plan’s Phase-4 RED
+(“genotypeData() non-NULL”), return stays 9 elements; (2) genotype
+reader =
+**[`getGenotypes()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGenotypes.md)**
+(the plan-named, monolith-parity, already-tested reader) over reusing
+`readDataFile()`. **The implementation (GREEN, all in `R/modInput.R`):**
+inside `observeEvent(input$getData)`, after
+`rawData <- readDataFile(...)` and its NULL-check, BEFORE the
+`qcStudbook`(L345)/`runQcStudbook`(L361) calls:
+`if (identical(input$fileContent, "separatePedGenoFile") && !is.null(input$genotypeFile)) { sep <- if (is.null(input$separator)) "," else input$separator; genotype <- getGenotypes(input$genotypeFile$datapath, sep = sep); genotype <- tryCatch(checkGenotypeFile(genotype), warning = \(w) NULL, error = \(e) NULL); if (!is.null(genotype)) rawData <- addGenotype(rawData, genotype) }`.
+`getGenotypes` is OUTSIDE the tryCatch (monolith-style; it emits no
+warning on a .csv so it wouldn’t be trapped anyway) and
+`checkGenotypeFile` INSIDE. Then added
+`genotype = getGVGenotype(qcResult$cleaned)` to the `storedResults`
+success-branch list (populates `genotypeData()`). **The data flow
+(verified firsthand + by a 5-agent recon, `wf_37c91d78-d24`):**
+`addGenotype` builds integer `first`/`second` (genoDict + 10000L) and
+merges `by="id"` → `qcStudbook` PRESERVES them as novel cols
+(qcStudbook.R:281-283) → `reportGV` auto-extracts via
+`getGVGenotype(ped)`/`hasGenotype(ped)` (needs NUMERIC first/second). So
+merging into the studbook BEFORE QC is SUFFICIENT for genome-uniqueness
+to use real genotypes; no arg threading. **Common-mode needs NO change**
+— PROVEN: nothing but `addGenotype` integer-codes alleles, and the
+monolith never calls it for `commonPedGenoFile`, so combined-file
+genotypes never gene-drop in EITHER app. **`addGenotype(ped, NULL)`
+crashes** (`"'by' must specify a uniquely valid column"`) → the merge is
+NULL-guarded (monolith lacks this guard). **TDD trail:** PRE-RED — read
+plan §9 Phase 4 + `modInput.R`/monolith
+server.r:38-156/`getPedigree`/`getGenotypes`/`checkGenotypeFile`/`addGenotype`/`hasGenotype`/`getGVGenotype`/`fixGenotypeCols`/`fixColumnNames`/`qcStudbook`
+col-handling firsthand; **firsthand probes** (obfuscated ped+geno: 31/31
+overlap, merged 375 rows, hasGenotype(cleaned)=TRUE, 0 errors; baseline
+no-merge → no first/second; `addGenotype(ped,NULL)` crash;
+`checkGenotypeFile(2-col)` stop; `getGenotypes(.csv)` no warning); ran a
+read-only **discovery+adversarial-completeness workflow**
+(`wf_37c91d78-d24`, 5 agents, ~511K tok) → settled common-mode parity,
+the NULL-crash, the testServer fileInput harness, and 2 author
+decisions, all verified firsthand (Learning \#21). Surfaced the 2 author
+decisions via `AskUserQuestion`; gated PRE-RED→RED. RED — 2 tests
+appended to `test_modInput_qcStudbook.R`: Test A (discriminating
+happy-path, **4/4 fail at HEAD** — no first/second, hasGenotype FALSE,
+genotypeData NULL), Test B (malformed-genotype graceful-degradation,
+**green-at-HEAD** since nothing merges yet). GREEN — the 2 edits → Test
+A 5/5, Test B 4/4. REFACTOR — gated, **skipped** (12-line block,
+minimal/idiomatic, no duplication). **Verification (gold standard for a
+module slice):** Test A 5/5 + Test B 4/4; **NULL-guard
+mutation-verified** (Learning \#20 — dropped the
+`if (!is.null(genotype))` guard in-place via Edit → Test B ERRORS at
+`addGenotype`→`merge`→`stop`; restored). Full suite under
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)+`NOT_CRAN=true`
+= **0 failed / 0 error**, 0 non-e2e offenders, e2e skipped (156), 5
+pre-existing `modPyramid` warnings, **2085 passed**. **Lint net-zero**
+on `R/modInput.R` via touched-file `git stash` (HEAD 41 = NOW 41; not
+`.lintr` line-excluded → \#7 trap N/A). `devtools::document()` → no
+man/NAMESPACE delta (only same-package fn calls; roxygen unchanged).
+**Phase 3E runtime smoke:**
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+binds (“Listening on …:6013”) + **HTTP 200**, modInput’s “Data Input and
+Quality Control” + `genotypeFile` input render. **No NEWS bullet**
+(modular app not yet canonical; no analytical-pipeline numeric change;
+plan reserves NEWS for numeric + Phase 9 deprecation → CHANGELOG only,
+per S22/S23). **Key files:** `R/modInput.R` (merge block inside
+`observeEvent(input$getData)` ~after L334;
+`genotype = getGVGenotype(qcResult$cleaned)` added to the
+`storedResults` list ~L390), `tests/testthat/test_modInput_qcStudbook.R`
+(2 new tests appended at EOF, ~L500-590). Best fixtures:
+`inst/extdata/obfuscated_rhesus_mhc_ped.csv` (375 rows) +
+`inst/extdata/obfuscated_rhesus_mhc_breeder_genotypes.csv` (31 rows,
+31/31 ids ⊂ ped → 0 orphan rows, 0 QC errors). Docs: `CHANGELOG.md`
+(S25), `CLAUDE.md` (Learning \#25), `BACKLOG.md`,
+`docs/planning/shiny-module-conversion-plan.md` (§6 row + §9 Phase 4 →
+DONE + closing pointer → Phase 5). Throwaway (`/tmp`, NOT committed):
+`modapp_smoke_s25.log`, `modapp_body_s25.html`. Recon artifact (NOT
+committed): `…/tasks/w52k8qd1i.output`. **GOTCHAS for the next session
+(Phase 5 — Breeding Groups downloads + per-group kinship +
+selector):** 1. **Implement PHASE 5 ONLY** (risk MEDIUM). Strict TDD +
+phase gates. See plan §9 Phase 5. Add `downloadGroup`/`downloadGroupKin`
+handlers + render the per-group kinship matrix + the `viewGrp` selector
+(monolith server.r:1197-1297).
+`grep downloadHandler R/modBreedingGroups.R` = 0 today. 2. **⚠ Phase-5
+DRAGON (plan §5/§9):** if you thread `gvResults$kinshipMatrix` into the
+view to avoid re-derivation, that’s a behavior-equivalence refactor —
+**prove [`identical()`](https://rdrr.io/r/base/identical.html)** vs
+current `groups()` output; the group-formation compute path must be
+UNCHANGED (downloads/view are display-only). Don’t let a
+kinship-threading refactor ride untested in a parity slice. 3. **Phase-4
+baked-in** (see ACTIVE TASK ⚠ block): the genotype merge is
+`separatePedGenoFile`-only + NULL-guarded; common-mode intentionally
+unchanged (proven parity); `genotypeData()` now returns
+`getGVGenotype(cleaned)` (NULL when no genotype); no downstream consumer
+reads it. 4. **Discriminating-RED reflex (Learnings \#15/#20/#24/#25):**
+key the RED on a deterministic observable (e.g. the written download
+file content / a non-stochastic group-kinship value), not the stochastic
+group-formation output; confirm no existing test passes on the bug. 5.
+**Recon-then-verify reflex (Learnings \#21/#24d/#25):** for a MEDIUM
+multi-feature slice a discovery+adversarial-completeness workflow earns
+its keep, but VERIFY its flagged findings firsthand (this session the
+recon was 100% confirmed by independent probes, but it also surfaced the
+common-mode/NULL-crash facts that reshaped scope). 6. **`testServer`
+fileInput harness:**
+`session$setInputs(<fileInputId> = list(name=basename(path), datapath=path))`
+with `datapath` a REAL on-disk file; trigger with
+`setInputs(getData=1)`; precedent at
+`test_modInput_qcStudbook.R:271-286`. `output$<downloadHandler>` runs
+the content fn + returns the written file PATH (read it to assert
+content — S22). 7. **Verify under `NOT_CRAN=true` +
+`pkgload::load_all(".")`** (Learnings \#15b/#19b); `renv` “out-of-sync”
+on bare `Rscript` is pre-existing noise. Runtime-smoke any UI/wiring
+change (Phase 3E). Lint via touched-file stash (#16c).
+**Self-assessment: 9/10.** (+) **Strict TDD honored** — declared the
+phase at the top of every response; gated the 2 pre-RED author
+decisions + PRE-RED→RED→GREEN→REFACTOR via `AskUserQuestion`; RED Test A
+failed 4/4 for the right reasons; GREEN minimal; REFACTOR
+considered+skipped. (+) **Recon-then-verify, right-sized (ultracode):**
+a 5-agent discovery+adversarial-completeness workflow for this MEDIUM
+multi-question slice, and I VERIFIED every load-bearing empirical claim
+firsthand (obfuscated-pair merge, NULL crash, getGenotypes-no-warning,
+common-mode dead-end) before trusting — caught nothing wrong this time,
+but the recon reshaped scope (common-mode = no-op parity; genotypeData
+has no consumer; NULL-guard needed). (+) **Discriminating RED on
+deterministic observables** (cleanedStudbook first/second +
+hasGenotype + genotypeData), NOT the stochastic gene-drop output — and
+confirmed no existing test pinned it. (+) **Non-happy-path covered**
+(malformed genotype) and **mutation-verified** the NULL guard (Learning
+\#20) since Test B was green-at-HEAD. (+) **Made the app MORE robust
+than the monolith** (the NULL guard the monolith lacks) — and documented
+the monolith’s latent crash for the record without touching the monolith
+(Phase 9 territory). (+) **Net-zero lint** (41=41), `document()`
+zero-delta, **Phase 3E HTTP 200**. (+) **1B stub landed** (and
+overwritten here). (+) SAFEGUARDS-clean: will commit the 2 impl files
+before the multi-file doc change; left the pre-existing
+`.DS_Store`/`..Rcheck/`/`.claude/`/audit-html noise untouched. (−) Did
+**not** run full `devtools::check()` (e2e `create_test_app` baseline;
+S7–S24 precedent) — mitigated by the `NOT_CRAN=true` `load_all` 0/0 +
+lint + `document()` + runtime smoke. (−) Browser-level interactive
+parity (select separate mode → upload ped + genotype → see
+genotype-aware GVA) is unverified here — Phase 8 / issue \#39 E2E tier;
+covered by `testServer` (real file upload) + the runtime smoke (module
+mounts). (−) Several user interactions (2 author decisions + 3 phase
+gates) — mandated by strict TDD + genuine forks; the recurring minor.
+
+------------------------------------------------------------------------
+
+### Session 23 Handoff Evaluation (by Session 24)
+
+**Score: 9/10.** - **What helped most:** S23’s ACTIVE-TASK “⇒ SUGGESTED
+NEXT = implement PHASE 3 only” was a precise, accurate work-list — it
+named the exact change (re-expose the GU-threshold `selectInput` default
+4, replacing the hardcoded `1L` at `modGeneticValue.R:165`;
+subset/filter + Export Subset; risk MEDIUM), flagged BOTH load-bearing
+traps verbatim — the **§9 offset-mapping trap** (“default 4” = THREADED
+INTEGER `guThresh=4`, make the RED assert the integer not the label) and
+the **§16.1 iterations-default** decision (1000 vs 5000) — and pointed
+at plan §9 Phase 3. Every clause held up. The “Phase 3 changing guThresh
+1→4 changes numeric output — intended parity (§3)” note correctly
+pre-justified the NEWS bullet. - **What helped (reflexes transferred):**
+the carried **verify-first reflex** (Learnings \#5/#15/#20) was
+load-bearing twice: (a) the offset-mapping trap warning meant I keyed
+the RED on the threaded integer via an internal `guThreshold()`
+reactive, not the `selectInput` label; (b) the same “pre-existing pass
+on the bug” instinct caught my OWN flipped iterations assertion
+`grepl("1000")` passing on the bug (matched `max="10000"`) → re-keyed on
+`value="1000"`. The `NOT_CRAN=true`+`load_all` regression reflex
+(#15b/#19b), the touched-files-stash lint method (#16c), and the
+`testServer` downloadHandler→written-file-path surfacing (S22) all fired
+directly. - **What was missing (expected — below handoff altitude):**
+S23 couldn’t anticipate the three implementation BLOCKERS the recon
+surfaced — `%||%` non-portability, `stri_trim` not being the imported
+symbol (`stri_trim_both` is), and the blanket `import(shiny)` making
+`@importFrom` churn unnecessary. These are sub-handoff-altitude details
+I found via the recon workflow + firsthand verification. Nor did it flag
+the 2 sibling inert controls (`calcGenomeUniqueness`/`calcMeanKinship`)
+— surfaced by the adversarial critic. - **What was wrong:** nothing. The
+offset-mapping and iterations-default traps were exactly right; the
+“after Phase 3: Phase 4 (genotype merge)” pointer was accurate. -
+**ROI:** strongly positive — the precise scope + the two pre-identified
+traps + the carried verify-first reflex meant the session went straight
+to the author decisions and a discriminating RED with zero rediscovery.
+
+### What Session 24 Did
+
+**Deliverable:** **Implement PHASE 3** of
+`docs/planning/shiny-module-conversion-plan.md` — GVA parity in
+`R/modGeneticValue.R`: genome-uniqueness threshold control (default 4) +
+subset/filter view + “Export Subset” download + iterations default
+5000→1000 + remove the inert `minAge` slider. (COMPLETE) **Date:**
+2026-06-03→04. **Branch:** `add-methodology`. **Commits:**
+**`280d1df0`** (`feat:` impl — 2 files: `R/modGeneticValue.R` +
+`tests/testthat/test_modGeneticValue.R`) + this `docs:` close-out.
+**Nature:** implementation session under strict TDD (RED→GREEN→REFACTOR,
+all 3 gates + 1 pre-RED author-decisions `AskUserQuestion`). The
+conversion plan’s 3rd implementation slice and the FIRST MEDIUM-risk
+multi-sub-feature slice. One deliverable; did NOT bundle Phase 4+ (FM
+\#18). **Author decisions (USER, via `AskUserQuestion`):** (1)
+GU-threshold UI = **direct mapping** (`selectInput` choices 1–5,
+`selected=4` → threads integer 4 directly, dropping the monolith’s
+confusing label-offset while keeping numeric parity); (2) iterations
+default = **1000** (monolith parity); (3) **remove minAge only** (the 2
+sibling inert checkboxes deferred); (4) **whole Phase 3** in one
+session. **The implementation (GREEN, all in `R/modGeneticValue.R`):**
+(UI) nIterations `value` 5000→1000; new
+`selectInput(ns("threshold"), choices=c(1L..5L), selected=4L)`; Rankings
+tab gained `textAreaInput(ns("viewIds"))` +
+`actionButton(ns("view"),"Filter View")` +
+`downloadButton(ns("downloadGVASubset"),"Export Subset")`, and
+`downloadRankings` relabeled “Download”→“Export All”. (Server)
+`guThreshold <- reactive(if is.null(input$threshold) 4L else as.integer(input$threshold))`;
+`guThresh = guThreshold()` (was `1L`); `gvaView <- reactive(...)`
+filtering `gvResults()` by parsed `viewIds` (base `trimws`) via the
+exported
+[`filterReport()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterReport.md)
+when `input$view>0`, else full; `rankingsTable` renders `gvaView()`; new
+`output$downloadGVASubset` writes `gvaView()` (`na=""`). (REFACTOR)
+removed the inert `sliderInput(ns("minAge"))`. **TDD trail:** PRE-RED —
+read plan §9 Phase 3 + `modGeneticValue.R` + monolith
+`uitpGeneticValueAnalysis.R` + server.r GVA region +
+`reportGV`/`calcGU`/`filterReport` firsthand; **empirically probed**
+that `guThresh` 1 vs 4 changes every `gu` row (discriminating-RED
+feasibility); ran a read-only **discovery+adversarial-completeness
+workflow** (`wf_a1f5fdb4-b8e`, 4 agents) → confirmed parity surface +
+flagged 3 blockers, verified firsthand; surfaced 4 author decisions via
+`AskUserQuestion`; gated PRE-RED→RED. RED — 6 new tests; first run, the
+iterations flip PASSED on the bug (`grepl("1000")` matched
+`max="10000"`) → re-keyed on `value="1000"`; then all 6 fail for the
+right reasons (3 object-not-found, 3 absent-control). GREEN — the edits
+→ 6/6 green (file 55 tests). REFACTOR — gated; removed minAge + its 2
+tautological tests + 3 lines → file 53 tests, all green. **Verification
+(gold standard for a module slice):** `test_modGeneticValue.R` 53/53;
+full suite under
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)+`NOT_CRAN=true`
+= **0 failed / 0 error**, 0 non-e2e offenders, e2e skipped (156), 5
+pre-existing `modPyramid` warnings. **Lint net-zero** on
+`R/modGeneticValue.R` via touched-file `git stash` (HEAD 23 = NOW 23 —
+the slider removal dropped 3 implicit-integer lints, offset by the
+explicit-integer `selectInput`). `devtools::document()` → no
+man/NAMESPACE delta (signature + roxygen unchanged; `import(shiny)`
+covers new controls). **Phase 3E runtime smoke:**
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+binds (“Listening on …:6013”) + **HTTP 200**, the new
+`geneticValue-threshold`/`geneticValue-viewIds`/`geneticValue-downloadGVASubset`
+controls render, “Genome Uniqueness Threshold”/“Export All”/“Export
+Subset” present, `minAge` gone (0 occurrences). NEWS bullet added to
+BOTH `NEWS.Rmd` + `NEWS.md` (hand-edited to the existing straight-quote
+style — re-knitting reflowed the whole file + smart-quoted it, so I
+reverted that churn; throwaway `NEWS.html` deleted, not committed).
+**Key files:** `R/modGeneticValue.R` (UI: nIterations L38, `selectInput`
+L39-41, Rankings-tab subset controls L74-81; server: `guThreshold()`
+after `fullResults`, `guThresh=guThreshold()` in the `reportGV` call,
+`gvaView()` before `rankingsTable`, `downloadGVASubset` after
+`downloadRankings`), `tests/testthat/test_modGeneticValue.R` (6 new
+tests; minAge tests removed). Docs: `CHANGELOG.md` (S24),
+`NEWS.Rmd`/`NEWS.md` (GVA parity bullet), `CLAUDE.md` (Learning \#24),
+`BACKLOG.md`, `docs/planning/shiny-module-conversion-plan.md` (§6 rows +
+§9 Phase 3 → DONE + §16.1 resolved + closing pointer → Phase 4).
+Throwaway (`/tmp`, NOT committed): `modapp_smoke_s24.log`,
+`modapp_body_s24.html`. Recon artifact (NOT committed):
+`…/tasks/wg11v4e6o.output`. **GOTCHAS for the next session (Phase 4 —
+genotype file merge):** 1. **Implement PHASE 4 ONLY** (risk MEDIUM).
+Strict TDD + phase gates. See plan §9 Phase 4. Wire
+`getGenotypes`/`checkGenotypeFile`/`addGenotype` so `input$genotypeFile`
+is read + merged (monolith server.r:117-156); `modInput.R`’s
+`genotypeData()` is currently always NULL and `activeFile` ignores
+`genotypeFile`. RED = uploading ped + genotype file yields a studbook
+carrying genotype columns (fails today). 2. **Phase-3 baked-in** (see
+ACTIVE TASK ⚠ block): `guThresh` is now `guThreshold()` (default 4);
+Rankings tab has the subset filter + Export All/Subset; iterations
+default 1000; minAge gone; 2 sibling inert checkboxes
+(`calcGenomeUniqueness`/`calcMeanKinship`) remain deferred. 3.
+**Discriminating-RED reflex (Learnings \#15/#20/#24):** key the RED on
+the SPECIFIC observable, not a substring/label — and confirm no existing
+test already passes on the bug. For a threaded-parameter fix, expose an
+internal reactive and assert it (deterministic) rather than the
+stochastic output. 4. **Recon-then-verify reflex (Learning \#21/#24):**
+for a MEDIUM multi-feature slice a discovery+adversarial-completeness
+workflow earns its keep, but VERIFY its flagged blockers firsthand
+(`%||%`/`stri_trim`/`import(shiny)` were all real this session). 5.
+**Verify under `NOT_CRAN=true` + `pkgload::load_all(".")`** (Learnings
+\#15b/#19b); `renv` “out-of-sync” on bare `Rscript` is pre-existing
+noise. Runtime-smoke any UI/wiring change (Phase 3E). 6. **NEWS:** edit
+BOTH `NEWS.Rmd` and `NEWS.md` by hand in the existing style — do NOT
+re-knit (the renderer reflows the whole file + converts to smart quotes;
+that’s churn). Modular-app parity bullets go in NEWS only when there’s a
+real user-visible behavior change (the plan reserves NEWS for numeric
+changes + the Phase 9 deprecation); pure-UI parity otherwise →
+CHANGELOG. **Self-assessment: 9/10.** (+) **Strict TDD honored** —
+declared the phase at the top of every response; gated the pre-RED
+author decisions + PRE-RED→RED + RED→GREEN→REFACTOR via
+`AskUserQuestion`; RED failed for the right reasons; GREEN minimal;
+REFACTOR behavior-preserving (dead-UI removal). (+) **Verify-first
+caught my OWN non-discriminating RED** (the
+`grepl("1000")`/`max="10000"` substring collision) before it shipped —
+the Learning \#15/#20 trap biting the test author, exactly the pattern
+S22/S23 flagged. (+) **Right-sized ultracode** — for this MEDIUM
+multi-sub-feature slice I DID run a discovery+adversarial-completeness
+workflow (vs S19–S23’s solo grep, which was right for those trivial
+slices), and it earned its keep by flagging 3 real blockers; I then
+verified each firsthand (Learning \#21) — caught the `%||%` nuance the
+critic slightly overstated (it IS in baseenv, just not portably). (+)
+**Net-zero lint** proven by the touched-file stash; chose explicit
+integer literals to add 0. (+) **Phase 3E done** — HTTP 200 + controls
+render + minAge gone. (+) **1B stub landed** (and overwritten here). (+)
+SAFEGUARDS-clean: committed the 2 impl files before the multi-file doc
+change; staged only intended files; deleted the throwaway `NEWS.html`;
+left the pre-existing `.DS_Store`/`..Rcheck/`/audit-html noise
+untouched. (−) Did **not** run full `devtools::check()` (e2e
+`create_test_app` baseline; S7–S23 precedent) — mitigated by the
+`NOT_CRAN=true` `load_all` 0/0 + lint + `document()` + runtime smoke.
+(−) Browser-level interactive parity (type IDs → Filter View → see
+filtered table → click Export Subset) is unverified here — Phase 8 /
+issue \#39 E2E tier; covered by `testServer` (incl. the written download
+file) + the runtime smoke (controls render). (−) The NEWS re-knit
+misstep cost a revert (recovered cleanly; the .Rmd/.md were already not
+renderer-in-sync). (−) Several user interactions (4 author decisions in
+one `AskUserQuestion` + 3 phase gates) — mandated by strict TDD +
+genuine product forks; the recurring minor.
+
+------------------------------------------------------------------------
+
+### Session 22 Handoff Evaluation (by Session 23)
+
+**Score: 9/10.** - **What helped most:** S22’s “GOTCHAS for the next
+session (Phase 2)” block was a precise work-list — “implement Phase 2
+ONLY (mount `modGvAndBgDesc`); RED =
+[`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
+lacks the tab; DONE = tab renders + `test_appServer_dynamicTabs.R` still
+green; **watch the dynamic insert/remove-tab interaction** (Error
+List/Changed Columns inserted after ‘Input’ on `mainNavbar`).” Every
+clause was accurate and scoped the session instantly. The reusable
+`testServer`-surfacing note and the NEWS-deferred-to-Phase-9 note were
+carried correctly too. - **What helped (reflexes transferred):** the
+**verify-first reflex** (Learnings \#5/#15/#20) — which S22 itself
+exercised on the `zScores`/`zScore` column name — was load-bearing
+again: S22’s flagged “a pre-existing test passes on the bug” pattern
+RECURRED here as a **heading-collision tautology** (my naive heading
+assertion passed at HEAD because `genetic_value.html`, mounted by
+`modGeneticValue`, already contains the exact heading phrase). Catching
+it took probing WHERE the “passing” string came from — the same
+discipline. The `NOT_CRAN=true`+`load_all` regression reflex (#15b/#19b)
+and the touched-files-stash lint method (#16c) both fired. - **What was
+missing (expected — below plan/handoff altitude):** neither the plan nor
+S22 anticipated (a) the heading-phrase collision with
+`genetic_value.html` (so a literal reading of “assert appUI contains the
+GvAndBgDesc tab” yields a non-discriminating heading assertion), nor (b)
+that `modGvAndBgDescUI` does not call `NS()` (no namespaced container to
+assert on). I found both via verify-first (grep + the dot-count tell). →
+Learning \#23. - **What was wrong:** nothing material. The plan’s RED
+hint was directionally right but needed the content-not-heading
+refinement; the dynamic-tab-interaction warning was exactly on point
+(confirmed harmless once the tab landed after “Breeding Groups”). -
+**ROI:** strongly positive — the precise Phase-2 scope + the dynamic-tab
+gotcha + the carried verify-first reflex meant the session went straight
+to a (corrected) discriminating RED with zero rediscovery.
+
+### What Session 23 Did
+
+**Deliverable:** **Implement PHASE 2** of
+`docs/planning/shiny-module-conversion-plan.md` — wire the already-built
+`modGvAndBgDesc` description tab into `appUI`/`appServer` (the
+conversion plan’s 2nd implementation slice; the FIRST that mounts a
+whole built-but-unwired module). (COMPLETE) **Date:** 2026-06-03.
+**Branch:** `add-methodology`. **Commits:** **`ef6a9f4c`** (`feat:` impl
+— 3 files) + this `docs:` close-out. **Nature:** implementation session
+under strict TDD (RED→GREEN; REFACTOR gated + skipped). Followed
+`DEVELOPMENT_WORKSTREAM` + plan §9 Phase 2 + the RED→GREEN→REFACTOR
+phase gates (each via `AskUserQuestion`). One deliverable; did NOT
+bundle Phase 3+ (FM \#18). **The two edits (GREEN):** (1) `R/appUI.R` —
+`tabPanel("Genetic Value Analysis and Breeding Group Description", icon = icon("book"), modGvAndBgDescUI("gvAndBgDesc"))`
+inserted after the “Breeding Groups” tab, before the “More” navbarMenu
+(monolith-parity placement: `inst/application/ui.r` lists
+`uitpGvAndBgDesc` LAST, after Breeding Group Formation). (2)
+`R/appServer.R` — `modGvAndBgDescServer("gvAndBgDesc")` appended after
+the Breeding Groups module init (informational module; returns NULL, no
+`shared` state). No roxygen/import changes (the `mod*UI`/`mod*Server`
+fns resolve via the package namespace like the other 6 mounted modules;
+`icon` already imported). **The discriminating-RED discovery
+(verify-first — Learning \#23):** the plan’s RED hint (“assert
+[`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
+HTML contains the GvAndBgDesc tab”) taken literally → assert the
+module’s H3 heading “Genetic Value Analysis and Breeding Group
+Description”. The FIRST RED run showed that heading assertion **PASSED
+at HEAD** (only the content assertion failed; the dot-count
+`.........12` was the tell). Grep proved why: that exact phrase lives in
+`genetic_value.html`, already mounted by `modGeneticValue` via
+`includeHTML` — a non-discriminating tautology. Tightened the RED to key
+on `gvAndBgDesc.html`’s OWN body text
+(`"kinship coefficients"`/`"genetic value analysis proceeds"`),
+grep-confirmed unique among the mounted guidance files (0 in
+`genetic_value.html`/`group_formation.html`) and absent from
+[`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
+at HEAD. Also found `modGvAndBgDescUI` does NOT call `NS()` → no
+namespaced container; content IS the only mount marker. **TDD trail:**
+PRE-RED — read plan §9 Phase 2 +
+`appUI`/`appServer`/`modGvAndBgDesc`/`test_appServer_dynamicTabs`/monolith
+`ui.r` firsthand; gated PRE-RED→RED via `AskUserQuestion`. RED —
+appended 2 tests to `tests/testthat/test_modGvAndBgDesc.R`; first run
+exposed the heading tautology → tightened to the unique-content marker;
+both then fail for the RIGHT reasons (content absent;
+`modGvAndBgDescServer` absent from `deparse(appServer)`). GREEN — gated
+via `AskUserQuestion` (label/placement/namespace spelled out) → the 2
+edits → both green. REFACTOR — gated, skipped (minimal/idiomatic; no
+duplication). **Verification (gold standard for a mount slice):**
+`test_modGvAndBgDesc.R` **10/10** (8 existing + 2 new);
+`test_appServer_dynamicTabs.R` **23/23** (the flagged dynamic
+insert/remove interaction unaffected — new tab far from the “Input”
+insert target); full suite under
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)+`NOT_CRAN=true`
+= **0 failed / 0 error / 2073 passed** (+2), **0 non-e2e offenders**,
+e2e skipped (156), only the 5 pre-existing `modPyramid` warnings. **Lint
+net-zero** via touched-files `git stash` + lint-HEAD-in-place (Learning
+\#16c): appUI 0=0, appServer 18=18; neither file is `.lintr`
+line-excluded → \#7 shift-trap N/A. `devtools::document()` → no
+man/NAMESPACE delta. **Phase 3E runtime smoke:**
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+binds (“Listening on …:7613”) + **HTTP 200**, no startup error
+(appUI/appServer is runtime code — build/test-clean ≠ runtime-clean, FM
+\#24). **Key files:** `R/appUI.R` (new `tabPanel` after “Breeding
+Groups”, ~L171-176), `R/appServer.R` (new
+`modGvAndBgDescServer("gvAndBgDesc")` at end, ~L289-290),
+`tests/testthat/test_modGvAndBgDesc.R` (2 new integration tests,
+L63-84). Docs: `CHANGELOG.md` (S23), `CLAUDE.md` (Learning \#23),
+`BACKLOG.md`, `docs/planning/shiny-module-conversion-plan.md` (§6 row +
+§9 Phase 2 → DONE + closing pointer). Throwaway (`/tmp`, NOT committed):
+`modapp_smoke_s23.log`. **GOTCHAS for the next session (Phase 3 — GVA
+GU-threshold + subset export):** 1. **Implement PHASE 3 ONLY** (risk
+MEDIUM). Strict TDD + phase gates. See plan §9 Phase 3. 2. **§9-Phase-3
+OFFSET-MAPPING trap:** the monolith `selectInput` maps display label N →
+value N+1 (`uitpGeneticValueAnalysis.R:38-49`: choices “0”=1L…“4”=5L,
+selected=4L). “Default 4” = the THREADED INTEGER `guThresh`=4. Make the
+RED assert the threaded integer (on a fixture where threshold 4 vs 1
+give different `gu`), NOT the selectInput label. Replaces the hardcoded
+`1L` at `modGeneticValue.R:165`. 3. **§16.1 gene-drop-iterations
+default** decision: monolith 1000 vs modular 5000
+(`modGeneticValue.R:37`) — recommend 1000 for parity; owner confirms. 4.
+**`guThresh` 1→4 changes numeric output** — INTENDED parity (decision
+§3); document it in the Phase-3 NEWS bullet (the plan reserves a NEWS
+bullet for this numeric change). 5. **Resolve the inert `minAge`
+slider** (`modGeneticValue.R:43`, `input$minAge` never read) — wire or
+remove (plan §9 Phase 3). 6. **Verify under `NOT_CRAN=true` +
+`pkgload::load_all(".")`** (Learnings \#15b/#19b); `renv` “out-of-sync”
+on bare `Rscript` is pre-existing noise. 7. **Phase-2 baked-in** (see
+ACTIVE TASK ⚠ block): `appUI` has the `gvAndBgDesc` tab; `appServer`
+calls `modGvAndBgDescServer`; to test tab presence, key on the module’s
+unique included content, not the heading (Learning \#23).
+**Self-assessment: 9/10.** (+) **Strict TDD honored** — declared the
+phase at the top of every response; gated PRE-RED→RED, RED→GREEN,
+GREEN→REFACTOR via `AskUserQuestion`; RED failed for the right reasons;
+GREEN minimal. (+) **Verify-first caught the heading-collision
+tautology** BEFORE it shipped as a non-discriminating RED — exactly the
+Learning \#15/#20 pattern S22 flagged, recurring for UI mounting (→
+Learning \#23). The dot-count tell + grep settled it; I did NOT trust
+the “passing” heading assertion. (+) **Net-zero lint** proven by the
+touched-files-stash method; \#7 trap pre-checked (neither file
+excluded). (+) **Phase 3E done** — launched the app, HTTP 200 (wiring is
+runtime; NOT FM \#24). (+) **1B stub landed** (and overwritten here).
+(+) **Right-sized ultracode** — a contained, deterministic, low-risk
+single-tab mount settled by firsthand reads + grep; **no multi-agent
+workflow** (honest “trivial/already-verified”, consistent with
+S19/S20/S22). (+) SAFEGUARDS-clean: committed the 3 impl files before
+the multi-file doc change; staged only intended files; left the
+pre-existing `.DS_Store`/`..Rcheck/`/audit-html noise untouched. (−) Did
+**not** run full `devtools::check()` (e2e `create_test_app` baseline;
+S7–S22 precedent) — mitigated by the `NOT_CRAN=true` `load_all` 0/0 +
+lint + `document()` + runtime smoke. (−) Browser-level interactive
+parity (click the tab → see the rendered guidance) is unverified here —
+Phase 8 / issue \#39 E2E tier; the mount is covered by the appUI
+rendered-HTML content assertion + the runtime smoke. (−) The appServer
+assertion is a structural `deparse` check (the module is
+informational/NULL-returning, so a behavioral `testServer` would surface
+nothing) — shallow by nature, mirroring the suite’s existing idiom;
+complemented by the runtime smoke. (−) Three user interactions (3 phase
+gates) — mandated by strict TDD; the recurring minor.
+
+------------------------------------------------------------------------
+
+### Session 21 Handoff Evaluation (by Session 22)
+
+**Score: 9/10.** - **What helped most:** S21’s ACTIVE-TASK + the plan §9
+Phase 1 scoped the session precisely — the **four** sub-items, the
+z-score column-name **TRACE** gotcha (#2), the kinship-download
+**§16.8** fork, the dropped MK/GU table gap, the founder-table-placement
+**§16.6** fork, the “audit is stale” warning (§11), the
+`NOT_CRAN`+`load_all` regression reflex (#6), and the 1a/1b split
+option. The plan was a near-perfect work-list: S21’s
+**completeness-critic** had caught exactly the 4 gaps that became Phase
+1 (dead kinship button, dropped MK/GU tables, founder-placement,
+`req(NULL)`) — the planning grep-inventory paid off directly as the
+executor’s task list. - **What helped (reflexes transferred):** the
+**z-score trace gotcha was exactly right** — `reportGV` emits `zScores`
+(plural), arrives unrenamed at `modSummaryStats`, which checked `zScore`
+(singular). The **Learning \#15/#20** “a pre-existing test passes on the
+bug” pattern was live (`test_modSummaryStats_ggplots.R` passes because
+`makeTestGVData()` injects BOTH names) → drove the discriminating RED
+(ONLY the plural name). The **verify-first** reflex (Learnings
+\#5/#8a/#9a) extended to (a) empirically confirming the emitted column
+name and (b) probing the `testServer` renderUI/downloadHandler surfacing
+before asserting. - **What was missing (minor, implementation-detail):**
+the plan didn’t spell out the `testServer` surfacing mechanism
+(`output$<renderUI>`→`$html`;
+`output$<downloadHandler>`→written-file-path) — I probed it. Nor that
+matching the file’s `reactive({x()})` return idiom adds `brace_linter`
+debt — found via the touched-files stash-diff. Both are below the
+altitude a plan should carry. - **What was wrong:** trivial line drifts
+only — the plan cited `modSummaryStats.R:595` for the kinship `req`; the
+actual was L596. The `zScore` checks cited L396/477 — exact.
+Negligible. - **ROI:** strongly positive — the precise four-item scope +
+the z-score trace + the two pre-identified author forks meant the
+session went straight to RED with zero rediscovery.
+
+### What Session 22 Did
+
+**Deliverable:** **Implement PHASE 1** of
+`docs/planning/shiny-module-conversion-plan.md` — Summary Statistics tab
+parity (the conversion plan’s **first implementation slice**; S21 was
+the plan). (COMPLETE) **Date:** 2026-06-02→03. **Branch:**
+`add-methodology`. **Commits:** **`596f6bc9`** (`feat:` impl — 4
+files) + this `docs:` close-out. **Nature:** an **implementation session
+under strict TDD** (RED→GREEN; REFACTOR gated + skipped). Followed
+`DEVELOPMENT_WORKSTREAM` + plan §9 Phase 1 + the RED→GREEN→REFACTOR
+phase gates (each gate via `AskUserQuestion`). One deliverable; did NOT
+bundle Phase 2+ (FM \#18). **Author decisions (USER, via
+`AskUserQuestion`):** (1) **founder table → add to the Summary tab**
+(thread `founderStats`; keep the GVA subtab too); (2) **kinship download
+→ use the module-internal `getKinshipMatrix()`** (smallest change;
+avoided the plan’s “thread `reportGV` kinship” dragon — `reportGV`
+filters to probands, so
+[`identical()`](https://rdrr.io/r/base/identical.html) would likely fail
+and it would silently change the relationship-derivation basis); (3)
+**REFACTOR skipped** (the only duplication — the dual-name zScore block
+in two reactives — PRE-EXISTED and matches the file’s
+self-contained-reactive style; out of Phase 1’s parity scope). **The bug
+(item 1, verified empirically — Learning \#15/#20 + matrix-`cbind`
+naming):** `reportGV.R:89` `zScores <- scale(indivMeanKin)` is cbind’d
+at L144 → a column literally named **`zScores`**
+([`scale()`](https://rdrr.io/r/base/scale.html) returns an unnamed 1-col
+matrix; `cbind` names it from the deparsed symbol — confirmed firsthand:
+`names(report)` contains `zScores`, class `numeric`, no `zScore`).
+`modGeneticValue.geneticValues()` renames only `indivMeanKin`/`gu`, so
+`zScores` arrives unchanged; `modSummaryStats` checked `"zScore"`
+(singular) → z-score hist+box ALWAYS NULL (“Z-scores not available”).
+The existing `_ggplots` test passed on the bug because its fixture
+injects BOTH names. **The four fixes (5 edits in `R/modSummaryStats.R`,
+1 in `R/appServer.R`):** (1) dual-name z-score lookup (prefer `zScores`)
+in `zscoreHistogramPlot` + `zscoreBoxPlotGG`; (2)
+`mkSummaryData`/`guSummaryData` reactives + rendered MK/GU quartile
+tables (Min/1stQ/Mean/Median/3rdQ/Max) in `output$summaryStats`
+(monolith `server.r:545-630`); (3) new `founderStats=NULL` param +
+rendered founder table (Known/Female/Male + FE/FG) in `summaryStats`,
+wired in `appServer.R:278` as `gvResults$founderStats`; (4)
+`downloadKinship` writes `getKinshipMatrix()` not the NULL arg; (5)
+return list gained `mkSummary`/`guSummary` (passed through directly, not
+`reactive({…})`-wrapped → lint-clean). **TDD trail:** PRE-RED — read
+plan §9 + the 4 modular/monolith files firsthand; empirical probes (real
+column name; founderStats fields; testServer surfacing). Pre-RED author
+forks (§16.6/§16.8) via `AskUserQuestion`. RED —
+`tests/testthat/test_modSummaryStats_parity.R` (6 tests), all failing
+for the RIGHT reasons (NULL plots; `mkSummary` non-function;
+`"Quartile"`/labels absent; `founderStats` “unused argument”;
+`req(NULL)` error) — confirmed before any impl. GREEN — the 6 edits →
+6/6 green (22 expectations). REFACTOR — gated, skipped. **Verification
+(gold standard for a module slice):** full suite under
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)+`NOT_CRAN=true`
+= **0 failed / 0 error / 2071 passed** (+22 = the new file), **0 non-e2e
+offenders**, e2e skipped (156), only the 5 pre-existing `modPyramid`
+warnings. Touched files all green (modSummaryStats 33, \_ggplots 31,
+\_popovers 23, \_relationships 43, appServer_dynamicTabs 23, parity 22).
+**Lint net-zero** proven by touched-files-only `git stash` +
+lint-HEAD-in-place (Learning \#16c): modSummaryStats 60=60, appServer
+18=18 (initial +2 brace_linter from the wrapped return entries → fixed
+by direct pass-through; diagnosed via line-CONTENT diff, not the
+misleading line-RANGE filter). `devtools::document()` → only
+`man/modSummaryStatsServer.Rd`. **Phase 3E runtime smoke:**
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+binds (“Listening on …:7613”) + **HTTP 200**, no startup error (the
+appServer `founderStats` wiring is a runtime change — build/test-clean ≠
+runtime-clean, FM \#24). **Key files:** `R/modSummaryStats.R` (signature
+L275; zCol blocks ~L395 & ~L484;
+`mkSummaryData`/`guSummaryData`/`quartileRow` + `summaryStats` renderUI
+~L544-665; `downloadKinship`; return `mkSummary`/`guSummary`),
+`R/appServer.R:274-280` (founderStats wiring),
+`man/modSummaryStatsServer.Rd`, **NEW**
+`tests/testthat/test_modSummaryStats_parity.R`. Docs: `CHANGELOG.md`
+(S22), `CLAUDE.md` (Learning \#22), `BACKLOG.md`,
+`docs/planning/shiny-module-conversion-plan.md` (§9/§17 annotated).
+Throwaway (`/tmp`, NOT committed): `lint_now.txt`, `lint_head.txt`.
+**GOTCHAS for the next session (Phase 2 — wire `modGvAndBgDesc`):** 1.
+**Implement PHASE 2 ONLY** (mount the already-built `modGvAndBgDesc` tab
+in `appUI`/`appServer`; risk LOW). Strict TDD + phase gates. RED =
+[`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
+HTML lacks the GvAndBgDesc tab; DONE = tab renders +
+`test_appServer_dynamicTabs.R` still green. **Watch the dynamic
+insert/remove-tab interaction** (Error List / Changed Columns tabs are
+inserted after “Input” on `mainNavbar`). 2. **The Phase-1
+`modSummaryStats` changes are baked in** (see ACTIVE TASK ⚠ block):
+z-score column is `zScores`; `modSummaryStatsServer` has a 5th
+`founderStats` param; `summaryStats` renders the founder + MK/GU tables;
+`downloadKinship` uses `getKinshipMatrix()`. 3. **`testServer` surfacing
+(reusable):** `output$<renderUI>` → list with `$html` (assert
+`as.character(x$html)`); `output$<downloadHandler>` → RUNS content +
+returns the written file PATH; a `req(NULL)` dead button errors on
+access. 4. **Verify under `NOT_CRAN=true` + `pkgload::load_all(".")`**
+(Learnings \#15b/#19b). `renv` “out-of-sync” on bare `Rscript` is
+pre-existing noise; authoritative read is under `load_all`. 5. **NEWS**
+for modular-app parity is **deferred to the Phase 9 canonical switch**
+(the modular app isn’t canonical yet; record parity in `CHANGELOG`).
+**Self-assessment: 9/10.** (+) **Strict TDD honored** — declared the
+phase at the top of every response; gated PRE-RED→RED, RED→GREEN,
+GREEN→REFACTOR via `AskUserQuestion`, plus the separate pre-RED
+author-fork `AskUserQuestion` (§16.6/§16.8); RED failed for the right
+reasons; GREEN minimal (no speculative branches). (+) **Verify-first
+paid off** — empirically confirmed the real `zScores` column
+(matrix-`cbind` naming is non-obvious) and probed the `testServer`
+surfacing before asserting, rather than theorizing. (+) **Discriminating
+RED** on ONLY the real column name (the pre-existing `_ggplots` test
+passes on the bug — Learning \#15/#20). (+) **Net-zero lint** proven by
+the rigorous touched-files-stash method; caught + fixed my own +2
+brace_linter via a content-diff (the line-RANGE filter was misleading).
+(+) **Phase 3E done, not skipped** — launched the app, confirmed bind +
+HTTP 200 (the wiring change is runtime; NOT FM \#24). (+) **1B stub
+landed** (and overwritten here). (+) SAFEGUARDS-clean: committed the 4
+impl files before the multi-file doc change; staged only intended files;
+left the pre-existing `.DS_Store`/`..Rcheck/`/audit-html noise
+untouched. (+) **Right-sized ultracode** — this was a contained,
+deterministic TDD slice settled by firsthand reads + empirical probes;
+**no multi-agent workflow** (it would be ceremony — honest
+“trivial/already-verified” per the prior-session pattern). (−) Did
+**not** run full `devtools::check()` (e2e `create_test_app` baseline;
+S7–S21 precedent) — mitigated by the `NOT_CRAN=true` `load_all` 0/0 +
+lint + `document()` + runtime smoke. (−) Browser-level interactive
+parity (click GVA → see the founder table on the Summary tab) is
+unverified here — that’s the Phase 8 / issue \#39 E2E tier; the feature
+logic is covered by `testServer` incl. rendered HTML + the actual
+written download file. (−) Several user interactions (2 author forks + 3
+phase gates) — mandated by strict TDD + genuine product forks; the
+recurring minor.
+
+------------------------------------------------------------------------
+
+### Session 20 Handoff Evaluation (by Session 21)
+
+**Score: 8/10.** - **What helped most:** S20’s ACTIVE-TASK correctly
+framed the remaining work as **planning** (“the audit compute/test items
+are now ALL resolved; what remains is the Shiny/XARCH planning work”)
+and named **XARCH-1 / NEW-12/XARCH-3 as planning sessions**, with the
+load-bearing pointer that XARCH-1 “now also gates issue \#39 (E2E-suite
+validation)”. When the user said “plan completing the conversion to
+using Shiny modules,” that framing instantly mapped the task to the
+Architecture/Planning workstream (not an implementation session) —
+exactly right. - **What helped (reflexes transferred):** S19/S20’s
+**`NOT_CRAN=true` + E2E-gate** gotchas (Learning \#19b) and the
+`create_test_app` opt-in gate were directly operative — they fed my
+understanding of the E2E suite’s current state, which became Phase 8
+(and the discovery that the suite is unwritten theatre). The carried
+**verify-first reflex** (Learnings \#5/#8a/#9a/#13/#20) was the spine of
+this session: I disproved three audit “staleness” premises and verified
+every load-bearing parity claim firsthand before it entered the plan. -
+**What was missing (expected — S20 wasn’t working this item):** no
+detail on the actual modular-vs-monolith parity gap or current module
+state (I discovered all of it via the discovery workflow + firsthand
+verification). And the TECH_DEBT audit S20 pointed to turned out **stale
+in key ways** (ui.r line count, the “lowercase duplicate,” the
+XARCH-3/4/7-first sequencing) — but S20 couldn’t have known without
+doing the work. - **What was wrong:** nothing in S20’s handoff was
+inaccurate. (The audit it referenced was stale, but S20 faithfully
+relayed it.) - **ROI:** strongly positive — the “this is planning work”
+framing + the E2E/NOT_CRAN reflexes oriented the session correctly from
+the first message.
+
+### What Session 21 Did
+
+**Deliverable:** **PLAN** completing the Shiny-module conversion (issue
+\#27 / XARCH-1) — the architecture/planning document
+**`docs/planning/shiny-module-conversion-plan.md`** (356 lines, 9
+vertical-slice phases). (COMPLETE) **Date:** 2026-06-02. **Branch:**
+`add-methodology`. **Commit:** this `docs:` close-out (the plan +
+session docs). **Nature:** the project’s **first planning/architecture
+deliverable** (Sessions 1–20 were all audit-fix/refactor/test code
+work). Followed
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` + the
+SESSION_RUNNER **Planning Session** protocol (evidence-based grep
+inventory, per-phase completion criteria, vertical slices,
+plan-is-the-deliverable). **Strict-TDD code phases (RED/GREEN/REFACTOR)
+did NOT apply** — no production code was written (declared at the top of
+the response); the discipline that applied was the planning protocol.
+**Did NOT implement** (FM \#18/#19 — the plan is the deliverable;
+implementation is later sessions). **Author scope decisions (USER, via
+`AskUserQuestion`):** (1) **Full** conversion: parity + E2E enablement +
+retire monolith; (2) **Exclude** ORIP-reporting wiring + functional
+Settings/About (parity = match monolith; both are out-of-scope future
+features); (3) GU-threshold = **re-expose the user selector, default 4**
+(monolith parity, replacing the hardcoded `1L`). **Method (ultracode,
+right-sized):** (a) read SAFEGUARDS/SESSION_RUNNER/ACTIVE-TASK + the
+ARCHITECTURE workstream + the XARCH/APP audit findings; (b) structural
+recon (file inventory, exports, issue \#27 = title-only); (c) a
+read-only **8-mapper discovery workflow** (`wf_2b9863c9-615`, 9 agents,
+~717K tok) → synthesis (parity gap / deletion inventory / prereqs /
+dragons / proposed phases); (d) **firsthand verification** of every
+load-bearing claim (z-score bug, E2E helpers undefined, breeding-group
+hole, GvAndBgDesc unwired, guThresh, genotype/focal-animal gap, orphans,
+getLogo, NAMESPACE, vignette refs); (e) wrote the plan; (f) a **3-agent
+completeness-critic workflow** (`wf_f2de6bd6-29f`) that found real
+omissions; (g) verified the critic’s findings firsthand and patched the
+plan (10 patches). **What the completeness-critic CAUGHT (real omissions
+the single-pass synthesis missed) — all verified + patched:** (1) the
+modular **kinship-matrix download is a dead button**
+(`modSummaryStats.R:595` `req(kinshipMatrix)` with `appServer.R:278`
+passing `NULL`); (2) the modular Summary-Stats tab **drops the MK/GU
+quartile distribution tables** (monolith server.r:545-630; modular shows
+3 scalars only); (3) **FE/FG founder table placement gap** (modular
+shows it on the GVA subtab, monolith on the Summary tab); (4)
+breeding-sim iterations default is **10 (`gpIter`)** not 1000 — modular
+fallback `1000L` is a 100× drift, distinct from the GVA gene-drop count;
+(5) the inert **debug toggle**; (6) the GU-threshold **selectInput
+offset mapping** (label N→value N+1). Also corrected: `getMinParentAge`
+is `@noRd`/unexported (no man, no NAMESPACE — simpler deletion);
+a3manual.{R,md,html} ARE knitted outputs containing `runGeneKeepR` (edit
+the `.Rmd` child + re-knit). **The plan in one paragraph:** declare the
+modular app canonical; close the §6 parity gaps over **Phases 1–7** (1
+Summary-Stats tab; 2 wire GvAndBgDesc tab; 3 GVA threshold+subset
+export; 4 genotype-file merge; 5 breeding-group
+downloads+per-group-kinship+selector; 6 breeding-group
+seed-groups+inert-controls; 7 🐉 focal-animal/LabKey build); **Phase 8**
+🐉 author the missing E2E driver helpers + run the shinytest2 tier (=
+issue \#39); **Phase 9** 🐉 (irreversible) alias `runGeneKeepR` via
+[`lifecycle::deprecate_soft`](https://lifecycle.r-lib.org/reference/deprecate_soft.html),
+delete `inst/application/` + confirmed orphans, update
+docs/vignettes/CI. Each phase has goal / done-criteria / verify-command
+/ session-boundary / risk / discriminating-RED guidance. **Key files
+(the plan + its evidence):**
+**`docs/planning/shiny-module-conversion-plan.md`** (THE deliverable —
+read it). Workflow artifacts (NOT committed): `…/tasks/wvavm9ljt.output`
+(discovery synthesis), `…/tasks/wyud7g1yg.output` (completeness critic).
+Evidence cited in-plan: modular core
+`R/appUI.R`/`R/appServer.R`/`R/runModularApp.R`/`R/runGenekeepr.R`;
+modules `R/mod*.R`; monolith
+`inst/application/server.r`(1304L)/`ui.r`(53L)/8 `uitp*.R`/`global.R`;
+`reportGV.R:89,144` (zScores); `modSummaryStats.R:396,477,595`;
+`modBreedingGroups.R:188,203`; `modGeneticValue.R:165,220-232`;
+`inst/application/uitpBreedingGroupFormation.R:155` (gpIter=10). Docs
+updated: `CHANGELOG.md`, `BACKLOG.md`, `CLAUDE.md` (Learning \#21).
+**GOTCHAS for the next session (implementing Phase 1):** 1. **Implement
+PHASE 1 ONLY** — Summary Statistics tab parity (4 sub-items in plan §9).
+Strict TDD applies now (RED→GREEN→REFACTOR, phase gates). **Do NOT
+bundle Phase 2+.** Split 1a/1b if long. 2. **The z-score bug needs a
+column-name TRACE first:** data flows `reportGV`(`zScores`) →
+`modGeneticValue`(renames some cols) → `modSummaryStats`(`zScore`). Read
+the name that ACTUALLY arrives (print `names(gv)`), then write a
+**discriminating RED** that fails on the NULL-plot path (Learning
+\#15/#20 — a pre-existing test may pass on NULL). 3. **The kinship
+download** (`req(kinshipMatrix)` + `kinshipMatrix=NULL`) is dead — fix
+by threading `gvResults$kinshipMatrix` OR using the module’s internal
+kinship (plan §16.8). If threading, prove
+[`identical()`](https://rdrr.io/r/base/identical.html). 4. **The audit
+is STALE** (plan §11) — plan against the real files. **The modular app
+is much more complete than the audit implies.** 5. **E2E (Phase 8) is
+unwritten theatre** —
+`create_app_driver`/`navigate_to_tab`/`get_html_safe` defined nowhere
+(verified `git log -S`); 155 e2e `test_that` would error before
+asserting. This is issue \#39’s real scope. 6. **Verify under
+`NOT_CRAN=true` + `pkgload::load_all(".")`** (Learnings \#15b/#19b).
+Regression read command is in plan §9. 7. **`renv` “out-of-sync”** on
+bare `Rscript` is pre-existing noise; authoritative read is under
+`load_all`. **Self-assessment: 9/10.** (+) **Honored the planning
+protocol** — recognized this as Architecture/Planning (not
+implementation), declared TDD code-phases inapplicable, wrote the plan
+and did NOT implement (FM \#18/#19), completed the mandatory grep-based
+inventory (§10) with references *run* not assumed. (+) **1B stub landed
+this time** (S20’s documented miss not repeated). (+) **Verify-first
+paid off massively** — the audit was stale on 3+ load-bearing points and
+the discovery synthesis missed 4 real parity gaps; firsthand
+verification + the completeness-critic caught them all before they
+reached the executor (the whole point of the planning grep-inventory).
+(+) **Right-sized ultracode orchestration** — a genuine broad fan-out
+(discovery 8-mapper) + an adversarial completeness-critic, both
+warranted by the scale (~5500 lines, a plan driving 9 sessions); not
+ceremony. (+) **Surfaced the real author/scope decisions** via
+`AskUserQuestion` with evidence in hand (not blind). (+) **Vertical
+slices, not horizontal layers** (FM \#25) — each phase ships a working
+feature. (+) SAFEGUARDS-clean: read-only until the plan write; left the
+pre-existing `.DS_Store`/`..Rcheck/`/audit-html noise untouched. (−)
+**Phase 3E (runtime smoke):** N/A — a planning document changes no
+runtime behavior; stated, not silently skipped (NOT FM \#24). (−) Three
+user interactions (the scope `AskUserQuestion`) — appropriate for
+genuine author/product scope forks, but a recurring cost. (−) Did not
+file the deferred XARCH items as GitHub issues (outward-facing; left as
+a user decision per the carried tracker-reconciliation question).
+
+------------------------------------------------------------------------
+
+### Session 19 Handoff Evaluation (by Session 20)
+
+**Score: 9/10.** - **What helped most:** S19’s ACTIVE-TASK
+suggested-next named the **trivial `test_getPotentialParents.R`
+assertion fix** as the first option, with the exact symptom (“recomputes
+a local `ped` but asserts the old top-level
+`potentialParents[[1L]]$id`”) and provenance (found Session 4).
+Precisely accurate — the defect was exactly that at lines 61-68; the
+session scoped instantly. - **What helped (reflexes transferred):** S19
+gotcha \#2 — **verify under `NOT_CRAN=true`, not bare `test_dir`**
+(Learning \#19b) — was directly operative: the regression ran with
+`NOT_CRAN=true` and confirmed 0/0 with the e2e files skipped (S19’s gate
+working as designed). The campaign **verify-first** reflex (Learnings
+\#5/#8a/#9a) carried to a TEST defect — I empirically reproduced the
+scenario (BRI2MW dropped, 50→49) before writing the assertion rather
+than trusting the test’s name. The `load_all`-before-`test_dir` (#15b)
+and in-place-mutation-not-worktree (#3) reflexes both fired. - **What
+was missing (expected — S19 wasn’t working the item):** the handoff
+framed it as a one-liner “assertion fix” without the strict-TDD subtlety
+— because production is already correct the corrected test is
+**green-on-arrival**, so it’s **REFACTOR-only** (not RED→GREEN) and
+needs a **mutation check** for rigor. I surfaced that as the author’s
+pre-RED classification decision. (→ Learning \#20.) Fair: S19 was
+relaying the carried Session-4 note, not working the item. - **What was
+wrong:** nothing. File, test name, line region, and defect description
+all checked out exactly. - **ROI:** strongly positive — the precise
+pointer + the carried verify-first / NOT_CRAN / mutation reflexes
+produced a fast, correctly-classified, mutation-verified one-deliverable
+session.
+
+### What Session 20 Did
+
+**Deliverable:** Fix the vacuous/tautological assertion in
+`tests/testthat/test_getPotentialParents.R` test
+`"works with records with no potential parent"` (a copy/paste slip
+flagged Session 4, never fixed) so it genuinely verifies its named
+scenario, under strict TDD. (COMPLETE) **Date:** 2026-06-02. **Branch:**
+`add-methodology`. **Commits:** `6049445d` (test), + this `docs:`
+close-out. **Nature:** a **test-correctness fix** (not a compute bug,
+not a production refactor) — the campaign’s first vacuous-test repair.
+**REFACTOR-only under strict TDD: no RED/GREEN** (author-classified).
+Gated `PRE-RED→REFACTOR` via `AskUserQuestion`. **Author decision
+(USER):** chose **REFACTOR-only** over a formal RED→GREEN. Rationale
+accepted: `getPotentialParents` is already correct → a correct assertion
+is green-on-arrival; declaring RED on a passing test violates “RED tests
+must fail,” and forcing a fail via a wrong expectation is a synthetic
+RED (Learning \#18c). **The defect
+(`test_getPotentialParents.R:61-68`):** the test set
+`pedOne$birth[1] <- 1950` and computed a local
+`ped <- getPotentialParents(...)`, then asserted
+`expect_equal(potentialParents[[1L]]$id, ids[1L])` — referencing the
+**top-level fixture** `potentialParents` (built at lines 9-13 from the
+unmodified pedigree) and never touching `ped`. A tautology already
+covered by the first test (line 47); it verified nothing about its
+scenario. **The empirical finding (verify-first):** row 1 of
+`rhesusPedigree` IS **BRI2MW** — a from-center founder with both parents
+unknown (`potentialParents[[1L]]`). Pushing its birth to 1950-01-01
+makes its breeding-age candidate set `ba = ped[birth ≤ 1948]` **empty**,
+so `getPotentialParents` hits the `if (nrow(ba) == 0L) next` skip
+(`R/getPotentialParents.R:54-56`) and **drops** BRI2MW: scenario result
+= **49** entries (vs global **50**), BRI2MW absent. Production is
+correct; the defect was purely the assertion. **The fix (1 file,
++10/−1):** replaced the single tautological line with a discriminating
+block — precondition (`"BRI2MW" %in%` the global ids — it normally
+appears), then after the birth edit
+`expect_false("BRI2MW" %in% scenarioIds)` (dropped) and
+`expect_equal(length(ped), length(potentialParents) - 1L)` (exactly one
+fewer). Self-documenting, code-token-free comment. **Verification (gold
+standard for a test fix):** (1) corrected test passes (its 3
+expectations; 15 in the file). (2) **MUTATION CHECK** — disabled the
+[`next`](https://rdrr.io/r/base/Control.html)-skip in-place (`perl -i` →
+`git checkout` restore; Learning \#3, no worktree); both new assertions
+FAILED (BRI2MW present; length 50≠49), proving the test discriminates —
+and the OLD assertion would have PASSED that same mutant (the contrast
+proves added coverage). (3) full suite under `pkgload::load_all(".")` +
+`NOT_CRAN=true`: **0 failed / 0 error**, **0 non-e2e offenders**, **2049
+passed** (S19’s 2047 + 2 net new expectations), 5 pre-existing
+`modPyramid` warnings, e2e files skipped. Lint: `tests` is
+`.lintr`-excluded (`.lintr:35`) → net-zero by config (the \#16c
+`/tmp`-lint is doubly-invalid here). No `document()`, no `NEWS.md`
+(test-only, no user-facing effect). **Key files:**
+`tests/testthat/test_getPotentialParents.R:61-77` (the corrected test).
+Production `R/getPotentialParents.R:54-56` (the
+[`next`](https://rdrr.io/r/base/Control.html)-skip — read &
+mutation-tested, **NOT** changed). Docs: `CHANGELOG.md` (S20 entry),
+`BACKLOG.md` (trivial item → resolved; suggested-next refreshed),
+`CLAUDE.md` (Learning \#20). **GOTCHAS for the next session:** 1.
+**Fixing a vacuous / green-on-arrival test is REFACTOR-only under strict
+TDD — don’t fake a RED** (Learning \#20a, extends \#18c from
+comments/dead-code to test corrections). Classify, gate
+`PRE-RED→REFACTOR`, prove discrimination via a mutation check. 2.
+**`tests` is excluded wholesale in `.lintr` (line 35)** — test-file
+edits are lint-exempt by config; don’t run the \#16c-invalid `/tmp` lint
+on them. 3. **The audit compute/test campaign is now COMPLETE** (all
+NEW-\* + the trivial test fix resolved through S20). What remains is
+**planning** work — NEW-12/XARCH-3 (Shiny progress hook), XARCH-1 (two
+coexisting apps; also gates issue \#39) — plus open GitHub issues (#34
+bug, \#30 lintr, \#37 unused exports, \#9). Tracker reconciliation
+(audit items vs GitHub \#1–#39) still open. 4. **`renv` reports the
+project “out-of-sync”** on every `Rscript` — pre-existing noise (prior
+sessions saw it too); the authoritative test read is under
+`pkgload::load_all(".")`, which works fine. **Self-assessment: 9/10.**
+(+) Strict TDD honored — declared the phase at the top of every
+response; recognized the green-on-arrival classification tension and
+surfaced it as the author’s pre-RED decision via `AskUserQuestion`
+(gated `PRE-RED→REFACTOR`); did NOT fake a RED (Learning \#18c
+discipline). (+) **Verify-first on a TEST defect** — empirically
+reproduced the scenario (BRI2MW dropped, 50→49) before writing the
+assertion, so it asserts real behavior, not the test’s name. (+)
+**Mutation check** proved the new assertion discriminates (and the old
+one didn’t) — the rigorous substitute for a RED on green-on-arrival
+code; in-place + `git checkout` restore (Learning \#3), production
+verified clean after. (+) **Right-sized under ultracode** — NO
+multi-agent workflow for a trivial, deterministic, mutation-verified
+one-assertion fix (honest “trivial + already-verified”); said so rather
+than reflexively orchestrating. (+) SAFEGUARDS-clean: committed the
+isolated test fix BEFORE the multi-file doc change; staged only the
+intended file; left the pre-existing `.DS_Store`/`..Rcheck/`/audit-html
+noise untouched. (+) Lint net-zero confirmed by `.lintr` config (the
+`tests` exclusion), not an invalid `/tmp` lint. (−) **1B stub miss:** my
+first attempt to write the session-claim stub FAILED (“file not read
+yet”) and I proceeded to investigation without retrying it, so the
+mandatory 1B trace never landed (FM \#14 mitigation incomplete) — a
+mid-session crash would have left no Session-20 trace. The full handoff
+now supersedes it; I should have retried the stub immediately. (−) Did
+**not** run full `devtools::check()` (e2e baseline + S7–S19 precedent);
+mitigated by the `NOT_CRAN=true` `test_dir` 0/0 + mutation check + the
+targeted reproduction. (−) **Phase 3E:** test-only change — no
+production code touched at all, so no
+app-startup/registration/dispatch/config behavior changed; a live-app
+launch does not apply. Stated, not silently skipped — NOT FM \#24. (−)
+One user interaction (the classification gate) — mandated by strict
+TDD’s phase-gate contract; the recurring minor.
+
+### Session 18 Handoff Evaluation (by Session 19)
+
+**Score: 9/10.** - **What helped most:** S18’s ACTIVE-TASK
+suggested-next named the **test-infra debt** as a discrete “its own
+session” deliverable with the exact symptom (`create_test_app()`
+undefined → 154 suite ERRORS when `shinytest2`+`chromote` installed) and
+the file globs (`test-app-*`/`test-e2e-*`). That pointer scoped the
+session instantly and was accurate. - **What helped (reflexes
+transferred):** the campaign’s **verify-first** reflex (Learnings
+\#8a/#9a — *“the audit’s stated mechanism can be wrong/incomplete”*) was
+directly operative: I did NOT take “154 errors, define the helper or
+gate” at face value. Empirical probing revealed the load-bearing
+mechanism nobody had documented — `skip_on_cran()` keys on `NOT_CRAN`,
+so the suite is clean under bare `test_dir` but errors under
+`devtools::test()`/CI. The carried Learning \#2/#4 (“test_local ERRORS /
+test_dir SKIPS”) recorded the *symptom*; this session found the *cause*.
+The `load_all`-before-`test_dir` reflex (Learning \#15b) and the
+`/tmp`-lint-is-invalid reflex (#16c) both fired correctly. - **What was
+missing (expected — S18 wasn’t working the item):** the handoff carried
+the audit’s binary “define the helper OR gate the tests” without noting
+that (a) the effort was **~90% complete** — the app is instrumented
+(`data-ready.js` + 6 modules) and `inst/shinytest/app.R` already exists,
+making `create_test_app()` a near-trivial one-liner; (b) the e2e tests
+target the **modular** app and are entangled with **XARCH-1** (two
+coexisting apps); (c) the chosen fix is really “gate cleanly + preserve
+the plan,” not “finish the e2e suite.” I surfaced all three via
+investigation. (→ Learning \#19.) - **What was wrong:** trivial only —
+“22 files” vs the actual **23**; “154” is the call-site count (the file
+count is 23). - **ROI:** strongly positive — the precise pointer plus
+the verify-first reflex turned a vaguely-scoped “test debt” into a
+clean, correctly-scoped one-cycle deliverable with the deferred work
+captured (issue \#39).
+
+### What Session 19 Did
+
+**Deliverable:** **Test-infra debt** — define `create_test_app()` (the
+missing entry point for the 23 `test-app-*`/`test-e2e-*` files) with an
+opt-in gate so the 154 suite ERRORS become clean skips, under strict
+TDD. (COMPLETE) **Date:** 2026-06-01→02. **Branch:** `add-methodology`.
+**Commits:** `a1ee8497` (test: helper + `test_create_test_app.R`), +
+this `docs:` close-out. **Nature:** test-infrastructure debt paydown
+(not a compute bug, not a refactor). One RED→GREEN cycle; **no
+REFACTOR** (the helper is minimal/clean; extracting the tests’ env-var
+boilerplate would need fiddly
+[`parent.frame()`](https://rdrr.io/r/base/sys.parent.html)/`on.exit` and
+read worse — gated GREEN→REFACTOR and chose skip). **Author scope
+decision (USER):** chose **“Gate + opt-in + issue”** over (B) full e2e
+implementation+validation \[campaign-sized, entangled with XARCH-1\] and
+(C) minimal skip-only \[discards the runnable path\]. The user’s own
+framing — *“E2E coverage is prudent but perhaps not now”* — drove it;
+pursue the full e2e campaign later, sequenced with XARCH-1. **Root cause
+(the discovery that reframed the item):** `create_test_app()` was
+**never defined** (confirmed: `git log -S 'create_test_app <-' --all`
+empty; the e2e suite landed in `7da01afe` without it). The errors are
+**runner-dependent**: each test guards with
+`skip_if_not_installed("shinytest2"/"chromote")` + `skip_on_cran()`;
+shinytest2+chromote+Chrome are all installed here, and `skip_on_cran()`
+only skips when `NOT_CRAN` is **unset** → bare `test_dir` SKIPS (clean),
+but `devtools::test()`/`test_local()`/CI set `NOT_CRAN=true` → no skip →
+reach the undefined helper → **154 errors**. (This is the *cause* behind
+Learnings \#2/#4’s recorded *symptom*.) **The fix (2 files):** appended
+`create_test_app()` to `tests/testthat/helper-shinytest2.R` (its natural
+home; auto-sourced for the suite):
+`if (!identical(Sys.getenv("NPRC_RUN_E2E"), "true")) testthat::skip(...) else system.file("shinytest", package="nprcgenekeepr")`.
+The returned `inst/shinytest/app.R` is `shinyApp(appUI(), appServer)`
+(the modular app) — exactly what `AppDriver` needs. New browser-free
+`tests/testthat/test_create_test_app.R` (2 `test_that`): opt-in returns
+a 1-length char path to an existing dir containing `app.R`; gate raises
+a `skip` condition (caught via `tryCatch(condition=…)`, asserted with
+`expect_s3_class(cnd, "skip")` — the probe-confirmed class is
+`c("skip","condition")`). Env var scoped with base
+`Sys.setenv`/`Sys.unsetenv`+`on.exit` (withr is NOT a declared dep →
+avoided). **Deferred work → GitHub issue \#39** (“Complete & validate
+the shinytest2 E2E test suite”): the existing assets (instrumented app,
+159 tests, `inst/shinytest/app.R`, `shinytest2.yaml` CI), the remaining
+campaign (run+validate the 159 tests, wire CI), and the **XARCH-1
+dependency**. This is the antidote to “the plan got lost.”
+**Verification (gold standard for test-infra):** new tests pass (test1:
+5 expectations; test2: 1). Full suite under `pkgload::load_all(".")` +
+`NOT_CRAN=true` (the hard case): **0 failed / 0 error**, E2E files
+error=0 / **skipped=154** (was 154 errors), **zero non-e2e offenders**,
+2047 passed, only the 5 pre-existing `modPyramid` warnings. Lint
+**net-zero** (`helper-shinytest2.R` = 0 lints in-place; the `/tmp`-HEAD
+“10” is the Learning \#16c artifact — `/tmp` loses `.lintr`+namespace;
+verified `helper-shinytest2.R` is NOT `.lintr` line-excluded → \#7 trap
+inapplicable). No `document()` (test helper, not package API → no
+man/NAMESPACE). **Key files:** NEW
+`tests/testthat/test_create_test_app.R` (2 browser-free tests).
+`tests/testthat/helper-shinytest2.R:176-201` (appended
+`create_test_app()`). Docs: `CHANGELOG.md` (S19 entry), `BACKLOG.md`
+(test-infra debt → resolved/issue \#39), `CLAUDE.md` (Learning \#19).
+Throwaway (`/tmp`, NOT committed): `helper_head.R`. **GOTCHAS for the
+next session:** 1. **`NPRC_RUN_E2E=true` flips the E2E suite ON.** With
+it set, the 23 e2e files run `create_test_app()` → `AppDriver` launches
+Chrome and drives the **modular** app — 159 never-validated browser
+tests. Expect a first-run flood to triage (issue \#39). Do NOT set it in
+CI until XARCH-1 is addressed and the tests are validated. 2. **The
+runner determines whether the suite looks clean** — `skip_on_cran()`
+keys on `NOT_CRAN`. Always verify “no regressions” under `NOT_CRAN=true`
+(the `devtools::test()`/CI condition), not just a bare `test_dir`
+(refines Learnings \#2/#4). 3. **The E2E effort is ~90% complete and
+entangled with XARCH-1**, not lost scaffolding. `runGeneKeepR`→monolith
+`inst/application/`; `runModularApp`→`shinyApp(appUI(),appServer)`; e2e
+tests target the modular app. See issue \#39 +
+`TECH_DEBT_AUDIT_2026-05-30.md` XARCH-1. 4. **Suggested next = the
+trivial `test_getPotentialParents.R` assertion fix**, OR NEW-12/XARCH-3
+/ XARCH-1 (planning; XARCH-1 also gates \#39), OR a GitHub issue (#34
+bug, \#30 lintr, \#37 unused exports). Tracker reconciliation (audit
+items vs GitHub \#1–#39) still open. **Self-assessment: 9/10.** (+)
+Strict TDD honored — declared every phase; gated PRE-RED→RED, RED→GREEN,
+GREEN→REFACTOR via `AskUserQuestion` + the separate pre-RED author scope
+decision; RED failed for the right reason (`could not find function`),
+GREEN minimal (no untested branches — omitted a speculative “app.R
+missing” guard), REFACTOR honestly skipped. (+) **Verify-first paid
+off** — probed the actual failure (the `skip_on_cran`/`NOT_CRAN`
+mechanism) and the actual completeness (instrumented app +
+`inst/shinytest/app.R`) instead of taking the audit’s binary framing,
+which reframed the deliverable from “finish e2e” to “gate cleanly +
+preserve the plan.” (+) **Right-sized under ultracode** — NO multi-agent
+workflow: this was a contained, deterministic grep/probe investigation
+(honest “trivial + already-verified”), so a workflow would be ceremony;
+said so rather than reflexively orchestrating. (+) **Preserved the
+plan** (issue \#39) — directly addressing the user’s “the plan got lost”
+concern. (+) Probed before asserting (skip class, withr absence,
+`system.file` resolution) — no theorizing. (+) Lint net-zero with both
+traps (#7, \#16c) pre-checked. (+) SAFEGUARDS-clean: GREEN (2 files)
+committed before close-out; staged only the intended files; left the
+pre-existing `.DS_Store`/`..Rcheck/`/audit-html noise untouched. (−) Did
+**not** run full `devtools::check()` (the e2e baseline + known precedent
+S7–S18); mitigated by the `NOT_CRAN=true` `test_dir` 0/0 + lint + the
+targeted reproduction. (−) **Phase 3E:** test-only change — no
+app-startup/registration/dispatch/config behavior changed (the helper
+returns a path; it does NOT launch the app under the default gate), so a
+live-app launch does not apply. The opt-in browser path is intentionally
+deferred (issue \#39). Stated, not silently skipped — NOT FM \#24. (−)
+Outward-facing action (filed issue \#39) — done under the explicit
+author approval in the scope decision. (−) Several user interactions
+(scope clarification + scope decision + 3 phase gates) — mandated by
+strict TDD + an author scope decision; the recurring minor.
+
+------------------------------------------------------------------------
+
+### Session 17 Handoff Evaluation (by Session 18)
+
+**Score: 9/10.** - **What helped most:** S17’s ACTIVE-TASK
+suggested-next named **NEW-22/NEW-30** with exact locations and the
+load-bearing framing that they “now live in ONE place” post-NEW-13. That
+pointer scoped the session instantly and was accurate — the entire
+surface was indeed in `calcFounderContributions.R` (+ `kinship.R`), so
+the inventory grep confirmed in minutes. - **What helped (reflexes
+transferred):** the campaign’s verify-first reflex (Learnings
+\#8a/#9a/#10a — *“the audit’s mechanism AND fix can both be wrong”*) was
+directly operative TWICE: I scrutinized the audit’s “dead variable”
+claim and found `founderMatrix <- NULL` is an intentional memory free
+(not dead), and found NEW-22’s “duplication” premise was already
+dissolved by S17 — so I DISPROVED parts of the item instead of
+mechanically deleting/extracting. S17’s
+[`identical()`](https://rdrr.io/r/base/identical.html)-vs-seeded-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+proof template (Learnings \#17/#16b) was my entire REFACTOR
+verification. - **What S17 slightly over-relayed (minor, expected):**
+S17’s handoff + BACKLOG carried the audit’s “now TRIVIAL … the ½ … live
+in ONE place” framing as if NEW-22 were a live *duplication* cleanup —
+but S17’s OWN NEW-13/23 consolidation had already removed the
+duplication, so the disciplined output was an author DECLINE of the
+constant, not an extraction. S17 was faithfully relaying the audit label
+and had not worked the item — fair. (→ Learning \#18a.) - **What was
+wrong:** nothing. Every <file:line> and the suggested-next checked out
+(the `founderMatrix <- NULL` pointer was accurate as a *candidate*; it
+just turned out not-dead on inspection). - **ROI:** strongly positive —
+the precise pointer + the verify-first reflex produced a fast, correct
+scope decision and prevented a reflexive (wrong) constant-extraction +
+dead-var deletion.
+
+### What Session 18 Did
+
+**Deliverable:** **NEW-22 / NEW-30** — document the Mendelian ½ factor
+(declined the named constant) and remove the dead `UID.founders` block,
+in `R/calcFounderContributions.R` + `R/kinship.R`, under strict TDD.
+(COMPLETE) **Date:** 2026-06-01. **Branch:** `add-methodology`.
+**Commits:** `04115d97` (refactor: comments + dead-code), + this `docs:`
+close-out. **Nature:** the campaign’s **3rd pure refactor** (after
+PED-1, NEW-13/23) and the FIRST whose audit motivation was already
+dissolved by a prior session. Comment + dead-code only → **REFACTOR-only
+under strict TDD: no RED/GREEN** (no new behavior, no new unit). Gated
+`PRE-RED→REFACTOR` via `AskUserQuestion`, plus a separate pre-RED author
+scope decision. **Decisions (USER, package author):** (1) **NEW-22 =
+decline the named constant / comment-only** (keep `/ 2L` —
+self-documenting; a shared constant would over-couple distinct formulas
+across the GV compute + the kinship engine); (2) **NEW-30 = delete the
+`UID.founders` block, KEEP `founderMatrix <- NULL`** (intentional memory
+free, not dead — annotate it); (3) approved the `PRE-RED→REFACTOR` gate
+(RED/GREEN vacuous for a comments/dead-code change). **The two findings
+that reshaped the item (audit partly outdated/wrong — Learnings
+\#8a/#10a pattern):** 1. **NEW-22’s “duplication” was already resolved
+by S17.** The 3 `calc*` copies → 1 helper, so the 5 named `/2L` sites
+are now 4–5 DISTINCT Mendelian formulas — parental-contribution avg
+(`calcFounderContributions.R:61`), parental-kinship avg
+(`kinship.R:103`), self-kinship `(1+f)/2` (`kinship.R:104`), founder
+self-kinship init (`kinship.R:78/80`) — not one shared knob.
+Grep-confirmed the inventory is contained to those 2 files; every other
+`0.5`/`/2L` in `R/` is unrelated (date math, plot colors, UI sliders,
+thresholds, docs). 2. **`founderMatrix <- NULL` is NOT a dead
+variable.** `founderMatrix` is USED at `d <- rbind(founderMatrix, d)`
+(`calcFounderContributions.R:45`); the `<- NULL` frees the
+founders×founders identity block before the generation loop — an
+intentional memory optimization the audit mislabeled. Kept + annotated
+(L46-48). **The change (5 edits, 2 files):** (NEW-22) keep every `/ 2L`;
+add a 1-line Mendelian-½ comment at `calcFounderContributions.R:59-60`
+and `kinship.R:75-76` (init) + `kinship.R:100-102` (recurrence).
+(NEW-30) delete the dead `## UID.founders <- …` block + its
+`# nolint: commented_code_linter` wrapper (was ~L36-40); annotate
+`founderMatrix <- NULL` (now L46-48). **TDD trail:** PRE-RED — grep
+inventory + audit-claim scrutiny → pre-RED author scope
+`AskUserQuestion` (decline constant / keep NULL). No RED/GREEN
+(declared + justified: comments + dead-code have no new behavior/unit; a
+synthetic “assert the comment exists” RED would test implementation
+trivia — anti-TDD). REFACTOR — the 5 edits; committed AFTER proving
+behavior-preservation. **Verification (gold standard for a parser-inert
+change):** captured a HEAD reference, then proved
+byte-[`identical()`](https://rdrr.io/r/base/identical.html) on all 10
+outputs — `calcFE`/`calcFG`/`calcFEFG` (char+factor),
+`calcFounderContributions` `$p`+`$ped`,
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+dense+sparse, and the full `set.seed(42)`
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+object (the live `calcFEFG`/`kinship` caller). Full suite under
+`load_all` = **0 failed / 0 error / 2001 passed** (= S17’s exact count;
+no new tests), 0 non-e2e offenders, only the 5 pre-existing `modPyramid`
+warnings. Lint **net-zero** (both files 0, = HEAD; verified neither is
+`.lintr` line-excluded → the Learning \#7 shift-trap is inapplicable;
+prose comments use no code-like tokens → `commented_code_linter` stays
+clean). `document()` = no man/NAMESPACE change. **No adversarial
+workflow** — right-sized: the change is parser-inert (BOTH trivial AND
+already-verified via the seeded
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+[`identical()`](https://rdrr.io/r/base/identical.html)), so a workflow
+would be ceremony (honest reading of ultracode’s “unless trivial or
+already verified”). **No `NEWS.md` bullet** — internal-only, no
+user-facing effect (NEWS = CRAN-facing per Learning \#11); logged in
+`CHANGELOG.md`. **Key files:** `R/calcFounderContributions.R` (deleted
+dead block ~L36-40; annotated `founderMatrix <- NULL` L46-48; Mendelian
+comment L59-60), `R/kinship.R` (Mendelian comments L75-76 init, L100-102
+recurrence — all `/ 2L` literals at L78/80/103/104 unchanged). Docs:
+`CHANGELOG.md` (S18 entry), `BACKLOG.md` (NEW-22/NEW-30 removed;
+suggested-next refreshed), `CLAUDE.md` (Learning \#18). Throwaway
+(`/tmp`, NOT committed): `new2230_ref_capture.R`, `new2230_compare.R`,
+`new2230_ref.rds`. **GOTCHAS for the next session:** 1. **An audit item
+tagged “now trivial because a prior session changed the code” may have
+had its MOTIVATION dissolved — re-derive whether the reason still holds
+before doing it.** NEW-22’s duplication was gone (S17 consolidated); the
+right output was a documented DECLINE, not an extraction. (→ Learning
+\#18a.) 2. **The audit’s “dead variable” can be a deliberate
+optimization** — `founderMatrix <- NULL` is a memory free, kept. Verify
+each claimed-dead var is truly unused before deleting. (→ Learning
+\#18b.) 3. **A comment-only / dead-code cleanup is REFACTOR-only under
+strict TDD — no RED/GREEN.** Don’t fake a RED; gate `PRE-RED→REFACTOR`.
+(→ Learning \#18c.) 4. **Suggested next = test-infra debt
+(`create_test_app`)** OR NEW-12/XARCH-3 / XARCH-1 (planning) OR the
+trivial `tests/testthat/test_getPotentialParents.R` assertion slip.
+Tracker reconciliation (audit items vs GitHub \#1–#38) still open.
+**Self-assessment: 9/10.** (+) Strict TDD honored — declared every
+phase’s TDD state; recognized the change as REFACTOR-only and justified
+the absence of RED/GREEN honestly (NOT FM \#17 erosion: there is no new
+behavior to develop); gated PRE-RED→REFACTOR + the separate pre-RED
+scope decision via `AskUserQuestion`. (+) **Verify-first paid off
+twice** — disproved NEW-22’s duplication premise (already resolved by
+S17) and the “dead variable” claim, turning a reflexive “extract +
+delete” into a disciplined “decline + keep + annotate.” (+)
+**Behavior-preservation proven to the gold standard** —
+[`identical()`](https://rdrr.io/r/base/identical.html) on all 10 outputs
+incl. the full seeded
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+object, despite the change being parser-inert. (+) Lint net-zero with
+the Learning \#7 trap pre-checked (neither file `.lintr`-excluded) and
+prose comments kept code-token-free. (+) **Right-sized under ultracode**
+— no adversarial workflow for a parser-inert change (both escape clauses
+apply); stated the reasoning, not silently skipped. (+) Correct doc
+separation — CHANGELOG yes, NEWS no (internal-only). (+)
+SAFEGUARDS-clean: baseline already committed; only the 2 intended R
+files staged; left the pre-existing `.DS_Store`/`..Rcheck/`/audit-html
+noise untouched. (−) Did **not** run full `devtools::check()` (e2e
+`create_test_app` baseline noise — S7–S17 precedent); mitigated by
+`test_dir` 0/0 + lint + `document()` + the
+[`identical()`](https://rdrr.io/r/base/identical.html) proof. (−)
+**Phase 3E:** comment + dead-code change — no
+app-startup/registration/dispatch/config behavior changed; the only live
+path (`reportGV→calcFEFG`/`kinship`) verified
+[`identical()`](https://rdrr.io/r/base/identical.html) on the full
+seeded object, so a live-app launch does not apply. Stated, not silently
+skipped — NOT FM \#24. (−) Two user interactions (scope decision + phase
+gate) — mandated by strict TDD + an author scope decision; the recurring
+minor.
+
+------------------------------------------------------------------------
+
+### Session 16 Handoff Evaluation (by Session 17)
+
+**Score: 9/10.** - **What helped most:** S16’s ACTIVE-TASK
+suggested-next named **NEW-13/NEW-23** AND pre-scoped it — *“now even
+cleaner post-PED-1: all three `calc*` share the IDENTICAL
+`getFounders(ped)` + `descendants` + matrix-build body, so the only real
+diff is FE-vs-FG output, making delegation low-risk.”* Exactly right:
+the three bodies WERE byte-identical (the adversarial workflow
+re-confirmed line-for-line), so the consolidation scoped instantly. -
+**What helped (reflexes transferred):** S16 gotcha \#2 —
+**`object_usage_linter` “no visible global function” on a NEW helper is
+the stale-namespace transient; authoritative read = REINSTALL/`load_all`
+then re-lint, NOT the `/tmp` method** (Learning \#16c) — was **directly
+operative**: the fresh-process lint flagged `calcFounderContributions`
+on all 3 wrappers; I diagnosed it as the transient in seconds and
+confirmed 0 via `load_all`-then-lint. S16’s
+**[`identical()`](https://rdrr.io/r/base/identical.html)-vs-reference-incl-seeded-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)**
+reflex (Learning \#16b) was my entire REFACTOR verification template. -
+**What had a dragon S16 didn’t flag (expected, minor):** S16 relayed the
+audit’s literal *“calcFE/calcFG **delegate to calcFEFG**”* — but
+`calcFE(ped)` has no `alleles` arg and is gene-drop-free, so literal
+delegation is UNIMPLEMENTABLE for calcFE (it would force an FG it can’t
+feed). I surfaced the approach fork (shared `@noRd` helper vs
+`alleles`-optional calcFEFG) as a pre-RED `AskUserQuestion`; the user
+chose the helper. (→ Learning \#17a.) S16 was faithfully relaying the
+audit and hadn’t worked the item — fair. - **What was missing (minor):**
+nothing flagged the load-bearing WIRING risk — calcFG/calcFEFG feed the
+**toCharacter-coerced** ped to `calcRetention`, so the helper must
+return that ped (else factor input silently diverges). I caught it by
+reading `calcRetention` before designing. (→ Learning \#17b.) - **What
+was wrong:** nothing. The suggested-next pointer, the “3 bodies
+identical” claim, and the descendants/population context all checked
+out. - **ROI:** strongly positive — the accurate pre-scoping + the
+lint-transient and identical() reflexes shaped a fast, clean session.
+
+### What Session 17 Did
+
+**Deliverable:** **NEW-13 / NEW-23** — consolidate the
+founder-contribution algorithm (shared near-verbatim by
+`calcFE`/`calcFG`/`calcFEFG`) into one `@noRd` helper
+`calcFounderContributions()` and collapse the triplicated Session-7
+partial-parentage [`stop()`](https://rdrr.io/r/base/stop.html) guard,
+under strict TDD (one RED→GREEN→REFACTOR cycle). (COMPLETE) **Date:**
+2026-06-01. **Branch:** `add-methodology`. **Commits:** `022afc8b`
+(GREEN: `R/calcFounderContributions.R` +
+`tests/testthat/test_calcFounderContributions.R`), `2b27f4c3` (REFACTOR:
+3 thin wrappers, +16/−134), + this `docs:` close-out. **Nature:** the
+campaign’s **2nd pure refactor** (after PED-1) — no behavior change. The
+body `toCharacter`→partial-parentage
+guard→`getFounders`/descendants→contribution-matrix build→generation
+propagation loop (`d[ego,]<-(d[sire,]+d[dam,])/2L`)→`currentDesc`
+subset→`p<-colMeans(d)` was copied ~45 lines × 3; now it lives ONCE in
+the helper, which returns `list(p, ped)`. **Decisions (USER, package
+author):** (1) **approach = shared `@noRd` helper** (over the literal
+“make calcFEFG `alleles`-optional & delegate”) — keeps `calcFE`
+gene-drop-free and all 3 public contracts byte-identical; (2) approved
+all three TDD phase gates + the pre-RED approach fork. **The
+load-bearing design (gotcha \#1):** the helper returns the
+**toCharacter-coerced** `ped` as `$ped`, so `calcFG`/`calcFEFG` call
+`calcRetention(fc$ped, alleles)` with the EXACT character pedigree the
+pre-refactor code passed — identical-BY-CONSTRUCTION, independent of
+whether `calcRetention` is factor-robust (it is, via `%in%` coercion —
+verified by reading `R/calcRetention.R:26-44`, but not relied upon).
+**The single guard:** parameterized by `caller` (default `"calcFEFG"`)
+so each function keeps its byte-identical message
+(`"calcFE requires complete parentage (no partial parentage): …"`). Used
+`caller`, NOT `.caller` — a leading dot trips `object_name_linter`
+(`.lintr` styles snake/Camel/camel; cf. `kinship.R:69`’s `# nolint`).
+**TDD trail:** RED — `tests/testthat/test_calcFounderContributions.R` (3
+`test_that`, 10 expectations): helper returns `list(p, ped)` with
+`1/sum(p^2)==2.9090909091` + character `ped`; identical `p` for factor
+vs char ped; guard stops naming the `caller`. All failed
+`could not find function` — the genuine RED for a pure refactor (the
+cross-function characterization `calcFE≡FEFG$FE` already PASSES, so it
+can’t be RED; Learning \#17c). GREEN — `R/calcFounderContributions.R`
+(`@noRd`); `document()` (no NAMESPACE/man change); new file passes; full
+suite 0/0/2001; committed BEFORE the multi-file refactor (SAFEGUARDS).
+REFACTOR — thinned the 3 functions to wrappers. **Verification (gold
+standard):** captured a pre-refactor reference at the GREEN commit, then
+proved every output
+byte-[`identical()`](https://rdrr.io/r/base/identical.html): FE/FG on
+lacy1989Ped (character AND factor), the full
+`set.seed(42L) reportGV(...)` object (the only live `calcFEFG` caller,
+`reportGV.R:133`), and all 3 partial-parentage messages; +
+cross-consistency `calcFE≡FEFG$FE`, `calcFG≡FEFG$FG`. Full suite under
+`load_all` **0 failed / 0 error / 2001 passed** (S16’s 1991 + 10 new).
+Lint **net-zero** (the `object_usage` finding on the 3 wrappers is the
+Learning \#16c transient — 0 under `load_all`/reinstall). `document()`
+no churn. An independent **3-agent adversarial-equivalence workflow**
+(`wf_8c251475`, `agentType=Explore`): static body-diff vs `022afc8b` ‖
+20 empirical OLD-vs-NEW edge tests (transcribing the originals via
+`git show`) ‖ contract/guard/namespace — all `ok=true`, **0
+divergences**. **Key files:** NEW `R/calcFounderContributions.R`
+(`@noRd`, returns `list(p, ped)`); `R/calcFE.R:43-47` (wrapper),
+`R/calcFG.R:55-63` (wrapper, `calcRetention(fc$ped, …)`),
+`R/calcFEFG.R:45-53` (wrapper). Tests:
+`tests/testthat/test_calcFounderContributions.R` (NEW, 10 expectations).
+Docs: `NEWS.md`/`NEWS.Rmd` (GV bullet), `CHANGELOG.md` (S17 entry),
+`BACKLOG.md` (NEW-13/23 removed, NEW-22/30 added as the now-trivial
+follow-on), `CLAUDE.md` (Learning \#17). Throwaway (`/tmp`, NOT
+committed): `new13_ref_capture.R`, `new13_compare.R`, `new13_ref.rds`.
+**GOTCHAS for the next session:** 1. **A behavior-preserving refactor’s
+real risk is the WIRING you don’t relocate, not the body.** Here
+calcFG/calcFEFG fed the toCharacter-coerced ped to `calcRetention`; the
+helper returns `$ped` to keep that identical-by-construction. When
+extracting a shared body, audit every value the OLD code passed
+downstream that the extraction would change. (→ Learning \#17b.) 2. **A
+literal “delegate to X” audit item can be unimplementable — check
+signature asymmetry.** `calcFE` has no `alleles`; surfacing the approach
+fork as a pre-RED `AskUserQuestion` was correct. (→ Learning \#17a.) 3.
+**`calcFounderContributions` is `@noRd` (internal)** — not exported, no
+`.Rd`. Its `caller` arg ONLY phrases the guard message; it returns
+`list(p, ped)`. 4. **Suggested next = NEW-22/NEW-30** (now trivial — the
+`/ 2L` ½-factor + dead vars live once in `calcFounderContributions.R`; ½
+also in `kinship.R:98-99`) OR the **test-infra debt**
+(`create_test_app`) OR **NEW-12/XARCH-3** (planning). Tracker
+reconciliation (audit items vs GitHub \#1–#38) still open.
+**Self-assessment: 9/10.** (+) Strict TDD honored end-to-end — declared
+every phase; gated all three transitions (`AskUserQuestion`) + the
+separate pre-RED approach fork; RED failed for the right reason
+(`could not find function`), GREEN minimal + committed before the
+multi-file change, REFACTOR proven
+[`identical()`](https://rdrr.io/r/base/identical.html). (+) **Caught the
+load-bearing wiring risk** (calcRetention’s ped type) by reading the
+downstream BEFORE designing, and chose identical-by-construction
+(`return list(p, ped)`) over relying on factor-robustness. (+)
+**Behavior-preservation proven to the gold standard** —
+[`identical()`](https://rdrr.io/r/base/identical.html) on char+factor +
+the full seeded
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+object + the 3 messages, then an independent adversarial workflow
+returned 0 divergences. (+) Lint net-zero with the `object_usage`
+transient correctly diagnosed (Learning \#16c), and caught the
+`.caller`→`caller` naming lint before it landed. (+) Right-sized:
+deterministic [`identical()`](https://rdrr.io/r/base/identical.html) was
+conclusive; ran the adversarial workflow as CONFIRMATION under ultracode
+(the user opted in via the gate), not as discovery. (+)
+SAFEGUARDS-clean: GREEN committed before the 3-file refactor; left the
+pre-existing artifacts (`.DS_Store`, `..Rcheck/`, `PED_GV_AUDIT_*.html`)
+untouched. (−) Did **not** run full `devtools::check()` (e2e
+`create_test_app` baseline noise — S7–S16 precedent); mitigated by
+`test_dir` 0/0 + lint + `document()` + the
+[`identical()`](https://rdrr.io/r/base/identical.html) proofs + the
+adversarial workflow. (−) **Phase 3E:** behavior-preserving compute
+refactor — the only live path (`reportGV→calcFEFG`) verified
+[`identical()`](https://rdrr.io/r/base/identical.html) on the full
+SEEDED object; no app-startup/registration/dispatch/config changed, so a
+live-app launch does not apply. Stated, not silently skipped — NOT FM
+\#24. (−) Several user interactions (approach fork + detail + 3 phase
+gates) — all mandated by strict TDD + an author approach decision; the
+recurring minor.
+
+------------------------------------------------------------------------
+
+### Session 15 Handoff Evaluation (by Session 16)
+
+**Score: 9/10.** - **What helped most:** S15’s ACTIVE-TASK
+suggested-next named **PED-1/NEW-17** with the single most load-bearing
+gotcha — *“do NOT naively unify the `descendants` lines:
+`calcRetention.R:27` filters by `ped$population`, the `calc*` copies do
+not.”* That was **directly operative**: I left `calcRetention.R:27`
+untouched while swapping line 26, exactly as warned. The user picked
+PED-1 and it scoped instantly. - **What helped (reflexes transferred):**
+S15’s gotcha \#1 (**ALWAYS run `test_dir` under
+`pkgload::load_all(".")`**) was applied on every suite run — zero
+phantom-flood this session. S15’s gotcha \#3 (**prove a
+behavior-preserving refactor with
+[`identical()`](https://rdrr.io/r/base/identical.html) vs a captured
+reference, not just “suite passes”**) was the template for my entire
+REFACTOR verification — extended here to a *seeded*
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+full-object compare. - **What was a partial mismatch (expected, not a
+deficiency):** S15’s handoff was bug-fix-centric (reproduce-the-failure,
+“audit mechanism/fix can be wrong”, RED-on-divergent-input). PED-1 is
+the campaign’s **first pure refactor** — no bug, no audit mechanism to
+reproduce — so those reflexes didn’t apply; but the `load_all` +
+[`identical()`](https://rdrr.io/r/base/identical.html) reflexes
+transferred cleanly. Same per-deliverable mismatch every session
+notes. - **What was missing (minor):** nothing warned that
+`grep founder` would MISS the `modSummaryStats` sites (named
+`males`/`females`, not `founders`) — I caught them via the broad
+`is.na(...sire/dam...)` sweep. And the handoff didn’t enumerate the 12
+sites (expected — a handoff points, the session inventories). - **What
+was wrong:** nothing. <file:line>, the descendants gotcha, and the
+suggested-next pointer all checked out. - **ROI:** strongly positive —
+the accurate pointer + the descendants gotcha prevented a wrong
+unification, and the load_all/identical() reflexes shaped a clean
+verification.
+
+### What Session 16 Did
+
+**Deliverable:** **PED-1 / NEW-17** — extract two exported helpers
+`isFounder(ped)` / `getFounders(ped)` and de-duplicate the inline
+founder predicate across the codebase, under strict TDD (one
+RED→GREEN→REFACTOR cycle, REFACTOR committed in 2 checkpointed batches).
+(COMPLETE) **Date:** 2026-06-01. **Branch:** `add-methodology`.
+**Commits:** `2758ffe6` (GREEN: helpers + tests + NAMESPACE + 2 man),
+`77f13d51` (REFACTOR Batch A), `a95828d6` (REFACTOR Batch B), + this
+close-out (`docs:`). **Nature (NOT a bug fix):** the campaign’s first
+pure-refactor deliverable — a *fix-all-instances* DRY cleanup, no
+behavior change. The founder predicate (*both parents unknown*) was
+hand-written inline at **12 sites across 9 files**; now
+`isFounder(ped) <- is.na(ped$sire) & is.na(ped$dam)` and
+`getFounders(ped) <- ped$id[isFounder(ped)]` hold it once. **Decisions
+(USER, package author):** (1) **scope = all ped-object sites** (12
+substitutions; `findPedigreeNumber` excluded), over GV-compute-only or a
+dual-signature variant; (2) **both helpers `@export`ed** (consistent
+with the package’s public pedigree-utility family); (3) the user asked
+for **more problem/solution detail** before choosing scope — supplied a
+before/after table, then re-posed the scope question. **The inventory
+(how it was settled):** `grep founder` found 10 sites; the broad
+`grep is.na(...sire/dam...)` sweep caught **2 more**
+(`modSummaryStats.R:606/616`, variables `males`/`females`). Separated
+the true idiom from false positives (roxygen `#'` examples,
+partial-parentage `xor`/`|`/exactly-one-parent, `hasBothParents`,
+birth/sex `is.na`). No non-`is.na` founder idiom exists (`gen==0` etc.
+absent). The 4 call-site shapes: ids (`ped$id[mask]` ×6 →
+`getFounders`), rows (`ped[mask,]` reportGV → `isFounder`), rows+sex
+(`ped[sex & mask,]` modSummaryStats ×2 → `isFounder`), counts
+(`sum(mask[, na.rm])` modORIPReporting ×4 → `isFounder`). **TDD trail:**
+RED — `tests/testthat/test_isFounder.R` (8 assertions) +
+`test_getFounders.R` (6) using a lacy fixture, a partial-parentage
+fixture (proves partial parentage is NOT a founder), all/none/empty
+edges, type guarantees, and `getFounders(ped) ≡ ped$id[isFounder(ped)]`;
+all FAILED with `could not find function`. GREEN — `R/isFounder.R` +
+`R/getFounders.R` (roxygen + `@export` + `@examples`),
+`devtools::document()` (NAMESPACE +2 exports, 2 new `.Rd`); both files
+green; full suite 0/0/1991; committed before the multi-file refactor
+(SAFEGUARDS). REFACTOR — 12 single-expression swaps in 2 batches (A:
+calc\*+orderReport, 5 files; B: reportGV+removeUninformativeFounders+2
+Shiny modules, 4 files). **Verification (gold-standard):** captured a
+pre-refactor reference at the committed GREEN state, then proved every
+refactored output
+**byte-[`identical()`](https://rdrr.io/r/base/identical.html)**:
+`calcFE`/`calcFG`/`calcFEFG`/`calcRetention` on lacy1989; the **full
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+object under `set.seed(42L)`** (so the deterministic founder path is
+verified inside the stochastic gene-drop); the Shiny-module expressions
+(`ped[sex & isFounder,]`, `sum(isFounder(ped)[& sex])`) on `qcPed`. Full
+suite under `load_all` = **0 failed / 0 error / 1991 passed**, zero
+non-e2e offenders, only the 5 pre-existing `modPyramid` warnings. New
+`@examples` run clean. Lint **net-zero**, proven rigorously (see gotcha
+\#2). An independent **4-angle completeness-sweep workflow**
+(`wf_553e1ce4-389`) re-derived the inventory; all 4 finders converged on
+the lone intentional exclusion `findPedigreeNumber.R:35` → **0 missed R/
+sites, 0 out-of-scope inst/ sites**. **Key files:** NEW `R/isFounder.R`,
+`R/getFounders.R` (+ `man/isFounder.Rd`, `man/getFounders.Rd`,
+NAMESPACE). Refactored: `R/calcFE.R:52`, `R/calcFEFG.R:54`,
+`R/calcFG.R:64`, `R/calcRetention.R:26` (⚠ L27 untouched),
+`R/orderReport.R:29`, `R/removeUninformativeFounders.R:40`,
+`R/reportGV.R:136`, `R/modSummaryStats.R:606/616`,
+`R/modORIPReporting.R:185/186/187/318` (counts; was 185-189/320
+pre-collapse). Tests: `test_isFounder.R`, `test_getFounders.R`. Docs:
+`NEWS.md`/`NEWS.Rmd` (“Pedigree curation”), `CHANGELOG.md` (S16),
+`BACKLOG.md` (PED-1 removed). Reference RDS (throwaway,
+`/tmp/ped1_ref.rds`, NOT committed). **GOTCHAS for the next
+session:** 1. **Inventory a fix-all-instances refactor by the IDIOM, not
+the concept’s NAME** — `grep founder` missed `modSummaryStats:606/616`
+(named `males`/`females`); the `is.na(...sire/dam...)` predicate sweep
+caught all. Filter false positives (roxygen, `xor`/`|`
+partial-parentage). (→ Learning \#16a.) 2. **`object_usage_linter` “no
+visible global function definition for ‘isFounder’/‘getFounders’” is the
+STALE-INSTALLED-NAMESPACE transient (Learning \#7) — and the Learning-#7
+`/tmp`-copy method is INVALID for it** (linting outside the package dir
+loses both `.lintr` and the namespace: HEAD-in-`/tmp` = 103 lints vs 21
+in-package). Authoritative: `R CMD INSTALL` then re-lint (warnings
+vanish → 0), and/or HEAD~1-vs-HEAD lint counts **in-place** (both Shiny
+modules = 60/17 at each → 0 added). (→ Learning \#16c.) 3.
+**`findPedigreeNumber.R:35` is the one intentional exclusion** (bare
+`id`/`sire`/`dam` vectors, no `ped` object). A future “PED-1 follow-on”
+could give the helpers a dual signature to cover it — author opt-in. 4.
+**Suggested next = NEW-13/NEW-23** — `calcFE`/`calcFG` delegate to
+`calcFEFG` + collapse the triplicated S7 partial-parentage guard. **Now
+low-risk post-PED-1**: the three `calc*` share an IDENTICAL
+`getFounders(ped)`+`descendants`+matrix body; only FE-vs-FG output
+differs. Tracker reconciliation (audit items vs GitHub \#1–#38) still
+open. **Self-assessment: 9/10.** (+) Strict TDD honored end-to-end —
+declared every phase; gated all three transitions (PRE-RED→RED,
+RED→GREEN, GREEN→REFACTOR) via `AskUserQuestion`, plus the separate
+pre-RED scope+export author decisions (one re-posed with a before/after
+table at the user’s request). RED failed for the right reason
+(`could not find function`); GREEN minimal; REFACTOR proven
+[`identical()`](https://rdrr.io/r/base/identical.html). (+) **Recon
+completeness win** — the broad predicate sweep caught the 2
+`modSummaryStats` sites that `grep founder` missed; separated true idiom
+from false positives. (+) **Behavior-preservation proven to the gold
+standard** — [`identical()`](https://rdrr.io/r/base/identical.html) on
+real fixtures incl. the full SEEDED
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+object, not just “suite passes” (S15 Learning \#15c, extended). (+)
+**Lint net-zero proven rigorously** — caught my OWN methodology error
+(the `/tmp` lint comparison is confounded by missing
+`.lintr`+namespace), corrected via reinstall + HEAD~1 in-place, and
+correctly diagnosed the `object_usage` warnings as the Learning-#7
+transient rather than “fixing” them. (+) **Right-sized orchestration
+under ultracode** — ran a genuine 4-angle completeness-sweep workflow
+(the canonical fix-all-instances shape; distinct from the prior 6
+single-fn fixes’ solo grep), which independently confirmed 0 misses. (+)
+SAFEGUARDS-clean: committed GREEN before the 9-file refactor; batched
+REFACTOR ≤5 files/commit; left the pre-existing uncommitted artifacts
+(`.DS_Store`, `..Rcheck/`, `PED_GV_AUDIT_2026-05-30.html`) untouched.
+(−) Did **not** run full `devtools::check()` (e2e `create_test_app`
+baseline noise — S7–S15 precedent); mitigated by `test_dir` 0/0 +
+reinstall + lint + `document()` + `@examples` + the
+[`identical()`](https://rdrr.io/r/base/identical.html) proofs + the
+completeness sweep. (−) **Phase 3E:** the two refactored Shiny modules’
+founder logic was verified at the EXPRESSION level
+([`identical()`](https://rdrr.io/r/base/identical.html) on qcPed), not
+by launching the live app — appropriate for a behavior-preserving
+expression swap inside download/render handlers (no
+app-startup/registration/dispatch/config behavior changed). Stated, not
+silently skipped — NOT FM \#24. (−) Several user interactions (2
+scope/detail rounds + export + 3 phase gates) — all mandated by strict
+TDD + an exported-API author decision; the recurring minor.
+
+------------------------------------------------------------------------
+
+### Session 14 Handoff Evaluation (by Session 15)
+
+**Score: 9/10.** - **What helped most:** S14’s ACTIVE-TASK
+suggested-next pointer named **NEW-16** with the exact location
+(`summarizeKinshipValues.R:105-106`), the precise mechanism (both `min`
+and `secondQuartile` = `fivenum()[1]`, Q1 should be `[2]`), AND the
+second aspect (`rbind`-in-loop O(n²)). Every detail checked out — the
+user picked NEW-16 and it scoped the session instantly. - **What helped
+(reflex):** the carried audit-fix template (Learnings \#8a/#9 —
+*“empirically reproduce; the audit’s mechanism AND fix can both be
+wrong”*). This time — as with NEW-45 — the audit was **CORRECT on both
+counts**; the verify-first reflex still paid off by redirecting
+attention to the REAL risk: the **existing test silently passing on
+buggy output** (the NEW-45 `C.003` pattern). Probing the real data
+(5/153 rows change; row-10 unaffected) **before** writing RED was
+decisive — it proved a naive RED on the existing fixture would not
+fail. - **What was a partial mismatch (expected, not a deficiency):**
+S14’s gotchas were duplicate/crash-centric (probe past precursor
+warnings; doubly-masked reachability). NEW-16 is neither a crash nor a
+reachability-masking item — it’s a value mislabel with trivial
+reachability (exported; called in 1 vignette/1 test/1 dev script). Those
+specific gotchas didn’t apply, but the deeper reproduce/probe-first
+reflex did. Same class of per-item mismatch every session notes. -
+**What was missing (minor):** nothing flagged that the existing
+`test_…:75` row-10 assertion silently passes on the buggy output (so a
+naive RED won’t fail), nor that NEW-16 was never actually a BACKLOG
+checkbox item (only a “suggested next” reference). Both surfaced via the
+probe / a BACKLOG read. Reasonable — S14 wasn’t working NEW-16. - **What
+was wrong:** nothing. The <file:line>, both mechanism aspects, and the
+suggested-next pointer were all exact. - **ROI:** strongly positive —
+the accurate pointer + the verify-first reflex scoped the work and
+prevented a non-discriminating RED test.
+
+### What Session 15 Did
+
+**Deliverable:** **NEW-16** — fix
+[`summarizeKinshipValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/summarizeKinshipValues.md)
+so the `secondQuartile` column is the lower hinge (`fivenum()[2]`) not
+the minimum (`fivenum()[1]`), and refactor the O(n²) `rbind`-in-loop to
+a single bind, under strict TDD (one RED→GREEN→REFACTOR cycle). Plus a
+baseline housekeeping commit and recording the author’s **NEW-20
+retention** decision. (COMPLETE) **Date:** 2026-06-01. **Branch:**
+`add-methodology`. **Commits:** `926f4606` (style: dashboard comment
+realign = clean baseline), `dd89998c` (fix:
+code+test+roxygen/man+NEWS/CHANGELOG/BACKLOG), + this close-out
+(`docs:`). **The bug (audit mechanism AND fix BOTH correct — the NEW-45
+case, 2nd time):** `R/summarizeKinshipValues.R:105-106` assigned
+**both** `min` and `secondQuartile` to `tukeys[1L]`.
+[`fivenum()`](https://rdrr.io/r/stats/fivenum.html) returns
+`c(min, lower-hinge, median, upper-hinge, max)`; the sibling columns
+(`median = tukeys[3L]`, `thirdQuartile = tukeys[4L]`,
+`max = tukeys[5L]`) confirm the intended positional mapping, so
+`secondQuartile` should be `tukeys[2L]` — it was silently duplicating
+`min`. Empirically confirmed: `fivenum(1:5) = 1,2,3,4,5`; synthetic
+input → buggy `secondQuartile=1`, fixed `=2`. Real-data impact: **5 of
+153 rows** in the seeded example pipeline change (first is row 82). The
+existing `test_…:75` asserts `secondQuartile[10]==0` and **still passes
+after the fix** because that row’s distribution
+(`0,0,0,0,0,0,.25,.25,.25,.25`) has lower hinge = min = 0 — i.e. it was
+passing on corrupted output (NEW-45 `C.003` pattern), which is why the
+RED test needed a **divergent** synthetic input. **Reachability (trivial
+— NOT a masking/crash question):** `summarizeKinshipValues` is
+`@export`ed and called directly in `vignettes/simulatedKValues.Rmd`,
+`tests/testthat/test_summarizeKinshipValues.R`, and the dev script
+`inst/extdata/trulyUnknownParents.R`. A mislabel produces
+wrong-but-non-crashing output at every call site — no upstream guard
+masks it. grep+probe-settled → honest **no workflow** (6th consecutive).
+**Decisions (USER, package author):** (1) scope = **correctness + perf
+refactor** (the complete NEW-16), (2) handle the pre-existing
+uncommitted dashboard whitespace by **committing it** (clean baseline;
+file kept), (3) **NEW-20 = retain** `makeGeneticDiversityDashboard.R` as
+early-development work (do not delete) — already `.Rbuildignore`’d at
+L25. **The fix:** (correctness) `R/summarizeKinshipValues.R:106`
+`tukeys[1L]` → `tukeys[2L]`. (perf) collect each qualifying row’s
+`data.frame` into a preallocated list (`rows <- vector("list", n)`;
+skipped/NA rows stay `NULL`), then `stats <- do.call(rbind, rows)` once;
+`rbind` drops the `NULL` gaps, and an all-skipped input yields `NULL` →
+guarded back to [`data.frame()`](https://rdrr.io/r/base/data.frame.html)
+(empty contract preserved). (doc) roxygen `@return` now states
+`secondQuartile`/`thirdQuartile` are the lower/upper hinges. **TDD
+trail:** RED — one
+`test_that("…second quartile is the lower hinge, not the minimum (NEW-16)")`
+in `tests/testthat/test_summarizeKinshipValues.R` using synthetic
+`kValues=c(1,2,3,4,5)`/`kCounts=rep(1L,5)`; asserts
+`secondQuartile==2` + `min/median/thirdQuartile/max==1/3/4/5` +
+`secondQuartile!=min`. The `secondQuartile==2` and `!=min` assertions
+FAILED for the right reason (actual `1`=min) while the 4 already-correct
+columns PASSED — proving the test sound, not broken. GREEN — the
+one-line `tukeys[2L]` swap; the NEW-16 block passes and the existing
+row-10 line-75 assertion stays valid (verified unchanged). REFACTOR —
+bind-once + roxygen; proven
+byte-[`identical()`](https://rdrr.io/r/base/identical.html) to a
+pre-refactor reference on the seeded pipeline, the synthetic input, AND
+the all-skipped/empty case. **Verification:** full suite via `test_dir`
+**WITH `pkgload::load_all(".")`** = **0 failed / 0 error**, 159 skipped,
+**1977 passed** (= S14’s 1971 + exactly the 6 new assertions); **zero**
+non-e2e offenders; only the **5 pre-existing `modPyramid`** warnings (my
+change trips no existing test, adds no warning). Lint **net-zero** (file
+not in `.lintr` exclusions; 0 before and after the roxygen edit, all
+roxygen lines ≤80 chars). `devtools::document()` regenerated **only**
+`man/summarizeKinshipValues.Rd`, **no NAMESPACE change**. `@example`
+pipeline runs clean (153×9, correct names). **No full
+`devtools::check()`** (e2e `create_test_app` baseline noise —
+S7/S9/S11/S13/S14 precedent); mitigated by the above + the
+[`identical()`](https://rdrr.io/r/base/identical.html) proof. **Key
+files:** `R/summarizeKinshipValues.R:106` (the fix) + the bind-once loop
+(L88-119) + roxygen `@return` hinge note (~L17-22).
+`tests/testthat/test_summarizeKinshipValues.R` (NEW-16 block, ~L83-101).
+`man/summarizeKinshipValues.Rd` (regen). `NEWS.md`/`NEWS.Rmd` (new
+“Genetic value analysis” bullet), `CHANGELOG.md` (S15 entry),
+`BACKLOG.md` (NEW-20 removed; suggested-next updated). Reference RDS
+(throwaway, `/tmp`, NOT committed): `new16_ref.rds`. **GOTCHAS for the
+next session:** 1. **⚠ ALWAYS run `testthat::test_dir(...)` under
+`pkgload::load_all(".")`.** A bare `Rscript -e 'test_dir(...)'` runs
+against the **stale installed namespace**, not your source — it produced
+a PHANTOM 46-failed/68-error flood across ~40 untouched files (every
+prior session’s fix missing from the install) and inverted my own
+change. TELL: failures in files you never touched = environment/loading,
+not a regression. (→ Learning \#15b.) 2. **When the audit mechanism AND
+fix are both correct (NEW-45/NEW-16), the trap is a pre-existing test
+PASSING ON BUGGY OUTPUT.** Probe real data first; design the RED test on
+an input where buggy≠correct. (→ Learning \#15a.) 3. **Prove a
+behavior-preserving refactor with
+[`identical()`](https://rdrr.io/r/base/identical.html) vs a captured
+reference**, not just “the suite still passes”; preserve the empty-input
+contract
+(`do.call(rbind, all-NULL)`→`NULL`→[`data.frame()`](https://rdrr.io/r/base/data.frame.html)).
+(→ Learning \#15c.) 4. **NEW-20 is CLOSED as won’t-delete — do NOT
+delete `R/makeGeneticDiversityDashboard.R`** (author retains it as
+early-dev work; already `.Rbuildignore`’d L25, defines no live
+function). The audit’s “delete dead code” no longer applies. Note
+`getProportionLow` remains its only (dead) consumer — NEW-25/NEW-20
+entanglement (S8 gotcha) persists but both are retained. 5. **Suggested
+next = PED-1/NEW-17** (extract `getFounders`/`isFounder` — ⚠ don’t unify
+the `descendants` lines; `calcRetention.R:27` filters by population)
+**or NEW-13/NEW-23** (calcFE/FG → calcFEFG + collapse the triplicated S7
+guard). Tracker reconciliation (audit items vs GitHub \#1–#38) still
+open. 6. **`summarizeKinshipValues` naming oddity (NOT a bug, out of
+scope):** the columns named `secondQuartile`/`thirdQuartile` hold the
+lower/upper hinges (≈ Q1/Q3) — the names track the 2nd/4th element of
+the five-number summary, not “Q2/Q3”. Renaming would be a breaking API
+change (vignette + tests reference them by name); left as-is.
+**Self-assessment: 9/10.** (+) Strict TDD honored end-to-end — declared
+every phase; gated all three transitions (PRE-RED→RED, RED→GREEN,
+GREEN→REFACTOR) via `AskUserQuestion` plus the separate pre-RED
+scope+housekeeping decision; the RED assertions failed for the RIGHT
+reason while the 4 already-correct columns + both existing blocks
+passed. (+) **Caught and corrected my OWN tooling error** — the first
+`test_dir` (no `load_all`) showed 46-failed/68-error; I diagnosed it as
+the stale-installed-namespace artifact (not a regression) in ~1 min and
+re-ran correctly to 0/0/1977. Honest adversarial self-check, and it
+became Learning \#15b. (+) **Proved the refactor behaviour-preserving
+via [`identical()`](https://rdrr.io/r/base/identical.html)** on three
+representative inputs incl. the empty edge — gold standard beyond “suite
+passes.” (+) Verified the non-discriminating-existing-test trap by
+probing real data BEFORE writing RED, so the RED genuinely fails. (+)
+Right-sized: deterministic single-file fix, grep/probe-settled → honest
+**no workflow** (ultracode’s “unless already verified”). (+) Recorded
+the user’s NEW-20 retention decision accurately across
+BACKLOG/CHANGELOG/handoff — prevents a future session deleting the file
+(FM \#22 territory). (+) SAFEGUARDS-clean: committed-clean baseline
+before starting, staged the fix explicitly (7 files, no `.DS_Store`),
+lint net-zero, clean `document()` with no NAMESPACE churn. (−) Did
+**not** run full `devtools::check()` (e2e baseline noise — established
+precedent); mitigated by `test_dir` 0/0 + lint + `document()` +
+`@example` + the [`identical()`](https://rdrr.io/r/base/identical.html)
+proof. (−) **Phase 3E:** this is a compute-function output fix — no
+app-startup/registration/dispatch/config behaviour changed, so a
+live-app launch does not apply; verified at the function/test level (RED
+proved the bug, GREEN the fix,
+[`identical()`](https://rdrr.io/r/base/identical.html) the refactor).
+Stated, not silently skipped — NOT FM \#24. (−) My initial `test_dir`
+invocation error cost one verification round (caught fast). (−) Several
+user interactions (scope+housekeeping bundle + 3 phase gates) — all
+mandated by strict TDD; the recurring minor.
+
+------------------------------------------------------------------------
+
+### Session 13 Handoff Evaluation (by Session 14)
+
+**Score: 9/10.** - **What helped most:** the carried audit-fix template
+(Learnings \#8a/#9 — *“empirically reproduce the ACTUAL failure mode;
+the audit’s stated mechanism AND its prescribed fix can both be wrong”*)
+was **decisive again**. NEW-46’s audit text (“parent lookup by rowname;
+duplicate ids → **wrong values**”, `geneDrop.R:82-104`) was empirically
+a hard **CRASH** at `rownames(ped) <- ids` (`geneDrop.R:97`) — the
+**NEW-48 pattern** repeating. Without the reproduce-first reflex I’d
+have written a RED test asserting silent corruption that never
+happens. - **What helped (pointer accuracy):** S13’s ACTIVE-TASK +
+gotcha \#5 named **NEW-46** as suggested-next with the exact location
+and the “sibling of NEW-45 in consensus issue \#7” framing; the user
+picked it and it scoped the session instantly. The `R/geneDrop.R:76-80`
+reference (the NEW-45 period guard) was accurate — I placed the new dup
+guard right beside it. - **What was a partial mismatch (expected, not a
+deficiency):** S13’s NEW-45 narrative was **domain-sweep-centric**
+(“when the audit mechanism is CORRECT, the live decision is a DOMAIN
+question”). NEW-46 was the inverse: the audit mechanism was **WRONG**
+again (crash, not corruption), and the domain was **unambiguous** (no
+sweep needed —
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+and
+[`removeDuplicates()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.md)
+already enforce uniqueness). So gotcha \#1’s domain guidance didn’t
+apply, but the deeper “reproduce first” reflex did. Same class of
+expected per-item mismatch every session notes. - **What was slightly
+off (minor):** gotcha \#5 echoed the audit’s “duplicate-id rowname
+**lookup**” framing — but the crash is at the `rownames(ped) <- ids`
+**assignment** (L97), not the lookup (L118-119). A one-line “verify the
+crash SITE — the audit may finger the wrong line” would have pre-warned;
+but S13 was faithfully relaying the audit and hadn’t worked NEW-46.
+Caught in ~2 min by the backtrace. - **What was wrong:** nothing. Every
+commit hash, <file:line>, and the suggested-next pointer checked out. -
+**ROI:** strongly positive — the template prevented a wrong test; the
+accurate pointer scoped the work immediately.
+
+### What Session 14 Did
+
+**Deliverable:** **NEW-46** — make
+[`geneDrop()`](https://github.com/rmsharp/nprcgenekeepr/reference/geneDrop.md)
+reject **duplicate animal IDs** with a clear
+[`stop()`](https://rdrr.io/r/base/stop.html), under strict TDD (one
+RED→GREEN→REFACTOR cycle). (COMPLETE) **Date:** 2026-06-01. **Branch:**
+`add-methodology`. **Commits:** `fix:` (guard + test + roxygen/man +
+NEWS/CHANGELOG/BACKLOG) + this close-out (`docs:`). **The bug (audit
+mechanism WRONG — the NEW-48 pattern, Learning \#8a):** the audit
+(`geneDrop.R:82-104`) called NEW-46 “parent lookup by rowname; duplicate
+ids → **wrong values**.” Empirically it is a **hard CRASH** at
+`R/geneDrop.R:97` `rownames(ped) <- ids`: R’s `.rowNamesDF<-`
+**rejects** duplicate row.names (a precursor warning
+`"non-unique value when setting 'row.names'"`, then a hard error
+`"duplicate 'row.names' are not allowed"`) — it does **not** silently
+mangle. The crash happens *before* the “parent lookup by rowname”
+(L118-119) and list-keying (L117) the audit fingered, so those
+downstream mechanisms are **preempted/unreachable**. Reproduced via
+`/tmp/new46_probe*.R`. **METHOD TRAP recorded (→ Learning \#14a):**
+probe v1 used `tryCatch(expr, warning=, error=)` — the `warning=`
+handler short-circuited on the precursor warning and **hid** the
+terminal error (read as “warning”); probe v2 (suppress/let-pass the
+warning) revealed the hard error. Always probe PAST a precursor warning.
+**Reachability — DOUBLY-masked;
+direct-[`geneDrop()`](https://github.com/rmsharp/nprcgenekeepr/reference/geneDrop.md)-call
+only (grep + deterministic probe; NO workflow):** - **Canonical
+`qcStudbook → reportGV → geneDrop` path = MASKED TWICE.** `qcStudbook`
+calls `removeDuplicates` (`qcStudbook.R:277`) which
+[`unique()`](https://rdrr.io/r/base/unique.html)-collapses identical
+rows and [`stop()`](https://rdrr.io/r/base/stop.html)s on mismatched dup
+ids; AND
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+— called at `reportGV.R:81`, **before** the `geneDrop` call at
+`reportGV.R:92` — already guards with
+`stop("All id values must be unique")`. So a non-qc’d dup-id ped passed
+to `reportGV` crashes at `kinship` with a clear message, never reaching
+geneDrop’s L97. - **Scope NARROWED to geneDrop-only by the grep, not
+widened (contrast NEW-53).** A `rownames(x) <- …` inventory found a
+sibling site `reportGV.R:122 rownames(ped) <- ped$id`, but kinship (L81)
+crashes first → it’s **unreachable-with-dups** → no reportGV change
+needed. The grep *proved* scope rather than my guessing (NEW-53’s grep
+widened scope to 3 sites; here it narrowed to 1). **The contract
+decision (USER, package author):** **reject with a clear
+[`stop()`](https://rdrr.io/r/base/stop.html)** — over silent-dedup and
+over “tolerate exact-dup, stop on mismatched.” Rationale (Learning
+\#8b): today’s behavior is **already a crash**, so a clear
+[`stop()`](https://rdrr.io/r/base/stop.html) is **contract-preserving**
+(no currently-succeeding call changes; only the cryptic message
+improves) — the NEW-48/NEW-45-reject side. The unique-id **domain** was
+unambiguous (unlike NEW-45’s sweep) because two sibling functions
+(`kinship`, `removeDuplicates`) already enforce it; `kinship`’s
+`"All id values must be unique"` supplied the message precedent. **The
+fix (minimal, 4 lines):** at `R/geneDrop.R:96-100`, immediately after
+the NEW-45 period guard:
+`dupIds <- duplicated(as.character(ids)); if (any(dupIds)) stop("geneDrop(): animal IDs must be unique; ", "duplicated id(s): ", toString(unique(as.character(ids)[dupIds])))`.
+Fires before `rownames(ped) <- ids`, so no precursor warning either.
+Style mirrors the adjacent period guard
+(`toString`/`unique`/`as.character`). **TDD trail:** RED — one
+`test_that("geneDrop rejects duplicate animal IDs (NEW-46)")` in
+`tests/testthat/test_geneDrop.R` (after the NEW-45 block):
+`expect_error(…, "must be unique")` for (1) a **mismatched** dup id and
+(2) an **exact-duplicate** row (pinning reject-ALL-dups), + a
+no-false-positive guard (unique ids `c("A","B","C")` still return a
+data.frame with those ids). The 2 dup assertions FAILED for the right
+reason — backtrace pinned `geneDrop.R:97:3`
+`rownames<-`/`.rowNamesDF<-`, actual message
+`"duplicate 'row.names' are not allowed"` ≠ `"must be unique"` — while
+the guard PASSED. GREEN — the 4-line guard; all 15 geneDrop tests pass,
+precursor warnings gone. REFACTOR (doc-only) — roxygen unique-id
+paragraph + `@param ids` “unique”; regen `man/geneDrop.Rd`;
+`NEWS.md`/`NEWS.Rmd`/`CHANGELOG.md` bullets; removed NEW-46 from
+`BACKLOG.md`. **Verification:** full suite via `test_dir` = **0 failed /
+0 error**, 159 skipped, **1971 passed** (+4 = exactly the new
+expectations; S13 ended 1967); **zero** non-e2e offenders; only the **5
+pre-existing `modPyramid`** warnings (my
+[`stop()`](https://rdrr.io/r/base/stop.html) trips no existing test —
+Learning \#6 corollary clear). Lint **net-zero**: the one
+`object_usage_linter` warning on `hasInvalidIdChar` (now L92) is
+**pre-existing from S13**, HEAD-verified via scoped `git stash` (same
+warning at HEAD’s L86 — it’s the stale installed-namespace not yet
+having the `@noRd` validator; Learning \#7). `devtools::document()`
+regenerated **only** `man/geneDrop.Rd`, **no NAMESPACE change**.
+`geneDrop` `@example` runs clean (14 rows each). **Key files:**
+`R/geneDrop.R:96-100` (the guard) + roxygen L34-39 (unique-id note) +
+L41 (`@param ids`). `tests/testthat/test_geneDrop.R` (NEW-46 block,
+~L119-161). `man/geneDrop.Rd` (regen). `NEWS.md` / `NEWS.Rmd` /
+`CHANGELOG.md` (NEW-46 entry). `BACKLOG.md` (NEW-46 removed). Throwaway
+probes (`/tmp`, NOT committed): `new46_probe.R`, `new46_probe2.R`,
+`new46_probe3.R`. **GOTCHAS for the next session:** 1. **The audit’s
+“duplicate/corruption” claim was a hard CRASH again (3rd time after
+NEW-48/NEW-25). R rejects duplicate data.frame row.names** — any
+`rownames(x) <- <non-unique vector>` idiom CRASHES, it does not mangle.
+When reproducing, **probe PAST any precursor warning** (a `tryCatch`
+with both `warning=` and `error=` hides the error after a warning). (→
+Learning \#14a.) 2. **Reachability can be DOUBLY-masked.** `geneDrop`’s
+dup-id crash is unreachable through the pipeline because BOTH
+`removeDuplicates` (qcStudbook) AND `kinship`’s own guard
+(reportGV.R:81, before geneDrop) catch it. Trace **all** upstream guards
+before declaring an item reachable. (→ Learning \#14b.) 3. **A fix-all
+grep can NARROW scope** by proving a sibling site unreachable (here
+`reportGV.R:122`), not only widen it (NEW-53). Run the idiom inventory
+either way. (→ Learning \#14b.) 4. **`geneDrop` now has TWO upfront
+input guards** (period `hasInvalidIdChar`, then duplicate-id). They
+share the `toString(unique(as.character(ids)[mask]))` message idiom —
+keep new id-validation guards consistent. 5. **Suggested next = NEW-20**
+(delete dead `makeGeneticDiversityDashboard.R` + its fully-commented
+test — `@noRd`/no live fn) or **NEW-16**
+(`summarizeKinshipValues.R:105-106` — `secondQuartile` mislabeled as the
+minimum, `fivenum()[1]` should be `[2]`; + `rbind`-in-loop O(n²)).
+Remaining audit items + traps in ACTIVE TASK below. Tracker
+reconciliation (audit items vs GitHub \#1–#38) still open. 6.
+**`geneDrop.R` carries 1 pre-existing lint** (`object_usage_linter` on
+the `@noRd` `hasInvalidIdChar`, from the stale installed namespace) — it
+resolves once the package is reinstalled; don’t “fix” it.
+**Self-assessment: 9/10.** (+) Strict TDD honored end-to-end — declared
+every phase, gated all three transitions via `AskUserQuestion` + the
+separate pre-RED contract decision; the 2 RED assertions failed for the
+RIGHT reason (backtrace-confirmed crash site) while the
+no-false-positive guard stayed green. (+) **Empirically OVERTURNED the
+audit on BOTH counts** (crash not corruption; site is `rownames<-` not
+the lookup) — and **caught my own probe-v1 error** (the warning-handler
+masked the terminal error) by probing past the warning in v2; honest
+adversarial self-correction (the highest-value move). (+) grep+probe
+**NARROWED scope to geneDrop-only by proving the reportGV sibling
+unreachable** (kinship guards it first) — evidence over guessing. (+)
+Right-sized orchestration: mechanism (deterministic base-R crash) +
+reachability (double-masked) + domain (two sibling guards) all “already
+verified” → **honest no-workflow** (5th consecutive; ultracode’s “unless
+already verified”). A fan-out would only re-run a deterministic probe.
+(+) HEAD-verified the lint is pre-existing (Learning \#7) rather than
+assuming. (+) Contract-preserving stop() per Learning \#8b, mirroring
+`kinship`’s message. (−) Did **not** run full `devtools::check()` (e2e
+`create_test_app` baseline noise — S7/S9/S11/S13 precedent); mitigated
+by `test_dir` 0/0 + net-zero lint + clean `document()` + `@example` run.
+(−) **Phase 3E:** this is an input-validation guard on a compute
+function — no app-startup/registration/dispatch/config behavior changed,
+so a live-browser launch does not apply; verified at the function/test
+level (RED proved the crash, GREEN proved the guard). NOT FM \#24 —
+stated, not silently skipped. (−) 4 user interactions (1 contract
+decision + 3 phase gates) — all mandated by the strict-TDD convention,
+the recurring minor.
+
+------------------------------------------------------------------------
+
+### Session 12 Handoff Evaluation (by Session 13)
+
+**Score: 8/10.** - **Context:** S12 was doc-only (it added the
+**`AskUserQuestion` phase-gate convention**). That deliverable was
+**directly operative** this session — I used a structured
+`AskUserQuestion` at every PRE-RED→RED / RED→GREEN / GREEN→REFACTOR
+transition (twice, across two cycles) plus the separate pre-RED
+scope/approach decisions, exactly as S12 specified. Immediate payoff. -
+**What helped:** the standing ACTIVE-TASK block named **NEW-45** as the
+suggested-next code deliverable (the user picked it), and the carried
+audit-fix template (Learnings \#8a/#9/#10/#12 — *“empirically reproduce;
+the audit’s mechanism/fix can be wrong”*) set the right reflex: I
+reproduced the bug first. - **What was a partial mismatch (expected, not
+a deficiency):** the reachability guidance is
+`qcStudbook`-masker-centric and value-domain-centric. NEW-45 was
+**neither** — it was a **DOMAIN-DEFINITION** question (does the ID
+domain permit `.`?), a new class (→ Learning \#13). And — first in the
+campaign — the audit’s stated mechanism was **CORRECT**. The
+verify-first reflex still paid off: it sent me to investigate the
+domain, which reshaped the fix from “support periods” to “reject
+periods.” - **What was missing:** nothing flagged the pre-existing
+`test_modGeneticValue` special-char test (counter-evidence — it was
+passing on silently-corrupted output) or the Shiny error-renderer
+display gap; both surfaced only through diligence/Phase 3E. Reasonable —
+S12 was doc-only. - **ROI:** strongly positive — the phase-gate
+convention structured the entire session; the NEW-45 pointer scoped it
+fast.
+
+### What Session 13 Did
+
+**Deliverable:** **NEW-45** — enforce + document the **“IDs may not
+contain a period (`.`)”** rule, under strict TDD across **two**
+RED→GREEN→REFACTOR cycles. (COMPLETE) **Date:** 2026-05-31. **Branch:**
+`add-methodology`. **Commits:** `5e228bd9` (fix: enforcement + tests),
+`2527d6bc` (docs: rationale), `ceab030f` (feat: error-renderer
+display) + this close-out (`docs:`). **The bug (audit mechanism CORRECT
+this time):** `geneDrop` rebuilds the `id`/`parent` output columns by
+`strsplit(rownames(alleles), ".", fixed=TRUE)` then `key[1]`/`key[2]`,
+where rownames are `<id>.<sire|dam>`. An id containing `.`
+(e.g. `"A.1"`→`"A.1.sire"`) splits to `c("A","1","sire")` → id truncated
+to `"A"`, sire/dam distinction lost. Empirically reproduced
+(`/tmp/new45_probe.R`). **The KEY decision — DOMAIN, not mechanism
+(Learning \#13):** the user GATED the “fix-to-support periods” approach
+(A2) on whether the ID domain precludes `.`. A read-only multi-modal
+**domain-sweep workflow** (`wf_21efc084-596`; 4 searchers —
+validation-code ‖ docs ‖ separator/format ‖ example-data — + adversarial
+synthesis) returned verdict **PRECLUDED**, decisive evidence **verified
+firsthand**: `inst/extdata/ui_guidance/input_format.html:86-97`
+documents `id`/`sire`/`dam` (and L251 genotype-id) as **“Alphanumeric
+characters (no symbols)”**, live in the app via `R/modInput.R:152-153`,
+and the vignette `manual_components/_input.Rmd:39-40` names that tab as
+the authority. Reinforced by deliberate authorial contrast (allele cols
+L141-150 explicitly allow “underscores, spaces and dashes” — withheld
+from ids). So the correctness-aligned fix is to **ENFORCE** the
+documented-but-unenforced rule (reject), **not** re-engineer parsing to
+support `.`. **Caveat the synthesis flagged:** the rule was
+documentation-only (no code enforced it), so enforcing it is a
+deliberate behavior change — which the author (user) signed off. **User
+decisions:** (1) approach = **B-broad** (geneDrop guard + qcStudbook
+validation), (2) **`.`-only** enforcement (NOT full alphanumeric — lower
+risk; real data may legitimately use `-`/`_`), (3) document it as a
+feature enforced at data-input + in all auto-gen IDs (rationale: `.`
+breaks across software environments), (4) **NEW-46 out of scope**, (5)
+Phase-3E gap → **extend now** to add the error display. **Cycle 1 —
+enforcement (`5e228bd9` + docs `2527d6bc`):** - `R/hasInvalidIdChar.R`
+(NEW, `@noRd`): `!is.na(ids) & grepl(".", ids, fixed=TRUE)` — single
+definition of the rule, reused everywhere (avoids the guard-triplication
+the audit dings elsewhere). - `R/qcStudbook.R:180-189` (after
+`unknown2NA`, before `addUIds`): validates `c(id,sire,dam)`;
+`reportErrors=FALSE` → [`stop()`](https://rdrr.io/r/base/stop.html),
+`reportErrors=TRUE` → `errorLst$invalidIdChars`. (Restructured to
+satisfy `unnecessary_nesting_linter`.) - `R/geneDrop.R:76-80`:
+[`stop()`](https://rdrr.io/r/base/stop.html) guard on
+`as.character(ids)` (defense-in-depth — the GV Shiny module reaches
+geneDrop **without** passing qcStudbook). - `R/getEmptyErrorLst.R` +
+`R/checkErrorLst.R`: add & count the new `invalidIdChars` field. -
+Generators (`addUIds` `U####`, `obfuscateId`) already period-free →
+locked with **characterization** tests (pass before & after). - **Two
+pre-existing tests my change disturbed** (Learning \#6 corollary, both
+expected): `test_getFocalAnimalPed.R:112` errorLst field-count `9→10`;
+`test_modGeneticValue.R` special-char fixture `C.003→C-003` (it had been
+passing on *silently-corrupted* geneDrop output — NEW-45 in the wild!) +
+a new period-reject assertion. - Docs: roxygen on
+qcStudbook/geneDrop/addUIds/obfuscateId (+ regen those 4 `.Rd`), the
+live `input_format.html` spec (cells + a new `<li>` rationale note),
+`NEWS.md`/`NEWS.Rmd`, `CHANGELOG.md`. **Cycle 2 — error display / Phase
+3E (`ceab030f`):** the two QC error renderers enumerate fields
+**hardcoded**, so the new `invalidIdChars` wasn’t shown to users (they’d
+see an error state without the reason). Added an `invalidIdChars` case
+to `R/processQcStudbookResult.R` (Shiny error table; `toString` to avoid
+adding to its 13 pre-existing lints — issue \#30) and
+`R/summary.nprcgenekeeprErr.R` (`addErrTxt` summary line) + regen
+`processQcStudbookResult.Rd`. **Verification:** full suite via
+`test_dir` = **0 failed / 0 error**, 159 skipped, **1967 passed** (+24
+net across both cycles); zero non-e2e offenders; only the **5
+pre-existing `modPyramid`** warnings. Lint **net-zero** on every edited
+file (`processQcStudbookResult.R` stays at its 13 pre-existing lints).
+`devtools::document()` regenerated only the 5 intended `.Rd`, **no
+NAMESPACE change** (`hasInvalidIdChar` is `@noRd`). Ran the 4 changed
+exported functions’ **examples** clean (check()-equivalent slice).
+HEAD-baseline-verified both regression offenders via `git stash` (both
+passed at HEAD → both genuinely mine, both expected). **Key files:**
+`R/hasInvalidIdChar.R` (validator), `R/qcStudbook.R:180-189`,
+`R/geneDrop.R:76-80`, `R/getEmptyErrorLst.R` (`invalidIdChars` field),
+`R/checkErrorLst.R`, `R/processQcStudbookResult.R` (period block),
+`R/summary.nprcgenekeeprErr.R` (addErrTxt). Tests:
+`test_hasInvalidIdChar.R` (NEW), `test_geneDrop.R`, `test_qcStudbook.R`
+(pedPeriod fixture), `test_addUIds.R`/`test_obfuscateId.R` (guarantees),
+`test_modGeneticValue.R` (swap+reject), `test_getFocalAnimalPed.R`
+(9→10), `test_modInput_qcStudbook.R` + `test_summary.nprcgenekeeprErr.R`
+(display). Workflow artifact: `…/tasks/wixjhggi7.output` (domain
+verdict). Probes (throwaway, `/tmp`, NOT committed): `new45_probe.R`.
+**GOTCHAS for the next session:** 1. **When the audit mechanism is
+CORRECT, the live decision often shifts to a DOMAIN-DEFINITION
+question** — consult the project’s own documented spec (here
+`input_format.html`, live via `modInput`) before fix-to-support vs
+reject. A read-only multi-modal domain sweep is the right tool. (→
+Learning \#13.) 2. **A new `errorLst` field is a 4-touch change, not
+1:** add to `getEmptyErrorLst` + the `checkErrorLst` count + **both**
+hardcoded renderers (`processQcStudbookResult.R`,
+`summary.nprcgenekeeprErr.R`) — Phase 3E catches the renderer gap. And
+it trips structure-count tests (`getFocalAnimalPed` 9→10). 3.
+**`processQcStudbookResult.R` has 13 pre-existing lints** (issue \#30) —
+use [`toString()`](https://rdrr.io/r/base/toString.html) (not
+`paste(.., collapse=)`) in any new line to avoid adding to the debt. 4.
+**Enforcement is `.`-only**, not full “no symbols” — `-`/`_`/space/`/`
+ids still pass (see the `test_modGeneticValue` fixture). A future
+session could enforce the full alphanumeric spec, but that’s a bigger
+behavior change (would reject dash/underscore ids) — its own decision.
+5. **Suggested next = NEW-46** (`geneDrop.R:82-104` duplicate-id rowname
+lookup — the sibling of NEW-45 in consensus issue \#7) or **NEW-20**
+(delete dead `makeGeneticDiversityDashboard.R`). Tracker reconciliation
+(audit items vs GitHub \#1–#38) still open. **Self-assessment: 9/10.**
+(+) Strict TDD honored end-to-end across **two** cycles — declared every
+phase, gated every transition via `AskUserQuestion`; all RED tests
+failed for the right reason with no-false-positive guards passing;
+HEAD-baseline-verified the two regression offenders rather than assuming
+(Learning \#3). (+) **The domain sweep was the highest-value move** —
+the user gated A2 on it, and it found the decisive `input_format.html`
+spec, correctly pivoting the fix from support→reject; verified the
+load-bearing evidence firsthand (Learning \#20). (+) Right-sized
+orchestration: a workflow for the genuine multi-location domain
+question; grep/probe (no workflow) for the mechanism. (+) Surfaced the
+counter-evidence (`test_modGeneticValue` was passing on corrupted
+output) and the Phase-3E renderer gap **honestly** rather than silently
+shipping. (+) DRY — one validator, reused at 3 enforcement points + 2
+renderers. (+) Lint net-zero by using the codebase-idiomatic `toString`
+instead of matching the file’s dirty `paste(collapse=)` pattern. (−) Did
+**not** run full `devtools::check()` (e2e `create_test_app` baseline
+noise makes a clean signal impractical — S7/S9/S11 precedent); mitigated
+by `test_dir` 0/0 + lint + clean `document()` + running the 4 changed
+examples. NOT FM \#24: runtime verified at the **testServer** level
+(modGeneticValueServer rejects period-ids; the two renderers display
+them), though I did not launch a live browser. (−) Many user
+interactions (multiple gates + clarifications across two cycles + the 3E
+decision) — all warranted under strict TDD + a load-bearing domain
+decision + an explicit scope extension, but a high count.
+
+------------------------------------------------------------------------
+
+### What Session 12 Did
+
+**Deliverable:** Added the **TDD Phase-gate format** convention to
+`CLAUDE.md`’s Development Process Contract — at every phase transition,
+ask permission via `AskUserQuestion` (structured), not a prose question.
+(COMPLETE) **Date:** 2026-05-31. **Branch:** `add-methodology`.
+**Commit:** `docs:` close-out (this entry’s commit). **Why:** the user
+runs a parallel TDD session that gates each transition with a structured
+`AskUserQuestion` (option 1 “Yes, proceed to ” enumerating the exact
+next-phase actions + downstream verify; option 2 “Hold / alternative”;
+harness auto-adds “Other”) and asked to adopt it here. In *this*
+conversation Session 11 had used prose gates (“May I proceed to
+GREEN?”). **Decision (USER):** gate **all three** transitions —
+`PRE-RED→RED`, `RED→GREEN`, `GREEN→REFACTOR` (not just the two
+source/doc gates). A pre-RED scope/approach decision stays a *separate*
+`AskUserQuestion`. **Mechanism note (important for a future session
+tempted to “automate” it):** this is a followed CLAUDE.md convention,
+**NOT** a `settings.json` hook — there is no “phase transition” harness
+event, and a hook can’t author context-specific options. Per Learning
+\#11 it lives in `CLAUDE.md`, never in the synced
+`SESSION_RUNNER.md`/`SAFEGUARDS.md`. **Key file:** `CLAUDE.md`
+“Development Process Contract” → new **“### Phase-gate format”**
+subsection (right after Enforcement Rules); the “MUST ask permission
+before transitioning” bullet now points to it. **Verification:**
+docs-only; no code/tests touched, so no TDD cycle and no suite run
+(markdown convention — nothing to test). `CLAUDE.md` reads coherently.
+**3A note:** intentionally skipped the formal previous-handoff
+evaluation — Session 11’s handoff was written minutes earlier in this
+same conversation, so a fresh-read evaluation would add nothing.
+**Self-assessment: 9/10.** (+) Right-sized a small process change:
+surfaced the one genuine design choice (which transitions) via
+`AskUserQuestion` with preview-rendered convention text, explained why a
+hook cannot implement it, and kept it in `CLAUDE.md` per the
+synced-files rule (Learning \#11). (−) Proportionately light close-out
+(no full 6-part handoff) — appropriate for a one-paragraph doc
+convention, but flagged explicitly so it is not mistaken for protocol
+erosion (FM \#17).
+
+------------------------------------------------------------------------
+
+### Session 10 Handoff Evaluation (by Session 11)
+
+**Score: 9/10.** - **Context:** S10 was a methodology-update session;
+its handoff pointed the next session at NEW-53 as the suggested next
+*code* deliverable, which the user did pick. So unlike the S9→S10 pivot,
+S10’s forward guidance was directly operative this session. - **What
+helped most:** the carried-forward audit-fix template (Learnings \#8a/#9
+— *“empirically reproduce the ACTUAL failure mode; the audit’s stated
+mechanism AND prescribed fix can BOTH be wrong”*) was again
+**decisive**. NEW-53’s audit text claims `makeSimPed` “overwrites
+sire/dam” and `createSimKinships` “adds a population column in place”; a
+2-minute probe **disproved both** — the only real leak is a by-reference
+data.frame→data.table CLASS flip (`$<-` shallow-copies, so content
+survives). Without the reflex to probe first, I’d have written a RED
+test asserting content corruption that never happens. The ACTIVE-TASK
+pointer named NEW-53, the two files, and the exact mechanism
+(`getPotentialParents.R:28`, `setDT` no copy) accurately. S10’s GOTCHA
+\#2 (orientation leads with `gh issue list`; tracker-reconciliation
+still open) set up Phase 0 correctly. - **What was missing (minor):**
+the pointer said “fix both together” (`makeSimPed` +
+`getPotentialParents`) but the audit finding text *also* names
+`createSimKinships` as the same pattern — the third sibling wasn’t
+flagged. I found it via the grep reference-inventory (workstream Q4) and
+surfaced the scope decision to the user. A one-line “audit also names
+createSimKinships” would have pre-scoped it. - **What was a partial
+mismatch (expected, not a deficiency):** the reachability guidance is
+`qcStudbook`-masker-centric (addUIds/convertSexCodes/addParents) and
+value-domain-centric (NEW-52). NEW-53 is **neither** — it’s a
+side-effect-on-caller / call-graph-propagation question (does the
+mutation reach a caller who reuses the object? — here
+`cumulateSimKinships` insulates it; direct API calls don’t). Same class
+of mismatch S7/S8 noted; the generic “verify reachability + reproduce
+mechanism” still pointed right. - **What was wrong:** nothing. Every
+<file:line> and the mechanism checked out. - **ROI:** strongly positive
+— the template prevented a wrong test, and the accurate pointer scoped
+the session immediately.
+
+### What Session 11 Did
+
+**Deliverable:** Fixed **NEW-53**
+(`makeSimPed`/`getPotentialParents`/`createSimKinships` mutate the
+caller’s `ped` by reference) under strict TDD, scope = all three (user
+decision). (COMPLETE) **Date:** 2026-05-31. **Branch:**
+`add-methodology`. **Commits:** `5f40b7af` (fix: 3 R files + 3 test
+files + NAMESPACE); close-out docs in a follow-up `docs:` commit. **The
+bug (empirically nailed; audit OVER-claimed the harm):** each function
+ran `setDT(ped)`, which converts a data.frame to a data.table **by
+reference** — silently flipping the *caller’s* `ped` class. The audit
+said `makeSimPed` “overwrites sire/dam” and `createSimKinships` “adds a
+population column in place”; **both are FALSE** — the post-`setDT`
+`ped$col[…] <- v` triggers `$<-.data.table`’s shallow-copy-and-rebind,
+decoupling the local `ped` before any write, so neither content nor new
+columns reach the caller. The **only** leak is the class flip. Realized
+harm = `[`-semantics divergence in the caller’s *later* code
+(`df[1]`=column vs `dt[1]`=ROW; `df[,"x"]`=vector vs `dt[,"x"]`=1-col
+table) — an exported-API value-semantics violation, NOT numerical
+corruption. **Reachability — verdict (probe + grep settled, NO workflow
+— “already verified”, 3rd consecutive session):** - **Pattern inventory
+(grep):** exactly **3** `setDT(` sites in `R/`; no other
+reference-mutation ops
+(`setDF`/`:=`/`set(`/`setattr`/`setkey`/`setorder`/`setcolorder` all
+absent). The complete cluster = `makeSimPed.R:25` (guarded),
+`getPotentialParents.R:28` (unconditional), `createSimKinships.R:50`
+(unconditional). - **Harm propagation (probe `/tmp/new53_probe3.R`):**
+`cumulateSimKinships` (the GV sim pipeline) does **NOT** leak the flip
+to its caller — its line-52 `ped$population <- …` copies before the loop
+— and its Monte-Carlo result is correct (content preserved across
+iterations). The realized exposure is **direct calls to the three
+`@export`ed functions**. `getPotentialParents`’s only in-repo caller is
+a dev script (`inst/extdata/trulyUnknownParents.R`);
+`makeSimPed`/`createSimKinships` are GV-sim public functions. -
+**Fix-idiom probe (`/tmp/new53_probe2.R`):** `as.data.table()` COPIES
+for both data.frame AND data.table inputs; `$<-` never leaks a *new*
+column to the caller; so the minimal `setDT`→`as.data.table` swap is
+sufficient (no unconditional `copy()` needed). makeSimPed output
+byte-identical (`s1_1/s2_2/s3_1`). **Semantic/scope decision (USER,
+package author):** scope = **all three** (the complete grep-verified
+cluster), over “the two from the handoff” or “makeSimPed only” — leaves
+no copy of the bug. There was NO stop-vs-warning contract decision
+(unlike NEW-40/48/52): a pure side-effect removal. **The fix (minimal,
+identical ×3):** `setDT(ped)` → `ped <- data.table::as.data.table(ped)`
+at `R/makeSimPed.R:25` (inside the existing
+`if (!inherits(ped, "data.table"))` guard),
+`R/getPotentialParents.R:28`, `R/createSimKinships.R:50`. Plus roxygen
+`@importFrom data.table setDT`→`as.data.table` ×3 and `NAMESPACE` regen
+(dropped `importFrom(data.table,setDT)` — no function uses `setDT`
+anymore; `as.data.table` was already imported by
+`R/kinshipMatrixToKValues.R`). **TDD trail:** RED — one `test_that` per
+function asserting the caller’s `class(ped)` stays `"data.frame"` after
+the call (`expect_false(inherits(pedDF,"data.table"))` +
+`expect_identical(class(pedDF),"data.frame")`), plus an **immutable**
+content/structure guard (`paste0(…)` snapshot — NOT `before <- ped`,
+which shares the SEXP and is mutated in place by `setDT`). All 3 failed
+for the right reason (class length 2, inherits data.table TRUE) while
+the content guards + preconditions stayed green. GREEN — the 3 one-line
+swaps; all green. REFACTOR (user-approved, doc-only) — `@importFrom` +
+NAMESPACE regen; no `.Rd` churn. **Verification:** full suite via
+`test_dir` = **0 failed / 0 error**, 159 skipped, **1943 passed** (+11 =
+exactly the new assertions; S9/S10 baseline 1932); **zero** non-e2e
+offenders. Warning column: only the **5 pre-existing**
+`test_modPyramid.R`
+[`max()`](https://rdrr.io/r/base/Extremes.html)-on-empty warnings
+(unchanged since S4). Lint = **0** on all 3 R files (line-for-line edits
+→ no `.lintr` displacement, Learning \#7 clear). The `createSimKinships`
+`@example` runs clean through the changed path. **No
+`devtools::check()`** (see self-assessment −). **Key files:** -
+`R/makeSimPed.R:25`, `R/getPotentialParents.R:28`,
+`R/createSimKinships.R:50` — the fix; `@importFrom` line in each updated
+to `as.data.table`. - `tests/testthat/test_makeSimPed.R`
+(`makeSimPed does not mutate the caller's pedigree (NEW-53)`),
+`test_getPotentialParents.R`, `test_createSimKinships.R` — the 3 new
+non-mutation tests (self-contained, inline fixtures;
+`as.data.frame(...)` start state). - `NAMESPACE` —
+`importFrom(data.table,setDT)` removed. - Probe scripts (throwaway, in
+`/tmp`, NOT committed): `new53_probe.R` (mutation repro),
+`new53_probe2.R` (copy semantics), `new53_probe3.R` (pipeline
+insulation + `[`-divergence demo). **GOTCHAS for the next session:** 1.
+**`data.table` `$<-` shallow-copies — so `setDT`/`set*` “in-place” audit
+items usually leak only the CLASS/attrs, not content.** When auditing
+any “mutates/corrupts in place” finding, probe what *actually* leaks
+before writing the RED test; assert caller-object-unchanged with an
+**immutable** snapshot (`paste0`), because `before <- ped` shares the
+SEXP and `setDT`/`setattr` mutate it in place (a naive before/after
+`identical` can pass on buggy code). (→ Learning \#12.) 2.
+**Reachability for a side-effect bug is a call-graph question, not a
+`qcStudbook`-masker or value-domain question.** Trace whether internal
+callers insulate the leak (`cumulateSimKinships` does; createSimKinships
+did not before this fix). 3. **NEW-50/51 still open in this cluster**
+(per S9 gotcha \#4): NEW-51 (positional matrix accumulation, no
+dimname/order assertion), NEW-50/KIN-4 (duplicated-and-diverging sim
+driver — `createSimKinships` vs `cumulateSimKinships`; note they now
+BOTH avoid the by-ref flip, but `cumulateSimKinships` still never calls
+`setDT`/`as.data.table` at all — it relies on `ped$population <- …` to
+copy, an asymmetry with `createSimKinships`).
+`makeSimPed`/`createSimKinships`/`cumulateSimKinships` are exported but
+**public orphans** (no live internal callers; the Monte-Carlo
+sim-kinship feature is exported-but-unwired). 4. **Suggested next =
+NEW-45** (`geneDrop` period-in-id allele mis-assignment). Then NEW-20
+(delete dead `makeGeneticDiversityDashboard.R` + its commented test),
+PED-1/NEW-17 (extract `getFounders`/`isFounder` — ⚠ don’t unify the
+`descendants` lines; `calcRetention.R:27` filters by population). See
+“Remaining work + audit-fix guidance” in ACTIVE TASK. 5. **Still-open
+from S10:** reconcile the audit follow-ups (BACKLOG.md) vs the GitHub
+tracker (#1–#38) with the user — they coexist. And the trivial
+`test_getPotentialParents.R` copy/paste-slip assertion (S4 find) is
+still unfixed. **Self-assessment: 9/10.** (+) Strict TDD honored
+end-to-end — declared every phase, asked permission RED→GREEN and
+GREEN→REFACTOR; the 3 RED tests failed for the RIGHT reason (class flip)
+while content guards + existing tests stayed green. (+) Empirically
+**disproved the audit’s harm claims** (sire/dam overwrite +
+population-column leak) via deterministic probes BEFORE the RED test —
+the highest-value move; correctly reframed the bug as a class-flip side
+effect, not corruption (→ Learning \#12). (+) Grep-inventoried the FULL
+reference-mutation pattern (3 sites, not the handoff’s 2) and surfaced
+the scope as an author decision with grounded options rather than
+guessing. (+) Answered the user’s “is this actually a bug / is ped used
+later?” with a traced, evidence-based call-graph analysis (pipeline
+insulation + concrete `[`-divergence demo) rather than asserting
+severity. (+) Right-sized the work: probe + grep settled mechanism &
+reachability → honestly **no workflow** (3rd consecutive session;
+ultracode’s “unless already verified”). (+) Clean REFACTOR —
+`@importFrom` honesty, NAMESPACE regen verified to touch nothing else,
+no `.Rd` churn, lint 0. (−) Did NOT run `devtools::check()` — justified
+for a 3-line internal change fully exercised by `test_dir` 0/0 + the
+example run + clean NAMESPACE regen, but it IS an exported-API +
+NAMESPACE change, so check() would be marginally more thorough (the one
+residual; this is NOT FM \#24 — no app-startup/registration/dispatch
+behavior changed, so Phase 3E runtime-launch does not apply; verified
+via suite + example). (−) Four user interactions (clarify-why-a-bug,
+scope, RED gate, GREEN gate, REFACTOR gate) — all warranted under strict
+TDD + an exported-API decision + the user’s substantive “why is this a
+bug” question, but a looser contract could have bundled the gates.
+
+------------------------------------------------------------------------
+
+### Session 9 Handoff Evaluation (by Session 10)
+
+**Score: 8/10** (with a caveat: this session’s task was *not* derived
+from S9’s handoff). - **Context:** S9’s handoff pointed the next session
+at NEW-53 (audit campaign). The user instead directed a
+**methodology-framework update**, so the handoff’s audit-specific
+content wasn’t the operative input this session. That’s not an S9
+deficiency — a handoff can’t anticipate a meta/maintenance pivot. -
+**What helped:** the ACTIVE TASK block oriented me to true repo state in
+one read (clean tree, S9 = NEW-52 done, suggested-next NEW-53), and its
+careful treatment of the **10 Learnings as institutional memory** is
+exactly what made me stop and *preserve* them (relocate to CLAUDE.md)
+before forcing the sync. The “What You Must Do” gotchas (maskers,
+reachability template) are high-value and I carried them forward
+intact. - **What was missing (a chain-wide gap, not S9-specific):** no
+session in the chain (1–9) noted that (a) the embedded **methodology was
+stale** vs canonical, or (b) the repo has a **live GitHub issue
+tracker** (`gh issue list` → \#34–38). Both are now surfaced. Also, none
+flagged the `CHANGELOG.md`-vs-`NEWS.md` scoring gap that the user caught
+— that’s what triggered this session. - **What was wrong:** nothing.
+Every commit hash and <file:line> in S9’s handoff checked out. -
+**ROI:** positive — fast, accurate orientation even though the task
+pivoted.
+
+### What Session 10 Did
+
+**Deliverable:** Updated the embedded methodology framework to canonical
+`rmsharp/methodology` `f32d780` and prepared the repo for a session
+restart. (COMPLETE) **Date:** 2026-05-31. **Branch:** `add-methodology`.
+**Commits:** `68ec2d05` (relocate customizations → CLAUDE.md + Phase 1B
+claim), `15e9a793` (sync trio), `7133df0f` (framework docs +
+workstreams), `0cd9838f` (CHANGELOG/ROADMAP/RECOMMENDED_SKILLS + BACKLOG
+split), + this close-out (`docs:`). **Why this session existed:** the
+user asked “where is the changelog?”; I answered from R convention
+(`NEWS.md`) without consulting the project’s own methodology, which keys
+the changelog on `CHANGELOG.md` (`methodology_dashboard.py`). The user
+(correctly) flagged that as substituting my judgment for the
+methodology, then directed a full methodology update from canonical.
+**How (BOOTSTRAP “Updating an existing project” runbook,
+evidence-based):** cloned canonical to `/tmp/methodology-canonical`; ran
+`bin/status`/`bin/sync --dry-run` (all 3 synced files =
+`locally modified` → sync refuses without `--force`); **diffed every
+file** to separate genuine customization from staleness BEFORE
+overwriting. **Findings that drove the plan:** - Synced trio
+customizations: `SESSION_RUNNER.md` carried only the **10 project
+Learnings** (templates + FM \#1–23 were stock); `SAFEGUARDS.md` carried
+**2 R-package build-equivalent rows**; `methodology_dashboard.py` had
+**no** project customization. → relocated the first two into CLAUDE.md,
+then `bin/sync --force`. - Framework docs all stale; **4 new upstream
+workstreams** added. `DESIGN`/`TEMPLATE` workstreams were already
+identical. - Canonical dashboard still scores **`CHANGELOG.md`** (weight
+5), NOT `NEWS.md` → created a *process* `CHANGELOG.md` (NEWS.md stays
+CRAN-facing). Health **92→98**. **Key files:** - `CLAUDE.md` — SESSION
+PROTOCOL orient line updated; new **“Build / Test / Verify”** (R
+build-equivalent) + **“Project-Specific Methodology Adaptations”** (10
+Learnings verbatim + new **Learning \#11** on methodology-update
+mechanics). This is now the home for all project methodology
+customizations. - `SESSION_RUNNER.md`, `SAFEGUARDS.md`,
+`methodology_dashboard.py` — byte-identical to canonical `f32d780`
+(`bin/status` = all `current`). **Do not edit these** — put changes in
+CLAUDE.md. - `docs/methodology/` —
+`ITERATIVE_METHODOLOGY`/`HOW_TO_USE`/`README` + 9 workstreams, all
+canonical. - `CHANGELOG.md` (process history), `ROADMAP.md` (milestone +
+feature inventory), `RECOMMENDED_SKILLS.md` (links adapted to this
+repo’s layout), `BACKLOG.md` (open work only + audit follow-ups).
+**GOTCHAS for the next session:** 1. **RESTART before working** — the
+new `CLAUDE.md`/`SESSION_RUNNER.md` load only in a fresh session
+(BOOTSTRAP First-Session rule). 2. **Orientation now leads with
+`gh issue list`** (repo has a live tracker — \#34–38 open). BACKLOG.md
+is the fallback. The audit follow-ups (NEW-53 etc.) are in BACKLOG.md,
+NOT GitHub issues — reconcile with the user. 3. **Synced files must stay
+byte-identical to canonical.** `bin/sync`/`bin/status` enforce it; drift
+blocks sync without `--force`. Customizations go in CLAUDE.md
+Adaptations (Learning \#11). 4. **`bin/sync --source=github` targets
+`KJ5HST/methodology`** (hardcoded in the script), which differs from the
+`rmsharp/methodology` URL the user gave. I used `--source=local` against
+a clone of `rmsharp/methodology`, so it didn’t matter — but for future
+GitHub-source syncs, confirm which repo is canonical. The
+`/tmp/methodology-canonical` clone is ephemeral (re-clone to sync
+again). 5. **Scope held / NOT done (deliberate):** did NOT file the
+audit follow-ups as GitHub issues; did NOT touch `NEWS.md`/`NEWS.Rmd`;
+did NOT add `CONTEXT.md`/`BOOTSTRAP.md` to the project (methodology-repo
+docs); did NOT run the R test suite (no code changed); left the
+pre-existing untouched artifacts (`.DS_Store`, `..Rcheck/`,
+`PED_GV_AUDIT_2026-05-30.html`) alone. **Self-assessment: 9/10.** (+)
+Treated a destructive multi-file framework change with full SAFEGUARDS
+discipline: committed-clean baseline, **evidence-based diff inventory
+before any overwrite**, customizations preserved (10 Learnings) *before*
+`--force`, incremental commits (≤5 files each), verified
+byte-identical + dashboard-runs + health-improved after each step. (+)
+Used the project’s **own intended mechanism** (`bin/sync`) rather than
+ad-hoc copying — the direct lesson from the CHANGELOG misstep (consult
+the project’s source of truth). (+) Was consultative on the two genuine
+decisions (scope, CHANGELOG/NEWS) rather than assuming — rebuilding
+trust after the earlier substitution-of-judgment error. (+) Surfaced two
+latent chain-wide gaps (stale methodology, unused GitHub tracker). (−)
+The `RECOMMENDED_SKILLS.md` link-rewrite is a judgment call (could have
+copied verbatim and accepted dangling links); it’s now non-identical to
+canonical by design. (−) Could not self-verify the restart (the whole
+point of restarting) — noted as a handoff gotcha rather than silently
+skipped (new SESSION_RUNNER Phase 3E).
+
+------------------------------------------------------------------------
+
+### Session 8 Handoff Evaluation (by Session 9)
+
+**Score: 9/10.** - **What helped most:** the two standing ⚠ in “What You
+Must Do” \#1 were *both* decisive. (1) *“empirically reproduce the
+ACTUAL failure mode — the audit’s stated mechanism AND its prescribed
+fix can BOTH be WRONG”* (Learnings \#8a/#9) → NEW-52 has TWO mechanisms;
+**M1 (n=1) reproduced** (all-NaN sd), but **M2 (catastrophic
+cancellation) does NOT reproduce** —
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+returns dyadic rationals (exact in IEEE-754), so constant-across-sims
+cells cancel to **exactly 0**, never tiny-negative (probe: 0 negative
+numerators, 117 exactly-0, 0 NaN at n=10 and n=100). Without that reflex
+I might have shipped a speculative `pmax(num,0)` clamp for an
+unreachable path. (2) *“reachability is NOT always a pipeline-masking
+question … orphaned, zero callers”* (Learning \#9) →
+`cumulateSimKinships` is `@export`ed but has **zero internal/live
+callers** (grep-settled), so M1 reachability = a direct public-API call
+with `n=1`; per Learning \#9’s corollary I did NOT spin up a 3-lens
+workflow (grep + a 2-min repro = “already verified”). - **What helped
+(process):** **Learning \#8b** (stop-vs-warning by *current* failure
+mode) framed the author decision exactly — n=1 currently *succeeds
+silently* (NaN sd) → graceful **NA+warning** is backward-safe (NEW-40
+side); n=0 *already crashes* → clear **stop** is backward-safe (NEW-48
+side). **Learning \#4**’s `test_dir`+`!grepl` isolation gave a clean
+0/0; the warning-column watch confirmed only the 5 pre-existing
+`modPyramid` warnings and that my new
+[`warning()`](https://rdrr.io/r/base/warning.html) trips no existing
+test (Learning \#6 corollary). **Learning \#7** check (file not in
+`.lintr`) avoided a phantom line-displacement hunt. - **What was
+slightly off (partial mismatch):** the NEW-52 one-liner (“sd n=1 → NaN”)
+captured M1 but not the audit’s *second* claimed mechanism (M2
+cancellation) — I found M2 only by reading the audit finding itself
+(`PED_GV_AUDIT:114-116`). Minor: the standing ⚠ “audit mechanism can be
+wrong” anticipated it, so the disproof cost ~2 min. - **What was
+missing:** no flag that `cumulateSimKinships` is a **public orphan**
+(`@export`ed, zero live callers — unusual), that the audit’s M2 is
+dubious for dyadic-rational values, or that **n=0** is a separate
+adjacent crash. All three only surface on empirical repro; S8 wasn’t on
+NEW-52, so reasonable gaps (same class as S8’s own note about S7). -
+**What was wrong:** nothing. S8 faithfully relayed the audit pointer;
+the audit’s M2 over-claim is the audit’s, not S8’s. - **ROI:** strongly
+positive — the standing learnings (#4/#8a/#8b/#9) were the backbone;
+they prevented a speculative fix and framed the dual stop/warning
+contract correctly.
+
+### What Session 9 Did
+
+**Deliverable:** Fixed **NEW-52** (`cumulateSimKinships` standard
+deviation undefined for n \< 2) under strict TDD, extended by author
+decision to also clear-error the adjacent n=0 crash; with a regression
+test block + roxygen/man update. (COMPLETE) **Date:** 2026-05-31.
+**Branch:** `add-methodology`. **Commits:** `e3c7e8b3` (fix + test
+block + man page); close-out docs in a follow-up `docs:` commit. **The
+bug (M1, real):** the sd formula
+`sqrt(((n*squaredKinship) - sumKinship^2L) / (n*(n-1L)))` is the n−1
+(sample) form. For **n=1** the denominator `n(n-1)=0` and numerator `=0`
+→ `0/0 = NaN` in **every** cell (289/289 on the test ped) — silent (no
+error). The roxygen documented “standard deviation” but didn’t address
+n\<2. **Reachability — verdict MIXED; it DISPROVED the audit’s M2
+(verified by grep caller-trace + direct empirical repro; NO workflow —
+“already verified” per Learning \#9 corollary):** - **M1 (n=1) =
+REACHABLE & CONFIRMED.** `cumulateSimKinships` is `@export`ed but has
+**zero internal/live callers** (full-repo grep: only its own def, its
+test using n=100, and docs/audits; no `do.call`/`get`/`match.fun`; NOT
+in the `qcStudbook`→`reportGV` path). So n=1 is reachable via a direct
+public-API call. Empirically all-NaN sd. - **M2 (catastrophic
+cancellation) = NOT REACHABLE.** Audit claimed “near-constant cells →
+tiny-negative under the root → NaN.” Empirically FALSE here:
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+returns **dyadic rationals** (sums of powers of ½), *exact* in IEEE-754,
+so constant cells produce numerator **exactly 0** (probe: min numerator
+0, **0 negative**, 117 exactly-0; 0 NaN at n=10 and n=100). The formula
+is only reachable *through* `cumulateSimKinships`, so non-dyadic data
+can’t reach it. Under strict TDD, **no failing test can be written → no
+fix** (a `pmax(num,0)` clamp would be speculative, untestable). →
+Learning \#10. - **n=0 (adjacent, NOT in audit) = REACHABLE, distinct
+crash.** `seq_len(0)` → loop never runs → `minKinship`/`maxKinship`
+never initialized → `"object 'minKinship' not found"` *before* the sd
+code. Author chose to also guard this. **Semantic decisions (USER,
+package author):** (sd contract) **NA matrix + warning** for n\<2 — over
+silent-NA and over [`stop()`](https://rdrr.io/r/base/stop.html).
+Reasoning (Learning \#8b): n=1 currently *succeeds* (returns valid
+mean/min/max + NaN sd), so graceful NA+warning preserves that success
+while fixing the diagnostic;
+[`stop()`](https://rdrr.io/r/base/stop.html) would convert a
+currently-succeeding call to a failure and deny the valid mean/min/max —
+the inverse of NEW-48/NEW-25 (already-crashing → stop). Matches base R
+`sd(c(5)) == NA`. (scope) **also clear-error n\<1** — n=0 already
+crashes cryptically, so a clear
+[`stop()`](https://rdrr.io/r/base/stop.html) is backward-safe (the
+NEW-48 side again). **The fix (minimal):** -
+`R/cumulateSimKinships.R:42-44` —
+`if (n < 1L) stop("cumulateSimKinships() requires at least one simulation (n >= 1).")`
+(top of function, before the loop). - `R/cumulateSimKinships.R:73-89` —
+sd branch:
+`if (n < 2L) { warning("… standard deviation is undefined for n < 2 simulations; sdKinship set to NA.") ; matrix(NA_real_, nrow=nIds, ncol=nIds, dimnames=dimnames(sumKinship)) } else { <original formula, byte-identical> }`.
+Verified: n≥2 output byte-identical to pre-fix; n=1 → all-NA (no NaN),
+dimnames preserved, mean/min/max intact. **TDD trail:** RED — one
+`test_that` block (`tests/testthat/test_cumulateSimKinships.R:72-101`),
+9 expectations: n=1 → `expect_warning("undefined for n < 2")` +
+`all(is.na(sd))` + **`expect_false(any(is.nan(sd)))`** (the KEY
+discriminator — `is.na(NaN)` is TRUE, so only `is.nan` separates the NaN
+baseline from the NA fix) + mean/min/max not-NaN; n=0 →
+`expect_error("at least one simulation")`; n=2 guard →
+`expect_warning(regexp=NA)` + no-NA sd. The 3 bug assertions FAILED for
+the right reason on unfixed code (no warning / sd is NaN / cryptic n=0
+message); the guards passed before AND after. GREEN — the two guards;
+file 14/14. REFACTOR (user-approved, doc-only) — roxygen `@return`
+(sdKinship NA for n\<2) + `@param n` (n\>=1 required, sd needs n\>=2);
+regenerated `man/cumulateSimKinships.Rd` (only that Rd; no NAMESPACE
+change). **Verification:** full suite via `test_dir` = **0 failed / 0
+error**, 159 skipped, **1932 passed** (+9 = exactly the new
+expectations; S8 ended 1923); **zero** non-e2e offenders. Warning
+column: only the **5 pre-existing** `test_modPyramid.R`
+[`max()`](https://rdrr.io/r/base/Extremes.html)-on-empty warnings
+(unchanged) — my new [`warning()`](https://rdrr.io/r/base/warning.html)
+trips no other test. Lint = **0** on `R/cumulateSimKinships.R` (NOT in
+`.lintr`) and the test file (blanket `tests` exclusion). **Key
+files:** - `R/cumulateSimKinships.R:42-44` (n\<1 stop), `:73-89` (n\<2
+NA+warning sd branch); roxygen `@return` `:10-14`, `@param n`
+`:19-21`. - `tests/testthat/test_cumulateSimKinships.R:72-101` — the new
+test block (reuses file-level `ped`/`allSimParents`; `set_seed(2L)` for
+determinism; inline only). - `man/cumulateSimKinships.Rd` — regenerated.
+**GOTCHAS for the next session:** 1. **An audit’s claimed mechanism can
+be UNREACHABLE for the function’s value domain** (extends Learning \#8a
+→ Learning \#10). NEW-52’s M2 (catastrophic cancellation) cannot occur
+because
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+yields dyadic rationals (exact in IEEE-754) → constant cells cancel to
+exactly 0. When auditing numerical-instability findings, check whether
+inputs are exactly representable AND whether the unstable expression is
+reachable with non-exact data. DISPROVING \> “defensively fixing”: under
+strict TDD, no failing test → no code. 2. **`is.na(NaN)` is `TRUE` in
+R** — to assert “NA but not NaN” you MUST use
+`expect_false(any(is.nan(x)))` alongside `all(is.na(x))`. A test that
+only checks `is.na` passes on the broken NaN baseline and proves
+nothing. 3. **`cumulateSimKinships` is a “public orphan”** — `@export`ed
+but zero live callers (its sibling `createSimKinships` likewise — verify
+before assuming a GV-report path). The Monte-Carlo sim-kinship feature
+appears exported-but-unwired. 4. **NEW-50/51/53 still OPEN in this
+cluster**
+(`cumulateSimKinships.R`/`createSimKinships.R`/`makeSimPed.R`): NEW-53
+(makeSimPed in-place mutation — also `getPotentialParents.R:28`
+setDT-no-copy; fix both together), NEW-51 (positional matrix
+accumulation, no dimname/order assertion), NEW-50/KIN-4
+(duplicated-and-diverging sim driver; note `createSimKinships` does
+`setDT(ped)` but `cumulateSimKinships` does not — an existing
+divergence). If NEW-50/KIN-4 consolidates the two into a shared
+`simulateOneKinship` helper, fold the n-guards in once. 5. **Scope held
+/ NOT done (deliberate):** did NOT add a defensive M2 clamp
+(unreachable + untestable); did NOT touch NEW-50/51/53; did NOT run
+`devtools::check()` (test_dir 0/0 + lint 0 + clean man regen deemed
+sufficient for a localized change — but it IS an exported fn, see
+self-assessment −); did NOT touch the pre-existing `modPyramid`
+[`max()`](https://rdrr.io/r/base/Extremes.html) warnings or the
+`test_getPotentialParents` copy/paste-slip test (both still open).
+**Self-assessment: 9/10.** (+) Strict TDD honored end-to-end — declared
+every phase (Pre-RED investigation, RED, GREEN, REFACTOR), asked
+permission RED→GREEN and GREEN→REFACTOR; the 3 RED assertions failed for
+the RIGHT reasons while the n≥2 + mean/min/max guards stayed green as
+true-positive guards. (+) Empirically reproduced ALL THREE mechanisms
+FIRST and **DISPROVED the audit’s M2** (dyadic rationals are exact →
+constant cells cancel to exactly 0; formula only reachable through the
+function) — correctly declined speculative untestable defensive code
+(the highest-value move; → Learning \#10). (+) Confirmed the candidate
+fix actually fixes the reproduced failure AND is byte-identical for n≥2
+BEFORE the RED test (Learning \#8a/#9). (+) Recognized the n\<2 contract
+as a genuine author decision and surfaced it with grounded options +
+code previews + the Learning \#8b reasoning; author chose NA+warning,
+consistent with the framework. (+) Right-sized reachability:
+`@export`ed-but-zero-callers settled by grep + a 2-min repro = “already
+verified”; did NOT spin up a workflow (honest application of ultracode’s
+“unless already verified” + Learning \#9 corollary — second consecutive
+session where the honest call was “no workflow”). (+) Used the `is.nan`
+discriminator in the RED test (since `is.na(NaN)` is TRUE) — a subtle
+correctness point. (+) Verified `.lintr` membership (Learning \#7) and
+confirmed `document()` touched only the one Rd. (−) Did NOT run
+`devtools::check()`; this touches an EXPORTED function + regenerates a
+man page, so check() is marginally more thorough than for S8’s `@noRd`
+helper — but the example was unchanged, the Rd regenerated cleanly,
+lint=0, suite 0/0. The one residual. (−) Four user interactions (the
+2-question batch + two phase gates); all warranted under strict-TDD + a
+behavior-defining public-API decision, but a looser contract could have
+bundled them.
+
+------------------------------------------------------------------------
+
+### Session 7 Handoff Evaluation (by Session 8)
+
+**Score: 8.5/10.** - **What helped most:** the standing **Learning
+\#8a** carried in “What You Must Do” \#1 — *“empirically reproduce the
+ACTUAL failure mode — the audit’s stated mechanism can be WRONG”* — was
+directly decisive. The audit (and its in-line note) framed NEW-25 as
+*“the three-way if/else-if has no terminal else, so `if (NaN > 0.5)`
+raises…”*, which reads as “add a terminal `else`.” Empirical repro in ~1
+min showed the crash is at the **FIRST** `if (NaN > 0.5)` = `if (NA)`
+(because `NaN > 0.5` is `NA`), so a terminal `else` would NOT fix it.
+S7’s gotcha \#1 (“don’t design the RED test off the audit’s prose”)
+trained exactly this reflex. Avoided shipping a non-fix. - **What helped
+(process):** Learning \#4’s `test_dir` +
+`!grepl("test-app-|test-e2e-", file)` isolation gave a clean 0/0 with +3
+passed (exactly the new expectations); the `warning` column again
+confirmed the 5 `test_modPyramid.R`
+[`max()`](https://rdrr.io/r/base/Extremes.html)-on-empty warnings are
+the SAME pre-existing ones S4–S7 flagged. S7’s framing of the semantic
+decision as the **package author’s call** (NEW-48 approach choice)
+generalized perfectly — empty-input contract was likewise a domain
+decision I surfaced with code previews rather than guessing. - **What
+was a partial MISMATCH (not wrong, just not aimed here):** the
+reachability template in \#1 is **`qcStudbook`-pipeline-centric**
+(maskers `addUIds`/`convertSexCodes`/`addParents`). NEW-25’s
+`getProportionLow` is **not in that pipeline at all** — it’s an `@noRd`
+helper with ZERO live callers. The *right* reachability question was an
+exhaustive caller-trace (incl. dynamic dispatch + commented-out
+consumers), and the answer reshaped the task into “harden an orphaned
+helper + decide the empty contract.” The generic “verify reachability
+BEFORE fixing” still pointed me the right way; only the specific maskers
+didn’t apply. - **What was missing:** no note that `getProportionLow`’s
+**only consumer is the dead `makeGeneticDiversityDashboard` (NEW-20)** —
+i.e. NEW-25 and NEW-20 are entangled (the orphan exists because its
+caller is commented out). I discovered this by grep; a one-line
+“orphaned by NEW-20” tag would have saved a few minutes. Reasonable gap
+— S7 wasn’t working NEW-25, and the audit itself didn’t surface the
+entanglement. - **ROI:** strongly positive — Learning \#8a alone
+prevented a wrong fix; the author-decision framing kept the contract
+correct.
+
+### What Session 8 Did
+
+**Deliverable:** Fixed **NEW-25** (`getProportionLow` empty-input crash)
+under strict TDD, with a regression test + roxygen note. (COMPLETE)
+**Date:** 2026-05-31. **Branch:** `add-methodology`. **Commits:**
+`587ba042` (fix + test + roxygen `@param` note); close-out docs in a
+follow-up `docs:` commit. **The bug:** `getProportionLow(geneticValues)`
+computes `proportion <- length(grep "Low") / length(geneticValues)`. For
+empty input that is `0 / 0 = NaN`. The function’s color logic is a
+three-way `if / else if / else if` with **no terminal `else`** — BUT
+that is a red herring: `NaN > 0.5` evaluates to **`NA`**, and `if (NA)`
+immediately errors *“missing value where TRUE/FALSE needed”* at the
+**first** `if` (R/getProportionLow.R, old line 18), before any
+fall-through. So the documented audit fix (“add a terminal else”) would
+NOT have fixed it. Empty input was the only crashing case (confirmed
+empirically). **Reachability — verdict: NO LIVE PATH (orphaned helper),
+verified by direct evidence (exhaustive grep + dynamic-dispatch check +
+empirical repro — no workflow needed, this was “already verified”):** -
+`getProportionLow` is `@noRd` (internal, not exported). A full-repo
+search (`*.R/*.Rmd/*.yml`, substring `ProportionLow`, and
+`do.call`/`get`/`match.fun`/`eval`) found **ZERO live callers**. The
+only references are: its own def, its happy-path test, a
+**commented-out** call in `test_makeGeneticDiversityDashboard.R:8`, and
+docs (`_pkgdown.yml`, `WORDLIST`, `NEWS.*`, audit files). - Its sole
+intended consumer, `R/makeGeneticDiversityDashboard.R`, is **100% dead
+code** (no non-comment, non-blank lines) = NEW-20. So NEW-25 is
+reachable only via a direct internal call or by reviving the dead
+dashboard. This is **robustness-hardening of a retained-but-orphaned
+helper** (it is intentionally retained — listed in
+`inst/_pkgdown.yml:192`). - Adjacent latent bug found, **NOT fixed (out
+of scope):** `getProportionLow(c(NA, "Low"))` returns `proportion = 1`
+silently — NA elements are counted as “Low” via NA-subsetting. Not a
+crash, not NEW-25. **Semantic decision (USER, package author):** the
+code can’t say what empty input *should* return. Surfaced 3 grounded
+options with code previews — (A) clear
+[`stop()`](https://rdrr.io/r/base/stop.html), (B) graceful NA result,
+(C) empty = 0%→green. **User chose (A) clear
+[`stop()`](https://rdrr.io/r/base/stop.html)** — consistent with NEW-48
+and Learning \#8b: the input ALREADY crashes (cryptic message), so a
+[`stop()`](https://rdrr.io/r/base/stop.html) is **backward-safe** (no
+currently-succeeding call changes; only the message improves). The
+`@param` doc (“vector is to have already been filtered”) also implies a
+non-empty precondition, so empty = caller error worth surfacing. **The
+fix (minimal):** at `R/getProportionLow.R:16-19`,
+`if (length(geneticValues) == 0L) stop("getProportionLow() requires at least one genetic value; ", "'geneticValues' is empty.")`.
+Existing proportion / if-else-if logic byte-for-byte unchanged. **TDD
+trail:** RED — added one `test_that` block
+(`tests/testthat/test_getProportionLow.R:24-42`): 2
+`expect_error(…, "requires at least one")` for `character(0)` and `NULL`
+(both FAILED for the right reason — they DID throw, but the cryptic
+`"missing value where TRUE/FALSE needed"` ≠ the intended message), plus
+a single-element `getProportionLow("Low") → list(1, "red", 1L)`
+true-positive guard that PASSED before and after (proving the guard
+fires only on length-0). The 3 existing happy-path expectations stayed
+green. GREEN — the length-0 `stop` guard; file 6/6. REFACTOR
+(user-approved, doc-only) — roxygen `@param` precondition note
+(`R/getProportionLow.R:9-12`); NO man page (function is `@noRd` —
+confirmed `man/getProportionLow.Rd` does not exist), so nothing to
+regenerate. **Verification:** full suite via `test_dir` = **0 failed / 0
+error**, 159 skipped, **1923 passed** (+3 = exactly the new
+expectations; S7 ended at 1920); **zero** non-e2e offenders. Warning
+column: only the **5 pre-existing** `test_modPyramid.R`
+[`max()`](https://rdrr.io/r/base/Extremes.html)-on-empty warnings
+(unchanged). Lint = **0** on `R/getProportionLow.R` (it is NOT in
+`.lintr` exclusions — so no Learning \#7 line-displacement risk; the
+test file is under the blanket `tests` exclusion). **Key files:** -
+`R/getProportionLow.R:16-19` — the guard; roxygen `@param` note at
+`:9-12`. Function is `@noRd` (line 14). -
+`tests/testthat/test_getProportionLow.R:24-42` — the new test block
+(deterministic; inline literals only, no fixtures). **GOTCHAS for the
+next session:** 1. **The audit’s prescribed FIX can be as wrong as its
+mechanism** (Learning \#9, extends \#8a). NEW-25’s “no terminal else →
+crash” implied “add an else”; the real crash is `if (NaN > 0.5)` =
+`if (NA)` at the FIRST `if`. `NaN`/`NA` comparisons yield `NA`, and
+`if (NA)` errors. Empirically confirm BOTH the mechanism and the remedy
+before writing the RED test. 2. **Reachability is NOT always a
+`qcStudbook`-masking question.** Some audit items target ORPHANED code
+(zero live callers). NEW-25’s `getProportionLow` is `@noRd` and its only
+caller is the dead `makeGeneticDiversityDashboard` (NEW-20). For such
+items, “verify reachability” = exhaustive caller-trace (grep all file
+types + `do.call`/`get`/`match.fun` + commented-out consumers), not
+pipeline-masker analysis. Don’t reflexively reach for the (heavier)
+3-lens reachability workflow when grep already settles it — that is
+“already verified” and a workflow would be ceremony. 3. **NEW-25 /
+NEW-20 are entangled.** `getProportionLow` exists only to serve the dead
+`makeGeneticDiversityDashboard`. If a future session does NEW-20 (delete
+the dead dashboard), consider whether `getProportionLow` (+ its test)
+should go too, OR whether the dashboard should be revived to consume it.
+It’s retained in `_pkgdown.yml:192` — which, since the function is
+`@noRd` (no Rd page), is itself a likely-stale pkgdown reference worth
+checking. 4. **Adjacent NA-element bug still open:**
+`getProportionLow(c(NA, "Low"))` → `proportion 1` (silent, NA counted as
+Low). Separate from NEW-25; not in any audit finding I saw. Candidate
+for a future robustness pass. 5. **Scope held / NOT done (deliberate):**
+did NOT delete the dead `makeGeneticDiversityDashboard` (NEW-20); did
+NOT fix the NA-element bug; did NOT touch scattered-threshold items
+(NEW-21/26); did NOT touch the pre-existing `modPyramid`
+[`max()`](https://rdrr.io/r/base/Extremes.html)-on-empty warnings or the
+`test_getPotentialParents` copy/paste-slip test (both still open).
+**Self-assessment: 9/10.** (+) Strict TDD honored end-to-end — declared
+every phase, asked permission RED→GREEN and GREEN→REFACTOR; the 2 RED
+tests failed for the RIGHT reason (cryptic message ≠ intended) while the
+single-element guard + happy-path tests stayed green as the
+true-positive guard. (+) Empirically reproduced the ACTUAL failure mode
+FIRST (Learning \#8a) and caught that the audit’s prescribed remedy
+(“terminal else”) was a non-fix — the highest-value move; generalized to
+Learning \#9. (+) Recognized the empty-input contract as a genuine
+package-author decision and surfaced it with grounded options + code
+previews rather than guessing (cf. S6/S7). (+) Right-sized the
+reachability work: a unique-named `@noRd` orphan with grep-clean callers
+is “already verified” — did NOT spin up a redundant 3-lens workflow
+(honest application of ultracode’s “unless already verified” carve-out).
+(+) Verified `.lintr` membership before editing (Learning \#7) and
+confirmed `@noRd` → no man page to regenerate, rather than assuming. (−)
+Did not run the heavier `devtools::check()` build-equivalent — justified
+for a one-line internal guard with `test_dir` 0/0 + lint 0, but noted.
+(−) Three user prompts (semantic decision + two phase gates) — all
+warranted under the strict-TDD contract + a behavior-defining decision,
+but a looser contract could have bundled them.
+
+------------------------------------------------------------------------
+
+### Session 6 Handoff Evaluation (by Session 7)
+
+**Score: 9/10.** - **What helped most:** ACTIVE TASK “What You Must Do”
+\#1 named **NEW-48** with a one-line mechanism AND the standing ⚠
+“verify reachability with real data BEFORE ‘fixing’” + the confirmed
+**MIXED per-mechanism template** (Learning \#6). That template was again
+exactly right — NEW-48 split cleanly: **M2 canonical
+`qcStudbook`→`reportGV` (incl. shipped app) MASKED** by `addUIds`
+(qcStudbook.R:180), **M1 direct call + M3
+`trimPedigree(removeUninformative=TRUE, addBackParents=FALSE)`
+REACHABLE**. S6 gotcha \#2 (“treat `convertSexCodes` as a masking step”)
+generalized perfectly: the analogous masker here is `addUIds`
+(“Eliminates partial parentage situations”), which I found by tracing
+the pipeline as the gotcha trained me to. Learning \#4’s `test_dir` +
+`!grepl("test-app-|test-e2e-", file)` isolation gave a clean 0/0 every
+run; the `warning` column confirmed the 5 `test_modPyramid.R` warnings
+are the SAME pre-existing ones S5/S6 flagged. - **What was WRONG (but
+NOT S6’s fault):** the NEW-48 one-liner — “partial-parentage `d[NA,]`
+contaminates ego + all descendants” (silent corruption) — described the
+**wrong failure mode**. Empirically it is a hard **CRASH**
+(`subscript out of bounds`): `calcFEFG` coerces ids to character and
+`d[NA_character_, ]` ERRORS (only *logical/integer* NA yields a silent
+NA row). BUT this came verbatim from the **audit**
+(`PED_GV_AUDIT_2026-05-30.md`), which S6 faithfully relayed — not an S6
+fabrication. The 3-lens empirical workflow caught it at ~0 time cost
+because the template (“reproduce via the real pipeline BEFORE writing
+the test”) is designed for exactly this. New lesson → **Learning \#8a**
+(the audit’s mechanism itself can be wrong). - **What was missing:** S6
+(via Learning \#4) framed `stop` as “not backward-safe” — true when the
+baseline is a silent *success*, but it **inverts** when the baseline is
+already a crash (NEW-48), where a clear
+[`stop()`](https://rdrr.io/r/base/stop.html) is the contract-preserving
+choice. New trap → **Learning \#8b**. - **ROI:** strongly positive — the
+MIXED-template + reachability warning scoped the session immediately and
+steered me to the empirical workflow that corrected the audit before any
+test was written.
+
+### What Session 7 Did
+
+**Deliverable:** Fixed **NEW-48** (`calcFEFG` partial-parentage crash)
+under strict TDD, extended by user decision to the two identical-bug
+siblings `calcFE`/`calcFG`, with regression tests + doc updates.
+(COMPLETE) **Date:** 2026-05-30. **Branch:** `add-methodology`.
+**Commits:** `19350559` (fix + 4 tests + 3 man pages); close-out docs in
+a follow-up `docs:` commit. **The bug:** `calcFEFG`/`calcFE`/`calcFG`
+define a founder as having BOTH parents NA (`calcFEFG.R:46`), so a row
+with **exactly one** NA parent is a *descendant*, enters the gen loop,
+and computes `d[ego, ] <- (d[sire, ] + d[dam, ]) / 2L` indexing the
+founder matrix by the lone `NA_character_` parent. The roxygen
+documented “no partial parentage” but **did not enforce it**.
+**Reachability — verdict MIXED, and it CORRECTED the audit (verified
+BEFORE fixing via 3-lens read-only workflow `wf_20c72ee8-64e`; artifact
+`…/tasks/w5bxzeaxc.output`):** - **The audit was WRONG about the
+mechanism:** it claimed “silent NA corruption” (`d[NA,]` → all-NA row
+contaminating FE/FG). Empirically it is a hard **CRASH**
+(`subscript out of bounds`) — R’s matrix indexing errors on
+`NA_character_` (character ids via `toCharacter`), whereas only
+*logical/integer* NA returns a silent NA row. FE/FG are NEVER produced;
+the loop aborts before `colMeans`/the FE/FG return, so the FG line’s
+`na.rm=TRUE` is irrelevant to this bug. All 3 lenses (empirical ‖ static
+‖ adversarial-critic) converged on CRASH-not-corruption. - **M2
+canonical `qcStudbook`→`reportGV` (incl. shipped app,
+`modGeneticValue.R:150-152`, `removeUninformative=FALSE`) = MASKED** by
+`addUIds` (qcStudbook.R:180), which rewrites every lone-NA parent to a
+`U####` placeholder + adds a founder line. The adversarial critic
+confirmed a clean run (FE≈109.67/FG≈47.67) and found NO flag that
+bypasses `addUIds`. - **M1 direct exported
+[`calcFEFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFEFG.md)/[`calcFE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFE.md)/[`calcFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFG.md)
+call = REACHABLE** (documented precondition unenforced; fails loud). -
+**M3
+`trimPedigree(removeUninformative=TRUE, addBackParents=FALSE)`→`reportGV`
+= REACHABLE** via `removeUninformativeFounders.R:52-53` (NA-s child refs
+when an uninformative founder is dropped; `addBackSecondParents` repairs
+ONLY when `addBackParents=TRUE`). The critic verified
+kinship/geneDrop/offspringCounts all tolerate the NA — `calcFEFG` is the
+FIRST step to die. The only `removeUninformative=TRUE` in the shipped
+app is *commented out*, so M3 is reachable via the exported API /
+scripts, not the default app path. **Semantic decisions (USER, package
+author):** (approach) **clear
+[`stop()`](https://rdrr.io/r/base/stop.html) guard** — chosen over
+(warning + return NA) and (self-heal via `addUIds`). Key reasoning: the
+input ALREADY crashes, so [`stop()`](https://rdrr.io/r/base/stop.html)
+is **backward-safe** (no currently-succeeding call changes; only the
+cryptic message improves) — the INVERSE of NEW-40, where the silent-NA
+baseline made `warning` the safe choice (→ Learning \#8b). (scope) **fix
+all 3 identical-bug siblings**, explicitly NOT the NEW-13/23
+calcFE/FG→calcFEFG consolidation. **The fix (minimal, identical guard
+×3):** after `toCharacter`,
+`partial <- xor(is.na(ped$sire), is.na(ped$dam)); if (any(partial)) stop("… requires complete parentage (no partial parentage): id(s) … ", toString(ped$id[partial]), " … qcStudbook()/addUIds() …")`.
+At `R/calcFEFG.R:47-53`, `R/calcFE.R:45-51`, `R/calcFG.R:57-63`. **TDD
+trail:** RED — 4 tests added, all FAILED with the exact cryptic
+`subscript out of bounds` (no guard yet), proving the bug; the existing
+complete-parentage tests stayed green (they double as the
+no-false-positive guard). GREEN — the `xor`/`stop` guard ×3; all 4 pass.
+REFACTOR (user-approved) — reflowed an 83-char
+[`stop()`](https://rdrr.io/r/base/stop.html) line to restore lint=0, and
+tightened the roxygen on all three to state the precondition is now
+ENFORCED (+ regenerated 3 man pages; `document()` touched ONLY those 3
+`.Rd`). Declined (user decision) extracting a shared guard helper — left
+to NEW-13/23. **Verification:** full suite via `test_dir` = **0 failed /
+0 error**, 159 skipped, **1920 passed** (+4 = exactly the new tests);
+**zero** non-e2e offenders. Warning column: only the **5 pre-existing**
+`test_modPyramid.R`
+[`max()`](https://rdrr.io/r/base/Extremes.html)-on-empty warnings
+(unchanged). Lint = **0** on all 3 R files + 3 test files. Masking
+(`addUIds`) + the M3 crash reproduced verbatim in the workflow artifact.
+**Key files:** - `R/calcFEFG.R:47-53`, `R/calcFE.R:45-51`,
+`R/calcFG.R:57-63` — the guard (identical; roxygen “enforced” note added
+to each function’s description/`@param ped`). -
+`tests/testthat/test_calcFEFG.R:52` (calcFEFG-stops), `:66` (reportGV
+real-caller integration); `test_calcFE.R:42`; `test_calcFG.R:52` — the 4
+new tests (inline 4-row partial-parentage `data.frame`s; deterministic,
+no geneDrop needed because the guard short-circuits before
+`calcRetention`). - `man/calcFEFG.Rd`, `man/calcFE.Rd`, `man/calcFG.Rd`
+— regenerated. - Workflow artifact `…/tasks/w5bxzeaxc.output` —
+per-mechanism CRASH/MASKED verdicts + verbatim repro (incl. the
+`d[NA_character_, ]` vs `d[NA_integer_, ]` semantics proof). **GOTCHAS
+for the next session:** 1. **The audit’s stated MECHANISM can be wrong —
+reproduce the ACTUAL failure mode first** (Learning \#8a). NEW-48 was a
+crash, not the “silent NA” the audit described, because of
+character-vs-logical/integer NA matrix-indexing semantics. Don’t design
+the RED test off the audit’s prose. 2. **`addUIds` (qcStudbook.R:180) is
+the partial-parentage masker** — like `convertSexCodes` (NEW-37) and
+`addParents` (NEW-40), it eliminates the very condition some `calc*`
+functions assume away. Any item about NA/partial parents reaching a GV
+function is likely MASKED through `qcStudbook` but REACHABLE via
+exported functions /
+`trimPedigree(removeUninformative=TRUE, addBackParents=FALSE)`. 3.
+**`removeUninformativeFounders.R:52-53` independently NA-s child
+sire/dam refs** when dropping an uninformative founder → re-introduces
+partial parentage that `trimPedigree`’s default `addBackParents=FALSE`
+does NOT repair. Relevant to anything downstream of `trimPedigree`. 4.
+**stop-vs-warning backward-safety depends on the CURRENT failure mode**
+(Learning \#8b): silent-wrong-success → `warning` (don’t abort a
+success, cf. NEW-40); already-crashing → clear `stop` (preserve the
+contract, improve the message, cf. NEW-48). 5. **The S7 guard is
+triplicated** across calcFEFG/calcFE/calcFG (3 inline copies, by the
+user’s scope choice). When NEW-13/23 consolidates calcFE/calcFG into
+calcFEFG delegation, collapse the guard into the single calcFEFG then.
+6. **Scope held / NOT done (deliberate):** did NOT extract a shared
+guard helper (NEW-13/23); did NOT touch
+`addUIds`/`removeUninformativeFounders`/`trimPedigree`; did NOT fix the
+pre-existing `modPyramid`
+[`max()`](https://rdrr.io/r/base/Extremes.html)-on-empty warnings or the
+`test_getPotentialParents` copy/paste-slip test (both still open).
+**Self-assessment: 9/10.** (+) Strict TDD honored end-to-end — declared
+every phase, asked permission RED→GREEN and GREEN→REFACTOR; the 4 RED
+tests failed for the RIGHT reason (cryptic `subscript out of bounds`)
+while the existing complete-parentage tests stayed green as the
+true-positive guard. (+) Verified reachability **per-mechanism BEFORE
+writing tests** via a 3-lens read-only workflow, which **corrected the
+audit’s mechanism** (crash, not silent corruption) and converged
+unanimously — the highest-value move of the session. (+) Recognized two
+genuine author decisions (approach + scope) and surfaced them with
+grounded options + code previews rather than guessing (cf. S6/NEW-37).
+(+) Added a `reportGV` **real-caller integration test**, not just unit
+tests, guarding the pipeline path. (+) Clean REFACTOR — restored lint=0,
+documented the enforced precondition, regenerated exactly 3 man pages
+(verified, not assumed). (+) Held scope (declined helper extraction;
+left NEW-13/23 untouched). (−) The reportGV integration test runs the
+full GV pipeline (kinship+geneDrop, guIter=50) on a 7-row ped — fast,
+but heavier than a pure unit test; acceptable for a real-path guard. (−)
+Three user prompts (semantic+scope decision, then the two mandatory
+phase gates) — all warranted under the strict-TDD contract + a
+public-API change, but a looser contract could have bundled them.
+
+------------------------------------------------------------------------
+
+### Session 5 Handoff Evaluation (by Session 6)
+
+**Score: 9/10.** - **What helped most:** ACTIVE TASK “What You Must Do”
+\#1 named NEW-37 as suggested-next with an accurate one-line mechanism
+(`correctParentSex` silently rewrites H/U→M/F) AND the ⚠ “verify
+reachability … BEFORE ‘fixing’” plus the explicit **“NEW-40’s verdict
+was MIXED … enumerate each distinct mechanism separately — reachability
+is rarely one yes/no”**. That MIXED-template framing (echoed in Learning
+\#6) *was* the session: I ran the 3-lens read-only reachability workflow
+first and, exactly as warned, NEW-37 split by mechanism — **U-sex parent
+REACHABLE** through the canonical `qcStudbook(reportErrors=FALSE)`
+pipeline, **literal-H MASKED** by `convertSexCodes(ignoreHerm=TRUE)`
+folding H→U at qcStudbook.R:184, **H/U both REACHABLE** via the exported
+public API. Without that framing I might have written a unit-only test
+and missed the pipeline-level U reachability (the part that actually
+matters to users). - **What helped (process):** Gotcha \#1
+(“reachability splits by MECHANISM”) applied directly. S5 gotcha \#2
+(`checkParentAge` drops NA-birth rows, isn’t an integrity guard) and
+gotcha \#4 (`@export`ed + `warning` is backward-safe, `stop` is not)
+framed the options I put to the user. Learning \#4’s `test_dir` +
+`!grepl("test-app-|test-e2e-", file)` offender-isolation gave a clean
+0/0 every run; watching the `warning` column (gotcha \#3) confirmed my
+fix introduced no new warnings and that no existing test depended on the
+old H/U→M/F behavior. - **What was slightly off:** The NEW-37 one-liner,
+like S5’s own NEW-40 note, didn’t pre-split the mechanism (that
+`convertSexCodes` masks literal-H while U stays reachable) — but the
+generic MIXED ⚠ explicitly anticipated exactly this, so zero time
+lost. - **What was missing:** Nothing material. S5 couldn’t have known
+that a roxygen `@details` addition would displace the line-anchored
+`.lintr` exclusion (`70L`) and resurface a pre-existing suppressed lint
+— that is the new, generalizable trap I’m adding as Learning \#7 +
+gotcha \#1 below. - **ROI:** Strongly positive — the MIXED-template
+framing + accurate finding pointer + reusable test/lint gotchas scoped
+the session immediately and steered the test design toward the
+pipeline-reachable path.
+
+### What Session 6 Did
+
+**Deliverable:** Fixed NEW-37 (`correctParentSex` silently rewrites H/U
+parents to M/F) under strict TDD, with regression tests + doc update.
+(COMPLETE) **Date:** 2026-05-30. **Branch:** `add-methodology`.
+**Commit:** `6b0ae333` (fix + 3 tests + man page + `.lintr`); close-out
+docs in a follow-up `docs:` commit. **The bug:** `R/correctParentSex.R`
+correction branch (`reportErrors = FALSE`, old lines 90-91) used
+`sex[((id %in% sires) & (sex != "M"))] <- "M"` / `(sex != "F")` → “F”,
+overwriting **any** non-M sire / non-F dam — so hermaphrodite (“H”) and
+unknown (“U”) parents were silently forced to M/F. The report branch
+(`reportErrors = TRUE`, R/correctParentSex.R:71,73) instead uses
+`!sex %in% c("H","U","M")` / `c("H","U","F")`, deliberately
+**exempting** H/U. The two branches were inconsistent; the correction
+branch destroyed recorded H/U sex. **Reachability — verdict MIXED
+(verified BEFORE fixing via a 3-lens read-only workflow
+`wf_50c7b30a-f43`: caller-trace ‖ empirical-repro ‖ adversarial
+masking-critic; artifact `…/tasks/wjahwpq5b.output`):** - **U-sex parent
+via canonical `qcStudbook(reportErrors=FALSE)` = REACHABLE.**
+`convertSexCodes` (qcStudbook.R:184) preserves U (NA→U, Unknown→U); an
+animal with its OWN line, sex “U”, listed as a sire/dam reaches the
+correction at qcStudbook.R:202 and is overwritten U→M (sire) / U→F
+(dam). End-to-end reproduced: own-line “U” sire emerges from
+`qcStudbook` as “M”. - **U-sex parent via
+`qcStudbook(reportErrors=TRUE)` = REACHABLE** through the inner
+`reportErrors=FALSE` call at qcStudbook.R:192 (the report branch never
+flags U/H, so all-NULL → inner correction runs). - **H & U via the
+exported
+[`correctParentSex()`](https://github.com/rmsharp/nprcgenekeepr/reference/correctParentSex.md)
+directly = REACHABLE** (public API; the report branch’s `c("H","U","M")`
+whitelist proves H is a valid input). H→M, U→M, H→F, U→F all
+reproduced. - **Literal H through default `qcStudbook` = MASKED:**
+`convertSexCodes(ignoreHerm=TRUE)` folds H→U at :184 before the
+correction (qcStudbook exposes no `ignoreHerm` param); the harm still
+lands but as the U-overwrite. The adversarial critic **conceded** every
+reachable mechanism and called the literal-H masking “hollow” (U is the
+carrier). **Semantic decision (USER, package author):** the
+self-contradictory code can’t say what *should* happen to H/U parents,
+so I put a grounded 3-option choice (with code previews) to the user:
+(A) preserve H **and** U — mirror the report branch; (B) preserve only
+H, keep inferring U→M/F from parental role; (C) keep overwriting but
+[`warning()`](https://rdrr.io/r/base/warning.html). **User chose (A).**
+This is a deliberate **behavior change to `qcStudbook` output** (a U-sex
+parent now stays U instead of becoming M/F), not just a diagnostic —
+unlike NEW-40, whose fix only added a warning. **The fix (minimal,
+consistency):** `R/correctParentSex.R:98-99` — `(sex != "M")` →
+`!(sex %in% c("H", "U", "M"))` and `(sex != "F")` →
+`!(sex %in% c("H", "U", "F"))`. Reuses the report branch’s exact, proven
+membership idiom; only true female-sires (F→M) and male-dams (M→F) are
+corrected. **TDD trail:** RED — 3 tests added
+(`tests/testthat/test_correctParentSex.R:81-138`): (1) `:95` “leaves H/U
+sires and dams unchanged” — 4 assertions (sH/sU/dH/dU) FAILED with exact
+overwrite signatures (M/F instead of H/U); (2) `:122` “qcStudbook
+preserves a U-sex parent” — integration test, FAILED M≠U (proving
+real-pipeline reachability AND that the crafted studbook is well-formed
+— `qcStudbook` returned a data frame, no error); (guard) `:104` “still
+corrects true female-sires and male-dams” — PASSED before and after
+(true positives preserved). GREEN — the 2-line membership fix; file
+14/14. REFACTOR (user-approved scope = docs) — added roxygen `@details`
+(:7-10) documenting H/U preservation; regenerated
+`man/correctParentSex.Rd` (clean, no NAMESPACE cascade).
+**Verification:** full suite via `test_dir` = **0 failed / 0 error**,
+159 skipped, **1916 passed** (+7 = exactly the new expectations 4+2+1);
+**zero** non-e2e offenders. Warning column: only the **5 pre-existing**
+`test_modPyramid.R`
+[`max()`](https://rdrr.io/r/base/Extremes.html)-on-empty warnings
+(unrelated, still open). Lint = **0** on `R/correctParentSex.R` and the
+test file (after the `.lintr` bump — see gotcha \#1). HEAD-version lint
+cross-checked to prove the resurfaced lint was pre-existing. **Key
+files:** - `R/correctParentSex.R:98-99` — the fix; roxygen `@details` at
+`:7-10`. - `tests/testthat/test_correctParentSex.R:81-138` — the 3 new
+tests (deterministic, inline data.frames only). -
+`man/correctParentSex.Rd:36-41` — regenerated `\details{}`. -
+`.lintr:20` — exclusion bumped `70L`→`75L` to keep suppressing the
+pre-existing `unnecessary_nesting_linter` on `if (reportErrors)` (now
+line 75). - Workflow artifact `…/tasks/wjahwpq5b.output` — the
+per-mechanism REACHABLE/MASKED verdicts + verbatim repro output.
+**GOTCHAS for the next session:** 1. **`.lintr` suppresses lints by
+HARDCODED LINE NUMBER** (`.lintr:17-34` lists ~19 files
+incl. `R/correctParentSex.R`, `R/getPyramidPlot.R`,
+`R/fillGroupMembers*.R`, …). Any edit that **adds/removes lines above**
+such a suppressed line (roxygen, imports, comments) shifts it,
+un-suppresses a **pre-existing** finding, and reads as “a lint you
+introduced.” Countermeasure: after editing a file listed in `.lintr`,
+re-lint; if a lint appears, confirm it’s pre-existing by linting the
+HEAD copy
+(`git show HEAD:path > /tmp/x.R; Rscript -e 'lintr::lint("/tmp/x.R")'`),
+then **update the exclusion’s line number** — do NOT refactor the
+suppressed (usually out-of-scope) structure. (See Learning \#7.) 2.
+**`convertSexCodes` is a masking step for ANY sex-code item.** At
+qcStudbook.R:184 (default `ignoreHerm=TRUE`) it folds H→U, NA→U,
+Unknown→U *before* most consumers. So a literal-H pathology is
+masked-as-U through the canonical pipeline but reachable via exported
+functions called directly. Treat it like `addParents` (NEW-40) — a
+transform that can mask or re-establish a condition. `qcStudbook`
+exposes no `ignoreHerm` param. 3. **NEW-36 / PED-6 is still OPEN in this
+same file** and is what the suppressed lint flags: `correctParentSex`’s
+`if (reportErrors) {...} else {...}` returns **different types** (an
+error `list` vs a `sex` vector) by flag. A future overhaul session could
+split it into two functions. I deliberately did NOT touch it (scope) —
+only updated the `.lintr` line number. 4. **This fix CHANGES pipeline
+output (not just a diagnostic).** A U-sex parent now stays U through
+`qcStudbook`. No current test relied on the old M/F (full suite clean),
+but if a future consumer assumes parents always have definite M/F sex,
+this is the change to remember. User approved it explicitly. 5. **Scope
+held / NOT done (deliberate):** did NOT fix NEW-36/PED-6 (dual return
+type); did NOT touch `convertSexCodes`; did NOT address the *other*
+report-vs-correction asymmetry (the report branch filters
+`recordStatus == "original"`, the correction branch does not — a
+separate latent inconsistency, not NEW-37); did NOT touch the
+pre-existing `modPyramid`
+[`max()`](https://rdrr.io/r/base/Extremes.html)-on-empty warnings or the
+`test_getPotentialParents` copy/paste-slip test (both still open).
+**Self-assessment: 9/10.** (+) Strict TDD honored end-to-end — declared
+every phase, asked permission before RED→GREEN and GREEN→REFACTOR; the
+bug-demonstrating tests failed for the *right* reason (H/U overwritten)
+while the guard proved true positives preserved. (+) Verified
+reachability **per-mechanism** with a 3-lens read-only workflow *before*
+writing the test (the NEW-40 template), surfacing the MIXED verdict; the
+adversarial critic conceded. (+) Recognized the fix encodes a **domain
+decision** the self-contradictory code couldn’t answer and put a
+concrete, empirically-grounded choice (with code previews) to the
+package author rather than guessing. (+) Added an **end-to-end
+`qcStudbook` integration test**, not just a unit test, so the
+user-facing reachability is regression-guarded. (+) Root-caused the lint
+0→1 to a line-anchored `.lintr` exclusion displaced by my own `@details`
+and fixed it minimally (line-number bump), **verified against HEAD**
+rather than assuming, and resisted refactoring the out-of-scope NEW-36
+structure. (−) My `@details` is what displaced the `.lintr` line; I
+could have anticipated the line-anchored exclusions before regenerating
+docs (cost ~2 investigation turns — though it produced Learning \#7).
+(−) Three user-facing prompts (semantic decision + two phase gates); the
+semantic one was necessary and the gates are mandated by the contract,
+but a looser contract could have bundled them.
+
+------------------------------------------------------------------------
+
+### Session 4 Handoff Evaluation (by Session 5)
+
+**Score: 9/10.** - **What helped most:** The ACTIVE TASK “What You Must
+Do” \#1 listed NEW-40 with an accurate one-line mechanism
+(`findGeneration` silent NA) AND the ⚠ “Several are masked by upstream
+invariants/non-default inputs — verify reachability with real data
+BEFORE ‘fixing’”. That single warning shaped the whole session: I ran
+the read-only reachability/masking workflow *first* and it paid off
+precisely — the simplest mechanism (dangling parent) turned out
+**masked** by `addParents`, while the **cycle** mechanism is genuinely
+reachable through the full `qcStudbook` pipeline. Without that warning
+I’d have written a weaker test against the masked path and “fixed”
+something that can’t reach users via the canonical flow. - **What helped
+(process):** Gotcha \#1 (verbatim: `test_dir` skips e2e; count `failed`
+AND `error`; isolate non-e2e offenders with
+`!grepl("test-app-|test-e2e-", file)`) gave the clean 0/0 read every
+time AND — because I also watched the `warning` column — surfaced that
+my new [`warning()`](https://rdrr.io/r/base/warning.html) had tripped an
+existing circular-reference test. Gotcha \#4 (Phase 1B stub) honored.
+The fast
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html) +
+`test_file` invocation (Learning \#4 / S3 gotcha \#4) used throughout. -
+**What was slightly off:** The NEW-40 one-liner “silent NA” was accurate
+but undifferentiated — it didn’t hint that reachability splits by
+mechanism (dangling = masked, cycle = reachable). Minor: the generic ⚠
+“verify reachability” line explicitly anticipated exactly this, so no
+time lost. - **What was missing:** Nothing material. The pre-existing
+`test_modPedigree_processing.R` circular-reference test that my warning
+would trip is not something S4 could have flagged for NEW-40
+specifically. - **ROI:** Strongly positive — the reachability warning +
+accurate finding pointer + reusable test/lint gotchas scoped the session
+immediately and steered me away from a masked-path fix.
+
+### What Session 5 Did
+
+**Deliverable:** Fixed NEW-40 (`findGeneration` silent NA generations)
+under strict TDD, with regression tests + doc update. (COMPLETE)
+**Date:** 2026-05-30. **Branch:** `add-methodology`. **Commit:**
+`ea5d28fa` (fix + tests + man page); close-out docs in a follow-up
+`docs:` commit. **The bug:** `R/findGeneration.R` initialises
+`gen <- rep(NA, length(id))` and assigns a generation only to ids whose
+parents are all NA-or-already-placed; it breaks when no new id can be
+placed, leaving any **unplaceable** id as `NA` with **no
+[`warning()`](https://rdrr.io/r/base/warning.html)/[`stop()`](https://rdrr.io/r/base/stop.html)**.
+The roxygen precondition (l.20, “does not work if the pedigree does not
+have all parent IDs as ego IDs”) was unenforced. The exported
+`findGeneration` (and the ~14 R/ + module callers) thus returned silent
+NA gen. **Reachability — verdict MIXED (verified BEFORE fixing via a
+3-lens read-only workflow `wf_ea9c8e19-b8f`: caller-trace ‖
+empirical-repro ‖ adversarial masking-critic; artifact
+`…/tasks/wpyav39fd.output`):** - **Dangling parent (parent id absent
+from `id`) = MASKED** through the canonical pipeline: `qcStudbook` calls
+`addParents` (R/qcStudbook.R:181) *before* `findGeneration` (:249), and
+`addParents` injects a founder line (sire=dam=NA → gen 0) for every
+missing parent — empirically confirmed no NA results. - **Cycle /
+self-loop = REACHABLE** through the *full* `qcStudbook` pipeline: a
+cycle survives `addParents` (both ids already present), and
+`checkParentAge` only flags a too-young parent when birth dates exist
+(R/checkParentAge.R:91 drops NA-birth rows) — so a cycle with **NA birth
+dates** slips through and `qcStudbook` returns normally with `gen=NA`.
+Empirically:
+`data.frame(id=c("a","b"), sire=c(NA,"a"), dam=c("b",NA), sex=c("F","M"), birth=c(NA,NA))`
+→ silent NA gen. The adversarial masking-critic (whose job was to argue
+MASKED) **conceded** the cycle path and recommended the fix. -
+**Downstream impact:** the silent NA later detonates in
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+as the cryptic `"NAs are not allowed in subscripted assignments"`, far
+from the root cause — so surfacing it at the source has real value.
+**The fix (minimal, choke-point):** after the loop, `if (anyNA(gen))`
+build and emit a [`warning()`](https://rdrr.io/r/base/warning.html)
+naming the unplaced id(s) and (when present) the referenced-but-absent
+parent id(s). Covers cycle + dangling-parent + self-loop in one place.
+**Return contract unchanged** (still the `gen` vector with NAs), so all
+callers/tests are unaffected. **Provably non-spurious:** a valid acyclic
+self-contained pedigree always places every id (every ancestor chain
+ends at an NA-parent founder reachable by the iteration); `lacy1989Ped`
+and `examplePedigree` both yield zero NA. Chose `warning` over `stop`
+(user-confirmed) to preserve backward-compat for pipelines that
+currently complete with partial NA gen. **TDD trail:** RED — added 3
+tests (`tests/testthat/test_findGeneration.R:14-46`): (1) 2-cycle →
+`expect_warning` + all-NA; (2) dangling parent →
+`expect_warning(regexp="GHOST")` + orphan NA / founder 0; (3) happy path
+→ `expect_warning(regexp=NA)`. Tests 1–2 failed for the right reason (no
+warning emitted) while their value assertions already passed — proving
+the bug is *exactly* the missing diagnostic. GREEN — added the guard;
+file passes 7/7. REFACTOR (user-approved scope = lint+docs) —
+`any(is.na())`→[`anyNA()`](https://rdrr.io/r/base/NA.html),
+`paste(.,collapse=", ")`→`toString(.)` (×2); extended roxygen `@return`
+and regenerated `man/findGeneration.Rd` (clean, no cascade).
+**Verification:** full suite via `test_dir` = **0 failed / 0 error**,
+159 skipped, **1909 passed**; **zero** non-e2e offenders. Warning
+column: the only remaining non-e2e warnings are the **5 pre-existing**
+`test_modPyramid.R` `"no non-missing arguments to max; returning -Inf"`
+(unrelated to NEW-40 — a
+[`max()`](https://rdrr.io/r/base/Extremes.html)-on-empty in the pyramid
+plot; candidate for a future session). Lint = **0** on
+`R/findGeneration.R` and both test files. `devtools::document()` touched
+only `man/findGeneration.Rd`. **Key files:** -
+`R/findGeneration.R:55-72` — the fix (the `if (anyNA(gen))` warning
+block); roxygen `@return` at :22-26. -
+`tests/testthat/test_findGeneration.R:14-46` — the 3 new tests
+(deterministic, no fixtures beyond inline vectors + `lacy1989Ped`). -
+`tests/testthat/test_modPedigree_processing.R:665-680` — the existing
+circular-reference test, now wrapping `session$setInputs(...)` in
+`expect_warning(regexp="could not be assigned a generation")` and
+`suppressWarnings(result$pedigree())`. - `man/findGeneration.Rd` —
+regenerated `\value`. - Workflow artifact `…/tasks/wpyav39fd.output` —
+the three structured REACHABLE/MASKED verdicts + exact repro console
+output. **GOTCHAS for the next session:** 1. **Reachability splits by
+MECHANISM, not one yes/no.** NEW-40 had a masked path AND a reachable
+path. When verifying any “silent NA / silent degradation” item,
+enumerate each distinct trigger and test reachability per-mechanism
+through the *full* `qcStudbook` pipeline. (See Learning \#6.) 2.
+**`checkParentAge` is NOT a cycle/integrity guard** — it drops NA-birth
+rows (R/checkParentAge.R:91), so any pedigree pathology among NA-birth
+animals (cycles, etc.) flows past it into `findGeneration`/kinship.
+Relevant to NEW-45/48/53 reachability too. 3. **Adding a
+[`warning()`](https://rdrr.io/r/base/warning.html)/[`stop()`](https://rdrr.io/r/base/stop.html)
+can trip EXISTING tests that exercise the degenerate path.** My warning
+hit `test_modPedigree_processing.R`’s circular-reference test (passed,
+but as an *unexpected* warning). Always re-run the full suite and
+**watch the `warning` column**, not just `failed`/`error`; update any
+test that feeds the degenerate input to *expect* the new diagnostic
+rather than suppress it silently. 4. **`@export`ed compute +
+[`warning()`](https://rdrr.io/r/base/warning.html) is backward-safe;
+[`stop()`](https://rdrr.io/r/base/stop.html) is not.** A warning leaves
+the return contract intact (all callers unaffected); a stop is a
+behavior change. For these audit correctness items prefer
+surfacing-not-aborting unless the user asks otherwise. 5. **Scope held /
+NOT done (deliberate):** I did NOT add cycle rejection to
+`qcStudbook`/`checkParentAge` (a larger, separate change — the warning
+at `findGeneration` is the proportionate NEW-40 fix), and did NOT touch
+the pre-existing `modPyramid`
+[`max()`](https://rdrr.io/r/base/Extremes.html)-on-empty warnings. Both
+are candidate follow-ups. **Self-assessment: 9/10.** (+) Strict TDD
+honored end-to-end — declared every phase, asked permission before
+RED→GREEN and GREEN→REFACTOR, wrote tests that fail for the *right*
+reason (missing diagnostic, values already correct), then the minimal
+choke-point fix. (+) Verified reachability with a 3-lens workflow
+*before* writing the test, exactly as the predecessor’s gotcha demanded,
+and the adversarial critic’s concession (cycle reachable) made the fix
+decision evidence-backed rather than assumed. (+) Caught and
+*strengthened* (not merely silenced) the existing circular-reference
+test that my warning tripped — by watching the `warning` column, not
+just failed/error. (+) Doc + lint REFACTOR kept the function to the
+project’s lint=0 bar; man-page regen was clean. (+) Held scope (no
+qcStudbook cycle-rejection, no modPyramid detour). (−) The warning lists
+*all* unplaced ids via `toString` with no cap — fine for a diagnostic,
+but a pathological all-NA pedigree would produce a very long message;
+didn’t bound it. (−) Two user permission prompts (approach, REFACTOR
+scope) — correct under the strict-TDD contract, but a leaner session
+might have proposed the unanimous-agent default and proceeded; I
+prioritised contract fidelity.
+
+### Session 3 Handoff Evaluation (by Session 4)
+
+**Score: 9/10.** - **What helped most:** The ACTIVE TASK “What You Must
+Do” \#1 named NEW-34 first with an accurate one-line mechanism
+(`getPotentialParents` unbound `j` → crash) AND the ⚠ “Several are
+masked by upstream invariants — verify reachability with real data
+BEFORE ‘fixing.’” That warning shaped the whole session: I ran a
+read-only reachability + masking workflow *before* touching code and
+confirmed the crash via the canonical `qcStudbook` pipeline rather than
+assuming. Highest-ROI line in the handoff. - **What helped (process):**
+Gotcha \#1 (sum `failed` AND `error`, not just `failed`) — I tallied
+both columns. Gotcha \#4 (the fast single-file
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html) +
+`test_file` invocation) — used verbatim, saved time. Gotcha \#2 (the
+e2e/`create_test_app` files are pre-existing baseline noise) primed me
+not to chase them. - **What was slightly off:** (a) The NEW-34 one-liner
+said “when no animal has a missing parent” — it’s actually no
+*from-center* animal (founders with NA parents but `fromCenter=FALSE`
+are correctly excluded); trivial, didn’t mislead. (b) Gotcha \#2 framed
+the e2e files as 154 ERRORS, but that is `test_local`-specific — under
+`testthat::test_dir(...)` they SKIP (159 skipped, 0 error). Both are
+runner artifacts, not regressions; see Learning \#4. - **What was
+missing:** Nothing material for NEW-34. (`removeAutoGenIds` re-NA-ing
+U-prefixed parents — which matters when building an empty-`pUnknown`
+fixture from real data — is NEW-34-specific detail Session 3 couldn’t
+have anticipated.) - **ROI:** Strongly positive — the reachability
+warning + accurate finding pointer + reusable test/lint gotchas scoped
+the session immediately.
+
+### What Session 4 Did
+
+**Deliverable:** Fixed NEW-34 (`getPotentialParents` unbound-`j` crash)
+under strict TDD, with a regression test. (COMPLETE) **Date:**
+2026-05-30. **Branch:** `add-methodology`. **Commit:** `dc695a3b` (fix +
+test); close-out docs in a follow-up `docs:` commit. **The bug:**
+`R/getPotentialParents.R` assigned the loop counter `j <- 0L` *only
+inside* `if (nrow(pUnknown) > 0L)` (old line 49), but read it
+*unconditionally* at `if (j > 0L)` (line 112). When `pUnknown` has zero
+rows — i.e. no `fromCenter==TRUE` animal has a missing sire/dam — the
+`if` body is skipped, `j` is never bound, and R raises
+`Error: object 'j' not found` instead of returning the intended `NULL`.
+The function is **`@export`ed (NAMESPACE:86)**, so this is reachable
+from the public API. **Reachability (verified BEFORE fixing, per Session
+3’s gotcha):** a read-only 3-agent workflow (`wf_95e0a06c-aad`)
+confirmed it three independent ways — (1) a crafted 6-animal
+`data.frame`, (2) the packaged `examplePedigree` filtered so `pUnknown`
+is truly empty (had to also drop U-prefixed parent ids, because
+`removeAutoGenIds` re-NA-s those and re-introduces unknowns), and (3)
+the **canonical `qcStudbook` pipeline** with a 5-row studbook whose lone
+from-center animal has both parents known. No upstream invariant masks
+it: `fromCenter` is optional in `qcStudbook`; founder stubs from
+`addParents` get `fromCenter=NA/FALSE` and never rescue `pUnknown`.
+**The fix (minimal):** moved `j <- 0L` from inside the `if` to
+immediately before it (`R/getPotentialParents.R:48`). Non-empty path is
+byte-for-byte unchanged; empty path now falls through to the existing
+`else NULL`. No internal `R/` callers exist (only test/example uses), so
+blast radius is this function alone. **TDD trail:** RED — added
+`test_that("getPotentialParents returns NULL when no from-center animal has a missing parent")`
+(`tests/testthat/test_getPotentialParents.R:69-90`); failed for the
+right reason (`object 'j' not found` at the `expect_null` call), the
+other 8 assertions still passing. GREEN — after the hoist, the file
+passes 9/9. REFACTOR — none needed (one-line hoist, already idiomatic).
+**Verification:** full suite via `test_dir` = **0 failed / 0 error**,
+159 skipped, 862 tests; **zero** non-(app/e2e) offenders. Robustness
+sweep: all four empty-`pUnknown` triggers (mixed `fromCenter`,
+all-`FALSE`, all-resolved, all-births-NA) now return `NULL`;
+`rhesusPedigree` happy path unchanged (list len 50, `[[1]]$id=BRI2MW`).
+Lint = 0 on both changed files. **Key files:** -
+`R/getPotentialParents.R:48` — the fix (the hoisted `j <- 0L`); the
+unconditional read is at `:112`. -
+`tests/testthat/test_getPotentialParents.R:69-90` — the regression test.
+Inline 3-animal fixture: founders `A`/`B` (`fromCenter=FALSE`, NA
+parents) excluded; from-center `C` has both parents known ⇒ empty
+`pUnknown`. - Workflow artifact `…/tasks/w27jywrus.output` — the
+reachability/masking verdicts and exact repro scripts. **GOTCHAS for the
+next session:** 1. **`test_dir` SKIPS the Shiny e2e files; `test_local`
+ERRORS on them.** Same baseline noise, different column. For a clean
+compute-change regression read, run
+`testthat::test_dir("tests/testthat", reporter="silent", stop_on_failure=FALSE)`,
+then `sum(failed)`/`sum(error)` and isolate true regressions with
+`!grepl("test-app-|test-e2e-", file)`. This session: 0/0/0 offenders.
+(Refines Session 3 gotcha \#1/#2 and Learning \#2.) 2.
+**`removeAutoGenIds` (`R/removeAutoGenIds.R`) re-introduces unknown
+parents** — it NA-s any sire/dam whose value starts with `"U"`. So to
+build a *real-data* fixture with an empty `pUnknown`, resolving NA
+parents is not enough; you must also avoid U-prefixed parent ids.
+Relevant to any test that needs the “no unknown parents” state. 3.
+**NEW-53 lives in `getPotentialParents` too:** line 28 does
+`data.table::setDT(ped)` with no `copy()`, mutating the caller’s ped by
+reference (class flips to data.table). Out of scope for NEW-34 (the
+crash) but should be fixed alongside the broader NEW-53 item. 4. **Phase
+1B stub honored this session** (Session 3 missed it) — the stub was
+written at task receipt and overwritten here at close-out.
+**Self-assessment: 9/10.** (+) Strict TDD honored end-to-end — declared
+every phase, asked permission before RED and before GREEN, and
+*empirically confirmed reachability three ways before writing the test*,
+exactly as the predecessor’s gotcha demanded. (+) Wrote the Phase 1B
+stub at receipt (fixing Session 3’s noted miss). (+) Verification went
+beyond the bar: full-suite tally counting both columns + isolation of
+non-e2e offenders, a 4-case robustness sweep, a happy-path regression
+check, and lint. (+) Held scope — flagged but did NOT fix the
+copy/paste-slip test or the NEW-53 in-place mutation in the same file.
+(−) Asserted the `test_dir`-skips-vs-`test_local`-errors difference is a
+“runner artifact” without nailing the exact mechanism (helper/setup
+loading); orthogonal to NEW-34 but unproven. (−) The 3-agent
+reachability workflow was arguably heavier than a one-line fix strictly
+needed — justified by the “verify reachability/masking” gotcha and
+ultracode, but worth right-sizing for obviously-reachable items.
+
+### Session 2 Handoff Evaluation (by Session 3)
+
+**Score: 9/10.** - **What helped:** The ACTIVE TASK block named NEW-15
+as the \#1 priority with the <file:line> (`countKinshipValues.R:133`),
+the precise mechanism (outer loop var overwrites the slot), and the key
+insight that the path is UNTESTED because the existing fixtures only
+exercise *equal* value-sets. That one paragraph scoped the whole session
+— I knew immediately I had to construct *differing* value-sets to reach
+the buggy branch. Gotcha \#2 (“NEW-15 is UNTESTED — write the failing
+test first”) was exactly right. - **What helped (process):** Gotcha \#3
+(“verify reachability before fixing latent items”) reinforced confirming
+the bug empirically — I ran the buggy function against constructed
+inputs and observed the corrupted output before writing the test. -
+**What was slightly off:** The line drifted by one — the wrong write is
+at `countKinshipValues.R:132`, not 133. Trivial; the <file:function>
+pointer landed me in \<1 min. - **What was missing:** No warning that
+the broad suite has 154 pre-existing `create_test_app` ERRORS — I had to
+discover and rule those out to confirm zero regressions. Now documented
+(ACTIVE TASK \#5) so the next session won’t re-derive it. - **ROI:**
+Strongly positive — turned a HIGH-severity bug hunt into a targeted
+2-line fix.
+
+### What Session 3 Did
+
+**Deliverable:** Fixed NEW-15 (the audit’s only HIGH-severity bug) under
+strict TDD, with a regression test. (COMPLETE) **Date:** 2026-05-30.
+**Branch:** `add-methodology`. **Commit:** `b05133ca`. **The bug:**
+`R/countKinshipValues.R` accumulation branch —
+`countDiffs[index] <- kCounts[[index]][kValues[[index]] == value]` used
+the OUTER row-loop variable `index` to subscript `countDiffs` (a vector
+sized to `length(valueDiffs)`). When a later simulation batch introduced
+kinship value(s) not already accumulated for a pair, this (a) overwrote
+one slot when \>1 new value existed, and (b) wrote out of bounds for any
+row `index > 1`, padding with 0/NA and desynchronising the lengths of
+`kValues` and `kCounts` — which then breaks
+[`summarizeKinshipValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/summarizeKinshipValues.md)
+downstream (`rep(values, counts)`). **The fix (minimal):**
+`for (i in seq_along(valueDiffs))` with
+`countDiffs[i] <- kCounts[[index]][kValues[[index]] == valueDiffs[i]]`.
+Kept the function’s explicit-loop idiom. **TDD trail:** RED — added
+`test_that("countKinshipValues merges new kinship values into correct slots")`;
+it failed against the original code with the exact bug signatures (count
+`c(6,1,0)` vs `c(6,1,1)`; length desync 3≠2; observation sum 7≠8),
+empirically confirmed first. GREEN — after the fix the file passes
+22/22. REFACTOR — none needed (already minimal/idiomatic, lint-clean).
+**Verification:** full suite = **0 expectation failures**, 1941 passing
+assertions / 866 tests; lint = 0 on both changed files. The only suite
+errors (154) are PRE-EXISTING, all in the 22 `test-app-*`/`test-e2e-*`
+files from the undefined `create_test_app()` (confirmed undefined at
+HEAD *before* my change; `shinytest2`+`chromote` installed so they don’t
+skip) — structurally independent of `countKinshipValues`. Blast radius:
+only the two changed files; kinship/simulation cluster
+(countKinshipValues, summarizeKinshipValues, createSimKinships,
+cumulateSimKinships, geneDrop, meanKinship) all green. **Key files:** -
+`R/countKinshipValues.R:131-135` — the fix. -
+`tests/testthat/test_countKinshipValues.R:96-149` — the regression test.
+Deterministic: builds two `data.table` batches with dyadic kinship
+values (1/4, 1/8, 1/16) that round-trip exactly through
+[`table()`](https://rdrr.io/r/base/table.html); exercises both the
+index-1 overwrite and index-2 out-of-bounds modes. **GOTCHAS for the
+next session:** 1.
+**[`testthat::test_local()`](https://testthat.r-lib.org/reference/test_package.html)
+records errors in a separate `error` column, NOT `failed`.** Summing
+only `df$failed` hides the 154 `create_test_app` errors (I hit this — a
+first tally showed “0 fail” and looked clean). Always sum `failed` AND
+`error`. 2. **The 154 `create_test_app` errors are pre-existing infra
+debt, not regressions** — don’t chase them when verifying a compute fix.
+The real fix is ACTIVE TASK \#5. 3. **HEAD git worktrees don’t load
+here:** the worktree lacks `renv/activate.R`, so its `.Rprofile` errors
+and
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)
+won’t run. For a baseline, revert the one file in place or use a
+structural argument (e.g. `git grep` proving a symbol is undefined at
+HEAD) instead of a worktree suite run. 4. **Fast single-file test:**
+`Rscript -e 'suppressMessages(pkgload::load_all(".", quiet=TRUE)); testthat::test_file("tests/testthat/test_X.R", reporter="summary")'`.
+The “out-of-sync renv” warning is benign. **Self-assessment: 9/10.** (+)
+Strict TDD honored — empirically confirmed the buggy output, wrote a
+test that fails for the RIGHT reason, then the minimal fix; declared
+every phase. (+) Did not trust a green-looking “0 fail” tally — chased
+the run-to-run discrepancy until I found the `error`-vs-`failed` column
+issue, and *structurally proved* the e2e errors pre-existing rather than
+asserting it. (+) Stopped before commit per the user’s explicit request;
+kept the review diff to the two relevant files. (+) One deliverable;
+flagged (did not fix) the `create_test_app` debt. (−) Burned several
+turns fighting the renv-broken worktree before pivoting to
+`git grep`-on-HEAD — should have reached for the structural proof
+sooner. (−) Skipped the Phase 1B session stub at task receipt (claimed
+the session only at close-out); low risk since I handed back cleanly,
+but a protocol miss to avoid next time.
+
+------------------------------------------------------------------------
+
+### Session 1 Handoff Evaluation (by Session 2)
+
+**Score: 9/10.** - **What helped:** The ACTIVE TASK block named the
+exact next task (re-run PED/GV) with the reason (agent failures =
+unaudited, not “clean”), pointed to Appendix C “Known coverage gaps”,
+and listed the specific unaudited core files. Gotcha \#5 (dashboard
+hangs as a background task; run with `</dev/null`) and the
+phantom-filename warning (#1) saved real time. The KIN-2 “do not naively
+unify the `descendants` lines” trap was accurate and was preserved. -
+**What was missing:** No note that this environment’s Bash can
+rewrite/block `grep`/`cat` (caused brief early confusion) — but that is
+environmental, not Session 1’s fault. - **What was wrong:** Nothing
+material. Gotcha \#2 (PED/GV = not audited, re-run) was exactly right
+and was the whole basis of this session. - **ROI:** Strongly positive —
+reading the handoff directly scoped the session.
+
+### What Session 2 Did
+
+**Deliverable:** `PED_GV_AUDIT_2026-05-30.md` — re-audit of the PED and
+GV clusters that returned 0 findings in Session 1 due to sub-agent
+failures. (COMPLETE) **Date:** 2026-05-30. **Branch:**
+`add-methodology`. **What was produced:** `PED_GV_AUDIT_2026-05-30.md` —
+the full verified finding set (**61 confirmed, 2 refuted** of 63
+candidates), deduped to ~24 distinct issues, with a
+correctness/dead-code section, a refuted-findings appendix, coverage +
+test-gap lists, and updated PED/GV cluster-overview rows. **No source
+code modified.** **How:** multi-agent workflow `wf_8077a831-96f` — 4
+parallel auditors (2 GV lenses, 1 PED cross-check, 1 deep-dive critic) →
+adversarial per-finding verification (63 → 61 confirmed / 2 refuted; 67
+agents). PLUS the author independently read all 24 GV files end-to-end
+and corroborated every spot-checked finding. **Key results:** PED is
+largely clean (0 high; themes: founders idiom PED-1, sex codes PED-2,
+error/return PED-5/6, `getPotentialParents` PED-4). GV is well-factored
+but carries the audit’s **only HIGH-severity bug — NEW-15**
+(`countKinshipValues.R:133` wrong loop index, untested path). Other
+notable correctness items: NEW-34 (`getPotentialParents` crash), NEW-40
+(`findGeneration` NA), NEW-37 (`correctParentSex` H/U overwrite), NEW-45
+(`geneDrop` period-in-id), NEW-48 (`calcFEFG` NA), NEW-53 (`makeSimPed`
+in-place mutation), NEW-52 (sd n=1), NEW-25 (`getProportionLow` empty).
+Plus NEW-20 dead file (`makeGeneticDiversityDashboard.R`) and NEW-13/23
+calcFE/FG/FEFG triplication. Four confirmed findings have no test:
+NEW-20, NEW-41, NEW-44, NEW-58. **Key files:** -
+`PED_GV_AUDIT_2026-05-30.md` — the deliverable (full finding tables +
+refuted appendix). - Workflow artifact
+`…/18efd281-…/tasks/w9oz3tkdf.output` — per-finding verdict JSON
+(incl. the 2 refuted, NEW-49 / NEW-60, with rationales). - Workflow
+script `…/workflows/scripts/ped-gv-audit-rerun-wf_8077a831-96f.js`
+(resumable). **GOTCHAS for the next session:** 1. **Tool-output
+rendering lagged badly** in this autonomous session — Bash/Read returned
+empty for many consecutive turns, flushing in batches only on external
+events (user messages, background-task notifications). Write/Edit and
+subagents worked normally. Countermeasure: delegate reads/parsing to a
+subagent (its final message returns reliably), or trigger a flush with a
+`run_in_background` command. 2. **NEW-15 is the one HIGH bug and is
+UNTESTED** — its buggy branch is never hit by the current test (only
+equal value-sets). Write the failing test first. 3. **Verify
+reachability before “fixing” latent items** — several medium correctness
+items (NEW-45/48/53) are masked by upstream invariants/non-default
+inputs; confirm with real data first. 4. **The 2 refuted findings
+(NEW-49, NEW-60)** are in the report’s appendix and the artifact —
+refuted because their causal mechanism didn’t hold (not a tooling
+failure). **Self-assessment: 8.5/10.** (+) Avoided Session 1’s failure
+mode by independently reading every GV file rather than trusting agents;
+adversarial verification (61/63) kept the floor high and caught 2
+plausible-but-wrong candidates. (+) Surfaced one HIGH bug + ~10 latent
+correctness items beyond pure debt. (−) Wrote a first version of the
+report before the full verification data had rendered (harness output
+lag), then had to expand and re-commit it. (−) Spent excessive turns
+fighting the output lag before pivoting to subagent delegation.
+
+### What Session 1 Did
+
+**Deliverable:** Read-only Senior-Architect technical-debt &
+refactoring-viability audit of `nprcgenekeepr`. (COMPLETE) **Date:**
+2026-05-30 **Branch:** `add-methodology` (unchanged)
+
+**What was produced:** - `TECH_DEBT_AUDIT_2026-05-30.md` (959 lines) —
+the audit report. Sections: Executive Summary, Cluster Overview, (1)
+Cognitive Complexity, (2) Duplication, (3) Extensibility, (4)
+Prioritized Refactoring Targets (Quick Wins vs Architectural Overhauls),
+Appendix A Coverage, Appendix B Rejected Findings, Appendix C Method &
+Caveats + Known coverage gaps. -
+`/Users/rmsharp/.claude/plans/reflective-bouncing-cat.md` — the approved
+audit plan. - **No source code was modified** (user instruction: “Do not
+modify any code”). The only repo file created is the report;
+SESSION_NOTES.md updated for handoff.
+
+**How it was done:** Multi-agent read-only workflow (ultracode). 81
+sub-agents: 11 parallel per-cluster auditors (QC, PED, LOOP, KIN, GV,
+GRP, GENO, APP, MISC, XDRY, XARCH) + adversarial per-finding verifiers +
+a coverage agent. Only verifier-CONFIRMED findings are in the main
+report; severity/category are verifier-ADJUSTED.
+
+**Results:** 60 confirmed findings (13 complexity, 19 duplication, 28
+extensibility; 44 quick-wins, 16 overhauls). 29 findings rejected by
+verification. Dominant themes: (a) two coexisting/diverging Shiny apps;
+(b) dead-code/duplicate-variant accumulation; (c) hardcoded domain
+constants (sex codes M/F/U/H, minParentAge=2, column-name lists) with no
+central schema/species profile; (d) Shiny leaking into core compute; (e)
+inconsistent error/return conventions.
+
+**Key report locations (TECH_DEBT_AUDIT_2026-05-30.md):** - Cluster
+Overview table: ~line 21 - §1 Complexity ~line 35; §2 Duplication ~line
+192; §3 Extensibility ~line 415 - §4 Prioritized (Quick Wins /
+Overhauls): ~line 741 - Appendix A Coverage (74-file gap list): ~line
+811 - Appendix B Rejected findings table: ~line 899 - Appendix C
+Caveats + Known coverage gaps: ~line 935
+
+**GOTCHAS for the next session:** 1. **The audit BRIEF contained phantom
+filenames** (e.g. `correctParentSexErrors.R`, `addPedigreeYears.R`,
+`getDateErrorMessage.R`) that do NOT exist in `R/`. The QC and several
+XDRY findings against them were correctly rejected — do not chase those
+files. 2. **PED and GV clusters = 0 findings = NOT audited** (agent
+failures), not “clean.” Re-run. 3. **Some Appendix-B rejections were
+transient tool failures**, not real refutations (verifier literally got
+empty tool output). APP-11 was rejected this way but is the SAME issue
+as confirmed XARCH-1. GENO-2, APP-2/4/5, GRP-1/2/6 are also re-verify
+candidates. 4. **Auditor line numbers drifted** in some findings; the
+verifier’s `correctedLineRange` is authoritative (e.g. KIN-1 is
+`calcFEFG.R:36-82`, not the auditor’s 44-93). 5.
+**`python3 methodology_dashboard.py` hangs as a background task** (it
+tries to open a browser). Run it in the foreground with stdin closed:
+`python3 methodology_dashboard.py </dev/null`. It prints a terminal
+summary and writes `dashboard.html`. Last health score: 78/100. 6.
+**Uncommitted, NOT mine:** working tree also has `.DS_Store` (modified),
+untracked `..Rcheck/` (an R CMD check artifact dir) and `.claude/`. I
+did not touch these; the audit commit includes ONLY the report + this
+file.
+
+**Self-assessment score: 8/10.** - (+) Delivered exactly one deliverable
+(the audit), read-only, honoring the constraint. - (+) Adversarial
+verification caught hallucinated/phantom-file findings before they
+reached the report — the report’s confirmed findings are a
+high-confidence floor. - (+) Honestly flagged the PED/GV coverage gap
+rather than presenting 0-findings as clean. - (−) My cluster brief
+seeded phantom filenames (from training-prior guesses about R file
+names) that wasted auditor/verifier effort. Lesson: resolve the real
+file list with Glob FIRST, then build cluster briefs from actual paths —
+don’t hand agents guessed filenames. - (−) Two cluster agents (PED, GV)
+returned empty and I did not re-dispatch them within the session before
+finalizing; flagged for re-run instead.

@@ -1,0 +1,56 @@
+# rhesusPedigree is a pedigree object
+
+Represents an obfuscated pedigree from *rhesusPedigree.csv* where the
+IDs and dates have been modified to de-identify the data.
+
+- id:
+
+  – character column of animal IDs
+
+- sire:
+
+  – the male parent of the animal indicated by the `id` column. Unknown
+  sires are indicated with `NA`
+
+- dam:
+
+  – the female parent of the animal indicated by the `id` column.Unknown
+  dams are indicated with `NA`
+
+- sex:
+
+  – factor with levels: "M", "F", "U". Sex specifier for an individual.
+
+- gen:
+
+  – generation number (integers beginning with 0 for the founder
+  generation) of the animal indicated by the `id` column.
+
+- birth:
+
+  – Date vector of birth dates
+
+- exit:
+
+  – Date vector of exit dates
+
+- age:
+
+  – numerical vector of age in years
+
+## Usage
+
+``` r
+rhesusPedigree
+```
+
+## Format
+
+An object of class `data.frame` with 375 rows and 8 columns.
+
+## Examples
+
+``` r
+library(nprcgenekeepr)
+data("rhesusPedigree")
+```

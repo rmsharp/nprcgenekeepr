@@ -1,0 +1,30 @@
+# checkErrorLst examines list for non-empty fields
+
+checkErrorLst examines list for non-empty fields
+
+## Usage
+
+``` r
+checkErrorLst(errorLst)
+```
+
+## Arguments
+
+- errorLst:
+
+  list with fields for each type of error detectable by `qcStudbook`.
+
+## Value
+
+Returns FALSE if all fields are empty or the list is NULL else the
+entire list is returned.
+
+## Examples
+
+``` r
+errorLst <- qcStudbook(nprcgenekeepr::pedFemaleSireMaleDam,
+  reportErrors = TRUE
+)
+checkErrorLst(errorLst)
+#> [1] TRUE
+```
