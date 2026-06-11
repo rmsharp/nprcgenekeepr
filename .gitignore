@@ -34,6 +34,7 @@ docs/*
 !docs/methodology/**
 !docs/planning/
 !docs/planning/**
+pkgdown_site/
 dashboard.html
 /doc/
 /Meta/
