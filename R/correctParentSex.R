@@ -4,6 +4,11 @@
 ## This file is part of nprcgenekeepr
 #' Part of Pedigree Curation
 #'
+#' @details Only true female-sires (\code{"F"}) and male-dams (\code{"M"}) are
+#' corrected (to \code{"M"} and \code{"F"} respectively). Parents recorded as
+#' hermaphrodite (\code{"H"}) or unknown (\code{"U"}) sex are left unchanged,
+#' consistent with \code{reportErrors = TRUE} mode, which does not flag them.
+#'
 #' @return A factor with levels: "M", "F", "H", and "U"
 #' representing the sex codes for the ids provided
 #'
@@ -86,9 +91,12 @@ correctParentSex <- function(id, sire, dam, sex, recordStatus,
       maleDams = maleDams
     )
   } else {
-    # Update gender for sires and dams
-    sex[((id %in% sires) & (sex != "M"))] <- "M"
-    sex[((id %in% dams) & (sex != "F"))] <- "F"
+    # Update gender for sires and dams. Mirror the report branch above
+    # (which exempts H/U via `!sex %in% c("H", "U", "M")`): only correct true
+    # female-sires (F -> M) and male-dams (M -> F). Hermaphrodite ("H") and
+    # unknown-sex ("U") parents keep their recorded sex (NEW-37).
+    sex[((id %in% sires) & !(sex %in% c("H", "U", "M")))] <- "M"
+    sex[((id %in% dams) & !(sex %in% c("H", "U", "F")))] <- "F"
     return(sex)
   }
 }

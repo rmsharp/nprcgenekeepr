@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
-context("getProbandPedigree")
 library(testthat)
 
 data("lacy1989Ped")

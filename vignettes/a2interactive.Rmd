@@ -722,6 +722,7 @@ errorDescriptions <- c(
   "Individuals are listed as male and as a dam.",
   "Individuals who are listed as both a sire and a dam.",
   "IDs listed more than once.",
+  "IDs (id, sire, or dam) that contain a period ('.'), which is not allowed.",
   stri_c(
     "Columns that have been changed to conform to internal naming ",
     "conventions and what they were changed to."

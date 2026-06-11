@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
-context("saveDataframesAsFiles")
 library(testthat)
 dfList <- list(
   lacy1989Ped = nprcgenekeepr::lacy1989Ped,

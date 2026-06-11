@@ -72,6 +72,8 @@ kinship <- function(id, father.id, mother.id, pdepth, sparse = FALSE) { # nolint
   if (anyDuplicated(id)) {
     stop("All id values must be unique")
   }
+  ## Mendelian 1/2: a non-inbred animal's self-kinship is 1/2, so kmat starts
+  ## as one-half of the identity matrix (each founder's self-kinship is 0.5).
   if (sparse) {
     kmat <- Diagonal(n + 1L) / 2L
   } else {
@@ -95,6 +97,9 @@ kinship <- function(id, father.id, mother.id, pdepth, sparse = FALSE) { # nolint
     for (i in indx) {
       mom <- mrow[i]
       dad <- drow[i]
+      ## Mendelian 1/2: i's kinship with any j is the average of its two
+      ## parents' kinships with j; i's self-kinship is half of one plus its
+      ## own inbreeding coefficient (the kinship between its two parents).
       kmat[i, ] <- kmat[, i] <- (kmat[mom, ] + kmat[dad, ]) / 2L
       kmat[i, i] <- (1L + kmat[mom, dad]) / 2L
     }

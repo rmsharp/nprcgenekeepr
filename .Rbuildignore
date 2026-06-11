@@ -8,14 +8,13 @@
 ^\.httr-oauth$
 ^\.Rprofile$
 ^cran-comments\.md$
-^20250504_cran-comments\.md$
-^20241220_cran-comments\.md$
 ^20210330_cran-comments\.md$
 ^20210324_cran-comments\.md$
 ^20201107_cran-comments\.md$
 ^20200517_cran-comments\.md$
 ^20200510_cran-comments\.md$
 ^20200415_cran-comments\.md$
+^20241220_cran-comments\.md$
 ^codecov\.yml$
 ^docs$
 inst/extdata/meeting_notes\.html$
@@ -66,3 +65,16 @@ README\.*\.png$
 ^tests/testthat/_snaps$
 ^CITATION\.cff$
 ^CRAN-SUBMISSION$
+^test_results_summary.md
+^\.\.Rcheck$
+^\.positai$
+^\.claude$
+# Methodology framework files (tooling, not R package content)
+^PROJECT_LEARNINGS\.md$
+^CLAUDE\.md$
+^SESSION_RUNNER\.md$
+^SESSION_NOTES\.md$
+^SAFEGUARDS\.md$
+^BACKLOG\.md$
+^ROADMAP\.md$
+^CHANGELOG\.md$

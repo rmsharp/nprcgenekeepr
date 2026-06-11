@@ -20,7 +20,10 @@
 #' This does not work if the pedigree does not have all parent IDs as ego IDs.
 #' }
 #' @return An integer vector indication the generation numbers for each id,
-#' starting at 0 for individuals lacking IDs for both parents.
+#' starting at 0 for individuals lacking IDs for both parents. Any id that
+#' cannot be placed --- e.g. when the pedigree contains a cycle or references
+#' a parent ID that is not itself present as an ego ID --- is returned as
+#' \code{NA} and triggers a \code{warning} naming the affected ids.
 #'
 #' @param id character vector with unique identifier for an individual
 #' @param sire character vector with unique identifier for an
@@ -51,6 +54,23 @@ findGeneration <- function(id, sire, dam) {
     i <- i + 1L
 
     parents <- cumulativeParents
+  }
+  if (anyNA(gen)) {
+    unplaced <- id[is.na(gen)]
+    danglingParents <- setdiff(c(sire[!is.na(sire)], dam[!is.na(dam)]), id)
+    msg <- paste0(
+      "findGeneration: ", length(unplaced),
+      " id(s) could not be assigned a generation; the pedigree may contain ",
+      "a cycle or a parent ID absent as an ego ID. Unplaced id(s): ",
+      toString(unplaced)
+    )
+    if (length(danglingParents) > 0L) {
+      msg <- paste0(
+        msg, ". Parent ID(s) with no record: ",
+        toString(danglingParents)
+      )
+    }
+    warning(msg)
   }
   gen
 }

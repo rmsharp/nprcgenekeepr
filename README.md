@@ -5,7 +5,7 @@ R. Mark Sharp, Ph.D.
 
 # nprcgenekeepr <a href="https://github.com/rmsharp/nprcgenekeepr"><img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
 
-Version 1.0.8 (2025-07-25)
+Version 1.1.0.9000 (2026-06-01)
 
 <!-- badges: start -->
 
@@ -13,11 +13,13 @@ Version 1.0.8 (2025-07-25)
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-[![R-CMD-check](https://github.com/rmsharp/nprcgenekeepr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rmsharp/nprcgenekeepr/actions/workflows/R-CMD-check.yaml)
+[![CRAN_version](https://www.r-pkg.org/badges/version/nprcgenekeepr)](https://cran.r-project.org/package=nprcgenekeepr)
+[![CRAN_download](https://cranlogs.r-pkg.org/badges/nprcgenekeepr)](https://cran.r-project.org/package=nprcgenekeepr)
+[![CRAN_download_total](https://cranlogs.r-pkg.org/badges/grand-total/kableExtra)](https://cran.r-project.org/package=nprcgenekeepr)
+\[[![R-CMD-check](https://github.com/rmsharp/nprcgenekeepr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rmsharp/nprcgenekeepr/actions/workflows/R-CMD-check.yaml)
+[![DOI](https://img.shields.io/badge/doi-10.32614-green.svg)](https://doi.org/10.32614)
 [![Codecov test
 coverage](https://codecov.io/gh/rmsharp/nprcgenekeepr/graph/badge.svg)](https://app.codecov.io/gh/rmsharp/nprcgenekeepr)
-[![CRAN
-status](https://www.r-pkg.org/badges/version/nprcgenekeepr)](https://CRAN.R-project.org/package=nprcgenekeepr)
 <!-- badges: end -->
 
 ## Introduction
@@ -34,9 +36,7 @@ Southwest National Primate Research Center and P51 OD011092 to the
 Oregon National Primate Research Center.
 
 <!--It is now managed and maintained as a joint effort between ONPRC-->
-
 <!--and Southwest National Primate Research Center (SNPRC) with the -->
-
 <!--coding being done by R. Mark Sharp, Ph.D.-->
 
 At present, the application supports 5 functions:
@@ -104,8 +104,11 @@ application that can be started with:
 
 ``` r
 library(nprcgenekeepr) # nolint: undesirable_function_linter
-runGeneKeepR()
+runModularApp()
 ```
+
+(`runGeneKeepR()` also still launches the application but is deprecated
+in favor of `runModularApp()`.)
 
 ## Summary of Major Functions
 

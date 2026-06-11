@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
-context("convertSexCodes")
 library(testthat)
 original <- c(
   "m", "male", "1", "MALE", "M", "F", "f", "female", "FemAle", "U",

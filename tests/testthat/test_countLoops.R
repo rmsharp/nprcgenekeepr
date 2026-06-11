@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
-context("countLoops")
 
 ped <- nprcgenekeepr::qcPed
 ped <- qcStudbook(ped, minParentAge = 0L)

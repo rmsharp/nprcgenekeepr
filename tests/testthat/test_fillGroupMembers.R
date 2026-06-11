@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
-context("fillGroupMembers")
 
 test_that("fillGroupMembers adds animals in the specified sex ratio", {
   skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
@@ -42,7 +41,7 @@ test_that("fillGroupMembers adds animals in the specified sex ratio", {
   )
   expect_equal(groupMembers[[1L]][1L:3L], c("N54ICI", "VJ08BW", "2ZMHG7"))
   expect_equal(calculateSexRatio(groupMembers[[1L]], ped), 52.5,
-    tolerance = 0.1, scale = 1.0
+    tolerance = 0.1
   )
   sexRatio <- 1L
   groupMembers <- nprcgenekeepr:::fillGroupMembers(
@@ -54,6 +53,6 @@ test_that("fillGroupMembers adds animals in the specified sex ratio", {
     c("N54ICI", "VJ08BW", "2ZMHG7", "CS23RV")
   )
   expect_equal(calculateSexRatio(groupMembers[[1]], ped), 1.0,
-    tolerance = 0.1, scale = 1.0
+    tolerance = 0.1
   )
 })

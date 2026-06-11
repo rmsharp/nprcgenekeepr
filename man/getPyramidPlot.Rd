@@ -4,10 +4,28 @@
 \alias{getPyramidPlot}
 \title{Creates a pyramid plot of the pedigree provided.}
 \usage{
-getPyramidPlot(ped = NULL)
+getPyramidPlot(
+  ped = NULL,
+  binWidth = 2L,
+  ageUnit = "years",
+  colorScheme = "default",
+  showCounts = TRUE,
+  ageLabelCex = 1
+)
 }
 \arguments{
 \item{ped}{dataframe with pedigree data.}
+
+\item{binWidth}{numeric bin width for age groups (default 2).}
+
+\item{ageUnit}{character either "years" (default) or "months".}
+
+\item{colorScheme}{character color scheme: "default" (blue/pink) or
+"viridis" (colorblind-friendly).}
+
+\item{showCounts}{logical whether to show count values on bars (default TRUE).}
+
+\item{ageLabelCex}{numeric expansion factor for age labels (default 1.0).}
 }
 \value{
 The return value of par("mar") when the function was called.
@@ -21,4 +39,5 @@ are provided by the nprcgenekeepr package.
 library(nprcgenekeepr)
 data(qcPed)
 getPyramidPlot(qcPed)
+getPyramidPlot(qcPed, binWidth = 5, colorScheme = "viridis")
 }

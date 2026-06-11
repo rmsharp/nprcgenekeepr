@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
-context("getRecordStatusIndex")
 library(testthat)
 test_that(
   "getRecordStatusIndex handles dataframe without a recordStatus column",

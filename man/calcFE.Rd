@@ -19,7 +19,8 @@ alleles retained in the gene dropping experiment.
 Part of the Genetic Value Analysis
 }
 \details{
-It is assumed that the pedigree has no partial parentage
+The pedigree must have no partial parentage (every animal has both parents
+known or both unknown); \code{calcFE} stops with an error otherwise.
 }
 \examples{
 ## Example from Analysis of Founder Representation in Pedigrees: Founder

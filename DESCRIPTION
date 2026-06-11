@@ -2,7 +2,7 @@ Config/renv/profiles/dev/dependencies: checkhelper,devtools, httpuv, qpdf, markd
 Package: nprcgenekeepr
 Type: Package
 Title: Genetic Tools for Colony Management
-Version: 1.0.8
+Version: 1.1.0.9000
 Authors@R: c(
     person("Michael", "Raboin", role = c("aut")),
     person("Terry", "Therneau", role = c("aut")),
@@ -36,11 +36,14 @@ Description: Provides genetic tools for colony management and is a derivation
 URL: https://rmsharp.github.io/nprcgenekeepr/, https://github.com/rmsharp/nprcgenekeepr
 BugReports: https://github.com/rmsharp/nprcgenekeepr/issues
 Depends:
-    R (>= 3.6.0)
+    R (>= 4.1.0)
 Imports:
     anytime,
+    bslib,
     data.table,
+    DT,
     futile.logger,
+    ggplot2,
     htmlTable,
     lifecycle,
     lubridate,
@@ -56,8 +59,8 @@ Imports:
 Suggests:
     covr,
     dplyr,
-    ggplot2,
     grid,
+    shinytest2,
     kableExtra,
     knitr,
     markdown,

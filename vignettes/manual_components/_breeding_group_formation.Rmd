@@ -1,8 +1,8 @@
 ---
 title: "Breeding Group Formation"
 author: "R. Mark Sharp, Ph.D."
-date: "10/2/2017"
-output: 
+date: "2025-01-01"
+output:
    - rmarkdown::pdf_document
    - rmarkdown::latex_document
    - rmarkdown::html_vignette
@@ -13,33 +13,69 @@ vignette: >
   %\usepackage[UTF-8]{inputenc}
 ---
 
-## Breeding Group Formation  
-The last major function of the R-package is to aid in generating breeding 
-groups that avoid inter-animal relatedness. 
-This tab allows you to build a number of breeding groups
-from a specified list of candidate animals. 
-It also has an option to build a group by
-adding animals from a list of candidates to a currently-existing group.
+## Breeding Group Formation
 
-In the top half of the tab, there are entry boxes and menus to adjust the 
-options of the analysis. 
-By default, the analysis will ignore relatedness between animals that is
-more distant than the second cousin level, pairwise relatedness involving an 
-animal under 1 year of age, and relatedness between all females. 
-All of these options can be adjusted before the analysis is run, however.
+The Breeding Group Formation tab (`modBreedingGroups`) helps generate breeding
+groups that minimize inter-animal relatedness while maintaining genetic diversity.
 
-If the desire is to add animals to an existing group, the IDs of the candidate 
-animals can be entered into the first text box (just as they would be if a new 
-group were being generated). 
-The IDs of the current group members can be added into the second text box.
-It should be noted that it will cause an error if the provided candidate 
-animals or current group member IDs are not part of the population for 
-which a genetic value analysis was run. The kinship matrix produced for this 
-analysis provides the pairwise
-kinship values used by the group formation functions.
+### Configuration Options
 
-After the simulation is done, the first group will be displayed automatically. 
-The group being displayed can be changed with the drop-down menu. 
-Whichever group is
-currently being displayed can then be downloaded with the export button.
+The left panel provides controls for group formation:
+
+- **Source**: Select which animals to use as candidates:
+  - *Top ranked*: Use the highest-ranked animals from the Genetic Value Analysis
+  - *Upload list*: Provide a custom list of candidate animal IDs
+  - *All available*: Use all animals in the current population
+
+- **Number of top animals**: When using "Top ranked" source, specify how many
+  of the highest genetic value animals to include (default: 20).
+
+- **Number of groups**: How many breeding groups to form (default: 3, range: 1-20).
+
+- **Max kinship threshold**: Maximum allowed kinship coefficient between
+  group members (default: 0.25). Lower values create more genetically diverse
+  groups but may result in fewer animals being placed.
+
+- **Sex ratio**: Control the male-to-female composition:
+  - *None*: No sex ratio constraint
+  - *Harem (1M:NF)*: One male per group with multiple females
+  - *Custom*: Specify a custom ratio
+
+### Results Display
+
+After clicking "Form Groups", results appear in two tabs:
+
+1. **Groups**: Visual display of each formed group showing:
+   - Group number and size
+   - Animal IDs and their genetic values
+   - Mean kinship within the group
+
+2. **Statistics**: Summary table showing:
+   - Number of animals per group
+   - Average kinship within each group
+   - Sex composition
+   - Unassigned animals (those that couldn't be placed without exceeding
+     kinship threshold)
+
+### Module Interface
+
+The `modBreedingGroups` module returns reactive values:
+
+- `groups`: List of data frames, one per breeding group
+- `nGroups`: Number of groups successfully formed
+- `unassigned`: IDs of animals that couldn't be placed
+
+### Algorithm Notes
+
+The group formation algorithm:
+
+1. Calculates pairwise kinship for all candidate animals
+2. Iteratively assigns animals to groups while respecting the kinship threshold
+3. Optimizes for maximum genetic diversity within groups
+4. Respects sex ratio constraints when specified
+
+By default, the analysis ignores relatedness more distant than second cousins,
+pairwise relatedness involving animals under 1 year of age, and relatedness
+between females. The guidance panel at the bottom provides a table of kinship
+values for common relationship categories.
 

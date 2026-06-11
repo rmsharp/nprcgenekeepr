@@ -1,6 +1,6 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
-context("get_elapsed_time_str")
+skip_if_not_installed("mockery")
 loadNamespace("mockery")
 start_time <- structure(
   c(

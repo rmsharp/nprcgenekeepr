@@ -1,7 +1,7 @@
 ---
 title: "NEWS"
 author: "R. Mark Sharp, Ph.D."
-date: "2025-07-23"
+date: "2026-01-26"
 output:
    github_document: default
 
@@ -10,6 +10,102 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+# nprcgenekeepr 1.1.0.9000 (20260126)
+- Data input / quality control
+  - IDs may no longer contain a period ("."). `qcStudbook()` and `geneDrop()`
+    now reject `id`/`sire`/`dam` values that contain a period; with
+    `reportErrors = TRUE`, the offending values are reported in
+    `errorLst$invalidIdChars`. Periods cause problems across software
+    environments (R column-name/formula parsing, file extensions, namespaces,
+    regular expressions). All automatically generated IDs remain period-free.
+    (NEW-45)
+  - `geneDrop()` now rejects duplicate animal IDs with a clear error. Animal IDs
+    uniquely identify animals (already enforced upstream by `qcStudbook()` via
+    `removeDuplicates()` and by `kinship()`); a duplicate id previously triggered
+    the cryptic base-R error "duplicate 'row.names' are not allowed". (NEW-46)
+- Genetic value analysis
+  - `summarizeKinshipValues()` now reports the `secondQuartile` column as the
+    lower hinge (`fivenum()[2]`, approximately the first quartile) instead of
+    silently duplicating `min` (`fivenum()[1]`). The `thirdQuartile` column
+    (the upper hinge) was already correct. (NEW-16)
+  - `calcFE()`, `calcFG()`, and `calcFEFG()` no longer duplicate the founder-
+    contribution algorithm and the partial-parentage guard they shared
+    verbatim; both now live in a single internal helper. Results, signatures,
+    and error messages are unchanged. (NEW-13 / NEW-23)
+- Pedigree curation
+  - Added two exported helpers, `isFounder()` and `getFounders()`, that
+    identify pedigree founders (animals whose sire and dam are both unknown).
+    `isFounder(ped)` returns the logical mask and `getFounders(ped)` returns
+    the founder `id` values. The founder predicate had been written inline in
+    a dozen places; it is now defined once and reused throughout the
+    genetic-value and reporting functions. (PED-1 / NEW-17)
+- Major changes
+  - Architectural Changes
+    - Modular Shiny Architecture      
+      - Refactored monolithic Shiny application into discrete,
+        testable modules using shiny::moduleServer()       
+      - New module files:             
+        - modInput.R - Data input and QC processing        
+        - modPedigree.R - Pedigree browser with trim/filter capabilities      
+        - modPyramid.R - Age-sex pyramid visualization     
+        - modGeneticValue.R - Genetic value analysis (mean kinship,
+          genome uniqueness)    
+        - modSummaryStats.R - Summary statistics with interactive visualizations
+        - modBreedingGroups.R - Breeding group formation using groupAddAssign()
+        - modORIPReporting.R - ORIP reporting module       
+      - New appServer.R and appUI.R orchestrate module communication via shared
+        reactive values
+      - runModularApp() provides entry point for modular application
+      - **Monolith retired (Phase 9).** The legacy monolithic application
+        (`inst/application/`) has been deleted. `runGeneKeepR()` is now a
+        soft-deprecated alias that launches the modular application via
+        `runModularApp()`; existing zero-argument calls continue to work.
+        Also removed the now-unused exports `getLogo()`, `shouldShowErrorTab()`,
+        `modMinimalTestUI()`, and `modMinimalTestServer()`, plus the unexported
+        `getMinParentAge()`. (XARCH-1 / issue #27)
+  - New Features
+    - Dynamic Tab Management          
+      - Error List and Changed Columns tabs appear/disappear dynamically based
+        on QC results   
+      - Uses insertTab()/removeTab() for cleaner UI when no errors present
+    - Enhanced QC Pipeline            
+      - runQcStudbook() wrapper provides UI-friendly error reporting        
+      - processQcStudbookResult() transforms QC output for display          
+      - shouldShowChangedColsTab() helper function
+    - Improved Visualizations
+      - getBoxWhiskerDescription() provides educational popover content for box
+        plots
+      - savePlotToFile() supports PNG, PDF, and SVG export
+      - Enhanced pyramid plots with getPyramidPlot()
+    - Genetic Value Analysis tab parity (modular app)
+      - Exposed the genome-uniqueness threshold as a user control with a
+        default of 4, matching the legacy application. The modular app
+        previously hard-coded a threshold of 1, so default genome-uniqueness
+        values from `runModularApp()` now match the legacy app. (The analytical
+        `reportGV()` default, `guThresh = 1`, is unchanged.)
+      - Added a subset filter (view by animal IDs) and an "Export Subset"
+        download, matching the legacy "Filter View" / "Export Current Subset".
+      - Changed the default gene-drop iterations to 1000 for legacy parity
+        (was 5000); removed an inert "Minimum breeding age" slider that had no
+        effect on the analysis.
+    - Utility Functions
+      - safeExecute() - Error-handling wrapper for module operations        
+      - logModuleEvent() - Structured logging with futile.logger integration
+      - makeFounderStatsTable(), makeGeneticSummaryTable() - Table generators
+  - Testing Improvements
+    - Added shiny::testServer() unit tests   
+    - ~145 new/modified test files with comprehensive module coverage     
+    - Tests for edge cases: NULL inputs, empty pedigrees, single-animal
+      scenarios
+    - Strict TDD development process used for all new features            
+- Minor changes
+  - New Dependencies 
+    - Added to Imports: bslib, DT, ggplot2             
+    - Added to Suggests: shinytest2 
+  - Bug Fixes 
+    - Fixed undefined global variables in ggplot2 aes() calls 
+    - Fixed column name expectations in genetic value tests (meanKinship/genomeUniqueness) 
+    - Network-dependent tests now skip gracefully
 
 # nprcgenekeepr 1.0.8 (20250723)
 - Minor changes
@@ -80,7 +176,6 @@ knitr::opts_chunk$set(echo = TRUE)
     simulations resulted.
 
 # nprcgenekeepr 1.0.5.9001 (20210830)
-
 - Major changes
   - Added ability to use simulation to estimate the kinship values of
     animals with incomplete parental information that are known to have

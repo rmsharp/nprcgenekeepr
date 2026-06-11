@@ -37,7 +37,7 @@ removeUninformativeFounders <- function(ped) {
   }
 
   repeat {
-    founders <- ped$id[is.na(ped$sire) & is.na(ped$dam)]
+    founders <- getFounders(ped)
 
     sires <- as.data.frame(table(ped$sire[ped$sire %in% founders]))
     dams <- as.data.frame(table(ped$dam[ped$dam %in% founders]))

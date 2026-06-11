@@ -86,6 +86,12 @@ summary.nprcgenekeeprErr <- function(object, ...) {
   )
   txt <- addErrTxt(
     txt,
+    errorLst$invalidIdChars,
+    "Error: The ID containing a disallowed period ('.') is",
+    "Error: The IDs containing a disallowed period ('.') are"
+  )
+  txt <- addErrTxt(
+    txt,
     errorLst$changedCols$caseChange,
     "Change: The column where case was changed is",
     "Change: The columns where case was changed are"

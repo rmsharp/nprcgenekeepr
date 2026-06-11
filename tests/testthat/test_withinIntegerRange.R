@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
-context("withinIntegerRange")
 
 test_that("withinIntegerRange forces value to integer within range", {
   expect_identical(withinIntegerRange(), 0L)

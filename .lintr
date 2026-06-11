@@ -17,7 +17,7 @@ exclusions: list(
     "R/addSexAndAgeToGroup.R" = 21L,
     "R/CheckRequiredCols.R" = 34L,
     "R/convertFromCenter.R" = 37L,
-    "R/correctParentSex.R" = 70L,
+    "R/correctParentSex.R" = 75L,
     "R/create_wkbk.R" = 55L,
     "R/fillGroupMembers.R" = 46L,
     "R/fillGroupMembersWithSexRatio.R" = 101L,

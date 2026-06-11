@@ -9,8 +9,14 @@
 #' @return The return value of par("mar") when the function was called.
 #'
 #' @param ped dataframe with pedigree data.
+#' @param binWidth numeric bin width for age groups (default 2).
+#' @param ageUnit character either "years" (default) or "months".
+#' @param colorScheme character color scheme: "default" (blue/pink) or
+#'   "viridis" (colorblind-friendly).
+#' @param showCounts logical whether to show count values on bars (default TRUE).
+#' @param ageLabelCex numeric expansion factor for age labels (default 1.0).
 #' @importFrom lubridate now
-#' @importFrom plotrix color.gradient
+#' @importFrom plotrix color.gradient pyramid.plot
 #' @importFrom stringi stri_c
 #' @importFrom graphics par
 #' @export
@@ -18,36 +24,95 @@
 #' library(nprcgenekeepr)
 #' data(qcPed)
 #' getPyramidPlot(qcPed)
-getPyramidPlot <- function(ped = NULL) {
+#' getPyramidPlot(qcPed, binWidth = 5, colorScheme = "viridis")
+getPyramidPlot <- function(ped = NULL, binWidth = 2L, ageUnit = "years",
+                           colorScheme = "default", showCounts = TRUE,
+                           ageLabelCex = 1.0) {
   if (is.null(ped)) {
     ped <- getPyramidAgeDist()
   }
+
+
+  # Convert age to months if requested
+  if (ageUnit == "months" && "age" %in% names(ped)) {
+    ped$age <- ped$age * 12
+  }
+
   opar <- par(no.readonly = TRUE)
   on.exit(par(opar))
   par(bg = "#FFF8DC")
-  binWidth <- 2L
+
+  # Ensure binWidth is at least 1
+
+binWidth <- max(1L, as.integer(binWidth))
+
   axModulas <- 5L
+  maxAge <- getPedMaxAge(ped)
+
+  # Handle case where maxAge might be very small or zero
+  if (is.na(maxAge) || maxAge < binWidth) {
+    maxAge <- binWidth
+  }
+
   upperAges <- seq(
     binWidth,
-    makeRoundUp(getPedMaxAge(ped), binWidth), binWidth
+    makeRoundUp(maxAge, binWidth), binWidth
   )
   lowerAges <- upperAges - binWidth
 
   bins <- fillBins(ped, lowerAges, upperAges)
   maxAx <- max(getMaxAx(bins, axModulas))
-  ageLabels <- stri_c(lowerAges, " - ", upperAges - 1L)
-  mcol <- color.gradient(0L, 0L, 0.5)
-  fcol <- color.gradient(1L, 0.5, 0.5)
+
+  # Create age labels with appropriate unit
+  ageUnitLabel <- if (ageUnit == "months") "mo" else "yr"
+  ageLabels <- stri_c(lowerAges, "-", upperAges - 1L)
+
+  # Set colors based on color scheme
+  if (colorScheme == "viridis") {
+    # Colorblind-friendly colors
+    mcol <- color.gradient(0.267, 0.329, 0.416)  # viridis blue-ish
+    fcol <- color.gradient(0.741, 0.639, 0.173)  # viridis yellow-ish
+  } else {
+    # Default blue/pink
+    mcol <- color.gradient(0L, 0L, 0.5)
+    fcol <- color.gradient(1L, 0.5, 0.5)
+  }
+
   currentDate <- now()
   axBy <- maxAx / axModulas
   axGap <- axBy * 0.6
-  ## The following values have worked well for chimpanzees:
-  ## gap=40, laxlab = seq(0, 100, by = 10), and raxlab = seq(0, 100, by = 10)
   gap <- axGap
   laxlab <- seq(0L, maxAx, by = axBy)
   raxlab <- seq(0L, maxAx, by = axBy)
-  agePyramidPlot(
-    bins$males, bins$females, ageLabels, mcol, fcol,
-    laxlab, raxlab, gap, currentDate
+
+  # Call pyramid.plot directly with additional parameters
+  pyramid.plot(
+    lx = bins$males,
+    rx = bins$females,
+    labels = ageLabels,
+    main = stri_c(
+      "Total on ",
+      lubridate::year(currentDate),
+      "-",
+      lubridate::month(currentDate, label = TRUE),
+      "-",
+      lubridate::day(currentDate),
+      ": ",
+      sum(c(bins$males, bins$females))
+    ),
+    top.labels = c(
+      stri_c("Male = ", sum(bins$males)),
+      paste0("Age (", ageUnitLabel, ")"),
+      stri_c("Female = ", sum(bins$females))
+    ),
+    lxcol = mcol,
+    rxcol = fcol,
+    laxlab = laxlab,
+    raxlab = raxlab,
+    gap = gap,
+    unit = "Number of Animals",
+    show.values = showCounts,
+    ndig = 0L,
+    labelcex = ageLabelCex
   )
 }

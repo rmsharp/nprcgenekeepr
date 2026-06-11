@@ -1,8 +1,8 @@
 ---
 title: "Summary Statistics"
 author: "R. Mark Sharp, Ph.D."
-date: "10/2/2017"
-output: 
+date: "2025-01-01"
+output:
    - rmarkdown::pdf_document
    - rmarkdown::latex_document
    - rmarkdown::html_vignette
@@ -13,15 +13,64 @@ vignette: >
   %\usepackage[UTF-8]{inputenc}
 ---
 
-## Summary Statistics  
-This tab provides some descriptions of the population being examined
-after the genetic value analysis has been run. 
-The tab reports the number of known founders, female founders, male founders,
-founder equivalents, and founder genome equivalents with the first table, 
-which has a single row.
-The second table has a row for Mean Kinship and a row for Genome Uniqueness.
-Each row has the Tukey five number summary, which is the minimum, 1^st^
-quartile, mean, median, 3^rd^ quartile, and maximum. 
-Lastly, the tab displays histograms and box plots of the distribution of
-mean kinship coefficients, the distribution of mean kinship coefficient 
-Z-scores, Distribution of genome uniqueness values.
+## Summary Statistics
+
+The Summary Statistics tab (`modSummaryStats`) displays comprehensive visualizations
+and statistics from the genetic value analysis results.
+
+### Interface Layout
+
+The module provides a structured display with three main sections:
+
+1. **Guidance Panel**: At the top, an informational panel explains how to interpret
+   the statistics and visualizations.
+
+2. **Export Buttons**: A row of download buttons for exporting:
+   - Kinship Matrix (CSV)
+   - Male Founders (CSV)
+   - Female Founders (CSV)
+   - First-Order Relationships (CSV)
+
+3. **Population Summary**: Dynamic HTML output showing:
+   - Total number of animals analyzed
+   - Average mean kinship across the population
+   - Average genome uniqueness across the population
+
+### Visualizations
+
+The module displays six plots arranged in two columns:
+
+**Left Column - Histograms**:
+- Mean Kinship Coefficient Distribution
+- Mean Kinship Z-Score Distribution
+- Genome Uniqueness Distribution
+
+**Right Column - Box Plots**:
+- Mean Kinship Coefficient
+- Mean Kinship Z-Score
+- Genome Uniqueness
+
+Each plot has an accompanying download button to export as PNG.
+
+### Statistical Summaries
+
+The tab reports founder statistics including:
+- Number of known founders, male founders, female founders
+- Founder equivalents and founder genome equivalents
+
+For Mean Kinship and Genome Uniqueness, displays the Tukey five-number summary:
+minimum, 1^st^ quartile, median, mean, 3^rd^ quartile, and maximum.
+
+### Module Interface
+
+The `modSummaryStats` module accepts inputs from upstream modules and returns:
+
+- `summaryData`: Reactive list containing:
+  - `nAnimals`: Count of animals in the analysis
+  - `meanMK`: Average mean kinship value
+  - `meanGU`: Average genome uniqueness value
+
+### Population Genetics Terms
+
+At the bottom, a reference panel provides definitions of key population genetics
+terms used throughout the analysis.

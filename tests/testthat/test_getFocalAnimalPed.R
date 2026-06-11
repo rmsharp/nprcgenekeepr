@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
-context("getFocalAnimalPed")
 
 library(stringi)
 test_that("getFocalAnimalPed recognizes no file and wrong file arguments", {
@@ -110,6 +109,516 @@ test_that(
       result <- getFocalAnimalPed(fileName = qcPedEmptyTxt),
       "The nprcgenekeepr configuration file is missing."
     )
-    expect_length(result, 9L)
+    ## NEW-45: getEmptyErrorLst() gained the invalidIdChars field (9 -> 10).
+    expect_length(result, 10L)
   }
 )
+
+# Helper function to create mock pedigree data in the format that
+# getLkDirectRelatives returns (before column renaming)
+# The columns will be renamed to: id, sex, birth, death, departure, dam, sire
+create_mock_ped_data <- function(ids = NULL, include_dates = TRUE) {
+  # Create base pedigree data matching focal animals from focalAnimalsShortList
+  # These IDs are from inst/extdata/focalAnimalsShortList.csv
+  base_data <- data.frame(
+    col1 = c("FJS7RQ", "H6T2FF", "HEVL3L", "I04JZV", "S63QDN",
+             "PARENT1", "PARENT2", "PARENT3", "PARENT4"),
+    col2 = c("M", "F", "M", "F", "M", "M", "F", "M", "F"),
+    col3 = if (include_dates) {
+      as.Date(c("2010-05-15", "2011-03-20", "2009-08-10",
+                "2012-01-05", "2010-11-30",
+                "2000-01-01", "2001-02-15", "1998-06-20", "1999-03-10"))
+    } else {
+      rep(NA, 9)
+    },
+    col4 = if (include_dates) {
+      as.Date(c(NA, "2020-06-15", NA, NA, NA,
+                "2018-01-01", NA, "2015-12-31", NA))
+    } else {
+      rep(NA, 9)
+    },
+    col5 = if (include_dates) {
+      as.Date(c("2019-01-01", NA, "2018-06-01", NA, "2017-03-15",
+                NA, "2016-05-01", NA, "2014-08-20"))
+    } else {
+      rep(NA, 9)
+    },
+    col6 = c("PARENT2", "PARENT4", "PARENT2", "PARENT4", "PARENT2",
+             NA, NA, NA, NA),
+    col7 = c("PARENT1", "PARENT3", "PARENT1", "PARENT3", "PARENT1",
+             NA, NA, NA, NA),
+    stringsAsFactors = FALSE
+  )
+
+  if (!is.null(ids)) {
+    # Filter to requested ids plus their parents
+    all_needed <- unique(c(ids, base_data$col6[base_data$col1 %in% ids],
+                           base_data$col7[base_data$col1 %in% ids]))
+    all_needed <- all_needed[!is.na(all_needed)]
+    base_data <- base_data[base_data$col1 %in% all_needed, ]
+  }
+
+  base_data
+}
+
+# Test that getFocalAnimalPed reads CSV files correctly
+test_that("getFocalAnimalPed reads CSV file and returns pedigree", {
+  skip_if_not_installed("mockery")
+
+  # Create a temporary CSV file with focal animal IDs
+  temp_file <- tempfile(fileext = ".csv")
+  focal_ids <- data.frame(id = c("FJS7RQ", "S63QDN"))
+  write.csv(focal_ids, temp_file, row.names = FALSE)
+
+  # Create mock data
+  mock_ped <- create_mock_ped_data(c("FJS7RQ", "S63QDN"))
+
+  # Stub getLkDirectRelatives to return mock data
+  mockery::stub(getFocalAnimalPed, "getLkDirectRelatives", mock_ped)
+
+  result <- getFocalAnimalPed(temp_file)
+
+  expect_s3_class(result, "data.frame")
+  expect_true(nrow(result) > 0)
+  expect_true("id" %in% names(result))
+  expect_true("sire" %in% names(result))
+  expect_true("dam" %in% names(result))
+  expect_true("sex" %in% names(result))
+  expect_true("birth" %in% names(result))
+  expect_true("death" %in% names(result))
+  expect_true("departure" %in% names(result))
+
+  unlink(temp_file)
+})
+
+# Test column renaming
+test_that("getFocalAnimalPed renames columns correctly", {
+  skip_if_not_installed("mockery")
+
+  temp_file <- tempfile(fileext = ".csv")
+  focal_ids <- data.frame(id = c("FJS7RQ"))
+  write.csv(focal_ids, temp_file, row.names = FALSE)
+
+  mock_ped <- create_mock_ped_data(c("FJS7RQ"))
+  mockery::stub(getFocalAnimalPed, "getLkDirectRelatives", mock_ped)
+
+  result <- getFocalAnimalPed(temp_file)
+
+  # Check column order after renaming
+  expect_identical(
+    names(result),
+    c("id", "sex", "birth", "death", "departure", "dam", "sire")
+  )
+
+  unlink(temp_file)
+})
+
+# Test date formatting
+test_that("getFocalAnimalPed formats dates as YYYY-MM-DD strings", {
+  skip_if_not_installed("mockery")
+
+  temp_file <- tempfile(fileext = ".csv")
+  focal_ids <- data.frame(id = c("FJS7RQ"))
+  write.csv(focal_ids, temp_file, row.names = FALSE)
+
+  mock_ped <- create_mock_ped_data(c("FJS7RQ"))
+  mockery::stub(getFocalAnimalPed, "getLkDirectRelatives", mock_ped)
+
+  result <- getFocalAnimalPed(temp_file)
+
+  # Check date format (should be character in YYYY-MM-DD format)
+  expect_type(result$birth, "character")
+  expect_type(result$death, "character")
+  expect_type(result$departure, "character")
+
+  # Check non-NA dates match expected format
+  non_na_birth <- result$birth[!is.na(result$birth) & result$birth != "NA"]
+  if (length(non_na_birth) > 0) {
+    expect_match(non_na_birth[1], "^\\d{4}-\\d{2}-\\d{2}$")
+  }
+
+  unlink(temp_file)
+})
+
+# Test handling of NULL return from getLkDirectRelatives
+test_that("getFocalAnimalPed returns error list when database connection fails", {
+  skip_if_not_installed("mockery")
+
+  temp_file <- tempfile(fileext = ".csv")
+  focal_ids <- data.frame(id = c("FJS7RQ"))
+  write.csv(focal_ids, temp_file, row.names = FALSE)
+
+  # Stub getLkDirectRelatives to return NULL (simulates connection failure)
+  mockery::stub(getFocalAnimalPed, "getLkDirectRelatives", NULL)
+
+  result <- getFocalAnimalPed(temp_file)
+
+  expect_type(result, "list")
+  expect_true("failedDatabaseConnection" %in% names(result))
+  expect_true(nchar(result$failedDatabaseConnection) > 0)
+  expect_s3_class(result, "nprcgenekeeprErr")
+
+  unlink(temp_file)
+})
+
+# Test filtering of NA ids
+test_that("getFocalAnimalPed removes rows with NA id", {
+  skip_if_not_installed("mockery")
+
+  temp_file <- tempfile(fileext = ".csv")
+  focal_ids <- data.frame(id = c("FJS7RQ"))
+  write.csv(focal_ids, temp_file, row.names = FALSE)
+
+  # Create mock data with an NA id
+  mock_ped <- create_mock_ped_data(c("FJS7RQ"))
+  mock_ped <- rbind(mock_ped, data.frame(
+    col1 = NA,
+    col2 = "M",
+    col3 = as.Date("2010-01-01"),
+    col4 = NA,
+    col5 = NA,
+    col6 = NA,
+    col7 = NA,
+    stringsAsFactors = FALSE
+  ))
+  mockery::stub(getFocalAnimalPed, "getLkDirectRelatives", mock_ped)
+
+  result <- getFocalAnimalPed(temp_file)
+
+  expect_false(any(is.na(result$id)))
+
+  unlink(temp_file)
+})
+
+# Test with actual focal animal files from inst/extdata
+test_that("getFocalAnimalPed works with focalAnimalsShortList.csv", {
+  skip_if_not_installed("mockery")
+
+  focal_file <- system.file("extdata", "focalAnimalsShortList.csv",
+                            package = "nprcgenekeepr")
+  skip_if(focal_file == "", "focalAnimalsShortList.csv not found")
+
+  # Read the actual focal IDs to create appropriate mock data
+  focal_ids <- read.csv(focal_file, stringsAsFactors = FALSE)
+  mock_ped <- create_mock_ped_data(focal_ids$id)
+
+  mockery::stub(getFocalAnimalPed, "getLkDirectRelatives", mock_ped)
+
+  result <- getFocalAnimalPed(focal_file)
+
+  expect_s3_class(result, "data.frame")
+  expect_true(nrow(result) > 0)
+  # Check that at least some focal animals are in the result
+  expect_true(any(focal_ids$id %in% result$id))
+})
+
+# Test with different CSV separator
+test_that("getFocalAnimalPed handles semicolon-separated CSV", {
+  skip_if_not_installed("mockery")
+
+  temp_file <- tempfile(fileext = ".csv")
+  focal_ids <- data.frame(id = c("FJS7RQ", "S63QDN"))
+  write.table(focal_ids, temp_file, row.names = FALSE, sep = ";", quote = TRUE)
+
+  mock_ped <- create_mock_ped_data(c("FJS7RQ", "S63QDN"))
+  mockery::stub(getFocalAnimalPed, "getLkDirectRelatives", mock_ped)
+
+  result <- getFocalAnimalPed(temp_file, sep = ";")
+
+  expect_s3_class(result, "data.frame")
+  expect_true(nrow(result) > 0)
+
+  unlink(temp_file)
+})
+
+# Test with tab-separated file
+test_that("getFocalAnimalPed handles tab-separated file", {
+  skip_if_not_installed("mockery")
+
+  temp_file <- tempfile(fileext = ".txt")
+  focal_ids <- data.frame(id = c("FJS7RQ"))
+  write.table(focal_ids, temp_file, row.names = FALSE, sep = "\t", quote = TRUE)
+
+  mock_ped <- create_mock_ped_data(c("FJS7RQ"))
+  mockery::stub(getFocalAnimalPed, "getLkDirectRelatives", mock_ped)
+
+  result <- getFocalAnimalPed(temp_file, sep = "\t")
+
+  expect_s3_class(result, "data.frame")
+  expect_true(nrow(result) > 0)
+
+  unlink(temp_file)
+})
+
+# Test with single focal animal
+test_that("getFocalAnimalPed handles single focal animal", {
+  skip_if_not_installed("mockery")
+
+  temp_file <- tempfile(fileext = ".csv")
+  focal_ids <- data.frame(id = c("FJS7RQ"))
+  write.csv(focal_ids, temp_file, row.names = FALSE)
+
+  mock_ped <- create_mock_ped_data(c("FJS7RQ"))
+  mockery::stub(getFocalAnimalPed, "getLkDirectRelatives", mock_ped)
+
+  result <- getFocalAnimalPed(temp_file)
+
+  expect_s3_class(result, "data.frame")
+  expect_true(nrow(result) >= 1)
+  expect_true("FJS7RQ" %in% result$id)
+
+  unlink(temp_file)
+})
+
+# Test with multiple focal animals
+test_that("getFocalAnimalPed handles multiple focal animals", {
+  skip_if_not_installed("mockery")
+
+  temp_file <- tempfile(fileext = ".csv")
+  focal_ids <- data.frame(id = c("FJS7RQ", "H6T2FF", "HEVL3L", "I04JZV", "S63QDN"))
+  write.csv(focal_ids, temp_file, row.names = FALSE)
+
+  mock_ped <- create_mock_ped_data(focal_ids$id)
+  mockery::stub(getFocalAnimalPed, "getLkDirectRelatives", mock_ped)
+
+  result <- getFocalAnimalPed(temp_file)
+
+  expect_s3_class(result, "data.frame")
+  # Should have at least as many rows as focal animals
+  expect_true(nrow(result) >= length(focal_ids$id))
+
+  unlink(temp_file)
+})
+
+# Test with NA dates
+test_that("getFocalAnimalPed handles NA dates correctly", {
+  skip_if_not_installed("mockery")
+
+  temp_file <- tempfile(fileext = ".csv")
+  focal_ids <- data.frame(id = c("FJS7RQ"))
+  write.csv(focal_ids, temp_file, row.names = FALSE)
+
+  # Create mock data with all NA dates
+  mock_ped <- create_mock_ped_data(c("FJS7RQ"), include_dates = FALSE)
+  mockery::stub(getFocalAnimalPed, "getLkDirectRelatives", mock_ped)
+
+  result <- getFocalAnimalPed(temp_file)
+
+  expect_s3_class(result, "data.frame")
+  # NA dates should be formatted as "NA" strings
+  expect_true(all(is.na(result$birth) | result$birth == "NA"))
+
+  unlink(temp_file)
+})
+
+# Test Excel file detection (mock the readExcelPOSIXToCharacter function)
+test_that("getFocalAnimalPed detects Excel file format", {
+  skip_if_not_installed("mockery")
+  skip_if_not_installed("readxl")
+
+  temp_file <- tempfile(fileext = ".xlsx")
+  # Create a mock Excel file by writing a simple marker
+  # We won't actually create an Excel file, just mock the detection
+  writeLines("placeholder", temp_file)
+
+  # Create mock data
+  mock_ped <- create_mock_ped_data(c("FJS7RQ"))
+  mock_focal_data <- data.frame(id = c("FJS7RQ"))
+
+  # Stub both excel_format to return xlsx and readExcelPOSIXToCharacter
+  mockery::stub(getFocalAnimalPed, "excel_format", "xlsx")
+  mockery::stub(getFocalAnimalPed, "readExcelPOSIXToCharacter", mock_focal_data)
+  mockery::stub(getFocalAnimalPed, "getLkDirectRelatives", mock_ped)
+
+  result <- getFocalAnimalPed(temp_file)
+
+  expect_s3_class(result, "data.frame")
+
+  unlink(temp_file)
+})
+
+# Test that focal animal IDs are extracted from first column
+test_that("getFocalAnimalPed extracts IDs from first column only", {
+  skip_if_not_installed("mockery")
+
+  temp_file <- tempfile(fileext = ".csv")
+  # Create CSV with extra columns (only first column should be used)
+  focal_ids <- data.frame(
+    id = c("FJS7RQ", "S63QDN"),
+    extra_col = c("ignore1", "ignore2"),
+    another_col = c(1, 2)
+  )
+  write.csv(focal_ids, temp_file, row.names = FALSE)
+
+  mock_ped <- create_mock_ped_data(c("FJS7RQ", "S63QDN"))
+  mockery::stub(getFocalAnimalPed, "getLkDirectRelatives", mock_ped)
+
+  result <- getFocalAnimalPed(temp_file)
+
+  expect_s3_class(result, "data.frame")
+  # Should only have standard pedigree columns, not the extra columns from input
+  expect_identical(
+    names(result),
+    c("id", "sex", "birth", "death", "departure", "dam", "sire")
+  )
+
+  unlink(temp_file)
+})
+
+# Test with whitespace in IDs
+test_that("getFocalAnimalPed handles IDs with leading/trailing whitespace", {
+  skip_if_not_installed("mockery")
+
+  temp_file <- tempfile(fileext = ".csv")
+  # IDs with whitespace - as.character should preserve them
+  focal_ids <- data.frame(id = c("FJS7RQ", " S63QDN "))
+  write.csv(focal_ids, temp_file, row.names = FALSE)
+
+  # Mock should handle the whitespace IDs
+  mock_ped <- create_mock_ped_data(c("FJS7RQ", " S63QDN "))
+  mockery::stub(getFocalAnimalPed, "getLkDirectRelatives", mock_ped)
+
+  result <- getFocalAnimalPed(temp_file)
+
+  expect_s3_class(result, "data.frame")
+
+  unlink(temp_file)
+})
+
+# Test empty focal animal file
+test_that("getFocalAnimalPed handles empty focal animal list", {
+  skip_if_not_installed("mockery")
+
+  temp_file <- tempfile(fileext = ".csv")
+  # Create CSV with header only
+  writeLines("id", temp_file)
+
+  # Empty result from database
+  mock_ped <- data.frame(
+    col1 = character(0),
+    col2 = character(0),
+    col3 = as.Date(character(0)),
+    col4 = as.Date(character(0)),
+    col5 = as.Date(character(0)),
+    col6 = character(0),
+    col7 = character(0),
+    stringsAsFactors = FALSE
+  )
+  mockery::stub(getFocalAnimalPed, "getLkDirectRelatives", mock_ped)
+
+  result <- getFocalAnimalPed(temp_file)
+
+  expect_s3_class(result, "data.frame")
+  expect_equal(nrow(result), 0)
+
+  unlink(temp_file)
+})
+
+# Test that the function uses the correct arguments for getLkDirectRelatives
+test_that("getFocalAnimalPed passes focal IDs to getLkDirectRelatives", {
+  skip_if_not_installed("mockery")
+
+  temp_file <- tempfile(fileext = ".csv")
+  focal_ids <- data.frame(id = c("FJS7RQ", "S63QDN", "H6T2FF"))
+  write.csv(focal_ids, temp_file, row.names = FALSE)
+
+  captured_ids <- NULL
+  mock_lk <- function(ids) {
+    captured_ids <<- ids
+    create_mock_ped_data(ids)
+  }
+
+  mockery::stub(getFocalAnimalPed, "getLkDirectRelatives", mock_lk)
+
+  result <- getFocalAnimalPed(temp_file)
+
+  expect_equal(captured_ids, c("FJS7RQ", "S63QDN", "H6T2FF"))
+
+  unlink(temp_file)
+})
+
+# Test with focalAnimals.csv (larger file)
+test_that("getFocalAnimalPed works with larger focalAnimals.csv", {
+  skip_if_not_installed("mockery")
+
+  focal_file <- system.file("extdata", "focalAnimals.csv",
+                            package = "nprcgenekeepr")
+  skip_if(focal_file == "", "focalAnimals.csv not found")
+
+  # Read focal IDs to verify file structure
+  focal_ids <- read.csv(focal_file, stringsAsFactors = FALSE)
+  expect_true(nrow(focal_ids) > 0)
+  expect_true("id" %in% names(focal_ids))
+
+  # Create mock data for a subset of IDs
+  subset_ids <- head(focal_ids$id, 10)
+  mock_ped <- data.frame(
+    col1 = subset_ids,
+    col2 = rep(c("M", "F"), length.out = length(subset_ids)),
+    col3 = as.Date("2010-01-01") + seq_along(subset_ids),
+    col4 = as.Date(NA),
+    col5 = as.Date(NA),
+    col6 = NA,
+    col7 = NA,
+    stringsAsFactors = FALSE
+  )
+
+  mockery::stub(getFocalAnimalPed, "getLkDirectRelatives", mock_ped)
+
+  result <- getFocalAnimalPed(focal_file)
+
+  expect_s3_class(result, "data.frame")
+  expect_true(nrow(result) > 0)
+})
+
+# Test return value structure matches expected pedigree format
+test_that("getFocalAnimalPed returns properly structured pedigree", {
+  skip_if_not_installed("mockery")
+
+  temp_file <- tempfile(fileext = ".csv")
+  focal_ids <- data.frame(id = c("FJS7RQ"))
+  write.csv(focal_ids, temp_file, row.names = FALSE)
+
+  mock_ped <- create_mock_ped_data(c("FJS7RQ"))
+  mockery::stub(getFocalAnimalPed, "getLkDirectRelatives", mock_ped)
+
+  result <- getFocalAnimalPed(temp_file)
+
+  # Check required columns exist
+  required_cols <- c("id", "sire", "dam", "sex", "birth", "death", "departure")
+  expect_true(all(required_cols %in% names(result)))
+
+  # Check data types
+  expect_type(result$id, "character")
+  expect_type(result$sex, "character")
+  expect_type(result$sire, "character")
+  expect_type(result$dam, "character")
+  expect_type(result$birth, "character")
+  expect_type(result$death, "character")
+  expect_type(result$departure, "character")
+
+  unlink(temp_file)
+})
+
+# Test error list structure when database fails
+test_that("getFocalAnimalPed error list has correct structure", {
+  skip_if_not_installed("mockery")
+
+  temp_file <- tempfile(fileext = ".csv")
+  focal_ids <- data.frame(id = c("FJS7RQ"))
+  write.csv(focal_ids, temp_file, row.names = FALSE)
+
+  mockery::stub(getFocalAnimalPed, "getLkDirectRelatives", NULL)
+
+  result <- getFocalAnimalPed(temp_file)
+
+  # Should have the nprcgenekeeprErr class
+  expect_s3_class(result, "nprcgenekeeprErr")
+
+  # Check that it's a valid error list with expected components
+  expect_true("failedDatabaseConnection" %in% names(result))
+  expect_type(result$failedDatabaseConnection, "character")
+  expect_true(grepl("Database connection failed", result$failedDatabaseConnection))
+
+  unlink(temp_file)
+})

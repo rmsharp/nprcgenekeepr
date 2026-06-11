@@ -22,6 +22,8 @@ ID aliases are pseudorandom sequences of alphanumeric upper case characters
 where the letter "O" is not included for readability..
 User has the option of providing a character vector of aliases to avoid
 using.
+Because aliases are alphanumeric, they never contain a period ("."),
+honoring the ID rule enforced at data input by \code{qcStudbook}.
 }
 \examples{
 library(nprcgenekeepr)

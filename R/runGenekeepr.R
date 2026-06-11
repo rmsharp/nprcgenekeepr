@@ -1,28 +1,35 @@
-#' Allows running \code{shiny} application with
-#' \code{nprcgenekeepr::runGeneKeepR()}
+#' Run the GeneKeepR Shiny Application (Deprecated)
 #'
-## Copyright(c) 2017-2024 R. Mark Sharp
-## This file is part of nprcgenekeepr
+#' The original monolithic Shiny application has been retired.
+#' \code{runGeneKeepR()} is now a soft-deprecated alias that launches the
+#' modular application via \code{\link{runModularApp}}. Existing
+#' zero-argument callers continue to work.
+#'
+#' @param port Integer port number for the Shiny server (default 6013).
+#' @param launch.browser Logical; whether to launch a browser (default TRUE).
 #'
 #' @return Returns the error condition of the Shiny application when it
-#' terminates.
+#'   terminates (from \code{\link{runModularApp}}).
 #'
-#' @importFrom shiny runApp
+#' @seealso \code{\link{runModularApp}} for the modular application this
+#'   now launches.
 #' @export
 #' @examples
 #' if (interactive()) {
 #'   library(nprcgenekeepr)
 #'   runGeneKeepR()
 #' }
-runGeneKeepR <- function() {
-  appDir <- system.file("application", package = "nprcgenekeepr")
-  if (appDir == "") {
-    stop(
-        "Could not find application directory. ",
-        "Try re-installing `nprcgenekeepr`.",
-      call. = FALSE
+## Copyright(c) 2017-2025 R. Mark Sharp
+## This file is part of nprcgenekeepr
+runGeneKeepR <- function(port = 6013L, launch.browser = TRUE) {
+  lifecycle::deprecate_soft(
+    when = "1.1.0",
+    what = "runGeneKeepR()",
+    with = "runModularApp()",
+    details = paste(
+      "The monolithic Shiny application has been retired;",
+      "runGeneKeepR() now launches the modular application."
     )
-  }
-
-  shiny::runApp(appDir, display.mode = "normal", port = 6012L)
+  )
+  runModularApp(port = port, launch.browser = launch.browser)
 }

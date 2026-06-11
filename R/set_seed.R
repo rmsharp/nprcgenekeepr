@@ -26,6 +26,21 @@ set_seed <- function(seed = 1L) {
   }
   suppressMessages(suppressWarnings(do.call(set.seed, arguments)))
 }
+#' Apply a gated RNG seed for reproducible E2E testing
+#'
+#' Reads `optionName` (env-var `envName` as fallback). When set, pins the RNG
+#' via [set_seed()] so the genetic-value / breeding-group module servers give
+#' reproducible stochastic output under shinytest2; a no-op otherwise (=> NA).
+#'
+#' @param optionName Option name, e.g. `"nprcgenekeepr.gva_seed"`.
+#' @param envName Environment-variable fallback, e.g. `"NPRC_GVA_SEED"`.
+#' @return NULL, invisibly.
+#' @noRd
+gatedSeed <- function(optionName, envName) {
+  seed <- getOption(optionName, as.integer(Sys.getenv(envName, NA)))
+  if (!is.na(seed)) set_seed(seed)
+  invisible(NULL)
+}
 #' Wrapper for R.Version
 #'
 #' @returns R.Version() output

@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
-context("addUIds")
 library(testthat)
 pedOne <- data.frame(
   id = c("s1", "d1", "s2", "d2", "o1", "o2", "o3", "o4"),
@@ -32,4 +31,14 @@ test_that("addUIds modifies the correct IDs in the right way", {
   expect_equal(newPed$sire[newPed$id == "s1"], "U0001")
   newPed <- addUIds(pedThree)
   expect_equal(newPed$dam[newPed$id == "s1"], "U0001")
+})
+
+## NEW-45 guarantee: auto-generated placeholder IDs (U####) must never contain
+## a period ('.'). pedTwo/pedThree force U-id generation. This property holds on
+## current code and must continue to hold (characterization guard).
+test_that("addUIds generates period-free IDs (NEW-45 guarantee)", {
+  npTwo <- addUIds(pedTwo)
+  npThree <- addUIds(pedThree)
+  expect_false(any(grepl(".", npTwo$sire[!is.na(npTwo$sire)], fixed = TRUE)))
+  expect_false(any(grepl(".", npThree$dam[!is.na(npThree$dam)], fixed = TRUE)))
 })

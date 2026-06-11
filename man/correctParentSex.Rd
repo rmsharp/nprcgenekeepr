@@ -33,6 +33,12 @@ representing the sex codes for the ids provided
 \description{
 Part of Pedigree Curation
 }
+\details{
+Only true female-sires (\code{"F"}) and male-dams (\code{"M"}) are
+corrected (to \code{"M"} and \code{"F"} respectively). Parents recorded as
+hermaphrodite (\code{"H"}) or unknown (\code{"U"}) sex are left unchanged,
+consistent with \code{reportErrors = TRUE} mode, which does not flag them.
+}
 \examples{
 library(nprcgenekeepr)
 pedOne <- data.frame(

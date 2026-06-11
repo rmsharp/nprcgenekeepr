@@ -23,6 +23,12 @@ kinship value. The columns are as follows:
 \code{thirdQuartile},
 \code{max}, and
 \code{sd}.
+
+The five-number-summary columns are taken from
+\code{\link[stats]{fivenum}}: \code{secondQuartile} is the lower hinge
+(\code{fivenum()[2]}, approximately the first quartile) and
+\code{thirdQuartile} is the upper hinge (\code{fivenum()[4]}, approximately
+the third quartile).
 }
 \description{
 Makes a data.frame object containing simulated kinship summary statistics

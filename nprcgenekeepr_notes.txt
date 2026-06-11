@@ -1,0 +1,61 @@
+ CRAN Submission Readiness Report
+
+  CRITICAL (must fix)
+
+  1. Version number has dev suffix — DESCRIPTION:5 has Version: 1.1.0.9000. CRAN won't accept
+  .9000. Change to 1.1.0 (or appropriate release version).
+  2. R CMD check ERROR — The existing ..Rcheck/00check.log shows Required fields missing or empty:
+  'Author' 'Maintainer'. The Authors@R parses correctly in current R 4.5.2, so this likely ran
+  against a corrupt state. A fresh R CMD check is needed to establish the real baseline.
+  3. Stale man pages from old package name — man/mprcgenekeepr-package.Rd and man/mprcgenekeepr.Rd
+  are exact duplicates of their nprcgenekeepr-* counterparts. These are leftover from the name
+  change and will confuse R CMD check. Delete them. **Done**
+  4. \dontrun in 6 Rd files — CRAN reviewers have previously asked this package to replace \dontrun
+   with \donttest. These remain:
+    - man/logModuleEvent.Rd:32
+    - man/runQcStudbook.Rd:39
+    - man/makeGeneticSummaryTable.Rd:28
+    - man/makeFounderStatsTable.Rd:32
+    - man/savePlotToFile.Rd:50
+    - man/safeExecute.Rd:43
+  5. Missing \value in 4 exported function Rd files:
+    - man/appServer.Rd
+    - man/appUI.Rd
+    - man/modMinimalTestServer.Rd
+    - man/modMinimalTestUI.Rd
+
+  IMPORTANT (should fix)
+
+  6. Missing .Rbuildignore entries — These root-level files will trigger R CMD check NOTEs:
+    - test_results_summary.md **DONE**
+    - ..Rcheck/ directory **DONE**
+  7. TODO comments in R/ files — CRAN may not flag these, but they indicate incomplete work:
+    - R/fillBins.R:6 — @return A list with two TODO: RMS provide description
+    - R/removeAutoGenIds.R:4 — TODO about changing ID identification
+    - R/agePyramidPlot.R:60 — TODO for chimpanzees
+    - R/getPotentialParents.R:92 — TODO about a hack
+  8. R (>= 3.6.0) minimum version — This is from 2019. The package uses bslib, lifecycle, and other
+   modern packages. Consider updating to R (>= 4.1.0) to match actual requirements. **DONE**
+
+  RECOMMENDED (nice to fix)
+
+  9. Unused Suggests — grid and png don't appear to be used in tests or vignettes. Clean up to
+  avoid questions from reviewers.
+  10. lifecycle imported but no deprecated() calls — lifecycle::deprecated is imported in
+  nprcgenekeepr-package.R but never used. Minor cleanup.
+  11. DESCRIPTION line 23 — Typo: 'Macaca' 'mulatto' should likely be 'Macaca' 'mulatta' (the
+  species name).
+
+  PASSING / NO ISSUES
+
+  - All 157 exported functions have Rd documentation (except the 4 noted above missing \value)
+  - No ::: triple-colon references in R/ files
+  - LICENSE and LICENSE.md properly configured
+  - Rlabkey is available on CRAN (v3.4.2)
+  - All test Sys.sleep() calls properly guarded with skip_on_cran()
+  - renv/ and renv.lock properly excluded from build
+  - Network-dependent tests skip gracefully
+  - NOTES todo.txt already in .Rbuildignore
+  - Authors@R parsing is valid
+
+✻ Crunched for 6m 10s

@@ -21,6 +21,22 @@
 #' Adding additional columns to \code{genotype} does not significantly affect
 #' the time require. Thus, it is convenient to add the corresponding haplotype
 #' names to the dataframe using \code{first_name} and \code{second_name}.
+#'
+#' Animal IDs (\code{ids}) must not contain a period ("."). A period is
+#' disallowed because it causes problems across software environments (R
+#' column-name and formula parsing, file-name extensions, programming-language
+#' namespaces, and regular expressions); \code{geneDrop} additionally relies on
+#' the period internally to recover the id and parent of each allele row, so a
+#' period-bearing id would silently corrupt the result. IDs containing a period
+#' are therefore rejected with an error. The same rule is enforced at data
+#' input by \code{\link{qcStudbook}} and honored by all automatically generated
+#' IDs.
+#'
+#' Animal IDs (\code{ids}) must also be unique. \code{geneDrop} indexes each
+#' animal's parents and accumulates its simulated alleles by id, so duplicate
+#' ids are rejected with an error. This invariant is established upstream by
+#' \code{\link{qcStudbook}} (via \code{\link{removeDuplicates}}) and by
+#' \code{\link{kinship}}, both of which require unique ids.
 
 #' @return A data.frame \code{id, parent, V1 ... Vn}
 #' A data.frame providing the maternal and paternal alleles for an animal
@@ -28,7 +44,7 @@
 #' whether the allele came from the sire or dam. These are followed by
 #' \code{n} columns indicating the allele for that iteration.
 #'
-#' @param ids A character vector of IDs for a set of animals.
+#' @param ids A character vector of unique IDs for a set of animals.
 #' @param sires A character vector with IDS of the sires for the set of
 #'  animals. \code{NA} is used for missing sires.
 #' @param dams A character vector with IDS of the dams for the set of
@@ -73,6 +89,16 @@
 #' )
 geneDrop <- function(ids, sires, dams, gen, genotype = NULL, n = 5000L,
                      updateProgress = NULL) {
+  badIds <- hasInvalidIdChar(as.character(ids))
+  if (any(badIds)) {
+    stop("geneDrop(): animal IDs must not contain a period ('.'); ",
+         "offending id(s): ", toString(unique(as.character(ids)[badIds])))
+  }
+  dupIds <- duplicated(as.character(ids))
+  if (any(dupIds)) {
+    stop("geneDrop(): animal IDs must be unique; ",
+         "duplicated id(s): ", toString(unique(as.character(ids)[dupIds])))
+  }
   ## Sort the IDs by generation so older generations are first
   ped <- data.frame(
     id = ids, sire = sires, dam = dams, gen,

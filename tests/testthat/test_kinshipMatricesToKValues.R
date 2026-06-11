@@ -1,7 +1,6 @@
 #' Copyright(c) 2017-2023 R. Mark Sharp
 #' This file is part of nprcgenekeepr
 library(testthat)
-context("kinshipMatricesToKValues")
 
 ped <- nprcgenekeepr::smallPed
 # nolint start: object_name_linter.

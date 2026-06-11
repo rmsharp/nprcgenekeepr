@@ -1,4 +1,3 @@
-context("test_create_wkbk")
 library(stringi)
 make_df_list <- function(size) {
   df_list <- list(size)

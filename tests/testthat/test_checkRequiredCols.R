@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
-context("checkRequiredCols")
 library(stringi)
 requiredCols <- getRequiredCols()
 test_that("checkRequiredCols detects missing cols", {

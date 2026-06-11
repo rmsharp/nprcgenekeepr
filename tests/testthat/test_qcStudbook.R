@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 # This file is part of nprcgenekeepr
-context("qcStudbook")
 library(testthat)
 library(lubridate)
 library(stringi)
@@ -300,4 +299,36 @@ test_that(test_str, {
   ped9 <- qcStudbook(pedNine, minParentAge = NULL, reportErrors = TRUE)
   expect_identical(ped9$sireAndDam, "s0")
   expect_length(ped9$duplicateIds, 0L)
+})
+
+## NEW-45: IDs may not contain a period ('.'). The documented domain spec
+## (input_format.html: id/sire/dam are "Alphanumeric characters (no symbols)")
+## is now enforced at data input. Default mode -> stop(); reportErrors == TRUE
+## -> the offending value(s) are returned in errorLst$invalidIdChars.
+pedPeriod <- data.frame(
+  id = c("s1", "d1", "o1.2"),
+  sire = c(NA, NA, "s1"),
+  dam = c(NA, NA, "d1"),
+  sex = c("M", "F", "F"),
+  birth = as.Date(c("2000-01-01", "2000-01-01", "2010-01-01")),
+  stringsAsFactors = FALSE
+)
+test_that("qcStudbook rejects IDs containing a period in default mode (NEW-45)", {
+  expect_error(
+    qcStudbook(pedPeriod, minParentAge = NULL),
+    "must not contain a period"
+  )
+})
+test_that("qcStudbook reports period-bearing IDs when reportErrors == TRUE", {
+  res <- qcStudbook(pedPeriod, minParentAge = NULL, reportErrors = TRUE)
+  expect_identical(res$invalidIdChars, "o1.2")
+})
+test_that("qcStudbook accepts period-free IDs (no false positive) (NEW-45)", {
+  ## pedFive is period-free (it has an unrelated femaleSires error that keeps
+  ## the errorLst non-NULL), so the invalidIdChars field must be empty (length
+  ## 0) before AND after the fix.
+  expect_length(
+    qcStudbook(pedFive, minParentAge = NULL, reportErrors = TRUE)$invalidIdChars,
+    0L
+  )
 })

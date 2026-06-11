@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
-context("makeExamplePedigreeFile")
 library(testthat)
 test_that("makeExamplePedigreeFile creates file", {
   skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")

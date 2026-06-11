@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 # This file is part of nprcgenekeepr
-context("summary.nprcgenekeeprErr")
 library(testthat)
 library(stringi)
 
@@ -72,4 +71,10 @@ test_that("summary.nprcgenekeeprErr identifies bad database connection", {
     summary(ped8)$txt,
     "Database connection failed"
   ))
+})
+test_that("summary.nprcgenekeeprErr reports IDs containing a period (NEW-45)", {
+  el <- getEmptyErrorLst()
+  el$invalidIdChars <- c("o1.2")
+  expect_true(stri_detect_fixed(summary(el)$txt, "period"))
+  expect_true(stri_detect_fixed(summary(el)$txt, "o1.2"))
 })

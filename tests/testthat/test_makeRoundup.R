@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 # This file is part of nprcgenekeepr
-context("makeRoundUp")
 library(testthat)
 test_that("makeRoundup correctly rounded values based on integer and modulus", {
   int1 <- makeRoundUp(int = 1L, modulus = 2L)

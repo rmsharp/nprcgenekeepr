@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 # This file is part of nprcgenekeepr
-context("print.summary.nprcgenekeeprErr")
 library(testthat)
 library(lubridate)
 
@@ -33,6 +32,6 @@ test_that("print.summary.nprcgenekeeprErr prints expected output", {
       ))),
       NA
     ),
-    "produced output"
+    "output"
   )
 })

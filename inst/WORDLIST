@@ -146,7 +146,6 @@ getGenotypes
 getIdsWithOneParent
 getIndianOriginStatus
 getLkDirectAncestors
-getMinParentAge
 getPedDirectRelative
 getPedigree
 getProductionStatus

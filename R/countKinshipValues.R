@@ -129,8 +129,9 @@ countKinshipValues <- function(kinshipValues,
           c(accummulatedKValueCounts$kValues[[index]], valueDiffs)
 
         countDiffs <- integer(length(valueDiffs))
-        for (value in valueDiffs) {
-          countDiffs[index] <- kCounts[[index]][kValues[[index]] == value]
+        for (i in seq_along(valueDiffs)) {
+          countDiffs[i] <-
+            kCounts[[index]][kValues[[index]] == valueDiffs[i]]
         }
 
         accummulatedKValueCounts$kCounts[[index]] <-

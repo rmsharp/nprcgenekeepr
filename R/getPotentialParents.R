@@ -18,14 +18,14 @@
 #' conception and birth. This will be used to prevent the removal of sires
 #' who exit the colony between date of conception and birth. Need to decide
 #' where this will come from.
-#' @importFrom data.table setDT
+#' @importFrom data.table as.data.table
 #' @importFrom stringi stri_sub
 #' @export
 getPotentialParents <- function(ped, minParentAge, maxGestationalPeriod) {
   birth <- exit <- fromCenter <- id <- sex <- NULL
 
   ## No point in looking at animals without a birth record.
-  data.table::setDT(ped)
+  ped <- data.table::as.data.table(ped)
   ped <- ped[!is.na(ped$birth), ]
   ## No point in looking for potential parents without a "fromCenter" column.
   if (!any(names(ped) == "fromCenter")) {
@@ -45,8 +45,8 @@ getPotentialParents <- function(ped, minParentAge, maxGestationalPeriod) {
   ## add calcs for births and pre-allocate memory
 
   potentialParents <- vector(mode = "list", length = nrow(pUnknown))
+  j <- 0L # counter for potentialParents; used to prevent NULL entries
   if (nrow(pUnknown) > 0L) {
-    j <- 0L # counter for potentialParents; used to prevent NULL entries
     for (i in seq_len(nrow(pUnknown))) {
       ## Calculating breeding age potential parents
       ba <- ped[birth <= (pUnknown$birth[i] - (dYear * minParentAge)), ]

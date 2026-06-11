@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
-context("checkErrorLst")
 library(lubridate)
 test_that("checkErrorLst sees errors when reported", {
   errorLst <- qcStudbook(nprcgenekeepr::pedGood, reportErrors = TRUE)

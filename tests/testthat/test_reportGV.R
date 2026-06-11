@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 # This file is part of nprcgenekeepr
-context("reportGV")
 library(testthat)
 qcPed <- nprcgenekeepr::qcPed
 gvReport <- reportGV(qcPed, guIter = 100L)

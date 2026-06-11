@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
-context("getGenotypes")
 ## This is identical to getPedigree and needs to be strengthened. However,
 ## function does not do any data quality checks at this time.
 

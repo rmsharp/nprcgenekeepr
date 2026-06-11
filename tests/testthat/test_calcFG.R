@@ -1,6 +1,5 @@
 #' Copyright(c) 2017-2024 R. Mark Sharp
 #' This file is part of nprcgenekeepr
-context("calcFG")
 
 ped <- data.frame(
   id = c("A", "B", "C", "D", "E", "F", "G"),
@@ -46,4 +45,19 @@ test_that("calcFG correctly calculates the number of founder genetic
 equivalents in the pedigree", {
   expect_lt(abs(fg - fgFactors), 0.2)
   expect_lt(abs(fg - 2.18), 0.2)
+})
+
+## --- NEW-48 (Session 7): reject partial parentage (identical bug, R/calcFG.R:83)
+## The complete-parentage test above doubles as the no-false-positive guard.
+test_that("calcFG stops with a clear error on partial parentage", {
+  partialPed <- data.frame(
+    id   = c("A", "B", "C", "D"),
+    sire = c(NA,  NA,  "A", NA),   # D: sire NA, dam B  -> partial
+    dam  = c(NA,  NA,  NA,  "B"),  # C: sire A,  dam NA -> partial
+    gen  = c(0L,  0L,  1L,  1L),
+    population = c(TRUE, TRUE, TRUE, TRUE),
+    stringsAsFactors = FALSE
+  )
+  ## alleles unused: guard short-circuits before calcRetention().
+  expect_error(calcFG(partialPed, alleles = NULL), regexp = "partial parentage")
 })

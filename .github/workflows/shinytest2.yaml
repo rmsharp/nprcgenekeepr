@@ -1,0 +1,185 @@
+# Workflow for shinytest2 Shiny application tests
+# Runs browser-based E2E tests for the GeneKeepR modular Shiny application.
+#
+# Opt-in tier (issue #39, Phase 8): every browser test is gated by
+# create_test_app() on the NPRC_RUN_E2E env var. Per the Phase 8 sub-plan owner
+# decision (docs/planning/phase8-e2e-harness-subplan.md sec 7), this runs on a
+# nightly schedule + manual dispatch (NOT per-PR) because browser tests are slow
+# and Chrome-flaky; the fast unit CI (R-CMD-check, test-coverage) remains the
+# per-PR gate. It runs the full opt-in E2E tier -- all 23 test-{app,e2e}-* files
+# (Phase-8b boot-smoke + Phase-8c per-module + Phase-8d interaction/menu),
+# matched by the ^(app|e2e)- filter (broadened in 8d once all tiers verified).
+#
+# Phase-8e-7: those 23 files are run in 13 PER-MODULE GROUPS, each in a FRESH
+# R process (a bash loop spawning one Rscript per group), so no single process
+# accumulates enough Chrome/AppDriver instances to hit the process-count flake
+# (S34: ~1 transient error / 5 full-tier single-process runs). The partition is
+# exact -- each group's regex selects only its module's files; union = the 23,
+# no overlap, no gap. The flake mitigation is ENVIRONMENTAL: only the live
+# GitHub runner can confirm it; the partition itself is statically verified.
+#
+# NOTE: schedule + workflow_dispatch only fire once this workflow is on the
+# default branch (master). On the feature branch it cannot be GitHub-triggered.
+
+on:
+  schedule:
+    # 07:00 UTC nightly (runs on the default branch only).
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+
+name: shinytest2
+
+permissions: read-all
+
+jobs:
+  shinytest2:
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 30
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+      # Opt-in gate: create_test_app() returns the app dir only when this is "true".
+      # Set at job level so it is visible to every step (sub-plan sec 7).
+      NPRC_RUN_E2E: 'true'
+      # The E2E files all call skip_on_cran(); testthat::on_cran() is TRUE
+      # on a non-interactive Rscript runner unless NOT_CRAN is set -- which would make
+      # every E2E test SILENTLY SKIP (stop_on_failure does not catch skips, so the job
+      # would go green having run nothing). Set it so the tests actually execute
+      # (matches every sub-plan verify command).
+      NOT_CRAN: 'true'
+      # The repo's tracked .Rprofile activates the renv autoloader, which forces
+      # .libPaths()[1] to renv's PRIVATE library. Disable it so setup-r-dependencies,
+      # R CMD INSTALL, and the test run all target the standard site library -- so the
+      # AppDriver subprocess (which starts in the installed shinytest/ dir, with no
+      # project .Rprofile) can resolve library(nprcgenekeepr). DESCRIPTION-driven (R7).
+      RENV_CONFIG_AUTOLOADER_ENABLED: 'false'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            any::shinytest2
+            any::chromote
+          needs: check
+
+      # The app subprocess (inst/shinytest/app.R) does library(nprcgenekeepr) and
+      # create_test_app() resolves system.file("shinytest", package = "nprcgenekeepr"),
+      # so the package itself must be installed -- not just its dependencies.
+      - name: Install nprcgenekeepr
+        run: R CMD INSTALL --no-multiarch --with-keep.source .
+        shell: bash
+
+      # Provision a pinned, reproducible Chrome-for-Testing (replaces the snap
+      # chromium-browser, which is headless-CI flaky -- sub-plan R5).
+      # install-dependencies pulls Chrome's required system libraries.
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v2
+        id: setup-chrome
+        with:
+          install-dependencies: true
+
+      # chromote::find_chrome() honours CHROMOTE_CHROME first; point it at the
+      # action's installed binary (its name is not guaranteed to be on PATH).
+      - name: Point chromote at the installed Chrome
+        run: echo "CHROMOTE_CHROME=${{ steps.setup-chrome.outputs.chrome-path }}" >> "$GITHUB_ENV"
+
+      - name: Assert Chrome is resolvable by chromote
+        run: |
+          chrome <- Sys.getenv("CHROMOTE_CHROME")
+          cat("CHROMOTE_CHROME =", chrome, "\n")
+          found <- chromote::find_chrome()
+          cat("chromote::find_chrome() =", if (is.null(found)) "<NULL>" else found, "\n")
+          # find_chrome() returns NULL when nothing is found, and returns CHROMOTE_CHROME
+          # unchecked when set -- so verify it is a single, existing path (nzchar alone
+          # passes vacuously on NULL: stopifnot(nzchar(NULL)) does not error).
+          if (length(found) != 1L || !nzchar(found) || !file.exists(found)) {
+            stop("Chrome not resolvable by chromote: ",
+                 if (is.null(found)) "NULL" else found)
+          }
+        shell: Rscript {0}
+
+      # Phase-8e-7: run the 23-file E2E tier in 13 PER-MODULE GROUPS, each in a
+      # FRESH R process, to defang the 23-in-one-process Chrome flake (S34). The
+      # group regexes partition the tier EXACTLY (union = the 23 files, no overlap,
+      # no gap); each is applied the same way test_dir(filter=) applies it --
+      # grepl against the file name stripped of "test-" and ".R".
+      #
+      # Per group (fresh Rscript): stop_on_failure = FALSE so we always reach the
+      # guards; passed == 0 => stop() loud (the silent-skip class -- now PER GROUP,
+      # so a single-group filter drift can't hide behind the other groups);
+      # failed/error > 0 => exit 1. The bash loop runs ALL groups (full signal,
+      # one group's flake does not skip the rest) and fails the job if ANY group
+      # failed -- preserving the stop_on_failure job semantics while giving each
+      # group fresh-process isolation. continue-on-error stays removed (R6).
+      - name: Run shinytest2 E2E tier in per-module fresh processes (opt-in)
+        run: |
+          groups=(
+            "^app-"
+            "^e2e-boundary-conditions"
+            "^e2e-breeding-groups-"
+            "^e2e-data-ready"
+            "^e2e-error-states"
+            "^e2e-genetic-value-"
+            "^e2e-home-navigation"
+            "^e2e-input-"
+            "^e2e-pedigree-"
+            "^e2e-pyramid-"
+            "^e2e-settings-about"
+            "^e2e-summary-statistics"
+            "^e2e-workflow-integration"
+          )
+          fail=0
+          for rx in "${groups[@]}"; do
+            echo "::group::E2E module group ${rx}"
+            Rscript -e '
+              rx  <- commandArgs(trailingOnly = TRUE)[1]
+              res <- as.data.frame(testthat::test_dir(
+                "tests/testthat", filter = rx, stop_on_failure = FALSE))
+              p <- sum(res$passed); f <- sum(res$failed)
+              s <- sum(res$skipped); e <- sum(res$error)
+              cat(sprintf("group %s: files=%d passed=%d failed=%d skipped=%d error=%d\n",
+                          rx, nrow(res), p, f, s, e))
+              # A real failure/error reds the job FIRST -- checked ahead of the
+              # silent-skip guard so a genuine failure is never mislabeled
+              # "executed nothing".
+              if (f > 0L || e > 0L) quit(status = 1L, save = "no")
+              # Silent-skip guard: files matched but every test skipped (or the
+              # group is empty) => nothing actually ran. PER GROUP, so one
+              # groups drift cannot hide behind the others. (A regex matching
+              # ZERO files is caught separately by test_dirs own
+              # "No test files found" abort -> nonzero exit.)
+              if (p == 0L) {
+                stop(sprintf(
+                  "group %s matched files but executed nothing (all skipped) -- check NOT_CRAN / NPRC_RUN_E2E",
+                  rx))
+              }
+            ' "$rx" || fail=1
+            echo "::endgroup::"
+          done
+          if [ "$fail" -ne 0 ]; then
+            echo "One or more E2E module groups failed (see per-group logs above)."
+            exit 1
+          fi
+          echo "All 13 E2E module groups passed."
+        shell: bash
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shinytest2-results
+          path: |
+            tests/testthat/_snaps/
+            *.png
+          if-no-files-found: ignore
