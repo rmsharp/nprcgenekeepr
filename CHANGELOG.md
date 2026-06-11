@@ -14,6 +14,30 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-11 — Promote `add-methodology` → master (PR #41) and live-validate `shinytest2`; close issue #40 (Session 51)
+- **Deliverable (integration / run-and-observe):** promoted the long-lived `add-methodology` branch
+  (105 commits / 356 files / +44,473−2,892; master a strict ancestor → 0 behind → clean conflict-free merge) to
+  **master via PR #41** (merge commit `0363ffe3`, `--merge` to preserve the multi-session TDD history — never
+  squashed). Pre-flight build-equivalent gate (non-e2e clean-regression read) = **2140 pass / 0 fail / 0 err /
+  0 non-e2e offenders** (S49 baseline held); no branch protection on master.
+- **Held the merge for the PR's first-ever remote CI**, triaging each red to root cause: **R-CMD-check passed on
+  all 5 platforms** (macOS, Windows, ubuntu release/devel/oldrel-1) + test-coverage passed → package correctness
+  intact; **pkgdown FAIL** = real but doc-site-deploy-only (`docs/methodology`+`docs/planning` tracked inside
+  pkgdown's `docs/` output dir → `clean_site()` refuses to clean a non-pkgdown `docs/`) → logged as **issue #42**;
+  **lint FAIL** = known style debt (#30); **codecov/patch+project FAIL** = external/advisory thresholds. Owner
+  decision (`AskUserQuestion`): "merge now, fix pkgdown later".
+- **Live validation (owner-designated gate):** `workflow_dispatch`-ed `shinytest2` on master → run `27356752221`
+  **SUCCESS** (~19 min). All **13 per-module groups** (fresh `Rscript` each) reported `passed>0 failed=0 error=0`
+  ("All 13 E2E module groups passed."). Both Session-34 live-runner watch items resolved on the first run:
+  (1) renv lib-path resolution under `RENV_CONFIG_AUTOLOADER_ENABLED=false` (`R CMD INSTALL` + every AppDriver
+  subprocess booted the app); (2) the 23-in-one-process Chrome flake — the 8e-7 per-module fresh-process grouping
+  produced ZERO transient errors (first environmental confirmation; per-group isolation contains any future
+  transient).
+- **Closed issue #40** ("Strengthen shinytest2 E2E assertions") with a full validation comment — the §8e
+  assertion-strengthening + CI-stability campaign is code-complete and live-validated on master.
+- **Follow-ups logged (not done this session):** **#42** (relocate methodology docs out of pkgdown's `docs/`),
+  **#30** (lintr cleanup) — both independent of package correctness.
+
 ### 2026-06-10 — Phase 8e-7 (CI per-module fresh-process grouping): run the 23-file shinytest2 E2E tier in 13 per-module groups, each in a fresh R process, to defang the 23-in-one-process Chrome flake (issue #40, Session 50)
 - **Deliverable (CI config / run-and-observe):** plan slice **8e-7**
   (`docs/planning/phase8e-assertion-strengthening-subplan.md` §8/§8e-7 — the FINAL §8e slice) — replaced the
