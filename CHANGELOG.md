@@ -14,6 +14,34 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-10 — Phase 8e-7 (CI per-module fresh-process grouping): run the 23-file shinytest2 E2E tier in 13 per-module groups, each in a fresh R process, to defang the 23-in-one-process Chrome flake (issue #40, Session 50)
+- **Deliverable (CI config / run-and-observe):** plan slice **8e-7**
+  (`docs/planning/phase8e-assertion-strengthening-subplan.md` §8/§8e-7 — the FINAL §8e slice) — replaced the
+  single `test_dir(filter = "^(app|e2e)-", stop_on_failure = TRUE)` run step in
+  `.github/workflows/shinytest2.yaml` with a **single job that loops over 13 per-module group regexes, each run
+  in a fresh `Rscript` process**, so no one process accumulates 23 Chrome/AppDriver instances (the S34
+  "process-count dragon": ~1 transient error / 5 full-tier single-process runs). Caps any process at ≤3 files.
+- **Per group:** `test_dir(filter = rx, stop_on_failure = FALSE)` → a `passed/failed/skipped/error` report →
+  fail/error > 0 ⇒ `quit(status = 1)` (checked FIRST, so a real failure is never mislabeled) → passed == 0 ⇒
+  `stop()` **per-group silent-skip guard** (stronger than the old whole-run guard; a zero-match regex is caught
+  separately by `test_dir`'s own "No test files found" abort). The bash loop runs ALL groups (full signal, one
+  flake doesn't skip the rest) and reds the job if ANY group failed — preserving `stop_on_failure` semantics +
+  the job env / Chrome provisioning / `R CMD INSTALL` / `timeout-minutes: 30` / removed `continue-on-error` (R6).
+- **Owner-gated topology** (`AskUserQuestion`): single-job loop chosen over a 13-leg `strategy.matrix` (cheapest,
+  plan-faithful, root-cause-sufficient — the matrix's 13× setup wasn't worth it for a nightly job). TDD =
+  run-and-observe (CI config; no RED→GREEN, plan §6), gated `PRE-RED→run-and-observe`.
+- **Verified locally:** the COMMITTED 13-regex partition selects EXACTLY the 23 `^(app|e2e)-` files — union ==
+  tier, no overlap / gap / stray — against the full 182-file dir (replicating testthat's stripped-name match,
+  Learning #33c); YAML parses (`yaml.safe_load`); run-step `bash -n` clean; the `Rscript -e '...'` block is
+  single-quote-free; the run-step logic smoked on a throwaway dir (pass→exit 0, fail→exit 1, skip / nomatch →
+  nonzero) — all four branches.
+- **⚠ Live-runner-only (FM #24's cousin):** the flake mitigation is environmental — the partition / guard / exit
+  logic is proven locally, but the 23-in-one-process flake can only be confirmed gone on the first live GitHub
+  run (which requires the workflow on `master`). Ships UNVALIDATED locally; not claimed fixed until a live run
+  shows it. Pushing `add-methodology` → master remains a SEPARATE deliverable.
+- **Scope:** CI-config only (no `R/` / `tests/` change → the test suite is byte-identical). CHANGELOG-only (no
+  package/source change).
+
 ### 2026-06-10 — Phase 8e-6c (real breeding-group flow): the 3 export-NULL'd Breeding-Groups E2E blocks become genuine data-bearing assertions → 8e-6 COMPLETE (issue #40, Session 49)
 - **Deliverable (implementation):** plan slice **8e-6c**
   (`docs/planning/phase8e-assertion-strengthening-subplan.md` §5/§8e-6) — the **third and final vertical

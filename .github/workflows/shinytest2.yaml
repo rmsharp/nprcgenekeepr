@@ -10,6 +10,14 @@
 # (Phase-8b boot-smoke + Phase-8c per-module + Phase-8d interaction/menu),
 # matched by the ^(app|e2e)- filter (broadened in 8d once all tiers verified).
 #
+# Phase-8e-7: those 23 files are run in 13 PER-MODULE GROUPS, each in a FRESH
+# R process (a bash loop spawning one Rscript per group), so no single process
+# accumulates enough Chrome/AppDriver instances to hit the process-count flake
+# (S34: ~1 transient error / 5 full-tier single-process runs). The partition is
+# exact -- each group's regex selects only its module's files; union = the 23,
+# no overlap, no gap. The flake mitigation is ENVIRONMENTAL: only the live
+# GitHub runner can confirm it; the partition itself is statically verified.
+#
 # NOTE: schedule + workflow_dispatch only fire once this workflow is on the
 # default branch (master). On the feature branch it cannot be GitHub-triggered.
 
@@ -101,31 +109,70 @@ jobs:
           }
         shell: Rscript {0}
 
-      # Full opt-in E2E tier: all 23 test-{app,e2e}-* files via ^(app|e2e)- --
-      # Phase-8b boot-smoke (app-loading, app-navigation, e2e-data-ready) +
-      # Phase-8c per-module shallow (15 files) + Phase-8d interaction/menu
-      # (home-navigation, settings-about, workflow-integration, error-states,
-      # boundary-conditions). All tiers verified green opt-in before this broaden.
-      # stop_on_failure = TRUE makes any failure fail the job; continue-on-error
-      # was removed so scheduled-run failures are visible (sub-plan R6).
-      - name: Run shinytest2 full E2E tier (opt-in)
+      # Phase-8e-7: run the 23-file E2E tier in 13 PER-MODULE GROUPS, each in a
+      # FRESH R process, to defang the 23-in-one-process Chrome flake (S34). The
+      # group regexes partition the tier EXACTLY (union = the 23 files, no overlap,
+      # no gap); each is applied the same way test_dir(filter=) applies it --
+      # grepl against the file name stripped of "test-" and ".R".
+      #
+      # Per group (fresh Rscript): stop_on_failure = FALSE so we always reach the
+      # guards; passed == 0 => stop() loud (the silent-skip class -- now PER GROUP,
+      # so a single-group filter drift can't hide behind the other groups);
+      # failed/error > 0 => exit 1. The bash loop runs ALL groups (full signal,
+      # one group's flake does not skip the rest) and fails the job if ANY group
+      # failed -- preserving the stop_on_failure job semantics while giving each
+      # group fresh-process isolation. continue-on-error stays removed (R6).
+      - name: Run shinytest2 E2E tier in per-module fresh processes (opt-in)
         run: |
-          res <- as.data.frame(testthat::test_dir(
-            "tests/testthat",
-            filter = "^(app|e2e)-",
-            stop_on_failure = TRUE
-          ))
-          cat("e2e full tier: passed =", sum(res$passed),
-              " failed =", sum(res$failed),
-              " skipped =", sum(res$skipped),
-              " error =", sum(res$error), "\n")
-          # stop_on_failure catches failures/errors but NOT an all-skipped run
-          # (skip != failure). Guard the silent-skip class: if nothing executed,
-          # fail loud (e.g. NOT_CRAN/NPRC_RUN_E2E misconfigured, or filter drift).
-          if (sum(res$passed) == 0L) {
-            stop("No E2E tests executed (all skipped) -- check NOT_CRAN / NPRC_RUN_E2E.")
-          }
-        shell: Rscript {0}
+          groups=(
+            "^app-"
+            "^e2e-boundary-conditions"
+            "^e2e-breeding-groups-"
+            "^e2e-data-ready"
+            "^e2e-error-states"
+            "^e2e-genetic-value-"
+            "^e2e-home-navigation"
+            "^e2e-input-"
+            "^e2e-pedigree-"
+            "^e2e-pyramid-"
+            "^e2e-settings-about"
+            "^e2e-summary-statistics"
+            "^e2e-workflow-integration"
+          )
+          fail=0
+          for rx in "${groups[@]}"; do
+            echo "::group::E2E module group ${rx}"
+            Rscript -e '
+              rx  <- commandArgs(trailingOnly = TRUE)[1]
+              res <- as.data.frame(testthat::test_dir(
+                "tests/testthat", filter = rx, stop_on_failure = FALSE))
+              p <- sum(res$passed); f <- sum(res$failed)
+              s <- sum(res$skipped); e <- sum(res$error)
+              cat(sprintf("group %s: files=%d passed=%d failed=%d skipped=%d error=%d\n",
+                          rx, nrow(res), p, f, s, e))
+              # A real failure/error reds the job FIRST -- checked ahead of the
+              # silent-skip guard so a genuine failure is never mislabeled
+              # "executed nothing".
+              if (f > 0L || e > 0L) quit(status = 1L, save = "no")
+              # Silent-skip guard: files matched but every test skipped (or the
+              # group is empty) => nothing actually ran. PER GROUP, so one
+              # groups drift cannot hide behind the others. (A regex matching
+              # ZERO files is caught separately by test_dirs own
+              # "No test files found" abort -> nonzero exit.)
+              if (p == 0L) {
+                stop(sprintf(
+                  "group %s matched files but executed nothing (all skipped) -- check NOT_CRAN / NPRC_RUN_E2E",
+                  rx))
+              }
+            ' "$rx" || fail=1
+            echo "::endgroup::"
+          done
+          if [ "$fail" -ne 0 ]; then
+            echo "One or more E2E module groups failed (see per-group logs above)."
+            exit 1
+          fi
+          echo "All 13 E2E module groups passed."
+        shell: bash
 
       - name: Upload test artifacts
         if: always()
