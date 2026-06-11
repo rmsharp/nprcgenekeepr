@@ -14,6 +14,27 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-11 — Plan issue #30: resolve the `.lintr` line-specific exclusions (Session 53)
+- **Deliverable (planning):** `docs/planning/issue30-lintr-exclusion-cleanup-plan.md` — an evidence-based plan to
+  remove most of the 18 `"file" = line` entries in `.lintr`'s `exclusions: list()` by fixing the underlying lint,
+  plus a strategy for the 152 residual lints. **No `R/`, `tests/`, or `.lintr` content changed** (plan only;
+  implementation is the subsequent sessions, one phase at a time — FM #18/#25).
+- **Evidence base:** firsthand `lint_package(parse_settings=FALSE)` (bypassing the exclusions so the suppressed
+  lints are visible) = **41 lints suppressed by the 18 line-excludes + 152 residual = 193 total in `R/`**;
+  cross-checked by an 18-file parallel examination workflow (`wf_c7863094-8f1`, one agent per file proposing the
+  exact fix + risk rating) with adversarial verification of every behavior-affecting fix and commented-code
+  deletion. **Three agent conclusions were corrected** by verification/reproduction (see plan §6).
+- **Dispositions:** FIX 15 entries (~38 lints; 10 behavior-none, 5 low-risk verified-safe), KEEP-EXCLUDE 1
+  (`makeGeneticDiversityDashboard.R` — author won't-delete, NEW-20), REMOVE-STALE + fix real lints 1
+  (`getPyramidPlot.R = 25:27` suppressed 0 lints).
+- **Config bugs found:** (1) `.lintr` lists `"R/CheckRequiredCols.R"` (wrong case) → the exclusion misses on
+  case-sensitive CI; (2) the `getPyramidPlot.R = 25:27` exclusion is dead config; (3) the `source` "undesirable
+  function" hits are a local variable named `source`, fixable by rename (zero behavior change); (4)
+  `commented_code_linter` IS active via the tag set — the `#commented_code_linter = NULL` line is a dead no-op
+  (resolves the issue #30 confusion).
+- **Learning #53** (parse_settings=FALSE auditing trap; line-number drift both ways; verify-first over agent
+  headlines). #30 stays OPEN (planning deliverable; implementation pending).
+
 ### 2026-06-11 — Fix issue #42: repoint pkgdown output off `docs/`; fix unmasked vignette bug; pkgdown GREEN on master (Session 52)
 - **Deliverable (CI config + vignette fix / run-and-observe):** the `pkgdown` workflow failed its Build-site step on
   a fresh CI clone because `docs/methodology/` + `docs/planning/` are git-tracked inside pkgdown's default `docs/`
