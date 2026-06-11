@@ -95,16 +95,38 @@ test_that("E2E: Breeding Groups has export functionality", {
   app <- create_app_driver(app_dir, "e2e_bg_export")
   on.exit(app$stop(), add = TRUE)
 
+  fixture <- system.file("extdata", "obfuscated_rhesus_mhc_ped.csv",
+                         package = "nprcgenekeepr")
+  if (!upload_and_wait(app, fixture)) skip("Upload/QC did not complete")
+
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  # NULL (pane-active only): the Export/Download buttons live in the INACTIVE
-  # "Group Detail" nested tab (display:none -> not in the active pane innerText)
-  # and the guidance HTML has no export text. Assert the pane is active/visible;
-  # the export-button assertion is deferred to 8e-6 (nested-tab navigation).
+  app$set_inputs(`breedingGroups-animalSource` = "all",
+                 `breedingGroups-nIterations` = 5, wait_ = FALSE)
+  if (!click_element_safe(app, "#breedingGroups-formGroups")) {
+    skip("Form Groups click failed")
+  }
+  if (!wait_for_module_ready(app, "breedingGroups", timeout = 180000)) {
+    skip("Group formation did not complete")
+  }
+  if (!click_element_safe(app, "a[data-value='Group Detail']")) {
+    skip("Group Detail tab activation failed")
+  }
+
+  # 8e-6c GREEN: real breeding flow (upload -> QC -> form groups -> activate the
+  # Group Detail nested tab) drives the data-bearing assertions. The export
+  # button label appears in the visible pane only after Group Detail activation;
+  # the member DTOutput (suspendWhenHidden) renders real rows only after group
+  # formation. Both tokens are static labels / rendered column headers ->
+  # seed-independent (Option C structural).
   expect_true(
-    assert_active_pane(app, "Breeding Groups"),
-    info = "Breeding Groups pane should be active"
+    assert_active_pane(app, "Breeding Groups", "Export Current Group"),
+    info = "Group Detail export button should be visible after forming groups"
+  )
+  expect_true(
+    grepl("Ego ID", get_html_safe(app, "#breedingGroups-groupMemberTable")),
+    info = "Group member table should render real data (data-bearing)"
   )
 })
 

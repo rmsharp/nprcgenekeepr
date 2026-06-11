@@ -141,15 +141,36 @@ test_that("E2E: Breeding Groups has group export options", {
   app <- create_app_driver(app_dir, "e2e_bg_export_groups")
   on.exit(app$stop(), add = TRUE)
 
+  fixture <- system.file("extdata", "obfuscated_rhesus_mhc_ped.csv",
+                         package = "nprcgenekeepr")
+  if (!upload_and_wait(app, fixture)) skip("Upload/QC did not complete")
+
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  # NULL (pane-active only): the Export/Download buttons live in the INACTIVE
-  # "Group Detail" nested tab (display:none -> not in the active pane innerText);
-  # guidance HTML has no export text. Deferred to 8e-6 (nested-tab navigation).
+  app$set_inputs(`breedingGroups-animalSource` = "all",
+                 `breedingGroups-nIterations` = 5, wait_ = FALSE)
+  if (!click_element_safe(app, "#breedingGroups-formGroups")) {
+    skip("Form Groups click failed")
+  }
+  if (!wait_for_module_ready(app, "breedingGroups", timeout = 180000)) {
+    skip("Group formation did not complete")
+  }
+  if (!click_element_safe(app, "a[data-value='Group Detail']")) {
+    skip("Group Detail tab activation failed")
+  }
+
+  # 8e-6c GREEN: real breeding flow drives the data-bearing assertions. The
+  # export option labels appear in the visible pane only after Group Detail
+  # activation; the member DTOutput renders real rows only after group formation.
+  # Tokens are static labels / rendered column headers -> seed-independent.
   expect_true(
-    assert_active_pane(app, "Breeding Groups"),
-    info = "Breeding Groups pane should be active"
+    assert_active_pane(app, "Breeding Groups", "Export Current Group"),
+    info = "Group export options should be visible in the Group Detail tab"
+  )
+  expect_true(
+    grepl("Age in Years", get_html_safe(app, "#breedingGroups-groupMemberTable")),
+    info = "Group member table should render (data-bearing)"
   )
 })
 
@@ -184,14 +205,37 @@ test_that("E2E: Breeding Groups has kinship matrix export per group", {
   app <- create_app_driver(app_dir, "e2e_bg_kinship_matrix_export")
   on.exit(app$stop(), add = TRUE)
 
+  fixture <- system.file("extdata", "obfuscated_rhesus_mhc_ped.csv",
+                         package = "nprcgenekeepr")
+  if (!upload_and_wait(app, fixture)) skip("Upload/QC did not complete")
+
   success <- navigate_to_tab(app, "Breeding Groups", "Groups")
   if (!success) skip("Could not navigate to Breeding Groups tab")
 
-  # NULL (pane-active only): the "Export Current Group Kinship Matrix" button is
-  # in the INACTIVE "Group Detail" nested tab (display:none); the guidance kinship
-  # table has no "matrix"/"export" tokens. Deferred to 8e-6 (nested-tab + data).
+  app$set_inputs(`breedingGroups-animalSource` = "all",
+                 `breedingGroups-nIterations` = 5, wait_ = FALSE)
+  if (!click_element_safe(app, "#breedingGroups-formGroups")) {
+    skip("Form Groups click failed")
+  }
+  if (!wait_for_module_ready(app, "breedingGroups", timeout = 180000)) {
+    skip("Group formation did not complete")
+  }
+  if (!click_element_safe(app, "a[data-value='Group Detail']")) {
+    skip("Group Detail tab activation failed")
+  }
+
+  # 8e-6c GREEN: real breeding flow drives the data-bearing assertions. The
+  # kinship-matrix export button label appears in the visible pane only after
+  # Group Detail activation; the within-group kinship DTOutput (suspendWhenHidden)
+  # renders only after group formation. Tokens are a static label / rendered
+  # <table> structure -> seed-independent (Option C structural).
   expect_true(
-    assert_active_pane(app, "Breeding Groups"),
-    info = "Breeding Groups pane should be active"
+    assert_active_pane(app, "Breeding Groups",
+                       "Export Current Group Kinship Matrix"),
+    info = "Per-group kinship-matrix export button should be visible"
+  )
+  expect_true(
+    grepl("<table", get_html_safe(app, "#breedingGroups-groupKinTable")),
+    info = "Within-group kinship matrix should render (data-bearing)"
   )
 })

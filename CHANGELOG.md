@@ -14,6 +14,50 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-10 — Phase 8e-6c (real breeding-group flow): the 3 export-NULL'd Breeding-Groups E2E blocks become genuine data-bearing assertions → 8e-6 COMPLETE (issue #40, Session 49)
+- **Deliverable (implementation):** plan slice **8e-6c**
+  (`docs/planning/phase8e-assertion-strengthening-subplan.md` §5/§8e-6) — the **third and final vertical
+  8e-6 flow**, completing the triad (pedigree ✓8e-6a, GVA ✓8e-6b, breeding ✓8e-6c). Drives the real
+  breeding pipeline opt-in: `upload_and_wait(app, obfuscated_rhesus_mhc_ped.csv)` →
+  `navigate_to_tab("Breeding Groups")` → `set_inputs(animalSource = "all", nIterations = 5)` →
+  `click_element_safe("#breedingGroups-formGroups")` → `wait_for_module_ready("breedingGroups")` →
+  `click_element_safe("a[data-value='Group Detail']")`, then asserts the rendered Group-Detail export
+  buttons + DTs. Revives the 3 export-NULL'd Breeding-Groups blocks from Session 43 (D5
+  `test-e2e-breeding-groups-detailed.R:89` export functionality, T7 `-tutorial.R:135` group export
+  options, T9 `-tutorial.R:178` kinship-matrix export per group) from pane-active-only into data-bearing
+  checks. Scope fixed by the owner's "8e-6c" instruction; full **RED→GREEN** (3 `AskUserQuestion` phase
+  gates), REFACTOR declined (precedent + the GVA and breeding run-flows diverge on the nested-tab
+  activation, so a "shared" run-flow helper is messier than a clean abstraction).
+- **Hard gate first (the breeding spike):** a live-browser spike captured the recon's two open items
+  firsthand before any RED. The Group-Detail nested `tabsetPanel` (`modBreedingGroups.R:72`) has **no
+  `id`**, so it cannot be driven by `set_inputs` — it is activated via the unique DOM link
+  `a[data-value='Group Detail']` (spike: `count == 1`). The spike proved both steps are required:
+  post-formation but pre-activation, the export labels and rendered tables are still absent (the nested
+  pane is `display:none`); only after the tab click do they enter the top-level active pane's innerText.
+  `animalSource = "all"` uses `ped$id` directly, isolating breeding from the GVA dependency (the
+  `topRanked` branch's `req(geneticValues())`, `appServer.R:272`).
+- **Assertions (mutation-proven discriminating, RNG/seed-independent):** a static-UI download button is
+  made data-bearing by PAIRING its visibility-gated label (matched via active-pane innerText, absent
+  until the nested tab is activated) with a `suspendWhenHidden` rendered DT (which needs both group
+  formation AND tab visibility). D5: `"Export Current Group"` + `grepl("Ego ID",` rendered
+  `#breedingGroups-groupMemberTable)`. T7: `"Export Current Group"` + `"Age in Years"` member-table
+  header. T9: `"Export Current Group Kinship Matrix"` + `grepl("<table",` rendered
+  `#breedingGroups-groupKinTable)`. All tokens are static labels / rendered column-headers / table
+  structure → verified GREEN with **no `NPRC_BG_SEED`** set. Group count and the within-group kinship
+  invariant are deliberately NOT asserted (the algorithm formed one large MIS group from `numGp = 3`,
+  and the strict kinship bound is unattainable because the module hardcodes `ignore = F–F`).
+- **Verification:** D5/T7/T9 all GREEN live (`test-e2e-breeding-groups-detailed.R` 8/0/0,
+  `test-e2e-breeding-groups-tutorial.R` 11/0/0); **[mutation-check] 13/13 all pass** (correct tokens →
+  TRUE; wrong export label + imaginary column + right-token-wrong-table `"Ego ID"`-in-kin → FALSE;
+  foreign pane (Pedigree Browser) → FALSE; pre-flow RED re-confirmed → FALSE). Non-e2e regression **2140
+  `expectation_success` / 0 failed / 0 error / 159 skipped / 5 pre-existing `modPyramid` warnings / 0
+  non-e2e offenders**, proven byte-identical with and without the edit via a `git stash` diff (the edit
+  touches only e2e blocks, which skip at `create_test_app()` before any assertion). The 2140-vs-Session-48's-2180
+  figure is a measurement-method difference (`pkgload::load_all` under renv vs the bare system lib's
+  missing Suggests deps), not a regression. Phase-3E = the live GREEN AppDriver runs (the real
+  upload→QC→kinship→group-formation→Group-Detail render) + the mutation spike ARE the runtime check
+  (#31). Test-tree-only → no `document()`/NEWS; `tests/` lint-exempt.
+
 ### 2026-06-10 — Phase 8e-6b (real GVA-run flow): the 2 NULL'd Genetic-Value E2E blocks become genuine data-bearing assertions (issue #40, Session 48)
 - **Deliverable (implementation):** plan slice **8e-6b**
   (`docs/planning/phase8e-assertion-strengthening-subplan.md` §5/§8e-6) — the **second of three vertical
