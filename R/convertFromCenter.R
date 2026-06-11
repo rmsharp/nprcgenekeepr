@@ -41,10 +41,9 @@ convertFromCenter <- function(fromCenter) {
           (fromCenterTrue == fromCenterFalse)
         ])
       )
-    } else {
-      fromCenterTrue[is.na(fromCenter)] <- NA
-      fromCenter <- fromCenterTrue
     }
+    fromCenterTrue[is.na(fromCenter)] <- NA
+    fromCenter <- fromCenterTrue
   }
   fromCenter
 }

@@ -55,9 +55,8 @@ fillGroupMembers <- function(candidates,
       sexRatio
     )
     return(groupMembers)
-  } else {
-    available <- makeAvailable(candidates, numGp)
   }
+  available <- makeAvailable(candidates, numGp)
 
   repeat {
     if (isEmpty(grpNum)) {

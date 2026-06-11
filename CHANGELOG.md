@@ -14,6 +14,13 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-11 — Issue #30 Phase 3: behavior-none lint refactors + `.lintr` casing fix (Session 55)
+- **Deliverable:** implemented Phase 3 of the issue #30 plan — **6 behavior-none lint refactors**, each removing its `.lintr` line-exclusion in the same change ([lint-net-zero]). `lintr::lint_package()` stays **0**.
+- **Refactors (all adversarially verified behavior-preserving):** `convertFromCenter.R` + `fillGroupMembers.R` + `hasGenotype.R` (`unnecessary_nesting` collapses — drop an `else` after an unconditional `stop()`/`return()`; `else { if }` → `else if`); `getLkDirectAncestors.R` + `getLkDirectRelatives.R` (rename local var `source` → `msgSource`, which `undesirable_function_linter` flagged as shadowing `base::source`; also dropped 2 now-redundant inline nolints); `saveDataframesAsFiles.R` (`unnecessary_lambda` → `vapply(dfList, inherits, logical(1L), what = "data.frame")`).
+- **`.lintr` casing bug fixed** (owner-flagged): `R/CheckRequiredCols.R` → `R/checkRequiredCols.R` — the capital-`C` entry matched nothing on case-sensitive CI, so the L34 lint would fire on the Linux `lint` runner.
+- **`checkRequiredCols.R` (planned Phase 3 #1) reclassified to Phase 4:** adversarial verification + firsthand repro proved its `sapply`→`%in%` fix is NOT behavior-none — on out-of-contract `NA`-in-`cols` it turns a thrown error into a clean missing-columns return (exported fn). Owner-approved deferral (`AskUserQuestion`) to a RED→GREEN→REFACTOR slice in Phase 4; the file's code + `.lintr` entry left as-is (casing now correct).
+- **Verification:** `lint_package()` = 0; the 6 files lint-clean (`parse_settings=FALSE`); full suite **2140 pass / 0 fail / 0 err / 159 skip** (= S49 baseline → zero regression); `devtools::check()` **0 errors** (1 pre-existing-environmental WARNING + NOTE from stray top-level files incl. a macOS `SESSION_NOTES 2.md` dupe — not from this change); `man/` untouched.
+
 ### 2026-06-11 — Implement issue #30: drive the R/ lint check to GREEN (Session 54)
 - **Deliverable:** implemented the issue #30 cleanup plan; `lintr::lint_package()` now reports **0 lints** in
   `R/` (was 193 = 41 suppressed by `.lintr` line-excludes + 152 residual) → the CI `lint` check goes green.

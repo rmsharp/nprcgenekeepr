@@ -34,14 +34,12 @@ hasGenotype <- function(genotype) {
     FALSE # "Genotype must have a column named 'first'
   } else if (!any(tolower(cols) == "second")) { # nolint: if_not_else_linter
     FALSE # "Genotype  must have a column named 'second'
+  } else if (!any(is.numeric(genotype$first))) {
+    FALSE # genotype representation (indirection) should be integer
+    # at this point
+  } else if (!any(is.numeric(genotype$second))) { # nolint: if_not_else_linter
+    FALSE # genotype representation (indirection) should be integer
   } else {
-    if (!any(is.numeric(genotype$first))) {
-      FALSE # genotype representation (indirection) should be integer
-      # at this point
-    } else if (!any(is.numeric(genotype$second))) { # nolint: if_not_else_linter
-      FALSE # genotype representation (indirection) should be integer
-    } else {
-      TRUE
-    }
+    TRUE
   }
 }

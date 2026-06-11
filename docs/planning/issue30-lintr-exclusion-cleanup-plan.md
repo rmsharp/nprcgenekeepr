@@ -60,7 +60,7 @@ lint_package(".")                               # => 152 residual (full .lintr)
 
 | Bug | Evidence | Fix | Phase |
 |---|---|---|---|
-| **Filename case mismatch** — `.lintr:18` lists `"R/CheckRequiredCols.R"` but the file is `R/checkRequiredCols.R` (lowercase `c`). | Matches on case-insensitive macOS (so it "works" locally) but **not on the case-sensitive Linux CI runner** → the `sapply` lint at L34 fires in the CI `lint` job. | Correct the case (or, better, delete the entry once L34 is fixed in Phase 3). | 1 or 3 |
+| **Filename case mismatch** — `.lintr:18` lists `"R/CheckRequiredCols.R"` but the file is `R/checkRequiredCols.R` (lowercase `c`). | Matches on case-insensitive macOS (so it "works" locally) but **not on the case-sensitive Linux CI runner** → the `sapply` lint at L34 fires in the CI `lint` job. | **✅ Casing FIXED in Session 55** (`R/CheckRequiredCols.R` → `R/checkRequiredCols.R`) at the owner's request; the entry itself is deleted in Phase 4 once L34's code is refactored. | ~~1 or 3~~ → **done S55** |
 | **Stale exclusion** — `.lintr:28` `"R/getPyramidPlot.R" = 25L:27L` suppresses **zero** lints (lines 25-27 are roxygen `@examples`). The file's real lints are at L16, L38, L41-43. | `parse_settings=FALSE` lint of the file shows lints only at 16/38/41-43; none at 25-27. A [lint-net-zero] line-shift orphaned this entry. | Delete the `25:27` entry; handle the real lints (Phase 2). | 2 |
 
 ---
@@ -78,7 +78,7 @@ lint_package(".")                               # => 152 residual (full .lintr)
 
 | # | File:line | Suppressed lint | Fix | Notes |
 |---|---|---|---|---|
-| 1 | `checkRequiredCols.R:34` | `undesirable_function` (`sapply`) | Replace the ragged `as.character(unlist(sapply(...)))` with `requiredCols[!requiredCols %in% cols]` | Byte-identical output (agent-verified across present/absent/empty cases). **Also fixes the §3 casing bug** (delete the mis-cased entry). |
+| 1 | `checkRequiredCols.R:34` | `undesirable_function` (`sapply`) | Replace the ragged `as.character(unlist(sapply(...)))` with `requiredCols[!requiredCols %in% cols]` | **⚠ RECLASSIFIED to Phase 4 by Session 55.** Adversarial verification + firsthand repro proved this is NOT behavior-none: on out-of-contract `NA`-in-`cols` the old `sapply`/`if` throws `"missing value where TRUE/FALSE needed"` while `%in%` returns the missing cols cleanly. Exported fn → RED→GREEN→REFACTOR with an NA-contract test first (§5 Phase 4). Non-NA output IS byte-identical. **Also fixes the §3 casing bug.** |
 | 2 | `convertFromCenter.R:37` | `unnecessary_nesting` | The `if` branch always `stop()`s → drop `} else {`, de-indent the two assignments. | Identical control flow. |
 | 3 | `fillGroupMembers.R:46` | `unnecessary_nesting` | `if`-branch ends in `return(groupMembers)` → drop the `else`, de-indent `available <- makeAvailable(...)`. | Identical. |
 | 4 | `hasGenotype.R:38` | `unnecessary_nesting` | Collapse `else { if (...) ... }` → `else if (...)`. Preserve the existing `# nolint: if_not_else_linter`. | Logically identical (prior conditions short-circuit). |
@@ -126,16 +126,18 @@ Each phase is a **separate session** (FM #18/#25). Each file is a **vertical sli
 - **TDD:** REFACTOR. Guard: the pyramid-plot tests (`test_getPyramidPlot*` / `test_modPyramid`) stay green.
 - **DONE:** `getPyramidPlot.R` lint-clean (0 lints under `parse_settings=FALSE`); no `25:27` entry.
 
-### Phase 3 — Behavior-none logic refactors *(§4A #1-7; existing tests guard)*
-- **Files:** `checkRequiredCols.R` (+ casing fix), `getLkDirectAncestors.R`, `getLkDirectRelatives.R`, `saveDataframesAsFiles.R`, `convertFromCenter.R`, `fillGroupMembers.R`, `hasGenotype.R`.
-- **TDD:** REFACTOR. Each file's `test_*` must stay green (all 7 have test files).
-- **DONE:** 7 exclusions gone (incl. the mis-cased entry); the two `source`-rename siblings unified (inline nolints at `getLkDirectRelatives.R:34/40` deleted).
+### Phase 3 — Behavior-none logic refactors *(§4A #2-7; existing tests guard)* — **DONE (Session 55)**
+- **Files (6 done):** `getLkDirectAncestors.R`, `getLkDirectRelatives.R`, `saveDataframesAsFiles.R`, `convertFromCenter.R`, `fillGroupMembers.R`, `hasGenotype.R`. **`checkRequiredCols.R` (§4A #1) was RECLASSIFIED to Phase 4** mid-session: adversarial verification proved its `%in%` fix changes exported NA-edge error semantics (owner-approved deferral via `AskUserQuestion`).
+- **TDD:** REFACTOR. Each file's `test_*` stayed green; all 6 adversarially verified behavior-preserving; full suite 2140/0/0/159 (S49 baseline); `lint_package()` = 0.
+- **DONE:** 6 exclusions gone; the two `source`-rename siblings unified (inline nolints at `getLkDirectRelatives.R:34/40` deleted). `checkRequiredCols`'s exclusion retained for Phase 4 (its code refactor is deferred there); its **§3 casing bug WAS fixed this session** at the owner's request (`R/CheckRequiredCols.R` → `R/checkRequiredCols.R`), so the entry now correctly suppresses the L34 lint on case-sensitive CI too.
 
-### Phase 4 — Behavior-sensitive refactors *(§4B #11-15; verified safe)*
+### Phase 4 — Behavior-sensitive refactors *(§4B #11-15 + `checkRequiredCols` #1; verified safe)*
 - **Files:** `correctParentSex.R` (#12), `create_wkbk.R` (#13), `fillGroupMembersWithSexRatio.R` (#14), `setExit.R` (#15) — all **REFACTOR** (verified behavior-preserving; existing tests guard).
-- **`addSexAndAgeToGroup.R` (#11) is the one RED→GREEN→REFACTOR:** it is exported and the refactor *could* change error semantics. **RED:** add a test pinning the current contract (factor `sex` output + levels on the happy path; and the documented behavior on a missing id). **GREEN/REFACTOR:** apply `match()`; confirm the new test + the 5 existing ones pass.
-- **TDD gate:** declare phase at top; `AskUserQuestion` at `PRE-RED→RED` and `RED→GREEN` for the `addSexAndAgeToGroup` slice (per the project TDD contract).
-- **DONE:** 5 exclusions gone; `.lintr` line-specific excludes reduced to just `makeGeneticDiversityDashboard` (kept) — every other R-file line exclusion removed.
+- **TWO RED→GREEN→REFACTOR slices (both exported; the refactor changes error semantics on out-of-contract input):**
+  - **`addSexAndAgeToGroup.R` (#11):** **RED:** test pinning the current contract (factor `sex` output + levels on the happy path; documented behavior on a missing id). **GREEN/REFACTOR:** apply `match()`; confirm the new test + the 5 existing pass.
+  - **`checkRequiredCols.R` (#1 — reclassified from Phase 3 by Session 55):** `sapply`→`%in%` turns an `NA`-in-`cols` error (`"missing value where TRUE/FALSE needed"`) into a clean missing-cols return (proven by S55 adversarial verify + firsthand repro; non-NA output byte-identical). **RED:** test pinning the desired NA behavior — decide whether to preserve the error or adopt the more-robust return (recommend the latter, documented as intentional). **GREEN/REFACTOR:** apply the chosen form, then **delete the `.lintr` entry** (its casing was already fixed in S55 → `R/checkRequiredCols.R = 34L`).
+- **TDD gate:** declare phase at top; `AskUserQuestion` at `PRE-RED→RED` and `RED→GREEN` for EACH of the two slices (per the project TDD contract).
+- **DONE:** 6 exclusions gone (5 §4B + `checkRequiredCols`); `.lintr` line-specific excludes reduced to just `makeGeneticDiversityDashboard` (kept) — every other R-file line exclusion removed.
 
 ### Phase 5 (optional / broader #30) — the residual 152 — see §7.
 
@@ -148,6 +150,7 @@ Each phase is a **separate session** (FM #18/#25). Each file is a **vertical sli
 3. **`getLkDirectAncestors.R:26/29/35` is NOT stale (#5).** An examination agent ran `lint()` with `.lintr` active (default `parse_settings=TRUE`), so the exclusion hid the lints and it reported "stale." Reproduced with `parse_settings=FALSE`: the `source` symbol **is** flagged. The fix is a variable rename, not an exclusion deletion. **General rule:** when auditing any exclusion, always use `parse_settings=FALSE` (§1).
 4. **`addSexAndAgeToGroup.R:21` is the only real behavior risk (#11).** Exported; `sapply`→`vapply` diverges on out-of-contract input. Use `match()` and a RED contract test. This is the single "load-bearing assumption" of the whole cleanup.
 5. **Line-shift discipline ([lint-net-zero]).** Always fix-code-and-delete-exclusion in the *same* commit. When a file fix changes line counts, *other files'* exclusions are unaffected (they're per-file), but never leave a fixed file's own entry pointing at a moved line.
+6. **`checkRequiredCols.R` (#1) is a SECOND behavior risk, found by Session 55 — not just `addSexAndAgeToGroup`.** Its `sapply`→`%in%` fix *looks* behavior-none but changes exported error semantics on `NA`-in-`cols` (error → clean return), and there is no clean lint-passing rewrite that preserves the exact NA-error (it is inherent to the `sapply`/`if` structure). Treat as RED→GREEN→REFACTOR with an NA-contract test, exactly like #11. **General lesson:** an "obviously equivalent" `*apply`/`%in%` swap on an EXPORTED function can still diverge on NA / duplicate / out-of-contract input — verify adversarially before classifying behavior-none.
 
 ---
 

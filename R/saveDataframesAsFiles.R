@@ -19,10 +19,7 @@
 #' @export
 saveDataframesAsFiles <- function(dfList, baseDir, fileType = "csv") {
   if (!(inherits(dfList, "list") &&
-    all(vapply(
-      dfList, function(df) inherits(df, "data.frame"),
-      logical(1L)
-    )))) {
+    all(vapply(dfList, inherits, logical(1L), what = "data.frame")))) {
     stop("dfList must be a list containing only dataframes.")
   }
   stopifnot(any(fileType %in% c("txt", "csv", "excel")))
