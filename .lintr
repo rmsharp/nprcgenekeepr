@@ -22,7 +22,6 @@ exclusions: list(
     "R/fillGroupMembersWithSexRatio.R" = 101L,
     "R/getLkDirectAncestors.R" = c(26L, 29L, 35L),
     "R/getLkDirectRelatives.R" = 31L,
-    "R/getPyramidPlot.R" = 25L:27L,
     "R/hasGenotype.R" = 38L,
     "R/makeGeneticDiversityDashboard.R" = 12L:55L,
     "R/saveDataframesAsFiles.R" = 23L,

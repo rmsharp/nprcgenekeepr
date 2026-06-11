@@ -48,9 +48,9 @@ modBreedingGroupsUI <- function(id) {
                numericInput(ns("maxKinship"), "Max kinship threshold:",
                             value = 0.25, min = 0L, max = 0.5, step = 0.01),
                radioButtons(ns("sexRatio"), "Sex ratio:",
-                            choices = c("None" = "none",
+                            choices = c(None = "none",
                                         "Harem (1M:NF)" = "harem",
-                                        "Custom" = "custom")),
+                                        Custom = "custom")),
                numericInput(ns("minAge"),
                             "Minimum breeding age (years):",
                             value = 1L, min = 0L, max = 40L, step = 0.1),
@@ -65,10 +65,11 @@ modBreedingGroupsUI <- function(id) {
                              value = FALSE),
                uiOutput(ns("seedTextareas")),
                actionButton(ns("formGroups"), "Form Groups",
-                            icon = icon("users"), class = "btn-primary btn-block")
+                            icon = icon("users"),
+                            class = "btn-primary btn-block")
              )
       ),
-      column(8,
+      column(8L,
              tabsetPanel(
                tabPanel("Groups", br(), uiOutput(ns("groupsDisplay"))),
                tabPanel("Statistics", br(), tableOutput(ns("groupStats"))),
@@ -126,9 +127,12 @@ modBreedingGroupsUI <- function(id) {
 #' \itemize{
 #'   \item \code{groups} - List of character vectors with animal IDs per group
 #'   \item \code{nGroups} - Number of groups formed
-#'   \item \code{score} - Optimization score from groupAddAssign (minimum group size)
-#'   \item \code{unassigned} - Character vector of candidate IDs not placed in groups
-#'   \item \code{groupKinship} - List of kinship matrices per group (if withKin=TRUE)
+#'   \item \code{score} - Optimization score from groupAddAssign
+#'     (minimum group size)
+#'   \item \code{unassigned} - Character vector of candidate IDs not placed
+#'     in groups
+#'   \item \code{groupKinship} - List of kinship matrices per group
+#'     (if withKin=TRUE)
 #' }
 #'
 #' @param id character vector of length 1. Module namespace identifier.
@@ -143,8 +147,8 @@ modBreedingGroupsUI <- function(id) {
 #' @seealso \code{\link{modGeneticValueServer}} for genetic value analysis
 #' @seealso \code{\link{kinship}} for kinship matrix calculation
 #'
-#' @importFrom shiny moduleServer reactive eventReactive reactiveVal withProgress
-#'   incProgress req showNotification
+#' @importFrom shiny moduleServer reactive eventReactive reactiveVal
+#'   withProgress incProgress req showNotification
 #' @export
 modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
   moduleServer(id, function(input, output, session) {
@@ -181,17 +185,17 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
     # Helper: Filter out NA/empty groups from groupAddAssign result
     filterValidGroups <- function(groupList) {
       validGroups <- lapply(groupList, function(g) {
-        if (length(g) == 0 || all(is.na(g))) return(NULL)
+        if (length(g) == 0L || all(is.na(g))) return(NULL)
         g[!is.na(g)]
       })
-      validGroups[!sapply(validGroups, is.null)]
+      validGroups[!vapply(validGroups, is.null, logical(1L))]
     }
 
     breedingGroups <- eventReactive(input$formGroups, {
       req(pedigree())
 
       # E2E determinism hook (gated; no-op in production). See gatedSeed().
-      gatedSeed("nprcgenekeepr.bg_seed", "NPRC_BG_SEED")
+      gatedSeed("nprcgenekeepr.bg_seed", "NPRC_BG_SEED") # nolint: object_usage_linter
 
       withProgress(message = "Forming breeding groups...", {
         ped <- pedigree()
@@ -294,9 +298,9 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
                     e$message,
                     "Please check your input data and try again."),
               type = "error",
-              duration = 10
+              duration = 10L
             )
-            list(group = list(character(0)), score = 0)
+            list(group = list(character(0L)), score = 0L)
           })
         }
 
@@ -378,7 +382,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
           groupData <- ped[ped$id %in% groupIds,
                            c("id", "sex", "birth", "sire", "dam")]
           groupData
-        }, options = list(pageLength = 10, dom = 't'))
+        }, options = list(pageLength = 10L, dom = "t"))
       })
     })
 
@@ -474,17 +478,17 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
       }
     )
 
-    return(list(
-      groups = reactive({ breedingGroups() }),
-      nGroups = reactive({ length(breedingGroups()) }),
+    list(
+      groups = reactive(breedingGroups()),
+      nGroups = reactive(length(breedingGroups())),
       score = reactive({
         res <- groupResults()
-        if (is.null(res)) return(0)
+        if (is.null(res)) return(0L)
         res$score
       }),
       unassigned = reactive({
         res <- groupResults()
-        if (is.null(res)) return(character(0))
+        if (is.null(res)) return(character(0L))
         res$unassigned
       }),
       groupKinship = reactive({
@@ -492,6 +496,6 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
         if (is.null(res)) return(NULL)
         res$groupKin
       })
-    ))
+    )
   })
 }

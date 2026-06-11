@@ -125,8 +125,8 @@ appServer <- function(input, output, session) {
     qcSummary <- tryCatch(inputResults$qcSummary(), error = function(e) NULL)
     if (is.null(qcSummary)) return()
 
-    hasErrors <- qcSummary$errors > 0
-    hasWarnings <- qcSummary$warnings > 0
+    hasErrors <- qcSummary$errors > 0L
+    hasWarnings <- qcSummary$warnings > 0L
 
     # Use isolate to prevent this from re-triggering
     isolate({
@@ -136,7 +136,7 @@ appServer <- function(input, output, session) {
           paste0("QC found ", qcSummary$errors,
                  " error(s). Check the Errors tab."),
           type = "error",
-          duration = 10
+          duration = 10L
         )
         # Switch to the QC Summary tab within the Input module
         updateTabsetPanel(session, "dataInput-mainTabs", selected = "Errors")
@@ -145,14 +145,14 @@ appServer <- function(input, output, session) {
           paste0("QC found ", qcSummary$warnings,
                  " warning(s). Check the Warnings tab."),
           type = "warning",
-          duration = 8
+          duration = 8L
         )
         updateTabsetPanel(session, "dataInput-mainTabs", selected = "Warnings")
-      } else if (qcSummary$records > 0) {
+      } else if (qcSummary$records > 0L) {
         showNotification(
           paste0("QC passed! ", qcSummary$records, " records processed."),
           type = "message",
-          duration = 5
+          duration = 5L
         )
         updateTabsetPanel(session, "dataInput-mainTabs",
                           selected = "QC Summary")
@@ -273,7 +273,7 @@ appServer <- function(input, output, session) {
   })
 
   # Summary Statistics Module
-  modSummaryStatsServer(
+  modSummaryStatsServer( # nolint: object_usage_linter
     "summaryStats",
     geneticValues = reactive(shared$geneticValues),
     pedigree = reactive(shared$currentPedigree),

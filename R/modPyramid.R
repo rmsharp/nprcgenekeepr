@@ -27,12 +27,12 @@ modPyramidUI <- function(id) {
       column(3L,
              wellPanel(
                selectInput(ns("ageUnit"), "Age Unit:",
-                           choices = c("Years" = "years", "Months" = "months")),
+                           choices = c(Years = "years", Months = "months")),
                numericInput(ns("ageBin"), "Bin Size:", value = 2L, min = 1L,
                             max = 10L),
                selectInput(ns("colorScheme"), "Color Scheme:",
-                           choices = c("Default" = "default",
-                                       "Viridis" = "viridis")),
+                           choices = c(Default = "default",
+                                       Viridis = "viridis")),
                hr(),
                checkboxInput(ns("showCounts"), "Show counts", TRUE),
                hr(),
@@ -132,7 +132,7 @@ modPyramidServer <- function(id, pedigreeData) {
       filename = function() paste0("pyramid_", Sys.Date(), ".png"),
       content = function(file) {
         # Scale PNG dimensions based on user's plot height selection
-        plotHeight <- if (!is.null(input$plotHeight)) input$plotHeight else 600
+        plotHeight <- if (!is.null(input$plotHeight)) input$plotHeight else 600L
         # Maintain aspect ratio: width = height * 1.5
         png(file, width = as.integer(plotHeight * 1.5), height = plotHeight)
         getPyramidPlot(
@@ -147,9 +147,9 @@ modPyramidServer <- function(id, pedigreeData) {
       }
     )
 
-    return(list(
-      pedigree = reactive({ pedigreeData() }),
-      animalCount = reactive({ nrow(pedigreeData()) })
-    ))
+    list(
+      pedigree = reactive(pedigreeData()),
+      animalCount = reactive(nrow(pedigreeData()))
+    )
   })
 }

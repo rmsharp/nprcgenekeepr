@@ -14,6 +14,30 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-11 — Implement issue #30: drive the R/ lint check to GREEN (Session 54)
+- **Deliverable:** implemented the issue #30 cleanup plan; `lintr::lint_package()` now reports **0 lints** in
+  `R/` (was 193 = 41 suppressed by `.lintr` line-excludes + 152 residual) → the CI `lint` check goes green.
+- **Phase 1 (commit `74a46d4c`):** removed dead commented code in `getErrorTab.R`, `get_elapsed_time_str.R`,
+  `print.summary.nprcgenekeeprErr.R`; stripped a stray `#'` in `set_seed.R` (also fixed a `#'` leak into
+  `man/set_seed.Rd`); removed the 4 now-unneeded `.lintr` line exclusions + the dead
+  `#commented_code_linter = NULL` no-op; kept `makeGeneticDiversityDashboard` (author won't-delete, NEW-20).
+- **Residual (this commit):** fixed the 154 firing lints across 17 `R/` files + `inst/shinytest/app.R` via a
+  per-file editor→adversarial-verifier workflow (one editor + one verifier per file; 150+ fixes, all 18 files
+  verified behavior-preserved). **Owner decisions (`AskUserQuestion`):** (1) keep `implicit_integer_linter` ON
+  and fix all 74 with `L` (counts/indices/widths) or `.0` (reals, e.g. `ped$age * 12.0`) — NOT disable;
+  (2) targeted inline `# nolint` for the 16 verified false-positives / justified idioms. Mechanical fixes:
+  `line_length` wraps, `brace`, `keyword_quote`, `return`, `paste(collapse=)`→`toString()`, `sapply`→`vapply`,
+  `if`/`else if` chain → `switch()` in `logModuleEvent.R`; removed the stale `getPyramidPlot.R = 25:27` exclusion.
+- **`# nolint` (verified non-bugs):** `object_usage` ×6 (package-internal `calcFounderContributions`/`gatedSeed`
+  lintr can't resolve + `founderStats` which IS a `modSummaryStatsServer` formal), `nonportable_path` ×3
+  (MIME strings), `object_name` ×2 (base-R `launch.browser` arg), `library()` ×2 (shinytest harness),
+  `par()` ×3 (CRAN save/restore idiom).
+- **Verification (firsthand):** `lint_package()` = 0; full test suite **2140 pass / 0 fail / 0 err / 159 skip**
+  (S49 baseline held exactly — zero behavior regression); `document()` regenerated 3 man pages (roxygen reflow,
+  content identical); **Phase-3E** — booted the app from `load_all` source: all 7 module UI builders constructed
+  and `runModularApp` served HTTP 200 / 92 KB.
+- Issue #30 remains OPEN pending owner confirmation to close (the `lint` check is now green).
+
 ### 2026-06-11 — Plan issue #30: resolve the `.lintr` line-specific exclusions (Session 53)
 - **Deliverable (planning):** `docs/planning/issue30-lintr-exclusion-cleanup-plan.md` — an evidence-based plan to
   remove most of the 18 `"file" = line` entries in `.lintr`'s `exclusions: list()` by fixing the underlying lint,

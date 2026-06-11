@@ -43,5 +43,5 @@
 calcFE <- function(ped) {
   ## Founder-contribution algorithm + partial-parentage guard are shared with
   ## calcFG()/calcFEFG() via calcFounderContributions() (NEW-13/NEW-23).
-  1L / sum(calcFounderContributions(ped, "calcFE")$p^2L)
+  1L / sum(calcFounderContributions(ped, "calcFE")$p^2L) # nolint: object_usage_linter
 }

@@ -45,21 +45,20 @@ logModuleEvent <- function(module, message, level = "INFO", ...) {
   # In production, this could be extended to use futile.logger or other
 
   # logging frameworks
-  if (level == "ERROR") {
-    message(log_entry)
-  } else if (level == "WARN") {
-    message(log_entry)
-  } else if (level == "DEBUG") {
-    # Debug messages only shown if debug mode is enabled
-    if (getOption("nprcgenekeepr.debug", FALSE)) {
-      cat(log_entry, "\n")
-    }
-  } else {
-    # INFO level
+  switch(level,
+    ERROR = ,
+    WARN = message(log_entry),
+    DEBUG = {
+      # Debug messages only shown if debug mode is enabled
+      if (getOption("nprcgenekeepr.debug", FALSE)) {
+        cat(log_entry, "\n")
+      }
+    },
+    # INFO level (default)
     if (getOption("nprcgenekeepr.verbose", FALSE)) {
       cat(log_entry, "\n")
     }
-  }
+  )
 
   invisible(NULL)
 }

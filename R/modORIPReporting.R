@@ -38,8 +38,8 @@ modORIPReportingUI <- function(id) {
     # Guidance section
     fluidRow(
       column(
-        10,
-        offset = 1,
+        10L,
+        offset = 1L,
         style = paste(
           "border: 1px solid lightgray; background-color: #EDEDED;",
           "border-radius: 25px; box-shadow: 0 0 5px 2px #888; padding: 10px;"
@@ -60,16 +60,16 @@ modORIPReportingUI <- function(id) {
 
     # Export buttons
     fluidRow(
-      column(3, offset = 1,
+      column(3L, offset = 1L,
              downloadButton(ns("downloadORIPReport"), "Export ORIP Report")),
-      column(3,
+      column(3L,
              downloadButton(ns("downloadDemographics"), "Export Demographics"))
     ),
     br(),
 
     # Site information section
     fluidRow(
-      column(10, offset = 1,
+      column(10L, offset = 1L,
              h4("Site Information"),
              htmlOutput(ns("siteInfo")))
     ),
@@ -77,7 +77,7 @@ modORIPReportingUI <- function(id) {
 
     # Colony summary section
     fluidRow(
-      column(10, offset = 1,
+      column(10L, offset = 1L,
              h4("Colony Summary"),
              tableOutput(ns("colonySummary")))
     ),
@@ -85,7 +85,7 @@ modORIPReportingUI <- function(id) {
 
     # Genetic diversity section
     fluidRow(
-      column(10, offset = 1,
+      column(10L, offset = 1L,
              h4("Genetic Diversity Metrics"),
              htmlOutput(ns("geneticDiversity")))
     ),
@@ -94,8 +94,8 @@ modORIPReportingUI <- function(id) {
     # Placeholder for future features
     fluidRow(
       column(
-        10,
-        offset = 1,
+        10L,
+        offset = 1L,
         style = paste(
           "border: 1px solid #ffc107; background-color: #fff3cd;",
           "border-radius: 10px; padding: 15px;"
@@ -252,7 +252,7 @@ modORIPReportingServer <- function(id, pedigree = NULL, geneticValues = NULL,
         # Site info
         if (!is.null(config)) {
           report <- rbind(report, data.frame(
-            Category = rep("Site", 3),
+            Category = rep("Site", 3L),
             Metric = c("Center", "Node", "Report Date"),
             Value = c(config$center, config$nodename, as.character(Sys.Date())),
             stringsAsFactors = FALSE
@@ -262,7 +262,7 @@ modORIPReportingServer <- function(id, pedigree = NULL, geneticValues = NULL,
         # Colony stats
         if (!is.null(ped) && nrow(ped) > 0L) {
           report <- rbind(report, data.frame(
-            Category = rep("Colony", 3),
+            Category = rep("Colony", 3L),
             Metric = c("Total Animals", "Males", "Females"),
             Value = c(
               as.character(nrow(ped)),
@@ -276,7 +276,7 @@ modORIPReportingServer <- function(id, pedigree = NULL, geneticValues = NULL,
         # Genetic diversity
         if (!is.null(gv) && nrow(gv) > 0L) {
           report <- rbind(report, data.frame(
-            Category = rep("Genetic Diversity", 2),
+            Category = rep("Genetic Diversity", 2L),
             Metric = c("Mean Kinship", "Mean Genome Uniqueness"),
             Value = c(
               sprintf("%.4f", mean(gv$meanKinship, na.rm = TRUE)),
