@@ -8,13 +8,9 @@
 ^\.httr-oauth$
 ^\.Rprofile$
 ^cran-comments\.md$
-^20210330_cran-comments\.md$
-^20210324_cran-comments\.md$
-^20201107_cran-comments\.md$
-^20200517_cran-comments\.md$
-^20200510_cran-comments\.md$
-^20200415_cran-comments\.md$
-^20241220_cran-comments\.md$
+# All dated CRAN-submission comment files YYYYMMDD_cran-comments.md -- one regex
+# covers every dated file incl. future ones, so a new one never silently ships.
+^[0-9]+_cran-comments\.md$
 ^codecov\.yml$
 ^docs$
 inst/extdata/meeting_notes\.html$
@@ -83,3 +79,12 @@ README\.*\.png$
 ^BACKLOG.*\.md$
 ^ROADMAP.*\.md$
 ^CHANGELOG.*\.md$
+
+# Methodology tooling, audit reports, and dev notes -- not R package content,
+# so they are build-ignored. Broad <NAME>.* forms also catch macOS sync dupes.
+^methodology_dashboard\.py$
+^dashboard\.html$
+^nprcgenekeepr_notes\.txt$
+^RECOMMENDED_SKILLS.*\.md$
+^PED_GV_AUDIT.*
+^TECH_DEBT_AUDIT.*
