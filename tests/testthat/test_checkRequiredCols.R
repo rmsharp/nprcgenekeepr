@@ -12,3 +12,18 @@ test_that("checkRequiredCols detects missing cols", {
     reportErrors = TRUE
   )))
 })
+test_that("checkRequiredCols returns missing cols (no error) on NA in cols", {
+  # Out-of-contract input: `cols` shorter than the required set, containing NA,
+  # with required cols absent. The robust contract returns the missing required
+  # columns rather than erroring on the NA (intentional; see @details). Pins the
+  # `%in%` form against the legacy sapply/`if (!any(col == cols))` form, which
+  # errored with "missing value where TRUE/FALSE needed".
+  expect_identical(
+    checkRequiredCols(c("dam", "sex", "birth", NA), reportErrors = TRUE),
+    c("id", "sire")
+  )
+  expect_identical(
+    checkRequiredCols(c("id", NA), reportErrors = TRUE),
+    c("sire", "dam", "sex", "birth")
+  )
+})

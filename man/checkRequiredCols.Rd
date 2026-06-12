@@ -22,6 +22,13 @@ of \code{reportErrors} for return values when required columns are missing.
 \description{
 Examines column names, \code{cols} for required column names
 }
+\details{
+When \code{reportErrors = TRUE}, \code{NA} entries in \code{cols} are
+treated as ordinary non-matching column names when building the list of
+missing required columns, rather than causing an error. (Earlier versions
+could error with \code{"missing value where TRUE/FALSE needed"} on such
+out-of-contract input.)
+}
 \examples{
 library(nprcgenekeepr)
 requiredCols <- getRequiredCols()
