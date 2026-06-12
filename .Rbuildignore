@@ -70,12 +70,16 @@ README\.*\.png$
 ^\.\.Rcheck$
 ^\.positai$
 ^\.claude$
-# Methodology framework files (tooling, not R package content)
-^PROJECT_LEARNINGS\.md$
-^CLAUDE\.md$
-^SESSION_RUNNER\.md$
+# Methodology framework files (tooling, not R package content).
+# NOTE: every line in this file is a perl regex -- a comment with an unbalanced
+# paren makes R CMD build abort. Keep the <NAME>.*\.md$ form broad so macOS sync
+# dupes like SESSION_NOTES 2.md and CLAUDE copy.md stay build-ignored and never
+# re-raise R CMD check's non-portable-file-names WARNING. S59 generalized S58.
+^PROJECT_LEARNINGS.*\.md$
+^CLAUDE.*\.md$
+^SESSION_RUNNER.*\.md$
 ^SESSION_NOTES.*\.md$
-^SAFEGUARDS\.md$
-^BACKLOG\.md$
-^ROADMAP\.md$
-^CHANGELOG\.md$
+^SAFEGUARDS.*\.md$
+^BACKLOG.*\.md$
+^ROADMAP.*\.md$
+^CHANGELOG.*\.md$
