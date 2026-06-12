@@ -52,12 +52,11 @@ create_wkbk <- function(file, df_list, sheetnames, replace = FALSE) {
   }
 
   if (file.exists(file)) {
-    if (replace) {
-      file.remove(file)
-    } else {
+    if (!replace) {
       warning("File, ", file, " exists and was not overwritten.")
       return(FALSE)
     }
+    file.remove(file)
   }
   WriteXLS(
     x = df_list,

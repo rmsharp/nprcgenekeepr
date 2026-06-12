@@ -72,26 +72,8 @@ correctParentSex <- function(id, sire, dam, sex, recordStatus,
   if ((length(sireAndDam) > 0L) && !reportErrors) {
     stop(sireAndDam, " : Subject(s) listed as both sire and dam")
   }
-  if (reportErrors) {
-    femaleSires <- id[(id %in% sires) & (!sex %in% c("H", "U", "M")) &
-      recordStatus == "original"]
-    maleDams <- id[(id %in% dams) & (!sex %in% c("H", "U", "F")) &
-      recordStatus == "original"]
-    if (length(femaleSires) == 0L) {
-      femaleSires <- NULL
-    }
-    if (length(maleDams) == 0L) {
-      maleDams <- NULL
-    }
-    if (length(sireAndDam) == 0L) {
-      sireAndDam <- NULL
-    }
-    list(
-      sireAndDam = sireAndDam, femaleSires = femaleSires,
-      maleDams = maleDams
-    )
-  } else {
-    # Update gender for sires and dams. Mirror the report branch above
+  if (!reportErrors) {
+    # Update gender for sires and dams. Mirror the report branch below
     # (which exempts H/U via `!sex %in% c("H", "U", "M")`): only correct true
     # female-sires (F -> M) and male-dams (M -> F). Hermaphrodite ("H") and
     # unknown-sex ("U") parents keep their recorded sex (NEW-37).
@@ -99,4 +81,21 @@ correctParentSex <- function(id, sire, dam, sex, recordStatus,
     sex[((id %in% dams) & !(sex %in% c("H", "U", "F")))] <- "F"
     return(sex)
   }
+  femaleSires <- id[(id %in% sires) & (!sex %in% c("H", "U", "M")) &
+    recordStatus == "original"]
+  maleDams <- id[(id %in% dams) & (!sex %in% c("H", "U", "F")) &
+    recordStatus == "original"]
+  if (length(femaleSires) == 0L) {
+    femaleSires <- NULL
+  }
+  if (length(maleDams) == 0L) {
+    maleDams <- NULL
+  }
+  if (length(sireAndDam) == 0L) {
+    sireAndDam <- NULL
+  }
+  list(
+    sireAndDam = sireAndDam, femaleSires = femaleSires,
+    maleDams = maleDams
+  )
 }

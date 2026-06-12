@@ -48,12 +48,10 @@ setExit <- function(ped, timeOrigin = as.Date("1970-01-01")) {
   }
   if (("birth" %in% headers) && !("exit" %in% headers)) {
     if (any("death" %in% headers) && any("departure" %in% headers)) {
-      # mapply simplifies results by default
-      # mapply would return a list, but simplification coerces this to a vector
-      # consequently, the simplification also coerces Date columns to Numeric
-      # as.Date("1970-01-01") is used to counter this and maintain Dates
-      # properly
-      ped$exit <- as.Date(mapply(chooseDate, ped$death, ped$departure),
+      # Map returns a list of single dates; unlist flattens it (as mapply's
+      # default SIMPLIFY = TRUE would), which coerces the Date class to numeric,
+      # so as.Date(..., origin = timeOrigin) restores proper Date values.
+      ped$exit <- as.Date(unlist(Map(chooseDate, ped$death, ped$departure)),
         origin = timeOrigin
       )
     } else if ("death" %in% headers) {

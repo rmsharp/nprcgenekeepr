@@ -3,8 +3,8 @@
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
-#' @details When \code{reportErrors = TRUE}, \code{NA} entries in \code{cols} are
-#' treated as ordinary non-matching column names when building the list of
+#' @details When \code{reportErrors = TRUE}, \code{NA} entries in \code{cols}
+#' are treated as ordinary non-matching column names when building the list of
 #' missing required columns, rather than causing an error. (Earlier versions
 #' could error with \code{"missing value where TRUE/FALSE needed"} on such
 #' out-of-contract input.)
