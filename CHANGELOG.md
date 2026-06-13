@@ -14,6 +14,15 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-13 — Merge methodology PR #25/#27 wording branch into add-methodology (Session 66)
+- **Deliverable:** Merged the local out-of-band branch `chore/methodology-pr2527-wording` (one wording-only commit `ce7d6779`) into `add-methodology`, then deleted it. Adopts the merged-upstream methodology PR #25/#27 wording — **no migration** (this repo's learnings extraction was done in Sessions 10/28; it is the reference end-state).
+- **TDD phase = N/A** (docs/methodology merge; no `R/`, `tests/`, `man/`, or `NEWS.md` changes — same non-code classification as S57/S61–S65).
+- **What landed (4 files, +10/−5):** SESSION_RUNNER.md §3C body → the canonical adopter-vs-canonical learnings-routing text + the Learnings-table caption reworded (3C section now byte-identical to canonical; the 6 seed rows already matched); `docs/methodology/HOW_TO_USE.md` 3C bullet → matching routing text; CLAUDE.md + PROJECT_LEARNINGS.md → replace the empirical "40k-char limit" justification with the documented size-budget language ("Claude Code targets ~200 lines / ~25 KB"); counts and history preserved.
+- **Merge mechanics:** true merge commit `0f9728e3` (`--no-ff`; the base had diverged — Sessions 63–65 added commits after the branch point `b7f45901`). Pre-merge `git merge-tree` dry run showed **0** conflict markers; 3 of 4 files were byte-identical to the branch base, and PROJECT_LEARNINGS.md auto-merged **keep-both** (branch's line-3 header rewording + the S63/64/65 tail-appended Learning rows — non-overlapping hunks).
+- **Verified:** all 4 task-spec greps pass — "Adopter project" in SESSION_RUNNER.md (3C body + table caption), no "40k" in CLAUDE.md/PROJECT_LEARNINGS.md, one "200 lines" in each, and the HOW_TO_USE.md 3C routing bullet. Branch deleted with safe `git branch -d` (confirmed merged).
+- **Build impact:** none — all 4 files are build-ignored (`.Rbuildignore` patterns `^CLAUDE.*\.md$`, `^PROJECT_LEARNINGS.*\.md$`, `^SESSION_RUNNER.*\.md$`, `^docs$`), verified firsthand; `R CMD check` unaffected.
+- **Issue tracker:** 19 open issues (unchanged — no issue activity this session).
+
 ### 2026-06-12 — Update #37 (exported-functions-unused inventory: 45 of 70 now used) (Session 65)
 - **Deliverable:** Updated GitHub issue #37 ("Exported functions not currently used by app") to current reality and **kept it open**. Struck the **45 of 70** listed functions now reached by the app, kept the 22 still-unused + 3 S3 methods, corrected the totals (**116 / 155 used, 39 unused**; was 38 / 108 / 70), fixed the 5 "Notable findings", added a dated re-verification note, and folded in the **17 unused exports created since** the issue was filed (2026-01-25). Executes S64 SUGGESTED-NEXT #1.
 - **TDD phase = N/A** (issue-grooming; no production code or tests written — same classification as S57/S61/S62/S63/S64).
