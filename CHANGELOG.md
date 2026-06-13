@@ -14,6 +14,15 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-13 — Re-scope #35 to descendants (ancestor-inclusion verified done) (Session 67)
+- **Deliverable:** Re-scoped GitHub issue #35 (was *"Include ancestors and descendants in pedigree filtering"*) to **"Include descendants in pedigree filtering (ancestors already implemented)"** and kept it **open**. Firsthand-verified that ancestor-inclusion is live and descendants are not, rewrote the body to current reality, corrected two stale references, documented two implementation options, and posted a dated verification comment (`#issuecomment-4699260833`). Executes S66 SUGGESTED-NEXT #1.
+- **TDD phase = N/A** (issue-grooming; no production code or tests — same classification as S57/S61–S66).
+- **What's verified (firsthand):** Ancestors **DONE** — `R/modPedigree.R:292-302`: when the "Trim pedigree" checkbox is on it calls `trimPedigree(probands, ped, …)` → `getProbandPedigree()` (`R/getProbandPedigree.R:24-40`), an upward `sire`/`dam` closure (ancestors only; the module docstring at `:166` already says "ancestors"). Descendants **NOT** implemented — neither function walks downward.
+- **Two stale references corrected in the body:** (1) the issue's cited "Current Code" (lines 246-253, a `# TODO: Include ancestors and descendants` placeholder) no longer exists — replaced by the ancestor logic at 292-302; (2) its "Suggested Implementation" called `trimPedigree(…, ancestors = TRUE, descendants = TRUE)` — a signature that **does not exist** (`trimPedigree(probands, ped, removeUninformative, addBackParents)`).
+- **Implementation options documented (owner chose "document both"):** (A) strict lineal — add a downward closure mirroring `getProbandPedigree`'s loop (repeated `getOffspring()` to closure) and union with the ancestor set; (B) reuse `getPedDirectRelatives()` (`R/getPedDirectRelatives.R:46-59`), which already loops parents+offspring to closure but also pulls in collateral relatives (sibs/cousins/mates), broadening beyond lineal. Left for the implementation session.
+- **Form (owner-chosen via `AskUserQuestion`):** rewrite the body + retitle + dated verification comment; issue kept open.
+- **Issue tracker:** 19 open issues (unchanged — #35 updated, not closed).
+
 ### 2026-06-13 — Merge methodology PR #25/#27 wording branch into add-methodology (Session 66)
 - **Deliverable:** Merged the local out-of-band branch `chore/methodology-pr2527-wording` (one wording-only commit `ce7d6779`) into `add-methodology`, then deleted it. Adopts the merged-upstream methodology PR #25/#27 wording — **no migration** (this repo's learnings extraction was done in Sessions 10/28; it is the reference end-state).
 - **TDD phase = N/A** (docs/methodology merge; no `R/`, `tests/`, `man/`, or `NEWS.md` changes — same non-code classification as S57/S61–S65).
