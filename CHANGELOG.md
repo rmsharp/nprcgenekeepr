@@ -14,6 +14,14 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-13 — Consolidate parent-ID cluster #31 + #28 → umbrella #45 (Session 73)
+- **Deliverable:** Created umbrella design issue **#45** ("Principled parent identification in getPotentialParents via estimated conception date") consolidating the two open parent-identification issues — **#31** (replace the dam-exclusion "hack" with gestational length) and **#28** (timestamped colocation at birth − gestation). Both kept **OPEN** as distinct, cross-linked sub-tasks — they are **not** duplicates. Open issues **15 → 16**. Analogous to S70's #44 consolidation, but the disposition differs: the research showed #31/#28 are distinct work (a linking umbrella), not duplicates-to-close.
+- **TDD phase = N/A** (grooming/design; no production code or tests — same classification as S70).
+- **Method:** firsthand subsystem map via a Workflow (4 parallel facet readers — core fn / callers / gestation+location data infra / tests — + an adversarial completeness critic), then firsthand re-verification of every load-bearing claim before the outward-facing create/link (Learning 70 / recompute-don't-inherit). The verification corrected an overstatement (a `species` column DOES exist in some example inputs, just not the canonical fixtures).
+- **Key findings (verified firsthand):** the shared primitive (conception date = birth − gestation) is **already half-implemented** as the existing `maxGestationalPeriod` param, applied sire-side only (`getPotentialParents.R:62`); #31 is a bounded in-function refactor (the dam side never got the treatment) while #28 needs a timestamped-colocation data model the package **lacks** (blocked on #11/#12); `getPotentialParents` is experimental + **unwired** (→ #37); #31 is a **behavior change** (the test asserts exact dam/sire sets via `expect_identical`), not a pure refactor.
+- **Owner decisions (via `AskUserQuestion`):** linking umbrella with both sub-tasks open; narrow scope (`getPotentialParents` only); reuse/extend the existing `maxGestationalPeriod` (no parallel parameter).
+- **[news-vs-changelog]:** CHANGELOG only — issue consolidation is dev-process history, not a user-facing release note (no `NEWS.md` entry); no `BACKLOG.md` file (open work lives in GitHub Issues).
+
 ### 2026-06-13 — Close #44 + #38: configurable auto-ID format (Session 72)
 - **Deliverable:** Closed GitHub issues **#44** (umbrella) and **#38** (generation sub-task) as completed — the configurable auto-ID feature shipped in S71 (`14c8e84d`) and the owner confirmed the close this session. Open issues **17 → 15**. Completes the #44 lifecycle: S70 consolidate → S71 implement → S72 close (one deliverable per session).
 - **TDD phase = N/A** (administrative issue-close; no production code — same classification as S69/S70).
