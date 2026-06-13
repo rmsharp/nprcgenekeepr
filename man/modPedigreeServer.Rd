@@ -36,8 +36,8 @@ This module processes the studbook by:
 \item Adding a \code{population} column via \code{setPopulation()}
 \item Adding a \code{pedNum} column via \code{findPedigreeNumber()}
 \item Ensuring a \code{gen} column exists via \code{findGeneration()}
-\item Optionally trimming to ancestors of focal animals via
-\code{trimPedigree()}
+\item Optionally trimming to the ancestors and descendants of focal
+animals via \code{trimPedigree()} and \code{getDescendantPedigree()}
 }
 }
 \seealso{

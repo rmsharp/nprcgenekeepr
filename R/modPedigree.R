@@ -122,8 +122,8 @@ modPedigreeUI <- function(id) {
           helpText(
             style = "font-size: 14px; color: darkblue; font-weight: bold;",
             paste0(
-              "Trim the pedigree to include only relatives of the focal ",
-              "animals provided."
+              "Trim the pedigree to include only the ancestors and ",
+              "descendants of the focal animals provided."
             )
           ),
           br(),
@@ -163,8 +163,8 @@ modPedigreeUI <- function(id) {
 #'   \item Adding a \code{population} column via \code{setPopulation()}
 #'   \item Adding a \code{pedNum} column via \code{findPedigreeNumber()}
 #'   \item Ensuring a \code{gen} column exists via \code{findGeneration()}
-#'   \item Optionally trimming to ancestors of focal animals via
-#'     \code{trimPedigree()}
+#'   \item Optionally trimming to the ancestors and descendants of focal
+#'     animals via \code{trimPedigree()} and \code{getDescendantPedigree()}
 #' }
 #'
 #' @return A list of reactive values:
@@ -289,15 +289,20 @@ modPedigreeServer <- function(id, studbook, config = NULL) {
         ped <- ped[!startsWith(ped$id, "U"), ]
       }
 
-      # Trim to focal animals and their ancestors if requested
+      # Trim to focal animals, their ancestors, and their descendants if
+      # requested
       if (input$trimPedigree && length(focalIds()) > 0L) {
         focal <- focalIds()
         # Get focal animals that exist in pedigree
         probands <- focal[focal %in% ped$id]
         if (length(probands) > 0L) {
-          # Use trimPedigree to include ancestors of focal animals
-          ped <- trimPedigree(probands, ped, removeUninformative = FALSE,
-                              addBackParents = FALSE)
+          # Include both ancestors (upward closure) and descendants (downward
+          # closure) of the focal animals. Strict-lineal -- collateral
+          # relatives (siblings, cousins, mates) are not included.
+          ancestors <- trimPedigree(probands, ped, removeUninformative = FALSE,
+                                    addBackParents = FALSE)
+          descendants <- getDescendantPedigree(probands, ped)
+          ped <- ped[ped$id %in% union(ancestors$id, descendants$id), ]
         }
       }
 

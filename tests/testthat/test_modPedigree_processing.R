@@ -250,6 +250,93 @@ test_that("modPedigreeServer trimPedigree handles multiple focal animals", {
   )
 })
 
+test_that("modPedigreeServer trimPedigree includes descendants of focal animals", {
+  skip_if_not_installed("shiny")
+
+  # D is the focal animal. A and B are D's parents (ancestors). GC is D's
+  # child by E (a descendant). C is D's sibling and E is D's mate (collaterals).
+  test_studbook <- data.frame(
+    id = c("A", "B", "C", "D", "E", "GC"),
+    sire = c(NA, NA, "A", "A", NA, "D"),
+    dam = c(NA, NA, "B", "B", NA, "E"),
+    sex = c("M", "F", "F", "M", "F", "F"),
+    gen = c(0L, 0L, 1L, 1L, 0L, 2L),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook }),
+      config = NULL
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE,
+        clearFocalAnimals = FALSE,
+        focalAnimalIds = "D"
+      )
+
+      session$setInputs(updateFocalAnimals = 1)
+      session$setInputs(trimPedigree = TRUE)
+
+      result <- session$getReturned()
+      ped <- result$pedigree()
+
+      # Ancestors of D still included
+      expect_true("D" %in% ped$id)
+      expect_true("A" %in% ped$id) # sire of D
+      expect_true("B" %in% ped$id) # dam of D
+      # Descendant of D now included (the new behavior)
+      expect_true("GC" %in% ped$id) # child of D
+    }
+  )
+})
+
+test_that("modPedigreeServer trimPedigree is strict-lineal: excludes siblings and mates", {
+  skip_if_not_installed("shiny")
+
+  # Same structure: focal D. Strict-lineal keeps ancestors {A,B} and
+  # descendants {GC}, but excludes the sibling C and the mate E (collaterals).
+  test_studbook <- data.frame(
+    id = c("A", "B", "C", "D", "E", "GC"),
+    sire = c(NA, NA, "A", "A", NA, "D"),
+    dam = c(NA, NA, "B", "B", NA, "E"),
+    sex = c("M", "F", "F", "M", "F", "F"),
+    gen = c(0L, 0L, 1L, 1L, 0L, 2L),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook }),
+      config = NULL
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE,
+        clearFocalAnimals = FALSE,
+        focalAnimalIds = "D"
+      )
+
+      session$setInputs(updateFocalAnimals = 1)
+      session$setInputs(trimPedigree = TRUE)
+
+      result <- session$getReturned()
+      ped <- result$pedigree()
+
+      # Lineal animals present
+      expect_true(all(c("A", "B", "D", "GC") %in% ped$id))
+      # Collaterals excluded
+      expect_false("C" %in% ped$id) # sibling of D
+      expect_false("E" %in% ped$id) # mate of D
+    }
+  )
+})
+
 # ============================================================================
 # Tests for findPedigreeNumber Integration
 # ============================================================================

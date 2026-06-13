@@ -36,6 +36,13 @@ R. Mark Sharp, Ph.D.
     predicate had been written inline in a dozen places; it is now
     defined once and reused throughout the genetic-value and reporting
     functions. (PED-1 / NEW-17)
+  - The Pedigree Browser's "Trim pedigree based on focal animals" option
+    now includes both the ancestors **and** the descendants of the focal
+    animals (it previously included ancestors only). A new exported
+    helper, `getDescendantPedigree()`, returns the transitive
+    descendants of a set of probands -- the downward mirror of
+    `getProbandPedigree()`. Trimming is strict-lineal: collateral
+    relatives (siblings, cousins, mates) are not added. (NEW-47)
 - Major changes
   - Architectural Changes
     - Modular Shiny Architecture
