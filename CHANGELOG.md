@@ -14,6 +14,13 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-13 — Close #44 + #38: configurable auto-ID format (Session 72)
+- **Deliverable:** Closed GitHub issues **#44** (umbrella) and **#38** (generation sub-task) as completed — the configurable auto-ID feature shipped in S71 (`14c8e84d`) and the owner confirmed the close this session. Open issues **17 → 15**. Completes the #44 lifecycle: S70 consolidate → S71 implement → S72 close (one deliverable per session).
+- **TDD phase = N/A** (administrative issue-close; no production code — same classification as S69/S70).
+- **Firsthand verification before the irreversible close** (per the standing "don't close an OPEN issue without firsthand evidence" rule + Learning 69): confirmed the committed tree (`14c8e84d`) against **each** of #44's 8 acceptance criteria — exports in `NAMESPACE`, the predicate routing all 7 detection sites + 2 generators, the round-trip tests, the docstring/tooltip updates — and that the full suite + `devtools::check()` passed on exactly that state. Mapped criteria → code in the close comment.
+- **Close comments** (with `14c8e84d` pointer): #44 carries the criterion-by-criterion map + the documented known limitation (prefix-only detection still over-matches real prefix-IDs — the owner-approved byte-identical tradeoff); #38 maps `setAutoIdFormat`/`getAutoIdFormat`/`addUIds`-format-param to its asks. `gh issue close --reason completed`.
+- **Issue tracker:** **15 open** (was 17). #44/#38 `state=CLOSED` (verified).
+
 ### 2026-06-13 — Implement #44/#38: configurable auto-generated unknown-ID format (Session 71)
 - **Deliverable:** Implemented umbrella issue **#44** (and its **#38** sub-task) via strict TDD (RED→GREEN→REFACTOR-skipped). The auto-generated placeholder-ID format for unknown parents is now configurable from a single source of truth, default `"U%04d"`, **byte-identical with no configuration**. Executes S70 SUGGESTED-NEXT candidate (1). Owner decisions (via `AskUserQuestion`): **full #44** scope; **prefix-only byte-identical** detection; **case-sensitive** reconciliation.
 - **TDD:** first code session since S68. Three phase gates posed via `AskUserQuestion` (PRE-RED→RED, RED→GREEN, GREEN→REFACTOR-skipped) plus a separate pre-RED scope/approach decision (3 questions). **0 stakeholder corrections.**
