@@ -14,6 +14,13 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-13 — Close #35: descendants in pedigree filtering (Session 69)
+- **Deliverable:** Closed GitHub issue #35 (*"Include descendants in pedigree filtering (ancestors already implemented)"*) as completed — the feature shipped in S68 (`d4320643`) and the owner confirmed the close this session. Open issues **19 → 18**. Completes the #35 lifecycle: S67 re-scope → S68 implement → S69 close (one deliverable per session).
+- **TDD phase = N/A** (administrative issue-close; no production code or tests — same classification as S57/S61–S67).
+- **Firsthand verification before the irreversible close** (per the standing "don't close an OPEN issue without firsthand evidence" rule): ran the three covering test files — `test_getDescendantPedigree.R`, `test_modPedigree_processing.R`, `test_modPedigree.R` — **all pass**; read the implementation (`R/getDescendantPedigree.R`, the union at `R/modPedigree.R:299-305`, the help text at `:124-126`) and confirmed it satisfies **each** of the issue's re-scoped asks: descendant set unioned with the existing ancestor set; **Option A** strict-lineal (no collaterals); UI label aligned from "only relatives" to "ancestors and descendants".
+- **Close comment** posted with a commit pointer (`d4320643`) mapping the shipped code to the issue's acceptance criteria; `gh issue close --reason completed`.
+- **Issue tracker:** **18 open** (was 19).
+
 ### 2026-06-13 — Implement #35: descendants in pedigree filtering (Session 68)
 - **Deliverable:** Implemented GitHub issue #35 (*"Include descendants in pedigree filtering (ancestors already implemented)"*) via strict TDD (RED→GREEN→REFACTOR-skipped). The Pedigree Browser's "Trim pedigree based on focal animals" option now includes both the **ancestors and descendants** of the focal animals (previously ancestors only). Owner chose **Option A — strict lineal** (no collateral relatives). Executes S67 SUGGESTED-NEXT #1.
 - **TDD:** first real code session after S57–S67's non-code run. Three phase gates posed via `AskUserQuestion` (PRE-RED→RED, RED→GREEN, GREEN→REFACTOR) plus a separate pre-RED Option A/B approach decision. **0 stakeholder corrections.**
