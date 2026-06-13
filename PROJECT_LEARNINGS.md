@@ -1,6 +1,6 @@
 # nprcgenekeepr — Project-Specific Learnings
 
-> Extracted verbatim from `CLAUDE.md` on 2026-06-06 to keep `CLAUDE.md` under Claude Code's 40k-char limit (it had grown to 97k, ~91% of which was this single table). No content was changed in the move. **Append new project learnings here, not in `CLAUDE.md`.** Base, methodology-level learnings remain in `SESSION_RUNNER.md`.
+> Extracted verbatim from `CLAUDE.md` on 2026-06-06 to keep `CLAUDE.md` within its size budget (Claude Code targets ~200 lines / ~25 KB; the file had grown to 97k chars, ~91% of which was this single table). No content was changed in the move. **Append new project learnings here, not in `CLAUDE.md`.** Base, methodology-level learnings remain in `SESSION_RUNNER.md`.
 
 *Migrated verbatim from `SESSION_RUNNER.md`'s Learnings table during the 2026-05-31 methodology update (Session 10) so the synced runner stays byte-identical to canonical. These are nprcgenekeepr-specific institutional memory from Sessions 1–27 (the PED/GV audit-fix campaign, then the Shiny-module conversion). The base, methodology-level learnings remain in `SESSION_RUNNER.md`. **Format note (Session 28):** the recurring cross-cutting reflexes were extracted into the glossary below and are cited from each Learning by `[tag]`; each Learning now carries only its UNIQUE finding / file:line / mechanism / verdict. No information was dropped — Session 28 was an information-preserving trim (the prior single-cell table was ~90% of this file, reloaded every session) verified by an adversarial per-Learning no-loss audit.*
 
