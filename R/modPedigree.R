@@ -109,7 +109,8 @@ modPedigreeUI <- function(id) {
           helpText(
             style = "font-size: 14px; color: darkblue; font-weight: bold;",
             paste0(
-              "Unknown IDs, beginning with a capital U, are created ",
+              "Unknown IDs, by default beginning with a capital U (the ",
+              "format is configurable via setAutoIdFormat()), are created ",
               "by the application for all animals with only one parent."
             )
           ),
@@ -285,8 +286,8 @@ modPedigreeServer <- function(id, studbook, config = NULL) {
 
       # Filter out unknown IDs if requested
       if (!input$displayUnknownIds) {
-        # Unknown IDs typically start with "U"
-        ped <- ped[!startsWith(ped$id, "U"), ]
+        # Auto-generated unknown IDs are detected via the shared predicate
+        ped <- ped[!isGeneratedUnknownId(ped$id), ]
       }
 
       # Trim to focal animals, their ancestors, and their descendants if

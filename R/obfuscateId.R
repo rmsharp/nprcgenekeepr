@@ -29,15 +29,16 @@ obfuscateId <- function(id, size = 10L, existingIds = character(0L)) {
     "M", "N", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",
     "Z"
   )
+  prefix <- getAutoIdPrefix()
   existingIds <- c(character(length(id)), existingIds)
   obfuscatedId <- character(length(id))
   for (i in seq_along(id)) {
     counter <- 0L
     repeat {
-      if (grepl("^U", id[i], ignore.case = TRUE)) {
+      if (isGeneratedUnknownId(id[i])) {
         obfuscatedId[i] <- stri_c(
-          c("U", sample(c(noOInLetters, stri_c(0L:9L)),
-            size = size - 1L, replace = TRUE
+          c(prefix, sample(c(noOInLetters, stri_c(0L:9L)),
+            size = size - nchar(prefix), replace = TRUE
           )),
           collapse = ""
         )
@@ -47,10 +48,10 @@ obfuscateId <- function(id, size = 10L, existingIds = character(0L)) {
           replace = TRUE
         ), collapse = "")
       }
-      ## grepl is ensuring both IDs are Unknown or known
+      ## ensure the alias and source are both auto-generated or both not
       if (!any(obfuscatedId[i] %in% existingIds) &&
-        (grepl("^U", obfuscatedId[i], ignore.case = TRUE) ==
-          grepl("^U", id[i], ignore.case = TRUE))) {
+        (isGeneratedUnknownId(obfuscatedId[i]) ==
+          isGeneratedUnknownId(id[i]))) {
         break
       }
       counter <- counter + 1L

@@ -15,10 +15,11 @@ required.}
 A pedigree with automatically generated IDs removed.
 }
 \description{
-Currently uses leading "U" to identify automatically generated IDs.
-TODO change identification of automatically generated IDs from looking for
-an initial "U" at the beginning of an ID to a function call so that actual
-ID that start with a "U" are possible.
+Identifies automatically generated IDs via \code{isGeneratedUnknownId()},
+the shared detection predicate derived from the configurable auto-ID format
+(see \code{\link{getAutoIdFormat}}; default a leading "U"). Routing detection
+through that single predicate is the "function call" the former inline
+leading-"U" check was flagged to become.
 }
 \examples{
 examplePedigree <- nprcgenekeepr::examplePedigree

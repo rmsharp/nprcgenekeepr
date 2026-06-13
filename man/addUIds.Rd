@@ -5,11 +5,14 @@
 \title{Eliminates partial parentage situations by adding unique placeholder
 IDs for the unknown parent.}
 \usage{
-addUIds(ped)
+addUIds(ped, format = getAutoIdFormat())
 }
 \arguments{
 \item{ped}{datatable that is the \code{Pedigree}. It contains pedigree
 information. The fields \code{sire} and \code{dam} are required.}
+
+\item{format}{\code{sprintf} template for the generated placeholder IDs;
+defaults to \code{\link{getAutoIdFormat}()} (\code{"U\%04d"}).}
 }
 \value{
 The updated pedigree with partial parentage removed.
@@ -19,10 +22,11 @@ This must be run prior to \code{addParents} since the IDs made herein are
 used by \code{addParents}
 }
 \details{
-The generated placeholder IDs have the form \code{Unnnn} (a leading "U" plus
-a zero-padded integer), so they are alphanumeric and never contain a period
-("."), honoring the ID rule enforced at data input by
-\code{\link{qcStudbook}}.
+The generated placeholder IDs default to the form \code{Unnnn} (a leading
+"U" plus a zero-padded integer), so they are alphanumeric and never contain a
+period ("."), honoring the ID rule enforced at data input by
+\code{\link{qcStudbook}}. The format is configurable via
+\code{\link{setAutoIdFormat}} (default \code{"U\%04d"}).
 }
 \examples{
 pedTwo <- data.frame(

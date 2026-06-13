@@ -43,6 +43,17 @@ R. Mark Sharp, Ph.D.
     descendants of a set of probands -- the downward mirror of
     `getProbandPedigree()`. Trimming is strict-lineal: collateral
     relatives (siblings, cousins, mates) are not added. (NEW-47)
+  - The format of the auto-generated placeholder IDs created for unknown
+    parents (see `addUIds()`) is now configurable from a single source of
+    truth shared by ID generation and detection. Two new exported
+    helpers, `getAutoIdFormat()` and `setAutoIdFormat()`, read and set the
+    `sprintf` format (default `"U%04d"`); with no configuration all
+    existing behavior is unchanged. Detection is now centralized in one
+    internal predicate used by `removeAutoGenIds()`, the Pedigree Browser
+    display filter, `reportGV()` founder counts, and `obfuscateId()` --
+    replacing eight scattered string literals and reconciling their
+    formerly inconsistent case-handling to case-sensitive (matching the
+    uppercase prefix that generation emits). (NEW-48 / issue \#44 / \#38)
 - Major changes
   - Architectural Changes
     - Modular Shiny Architecture
