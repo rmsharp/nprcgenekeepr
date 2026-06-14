@@ -54,6 +54,17 @@ R. Mark Sharp, Ph.D.
     replacing eight scattered string literals and reconciling their
     formerly inconsistent case-handling to case-sensitive (matching the
     uppercase prefix that generation emits). (NEW-48 / issue \#44 / \#38)
+  - `getPotentialParents()` now selects candidate dams using a
+    gestation-derived exclusion window driven by its existing
+    `maxGestationalPeriod` parameter, replacing a fixed half-year window.
+    A female who delivered another offspring within
+    `maxGestationalPeriod` days of a focal animal's birth is excluded as
+    a candidate dam (a female bears one offspring at a time), so dam
+    selection now responds to the species' gestation length rather than a
+    hard-coded +/- 182.5 days. Sire selection already used this
+    parameter; the sire (presence at conception) / dam (presence at
+    birth) exit-check asymmetry is intentional and now documented.
+    (NEW-49 / issue \#31)
 - Major changes
   - Architectural Changes
     - Modular Shiny Architecture
