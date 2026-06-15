@@ -11,6 +11,18 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 # nprcgenekeepr 1.1.0.9000 (20260126)
+- Shiny application
+  - New **Potential Parents** tab. For a loaded pedigree it identifies
+    in-colony animals (`fromCenter`) that have at least one unknown parent and
+    lists candidate sires and dams, screened by estimated conception date
+    (birth minus the maximum gestational period). A numeric **Maximum
+    Gestational Period (days)** input (default 210, the rhesus upper bound) is
+    overridable per run; a **Find Potential Parents** button computes on the
+    current pedigree; results display in a sortable table and download as CSV.
+    The tab degrades gracefully when no pedigree is loaded, when the pedigree
+    lacks the `fromCenter` colony-origin field, or when no animal has an unknown
+    parent. This wires the exported `getPotentialParents()` (including the
+    gestation-derived dam-exclusion window) into the app. (#48)
 - Data input / quality control
   - IDs may no longer contain a period ("."). `qcStudbook()` and `geneDrop()`
     now reject `id`/`sire`/`dam` values that contain a period; with
@@ -39,6 +51,33 @@ knitr::opts_chunk$set(echo = TRUE)
     the founder `id` values. The founder predicate had been written inline in
     a dozen places; it is now defined once and reused throughout the
     genetic-value and reporting functions. (PED-1 / NEW-17)
+  - The Pedigree Browser's "Trim pedigree based on focal animals" option now
+    includes both the ancestors **and** the descendants of the focal animals
+    (it previously included ancestors only). A new exported helper,
+    `getDescendantPedigree()`, returns the transitive descendants of a set of
+    probands -- the downward mirror of `getProbandPedigree()`. Trimming is
+    strict-lineal: collateral relatives (siblings, cousins, mates) are not
+    added. (NEW-47)
+  - The format of the auto-generated placeholder IDs created for unknown parents
+    (see `addUIds()`) is now configurable from a single source of truth shared
+    by ID generation and detection. Two new exported helpers,
+    `getAutoIdFormat()` and `setAutoIdFormat()`, read and set the `sprintf`
+    format (default `"U%04d"`); with no configuration all existing behavior is
+    unchanged. Detection is now centralized in one internal predicate used by
+    `removeAutoGenIds()`, the Pedigree Browser display filter, `reportGV()`
+    founder counts, and `obfuscateId()` -- replacing eight scattered string
+    literals and reconciling their formerly inconsistent case-handling to
+    case-sensitive (matching the uppercase prefix that generation emits).
+    (NEW-48 / issue #44 / #38)
+  - `getPotentialParents()` now selects candidate dams using a gestation-derived
+    exclusion window driven by its existing `maxGestationalPeriod` parameter,
+    replacing a fixed half-year window. A female who delivered another offspring
+    within `maxGestationalPeriod` days of a focal animal's birth is excluded as
+    a candidate dam (a female bears one offspring at a time), so dam selection
+    now responds to the species' gestation length rather than a hard-coded
+    +/- 182.5 days. Sire selection already used this parameter; the sire
+    (presence at conception) / dam (presence at birth) exit-check asymmetry is
+    intentional and now documented. (NEW-49 / issue #31)
 - Major changes
   - Architectural Changes
     - Modular Shiny Architecture      

@@ -169,6 +169,15 @@ appUI <- function() {
     ),
 
     # ====================
+    # Potential Parents Tab
+    # ====================
+    tabPanel(
+      "Potential Parents",
+      icon = icon("search"),
+      modPotentialParentsUI("potentialParents")
+    ),
+
+    # ====================
     # GV & BG Description Tab
     # ====================
     tabPanel(

@@ -288,6 +288,12 @@ appServer <- function(input, output, session) {
     geneticValues = reactive(shared$geneticValues)
   )
 
+  # Potential Parents Module
+  modPotentialParentsServer(
+    "potentialParents",
+    pedigree = reactive(shared$currentPedigree)
+  )
+
   # GV & BG Description Module (informational - no reactive state)
   modGvAndBgDescServer("gvAndBgDesc")
 }
