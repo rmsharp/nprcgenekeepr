@@ -271,12 +271,16 @@ modInputServer <- function(id, config = NULL) {
             paste0("Reading text file with separator: '", separator, "'"),
             name = "nprcgenekeepr"
           )
-          data <- read.table(file$datapath, header = TRUE, sep = separator,
-                             stringsAsFactors = FALSE, fill = TRUE,
-                             quote = "\"")
+          data <- muffleIncompleteFinalLine(
+            read.table(file$datapath, header = TRUE, sep = separator,
+                       stringsAsFactors = FALSE, fill = TRUE,
+                       quote = "\"")
+          )
         } else {
           futile.logger::flog.debug("Reading CSV file", name = "nprcgenekeepr")
-          data <- read.csv(file$datapath, stringsAsFactors = FALSE)
+          data <- muffleIncompleteFinalLine(
+            read.csv(file$datapath, stringsAsFactors = FALSE)
+          )
         }
 
         futile.logger::flog.debug(

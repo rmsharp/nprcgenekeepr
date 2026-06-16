@@ -59,6 +59,13 @@ R. Mark Sharp, Ph.D.
     `qcStudbook()` via `removeDuplicates()` and by `kinship()`); a
     duplicate id previously triggered the cryptic base-R error
     “duplicate ‘row.names’ are not allowed”. (NEW-46)
+  - Reading an animal list or pedigree file whose final line has no
+    trailing newline no longer emits the confusing “incomplete final
+    line found by readTableHeader” warning. Every row, including the
+    last, was always read correctly – the warning was harmless noise.
+    `getPedigree()`, `getGenotypes()`, `getFocalAnimalPed()`, and the
+    Shiny file upload now suppress only that one warning while letting
+    every other read warning through. (#4)
 - Genetic value analysis
   - `summarizeKinshipValues()` now reports the `secondQuartile` column
     as the lower hinge (`fivenum()[2]`, approximately the first
