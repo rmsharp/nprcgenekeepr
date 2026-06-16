@@ -14,6 +14,15 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-15 — Owner-confirmed close of #48 + clean fromCenter example dataset (Session 81)
+- **Deliverable:** Owner-confirmed close of **#48** (the getPotentialParents "Potential Parents" tab shipped S80), gated on a **live owner click-through** verified end-to-end. Workstream = verification + issue-management (**TDD phase = N/A** — added an example dataset + diagnosis, no production logic/tests).
+- **Live click-through (Phase 3E, owner-run): PASS.** Part A graceful degradation (`ExamplePedigree.csv` → "no fromCenter field" empty-state); Part B populated path (new fromCenter file → 50-animal sortable table, status "Found candidate parents for 50 animal(s)…", CSV downloaded as `potential_parents_2026-06-15.csv`). Existing tabs intact.
+- **New shipped data:** `inst/extdata/rhesusPedigree_fromCenter.csv` (`rhesusPedigree` + `fromCenter=TRUE`, 375 animals, unknown parents as **literal `NA`**) — a purpose-built clean fixture, because every shipped pedigree example is a deliberate input-error QC fixture and none reaches the feature's happy path. Owner chose the `rhesusPedigree` source via `AskUserQuestion`.
+- **Defect caught by the click-through (FM #24):** the first staged file wrote unknowns as **empty cells**; the app's reader (`read.table` default `na.strings="NA"`, `modInput.R:274`) reads `""` as the empty string, so `""` landed in both the sire and dam columns → `correctParentSex.R:71` *"both sire and dam"* error. My headless pre-check had used `na.strings=c("","NA")`, masking it. Rewrote with literal `NA` and re-verified against the app's exact reader → clean + 50 candidates.
+- **Diagnosed non-defects firsthand:** the *"fromCenter → fromcenter"* case-change warning is cosmetic (`fixColumnNames.R:20` lowercases all headers, `:61` restores `fromCenter`; the cleaned studbook keeps `fromCenter`); *"No data available in table"* = the empty Errors-tab placeholder.
+- **GitHub:** **#48 CLOSED** (owner-confirmed). Umbrella **#45**'s getPotentialParents line now delivers verified app value. Open issues 18 → 17.
+- **PROJECT_LEARNINGS.md:** Learning 79 added (click-through-first + replicate-the-app's-exact-reader).
+
 ### 2026-06-15 — Implement #48: wire getPotentialParents into a new Potential Parents tab (Session 80)
 - **Deliverable:** Implemented the owner-ratified (S79) `getPotentialParents` Shiny wire-in under **Strict TDD** (RED → GREEN → REFACTOR with phase gates). Turns shipped package-API logic (the S74 #31 gestation-derived dam window) into user-visible app value. The build-from-scratch second session that S79's Learning 77 predicted.
 - **TDD phase: full RED → GREEN → REFACTOR**, every transition gated via `AskUserQuestion` (PRE-RED→RED, RED→GREEN, GREEN→REFACTOR). 0 stakeholder corrections.
