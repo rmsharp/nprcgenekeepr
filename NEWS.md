@@ -26,7 +26,10 @@ R. Mark Sharp, Ph.D.
     pedigree and genetic-value results. Two **Export** buttons download
     the ORIP report and the demographics as CSV. This mounts the
     previously unwired `modORIPReporting` module pair into the
-    application. (#47)
+    application. The tab is **ONPRC-specific**: it is shown only when an
+    actual site configuration file identifies the colony as ONPRC, and
+    is hidden at other sites and when no configuration file is present.
+    (#47, \#49)
 - Data input / quality control
   - IDs may no longer contain a period (“.”). `qcStudbook()` and
     `geneDrop()` now reject `id`/`sire`/`dam` values that contain a

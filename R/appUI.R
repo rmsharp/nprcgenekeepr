@@ -1,9 +1,21 @@
 #' Main Application UI for nprcgenekeepr
+#'
+#' @param siteInfo Named list of site configuration as returned by
+#'   \code{\link{getSiteInfo}}; defaults to
+#'   \code{getSiteInfo(expectConfigFile = FALSE)}. Its \code{center} and
+#'   \code{configFile} elements gate the Oregon (ONPRC)-specific ORIP Reporting
+#'   tab, which is shown only for an actual ONPRC configuration (see
+#'   \code{\link{shouldShowOripTab}}).
 #' @importFrom bslib bs_theme
 #' @importFrom shiny navbarPage tabPanel icon fluidRow column div h1 p hr
 #'             actionButton navbarMenu tags includeScript
 #' @export
-appUI <- function() {
+appUI <- function(siteInfo = getSiteInfo(expectConfigFile = FALSE)) {
+
+  # ORIP Reporting is Oregon (ONPRC)-specific; show its tab only for an actual
+  # ONPRC site configuration (#49).
+  showOrip <- shouldShowOripTab(siteInfo$center,
+                                file.exists(siteInfo$configFile))
 
   # Include data-ready JavaScript for E2E testing
   dataReadyJS <- system.file("www", "js", "data-ready.js",
@@ -160,13 +172,15 @@ appUI <- function() {
     ),
 
     # ====================
-    # ORIP Reporting Tab
+    # ORIP Reporting Tab (ONPRC-only, #49)
     # ====================
-    tabPanel(
-      "ORIP Reporting",
-      icon = icon("file-invoice"),
-      modORIPReportingUI("oripReporting")
-    ),
+    if (isTRUE(showOrip)) {
+      tabPanel(
+        "ORIP Reporting",
+        icon = icon("file-invoice"),
+        modORIPReportingUI("oripReporting")
+      )
+    },
 
     # ====================
     # Breeding Groups Tab

@@ -4,7 +4,15 @@
 \alias{appUI}
 \title{Main Application UI for nprcgenekeepr}
 \usage{
-appUI()
+appUI(siteInfo = getSiteInfo(expectConfigFile = FALSE))
+}
+\arguments{
+\item{siteInfo}{Named list of site configuration as returned by
+\code{\link{getSiteInfo}}; defaults to
+\code{getSiteInfo(expectConfigFile = FALSE)}. Its \code{center} and
+\code{configFile} elements gate the Oregon (ONPRC)-specific ORIP Reporting
+tab, which is shown only for an actual ONPRC configuration (see
+\code{\link{shouldShowOripTab}}).}
 }
 \description{
 Main Application UI for nprcgenekeepr

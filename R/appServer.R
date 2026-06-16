@@ -281,13 +281,18 @@ appServer <- function(input, output, session) {
     founderStats = gvResults$founderStats
   )
 
-  # ORIP Reporting Module
-  modORIPReportingServer(
-    "oripReporting",
-    pedigree = reactive(shared$currentPedigree),
-    geneticValues = reactive(shared$geneticValues),
-    siteConfig = reactive(getSiteInfo(expectConfigFile = FALSE))
-  )
+  # ORIP Reporting Module (ONPRC-only, #49) -- mount only for an actual ONPRC
+  # site configuration, matching the conditional ORIP tab in appUI().
+  oripSiteInfo <- getSiteInfo(expectConfigFile = FALSE)
+  if (shouldShowOripTab(oripSiteInfo$center,
+                        file.exists(oripSiteInfo$configFile))) {
+    modORIPReportingServer(
+      "oripReporting",
+      pedigree = reactive(shared$currentPedigree),
+      geneticValues = reactive(shared$geneticValues),
+      siteConfig = reactive(getSiteInfo(expectConfigFile = FALSE))
+    )
+  }
 
   # Breeding Groups Module
   modBreedingGroupsServer(
