@@ -41,6 +41,11 @@ R. Mark Sharp, Ph.D.
     missing or malformed. The previous loader used
     `read.table(sep = "=")`, which assumed a strict two-column table and
     stopped with “line N did not have 2 elements”. (#50)
+  - The **About** panel now shows the installed package version
+    dynamically (via `getVersion()`), reading it from the package
+    `DESCRIPTION` instead of a hard-coded string. The previous static
+    “Version 1.0.8” had drifted out of date; deriving it at run time
+    keeps it from going stale again.
 - Data input / quality control
   - IDs may no longer contain a period (“.”). `qcStudbook()` and
     `geneDrop()` now reject `id`/`sire`/`dam` values that contain a

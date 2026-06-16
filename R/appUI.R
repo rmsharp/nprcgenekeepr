@@ -227,7 +227,7 @@ appUI <- function(siteInfo = getSiteInfo(expectConfigFile = FALSE)) {
         "About",
         icon = icon("info-circle"),
         h3("About GeneKeepR"),
-        p("Version 1.0.8"),
+        p(paste("Version", getVersion(date = FALSE))),
         p("Developed at Oregon National Primate Research Center"),
         p("Funded by NIH grants P51 RR13986 and P51 OD011092")
       ),
