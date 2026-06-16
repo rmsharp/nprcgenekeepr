@@ -34,6 +34,16 @@ knitr::opts_chunk$set(echo = TRUE)
     only when an actual site configuration file identifies the colony as ONPRC,
     and is hidden at other sites and when no configuration file is present.
     (#47, #49)
+  - Fixed a startup crash. The application no longer fails to launch when a
+    site configuration file written in the documented format (comment lines,
+    blank lines, and multi-line / quoted / comma-separated values, as in
+    `example_nprcgenekeepr_config`) is present in the user's home directory.
+    Configuration is now read through the same tolerant parser used by
+    `getSiteInfo()`, via the new `loadSiteConfig()`, which logs a warning and
+    leaves the configuration unset (rather than aborting boot) if the file is
+    missing or malformed. The previous loader used `read.table(sep = "=")`,
+    which assumed a strict two-column table and stopped with "line N did not
+    have 2 elements". (#50)
 - Data input / quality control
   - IDs may no longer contain a period ("."). `qcStudbook()` and `geneDrop()`
     now reject `id`/`sire`/`dam` values that contain a period; with

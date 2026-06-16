@@ -21,6 +21,7 @@
 #' @seealso \code{\link{modGeneticValueServer}} for genetic value analysis
 #' @seealso \code{\link{shouldShowChangedColsTab}} for changed columns tab
 #'  logic
+#' @seealso \code{\link{loadSiteConfig}} for site configuration loading
 #'
 #' @importFrom shiny reactiveValues reactiveVal observeEvent updateNavbarPage
 #'         updateTabsetPanel reactive observe req insertTab removeTab
@@ -56,15 +57,11 @@ appServer <- function(input, output, session) {
   # Load Configuration
   # ========================================
   observe({
-    # Attempt to load configuration file
-    sysInfo <- Sys.info()
-    configFile <- nprcgenekeepr::getConfigFileName(sysInfo)[["configFile"]]
-    if (!is.null(configFile) && file.exists(configFile)) {
-      shared$config <- read.table(configFile,
-                                  header = TRUE,
-                                  sep = "=",
-                                  stringsAsFactors = FALSE)
-    }
+    # Load the site configuration via the tolerant getSiteInfo() parser.
+    # loadSiteConfig() returns NULL (and logs a warning) rather than erroring
+    # on a missing or malformed config file, so a documented-format config can
+    # never crash the app on boot (issue #50).
+    shared$config <- loadSiteConfig()
   })
 
   # ========================================
