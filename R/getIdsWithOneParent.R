@@ -23,6 +23,7 @@
 #' nrow(p)
 #' p <- addBackSecondParents(p, ped)
 #' nrow(p)
+#' getIdsWithOneParent(p)
 getIdsWithOneParent <- function(uPed) {
   uPed$id[(is.na(uPed$sire) & !is.na(uPed$dam)) |
     (!is.na(uPed$sire) & is.na(uPed$dam))]

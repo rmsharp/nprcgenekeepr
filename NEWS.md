@@ -179,6 +179,13 @@ R. Mark Sharp, Ph.D.
     - Fixed column name expectations in genetic value tests
       (meanKinship/genomeUniqueness)
     - Network-dependent tests now skip gracefully
+  - Documentation
+    - Corrected the roxygen `@examples` for `getPedDirectRelatives()`,
+      `cumulateSimKinships()`, and `getIdsWithOneParent()` so each help
+      example calls the function it documents. Previously each example
+      demonstrated a different function; in particular
+      `getPedDirectRelatives()` showed `getLkDirectRelatives()` and
+      omitted its required `ped` argument.
 
 # nprcgenekeepr 1.0.8 (20250723)
 
