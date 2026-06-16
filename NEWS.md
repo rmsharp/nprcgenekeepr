@@ -18,6 +18,15 @@ R. Mark Sharp, Ph.D.
     colony-origin field, or when no animal has an unknown parent. This
     wires the exported `getPotentialParents()` (including the
     gestation-derived dam-exclusion window) into the app. (#48)
+  - New **ORIP Reporting** tab. Provides formatted colony summaries for
+    submission to the NIH Office of Research Infrastructure Programs
+    (ORIP): site information, a colony summary table (totals by sex with
+    founder counts via `isFounder()`), and genetic-diversity metrics
+    (mean kinship and mean genome uniqueness) computed from the loaded
+    pedigree and genetic-value results. Two **Export** buttons download
+    the ORIP report and the demographics as CSV. This mounts the
+    previously unwired `modORIPReporting` module pair into the
+    application. (#47)
 - Data input / quality control
   - IDs may no longer contain a period (“.”). `qcStudbook()` and
     `geneDrop()` now reject `id`/`sire`/`dam` values that contain a

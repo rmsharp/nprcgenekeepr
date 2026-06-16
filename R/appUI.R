@@ -160,6 +160,15 @@ appUI <- function() {
     ),
 
     # ====================
+    # ORIP Reporting Tab
+    # ====================
+    tabPanel(
+      "ORIP Reporting",
+      icon = icon("file-invoice"),
+      modORIPReportingUI("oripReporting")
+    ),
+
+    # ====================
     # Breeding Groups Tab
     # ====================
     tabPanel(

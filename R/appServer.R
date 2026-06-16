@@ -281,6 +281,14 @@ appServer <- function(input, output, session) {
     founderStats = gvResults$founderStats
   )
 
+  # ORIP Reporting Module
+  modORIPReportingServer(
+    "oripReporting",
+    pedigree = reactive(shared$currentPedigree),
+    geneticValues = reactive(shared$geneticValues),
+    siteConfig = reactive(getSiteInfo(expectConfigFile = FALSE))
+  )
+
   # Breeding Groups Module
   modBreedingGroupsServer(
     "breedingGroups",
