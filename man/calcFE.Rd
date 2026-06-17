@@ -12,8 +12,9 @@ calcFE(ped)
 }
 \value{
 The founder equivalents \code{FE = 1 / sum(p ^ 2)}, where \code{p}
-is average number of descendants and \code{r} is the mean number of founder
-alleles retained in the gene dropping experiment.
+is the vector of founder mean contributions to the current descendants and
+\code{r} is the mean number of founder alleles retained in the gene
+dropping experiment.
 }
 \description{
 Part of the Genetic Value Analysis

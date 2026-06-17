@@ -4,8 +4,14 @@
 ## This file is part of nprcgenekeepr
 #' This is the main function for the Genetic Value Analysis.
 #'
-#' @return A dataframe with the genetic value report. Animals are ranked
-#' in order of descending value.
+#' @return An object of class \code{nprcgenekeeprGV}: a list with elements
+#' \code{report} (a dataframe with the genetic value report, with animals
+#' ranked in order of descending value), \code{kinship} (the kinship matrix),
+#' \code{gu} (genome uniqueness values), \code{fe} (founder equivalents),
+#' \code{fg} (founder genome equivalents), \code{maleFounders} and
+#' \code{femaleFounders} (dataframes of the known male and female founder
+#' records), \code{nMaleFounders} and \code{nFemaleFounders} (the counts of
+#' those founders), and \code{total} (the total number of known founders).
 #'
 #' @param ped The pedigree information in data.frame format
 #' @param guIter Integer indicating the number of iterations for the gene-drop

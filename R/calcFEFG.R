@@ -6,9 +6,9 @@
 #'
 #' @return The list containing the founder equivalents,
 #' \code{FE = 1 / sum(p ^ 2)}, and the founder genome equivalents,
-#' \code{FG = 1 / sum( (p ^ 2) / r} where \code{p} is average number of
-#' descendants and \code{r} is the mean number of founder alleles retained
-#' in the gene dropping experiment.
+#' \code{FG = 1 / sum( (p ^ 2) / r} where \code{p} is the vector of founder
+#' mean contributions to the current descendants and \code{r} is the mean
+#' number of founder alleles retained in the gene dropping experiment.
 #'
 #' @param ped the pedigree information in datatable format.  Pedigree
 #' (req. fields: id, sire, dam, gen, population).

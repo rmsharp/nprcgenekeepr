@@ -8,8 +8,9 @@
 #' known or both unknown); \code{calcFE} stops with an error otherwise.
 #'
 #' @return The founder equivalents \code{FE = 1 / sum(p ^ 2)}, where \code{p}
-#' is average number of descendants and \code{r} is the mean number of founder
-#' alleles retained in the gene dropping experiment.
+#' is the vector of founder mean contributions to the current descendants and
+#' \code{r} is the mean number of founder alleles retained in the gene
+#' dropping experiment.
 #'
 #' @param ped the pedigree information in datatable format.  Pedigree
 #' (req. fields: id, sire, dam, gen, population).
