@@ -37,6 +37,7 @@ docs/*
 !docs/audits/
 !docs/audits/**
 pkgdown_site/
+.quarto/
 dashboard.html
 /doc/
 /Meta/

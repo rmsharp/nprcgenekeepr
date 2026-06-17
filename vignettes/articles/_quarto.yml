@@ -1,0 +1,10 @@
+# Mixed-mode pkgdown configuration.
+#
+# pkgdown (>= 2.1.0) turns this articles directory into a Quarto project when it
+# builds any `.qmd` article here. Restricting the render list to `*.qmd` keeps
+# Quarto from touching `.Rmd` files, so RMarkdown continues to build the four
+# CRAN vignettes in ../ unchanged. This whole directory is build-ignored
+# (`^vignettes/articles$` in .Rbuildignore), so neither this file nor the
+# articles ship in the package tarball -- they are website-only.
+project:
+  render: ['*.qmd']

@@ -22,6 +22,9 @@ integration testing and CRAN-submission preparation.
   and dropped from the CRAN vignette set (§6.3(b)), coordinated with the CRAN resubmission.
   Implementation is per-slice, in separate sessions — see the analysis doc §7.1.
   **Slice 1 done (S106):** `inst/extdata/meeting_notes.Rmd` → `.qmd` (build-ignored dev doc).
+  **Slice 2 done (S107):** pkgdown mixed `.qmd`/`.Rmd` mode stood up (`vignettes/articles/_quarto.yml`)
+  + first Quarto article `vignettes/articles/breeding-group-formation.qmd` (build-ignored,
+  website-only, zero CRAN risk; verified via `quarto render` + `pkgdown::build_article`).
 - **Audit follow-ups** (full findings in `PED_GV_AUDIT_2026-05-30.md`; open items in
   `BACKLOG.md`): NEW-53 (in-place ped mutation), NEW-45 (`geneDrop` period-in-id),
   NEW-20 (delete dead `makeGeneticDiversityDashboard.R`), PED-1/NEW-17 (founders-helper
