@@ -55,7 +55,7 @@
 #' data("finalRpt")
 #' finalRpt <- rankSubjects(finalRpt)
 "finalRpt"
-#' focalAnimals is a dataframe with one column (_id_) containing the of animal
+#' focalAnimals is a dataframe with one column (_id_) containing the animal
 #' Ids from the __examplePedigree__ pedigree
 #'
 #' They can be used to illustrate the identification of a population of
@@ -181,8 +181,9 @@
 #' \code{pedSameMaleIsSireAndDam}) used to
 #' demonstrate error detection by the qcStudbook function.
 "pedInvalidDates"
-#' pedMissingBirth is a dataframe with 8 rows and 5 columns (ego_id, sire,
-#' dam_id, sex, birth_date) representing a full pedigree with no errors
+#' pedMissingBirth is a dataframe with 8 rows and 4 columns (ego_id, sire,
+#' dam_id, sex) representing a full pedigree that is missing the birth_date
+#' column
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
 #' \code{pedFemaleSireMaleDam}, \code{pedgood},
@@ -200,7 +201,8 @@
 #' head(pedOne)
 "pedOne"
 #' pedSameMaleIsSireAndDam is a dataframe with 8 rows and 5 columns (ego_id,
-#' sire, dam_id, sex, birth_date) representing a full pedigree with no errors
+#' sire, dam_id, sex, birth_date) representing a full pedigree in which the
+#' same male animal is listed as both a sire and a dam
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
 #' \code{pedFemaleSireMaleDam}, \code{pedgood},
