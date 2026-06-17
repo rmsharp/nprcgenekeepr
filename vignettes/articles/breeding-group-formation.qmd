@@ -58,8 +58,9 @@ breederPed <- qcStudbook(examplePedigree,
 
 `qcStudbook()` validates and standardizes the studbook (checking parentage,
 sexes, dates, and minimum parent age). Next we mark the focal population -- here,
-the founders still in the colony -- and trim the pedigree to those animals plus
-the ancestors needed to compute their kinships.
+the non-founders still in the colony (those with at least one known parent) --
+and trim the pedigree to those animals plus the ancestors needed to compute
+their kinships.
 
 ```{r}
 #| label: focal
