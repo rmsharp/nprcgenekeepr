@@ -88,3 +88,16 @@ README\.*\.png$
 ^RECOMMENDED_SKILLS.*\.md$
 ^PED_GV_AUDIT.*
 ^TECH_DEBT_AUDIT.*
+
+# Build cruft (S102, CRAN submission Phase 1). Every line here is a perl regex --
+# an unbalanced paren even in a comment aborts R CMD build, so keep lines paren-free.
+# The .DS_Store / .Rapp.history lines are end-anchored only (no leading ^) so they
+# also catch copies in subdirs, e.g. man/.DS_Store and inst/extdata/.Rapp.history.
+\.DS_Store$
+\.Rapp\.history$
+^inst/extdata/.*\.qmd$
+^inst/extdata/README_modules\.md$
+^inst/extdata/example_usage\.R$
+^inst/extdata/trulyUnknownParents\.R$
+^inst/extdata/submission\.txt$
+^inst/_pkgdown\.yml$

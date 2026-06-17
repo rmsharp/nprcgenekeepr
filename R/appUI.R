@@ -6,6 +6,10 @@
 #'   \code{configFile} elements gate the Oregon (ONPRC)-specific ORIP Reporting
 #'   tab, which is shown only for an actual ONPRC configuration (see
 #'   \code{\link{shouldShowOripTab}}).
+#' @return A \code{shiny.tag.list} object (as produced by
+#'   \code{shiny::tagList()}) describing the complete GeneKeepR user interface;
+#'   pass it as the \code{ui} argument to \code{shiny::shinyApp()} or
+#'   \code{shiny::runApp()}.
 #' @importFrom bslib bs_theme
 #' @importFrom shiny navbarPage tabPanel icon fluidRow column div h1 p hr
 #'             actionButton navbarMenu tags includeScript
