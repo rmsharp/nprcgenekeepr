@@ -1,5 +1,10 @@
 # Tests for modBreedingGroups.R - Breeding Group Formation Shiny Module
 
+# Slow shiny-module integration tests (many shiny::testServer() calls); skip on
+# CRAN to keep check elapsed time within limits. They still run on CI and
+# locally. The analytical functions exercised here have their own unit tests.
+testthat::skip_on_cran()
+
 test_that("modBreedingGroupsUI returns a shiny.tag object", {
   ui <- modBreedingGroupsUI("test")
   expect_true(inherits(ui, "shiny.tag"))

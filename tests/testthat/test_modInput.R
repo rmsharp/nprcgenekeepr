@@ -1,5 +1,10 @@
 # Tests for modInput.R - Data Input and Quality Control Shiny Module
 
+# Slow shiny-module integration tests (many shiny::testServer() calls); skip on
+# CRAN to keep check elapsed time within limits. They still run on CI and
+# locally. The analytical functions exercised here have their own unit tests.
+testthat::skip_on_cran()
+
 test_that("modInputUI returns a shiny.tag object", {
   ui <- modInputUI("test")
   expect_true(inherits(ui, "shiny.tag"))

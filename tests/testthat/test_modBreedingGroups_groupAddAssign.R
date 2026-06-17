@@ -4,6 +4,11 @@
 # These tests verify that modBreedingGroupsServer properly integrates with
 # the groupAddAssign() function instead of using placeholder random assignment.
 
+# Slow shiny-module integration tests (many shiny::testServer() calls); skip on
+# CRAN to keep check elapsed time within limits. They still run on CI and
+# locally. The analytical functions exercised here have their own unit tests.
+testthat::skip_on_cran()
+
 # =============================================================================
 # Helper Functions for Creating Valid Test Data
 # =============================================================================

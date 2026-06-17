@@ -10,8 +10,8 @@ bkmat <- kinship(qcPed$id, qcPed$sire, qcPed$dam, qcPed$gen,
 kin <- convertRelationships(bkmat, qcPed)
 relClasses <- as.data.frame(makeRelationClassesTable(kin))
 relClasses$`Relationship Class` <- as.character(relClasses$`Relationship Class`)
-relClassTbl <- kin[!kin$relation == "Self", ] %>%
-  group_by(relation) %>%
+relClassTbl <- kin[!kin$relation == "Self", ] |>
+  group_by(relation) |>
   summarise(count = n())
 test_that("makeRelationsClasses retains the correct counts", {
   for (rel in relClasses[, "Relationship Class"]) {

@@ -232,9 +232,9 @@ errorTbl <- data.frame(
 #| tbl.alt: >
 #|   Error definitions.
 # print-error-definition-tbl
-knitr::kable(errorTbl) %>%
-  kable_styling(full_width = FALSE) %>%
-  column_spec(1L, bold = TRUE, color = "blue") %>%
+knitr::kable(errorTbl) |>
+  kable_styling(full_width = FALSE) |>
+  column_spec(1L, bold = TRUE, color = "blue") |>
   column_spec(2L, width = "30em")
 ```
 

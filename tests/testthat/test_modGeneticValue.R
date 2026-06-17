@@ -1,5 +1,10 @@
 # Tests for modGeneticValue.R - Genetic Value Analysis Shiny Module
 
+# Slow shiny-module integration tests (many shiny::testServer() calls); skip on
+# CRAN to keep check elapsed time within limits. They still run on CI and
+# locally. The analytical functions exercised here have their own unit tests.
+testthat::skip_on_cran()
+
 # Helper function to create valid test pedigrees
 # This ensures proper sex assignments (sires are male, dams are female)
 # and that all parent references are valid
