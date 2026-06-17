@@ -17,7 +17,7 @@ They were initially selected for having low kinship coefficients.
 }
 }
 \usage{
-qcBreeders
+data(qcBreeders)
 }
 \description{
 qcBreeders is a list of 29 baboon IDs that are potential breeders

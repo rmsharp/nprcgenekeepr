@@ -8,7 +8,7 @@
 An object of class \code{data.frame} with 3694 rows and 12 columns.
 }
 \usage{
-examplePedigree
+data(examplePedigree)
 }
 \description{
 Represents pedigree from \emph{ExamplePedigree.csv}.

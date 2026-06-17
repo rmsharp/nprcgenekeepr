@@ -10,7 +10,7 @@ having a sire labeled as female and a dam labeled as male.}
 An object of class \code{data.frame} with 8 rows and 5 columns.
 }
 \usage{
-pedFemaleSireMaleDam
+data(pedFemaleSireMaleDam)
 }
 \description{
 It is one of six pedigrees (\code{pedDuplicateIds},

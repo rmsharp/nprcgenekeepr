@@ -31,7 +31,7 @@ example baboon pedigree file provided by Deborah Newman,
 Southwest National Primate Center.
 }
 \usage{
-ped1Alleles
+data(ped1Alleles)
 }
 \description{
 ped1Alleles is a dataframe created by the geneDrop function

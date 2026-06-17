@@ -10,7 +10,7 @@ dam_id, sex, birth_date) representing a full pedigree with values in the
 An object of class \code{data.frame} with 8 rows and 5 columns.
 }
 \usage{
-pedInvalidDates
+data(pedInvalidDates)
 }
 \description{
 It is one of six pedigrees (\code{pedDuplicateIds},

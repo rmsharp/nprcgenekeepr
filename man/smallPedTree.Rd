@@ -8,7 +8,7 @@
 An object of class \code{list} of length 17.
 }
 \usage{
-smallPedTree
+data(smallPedTree)
 }
 \description{
 Access it using the following commands.

@@ -27,7 +27,7 @@ Column 5002 is the \code{parent} column with values of \code{sire} and
 }
 }
 \usage{
-lacy1989PedAlleles
+data(lacy1989PedAlleles)
 }
 \description{
 lacy1989PedAlleles is a dataframe produced by \code{geneDrop} on

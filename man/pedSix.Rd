@@ -9,7 +9,7 @@ and demonstration}
 An object of class \code{data.frame} with 8 rows and 7 columns.
 }
 \usage{
-pedSix
+data(pedSix)
 }
 \description{
 This is used for testing and demonstration.

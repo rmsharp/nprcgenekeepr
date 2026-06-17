@@ -10,7 +10,7 @@ record.}
 An object of class \code{data.frame} with 9 rows and 5 columns.
 }
 \usage{
-pedDuplicateIds
+data(pedDuplicateIds)
 }
 \description{
 It is one of six pedigrees (\code{pedDuplicateIds},

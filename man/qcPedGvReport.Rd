@@ -8,7 +8,7 @@
 An object of class \code{list} (inherits from \code{GVnprcmanag}) of length 8.
 }
 \usage{
-qcPedGvReport
+data(qcPedGvReport)
 }
 \description{
 qcPedGvReport is a genetic value report for illustrative purposes only.

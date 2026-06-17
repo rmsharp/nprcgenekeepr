@@ -9,7 +9,7 @@ configuration file \code{example_nprcgenekeepr_config}}
 An object of class \code{character} of length 34.
 }
 \usage{
-exampleNprcgenekeeprConfig
+data(exampleNprcgenekeeprConfig)
 }
 \description{
 It contains a working version of a \strong{nprcgenekeepr} configuration

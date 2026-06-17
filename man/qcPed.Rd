@@ -8,7 +8,7 @@
 An object of class \code{data.frame} with 280 rows and 8 columns.
 }
 \usage{
-qcPed
+data(qcPed)
 }
 \description{
 \describe{

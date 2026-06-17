@@ -23,7 +23,7 @@ file = "data/pedWithGenotypeReport.RData")
 }
 }
 \usage{
-pedWithGenotypeReport
+data(pedWithGenotypeReport)
 }
 \description{
 pedWithGenotypeReport is a list containing the output of \code{reportGV}.

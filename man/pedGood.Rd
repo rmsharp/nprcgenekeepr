@@ -9,7 +9,7 @@ sex, birth_date) representing a full pedigree with no errors.}
 An object of class \code{data.frame} with 8 rows and 5 columns.
 }
 \usage{
-pedGood
+data(pedGood)
 }
 \description{
 It is one of six pedigrees (\code{pedDuplicateIds},

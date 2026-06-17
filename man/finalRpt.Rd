@@ -11,7 +11,7 @@ is at the state just prior to calling \code{rankSubjects} inside
 An object of class \code{list} of length 3.
 }
 \usage{
-finalRpt
+data(finalRpt)
 }
 \description{
 finalRpt is a list object created from the list object \emph{rpt} prepared

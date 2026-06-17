@@ -8,7 +8,7 @@
 An object of class \code{data.frame} with 375 rows and 8 columns.
 }
 \usage{
-rhesusPedigree
+data(rhesusPedigree)
 }
 \description{
 Represents an obfuscated pedigree from \emph{rhesusPedigree.csv} where the

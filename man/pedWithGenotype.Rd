@@ -9,7 +9,7 @@ genotypes.}
 An object of class \code{data.frame} with 280 rows and 12 columns.
 }
 \usage{
-pedWithGenotype
+data(pedWithGenotype)
 }
 \description{
 \describe{

@@ -28,7 +28,7 @@ generation) of the animal indicated by the \code{id} column.}
 }
 }
 \usage{
-lacy1989Ped
+data(lacy1989Ped)
 }
 \description{
 lacy1989Ped small hypothetical pedigree

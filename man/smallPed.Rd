@@ -8,7 +8,7 @@
 An object of class \code{data.frame} with 17 rows and 6 columns.
 }
 \usage{
-smallPed
+data(smallPed)
 }
 \description{
 It has the following structure:

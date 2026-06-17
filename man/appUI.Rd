@@ -15,9 +15,10 @@ tab, which is shown only for an actual ONPRC configuration (see
 \code{\link{shouldShowOripTab}}).}
 }
 \value{
-A \code{shiny.tag.list} object (as produced by \code{shiny::tagList()})
-describing the complete GeneKeepR user interface; pass it as the \code{ui}
-argument to \code{shiny::shinyApp()} or \code{shiny::runApp()}.
+A \code{shiny.tag.list} object (as produced by
+\code{shiny::tagList()}) describing the complete GeneKeepR user interface;
+pass it as the \code{ui} argument to \code{shiny::shinyApp()} or
+\code{shiny::runApp()}.
 }
 \description{
 Main Application UI for nprcgenekeepr

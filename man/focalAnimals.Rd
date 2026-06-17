@@ -9,7 +9,7 @@ Ids from the \strong{examplePedigree} pedigree.}
 An object of class \code{data.frame} with 327 rows and 1 columns.
 }
 \usage{
-focalAnimals
+data(focalAnimals)
 }
 \description{
 They can be used to illustrate the identification of a population of

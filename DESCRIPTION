@@ -67,7 +67,7 @@ Suggests:
     pkgdown,
     png,
     rmarkdown,
-    roxygen2 (>= 7.3.2),
+    roxygen2 (>= 8.0.0),
     shinyBS,
     shinyWidgets,
     spelling,
@@ -75,9 +75,9 @@ Suggests:
 Language: en-US
 Encoding: UTF-8
 License: MIT + file LICENSE
-RoxygenNote: 7.3.2
 LazyData: TRUE
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 Config/renv/profiles/dev/dependencies: checkhelper, devtools, httpuv, qpdf, markdown, pak, roxygen2, spelling, usethis
 Config/Needs/website: quarto
+Config/roxygen2/version: 8.0.0

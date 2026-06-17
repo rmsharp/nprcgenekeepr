@@ -8,7 +8,7 @@
 An object of class \code{data.frame} with 31 rows and 3 columns.
 }
 \usage{
-rhesusGenotypes
+data(rhesusGenotypes)
 }
 \description{
 There are  object.
