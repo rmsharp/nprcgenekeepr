@@ -1,9 +1,12 @@
 # Remove automatically generated IDs from pedigree
 
-Currently uses leading "U" to identify automatically generated IDs. TODO
-change identification of automatically generated IDs from looking for an
-initial "U" at the beginning of an ID to a function call so that actual
-ID that start with a "U" are possible.
+Identifies automatically generated IDs via `isGeneratedUnknownId()`, the
+shared detection predicate derived from the configurable auto-ID format
+(see
+[`getAutoIdFormat`](https://github.com/rmsharp/nprcgenekeepr/reference/getAutoIdFormat.md);
+default a leading "U"). Routing detection through that single predicate
+is the "function call" the former inline leading-"U" check was flagged
+to become.
 
 ## Usage
 

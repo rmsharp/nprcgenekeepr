@@ -23,10 +23,10 @@ skip orientation, skip close-out, and continue past the deliverable.
 
 ## Project Overview
 
-**nprcgenekeepr** (Version 1.0.8) is an R package implementing Genetic
-Tools for Colony Management. Initially conceived and developed as a
-Shiny web application at the Oregon National Primate Research Center
-(ONPRC), it has been enhanced to have more capability as a Shiny
+**nprcgenekeepr** (Version 1.1.0.9000) is an R package implementing
+Genetic Tools for Colony Management. Initially conceived and developed
+as a Shiny web application at the Oregon National Primate Research
+Center (ONPRC), it has been enhanced to have more capability as a Shiny
 application and to expose functions for use either interactively or in R
 scripts.
 
@@ -244,10 +244,10 @@ workstream **and** the RED→GREEN→REFACTOR gates.
 Project institutional memory (Sessions 1–28+; 33 learnings, ~88k chars)
 lives in
 [`PROJECT_LEARNINGS.md`](https://github.com/rmsharp/nprcgenekeepr/PROJECT_LEARNINGS.md)
-— extracted from this file to stay under Claude Code’s 40k `CLAUDE.md`
-limit. **Read it when you need prior-session context; append new
-learnings there, not here.** Base methodology-level learnings remain in
-`SESSION_RUNNER.md`.
+— extracted from this file to keep `CLAUDE.md` within its size budget
+(Claude Code targets ~200 lines / ~25 KB). **Read it when you need
+prior-session context; append new learnings there, not here.** Base
+methodology-level learnings remain in `SESSION_RUNNER.md`.
 
 ### Project-specific Failure Modes
 

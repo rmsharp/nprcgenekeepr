@@ -2,6 +2,56 @@
 
 ## nprcgenekeepr 1.1.0.9000 (20260126)
 
+- Shiny application
+  - New **Potential Parents** tab. For a loaded pedigree it identifies
+    in-colony animals (`fromCenter`) that have at least one unknown
+    parent and lists candidate sires and dams, screened by estimated
+    conception date (birth minus the maximum gestational period). A
+    numeric **Maximum Gestational Period (days)** input (default 210,
+    the rhesus upper bound) is overridable per run; a **Find Potential
+    Parents** button computes on the current pedigree; results display
+    in a sortable table and download as CSV. The tab degrades gracefully
+    when no pedigree is loaded, when the pedigree lacks the `fromCenter`
+    colony-origin field, or when no animal has an unknown parent. This
+    wires the exported
+    [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+    (including the gestation-derived dam-exclusion window) into the app.
+    ([\#48](https://github.com/rmsharp/nprcgenekeepr/issues/48))
+  - New **ORIP Reporting** tab. Provides formatted colony summaries for
+    submission to the NIH Office of Research Infrastructure Programs
+    (ORIP): site information, a colony summary table (totals by sex with
+    founder counts via
+    [`isFounder()`](https://github.com/rmsharp/nprcgenekeepr/reference/isFounder.md)),
+    and genetic-diversity metrics (mean kinship and mean genome
+    uniqueness) computed from the loaded pedigree and genetic-value
+    results. Two **Export** buttons download the ORIP report and the
+    demographics as CSV. This mounts the previously unwired
+    `modORIPReporting` module pair into the application. The tab is
+    **ONPRC-specific**: it is shown only when an actual site
+    configuration file identifies the colony as ONPRC, and is hidden at
+    other sites and when no configuration file is present.
+    ([\#47](https://github.com/rmsharp/nprcgenekeepr/issues/47),
+    [\#49](https://github.com/rmsharp/nprcgenekeepr/issues/49))
+  - Fixed a startup crash. The application no longer fails to launch
+    when a site configuration file written in the documented format
+    (comment lines, blank lines, and multi-line / quoted /
+    comma-separated values, as in `example_nprcgenekeepr_config`) is
+    present in the user’s home directory. Configuration is now read
+    through the same tolerant parser used by
+    [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md),
+    via the new
+    [`loadSiteConfig()`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSiteConfig.md),
+    which logs a warning and leaves the configuration unset (rather than
+    aborting boot) if the file is missing or malformed. The previous
+    loader used `read.table(sep = "=")`, which assumed a strict
+    two-column table and stopped with “line N did not have 2 elements”.
+    ([\#50](https://github.com/rmsharp/nprcgenekeepr/issues/50))
+  - The **About** panel now shows the installed package version
+    dynamically (via
+    [`getVersion()`](https://github.com/rmsharp/nprcgenekeepr/reference/getVersion.md)),
+    reading it from the package `DESCRIPTION` instead of a hard-coded
+    string. The previous static “Version 1.0.8” had drifted out of date;
+    deriving it at run time keeps it from going stale again.
 - Data input / quality control
   - IDs may no longer contain a period (“.”).
     [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
@@ -23,6 +73,16 @@
     [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md));
     a duplicate id previously triggered the cryptic base-R error
     “duplicate ‘row.names’ are not allowed”. (NEW-46)
+  - Reading an animal list or pedigree file whose final line has no
+    trailing newline no longer emits the confusing “incomplete final
+    line found by readTableHeader” warning. Every row, including the
+    last, was always read correctly – the warning was harmless noise.
+    [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md),
+    [`getGenotypes()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGenotypes.md),
+    [`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md),
+    and the Shiny file upload now suppress only that one warning while
+    letting every other read warning through.
+    ([\#4](https://github.com/rmsharp/nprcgenekeepr/issues/4))
 - Genetic value analysis
   - [`summarizeKinshipValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/summarizeKinshipValues.md)
     now reports the `secondQuartile` column as the lower hinge
@@ -48,6 +108,49 @@
     predicate had been written inline in a dozen places; it is now
     defined once and reused throughout the genetic-value and reporting
     functions. (PED-1 / NEW-17)
+  - The Pedigree Browser’s “Trim pedigree based on focal animals” option
+    now includes both the ancestors **and** the descendants of the focal
+    animals (it previously included ancestors only). A new exported
+    helper,
+    [`getDescendantPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDescendantPedigree.md),
+    returns the transitive descendants of a set of probands – the
+    downward mirror of
+    [`getProbandPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getProbandPedigree.md).
+    Trimming is strict-lineal: collateral relatives (siblings, cousins,
+    mates) are not added. (NEW-47)
+  - The format of the auto-generated placeholder IDs created for unknown
+    parents (see
+    [`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md))
+    is now configurable from a single source of truth shared by ID
+    generation and detection. Two new exported helpers,
+    [`getAutoIdFormat()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAutoIdFormat.md)
+    and
+    [`setAutoIdFormat()`](https://github.com/rmsharp/nprcgenekeepr/reference/setAutoIdFormat.md),
+    read and set the `sprintf` format (default `"U%04d"`); with no
+    configuration all existing behavior is unchanged. Detection is now
+    centralized in one internal predicate used by
+    [`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md),
+    the Pedigree Browser display filter,
+    [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+    founder counts, and
+    [`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
+    – replacing eight scattered string literals and reconciling their
+    formerly inconsistent case-handling to case-sensitive (matching the
+    uppercase prefix that generation emits). (NEW-48 / issue
+    [\#44](https://github.com/rmsharp/nprcgenekeepr/issues/44) /
+    [\#38](https://github.com/rmsharp/nprcgenekeepr/issues/38))
+  - [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+    now selects candidate dams using a gestation-derived exclusion
+    window driven by its existing `maxGestationalPeriod` parameter,
+    replacing a fixed half-year window. A female who delivered another
+    offspring within `maxGestationalPeriod` days of a focal animal’s
+    birth is excluded as a candidate dam (a female bears one offspring
+    at a time), so dam selection now responds to the species’ gestation
+    length rather than a hard-coded +/- 182.5 days. Sire selection
+    already used this parameter; the sire (presence at conception) / dam
+    (presence at birth) exit-check asymmetry is intentional and now
+    documented. (NEW-49 / issue
+    [\#31](https://github.com/rmsharp/nprcgenekeepr/issues/31))
 - Major changes
   - Architectural Changes
     - Modular Shiny Architecture
@@ -130,6 +233,18 @@
     - Fixed column name expectations in genetic value tests
       (meanKinship/genomeUniqueness)
     - Network-dependent tests now skip gracefully
+  - Documentation
+    - Corrected the roxygen `@examples` for
+      [`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md),
+      [`cumulateSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/cumulateSimKinships.md),
+      and
+      [`getIdsWithOneParent()`](https://github.com/rmsharp/nprcgenekeepr/reference/getIdsWithOneParent.md)
+      so each help example calls the function it documents. Previously
+      each example demonstrated a different function; in particular
+      [`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
+      showed
+      [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+      and omitted its required `ped` argument.
 
 ## nprcgenekeepr 1.0.8 (20250723)
 

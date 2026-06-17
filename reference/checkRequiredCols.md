@@ -25,6 +25,14 @@ checkRequiredCols(cols, reportErrors)
 NULL is returned if all required columns are present. See description of
 `reportErrors` for return values when required columns are missing.
 
+## Details
+
+When `reportErrors = TRUE`, `NA` entries in `cols` are treated as
+ordinary non-matching column names when building the list of missing
+required columns, rather than causing an error. (Earlier versions could
+error with `"missing value where TRUE/FALSE needed"` on such
+out-of-contract input.)
+
 ## Examples
 
 ``` r

@@ -48,7 +48,7 @@ used by <code>addParents</code></p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">addUIds</span><span class="op">(</span><span class="va">ped</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">addUIds</span><span class="op">(</span><span class="va">ped</span>, format <span class="op">=</span> <span class="fu"><a href="getAutoIdFormat.html">getAutoIdFormat</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -59,6 +59,11 @@ used by <code>addParents</code></p>
 <dd><p>datatable that is the <code>Pedigree</code>. It contains pedigree
 information. The fields <code>sire</code> and <code>dam</code> are required.</p></dd>
 
+
+<dt id="arg-format">format<a class="anchor" aria-label="anchor" href="#arg-format"></a></dt>
+<dd><p><code>sprintf</code> template for the generated placeholder IDs;
+defaults to <code><a href="getAutoIdFormat.html">getAutoIdFormat()</a></code> (<code>"U%04d"</code>).</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -66,10 +71,11 @@ information. The fields <code>sire</code> and <code>dam</code> are required.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The generated placeholder IDs have the form <code>Unnnn</code> (a leading "U" plus
-a zero-padded integer), so they are alphanumeric and never contain a period
-("."), honoring the ID rule enforced at data input by
-<code><a href="qcStudbook.html">qcStudbook</a></code>.</p>
+    <p>The generated placeholder IDs default to the form <code>Unnnn</code> (a leading
+"U" plus a zero-padded integer), so they are alphanumeric and never contain a
+period ("."), honoring the ID rule enforced at data input by
+<code><a href="qcStudbook.html">qcStudbook</a></code>. The format is configurable via
+<code><a href="setAutoIdFormat.html">setAutoIdFormat</a></code> (default <code>"U%04d"</code>).</p>
     </div>
 
     <div class="section level2">

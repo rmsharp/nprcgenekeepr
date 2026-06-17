@@ -51,3 +51,6 @@ for genetic value analysis
 
 [`shouldShowChangedColsTab`](https://github.com/rmsharp/nprcgenekeepr/reference/shouldShowChangedColsTab.md)
 for changed columns tab logic
+
+[`loadSiteConfig`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSiteConfig.md)
+for site configuration loading

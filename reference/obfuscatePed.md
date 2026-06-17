@@ -57,14 +57,14 @@ ped
 #> 2 d2 <NA> <NA>   F   0 2002-06-22 <NA> 24.0     original
 #> 3 s1 <NA> <NA>   M   0 2000-07-18 <NA> 25.9     original
 #> 4 s2 <NA> <NA>   M   0 2005-06-19 <NA> 21.0     original
-#> 5 o1   s1   d1   F   1 2015-02-04 <NA> 11.3     original
-#> 6 o2   s1   d2   F   1 2009-03-17 <NA> 17.2     original
+#> 5 o1   s1   d1   F   1 2015-02-04 <NA> 11.4     original
+#> 6 o2   s1   d2   F   1 2009-03-17 <NA> 17.3     original
 #> 7 o3   s2   d2   F   1 2012-04-11 <NA> 14.2     original
 #> 8 o4   s2   d2   M   1 2008-04-13 <NA> 18.2     original
 obfuscatedPed
 #>       id   sire    dam sex gen      birth exit  age recordStatus
-#> 1 LS7SJB   <NA>   <NA>   F   0 2003-03-17 <NA> 23.2     original
-#> 2 P4MENX   <NA>   <NA>   F   0 2002-05-29 <NA> 24.0     original
+#> 1 LS7SJB   <NA>   <NA>   F   0 2003-03-17 <NA> 23.3     original
+#> 2 P4MENX   <NA>   <NA>   F   0 2002-05-29 <NA> 24.1     original
 #> 3 NZZUQQ   <NA>   <NA>   M   0 2000-07-10 <NA> 25.9     original
 #> 4 KV6EPH   <NA>   <NA>   M   0 2005-05-30 <NA> 21.0     original
 #> 5 QER817 NZZUQQ LS7SJB   F   1 2015-01-22 <NA> 11.4     original

@@ -54,8 +54,11 @@ This module processes the studbook by:
 - Ensuring a `gen` column exists via
   [`findGeneration()`](https://github.com/rmsharp/nprcgenekeepr/reference/findGeneration.md)
 
-- Optionally trimming to ancestors of focal animals via
+- Optionally trimming to the ancestors and descendants of focal animals
+  via
   [`trimPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/trimPedigree.md)
+  and
+  [`getDescendantPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDescendantPedigree.md)
 
 ## See also
 

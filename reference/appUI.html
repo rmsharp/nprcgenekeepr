@@ -45,11 +45,25 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">appUI</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">appUI</span><span class="op">(</span>siteInfo <span class="op">=</span> <span class="fu"><a href="getSiteInfo.html">getSiteInfo</a></span><span class="op">(</span>expectConfigFile <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
-  </main></div>
+
+<dl><dt id="arg-siteinfo">siteInfo<a class="anchor" aria-label="anchor" href="#arg-siteinfo"></a></dt>
+<dd><p>Named list of site configuration as returned by
+<code><a href="getSiteInfo.html">getSiteInfo</a></code>; defaults to
+<code>getSiteInfo(expectConfigFile = FALSE)</code>. Its <code>center</code> and
+<code>configFile</code> elements gate the Oregon (ONPRC)-specific ORIP Reporting
+tab, which is shown only for an actual ONPRC configuration (see
+<code><a href="shouldShowOripTab.html">shouldShowOripTab</a></code>).</p></dd>
+
+</dl></div>
+
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

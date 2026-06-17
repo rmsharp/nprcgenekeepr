@@ -69,8 +69,10 @@ selection, pedigree processing, filtering, and data export.</p>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list of reactive values:</p><ul><li><p><code>pedigree</code> - Filtered pedigree for display (respects trim/unknown settings)</p></li>
-<li><p><code>processedPedigree</code> - Full pedigree with population, pedNum, gen columns</p></li>
+    <p>A list of reactive values:</p><ul><li><p><code>pedigree</code> - Filtered pedigree for display (respects
+trim/unknown settings)</p></li>
+<li><p><code>processedPedigree</code> - Full pedigree with population, pedNum,
+gen columns</p></li>
 <li><p><code>focalAnimals</code> - Character vector of focal animal IDs</p></li>
 <li><p><code>nAnimals</code> - Count of animals in filtered pedigree</p></li>
 <li><p><code>populationCount</code> - Count of animals marked as population</p></li>
@@ -81,7 +83,8 @@ selection, pedigree processing, filtering, and data export.</p>
     <p>This module processes the studbook by:</p><ul><li><p>Adding a <code>population</code> column via <code><a href="setPopulation.html">setPopulation()</a></code></p></li>
 <li><p>Adding a <code>pedNum</code> column via <code><a href="findPedigreeNumber.html">findPedigreeNumber()</a></code></p></li>
 <li><p>Ensuring a <code>gen</code> column exists via <code><a href="findGeneration.html">findGeneration()</a></code></p></li>
-<li><p>Optionally trimming to ancestors of focal animals via <code><a href="trimPedigree.html">trimPedigree()</a></code></p></li>
+<li><p>Optionally trimming to the ancestors and descendants of focal
+animals via <code><a href="trimPedigree.html">trimPedigree()</a></code> and <code><a href="getDescendantPedigree.html">getDescendantPedigree()</a></code></p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

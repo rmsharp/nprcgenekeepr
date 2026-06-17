@@ -24,6 +24,12 @@ addSexAndAgeToGroup(ids, ped)
 
 Dataframe with Id, Sex, and Current Age
 
+## Details
+
+An empty `ids` vector yields a zero-row data frame that still contains
+all three columns (`ids`, `sex`, `age`), with `sex` an empty factor, so
+the returned schema does not depend on the number of ids supplied.
+
 ## Examples
 
 ``` r
@@ -33,10 +39,10 @@ data("qcPed")
 df <- addSexAndAgeToGroup(ids = qcBreeders, ped = qcPed)
 head(df)
 #>           ids sex      age
-#> Q0RGP7 Q0RGP7   F 21.32512
-#> C1ICXL C1ICXL   F 10.30253
-#> J3D3N5 J3D3N5   M 25.37440
-#> VFS0XB VFS0XB   M 20.36961
-#> HP3E04 HP3E04   M 19.21697
-#> 2KULR3 2KULR3   F 12.98015
+#> Q0RGP7 Q0RGP7   F 21.34155
+#> C1ICXL C1ICXL   F 10.31896
+#> J3D3N5 J3D3N5   M 25.39083
+#> VFS0XB VFS0XB   M 20.38604
+#> HP3E04 HP3E04   M 19.23340
+#> 2KULR3 2KULR3   F 12.99658
 ```

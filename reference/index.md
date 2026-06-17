@@ -218,6 +218,9 @@
 - [`getAnimalsWithHighKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAnimalsWithHighKinship.md)
   : Forms a list of animal Ids and animals related to them
 
+- [`getAutoIdFormat()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAutoIdFormat.md)
+  : Get the auto-generated unknown-ID format
+
 - [`getBoxWhiskerDescription()`](https://github.com/rmsharp/nprcgenekeepr/reference/getBoxWhiskerDescription.md)
   : Get Box and Whisker Plot Description
 
@@ -242,6 +245,9 @@
 
 - [`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
   : Get demographic data
+
+- [`getDescendantPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDescendantPedigree.md)
+  : Gets pedigree with descendants of provided group.
 
 - [`getEmptyErrorLst()`](https://github.com/rmsharp/nprcgenekeepr/reference/getEmptyErrorLst.md)
   : Creates a empty errorLst object
@@ -371,6 +377,9 @@
   lacy1989PedAlleles is a dataframe produced by `geneDrop` on
   `lacy1989Ped` with 5000 iterations.
 
+- [`loadSiteConfig()`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSiteConfig.md)
+  : Load the site configuration for the modular Shiny application
+
 - [`logModuleEvent()`](https://github.com/rmsharp/nprcgenekeepr/reference/logModuleEvent.md)
   : Log Module Events
 
@@ -442,6 +451,12 @@
 
 - [`modPedigreeUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPedigreeUI.md)
   : Pedigree Browser Module - UI Function
+
+- [`modPotentialParentsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPotentialParentsServer.md)
+  : Potential Parents Module - Server Function
+
+- [`modPotentialParentsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPotentialParentsUI.md)
+  : Potential Parents Module - UI Function
 
 - [`modPyramidServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPyramidServer.md)
   : Age-Sex Pyramid Module - Server Function
@@ -592,6 +607,9 @@
 - [`savePlotToFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/savePlotToFile.md)
   : Save Plot to File
 
+- [`setAutoIdFormat()`](https://github.com/rmsharp/nprcgenekeepr/reference/setAutoIdFormat.md)
+  : Set the auto-generated unknown-ID format
+
 - [`setExit()`](https://github.com/rmsharp/nprcgenekeepr/reference/setExit.md)
   : Sets the exit date, if there is no exit column in the table
 
@@ -604,6 +622,9 @@
 
 - [`shouldShowChangedColsTab()`](https://github.com/rmsharp/nprcgenekeepr/reference/shouldShowChangedColsTab.md)
   : Determine if Changed Columns tab should be displayed
+
+- [`shouldShowOripTab()`](https://github.com/rmsharp/nprcgenekeepr/reference/shouldShowOripTab.md)
+  : Determine if the ORIP Reporting tab should be displayed
 
 - [`smallPed`](https://github.com/rmsharp/nprcgenekeepr/reference/smallPed.md)
   : smallPed is a hypothetical pedigree

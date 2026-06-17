@@ -254,7 +254,30 @@ workstream:
 
 ### 3C: Document Learnings
 
-Update the workstream document and/or the Learnings table below:
+Capture what this session learned so the next session inherits it.
+Always update the relevant workstream document for any workstream-level
+pattern or anti-pattern. Then record session learnings in the right
+place for your audience:
+
+- **Adopter project** (you copied this `SESSION_RUNNER.md` from the
+  methodology repo): put project learnings in your `CLAUDE.md` →
+  **Project-Specific Methodology Adaptations** → **Project-specific
+  Learnings** subsection. Do NOT edit the “Learnings (added by
+  sessions)” table further down in this file — `SESSION_RUNNER.md` is
+  synced from canonical and must stay byte-identical, or local edits
+  will block future syncs (see BOOTSTRAP, “Customizations Go in
+  CLAUDE.md, Not in Synced Files”). Agents read `CLAUDE.md` at session
+  start, so a learning recorded there is applied on top of the base
+  protocol.
+- **Canonical methodology repo** (you are dogfooding the framework on
+  itself): record framework-level learnings by appending a new row to
+  the “Learnings (added by sessions)” table further down in this file.
+  This repo has no `CLAUDE.md` Adaptations section because the
+  SESSION_RUNNER table is its learnings home; the seed rows there are
+  real framework learnings, not placeholders. Append new rows — do not
+  edit or overwrite existing ones.
+
+Capture, wherever it lands:
 
 - What you did, how you did it, and why
 - Files referenced during this session
@@ -417,8 +440,12 @@ failed delivery is the user’s trust.
 
 ## Learnings (added by sessions)
 
-*This table starts empty. Each session adds learnings here. Over time,
-this becomes the project’s institutional memory.*
+*These rows are the methodology’s own framework learnings, recorded as
+the canonical repo dogfoods itself — canonical sessions append new rows
+here (append only; do not edit existing rows). Adopter projects do NOT
+edit this synced table — record project learnings in `CLAUDE.md` →
+Project-Specific Methodology Adaptations → Project-specific Learnings
+instead (see 3C).*
 
 | \# | Learning | Source | When to Apply |
 |----|----|----|----|

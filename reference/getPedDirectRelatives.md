@@ -35,8 +35,15 @@ for the Ids provided.
 
 ``` r
 library(nprcgenekeepr)
-## Have to a vector of focal animals
-focalAnimals <- c("1X2701", "1X0101")
-suppressWarnings(getLkDirectRelatives(ids = focalAnimals))
-#> NULL
+## A pedigree to search and a focal animal whose direct relatives we want
+ped <- nprcgenekeepr::lacy1989Ped
+getPedDirectRelatives(ids = "E", ped = ped)
+#>   id sire  dam gen population
+#> 1  A <NA> <NA>   0       TRUE
+#> 2  B <NA> <NA>   0       TRUE
+#> 3  C    A    B   1       TRUE
+#> 4  D    A    B   1       TRUE
+#> 5  E <NA> <NA>   0       TRUE
+#> 6  F    D    E   2       TRUE
+#> 7  G    D    E   2       TRUE
 ```

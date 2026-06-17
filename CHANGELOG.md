@@ -15,6 +15,1931 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-16 — Audit of issue \#37 (exported functions not used by the app) — delta re-verification (Session 97)
+
+- **Deliverable:**
+  `docs/audits/ISSUE_37_UNUSED_EXPORTS_AUDIT_2026-06-16.md` — a
+  read-only delta re-verification of \#37 against the S78 triage
+  (2026-06-14). **TDD phase N/A** (no `R/`, test, `NAMESPACE`, `man/`,
+  or issue-state change). **0 closes performed** (closing \#37 requires
+  owner confirmation).
+- **Headline — \#37’s actionable surface is fully drained:** both S78
+  wire-in candidates shipped + their tracking issues CLOSED (**\#47**
+  ORIP module mounted at `appUI.R:181`/`appServer.R:286`; **\#48**
+  `getPotentialParents` via new `modPotentialParents` at
+  `appUI.R:200`/`appServer.R:302`); the one docfix \#37 surfaced is
+  fixed (`getPedDirectRelatives` `@examples`, S87 `2a64770f`); the
+  logging island (`safeExecute`/`logModuleEvent`/`savePlotToFile`) still
+  has **0 live callers**. Current reachability: **127 app-used / 39
+  unused** = **0 wire-in · 39 keep-as-public-API · 0 retire**
+  (`safeExecute` the lone conditional future-retire candidate).
+- **Method note (→ Learning 92):** the renv project library isn’t
+  materialized in this checkout
+  ([`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)
+  bootstraps an empty renv and fails), so reachability was recomputed
+  statically — `sys.source` the 202 `R/*.R` files +
+  [`codetools::findGlobals`](https://rdrr.io/pkg/codetools/man/findGlobals.html)
+  under `Rscript --vanilla` (base lib only). **A method bug was
+  caught:** `findGlobals(merge = FALSE)$functions` false-flagged
+  `chooseDate` unused (it’s passed as a value to
+  [`Map()`](https://rdrr.io/r/base/funprog.html) in `setExit.R:54` →
+  lands in `$variables`); `merge = TRUE` is the correct conservative
+  test and reconciled the result with S78.
+- **Scope (Learning 91 applied at scoping):** read the issue body + its
+  S65/S78 triage comments + both prior audit reports + CHANGELOG
+  **before** any work → scoped a delta, not a re-run of S78’s verified
+  per-function disposition. Right-sized **SOLO** under ultracode (a
+  fan-out would repeat S78’s adversarially-verified triage = the
+  Learning-91 redundancy).
+- **Recommendation:** owner judgment — **close \#37** (no actionable
+  work remains) **or keep it open + update the now-stale body** (it
+  predates the wire-ins; lists 3 unused S3 methods, not the verified 4 —
+  adds `summary.nprcgenekeeprGV`).
+- **\[news-vs-changelog\]:** internal audit findings doc = dev-process
+  history, **CHANGELOG only**, no `NEWS` (no user-facing or package
+  change). **Phase-3E N/A** — read-only audit changes no runtime
+  behavior (stated, not silently skipped).
+- **PROJECT_LEARNINGS.md:** Learning 92 added.
+
+### 2026-06-16 — Implemented-but-open audit of all 14 open issues (Learning 90 follow-through) (Session 95)
+
+- **Deliverable:**
+  `docs/audits/IMPLEMENTED_BUT_OPEN_AUDIT_2026-06-16.md` — a read-only
+  audit classifying every open GitHub issue by implementation status to
+  find any \#49-style work that shipped but was never closed. Motivated
+  by S94’s discovery that \#49 had been fully implemented in S84 yet
+  stayed OPEN ~10 sessions. Method: a 14-agent
+  classify→adversarial-verify workflow; the two “criteria appear met”
+  findings (#45, \#37) re-verified firsthand by the session. **TDD phase
+  N/A** (read-only audit, no code surface). **0 closes performed**
+  (closing requires owner confirmation).
+- **Headline result — the implemented-but-open backlog is DRAINED:**
+  **0** fully-implemented-but-open closeable candidates (no second
+  \#49). Classifications: not-implemented **9** (#2, \#10, \#11, \#12,
+  \#13, \#28, \#29, \#36, \#46 — genuinely unbuilt, mostly
+  external-system/methodology features), policy-hold **4** (#45, \#9,
+  \#5, \#1), ambiguous **1** (#37). Coverage 14/14 (100%).
+- **Two owner-judgment items surfaced (not auto-closes):** **\#45**
+  (umbrella — its four written acceptance criteria are met via closed
+  sub-task \#31 `0eeee3f6` + spec on \#28, but it intentionally parents
+  still-deferred \#28 → owner decides whether the umbrella closes);
+  **\#37** (standing inventory — its only actionable wire-ins \#47/#48
+  are both shipped and closed, the rest are keep-as-public-API by
+  decision → owner decides whether to retire the inventory issue).
+  **\#1/#5/#9** confirmed genuinely partial (a tested first increment
+  shipped; a specific owner-named criterion still unmet) — correctly
+  open.
+- **Process note (→ Learning 91):** this audit substantially re-ran
+  S62’s `docs/audits/BACKLOG_STALENESS_AUDIT_2026-06-12.md` (same
+  question, all then-open issues, 4 days prior). The right scope was a
+  delta against that baseline; the prior audit + the CHANGELOG/handoff
+  record of the issue-by-issue drain (#4/#33/#49) should have been
+  checked at Phase 1 before a full sweep. Owner directed: keep the
+  report as-is (it stands as the firsthand “no second \#49”
+  confirmation + S62 trend comparison).
+- **\[news-vs-changelog\]:** internal audit findings doc = dev-process
+  history, **CHANGELOG only**, no `NEWS` (no user-facing or package
+  change). **Phase-3E N/A** — read-only audit changes no runtime
+  behavior (stated, not silently skipped).
+- **PROJECT_LEARNINGS.md:** Learning 91 added.
+
+### 2026-06-16 — Complete the `fillBins()` `@return` documentation (#33) (Session 92)
+
+- **Deliverable:** Completed the `@return` roxygen for the `@noRd`
+  internal `fillBins()` (`R/fillBins.R:6`) — replaced the
+  `#' @return A list with two TODO: RMS provide description` placeholder
+  with a `\describe{}` block documenting both returned elements
+  (`males`/`females` = integer vectors of counts per age bin).
+  **Docs-only on a non-exported internal** (no `R/` behavior, NAMESPACE,
+  `man/`, or DESCRIPTION change). Workstream = development under
+  **Strict TDD** — phase declared every response; gates via
+  `AskUserQuestion` (pre-RED test-approach scope, PRE-RED→RED,
+  RED→GREEN, GREEN→REFACTOR); **0 stakeholder corrections**.
+- **RED driver (since `@noRd` ⇒ no `man/*.Rd` for the S87 `Rd2ex`
+  pattern):** a doc-completeness test in
+  `tests/testthat/test_fillBins.R` reads `R/fillBins.R` via
+  `testthat::test_path("..","..","R","fillBins.R")` with
+  `skip_if(!file.exists(...))` for the installed context, **extracts
+  only the `@return` block** (between the `@return` tag and the next
+  roxygen tag), and asserts no `TODO` plus both
+  `\bmales\b`/`\bfemales\b` — scoping to the block so the title’s
+  existing `\code{males}`/`\code{females}` can’t falsely satisfy it (3
+  failures RED at HEAD, all for the right reason; the failure output
+  proved the extractor isolated only the `@return` line).
+- **Contract-lock guard (green at HEAD, honestly classified):** a
+  behavioral `test_that` asserting `fillBins(pedOne, seq(0L,20L,5L))`
+  returns a list named `c("males","females")`, both `expect_type`
+  `"integer"`, `expect_length == length(lowerAges)` — verifies the docs
+  match real behavior and guards future drift.
+- **Verification:** `test_fillBins.R` 11/11 green;
+  `devtools::document()` produced **no** NAMESPACE/`man/`/DESCRIPTION
+  change (confirms the `@noRd` path); `lintr` 0 on `R/fillBins.R` and
+  the test file; full clean-regression read **0 failed / 0 error** (5
+  warnings = the designed `loadSiteConfig` safety-net logs; 169 skips).
+  **\[news-vs-changelog\]:** `@noRd` internal docs never render to a
+  user-facing man page → **CHANGELOG only**, no `NEWS`. Phase-3E
+  (runtime smoke test) **N/A** — a roxygen comment on a `@noRd` internal
+  changes no runtime behavior (stated, not silently skipped). \#33 left
+  OPEN pending owner confirmation.
+
+### 2026-06-16 — Behavioral upload-path regression tests for \#4; close \#4 (Session 90)
+
+- **Deliverable:** Finalized issue **\#4** — CLOSED it on owner
+  confirmation (the fix shipped in S89, `8a3e3631`, was
+  Phase-3E-verified) and added behavioral regression coverage for the
+  Shiny UPLOAD path that S89 had covered only structurally (a
+  `deparse(body(modInputServer))` grep). Two NEW test files;
+  **test-only** (no `R/`/NAMESPACE/`man/`/DESCRIPTION change).
+  Workstream = development under **Strict TDD** — phase declared every
+  response, gates via `AskUserQuestion` (pre-RED scope, PRE-RED→RED,
+  RED→GREEN, GREEN→REFACTOR, **+ a mid-GREEN reframe** when
+  investigation changed what was testable), **0 stakeholder
+  corrections**.
+- **NEW `tests/testthat/test_modInput_incomplete_final_line.R` (normal
+  suite, in-process):** drives `modInputServer`’s `getData` observer via
+  [`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html)
+  with a TINY (4-line) no-trailing-newline upload through both reader
+  branches (read.csv + read.table) and asserts (a) the
+  `"incomplete final line"` warning does NOT escape the read and (b) all
+  3 founder records survive QC. **Carries the fix-specific teeth:**
+  un-muffling either read site makes both blocks RED (round-trip
+  verified S90); restoring → green.
+- **NEW `tests/testthat/test-e2e-input-incomplete-final-line.R` (opt-in
+  `NPRC_RUN_E2E`, browser):** drives the assembled app via
+  [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html),
+  uploads a no-trailing-newline copy of `ExamplePedigree.csv` through
+  both reader paths, and asserts the cleaned studbook flows end-to-end
+  into the Pedigree Browser table (all **3,694** records). Full-stack
+  data-integrity net.
+- **Key discovery (drove the two-test design; cost several cycles):**
+  the `"incomplete final line"` warning is (1) a *console-only* artifact
+  that never reaches the DOM or `app$get_logs()` in the assembled app,
+  AND (2) only fires for *small* files — `read.table`/`read.csv` warn
+  only when the header/type-detection scan actually reaches the
+  unterminated final line, so a realistic-size file (e.g. 3694-row
+  `ExamplePedigree.csv`) never triggers it. ⇒ the warning-suppression
+  cannot be teeth-tested in a browser; the **testServer** test (tiny
+  fixture, in-process where the warning IS observable) owns that teeth,
+  and the **browser E2E** owns end-to-end processing.
+- **Verification:** testServer test 6/6 green; teeth round-trip
+  (un-muffle both sites → both blocks RED → restore → green) confirmed;
+  browser E2E 2/2 green (opt-in, drives the INSTALLED app via real
+  Chrome); full clean-regression read **0 failed / 0 error** (195 files;
+  5 warnings = the designed `loadSiteConfig` safety-net logs); all test
+  lines ≤80. **Phase-3E:** the browser E2E IS the runtime verification
+  (drove the installed app); the testServer test drives the real module
+  server. **Issue \#4 CLOSED.**
+- **\[news-vs-changelog\]:** test-only (the user-facing fix landed in
+  NEWS at S89) → **CHANGELOG only**.
+- **PROJECT_LEARNINGS.md:** Learning 88 added.
+
+### 2026-06-16 — Fix \#4: suppress the “incomplete final line” warning on files with no trailing newline (Session 89)
+
+- **Deliverable:** Fixed issue **\#4** — reading an animal list or
+  pedigree file whose final line lacks a trailing newline emitted
+  `"incomplete final line found by readTableHeader on '...'"`
+  (originally reported from a Shiny text upload, `0.txt`). Reproduced
+  firsthand that this is **noise, not data loss**: every row, including
+  the last, is read correctly (`nrow == 3`); only the warning is the
+  problem. Owner chose the **root-cause fix across all readers via a
+  shared helper** (over fixing only the reported upload path).
+  Workstream = development under **Strict TDD** — phase declared every
+  response, **3 gates** via `AskUserQuestion` (PRE-RED→RED, RED→GREEN,
+  GREEN→REFACTOR) **+ a separate pre-RED scope question**
+  (all-readers-via-helper vs named-readers vs app-only), **0 stakeholder
+  corrections**.
+- **RED:** NEW `tests/testthat/test_muffleIncompleteFinalLine.R` (7
+  tests): helper unit teeth — a no-trailing-newline read emits **no**
+  warning *and* preserves every row; an unrelated `warning("...")`
+  **still propagates** (proves it is surgical, not blanket
+  `suppressWarnings`); the helper returns `expr`’s value unchanged.
+  Integration —
+  [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md)/[`getGenotypes()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGenotypes.md)
+  emit no warning + preserve rows;
+  [`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md)
+  emits no `"incomplete final line"` warning (its post-read LabKey call
+  returns an error list without a DB; the unrelated config-missing
+  warning is acceptable); and `modInputServer`’s body references the
+  helper (structural lock for the server-internal `readDataFile`
+  closure). All 7 failed at HEAD for the right reason (helper missing →
+  3 errors; readers still warn → fail; body lacks the wrap → fail).
+- **GREEN:** NEW non-exported `@noRd` internal helper
+  `R/muffleIncompleteFinalLine.R` =
+  `withCallingHandlers(expr, warning = ...)` that
+  `invokeRestart("muffleWarning")` **only** when `conditionMessage`
+  matches `"incomplete final line"` (all other warnings propagate).
+  Wrapped the read call at each of the four sites: `getPedigree.R`,
+  `getGenotypes.R` (`read.table`), `getFocalAnimalPed.R` (`read.csv`),
+  and `modInput.R`’s `readDataFile` (both the text `read.table` and CSV
+  `read.csv` branches). No new imports (base functions). `document()`
+  produced **no** NAMESPACE/`man/`/DESCRIPTION change (helper is
+  `@noRd`; reader signatures unchanged). **REFACTOR = confirmed no-op**
+  (helper + wraps already minimal/idiomatic/lint-clean).
+- **Verification:** new file **7/7 green** (12 expectations); full
+  clean-regression read **0 failed / 0 error** (192 files, 1046 tests,
+  167 skips; the 5 warnings are S85’s designed `loadSiteConfig`
+  safety-net logs); `lintr` **0 lints** on all 5 changed `R/` files.
+  **Phase-3E = PERFORMED, PASS:** `devtools::install()` then exercised
+  the exported readers in the **installed** package —
+  `getPedigree`/`getGenotypes` on no-newline files emit no warning and
+  preserve all rows; `getFocalAnimalPed` no longer emits the
+  incomplete-final-line warning **but its unrelated config-missing
+  warning still propagates** (surgical proof); a control file *with* a
+  trailing newline still reads cleanly.
+- **\[news-vs-changelog\]:** user-facing file-reading bug fix → **BOTH**
+  `NEWS.Rmd`→`NEWS.md` (new bullet under `1.1.0.9000` → Data input /
+  quality control; rendered from source, diff = only that bullet)
+  **and** this CHANGELOG entry. **Issue \#4 left OPEN** pending owner
+  confirmation (standing close-only-on-owner-confirmation rule).
+- **PROJECT_LEARNINGS.md:** Learning 87 added.
+
+### 2026-06-16 — Housekeeping: About-tab version derived from DESCRIPTION (stale “Version 1.0.8” → dynamic getVersion()) (Session 88)
+
+- **Deliverable:** Replaced the stale hard-coded `Version 1.0.8` strings
+  (carried since S56) with the current package version. The runtime fix:
+  the Shiny **About** panel (`R/appUI.R:230`) now renders
+  `paste("Version", getVersion(date = FALSE))`, reusing the existing
+  exported
+  [`getVersion()`](https://github.com/rmsharp/nprcgenekeepr/reference/getVersion.md)
+  helper (which reads `packageVersion("nprcgenekeepr")`) so the
+  displayed version tracks `DESCRIPTION` (`1.1.0.9000`) and can never
+  drift again — the root-cause fix the owner chose over a hard-coded
+  literal. The `CLAUDE.md` project-overview prose was updated to
+  `1.1.0.9000` as a plain doc edit. Workstream = development under
+  **Strict TDD** — phase declared every response, 3 gates via
+  `AskUserQuestion` (PRE-RED→RED, RED→GREEN, GREEN→REFACTOR) + a
+  separate pre-RED approach question (dynamic vs hard-coded), **0
+  stakeholder corrections**.
+- **RED:** NEW `tests/testthat/test_appUI_version.R` renders
+  `as.character(appUI())` and, **scoped to the About panel** (the region
+  following its `About GeneKeepR` heading), asserts it shows
+  `Version <packageVersion>` and not the stale `Version 1.0.8`. Scoping
+  was essential: the app already shows a *dynamic* version in its title
+  bar (`appUI.R:47`,
+  [`getVersion()`](https://github.com/rmsharp/nprcgenekeepr/reference/getVersion.md)
+  with build date), so an un-scoped positive assertion was a **false
+  pass** at HEAD — it matched the title-bar string, not the About tab.
+  After scoping, both assertions failed for the right reason at HEAD.
+- **GREEN (2 edits, no `document()`):** `R/appUI.R:230`
+  `p("Version 1.0.8")` →
+  `p(paste("Version", getVersion(date = FALSE)))`; `CLAUDE.md` overview
+  `(Version 1.0.8)` → `(Version 1.1.0.9000)`. Body-only change to
+  [`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
+  → no `.Rd`/NAMESPACE/DESCRIPTION change (`utils` already imported;
+  `getVersion` already exported). **REFACTOR = confirmed no-op** (the
+  fix reuses the existing helper and is minimal/idiomatic).
+- **Verification:** new test 3/3 green; full clean-regression read **0
+  failed / 0 error** (5 warnings = the designed `loadSiteConfig`
+  safety-net logs from S85); `lintr` **0 lints** on `R/appUI.R`.
+  **Phase-3E = PERFORMED, PASS:** `devtools::install()` + a
+  [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+  boot of the **installed** stock app confirmed the live About panel
+  renders `<p>Version 1.1.0.9000</p>` with the stale `1.0.8` absent.
+- **\[news-vs-changelog\]:** user-facing (the displayed app version) →
+  **BOTH** `NEWS.Rmd`→`NEWS.md` (new bullet under `1.1.0.9000` → Shiny
+  application; rendered from source, diff = only that bullet) **and**
+  this CHANGELOG entry.
+- **PROJECT_LEARNINGS.md:** Learning 86 added.
+
+### 2026-06-16 — Docfix sweep: roxygen @examples corrections + dedicated tests for two zero-coverage functions (Session 87)
+
+- **Deliverable:** Owner-scoped **full sweep + tests**. (1) Corrected
+  the roxygen `@examples` for three exported functions whose documented
+  example never invoked the function it documents; (2) added dedicated
+  unit tests for
+  [`kinshipMatrixToKValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinshipMatrixToKValues.md)
+  and
+  [`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md),
+  which previously had **zero direct test references** in
+  `tests/testthat/`. Workstream = development (documentation + test
+  backfill) under **Strict TDD** — phase declared every response, 3
+  gates via `AskUserQuestion` (PRE-RED→RED, RED→GREEN, GREEN→REFACTOR) +
+  a separate pre-RED scope question, **0 stakeholder corrections**.
+- **Evidence-based scope (read-only sweep across all exported
+  functions):** 5 functions had an `@examples` block that never calls
+  its own function; 3 are real defects, 2 are S3-dispatch false
+  positives (`summary.nprcgenekeeprErr` /
+  `print.summary.nprcgenekeeprErr`, correctly demonstrated via the
+  [`summary()`](https://rdrr.io/r/base/summary.html)/auto-print generic
+  — left untouched).
+- **@examples fixes (3, GREEN):** `getPedDirectRelatives` (severe —
+  example called `getLkDirectRelatives(ids = ...)`, the wrong function,
+  and omitted the required `ped`; now
+  `getPedDirectRelatives(ids = "E", ped = nprcgenekeepr::lacy1989Ped)`);
+  `cumulateSimKinships` (final call was `createSimKinships(...)` → now
+  `cumulateSimKinships(ped, allSimParents, pop, n = 10)`);
+  `getIdsWithOneParent` (added a closing `getIdsWithOneParent(p)` call).
+  `document()` regenerated only the 3 corresponding `man/*.Rd`;
+  NAMESPACE unchanged (no new exports).
+- **RED:** NEW `tests/testthat/test_examples_invoke_documented_fn.R`
+  extracts each function’s `@examples` from `man/<fn>.Rd` via
+  [`tools::Rd2ex`](https://rdrr.io/r/tools/Rd2HTML.html) (skips under an
+  installed package with no `man/`) and asserts the example calls
+  `<fn>(`, plus that `getPedDirectRelatives` does **not** call
+  `getLkDirectRelatives(`. 4 assertions failed for the right reason at
+  HEAD; all GREEN after the fixes.
+- **Coverage backfill (honest degenerate cycle, declared):** NEW
+  `tests/testthat/test_kinshipMatrixToKValues.R` (shape, `n + n(n-1)/2`
+  row count, orientation-agnostic coefficient lookups, named/unnamed
+  matrices) and `tests/testthat/test_getAncestors.R` (founder/NA →
+  `character(0)`, one- and multi-generation lineages with exact order +
+  setequal, and a `createPedTree(lacy1989Ped)` integration check). The
+  functions already ship correctly, so these pass from the start;
+  expected values were independently hand-derived and **teeth-checked**
+  (perturbing an expected value fails).
+- **Verification:** all 3 fixed examples run clean end-to-end
+  ([`tools::Rd2ex`](https://rdrr.io/r/tools/Rd2HTML.html) → `source`),
+  the docs build-equivalent per SAFEGUARDS; full clean-regression read
+  **0 failed / 0 error** (the 5 warnings are the designed
+  `loadSiteConfig` safety-net logs from S85); `lintr` **0 lints** on the
+  3 changed `R/` files; new test files ≤80 cols by hand (`.lintr`
+  excludes `tests/`). **REFACTOR = confirmed no-op** (edits and tests
+  already minimal and idiomatic). **Phase-3E runtime smoke = N/A** —
+  documentation + tests only, no runtime behavior change (stated, not
+  silently skipped).
+- **\[news-vs-changelog\]:** the `getPedDirectRelatives` example was a
+  user-facing help defect (wrong function shown in
+  [`?getPedDirectRelatives`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md))
+  → **BOTH** `NEWS.Rmd`→`NEWS.md` (new Documentation bullet under
+  `1.1.0.9000` Minor changes; rendered from source, diff = only that
+  bullet) **and** this CHANGELOG entry.
+- **PROJECT_LEARNINGS.md:** Learning 85 added.
+
+### 2026-06-16 — Durable opt-in E2E for the ONPRC-gated ORIP Reporting tab (#47, \#49, Session 86)
+
+- **Deliverable:** NEW `tests/testthat/test-e2e-orip-module.R` — a
+  durable, opt-in (`NPRC_RUN_E2E=true`) browser-driven regression test
+  for the **ORIP Reporting** tab wired in S83 (#47) and ONPRC-gated in
+  S84 (#49). Drives the assembled modular app
+  ([`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)/`appServer`)
+  through
+  [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+  and asserts the build-time gate **end-to-end, both polarities**.
+  Workstream = development (regression backfill) under **Strict TDD** —
+  phase declared every response, 3 gates via `AskUserQuestion`, **0
+  stakeholder corrections**. **Test-only — no `R/`, `man/`, `NAMESPACE`,
+  or `NEWS` changes.**
+- **Four opt-in blocks** (each
+  `skip_if_not_installed("shinytest2"/"chromote")` + `skip_on_cran()` +
+  the `create_test_app()` opt-in gate): (1) **ONPRC config → tab
+  accessible** (active pane + the module’s unique body text); (2)
+  **ONPRC → content + download** — `#oripReporting-siteInfo` reports
+  `Center=ONPRC`, the Export ORIP Report button is present, and
+  `app$get_download("oripReporting-downloadORIPReport")` yields a
+  `Category/Metric/Value` CSV with a `Center=ONPRC` Site row
+  (deterministic — the handler writes the Site section even with no
+  pedigree loaded); (3) **no config (stock app) → tab ABSENT**
+  (`navigate_to_tab` returns FALSE AND `oripReporting-` absent from the
+  body); (4) **SNPRC config → tab ABSENT** (proves the gate keys on
+  `center`, not mere config presence).
+- **Config-injecting fixture:** a local `build_config_app_dir(center)`
+  writes a temp `app.R` that
+  `Sys.setenv(HOME=<temp dir with a complete documented-format .nprcgenekeepr_config>)`
+  BEFORE `shinyApp(appUI(), appServer)` — S84/S85’s HOME-override
+  Phase-3E recipe promoted to a reusable test fixture (the positive case
+  can’t use the stock app, which has no config → tab hidden; the
+  no-config negative case rides the stock `create_test_app()` app for
+  free). It reuses the opt-in gate by calling `create_test_app()` for
+  its skip side-effect — **no change to the shared
+  `helper-shinytest2.R`**.
+- **RED (honest degenerate cycle):** behavior already ships, so RED =
+  author teeth-bearing assertions + confirm all 4 blocks self-skip
+  cleanly with opt-in OFF (`SSSS`, 0 fail/error) — no literal
+  red-to-green.
+- **GREEN:** independently confirmed the three gate outcomes in-process
+  FIRST
+  ([`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+  parse →
+  [`shouldShowOripTab()`](https://github.com/rmsharp/nprcgenekeepr/reference/shouldShowOripTab.md):
+  ONPRC→TRUE, SNPRC→FALSE, no-config→FALSE),
+  `devtools::install(quick=TRUE)`, then ran all 4 blocks with
+  `NOT_CRAN=true NPRC_RUN_E2E=true` against the installed app → **9/9
+  expectations PASS** (real Chrome via `chromote`).
+- **REFACTOR:** reflowed 6 over-length lines to ≤80 (split the long
+  `lkPedColumns` config line into the shipped example config’s
+  multi-line format); re-verified parsing + a fresh 9/9 browser run.
+- **Verification:** full clean-regression read **0 failed / 0 error**
+  with this file **4-skipped** in the normal (opt-in-off) run; `lintr`
+  clean (`tests/` is excluded in `.lintr`, consistent with prior
+  sessions). The browser E2E run IS the Phase-3E runtime verification
+  (FM \#24 answered head-on).
+- **\[news-vs-changelog\]:** test-only addition (no `R/` code, no
+  user-facing feature; the ORIP feature itself landed in `NEWS.md` at
+  S83/S84) → **CHANGELOG only**.
+- **PROJECT_LEARNINGS.md:** Learning 84 added.
+
+### 2026-06-15 — Fix modular-app boot crash on a documented-format config file (#50, Session 85)
+
+- **Deliverable:** Fixed **\#50** — the modular app’s config-loading
+  observer (`R/appServer.R:58-68`) used
+  `read.table(configFile, header=TRUE, sep="=")`, which cannot parse the
+  **documented** config format
+  (`inst/extdata/example_nprcgenekeepr_config`: comment lines, blank
+  lines, multi-line / quoted / comma-separated values) and stopped with
+  *“line N did not have 2 elements”*. The observer was not wrapped in
+  `tryCatch`, so the error propagated and
+  [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+  failed to reach a stable state on boot for any deployment with such a
+  config file present. Workstream = development under **Strict TDD** —
+  phase declared every response, 3 gates via `AskUserQuestion` + a
+  separate pre-RED approach question, 0 stakeholder corrections.
+- **Decision (owner, via `AskUserQuestion`):** **Single source of
+  truth** (issue’s suggested fix \#1) over a minimal `tryCatch`-only
+  patch — parse via the tolerant
+  [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+  path so documented-format configs actually load, not merely fail-soft.
+  Safe because `shared$config` is passed to
+  `modInputServer`/`modPedigreeServer` but **referenced by neither
+  module body** (verified by grep), so changing its shape from
+  data.frame to the
+  [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+  named list has no runtime consumer impact.
+- **RED:** NEW `tests/testthat/test_loadSiteConfig.R` (5 tests / 8
+  expectations): no-file → `NULL`; documented
+  `example_nprcgenekeepr_config` → list with `center=="SNPRC"` &
+  `lkPedColumns>=6` (THE crash case); malformed config (missing
+  `center`) → `NULL`, no throw (`tryCatch` safety net); a
+  characterization guard that `read.table(sep="=")` errors on the
+  documented file (root-cause lock, green throughout); and a structural
+  `deparse(appServer)` assertion (uses `loadSiteConfig`, not
+  `read.table`). The behavioral + structural assertions failed for the
+  right reason at HEAD (undefined function / observer still on
+  `read.table`); the characterization guard passed.
+- **GREEN (2 edits + document()):** NEW exported `R/loadSiteConfig.R` =
+  `getConfigFileName(Sys.info())` → `NULL` if no file, else
+  `tryCatch(getSiteInfo(expectConfigFile = FALSE), error → flog.warn + NULL)`;
+  rewrote the `appServer` observer to
+  `shared$config <- loadSiteConfig()`. `document()` regenerated
+  NAMESPACE export + `man/loadSiteConfig.Rd`. **REFACTOR:** added a
+  bidirectional `@seealso \link{loadSiteConfig}` to `appServer`’s
+  roxygen (re-documented); no behavior change.
+- **Verification:** new tests 8/8 green; full clean-regression read **0
+  failed / 0 error**; `lintr` **0 lints** on all 3 changed files (the
+  transient `object_usage` warning for the brand-new function cleared
+  after `devtools::install()`).
+- **Phase-3E (runtime smoke): PERFORMED — PASS.** `AppDriver` boot of
+  the installed app with the **real documented
+  `example_nprcgenekeepr_config` (SNPRC) present**
+  (HOME-override-in-`app.R` recipe) — the exact file that crashed boot
+  before. App reached a stable state (`mainNavbar`=“Home”), navigation
+  to “Genetic Value Analysis” worked, **0** `read.table`/“did not have 2
+  elements” crash lines, **0** non-`shinyBS` error-level logs. This is
+  the boot S84 had to sidestep with a stripped single-line config; the
+  documented format now boots clean.
+- **\[news-vs-changelog\]:** user-facing (a startup-crash bug fix) →
+  **BOTH** `NEWS.Rmd`→`NEWS.md` (new bug-fix bullet under `1.1.0.9000`,
+  rendered from source; diff = only that bullet) **and** this CHANGELOG
+  entry.
+- **PROJECT_LEARNINGS.md:** Learning 83 added.
+
+### 2026-06-15 — Gate the ORIP Reporting tab to ONPRC-only (#49) + owner-confirmed close of \#47 (Session 84)
+
+- **Deliverable (1):** Owner-confirmed close of **\#47** (the ORIP
+  wire-in shipped S83). The owner accepted the always-visible v1; **\#47
+  CLOSED** with a comment referencing commit `6fd16715` and the 13/13
+  Phase-3E smoke, noting the ONPRC-gating follow-up is \#49.
+- **Deliverable (2):** Implemented **\#49** — the **ORIP Reporting** tab
+  is now shown **only for ONPRC**. Workstream = development under
+  **Strict TDD** — phase declared every response, 3 gates via
+  `AskUserQuestion` + a separate pre-RED scope/approach question, 0
+  stakeholder corrections.
+- **Decisions (owner, via `AskUserQuestion`):** (a) **Hide unless a real
+  ONPRC config** — show only when an actual config file exists AND its
+  `center` is ONPRC; the
+  [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+  default fallback (`center="ONPRC"` with no file, true in dev/CI) hides
+  the tab. (b) **Build-time conditional `tabPanel`** (not dynamic
+  `insertTab`) — the deployment center is fixed per server and
+  [`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
+  is evaluated once at construction, so the tab’s presence is a
+  per-deployment constant.
+- **RED:** NEW `tests/testthat/test_shouldShowOripTab.R` (5
+  pure-predicate cases) + rewrote
+  `tests/testthat/test_modORIPReporting.R` to inject a `siteInfo` list
+  and assert the tab is PRESENT under ONPRC+real-file and ABSENT under
+  SNPRC / no-file, plus a `deparse(appServer)` assertion that the server
+  mount is gated on `shouldShowOripTab`. All failed for the right reason
+  (undefined function / unused `siteInfo` arg / un-gated mount).
+- **GREEN (3 edits):** NEW exported `R/shouldShowOripTab.R`
+  (`isTRUE(hasConfigFile) && isTRUE(center == "ONPRC")`, mirroring
+  `shouldShowChangedColsTab`); parameterized
+  `appUI(siteInfo = getSiteInfo(expectConfigFile = FALSE))` with a
+  conditional ORIP `tabPanel`; gated the `modORIPReportingServer` mount
+  in `appServer.R` on the same predicate. `document()` regenerated
+  NAMESPACE + `man/`. REFACTOR = no-op (kept the inline-call idiom; no
+  helper extraction).
+- **Verification:** new tests pass (5/5 + 4/4); full clean-regression
+  read **0 failed / 0 error**; `lintr` **0 lints** on all 5 changed
+  files (the transient `object_usage` warning for the brand-new function
+  clears once the package is installed).
+- **Phase-3E (runtime smoke): PERFORMED — PASS (3/3 scenarios).**
+  `AppDriver` boots of the installed app under three real config-file
+  scenarios (each generated `app.R` sets `HOME` to a temp config dir):
+  **ONPRC** → tab present, navigable, all 5 ORIP outputs register
+  values, 4 siblings intact; **SNPRC** → tab absent (UI + server),
+  siblings intact; **no config** → tab absent, siblings intact. 0
+  ORIP-namespaced errors (only the pre-existing app-wide `shinyBS`
+  noise).
+- **Discovered (out of scope) → filed \#50:** the pre-existing
+  config-loading observer (`appServer.R:63`, from commit `6457a3a3`)
+  calls `read.table(configFile, header=TRUE, sep="=")`, which CANNOT
+  parse the documented config format (comments, blank lines, multi-line
+  quoted values) and **crashes the modular app on boot** whenever such a
+  config file is present. Surfaced by this session’s Phase-3E (first app
+  boot WITH a config file). NOT fixed here (unrelated to \#49); filed as
+  **\#50**.
+- **\[news-vs-changelog\]:** user-facing (visible-tab behavior change) →
+  **BOTH** `NEWS.Rmd`→`NEWS.md` (ORIP bullet augmented with the
+  ONPRC-gating note, rendered from source; diff = only that bullet)
+  **and** this CHANGELOG entry.
+- **PROJECT_LEARNINGS.md:** Learning 82 added.
+
+### 2026-06-15 — Wire in the ORIP Reporting module (#47, Session 83)
+
+- **Deliverable:** Mounted the existing-but-unwired `modORIPReporting`
+  module pair into the application — a new **ORIP Reporting** tab (after
+  Summary Statistics). Two production edits: `R/appUI.R` (`tabPanel`
+  with `modORIPReportingUI("oripReporting")`) and `R/appServer.R`
+  (`modORIPReportingServer("oripReporting", pedigree=…, geneticValues=…, siteConfig=…)`).
+  Implements **\#47** (left OPEN pending owner-confirmed close, per the
+  standing rule + the \#48 precedent). Workstream = development under
+  **Strict TDD** — phase declared every response, 3 gates via
+  `AskUserQuestion` + a separate PRE-RED UX-fork question (tab
+  placement), 0 stakeholder corrections.
+- **RED:** New `tests/testthat/test_modORIPReporting.R` — 2 wiring tests
+  (4 expectations) mirroring `test_modGvAndBgDesc.R`’s mount idiom: (1)
+  `as.character(appUI())` must contain the `oripReporting-` namespace
+  **and** “Office of Research Infrastructure Programs”; (2)
+  `deparse(appServer)` must contain `modORIPReportingServer` **and**
+  `oripReporting`. All 4 failed for the right reason at HEAD (markers
+  absent); no module unit tests needed (the module is already tested in
+  `test_modSiteConfig.R`).
+- **GREEN/REFACTOR:** 2 edits matching the 7 sibling
+  tabPanel/server-call idioms → 4/4 pass; full suite 0 failed / 0 error;
+  `lintr` 0 lints on all 3 changed files; `document()` no-op (module
+  already `@export`’d, NAMESPACE/man unchanged). REFACTOR was a
+  confirmed no-op (edits already idiomatic).
+- **Phase-3E (runtime smoke): PERFORMED — PASS (13/13).** Headless
+  `AppDriver` boot of the installed app: ORIP tab link + all 5
+  namespaced outputs/buttons + body text render; `mainNavbar` navigates
+  to it (active pane shows “Export ORIP Report”); 4 sibling tabs intact;
+  **0 `oripReporting`-namespaced JS errors** (the 12 `shinyBS` errors
+  are pre-existing app-wide noise, separated by namespace grep). Reused
+  Learning 78’s recipe (`NOT_CRAN=true` + `devtools::install()` first).
+- **Owner-clarified follow-up → \#49 filed:** the tab ships
+  **always-visible** this session; the owner clarified ORIP reporting is
+  **ONPRC-specific** and the tab should be **gated on an Oregon-specific
+  config**. That conditional-presentation change is deferred to new
+  issue **\#49** (out of scope here, per 1-and-done).
+- **\[news-vs-changelog\]:** user-facing (a new visible tab) → **BOTH**
+  `NEWS.Rmd`→`NEWS.md` (new “Shiny application” bullet under
+  `1.1.0.9000`, rendered from source) **and** this CHANGELOG entry. The
+  module was previously listed in NEWS only as an existing *module
+  file*, never as a reachable feature.
+
+### 2026-06-15 — Durable opt-in E2E test for the Potential Parents tab (Session 82)
+
+- **Deliverable:** Added
+  `tests/testthat/test-e2e-potential-parents-module.R` — a durable,
+  opt-in browser E2E test for the shipped **\#48** “Potential Parents”
+  tab, mirroring the sibling `test-e2e-*-module.R` pattern. Closes the
+  literal full-browser-chain gap S80 (mount-only AppDriver smoke +
+  `testServer`) and S81 (one owner click-through) both flagged.
+  Workstream = development (test backfill) under **Strict TDD** — phase
+  declared every response, 3 gates via `AskUserQuestion`, 0 stakeholder
+  corrections.
+- **Regression backfill ⇒ no production code:** the feature already
+  shipped (S80) and was owner-verified (S81), so this adds only a test
+  (no `R/`, `man/`, `NAMESPACE`, or `NEWS.md` changes). The degenerate
+  RED→GREEN was declared honestly at the gate: RED = assertions with
+  teeth that self-skip when `NPRC_RUN_E2E` is off; GREEN = run against
+  the shipped feature; REFACTOR = lint.
+- **4 opt-in `AppDriver` blocks:** (1) tab accessible; (2) controls
+  present (gestation input / Find button / Download CSV); (3)
+  **populated path** — upload `rhesusPedigree_fromCenter.csv` → Pedigree
+  Browser → Potential Parents → `maxGestationalPeriod=210` → Find →
+  assert status *“Found candidate parents for 50 animal”* + table *“of
+  50 entries”* + downloaded CSV = 50 rows & header
+  `id,nSires,nDams,sires,dams`; (4) graceful degradation —
+  `ExamplePedigree.csv` → Find → *“colony-origin”* warning. The `50`
+  regression lock was independently re-derived through the app’s exact
+  pipeline (both the filtered `pedigreeData` and full
+  `processedPedigree` variants give 50) before the browser run.
+- **Verification:** `devtools::install(quick=TRUE)` (E2E drives the
+  installed copy) → `NOT_CRAN=true NPRC_RUN_E2E=true` single-file run →
+  **7/7 expectations PASS, 0 fail/skip/error** in a real Chrome browser
+  (this is the Phase-3E runtime verification) → clean-regression read
+  **0 failed / 0 error / 0 true offenders** with the file skipping
+  cleanly in the normal suite → `lintr` 0 lints.
+- **PROJECT_LEARNINGS.md:** Learning 80 added (backfilling a regression
+  E2E under strict TDD: honest degenerate cycle, re-derive the locked
+  value through the exact pipeline, browser-E2E-is-Phase-3E, preserve
+  the sibling idiom).
+
+### 2026-06-15 — Owner-confirmed close of \#48 + clean fromCenter example dataset (Session 81)
+
+- **Deliverable:** Owner-confirmed close of **\#48** (the
+  getPotentialParents “Potential Parents” tab shipped S80), gated on a
+  **live owner click-through** verified end-to-end. Workstream =
+  verification + issue-management (**TDD phase = N/A** — added an
+  example dataset + diagnosis, no production logic/tests).
+- **Live click-through (Phase 3E, owner-run): PASS.** Part A graceful
+  degradation (`ExamplePedigree.csv` → “no fromCenter field”
+  empty-state); Part B populated path (new fromCenter file → 50-animal
+  sortable table, status “Found candidate parents for 50 animal(s)…”,
+  CSV downloaded as `potential_parents_2026-06-15.csv`). Existing tabs
+  intact.
+- **New shipped data:** `inst/extdata/rhesusPedigree_fromCenter.csv`
+  (`rhesusPedigree` + `fromCenter=TRUE`, 375 animals, unknown parents as
+  **literal `NA`**) — a purpose-built clean fixture, because every
+  shipped pedigree example is a deliberate input-error QC fixture and
+  none reaches the feature’s happy path. Owner chose the
+  `rhesusPedigree` source via `AskUserQuestion`.
+- **Defect caught by the click-through (FM \#24):** the first staged
+  file wrote unknowns as **empty cells**; the app’s reader (`read.table`
+  default `na.strings="NA"`, `modInput.R:274`) reads `""` as the empty
+  string, so `""` landed in both the sire and dam columns →
+  `correctParentSex.R:71` *“both sire and dam”* error. My headless
+  pre-check had used `na.strings=c("","NA")`, masking it. Rewrote with
+  literal `NA` and re-verified against the app’s exact reader → clean +
+  50 candidates.
+- **Diagnosed non-defects firsthand:** the *“fromCenter → fromcenter”*
+  case-change warning is cosmetic (`fixColumnNames.R:20` lowercases all
+  headers, `:61` restores `fromCenter`; the cleaned studbook keeps
+  `fromCenter`); *“No data available in table”* = the empty Errors-tab
+  placeholder.
+- **GitHub:** **\#48 CLOSED** (owner-confirmed). Umbrella **\#45**’s
+  getPotentialParents line now delivers verified app value. Open issues
+  18 → 17.
+- **PROJECT_LEARNINGS.md:** Learning 79 added (click-through-first +
+  replicate-the-app’s-exact-reader).
+
+### 2026-06-15 — Implement \#48: wire getPotentialParents into a new Potential Parents tab (Session 80)
+
+- **Deliverable:** Implemented the owner-ratified (S79)
+  `getPotentialParents` Shiny wire-in under **Strict TDD** (RED → GREEN
+  → REFACTOR with phase gates). Turns shipped package-API logic (the S74
+  \#31 gestation-derived dam window) into user-visible app value. The
+  build-from-scratch second session that S79’s Learning 77 predicted.
+- **TDD phase: full RED → GREEN → REFACTOR**, every transition gated via
+  `AskUserQuestion` (PRE-RED→RED, RED→GREEN, GREEN→REFACTOR). 0
+  stakeholder corrections.
+- **New code:** `R/modPotentialParents.R` — a pure
+  `flattenPotentialParents()` helper (list-of-lists → render/CSV-ready
+  data.frame, `NULL`/empty → 0-row),
+  [`modPotentialParentsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPotentialParentsUI.md)
+  (numeric `maxGestationalPeriod` input default 210, “Find Potential
+  Parents” button, sortable `DT` table, CSV download, graceful
+  empty-state messages), and
+  `modPotentialParentsServer(id, pedigree, minParentAge = 2.0)`.
+- **Tests:** `tests/testthat/test_modPotentialParents.R` — 14 tests / 43
+  expectations covering the helper (cols, NULL/empty, multi-animal
+  flatten, empty-sires, CSV round-trip), the UI (controls + namespace +
+  default 210), and the server via
+  [`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html)
+  (happy path on the rhesus fixture, no-`fromCenter` empty state,
+  no-unknowns empty state, return shape). All pass.
+- **Wiring (2 edits):** `appUI.R` —
+  `tabPanel("Potential Parents", icon("search"), modPotentialParentsUI("potentialParents"))`
+  after Breeding Groups; `appServer.R` —
+  `modPotentialParentsServer("potentialParents", pedigree = reactive(shared$currentPedigree))`.
+- **Data seams honored** (from \#48): no `fromCenter` column →
+  `getPotentialParents` returns `NULL` → empty-state, not error;
+  `minParentAge` reuses the QC 2-year default as a server param (owner
+  ratified only the gestation UI input, so no second UI input added —
+  scope held); empty results → empty-state message.
+- **Verification:** `devtools::check()` clean (0 errors / 0 warnings / 0
+  notes); full clean-regression read 0 real failed/error; `lintr` clean
+  on the new module + test files; docs regenerated
+  (`modPotentialParents*` exported, `flattenPotentialParents` kept
+  internal via `@noRd`).
+- **Phase-3E runtime smoke test (mandatory, performed):** booted the
+  assembled app headlessly via
+  [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+  (`inst/shinytest/app.R`, `NOT_CRAN=true` to bypass the CRAN guard, dev
+  package installed first). Confirmed: app boots with full server init
+  (incl. the new module), the tab + all four controls mount, default 210
+  set, navigation works, existing tabs intact, module outputs
+  (`statusMessage`/`resultsTable`/`downloadParents`) register
+  error-free. The only log “errors” are pre-existing
+  `shinyBS is not defined` JS reference errors (app-wide, not from this
+  module).
+- **\[news-vs-changelog\]:** user-facing feature → **also** `NEWS.md`
+  (new “Shiny application” bullet under `1.1.0.9000`), plus this
+  CHANGELOG process entry. \#48 remains OPEN pending owner-confirmed
+  close; umbrella \#45 unchanged.
+- **NEWS source-sync fix (owner-flagged mid-session):** `NEWS.md` is
+  generated from `NEWS.Rmd` (`github_document`), but prior sessions had
+  edited the generated `NEWS.md` directly, leaving `NEWS.Rmd` missing
+  three shipped entries — **NEW-47** (`getDescendantPedigree`),
+  **NEW-48/#44/#38** (`getAutoIdFormat`/`setAutoIdFormat`),
+  **NEW-49/#31** (`getPotentialParents` gestation window). Back-ported
+  all three into `NEWS.Rmd`, added the \#48 entry to the source, and
+  regenerated `NEWS.md` via
+  [`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html);
+  verified `NEWS.md == render(NEWS.Rmd)` (escaping now consistently
+  `\#`). Going forward, edit `NEWS.Rmd` and regenerate — not `NEWS.md`
+  directly.
+
+### 2026-06-14 — Resolve UX forks for the getPotentialParents wire-in; deprioritize ORIP (Session 79)
+
+- **Deliverable:** Resolved the three UX/design forks for the
+  **getPotentialParents wire-in** (the \#37 integration of the S74 \#31
+  logic, scoped under umbrella \#45) with the owner via
+  `AskUserQuestion`, and recorded the ratified design on a new tracking
+  issue **\#48** so a following session can implement under TDD.
+  Design/decisions only — **no code**. Also deprioritized **\#47
+  (ORIP)** per owner direction. Open issues **17 → 18** (one new issue,
+  \#48).
+- **TDD phase = N/A** (design/decisions; no production code or tests —
+  same classification as S76/S77/S78).
+- **Owner decisions (via `AskUserQuestion`, all applied, 0
+  corrections):** (1) **`maxGestationalPeriod` source** = a **numeric
+  input** prefilled with the rhesus default 210, user-overridable (v1
+  single-species per \#45; species-keyed gestation stays \#46); (2)
+  **location** = a **new top-level “Potential Parents” tab** (peer to
+  the 8 existing module tabs); (3) **trigger/output** = a **“Find
+  Potential Parents” button** → sortable table (animal → candidate
+  sires/dams) → **CSV download** (the app’s `downloadHandler` idiom).
+- **Firsthand grounding (recompute-don’t-inherit):** read
+  `getPotentialParents.R` in full (gestation dam window `:83-85`,
+  exclusion `:106`; zero production callers), `appUI.R` (8 mounted
+  module tabs), `appServer.R:104-293` (the
+  `modXxxServer(id, <reactives>)` wiring + `shared$currentPedigree`
+  flow), and the `fromCenter` producers (`convertFromCenter` /
+  `qcStudbook`). Confirmed the data seams for the implementer
+  (`fromCenter`-absent → `NULL`; `minParentAge` has no signature
+  default; empty-results state). Noted \#45’s body line-map predates S74
+  and is stale.
+- **Deprioritization (#47 ORIP):** the repo had **no priority labels**
+  and no `BACKLOG.md` (Issues are the backlog), so created a
+  `low priority` label and applied it to \#47 (owner-directed). ORIP’s
+  module already exists — a **mount-only** wire-in, correctly deferred
+  behind the larger **build-from-scratch** \#48 (→ Learning 77).
+- **New issue:** **\#48** “Wire in getPotentialParents — new Shiny
+  surface for animals with unknown parents” (`enhancement`) — captures
+  the three ratified forks, the from-scratch module/test/wiring task,
+  the data seams, the \#28/#46 out-of-scope boundary, and the mandatory
+  Phase-3E smoke test; references \#37/#45.
+- **Issue tracker:** \#48 filed; register-ratified **link comment** on
+  umbrella **\#45** (additive — prior comments preserved, FM \#22).
+  Nothing closed; \#45 stays OPEN. Verified: \#48 OPEN, \#45 OPEN (3
+  comments), \#47 labeled `low priority`, open count 18.
+- **\[news-vs-changelog\]:** CHANGELOG only — resolving design forks +
+  filing an issue is dev-process history, not a user-facing release note
+  (no `NEWS.md` entry); no `BACKLOG.md` file (open work lives in GitHub
+  Issues).
+
+### 2026-06-14 — Triage \#37: wire-in / keep / retire the unused exports (Session 78)
+
+- **Deliverable:** Triaged GitHub issue **\#37** (“Exported functions
+  not currently used by app”) — a firsthand, clustered disposition of
+  every exported-but-app-unreachable function as **wire-in /
+  keep-as-public-API / retire**, recorded as an [additive triage
+  comment](https://github.com/rmsharp/nprcgenekeepr/issues/37#issuecomment-4703983124).
+  Grooming/triage only — **no code**. \#37 stays **OPEN** (the standing
+  inventory). One new issue filed (#47). Open issues **16 → 17**.
+- **TDD phase = N/A** (grooming/triage; no production code or tests —
+  same classification as S73/S76/S77).
+- **Recompute-don’t-inherit:** re-ran the issue’s own documented method
+  firsthand (call-graph reachability seeded at
+  `runModularApp`/`runGeneKeepR`/`appUI`/`appServer`, transitive closure
+  of
+  [`codetools::findGlobals`](https://rdrr.io/pkg/codetools/man/findGlobals.html)).
+  **The S65 (2026-06-12) snapshot had drifted:** now **158 exports / 119
+  reached / 39 unused** (was 155/116/39); `setAutoIdFormat` (S71
+  \#44/#38) is a new unused export the issue body predates; `chooseDate`
+  is no longer unused. Reachability confirmed clean (no
+  S3/`do.call`/`match.fun`/[`get()`](https://rdrr.io/r/base/get.html)
+  path reaches any of the 39).
+- **Method:** a Workflow (`wf_be838846-794`) — **9 parallel cluster
+  investigators** (each gathering firsthand: definition,
+  roxygen/`@examples`, tests, vignette/`inst` use, non-app package
+  callers, git provenance, related issue) + an adversarial
+  **completeness critic**. The critic earned its keep (→ **Learning
+  76**): it (1) **overturned a fabricated caller-edge** —
+  `calcFE`/`calcFG` were claimed “called by `calcFEFG`” but have **no
+  live callers** (`calcFEFG` computes via
+  `calcFounderContributions`+`calcRetention`; `reportGV` calls
+  `calcFEFG`); (2) surfaced two **closed islands** (obfuscation trio
+  rooted at `obfuscatePed`; logging/error/export trio
+  `logModuleEvent`←`safeExecute`/`savePlotToFile`, reachable from
+  nothing live) whose dispositions are coupled; (3) downgraded the
+  investigators’ uniform “high-confidence wire-in” on the infra island
+  to a genuine owner-decision; (4) corrected the cluster’s roadmap issue
+  (#8 is CLOSED; **\#10** is the open sim-kinship home). Every
+  load-bearing critic claim re-verified firsthand against the working
+  tree before recording.
+- **Result: 2 wire-in · 37 keep-as-public-API · 0 retire.** “Exported
+  but app-unreachable” is not “dead code” — the package deliberately
+  exposes script/interactive API, so the default is
+  **keep-as-public-API** and nothing reached the breaking-change retire
+  bar.
+- **Owner decisions (via `AskUserQuestion`, applied):** (1) **ORIP
+  reporting module** (`modORIPReportingUI`+`modORIPReportingServer`, a
+  complete-but-never-mounted module) → **wire-in** as a grant-reporting
+  tab (filed as **\#47**); (2) **logging/error/plot-export island** →
+  **keep as-is / defer** (adopt incrementally; `safeExecute`, zero
+  callers, is a future-cleanup retire candidate); (3) **founder/genetic
+  summary table helpers**
+  (`makeFounderStatsTable`/`makeGeneticSummaryTable`) →
+  **keep-as-public-API** (the app already renders founder stats inline
+  at `modSummaryStats.R:583-638`; wiring in = DRY refactor of working
+  code, no functional gain). The other wire-in —
+  **`getPotentialParents`** — is the S74 \#31 feature already homed
+  under umbrella **\#45** (#37 wiring gates its app value).
+- **Docfixes surfaced (not done — separate session):**
+  `getPedDirectRelatives` `@examples` (`R/getPedDirectRelatives.R:27`)
+  calls `getLkDirectRelatives`, not itself; optional dedicated tests for
+  `kinshipMatrixToKValues` and `getAncestors` (currently
+  transitive-only).
+- **New issue:** **\#47** “Wire in the ORIP reporting module (mount
+  modORIPReporting\* in appUI/appServer)” (`enhancement`) — captures the
+  owner-ratified wire-in; references \#37.
+- **Issue tracker:** triage posted as an **additive comment** on \#37
+  (the owner’s S65 re-verification body/comment preserved — FM \#22);
+  \#47 filed. Nothing closed; \#37 remains OPEN. Verified: \#37 OPEN (2
+  comments), \#47 OPEN, open count 17.
+- **\[news-vs-changelog\]:** CHANGELOG only — a triage recorded on an
+  issue + filing an issue is dev-process history, not a user-facing
+  release note (no `NEWS.md` entry); no `BACKLOG.md` file (open work
+  lives in GitHub Issues).
+
+### 2026-06-14 — Ratify \#28 open-decisions register (Session 77)
+
+- **Deliverable:** Ratified the **8 `[OPEN]` items** in \#28’s §13
+  open-decisions register (the S76 colocation data-model spec) via owner
+  sign-off, and recorded the decisions back onto **\#28** ([ratification
+  comment](https://github.com/rmsharp/nprcgenekeepr/issues/28#issuecomment-4703716881))
+  — every item moves **\[OPEN\] → \[DECIDED\]**. Design/grooming only —
+  **no code**. \#28 stays **OPEN** (the register clears the
+  *design/semantics* gate; implementation remains gated on
+  \#11/#12/#37/#46). Open issues **15 → 16** (one new issue filed —
+  \#46, below).
+- **TDD phase = N/A** (design/grooming; no production code or tests —
+  same classification as S73/S76).
+- **Method:** a verify-and-sharpen Workflow (`wf_b8035a53-5be`) — **8
+  parallel item-verifiers** (one per register item, each re-reading the
+  spec’s code claims firsthand against the working tree and
+  adversarially stress-testing its `[REC]`) + an adversarial
+  **completeness critic**. The critic reduced an over-asked 8-item
+  register to **4 genuine owner-decisions** (items 1/2/3 + item 6’s
+  provenance half), with the rest as ratifiable corollaries/deferrals;
+  it also surfaced two §7 policy gaps absent from §13. Decisions posed
+  via `AskUserQuestion` (2 rounds, staggered so item 2 could be informed
+  by item 1’s answer); rubber-stamps folded into one batch ratification.
+- **Owner decisions (all ratified as recommended):** (1) **missing-dam
+  inference** = mother–infant co-housing model with a required,
+  no-default, species-tunable `postnatalCoHousingWindow` +
+  gestation-presence, strictly **soft-rank** (hard-filter rejected); (2)
+  **both-unknown** = **dam-side only** via the focal-animal anchor
+  (soft-rank), sire side unranked; (3) **output** = additive-only
+  invariant locked, concrete carrier deferred to implementation; (4)
+  **coherent obfuscation** = one shared per-animal delta + alias
+  FK-remap, built with \#28; (5) **v1 single-species**, \#28 does not
+  block on first-class species; (6) **provenance** = stamp pull-date +
+  source id (full bitemporal deferred); (7+8) **defer flat-file
+  ingestion & POSIXct** (LabKey-only, Date resolution) pending a
+  concrete source; **§7 QC policy** = open-start contributes no overlap,
+  contradictory rows raise a QC warning.
+- **Two firsthand corrections to the S76 spec** (caught by the
+  verification workflow): **(a)** item 2’s written `[REC]` (“require ≥1
+  known parent — case 3 is anchorless”) is **unsound** —
+  `getPotentialParents.R:46-48`’s inclusive-OR filter means a
+  both-unknown infant’s *own* birth-time location is a valid
+  **dam-side** anchor (only the sire side is anchorless); so the
+  decision flips to dam-side colocation. **(b)** §10 **mis-cited \#36**
+  as the “make species first-class” prerequisite — \#36 is actually the
+  chimpanzee age-pyramid *display* ticket; first-class species support
+  was un-ticketed and is now **\#46**.
+- **Sizing notes recorded for the eventual \#28 implementer:**
+  `postnatalCoHousingWindow` is a NEW required, species-dependent
+  parameter (no default, mirrors `maxGestationalPeriod`);
+  `obfuscateDate.R:49-57`’s per-element re-draw-to-floor must be
+  reworked into a per-animal draw (changes existing obfuscation output,
+  breaks current `obfuscatePed`/`obfuscateDate` test expectations); the
+  scored-output carrier/columns are deferred until \#37’s app consumer +
+  items 1/2 are concrete.
+- **New issue:** **\#46** “Make species a first-class attribute
+  (ingestion + species-keyed gestation/postnatal window)”
+  (`enhancement`) — the real multi-species dependency, distinct from
+  \#36’s display scope; owns the corrected §10 dependency.
+- **Issue tracker:** ratification posted as an **additive comment** on
+  \#28 (S76 spec body/comments preserved — FM \#22); register-ratified
+  link comment on **\#45**; **\#46** filed. Nothing closed; \#45/#28
+  remain OPEN. Verified: \#28 OPEN (3 comments), \#45 OPEN (2 comments),
+  \#46 OPEN, open count 16.
+- **\[news-vs-changelog\]:** CHANGELOG only — ratifying a register on an
+  issue + filing an issue is dev-process history, not a user-facing
+  release note (no `NEWS.md` entry); no `BACKLOG.md` file (open work
+  lives in GitHub Issues).
+
+### 2026-06-14 — Spec \#28: colocation data model (Session 76)
+
+- **Deliverable:** Wrote a colocation data-model spec onto GitHub issue
+  **\#28** (the deferred sub-task under umbrella **\#45**), satisfying
+  umbrella **acceptance criterion \#4** (“#28 has a written data-model
+  spec — grain of colocation; source query — recorded on \#28 before any
+  implementation”). Design/grooming only — **no code**. \#28 stays
+  **OPEN** (a spec clears the design gate; it does not complete the
+  data-dependent sub-task). Open issues unchanged at **15**.
+- **TDD phase = N/A** (design/grooming; no production code or tests —
+  same classification as S73’s consolidation).
+- **Method:** firsthand subsystem map via a Workflow (5 parallel facet
+  readers — conception primitive / pedigree data-model+ingestion /
+  LabKey-Oracle-ARMS sourcing / existing location+temporal constructs /
+  colocation semantics — + an adversarial completeness critic), then
+  firsthand re-verification of every load-bearing claim before the
+  outward-facing post (Learning 70 / recompute-don’t-inherit → new
+  **Learning 74**). Re-read firsthand: `getPotentialParents.R` (full,
+  post-S74), `getPossibleCols`, `getDateColNames`, `getSiteInfo`,
+  `getDemographics`, `obfuscateDate`, `obfuscatePed`, `fixColumnNames`,
+  `qcStudbook` column-handling.
+- **Owner decisions (via `AskUserQuestion`, applied):** temporal model =
+  **Date-ranged residency intervals** (day resolution, matching every
+  existing date column); colocation grain = **configurable,
+  finest-available default** (cage/room/enclosure/building); colocation
+  effect = **soft rank with fallback** (never empties an age-eligible
+  set; no-location candidates retained as `colocation-unknown`); v1
+  scope = **source-agnostic model + optional `location` arg that
+  degrades to byte-identical (`location = NULL`) behavior** — not
+  hard-blocked on \#11/#12.
+- **Spec content (13 sections + acceptance criteria):** a separate
+  many-rows-per-id location entity `{id, location, grain, start, end}`
+  (exempt from `removeDuplicates`); the
+  interval-overlap-vs-conception-window predicate reusing the existing
+  `maxGestationalPeriod` primitive; ingestion mirroring
+  `getDemographics`/`getSiteInfo` (new
+  `lkLocationColumns`/`mapLocationColumns`/`locationQueryName`); a
+  null/partial-coverage matrix; and the **obfuscation-coherence
+  requirement** (the critic+firsthand finding — `obfuscatePed` jitters
+  each Date column independently ±30 d and covers only the pedigree,
+  which would corrupt overlap math). Carries an **open-decisions
+  register** (missing-dam inference model + postnatal co-housing window
+  — flagged as *invented design awaiting husbandry ratification*, not
+  derived; output reshape coordinated with \#37; species/#36 ordering;
+  bitemporal handling; flat-file ingestion) for sign-off before sizing.
+- **Honest scope notes recorded on \#28:** \#11 (Oracle) is
+  demographic-only/unspecified and \#12 (ARMS) is an empty stub, so the
+  gating is *nominal* — the spec defines the model source-agnostically;
+  “source query” is satisfied at the idiom level (mirror
+  `getDemographics`), not a concrete query; the JMAC `species` column
+  survives ingestion as a trailing `novelCol` (`qcStudbook.R:281-283`)
+  but is read nowhere.
+- **Issue tracker:** spec posted as a **comment** on \#28 (additive —
+  owner’s body/comment preserved, FM \#22); criterion-#4-satisfied link
+  comment on **\#45**. Nothing closed; no issue state changed.
+- **\[news-vs-changelog\]:** CHANGELOG only — a spec recorded on an
+  issue is dev-process history, not a user-facing release note (no
+  `NEWS.md` entry); no `BACKLOG.md` file (open work lives in GitHub
+  Issues).
+
+### 2026-06-13 — Close \#31: gestation-derived dam-exclusion window (Session 75)
+
+- **Deliverable:** Closed GitHub issue **\#31** (“Use gestational length
+  instead of hack for dam identification”) as completed — the
+  gestation-derived dam-exclusion window shipped in S74 (`0eeee3f6`) and
+  the owner confirmed the close this session. Open issues **16 → 15**.
+  Completes the \#31 lifecycle: S73 consolidate (under umbrella \#45) →
+  S74 implement → S75 close (one deliverable per session).
+- **TDD phase = N/A** (administrative issue-close; no production code —
+  same classification as S69/S72).
+- **Firsthand verification before the irreversible close** (per the
+  standing “don’t close an OPEN issue without firsthand evidence” rule +
+  Learning 69): mapped the committed tree (`0eeee3f6`) against umbrella
+  \#45’s acceptance criteria 1–3 (#31’s scope) — (1) the dam window is
+  driven by the existing `maxGestationalPeriod` scalar, no parallel
+  param (`getPotentialParents.R:83-85`, signature unchanged); (2) two
+  tests demonstrate dam selection responds to `maxGestationalPeriod`
+  (synthetic-exclusion + the explicitly-named criterion-2 test,
+  `test_getPotentialParents.R:131-190`); (3) the `:92-93` “hack” TODO is
+  resolved, the roxygen documents the dual use + intentional sire/dam
+  asymmetry, and every dropped-dam fixture delta carries a per-delta
+  biological justification. Re-ran the target file (21/21) and the full
+  suite (0 failed / 0 error) firsthand.
+- **Close comment** (with `0eeee3f6` pointer): criterion-by-criterion
+  map + honest scope notes — \#31’s original “add a `gestationalLength`
+  parameter” suggestion was intentionally superseded by the owner’s S73
+  decision to extend the existing `maxGestationalPeriod`;
+  species-specific gestation remains a documented dependency under \#45;
+  the function is exported-but-unwired (#37).
+- **Issue tracker:** **15 open** (was 16). \#31 `state=CLOSED`
+  (verified). Umbrella \#45 + sub-task \#28 remain OPEN.
+- **\[news-vs-changelog\]:** CHANGELOG only — closing an issue is
+  dev-process history, not a user-facing release note (no `NEWS.md`
+  entry); no `BACKLOG.md` file (open work lives in GitHub Issues).
+
+### 2026-06-13 — Implement \#31: gestation-derived dam-exclusion window in getPotentialParents (Session 74)
+
+- **Deliverable:** Replaced the “hack” in
+  [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+  (a fixed ±½-year birth window for excluding candidate dams, flagged
+  with a TODO at `:92-93`) with a principled gestation-derived window
+  driven by the **existing** `maxGestationalPeriod` parameter — the dam
+  side now gets the gestation treatment the sire side already had.
+  Resolves the near-term, low-lift sub-task of umbrella **\#45**.
+  `devtools::check()` clean (0/0/0); full suite 0 failed / 0 error.
+- **TDD phase = RED→GREEN→REFACTOR(skipped)** — a real TDD code session
+  (first since S71). All three transition gates + a separate pre-RED
+  scope decision posed via `AskUserQuestion`; phase declared atop every
+  response; **0 stakeholder corrections**.
+- **The change (one rule):** a female who delivered another offspring
+  within `maxGestationalPeriod` days of the focal birth cannot have
+  gestated the focal animal (a female bears one offspring at a time), so
+  she is excluded as a candidate dam. The `births` window
+  (`getPotentialParents.R`) now uses
+  `pUnknown$birth[i] ± maxGestationalPeriod` instead of `± dYear/2L`
+  (182.5 d).
+- **Scope (owner-decided, minimal):** only the `births` exclusion window
+  changed. The sire/dam exit-check asymmetry (`exit ≥ birth − gestation`
+  for sires vs `exit ≥ birth` for dams) is **biologically correct**
+  (sire→conception, dam→birth) and was documented, not changed. The
+  preferential band (`births_plus_minus_one`) was left untouched —
+  analysis proved moving its inner edge is a behavioral no-op (the wider
+  exclusion always removes the overlap region first).
+- **Behavior change, verified + justified firsthand (not silently
+  regenerated):** the exact-set fixtures `dams_1` (BRI2MW) drop `0B7XRI`
+  (−193 d) / `PHCADH` (+195 d); `dams_4` (FEEN9W) drop `1SIP4V` (+183 d)
+  / `DMI0QY` (+192 d) / `HV7LZ3` (−192 d) — each delivered another
+  offspring inside the new ±210 d window. No dams added, no fallback
+  triggered, sires unchanged. Backed by two from-first-principles
+  driving tests: a hand-verifiable synthetic-pedigree exclusion test and
+  a differential-responsiveness test (acceptance criterion \#2).
+- **\[news-vs-changelog\]:** BOTH — a behavior change to an exported
+  function is user-facing → `NEWS.md` NEW-49; this entry is the
+  dev-process record. \#31 left **OPEN** (implemented, check-green;
+  close is a separate owner-confirmed step).
+
+### 2026-06-13 — Consolidate parent-ID cluster \#31 + \#28 → umbrella \#45 (Session 73)
+
+- **Deliverable:** Created umbrella design issue **\#45** (“Principled
+  parent identification in getPotentialParents via estimated conception
+  date”) consolidating the two open parent-identification issues —
+  **\#31** (replace the dam-exclusion “hack” with gestational length)
+  and **\#28** (timestamped colocation at birth − gestation). Both kept
+  **OPEN** as distinct, cross-linked sub-tasks — they are **not**
+  duplicates. Open issues **15 → 16**. Analogous to S70’s \#44
+  consolidation, but the disposition differs: the research showed
+  \#31/#28 are distinct work (a linking umbrella), not
+  duplicates-to-close.
+- **TDD phase = N/A** (grooming/design; no production code or tests —
+  same classification as S70).
+- **Method:** firsthand subsystem map via a Workflow (4 parallel facet
+  readers — core fn / callers / gestation+location data infra / tests
+  — + an adversarial completeness critic), then firsthand
+  re-verification of every load-bearing claim before the outward-facing
+  create/link (Learning 70 / recompute-don’t-inherit). The verification
+  corrected an overstatement (a `species` column DOES exist in some
+  example inputs, just not the canonical fixtures).
+- **Key findings (verified firsthand):** the shared primitive
+  (conception date = birth − gestation) is **already half-implemented**
+  as the existing `maxGestationalPeriod` param, applied sire-side only
+  (`getPotentialParents.R:62`); \#31 is a bounded in-function refactor
+  (the dam side never got the treatment) while \#28 needs a
+  timestamped-colocation data model the package **lacks** (blocked on
+  \#11/#12); `getPotentialParents` is experimental + **unwired** (→
+  \#37); \#31 is a **behavior change** (the test asserts exact dam/sire
+  sets via `expect_identical`), not a pure refactor.
+- **Owner decisions (via `AskUserQuestion`):** linking umbrella with
+  both sub-tasks open; narrow scope (`getPotentialParents` only);
+  reuse/extend the existing `maxGestationalPeriod` (no parallel
+  parameter).
+- **\[news-vs-changelog\]:** CHANGELOG only — issue consolidation is
+  dev-process history, not a user-facing release note (no `NEWS.md`
+  entry); no `BACKLOG.md` file (open work lives in GitHub Issues).
+
+### 2026-06-13 — Close \#44 + \#38: configurable auto-ID format (Session 72)
+
+- **Deliverable:** Closed GitHub issues **\#44** (umbrella) and **\#38**
+  (generation sub-task) as completed — the configurable auto-ID feature
+  shipped in S71 (`14c8e84d`) and the owner confirmed the close this
+  session. Open issues **17 → 15**. Completes the \#44 lifecycle: S70
+  consolidate → S71 implement → S72 close (one deliverable per session).
+- **TDD phase = N/A** (administrative issue-close; no production code —
+  same classification as S69/S70).
+- **Firsthand verification before the irreversible close** (per the
+  standing “don’t close an OPEN issue without firsthand evidence” rule +
+  Learning 69): confirmed the committed tree (`14c8e84d`) against
+  **each** of \#44’s 8 acceptance criteria — exports in `NAMESPACE`, the
+  predicate routing all 7 detection sites + 2 generators, the round-trip
+  tests, the docstring/tooltip updates — and that the full suite +
+  `devtools::check()` passed on exactly that state. Mapped criteria →
+  code in the close comment.
+- **Close comments** (with `14c8e84d` pointer): \#44 carries the
+  criterion-by-criterion map + the documented known limitation
+  (prefix-only detection still over-matches real prefix-IDs — the
+  owner-approved byte-identical tradeoff); \#38 maps
+  `setAutoIdFormat`/`getAutoIdFormat`/`addUIds`-format-param to its
+  asks. `gh issue close --reason completed`.
+- **Issue tracker:** **15 open** (was 17). \#44/#38 `state=CLOSED`
+  (verified).
+
+### 2026-06-13 — Implement \#44/#38: configurable auto-generated unknown-ID format (Session 71)
+
+- **Deliverable:** Implemented umbrella issue **\#44** (and its **\#38**
+  sub-task) via strict TDD (RED→GREEN→REFACTOR-skipped). The
+  auto-generated placeholder-ID format for unknown parents is now
+  configurable from a single source of truth, default `"U%04d"`,
+  **byte-identical with no configuration**. Executes S70 SUGGESTED-NEXT
+  candidate (1). Owner decisions (via `AskUserQuestion`): **full \#44**
+  scope; **prefix-only byte-identical** detection; **case-sensitive**
+  reconciliation.
+- **TDD:** first code session since S68. Three phase gates posed via
+  `AskUserQuestion` (PRE-RED→RED, RED→GREEN, GREEN→REFACTOR-skipped)
+  plus a separate pre-RED scope/approach decision (3 questions). **0
+  stakeholder corrections.**
+- **New code:** `R/autoIdFormat.R` —
+  [`getAutoIdFormat()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAutoIdFormat.md)
+  /
+  [`setAutoIdFormat()`](https://github.com/rmsharp/nprcgenekeepr/reference/setAutoIdFormat.md)
+  (exported, over `getOption("nprcgenekeepr.autoIdFormat", "U%04d")`,
+  mirroring the `.debug`/`.verbose`/`.gva_seed` convention) + internal
+  `getAutoIdPrefix()` and `isGeneratedUnknownId()` (case-sensitive,
+  NA-preserving like the `startsWith`/`stri_sub` it replaces).
+- **Threaded through:**
+  [`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
+  gains a `format =` param and mints via `sprintf(format, …)` (≡
+  default);
+  [`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
+  mints with `getAutoIdPrefix()` and detects via the predicate;
+  [`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)
+  (×3), `modPedigree.R` display filter, and
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+  founder counts all route detection through the single predicate —
+  replacing all 7 detection literals + 2 generators.
+  [`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)’s
+  standing “use a function call” TODO is resolved.
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  unchanged (its `addUIds(sb)` picks up the option via the default —
+  smallest blast radius). Out-of-scope conventions (textual
+  `"UNKNOWN"`/`unknown2NA`, `recordStatus`/`getRecordStatusIndex`)
+  deliberately untouched.
+- **Tests (TDD):** NEW `tests/testthat/test_autoIdFormat.R`
+  (default/set/validation/predicate/prefix + a non-default-format
+  `"AUTO%05d"` round-trip: configure→generate→detect→remove); NEW
+  `tests/testthat/test_removeAutoGenIds.R` (none existed — default
+  removal + case-sensitivity + non-default prefix);
+  `test_obfuscateId.R:27-32` updated to the case-sensitive contract
+  (lowercase `"u001"` is now a real ID, the **only** existing test that
+  changed — `test_addUIds.R`/`test_qcStudbook.R`/`test_modPedigree.R`
+  pass unchanged = back-compat proof). **Full suite: 0 failed, 0 error,
+  159 skip** (985 results); the 5 warnings are pre-existing
+  `test_modPyramid.R` baseline. Lint clean under `load_all` (the
+  [`options()`](https://rdrr.io/r/base/options.html) setter carries
+  `# nolint: undesirable_function_linter` per the project’s
+  `getPyramidPlot.R` precedent — a public permanent setter, not a scoped
+  change).
+- **Docs/exports:** `devtools::document()` → `man/getAutoIdFormat.Rd` +
+  `man/setAutoIdFormat.Rd` + NAMESPACE exports;
+  `man/addUIds.Rd`/`man/removeAutoGenIds.Rd` regenerated. **NEWS.md**
+  NEW-48 (user-facing). `modPedigree.R:112` tooltip notes the format is
+  configurable.
+
+### 2026-06-13 — Consolidate the ID cluster into umbrella \#44 (Session 70)
+
+- **Deliverable:** Consolidated the three overlapping
+  auto-generated-unknown-ID issues — **\#26**, **\#32**, **\#38** — into
+  one umbrella design issue **\#44** (*“Configurable auto-generated
+  unknown-ID format (default `"U%04d"`) — single source of truth for
+  generation + detection”*). Executes S69 SUGGESTED-NEXT candidate (1).
+  Per owner decisions (via `AskUserQuestion`): configurability =
+  **prefix + number format**, default `"U%04d"`; scope = the
+  `"U"`-prefix convention only; **\#26 + \#32 closed** as duplicates of
+  \#44, **\#38 kept open** and linked as the concrete generation
+  sub-task. Open issues **18 → 17** (−2 closed, +1 umbrella created).
+- **TDD phase = N/A** (grooming/design; no production code or tests —
+  same classification as S57/S61–S67/S69).
+- **Firsthand subsystem map (Workflow under ultracode):** 4 parallel
+  facet readers (generation / detection / callers-config / tests) + an
+  adversarial completeness critic. The critic overturned the mappers on
+  two material points: the package has **three** independent
+  unknown/auto-gen conventions (textual `"UNKNOWN"` in `unknown2NA`; the
+  `"U%04d"` prefix with **two** producers — `addUIds.R:47,54` +
+  `obfuscateId.R:38-43` — and **7** case-divergent detection sites with
+  no centralized predicate; and `recordStatus="added"` in `addParents.R`
+  with the already-centralized `getRecordStatusIndex()`), coupled only
+  by ordering in `qcStudbook.R:188→198→199`.
+- **Verify-before-publish:** re-read the 8 load-bearing files firsthand
+  (`addUIds`, `removeAutoGenIds`, `addParents`, `getRecordStatusIndex`,
+  `obfuscateId`, `unknown2NA`, the `qcStudbook` ordering, the
+  `modPedigree.R:112` tooltip) before creating \#44 / closing \#26/#32 —
+  did not publish subagent findings unverified.
+- **\#44** captures the verified current-state map, a
+  single-source-of-truth design
+  ([`getAutoIdFormat()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAutoIdFormat.md)/[`setAutoIdFormat()`](https://github.com/rmsharp/nprcgenekeepr/reference/setAutoIdFormat.md)
+  per \#38 + an internal `isGeneratedUnknownId()` predicate replacing
+  the 8 literals), acceptance criteria (incl. byte-identical back-compat
+  with no config, and a non-default-format round-trip test), the tests
+  that bake in `"U"`, and an explicit **out-of-scope** section for the
+  textual-`"UNKNOWN"` and `recordStatus` conventions.
+- **Issue tracker:** **17 open** (was 18). \#26/#32 `state=CLOSED`
+  (verified); \#38 OPEN with link comment; \#44 OPEN, label
+  `enhancement`.
+
+### 2026-06-13 — Close \#35: descendants in pedigree filtering (Session 69)
+
+- **Deliverable:** Closed GitHub issue \#35 (*“Include descendants in
+  pedigree filtering (ancestors already implemented)”*) as completed —
+  the feature shipped in S68 (`d4320643`) and the owner confirmed the
+  close this session. Open issues **19 → 18**. Completes the \#35
+  lifecycle: S67 re-scope → S68 implement → S69 close (one deliverable
+  per session).
+- **TDD phase = N/A** (administrative issue-close; no production code or
+  tests — same classification as S57/S61–S67).
+- **Firsthand verification before the irreversible close** (per the
+  standing “don’t close an OPEN issue without firsthand evidence” rule):
+  ran the three covering test files — `test_getDescendantPedigree.R`,
+  `test_modPedigree_processing.R`, `test_modPedigree.R` — **all pass**;
+  read the implementation (`R/getDescendantPedigree.R`, the union at
+  `R/modPedigree.R:299-305`, the help text at `:124-126`) and confirmed
+  it satisfies **each** of the issue’s re-scoped asks: descendant set
+  unioned with the existing ancestor set; **Option A** strict-lineal (no
+  collaterals); UI label aligned from “only relatives” to “ancestors and
+  descendants”.
+- **Close comment** posted with a commit pointer (`d4320643`) mapping
+  the shipped code to the issue’s acceptance criteria;
+  `gh issue close --reason completed`.
+- **Issue tracker:** **18 open** (was 19).
+
+### 2026-06-13 — Implement \#35: descendants in pedigree filtering (Session 68)
+
+- **Deliverable:** Implemented GitHub issue \#35 (*“Include descendants
+  in pedigree filtering (ancestors already implemented)”*) via strict
+  TDD (RED→GREEN→REFACTOR-skipped). The Pedigree Browser’s “Trim
+  pedigree based on focal animals” option now includes both the
+  **ancestors and descendants** of the focal animals (previously
+  ancestors only). Owner chose **Option A — strict lineal** (no
+  collateral relatives). Executes S67 SUGGESTED-NEXT \#1.
+- **TDD:** first real code session after S57–S67’s non-code run. Three
+  phase gates posed via `AskUserQuestion` (PRE-RED→RED, RED→GREEN,
+  GREEN→REFACTOR) plus a separate pre-RED Option A/B approach decision.
+  **0 stakeholder corrections.**
+- **New/changed code:** `R/getDescendantPedigree.R` — new exported
+  transitive-offspring closure, the downward mirror of
+  [`getProbandPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getProbandPedigree.md).
+  `R/modPedigree.R:292-307` — trim block now unions the ancestor closure
+  (`trimPedigree`) with the descendant closure:
+  `ped[ped$id %in% union(ancestors$id, descendants$id), ]`. UI help text
+  (`:125`) and module docstring (`:166`) updated from the “only
+  relatives” over-promise to “ancestors and descendants”.
+- **Tests (TDD):** NEW `tests/testthat/test_getDescendantPedigree.R` (6
+  unit tests on `lacy1989Ped`: transitive offspring, leaf,
+  multi-proband, empty, absent, circular-terminates); 2 integration
+  tests added to `test_modPedigree_processing.R` (descendants included;
+  strict-lineal excludes sibling + mate). One stale pre-existing test in
+  `test_modPedigree.R` updated to the new contract — surfaced by the
+  full-suite clean-regression read (Learning 68). **Full suite: 972
+  tests, 0 failed, 0 error, 159 skip.**
+- **Docs/exports:** `devtools::document()` →
+  `man/getDescendantPedigree.Rd` + NAMESPACE export;
+  `man/modPedigreeServer.Rd` regenerated. **NEWS.md** NEW-47 entry
+  (user-facing). Lint clean (lone `object_usage_linter` warning proven
+  an install-staleness artifact). Phase 3E:
+  `shiny::testServer(modPedigreeServer, …)` integration tests exercise
+  the changed reactive.
+- **Issue tracker:** \#35 implemented — to be closed (19 → 18 open) once
+  the owner confirms.
+
+### 2026-06-13 — Re-scope \#35 to descendants (ancestor-inclusion verified done) (Session 67)
+
+- **Deliverable:** Re-scoped GitHub issue \#35 (was *“Include ancestors
+  and descendants in pedigree filtering”*) to **“Include descendants in
+  pedigree filtering (ancestors already implemented)”** and kept it
+  **open**. Firsthand-verified that ancestor-inclusion is live and
+  descendants are not, rewrote the body to current reality, corrected
+  two stale references, documented two implementation options, and
+  posted a dated verification comment (`#issuecomment-4699260833`).
+  Executes S66 SUGGESTED-NEXT \#1.
+- **TDD phase = N/A** (issue-grooming; no production code or tests —
+  same classification as S57/S61–S66).
+- **What’s verified (firsthand):** Ancestors **DONE** —
+  `R/modPedigree.R:292-302`: when the “Trim pedigree” checkbox is on it
+  calls `trimPedigree(probands, ped, …)` →
+  [`getProbandPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getProbandPedigree.md)
+  (`R/getProbandPedigree.R:24-40`), an upward `sire`/`dam` closure
+  (ancestors only; the module docstring at `:166` already says
+  “ancestors”). Descendants **NOT** implemented — neither function walks
+  downward.
+- **Two stale references corrected in the body:** (1) the issue’s cited
+  “Current Code” (lines 246-253, a
+  `# TODO: Include ancestors and descendants` placeholder) no longer
+  exists — replaced by the ancestor logic at 292-302; (2) its “Suggested
+  Implementation” called
+  `trimPedigree(…, ancestors = TRUE, descendants = TRUE)` — a signature
+  that **does not exist**
+  (`trimPedigree(probands, ped, removeUninformative, addBackParents)`).
+- **Implementation options documented (owner chose “document
+  both”):** (A) strict lineal — add a downward closure mirroring
+  `getProbandPedigree`’s loop (repeated
+  [`getOffspring()`](https://github.com/rmsharp/nprcgenekeepr/reference/getOffspring.md)
+  to closure) and union with the ancestor set; (B) reuse
+  [`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
+  (`R/getPedDirectRelatives.R:46-59`), which already loops
+  parents+offspring to closure but also pulls in collateral relatives
+  (sibs/cousins/mates), broadening beyond lineal. Left for the
+  implementation session.
+- **Form (owner-chosen via `AskUserQuestion`):** rewrite the body +
+  retitle + dated verification comment; issue kept open.
+- **Issue tracker:** 19 open issues (unchanged — \#35 updated, not
+  closed).
+
+### 2026-06-13 — Merge methodology PR \#25/#27 wording branch into add-methodology (Session 66)
+
+- **Deliverable:** Merged the local out-of-band branch
+  `chore/methodology-pr2527-wording` (one wording-only commit
+  `ce7d6779`) into `add-methodology`, then deleted it. Adopts the
+  merged-upstream methodology PR \#25/#27 wording — **no migration**
+  (this repo’s learnings extraction was done in Sessions 10/28; it is
+  the reference end-state).
+- **TDD phase = N/A** (docs/methodology merge; no `R/`, `tests/`,
+  `man/`, or `NEWS.md` changes — same non-code classification as
+  S57/S61–S65).
+- **What landed (4 files, +10/−5):** SESSION_RUNNER.md §3C body → the
+  canonical adopter-vs-canonical learnings-routing text + the
+  Learnings-table caption reworded (3C section now byte-identical to
+  canonical; the 6 seed rows already matched);
+  `docs/methodology/HOW_TO_USE.md` 3C bullet → matching routing text;
+  CLAUDE.md + PROJECT_LEARNINGS.md → replace the empirical “40k-char
+  limit” justification with the documented size-budget language (“Claude
+  Code targets ~200 lines / ~25 KB”); counts and history preserved.
+- **Merge mechanics:** true merge commit `0f9728e3` (`--no-ff`; the base
+  had diverged — Sessions 63–65 added commits after the branch point
+  `b7f45901`). Pre-merge `git merge-tree` dry run showed **0** conflict
+  markers; 3 of 4 files were byte-identical to the branch base, and
+  PROJECT_LEARNINGS.md auto-merged **keep-both** (branch’s line-3 header
+  rewording + the S63/64/65 tail-appended Learning rows —
+  non-overlapping hunks).
+- **Verified:** all 4 task-spec greps pass — “Adopter project” in
+  SESSION_RUNNER.md (3C body + table caption), no “40k” in
+  CLAUDE.md/PROJECT_LEARNINGS.md, one “200 lines” in each, and the
+  HOW_TO_USE.md 3C routing bullet. Branch deleted with safe
+  `git branch -d` (confirmed merged).
+- **Build impact:** none — all 4 files are build-ignored
+  (`.Rbuildignore` patterns `^CLAUDE.*\.md$`,
+  `^PROJECT_LEARNINGS.*\.md$`, `^SESSION_RUNNER.*\.md$`, `^docs$`),
+  verified firsthand; `R CMD check` unaffected.
+- **Issue tracker:** 19 open issues (unchanged — no issue activity this
+  session).
+
+### 2026-06-12 — Update \#37 (exported-functions-unused inventory: 45 of 70 now used) (Session 65)
+
+- **Deliverable:** Updated GitHub issue \#37 (“Exported functions not
+  currently used by app”) to current reality and **kept it open**.
+  Struck the **45 of 70** listed functions now reached by the app, kept
+  the 22 still-unused + 3 S3 methods, corrected the totals (**116 / 155
+  used, 39 unused**; was 38 / 108 / 70), fixed the 5 “Notable findings”,
+  added a dated re-verification note, and folded in the **17 unused
+  exports created since** the issue was filed (2026-01-25). Executes S64
+  SUGGESTED-NEXT \#1.
+- **TDD phase = N/A** (issue-grooming; no production code or tests
+  written — same classification as S57/S61/S62/S63/S64).
+- **Method (firsthand, reproducible):** app reachability by call-graph
+  closure —
+  [`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html),
+  seed at `{runModularApp, runGeneKeepR, appUI, appServer}`, transitive
+  closure of
+  [`codetools::findGlobals`](https://rdrr.io/pkg/codetools/man/findGlobals.html)
+  over package functions; exported names outside the closure are
+  “unused.” Concrete call paths were produced for the flipped set
+  (e.g. `rankSubjects` via
+  `appServer → modGeneticValueServer → reportGV → orderReport`; the 4
+  Shiny modules called directly by `appServer`; the genotype trio via
+  `modInputServer`; `filterKinMatrix/Report/Threshold` via the
+  breeding-group + GV modules).
+- **Adversarial check of the static method’s blind spots:** the only
+  string-dispatched call in `R/` is `do.call("rbind", …)`, and none of
+  the 22 still-unused names appear as string literals → no
+  dynamic-dispatch invocation the closure missed; the S3 methods aren’t
+  dispatched on the app path (the app’s
+  [`summary()`](https://rdrr.io/r/base/summary.html) calls hit
+  `summary.default` on numeric vectors).
+- **Re-grade vs the handoff:** S64 (inheriting the S62 audit) framed
+  \#37 as “strike the resolved Shiny-module + genotype rows; keep the
+  still-accurate inventory” — implying ≈7 functions flipped and the bulk
+  held. Firsthand recomputation found **45/70 flipped** — ~64% stale,
+  not 2 clusters. Same classifier-stops-at-the-headline calibration miss
+  documented for S62→#14 and S63→#8.
+- **Applied form (owner-chosen via `AskUserQuestion`):**
+  strikethrough-in-place + dated verification note in the body
+  (`gh issue edit 37 --body-file`), plus the 17 newer unused exports; a
+  timeline pointer comment (`#issuecomment-4696756359`) makes the
+  correction visible to watchers. Issue kept **open** — the 39
+  genuinely-unused exports remain the actionable surface (largest
+  clusters: the simulated-kinship subsystem and the ORIP reporting
+  module).
+- **Issue tracker:** 19 open issues (unchanged — \#37 updated, not
+  closed).
+
+### 2026-06-12 — Verify + close \#8 (non-founder no-parents handling — caveated close) (Session 64)
+
+- **Deliverable:** Closed GitHub issue \#8 (“Improve handling of
+  non-founder animals without either parents assigned”) as
+  **implemented**, with a strengthened-caveat resolution comment.
+  Executes S63 SUGGESTED-NEXT \#1 (the other STALE candidate from the
+  S62 audit) — but firsthand verification + a reproduction re-graded it
+  from the audit’s footnote-caveat to a **strengthened caveat with a
+  reproduced silent-failure case**.
+- **TDD phase = N/A** (verify-and-close; no production code or tests
+  written — same classification as S57/S61/S63).
+- **What’s implemented (verified firsthand):** both of the issue’s
+  proposed solutions are live in the GVA report-ordering path. Solution
+  1 (origin/“From Center” segregation) — ONPRC-born founders with no
+  offspring are split into a `noParentage` bucket
+  (`R/orderReport.R:31,44-54`). Solution 2 (don’t rank them) — those
+  animals get `value = "Undetermined"`, `rank = NA`
+  (`R/rankSubjects.R:38,44`). Live wiring:
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+  → `orderReport(finalData, ped)` (`R/reportGV.R:146`). Tests green
+  against source via
+  [`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html):
+  `test_orderReport.R` 8/0/0/0, `test_rankSubjects.R` 5/0/0/0.
+- **The caveats (firsthand, beyond the audit’s note):** (1) **The fix is
+  gated on the optional `origin` column and silently does nothing
+  without it.** The whole `noParentage` block is wrapped in
+  `if ("origin" %in% names(rpt))` (`R/orderReport.R:31`); `origin`
+  reaches the report only when the source pedigree carries it
+  (`R/reportGV.R:119` `intersect(getIncludeColumns(), names(ped))`) and
+  is documented optional. **Reproduced:** a no-parent founder with no
+  offspring → `value = "High Value", rank = 1` (the original bug)
+  without `origin`, vs `"Undetermined"/NA` with it — no warning when the
+  safeguard doesn’t apply. (2) **No regression test pins the
+  `Undetermined`/`rank = NA` branch** — `test_orderReport` exercises the
+  path but asserts only positional unknown-ID counts;
+  `test_rankSubjects` never exercises `noParentage`. (3) **The 2021
+  simulated-kinship subsystem is orphaned** — `getPotentialParents`,
+  `createSimKinships`, `kinshipMatricesToKValues`,
+  `summarizeKinshipValues`, `countKinshipValues`,
+  `addKinshipValueCount`, `cumulateSimKinships` are exported but have no
+  live caller in `R/` (present only in tests,
+  `inst/extdata/trulyUnknownParents.R`,
+  `vignettes/simulatedKValues.Rmd`); the issue’s “discuss with Matt”
+  design item is unresolved. These remaining items are recorded in the
+  close comment as candidate enhancements but **not filed** (new-issue
+  creation outside the approved “close with caveat” scope — S63 lesson).
+- **Method (right-sized under ultracode):** firsthand source read + a
+  direct **reproduction** of the origin-gating failure + `load_all` test
+  runs + a 3-lens adversarial refute-the-close workflow
+  (`wf_f37f1b72-b6a`). The gate split 1 hold-open / 2 close-with-caveat;
+  the hold-open verdict (origin-gating makes the fix illusory in the
+  common case) was reconciled firsthand via the reproduction, which
+  upgraded the caveat and was surfaced to the owner via
+  `AskUserQuestion` before the irreversible close.
+- **Issue tracker:** 19 open issues remain (was 20).
+
+### 2026-06-12 — Verify + close \#14 (genotype provide+track — caveated close) (Session 63)
+
+- **Deliverable:** Closed GitHub issue \#14 (“Add ability to provide
+  genotypes for animals within the pedigree and track them”) as
+  **implemented**, with a caveat resolution comment. Executes S62 audit
+  recommendation \#1 — but firsthand verification re-graded it from the
+  audit’s “clean” classification to **close-with-caveat**.
+- **TDD phase = N/A** (verify-and-close; no production code or tests
+  written — same classification as S57/S61).
+- **Verified firsthand:** the genotype provide+track ability is
+  live-wired and test-pinned.
+  `getGenotypes`/`checkGenotypeFile`/`addGenotype` read + integer-code +
+  merge in the modular app’s separate-genotype-file mode
+  (`R/modInput.R:384-396`); the integer `first`/`second` columns ride
+  the cleaned studbook into
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+  → `getGVGenotype` (`R/reportGV.R:78`) → `geneDrop(genotype=…)` (`:92`)
+  → `calcGU`/`calcFG`; the functions are exported for scripting; **278
+  genotype-path assertions pass (0 fail / 0 err / 0 skip)**, including
+  the end-to-end `modInputServer` separate-file test
+  (`tests/testthat/test_modInput_qcStudbook.R:536-545`). Live entry
+  point:
+  [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+  → `shinyApp(appUI(), appServer)` → `modInputUI/Server("dataInput")`.
+- **The caveat (deliberate, owner-authored):** the combined-file UI mode
+  (`commonPedGenoFile`) does **not** integer-code string alleles, so
+  genotypes supplied in a single combined file don’t reach gene-drop —
+  at parity with the legacy monolith (per commit `c9019d51`’s own
+  rationale). Documented in the close comment; extending tracking to the
+  combined-file mode is noted there as a candidate future enhancement
+  (not filed — new-issue creation was outside the approved scope).
+- **Method (right-sized under ultracode):** firsthand source read +
+  [`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)
+  test run + a 3-lens adversarial refute-the-close workflow
+  (`wf_9d00a37a-6d0`). The refute pass earned its keep: the
+  intent-completeness lens surfaced the combined-file caveat that
+  re-graded the close, and a test-authenticity “tests are failing”
+  refutation was correctly traced to a **stale installed binary** (the
+  source tests pass green) rather than a real regression.
+- **Issue tracker:** 20 open issues remain (was 21).
+
+### 2026-06-12 — Backlog-staleness audit of all 21 open GitHub issues (Session 62)
+
+- **Deliverable:** `docs/audits/BACKLOG_STALENESS_AUDIT_2026-06-12.md` —
+  a read-only audit classifying every open issue as **STALE** (already
+  implemented), **PARTIAL**, or **OPEN** against the current code,
+  motivated by S61’s finding that \#34 was resolved in code but stayed
+  open. Generalizes that one-issue check to the whole tracker. **No
+  code, tests, or issues changed** (closing is a recommended follow-up,
+  not executed — 1-and-done).
+- **TDD phase = N/A** (read-only audit; no production code or tests
+  written — same classification as the S57/S61 non-code sessions).
+- **Result:** **2 STALE / close candidates** (#14 genotype provide+track
+  — clean close, \#34-grade; \#8 non-founder no-parents handling — close
+  *with caveat*: both proposed solutions are live but gated on the
+  optional `origin` column and lack a direct test assertion); **5
+  PARTIAL** (#1, \#5, \#9, \#35, \#37 — keep open with narrowed scope;
+  \#37 should be *updated*, not closed); **14 genuinely OPEN** (#2, \#4,
+  \#10, \#11, \#12, \#13, \#26, \#28, \#29, \#31, \#32, \#33, \#36, \#38
+  — cited TODOs still present verbatim or no implementation exists).
+- **Method:** 24-agent classify→adversarial-verify workflow (one
+  classifier per issue, searching by *content* not stale line numbers;
+  every STALE call handed to an independent skeptic told to refute it).
+  The adversarial pass **knocked down a false-STALE on \#1** — its
+  `Clear Focal Animals` checkbox clears the IDs reactive but not the
+  file-browser input, exactly as the owner’s own 2020 GitHub comment
+  notes — and downgraded \#8 to a caveated close. All close-relevant
+  calls (#14, \#8, \#1) were re-verified firsthand by the session
+  against source + `gh api`.
+- **Structural findings:** the issue tracker lags the code only in the
+  resolved→still-open direction (no false “open”); the auto-generated-ID
+  cluster (#38/#32/#26 + dam-ID \#31) is one feature split across four
+  issues — recommend consolidating; the old external-system requests
+  (#10/#11/#12/#13/#28) are correctly open and large. Report placed
+  under `docs/audits/` (build-ignored via `^docs$`) so it does not
+  regress S60’s top-level-files-NOTE elimination.
+
+### 2026-06-12 — Verify and close issue \#34 (`qcStudbook` already integrated in `modInput`) (Session 61)
+
+- **Closed issue \#34** (“Integrate qcStudbook() in modInput Shiny
+  module”, bug/high). The placeholder QC logic the issue describes
+  (`# TODO: Replace with actual qcStudbook() call` +
+  `results$cleaned <- rawData`) was already replaced by a real
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)/[`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md)
+  integration during the Shiny-module conversion (commit `7da01afe`,
+  extended `c9019d51`/`bb7f2be6`); CHANGELOG’s Session-20 entry already
+  noted \#34 as “stale (already integrated)” but the GitHub issue was
+  never formally closed. This session verified the resolution firsthand
+  and closed it with a resolution comment. **No code changed.**
+- **TDD phase = N/A** (verify-and-close; no production code or tests
+  written — same classification as the S57 close of \#30).
+- **What’s wired:** `R/modInput.R:408` calls
+  `qcStudbook(rawData, minParentAge, reportChanges=TRUE, reportErrors=TRUE)`;
+  `:423` calls the two-pass wrapper
+  [`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md)
+  (`R/runQcStudbook.R`); `R/processQcStudbookResult.R` shapes results
+  for the UI; `minParentAge` is read from the UI input with safe
+  coercion (`:398-404`); live path confirmed `appUI.R:123`
+  (`modInputUI("dataInput")`) → `appServer.R:104` (`modInputServer`).
+- **Verification (firsthand):** `test_qcStudbook.R` 38/0/0/0 +
+  `test_modInput_qcStudbook.R` 90/0/0/0 (pass/fail/err/skip). The
+  [`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html)
+  module tests ran (**0 skips**; `shiny` installed), driving
+  `modInputServer` and asserting the cleaned studbook carries the `gen`
+  column that only
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  adds (`test_modInput_qcStudbook.R:296`) — that assertion would FAIL if
+  the module were reverted to the placeholder, so the integration is
+  regression-pinned. A 3-lens adversarial refute-the-close workflow
+  (residual-placeholder/live-path ‖ functional-completeness ‖
+  test-authenticity) returned refuted=false / high confidence / 0 gaps
+  on all three lenses.
+
+### 2026-06-12 — `.Rbuildignore` excludes all non-shipping top-level dev/audit files — “non-standard top-level files” NOTE eliminated (Session 60)
+
+- **Deliverable:** added `.Rbuildignore` patterns for the 8
+  currently-shipping non-standard top-level files so they are dropped
+  from the build tarball, **eliminating** the R CMD check “non-standard
+  files/directories found at top level” NOTE entirely — the built
+  tarball’s top level is now only the 5 standard files (`DESCRIPTION`,
+  `NAMESPACE`, `NEWS.md`, `README.md`, `LICENSE`). Excluded:
+  `20250504_cran-comments.md` (the 8th dated cran-comments file — its 7
+  siblings were already individually ignored),
+  `methodology_dashboard.py`, `dashboard.html`,
+  `nprcgenekeepr_notes.txt`, `RECOMMENDED_SKILLS.md`,
+  `PED_GV_AUDIT_2026-05-30.{md,html}`, `TECH_DEBT_AUDIT_2026-05-30.md`.
+  This is the deferred “scope-B” follow-up S58/S59 surfaced (a
+  tarball-contents change, distinct from the pure dupe-guards of
+  S58/S59).
+- **Owner decisions (`AskUserQuestion`):** (1) scope = exclude **all 8**
+  (none are package content) → eliminate the NOTE; (2) style = broad
+  dupe-guarded + consolidate — the 7 dated
+  `^YYYYMMDD_cran-comments\.md$` exact lines replaced by one
+  `^[0-9]+_cran-comments\.md$` regex (covers 20250504 + any future dated
+  file, so a new one never silently ships again), and the synced
+  methodology/audit files use `<NAME>.*` forms
+  (`^RECOMMENDED_SKILLS.*\.md$`, `^PED_GV_AUDIT.*`,
+  `^TECH_DEBT_AUDIT.*`) that also catch macOS sync dupes; the non-synced
+  files (`methodology_dashboard.py`, `dashboard.html`,
+  `nprcgenekeepr_notes.txt`) use tight exact-match.
+- **TDD phase = N/A** (build-config only; `.Rbuildignore` is dropped
+  from the built tarball → no shippable `testthat` assertion; same
+  rationale as S58/S59).
+- **Verification (firsthand, authoritative at the build level):** staged
+  3 real spaced dupes (`RECOMMENDED_SKILLS 2.md`,
+  `PED_GV_AUDIT_2026-05-30 2.md`, `TECH_DEBT_AUDIT_2026-05-30 2.md`),
+  ran `R CMD build --no-build-vignettes --no-manual .` (RC=0 → no
+  regex-comment abort); the resulting tarball’s top level contained
+  **exactly** the 5 standard files — none of the 8 excluded files and
+  none of the 3 staged dupes (685 files, down from the 693-file baseline
+  = the 8 removed). The “non-standard top-level files” NOTE is a pure
+  function of the tarball’s top-level entries, so this directly confirms
+  the NOTE is gone (full `devtools::check()` not re-run — nothing
+  affecting tests/examples/metadata changed; consistent with S58/S59).
+  The complete 8-file set was enumerated by building the baseline
+  tarball first (S59’s candidate list named only 4 of the 8). Temp
+  dupes + tarballs removed via `trap cleanup`; tree clean.
+
+### 2026-06-12 — `.Rbuildignore` macOS-dupe guard generalized to the whole methodology `.md` cluster (Session 59)
+
+- **Deliverable:** generalized Session 58’s SESSION_NOTES dupe-guard to
+  the rest of the top-level methodology/doc `.md` files. Broadened 7
+  exact-match `.Rbuildignore` patterns to the `<NAME>.*\.md$` form —
+  `PROJECT_LEARNINGS`, `CLAUDE`, `SESSION_RUNNER`, `SAFEGUARDS`,
+  `BACKLOG`, `ROADMAP`, `CHANGELOG` (`.Rbuildignore:78-85`) — so macOS
+  file-sync duplicates (`CLAUDE 2.md`, `CHANGELOG copy.md`, …) of any of
+  them are build-ignored and can never re-raise the R CMD check
+  “non-portable file names” WARNING. After S58 only `SESSION_NOTES` was
+  `.*`-guarded; this kills the dupe-WARNING class for the whole
+  methodology cluster. (Owner decisions via `AskUserQuestion`: loose
+  `.*` style to match the S58 line; scope limited to the already-ignored
+  cluster — adding currently-unignored docs such as
+  `RECOMMENDED_SKILLS.md` deferred as a separate tarball-contents
+  change.)
+- **TDD phase = N/A** (build-config only; same rationale as S58 —
+  `.Rbuildignore` is dropped from the built tarball, so there is no
+  shippable `testthat` assertion).
+- **Verification (firsthand, both levels):** (1) regex probe across all
+  7 names — OLD exact patterns miss every dupe form (the leak); NEW `.*`
+  form matches `<NAME> 2.md` and `<NAME> copy.md` while NOT
+  over-matching `<NAME>.Rmd` / `<NAME>_archive.txt`, and canonical names
+  stay excluded. (2) build-equivalent (authoritative) — staged 14 real
+  spaced dupes (both forms × 7 names), ran
+  `R CMD build --no-build-vignettes --no-manual` (RC=0); the resulting
+  tarball (693 files) contained **zero** of the 7 names as `.md` → all
+  dupes + canonicals excluded, real content (DESCRIPTION/NAMESPACE)
+  present. Temp files + tarball removed via `trap cleanup`; tree clean.
+- **In-flight finding (caught by the build step, not shipped):**
+  `.Rbuildignore` lines are *all* perl regexes — including `#` comment
+  lines (they simply match no real path). An initial multi-line comment
+  with an unbalanced `(` made `R CMD build` abort with
+  `invalid regular expression`; fixed to regex-safe comment lines, plus
+  an inline NOTE warning future editors. (See PROJECT_LEARNINGS Learning
+  59.)
+
+### 2026-06-12 — `.Rbuildignore` permanent macOS-dupe fix (Session 58)
+
+- **Deliverable:** broadened `.Rbuildignore`’s `^SESSION_NOTES\.md$` →
+  `^SESSION_NOTES.*\.md$` so macOS file-sync duplicates
+  (`SESSION_NOTES 2.md`, `SESSION_NOTES 3.md`, `SESSION_NOTES copy.md`,
+  …) are build-ignored and can never again re-enter the build tarball to
+  re-raise the R CMD check “non-portable file names” WARNING that
+  Session 57 had to clear by hand. This is the permanent fix S57
+  deferred (root cause: an exact-match build-ignore pattern doesn’t
+  cover the space-name); the prior `^\.Rhistory\ 2$` entry shows the
+  same class was patched narrowly once before.
+- **TDD phase = N/A** (build-config only; no R code, no shippable unit
+  test — `.Rbuildignore` is dropped from the built tarball, so a
+  `testthat` assertion on it can’t run under R CMD check).
+- **Verification (firsthand):** (1) regex probe — OLD pattern matches
+  `SESSION_NOTES.md` only; NEW matches all dupe variants and
+  over-matches nothing (`CHANGELOG.md`, `SESSION_NOTES_archive.txt` stay
+  excluded; canonical `SESSION_NOTES.md` still excluded). (2)
+  build-equivalent — staged a real `SESSION_NOTES 2.md`, ran
+  `R CMD build` (RC=0); the resulting tarball contained **zero**
+  SESSION_NOTES entries → the dupe is excluded and the WARNING cannot
+  fire. Temp file + tarball removed; tree clean. (Full
+  `devtools::check()` intentionally skipped — the WARNING is a pure
+  function of tarball contents, verified directly.)
+
+### 2026-06-12 — Close issue \#30 + repo hygiene (Session 57)
+
+- **Closed issue \#30** (“work on use of lintr until satisfied with code
+  style”). The plan deliverable
+  (`docs/planning/issue30-lintr-exclusion-cleanup-plan.md`) is complete:
+  `lintr::lint_package()` = **0** (re-verified firsthand this session),
+  every `R/`-file `.lintr` line-specific exclusion removed except the
+  deliberately-kept `makeGeneticDiversityDashboard` (author
+  won’t-delete, `.Rbuildignore`’d). The CI `lint` check is GREEN. Closed
+  with a resolution comment summarizing Phases 1–4 (Sessions 53–56).
+  Optional trivial follow-up noted on the issue: convert the lone
+  remaining range-exclusion to an inline `# nolint start/end` block
+  (plan §4C \#16).
+- **Repo hygiene:** removed the untracked macOS-duplicate
+  `SESSION_NOTES 2.md` (563 KB, never committed, content fully contained
+  in `SESSION_NOTES.md`). Its space-in-filename was the sole cause of
+  the `devtools::check()` “portable file names” **WARNING**
+  (`.Rbuildignore`’s `^SESSION_NOTES\.md$` exact-match does not cover
+  the space-name, so the dupe entered the build tarball). **Verified
+  firsthand:** post-removal `devtools::check()` = **0 errors / 0
+  warnings / 3 NOTEs** (was 1 WARNING at S56) → the WARNING is cleared.
+  The 3 residual NOTEs are all pre-existing/environmental (clock-skew
+  future-timestamps, spelling, and “non-standard top-level files” — the
+  latter now lists only no-space methodology/audit files:
+  `20250504_cran-comments.md`, `PED_GV_AUDIT_2026-05-30.{html,md}`,
+  `RECOMMENDED_SKILLS.md`, `TECH_DEBT_AUDIT_2026-05-30.md`,
+  `dashboard.html`, `methodology_dashboard.py`,
+  `nprcgenekeepr_notes.txt`; the build-ignored `..Rcheck/` does not
+  appear).
+
+### 2026-06-12 — Issue \#30 Phase 4: behavior-sensitive lint refactors + de-exclude (Session 56)
+
+- **Deliverable:** implemented Phase 4 (the final exclusion-cleanup
+  phase) of the issue \#30 plan — the **6 behavior-sensitive `.lintr`
+  line-exclusions** (5 §4B + the reclassified `checkRequiredCols`).
+  After this, the **only** `R/`-file line exclusion left is
+  `makeGeneticDiversityDashboard` (deliberately kept);
+  `lintr::lint_package()` stays **0**.
+- **`checkRequiredCols.R` (RED→GREEN→REFACTOR, commit `17e3fa06`):**
+  `as.character(unlist(sapply(...)))` →
+  `requiredCols[!requiredCols %in% cols]`. Owner-chosen robust contract:
+  on out-of-contract `NA`-in-`cols` (reportErrors=TRUE) it now returns
+  the missing cols cleanly instead of erroring
+  (`"missing value where TRUE/FALSE needed"`); non-NA output
+  byte-identical, `reportErrors=FALSE` untouched. Pinned by a RED
+  NA-contract test; `@details` documents it.
+- **4 behavior-none REFACTORs (commit `69c8d759`, all adversarially
+  verified):** `correctParentSex.R` (if/else inverted to a guard clause;
+  6000-iter fuzz identical incl. error messages);
+  `fillGroupMembersWithSexRatio.R` (`else { if }` → `else if`, inline
+  `# nolint` deleted; 146 seeded cases identical); `setExit.R` (`mapply`
+  → `unlist(Map(...))`, `chooseDate` always length-1; 21 inputs
+  identical).
+- **`addSexAndAgeToGroup.R` (adopted-robust REFACTOR, commit
+  `69c8d759`):** `sapply` → `ped$sex[match(ids, ped$id)]`. Adversarial
+  verification found that on **empty `ids`** the old `sapply` form
+  dropped the `sex` column (2-col result), which **crashed** the one
+  caller (`modBreedingGroups.R:438` `colnames(gp) <- c(<3 names>)`) on
+  an empty group; the [`match()`](https://rdrr.io/r/base/match.html)
+  form returns the documented 3-column schema (sex an empty factor) and
+  renders an empty table. Owner adopted the new behavior as intentional;
+  pinned by an empty-ids contract test + a happy-path characterization
+  test; `@details` documents it.
+- **`create_wkbk.R` (accepted-divergence REFACTOR, commit `69c8d759`):**
+  inner `if (replace)` → guard clause `if (!replace)`. Owner-accepted
+  cosmetic divergence: on a non-logical non-coercible `replace` while
+  the file exists, both versions error but the message text differs
+  (`"argument is not interpretable as logical"` →
+  `"invalid argument type"`); `replace` is documented logical, coercible
+  values identical.
+- **Verification:** `lint_package()` = 0; the 6 files lint-clean
+  (`parse_settings=FALSE`); full suite **0 fail / 0 err / 159 skip**
+  (S49 baseline + 5 new passing expectations from the
+  contract/characterization tests → zero regression);
+  `devtools::check()` **0 errors** (1 pre-existing-environmental
+  WARNING + 2 NOTEs from stray top-level files incl. the macOS
+  `SESSION_NOTES 2.md` dupe — not from this change); adversarial
+  behavior-verification workflow `wf_168f8dcf-1e5` (6 skeptics, each
+  told to refute). Phase-3E: `addSexAndAgeToGroup`’s runtime integration
+  is covered by `test_modBreedingGroups.R:1015-1122` (the
+  breeding-groups member view), green in the full suite.
+
+### 2026-06-11 — Issue \#30 Phase 3: behavior-none lint refactors + `.lintr` casing fix (Session 55)
+
+- **Deliverable:** implemented Phase 3 of the issue \#30 plan — **6
+  behavior-none lint refactors**, each removing its `.lintr`
+  line-exclusion in the same change (\[lint-net-zero\]).
+  `lintr::lint_package()` stays **0**.
+- **Refactors (all adversarially verified behavior-preserving):**
+  `convertFromCenter.R` + `fillGroupMembers.R` + `hasGenotype.R`
+  (`unnecessary_nesting` collapses — drop an `else` after an
+  unconditional
+  [`stop()`](https://rdrr.io/r/base/stop.html)/[`return()`](https://rdrr.io/r/base/function.html);
+  `else { if }` → `else if`); `getLkDirectAncestors.R` +
+  `getLkDirectRelatives.R` (rename local var `source` → `msgSource`,
+  which `undesirable_function_linter` flagged as shadowing
+  [`base::source`](https://rdrr.io/r/base/source.html); also dropped 2
+  now-redundant inline nolints); `saveDataframesAsFiles.R`
+  (`unnecessary_lambda` →
+  `vapply(dfList, inherits, logical(1L), what = "data.frame")`).
+- **`.lintr` casing bug fixed** (owner-flagged): `R/CheckRequiredCols.R`
+  → `R/checkRequiredCols.R` — the capital-`C` entry matched nothing on
+  case-sensitive CI, so the L34 lint would fire on the Linux `lint`
+  runner.
+- **`checkRequiredCols.R` (planned Phase 3 \#1) reclassified to Phase
+  4:** adversarial verification + firsthand repro proved its
+  `sapply`→`%in%` fix is NOT behavior-none — on out-of-contract
+  `NA`-in-`cols` it turns a thrown error into a clean missing-columns
+  return (exported fn). Owner-approved deferral (`AskUserQuestion`) to a
+  RED→GREEN→REFACTOR slice in Phase 4; the file’s code + `.lintr` entry
+  left as-is (casing now correct).
+- **Verification:** `lint_package()` = 0; the 6 files lint-clean
+  (`parse_settings=FALSE`); full suite **2140 pass / 0 fail / 0 err /
+  159 skip** (= S49 baseline → zero regression); `devtools::check()` **0
+  errors** (1 pre-existing-environmental WARNING + NOTE from stray
+  top-level files incl. a macOS `SESSION_NOTES 2.md` dupe — not from
+  this change); `man/` untouched.
+
+### 2026-06-11 — Implement issue \#30: drive the R/ lint check to GREEN (Session 54)
+
+- **Deliverable:** implemented the issue \#30 cleanup plan;
+  `lintr::lint_package()` now reports **0 lints** in `R/` (was 193 = 41
+  suppressed by `.lintr` line-excludes + 152 residual) → the CI `lint`
+  check goes green.
+- **Phase 1 (commit `74a46d4c`):** removed dead commented code in
+  `getErrorTab.R`, `get_elapsed_time_str.R`,
+  `print.summary.nprcgenekeeprErr.R`; stripped a stray `#'` in
+  `set_seed.R` (also fixed a `#'` leak into `man/set_seed.Rd`); removed
+  the 4 now-unneeded `.lintr` line exclusions + the dead
+  `#commented_code_linter = NULL` no-op; kept
+  `makeGeneticDiversityDashboard` (author won’t-delete, NEW-20).
+- **Residual (this commit):** fixed the 154 firing lints across 17 `R/`
+  files + `inst/shinytest/app.R` via a per-file
+  editor→adversarial-verifier workflow (one editor + one verifier per
+  file; 150+ fixes, all 18 files verified behavior-preserved). **Owner
+  decisions (`AskUserQuestion`):** (1) keep `implicit_integer_linter` ON
+  and fix all 74 with `L` (counts/indices/widths) or `.0` (reals,
+  e.g. `ped$age * 12.0`) — NOT disable;
+  2.  targeted inline `# nolint` for the 16 verified false-positives /
+      justified idioms. Mechanical fixes: `line_length` wraps, `brace`,
+      `keyword_quote`, `return`,
+      `paste(collapse=)`→[`toString()`](https://rdrr.io/r/base/toString.html),
+      `sapply`→`vapply`, `if`/`else if` chain →
+      [`switch()`](https://rdrr.io/r/base/switch.html) in
+      `logModuleEvent.R`; removed the stale `getPyramidPlot.R = 25:27`
+      exclusion.
+- **`# nolint` (verified non-bugs):** `object_usage` ×6
+  (package-internal `calcFounderContributions`/`gatedSeed` lintr can’t
+  resolve + `founderStats` which IS a `modSummaryStatsServer` formal),
+  `nonportable_path` ×3 (MIME strings), `object_name` ×2 (base-R
+  `launch.browser` arg),
+  [`library()`](https://rdrr.io/r/base/library.html) ×2 (shinytest
+  harness), [`par()`](https://rdrr.io/r/graphics/par.html) ×3 (CRAN
+  save/restore idiom).
+- **Verification (firsthand):** `lint_package()` = 0; full test suite
+  **2140 pass / 0 fail / 0 err / 159 skip** (S49 baseline held exactly —
+  zero behavior regression); `document()` regenerated 3 man pages
+  (roxygen reflow, content identical); **Phase-3E** — booted the app
+  from `load_all` source: all 7 module UI builders constructed and
+  `runModularApp` served HTTP 200 / 92 KB.
+- Issue \#30 remains OPEN pending owner confirmation to close (the
+  `lint` check is now green).
+
+### 2026-06-11 — Plan issue \#30: resolve the `.lintr` line-specific exclusions (Session 53)
+
+- **Deliverable (planning):**
+  `docs/planning/issue30-lintr-exclusion-cleanup-plan.md` — an
+  evidence-based plan to remove most of the 18 `"file" = line` entries
+  in `.lintr`’s `exclusions: list()` by fixing the underlying lint, plus
+  a strategy for the 152 residual lints. **No `R/`, `tests/`, or
+  `.lintr` content changed** (plan only; implementation is the
+  subsequent sessions, one phase at a time — FM \#18/#25).
+- **Evidence base:** firsthand `lint_package(parse_settings=FALSE)`
+  (bypassing the exclusions so the suppressed lints are visible) = **41
+  lints suppressed by the 18 line-excludes + 152 residual = 193 total in
+  `R/`**; cross-checked by an 18-file parallel examination workflow
+  (`wf_c7863094-8f1`, one agent per file proposing the exact fix + risk
+  rating) with adversarial verification of every behavior-affecting fix
+  and commented-code deletion. **Three agent conclusions were
+  corrected** by verification/reproduction (see plan §6).
+- **Dispositions:** FIX 15 entries (~38 lints; 10 behavior-none, 5
+  low-risk verified-safe), KEEP-EXCLUDE 1
+  (`makeGeneticDiversityDashboard.R` — author won’t-delete, NEW-20),
+  REMOVE-STALE + fix real lints 1 (`getPyramidPlot.R = 25:27` suppressed
+  0 lints).
+- **Config bugs found:** (1) `.lintr` lists `"R/CheckRequiredCols.R"`
+  (wrong case) → the exclusion misses on case-sensitive CI; (2) the
+  `getPyramidPlot.R = 25:27` exclusion is dead config; (3) the `source`
+  “undesirable function” hits are a local variable named `source`,
+  fixable by rename (zero behavior change); (4) `commented_code_linter`
+  IS active via the tag set — the `#commented_code_linter = NULL` line
+  is a dead no-op (resolves the issue \#30 confusion).
+- **Learning \#53** (parse_settings=FALSE auditing trap; line-number
+  drift both ways; verify-first over agent headlines). \#30 stays OPEN
+  (planning deliverable; implementation pending).
+
+### 2026-06-11 — Fix issue \#42: repoint pkgdown output off `docs/`; fix unmasked vignette bug; pkgdown GREEN on master (Session 52)
+
+- **Deliverable (CI config + vignette fix / run-and-observe):** the
+  `pkgdown` workflow failed its Build-site step on a fresh CI clone
+  because `docs/methodology/` + `docs/planning/` are git-tracked inside
+  pkgdown’s default `docs/` output dir (no `pkgdown.yml` sentinel →
+  `clean_site()` refuses to wipe a dir it didn’t build → exit 1).
+- **Fix = Option 2 (repoint pkgdown), not the issue’s recommended Option
+  1 (relocate the doc trees).** Surfaced the choice via
+  `AskUserQuestion`: Option 1 conflicts with the methodology framework’s
+  own `docs/methodology/` convention — the synced
+  `methodology_dashboard.py` scores that path and the synced
+  `SESSION_RUNNER.md`/ `SAFEGUARDS.md` cross-link it (none durably
+  editable in-repo). Verified from pkgdown 2.1.1 source + empirically
+  that `build_site_github_pages()` overrides `_pkgdown.yml`’s
+  `destination:` via `override = list(destination = dest_dir)`, so the
+  yml alone is insufficient for CI. Commit `fcc154e8`: workflow
+  `dest_dir = "pkgdown_site"` + deploy `folder: docs → pkgdown_site`;
+  `_pkgdown.yml destination: pkgdown_site`;
+  `.gitignore += pkgdown_site/`; `.Rbuildignore += ^pkgdown_site$`. No
+  file moves; `docs/methodology`/`docs/planning`/dashboard/synced
+  cross-refs untouched; gh-pages URL unchanged; no `R/` or `tests/`
+  change.
+- **Unmasked + fixed a separate latent bug** (commit `e89975c8`): with
+  `clean_site` resolved, the build reached vignette rendering and failed
+  on `ColonyManagerTutorial.Rmd` — its error table paired
+  `names(getEmptyErrorLst())` (10 types) with 9 hardcoded descriptions
+  (“arguments imply differing number of rows: 10, 9”). The NEW-45 “no
+  period in IDs” feature added the `invalidIdChars` type without
+  updating the vignette; added the missing description. This vignette is
+  `.Rbuildignore`’d, so R CMD check never builds it — only pkgdown does
+  (it ignores `.Rbuildignore`) — which is why it was green on all 5
+  R-CMD-check platforms yet fatal to pkgdown.
+- **Validation (firsthand):** PR \#43 pkgdown run `27361729368`
+  (fresh-clone) SUCCESS → merged `--merge` to master `c6ad23dd` → master
+  push run `27362288625` Build site **SUCCESS** + Deploy **SUCCESS**.
+  **Closed issue \#42.** Remaining CI red is lint (#30, known/accepted).
+
 ### 2026-06-11 — Promote `add-methodology` → master (PR \#41) and live-validate `shinytest2`; close issue \#40 (Session 51)
 
 - **Deliverable (integration / run-and-observe):** promoted the

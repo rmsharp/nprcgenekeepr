@@ -6,7 +6,7 @@ used by `addParents`
 ## Usage
 
 ``` r
-addUIds(ped)
+addUIds(ped, format = getAutoIdFormat())
 ```
 
 ## Arguments
@@ -16,16 +16,25 @@ addUIds(ped)
   datatable that is the `Pedigree`. It contains pedigree information.
   The fields `sire` and `dam` are required.
 
+- format:
+
+  `sprintf` template for the generated placeholder IDs; defaults to
+  [`getAutoIdFormat()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAutoIdFormat.md)
+  (`"U%04d"`).
+
 ## Value
 
 The updated pedigree with partial parentage removed.
 
 ## Details
 
-The generated placeholder IDs have the form `Unnnn` (a leading "U" plus
-a zero-padded integer), so they are alphanumeric and never contain a
-period ("."), honoring the ID rule enforced at data input by
+The generated placeholder IDs default to the form `Unnnn` (a leading "U"
+plus a zero-padded integer), so they are alphanumeric and never contain
+a period ("."), honoring the ID rule enforced at data input by
 [`qcStudbook`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md).
+The format is configurable via
+[`setAutoIdFormat`](https://github.com/rmsharp/nprcgenekeepr/reference/setAutoIdFormat.md)
+(default `"U%04d"`).
 
 ## Examples
 

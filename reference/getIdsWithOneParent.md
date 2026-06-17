@@ -40,4 +40,6 @@ nrow(p)
 p <- addBackSecondParents(p, ped)
 nrow(p)
 #> [1] 690
+getIdsWithOneParent(p)
+#> character(0)
 ```

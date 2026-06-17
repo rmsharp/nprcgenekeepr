@@ -1,10 +1,11 @@
 # nprcgenekeepr — Project-Specific Learnings
 
 > Extracted verbatim from `CLAUDE.md` on 2026-06-06 to keep `CLAUDE.md`
-> under Claude Code’s 40k-char limit (it had grown to 97k, ~91% of which
-> was this single table). No content was changed in the move. **Append
-> new project learnings here, not in `CLAUDE.md`.** Base,
-> methodology-level learnings remain in `SESSION_RUNNER.md`.
+> within its size budget (Claude Code targets ~200 lines / ~25 KB; the
+> file had grown to 97k chars, ~91% of which was this single table). No
+> content was changed in the move. **Append new project learnings here,
+> not in `CLAUDE.md`.** Base, methodology-level learnings remain in
+> `SESSION_RUNNER.md`.
 
 *Migrated verbatim from `SESSION_RUNNER.md`’s Learnings table during the
 2026-05-31 methodology update (Session 10) so the synced runner stays
@@ -3189,3 +3190,3045 @@ fix as its own issue; merge with `--merge` to preserve multi-session
 history; validate a CI deliverable by dispatching the live workflow on
 the target branch and reading each group’s result firsthand; and state
 plainly that one clean run doesn’t prove a probabilistic flake gone.
+
+#### Learning 52 — Fix pkgdown’s `docs/` collision (#42) by REPOINTING the output dir, not relocating the doc trees: `build_site_github_pages(dest_dir=...)` OVERRIDES `_pkgdown.yml destination:` (set BOTH); the methodology framework PINS reference docs to `docs/methodology/` (synced dashboard + synced cross-refs), making “relocate” the wrong fix; and fixing one CI failure UNMASKS the next — pkgdown builds vignettes from source IGNORING `.Rbuildignore`, so a check-excluded vignette can be green on R-CMD-check yet fatal to pkgdown (S52, issue \#42 / pkgdown)
+
+#### Learning 53 — Auditing `.lintr` line-exclusions requires `parse_settings=FALSE`, and the hardcoded line numbers drift two ways (S53, issue \#30 planning)
+
+**(a) The auditing trap.** To see what a `.lintr` `"file" = line`
+exclusion actually suppresses you MUST bypass `.lintr` —
+`lintr::lint("R/foo.R")` (and `lint_package()`) default to
+`parse_settings=TRUE`, which reads `.lintr` and applies the very
+exclusion under audit, so a suppressed line reports “No lints found” and
+looks stale. Use
+`lint(..., linters=<project tag set>, parse_settings=FALSE)` or
+`lint_package(..., parse_settings=FALSE, exclusions=list("inst","tests","vignettes"))`.
+A subagent that skipped this wrongly declared
+`getLkDirectAncestors.R:26/29/35` a stale exclusion; bypassing it proved
+`undesirable_function_linter` DOES flag the local variable named
+`source` (it flags the *symbol* shadowing
+[`base::source`](https://rdrr.io/r/base/source.html), not just calls) →
+the fix is a variable RENAME, not an exclusion deletion. **(b)
+Line-number drift goes both ways** (\[lint-net-zero\] sibling): a shift
+can leave an exclusion pointing at lines with NO lint (dead config —
+`getPyramidPlot.R = 25:27` suppressed 0; the real lints had moved to
+16/38/41-43) OR keep suppressing while the *content* changed. **(c)
+Verify-first beats the agent’s headline.** Adversarial verification
+overturned two examine-agent recommendations: “delete the all-commented
+`makeGeneticDiversityDashboard.R`” reversed an explicit author
+won’t-delete decision (NEW-20, `.Rbuildignore`’d, namespace fallout per
+\#35) → KEEP-EXCLUDE; and “set_seed.R:11 exclusion is stale, just remove
+it” was wrong because removing it re-fires the lint — a stray trailing
+`#'` (which also leaks into `man/set_seed.Rd`) fools
+`commented_code_linter` and must be stripped. **(d) Fix-and-de-exclude
+atomically:** clean a file’s code and delete ITS `.lintr` entry in the
+SAME commit, so no stale line number is ever left. **(e)
+`commented_code_linter` IS active** via the tag set; the
+`#commented_code_linter = NULL` line in `.lintr` is a dead no-op (a
+failed `linters_with_tags` modify) — resolving issue \#30’s “reports not
+finding it” confusion. **(f) `undesirable_function_linter` flags
+symbols, not just calls** — a local var named `source`/`sapply`/etc.
+shadowing an undesirable function trips it. **Reflexes:**
+\[verify-first\]\[lint-net-zero\]\[author-decision\]\[parse-settings-false\].
+**Apply:** audit exclusions with `parse_settings=FALSE`; rename
+shadowing locals; never delete author-retained files; strip stray `#'`;
+fix-and-de-exclude in one commit. \#42: the `pkgdown` Build-site step
+failed on a fresh CI clone because `docs/methodology/`+`docs/planning/`
+are git-tracked inside pkgdown’s default `docs/` output dir
+(`.gitignore:32-36`) with no `pkgdown.yml` sentinel →
+`clean_site()`/`check_dest_is_pkgdown()` refuses to wipe a dir it didn’t
+build → exit 1. **(a) \[author-decision\] chose Option 2 (repoint), NOT
+the issue’s recommended Option 1 (relocate the trees) — surfaced via
+`AskUserQuestion` because the recommendation had a constraint the issue
+author hadn’t weighed.** The methodology framework’s OWN convention pins
+reference docs to `docs/methodology/`: the SYNCED
+`methodology_dashboard.py:109-110` scores
+`docs/methodology`+`docs/methodology/workstreams` (20 of the 98 health
+pts) and the SYNCED `SESSION_RUNNER.md` (13 refs) + `SAFEGUARDS.md` (1
+ref) cross-link that path — none durably editable in-repo (re-synced
+from upstream). So relocating would break things I can’t fix; repointing
+pkgdown touches nothing the framework cares about. **When the owner’s
+written recommendation conflicts with evidence you’ve found, don’t
+silently follow OR silently override — surface the trade-off with exact
+actions and let them choose.** **(b) \[verify-first on library
+internals\] `build_site_github_pages(dest_dir="docs")` does
+`as_pkgdown(pkg, override=list(destination=dest_dir))` — its `dest_dir`
+ARG OVERRIDES `_pkgdown.yml destination:`.** Read the installed-pkgdown
+(2.1.1) source AND proved it empirically
+(`as_pkgdown(".",override=list(destination="pkgdown_site"))$dst_path` →
+`pkgdown_site`; default → `docs`). ⟹ setting the yml ALONE does NOT fix
+CI (the owner proposed the yml; I confirmed it’s
+necessary-but-insufficient and set BOTH: workflow
+`dest_dir="pkgdown_site"` for CI +
+`_pkgdown.yml destination: pkgdown_site` for local `build_site()`
+consistency). Don’t assume a config field is honored by every entry
+point — `build_site()` reads the yml, `build_site_github_pages()`
+overrides it. **(c) Fix (commit `fcc154e8`):**
+`.github/workflows/pkgdown.yaml` `dest_dir="pkgdown_site"` + deploy
+`folder: docs→pkgdown_site`; `_pkgdown.yml destination: pkgdown_site`;
+`.gitignore += pkgdown_site/`; `.Rbuildignore += ^pkgdown_site$`. NO
+file moves; gh-pages URL unchanged (the site deploys from the gh-pages
+BRANCH via JamesIves, so the build-dir name is a transient artifact); no
+`R/`/`tests/` change → suite byte-identical, R-CMD-check unaffected.
+**\[local-proof-before-push\]** simulated the fresh-clone state in a
+temp package skeleton: `clean_site(dest=docs)` ERRORS “is non-empty and
+not built by pkgdown” (reproduces \#42) while
+`clean_site(dest=pkgdown_site)` is a clean no-op — proved the fix
+locally before any CI cycle. **(d) \[fix-unmasks-next\] a CI failure can
+MASK later-stage failures; fixing it reveals the next one.** With
+clean_site resolved, the build reached vignette rendering and failed on
+`ColonyManagerTutorial.Rmd:209` chunk `make-errorList-definition-tbl` —
+`data.frame(Error=names(getEmptyErrorLst()), Definition=errorDescriptions)`
+paired **10 error types vs 9 hardcoded descriptions** (“arguments imply
+differing number of rows: 10, 9”). Root cause: the NEW-45 “no period in
+IDs” feature (commit `5e228bd9`) added the `invalidIdChars` type to
+[`getEmptyErrorLst()`](https://github.com/rmsharp/nprcgenekeepr/reference/getEmptyErrorLst.md)
+without updating the vignette table → added the missing description in
+positional order (after `duplicateIds`, before `changedCols`) using the
+package’s canonical wording (commit `e89975c8`). **(e)
+\[pkgdown-vs-Rbuildignore\] pkgdown builds ALL vignettes from the source
+tree IGNORING `.Rbuildignore`; R CMD build/check builds only the
+NON-ignored ones.** `ColonyManagerTutorial.Rmd` is `.Rbuildignore`’d
+(`:36`) — likely for CRAN tarball-size/time (it reads screenshots from
+the also-`.Rbuildignore`’d `vignettes/shiny_app_use/`) — so R-CMD-check
+NEVER builds it (green on all 5 platforms) yet pkgdown does → it was the
+ONE pkgdown-built vignette no R-CMD-check covers, hence the only place a
+render bug could hide (the other 3 —
+a2interactive/a3manual/simulatedKValues — ARE check-built → green →
+render fine; this let me PREDICT the re-run would go green, which it
+did). **If you add/rename an error type in
+[`getEmptyErrorLst()`](https://github.com/rmsharp/nprcgenekeepr/reference/getEmptyErrorLst.md),
+update the `ColonyManagerTutorial.Rmd` table in lockstep (positional
+pairing).** **(f) \[scope-discipline\] when the fix unmasked a SEPARATE
+bug, surfaced it via `AskUserQuestion` (fix-now vs file-separately)
+rather than silently scope-creeping** — characterized the root cause,
+the whack-a-mole risk (a 4th vignette untested at that point), and the
+`.Rbuildignore` reason it was latent, so the owner could decide with
+full info; owner chose fix-now. **(g) \[phase-3E\] validation chain, all
+firsthand:** local fresh-clone simulation → PR \#43 pkgdown run
+`27361729368` (fresh-clone, Deploy skipped on PR) SUCCESS, all 4
+vignettes rendered → merged `--merge` to master `c6ad23dd` → master push
+run `27362288625` Build site SUCCESS **+ Deploy SUCCESS** (exercises the
+new `folder: pkgdown_site` → gh-pages). The live master pkgdown run IS
+Phase-3E (#31) — confirmed the steps firsthand, not “the check is
+green.” **\#42 auto-closed on merge** (PR body “Fixes \#42”) +
+validation comment. Owner-gated decisions: 4 `AskUserQuestion`
+(fix-approach, vignette-scope, merge; + honored the owner’s mid-stream
+yml correction) — 0 corrections. `[news-vs-changelog]` → CHANGELOG only;
+`[macos-dupe-scan]` explicit `git add`. **Reflexes:**
+\[author-decision\]\[verify-first\]\[local-proof-before-push\]\[fix-unmasks-next\]\[pkgdown-vs-Rbuildignore\]\[scope-discipline\]\[phase-3E-smoke\]\[triage-to-root-cause\]\[news-vs-changelog\]\[macos-dupe-scan\].
+**Apply:** to fix a pkgdown `docs/` collision when reference docs
+legitimately live under `docs/`, REPOINT pkgdown’s output via the
+workflow `dest_dir` arg (it overrides `_pkgdown.yml destination:`) + set
+the yml too for local consistency, rather than relocating tracked trees
+the framework pins there; prove the fix with a fresh-clone
+`clean_site()` simulation BEFORE pushing; expect a masked CI failure to
+reveal the next one (pkgdown builds `.Rbuildignore`’d vignettes that
+R-CMD-check skips); and surface any unmasked separate bug as a scope
+decision rather than silently absorbing it.
+
+#### Learning 54 — Implement issue \#30 to a GREEN lint check: Phase 1 (commented-code) committed alone, then a per-file editor→verifier fan-out for the 154-lint residual (S54, issue \#30 implementation)
+
+**(a) \[orchestrate-fanout-verify-globally\] A broad
+mechanical-but-judgment cleanup is a per-file pipeline.** 154 residual
+lints across 18 files: a workflow with ONE editor + ONE adversarial
+verifier per file (each editing its OWN distinct file → zero Edit
+conflicts) applied 150+ fixes and verified all 18 behavior-preserved in
+~6 min. The editors iterated-until-clean and caught EXTRA
+`implicit_integer` literals that only surfaced after a wrap shifted
+lines (`pch = 19`→`19L`, `errors$Error[1]`→`[1L]`). The orchestration
+parallelizes the per-site judgment; the AUTHORITATIVE verification (full
+`lint_package()`=0, full test suite, `document()`, app boot) is done by
+the parent, not trusted from the agents. **(b)
+\[reconcile-against-CI-command\] An agent’s `parse_settings=FALSE`
+self-lint can fire linters the project `.lintr` does NOT.** A verifier
+reported 2 `coalesce_linter` “remaining” on `modInput.R`; but
+`coalesce_linter` isn’t in the project tag set
+(`"coalesce_linter" %in% names(proj)` → FALSE) and the real CI command
+`lintr::lint_package()` (reads `.lintr`) showed **0**. The flagged lines
+were pre-existing, untouched, behavior-correct. NEVER accept a non-green
+claim from a sub-probe without reproducing it with the exact CI command.
+**(c) `implicit_integer` int-vs-double is behaviorally moot in R but
+intent-correctness matters** (owner kept the linter ON, did not
+disable): append `L` for counts/indices/lengths/UI-widths/durations
+(`column(8L)`, `character(0L)`, `errors > 0L`, `rep("Site", 3L)`);
+append `.0` only where a real is intended (`ped$age * 12.0`).
+`double * 12L` == `double * 12.0` numerically, so this is style, not
+behavior — but pick the intent-correct form. **(d) \[author-decision\]
+targeted inline `# nolint: <linter>` for VERIFIED false-positives only**
+— `object_usage` on package-internal funcs lintr can’t resolve
+(`calcFounderContributions`, `gatedSeed`) + one it misreads
+(`founderStats` IS a `modSummaryStatsServer` formal,
+modSummaryStats.R:293); `nonportable_path` on MIME strings
+(`"text/css"`); `object_name` on the base-R-standard `launch.browser`
+arg; [`library()`](https://rdrr.io/r/base/library.html) in the shinytest
+harness; the CRAN [`par()`](https://rdrr.io/r/graphics/par.html)
+save/restore idiom. Read each to PROVE it’s a non-bug before suppressing
+(all 6 object_usage were false positives — 0 latent bugs). **(e)
+Wrapping a roxygen line reflows the generated `.Rd`** → run `document()`
+after and COMMIT the regenerated man pages
+(`getPyramidPlot`/`modBreedingGroupsServer`/`modPedigreeServer` here);
+the `\item`/`\value` text is identical, just rewrapped — R-CMD-check
+requires man/ to match source. `@importFrom` wraps did NOT change
+`NAMESPACE` (roxygen joins continuation lines → same tokens). **(f)
+\[phase-3E-smoke\] verify runtime Shiny edits by BOOTING the app from
+`load_all` source, not the stale system lib** — `pkgload::load_all(".")`
+then build each `modXUI()` + `runModularApp(launch.browser=FALSE)`;
+confirmed all 7 module UI builders constructed (where most
+`column()`/`implicit_integer` UI edits live) and the app served **HTTP
+200 / 92KB** — the unit suite (2140/0/0, S49 baseline) does NOT exercise
+the mod servers, so the boot is the real runtime gate for these files.
+**(g) The lint-dump basename ≠ `R/<name>`** — the dump’s `app.R`
+actually lives at `inst/shinytest/app.R` (no `R/app.R`); have agents
+DISCOVER and flag the real path rather than assume. **(h) \[scope\] the
+owner expanded a “1-and-done” session mid-stream** (“proceed to clean up
+lints that remain”) — honored it as a deliberate scope expansion (Phase
+1 + residual), committed Phase 1 ALONE first as a recoverable boundary
+(\[lint-net-zero\]: code fix + exclusion removal same commit) before the
+architect-mode residual fan-out. **Reflexes:**
+\[orchestrate-fanout-verify-globally\]\[reconcile-against-CI-command\]\[author-decision\]\[phase-3E-smoke\]\[lint-net-zero\]\[verify-first\].
+**Apply:** for a broad lint backlog, fan out one editor + one
+adversarial verifier per file; keep `implicit_integer` int/double
+intent-correct; `# nolint` only PROVEN false-positives; `document()` +
+commit man/ after any roxygen reflow; reconcile every lint count against
+the real `lint_package()` CI command; and BOOT the app to verify runtime
+Shiny edits.
+
+#### Learning 55 — Adversarial verification can overturn a plan’s “behavior-none” classification: an EXPORTED `sapply`→`%in%` swap diverged on NA input → owner-gated reclassification to RED→GREEN→REFACTOR (S55, issue \#30 Phase 3)
+
+**(a) \[verify-first-before-classifying\] “Obviously equivalent” is a
+hypothesis, not a fact — especially on an exported function.** Phase 3
+of the \#30 plan labeled `checkRequiredCols.R`’s
+`as.character(unlist(sapply(requiredCols, \(col) if (!any(col == cols)) col)))`
+→ `requiredCols[!requiredCols %in% cols]` as behavior-none
+(“agent-verified across present/absent/empty cases”). A per-file
+adversarial verifier (`wf_eb654565-758`; one skeptic per refactor, each
+told to REFUTE behavior-equivalence and ALLOWED TO RUN R) constructed
+the untested case: `cols = c("id", NA, "sire")` with a required col
+absent → the OLD `if (!any(col == cols))` evaluates `if (!NA)` and
+THROWS `"missing value where TRUE/FALSE needed"`, while `%in%` treats NA
+cleanly and RETURNS the missing cols. I reproduced it firsthand (non-NA
+inputs byte-identical across 5 cases; NA input: error vs clean return).
+`checkRequiredCols` is `@export`ed → the divergence is on the public
+surface. **There is NO clean lint-passing rewrite that preserves the
+exact NA-error** (it is inherent to the `sapply`/`if` structure), so the
+lint fix *necessarily* changes behavior → it belongs in the
+behavior-SENSITIVE bucket (RED→GREEN→REFACTOR), not behavior-none. The
+plan had caught `addSexAndAgeToGroup` as “the only real behavior risk”
+(§6 \#4); this is a SECOND one it under-scoped. **(b) \[strict-TDD\] A
+behavior change discovered mid-REFACTOR is a phase violation — surface
+it, don’t ship it.** Per the project TDD contract (REFACTOR = no
+behavior change) I paused before committing, surfaced 3 options via
+`AskUserQuestion`; the owner chose DEFER to Phase 4. Reverted the one
+file to its EXACT pre-session state (sapply + exclusion restored) and
+shipped only the 6 GENUINELY behavior-none refactors (the other 6
+verifiers returned refuted=false, each with empirical R comparison).
+**(c) The 6 that WERE behavior-none:** `unnecessary_nesting` collapses
+(drop an `else` after an unconditional
+[`stop()`](https://rdrr.io/r/base/stop.html)/[`return()`](https://rdrr.io/r/base/function.html),
+or `else { if }` → `else if`) are pure control-flow-equivalent;
+`undesirable_function_linter` flags a local var named `source`
+(shadowing [`base::source`](https://rdrr.io/r/base/source.html) — it
+flags the SYMBOL, not just a call) → rename to `msgSource` (a value
+reference, so resolution is unaffected — cosmetic); `unnecessary_lambda`
+`\(df) inherits(df, "data.frame")` →
+`vapply(dfList, inherits, logical(1L), what = "data.frame")` (vapply
+feeds each element positionally to `inherits`’s `x`, `what=` appended
+via `...` → identical call; a list element named `what` cannot misbind
+because elements pass positionally). **(d) \[owner-flagged-config-fix\]
+A pre-existing `.lintr` casing bug (`R/CheckRequiredCols.R` capital-C)
+suppresses nothing on case-sensitive CI** — `lintr` exclusions are
+case-sensitive on Linux, so the capital-C entry let the L34 lint fire on
+the CI runner while macOS hid it. Fixed to lowercase
+`R/checkRequiredCols.R` at the owner’s explicit request (config-only,
+behavior-none); the corrected entry now suppresses the deferred file’s
+lint on Linux too, while the CODE refactor stays deferred. **I initially
+restored the buggy casing as a literal “revert” and only flagged it —
+the owner had to point it out; the better call was to fix it proactively
+(behavior-none, independent of the deferred code).** **(e)
+\[orchestrate-then-verify-globally\]** 7 verifiers ran in parallel (~95
+s); the AUTHORITATIVE gate (`lint_package()`=0, full suite 2140/0/0/159,
+`devtools::check()` 0 errors) was run by the parent, not trusted from
+agents. **Reflexes:**
+\[verify-first\]\[adversarial-overturns-plan\]\[strict-TDD\]\[author-decision\]\[lint-net-zero\]\[orchestrate-fanout-verify-globally\].
+**Apply:** before classifying a
+`*apply`/`%in%`/[`match()`](https://rdrr.io/r/base/match.html) swap on
+an EXPORTED function as behavior-none, adversarially test NA / duplicate
+/ out-of-contract input; if it diverges, it is RED→GREEN→REFACTOR, not
+REFACTOR — surface and let the owner decide. And `.lintr` line-exclusion
+paths are case-sensitive on CI — match the real filename casing.
+
+#### Learning 56 — Implement \#30 Phase 4 (the behavior-sensitive bucket): adversarial verification catches edge divergences that firsthand probing MISSES — empty-input column-drop + abuse-input error-message — and one was a latent caller crash-fix (S56, issue \#30 Phase 4)
+
+**(a) \[verify-first / adversarial-beats-my-own-probe\] A dedicated
+skeptic finds the edge case your own firsthand probe didn’t think to
+try.** I had firsthand-proven `addSexAndAgeToGroup`’s
+`sapply`→`ped$sex[match(ids, ped$id)]` equivalent across
+happy/missing/duplicate inputs and DOWNGRADED it from the plan’s “RED
+slice” to a behavior-none REFACTOR (the `age` vapply already errors
+identically on any ≠1-row id, so `sex` can’t diverge — true on those
+inputs). The 6-skeptic adversarial workflow (`wf_168f8dcf-1e5`, each
+told to REFUTE + run R) tried `ids = character(0)`: OLD
+`sapply(character(0), …)` returns a NAMED EMPTY LIST →
+[`data.frame()`](https://rdrr.io/r/base/data.frame.html) DROPS that
+column → 2 cols (ids, age); NEW
+[`match()`](https://rdrr.io/r/base/match.html) returns a length-0 factor
+→ retained → 3 cols (ids, sex, age). A SHAPE divergence I never probed.
+**Lesson: run the adversarial pass even AFTER your own firsthand
+verification — “I tested it” is not “I tested the empty / zero-length /
+wrong-type case.”** Always include `character(0)` / length-0 / `NA` /
+wrong-type in an `*apply`-swap’s adversarial set. **(b)
+\[trace-the-caller\] The empty-input divergence was a LATENT CRASH FIX,
+not a regression.** The sole caller `modBreedingGroups.R:438-440` does
+`gp <- addSexAndAgeToGroup(ids, ped); colnames(gp) <- c("Ego ID","Sex","Age in Years")`
+— assigning 3 names to OLD’s 2-col empty-group result THROWS
+`"'names' attribute [3] must be the same length as the vector [2]"`;
+NEW’s 3-col result renders an empty table. NEW also matches the
+`@return` doc (3 columns). So “adopt the new behavior” (owner choice)
+FIXED a latent empty-group crash in the breeding-groups member view.
+Tracing the ONE caller turned an abstract “shape differs” into a
+concrete decision. **(c) A guard-clause inversion `if(x)`→`if(!x)`
+diverges on non-logical input.** `create_wkbk`’s
+`if (replace){remove} else {warn;return}` →
+`if (!replace){warn;return}; remove`: for `replace` a non-logical
+non-coercible value (string/list) while the file exists, OLD
+`if(replace)` throws “argument is not interpretable as logical” while
+NEW `!replace` (evaluated FIRST, before `if`) throws “invalid argument
+type” — both error, only the message text differs. Coercible values
+(0/1/NA/logical) are identical. `replace` is documented logical → owner
+ACCEPTED the cosmetic message change (no clean lint-passing rewrite
+preserves the exact message). **(d) \[strict-TDD\] Surface BOTH
+refutations before shipping, even the trivial one.** Per \#55’s
+precedent and the REFACTOR contract, I paused on both (not just the
+meaningful `addSexAndAge` one) and posed ONE `AskUserQuestion` with the
+caller-traced consequences + recommendations; owner chose adopt-new /
+accept. 0 corrections. **(e) \[process-slip — re-lint after EVERY edit,
+incl. roxygen\] I committed the checkpoint `17e3fa06` after adding an
+`@details` block without re-linting → an 81-char line landed in it;
+caught by the NEXT `lint_package()` run and fixed-forward in the
+batch.** A roxygen edit can introduce a `line_length` lint just like
+code — re-run `lint_package()` AFTER any edit and BEFORE the commit, not
+just after the code change. **(f) The 4 genuinely behavior-none
+refactors** (correctParentSex if/else inversion with the report body
+falling through; fillGroupMembers `else{if}`→`else if`; setExit
+`mapply`→`unlist(Map(...))` since `chooseDate` is always length-1;
+checkRequiredCols `%in%` strictly within the agreed NA envelope) were
+confirmed by the skeptics (6000-iter fuzz / 146 seeded / 21 inputs / ~50
+inputs respectively, all identical incl. error messages). **(g)
+\[phase-3E\] the runtime gate for a pure-fn change consumed by Shiny =
+the module test, not an app boot.** `addSexAndAgeToGroup`’s integration
+is exercised by `test_modBreedingGroups.R:1015-1122` (the `viewGrp`
+member view → `c("Ego ID","Sex","Age in Years")` colnames path), green
+in the full suite — stronger and cheaper than manually creating an empty
+group in a booted app. **Reflexes:**
+\[verify-first\]\[adversarial-beats-own-probe\]\[trace-the-caller\]\[strict-TDD\]\[author-decision\]\[lint-net-zero\]\[re-lint-after-every-edit\]\[orchestrate-fanout-verify-globally\]\[phase-3E-via-module-test\].
+**Apply:** when swapping
+`*apply`/[`match()`](https://rdrr.io/r/base/match.html)/`%in%` or
+inverting a guard clause on an EXPORTED fn, adversarially test EMPTY
+(`character(0)`), zero-length, `NA`, and WRONG-TYPE inputs (not just
+happy/missing/dup) — and trace the actual caller(s) to judge whether a
+shape/error divergence is a regression or a latent-bug fix; re-lint
+after every edit including roxygen.
+
+#### Learning 57 — Closing \#30 (admin) + the macOS `SESSION_NOTES 2.md` dupe is a check *WARNING* (not just a NOTE) because of the SPACE in its name (S57, issue \#30 close + repo hygiene)
+
+**(a) \[verify-the-gating-fact-firsthand\] Re-verify the one fact a
+close turns on, even when the handoff already states it.** Before
+`gh issue close 30` I re-ran `lintr::lint_package()` = **0** myself
+rather than trusting the S56 handoff’s count — the project’s own
+standing gotcha is “always reconcile any sub-probe lint count against
+the real `lint_package()`.” A close is a public, hard-to-walk-back act;
+pay the few seconds to confirm its load-bearing premise. **(b)
+\[macos-dupe → portable-names WARNING, not the top-level NOTE\] The
+recurring macOS sync duplicate `SESSION_NOTES 2.md` causes the lone
+`devtools::check()` WARNING specifically via the “non-portable file
+names” check — because of the SPACE in the filename — which is a
+DIFFERENT check from the “non-standard files/directories found at top
+level” NOTE that the no-space methodology/audit files
+(`RECOMMENDED_SKILLS.md`, `methodology_dashboard.py`,
+`PED_GV_AUDIT_2026-05-30.{html,md}`, `TECH_DEBT_AUDIT_2026-05-30.md`,
+`dashboard.html`, `nprcgenekeepr_notes.txt`,
+`20250504_cran-comments.md`) trigger.** Root cause of why the dupe
+reaches the build at all: `.Rbuildignore`’s `^SESSION_NOTES\.md$` is an
+EXACT-match regex that does not cover the space-name, so the dupe lands
+in the build tarball while the real file is ignored. `rm` clears the
+WARNING (verified firsthand: post-removal `devtools::check()` = **0
+errors / 0 warnings / 3 pre-existing NOTEs** — clock-skew, spelling, and
+the top-level-files NOTE which no longer lists the dupe). The NOTE is
+pre-existing/accepted and is NOT cleared by removing the dupe.
+**Permanent fix (DEFERRED — owner’s call, out of this session’s
+scope):** broaden the pattern to `^SESSION_NOTES.*\.md$` (or
+`^SESSION_NOTES.*`) so any future macOS dupe is build-ignored and never
+re-raises the WARNING. **(c) \[safe-delete-untracked\] “Untracked” is
+not “safe to delete.”** Before `rm` I verified the dupe was untracked
+(`??`), never committed (empty `git log -- "SESSION_NOTES 2.md"`), AND
+content-contained in the live file
+(`comm -13 <(sort SESSION_NOTES.md) <(sort "SESSION_NOTES 2.md")` → 0
+dupe-only lines). A point-in-time copy could hold edits absent from the
+original; confirm zero unique content first. **(d)
+\[declare-N/A-honestly\] An admin/hygiene session (issue close +
+untracked-file removal + doc/changelog edits) writes no production code
+or tests → the RED→GREEN→REFACTOR cycle does not apply; declare TDD
+phase N/A every response rather than forcing a phase.** **Reflexes:**
+\[verify-first\]\[verify-the-gating-fact\]\[safe-delete-untracked\]\[macos-dupe-scan\]\[news-vs-changelog\]\[commit-before-scope-switch\].
+**Apply:** when a session’s whole point is to close an issue, re-verify
+the issue’s resolution criterion firsthand before closing; and remember
+the macOS dupe trips a *WARNING* (space → portable-names) distinct from
+the top-level-files *NOTE* — `rm` it (or broaden `.Rbuildignore` to kill
+it permanently).
+
+#### Learning 58 — Execute S57’s DEFERRED `.Rbuildignore` permanent dupe-fix: broaden the exact-match to `.*`, and verify a build-ignore change at the BUILD level (stage dummy → `R CMD build` → `tar tzf`), not via `devtools::check()` (S58, repo hygiene / `.Rbuildignore`)
+
+**(a) \[permanent-over-recurring\] Kill a recurring-toil class at the
+root rather than re-doing the manual fix each session.** S57 cleared the
+macOS-dupe WARNING by `rm`-ing `SESSION_NOTES 2.md` and explicitly
+DEFERRED the permanent fix (Learning 57b); S58 executed it —
+`.Rbuildignore:77` `^SESSION_NOTES\.md$` → `^SESSION_NOTES.*\.md$`. An
+exact-match build-ignore entry does NOT cover macOS sync dupes
+(`X 2.md`, `X 3.md`, `X copy.md`); broaden to `^X.*\.md$`. The project
+had already patched this exact class narrowly ONCE (`.Rbuildignore:30`
+`^\.Rhistory\ 2$` — an escaped-space exact match for a single dupe),
+which is the TELL that the narrow form keeps coming back; the `.*`
+generalization is the durable fix. **(b) \[build-not-check\] Verify a
+`.Rbuildignore` change at the BUILD level, not via
+`devtools::check()`.** The “non-portable file names” WARNING is a pure
+function of the built tarball’s CONTENTS, so the authoritative, targeted
+gate is: stage a real dummy (`touch "SESSION_NOTES 2.md"`) →
+`R CMD build --no-build-vignettes --no-manual .` →
+`tar tzf <tarball> | grep -i SESSION_NOTES` (expect NONE) → remove the
+dummy + tarball. This proved exclusion (0 SESSION_NOTES entries / 693
+files, RC=0) WITHOUT the ~90s full `check()` that S57 self-dinged as
+over-heavy — check would be redundant here since no R code/metadata
+affecting it changed and S57 already established the dupe→WARNING link.
+Pair it with a fast `grepl(old, files)` vs `grepl(new, files)` regex
+probe (`ignore.case = TRUE, perl = TRUE` — mirrors R CMD build’s
+case-insensitive relative-path match) as the RED-equivalent: confirm OLD
+misses the dupes, NEW catches all variants, and neither over-matches
+(`CHANGELOG.md` / non-`.md` stay FALSE; the canonical name stays
+excluded). **(c) \[declare-N/A-honestly, cont. from 57d\] A
+`.Rbuildignore`-only change is TDD N/A — there is NO shippable unit test
+for it, because `.Rbuildignore` is DROPPED from the built tarball, so a
+`testthat` assertion that reads it can’t run under R CMD check.**
+Substitute the build-level proof above; do not manufacture a synthetic
+test. **(d) \[glob-dont-hardcode\] DESCRIPTION `Version` is the
+tarball-name source of truth, not CLAUDE.md.** The built tarball was
+`nprcgenekeepr_1.1.0.9000.tar.gz` (dev version) while CLAUDE.md still
+says “Version 1.0.8” — glob `nprcgenekeepr_*.tar.gz`; a hardcoded
+`_1.0.8` would have matched nothing. (Stale CLAUDE.md version flagged
+for a future one-line fix.) **(e) \[Rscript –vanilla for one-offs\] In
+an renv project, run throwaway R from a temp `.R` file via
+`Rscript --vanilla`** — inline `-e` with backslashes (`"\\."`) hits
+shell-escaping AND `.Rprofile` prints the renv out-of-sync banner;
+`--vanilla` skips `.Rprofile`/renv and a file sidesteps the quoting.
+**Reflexes:**
+\[verify-first\]\[macos-dupe-scan\]\[news-vs-changelog\]\[right-sized-orchestration\]\[declare-N/A-honestly\].
+**Apply:** when a recurring macOS-dupe (or any sync-dupe) keeps
+re-raising a check WARNING, broaden the `.Rbuildignore` exact-match to
+`.*` and prove it by building with a staged dummy and inspecting the
+tarball — not by `devtools::check()`, and not by eye.
+
+#### Learning 59 — Generalize the dupe-guard to the whole methodology `.md` cluster — and the trap that surfaced: EVERY `.Rbuildignore` line is a perl regex, so a “comment” with an unbalanced paren ABORTS the build (S59, repo hygiene / `.Rbuildignore`)
+
+**(a) \[generalize-the-class, cont. from 58a\] S58 broadened only
+`SESSION_NOTES`; the same macOS-dupe WARNING class still hit every
+sibling exact-match pattern.** Broadened all 7 to `<NAME>.*\.md$`
+(`.Rbuildignore:77-84`): `PROJECT_LEARNINGS`, `CLAUDE`,
+`SESSION_RUNNER`, `SAFEGUARDS`, `BACKLOG`, `ROADMAP`, `CHANGELOG`. A
+dupe of any of them (`CLAUDE 2.md`, `CHANGELOG copy.md`) would otherwise
+have re-raised the exact WARNING S58 just killed for SESSION_NOTES.
+Killing a *class* means covering every member, not the one that bit you
+last. **(b) \[Rbuildignore-lines-are-ALL-regexes\] The load-bearing new
+fact: `.Rbuildignore` has NO comment syntax — every line is a perl regex
+matched against relative paths. The existing `#`-prefixed “comments”
+only work because each happens to be a VALID regex that matches no real
+file (a path containing the literal comment text doesn’t exist).** I
+added a multi-line `#` comment whose 2nd/3rd lines held an unbalanced
+`(` (`... sync dupes (` 2.md`,`) → `R CMD build` aborted immediately:
+`Error ... invalid regular expression '# Patterns broadened ...('`. The
+fix: keep every comment line a valid regex — balanced parens or, safest,
+NO parens / no leading quantifier (`*`,`+`,`?`). I left an inline NOTE
+in the file warning the next editor. The TELL that this is a regex-file,
+not a prose-file: line 73’s original `(tooling, not R package content)`
+works ONLY because its parens are balanced. **(c) \[the build step IS
+the test\] This was caught by the build-level verify (Learning 58b), not
+by eye — a static read of the comment looked fine.** A `.Rbuildignore`
+edit’s authoritative gate is `R CMD build`; running it after EVERY edit
+(not just the pattern lines) is what surfaced the invalid-regex abort
+before it could ship. **(d) \[zsh-not-bash: no word-split on unquoted
+scalars\] The Bash tool runs in zsh, where `for n in $NAMES` does NOT
+split an unquoted scalar on whitespace (bash does).** My first verify
+loop iterated ONCE over the whole string → created 1 bogus file named
+`PROJECT_LEARNINGS CLAUDE ... 2.md` instead of 7. Use an explicit
+literal list (`for n in A B C ...`) or a real array, never an unquoted
+space-joined scalar, when a loop’s correctness depends on
+word-splitting. **(e) \[authoritative build proof\] Staged 14 REAL
+spaced dupes (both `2.md` and `copy.md` forms × 7 names) → `R CMD build`
+(RC=0) → `tar tzf` (693 files) → ZERO of the 7 names as `.md` (dupes AND
+canonicals excluded), real content (DESCRIPTION/NAMESPACE) present;
+`trap cleanup EXIT` removed all dupes + the tarball.** Paired with an
+all-7-names regex probe (RED-equivalent): OLD misses every dupe form,
+NEW catches `2.md`/`copy.md` and does NOT over-match
+`<NAME>.Rmd`/`<NAME>_archive.txt`. **(f)
+\[scope-the-decision-to-the-owner\] Two genuine author-decisions posed
+via `AskUserQuestion` before editing:** pattern style (loose `.*` to
+match S58’s shipped line — chosen — vs a targeted `( [0-9]+| copy)?`
+with zero over-match) and file scope (the already-ignored cluster —
+chosen, pure behavior-none — vs ALSO adding currently-UNignored docs
+like `RECOMMENDED_SKILLS.md`/audit files, which would change tarball
+contents + shrink the top-level-files NOTE, a DIFFERENT change).
+Deferring the latter kept this a pure dupe-guard. **Reflexes:**
+\[verify-first\]\[build-not-check\]\[macos-dupe-scan\]\[news-vs-changelog\]\[declare-N/A-honestly\]\[right-sized-orchestration\]\[commit-before-scope-switch\].
+**Apply:** treat `.Rbuildignore` as a regex file (balanced/safe comments
+only) and re-build after any edit; when scripting verification in this
+environment remember it’s zsh (explicit lists, not unquoted scalars);
+and when generalizing a guard, cover every member of the class, not just
+the triggering file.
+
+#### Learning 60 — Execute the deferred scope-B: exclude ALL non-shipping top-level files to eliminate the “non-standard top-level files” NOTE — and BUILD THE BASELINE TARBALL to enumerate the real set, don’t trust the handoff’s candidate list (S60, repo hygiene / `.Rbuildignore`)
+
+**(a) \[enumerate-from-the-artifact, not the handoff\] The handoff’s
+candidate-file list was incomplete; the authoritative set came from
+building the baseline tarball.** S59’s SUGGESTED-NEXT \#1 named 4
+candidate files (`RECOMMENDED_SKILLS.md`, `TECH_DEBT_AUDIT`,
+`PED_GV_AUDIT.{md,html}`) but the actual NOTE comprised **8** — also
+`20250504_cran-comments.md`, `methodology_dashboard.py`,
+`dashboard.html`, `nprcgenekeepr_notes.txt`. I got the complete set by
+`R CMD build` → `tar tzf <tarball> | grep -E '^pkg/[^/]+$'` (the
+tarball’s top-level FILES are exactly the NOTE’s input), then
+subtracting the 5 standard files
+(`DESCRIPTION`/`NAMESPACE`/`NEWS.md`/`README.md`/`LICENSE`). Lesson: for
+a “shrink/eliminate the NOTE” task, enumerate from the built artifact,
+not from a prose candidate list — and pose the scope `AskUserQuestion`
+only AFTER you have the real set, so the options are grounded in
+reality. **(b) \[the NOTE is a pure function of tarball top-level
+contents\] “Non-standard files/directories found at top level” is
+computed by R CMD check from the unpacked tarball’s top-level entries
+minus a fixed standard set, so building + listing top-level entries is
+the AUTHORITATIVE gate** — a full `devtools::check()` is not needed
+(same build-not-check logic as Learning 58b, here applied to a NOTE
+rather than a WARNING). Excluding all 8 left exactly the 5 standard
+files (685 files vs the 693 baseline = the 8 removed) → NOTE eliminated,
+verified directly. **(c) \[consolidate-to-prevent-recurrence\] The root
+cause of `20250504_cran-comments.md` shipping was 7 sibling exact-match
+lines + a missed 8th.** Replaced all 7 dated
+`^YYYYMMDD_cran-comments\.md$` with one `^[0-9]+_cran-comments\.md$` — a
+NEW dated cran-comments file is now auto-ignored, killing the “someone
+adds a dated file and forgets the ignore line” class. When you find N
+exact-match lines for a dated/numbered family, a single regex is the
+durable fix. **(d) \[dupe-guard only where dupes happen\] Used
+`<NAME>.*` (dupe-guarded) for the macOS-synced methodology/audit docs
+(`RECOMMENDED_SKILLS`, `PED_GV_AUDIT`, `TECH_DEBT_AUDIT`) but tight
+`^X\.ext$` for
+`methodology_dashboard.py`/`dashboard.html`/`nprcgenekeepr_notes.txt`
+and the cran-comments regex — those aren’t sync-prone, so the broad form
+would only add over-match risk for no benefit.** Match the guard to the
+actual threat, don’t apply `.*` reflexively. **(e) \[zsh-nomatch ABORTS,
+cont. from 59d\] `rm -f nprcgenekeepr_*.tar.gz` with no matching file
+ABORTED the whole script in zsh (`no matches found`) before
+`R CMD build` ran** — even with `-f`, zsh errors on an unmatched glob
+unless `unsetopt nomatch` / `setopt null_glob`. I’d applied the zsh
+lesson to the dupe-staging array but forgot it for the cleanup glob;
+prefix `unsetopt nomatch 2>/dev/null; setopt null_glob 2>/dev/null`
+before ANY glob that might not match. **Reflexes:**
+\[verify-first\]\[build-not-check\]\[macos-dupe-scan\]\[news-vs-changelog\]\[declare-N/A-honestly\]\[right-sized-orchestration\]\[commit-before-scope-switch\].
+**Apply:** to “shrink/eliminate a top-level-files NOTE,” build the
+baseline tarball to enumerate the real non-standard set, exclude per
+owner scope, then re-build and confirm the top level is only standard
+files; consolidate dated/numbered families to one regex; and disable zsh
+`nomatch` before glob cleanups.
+
+#### Learning 61 — Closing a STALE issue (resolved by a prior session but never formally closed): verify the integration is LIVE and PINNED firsthand before closing — the proof is a test that would FAIL if reverted to the placeholder (S61, issue \#34 close)
+
+**(a) \[verify-the-gating-fact-firsthand, cont. from 57a\] When the
+deliverable is closing an issue, the gating fact is the issue’s
+resolution CLAIM — establish it firsthand, don’t infer it from “looks
+done.”** \#34 (“integrate qcStudbook in modInput”, bug/high) described
+placeholder QC (`# TODO: Replace with actual qcStudbook() call` +
+`results$cleaned <- rawData`); the current `modInput.R:408/423` already
+calls
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)/[`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md).
+The integration landed during the Shiny-module conversion (commit
+`7da01afe`, extended `c9019d51`/`bb7f2be6`) and `CHANGELOG.md`’s
+Session-20 entry (`:1216-1217`) even recorded “#34 … is stale (already
+integrated)” — yet nobody had closed the GitHub issue. **An issue can
+outlive its resolution; closing it is itself an evidence-gated
+deliverable.** The handoff chain (S20→S60) kept listing \#34 as the
+“highest-value open BUG to implement” when CHANGELOG already knew it was
+done — a systemic issue-tracker-lags-code gap, not one session’s miss.
+**(b) \[pin-test = the integration proof; a \[mutation-check\] sibling\]
+The single strongest evidence a claimed-complete integration is REAL is
+a test that would FAIL if the code were reverted to the placeholder.**
+`test_modInput_qcStudbook.R:296` asserts `"gen" %in% names(cleaned)`;
+`gen` is added ONLY by
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+(`qcStudbook.R:267`), never by the old `results$cleaned <- rawData`
+passthrough → that one assertion pins the live path. When verifying “is
+X actually wired,” don’t just confirm the call exists — locate (or note
+the ABSENCE of) the discriminating test the placeholder would have
+failed. **(c) \[firsthand test gate — skips are load-bearing\]
+`test_qcStudbook.R` 38/0/0/0 + `test_modInput_qcStudbook.R` 90/0/0/0
+(pass/fail/err/skip).** The **0 skips** mattered: the
+[`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html)
+module-server tests carry `skip_if_not_installed("shiny")`, so a nonzero
+skip would mean the end-to-end module path never executed and the green
+was hollow. Confirm `shiny` is installed → those tests actually drove
+`modInputServer` (upload → `getData` → assert the cleaned studbook).
+**(d) \[right-sized adversarial close under ultracode\] For an
+irreversible public act on a HIGH-priority bug, ran a small 3-lens
+refute-the-close workflow** (residual-placeholder/live-path ‖
+functional-completeness-vs-issue-intent ‖ test-authenticity), each
+skeptic told to find a reason NOT to close → all `refuted=false`, high
+confidence, 0 gaps. The AUTHORITATIVE test gate was run by the parent
+firsthand, not trusted from the agents (agents read code; I ran R). A
+3-lens fan-out is proportionate here; a heavier pass would be ceremony,
+a solo close would underuse the ultracode budget. (First launch failed
+on an unsupported `run_in_background` arg — Workflow always backgrounds;
+re-invoked clean, one self-corrected round-trip.) **(e)
+\[declare-N/A-honestly, cont. from 57d/58c\] A verify-and-close session
+writes no production code or tests → TDD phase N/A every response;**
+pre-committed to NOT fixing in-session if a gap surfaced (separate TDD
+session) so scope discipline held even with “while I’m here” temptation.
+**Reflexes:**
+\[verify-first\]\[verify-the-gating-fact\]\[mutation-check\]\[right-sized-orchestration\]\[declare-N/A-honestly\]\[news-vs-changelog\]\[commit-before-scope-switch\].
+**Apply:** to close an issue a prior session resolved-but-didn’t-close,
+verify the resolution firsthand — find the discriminating test the
+original defect/placeholder would have failed (the integration’s “pin”),
+run the relevant tests confirming 0 skips on any conditionally-skipped
+end-to-end tests, and for a high-value/irreversible close run a small
+adversarial refute-the-close pass while keeping the test gate firsthand.
+And when picking a backlog “bug,” READ THE CODE to confirm it’s still
+live before treating it as implementation work — the tracker can lag the
+code.
+
+#### Learning 62 — Backlog-staleness audit: generalize the \#34 finding to the WHOLE tracker via a classify→adversarial-refute fan-out — the refute pass earns its keep by knocking down a false-STALE the owner himself had flagged in 2020 (S62, audit / `docs/audits/`)
+
+**(a) \[generalize-the-#34-finding to the whole tracker\] S61 found ONE
+issue (#34) resolved-but-open; this audited all 21 open issues for the
+same staleness.** Result: only **2 of 21** are fully done (#14 genotype
+support, \#8 no-parentage handling) — both landed in the S20–25
+Shiny-module conversion and were never closed; **5 PARTIAL** (#1, \#5,
+\#9, \#35, \#37); **14 genuinely OPEN**. The tracker lags the code, but
+**only in the resolved→still-open direction** — no issue was falsely
+“open” the other way. Confirms the systemic gap is “closing doesn’t
+happen,” not “issues are wrong.” **(b) \[adversarial-refute-the-close
+EARNS ITS KEEP — not ceremony\] Of the 3 issues a classifier called
+STALE, the skeptic confirmed 2 and KNOCKED DOWN 1 (#1).** \#1 (“clear
+focal animals list”) has a `Clear Focal Animals` checkbox
+(`modPedigree.R:84-88`) that resets `focalIds(character(0L))` — but
+**never** resets the file-browser input (`input$focalAnimalFile`; no
+`shinyjs::reset` anywhere), so a later “Update” re-reads the
+still-uploaded file. **The owner’s OWN 2020 GitHub comment says exactly
+this:** *“Introduced a partial fix… a new checkbox
+`Clear Focal Animals`… but it does not clear file names read in with the
+file browser.”* Closing on the checkbox alone would have re-buried a gap
+the author documented six years ago. For an outward-facing close, the
+refute step changed the answer on 1/3 of candidates — load-bearing.
+**(c) \[verify-close-relevant-calls firsthand — incl. the issue’s own
+comments\] Re-verified all 3 close-relevant calls (#14/#8/#1) firsthand
+against source AND GitHub.** An agent CITED the \#1 owner comment as
+evidence; I confirmed it real via
+`gh api repos/:owner/:repo/issues/1/comments` (a bare `gh issue view 1`
+printed empty — a TTY/pager quirk; the API showed 1 comment). Agents
+read code; the parent runs the authoritative checks (here: `gh api`,
+`R`-free grep/Read of `orderReport.R:44-54` + `rankSubjects.R:38,43` for
+\#8, the test assertions at `test_modInput_qcStudbook.R:538-545` for
+\#14). **(d) \[search-by-CONTENT, not the cited line\] The load-bearing
+classifier instruction: old issues’ line numbers have drifted, so grep
+the quoted TODO TEXT / function name, never the cited line.** \#35’s
+placeholder moved from the issue’s “lines 246-253” to
+`modPedigree.R:292-302` (a real
+[`trimPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/trimPedigree.md)
+call replacing it) — a line-number check misses the resolution; content
+search finds it AND reveals it’s only ancestors (`getProbandPedigree`
+walks backward only), so PARTIAL not STALE. **(e) \[hold STALE at the
+\#34 bar\] STALE = placeholder REPLACED by real logic, not a TODO
+deleted/reworded.** 14 OPEN issues still carry the cited TODO VERBATIM
+(`fillBins.R:6` “RMS provide description”, `agePyramidPlot.R:60` chimp
+TODO, `getPotentialParents.R:92-94` “a bit of a hack”,
+`removeAutoGenIds.R:4-6` leading-`U`). \#8 was
+confirmed-resolved-but-CAVEATED → downgraded to a close-WITH-NOTE
+(functional both-solutions-live, but gated on the optional `origin`
+column + no test asserts the `Undetermined`/`rank=NA` branch) — distinct
+from \#14’s clean close. **(f) \[Workflow `args` gotcha + build-safe
+report placement\] `Workflow({args:[38,37,…]})` arrived as a NON-array →
+`pipeline()` threw instantly (0 agents, 59 ms).** Fix: hardcode the
+work-list in the script
+(`const ISSUES = Array.isArray(args)&&args.length ? args : [38,37,…]`)
+and re-launch from the patched `scriptPath` (resume not needed — nothing
+cached). Placed the report under `docs/audits/` — build-ignored via
+`.Rbuildignore:15` `^docs$` — so it does NOT regress S60’s elimination
+of the “non-standard top-level files” NOTE (a top-level dated audit file
+like the existing `PED_GV_AUDIT`/`TECH_DEBT_AUDIT` would have re-added
+to it). **(g) \[1-and-done: audit ≠ close\] The deliverable is the audit
+REPORT with closure RECOMMENDATIONS; closing issues is an outward-facing
+follow-up, NOT executed this session** (stated in Phase 1, held to it).
+Net available: \#14 clean close, \#8 caveated close, \#37/#35 updates,
+ID-cluster (#38/#32/#26/#31 — one feature split across four issues)
+consolidation. **Reflexes:**
+\[verify-first\]\[completeness-workflow\]\[right-sized-orchestration\]\[news-vs-changelog\]\[declare-N/A-honestly\]\[commit-before-scope-switch\]\[author-decision\].
+**Apply:** for a backlog-staleness sweep, fan out one classifier per
+issue (instruct: search by CONTENT, hold STALE at the \#34 bar),
+adversarially REFUTE every STALE before recommending a close, verify
+close-relevant calls firsthand INCLUDING the GitHub issue’s own
+comments, write the report under a build-ignored path, and recommend —
+don’t execute — the closes (1-and-done).
+
+#### Learning 63 — Executing an audit’s close recommendation is itself evidence-gated: re-verify intent-completeness firsthand (it re-graded \#14 from “clean” to “caveated”), and reconcile EVERY adversarial verdict against a `load_all` run — a “tests failing” refutation was a stale-installed-binary artifact (S63, issue \#14 close)
+
+**(a) \[the audit’s confidence is a HUNCH until re-verified — don’t
+inherit it\] S62 classified \#14 a “clean close, high confidence”;
+firsthand verification re-graded it to close-WITH-CAVEAT.** The audit’s
+per-issue classifier checked the headline (the separate-genotype-file
+path works + the test pin passes) and stopped there. My deeper check
+found the `commonPedGenoFile` (combined-file) UI mode never
+integer-codes string alleles → those genotypes never satisfy
+[`hasGenotype()`](https://github.com/rmsharp/nprcgenekeepr/reference/hasGenotype.md)
+and never reach
+[`geneDrop()`](https://github.com/rmsharp/nprcgenekeepr/reference/geneDrop.md).
+**Lesson:** a verify-and-close session executing an audit recommendation
+must independently re-check *intent-completeness against the WHOLE
+issue* (here: does EVERY input mode track, not just the one the audit
+cited), not ratify the audit’s grade. An audit recommending a close is
+the start of the verification, not the end of it. This is Learning 61(a)
+applied to a recommendation rather than a raw backlog item. **(b)
+\[reconcile each adversarial verdict against firsthand evidence —
+refuted≠true, refuted≠false, until checked\] The 3-lens refute pass
+returned 1 confirm + 2 refuted; one refutation was REAL and one was an
+ARTIFACT.** The intent-completeness refutation (combined-file caveat)
+was real and changed the deliverable. The test-authenticity refutation —
+“the test at `:503-547` is actively FAILING, the installed
+`modInputServer` is missing the genotype merge block” — was FALSE: the
+agent decompiled the **stale installed binary** (compiled RDB) instead
+of the source. My own
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)
+run was 90/0/0/0 and I had read the merge block at
+`R/modInput.R:384-396` directly. **Lesson:** when a subagent claims an R
+test is failing or code is missing, it may be inspecting
+`getNamespaceVersion`/the installed namespace, which can lag the working
+tree; the authoritative source gate is `load_all` (or a fresh install)
+run by the parent. Don’t accept `refuted=true` at face value AND don’t
+dismiss it — verify each verdict firsthand; the value of the refute pass
+is the questions it raises, not the verdicts it returns. **(c)
+\[stale-install is a recurring R-package verification trap — the version
+string is NOT proof of currency\] `getNamespaceVersion("nprcgenekeepr")`
+returns the rolling dev `1.1.0.9000` whether the installed binary is
+current or months stale.** So a matching version does not mean the
+installed code equals the source. An agent decompiling the installed
+namespace can therefore “see” code the source has already superseded
+(or, here, code the source ADDED that the install lacks). Always test
+via `load_all` against the working tree when verifying a source-level
+claim; never let an installed-binary inspection stand in for it. **(d)
+\[verification flipped the approved premise → re-confirm with the owner,
+even about something they once decided\] The combined-file caveat was a
+DELIBERATE parity choice in the owner’s OWN commit `c9019d51`.** Even
+so, because it changed the close from the “clean” framing the owner
+approved (when picking “#14” off my menu) to a caveated one, I surfaced
+it via `AskUserQuestion` (clean / caveated / keep-open-narrowed) rather
+than silently downgrading or unilaterally closing. The owner chose
+caveated close. **Lesson:** when firsthand verification flips the
+premise of an approved outward-facing action, re-confirm the framing —
+owning a past design decision is not the same as authorizing today’s
+issue-state change on the new understanding. (Safeguards: “if what you
+find contradicts how it was described, surface that instead of
+proceeding.”) **(e) \[“close with caveat” authorizes the close +
+comment, NOT new tracker writes — the classifier enforced this
+correctly\] I tried to file a 1-line follow-up enhancement for the
+combined-file gap; the auto-mode classifier DENIED it** (the approved
+action was closing \#14; a new issue is a separate external write).
+Right boundary. I captured the residual *in the close comment* instead
+(with the file pointers a future enhancement needs) and labeled it “not
+filed.” **Lesson:** when an outward-facing scope is approved narrowly,
+keep within it — record spun-off gaps in the artifact you ARE authorized
+to write, and leave issue-creation to the owner unless explicitly
+approved. Don’t treat “optionally I could also…” in a menu option as
+standing authorization. **Reflexes:**
+\[verify-first\]\[verify-the-gating-fact\]\[reconcile-agent-claims-firsthand\]\[stale-install-trap\]\[author-decision\]\[right-sized-orchestration\]\[declare-N/A-honestly\]\[news-vs-changelog\]\[commit-before-scope-switch\].
+**Apply:** when executing an audit’s close recommendation, re-verify the
+issue’s FULL intent firsthand (every mode/path, not just the cited one)
+— the audit’s grade is a hunch; run a refute-the-close pass and
+reconcile EACH verdict against a
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)
+run (a stale installed binary yields false “tests failing”/“code
+missing” refutations); if verification re-grades the close, re-confirm
+the framing with the owner via `AskUserQuestion`; and keep new-issue
+creation out of a “close with caveat” scope — document spun-off gaps in
+the close comment.
+
+#### Learning 64 — When an adversarial gate SPLITS, reconcile the dissenting verdict by REPRODUCTION, not majority vote — a “hold-open” outvoted 2-to-1 was substantively right, and reproducing its claim (optional-column gating silently recreates the original bug) upgraded a footnote caveat into a strengthened one (S64, issue \#8 close)
+
+**(a) \[a split gate is decided by evidence, not a vote count\] The
+3-lens refute pass on closing \#8 returned 1 `hold-open` (refuted=true,
+high) + 2 `close-with-caveat` (refuted=false, high).** The tempting move
+is to go with the 2-of-3 majority. Instead I reconstructed the
+dissenter’s central claim in code: a no-parent founder with no
+offspring, run through `orderReport()` *without* an `origin` column →
+`value="High Value", rank=1` (the exact bug \#8 describes); *with*
+`origin` (NA for the ONPRC-born animal) → `"Undetermined"/NA`. The
+reproduction CONFIRMED the hold-open verdict’s substance even though it
+was outvoted. **Lesson:** adversarial verdicts are inputs to a firsthand
+reconciliation, not a poll to be tallied — the lone dissenter is exactly
+the one to reproduce, because if it’s right it changes the deliverable.
+(Extends Learning 63(b): reconcile EACH verdict; 64 adds: when they
+disagree, the reproduction breaks the tie, not the count.) **(b)
+\[optional-column gating that SILENTLY recreates the bug is a stronger
+finding than a footnote caveat\] The S62 audit graded \#8 “close WITH
+CAVEAT” treating the `origin` gating (`R/orderReport.R:31`
+`if ("origin" %in% names(rpt))`) as a footnote.** Firsthand, the gating
+means the fix does NOTHING — with no warning — for any studbook lacking
+the optional `origin` column (absent from most bundled datasets;
+`origin` reaches the report only via
+`intersect(getIncludeColumns(), names(ped))` at `R/reportGV.R:119`). The
+headline symptom is fully present in the default path. **Lesson:**
+“implemented but gated on an optional input” is not automatically a
+minor caveat — check what happens on the DEFAULT path and whether the
+user is warned; a safeguard that silently no-ops is materially worse
+than the audit’s one-line note implied. A staleness classifier checks
+the headline + cited anchors and stops; it won’t probe the alternate
+input path or a long comment thread’s second arc (here, the orphaned
+2021 simulated-kinship subsystem + the unresolved “discuss with Matt”
+design item). **(c) \[the same premise-flip → re-confirm-with-owner
+reflex as S63, second time running\] Firsthand verification again
+flipped the approved premise (audit’s footnote caveat → reproduced
+silent-failure + orphaned subsystem), so I surfaced it via
+`AskUserQuestion`** (close-with-strengthened-caveat /
+hold-open-and-re-scope / close-and-file-followup) before the
+irreversible `gh issue close`. Owner chose strengthened caveat. Held the
+S63 scope boundary: documented the three remaining items (origin-absent
+safeguard, regression test, simulated-kinship integration) in the close
+comment as candidate enhancements but filed NO new issues. **Lesson:**
+the premise-flip reflex isn’t a one-off — every audit-driven close is
+gated on re-verifying intent firsthand, and a reproduction (not just a
+code read) is the strongest re-grade evidence to bring the owner.
+**Reflexes:**
+\[verify-first\]\[reproduce-the-dissenting-verdict\]\[verify-the-gating-fact\]\[default-path-not-just-headline\]\[author-decision\]\[surface-premise-flip\]\[scope-discipline\]\[declare-N/A-honestly\]\[news-vs-changelog\].
+**Apply:** when an adversarial refute gate splits, reproduce the
+dissenting (hold-open) verdict’s claim in code before deciding — a
+majority of “close” verdicts does not outweigh one reproduced blocker;
+treat optional-input gating as a potential silent-failure (test the
+default path + check for a warning), not a footnote; and when
+verification re-grades an approved close, re-confirm the framing with
+the owner via `AskUserQuestion` and keep new-issue creation out of the
+“close with caveat” scope.
+
+#### Learning 65 — “Update a stale inventory issue” is a recompute-from-scratch task, not a patch-the-named-clusters task: the handoff said ≈2 clusters flipped; a call-graph reachability recomputation found 45 of 70 listed functions are now used (S65, issue \#37 update)
+
+**(a) \[recompute, don’t patch the cited clusters\] S64 (inheriting the
+S62 audit) framed \#37 as “strike the resolved Shiny-module + genotype
+rows; keep the still-accurate unused-export inventory” — ≈7 functions,
+“bulk holds.”** A from-scratch reachability recomputation found **45 of
+the 70 listed functions are now used by the app** (only 22 + 3 S3
+methods still unused); totals 155 exports / 116 used / 39 unused vs the
+issue’s 108 / 38 / 70. The per-issue classifier had checked the headline
+(the 4 Shiny modules) + the genotype anchor and stopped — the SAME
+calibration miss flagged for S62→#14 and S63→#8, here amplified because
+\#37 is a 70-row inventory, not a single yes/no. **Lesson:** when the
+deliverable is “update a stale inventory,” the unit of work is
+recomputing the WHOLE inventory, not patching the rows the handoff
+names; the handoff tells you where to start, not how much is stale.
+Stale entries the inherited framing would have left in place included
+`rankSubjects`, `calcGU`, `filterKinMatrix/Report/Threshold`,
+`getOffspring`, `withinIntegerRange` — all now live. **(b) \[call-graph
+reachability is the right tool AND it’s reproducible\]
+`codetools::findGlobals(f, merge=FALSE)$functions ∩ package-functions`
+gives each function’s callees; BFS from the app entry seeds
+`{runModularApp, runGeneKeepR, appUI, appServer}` yields the transitive
+“used by the app” set; exported names outside it are unused.** This is
+more rigorous than grep (it follows the call graph, not text matches)
+and more reliable than farming per-function judgments to agents (which
+conflate test/`man`/`@examples` references with app use — roxygen lives
+in comments and is correctly NOT seen by findGlobals, which parses the
+function body). Concrete call paths are the evidence to ship
+(e.g. `rankSubjects: appServer → modGeneticValueServer → reportGV → orderReport → rankSubjects`).
+Put the method in the issue so the inventory is reproducible, not a
+one-time snapshot. **(c) \[name the static method’s blind spots and
+CHECK them — don’t hand-wave\] findGlobals misses dynamic dispatch
+(`do.call`/`match.fun`/`get` string calls) and S3 generic dispatch.**
+Checked explicitly: the only string-dispatched call in `R/` is
+`do.call("rbind", …)` (base), and NONE of the 22 still-unused names
+appear as a string literal anywhere in `R/` → no dynamic invocation the
+closure missed; the 3 S3 methods (`print.summary.*`,
+`summary.nprcgenekeeprErr`) aren’t dispatched on the app path (the app’s
+[`summary()`](https://rdrr.io/r/base/summary.html) calls hit
+`summary.default` on numeric vectors). A stated-and-checked limitation
+is verification; an unstated one is a latent error. (Also note the 3 S3
+methods aren’t even in `getNamespaceExports` — registered via `S3method`
+— yet the issue author counted them as exported; keep them with an S3
+caveat rather than silently dropping them.) **(d) \[for an
+outward-facing edit, surface FORM + SCOPE before acting\] Editing the
+owner’s own issue body is reversible (GitHub keeps edit history) but
+still overwrites authored text, and “also add the 17 newer unused
+exports” expands scope beyond the literal task.** Both are the owner’s
+call → ONE `AskUserQuestion` with concrete previews
+(strikethrough-in-place vs rewrite vs comment-only; scope-to-70 vs
+add-the-17) let the owner choose grounded in mockups; then a timeline
+pointer comment so a silent body edit isn’t invisible to watchers. Same
+surface-before-irreversible discipline S63/S64 used for closes, applied
+to an UPDATE. **Reflexes:**
+\[verify-first\]\[recompute-don’t-patch\]\[reproducible-method-in-the-artifact\]\[name-and-check-the-blind-spot\]\[surface-form-and-scope\]\[right-sized-orchestration\]\[declare-N/A-honestly\]\[news-vs-changelog\]\[macos-dupe-scan\].
+**Apply:** to “update a stale inventory/audit issue,” recompute the
+whole inventory with a reproducible static method (call-graph closure
+for “used by the app”), adversarially check that method’s blind spots,
+then surface the edit’s form + scope to the owner before the
+outward-facing change.
+
+#### Learning 66 — Merging an out-of-band branch into a diverged base: prove the merge is clean BEFORE running it and confirm keep-both AFTER, and re-read any operating file the merge rewrites (S66, merge `chore/methodology-pr2527-wording` → `add-methodology`)
+
+**(a) \[bracket the merge: prove-clean-before, verify-keep-both-after\]
+When a branch and its target both touched the same file, don’t
+`git merge` and trust the exit code — bracket it with verification.**
+The branch (one wording-only commit `ce7d6779`, methodology PR \#25/#27
+adoption) edited PROJECT_LEARNINGS.md’s line-3 header blockquote;
+Sessions 63–65 had appended Learning rows to its tail. BEFORE:
+`git rev-parse HEAD:<file>` showed CLAUDE.md / SESSION_RUNNER.md /
+HOW_TO_USE.md blobs were byte-identical to the branch base (→ those
+three merge trivially), and
+`git diff b7f45901..HEAD -- PROJECT_LEARNINGS.md` showed the divergence
+was tail-only (`@@ -224,3`) vs the branch’s line-3 edit (→
+non-overlapping); a `git merge-tree` dry run grepped for **actual**
+`^<<<<<<<` markers returned **0** (the “changed in both” line it also
+prints is informational, NOT a conflict — grep the marker, not that
+phrase, or you raise a false alarm). AFTER: confirmed BOTH the new “size
+budget” header AND the S63/64/65 tail appends survived (the prompt’s
+“keep both” rule), which git’s 3-way merge does automatically for
+non-overlapping hunks. **Lesson:** a clean merge-tree dry run +
+blob-equality check turns “I hope it merges” into “I know it will, and
+here is the keep-both proof”; that bracketing is the whole value-add of
+a human/agent over a bare `git merge`. **(b) \[re-read an operating file
+the merge rewrites; close out under the NEW text\] This merge rewrote
+SESSION_RUNNER.md §3C — my own close-out routing for learnings.** Per
+the prompt’s caution I re-read the merged 3C before closing out: it now
+routes *adopter-project* learnings to `CLAUDE.md` → Project-Specific
+Methodology Adaptations → Project-specific Learnings (which this repo
+redirects to PROJECT_LEARNINGS.md) and says explicitly NOT to edit the
+synced “Learnings (added by sessions)” table. So this very learning went
+to PROJECT_LEARNINGS.md, not the table — the change I merged codified
+the rule I then had to follow. **Lesson:** when a merge lands new
+wording in a file you operate from (SESSION_RUNNER / SAFEGUARDS /
+CLAUDE), treat close-out as governed by the post-merge text, not the
+version you read at orient. **(c) \[anchor analysis to live HEAD, not
+the handoff’s session number\] The task arrived with out-of-band context
+(the branch was prepared outside the session protocol, so S65’s handoff
+could not pre-name it), and a mid-flight user note corrected that “S65
+has also closed since the prompt was written.”** Because the pre-merge
+analysis used `git merge-base` / `merge-tree` against the live HEAD
+(`003ae525` = S65) rather than the session number quoted in the
+instructions, the correction required zero rework — the analysis was
+already current. **Lesson:** compute merge/diff facts against the actual
+current ref; then a stale session-number in the instructions is a no-op,
+not a redo. **Reflexes:**
+\[verify-first\]\[prove-clean-before-merge\]\[verify-keep-both\]\[re-read-rewritten-operating-file\]\[anchor-to-live-HEAD\]\[right-sized-solo\]\[declare-N/A-honestly\]\[news-vs-changelog\]\[macos-dupe-scan\].
+**Apply:** to any branch merge where both sides touched a shared file —
+bracket the merge with a blob-equality + `merge-tree` dry-run
+(`^<<<<<<<` only) check and an after-merge keep-both confirmation; and
+whenever a merge edits a file you operate from, re-read it before acting
+on it. A mechanical single-commit merge with explicit verification steps
+is a right-sized SOLO task — no Workflow fan-out needed (ultracode ≠
+orchestrate-everything).
+
+#### Learning 67 — Re-scoping a partially-done feature issue: verify which half shipped AND validate the issue’s OWN suggested API against the code (it can cite a signature that doesn’t exist), then expose the semantic fork the one-line ask hides (S67, issue \#35 re-scope)
+
+**(a) \[the issue’s “Suggested Implementation” is a claim to verify, not
+a spec to inherit\] \#35 proposed
+`trimPedigree(focalIds(), ped, ancestors = TRUE, descendants = TRUE)` —
+but `trimPedigree`’s real signature is
+`(probands, ped, removeUninformative = FALSE, addBackParents = FALSE)`;
+the `ancestors`/`descendants` params never existed.** A re-scope that
+copied the issue’s suggested call forward would have handed the
+implementer a non-compiling spec. The body ALSO cited stale placeholder
+lines 246-253 that had already been replaced by live ancestor logic at
+292-302. **Lesson:** when grooming a feature issue, check every API the
+body names against the actual function definition — author-proposed code
+in an old issue ages exactly like cited line numbers do. Read the
+signature, don’t trust the snippet. **(b) \[verify which half of a “X
+and Y” ask already shipped — by reading the call chain, not the title\]
+\#35 = “include ancestors AND descendants.” Firsthand: ancestors DONE
+(`modPedigree.R:292-302` → `trimPedigree` → `getProbandPedigree`, an
+upward sire/dam closure at `getProbandPedigree.R:24-40`), descendants
+NOT — neither walks downward, and `getOffspring` is single-level only.**
+**Lesson:** for a compound feature ask, the re-scope’s first job is to
+partition done/not-done against the live call graph; the handoff’s
+“ancestors done, descendants not” was a hint to verify, not a finding to
+restate (same recompute-don’t-inherit discipline as Learning 65, applied
+to a feature rather than an inventory). **(c) \[a one-line ask can hide
+a semantic fork — surface it, don’t pick silently\] “Include
+descendants” has two non-equivalent implementations: (A) strict lineal —
+a new downward closure mirroring `getProbandPedigree`, unioned with
+ancestors (focal’s ancestors+descendants only); (B) reuse
+[`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
+(`R/getPedDirectRelatives.R:46-59`), which loops parents AND offspring
+to closure but thereby also pulls in collateral relatives
+(siblings/cousins/mates) = the whole connected pedigree.** The package
+has a both-directions primitive already, but it is broader than lineal,
+and there is NO transitive descendants-only helper. I documented both as
+an open design choice (owner’s pick) rather than committing the issue to
+one. **Lesson:** when re-scoping, expose the design fork the ask glosses
+over (here, lineal vs all-relatives — plus the UI help text at
+`modPedigree.R:125` already says “relatives” while the behavior is
+ancestors-only); a grooming/re-scope deliverable is a faithful spec, and
+prematurely picking an approach is implementation work the session isn’t
+doing. **Reflexes:**
+\[verify-first\]\[recompute-don’t-inherit\]\[validate-the-issues-own-API\]\[partition-done-vs-not-by-call-graph\]\[surface-the-semantic-fork\]\[surface-form-and-scope\]\[right-sized-solo\]\[declare-N/A-honestly\]\[news-vs-changelog\]\[macos-dupe-scan\].
+**Apply:** to re-scope a partially-implemented feature issue — trace the
+live call chain to partition which half shipped, validate every API/line
+the body cites against the current code (author-proposed snippets go
+stale like line numbers), and surface both the edit’s form and any
+hidden semantic fork to the owner via `AskUserQuestion` before the
+outward-facing edit.
+
+#### Learning 68 — A behavior-change feature’s RED phase must inventory EVERY pre-existing test that asserts the OLD contract, not just add tests for the new behavior; the full-suite regression read is the backstop, not the plan (S68, implement \#35 descendants — first real TDD code session after the S57–S67 non-code run)
+
+**(a) \[grep the test corpus for the contract you’re changing DURING
+RED\] The trim feature deliberately flips an existing contract:
+ancestors-only → ancestors+descendants.** In RED I wrote the new
+helper’s unit tests + 2 integration tests in the obvious file
+(`test_modPedigree_processing.R`), but a SECOND pre-existing test in a
+*different* file — `test_modPedigree.R:419` (“trims pedigree based on
+focal animals”) — still asserted the old result (`nrow==3`,
+`expect_false("D")`) for focal `{A,C}`. Under strict-lineal, D is a
+child of focal A → a descendant → now correctly included (`nrow==4`; E
+stays excluded as a half-sib collateral). The full-suite
+clean-regression read caught it in GREEN (2 failures), and I updated it
+to the new approved contract with reasoning. **Lesson:** when
+RED-planning a behavior change (not greenfield), `grep -rn` the whole
+test corpus for the symbol/behavior you’re changing (here `trimPedigree`
+/ “trims pedigree”) and bring EVERY old-contract assertion into the RED
+set — do not rely on the GREEN regression read to surface them.
+CLAUDE.md’s “clean-regression read” is the backstop that proved its
+worth here, not a substitute for an exhaustive RED inventory. (FM
+\#25-adjacent: the new tests “felt complete” while the contract change
+rippled to a test the RED plan never looked at.) **(b) \[a newly-added
+exported function trips object_usage_linter until it is installed —
+prove it’s an artifact, don’t dismiss it\] After adding
+`getDescendantPedigree` and calling it from `modPedigree.R`, lintr
+flagged “no visible global function definition for
+‘getDescendantPedigree’” — while the existing `trimPedigree` call one
+line above did NOT warn.** Cause: `object_usage_linter` resolves against
+the INSTALLED namespace; a brand-new function lives only in the dev
+(`load_all`) namespace until reinstall. Re-running
+`lint(..., object_usage_linter())` after
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+→ **0 warnings**, proving it a staleness artifact, not an
+undefined-function bug (the full suite passing already implied runtime
+resolution). **Lesson:** a lint warning that fires only for a
+newly-added sibling function is the install-staleness artifact — confirm
+by linting with the dev namespace loaded, rather than ignoring it OR
+“fixing” a non-bug. **(c) \[the project’s phase-gate convention,
+exercised for real after a long non-code run\] First actual
+RED→GREEN→REFACTOR session since S56-era code work.** The convention
+held cleanly: declared the TDD phase atop every response; posed a
+SEPARATE pre-RED approach decision (Option A strict-lineal vs Option B
+`getPedDirectRelatives`) BEFORE declaring RED; then one
+`AskUserQuestion` at each of PRE-RED→RED, RED→GREEN, GREEN→REFACTOR. The
+Option A design I previewed to the owner came essentially straight from
+S67’s documented spec, making PRE-RED→GREEN nearly mechanical. **0
+stakeholder corrections** — approach + every transition were the owner’s
+call, applied as chosen. **Right-sized SOLO:** a single-helper feature
+verifiable by a focused suite is mechanical/directly-checkable; a
+Workflow fan-out would be ceremony (same call S65/S66/S67 made —
+ultracode ≠ orchestrate-everything). **Reflexes:**
+\[grep-the-contract-during-RED\]\[regression-read-is-the-backstop-not-the-plan\]\[prove-the-lint-artifact\]\[declare-phase-every-response\]\[separate-pre-RED-approach-decision\]\[phase-gate-via-AskUserQuestion\]\[right-sized-solo\]\[news-and-changelog\].
+**Apply:** when implementing a feature that changes an existing
+behavioral contract, during RED grep the entire test corpus for
+assertions of the OLD behavior and bring them all into the RED set;
+treat a newly-added-function `object_usage_linter` warning as an
+install-staleness artifact (confirm via `load_all`); and keep declaring
+the phase + gating each transition via `AskUserQuestion` even on a
+small, clean feature.
+
+#### Learning 69 — Closing an issue: verify the shipped code against EACH of the issue’s enumerated acceptance criteria, not just “the suite is green” — a green suite proves the tests pass, not that every sub-ask was addressed (S69, close \#35)
+
+**(a) \[map the close to the acceptance criteria, not to a passing test
+count\] \#35 had been re-scoped by S67 into three explicit asks: (1)
+union the descendant set with the existing ancestor set, (2) Option A
+strict-lineal (no collaterals), (3) align the over-promising “relatives”
+UI label.** Before the (irreversible, outward-facing) `gh issue close`,
+I confirmed all three firsthand in the working tree: the union at
+`R/modPedigree.R:299-305`, the strict-lineal closure in
+`R/getDescendantPedigree.R` (no `getParents`/collateral step), and the
+help text at `:124-126` now reading “ancestors and descendants”. Running
+the three covering test files green was necessary but NOT sufficient —
+green proves the assertions hold, not that each enumerated sub-ask
+shipped (the UI-label item, e.g., has no failing test gating it).
+**Lesson:** when the issue body enumerates acceptance criteria
+(especially a re-scoped issue that lists them), the close’s firsthand
+evidence is a criterion-by-criterion map of asks → code, with the suite
+as a backstop — not a green-suite result standing in for the map.
+(Extends the S64/S65 “don’t close without firsthand evidence” rule: the
+evidence is acceptance-criteria coverage, not just test status.) **(b)
+\[a clean three-session feature lifecycle, each honoring “1 and done”\]
+\#35 ran S67 re-scope → S68 implement → S69 close — three sessions, one
+deliverable each, no bundling.** S67 produced a faithful spec (and
+exposed the Option A/B fork); S68 implemented exactly Option A with full
+TDD and shipped + closed-out in one commit; S69 did only the
+administrative close after firsthand re-verification. The owner’s
+explicit “close \#35” was the gate for the outward-facing action S68
+deliberately deferred (FM \#2 “keep going” avoided: S68 did NOT
+self-close the issue it implemented). **Right-sized SOLO:** a
+single-issue close verifiable by running three test files + reading the
+diff is mechanical/directly-checkable — a Workflow fan-out would be
+ceremony (same call S65–S68 made; ultracode ≠ orchestrate-everything).
+**Reflexes:**
+\[verify-first\]\[map-asks-to-code-not-just-green-suite\]\[owner-confirm-before-irreversible-close\]\[1-and-done\]\[right-sized-solo\]\[declare-N/A-honestly\]\[news-vs-changelog\]\[macos-dupe-scan\].
+**Apply:** before closing any issue, list its acceptance criteria and
+confirm each one in the shipped code firsthand; treat a passing suite as
+the backstop, not the proof; and never self-close an issue you
+implemented in the same session without an explicit owner go-ahead.
+
+#### Learning 70 — Consolidating overlapping issues is a SUBSYSTEM-mapping task, not an issue-reading task — and the adversarial completeness critic (not the facet-mappers) is what finds the structure the issues don’t mention (S70, consolidate \#26/#32/#38 → umbrella \#44)
+
+**(a) \[map the subsystem the issues touch, don’t just summarize the
+issues\] \#26/#32/#38 all framed the problem as the single hard-coded
+leading-“U” convention.** A firsthand subsystem map (Workflow: 4
+parallel facet readers — generation / detection / callers-config / tests
+— + a completeness critic) found the package actually carries THREE
+independent “unknown/auto-generated” conventions, coupled only by call
+ordering in `qcStudbook.R` (`unknown2NA → addUIds → addParents`): (1)
+textual `"UNKNOWN"` sentinel (`unknown2NA.R`, case-insensitive
+`toupper()=="UNKNOWN"`); (2) the `"U%04d"` prefix — TWO producers
+(`addUIds.R:47,54` + `obfuscateId.R:38-43`, a second minter) and 7
+detection sites across 4 files with INCONSISTENT case-handling
+(`stri_sub`/`startsWith` case-sensitive vs
+`grepl("^U", ignore.case=TRUE)`), and NO centralized predicate; (3)
+`recordStatus="added"/"original"` (`addParents.R:43-61`) with the
+ALREADY-centralized `getRecordStatusIndex()` predicate consumed by 5
+functions. **Lesson:** an umbrella/consolidation deliverable’s unit of
+work is the subsystem the issues touch, not the issue text — the issues
+describe the symptom the reporter noticed, not the landscape underneath.
+The umbrella’s quality (and where its “out of scope” boundary falls)
+depends on the map, not the titles. **(b) \[the completeness critic
+earns its keep — it found what the facet-mappers asserted didn’t exist\]
+The four facet agents reported `addUIds` as “exactly ONE site where IDs
+are synthesized” and the DETECTION facet said “no centralized predicate
+exists.”** The adversarial completeness critic (phase 2, fed the
+combined inventory and told to refute) overturned BOTH: `obfuscateId`
+mints a second `"U"` id, `addParents` is a second synthesizer (tracked
+by `recordStatus`, not the prefix), and `getRecordStatusIndex` IS a
+centralized predicate — for a parallel convention the mappers were blind
+to because each was scoped to search only for `"U"`. **Lesson:** under
+ultracode, the completeness-critic pass on a mapping fan-out is not
+ceremony — facet agents are each scoped to one lens and structurally
+blind to a parallel mechanism; the critic’s whole job is to find the
+mechanism no single lens was searching for. The session’s most
+load-bearing finding came from the critic, not the mappers. **(c) \[a
+subagent’s map is an assumption until firsthand-verified — especially
+before an irreversible/outward-facing action\] Before writing the map
+into outward-facing artifacts (creating \#44, closing \#26/#32) I
+re-read the 8 load-bearing files myself** (`addUIds`,
+`removeAutoGenIds`, `addParents`, `getRecordStatusIndex`, `obfuscateId`,
+`unknown2NA`, the `qcStudbook.R:188-199` ordering, the
+`modPedigree.R:112` tooltip) rather than copying the workflow’s findings
+verbatim — confirming the three-convention thesis and the two-generator
+claim in source. This is \[verify-first\]/recompute-don’t-inherit
+(Learning 65/67) extended to WORKFLOW output: orchestration breadth does
+not lower the firsthand-verification bar for the claims you publish.
+**Right-sizing note:** this INVERTS the S65/S67/S69 “single-issue
+grooming = solo” call — a MULTI-issue consolidation spanning a subsystem
+is exactly where the Workflow fan-out + adversarial verify pays for
+itself; the right-size heuristic is *breadth of the surface*, not “it’s
+a grooming session.” **Honest miss:** my `AskUserQuestion` option copy
+said closing 2 issues = “18 → 16”, forgetting the umbrella is itself a
+new open issue (true net **18 → 17**); caught at verification, corrected
+in the handoff — decision-aid arithmetic deserves the same care as the
+deliverable’s. **Reflexes:**
+\[verify-first\]\[map-the-subsystem-not-the-issue-text\]\[completeness-critic-finds-the-parallel-mechanism\]\[verify-workflow-output-before-publishing\]\[surface-form-and-scope\]\[right-size-by-surface-breadth\]\[declare-N/A-honestly\]\[news-vs-changelog\]\[macos-dupe-scan\].
+**Apply:** to consolidate overlapping issues into an umbrella — map the
+whole subsystem they touch (fan-out facet readers + an adversarial
+completeness critic to catch parallel mechanisms no single lens searches
+for), firsthand-verify every load-bearing claim before the
+outward-facing create/close, and surface scope + originals-disposition
+to the owner via `AskUserQuestion`; recognize that a multi-issue
+consolidation is Workflow-worthy even when single-issue grooming is not.
+
+#### Learning 71 — Implementing a “make it configurable, keep it byte-identical” feature: the byte-identical constraint is satisfied at the EXPRESSION level (a drop-in equivalent, NA-semantics included), and the UNCHANGED tests are the proof — not “the suite is green” (S71, implement \#44/#38, configurable auto-ID format)
+
+**(a) \[byte-identical = expression-level equivalence, and the UNCHANGED
+tests are the proof\] \#44’s acceptance criterion \#1 was “with no
+configuration, all existing behavior is byte-identical.”** I satisfied
+it by replacing each inline check with a predicate that returns the
+*identical* value, not a “cleaner” one: `isGeneratedUnknownId(x)` is
+`startsWith(as.character(x), prefix)`, which equals the old
+`stri_sub(x,1,1)=="U"` / `startsWith(x,"U")` for ALL inputs **including
+NA** (both yield `NA` for `NA`, so the replacement is a true drop-in
+even inside `ped$sire[<idx>] <- NA` where the index carries NAs).
+Generation: `sprintf("U%04d", n)` ≡ `paste0("U", sprintf("%04d", n))`;
+`obfuscateId`’s mint stays `size - nchar(prefix)` = `size - 1` for the
+1-char default. **The proof was that 3 of the 4 “U”-baking tests
+(`test_addUIds`, `test_qcStudbook`, `test_modPedigree`) passed
+UNCHANGED** — only the one deliberate case-reconciliation test changed.
+**Lesson:** when an acceptance criterion is “byte-identical,” verify
+equivalence at the expression level (does the new call return the same
+value, NA semantics and all, as the old one?) and let the *unchanged*
+characterization tests be the evidence — a green suite full of *edited*
+tests proves nothing about back-compat. **(b) \[a fixture’s edge-case
+datum is where “reconcile the inconsistency” becomes a concrete
+owner-facing fork — grep for it DURING pre-RED\] The abstract ask
+“reconcile case-sensitivity” only became a real decision once I found
+the lowercase `"u001"` in `test_obfuscateId.R:28`.** That single datum
+made the fork concrete: case-sensitive (the issue’s recommendation) is a
+deliberate, test-visible behavior change *there*; case-insensitive
+breaks no existing test. Grepping the test corpus for the distinguishing
+data BEFORE posing the `AskUserQuestion` let me hand the owner an
+evidence-based choice naming *exactly which test changes and why*, not a
+hand-wave. **Lesson:** before surfacing an approach decision that
+“reconciles an inconsistency” or “fixes a latent bug,” grep the fixtures
+for the data that distinguishes the options; the decision aid should
+cite the specific test/line that flips, so the owner chooses against
+evidence, not abstraction. (Pairs with Learning 70’s “decision-aid
+care.”) **(c) \[a handoff gotcha naming a “second / easy-to-miss” site
+is a RED-inventory line item, closed by a completeness grep\] S70’s
+gotcha — “`obfuscateId` is a SECOND `\"U\"` producer, easy to miss; any
+format change must touch it too” — was load-bearing.** The mint path
+needed `getAutoIdPrefix()` + `size - nchar(prefix)` (not hard-coded
+`"U"` + `size-1`) to honor a multi-char configured prefix while staying
+byte-identical for the 1-char default; missing it would have left a
+second generator un-threaded and failed the round-trip. After GREEN I
+ran an exhaustive `grep` for any remaining auto-ID `"U"` literal across
+`R/` and confirmed all 7 detection sites + 2 generators were centralized
+(the only other `"U"` hits being the unrelated sex-factor level
+M/F/U/H). **Lesson:** when a predecessor’s gotcha flags a
+“second/parallel/easy-to-miss” site, promote it to an explicit RED-scope
+item and close the loop with a completeness grep that proves no instance
+of the old literal survives. **(d) \[triage a devtools::check NOTE by
+attribution BEFORE fixing — a pre-existing baseline NOTE is not this
+session’s to resolve\] check() returned 1 NOTE: the `spelling.R`
+comparison test (`spelling.Rout` vs a stale `spelling.Rout.save` reading
+“All Done!”).** Rather than reflexively expand `inst/WORDLIST` or
+regenerate the `.save` (scope creep, FM \#8), I attributed it:
+`spell_check_package(".")` plus the check’s own word list showed **0 of
+my new identifiers** among the 54 flagged words — all flagged terms live
+in pre-existing files. So the NOTE pre-existed and my session neither
+introduced nor worsened it; I flagged it as a future-housekeeping
+candidate and left it. **Lesson:** when `check()` yields a NOTE/WARNING,
+run the underlying check directly and confirm whether *your* symbols
+contribute before acting; “check clean of anything my change caused, 1
+pre-existing baseline NOTE” is an honest, correct close state — fixing
+baseline noise is a separate deliverable. **Right-size note:** this
+contained 6-file single-feature TDD change was correctly SOLO (no
+Workflow) — the byte-identical claim was directly checkable via full
+suite + exhaustive grep + `check()`; contrast S70’s multi-issue
+subsystem map, which WAS Workflow-worthy. The Learning-70(c) heuristic
+held: right-size by *breadth of surface*, not “it’s a code session.”
+**Reflexes:**
+\[byte-identical-is-expression-level\]\[unchanged-tests-are-the-proof\]\[grep-fixtures-for-the-deciding-datum-pre-RED\]\[promote-handoff-gotcha-to-RED-scope\]\[completeness-grep-after-GREEN\]\[attribute-check-NOTEs-before-fixing\]\[right-size-by-surface-breadth\]\[declare-phase-every-response\]\[phase-gate-via-AskUserQuestion\]\[news-and-changelog\].
+**Apply:** to implement a “configurable but back-compatible” change —
+prove byte-identical by expression-level equivalence (NA semantics
+included) and by which characterization tests stay UNCHANGED; grep
+fixtures for the edge-case datum that makes a “reconcile” decision
+concrete and cite it in the owner’s decision aid; treat predecessor
+“second/easy-to-miss site” gotchas as RED-scope items closed by a
+completeness grep; and attribute every `check()` NOTE to
+mine-vs-baseline before touching it.
+
+#### Learning 72 — Consolidation ≠ deduplication: a consolidation session must let the firsthand research decide whether the issues are duplicates-to-close or distinct-sub-tasks-to-link; a thin shared primitive + severe lift asymmetry ⇒ a LINKING umbrella with both kept open, not closes (S73, consolidate \#31/#28 → umbrella \#45)
+
+**(a) \[the disposition is an evidence outcome, not the pattern
+inherited from the prior consolidation\] The task (“consolidate the
+parent-ID cluster into an umbrella”) implicitly carried S70’s \#44
+template, where the consolidated issues (#26/#32) were TRUE duplicates
+and got CLOSED.** Firsthand, \#31 and \#28 are NOT duplicates: they
+share only the scalar “estimated conception date = birth − gestation”
+and diverge sharply in mechanism, data model, and lift — \#31 is a
+bounded in-function refactor over data already present; \#28 needs a NEW
+timestamped-colocation subsystem the package wholly lacks, blocked on
+the \#11/#12 data pulls. So the right disposition was a LINKING umbrella
+(#45) with BOTH sub-tasks kept OPEN and cross-linked — not a
+dedup-and-close. I surfaced the duplicate-vs-distinct finding + the
+disposition via `AskUserQuestion` rather than force-fitting the prior
+pattern (owner chose linking-umbrella, both open). **Lesson:** a
+consolidation deliverable’s disposition (close-as-duplicate vs
+link-as-distinct-sub-task) is decided by the research, not by the
+consolidation that preceded it; “umbrella” does NOT imply “close the
+originals.” The signal that says LINK-don’t-merge is a *thin shared
+primitive + lift asymmetry* — verify both before assuming dedup. **(b)
+\[reading the CORE file firsthand beat both the issue text and the
+subagent summaries\] The single most scope-shaping fact — that
+`getPotentialParents` ALREADY takes `maxGestationalPeriod` and applies
+it sire-side (`:62`), so \#31 is “extend the existing gestation quantity
+to the dam side,” not “add gestation to a function with none” — came
+from reading the function myself**, not from the issue bodies (which say
+“use gestational length” as if none existed) nor verbatim from the facet
+readers. It also let the owner pick “reuse the existing param” over “new
+option” from an informed position. **Lesson:** in a grooming/design
+session, read the core implementation firsthand before drafting — the
+issue describes the symptom the reporter noticed, the subagents
+summarize, but the *function* tells you what is already half-built and
+reframes the ask. **(c) \[the firsthand-verification bar applies to
+EVERY layer of a fan-out, the adversarial CRITIC included\] Learning
+70(c) verified the facet-MAPPERS before publishing; here the
+completeness CRITIC itself overstated — it asserted “no species column
+in the data model,” but a firsthand grep found example input pedigrees
+DO carry a `species` column (`deidentified_jmac_ped.csv`) plus latent
+multi-species intent (#36, `agePyramidPlot.R:60`).** I published the
+accurate, narrower fact in \#45 (no species in the CANONICAL fixtures /
+parent-ID data model, but present in some inputs) rather than the
+critic’s absolute; also re-confirmed firsthand that \#28’s location data
+is genuinely absent and that `getPotentialParents` is unwired (only its
+test + one ext-data caller → \#37). **Lesson:** a critic that refutes
+the mappers can still itself overstate — verify the claim you are about
+to publish whoever produced it, including the adversarial pass.
+**Right-size note:** this multi-issue subsystem consolidation WAS
+Workflow-worthy (breadth of surface — Learning 70’s heuristic held) even
+though \#45’s *scope* is narrow (one function); contrast the
+single-issue closes S69/S72 rightly ran solo. **Honest −1:** I confirmed
+the `species` column is in the raw CSV headers but did NOT trace whether
+ingestion (`getPossibleCols`/`toCharacter`) retains it into the internal
+pedigree — I stated the verified-narrow fact, but a full trace would
+have resolved “is species-specific gestation even reachable today” for
+the \#31 implementer. **Reflexes:**
+\[verify-first\]\[disposition-is-an-evidence-outcome-not-the-inherited-pattern\]\[thin-primitive+lift-asymmetry⇒link-don’t-merge\]\[read-the-core-file-before-drafting\]\[verify-every-layer-including-the-critic\]\[surface-disposition-via-AskUserQuestion\]\[right-size-by-surface-breadth\]\[declare-N/A-honestly\]\[news-vs-changelog\]\[macos-dupe-scan\].
+**Apply:** when consolidating overlapping issues, let firsthand research
+decide duplicate-vs-distinct (a thin shared primitive + lift asymmetry ⇒
+a linking umbrella with sub-tasks kept open, NOT dedup-closes); read the
+core implementation yourself before drafting the design (it reveals
+what’s already half-built and reframes the ask); and hold the
+firsthand-verification bar for every layer of a workflow’s output, the
+adversarial critic included.
+
+#### Learning 73 — TDD on an intentional behavior change with exact-set characterization fixtures: derive the new expected sets from an INDEPENDENT read-only reference computation + per-delta justification (never from running the production change), and back them with from-first-principles driving tests that fail on the old code for the RIGHT reason (S74, implement \#31 — gestation-derived dam-exclusion window)
+
+**(a) \[the RED chicken-and-egg of exact-set fixtures, resolved by an
+independent oracle + per-delta justification\] When a behavior change
+rewrites the expected output of an `expect_identical` characterization
+fixture (here `dams_1`/`dams_4`), you cannot write the new expected
+values by running the not-yet-written production change — that is
+circular (asserting the code matches itself).** Resolution: in PRE-RED I
+built a *throwaway, read-only* copy of the function with only the
+intended one-line change (in `/tmp`, never committed, never touching
+`R/`) as an oracle, diffed it against the shipped output, and
+**justified every delta against the biological rule** — each of the 5
+dropped dams (`0B7XRI −193 d`, `PHCADH +195 d`, `1SIP4V +183 d`,
+`DMI0QY +192 d`, `HV7LZ3 −192 d`) delivered another offspring within the
+new ±`maxGestationalPeriod` window, a gestation conflict. The new
+fixtures = old minus the justified removals, written into the test in
+RED; they fail on shipped code (still returning the old 7/10 sets) for
+the right reason. **Lesson:** the new expected values for a
+characterization-fixture behavior change come from an *independent*
+derivation (a reference computation you can read, plus a per-row “why
+this changed” check), not from the production code under test — and the
+comment block recording each delta’s justification is what turns
+“silently regenerated” into “recomputed and justified” (the umbrella’s
+explicit bar). **(b) \[the characterization fixtures lock the surface;
+the CORRECTNESS proof is separate, from-first-principles driving tests\]
+The exact-set fixtures are a regression net, not a proof of the rule.**
+I added two tests that prove the rule independently of the rhesus
+fixture’s accidents: (1) a **hand-verifiable synthetic pedigree** — a
+focal animal plus `DAM_IN` (another offspring at +200 d) and `DAM_OUT`
+(+400 d) — asserting `DAM_IN` is excluded at `maxGestationalPeriod=210`
+but retained at `180`, isolating the exact window edge with values
+verifiable by hand; and (2) a **differential/responsiveness test**
+asserting BRI2MW’s dam set differs between 165 d and 210 d (acceptance
+criterion \#2: selection must respond to the parameter, not a hard-coded
+half-year). Both fail on shipped code for the right reason — the
+synthetic one because shipped uses a fixed ±182.5 d window, the
+differential one because shipped dam selection ignored
+`maxGestationalPeriod` entirely. **Lesson:** pair brittle exact-set
+characterization fixtures with at least one synthetic, hand-computed
+test that isolates the changed rule on a minimal controlled input, and
+(where the issue frames it as “responds to X”) a differential test
+across two values of X; the fixtures catch unintended regressions, the
+driving tests prove the intended behavior. **(c) \[“reconcile X if
+appropriate” is a prompt to ANALYZE, not necessarily to CHANGE — and
+proving a candidate change is a no-op is a real result\] The umbrella
+flagged two adjacent things (“reconcile the sire/dam exit-check
+asymmetry if appropriate”; consider the preferential band).** Firsthand
+analysis showed (i) the exit-check asymmetry (`exit ≥ birth − gestation`
+for sires vs `exit ≥ birth` for dams) is **biologically correct** — a
+sire need only be present at conception, a dam through to birth — so the
+right action was to *document it as intentional*, not change it; and
+(ii) widening the exclusion window while leaving the preferential band’s
+inner edge at the old half-year is **behaviorally a no-op**, because the
+wider exclusion (`:94`) always removes the overlap region before the
+preferential intersection (`:97`) runs — so leaving the band untouched
+is the minimal *and* equivalent choice (I proved it on the data: outputs
+identical either way). I surfaced both as the resolved scope in the
+pre-RED `AskUserQuestion` (minimal vs broader-reconciliation),
+recommending minimal. **Lesson:** when a spec says “reconcile/consider X
+if appropriate,” the deliverable is the *analysis*; “X is already
+correct — document it” and “changing X is provably a no-op — don’t” are
+both valid, scope-minimizing outcomes — surface them as the recommended
+option rather than changing code to look responsive (FM \#8 resisted).
+**Right-size note:** this contained single-function change was correctly
+SOLO (no Workflow) — the behavior change was directly checkable via an
+independent oracle + full suite + `check()`; the read-only exploration
+that quantified the deltas was research I needed in my own context, not
+a fan-out (Learning 70’s right-size-by-surface-breadth heuristic held).
+**Reflexes:**
+\[independent-oracle-for-fixture-deltas\]\[justify-every-delta-not-silently-regenerate\]\[synthetic-hand-verifiable-driving-test\]\[differential-test-for-responds-to-X\]\[prove-the-no-op\]\[document-correct-asymmetry-dont-change-it\]\[declare-phase-every-response\]\[phase-gate-via-AskUserQuestion\]\[right-size-by-surface-breadth\]\[news-and-changelog\]\[macos-dupe-scan\].
+**Apply:** to TDD an intentional behavior change that rewrites
+characterization fixtures — derive the new expected values from an
+independent read-only reference computation and justify each delta
+against the domain rule (never from the production change under test);
+back them with a hand-verifiable synthetic-input test that isolates the
+changed rule and, when the ask is “responds to X,” a differential test
+across two values of X; and treat “reconcile X if appropriate” as a call
+to analyze, where proving X correct-as-is or a change a no-op are valid
+minimal-scope outcomes.
+
+#### Learning 74 — A spec/grooming session’s research workflow needs a critic that separates DERIVED findings from INVENTED design, and recompute-don’t-inherit extends to your own project’s prior issue maps (which go stale when later code ships) (S76, spec \#28 colocation data model)
+
+**(a) \[a facet asked to REASON about semantics returns design proposals
+dressed as findings — the completeness critic’s job in a spec workflow
+is to demote them to ratifiable options\] When a research workflow
+includes a facet that *reasons* (semantics, modeling) rather than
+*reads* (code, config), its output is a mix of findings and proposals —
+and the proposals arrive phrased like derived requirements.** Facet E
+(colocation inference semantics) returned an elaborate 3-case model
+(missing-sire / missing-dam / both-unknown), a postnatal mother-infant
+co-housing window, a grain-confidence ordering, and overlap-duration
+weighting — none of which exists in code — as `spec_implications` worded
+like settled findings. The completeness critic caught exactly this
+(“almost entirely INVENTED design, not derived from package evidence …
+presenting invented design as implications risks the spec adopting
+unvalidated husbandry assumptions as settled”), so the spec carries them
+as **\[OPEN — husbandry ratification required\]**, not fact. The
+code-reading facets needed the critic for a different failure: an
+inter-reader contradiction (Facet B “species novelCol survives” vs Facet
+D “species dropped”), resolved firsthand at `qcStudbook.R:281-283`
+(`sb[, c(cols, novelCols)]` ⇒ it survives). **Lesson:** a critic pass
+over fanned-out research must classify each item as derived-vs-proposed
+and reconcile contradictions; reading facets overstate *absence/claims*,
+reasoning facets invent *design* — both must be demoted before they
+harden into a spec. **(b) \[recompute-don’t-inherit applies to your OWN
+project’s prior issue maps — they go stale when later code ships\] A
+design issue’s “verified firsthand” current-state map is verified only
+as of its authoring.** Umbrella \#45 (authored S73) carried a line-cited
+map of `getPotentialParents`, but S74 (#31) then rewrote that function —
+so \#45’s `:72-94` dam-window citation was stale this session. I re-read
+the function against the working tree (the spec’s §2 cites the post-S74
+lines: window `:83-85`, exclusion `:106`, fallback `:112-115`) rather
+than inherit \#45’s map, and said so in the spec. **Lesson:** this is
+Learnings 70/72c/73’s recompute principle applied to a *self-authored
+umbrella* — the place you are most tempted to trust. If any code an
+inherited map describes shipped a change after the map was written, the
+map is stale; recompute and note the supersession. **(c) \[the
+non-obvious cross-cutting constraint is a spec’s highest-value finding\]
+The owner flagged grain + temporal model; the research surfaced a
+constraint neither \#28 nor \#45 mentioned: obfuscation coherence.**
+`obfuscatePed` jitters each Date column independently
+(`obfuscatePed.R:34-37` + a fresh `runif` per element
+`obfuscateDate.R:50`, ±30 d default) and covers only the pedigree — so
+naïvely obfuscating location dates corrupts the interval-overlap math
+(±30 d ≈ 1/5 of gestation) and orphans the location FK. The spec makes
+coherent per-animal-delta obfuscation + alias-remap an explicit
+requirement (§9), alongside the other cross-cutting items the
+originating issue didn’t name (null-coverage matrix, `location = NULL`
+byte-identical default, performance at colony scale). **Lesson:** a
+data-model spec’s value is disproportionately in the cross-cutting
+constraints the originating issue omitted; the critic’s
+section-by-section outline exists to force those into view, not merely
+to answer the owner’s flagged questions. **Right-size note:** this
+multi-facet spec genuinely warranted a Workflow (5 readers + critic) —
+unlike the contained single-function S74 change that was correctly SOLO
+— because the surface spanned four subsystems (conception primitive,
+ingestion/data-model, LabKey/Oracle/ARMS sourcing, obfuscation/temporal)
+no single context maps well at once (Learning 70’s
+right-size-by-surface-breadth heuristic, the breadth side this time).
+**Reflexes:**
+\[critic-classifies-derived-vs-invented\]\[reconcile-inter-reader-contradictions-firsthand\]\[recompute-stale-self-authored-map\]\[firsthand-verify-before-outward-facing-spec\]\[surface-cross-cutting-constraints\]\[owner-decisions-via-AskUserQuestion\]\[recommend-with-rationale-plus-open-register\]\[additive-comments-not-body-overwrites\]\[right-size-by-surface-breadth\]\[news-vs-changelog\]\[macos-dupe-scan\].
+**Apply:** to any spec/design/grooming session that fans out research —
+run a completeness critic that (1) classifies each facet item as
+derived-from-evidence vs proposed-design (carry proposals as ratifiable
+**\[OPEN\]**, never as fact), (2) catches and resolves inter-reader
+contradictions firsthand, and (3) names the cross-cutting constraints
+the originating issue didn’t; and recompute any current-state map you
+inherit — including your own project’s prior umbrella/issue maps —
+against the working tree, because later commits silently invalidate
+them.
+
+#### Learning 75 — Before putting a spec’s recommendations to the owner, verify each `[REC]` firsthand against the code: a verify-and-sharpen workflow can OVERTURN a prior session’s own recommendations, and most “open decisions” aren’t decisions for the owner at all (S77, ratify \#28’s §13 open-decisions register)
+
+**(a) \[a spec’s own `[REC]` is an assumption-level claim until
+re-verified — verifying before asking can flip it\] A
+decisions/ratification session’s first job is not to relay the spec’s
+recommendations to the owner; it is to re-prove each one against the
+working tree, because the spec author could be wrong.** The S76 spec’s
+§5-case-3 `[REC]` said both-parents-unknown animals have “no known
+anchor,” so colocation should be withheld (require ≥1 known parent). An
+item-verifier re-read `getPotentialParents.R:46-48` firsthand and found
+the `pUnknown` filter is an inclusive OR — a both-unknown infant is
+already processed and, crucially, its **own birth-time location is a
+valid dam-side anchor**, identical to the missing-dam case; only the
+*sire* side is genuinely anchorless. So the recommendation flipped from
+“withhold” to “dam-side colocation only,” and I flagged the overturn to
+the owner rather than presenting the spec’s `[REC]` as settled.
+Separately, §10 mis-cited \#36 (“Add chimpanzee-specific age pyramid
+plot settings”) as the “make species first-class” prerequisite —
+firsthand `gh` lookup showed \#36 is a display ticket; first-class
+species was un-ticketed (now \#46). **Lesson:** treat every `[REC]` in
+an inbound spec — *especially one a prior session of yours authored* —
+as a claim to re-verify before the owner sees it; a verify-and-sharpen
+fan-out exists precisely to catch the recommendations and citations that
+are plausible-but-wrong. This is Learnings 70/72c/73/74b’s
+recompute-don’t-inherit applied to *recommendations*, not just
+current-state maps. **(b) \[an “open-decisions register” over-states
+what the owner must decide — classify each item before asking\] Not
+every `[OPEN]` item is an owner-judgment call; many are corollaries of
+decisions already made or deferrals gated on absent inputs, and bundling
+them all into questions wastes the stakeholder’s attention.** The
+completeness critic classified the 8 register items into **4 genuine
+owner-decisions** (missing-dam model, both-unknown, output shape,
+provenance) vs **4 ratifiable corollaries/deferrals**
+(coherent-obfuscation = technical-correctness requirement;
+single-species, flat-file, POSIXct = corollaries of S76’s
+already-DECIDED scope or `#11/#12`-gated). It also found two §7 policy
+gaps absent from §13 despite the register’s “owner sign-off before
+sizing” contract. I asked the 4 genuine decisions via `AskUserQuestion`
+(2 rounds, **staggered** so the dependent both-unknown item could be
+informed by the missing-dam answer — same-call questions are answered
+simultaneously, so a true dependency requires a later call), and folded
+the rest + the §7 gaps into a single multi-select batch ratification.
+Result: 0 stakeholder corrections, all recommendations accepted.
+**Lesson:** classify register items as genuine-decision /
+safe-ratification / already-decided / out-of-scope-defer before
+composing questions; ask the genuine ones with room (crux first), batch
+the rubber-stamps, and order calls so dependent decisions follow the
+decisions they depend on. **(c) \[record ratifications additively and
+split a discovered mis-citation into its own issue\] The deliverable of
+a ratification session is the decisions recorded where the spec lives,
+plus any tracker corrections the verification surfaced.** I posted the
+ratified register as a **new comment** on \#28 (preserving the S76 spec
+— FM \#22), each item annotated `[DECIDED-S77]`/`[SIZING]` with the two
+corrections inline; added a register-ratified link comment on umbrella
+\#45; and (with owner consent via `AskUserQuestion`) filed **\#46** to
+own the corrected first-class-species dependency rather than letting the
+mis-citation rot in a spec footnote. Carried sizing notes forward for
+the implementer (the new species-dependent `postnatalCoHousingWindow`
+param; the `obfuscateDate.R:49-57` per-element-re-draw rework that will
+break existing obfuscation tests). **Right-size note:** the
+verify-and-sharpen Workflow (8 verifiers + critic) was the right call
+here — verifying 8 independent `[REC]`s against different files is a
+genuine breadth fan-out (Learning 70), and it de-risked owner decisions
+by catching the two unsound spec claims before they reached the owner; a
+SOLO read would have been tempted to trust the spec’s own
+recommendations. **Reflexes:**
+\[verify-every-REC-firsthand-before-asking\]\[overturn-prior-session-recommendations-when-wrong\]\[classify-register-items-genuine-vs-ratifiable\]\[stagger-dependent-AskUserQuestion-across-calls\]\[crux-first-batch-the-rubber-stamps\]\[additive-comments-not-body-overwrites\]\[file-an-issue-for-a-discovered-miscitation\]\[carry-sizing-notes-for-the-implementer\]\[right-size-by-surface-breadth\]\[news-vs-changelog\]\[macos-dupe-scan\].
+**Apply:** to any session that ratifies/grooms an inbound spec’s
+open-decisions list — re-verify each recommendation and citation
+firsthand (be ready to overturn your own prior session), classify which
+items are truly the owner’s to decide vs corollaries to batch-ratify,
+stagger genuinely-dependent questions across `AskUserQuestion` calls,
+and record the outcome additively where the spec lives while splitting
+any discovered tracker error into its own issue.
+
+#### Learning 76 — Triaging “unused exports” is a coupling-and-provenance problem, not a per-function checklist: “app-unreachable ≠ dead code”, caller-edges must be proven REAL (not <roxygen/@seealso>/comment), and mutually-referencing unused sets form CLOSED ISLANDS whose keep/wire/retire decision is a unit (S78, triage \#37)
+
+**(a) \[the disposition axis is wire-in / keep-as-public-API / retire —
+and for a dual-purpose package the DEFAULT is keep, not retire\] \#37
+lists functions exported but unreached by the Shiny app’s call graph;
+the naïve reading is “dead code to delete.”** But CLAUDE.md’s Project
+Overview states the package was enhanced “to expose functions for use
+either interactively or in R scripts” — so app-unreachable is the
+*expected* state for deliberate script API. The right framework is three
+dispositions: **wire-in** (clear app value + latent intent — a
+built-but-unmounted module, an open-issue mandate),
+**keep-as-public-API** (the default for any export that is documented +
+tested + has `@examples`/vignette/`inst` use, OR is called by another
+package function; retiring is a breaking change), **retire** (genuinely
+dead: no tests/examples/vignette/callers, superseded — a HIGH bar).
+Result for \#37: 2 wire-in, 37 keep, **0 retire**. **Lesson:** before
+triaging “unused” exports, anchor on the package’s own stated dual
+nature; “unused by the app” is a reachability fact, not a verdict — make
+retire earn a breaking-change-level burden of proof, and treat
+keep-as-public-API as the default. **(b) \[an “otherPkgCallers” claim is
+worthless until the edge is proven a REAL call —
+<roxygen/@seealso>/comment references masquerade as dependencies\] The
+investigator agents reported `calcFE`/`calcFG` as “called by
+`calcFEFG`/`calcFounderContributions`/`calcRetention`”; the completeness
+critic re-grepped with `#'`/comment lines stripped and found they are
+called by NOTHING** — `calcFEFG` computes FE/FG via
+`calcFounderContributions`+`calcRetention` (the NEW-13/NEW-23 refactor),
+and the only `calcFE(`/`calcFG(` tokens in `R/` are refactor *comments*.
+The keep disposition survived (script-API grounds), but a
+retire-blocking dependency analysis built on the fabricated edge would
+have been unsafe. I verified firsthand before recording. **Lesson:** a
+caller-edge used to justify keep/block-retire must be a verified
+*function call*, not a `@seealso` tag, an `@examples` line, or a
+provenance comment; when a fan-out reports “called by X”, re-grep
+stripping roxygen/comments before trusting it. (Recompute-don’t-inherit
+— Learnings 70c/72c/74b/75a — applied to the dependency graph itself.)
+**(c) \[find the CLOSED ISLANDS — maximal unused sets that only call
+each other and are reached from nothing live — because their disposition
+is COUPLED\] Per-function dispositions hid the real structure: two
+islands.** The obfuscation trio
+(`obfuscatePed`→`obfuscateId`/`obfuscateDate`, `obfuscatePed` itself
+callerless) and the logging/error/export trio (`logModuleEvent` called
+only by `safeExecute`+`savePlotToFile`, both of which are callerless).
+Neither is reachable from anything live, so each island’s
+keep/wire/retire decision must be made as a *unit* — you cannot retire
+`obfuscateId` while `obfuscatePed` lives, and “wire in the logging
+standard” vs “retire the island” is one decision over three functions.
+The investigators’ uniform “high-confidence wire-in” on the logging
+island over-stated it (“built-but-unmounted” and
+“tried-and-rejected-in-favor-of-ad-hoc” are observationally identical
+from the call graph alone — `safeExecute` has zero callers ever; the app
+deliberately uses raw `ggsave` at 7 sites), so the critic correctly
+demoted it to an owner decision. **Lesson:** a triage of unused exports
+must compute the call graph *among* the unused set and surface its
+connected components; a closed island is one decision, and absent a
+positive intent signal (open issue, TODO, partial wiring) an
+unadopted-infra island is an owner roadmap call, not a high-confidence
+wire-in. **Right-size note:** the 39-export triage genuinely warranted a
+Workflow (9 investigators + critic) — breadth of surface (Learning 70’s
+heuristic, breadth side) — and the critic earned its keep on every axis
+(fabricated edge, closed islands, confidence calibration, the
+\#8-CLOSED/#10-OPEN roadmap correction). **Reflexes:**
+\[app-unreachable≠dead-code\]\[keep-as-public-API-is-the-default\]\[retire-must-earn-a-breaking-change-burden\]\[prove-caller-edges-are-real-not-roxygen\]\[re-grep-stripping-comments\]\[compute-the-call-graph-among-the-unused-set\]\[closed-island-is-one-decision\]\[no-high-confidence-wire-in-without-a-positive-intent-signal\]\[verify-critic-claims-firsthand\]\[bind-clusters-to-VERIFIED-open-issues\]\[surface-genuine-decisions-via-AskUserQuestion\]\[file-an-issue-for-a-ratified-wire-in\]\[additive-comments-not-body-overwrites\]\[right-size-by-surface-breadth\]\[declare-N/A-honestly\]\[news-vs-changelog\]\[macos-dupe-scan\].
+**Apply:** to triage “unused/exported” code — anchor on the package’s
+stated script-vs-app duality (keep-as-public-API is the default; retire
+carries a breaking-change burden); prove every caller-edge is a real
+call (strip roxygen/comments and re-grep) before using it to justify a
+disposition; compute the call graph among the unused set and treat each
+closed island as a single coupled decision; require a positive intent
+signal before assigning high-confidence wire-in; verify every critic
+claim firsthand; and record dispositions additively, filing a tracking
+issue for each ratified wire-in.
+
+#### Learning 77 — A “wire-in” (#37 integration) is not one shape: a built-but-unmounted module is a mount-only wire-in (no design step), but a never-surfaced exported function is a build-from-scratch wire-in whose FIRST session is a design-decisions step resolving the UX forks — don’t read a handoff’s “implement (Real TDD)” as license to code when the user-facing surface doesn’t exist yet (S79, resolve UX forks for the getPotentialParents wire-in → \#48)
+
+**(a) \[classify the wire-in before scoping it — mount-only vs
+build-from-scratch decides the session count\] \#37’s two ratified
+wire-ins look alike on the issue list but decompose differently.** ORIP
+(#47) is a **mount-only** wire-in: `modORIPReporting.R` already exists
+complete+tested, so the whole job is two edits (a `tabPanel` + a
+`mod*Server` call) — no product decisions, one session.
+`getPotentialParents` (#48) is a **build-from-scratch** wire-in: no
+module, no UI, no render/export logic exists, so its app value is gated
+on genuine UX forks (where does `maxGestationalPeriod` come from; where
+does the surface live; how is it triggered and exported) that are the
+owner’s to decide. The honest decomposition is **two sessions** — a
+design-decisions session (this one: `AskUserQuestion` the forks, record
+them on the tracking issue) then a TDD implementation session — not one.
+**Lesson:** before sizing a wire-in, check whether the thing being wired
+already exists as a built unit; if it does, it’s a mount (skip design,
+go straight to TDD); if it must be built, resolve the product/UX forks
+first and treat that resolution as its own deliverable. **(b) \[a
+handoff’s “implement (Real TDD)” is a candidate label, not a license to
+skip the design gate\] S78’s handoff pre-named this as “Implement the
+`getPotentialParents` wire-in … Real TDD.”** Taken literally that
+invites starting code; but the surface didn’t exist, so the load-bearing
+first move was resolving the forks (FM \#18 — don’t bleed design into
+implementation; FM \#23 — the owner’s “explain it” was a question, and
+even “Yes, proceed” meant proceed *with the design-step-first path* I’d
+recommended, not “start coding”). I explained firsthand, recommended the
+path, and only on “Yes” claimed the session (Phase 1B stub), declared
+TDD N/A, asked the three forks crux-first via `AskUserQuestion` (0
+corrections), recorded them additively on a new issue **\#48** + a link
+comment on umbrella \#45, and **stopped before any code**. **Right-size
+note:** correctly SOLO — three well-scoped product forks grounded in ~4
+files (`getPotentialParents.R`, `appUI.R`, `appServer.R`, the
+`fromCenter` producers) is a focused read, not a breadth fan-out; a
+Workflow would have been theater (Learning 70’s right-size heuristic,
+the contained side — same call as S74/S75). **Reflexes:**
+\[classify-wire-in-mount-vs-build\]\[build-from-scratch-wire-in-needs-a-design-session-first\]\[handoff-candidate-label≠skip-the-gate\]\[question-not-instruction-FM23\]\[resolve-UX-forks-via-AskUserQuestion-crux-first\]\[file-an-issue-for-the-ratified-design\]\[additive-comments-not-body-overwrites\]\[right-size-SOLO-for-a-contained-read\]\[declare-N/A-honestly\]\[news-vs-changelog\]\[macos-dupe-scan\].
+**Apply:** when a handoff or issue names a “wire-in,” first determine
+whether the wired unit already exists (mount-only → go straight to a TDD
+implementation session) or must be built (build-from-scratch → its first
+session resolves the owner’s UX forks and records them on a tracking
+issue; implementation is a separate TDD session); never let an inbound
+“implement” label skip the design gate when the user-facing surface
+doesn’t yet exist.
+
+#### Learning 78 — Executing a build-from-scratch Shiny wire-in under strict TDD: extract the module’s data logic into a PURE helper so the contract is pinned by deterministic tests (not trapped behind reactives), and the mandatory Phase-3E for a module-mount is a headless `AppDriver` boot — which closes the integration gap unit tests cannot, modulo three repo toolchain gotchas (S80, implement \#48: getPotentialParents tab)
+
+**(a) \[find the pure function hiding inside the module and test it
+exhaustively; let testServer cover only the reactive glue\] The
+render/CSV mapping (`getPotentialParents`’s list-of-lists → a flat
+data.frame) was extracted as `flattenPotentialParents()` — Shiny-free —
+mirroring the existing `makeFounderStatsTable`/`makeGeneticSummaryTable`
+pattern.** That made 7 of 14 tests trivially deterministic (columns;
+`NULL`/empty → 0-row empty state; multi-animal flatten; empty-sires →
+`""`/0; `write.csv` round-trip), and the **same** helper feeds both
+[`DT::renderDT`](https://rdrr.io/pkg/DT/man/dataTableOutput.html) and
+the `downloadHandler`, so the on-screen table and the CSV cannot
+diverge. The reactive surface
+([`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html))
+then only had to prove the glue: button → `getPotentialParents` →
+flatten → table, plus the two empty-state degradations (no `fromCenter`
+column; no unknowns). Note `testServer` runs the **real reactive graph**
+(not mocks), so the happy-path test on the rhesus fixture is genuine
+module-level integration evidence — the remaining runtime unknown is
+only whether the module is actually mounted in the assembled app.
+**Lesson:** when TDD-ing a Shiny module, first ask “what is the pure
+function hiding inside this module?” — pull it out, test it as
+data-in/data-out, and keep the reactive tests thin. Honor the ratified
+UI scope while doing so: the owner ratified only the gestation numeric
+input, so `minParentAge` stayed a server param (default `2.0`, the QC
+value), NOT a second UI input — don’t let the helper’s flexibility tempt
+extra surface. **(b) \[Phase-3E for a mount is a headless AppDriver boot
+— and three gotchas decide whether it runs and whether you trust its
+logs\] Build-clean + `testServer`-green prove the module works in
+isolation but NOT that the `tabPanel`/`mod*Server` wiring mounted it and
+that `shared$currentPedigree` reaches it; that integration gap is
+exactly what Phase-3E must close (FM \#24).** Booting
+`inst/shinytest/app.R` (= `shinyApp(appUI(), appServer)`) through
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+closes it: broken wiring ⇒ no boot or absent controls. Confirmed
+firsthand: app boots with full server init, the tab + all four
+namespaced controls mount, default 210 is set, navigation works,
+existing tabs survive, and the module’s outputs appear only as clean
+`shiny:value potentialParents-*` log entries. **Three gotchas:** (1)
+under `Rscript` AppDriver aborts with “Reason: On CRAN” unless
+`NOT_CRAN=true` is set (non-interactive ⇒ treated as CRAN); (2) the E2E
+app drives the **installed** package — `devtools::install()` your dev
+code first or the smoke tests stale bits; (3) `shinyBS is not defined`
+JS console errors are **pre-existing app-wide noise** (shinyBS popovers
+used elsewhere) — to separate a regression from baseline noise, grep the
+captured logs for *your module’s namespace*, not the bare word “error”.
+The e2e suite is opt-in (`NPRC_RUN_E2E=true`) and skips by default in
+`test()`/`check()`, so it is NOT a substitute for actively running the
+smoke during the session. **Reflexes:**
+\[extract-the-pure-helper-from-the-module\]\[test-pure-logic-exhaustively-reactive-glue-thinly\]\[one-helper-feeds-table-and-CSV\]\[testServer-runs-the-real-reactive-graph\]\[honor-the-ratified-UI-scope-no-extra-inputs\]\[phase3E-for-a-mount-is-a-headless-AppDriver-boot\]\[NOT_CRAN=true-for-AppDriver-under-Rscript\]\[install-dev-code-before-e2e\]\[distinguish-preexisting-log-noise-by-namespace\]\[declare-TDD-phase-every-response\]\[gate-every-transition-via-AskUserQuestion\]\[news-AND-changelog-for-a-user-facing-feature\]\[macos-dupe-scan\].
+**Apply:** when implementing a build-from-scratch Shiny wire-in under
+strict TDD — extract the data transformation into a pure Shiny-free
+helper feeding every output, pin it with deterministic tests, use
+`testServer` only for the reactive glue; then run the mandatory Phase-3E
+as a headless `AppDriver` boot of the assembled app (install dev code
+first, `NOT_CRAN=true`, separate your namespace’s logs from pre-existing
+app noise).
+
+#### Learning 79 — Verifying a shipped feature with a live owner click-through: do the click-through FIRST (it catches integration defects headless checks bless), but the example data you stage must pass through the app’s EXACT ingest+validate path — a pre-flight that diverges from the app (reader `na.strings`, or `processQcStudbookResult` vs the raw `errorLst` the UI shows) ships a defective fixture to the owner (S81, owner-confirm close \#48 via click-through)
+
+**(a) \[click-through-FIRST earns its keep — it caught a defect a
+headless pre-check had blessed\] The owner ran the live tab and hit
+*“Subject(s) listed as both sire and dam”* (offending id blank → “cell
+empty”); my pre-flight pipeline run had said CLEAN.** Root cause: the
+staged example CSV wrote unknown parents as **empty cells**
+(`write.csv(na="")`), but the app’s text reader (`modInput.R:274` =
+`read.table(..., fill=TRUE, quote="\"")`, **default `na.strings="NA"`**)
+reads `""` as the empty *string*, not `NA`, so `""` appeared in **both**
+the sire and dam columns → `correctParentSex.R:71`
+`intersect(sires,dams)` flagged it. My pre-check used
+`na.strings=c("","NA")`, silently coercing `""`→`NA` and masking the bug
+— a pure FM \#24 instance (the verification diverged from the app, so
+“headless-passes” blessed a runtime defect). **Fix:** write unknown
+parents as **literal `NA`** (matching `ExamplePedigree.csv`) and
+re-verify with the app’s exact reader → clean + 50 candidates.
+**Lesson:** “click-through first” (the owner’s call here) is not
+ceremony — it exercises the real browser→reader→QC→reactive path that
+unit/headless checks approximate; let it run before you commit/close.
+**(b) \[match the app’s EXACT verification surface, not a convenient
+proxy\] Two divergences bit the same session.** (i) The reader’s
+`na.strings` (above). (ii) I judged “is the file clean?” by
+`processQcStudbookResult()$hasErrors`, but that category-set
+**excludes** the `sireAndDam` error — the app’s Errors tab renders the
+raw `errorLst$sireAndDam` (from `qcStudbook(reportErrors=TRUE)`)
+directly. So my “0 errors” verdict read a signal the UI does not use.
+**Lesson:** to pre-verify app-ingested data, read the file the way
+`readDataFile` does AND inspect the same `errorLst` components the UI
+displays — reuse the app’s functions, don’t reimplement a looser proxy.
+**(c) \[diagnose alarming-but-cosmetic warnings FROM THE CODE, don’t
+guess a fix\] The *“Column name case changed: fromCenter → fromcenter”*
+warning looked like it would break `getPotentialParents` (case-sensitive
+on `"fromCenter"`).** Reading `fixColumnNames.R` settled it firsthand:
+`:20` lowercases all headers (and logs the caseChange), `:61` restores
+`fromcenter`→`fromCenter`; the cleaned studbook keeps `fromCenter`, so
+the feature works. Cosmetic (same noise for
+`recordStatus`/`geographicOrigin`). The cure for owner alarm is a
+source-grounded explanation, not a speculative “try X.” **(d) \[shipped
+example data may be adversarial-by-design — stage a purpose-built clean
+fixture, owner-chosen\] The package’s pedigree example files are
+deliberately error-laden input-error QC fixtures; none reaches a
+feature’s happy path.** A live demo of a new feature often needs a
+purpose-built clean fixture — here
+`inst/extdata/rhesusPedigree_fromCenter.csv` (`rhesusPedigree` +
+`fromCenter=TRUE`, unknowns as literal `NA`), with the source chosen by
+the owner via `AskUserQuestion` (rhesus vs full-ExamplePedigree vs
+modify-in-place; new file avoids blast radius on the many
+tests/vignettes referencing `ExamplePedigree.csv`). Surface this in the
+handoff so the next demo session doesn’t rediscover it. **Right-size
+note:** correctly SOLO — a contained diagnose-and-stage across ~10 files
+with interactive owner round-trips is not a breadth fan-out; a Workflow
+would have been theater (Learning 70, contained side). **Reflexes:**
+\[click-through-first-catches-integration-defects\]\[replicate-the-apps-EXACT-reader-na.strings-fill-quote\]\[inspect-the-raw-errorLst-the-UI-renders-not-just-processQcStudbookResult\]\[reuse-the-apps-functions-dont-reimplement-a-proxy\]\[write-unknown-parents-as-literal-NA\]\[diagnose-cosmetic-warnings-from-the-source\]\[shipped-example-data-may-be-error-fixtures-by-design\]\[stage-a-purpose-built-clean-fixture-owner-chosen-via-AskUserQuestion\]\[new-file-over-modify-in-place-to-bound-blast-radius\]\[owner-confirmed-close-only\]\[right-size-SOLO-for-a-contained-diagnose\]\[declare-N/A-honestly\]\[news-vs-changelog\]\[macos-dupe-scan\].
+**Apply:** when verifying an app feature with a live click-through — run
+the click-through FIRST, but make the pre-flight traverse the app’s
+exact ingest+validate path (reader flags AND the same validation surface
+the UI renders, by reusing the app’s own functions); write example
+pedigrees with unknowns as literal `NA`; expect shipped example data to
+be adversarial-by-design and stage a purpose-built clean fixture
+(owner-chosen source, prefer a new file over modify-in-place); diagnose
+alarming warnings from the source before proposing fixes; and close the
+issue only on owner confirmation.
+
+#### Learning 80 — Backfilling a regression E2E test for ALREADY-SHIPPED behavior under strict TDD: the RED→GREEN cycle is degenerate (no production code), so map it honestly — RED authors assertions with TEETH that self-skip when opt-in is off, GREEN re-derives the baked regression value through the app’s EXACT pipeline BEFORE the browser run, and the browser E2E run itself IS the Phase-3E verification; preserve the sibling test idiom over DRY-extraction (S82, opt-in E2E test for the \#48 Potential Parents tab)
+
+**(a) \[declare the degenerate cycle up front and gate it — don’t fake a
+failing-first RED\] The deliverable was a durable opt-in E2E test for a
+feature that already shipped (S80) and was owner-verified (S81), so
+there is NO production code to write and the classic “RED fails, GREEN
+makes it pass” does not literally apply.** Rather than perform a fake
+failing-first cycle, I declared the honest classification at the
+PRE-RED→RED gate (regression/characterization backfill) and mapped the
+phases truthfully: RED = author the test so each data assertion has
+TEETH (passes only when the shipped feature returns the verified result;
+a broken/empty feature renders the empty-state and fails the match) AND
+self-skips cleanly when the opt-in env var is off; GREEN = run it
+against the shipped feature and confirm green; REFACTOR = lint/tidy. The
+RED verification was “run it, watch it self-skip correctly” (`SSSS`, 0
+fail/error) — the opt-in equivalent of “watch it fail”. **Lesson:** when
+the production code already exists, don’t contort the work into a fake
+RED→GREEN — name the degenerate cycle at the gate and define what
+RED/GREEN/REFACTOR concretely mean for a test backfill (teeth + clean
+self-skip / run-green-against-shipped / lint), so the discipline stays
+honest instead of theatrical. **(b) \[GREEN’s real work is re-deriving
+the regression value through the app’s EXACT object-under-test, BEFORE
+the expensive browser run\] A regression lock (here
+`PP_EXPECTED_CANDIDATES <- 50L`) is only as good as the number baked
+in.** Before the browser run I re-derived it through the app’s exact
+pipeline — `read.csv` (the CSV reader path, `modInput.R:279`) →
+`runQcStudbook(minParentAge=2, reportChanges=TRUE)$cleaned` →
+`setPopulation` → `findPedigreeNumber`/`findGeneration`
+(`modPedigree.R:261-280`) → `getPotentialParents(_, 2.0, 210L)` — NOT
+the looser raw-`rhesusPedigree` path the unit test uses. Crucially I
+confirmed which object the module actually feeds: it exports
+`pedigree = reactive(pedigreeData())` (`modPedigree.R:344`) — the
+FILTERED pedigree (generated-unknowns removed), not `processedPedigree`
+— and computed the count on BOTH, getting 50 either way, so the browser
+E2E passed on the first try. **Lesson:** for a regression-locking test,
+independently re-derive the locked value through the production
+object-under-test (trace which reactive/return the code actually
+consumes, not a convenient proxy) BEFORE the slow end-to-end run; and
+when a distinction might matter (filtered vs full pedigree), compute
+both and PROVE it’s immaterial rather than assume —
+recompute-don’t-inherit (Learnings 70c/72c/74b/75a) applied to the
+test’s expected value. **(c) \[the browser E2E IS the Phase-3E runtime
+verification, and assertions must have teeth; preserve the sibling idiom
+over DRY-extraction\] An opt-in browser E2E that actually runs (chromote
+present) is the strongest Phase-3E — real Chrome, real reactive graph,
+real upload→QC→pedigree→compute→DT-render→CSV-download — so the GREEN
+run doubles as the mandatory runtime smoke (FM \#24 answered head-on,
+not “skipped/build-clean”).** The assertions are deliberately teethy:
+*“Found candidate parents for 50 animal”*, the DT info text *“of 50
+entries”*, and a `get_download` CSV with exactly 50 rows + the
+`id,nSires,nDams,sires,dams` header — each fails when the feature is
+broken (the empty-state/warning renders instead), unlike the
+`grepl(keyword, get_html(app,"body"))` tautology the helper’s own
+comments warn passes once the app boots regardless of tab. And in
+REFACTOR I did NOT extract the repeated skip/`AppDriver` boilerplate
+into a helper: the sibling `test-e2e-*-module.R` files deliberately
+repeat it, so DRY-extraction would diverge from the established idiom —
+matching siblings beats local cleverness for a regression net.
+**Right-size note:** correctly SOLO — a contained single-file test
+backfill with interactive TDD gates is not a breadth fan-out; a Workflow
+would have been theater (Learning 70/77 right-size heuristic, contained
+side). This held even with **ultracode “on”** — the project
+methodology + these learnings govern the right-size call, and “use a
+Workflow on every substantive task” yields to “right-size by breadth of
+surface” when the surface is one file. **Reflexes:**
+\[declare-the-degenerate-RED→GREEN-for-a-test-backfill\]\[RED=teeth+clean-self-skip\]\[assertions-must-have-teeth-not-body-grepl\]\[GREEN-re-derive-the-locked-value-through-the-exact-pipeline\]\[trace-which-reactive-the-module-actually-feeds\]\[compute-both-variants-and-prove-immaterial\]\[browser-E2E-is-the-Phase-3E-verification\]\[opt-in-via-NPRC_RUN_E2E+NOT_CRAN+install-first\]\[preserve-the-sibling-test-idiom-no-DRY-extraction\]\[right-size-SOLO-even-under-ultracode\]\[declare-phase-every-response\]\[gate-every-transition-via-AskUserQuestion\]\[news-vs-changelog\]\[macos-dupe-scan\].
+**Apply:** to backfill a regression test for already-shipped behavior
+under strict TDD — declare the degenerate (no-production-code) cycle at
+the PRE-RED→RED gate and define RED/GREEN/REFACTOR concretely (teeth +
+clean self-skip / run-green-against-shipped + re-derive the locked value
+through the exact production pipeline first / lint preserving the
+sibling idiom); make every data assertion fail when the feature is
+broken; let the real browser E2E run be the Phase-3E runtime
+verification; and right-size SOLO for a single-file test even when an
+“always use a Workflow” directive is in force.
+
+#### Learning 81 — Executing a MOUNT-ONLY Shiny wire-in (a built-but-unmounted module) under strict TDD is the smallest vertical slice: 2 production edits, RED is the wiring-grep idiom (NOT module unit tests — the module is already tested), and the deparse-grep server test’s teeth come from the Phase-3E AppDriver boot, not the grep; and a mid-session owner QUESTION that reveals new scope → answer firsthand + file an issue, don’t expand the deliverable (S83, wire in the ORIP module \#47; ONPRC-gating deferred to \#49)
+
+**(a) \[the mount-only wire-in is the smallest TDD slice — 2 edits, and
+RED is the wiring-grep idiom, not module re-tests\] Learning 77
+predicted a built-but-unmounted module is a mount-only wire-in (no
+design step); \#47 confirmed it: exactly 2 production edits — an
+`appUI.R` `tabPanel` and an `appServer.R` `modXxxServer(...)` call, each
+mirroring the 7 siblings.** The module already had unit tests
+(`test_modSiteConfig.R`), so RED needed only WIRING tests, and
+`test_modGvAndBgDesc.R` is the exact precedent: (1)
+`as.character(appUI())` must contain a DISCRIMINATING marker present
+only when the module mounts — here the `oripReporting-` namespace prefix
+(proves the mount AND the id) plus the module’s unique body text
+*“Office of Research Infrastructure Programs”* (proves the right
+content, not a generic phrase a sibling tab already emits); (2)
+`deparse(appServer)` must contain the server-call name AND the
+namespace. Both markers are absent at HEAD → the tests fail as
+ASSERTIONS (not errors/undefined-functions) → present after the 2 edits.
+**Lesson:** for a mount-only wire-in don’t re-test the module — the RED
+net is the wiring grep idiom (appUI-render + appServer-deparse), and
+choose a marker that can only appear once the module is mounted
+(namespace prefix + unique body text), not one a sibling already
+renders. **(b) \[the deparse-grep server test is structurally weak — its
+real teeth are the Phase-3E AppDriver boot\] Be honest about the limit:
+`grepl("modORIPReportingServer", deparse(appServer))` only confirms the
+source TEXT contains the call — near-tautological; it cannot catch a
+wrong reactive or a runtime mount failure.** The teeth for the server
+wiring are the mandatory Phase-3E — a headless `AppDriver` boot of the
+INSTALLED app (Learning 78’s recipe: `NOT_CRAN=true` +
+`devtools::install()` first) that proves the tab is REACHABLE (navigate
+via `app$set_inputs(mainNavbar="ORIP Reporting")`, assert the active
+pane shows the module’s content) and its namespaced outputs register
+with **0 module-namespaced JS errors** (grep the logs for YOUR
+namespace, separating the pre-existing app-wide `shinyBS` noise). Carry
+this script gotcha: `app$get_html(".tab-pane.active")` returns MULTIPLE
+nodes (every nested module tabset has its own active pane), so collapse
+with `paste(collapse=" ")` or assert on
+`app$get_value(input="mainNavbar")` instead of `&&`-ing a length-N
+vector (a length-5 vector into `isTRUE`/`&&` halts the run). **Lesson:**
+mirror the codebase’s deparse-grep wiring idiom for the RED net, but
+treat it as a smoke-alarm wire, not proof — the AppDriver Phase-3E is
+what actually verifies a module mount (FM \#24 answered head-on). **(c)
+\[a mid-session owner QUESTION that reveals new scope → answer
+firsthand, then file an issue; don’t bleed it into the deliverable (FM
+\#23 + 1-and-done)\] Mid-close-out the owner asked whether the tab’s
+visibility is config/ONPRC-dependent.** I answered FIRSTHAND from the
+code (no — it’s a static `tabPanel`, always mounted; only the displayed
+center label reflects config, defaulting to “ONPRC” via
+`getSiteInfo.R:66` when absent) and changed nothing. The owner then
+clarified the tab SHOULD be ONPRC-gated but “that is too much for this
+session — put it as an issue.” Correct handling: answer the question,
+recognize the clarification as a REAL new requirement, and capture it as
+a tracked issue (**\#49**, with evidence-based design options — dynamic
+`insertTab`/`removeTab` mirroring the Error List pattern at
+`appServer.R:163-242`, and the genuine “show or hide when no config file
+→ default ONPRC” product fork flagged) rather than expanding the current
+GREEN. The \#47 wire-in stands as built (always-visible); \#49 tracks
+the gating. **Right-size note:** correctly SOLO — a 2-edit mount with
+interactive TDD gates is not a breadth fan-out; a Workflow would have
+been theater (Learning 70/77 contained side), holding under ultracode
+“on” (project methodology governs). **Reflexes:**
+\[mount-only-wire-in=2-edits-no-design-step\]\[RED=wiring-grep-not-module-re-tests\]\[appUI-render-grep+appServer-deparse-grep
+idiom\]\[pick-a-discriminating-marker-namespace-prefix+unique-body-text\]\[markers-absent-at-HEAD-fail-as-assertions\]\[deparse-grep-is-a-smoke-alarm-not-proof\]\[Phase-3E-AppDriver-boot-is-the-real-server-verification\]\[NOT_CRAN+install-first\]\[grep-logs-for-YOUR-namespace-separate-shinyBS-noise\]\[tab-pane.active-returns-multiple-nodes-collapse-or-get_value\]\[a-question-is-not-an-instruction-FM#23\]\[answer-firsthand-from-the-code\]\[new-requirement→file-an-issue-not-scope-creep\]\[1-and-done\]\[owner-confirmed-close-only\]\[right-size-SOLO-even-under-ultracode\]\[declare-phase-every-response\]\[gate-every-transition-via-AskUserQuestion\]\[news-vs-changelog\]\[macos-dupe-scan\].
+**Apply:** to a mount-only Shiny wire-in (an existing, tested, but
+unmounted module) under strict TDD — write 2 edits (UI tabPanel + server
+call) mirroring siblings; RED = wiring-grep tests only (appUI-render for
+a discriminating mount marker + appServer-deparse for the call), not
+module re-tests; treat the deparse-grep as a smoke alarm and make the
+headless AppDriver Phase-3E the real proof of the mount; and when a
+mid-session owner question surfaces a new requirement, answer it
+firsthand and file an issue rather than expanding the session’s
+deliverable.
+
+#### Learning 82 — Gating an existing UI element on DEPLOYMENT config under strict TDD: resolve the product fork AND the approach as a SEPARATE pre-RED AskUserQuestion (both change the test expectations); implement as a PURE predicate + parameterized-UI injection (maps onto the codebase’s own fast test idioms, no browser for core logic); and drive the REAL config path across all scenarios in Phase-3E — which is exactly where a pre-existing latent bug surfaces (flag-and-file, don’t fix) (S84, gate the ORIP tab to ONPRC-only \#49; close \#47; file \#50)
+
+**(a) \[a config-gating change has TWO pre-RED forks — a PRODUCT fork
+and a TECHNICAL-approach fork — and BOTH alter the RED expectations, so
+pose both as a SEPARATE pre-RED AskUserQuestion, not the RED gate\] \#49
+carried a product fork (when no config file exists,
+[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+returns the default fallback `center="ONPRC"` — show or hide the tab?)
+and an approach fork (build-time conditional `tabPanel` vs dynamic
+`insertTab`/`removeTab`).** Both are load-bearing on the tests: S83’s
+wiring test asserted the ORIP tab is ALWAYS present, but under the
+owner’s chosen “hide unless a real ONPRC config” that assertion FLIPS to
+absent in dev/CI (no config file). Per the phase-gate contract these
+author/owner decisions are a SEPARATE `AskUserQuestion` posed BEFORE
+declaring RED (distinct from the PRE-RED→RED gate itself). Recompute the
+seam firsthand to pick the approach:
+[`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
+is evaluated ONCE at `shinyApp(appUI(), appServer)` construction
+(`runModularApp.R:40`, `inst/shinytest/app.R`), and the deployment
+center is fixed per server — so the tab’s presence is a per-deployment
+CONSTANT, not a per-session reactive. Build-time gating is therefore
+semantically correct AND simpler than the dynamic `insertTab` pattern,
+which exists for DATA-driven tabs (Error List, `appServer.R:163-242`)
+that genuinely toggle on per-session user input. **Lesson:** when a
+gating change has a product fork AND an approach fork that both move the
+test expectations, surface both in ONE pre-RED `AskUserQuestion`
+(recommend + spell out trade-offs), and let the actual evaluation model
+— verified firsthand (build-time-once vs per-session-reactive) — drive
+the approach, not the “most consistent with the existing mechanism”
+reflex (the existing dynamic-tab mechanism fits a DIFFERENT trigger
+shape). **(b) \[implement as a PURE predicate + a parameterized-UI that
+INJECTS the resolved config — it maps onto the codebase’s own test
+idioms and turns an environment-dependent feature into deterministic,
+browserless unit tests\] The sibling `shouldShowChangedColsTab`
+(exported, own file, tested as a pure predicate +
+`as.character(appUI())` grepl + `deparse(appServer)` grepl) is the exact
+precedent.** Mirror it: NEW exported `R/shouldShowOripTab.R` =
+`isTRUE(hasConfigFile) && isTRUE(center == "ONPRC")` — and prefer
+`isTRUE(center == "ONPRC")` over `identical(center, "ONPRC")` so it’s
+robust to a NAMED/attributed `center` (e.g. `getParamDef` could return
+one), to `NA`, `NULL`, and length≠1, all → FALSE. Parameterize
+`appUI(siteInfo = getSiteInfo(expectConfigFile = FALSE))` so the
+integration tests INJECT a `siteInfo` list (`center` + an
+existing-vs-nonexistent `configFile` path →
+[`file.exists()`](https://rdrr.io/r/base/files.html) is the
+discriminator) and assert the tab present/absent DETERMINISTICALLY — no
+HOME/config-file mocking, no browser. Gate the `appServer` server mount
+on the SAME predicate so UI tab and server module toggle together (a UI
+tab whose server isn’t mounted is an empty, non-functional tab); the
+`deparse(appServer)` grep for `shouldShowOripTab` is the structural lock
+that the mount is gated. **Lesson:** for a config-gated UI element,
+extract a PURE predicate (unit-testable like its siblings) and make the
+UI function accept the resolved config as a DEFAULTED parameter —
+injection converts an environment-dependent feature into fast
+deterministic unit tests so the build-equivalent (full suite + lint)
+stays quick; reserve the browser for Phase-3E. (Watch the lint false
+positive: `object_usage_linter` flags a BRAND-NEW package function as
+“no visible global function” until the package is re-installed — confirm
+by re-linting after `devtools::install()`, like its already-installed
+siblings.) **(c) \[Phase-3E must drive the REAL config path across ALL
+gated scenarios — and that is exactly where a pre-existing latent bug
+surfaces: flag-and-file, don’t fix; and classify logs by LEVEL not
+namespace-mention\] The unit tests inject `siteInfo`, but Phase-3E must
+prove the gate works through the REAL `getSiteInfo`→config-file path.**
+Bulletproof recipe: generate a temp app dir whose `app.R` does
+`Sys.setenv(HOME=<temp dir containing .nprcgenekeepr_config>)` BEFORE
+`shinyApp(appUI(), appServer)`, so the child process’s
+`getConfigFileName` reads the controlled config regardless of env
+inheritance; boot one `AppDriver` per scenario (ONPRC config → tab
+present + navigable + 5 outputs register values; SNPRC → absent; no
+config → absent; siblings intact throughout). Driving the real config
+path made this the FIRST app boot ever performed WITH a config file
+present — which immediately crashed on a PRE-EXISTING bug: the
+config-loading observer (`appServer.R:63`, from `6457a3a3`) uses
+`read.table(sep="=")`, which CANNOT parse the DOCUMENTED config format
+(comments, blank lines, multi-line quoted values) that `getSiteInfo`’s
+tolerant tokenizer handles — latent in dev/CI only because no config
+file exists there. Correct handling (FM \#23 + scope discipline +
+1-and-done): do NOT fix it (unrelated to \#49); SIDESTEP it for the
+smoke with a stripped single-line `key=value` config both parsers
+accept; FILE it (**\#50**) with root cause + repro + suggested fix; note
+it in the handoff. Also: a naive Phase-3E log metric
+(`sum(grepl("oripReporting", msgs))`) counted INFO-level `shiny:value`
+output registrations as “errors” and produced a false FAIL — classify by
+log LEVEL/text (genuine `error`-level, minus the pre-existing app-wide
+`shinyBS` noise), not by namespace MENTION, before declaring a Phase-3E
+result. **Lesson:** verify a config-gated feature by driving the REAL
+config path in Phase-3E (HOME-override-in-app.R for full control);
+expect that “the first boot with a config present” can expose
+pre-existing config-handling bugs — flag-and-file them (don’t bleed a
+fix into the deliverable), and sidestep them minimally to complete the
+smoke; and judge runtime logs by level/text, not namespace mention.
+**Reflexes:** \[config-gating has a PRODUCT fork + an APPROACH fork —
+both move the tests\]\[resolve them as a SEPARATE pre-RED
+AskUserQuestion not the RED gate\]\[recompute the evaluation model
+firsthand: appUI() is built ONCE → per-deployment constant → build-time
+gating beats dynamic insertTab\]\[dynamic-insertTab is for DATA-driven
+tabs, not deployment-config tabs\]\[mirror the sibling pure-predicate
+idiom: own file + exported + unit test + as.character(appUI()) grepl +
+deparse(appServer) grepl\]\[isTRUE(x==“ONPRC”) not identical —
+names/NA/NULL/length-safe\]\[parameterize appUI(siteInfo=…) and INJECT
+config → deterministic browserless tests\]\[gate UI tab AND server mount
+on the same predicate so they toggle together\]\[object_usage_linter
+false-positives a brand-new fn until installed — re-lint after
+install\]\[Phase-3E drives the REAL config path via
+HOME-override-in-app.R, one AppDriver per
+scenario\]\[first-boot-with-a-config-present can expose pre-existing
+config bugs → flag-and-file \#50, don’t fix (FM \#23 +
+1-and-done)\]\[sidestep an out-of-scope bug minimally to complete the
+smoke\]\[classify Phase-3E logs by LEVEL/text not
+namespace-mention\]\[owner-confirmed close only
+(#47)\]\[declare-phase-every-response\]\[gate-every-transition-via-AskUserQuestion\]\[news-vs-changelog\]\[macos-dupe-scan\]\[right-size-SOLO-even-under-ultracode\].
+**Apply:** to gate an existing UI element on deployment configuration
+under strict TDD — resolve the product fork and the technical approach
+in a SEPARATE pre-RED `AskUserQuestion` (both change the test
+expectations); implement as a PURE predicate (mirroring the codebase’s
+sibling tab-visibility predicate) plus a UI function that accepts the
+resolved config as a defaulted parameter so tests inject it
+deterministically; gate the matching server mount on the same predicate;
+and in Phase-3E drive the REAL config-file path across every scenario —
+being ready to flag-and-file (not fix) any pre-existing config-handling
+bug the first config-present boot exposes, and to classify runtime logs
+by level rather than by namespace mention.
+
+#### Learning 83 — Fixing a boot crash caused by a REDUNDANT parse path that diverged from the canonical one: the fix is to DELETE the redundancy and route through the single source of truth, not harden the wrong parser; before reshaping a reactive value grep its consumers (a passed-but-unused value is safe to retype); and since an observer isn’t unit-testable in isolation, extract its risky logic into a PURE helper the observer calls — unit-test the helper, lock the wiring with a deparse-grep, prove the integration in Phase-3E (S85, fix \#50: documented-format config crashes the modular app on boot)
+
+**(a) \[a crash from a REDUNDANT representation that diverged from the
+canonical parser → consolidate to the single source of truth; don’t
+harden the wrong parser\] The same artifact (the site config file) was
+parsed TWO ways:** the tolerant
+[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+tokenizer (`readLines`→`getTokenList`→`getParamDef`, which handles
+comments / blank lines / multi-line quoted / comma-separated values)
+AND, redundantly, the `appServer` config observer’s
+`read.table(configFile, header=TRUE, sep="=")`, which assumes a strict
+2-column table and stops with *“line N did not have 2 elements”* on the
+documented format (`inst/extdata/example_nprcgenekeepr_config`). The bug
+was latent in dev/CI only because no config file exists there (the
+`file.exists(configFile)` branch never runs). **Lesson:** when two code
+paths parse the SAME artifact differently and one crashes, the fix is
+NOT to make the broken parser tolerant (that perpetuates the
+duplication) — it is to DELETE the redundant path and route through the
+one canonical parser (issue \#50’s suggested fix \#1, owner-chosen over
+the minimal `tryCatch`-only patch). “Two parsers for one file format” is
+the smell; one source of truth is the cure. Wrap the canonical call in
+`tryCatch`(→`flog.warn`+`NULL`) so a missing/malformed file fails SOFT
+(the app must reach a stable boot state regardless of a user’s config
+file), but make loading actually WORK, not merely not-crash. **(b)
+\[before changing a reactive value’s TYPE/shape, grep its consumers — a
+“passed but unused” value is safe to reshape\] `shared$config` is wired
+into TWO module signatures
+(`modInputServer("dataInput", config = reactive(shared$config))` and
+`modPedigreeServer(..., config = reactive(shared$config))`) but
+referenced by NEITHER module body** (both declare `config = NULL` and
+ignore it — confirmed by
+`grep -n "config" R/modInput.R R/modPedigree.R`). So switching
+`shared$config` from a `read.table` data.frame to the
+[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+named list has ZERO runtime consumer impact. **Lesson:**
+recompute-don’t-inherit applies at the DATA-shape level too — before
+reshaping a shared/reactive value, grep every consumer to learn what
+shape they actually depend on; a value that is plumbed-but-unused is
+free to retype, and knowing that converts a “scary type change across
+the reactive graph” into a safe local edit. **(c) \[an observer/reactive
+isn’t unit-testable in isolation (needs a Shiny session) → extract its
+risky logic into a PURE helper, unit-test the helper, lock the wiring
+with a deparse-grep, prove integration in Phase-3E\] The crash lived in
+an `observe({...})`, which can’t be exercised by a fast `testthat` test
+without standing up a session.** Same extract-to-a-test-seam move as
+Learning 78 (pure helper for module logic) and 82 (pure predicate for
+tab visibility), now applied to a crashing observer: NEW exported
+`R/loadSiteConfig.R` (`getConfigFileName(Sys.info())` → `NULL` if no
+file, else
+`tryCatch(getSiteInfo(expectConfigFile=FALSE), error→flog.warn+NULL)`),
+and the observer collapses to a one-liner
+`shared$config <- loadSiteConfig()`. The helper gets deterministic
+browserless tests via
+[`withr::local_tempdir()`](https://withr.r-lib.org/reference/with_tempfile.html) +
+`withr::local_envvar(c(HOME=tmp))` (the codebase’s env-override idiom;
+copy the example config to
+`basename(getConfigFileName(Sys.info())[["configFile"]])` so it’s
+OS-correct). Add a **characterization guard** test asserting the OLD
+broken call (`read.table(sep="=")`) errors on the documented file — it
+is green BEFORE and after the fix (so it’s not a RED driver; classify it
+honestly), but it fails loudly if anyone reintroduces the strict parser.
+Lock the wiring with a `deparse(appServer)` grep (`loadSiteConfig`
+present, `read.table` absent), and prove the integration in Phase-3E by
+booting the installed app with the REAL documented config present
+(HOME-override-in-`app.R`, `NOT_CRAN=true`, install-first) — the exact
+boot S84 had to SIDESTEP with a stripped single-line config now succeeds
+with the documented format. **Lesson:** to fix a crash inside a
+reactive/observer under strict TDD, push the crashing logic down into a
+pure exported helper (fast unit tests with teeth), keep the observer a
+one-liner, lock the call site with a structural deparse-grep, and let
+Phase-3E’s real-config boot be the integration proof. **Continuation
+note:** this is the designed payoff of S84’s flag-and-file — S84
+surfaced \#50 on the first config-present boot, sidestepped it, and
+filed it as candidate (1) with the exact RED/GREEN/Phase-3E shape; S85
+executed that shape. The flag-and-file → next-session-fix loop worked.
+**Reflexes:** \[two parsers for one file format is the smell →
+consolidate to the single source of truth, don’t harden the wrong
+one\]\[fail-soft via tryCatch but make loading actually work\]\[grep a
+reactive value’s consumers before reshaping it — passed-but-unused is
+safe to retype\]\[an observer isn’t unit-testable → extract a PURE
+helper, unit-test it, one-line the observer\]\[withr::local_tempdir +
+local_envvar(HOME) is the env-override test idiom; name the config by
+basename(getConfigFileName(…)) for
+OS-correctness\]\[characterization-guard test locks the root cause but
+is green throughout → not a RED driver, classify
+honestly\]\[deparse(appServer) grep locks the call site\]\[Phase-3E
+boots the REAL documented config that previously crashed — the boot S84
+sidestepped\]\[object_usage_linter false-positives a brand-new fn until
+installed — re-lint after install\]\[owner picks single-source-of-truth
+vs minimal-patch via a SEPARATE pre-RED
+AskUserQuestion\]\[declare-phase-every-response\]\[gate-every-transition\]\[news-vs-changelog:
+a startup-crash fix is user-facing → NEWS+CHANGELOG\]\[flag-and-file →
+next-session-fix loop is the compounding
+mechanism\]\[right-size-SOLO-even-under-ultracode\]. **Apply:** to fix a
+crash caused by a redundant/divergent parse (or any duplicated
+representation of one artifact) under strict TDD — delete the redundant
+path and route through the canonical parser (wrapped to fail-soft); grep
+the affected value’s consumers first to confirm the reshape is safe;
+extract the crashing reactive’s logic into a pure exported helper with
+deterministic env-override unit tests; lock the call site with a
+deparse-grep and a root-cause characterization guard; and prove it in
+Phase-3E by driving the real input that previously crashed.
+
+#### Learning 84 — A durable opt-in browser E2E for a DEPLOYMENT-CONFIG-GATED tab needs both polarities of teeth and a config-injecting app fixture: the POSITIVE case CANNOT use the stock test app (no config → tab hidden) so boot a generated `app.R` that HOME-overrides a real config before `shinyApp()` (S84’s Phase-3E recipe promoted to a reusable test fixture), while the NO-CONFIG negative case is FREE from that same stock `create_test_app()`; reuse the opt-in gate without growing the shared helper, and confirm every gate outcome in-process before the slow browser run (S86, durable opt-in E2E for the ORIP tab \#47/#49)
+
+**(a) \[a config-gated tab’s POSITIVE E2E must construct the app under a
+REAL config — the stock app hides it — but the NO-CONFIG negative case
+is FREE from that same stock app, so one E2E file mixes a
+config-injecting builder with the stock app\] The ORIP tab is build-time
+gated (`appUI.R:17`
+`showOrip = shouldShowOripTab(siteInfo$center, file.exists(siteInfo$configFile))`,
+server mount gated identically at `appServer.R:283-292`), with
+`siteInfo` defaulting to `getSiteInfo(expectConfigFile = FALSE)`.** So
+the standard installed app (`inst/shinytest/app.R` →
+[`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
+with no config present) yields the default fallback `center="ONPRC"` BUT
+a `configFile` path that does NOT exist → tab HIDDEN. The sibling
+`test-e2e-potential-parents-module.R` drives a NON-gated tab via
+`create_test_app()` (the stock `inst/shinytest` dir); a config-gated
+tab’s POSITIVE case CANNOT reuse it. The fixture: a local
+`build_config_app_dir(center)` that writes a temp `app.R` doing
+`Sys.setenv(HOME = <temp dir with a complete documented-format .nprcgenekeepr_config>)`
+BEFORE `shinyApp(appUI(), appServer)` — S84/S85’s
+HOME-override-in-`app.R` Phase-3E recipe, now promoted from a one-off
+smoke script to a reusable TEST fixture (`getConfigFileName.R:16` reads
+`Sys.getenv("HOME")`, so the child process’s gate reads the controlled
+config). Conversely, the NO-CONFIG NEGATIVE case is FREE: the stock
+`create_test_app()` app already has no config → the gate correctly hides
+the tab, so that block asserts absence against the unmodified installed
+app. **Lesson:** for an opt-in E2E of a deployment-config-gated UI
+element, the positive case needs a config-injecting app fixture
+(HOME-override `app.R`), but the no-config negative case rides the stock
+app for free — one self-contained E2E file uses both. Embed the HOME
+path as an absolute forward-slash literal
+(`normalizePath(winslash="/")`), name the config by
+`basename(getConfigFileName(Sys.info())[["configFile"]])` for
+OS-correctness, write all 7 params (`getSiteInfo`/`getParamDef`
+[`stop()`](https://rdrr.io/r/base/stop.html)s on a missing one when a
+file exists), and put the config dir INSIDE the app dir so one
+`unlink(recursive=TRUE)` (registered AFTER `app$stop()`) cleans both.
+
+**(b) \[reuse the opt-in gate without growing the shared helper — call
+`create_test_app()` for its skip side-effect and discard its returned
+path\] The opt-in gate lives in one place
+(`helper-shinytest2.R::create_test_app()` skips unless
+`NPRC_RUN_E2E="true"`), and the new config-injecting builder must honor
+it without duplicating the gate string or modifying a helper 137
+call-sites depend on.** The move: `build_config_app_dir()` calls
+`create_test_app()` as its first line purely for the skip side-effect
+(and to confirm the package is installed), then ignores the stock-dir
+return and builds the config app instead. The new test file thus adds
+ZERO shared-helper surface and stays fully self-contained — preserving
+the sibling “self-contained `test-e2e-*` file” idiom (Learning 80c:
+prefer matching the established e2e idiom over DRY-extraction for a
+regression net). **Lesson:** when a new opt-in E2E needs the same gate
+but a different app dir, invoke the existing gate helper for its
+side-effect and discard its path rather than re-implementing the gate or
+widening the shared helper — single source of the gate, zero blast
+radius on shared test infrastructure.
+
+**(c) \[GATING teeth come in TWO polarities, and you confirm every gate
+outcome in-process BEFORE the browser run\] A gate E2E proves both that
+the tab APPEARS+functions under the right config AND that it is
+genuinely ABSENT otherwise — and the negative polarity is the one a
+body-grepl tautology can’t fake.** Positive teeth (ONPRC): the gated
+namespace output `#oripReporting-siteInfo` renders **ONPRC** (only true
+when the live config reached the module, not the default-fallback path)
+plus a DETERMINISTIC download —
+`app$get_download("oripReporting-downloadORIPReport")` always writes a
+Site section (`Category/Metric/Value`, a `Center=ONPRC` row) even with
+no pedigree loaded, so the CSV assertion needs no upload. Negative teeth
+(no-config AND SNPRC): `grepl("oripReporting-", get_html(app,"body"))`
+is **FALSE** — absence of the namespace is only true when the tab is
+genuinely unmounted (a booted-but-wrong-tab app can’t fake it, unlike
+the `grepl(keyword, body)` tautology the helper comments warn about).
+The SNPRC block specifically proves the gate keys on **center**, not
+mere config presence — a discriminator the no-config case alone cannot
+establish (config file present, `center!="ONPRC"` → still absent). And
+applying Learning 80b’s “re-derive the locked value first” to a
+PREDICATE rather than a count: before the slow browser run, confirm all
+three gate outcomes in-process
+([`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+parse →
+[`shouldShowOripTab()`](https://github.com/rmsharp/nprcgenekeepr/reference/shouldShowOripTab.md)):
+ONPRC→TRUE, SNPRC→FALSE, no-config→FALSE — so the 4-block browser run
+passed first try. **Right-size note:** correctly SOLO — a contained
+single-file test backfill with interactive TDD gates is not a breadth
+fan-out; a Workflow would have been theater, and this held even with
+**ultracode “on”** (the project methodology + these learnings govern the
+right-size call; “use a Workflow on every substantive task” yields to
+“right-size by breadth of surface” when the surface is one file —
+Learning 80c). The degenerate RED→GREEN (already-shipped behavior, no
+production code) was declared honestly at the PRE-RED→RED gate (Learning
+80a); RED verification = “run it, watch all 4 blocks self-skip” (`SSSS`,
+0 fail/error). **Reflexes:** \[config-gated tab’s POSITIVE E2E can’t use
+the stock app — build a HOME-override config-injecting app
+fixture\]\[promote the Phase-3E HOME-override recipe to a reusable test
+fixture\]\[the NO-CONFIG negative case is free from the stock
+create_test_app() app\]\[reuse the opt-in gate via create_test_app()’s
+skip side-effect, discard its path — no shared-helper
+change\]\[self-contained e2e file, no DRY-extraction\]\[embed HOME as
+normalizePath(winslash=“/”) absolute literal\]\[name the config by
+basename(getConfigFileName(…)) for OS-correctness\]\[write all 7 params
+— getParamDef stop()s on a missing one\]\[config dir inside app dir →
+one unlink after app\$stop()\]\[two-polarity teeth: positive
+namespace-renders-ONPRC + deterministic download-CSV row, negative
+grepl-namespace-ABSENT\]\[SNPRC block proves the gate keys on center not
+config-presence\]\[confirm every gate outcome in-process BEFORE the
+browser run (Learning 80b applied to a predicate)\]\[browser E2E IS the
+Phase-3E verification (FM \#24)\]\[opt-in via NPRC_RUN_E2E + NOT_CRAN +
+install-first\]\[declare the degenerate RED→GREEN at the
+gate\]\[RED=teeth+clean-self-skip (SSSS)\]\[REFACTOR re-verifies
+parsing + a fresh browser run when it touches config the app
+reads\]\[right-size-SOLO-even-under-ultracode\]\[news-vs-changelog:
+test-only → CHANGELOG only\]\[macos-dupe-scan\]. **Apply:** to write a
+durable opt-in browser E2E for a deployment-config-gated UI element
+under strict TDD — build a config-injecting app fixture (HOME-override
+`app.R`) for the positive case, ride the stock app for the no-config
+negative case, reuse the opt-in gate via the existing helper’s skip
+side-effect (no shared-helper change), assert both polarities of teeth
+(gated content + download under the right config; namespace ABSENT under
+wrong/no config, with a wrong-center block to prove the gate keys on the
+config value not mere presence), confirm every gate outcome in-process
+before the slow browser run, and let the real 4-block browser run be the
+Phase-3E runtime verification.
+
+#### Learning 85 — A “docfix sweep” under strict TDD: turn a single named example bug into an evidence-based scope via a read-only audit FIRST; the discriminating RED test for a roxygen `@examples` is STRUCTURAL (“the example for F invokes F()”, extracted from `man/<F>.Rd` via `tools::Rd2ex`) — NOT “the example runs” (broken examples often still run); the build-equivalent is actually RUNNING the corrected examples; and new tests for already-correct functions are an honest degenerate cycle (hand-derive expected values + teeth-check by perturbation) (S87, fix 3 `@examples` defects + backfill tests for `kinshipMatrixToKValues`/`getAncestors`)
+
+**(a) \[before scoping a “sweep”, AUDIT the whole surface read-only so
+the scope `AskUserQuestion` is evidence-based, not blind — and classify
+the false positives\] The handoff named ONE example bug
+(`getPedDirectRelatives`), but “sweep” implies breadth.** A cheap
+read-only audit (`awk` the `@examples`→def block for every `@export`ed
+function; flag any whose example never calls `<fn>(`) found 5 suspects →
+3 real defects (`getPedDirectRelatives` severe: called
+`getLkDirectRelatives` + omitted required `ped`; `cumulateSimKinships`
+called `createSimKinships`; `getIdsWithOneParent` called only sibling
+helpers) and 2 FALSE positives (`summary.nprcgenekeeprErr` /
+`print.summary.nprcgenekeeprErr` — S3 methods correctly demonstrated via
+the [`summary()`](https://rdrr.io/r/base/summary.html)/auto-print
+GENERIC; the heuristic can’t see dispatch). Also confirmed firsthand the
+“±” candidates `kinshipMatrixToKValues`/`getAncestors` had **zero**
+direct test references (`grep -rln` in `tests/testthat/`). **Lesson:**
+when a candidate is framed as a “sweep” with an optional “±” tail, run
+the breadth audit during PRE-RED (read-only) and present the findings —
+real defects, false positives, and coverage gaps — as the scope
+`AskUserQuestion` options (per the phase-gate contract, scope is a
+SEPARATE pre-RED question). The audit converts “fix the one named bug”
+into a deliberate owner choice across the true surface;
+recompute-don’t-inherit applies to the scope itself.
+
+**(b) \[the discriminating RED test for a documentation/example defect
+is STRUCTURAL, not behavioral — “the example for F invokes F()” —
+because broken examples frequently still RUN\] “The documented example
+runs without error” is NOT a RED driver here:**
+`getPedDirectRelatives`’s buggy example called
+`getLkDirectRelatives(ids=...)` which fails SOFT to `NULL` (its
+`getDemographics` is `tryCatch`’d — no LabKey, no error), and the other
+two called real sibling functions — so all three “ran” at HEAD. The
+property that actually encodes the defect is “the `@examples` for `F`
+contains a call `F(`”. Test it by extracting the example from the
+GENERATED `man/<F>.Rd` via `tools::Rd2ex(rd, out=tmp)` then
+`grepl(paste0(fn,"("), code, fixed=TRUE)` (use `fixed=TRUE` — `\(` is
+“an unrecognized escape” and is needless here; and require the `(` so a
+mere mention in a comment doesn’t satisfy it). Add a NEGATIVE assertion
+for the severe case (`getPedDirectRelatives` must NOT call
+`getLkDirectRelatives(`). Locate the `.Rd` with
+`testthat::test_path("..","..","man",paste0(fn,".Rd"))` and
+`skip_if(!file.exists, ...)` so it runs under `load_all`/dev (where
+`man/` exists and it’s RED→GREEN) and skips gracefully under an
+installed package (no `man/`) — the project’s accepted
+context-gated-test idiom. **Lesson:** for a roxygen-example fix under
+TDD, the meaningful RED test is structural
+(example-invokes-its-own-function), read from the generated `.Rd`;
+“example runs” is a weak guard because wrong examples routinely run. The
+real “does it run?” check is the build-equivalent below.
+
+**(c) \[the docs build-equivalent is RUNNING the corrected examples;
+`document()` must be scope-checked; coverage tests of correct functions
+are an honest degenerate cycle; and a user-facing help defect is
+NEWS-worthy\] After the GREEN roxygen edits + `devtools::document()`,
+the SAFEGUARDS “build-equivalent” for documentation is to actually
+execute each fixed example**
+([`tools::Rd2ex`](https://rdrr.io/r/tools/Rd2HTML.html)→`source(out, local=new.env())`,
+assert no error) — this is what `R CMD check` does and it’s the proof
+the new examples work, complementing the structural test. Guard
+`document()` for scope: `git status` must show ONLY the intended
+`man/*.Rd` (here exactly 3) — restore any unrelated roxygen-version
+drift, and confirm `NAMESPACE` is untouched (no new exports for an
+example-only change). The two NEW test files
+(`test_kinshipMatrixToKValues.R`, `test_getAncestors.R`) exercise
+already-correct shipped functions, so they pass from the start — declare
+this **honest degenerate RED→GREEN**: hand-derive every expected value
+independently (the symmetric kinship matrix’s coefficients; the
+recursive sire-then-dam lineage `c("C","A","B","D","A","B")` for the
+explicit `ptree`), and TEETH-CHECK by perturbing a value in a throwaway
+run to confirm it fails — proving the assertions bite. Build small
+deterministic fixtures in-test (a hand-built `ptree`, a 3×3 named + 2×2
+unnamed matrix) rather than leaning on dataset structure (note: in
+`lacy1989Ped`, `E` is a FOUNDER → use `F` for the `createPedTree`
+integration check). **news-vs-changelog:** the `getPedDirectRelatives`
+example was a user-facing HELP defect
+([`?getPedDirectRelatives`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
+showed the wrong function) → **BOTH** — a NEWS Documentation bullet
+(edit `NEWS.Rmd`,
+[`rmarkdown::render`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)
+to `NEWS.md`, verify the diff is EXACTLY the new bullet, no reflow
+churn) plus the CHANGELOG entry (NEWS historically lists example/roxygen
+fixes). **Right-size note:** correctly SOLO even with **ultracode “on”**
+— a docs+tests sweep gated by interactive TDD is not a breadth fan-out;
+a Workflow would be theater (the project methodology + Learning 80c/84
+govern the right-size call). **Reflexes:** \[audit the whole `@export`
+surface read-only BEFORE scoping a “sweep” — `awk` the @examples→def
+block for any fn whose example never calls itself\]\[classify S3-method
+false positives (example calls the GENERIC → dispatch)\]\[confirm “±”
+coverage gaps firsthand via grep -rln in tests/\]\[scope is a SEPARATE
+pre-RED AskUserQuestion built from the audit findings\]\[structural RED
+test = example-invokes-its-own-fn, extracted from man/.Rd via
+tools::Rd2ex\]\[grepl(…, fixed=TRUE) — avoid the `\(` escape, require
+the `(`\]\[add a NEGATIVE assertion for the wrong-fn
+call\]\[skip_if(!file.exists(man/…)) so it runs under load_all, skips
+under installed pkg\]\[docs build-equivalent = actually RUN the fixed
+examples (Rd2ex→source, expect no error)\]\[scope-check document(): only
+the intended .Rd change, NAMESPACE untouched, restore roxygen-version
+drift\]\[tests of already-correct fns = honest degenerate cycle:
+hand-derive expected values + teeth-check by perturbation\]\[build
+deterministic in-test fixtures, not dataset-shape-dependent
+ones\]\[lacy1989Ped E is a founder — use F for ancestors\]\[a
+user-facing help defect → NEWS+CHANGELOG; render NEWS.Rmd→NEWS.md, diff
+= only the new
+bullet\]\[declare-phase-every-response\]\[gate-every-transition-via-AskUserQuestion\]\[right-size-SOLO-even-under-ultracode\]\[Phase-3E
+N/A for docs+tests — state it, don’t silently skip\]\[macos-dupe-scan\].
+**Apply:** to a “docfix sweep ± tests” candidate under strict TDD —
+first run a read-only audit across all exported functions to turn the
+one named bug into an evidence-based scope (real defects vs dispatch
+false positives vs coverage gaps) and pose that as the pre-RED scope
+question; write the RED test as a STRUCTURAL
+“example-invokes-its-own-function” check extracted from the generated
+`man/*.Rd` (not “example runs”, which broken examples pass); make the
+docs build-equivalent the actual execution of the corrected examples;
+treat new tests of already-correct functions as an honest degenerate
+cycle with hand-derived, teeth-checked expectations; scope-check
+`document()`; and route a user-facing help-example correction to BOTH
+NEWS and the CHANGELOG.
+
+#### Learning 86 — A version-string HOUSEKEEPING fix is still a real RED→GREEN under strict TDD, and the load-bearing insight is RED-test SCOPE: an un-scoped `grepl` over `as.character(appUI())` was a FALSE PASS at HEAD because the app already renders the dynamic version elsewhere (the title bar via `getVersion()`), so a positive assertion MUST be scoped to the specific element (the About-panel region); choose the root-cause DYNAMIC fix (reuse the existing exported `getVersion()` helper, which reads the version from `DESCRIPTION`) over a hard-coded literal so it can’t drift again (S88, replace stale `Version 1.0.8` in `R/appUI.R:230` + `CLAUDE.md`)
+
+**The trap and the fix.** The deliverable looked trivial (a stale
+`Version 1.0.8` string carried since S56), but two non-obvious facts
+made it a genuine TDD slice. **(1) A rendered-UI assertion needs
+element-scope or it lies.** My first RED rendered the whole
+[`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
+to HTML and asserted `grepl("Version <pkgver>", html)` (positive) plus
+`!grepl("Version 1.0.8", html)` (negative). The positive PASSED at HEAD
+— a FALSE PASS — because `appUI.R:47` ALREADY shows
+[`getVersion()`](https://github.com/rmsharp/nprcgenekeepr/reference/getVersion.md)
+(dynamic, with build date) in the title bar, so `"Version 1.1.0.9000"`
+was present regardless of the broken About tab; only the negative had
+teeth. Fix: scope the assertions to the About panel by slicing the
+rendered HTML from its `About GeneKeepR` heading forward (`regexpr` +
+`substring(html, i, i + 200L)`) and guard that the heading exists; then
+BOTH assertions fail for the right reason at HEAD. **Lesson:** when
+asserting on a rendered page that contains the same token in more than
+one place, scope the assertion to the element under test, or RED passes
+for the wrong reason — a false-positive RED is as dangerous as a missing
+test. **(2) Reuse the existing source-of-truth helper.** A
+`grep getVersion(` showed the package already had an exported
+`getVersion(date=)` wrapping `packageVersion("nprcgenekeepr")`; the
+dynamic GREEN is `p(paste("Version", getVersion(date = FALSE)))` (reuse,
+DRY) — NOT a fresh inline `utils::packageVersion(...)`. The owner chose
+dynamic over hard-coded via a separate pre-RED `AskUserQuestion`
+(permanent-over-recurring: kill the drift class at the root). **Phase-3E
+for a build-time UI string:** the version is set at UI CONSTRUCTION, not
+via server reactivity, so an `AppDriver` boot of the INSTALLED app + a
+body-HTML check (`<p>Version 1.1.0.9000</p>` present, `1.0.8` absent) is
+sufficient — no tab navigation needed (all `tabPanel`s render into the
+DOM at load, just hidden). **news-vs-changelog:** the displayed app
+version is user-facing → BOTH NEWS (a Shiny-application bullet; render
+`NEWS.Rmd`→`NEWS.md`, diff = only the new bullet) and the CHANGELOG.
+**Right-size:** correctly SOLO even under **ultracode “on”** — a
+two-edit fix gated by interactive TDD is not a breadth fan-out (project
+methodology + Learning 80c/84/85 govern). **Reflexes:** \[housekeeping ≠
+trivial — scope it as a real RED→GREEN\]\[scope a rendered-UI assertion
+to the element under test — a whole-page grepl FALSE-PASSES when the
+same token appears elsewhere (here the title bar’s
+getVersion())\]\[slice the element by its heading: regexpr(“About
+GeneKeepR”) + substring(…,i,i+200L), guard the heading exists\]\[grep
+for an existing source-of-truth helper before writing an inline one —
+getVersion(date=FALSE) reads packageVersion\]\[prefer the dynamic
+root-cause fix over a literal that re-drifts
+(permanent-over-recurring)\]\[body-only edit to a UI fn → no
+document()/NAMESPACE/DESCRIPTION change; utils already imported, helper
+already exported\]\[Phase-3E for a build-time UI string = AppDriver
+body-HTML check on the INSTALLED app; tabPanels are in the DOM at load,
+no navigation needed\]\[news-vs-changelog: displayed version is
+user-facing → BOTH\]\[declare-phase-every-response\]\[separate pre-RED
+approach AskUserQuestion when the choice changes test+impl (dynamic vs
+hard-coded)\]\[gate-every-transition-via-AskUserQuestion\]\[right-size-SOLO-even-under-ultracode\]\[macos-dupe-scan\].
+**Apply:** to a stale-string / version-display housekeeping fix in a
+Shiny UI under strict TDD — write a RED test that renders the real UI
+function and SCOPES the positive+negative assertions to the specific
+element (don’t grep the whole page; a duplicate token elsewhere will
+false-pass), reuse any existing exported version/source-of-truth helper
+for a dynamic root-cause fix instead of a literal, verify the live
+string via an AppDriver body-HTML check on the installed app, and route
+the user-facing displayed version to BOTH NEWS and the CHANGELOG.
+
+#### Learning 87 — Fixing a “noisy warning” bug under strict TDD: REPRODUCE firsthand FIRST to establish it is noise-not-data-loss (which decides the whole fix shape); suppress it SURGICALLY with `withCallingHandlers` + message-matched `invokeRestart("muffleWarning")` (never blanket `suppressWarnings`), and prove the surgery with teeth that an UNRELATED warning still propagates; consolidate across all readers via a shared `@noRd` internal helper (the package’s non-exported convention → `document()` no-op); and test a server-internal closure structurally while putting behavioral teeth on the exported readers (S89, fix \#4 — “incomplete final line found by readTableHeader” on files with no trailing newline)
+
+**The shape of the fix is decided by reproduction, not the bug report.**
+Issue \#4 reported
+`"incomplete final line found by readTableHeader on '...0.txt'"` from a
+Shiny text upload. The naive reading (“a final line is incomplete → a
+row is dropped”) would lead to a file-normalization fix. **Reproducing
+firsthand** (write a CSV with no trailing newline, read it, capture
+warnings + `nrow`) showed the opposite: `read.table`/`read.csv` read
+**every** row correctly (`nrow == 3`, last row intact) and merely emit a
+*cosmetic* warning. That single fact decided everything — the fix is to
+**suppress the warning**, not to recover a row — so
+recompute-don’t-inherit applies to the BUG’S ACTUAL BEHAVIOR before
+designing anything. **(1) Surgical, not blanket.** The mechanism is
+`withCallingHandlers(expr, warning = function(w) if (grepl("incomplete final line", conditionMessage(w), fixed = TRUE)) invokeRestart("muffleWarning"))`
+— it muffles ONLY that one warning and lets every other warning (a
+genuinely malformed file, a config problem) reach the caller.
+[`suppressWarnings()`](https://rdrr.io/r/base/warning.html) would have
+been wrong: it hides real problems too. The discriminating RED teeth for
+“surgical” is a test that an UNRELATED `warning("...")` STILL propagates
+(`expect_warning`) — and the strongest RUNTIME proof, in Phase-3E, is
+that `getFocalAnimalPed`’s unrelated “configuration file is missing”
+warning still fires while the incomplete-final-line one is gone. A “no
+warnings at all” assertion would be both untestable for that reader (the
+config warning legitimately fires without a DB) and semantically wrong
+(it would mean blanket suppression). **(2) Lazy-eval makes the wrapper
+trivial.** `muffleIncompleteFinalLine(expr)` takes `expr` as an
+unevaluated promise; `withCallingHandlers(expr, ...)` forces it only
+after the handler is registered (the same idiom `suppressWarnings`
+itself uses) — so no `substitute`/`eval` gymnastics are needed. **(3)
+Consolidate via a shared `@noRd` internal helper.** The owner chose
+(separate pre-RED scope `AskUserQuestion`: all-readers-via-helper vs
+named-readers vs app-only) the **root-cause** scope — wrap the read at
+all four sites (`getPedigree`, `getGenotypes` → `read.table`;
+`getFocalAnimalPed` → `read.csv`; `modInput.R`’s `readDataFile` text +
+CSV branches) through one helper, over fixing only the reported upload
+path. `@noRd` is the package’s established convention for non-exported
+internals (confirmed via
+`getRecordStatusIndex`/`readExcelPOSIXToCharacter` — no `man/*.Rd`,
+referenced in tests as `nprcgenekeepr:::`), so `document()` is a
+**no-op** (no NAMESPACE/`man/`/DESCRIPTION churn) — scope-check
+`git status` after to confirm. **(4) Test a server-internal closure
+structurally; put behavioral teeth on the exported readers.**
+`readDataFile` is a closure defined inside `modInputServer` — not
+callable without standing up a Shiny session — so the practical seam is
+a `deparse(body(modInputServer))` grep that the body references the
+helper (honest structural lock, weaker than behavioral). The behavioral
+teeth live where the functions are directly callable: the helper unit
+tests and `getPedigree`/`getGenotypes` (no external deps, return data +
+assert no warning + rows preserved). **Phase-3E** for an exported-reader
+fix = call the readers in the INSTALLED package on a no-newline input
+(warning gone, rows preserved) PLUS a control file WITH a trailing
+newline (still reads cleanly — no regression) PLUS the surgical proof
+(unrelated warning still propagates). **Issue left OPEN** pending owner
+confirmation (standing close-only-on-owner-confirmation rule — the owner
+picked \#4 to fix but has not yet accepted the fix). **Right-size:**
+correctly SOLO even under **ultracode “on”** — a one-bug fix gated by
+interactive TDD is not a breadth fan-out; a Workflow would be theater
+(project methodology + Learning 80c/84/85/86 govern). **Reflexes:**
+\[REPRODUCE a “noisy warning” bug firsthand FIRST — noise-vs-data-loss
+decides the whole fix shape (suppress the warning vs recover a
+row)\]\[recompute-don’t-inherit applies to the bug’s actual behavior,
+not just the report’s wording\]\[surgical muffle = withCallingHandlers +
+message-matched invokeRestart(“muffleWarning”), grepl(…,
+fixed=TRUE)\]\[NEVER blanket suppressWarnings — it hides real
+problems\]\[teeth for “surgical”: an UNRELATED warning must STILL
+propagate (RED test + Phase-3E runtime proof)\]\[for a
+DB/config-dependent reader assert ABSENCE of the SPECIFIC warning, not
+zero warnings — the config-missing warning legitimately fires without a
+DB\]\[withCallingHandlers(expr,…) lazy-eval promise idiom — handler
+registered before force, no substitute/eval needed\]\[consolidate across
+readers via ONE shared @noRd internal helper — the package’s
+non-exported convention → document() no-op, scope-check git
+status\]\[server-internal closure (readDataFile in modInputServer) →
+structural deparse-grep seam; behavioral teeth on the directly-callable
+exported readers + the helper\]\[non-exported internals referenced in
+tests as nprcgenekeepr:::\]\[scope is a SEPARATE pre-RED
+AskUserQuestion: all-readers-via-helper vs named-readers vs app-only;
+owner picks root-cause over symptom\]\[Phase-3E = call INSTALLED readers
+on no-newline + a control with-newline file (no regression) + the
+surgical proof\]\[leave the issue OPEN pending owner
+confirmation\]\[declare-phase-every-response\]\[gate-every-transition-via-AskUserQuestion\]\[news-vs-changelog:
+a file-reading bug fix is user-facing → BOTH (render NEWS.Rmd→NEWS.md,
+diff = only the new bullet; curly-quote/en-dash conversion is expected,
+not churn)\]\[right-size-SOLO-even-under-ultracode\]\[macos-dupe-scan\].
+**Apply:** to fix a “noisy but harmless warning” bug under strict TDD —
+first reproduce firsthand to confirm it is noise (data preserved) so the
+fix is suppression not recovery; suppress it surgically with
+`withCallingHandlers` + a message-matched
+`invokeRestart("muffleWarning")` (never blanket `suppressWarnings`), and
+write RED teeth that an unrelated warning still propagates; consolidate
+across every affected reader through one shared `@noRd` internal helper
+(document() stays a no-op); test any server-internal closure
+structurally (deparse-grep) while putting behavioral teeth on the
+directly-callable exported functions; and in Phase-3E exercise the
+installed readers on the bad input, a clean control input, and confirm
+the surgery left other warnings intact.
+
+#### Learning 88 — Writing a BEHAVIORAL test for an already-shipped fix: DE-RISK THE FIXTURE before the mechanism — validate firsthand that your fixture actually reproduces the bug condition in plain code, or you burn cycles blaming the app for a fixture artifact; the `"incomplete final line"` warning only fires for SMALL files (the `readTableHeader` scan must reach the unterminated line) AND is a console-only artifact unobservable in the assembled Shiny app, so the warning-suppression teeth live in an in-process `shiny::testServer` test (tiny fixture, `withCallingHandlers`) while the browser E2E owns end-to-end data integrity; the un-muffle teeth round-trip is what exposes a toothless assertion (S90, behavioral upload-path tests for \#4 + close \#4)
+
+**The cycle-burning mistake, and the lesson that prevents it.** The
+deliverable was “a behavioral E2E for the modInput upload path” for \#4
+(S89 covered it only structurally). I built the browser E2E and the
+testServer test on a convenient fixture — a no-trailing-newline copy of
+`ExamplePedigree.csv` (3694 rows) — and the un-muffle teeth round-trip
+kept coming back GREEN (the warning-absence assertion passed even with
+the muffle removed). I spent SIX browser diagnostics + multiple
+install/`load_all` round-trips hypothesizing that the assembled Shiny
+app *swallows* the deferred warning (it doesn’t), before finally
+checking the FOUNDATIONAL assumption I had never validated: **does the
+no-trailing-newline `ExamplePedigree` even emit the warning in a plain
+`read.csv`?** It does NOT. **Root cause:** `read.table`/`read.csv` emit
+`"incomplete final line found by readTableHeader"` only when the header
+/ type-detection scan (~the first few lines) actually REACHES the
+unterminated final line — i.e. for SMALL files (≤ ~5 lines, the
+condition the user hit with `0.txt`); a 3694-row file’s scan never
+reaches the end, so no warning. Every “the app swallows it” conclusion
+was a FIXTURE ARTIFACT. Swapping to a TINY 4-line fixture (header + 3
+founder rows of `ExamplePedigree`) made the warning fire and the teeth
+appear instantly. **Lesson:** before building ANY teeth (browser
+`get_logs`, `testServer` `withCallingHandlers`) on a fixture, prove
+FIRST — in plain code, no Shiny — that THAT fixture reproduces the exact
+failure condition (here: a `withCallingHandlers` around a plain
+`read.csv(fixture)` capturing the message). De-risk the fixture, not
+just the observation mechanism. A teeth round-trip that won’t go RED
+means EITHER the assertion is toothless OR the fixture doesn’t trigger
+the bug — check the fixture first; it is the cheaper, more common
+culprit.
+
+**(1) \[the muffle’s effect is NOT browser/log-observable in the
+assembled app → the warning-suppression teeth belong in an in-process
+testServer test, not the browser E2E\] Two independent reasons the
+browser can’t teeth-test this muffle:** the `"incomplete final line"`
+warning is a console-only artifact (it never reaches the DOM, and
+`app$get_logs()` did not surface it from the modInput getData path), AND
+a realistic-size fixture doesn’t even fire it. So the browser
+`expect_false(grepl("incomplete final line", logs_blob))` was a
+TAUTOLOGY (green with or without the muffle — the un-muffle round-trip
+proved it). The vehicle that CAN observe it is
+[`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html)
+(in-process, `warn` reaches an R-level handler): drive
+`modInputServer`’s `getData` with a simulated upload —
+`session$setInputs(fileType=, fileContent="pedFile", minParentAge="2.0", pedigreeFileOne=data.frame(name=, size=, type=, datapath=fixture))`
+then
+`withCallingHandlers(session$setInputs(getData=1), warning=\(w){ capture; invokeRestart("muffleWarning") })`
+— and assert the captured warnings exclude `"incomplete final line"`
+(read the module’s `session$returned$qcSummary()$records`/`$errors` for
+the data-integrity half). **Teeth PROVEN by round-trip:** un-muffle BOTH
+`read.table`+`read.csv` sites in `modInput.R`, `load_all`, run → both
+blocks RED (`warned=TRUE`); `git checkout` → green. **Lesson:** when a
+fix suppresses an R-process-internal signal (a console warning) that
+never reaches the browser, the browser E2E cannot give it teeth — put
+the suppression teeth in a `testServer` (or pure-helper) test where the
+signal is observable, and let the browser E2E carry the end-to-end
+*user-visible* behavior.
+
+\*\*(2) \[browser E2E owns end-to-end data integrity, read via a
+TOP-LEVEL consumer because modInput’s own QC outputs are SUSPENDED in
+hidden nested tabs\] The modInput QC outputs (`qcSummaryUI`,
+`cleanedDataTable`, `downloadCleaned`) live in non-active nested tabs of
+`dataInput-mainTabs`, so Shiny `suspendWhenHidden=TRUE` leaves them
+empty / the download link `disabled href=""` — and neither
+`set_inputs(\`dataInput-mainTabs\`=…)`nor a JS anchor-click reliably un-suspends them under this app's bslib BS4 + (broken) shinyBS JS.** The robust count signal is a TOP-LEVEL navbar consumer: after upload+ready,`navigate_to_tab(app,
+“Pedigree Browser”,
+“Pedigree”)`(the proven sibling mechanism) materializes the pedigree, and`\#pedigree-pedigreeTable`renders`of
+3,694
+entries`on the ACTIVE pane (DataTables formats the count WITH a comma — match`“of
+3,694
+entries”`, not`3694`).`data-ready=true`is set server-side and does NOT imply the hidden-tab outputs rendered. **Lesson:** to read a count/state from a Shiny module whose own outputs sit in hidden (suspended) nested tabs, don't fight tab-suspension — assert via a top-level navbar tab that CONSUMES the data on its active pane (the same`navigate_to_tab`/`assert_active_pane`idiom the e2e suite already trusts). **Right-size:** correctly SOLO even under **ultracode "on"** — a two-file test backfill gated by interactive TDD is not a breadth fan-out; a Workflow would be theater (project methodology + Learning 80c/84/85/86/87 govern), and a background Workflow cannot pause for the`AskUserQuestion`phase gates this project requires. The honest division of labor (testServer = warning-suppression teeth; browser = end-to-end) was surfaced to the owner via a mid-GREEN reframe`AskUserQuestion`rather than silently shipping a weaker-than-described test. **Reflexes:** [DE-RISK THE FIXTURE FIRST — prove in plain code (no Shiny) that the fixture reproduces the exact bug condition before building teeth on it][a teeth round-trip that won't go RED ⇒ toothless assertion OR fixture doesn't trigger the bug — check the fixture first, it's the cheaper culprit][read.table/read.csv emit "incomplete final line" only for SMALL files — the readTableHeader scan must reach the unterminated final line; a large file never warns][a console-only warning is NOT browser/get_logs-observable in the assembled app → its suppression can't be teeth-tested in a browser][put suppression teeth in shiny::testServer (in-process, warn reaches withCallingHandlers) with a TINY fixture; simulate the fileInput value as a 1-row data.frame(name,size,type,datapath)][read module return via session$returned$<reactive>()][prove teeth by un-muffling BOTH sites → both blocks RED → git checkout → green (load_all, no install needed)][browser E2E owns end-to-end: modInput QC outputs are SUSPENDED in hidden nested tabs (suspendWhenHidden) and don't reliably un-suspend via set_inputs/JS-click under bslib+shinyBS — read a TOP-LEVEL consumer (Pedigree Browser #pedigree-pedigreeTable) instead][DataTables formats the entry count WITH a comma — match "of 3,694 entries"][data-ready=true is server-side, does NOT imply hidden-tab outputs rendered][surface a mid-GREEN scope/teeth reframe to the owner via AskUserQuestion — don't silently ship a weaker test][close the issue only on owner confirmation][test-only → CHANGELOG only][declare-phase-every-response][gate-every-transition][right-size-SOLO-even-under-ultracode][macos-dupe-scan]. **Apply:** to write a BEHAVIORAL test for an already-shipped fix that suppresses a console-internal signal — first prove in plain code that your chosen fixture actually reproduces the failure (de-risk the fixture, not only the observation mechanism); recognize that a console-only warning is not browser-observable, so put the suppression teeth in an in-process`testServer`/pure-helper test (tiny fixture,`withCallingHandlers\`)
+and let the browser E2E carry the end-to-end user-visible behavior read
+from a top-level data consumer (not the module’s own suspended
+nested-tab outputs); and ALWAYS run the un-muffle teeth round-trip — a
+round-trip that won’t go RED is the alarm that catches both toothless
+assertions and non-triggering fixtures.
+
+#### Learning 89 — Strict TDD on a DOCS-ONLY fix to a `@noRd` internal: the only thing RED at HEAD is the documentation TEXT, so the RED driver is a doc-completeness test that reads `R/<fn>.R` (the S87 `tools::Rd2ex(man/<fn>.Rd)` pattern is UNAVAILABLE — `@noRd` generates no `man/*.Rd`) via `test_path("..","..","R","<fn>.R")` + `skip_if(!file.exists)` for the installed context, and SCOPES its assertions to the extracted `@return` block (not the whole file) so a pre-existing mention in the title/`\code{}` can’t false-pass; pair it with a behavioral return-contract guard (green at HEAD, honestly classified) so the docs are verified against real behavior (S92, complete `fillBins()` `@return` docs — \#33)
+
+**The doc-text is the deliverable AND the only RED surface — so test the
+doc text, scoped.** Issue \#33 was a single unfinished roxygen line:
+`#' @return A list with two TODO: RMS provide description`. Under strict
+TDD the question is “what fails before the fix and passes after?” — and
+for a docs-only change the answer is NOT a behavioral test (the function
+already returns the right thing; any return-contract assertion is GREEN
+at HEAD) but a **doc-completeness** test. **(1) The S87 `Rd2ex` pattern
+does not apply to `@noRd`.** `test_examples_invoke_documented_fn.R`
+reads `man/<fn>.Rd` via
+[`tools::Rd2ex`](https://rdrr.io/r/tools/Rd2HTML.html) — but a `@noRd`
+internal generates NO `man/*.Rd` (confirmed: `document()` is a no-op for
+it, scope-check `git status`). So the only artifact carrying the doc is
+the SOURCE file `R/fillBins.R`; read it directly via
+`testthat::test_path("..","..","R","fillBins.R")` (the same `..`/`..`
+root-relative idiom S87 uses for `man/`) with
+`skip_if(!file.exists(src), "R/ source not available (installed package)")`
+so it’s RED in dev (where the fix lives) and inert under `R CMD check`
+(where `R/*.R` source isn’t shipped). **(2) SCOPE the assertion to the
+`@return` block, or it false-passes.** `fillBins.R`’s TITLE line already
+says `list of two lists \code{males} and \code{females}`, so a naive
+`grepl("males", whole_file)` would be GREEN even with the TODO still
+present. The discriminating test extracts ONLY the `@return` block —
+find the `@return` line, take following lines until the next `#' @` tag
+— and asserts within it: no `"TODO"`, and `\bmales\b`/`\bfemales\b`
+(word-boundaries so the `males` inside `females` doesn’t satisfy the
+`males` assertion). All 3 assertions then go RED at HEAD for the right
+reason, and the RED failure output literally prints the isolated
+`@return` line — proof the extractor scoped correctly. **(3) Pair with a
+behavioral contract guard, honestly classified.** A `test_that`
+asserting `expect_named(res, c("males","females"))` + both
+`expect_type "integer"` + `expect_length == length(lowerAges)` is GREEN
+at HEAD — it is NOT the RED driver, it is a contract-LOCK that ties the
+now-complete docs to real behavior and catches future drift (same
+honest-degenerate-cycle classification as S87’s backfill tests and S89’s
+`nrow` guards: declare it green-at-HEAD, don’t pretend it drove the
+change). **(4) Verification appropriate to docs-only.** `document()` →
+no NAMESPACE/`man/`/DESCRIPTION churn (the `@noRd` proof); `lintr` 0;
+full clean-regression 0/0; and **Phase-3E is genuinely N/A** — a roxygen
+comment on a `@noRd` internal changes NO runtime behavior, no man page
+even renders — STATE that (FM \#24 doesn’t apply: there’s no
+build-vs-runtime gap to mistake, the test suite IS the verification).
+**Style:** match the package’s existing `\describe{\item{name}{...}}`
+`@return` convention (4 files use it, e.g. `getPossibleCols.R`). **Issue
+left OPEN** pending owner confirmation (standing rule). **Right-size:**
+correctly SOLO even under **ultracode “on”** — a one-line doc fix gated
+by interactive TDD is not a breadth fan-out; a Workflow would be theater
+and cannot pause for the `AskUserQuestion` gates (Learning
+80c/84/85/86/87/88 govern). **Reflexes:** \[docs-only fix under strict
+TDD ⇒ the RED driver is a doc-COMPLETENESS test, not a behavioral one
+(behavior is already correct → green at HEAD)\]\[`@noRd` internal ⇒ NO
+`man/*.Rd` ⇒ the S87
+[`tools::Rd2ex`](https://rdrr.io/r/tools/Rd2HTML.html) pattern is
+unavailable; read the SOURCE `R/<fn>.R` via
+`test_path("..","..","R","<fn>.R")` + `skip_if(!file.exists)`\]\[SCOPE
+doc assertions to the extracted `@return` block — a pre-existing
+title/`\code{}` mention false-passes a whole-file grep\]\[extract the
+block: from the `@return` line to the next `#' @` tag\]\[use `\bword\b`
+word-boundaries so `males` inside `females` doesn’t satisfy the `males`
+assertion\]\[pair with a behavioral contract guard (named/type/length)
+but classify it honestly as green-at-HEAD contract-lock, not the RED
+driver\]\[`document()` is a no-op for `@noRd` — scope-check `git status`
+for zero NAMESPACE/`man/`/DESCRIPTION churn\]\[Phase-3E N/A for a
+`@noRd` doc edit — STATE it, FM \#24 doesn’t apply (no build-vs-runtime
+gap)\]\[match the existing `\describe{\item{}}` `@return`
+convention\]\[news-vs-changelog: `@noRd` internal docs never render to a
+user-facing page → CHANGELOG only, no NEWS\]\[leave the issue OPEN
+pending owner
+confirmation\]\[declare-phase-every-response\]\[gate-every-transition-via-AskUserQuestion\]\[right-size-SOLO-even-under-ultracode\]\[macos-dupe-scan\].
+**Apply:** to complete/repair the documentation of a `@noRd`
+(non-exported) function under strict TDD — drive it with a
+doc-completeness test that reads the SOURCE file (not a `man/*.Rd`,
+which doesn’t exist) scoped to the relevant roxygen block with
+word-boundary assertions and a `skip_if`-installed guard, pair it with
+an honestly-classified behavioral contract guard, verify via
+`document()` no-op + lint + full regression, and state Phase-3E N/A
+because a `@noRd` comment changes no runtime behavior.
+
+#### Learning 90 — Before asserting an open issue “needs implementation,” GREP FOR THE IMPLEMENTATION: a negative claim (“the work hasn’t been done”) demands a positive search, NOT an inference from issue metadata — \#49 read as fresh (created today, 0 comments, absent from the last-8 `git log`) but was already built, wired in UI+server, and fully tested in **S84** (`grep -rn ORIP R/ tests/` + `git log --diff-filter=A -- R/shouldShowOripTab.R` found it in seconds, surfacing `b980f998`); implemented-but-unclosed is a RECURRING shape in this repo (#4→impl S89/close S90, \#33→impl S92/close S93, \#49→impl S84/close S94), so “close \#N” usually means RECOMPUTE-VERIFY-THEN-administratively-close, not a TDD build — and the handoff chain must carry “implemented in SXX, OPEN pending close” forward or the done-but-open status goes invisible for many sessions (S94, close \#49 — the ONPRC-only ORIP tab gate already shipped S84)
+
+#### Learning 91 — Before running OR proposing a recurring-shaped task (audit / sweep / inventory), CHECK THE PROJECT’S OWN PROCESS-HISTORY ARTIFACTS AT SCOPING TIME — `CHANGELOG.md`, `docs/audits/`, and the recent `SESSION_NOTES.md` handoffs are cheap and authoritative and tell you whether it was just done: a recurring audit is a DIFF against the last baseline, not a full re-run. S95 ran a full 14-agent / ~483k-token sweep classifying all 14 open issues for “implemented-but-open” when **S62 (`docs/audits/BACKLOG_STALENESS_AUDIT_2026-06-12.md`, 4 days prior) had already classified all 21 then-open issues with the identical question**, AND the `CHANGELOG.md [Unreleased]` entries (S89/S90/S92) + the S94 handoff already documented the implemented-but-open backlog being drained issue-by-issue (#4/#33/#49). The overlap surfaced only MID-EXECUTION (agents cited S62) and at report-writing (looking up the audits-dir naming convention) — never at scoping. The owner flagged it twice (“why was this in the backlog if already done?”, “you should have been able to check changelog also”). (S95, Learning 90 follow-through audit — 0 new closeable candidates found; the backlog was already drained)
+
+**The audit designed to catch done-but-still-listed WORK was itself a
+done-but-re-listed TASK — the same tracker-lags-reality failure, one
+meta-level up.** The decisive miss: the AUDIT_WORKSTREAM’s own **Step 4
+“Review Prior Audits”** fired too late — at report-writing, where it
+produced a nice S62 comparison table — instead of at SCOPING/Phase 1,
+where it would have collapsed the whole sweep into a 7-issue delta (the
+closures since S62) plus the new \#49 data point, or an owner “do you
+want the full re-run or just the diff?” before any fan-out. Under
+ultracode, token cost is explicitly not the constraint — but
+proposing/running REDUNDANT work is a judgment defect independent of
+budget (FM \#5 helpfulness-as-volume / FM \#21 greenfield-assumption
+applied to *process artifacts*: I acted as if the backlog had never been
+audited). **(1) The cheap pre-checks were all available at
+orientation.** `docs/audits/` is one `ls`; the CHANGELOG `[Unreleased]`
+section is at the top of the file; the recent handoffs were already read
+in Phase 0. Any one of the three would have shown the work was recent or
+in-progress. **(2) Recurring tasks need a baseline check, not a fresh
+start.** When a task is audit/sweep/inventory-SHAPED (whole-backlog,
+whole-codebase, whole-corpus), the first scoping move is “has this been
+done recently, and what’s the smallest delta that updates it?” — grep
+the process-history artifacts for a prior run before deciding scope.
+**(3) The handoff-chain corollary (mirrors Learning 90).** Just as a
+session that implements-but-leaves-OPEN must carry “impl SXX, OPEN
+pending close” forward, a handoff that PROPOSES an audit/sweep candidate
+must cite the most recent prior run of that shape (or state “none
+exists”) so the next session scopes it as a delta rather than
+re-proposing it as novel. S94’s candidate (2) framed this audit as
+“cheap, high-value” without referencing S62 — the proximate cause of the
+redundancy. **(4) Honest recovery beats a defended sunk cost.** When the
+owner questioned the overlap, the right move was to own it plainly (yes,
+S62 did this; yes, I should have checked CHANGELOG and `docs/audits/` at
+Phase 1), give an honest marginal-value accounting (not zero — 7
+closures + the \#49 data point + a firsthand “no second \#49”
+confirmation since S62 — but a delta paid for as a full sweep), and let
+the owner decide keep-vs-trim, rather than rationalizing the spend.
+**Reflexes:** \[task is audit/sweep/inventory-SHAPED ⇒ at SCOPING (Phase
+1), `ls docs/audits/` + scan `CHANGELOG.md [Unreleased]` + recent
+handoffs for a prior run BEFORE fanning out\]\[a recent prior run exists
+⇒ scope to the DELTA since that baseline; offer the owner the diff-only
+option before spending a full sweep\]\[AUDIT_WORKSTREAM Step 4 “Review
+Prior Audits” belongs at scoping, not report-writing\]\[a handoff that
+proposes a recurring-task candidate must cite the most recent prior run
+of that shape, or “none”\]\[redundant work is a judgment defect even
+when token budget is unconstrained — FM \#5/#21\]\[own an overlap to the
+owner with an honest marginal-value accounting; don’t defend the sunk
+cost\]. **Apply:** whenever you’re about to run — or propose in a
+handoff — anything that classifies/reviews a whole set (all open issues,
+all files in a module, all citations), first check the project’s
+process-history (`docs/audits/`, `CHANGELOG.md`, recent
+`SESSION_NOTES.md`) for when it was last done; if recent, do the delta
+and say so, and only do the full sweep if the baseline is stale or the
+owner asks for it.
+
+**A “this issue is open so it must need work” assumption is a negative
+claim — verify it the way you’d verify any claim: search for the
+disproof first.** This session’s near-miss: asked “why is \#49 open,” I
+(previous turn) answered “real implementation remains /
+implementation-ready TDD candidate” after checking only the *issue*
+surface — sibling-issue states (#47 closed) and the S86 commit *message*
+— and concluded “no commit implements it” because it wasn’t in the last
+8 commits and had 0 comments. **That was an unsearched negative.** When
+the owner then said “work on closing \#49,” the recompute-don’t-inherit
+reflex (applied *before* declaring any RED) is what caught it: a
+2-second `grep -rn "ORIP\|orip" R/ tests/` revealed
+`R/shouldShowOripTab.R`, the conditional `appUI.R:177-183` mount, the
+`appServer.R:281-292` gate, and three test files;
+`git log --diff-filter=A -- R/shouldShowOripTab.R` dated the whole
+feature to **S84 `b980f998`** (“gate ORIP Reporting tab to ONPRC-only
+(#49)”). The feature was DONE — including the issue’s flagged “open
+product fork” (no-config case), resolved as
+`shouldShowOripTab(center, hasConfigFile) <- isTRUE(hasConfigFile) && isTRUE(center == "ONPRC")`
+(the
+[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+default ONPRC fallback does NOT show the tab). **(1)
+Implemented-but-unclosed is this repo’s default, not the exception.**
+\#4, \#33, and \#49 all followed impl-in-session-X → left-OPEN →
+administratively-closed-in-session-Y on owner confirmation. So when the
+deliverable is “close \#N,” the FIRST move is recompute:
+`grep`/`git log` for the implementation, read the code firsthand, run
+its tests — only then decide whether “close” means an admin close (the
+common case) or a real build. Treating “close \#N” as “build \#N” risks
+duplicating shipped work (a scope + volume violation, FM \#5/#8). **(2)
+Verify firsthand before a PUBLIC assertion of completeness.** The close
+comment asserts to the world that the gate is correct, so I re-read the
+predicate + UI gate + server gate AND re-ran `test_shouldShowOripTab.R`
+(5/5), `test_modORIPReporting.R` (9/9, behavioral — renders real
+`appUI(siteInfo=)` HTML for ONPRC/SNPRC/no-config),
+`test_modSiteConfig.R` (30/30) green at HEAD — did not trust S84’s green
+claim blindly. **(3) A changed premise is the owner’s to ratify — don’t
+improvise the pivot.** Because the owner directed the close under a
+premise I had mis-stated (that it needed implementing), I surfaced the
+corrected finding and confirmed the close path via `AskUserQuestion`
+rather than silently switching from “build” to “close.” Owning the prior
+error explicitly is part of the recovery, not optional. **(4) The
+handoff chain dropped \#49.** Unlike \#4/#33 (whose “left OPEN pending
+confirmation” was carried in every subsequent handoff), \#49 was
+implemented in S84 without recording “done-but-open,” and ~10 handoffs
+never surfaced it — which is *why* my metadata-only read looked
+plausible. Fix: when a session implements an issue but leaves it OPEN,
+the handoff’s gotchas/suggested-next MUST list it as “implemented SXX,
+OPEN pending close,” and that line must propagate until the issue
+closes. **Reflexes:** \[deliverable is “close \#N” ⇒ recompute FIRST:
+`grep`/`git log --diff-filter=A -- <likely files>` for the
+implementation before assuming it needs building\]\[a negative claim
+(“not done”, “no caller”, “doesn’t exist”) requires a positive search,
+not an inference from metadata (0 comments / recent creation / absent
+from recent `git log`)\]\[implemented-but-unclosed is the repo default
+(#4/#33/#49) — “close” usually = admin close on owner
+confirmation\]\[verify firsthand (re-read code + re-run tests green)
+before asserting completeness in a PUBLIC close comment —
+recompute-don’t-inherit applied to a prior session’s green claim\]\[own
+a mis-statement to the owner explicitly; confirm a changed-premise pivot
+via `AskUserQuestion`, don’t improvise it\]\[a session that
+implements-but-leaves-OPEN must carry “impl SXX, OPEN pending close” in
+its handoff until close\]\[closing an issue adds no new software work ⇒
+no new CHANGELOG/NEWS (logged at impl time) —
+\[\[backlog-vs-changelog-placement\]\]\]\[Phase-3E N/A for a pure
+issue-close — STATE it, verify the issue transitioned to
+CLOSED\]\[right-size-SOLO for an operational close even under
+ultracode\]\[macos-dupe-scan\]. **Apply:** whenever the task is “close
+issue \#N” or you’re about to claim an open issue still needs work —
+grep + `git log` for the implementation FIRST; if it already shipped
+(the repo’s common case), recompute-verify it firsthand (read the code,
+run its tests green), confirm the close with the owner if the premise
+changed, then `gh issue close` with an evidence comment citing the impl
+commit + verification, and carry any other implemented-but-open issues
+forward in the handoff.
+
+#### Learning 92 — Re-verifying \#37’s “exported-but-app-unused” inventory: (a) compute reachability WITHOUT loading the package — source `R/*.R` into a throwaway env + `codetools::findGlobals` (base lib), because the renv project library isn’t materialized in this checkout (`pkgload::load_all` bootstraps an empty renv and dies); and (b) use `findGlobals(f, merge = TRUE)`, NOT `$functions`-only — a function passed AS A VALUE to a higher-order call (`Map(chooseDate, …)` at `setExit.R:54`) lands in `$variables`, so a call-position-only graph FALSE-FLAGS it unused. The genuine S97 delta vs S78: both wire-ins discharged (#47 ORIP + \#48 `getPotentialParents`/`modPotentialParents`, both CLOSED + mounted), the surfaced docfix fixed (S87 `2a64770f`), the logging island still 0 live callers → 39 unused = **0 wire-in · 39 keep-as-public-API · 0 retire**; \#37’s actionable surface is fully drained (S97, audit of \#37)
+
+**The recompute caught a method bug — which is the whole point of
+recompute-don’t-inherit.** First pass used
+`findGlobals(merge = FALSE)$functions` and flagged `chooseDate` unused,
+contradicting S78’s “`chooseDate` is no longer unused.” Firsthand check
+found `Map(chooseDate, ped$death, ped$departure)` in `setExit.R:54` —
+`chooseDate` is an *argument*, not a call, so it’s in `$variables`.
+`merge = TRUE` (any global reference, any position — the correct
+conservative “the app uses this” test) reconciled it and moved exactly
+one function into the reached set. **(1) Environment gotcha:** this
+checkout has `renv.lock` + `renv/activate.R` but **no `renv/library`**,
+so the `.Rprofile`’s `source("renv/activate.R")` re-bootstraps renv into
+an empty lib and any `pkgload`/`devtools` call fails — but `findGlobals`
+is pure static parse-tree analysis needing only base `codetools`, so
+`Rscript --vanilla` + `sys.source` over `R/*.R` reproduces the issue’s
+documented method with zero deps and zero install. **(2) Scoping
+discipline (Learning 91 applied correctly this time):** before any
+fan-out I read the issue body + its two triage comments (S65, S78), both
+prior audit reports (`BACKLOG_STALENESS`, `IMPLEMENTED_BUT_OPEN`), and
+the CHANGELOG — establishing that S78 had already verified the
+per-function disposition (2 wire-in · 37 keep · 0 retire) with an
+adversarial completeness critic two days prior. So the deliverable was a
+**delta re-verification** (recompute the set, diff against S78, confirm
+wire-in/docfix status), NOT a re-run of S78’s triage. **(3) Right-size
+SOLO even under ultracode:** the 37 keep-as-public-API dispositions were
+already verified by S78; re-investigating each would be the exact
+Learning-91 redundancy. A Workflow fan-out would be theater — the
+genuinely-new work is one deterministic recompute + a handful of
+targeted firsthand grep/`gh` checks, and the adversarial check that
+mattered (is my recompute correct?) I did inline by catching the `merge`
+bug. **(4) The disposition finding:** \#37’s only ever-actionable items
+(#47, \#48, the `getPedDirectRelatives` docfix) are all shipped/fixed
+and CLOSED; the remaining 39 are intended public API by repeated owner
+decision (0 retire, `safeExecute` the lone conditional
+future-candidate). So \#37 is now a pure standing inventory — close (no
+work left) or keep + update the now-stale body (it predates the
+wire-ins; lists 3 S3 methods, not 4) is an owner judgment call, not an
+auto-close. **Reflexes:** \[#37 reachability recompute ⇒ source
+`R/*.R` +
+[`codetools::findGlobals`](https://rdrr.io/pkg/codetools/man/findGlobals.html)
+under `Rscript --vanilla`; do NOT rely on
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)
+(renv lib unmaterialized in this checkout)\]\[use
+`findGlobals(f, merge = TRUE)` — call-position-only `$functions`
+false-flags functions passed to `Map`/`apply`/`do.call` as unused
+(e.g. `chooseDate` via `Map` in `setExit.R`)\]\[recurring inventory ⇒
+delta against the last triage (S78), not a fresh per-function re-run —
+read the issue comments + `docs/audits/` + CHANGELOG at scoping
+(Learning 91)\]\[a prior session verified the dispositions with an
+adversarial critic ⇒ re-verifying them is redundant; do the DELTA and
+right-size SOLO even under ultracode\]\[confirm a “wire-in shipped”
+claim by grepping the mount site (`appUI.R`/`appServer.R`) AND the
+tracking issue’s CLOSED state — not the issue list alone\]\[S3 methods
+can’t be proven unused statically — flag as “cannot-prove-used,” not
+“dead”\]\[read-only audit ⇒ Phase-3E N/A, no `R/`/test/issue-state
+change, CHANGELOG-only\]\[macos-dupe-scan\]. **Apply:** when
+re-verifying \#37 (or any “exported-but-app-unused” reachability
+inventory) — recompute statically with
+`codetools::findGlobals(merge = TRUE)` over sourced `R/*.R` (no package
+load needed, and `merge = TRUE` avoids the higher-order-argument
+false-unused), but first read the most recent prior triage and audit
+reports so you scope a delta rather than re-running verified
+per-function dispositions; the disposition of the *issue* (close vs
+keep-and-update) is the owner’s judgment call once its actionable
+wire-in/docfix surface is confirmed drained.
+
+#### Learning 93 — Updating a STALE inventory/catalog (e.g. an issue body) ⇒ reconcile against the FULL recomputed truth, NOT the handoff’s delta-list: a handoff’s “delta” is anchored to the handoff’s OWN baseline, but the artifact you’re editing may sit at an OLDER baseline, so the handoff’s recommendation list is necessary-but-not-sufficient. S97’s handoff listed the delta-since-S78 for \#37’s body (strike `modORIPReporting*`/`getPotentialParents`, mark `removeAutoGenIds` transitive, add the 4th S3 `summary.nprcgenekeeprGV`, note the `getPedDirectRelatives` docfix) — but \#37’s BODY was last re-verified at **S65 (2026-06-12), older than S78**, so two MORE entries were stale that a delta-since-S78 cannot name: `chooseDate` (left the unused set AT S78 → already-gone from S78’s frame, so absent from “what changed since S78”) and `setAutoIdFormat` (a newer \#44/#38 export never catalogued at all). Recomputing the authoritative 39-set firsthand and reconciling the WHOLE body against it (a programmatic exact-match check) caught both, plus a pre-existing arithmetic error (the body’s own breakdown summed to 42, not 39) and a grep false-negative (NAMESPACE declares S3 methods as `S3method(print,summary.x)` — comma form — not `print.summary.x`). (S98, keep \#37 open + update its stale body)
+
+**A handoff delta is relative to the handoff’s baseline; the artifact
+may be at a different one — so recompute the full current truth and
+reconcile the whole artifact, don’t hand-apply the delta list.** The
+deliverable was the owner’s choice of “keep \#37 open + update the stale
+body” over “close \#37.” The trap: treat S97’s tidy recommendation list
+as the complete change-set. It wasn’t — not because S97 erred, but
+because a “delta since S78” is silent about anything that changed
+*before* S78, and the body lagged to S65. **(1) The
+recompute-don’t-inherit reflex applies to PUBLICATION, not just to
+“close \#N” / RED-gating.** Editing a public issue body asserts the
+inventory to the world, so the right basis is a fresh authoritative
+computation, not an inherited list. I re-ran the issue’s own documented
+method (`codetools::findGlobals(merge = TRUE)` over all 202 sourced
+`R/*.R` under `Rscript --vanilla`, per Learning 92) and got 166 / 127 /
+**39 unused** (35 fn + 4 S3) — independently reproducing S97 — THEN
+reconciled every non-struck body entry against that set with a tiny R
+check asserting `identical(body_nonstruck, authoritative)`. That
+exact-match gate (not eyeballing) is what surfaced `chooseDate` (body
+said unused; recompute said REACHED via the higher-order
+`Map(chooseDate,…)` at `setExit.R:54`) and `setAutoIdFormat` (in the
+truth-set, absent from BOTH body tables). **(2) Verify each load-bearing
+claim firsthand before it goes public — even on a “trivial” edit.** A
+grep for the S3 exports returned EMPTY at first (my regex assumed
+`print.summary.x`; NAMESPACE uses `S3method(print,summary.x)`), which
+would have falsely “confirmed” the 4th S3 didn’t exist — re-grepping the
+real form confirmed all four. Confirmed the 5 strikes (mount sites in
+`appUI.R`/`appServer.R`, the transitive `removeAutoGenIds` at
+`getPotentialParents.R:42`, the `Map` site) and the 2 additions
+(`setAutoIdFormat` has no direct callers; app reads format via
+`getAutoIdFormat` in `addUIds.R`) before writing them. **(3) “Update the
+stale body” includes fixing the body’s OWN internal inconsistencies, not
+only the named items.** The body claimed 39 unused but its
+origin-breakdown summed to 42; I rebuilt the Summary so 22 (of original
+70) + 17 (added since) = 39 holds and matches the 35-fn/4-S3 split. An
+updated doc with wrong arithmetic is still stale. **(4) Leave a dated
+thread marker for a silent body edit.** GitHub issue-body edits don’t
+appear in the timeline, so a long-lived catalog issue needs a short
+dated comment (“body re-verified & updated 2026-06-16 (S98): struck 5,
+added 2, see audit doc”) or the change is invisible to anyone reading
+the thread. **(5) news-vs-changelog + right-size:** an issue-body edit
+is dev-process bookkeeping (the underlying audit was already logged by
+S97) → **no CHANGELOG/NEWS** entry
+(\[\[backlog-vs-changelog-placement\]\]); and it’s correctly **SOLO even
+under ultracode** — one recompute + targeted firsthand checks + a body
+rewrite is not a breadth fan-out (the audit fan-out already happened
+S95/S97; a Workflow would be theater). **Phase-3E N/A** — editing an
+issue body changes no runtime behavior (no `R/`/test change); FM \#24
+inapplicable (no build step). **Reflexes:** \[updating a stale
+catalog/inventory ⇒ recompute the FULL authoritative set and reconcile
+the WHOLE artifact against it (programmatic exact-match), don’t
+hand-apply a handoff’s delta list\]\[a handoff “delta” is anchored to
+the HANDOFF’s baseline — if the artifact lags to an OLDER baseline, the
+delta is necessary-but-not-sufficient; compute the diff from the
+ARTIFACT’s baseline to now\]\[recompute-don’t-inherit applies to
+PUBLICATION (editing a public body), not just to “close \#N” or
+RED-gating — a fresh authoritative compute, not an inherited list, is
+the basis\]\[verify each load-bearing claim firsthand before it goes
+public — a failed grep may be a regex artifact (NAMESPACE S3 form is
+`S3method(print,summary.x)`, comma not dot), not a true negative\]\[gate
+the edit with `identical(body_entries, authoritative_set)` — eyeballing
+a 70-row table misses entries that changed before the handoff’s baseline
+(`chooseDate`) or were never catalogued (`setAutoIdFormat`)\]\[fix the
+artifact’s OWN internal inconsistencies too (the body’s breakdown summed
+to 42≠39) — “update the stale body” ⊇ “make it self-consistent”\]\[leave
+a dated comment for a silent issue-body edit — GitHub body edits don’t
+show in the timeline\]\[keep the issue OPEN per owner choice; the audit
+doc is the durable per-export evidence\]\[issue-body edit ⇒ dev-process
+bookkeeping, CHANGELOG/NEWS not warranted\]\[Phase-3E N/A — no runtime
+surface\]\[right-size-SOLO-even-under-ultracode\]\[macos-dupe-scan\].
+**Apply:** when the task is to refresh a stale catalog/inventory
+artifact (an issue body, a ROADMAP table, a generated index) — recompute
+the authoritative current set with the artifact’s own documented method,
+reconcile the FULL artifact against it programmatically (not by applying
+the most-recent handoff’s delta, which is blind to anything that changed
+before its baseline), fix any internal arithmetic/consistency errors you
+find, verify each published claim firsthand, and leave a dated marker if
+the edit is otherwise invisible.
+
+#### Learning 94 — Re-merging the long-lived `add-methodology` branch into `master` (the standing branch model): the safety check is NOT the ahead/behind count — prior PRs merged via MERGE COMMITS, so those merge-commit nodes show up as “master-only” commits and make `master` look “N ahead” when it has ZERO unique content. Verify a re-merge with a THREE-part recipe instead: (1) `git merge-tree --write-tree origin/master origin/add-methodology` → exit 0 = no conflicts; (2) `git log origin/add-methodology..origin/master --oneline` → confirm the only master-only commits are `Merge pull request #NN` nodes (add-methodology’s own work merged back), NOT independent work; (3) confirm master is strictly behind — `comm -23 <(git ls-tree -r --name-only origin/master|sort) <(... add-methodology|sort)` is empty (no master-only files) AND the tip-to-tip diff is an exact mirror (master-vs-add-methodology = the inverse of add-methodology-vs-master). All three held for PR \#51 (S52–S99, 54 commits, +6001/−406, clean): merge-tree exit 0, the 2 master-only commits were `Merge pull request #43/#41`, no master-only files, mirror diff. (S100, PR \#51 add-methodology → master)
+
+**The “2 ahead / 54 behind” divergence looked alarming and was
+completely benign — because `master`‘s 2 unique commits were the GitHub
+merge nodes from PRs \#41/#43, i.e. add-methodology’s own prior work
+merged back, not new work done on master.\*\* A long-lived feature
+branch that is periodically PR-merged (not deleted-and-recreated)
+accumulates this pattern: every prior merge-commit lives on master’s
+first-parent line but not on the branch line, so
+`git rev-list --left-right --count master...add-methodology` reports
+master as “ahead” by the count of prior merges. Reading that number as
+“master has work I’d regress” is the trap. **(1) The decisive safety
+signal is `merge-tree` + content subsumption, not the commit count.**
+merge-tree’s clean exit proves a 3-way merge applies with no conflicts;
+a clean 3-way merge preserves all of master’s content unless
+add-methodology explicitly reverted the same lines (which would surface
+AS a conflict). Pair it with the mirror-diff / no-master-only-files
+check to prove master is strictly behind (zero unique content), and the
+merge is provably safe and purely additive. **(2) This is the repo’s
+standing model, so it recurs — Learning 91’s “cite the prior run”
+corollary applies to the branch topology too.** The branch model is
+“work on `add-methodology`; `master` gets it via a PR” (S51 = PR \#41,
+S52-ish = PR \#43, S100 = PR \#51). Each future
+`add-methodology → master` PR will show the same growing “master ahead
+by K merge-commits” divergence; the next session should expect it and
+run the three-part recipe rather than re-discovering that the divergence
+is benign. **(3) Right-size SOLO even under ultracode (same call as the
+S96/S99 pushes).** A PR is one `gh pr create` after pre-flight
+investigation; the investigation is a handful of deterministic git/`gh`
+reads, and the adversarial check that matters (will this merge cleanly /
+lose anything?) is answered by merge-tree + the mirror-diff, done
+inline. A Workflow fan-out would be theater. **(4) Outward-facing ⇒
+confirm the exact public title/body once before `gh pr create`.** A PR
+body is published to the world; per SAFEGUARDS’ outward-facing caution,
+draft the title/body, ground the user-facing summary in the canonical
+`NEWS.md`/`CHANGELOG.md` (not from memory of the commits), and confirm
+via `AskUserQuestion` before creating — then leave it OPEN (merging
+master is a separate owner decision).** (5) news-vs-changelog:\*\*
+opening a PR publishes already-committed, already-logged work (the 54
+commits each carry their own CHANGELOG/NEWS entries) → it is not itself
+a new software change → **no new CHANGELOG/NEWS entry**
+(\[\[backlog-vs-changelog-placement\]\], the S96/S99 push precedent).
+**Phase-3E N/A** — creating a PR changes no runtime behavior on this
+machine (no `R/`/test change); FM \#24 inapplicable (no build step).
+**Reflexes:** \[re-merging `add-methodology`→`master` ⇒ verify with
+merge-tree (exit 0) + master-only-commits-are-merge-nodes +
+strictly-behind (no master-only files, mirror diff), NOT the
+ahead/behind count\]\[a long-lived PR-merged branch shows prior
+merge-commits as “base ahead” — benign; the count is not the safety
+signal\]\[clean `git merge-tree --write-tree` = the authoritative
+“applies cleanly, loses nothing” proof — pair with content-subsumption
+check\]\[branch model is work-on-add-methodology / master-via-PR (S51
+\#41, \#43, S100 \#51) — expect the divergence to grow each PR; run the
+recipe, don’t re-discover it’s benign\]\[ground the PR body’s
+user-facing summary in `NEWS.md`/`CHANGELOG.md`, not commit-message
+memory\]\[outward-facing PR ⇒ draft + confirm title/body via
+`AskUserQuestion` before `gh pr create`; leave OPEN unless told to
+merge\]\[PR creation = publishing already-logged work ⇒ no new
+CHANGELOG/NEWS (push precedent S96/S99)\]\[Phase-3E N/A — no runtime
+surface\]\[right-size-SOLO-even-under-ultracode\]\[macos-dupe-scan\].
+**Apply:** when the task is “PR `add-methodology` to `master`” (or
+re-merging any long-lived periodically-PR-merged branch) — don’t be
+alarmed by the “master is N ahead” divergence; prove safety with
+`git merge-tree --write-tree` (no conflicts) + confirming master’s only
+unique commits are prior merge nodes + master is strictly behind (no
+unique files, mirror diff), draft the PR body from
+`NEWS.md`/`CHANGELOG.md`, confirm the public title/body once via
+`AskUserQuestion`, create it, leave it OPEN, and add no CHANGELOG/NEWS
+entry.

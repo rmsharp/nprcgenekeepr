@@ -24,10 +24,18 @@ getPotentialParents(ped, minParentAge, maxGestationalPeriod)
 
 - maxGestationalPeriod:
 
-  integer value describing the days between conception and birth. This
-  will be used to prevent the removal of sires who exit the colony
-  between date of conception and birth. Need to decide where this will
-  come from.
+  integer value describing the maximum number of days between conception
+  and birth for the species being analyzed (a conservative upper bound,
+  e.g. 210 for rhesus whose typical gestation is about 165 days). It is
+  used two ways: (1) a sire who exited the colony between conception
+  (birth - maxGestationalPeriod) and birth is still retained as a
+  candidate; and (2) a female who delivered another offspring within
+  maxGestationalPeriod days of the focal birth is excluded as a
+  candidate dam, because a female bears one offspring at a time. The
+  sire check uses presence at conception while the dam check uses
+  presence at birth; this asymmetry is intentional – a sire need only be
+  present to conceive, whereas a dam must be present through the
+  pregnancy to give birth.
 
 ## Value
 

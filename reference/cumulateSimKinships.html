@@ -114,7 +114,7 @@ base R <code><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd(
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">allSimParents</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">simParent_1</span>, <span class="va">simParent_2</span>, <span class="va">simParent_3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">pop</span> <span class="op">&lt;-</span> <span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span></span></span>
-<span class="r-in"><span><span class="va">simKinships</span> <span class="op">&lt;-</span> <span class="fu"><a href="createSimKinships.html">createSimKinships</a></span><span class="op">(</span><span class="va">ped</span>, <span class="va">allSimParents</span>, <span class="va">pop</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">cumulativeKinships</span> <span class="op">&lt;-</span> <span class="fu">cumulateSimKinships</span><span class="op">(</span><span class="va">ped</span>, <span class="va">allSimParents</span>, <span class="va">pop</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

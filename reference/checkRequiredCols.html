@@ -69,6 +69,14 @@ the program is stopped.</p></dd>
     <p>NULL is returned if all required columns are present. See description
 of <code>reportErrors</code> for return values when required columns are missing.</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>When <code>reportErrors = TRUE</code>, <code>NA</code> entries in <code>cols</code>
+are treated as ordinary non-matching column names when building the list of
+missing required columns, rather than causing an error. (Earlier versions
+could error with <code>"missing value where TRUE/FALSE needed"</code> on such
+out-of-contract input.)</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>

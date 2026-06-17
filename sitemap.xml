@@ -89,6 +89,7 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/geneDrop.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/getAnimalsWithHighKinship.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/getAutoIdFormat.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/getBoxWhiskerDescription.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/getChangedColsTab.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/getConfigFileName.html</loc></url>
@@ -96,6 +97,7 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/getDateErrorsAndConvertDatesInPed.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/getDatedFilename.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/getDescendantPedigree.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/getEmptyErrorLst.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/getErrorTab.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.html</loc></url>
@@ -137,6 +139,7 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/kinshipMatrixToKValues.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/lacy1989Ped.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/lacy1989PedAlleles.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/loadSiteConfig.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/logModuleEvent.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/makeCEPH.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/makeExamplePedigreeFile.html</loc></url>
@@ -160,6 +163,8 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/modORIPReportingUI.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/modPedigreeServer.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/modPedigreeUI.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/modPotentialParentsServer.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/modPotentialParentsUI.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/modPyramidServer.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/modPyramidUI.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/modSummaryStatsServer.html</loc></url>
@@ -203,10 +208,12 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/safeExecute.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/saveDataframesAsFiles.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/savePlotToFile.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/setAutoIdFormat.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/setExit.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/setPopulation.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/set_seed.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/shouldShowChangedColsTab.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/shouldShowOripTab.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/smallPed.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/smallPedTree.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/summarizeKinshipValues.html</loc></url>
