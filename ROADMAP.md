@@ -25,9 +25,9 @@ integration testing and CRAN-submission preparation.
   **Slice 2 done (S107):** pkgdown mixed `.qmd`/`.Rmd` mode stood up (`vignettes/articles/_quarto.yml`)
   + first Quarto article `vignettes/articles/breeding-group-formation.qmd` (build-ignored,
   website-only, zero CRAN risk; verified via `quarto render` + `pkgdown::build_article`).
-  **Articles so far (S107–S109):** `breeding-group-formation.qmd`, `genetic-value-analysis.qmd`,
-  `studbook-quality-control.qmd` — each a scripted, non-Shiny walkthrough on shipped data; adding
-  more is a drop-in `.qmd` (no new config), each verified the same way.
+  **Articles so far (S107–S110):** `breeding-group-formation.qmd`, `genetic-value-analysis.qmd`,
+  `studbook-quality-control.qmd`, `age-sex-pyramid.qmd` — each a scripted, non-Shiny walkthrough on
+  shipped data; adding more is a drop-in `.qmd` (no new config), each verified the same way.
 - **Audit follow-ups** (full findings in `PED_GV_AUDIT_2026-05-30.md`; open items in
   `BACKLOG.md`): NEW-53 (in-place ped mutation), NEW-45 (`geneDrop` period-in-id),
   NEW-20 (delete dead `makeGeneticDiversityDashboard.R`), PED-1/NEW-17 (founders-helper
