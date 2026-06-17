@@ -3,7 +3,7 @@
 \docType{data}
 \name{pedDuplicateIds}
 \alias{pedDuplicateIds}
-\title{pedDuplicateIds is a dataframe with 9 rows and 5 columns (ego_id, sire,
+\title{pedDuplicateIds is a dataframe with 9 rows and 5 columns (ego_id, si.re,
 dam_id, sex, birth_date) representing a full pedigree with a duplicated
 record}
 \format{
@@ -14,7 +14,7 @@ data(pedDuplicateIds)
 }
 \description{
 It is one of six pedigrees (\code{pedDuplicateIds},
-\code{pedFemaleSireMaleDam}, \code{pedgood},
+\code{pedFemaleSireMaleDam}, \code{pedGood},
 \code{pedInvalidDates}, \code{pedMissingBirth},
 \code{pedSameMaleIsSireAndDam}) used to
 demonstrate error detection by the qcStudbook function.

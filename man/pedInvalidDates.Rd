@@ -3,9 +3,9 @@
 \docType{data}
 \name{pedInvalidDates}
 \alias{pedInvalidDates}
-\title{pedInvalidDates is a dataframe with 8 rows and 5 columns (ego_id, sire,
-dam_id, sex, birth_date) representing a full pedigree with values in the
-\code{birth_date} column that are not valid dates}
+\title{pedInvalidDates is a dataframe with 8 rows and 5 columns (id, sire, dam,
+sex, birth) representing a full pedigree with values in the
+\code{birth} column that are not valid dates}
 \format{
 An object of class \code{data.frame} with 8 rows and 5 columns.
 }
@@ -14,7 +14,7 @@ data(pedInvalidDates)
 }
 \description{
 It is one of six pedigrees (\code{pedDuplicateIds},
-\code{pedFemaleSireMaleDam}, \code{pedgood},
+\code{pedFemaleSireMaleDam}, \code{pedGood},
 \code{pedInvalidDates}, \code{pedMissingBirth},
 \code{pedSameMaleIsSireAndDam}) used to
 demonstrate error detection by the qcStudbook function.

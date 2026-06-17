@@ -3,7 +3,7 @@
 \docType{data}
 \name{pedMissingBirth}
 \alias{pedMissingBirth}
-\title{pedMissingBirth is a dataframe with 8 rows and 4 columns (ego_id, sire,
+\title{pedMissingBirth is a dataframe with 8 rows and 4 columns (ego_id, si.re,
 dam_id, sex) representing a full pedigree that is missing the birth_date
 column}
 \format{
@@ -14,7 +14,7 @@ data(pedMissingBirth)
 }
 \description{
 It is one of six pedigrees (\code{pedDuplicateIds},
-\code{pedFemaleSireMaleDam}, \code{pedgood},
+\code{pedFemaleSireMaleDam}, \code{pedGood},
 \code{pedInvalidDates}, \code{pedMissingBirth},
 \code{pedSameMaleIsSireAndDam}) used to
 demonstrate error detection by the qcStudbook function.

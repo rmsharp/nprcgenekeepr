@@ -17,9 +17,9 @@
 #' \emph{Journal of the American Association for Laboratory Animal Science},
 #' \strong{54}(6), 700-707.
 #' @importFrom DT DTOutput renderDT
-#' @importFrom shiny NS div h3 fluidRow column wellPanel
-#'   h4 icon numericInput checkboxInput sliderInput actionButton
-#'   tabsetPanel tabPanel br downloadButton plotOutput tableOutput includeHTML
+#' @importFrom shiny NS div h3 fluidRow column wellPanel h4 icon numericInput
+#' @importFrom shiny checkboxInput sliderInput actionButton tabsetPanel tabPanel
+#' @importFrom shiny br downloadButton plotOutput tableOutput includeHTML
 #' @export
 modGeneticValueUI <- function(id) {
   ns <- NS(id)
@@ -116,7 +116,7 @@ modGeneticValueUI <- function(id) {
 #' Lacy, R.C. (1989) \emph{Zoo Biology}, \strong{8}, 111-123.
 #'
 #' @importFrom shiny moduleServer reactive eventReactive withProgress
-#'             incProgress
+#' @importFrom shiny incProgress
 #' @export
 modGeneticValueServer <- function(id, pedigree) {
   moduleServer(id, function(input, output, session) {

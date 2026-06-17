@@ -60,7 +60,7 @@ flattenPotentialParents <- function(potentialParents) {
 #' @seealso \code{\link{modPotentialParentsServer}} for server logic.
 #' @seealso \code{\link{getPotentialParents}} for the underlying computation.
 #' @importFrom shiny NS div h3 p fluidRow column numericInput helpText br
-#'   actionButton downloadButton uiOutput hr icon
+#' @importFrom shiny actionButton downloadButton uiOutput hr icon
 #' @export
 modPotentialParentsUI <- function(id) {
   ns <- NS(id)
@@ -132,7 +132,7 @@ modPotentialParentsUI <- function(id) {
 #' @seealso \code{\link{modPotentialParentsUI}} for the user interface.
 #' @seealso \code{\link{getPotentialParents}} for the underlying computation.
 #' @importFrom shiny moduleServer eventReactive reactive renderUI
-#'   downloadHandler div helpText
+#' @importFrom shiny downloadHandler div helpText
 #' @importFrom utils write.csv
 #' @export
 modPotentialParentsServer <- function(id, pedigree = NULL, minParentAge = 2.0) {

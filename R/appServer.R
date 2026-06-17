@@ -29,11 +29,11 @@
 #' @seealso \code{\link{loadSiteConfig}} for site configuration loading
 #'
 #' @importFrom shiny reactiveValues reactiveVal observeEvent updateNavbarPage
-#'         updateTabsetPanel reactive observe req insertTab removeTab
-#'         showNotification tabPanel div h3 p hr icon uiOutput
-#'         verbatimTextOutput isolate
+#' @importFrom shiny updateTabsetPanel reactive observe req insertTab removeTab
+#' @importFrom shiny showNotification tabPanel div h3 p hr icon uiOutput
+#' @importFrom shiny verbatimTextOutput isolate
 #' @importFrom futile.logger flog.logger flog.threshold flog.debug flog.info
-#'         INFO DEBUG appender.file
+#' @importFrom futile.logger INFO DEBUG appender.file
 #' @export
 appServer <- function(input, output, session) {
 

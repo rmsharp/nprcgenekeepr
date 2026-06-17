@@ -142,51 +142,51 @@
 #' @source example baboon pedigree file provided by Deborah Newman,
 #' Southwest National Primate Center.
 "ped1Alleles"
-#' pedDuplicateIds is a dataframe with 9 rows and 5 columns (ego_id, sire,
+#' pedDuplicateIds is a dataframe with 9 rows and 5 columns (ego_id, si.re,
 #' dam_id, sex, birth_date) representing a full pedigree with a duplicated
 #' record
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
-#' \code{pedFemaleSireMaleDam}, \code{pedgood},
+#' \code{pedFemaleSireMaleDam}, \code{pedGood},
 #' \code{pedInvalidDates}, \code{pedMissingBirth},
 #' \code{pedSameMaleIsSireAndDam}) used to
 #' demonstrate error detection by the qcStudbook function.
 "pedDuplicateIds"
-#' pedFemaleSireMaleDam is a dataframe with 8 rows and 5 columns (ego_id, sire,
+#' pedFemaleSireMaleDam is a dataframe with 8 rows and 5 columns (ego_id, si.re,
 #' dam_id, sex, birth_date) representing a full pedigree with the errors of
 #' having a sire labeled as female and a dam labeled as male
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
-#' \code{pedFemaleSireMaleDam}, \code{pedgood},
+#' \code{pedFemaleSireMaleDam}, \code{pedGood},
 #' \code{pedInvalidDates}, \code{pedMissingBirth},
 #' \code{pedSameMaleIsSireAndDam}) used to
 #' demonstrate error detection by the qcStudbook function.
 "pedFemaleSireMaleDam"
-#' pedGood is a dataframe with 8 rows and 5 columns (ego_id, sire, dam_id,
+#' pedGood is a dataframe with 8 rows and 5 columns (ego_id, si.re, dam_id,
 #' sex, birth_date) representing a full pedigree with no errors
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
-#' \code{pedFemaleSireMaleDam}, \code{pedgood},
+#' \code{pedFemaleSireMaleDam}, \code{pedGood},
 #' \code{pedInvalidDates}, \code{pedMissingBirth},
 #' \code{pedSameMaleIsSireAndDam}) used to
 #' demonstrate error detection by the qcStudbook function.
 "pedGood"
-#' pedInvalidDates is a dataframe with 8 rows and 5 columns (ego_id, sire,
-#' dam_id, sex, birth_date) representing a full pedigree with values in the
-#' \code{birth_date} column that are not valid dates
+#' pedInvalidDates is a dataframe with 8 rows and 5 columns (id, sire, dam,
+#' sex, birth) representing a full pedigree with values in the
+#' \code{birth} column that are not valid dates
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
-#' \code{pedFemaleSireMaleDam}, \code{pedgood},
+#' \code{pedFemaleSireMaleDam}, \code{pedGood},
 #' \code{pedInvalidDates}, \code{pedMissingBirth},
 #' \code{pedSameMaleIsSireAndDam}) used to
 #' demonstrate error detection by the qcStudbook function.
 "pedInvalidDates"
-#' pedMissingBirth is a dataframe with 8 rows and 4 columns (ego_id, sire,
+#' pedMissingBirth is a dataframe with 8 rows and 4 columns (ego_id, si.re,
 #' dam_id, sex) representing a full pedigree that is missing the birth_date
 #' column
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
-#' \code{pedFemaleSireMaleDam}, \code{pedgood},
+#' \code{pedFemaleSireMaleDam}, \code{pedGood},
 #' \code{pedInvalidDates}, \code{pedMissingBirth},
 #' \code{pedSameMaleIsSireAndDam}) used to
 #' demonstrate error detection by the qcStudbook function.
@@ -201,11 +201,11 @@
 #' head(pedOne)
 "pedOne"
 #' pedSameMaleIsSireAndDam is a dataframe with 8 rows and 5 columns (ego_id,
-#' sire, dam_id, sex, birth_date) representing a full pedigree in which the
+#' si.re, dam_id, sex, birth_date) representing a full pedigree in which the
 #' same male animal is listed as both a sire and a dam
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
-#' \code{pedFemaleSireMaleDam}, \code{pedgood},
+#' \code{pedFemaleSireMaleDam}, \code{pedGood},
 #' \code{pedInvalidDates}, \code{pedMissingBirth},
 #' \code{pedSameMaleIsSireAndDam}) used to
 #' demonstrate error detection by the qcStudbook function.

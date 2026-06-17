@@ -12,7 +12,7 @@
 #'   \code{shiny::runApp()}.
 #' @importFrom bslib bs_theme
 #' @importFrom shiny navbarPage tabPanel icon fluidRow column div h1 p hr
-#'             actionButton navbarMenu tags includeScript
+#' @importFrom shiny actionButton navbarMenu tags includeScript
 #' @export
 appUI <- function(siteInfo = getSiteInfo(expectConfigFile = FALSE)) {
 

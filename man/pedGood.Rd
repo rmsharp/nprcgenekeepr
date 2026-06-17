@@ -3,7 +3,7 @@
 \docType{data}
 \name{pedGood}
 \alias{pedGood}
-\title{pedGood is a dataframe with 8 rows and 5 columns (ego_id, sire, dam_id,
+\title{pedGood is a dataframe with 8 rows and 5 columns (ego_id, si.re, dam_id,
 sex, birth_date) representing a full pedigree with no errors}
 \format{
 An object of class \code{data.frame} with 8 rows and 5 columns.
@@ -13,7 +13,7 @@ data(pedGood)
 }
 \description{
 It is one of six pedigrees (\code{pedDuplicateIds},
-\code{pedFemaleSireMaleDam}, \code{pedgood},
+\code{pedFemaleSireMaleDam}, \code{pedGood},
 \code{pedInvalidDates}, \code{pedMissingBirth},
 \code{pedSameMaleIsSireAndDam}) used to
 demonstrate error detection by the qcStudbook function.
