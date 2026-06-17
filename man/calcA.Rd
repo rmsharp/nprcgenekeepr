@@ -3,7 +3,7 @@
 \name{calcA}
 \alias{calcA}
 \title{Calculates \code{a}, the number of an individual's alleles that are rare in
-each simulation.}
+each simulation}
 \usage{
 calcA(alleles, threshold = 1L, byID = FALSE)
 }

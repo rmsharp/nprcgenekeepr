@@ -49,14 +49,14 @@
 #' finalRpt is a list object created from the list object \emph{rpt} prepared
 #' by \code{reportGV}. It is created inside \code{orderReport}. This version
 #' is at the state just prior to calling \code{rankSubjects} inside
-#' \code{orderReport}.
+#' \code{orderReport}
 #' @examples
 #' library(nprcgenekeepr)
 #' data("finalRpt")
 #' finalRpt <- rankSubjects(finalRpt)
 "finalRpt"
 #' focalAnimals is a dataframe with one column (_id_) containing the of animal
-#' Ids from the __examplePedigree__ pedigree.
+#' Ids from the __examplePedigree__ pedigree
 #'
 #' They can be used to illustrate the identification of a population of
 #' interest as is shown in the example below.
@@ -96,7 +96,7 @@
 #' }
 "lacy1989Ped"
 #' lacy1989PedAlleles is a dataframe produced by \code{geneDrop} on
-#' \code{lacy1989Ped} with 5000 iterations.
+#' \code{lacy1989Ped} with 5000 iterations
 #'
 #' @source lacy1989Ped is a dataframe containing the small example pedigree used
 #' by Robert C. Lacy in "Analysis of Founder Representation in Pedigrees:
@@ -144,7 +144,7 @@
 "ped1Alleles"
 #' pedDuplicateIds is a dataframe with 9 rows and 5 columns (ego_id, sire,
 #' dam_id, sex, birth_date) representing a full pedigree with a duplicated
-#' record.
+#' record
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
 #' \code{pedFemaleSireMaleDam}, \code{pedgood},
@@ -154,7 +154,7 @@
 "pedDuplicateIds"
 #' pedFemaleSireMaleDam is a dataframe with 8 rows and 5 columns (ego_id, sire,
 #' dam_id, sex, birth_date) representing a full pedigree with the errors of
-#' having a sire labeled as female and a dam labeled as male.
+#' having a sire labeled as female and a dam labeled as male
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
 #' \code{pedFemaleSireMaleDam}, \code{pedgood},
@@ -163,7 +163,7 @@
 #' demonstrate error detection by the qcStudbook function.
 "pedFemaleSireMaleDam"
 #' pedGood is a dataframe with 8 rows and 5 columns (ego_id, sire, dam_id,
-#' sex, birth_date) representing a full pedigree with no errors.
+#' sex, birth_date) representing a full pedigree with no errors
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
 #' \code{pedFemaleSireMaleDam}, \code{pedgood},
@@ -173,7 +173,7 @@
 "pedGood"
 #' pedInvalidDates is a dataframe with 8 rows and 5 columns (ego_id, sire,
 #' dam_id, sex, birth_date) representing a full pedigree with values in the
-#' \code{birth_date} column that are not valid dates.
+#' \code{birth_date} column that are not valid dates
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
 #' \code{pedFemaleSireMaleDam}, \code{pedgood},
@@ -182,7 +182,7 @@
 #' demonstrate error detection by the qcStudbook function.
 "pedInvalidDates"
 #' pedMissingBirth is a dataframe with 8 rows and 5 columns (ego_id, sire,
-#' dam_id, sex, birth_date) representing a full pedigree with no errors.
+#' dam_id, sex, birth_date) representing a full pedigree with no errors
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
 #' \code{pedFemaleSireMaleDam}, \code{pedgood},
@@ -200,7 +200,7 @@
 #' head(pedOne)
 "pedOne"
 #' pedSameMaleIsSireAndDam is a dataframe with 8 rows and 5 columns (ego_id,
-#' sire, dam_id, sex, birth_date) representing a full pedigree with no errors.
+#' sire, dam_id, sex, birth_date) representing a full pedigree with no errors
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
 #' \code{pedFemaleSireMaleDam}, \code{pedgood},
@@ -218,7 +218,7 @@
 #' head(pedSix)
 "pedSix"
 #' pedWithGenotype is a dataframe produced from qcPed by adding made up
-#' genotypes.
+#' genotypes
 #'
 #' \describe{
 #' A dataframe containing 280 records with 12 columns: \code{id}, \code{sire},
@@ -226,7 +226,7 @@
 #'  \code{first}, \code{second}, \code{first_name}, and \code{second_name}.
 #' }
 "pedWithGenotype"
-#' pedWithGenotypeReport is a list containing the output of \code{reportGV}.
+#' pedWithGenotypeReport is a list containing the output of \code{reportGV}
 #'
 #' @source pedWithGenotypeReport was made with pedWithGenotype as input into
 #' reportGV with 10,000 iterations.

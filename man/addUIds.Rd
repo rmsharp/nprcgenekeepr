@@ -3,7 +3,7 @@
 \name{addUIds}
 \alias{addUIds}
 \title{Eliminates partial parentage situations by adding unique placeholder
-IDs for the unknown parent.}
+IDs for the unknown parent}
 \usage{
 addUIds(ped, format = getAutoIdFormat())
 }

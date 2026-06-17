@@ -1,4 +1,4 @@
-#' Recursively create a character vector of ancestors for an individual ID.
+#' Recursively create a character vector of ancestors for an individual ID
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr

@@ -1,5 +1,5 @@
 #' Creates a folder with CSV files containing example pedigrees and ID lists
-#' used to demonstrate the package.
+#' used to demonstrate the package
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr

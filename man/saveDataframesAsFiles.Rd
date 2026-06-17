@@ -2,7 +2,7 @@
 % Please edit documentation in R/saveDataframesAsFiles.R
 \name{saveDataframesAsFiles}
 \alias{saveDataframesAsFiles}
-\title{Write copy of dataframes to either CSV, TXT, or Excel file.}
+\title{Write copy of dataframes to either CSV, TXT, or Excel file}
 \usage{
 saveDataframesAsFiles(dfList, baseDir, fileType = "csv")
 }

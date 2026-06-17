@@ -1,4 +1,4 @@
-#' Get the direct ancestors of selected animals from supplied pedigree.
+#' Get the direct ancestors of selected animals from supplied pedigree
 #'
 ## Copyright(c) 2017-2023 R. Mark Sharp
 ## This file is part of nprcgenekeepr

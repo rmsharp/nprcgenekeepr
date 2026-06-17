@@ -1,4 +1,4 @@
-#' Calculates genome uniqueness for each ID that is part of the population.
+#' Calculates genome uniqueness for each ID that is part of the population
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr

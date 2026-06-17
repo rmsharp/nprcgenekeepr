@@ -2,7 +2,7 @@
 % Please edit documentation in R/getGVGenotype.R
 \name{getGVGenotype}
 \alias{getGVGenotype}
-\title{Get Genetic Value Genotype data structure for reportGV function.}
+\title{Get Genetic Value Genotype data structure for reportGV function}
 \usage{
 getGVGenotype(ped)
 }

@@ -3,7 +3,7 @@
 \name{createExampleFiles}
 \alias{createExampleFiles}
 \title{Creates a folder with CSV files containing example pedigrees and ID lists
-used to demonstrate the package.}
+used to demonstrate the package}
 \usage{
 createExampleFiles()
 }

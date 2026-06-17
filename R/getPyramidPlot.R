@@ -1,4 +1,4 @@
-#' Creates a pyramid plot of the pedigree provided.
+#' Creates a pyramid plot of the pedigree provided
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr

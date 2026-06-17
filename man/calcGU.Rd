@@ -2,7 +2,7 @@
 % Please edit documentation in R/calcGU.R
 \name{calcGU}
 \alias{calcGU}
-\title{Calculates genome uniqueness for each ID that is part of the population.}
+\title{Calculates genome uniqueness for each ID that is part of the population}
 \usage{
 calcGU(alleles, threshold = 1L, byID = FALSE, pop = NULL)
 }

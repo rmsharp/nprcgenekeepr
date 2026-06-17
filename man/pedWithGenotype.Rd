@@ -4,7 +4,7 @@
 \name{pedWithGenotype}
 \alias{pedWithGenotype}
 \title{pedWithGenotype is a dataframe produced from qcPed by adding made up
-genotypes.}
+genotypes}
 \format{
 An object of class \code{data.frame} with 280 rows and 12 columns.
 }

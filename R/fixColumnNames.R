@@ -1,4 +1,4 @@
-#' fixColumnNames changes original column names and into standardized names.
+#' fixColumnNames changes original column names and into standardized names
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr

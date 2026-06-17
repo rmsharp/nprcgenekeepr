@@ -4,7 +4,7 @@
 \name{pedMissingBirth}
 \alias{pedMissingBirth}
 \title{pedMissingBirth is a dataframe with 8 rows and 5 columns (ego_id, sire,
-dam_id, sex, birth_date) representing a full pedigree with no errors.}
+dam_id, sex, birth_date) representing a full pedigree with no errors}
 \format{
 An object of class \code{data.frame} with 8 rows and 4 columns.
 }

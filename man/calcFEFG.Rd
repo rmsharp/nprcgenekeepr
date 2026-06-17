@@ -19,7 +19,7 @@ table of allele information produced by \code{geneDrop()}.}
 \value{
 The list containing the founder equivalents,
 \code{FE = 1 / sum(p ^ 2)}, and the founder genome equivalents,
-\code{FG = 1 / sum( (p ^ 2) / r} where \code{p} is the vector of founder
+\code{FG = 1 / sum( (p ^ 2) / r)} where \code{p} is the vector of founder
 mean contributions to the current descendants and \code{r} is the mean
 number of founder alleles retained in the gene dropping experiment.
 }

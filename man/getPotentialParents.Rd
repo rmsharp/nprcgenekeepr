@@ -3,7 +3,7 @@
 \name{getPotentialParents}
 \alias{getPotentialParents}
 \title{Get the lists of portential parents for all individuals born in the colony
-with one or two unknown parents.}
+with one or two unknown parents}
 \usage{
 getPotentialParents(ped, minParentAge, maxGestationalPeriod)
 }

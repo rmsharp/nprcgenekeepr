@@ -1,4 +1,4 @@
-#' hasBothParents checks to see if both parents are identified.
+#' hasBothParents checks to see if both parents are identified
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr

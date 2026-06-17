@@ -2,7 +2,7 @@
 % Please edit documentation in R/findGeneration.R
 \name{findGeneration}
 \alias{findGeneration}
-\title{Determines the generation number for each id.}
+\title{Determines the generation number for each id}
 \usage{
 findGeneration(id, sire, dam)
 }

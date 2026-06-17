@@ -3,7 +3,7 @@
 \name{get_and_or_list}
 \alias{get_and_or_list}
 \title{Returns a one element character string with correct punctuation for
-a list made up of the elements of the character vector argument.}
+a list made up of the elements of the character vector argument}
 \usage{
 get_and_or_list(c_vector, conjunction = "and")
 }
@@ -22,7 +22,7 @@ last two elements joined by the selected conjunction.
 }
 \description{
 Returns a one element character string with correct punctuation for
-a list made up of the elements of the character vector argument.
+a list made up of the elements of the character vector argument
 }
 \examples{
 get_and_or_list(c("Bob", "John")) # "Bob and John"

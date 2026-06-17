@@ -1,5 +1,5 @@
 #' Counts the number of occurrences of each kinship value seen for a pair of
-#' individuals in a series of simulated pedigrees.
+#' individuals in a series of simulated pedigrees
 #'
 #' @return A list of three lists named \code{kIds} (kinship IDs), \code{kValues}
 #'         (kinship values), and \code{kCounts} (kinship counts).

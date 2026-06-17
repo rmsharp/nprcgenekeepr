@@ -1,4 +1,4 @@
-#' Choose date based on \code{earlier} flag.
+#' Choose date based on \code{earlier} flag
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr

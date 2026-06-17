@@ -2,7 +2,7 @@
 % Please edit documentation in R/removeUninformativeFounders.R
 \name{removeUninformativeFounders}
 \alias{removeUninformativeFounders}
-\title{Remove uninformative founders.}
+\title{Remove uninformative founders}
 \usage{
 removeUninformativeFounders(ped)
 }

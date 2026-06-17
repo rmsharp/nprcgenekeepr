@@ -2,7 +2,7 @@
 % Please edit documentation in R/getGVPopulation.R
 \name{getGVPopulation}
 \alias{getGVPopulation}
-\title{Get the population of interest for the Genetic Value analysis.}
+\title{Get the population of interest for the Genetic Value analysis}
 \usage{
 getGVPopulation(ped, pop)
 }

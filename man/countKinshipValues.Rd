@@ -3,7 +3,7 @@
 \name{countKinshipValues}
 \alias{countKinshipValues}
 \title{Counts the number of occurrences of each kinship value seen for a pair of
-individuals in a series of simulated pedigrees.}
+individuals in a series of simulated pedigrees}
 \usage{
 countKinshipValues(kinshipValues, accummulatedKValueCounts = NULL)
 }
@@ -22,7 +22,7 @@ A list of three lists named \code{kIds} (kinship IDs), \code{kValues}
 }
 \description{
 Counts the number of occurrences of each kinship value seen for a pair of
-individuals in a series of simulated pedigrees.
+individuals in a series of simulated pedigrees
 }
 \examples{
 library(nprcgenekeepr)

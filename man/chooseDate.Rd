@@ -2,7 +2,7 @@
 % Please edit documentation in R/chooseDate.R
 \name{chooseDate}
 \alias{chooseDate}
-\title{Choose date based on \code{earlier} flag.}
+\title{Choose date based on \code{earlier} flag}
 \usage{
 chooseDate(d1, d2, earlier = TRUE)
 }

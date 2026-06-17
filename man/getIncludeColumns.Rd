@@ -2,7 +2,7 @@
 % Please edit documentation in R/getIncludeColumns.R
 \name{getIncludeColumns}
 \alias{getIncludeColumns}
-\title{Get the superset of columns that can be in a pedigree file.}
+\title{Get the superset of columns that can be in a pedigree file}
 \usage{
 getIncludeColumns()
 }

@@ -1,4 +1,4 @@
-#' Reformats a kinship matrix into a long-format table.
+#' Reformats a kinship matrix into a long-format table
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr

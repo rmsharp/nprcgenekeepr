@@ -2,7 +2,7 @@
 % Please edit documentation in R/createPedTree.R
 \name{createPedTree}
 \alias{createPedTree}
-\title{Create a pedigree tree (PedTree).}
+\title{Create a pedigree tree (PedTree)}
 \usage{
 createPedTree(ped)
 }
