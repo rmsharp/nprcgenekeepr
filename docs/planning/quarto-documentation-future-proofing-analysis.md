@@ -1,8 +1,11 @@
 # Quarto vs. R Markdown — Documentation Future-Proofing Analysis
 
-**Status:** Analysis + recommendation (Session 104, 2026-06-17). The deliverable is this
-document; no documents were converted. Adopting any path below is a separate, owner-approved
-session.
+**Status:** **ADOPTED — Option B, Hybrid (decided by the owner, 2026-06-17, Session 105).**
+The §6.3 manual sub-decision is resolved to **(b): reposition the manual onto the Quarto
+website**, dropping it from the CRAN vignette set. This document is now the project's
+documentation-engine policy; the analysis below (written Session 104, 2026-06-17) is its
+rationale, left intact. **No documents have been converted by this decision** — each
+implementation slice in §7.1 is a separate, owner-approved session (FM #18).
 
 **Question (owner's framing):** Should `nprcgenekeepr`'s documentation be migrated from
 R Markdown to Quarto to **future-proof** it? Build time is *not* the owner's concern — it is
@@ -29,9 +32,9 @@ This honors the future-proofing goal — it *does* adopt Quarto, deliberately, w
 off — while keeping the CRAN-facing surface on the engine that is purpose-built for CRAN and
 is not being retired.
 
-This is the owner's decision; §7 lists the three options plainly so a different call is easy
-to make. Every load-bearing claim below was independently web-researched and then survived an
-adversarial attempt to refute it (high confidence) — see §8.
+**The owner adopted this — Option B — on 2026-06-17 (see §7 and §7.1).** Every load-bearing
+claim below was independently web-researched and then survived an adversarial attempt to
+refute it (high confidence) — see §8.
 
 ---
 
@@ -187,6 +190,10 @@ indefinitely, and endorsed for this exact case by the Quarto maintainer.
   heaviest assembly from the CRAN build — but it changes what ships to CRAN, so it is a
   deliberate scope decision, not a mechanical one.
 
+**→ Decided (owner, 2026-06-17): option (b).** The manual moves onto the Quarto website and
+leaves the CRAN vignette set. Because this changes what ships to CRAN, the slice must be
+coordinated with the CRAN 2.0.0 resubmission — see §7.1 (slice 4) and the corrected §8.
+
 **6.4 Explicitly NOT recommended:** converting the CRAN vignettes to live Quarto vignettes
 (adds the CLI dependency for narrow benefit on an archived package), and using Quarto as the
 *timing* fix (it can't help — see §4).
@@ -198,13 +205,35 @@ indefinitely, and endorsed for this exact case by the Quarto maintainer.
 | Option | What it means | Verdict |
 |---|---|---|
 | **A. Full conversion** — all docs → Quarto, CRAN vignettes included | Adds Quarto-CLI `SystemRequirements`; new CRAN check risk; narrow realized benefit | **Not recommended** — wrong risk/benefit for an archived package |
-| **B. Hybrid / partial adoption** (this doc's recommendation) | CRAN vignettes stay knitr; website + new docs + dev docs + slides → Quarto; manual per §6.3 | **Recommended** — captures the future-proofing benefit at near-zero CRAN risk |
+| **B. Hybrid / partial adoption** (this doc's recommendation) | CRAN vignettes stay knitr; website + new docs + dev docs + slides → Quarto; manual per §6.3 | **✅ ADOPTED 2026-06-17** — captures the future-proofing benefit at near-zero CRAN risk (only the manual slice, §6.3(b), touches CRAN contents — coordinate with the resubmission, §8) |
 | **C. Status quo** — stay fully on R Markdown | No change | **Safe but leaves value on the table** — forgoes Quarto where it's free of risk |
 
-Default if unaddressed: **B**. None of this blocks the CRAN resubmission; it can proceed in
-parallel or after.
+**Adopted: B** (owner, 2026-06-17). Slices 1–3 (§7.1) carry no CRAN risk and can proceed any
+time; the manual slice (§6.3(b)) changes what ships to CRAN and must be sequenced with the
+resubmission (§8).
 
 ---
+
+## 7.1 Adopted decision and implementation slices (Session 105)
+
+**Decision (owner, 2026-06-17): adopt Option B (Hybrid), with the §6.3 manual resolved to
+(b).** This document is now the documentation-engine policy. Recording the decision converts
+nothing; each slice below is a separate, owner-approved implementation session (FM #18 — one
+slice per session, RED-first if any rendered numbers would change).
+
+Implementation slices, in suggested order:
+
+| # | Slice | CRAN risk | Notes |
+|---|---|---|---|
+| 1 | Standardize the third `inst/extdata/` dev doc — `meeting_notes.Rmd` → `.qmd` | **None** (build-ignored) | Smallest, fully reversible. `claude_code.qmd` + `software_design_doc.qmd` are already `.qmd`; this makes the dev-doc set uniform. |
+| 2 | pkgdown: author *new* articles in Quarto via mixed mode | **None** (website only) | Add a `_quarto.yml` (`project: render: ['*.qmd']`) so existing `.Rmd` vignettes keep rendering the site (pkgdown ≥ 2.1.0). New long-form / tutorial web content is where Quarto's cross-references, theming, and single-source pay off. |
+| 3 | Slide decks / talks in Quarto (`revealjs`) | **None** | Only when new presentation material is needed; there are no existing decks to migrate. |
+| 4 | **Reposition the manual** (`a3manual.Rmd` + 13 `manual_components/_*.Rmd`) onto the Quarto website, dropping it from the CRAN vignette set | **Yes — changes package contents** | The §6.3(b) decision. **Coordinate with `cran-2.0.0-submission-plan.md`** (§8): removing a CRAN vignette alters what ships, so sequence this deliberately relative to the resubmission, not as an independent slice. Hand-work (§5): the 13 `child=` includes, the `kableExtra` `latex_options` tables, the `knitr::rmarkdown_notangle` engine choice, and relative paths to `shiny_app_use/` screenshots. |
+
+**Not adopted:** Option A (live Quarto CRAN vignettes — adds a Quarto-CLI `SystemRequirements`)
+and using Quarto as a timing fix (§6.4) remain explicitly rejected. Slices 1–3 are
+zero-CRAN-risk and independent; slice 4 is the one CRAN-touching piece, gated on resubmission
+coordination.
 
 ## 8. Relationship to the CRAN 2.0.0 plan
 
@@ -213,10 +242,17 @@ parallel or after.
   committed `.Rmd` via `knitr::knit()`), which removes the heavy gene-drop computation from
   CRAN's build while keeping `VignetteBuilder: knitr` and the exact displayed kinship numbers.
   **Quarto is not the lever for this** and the two efforts are independent.
-- **This analysis does not change Phases 1–6** of `cran-2.0.0-submission-plan.md`. If the owner
-  picks option B/C, the CRAN vignettes remain knitr and the plan is unaffected. Only option A
-  (not recommended) would intersect the submission, by adding a `SystemRequirements` and
-  reopening check-portability questions.
+- **Intersection with the submission (updated for the adopted decision, 2026-06-17):** the
+  timing / Phase-2b work above is unaffected. The other CRAN-facing point has changed. With the
+  owner's §6.3(b) choice, the adopted path **does** now touch the submission — repositioning the
+  manual removes a CRAN vignette, which changes the package contents `R CMD check` sees and
+  should be reflected in `cran-comments.md` / NEWS for 2.0.0. (Option A would also have
+  intersected it, by adding a Quarto-CLI `SystemRequirements` — but A was not adopted.) The
+  remaining slices (1–3, §7.1) carry no CRAN exposure and are independent of the plan.
+  **Slice 4 (the manual) must be sequenced with `cran-2.0.0-submission-plan.md`** — cleanest is
+  to drop it from the vignette set as part of, or after, the resubmission rather than mid-flight.
+  This does not change Phases 1–6 themselves; it adds a coordination dependency for that one
+  slice.
 
 ---
 

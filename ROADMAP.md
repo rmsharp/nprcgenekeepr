@@ -14,6 +14,13 @@ integration testing and CRAN-submission preparation.
 *(Scoped but not started. The active task list is in `BACKLOG.md`.)*
 - Integration testing for the modularized Shiny app (target >80% coverage).
 - CRAN submission preparation.
+- **Documentation engine: Hybrid (Quarto + R Markdown)** — adopted 2026-06-17, Option B of
+  `docs/planning/quarto-documentation-future-proofing-analysis.md`. The four CRAN vignettes
+  stay on `knitr`/`rmarkdown` (zero CRAN risk); new and non-CRAN documentation moves to Quarto
+  — pkgdown articles (mixed `.qmd`/`.Rmd` mode), slide decks (`revealjs`), and the
+  `inst/extdata/` developer docs. The long-form manual is repositioned onto the Quarto website
+  and dropped from the CRAN vignette set (§6.3(b)), coordinated with the CRAN resubmission.
+  Implementation is per-slice, in separate sessions — see the analysis doc §7.1.
 - **Audit follow-ups** (full findings in `PED_GV_AUDIT_2026-05-30.md`; open items in
   `BACKLOG.md`): NEW-53 (in-place ped mutation), NEW-45 (`geneDrop` period-in-id),
   NEW-20 (delete dead `makeGeneticDiversityDashboard.R`), PED-1/NEW-17 (founders-helper
