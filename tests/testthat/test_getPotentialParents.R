@@ -12,13 +12,24 @@ potentialParents <-
     maxGestationalPeriod = 210L
   )
 ids <- c("BRI2MW", "FEEN9W")
+## #31: the dam-exclusion window is now gestation-derived (+/- maxGestationalPeriod,
+## here +/- 210 d) instead of the old fixed +/- 182.5 d (1/2 year) "hack". Two dams
+## drop from BRI2MW's set (focal birth 1998-12-06) because each delivered another
+## offspring within +/- 210 d of the focal birth -- a gestation conflict that makes
+## her the dam of the focal animal biologically impossible:
+##   0B7XRI -- other offspring at -193 d      PHCADH -- other offspring at +195 d
+## Both sat just outside the old +/- 182.5 d window, so they survived before #31.
 dams_1 <- c(
-  "HR70BU", "I2G9D6", "0B7XRI", "J8XZ81", "PHCADH", "HV7LZ3",
-  "IMF6BL"
+  "HR70BU", "I2G9D6", "J8XZ81", "HV7LZ3", "IMF6BL"
 )
+## #31: three dams drop from FEEN9W's set (focal birth 1997-12-23) -- each
+## delivered another offspring within +/- 210 d of the focal birth:
+##   1SIP4V +183 d        DMI0QY +192 d        HV7LZ3 -192 d
+## Exclusion is per-focal: PHCADH conflicts with BRI2MW but not FEEN9W, so it
+## stays here; HV7LZ3 conflicts with FEEN9W but not BRI2MW, so it stays in dams_1.
 dams_4 <- c(
-  "1SIP4V", "DMI0QY", "3PD3U5", "J8XZ81", "73Z6NI", "T5S3BR",
-  "PHCADH", "A792ZU", "HV7LZ3", "F3QIL7"
+  "3PD3U5", "J8XZ81", "73Z6NI", "T5S3BR",
+  "PHCADH", "A792ZU", "F3QIL7"
 )
 sires_1 <- c(
   "HKTQ40", "MY1AEU", "QWUKUY", "1X40V5", "WDBGPF", "6MGJYG",
@@ -116,4 +127,64 @@ test_that("getPotentialParents does not mutate the caller's pedigree (NEW-53)", 
   expect_false(inherits(pedDF, "data.table"))
   expect_identical(class(pedDF), "data.frame")
   expect_identical(paste0(names(pedDF), collapse = "\r"), namesSnapshot)
+})
+test_that("getPotentialParents excludes dams by a gestation-derived window (#31)", {
+  ## #31: a female who delivered another offspring within +/- maxGestationalPeriod
+  ## days of the focal birth cannot have gestated the focal animal, so she is
+  ## removed from the candidate dams. This replaces the old fixed +/- 182.5-day
+  ## "hack" with a window driven by the existing maxGestationalPeriod parameter.
+  ## Minimal hand-verifiable pedigree:
+  ##   FOCAL   born 2010-01-01, from-center, both parents unknown
+  ##   DAM_IN  delivered KID_IN  at +200 d -> conflict iff window >= 200 d
+  ##   DAM_OUT delivered KID_OUT at +400 d -> never a conflict; stays a candidate
+  ## Both DAM_IN/DAM_OUT are breeding-age females present at the focal birth and
+  ## are "proven breeders" in the +/- 0.5-1.5 y preferential band, so the only
+  ## thing separating them is the gestation-derived exclusion.
+  D0 <- as.Date("2010-01-01")
+  ped <- data.frame(
+    id    = c("FOCAL", "DAM_IN", "DAM_OUT", "SIRE", "KID_IN", "KID_OUT"),
+    sire  = c(NA, NA, NA, NA, "SIRE", "SIRE"),
+    dam   = c(NA, NA, NA, NA, "DAM_IN", "DAM_OUT"),
+    sex   = c("F", "F", "F", "M", "M", "F"),
+    birth = c(
+      D0, as.Date("2000-01-01"), as.Date("2000-01-01"),
+      as.Date("2000-01-01"), D0 + 200L, D0 + 400L
+    ),
+    exit  = as.Date(NA),
+    fromCenter = c(TRUE, TRUE, TRUE, TRUE, FALSE, FALSE),
+    stringsAsFactors = FALSE
+  )
+  damsAt <- function(g) {
+    out <- getPotentialParents(
+      ped = ped, minParentAge = 2L, maxGestationalPeriod = g
+    )
+    out[[1L]]$dams
+  }
+  ## window = 210 d: DAM_IN's +200 d offspring is INSIDE -> DAM_IN excluded
+  expect_false("DAM_IN" %in% damsAt(210L))
+  expect_true("DAM_OUT" %in% damsAt(210L))
+  ## window = 180 d: DAM_IN's +200 d offspring is OUTSIDE -> DAM_IN retained
+  ## (guards against over-exclusion; DAM_OUT is always a candidate)
+  expect_true("DAM_IN" %in% damsAt(180L))
+  expect_true("DAM_OUT" %in% damsAt(180L))
+})
+test_that("dam selection responds to maxGestationalPeriod (#31 acceptance crit. 2)", {
+  ## #31 acceptance criterion 2: dam candidate selection must respond to
+  ## maxGestationalPeriod, not a hard-coded 1/2-year window. On the rhesus
+  ## fixture, BRI2MW's dam set differs between 165 d (actual rhesus gestation)
+  ## and 210 d (the conservative max used elsewhere in this file): 0B7XRI (-193 d)
+  ## and PHCADH (+195 d) fall inside +/- 210 but outside +/- 165, so they remain
+  ## candidates at 165 and are excluded at 210. Before #31 the dam set was
+  ## identical for any maxGestationalPeriod (the parameter affected only sires).
+  damsBRI <- function(g) {
+    pp <- getPotentialParents(
+      ped = pedOne, minParentAge = 2.0, maxGestationalPeriod = g
+    )
+    pp[[1L]]$dams
+  }
+  d165 <- damsBRI(165L)
+  d210 <- damsBRI(210L)
+  expect_false(identical(d165, d210))
+  ## a wider gestation window only removes dams, never adds them
+  expect_true(all(d210 %in% d165))
 })

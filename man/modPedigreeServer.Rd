@@ -16,8 +16,10 @@ modPedigreeServer(id, studbook, config = NULL)
 \value{
 A list of reactive values:
 \itemize{
-\item \code{pedigree} - Filtered pedigree for display (respects trim/unknown settings)
-\item \code{processedPedigree} - Full pedigree with population, pedNum, gen columns
+\item \code{pedigree} - Filtered pedigree for display (respects
+trim/unknown settings)
+\item \code{processedPedigree} - Full pedigree with population, pedNum,
+gen columns
 \item \code{focalAnimals} - Character vector of focal animal IDs
 \item \code{nAnimals} - Count of animals in filtered pedigree
 \item \code{populationCount} - Count of animals marked as population
@@ -34,7 +36,8 @@ This module processes the studbook by:
 \item Adding a \code{population} column via \code{setPopulation()}
 \item Adding a \code{pedNum} column via \code{findPedigreeNumber()}
 \item Ensuring a \code{gen} column exists via \code{findGeneration()}
-\item Optionally trimming to ancestors of focal animals via \code{trimPedigree()}
+\item Optionally trimming to the ancestors and descendants of focal
+animals via \code{trimPedigree()} and \code{getDescendantPedigree()}
 }
 }
 \seealso{

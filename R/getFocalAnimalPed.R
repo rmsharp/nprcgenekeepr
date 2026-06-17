@@ -41,13 +41,13 @@ getFocalAnimalPed <- function(fileName, sep = ",") {
       nrow(focalAnimals), "\n"
     ), name = "nprcgenekeepr")
   } else {
-    focalAnimals <- read.csv(fileName,
+    focalAnimals <- muffleIncompleteFinalLine(read.csv(fileName,
       header = TRUE,
       sep = sep,
       stringsAsFactors = FALSE,
       na.strings = c("", "NA"),
       check.names = FALSE
-    )
+    ))
     flog.debug(paste0(
       "in getFocalAnimalPed after read.csv, ",
       "nrow(focalAnimals) = ",

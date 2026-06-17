@@ -21,6 +21,7 @@
 #' @seealso \code{\link{modGeneticValueServer}} for genetic value analysis
 #' @seealso \code{\link{shouldShowChangedColsTab}} for changed columns tab
 #'  logic
+#' @seealso \code{\link{loadSiteConfig}} for site configuration loading
 #'
 #' @importFrom shiny reactiveValues reactiveVal observeEvent updateNavbarPage
 #'         updateTabsetPanel reactive observe req insertTab removeTab
@@ -56,15 +57,11 @@ appServer <- function(input, output, session) {
   # Load Configuration
   # ========================================
   observe({
-    # Attempt to load configuration file
-    sysInfo <- Sys.info()
-    configFile <- nprcgenekeepr::getConfigFileName(sysInfo)[["configFile"]]
-    if (!is.null(configFile) && file.exists(configFile)) {
-      shared$config <- read.table(configFile,
-                                  header = TRUE,
-                                  sep = "=",
-                                  stringsAsFactors = FALSE)
-    }
+    # Load the site configuration via the tolerant getSiteInfo() parser.
+    # loadSiteConfig() returns NULL (and logs a warning) rather than erroring
+    # on a missing or malformed config file, so a documented-format config can
+    # never crash the app on boot (issue #50).
+    shared$config <- loadSiteConfig()
   })
 
   # ========================================
@@ -125,8 +122,8 @@ appServer <- function(input, output, session) {
     qcSummary <- tryCatch(inputResults$qcSummary(), error = function(e) NULL)
     if (is.null(qcSummary)) return()
 
-    hasErrors <- qcSummary$errors > 0
-    hasWarnings <- qcSummary$warnings > 0
+    hasErrors <- qcSummary$errors > 0L
+    hasWarnings <- qcSummary$warnings > 0L
 
     # Use isolate to prevent this from re-triggering
     isolate({
@@ -136,7 +133,7 @@ appServer <- function(input, output, session) {
           paste0("QC found ", qcSummary$errors,
                  " error(s). Check the Errors tab."),
           type = "error",
-          duration = 10
+          duration = 10L
         )
         # Switch to the QC Summary tab within the Input module
         updateTabsetPanel(session, "dataInput-mainTabs", selected = "Errors")
@@ -145,14 +142,14 @@ appServer <- function(input, output, session) {
           paste0("QC found ", qcSummary$warnings,
                  " warning(s). Check the Warnings tab."),
           type = "warning",
-          duration = 8
+          duration = 8L
         )
         updateTabsetPanel(session, "dataInput-mainTabs", selected = "Warnings")
-      } else if (qcSummary$records > 0) {
+      } else if (qcSummary$records > 0L) {
         showNotification(
           paste0("QC passed! ", qcSummary$records, " records processed."),
           type = "message",
-          duration = 5
+          duration = 5L
         )
         updateTabsetPanel(session, "dataInput-mainTabs",
                           selected = "QC Summary")
@@ -273,7 +270,7 @@ appServer <- function(input, output, session) {
   })
 
   # Summary Statistics Module
-  modSummaryStatsServer(
+  modSummaryStatsServer( # nolint: object_usage_linter
     "summaryStats",
     geneticValues = reactive(shared$geneticValues),
     pedigree = reactive(shared$currentPedigree),
@@ -281,11 +278,30 @@ appServer <- function(input, output, session) {
     founderStats = gvResults$founderStats
   )
 
+  # ORIP Reporting Module (ONPRC-only, #49) -- mount only for an actual ONPRC
+  # site configuration, matching the conditional ORIP tab in appUI().
+  oripSiteInfo <- getSiteInfo(expectConfigFile = FALSE)
+  if (shouldShowOripTab(oripSiteInfo$center,
+                        file.exists(oripSiteInfo$configFile))) {
+    modORIPReportingServer(
+      "oripReporting",
+      pedigree = reactive(shared$currentPedigree),
+      geneticValues = reactive(shared$geneticValues),
+      siteConfig = reactive(getSiteInfo(expectConfigFile = FALSE))
+    )
+  }
+
   # Breeding Groups Module
   modBreedingGroupsServer(
     "breedingGroups",
     pedigree = reactive(shared$currentPedigree),
     geneticValues = reactive(shared$geneticValues)
+  )
+
+  # Potential Parents Module
+  modPotentialParentsServer(
+    "potentialParents",
+    pedigree = reactive(shared$currentPedigree)
   )
 
   # GV & BG Description Module (informational - no reactive state)

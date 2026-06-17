@@ -42,7 +42,7 @@
 #' )
 #' allSimParents <- list(simParent_1, simParent_2, simParent_3)
 #' pop <- LETTERS[1:7]
-#' simKinships <- createSimKinships(ped, allSimParents, pop, n = 10)
+#' cumulativeKinships <- cumulateSimKinships(ped, allSimParents, pop, n = 10)
 cumulateSimKinships <- function(ped, allSimParents, pop = NULL, n = 10L) {
   if (n < 1L) {
     stop("cumulateSimKinships() requires at least one simulation (n >= 1).")

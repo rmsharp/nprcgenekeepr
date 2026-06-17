@@ -33,4 +33,5 @@ p <- removeUninformativeFounders(ped)
 nrow(p)
 p <- addBackSecondParents(p, ped)
 nrow(p)
+getIdsWithOneParent(p)
 }

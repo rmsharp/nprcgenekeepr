@@ -21,9 +21,12 @@ List with reactive components:
 \itemize{
 \item \code{groups} - List of character vectors with animal IDs per group
 \item \code{nGroups} - Number of groups formed
-\item \code{score} - Optimization score from groupAddAssign (minimum group size)
-\item \code{unassigned} - Character vector of candidate IDs not placed in groups
-\item \code{groupKinship} - List of kinship matrices per group (if withKin=TRUE)
+\item \code{score} - Optimization score from groupAddAssign
+(minimum group size)
+\item \code{unassigned} - Character vector of candidate IDs not placed
+in groups
+\item \code{groupKinship} - List of kinship matrices per group
+(if withKin=TRUE)
 }
 }
 \description{

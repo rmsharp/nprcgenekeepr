@@ -27,13 +27,13 @@ getGenotypes <- function(fileName, sep = ",") {
       nrow(genotypes), "\n"
     ), name = "nprcgenekeepr")
   } else {
-    genotypes <- read.table(fileName,
+    genotypes <- muffleIncompleteFinalLine(read.table(fileName,
       header = TRUE,
       sep = sep,
       stringsAsFactors = FALSE,
       na.strings = c("", "NA"),
       check.names = FALSE
-    )
+    ))
     flog.debug(paste0(
       "in getGenotypes after read.csv, nrow(genotypes) = ",
       nrow(genotypes), "\n"

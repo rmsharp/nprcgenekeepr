@@ -35,7 +35,7 @@
 #'   library(nprcgenekeepr)
 #'   runModularApp()
 #' }
-runModularApp <- function(port = 6013L, launch.browser = TRUE) {
+runModularApp <- function(port = 6013L, launch.browser = TRUE) { # nolint: object_name_linter
   app <- shiny::shinyApp(
     ui = appUI(),
     server = appServer

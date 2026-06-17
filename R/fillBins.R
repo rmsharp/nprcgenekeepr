@@ -3,7 +3,11 @@
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' @return  A list with two TODO: RMS provide description
+#' @return A list with two elements:
+#' \describe{
+#'   \item{males}{Integer vector of male counts per age bin}
+#'   \item{females}{Integer vector of female counts per age bin}
+#' }
 #' @param ageDist dataframe with \code{sex} and \code{age} columns
 #' @param lowerAges integer vector of lower age boundaries; must be the same
 #' length as \code{upperAges}

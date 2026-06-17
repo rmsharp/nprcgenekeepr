@@ -23,7 +23,8 @@ getPyramidPlot(
 \item{colorScheme}{character color scheme: "default" (blue/pink) or
 "viridis" (colorblind-friendly).}
 
-\item{showCounts}{logical whether to show count values on bars (default TRUE).}
+\item{showCounts}{logical whether to show count values on bars
+(default TRUE).}
 
 \item{ageLabelCex}{numeric expansion factor for age labels (default 1.0).}
 }

@@ -134,12 +134,10 @@ reportGV <- function(ped, guIter = 5000L, guThresh = 1L, pop = NULL,
 
   # Calculating known founders
   founders <- ped[isFounder(ped), ]
-  males <- founders[(founders$sex == "M") & !grepl("^U", founders$id,
-    ignore.case = TRUE
-  ), ]
-  females <- founders[(founders$sex == "F") & !grepl("^U", founders$id,
-    ignore.case = TRUE
-  ), ]
+  males <- founders[(founders$sex == "M") &
+    !isGeneratedUnknownId(founders$id), ]
+  females <- founders[(founders$sex == "F") &
+    !isGeneratedUnknownId(founders$id), ]
 
   finalData <- cbind(demographics, indivMeanKin, zScores, gu, offspring)
   finalData <- list(

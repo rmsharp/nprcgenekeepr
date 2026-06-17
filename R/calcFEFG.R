@@ -47,7 +47,7 @@ calcFEFG <- function(ped, alleles) {
   ## calcFE()/calcFG() via calcFounderContributions() (NEW-13/NEW-23). fc$ped is
   ## the toCharacter()-coerced pedigree, fed to calcRetention() exactly as the
   ## pre-refactor code did.
-  fc <- calcFounderContributions(ped, "calcFEFG")
+  fc <- calcFounderContributions(ped, "calcFEFG") # nolint: object_usage_linter
   r <- calcRetention(fc$ped, alleles)
   list(FE = 1L / sum(fc$p^2L), FG = 1L / sum((fc$p^2L) / r, na.rm = TRUE))
 }

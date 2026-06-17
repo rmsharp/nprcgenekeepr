@@ -84,7 +84,7 @@ processQcStudbookResult <- function(errorLst) {
     result$errors <- rbind(
       result$errors,
       makeErrorRow("Missing required columns",
-                   paste(errorLst$missingColumns, collapse = ", "))
+                   toString(errorLst$missingColumns))
     )
   }
 
@@ -126,7 +126,7 @@ processQcStudbookResult <- function(errorLst) {
     result$errors <- rbind(
       result$errors,
       makeErrorRow("Duplicate IDs found",
-                   paste(errorLst$duplicateIds, collapse = ", "))
+                   toString(errorLst$duplicateIds))
     )
   }
 
@@ -144,7 +144,7 @@ processQcStudbookResult <- function(errorLst) {
     result$errors <- rbind(
       result$errors,
       makeErrorRow("Invalid date values",
-                   paste(errorLst$invalidDateRows, collapse = ", "))
+                   toString(errorLst$invalidDateRows))
     )
   }
 
@@ -181,16 +181,14 @@ processQcStudbookResult <- function(errorLst) {
         result$warnings <- rbind(
           result$warnings,
           makeWarningRow("Column name case changed",
-                         paste(errorLst$changedCols$caseChange,
-                               collapse = ", "))
+                         toString(errorLst$changedCols$caseChange))
         )
       }
       if (length(errorLst$changedCols$spaceRemoved) > 0L) {
         result$warnings <- rbind(
           result$warnings,
           makeWarningRow("Spaces removed from column names",
-                         paste(errorLst$changedCols$spaceRemoved,
-                               collapse = ", "))
+                         toString(errorLst$changedCols$spaceRemoved))
         )
       }
     }

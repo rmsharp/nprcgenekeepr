@@ -135,7 +135,7 @@ modGeneticValueServer <- function(id, pedigree) {
       req(pedigree())
 
       # E2E determinism hook (gated; no-op in production). See gatedSeed().
-      gatedSeed("nprcgenekeepr.gva_seed", "NPRC_GVA_SEED")
+      gatedSeed("nprcgenekeepr.gva_seed", "NPRC_GVA_SEED") # nolint: object_usage_linter
 
       withProgress(message = "Running genetic value analysis...", {
         ped <- pedigree()
@@ -144,7 +144,7 @@ modGeneticValueServer <- function(id, pedigree) {
         updateProgress <- function(n = 1L, detail = NULL, value = 0L,
                                    reset = FALSE) {
           if (reset) {
-            incProgress(0, detail = detail)
+            incProgress(0.0, detail = detail)
           } else {
             incProgress(amount = 0.01, detail = detail)
           }
@@ -227,7 +227,7 @@ modGeneticValueServer <- function(id, pedigree) {
         return(rpt)
       }
       ids <- unlist(strsplit(isolate(input$viewIds), "[ ,;\t\n]"))
-      ids <- ids[trimws(ids) != ""]
+      ids <- ids[nzchar(trimws(ids))]
       if (length(ids) == 0L) {
         return(rpt)
       }
@@ -237,7 +237,7 @@ modGeneticValueServer <- function(id, pedigree) {
     output$rankingsTable <- DT::renderDT({
       req(gvaView())
       data <- gvaView()
-      if (input$topN < nrow(data)) data <- data[1:input$topN, ]
+      if (input$topN < nrow(data)) data <- data[1L:input$topN, ]
       data
     })
 
@@ -285,13 +285,16 @@ modGeneticValueServer <- function(id, pedigree) {
       results <- gvResults()
 
       # Use correct column names
-      mkCol <- if ("indivMeanKin" %in% names(results)) "indivMeanKin" else "meanKinship"
+      mkCol <- if ("indivMeanKin" %in% names(results))
+                 "indivMeanKin"
+               else
+                 "meanKinship"
       guCol <- if ("gu" %in% names(results)) "gu" else "genomeUniqueness"
 
       plot(results[[mkCol]], results[[guCol]],
            xlab = "Mean Kinship", ylab = "Genome Uniqueness",
            main = "Genetic Value Analysis",
-           pch = 19, col = ifelse(results$rank <= 10, "red", "blue"))
+           pch = 19L, col = ifelse(results$rank <= 10L, "red", "blue"))
     })
 
     output$downloadRankings <- downloadHandler(
@@ -306,7 +309,7 @@ modGeneticValueServer <- function(id, pedigree) {
       }
     )
 
-    return(list(
+    list(
       geneticValues = reactive({
         gv <- gvResults()
         if (is.null(gv)) return(NULL)
@@ -322,9 +325,9 @@ modGeneticValueServer <- function(id, pedigree) {
       topAnimals = reactive({
         gv <- gvResults()
         if (is.null(gv)) return(NULL)
-        gv[gv$rank <= 10, ]
+        gv[gv$rank <= 10L, ]
       }),
-      nAnalyzed = reactive({ nrow(gvResults()) }),
+      nAnalyzed = reactive(nrow(gvResults())),
       kinshipMatrix = reactive({
         req(fullResults())
         fullResults()$kinship
@@ -348,6 +351,6 @@ modGeneticValueServer <- function(id, pedigree) {
         req(fullResults())
         fullResults()$femaleFounders
       })
-    ))
+    )
   })
 }

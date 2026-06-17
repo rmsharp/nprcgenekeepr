@@ -14,10 +14,17 @@
 #' @param minParentAge numeric values to set the minimum age in years for
 #' an animal to have an offspring. Defaults to 2 years. The check is not
 #' performed for animals with missing birth dates.
-#' @param maxGestationalPeriod integer value describing the days between
-#' conception and birth. This will be used to prevent the removal of sires
-#' who exit the colony between date of conception and birth. Need to decide
-#' where this will come from.
+#' @param maxGestationalPeriod integer value describing the maximum number of
+#' days between conception and birth for the species being analyzed (a
+#' conservative upper bound, e.g. 210 for rhesus whose typical gestation is
+#' about 165 days). It is used two ways: (1) a sire who exited the colony
+#' between conception (birth - maxGestationalPeriod) and birth is still
+#' retained as a candidate; and (2) a female who delivered another offspring
+#' within maxGestationalPeriod days of the focal birth is excluded as a
+#' candidate dam, because a female bears one offspring at a time. The sire
+#' check uses presence at conception while the dam check uses presence at
+#' birth; this asymmetry is intentional -- a sire need only be present to
+#' conceive, whereas a dam must be present through the pregnancy to give birth.
 #' @importFrom data.table as.data.table
 #' @importFrom stringi stri_sub
 #' @export
@@ -68,10 +75,14 @@ getPotentialParents <- function(ped, minParentAge, maxGestationalPeriod) {
         (is.na(ba$exit) |
           exit >= pUnknown$birth[i]), ]
 
-      ## Females who had an offspring in rolling year of focal offspring birth
+      ## Females who delivered another offspring within one gestational period
+      ## of the focal birth: a female bears one offspring at a time, so she
+      ## cannot have gestated the focal animal as well (see the dam exclusion
+      ## below). The window is gestation-derived (maxGestationalPeriod) rather
+      ## than the former fixed half-year.
       births <-
-        ped[birth >= pUnknown$birth[i] - (dYear / 2L) &
-          birth <= pUnknown$birth[i] + (dYear / 2L), ]
+        ped[birth >= pUnknown$birth[i] - maxGestationalPeriod &
+          birth <= pUnknown$birth[i] + maxGestationalPeriod, ]
 
       ## Females who had an offspring in the year prior or year after
       births_plus_minus_one <-
@@ -87,10 +98,11 @@ getPotentialParents <- function(ped, minParentAge, maxGestationalPeriod) {
         births_plus_minus_one[!duplicated(births_plus_minus_one$dam), ]
 
 
-      ## Remove from consideration those dams who gave birth within 1/2 year
-      ## of birth date
-      ## TODO: This is a bit of a hack. We should be able to do this in a more
-      ## principled way using gestational length.
+      ## Remove from consideration dams who gave birth within one gestational
+      ## period (maxGestationalPeriod) of the focal birth: bearing one offspring
+      ## at a time, such a female cannot also have gestated the focal animal.
+      ## (#31 -- replaces the former fixed half-year window with this
+      ## gestation-derived one, driven by the existing maxGestationalPeriod.)
       potentialDams <- potentialDams[!id %in% births$dam, ]
       ## Preferrentially accept dams that are proven breeders near the time of
       ## the birth.

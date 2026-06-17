@@ -31,7 +31,7 @@ modPedigreeUI <- function(id) {
     fluidRow(
       # Left panel - HTML documentation
       column(
-        4,
+        4L,
         div(
           style = paste(
             "padding: 10px; border: 1px solid lightgray;",
@@ -47,7 +47,7 @@ modPedigreeUI <- function(id) {
 
       # Middle panel - Focal animal input
       column(
-        4,
+        4L,
         wellPanel(
           h4("Focal Animals"),
           helpText(
@@ -62,8 +62,8 @@ modPedigreeUI <- function(id) {
           ),
           tags$textarea(
             id = ns("focalAnimalIds"),
-            rows = 5,
-            cols = 40,
+            rows = 5L,
+            cols = 40L,
             placeholder = "Enter animal IDs (one per line or comma-separated)"
           ),
           br(), br(),
@@ -71,7 +71,7 @@ modPedigreeUI <- function(id) {
             ns("focalAnimalFile"),
             "Choose CSV file with focal animals",
             multiple = FALSE,
-            accept = c("text/csv", "text/comma-separated-values,text/plain",
+            accept = c("text/csv", "text/comma-separated-values,text/plain", # nolint: nonportable_path_linter
                        ".csv")
           ),
           actionButton(
@@ -98,7 +98,7 @@ modPedigreeUI <- function(id) {
 
       # Right panel - Options and export
       column(
-        4,
+        4L,
         wellPanel(
           h4("Display Options"),
           checkboxInput(
@@ -109,7 +109,8 @@ modPedigreeUI <- function(id) {
           helpText(
             style = "font-size: 14px; color: darkblue; font-weight: bold;",
             paste0(
-              "Unknown IDs, beginning with a capital U, are created ",
+              "Unknown IDs, by default beginning with a capital U (the ",
+              "format is configurable via setAutoIdFormat()), are created ",
               "by the application for all animals with only one parent."
             )
           ),
@@ -122,8 +123,8 @@ modPedigreeUI <- function(id) {
           helpText(
             style = "font-size: 14px; color: darkblue; font-weight: bold;",
             paste0(
-              "Trim the pedigree to include only relatives of the focal ",
-              "animals provided."
+              "Trim the pedigree to include only the ancestors and ",
+              "descendants of the focal animals provided."
             )
           ),
           br(),
@@ -145,7 +146,7 @@ modPedigreeUI <- function(id) {
     # Pedigree data table
     fluidRow(
       column(
-        12,
+        12L,
         br(),
         DT::DTOutput(ns("pedigreeTable"))
       )
@@ -163,13 +164,16 @@ modPedigreeUI <- function(id) {
 #'   \item Adding a \code{population} column via \code{setPopulation()}
 #'   \item Adding a \code{pedNum} column via \code{findPedigreeNumber()}
 #'   \item Ensuring a \code{gen} column exists via \code{findGeneration()}
-#'   \item Optionally trimming to ancestors of focal animals via \code{trimPedigree()}
+#'   \item Optionally trimming to the ancestors and descendants of focal
+#'     animals via \code{trimPedigree()} and \code{getDescendantPedigree()}
 #' }
 #'
 #' @return A list of reactive values:
 #' \itemize{
-#'   \item \code{pedigree} - Filtered pedigree for display (respects trim/unknown settings)
-#'   \item \code{processedPedigree} - Full pedigree with population, pedNum, gen columns
+#'   \item \code{pedigree} - Filtered pedigree for display (respects
+#'     trim/unknown settings)
+#'   \item \code{processedPedigree} - Full pedigree with population, pedNum,
+#'     gen columns
 #'   \item \code{focalAnimals} - Character vector of focal animal IDs
 #'   \item \code{nAnimals} - Count of animals in filtered pedigree
 #'   \item \code{populationCount} - Count of animals marked as population
@@ -195,19 +199,19 @@ modPedigreeServer <- function(id, studbook, config = NULL) {
   moduleServer(id, function(input, output, session) {
 
     # Reactive value to store focal animal IDs
-    focalIds <- reactiveVal(character(0))
+    focalIds <- reactiveVal(character(0L))
 
     # Parse focal animal IDs from text area or file
     observeEvent(input$updateFocalAnimals, {
       # Check if clearing
       if (input$clearFocalAnimals) {
-        focalIds(character(0))
+        focalIds(character(0L))
         showNotification("Focal animals cleared", type = "message")
         updateCheckboxInput(session, "clearFocalAnimals", value = FALSE)
         return()
       }
 
-      ids <- character(0)
+      ids <- character(0L)
 
       # Get IDs from text area
       textIds <- input$focalAnimalIds
@@ -224,8 +228,8 @@ modPedigreeServer <- function(id, studbook, config = NULL) {
           fileData <- read.csv(input$focalAnimalFile$datapath,
                                stringsAsFactors = FALSE)
           # Assume first column contains IDs
-          if (ncol(fileData) >= 1) {
-            fileIds <- as.character(fileData[[1]])
+          if (ncol(fileData) >= 1L) {
+            fileIds <- as.character(fileData[[1L]])
             fileIds <- trimws(fileIds)
             fileIds <- fileIds[nzchar(fileIds)]
             ids <- unique(c(ids, fileIds))
@@ -240,7 +244,7 @@ modPedigreeServer <- function(id, studbook, config = NULL) {
 
       focalIds(unique(ids))
 
-      if (length(ids) > 0) {
+      if (length(ids) > 0L) {
         showNotification(
           paste("Updated focal animals:", length(ids), "IDs"),
           type = "message"
@@ -282,19 +286,24 @@ modPedigreeServer <- function(id, studbook, config = NULL) {
 
       # Filter out unknown IDs if requested
       if (!input$displayUnknownIds) {
-        # Unknown IDs typically start with "U"
-        ped <- ped[!startsWith(ped$id, "U"), ]
+        # Auto-generated unknown IDs are detected via the shared predicate
+        ped <- ped[!isGeneratedUnknownId(ped$id), ]
       }
 
-      # Trim to focal animals and their ancestors if requested
-      if (input$trimPedigree && length(focalIds()) > 0) {
+      # Trim to focal animals, their ancestors, and their descendants if
+      # requested
+      if (input$trimPedigree && length(focalIds()) > 0L) {
         focal <- focalIds()
         # Get focal animals that exist in pedigree
         probands <- focal[focal %in% ped$id]
-        if (length(probands) > 0) {
-          # Use trimPedigree to include ancestors of focal animals
-          ped <- trimPedigree(probands, ped, removeUninformative = FALSE,
-                              addBackParents = FALSE)
+        if (length(probands) > 0L) {
+          # Include both ancestors (upward closure) and descendants (downward
+          # closure) of the focal animals. Strict-lineal -- collateral
+          # relatives (siblings, cousins, mates) are not included.
+          ancestors <- trimPedigree(probands, ped, removeUninformative = FALSE,
+                                    addBackParents = FALSE)
+          descendants <- getDescendantPedigree(probands, ped)
+          ped <- ped[ped$id %in% union(ancestors$id, descendants$id), ]
         }
       }
 
@@ -306,7 +315,7 @@ modPedigreeServer <- function(id, studbook, config = NULL) {
       req(pedigreeData())
       pedigreeData()
     }, options = list(
-      pageLength = 15,
+      pageLength = 15L,
       scrollX = TRUE,
       search = list(regex = TRUE)
     ))
@@ -331,7 +340,7 @@ modPedigreeServer <- function(id, studbook, config = NULL) {
     )
 
     # Return reactive values for use by other modules
-    return(list(
+    list(
       pedigree = reactive({
         pedigreeData()
       }),
@@ -351,6 +360,6 @@ modPedigreeServer <- function(id, studbook, config = NULL) {
       isReady = reactive({
         !is.null(pedigreeData()) && nrow(pedigreeData()) > 0L
       })
-    ))
+    )
   })
 }

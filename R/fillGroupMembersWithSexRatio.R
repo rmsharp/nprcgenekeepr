@@ -97,22 +97,20 @@ fillGroupMembersWithSexRatio <-
         id <- sample(availableFemales[[i]], 1L)
         availableFemales <-
           removeSelectedAnimalFromAvailableAnimals(availableFemales, id, numGp)
-      } else { # may need male # nolint unnecessary_nesting_linter
-        if (abs(sexRatio - calculateSexRatio(groupMembers[[i]], ped,
-          additionalMales = 1L
-        )) <
-          abs(sexRatio - calculateSexRatio(groupMembers[[i]], ped,
-            additionalFemales = 1L
-          ))) {
-          id <- sample(availableMales[[i]], 1L)
-          availableMales <-
-            removeSelectedAnimalFromAvailableAnimals(availableMales, id, numGp)
-        } else {
-          id <- sample(availableFemales[[i]], 1L)
-          availableFemales <-
-            removeSelectedAnimalFromAvailableAnimals(availableFemales, id,
-                                                     numGp)
-        }
+      } else if (abs(sexRatio - calculateSexRatio(groupMembers[[i]], ped,
+        additionalMales = 1L
+      )) <
+        abs(sexRatio - calculateSexRatio(groupMembers[[i]], ped,
+          additionalFemales = 1L
+        ))) { # may need male
+        id <- sample(availableMales[[i]], 1L)
+        availableMales <-
+          removeSelectedAnimalFromAvailableAnimals(availableMales, id, numGp)
+      } else {
+        id <- sample(availableFemales[[i]], 1L)
+        availableFemales <-
+          removeSelectedAnimalFromAvailableAnimals(availableFemales, id,
+                                                   numGp)
       }
       groupMembers[[i]] <- c(groupMembers[[i]], id)
       # Remove all relatives from consideration for the group it was added to

@@ -8,7 +8,7 @@
 #'
 #' It seems \code{RNGkind(sample.kind="Rounding")} does not work prior to
 #' version 3.6 so I resorted to using version dependent construction of the
-#' argument list to set.seed() in do.call().#'
+#' argument list to set.seed() in do.call().
 #' @return NULL, invisibly.
 #'
 #' @param seed argument to \code{set.seed}

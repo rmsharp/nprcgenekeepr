@@ -110,7 +110,7 @@ runQcStudbook <- function(ped,
 
   futile.logger::flog.debug(paste0(
     "runQcStudbook: First pass returned. errorLst class: ",
-    paste(class(errorLst), collapse = ", ")
+    toString(class(errorLst))
   ),
   name = "nprcgenekeepr")
 

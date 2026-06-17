@@ -15,7 +15,8 @@
 #'
 #' @seealso \code{\link{modInputServer}} for server logic.
 #' @seealso \code{\link{modPedigreeUI}} for pedigree browsing after QC.
-#' @importFrom shiny NS div h3 h4 tags fluidRow column sidebarLayout sidebarPanel
+#' @importFrom shiny NS div h3 h4 tags fluidRow column sidebarLayout
+#'   sidebarPanel
 #'   mainPanel helpText radioButtons conditionalPanel fileInput textInput
 #'   actionButton checkboxInput icon includeHTML br hr tabsetPanel tabPanel
 #'   uiOutput downloadButton updateTabsetPanel observeEvent
@@ -32,7 +33,7 @@ modInputUI <- function(id) {
 
     # Custom CSS for tables in the HTML documentation
     tags$style(
-      type = "text/css",
+      type = "text/css", # nolint: nonportable_path_linter
       "table {border: 1px solid black; width: 100%; padding: 15px;}",
       "tr, td, th {border: 1px solid black; padding: 5px;}",
       "th {font-weight: bold; background-color: #7CFC00;}",
@@ -66,7 +67,8 @@ modInputUI <- function(id) {
           choices = list(
             "Pedigree(s) file only; genotypes not provided" = "pedFile",
             "Pedigree(s) and genotypes in one file" = "commonPedGenoFile",
-            "Pedigree(s) and genotypes in separate files" = "separatePedGenoFile",
+            "Pedigree(s) and genotypes in separate files" =
+              "separatePedGenoFile",
             "Focal animals only; pedigree built from database" = "focalAnimals"
           ),
           selected = "pedFile"
@@ -95,7 +97,8 @@ modInputUI <- function(id) {
         conditionalPanel(
           condition = "input.fileContent == 'commonPedGenoFile'",
           ns = ns,
-          fileInput(ns("pedigreeFileTwo"), label = "Select Pedigree-Genotype File",
+          fileInput(ns("pedigreeFileTwo"),
+                    label = "Select Pedigree-Genotype File",
                     accept = c(".csv", ".txt", ".xlsx", ".xls"))
         ),
 
@@ -238,10 +241,10 @@ modInputServer <- function(id, config = NULL) {
     # Determine which file input to use based on content type
     activeFile <- reactive({
       switch(input$fileContent,
-             "pedFile" = input$pedigreeFileOne,
-             "commonPedGenoFile" = input$pedigreeFileTwo,
-             "separatePedGenoFile" = input$pedigreeFileThree,
-             "focalAnimals" = input$breederFile,
+             pedFile = input$pedigreeFileOne,
+             commonPedGenoFile = input$pedigreeFileTwo,
+             separatePedGenoFile = input$pedigreeFileThree,
+             focalAnimals = input$breederFile,
              NULL)
     })
 
@@ -260,25 +263,30 @@ modInputServer <- function(id, config = NULL) {
         )
 
         if (fileExt %in% c("xlsx", "xls")) {
-          futile.logger::flog.debug("Reading Excel file", name = "nprcgenekeepr")
+          futile.logger::flog.debug("Reading Excel file",
+                                    name = "nprcgenekeepr")
           data <- readxl::read_excel(file$datapath)
         } else if (fileType == "fileTypeText") {
           futile.logger::flog.debug(
             paste0("Reading text file with separator: '", separator, "'"),
             name = "nprcgenekeepr"
           )
-          data <- read.table(file$datapath, header = TRUE, sep = separator,
-                             stringsAsFactors = FALSE, fill = TRUE,
-                             quote = "\"")
+          data <- muffleIncompleteFinalLine(
+            read.table(file$datapath, header = TRUE, sep = separator,
+                       stringsAsFactors = FALSE, fill = TRUE,
+                       quote = "\"")
+          )
         } else {
           futile.logger::flog.debug("Reading CSV file", name = "nprcgenekeepr")
-          data <- read.csv(file$datapath, stringsAsFactors = FALSE)
+          data <- muffleIncompleteFinalLine(
+            read.csv(file$datapath, stringsAsFactors = FALSE)
+          )
         }
 
         futile.logger::flog.debug(
           paste0("File read successfully. Rows: ", nrow(data),
                  ", Cols: ", ncol(data),
-                 ", Column names: ", paste(names(data), collapse = ", ")),
+                 ", Column names: ", toString(names(data))),
           name = "nprcgenekeepr"
         )
 
@@ -291,7 +299,7 @@ modInputServer <- function(id, config = NULL) {
         showNotification(
           paste("Error reading file:", e$message),
           type = "error",
-          duration = 10
+          duration = 10L
         )
         NULL
       })
@@ -360,8 +368,8 @@ modInputServer <- function(id, config = NULL) {
             stringsAsFactors = FALSE
           ),
           warnings = data.frame(
-            Row = integer(0), Warning = character(0),
-            Details = character(0), stringsAsFactors = FALSE
+            Row = integer(0L), Warning = character(0L),
+            Details = character(0L), stringsAsFactors = FALSE
           ),
           changedCols = NULL,
           hasChangedCols = FALSE
@@ -428,8 +436,8 @@ modInputServer <- function(id, config = NULL) {
               stringsAsFactors = FALSE
             ),
             warnings = data.frame(
-              Row = integer(0), Warning = character(0),
-              Details = character(0), stringsAsFactors = FALSE
+              Row = integer(0L), Warning = character(0L),
+              Details = character(0L), stringsAsFactors = FALSE
             ),
             changedCols = NULL,
             hasErrors = TRUE,
@@ -457,7 +465,8 @@ modInputServer <- function(id, config = NULL) {
       ))
     })
 
-    # Keep qcResults as a simple reactive that reads storedResults (for compatibility)
+    # Keep qcResults as a simple reactive that reads storedResults
+    # (for compatibility)
     qcResults <- reactive({
       storedResults()
     })
@@ -474,7 +483,7 @@ modInputServer <- function(id, config = NULL) {
 
         nErrors <- nrow(results$errors)
         nWarnings <- nrow(results$warnings)
-        nRecords <- if (!is.null(results$cleaned)) nrow(results$cleaned) else 0
+        nRecords <- if (!is.null(results$cleaned)) nrow(results$cleaned) else 0L
 
         futile.logger::flog.debug(
           paste0("qcSummaryUI rendering. Errors: ", nErrors,
@@ -484,26 +493,35 @@ modInputServer <- function(id, config = NULL) {
 
       div(
         fluidRow(
-          column(4,
+          column(4L,
                  div(class = "panel panel-primary",
                      div(class = "panel-heading", h4("Records Processed")),
                      div(class = "panel-body", h2(nRecords)))),
-          column(4,
-                 div(class = if (nErrors > 0) "panel panel-danger" else "panel panel-success",
+          column(4L,
+                 div(class = if (nErrors > 0L) {
+                   "panel panel-danger"
+                 } else {
+                   "panel panel-success"
+                 },
                      div(class = "panel-heading", h4("Errors")),
                      div(class = "panel-body", h2(nErrors)))),
-          column(4,
-                 div(class = if (nWarnings > 0) "panel panel-warning" else "panel panel-success",
+          column(4L,
+                 div(class = if (nWarnings > 0L) {
+                   "panel panel-warning"
+                 } else {
+                   "panel panel-success"
+                 },
                      div(class = "panel-heading", h4("Warnings")),
                      div(class = "panel-body", h2(nWarnings))))
         ),
-        if (nErrors == 0 && nRecords > 0) {
+        if (nErrors == 0L && nRecords > 0L) {
           div(
             class = "alert alert-success",
             icon("check"),
-            " Data passed quality control. You may proceed to the Pedigree Browser."
+            paste0(" Data passed quality control. You may proceed to the ",
+                   "Pedigree Browser.")
           )
-        } else if (nErrors > 0) {
+        } else if (nErrors > 0L) {
           div(
             class = "alert alert-danger",
             icon("exclamation-triangle"),
@@ -516,7 +534,8 @@ modInputServer <- function(id, config = NULL) {
           paste0("qcSummaryUI error: ", e$message),
           name = "nprcgenekeepr"
         )
-        div(class = "alert alert-danger", paste("Error rendering QC summary:", e$message))
+        div(class = "alert alert-danger",
+            paste("Error rendering QC summary:", e$message))
       })
     })
 
@@ -527,21 +546,25 @@ modInputServer <- function(id, config = NULL) {
       futile.logger::flog.debug(
         paste0("Rendering qcErrors table. Rows: ", nrow(errors),
                ", Cols: ", ncol(errors),
-               if (nrow(errors) > 0) paste0(", First error: ", errors$Error[1]) else ""),
+               if (nrow(errors) > 0L) {
+                 paste0(", First error: ", errors$Error[1L])
+               } else {
+                 ""
+               }),
         name = "nprcgenekeepr"
       )
       errors
-    }, options = list(pageLength = 10))
+    }, options = list(pageLength = 10L))
 
     output$qcWarnings <- DT::renderDT({
       req(qcResults())
       qcResults()$warnings
-    }, options = list(pageLength = 10))
+    }, options = list(pageLength = 10L))
 
     output$cleanedDataTable <- DT::renderDT({
       req(qcResults())
       qcResults()$cleaned
-    }, options = list(pageLength = 10, scrollX = TRUE))
+    }, options = list(pageLength = 10L, scrollX = TRUE))
 
     # Download handlers
     output$downloadErrors <- downloadHandler(
@@ -566,7 +589,7 @@ modInputServer <- function(id, config = NULL) {
     )
 
     # Return reactive values for use by other modules
-    return(list(
+    list(
       cleanedStudbook = reactive({
         req(qcResults())
         qcResults()$cleaned
@@ -577,7 +600,11 @@ modInputServer <- function(id, config = NULL) {
       }),
       qcSummary = reactive({
         req(qcResults())
-        nRecords <- if (!is.null(qcResults()$cleaned)) nrow(qcResults()$cleaned) else 0L
+        nRecords <- if (!is.null(qcResults()$cleaned)) {
+          nrow(qcResults()$cleaned)
+        } else {
+          0L
+        }
         list(
           errors = nrow(qcResults()$errors),
           warnings = nrow(qcResults()$warnings),
@@ -589,9 +616,9 @@ modInputServer <- function(id, config = NULL) {
       }),
       isReady = reactive({
         req(qcResults())
-        nrow(qcResults()$errors) == 0 && !is.null(qcResults()$cleaned)
+        nrow(qcResults()$errors) == 0L && !is.null(qcResults()$cleaned)
       }),
-      debugMode = reactive({ input$debugger }),
+      debugMode = reactive(input$debugger),
       changedCols = reactive({
         req(qcResults())
         qcResults()$changedCols
@@ -603,6 +630,6 @@ modInputServer <- function(id, config = NULL) {
       pedigreeFileName = reactive({
         storedFileName()
       })
-    ))
+    )
   })
 }

@@ -13,7 +13,8 @@
 #' @param ageUnit character either "years" (default) or "months".
 #' @param colorScheme character color scheme: "default" (blue/pink) or
 #'   "viridis" (colorblind-friendly).
-#' @param showCounts logical whether to show count values on bars (default TRUE).
+#' @param showCounts logical whether to show count values on bars
+#'   (default TRUE).
 #' @param ageLabelCex numeric expansion factor for age labels (default 1.0).
 #' @importFrom lubridate now
 #' @importFrom plotrix color.gradient pyramid.plot
@@ -35,12 +36,12 @@ getPyramidPlot <- function(ped = NULL, binWidth = 2L, ageUnit = "years",
 
   # Convert age to months if requested
   if (ageUnit == "months" && "age" %in% names(ped)) {
-    ped$age <- ped$age * 12
+    ped$age <- ped$age * 12.0
   }
 
-  opar <- par(no.readonly = TRUE)
-  on.exit(par(opar))
-  par(bg = "#FFF8DC")
+  opar <- par(no.readonly = TRUE) # nolint: undesirable_function_linter
+  on.exit(par(opar)) # nolint: undesirable_function_linter
+  par(bg = "#FFF8DC") # nolint: undesirable_function_linter
 
   # Ensure binWidth is at least 1
 

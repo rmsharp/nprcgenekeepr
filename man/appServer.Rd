@@ -37,4 +37,6 @@ The server handles:
 
 \code{\link{shouldShowChangedColsTab}} for changed columns tab
 logic
+
+\code{\link{loadSiteConfig}} for site configuration loading
 }

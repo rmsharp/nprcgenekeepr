@@ -8,13 +8,9 @@
 ^\.httr-oauth$
 ^\.Rprofile$
 ^cran-comments\.md$
-^20210330_cran-comments\.md$
-^20210324_cran-comments\.md$
-^20201107_cran-comments\.md$
-^20200517_cran-comments\.md$
-^20200510_cran-comments\.md$
-^20200415_cran-comments\.md$
-^20241220_cran-comments\.md$
+# All dated CRAN-submission comment files YYYYMMDD_cran-comments.md -- one regex
+# covers every dated file incl. future ones, so a new one never silently ships.
+^[0-9]+_cran-comments\.md$
 ^codecov\.yml$
 ^docs$
 inst/extdata/meeting_notes\.html$
@@ -70,12 +66,25 @@ README\.*\.png$
 ^\.\.Rcheck$
 ^\.positai$
 ^\.claude$
-# Methodology framework files (tooling, not R package content)
-^PROJECT_LEARNINGS\.md$
-^CLAUDE\.md$
-^SESSION_RUNNER\.md$
-^SESSION_NOTES\.md$
-^SAFEGUARDS\.md$
-^BACKLOG\.md$
-^ROADMAP\.md$
-^CHANGELOG\.md$
+# Methodology framework files (tooling, not R package content).
+# NOTE: every line in this file is a perl regex -- a comment with an unbalanced
+# paren makes R CMD build abort. Keep the <NAME>.*\.md$ form broad so macOS sync
+# dupes like SESSION_NOTES 2.md and CLAUDE copy.md stay build-ignored and never
+# re-raise R CMD check's non-portable-file-names WARNING. S59 generalized S58.
+^PROJECT_LEARNINGS.*\.md$
+^CLAUDE.*\.md$
+^SESSION_RUNNER.*\.md$
+^SESSION_NOTES.*\.md$
+^SAFEGUARDS.*\.md$
+^BACKLOG.*\.md$
+^ROADMAP.*\.md$
+^CHANGELOG.*\.md$
+
+# Methodology tooling, audit reports, and dev notes -- not R package content,
+# so they are build-ignored. Broad <NAME>.* forms also catch macOS sync dupes.
+^methodology_dashboard\.py$
+^dashboard\.html$
+^nprcgenekeepr_notes\.txt$
+^RECOMMENDED_SKILLS.*\.md$
+^PED_GV_AUDIT.*
+^TECH_DEBT_AUDIT.*

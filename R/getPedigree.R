@@ -27,13 +27,13 @@ getPedigree <- function(fileName, sep = ",") {
       nrow(pedigree), "\n"
     ), name = "nprcgenekeepr")
   } else {
-    pedigree <- read.table(fileName,
+    pedigree <- muffleIncompleteFinalLine(read.table(fileName,
       header = TRUE,
       sep = sep,
       stringsAsFactors = FALSE,
       na.strings = c("", "NA"),
       check.names = FALSE
-    )
+    ))
     flog.debug(paste0(
       "in getPedigree after read.csv, nrow(pedigree) = ",
       nrow(pedigree), "\n"

@@ -56,7 +56,7 @@ calcFG <- function(ped, alleles) {
   ## Founder-contribution algorithm + partial-parentage guard are shared with
   ## calcFE()/calcFEFG() via calcFounderContributions() (NEW-13/NEW-23). fc$ped
   ## is the toCharacter()-coerced pedigree, fed to calcRetention() as before.
-  fc <- calcFounderContributions(ped, "calcFG")
+  fc <- calcFounderContributions(ped, "calcFG") # nolint: object_usage_linter
   r <- calcRetention(fc$ped, alleles)
   1L / sum((fc$p^2L) / r, na.rm = TRUE)
 }

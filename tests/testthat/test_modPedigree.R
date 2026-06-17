@@ -450,11 +450,12 @@ test_that("modPedigreeServer trims pedigree based on focal animals", {
       result <- session$getReturned()
       ped <- result$pedigree()
 
-      # With trimming enabled, should include focal animals AND their ancestors
-      # A is focal, C is focal, B is dam of C (ancestor)
-      expect_equal(nrow(ped), 3)
-      expect_true(all(c("A", "B", "C") %in% ped$id))
-      expect_false("D" %in% ped$id)
+      # With trimming enabled, should include focal animals, their ancestors,
+      # AND their descendants. A and C are focal; B is dam of C (ancestor);
+      # D is a child of A (descendant). E is a half-sib of C (collateral) and
+      # not a descendant of any focal animal, so it is excluded.
+      expect_equal(nrow(ped), 4)
+      expect_true(all(c("A", "B", "C", "D") %in% ped$id))
       expect_false("E" %in% ped$id)
     }
   )

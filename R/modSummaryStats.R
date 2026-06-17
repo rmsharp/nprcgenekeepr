@@ -721,8 +721,9 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
     )
 
     output$downloadFirstOrder <- downloadHandler(
-      filename = function() paste0("first_order_relationships_", Sys.Date(),
-                                   ".csv"),
+      filename = function() {
+        paste0("first_order_relationships_", Sys.Date(), ".csv")
+      },
       content = function(file) {
         req(pedigree())
         counts <- firstOrderData()
@@ -814,18 +815,18 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
           meanGU = mean(gv$genomeUniqueness, na.rm = TRUE)
         )
       }),
-      relationships = reactive({ relationshipData() }),
-      relationClasses = reactive({ relationClassData() }),
-      firstOrderCounts = reactive({ firstOrderData() }),
+      relationships = reactive(relationshipData()),
+      relationClasses = reactive(relationClassData()),
+      firstOrderCounts = reactive(firstOrderData()),
       mkSummary = mkSummaryData,
       guSummary = guSummaryData,
       # ggplot2-based plot reactives for download handlers
-      mkHistogram = reactive({ mkHistogramPlot() }),
-      zscoreHistogram = reactive({ zscoreHistogramPlot() }),
-      guHistogram = reactive({ guHistogramPlot() }),
-      meanKinshipBoxPlot = reactive({ meanKinshipBoxPlotGG() }),
-      zscoreBoxPlot = reactive({ zscoreBoxPlotGG() }),
-      guBoxPlot = reactive({ guBoxPlotGG() })
+      mkHistogram = reactive(mkHistogramPlot()),
+      zscoreHistogram = reactive(zscoreHistogramPlot()),
+      guHistogram = reactive(guHistogramPlot()),
+      meanKinshipBoxPlot = reactive(meanKinshipBoxPlotGG()),
+      zscoreBoxPlot = reactive(zscoreBoxPlotGG()),
+      guBoxPlot = reactive(guBoxPlotGG())
     )
   })
 }

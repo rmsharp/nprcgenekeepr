@@ -20,6 +20,12 @@ Dataframe with Id, Sex, and Current Age
 Forms a dataframe with Id, Sex, and current Age given a list of Ids and a
 pedigree
 }
+\details{
+An empty \code{ids} vector yields a zero-row data frame that still
+contains all three columns (\code{ids}, \code{sex}, \code{age}), with
+\code{sex} an empty factor, so the returned schema does not depend on the
+number of ids supplied.
+}
 \examples{
 library(nprcgenekeepr)
 data("qcBreeders")

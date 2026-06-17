@@ -22,9 +22,9 @@
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
-#' ## Have to a vector of focal animals
-#' focalAnimals <- c("1X2701", "1X0101")
-#' suppressWarnings(getLkDirectRelatives(ids = focalAnimals))
+#' ## A pedigree to search and a focal animal whose direct relatives we want
+#' ped <- nprcgenekeepr::lacy1989Ped
+#' getPedDirectRelatives(ids = "E", ped = ped)
 getPedDirectRelatives <- function(ids, ped, unrelatedParents = FALSE) {
   if (missing(ids)) {
     stop("Need to specify IDs in 'id' parameter.")
