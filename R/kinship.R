@@ -1,4 +1,4 @@
-#' Generates a kinship matrix.
+#' Generates a kinship matrix
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr

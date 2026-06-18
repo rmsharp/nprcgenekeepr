@@ -3,7 +3,7 @@
 \name{getConfigFileName}
 \alias{getConfigFileName}
 \title{getConfigFileName returns the configuration file name appropriate for
-the system.}
+the system}
 \usage{
 getConfigFileName(sysInfo)
 }
@@ -15,7 +15,7 @@ Character vector with expected configuration file
 }
 \description{
 getConfigFileName returns the configuration file name appropriate for
-the system.
+the system
 }
 \examples{
 library(nprcgenekeepr)

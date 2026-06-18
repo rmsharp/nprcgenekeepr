@@ -14,7 +14,8 @@
 #'
 #' @seealso \code{\link{modPedigreeServer}} for server logic.
 #' @importFrom shiny NS div h3 h4 fluidRow column wellPanel helpText tags
-#'   fileInput actionButton checkboxInput downloadButton includeHTML br
+#' @importFrom shiny fileInput actionButton checkboxInput downloadButton
+#' @importFrom shiny includeHTML br
 #' @importFrom DT DTOutput
 #' @export
 modPedigreeUI <- function(id) {
@@ -71,8 +72,8 @@ modPedigreeUI <- function(id) {
             ns("focalAnimalFile"),
             "Choose CSV file with focal animals",
             multiple = FALSE,
-            accept = c("text/csv", "text/comma-separated-values,text/plain", # nolint: nonportable_path_linter
-                       ".csv")
+            accept = c("text/csv", # nolint: nonportable_path_linter
+                       "text/comma-separated-values,text/plain", ".csv")
           ),
           actionButton(
             ns("updateFocalAnimals"),
@@ -191,7 +192,7 @@ modPedigreeUI <- function(id) {
 #' @seealso \code{\link{findGeneration}} for generation calculation
 #'
 #' @importFrom shiny moduleServer reactive reactiveVal eventReactive observe
-#'   renderUI req showNotification updateCheckboxInput
+#' @importFrom shiny renderUI req showNotification updateCheckboxInput
 #' @importFrom DT renderDT
 #' @importFrom utils read.csv write.csv
 #' @export

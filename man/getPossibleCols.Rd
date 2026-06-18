@@ -2,7 +2,7 @@
 % Please edit documentation in R/getPossibleCols.R
 \name{getPossibleCols}
 \alias{getPossibleCols}
-\title{Get possible column names for a studbook.}
+\title{Get possible column names for a studbook}
 \usage{
 getPossibleCols()
 }

@@ -1,5 +1,5 @@
 #' Filters kinship values from a long-format kinship table based on the sexes
-#'  of the two animals involved.
+#'  of the two animals involved
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'

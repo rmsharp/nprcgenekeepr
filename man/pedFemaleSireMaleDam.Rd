@@ -3,18 +3,21 @@
 \docType{data}
 \name{pedFemaleSireMaleDam}
 \alias{pedFemaleSireMaleDam}
-\title{pedFemaleSireMaleDam is a dataframe with 8 rows and 5 columns (ego_id, sire,
-dam_id, sex, birth_date) representing a full pedigree with the errors of
-having a sire labeled as female and a dam labeled as male.}
+\title{Example studbook with sex-mismatched parents}
 \format{
 An object of class \code{data.frame} with 8 rows and 5 columns.
 }
 \usage{
-pedFemaleSireMaleDam
+data(pedFemaleSireMaleDam)
 }
 \description{
+A data frame with 8 rows and 5 columns (ego_id, si.re,
+dam_id, sex, birth_date) representing a full pedigree with the errors of
+having a sire labeled as female and a dam labeled as male.
+}
+\details{
 It is one of six pedigrees (\code{pedDuplicateIds},
-\code{pedFemaleSireMaleDam}, \code{pedgood},
+\code{pedFemaleSireMaleDam}, \code{pedGood},
 \code{pedInvalidDates}, \code{pedMissingBirth},
 \code{pedSameMaleIsSireAndDam}) used to
 demonstrate error detection by the qcStudbook function.

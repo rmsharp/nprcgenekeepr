@@ -3,7 +3,7 @@
 \name{chooseAlleles}
 \alias{chooseAlleles}
 \title{Combines two vectors of alleles by randomly selecting one allele
-or the other at each position.}
+or the other at each position}
 \usage{
 chooseAlleles(a1, a2)
 }
@@ -20,7 +20,7 @@ and \code{a2} according to Mendelian inheritance.
 }
 \description{
 Combines two vectors of alleles by randomly selecting one allele
-or the other at each position.
+or the other at each position
 }
 \examples{
 chooseAlleles(0L:4L, 5L:9L)

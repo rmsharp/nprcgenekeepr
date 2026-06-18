@@ -26,7 +26,7 @@
 #'
 #' @seealso \code{\link{modORIPReportingServer}} for server logic.
 #' @importFrom shiny NS div h3 h4 p br fluidRow column helpText hr
-#'   downloadButton htmlOutput tableOutput
+#' @importFrom shiny downloadButton htmlOutput tableOutput
 #' @export
 modORIPReportingUI <- function(id) {
   ns <- NS(id)
@@ -131,7 +131,7 @@ modORIPReportingUI <- function(id) {
 #' @seealso \code{\link{getSiteInfo}} for site configuration
 #'
 #' @importFrom shiny moduleServer reactive renderUI renderTable downloadHandler
-#'   req tags
+#' @importFrom shiny req tags
 #' @importFrom utils write.csv
 #' @export
 modORIPReportingServer <- function(id, pedigree = NULL, geneticValues = NULL,

@@ -1,4 +1,4 @@
-#' Age in years using the provided birthdate.
+#' Age in years using the provided birthdate
 #'
 #' Assumes current date for calculating age.
 #'

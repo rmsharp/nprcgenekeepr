@@ -1,4 +1,4 @@
-#' Get the population of interest for the Genetic Value analysis.
+#' Get the population of interest for the Genetic Value analysis
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr

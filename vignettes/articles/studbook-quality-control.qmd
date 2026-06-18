@@ -1,0 +1,232 @@
+---
+title: "Studbook Quality Control"
+---
+
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+## Overview {#sec-overview}
+
+Every analysis in `nprcgenekeepr` -- genetic value, breeding-group formation,
+the age-sex pyramid -- starts from a **quality-controlled pedigree**. Real
+studbooks arrive with inconsistent column names, mixed date formats, sex codes
+that disagree with how an animal is actually used as a parent, duplicated
+records, and impossible parentages. `qcStudbook()` is the single function that
+validates and standardizes a studbook before anything else touches it; the
+*Genetic Value Analysis* and *Forming Breeding Groups* articles both call it as
+their very first step.
+
+`qcStudbook()` performs several families of checks:
+
+- **required columns** -- the studbook must contain `id`, `sire`, `dam`,
+  `sex`, and `birth`;
+- **identifier validity** -- animal IDs must be alphanumeric (a period is not
+  allowed, because it breaks formulas, file names, and namespaces across
+  software environments);
+- **sex consistency** -- an animal used as a sire must be male and one used as
+  a dam must be female;
+- **date validity** -- birth and exit dates must parse to real calendar dates;
+- **duplicate detection** -- the same ID must not appear in two conflicting
+  records;
+- **minimum parent age** -- a parent must be at least `minParentAge` years old
+  (default 2.0) at an offspring's birth.
+
+It runs in one of two modes, controlled by `reportErrors`:
+
+- **production mode** (`reportErrors = FALSE`, the default) returns a clean,
+  standardized data frame -- silently correcting what it can safely repair and
+  **stopping** on anything it cannot;
+- **diagnostic mode** (`reportErrors = TRUE`) does not stop. It scans the whole
+  studbook and returns a *list* of everything it found, so you can see every
+  problem in one pass and fix the source data.
+
+## Setup {#sec-setup}
+
+```{r}
+#| label: load
+#| message: false
+library(nprcgenekeepr)
+```
+
+`qcStudbook()` is deterministic -- it runs no random simulation -- so, unlike
+the genetic-value and breeding-group analyses (which seed a gene-drop
+simulation), this article needs no `set_seed()` call to be reproducible.
+
+## Cleaning a real studbook {#sec-clean}
+
+The package ships `examplePedigree`, a realistic 3,694-animal studbook. Running
+it through `qcStudbook()` in production mode returns a standardized pedigree
+ready for analysis.
+
+```{r}
+#| label: qc
+ped <- qcStudbook(examplePedigree,
+  minParentAge  = 2.0,
+  reportChanges = FALSE,
+  reportErrors  = FALSE
+)
+dim(ped)
+names(ped)
+head(ped[, c("id", "sire", "dam", "sex", "gen", "birth", "exit", "age")])
+```
+
+The result has standardized columns, founders (animals with no known parent)
+marked generation 0, and an `age` column. Because `examplePedigree` already
+carries an `age` column, `qcStudbook()` keeps it rather than recomputing ages
+against the current date, so this article renders the same numbers every time.
+When the input has no `age` column, ages are computed from `birth` to `exit` --
+or to today's date for animals still in the colony.
+
+## What QC standardizes {#sec-standardize}
+
+Before testing for errors, `qcStudbook()` normalizes the studbook so downstream
+code sees consistent names and codes. Column names are lower-cased and stripped
+of spaces, periods, and underscores, and common aliases are renamed
+(`egoid` / `ego_id` -> `id`, `sireid` -> `sire`, `damid` -> `dam`,
+`birthdate` -> `birth`). Setting `reportChanges = TRUE` records exactly what was
+renamed. The shipped `pedGood` data set has deliberately messy headers
+(`ego_id`, `si.re`, `dam_id`, `birth_date`):
+
+```{r}
+#| label: changes
+chg <- qcStudbook(pedGood, reportChanges = TRUE, reportErrors = TRUE)
+Filter(length, chg$changedCols)
+```
+
+`qcStudbook()` also standardizes coded values: sex to `M` / `F` / `U`
+(from `MALE` / `FEMALE` / `1` / `2` / ...; by default the hermaphrodite codes
+`H` / `HERMAPHRODITE` / `4` are folded into `U`), status to
+`ALIVE` / `DECEASED` / `SHIPPED` / `UNKNOWN`, and ancestry to
+`INDIAN` / `CHINESE` / `HYBRID` / `JAPANESE` / `UNKNOWN` / `OTHER`. Character
+dates are parsed to `Date`, and `UNKNOWN` parents become either `NA` or
+auto-generated `Unnnn` placeholder IDs.
+
+## Diagnosing problems without stopping {#sec-diagnose}
+
+In diagnostic mode (`reportErrors = TRUE`) the function returns a list whose
+named elements each hold one category of finding. A **clean** studbook returns
+`NULL` -- nothing to report:
+
+```{r}
+#| label: clean
+is.null(qcStudbook(pedGood, reportErrors = TRUE))
+```
+
+The package ships small, purpose-built data sets that each trigger one kind of
+problem; they make good worked examples.
+
+**Sex inconsistency.** In `pedFemaleSireMaleDam`, `s1` is recorded female but is
+the sire of two offspring, and `d1` is recorded male but is used as a dam:
+
+```{r}
+#| label: sex
+qcStudbook(pedFemaleSireMaleDam,
+  reportErrors = TRUE)[c("femaleSires", "maleDams")]
+```
+
+**Invalid dates.** `pedInvalidDates` contains `"205-06-19"` (a three-digit year)
+and `"2002-16-22"` (month 16); the offending row numbers are reported:
+
+```{r}
+#| label: dates
+qcStudbook(pedInvalidDates, reportErrors = TRUE)$invalidDateRows
+```
+
+**Duplicate records.** `pedDuplicateIds` repeats animal `d1` in two rows:
+
+```{r}
+#| label: dups
+qcStudbook(pedDuplicateIds, reportErrors = TRUE)$duplicateIds
+```
+
+**A missing required column.** `pedMissingBirth` has no `birth` column at all:
+
+```{r}
+#| label: missing
+qcStudbook(pedMissingBirth, reportErrors = TRUE)$missingColumns
+```
+
+**An impossible parentage.** In `pedSameMaleIsSireAndDam`, `s1` is listed as
+both a sire and a dam:
+
+```{r}
+#| label: sireanddam
+qcStudbook(pedSameMaleIsSireAndDam, reportErrors = TRUE)$sireAndDam
+```
+
+Diagnostic mode also reports parents younger than `minParentAge` at an
+offspring's birth (in `suspiciousParents`) and any ID containing a period
+(in `invalidIdChars`).
+
+## Production mode vs diagnostic mode {#sec-modes}
+
+The two modes treat the same problems differently. Production mode fixes what it
+can prove is safe and refuses to return a pedigree it cannot trust; diagnostic
+mode never stops, so a single pass surfaces every issue at once.
+
+| Problem | Production mode (`reportErrors = FALSE`) | Diagnostic mode (`reportErrors = TRUE`) |
+|---|---|---|
+| Messy column names | corrected | `changedCols` (with `reportChanges = TRUE`) |
+| Female sire / male dam | **corrected** (sex flipped) | `femaleSires` / `maleDams` |
+| Exact duplicate record | **removed** | `duplicateIds` |
+| Missing required column | **stops** | `missingColumns` |
+| Invalid date | **stops** | `invalidDateRows` |
+| Sire is also a dam | **stops** | `sireAndDam` |
+| Parent below `minParentAge` | **stops** | `suspiciousParents` |
+| Period in an ID | **stops** | `invalidIdChars` |
+
+Production mode silently corrects the safe cases. We can confirm it on
+`pedFemaleSireMaleDam` -- `s1` becomes male and `d1` female -- and on
+`pedDuplicateIds`, where the repeated row is dropped:
+
+```{r}
+#| label: corrections
+qcStudbook(pedFemaleSireMaleDam)[, c("id", "sex")]
+nrow(pedDuplicateIds)             # before
+nrow(qcStudbook(pedDuplicateIds)) # the duplicate row is gone
+```
+
+Run on data it cannot safely repair, production mode stops with a message naming
+the offending rows -- here, the invalid dates:
+
+```{r}
+#| label: stop
+#| warning: false
+tryCatch(
+  qcStudbook(pedInvalidDates),
+  error = function(e) cat(conditionMessage(e))
+)
+```
+
+The recommended workflow follows from this: run once in diagnostic mode to see
+everything, correct the source studbook, then run in production mode to get the
+clean pedigree the analyses consume.
+
+## Key arguments {#sec-arguments}
+
+| Argument | Default | Meaning |
+|---|---|---|
+| `sb` | -- | the studbook data frame to check |
+| `minParentAge` | `2.0` | minimum age (years) a parent must be at an offspring's birth; skipped when birth dates are missing |
+| `reportChanges` | `FALSE` | record column-name corrections in `changedCols` |
+| `reportErrors` | `FALSE` | diagnostic mode: scan everything and return a list of findings (or `NULL`) instead of a cleaned pedigree |
+
+## See also {#sec-seealso}
+
+- The **Genetic Value Analysis** article -- ranks a quality-controlled pedigree
+  by genetic value.
+- The **Forming Breeding Groups** article -- assembles breeding groups from a
+  quality-controlled pedigree.
+- `qcStudbook()` -- the function documented here.
+- `runModularApp()` -- the Shiny app, whose Quality Control tab drives this same
+  function interactively.
+
+**Reference.**
+
+Vinson A, Raboin MJ (2015). "A Practical Approach for Designing Breeding Groups
+to Maximize Genetic Diversity in a Large Colony of Captive Rhesus Macaques
+(*Macaca mulatta*)." *Journal of the American Association for Laboratory Animal
+Science* 54(6):700-707.

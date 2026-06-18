@@ -11,8 +11,9 @@
 #'
 #' @seealso \code{\link{modPyramidServer}}
 #' @importFrom shiny NS div h3 fluidRow column wellPanel selectInput
-#'   numericInput hr checkboxInput downloadButton tabsetPanel
-#'   tabPanel plotOutput tableOutput includeHTML sliderInput uiOutput helpText
+#' @importFrom shiny numericInput hr checkboxInput downloadButton tabsetPanel
+#' @importFrom shiny tabPanel plotOutput tableOutput includeHTML sliderInput
+#' @importFrom shiny uiOutput helpText
 #' @export
 modPyramidUI <- function(id) {
   ns <- NS(id)
@@ -80,7 +81,7 @@ modPyramidUI <- function(id) {
 #' @seealso \code{\link{modPyramidUI}}
 #' @importFrom grDevices dev.off png
 #' @importFrom shiny moduleServer reactive eventReactive renderPlot renderTable
-#'   downloadHandler req isolate tagList renderUI
+#' @importFrom shiny downloadHandler req isolate tagList renderUI
 #' @importFrom graphics text
 #' @export
 modPyramidServer <- function(id, pedigreeData) {

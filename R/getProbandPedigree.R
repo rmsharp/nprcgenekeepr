@@ -1,4 +1,4 @@
-#' Gets pedigree to ancestors of provided group leaving uninformative ancestors.
+#' Gets pedigree to ancestors of provided group leaving uninformative ancestors
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr

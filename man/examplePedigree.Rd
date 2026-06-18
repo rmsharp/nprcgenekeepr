@@ -3,14 +3,15 @@
 \docType{data}
 \name{examplePedigree}
 \alias{examplePedigree}
-\title{examplePedigree is a pedigree object created by \code{qcStudbook}}
+\title{Example pedigree object (from ExamplePedigree.csv)}
 \format{
 An object of class \code{data.frame} with 3694 rows and 12 columns.
 }
 \usage{
-examplePedigree
+data(examplePedigree)
 }
 \description{
+A pedigree object created by \code{qcStudbook}.
 Represents pedigree from \emph{ExamplePedigree.csv}.
 \describe{
 \item{id}{-- character column of animal IDs}

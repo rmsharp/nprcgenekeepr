@@ -2,7 +2,7 @@
 % Please edit documentation in R/calcAge.R
 \name{calcAge}
 \alias{calcAge}
-\title{Calculate animal ages.}
+\title{Calculate animal ages}
 \usage{
 calcAge(birth, exit)
 }

@@ -1,4 +1,4 @@
-#' Make relation classes table from \code{kin} dataframe.
+#' Make relation classes table from \code{kin} dataframe
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
@@ -26,8 +26,8 @@
 #' relClasses <- makeRelationClassesTable(kin)
 #' relClasses$`Relationship Class` <-
 #'   as.character(relClasses$`Relationship Class`)
-#' relClassTbl <- kin[!kin$relation == "Self", ] %>%
-#'   group_by(relation) %>%
+#' relClassTbl <- kin[!kin$relation == "Self", ] |>
+#'   group_by(relation) |>
 #'   summarise(count = n())
 #' relClassTbl
 makeRelationClassesTable <- function(kin) {

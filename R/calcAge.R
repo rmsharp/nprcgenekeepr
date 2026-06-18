@@ -1,4 +1,4 @@
-#' Calculate animal ages.
+#' Calculate animal ages
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr

@@ -2,7 +2,7 @@
 % Please edit documentation in R/countLoops.R
 \name{countLoops}
 \alias{countLoops}
-\title{Count the number of loops in a pedigree tree.}
+\title{Count the number of loops in a pedigree tree}
 \usage{
 countLoops(loops, ptree)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/getDatedFileName.R
 \name{getDatedFilename}
 \alias{getDatedFilename}
-\title{Returns a character vector with an file name having the date prepended.}
+\title{Returns a character vector with an file name having the date prepended}
 \usage{
 getDatedFilename(filename)
 }
@@ -14,7 +14,7 @@ A character string with a file name prepended with the date and time
 in YYYY-MM-DD_hh_mm_ss_basename format.
 }
 \description{
-Returns a character vector with an file name having the date prepended.
+Returns a character vector with an file name having the date prepended
 }
 \examples{
 library(nprcgenekeepr)

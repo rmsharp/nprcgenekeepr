@@ -3,14 +3,15 @@
 \docType{data}
 \name{smallPedTree}
 \alias{smallPedTree}
-\title{smallPedTree is a pedigree tree made from \code{smallPed}}
+\title{Pedigree tree built from smallPed}
 \format{
 An object of class \code{list} of length 17.
 }
 \usage{
-smallPedTree
+data(smallPedTree)
 }
 \description{
+A pedigree tree made from \code{smallPed}.
 Access it using the following commands.
 }
 \examples{

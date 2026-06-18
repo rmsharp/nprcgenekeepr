@@ -1,5 +1,5 @@
 #' obfuscatePed takes a pedigree object and creates aliases for all IDs and
-#' adjusts all date within a specified amount.
+#' adjusts all date within a specified amount
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'

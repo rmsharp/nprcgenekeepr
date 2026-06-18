@@ -2,7 +2,7 @@
 % Please edit documentation in R/kinship.R
 \name{kinship}
 \alias{kinship}
-\title{Generates a kinship matrix.}
+\title{Generates a kinship matrix}
 \usage{
 kinship(id, father.id, mother.id, pdepth, sparse = FALSE)
 }

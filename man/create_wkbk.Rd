@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_wkbk.R
 \name{create_wkbk}
 \alias{create_wkbk}
-\title{Creates an Excel workbook with worksheets.}
+\title{Creates an Excel workbook with worksheets}
 \usage{
 create_wkbk(file, df_list, sheetnames, replace = FALSE)
 }
@@ -21,7 +21,7 @@ TRUE if the Excel file was successfully created. FALSE if any errors
 occurred.
 }
 \description{
-Creates an Excel workbook with worksheets.
+Creates an Excel workbook with worksheets
 }
 \examples{
 library(nprcgenekeepr)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/getRequiredCols.R
 \name{getRequiredCols}
 \alias{getRequiredCols}
-\title{Get required column names for a studbook.}
+\title{Get required column names for a studbook}
 \usage{
 getRequiredCols()
 }

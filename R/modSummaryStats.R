@@ -16,8 +16,8 @@ utils::globalVariables(c("x", "y"))
 #' @param id character vector of length 1. Module namespace identifier.
 #'
 #' @seealso \code{\link{modSummaryStatsServer}} for server logic.
-#' @importFrom shiny NS div h3 fluidRow column br downloadButton
-#'   plotOutput htmlOutput withMathJax includeHTML
+#' @importFrom shiny NS div h3 fluidRow column br downloadButton plotOutput
+#' @importFrom shiny htmlOutput withMathJax includeHTML
 #' @export
 modSummaryStatsUI <- function(id) {
   ns <- NS(id)
@@ -282,12 +282,13 @@ modSummaryStatsUI <- function(id) {
 #' @seealso \code{\link{kinship}} for kinship matrix calculation
 #'
 #' @importFrom shiny moduleServer reactive renderPlot renderUI downloadHandler
-#'                   req
+#' @importFrom shiny req
 #' @importFrom grDevices dev.off png
 #' @importFrom graphics hist boxplot par plot.new text
 #' @importFrom stats median
 #' @importFrom ggplot2 ggplot aes geom_histogram geom_boxplot geom_jitter
-#'   geom_vline theme_classic xlab ylab ggtitle coord_flip ggsave
+#' @importFrom ggplot2 geom_vline theme_classic xlab ylab ggtitle coord_flip
+#' @importFrom ggplot2 ggsave
 #' @export
 modSummaryStatsServer <- function(id, geneticValues, pedigree,
                                    kinshipMatrix = NULL, founderStats = NULL) {

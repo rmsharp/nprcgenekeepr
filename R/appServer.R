@@ -15,6 +15,11 @@
 #' @param output Shiny output object
 #' @param session Shiny session object
 #'
+#' @return No return value, called for side effects. As a 'Shiny' server
+#'   function, \code{appServer()} is invoked by the 'Shiny' runtime to wire up
+#'   the application's reactive outputs, observers, and module servers for a
+#'   running GeneKeepR session.
+#'
 #' @seealso \code{\link{appUI}} for the corresponding UI function
 #' @seealso \code{\link{modInputServer}} for data input module
 #' @seealso \code{\link{modPedigreeServer}} for pedigree browser module
@@ -24,11 +29,11 @@
 #' @seealso \code{\link{loadSiteConfig}} for site configuration loading
 #'
 #' @importFrom shiny reactiveValues reactiveVal observeEvent updateNavbarPage
-#'         updateTabsetPanel reactive observe req insertTab removeTab
-#'         showNotification tabPanel div h3 p hr icon uiOutput
-#'         verbatimTextOutput isolate
+#' @importFrom shiny updateTabsetPanel reactive observe req insertTab removeTab
+#' @importFrom shiny showNotification tabPanel div h3 p hr icon uiOutput
+#' @importFrom shiny verbatimTextOutput isolate
 #' @importFrom futile.logger flog.logger flog.threshold flog.debug flog.info
-#'         INFO DEBUG appender.file
+#' @importFrom futile.logger INFO DEBUG appender.file
 #' @export
 appServer <- function(input, output, session) {
 

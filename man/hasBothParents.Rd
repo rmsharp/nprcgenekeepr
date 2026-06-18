@@ -2,7 +2,7 @@
 % Please edit documentation in R/hasBothParents.R
 \name{hasBothParents}
 \alias{hasBothParents}
-\title{hasBothParents checks to see if both parents are identified.}
+\title{hasBothParents checks to see if both parents are identified}
 \usage{
 hasBothParents(id, ped)
 }
@@ -15,7 +15,7 @@ hasBothParents(id, ped)
 TRUE if ID has both sire and dam identified in \code{ped}.
 }
 \description{
-hasBothParents checks to see if both parents are identified.
+hasBothParents checks to see if both parents are identified
 }
 \examples{
 library(nprcgenekeepr)

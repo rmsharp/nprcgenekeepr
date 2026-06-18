@@ -2,7 +2,7 @@
 % Please edit documentation in R/reportGV.R
 \name{reportGV}
 \alias{reportGV}
-\title{Generates a genetic value report for a provided pedigree.}
+\title{Generates a genetic value report for a provided pedigree}
 \usage{
 reportGV(
   ped,
@@ -37,8 +37,14 @@ will be called during each iteration to update a
 \code{shiny::Progress} object.}
 }
 \value{
-A dataframe with the genetic value report. Animals are ranked
-in order of descending value.
+An object of class \code{nprcgenekeeprGV}: a list with elements
+\code{report} (a dataframe with the genetic value report, with animals
+ranked in order of descending value), \code{kinship} (the kinship matrix),
+\code{gu} (genome uniqueness values), \code{fe} (founder equivalents),
+\code{fg} (founder genome equivalents), \code{maleFounders} and
+\code{femaleFounders} (dataframes of the known male and female founder
+records), \code{nMaleFounders} and \code{nFemaleFounders} (the counts of
+those founders), and \code{total} (the total number of known founders).
 }
 \description{
 This is the main function for the Genetic Value Analysis.

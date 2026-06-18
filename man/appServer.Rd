@@ -13,6 +13,12 @@ appServer(input, output, session)
 
 \item{session}{Shiny session object}
 }
+\value{
+No return value, called for side effects. As a 'Shiny' server
+function, \code{appServer()} is invoked by the 'Shiny' runtime to wire up
+the application's reactive outputs, observers, and module servers for a
+running GeneKeepR session.
+}
 \description{
 Server function for the main GeneKeepR Shiny application. Initializes
 all modules and manages shared reactive state between them.

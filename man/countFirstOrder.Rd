@@ -2,7 +2,7 @@
 % Please edit documentation in R/countFirstOrder.R
 \name{countFirstOrder}
 \alias{countFirstOrder}
-\title{Count first-order relatives.}
+\title{Count first-order relatives}
 \usage{
 countFirstOrder(ped, ids = NULL)
 }

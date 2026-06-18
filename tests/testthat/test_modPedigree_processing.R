@@ -2,6 +2,11 @@
 # These tests verify the integration of setPopulation(), trimPedigree(),
 # findPedigreeNumber(), and findGeneration() with modPedigreeServer
 
+# Slow shiny-module integration tests (many shiny::testServer() calls); skip on
+# CRAN to keep check elapsed time within limits. They still run on CI and
+# locally. The analytical functions exercised here have their own unit tests.
+testthat::skip_on_cran()
+
 # ============================================================================
 # Tests for setPopulation Integration
 # ============================================================================

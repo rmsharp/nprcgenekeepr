@@ -1,4 +1,4 @@
-#' Convert internal column names to display or header names.
+#' Convert internal column names to display or header names
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr

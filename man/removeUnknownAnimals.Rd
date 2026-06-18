@@ -3,7 +3,7 @@
 \name{removeUnknownAnimals}
 \alias{removeUnknownAnimals}
 \title{removeUnknownAnimals Removes unknown animals added to pedigree that serve as
-placeholders for unknown parents.}
+placeholders for unknown parents}
 \usage{
 removeUnknownAnimals(ped)
 }
@@ -15,7 +15,7 @@ Pedigree with unknown animals removed
 }
 \description{
 removeUnknownAnimals Removes unknown animals added to pedigree that serve as
-placeholders for unknown parents.
+placeholders for unknown parents
 }
 \examples{
 library(nprcgenekeepr)

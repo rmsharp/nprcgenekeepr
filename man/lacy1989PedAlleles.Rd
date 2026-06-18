@@ -3,8 +3,7 @@
 \docType{data}
 \name{lacy1989PedAlleles}
 \alias{lacy1989PedAlleles}
-\title{lacy1989PedAlleles is a dataframe produced by \code{geneDrop} on
-\code{lacy1989Ped} with 5000 iterations.}
+\title{Gene-drop alleles for lacy1989Ped (5000 iterations)}
 \format{
 An object of class \code{data.frame} with 14 rows and 5002 columns.
 }
@@ -27,10 +26,10 @@ Column 5002 is the \code{parent} column with values of \code{sire} and
 }
 }
 \usage{
-lacy1989PedAlleles
+data(lacy1989PedAlleles)
 }
 \description{
-lacy1989PedAlleles is a dataframe produced by \code{geneDrop} on
+A dataframe produced by \code{geneDrop} on
 \code{lacy1989Ped} with 5000 iterations.
 }
 \keyword{datasets}

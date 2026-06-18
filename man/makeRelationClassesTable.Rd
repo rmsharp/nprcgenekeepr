@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeRelationClassesTable.R
 \name{makeRelationClassesTable}
 \alias{makeRelationClassesTable}
-\title{Make relation classes table from \code{kin} dataframe.}
+\title{Make relation classes table from \code{kin} dataframe}
 \usage{
 makeRelationClassesTable(kin)
 }
@@ -33,8 +33,8 @@ kin <- convertRelationships(bkmat, qcPed)
 relClasses <- makeRelationClassesTable(kin)
 relClasses$`Relationship Class` <-
   as.character(relClasses$`Relationship Class`)
-relClassTbl <- kin[!kin$relation == "Self", ] \%>\%
-  group_by(relation) \%>\%
+relClassTbl <- kin[!kin$relation == "Self", ] |>
+  group_by(relation) |>
   summarise(count = n())
 relClassTbl
 }

@@ -1,4 +1,4 @@
-#' Get the superset of columns that can be in a pedigree file.
+#' Get the superset of columns that can be in a pedigree file
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr

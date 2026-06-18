@@ -2,7 +2,7 @@
 % Please edit documentation in R/getDescendantPedigree.R
 \name{getDescendantPedigree}
 \alias{getDescendantPedigree}
-\title{Gets pedigree with descendants of provided group.}
+\title{Gets pedigree with descendants of provided group}
 \usage{
 getDescendantPedigree(probands, ped)
 }

@@ -16,8 +16,8 @@
 #' Vinson, A. and Raboin, M.J. (2015)
 #' @importFrom DT DTOutput renderDT
 #' @importFrom shiny NS div h3 fluidRow column wellPanel radioButtons
-#'             conditionalPanel numericInput actionButton tabsetPanel
-#'             tabPanel uiOutput tableOutput icon includeHTML
+#' @importFrom shiny conditionalPanel numericInput actionButton tabsetPanel
+#' @importFrom shiny tabPanel uiOutput tableOutput icon includeHTML
 #' @export
 modBreedingGroupsUI <- function(id) {
   ns <- NS(id)
@@ -148,7 +148,7 @@ modBreedingGroupsUI <- function(id) {
 #' @seealso \code{\link{kinship}} for kinship matrix calculation
 #'
 #' @importFrom shiny moduleServer reactive eventReactive reactiveVal
-#'   withProgress incProgress req showNotification
+#' @importFrom shiny withProgress incProgress req showNotification
 #' @export
 modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
   moduleServer(id, function(input, output, session) {

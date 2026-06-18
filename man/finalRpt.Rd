@@ -3,18 +3,15 @@
 \docType{data}
 \name{finalRpt}
 \alias{finalRpt}
-\title{finalRpt is a list object created from the list object \emph{rpt} prepared
-by \code{reportGV}. It is created inside \code{orderReport}. This version
-is at the state just prior to calling \code{rankSubjects} inside
-\code{orderReport}.}
+\title{Genetic-value report list prior to ranking}
 \format{
 An object of class \code{list} of length 3.
 }
 \usage{
-finalRpt
+data(finalRpt)
 }
 \description{
-finalRpt is a list object created from the list object \emph{rpt} prepared
+A list object created from the list object \emph{rpt} prepared
 by \code{reportGV}. It is created inside \code{orderReport}. This version
 is at the state just prior to calling \code{rankSubjects} inside
 \code{orderReport}.

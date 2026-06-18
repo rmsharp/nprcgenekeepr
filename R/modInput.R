@@ -16,10 +16,10 @@
 #' @seealso \code{\link{modInputServer}} for server logic.
 #' @seealso \code{\link{modPedigreeUI}} for pedigree browsing after QC.
 #' @importFrom shiny NS div h3 h4 tags fluidRow column sidebarLayout
-#'   sidebarPanel
-#'   mainPanel helpText radioButtons conditionalPanel fileInput textInput
-#'   actionButton checkboxInput icon includeHTML br hr tabsetPanel tabPanel
-#'   uiOutput downloadButton updateTabsetPanel observeEvent
+#' @importFrom shiny sidebarPanel mainPanel helpText radioButtons
+#' @importFrom shiny conditionalPanel fileInput textInput actionButton
+#' @importFrom shiny checkboxInput icon includeHTML br hr tabsetPanel tabPanel
+#' @importFrom shiny uiOutput downloadButton updateTabsetPanel observeEvent
 #' @importFrom DT DTOutput
 #' @importFrom futile.logger flog.debug flog.threshold DEBUG INFO
 #' @export
@@ -222,7 +222,7 @@ modInputUI <- function(id) {
 #' @seealso \code{\link{modInputUI}} for the user interface.
 #' @seealso \code{\link{modPedigreeServer}} for using the cleaned data.
 #' @importFrom shiny moduleServer reactive eventReactive req showNotification
-#'   renderUI withProgress incProgress
+#' @importFrom shiny renderUI withProgress incProgress
 #' @importFrom DT renderDT
 #' @export
 modInputServer <- function(id, config = NULL) {

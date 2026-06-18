@@ -2,7 +2,7 @@
 % Please edit documentation in R/headerDisplayNames.R
 \name{headerDisplayNames}
 \alias{headerDisplayNames}
-\title{Convert internal column names to display or header names.}
+\title{Convert internal column names to display or header names}
 \usage{
 headerDisplayNames(headers)
 }

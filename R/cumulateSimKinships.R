@@ -1,5 +1,5 @@
 #' Makes a list object containing kinship summary statistics using the list
-#' object from __createSimKinships__.
+#' object from __createSimKinships__
 #'
 #' \code{cumulateSimKinships} creates a named
 #' list of length 4 is generated where the first element is the mean of the

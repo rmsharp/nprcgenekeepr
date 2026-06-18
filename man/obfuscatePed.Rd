@@ -3,7 +3,7 @@
 \name{obfuscatePed}
 \alias{obfuscatePed}
 \title{obfuscatePed takes a pedigree object and creates aliases for all IDs and
-adjusts all date within a specified amount.}
+adjusts all date within a specified amount}
 \usage{
 obfuscatePed(
   ped,
