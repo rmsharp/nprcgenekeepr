@@ -22,15 +22,15 @@
 #' column. Unknown sires are indicated with \code{NA}}
 #' \item{dam}{-- the female parent of the animal indicated by the \code{id}
 #' column. Unknown dams are indicated with \code{NA}}
-#' \item{sex}{-- factor with levels: "M", "F", "U". Sex specifier for an
+#' \item{sex}{-- factor with levels: "F", "M", "H", "U". Sex specifier for an
 #' individual.}
 #' \item{gen}{-- generation number (integers beginning with 0 for the founder
 #' generation) of the animal indicated by the \code{id} column.}
 #' \item{birth}{-- Date vector of birth dates}
 #' \item{exit}{-- Date vector of exit dates}
 #' \item{age}{-- numerical vector of age in years}
-#' \item{ancestry}{-- character vector or NA with free-form text providing
-#' information about the geographic population of origin.}
+#' \item{ancestry}{-- factor with levels: INDIAN, CHINESE, HYBRID, JAPANESE,
+#' OTHER, UNKNOWN indicating the geographic population of origin.}
 #' \item{origin}{-- character vector or \code{NA} (optional) that indicates
 #' the name of the facility that the individual was imported from if other than
 #' local.}
@@ -270,8 +270,8 @@
 "pedWithGenotypeReport"
 #' Potential breeder IDs (29 baboons)
 #'
-#' A list of 29 baboon IDs that are potential breeders.
-#' @source qcBreeders is a list of 3 males and 26 females from
+#' A character vector of 29 baboon IDs that are potential breeders.
+#' @source qcBreeders is a character vector of 3 males and 26 females from
 #' the \code{qcPed} data set.
 #'
 #' \describe{
@@ -344,7 +344,7 @@
 #' Represents 31 animals that are also in the obfuscated \code{rhesusPedigree}
 #' pedigree from \emph{rhesusGenotypes.csv}.
 #' \describe{
-#' \item{id}{-- character column of animal IDs}
+#' \item{id}{-- factor column of animal IDs}
 #' \item{first_name}{-- a generic name for the first haplotype}
 #' \item{second_name}{-- a generic name for the second haplotype}
 #' }
@@ -358,17 +358,18 @@
 #' Represents an obfuscated pedigree from \emph{rhesusPedigree.csv} where the
 #' IDs and dates have been modified to de-identify the data.
 #' \describe{
-#' \item{id}{-- character column of animal IDs}
+#' \item{id}{-- factor column of animal IDs}
 #' \item{sire}{-- the male parent of the animal indicated by the \code{id}
 #' column. Unknown sires are indicated with \code{NA}}
 #' \item{dam}{-- the female parent of the animal indicated by the \code{id}
 #' column. Unknown dams are indicated with \code{NA}}
-#' \item{sex}{-- factor with levels: "M", "F", "U". Sex specifier for an
+#' \item{sex}{-- factor with levels: "F", "M". Sex specifier for an
 #' individual.}
 #' \item{gen}{-- generation number (integers beginning with 0 for the founder
 #' generation) of the animal indicated by the \code{id} column.}
-#' \item{birth}{-- Date vector of birth dates}
-#' \item{exit}{-- Date vector of exit dates}
+#' \item{birth}{-- factor of birth-date strings (282 levels)}
+#' \item{exit}{-- logical vector, all \code{NA} (no exit dates are recorded
+#' in this obfuscated pedigree)}
 #' \item{age}{-- numerical vector of age in years}
 #' }
 #' @examples

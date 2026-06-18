@@ -19,15 +19,15 @@ Represents pedigree from \emph{ExamplePedigree.csv}.
 column. Unknown sires are indicated with \code{NA}}
 \item{dam}{-- the female parent of the animal indicated by the \code{id}
 column. Unknown dams are indicated with \code{NA}}
-\item{sex}{-- factor with levels: "M", "F", "U". Sex specifier for an
+\item{sex}{-- factor with levels: "F", "M", "H", "U". Sex specifier for an
 individual.}
 \item{gen}{-- generation number (integers beginning with 0 for the founder
 generation) of the animal indicated by the \code{id} column.}
 \item{birth}{-- Date vector of birth dates}
 \item{exit}{-- Date vector of exit dates}
 \item{age}{-- numerical vector of age in years}
-\item{ancestry}{-- character vector or NA with free-form text providing
-information about the geographic population of origin.}
+\item{ancestry}{-- factor with levels: INDIAN, CHINESE, HYBRID, JAPANESE,
+OTHER, UNKNOWN indicating the geographic population of origin.}
 \item{origin}{-- character vector or \code{NA} (optional) that indicates
 the name of the facility that the individual was imported from if other than
 local.}
