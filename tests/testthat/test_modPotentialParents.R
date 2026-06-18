@@ -118,10 +118,6 @@ test_that("modPotentialParentsServer computes a populated table on button press"
   skip_if_not_installed("shiny")
 
   pedOne <- nprcgenekeepr::rhesusPedigree
-  pedOne$id <- as.character(pedOne$id)
-  pedOne$sire <- as.character(pedOne$sire)
-  pedOne$dam <- as.character(pedOne$dam)
-  pedOne$birth <- as.Date(pedOne$birth)
   pedOne$fromCenter <- TRUE
 
   shiny::testServer(
