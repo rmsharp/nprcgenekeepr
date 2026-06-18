@@ -21,7 +21,7 @@ assumed to have independent ancestries.
 \item{sire}{the male parent of the animal indicated by the \code{id} column.
 Unknown sires are indicated with \code{NA}}
 \item{dam}{the female parent of the animal indicated by the \code{id}
-column.Unknown dams are indicated with \code{NA}}
+column. Unknown dams are indicated with \code{NA}}
 \item{gen}{generation number (integers beginning with 0 for the founder
 generation) of the animal indicated by the \code{id} column.}
 \item{population}{logical vector with all values set TRUE}

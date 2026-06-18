@@ -21,7 +21,7 @@
 #' \item{sire}{-- the male parent of the animal indicated by the \code{id}
 #' column. Unknown sires are indicated with \code{NA}}
 #' \item{dam}{-- the female parent of the animal indicated by the \code{id}
-#' column.Unknown dams are indicated with \code{NA}}
+#' column. Unknown dams are indicated with \code{NA}}
 #' \item{sex}{-- factor with levels: "M", "F", "U". Sex specifier for an
 #' individual.}
 #' \item{gen}{-- generation number (integers beginning with 0 for the founder
@@ -94,7 +94,7 @@
 #' \item{sire}{the male parent of the animal indicated by the \code{id} column.
 #' Unknown sires are indicated with \code{NA}}
 #' \item{dam}{the female parent of the animal indicated by the \code{id}
-#' column.Unknown dams are indicated with \code{NA}}
+#' column. Unknown dams are indicated with \code{NA}}
 #' \item{gen}{generation number (integers beginning with 0 for the founder
 #' generation) of the animal indicated by the \code{id} column.}
 #' \item{population}{logical vector with all values set TRUE}
@@ -132,13 +132,13 @@
 #' the \code{id} column during iteration 1 of gene dropping performed by
 #' \code{geneDrop}.}
 #' \item{V2}{alleles assigned to the parents of the animals identified in
-#' the \code{id} column during iteration 1 of gene dropping performed by
+#' the \code{id} column during iteration 2 of gene dropping performed by
 #' \code{geneDrop}.}
 #' \item{V3}{alleles assigned to the parents of the animals identified in
-#' the \code{id} column during iteration 1 of gene dropping performed by
+#' the \code{id} column during iteration 3 of gene dropping performed by
 #' \code{geneDrop}.}
 #' \item{V4}{alleles assigned to the parents of the animals identified in
-#' the \code{id} column during iteration 1 of gene dropping performed by
+#' the \code{id} column during iteration 4 of gene dropping performed by
 #' \code{geneDrop}.}
 #' \item{id}{character vector of animal IDs provided to the gene dropping
 #' function \code{geneDrop}.}
@@ -362,7 +362,7 @@
 #' \item{sire}{-- the male parent of the animal indicated by the \code{id}
 #' column. Unknown sires are indicated with \code{NA}}
 #' \item{dam}{-- the female parent of the animal indicated by the \code{id}
-#' column.Unknown dams are indicated with \code{NA}}
+#' column. Unknown dams are indicated with \code{NA}}
 #' \item{sex}{-- factor with levels: "M", "F", "U". Sex specifier for an
 #' individual.}
 #' \item{gen}{-- generation number (integers beginning with 0 for the founder
