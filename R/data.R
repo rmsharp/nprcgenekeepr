@@ -3,7 +3,7 @@
 #' A loadable version of the example
 #' configuration file \code{example_nprcgenekeepr_config}.
 #' It contains a working version of a \strong{nprcgenekeepr} configuration
-#' file created the SNPRC.
+#' file created at the SNPRC.
 #' Users of LabKey's EHR can adapt it to their systems and put it
 #' in their home directory. Instructions are embedded as comments
 #' within the file.
@@ -39,7 +39,7 @@
 #'  factor \{levels: ALIVE, DECEASED, SHIPPED, UNKNOWN\}. Vector of
 #' standardized status codes with the possible values
 #' ALIVE, DECEASED, SHIPPED, or UNKNOWN}
-#' \item{recordStats}{-- character vector with value of \code{"added"} or
+#' \item{recordStatus}{-- character vector with value of \code{"added"} or
 #'  \code{"original"}.}
 #' }
 #' @examples
@@ -339,7 +339,7 @@
 #'
 #' A dataframe with two haplotypes per animal.
 #'
-#' There are  object.
+#' There are 31 rows and 3 columns.
 #'
 #' Represents 31 animals that are also in the obfuscated \code{rhesusPedigree}
 #' pedigree from \emph{rhesusGenotypes.csv}.

@@ -36,7 +36,7 @@ status as alive, dead, sold, etc. Transformed to
 factor \{levels: ALIVE, DECEASED, SHIPPED, UNKNOWN\}. Vector of
 standardized status codes with the possible values
 ALIVE, DECEASED, SHIPPED, or UNKNOWN}
-\item{recordStats}{-- character vector with value of \code{"added"} or
+\item{recordStatus}{-- character vector with value of \code{"added"} or
 \code{"original"}.}
 }
 }

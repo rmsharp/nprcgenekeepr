@@ -14,7 +14,7 @@ data(rhesusGenotypes)
 A dataframe with two haplotypes per animal.
 }
 \details{
-There are  object.
+There are 31 rows and 3 columns.
 
 Represents 31 animals that are also in the obfuscated \code{rhesusPedigree}
 pedigree from \emph{rhesusGenotypes.csv}.
