@@ -17,7 +17,7 @@ A dataframe with two haplotypes per animal.
 There are 31 rows and 3 columns.
 
 Represents 31 animals that are also in the obfuscated \code{rhesusPedigree}
-pedigree from \emph{rhesusGenotypes.csv}.
+pedigree from \emph{obfuscated_rhesus_mhc_breeder_genotypes.csv}.
 \describe{
 \item{id}{-- character column of animal IDs}
 \item{first_name}{-- a generic name for the first haplotype}
