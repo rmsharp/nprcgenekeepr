@@ -344,7 +344,7 @@
 #' Represents 31 animals that are also in the obfuscated \code{rhesusPedigree}
 #' pedigree from \emph{rhesusGenotypes.csv}.
 #' \describe{
-#' \item{id}{-- factor column of animal IDs}
+#' \item{id}{-- character column of animal IDs}
 #' \item{first_name}{-- a generic name for the first haplotype}
 #' \item{second_name}{-- a generic name for the second haplotype}
 #' }
