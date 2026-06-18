@@ -1,6 +1,7 @@
-#' exampleNprcgenekeeprConfig is a loadable version of the example
-#' configuration file \code{example_nprcgenekeepr_config}
+#' Example nprcgenekeepr configuration file (loadable)
 #'
+#' A loadable version of the example
+#' configuration file \code{example_nprcgenekeepr_config}.
 #' It contains a working version of a \strong{nprcgenekeepr} configuration
 #' file created the SNPRC.
 #' Users of LabKey's EHR can adapt it to their systems and put it
@@ -11,8 +12,9 @@
 #' data("exampleNprcgenekeeprConfig")
 #' head(exampleNprcgenekeeprConfig)
 "exampleNprcgenekeeprConfig"
-#' examplePedigree is a pedigree object created by \code{qcStudbook}
+#' Example pedigree object (from ExamplePedigree.csv)
 #'
+#' A pedigree object created by \code{qcStudbook}.
 #' Represents pedigree from \emph{ExamplePedigree.csv}.
 #' \describe{
 #' \item{id}{-- character column of animal IDs}
@@ -46,18 +48,21 @@
 #' exampleTree <- createPedTree(examplePedigree)
 #' exampleLoops <- findLoops(exampleTree)
 "examplePedigree"
-#' finalRpt is a list object created from the list object \emph{rpt} prepared
+#' Genetic-value report list prior to ranking
+#'
+#' A list object created from the list object \emph{rpt} prepared
 #' by \code{reportGV}. It is created inside \code{orderReport}. This version
 #' is at the state just prior to calling \code{rankSubjects} inside
-#' \code{orderReport}
+#' \code{orderReport}.
 #' @examples
 #' library(nprcgenekeepr)
 #' data("finalRpt")
 #' finalRpt <- rankSubjects(finalRpt)
 "finalRpt"
-#' focalAnimals is a dataframe with one column (_id_) containing the animal
-#' Ids from the __examplePedigree__ pedigree
+#' Focal animal IDs from examplePedigree
 #'
+#' A dataframe with one column (_id_) containing the animal
+#' Ids from the __examplePedigree__ pedigree.
 #' They can be used to illustrate the identification of a population of
 #' interest as is shown in the example below.
 #' @examples
@@ -74,7 +79,7 @@
 #' nrow(examplePedigree)
 #' nrow(examplePedigree[examplePedigree$population, ])
 "focalAnimals"
-#' lacy1989Ped small hypothetical pedigree
+#' Small hypothetical pedigree (Lacy 1989)
 #'
 #' @source lacy1989Ped is a dataframe containing the small hypothetical
 #' pedigree of three founders and four descendants used
@@ -95,9 +100,10 @@
 #' \item{population}{logical vector with all values set TRUE}
 #' }
 "lacy1989Ped"
-#' lacy1989PedAlleles is a dataframe produced by \code{geneDrop} on
-#' \code{lacy1989Ped} with 5000 iterations
+#' Gene-drop alleles for lacy1989Ped (5000 iterations)
 #'
+#' A dataframe produced by \code{geneDrop} on
+#' \code{lacy1989Ped} with 5000 iterations.
 #' @source lacy1989Ped is a dataframe containing the small example pedigree used
 #' by Robert C. Lacy in "Analysis of Founder Representation in Pedigrees:
 #' Founder Equivalents and Founder Genome Equivalents" Zoo Biology 8:111-123
@@ -115,10 +121,11 @@
 #' \code{dam} alternating.
 #' }
 "lacy1989PedAlleles"
-#' ped1Alleles is a dataframe created by the geneDrop function
-#'
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+#' Gene-drop alleles example (baboon pedigree)
+#'
+#' A dataframe created by the \code{geneDrop} function.
 #' @format A dataframe with 554 rows and 6 variables
 #' \describe{
 #' \item{V1}{alleles assigned to the parents of the animals identified in
@@ -142,9 +149,11 @@
 #' @source example baboon pedigree file provided by Deborah Newman,
 #' Southwest National Primate Center.
 "ped1Alleles"
-#' pedDuplicateIds is a dataframe with 9 rows and 5 columns (ego_id, si.re,
+#' Example studbook with a duplicated record
+#'
+#' A data frame with 9 rows and 5 columns (ego_id, si.re,
 #' dam_id, sex, birth_date) representing a full pedigree with a duplicated
-#' record
+#' record.
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
 #' \code{pedFemaleSireMaleDam}, \code{pedGood},
@@ -152,9 +161,11 @@
 #' \code{pedSameMaleIsSireAndDam}) used to
 #' demonstrate error detection by the qcStudbook function.
 "pedDuplicateIds"
-#' pedFemaleSireMaleDam is a dataframe with 8 rows and 5 columns (ego_id, si.re,
+#' Example studbook with sex-mismatched parents
+#'
+#' A data frame with 8 rows and 5 columns (ego_id, si.re,
 #' dam_id, sex, birth_date) representing a full pedigree with the errors of
-#' having a sire labeled as female and a dam labeled as male
+#' having a sire labeled as female and a dam labeled as male.
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
 #' \code{pedFemaleSireMaleDam}, \code{pedGood},
@@ -162,8 +173,10 @@
 #' \code{pedSameMaleIsSireAndDam}) used to
 #' demonstrate error detection by the qcStudbook function.
 "pedFemaleSireMaleDam"
-#' pedGood is a dataframe with 8 rows and 5 columns (ego_id, si.re, dam_id,
-#' sex, birth_date) representing a full pedigree with no errors
+#' Valid example studbook (no QC errors)
+#'
+#' A data frame with 8 rows and 5 columns (ego_id, si.re, dam_id,
+#' sex, birth_date) representing a full pedigree with no errors.
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
 #' \code{pedFemaleSireMaleDam}, \code{pedGood},
@@ -171,9 +184,11 @@
 #' \code{pedSameMaleIsSireAndDam}) used to
 #' demonstrate error detection by the qcStudbook function.
 "pedGood"
-#' pedInvalidDates is a dataframe with 8 rows and 5 columns (id, sire, dam,
+#' Example studbook with invalid birth dates
+#'
+#' A data frame with 8 rows and 5 columns (id, sire, dam,
 #' sex, birth) representing a full pedigree with values in the
-#' \code{birth} column that are not valid dates
+#' \code{birth} column that are not valid dates.
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
 #' \code{pedFemaleSireMaleDam}, \code{pedGood},
@@ -181,9 +196,11 @@
 #' \code{pedSameMaleIsSireAndDam}) used to
 #' demonstrate error detection by the qcStudbook function.
 "pedInvalidDates"
-#' pedMissingBirth is a dataframe with 8 rows and 4 columns (ego_id, si.re,
+#' Example studbook missing the birth date column
+#'
+#' A data frame with 8 rows and 4 columns (ego_id, si.re,
 #' dam_id, sex) representing a full pedigree that is missing the birth_date
-#' column
+#' column.
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
 #' \code{pedFemaleSireMaleDam}, \code{pedGood},
@@ -191,18 +208,20 @@
 #' \code{pedSameMaleIsSireAndDam}) used to
 #' demonstrate error detection by the qcStudbook function.
 "pedMissingBirth"
-#' pedOne is a loadable version of a pedigree file fragment used for testing
-#' and demonstration
+#' Raw pedigree-file fragment for testing (5 columns)
 #'
-#' This is used for testing and demonstration.
+#' A loadable version of a pedigree file fragment used for testing
+#' and demonstration.
 #' @examples
 #' library(nprcgenekeepr)
 #' data("pedOne")
 #' head(pedOne)
 "pedOne"
-#' pedSameMaleIsSireAndDam is a dataframe with 8 rows and 5 columns (ego_id,
+#' Example studbook with a male as both sire and dam
+#'
+#' A data frame with 8 rows and 5 columns (ego_id,
 #' si.re, dam_id, sex, birth_date) representing a full pedigree in which the
-#' same male animal is listed as both a sire and a dam
+#' same male animal is listed as both a sire and a dam.
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
 #' \code{pedFemaleSireMaleDam}, \code{pedGood},
@@ -210,26 +229,28 @@
 #' \code{pedSameMaleIsSireAndDam}) used to
 #' demonstrate error detection by the qcStudbook function.
 "pedSameMaleIsSireAndDam"
-#' pedSix is a loadable version of a pedigree file fragment used for testing
-#' and demonstration
+#' Raw pedigree-file fragment for testing (7 columns)
 #'
-#' This is used for testing and demonstration.
+#' A loadable version of a pedigree file fragment used for testing
+#' and demonstration.
 #' @examples
 #' library(nprcgenekeepr)
 #' data("pedSix")
 #' head(pedSix)
 "pedSix"
-#' pedWithGenotype is a dataframe produced from qcPed by adding made up
-#' genotypes
+#' Pedigree with simulated genotypes (from qcPed)
 #'
+#' A dataframe produced from qcPed by adding made up
+#' genotypes.
 #' \describe{
 #' A dataframe containing 280 records with 12 columns: \code{id}, \code{sire},
 #'  \code{dam}, \code{sex}, \code{gen}, \code{birth}, \code{exit}, \code{age},
 #'  \code{first}, \code{second}, \code{first_name}, and \code{second_name}.
 #' }
 "pedWithGenotype"
-#' pedWithGenotypeReport is a list containing the output of \code{reportGV}
+#' Genetic-value report for pedWithGenotype
 #'
+#' A list containing the output of \code{reportGV}.
 #' @source pedWithGenotypeReport was made with pedWithGenotype as input into
 #' reportGV with 10,000 iterations.
 #'
@@ -247,8 +268,9 @@
 #' @examples
 #' pedWithGenotypeReport <- nprcgenekeepr::pedWithGenotypeReport
 "pedWithGenotypeReport"
-#' qcBreeders is a list of 29 baboon IDs that are potential breeders
+#' Potential breeder IDs (29 baboons)
 #'
+#' A list of 29 baboon IDs that are potential breeders.
 #' @source qcBreeders is a list of 3 males and 26 females from
 #' the \code{qcPed} data set.
 #'
@@ -257,8 +279,9 @@
 #' They were initially selected for having low kinship coefficients.
 #' }
 "qcBreeders"
-#' qcPed is a dataframe with 277 rows and 6 columns
+#' Example quality-controlled baboon pedigree
 #'
+#' A data frame with 280 rows and 8 columns.
 #' \describe{
 #' \item{id}{character column of animal IDs}
 #' \item{sire}{the male parent of the animal indicated by the \code{id} column.}
@@ -275,8 +298,7 @@
 #' column.}
 #' }
 "qcPed"
-#' qcPedGvReport is a genetic value report
-#'
+#' Genetic-value report for qcPed
 #'
 #' qcPedGvReport is a genetic value report for illustrative purposes only.
 #' It is used in examples and unit tests with the nprcgenekeepr package.
@@ -290,9 +312,9 @@
 #' @examples
 #' qcPedGvReport <- nprcgenekeepr::qcPedGvReport
 "qcPedGvReport"
-#' smallPed is a hypothetical pedigree
+#' Hypothetical 17-animal pedigree
 #'
-#' It has the following structure:
+#' A hypothetical pedigree. It has the following structure:
 #' structure(list(id = c("A", "B", "C", "D", "E", "F", "G", "H",
 #' "I", "J", "K", "L", "M", "N", "O", "P", "Q"), sire = c("Q", NA,
 #' "A", "A", NA, "D", "D", "A", "A", NA, NA, "C", "A", NA, NA, "M", NA),
@@ -305,14 +327,17 @@
 #'   .Names = c("id", "sire", "dam", "sex", "gen", "population"),
 #'   row.names = c(NA, -17L), class = "data.frame")
 "smallPed"
-#' smallPedTree is a pedigree tree made from \code{smallPed}
+#' Pedigree tree built from smallPed
 #'
+#' A pedigree tree made from \code{smallPed}.
 #' Access it using the following commands.
 #' @examples
 #' library(nprcgenekeepr)
 #' data("smallPedTree")
 "smallPedTree"
-#' rhesusGenotypes is a dataframe with two haplotypes per animal
+#' Rhesus genotypes (two haplotypes per animal)
+#'
+#' A dataframe with two haplotypes per animal.
 #'
 #' There are  object.
 #'
@@ -327,8 +352,9 @@
 #' library(nprcgenekeepr)
 #' data("rhesusGenotypes")
 "rhesusGenotypes"
-#' rhesusPedigree is a pedigree object
+#' Obfuscated rhesus pedigree object
 #'
+#' A pedigree object.
 #' Represents an obfuscated pedigree from \emph{rhesusPedigree.csv} where the
 #' IDs and dates have been modified to de-identify the data.
 #' \describe{

@@ -3,8 +3,7 @@
 \docType{data}
 \name{pedSix}
 \alias{pedSix}
-\title{pedSix is a loadable version of a pedigree file fragment used for testing
-and demonstration}
+\title{Raw pedigree-file fragment for testing (7 columns)}
 \format{
 An object of class \code{data.frame} with 8 rows and 7 columns.
 }
@@ -12,7 +11,8 @@ An object of class \code{data.frame} with 8 rows and 7 columns.
 data(pedSix)
 }
 \description{
-This is used for testing and demonstration.
+A loadable version of a pedigree file fragment used for testing
+and demonstration.
 }
 \examples{
 library(nprcgenekeepr)

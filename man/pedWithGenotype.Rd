@@ -3,8 +3,7 @@
 \docType{data}
 \name{pedWithGenotype}
 \alias{pedWithGenotype}
-\title{pedWithGenotype is a dataframe produced from qcPed by adding made up
-genotypes}
+\title{Pedigree with simulated genotypes (from qcPed)}
 \format{
 An object of class \code{data.frame} with 280 rows and 12 columns.
 }
@@ -12,6 +11,8 @@ An object of class \code{data.frame} with 280 rows and 12 columns.
 data(pedWithGenotype)
 }
 \description{
+A dataframe produced from qcPed by adding made up
+genotypes.
 \describe{
 A dataframe containing 280 records with 12 columns: \code{id}, \code{sire},
 \code{dam}, \code{sex}, \code{gen}, \code{birth}, \code{exit}, \code{age},

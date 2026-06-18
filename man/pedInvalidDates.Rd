@@ -3,9 +3,7 @@
 \docType{data}
 \name{pedInvalidDates}
 \alias{pedInvalidDates}
-\title{pedInvalidDates is a dataframe with 8 rows and 5 columns (id, sire, dam,
-sex, birth) representing a full pedigree with values in the
-\code{birth} column that are not valid dates}
+\title{Example studbook with invalid birth dates}
 \format{
 An object of class \code{data.frame} with 8 rows and 5 columns.
 }
@@ -13,6 +11,11 @@ An object of class \code{data.frame} with 8 rows and 5 columns.
 data(pedInvalidDates)
 }
 \description{
+A data frame with 8 rows and 5 columns (id, sire, dam,
+sex, birth) representing a full pedigree with values in the
+\code{birth} column that are not valid dates.
+}
+\details{
 It is one of six pedigrees (\code{pedDuplicateIds},
 \code{pedFemaleSireMaleDam}, \code{pedGood},
 \code{pedInvalidDates}, \code{pedMissingBirth},

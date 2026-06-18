@@ -3,7 +3,7 @@
 \docType{data}
 \name{rhesusPedigree}
 \alias{rhesusPedigree}
-\title{rhesusPedigree is a pedigree object}
+\title{Obfuscated rhesus pedigree object}
 \format{
 An object of class \code{data.frame} with 375 rows and 8 columns.
 }
@@ -11,6 +11,7 @@ An object of class \code{data.frame} with 375 rows and 8 columns.
 data(rhesusPedigree)
 }
 \description{
+A pedigree object.
 Represents an obfuscated pedigree from \emph{rhesusPedigree.csv} where the
 IDs and dates have been modified to de-identify the data.
 \describe{

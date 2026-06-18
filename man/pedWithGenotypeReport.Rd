@@ -3,7 +3,7 @@
 \docType{data}
 \name{pedWithGenotypeReport}
 \alias{pedWithGenotypeReport}
-\title{pedWithGenotypeReport is a list containing the output of \code{reportGV}}
+\title{Genetic-value report for pedWithGenotype}
 \format{
 An object of class \code{list} (inherits from \code{GVnprcmanag}) of length 8.
 }
@@ -26,7 +26,7 @@ file = "data/pedWithGenotypeReport.RData")
 data(pedWithGenotypeReport)
 }
 \description{
-pedWithGenotypeReport is a list containing the output of \code{reportGV}
+A list containing the output of \code{reportGV}.
 }
 \examples{
 pedWithGenotypeReport <- nprcgenekeepr::pedWithGenotypeReport

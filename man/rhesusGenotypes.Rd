@@ -3,7 +3,7 @@
 \docType{data}
 \name{rhesusGenotypes}
 \alias{rhesusGenotypes}
-\title{rhesusGenotypes is a dataframe with two haplotypes per animal}
+\title{Rhesus genotypes (two haplotypes per animal)}
 \format{
 An object of class \code{data.frame} with 31 rows and 3 columns.
 }
@@ -11,9 +11,11 @@ An object of class \code{data.frame} with 31 rows and 3 columns.
 data(rhesusGenotypes)
 }
 \description{
-There are  object.
+A dataframe with two haplotypes per animal.
 }
 \details{
+There are  object.
+
 Represents 31 animals that are also in the obfuscated \code{rhesusPedigree}
 pedigree from \emph{rhesusGenotypes.csv}.
 \describe{

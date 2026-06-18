@@ -3,7 +3,7 @@
 \docType{data}
 \name{qcPed}
 \alias{qcPed}
-\title{qcPed is a dataframe with 277 rows and 6 columns}
+\title{Example quality-controlled baboon pedigree}
 \format{
 An object of class \code{data.frame} with 280 rows and 8 columns.
 }
@@ -11,6 +11,7 @@ An object of class \code{data.frame} with 280 rows and 8 columns.
 data(qcPed)
 }
 \description{
+A data frame with 280 rows and 8 columns.
 \describe{
 \item{id}{character column of animal IDs}
 \item{sire}{the male parent of the animal indicated by the \code{id} column.}

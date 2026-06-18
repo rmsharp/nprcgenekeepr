@@ -3,8 +3,7 @@
 \docType{data}
 \name{focalAnimals}
 \alias{focalAnimals}
-\title{focalAnimals is a dataframe with one column (\emph{id}) containing the animal
-Ids from the \strong{examplePedigree} pedigree}
+\title{Focal animal IDs from examplePedigree}
 \format{
 An object of class \code{data.frame} with 327 rows and 1 columns.
 }
@@ -12,6 +11,8 @@ An object of class \code{data.frame} with 327 rows and 1 columns.
 data(focalAnimals)
 }
 \description{
+A dataframe with one column (\emph{id}) containing the animal
+Ids from the \strong{examplePedigree} pedigree.
 They can be used to illustrate the identification of a population of
 interest as is shown in the example below.
 }

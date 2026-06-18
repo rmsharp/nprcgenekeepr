@@ -3,7 +3,7 @@
 \docType{data}
 \name{ped1Alleles}
 \alias{ped1Alleles}
-\title{ped1Alleles is a dataframe created by the geneDrop function}
+\title{Gene-drop alleles example (baboon pedigree)}
 \format{
 A dataframe with 554 rows and 6 variables
 \describe{
@@ -34,6 +34,6 @@ Southwest National Primate Center.
 data(ped1Alleles)
 }
 \description{
-ped1Alleles is a dataframe created by the geneDrop function
+A dataframe created by the \code{geneDrop} function.
 }
 \keyword{datasets}

@@ -3,7 +3,7 @@
 \docType{data}
 \name{smallPed}
 \alias{smallPed}
-\title{smallPed is a hypothetical pedigree}
+\title{Hypothetical 17-animal pedigree}
 \format{
 An object of class \code{data.frame} with 17 rows and 6 columns.
 }
@@ -11,7 +11,7 @@ An object of class \code{data.frame} with 17 rows and 6 columns.
 data(smallPed)
 }
 \description{
-It has the following structure:
+A hypothetical pedigree. It has the following structure:
 structure(list(id = c("A", "B", "C", "D", "E", "F", "G", "H",
 "I", "J", "K", "L", "M", "N", "O", "P", "Q"), sire = c("Q", NA,
 "A", "A", NA, "D", "D", "A", "A", NA, NA, "C", "A", NA, NA, "M", NA),

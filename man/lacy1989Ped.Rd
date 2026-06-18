@@ -3,7 +3,7 @@
 \docType{data}
 \name{lacy1989Ped}
 \alias{lacy1989Ped}
-\title{lacy1989Ped small hypothetical pedigree}
+\title{Small hypothetical pedigree (Lacy 1989)}
 \format{
 An object of class \code{data.frame} with 7 rows and 5 columns.
 }
@@ -31,6 +31,6 @@ generation) of the animal indicated by the \code{id} column.}
 data(lacy1989Ped)
 }
 \description{
-lacy1989Ped small hypothetical pedigree
+Small hypothetical pedigree (Lacy 1989)
 }
 \keyword{datasets}

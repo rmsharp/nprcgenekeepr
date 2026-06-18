@@ -3,7 +3,7 @@
 \docType{data}
 \name{qcBreeders}
 \alias{qcBreeders}
-\title{qcBreeders is a list of 29 baboon IDs that are potential breeders}
+\title{Potential breeder IDs (29 baboons)}
 \format{
 An object of class \code{character} of length 29.
 }
@@ -20,6 +20,6 @@ They were initially selected for having low kinship coefficients.
 data(qcBreeders)
 }
 \description{
-qcBreeders is a list of 29 baboon IDs that are potential breeders
+A list of 29 baboon IDs that are potential breeders.
 }
 \keyword{datasets}
