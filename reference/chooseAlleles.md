@@ -1,7 +1,7 @@
-# Combines two vectors of alleles by randomly selecting one allele or the other at each position.
+# Combines two vectors of alleles by randomly selecting one allele or the other at each position
 
 Combines two vectors of alleles by randomly selecting one allele or the
-other at each position.
+other at each position
 
 ## Usage
 

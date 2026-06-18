@@ -1,13 +1,13 @@
-# finalRpt is a list object created from the list object *rpt* prepared by `reportGV`. It is created inside `orderReport`. This version is at the state just prior to calling `rankSubjects` inside `orderReport`.
+# Genetic-value report list prior to ranking
 
-finalRpt is a list object created from the list object *rpt* prepared by
-`reportGV`. It is created inside `orderReport`. This version is at the
-state just prior to calling `rankSubjects` inside `orderReport`.
+A list object created from the list object *rpt* prepared by `reportGV`.
+It is created inside `orderReport`. This version is at the state just
+prior to calling `rankSubjects` inside `orderReport`.
 
 ## Usage
 
 ``` r
-finalRpt
+data(finalRpt)
 ```
 
 ## Format

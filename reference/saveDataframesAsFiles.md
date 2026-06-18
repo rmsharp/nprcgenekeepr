@@ -1,4 +1,4 @@
-# Write copy of dataframes to either CSV, TXT, or Excel file.
+# Write copy of dataframes to either CSV, TXT, or Excel file
 
 Takes a list of dataframes and creates a file based on the list name of
 the dataframe and the extension for the file type.

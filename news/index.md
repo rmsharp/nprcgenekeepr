@@ -245,6 +245,11 @@
       showed
       [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
       and omitted its required `ped` argument.
+  - Code modernization
+    - Replaced the magrittr pipe (`%>%`) with the base R native pipe
+      (`|>`) in package vignettes and examples (the package already
+      requires R \>= 4.1, so the native pipe is always available);
+      `magrittr` is no longer used.
 
 ## nprcgenekeepr 1.0.8 (20250723)
 

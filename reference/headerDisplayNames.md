@@ -1,4 +1,4 @@
-# Convert internal column names to display or header names.
+# Convert internal column names to display or header names
 
 Converts the column names of a Pedigree or Genetic value Report to
 something more descriptive.

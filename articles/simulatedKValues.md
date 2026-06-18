@@ -55,7 +55,6 @@ Animals , , and
 
 knitr::opts_chunk$set(echo = TRUE)
 library(kableExtra) # nolint: undesirable_function_linter
-library(magrittr) # nolint: undesirable_function_linter
 library(nprcgenekeepr) # nolint: undesirable_function_linter
 library(stringi) # nolint: undesirable_function_linter
 
@@ -169,7 +168,7 @@ nrow(stats_10[stats_10$sd > 0.0, ])
 
 ``` r
 
-kable(stats_10[stats_10$sd > 0.0, ], longtable = TRUE) %>%
+kable(stats_10[stats_10$sd > 0.0, ], longtable = TRUE) |>
   kable_styling(
     latex_options = c("striped", "repeat_header"),
     repeat_header_method = "replace",
@@ -320,7 +319,7 @@ nrow(stats_100[stats_100$sd > 0.0, ])
 
 ``` r
 
-kable(stats_100[stats_100$sd > 0.0, ], longtable = TRUE) %>%
+kable(stats_100[stats_100$sd > 0.0, ], longtable = TRUE) |>
   kable_styling(
     latex_options = c("striped", "repeat_header"),
     repeat_header_method = "replace",
@@ -471,7 +470,7 @@ nrow(stats_1000[stats_1000$sd > 0.0, ])
 
 ``` r
 
-kable(stats_1000[stats_1000$sd > 0.0, ], longtable = TRUE) %>%
+kable(stats_1000[stats_1000$sd > 0.0, ], longtable = TRUE) |>
   kable_styling(
     latex_options = c("striped", "repeat_header"),
     repeat_header_method = "replace",
@@ -606,7 +605,7 @@ kable(comprison,
     "Comparision of estimated kinships between simulations ",
     "of 10 (short) and 1000 (long)"
   )
-) %>%
+) |>
   kable_styling(
     latex_options = c("striped", "repeat_header"),
     repeat_header_method = "replace",
@@ -744,7 +743,7 @@ kable(comprison,
     "Comparision of estimated kinships between simulations ",
     "of 100 (short) and 1000 (long)"
   )
-) %>%
+) |>
   kable_styling(
     latex_options = c("striped", "repeat_header"),
     repeat_header_method = "replace",

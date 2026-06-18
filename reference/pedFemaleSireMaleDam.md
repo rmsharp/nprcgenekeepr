@@ -1,16 +1,22 @@
-# pedFemaleSireMaleDam is a dataframe with 8 rows and 5 columns (ego_id, sire, dam_id, sex, birth_date) representing a full pedigree with the errors of having a sire labeled as female and a dam labeled as male.
+# Example studbook with sex-mismatched parents
 
-It is one of six pedigrees (`pedDuplicateIds`, `pedFemaleSireMaleDam`,
-`pedgood`, `pedInvalidDates`, `pedMissingBirth`,
-`pedSameMaleIsSireAndDam`) used to demonstrate error detection by the
-qcStudbook function.
+A data frame with 8 rows and 5 columns (ego_id, si.re, dam_id, sex,
+birth_date) representing a full pedigree with the errors of having a
+sire labeled as female and a dam labeled as male.
 
 ## Usage
 
 ``` r
-pedFemaleSireMaleDam
+data(pedFemaleSireMaleDam)
 ```
 
 ## Format
 
 An object of class `data.frame` with 8 rows and 5 columns.
+
+## Details
+
+It is one of six pedigrees (`pedDuplicateIds`, `pedFemaleSireMaleDam`,
+`pedGood`, `pedInvalidDates`, `pedMissingBirth`,
+`pedSameMaleIsSireAndDam`) used to demonstrate error detection by the
+qcStudbook function.

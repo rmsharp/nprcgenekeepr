@@ -6232,3 +6232,1210 @@ unique files, mirror diff), draft the PR body from
 `NEWS.md`/`CHANGELOG.md`, confirm the public title/body once via
 `AskUserQuestion`, create it, leave it OPEN, and add no CHANGELOG/NEWS
 entry.
+
+#### Learning 95 — Before planning a CRAN “update/submission,” VERIFY THE PACKAGE’S ACTUAL CRAN STATUS FIRSTHAND (it may be ARCHIVED, which reshapes the whole submission path), and treat a clean one-time local `R CMD check` as necessary-but-NOT-sufficient — CRAN’s PERIODIC re-checks (not the submission check) archive established packages for timing/policy drift, so the deliverable is “fast/clean under `--as-cran` on an ongoing basis,” not “passed once.” `nprcgenekeepr` reads in CLAUDE.md and the repo as an established CRAN package (8 dated `cran-comments.md`, a `CRAN-SUBMISSION` marker, `revdep/`), and the owner framed the task as a routine “version bump + NEWS rewrite.” A firsthand `WebFetch` of `cran.r-project.org/web/packages/nprcgenekeepr/index.html` proved otherwise: **“Archived on 2025-07-29 as issues were not corrected in time”** — and the Archive dir + R-pkg-devel thread showed it had a 1.0.8 publish (2025-07-26) RE-archived ~3 days later over *tested elapsed times*, plus a prior 2022-11-03 archive/2025-04-24 unarchive cycle. (S101, CRAN 2.0.0 submission plan)
+
+**The status determines the plan’s spine, so it is a Phase-0/scoping
+check, not a detail.** Published-update vs first-submission vs
+archived-resubmission are three different checklists (the archived path
+adds a mandatory root-cause fix + an explicit archival cover-note in
+`cran-comments.md` + stricter human review for a multiply-archived
+package). **(1) A positive, plan-shaping claim demands a firsthand probe
+(Learning 90, applied to external state).** The whole plan pivots on “is
+it on CRAN?”; the research agent quoted the page, but I re-fetched it
+myself before anchoring six phases on it — the same discipline as
+grepping for an implementation before calling an issue “unbuilt,”
+extended to a remote authority. **(2) “Build/check passes” ≠
+“CRAN-stable” (FM \#24 at CRAN scale).** The repo’s `cran-comments.md`
+honestly recorded `0 errors | 0 warnings | 0 note` for the 1.0.8
+submission — and the package was archived anyway, because CRAN’s
+recurring flavor checks later exceeded elapsed-time limits the one-time
+submission check tolerated. So the timing fix is the critical path and
+must be *measured* (profile examples/tests/vignettes under `--as-cran`),
+not assumed from the mailing-list reason — the index page only says the
+generic “issues were not corrected in time.” **(3) Right-size the
+research as a Workflow, but OWN the synthesis.** A CRAN-prep plan has
+genuinely independent research angles (CRAN Policy / R-exts, the named
+skills, the devtools/usethis pipeline, CRAN status, NEWS conventions)
+and codebase-audit angles (DESCRIPTION+version-string inventory, NEWS
+structure, check readiness, build cruft) — a 9-agent fan-out
+(`wy9xitgt6`) is the correct breadth tool under ultracode, and keeping
+the 396k-token research/file-dump out of the main context is the point.
+But the plan document itself is the deliverable I author and must
+internalize (the SESSION_RUNNER planning rules: grep-based evidence
+inventory, per-phase completion criteria + verification commands +
+session boundaries, here-be-dragons). **(4) When a named external source
+is bot-blocked, fall through to its canonical upstream and SAY SO.** The
+`agent-almanac submit-to-cran` skill’s lobehub mirror was JS-blocked, so
+the agent fetched the real `SKILL.md` from
+`raw.githubusercontent.com/pjt222/agent-almanac`; the `mcpmarket` skill
+stayed blocked (HTTP 429 Vercel checkpoint) and was reconstructed from
+r-pkgs.org + the marinedatascience checklist — both flagged in the
+plan’s Sources as verified-vs-reconstructed so the executor knows what’s
+authoritative. **(5) Honor the project’s own NEWS convention over a
+general one.** The owner asked for “Major changes / Minor changes” —
+which is *also* every prior NEWS entry’s structure — so the plan keeps
+it (with `(breaking)` lead-tags inside Major) rather than imposing
+tidyverse’s “Breaking changes / New features / Minor improvements”
+(\[\[consult-project-source-of-truth\]\]). **(6) The plan is the
+deliverable — do NOT bump the version or touch NEWS this session** (FM
+\#18 planning-to-implementation bleed): those are Phase 3 of the plan, a
+separate session. **Phase-3E N/A** — writing a plan changes no runtime
+behavior; the verification appropriate to the deliverable is the
+firsthand CRAN-status probe + the evidence-based inventory.
+**Reflexes:** \[before planning a CRAN update, `WebFetch` the package’s
+CRAN index page firsthand — archived vs published vs first-submission
+picks a different checklist\]\[archived-resubmission path = mandatory
+measured root-cause fix + explicit archival cover-note + expect stricter
+review (esp. multiply-archived)\]\[a one-time clean `R CMD check` is
+necessary-not-sufficient — CRAN’s PERIODIC re-checks archive for
+timing/policy; deliverable is clean under `--as-cran` ongoing, FM \#24
+at CRAN scale\]\[measure the archival cause (profile
+examples/tests/vignettes), don’t assume it from the mailing-list reason
+— the index page reason is generic\]\[CRAN-prep plan ⇒ Workflow the
+independent research+audit angles, but AUTHOR the plan yourself (grep
+inventory, per-phase criteria/verify/boundary,
+here-be-dragons)\]\[bot-blocked named source ⇒ fall through to canonical
+upstream (GitHub `SKILL.md`) and mark verified-vs-reconstructed in
+Sources\]\[NEWS section names = the project’s own historical convention
+(Major/Minor here), not an imported one\]\[a speed-up that changes
+simulation/sampling numbers is a correctness regression —
+RED-first\]\[version-bump blast radius: don’t touch deprecation `when=`
+markers or historical NEWS/inst strings;
+[`getVersion()`](https://github.com/rmsharp/nprcgenekeepr/reference/getVersion.md)-driven
+files auto-track\]\[plan-is-the-deliverable — no version bump / NEWS
+rewrite this session, FM \#18\]\[Phase-3E N/A — no runtime
+surface\]\[macos-dupe-scan\]. **Apply:** when asked to “prepare for
+CRAN” / “submit to CRAN” / “bump version for release” — FIRST `WebFetch`
+the CRAN package page to learn the true status (don’t trust the repo’s
+`cran-comments`/`CRAN-SUBMISSION` to mean “currently published”); if
+archived, make the measured root-cause fix the critical path and write
+the archival cover-note; fan out the research+audit as a Workflow but
+author the phased plan yourself with grep-based inventory and per-phase
+completion criteria; keep the version bump + NEWS rewrite as their own
+later phases.
+
+#### Learning 96 — CRAN Phase-1 static hygiene is VERIFIABLE WITHOUT `renv::restore()`, and `tar tzf` on a REAL build is the authoritative “no cruft ships” check (over any hand-rolled `.Rbuildignore` simulation): `R CMD build --no-build-vignettes --no-manual <pkg>` produces a valid source tarball using only base R (no Imports/Suggests needed once vignettes+manual are skipped) — refining Learning 92 (“static-only until renv is materialized” holds for code-reachability, NOT for tarball-content checks). (S102, CRAN Phase 1 static hygiene)
+
+#### Learning 97 — Profiling CRAN example/test/vignette TIMING (CRAN Phase 2) has three traps that make raw `testthat` numbers lie, and the profile — not the assumption — names both the offender and the fix mechanism. **MEASURE FIRST, with the right harness, under the right conditions.** (S103, CRAN Phase 2a — skip_on_cran slow shiny-module tests + native pipe)
+
+**(1) Harness trap — run the suite the way the package does, or
+internals vanish.** Running tests via
+`library(nprcgenekeepr) + testthat::test_dir()` does NOT expose
+non-exported functions, so every test that calls an internal
+(e.g. `addErrTxt`, confirmed internal: not in NAMESPACE, lives in
+`R/addErrTxt.R`, reachable only via `:::`) errors with
+`could not find function` — 52 false “errors” here that LOOK like
+missing Suggests but are a harness mistake. The package’s own
+`tests/testthat.R` uses `test_check()`; the dev equivalent is
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+(runs in the package namespace). With `load_all` the same suite was **0
+failed / 0 errors**. *(The owner caught my misattribution — I had blamed
+missing shinytest2/RSelenium/spelling.)* **(2) `skip_if_not(user)` trap
+— raw-slowest ≠ CRAN-slowest.** The four raw-slowest test files
+(`test_fillGroupMembersWithSexRatio/fillGroupMembers/groupAddAssign/makeExamplePedigreeFile`,
+~17s) are guarded `skip_if_not(Sys.info()[["user"]] == "rmsharp")` →
+they run ONLY on the owner’s machine, never on CI or CRAN; measuring AS
+rmsharp overcounts CRAN cost by that ~17s. The genuinely CRAN-running
+slow tests are the **shiny module `testServer` tests**
+(`test_modGeneticValue` 4.4s, `test_modBreedingGroups` 4.6s,
+`test_modInput` 2.7s, `test_modBreedingGroups_groupAddAssign` 2.2s,
+`test_modPedigree_processing` 1.2s) — they use only
+`skip_if_not_installed("shiny")` and shiny is an Import, so they run.
+**(3) `NOT_CRAN` trap.** `skip_on_cran()` skips when
+`Sys.getenv("NOT_CRAN") != "true"`; run `NOT_CRAN=false` to see
+CRAN-effective cost, `NOT_CRAN=true` for CI cost. `NOT_CRAN=true` also
+makes normally-skipped tests RUN and error on missing Suggests
+(`shinyBS` for the modSummaryStats/ORIP/founder UI tests) — env gaps,
+not regressions; install the dep (`shinyBS`) for a clean CI-mode read.
+
+**The profile named the fix mechanism.** Per-BLOCK timing showed the
+mod\* cost is spread across MANY
+[`shiny::testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html)
+calls (~0.05–0.3s each), not a few heavy blocks — so surgical per-block
+skipping buys nothing; the right move is **file-level top-of-file
+[`testthat::skip_on_cran()`](https://testthat.r-lib.org/reference/skip.html)**
+(verified empirically: a top-level skip halts the whole file cleanly,
+even when a helper is defined AFTER it and tests reference it). These
+are shiny module *integration* tests; the analytical functions they
+exercise
+(`reportGV`/`geneDrop`/`groupAddAssign`/`trimPedigree`/`qcStudbook`)
+have their own unit tests that stay on CRAN, so file-level skip is
+coverage-preserving in spirit. Result: ~15s of CRAN test time removed;
+CI/local still runs everything (NOT_CRAN=true). **Examples were already
+fine** (6.6s total, slowest `countLoops` 1.28s — none \> 5s, none flag);
+**vignettes ~21s** (`ColonyManagerTutorial` 7.8s / `a2interactive` 7.5s
+/ `simulatedKValues` 5.4s) were DEFERRED to Phase 2b because the only
+iteration-reduction lever (the n=1000 gene-drop in `simulatedKValues`,
+3.68s) would change the displayed kinship numbers (a correctness
+regression) — the numeric-preserving fix is precompute, a larger
+separate effort. The cited archival reason (“tested elapsed times”) =
+the mod\* shiny tests, so Phase 2a (tests) is the high-confidence,
+no-numeric-change fix; Phase 2b (vignette precompute) remains.
+
+**build/check deps ≠ run deps, and they differ PER profiling surface
+(owner-reinforced).** renv’s `snapshot.type="explicit"` over
+`package.dependency.fields=[Imports,Depends,LinkingTo]`
+(`renv/settings.json`) means
+[`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html)
+materializes ZERO Suggests — so profiling needs precise per-surface
+installs: examples need only Imports (present); vignettes need their own
+[`library()`](https://rdrr.io/r/base/library.html) set
+(`kableExtra`/`png`/`magrittr`); tests need `testthat`/`mockery`/`withr`
+(+`dplyr` for one) and the module UI tests need `shinyBS`;
+`pkgload`/`roxygen2`/`devtools` are build-only tooling that belong in
+`Config/Needs/build`, not Suggests. **`RSelenium` is UNDECLARED** (used
+in the e2e tests, absent from DESCRIPTION Suggests — a real gap to fix
+in a later phase).
+
+**Native pipe.** The package floor is `R (>= 4.1.0)`, so the base `|>`
+is always available; converting `%>%`→`|>` removed the only DIRECT
+`magrittr` use ([`library(magrittr)`](https://magrittr.tidyverse.org) in
+`simulatedKValues.Rmd`) so no Suggests entry was needed (the other `%>%`
+came from dplyr/kableExtra re-exports). Every usage here was
+`lhs %>% fn(...)` — natively convertible (no `.` placeholder, no
+`%T>%`/`%$%`). Editing a roxygen `@examples` `%>%` means the generated
+`.Rd` shows `\%>\%` (`%` is the Rd comment char) — convert it to plain
+`|>` (no escaping) when hand-syncing. **Re-rendering `NEWS.md` from
+`NEWS.Rmd`** (`rmarkdown::render(output_format="github_document")`)
+cleanly appended only the new bullet (no whole-file reformat); `>`
+renders as `\>` in github_document (benign). **TDD:** all edits were
+REFACTOR/mechanical with NO numeric change (skip guards change only WHAT
+runs on CRAN; pipe is syntactic) → RED-first did not apply; gated
+PRE-RED→REFACTOR with one `AskUserQuestion` spelling out the edits +
+verification, plus a separate pre-RED scope `AskUserQuestion` (defer
+vignettes; convert all pipes). **Phase-3E:** the changed code IS
+executed (vignette/example/test) — verified by rendering
+`simulatedKValues.Rmd`, running the `makeRelationClassesTable` example,
+and the affected tests passing — so “runtime” was checked, not skipped.
+**Reflexes:** \[profile package tests with
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+(namespace), NOT `library()+test_dir()` — the latter hides internals →
+false `could not find function`\]\[raw-slowest ≠ CRAN-slowest: check
+each slow test for
+`skip_if_not(user==…)`/`skip_on_cran`/`skip_if_not_installed` before
+blaming it — `skip_if_not(rmsharp)` tests never run off the owner’s
+machine\]\[`NOT_CRAN=false` = CRAN cost, `NOT_CRAN=true` = CI cost;
+NOT_CRAN=true surfaces missing-Suggests errors (env, not
+regressions)\]\[per-block timing decides surgical-vs-file-level skip —
+spread-out testServer overhead ⇒ file-level top-of-file `skip_on_cran()`
+(it halts the whole file cleanly, even past a later helper def)\]\[skip
+shiny module *integration* tests on CRAN; their analytical functions
+have own unit tests that stay\]\[vignette speed-up that reduces
+simulation iterations changes displayed numbers = correctness regression
+⇒ defer to numeric-preserving precompute, RED-first\]\[renv
+explicit-snapshot omits ALL Suggests ⇒ install the precise per-surface
+set; build-only tooling (pkgload/roxygen2/devtools) ⇒
+`Config/Needs/build`\]\[R\>=4.1 floor ⇒ `|>` always available;
+`%>%`→`|>` removes magrittr if it was the only direct user; `\%>\%` in
+`.Rd` ⇒ plain `|>`\]\[re-render NEWS.md from NEWS.Rmd, never hand-edit
+NEWS.md\]\[use plain descriptive language, not jargon like
+“dragon-prone” — user-flagged S103, see
+\[\[avoid-jargon-use-plain-language\]\]\]\[macos-dupe-scan\]. **Apply:**
+for any CRAN timing work — profile each surface (examples via
+`R CMD check` `-Ex.timings`; tests via
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)+`test_dir`
+under both NOT_CRAN settings; vignettes via per-vignette render +
+isolate the heavy compute) BEFORE concluding; let the per-unit/per-block
+data name the offender; gate slow shiny-module integration tests with
+file-level `skip_on_cran()` (no numeric risk); defer iteration-reducing
+vignette fixes to a numeric-preserving precompute pass; install only the
+precise per-surface deps, recognizing build/check/run are three
+different sets.
+
+**A file-path-only `.Rbuildignore` simulation UNDER-reports exclusions;
+only a real build models directory pruning.** A naive per-file
+`grepl(pattern, path)` check reported
+`inst/extdata/code_under_development/combinerKinshipTriangles.R` as
+“kept” — but R CMD build excludes it, because the existing pattern
+`^inst/extdata/code_under_development$` is end-anchored to the DIRECTORY
+and the build prunes the whole dir (it walks with `include.dirs=TRUE`),
+whereas a per-file grep needs the pattern to match each contained file.
+So a static sim is a useful pre-check but `tar tzf` on an actual
+`R CMD build` is authoritative (708 entries here, 0 cruft, 0 hidden
+files). **(1) macOS/R junk was TRACKED in git, not just working-tree
+litter.** `git ls-files` showed `.DS_Store`, `man/.DS_Store`,
+`.Rapp.history`, `inst/extdata/.Rapp.history` all tracked — and the
+plan’s root-anchored `^\.DS_Store$` would have MISSED `man/.DS_Store`.
+An END-anchored, front-UNanchored `\.DS_Store$` / `\.Rapp\.history$`
+(paren-free, per the `.Rbuildignore` perl-regex hazard) catches every
+copy in any subdir. Build-ignoring keeps them out of the tarball WITHOUT
+`git rm`, preserving the owner’s standing `.DS_Store` keep-call
+(de-tracking via `git rm --cached` is a separate, owner’s-call tidy).
+**(2) `\value` for the two exported functions lacking it, with roxygen2
+unavailable:** add `@return` to the roxygen source AND hand-sync the
+`.Rd` (modern roxygen2 places `\value` between `\arguments` and
+`\description`); Phase 4’s `roxygenise()` (post
+[`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html))
+canonicalizes any cosmetic whitespace diff.
+[`appServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md)
+= “No return value, called for side effects” (a Shiny server, invoked
+for side effects — confirmed it ends in module-server calls with no
+explicit return);
+[`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
+returns a `shiny.tag.list`. **(3) Phase 1 has no RED/GREEN** —
+metadata + docs + build-ignore config have no behavioral test surface
+(verified by `R CMD build` + `read.dcf` +
+[`tools::parse_Rd`](https://rdrr.io/r/tools/parse_Rd.html), not
+testthat); the named guard tests (`test_appUI_version.R`,
+`test_getVersion.R`) are unaffected because no version/logic changed —
+verified by READING them (the full suite is deferred to Phase 4’s renv
+gate, not skipped). The PRE-RED→REFACTOR transition still went through
+ONE `AskUserQuestion` gate spelling out every edit (the contract’s
+permission requirement holds even when RED/GREEN don’t apply).
+**Phase-3E N/A** — no runtime/app behavior changed (roxygen additions
+are comments; DESCRIPTION/LICENSE/`.Rbuildignore` aren’t loaded at
+runtime); the build-equivalent (`R CMD build` + tarball inspection) IS
+the appropriate verification and was run (NOT FM \#24 — there is no
+untested runtime behavior being masked, and the actual deliverable was
+verified). **news-vs-changelog:** packaging/metadata hygiene =
+dev-process history → CHANGELOG only; the user-facing NEWS rewrite is
+Phase 3 (\[\[backlog-vs-changelog-placement\]\]). **Reflexes:** \[CRAN
+Phase-1 hygiene ⇒ verify with
+`R CMD build --no-build-vignettes --no-manual` (base-R only, no renv) +
+`tar tzf`, not a hand-rolled ignore sim\]\[`tar tzf` on a real build is
+authoritative over file-path `.Rbuildignore` simulation — the sim can’t
+model directory pruning\]\[end-anchored front-unanchored `\.DS_Store$`
+catches subdir copies (e.g. `man/.DS_Store`); root-anchored
+`^\.DS_Store$` misses them\]\[macOS/R junk may be TRACKED — build-ignore
+keeps it out of the tarball without `git rm`; de-tracking is a separate
+owner’s-call\]\[`\value` with roxygen2 unavailable ⇒ edit roxygen
+source + hand-sync `.Rd` (between and ); Phase 4 roxygenise
+canonicalizes\]\[Phase-1 metadata/docs = REFACTOR, no RED/GREEN, but
+still gate the change with one AskUserQuestion\]\[Phase-3E N/A — no
+runtime surface\]\[news-vs-changelog: packaging hygiene → CHANGELOG,
+NEWS rewrite is Phase 3\]\[right-size-SOLO-even-under-ultracode\].
+**Apply:** when executing CRAN-prep Phase 1 (build cruft + DESCRIPTION +
+`\value`) — don’t wait on
+[`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html);
+make the edits, then prove cleanliness with
+`R CMD build --no-build-vignettes --no-manual` + `tar tzf`
+(authoritative over any ignore-simulation), use end-anchored
+`\.DS_Store$`/`\.Rapp\.history$` to catch subdir junk, build-ignore
+rather than `git rm` tracked junk you weren’t asked to de-track, and
+hand-sync the `.Rd` when roxygen2 isn’t installed.
+
+#### Learning 98 — A “should we adopt technology X to future-proof?” decision splits into THREE independent questions — (1) is the incumbent actually dying? (2) what does X concretely buy ON OUR constrained surface? (3) what does X cost there? — and the answer is frequently HYBRID (adopt X where it’s unconstrained and free; stay on the incumbent where the constraint lives), not all-or-nothing. Verify every external-ecosystem claim by adversarial web research, never from model memory. (S104, Quarto-vs-R-Markdown documentation future-proofing analysis — `docs/planning/quarto-documentation-future-proofing-analysis.md`)
+
+**Don’t answer “convert to X?” as one question.** The owner asked
+whether to migrate the package’s docs from R Markdown to Quarto “to
+future-proof.” The naive framing is binary (convert / don’t). The
+correct decomposition is three separable questions, each with a
+different evidence base: **(1) Is the incumbent a dead end?** — for R
+Markdown, NO: Posit’s on-record line is “not going away, no plans for
+deprecation, actively supported for a long time to come”; `rmarkdown`
+2.31 (2026-03, with a GPLv3→MIT relicense) and `knitr` 1.51 (2025-12)
+are actively maintained CRAN-critical infrastructure (~800
+reverse-imports; it’s the engine Quarto itself runs R with). The real
+cost of staying is *feature stagnation* (“new features may only exist in
+Quarto”), not breakage. **(2) What does X buy on OUR surface?** — for a
+single-language R package’s CRAN HTML vignettes, the gain is NARROW
+because the CRAN vignette engine is deliberately minimal (`theme:none`,
+`minimal:true`): callouts/tabsets/Bootstrap-5/multi-language are
+irrelevant or disabled; only native cross-references is realized. The
+differentiators that make Quarto compelling (books, websites,
+multi-format single-source, multi-language) apply to the
+*manual/website*, not to four simple vignettes. **(3) What does X cost
+there?** — a Quarto vignette adds a `SystemRequirements` Quarto-CLI
+dependency that CRAN’s check machines DON’T guarantee (confirmed missing
+on macOS flavors in 2025), with a documented transient “no vignettes”
+NOTE — a bad trade for an *already-archived* package. The Quarto
+maintainer himself (cderv) “would not advise” the Quarto vignette engine
+for CRAN vignettes.
+
+**The hybrid answer is usually the right one, and it’s a real “yes to
+X,” not a dodge.** Recommendation: keep CRAN vignettes on
+knitr/rmarkdown (zero CRAN risk, officially supported indefinitely)
+while adopting Quarto on the unconstrained surface where it pays off and
+carries no CRAN dependency — the pkgdown site, new long-form docs, slide
+decks, and the `inst/extdata/` dev docs (two already `.qmd`). This is
+enabled by fact, not wish: pkgdown supports MIXED `.qmd`/`.Rmd` (since
+2.1.0, 2024-07) via `project: render: ['*.qmd']`. The one genuine
+strategic fork worth surfacing to the owner (not deciding for them): the
+long-form *manual* is both a CRAN vignette AND the doc that most rewards
+Quarto — it could be repositioned off the CRAN vignette set onto the
+website. Conversion is mechanical and reversible (Quarto renders most
+`.Rmd` unmodified), which is itself an argument against rushing: the
+switching cost stays low whenever (if ever) chosen.
+
+**Process notes that held.** (1) **The owner reframed mid-session**
+(timing → future-proofing); the right move was to KEEP pass 1’s
+already-running CRAN-viability/timing research (still load-bearing as
+the guardrail for the new framing) and ADD a targeted pass 2 on the
+strategic/longevity dimension — not discard and restart. (2)
+**Adversarial verification earns the confidence:** across two Workflows
+(9 + 8 agents, ~900k subagent tokens kept out of main context), all six
+load-bearing claims survived an explicit attempt to refute them at high
+confidence — far stronger than asserting “Quarto is heavier” from
+memory. (3) **Ground the inventory firsthand too:** I read the vignette
+engine headers, the `a3manual` child-include structure,
+`simulatedKValues.Rmd` (set.seed before each sim → deterministic), and
+confirmed the `vignettes/*.html|.R|.md` are git-ignored stale renders
+(no precompute pattern) — not just trusting the audit agent. (4)
+**Right-size as Workflow-for-research + SOLO-for-synthesis:** research
+breadth (CRAN policy, build-time, ecosystem trajectory, migration
+mechanics) is genuine independent fan-out; the recommendation document
+is mine to author per the planning rules (like S101’s CRAN plan). (5)
+**Timing fix is orthogonal to this decision:** the CRAN plan’s deferred
+Phase 2b vignette timing is fixed by precompute on the EXISTING engine
+(`.Rmd.orig`→committed `.Rmd`), NOT by Quarto — keep the two efforts
+separate. **\[news-vs-changelog\]:** an analysis/planning doc =
+dev-process history → **CHANGELOG only**, no NEWS
+(\[\[backlog-vs-changelog-placement\]\], S101 plan precedent).
+**Phase-3E N/A** — an analysis document changes no runtime behavior; the
+verification appropriate to the deliverable is the
+adversarially-verified research + firsthand inventory (NOT FM \#24 — no
+build step mistaken for correctness). **Used plain language, not
+jargon** (\[\[avoid-jargon-use-plain-language\]\] — no “here be
+dragons”/“dragon-prone” in the new doc). **Reflexes:** \[decompose
+“adopt X to future-proof?” into is-incumbent-dying /
+what-X-buys-on-our-constrained-surface / what-X-costs-there — three
+different evidence bases\]\[the future-proofing answer is often HYBRID:
+adopt X on the unconstrained/author-controlled surface, stay on the
+incumbent where the hard constraint (here, CRAN’s guaranteed toolchain)
+lives\]\[verify external-ecosystem trajectory claims (deprecation
+status, maintenance, CRAN support) by adversarial web research with
+refutation, never from model memory\]\[rmarkdown/knitr are maintained
+CRAN-critical infrastructure — “not going away, no deprecation”; staying
+is safe, the only cost is feature stagnation\]\[Quarto CRAN vignette =
+`SystemRequirements` Quarto-CLI NOT guaranteed on CRAN machines +
+minimal engine disables most Quarto features ⇒ narrow benefit, real
+risk, esp. for an archived package\]\[pkgdown supports MIXED .qmd/.Rmd
+(2.1.0) — the hybrid split is officially enabled\]\[owner reframes
+mid-task ⇒ keep still-relevant in-flight research as the guardrail, ADD
+a pass for the new axis; don’t discard\]\[ground the inventory firsthand
+(engine headers, child includes, gitignored renders), not just the audit
+agent\]\[Workflow the research breadth, author the recommendation SOLO
+(planning rules)\]\[CRAN vignette timing fix = precompute on existing
+engine, orthogonal to a Quarto decision\]\[analysis/planning doc →
+CHANGELOG only, no NEWS\]\[Phase-3E N/A — no runtime surface\]\[use
+plain language, not
+jargon\]\[right-size-Workflow-for-research-SOLO-for-synthesis\].
+**Apply:** when asked “should we adopt/convert to to future-proof?” —
+split it into (1) is the incumbent actually being retired (verify
+firsthand, don’t assume), (2) what does the new thing concretely buy on
+the specific constrained surface we ship (often little, if the
+constraint strips its differentiators), (3) what does it cost there (new
+dependency / risk); expect the answer to be a deliberate HYBRID — adopt
+it where it’s free and pays off, keep the incumbent where the constraint
+lives — and present the options with a clear recommendation as the
+owner’s decision, authored as one analysis doc (CHANGELOG only), with
+all external claims adversarially web-verified.
+
+#### Learning 99 — RECORDING an adopted decision is not the same as STAMPING it “adopted”: when the owner picks a recommendation that has open sub-options, resolving a sub-option can invalidate a top-level claim the source doc made under a *different* sub-choice — so propagate the chosen sub-option’s consequences and CORRECT the now-stale claims, don’t just flip a Status line. (S105, adopt Hybrid documentation strategy — `docs/planning/quarto-documentation-future-proofing-analysis.md`)
+
+**The trap.** S104’s analysis recommended Hybrid (Option B) and, in §8,
+stated “only Option A would intersect the CRAN submission; under B/C the
+plan is unaffected” — TRUE *only if* the §6.3 manual sub-decision stayed
+at (a) keep-as-knitr-vignette. When the owner adopted B **with §6.3 →
+(b)** (reposition the manual onto the website, dropping it from the CRAN
+vignette set), that removes a CRAN vignette = changes the package
+contents `R CMD check` sees, so the adopted path now DOES intersect the
+resubmission. Flipping the Status to “ADOPTED” without fixing §8 would
+have left a self-contradicting policy doc — the kind of stale
+load-bearing claim FM \#11/#20 warn about, here introduced by the act of
+recording rather than by memory drift.
+
+**What “record the decision” actually entails (the checklist that
+worked):** (1) flip the doc’s own decision surfaces — Status header,
+TL;DR, the §7 options-table verdict, the “default if unaddressed” line —
+so it reads as policy, not a pending recommendation; (2) RESOLVE every
+open sub-decision the chosen option carried (here §6.3 → (b)) and mark
+it inline where the option is described; (3) re-derive and CORRECT any
+consequence the source doc asserted conditional on a *different*
+sub-choice (§8’s “only A intersects”); (4) record the implementation
+slices where future sessions look — for this project, the analysis doc
+(a new §7.1 slices table with per-slice CRAN-risk + ordering) + ROADMAP
+“Planned”; (5) CHANGELOG entry (a documentation-process decision =
+dev-process history → CHANGELOG only, no NEWS —
+\[\[backlog-vs-changelog-placement\]\]); (6) NO auto-memory — the
+decision now lives in the repo, so a memory would duplicate the source
+of truth (\[\[consult-project-source-of-truth\]\]).
+
+**The deliverable boundary held (FM \#18).** “Adopt Hybrid” is a
+DECISION-recording session; it converts NOTHING. The first conversion
+slice is a separate, owner-approved session. The owner’s own menu
+framing (“(A) Decide the recommendation … the first implementable slice
+is a separate session”) made this explicit, and recording the slices as
+a §7.1 table (with the slice-4 resubmission-coordination gate) sets up
+those sessions without starting them. The one CRAN-touching slice (the
+manual) is flagged as gated on the CRAN plan, not free-standing. **Two
+`AskUserQuestion`s up front** pinned the two genuine owner sub-decisions
+(§6.3 manual disposition; file-issues-or-not) *before* writing — they
+changed exactly what got recorded. **Right-sized SOLO under ultracode:**
+editing 4–5 docs to record a decision the owner just made — facts
+already established and already adversarially verified in S104 — has no
+breadth to fan out and no fresh claims to verify; a Workflow would be
+theater (the S101/S102/S103/S104 call). Verification = a firsthand
+cross-document consistency re-read (does §6.3 = §7 = §7.1 = §8 = ROADMAP
+= CHANGELOG tell ONE story?). **Reflexes:** \[recording an adopted
+decision ≠ stamping “adopted” — resolve open sub-options and CORRECT any
+source claim that assumed a different sub-choice\]\[flip ALL the doc’s
+decision surfaces: Status, TL;DR, options-table verdict, default
+line\]\[record slices where future sessions look: analysis doc +
+ROADMAP + CHANGELOG entry, no NEWS\]\[no auto-memory for a decision now
+recorded in the repo\]\[decision-recording converts nothing — FM \#18;
+slices are separate owner-approved sessions\]\[gate the one
+CRAN-touching slice on the CRAN plan, keep the zero-risk slices
+independent\]\[ask the genuine owner sub-decisions up front via
+AskUserQuestion\]\[verify a decision-recording deliverable by
+cross-document consistency re-read,
+SOLO\]\[right-size-SOLO-even-under-ultracode\]. **Apply:** when the
+owner says “adopt ” — treat it as a decision-recording deliverable
+(convert nothing); ask the option’s open sub-decisions first; then flip
+every decision surface in the source doc, resolve the sub-decisions
+inline, re-derive and fix any consequence the doc stated under a
+different sub-choice, record the implementation slices in the doc +
+ROADMAP + CHANGELOG (no NEWS, no auto-memory), and verify by reading all
+the touched docs as one consistent story.
+
+#### Learning 100 — Converting a doc Rmd → Quarto `.qmd` is not just a rename: (a) the target format has SEMANTIC differences the source didn’t (Quarto treats `:::` as fenced-div/callout syntax; R Markdown doesn’t), so you must RENDER to catch them — a static rename hides them; (b) verify the conversion changes no *package* contents by applying the `.Rbuildignore` regexes to BOTH filenames, don’t assume “it was ignored so the new one is too”; (c) when the doc isn’t reproducibly renderable (dead hardcoded paths, unmaterialized packages), render with `--no-execute` to verify FORMAT validity and STATE the execution limitation — do not fake a full render, and do NOT “fix” the doc into being executable (that’s a behavior change, not a format conversion); (d) preserve the author’s historical prose byte-for-byte rather than rewrite it to silence a cosmetic warning whose output is verified correct (FM \#22). (S106, Quarto Hybrid §7.1 slice 1 — `inst/extdata/meeting_notes.Rmd` → `.qmd`)
+
+**What happened.** Slice 1 of the adopted Hybrid doc policy: convert the
+build-ignored developer doc `inst/extdata/meeting_notes.Rmd` to `.qmd`.
+The mechanical change is tiny — `git mv` + one YAML line
+(`output: html_document` → `format: html`, matching the two
+already-`.qmd` sibling dev docs); `git diff -M` reported
+`similarity index 99%`, body byte-for-byte. The *value* was in the
+verification, which surfaced three things a rename-only “conversion”
+would have missed: - **A real Rmd→qmd semantic difference.** Rendering
+the `.qmd` (Quarto 1.7.33) emitted a warning that the string
+`nprcgenekeepr:::` “looked like a fenced div.” Quarto treats `:::` as
+fenced-div / callout syntax; R Markdown does not. The token was R’s
+internal-function operator quoted from a 2020 CRAN-review reply, sitting
+in prose. Checking the rendered HTML proved it rendered correctly
+(mid-line `:::` is not a div delimiter — a heuristic false-positive), so
+it was left byte-faithful. But the general point holds: **a static
+rename would never have revealed it; only the render did.** Other latent
+Quarto-vs-Rmd differences (header attributes
+[`{}`](https://rdrr.io/r/base/Paren.html), raw-HTML/`$math$` handling,
+callouts) live in the same blind spot. - **The doc isn’t reproducibly
+renderable — and that’s not mine to “fix.”** Five embedded R chunks
+hardcode 2020-era absolute paths
+(`/Users/rmsharp/.../20160816_GeneticManagementTools`) and need packages
+absent from the default library (the standing renv-not-materialized
+condition). `include=FALSE` hides output but the chunk still *executes*,
+so a full render fails on the dead paths even with packages. This is a
+historical meeting-notes log, not a live computational document. The
+build-equivalent (SAFEGUARDS “Verify the Build Equivalent”) was
+therefore satisfied by `quarto render --no-execute` (verifies YAML +
+markdown + structure → 81 KB HTML, code shown not run) with the
+execution limitation **stated, not silently skipped**. Making it
+re-executable (e.g. `eval: false` globally, or repointing the paths)
+would have been a behavior/content change masquerading as a format
+conversion — FM \#8 / the SAFEGUARDS two-mode “while I’m at it” trap. -
+**“It was build-ignored” is not proof the new file is.** I confirmed it
+by reading both relevant `.Rbuildignore` regexes
+(`^inst/extdata/meeting_notes\.` — extension-agnostic — and
+`^inst/extdata/.*\.qmd$`) AND by running every `.Rbuildignore` pattern
+against both `meeting_notes.Rmd` and `meeting_notes.qmd` in R
+(`ships=FALSE` for both). Had the ignore pattern been extension-specific
+(`...\.Rmd$`), the conversion would have started *shipping* the new
+`.qmd` into the CRAN tarball — a silent package-contents change. For an
+archived package mid-resubmission (Learning 95), that’s exactly the kind
+of invisible regression to rule out, not assume.
+
+**Reflexes:** \[Rmd→qmd is a format change with SEMANTIC differences
+(`:::` fenced divs), not just a rename — RENDER to catch them\]\[verify
+a doc conversion changes no package contents by running the
+`.Rbuildignore` regexes against BOTH old and new filenames, not by
+assuming\]\[when a doc isn’t reproducibly renderable (dead paths /
+unmaterialized packages), render `--no-execute` to verify FORMAT and
+STATE the execution limitation — never fake a full render\]\[do NOT
+“fix” a historical doc into being executable during a format conversion
+— that’s a behavior change (FM \#8)\]\[preserve the author’s historical
+prose byte-faithful; don’t rewrite it to silence a cosmetic warning
+whose output is verified correct (FM \#22)\]\[`git mv` for doc renames —
+preserves history, fully reversible\]\[1-and-done: one slice, do not
+bundle the next (FM \#18/#25)\]\[right-size SOLO for a single-file
+mechanical conversion even under ultracode\]. **Apply:** when converting
+any doc between markup engines — do the minimal faithful change
+(`git mv` + the format-line), then RENDER (using `--no-execute` if the
+doc isn’t reproducibly executable) to catch target-format semantic
+differences, confirm via the ignore/build rules that no shipped-contents
+changed, state any verification you could not perform, and leave the
+author’s content byte-faithful unless a real output defect (not a
+cosmetic warning) forces a change.
+
+#### Learning 101 — A “make it render/build” doc deliverable is verified by building it through the REAL consumer’s integration path, not a proxy renderer — and an adversarial reviewer’s “correction” is a claim to check against ground truth, not a verdict to act on. (S107, Quarto Hybrid §7.1 slice 2 — pkgdown mixed mode + `vignettes/articles/breeding-group-formation.qmd`)
+
+**What happened.** Slice 2 of the adopted Hybrid doc policy: stand up
+pkgdown mixed `.qmd`/`.Rmd` mode and author the first Quarto pkgdown
+article (a scripted breeding-group-formation walkthrough on shipped
+`examplePedigree` data). Three things made the verification the real
+work: - **Recon against the canonical source corrected an imprecise plan
+instruction.** The §7.1 policy note said “add a `_quarto.yml`
+(`project: render: ['*.qmd']`)” without saying *where*. The
+authoritative pkgdown docs (+ usethis `use_article()`) say the
+`_quarto.yml` and the `.qmd` both live **inside `vignettes/articles/`**
+(pkgdown turns that dir into a Quarto project), and a single
+`.Rbuildignore` line `^vignettes/articles$` then makes the whole dir
+website-only — covering the article, the `_quarto.yml`, and any
+`.quarto/` cache. A root `_quarto.yml` (my Phase-1 assumption) would
+have needed its own ignore entry and could have pulled the `.Rmd`
+vignettes into a Quarto project. Reading the source of truth beat acting
+on the plausible-sounding policy paraphrase. - **Render-only is a proxy;
+build through the real consumer.** `quarto render` proves the article’s
+R chunks execute (they did, ~1.7 s, deterministic via `set_seed(1L)`).
+But the deliverable’s actual claim is “**pkgdown** mixed mode works.” So
+I installed pkgdown 2.2.0 + the `quarto` R package locally and ran
+[`pkgdown::build_article`](https://pkgdown.r-lib.org/reference/build_articles.html)
+— which surfaced an integration detail a renderer never would: pkgdown’s
+name for the article is `articles/breeding-group-formation` (with the
+`articles/` prefix), and the build only succeeded once I used it (the
+bare stem errored “Can’t find article”). The two-path verification
+(quarto render AND pkgdown build) is what makes “mixed mode is stood up”
+a tested claim rather than a hopeful one. Zero CRAN risk was likewise
+*proven* (a real `R CMD build` tarball shows the `vignettes/articles/`
+tree absent and the shipping vignettes unaffected), not assumed. -
+**Verify the verifier.** A fresh adversarial reviewer flagged the
+article’s “threshold 0.015625 = 1/64 = second cousins” as wrong,
+asserting 1/64 is *third* cousins. Checked before acting: it confused
+the **coefficient of relationship** (r; second cousins = 1/32) with the
+**kinship coefficient** (φ = r/2; second cousins = 1/64) — and this
+package computes φ. The package’s own manual
+(`vignettes/manual_components/_breeding_group_formation.Rmd`) says the
+default ignores “relatedness more distant than second cousins.” The
+original was correct; I left it unchanged. An adversarial pass is only
+as trustworthy as the check you run on *its* claims.
+
+**Reflexes:** \[verify a doc/render deliverable through the REAL
+consumer’s build path (here
+[`pkgdown::build_article`](https://pkgdown.r-lib.org/reference/build_articles.html)),
+not just a standalone renderer — the integration path catches
+discovery/naming/wiring the renderer can’t\]\[read the
+canonical/authoritative source for config placement; don’t act on a
+plan’s paraphrase of it\]\[prove zero-CRAN-risk for a website artifact
+with a real `R CMD build` tarball + build-ignore the whole
+`vignettes/articles/` dir — don’t assume\]\[an adversarial reviewer’s
+“correction” is a candidate, not a verdict — check it against ground
+truth (the math AND the package’s own docs) before changing anything;
+distinguish kinship coefficient φ from coefficient of relationship
+r\]\[build a how-to article on the function’s own roxygen `@examples`
+pipeline so it exercises the same code `R CMD check` runs\]\[seed once
+up front (`set_seed`) for reproducible rendered stochastic
+output\]\[right-size: recon as a Workflow for breadth/context-economy,
+author the prose SOLO, verify through real build paths\]. **Apply:**
+when a deliverable is “make X render/build on surface Y,” verify by
+building it on Y itself (install Y’s real toolchain if needed), prove
+any “won’t ship / no risk” claim with the actual build artifact, ground
+config choices in the authoritative docs rather than a plan’s
+restatement, and treat every adversarial finding — including a
+reviewer’s — as a claim to verify, not accept.
+
+#### Learning 102 — When documenting a function’s outputs/scoring, the GROUND TRUTH is the implementation run on real data plus the scoring source — NOT the function’s own roxygen, which can drift. Run the pipeline first; read the ordering/scoring code; treat `@return`/`@param` prose as a hint. (S108, Quarto Hybrid §7.1 — second article `vignettes/articles/genetic-value-analysis.qmd`, a scripted `reportGV()` walkthrough)
+
+**What happened.** Authoring an accurate how-to for
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+meant getting three things right that the package’s OWN roxygen states
+incorrectly — caught only by reading the implementation: (1)
+`orderReport.R` `@return` says the High-Value mean-kinship tier is “mean
+kinship less than 0.25,” but the code (`orderReport.R:63`) gates on the
+**z-score** (`zScores <= 0.25`), not raw mean kinship; (2) `calcFEFG.R`
+roxygen calls the founder weight `p` the “average number of
+descendants,” but the code computes Mendelian-halved proportional
+**contributions** (`calcFounderContributions.R`); (3) `reportGV.R`
+`@return` says it returns “A dataframe,” but it returns a **list** of
+class `nprcgenekeeprGV`. The article is correct in all three because it
+was written from the code + a real run, not from the roxygen.
+
+**Run-the-pipeline-first paid off.** Executing the GVA on shipped
+`examplePedigree` (deterministic via `set_seed(1L)` — the gene-drop
+behind genome uniqueness / `fe` / `fg` is stochastic; mean kinship is
+not) produced the real numbers the prose describes (327-animal
+population of interest, 199/128 High/Low Value, `fe` 109.67 / `fg`
+47.62) and surfaced the teaching example for free: the rank-1 animal has
+higher genome uniqueness but NOT the lowest mean kinship — which is
+exactly why the ranking uses both metrics. The article prints computed
+values in chunks rather than hardcoding them, so the rendered output is
+the ground truth.
+
+**Verify-the-verifier held again (Learning 101).** This time the
+adversarial reviewer’s flags were ALL real — I confirmed each against
+the code before applying three precision fixes: `meanKinship.R` is
+`colMeans` over the whole matrix incl. the diagonal → “all animals
+incl. itself,” not “every other”; `orderReport.R:59` tier-2 sort breaks
+ties on ascending z-score; `orderReport.R:32` imports tier also requires
+`id %in% founders`. An adversarial pass that returns “no must-fix” still
+earns its cost: it converted three latent imprecisions into fixes and
+independently confirmed the article out-corrects the roxygen.
+
+**Discovered, not mine (flagged, not fixed — FM \#8).** The sibling S107
+article `breeding-group-formation.qmd` comments its focal set is “the
+founders still in the colony,” but the filter
+`!(is.na(sire) & is.na(dam))` selects **non-founders** (≥ 1 known
+parent). A one-line prose inversion; left for an owner-approved session.
+
+**Reflexes:** \[run the function’s real pipeline on shipped data and let
+the printed output be the ground truth before writing a descriptive
+sentence\]\[read the scoring/ordering implementation
+(`orderReport`/`rankSubjects`/`calcFEFG`), not the function’s `@return`,
+when the doc’s whole job is to explain behavior — roxygen drifts\]\[seed
+once up front for reproducible stochastic rendered output\]\[an
+adversarial reviewer’s flags are claims to verify against code, even
+when they all turn out right\]\[a how-to built on the function’s own
+`@examples` shape exercises the code `R CMD check` runs\]\[right-size:
+recon Workflow for breadth, author SOLO, verify through real build
+paths\]. **Apply:** documenting any function’s outputs/scoring — derive
+every claim from a real run + the implementation; where the roxygen is
+wrong, FIX-FORWARD in the doc and note the roxygen for a future repair
+session; flag, don’t fix, errors you find in sibling artifacts.
+
+#### Learning 103 — Ground-truth-first documentation also means running the UNHAPPY paths: a function’s error/edge behavior is part of what you are documenting, and running it can refute an assumption you would otherwise have written down as fact. (S109, Quarto Hybrid §7.1 — third article `vignettes/articles/studbook-quality-control.qmd`, a scripted `qcStudbook()` walkthrough)
+
+**What happened.** Documenting
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+meant describing two modes (`reportErrors = FALSE` production vs `TRUE`
+diagnostic) and how each handles every category of bad input. From
+reading the code I had *assumed* invalid dates were silently coerced to
+`NA` in production mode. Running `qcStudbook(pedInvalidDates)` showed it
+actually **stops** (“invalid dates on row(s) 3 and 4”). Running each
+shipped error-demo set in both modes produced the exact, verified
+behavior table the article rests on — auto-corrected
+(female-sire/male-dam, exact duplicates), fatal (missing column, invalid
+date, sire==dam, young parent, period-in-ID), and the diagnostic list’s
+named elements (returning `NULL` when clean). The shipped
+`pedGood`/`pedFemaleSireMaleDam`/`pedInvalidDates`/`pedDuplicateIds`/`pedMissingBirth`/`pedSameMaleIsSireAndDam`
+data sets are purpose-built worked examples — find and use them rather
+than constructing inputs.
+
+**Determinism by reading, not hoping.**
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+has no random component (no seed needed — unlike the GVA/breeding
+siblings whose `reportGV`/`groupAddAssign` gene-drop is stochastic), and
+its one [`Sys.Date()`](https://rdrr.io/r/base/Sys.time.html) dependency
+(`calcAge` for living animals) is bypassed because `examplePedigree`
+ships an `age` column, so no live-date value enters the displayed
+output. Confirmed empirically by the render-determinism review lens: two
+render passes produced byte-identical HTML. When a fatal call must
+appear in a render, wrap it in
+`tryCatch(..., error = function(e) cat(conditionMessage(e)))` so the
+real message is shown without breaking the build (vs an `#| error: true`
+chunk whose toolchain support I had not proven here).
+
+**Two-lens adversarial review + verify-the-verifier (Learning
+101/102).** Ran the review as two parallel lenses (code-correctness vs
+the implementation; pedagogy + render-determinism). No must-fix; I
+confirmed each flag against the code before acting — the `H` sex-code
+flag was real (`qcStudbook` calls `convertSexCodes(ignoreHerm = TRUE)` →
+`H`/`HERMAPHRODITE`/`4` fold to `U`, never output), so I fixed the
+article (out-correcting an over-broad “M/F/U/H” claim) and added a
+`## Setup` section for house-style parallelism with the siblings; left
+the “defensible digest” column-rename nit as-is.
+
+**Reflexes:** \[run the unhappy paths, not just the happy path —
+error/edge behavior is part of the documentation surface, and running it
+can refute a code-reading assumption\]\[prefer shipped purpose-built
+example data sets over constructed inputs\]\[prove render determinism
+both by reading for RNG +
+[`Sys.Date()`](https://rdrr.io/r/base/Sys.time.html) reachability AND by
+a byte-identical double render\]\[show a fatal call via `tryCatch` +
+`cat(conditionMessage(e))` so the build stays clean\]\[two adversarial
+lenses (correctness vs pedagogy/render) beat one for a doc article;
+still verify every flag against code\]. **Apply:** documenting any
+function with modes/error handling — exercise every mode on real data
+and let the output be the table; a behavior you only read in the source
+is a hypothesis until you run it.
+
+#### Learning 104 — When the documentation IS a data visualization, the figure’s input filter is part of the truth: read what the plot actually includes/excludes, and run it on the example data — a plot built from incomplete data can show the OPPOSITE of reality, not just an attenuated version. (S110, Quarto Hybrid §7.1 — fourth article `vignettes/articles/age-sex-pyramid.qmd`, a scripted `getPyramidPlot()` walkthrough)
+
+**What happened.** `getPyramidPlot(qcPed)` looked like it would plot
+“the living colony,” and a naive article would have said so. Running it
+(and `fillBins`) showed the pyramid plots only living animals **with a
+known age** — 46 of 89 living, because 43 living animals lack a birth
+date and so cannot be aged. Those 43 are *all male*, so the plot shows
+35 F / 11 M (≈ 3:1 female) while the living colony is actually 35 F / 54
+M (male-majority). The visualization shows the **reverse** of the real
+sex ratio. The article was built on the verified numbers and turned this
+into its central lesson (missing birth dates can *invert* a demographic
+plot, not just shrink it — quality-control first), which the second
+adversarial lens then sharpened from “under-counts males” to “the skew
+is reversed.”
+
+**Determinism for a base-graphics figure.** The pyramid is
+[`plotrix::pyramid.plot()`](https://plotrix.github.io/plotrix/reference/pyramid.plot.html)
+(base graphics), so the plotting call must be the chunk’s last
+expression, and `#| results: hide` keeps the function’s (non-plot)
+return value out of the rendered output. The render is deterministic in
+*shape* — no RNG, no seed (unlike the GVA/breeding siblings), and
+`qcPed` ships a frozen `age` column — but the title embeds
+[`lubridate::now()`](https://lubridate.tidyverse.org/reference/now.html),
+so the date label is the build date. I characterized that honestly
+rather than trying to force byte-identical output.
+
+**Two-lens review + verify-the-verifier (Learning 101/102/103).**
+Code-correctness re-ran every number against `qcPed` (all held). The
+pedagogy lens caught the reversed-skew understatement and the V&R
+reference over-attribution; I confirmed both against the data (living
+35F/54M) and the paper’s actual subject before applying. Found (not
+fixed, FM \#8) a `getPyramidPlot` `@return` roxygen drift (claims
+`par('mar')`; returns `pyramid.plot()`’s value) — flagged for the
+roxygen-repair session.
+
+**Reflexes:** \[for documentation-of-a-plot, read the plot’s input
+filter (`fillBins`: living + non-NA age) and run it on the example data
+— the figure’s coverage is part of the claim\]\[a plot from incomplete
+data can show the OPPOSITE of reality, not just an attenuated version —
+check stratum-by-stratum (here the dropped 43 are all male, flipping the
+sex ratio)\]\[base-graphics chunk: plot is the last expression +
+`#| results: hide` to drop the return value\]\[a `now()` title is an
+honest “as of render date,” not a determinism defect to hide\].
+**Apply:** documenting any plotting function — derive the description
+from what the function actually plots on real data, and stress-test
+whether missing data could invert (not merely shrink) the visual
+conclusion.
+
+#### Learning 105 — A flagged error from a previous session is a claim to re-verify, not a fact to action: confirm it two ways (internal corroboration + ground truth on the example data) before correcting, and right-size a one-line fix as SOLO. (S111, doc fix `vignettes/articles/breeding-group-formation.qmd` — corrected the inverted “founders” → “non-founders” focal-population description)
+
+**What happened.** S108 discovered, and S109/S110 carried forward, that
+the breeding-group article called its focal set “the founders still in
+the colony” while the filter `!(is.na(sire) & is.na(dam)) & is.na(exit)`
+actually selects **non-founders**. Rather than trust the prior-session
+flag and swap the word, I confirmed it two independent ways: (1)
+**internal corroboration** — the same sentence trims the pedigree to the
+focal set “plus the ancestors needed to compute their kinships,” and
+founders by definition have no ancestors, so the focal set logically
+*must* be non-founders; (2) **ground truth** — ran
+`qcStudbook(examplePedigree)` + the article’s own filter: 327 focal
+animals, none founders, all with ≥ 1 known parent (1,668 founders in the
+studbook, zero in the focal set). Both agreed with the flag, so the fix
+was safe. The correction also adds an inline definition (“those with at
+least one known parent”) so the term is clear without the reader
+cross-referencing the code.
+
+**Right-sizing under ultracode.** A one-line prose correction with a
+deterministic two-way verification has no breadth to fan out and no
+competing claims to adjudicate — it was done SOLO. Spawning a Workflow
+would have been theater (the same S100/S106 call for genuinely
+single-threaded mechanical work). Ultracode means *exhaustive and
+correct*, not *always multi-agent*; here exhaustiveness was the two-way
+verification, not parallelism.
+
+**Reflexes:** \[a flagged error inherited from a predecessor is a
+hypothesis to verify against code + data, not a fact to action blindly —
+even when the predecessor was reliable\]\[confirm a prose-vs-logic
+mismatch two ways: internal corroboration (does the surrounding text
+agree?) + ground truth (run the actual filter on the example
+data)\]\[when correcting an inverted term, add an inline definition so
+the fix also removes the ambiguity that allowed the
+inversion\]\[right-size: a one-line fix with deterministic verification
+is SOLO, not a Workflow\]. **Apply:** actioning any “discovered, not
+mine” flag from a prior session — re-verify it firsthand before editing;
+the discoverer couldn’t fix it precisely because it wasn’t their
+deliverable, so the claim has never itself been re-checked.
+
+#### Learning 106 — Regenerating a generated artifact (here `man/` via `roxygenise()`) with a dev tool newer than the committed baseline silently reformats EVERY file and migrates config — read `git diff --stat` after any codegen step, and if it touches files beyond your edits, revert the version migration and apply the change surgically rather than bundling a tooling bump into a content fix. And: re-verifying inherited flags can REFUTE them, not just confirm them. (S112, roxygen-repair pass — fixed 3 of 4 inherited `@return`/`p` drifts across `orderReport`/`calcFEFG`/`reportGV` + the `calcFE`/`calcFG` siblings)
+
+**What happened (the blast-radius trap).** The deliverable was a 5-line
+roxygen prose fix + a `man/` regen. Running
+[`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html)
+rewrote ~30 `.Rd` files and changed `DESCRIPTION` — far beyond the 4
+functions I edited. Cause: the committed `man/` was generated with
+roxygen2 **7.3.2** (`RoxygenNote: 7.3.2`), but the dev library has
+**8.0.0**, which reformats every page (data-doc `\usage` `qcPed` →
+`data(qcPed)`, re-wrapped `\value`) and migrates the field
+(`RoxygenNote:` → `Config/roxygen2/version:`). Committing it would have
+bundled a tooling-baseline migration — a deliberate, CRAN-coordinated
+decision — into a doc fix. Countermeasure:
+`git checkout -- man/ DESCRIPTION` to drop the version artifacts, then
+hand-edited the four affected `\value` blocks to match source, keeping
+the diff to exactly 5 `R/` + 4 `man/` files. The 7.3.2→8.0.0 migration
+was flagged as a separate task. **General rule: after any
+codegen/regeneration step, read `git diff --stat`; if it touches files
+you did not intend, a version/tooling mismatch is reformatting them — do
+not commit it as part of a content change.** (This is the codegen
+sibling of SAFEGUARDS “Verify Render-Dependency Completeness” — a tool’s
+*version* is a render dependency.)
+
+**Re-verifying inherited flags can refute, not just confirm (extends
+Learning 105).** Four `@return`/param drifts were inherited as code-read
+claims (three from S108, one from S110) never confirmed against runtime.
+An 8-agent verification workflow (one verifier + one adversarial
+cross-checker per claim) confirmed three and **refuted the fourth**:
+`getPyramidPlot.R`’s `@return` (“the return value of `par('mar')`”) is
+correct — the function returns
+[`plotrix::pyramid.plot()`](https://plotrix.github.io/plotrix/reference/pyramid.plot.html)’s
+value, but `pyramid.plot` ends with `return(oldmar)` where
+`oldmar <- par("mar")`, so the returned value *is* a `par("mar")` vector
+(verified: returns `c(5.1, 4.1, 4.1, 2.1)`). S110’s flag was a
+false-dichotomy code-read (“returns pyramid.plot, not par(‘mar’)”) that
+never ran the function. Trusting it would have replaced a correct
+`@return` with a wrong one. The cross-check also surfaced same-defect
+instances beyond the named scope (the `p` description in sibling
+`calcFE`/`calcFG`; a second `orderReport` `@return` bullet), which the
+owner approved folding in.
+
+**Right-sizing: this one earned a Workflow where S111 did not.**
+Adjudicating four independent inherited claims that ship to CRAN — each
+needing a code trace + an adversarial check — has real breadth and
+competing claims, so the verify+refute fan-out was warranted (contrast
+Learning 105’s single deterministic one-liner, correctly SOLO).
+Verification fans out; the mutation (edits + regen) stays
+single-threaded in the main loop to keep control and avoid worktree
+conflicts.
+
+**Scope discipline held with one disclosed extension.** Fixed exactly
+the agreed `p`-description in `calcFE`/`calcFG` (kept their `r` clause),
+and flagged — did not fix — adjacent pre-existing defects (`calcFE`’s
+`@return` mentions `r` though `FE = 1/sum(p^2)` has none; the
+`sum( (p^2) / r}` formula has unbalanced parens; the pre-existing
+`reportGV.Rd` `\title`-ends-in-period `checkRd` note).
+
+**Reflexes:** \[after ANY codegen/regeneration step, read
+`git diff --stat` before trusting it — a diff touching files beyond your
+edits means a tool/version mismatch is reformatting them; revert and
+apply surgically\]\[never bundle a generated-tooling version migration
+(here roxygen 7.3.2→8.0.0) into a content fix — it’s a separate,
+deliberate decision\]\[a generated artifact (`man/*.Rd`) may be
+hand-edited as a scoped, disclosed exception when regenerating would
+force a version migration — the content matches source, so a later
+proper regen reconciles cleanly\]\[re-verify inherited flags against
+runtime, not just code-read — they can be WRONG, not merely unconfirmed;
+one of four here was\]\[verification fans out (verifier + adversarial
+refuter per claim), mutation stays single-threaded\]\[doc-change
+build-equivalent =
+[`tools::checkRd()`](https://rdrr.io/r/tools/checkRd.html) +
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html) +
+render the `\value`, not full `R CMD check`; `devtools` is NOT in the
+renv lib, `roxygen2`/`pkgload`/`pkgbuild` ARE\]. **Apply:** any task
+editing roxygen/generated docs — check the regen blast radius, keep
+tooling migrations out of content fixes, and re-verify every inherited
+claim firsthand before acting on it.
+
+#### Learning 107 — A generated-tooling version migration, taken as its OWN deliverable, is the clean inverse of the blast-radius trap (Learning 106): the diff is small and reviewable, and regenerating with the newer tool also REPAIRS content that had silently drifted between the source and the committed artifact. Adopt it safely by reading the COMPLETE regen diff (every change must be an intended kind) and confirming the new tool introduces ZERO new linter findings — not by spot-checking. (S113, owner pick A — adopted roxygen2 8.0.0, regenerated `man/`)
+
+**What happened.** S112 hit roxygen2 8.0.0 reformatting `man/` mid-way
+through a content fix and correctly isolated the version migration as a
+separate, deliberate task. S113 executed that task as its whole
+deliverable. Counter to the “blast radius” framing, the isolated
+migration was *small*: **26 of 190 `.Rd` files + `DESCRIPTION`**, 31
+insertions / 29 deletions, `NAMESPACE` untouched. The changes were
+exactly three kinds — the `Config/roxygen2/version` field rename
+(`RoxygenNote: 7.3.2` retired), 24 dataset docs adopting 8.0.0’s
+canonical `\usage{ data(name) }` form, and a cosmetic `\value` re-wrap —
+plus a fourth, unexpected and *beneficial*: regenerating
+`man/nprcgenekeepr-package.Rd` repaired a shipped typo (`'mulatto'` →
+`'mulatta'`, already correct in `DESCRIPTION`) and added the maintainer
+to the Authors list. The committed 7.3.2 `.Rd` had drifted from its
+source; the regen reconciled it.
+
+**The migration IS the point, so verification is “is the WHOLE diff
+intended?”, not “did I break anything?”** The adversarial check that
+mattered was reading the complete diff (all 27 files) and tallying every
+added line — confirming there were no surprise edits hiding among the
+mechanical ones — and proving the new tool added ZERO new `checkRd`
+problems by checking all 26 pages and confirming the 11 flagged
+`\title`-period NOTEs were already present on the committed HEAD (62 of
+190 package-wide). A spot-check of a few files would have missed either
+a stray change or mistaken a pre-existing NOTE for a regression.
+
+**Right-sizing: SOLO, but with a full-diff audit, not a fan-out.** A
+deterministic regen whose diff is fully inspectable has no competing
+claims to adjudicate, so a multi-agent workflow would be theater (the
+S111/S106 call). The rigor lived in reading 100% of the diff and the
+HEAD-vs-working `checkRd` comparison, not in parallelism. Pinning the
+old tool was the rejected alternative: roxygen2 isn’t in `renv.lock`
+(dev-only dep), so a pin needs a manual downgrade and doesn’t survive
+[`renv::restore`](https://rstudio.github.io/renv/reference/restore.html)
+— adopting was both less work and durable.
+
+**Reflexes:** \[a tooling version migration is a legitimate standalone
+deliverable — isolate it from content fixes (Learning 106), then DO it
+deliberately when it’s the chosen task\]\[verify a regen by reading the
+COMPLETE diff and classifying every change as an intended kind — a
+regen’s correctness is “is the whole diff intended?”, not “spot-check
+looks fine”\]\[prove a new codegen tool adds no regressions by running
+the linter (`checkRd`) on every changed artifact AND confirming any
+findings pre-exist on HEAD — don’t assume a NOTE on a changed file is
+new\]\[a newer codegen tool can repair drift between source and a stale
+committed artifact — treat it as a benefit, but disclose it (it
+ships)\]\[prefer adopting over pinning when the tool isn’t snapshotted
+in the lock — a pin isn’t durable across
+[`renv::restore`](https://rstudio.github.io/renv/reference/restore.html)\].
+**Apply:** any deliberate regeneration-tool or formatter version bump
+(roxygen2, styler, a codegen) — take it as its own commit, audit the
+entire diff, and confirm zero new linter findings against HEAD.
+
+#### Learning 108 — A large-but-uniform mechanical doc sweep (here 62 `\title`-ends-in-period `checkRd` NOTEs) is a legitimate SINGLE deliverable when the edit is ONE kind and the verification is an ORACLE: dry-run a deterministic script and audit every before/after BEFORE writing, then prove via a per-page HEAD-vs-working `checkRd` diff that ONLY the target NOTE disappeared and NOTHING was added. (S114, owner pick A2 — title-period mop-up across 52 title files + 3 GV `@return` files = 55 `R/` total)
+
+**What happened.** The flagged work — 62 of 190 `.Rd` carrying
+`\title should not end in a period`, plus `calcFE`’s spurious `r` clause
+and the unbalanced-paren `fg` formula in `calcFEFG`/`calcFG` — all
+re-verified true against the current tree (a flag is a claim, not a
+fact; Learning 105/106). The blast radius (~55 source files) *looks*
+like it violates the SAFEGUARDS “5 files” rule, but the rule targets
+unrelated multi-file scope creep; a single uniform mechanical change
+(remove one trailing period per title) verified by an oracle is a
+different shape. Right-sized as ONE deliverable after the owner blessed
+the scope via a pre-RED `AskUserQuestion` (full sweep vs. narrower;
+concrete previews; ASCII-only labels per
+\[\[ascii-only-in-question-options\]\]).
+
+**Why SOLO + script + oracle, not a fan-out.**
+[`tools::checkRd()`](https://rdrr.io/r/tools/checkRd.html) is a
+ground-truth oracle: if 0 title-period NOTEs remain and no changed page
+gained a new note, the titles are correct. When the check is an oracle,
+parallel agents add variance, not safety, for “remove one character” — a
+deterministic script is *more* reliable than 51 hand-edits or 51
+sub-agents. Edits were made at the roxygen SOURCE and `man/` regenerated
+(never hand-edit `.Rd`). The rigor lived in two places: (1) a
+**dry-run** of the title script that printed every title paragraph + its
+before/after so all 51 were audited *before* any write (each correctly
+identified the title = first roxygen paragraph, including multi-line
+titles); (2) a **per-page HEAD-vs-working `checkRd` comparison**
+(normalize away line numbers, set-diff the messages) proving 62 pages
+had ONLY the period NOTE removed and 0 pages gained anything — the
+precise “no new problems” proof, scoped to the 65 changed pages (the
+other 125 are byte-identical to HEAD). Confirmed `load_all` (162
+exports) + `NAMESPACE`/`DESCRIPTION` unchanged. This extends Learning
+107 (deterministic regen → SOLO full-diff audit) to a deterministic
+*source sweep*.
+
+**The shell backslash trap (recurring — bit S112/S113 too).**
+`Rscript -e '... pattern="\\.Rd$" ...'` and `grep("^\\\\title", ...)`
+get mangled through the Bash tool layer — a backslash level is stripped,
+so R sees an invalid escape (`'\.' is an unrecognized escape`) or a `\t`
+tab that matches nothing. Fix: WRITE the R probe to a file (Write tool)
+and run `Rscript file.R` — file contents are passed verbatim, no shell
+re-escaping — and/or use backslash-free constructs: `endsWith(f, ".Rd")`
+not a regex, `[.]` not `\\.`, `fixed = TRUE`, POSIX `[[:space:]]`. Reach
+for the file-based probe FIRST given the documented history.
+
+**Scope discipline.** Period-removal is mechanical, so it left adjacent
+CONTENT bugs intact, which were FLAGGED not fixed (FM \#8):
+`findPedigreeNumber`’s title is a copy-paste of `findGeneration`’s;
+`pedMissingBirth`/`pedSameMaleIsSireAndDam` data docs claim “no errors”
+though they are error-demo sets; `focalAnimals`/`convertSexCodes`
+grammar. The minimal-vs-proper fork for data-doc titles (remove period
+vs. rewrite the run-on into a short title + `@description`) was surfaced
+to the owner as part of the scope question; the owner chose minimal, so
+the long titles are now checkRd-clean but a proper rewrite is deferred.
+
+**Reflexes:** \[a large-but-UNIFORM mechanical doc change is one
+deliverable when the edit is a single kind AND a linter/oracle can
+confirm it — the SAFEGUARDS “5 files” rule targets unrelated scope
+creep, not one verified uniform sweep\]\[prefer a deterministic script
+over hand-edits or sub-agents when the change is “remove/replace one
+token” — but DRY-RUN it and audit every before/after before
+writing\]\[prove “no regressions” by a per-page HEAD-vs-working linter
+diff (normalize line numbers, set-diff messages), scoped to changed
+files — don’t eyeball\]\[when a linter is a ground-truth oracle, SOLO +
+script + oracle beats a fan-out; parallel agents add variance not safety
+for trivial mechanical edits\]\[write R probes to a FILE to dodge the
+recurring shell backslash-mangling trap, or use
+`endsWith`/`[.]`/`fixed=TRUE`/POSIX classes\]\[edit roxygen SOURCE
+titles + regenerate; never hand-edit `.Rd`\]\[period-removal leaves
+CONTENT bugs intact — flag the copy-paste/garbled titles, don’t fix them
+in a mechanical pass\]. **Apply:** any mechanical lint-cleanup sweep
+(trailing periods, deprecated tags, formatting) across many files — pose
+the scope to the owner, dry-run + audit a deterministic fixer,
+regenerate, and prove via a per-file before/after linter diff that only
+the target finding cleared and nothing new appeared.
+
+#### Learning 109 — A flagged doc “bug” is often one token inside a larger wrong claim; the correct fix verifies and repairs the WHOLE sentence against ground-truth data, and a regenerated data-doc’s auto-computed `\format` block is a free oracle for shape claims. (S115, owner pick A — repaired the 4 content bugs S114 flagged)
+
+**What happened.** S114 flagged `pedMissingBirth`’s data doc for saying
+“representing a full pedigree with no errors” (it is an error-demo set).
+Loading the data to verify (Learning 105/106) showed the demonstrated
+error is that the `birth_date` column is ABSENT entirely — and that the
+same sentence’s “5 columns (ego_id, sire, dam_id, sex, birth_date)” was
+therefore ALSO wrong (the object has 4 columns). The flagged token (“no
+errors”) sat inside a larger inaccurate claim; fixing only the token
+would have left “missing the birth_date column” contradicting “5 columns
+including birth_date” in the same sentence. Surfaced the fork (minimal
+touch vs. full accuracy) to the owner via `AskUserQuestion` grounded in
+the probe output (concrete before/after previews, ASCII-only labels per
+\[\[ascii-only-in-question-options\]\]); owner chose full accuracy. The
+regenerated `.Rd`’s auto-generated `\format` line already read “8 rows
+and 4 columns” — independent corroboration that the hand-written “5
+columns” prose had drifted from the data object.
+
+**Verify the claim, not the flag.** All four flags re-checked against
+ground truth before editing: `pedSameMaleIsSireAndDam` row `o3` has
+`dam_id = s1` (a male) and `s1` sires `o1`/`o2` (the same male is both
+sire and dam; 5 columns correct, so only the error clause changed);
+`focalAnimals` is 1 column (`id`) / 327 rows; `findPedigreeNumber`
+assigns a connected-component number (the `pedNum` vector), not a
+generation (its title was a verbatim copy of `findGeneration`’s);
+`convertSexCodes`’s “to a standardized codes” is a number-agreement
+error. Each fix states what the data/function actually is.
+
+**A mid-session owner constraint can be already-satisfied — confirm,
+don’t re-do.** The owner interjected that `pedMissingBirth` must “retain
+the characteristic of not having a Birth column.” Because the
+deliverable touched only documentation (never `data/`), the constraint
+was already met; the right response was to verify the data object
+post-edit (4 columns, `birth_date` absent) and confirm, not to change
+anything (FM \#23 inverse — don’t manufacture work from a constraint
+that’s already honored).
+
+**Right-sizing: SOLO with firsthand data probes + a `checkRd` oracle.**
+Five deterministic prose fixes whose correctness is established by
+printing the actual data objects — a fan-out of agents to re-print data
+I already printed would be theater (the S111/S113/S114 call).
+Verification = per-page `checkRd` HEAD-vs-working diff (0 problems, 0
+new) + `load_all` (162 exports) + a `data/`-unchanged check. Edits at
+the roxygen SOURCE, `man/` regenerated; never hand-edit `.Rd`. Used
+file-based R probes from the first command, dodging the recurring
+shell-backslash trap (Learning 108) that bit S112–S114.
+
+**Scope discipline.** Fixed exactly the four flagged items; FLAGGED but
+did not fix newly-discovered adjacent bugs (FM \#8): the
+`\code{pedgood}` wrong-case cross-reference in all six error-set docs
+(dataset is `pedGood`), the `si.re`-vs-`sire` data/doc column-name
+mismatch across the qc data family, and roxygen 8.0.0’s
+`@importFrom must be only 1 line long` errors in `mod*.R`.
+
+**Reflexes:** \[a flagged doc bug is a claim about one token — verify
+the WHOLE surrounding sentence against ground-truth data, because the
+correct fix often must repair a second, unflagged inaccuracy for
+coherence\]\[load the actual data object and read its columns/rows
+before describing a dataset — names lie, `\format` is computed\]\[a
+regenerated data-doc’s auto-generated `\format` block is a free oracle
+for shape claims (row/column counts) — cross-check hand-written prose
+against it\]\[a mid-session owner constraint may already be satisfied by
+the deliverable’s scope — verify and confirm, don’t re-open
+work\]\[SOLO + firsthand probes + `checkRd` oracle for deterministic
+prose fixes; flag (don’t fix) adjacent bugs found along the way\].
+**Apply:** any task fixing a flagged documentation error — re-verify the
+flag against data, repair the entire inaccurate claim (not just the
+flagged word), cross-check counts against the generated `\format`, and
+flag adjacent bugs for a separate pass.
+
+#### Learning 110 — A flag can be wrong about a bug’s NATURE and SCOPE, not just its existence; before fixing, disprove your own hypothesis with the oracle, scan the whole codebase for the pattern, and trace “messy” data through its consumer — the principled fix sometimes INVERTS the obvious one. (S116, owner pick A — fixed the 3 adjacent doc/data-doc bugs S115 flagged)
+
+**What happened.** S116 inherited three flags from S115 and each needed
+re-examination beyond “is it real?”: (1) **Nature was wrong.** S115’s
+flag — and my own restatement — called the wrapped `@importFrom` tags a
+“latent NAMESPACE-drop hazard.” A fully-reverted regen probe
+(`roxygenise()` on the current source, then `git diff NAMESPACE` +
+count, then `git checkout`) disproved it: roxygen 8.0.0 prints
+`✖ @importFrom must be only 1 line long` for all of them but still
+parses every continuation line — `NAMESPACE` came back byte-identical
+(140 `importFrom`, 0 removed). The bug was cosmetic lint, not a
+regression. (2) **Scope was undercounted 3×.** The flag named 3 `mod*.R`
+files; a file-based detector scanning every `@importFrom` in `R/`
+(checking whether the next roxygen line is a non-tag continuation) found
+**20 wrapped tags across 10 files**, including non-`mod` files
+(`appServer.R`, `appUI.R`). (3) **The obvious fix was inverted.**
+`si.re` (and `pedOne`’s `si re`) looked like a corrupted `sire` to
+rename in the data; tracing it through its consumer showed
+`fixColumnNames` strips spaces then periods (`si re` → `si.re` → `sire`)
+and `qcStudbook(pedGood)` returns canonical `sire` — so `si.re` is an
+*intentional raw QC-demo fixture* (`make.names("si re")` at `.rda`
+creation), and renaming it would gut the fixture it exists to exercise.
+The correct fix was the docs, not the data.
+
+**Disprove your own hypothesis with the oracle, cheaply and
+reversibly.** The single most valuable step was a throwaway regen whose
+entire output I reverted (`git checkout -- man/ NAMESPACE DESCRIPTION`).
+It converted a plausible-sounding inherited claim (“hazard”) into a
+measured fact (“cosmetic; NAMESPACE byte-identical”) before I touched
+anything — and I reported the correction to the owner rather than
+quietly proceeding. Verify-the-claim-not-the-flag (Learning 105/106/109)
+applies to *your own* characterization too, not just to a predecessor’s.
+
+**Trace “messy” data through its consumer before cleaning it.** A value
+that looks like corruption (`si.re`) can be a deliberate test input.
+Read the normalization/validation function (`fixColumnNames`) and run
+the end-to-end consumer (`qcStudbook`) to see what the messy form is
+*for*. If it round-trips to the canonical value, it’s load-bearing — fix
+the description, not the datum.
+
+**Two owner-decisions → two pre-RED gates, each grounded in evidence.**
+The data-vs-doc fork (item 2) and the 3-vs-10-file boundary (item 3,
+surfaced *after* the scope/nature discovery) were each posed as a
+separate `AskUserQuestion` with a recommendation and concrete tradeoffs
+(ASCII-only labels per \[\[ascii-only-in-question-options\]\]); owner
+chose full-accuracy docs and all-10-files. A discovery that changes what
+a chosen option *means* (scope tripled, hazard→cosmetic) warrants
+re-surfacing, not silent expansion (FM \#8) or a silent half-fix.
+
+**Prove the neutral claim with the oracle, and match surrounding
+style.** Item 3’s safety rested on `NAMESPACE` being byte-identical
+after the real regen (`git diff --quiet -- NAMESPACE`), not on
+reasoning. And the reformat split each over-long list into *multiple*
+single-line `@importFrom pkg ...` tags wrapped at ≤80 chars (a
+deterministic dry-run-first script, audited before writing, per Learning
+108) — matching the authors’ existing wrapping rather than collapsing to
+one 180-char line. Regression read confirmed 0 new failures (no
+executable line changed — only `#'` comments).
+
+**Reflexes:** \[run a reverted regen/build probe to measure a codegen
+tool’s ACTUAL behavior before believing a flag about its effect — “✖”
+lint is not the same as a functional change\]\[scan the whole codebase
+for the flagged pattern with a deterministic detector — a flag’s file
+list is a sample, not an inventory (SESSION_RUNNER
+evidence-based-inventory applies to bug-fix scope too)\]\[before
+“cleaning” a value that looks corrupt, read its consumer/normalizer and
+run it end-to-end — an ugly raw value may be an intentional fixture that
+round-trips to canonical\]\[correct your OWN mis-characterization to the
+owner and re-pose scope when a discovery changes what the chosen option
+means\]\[prove a “won’t change X” claim with the byte-level oracle
+(`git diff --quiet`), not reasoning\]\[reformat to match surrounding
+style — multiple ≤80-char single-line tags, not one mega-line\].
+**Apply:** any inherited-flag fix touching generated artifacts
+(roxygen/NAMESPACE/codegen) or example/test data — probe the tool’s real
+behavior, inventory the pattern across the repo, trace messy data
+through its consumer, gate genuine owner-forks, and verify neutrality
+with the artifact oracle.
+
+------------------------------------------------------------------------
+
+#### Learning 111 — For a doc-rewrite that is structurally oracle-checkable but whose QUALITY is not, split the verification: do the edits SOLO with firsthand probes + oracle (checkRd/load_all/tests), then fan out an adversarial critic panel for the subjective dimension (title aptness, completeness, cross-doc consistency) that no oracle can judge. (S117, owner pick A2 — short-`@title` rewrite of all 24 data docs)
+
+**What happened.** The deliverable was rewriting all 24 `R/data.R`
+data-doc titles from “X is a …” run-ons into short noun-phrase titles,
+with the detail moved to `@description`. Structural correctness — does
+it render, is it `checkRd`-clean, are `NAMESPACE`/exports/tests
+unchanged? — is fully oracle-decidable, so fanning *that* out would be
+theater (Learnings 108–110). But title *quality* — is “Example studbook
+with sex-mismatched parents” apt, accurate, non-duplicative? — is
+**not** oracle-checkable. So I made the 24 edits solo (serial edits to
+one file) and verified structure with the oracle, then ran a 3-lens
+critic workflow (accuracy / completeness / style+consistency) over the
+24 before/after pairs, each lens grounding itself in
+`git show HEAD:R/data.R` plus the loaded objects. It returned **0 block,
+0 should-fix, 3 nits**: a pre-existing `recordStats`→`recordStatus`
+`\describe` drift (flagged, out of scope, FM \#8), a confusable
+near-duplicate title prefix (`smallPed` vs `lacy1989Ped` — fix applied),
+and a studbook-vs-pedigree term split (kept — owner-approved in the
+preview).
+
+**Verify every count-bearing claim before authoring it; a
+self-contradicting auto-`\format` is a free oracle.** Before moving any
+“N rows and M columns” sentence into a description I checked each
+against the live object. Exactly one was wrong: `qcPed` said “277 rows
+and 6 columns” but is 280×8 — and roxygen’s auto-generated `\format`
+already read “280 rows and 8 columns”, so the page literally
+contradicted itself. Authoring the moved sentence verbatim would have
+perpetuated a falsehood; I wrote the accurate 280×8 and flagged the
+correction (the S115/S116 verify-and-correct pattern, now extended to
+title-rewrites).
+
+**A critic suggestion that reverses an owner-approved previewed choice
+is a note, not a mandate; improving your own un-previewed draft is
+within latitude.** The style lens flagged “studbook” (the 6 QC fixtures)
+as inconsistent with the file’s dominant “pedigree” — but the owner had
+explicitly selected the “studbook” preview when choosing the style, so I
+kept it (defensible: studbook-style input fixtures that *represent*
+pedigrees and feed `qcStudbook`) and recorded the observation for the
+future rather than silently flipping approved text. The `smallPed`
+near-duplicate, by contrast, was my own un-previewed draft — I applied
+the disambiguation directly.
+
+**Reflexes:** \[for a rewrite whose structure is oracle-checkable but
+whose quality is not, do edits solo+oracle and fan out ONLY the
+subjective dimension — that’s the non-theater use of a critic
+panel\]\[give each critic lens ground truth (HEAD diff + loaded
+objects), not your summary, so it verifies independently\]\[verify every
+count/column claim against the live object before moving it into prose;
+a self-contradicting auto-`\format` is a free oracle\]\[keep an
+owner-approved previewed choice when a critic merely *prefers* an
+alternative — note it, don’t flip it; freely improve your own
+un-previewed drafts\]\[flag pre-existing adjacent content bugs the panel
+surfaces (FM \#8), don’t fix them mid-task\]. **Apply:** any bulk
+documentation/content rewrite where rendering + lint prove structure but
+not aptness — pair solo oracle verification with an adversarial quality
+panel grounded in source-of-truth, verify factual claims firsthand, and
+respect the owner-decision boundary.

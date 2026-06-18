@@ -1,7 +1,6 @@
-# fixColumnNames changes original column names and into standardized names.
+# fixColumnNames changes original column names and into standardized names
 
-fixColumnNames changes original column names and into standardized
-names.
+fixColumnNames changes original column names and into standardized names
 
 ## Usage
 

@@ -1,4 +1,4 @@
-# Calculates genome uniqueness for each ID that is part of the population.
+# Calculates genome uniqueness for each ID that is part of the population
 
 {Genome Uniqueness Functions}{}
 

@@ -1,4 +1,4 @@
-# Get the superset of columns that can be in a pedigree file.
+# Get the superset of columns that can be in a pedigree file
 
 Part of Genetic Value Functions
 

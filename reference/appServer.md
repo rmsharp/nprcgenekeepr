@@ -23,6 +23,13 @@ appServer(input, output, session)
 
   Shiny session object
 
+## Value
+
+No return value, called for side effects. As a 'Shiny' server function,
+`appServer()` is invoked by the 'Shiny' runtime to wire up the
+application's reactive outputs, observers, and module servers for a
+running GeneKeepR session.
+
 ## Details
 
 The server handles:

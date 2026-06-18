@@ -1,4 +1,4 @@
-# Gets pedigree to ancestors of provided group leaving uninformative ancestors.
+# Gets pedigree to ancestors of provided group leaving uninformative ancestors
 
 Filters a pedigree down to only the ancestors of the provided group,
 removing unnecessary individuals from the studbook. This version builds

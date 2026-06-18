@@ -1,11 +1,11 @@
-# lacy1989Ped small hypothetical pedigree
+# Small hypothetical pedigree (Lacy 1989)
 
-lacy1989Ped small hypothetical pedigree
+Small hypothetical pedigree (Lacy 1989)
 
 ## Usage
 
 ``` r
-lacy1989Ped
+data(lacy1989Ped)
 ```
 
 ## Format

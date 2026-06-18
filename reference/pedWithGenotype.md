@@ -1,9 +1,11 @@
-# pedWithGenotype is a dataframe produced from qcPed by adding made up genotypes.
+# Pedigree with simulated genotypes (from qcPed)
+
+A dataframe produced from qcPed by adding made up genotypes.
 
 ## Usage
 
 ``` r
-pedWithGenotype
+data(pedWithGenotype)
 ```
 
 ## Format

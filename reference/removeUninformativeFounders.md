@@ -1,4 +1,4 @@
-# Remove uninformative founders.
+# Remove uninformative founders
 
 Founders (having unknown sire and dam) that appear only one time in a
 pedigree are uninformative and can be removed from a pedigree without

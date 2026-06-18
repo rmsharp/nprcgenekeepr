@@ -1,4 +1,4 @@
-# Generates a genetic value report for a provided pedigree.
+# Generates a genetic value report for a provided pedigree
 
 This is the main function for the Genetic Value Analysis.
 
@@ -56,8 +56,14 @@ reportGV(
 
 ## Value
 
-A dataframe with the genetic value report. Animals are ranked in order
-of descending value.
+An object of class `nprcgenekeeprGV`: a list with elements `report` (a
+dataframe with the genetic value report, with animals ranked in order of
+descending value), `kinship` (the kinship matrix), `gu` (genome
+uniqueness values), `fe` (founder equivalents), `fg` (founder genome
+equivalents), `maleFounders` and `femaleFounders` (dataframes of the
+known male and female founder records), `nMaleFounders` and
+`nFemaleFounders` (the counts of those founders), and `total` (the total
+number of known founders).
 
 ## Examples
 

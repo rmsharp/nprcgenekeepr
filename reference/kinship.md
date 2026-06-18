@@ -1,4 +1,4 @@
-# Generates a kinship matrix.
+# Generates a kinship matrix
 
 {Kinship Matrix Functions} { The code for the kinship function was
 written by Terry Therneau at the Mayo clinic and taken from his website.

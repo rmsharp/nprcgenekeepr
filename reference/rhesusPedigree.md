@@ -1,7 +1,8 @@
-# rhesusPedigree is a pedigree object
+# Obfuscated rhesus pedigree object
 
-Represents an obfuscated pedigree from *rhesusPedigree.csv* where the
-IDs and dates have been modified to de-identify the data.
+A pedigree object. Represents an obfuscated pedigree from
+*rhesusPedigree.csv* where the IDs and dates have been modified to
+de-identify the data.
 
 - id:
 
@@ -41,7 +42,7 @@ IDs and dates have been modified to de-identify the data.
 ## Usage
 
 ``` r
-rhesusPedigree
+data(rhesusPedigree)
 ```
 
 ## Format

@@ -1,11 +1,11 @@
-# pedWithGenotypeReport is a list containing the output of `reportGV`.
+# Genetic-value report for pedWithGenotype
 
-pedWithGenotypeReport is a list containing the output of `reportGV`.
+A list containing the output of `reportGV`.
 
 ## Usage
 
 ``` r
-pedWithGenotypeReport
+data(pedWithGenotypeReport)
 ```
 
 ## Format

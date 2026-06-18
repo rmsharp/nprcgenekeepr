@@ -1,4 +1,4 @@
-# Get required column names for a studbook.
+# Get required column names for a studbook
 
 Pedigree curation function
 

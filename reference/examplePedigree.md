@@ -1,6 +1,7 @@
-# examplePedigree is a pedigree object created by `qcStudbook`
+# Example pedigree object (from ExamplePedigree.csv)
 
-Represents pedigree from *ExamplePedigree.csv*.
+A pedigree object created by `qcStudbook`. Represents pedigree from
+*ExamplePedigree.csv*.
 
 - id:
 
@@ -61,7 +62,7 @@ Represents pedigree from *ExamplePedigree.csv*.
 ## Usage
 
 ``` r
-examplePedigree
+data(examplePedigree)
 ```
 
 ## Format

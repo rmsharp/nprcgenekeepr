@@ -1,4 +1,4 @@
-# Determines the generation number for each id.
+# Determines the pedigree number for each id
 
 One of Pedigree Curation functions
 

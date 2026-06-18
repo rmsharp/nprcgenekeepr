@@ -25,9 +25,10 @@ calcFG(ped, alleles)
 
 ## Value
 
-The founder genome equivalents, `FG = 1 / sum( (p ^ 2) / r` where `p` is
-average number of descendants and `r` is the mean number of founder
-alleles retained in the gene dropping experiment.
+The founder genome equivalents, `FG = 1 / sum( (p ^ 2) / r)` where `p`
+is the vector of founder mean contributions to the current descendants
+and `r` is the mean number of founder alleles retained in the gene
+dropping experiment.
 
 ## Examples
 

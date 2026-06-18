@@ -1,11 +1,11 @@
-# qcBreeders is a list of 29 baboon IDs that are potential breeders
+# Potential breeder IDs (29 baboons)
 
-qcBreeders is a list of 29 baboon IDs that are potential breeders
+A list of 29 baboon IDs that are potential breeders.
 
 ## Usage
 
 ``` r
-qcBreeders
+data(qcBreeders)
 ```
 
 ## Format

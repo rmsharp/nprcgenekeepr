@@ -15,6 +15,941 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-17 — Data-doc short-`@title` rewrite: all 24 datasets given proper short titles, detail moved to `@description` (Session 117)
+
+- **Deliverable (owner pick A2):** rewrote the roxygen TITLE of all 24
+  datasets in `R/data.R` from long “X is a …” run-on sentences into
+  short noun-phrase titles, moving the descriptive detail into
+  `@description`; regenerated the 24 data `man/` pages. Owner chose
+  **all 24 docs** (scope) and **short noun phrase, no object-name
+  prefix** (style) via a gated pre-RED `AskUserQuestion`. Scoped to
+  **`R/data.R` + 24 data `man/` pages**; `NAMESPACE`, `DESCRIPTION`,
+  `data/` unchanged. **TDD phase N/A** (roxygen prose; no executable R
+  line changed — only `#'` comments; RED vacuous; declared every
+  response). **0 stakeholder corrections.**
+- **The 24 new titles** span the worst offenders (`finalRpt`’s
+  4-sentence title with no `@description` at all; the 6 QC error-set “…N
+  rows and M columns (…) representing a full pedigree with…” run-ons) to
+  the moderate “X is a …” one-liners. Examples: `pedGood` → “Valid
+  example studbook (no QC errors)”; `finalRpt` → “Genetic-value report
+  list prior to ranking”; `qcPed` → “Example quality-controlled baboon
+  pedigree”; `smallPed` → “Hypothetical 17-animal pedigree”.
+- **`qcPed` dimension claim corrected (verify-and-correct, Learning
+  109/111):** the old title said “277 rows and 6 columns”; the object is
+  **280×8** (and roxygen’s auto-`\format` already read 280×8 — the page
+  contradicted itself). The new description states the accurate 280×8.
+  Every other count-bearing doc was verified accurate against the loaded
+  object before authoring.
+- **`ped1Alleles` block made well-formed:** the two `## Copyright`
+  comment lines that interrupted its roxygen block (between title and
+  `@format`) were relocated above the block, so the block is contiguous.
+- **Adversarial quality review (3-lens critic panel — accuracy /
+  completeness / style+consistency):** returned **0 block, 0 should-fix,
+  3 nits**. Acted on: `smallPed` retitled “Hypothetical 17-animal
+  pedigree” (was a confusable near-duplicate of `lacy1989Ped`’s “Small
+  hypothetical pedigree (Lacy 1989)”). Kept (owner-approved in the style
+  preview): “studbook” for the 6 QC fixtures (panel preferred “pedigree”
+  for file consistency — noted for future).
+- **Verified (build-equivalent for a generated-doc change):**
+  `roxygenise()` regen confined to exactly the 24 intended data pages
+  (`git diff --stat`); **`NAMESPACE` byte-identical** to HEAD
+  (`git diff --quiet`); `DESCRIPTION`/`data/` untouched;
+  [`tools::checkRd()`](https://rdrr.io/r/tools/checkRd.html) on all 24
+  changed pages — **0 problems**;
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  OK (**162 exports**); full-suite regression read **failed=0 error=0**
+  (incl. the usually-noisy app/e2e files); no stray `Rplots.pdf`.
+  **Phase-3E N/A** — roxygen/Rd prose changes no package/app runtime
+  behavior. Full `R CMD check` not run (`devtools` absent; the above is
+  the proportionate equivalent).
+- **\[news-vs-changelog\]:** dev-process history → CHANGELOG here. These
+  help pages **ship**, so fold the new titles into the CRAN Phase 3 NEWS
+  rewrite at 2.0.0 (flagged, not edited now).
+  \[\[backlog-vs-changelog-placement\]\]
+- **Out of scope (flagged, FM \#8 — not fixed):** (1)
+  `examplePedigree`’s `\describe` documents `\item{recordStats}` but the
+  actual column is `recordStatus` (pre-existing; surfaced by the critic
+  panel and verified against the data); (2) the “studbook” vs “pedigree”
+  term split for the 6 QC fixtures (owner-approved “studbook” kept;
+  revisit if uniform “pedigree” preferred); (3) pre-existing wording
+  bugs preserved verbatim — `rhesusGenotypes`’s garbled “There are
+  object.” and `exampleNprcgenekeeprConfig`’s “created the SNPRC”; (4)
+  `vignettes/articles/studbook-quality-control.qmd:91` still omits the
+  `sex` column (S116’s A3 nit).
+- **PROJECT_LEARNINGS.md:** Learning 111 added.
+
+### 2026-06-17 — Adjacent doc/data-doc repair: pedGood cross-ref case, data-doc column accuracy, and 20 wrapped `@importFrom` tags (Session 116)
+
+- **Deliverable (owner pick A):** repaired the three adjacent
+  doc/data-doc bugs S115 flagged but deliberately left (FM \#8), then
+  regenerated the affected `man/`. Scoped to **`R/data.R` + 10 `R/`
+  source files + 6 data `man/` pages**; `NAMESPACE`, `DESCRIPTION`, and
+  `data/` unchanged. **TDD phase N/A** (roxygen/data-doc prose +
+  `@importFrom` source reformatting; no executable R line changed — only
+  `#'` comments — so no package logic or test surface; RED vacuous;
+  declared every response). **Two gated pre-RED `AskUserQuestion`s**
+  (the item-2 data-vs-doc fork; the item-3 3-vs-10-file scope, posed
+  after the scope/nature discovery). **0 stakeholder corrections.**
+- **Item 1 — `pedgood` -\> `pedGood` cross-reference case (6×):** the
+  “one of six pedigrees” boilerplate in all six error-set data docs
+  (`pedDuplicateIds`, `pedFemaleSireMaleDam`, `pedGood`,
+  `pedInvalidDates`, `pedMissingBirth`, `pedSameMaleIsSireAndDam`) wrote
+  `\code{pedgood}`; the dataset is `pedGood`. Fixed in `R/data.R`,
+  regenerated the 6 pages.
+- **Item 2 — data-doc column lists corrected to the ACTUAL columns
+  (owner chose full accuracy):** the five raw-fixture datasets store
+  column `si.re` (and `pedOne` stores `si re`), not `sire`; the docs
+  said `sire`. `si.re`/`si re` is an **intentional raw studbook-input
+  fixture** — `fixColumnNames` strips spaces then periods (`si re` -\>
+  `si.re` -\> `sire`) and `qcStudbook(pedGood)` returns canonical
+  `sire`, confirming the messy header is what the QC pipeline exists to
+  normalize. So the fix is doc-only (renaming the data would gut the
+  fixture): `sire` -\> `si.re` in
+  `pedGood`/`pedDuplicateIds`/`pedFemaleSireMaleDam`/`pedMissingBirth`/`pedSameMaleIsSireAndDam`.
+  Also fixed `pedInvalidDates`’ separate divergence (doc said
+  `(ego_id, sire, dam_id, sex, birth_date)`; data is
+  `(id, sire, dam, sex, birth)` — corrected the column list and the
+  `\code{birth_date}` -\> `\code{birth}` reference). Row counts verified
+  already-correct. `pedOne`’s doc makes no column claim, so it needed no
+  edit.
+- **Item 3 — split 20 wrapped `@importFrom` tags across 10 files (owner
+  chose all 10):** the flag named 3 `mod*.R` files; a codebase scan
+  found **20 multi-line `@importFrom` tags across 10 files** (every
+  `mod*.R` plus `appServer.R` and `appUI.R`) triggering roxygen 8.0.0’s
+  `@importFrom must be only 1 line long`. **Corrected the inherited
+  characterization: this is cosmetic lint, NOT a NAMESPACE hazard** — a
+  reverted regen probe proved roxygen 8.0.0 still captures every
+  continuation line (`NAMESPACE` byte-identical, 140 `importFrom`, 0
+  removed). Split each wrapped tag into multiple single-line
+  `@importFrom pkg ...` tags wrapped at \<=80 chars (matching the
+  authors’ style; deterministic dry-run-first script, every before/after
+  audited before writing). Regen emits **0** `@importFrom` errors.
+- **Verified (build-equivalent for a generated-doc/source change):**
+  `roxygenise()` regen confined to exactly the 6 intended data pages
+  (`git diff --stat`); **`NAMESPACE` byte-identical** to HEAD
+  (`git diff --quiet`) — proving the item-3 reformat is import-neutral;
+  `DESCRIPTION` and `data/` untouched; per-page
+  [`tools::checkRd()`](https://rdrr.io/r/tools/checkRd.html)
+  HEAD-vs-working on all 6 changed pages — **0 problems, 0 new**;
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  OK (**162 exports**); full-suite regression read **failed=0 error=0**
+  (incl. the usually-noisy app/e2e files); 0 wrapped `@importFrom` tags
+  remain; no stray `Rplots.pdf`. **Phase-3E N/A** — no runtime behavior
+  change (doc prose + `NAMESPACE`-neutral `@importFrom` reformat; proven
+  byte-identical). Full `R CMD check` not run (`devtools` absent;
+  `checkRd` + `load_all` + the `NAMESPACE`/man diff + the regression
+  read is the proportionate equivalent).
+- **\[news-vs-changelog\]:** dev-process history -\> CHANGELOG here.
+  These help pages **ship**, so fold these corrections into the CRAN
+  Phase 3 NEWS rewrite at 2.0.0 (flagged, not edited now).
+  \[\[backlog-vs-changelog-placement\]\]
+- **Out of scope (flagged, FM \#8 — not fixed):**
+  `vignettes/articles/studbook-quality-control.qmd:91` lists
+  `(ego_id, si.re, dam_id, birth_date)` (correct `si.re`, but omits the
+  `sex` column) — a vignette accuracy nit, separate artifact; S114’s
+  still-deferred data-doc short-title rewrite (A2) — several titles
+  remain long run-ons.
+- **PROJECT_LEARNINGS.md:** Learning 110 added.
+
+### 2026-06-17 — Roxygen content-bug repair: corrected 4 wrong/garbled doc descriptions S114 flagged (Session 115)
+
+- **Deliverable (owner pick A):** repaired the four adjacent roxygen
+  CONTENT bugs S114 flagged but deliberately left (FM \#8), then
+  regenerated the affected `man/` pages. Scoped to **3 `R/` files (5
+  edits) + 5 `man/` pages**; `data/`, `NAMESPACE`, `DESCRIPTION`
+  unchanged. **TDD phase N/A** (roxygen prose; no package logic or test
+  surface, so RED is vacuous; declared every response). **One gated
+  `AskUserQuestion`** (a pre-RED wording/scope decision for
+  `pedMissingBirth`; owner chose full accuracy). **0 stakeholder
+  corrections** (one mid-session owner constraint, already satisfied —
+  see below).
+- **What changed (5 source edits):**
+  - `R/findPedigreeNumber.R` title — was byte-identical to
+    `findGeneration`’s (“Determines the generation number for each id”);
+    now “Determines the pedigree number for each id” (the function
+    numbers disjoint connected sub-pedigrees, the `pedNum` vector).
+  - `R/convertSexCodes.R` title — “Converts sex indicator for an
+    individual to a standardized codes” (number-agreement error) →
+    “Converts a sex indicator for an individual to a standardized code”.
+  - `R/data.R` `focalAnimals` — “containing the of animal Ids” (stray
+    word) → “containing the animal Ids”.
+  - `R/data.R` `pedMissingBirth` — “8 rows and 5 columns (ego_id, sire,
+    dam_id, sex, birth_date) representing a full pedigree with no
+    errors” → “8 rows and 4 columns (ego_id, sire, dam_id, sex)
+    representing a full pedigree that is missing the birth_date column”.
+    It is an error-demo set, not error-free; and the data object
+    genuinely has only 4 columns (`birth_date` absent), so the old “5
+    columns” was itself wrong — the auto-generated `\format` block
+    already read “4 columns”, confirming the correction.
+  - `R/data.R` `pedSameMaleIsSireAndDam` — “…representing a full
+    pedigree with no errors” → “…representing a full pedigree in which
+    the same male animal is listed as both a sire and a dam” (verified:
+    male `s1` sires `o1`/`o2` and is the dam of `o3`). Column count (5)
+    is correct, unchanged.
+- **Ground-truth verification before editing (Learning 105/106).**
+  Loaded the data objects: `pedMissingBirth` has columns
+  `ego_id, si.re, dam_id, sex` and NO `birth_date` (4 columns, 8 rows);
+  `pedSameMaleIsSireAndDam` row `o3` has `dam_id = s1` (a male);
+  `focalAnimals` is 1 column (`id`), 327 rows. `findPedigreeNumber`
+  source confirmed to assign a connected-component number, not a
+  generation. Each fix states what the data actually is — not just what
+  the flag named.
+- **Owner constraint addressed:** mid-session the owner required
+  `pedMissingBirth` to **retain the characteristic of not having a Birth
+  column**. Only documentation changed — the data object is untouched
+  and still has no `birth_date` column (verified post-edit: 4 columns,
+  `birth_date` absent). The new doc accurately states this intended demo
+  characteristic.
+- **Verified (build-equivalent for a generated-doc change):** per-page
+  [`tools::checkRd()`](https://rdrr.io/r/tools/checkRd.html)
+  HEAD-vs-working comparison on all 5 changed pages — **0 problems, 0
+  new vs HEAD**;
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  OK (**162 exports** — NAMESPACE consistent); `data/` unchanged; no
+  stray `Rplots.pdf`; regen confined to the 5 intended pages
+  (`git diff --stat`), no roxygen version blast radius (baseline 8.0.0).
+  **Phase-3E N/A** — roxygen/Rd prose changes no package/app runtime
+  behavior. Full `R CMD check` not run (`devtools` absent; `checkRd` +
+  `load_all` + the per-page HEAD-vs-working diff is the proportionate
+  equivalent for an artifact-only change).
+- **\[news-vs-changelog\]:** dev-process history → CHANGELOG here. These
+  help pages **ship**, so fold these corrections into the CRAN Phase 3
+  NEWS rewrite at 2.0.0 (flagged, not edited now).
+  \[\[backlog-vs-changelog-placement\]\]
+- **Out of scope (flagged, FM \#8 — newly discovered this session, not
+  fixed):** (1) the cross-reference boilerplate in all six error-set
+  data docs writes `\code{pedgood}` (wrong case; the dataset is
+  `pedGood`); (2) the data objects’ actual sire column is named `si.re`
+  though every doc says `sire`; (3) roxygen2 8.0.0 emits
+  `@importFrom must be only 1 line long` errors for `mod*.R`
+  (`modPotentialParents`, `modPyramid`, `modSummaryStats`) — multi-line
+  `@importFrom` tags need splitting; (4) several data-doc titles remain
+  long run-ons (S114’s deferred A2 short-title rewrite).
+- **PROJECT_LEARNINGS.md:** Learning 109 added.
+
+### 2026-06-17 — Roxygen doc-nit mop-up: cleared all 62 `\title`-period checkRd NOTEs + 3 genetic-value `@return` nits (Session 114)
+
+- **Deliverable (owner pick A2 — full sweep):** removed the trailing
+  period from every roxygen title flagged by
+  [`tools::checkRd()`](https://rdrr.io/r/tools/checkRd.html) as
+  `\title should not end in a period` (**62 of 190 `.Rd`**: 51 function
+  docs + 11 data docs), and fixed three genetic-value `@return` nits
+  S112 had flagged. Then regenerated `man/`. **TDD phase N/A** (roxygen
+  prose; no package logic or test surface, so RED is vacuous; declared
+  every response). **One gated `AskUserQuestion`** (a pre-RED *scope*
+  decision — full sweep vs. a narrower bite; owner chose the full
+  sweep). **0 stakeholder corrections.**
+- **What changed:** **`R/` (55 files):** 51 function files lost one
+  trailing title period each; `R/data.R` lost it from 11 data-doc
+  titles; `R/calcFE.R` `@return` dropped the spurious `\code{r}` clause
+  (`FE = 1/sum(p^2)` uses only `p`); `R/calcFEFG.R` + `R/calcFG.R`
+  `@return` closed the unbalanced paren in the FG formula
+  (`sum( (p ^ 2) / r}` → `sum( (p ^ 2) / r)`). **`man/` (65 pages
+  regenerated):** the 62 title pages + the 3 GV `\value` pages.
+  `NAMESPACE` and `DESCRIPTION` unchanged.
+- **Method (deterministic + dry-run + oracle).** The 51 single-block
+  function titles were de-periodized by a dry-run-first script whose
+  every before/after was audited before writing (each picked the correct
+  title paragraph, incl. multi-line); `R/data.R` (11 titles) and the 3
+  `@return` blocks were hand-edited. Each function file changed exactly
+  one line (51 insertions / 51 deletions, no encoding rewrite).
+- **Verified (build-equivalent for a generated-doc change):** a per-page
+  `checkRd` comparison of all **65** changed pages vs their HEAD
+  versions proved **62 pages had ONLY the title-period NOTE removed and
+  0 pages gained any new problem** (the 3 GV pages changed `\value`
+  prose with no `checkRd` impact). Title-period NOTEs package-wide: **62
+  → 0**.
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  OK (**162 exports** — NAMESPACE consistent). No stray `Rplots.pdf`.
+  **Phase-3E N/A** — roxygen/Rd prose changes no package/app runtime
+  behavior. Full `R CMD check` not run (`devtools` absent; `checkRd` +
+  `load_all` + the per-page HEAD-vs-working diff is the proportionate
+  equivalent for an artifact-only change).
+- **\[news-vs-changelog\]:** dev-process history → CHANGELOG here. These
+  help pages **ship**, so fold the title/return corrections into the
+  CRAN Phase 3 NEWS rewrite at 2.0.0 (flagged, not edited now).
+  \[\[backlog-vs-changelog-placement\]\]
+- **Out of scope (flagged, FM \#8 — period-removal left these intact):**
+  copy-paste/garbled CONTENT in titles & data docs —
+  `R/findPedigreeNumber.R` title duplicates `findGeneration`’s
+  (“Determines the generation number for each id”);
+  `pedMissingBirth`/`pedSameMaleIsSireAndDam` data docs say
+  “representing a full pedigree with no errors” though they are
+  error-demo sets; `focalAnimals` “containing the of animal”;
+  `convertSexCodes` “to a standardized codes”. Several data-doc titles
+  are now checkRd-clean but still long run-ons (a proper short-title
+  rewrite is a separate task).
+- **PROJECT_LEARNINGS.md:** Learning 108 added.
+
+### 2026-06-17 — Roxygen tooling migration: adopted roxygen2 8.0.0, regenerated `man/` (Session 113)
+
+- **Deliverable (owner pick A):** the deliberate, gated roxygen
+  `7.3.2 → 8.0.0` migration that S112 isolated and deferred. Regenerated
+  `man/` with the installed roxygen2 8.0.0 and migrated the
+  `DESCRIPTION` version field — a small, reviewable diff (**26 `.Rd`
+  pages + `DESCRIPTION`; `NAMESPACE` unchanged**), taken as its own
+  deliverable rather than bundled into a content fix. **TDD phase N/A**
+  (regenerating generated artifacts + a `DESCRIPTION` field migration;
+  no package logic or test surface, so RED is vacuous; declared every
+  response). **One gated `AskUserQuestion`** (adopt 8.0.0 vs pin 7.3.2 —
+  a pre-implementation *approach* decision, not a TDD gate); owner chose
+  **adopt**. **0 stakeholder corrections.**
+- **What changed:** `DESCRIPTION` — `RoxygenNote: 7.3.2` →
+  `Config/roxygen2/version: 8.0.0` (the 8.0.0 field rename) and the
+  `Suggests` floor `roxygen2 (>= 7.3.2)` → `(>= 8.0.0)`. `man/` (26
+  pages): **24 dataset docs** adopt 8.0.0’s canonical usage form
+  (`\usage{ qcPed }` → `\usage{ data(qcPed) }`); `man/appUI.Rd` re-wraps
+  its `\value` text (cosmetic, identical content).
+- **The regen also repaired stale committed content** (drift between
+  source and the committed 7.3.2 `.Rd`): `man/nprcgenekeepr-package.Rd`
+  now reads `'Macaca' 'mulatta'` (the committed page had the typo
+  `'mulatto'`; `DESCRIPTION` already read `mulatta`) and lists the
+  maintainer **R. Mark Sharp** under Authors (he is `aut` in
+  `DESCRIPTION` but was absent from the rendered list). No content was
+  lost; S112’s four hand-edited `\value` pages produced **zero diff** —
+  their content already matched source, the clean reconciliation S112
+  predicted.
+- **Verified (build-equivalent for a generated-doc change):** the
+  **complete** 27-file diff was read line-by-line — every change is one
+  of the four intended kinds, nothing unexpected; `NAMESPACE` unchanged
+  (162 exports,
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  OK); [`tools::checkRd()`](https://rdrr.io/r/tools/checkRd.html) on
+  **all 26** changed pages introduces **zero new problems** — the 11
+  reported `\title`-ends-in-period NOTEs are pre-existing (confirmed
+  identical on the committed HEAD versions; **62 of 190** `.Rd` carry it
+  package-wide). `renv.lock` unchanged (roxygen2 is a dev-only dep, not
+  snapshotted). **Phase-3E N/A** — Rd/`DESCRIPTION` regeneration changes
+  no package/app runtime behavior; the appropriate verification is Rd
+  validity + load + full-diff audit, done. Full `R CMD check` not run
+  (`devtools` absent; `checkRd` + `load_all` is the proportionate
+  equivalent for an artifact-only change).
+- **\[news-vs-changelog\]:** dev-process history → CHANGELOG here. These
+  help pages **ship**, so fold the content repairs (typo + author list)
+  into the CRAN Phase 3 NEWS rewrite at 2.0.0 (flagged, not edited now —
+  the CRAN plan owns the NEWS pipeline).
+  \[\[backlog-vs-changelog-placement\]\]
+- **Out of scope (flagged, FM \#8):** the **62** pre-existing
+  `\title`-period `checkRd` NOTEs and S112’s other A2 mop-up nits
+  (`calcFE.R` `@return` mentions `r`; the unbalanced-paren `fg` formula)
+  — a separate A2 session.
+- **PROJECT_LEARNINGS.md:** Learning 107 added.
+
+### 2026-06-17 — Roxygen repair: corrected drifted `@return`/`p` descriptions for the genetic-value functions (Session 112)
+
+- **Deliverable (owner pick A2):** corrected long-drifted roxygen
+  documentation, and regenerated the affected `man/` pages, for the
+  genetic-value functions — fixing three confirmed `@return`/parameter
+  drifts plus the identical defect in two sibling files, and **refuting
+  the fourth inherited flag**. Scoped to **5 `R/` + 4 `man/` files**.
+  **TDD phase N/A** (roxygen prose corrected to match already-correct
+  behavior — the code was right, only the docs were wrong, so RED is
+  vacuous; declared every response).
+  - `R/orderReport.R` `@return` — the High-Value tier was described as
+    raw “mean kinship less than 0.25, ranked by ascending mk”; it
+    actually gates on the **z-score** of mean kinship
+    (`zScores <= 0.25`) and orders by ascending `zScores`. Both
+    `@return` bullets carried the “ascending mk” error (the second tier
+    is also sorted by `zScores`); both corrected.
+  - `R/calcFEFG.R`, `R/calcFG.R`, `R/calcFE.R` `@return` — `p` was
+    described as “average number of descendants”; it is the vector of
+    each founder’s **mean genetic contribution** to the current
+    descendants (`colMeans` of the contributions matrix; verified
+    `sum(p) = 1` on `lacy1989Ped`). Fixed in all three — the owner
+    approved extending the agreed fix to the two `calcFE`/`calcFG`
+    siblings, which share the `calcFounderContributions()` helper and
+    carried the identical wording.
+  - `R/reportGV.R` `@return` — said “A dataframe”;
+    [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+    returns a **list** of class `nprcgenekeeprGV` with 10 named elements
+    (`report`, `kinship`, `gu`, `fe`, `fg`, `maleFounders`,
+    `femaleFounders`, `nMaleFounders`, `nFemaleFounders`, `total`). Now
+    documents the list and its elements (verified against the
+    `list(...)` constructor and the function’s own examples).
+- **Re-verified the inherited flags before acting (Learning 105/106).**
+  The four drifts were code-read claims (three from S108, one from S110)
+  never confirmed against runtime. An 8-agent workflow (one verifier +
+  one adversarial cross-checker per claim) confirmed three and **refuted
+  the fourth**: `getPyramidPlot.R`’s `@return` (“the return value of
+  `par('mar')`”) is **correct** — the function returns
+  [`plotrix::pyramid.plot()`](https://plotrix.github.io/plotrix/reference/pyramid.plot.html)’s
+  value, and `pyramid.plot` ends with `return(oldmar)` where
+  `oldmar <- par("mar")`, so the returned value *is* a `par("mar")`
+  vector (verified: returns `c(5.1, 4.1, 4.1, 2.1)`). Left unchanged.
+  Trusting the flag would have replaced a correct `@return` with a wrong
+  one.
+- **`man/` regenerated without a tooling migration.** The dev `roxygen2`
+  (8.0.0) is newer than the committed baseline (`RoxygenNote: 7.3.2`),
+  so a full `roxygenise()` reformatted all 30 `.Rd` files and migrated
+  the DESCRIPTION field. That version migration was reverted
+  (`git checkout -- man/ DESCRIPTION`) and the four affected `\value`
+  sections were edited surgically to match the source — keeping the
+  change scoped. The 7.3.2→8.0.0 roxygen migration is flagged as a
+  separate, deliberate task (coordinate with the CRAN plan).
+- **Verified (build-equivalent for a doc change):**
+  [`tools::checkRd()`](https://rdrr.io/r/tools/checkRd.html) clean on
+  all four changed pages (the one note — `reportGV.Rd` `\title` ends in
+  a period — is pre-existing, on a line not touched);
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  succeeds; the rendered `\value` text reads correctly. **Phase-3E N/A**
+  — documentation prose changes no package/app runtime behavior; the
+  appropriate verification is Rd validity + render, done.
+- **\[news-vs-changelog\]:** dev-process history → CHANGELOG here.
+  Unlike the website articles, these help pages **do ship**, so this
+  correction should be folded into the CRAN Phase 3 NEWS rewrite at
+  2.0.0 (flagged, not edited now — the CRAN plan owns the NEWS
+  pipeline). \[\[backlog-vs-changelog-placement\]\]
+- **Discovered, not fixed (flagged, FM \#8):** (a) `R/calcFE.R`
+  `@return` still mentions `r`, which does not appear in its
+  `FE = 1/sum(p^2)` formula; (b) the formula `sum( (p ^ 2) / r}` has
+  unbalanced parentheses in `calcFEFG`/`calcFG`; (c) `reportGV.Rd`
+  `\title` ends in a period (`checkRd` -5).
+- **PROJECT_LEARNINGS.md:** Learning 106 added.
+
+### 2026-06-17 — Doc fix: corrected inverted focal-population description in the breeding-group article (Session 111)
+
+- **Deliverable:** one prose fix in
+  `vignettes/articles/breeding-group-formation.qmd` — the focal
+  population was described as “the founders still in the colony,” but
+  the filter `!(is.na(sire) & is.na(dam)) & is.na(exit)` selects
+  **non-founders** (animals with at least one known parent) still in the
+  colony. Corrected to “the non-founders still in the colony (those with
+  at least one known parent).” Resolves the S108-discovered inversion
+  (open since then; carried forward as option A’ through S109/S110).
+  **One-line fix only** (FM \#18/#25). **TDD phase N/A** (documentation
+  prose; no `R/` logic or test surface; declared every response).
+- **Verified two ways:** (1) internal corroboration — the same sentence
+  trims the pedigree to the focal set “plus the ancestors needed to
+  compute their kinships,” and founders have no ancestors, so the focal
+  set must be non-founders; (2) ground truth on the example data —
+  `qcStudbook(examplePedigree)` then the article’s own filter yields 327
+  focal animals, **none** of which are founders and **all** of which
+  have at least one known parent (the studbook has 1,668 founders, zero
+  in the focal set). The article re-rendered cleanly (`quarto render` —
+  all 19 chunks executed; prose-only change, output unchanged).
+- **\[news-vs-changelog\]:** website-only documentation = dev-process
+  history → CHANGELOG only, no NEWS (the article never ships;
+  \[\[backlog-vs-changelog-placement\]\]). **Phase-3E N/A** — a
+  build-ignored website article changes no package/app runtime behavior;
+  the appropriate verification is the render, done.
+- **PROJECT_LEARNINGS.md:** Learning 105 added.
+
+### 2026-06-17 — Quarto Hybrid §7.1: fourth Quarto article — Age-Sex Pyramid Plots (Session 110)
+
+- **Deliverable:** a fourth Quarto pkgdown article,
+  `vignettes/articles/age-sex-pyramid.qmd` — a scripted
+  [`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md)
+  demographic walkthrough on the shipped `qcPed` data: building the
+  pyramid, reading colony age/sex structure, the `binWidth` /
+  `colorScheme` / `ageUnit` options, and the living-and-aged animal
+  selection. Drop-in `.qmd` on the slice-2 mixed-mode infra (S107) — no
+  new config. **One article only** (FM \#18/#25). **TDD phase N/A**
+  (documentation using an existing exported function + shipped data; no
+  `R/` logic or test surface; declared every response).
+- **Authored ground-truth-first:** ran
+  [`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md)
+  (and `fillBins`) on `qcPed` and let the actual numbers drive the
+  prose. The key catch the run surfaced: the pyramid plots only the
+  **living animals with a known age** — 46 of `qcPed`’s 89 living
+  animals — because 43 living animals (all male) lack a birth date and
+  so cannot be aged or placed. That makes the example’s apparent ~3:1
+  *female* skew **reversed** from the true living population (54 males
+  to 35 females) — used as the article’s honesty / QC-tie-in lesson
+  (missing data can *invert* a pyramid, not just shrink it).
+- **Verified end-to-end through the same paths as S107–S109:**
+  `quarto render` (Quarto 1.7.33) executes the chunks on shipped data →
+  clean HTML with both figures (deterministic *shape*:
+  [`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md)
+  runs no simulation, needs no seed, and `qcPed` ships a fixed `age`
+  column; the only nondeterministic element is the plot **title date**
+  via
+  [`lubridate::now()`](https://lubridate.tidyverse.org/reference/now.html)
+  — a cosmetic “census on render date” label);
+  `pkgdown::build_article("articles/age-sex-pyramid")` (pkgdown 2.2.0)
+  wraps it in the site template; an `R CMD build` tarball confirms
+  `vignettes/articles/` does **not** ship — zero CRAN risk, the 21
+  shipping vignette files unaffected.
+- **Adversarial review (two independent lenses — code-correctness +
+  pedagogy/render-determinism):** code-correctness = ship (all 8
+  challenged claims verified by re-running against `qcPed`: 280/89/46,
+  35F/11M, the 43 all-male-no-birth chain, the title / left-right /
+  defaults). Pedagogy = ship-with-fixes; two grounded honesty fixes
+  applied + re-rendered: strengthened the sex-skew caveat to state the
+  apparent skew is *reversed* (not merely inflated), and reframed the
+  Reference so V&R 2015 is the *package’s* origin rather than implying
+  the pyramid method derives from it (the pyramid is general demography
+  via
+  [`plotrix::pyramid.plot()`](https://plotrix.github.io/plotrix/reference/pyramid.plot.html)).
+- **Discovered, not mine — flagged for a future session:**
+  `getPyramidPlot.R` `@return` roxygen says “the return value of
+  `par('mar')`” but the function actually returns
+  [`plotrix::pyramid.plot()`](https://plotrix.github.io/plotrix/reference/pyramid.plot.html)’s
+  value — a roxygen drift (joins the S108-discovered set); left
+  untouched (FM \#8; the article documents no return value).
+- **\[news-vs-changelog\]:** website-only documentation = dev-process
+  history → CHANGELOG only, no NEWS (the article never ships;
+  \[\[backlog-vs-changelog-placement\]\]). **Phase-3E N/A** — a
+  build-ignored website article changes no package/app runtime behavior;
+  the appropriate verification is render + pkgdown build + tarball, all
+  done.
+- **PROJECT_LEARNINGS.md:** Learning 104 added. **ROADMAP.md / analysis
+  §7.1:** articles-so-far note extended to record the fourth article.
+
+### 2026-06-17 — Quarto Hybrid §7.1: third Quarto article — Studbook Quality Control (Session 109)
+
+- **Deliverable:** a third Quarto pkgdown article,
+  `vignettes/articles/studbook-quality-control.qmd` — a scripted,
+  non-Shiny walkthrough of studbook quality control
+  ([`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md))
+  on the shipped `examplePedigree` plus the purpose-built error-demo
+  data sets: the required-column / sex-consistency / date / duplicate /
+  parent-age checks, the production vs diagnostic (`reportErrors`)
+  modes, and column/code standardization. Drop-in `.qmd` on the slice-2
+  mixed-mode infrastructure (S107) — no new config. **One article only**
+  (FM \#18/#25). **TDD phase N/A** (documentation using existing
+  exported functions + shipped data; no `R/` logic or test surface;
+  declared every response).
+- **Authored ground-truth-first:** ran
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  on real data in BOTH modes and let the actual output drive the prose —
+  `examplePedigree` (3,694 rows) → standardized 3,694-row data frame;
+  `reportErrors = TRUE` returns a diagnostic list (or `NULL` when the
+  studbook is clean) and each shipped error-demo set triggers exactly
+  one finding (`pedFemaleSireMaleDam` → `femaleSires`/`maleDams`;
+  `pedInvalidDates` → `invalidDateRows = 3,4`; `pedDuplicateIds` →
+  `duplicateIds`; `pedMissingBirth` → `missingColumns`;
+  `pedSameMaleIsSireAndDam` → `sireAndDam`); `reportErrors = FALSE`
+  (production) auto-corrects female-sire/male-dam and removes exact
+  duplicates but **stops** on missing column, invalid date, sire==dam,
+  young parent, and period-in-ID. Running it corrected a wrong
+  assumption — invalid dates *stop* the function; they are not silently
+  coerced to `NA`.
+- **Verified end-to-end through the same paths as S107/S108:**
+  `quarto render` (Quarto 1.7.33) executes the chunks on shipped data →
+  clean HTML (deterministic —
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  runs no simulation, needs no seed, and `examplePedigree` ships an
+  `age` column so no
+  [`Sys.Date()`](https://rdrr.io/r/base/Sys.time.html) value enters the
+  output; confirmed byte-identical across two renders);
+  `pkgdown::build_article("articles/studbook-quality-control")` (pkgdown
+  2.2.0) wraps it in the site template; an `R CMD build` tarball
+  confirms `vignettes/articles/` does **not** ship — zero CRAN risk, the
+  21 shipping vignette files unaffected.
+- **Adversarial review (two independent lenses — code-correctness +
+  pedagogy/render-determinism):** no must-fix; all nine challenged
+  behavioral claims confirmed against `qcStudbook.R` + ~18 helpers, and
+  render determinism confirmed empirically. Two grounded fixes applied
+  and re-rendered: corrected the sex-standardization claim
+  ([`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  calls `convertSexCodes(ignoreHerm = TRUE)`, folding `H` into `U` — it
+  never *outputs* `H`), and added a `## Setup {#sec-setup}` section
+  (house-style parallel with the two sibling articles) noting QC needs
+  no seed. Left the “defensible digest” column-rename nit as-is.
+- **\[news-vs-changelog\]:** website-only documentation = dev-process
+  history → CHANGELOG only, no NEWS (the article never ships;
+  \[\[backlog-vs-changelog-placement\]\]). **Phase-3E N/A** — a
+  build-ignored website article changes no package/app runtime behavior;
+  the appropriate verification is render + pkgdown build + tarball, all
+  done.
+- **PROJECT_LEARNINGS.md:** Learning 103 added. **ROADMAP.md / analysis
+  §7.1:** articles-so-far note extended to record the third article.
+
+### 2026-06-17 — Quarto Hybrid §7.1: second Quarto article — Genetic Value Analysis (Session 108)
+
+- **Deliverable:** a second Quarto pkgdown article,
+  `vignettes/articles/genetic-value-analysis.qmd` — a scripted,
+  non-Shiny walkthrough of the genetic value analysis
+  ([`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md))
+  on the shipped `examplePedigree` data: quality control → population of
+  interest → mean kinship and genome uniqueness → the ranked report,
+  plus the colony-level founder-equivalent (`fe`) /
+  founder-genome-equivalent (`fg`) diversity summaries. Content
+  production enabled by the slice-2 mixed-mode infrastructure stood up
+  in S107 — adding an article is a drop-in `.qmd` in
+  `vignettes/articles/`, no new config. **One article only** (FM
+  \#18/#25). **TDD phase N/A** (documentation using existing exported
+  functions + shipped data; no `R/` logic or test surface; declared
+  every response).
+- **Authored ground-truth-first:** ran the actual
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+  pipeline on `examplePedigree` and let the real output drive the prose
+  (327-animal population of interest; 199 High Value / 128 Low Value;
+  `fe` 109.67 / `fg` 47.62; the rank-1 animal has higher genome
+  uniqueness but *not* the lowest mean kinship — used to illustrate why
+  the ranking uses both metrics). Source-checked the scoring scheme
+  directly in `orderReport.R` + `rankSubjects.R` (the High-Value
+  mean-kinship tier is gated on the **z-score** ≤ 0.25, not raw mean
+  kinship — the article is correct where the `orderReport` roxygen
+  wording is not) and the fe/fg formulas in `calcFEFG.R` (Lacy 1989).
+- **Verified end-to-end through the same two build paths as S107 + a
+  tarball:** `quarto render` (Quarto 1.7.33, knitr engine) executes the
+  chunks on shipped data → clean HTML, deterministic via `set_seed(1L)`
+  (the gene-drop behind genome uniqueness / fe / fg is stochastic);
+  `pkgdown::build_article("articles/genetic-value-analysis")` (pkgdown
+  2.2.0) wraps it in the site template; an `R CMD build` tarball
+  confirms `vignettes/articles/` (hence this article) does **not** ship
+  — **zero CRAN risk** proven, shipped CRAN vignettes unaffected.
+- **Adversarial review:** a fresh reviewer checked every
+  technical/genetics claim against the code — **no must-fix errors**;
+  the article is *more* correct than the package’s own roxygen in three
+  places (the z-score gate, the meaning of founder contribution `p`, and
+  `reportGV` returning a list rather than a data frame). Three
+  low-severity precision fixes applied and re-verified against the code:
+  mean kinship averages over *all* animals including self
+  (`meanKinship.R`), tier-2 ranking ties break on ascending mean kinship
+  (`orderReport.R`), and the imports tier also requires the animal to be
+  a founder.
+- **Discovered, not mine — flagged for a future session:** the sibling
+  article `breeding-group-formation.qmd` (S107) comments that its focal
+  set is “the founders still in the colony,” but the same filter
+  `!(is.na(sire) & is.na(dam))` actually selects **non-founders**
+  (animals with ≥ 1 known parent). A one-line prose inversion; left
+  untouched (not this session’s deliverable; FM \#8).
+- **\[news-vs-changelog\]:** website-only documentation = dev-process
+  history → **CHANGELOG only**, no NEWS (the article never ships;
+  \[\[backlog-vs-changelog-placement\]\]). **Phase-3E N/A** — a
+  build-ignored website article changes no package/app runtime behavior;
+  the appropriate verification is render + pkgdown build + tarball, all
+  done.
+- **PROJECT_LEARNINGS.md:** Learning 102 added. **ROADMAP.md / analysis
+  §7.1:** slice-2 note extended to record the second article.
+
+### 2026-06-17 — Quarto Hybrid §7.1 Slice 2: stand up pkgdown mixed mode + first Quarto article (Session 107)
+
+- **Deliverable:** the second implementation slice of the adopted Hybrid
+  documentation policy (analysis doc §7.1, slice 2) — stood up pkgdown
+  **mixed `.qmd`/`.Rmd` mode** and authored the first Quarto pkgdown
+  article, `vignettes/articles/breeding-group-formation.qmd` (a
+  scripted, non-Shiny walkthrough of breeding-group formation via
+  [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+  — harem and target-sex-ratio strategies — on the shipped
+  `examplePedigree` data). **One slice only** (FM \#18/#25) — slices 3–4
+  are separate, owner-approved sessions. **TDD phase N/A**
+  (documentation + website-config deliverable; no `R/` logic or test
+  surface; declared every response).
+- **What changed (zero CRAN risk):** new
+  `vignettes/articles/breeding-group-formation.qmd` +
+  `vignettes/articles/_quarto.yml` (`project: render: ['*.qmd']`, so
+  RMarkdown keeps building the `.Rmd` vignettes); `.Rbuildignore` gained
+  the single line `^vignettes/articles$` (covers the article AND the
+  `_quarto.yml` AND any `.quarto/` cache — the whole dir is
+  website-only); `DESCRIPTION` gained `Config/Needs/website: quarto` and
+  `.github/workflows/pkgdown.yaml` a
+  `quarto-dev/quarto-actions/setup@v2` step so the pkgdown CI job
+  installs Quarto; `.gitignore` gained `.quarto/`.
+- **Config placement corrected from the general policy note:** the
+  `_quarto.yml` belongs **inside `vignettes/articles/`** (pkgdown turns
+  that dir into a Quarto project), not at the package root — so one
+  `.Rbuildignore` line excludes everything and the root/`.Rmd` vignettes
+  are untouched.
+- **Verified end-to-end through two independent build paths:** (1)
+  `quarto render` (Quarto CLI 1.7.33, knitr engine) executes the
+  article’s R chunks on shipped `examplePedigree` data → clean HTML,
+  ~1.7 s, deterministic via `set_seed(1L)`; (2)
+  `pkgdown::build_article("articles/breeding-group-formation")`
+  (installed pkgdown **2.2.0** + `quarto` R pkg locally) discovers the
+  `.qmd`, runs `quarto render`, and wraps it in the pkgdown template →
+  clean HTML with navbar. **Zero CRAN risk proven by a real
+  `R CMD build` tarball** (the `vignettes/articles/` tree is absent; the
+  shipping vignettes are unaffected).
+- **Article accuracy:** built around
+  [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)’s
+  own roxygen `@examples` pipeline (the code `R CMD check` already
+  exercises) and source-checked — `threshold` default `0.015625` (=
+  1/64, second-cousin kinship),
+  [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+  does not seed internally (hence
+  [`set_seed()`](https://github.com/rmsharp/nprcgenekeepr/reference/set_seed.md)),
+  `$group` is a `numGp + 1`-element list (last = unplaced pool). One
+  owner correction applied (`minParentAge = 2.0` as a float). The
+  unverified “`sexRatio` in steps of 0.5” claim (an app-UI constraint,
+  not enforced by the function) was removed after reading the source.
+- **\[news-vs-changelog\]:** website-only documentation/config =
+  dev-process history → **CHANGELOG only**, no NEWS (the article never
+  ships; \[\[backlog-vs-changelog-placement\]\]). **Phase-3E N/A** — a
+  build-ignored website article changes no package/app runtime behavior;
+  the appropriate verification is the render + pkgdown build + tarball,
+  all done.
+- **PROJECT_LEARNINGS.md:** Learning 101 added. **ROADMAP.md / analysis
+  §7.1:** slice 2 marked done.
+
+### 2026-06-17 — Quarto Hybrid §7.1 Slice 1: standardize a dev doc to `.qmd` (Session 106)
+
+- **Deliverable:** the first implementation slice of the adopted Hybrid
+  documentation policy (analysis doc §7.1, slice 1) — converted the
+  developer doc `inst/extdata/meeting_notes.Rmd` →
+  `inst/extdata/meeting_notes.qmd` (Quarto), making the three
+  `inst/extdata/` dev docs uniformly `.qmd` (`claude_code.qmd` +
+  `software_design_doc.qmd` were already converted). **One slice only**
+  (FM \#18/#25) — slices 2–4 are separate, owner-approved sessions.
+  **TDD phase N/A** (format conversion; no code/test surface; declared
+  every response).
+- **Faithful, reversible change:** `git mv` (preserves history) + a
+  single YAML line, `output: html_document` → `format: html` (matching
+  the two sibling `.qmd`); the document body is byte-for-byte unchanged
+  (`git diff -M` reports `similarity index 99%`).
+- **Zero CRAN risk — verified, not assumed:** both the old `.Rmd` and
+  the new `.qmd` are build-ignored (`.Rbuildignore` line
+  `^inst/extdata/meeting_notes\.` is extension-agnostic, plus
+  `^inst/extdata/.*\.qmd$`), so the package source tarball contents are
+  unchanged. Confirmed authoritatively by applying every `.Rbuildignore`
+  regex to both filenames (`ships=FALSE` for both). No `.Rbuildignore`
+  edit was needed.
+- **Build-equivalent (render) verified honestly:** Quarto 1.7.33 renders
+  the `.qmd` to HTML via `--no-execute`. The five embedded R chunks are
+  *not* reproducibly executable in any current environment — they
+  hardcode 2020-era absolute machine paths
+  (`/Users/rmsharp/.../20160816_GeneticManagementTools`) and need
+  packages that aren’t in the default library — so this is a historical
+  meeting-notes log, not a live computational document; making it
+  re-executable would be a behavior change beyond a format
+  standardization and was deliberately *not* done (FM \#8). The render
+  limitation is stated, not silently skipped.
+- **Rmd→qmd semantic difference caught by the render:** Quarto warned
+  that `nprcgenekeepr:::` (an R internal-function token quoted from a
+  2020 CRAN review, in prose) looked like a malformed `:::` fenced div —
+  `:::` is meaningful in Quarto but inert in R Markdown. Verified in the
+  rendered HTML that the text renders correctly (a heuristic
+  false-positive, no output defect); left byte-faithful rather than
+  rewrite the author’s historical prose for a cosmetic warning (FM
+  \#22).
+- **\[news-vs-changelog\]:** a developer-doc format standardization is
+  dev-process history → **CHANGELOG only**, no NEWS (the file is
+  build-ignored, never user-facing;
+  \[\[backlog-vs-changelog-placement\]\]). **Phase-3E N/A** — converting
+  a build-ignored doc changes no package/app runtime behavior; the
+  appropriate verification is the render + build-ignore check, both
+  done.
+- **PROJECT_LEARNINGS.md:** Learning 100 added. **ROADMAP.md / analysis
+  §7.1:** slice 1 marked done.
+
+### 2026-06-17 — Decision: adopt the Hybrid documentation strategy (Quarto analysis §7 Option B) (Session 105)
+
+- **Deliverable:** recorded the owner’s decision to adopt **Option B
+  (Hybrid)** from the Session 104 analysis. Flipped
+  `docs/planning/quarto-documentation-future-proofing-analysis.md` from
+  “recommendation awaiting a decision” to **ADOPTED policy** (Status
+  header + TL;DR + §7 table), resolved the open §6.3 manual
+  sub-decision, corrected §8, and added a §7.1 implementation-slices
+  table. **No documents were converted** — each slice is a separate,
+  owner-approved session (FM \#18). **TDD phase N/A**
+  (decision-recording / documentation deliverable, no code surface;
+  declared every response).
+- **Adopted policy:** the four CRAN vignettes stay on
+  `knitr`/`rmarkdown` (officially supported, zero CRAN risk); new and
+  non-CRAN documentation moves to Quarto — pkgdown articles via mixed
+  mode, slide decks (`revealjs`), the `inst/extdata/` dev docs.
+- **§6.3 manual — resolved to option (b):** the long-form manual
+  (`a3manual.Rmd` + 13 `manual_components/_*.Rmd`) is repositioned onto
+  the Quarto website and dropped from the CRAN vignette set. Because
+  this changes what ships to CRAN, the §8 claim that “only Option A
+  intersects the submission” was **corrected**: the adopted path now
+  does touch the resubmission via the manual, and that slice must be
+  sequenced with `cran-2.0.0-submission-plan.md`.
+- **Implementation slices (analysis §7.1), recorded in the doc + ROADMAP
+  only — no GitHub issues (owner’s call):** (1) standardize the third
+  `inst/extdata` dev doc to `.qmd` — no CRAN risk; (2) author new
+  pkgdown articles in Quarto via mixed mode — no CRAN risk; (3) slide
+  decks in Quarto `revealjs` as needed — no CRAN risk; (4) reposition
+  the manual — CRAN-touching, gated on resubmission coordination.
+- **ROADMAP.md:** added the documentation-engine policy under “Planned.”
+- **\[news-vs-changelog\]:** a documentation-process decision is
+  dev-process history → **CHANGELOG only**, no NEWS (the S104
+  analysis-doc precedent; \[\[backlog-vs-changelog-placement\]\]).
+  **Phase-3E N/A** — recording a decision changes no runtime behavior
+  (stated, not skipped).
+- **PROJECT_LEARNINGS.md:** Learning 99 added.
+
+### 2026-06-17 — Analysis: Quarto vs. R Markdown documentation future-proofing (Session 104)
+
+- **Deliverable:**
+  `docs/planning/quarto-documentation-future-proofing-analysis.md` — an
+  analysis + recommendation answering the owner’s question: should the
+  package’s documentation migrate from R Markdown to Quarto to
+  **future-proof** it? (Owner reframed away from build timing.)
+  Research-only session; **no documents were converted** (conversion
+  would be a separate, owner-approved session — FM \#18).
+- **Recommendation: hybrid / partial adoption.** Keep the four CRAN
+  vignettes on `knitr`/`rmarkdown` (officially supported indefinitely,
+  zero CRAN risk); adopt Quarto on the non-CRAN surface where it carries
+  no CRAN dependency and its benefits land — the pkgdown site, new
+  long-form docs, slide decks, and the `inst/extdata/` dev docs (two
+  already `.qmd`). The long-form manual is flagged as a deliberate owner
+  fork (keep as a knitr vignette vs. reposition onto the website as
+  Quarto).
+- **Evidence base:** two adversarial research Workflows (9 + 8 agents).
+  All six load-bearing claims survived an explicit attempt to refute
+  them at high confidence: (a) R Markdown is *not* being deprecated —
+  `rmarkdown` 2.31 / `knitr` 1.51 are actively maintained CRAN-critical
+  infrastructure (“not going away, no deprecation”); the only cost of
+  staying is feature stagnation. (b) A Quarto CRAN vignette adds a
+  `SystemRequirements` Quarto-CLI dependency that CRAN’s check machines
+  don’t guarantee (missing on macOS flavors in 2025), with a documented
+  transient “no vignettes” NOTE; the Quarto maintainer himself advises
+  against it for CRAN vignettes. (c) For simple single-language HTML
+  vignettes the realized Quarto benefit is narrow (the CRAN engine
+  disables callouts/tabsets/Bootstrap/multi-language). (d) Migration is
+  mechanical and reversible; pkgdown supports a mixed `.qmd`/`.Rmd` set.
+- **Relationship to the CRAN plan:** does NOT change Phases 1–6 of
+  `cran-2.0.0-submission-plan.md`. The deferred Phase 2b vignette-timing
+  fix is precompute on the existing `knitr` engine (`.Rmd.orig` →
+  committed `.Rmd`), orthogonal to a Quarto decision; Quarto cannot help
+  timing (same knitr R-chunk cost + added overhead).
+- **\[news-vs-changelog\]:** an analysis/planning document is
+  dev-process history → **CHANGELOG only**, no NEWS (S101 plan
+  precedent). **Phase-3E:** N/A — an analysis doc changes no runtime
+  behavior; verification is the adversarially-verified research +
+  firsthand vignette inventory, stated not skipped.
+- **PROJECT_LEARNINGS.md:** Learning 98 added.
+
+### 2026-06-17 — CRAN Phase 2a: archival timing root cause (tests) + native pipe (Session 103)
+
+- **Deliverable:** Phase 2 of
+  `docs/planning/cran-2.0.0-submission-plan.md` (§4 Phase 2) — the
+  archival root cause (CRAN “tested elapsed times”). Scoped with the
+  owner to **Phase 2a (tests + native pipe + NEWS)**; **Phase 2b
+  (vignette rebuild timing) deferred** to a numeric-preserving
+  precompute pass. **TDD phase = REFACTOR/mechanical** (no numeric
+  change → RED-first did not apply; the plan’s simulation-number risk
+  was avoided, not triggered).
+- **Measure-first profile (cause named by data, not assumption):**
+  examples 6.6s total (slowest 1.28s — none flag); the CRAN-running slow
+  tests are the **shiny module `testServer` tests** (`modGeneticValue`
+  4.4s / `modBreedingGroups` 4.6s / `modInput` 2.7s /
+  `modBreedingGroups_groupAddAssign` 2.2s / `modPedigree_processing`
+  1.2s; no `skip_on_cran`); the raw-slowest test files are
+  `skip_if_not(user=="rmsharp")` (owner-only, never on CRAN); vignettes
+  ~21s (deferred to 2b). Three profiling traps documented in Learning 97
+  (test harness must be
+  [`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html);
+  `skip_if_not(rmsharp)` guards; `NOT_CRAN`).
+- **Tests:** added file-level
+  [`testthat::skip_on_cran()`](https://testthat.r-lib.org/reference/skip.html)
+  to the 5 slow shiny-module integration test files — removes ~15s of
+  CRAN check time; they still run on CI/locally (`NOT_CRAN=true`). The
+  analytical functions they exercise have their own unit tests that stay
+  on CRAN.
+- **Native pipe (owner-directed):** replaced the magrittr pipe `%>%`
+  with the base R native pipe `|>` throughout —
+  `vignettes/simulatedKValues.Rmd` (5; dropped
+  [`library(magrittr)`](https://magrittr.tidyverse.org)),
+  `vignettes/ColonyManagerTutorial.Rmd` (3),
+  `tests/testthat/test_makeRelationsClasses.R` (2), and the
+  [`makeRelationClassesTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeRelationClassesTable.md)
+  `@examples` (2) + hand-synced `man/makeRelationClassesTable.Rd`. R≥4.1
+  floor guarantees `|>`; magrittr was the vignette’s only direct user
+  (never declared), so no Suggests entry was needed.
+- **NEWS (owner-directed):** added a Minor-changes “Code modernization”
+  bullet for the native-pipe adoption to `NEWS.Rmd`; re-rendered
+  `NEWS.md` (only the new bullet changed — no reformat).
+- **Verification:** full core suite via
+  [`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)
+  at `NOT_CRAN=true` (CI): **169 files, 0 failed, 0 errors** (after
+  installing the missing `shinyBS` Suggest in the dev lib); at
+  `NOT_CRAN=false` (CRAN): the 5 mod files skip, affected-file test time
+  **14.82s → 0.01s**. `simulatedKValues.Rmd` renders with the native
+  pipe (no magrittr); the `makeRelationClassesTable` example runs;
+  `man/*.Rd` parses; no `%>%` remains in any converted file.
+- **\[news-vs-changelog\]:** the native-pipe adoption is user-facing →
+  **NEWS** (done, owner-directed); the test `skip_on_cran` is dev/CI
+  infrastructure → **CHANGELOG only**. **Phase-3E:** the changed code is
+  executed (vignette/example/test) and was run-verified; no `R/`
+  function body or app/runtime path changed (the
+  `makeRelationClassesTable` edit is roxygen only) — N/A for an app
+  launch, stated not skipped.
+- **Discovered (NOT done — owner’s call):** `RSelenium` is
+  **undeclared** (used in e2e tests, absent from Suggests); the
+  `skip_if_not(user=="rmsharp")` tests run only on the owner’s machine
+  (an anti-pattern); **Phase 2b (vignette rebuild timing)** remains.
+- **PROJECT_LEARNINGS.md:** Learning 97 added.
+
+### 2026-06-17 — CRAN Phase 1: static hygiene (Session 102)
+
+- **Deliverable:** Phase 1 of
+  `docs/planning/cran-2.0.0-submission-plan.md` (§4 Phase 1) — static
+  CRAN hygiene (build cruft + DESCRIPTION/metadata defects + `\value`
+  docs), verified by a real `R CMD build` source tarball. **No version
+  bump** (Phase 3; FM \#18/#25 held — Version stays `1.1.0.9000`,
+  NEWS/CITATION.cff untouched). **TDD phase = REFACTOR/mechanical** (no
+  behavioral test surface).
+- **`.Rbuildignore`** (+13 lines, end-anchored & paren-free per the
+  perl-regex hazard): excludes macOS/R junk via `\.DS_Store$` and
+  `\.Rapp\.history$` (front-unanchored, so they also catch
+  `man/.DS_Store` + `inst/extdata/.Rapp.history` — the plan’s
+  root-anchored form would have missed `man/.DS_Store`) plus dev-only
+  `inst/extdata` files (`*.qmd`, `README_modules.md`, `example_usage.R`,
+  `trulyUnknownParents.R`, `submission.txt`) and `inst/_pkgdown.yml`.
+  Deleted the stale untracked `..Rcheck/` build artifact
+  (owner-approved).
+- **DESCRIPTION:** fixed species typo `'Macaca' 'mulatto'` →
+  `'mulatta'`; moved the renv `Config/...` field from line 1 (illegally
+  before `Package:`) to the end + normalized spacing;
+  `VignetteBuilder: knitr, rmarkdown` → `knitr` (rmarkdown stays in
+  Suggests).
+- **Docs:** added `@return`/`\value` to the two exported functions that
+  lacked it —
+  [`appServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md)
+  (side-effect Shiny server) and
+  [`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
+  (returns a `shiny.tag.list`); roxygen source + hand-synced `.Rd`
+  (roxygen2 unavailable until renv; Phase 4 will canonicalize).
+- **LICENSE:** reconciled copyright year — `LICENSE` `2017-2021` and
+  `LICENSE.md` `2017-2024` → both `2017-2026`.
+- **Verification:** `R CMD build --no-build-vignettes --no-manual`
+  (base-R only, no
+  [`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html))
+  → tarball (708 entries) ships **0 cruft, 0 hidden files**; `read.dcf`
+  parses with `Package:` first; both `.Rd` parse with `\value`; guard
+  tests `test_appUI_version.R`/`test_getVersion.R` unaffected (verified
+  by reading — no version/logic change; full suite deferred to Phase 4
+  renv gate). See Learning 96.
+- **\[news-vs-changelog\]:** packaging/metadata hygiene → **CHANGELOG
+  only**; the user-facing NEWS rewrite is Phase 3. **Phase-3E N/A** — no
+  runtime/app behavior changed (stated, not skipped).
+- **PROJECT_LEARNINGS.md:** Learning 96 added.
+
+### 2026-06-16 — CRAN 2.0.0 submission plan (Session 101)
+
+- **Deliverable:** `docs/planning/cran-2.0.0-submission-plan.md` — a
+  planning-workstream document to prepare `nprcgenekeepr` for CRAN:
+  version → 2.0.0, `NEWS.Rmd` reorganized into user-facing Major/Minor
+  changes since 1.0.8, and full CRAN readiness. **The plan is the
+  deliverable** — no `R/`, test, `DESCRIPTION`, `NEWS.Rmd`, or
+  `.Rbuildignore` change this session (FM \#18). **TDD phase N/A**
+  (planning doc, no code surface).
+- **Headline (firsthand-verified, reshapes the task):** the package is
+  **ARCHIVED on CRAN** — `WebFetch` of the CRAN index page shows
+  “Archived on 2025-07-29 as issues were not corrected in time” (last
+  published 1.0.8, 2025-07-26; prior 2022-11-03 archive / 2025-04-24
+  unarchive cycle). So this is a **resubmission of an archived package**
+  whose root cause (CRAN example/test/vignette ELAPSED-TIME limits, per
+  the R-pkg-devel thread) must be measured-and-fixed — a clean one-time
+  local check is necessary-but-not-sufficient (FM \#24 at CRAN scale).
+- **Method:** a 9-agent research+audit Workflow (`wy9xitgt6`, 5
+  web-research over CRAN Policy / Writing R Extensions / r-pkgs.org /
+  the two named skills / CRAN status + 4 read-only codebase auditors
+  over DESCRIPTION+version-strings, `NEWS.Rmd`, R-CMD-check readiness,
+  build cruft); the author re-fetched the pivotal CRAN-status claim
+  firsthand. Plan = 6 phases (hygiene → timing root-cause → NEWS+2.0.0 →
+  local `--as-cran` gate → cross-platform+cran-comments →
+  post-acceptance), each a separate strict-TDD session with completion
+  criteria, verification commands, and a STOP point; owner performs the
+  actual CRAN upload (Phase 5 STOP).
+- **Evidence-based inventory** included: every version-string location
+  for the bump (+ the historical markers NOT to bump),
+  DESCRIPTION/metadata defects (incl. the `'mulatta'` typo and missing
+  `\value` on
+  [`appServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md)/[`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)),
+  the `.Rbuildignore` gaps (`.DS_Store`, `.Rapp.history`, loose
+  `inst/extdata` dev files), the three recurring false-positive NOTEs to
+  pre-explain, and the no-reverse-dependencies fact.
+- **\[news-vs-changelog\]:** a planning document is dev-process history
+  → **CHANGELOG only**, no `NEWS` (no user-facing or package change; the
+  actual NEWS rewrite is Phase 3). **Phase-3E N/A** — writing a plan
+  changes no runtime behavior (stated, not silently skipped).
+- **PROJECT_LEARNINGS.md:** Learning 95 added.
+
 ### 2026-06-16 — Audit of issue \#37 (exported functions not used by the app) — delta re-verification (Session 97)
 
 - **Deliverable:**

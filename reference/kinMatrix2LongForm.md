@@ -1,4 +1,4 @@
-# Reformats a kinship matrix into a long-format table.
+# Reformats a kinship matrix into a long-format table
 
 Part of Group Formation
 

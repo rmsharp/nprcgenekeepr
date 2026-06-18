@@ -1,6 +1,6 @@
-# Creates an Excel workbook with worksheets.
+# Creates an Excel workbook with worksheets
 
-Creates an Excel workbook with worksheets.
+Creates an Excel workbook with worksheets
 
 ## Usage
 

@@ -1,11 +1,11 @@
-# rhesusGenotypes is a dataframe with two haplotypes per animal
+# Rhesus genotypes (two haplotypes per animal)
 
-There are object.
+A dataframe with two haplotypes per animal.
 
 ## Usage
 
 ``` r
-rhesusGenotypes
+data(rhesusGenotypes)
 ```
 
 ## Format
@@ -13,6 +13,8 @@ rhesusGenotypes
 An object of class `data.frame` with 31 rows and 3 columns.
 
 ## Details
+
+There are object.
 
 Represents 31 animals that are also in the obfuscated `rhesusPedigree`
 pedigree from *rhesusGenotypes.csv*.

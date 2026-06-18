@@ -1,4 +1,4 @@
-# Choose date based on `earlier` flag.
+# Choose date based on `earlier` flag
 
 Part of Pedigree Curation
 

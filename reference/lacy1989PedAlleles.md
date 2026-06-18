@@ -1,12 +1,12 @@
-# lacy1989PedAlleles is a dataframe produced by `geneDrop` on `lacy1989Ped` with 5000 iterations.
+# Gene-drop alleles for lacy1989Ped (5000 iterations)
 
-lacy1989PedAlleles is a dataframe produced by `geneDrop` on
-`lacy1989Ped` with 5000 iterations.
+A dataframe produced by `geneDrop` on `lacy1989Ped` with 5000
+iterations.
 
 ## Usage
 
 ``` r
-lacy1989PedAlleles
+data(lacy1989PedAlleles)
 ```
 
 ## Format

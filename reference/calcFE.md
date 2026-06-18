@@ -17,9 +17,8 @@ calcFE(ped)
 
 ## Value
 
-The founder equivalents `FE = 1 / sum(p ^ 2)`, where `p` is average
-number of descendants and `r` is the mean number of founder alleles
-retained in the gene dropping experiment.
+The founder equivalents `FE = 1 / sum(p ^ 2)`, where `p` is the vector
+of founder mean contributions to the current descendants.
 
 ## Details
 

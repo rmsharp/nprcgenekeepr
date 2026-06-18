@@ -1,4 +1,4 @@
-# Get the population of interest for the Genetic Value analysis.
+# Get the population of interest for the Genetic Value analysis
 
 If user has limited the population of interest by defining `pop`, that
 information is incorporated via the `ped$population` column.

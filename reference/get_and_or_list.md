@@ -1,7 +1,7 @@
-# Returns a one element character string with correct punctuation for a list made up of the elements of the character vector argument.
+# Returns a one element character string with correct punctuation for a list made up of the elements of the character vector argument
 
 Returns a one element character string with correct punctuation for a
-list made up of the elements of the character vector argument.
+list made up of the elements of the character vector argument
 
 ## Usage
 

@@ -1,4 +1,4 @@
-# Calculate animal ages.
+# Calculate animal ages
 
 Part of Pedigree Curation
 

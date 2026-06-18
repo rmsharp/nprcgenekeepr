@@ -1,4 +1,4 @@
-# Converts sex indicator for an individual to a standardized codes.
+# Converts a sex indicator for an individual to a standardized code
 
 Part of Pedigree Curation
 

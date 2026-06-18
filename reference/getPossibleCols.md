@@ -1,4 +1,4 @@
-# Get possible column names for a studbook.
+# Get possible column names for a studbook
 
 Pedigree curation function
 

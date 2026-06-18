@@ -1,7 +1,7 @@
-# removeUnknownAnimals Removes unknown animals added to pedigree that serve as placeholders for unknown parents.
+# removeUnknownAnimals Removes unknown animals added to pedigree that serve as placeholders for unknown parents
 
 removeUnknownAnimals Removes unknown animals added to pedigree that
-serve as placeholders for unknown parents.
+serve as placeholders for unknown parents
 
 ## Usage
 

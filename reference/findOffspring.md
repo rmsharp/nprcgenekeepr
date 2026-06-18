@@ -1,4 +1,4 @@
-# Finds the number of total offspring for each animal in the provided pedigree.
+# Finds the number of total offspring for each animal in the provided pedigree
 
 Part of Genetic Value Analysis
 

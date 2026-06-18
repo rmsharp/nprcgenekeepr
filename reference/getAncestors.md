@@ -1,4 +1,4 @@
-# Recursively create a character vector of ancestors for an individual ID.
+# Recursively create a character vector of ancestors for an individual ID
 
 Part of Pedigree Sampling From PedigreeSampling.R 2016-01-28
 

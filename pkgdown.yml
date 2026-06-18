@@ -4,9 +4,13 @@ pkgdown_sha: ~
 articles:
   a2interactive: a2interactive.html
   a3manual: a3manual.html
+  articles/age-sex-pyramid: age-sex-pyramid.html
+  articles/breeding-group-formation: breeding-group-formation.html
   ColonyManagerTutorial: ColonyManagerTutorial.html
+  articles/genetic-value-analysis: genetic-value-analysis.html
   simulatedKValues: simulatedKValues.html
-last_built: 2026-06-17T04:05Z
+  articles/studbook-quality-control: studbook-quality-control.html
+last_built: 2026-06-18T01:25Z
 urls:
   reference: https://github.com/rmsharp/nprcgenekeepr/reference
   article: https://github.com/rmsharp/nprcgenekeepr/articles

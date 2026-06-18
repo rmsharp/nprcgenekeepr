@@ -1,6 +1,6 @@
-# Get the maximum age of live animals in the pedigree.
+# Get the maximum age of live animals in the pedigree
 
-Get the maximum age of live animals in the pedigree.
+Get the maximum age of live animals in the pedigree
 
 ## Usage
 

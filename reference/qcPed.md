@@ -1,4 +1,6 @@
-# qcPed is a dataframe with 277 rows and 6 columns
+# Example quality-controlled baboon pedigree
+
+A data frame with 280 rows and 8 columns.
 
 - id:
 
@@ -37,7 +39,7 @@
 ## Usage
 
 ``` r
-qcPed
+data(qcPed)
 ```
 
 ## Format

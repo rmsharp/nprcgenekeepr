@@ -1,4 +1,4 @@
-# Converts pairwise kinship values to a relationship category descriptor.
+# Converts pairwise kinship values to a relationship category descriptor
 
 Part of Relations
 

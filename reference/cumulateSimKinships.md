@@ -1,4 +1,4 @@
-# Makes a list object containing kinship summary statistics using the list object from **createSimKinships**.
+# Makes a list object containing kinship summary statistics using the list object from **createSimKinships**
 
 `cumulateSimKinships` creates a named list of length 4 is generated
 where the first element is the mean of the simulated kinships, the

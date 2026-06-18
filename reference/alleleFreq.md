@@ -1,4 +1,4 @@
-# Calculates the count of each allele in the provided vector.
+# Calculates the count of each allele in the provided vector
 
 Part of Genetic Value Analysis
 

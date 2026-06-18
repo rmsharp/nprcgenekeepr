@@ -1,11 +1,11 @@
-# ped1Alleles is a dataframe created by the geneDrop function
+# Gene-drop alleles example (baboon pedigree)
 
-ped1Alleles is a dataframe created by the geneDrop function
+A dataframe created by the `geneDrop` function.
 
 ## Usage
 
 ``` r
-ped1Alleles
+data(ped1Alleles)
 ```
 
 ## Format

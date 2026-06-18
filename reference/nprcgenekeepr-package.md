@@ -10,7 +10,7 @@ Provides genetic tools for colony management and is a derivation of the
 work in Amanda Vinson and Michael J Raboin (2015)
 <https://pmc.ncbi.nlm.nih.gov/articles/PMC4671785/> "A Practical
 Approach for Designing Breeding Groups to Maximize Genetic Diversity in
-a Large Colony of Captive Rhesus Macaques ('Macaca' 'mulatto')". It
+a Large Colony of Captive Rhesus Macaques ('Macaca' 'mulatta')". It
 provides a 'Shiny' application with an exposed API. The application
 supports five groups of functions: (1) Quality control of studbooks
 contained in text files or 'Excel' workbooks and of pedigrees within
@@ -163,6 +163,10 @@ Useful links:
 data contributor\]
 
 Authors:
+
+- R. Mark Sharp <rmsharp@me.com>
+  ([ORCID](https://orcid.org/0000-0002-6170-6942)) \[copyright holder,
+  data contributor\]
 
 - Michael Raboin
 

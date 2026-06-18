@@ -1,4 +1,4 @@
-# Get Genetic Value Genotype data structure for reportGV function.
+# Get Genetic Value Genotype data structure for reportGV function
 
 Extracts genotype data if available otherwise NULL is returned.
 

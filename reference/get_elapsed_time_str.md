@@ -1,4 +1,4 @@
-# Returns the elapsed time since start_time.
+# Returns the elapsed time since start_time
 
 Taken from github.com/rmsharp/rmsutilityr
 

@@ -23,10 +23,10 @@
 
 - [`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
   : Eliminates partial parentage situations by adding unique placeholder
-  IDs for the unknown parent.
+  IDs for the unknown parent
 
 - [`alleleFreq()`](https://github.com/rmsharp/nprcgenekeepr/reference/alleleFreq.md)
-  : Calculates the count of each allele in the provided vector.
+  : Calculates the count of each allele in the provided vector
 
 - [`appServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md)
   : Main Application Server for nprcgenekeepr
@@ -41,10 +41,10 @@
   :
 
   Calculates `a`, the number of an individual's alleles that are rare in
-  each simulation.
+  each simulation
 
 - [`calcAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcAge.md)
-  : Calculate animal ages.
+  : Calculate animal ages
 
 - [`calcFE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFE.md)
   : Calculates founder Equivalents
@@ -57,7 +57,7 @@
 
 - [`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md)
   : Calculates genome uniqueness for each ID that is part of the
-  population.
+  population
 
 - [`calcRetention()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcRetention.md)
   : Calculates Allelic Retention
@@ -87,12 +87,12 @@
 
 - [`chooseAlleles()`](https://github.com/rmsharp/nprcgenekeepr/reference/chooseAlleles.md)
   : Combines two vectors of alleles by randomly selecting one allele or
-  the other at each position.
+  the other at each position
 
 - [`chooseDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/chooseDate.md)
   :
 
-  Choose date based on `earlier` flag.
+  Choose date based on `earlier` flag
 
 - [`convertAncestry()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertAncestry.md)
   : Converts the ancestry information to a standardized code
@@ -105,60 +105,55 @@
 
 - [`convertRelationships()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertRelationships.md)
   : Converts pairwise kinship values to a relationship category
-  descriptor.
+  descriptor
 
 - [`convertSexCodes()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertSexCodes.md)
-  : Converts sex indicator for an individual to a standardized codes.
+  : Converts a sex indicator for an individual to a standardized code
 
 - [`convertStatusCodes()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertStatusCodes.md)
   : Converts status indicators to a Standardized code
 
 - [`correctParentSex()`](https://github.com/rmsharp/nprcgenekeepr/reference/correctParentSex.md)
-  : Sets sex for animals listed as either a sire or dam.
+  : Sets sex for animals listed as either a sire or dam
 
 - [`countFirstOrder()`](https://github.com/rmsharp/nprcgenekeepr/reference/countFirstOrder.md)
-  : Count first-order relatives.
+  : Count first-order relatives
 
 - [`countKinshipValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/countKinshipValues.md)
   : Counts the number of occurrences of each kinship value seen for a
-  pair of individuals in a series of simulated pedigrees.
+  pair of individuals in a series of simulated pedigrees
 
 - [`countLoops()`](https://github.com/rmsharp/nprcgenekeepr/reference/countLoops.md)
-  : Count the number of loops in a pedigree tree.
+  : Count the number of loops in a pedigree tree
 
 - [`createExampleFiles()`](https://github.com/rmsharp/nprcgenekeepr/reference/createExampleFiles.md)
   : Creates a folder with CSV files containing example pedigrees and ID
-  lists used to demonstrate the package.
+  lists used to demonstrate the package
 
 - [`createPedTree()`](https://github.com/rmsharp/nprcgenekeepr/reference/createPedTree.md)
-  : Create a pedigree tree (PedTree).
+  : Create a pedigree tree (PedTree)
 
 - [`createSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/createSimKinships.md)
   : Makes a list object of kinship matrices from simulated pedigrees of
   possible parents for animals with unknown parents
 
 - [`create_wkbk()`](https://github.com/rmsharp/nprcgenekeepr/reference/create_wkbk.md)
-  : Creates an Excel workbook with worksheets.
+  : Creates an Excel workbook with worksheets
 
 - [`cumulateSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/cumulateSimKinships.md)
   :
 
   Makes a list object containing kinship summary statistics using the
-  list object from **createSimKinships**.
+  list object from **createSimKinships**
 
 - [`dataframe2string()`](https://github.com/rmsharp/nprcgenekeepr/reference/dataframe2string.md)
   : dataframe2string converts a data.frame object to a character vector
 
 - [`exampleNprcgenekeeprConfig`](https://github.com/rmsharp/nprcgenekeepr/reference/exampleNprcgenekeeprConfig.md)
-  :
-
-  exampleNprcgenekeeprConfig is a loadable version of the example
-  configuration file `example_nprcgenekeepr_config`
+  : Example nprcgenekeepr configuration file (loadable)
 
 - [`examplePedigree`](https://github.com/rmsharp/nprcgenekeepr/reference/examplePedigree.md)
-  :
-
-  examplePedigree is a pedigree object created by `qcStudbook`
+  : Example pedigree object (from ExamplePedigree.csv)
 
 - [`fillGroupMembersWithSexRatio()`](https://github.com/rmsharp/nprcgenekeepr/reference/fillGroupMembersWithSexRatio.md)
   : Forms breeding group(s) with an effort to match a specified sex
@@ -169,7 +164,7 @@
 
 - [`filterPairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterPairs.md)
   : Filters kinship values from a long-format kinship table based on the
-  sexes of the two animals involved.
+  sexes of the two animals involved
 
 - [`filterReport()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterReport.md)
   : Filters a genetic value report down to only the specified animals
@@ -179,41 +174,34 @@
   specified threshold
 
 - [`finalRpt`](https://github.com/rmsharp/nprcgenekeepr/reference/finalRpt.md)
-  :
-
-  finalRpt is a list object created from the list object *rpt* prepared
-  by `reportGV`. It is created inside `orderReport`. This version is at
-  the state just prior to calling `rankSubjects` inside `orderReport`.
+  : Genetic-value report list prior to ranking
 
 - [`findGeneration()`](https://github.com/rmsharp/nprcgenekeepr/reference/findGeneration.md)
-  : Determines the generation number for each id.
+  : Determines the generation number for each id
 
 - [`findLoops()`](https://github.com/rmsharp/nprcgenekeepr/reference/findLoops.md)
   : Find loops in a pedigree tree
 
 - [`findOffspring()`](https://github.com/rmsharp/nprcgenekeepr/reference/findOffspring.md)
   : Finds the number of total offspring for each animal in the provided
-  pedigree.
+  pedigree
 
 - [`findPedigreeNumber()`](https://github.com/rmsharp/nprcgenekeepr/reference/findPedigreeNumber.md)
-  : Determines the generation number for each id.
+  : Determines the pedigree number for each id
 
 - [`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)
   : fixColumnNames changes original column names and into standardized
-  names.
+  names
 
 - [`focalAnimals`](https://github.com/rmsharp/nprcgenekeepr/reference/focalAnimals.md)
-  :
-
-  focalAnimals is a dataframe with one column (*id*) containing the of
-  animal Ids from the **examplePedigree** pedigree.
+  : Focal animal IDs from examplePedigree
 
 - [`geneDrop()`](https://github.com/rmsharp/nprcgenekeepr/reference/geneDrop.md)
   : Gene drop simulation based on the provided pedigree information
 
 - [`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md)
   : Recursively create a character vector of ancestors for an individual
-  ID.
+  ID
 
 - [`getAnimalsWithHighKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAnimalsWithHighKinship.md)
   : Forms a list of animal Ids and animals related to them
@@ -229,10 +217,10 @@
 
 - [`getConfigFileName()`](https://github.com/rmsharp/nprcgenekeepr/reference/getConfigFileName.md)
   : getConfigFileName returns the configuration file name appropriate
-  for the system.
+  for the system
 
 - [`getCurrentAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getCurrentAge.md)
-  : Age in years using the provided birthdate.
+  : Age in years using the provided birthdate
 
 - [`getDateErrorsAndConvertDatesInPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDateErrorsAndConvertDatesInPed.md)
   :
@@ -241,13 +229,13 @@
 
 - [`getDatedFilename()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDatedFilename.md)
   : Returns a character vector with an file name having the date
-  prepended.
+  prepended
 
 - [`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
   : Get demographic data
 
 - [`getDescendantPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDescendantPedigree.md)
-  : Gets pedigree with descendants of provided group.
+  : Gets pedigree with descendants of provided group
 
 - [`getEmptyErrorLst()`](https://github.com/rmsharp/nprcgenekeepr/reference/getEmptyErrorLst.md)
   : Creates a empty errorLst object
@@ -262,10 +250,10 @@
   : Gets the founder ids from a pedigree
 
 - [`getGVGenotype()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGVGenotype.md)
-  : Get Genetic Value Genotype data structure for reportGV function.
+  : Get Genetic Value Genotype data structure for reportGV function
 
 - [`getGVPopulation()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGVPopulation.md)
-  : Get the population of interest for the Genetic Value analysis.
+  : Get the population of interest for the Genetic Value analysis
 
 - [`getGenotypes()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGenotypes.md)
   : Get genotypes from file
@@ -275,7 +263,7 @@
   a sire or a dam
 
 - [`getIncludeColumns()`](https://github.com/rmsharp/nprcgenekeepr/reference/getIncludeColumns.md)
-  : Get the superset of columns that can be in a pedigree file.
+  : Get the superset of columns that can be in a pedigree file
 
 - [`getLkDirectAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectAncestors.md)
   : Get the direct ancestors of selected animals
@@ -290,36 +278,36 @@
   : Get parents to corresponding animal IDs provided
 
 - [`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
-  : Get the direct ancestors of selected animals from supplied pedigree.
+  : Get the direct ancestors of selected animals from supplied pedigree
 
 - [`getPedMaxAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedMaxAge.md)
-  : Get the maximum age of live animals in the pedigree.
+  : Get the maximum age of live animals in the pedigree
 
 - [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md)
   : Get pedigree from file
 
 - [`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md)
-  : Get possible column names for a studbook.
+  : Get possible column names for a studbook
 
 - [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
   **\[experimental\]** : Get the lists of portential parents for all
-  individuals born in the colony with one or two unknown parents.
+  individuals born in the colony with one or two unknown parents
 
 - [`getPotentialSires()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialSires.md)
   : Provides list of potential sires
 
 - [`getProbandPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getProbandPedigree.md)
   : Gets pedigree to ancestors of provided group leaving uninformative
-  ancestors.
+  ancestors
 
 - [`getPyramidAgeDist()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidAgeDist.md)
   : Get the age distribution for the pedigree
 
 - [`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md)
-  : Creates a pyramid plot of the pedigree provided.
+  : Creates a pyramid plot of the pedigree provided
 
 - [`getRequiredCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getRequiredCols.md)
-  : Get required column names for a studbook.
+  : Get required column names for a studbook
 
 - [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
   : Get site information
@@ -332,34 +320,34 @@
 
 - [`get_and_or_list()`](https://github.com/rmsharp/nprcgenekeepr/reference/get_and_or_list.md)
   : Returns a one element character string with correct punctuation for
-  a list made up of the elements of the character vector argument.
+  a list made up of the elements of the character vector argument
 
 - [`get_elapsed_time_str()`](https://github.com/rmsharp/nprcgenekeepr/reference/get_elapsed_time_str.md)
-  : Returns the elapsed time since start_time.
+  : Returns the elapsed time since start_time
 
 - [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
   : Add animals to an existing breeding group or forms groups:
 
 - [`hasBothParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/hasBothParents.md)
-  : hasBothParents checks to see if both parents are identified.
+  : hasBothParents checks to see if both parents are identified
 
 - [`hasGenotype()`](https://github.com/rmsharp/nprcgenekeepr/reference/hasGenotype.md)
   : Check for genotype data in dataframe
 
 - [`headerDisplayNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/headerDisplayNames.md)
-  : Convert internal column names to display or header names.
+  : Convert internal column names to display or header names
 
 - [`isFounder()`](https://github.com/rmsharp/nprcgenekeepr/reference/isFounder.md)
   : Identifies the founders in a pedigree
 
 - [`is_valid_date_str()`](https://github.com/rmsharp/nprcgenekeepr/reference/is_valid_date_str.md)
-  : Returns TRUE if the string is a valid date.
+  : Returns TRUE if the string is a valid date
 
 - [`kinMatrix2LongForm()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinMatrix2LongForm.md)
-  : Reformats a kinship matrix into a long-format table.
+  : Reformats a kinship matrix into a long-format table
 
 - [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
-  : Generates a kinship matrix.
+  : Generates a kinship matrix
 
 - [`kinshipMatricesToKValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinshipMatricesToKValues.md)
   : Forms kValue matrix from list of kinship matrices
@@ -369,13 +357,10 @@
   kinship matrix
 
 - [`lacy1989Ped`](https://github.com/rmsharp/nprcgenekeepr/reference/lacy1989Ped.md)
-  : lacy1989Ped small hypothetical pedigree
+  : Small hypothetical pedigree (Lacy 1989)
 
 - [`lacy1989PedAlleles`](https://github.com/rmsharp/nprcgenekeepr/reference/lacy1989PedAlleles.md)
-  :
-
-  lacy1989PedAlleles is a dataframe produced by `geneDrop` on
-  `lacy1989Ped` with 5000 iterations.
+  : Gene-drop alleles for lacy1989Ped (5000 iterations)
 
 - [`loadSiteConfig()`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSiteConfig.md)
   : Load the site configuration for the modular Shiny application
@@ -404,7 +389,7 @@
 - [`makeRelationClassesTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeRelationClassesTable.md)
   :
 
-  Make relation classes table from `kin` dataframe.
+  Make relation classes table from `kin` dataframe
 
 - [`makeSimPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeSimPed.md)
   : Makes a simulated pedigree using representative sires and dams
@@ -482,62 +467,43 @@
 
 - [`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
   : obfuscatePed takes a pedigree object and creates aliases for all IDs
-  and adjusts all date within a specified amount.
+  and adjusts all date within a specified amount
 
 - [`offspringCounts()`](https://github.com/rmsharp/nprcgenekeepr/reference/offspringCounts.md)
   : Finds the total number of offspring for each animal in the pedigree
 
 - [`ped1Alleles`](https://github.com/rmsharp/nprcgenekeepr/reference/ped1Alleles.md)
-  : ped1Alleles is a dataframe created by the geneDrop function
+  : Gene-drop alleles example (baboon pedigree)
 
 - [`pedDuplicateIds`](https://github.com/rmsharp/nprcgenekeepr/reference/pedDuplicateIds.md)
-  : pedDuplicateIds is a dataframe with 9 rows and 5 columns (ego_id,
-  sire, dam_id, sex, birth_date) representing a full pedigree with a
-  duplicated record.
+  : Example studbook with a duplicated record
 
 - [`pedFemaleSireMaleDam`](https://github.com/rmsharp/nprcgenekeepr/reference/pedFemaleSireMaleDam.md)
-  : pedFemaleSireMaleDam is a dataframe with 8 rows and 5 columns
-  (ego_id, sire, dam_id, sex, birth_date) representing a full pedigree
-  with the errors of having a sire labeled as female and a dam labeled
-  as male.
+  : Example studbook with sex-mismatched parents
 
 - [`pedGood`](https://github.com/rmsharp/nprcgenekeepr/reference/pedGood.md)
-  : pedGood is a dataframe with 8 rows and 5 columns (ego_id, sire,
-  dam_id, sex, birth_date) representing a full pedigree with no errors.
+  : Valid example studbook (no QC errors)
 
 - [`pedInvalidDates`](https://github.com/rmsharp/nprcgenekeepr/reference/pedInvalidDates.md)
-  :
-
-  pedInvalidDates is a dataframe with 8 rows and 5 columns (ego_id,
-  sire, dam_id, sex, birth_date) representing a full pedigree with
-  values in the `birth_date` column that are not valid dates.
+  : Example studbook with invalid birth dates
 
 - [`pedMissingBirth`](https://github.com/rmsharp/nprcgenekeepr/reference/pedMissingBirth.md)
-  : pedMissingBirth is a dataframe with 8 rows and 5 columns (ego_id,
-  sire, dam_id, sex, birth_date) representing a full pedigree with no
-  errors.
+  : Example studbook missing the birth date column
 
 - [`pedOne`](https://github.com/rmsharp/nprcgenekeepr/reference/pedOne.md)
-  : pedOne is a loadable version of a pedigree file fragment used for
-  testing and demonstration
+  : Raw pedigree-file fragment for testing (5 columns)
 
 - [`pedSameMaleIsSireAndDam`](https://github.com/rmsharp/nprcgenekeepr/reference/pedSameMaleIsSireAndDam.md)
-  : pedSameMaleIsSireAndDam is a dataframe with 8 rows and 5 columns
-  (ego_id, sire, dam_id, sex, birth_date) representing a full pedigree
-  with no errors.
+  : Example studbook with a male as both sire and dam
 
 - [`pedSix`](https://github.com/rmsharp/nprcgenekeepr/reference/pedSix.md)
-  : pedSix is a loadable version of a pedigree file fragment used for
-  testing and demonstration
+  : Raw pedigree-file fragment for testing (7 columns)
 
 - [`pedWithGenotype`](https://github.com/rmsharp/nprcgenekeepr/reference/pedWithGenotype.md)
-  : pedWithGenotype is a dataframe produced from qcPed by adding made up
-  genotypes.
+  : Pedigree with simulated genotypes (from qcPed)
 
 - [`pedWithGenotypeReport`](https://github.com/rmsharp/nprcgenekeepr/reference/pedWithGenotypeReport.md)
-  :
-
-  pedWithGenotypeReport is a list containing the output of `reportGV`.
+  : Genetic-value report for pedWithGenotype
 
 - [`print(`*`<summary.nprcgenekeeprErr>`*`)`](https://github.com/rmsharp/nprcgenekeepr/reference/print.md)
   [`print(`*`<summary.nprcgenekeeprGV>`*`)`](https://github.com/rmsharp/nprcgenekeepr/reference/print.md)
@@ -547,19 +513,19 @@
   : Process qcStudbook Result into UI-Friendly Format
 
 - [`qcBreeders`](https://github.com/rmsharp/nprcgenekeepr/reference/qcBreeders.md)
-  : qcBreeders is a list of 29 baboon IDs that are potential breeders
+  : Potential breeder IDs (29 baboons)
 
 - [`qcPed`](https://github.com/rmsharp/nprcgenekeepr/reference/qcPed.md)
-  : qcPed is a dataframe with 277 rows and 6 columns
+  : Example quality-controlled baboon pedigree
 
 - [`qcPedGvReport`](https://github.com/rmsharp/nprcgenekeepr/reference/qcPedGvReport.md)
-  : qcPedGvReport is a genetic value report
+  : Genetic-value report for qcPed
 
 - [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
   : Quality Control for the Studbook or pedigree
 
 - [`rankSubjects()`](https://github.com/rmsharp/nprcgenekeepr/reference/rankSubjects.md)
-  : Ranks animals based on genetic value.
+  : Ranks animals based on genetic value
 
 - [`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)
   : Remove automatically generated IDs from pedigree
@@ -574,20 +540,20 @@
   : Removes potential sires from list of Ids
 
 - [`removeUninformativeFounders()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUninformativeFounders.md)
-  : Remove uninformative founders.
+  : Remove uninformative founders
 
 - [`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
   : removeUnknownAnimals Removes unknown animals added to pedigree that
-  serve as placeholders for unknown parents.
+  serve as placeholders for unknown parents
 
 - [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-  : Generates a genetic value report for a provided pedigree.
+  : Generates a genetic value report for a provided pedigree
 
 - [`rhesusGenotypes`](https://github.com/rmsharp/nprcgenekeepr/reference/rhesusGenotypes.md)
-  : rhesusGenotypes is a dataframe with two haplotypes per animal
+  : Rhesus genotypes (two haplotypes per animal)
 
 - [`rhesusPedigree`](https://github.com/rmsharp/nprcgenekeepr/reference/rhesusPedigree.md)
-  : rhesusPedigree is a pedigree object
+  : Obfuscated rhesus pedigree object
 
 - [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
   : Run the GeneKeepR Shiny Application (Deprecated)
@@ -602,7 +568,7 @@
   : Safe Execution Wrapper with Error Handling
 
 - [`saveDataframesAsFiles()`](https://github.com/rmsharp/nprcgenekeepr/reference/saveDataframesAsFiles.md)
-  : Write copy of dataframes to either CSV, TXT, or Excel file.
+  : Write copy of dataframes to either CSV, TXT, or Excel file
 
 - [`savePlotToFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/savePlotToFile.md)
   : Save Plot to File
@@ -627,12 +593,10 @@
   : Determine if the ORIP Reporting tab should be displayed
 
 - [`smallPed`](https://github.com/rmsharp/nprcgenekeepr/reference/smallPed.md)
-  : smallPed is a hypothetical pedigree
+  : Hypothetical 17-animal pedigree
 
 - [`smallPedTree`](https://github.com/rmsharp/nprcgenekeepr/reference/smallPedTree.md)
-  :
-
-  smallPedTree is a pedigree tree made from `smallPed`
+  : Pedigree tree built from smallPed
 
 - [`summarizeKinshipValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/summarizeKinshipValues.md)
   : Summary statistics for imputed kinship values

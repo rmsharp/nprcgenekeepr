@@ -1,16 +1,22 @@
-# pedSameMaleIsSireAndDam is a dataframe with 8 rows and 5 columns (ego_id, sire, dam_id, sex, birth_date) representing a full pedigree with no errors.
+# Example studbook with a male as both sire and dam
 
-It is one of six pedigrees (`pedDuplicateIds`, `pedFemaleSireMaleDam`,
-`pedgood`, `pedInvalidDates`, `pedMissingBirth`,
-`pedSameMaleIsSireAndDam`) used to demonstrate error detection by the
-qcStudbook function.
+A data frame with 8 rows and 5 columns (ego_id, si.re, dam_id, sex,
+birth_date) representing a full pedigree in which the same male animal
+is listed as both a sire and a dam.
 
 ## Usage
 
 ``` r
-pedSameMaleIsSireAndDam
+data(pedSameMaleIsSireAndDam)
 ```
 
 ## Format
 
 An object of class `data.frame` with 8 rows and 5 columns.
+
+## Details
+
+It is one of six pedigrees (`pedDuplicateIds`, `pedFemaleSireMaleDam`,
+`pedGood`, `pedInvalidDates`, `pedMissingBirth`,
+`pedSameMaleIsSireAndDam`) used to demonstrate error detection by the
+qcStudbook function.

@@ -1,11 +1,12 @@
-# smallPedTree is a pedigree tree made from `smallPed`
+# Pedigree tree built from smallPed
 
-Access it using the following commands.
+A pedigree tree made from `smallPed`. Access it using the following
+commands.
 
 ## Usage
 
 ``` r
-smallPedTree
+data(smallPedTree)
 ```
 
 ## Format

@@ -1,4 +1,4 @@
-# Count first-order relatives.
+# Count first-order relatives
 
 Part of Relations
 

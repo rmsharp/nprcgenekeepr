@@ -1,4 +1,4 @@
-# Create a pedigree tree (PedTree).
+# Create a pedigree tree (PedTree)
 
 The PedTree is a list containing sire and dam information for an
 individual.

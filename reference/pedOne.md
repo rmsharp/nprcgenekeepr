@@ -1,11 +1,12 @@
-# pedOne is a loadable version of a pedigree file fragment used for testing and demonstration
+# Raw pedigree-file fragment for testing (5 columns)
 
-This is used for testing and demonstration.
+A loadable version of a pedigree file fragment used for testing and
+demonstration.
 
 ## Usage
 
 ``` r
-pedOne
+data(pedOne)
 ```
 
 ## Format

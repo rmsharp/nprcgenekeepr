@@ -18,3 +18,12 @@ appUI(siteInfo = getSiteInfo(expectConfigFile = FALSE))
   `configFile` elements gate the Oregon (ONPRC)-specific ORIP Reporting
   tab, which is shown only for an actual ONPRC configuration (see
   [`shouldShowOripTab`](https://github.com/rmsharp/nprcgenekeepr/reference/shouldShowOripTab.md)).
+
+## Value
+
+A `shiny.tag.list` object (as produced by
+[`shiny::tagList()`](https://rstudio.github.io/htmltools/reference/tagList.html))
+describing the complete GeneKeepR user interface; pass it as the `ui`
+argument to
+[`shiny::shinyApp()`](https://rdrr.io/pkg/shiny/man/shinyApp.html) or
+[`shiny::runApp()`](https://rdrr.io/pkg/shiny/man/runApp.html).

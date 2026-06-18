@@ -1,4 +1,4 @@
-# Count the number of loops in a pedigree tree.
+# Count the number of loops in a pedigree tree
 
 Part of Pedigree Sampling From PedigreeSampling.R 2016-01-28
 

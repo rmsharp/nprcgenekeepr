@@ -1,4 +1,4 @@
-# Make relation classes table from `kin` dataframe.
+# Make relation classes table from `kin` dataframe
 
 From Relations
 
@@ -38,8 +38,8 @@ kin <- convertRelationships(bkmat, qcPed)
 relClasses <- makeRelationClassesTable(kin)
 relClasses$`Relationship Class` <-
   as.character(relClasses$`Relationship Class`)
-relClassTbl <- kin[!kin$relation == "Self", ] %>%
-  group_by(relation) %>%
+relClassTbl <- kin[!kin$relation == "Self", ] |>
+  group_by(relation) |>
   summarise(count = n())
 relClassTbl
 #> # A tibble: 1 × 2

@@ -7,6 +7,3274 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 117 Did
+
+**Deliverable:** owner’s pick **(A2)** — the data-doc short-`@title`
+rewrite: rewrote the roxygen TITLE of **all 24 datasets** in `R/data.R`
+from long “X is a `<type>` …” run-on sentences into short noun-phrase
+titles, moving the descriptive detail into `@description`, then
+regenerated the 24 data `man/` pages. **(DONE — verified by
+[`tools::checkRd()`](https://rdrr.io/r/tools/checkRd.html) 0 problems on
+all 24 pages + `NAMESPACE` byte-identical (`git diff --quiet`) +
+`load_all` (162 exports) + full-suite regression read (0 fail / 0
+error) + a 3-lens adversarial critic panel returning 0 block / 0
+should-fix / 3 nits.)** Scoped to **`R/data.R` + 24 data `man/` pages**;
+`NAMESPACE`, `DESCRIPTION`, `data/` unchanged. **Started / Completed:**
+2026-06-17 **Status:** **DONE. TDD phase = N/A** (roxygen prose; no
+executable R line changed — only `#'` comments — so no package logic or
+test surface; RED vacuous; declared every response, as S108–S116). **One
+gated pre-RED `AskUserQuestion`** (two questions: scope = all 24
+vs. worst-8; style = short noun phrase vs. name-led — owner chose **all
+24 + short noun phrase**, grounded in a `pedGood` before/after preview).
+No TDD phase-transition gates (none apply). **0 stakeholder
+corrections.** Right-sized under ultracode as **SOLO edits + oracle
+(checkRd/load_all/tests) for the structural dimension, PLUS a 3-lens
+critic workflow for the NON-oracle quality dimension** (title
+aptness/accuracy/consistency — which no oracle can judge) → **Learning
+111.** New session within the conversation: claimed it (1B stub BEFORE
+technical work), did the full Phase 0 reads this same turn. - **What
+changed (1 source file, 24 regenerated `man/` pages, 0 new committed
+files):** **`R/data.R`** — 24 data-doc blocks restructured: short
+noun-phrase title, blank line, then the moved descriptive sentence as
+`@description`; `\describe`/`@examples`/`@source`/structure-dumps
+preserved byte-for-byte. **`man/` (24 regenerated):**
+`exampleNprcgenekeeprConfig`, `examplePedigree`, `finalRpt`,
+`focalAnimals`, `lacy1989Ped`, `lacy1989PedAlleles`, `ped1Alleles`,
+`pedDuplicateIds`, `pedFemaleSireMaleDam`, `pedGood`, `pedInvalidDates`,
+`pedMissingBirth`, `pedOne`, `pedSameMaleIsSireAndDam`, `pedSix`,
+`pedWithGenotype`, `pedWithGenotypeReport`, `qcBreeders`, `qcPed`,
+`qcPedGvReport`, `smallPed`, `smallPedTree`, `rhesusGenotypes`,
+`rhesusPedigree`. **Plus** `CHANGELOG.md` (S117 `[Unreleased]`),
+`PROJECT_LEARNINGS.md` (Learning 111), `SESSION_NOTES.md` (this
+handoff). **No `NAMESPACE`, `DESCRIPTION`, NEWS, test, CI-workflow,
+CRAN-vignette, or `data/` change.** - **🚨 REAL WORK \#1 — VERIFIED
+EVERY COUNT BEFORE AUTHORING IT; FOUND `qcPed` SELF-CONTRADICTS (→
+Learning 111):** before moving any “N rows and M columns” sentence into
+a description, I checked all 10 count-bearing docs against the loaded
+objects. Exactly one was wrong: `qcPed` title said “277 rows and 6
+columns” but the object is **280×8** — and roxygen’s auto-`\format`
+already read “280 rows and 8 columns”, so the page literally
+contradicted itself. Wrote the accurate 280×8 in the new description and
+flagged the correction (the S115/S116 verify-and-correct pattern). All 9
+others (incl. `ped1Alleles` 554×6, the six error-set peds,
+`pedWithGenotype` 280×12) verified accurate, preserved verbatim. - **🚨
+REAL WORK \#2 — PAIRED SOLO+ORACLE WITH AN ADVERSARIAL PANEL FOR THE
+SUBJECTIVE DIMENSION (→ Learning 111):** `checkRd`/`load_all`/tests
+prove the rewrite RENDERS and is structurally clean, but cannot judge
+whether a title is APT/accurate/non-duplicative. So I ran a 3-lens
+critic workflow (accuracy / completeness / style+consistency), each lens
+grounding itself in `git show HEAD:R/data.R` + the loaded objects.
+Result **0 block / 0 should-fix / 3 nits**: (a) `examplePedigree`’s
+`\describe` documents `\item{recordStats}` but the actual column is
+`recordStatus` — PRE-EXISTING (identical in HEAD), in a `\describe`
+block I only touched at the title → **flagged, not fixed (FM \#8)**,
+verified real against the data first; (b) `smallPed` “Small hypothetical
+pedigree (17 animals)” was a confusable near-duplicate of `lacy1989Ped`
+“Small hypothetical pedigree (Lacy 1989)” → **applied** the
+disambiguation to “Hypothetical 17-animal pedigree” (improving my own
+un-previewed draft); (c) “studbook” vs “pedigree” for the 6 QC fixtures
+→ **kept studbook** (owner approved it in the style preview; it’s
+defensible — studbook input fixtures that represent pedigrees, feeding
+`qcStudbook`), noted for future. - **`ped1Alleles` made well-formed:**
+two `## Copyright` comment lines interrupted its roxygen block (between
+title and `@format`); relocated them above the block so it is
+contiguous. Regenerated `.Rd` carries title + `@description` + `@format`
+cleanly. - **Used file-based R probes from the first command** — dodged
+the recurring shell-backslash trap (Learnings 108/109) that bit
+S112–S114; no misfires this session. - **\[news-vs-changelog\]:**
+dev-process history → CHANGELOG here. These help pages **SHIP** → fold
+S117’s new titles into the **CRAN Phase 3 NEWS rewrite at 2.0.0**
+(flagged, NOT edited now). **NO auto-memory** — the work lives in the
+repo (\[\[consult-project-source-of-truth\]\]). **\[macos-dupe-scan\]:**
+committed ONLY the repo files; excluded `.DS_Store` (modified) +
+`PED_GV_AUDIT_2026-05-30.html` (untracked, standing keep); the five
+`_s117_*.R` probe/script files were TEMPORARY (removed before commit).
+
+**Phase-3E (runtime smoke test): N/A — STATED, not silently skipped.**
+Roxygen/Rd prose changes NO package or app runtime behavior (no logic,
+dispatch, config, or test surface; `NAMESPACE`/`DESCRIPTION`/`data/`
+unchanged — proven `NAMESPACE` byte-identical). Verification appropriate
+to the deliverable = the per-page `checkRd` + `load_all` + the
+full-suite regression read + the adversarial quality panel, all done.
+Full `R CMD check` not run (`devtools` absent; the above is the
+proportionate equivalent for a generated-doc/source change). **NOT FM
+\#24.**
+
+**Session 116 Handoff Evaluation (by Session 117): Score 9/10.** S116
+pre-named THIS deliverable as suggested-next option **(A2)** (“give the
+data docs proper short `@title`s with detail moved to `@description` —
+e.g. `finalRpt`‘s 4-sentence run-on; the error-set docs’ titles are now
+their full first sentence”), so I located the scope instantly. Its
+gotchas held exactly and saved real time: the **shell-backslash trap →
+write file-based R probes** (I used file-based probes from command \#1,
+zero misfires); **regen with
+`roxygen2::roxygenise(package.dir=<abspath>)`** (devtools absent),
+baseline 8.0.0 so the regen confined to my intended pages; the
+**`NAMESPACE` byte-identical check** (`git diff --quiet`) as the
+import-neutrality oracle; and — critically — **`si.re`/`si re` are
+INTENTIONAL raw fixtures, do NOT “clean” them** (I preserved them and
+explicitly told the critic panel not to flag them). The standing
+`.DS_Store`/`PED_GV_AUDIT` keep-call held. ROI very high. **The −1:**
+S116’s A2 description referenced only `finalRpt` + the error-set docs as
+examples without noting the full set is **24** data docs sharing one
+consistent “X is a…” anti-pattern (I had to inventory the scope myself),
+and it could not foresee the latent `qcPed` count error (277×6 vs 280×8)
+or the `examplePedigree` `recordStats`→`recordStatus` drift — both
+discoverable only by probing/critic this session. Accurate within what a
+flag could know; no false credit.
+
+**Self-assessment (Session 117): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER in full, notes top, dashboard 98/100, git, 14 issues,
+ghost-check → HEAD `674b772d` = S116, clean), reported, STOPPED for the
+owner’s pick; claimed the session (1B stub BEFORE technical work).
+**Headline strengths:** (1) **inventoried the true scope** (24 data docs
+= 24 `.rda` = 24 `\docType{data}` pages, complete and self-contained)
+before posing the gated `AskUserQuestion`, which carried a concrete
+`pedGood` before/after preview + ASCII-only labels
+(\[\[ascii-only-in-question-options\]\]); (2) **verified every
+count-bearing claim against the live object before authoring** — caught
+`qcPed`’s self-contradiction and corrected it (Learning 111, extends
+109); (3) **right-sized SOLO+oracle for structure but fanned out a
+3-lens adversarial panel for the non-oracle quality dimension** — the
+legitimate, non-theater use of a critic workflow (it validated the
+rewrites AND surfaced a real near-duplicate + a pre-existing content
+bug) → Learning 111; (4) **respected the owner-decision boundary** —
+kept the owner-approved “studbook” when the panel merely preferred
+“pedigree”, but freely improved my own un-previewed `smallPed` draft;
+(5) **held scope discipline** — FLAGGED (did not fix) the
+`recordStats`→`recordStatus` drift, the garbled `rhesusGenotypes`
+fragment, and the `created the SNPRC` wording (FM \#8), verifying the
+first against the data; (6) **proved zero regressions** (checkRd 0 ×24,
+NAMESPACE byte-identical, load_all 162, suite 0/0); (7) used file-based
+probes from command \#1 (no backslash misfires); 0 corrections; plain
+language; declared TDD N/A + Phase-3E N/A with reasons; removed all temp
+probes. **Weaknesses (honest):** (a) full `R CMD check` NOT run
+(`devtools` absent) — checkRd + load_all + regression + NAMESPACE diff
+is the proportionate build-equivalent, not the full check; (b) the work
+is moderate-difficulty — the value is the verify-before-authoring
+rigor + the solo/panel split, not deep technical complexity; (c) I left
+a within-doc term split (studbook title / “pedigree” description)
+standing for the 6 fixtures — defensible and owner-approved, but a
+reader could notice it. I reserve 10 for a delivery that is also
+full-`check`-verified with no residual known stylistic split in touched
+files.
+
+**⇒ SUGGESTED NEXT = owner’s pick.** (A2) is done; nothing mid-flight.
+All 24 data-doc titles are now short noun phrases. Natural options
+(plain ASCII labels): - **(A) Adjacent content bugs flagged this session
+(ships, gated):** `examplePedigree` `\describe` says
+`\item{recordStats}` but the column is `recordStatus` (verified against
+the data); `rhesusGenotypes`’s garbled “There are object.” fragment;
+`exampleNprcgenekeeprConfig`’s “created the SNPRC” (missing “at”).
+Low-risk roxygen-source fixes → `man/` regen → sequence with CRAN. -
+**(A3) Vignette accuracy nit (ships, gated):** S116’s still-open item —
+`vignettes/articles/studbook-quality-control.qmd:91` lists
+`(ego_id, si.re, dam_id, birth_date)`, omitting the `sex` column.
+One-line article fix. - **(B) Resume the CRAN plan** — Phase 2b
+(vignette rebuild timing) or **Phase 3** (NEWS rewrite + version bump →
+2.0.0; **fold in S112–S117’s shipping doc repairs, incl. the 24 new
+data-doc titles**). - **(C) Merge `add-methodology` → `master`** — after
+this commit **6 ahead of `origin/add-methodology`** (S112–S117) and
+**~183 ahead of `master`**; the real standing pending action is the
+merge to master. **Do NOT** bundle the flagged content bugs or the
+vignette nit into the next content task; **do NOT** bundle phases (FM
+\#18/#25).
+
+**Key files (this session):** **CHANGED (committed):** `R/data.R`; the
+24 `man/*.Rd` data pages listed above; `CHANGELOG.md`,
+`PROJECT_LEARNINGS.md` (Learning 111), `SESSION_NOTES.md` (this
+handoff). **Read firsthand:** `R/data.R` (full, all 24 blocks),
+`DESCRIPTION` (confirmed `Roxygen: list(markdown = TRUE)` —
+`focalAnimals`’s `_id_`/`__examplePedigree__` are intentional markdown),
+`man/ped1Alleles.Rd` (HEAD, to see how roxygen parsed the
+`##`-interrupted block), the loaded data objects (exact dims/colnames
+for every count-bearing doc), the 3 spot-checked regenerated `.Rd`
+(`ped1Alleles`/`qcPed`/`finalRpt` title+description). **Transient
+(removed, NOT committed):** `_s117_probe.R`, `_s117_counts.R`,
+`_s117_regen.R`, `_s117_checkrd.R`, `_s117_regress.R`, `_s117_critic.R`.
+
+**Gotchas:** (1) **Adjacent content bugs FLAGGED, NOT fixed (FM \#8) —
+option (A):** `examplePedigree`’s `\describe` item is `recordStats` but
+the actual column is `recordStatus` (verified 3694×12, last col
+`recordStatus`); `rhesusGenotypes`’s description still contains the
+garbled “There are object.” (intentionally preserved this session);
+`exampleNprcgenekeeprConfig` says “created the SNPRC”. (2)
+**`si.re`/`si re` are INTENTIONAL raw fixtures, NOT corruption**
+(carried from S116) — `fixColumnNames` normalizes them to `sire`; do NOT
+“clean” the data columns. The data-doc column lists (set by S116) were
+preserved byte-for-byte. (3) **`qcPed` is 280×8** — its title formerly
+claimed 277×6 (now corrected in the description); roxygen’s
+auto-`\format` is a free oracle for shape claims (it already read
+280×8). (4) **`studbook` vs `pedigree` term split** — the 6 QC fixtures
+are titled “…studbook…” (owner-approved preview) while their
+descriptions say “…full pedigree…”; a future pass could unify to
+“pedigree” if preferred (panel’s nit). (5) **Shell backslash trap
+(recurring):** write R probes to a FILE and run `Rscript file.R`; simple
+`Rscript -e` expressions (no regex/backslashes) are fine. (6)
+**Regenerate with
+`roxygen2::roxygenise(package.dir=<abspath>, roclets="rd")`** (devtools
+absent); baseline 8.0.0 so regens are clean — confirm via
+`git diff --stat` that only intended pages changed, and
+`git diff --quiet -- NAMESPACE` for import neutrality. (7) **Markdown IS
+enabled** (`Roxygen: list(markdown = TRUE)`) — titles must avoid stray
+markdown syntax (mine are plain phrases + parens, safe);
+`_id_`/`__examplePedigree__` in `focalAnimals` are intentional markdown
+emphasis, preserved. (8) Standing uncommitted: `.DS_Store` (modified) +
+`PED_GV_AUDIT_2026-05-30.html` (untracked) — owner’s keep-call; a stray
+`Rplots.pdf` can appear from Rscript plot calls — none this session. (9)
+**Branch state:** after this commit `add-methodology` is **6 ahead of
+`origin/add-methodology`** (S112–S117) and **~183 ahead of `master`** —
+the pending action is the merge to master. (10) Carried CRAN gotchas
+remain valid: `NEWS.md` from `NEWS.Rmd`; renv explicit-snapshot omits
+ALL Suggests; pkgdown/quarto/devtools dev-lib-only; `RSelenium`
+undeclared; the package is ARCHIVED on CRAN (Learning 95).
+
+### What Session 116 Did
+
+**Deliverable:** owner’s pick **(A)** — repaired the three adjacent
+doc/data-doc bugs S115 flagged but deliberately left (FM \#8): (1) the
+`\code{pedgood}` wrong-case cross-reference in all six error-set data
+docs (dataset is `pedGood`); (2) the data-doc column-list inaccuracy
+across the qc data family (owner chose **full accuracy** doc-fix); (3)
+the wrapped `@importFrom` roxygen 8.0.0 lint (owner chose **all 10
+files**) — then regenerated the affected `man/`. **(DONE — verified by
+`NAMESPACE` byte-identical + per-page `checkRd` HEAD-vs-working (0
+new) + `load_all` (162) + full-suite regression read (0 fail / 0
+error) + 0 wrapped tags remaining.)** Scoped to **`R/data.R` + 10 `R/`
+source files + 6 data `man/` pages**; `NAMESPACE`, `DESCRIPTION`,
+`data/` unchanged. **Started / Completed:** 2026-06-17 **Status:**
+**DONE. TDD phase = N/A** (roxygen/data-doc prose + `@importFrom` source
+reformatting; **no executable R line changed — only `#'` comment lines**
+— so no package logic or test surface; RED vacuous; declared every
+response, as S108–S115). **Two gated pre-RED `AskUserQuestion`s** — (i)
+item-2 data-vs-doc fork (owner: full-accuracy docs); (ii) item-3
+3-vs-10-file scope, posed *after* I discovered the scope was 10 files
+not 3 and the bug was cosmetic not a hazard (owner: all 10). No TDD
+phase-transition gates (none apply). **0 stakeholder corrections** — two
+mid-session owner questions (“what does wrapped `@importFrom` mean?”;
+“does that make some lines \>80 chars?”) were answered (no; longest is
+80), not corrections. Right-sized under ultracode as **SOLO with
+firsthand probes + deterministic dry-run script + byte-level oracles**
+(a fan-out re-running grep/`checkRd`/`git diff` would be theater —
+Learnings 108/109; \[\[consult-project-source-of-truth\]\]) → **Learning
+110.** New session within the conversation: claimed it (1B stub BEFORE
+technical work), did the full Phase 0 reads this same turn. - **What
+changed (11 source files, 0 new committed files):** **`R/data.R`** —
+item 1: `\code{pedgood}` -\> `\code{pedGood}` (×6, all error-set
+cross-ref lists); item 2: column lists corrected to actual data — `sire`
+-\> `si.re` in
+`pedGood`/`pedDuplicateIds`/`pedFemaleSireMaleDam`/`pedMissingBirth`/`pedSameMaleIsSireAndDam`,
+and `pedInvalidDates` `(ego_id, sire, dam_id, sex, birth_date)` -\>
+`(id, sire, dam, sex, birth)` plus `\code{birth_date}` -\>
+`\code{birth}`. **10 `R/` source files** (item 3) — `appServer.R`,
+`appUI.R`, `modBreedingGroups.R`, `modGeneticValue.R`, `modInput.R`,
+`modORIPReporting.R`, `modPedigree.R`, `modPotentialParents.R`,
+`modPyramid.R`, `modSummaryStats.R`: 20 wrapped `@importFrom` tags each
+split into multiple single-line `@importFrom pkg ...` tags \<=80 chars.
+**`man/` (6 regenerated):** `pedDuplicateIds.Rd`,
+`pedFemaleSireMaleDam.Rd`, `pedGood.Rd`, `pedInvalidDates.Rd`,
+`pedMissingBirth.Rd`, `pedSameMaleIsSireAndDam.Rd`. **Plus**
+`CHANGELOG.md` (S116 `[Unreleased]`), `PROJECT_LEARNINGS.md` (Learning
+110), `SESSION_NOTES.md` (this handoff). **No `NAMESPACE`,
+`DESCRIPTION`, NEWS, test, CI-workflow, CRAN-vignette, or `data/`
+change.** - **🚨 REAL WORK \#1 — DISPROVED MY OWN INHERITED CLAIM WITH A
+REVERTED REGEN ORACLE (→ Learning 110):** I initially restated S115’s
+item-3 flag as a “latent NAMESPACE-drop hazard.” A fully-reverted
+`roxygenise()` probe (`git checkout -- man/ NAMESPACE DESCRIPTION`
+after) disproved it: roxygen 8.0.0 prints
+`✖ @importFrom must be only 1 line long` for all wrapped tags but
+**still captures every continuation line** — `NAMESPACE` came back
+**byte-identical** (140 `importFrom`, 0 removed). It’s cosmetic lint,
+not a regression. Reported the correction to the owner before touching
+anything (verify-the-claim applies to your OWN characterization). - **🚨
+REAL WORK \#2 — THE FLAG UNDERCOUNTED SCOPE 3× (→ Learning 110):** S115
+named 3 `mod*.R` files; a file-based detector scanning every
+`@importFrom` in `R/` found **20 wrapped tags across 10 files**,
+incl. non-`mod` `appServer.R`/`appUI.R`. Surfaced the 3-vs-10 boundary
+to the owner (a flag’s file list is a sample, not an inventory). - **🚨
+REAL WORK \#3 — THE OBVIOUS FIX WAS INVERTED; `si.re` IS AN INTENTIONAL
+FIXTURE (→ Learning 110):** `si.re` (and `pedOne`’s `si re`) looked like
+a corrupted `sire` to rename in the data. Tracing it through the
+consumer: `R/fixColumnNames.R:22,25` strips spaces then periods (`si re`
+-\> `si.re` -\> `sire`), and the end-to-end probe `qcStudbook(pedGood)`
+returns canonical columns `id, sire, dam, ...`. So `si.re` is a
+deliberate raw studbook-input fixture (`make.names("si re")` at `.rda`
+creation) exercising the QC normalizer — renaming would gut it. Correct
+fix = the docs, not the data. Posed the data-vs-doc fork; owner chose
+full-accuracy doc-fix. - **Used file-based R probes from the first
+command** — dodged the recurring shell-backslash trap (Learnings
+108/109) that bit S112–S114; no misfires this session. -
+**\[news-vs-changelog\]:** dev-process history → CHANGELOG here. These
+help pages **SHIP** → fold S116’s corrections into the **CRAN Phase 3
+NEWS rewrite at 2.0.0** (flagged, NOT edited now). **NO auto-memory** —
+the work lives in the repo (\[\[consult-project-source-of-truth\]\]).
+**\[macos-dupe-scan\]:** committed ONLY the repo files; excluded
+`.DS_Store` (modified) + `PED_GV_AUDIT_2026-05-30.html` (untracked,
+standing keep); the four `_s116_*.R` probe/script files were TEMPORARY
+(removed before commit).
+
+**Phase-3E (runtime smoke test): N/A — STATED, not silently skipped.**
+No runtime behavior change: the data-doc edits are inert prose, and the
+`@importFrom` reformat is **proven `NAMESPACE`-neutral
+(byte-identical)** — so the app’s imports are unchanged. Verification
+appropriate to the deliverable = `NAMESPACE`/man `git diff` + per-page
+`checkRd` HEAD-vs-working + `load_all` + full-suite regression read, all
+done. Full `R CMD check` not run (`devtools` absent; the above is the
+proportionate equivalent for an artifact/source-hygiene change). **NOT
+FM \#24.**
+
+**Session 115 Handoff Evaluation (by Session 116): Score 9/10.** S115
+pre-named THIS deliverable precisely as option (A), listing all three
+sub-items with the file and the wrong phrase for each (`\code{pedgood}`
+wrong-case in the six error-set docs; the `si.re`-vs-`sire` data/doc
+mismatch framed as a gated data-vs-doc fork; the `mod*.R` `@importFrom`
+8.0.0 errors). Location was instant — zero rediscovery. Its gotchas held
+exactly: the shell-backslash trap warning (→ I wrote file-based probes
+from command \#1, no misfires); regen with
+`roxygen2::roxygenise(package.dir=<abspath>)` (devtools absent),
+baseline 8.0.0 so the regen confined to my 6 pages; the standing
+uncommitted `.DS_Store`/`PED_GV_AUDIT` keep-call. ROI very high. **The
+−1:** S115’s flag (a) **undercounted item 3** — it named 3 `mod*.R`
+files, but the wrapped-`@importFrom` issue is 20 tags across 10 files
+(incl. `appServer.R`/`appUI.R`), and it implied a correctness problem
+without noting it’s cosmetic (NAMESPACE-neutral); and (b) framed item 2
+as “`si.re` vs `sire`” without noting `si.re` is an *intentional* raw
+fixture (renaming would be wrong). Both are discoveries only execution
+could make — accurate within what a flag could know; no false credit.
+
+**Self-assessment (Session 116): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER in full, notes top, dashboard 98/100, git, 14 issues,
+ghost-check → HEAD `1ddfb38e` = S115, clean), reported, STOPPED for the
+owner’s pick; claimed the session (1B stub BEFORE technical work).
+**Headline strengths:** (1) **disproved my OWN inherited “hazard” claim
+with a cheap reverted regen oracle** and corrected the record to the
+owner before editing (→ Learning 110); (2) **inventoried the flagged
+pattern across the whole repo** — caught the 3→10-file undercount —
+rather than trusting the flag’s file list; (3) **traced `si.re` through
+`fixColumnNames`/`qcStudbook`** and found the obvious fix was inverted
+(it’s a fixture; fix docs not data); (4) **posed the two genuine
+owner-forks as separate evidence-grounded `AskUserQuestion`s** with
+recommendations + ASCII-only labels
+(\[\[ascii-only-in-question-options\]\]); (5) **proved item-3 neutrality
+with the byte-level oracle** (`NAMESPACE` `git diff --quiet`) and
+matched the authors’ ≤80-char style (multiple single-line tags,
+dry-run-audited script per Learning 108) rather than one mega-line; (6)
+**verified end-to-end** — checkRd HEAD-vs-working 0-new, load_all 162,
+regen confined to 6 pages, full-suite regression 0/0; (7) **held scope
+discipline** — FLAGGED (did not fix) the vignette `si.re`/missing-`sex`
+nit and the deferred A2 short-title rewrite; (8) answered both
+mid-session owner questions accurately (incl. catching my own `grep -n`
+measurement artifact); 0 corrections; plain language; declared TDD N/A +
+Phase-3E N/A with reasons; removed all temp probes. **Weaknesses
+(honest):** (a) I initially propagated S115’s “hazard” framing into my
+own report before the probe corrected it — right outcome, but I should
+have probed the tool’s behavior *before* characterizing it; (b) the work
+is intrinsically low-difficulty — the value is the verification rigor +
+the three corrections (nature/scope/inversion), not technical depth; (c)
+full `R CMD check` NOT run (`devtools` absent) — the `NAMESPACE`/man
+diff + `checkRd` + `load_all` + regression read is the proportionate
+build-equivalent, not the full check. I reserve 10 for a delivery that
+probes-before-characterizing from the start and is also
+full-`check`-verified.
+
+**⇒ SUGGESTED NEXT = owner’s pick.** (A) is done; nothing mid-flight.
+The three S115-flagged adjacent bugs are fixed. Natural options (plain
+ASCII labels): - **(A2) Data-doc title rewrite (ships, gated):** S114’s
+still-deferred fork — give the data docs proper short `@title`s with
+detail moved to `@description` (e.g. `finalRpt`‘s 4-sentence run-on; the
+error-set docs’ titles are now their full first sentence). - **(A3)
+Vignette accuracy nit (ships, gated):**
+`vignettes/articles/studbook-quality-control.qmd:91` lists
+`(ego_id, si.re, dam_id, birth_date)` — `si.re` is right, but it omits
+the `sex` column (the dataset is 5 columns). One-line article fix
+(separate artifact from the `man/` work). - **(B) Resume the CRAN plan**
+— Phase 2b (vignette rebuild timing) or **Phase 3** (NEWS rewrite +
+version bump → 2.0.0; **fold in S112/S113/S114/S115/S116’s shipping doc
+repairs**). - **(C) Merge `add-methodology` → `master`** — after this
+commit **5 ahead of `origin/add-methodology`** (S112–S116) and **~182
+ahead of `master`**; the real standing pending action is the merge to
+master. **Do NOT** bundle the data-doc title rewrite or the vignette nit
+into the next content task; **do NOT** bundle phases (FM \#18/#25).
+
+**Key files (this session):** **CHANGED (committed):** `R/data.R`;
+`R/appServer.R`, `R/appUI.R`, `R/modBreedingGroups.R`,
+`R/modGeneticValue.R`, `R/modInput.R`, `R/modORIPReporting.R`,
+`R/modPedigree.R`, `R/modPotentialParents.R`, `R/modPyramid.R`,
+`R/modSummaryStats.R`; `man/pedDuplicateIds.Rd`,
+`man/pedFemaleSireMaleDam.Rd`, `man/pedGood.Rd`,
+`man/pedInvalidDates.Rd`, `man/pedMissingBirth.Rd`,
+`man/pedSameMaleIsSireAndDam.Rd`; `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
+(Learning 110), `SESSION_NOTES.md` (this handoff). **Read firsthand:**
+`R/data.R` (140–219), `R/fixColumnNames.R` (full), the loaded data
+objects (`pedGood` et al. — exact nrow/ncol/colnames), the 6 rendered
+`.Rd` diffs, the per-page `checkRd` HEAD-vs-working comparison, the
+`NAMESPACE` byte-diff. **Transient (removed, NOT committed):**
+`_s116_probe.R`, `_s116_fix.R`, `_s116_truth.R`, `_s116_wrapscan.R`,
+`_s116_split_importfrom.R`, `_s116_checkrd.R`, `_s116_regress.R`.
+
+**Gotchas:** (1) **`si.re`/`si re` are INTENTIONAL raw fixtures, NOT
+corruption** — `fixColumnNames` strips spaces then periods so both
+normalize to `sire`; `qcStudbook(pedGood)` returns canonical columns.
+The data docs now say `si.re` to match the actual data. Do NOT “clean”
+the data column (it would gut the QC-demo fixture and a test family that
+round-trips `names(pedGood)`). (2) **Wrapped `@importFrom` is COSMETIC
+lint, not a NAMESPACE hazard** — roxygen 8.0.0 captures continuation
+lines fine (proven byte-identical); the 20 errors are now 0. (3)
+**`pedInvalidDates` is the anomaly of the error-set family** — its data
+uses already-canonical columns `(id, sire, dam, sex, birth)`, unlike the
+raw `(ego_id, si.re, dam_id, ..., birth_date)` of the other five; its
+doc now matches. (4) **Newly-flagged, NOT fixed (FM \#8):** vignette
+`studbook-quality-control.qmd:91` omits the `sex` column (option A3);
+S114’s data-doc short-title rewrite still deferred (A2). (5) **Shell
+backslash trap (recurring):** write R probes to a FILE and run
+`Rscript file.R`; also `grep -n` prepends `LINENUM:` which inflates
+`length($0)` line-length checks — read files directly when measuring
+width. (6) **Regenerate with
+`roxygen2::roxygenise(package.dir=<abspath>)`** (devtools absent);
+baseline 8.0.0 so regens are clean — confirm via `git diff --stat` that
+only intended pages changed, and `git diff --quiet -- NAMESPACE` for
+import-neutral source edits. (7) Standing uncommitted: `.DS_Store`
+(modified) + `PED_GV_AUDIT_2026-05-30.html` (untracked) — owner’s
+keep-call; a stray `Rplots.pdf` can appear from Rscript plot calls —
+none this session. (8) **Branch state:** after this commit
+`add-methodology` is **5 ahead of `origin/add-methodology`** (S112–S116)
+and **~182 ahead of `master`** — the pending action is the merge to
+master. (9) Carried CRAN gotchas remain valid: `NEWS.md` from
+`NEWS.Rmd`; renv explicit-snapshot omits ALL Suggests;
+pkgdown/quarto/devtools dev-lib-only; `RSelenium` undeclared; the
+package is ARCHIVED on CRAN (Learning 95).
+
+### What Session 115 Did
+
+**Deliverable:** owner’s pick **(A)** — repaired the four adjacent
+roxygen CONTENT bugs S114 flagged but deliberately did not fix (FM \#8):
+`findPedigreeNumber.R`’s copy-pasted title, the
+`pedMissingBirth`/`pedSameMaleIsSireAndDam` “no errors” misdescriptions,
+the garbled `focalAnimals` description, and `convertSexCodes`’s
+number-agreement title — then regenerated the affected `man/` pages.
+**(DONE — verified by a per-page `checkRd` HEAD-vs-working diff (0
+problems, 0 new on all 5 pages) + `load_all` (162 exports) + a
+`data/`-unchanged check.)** Scoped to **3 `R/` files (5 edits) + 5
+regenerated `man/` pages**; `data/`, `NAMESPACE`, `DESCRIPTION`
+unchanged. **Started / Completed:** 2026-06-17 **Status:** **DONE. TDD
+phase = N/A** (roxygen prose; no package logic or test surface, so RED
+is vacuous; declared every response, as S108–S114). **One gated
+`AskUserQuestion`** (pre-RED *wording/scope* decision for
+`pedMissingBirth` — full accuracy vs. minimal touch; owner chose **full
+accuracy**, grounded in the probe output). No TDD phase-transition gates
+(none apply). **0 stakeholder corrections** — one mid-session owner
+constraint (`pedMissingBirth` must retain the no-Birth-column
+characteristic), which was **already satisfied** (doc-only deliverable;
+data untouched) and confirmed, not a correction. Right-sized under
+ultracode as **SOLO with firsthand data probes + a `checkRd` oracle**,
+not a fan-out (re-printing data I already printed would be theater;
+extends S111/S113/S114) → **Learning 109.** New session within the
+conversation: claimed it (1B stub BEFORE technical work), did the full
+Phase 0 reads this same turn. - **What changed (5 source edits, 0 new
+files):** **`R/findPedigreeNumber.R`** title
+`Determines the generation number for each id` →
+`Determines the pedigree number for each id` (was byte-identical to
+`findGeneration`’s; the function numbers disjoint connected
+sub-pedigrees, the `pedNum` vector). **`R/convertSexCodes.R`** title
+`Converts sex indicator for an individual to a standardized codes` →
+`Converts a sex indicator for an individual to a standardized code`
+(number agreement). **`R/data.R` (3 blocks):** `focalAnimals`
+“containing the **of** animal Ids” → “containing the animal Ids”;
+`pedMissingBirth` “8 rows and **5** columns (…, **birth_date**) … with
+no errors” → “8 rows and **4** columns (ego_id, sire, dam_id, sex) …
+that is missing the birth_date column”; `pedSameMaleIsSireAndDam` “…
+with no errors” → “… in which the same male animal is listed as both a
+sire and a dam”. **`man/` (5 regenerated):** `findPedigreeNumber.Rd`,
+`convertSexCodes.Rd`, `focalAnimals.Rd`, `pedMissingBirth.Rd`,
+`pedSameMaleIsSireAndDam.Rd`. **Plus** `CHANGELOG.md` (S115
+`[Unreleased]`), `PROJECT_LEARNINGS.md` (Learning 109),
+`SESSION_NOTES.md` (this handoff). **No NAMESPACE, DESCRIPTION, NEWS,
+test, CI-workflow, CRAN-vignette, or `data/` change.** - **🚨 REAL WORK
+\#1 — VERIFY THE CLAIM, NOT THE FLAG; THE FIX MUST REPAIR THE WHOLE
+SENTENCE (→ Learning 109):** loaded the data objects before editing.
+`pedMissingBirth` has columns `ego_id, si.re, dam_id, sex` and **NO
+`birth_date`** (4 columns, 8 rows) — so the flagged “no errors” AND the
+same sentence’s “5 columns (…, birth_date)” were BOTH wrong; fixing only
+the flagged token would have left a self-contradiction. The regenerated
+`.Rd`’s auto-`\format` already read “4 columns” — independent
+corroboration. `pedSameMaleIsSireAndDam` row `o3` has `dam_id = s1` (a
+male) and `s1` sires `o1`/`o2` (same male is both sire and dam; 5
+columns correct). `focalAnimals` is 1 column (`id`)/327 rows.
+`findPedigreeNumber` source confirmed to assign a connected-component
+number, not a generation. - **🚨 REAL WORK \#2 — A MID-SESSION OWNER
+CONSTRAINT WAS ALREADY SATISFIED (→ Learning 109):** owner required
+`pedMissingBirth` to “retain the characteristic of not having a Birth
+column.” The deliverable touched only documentation, so the data object
+was never at risk; confirmed post-edit (4 columns, `birth_date` absent)
+and reported, rather than manufacturing a change. - **Used file-based R
+probes from the first command** — dodged the recurring shell-backslash
+trap (Learning 108) that bit S112–S114. - **\[news-vs-changelog\]:**
+dev-process history → CHANGELOG here. These help pages **SHIP** → fold
+S115’s corrections into the **CRAN Phase 3 NEWS rewrite at 2.0.0**
+(flagged, NOT edited now). **NO auto-memory** — the work lives in the
+repo (\[\[consult-project-source-of-truth\]\]). **\[macos-dupe-scan\]:**
+committed ONLY the repo files; excluded `.DS_Store` (modified) +
+`PED_GV_AUDIT_2026-05-30.html` (untracked, standing keep); the two
+`_s115_*.R` probes were TEMPORARY (removed before commit).
+
+**Phase-3E (runtime smoke test): N/A — STATED, not silently skipped.**
+Roxygen/Rd prose changes NO package or app runtime behavior (no logic,
+dispatch, config, or test surface; NAMESPACE/DESCRIPTION/`data/`
+unchanged). Verification appropriate to the deliverable = the per-page
+`checkRd` HEAD-vs-working diff + `load_all` + `data/`-unchanged check,
+all done. Full `R CMD check` not run (`devtools` absent; `checkRd` +
+`load_all` + the per-page diff is the proportionate equivalent for an
+artifact-only change). **NOT FM \#24.**
+
+**Session 114 Handoff Evaluation (by Session 115): Score 9/10.** S114
+pre-named THIS deliverable precisely — its SUGGESTED NEXT option (A) and
+gotcha 1 listed all four content bugs with the exact file and wrong
+phrase for each (`findPedigreeNumber` title copy-paste of
+`findGeneration`’s; `pedMissingBirth`/`pedSameMaleIsSireAndDam` “no
+errors” though error-demo sets; `focalAnimals` “containing the of
+animal”; `convertSexCodes` “a standardized codes”). Location was instant
+— zero rediscovery. Its **gotcha 3** (shell backslash trap → write R
+probes to a FILE) let me avoid the trap that bit S112–S114 on my first
+command; its **gotcha 4** (regen with
+`roxygen2::roxygenise(package.dir=<abspath>)`, baseline 8.0.0 so clean)
+held exactly — the regen touched only my 5 pages, no blast radius. ROI
+very high. **The −1:** S114 (a mechanical period-removal pass) could not
+foresee that fixing `pedMissingBirth`’s “no errors” would also require
+correcting its column count (the data object has 4 columns, not the
+documented 5), nor the `si.re`-vs-`sire` and `\code{pedgood}` case
+mismatches — all discoverable only by loading the data this session. The
+handoff was accurate within what a mechanical pass could know; no false
+credit.
+
+**Self-assessment (Session 115): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER in full, notes top, dashboard 98/100, git, 14 issues,
+ghost-check → HEAD `47cc927c` = S114, clean), reported, STOPPED for the
+owner’s pick; claimed the session (1B stub BEFORE technical work).
+**Headline strengths:** (1) **verified all four flags against the actual
+DATA, not just code-read** — and the verification surfaced a SECOND
+inaccuracy (`pedMissingBirth`’s wrong column count) that the flag didn’t
+name (→ Learning 109, extends 105/106); (2) **grounded the one genuine
+wording fork in the probe before posing it** via `AskUserQuestion` with
+concrete before/after previews + ASCII-only labels
+(\[\[ascii-only-in-question-options\]\]); (3) **handled the mid-session
+owner constraint correctly** — confirmed the data object retains its
+no-birth-column characteristic rather than re-doing work; (4) **used
+file-based R probes from the first command**, avoiding the recurring
+backslash trap; (5) **proved zero regressions** via per-page `checkRd`
+HEAD-vs-working diff (0 new) + `load_all` (162) + `data/`-unchanged; (6)
+**held scope discipline** — FLAGGED (did not fix) the newly-found
+adjacent bugs (`pedgood` case, `si.re`/`sire`, `mod*.R` `@importFrom`);
+(7) 0 stakeholder corrections; plain language; declared TDD N/A +
+Phase-3E N/A with reasons; removed probes. **Weaknesses (honest):** (a)
+the work is intrinsically low-difficulty — the value is the verification
+rigor + the grounded scope decision, not technical depth; (b) full
+`R CMD check` NOT run (`devtools` absent; doc-only) — `checkRd` +
+`load_all` + the per-page diff is the proportionate build-equivalent,
+not the full check; (c) I did NOT run
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+on the two error-demo sets to confirm the *reported* error text — the
+data structure was dispositive (missing column; male used as dam), but
+running it would have been marginally more rigorous; (d) the data docs I
+touched still carry the flagged-but-deferred `si.re`/`sire` mismatch, so
+a “content-bug repair” session leaves known (out-of-scope) inaccuracies
+in the same blocks. I reserve 10 for a delivery that is also
+full-`check`-verified with no residual known issues in the touched
+files.
+
+**⇒ SUGGESTED NEXT = owner’s pick.** (A) is done; nothing mid-flight.
+The four S114-flagged content bugs are fixed. Natural options (plain
+ASCII labels): - **(A) Adjacent bugs newly flagged this session (ships,
+gated):** the `\code{pedgood}` wrong-case cross-reference in all SIX
+error-set data docs (`pedDuplicateIds`, `pedFemaleSireMaleDam`,
+`pedGood`, `pedInvalidDates`, `pedMissingBirth`,
+`pedSameMaleIsSireAndDam`) — dataset is `pedGood`; the `si.re`-vs-`sire`
+data/doc column-name mismatch across the qc data family (decide: rename
+the data column to `sire`, or correct the docs to `si.re` — a
+data-vs-doc fork); and the `mod*.R` multi-line `@importFrom` roxygen
+8.0.0 errors (`modPotentialParents`, `modPyramid`, `modSummaryStats`).
+Low-risk roxygen-SOURCE / minor-data fixes → `man/` regen → sequence
+with CRAN. - **(A2) Data-doc title rewrite (ships, gated):** S114’s
+still-deferred fork — give the 11 data docs proper short titles with
+detail moved to `@description` (e.g. `finalRpt`’s 4-sentence run-on). -
+**(B) Resume the CRAN plan** — Phase 2b (vignette rebuild timing) or
+**Phase 3** (NEWS rewrite + version bump → 2.0.0; **fold in
+S112/S113/S114/S115’s shipping doc repairs**). - **(C) Merge
+`add-methodology` → `master`** — now **4 ahead of
+`origin/add-methodology`** (S112–S115) and **~180 ahead of `master`**;
+the real pending action is the merge to master. **Do NOT** bundle the
+newly-flagged adjacent bugs or the data-doc rewrite into the next
+content task; **do NOT** bundle phases (FM \#18/#25).
+
+**Key files (this session):** **CHANGED (committed):**
+`R/findPedigreeNumber.R`, `R/convertSexCodes.R`, `R/data.R` (3 blocks:
+`focalAnimals`, `pedMissingBirth`, `pedSameMaleIsSireAndDam`);
+`man/findPedigreeNumber.Rd`, `man/convertSexCodes.Rd`,
+`man/focalAnimals.Rd`, `man/pedMissingBirth.Rd`,
+`man/pedSameMaleIsSireAndDam.Rd`; `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
+(Learning 109), `SESSION_NOTES.md` (this handoff). **Read firsthand:**
+`R/findPedigreeNumber.R` + `R/findGeneration.R` (full — the title
+comparison), `R/convertSexCodes.R` (full), `R/data.R` lines 48–217, the
+loaded data objects (`pedMissingBirth`, `pedSameMaleIsSireAndDam`,
+`focalAnimals`), the 5 rendered `.Rd` diffs, the per-page `checkRd`
+HEAD-vs-working comparison. **Transient (removed, NOT committed):**
+`_s115_probe.R`, `_s115_verify.R`.
+
+**Gotchas:** (1) **Newly-discovered adjacent bugs FLAGGED, NOT fixed (FM
+\#8) — option (A):** `\code{pedgood}` wrong case in all six error-set
+cross-reference lists (dataset is `pedGood`); the data objects’ actual
+sire column is named `si.re` though every doc says `sire` (data-vs-doc
+fork — pick one); `mod*.R`
+(`modPotentialParents`/`modPyramid`/`modSummaryStats`) trigger roxygen
+8.0.0 `@importFrom must be only 1 line long` errors (multi-line
+`@importFrom` tags must be split — these surfaced as non-fatal
+`roxygenise()` messages and did NOT block the regen of the 5 target
+pages). (2) **`pedMissingBirth` data object genuinely has NO
+`birth_date` column (4 columns)** — that is its INTENDED demo
+characteristic (owner-confirmed this session); do NOT “fix” the data by
+adding the column; the doc now states it. (3) **Shell backslash trap
+(recurring):** write R probes to a FILE (Write tool) and run
+`Rscript file.R`, or use `endsWith`/`[.]`/`fixed=TRUE`/`[[:space:]]` —
+avoided this session. (4) **Regenerate with
+`roxygen2::roxygenise(package.dir=<abspath>)`** (devtools absent);
+baseline is 8.0.0 so regens are clean (no blast radius) — confirm via
+`git diff --stat` that only intended pages changed. (5) **These help
+pages SHIP** — fold S115’s corrections into the CRAN Phase 3 NEWS at
+2.0.0 (flagged, not edited now). (6) Standing uncommitted: `.DS_Store`
+(modified) + `PED_GV_AUDIT_2026-05-30.html` (untracked) — owner’s
+keep-call; a stray `Rplots.pdf` can appear from Rscript plot calls —
+none this session. (7) **Branch state:** `add-methodology` is **4 ahead
+of `origin/add-methodology`** (S112–S115) and **~180 ahead of `master`**
+— the pending action is the merge to master. (8) Carried CRAN gotchas
+remain valid: `NEWS.md` from `NEWS.Rmd`; renv explicit-snapshot omits
+ALL Suggests; pkgdown/quarto/devtools dev-lib-only; `RSelenium`
+undeclared; the package is ARCHIVED on CRAN (Learning 95).
+
+### What Session 114 Did
+
+**Deliverable:** the owner’s pick **(A2 — full sweep)** — a
+roxygen-source doc-nit mop-up: removed the trailing period from every
+title flagged by `checkRd` (**62 of 190 `.Rd`**: 51 function docs + 11
+data docs) **and** fixed S112’s three genetic-value `@return` nits
+(`calcFE` spurious `r` clause; `calcFEFG`/`calcFG` unbalanced
+`fg`-formula paren), then regenerated `man/`. **(DONE — verified by a
+per-page HEAD-vs-working `checkRd` diff proving 62 pages had ONLY the
+period NOTE removed and 0 pages gained any new problem; title-period
+NOTEs 62 → 0; `load_all` 162 exports.)** Scoped to **55 `R/` files + 65
+regenerated `man/` pages**; `NAMESPACE`/`DESCRIPTION` unchanged. Did NOT
+fix flagged adjacent content bugs (FM \#8). **Started / Completed:**
+2026-06-17 **Status:** **DONE. TDD phase = N/A** (roxygen prose; no
+package logic or test surface, so RED is vacuous; declared every
+response, as S108–S113). **One gated `AskUserQuestion`** (pre-RED
+*scope* decision — full sweep vs. functions-only vs. GV-nits-only; owner
+chose full sweep). No TDD phase-transition gates (none apply). **0
+stakeholder corrections.** Right-sized under ultracode as **SOLO with a
+deterministic dry-run-first script + an oracle (`checkRd`)
+verification**, not a fan-out — when the check is a ground-truth oracle,
+parallel agents add variance not safety for “remove one character”
+(extends S113’s deterministic-regen call) → **Learning 108.** New
+session within the conversation: claimed it (1B stub BEFORE technical
+work), did the full Phase 0 reads this same turn. - **What changed (55
+`R/` edits + 65 `man/` regenerated, 0 new files):** **`R/` (54):** 51
+function files each lost one trailing title period; `R/data.R` lost it
+from 11 data-doc titles; `R/calcFE.R` `@return` dropped the spurious
+`\code{r}` clause (`FE = 1/sum(p^2)` uses only `p`); `R/calcFEFG.R` +
+`R/calcFG.R` `@return` closed the unbalanced paren (`sum( (p ^ 2) / r}`
+→ `sum( (p ^ 2) / r)`). **`man/` (65 regenerated):** the 62 title
+pages + the 3 GV `\value` pages. **Plus** `CHANGELOG.md` (S114
+`[Unreleased]`), `PROJECT_LEARNINGS.md` (Learning 108),
+`SESSION_NOTES.md` (this handoff). **No NAMESPACE, DESCRIPTION, NEWS,
+test, CI-workflow, or CRAN-vignette change.** - **🚨 REAL WORK \#1 —
+DRY-RUN + AUDIT BEFORE WRITING, THEN AN ORACLE PROOF (→ Learning 108):**
+the 51 single-block function titles were de-periodized by a
+deterministic script run in **dry-run first** — it printed every title
+paragraph + its before/after, all 51 audited before any write (each
+correctly found the title = first roxygen paragraph, incl. the 12
+multi-line titles). Each function file then changed **exactly one line**
+(51 insertions / 51 deletions — no encoding rewrite). `R/data.R` (11
+titles) + the 3 `@return` blocks were hand-edited from a fresh read.
+Verification was an **oracle**: a per-page `checkRd` comparison of all
+**65** changed pages vs their HEAD versions (normalize line numbers,
+set-diff messages) proved **62 pages had ONLY
+`\title should not end in a period` removed and 0 pages gained any new
+problem**; the 3 GV pages changed `\value` prose with no `checkRd`
+impact. Title-period NOTEs package-wide **62 → 0**.
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+OK (**162 exports** — NAMESPACE consistent). No stray `Rplots.pdf`. -
+**🚨 REAL WORK \#2 — RE-VERIFIED EVERY INHERITED FLAG (→ Learning
+105/106):** the 62 count matched S113’s claim exactly; `calcFE`’s
+spurious `r` and the `calcFEFG`/`calcFG` unbalanced paren both confirmed
+real against source before editing. None actioned blindly. - **The
+recurring shell backslash trap (bit me TWICE early):**
+`Rscript -e '... "\\.Rd$" ...'` and `grep("^\\\\title", ...)` get
+mangled through the Bash layer (a backslash level stripped →
+`'\.' is an unrecognized escape` / a `\t` tab matching nothing).
+Switched to **file-based R probes** (Write tool, run `Rscript file.R`) +
+backslash-free constructs (`endsWith`, `[.]`, `fixed=TRUE`,
+`[[:space:]]`). S112/S113 hit variants — reach for the file-based probe
+FIRST. - **\[news-vs-changelog\]:** dev-process history → CHANGELOG
+here. These help pages **SHIP** → fold the title/return corrections into
+the **CRAN Phase 3 NEWS rewrite at 2.0.0** (flagged, NOT edited now).
+**NO auto-memory** — the work lives in the repo
+(\[\[consult-project-source-of-truth\]\]). **\[macos-dupe-scan\]:**
+commit ONLY the repo files; exclude `.DS_Store` (modified) +
+`PED_GV_AUDIT_2026-05-30.html` (untracked, standing keep); the three
+`_s114_*.R` probes are TEMPORARY (removed before commit).
+
+**Phase-3E (runtime smoke test): N/A — STATED, not silently skipped.**
+Roxygen/Rd prose changes NO package or app runtime behavior (no logic,
+dispatch, config, or test surface; NAMESPACE/DESCRIPTION unchanged so no
+export change). Verification appropriate to the deliverable = the
+per-page `checkRd` HEAD-vs-working diff + `load_all`, all done. Full
+`R CMD check` not run (`devtools` absent; `checkRd` + `load_all` + the
+per-page diff is the proportionate equivalent for an artifact-only
+change). **NOT FM \#24.**
+
+**Session 113 Handoff Evaluation (by Session 114): Score 9/10.** S113
+pre-named THIS deliverable precisely — its (A2) named “the **62**
+pre-existing `\title`-ends-in-period `checkRd` NOTEs are the largest
+cluster … fix in the roxygen source, then regenerate” plus the two GV
+`@return` nits with exact specifics. Its **gotcha 2** gave the exact
+count (62 of 190, confirmed identical on HEAD) and the fix location
+(source, not `.Rd`); **gotcha 1** gave the regen command
+(`roxygen2::roxygenise(package.dir=<abspath>)`, NOT `devtools` which is
+absent) and that the baseline is now 8.0.0 so regens are clean — both
+held exactly and saved real time. Learning 107 carried the
+regen-verification discipline (read the complete diff, prove zero new
+`checkRd` findings) that I applied directly. ROI very high — near-zero
+rediscovery. **The −1:** S113 said “fix in the roxygen source (`@title`
+lines)” — but most titles are NOT literal `@title` tags; they are the
+first roxygen paragraph (which roxygen renders as the title), a slight
+mechanism imprecision; and it couldn’t foresee that 11 of the 62 live in
+`R/data.R` as full-sentence titles needing a minimal-vs-proper scope
+fork, nor the copy-paste/garbled CONTENT bugs (findPedigreeNumber,
+pedMissingBirth/pedSameMaleIsSireAndDam, focalAnimals, convertSexCodes)
+that only surfaced on reading the titles. All discoverable only in
+execution. No false credit.
+
+**Self-assessment (Session 114): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER in full, notes top, dashboard 98/100, git, 14 issues,
+ghost-check → HEAD `7d780b43` = S113, clean), reported, STOPPED for the
+owner’s pick; claimed the session (1B stub BEFORE technical work).
+**Headline strengths:** (1) **grounded the gated scope decision in real
+data before posing it** — counted the 62, mapped each to source, read
+`R/data.R`’s structure, surfaced the data-doc minimal-vs-proper fork —
+so the `AskUserQuestion` had concrete previews + ASCII-only labels
+(\[\[ascii-only-in-question-options\]\]); (2) **re-verified every
+inherited flag** (62 count, `calcFE` `r`, the `fg` paren) before acting
+(Learning 105/106); (3) **dry-ran the deterministic fixer and audited
+all 51 before/after BEFORE writing**, then **proved zero regressions by
+a per-page HEAD-vs-working `checkRd` diff** (62 ONLY-period-removed, 0
+new) rather than eyeballing → Learning 108; (4) **right-sized SOLO +
+script + oracle** and said why (a linter oracle makes a fan-out
+theater); (5) **held scope discipline** — FLAGGED (did not fix) the
+copy-paste/garbled content bugs and deferred the data-doc title rewrite;
+(6) 0 stakeholder corrections; plain language; declared TDD N/A +
+Phase-3E N/A with reasons; no stray artifacts. **Weaknesses (honest):**
+(a) **hit the shell backslash trap TWICE** (`\\.Rd`, then `\\title`)
+before switching to file-based probes — a recurring trap (S112/S113 hit
+variants); the documented history should have sent me to the file-based
+probe on the first command (−1); (b) the data-doc minimal period-removal
+leaves several long run-on “titles” (finalRpt is 4 sentences) —
+checkRd-clean but still poor titles; deferred per the owner’s choice,
+disclosed; (c) full `R CMD check` NOT run (devtools absent; doc-only) —
+the per-page `checkRd` + `load_all` is the proportionate
+build-equivalent, not the full check; (d) the work is intrinsically
+low-difficulty — the value is the dry-run-audit + oracle-proof rigor,
+not technical depth. I reserve 10 for a delivery with no command
+misfires that is also full-`check`-verified.
+
+**⇒ SUGGESTED NEXT = owner’s pick.** (A2) is done; nothing mid-flight.
+The 62 title-period `checkRd` NOTEs are now **0**. Natural options
+(plain ASCII labels): - **(A) Adjacent CONTENT-bug fixes flagged this
+session (ships, gated):** `R/findPedigreeNumber.R` title is a copy-paste
+of `findGeneration`’s (“Determines the generation number for each id” —
+should describe the *pedigree* number); `pedMissingBirth` +
+`pedSameMaleIsSireAndDam` data docs say “representing a full pedigree
+with no errors” though they are error-demo sets (wrong description);
+`focalAnimals` “containing the of animal” (garbled); `convertSexCodes`
+“to a standardized codes” (number agreement). Low-risk roxygen-SOURCE
+fixes → `man/` regen → sequence with CRAN. - **(A2) Data-doc title
+rewrite (ships, gated):** give the 11 data docs — especially
+`finalRpt`’s 4-sentence run-on — proper short titles with the detail
+moved to `@description` (the “proper” fork the owner deferred this
+session). - **(B) Resume the CRAN plan** — Phase 2b (vignette rebuild
+timing) or **Phase 3** (NEWS rewrite + version bump → 2.0.0; **fold in
+S112/S113/S114’s shipping doc repairs**). - **(C) Merge
+`add-methodology` → `master`** — now **3 ahead of
+`origin/add-methodology`** (S112–S114) and **~179 ahead of `master`**;
+the real pending action is the merge to master. **Do NOT** bundle the
+content-bug fixes or the data-doc rewrite into the next content task;
+**do NOT** bundle phases (FM \#18/#25).
+
+**Key files (this session):** **CHANGED (committed):** 51 `R/` function
+files (one title de-period each — `addUIds`, `alleleFreq`, `calcA`,
+`calcAge`, `calcGU`, `chooseAlleles`, `chooseDate`,
+`convertRelationships`, `convertSexCodes`, `correctParentSex`,
+`countFirstOrder`, `countKinshipValues`, `countLoops`, `create_wkbk`,
+`createExampleFiles`, `createPedTree`, `cumulateSimKinships`,
+`filterPairs`, `findGeneration`, `findOffspring`, `findPedigreeNumber`,
+`fixColumnNames`, `get_and_or_list`, `get_elapsed_time_str`,
+`getAncestors`, `getConfigFileName`, `getCurrentAge`,
+`getDatedFileName`, `getDescendantPedigree`, `getGVGenotype`,
+`getGVPopulation`, `getIncludeColumns`, `getPedDirectRelatives`,
+`getPedMaxAge`, `getPossibleCols`, `getPotentialParents`,
+`getProbandPedigree`, `getPyramidPlot`, `getRequiredCols`,
+`hasBothParents`, `headerDisplayNames`, `is_valid_date_str`,
+`kinMatrix2LongForm`, `kinship`, `makeRelationClassesTable`,
+`obfuscatePed`, `rankSubjects`, `removeUninformativeFounders`,
+`removeUnknownAnimals`, `reportGV`, `saveDataframesAsFiles`); `R/data.R`
+(11 data-doc titles); `R/calcFE.R`, `R/calcFEFG.R`, `R/calcFG.R`
+(`@return`); **65 `man/*.Rd`** regenerated; `CHANGELOG.md`,
+`PROJECT_LEARNINGS.md` (Learning 108), `SESSION_NOTES.md` (this
+handoff). **Read firsthand:** `R/calcFE.R`, `R/calcFEFG.R`,
+`R/calcFG.R`, `R/data.R` (full), the 62-page `checkRd` output, the
+per-page HEAD-vs-working `checkRd` comparison, the rendered
+`\value`/`\title` diffs. **Transient (removed, NOT committed):**
+`_s114_probe.R`, `_s114_fix_titles.R`, `_s114_verify.R`.
+
+**Gotchas:** (1) **Adjacent CONTENT bugs flagged, NOT fixed (FM \#8):**
+period-removal is mechanical and left wrong/garbled wording intact —
+`findPedigreeNumber.R` title copy-pastes `findGeneration`’s;
+`pedMissingBirth`/`pedSameMaleIsSireAndDam` data docs claim “no errors”
+(they are error-demo sets); `focalAnimals` “containing the of animal”;
+`convertSexCodes` “a standardized codes” — option (A). (2) **Data-doc
+titles are now `checkRd`-clean but several are long run-ons**
+(`finalRpt` is 4 sentences) — roxygen treats the first *paragraph* (not
+first sentence) as the title for these, so they’re long; a proper
+short-title rewrite is deferred (option A2). (3) **Shell backslash trap
+(recurring):** write R probes to a FILE (Write tool) and run
+`Rscript file.R`, or use `endsWith`/`[.]`/`fixed=TRUE`/`[[:space:]]` —
+do NOT pass `\\.`/`\\title` through `Rscript -e '...'`. (4) **Regenerate
+with `roxygen2::roxygenise(package.dir=<abspath>)`** (devtools absent);
+baseline is 8.0.0 (S113) so regens are clean. (5) **These help pages
+SHIP** — fold S114’s title/return corrections into the CRAN Phase 3 NEWS
+at 2.0.0 (flagged, not edited now). (6) Standing uncommitted:
+`.DS_Store` (modified) + `PED_GV_AUDIT_2026-05-30.html` (untracked) —
+owner’s keep-call; a stray `Rplots.pdf` can appear from Rscript plot
+calls — none this session. (7) **Branch state:** `add-methodology` is
+**3 ahead of `origin/add-methodology`** (S112–S114) and **~179 ahead of
+`master`** — the pending action is the merge to master. (8) Carried CRAN
+gotchas remain valid: `NEWS.md` from `NEWS.Rmd`; renv explicit-snapshot
+omits ALL Suggests; pkgdown/quarto/devtools dev-lib-only; `RSelenium`
+undeclared; the package is ARCHIVED on CRAN (Learning 95).
+
+### What Session 113 Did
+
+**Deliverable:** the owner’s pick **(A)** — the deliberate, gated
+roxygen **`7.3.2` -\> `8.0.0`** tooling migration that S112 isolated and
+deferred. **Adopted 8.0.0:** regenerated `man/` with the installed
+roxygen2 8.0.0 and migrated the `DESCRIPTION` version field. **(DONE —
+verified by reading the COMPLETE 27-file diff + `checkRd` on all 26
+changed pages + `load_all` + content checks.)** Scoped to
+**`DESCRIPTION` + 26 `man/` files** (`NAMESPACE` unchanged). Did NOT
+touch `R/` logic, tests, the CRAN plan, or the pre-existing A2 doc nits
+(FM \#8/#18/#25). **Started / Completed:** 2026-06-17 **Status:**
+**DONE. TDD phase = N/A** (regenerating generated artifacts + a
+`DESCRIPTION` field migration — no package logic or test surface, so RED
+is vacuous; declared every response). **One gated `AskUserQuestion`**
+(adopt 8.0.0 vs pin 7.3.2 — a pre-implementation *approach* decision,
+not a TDD phase-transition gate); owner chose **adopt**. **0 stakeholder
+corrections.** Right-sized under ultracode as **SOLO with a full-diff
+audit** (a deterministic, fully-inspectable regen has no competing
+claims to fan out — the rigor is reading 100% of the diff + the
+HEAD-vs-working `checkRd` comparison, not parallelism) -\> **Learning
+107.** New session within the conversation: claimed it (1B stub BEFORE
+technical work), did the full Phase 0 reads this same turn. - **What
+changed (27 files regenerated/edited, 0 new):** **`DESCRIPTION`:**
+`RoxygenNote: 7.3.2` -\> `Config/roxygen2/version: 8.0.0` (the 8.0.0
+field rename) **+** the `Suggests` floor `roxygen2 (>= 7.3.2)` -\>
+`(>= 8.0.0)`. **`man/` (26 pages):** **24 dataset docs** adopt 8.0.0’s
+canonical usage form (`\usage{ qcPed }` -\> `\usage{ data(qcPed) }`);
+`man/appUI.Rd` re-wraps its `\value` (cosmetic, identical content);
+`man/nprcgenekeepr-package.Rd` gets the two content repairs below.
+**Plus** `CHANGELOG.md` (S113 `[Unreleased]`), `PROJECT_LEARNINGS.md`
+(Learning 107), `SESSION_NOTES.md` (this handoff). **No `R/`, test,
+NAMESPACE, NEWS, ROADMAP, CI-workflow, or CRAN-vignette change.** - **🚨
+REAL WORK \#1 — THE REGEN REPAIRED STALE COMMITTED CONTENT (-\> Learning
+107):** regenerating `man/nprcgenekeepr-package.Rd` corrected a
+**shipped typo** (`'Macaca' 'mulatto'` -\> `'mulatta'`; `DESCRIPTION`
+already read `mulatta`, so the committed 7.3.2 `.Rd` had drifted from
+its source) **and added the maintainer R. Mark Sharp to the Authors
+list** (he is `aut` in `DESCRIPTION` but was absent from the rendered
+page). The committed `.Rd` had drifted from source; the regen reconciled
+it. S112’s four hand-edited `\value` pages produced **zero diff** —
+content already matched source (the clean reconciliation S112
+predicted). The migration is the inverse of S112’s blast-radius trap:
+taken as its own deliverable it is small (26 of 190 `.Rd`), reviewable,
+and *fixes* drift. - **🚨 REAL WORK \#2 — PROVED ZERO REGRESSIONS, NOT
+“LOOKS FINE” (-\> Learning 107):** verification = “is the WHOLE diff
+intended?”, not “did I break anything?” Read all 27 changed files
+line-by-line; tallied every added line (only the field rename, 24
+`data(...)` forms, the appUI rewrap, the `mulatta` line, and the Sharp
+author line — no surprises).
+[`tools::checkRd()`](https://rdrr.io/r/tools/checkRd.html) on **all 26**
+changed pages introduces **zero new problems**: the 11 reported
+`\title`-ends-in-period NOTEs are PRE-EXISTING — confirmed identical on
+the committed HEAD versions, and **62 of 190** `.Rd` carry it
+package-wide (a separate A2 item). Did NOT assume a NOTE on a changed
+file was new. - **The rejected alternative (pin 7.3.2):** roxygen2 is
+**not in `renv.lock`** (dev-only dep, not snapshotted), so pinning needs
+a manual `renv::install(roxygen2@7.3.2)` that does NOT survive
+[`renv::restore`](https://rstudio.github.io/renv/reference/restore.html)
+— more work, not durable, and it preserves the typo + missing author.
+Adopting needs no lock change. The owner chose adopt. - **Verification
+(build-equivalent for a generated-doc change):** complete-diff audit (27
+files) + [`tools::checkRd()`](https://rdrr.io/r/tools/checkRd.html)
+clean-of-new on all 26 pages +
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+OK (162 exports — NAMESPACE consistent) + content checks (`mulatta`
+present, `mulatto` absent, Sharp in Authors, 32
+[`data()`](https://rdrr.io/r/utils/data.html) usage forms) + no stray
+`Rplots.pdf`. `renv.lock` unchanged. **`devtools` is NOT in the renv
+lib** (`roxygen2 8.0.0`/`pkgload` ARE). - **\[news-vs-changelog\]:**
+dev-process history -\> CHANGELOG here. These help pages **SHIP** -\>
+fold the content repairs (typo + author list) into the **CRAN Phase 3
+NEWS rewrite at 2.0.0** (flagged, NOT edited now — the CRAN plan owns
+the NEWS pipeline; \[\[backlog-vs-changelog-placement\]\]). **NO
+auto-memory** — the work lives in the repo
+(\[\[consult-project-source-of-truth\]\]). **\[macos-dupe-scan\]:**
+commit ONLY the repo files; exclude `.DS_Store` (modified) +
+`PED_GV_AUDIT_2026-05-30.html` (untracked, standing keep).
+
+**Phase-3E (runtime smoke test): N/A — STATED, not silently skipped.**
+Rd/`DESCRIPTION` regeneration changes NO package or app runtime behavior
+(no logic, dispatch, config, or test surface; NAMESPACE unchanged so no
+export change). Verification appropriate to the deliverable = full-diff
+audit + Rd validity (`checkRd`) + package load, all done. Full
+`R CMD check` not run (`devtools` absent; `checkRd` + `load_all` is the
+proportionate equivalent for an artifact-only change). **NOT FM \#24.**
+
+**Session 112 Handoff Evaluation (by Session 113): Score 9/10.** S112
+pre-named THIS deliverable as option (A) with the exact mechanism —
+“regenerating reformats all 30 `.Rd` + migrates `DESCRIPTION`
+(`RoxygenNote:` -\> `Config/roxygen2/version:`)… decide whether to adopt
+8.0.0 or pin 7.3.2.” That framing made the gated decision instant to
+pose. Its gotcha 1 (read `git diff --stat` after any regen) and gotcha 5
+(the hand-edited `\value` pages “reconcile cleanly since content matches
+source”) both held EXACTLY — S112’s four pages produced zero diff, as
+predicted. Learning 106 carried the whole trap context. Gotchas 2/6
+(devtools absent; standing uncommitted files; stray `Rplots.pdf`) all
+fired as described. ROI very high — near-zero rediscovery. **The −1:**
+S112 estimated “all 30 `.Rd`” reformatted; the actual regen touches
+**26**, and it framed the migration purely as a *risk* (“blast radius”)
+— it could not foresee that the regen also *repairs* the `mulatto`
+typo + the missing author (drift between source and committed `.Rd`),
+nor that the diff is genuinely small when isolated. Both are discoveries
+only the execution could make; the handoff was accurate within what it
+could know. No false credit.
+
+**Self-assessment (Session 113): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER in full, notes top, dashboard 98/100, git, 14 issues,
+ghost-check -\> HEAD `9ae8a099` = S112, clean), reported, STOPPED for
+the owner’s pick (A); claimed the session (1B stub BEFORE technical
+work). **Headline strengths:** (1) **grounded the gated decision in a
+reverted dry-run before posing it** — measured the real blast radius (26
+files, not “all 190”), characterized all four change-types, and surfaced
+that roxygen2 isn’t in `renv.lock` (which decides adopt-vs-pin
+economics) — so the `AskUserQuestion` was fully informed, with
+plain-ASCII labels + previews (\[\[ascii-only-in-question-options\]\]);
+(2) **verified by reading the COMPLETE diff + `checkRd` on all 26
+pages**, and proved the 11 `\title` NOTEs PRE-EXIST on HEAD (62/190
+package-wide) rather than assuming a NOTE on a changed file was a
+regression (-\> Learning 107); (3) **caught the beneficial side effect**
+— the regen repairs the shipped `mulatto` typo + adds the maintainer to
+Authors — and disclosed it (it ships -\> CRAN NEWS); (4) **right-sized
+SOLO with a full-diff audit** and said why (a deterministic inspectable
+regen has nothing to fan out — a workflow would be theater); (5) **held
+scope discipline** — bumped only the agreed `Suggests` floor, FLAGGED
+(did not fix) the 62 pre-existing `\title` NOTEs + S112’s A2 nits (FM
+\#8); (6) 0 stakeholder corrections; plain language; declared TDD N/A +
+Phase-3E N/A with reasons; no stray artifacts. **Weaknesses (honest):**
+(a) two of my verification Rscripts hit self-inflicted bugs — a `grep`
+no-match exit-2 and an R string-escape (`\\.Rd`) error — caught and
+corrected immediately, no harm, but avoidable; (b) full `R CMD check`
+was NOT run (devtools absent; artifact-only change) — `checkRd` +
+`load_all` + the complete-diff audit is the proportionate
+build-equivalent, but it is not the full check; (c) the migration is
+intrinsically low-difficulty — the value is the decision grounding + the
+zero-regression proof, not technical depth. I reserve 10 for a delivery
+with no command misfires that is also full-`check`-verified.
+
+**⇒ SUGGESTED NEXT = owner’s pick.** (A) is done; nothing mid-flight.
+The roxygen tooling baseline is now 8.0.0 — future `roxygenise()` regens
+stay clean (no more version blast radius). Natural options (plain ASCII
+labels): - **(A2) Mop-up doc nits (ships, gated):** now that `man/` is
+on 8.0.0, the **62 pre-existing `\title`-ends-in-period `checkRd`
+NOTEs** are the largest cluster (sourced from dataset/function `@title`
+lines ending in a period — fix in the roxygen source, then regenerate).
+Plus S112’s smaller flags: `calcFE.R` `@return` mentions `r` though
+`FE = 1/sum(p^2)` has none; the `sum( (p^2) / r}` `fg` formula has
+unbalanced parens. Low-risk roxygen-source fixes. - **(B) Resume the
+CRAN plan** — Phase 2b (vignette rebuild timing) or **Phase 3** (NEWS
+rewrite + version bump -\> 2.0.0; **fold in S112’s `@return` corrections
+AND S113’s typo/author repairs** — both ship). - **(C) Push**
+`add-methodology` — now **2 ahead of `origin/add-methodology`** (S112 +
+S113); it is **178 ahead of `master`**, so the real pending action is
+the eventual merge to master. **Do NOT** bundle the A2 mop-up into the
+next content task; **do NOT** bundle phases (FM \#18/#25).
+
+**Key files (this session):** **CHANGED (committed):** `DESCRIPTION`;
+`man/appUI.Rd`, `man/nprcgenekeepr-package.Rd`, and 24 dataset `.Rd`
+(`exampleNprcgenekeeprConfig`, `examplePedigree`, `finalRpt`,
+`focalAnimals`, `lacy1989Ped`, `lacy1989PedAlleles`, `ped1Alleles`,
+`pedDuplicateIds`, `pedFemaleSireMaleDam`, `pedGood`, `pedInvalidDates`,
+`pedMissingBirth`, `pedOne`, `pedSameMaleIsSireAndDam`, `pedSix`,
+`pedWithGenotype`, `pedWithGenotypeReport`, `qcBreeders`, `qcPed`,
+`qcPedGvReport`, `rhesusGenotypes`, `rhesusPedigree`, `smallPed`,
+`smallPedTree`); `CHANGELOG.md`, `PROJECT_LEARNINGS.md` (Learning 107),
+`SESSION_NOTES.md` (this handoff). **Read firsthand:** the complete
+regen diff (27 files), `DESCRIPTION` (Suggests + version fields), the
+HEAD-vs-working `checkRd` comparison. **Transient:** the reverted
+dry-run regen (`git checkout -- man/ DESCRIPTION`); no stray artifacts
+produced.
+
+**Gotchas:** (1) **The roxygen baseline is now 8.0.0**
+(`Config/roxygen2/version: 8.0.0`, `RoxygenNote` retired,
+`Suggests: roxygen2 (>= 8.0.0)`) — future regens are clean; the S112
+version blast-radius trap is RESOLVED. Regenerate with
+`roxygen2::roxygenise(package.dir=<abspath>)` (NOT
+`devtools::document()` — devtools is absent). (2) **62 of 190 `.Rd` have
+the pre-existing `\title`-ends-in-period `checkRd` NOTE** (the largest
+A2 cluster) — they pre-date this session (confirmed on HEAD); fix in the
+roxygen SOURCE (`@title` lines), not the `.Rd`, then regenerate. (3)
+**These help pages SHIP** — S113’s `mulatto`-\>`mulatta` typo fix + the
+added maintainer, and S112’s `@return` corrections, all belong in the
+CRAN Phase 3 NEWS at 2.0.0 (flagged, not edited now). (4) **`man/` data
+docs now use `\usage{ data(name) }`** (8.0.0 canonical form) — expected,
+do not “revert” it. (5) **roxygen2 is NOT in `renv.lock`** (dev-only
+dep) — a future
+[`renv::restore`](https://rstudio.github.io/renv/reference/restore.html)
+re-pulls whatever roxygen2 the dev installs; the committed `man/` is the
+source of truth for the format, not the lock. (6) Standing uncommitted:
+`.DS_Store` (modified) + `PED_GV_AUDIT_2026-05-30.html` (untracked) —
+owner’s keep-call; a stray `Rplots.pdf` can appear from Rscript plot
+calls — none this session. (7) **Branch state:** `add-methodology` is
+**2 ahead of `origin/add-methodology`** (S112 + S113) and **178 ahead of
+`master`** — the pending action is the merge to master, not just a push.
+(8) Carried-forward CRAN gotchas remain valid: `NEWS.md` from
+`NEWS.Rmd`; renv explicit-snapshot omits ALL Suggests (which is why
+roxygen2 isn’t locked); pkgdown/quarto/devtools dev-lib-only;
+`RSelenium` undeclared; the package is ARCHIVED on CRAN (Learning 95).
+
+### What Session 112 Did
+
+**Deliverable:** the owner’s pick **(A2)** — a roxygen-repair pass
+correcting the drifted genetic-value documentation and regenerating the
+affected `man/` pages. **Fixed 3 of the 4 inherited drifts**
+(`orderReport` `@return`, `calcFEFG`/`reportGV` `@return`) **plus the
+same `p`-description defect in 2 sibling files** (`calcFE`, `calcFG`;
+owner-approved); **the 4th flag was REFUTED** (`getPyramidPlot`
+`@return` is correct — left unchanged). **(DONE — re-verified via an
+8-agent workflow + `checkRd`/`load_all`/render.)** Scoped to **5 `R/` +
+4 `man/` files**; did NOT migrate roxygen versions, touch the CRAN plan,
+or fix flagged-but-out-of-scope items (FM \#8/#18/#25). **Started /
+Completed:** 2026-06-17 **Status:** **DONE. TDD phase = N/A** (roxygen
+prose corrected to match already-correct behavior — the code was right,
+only the docs were wrong, so RED is vacuous; declared every response).
+**One `AskUserQuestion` (pre-implementation SCOPE decision, not a TDD
+gate):** the `calcFEFG` `p`-defect also exists verbatim in
+`calcFE.R`/`calcFG.R` (shared `calcFounderContributions()` helper) —
+owner chose **“fix siblings too.”** No TDD phase-transition gates (none
+apply). **0 stakeholder corrections.** Right-sized under ultracode as an
+**8-agent verify + adversarial-cross-check Workflow** (one verifier +
+one refuter per claim) feeding **SOLO single-threaded edits + regen** →
+**Learning 106.** New session within the conversation: claimed it (1B
+stub before technical work). - **What changed (12 edits, 0 new):**
+**`R/` (5):** `orderReport.R` `@return` (both bullets: “mean kinship \<
+0.25, ascending mk” → z-score `<= 0.25`, ascending `zScores`),
+`calcFEFG.R` / `calcFG.R` / `calcFE.R` `@return` (`p` “average number of
+descendants” → “the vector of founder mean contributions to the current
+descendants”), `reportGV.R` `@return` (“A dataframe” → the
+`nprcgenekeeprGV` list + its 10 elements). **`man/` (4):** matching
+`\value` edits in `calcFE.Rd` / `calcFEFG.Rd` / `calcFG.Rd` /
+`reportGV.Rd` (`orderReport` is `@noRd` — no `.Rd`). **Plus**
+`CHANGELOG.md` (S112 `[Unreleased]`), `PROJECT_LEARNINGS.md` (Learning
+106), `SESSION_NOTES.md` (this handoff). **No NAMESPACE, DESCRIPTION,
+NEWS, test, CI-workflow, or CRAN-vignette change.** - **🚨 REAL WORK \#1
+— RE-VERIFYING THE INHERITED FLAGS REFUTED ONE OF FOUR (→ Learning 106,
+extends 105):** the 4 drifts were code-read claims (3 from S108, 1 from
+S110) never confirmed against runtime. An 8-agent workflow (verifier +
+adversarial cross-checker per claim) confirmed 3 and **refuted
+`getPyramidPlot`**: its `@return` (“the return value of `par('mar')`”)
+is correct — the function returns
+[`plotrix::pyramid.plot()`](https://plotrix.github.io/plotrix/reference/pyramid.plot.html)’s
+value, but `pyramid.plot` ends with `return(oldmar)` where
+`oldmar <- par("mar")`, so the returned value *is* a `par("mar")` vector
+(verified: returns `c(5.1,4.1,4.1,2.1)`). Trusting the flag would have
+replaced a correct `@return` with a wrong one. The cross-check also
+surfaced same-defect instances beyond scope (the sibling `p`
+descriptions; a 2nd `orderReport` bullet). - **🚨 REAL WORK \#2 — THE
+roxygen VERSION-MISMATCH BLAST-RADIUS TRAP (→ Learning 106):**
+[`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html)
+rewrote **~30** `.Rd` files + changed `DESCRIPTION` — far beyond my 4
+functions — because committed `man/` is roxygen **7.3.2**
+(`RoxygenNote: 7.3.2`) but the dev lib is **8.0.0** (reformats every
+page; migrates the field to `Config/roxygen2/version:`). I
+`git checkout -- man/ DESCRIPTION` to drop the version artifacts, then
+hand-edited the 4 affected `\value` blocks to match source — scoping the
+diff to 5 `R/` + 4 `man/`. **General rule: read `git diff --stat` after
+any regen; a diff beyond your edits = a tool/version mismatch
+reformatting files — don’t commit it as part of a content fix.** -
+**Verification (build-equivalent for a doc change):**
+[`tools::checkRd()`](https://rdrr.io/r/tools/checkRd.html) clean on all
+4 changed pages;
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+succeeds; rendered `\value` reads correctly (`reportGV` now lists the 10
+elements, matching the `list(...)` constructor + the function’s own
+`@examples`); no leftover “average number of descendants” / “ascending
+mk” anywhere. `devtools` is NOT in the renv lib
+(`roxygen2`/`pkgload`/`pkgbuild` ARE). - **\[news-vs-changelog\]:**
+dev-process history → CHANGELOG here. **Unlike the website articles,
+these help pages SHIP** — so fold this correction into the **CRAN Phase
+3 NEWS rewrite at 2.0.0** (flagged, NOT edited now — the CRAN plan owns
+the NEWS pipeline; \[\[backlog-vs-changelog-placement\]\]). **NO
+auto-memory** — the work lives in the repo
+(\[\[consult-project-source-of-truth\]\]). **\[macos-dupe-scan\]:**
+commit ONLY the repo files; exclude `.DS_Store` (modified) +
+`PED_GV_AUDIT_2026-05-30.html` (untracked); removed a stray `Rplots.pdf`
+(from `load_all`/probe) before committing.
+
+**Phase-3E (runtime smoke test): N/A — STATED, not silently skipped.**
+Roxygen/Rd documentation prose changes NO package or app runtime
+behavior (no logic, dispatch, config, or test surface — comments are
+inert). Verification appropriate to the deliverable = Rd validity
+(`checkRd`) + package load + `\value` render, all done. **NOT FM \#24.**
+
+**Session 111 Handoff Evaluation (by Session 112): Score 8/10.** S111
+pre-named THIS deliverable as option (A2) and listed all four drifts
+with specifics — the file, the wrong phrase, and the correct answer for
+each (`orderReport` z-score, `calcFEFG` `p`, `reportGV` list,
+`getPyramidPlot` par(‘mar’)). That precision made location instant (zero
+rediscovery) and Learning 105/102 carried the verification approach. Its
+gotchas held (CRAN gotchas, standing uncommitted files, the cwd-drift
+trap, and the stray-`Rplots.pdf` warning — which fired exactly as
+predicted). **The −2:** (1) one of the four named drifts —
+`getPyramidPlot` — **was not real**; the handoff presented all four as
+equally valid repair targets, and acting blindly would have introduced
+an error (it inherited S110’s unverified code-read). Consistent with
+S111’s OWN Learning 105 (a flag is a claim, not a fact), so it armed me
+with the warning even as it carried the bad flag — but it is still an
+inaccuracy in the named scope. (2) It couldn’t surface the sibling
+`calcFE`/`calcFG` instances or the roxygen version mismatch — both
+needed the tooling to find — so I discovered them in execution (fair).
+No false credit. ROI high.
+
+**Self-assessment (Session 112): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER in full, notes top, dashboard 98/100, git, 14 issues,
+ghost-check → HEAD `ef1b86e8` = S111, clean), reported, STOPPED for the
+owner’s pick (A2); claimed the session (1B stub BEFORE technical work).
+**Headline strengths:** (1) **re-verified all 4 inherited flags before
+acting — and one was wrong** (`getPyramidPlot`), so the discipline
+prevented shipping a regression into the docs (→ Learning 106, extends
+105); (2) **caught and contained the roxygen 7.3.2→8.0.0 blast radius**
+— reverted a 30-file version migration and scoped the diff to 5 `R/` + 4
+`man/` (no tooling bump bundled into a content fix); (3) **right-sized
+the Workflow correctly** — fanned out the 4-claim adjudication (verify +
+adversarial refute) where it had real breadth, kept the mutation
+single-threaded; (4) **asked the one genuine scope decision** (siblings)
+via `AskUserQuestion` with plain-ASCII options
+(\[\[ascii-only-in-question-options\]\]); (5) **held scope discipline**
+— fixed exactly the agreed `p`-defect in the siblings and FLAGGED
+(didn’t fix) three adjacent pre-existing defects (calcFE’s spurious `r`,
+the unbalanced-paren formula, the `reportGV.Rd` `\title` period); (6)
+**verified the doc build-equivalent** (`checkRd` + `load_all` + `\value`
+render) and removed the stray `Rplots.pdf`; (7) 0 stakeholder
+corrections; plain language; declared TDD N/A + Phase-3E N/A with
+reasons. **Weaknesses (honest):** (a) my first `man/` regen tried
+`devtools` (absent), then `roxygenise` triggered the version blast
+radius — I recovered cleanly, but a Phase-0 check of the roxygen version
+vs `RoxygenNote` would have predicted it (SAFEGUARDS “Verify
+Render-Dependency Completeness” applies to codegen tools too); (b)
+hand-editing generated `.Rd` is a deliberate exception to “do not edit
+by hand” — justified and disclosed, but it leaves `man/` in 7.3.2 format
+until the version question is settled; (c) full `R CMD check` was NOT
+run (devtools absent; doc-only change) — `checkRd` + `load_all` + render
+is the proportionate build-equivalent, but it is not the full check. I
+reserve 9–10 for a delivery with no tooling missteps that is also
+full-`check`-verified.
+
+**⇒ SUGGESTED NEXT = owner’s pick.** (A2) is done; nothing mid-flight.
+Natural options (plain ASCII labels): - **(A) roxygen 7.3.2 -\> 8.0.0
+migration (deliberate, gated):** the dev lib has 8.0.0; regenerating
+reformats all 30 `.Rd` + migrates `DESCRIPTION` (`RoxygenNote:` -\>
+`Config/roxygen2/version:`). A real change that ships — sequence with
+the CRAN plan; decide whether to adopt 8.0.0 or pin 7.3.2 in the dev
+renv profile. (This is what made my `man/` regen non-trivial.) - **(A2)
+Mop-up doc nits (flagged this session, ships):** `calcFE.R` `@return`
+mentions `r` though `FE = 1/sum(p^2)` has none; the `sum( (p ^ 2) / r}`
+formula has unbalanced parens in `calcFEFG`/`calcFG`; `reportGV.Rd`
+`\title` ends in a period (`checkRd` -5). Low-risk roxygen fixes. -
+**(B) Resume the CRAN plan** — Phase 2b (vignette rebuild timing) or
+**Phase 3** (NEWS rewrite + version bump -\> 2.0.0; **fold in this
+session’s help-page corrections**). - **(C) Push** `add-methodology` —
+its remote `origin/add-methodology` is already current; it is **177
+commits ahead of `master`**, so the real pending action is the eventual
+merge to master, not a push. **Do NOT** bundle the roxygen version
+migration into a content fix; **do NOT** bundle phases (FM \#18/#25).
+
+**Key files (this session):** **CHANGED (to commit):**
+`R/orderReport.R`, `R/calcFEFG.R`, `R/calcFG.R`, `R/calcFE.R`,
+`R/reportGV.R`; `man/calcFE.Rd`, `man/calcFEFG.Rd`, `man/calcFG.Rd`,
+`man/reportGV.Rd`; `CHANGELOG.md`, `PROJECT_LEARNINGS.md` (Learning
+106), `SESSION_NOTES.md` (this handoff). **Read firsthand:** the 5 `R/`
+roxygen blocks, the 4 `.Rd` `\value` blocks, `reportGV.R:142-157` (the
+list constructor + `@examples`), the 8-agent verification output.
+**Transient (removed, NOT committed):** `Rplots.pdf`. **Workflow:**
+`roxygen-drift-verify` (run `wf_f3dffff2-edf`; script saved under the
+session dir).
+
+**Gotchas:** (1) **roxygen version mismatch (the session’s main trap):**
+committed `man/` is **7.3.2** (`RoxygenNote:`), dev lib is **8.0.0**;
+`roxygenise()` reformats ALL 30 `.Rd` + migrates `DESCRIPTION`. **Read
+`git diff --stat` after any regen** — a diff beyond your edits = the
+version mismatch; revert (`git checkout -- man/ DESCRIPTION`) and
+hand-edit the target `\value`, OR do the migration deliberately (option
+A). (2) **`devtools` is NOT in the renv lib**
+(`roxygen2`/`pkgload`/`pkgbuild` ARE) — use
+[`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html)
+not `devtools::document()`; pass an **absolute** `package.dir` to avoid
+the cwd-drift trap. (3) **`getPyramidPlot` `@return` is CORRECT** — the
+S108-set “4th drift” was refuted; do not “fix” it (it returns
+`pyramid.plot()`‘s `oldmar` = a `par("mar")` vector). The S108/S110
+roxygen-drift set is now fully resolved (3 fixed + 1 refuted); the only
+open roxygen nits are option (A2) above. (4) **These help pages SHIP** —
+fold the corrections into the CRAN Phase 3 NEWS at 2.0.0 (not edited
+now). (5) **`man/` is hand-edited (7.3.2 format)** — a later proper
+regen (after the version decision) reconciles cleanly since content
+matches source. (6) Standing uncommitted: `.DS_Store` (modified) +
+`PED_GV_AUDIT_2026-05-30.html` (untracked) — owner’s keep-call; a stray
+`Rplots.pdf` appears from `load_all`/Rscript plot calls — remove before
+committing (done). (7) **Branch state:** `add-methodology` is current
+with `origin/add-methodology` (0/0); it is **177 ahead of `master`** —
+the pending action is the merge to master, not a push (prior handoffs’
+“N ahead of origin, push when ready” wording was comparing to master).
+(8) Carried-forward CRAN gotchas remain valid: `NEWS.md` from
+`NEWS.Rmd`; renv explicit-snapshot omits ALL Suggests;
+pkgdown/quarto/devtools dev-lib-only; `RSelenium` undeclared; the
+package is ARCHIVED on CRAN (Learning 95).
+
+### What Session 111 Did
+
+**Deliverable:** the owner’s pick **(A’)** — one prose fix in
+`vignettes/articles/breeding-group-formation.qmd`: corrected the
+inverted focal-population description. The article said the focal set
+was “the founders still in the colony,” but the filter
+`!(is.na(sire) & is.na(dam)) & is.na(exit)` selects **non-founders**
+(animals with at least one known parent) still in the colony. Now reads
+“the non-founders still in the colony (those with at least one known
+parent)” — the parenthetical defines the term inline so the fix also
+removes the ambiguity. **(DONE — verified two ways + re-rendered.)**
+Resolves the S108-discovered inversion, open and carried forward as
+option (A’) through S109/S110. **One-line fix only** — did NOT touch the
+roxygen drifts, the CRAN plan, or any other article (FM \#18/#25/#8).
+**Started / Completed:** 2026-06-17 **Status:** **DONE. TDD phase =
+N/A** (documentation prose using an existing exported-function
+walkthrough; no `R/` logic or test surface — declared every response,
+same as S104–S110). **No `AskUserQuestion`** — the owner named (A’)
+directly; no scope sub-question remained. **0 stakeholder corrections.**
+Right-sized under ultracode as **SOLO** — a one-line prose correction
+with a deterministic two-way verification has no breadth to fan out and
+no competing claims to adjudicate; a Workflow would be theater (the S106
+/ S100 call) → **Learning 105**. New session within the conversation:
+claimed it (1B stub before technical work) and confirmed fresh post-S110
+state (the full Phase 0 reads were done this same turn). - **What
+changed (4 edits, 0 new):** **EDIT**
+`vignettes/articles/breeding-group-formation.qmd` (the one prose
+sentence, lines ~60–63). **EDITS:** `CHANGELOG.md` (S111
+`[Unreleased]`), `PROJECT_LEARNINGS.md` (Learning 105),
+`SESSION_NOTES.md` (this handoff). **No `R/`, test, NAMESPACE, `man/`,
+DESCRIPTION, NEWS, ROADMAP, CI-workflow, planning-doc, or CRAN-vignette
+change** (the fix changes neither package contents nor roadmap state;
+ROADMAP needed no edit). - **🚨 THE REAL WORK WAS RE-VERIFYING AN
+INHERITED FLAG, NOT TRUSTING IT (→ Learning 105):** A flagged error from
+a prior session is a claim to re-check, not a fact to action — the
+discoverer (S108) couldn’t fix it precisely because it wasn’t their
+deliverable, so the claim had never itself been re-verified against
+data. I confirmed it two ways before editing: (1) **internal
+corroboration** — the same sentence trims the pedigree to the focal set
+“plus the ancestors needed to compute their kinships,” and founders have
+no ancestors, so the focal set must logically be non-founders; (2)
+**ground truth** — ran `qcStudbook(examplePedigree)` + the article’s
+exact filter: **327 focal animals, NONE founders, ALL with ≥ 1 known
+parent** (the studbook has 1,668 founders, zero in the focal set; the
+327 matches the GVA article’s population-of-interest count). Both agreed
+→ fix safe. - **Verification (build-equivalent):**
+`quarto render vignettes/articles/breeding-group-formation.qmd` — all 19
+chunks executed on shipped data, clean HTML produced; prose-only change,
+computed output unchanged. Cleaned every render artifact before commit
+(`.html`, `_files/`, the quarto-generated `.gitignore`, `.quarto/`); no
+stray `Rplots.pdf`. - **\[news-vs-changelog\]:** website-only
+documentation = dev-process history → **CHANGELOG only**, no NEWS
+(\[\[backlog-vs-changelog-placement\]\]). **Auto-memory:** saved one NEW
+feedback memory — **\[\[ascii-only-in-question-options\]\]** (owner: use
+plain ASCII in AskUserQuestion labels / presented option lists;
+non-ASCII punctuation slows selection) + its MEMORY.md index pointer.
+The doc work itself lives in the repo, not memory
+(\[\[consult-project-source-of-truth\]\]). **\[macos-dupe-scan\]:**
+commit ONLY the 3 changed repo files; exclude `.DS_Store` (modified) +
+`PED_GV_AUDIT_2026-05-30.html` (untracked, standing keep).
+
+**Phase-3E (runtime smoke test): N/A — STATED, not silently skipped.** A
+build-ignored, website-only pkgdown article changes NO package or app
+runtime behavior (no `R/`/test/app-path change; the article doesn’t
+ship). Verification appropriate to the deliverable = the render, done.
+**NOT FM \#24.**
+
+**Session 110 Handoff Evaluation (by Session 111): Score 9/10.** S110
+pre-named THIS deliverable exactly: its option (A’) gave the precise
+file (`breeding-group-formation.qmd`), the exact inverted phrase
+(“founders” → “non-founders”), the discovering session (S108), and
+called it “one line.” Its gotcha 6 and the §7.1 history made it trivial
+to locate. PROJECT_LEARNINGS Learning 102 carried the filter expression
+I verified against. ROI very high — zero rediscovery. **The −1:** S110’s
+handoff (inheriting S108’s discovery) stated the correct answer
+(“non-founders”) but neither had ever run the filter on the data, so the
+claim was code-read, not data-confirmed — no counts, no “are any of the
+focal animals actually founders?” check. Entirely fair (it was never
+their deliverable to verify), and it is exactly why re-verifying
+firsthand — not actioning the flag blindly — was the right move (→
+Learning 105). No inaccuracies in the handoff.
+
+**Self-assessment (Session 111): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER in full, notes top, dashboard 98/100, git, 14 issues,
+ghost-check → HEAD `1068fa2c` = S110, clean), reported, STOPPED for the
+owner’s pick (A’); claimed the session (1B stub BEFORE the edit).
+**Headline strengths:** (1) **re-verified the inherited flag two
+independent ways** (internal corroboration + ground truth on the data)
+instead of trusting it — the discipline this session is about (→
+Learning 105); (2) **the fix also removes the ambiguity** that allowed
+the inversion, via an inline definition (“those with at least one known
+parent”); (3) **rendered to confirm** the build-equivalent and cleaned
+every artifact; (4) **right-sized SOLO** and said why (no Workflow
+theater for a one-line deterministic fix); (5) **captured the owner’s
+non-ASCII feedback to auto-memory immediately** (new memory + index
+pointer); (6) **held 1-and-done** — left the 4 roxygen drifts, the CRAN
+plan, and new articles untouched; (7) 0 stakeholder corrections; plain
+language; declared TDD N/A + Phase-3E N/A with reasons. **Weaknesses
+(honest):** (a) **a small process slip** — my first `MEMORY.md` edit
+failed because I tried to edit from the system-reminder’s copy of its
+contents without a `Read` first; the read-before-edit rule applies to
+memory files too. Caught and corrected immediately, no harm (−1); (b)
+the fix is intrinsically low-difficulty — the value is the verification
+rigor and the clean close-out, not technical depth; (c) the **CI
+gh-pages build is unverified locally** (standing gap S107–S110), though
+this prose-only change is the lowest-risk case yet. I reserve 9–10 for a
+delivery with zero process slips that is also CI-verified end-to-end.
+
+**⇒ SUGGESTED NEXT = owner’s pick.** (A’) is done + committed; nothing
+mid-flight. The ready-made article candidates remain **exhausted** (all
+4 demonstrable-function articles done; a new one needs a fresh topic or
+slice-3 presentation material). Natural options (plain labels per the
+new ASCII feedback): - **(A2) Roxygen-repair session (gated, ships):**
+the **4** accumulated `@return`/param drifts — `orderReport.R` @return
+(z-score, not “mean kinship \< 0.25”), `calcFEFG.R`’s `p` description,
+`reportGV.R` @return (“A dataframe” → list), `getPyramidPlot.R` @return
+(“par(‘mar’)” → `pyramid.plot()`’s value). Touches `R/` roxygen → `man/`
+regen → it ships, so sequence with the CRAN plan. - **(B) Resume the
+CRAN plan** — Phase 2b (vignette rebuild timing) or Phase 3 (NEWS
+rewrite + version bump → 2.0.0). - **(C) Push** `add-methodology` to
+origin (now **11 ahead**: S101–S111). **Do NOT** author another article
+without an owner-approved session/topic; **do NOT** bundle (FM
+\#18/#25).
+
+**Key files (this session):** **CHANGED (to commit):**
+`vignettes/articles/breeding-group-formation.qmd` (the prose sentence,
+~lines 60–63), `CHANGELOG.md` (S111 `[Unreleased]`),
+`PROJECT_LEARNINGS.md` (Learning 105), `SESSION_NOTES.md` (this
+handoff). **Auto-memory (outside repo):** new
+`…/memory/ascii-only-in-question-options.md` + `MEMORY.md` pointer.
+**Read firsthand:** the full `.qmd` (the filter is lines 66–68; the
+prose is lines 60–63). **Transient (removed, NOT committed):** the
+render artifacts (`.html`, `_files/`, `.quarto/`, the quarto
+`.gitignore`).
+
+**Gotchas:** (1) **Owner feedback (now in auto-memory
+\[\[ascii-only-in-question-options\]\]):** use **plain ASCII** in
+`AskUserQuestion` labels and any presented option list — non-ASCII
+punctuation (em/en dashes, arrows, prime marks like the “A′” I had used)
+slows the owner’s selection. Use `A`, `B`, `A2`, etc. (2)
+**Read-before-edit applies to memory files too** — a `MEMORY.md` edit
+from the system-reminder’s copy (without a `Read` this session) is
+rejected; `Read` it first. (3) **Roxygen drifts now total 4**
+(orderReport/calcFEFG/reportGV + getPyramidPlot @return) — option (A2),
+gated (ships). (4) **CI gh-pages build NOT locally verified** — watch
+the next push to `main`/`master` (or a PR/release) for the pkgdown
+workflow result. (5) This close-out leaves `add-methodology` **11 ahead
+of origin** (S101–S111) — push when ready. (6) Standing uncommitted:
+`.DS_Store` (modified) + `PED_GV_AUDIT_2026-05-30.html` (untracked) —
+owner’s keep-call; a stray `Rplots.pdf` can appear from Rscript plot
+calls without an explicit device — none this session, but check before
+committing. (7) **cwd-drift trap (S109):** build/render with absolute
+paths or from the repo root; do NOT `cd /tmp && …` (strands the shell
+cwd). (8) Carried-forward CRAN gotchas remain valid: `NEWS.md` from
+`NEWS.Rmd`; renv explicit-snapshot omits ALL Suggests; pkgdown/quarto
+dev-lib-only; `RSelenium` undeclared; the package is ARCHIVED on CRAN
+(Learning 95).
+
+### What Session 110 Did
+
+**Deliverable:** §7.1 (adopted Hybrid doc policy) — authored a fourth
+zero-CRAN-risk Quarto pkgdown article,
+**`vignettes/articles/age-sex-pyramid.qmd`** (a scripted
+[`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md)
+demographic walkthrough on shipped `qcPed`: building the pyramid,
+reading colony age/sex structure, the `binWidth`/`colorScheme`/`ageUnit`
+options, the living-and-aged selection). **(DONE — verified via
+`quarto render` +
+[`pkgdown::build_article`](https://pkgdown.r-lib.org/reference/build_articles.html) +
+an `R CMD build` tarball; two-lens adversarial review → no must-fix, 2
+grounded honesty fixes applied + re-rendered.)** Drop-in `.qmd` on the
+S107 mixed-mode infra; no config. **One article only** — did NOT touch
+the CRAN plan, roxygen, or the sibling’s open error (FM \#18/#25/#8).
+**Started / Completed:** 2026-06-17 **Status:** **DONE. TDD phase =
+N/A** (documentation using an existing exported function + shipped data;
+no `R/` logic or test surface — declared every response, same as
+S104–S109). **No `AskUserQuestion`** — the owner’s “(A)” mapped
+unambiguously to the one remaining ready-made article candidate (no
+topic sub-question needed). **0 stakeholder corrections.** Right-sized
+under ultracode as **SOLO ground-truth-first authoring (grounding reuse
+from the S109 recon) + a 2-lens adversarial-review Workflow + direct
+multi-path verification** → **Learning 104.** A new session within the
+conversation: I claimed it (1B stub before technical work) and confirmed
+the fresh post-S109 state rather than re-running the full Phase 0 reads
+I’d just done this turn. - **What changed (1 new + 5 edits):** **NEW**
+`vignettes/articles/age-sex-pyramid.qmd`. **EDITS:** `CHANGELOG.md`
+(S110 `[Unreleased]`), `ROADMAP.md` (articles-so-far → S107–S110),
+`docs/planning/quarto-documentation-future-proofing-analysis.md` (§7.1
+slice-2 cell → 4th article), `PROJECT_LEARNINGS.md` (Learning 104),
+`SESSION_NOTES.md` (this handoff). **No `R/`, test, NAMESPACE, `man/`,
+DESCRIPTION, NEWS, CI-workflow, or CRAN-vignette change.** - **🚨 THE
+REAL WORK WAS GROUND-TRUTH-FIRST AUTHORING OF A PLOT — THE FIGURE’S
+INPUT FILTER IS PART OF THE TRUTH (→ Learning 104):** (1) **Ran
+[`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md) +
+`fillBins` on `qcPed` before writing.** The pyramid plots ONLY living
+animals (`exit==NA`) **with a known age** — **46 of `qcPed`’s 89 living
+animals** — because **43 living animals (all male) lack a birth date** →
+no age → cannot be placed. (2) **That makes the example’s apparent ~3:1
+*female* skew REVERSED from reality:** the plot shows 35 F / 11 M, but
+the living colony is 35 F / **54 M** (male-majority). A plot from
+incomplete data can show the OPPOSITE of reality, not just an attenuated
+version — this became the article’s central honesty / QC-tie-in lesson.
+(3) **Verified through 3 paths:** `quarto render` (Quarto 1.7.33) →
+clean HTML + both figures (deterministic *shape* — no RNG/seed; `qcPed`
+ships a fixed `age` col; only the title date drifts via
+[`lubridate::now()`](https://lubridate.tidyverse.org/reference/now.html));
+`pkgdown::build_article("articles/age-sex-pyramid")` (pkgdown 2.2.0)
+wraps it; an `R CMD build` tarball confirms `vignettes/articles/` absent
+→ zero CRAN risk, 21 shipping vignette files intact. (4) **Verified the
+verifier (2 lenses):** code-correctness re-ran every number against
+`qcPed` (all 8 challenges held); pedagogy caught two honesty issues — I
+confirmed both against the data/paper before FIX-FORWARD applying:
+strengthened the sex-skew caveat to say *reversed* (not merely
+“under-counts males” — I had the 35F/54M numbers from my own probe and
+should have stated this first-draft), and reframed the Reference so V&R
+2015 is the *package’s* origin, not the pyramid method’s source (the
+pyramid is general demography via
+[`plotrix::pyramid.plot()`](https://plotrix.github.io/plotrix/reference/pyramid.plot.html)).
+Re-rendered (prose-only). - **Discovered, NOT mine — flagged:**
+`getPyramidPlot.R` `@return` roxygen says “the return value of
+`par('mar')`” but the function returns
+[`plotrix::pyramid.plot()`](https://plotrix.github.io/plotrix/reference/pyramid.plot.html)’s
+value — a roxygen drift (joins the S108-discovered set → now **4**
+drifts). Left untouched (FM \#8). - **\[news-vs-changelog\]:**
+website-only documentation → **CHANGELOG only**, no NEWS
+(\[\[backlog-vs-changelog-placement\]\]). **NO auto-memory** — the work
+lives in the repo (\[\[consult-project-source-of-truth\]\]).
+**\[macos-dupe-scan\]:** commit ONLY the 6 changed/new files; exclude
+`.DS_Store` + `PED_GV_AUDIT`; removed all render/build artifacts + a
+stray `Rplots.pdf` (base-graphics default device from an Rscript plot
+call) before committing.
+
+**Phase-3E (runtime smoke test): N/A — STATED, not silently skipped.** A
+build-ignored, website-only pkgdown article changes NO package/app
+runtime behavior (the article doesn’t ship). Verification appropriate to
+the deliverable = render +
+[`pkgdown::build_article`](https://pkgdown.r-lib.org/reference/build_articles.html)
+(pkgdown 2.2.0) + `R CMD build` tarball, all done. **NOT FM \#24.** The
+one thing NOT locally verifiable: the GitHub Actions gh-pages site build
+— confirm on next push (gotcha 8).
+
+**Session 109 Handoff Evaluation (by Session 110): Score 9/10.** S109
+pre-named THIS deliverable precisely — its SUGGESTED-NEXT (A) said “the
+age–sex pyramid
+([`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md)
+on shipped `qcPed`) is the last ready-made grounded candidate” and its
+**gotcha 4** pre-loaded the determinism story (title embeds
+[`lubridate::now()`](https://lubridate.tidyverse.org/reference/now.html);
+ages frozen in `qcPed`; base graphics → plot must be the chunk’s last
+expression) — all held firsthand and saved real time. Best of all,
+**S109 gotcha 1 (the cwd-drift trap, which S109 itself hit) directly
+prevented a repeat:** I built the tarball into the repo root instead of
+`cd /tmp && …`, so the shell cwd never stranded this session. ROI very
+high. **The −1:** the handoff (and the S109-era recon) characterized the
+pyramid as plotting “living animals” but could not surface the
+load-bearing subtlety — that `fillBins` also drops NA-age animals, so
+the example plots 46 of 89 and its sex skew is *reversed* — because
+running `getPyramidPlot` wasn’t S109’s deliverable. Fair (not S109’s job
+to know); it’s exactly why ground-truth-first running, not
+handoff-reading, found it.
+
+**Self-assessment (Session 110): 8/10.** Recognized the owner-directed
+new deliverable, claimed it (1B stub before technical work), confirmed
+fresh state without re-running Phase 0 reads I’d just done (avoided
+protocol-theater). **Headline strengths:** (1) **ground-truth-first
+running surfaced the load-bearing catch** a code-read would have missed
+— the pyramid plots 46 of 89 living animals and the example’s sex skew
+is *reversed* (35F/54M living vs 35F/11M plotted), which became the
+article’s best teaching point (→ Learning 104); (2) **heeded the
+predecessor’s cwd-drift lesson** — tarball built into the repo root, no
+strand (improvement over S109’s own slip); (3) **verified through 3
+independent paths** + proved zero-CRAN-risk; (4) **2-lens adversarial
+review + verify-the-verifier held** — confirmed both honesty flags
+against the data/paper before applying; (5) **held 1-and-done** — one
+article; flagged (not fixed) the `getPyramidPlot` `@return` roxygen
+drift; (6) 0 stakeholder corrections; plain language; clean
+base-graphics rendering via `#| results: hide`; cleaned every artifact
+(incl. a stray `Rplots.pdf`). **Weaknesses (honest):** (a) **I
+understated the sex-skew in the first draft** — wrote “under-count the
+living males” when I already had the 35F/54M living numbers from my own
+probe showing the skew is *reversed*; the adversarial lens caught what I
+should have stated first-pass (−1, the real self-critique); (b) a stray
+`Rplots.pdf` artifact from an Rscript plot call without an explicit
+device — caught at cleanup, but avoidable (open a device /
+[`invisible()`](https://rdrr.io/r/base/invisible.html) in plotting
+probes); (c) the **CI gh-pages build is unverified locally** (standing
+gap, S107–S109). I reserve 9–10 for a delivery whose first draft is
+already maximally honest AND is CI-verified end-to-end.
+
+**⇒ SUGGESTED NEXT = owner’s pick.** Article done + committed; nothing
+mid-flight. **The ready-made article candidates are now EXHAUSTED** —
+all 4 demonstrable-function articles are done (breeding-group, GVA,
+studbook-QC, age-sex-pyramid). Natural options: - **(A) Slice 3
+(`revealjs` decks)** — only when new presentation material exists (none
+to migrate). A *new* pkgdown article would need a fresh topic (the
+function walkthroughs are done). **Do NOT** start **slice 4 (the
+manual)** free-standing — CRAN-gated (§8). - **(A′) Tiny doc fix
+(owner’s call):** the “founders” → “non-founders” prose inversion in
+`vignettes/articles/breeding-group-formation.qmd` (open since S108). One
+line. - **(A″) Roxygen-repair session (gated, ships):** now **4** drifts
+— `orderReport.R` @return, `calcFEFG.R`’s `p`, `reportGV.R` @return
+(S108) + `getPyramidPlot.R` @return (S110). Touches `R/` roxygen →
+`man/` regen → sequence with the CRAN plan. - **(B) Resume the CRAN
+plan** — **Phase 2b** (vignette rebuild timing) or **Phase 3** (NEWS
+rewrite + version bump → 2.0.0). - **(C) Push** `add-methodology` to
+origin (now **10 ahead**: S101–S110). **Do NOT** author another article
+without an owner-approved session/topic; **do NOT** bundle (FM
+\#18/#25).
+
+**Key files (this session):** **NEW (committed):**
+`vignettes/articles/age-sex-pyramid.qmd`. **CHANGED (committed):**
+`CHANGELOG.md`, `ROADMAP.md`,
+`docs/planning/quarto-documentation-future-proofing-analysis.md` (§7.1
+slice-2 cell), `PROJECT_LEARNINGS.md` (Learning 104), `SESSION_NOTES.md`
+(this handoff). **Read firsthand:** `R/getPyramidPlot.R` (full),
+`R/getPyramidAgeDist.R` (full), `R/fillBins.R` (via review), the model
+article `vignettes/articles/genetic-value-analysis.qmd`, `qcPed`.
+**Transient (NOT committed — removed):** `/tmp/s110_pyr.R` + its PNGs, a
+stray `Rplots.pdf`, the `/tmp`-style tarball (built into repo root,
+removed), and all render/build artifacts (`pkgdown/`, `pkgdown_site/`,
+`vignettes/articles/.quarto/`, `*_files/`, the `.html`, the
+quarto-generated `vignettes/articles/.gitignore`).
+
+**Gotchas:** (1) **`getPyramidPlot(qcPed)` plots ONLY living animals
+(`exit==NA`) with a KNOWN age** — `fillBins` drops exited and NA-age
+animals — so for `qcPed` it plots 46 of 89 living, and the example’s
+apparent sex skew is *reversed* by 43 unaged (all-male) living animals.
+Any future demographic doc/feature must account for this input filter (a
+complete census needs birth dates). (2) **Base graphics (plotrix):** the
+plot call must be the chunk’s last expression; `#| results: hide`
+suppresses the (non-plot) return value. **`getPyramidPlot.R` `@return`
+roxygen is WRONG** (says `par('mar')`; returns `pyramid.plot()`’s value)
+— joins the roxygen-repair set (A″). (3) **The plot title embeds
+[`lubridate::now()`](https://lubridate.tidyverse.org/reference/now.html)**
+→ the title shows the render date (cosmetic “census as of” label); the
+pyramid *shape* is deterministic (no seed). (4) **Ready-made article
+candidates are EXHAUSTED** (4 done) — a new article needs a fresh topic
+or new presentation material (slice 3). (5) **Roxygen drifts now total
+4** (orderReport/calcFEFG/reportGV + getPyramidPlot) — A″, gated
+(ships). (6) **`breeding-group-formation.qmd` “founders” →
+“non-founders” inversion** remains open (A′). (7) **cwd-drift trap
+(heeded this session):** build tarballs into the repo root or use
+absolute paths — do NOT `cd /tmp && R CMD build` (strands the shell cwd;
+S109 gotcha 1). (8) **CI gh-pages build NOT locally verified** — watch
+the next push to `main`/`master` (or a PR/release). (9) This close-out
+leaves `add-methodology` **10 ahead of origin** (S101–S110) — push when
+ready. (10) Standing uncommitted: `.DS_Store` (modified) +
+`PED_GV_AUDIT_2026-05-30.html` (untracked) — owner’s keep-call; a stray
+`Rplots.pdf` can appear from Rscript plot calls without an explicit
+device — remove before committing. (11) Carried-forward CRAN gotchas
+remain valid: `NEWS.md` from `NEWS.Rmd`; renv explicit-snapshot omits
+ALL Suggests; pkgdown/quarto dev-lib-only; `RSelenium` undeclared; the
+package is ARCHIVED on CRAN (Learning 95).
+
+### What Session 109 Did
+
+**Deliverable:** §7.1 (adopted Hybrid doc policy) — authored a third
+zero-CRAN-risk Quarto pkgdown article,
+**`vignettes/articles/studbook-quality-control.qmd`** (a scripted,
+non-Shiny walkthrough of
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+on shipped `examplePedigree` + the purpose-built error-demo data sets:
+required-column / sex-consistency / date / duplicate / parent-age
+checks, the production vs diagnostic `reportErrors` modes, and
+column/code standardization). **(DONE — verified via `quarto render` +
+[`pkgdown::build_article`](https://pkgdown.r-lib.org/reference/build_articles.html) +
+an `R CMD build` tarball; two-lens adversarial review → no must-fix, 2
+grounded fixes applied + re-rendered.)** Content production on the
+slice-2 mixed-mode infra (S107) — **not** a new slice (drop-in `.qmd`,
+no config). **One article only** — did NOT author the age–sex pyramid,
+did NOT fix the sibling’s discovered error, did NOT touch the CRAN plan
+or roxygen (FM \#18/#25/#8). **Started / Completed:** 2026-06-17
+**Status:** **DONE. TDD phase = N/A** (documentation using existing
+exported functions + shipped data; no `R/` logic or test surface —
+declared every response, same as S104–S108). **One `AskUserQuestion`
+(pre-RED SCOPE decision, not a TDD gate):** which topic — owner picked
+**studbook quality control** (from 2 grounded candidates: studbook QC /
+age–sex pyramid; both grounded by parallel recon first). No TDD
+phase-transition gates (none apply). **0 stakeholder corrections.**
+Right-sized under ultracode as **2 parallel recon Explore agents (one
+per candidate topic) + SOLO ground-truth-first authoring + a 2-lens
+adversarial-review Workflow + direct multi-path verification** →
+**Learning 103.** - **What changed (1 new + 5 edits):** **NEW**
+`vignettes/articles/studbook-quality-control.qmd` (the article).
+**EDITS:** `CHANGELOG.md` (S109 `[Unreleased]`), `ROADMAP.md`
+(articles-so-far → S107–S109),
+`docs/planning/quarto-documentation-future-proofing-analysis.md` (§7.1
+slice-2 cell → records the 3rd article), `PROJECT_LEARNINGS.md`
+(Learning 103), `SESSION_NOTES.md` (this handoff). **No `R/`, test,
+NAMESPACE, `man/`, DESCRIPTION, NEWS, CI-workflow, or CRAN-vignette
+change** (the slice-2 infra already exists from S107; this article
+needed none of it touched). - **🚨 THE REAL WORK WAS GROUND-TRUTH-FIRST
+AUTHORING — INCLUDING THE UNHAPPY PATHS (→ Learning 103):** (1) **Ran
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+on real data in BOTH modes before writing prose.** `examplePedigree`
+(3,694) → standardized 3,694-row df; `reportErrors=TRUE` returns a
+diagnostic LIST (or `NULL` when clean), and each shipped error-demo set
+triggers exactly one finding
+(`pedFemaleSireMaleDam`→`femaleSires`/`maleDams`;
+`pedInvalidDates`→`invalidDateRows=3,4`;
+`pedDuplicateIds`→`duplicateIds`; `pedMissingBirth`→`missingColumns`;
+`pedSameMaleIsSireAndDam`→`sireAndDam`); `reportErrors=FALSE`
+(production) **auto-corrects** female-sire/male-dam (s1→M, d1→F) and
+removes exact duplicates (9→8) but **STOPS** on missing column, invalid
+date, sire==dam, young parent, period-in-ID. (2) **Running it REFUTED my
+own assumption** — I’d read the code and assumed invalid dates were
+coerced to `NA`; they actually stop the function. A behavior you only
+read in source is a hypothesis until you run it. (3) **Verified through
+3 paths:** `quarto render` (Quarto 1.7.33) executes the chunks → clean
+HTML (deterministic — no RNG/seed; `examplePedigree` ships an `age` col
+so no [`Sys.Date()`](https://rdrr.io/r/base/Sys.time.html) leaks;
+confirmed byte-identical across two renders);
+`pkgdown::build_article("articles/studbook-quality-control")` (pkgdown
+2.2.0) wraps it in the site template; an `R CMD build` tarball confirms
+`vignettes/articles/` is **absent** → zero CRAN risk, the 21 shipping
+vignette files intact. (4) **Verified the verifier (2 lenses):**
+code-correctness (all 9 challenged claims confirmed vs `qcStudbook.R` +
+~18 helpers) + pedagogy/render-determinism (byte-identical double
+render). No must-fix; confirmed the one real flag against the code
+(`qcStudbook` calls `convertSexCodes(ignoreHerm=TRUE)` → `H` folds to
+`U`, never output) and FIX-FORWARD corrected the article’s “M/F/U/H” →
+“M/F/U”; added a `## Setup {#sec-setup}` section for house-style
+parallelism; re-rendered (prose-only). - **\[news-vs-changelog\]:**
+website-only documentation = dev-process history → **CHANGELOG only**
+(S109 entry), no NEWS (\[\[backlog-vs-changelog-placement\]\]). **NO
+auto-memory** — the work lives in the repo
+(\[\[consult-project-source-of-truth\]\]). **\[macos-dupe-scan\]:**
+commit ONLY the 6 changed/new files; exclude `.DS_Store` (modified) +
+`PED_GV_AUDIT_2026-05-30.html` (untracked, standing keep); removed all
+render/build artifacts before committing.
+
+**Phase-3E (runtime smoke test): N/A — STATED, not silently skipped.** A
+build-ignored, website-only pkgdown article changes NO package or app
+runtime behavior (no `R/`/test/app-path change; the article doesn’t
+ship). Verification appropriate to the deliverable = render
+(`quarto render` → clean HTML, chunks execute on shipped data) + the
+real-consumer build
+([`pkgdown::build_article`](https://pkgdown.r-lib.org/reference/build_articles.html),
+pkgdown 2.2.0) + the package-contents proof (`R CMD build` tarball).
+**NOT FM \#24.** The one thing NOT locally verifiable: the GitHub
+Actions gh-pages site build — confirm on next push (gotcha 6).
+
+**Session 108 Handoff Evaluation (by Session 109): Score 9/10.** S108
+pre-named THIS deliverable precisely: its SUGGESTED-NEXT (A) listed
+“studbook quality control
+([`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md))
+or age–sex pyramid
+([`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md))”
+as the ready-made candidates and told me to ask the owner the topic up
+front — exactly what I did. Gotchas held firsthand and saved time: the
+`articles/` prefix for
+[`pkgdown::build_article`](https://pkgdown.r-lib.org/reference/build_articles.html)
+(verbatim, no rediscovery); “drop another `.qmd`, no further config”
+(held — touched no config); the build-ignored-whole-dir proof by
+tarball; `set_seed`/determinism framing (relevant in reverse — I
+confirmed QC needs NO seed, distinguishing it from the siblings);
+pkgdown 2.2.0 + quarto already installed (no reinstall); the
+artifact-cleanup list (`pkgdown_site/`, `_files/`, `.quarto/`, the
+quarto `.gitignore`) held exactly; standing-uncommitted-files +
+macos-dupe-scan disposition (applied verbatim). The §7.1 slices table
+was an accurate substrate. ROI very high. **The −1:** S108’s gotcha \#1
+named the *symptom* (“render from the repo root”) but not the sharper
+*trap mechanism* — a build command that does `cd /tmp && R CMD build …`
+strands the shell cwd, so the *next* `git status`/render silently runs
+in the wrong directory. I hit exactly that (caught immediately). Now
+captured as gotcha 1 below + Learning 103.
+
+**Self-assessment (Session 109): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER in full, notes top, dashboard 98/100, git, 14 issues,
+ghost-check → HEAD `7fedae91` = S108, clean), reported, STOPPED for the
+owner’s pick (A → studbook QC); claimed the session (1B stub BEFORE
+technical work). **Headline strengths:** (1) **ground-truth-first
+authoring of BOTH happy and unhappy paths** — ran
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+in both modes on the real data + every shipped error-demo set, which
+*refuted my own code-reading assumption* (invalid dates stop, not
+NA-coerce) and produced the exact verified behavior table the article
+rests on; (2) **grounded BOTH topic candidates via parallel recon before
+asking**, so the `AskUserQuestion` was informed; (3) **verified through
+3 independent paths** + proved zero-CRAN-risk authoritatively; (4)
+**2-lens adversarial review + verify-the-verifier held** — confirmed the
+real `H`-code flag against the code before FIX-FORWARD correcting the
+article (out-correcting an over-broad claim) and re-rendered; (5) **held
+1-and-done** — one article; did NOT author the pyramid, fix the
+sibling’s error, or touch the CRAN plan/roxygen; (6) 0 stakeholder
+corrections; plain language; declared TDD N/A + Phase-3E N/A with
+reasons; cleaned every artifact for a precise commit. **Weaknesses
+(honest):** (a) **a self-inflicted process slip** — I used
+`cd /tmp && R CMD build` to keep the tarball out of the repo, which
+stranded the shell cwd in `/tmp`; the next `git status` failed (“not a
+git repository”) — exactly the trap S108 had flagged. Caught immediately
+and switched to absolute paths / `git -C`, no harm, but avoidable (−1);
+(b) content authoring on now-well-trodden infra — bounded difficulty;
+the value is QC-behavior accuracy + running the unhappy paths +
+verification rigor, not technical novelty; (c) the **CI gh-pages site
+build is unverified locally** (standing gap, S107/S108). I reserve 9–10
+for a zero-snag delivery that is also CI-verified end-to-end.
+
+**⇒ SUGGESTED NEXT = owner’s pick.** Article done + committed; nothing
+mid-flight. More articles remain trivial (drop-in `.qmd`). Natural
+options: - **(A) More Quarto articles (zero-CRAN-risk, separate
+session):** the **age–sex pyramid**
+([`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md)
+on shipped `qcPed`) is the last ready-made grounded candidate from the
+original topic menu — **mind its determinism caveat** (gotcha 4). Or
+**slice 3** (`revealjs` decks) — only when new presentation material
+exists. **Do NOT** start **slice 4 (the manual)** free-standing —
+CRAN-gated (§8). - **(A′) Tiny doc fix (owner’s call):** correct the
+“founders” → “non-founders” prose inversion in
+`vignettes/articles/breeding-group-formation.qmd` (S108’s discovered
+error, still open). One line. - **(A″) Roxygen-repair session (gated,
+ships):** the 3 drifted roxygen the S108 article exposed —
+`orderReport.R` @return, `calcFEFG.R`’s `p`, `reportGV.R` @return.
+(`qcStudbook`’s own roxygen is accurate — it correctly documents
+`ignoreHerm`.) Touches `R/` roxygen → `man/` regen → sequence with the
+CRAN plan. - **(B) Resume the CRAN plan** — **Phase 2b** (vignette
+rebuild timing) or **Phase 3** (NEWS rewrite + version bump → 2.0.0). -
+**(C) Push** `add-methodology` to origin (now **9 ahead**: S101–S109).
+**Do NOT** author another article without an owner-approved session;
+**do NOT** bundle (FM \#18/#25).
+
+**Key files (this session):** **NEW (committed):**
+`vignettes/articles/studbook-quality-control.qmd`. **CHANGED
+(committed):** `CHANGELOG.md`, `ROADMAP.md`,
+`docs/planning/quarto-documentation-future-proofing-analysis.md` (§7.1
+slice-2 cell), `PROJECT_LEARNINGS.md` (Learning 103), `SESSION_NOTES.md`
+(this handoff). **Read firsthand (verification/authoring):** the 2 recon
+Explore outputs, `R/qcStudbook.R` (full), the model article
+`vignettes/articles/genetic-value-analysis.qmd`, `data/` listing,
+DESCRIPTION. **Transient (NOT committed — removed):** `/tmp/s109_qc.R`,
+`/tmp/s109_qc2.R`, the `/tmp` tarball, and all render/build artifacts
+(`pkgdown/`, `pkgdown_site/`, `vignettes/articles/.quarto/`, `*_files/`,
+the `.html`, the quarto-generated `vignettes/articles/.gitignore`).
+
+**Gotchas:** (1) **cwd-drift trap (I hit it):** a build command that
+does `cd /tmp && R CMD build …` strands the shell cwd in `/tmp`; the
+*next* `git status`/`quarto render` then runs in the wrong directory.
+Use absolute paths + `git -C <repo>`, or `R CMD build <abspath>` without
+`cd`. (2) **`qcStudbook(reportErrors=TRUE)` returns a LIST or `NULL`
+(when clean), NOT a data frame** — you can’t get the cleaned df AND the
+error list in one call; production mode (`FALSE`) returns the df or
+STOPS. (3) **Shipped error-demo data sets are the teaching hooks:**
+`pedGood` / `pedFemaleSireMaleDam` / `pedInvalidDates` /
+`pedDuplicateIds` / `pedMissingBirth` / `pedSameMaleIsSireAndDam` — each
+triggers exactly one finding. (4) **Age–sex pyramid article (the next
+ready candidate) determinism caveat:**
+[`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md)
+embeds
+[`lubridate::now()`](https://lubridate.tidyverse.org/reference/now.html)
+in the plot TITLE (date drifts) and
+[`getPyramidAgeDist()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidAgeDist.md)
+computes ages from `now()` — but shipped `qcPed` carries a frozen `age`
+column, so `getPyramidPlot(qcPed)` only drifts the title date
+(cosmetic). It is **base graphics** (plotrix) → the plot call must be
+the chunk’s last expression. (5) **The 3 S108-discovered roxygen drifts
+(orderReport/calcFEFG/reportGV) remain unrepaired** (A″, gated — ships).
+(6) **CI gh-pages build is NOT locally verified** — watch the next push
+to `main`/`master` (or a PR/release) for the pkgdown workflow result.
+(7) This close-out leaves `add-methodology` **9 ahead of origin**
+(S101–S109) — push when ready (accumulate-then-push). (8) Standing
+uncommitted: `.DS_Store` (modified) + `PED_GV_AUDIT_2026-05-30.html`
+(untracked) — owner’s keep-call. (9) Discovered, NOT mine (still open):
+the `breeding-group-formation.qmd` “founders” → “non-founders” prose
+inversion (A′). (10) Carried-forward CRAN gotchas remain valid:
+`NEWS.md` generated from `NEWS.Rmd`; renv explicit-snapshot omits ALL
+Suggests; pkgdown/quarto are dev-lib-only (re-install after a fresh
+[`renv::restore`](https://rstudio.github.io/renv/reference/restore.html));
+`RSelenium` undeclared; the package is ARCHIVED on CRAN (Learning 95).
+
+### What Session 108 Did
+
+**Deliverable:** §7.1 (adopted Hybrid doc policy) — authored a second
+zero-CRAN-risk Quarto pkgdown article,
+**`vignettes/articles/genetic-value-analysis.qmd`** (a scripted,
+non-Shiny walkthrough of
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+on shipped `examplePedigree`: QC → population of interest → mean
+kinship + genome uniqueness → the ranked report → colony-level `fe`/`fg`
+diversity). **(DONE — verified via `quarto render` +
+[`pkgdown::build_article`](https://pkgdown.r-lib.org/reference/build_articles.html) +
+an `R CMD build` tarball; adversarially reviewed → no must-fix, 3
+precision fixes applied + re-rendered.)** Content production on the
+slice-2 mixed-mode infra S107 stood up — **not** a new slice (drop-in
+`.qmd`, no new config). **One article only** — did NOT start another
+article/slice, did NOT fix the sibling article’s discovered error (FM
+\#18/#25/#8). **Started / Completed:** 2026-06-17 **Status:** **DONE.
+TDD phase = N/A** (documentation using existing exported functions +
+shipped data; no `R/` logic or test surface — declared every response,
+same as S104–S107). **One `AskUserQuestion` (pre-RED SCOPE decision, not
+a TDD gate):** which topic — owner picked **genetic value analysis**
+(from 3 grounded candidates: GVA / studbook QC / age–sex pyramid). No
+TDD phase-transition gates (none apply). **0 stakeholder corrections.**
+Right-sized under ultracode as **1 recon Explore agent + SOLO
+ground-truth-first authoring + 1 adversarial-review agent + direct
+multi-path verification** (the S107 shape) → **Learning 102.** - **What
+changed (1 new + 5 edits):** **NEW**
+`vignettes/articles/genetic-value-analysis.qmd` (the article).
+**EDITS:** `CHANGELOG.md` (S108 `[Unreleased]`), `ROADMAP.md` (slice-2
+articles-so-far note),
+`docs/planning/quarto-documentation-future-proofing-analysis.md` (§7.1
+slice-2 cell → records the 2nd article), `PROJECT_LEARNINGS.md`
+(Learning 102), `SESSION_NOTES.md` (this handoff). **No `R/`, test,
+NAMESPACE, `man/`, DESCRIPTION, NEWS, CI-workflow, or CRAN-vignette
+change** (the slice-2 infra — `_quarto.yml`, `.Rbuildignore`,
+DESCRIPTION CI dep, pkgdown.yaml — already exists from S107; this
+article needed none of it touched). - **🚨 THE REAL WORK WAS
+GROUND-TRUTH-FIRST AUTHORING + VERIFICATION (→ Learning 102):** (1)
+**Ran the real
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+pipeline before writing prose** and let the printed output be the ground
+truth — 327-animal population of interest (`examplePedigree` 3694 rows →
+trimmed 704), 199 High Value / 128 Low Value, `fe` 109.67 / `fg` 47.62,
+kinship 327×327. This handed me the teaching example for free: rank-1
+`1SPLS8` has higher genome uniqueness but NOT the lowest mean kinship —
+which is exactly why the ranking uses both metrics. (2) **Source-checked
+the scoring scheme in the implementation, not the roxygen** —
+`orderReport.R`/`rankSubjects.R` (the High-Value mean-kinship tier gates
+on the **z-score** `zScores <= 0.25`, not raw mean kinship) and
+`calcFEFG.R` (fe = 1/Σp², fg = 1/Σ(p²/r), r = mean founder alleles
+retained → fg ≤ fe; Lacy 1989). **The article is MORE correct than the
+package’s own roxygen in 3 places** (the `orderReport` @return “mean
+kinship \< 0.25”; `calcFEFG`’s description of `p`; `reportGV` @return “A
+dataframe” — it returns a list). (3) **Verified through 3 paths:**
+`quarto render` (Quarto 1.7.33) executes the chunks on shipped data →
+clean HTML (deterministic via `set_seed(1L)`; the gene-drop behind
+gu/fe/fg is stochastic, mean kinship is not);
+`pkgdown::build_article("articles/genetic-value-analysis")` (pkgdown
+2.2.0) wraps it in the site template; an `R CMD build` tarball confirms
+`vignettes/articles/` is **absent** → **zero CRAN risk**, shipped
+vignettes (a2interactive/a3manual/manual_components) intact. (4)
+**Verified the verifier:** the adversarial reviewer returned **no
+must-fix**; I confirmed each of its 3 low-severity flags against the
+code (`meanKinship.R` is `colMeans` incl. the diagonal → “all animals
+incl. itself”; tier-2 sort ties break on ascending z-score; imports tier
+also requires `id %in% founders`), applied the fixes, and re-rendered
+(output unchanged — prose-only). - **Discovered, NOT mine — flagged for
+a future session:** the sibling S107 article
+`breeding-group-formation.qmd` comments its focal set is “the founders
+still in the colony,” but the filter `!(is.na(sire) & is.na(dam))`
+selects **non-founders** (≥ 1 known parent). One-line prose inversion;
+left untouched (FM \#8 — not this deliverable). -
+**\[news-vs-changelog\]:** website-only documentation = dev-process
+history → **CHANGELOG only** (S108 entry), no NEWS (never ships;
+\[\[backlog-vs-changelog-placement\]\]). **NO auto-memory** — the work
+lives in the repo (article + analysis §7.1 + ROADMAP + CHANGELOG)
+(\[\[consult-project-source-of-truth\]\]). **\[macos-dupe-scan\]:**
+commit ONLY the 6 changed/new files; exclude `.DS_Store` (modified) +
+`PED_GV_AUDIT_2026-05-30.html` (untracked, standing keep); removed all
+render artifacts (`pkgdown/`, `pkgdown_site/`, `.quarto/`,
+`vignettes/articles/.gitignore`, `*_files/`, the `.html`) before
+committing.
+
+**Phase-3E (runtime smoke test): N/A — STATED, not silently skipped.** A
+build-ignored, website-only pkgdown article changes NO package or app
+runtime behavior (no `R/`/test/app-path change; the article doesn’t
+ship). The verification appropriate to the deliverable = the
+build-equivalent render (`quarto render` → clean HTML, chunks execute on
+shipped data) **and** the real-consumer build
+([`pkgdown::build_article`](https://pkgdown.r-lib.org/reference/build_articles.html)
+on pkgdown 2.2.0) **and** the package-contents proof (`R CMD build`
+tarball). **NOT FM \#24** — no build step mistaken for correctness; I
+verified the actual executed surface (the rendered report numbers)
+through independent paths. **The one thing NOT locally verifiable: the
+GitHub Actions gh-pages site build** — confirm on next push (gotcha 7).
+
+**Session 107 Handoff Evaluation (by Session 108): Score 9/10.** S107
+pre-named THIS deliverable precisely: its SUGGESTED-NEXT (A) listed
+“author another `vignettes/articles/*.qmd` — the other 3 grounded
+candidates from this session’s topic menu are ready-made (genetic value
+analysis; studbook quality control; age–sex pyramid plots)” — exactly
+what I did, and it told me to ask the owner for the topic up front.
+Every gotcha held firsthand and saved real time: the `articles/` prefix
+for
+[`pkgdown::build_article`](https://pkgdown.r-lib.org/reference/build_articles.html)
+(used verbatim — no rediscovery); “adding more = drop another `.qmd` in
+`vignettes/articles/` (no further config needed)” (held exactly — I
+touched no config); `set_seed(1L)` determinism; the whole dir is
+build-ignored (proven again by tarball); pkgdown 2.2.0 + quarto already
+installed (didn’t need reinstall); the standing-uncommitted-files +
+macos-dupe-scan disposition (applied verbatim). The §7.1 slices table
+was an accurate substrate. ROI very high. **The −1:** S107’s own article
+carries a factual prose inversion (its focal set labeled “founders” when
+the filter selects non-founders) — a small quality miss in the
+predecessor’s *deliverable* that I had to notice and flag; its *handoff*
+was accurate (it just couldn’t flag an error it didn’t know it had).
+Also unflagged (general, fair): renders must run from the repo root for
+renv to activate `rmarkdown` — I hit this only because my shell cwd
+drifted to `/tmp`.
+
+**Self-assessment (Session 108): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER in full, notes top, dashboard 98/100, git, 14 issues,
+ghost-check → HEAD `7f90e38c` = S107, clean), reported, STOPPED for the
+owner’s pick (A → GVA); claimed the session (1B stub BEFORE technical
+work). **Headline strengths:** (1) **ground-truth-first authoring** —
+ran the real
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+pipeline and built every claim on the actual output + the
+implementation, NOT the roxygen, which is how the article ended up
+*more* correct than the package’s own docs in 3 places; (2) **the
+teaching example came from real data** (rank-1 animal: high gu,
+not-lowest mk → why both metrics); (3) **verified through 3 independent
+paths** (render + real
+[`pkgdown::build_article`](https://pkgdown.r-lib.org/reference/build_articles.html) +
+`R CMD build` tarball) and proved zero-CRAN-risk authoritatively; (4)
+**verify-the-verifier held** — confirmed all 3 adversarial flags against
+the code before applying, re-rendered; (5) **held 1-and-done** — one
+article, did NOT fix the sibling’s discovered error or start another
+slice; flagged it instead (FM \#8); (6) asked the one genuine scope
+decision (topic) up front, grounding all 3 candidates first; (7) 0
+stakeholder corrections; plain language; declared TDD N/A + Phase-3E N/A
+with reasons; cleaned every build artifact for a precisely-scoped
+commit. **Weaknesses (honest):** (a) **a self-inflicted process slip** —
+my shell cwd drifted to `/tmp` after an `R CMD build … && cd`, so one
+re-render failed with “no package called ‘rmarkdown’”; caught
+immediately and re-verified from the repo root, but avoidable (use
+absolute paths / don’t strand cwd) (−1); (b) content authoring on
+now-well-trodden infra (S107 did the hard infra work) — bounded
+difficulty; the value is genetics accuracy + verification rigor, not
+technical depth; (c) the **CI gh-pages site build is unverified
+locally** (same standing gap as S107). I reserve 9–10 for a zero-snag,
+zero-correction delivery that is also CI-verified end-to-end.
+
+**⇒ SUGGESTED NEXT = owner’s pick.** Article done + committed; nothing
+mid-flight. Mixed-mode infra makes more articles trivial. Natural
+options: - **(A) More Quarto articles (zero-CRAN-risk, separate
+session):** the other 2 grounded candidates from this session’s topic
+menu are ready-made — **studbook quality control**
+([`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md))
+or **age–sex pyramid**
+([`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md)
+on shipped `qcPed`). Or **slice 3** (`revealjs` decks) — only when new
+presentation material exists. **Do NOT** start **slice 4 (the manual)**
+free-standing — it changes CRAN contents, gated on the CRAN plan (§8). -
+**(A′) Tiny doc fix (owner’s call):** correct the “founders” →
+“non-founders” prose inversion in
+`vignettes/articles/breeding-group-formation.qmd` (the discovered
+error). One line. - **(A″) Roxygen-repair session (real package-doc
+change, gated):** the 3 drifted roxygen descriptions the article exposed
+— `orderReport.R` @return (“mean kinship \< 0.25” → z-score),
+`calcFEFG.R`’s description of `p`, `reportGV.R` @return (“A dataframe” →
+list). Touches `R/` roxygen → `man/` regen, so it ships — sequence with
+the CRAN plan. - **(B) Resume the CRAN plan** — **Phase 2b** (vignette
+rebuild timing via numeric-preserving precompute) or **Phase 3** (NEWS
+rewrite + version bump → 2.0.0). - **(C) Push** `add-methodology` to
+origin (now **8 ahead**: S101–S108). **Do NOT** author another article
+without an owner-approved session; **do NOT** bundle (FM \#18/#25).
+
+**Key files (this session):** **NEW (committed):**
+`vignettes/articles/genetic-value-analysis.qmd`. **CHANGED
+(committed):** `CHANGELOG.md`, `ROADMAP.md`,
+`docs/planning/quarto-documentation-future-proofing-analysis.md` (§7.1
+slice-2 cell), `PROJECT_LEARNINGS.md` (Learning 102), `SESSION_NOTES.md`
+(this handoff). **Read firsthand (verification/authoring):** recon
+Explore output, `R/reportGV.R`, `R/orderReport.R`, `R/rankSubjects.R`,
+`R/calcFEFG.R` (roxygen), `R/meanKinship.R`, the model article
+`vignettes/articles/breeding-group-formation.qmd`,
+`vignettes/articles/_quarto.yml`,
+`vignettes/manual_components/_genetic_value_analysis.Rmd`. **Transient
+(NOT committed):** `/tmp/s108_gv.R`, `/tmp/s108_gv2.R`; all render/build
+artifacts (cleaned).
+
+**Gotchas:** (1) **Render from the REPO ROOT** — Quarto’s knitr engine
+relies on renv activating via the repo `.Rprofile` (cwd-based);
+rendering with cwd elsewhere (e.g. `/tmp`) fails with “there is no
+package called ‘rmarkdown’”. (2) **pkgdown article name carries the
+`articles/` prefix:**
+`pkgdown::build_article("articles/genetic-value-analysis")` (bare stem
+errors “Can’t find article”). (3) **Building generates artifacts to
+clean before commit:** `pkgdown_site/` (the site dest, NOT `docs/`),
+`pkgdown/favicon/`, `vignettes/articles/.quarto/`, a quarto-generated
+`vignettes/articles/.gitignore` (`/.quarto/`, redundant with the root
+`.gitignore`), a `*_files/` support dir, and the `.html` — the articles
+dir should end with only `_quarto.yml` + the `.qmd` sources. (4)
+**`set_seed(1L)` makes the article deterministic;**
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+does NOT seed internally (gene-drop is stochastic; mean kinship is not).
+(5) **Discovered, NOT mine:** `breeding-group-formation.qmd` mislabels
+its focal set “founders” (it’s non-founders) — owner’s call to fix (A′).
+(6) **3 roxygen descriptions drifted from code**
+(`orderReport`/`calcFEFG`/`reportGV` — see A″); the new article is
+correct, but the package roxygen is stale. (7) **CI gh-pages build is
+NOT locally verified** — watch the next push to `main`/`master` (or a
+PR/release) for the pkgdown workflow result (the S107
+DESCRIPTION/`pkgdown.yaml` CI changes should install Quarto + render the
+`.qmd`). (8) This close-out leaves `add-methodology` **8 ahead of
+origin** (S101–S108) — push when ready (accumulate-then-push). (9)
+Standing uncommitted: `.DS_Store` (modified) +
+`PED_GV_AUDIT_2026-05-30.html` (untracked) — owner’s keep-call. (10)
+Carried-forward CRAN gotchas remain valid: `NEWS.md` generated from
+`NEWS.Rmd`; renv explicit-snapshot omits ALL Suggests; pkgdown/quarto
+are dev-lib-only (re-install after a fresh
+[`renv::restore`](https://rstudio.github.io/renv/reference/restore.html));
+`RSelenium` undeclared; the package is ARCHIVED on CRAN (Learning 95).
+
+### What Session 107 Did
+
+**Deliverable:** §7.1 **Slice 2** of the adopted Hybrid documentation
+policy — stand up pkgdown **mixed `.qmd`/`.Rmd` mode** + author the
+first Quarto pkgdown article,
+`vignettes/articles/breeding-group-formation.qmd` (a scripted, non-Shiny
+walkthrough of
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+— harem + target-sex-ratio strategies — on shipped `examplePedigree`
+data). **(DONE — verified end-to-end through two independent build
+paths + a zero-CRAN-risk tarball.)** Documentation + website-config
+implementation slice. **One slice only** — did NOT start slice 3
+(revealjs) or slice 4 (manual) (FM \#18/#25). **Started / Completed:**
+2026-06-17 **Status:** **DONE. TDD phase = N/A** (documentation +
+website-config; no `R/` logic or test surface — the article uses only
+existing exported functions + shipped data; declared every response,
+same as S104/S105/S106). **One `AskUserQuestion` (pre-RED SCOPE
+decision, not a TDD gate):** which article topic — owner picked
+**breeding group formation** (from 4 grounded candidates). No TDD
+phase-transition gates (none apply). **1 stakeholder correction**
+(`minParentAge = 2` → `2.0`, applied + re-rendered). Right-sized under
+ultracode as **1 recon Workflow + SOLO authoring + 1 adversarial-review
+agent + direct multi-path verification**: recon `wlpqf6mb2` (3 agents —
+breeding-group API/working-invocation + example-data shapes +
+pkgdown-Quarto canonical config) kept the file-dumps out of context; I
+authored the prose; verification was done directly (the ground truth). →
+**Learning 101.** - **What changed (2 new + 7 edits):** **NEW**
+`vignettes/articles/breeding-group-formation.qmd` (the article) +
+`vignettes/articles/_quarto.yml` (`project: render: ['*.qmd']` — mixed
+mode). **EDITS:** `.Rbuildignore` (+`^vignettes/articles$` — one line
+covers the article, the `_quarto.yml`, and any `.quarto/` cache →
+website-only), `DESCRIPTION` (+`Config/Needs/website: quarto` so the
+pkgdown CI job installs the `quarto` R pkg),
+`.github/workflows/pkgdown.yaml` (+`quarto-dev/quarto-actions/setup@v2`
+so CI installs the Quarto CLI), `.gitignore` (+`.quarto/`), `ROADMAP.md`
+(slice-2-done), `CHANGELOG.md` (S107 `[Unreleased]`),
+`docs/planning/quarto-documentation-future-proofing-analysis.md` (§7.1
+slice-2 row → ✅ Done), `PROJECT_LEARNINGS.md` (Learning 101),
+`SESSION_NOTES.md` (this handoff). **No `R/`, test, NAMESPACE, `man/`,
+NEWS, or CRAN-vignette change.** - **🚨 THE REAL WORK WAS THE
+VERIFICATION (→ Learning 101):** (1) **Recon corrected an imprecise plan
+note.** §7.1 said “add a `_quarto.yml`” without saying *where*; the
+canonical pkgdown docs say it + the `.qmd` belong **inside
+`vignettes/articles/`** (pkgdown makes that dir a Quarto project), so
+one `.Rbuildignore` line excludes everything — a root `_quarto.yml` (my
+Phase-1 assumption) was wrong. (2) **Built through the REAL consumer,
+not a proxy.** `quarto render` proves the chunks execute (~1.7 s on
+`examplePedigree`, deterministic via `set_seed(1L)`); but the
+deliverable’s claim is “*pkgdown* mixed mode works,” so I installed
+pkgdown **2.2.0** + the `quarto` R pkg locally and ran
+`pkgdown::build_article("articles/breeding-group-formation")` → it
+discovers the `.qmd`, runs `quarto render`, wraps it in the pkgdown
+template (navbar). That surfaced an integration detail a renderer
+wouldn’t — the article’s pkgdown name carries the `articles/` prefix
+(bare stem errors “Can’t find article”). (3) **Zero CRAN risk PROVEN**
+by a real `R CMD build` tarball: `vignettes/articles/` is absent; the
+shipping vignettes are unaffected. (4) **Verified the verifier:** a
+fresh adversarial reviewer flagged “1/64 = second cousins” as wrong
+(claimed third cousins) — but it confused coefficient of relationship
+(r; 2nd cousins = 1/32) with kinship coefficient (φ = r/2 = 1/64, which
+is what the package computes); the package’s own manual says “second
+cousins” at this threshold. Original was correct, left unchanged. -
+**\[news-vs-changelog\]:** website-only doc/config = dev-process history
+→ **CHANGELOG only** (S107 entry), no NEWS (never ships;
+\[\[backlog-vs-changelog-placement\]\]). **NO auto-memory** — the slice
+now lives in the repo (analysis §7.1 + ROADMAP + CHANGELOG)
+(\[\[consult-project-source-of-truth\]\]). **\[macos-dupe-scan\]:**
+committed ONLY the 11 changed/new files; excluded `.DS_Store`
+(modified) + `PED_GV_AUDIT_2026-05-30.html` (untracked, standing keep);
+removed the local `pkgdown/` favicon artifact + `pkgdown_site/` + all
+render artifacts before committing.
+
+**Phase-3E (runtime smoke test): N/A — STATED, not silently skipped.** A
+build-ignored, website-only pkgdown article changes NO package or app
+runtime behavior (no `R/`/test/app-path change; the article doesn’t
+ship). The verification appropriate to the deliverable = the
+build-equivalent render (`quarto render` → clean HTML, chunks execute)
+**and** the real-consumer build
+([`pkgdown::build_article`](https://pkgdown.r-lib.org/reference/build_articles.html)
+on pkgdown 2.2.0) **and** the package-contents proof (`R CMD build`
+tarball). **NOT FM \#24** — no build step mistaken for correctness; I
+verified the actual executed surface through two independent paths.
+**The one thing NOT locally verifiable: the GitHub Actions gh-pages site
+build** (the DESCRIPTION + workflow CI changes) — confirm on next push
+(see gotcha 3).
+
+**Session 106 Handoff Evaluation (by Session 107): Score 9/10.** S106
+pre-named THIS deliverable precisely: its SUGGESTED-NEXT (A) said “slice
+2 — stand up pkgdown mixed `.qmd`/`.Rmd` mode (add a `_quarto.yml`) +
+author ONE new article in Quarto (needs a topic)” — exactly what I did,
+and “needs a topic” told me to ask the owner up front. The §7.1 slices
+table it maintained was an accurate substrate; gotchas held firsthand
+(slices 2–3 independent + zero-CRAN-risk — honored; do NOT start slice 4
+free-standing — honored; branch 6-ahead; standing-uncommitted-files
+disposition — applied verbatim). ROI high. **The −1:** neither S106 nor
+the §7.1 row specified *where* the `_quarto.yml` goes (root vs
+`vignettes/articles/`), that the article must live in
+`vignettes/articles/` (not `vignettes/`) to stay off CRAN, or that the
+site build needs a `quarto` CI dependency — all pkgdown-implementation
+specifics I had to get from the canonical docs via recon. Fair/light: a
+doc-policy note isn’t the place for pkgdown wiring details, and the
+recon the slice naturally required surfaced them.
+
+**Self-assessment (Session 107): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER in full, notes top, dashboard 98/100, git, 14 issues,
+ghost-check → HEAD `10daa55c` = S106, clean), reported, STOPPED for the
+owner’s pick (A); claimed the session (1B stub BEFORE technical work).
+**Headline strengths:** (1) **asked the one genuine scope decision
+(topic) up front** via `AskUserQuestion`, grounding all 4 candidates in
+the actual package/issues first; (2) **the verification did the real
+work** — two independent build paths (`quarto render` AND a real
+[`pkgdown::build_article`](https://pkgdown.r-lib.org/reference/build_articles.html)
+on pkgdown 2.2.0), the second of which caught the `articles/`-prefix
+discovery detail a renderer can’t; (3) **proved zero-CRAN-risk
+authoritatively** with an `R CMD build` tarball, not an assumption, and
+corrected the config placement (`vignettes/articles/_quarto.yml`, not
+root) by reading the canonical pkgdown docs; (4) **verified the
+verifier** — checked the adversarial reviewer’s “second cousins” flag
+against the genetics (φ vs r) AND the package’s own manual, kept the
+correct claim; (5) **built the article on
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)’s
+own `@examples` pipeline** so it exercises the same code `R CMD check`
+runs, reproducible via `set_seed(1L)`; (6) **held 1-and-done** — slice 2
+only, did NOT start slice 3/4 or touch the CRAN plan/package source; (7)
+handled the owner’s `minParentAge = 2.0` correction immediately +
+re-rendered; (8) cleaned up every build artifact so the commit is
+exactly scoped; plain language; declared TDD N/A + Phase-3E N/A with
+reasons. **Weaknesses (honest):** (a) **1 stakeholder correction**
+(`minParentAge` float) — small but anticipatable; (b) the **CI
+site-build path is not locally verifiable** — I verified the local
+pkgdown build (strong proxy) but the actual GitHub Actions gh-pages run
+is unconfirmed until the next push (stated, not skipped); (c) I added
+DESCRIPTION + workflow CI changes (defensible as “make mixed mode
+actually build on the live site,” but slightly more surface than the
+minimal article+config). I reserve 9–10 for a zero-correction delivery
+that is also fully CI-verified end-to-end.
+
+**⇒ SUGGESTED NEXT = owner’s pick.** Slice 2 done + committed; nothing
+mid-flight. The mixed-mode infra is now in place, so **adding further
+Quarto articles is trivial** (drop another `.qmd` in
+`vignettes/articles/`; each needs a topic). Natural options: - **(A)
+More Quarto articles (zero-CRAN-risk, separate session):** author
+another `vignettes/articles/*.qmd` — the other 3 grounded candidates
+from this session’s topic menu are ready-made (genetic value analysis;
+studbook quality control; age–sex pyramid plots). Or **slice 3**
+(`revealjs` decks) — only when new presentation material exists (none to
+migrate). **Do NOT** start **slice 4 (the manual)** free-standing — it
+removes a CRAN vignette = changes package contents, gated on the CRAN
+plan (§8). - **(B) Resume the CRAN plan** — **Phase 2b** (vignette
+rebuild timing via numeric-preserving precompute) or **Phase 3** (NEWS
+rewrite + version bump → 2.0.0). - **(C) Push** `add-methodology` to
+origin (now **7 ahead**: S101–S107). **Do NOT** bundle slices (FM
+\#18/#25); **do NOT** author another article without an owner-approved
+session.
+
+**Key files (this session):** **NEW (committed):**
+`vignettes/articles/breeding-group-formation.qmd`,
+`vignettes/articles/_quarto.yml`. **CHANGED (committed):**
+`.Rbuildignore`, `DESCRIPTION`, `.github/workflows/pkgdown.yaml`,
+`.gitignore`, `ROADMAP.md`, `CHANGELOG.md`,
+`docs/planning/quarto-documentation-future-proofing-analysis.md` (§7.1
+slice-2 row), `PROJECT_LEARNINGS.md` (Learning 101), `SESSION_NOTES.md`
+(this handoff). **Read firsthand (verification):** recon `wlpqf6mb2`
+output, `R/groupAddAssign.R` (signature + roxygen), `R/set_seed.R`,
+`R/qcStudbook.R`/`reportGV.R` signatures,
+`vignettes/manual_components/_breeding_group_formation.Rmd` (the “second
+cousins” framing), `DESCRIPTION`, `pkgdown.yaml`, `.Rbuildignore`,
+`.gitignore`. **Transient (NOT committed):** `/tmp/s107_pipeline.R`,
+`/tmp/nprcgenekeepr_1.1.0.9000.tar.gz`; **locally-installed pkgdown
+2.2.0 + quarto 1.5.1 + deps (fansi, downlit, httr2, purrr, ragg,
+whisker) in the renv dev lib — NOT in the lockfile** (won’t survive a
+fresh
+[`renv::restore`](https://rstudio.github.io/renv/reference/restore.html)).
+
+**Gotchas:** (1) **The `_quarto.yml` lives INSIDE `vignettes/articles/`,
+not the package root** — pkgdown turns that dir into a Quarto project;
+the single `.Rbuildignore` line `^vignettes/articles$` makes everything
+there website-only. Adding more Quarto articles = drop another `.qmd` in
+that dir (no further config needed). (2) **pkgdown’s article name
+carries the `articles/` prefix:**
+`pkgdown::build_article("articles/breeding-group-formation")` (the bare
+stem errors “Can’t find article”). (3) **CI gh-pages build is NOT
+locally verified** — `DESCRIPTION` `Config/Needs/website: quarto` + the
+`pkgdown.yaml` `quarto-actions/setup` step should make the GitHub
+Actions site build install Quarto and render the `.qmd`, but the actual
+Actions run is unconfirmed; **watch the next push** to `main`/`master`
+(or a PR/release) for the pkgdown workflow result. (4)
+**Locally-installed pkgdown/quarto are dev-lib only, not in the
+lockfile** — re-install for local site builds after a fresh
+[`renv::restore`](https://rstudio.github.io/renv/reference/restore.html).
+(5) **Discovered, NOT mine — flag for the CRAN plan:**
+`ColonyManagerTutorial.Rmd` is build-ignored (`.Rbuildignore:32`), so it
+does NOT ship to CRAN — only **3** of the “4 CRAN vignettes”
+(a2interactive, a3manual, simulatedKValues) actually ship. The analysis
+§1 marks ColonyManagerTutorial “built by CRAN: Yes” — a discrepancy to
+reconcile during the resubmission (it’s effectively a website article,
+not a shipped vignette). (6) **`set_seed(1L)` makes the article
+deterministic;**
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+does not seed internally. (7) This close-out leaves `add-methodology`
+**7 ahead of origin** (S101–S107) — push when ready
+(accumulate-then-push). (8) Standing uncommitted: `.DS_Store`
+(modified) + `PED_GV_AUDIT_2026-05-30.html` (untracked) — owner’s
+keep-call. (9) Carried-forward CRAN gotchas remain valid: `NEWS.md`
+generated from `NEWS.Rmd`; renv explicit-snapshot omits ALL Suggests;
+`RSelenium` undeclared; the package is ARCHIVED on CRAN (Learning 95).
+
+### What Session 106 Did
+
+**Deliverable:** **§7.1 Slice 1** of the adopted Hybrid documentation
+policy — convert the developer doc `inst/extdata/meeting_notes.Rmd` →
+`inst/extdata/meeting_notes.qmd` (Quarto), making the three
+`inst/extdata/` dev docs uniformly `.qmd`. **(DONE — `git diff -M`
+similarity 99%; Quarto renders to HTML; both filenames build-ignored
+`ships=FALSE`.)** Implementation slice (one of the adopted Hybrid
+policy’s slices); the deliverable is the conversion. **One slice only**
+— did NOT start slice 2/3/4 (FM \#18/#25). **Started / Completed:**
+2026-06-17 **Status:** **DONE. TDD phase = N/A** (format conversion of a
+build-ignored doc; no RED/GREEN/REFACTOR code or test surface; declared
+every response — same as S104/S105). **One `AskUserQuestion` (pre-RED
+SCOPE decision, not a TDD gate):** slice 1 vs slice 2 — owner picked
+**slice 1**. No TDD phase-transition gates (none apply). **0 stakeholder
+corrections.** Right-sized **SOLO** under ultracode — a single-file
+mechanical conversion (`git mv` + one YAML line) with a deterministic
+render + build-ignore check has no breadth to fan out and no independent
+claims to verify; a Workflow would be theater (the S101–S105 call). →
+**Learning 100.** - **What changed (1 doc converted + 5 housekeeping):**
+**`inst/extdata/meeting_notes.qmd`** — `git mv` from `.Rmd` (preserves
+history) + the single YAML line `output: html_document` → `format: html`
+(matching siblings `claude_code.qmd` / `software_design_doc.qmd`);
+**body byte-for-byte** (`git diff -M HEAD` = `similarity index 99%`,
+only the YAML line differs). Plus
+**`docs/planning/quarto-documentation-future-proofing-analysis.md`**
+(§7.1 slice-1 row → ✅ Done), **`ROADMAP.md`** (slice-1-done note under
+the doc-engine policy), **`CHANGELOG.md`** (S106 `[Unreleased]` entry),
+**`PROJECT_LEARNINGS.md`** (Learning 100), **`SESSION_NOTES.md`** (this
+handoff). **No `.Rbuildignore` edit needed** (see below). **No `R/`,
+test, NAMESPACE, `man/`, DESCRIPTION, NEWS, or vignette change.** - **🚨
+THE REAL WORK WAS THE VERIFICATION (→ Learning 100) — a rename-only
+“conversion” would have hidden three things:** (1) **An Rmd→qmd SEMANTIC
+difference.** The render warned that `nprcgenekeepr:::` (R’s
+internal-call operator, quoted from a 2020 CRAN-review reply, in
+**prose**) looked like a malformed `:::` fenced div — `:::` is
+meaningful in Quarto, inert in R Markdown. Checked the rendered HTML: it
+renders correctly (mid-line `:::` is not a div delimiter → heuristic
+false-positive, no output defect). **Left byte-faithful** rather than
+rewrite the author’s historical prose for a cosmetic warning (FM \#22).
+(2) **The doc is NOT reproducibly renderable — and that’s not mine to
+“fix.”** Its 5 R chunks hardcode 2020 absolute paths
+(`/Users/rmsharp/.../20160816_GeneticManagementTools`) and need packages
+absent from the default lib (standing renv-not-materialized);
+`include=FALSE` hides output but the chunk still *executes*, so a full
+render fails on the dead paths. It’s a **historical meeting-notes log**,
+not a live computational doc. Build-equivalent satisfied via
+`quarto render --no-execute` (YAML + structure → 81 KB HTML, code shown
+not run); execution limitation **stated, not silently skipped**. Making
+it executable would be a behavior change (FM \#8). (3) **“It was
+build-ignored” ≠ “the new file is.”** Confirmed by applying every
+`.Rbuildignore` regex to BOTH filenames in R: `meeting_notes.Rmd` and
+`meeting_notes.qmd` both `ships=FALSE` (covered by
+`^inst/extdata/meeting_notes\.` — extension-agnostic — and
+`^inst/extdata/.*\.qmd$`). Had the pattern been `...\.Rmd$`, the
+conversion would have started SHIPPING the `.qmd` into the CRAN tarball
+— a silent package-contents change for an archived package
+mid-resubmission. - **\[news-vs-changelog\]:** a build-ignored dev-doc
+format standardization = dev-process history → **CHANGELOG only** (S106
+entry), no NEWS (never user-facing). **NO auto-memory** — the
+decision/slice now lives in the repo (analysis §7.1 + ROADMAP +
+CHANGELOG) (\[\[consult-project-source-of-truth\]\]).
+**\[macos-dupe-scan\]:** committed ONLY the 6 changed files; excluded
+`.DS_Store` (modified) + `PED_GV_AUDIT_2026-05-30.html` (untracked,
+standing keep).
+
+**Phase-3E (runtime smoke test): N/A — STATED, not silently skipped.**
+Converting a build-ignored developer doc changes NO package or app
+runtime behavior (no `R/`/test/app-path change; the file doesn’t even
+ship). The verification appropriate to the deliverable = the
+**build-equivalent render** (`quarto render --no-execute` → clean
+HTML) + the **package-contents check** (both filenames `ships=FALSE`) +
+the faithful-diff check (`similarity 99%`) — all done. **NOT FM \#24** —
+no build step mistaken for correctness; there is no runtime behavior to
+test.
+
+**Session 105 Handoff Evaluation (by Session 106): Score 9/10.** S105
+pre-named THIS deliverable precisely: its SUGGESTED-NEXT “(A) First
+Quarto slice” listed slice 1 = standardize `meeting_notes.Rmd` → `.qmd`
+as “the smallest … build-ignored, fully reversible,” and the §7.1 slices
+table it authored was an accurate executable substrate — the slice-1
+row’s claim that `claude_code.qmd` + `software_design_doc.qmd` are
+already `.qmd` held firsthand and gave me the `format: html` precedent.
+Gotchas all held: slices 1–3 zero-CRAN-risk + independent (honored),
+don’t start slice 4 free-standing (honored), branch 5-ahead, the
+standing-uncommitted-files disposition (applied verbatim). ROI high.
+**The −1:** neither S105 nor the §7.1 row flagged that
+`meeting_notes.Rmd` contains executable R chunks hardcoding dead 2020
+absolute paths (so it isn’t reproducibly renderable) or that Quarto’s
+`:::` handling differs from Rmd — both latent, discovered only by
+rendering. Fair/light: S105 was a decision-recording session and S104’s
+inventory firsthand-read the four CRAN vignettes’ engines, not this
+non-CRAN dev doc’s chunk internals (out of that scope) — so the gap is
+reasonable, now captured in Learning 100.
+
+**Self-assessment (Session 106): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER in full, notes top, dashboard 98/100, git, 14 issues,
+ghost-check → HEAD `9a1be115` = S105, clean), reported, STOPPED for the
+owner’s task; owner picked (A). **Asked the genuine scope sub-decision
+(slice 1 vs 2) up front** via `AskUserQuestion` and grounded both
+candidates in the actual files first. Claimed the session (1B stub
+BEFORE technical work). **Headline strengths:** (1) **the verification
+did the real work** — rendering (not a static rename) surfaced the `:::`
+semantic difference and the dead-path non-renderability, and I handled
+both with discipline (verified `:::` output correct + left
+byte-faithful; `--no-execute` + stated the limitation rather than fake a
+render or “fix” the doc into executing); (2) **proved zero-CRAN-risk
+authoritatively** — ran every `.Rbuildignore` regex against both
+filenames instead of assuming; (3) **maximally faithful + reversible**
+(`git mv` + one YAML line; body byte-for-byte; `similarity 99%`); (4)
+**held 1-and-done** (did NOT start slice 2, did NOT touch the manual,
+the CRAN plan, package source, or the standing files); (5) right-sized
+SOLO honestly and used plain language
+(\[\[avoid-jargon-use-plain-language\]\]); correctly declined an
+auto-memory. **0 stakeholder corrections.** Declared TDD N/A + Phase-3E
+N/A with reasons. **Weaknesses (honest):** (a) the deliverable is a tiny
+mechanical change — bounded difficulty; the value is the verification
+rigor, not technical depth; (b) I could not run a FULL (executing)
+render — but that’s an inherent, pre-existing property of the artifact
+(dead paths), stated explicitly, not a defect I introduced or could
+remove within this slice’s scope. I reserve 9–10 for a delivery that is
+both zero-correction AND lands a fully-executing verifiable artifact.
+
+**⇒ SUGGESTED NEXT = owner’s pick.** Slice 1 is done + committed;
+nothing mid-flight. Natural options (per analysis §7.1): - **(A) Next
+zero-CRAN-risk Quarto slice (separate session):** **slice 2** — stand up
+pkgdown mixed `.qmd`/`.Rmd` mode (add a `_quarto.yml`) + author ONE new
+article in Quarto (needs a topic). **Slice 3** (`revealjs` decks) only
+when new presentation material is needed. **Do NOT** start **slice 4
+(the manual)** free-standing — it changes CRAN contents and is gated on
+the CRAN plan (§8). - **(B) Resume the CRAN plan** — **Phase 2b**
+(vignette rebuild timing via numeric-preserving precompute) or **Phase
+3** (NEWS rewrite + version bump → 2.0.0). The manual slice (4) and the
+resubmission have a coordination dependency. - **(C) Push**
+`add-methodology` to origin (now **6 ahead**: S101–S106). **Do NOT**
+convert another document without an owner-approved slice session; **do
+NOT** bundle slices (FM \#18/#25).
+
+**Key files (this session):** **CHANGED (committed):**
+`inst/extdata/meeting_notes.qmd` (renamed from `.Rmd` + YAML
+`format: html`),
+`docs/planning/quarto-documentation-future-proofing-analysis.md` (§7.1
+slice-1 row → Done), `ROADMAP.md` (slice-1-done note), `CHANGELOG.md`
+(S106 `[Unreleased]` entry), `PROJECT_LEARNINGS.md` (Learning 100),
+`SESSION_NOTES.md` (this handoff). **Read firsthand (verification):**
+the converted `.qmd` header + chunk regions (lines 8/224–333/775), the
+two sibling `.qmd`, `.Rbuildignore` (full), the rendered HTML
+(`/tmp/s106_mn.html` line 171 — `:::` renders correct). **Transient (NOT
+committed, /tmp):** `/tmp/s106_prose_test.qmd|.html` (Quarto-works
+probe), `/tmp/s106_mn.qmd|.html` (render verify).
+
+**Gotchas:** (1) **`inst/extdata/meeting_notes.qmd` is a HISTORICAL log,
+NOT reproducibly renderable** — its R chunks hardcode dead 2020 absolute
+paths + need unmaterialized packages; render with `--no-execute`. Do NOT
+“fix” it to execute unless that is an explicit, separate, owner-approved
+deliverable (it would be a behavior change, FM \#8). (2) **The `:::`
+warning recurs on every render** — benign (output verified correct). If
+a warning-free render is ever wanted, wrap `nprcgenekeepr:::` (≈ line
+119) in backticks — but that edits the author’s historical prose, so
+owner’s call (FM \#22). (3) **Build-ignore needs no change** —
+`^inst/extdata/meeting_notes\.` (extension-agnostic) +
+`^inst/extdata/.*\.qmd$` both cover the new file (`ships=FALSE`). (4)
+**Slices 2–3 are independent + zero-CRAN-risk; slice 4 (manual) is
+CRAN-touching, gated on the CRAN plan (§8).** Do NOT bundle (FM
+\#18/#25). (5) **This close-out leaves `add-methodology` 6 ahead of
+origin** (S101–S106) — push when ready (accumulate-then-push). (6)
+Standing uncommitted: `.DS_Store` (modified) +
+`PED_GV_AUDIT_2026-05-30.html` (untracked) — owner’s keep-call. (7)
+Carried-forward CRAN gotchas remain valid: `NEWS.md` generated from
+`NEWS.Rmd`; renv explicit-snapshot omits ALL Suggests; `RSelenium`
+undeclared; the package is ARCHIVED on CRAN (Learning 95).
+
+### What Session 105 Did
+
+**Deliverable:** Record the owner’s adoption of the **Hybrid**
+documentation strategy (Quarto analysis §7 **Option B**) — flip
+`docs/planning/quarto-documentation-future-proofing-analysis.md` from
+recommendation to **ADOPTED policy**; resolve §6.3 (manual → Quarto
+website, **option (b)**); correct §8 (the chosen path now **does**
+intersect the CRAN resubmission via the manual); add a §7.1
+implementation-slices table; update ROADMAP + CHANGELOG. **(DONE.)**
+Decision-recording / documentation deliverable (SESSION_RUNNER planning
+rules). **NO documents converted** — each slice is a separate
+owner-approved session (FM \#18). **Started / Completed:** 2026-06-17
+**Status:** **DONE. TDD phase = N/A** (decision-recording /
+documentation deliverable — no RED/GREEN/REFACTOR code surface; declared
+every response, same as S101/S104). **No `AskUserQuestion` TDD gates**
+(no phase transitions); **two `AskUserQuestion` scope questions UP
+FRONT** pinned the two genuine owner sub-decisions BEFORE writing — (1)
+§6.3 manual disposition → **(b) reposition to Quarto website**; (2) how
+to record the slices → **analysis doc + ROADMAP only, no GitHub
+issues**. **0 stakeholder corrections.** Right-sized **SOLO** under
+ultracode — editing 4–5 docs to record a decision the owner just made
+(facts already established + adversarially verified in S104) has no
+breadth to fan out and no fresh claims to verify; a Workflow would be
+theater (the S101–S104 call). → **Learning 99.** - **What changed (5
+files, all docs):**
+**`docs/planning/quarto-documentation-future-proofing-analysis.md`** —
+flipped all decision surfaces: Status header (→ ADOPTED B + §6.3(b)),
+TL;DR closing line, §7 options-table B-row verdict (→ ✅ ADOPTED) + the
+“default” line, a new **§7.1** slices table, the §6.3 (b) bullet (→
+Decided), and the **§8 correction** (below). **`ROADMAP.md`** —
+documentation-engine policy added under “Planned.” **`CHANGELOG.md`** —
+S105 `[Unreleased]` entry. **`PROJECT_LEARNINGS.md`** — Learning 99.
+**`SESSION_NOTES.md`** — this handoff. - **🚨 KEY CATCH (the real work,
+→ Learning 99): adopting B with §6.3 → (b) INVALIDATED a load-bearing
+claim the source doc made under the OTHER sub-choice.** S104’s §8 said
+“only Option A would intersect the CRAN submission; under B/C the plan
+is unaffected” — true ONLY if the manual stayed a knitr vignette
+(§6.3(a)). The owner chose (b) = reposition the manual off the CRAN
+vignette set, which **changes package contents `R CMD check` sees** ⇒
+the adopted path now DOES touch the resubmission. Recording the decision
+= flip the Status AND re-derive/correct §8 (done), not just stamp
+“adopted.” A bare Status flip would have left a self-contradicting
+policy doc (FM \#11/#20, introduced by the recording act itself). -
+**The adopted policy (now the project’s doc-engine policy):** 4 CRAN
+vignettes stay on `knitr`/`rmarkdown` (zero CRAN risk); new + non-CRAN
+docs → Quarto (pkgdown articles via mixed mode, `revealjs` slides,
+`inst/extdata/` dev docs). **§7.1 slices (suggested order):** (1)
+standardize the 3rd `inst/extdata` dev doc `meeting_notes.Rmd`→`.qmd` —
+**no CRAN risk**; (2) new pkgdown articles in Quarto (mixed
+`_quarto.yml`) — **no CRAN risk**; (3) `revealjs` decks as needed — **no
+CRAN risk**; (4) **reposition the manual** (`a3manual.Rmd` + 13
+children) off CRAN vignettes onto the website — **CRAN-touching, gated
+on CRAN-plan coordination.** - **\[news-vs-changelog\]:** a
+documentation-process decision = dev-process history → **CHANGELOG
+only** (S105 entry), no NEWS (S104 analysis-doc precedent;
+\[\[backlog-vs-changelog-placement\]\]). **NO auto-memory** — the
+decision now lives in the repo (analysis doc + ROADMAP + CHANGELOG), so
+a memory would duplicate the source of truth
+(\[\[consult-project-source-of-truth\]\]). **\[macos-dupe-scan\]:**
+commit ONLY the 5 changed docs; exclude `.DS_Store` (modified) +
+`PED_GV_AUDIT_2026-05-30.html` (untracked, standing keep).
+
+**Phase-3E (runtime smoke test): N/A — STATED, not silently skipped.**
+Recording a decision in documentation changes NO runtime/app behavior
+(no `R/`/test/app-path change). The verification appropriate to the
+deliverable = a firsthand **cross-document consistency re-read** (does
+§6.3 = §7 = §7.1 = §8 = ROADMAP = CHANGELOG tell ONE story? —
+confirmed) + checking that adopting (b) didn’t leave a stale claim
+(caught + corrected §8). **NOT FM \#24** — no build step mistaken for
+correctness; there is no runtime behavior to test.
+
+**Session 104 Handoff Evaluation (by Session 105): Score 9/10.** S104
+could not pre-name THIS deliverable (it was a research-only analysis
+whose own close-out correctly said “acting on it is a SEPARATE
+owner-approved session”), but its handoff set this session up to succeed
+precisely: the recommendation was **HYBRID** with the **§6.3 manual fork
+explicitly flagged as the one owner sub-decision** — which is exactly
+the fork I had to resolve, so I knew to ask it up front rather than
+discover it. The gotchas held firsthand: “do NOT convert CRAN vignettes”
+(honored — slices 1–3 are non-CRAN, A stays rejected), “the manual is
+both a CRAN vignette and the best Quarto candidate — owner’s call” (the
+§6.3(b) decision), the branch state (4 ahead of origin), the
+standing-uncommitted-files disposition (applied verbatim). The analysis
+doc itself was an excellent, accurate substrate — every section I edited
+held as written. ROI high. **The −1:** S104’s §8 carried the “only
+Option A intersects the submission” claim without flagging that §6.3(b)
+(a Hybrid sub-option it itself surfaced) would break that claim — a
+latent inconsistency the adopting session had to catch. Light/fair: §8
+was written under the default assumption (manual stays), which was
+reasonable for an analysis presenting options; the cost was one
+correction this session, now captured in Learning 99.
+
+**Self-assessment (Session 105): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER in full, notes top, dashboard 98/100, git, 14 issues,
+ghost-check → HEAD `948d0e20` = S104, clean), reported, STOPPED for the
+owner’s task; the owner picked (A). Claimed the session (1B stub BEFORE
+technical work). **Headline strengths:** (1) **caught the latent
+contradiction** — recognized that adopting B *with §6.3→(b)* invalidates
+§8’s “only A intersects” claim, and corrected it rather than leaving a
+self-contradicting policy doc (the core insight = Learning 99); (2)
+**asked the genuine owner sub-decisions up front** (§6.3 manual;
+issues-or-not) via two `AskUserQuestion`s — they changed exactly what
+got recorded; (3) **flipped EVERY decision surface** (Status, TL;DR, §7
+table verdict, default line, §6.3 bullet, new §7.1, §8) so the doc reads
+as policy, not a pending recommendation, and **verified by a
+cross-document consistency re-read**; (4) **held the deliverable
+boundary (FM \#18 / 1-and-done)** — converted NOTHING, recorded slices
+as future separate sessions, gated the one CRAN-touching slice; (5)
+right-sized SOLO honestly and said why; (6) used plain language
+(\[\[avoid-jargon-use-plain-language\]\]); correctly declined an
+auto-memory (repo is now the source of truth). **0 stakeholder
+corrections.** Declared TDD N/A + Phase-3E N/A with reasons.
+**Weaknesses (honest):** (a) the deliverable is documentation editing on
+well-trodden ground — the difficulty was bounded (the value was the §8
+catch + the up-front scoping, not technical depth); (b) the decision is
+recorded but **not yet acted on** — the first conversion slice is
+unstarted (appropriate for a decision session, but it’s an open path,
+not a “verified” end-state the way a passing test is). I reserve a 10
+for a delivery that is both zero-correction AND lands a verifiable
+runtime/build artifact.
+
+**⇒ SUGGESTED NEXT = owner’s pick.** The Hybrid decision is recorded +
+committed; nothing mid-flight. Natural options: - **(A) First Quarto
+slice (zero-CRAN-risk, separate session):** the smallest is **§7.1 slice
+1** — standardize `inst/extdata/meeting_notes.Rmd` → `.qmd`
+(build-ignored, fully reversible). Or **slice 2** — stand up pkgdown
+mixed `.qmd`/`.Rmd` mode + author one new article in Quarto. **Do NOT**
+start **slice 4 (the manual)** as a free-standing slice — it changes
+CRAN contents and is gated on the CRAN plan (§8). - **(B) Resume the
+CRAN plan** — **Phase 2b** (vignette rebuild timing via
+numeric-preserving precompute) or **Phase 3** (NEWS rewrite + version
+bump → 2.0.0). Note: the manual slice (4) and the CRAN resubmission now
+have a coordination dependency — whoever does the manual repositioning
+should fold the removed-vignette into `cran-comments.md`/NEWS. - **(C)
+Push** `add-methodology` to origin (now **5 ahead**: S101–S104 + this
+S105 commit). **Do NOT** convert any document without an owner-approved
+slice session; **do NOT** bundle slices (FM \#18/#25).
+
+**Key files (this session):** **CHANGED (to commit):**
+`docs/planning/quarto-documentation-future-proofing-analysis.md` (the
+policy flip — Status/TL;DR/§6.3/§7/§7.1/§8), `ROADMAP.md` (doc-engine
+policy under Planned), `CHANGELOG.md` (S105 `[Unreleased]` entry),
+`PROJECT_LEARNINGS.md` (Learning 99 at tail), `SESSION_NOTES.md` (this
+handoff). **Read firsthand (verification):** the full analysis doc
+pre-edit; ROADMAP “Planned”; CHANGELOG `[Unreleased]`; PROJECT_LEARNINGS
+tail (L95–98); re-read §6.3→§8 + Status/TL;DR post-edit for
+cross-document consistency. **No `R/`, test, NAMESPACE, `man/`,
+DESCRIPTION, or NEWS change.**
+
+**Gotchas:** (1) **The decision is recorded, NOT executed** — any
+conversion is a SEPARATE owner-approved slice session (FM \#18). (2)
+**Slice 4 (manual) ≠ a free-standing slice** — it removes a CRAN
+vignette = changes package contents, gated on CRAN-plan coordination
+(§8); slices 1–3 are independent and zero-CRAN-risk. (3) **§8 was
+corrected this session** — the source doc no longer says “only A
+intersects”; the adopted path DOES touch the resubmission via the manual
+(Learning 99). (4) **This close-out leaves `add-methodology` 5 ahead of
+origin** (S101–S104 + this S105 commit) — push when ready
+(accumulate-then-push). (5) Standing uncommitted: `.DS_Store`
+(modified) + `PED_GV_AUDIT_2026-05-30.html` (untracked) — owner’s
+keep-call. (6) Carried-forward CRAN gotchas remain valid: `NEWS.md`
+generated from `NEWS.Rmd`; renv explicit-snapshot omits ALL Suggests;
+`RSelenium` undeclared; the package is ARCHIVED on CRAN (Learning 95).
+
+### What Session 104 Did
+
+**Deliverable:** Investigation + recommendation — should the package’s
+documentation be migrated from R Markdown to Quarto to **future-proof
+the documentation**? **(DONE —
+`docs/planning/quarto-documentation-future-proofing-analysis.md`
+written.)** Research/analysis workstream (SESSION_RUNNER planning
+rules). **Research-only — NO documents were converted** (conversion is a
+separate, owner-approved implementation session; FM \#18 held).
+**Started / Completed:** 2026-06-17 **Status:** **DONE.** **Owner
+reframed mid-session:** opened as “is Rmd→Quarto conversion
+contraindicated by build timing?” → owner clarified “NOT overly
+concerned about timing… more interested in future-proofing
+documentation.” Adapted: KEPT the in-flight timing/CRAN-viability
+research (still load-bearing as the guardrail) and ADDED a
+future-proofing pass. **TDD phase = N/A** (analysis doc, no
+RED/GREEN/REFACTOR code surface; declared every response). **No
+`AskUserQuestion` gates** (no TDD transitions; the deliverable is an
+analysis presenting the owner’s decision, not a code change). **0
+stakeholder corrections.** Right-sized under ultracode as **2 sequential
+research Workflows + SOLO synthesis**: pass 1 `wwzzra7sf` (9 agents —
+CRAN-viability/sysreq/build-time/precompute/inventory + 3 adversarial
+verifiers), pass 2 `w7tp1or3o` (8 agents —
+longevity/Posit-direction/realized-value/migration-cost/steelman + 3
+adversarial verifiers); ~900k subagent tokens kept out of main context.
+The recommendation document is mine to author per the planning rules. →
+**Learning 98.** - **🚨 RECOMMENDATION = HYBRID / partial adoption
+(owner’s decision; 3 options in the doc §7):** KEEP the 4 CRAN vignettes
+on `knitr`/`rmarkdown` (zero CRAN risk, officially supported
+indefinitely, endorsed for this case by the Quarto maintainer); ADOPT
+Quarto on the non-CRAN surface where it carries no CRAN dependency and
+pays off — pkgdown site, new long-form docs, slide decks, the
+`inst/extdata/` dev docs (2 already `.qmd`). The long-form **manual**
+(`a3manual.Rmd` + 13 children) is the one deliberate fork (§6.3): keep
+as a knitr vignette vs. reposition onto the website as Quarto. - **All 6
+load-bearing claims survived adversarial refutation at HIGH
+confidence:** (1) R Markdown is NOT deprecated — `rmarkdown` 2.31
+(2026-03)/`knitr` 1.51 (2025-12) actively maintained CRAN-critical
+infrastructure (Posit: “not going away, no plans for deprecation”; Xie
+laid off 2023-12-31 but Posit-funded contractor to keep maintaining
+knitr/rmarkdown); the only cost of staying is feature stagnation, not
+breakage. (2) Quarto CRAN vignette adds a `SystemRequirements`
+Quarto-CLI dep NOT guaranteed on CRAN machines (missing on macOS flavors
+2025) + a documented transient “no vignettes” NOTE — bad for an archived
+package; maintainer cderv “would not advise” it for CRAN. (3) Realized
+Quarto benefit for simple single-language HTML vignettes is narrow (CRAN
+engine is `theme:none`/`minimal:true` →
+callouts/tabsets/Bootstrap/multi-language disabled; only
+cross-references land). (4) Conversion can’t fix timing (same knitr
+R-chunk cost + fixed overhead → slightly slower). (5) Precompute on the
+existing engine solves timing without Quarto. (6) Migration is
+mechanical/reversible; pkgdown supports mixed `.qmd`/`.Rmd` (2.1.0,
+2024-07). - **Firsthand inventory (not just the audit agent):** all 4
+CRAN vignettes use knitr engines (`knitr::rmarkdown_notangle` ×3;
+`a3manual` =
+[`knitr::knitr`](https://rdrr.io/pkg/knitr/man/knitr-package.html));
+`ColonyManagerTutorial` is `eval=FALSE` (screenshots only);
+`a2interactive` runs real analysis; `simulatedKValues` has 3 sims
+n=10/100/1000 with `set.seed(1L)` before each (deterministic →
+precompute-safe); `a3manual` is a 57-line wrapper over 13
+`manual_components/_*.Rmd`. `VignetteBuilder: knitr`, no Quarto dep. The
+`vignettes/*.html|.R|.md` are git-ignored stale renders — **no
+precompute pattern exists**. - **\[news-vs-changelog\]:** an
+analysis/planning doc = dev-process history → **CHANGELOG only** (S104
+entry), no NEWS (\[\[backlog-vs-changelog-placement\]\], S101 plan
+precedent). **\[macos-dupe-scan\]:** commit ONLY the new analysis doc +
+`CHANGELOG.md` + `PROJECT_LEARNINGS.md` (L98) + `SESSION_NOTES.md`;
+exclude `.DS_Store` (modified) + `PED_GV_AUDIT_2026-05-30.html`
+(untracked, standing keep).
+
+**Phase-3E (runtime smoke test): N/A — STATED, not silently skipped.**
+An analysis document changes NO runtime/app behavior (no `R/`/test
+change). The verification appropriate to the deliverable = two
+adversarial research Workflows (all 6 claims survived refutation) +
+firsthand vignette inventory (engine headers, child includes, gitignored
+renders). **NOT FM \#24** — no build step mistaken for correctness;
+there is no runtime behavior to test.
+
+**Session 103 Handoff Evaluation (by Session 104): Score 9/10.** S103
+did not (and could not) pre-name THIS deliverable — the
+Quarto/future-proofing question was a fresh owner pivot outside its
+suggested-next list (Phase 2b / Phase 3). But its handoff was accurate
+and load-bearing for this work anyway: the exact vignette inventory +
+timings (`ColonyManagerTutorial` 7.8s / `a2interactive` 7.5s /
+`simulatedKValues` 5.4s), the **precompute-not-iteration-reduction**
+rule and the reason (`simulatedKValues` n=1000 changes displayed kinship
+numbers), the NEWS.md-generated-from-NEWS.Rmd gotcha, and the branch
+state (3 ahead of origin) + standing-uncommitted-files disposition — all
+held firsthand and fed directly into the analysis (§1 inventory, §8
+timing-via-precompute). ROI high. **The −1:** the handoff (and Learning
+97) embedded the timing framing so thoroughly that pass 1 initially
+inherited it — but that is a faithful reflection of S103’s actual scope,
+not a defect, and the owner’s first message also framed the task as a
+timing question, so pass 1 was the right initial response. Nothing in
+the handoff was wrong.
+
+**Self-assessment (Session 104): 8/10.** Oriented fully
+(SESSION_RUNNER + SAFEGUARDS in full, notes top, dashboard 98/100, git,
+14 issues, ghost-check → HEAD = S103), reported, STOPPED for the owner’s
+task. Claimed the session (1B stub BEFORE technical work). **Headline
+strengths:** (1) **adapted cleanly to the owner’s mid-task reframe**
+(timing → future-proofing) — kept the still-relevant in-flight research
+as the guardrail and added a targeted pass rather than
+discarding/restarting; (2) **did not assert from memory** — verified all
+6 load-bearing claims via two adversarial Workflows (every claim
+survived refutation at high confidence) AND grounded the inventory with
+my own firsthand vignette reads; (3) **balanced, even-handed analysis**
+— did NOT rubber-stamp “don’t convert”; landed on a genuine “yes to
+Quarto, placed where it pays off,” honored the future-proofing goal,
+presented 3 options with the owner’s decision explicit; (4) right-sized
+Workflow-for-research + SOLO-for-synthesis; (5) **scope discipline
+(1-and-done):** produced exactly ONE analysis doc, converted nothing (FM
+\#18), did NOT touch the CRAN plan / package source / issues / standing
+files; (6) used **plain language, not jargon**
+(\[\[avoid-jargon-use-plain-language\]\]). Declared TDD N/A + Phase-3E
+N/A with reasons. **Weaknesses (honest):** (a) pass 1 did real work
+under the pre-reframe timing framing before the owner clarified — not
+wasted (it’s the CRAN-viability guardrail), but a sharper initial read
+might have anticipated the strategic axis; (b) the recommendation is a
+judgment the owner has not yet endorsed — appropriate for an analysis
+deliverable, but it leaves an open decision (not “verified” the way a
+code change is). I reserve 9–10 for a zero-correction delivery whose
+recommendation is also accepted/acted on.
+
+**⇒ SUGGESTED NEXT = owner’s pick.** The analysis is written +
+committed; nothing mid-flight. Natural options: - **(A) Decide the
+recommendation** (doc §7): adopt **Hybrid** (recommended), Full convert
+(not recommended), or Status quo. If Hybrid, the first implementable
+slice is owner-controlled, zero-CRAN-risk (e.g. author the next pkgdown
+article in Quarto, or standardize the `inst/extdata` dev docs) — a
+separate session. - **(B) Resume the CRAN plan** — **Phase 2b**
+(vignette rebuild timing via numeric-preserving precompute,
+`.Rmd.orig`→committed `.Rmd`; this analysis confirms precompute, NOT
+Quarto, is the lever) or **Phase 3** (NEWS Major/Minor rewrite + version
+bump → 2.0.0). - **(C)** Push `add-methodology` to origin (now **4
+ahead**: S101 `60b8c67c` + S102 `a3cf3623` + S103 `81e2f11f` + this S104
+commit). **Do NOT** start converting documents without an owner decision
+on §7; **do NOT** bundle phases (FM \#18/#25).
+
+**Key files (this session):** **NEW (committed):**
+`docs/planning/quarto-documentation-future-proofing-analysis.md` (the
+deliverable). **CHANGED (committed):** `CHANGELOG.md` (S104
+`[Unreleased]` entry), `PROJECT_LEARNINGS.md` (Learning 98 at tail),
+`SESSION_NOTES.md` (this handoff). **Read firsthand (verification):**
+`vignettes/simulatedKValues.Rmd` (full), the vignette engine headers +
+`a3manual` child-include structure (grep), `DESCRIPTION`
+(VignetteBuilder/Suggests),
+`docs/planning/cran-2.0.0-submission-plan.md` §Phase 2/3. **Workflow
+outputs (full findings):** pass 1
+`/private/tmp/claude-501/.../tasks/wwzzra7sf.output`, pass 2
+`…/w7tp1or3o.output`; scripts under
+`…/workflows/scripts/quarto-*-wf_*.js`.
+
+**Gotchas:** (1) **The analysis is research-only — nothing was
+converted.** Acting on it (any conversion) is a SEPARATE owner-approved
+session; the recommended Hybrid path converts only non-CRAN surfaces.
+(2) **Do NOT convert CRAN vignettes to live Quarto** — it adds a
+`SystemRequirements` Quarto-CLI dependency CRAN’s check machines don’t
+guarantee (the doc §4); wrong for an archived package. (3) **Timing ≠
+this decision** — the CRAN plan’s Phase 2b vignette-timing fix is
+precompute on the EXISTING knitr engine, orthogonal to Quarto; the two
+efforts stay separate. (4) **`a3manual` is both a CRAN vignette and the
+best Quarto candidate** — the one strategic fork (doc §6.3), owner’s
+call. (5) **This close-out leaves `add-methodology` 4 ahead of origin**
+(S101/S102/S103 + this S104 commit) — push when ready
+(accumulate-then-push). (6) Standing uncommitted: `.DS_Store`
+(modified) + `PED_GV_AUDIT_2026-05-30.html` (untracked) — owner’s
+keep-call. (7) Carried-forward CRAN gotchas remain valid: renv
+explicit-snapshot omits ALL Suggests (Phase 4 needs them installed);
+`NEWS.md` generated from `NEWS.Rmd`; `RSelenium` undeclared.
+
+### What Session 103 Did
+
+**Deliverable:** **Phase 2 of the CRAN 2.0.0 submission plan**
+(`docs/planning/cran-2.0.0-submission-plan.md` §4 Phase 2) — archival
+ROOT CAUSE (CRAN “tested elapsed times”). **Owner-scoped to Phase 2a
+(tests + native pipe + NEWS); Phase 2b (vignette rebuild timing)
+DEFERRED.** **(DONE — Phase 2a; 2b remains.)** Development workstream +
+strict TDD. **Started / Completed:** 2026-06-17 **Status:** **DONE
+(Phase 2a). TDD phase = REFACTOR/mechanical** — every edit is
+no-numeric-change (skip guards change only WHAT runs on CRAN; native
+pipe is syntactic), so the plan’s RED-first simulation-number rule did
+NOT apply (avoided, not triggered; declared every response). **Two
+`AskUserQuestion` gates:** a pre-RED **scope** decision (defer vignettes
+2b; convert ALL `%>%`) + the **PRE-RED→REFACTOR** gate spelling out
+every edit + verification. **Owner steered live** (build-vs-run deps;
+`Config/Needs/build`; native `|>` instead of declaring magrittr; NEWS
+entry; the harness-misattribution catch; the jargon flag). Right-sized
+**SOLO** — measurement is CPU-sensitive (parallel checks would corrupt
+timing) and the fix is gated mechanical edits; a Workflow would corrupt
+the measurement and add no value. - **Measure-first profile (the cause,
+named by data not assumption — overturned the plan’s single-suspect
+framing):** **examples** 6.6s total, slowest `countLoops` 1.28s — none
+\>5s, none flag (no action). **Tests:** the CRAN-running slow ones are
+the **shiny module `testServer` tests** (`modGeneticValue` 4.4s /
+`modBreedingGroups` 4.6s / `modInput` 2.7s /
+`modBreedingGroups_groupAddAssign` 2.2s / `modPedigree_processing` 1.2s;
+`skip_if_not_installed("shiny")` only — shiny is an Import, so they
+RUN). The raw-slowest files (`fillGroupMembers*`/`groupAddAssign`, ~17s)
+are `skip_if_not(user=="rmsharp")` → owner-machine-only, **never on
+CRAN**. **Vignettes** ~21s (`ColonyManagerTutorial` 7.8s /
+`a2interactive` 7.5s / `simulatedKValues` 5.4s) → **Phase 2b** (the only
+iteration-reduction lever — `simulatedKValues` n=1000 gene-drop, 3.68s —
+would change displayed kinship numbers = a correctness regression, so it
+needs numeric-preserving precompute, a separate effort). - **What
+changed (13 files):** **Tests** — file-level
+[`testthat::skip_on_cran()`](https://testthat.r-lib.org/reference/skip.html)
+added to `test_modGeneticValue.R`, `test_modBreedingGroups.R`,
+`test_modBreedingGroups_groupAddAssign.R`, `test_modInput.R`,
+`test_modPedigree_processing.R` (removes ~15s CRAN time; CI/local
+unaffected). **Native pipe** `%>%`→`|>` —
+`vignettes/simulatedKValues.Rmd` (5; dropped
+[`library(magrittr)`](https://magrittr.tidyverse.org)),
+`vignettes/ColonyManagerTutorial.Rmd` (3),
+`tests/testthat/test_makeRelationsClasses.R` (2),
+`R/makeRelationClassesTable.R` `@examples` (2) + hand-synced
+`man/makeRelationClassesTable.Rd` (`\%>\%`→`|>`). **NEWS** — `NEWS.Rmd`
+Minor “Code modernization” bullet + re-rendered `NEWS.md`. Plus
+`CHANGELOG.md` (S103 entry), `PROJECT_LEARNINGS.md` (Learning 97), this
+handoff. - **Verification:** full core suite via
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)
+at **`NOT_CRAN=true` → 169 files, 0 failed, 0 errors** (after installing
+the missing `shinyBS` Suggest in the dev lib — the earlier “52/69
+errors” were 100% environment/harness, NOT regressions); at
+**`NOT_CRAN=false` the 5 mod files skip** (affected-file time
+14.82s→0.01s). `simulatedKValues.Rmd` renders with native pipe (no
+magrittr); `makeRelationClassesTable` example runs; `man/*.Rd` parses;
+`NEWS.md` re-rendered with only the new bullet (no reformat); 0 `%>%`
+remain in any converted file.
+
+**Phase-3E (runtime smoke test): N/A — STATED, not skipped.** No `R/`
+function BODY or app/runtime path changed (the
+`makeRelationClassesTable` edit is roxygen-comment-only; skip guards are
+test infra; NEWS is prose). The code that DID change is executed in
+vignettes/examples/tests and was run-verified (render + example + 0/0
+suite). NOT FM \#24 — there is no untested runtime behavior masked by a
+passing build; I verified the actual executed surface.
+
+**Session 102 Handoff Evaluation (by Session 103): Score 9/10.** S102
+pre-named THIS deliverable as SUGGESTED-NEXT with the exact `§4 Phase 2`
+pointer, flagged it as the critical path, named the prime suspect
+(`simulatedKValues.Rmd`), and carried the load-bearing rules: **“profile
+first, let the data name the offender”** (I did — and it overturned the
+single-suspect framing: the cited “tested elapsed times” is the
+shiny-module tests, not the vignette) and **RED-first any
+numeric-altering change** (I respected — deferred the
+iteration-reduction). ROI high. **The −1:** two inherited assumptions
+were stale/incomplete — (a) the “renv NOT materialized, `restore()`
+required” gotcha:
+[`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html)
+reported **already-synchronized** (the library lives at
+`~/Library/Caches/.../renv/library/nprcgenekeepr-229b003c/...`, Imports
+present); the real gap is that the **explicit snapshot omits ALL
+Suggests**, so Suggests (testthat, shinyBS, …) need separate installs —
+a different problem than “restore first”; (b) neither the plan nor the
+handoff flagged the `skip_if_not(user=="rmsharp")` test guards (which
+make raw timing misleading) or that the package’s test harness needs
+`load_all` (not [`library()`](https://rdrr.io/r/base/library.html)) to
+expose internals. All were caught by the measure-first discipline the
+plan itself prescribed.
+
+**Self-assessment (Session 103): 7/10.** Oriented fully, claimed the
+session (1B stub before work), measured before concluding, and the
+measure-first paid off (corrected the single-suspect assumption;
+surfaced the rmsharp-only guards). **Strengths:** (1) **profiled each
+surface honestly and re-measured when wrong** — when the owner asked
+“why don’t you have shinyBS”, I found my real error (ran tests via
+`library()+test_dir`, which hides internals → 52 false
+`could not find function` “errors”) and re-ran via `load_all` for
+trustworthy numbers; (2) **respected the numeric-change rule** —
+deferred the only vignette speed-up that would alter displayed numbers,
+scoping to a no-numeric-change fix and gating it; (3) handled the
+owner’s live direction cleanly (native `|>` over declaring magrittr;
+`Config/Needs/build` for build-only tooling; per-surface dep precision);
+(4) **verified thoroughly** (0/0 regression after resolving the env gap,
+skip behavior both NOT_CRAN settings, render/example/.Rd/NEWS).
+**Weaknesses (honest):** (a) the **harness misstep** — I should have
+used `load_all` from the start and not initially blamed missing Suggests
+for the 52 errors; the owner caught it (−1+); (b) used **jargon
+(“dragon-prone”)** the owner objected to (saved as a memory) (−1); (c)
+Phase 2 is **partially delivered** (2a; 2b deferred) — owner-approved,
+but not the whole plan-Phase. Two genuine stakeholder corrections (vs
+the recent 0-correction streak). I reserve 9–10 for a clean-harness,
+zero-correction delivery.
+
+**⇒ SUGGESTED NEXT = owner’s pick.** Phase 2a done + verified; nothing
+mid-flight. Per the plan’s order: **Phase 2b — vignette rebuild timing**
+(`ColonyManagerTutorial` 7.8s / `a2interactive` 7.5s /
+`simulatedKValues` 5.4s, ~21s total). The CRAN-correct,
+**numeric-preserving** fix is precompute (the `.Rmd.orig` → committed
+`.Rmd` pattern), NOT iteration reduction (that changes
+`simulatedKValues`’ displayed kinship numbers — RED-first if any number
+moves). Alternatively **Phase 3** (NEWS Major/Minor rewrite + version
+bump → 2.0.0). **Do NOT** bundle phases (FM \#18/#25).
+
+**Key files (this session):** **CHANGED (to commit):**
+`tests/testthat/test_modGeneticValue.R`, `test_modBreedingGroups.R`,
+`test_modBreedingGroups_groupAddAssign.R`, `test_modInput.R`,
+`test_modPedigree_processing.R` (skip_on_cran);
+`vignettes/simulatedKValues.Rmd`, `vignettes/ColonyManagerTutorial.Rmd`,
+`tests/testthat/test_makeRelationsClasses.R`,
+`R/makeRelationClassesTable.R`, `man/makeRelationClassesTable.Rd`
+(native pipe); `NEWS.Rmd`, `NEWS.md` (Minor bullet); `CHANGELOG.md`,
+`PROJECT_LEARNINGS.md` (L97), `SESSION_NOTES.md`. **Transient (NOT
+committed, /tmp):** `s103_simtime.R`, `s103_vigtime.R`,
+`s103_testtime*.R`, `s103_blocktime.R`, `s103_verify_tests.R`,
+`s103_excheck/` (example-check tarball + `.Rcheck`). Removed transient
+`tests/testthat/_problems/` + `testthat-problems.rds` (from a diagnostic
+run).
+
+**Gotchas:** (1) **renv state is NOT what the prior gotchas said** —
+[`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html)
+reports **already-synchronized** (Imports materialized in the cache-path
+library); the gap is **Suggests** (explicit snapshot omits them). This
+session I installed into the dev lib (NOT the lockfile, so they won’t
+survive a fresh
+[`renv::restore`](https://rstudio.github.io/renv/reference/restore.html)):
+`testthat, mockery, withr, dplyr, magrittr, kableExtra, png, shinyBS, pkgload, roxygen2`.
+Phase 4’s full `--as-cran` will need these (and `shinytest2`,
+`spelling`, the undeclared `RSelenium`). (2) **The `skip_on_cran` tests
+now skip on CRAN** — confirm in Phase 4’s real `R CMD check --as-cran`
+that the “checking tests” elapsed dropped (I verified the skip behavior
+via `load_all`, not yet via a full `--as-cran` run — that’s Phase 4’s
+authoritative gate). (3) **Phase 2b vignette fix must PRESERVE numbers**
+— precompute, not iteration reduction; RED-first any numeric change. (4)
+**`RSelenium` is undeclared** in Suggests (e2e tests use it). (5) The
+`skip_if_not(user=="rmsharp")` tests run only on the owner’s machine —
+an anti-pattern, out of Phase-2 scope. (6) **NEWS.md is generated from
+NEWS.Rmd** — edit the `.Rmd`, re-render
+(`rmarkdown::render(output_format="github_document")`); never hand-edit
+NEWS.md. (7) **This close-out leaves `add-methodology` 3 ahead of
+origin** (S101 `60b8c67c` + S102 `a3cf3623` + this S103 commit) — push
+when ready (accumulate-then-push). (8) Standing uncommitted: `.DS_Store`
+(modified) + `PED_GV_AUDIT_2026-05-30.html` (untracked) — owner’s
+keep-call.
+
+### What Session 102 Did
+
+**Deliverable:** Implement **Phase 1 of the CRAN 2.0.0 submission plan**
+(`docs/planning/cran-2.0.0-submission-plan.md` §4 Phase 1) — static CRAN
+hygiene (build cruft + DESCRIPTION/metadata defects + `\value` docs).
+**(DONE — verified by a real `R CMD build` source tarball: 708 entries,
+0 cruft, 0 hidden files.)** Development workstream + strict TDD. **NO
+version bump** (Phase 3; FM \#18/#25 held — did NOT touch Version / NEWS
+/ CITATION.cff). **Started / Completed:** 2026-06-16 / 2026-06-17
+**Status:** **DONE. TDD phase = REFACTOR/mechanical** (metadata + docs +
+build-ignore config; no behavioral/runtime change ⇒ no new test surface,
+the plan’s own Phase-1 classification; declared every response). **One
+`AskUserQuestion`** — the **PRE-RED→REFACTOR permission gate** spelling
+out every concrete edit + verification (RED/GREEN don’t apply with no
+test surface) **+ one scope question** (delete `..Rcheck/` → owner:
+delete). **0 stakeholder corrections.** Right-sized **SOLO** under
+ultracode (the 9-agent research already happened in S101; Phase 1 = a
+handful of deterministic mechanical edits with a deterministic build
+check — a Workflow would be theater). → **Learning 96.** - **What
+changed (8 tracked files):** (a) **`.Rbuildignore`** (+13 lines,
+end-anchored & paren-free per the perl-regex hazard): `\.DS_Store$` +
+`\.Rapp\.history$` (front-UNanchored so they ALSO catch
+`man/.DS_Store` + `inst/extdata/.Rapp.history` — the plan’s
+root-anchored `^\.DS_Store$` would have missed `man/.DS_Store`),
+`^inst/extdata/.*\.qmd$`, `^inst/extdata/README_modules\.md$`,
+`^inst/extdata/example_usage\.R$`,
+`^inst/extdata/trulyUnknownParents\.R$`,
+`^inst/extdata/submission\.txt$`, `^inst/_pkgdown\.yml$`. (b)
+**`DESCRIPTION`**: `'Macaca' 'mulatto'`→`'mulatta'` (was L23); moved the
+renv `Config/renv/...` field from L1 (illegally before `Package:`) to
+the last line + normalized comma spacing;
+`VignetteBuilder: knitr, rmarkdown`→`knitr` (rmarkdown stays in
+Suggests). (c) **`R/appServer.R`+`R/appUI.R`**: added `@return` roxygen
+— appServer = “No return value, called for side effects” (Shiny server;
+confirmed it ends in module-server calls, no explicit return), appUI =
+“A `shiny.tag.list`…”. (d) **`man/appServer.Rd`+`man/appUI.Rd`**:
+hand-synced `\value{}` (roxygen2 unavailable until renv; placed between
+`\arguments` and `\description` per modern roxygen2 — Phase 4
+`roxygenise()` canonicalizes). (e) **`LICENSE` 2017-2021 + `LICENSE.md`
+2017-2024 → both 2017-2026.** Also deleted the untracked stale
+`..Rcheck/` (owner-approved; no git change — was untracked). -
+**Verification (authoritative, renv-independent — Learning 96):**
+**`R CMD build --no-build-vignettes --no-manual` succeeded with only
+base R** → `tar tzf` of the 708-entry tarball: **0 of the §3.3 cruft
+paths ship, 0 hidden files anywhere** (incl. `code_under_development/`
+pruned by the existing dir pattern — a file-only static sim
+under-reports this, so the real build is authoritative); legit content
+(DESCRIPTION, NAMESPACE, WORDLIST, both `.Rd`, example data) ships;
+shipped `appUI.Rd` contains `\value`. `read.dcf("DESCRIPTION")` parses,
+`Package:` first, Version still `1.1.0.9000`, `VignetteBuilder: knitr`,
+Config last. [`tools::parse_Rd`](https://rdrr.io/r/tools/parse_Rd.html)
+OK + `\value` present on both. Guard tests
+**`test_appUI_version.R`/`test_getVersion.R` verified UNAFFECTED by
+reading them** (assert
+[`packageVersion()`](https://rdrr.io/r/utils/packageDescription.html)/[`getVersion()`](https://github.com/rmsharp/nprcgenekeepr/reference/getVersion.md)
+format — no version/logic changed; my `@return` edits are comments).
+Full testthat suite deferred to Phase 4’s
+[`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html)
+gate (Learning 92). - **\[news-vs-changelog\]:** packaging/metadata
+hygiene = dev-process history → **CHANGELOG only** (S102 entry); the
+user-facing NEWS rewrite is Phase 3
+(\[\[backlog-vs-changelog-placement\]\]). **\[macos-dupe-scan\]:**
+committed ONLY the 8 changed files + `SESSION_NOTES.md` +
+`CHANGELOG.md` + `PROJECT_LEARNINGS.md`; excluded `.DS_Store` (modified,
+standing) + `PED_GV_AUDIT_2026-05-30.html` (untracked, standing keep).
+
+**Phase-3E (runtime smoke test): N/A — STATED, not silently skipped.**
+Phase 1 changes NO runtime/app behavior: the `@return` additions are
+roxygen comments; DESCRIPTION metadata, LICENSE, and `.Rbuildignore` are
+not loaded at runtime; no `R/` logic changed. The verification
+appropriate to the deliverable is the **build-equivalent**
+(`R CMD build` + tarball inspection) + `read.dcf`/`parse_Rd` static
+checks — all run and clean. **NOT FM \#24** — I did not treat “build
+clean” as a proxy for untested runtime behavior; there is no runtime
+behavior to test here, and I verified the actual deliverable (a clean
+tarball).
+
+**Session 101 Handoff Evaluation (by Session 102): Score 9/10.** S101
+pre-named THIS deliverable as SUGGESTED-NEXT with the exact
+`…/cran-2.0.0-submission-plan.md` §4 Phase 1 pointer, and the plan it
+authored was an excellent executable spec — every <file:line> in
+§3.1/§3.2/§3.3 held firsthand (DESCRIPTION L1 Config / L23 mulatto / L81
+VignetteBuilder, both LICENSE years, all 11 cruft paths existed).
+Load-bearing gotchas were accurate and saved real time:
+renv-not-materialized (Learning 92 — I hit exactly this and routed
+around it), the `.Rbuildignore` perl-regex/paren hazard (respected),
+“NEWS is generated from NEWS.Rmd / don’t bump Version this session” (FM
+\#18 held), “no revdepcheck.” ROI: very high. **The −1:** the plan’s
+`^\.DS_Store$` was root-anchored and would have missed the tracked
+`man/.DS_Store`; the plan didn’t flag that `.DS_Store`/`.Rapp.history`
+are TRACKED in git (treated `.DS_Store` only as a tarball hidden-file),
+nor that `create_nprcgenekeepr_hexbadge.R` is the same dev-script class
+as the two `.R` files it listed. All three were trivially caught by the
+firsthand verification the plan itself prescribed — a light, fair dock.
+
+**Self-assessment (Session 102): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER in full, notes top, dashboard 98/100, git, 14 issues,
+ghost-check → `60b8c67c`=S101), reported, STOPPED for the owner’s task.
+Claimed the session (1B stub BEFORE technical work). **Headline
+strengths:** (1) **re-read every target firsthand** (FM \#20) and caught
+three plan gaps (man/.DS_Store via tracked-file check, broad-vs-anchored
+pattern, hexbadge.R) BEFORE editing; (2) **gated the change with one
+AskUserQuestion spelling out every concrete edit + verification** and
+surfaced the genuine forks (..Rcheck delete, broad `\.DS_Store$`) rather
+than deciding silently; (3) **verified authoritatively** — a real
+`R CMD build` tarball + `tar tzf`, not just the static sim, and honestly
+flagged the sim’s directory-prune blind spot; (4) solved the
+renv-unmaterialized constraint cleanly (build-without-vignettes for the
+tarball check + hand-synced `.Rd` — Learning 96); (5) **scope discipline
+(1-and-done):** did exactly Phase 1 — NO version bump (FM \#18), did NOT
+touch NEWS/CITATION.cff (Phase 3), did NOT `git rm` the owner’s standing
+`.DS_Store`, FLAGGED-not-fixed hexbadge.R and the stale `2017-2024`
+copyright headers in source/test files (avoided scope creep). **0
+stakeholder corrections.** Declared TDD REFACTOR + Phase-3E N/A with
+reasons. **The −1 (honest):** the full testthat suite could not be RUN
+(renv unmaterialized) — the guard tests are verified-by-reading
+(provably unaffected: comments + unchanged Version), not
+verified-by-running; the plan defers the full run to Phase 4, so this is
+expected and stated, but it is a deferred verification. Also the
+hand-synced `.Rd` may show a cosmetic whitespace diff when Phase 4 runs
+`roxygenise()` (stated). I reserve a 10 for a delivery with zero
+deferred verification.
+
+**⇒ SUGGESTED NEXT = owner’s pick.** Phase 1 DONE + verified; nothing
+mid-flight. Per the plan’s order, **Phase 2 — archival ROOT CAUSE
+(example/test/vignette timing) — is next and is the critical path /
+here-be-dragons** (`…/cran-2.0.0-submission-plan.md` §4 Phase 2): it
+REQUIRES
+[`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html)
+first (Learning 92/96), and the plan’s hard rules are **profile first,
+let the data name the offender** (don’t assume “timing” — the index
+reason is generic) and **RED-first any change that alters
+simulation/sampling numbers** (a speed-up that changes GVA output is a
+correctness regression). Prime suspect:
+`vignettes/simulatedKValues.Rmd`. Alternatively the owner may prefer
+Phase 3 (NEWS/version) — but the plan deliberately sequences the timing
+fix before the headline. **Do NOT** bundle phases (FM \#18/#25). **Small
+discovered follow-ups (owner’s call, NOT done — out of Phase 1 scope):**
+(a) `inst/extdata/create_nprcgenekeepr_hexbadge.R` still ships (same
+dev-script class; add `^inst/extdata/create_nprcgenekeepr_hexbadge\.R$`
+to retire it); (b)
+`.DS_Store`/`man/.DS_Store`/`.Rapp.history`/`inst/extdata/.Rapp.history`
+are TRACKED in git — now build-ignored so they won’t ship, but a
+`git rm --cached` would de-track them (left undone given the standing
+`.DS_Store` keep-call); (c) many `R/`+`tests/` files carry stale
+`Copyright(c) 2017-2024` headers — a future sweep could reconcile to
+2026 alongside the LICENSE fix.
+
+**Key files (this session):** **CHANGED (committed):** `.Rbuildignore`,
+`DESCRIPTION`, `LICENSE`, `LICENSE.md`, `R/appServer.R`, `R/appUI.R`,
+`man/appServer.Rd`, `man/appUI.Rd` (the Phase-1 deliverable);
+`CHANGELOG.md` (S102 \[Unreleased\] entry), `PROJECT_LEARNINGS.md`
+(Learning 96), `SESSION_NOTES.md` (this handoff). **DELETED:**
+`..Rcheck/` (untracked; no git change). **Read firsthand
+(verification):** `docs/planning/cran-2.0.0-submission-plan.md` (full),
+the 8 target files pre-edit, `tests/testthat/test_appUI_version.R`,
+`tests/testthat/test_getVersion.R`, `R/appServer.R` tail (return
+semantics). **Transient (NOT committed, in /tmp):**
+`/tmp/nprcgenekeepr_1.1.0.9000.tar.gz` (verification build),
+`/tmp/s102_verify.R` (Rd + ignore-sim script).
+
+**Gotchas:** (1) **Phase 1 is DONE + verified by a real tarball** — a
+future re-check is a delta, not a re-run. (2) **renv library is NOT
+materialized** (Learning 92) — Phase 2+ REQUIRE
+[`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html)
+first; until then only base-R checks work (`Rscript --vanilla`,
+`R CMD build --no-build-vignettes`). (3) **`.Rbuildignore` is perl-regex
+— an unbalanced paren even in a comment aborts `R CMD build`** (keep
+lines anchored/paren-free). (4) **`NEWS.md` is generated from
+`NEWS.Rmd`** — Phase 3 edits the `.Rmd`, never `NEWS.md` directly. (5)
+**The hand-synced `man/*.Rd` `\value` may get a cosmetic whitespace
+diff** when Phase 4 runs
+[`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html)
+— expected/benign. (6) **This close-out leaves `add-methodology` 2 ahead
+of origin** (S101 `60b8c67c` + this S102 commit) — push when ready
+(accumulate-then-push; S96/S99 pattern). (7) **No version bump
+happened** (Version still `1.1.0.9000`) — Phase 3 bumps to 2.0.0. (8)
+The standing `.DS_Store` (modified) + `PED_GV_AUDIT_2026-05-30.html`
+(untracked) remain uncommitted (owner’s keep-call).
+
+### What Session 101 Did
+
+**Deliverable:** Research + write a CRAN-submission preparation PLAN.
+**(DONE — `docs/planning/cran-2.0.0-submission-plan.md` written.)**
+Planning workstream (`ARCHITECTURE_WORKSTREAM.md` / SESSION_RUNNER
+planning rules). **The plan is the deliverable** — NO version bump / NO
+`NEWS.Rmd` rewrite / NO `R/`/test/`DESCRIPTION`/`.Rbuildignore` change
+this session (FM \#18 planning-to-implementation bleed; those are phases
+IN the plan). → **Learning 95.** **Started / Completed:** 2026-06-16
+**Status:** **DONE.** **TDD phase N/A** (planning doc, no
+RED/GREEN/REFACTOR code surface; declared every response). **No
+`AskUserQuestion` gates** (no TDD phase transitions; the owner’s scope
+forks are documented in the plan’s §8 with defaults rather than gated —
+the task was an unambiguous “research + create a plan”). **0 stakeholder
+corrections.** Right-sized as a **Workflow under ultracode**
+(`wy9xitgt6`: 5 web-research + 4 read-only codebase-audit agents =
+genuine independent breadth; 396k subagent tokens kept out of main
+context) **+ SOLO synthesis** (the plan is mine to author per the
+planning rules). - **🚨 HEADLINE (firsthand-verified, reshapes the whole
+task): the package is ARCHIVED on CRAN, not published.** `WebFetch` of
+`cran.r-project.org/web/packages/nprcgenekeepr/index.html` → **“Archived
+on 2025-07-29 as issues were not corrected in time.”** Last published =
+**1.0.8** (2025-07-26, = `CRAN-SUBMISSION`); prior **2022-11-03 archive
+→ 2025-04-24 unarchive (1.0.7)** cycle; 1.0.8 was RE-archived ~3 days
+after publish. Most-cited trigger (R-pkg-devel thread) = **CRAN
+test/example/vignette ELAPSED-TIME limits**. ⇒ This is a **resubmission
+of a (twice-)archived package**: the root-cause timing fix is the
+critical path, a clean one-time local check is
+necessary-but-NOT-sufficient (CRAN’s PERIODIC re-checks archive
+established pkgs — FM \#24 at CRAN scale), and `cran-comments.md` must
+explicitly address the archival. - **The plan = 6 phases**, each a
+separate strict-TDD session with DONE-criteria + verification commands +
+STOP point + here-be-dragons: **(1)** static hygiene (`.Rbuildignore`
+cruft + DESCRIPTION defects + `\value` on
+[`appServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md)/[`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md));
+**(2) ⚠ archival root cause** — profile-then-fix example/test/vignette
+timing (the critical/dragons phase; `vignettes/simulatedKValues.Rmd`
+simulations the prime suspect); **(3)** the owner’s headline —
+`NEWS.Rmd` rewrite into user-facing Major/Minor + bump DESCRIPTION →
+2.0.0 + regenerate README/CITATION.cff; **(4)**
+[`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html)
+→ full local `R CMD check --as-cran` gate; **(5)** win-builder ×3 +
+R-hub v2 + `cran-comments.md` → **owner submits**; **(6)**
+post-acceptance tag + GH release + dev bump. - **Evidence-based
+inventory** (SESSION_RUNNER planning mandate) in the plan §3: every
+version-string location for the bump + historical markers NOT to bump
+(`runGenekeepr.R:26 when="1.1.0"`, prior NEWS/inst strings,
+getVersion()-tracked files); DESCRIPTION/metadata defects
+(`'mulatto'`→`'mulatta'` typo `DESCRIPTION:23`+`CITATION.cff:15`; renv
+`Config` line before `Package:`;
+`VignetteBuilder: knitr, rmarkdown`→`knitr`; LICENSE year; missing
+`\value`); `.Rbuildignore` gaps (`.DS_Store`, `.Rapp.history`,
+`inst/extdata/.Rapp.history`, loose `inst/extdata` dev
+`.qmd`/`.R`/`.md`/`submission.txt`, `inst/_pkgdown.yml`); the 3
+recurring false-positive NOTEs to pre-explain; **no reverse
+dependencies** (revdepcheck NOT required). Full NEWS Major/Minor/DROP
+classification in plan §6.3. - **\[news-vs-changelog\]:** a planning doc
+= dev-process history → **CHANGELOG only** (S101 `[Unreleased]` entry),
+no `NEWS` (the actual NEWS rewrite is Phase 3)
+(\[\[backlog-vs-changelog-placement\]\], S95/S97 audit precedent).
+**\[macos-dupe-scan\]:** commit ONLY the new plan + `CHANGELOG.md` +
+`PROJECT_LEARNINGS.md` + `SESSION_NOTES.md`; exclude `.DS_Store`
+(modified) + the 2 standing untracked files (`..Rcheck/`,
+`PED_GV_AUDIT_2026-05-30.html`).
+
+**Phase-3E (runtime smoke test): N/A — STATED, not silently skipped.**
+Writing a plan changes NO runtime behavior (no `R/`/test change). The
+verification appropriate to the deliverable = the firsthand CRAN-status
+`WebFetch` (the pivotal claim) + the evidence-based <file:line>
+inventory (9 read-only auditors). **FM \#24 N/A** — no build step this
+session (and the plan itself elevates FM \#24 to a first-class risk for
+the executor: CRAN periodic re-checks, not the one-time check, archived
+this package).
+
+**Session 100 Handoff Evaluation (by Session 101): Score 9/10.** S100’s
+baselines all held firsthand: branch `add-methodology` 0/0 with origin,
+dashboard 98/100, ghost-check clean (HEAD = S100 coda commits), 14 open
+issues, the 2-untracked + `.DS_Store` disposition (applied verbatim),
+the `gh --json` field gotcha. The **branch model** note (“work on
+add-methodology; long-lived; don’t delete”) framed orientation
+correctly. The coda recording PR \#51 MERGED to master was accurate and
+saved me from re-checking merge state. The SUGGESTED-NEXT list (#45 /
+small TDD \#36/#29/#46 / \#2) was a sound menu — though the owner’s
+actual task (CRAN prep) was outside it, which is expected for an
+owner-directed pivot. ROI: high. **The −1:** the CRAN-readiness state
+was entirely absent from the handoff chain — no prior session had
+recorded that the package is *archived on CRAN* (the single most
+important fact for this task), so I discovered it cold. Fair/light: no
+prior session was doing CRAN work, so there was no reason to carry it;
+now captured in Learning 95 + this handoff so any future CRAN session
+inherits it.
+
+**Self-assessment (Session 101): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full, notes top, dashboard 98/100, git, 14
+issues, ghost-check), reported, STOPPED for the owner’s task. Claimed
+the session (Phase 1B stub BEFORE technical work). **Headline
+strengths:** (1) **did not trust the framing** — the owner (and the
+repo’s `cran-comments`/`CRAN-SUBMISSION`/`revdep/`) implied an
+established published package; a firsthand `WebFetch` proved it’s
+ARCHIVED, which reshaped the plan from “routine update” to “archived
+resubmission with a measured root-cause fix” (Learning 90 discipline
+applied to external state); (2) **right-sized the breadth as a 9-agent
+Workflow** (genuinely independent research+audit angles) while
+**authoring the plan myself** per the planning rules (grep-based
+inventory, per-phase completion criteria + verification + session
+boundaries, here-be-dragons); (3) **held the plan-is-the-deliverable
+line** — did NOT bump the version or touch NEWS (FM \#18); (4) flagged
+bot-blocked sources (mcpmarket 429; lobehub→canonical GitHub `SKILL.md`)
+as verified-vs-reconstructed so the executor knows what’s authoritative;
+(5) honored the project’s own “Major/Minor” NEWS convention over
+tidyverse’s (\[\[consult-project-source-of-truth\]\]). **Scope
+discipline (1-and-done):** produced exactly ONE plan document; did NOT
+implement any phase, did NOT touch package source / issues / the
+untracked files / `.DS_Store`. **0 stakeholder corrections.** Declared
+TDD N/A + Phase-3E N/A with reasons. **The −1 (honest):** the timing
+root cause (Phase 2) is *assumed from the mailing-list reason*, not yet
+measured — the plan correctly defers profiling to the executor and flags
+it as dragon \#1, but I could not narrow the offending example/vignette
+firsthand this session (renv unmaterialized + planning scope). I reserve
+a 10 for a delivery with no deferred load-bearing unknown.
+
+**⇒ SUGGESTED NEXT = owner’s pick.** The plan is written and committed;
+nothing mid-flight. The natural next session is **Phase 1 of the plan**
+(static CRAN hygiene — cheap, mechanical, high-confidence:
+`.Rbuildignore` cruft + DESCRIPTION fixes + `\value` docs), per
+`docs/planning/cran-2.0.0-submission-plan.md` §4 Phase 1. **Phase 2
+(timing) is the critical path** but should follow Phase 1. **Do NOT**
+start implementing until the owner confirms the plan / picks a phase.
+**Do NOT** bundle phases (FM \#18/#25). Owner decisions with defaults
+are in the plan §8 (version 2.0.0 ✓, Major/Minor naming ✓, owner submits
+✓, `secondQuartile` Minor-vs-Major flag, phase grain).
+
+**Key files (this session):** **NEW (committed):**
+`docs/planning/cran-2.0.0-submission-plan.md` (the deliverable).
+**CHANGED (committed):** `CHANGELOG.md` (S101 `[Unreleased]` entry),
+`PROJECT_LEARNINGS.md` (Learning 95 at tail), `SESSION_NOTES.md` (this
+handoff). **Read firsthand (verification):**
+`cran.r-project.org/web/packages/nprcgenekeepr/index.html` (archival
+status, `WebFetch`); `DESCRIPTION`, `.Rbuildignore`, `cran-comments.md`,
+`CRAN-SUBMISSION`,
+`docs/planning/issue30-lintr-exclusion-cleanup-plan.md` (house style);
+`ARCHITECTURE_WORKSTREAM.md`. **Workflow output (full 9-agent
+findings):**
+`/private/tmp/claude-501/-Users-rmsharp-Documents-Development-R-r-workspace-nprcgenekeepr/5b1492e9-aeff-4009-a54b-8ea72feb153f/tasks/wy9xitgt6.output`
+(884 lines); script at
+`…/workflows/scripts/cran-prep-research-wf_14d5e757-1b6.js`.
+
+**Gotchas:** (1) **The package is ARCHIVED on CRAN (2025-07-29)** — any
+CRAN session is an archived-resubmission, not a routine update; the
+timing root cause must be MEASURED (profile examples/tests/vignettes
+under `--as-cran`), not assumed; `cran-comments.md` must address the
+archival (Learning 95). (2) **`NEWS.md` is generated from `NEWS.Rmd`** —
+edit the `.Rmd` (plain ASCII) and re-render; never edit `NEWS.md`
+directly. (3) **The 1.1.0.9000 NEWS section double-counts changes** —
+the rewrite must merge duplicates (plan §6.3 / dragon \#4). (4)
+**`.Rbuildignore` is perl-regex — an unbalanced paren even in a comment
+aborts `R CMD build`** (anchored, paren-free lines only). (5) **renv
+library NOT materialized** (Learning 92) —
+[`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html)
+is a prerequisite for the check phases. (6) **A speed-up that changes
+simulation/sampling numbers is a correctness regression** — RED-first
+(dragon \#2). (7) **No reverse dependencies** — do NOT run `revdepcheck`
+(plan §3.5). (8) **The owner performs the CRAN upload + email
+confirmation** (Phase 5 STOP — outward-facing). (9) The 2 untracked
+files (`..Rcheck/`, `PED_GV_AUDIT_2026-05-30.html`) + `.DS_Store` remain
+uncommitted (build-ignored / owner’s standing keep-call). (10) **This
+close-out leaves `add-methodology` 1 ahead of origin** — push when ready
+(accumulate-then-push; S96/S99 pattern).
+
 ### What Session 100 Did
 
 **Deliverable:** Open a pull request merging `add-methodology` →
@@ -69,9 +3337,17 @@ commit** → committed lockfile-only as `638c17dd`
 so `git push origin add-methodology` published all S100 commits
 (`ce255f99` handoff + `638c17dd` renv.lock + this coda commit). **⇒
 `add-methodology` ends FULLY synced with origin (0/0).** PR \#51’s head
-ref advances to include these (the PR now also carries the S100
-handoff + renv.lock commits on top of the 54 it was opened with); PR
-\#51 stays OPEN/MERGEABLE — still NOT merged (owner’s call).
+ref advanced to include these (57 commits total). (c) **merge** — owner
+then said merge → `gh pr merge 51 --merge` (merge commit, branch NOT
+deleted) → **PR \#51 MERGED**
+(`7a8433b3 Merge pull request #51 from rmsharp/add-methodology`,
+2026-06-17T04:02Z); `origin/master` advanced `c6ad23dd..7a8433b3`.
+`add-methodology` survives (long-lived working branch), now has **0
+commits not in master** (all work merged). The `git rev-list` “master 3
+ahead of add-methodology” is benign — the 3 accumulated
+`Merge pull request #41/#43/#51` nodes (Learning 94). **This S100-coda
+commit (recording the merge) is itself committed + pushed**, so
+`add-methodology` ends 0/0 with origin again.
 
 **Phase-3E (runtime smoke test): N/A — STATED, not silently skipped.**
 Creating a PR changes NO runtime behavior on this machine (no `R/`/test

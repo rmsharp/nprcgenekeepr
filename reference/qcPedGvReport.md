@@ -1,4 +1,4 @@
-# qcPedGvReport is a genetic value report
+# Genetic-value report for qcPed
 
 qcPedGvReport is a genetic value report for illustrative purposes only.
 It is used in examples and unit tests with the nprcgenekeepr package. It
@@ -13,7 +13,7 @@ was created using the following commands.
 ## Usage
 
 ``` r
-qcPedGvReport
+data(qcPedGvReport)
 ```
 
 ## Format

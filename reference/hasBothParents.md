@@ -1,6 +1,6 @@
-# hasBothParents checks to see if both parents are identified.
+# hasBothParents checks to see if both parents are identified
 
-hasBothParents checks to see if both parents are identified.
+hasBothParents checks to see if both parents are identified
 
 ## Usage
 

@@ -1,4 +1,4 @@
-# Determines the generation number for each id.
+# Determines the generation number for each id
 
 This loops through the entire pedigree one generation at a time. It
 finds the zeroth generation during first loop. The first time through

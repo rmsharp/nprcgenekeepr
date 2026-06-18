@@ -1,12 +1,14 @@
-# focalAnimals is a dataframe with one column (*id*) containing the of animal Ids from the **examplePedigree** pedigree.
+# Focal animal IDs from examplePedigree
 
-They can be used to illustrate the identification of a population of
-interest as is shown in the example below.
+A dataframe with one column (*id*) containing the animal Ids from the
+**examplePedigree** pedigree. They can be used to illustrate the
+identification of a population of interest as is shown in the example
+below.
 
 ## Usage
 
 ``` r
-focalAnimals
+data(focalAnimals)
 ```
 
 ## Format

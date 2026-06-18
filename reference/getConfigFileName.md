@@ -1,7 +1,7 @@
-# getConfigFileName returns the configuration file name appropriate for the system.
+# getConfigFileName returns the configuration file name appropriate for the system
 
 getConfigFileName returns the configuration file name appropriate for
-the system.
+the system
 
 ## Usage
 

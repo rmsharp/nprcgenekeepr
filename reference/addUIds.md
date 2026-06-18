@@ -1,4 +1,4 @@
-# Eliminates partial parentage situations by adding unique placeholder IDs for the unknown parent.
+# Eliminates partial parentage situations by adding unique placeholder IDs for the unknown parent
 
 This must be run prior to `addParents` since the IDs made herein are
 used by `addParents`
