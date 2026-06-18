@@ -14,6 +14,12 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-17 — Merged PR #52: `add-methodology` → `master` (S101–S117 now on master) (Session 119)
+- **Deliverable (owner instruction):** merged **PR #52** with a merge commit (`gh pr merge 52 --merge`), bringing **S101–S117** into `master`. Owner explicitly directed the merge (delegating what S118 had left to them). **TDD phase N/A** (VCS operation; no code authored). **0 stakeholder corrections.**
+- **Result:** `origin/master` advanced `7a8433b3 → 85b3f4f6 "Merge pull request #52 from rmsharp/add-methodology"` — a 2-parent merge commit (parents `7a8433b3` + `55331c17`), matching the #41/#43/#51 pattern. Confirmed `origin/master` now contains `55331c17` (S117). PR #52 state MERGED.
+- **Branch hygiene:** `add-methodology` NOT deleted (stays the ongoing dev branch) and NOT reconciled backward (stays linear; it now shows "behind" `origin/master` by the `85b3f4f6` merge bubble — normal per Learning 112). Pushed the held S118 close-out (`e17b62ee`) + this S119 close-out to `origin/add-methodology`.
+- **Phase-3E N/A** — branch/PR operation, no runtime behavior change. **No new learning** (Learning 112 already covers the topology and PR mechanism).
+
 ### 2026-06-17 — Open PR #52 to merge `add-methodology` → `master` (push + open; owner merges) (Session 118)
 - **Deliverable (owner pick C):** opened **PR #52** (base `master` ← head `add-methodology`) to merge the 18 unmerged commits **S101–S117** into `master`, following the established #41/#43/#51 PR workflow. Owner chose **"push + open PR, owner merges"** via a gated `AskUserQuestion`; I pushed and opened the PR and **stopped before merging** (owner reviews/merges on GitHub). **TDD phase N/A** (VCS operation; no code authored). **0 stakeholder corrections.**
 - **Topology (discovered via `git fetch`, read-only):** local `master` (4790b64f) was STALE — 168 behind `origin/master` (7a8433b3 = the PR #51 merge); the real target is `origin/master`. `add-methodology` (55331c17) and `origin/master` diverged 18-ahead / 3-behind, where the 3 "behind" are only the PR #41/#43/#51 merge bubbles (add-methodology stays linear, never pulling them back). Fork point `14032640` (S100). → Learning 112.
