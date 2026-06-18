@@ -8,7 +8,8 @@ message: 'To cite package "nprcgenekeepr" in publications use:'
 type: software
 license: MIT
 title: 'nprcgenekeepr: Genetic Tools for Colony Management'
-version: 1.0.7
+version: 2.0.0
+date-released: '2026-06-18'
 abstract: 'Provides genetic tools for colony management and is a derivation of the
   work in Amanda Vinson and Michael J Raboin (2015) <https://pmc.ncbi.nlm.nih.gov/articles/PMC4671785/>
   "A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity

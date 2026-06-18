@@ -5,7 +5,7 @@ R. Mark Sharp, Ph.D.
 
 # nprcgenekeepr <a href="https://github.com/rmsharp/nprcgenekeepr"><img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
 
-Version 1.1.0.9000 (2026-06-01)
+Version 2.0.0 (2026-06-17)
 
 <!-- badges: start -->
 
