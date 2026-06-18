@@ -19,6 +19,12 @@ A pedigree object with genotype data added.
 \description{
 Assumes genotype has been opened by \code{checkGenotypeFile}
 }
+\details{
+The two allele columns are coerced to character internally so the name-keyed
+allele dictionary is both built and indexed by allele label. This keeps the
+integer encoding consistent even when the allele columns are supplied as
+factors (a factor would otherwise be indexed by its integer codes).
+}
 \examples{
 library(nprcgenekeepr)
 rhesusPedigree <- nprcgenekeepr::rhesusPedigree
