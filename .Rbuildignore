@@ -58,6 +58,7 @@ README\.*\.png$
 # Quarto pkgdown articles (website-only; never shipped). One pattern covers the
 # .qmd articles, vignettes/articles/_quarto.yml, and any .quarto/ build cache.
 ^vignettes/articles$
+^data-raw$
 ^dev$
 ^doc$
 ^Meta$
