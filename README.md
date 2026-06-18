@@ -55,7 +55,7 @@ At present, the application supports 5 functions:
 **For more information see:**  
 A Practical Approach for Designing Breeding Groups to Maximize Genetic
 Diversity in a Large Colony of Captive Rhesus Macaques (*Macaca
-mulatto*) Vinson, A ; Raboin, MJ *Journal Of The American Association
+mulatta*) Vinson, A ; Raboin, MJ *Journal Of The American Association
 For Laboratory Animal Science*, 2015 Nov, Vol.54(6), pp.700-707 \[Peer
 Reviewed Journal\]
 
@@ -223,6 +223,6 @@ groups and restricts the number of males to one per group.
 **For more information see:**  
 A Practical Approach for Designing Breeding Groups to Maximize Genetic
 Diversity in a Large Colony of Captive Rhesus Macaques (*Macaca
-mulatto*) Vinson, A ; Raboin, MJ *Journal Of The American Association
+mulatta*) Vinson, A ; Raboin, MJ *Journal Of The American Association
 For Laboratory Animal Science*, 2015 Nov, Vol.54(6), pp.700-707 \[Peer
 Reviewed Journal\]

@@ -125,6 +125,8 @@ Each `[...]` is one session with a STOP point. The pipeline is necessarily **mos
 
 ### Phase 1 — Static CRAN hygiene (build cruft + DESCRIPTION + `\value` docs)
 
+> **STATUS: COMPLETE** (verified against the live tree by S132). Executed by **S102** (commit `a3cf3623`): all §3.3 `.Rbuildignore` build-cruft lines, the §3.2 DESCRIPTION fixes (`mulatto`→`mulatta`, renv `Config/*` reordering, `VignetteBuilder: knitr`), the `@return`/`\value` docs for `appServer()`/`appUI()`, and the LICENSE-year reconcile (both files `2017-2026`). **S132** finished the one tail S102 missed — the species typo survived in `README.Rmd`/`README.md`, the `_introduction.Rmd` vignette child, `CITATION.cff`, and `_pkgdown.yml` (website description) — S102 fixed only DESCRIPTION. The **only** remaining §3.2 item is the **optional** DOI (this plan marks `<https:>` acceptable), so Phase 1 needs no further session.
+
 - **Deliverable:** a CRAN-clean DESCRIPTION, complete exported-function docs, and a tarball that ships no stray files — all verifiable by build + static inspection without `renv::restore()`.
 - **DONE looks like:** `R CMD build .` then `tar tzf nprcgenekeepr_*.tar.gz` shows **none** of the §3.3 paths; DESCRIPTION has `Package:` first, `mulatta`, `VignetteBuilder: knitr`; `man/appServer.Rd` + `man/appUI.Rd` have `\value`; `LICENSE` year reconciled.
 - **Steps:** (a) append the §3.3 `.Rbuildignore` lines + `rm -rf ..Rcheck`; (b) DESCRIPTION fixes §3.2 (mulatto→mulatta, move renv `Config` line below standard fields, `VignetteBuilder: knitr`, LICENSE year; DOI optional); (c) add `@return` to `R/appServer.R` + `R/appUI.R`, `devtools::document()`. **Do NOT bump the version here** (Phase 3).
@@ -264,7 +266,7 @@ Rewrite the existing `cran-comments.md` (fixing its doubled "## Reverse dependen
 
 | Phase | Deliverable | Verify | TDD | Session? |
 |---|---|---|---|---|
-| 1 | Build cruft + DESCRIPTION + `\value` clean | `R CMD build` + `tar tzf` grep; targeted check | REFACTOR/mechanical | 1 |
+| 1 ✅ | Build cruft + DESCRIPTION + `\value` clean **(DONE: S102 + typo tail S132)** | `R CMD build` + `tar tzf` grep; targeted check | REFACTOR/mechanical | 1 |
 | 2 ⚠ | Examples/tests/vignettes fast under `--as-cran` | check timing section clean; regression read green | RED→GREEN→REFACTOR where logic moves | 1 |
 | 3 | NEWS Major/Minor + 2.0.0 bump | NEWS re-renders; version-tests green | prose + REFACTOR | 1 |
 | 4 | Clean local `--as-cran` | the check log (0/0/0 or explained) | verification | 1 |
