@@ -150,6 +150,8 @@ Each `[...]` is one session with a STOP point. The pipeline is necessarily **mos
 
 ### Phase 3 — `NEWS.Rmd` rewrite (Major/Minor, user-facing) + version bump to 2.0.0  (owner's headline)
 
+> **STATUS: COMPLETE — verified firsthand S139.** `NEWS.Rmd` carries a single `# nprcgenekeepr 2.0.0 (20260618)` section with **Major changes / Minor changes** sub-bullets, re-rendered to `NEWS.md`; `DESCRIPTION:5` = `2.0.0` (bumped S131, `e24a53a2`); `README.md` ("Version 2.0.0") + `CITATION.cff` (`version: 2.0.0`) regenerated; prior version sections untouched. Version-dependent tests green (S138 full regression 0/0).
+
 - **Deliverable:** the single post-1.0.8 `NEWS` section reorganized into user-facing **Major changes / Minor changes** for **2.0.0**, re-rendered to `NEWS.md`; DESCRIPTION at 2.0.0; README + CITATION.cff regenerated. Full spec in **§6**.
 - **DONE looks like:** `NEWS.Rmd` has one `# nprcgenekeepr 2.0.0 (YYYYMMDD)` section with `- Major changes` / `- Minor changes` sub-bullets matching the project's historical terse style (§6.2), de-duplicated, with breaking changes flagged; `NEWS.md` re-rendered from it; `DESCRIPTION:5` = `2.0.0`; `README.md` + `CITATION.cff` regenerated to 2.0.0; prior version sections untouched.
 - **Steps:** (a) edit **`NEWS.Rmd`** (source) per §6 — author plain ASCII, then re-render to `NEWS.md` (github_document); (b) `usethis::use_version("major")` *or* hand-edit `DESCRIPTION:5` → 2.0.0; (c) `devtools::build_readme()`; (d) `cffr::cff_write()`.
@@ -274,7 +276,7 @@ Rewrite the existing `cran-comments.md` (fixing its doubled "## Reverse dependen
 |---|---|---|---|---|
 | 1 ✅ | Build cruft + DESCRIPTION + `\value` clean **(DONE: S102 + typo tail S132)** | `R CMD build` + `tar tzf` grep; targeted check | REFACTOR/mechanical | 1 |
 | 2 ✅ | Examples/tests/vignettes fast under `--as-cran` **(MEASURED S133: timing within limits — archival cause already resolved; fixed the lone real CRAN-blocker, an undeclared `withr` test dep)** | `--as-cran` 0 ERROR / 0 WARNING; regression read 0/0 | RED→GREEN (`withr` in Suggests); REFACTOR N/A | 1 |
-| 3 | NEWS Major/Minor + 2.0.0 bump | NEWS re-renders; version-tests green | prose + REFACTOR | 1 |
+| 3 ✅ | NEWS Major/Minor + 2.0.0 bump **(DONE: single 2.0.0 Major/Minor `NEWS` section re-rendered; DESCRIPTION/README/CITATION.cff all at 2.0.0 — verified S139)** | NEWS re-renders; version-tests green | prose + REFACTOR | 1 |
 | 4 ✅ | Clean local `--as-cran` **(DONE: S134 true gate — 4 Suggests installed, `Status: 2 NOTEs` = 0 ERROR / 0 WARNING, both false-positive; WORDLIST +35; roxygenise/URL clean)** | the check log (0/0/2-NOTE explained) | verification | 1 |
 | 5 ◑ | win-builder ×3 + R-hub + cran-comments | platform reports captured | verification/packaging | 1 → owner submits |
 | 5a ✅ | `cran-comments.md` rewrite (§7) + cross-platform **runbook** **(DONE: S135, scope A; adversarially verified)** | cover note CRAN-facing-only; runbook commands verified | verification | 1 |

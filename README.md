@@ -5,7 +5,7 @@ R. Mark Sharp, Ph.D.
 
 # nprcgenekeepr <a href="https://github.com/rmsharp/nprcgenekeepr"><img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
 
-Version 2.0.0 (2026-06-17)
+Version 2.0.0 (2026-06-19)
 
 <!-- badges: start -->
 
@@ -219,10 +219,3 @@ the groups, though this has likely been a consideration by the user in
 selecting the candidate group members. Optionally the user may select to
 form harem groups, which considers the sex of individuals when forming
 groups and restricts the number of males to one per group.
-
-**For more information see:**  
-A Practical Approach for Designing Breeding Groups to Maximize Genetic
-Diversity in a Large Colony of Captive Rhesus Macaques (*Macaca
-mulatta*) Vinson, A ; Raboin, MJ *Journal Of The American Association
-For Laboratory Animal Science*, 2015 Nov, Vol.54(6), pp.700-707 \[Peer
-Reviewed Journal\]

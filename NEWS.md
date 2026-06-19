@@ -49,7 +49,7 @@ R. Mark Sharp, Ph.D.
   - The **About** panel now shows the installed package version
     dynamically (it previously displayed a hard-coded “Version 1.0.8”).
   - `geneDrop()` now reports duplicate animal IDs with a clear error
-    instead of the base-R “duplicate ‘row.names’ are not allowed”
+    instead of the base-R `duplicate 'row.names' are not allowed`
     message.
   - Reading a file whose final line lacks a trailing newline no longer
     emits the spurious “incomplete final line” warning. (#4)
