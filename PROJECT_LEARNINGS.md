@@ -8912,3 +8912,117 @@ child changes every consumer (here `a3manual.Rmd` +
 **Apply:** any fix to a flag/warning on a knitr/pandoc/roxygen-generated
 artifact, and any edit that requires re-rendering `NEWS.md` /
 `README.md`.
+
+#### Learning 133 — Before merging a PR, triage its CI checks: a red check is not automatically a merge-blocker. `gh pr view --json mergeStateStatus` distinguishes **BLOCKED** (a *required* check is failing — do not merge) from **UNSTABLE** (mergeable; only non-required checks are red). When a check is red, read its log and CLASSIFY it — required vs optional, correctness vs style, introduced-by-this-PR vs pre-existing — and report that classification; don’t merge blind, and don’t refuse a merge the owner directed just because a non-required style check is red. (S140, owner directive “merge \#54”)
+
+**What happened.** PR \#54 (the 2.0.0 merge) came back
+`mergeable: MERGEABLE` but `mergeStateStatus: UNSTABLE`.
+`gh pr checks 54` showed every R-CMD-check (macOS / Windows / Ubuntu
+devel+oldrel+release), test-coverage, codecov, and pkgdown **PASS** —
+and exactly one red: `lint`. Reading the failed job log, the lint
+failure was ~30 `lintr` STYLE warnings (`return_linter` “explicit
+return() not needed”, `seq_linter` “use seq_along”, `coalesce_linter`
+“use %\|\|%”, `nonportable_path_linter`, `boolean_arithmetic_linter`) in
+long-standing core files (`qcStudbook.R`, `geneDrop.R`,
+`removeDuplicates.R`, `makeFounderStatsTable.R`, the `mod*.R` modules,
+…) plus a CI config wart (`cyclocomp` package not installed → exit 31).
+None were correctness issues, none were introduced by S139 (docs only —
+zero R code), and `lint` is **non-required** (hence UNSTABLE not BLOCKED
+— GitHub allowed the merge). So the disciplined output was to **surface
+the finding** (“the only red check is non-required pre-existing style
+lint; all correctness checks pass”) and **proceed with the
+owner-directed merge** — neither merging silently over a red check nor
+refusing it. Merge landed: merge commit `46dfc766`, `origin/master` now
+`Version: 2.0.0`. A trap en route: `gh pr view 54 --json merged` errors
+(`merged` is not a field — use `state` / `mergedAt`); the field error
+made a *successful* merge look failed until I re-checked with
+`state: MERGED`.
+
+**Reflexes:** \[before merging, run `gh pr checks <N>` and
+`gh pr view <N> --json mergeStateStatus,mergeable` — BLOCKED = a
+required check failing (stop), UNSTABLE = mergeable with only
+non-required checks red\]\[when a check is red, open its log and
+CLASSIFY it (required vs optional, correctness vs style, introduced vs
+pre-existing) and report that — merging blind and refusing-on-any-red
+are both wrong\]\[a non-required lint/style check failing is
+informational debt, not a correctness gate — an explicit owner merge
+directive proceeds, with the finding surfaced\]\[use a merge commit (not
+squash) to preserve a long-lived branch’s per-session history; never
+`--delete-branch` unless told\]\[verify the merge actually landed
+(`git fetch` + `git show origin/master:DESCRIPTION` +
+`git merge-base --is-ancestor <head> origin/master`) — don’t trust the
+`gh pr merge` exit alone; a bad `--json` field query can mask success,
+so confirm `state: MERGED` / `mergedAt`\]. **Apply:** any PR merge,
+especially into a protected/default branch with mixed required +
+informational CI checks. (Records a known state: `lint` is RED on
+`master` — pre-existing lintr style debt; a future REFACTOR session
+could clear it to green.)
+
+#### Learning 134 — Clearing a lint check is a FIXPOINT problem, not a one-pass edit: an autofix that satisfies its TARGET linter can TRIGGER other linters (a cascade), so the only reliable completion signal is re-running `lint_package()` over the WHOLE tree after the per-file fixes and repeating until 0 — never trust a per-file fixer’s “done.” And a linter message is a suggestion, not a mandate: `nonportable_path_linter` fires on any `/`-bearing string (incl. MIME types), `coalesce_linter` assumes `%||%` exists — when the literal fix is wrong or unavailable, prefer `# nolint` (extending the author’s intent) or disabling the linter in `.lintr`, not the transformation the message names. (S141, owner pick — Lint cleanup → green CI; this clears the exact state Learning 133 flagged)
+
+**What happened.** The CI lint log showed “~30” warnings (Learning 133’s
+count); a firsthand `lint_package()` found **57** across 33 files. Owner
+picks: disable `coalesce_linter` (11), fix `data-raw` (5), continue on
+`add-methodology`. After `.lintr` got `coalesce_linter = NULL`, 46 code
+fixes remained across 28 files; I ran a fix→adversarial-review workflow
+(one fixer + one independent behavior-neutrality reviewer per file, 56
+agents). 27 files came back clean; the central re-lint then read **5,
+not 0** — all in `removeDuplicates.R`: the `boolean_arithmetic` autofix
+`sum(duplicated(x)) == 0L` → `!any(duplicated(x))` *cleared its target*
+but *triggered three new linters* (`if_not_else`, `any_duplicated`,
+`unnecessary_nesting`). The per-file fixer could not see this — it only
+knew its assigned lints. I rewrote the function to
+`if (anyDuplicated(x) > 0L) <dups> else NULL` and converted the
+[`stop()`](https://rdrr.io/r/base/stop.html) branch to a guard clause
+(`if (anyDuplicated(p$id) > 0L) stop(...); p`), which satisfied all four
+linters and preserved exact behavior (`sum(duplicated)==0` ⟺ no dups ⟺
+`anyDuplicated > 0` false, including the empty-vector edge:
+`duplicated(character(0))` → no dups, `anyDuplicated` → 0). Re-lint →
+**0**. Two more context-blind-linter judgments: (a)
+`nonportable_path_linter` flagged a **MIME-type** string in
+`modPedigree`’s `fileInput(accept = c(...))` — the author had *already*
+put `# nolint: nonportable_path_linter` on the adjacent `"text/csv"`
+line (clear intent: false positive) but missed the second string; the
+fixer “fixed” it by wrapping the MIME type in
+[`file.path()`](https://rdrr.io/r/base/file.path.html) (output
+identical, semantically wrong), so I restored the readable string +
+extended the `# nolint`. (b) `coalesce_linter` wants `%||%`, but base R
+only added it in 4.4, the package `Depends: R (>= 4.1.0)`, and shiny
+1.13 dropped its export — adopting it would silently break R 4.1–4.3, so
+disabling (consistent with the 7 linters `.lintr` already disables) was
+correct, not a transformation. The `cyclocomp` wart: `.lintr` already
+NULLs `cyclocomp_linter`, but `linters_with_tags()` constructs it at
+config-load and warns when `cyclocomp` is absent (non-fatal — clearing
+the lints alone makes CI green); added `any::cyclocomp` to `lint.yaml`
+to silence the log noise. The one `line_length` fix on a roxygen comment
+(`R/data.R:358`) meant the generated `.Rd` was stale, so I regenerated
+`man/` (installed roxygen2 == the pinned
+`Config/roxygen2/version: 8.0.0`, so no version-churn) — diff confined
+to `man/rhesusPedigree.Rd`’s one reflowed line. Final triple:
+`lint_package()` = 0, full suite 0/0, `R CMD check` Status OK (0/0/0),
+plus a firsthand read of the entire diff.
+
+**Reflexes:** \[a lint sweep is iterative — after applying fixes, re-run
+the linter over the WHOLE package and repeat until 0; an autofix can
+clear its target and trigger others (`boolean_arithmetic` →
+`if_not_else` + `any_duplicated` + `unnecessary_nesting`), and per-file
+fixers are blind to the cascade\]\[don’t trust a fan-out’s per-file
+“fixed” as the completion signal — the authoritative checks are the
+central re-lint + the full test suite, run by you\]\[a linter message is
+a suggestion, not a mandate: `nonportable_path_linter` fires on MIME
+types / URLs, `coalesce_linter`/`undesirable_*` assume an idiom exists —
+when the literal fix is wrong (MIME-as-path) or unavailable (`%||%`
+below the R floor), prefer `# nolint` (extend the author’s existing
+intent) or disable the linter in `.lintr` (consistent with its
+already-disabled set)\]\[check the package’s R-version floor before
+adopting a “newer idiom” autofix — `%||%` is base only since R 4.4; the
+pkg Depends R≥4.1 and shiny 1.13 no longer exports it\]\[if a style fix
+touches a roxygen comment, regenerate `man/` (confirm installed
+`roxygen2` == the pinned `Config/roxygen2/version` first, to avoid
+version-churn) and diff `man/` to confirm the regeneration is
+confined\]\[a behavior-neutral REFACTOR’s build-equivalent is the full
+triple — `lint_package()`=0, full suite 0/0, `R CMD check` Status OK —
+plus a firsthand read of the entire `git diff`, not the fixers’
+summaries\]. **Apply:** any lint/style/formatter cleanup, any session
+acting on linter autofixes, and any fan-out whose per-agent outputs need
+a central re-verification.
