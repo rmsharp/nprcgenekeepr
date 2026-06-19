@@ -7,6 +7,11 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 - [ ] (none in progress)
 
 ## Up Next
+- [ ] **Research LabKey integration options** — a research/evaluation pass (RESEARCH_DOCUMENTATION
+      workstream) on how nprcgenekeepr integrates with LabKey: the current `Rlabkey` API surface and
+      auth model, alternative/updated integration approaches, schema/query options, and version/maintenance
+      risk. Output: one research document with a recommendation. (Added S142 per owner request; could be
+      promoted to a GitHub issue for the formal tracker.)
 - [ ] **Strengthen the shinytest2 E2E assertions + CI stability** — GitHub issue **#40**, the open
       follow-on to the now-complete Phase 8 E2E harness: replace boot-level tautologies with behavioral
       checks, and harden the full-tier Chrome process-count flake (per-group fresh processes). Coverage
