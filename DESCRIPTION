@@ -71,7 +71,8 @@ Suggests:
     shinyBS,
     shinyWidgets,
     spelling,
-    testthat
+    testthat,
+    withr
 Language: en-US
 Encoding: UTF-8
 License: MIT + file LICENSE
