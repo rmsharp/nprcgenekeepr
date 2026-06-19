@@ -9026,3 +9026,61 @@ plus a firsthand read of the entire `git diff`, not the fixers’
 summaries\]. **Apply:** any lint/style/formatter cleanup, any session
 acting on linter autofixes, and any fan-out whose per-agent outputs need
 a central re-verification.
+
+#### Learning 135 — To make a CI check’s fix demonstrably green you may have to MERGE it where the workflow runs: a check whose workflow triggers only on `pull_request` / push-to-default is invisible on a feature-branch push, so the fix’s green status is unverifiable until a PR runs — open the PR, watch all checks, then merge (do not merge blind). And when adopting a default-branch workflow, the local default branch is often badly STALE and `git pull` may be reconfigured to rebase (`pull.rebase=true`) — which a standing junk modification (`.DS_Store`) will block; sync a stale-but-ancestor local branch with `git fetch` + `git reset --hard origin/<branch>` (after `git merge-base --is-ancestor HEAD origin/<branch>` proves it’s an ff), NOT `git pull`. (S142, owner directive “work on 1, 2, and 3” + branch plan “merge now, switch to master”)
+
+**What happened.** S141 cleared all `lintr` lints on `add-methodology`,
+but the repo’s `lint` GitHub Actions workflow triggers only on
+`pull_request` and push to `main`/`master` — NOT on push to
+`add-methodology` — so the fix was green *locally* yet the `lint` check
+stayed RED on `master` and there was no CI run anywhere to prove the fix
+worked. The only way to see it pass was to open a PR. I pushed S141’s 2
+commits, opened **PR \#55** (`add-methodology`→`master`), and watched
+all checks via a background `gh pr checks 55 --watch` → 11/11 PASS,
+including **`lint` PASS** and `mergeStateStatus: CLEAN` (vs PR \#54’s
+UNSTABLE when lint was red) — only *then* merged (`--merge`, merge
+commit `f44a5322`), verifying it landed firsthand
+(`merge-base --is-ancestor 507de407 origin/master`). Then, executing the
+owner’s “switch to master”, I hit two git traps in sequence: (a) local
+`master` was **215 commits stale** (it had never been the working branch
+— all work was on `add-methodology`), and (b) `git pull` failed with
+“cannot pull with rebase: You have unstaged changes” because the repo
+has `pull.rebase=true` and the standing `.DS_Store` modification (a
+never-commit keep) was in the tree. Rather than stash-juggling or
+force-flailing, I confirmed local master was a **strict ancestor** of
+`origin/master` (`git merge-base --is-ancestor HEAD origin/master` = YES
+→ a hard reset is exactly a fast-forward of tracked content, and
+`git status --untracked-files=no` showed `.DS_Store` was the *only*
+tracked modification, so nothing real to lose), then
+`git reset --hard origin/master` → clean at the merge tip. The
+disposable Phase-1B stub was discarded before the switch (it gets
+rewritten as the full handoff anyway). The standing keeps were
+respected: `PED_GV_AUDIT_2026-05-30.html` (untracked) untouched by the
+reset; `.DS_Store` reset to its committed bytes (the keep is “never
+*commit* it”, not “preserve this exact local modification”).
+
+**Reflexes:** \[a CI check that is RED because its fix lives on a branch
+the workflow doesn’t run on is only PROVABLE-green via a PR (or a push
+to the trigger branch) — open the PR, watch ALL checks
+(`gh pr checks <N> --watch`), confirm the target check PASS +
+`mergeStateStatus: CLEAN`, THEN merge; never merge blind (Learning
+133)\]\[use a background `gh pr checks <N> --watch` so the harness
+re-invokes you when CI finishes — don’t poll\]\[after merging, verify
+firsthand it landed: `state: MERGED` +
+`git merge-base --is-ancestor <fix-commit> origin/<base>` + the expected
+`DESCRIPTION` version — not the `gh` exit alone\]\[a local default
+branch you’ve never used is probably FAR behind origin — `git fetch`
+then check `git merge-base --is-ancestor HEAD origin/<branch>`; if YES
+it’s a safe fast-forward\]\[this repo has `pull.rebase=true` —
+`git pull` becomes a rebase and ABORTS on any unstaged change (the
+standing `.DS_Store`); to sync a stale-but-ancestor local branch use
+`git reset --hard origin/<branch>` (provably ff-equivalent) instead of
+`git pull`\]\[before any `reset --hard`, prove safety: confirm
+strict-ancestor AND that `git status --untracked-files=no` shows only
+throwaway tracked modifications — `reset --hard` discards tracked-file
+changes but leaves genuinely-untracked files (so the `PED_GV_AUDIT` keep
+survives)\]\[a “standing keep” of a junk file (`.DS_Store`) means never
+COMMIT it, not preserve its exact local bytes — resetting it is fine\].
+**Apply:** any session that pushes/merges to make a CI check green, any
+branch-strategy switch to a long-dormant local default branch, and any
+`git pull`/`reset` on this repo (mind `pull.rebase=true`).

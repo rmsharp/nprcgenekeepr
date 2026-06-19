@@ -15,6 +15,38 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-19 — Branch reconciliation: pushed S141, merged PR \#55 (lint fix → `master`, `lint` now GREEN), switched the working line to `master` (Session 142)
+
+- **Deliverable (owner directive “work on 1, 2, and 3”):** (1) push
+  S141’s 2 local commits, (2) get `lint` green on `master`, (3) settle
+  the branch-strategy decision. **VERIFICATION/admin phase** — git
+  operations + a PR, no production-code change; 0 stakeholder
+  corrections. Owner picked branch plan **“Merge now, switch to
+  master”** via `AskUserQuestion` (the one owner decision, posed before
+  any merge).
+- **Item 1 — push:** verified branch state firsthand (Learning 129) then
+  pushed `add-methodology` (`fb91e739..7016c376`); re-verified `0/0` vs
+  origin.
+- **Item 2 — lint green on master (did not merge blind, Learning 133):**
+  opened **PR \#55** (`add-methodology`→`master`); watched all checks →
+  **11/11 PASS**, crucially **`lint` PASS** (4m28s) +
+  `mergeStateStatus: CLEAN` (vs PR \#54’s UNSTABLE) — the S141 fix
+  verified green end-to-end (the `lint` workflow runs only on a PR /
+  push-to-master, so a PR was the only way to see it pass). Merged with
+  a merge commit → **`f44a5322`**; verified it landed (`state: MERGED`;
+  `merge-base --is-ancestor 507de407 origin/master` = YES; master still
+  `Version: 2.0.0`).
+- **Item 3 — switch to master (recovered a stale-branch trap → Learning
+  135):** local `master` was 215 commits stale and `git pull` choked
+  (`pull.rebase=true` + the standing `.DS_Store` change); after
+  confirming local master was a strict ancestor of `origin/master`,
+  `git reset --hard origin/master` (ff-equivalent, no local commits to
+  lose) → at `f44a5322`, lint fix present, clean tree. `add-methodology`
+  is now merged & dormant (NOT deleted).
+- **Backlog (owner mid-session add):** added a **LabKey integration
+  research** item to `BACKLOG.md` “Up Next” (literal “backlog” → the
+  file; no unrequested public issue filed).
+
 ### 2026-06-19 — Lint cleanup → green CI: cleared all 57 `lintr` warnings + the `cyclocomp` config wart (behavior-neutral REFACTOR) (Session 141)
 
 - **Deliverable (owner pick):** make the `lint` GitHub Actions check
