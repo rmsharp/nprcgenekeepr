@@ -11,7 +11,7 @@ An object of class \code{data.frame} with 8 rows and 5 columns.
 data(pedFemaleSireMaleDam)
 }
 \description{
-A data frame with 8 rows and 5 columns (ego_id, si.re,
+A data frame with 8 rows and 5 columns (ego_id, sire.id,
 dam_id, sex, birth_date) representing a full pedigree with the errors of
 having a sire labeled as female and a dam labeled as male.
 }

@@ -11,7 +11,7 @@ An object of class \code{data.frame} with 9 rows and 5 columns.
 data(pedDuplicateIds)
 }
 \description{
-A data frame with 9 rows and 5 columns (ego_id, si.re,
+A data frame with 9 rows and 5 columns (ego_id, sire.id,
 dam_id, sex, birth_date) representing a full pedigree with a duplicated
 record.
 }

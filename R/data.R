@@ -151,7 +151,7 @@
 "ped1Alleles"
 #' Example studbook with a duplicated record
 #'
-#' A data frame with 9 rows and 5 columns (ego_id, si.re,
+#' A data frame with 9 rows and 5 columns (ego_id, sire.id,
 #' dam_id, sex, birth_date) representing a full pedigree with a duplicated
 #' record.
 #'
@@ -163,7 +163,7 @@
 "pedDuplicateIds"
 #' Example studbook with sex-mismatched parents
 #'
-#' A data frame with 8 rows and 5 columns (ego_id, si.re,
+#' A data frame with 8 rows and 5 columns (ego_id, sire.id,
 #' dam_id, sex, birth_date) representing a full pedigree with the errors of
 #' having a sire labeled as female and a dam labeled as male.
 #'
@@ -175,7 +175,7 @@
 "pedFemaleSireMaleDam"
 #' Valid example studbook (no QC errors)
 #'
-#' A data frame with 8 rows and 5 columns (ego_id, si.re, dam_id,
+#' A data frame with 8 rows and 5 columns (ego_id, sire.id, dam_id,
 #' sex, birth_date) representing a full pedigree with no errors.
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
@@ -198,7 +198,7 @@
 "pedInvalidDates"
 #' Example studbook missing the birth date column
 #'
-#' A data frame with 8 rows and 4 columns (ego_id, si.re,
+#' A data frame with 8 rows and 4 columns (ego_id, sire.id,
 #' dam_id, sex) representing a full pedigree that is missing the birth_date
 #' column.
 #'
@@ -220,7 +220,7 @@
 #' Example studbook with a male as both sire and dam
 #'
 #' A data frame with 8 rows and 5 columns (ego_id,
-#' si.re, dam_id, sex, birth_date) representing a full pedigree in which the
+#' sire.id, dam_id, sex, birth_date) representing a full pedigree in which the
 #' same male animal is listed as both a sire and a dam.
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
