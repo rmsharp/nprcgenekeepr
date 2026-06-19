@@ -100,21 +100,25 @@ codes. Column names are lower-cased and stripped of spaces, periods, and
 underscores, and common aliases are renamed (`egoid` / `ego_id` -\>
 `id`, `sireid` -\> `sire`, `damid` -\> `dam`, `birthdate` -\> `birth`).
 Setting `reportChanges = TRUE` records exactly what was renamed. The
-shipped `pedGood` data set has deliberately messy headers (`ego_id`,
-`si.re`, `dam_id`, `birth_date`):
+shipped `pedGood` data set has five columns – four with deliberately
+messy headers (`ego_id`, `sire.id`, `dam_id`, `birth_date`) and an
+already-canonical `sex` that QC leaves untouched:
 
 ``` r
 
 chg <- qcStudbook(pedGood, reportChanges = TRUE, reportErrors = TRUE)
 Filter(length, chg$changedCols)
 #> $periodRemoved
-#> [1] "si.re to sire"
+#> [1] "sire.id to sireid"
 #> 
 #> $underScoreRemoved
 #> [1] "ego_id, dam_id, and birth_date to egoid, damid, and birthdate"
 #> 
 #> $egoidToId
 #> [1] "egoid to id"
+#> 
+#> $sireIdToSire
+#> [1] "sireid to sire"
 #> 
 #> $damIdToDam
 #> [1] "damid to dam"

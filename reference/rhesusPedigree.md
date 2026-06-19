@@ -1,8 +1,8 @@
 # Obfuscated rhesus pedigree object
 
 A pedigree object. Represents an obfuscated pedigree from
-*rhesusPedigree.csv* where the IDs and dates have been modified to
-de-identify the data.
+*obfuscated_rhesus_mhc_ped.csv* where the IDs and dates have been
+modified to de-identify the data.
 
 - id:
 
@@ -15,12 +15,12 @@ de-identify the data.
 
 - dam:
 
-  – the female parent of the animal indicated by the `id` column.Unknown
-  dams are indicated with `NA`
+  – the female parent of the animal indicated by the `id` column.
+  Unknown dams are indicated with `NA`
 
 - sex:
 
-  – factor with levels: "M", "F", "U". Sex specifier for an individual.
+  – factor with levels: "F", "M". Sex specifier for an individual.
 
 - gen:
 
@@ -29,11 +29,12 @@ de-identify the data.
 
 - birth:
 
-  – Date vector of birth dates
+  – `Date` vector of birth dates
 
 - exit:
 
-  – Date vector of exit dates
+  – `Date` vector, all `NA` (no exit dates are recorded in this
+  obfuscated pedigree)
 
 - age:
 

@@ -24,6 +24,14 @@ addGenotype(ped, genotype)
 
 A pedigree object with genotype data added.
 
+## Details
+
+The two allele columns are coerced to character internally so the
+name-keyed allele dictionary is both built and indexed by allele label.
+This keeps the integer encoding consistent even when the allele columns
+are supplied as factors (a factor would otherwise be indexed by its
+integer codes).
+
 ## Examples
 
 ``` r

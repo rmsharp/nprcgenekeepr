@@ -4,7 +4,7 @@ R. Mark Sharp, Ph.D. 2025-07-25
 
 # nprcgenekeepr
 
-Version 1.1.0.9000 (2026-06-01)
+Version 2.0.0 (2026-06-19)
 
 ## Introduction
 
@@ -35,7 +35,7 @@ At present, the application supports 5 functions:
 **For more information see:**  
 A Practical Approach for Designing Breeding Groups to Maximize Genetic
 Diversity in a Large Colony of Captive Rhesus Macaques (*Macaca
-mulatto*) Vinson, A ; Raboin, MJ *Journal Of The American Association
+mulatta*) Vinson, A ; Raboin, MJ *Journal Of The American Association
 For Laboratory Animal Science*, 2015 Nov, Vol.54(6), pp.700-707 \[Peer
 Reviewed Journal\]
 
@@ -204,10 +204,3 @@ the groups, though this has likely been a consideration by the user in
 selecting the candidate group members. Optionally the user may select to
 form harem groups, which considers the sex of individuals when forming
 groups and restricts the number of males to one per group.
-
-**For more information see:**  
-A Practical Approach for Designing Breeding Groups to Maximize Genetic
-Diversity in a Large Colony of Captive Rhesus Macaques (*Macaca
-mulatto*) Vinson, A ; Raboin, MJ *Journal Of The American Association
-For Laboratory Animal Science*, 2015 Nov, Vol.54(6), pp.700-707 \[Peer
-Reviewed Journal\]

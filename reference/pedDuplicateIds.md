@@ -1,6 +1,6 @@
 # Example studbook with a duplicated record
 
-A data frame with 9 rows and 5 columns (ego_id, si.re, dam_id, sex,
+A data frame with 9 rows and 5 columns (ego_id, sire.id, dam_id, sex,
 birth_date) representing a full pedigree with a duplicated record.
 
 ## Usage

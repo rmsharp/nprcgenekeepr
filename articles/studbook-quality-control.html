@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">nprcgenekeepr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -135,19 +135,22 @@
 <p>The result has standardized columns, founders (animals with no known parent) marked generation 0, and an <code>age</code> column. Because <code>examplePedigree</code> already carries an <code>age</code> column, <code><a href="../reference/qcStudbook.html">qcStudbook()</a></code> keeps it rather than recomputing ages against the current date, so this article renders the same numbers every time. When the input has no <code>age</code> column, ages are computed from <code>birth</code> to <code>exit</code> – or to today’s date for animals still in the colony.</p>
 </section><section class="level2"><h2 id="sec-standardize">What QC standardizes<a class="anchor" aria-label="anchor" href="#sec-standardize"></a>
 </h2>
-<p>Before testing for errors, <code><a href="../reference/qcStudbook.html">qcStudbook()</a></code> normalizes the studbook so downstream code sees consistent names and codes. Column names are lower-cased and stripped of spaces, periods, and underscores, and common aliases are renamed (<code>egoid</code> / <code>ego_id</code> -&gt; <code>id</code>, <code>sireid</code> -&gt; <code>sire</code>, <code>damid</code> -&gt; <code>dam</code>, <code>birthdate</code> -&gt; <code>birth</code>). Setting <code>reportChanges = TRUE</code> records exactly what was renamed. The shipped <code>pedGood</code> data set has deliberately messy headers (<code>ego_id</code>, <code>si.re</code>, <code>dam_id</code>, <code>birth_date</code>):</p>
+<p>Before testing for errors, <code><a href="../reference/qcStudbook.html">qcStudbook()</a></code> normalizes the studbook so downstream code sees consistent names and codes. Column names are lower-cased and stripped of spaces, periods, and underscores, and common aliases are renamed (<code>egoid</code> / <code>ego_id</code> -&gt; <code>id</code>, <code>sireid</code> -&gt; <code>sire</code>, <code>damid</code> -&gt; <code>dam</code>, <code>birthdate</code> -&gt; <code>birth</code>). Setting <code>reportChanges = TRUE</code> records exactly what was renamed. The shipped <code>pedGood</code> data set has five columns – four with deliberately messy headers (<code>ego_id</code>, <code>sire.id</code>, <code>dam_id</code>, <code>birth_date</code>) and an already-canonical <code>sex</code> that QC leaves untouched:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">pedGood</span>, reportChanges <span class="op">=</span> <span class="cn">TRUE</span>, reportErrors <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Filter</a></span><span class="op">(</span><span class="va">length</span>, <span class="va">chg</span><span class="op">$</span><span class="va">changedCols</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $periodRemoved</span></span>
-<span><span class="co">#&gt; [1] "si.re to sire"</span></span>
+<span><span class="co">#&gt; [1] "sire.id to sireid"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $underScoreRemoved</span></span>
 <span><span class="co">#&gt; [1] "ego_id, dam_id, and birth_date to egoid, damid, and birthdate"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $egoidToId</span></span>
 <span><span class="co">#&gt; [1] "egoid to id"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $sireIdToSire</span></span>
+<span><span class="co">#&gt; [1] "sireid to sire"</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $damIdToDam</span></span>
 <span><span class="co">#&gt; [1] "damid to dam"</span></span>

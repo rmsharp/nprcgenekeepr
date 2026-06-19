@@ -15,6 +15,1277 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-19 — Cleared S138’s punch-list (owner directive “perform S138’s next steps”): NEWS `names'` spell flag fixed at source, README citation de-duplicated, CRAN plan §9 Phase-3 reconciled, PR \#54 opened (Session 139)
+
+- **Deliverable (owner directive):** clear the remaining items on S138’s
+  suggested-next menu in one batched session. The owner explicitly
+  overrode the usual “1 and done” to do the whole punch-list; executed
+  in a safe order with verification between items. **VERIFICATION/docs
+  phase** — no production logic; no RED→GREEN→REFACTOR transition. Issue
+  \#53 was already CLOSED by the owner earlier today, so no action
+  there.
+- **NEWS `names'` spell flag — fixed at source, not whitelisted (→
+  Learning 132):** the flag was a *render* artifact, not a source typo.
+  `NEWS.Rmd` already used straight quotes, but pandoc smart-quotes
+  curled `'row.names'` → `‘row.names’` on render, producing the bogus
+  `names’` token. Wrapped the literal base-R message in backticks in
+  `NEWS.Rmd` (code spans bypass smart-quotes; also reads as the verbatim
+  message) and re-rendered `NEWS.md` (github_document,
+  `html_preview=FALSE`) → single-line diff.
+  [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+  now **0 flags** (was 1).
+- **README de-dup:** the Vinson/Raboin “For more information” citation
+  rendered **twice** — once from the shared child
+  `vignettes/manual_components/_introduction.Rmd` (also used by
+  `a3manual.Rmd` + `ColonyManagerTutorial.Rmd`) and once from
+  README.Rmd’s own hardcoded block. Removed **only README.Rmd’s block**
+  (README-only blast radius; the manual/tutorial vignettes untouched)
+  and re-rendered via `devtools::build_readme()`. Citation now appears
+  once (Introduction); diff = removed block + an incidental, correct
+  version-date refresh (`2026-06-17` → `2026-06-19`). Carried S132→S138
+  as FM \#8.
+- **CRAN plan §9 Phase-3 reconcile:** marked
+  `docs/planning/cran-2.0.0-submission-plan.md` §9 row 3 ✅ and added a
+  Phase-3 STATUS block — verified firsthand that DESCRIPTION / README.md
+  / CITATION.cff are all at 2.0.0, NEWS re-renders, and version-tests
+  are green (S138 0/0).
+- **PR \#54 opened:** `add-methodology` → `master` (master was still
+  `1.1.0.9000` with none of the 2.0.0 work; 22 commits, 50 files).
+  <https://github.com/rmsharp/nprcgenekeepr/pull/54> — **opened, not
+  merged** (merge timing is the owner’s call; CRAN Phase 5 remains
+  owner-gated).
+
+### 2026-06-19 — `si.re` example-data defect FIXED (owner pick: option 2, the real fix for issue \#53): renamed the malformed sire column to `sire.id` across 6 datasets under strict TDD; removed S137’s `si` whitelist (Session 138)
+
+- **Deliverable (owner pick — option 2 / the real fix for issue \#53):**
+  rename the malformed sire column (`si.re` period ×5, `si re` space in
+  `pedOne`) to **`sire.id`** across all 6 example pedigree datasets,
+  sweep the dependent source/docs, and remove the now-unneeded `si`
+  `inst/WORDLIST` whitelist S137 added. **Supersedes S137’s deferral** —
+  the owner chose to do the real fix now rather than ship the typo.
+  **Strict TDD**, full RED→GREEN→REFACTOR with phase gates (one
+  `AskUserQuestion` per transition).
+- **Target name `sire.id` (owner-chosen):** a period in a column name is
+  a realistic “inexperienced data provider” messy header, so the fix
+  *keeps* a period-bearing header under test rather than removing it —
+  but in a sensible place that tokenizes to real words (`sire`+`id`) so
+  it no longer spell-flags. `fixColumnNames("sire.id")` → `sire`
+  (verified); it exercises *more* normalization than `si.re` did
+  (periodRemoved + sireIdToSire vs periodRemoved only).
+- **RED:** new `tests/testthat/test_exampleData_columnNames.R` — a
+  data-contract test pinning all 6 datasets’ exact column names to
+  include `sire.id` (+ a normalization-invariant guard). Failed as
+  expected (names held `si.re`/`si re`).
+- **GREEN:** regenerated the 6 `.RData` (load → rename the column →
+  re-save gzip, **values byte-identical**, verified via
+  [`identical()`](https://rdrr.io/r/base/identical.html)); updated
+  `R/createPedOne.R:17` (`` `si re` `` → `sire.id`). 18/18 assertions
+  green.
+- **REFACTOR:** `si.re` → `sire.id` in the 5 `R/data.R` roxygen blocks →
+  `devtools::document()` regenerated exactly the 5 `man/*.Rd` (NAMESPACE
+  untouched); removed the `si` line from `inst/WORDLIST` (no longer
+  needed — `si.re` is gone from the docs); updated the website-only
+  vignette prose (`vignettes/articles/studbook-quality-control.qmd`);
+  its executed change-log output regenerates at site build (the quarto
+  freeze cache is git-ignored, `.gitignore:40`).
+- **Necessitated test update:** `test_summary.nprcgenekeeprErr.R`
+  asserted the summary change-log has 9 newlines; `sire.id` adds the
+  `sireIdToSire` line, so it is now 10 (`9L` → `10L`, with a clarifying
+  comment). Caught by the full-suite VERIFY — the pre-flight grep scan
+  missed it because it asserts on output *shape*, not the literal name
+  (→ Learning 131).
+- **VERIFY:** full clean-regression read **0 failed / 0 error** (866
+  blocks, incl. the app/e2e baseline); **`R CMD check` Status: OK** (0
+  errors / 0 warnings / 0 notes); `spell_check_package()` now flags only
+  the unrelated `names’` (`NEWS.md:51`). Package installs + loads with
+  the new data.
+- **Issue \#53** can now be closed (the defect is fixed).
+  **PROJECT_LEARNINGS.md:** Learning 131 (a data/fixture change can
+  break output-SHAPE assertions without referencing the changed value;
+  the full suite — not a token grep — is the real breakage check).
+  \[\[consult-project-source-of-truth\]\]
+
+### 2026-06-19 — `si.re` example-data defect: filed issue \#53, then (owner decision) cleared the spell-check flag the least-disruptive way by whitelisting `si` in `inst/WORDLIST` — data regeneration deferred as low-priority (owner pick F) (Session 137)
+
+- **Deliverable (owner pick F):** investigate the `si.re`
+  example-dataset defect, file a precise evidence-based GitHub issue,
+  and — per the owner’s mid-session decision — resolve the immediate
+  (developer-facing) spell-check flag with the **least-disruptive**
+  change rather than the heavy data regeneration. **Audit/verification
+  phase** (no RED→GREEN→REFACTOR; **no
+  `R/`/`man/`/`data/`/`tests/`/`NEWS` change** — the only
+  shipped-content edit is **one line added to `inst/WORDLIST`**, a
+  gate-invariant dictionary file consumed only by the
+  `error=FALSE`+`skip_on_cran` `tests/spelling.R`; `R CMD check` never
+  reads it). Filed as **issue \#53** (`bug` + `low priority`):
+  <https://github.com/rmsharp/nprcgenekeepr/issues/53>
+- **Resolution (owner’s call):** added `si` to `inst/WORDLIST` (C-locale
+  position, between `sexRatioWithAddions` and `simParent`).
+  [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+  before = 2 flags (`si` in 5 `man/*.Rd`, plus an unrelated `names’`
+  curly-apostrophe in `NEWS.md:51`); after = `si` cleared, only the
+  pre-existing `names’` remains (left untouched — separate item; the
+  real fix there is the NEWS curly-quote, not a whitelist). This
+  **silences** the spell-check symptom while leaving the malformed names
+  in the shipped data; the underlying naming inconsistency is now
+  tracked by **issue \#53** (low priority). It deliberately reverses
+  S134’s “leave `si` flagged to keep the defect visible” — appropriate
+  now that \#53 captures it.
+- **The defect, verified firsthand (corrects the inherited “5 of 6”
+  note):** **6** example datasets carry a malformed sire column —
+  `pedGood`, `pedDuplicateIds`, `pedFemaleSireMaleDam`,
+  `pedMissingBirth`, `pedSameMaleIsSireAndDam` use `si.re` (a period
+  inside `sire`), and **`pedOne` uses `si re` (a space)** — the prior
+  note missed `pedOne`. The malformed name appears in the source tree
+  **only** in `R/data.R` roxygen + the generated `man/*.Rd` + one
+  website-only vignette; nowhere in `R/` logic or `tests/`.
+- **Not a CRAN blocker, not functionally broken.** Empirically
+  ([`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html) +
+  [`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)):
+  `si.re`, `si re`, `sire_id`, `Sire_ID`, `Sire Id`, `sire` **all
+  normalize to canonical `sire`**, and
+  `ego_id, si.re, dam_id, sex, birth_date` →
+  `id, sire, dam, sex, birth`.
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  (`R/qcStudbook.R:174`) normalizes at ingestion, so the column is valid
+  downstream. The real defect is **internal inconsistency**: the repo
+  already ships two messy-sire conventions — `si re` (space, in
+  `createPedOne` + ~8 local fixtures) and `Sire_ID` (underscore, the
+  `fixColumnNames` `@example`) — and the five `.RData` files use a
+  *third* spelling (`si.re`, period) matching neither.
+- **Issue contents:** affected-dataset table, the not-broken evidence, a
+  full blast-radius inventory (shipped `.RData` + `R/data.R`/`man/`; the
+  website-only `vignettes/articles/studbook-quality-control.qmd` labeled
+  `.Rbuildignore`’d; verify-only tests that auto-follow the shipped
+  names), the **maintainer decisions** the fix needs (target name
+  `si re`/`sire_id`/`sire`, `pedOne` uniformity, whether to author the
+  missing `data-raw/` generator for the five), and a RED-first fix
+  approach for the next session.
+- **Adversarial verification + firsthand cross-check:** ran a 4-reader →
+  synthesize → adversarial-verify workflow, then re-verified the
+  adversary’s own corrections against the files — caught that the
+  skeptic’s cited evidence (`R/fixColumnNames.R:16` `@example`) actually
+  uses `Sire_ID`, the opposite of its claim; both proposer and adversary
+  were partly wrong, so the issue **frames the target-name choice for
+  the owner** rather than asserting one. (→ Learning 130.)
+- **PROJECT_LEARNINGS.md:** Learning 130 added (cross-check a verify
+  pass’s own corrections firsthand; frame contested decisions for the
+  owner; re-derive inherited counts).
+  \[\[consult-project-source-of-truth\]\]
+  \[\[check-process-history-before-rerunning-work\]\]
+
+### 2026-06-18 — CRAN Phase 5 local prep (owner pick Phase5-finish, scope “prep + hand off”): verified the R-hub push prerequisite is already satisfied, rebuilt/verified the final tarball, tightened the runbook (Session 136)
+
+- **Deliverable (owner pick Phase5-finish, scope “prep + hand off”):**
+  the Claude-doable prerequisites for the CRAN plan’s **Phase 5**, plus
+  a tightened owner runbook. **Verification phase** (no new
+  code/behavior). The outward-facing win-builder/R-hub triggers + the
+  final `submit_cran()` remain the owner’s (need the owner’s GitHub
+  PAT + email; SAFEGUARDS + plan decision \#3). Scoped to
+  **`docs/planning/cran-2.0.0-phase5-runbook.md`** +
+  **`docs/planning/cran-2.0.0-submission-plan.md`** +
+  CHANGELOG/learnings/notes; **no
+  `R/`/`man/`/`NAMESPACE`/`DESCRIPTION`/`tests/`/`data/`/`NEWS`/`cran-comments.md`
+  change.**
+- **Resolved a branch-state contradiction → the push prerequisite is
+  already done.** Orientation `git status` said “up to date with
+  origin/add-methodology”, which contradicted S135’s “2 commits behind —
+  push before R-hub.” A `git fetch` +
+  `git rev-list --left-right --count origin/add-methodology...HEAD` →
+  **`0 / 0`**: `origin/add-methodology` is **fully in sync** with local
+  HEAD `24175785`, so the remote already carries S133’s `withr` fix
+  (`b93a5b4c`) + S134 (`56b66ae0`) + S135 (`24175785`). The branch was
+  pushed after S135’s handoff was written; **no `git push` is needed**
+  before `rhub_check()`. (`origin/master` is still `1.1.0.9000`,
+  unchanged.)
+- **Rebuilt + verified the final tarball:** `R CMD build .` → **clean**
+  `nprcgenekeepr_2.0.0.tar.gz` (1.9 MB; vignettes created OK; no
+  errors/warnings) on macOS R 4.6.0. The code/data/metadata tree is
+  **unchanged since the S134 gate**
+  (`git diff --name-only 56b66ae0..HEAD` = docs only), so that gate’s
+  `0 errors | 0 warnings | 2 notes` still applies. Artifact removed, not
+  committed.
+- **Re-confirmed every cover-note fact firsthand** (not from the handoff
+  chain): DESCRIPTION `Version: 2.0.0`; maintainer `rmsharp@me.com` via
+  the `cre` role (DESCRIPTION:9-11); `revdep/README.md` Revdeps section
+  empty (no reverse dependencies). The cover note `cran-comments.md`
+  needs no change — it is already a correct CRAN-facing template.
+- **Tightened the runbook:** added a copy-paste **Quick sequence**
+  (install → build → win-builder ×3 → R-hub → submit) at the top;
+  **corrected the §3 branch caveat** to “verified current — no push
+  needed” and marked S135’s “2 commits behind / push first” note
+  **superseded**; added a build-confirmation note in §1.
+- **Status:** **Phase 5 local prep DONE + verified; cross-platform
+  runs + submission PENDING (owner).** The owner now runs the runbook’s
+  Quick sequence (win-builder ×3 + R-hub need the PAT/email), folds real
+  results into `cran-comments.md`, then submits (HARD STOP).
+  \[\[consult-project-source-of-truth\]\]
+  \[\[check-process-history-before-rerunning-work\]\]
+- **PROJECT_LEARNINGS.md:** Learning 129 added (a firsthand-verified
+  remote-state claim still expires — re-`fetch` before acting on an
+  inherited “push first” prerequisite).
+
+### 2026-06-18 — CRAN Phase 5 (cover note + runbook): rewrote `cran-comments.md` for the 2.0.0 archived-package resubmission and wrote the owner-run win-builder/R-hub runbook; adversarially verified (Session 135)
+
+- **Deliverable (owner pick B-Phase5, scope A “cover note + runbook”):**
+  the local, fully-completable half of the CRAN plan’s **Phase 5**.
+  **Verification phase** (no new code/behavior). Outward-facing
+  win-builder/R-hub submissions + the final CRAN upload remain the
+  owner’s (SAFEGUARDS + plan decision \#3). Scoped to
+  **`cran-comments.md`** + a new
+  **`docs/planning/cran-2.0.0-phase5-runbook.md`** +
+  plan/CHANGELOG/learnings docs; **no
+  `R/`/`man/`/`NAMESPACE`/`DESCRIPTION`/`tests/`/`data/`/`NEWS`
+  change.**
+- **`cran-comments.md` rewritten** (the old file was the stale 1.0.8
+  “bug fix in unit test” note with a doubled “Reverse dependencies”
+  block and 1.0.8-era R-hub `pak` results): now a 2.0.0 archived-package
+  resubmission note per plan §7 — addresses the **2025-07-29 archival**
+  (date, “Tested elapsed times” reason, and that the 2.0.0 tree no
+  longer reproduces the timing condition), reports the **S134 local gate
+  `0 errors | 0 warnings | 2 notes`** with each NOTE explained (NOTE 1 =
+  incoming feasibility incl. the PMC-403 URL + correctly-spelled
+  DESCRIPTION words; NOTE 2 = the local-only HTML-manual tidy/V8
+  artifact, absent on CRAN), drops the now-moot NEWS `http→https`
+  false-positive (**verified: no `http://` in `NEWS.md`**, so
+  pre-explaining it would describe a NOTE that won’t appear), and
+  records “no reverse dependencies.” The file is **CRAN-facing-only** —
+  no embedded process notes, placeholders, or “delete-before-pasting”
+  blocks.
+- **Runbook written** (`docs/planning/cran-2.0.0-phase5-runbook.md`):
+  exact, ordered commands for the owner — install
+  `devtools`/`rhub`/`gitcreds` (absent here) + set a GitHub PAT;
+  `R CMD build`; `devtools::check_win_devel/release/oldrelease()`
+  (uploads the local tarball; emails results); `rhub::rhub_doctor()` +
+  `rhub_check(platforms=c("linux","windows","macos"))`; fold real
+  results into the cover note; submit (HARD STOP, owner only).
+- **Adversarially verified** (3-lens background workflow — repo
+  fact-check + runbook-command/API + skeptical-CRAN-reviewer; all repo
+  facts confirmed). Acted on its findings: scoped the timing “3-5x
+  headroom” claim to **per-example** (the tests phase at ~43s is not
+  3-5x under a minute); reworded the archival section so it does **not**
+  imply a structural timing fix that was never made (the cause does not
+  reproduce; win-builder/R-hub on slower hardware re-confirm before
+  submission); softened the misspelled-words list to “for example …”
+  (CRAN computes its own list and does not read `inst/WORDLIST`) and
+  added a runbook step to reconcile it against the real check log; moved
+  all result-staging guidance out of the cover note into the runbook (a
+  “delete-before-pasting” block in a file pasted to CRAN is a foot-gun).
+- **Branch/PR correction (verified firsthand; supersedes the standing
+  handoff assumption):** the long-carried “future **PR \#53**” **does
+  not exist** (`gh pr view 53` → no such PR); **PR \#52 is merged but
+  carried only S101-S117** — `origin/master` is still **`1.1.0.9000`**
+  and has **none** of the 2.0.0 commits. `origin/add-methodology` is at
+  2.0.0 but lacks S133’s `withr` fix + S134’s Phase-4 commit (the 2
+  unpushed local commits), so **R-hub must check a pushed
+  `add-methodology`** or it re-reports the `withr` WARNING. The
+  runbook + Learning 128 capture this.
+- **Status:** **Phase 5 cover note + runbook DONE; cross-platform runs +
+  submission PENDING (owner).** Noticed drift (flagged, not fixed, FM
+  \#8): plan §9 **row 3** (NEWS Major/Minor + 2.0.0 bump) lacks its ✅
+  though S130/S131 committed it and the tree is at 2.0.0 — a future
+  reconciliation (verify README/CITATION.cff at 2.0.0 too).
+  \[\[consult-project-source-of-truth\]\]
+  \[\[check-process-history-before-rerunning-work\]\]
+- **PROJECT_LEARNINGS.md:** Learning 128 added.
+
+### 2026-06-18 — CRAN Phase 4 (full local `--as-cran` gate): true gate is 0 ERROR / 0 WARNING / 2 false-positive NOTEs; reconciled `inst/WORDLIST` (+35); found the `si.re` dataset-column defect (Session 134)
+
+- **Deliverable (owner pick A):** the CRAN plan’s **Phase 4** — a full
+  local `R CMD check --as-cran` gate on the built 2.0.0 tarball.
+  **Verification phase** (no new code); the spell reconciliation touched
+  one shipped non-code file. Scoped to **`inst/WORDLIST`** + the
+  plan/CHANGELOG/learnings docs; **no
+  `R/`/`man/`/`NAMESPACE`/`DESCRIPTION`/`tests/`/`data/`/`NEWS`
+  change.**
+- **True gate, not a forced check:** installed the 4 missing Suggests
+  (`covr`, `shinytest2`, `shinyWidgets`, `spelling`) + `urlchecker` into
+  the renv library, so `R CMD check --as-cran` ran with **no
+  `_R_CHECK_FORCE_SUGGESTS_=false`** (the condition CRAN checks under).
+  Installing the *package* `shinytest2` does not install Chrome —
+  chromote fetches it lazily and the e2e tests `skip_on_cran`, so the
+  check never launches a browser. (The installs land in the renv
+  library, not `renv.lock` — no
+  [`renv::snapshot()`](https://rstudio.github.io/renv/reference/snapshot.html)
+  run.)
+- **Result — `Status: 2 NOTEs` = 0 ERROR / 0 WARNING, both NOTEs
+  false-positive.** Timings all comfortable: examples `[19s/19s]`,
+  `--run-donttest [19s/19s]`, tests `[41s/43s]`, vignette rebuild
+  `[15s/16s]`, PDF manual OK. **NOTE 1** = CRAN incoming feasibility
+  (“New submission / Package was archived on CRAN”) — expected,
+  CRAN-persistent, pre-explain in Phase-5 `cran-comments.md`. **NOTE 2**
+  = “checking HTML version of manual” (`'tidy' not recent enough` +
+  `package 'V8' unavailable` → both sub-checks skipped) — a
+  **local-toolchain** NOTE; CRAN has recent HTML Tidy + V8, so it will
+  **not** appear there. **Verified twice** (initial build, then a
+  rebuild after the WORDLIST change — identical result; WORDLIST is
+  consumed only by the `skip_on_cran` spell test, so it is
+  gate-invariant).
+- **Pre-gate hygiene (captured evidence):**
+  [`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html)
+  → **zero diff** (`man/`+`NAMESPACE` already in sync);
+  `urlchecker::url_check()` → **all 17 URLs correct**; full
+  clean-regression read **0 failed / 0 error** (863 result rows; 167
+  skipped = e2e/app via `skip_on_cran`+opt-in gate; 5 benign warnings,
+  all in one passing test `test_modPyramid.R`, pre-existing baseline).
+- **`inst/WORDLIST` reconciled (+35 terms, 310→345 lines, owner-approved
+  “reconcile now”):** the plan expected “only EHR/Raboin/kinships
+  remain,” but
+  [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+  flagged **37** words — the dictionary had drifted ~35 legitimate code
+  identifiers behind the S100–S133 work (`changedCols`, `femaleSires`,
+  `qcResult`, `mulatta`, `magrittr`, `BG`/`FG`/`GV`, …). Each was
+  verified against its source before adding. **Two left deliberately
+  flagged:** `names'` (a curly-quote tokenizer artifact from the quoted
+  base-R error `'row.names'` in NEWS — a faithful quote, not a word) and
+  `si` (see next).
+- **NEW FINDING — `si.re` dataset-column defect (out of scope; needs its
+  own session):** the flagged token `si` traced to a column literally
+  named **`si.re`** in 5 of the 6 example pedigrees (`pedGood`,
+  `pedDuplicateIds`, `pedFemaleSireMaleDam`, `pedMissingBirth`,
+  `pedSameMaleIsSireAndDam`); the 6th (`pedInvalidDates`) correctly uses
+  `sire`. Almost certainly a data defect (should be `sire`/`sire_id`, to
+  pair with `ego_id`/`dam_id`). `si` was **left out** of WORDLIST so the
+  flag stays visible —
+  [`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html)
+  would have enshrined it and masked the defect. Not a CRAN blocker (odd
+  column names are legal). Candidate for a GitHub issue + its own
+  RED-first fix session (regenerate the `.rda` data with the corrected
+  column + sweep dependent code/tests/docs).
+- **Status:** **CRAN Phase 4 is COMPLETE.** **Remaining for CRAN:**
+  Phase 5 (cross-platform: win-builder ×3 + R-hub + author
+  `cran-comments.md`; the cover note must address the 2025-07-29
+  archival; **owner triggers the final upload**).
+  \[\[check-process-history-before-rerunning-work\]\]
+  \[\[consult-project-source-of-truth\]\]
+- **PROJECT_LEARNINGS.md:** Learning 127 added.
+
+### 2026-06-18 — CRAN Phase 2 (archival timing root cause): measured timing is within limits — fixed the one real CRAN-blocker, an undeclared `withr` test dependency (strict TDD) (Session 133)
+
+- **Deliverable (owner pick B-Phase2, re-scoped):** the owner picked
+  “CRAN Phase 2 — archival timing root cause.” Profiling first (the
+  plan’s mandated step + dragon \#1) showed the **archival timing defect
+  does NOT reproduce** in the 2.0.0 tree, so per the Phase-2
+  STOP-and-re-scope rule the owner re-scoped the session to the one
+  **real CRAN-blocking** finding the profile exposed: an **undeclared
+  `withr`** test dependency. Scoped to **`DESCRIPTION`** (one `Suggests`
+  line) + the plan/CHANGELOG/learnings docs; **no
+  `R/`/`man/`/`NAMESPACE`/`tests/`/`data/`/`NEWS` change.**
+- **Measurement (authoritative `R CMD check --as-cran --timings`, this
+  tree):** examples `[19s/20s]`, `--run-donttest [19s/19s]`, tests
+  `[42s/43s]`, vignette re-build `[15s/16s]` — **no timing flag**;
+  slowest example `countLoops` 1.43s (0 examples ≥ 5s; sum 7.0s across
+  145). The gene-drop vignettes
+  (`simulatedKValues`/`ColonyManagerTutorial`, the plan’s prime
+  suspects) rebuild in 16s total — cheap on the tiny `smallPed`, **not**
+  the offender. Archival reason confirmed firsthand in the CRAN db
+  override: *“Archived on 2025-07-29 as issues were not corrected in
+  time. / Tested elapsed times.”*
+- **The real CRAN-blocker:** `--as-cran` reported
+  `Status: 1 WARNING — checking for unstated dependencies in 'tests' ... '::' import not declared from: 'withr'`.
+  `tests/testthat/test_loadSiteConfig.R` calls
+  [`withr::local_tempdir()`](https://withr.r-lib.org/reference/with_tempfile.html)/[`withr::local_envvar()`](https://withr.r-lib.org/reference/with_envvar.html)
+  (6 uses) but `withr` was in neither Imports nor Suggests (it ran only
+  because it is installed transitively via testthat). CRAN rejects on
+  any WARNING.
+- **What changed (1 line):** added `withr` to `DESCRIPTION` `Suggests`
+  (alphabetical, after `testthat`). Suggests is correct — `withr` is
+  used only in tests. The pre-existing `shinytest2` mis-ordering in
+  `Suggests` was left alone (out of scope, FM \#8).
+- **TDD:** a pre-RED re-scope gate (fix-withr-and-document vs
+  document-only vs +guard-heavy-examples; owner chose **fix +
+  document**) + the three transitions (`PRE-RED→RED`, `RED→GREEN`;
+  `GREEN→REFACTOR` declared **N/A** — a single metadata line, no
+  structure). RED: a file-based probe (`_s133_red.R`) encoding the CRAN
+  “unstated test deps” invariant via R’s **parser** (`SYMBOL_PACKAGE`
+  tokens — comment/string-immune, adopted after a first regex draft
+  false-flagged `devtools` in comments and the `shinytest2.R` filename);
+  2 assertions (withr declared; no undeclared `pkg::` in `tests/`) → **2
+  failures** naming only `withr`, **0** after the fix. No permanent
+  testthat guard (owner chose the temp-probe path; matches the S131/S132
+  metadata-fix class).
+- **Verified:** probe green (declared deps 34→35; no undeclared test
+  deps); **re-run `R CMD check --as-cran` → `Status: 2 NOTEs`, i.e. 0
+  ERROR / 0 WARNING** — the `withr` WARNING resolved, timing still
+  clean; **full clean-regression read 0 failed / 0 error** (699 test
+  blocks excl. `test-app-`/`test-e2e-`; 0/0 across all 863). The 2 NOTEs
+  are the expected archived/new-submission incoming-feasibility note + a
+  non-standard-files note listing only the `_s133_*` session transients
+  (removed before commit) → true package status is **0 / 0 /
+  1-expected-NOTE**. **Phase-3E:** the `--as-cran` check ran the full
+  runtime (install + 136 examples + the testthat suite + vignette
+  rebuild) — the strongest available runtime verification; the change
+  itself alters no runtime behavior.
+- **Env note:** the renv library IS materialized here (correcting the
+  S131/S132 “renv not materialized / Phase 2 blocked” baseline).
+  Installed one missing build-only Suggest, `markdown` (+ `litedown`),
+  into the renv library so `a3manual.Rmd` builds — env-setup gap, not a
+  package defect.
+  `devtools`/`rcmdcheck`/`shinytest2`/`shinyWidgets`/`spelling`/`covr`
+  remain absent; the `--as-cran` check ran with
+  `_R_CHECK_FORCE_SUGGESTS_=false`.
+- **Status:** **CRAN Phase 2 is COMPLETE** — timing
+  measured-and-within-limits (archival cause already resolved), the one
+  real CRAN-blocker fixed. **Residual:** machine-speed variance on CRAN
+  re-checks is only retired in Phase 5 (win-builder/R-hub).
+- **Remaining for CRAN:** Phase 4 (full `--as-cran` gate — now 0/0
+  locally modulo the expected NOTE; re-confirm with the missing Suggests
+  installed), Phase 5 (cross-platform + `cran-comments.md`; owner
+  submits). \[\[check-process-history-before-rerunning-work\]\]
+  \[\[consult-project-source-of-truth\]\]
+- **PROJECT_LEARNINGS.md:** Learning 126 added.
+
+### 2026-06-18 — Completed the `mulatto`-\>`mulatta` species-typo fix across shipped README + vignette + CITATION; reconciled CRAN Phase-1 status (strict TDD) (Session 132)
+
+- **Deliverable (owner pick B-Phase1, re-scoped):** the owner picked
+  “CRAN Phase 1 static hygiene”, but a process-history check found
+  **Phase 1 was already executed by S102** (commit `a3cf3623`): the
+  `.Rbuildignore` build-cruft lines, the DESCRIPTION
+  `mulatto`-\>`mulatta` typo, the renv `Config/*` reordering,
+  `VignetteBuilder: knitr`, the `@return`/`\value` docs for
+  [`appServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md)/[`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md),
+  and the LICENSE-year reconcile (`LICENSE` + `LICENSE.md` both
+  `2017-2026`) are all in place — verified firsthand against the live
+  tree. The only Phase-1 remnant is the **optional** DESCRIPTION DOI
+  (the plan marks `<https:>` acceptable). A tree-wide `mulatto` sweep,
+  however, found S102 fixed the typo in DESCRIPTION **only**: the same
+  species name survived in **four** more tracked places —
+  `README.Rmd:48` (rendering into the shipped `README.md` twice), the
+  shipped vignette child
+  `vignettes/manual_components/_introduction.Rmd:48` (built into
+  `a3manual.Rmd`), `CITATION.cff:16`, and `_pkgdown.yml:16` (the website
+  `description:` field). The owner chose to finish the typo fix
+  tree-wide (and approved a +1 when a close-out `git ls-files` pass
+  surfaced `_pkgdown.yml`, which the RED probe’s dir-scoped sweep had
+  missed).
+- **What changed (5 tracked content files, 6 lines):** `README.Rmd:48` +
+  `vignettes/manual_components/_introduction.Rmd:48`
+  `*Macaca mulatto*`-\>`*Macaca mulatta*`; `CITATION.cff:16`
+  `''mulatto''`-\>`''mulatta''` (hand-edit; cffr absent);
+  `_pkgdown.yml:16` `'Macaca' 'mulatto'`-\>`'Macaca' 'mulatta'`.
+  Re-rendered `README.md` via
+  [`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html) +
+  `rmarkdown::render(github_document, html_preview=FALSE)`, which fixed
+  **both** README.md occurrences (one from README.Rmd’s own line, one
+  from the `_introduction` child included at `README.Rmd:32`). The
+  `README.md` diff is confined to exactly the two typo lines — the auto
+  [`getVersion()`](https://github.com/rmsharp/nprcgenekeepr/reference/getVersion.md)
+  date line did not churn. (`CITATION.cff` and `_pkgdown.yml` are
+  `.Rbuildignore`d — they do not ship to CRAN, but `_pkgdown.yml` is
+  published to the pkgdown website.)
+- **TDD:** a pre-RED scope gate (re-scope: typo-fix-tree-wide vs
+  doc-reconcile-only vs typo-only; owner chose tree-wide) + the three
+  transitions (`PRE-RED→RED`, `RED→GREEN`; `GREEN→REFACTOR` declared
+  **N/A** — prose content, no structure to refactor). RED: a file-based
+  probe (`_s132_red.R`) bound to the no-`mulatto` invariant — per-file
+  (each of the 4 files: zero `mulatto`, \>=1 `mulatta`) + a tree-wide
+  sweep over git-tracked `R/`/`man/`/`vignettes/` + `README.md` +
+  `DESCRIPTION` — **9 failures** on the current tree, **0** after the
+  edits + re-render. The sweep was scoped to git-tracked files after RED
+  surfaced an over-broad hit on untracked, git-ignored render litter
+  (`vignettes/a3manual.html|md`) — but the dir-scoped sweep then proved
+  too *narrow*, missing `_pkgdown.yml`; a close-out
+  `git ls-files | grep mulatto` belt-and-suspenders pass caught it
+  (owner-approved scope+1) → Learning 125. No permanent testthat test
+  added (prose; matches the S126–S131 doc-fix class — the owner chose
+  the temp-probe path over a permanent guard in the PRE-RED→RED gate).
+  **0 stakeholder corrections.**
+- **Verified:** probe 9/9 pass; **full clean-regression read 0 failed /
+  0 error** (no true offenders excluding `test-app-`/`test-e2e-`);
+  `git diff` confined to the 3 sources + regenerated `README.md`; no
+  `README.html`/figure litter; removed the transient probe/render/suite
+  scripts. **Phase-3E N/A** — a content/doc change alters no runtime
+  behavior; the README re-render IS the doc build-equivalent
+  (SAFEGUARDS). Full `R CMD check` not run (`devtools` absent).
+- **Status reconciliation:** **CRAN Phase 1 is now COMPLETE** (S102 +
+  this S132 typo tail). The untracked, git-ignored
+  `vignettes/a3manual.html|md` still carry the old typo, but they are
+  local render litter — not committed, absent from a clean CRAN tarball
+  — and regenerate clean on the next vignette build; left as-is.
+- **Remaining for CRAN:** Phase 2 (archival timing root cause), Phase 4
+  (`R CMD check --as-cran` gate), Phase 5 (cross-platform +
+  `cran-comments.md`; owner submits).
+  \[\[check-process-history-before-rerunning-work\]\]
+  \[\[news-vs-changelog\]\] \[\[backlog-vs-changelog-placement\]\]
+- **PROJECT_LEARNINGS.md:** Learning 125 added.
+
+### 2026-06-18 — Bumped version to 2.0.0 across DESCRIPTION / README / CITATION (CRAN Phase 3b, strict TDD) (Session 131)
+
+- **Deliverable (owner pick B-cont, Phase 3b):** the version-consistency
+  half of the CRAN plan’s Phase 3 — bumped `DESCRIPTION:4` Version
+  `1.1.0.9000` → `2.0.0`, re-rendered `README.md` (its version line
+  auto-tracks
+  [`getVersion()`](https://github.com/rmsharp/nprcgenekeepr/reference/getVersion.md)),
+  and set `CITATION.cff` version (**stale at 1.0.7**) → `2.0.0` plus a
+  new `date-released: '2026-06-18'`. Scoped to **`DESCRIPTION` +
+  `README.md` + `CITATION.cff`**; **no
+  `R/`/`man/`/`NAMESPACE`/`data/`/test/`NEWS` change.** This resolves
+  the intentional Phase-3a mismatch (NEWS said 2.0.0 while DESCRIPTION
+  still said 1.1.0.9000) — the package is now version-consistent at
+  **2.0.0**.
+- **Owner decisions (two pre-RED gates):** scope = **version-consistency
+  only** (no new permanent guard test); the carried maintainer-judgment
+  NEWS promotion (`secondQuartile` / rhesus data-type Minor → Major) =
+  **deferred** (NEWS untouched).
+- **TDD:** pre-RED scope question + the three transitions
+  (`PRE-RED→RED`, `RED→GREEN`; `GREEN→REFACTOR` declared **N/A** —
+  mechanical metadata bump, no structure to refactor). RED: a file-based
+  version-consistency probe (`_s131_red.R`) parsing `DESCRIPTION`
+  (`read.dcf`), `CITATION.cff`, and `README.md` — 7 assertions (all
+  three == 2.0.0; stale `1.1.0.9000` / `1.0.7` absent; CITATION has a
+  `date-released`) → **7 failures** on the current tree, **0** after the
+  two Edits + re-render. GREEN: two deterministic `Edit`s +
+  `rmarkdown::render(output_format = github_document(html_preview = FALSE))`
+  (no litter). **0 stakeholder corrections.**
+- **Verified:** probe 7/7; `test_getVersion.R` (7 checks) +
+  `test_appUI_version.R` (3 checks) green at 2.0.0; **full
+  clean-regression read 191 files, 0 failed / 0 error**;
+  `git diff README.md` confined to the single version line
+  (`1.1.0.9000 (2026-06-01)` → `2.0.0 (2026-06-17)`), no `README.html`
+  litter, no figure drift. **Phase-3E satisfied** —
+  `test_appUI_version.R` renders the
+  [`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
+  About tab and confirms it now shows “Version 2.0.0” (a real runtime
+  path), not the stale “1.0.8”.
+- **Dates provisional:** README’s `(2026-06-17)` is
+  [`getVersion()`](https://github.com/rmsharp/nprcgenekeepr/reference/getVersion.md)/`sessioninfo`-derived
+  (not literal today); CITATION `date-released` is today’s `2026-06-18`.
+  Both reconfirmed at the actual CRAN submission (Phase 5).
+- **Flagged for follow-up (out of locked scope — `.Rbuildignore`d dev
+  docs, not CRAN artifacts; not touched, FM \#8):** stale “(Version
+  1.1.0.9000)” prose in `CLAUDE.md:18`; a now-**dangling** “NEWS.md
+  1.1.0.9000” cross-reference in `ROADMAP.md:6` (consequence of S130’s
+  NEWS retitle to 2.0.0); a now-resolved TODO note in
+  `nprcgenekeepr_notes.txt:5`. Historical `1.0.7` build logs in
+  `inst/extdata/submission.txt` / `meeting_notes.html` correctly left
+  (§3.1 “must NOT be bumped”).
+- **Remaining for CRAN:** Phase 4 (`R CMD check --as-cran` gate), Phase
+  5 (cross-platform + `cran-comments.md`; owner submits), and Phase 2
+  (archival timing root cause). *(Correction by S132: Phase 1 static
+  hygiene was NOT open — it was completed in S102; this entry’s claim
+  was inaccurate. The `'mulatto'`→`'mulatta'` typo and `\value` docs
+  were done in S102, except the typo’s README/vignette/CITATION copies,
+  which S132 finished.)* \[\[news-vs-changelog\]\]
+  \[\[backlog-vs-changelog-placement\]\]
+- **PROJECT_LEARNINGS.md:** Learning 124 added.
+
+### 2026-06-18 — Rewrote the NEWS 1.1.0.9000 section into a terse 2.0.0 Major/Minor entry (CRAN Phase 3a, strict TDD) (Session 130)
+
+- **Deliverable (owner pick B, Phase 3a — split per plan line 154):**
+  rewrote the single post-1.0.8 `NEWS` section (the dev tag
+  `1.1.0.9000`) into one terse `# nprcgenekeepr 2.0.0 (20260618)` entry
+  organized as **Major changes / Minor changes** per the plan’s §6.2
+  style and §6.3 classification, and re-rendered `NEWS.md` from
+  `NEWS.Rmd`. Scoped to **`NEWS.Rmd` + `NEWS.md`**; **no
+  `DESCRIPTION`/`R/`/`man/`/`data/`/test/README/CITATION change** — the
+  version bump + README/CITATION regen + version-dependent tests are the
+  deferred **Phase 3b** (next session).
+- **What the rewrite did:** merged the doubled topic-block +
+  Major/Minor-block (dragon \#4) into one de-duplicated section; dropped
+  the 9 internal tracker codes (`NEW-xx`/`PED-x`/`XARCH-x`) while
+  keeping the `(#NN)` GitHub refs; dropped developer-internal mechanics
+  per §6.3 (calcFE/FG/FEFG de-dup, `mod*.R` file lists/`moduleServer`
+  internals,
+  `runQcStudbook`/`processQcStudbookResult`/`shouldShowChangedColsTab`,
+  `safeExecute`/`logModuleEvent`/table-makers, “Testing
+  Improvements”/~145 test files, internal test/CI fixes); and **folded
+  in the S112–S129 user-facing delta** — the
+  `rhesusPedigree`/`rhesusGenotypes` canonical-column-type re-exports
+  (S123/S124, Minor with a maintainer-judgment flag), the
+  [`addGenotype()`](https://github.com/rmsharp/nprcgenekeepr/reference/addGenotype.md)
+  allele-coercion behavior change (S125, Minor), and one omnibus
+  “Documentation” Minor bullet for the shipped help/data-doc corrections
+  (S112/S114–S117/S120–S122/S126–S127). S113/S118/S119/S128/S129 are
+  tooling/VCS/test/website-only and correctly not surfaced.
+- **Date provisional:** the `(20260618)` heading date is today’s;
+  reconfirm/adjust at the actual CRAN submission (Phase 5).
+- **TDD:** one pre-RED scope gate (full Phase 3 vs split; owner chose
+  split) + the three transitions (`PRE-RED→RED`, `RED→GREEN`,
+  `GREEN→REFACTOR`). RED: a file-based probe bound to the rendered
+  `NEWS.md` — 1 precondition (prior 1.0.8 history present) + 6
+  assertions (one 2.0.0 heading; 1.1.0.9000 gone; Major+Minor present;
+  no NEW-/PED-/XARCH-; delta folded incl. `addGenotype` + rhesus data;
+  module mechanics dropped) — **6 failures** on the current file, **0
+  (7/7)** after the rewrite+render. GREEN: authored the section
+  (write-section-file + R splice by heading boundary, avoiding a fragile
+  178-line Edit match), re-rendered. REFACTOR: tightened the verbose
+  Major bullets to the §6.2 one-sentence form (probe stayed 7/7; all
+  facts preserved). **0 stakeholder corrections.**
+- **Adversarially verified (workflow — 3 independent lenses):**
+  completeness (vs OLD `git show HEAD:NEWS.md`, plan §6.3, CHANGELOG
+  S112–S129), accuracy (every named function exists/exported per
+  `NAMESPACE`/`R/`; behavior + issue numbers cross-checked against
+  code), and dedup/house-style → **0 completeness, 0 accuracy issues, 0
+  double-counts**; only 6 style nits (verbose bullets), all resolved by
+  the REFACTOR tighten. A post-tighten token sweep confirmed every
+  user-facing fact survived.
+- **Verified:** probe 7/7;
+  `rmarkdown::render(output_format="github_document")` clean (pandoc
+  3.1.1); both `NEWS.Rmd`/`NEWS.md` carry exactly one `2.0.0` heading
+  and zero `1.1.0.9000`; prior history (1.0.8 → 1.0.4.9003 …) intact;
+  `git diff` confined to the two NEWS files; removed the github_document
+  `NEWS.html` preview litter + transient probe/splice files. **Phase-3E
+  N/A** — a docs-content change alters no runtime behavior; the render
+  IS the doc build-equivalent (SAFEGUARDS). Version-dependent tests not
+  run this session (no version bump yet; both are dynamic and deferred
+  to Phase 3b).
+- **Flagged for Phase 3b (next session):** bump `DESCRIPTION:4`
+  1.1.0.9000 → 2.0.0; regenerate `README.md` (rmarkdown::render;
+  `devtools::build_readme` absent); set `CITATION.cff` version
+  (currently **stale at 1.0.7**) → 2.0.0 (hand-edit; cffr absent); run
+  `test_getVersion.R` + `test_appUI_version.R` (both dynamic → green).
+  Maintainer judgment for the owner: whether to promote the
+  [`summarizeKinshipValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/summarizeKinshipValues.md)
+  `secondQuartile` change and/or the rhesus data-type change from Minor
+  to Major. \[\[news-vs-changelog\]\]
+  \[\[backlog-vs-changelog-placement\]\]
+- **PROJECT_LEARNINGS.md:** Learning 123 added.
+
+### 2026-06-18 — Corrected the studbook-QC vignette’s `pedGood` column description (DOC fix, strict TDD) (Session 129)
+
+- **Deliverable (owner pick A3):** carried from S116 — the *Studbook
+  Quality Control* article
+  (`vignettes/articles/studbook-quality-control.qmd:90-91`) introduced
+  the `pedGood` example as having “deliberately messy headers (`ego_id`,
+  `si.re`, `dam_id`, `birth_date`)”, listing only four of the data set’s
+  **five** columns and never telling the reader `pedGood` also carries a
+  `sex` column. Reworded the lead-in to “…has five columns – four with
+  deliberately messy headers (`ego_id`, `si.re`, `dam_id`, `birth_date`)
+  and an already-canonical `sex` that QC leaves untouched:”.
+  Website-only article (`vignettes/articles/` is `.Rbuildignore`d) —
+  **no
+  `R/`/`man/`/`NAMESPACE`/`DESCRIPTION`/`NEWS`/`data/`/test/CRAN-vignette
+  change**; a single 3-line prose edit.
+- **Correctness nuance (verified firsthand):** S116 framed this as
+  “omits the `sex` column”, but `sex` is NOT one of the messy headers —
+  a probe on the live object shows `names(pedGood)` = `ego_id`, `si.re`,
+  `dam_id`, `sex`, `birth_date`, and the `changes` chunk renames exactly
+  the four non-`sex` columns (`sex` is absent from `changedCols`).
+  Naively inserting `sex` into the parenthetical would have mislabeled
+  it as messy and contradicted the chunk’s own output. The owner chose
+  the lead-in rewrite (five columns: four messy + already-clean `sex`)
+  over a minimal appended clause.
+- **TDD:** one pre-RED approach gate (rewrite lead-in vs append a
+  clause) + the three mandatory transitions (`PRE-RED→RED`, `RED→GREEN`;
+  `GREEN→REFACTOR` declared **N/A** — prose content, structure
+  preserved). RED: a file-based probe bound to ground truth — parses the
+  lead-in paragraph from the `.qmd` and asserts (preconditions, must
+  pass) `names(pedGood)` has 5 columns incl. `sex` and the 4 listed
+  headers are exactly the non-`sex` columns, and (RED assertions, must
+  fail) the lead-in mentions `sex` and states the count “five” —
+  confirmed **2 failures** against the current prose, 3 preconditions
+  passing. GREEN: the 3-line edit; re-ran the probe → **0 failures (all
+  5 pass)**. No permanent testthat test added (matches the S120–S127
+  doc-fix class; testthat does not execute this website-only article).
+  **0 stakeholder corrections.**
+- **Verified:** probe 0 failures; **build-equivalent render** via
+  `pkgdown::build_article("articles/studbook-quality-control")` — clean
+  render; the rendered HTML (`pkgdown_site/articles/...`, gitignored)
+  contains the new sentence and the `changedCols` output still shows
+  exactly the four renames with no `sex` rename (prose now matches what
+  the chunk demonstrates); `git diff` confined to the single `.qmd`.
+  Cleaned the render litter (`pkgdown/`,
+  `vignettes/articles/.gitignore`, the `*.rmarkdown` intermediate)
+  before commit. **Phase-3E N/A** — a documentation-content change
+  alters no runtime behavior; the render IS the doc build-equivalent
+  (SAFEGUARDS “Verify the Build Equivalent”). Full testthat suite not
+  run — no `R/`/test/`data/` change, and testthat does not execute the
+  website-only article.
+- **Flagged for the future:** website-only article — does **not** ship
+  to CRAN, so **no `NEWS.md` line warranted** (unlike the S123–S125
+  user-facing changes). \[\[news-vs-changelog\]\]
+  \[\[backlog-vs-changelog-placement\]\]
+- **PROJECT_LEARNINGS.md:** Learning 122 added.
+
+### 2026-06-18 — Removed redundant `as.character`/`as.Date` no-op conversions from two test fixtures (REFACTOR, strict TDD) (Session 128)
+
+- **Deliverable (owner pick A8):** carried from S123 — deleted the
+  redundant `as.character(id/sire/dam)` / `as.Date(birth)`
+  self-assignments that re-coerced `rhesusPedigree`-sourced fixtures to
+  types the object already ships (S123 re-exported `rhesusPedigree` with
+  canonical column types, Learning 116, making these conversions
+  no-ops). Removed **12 lines** across **three** identical-class blocks:
+  `tests/testthat/test_getPotentialParents.R:4-7` (`pedOne`) and
+  `:116-119` (`pedDF`), plus
+  `tests/testthat/test_modPotentialParents.R:121-124` (`pedOne`). Kept
+  every `$fromCenter <- TRUE` line and the `pedDF`
+  [`as.data.frame()`](https://rdrr.io/r/base/as.data.frame.html)
+  precondition. **Test code only — no production / `R/` / `man/` /
+  `NAMESPACE` / `DESCRIPTION` / `NEWS` / `data/` change.**
+- **Scope (gated):** S127’s handoff named two blocks; a robust ERE sweep
+  found a third identical block in the same file (`pedDF`), which the
+  owner chose to include (all three) so the file is internally
+  consistent. Two look-alikes were classified out and left alone — an
+  `as.Date` inside age arithmetic at `test_fillBins.R:22` and an
+  `as.character` inside an `expect_setequal` at
+  `test_modGeneticValue.R:1274` (not redundant self-assignments).
+- **No-op proven firsthand:** `rhesusPedigree` ships `id`/`sire`/`dam`
+  as character and `birth` as Date; `identical(as.character(col), col)`
+  and `identical(as.Date(birth), birth)` are all TRUE, and
+  `identical(frame-with-all-conversions, frame-without)` is TRUE — so
+  the deletions are strictly behavior-preserving.
+- **TDD:** a REFACTOR-only deliverable, so **NO RED phase** (the
+  existing green suite is the safety net). One pre-REFACTOR scope gate
+  (two named blocks vs all three) + the GREEN→REFACTOR transition gate.
+  **0 stakeholder corrections.**
+- **Verified:** GREEN baseline both files pass → 12-line deletion → both
+  files pass with identical test counts; full-suite clean-regression
+  read **failed=0 error=0** (no offenders; baseline
+  `test-app-`/`test-e2e-` clean this run too); `git diff` confined to
+  the 12 intended deletions. **Phase-3E N/A** — a test-only change
+  alters no runtime/production behavior; the proportionate
+  build-equivalent is the targeted files green + full suite 0/0 + the
+  confined diff.
+- **Flagged for the future:** internal test cleanup — fold into the CRAN
+  Phase 3 NEWS rewrite at 2.0.0 only if a NEWS line is warranted (almost
+  certainly not — no user-facing change). \[\[news-vs-changelog\]\]
+  \[\[backlog-vs-changelog-placement\]\]
+- **PROJECT_LEARNINGS.md:** Learning 121 added.
+
+### 2026-06-18 — Corrected the `rhesusPedigree` data-doc `@source` citation (DOC fix, strict TDD) (Session 127)
+
+- **Deliverable (owner pick A11):** the `rhesusPedigree` documentation
+  cited a nonexistent source file `rhesusPedigree.csv`; corrected it to
+  the real, value-identical export `obfuscated_rhesus_mhc_ped.csv`. This
+  closes the sibling phantom flagged by S126 (Learning 119) and
+  **completes the data-doc `@source` phantom-citation class for
+  `R/data.R`** (a post-fix sweep confirms all three `\emph{...csv}`
+  citations now resolve). Scoped to **`R/data.R` (one roxygen token) +
+  `man/rhesusPedigree.Rd` (regenerated)**; **no
+  `NAMESPACE`/`DESCRIPTION`/`NEWS`/`data/`/code change** (`NAMESPACE`
+  proven byte-identical). Owner chose **filename-swap-only** (sentence
+  structure preserved) over a grammar-clarifying rewrite.
+- **Verified firsthand (overturned a filename-based assumption):**
+  `find` confirms no `rhesusPedigree.csv` exists anywhere. Both
+  candidate files carry the SAME obfuscated ids as the bundled object,
+  so neither is pre-obfuscation data — there is no un-obfuscated source
+  shipped. `inst/extdata/obfuscated_rhesus_mhc_ped.csv` is 375×8 and
+  **value-identical to the bundled `rhesusPedigree` across all 8
+  columns** (ordered-by-id compare).
+  `inst/extdata/rhesusPedigree_fromCenter.csv` (the file
+  `data-raw/rhesusPedigree.R` names as the obfuscation source) is
+  value-identical only on the 8 shared columns but is 375×9 (extra
+  `fromCenter` column) — a superset, not the exact twin — so the minimal
+  exact match was cited.
+- **TDD:** one pre-RED scope gate (which file + swap-only vs
+  grammar-clarify) + the three mandatory transitions (`PRE-RED→RED`,
+  `RED→GREEN`, `GREEN→REFACTOR`). RED: a file-based probe parsing
+  `man/rhesusPedigree.Rd` for its `\emph{}` source token and
+  asserting (a) the phantom `rhesusPedigree.csv` is absent from both
+  `R/data.R` and the man page, (b) the cited
+  `obfuscated_rhesus_mhc_ped.csv` is present in both, (c) it exists in
+  `inst/extdata` **and** is value-identical to the object — confirmed
+  **4 failures** (A1–A4) against the current doc, preconditions A5–A6
+  passing. GREEN: swapped the one token; regenerated `man/` via the rd
+  roclet only (NAMESPACE untouched); re-ran the probe → **0 failures
+  (all 6 pass)**. REFACTOR: **N/A** (single-token doc fix; structure
+  intentionally preserved). No permanent testthat test added — matches
+  the S120–S122 / S126 data-doc audit class. **0 stakeholder
+  corrections.**
+- **Verified:** probe 0 failures; full-suite clean-regression read
+  **failed=0 error=0** (no offenders; baseline `test-app-`/`test-e2e-`
+  clean); `tools::checkRd("man/rhesusPedigree.Rd")` **0 problems**;
+  **`NAMESPACE` byte-identical** (md5 unchanged); `git diff` confined to
+  the two intended lines (`R/data.R`, `man/rhesusPedigree.Rd`).
+  **Phase-3E N/A** — a doc-only change alters no runtime behavior (no
+  code/data/startup/dispatch); the build-equivalent (checkRd +
+  load_all + full suite + NAMESPACE byte-diff + the man-source probe) is
+  the proportionate verification.
+- **Flagged for the future:** the `@source` phantom-citation class is
+  now **CLOSED** for `R/data.R`. Fold S127 into the CRAN Phase 3 NEWS
+  rewrite at 2.0.0 (doc-only; may not warrant a NEWS line).
+  \[\[news-vs-changelog\]\] \[\[backlog-vs-changelog-placement\]\]
+- **PROJECT_LEARNINGS.md:** Learning 120 added.
+
+### 2026-06-18 — Corrected the `rhesusGenotypes` data-doc `@source` citation (DOC fix, strict TDD) (Session 126)
+
+- **Deliverable (owner pick A10):** the `rhesusGenotypes` documentation
+  cited a nonexistent source file `rhesusGenotypes.csv`; corrected it to
+  the real, value-identical export
+  `obfuscated_rhesus_mhc_breeder_genotypes.csv`. Scoped to **`R/data.R`
+  (one roxygen token) + `man/rhesusGenotypes.Rd` (regenerated)**; **no
+  `NAMESPACE`/`DESCRIPTION`/`NEWS`/`data/`/code change** (`NAMESPACE`
+  proven byte-identical). Owner chose **filename-swap-only** (sentence
+  structure preserved) over a grammar-clarifying rewrite.
+- **Verified firsthand (not from S124/S125 memory):** `find` confirms no
+  `rhesusGenotypes.csv` exists anywhere in the repo;
+  `inst/extdata/obfuscated_rhesus_mhc_breeder_genotypes.csv` is 31×3
+  (`id`/`first_name`/`second_name`) and **value-identical** to the
+  bundled `rhesusGenotypes` in all three columns (ordered-by-id,
+  all-character compare). `data-raw/rhesusGenotypes.R` (S124)
+  independently documents this CSV as the value-identical export.
+- **TDD:** one pre-RED scope gate (filename-swap-only vs
+  +grammar-clarify) + the three mandatory transitions (`PRE-RED→RED`,
+  `RED→GREEN`, `GREEN→REFACTOR`). RED: a file-based probe parsing
+  `man/rhesusGenotypes.Rd` for its `\emph{}` source token and
+  asserting (a) the cited file exists in `inst/extdata` **and** is
+  value-identical to `rhesusGenotypes`, (b) the wrong name
+  `rhesusGenotypes.csv` is absent from both `R/data.R` and the man page
+  — confirmed **4 failures** against the current doc. GREEN: swapped the
+  one token; regenerated `man/` via the rd roclet only (NAMESPACE
+  untouched); re-ran the probe → **0 failures**. REFACTOR: **N/A**
+  (single-token doc fix; structure intentionally preserved). No
+  permanent testthat test added — matches the S120–S122 data-doc audit
+  class. **0 stakeholder corrections.**
+- **Verified:** probe 0 failures; full-suite clean-regression read
+  **failed=0 error=0** (no offenders; baseline `test-app-`/`test-e2e-`
+  clean this run too); `tools::checkRd("man/rhesusGenotypes.Rd")` **0
+  problems**; **`NAMESPACE` byte-identical** (sha256 unchanged);
+  `git diff` confined to the two intended lines (`R/data.R`,
+  `man/rhesusGenotypes.Rd`). **Phase-3E N/A** — a doc-only change alters
+  no runtime behavior (no code/data/startup/dispatch); the
+  build-equivalent (checkRd + load_all + full suite + NAMESPACE
+  byte-diff + the man-source probe) is the proportionate verification.
+- **Flagged for the future (NOT done, FM \#8):** **the sibling
+  `rhesusPedigree` `@source` (`R/data.R:358`) cites the same phantom
+  class** — `rhesusPedigree.csv` does NOT exist anywhere; candidate real
+  source is `rhesusPedigree_fromCenter.csv` (the obfuscation source) or
+  `obfuscated_rhesus_mhc_ped.csv` (a likely value-identical obfuscated
+  export — needs a value-identity check) — call it **A11**.
+  `ExamplePedigree.csv` (`R/data.R:18`) was checked and **does** exist
+  (fine). Fold S126 into the CRAN Phase 3 NEWS rewrite at 2.0.0
+  (doc-only; may not warrant a NEWS line). \[\[news-vs-changelog\]\]
+  \[\[backlog-vs-changelog-placement\]\]
+- **PROJECT_LEARNINGS.md:** Learning 119 added.
+
+### 2026-06-17 — Hardened `addGenotype()` against factor allele columns (CODE fix, strict TDD) (Session 125)
+
+- **Deliverable (owner pick A9):** hardened
+  [`addGenotype()`](https://github.com/rmsharp/nprcgenekeepr/reference/addGenotype.md)
+  so its integer allele encoding is consistent regardless of whether the
+  two allele columns arrive as character or factor. This realizes the
+  code fragility S124 surfaced and flagged (Learning 117): the
+  dictionary lookup `genoDict[genotype[, 2L]]` / `[, 3L]` indexes a
+  name-keyed vector by a factor, so R uses the factor’s **integer
+  codes** instead of its labels, yielding an encoding that is
+  inconsistent between the two columns (and between callers). Scoped to
+  **`R/addGenotype.R` + `tests/testthat/test_addGenotype.R` +
+  `man/addGenotype.Rd`**; **no
+  `NAMESPACE`/`DESCRIPTION`/`NEWS`/`data/`/`checkGenotypeFile.R`
+  change** (`NAMESPACE` proven byte-identical).
+- **Fix (2 lines):** coerce both allele columns to character at the top
+  of
+  [`addGenotype()`](https://github.com/rmsharp/nprcgenekeepr/reference/addGenotype.md)
+  (by their names, `genotypeNames[1L]`/`[2L]`), so both the dictionary
+  build (`sort(unique(c(...)))`) and the lookup operate on labels.
+  Coercing at the top — rather than only wrapping the two index
+  expressions — also neutralizes the version-fragile
+  [`c()`](https://rdrr.io/r/base/c.html)-on-factors behavior in the
+  dictionary build.
+- **Scope decision (gated):** the coercion lives in `addGenotype` only,
+  **not** `checkGenotypeFile`. A read-only breadth scan confirmed (a)
+  the bug pattern is **isolated to `addGenotype`** — no sibling genotype
+  function indexes a named vector by a possibly-factor column; (b)
+  `addGenotype` has **direct callers that bypass the `checkGenotypeFile`
+  gate** (the roxygen example, `test_addGenotype.R`, `test_geneDrop.R`),
+  so a gate-only fix would not protect them; (c) `checkGenotypeFile` is
+  a structural validator that does not coerce types. Owner chose
+  addGenotype-only (point-of-use); `checkGenotypeFile` stays a pure
+  validator.
+- **TDD:** one pre-RED scope gate (addGenotype-only vs
+  +checkGenotypeFile) + the three mandatory transitions (`PRE-RED→RED`,
+  `RED→GREEN`, `GREEN→REFACTOR`). RED: two new failing tests in
+  `test_addGenotype.R` — (1) factor-input output **identical** to
+  character-input output, (2) the same allele (`"b"`, appearing as
+  `first_name` in one row and `second_name` in another) gets the
+  **same** code in both — on a minimal deterministic fixture
+  (`first_name = c("a","b")`, `second_name = c("b","c")` as factors;
+  globally a→10001, b→10002, c→10003). Confirmed **2 failed / 0 error**
+  on the unhardened function while the existing character-input test
+  stayed green. GREEN: the 2-line coercion; all 3 tests pass. REFACTOR:
+  added a one-line `@details` note documenting the internal coercion;
+  regenerated `man/addGenotype.Rd`. **0 stakeholder corrections.**
+- **Verified:** all 3 `addGenotype` tests pass; full-suite
+  clean-regression read **failed=0 error=0** (no offenders; baseline
+  `test-app-`/`test-e2e-` clean this run too);
+  `tools::checkRd("man/addGenotype.Rd")` **0 problems**; **`NAMESPACE`
+  byte-identical**; `git diff` confined to the three intended files.
+  **Phase-3E runtime smoke DONE** (runtime-behavior change): ran
+  `addGenotype(rhesusPedigree, rhesusGenotypes)` on a factor-coerced
+  copy of the real bundled object → `first`/`second` **identical** to
+  the character path, the combined 35-allele dictionary (codes
+  10001–10035), **max distinct codes per allele = 1** (consistent) —
+  computed at the genotype-row level to avoid the S124
+  short-logical-recycling trap (gotcha \#11).
+- **Flagged for the future (NOT done):** fold S125 into the CRAN Phase 3
+  NEWS rewrite at 2.0.0 (this CODE fix **ships** and changes
+  `addGenotype` output for any factor-columned input). Still open: the
+  `R/data.R:345` data-doc nit (cites a nonexistent
+  `rhesusGenotypes.csv`; real source is
+  `obfuscated_rhesus_mhc_breeder_genotypes.csv`) (A10), the redundant
+  test no-ops in
+  `test_getPotentialParents.R`/`test_modPotentialParents.R` (A8), and
+  the vignette sex-column nit (A3). \[\[news-vs-changelog\]\]
+  \[\[backlog-vs-changelog-placement\]\]
+- **PROJECT_LEARNINGS.md:** Learning 118 added.
+
+### 2026-06-17 — Re-exported `rhesusGenotypes` with character column types (DATA change, strict TDD) (Session 124)
+
+- **Deliverable (owner pick A7):** re-exported the bundled
+  `rhesusGenotypes` object (31 animals, two haplotypes each) so all
+  three columns carry the canonical **character** type, **preserving
+  every value**. They shipped as `stringsAsFactors`-era factors (`id` 31
+  levels, `first_name` 18, `second_name` 23). Same coerce-in-place +
+  `data-raw/` + atomic-doc/man/test pattern as S123 (Learning 116).
+  Scoped to **`data/rhesusGenotypes.RData` + new
+  `data-raw/rhesusGenotypes.R` + new
+  `tests/testthat/test_rhesusGenotypes.R` + the `rhesusGenotypes` `id`
+  doc line in `R/data.R` + `man/rhesusGenotypes.Rd`**; **no
+  `NAMESPACE`/`DESCRIPTION`/`NEWS`/`.Rbuildignore`/other-data-object/`addGenotype.R`
+  change** (`^data-raw$` was already build-ignored from S123).
+- **The firsthand investigation reframed A7 (Learning 117):** S123
+  flagged A7 as “de-factor `id`”. Probing showed the object has
+  **three** factor columns, and that `id` is the column that does NOT
+  matter (`merge(ped, genotype, by="id")` coerces it either way; every
+  consumer is id-agnostic). The columns that matter are the two
+  **allele** columns:
+  [`addGenotype()`](https://github.com/rmsharp/nprcgenekeepr/reference/addGenotype.md)’s
+  dictionary lookup `genoDict[genotype[, 2L]]` indexes a name-keyed
+  vector by a factor, so R uses the factor’s INTEGER CODES instead of
+  its labels — yielding an **inconsistent** encoding (same allele →
+  different codes in `first` vs `second`). With character columns the
+  lookup is by name and the encoding is **consistent** (verified: same
+  allele → same code = TRUE for character / FALSE for factor; combined
+  dictionary 35 alleles, codes 10001–10035 vs the buggy per-column
+  10001–10018 / 10001–10023). The package’s own `test_addGenotype.R`
+  already feeds `stringsAsFactors = FALSE` input — the shipped factor
+  object was the anomaly. **Owner chose to coerce all three columns**
+  (full type-correctness), making the shipped
+  `addGenotype(rhesusPedigree, rhesusGenotypes)` example produce
+  correct, consistent codes.
+- **Provenance → coerce-in-place:** `data/rhesusGenotypes.RData` has a
+  single 2020 commit (`31c4679d`), no scripted generator, and shares all
+  31 obfuscated ids with `rhesusPedigree` (re-deriving via the
+  non-deterministic
+  [`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+  would change ids and desync the sibling). The new idempotent
+  `data-raw/rhesusGenotypes.R` coerces the three columns via
+  [`as.character()`](https://rdrr.io/r/base/character.html) and re-saves
+  in place (`compress="xz"`, 734→608 bytes). The value-identical
+  `inst/extdata/obfuscated_rhesus_mhc_breeder_genotypes.csv` serves as
+  an independent cross-check.
+- **TDD:** one pre-RED scope gate (id-only vs all-three; owner chose all
+  three) + the three mandatory transitions (`PRE-RED→RED`, `RED→GREEN`,
+  `GREEN→REFACTOR`). RED: wrote `test_rhesusGenotypes.R` (22 assertions
+  pinning corrected types **and** preserved values — dim 31×3, names,
+  unique counts 31/18/23, NA counts 0, membership spot-checks),
+  confirmed it **failed** on the factor object (the 6 type assertions).
+  GREEN: ran the coercion, reverted the `id` doc line
+  (`factor`→`character`; `first_name`/`second_name` make no type claim),
+  regenerated `man/`. REFACTOR: **N/A** (own code clean; the change
+  introduced no redundant conversions — no test references the bundled
+  genotype object). **0 stakeholder corrections.**
+- **Verified:** new test **all-pass** (22); full-suite regression read
+  **failed=0 error=0** (no offenders, baseline `test-app-`/`test-e2e-`
+  included); `tools::checkRd("man/rhesusGenotypes.Rd")` **0 problems**;
+  **`NAMESPACE` byte-identical**; `git diff --stat` confined to the
+  intended files. **Phase-3E runtime smoke test DONE** (this is a
+  runtime-behavior change):
+  [`addGenotype()`](https://github.com/rmsharp/nprcgenekeepr/reference/addGenotype.md)
+  runs cleanly on the **shipped corrected object** (no conversions;
+  375×12, 31 genotype rows), the allele encoding is consistent (same
+  allele → same code, TRUE), the coercion is idempotent (no-op on
+  re-run), and the CSV cross-check confirms
+  `id`/`first_name`/`second_name` all identical.
+- **Flagged for the future (NOT fixed, FM \#8):** (a) **`addGenotype.R`
+  is fragile to factor inputs** — it would mis-encode any
+  factor-columned genotype, not just the bundled one; hardening it
+  (coerce the allele columns inside the function or in
+  `checkGenotypeFile`) is a separate code-fix deliverable with its own
+  tests; (b) the `rhesusGenotypes` doc (`R/data.R:345`) cites a
+  nonexistent source file `rhesusGenotypes.csv` — the real
+  value-identical export is
+  `obfuscated_rhesus_mhc_breeder_genotypes.csv` (a separate data-doc
+  nit); (c) fold S124 into the CRAN Phase 3 NEWS rewrite at 2.0.0 (this
+  DATA change **ships**). \[\[news-vs-changelog\]\]
+  \[\[backlog-vs-changelog-placement\]\]
+- **PROJECT_LEARNINGS.md:** Learning 117 added.
+
+### 2026-06-17 — Re-exported `rhesusPedigree` with corrected canonical column types (DATA change, strict TDD) (Session 123)
+
+- **Deliverable (owner pick A6):** S122’s audit surfaced that the
+  bundled `rhesusPedigree` object ships **degraded column types** (an
+  obfuscation/`stringsAsFactors`-era artifact). Re-exported the object
+  so its columns carry the canonical pedigree types matching
+  `examplePedigree`, **preserving every value**. This is the first item
+  in the S118–S123 run that is a real **DATA change** — it touches
+  `data/`, adds tests, and runs the full **RED → GREEN → REFACTOR**
+  cycle (not roxygen prose). Scoped to **`data/rhesusPedigree.RData` + a
+  new `data-raw/` script + `tests/testthat/test_rhesusPedigree.R` + the
+  `rhesusPedigree` doc in `R/data.R` + `man/rhesusPedigree.Rd` +
+  `.Rbuildignore`**; **no `NAMESPACE`/`DESCRIPTION`/`NEWS` or
+  other-data-object change**.
+- **Type fixes (375×8, values preserved):** `id`/`sire`/`dam` factor →
+  **character**; `birth` factor-of-date-strings (282 levels) →
+  **`Date`** (every level parsed cleanly; NA pattern unchanged); `exit`
+  all-NA logical → **`Date`** all-NA (kept as a column —
+  [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+  reads `ba$exit`; dropping it would break that consumer). `sex` (factor
+  F,M), `gen` (integer), `age` (numeric) were already correct and left
+  unchanged (owner chose **Type-correctness**, not full canonical match
+  — no gratuitous widening of `sex` to F,M,H,U).
+- **Reproducibility (owner choice):** added committed
+  **`data-raw/rhesusPedigree.R`** (+ `^data-raw$` in `.Rbuildignore`).
+  The `.rda` has **no reproducible generator** (obfuscated from
+  `inst/extdata/rhesusPedigree_fromCenter.csv` via
+  [`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md),
+  hand-saved 2020-02-02, never scripted/seeded), and the obfuscation is
+  non-deterministic — so the script **coerces the existing object’s
+  types without altering values** (idempotent) rather than re-deriving
+  from the CSV (which would change the shipped obfuscated ids/dates).
+- **TDD:** four gated `AskUserQuestion`s (pre-RED scope:
+  Type-correctness; pre-RED reproducibility: add data-raw script; then
+  `PRE-RED→RED`, `RED→GREEN`, `GREEN→REFACTOR`). RED: wrote
+  `test_rhesusPedigree.R` (31 assertions pinning corrected types **and**
+  preserved values — dim 375×8, id all-unique, sire/dam 124 NA, birth
+  range 1970-07-03..2013-12-21, BRI2MW birth 1998-12-06, exit all-NA),
+  confirmed it **failed** on the degraded object. GREEN: ran the
+  coercion, updated the doc (id `factor`→`character`; birth
+  `factor of birth-date strings`→`Date vector`; exit `logical`→`Date`),
+  regenerated `man/`. REFACTOR: **N/A** (own code clean) — the
+  now-redundant `as.character`/`as.Date` conversions in
+  `test_getPotentialParents.R`/`test_modPotentialParents.R` are harmless
+  no-ops, **flagged** for a future cleanup (out of scope, FM \#8). **0
+  stakeholder corrections.**
+- **Verified:** new test file **all-pass**; full-suite regression read
+  **failed=0 error=0** (true offenders excl. baseline
+  `test-app-`/`test-e2e-` noise: NONE);
+  `tools::checkRd("man/rhesusPedigree.Rd")` **0 problems**;
+  **`NAMESPACE` byte-identical**;
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  **162 exports**; `git diff --stat` confined to the intended files.
+  **Phase-3E runtime smoke test DONE** (this is a runtime-behavior
+  change):
+  [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+  runs cleanly on the **shipped corrected object directly** (no
+  conversions; `birth` is `Date`, `id` is character; 50-element result),
+  and the suite’s positional dam/sire assertions pass.
+- **Flagged for the future:** (a) re-`man`/NEWS at CRAN Phase 3 — fold
+  S123 into the 2.0.0 NEWS rewrite (these doc/data changes
+  **ship**); (b) the redundant conversion no-ops in the two
+  potential-parents test files can be removed in a later cleanup; (c)
+  `data-raw/` now establishes the reproducibility pattern — other opaque
+  `.rda`s (e.g. `rhesusGenotypes`) could follow.
+  \[\[news-vs-changelog\]\] \[\[backlog-vs-changelog-placement\]\]
+- **PROJECT_LEARNINGS.md:** Learning 116 added.
+
+### 2026-06-17 — One-pass factual-claim audit of all 24 data docs vs live objects; fixed 9 discrepancies (Session 122)
+
+- **Deliverable (owner pick A5, promoted to full sweep):** S121 flagged
+  a 3rd same-class data-doc bug (sex factor levels) and suggested
+  promoting it to a one-pass audit of all 24 data docs. Owner chose the
+  **full 24-doc audit + fix** over the narrow 2-doc fix. Audited **every
+  factual claim** (dims, column names, types, factor levels, counts,
+  prose) in all 24 `\docType{data}` blocks against the live objects,
+  fixed all confirmed discrepancies, regenerated the 4 affected `man/`
+  pages. Scoped to **`R/data.R` + 4 data `man/` pages**;
+  `NAMESPACE`/`DESCRIPTION`/`data/` unchanged. **TDD phase N/A**
+  (roxygen prose; only `#'` comment lines changed — no executable R; RED
+  vacuous; declared every response). **0 stakeholder corrections.**
+  **Two gated `AskUserQuestion`s** — (1) scope: narrow vs. full sweep
+  (owner chose full); (2) how to handle the 2 data-artifact findings
+  (owner chose “document actual types now”).
+- **Method (ultracode):** computed authoritative ground truth for all 24
+  objects with one oracle probe
+  ([`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html) +
+  direct inspection), then ran a workflow — **5 independent lens
+  scanners** (dims/counts, column-names, types/levels, prose/crossref,
+  free-roam) over all 24 docs for completeness, then an **adversarial
+  refuter per unique discrepancy** (12 candidates → 10 confirmed, 2
+  rejected). The adversarial pass prevented over-reach: it **rejected**
+  flagging `rhesusPedigree` `sire`/`dam` (they make no type claim —
+  adding “factor” would invent a correction).
+- **9 fixes across 4 objects (each verified firsthand against the live
+  object before authoring, Learning 109/111):** `examplePedigree`
+  `\item{sex}` `"M","F","U"` → `"F","M","H","U"` (live factor has 4
+  levels incl. zero-count `H`) and `\item{ancestry}` “character …
+  free-form text” → “factor with levels: INDIAN, CHINESE, HYBRID,
+  JAPANESE, OTHER, UNKNOWN” (a closed factor, not free-form character);
+  `rhesusPedigree` `\item{id}` “character” → “factor”, `\item{sex}`
+  `"M","F","U"` → `"F","M"` (no `U` level), `\item{birth}` “Date vector”
+  → “factor of birth-date strings (282 levels)”, `\item{exit}` “Date
+  vector” → “logical vector, all `NA` (no exit dates recorded in this
+  obfuscated pedigree)”; `rhesusGenotypes` `\item{id}` “character” →
+  “factor”; `qcBreeders` `@description` + `@source` “A list of …” → “A
+  character vector of …” (counts 3 males/26 females confirmed correct).
+  The genuinely-correct sibling claims
+  (`examplePedigree`/`lacy1989Ped`/`qcPed` id as character;
+  `examplePedigree` birth/exit as Date) were verified and left
+  untouched.
+- **Owner decision — the 2 data-artifacts (gated):** `rhesusPedigree`
+  ships `birth` as a factor (not Date) and `exit` as all-NA logical (no
+  dates) — the data itself looks degraded by obfuscation. Owner chose
+  **document the actual types now** (docs made accurate); the underlying
+  data oddity is flagged for a possible future data re-export (separate
+  session, not a doc change).
+- **Verified (build-equivalent for a generated-doc change):**
+  `roxygenise()` regen confined to exactly the 4 intended pages
+  (`git diff --stat`); **`NAMESPACE` byte-identical**
+  (`git diff --quiet`);
+  [`tools::checkRd()`](https://rdrr.io/r/tools/checkRd.html) on the 4
+  pages — **0 problems**;
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  OK (**162 exports**); full-suite regression read **failed=0 error=0**
+  (189 files; 164 excluding the usually-noisy app/e2e files). **Phase-3E
+  N/A** — roxygen/Rd prose changes no package/app runtime behavior. Full
+  `R CMD check` not run (`devtools` absent; the above is the
+  proportionate equivalent).
+- **\[news-vs-changelog\]:** dev-process history → CHANGELOG here. These
+  help pages **ship** → fold S122’s 9 fixes into the CRAN Phase 3 NEWS
+  rewrite at 2.0.0 (flagged, not edited now).
+  \[\[backlog-vs-changelog-placement\]\]
+- **PROJECT_LEARNINGS.md:** Learning 115 added.
+
+### 2026-06-17 — Repaired 2 same-class data-doc bugs flagged in S120; flagged a 3rd (sex factor levels) (Session 121)
+
+- **Deliverable (owner pick A4):** fixed the two newly-flagged
+  same-class data-doc bugs S120 found and deliberately left (FM \#8),
+  then regenerated the 4 affected `man/` pages. Scoped to **`R/data.R` +
+  4 data `man/` pages**; `NAMESPACE`/`DESCRIPTION`/`data/` unchanged.
+  **TDD phase N/A** (roxygen prose; only `#'` comment lines changed — no
+  executable R; RED vacuous; declared every response). **0 stakeholder
+  corrections.** **No gated `AskUserQuestion`** — both fixes were fully
+  determined by ground truth (4 distinct iteration columns;
+  correctly-spaced parallel `sire` items), so per Learning 113
+  over-gating was avoided (the owner’s “(A4)” pick was the
+  authorization).
+- **The two fixes (each verified against the live object before
+  authoring, Learning 109/111):** `ped1Alleles` `\item{V2}/{V3}/{V4}`
+  “iteration 1” → “iteration 2/3/4” (object 554×6; V1–V4 are 4 distinct
+  columns — all 6 pairwise
+  [`identical()`](https://rdrr.io/r/base/identical.html)=FALSE, 290/554
+  rows differ; `\item{parent}` says “4 gene dropping iterations”; V1
+  correctly stays “iteration 1”); the `dam` `\item` “column.Unknown
+  dams” → “column. Unknown dams” in
+  `examplePedigree`/`lacy1989Ped`/`rhesusPedigree` (R/data.R 24/97/365;
+  the parallel `sire` items were already correctly spaced).
+- **Adversarial verification (workflow — 2 independent refutation
+  agents + 4 completeness scanners over all 24 data docs):** both fixes
+  **CONFIRMED** (refuted 0/2 each; ground truth re-derived independently
+  — V1–V4 distinct, `\item{parent}` corroborates “4 iterations”,
+  repo-wide grep for “column.Unknown” returns NONE; source ↔︎ rendered
+  `.Rd` in sync).
+- **Out of scope — flagged, NOT fixed (FM \#8):** the completeness scan
+  found a **third same-class bug** for a future session — the
+  `\item{sex}` of both `examplePedigree` (R/data.R:25) and
+  `rhesusPedigree` (R/data.R:366) claims
+  `factor with levels: "M", "F", "U"`, but the live factors are
+  `F,M,H,U` (examplePedigree — 4 levels, H empty) and `F,M`
+  (rhesusPedigree — 2 levels, no U); neither matches. **Firsthand
+  verification BROADENED the scanner’s flag** (it caught only
+  examplePedigree; rhesusPedigree shares the doc text and is also wrong
+  — Learning 114). All other 24-doc factual claims verified correct.
+- **Verified (build-equivalent for a generated-doc change):**
+  `roxygenise()` regen confined to exactly the 4 intended pages
+  (`git diff --stat`); **`NAMESPACE` byte-identical**
+  (`git diff --quiet`);
+  [`tools::checkRd()`](https://rdrr.io/r/tools/checkRd.html) on the 4
+  pages — **0 problems**;
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  OK (**162 exports**); full-suite regression read **failed=0 error=0**
+  (incl. the usually-noisy app/e2e files). **Phase-3E N/A** — roxygen/Rd
+  prose changes no package/app runtime behavior. Full `R CMD check` not
+  run (`devtools` absent; the above is the proportionate equivalent).
+- **\[news-vs-changelog\]:** dev-process history → CHANGELOG here. These
+  help pages **ship** → fold into the CRAN Phase 3 NEWS rewrite at 2.0.0
+  (flagged, not edited now). \[\[backlog-vs-changelog-placement\]\]
+- **PROJECT_LEARNINGS.md:** Learning 114 added.
+
+### 2026-06-17 — Repaired 3 data-doc content bugs flagged in S117; flagged 2 more same-class bugs (Session 120)
+
+- **Deliverable (owner pick A):** fixed the three adjacent roxygen
+  data-doc content bugs S117 flagged but deliberately left (FM \#8),
+  then regenerated the 3 affected `man/` pages. Scoped to **`R/data.R` +
+  3 data `man/` pages**; `NAMESPACE`/`DESCRIPTION`/`data/` unchanged.
+  **TDD phase N/A** (roxygen prose; only `#'` comment lines changed — no
+  executable R; RED vacuous; declared every response). **0 stakeholder
+  corrections.** One gated pre-RED `AskUserQuestion` (the only genuine
+  fork — how to repair the garbled `rhesusGenotypes` fragment; owner
+  chose “fill in the real count”).
+- **The three fixes (each verified against the live object before
+  authoring, Learning 109/111):** `examplePedigree` `\item{recordStats}`
+  → `\item{recordStatus}` (real 12th column is `recordStatus`;
+  `recordStats` absent); `rhesusGenotypes`’s garbled “There are object.”
+  → “There are 31 rows and 3 columns.” (`dim` = 31×3, 31 unique ids,
+  consistent with “Represents 31 animals” and the auto-`\format`);
+  `exampleNprcgenekeeprConfig`’s “…configuration file created the
+  SNPRC.” → “…created at the SNPRC.” (missing locative preposition).
+- **Adversarial verification (workflow — 3 independent refutation
+  agents + 1 completeness critic):** all three fixes **CONFIRMED** by
+  independent ground-truth re-derivation (source ↔︎ rendered `.Rd` in
+  sync; broken strings gone everywhere in `R/`+`man/`; no new issues
+  introduced).
+- **Out of scope — flagged, NOT fixed (FM \#8):** the completeness
+  critic scanned all 24 data docs against their live objects and found
+  **two more same-class bugs** for a future session: (1) `ped1Alleles`
+  V2/V3/V4 `\item`s all say “iteration 1” though V1≠V2≠V3≠V4 and the
+  block says “4 iterations” — should be iterations 2/3/4 (R/data.R
+  134–142); (2) missing space “column.Unknown dams” in the `dam` item of
+  `examplePedigree`/`lacy1989Ped`/`rhesusPedigree` (R/data.R 24/97/365;
+  the parallel `sire` items are correctly spaced). All other 24-doc
+  counts and `\item` names verified correct.
+- **Verified (build-equivalent for a generated-doc change):**
+  `roxygenise()` regen confined to exactly the 3 intended pages
+  (`git diff --stat`); **`NAMESPACE` byte-identical**
+  (`git diff --quiet`);
+  [`tools::checkRd()`](https://rdrr.io/r/tools/checkRd.html) on the 3
+  pages — **0 problems**;
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  OK (**162 exports**); full-suite regression read **failed=0 error=0**
+  (incl. the usually-noisy app/e2e files). **Phase-3E N/A** — roxygen/Rd
+  prose changes no package/app runtime behavior. Full `R CMD check` not
+  run (`devtools` absent; the above is the proportionate equivalent).
+- **\[news-vs-changelog\]:** dev-process history → CHANGELOG here. These
+  help pages **ship** → fold into the CRAN Phase 3 NEWS rewrite at 2.0.0
+  (flagged, not edited now). \[\[backlog-vs-changelog-placement\]\]
+- **PROJECT_LEARNINGS.md:** Learning 113 added.
+
+### 2026-06-17 — Merged PR \#52: `add-methodology` → `master` (S101–S117 now on master) (Session 119)
+
+- **Deliverable (owner instruction):** merged **PR \#52** with a merge
+  commit (`gh pr merge 52 --merge`), bringing **S101–S117** into
+  `master`. Owner explicitly directed the merge (delegating what S118
+  had left to them). **TDD phase N/A** (VCS operation; no code
+  authored). **0 stakeholder corrections.**
+- **Result:** `origin/master` advanced
+  `7a8433b3 → 85b3f4f6 "Merge pull request #52 from rmsharp/add-methodology"`
+  — a 2-parent merge commit (parents `7a8433b3` + `55331c17`), matching
+  the \#41/#43/#51 pattern. Confirmed `origin/master` now contains
+  `55331c17` (S117). PR \#52 state MERGED.
+- **Branch hygiene:** `add-methodology` NOT deleted (stays the ongoing
+  dev branch) and NOT reconciled backward (stays linear; it now shows
+  “behind” `origin/master` by the `85b3f4f6` merge bubble — normal per
+  Learning 112). Pushed the held S118 close-out (`e17b62ee`) + this S119
+  close-out to `origin/add-methodology`.
+- **Phase-3E N/A** — branch/PR operation, no runtime behavior change.
+  **No new learning** (Learning 112 already covers the topology and PR
+  mechanism).
+
+### 2026-06-17 — Open PR \#52 to merge `add-methodology` → `master` (push + open; owner merges) (Session 118)
+
+- **Deliverable (owner pick C):** opened **PR \#52** (base `master` ←
+  head `add-methodology`) to merge the 18 unmerged commits **S101–S117**
+  into `master`, following the established \#41/#43/#51 PR workflow.
+  Owner chose **“push + open PR, owner merges”** via a gated
+  `AskUserQuestion`; I pushed and opened the PR and **stopped before
+  merging** (owner reviews/merges on GitHub). **TDD phase N/A** (VCS
+  operation; no code authored). **0 stakeholder corrections.**
+- **Topology (discovered via `git fetch`, read-only):** local `master`
+  (4790b64f) was STALE — 168 behind `origin/master` (7a8433b3 = the PR
+  \#51 merge); the real target is `origin/master`. `add-methodology`
+  (55331c17) and `origin/master` diverged 18-ahead / 3-behind, where the
+  3 “behind” are only the PR \#41/#43/#51 merge bubbles (add-methodology
+  stays linear, never pulling them back). Fork point `14032640` (S100).
+  → Learning 112.
+- **Actions:** `git push origin add-methodology` (fast-forward
+  `ef1b86e8..55331c17`, publishing S112–S117 to the remote branch);
+  `gh pr create --base master --head add-methodology` → **PR \#52**
+  (OPEN, MERGEABLE, 18 commits). URL:
+  <https://github.com/rmsharp/nprcgenekeepr/pull/52>. **Did NOT merge**
+  — owner’s call.
+- **Phase-3E N/A** — no runtime behavior change (branch/PR operation).
+- **PROJECT_LEARNINGS.md:** Learning 112 added.
+
 ### 2026-06-17 — Data-doc short-`@title` rewrite: all 24 datasets given proper short titles, detail moved to `@description` (Session 117)
 
 - **Deliverable (owner pick A2):** rewrote the roxygen TITLE of all 24

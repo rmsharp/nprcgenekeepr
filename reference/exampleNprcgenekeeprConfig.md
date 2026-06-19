@@ -2,7 +2,7 @@
 
 A loadable version of the example configuration file
 `example_nprcgenekeepr_config`. It contains a working version of a
-**nprcgenekeepr** configuration file created the SNPRC. Users of
+**nprcgenekeepr** configuration file created at the SNPRC. Users of
 LabKey's EHR can adapt it to their systems and put it in their home
 directory. Instructions are embedded as comments within the file.
 

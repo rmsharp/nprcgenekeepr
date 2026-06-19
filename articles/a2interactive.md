@@ -952,16 +952,16 @@ This is the pedigree. *(We will discuss the column names shortly.)*
 knitr::kable(nprcgenekeepr::pedOne)
 ```
 
-| ego_id | si re | dam_id | sex | birth_date |
-|:-------|:------|:-------|:----|:-----------|
-| s1     | NA    | NA     | F   | 2000-07-18 |
-| d1     | NA    | NA     | M   | 2003-04-13 |
-| s2     | NA    | NA     | M   | 2006-06-19 |
-| d2     | NA    | NA     | F   | 2015-09-16 |
-| o1     | s1    | d1     | F   | 2015-02-04 |
-| o2     | s1    | d2     | F   | 2009-03-17 |
-| o3     | s2    | d2     | F   | 2012-04-11 |
-| o4     | s2    | d2     | M   | 2006-04-13 |
+| ego_id | sire.id | dam_id | sex | birth_date |
+|:-------|:--------|:-------|:----|:-----------|
+| s1     | NA      | NA     | F   | 2000-07-18 |
+| d1     | NA      | NA     | M   | 2003-04-13 |
+| s2     | NA      | NA     | M   | 2006-06-19 |
+| d2     | NA      | NA     | F   | 2015-09-16 |
+| o1     | s1      | d1     | F   | 2015-02-04 |
+| o2     | s1      | d2     | F   | 2009-03-17 |
+| o3     | s2      | d2     | F   | 2012-04-11 |
+| o4     | s2      | d2     | M   | 2006-04-13 |
 
 If we try to convert this pedigree file into the standardized studbook
 format, we are going to get an error message and the creation of a file
@@ -975,7 +975,7 @@ ped <- qcStudbook(pedOne, minParentAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/Rtmp8oJgpl/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpQU76Iq/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -1032,9 +1032,10 @@ summary(errorList)
 
     ## Error: The animal listed as a sire and also listed as a female is: s1.
     ## Error: The animal listed as a dam and also listed as a male is: d1.
-    ## Change: The column where space was removed is: si re to sire.
+    ## Change: The column where period was removed is: sire.id to sireid.
     ## Change: The columns where underscore was removed are: ego_id, dam_id, and birth_date to egoid, damid, and birthdate.
     ## Change: The column changed from: egoid to id.
+    ## Change: The column changed from: sireid to sire.
     ## Change: The column changed from: damid to dam.
     ## Change: The column changed from: birthdate to birth.
     ## 
@@ -1135,7 +1136,7 @@ examplePedigree[unlist(exampleLoops), c("id", "sire", "dam")][1L:10L, ]
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-06-18 01:26:48.975603. The processing
+The current date and time is 2026-06-19 19:08:55.455129. The processing
 time for this document was 14 seconds..
 
 ``` r
@@ -1169,8 +1170,7 @@ sessionInfo()
     ## [1] stats     graphics  grDevices datasets  utils     methods   base     
     ## 
     ## other attached packages:
-    ## [1] nprcgenekeepr_1.1.0.9000 knitr_1.51               ggplot2_4.0.3           
-    ## [4] stringi_1.8.7           
+    ## [1] nprcgenekeepr_2.0.0 knitr_1.51          ggplot2_4.0.3       stringi_1.8.7      
     ## 
     ## loaded via a namespace (and not attached):
     ##  [1] gtable_0.3.6         anytime_0.3.13       xfun_0.58            bslib_0.11.0        

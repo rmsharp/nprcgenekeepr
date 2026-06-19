@@ -7439,3 +7439,1476 @@ documentation/content rewrite where rendering + lint prove structure but
 not aptness — pair solo oracle verification with an adversarial quality
 panel grounded in source-of-truth, verify factual claims firsthand, and
 respect the owner-decision boundary.
+
+------------------------------------------------------------------------
+
+#### Learning 112 — “Merge X to master” is about `origin/master`, not the local `master` branch — `git fetch` first and reason about the REMOTE topology; a local mainline branch can be far behind, and the repo’s real merge mechanism (PR vs direct push) is encoded in its history. (S118, owner pick C — merge `add-methodology` → `master`)
+
+**What happened.** Asked to “merge add-methodology to master”, the naive
+read was a local fast-forward: local `master` (4790b64f) was a clean
+ancestor of `add-methodology`, 183 behind. But `git branch -vv` showed
+local `master` as `[origin/master: behind 168]` — the LOCAL master was a
+stale red herring; the real target is `origin/master` (7a8433b3 = “Merge
+pull request \#51 from rmsharp/add-methodology”). After `git fetch`,
+`add-methodology` and `origin/master` were DIVERGED: 18 ahead / 3 behind
+— and the 3 “behind” commits are merely the PR \#41/#43/#51 merge
+bubbles (master accumulates merge commits; add-methodology stays linear
+and never pulls them back). Fork point `14032640` (S100); the unmerged
+work was S101–S117 (18 commits). The repo’s established mechanism is
+GitHub PRs (a commit on add-methodology, 6175fe66, even records “PR \#51
+merged to master”). So the correct action was a fresh PR \#52, not a
+local merge.
+
+**Fetch before reasoning about remote branches; trust `origin/<branch>`,
+not local.** Remote-tracking refs are only as fresh as the last fetch,
+and a local mainline branch can sit hundreds of commits behind its
+remote (here 168). The first move for any “merge/compare/rebase against
+master” task is `git fetch`, then reason about `origin/master`. The
+`[behind N]` annotation in `git branch -vv` is the tell that a local
+branch is stale.
+
+**Read the merge mechanism out of the history before choosing one.** A
+run of “Merge pull request \#N from ” commits on the target — plus a
+feature branch that stays linear and never contains those merge nodes —
+means the project merges via PRs and never reconciles the feature branch
+backward. Matching that (open PR \#52) keeps history consistent; a local
+`--no-ff` merge + direct push would deviate and may hit branch
+protection.
+
+**Confirm the mechanism on an outward main-branch action even under an
+explicit instruction.** “Merge to master” authorizes the goal, but
+pushing/merging the main branch is hard to reverse and the *who-merges*
+split is a real choice — a one-question gated `AskUserQuestion` (I-merge
+vs you-merge vs local) resolved it (owner: push + open PR, owner
+merges). \[\[ascii-only-in-question-options\]\]
+
+**Reflexes:** \[`git fetch` before comparing against any remote branch;
+reason about `origin/<branch>`, never a possibly-stale local
+mainline\]\[a `[behind N]` in `git branch -vv` means the local branch is
+a red herring — use the remote\]\[detect PR-based vs direct-push
+workflow from the merge-commit pattern in the target’s history and match
+it\]\[on an outward main-branch action, confirm the mechanism and
+who-merges with one gated question even when the goal is explicitly
+authorized\]. **Apply:** any “merge/sync/compare branch X into mainline”
+task — fetch first, target `origin/<mainline>`, identify the established
+merge mechanism from history, and gate the outward step.
+
+------------------------------------------------------------------------
+
+#### Learning 113 — When the task is to fix an AUTHORIZED SET of flagged bugs, treat that list itself as a sample, not an inventory: after fixing exactly the authorized items, run a completeness scan of the WHOLE artifact for the same bug CLASS and FLAG (don’t fix) the siblings. (S120, owner pick A — fixed the 3 adjacent data-doc content bugs flagged in S117)
+
+**What happened.** The owner authorized fixing exactly three
+S117-flagged data-doc content bugs in `R/data.R`: `examplePedigree`’s
+`\item{recordStats}` → `\item{recordStatus}` (real 12th column is
+`recordStatus`, `recordStats` absent); `rhesusGenotypes`’s garbled
+“There are object.” → “There are 31 rows and 3 columns.” (`dim` = 31×3,
+31 unique ids, consistent with the neighboring “Represents 31 animals”
+and the auto-`\format`); and `exampleNprcgenekeeprConfig`’s “…file
+created the SNPRC.” → “…created at the SNPRC.” (missing locative
+preposition). Each was verified against the live object before authoring
+(Learning 109/111), edited at the roxygen source, regenerated (3 `man/`
+pages, `NAMESPACE` byte-identical), and adversarially confirmed by three
+independent refutation agents. But the highest-value step was a
+**completeness critic** that scanned all 24 `\docType{data}` blocks
+against their loaded objects for the same *class* of bug — and found
+**two more not in the authorized list**: `ped1Alleles`’s V2/V3/V4
+`\item`s all say “iteration 1” though V1≠V2≠V3≠V4 and the block itself
+says “4 iterations” (R/data.R 134–142), and a missing-space
+“column.Unknown dams” in the `dam` item of
+`examplePedigree`/`lacy1989Ped`/`rhesusPedigree` whose parallel `sire`
+items are correctly spaced (R/data.R 24/97/365). Both confirmed
+firsthand, then **flagged for a future session, not fixed** (FM \#8, “1
+and done”).
+
+**An authorized list of flags is a sample of a bug class.** Learning 110
+established that a single flag’s *file list* is a sample of one
+pattern’s scope. This extends it one level up: a *set* of authorized
+flags is a sample of a bug *class*. Fixing only the named items leaves
+same-kind siblings in the artifact. A cheap whole-artifact scan for the
+class — grounded in the live data (garbled/templated fragments,
+`\item{}` names that aren’t real columns, grammar gaps, prose counts vs
+[`dim()`](https://rdrr.io/r/base/dim.html)) — turns “fixed what I was
+told” into “found everything of this kind.” Scope discipline means you
+FLAG the extras, you do not fix them.
+
+**Right-sizing under ultracode (where the fan-out is non-theater vs
+theater).** Three one-line fixes whose structural correctness is
+oracle-decidable (`checkRd`/`load_all`/regression/`NAMESPACE` byte-diff)
+were edited SOLO+oracle. The workflow’s agents added information the
+oracle cannot: independent re-derivation of each fix’s ground truth
+(adversarial refutation) and the class-completeness scan. Honestly,
+three identical verifiers re-deriving dims I already derived sit near
+the theater line (Learnings 108–110); the **completeness scan is the
+part that earned the fan-out** — it found two real bugs the flag-list
+missed.
+
+**Gate only the genuine fork.** Two of the three fixes were fully
+determined by ground truth (a real column name; a missing preposition
+S117 had already diagnosed) and needed no question. Only the garbled
+`rhesusGenotypes` fragment had \>1 reasonable repair (fill in the real
+count vs. delete the redundant sentence), so that single editorial
+choice was the one gated `AskUserQuestion` (owner: fill in). Determined
+fixes do not need a gate; over-gating is its own failure.
+
+**Reflexes:** \[treat an authorized SET of flagged bugs as a sample of a
+bug CLASS — after fixing the named items, scan the whole artifact for
+the same class against live data and FLAG the siblings (extends Learning
+110’s “a flag’s file list is a sample”)\]\[the completeness critic
+grounded in live data is the non-theater half of a verify workflow for a
+fix task — adversarial re-derivation confirms YOUR fixes, the scan finds
+what the flag-list missed\]\[gate ONLY the genuine editorial fork — a
+fix determined by ground truth (a real column, a real dim, a missing
+word) needs no question; a garbled fragment with \>1 reasonable repair
+does\]\[verify every flagged item firsthand before putting it in a
+handoff — a flag must be confirmed, not relayed\]. **Apply:** any task
+that fixes a list of flagged content/doc bugs — verify each against
+ground truth, gate only genuine forks, fix exactly the authorized set,
+then run a class-completeness scan of the whole artifact and flag (don’t
+fix) the adjacents.
+
+------------------------------------------------------------------------
+
+#### Learning 114 — Verify a completeness-scanner’s flag firsthand against ALL parallel siblings — a per-group scanner’s finding is itself a sample and can miss a same-text sibling in another scan group. And when one bug CLASS recurs across many sessions, propose a single batch sweep as the better deliverable. (S121, owner pick A4 — fixed the 2 same-class data-doc bugs S120 flagged)
+
+**What happened.** (A4) fixed exactly the two bugs S120’s completeness
+scan had flagged: `ped1Alleles` `\item{V2}/{V3}/{V4}` “iteration 1” →
+2/3/4 (object 554×6; V1–V4 distinct — all 6 pairwise
+[`identical()`](https://rdrr.io/r/base/identical.html)=FALSE, 290/554
+rows differ; `\item{parent}` says “4 iterations”; V1 correctly stays
+“iteration 1”), and the missing-space “column.Unknown dams” in three
+`dam` items. Both were ground-truth-determined → no gate (Learning 113),
+edited SOLO+oracle (checkRd 0×4, NAMESPACE byte-identical, load_all 162,
+regression 0/0, rendered-`.Rd` diff matches intent), and adversarially
+CONFIRMED (2 refuters, refuted 0/2 each). The fresh completeness scan (4
+agents over the 24 data docs) flagged a third same-class bug —
+`examplePedigree`’s `\item{sex}` claims levels “M,F,U” but the factor is
+`F,M,H,U`.
+
+**A completeness-scanner’s flag is a sample too — verify it firsthand
+against every parallel sibling.** Before writing the sex-levels flag
+into the handoff I probed every data object’s `sex` column and grepped
+every doc claiming “factor with levels”. The scanner (which only saw its
+own 6-doc group) flagged `examplePedigree` but MISSED that
+`rhesusPedigree` carries the identical doc text and is ALSO wrong — in
+the opposite direction (its factor is just `F,M`; the doc over-claims a
+`U` level that doesn’t exist). Firsthand verification turned a one-doc
+flag into the correct two-doc scope. This is Learning 113’s “a flag is a
+sample” applied to the verification agent’s OWN output: a fan-out
+partitioned by group is structurally blind to a cross-group sibling, so
+confirm-firsthand must check the whole sibling set (every doc sharing
+the claim), not just the flagged instance.
+
+**When a bug CLASS keeps recurring, the one-bug-at-a-time cadence is the
+wrong shape — propose a batch sweep.** Data-doc factual-accuracy bugs
+have now been found and fixed across S114/S115/S116/S117/S120/S121
+(counts, column names, item labels, prose typos, and now factor levels).
+Each session fixes the named instance and the completeness scan finds
+the next. That pattern says the higher-ROI deliverable is a single
+owner-gated sweep that audits EVERY factual claim in all 24 data docs
+against the live objects (dims, column names/order, factor levels,
+counts, prose) and fixes them as one batch — rather than discovering one
+more each session. Flagged as a suggested next deliverable (not started
+— “1 and done”).
+
+**Reflexes:** \[a completeness-scanner’s finding is a sample — before
+relaying it, verify firsthand against ALL parallel siblings (other docs
+sharing the same claim text), because a group-partitioned fan-out is
+blind to cross-group siblings\]\[when the same bug CLASS surfaces across
+many sessions, stop fixing one-at-a-time and propose a single batch
+audit-and-fix sweep as the deliverable\]\[both fixes determined by
+ground truth → no gate (Learning 113); adversarial refuters confirm YOUR
+fixes, the scan finds the next sibling\]. **Apply:** any session fixing
+flagged content/doc bugs whose verification fans out by group — confirm
+each flag against the whole sibling set firsthand, and if the bug class
+is recurring, recommend a batch sweep instead of serial one-offs.
+
+#### Learning 115 — The batch sweep that Learning 114 proposed paid off: one oracle-grounded audit of all 24 data docs found 10 discrepancies where the serial cadence found ~1-2/session. An accuracy audit also surfaces a 2nd-order class — “data-artifact” bugs (the data itself looks degraded), which is the OWNER’s call, not the auditor’s — and the adversarial pass must BOUND scope (reject non-claims), not just confirm. (S122, owner pick A5 promoted to a full 24-doc audit + fix)
+
+**What happened.** S121’s Learning 114 recommended replacing the
+one-bug-at-a-time data-doc cadence (S114–S121) with a single owner-gated
+sweep. Owner picked it. I computed authoritative ground truth for all 24
+objects once
+([`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html) +
+direct inspection), then ran a workflow: 5 independent lens scanners
+(dims/counts, column-names, types/levels, prose/crossref, free-roam)
+over all 24 docs for completeness, then an adversarial refuter per
+unique discrepancy. Result: **12 candidates → 10 confirmed, 2
+rejected**, fixed in one pass (9 doc edits across 4 objects; checkRd
+0×4, NAMESPACE byte-identical, load_all 162, regression 0/0,
+rendered-`.Rd` diffs match intent). The serial sessions had been
+clearing ~1–2 of these per session; the batch found the whole remaining
+set at once. **The recurring-class signal was right — when a bug class
+keeps reappearing, the fix is a class-complete sweep, not another single
+fix.**
+
+**An accuracy audit surfaces a 2nd-order bug class the auditor must NOT
+silently resolve — gate it.** Seven findings were plain “doc-bugs” (the
+object is legitimate; the doc is wrong — e.g. `sex` factor levels
+`"M","F","U"` vs the live `F,M,H,U`; `ancestry` documented as free-form
+character but actually a closed factor; `id`/`qcBreeders` mistyped). But
+two were different in KIND: `rhesusPedigree`’s `birth` ships as a
+factor-of-strings (not Date) and `exit` as all-NA logical (no dates at
+all) — the *data itself* looks degraded by obfuscation, so “make the doc
+match the object” would enshrine what may be a data defect. That is the
+owner’s decision (document the degraded reality now vs. leave the
+aspirational doc and queue a data re-export), not a default the auditor
+should pick. I split the deliverable: fixed the 7 unambiguous doc-bugs,
+and posed ONE focused gate for the 2 data-artifacts (owner chose
+“document actual types now”). **Naming the doc-bug vs data-artifact
+distinction is what turns an over-reaching “I rewrote everything to
+match” into a faithful audit.**
+
+**The adversarial pass must BOUND scope, not just confirm.** The
+refuters didn’t only re-derive and confirm my candidates — they REJECTED
+two (`rhesusPedigree` `sire`/`dam`), correctly ruling that those items
+make no type claim at all (“the male/female parent … NA for unknown”),
+so “correcting” them to say “factor” would invent a fix for a non-bug.
+In a fix-audit the skeptic’s job is symmetric: confirm real mismatches
+AND veto claimed mismatches that aren’t, so the sweep doesn’t
+manufacture churn on accurate-but-untyped prose. Method note: compute
+the oracle ground truth ONCE yourself (deterministic, not delegated),
+have the fan-out reason over it for completeness + adversarial verify,
+and keep R execution with the orchestrator to avoid concurrent-temp-file
+races.
+
+**Reflexes:** \[a recurring bug CLASS is best closed by one
+oracle-grounded, class-complete sweep — compute ground truth once
+yourself, fan out independent lenses for completeness, adversarially
+verify each finding\]\[an accuracy audit can surface a 2nd-order class
+where the DATA, not the doc, is the suspect — classify doc-bug vs
+data-artifact and GATE the data-artifacts (owner’s call); fix the plain
+doc-bugs\]\[the adversarial pass must veto non-claims too (reject
+“fixing” prose that makes no factual assertion), not only confirm real
+mismatches\]\[gate the genuine forks (scope: narrow vs full; how to
+treat data-artifacts) but don’t re-gate ground-truth-determined doc
+fixes — Learning 113\]. **Apply:** any whole-artifact factual-accuracy
+audit — derive the oracle once, fan out for completeness + adversarial
+verify, separate “doc is wrong” from “data looks wrong” and gate the
+latter, and let the skeptic bound scope on both ends.
+
+------------------------------------------------------------------------
+
+#### Learning 116 — Re-exporting an opaque / non-reproducible bundled data object = COERCE the existing object’s types in place (preserve every value) via a committed `data-raw/` script — never re-derive from source. Investigate provenance + dependents FIRST to prune unsafe options before the scope gate, and keep the .rda + its doc + man/ + tests in ONE deliverable so you don’t reopen the doc-mismatch class. (S123, owner pick A6 — re-export `rhesusPedigree` with corrected column types)
+
+**What happened.** Learning 115’s flagged “data-artifact” (the owner’s
+deferred A6) became this session’s deliverable: `rhesusPedigree` shipped
+degraded types — `id`/`sire`/`dam`/`birth` as factors, `exit` as all-NA
+logical — a `stringsAsFactors`/obfuscation-era artifact. The fix
+re-exported the object with canonical types matching `examplePedigree`
+(`id`/`sire`/`dam` → character, `birth` → `Date`, `exit` → `Date`
+all-NA), preserving **every value** (dim 375×8, all ids, NA patterns,
+BRI2MW birth 1998-12-06, date range). Strict TDD: a pre-RED scope gate
+(Type-correctness, not full canonical match — no gratuitous `sex`
+widening), a pre-RED reproducibility gate (add `data-raw/`), then RED
+(31 assertions, confirmed failing) → GREEN (coerce + doc + man regen,
+all green) → REFACTOR (N/A; flagged the adjacent redundant test
+conversions). Verified: new tests pass, full suite 0/0, checkRd 0,
+NAMESPACE byte-identical, 162 exports, and a real runtime smoke test.
+
+**Coerce-in-place, never re-derive, when the generator is
+non-reproducible.** A read-only provenance investigation (workflow)
+established the `.rda` has NO committed generator: it was obfuscated
+from `inst/extdata/rhesusPedigree_fromCenter.csv` via
+[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+and hand-saved in 2020, never scripted or seeded. Obfuscation is
+non-deterministic — re-running it from the CSV would produce DIFFERENT
+obfuscated ids/dates than the shipped object (and could desync sibling
+objects like `rhesusGenotypes` that share those ids). So the only sound
+re-export is to load the existing object and coerce its column TYPES
+while leaving VALUES untouched (`as.character`,
+`as.Date(as.character(...))`, typed all-NA `Date`). The committed
+`data-raw/rhesusPedigree.R` encodes exactly that constraint, is
+idempotent, and establishes a reproducibility pattern other opaque
+`.rda`s can follow. Lesson: “re-export the data” does not mean
+“regenerate from source” — for an opaque/obfuscated artifact it means a
+value-preserving type coercion, and the data-raw script’s job is to make
+that transform reproducible, not to reinvent the original generation.
+
+**Investigate provenance + dependents BEFORE the scope gate, so the
+owner is never offered a foot-gun.** The pre-RED investigation pruned
+the option set: “re-derive from CSV” was eliminated by non-determinism,
+and “drop the `exit` column” was eliminated because
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+reads `ba$exit` (dropping it breaks the object’s main consumer). Both
+were plausible-sounding options that an un-investigated gate might have
+offered. By verifying firsthand that no test asserts the *current*
+factor/logical types (so a fix breaks nothing) and that `exit` is
+required, the gate I posed contained only genuinely-safe choices.
+Pruning unsafe options before asking is part of right-sizing a gate —
+don’t make the owner the safety check on options you could have ruled
+out yourself.
+
+**A data re-export and its documentation are ONE deliverable.**
+S114–S122 spent eight sessions fixing data-doc mismatches; changing a
+data object’s types without updating its `R/data.R` doc + regenerating
+`man/` in the SAME session would immediately reopen that exact bug class
+(the doc would now describe the old degraded types). So the deliverable
+bundled: `.rda` + `data-raw/` + `R/data.R` doc reversal (id
+`factor`→`character`, birth/exit → `Date`) + `man/` regen + tests +
+`.Rbuildignore`. This is not scope creep — it is the minimum coherent
+unit; splitting it would ship a known inconsistency.
+
+**Test value-preservation, not just types; smoke-test the real consumer
+on the SHIPPED object.** RED pinned both the corrected types AND
+preserved values (dim, NA counts, a known id→date pair, min/max range) —
+because a botched coercion can silently lose or reorder data while
+satisfying type checks. For Phase 3E, “the suite passes” was necessary
+but insufficient: the potential-parents tests do their own
+`as.character`/`as.Date` conversions (now no-ops), which could mask a
+type that’s still wrong. The conclusive smoke test ran
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+on the shipped object **directly, with no conversions** — proving the
+corrected types are usable as-shipped.
+
+**Reflexes:** \[re-exporting an opaque/non-reproducible data object =
+coerce the existing object’s TYPES in place, preserve all VALUES, via a
+committed idempotent `data-raw/` script — never re-derive from source
+(non-deterministic obfuscation changes shipped values and desyncs
+sibling objects)\]\[investigate provenance + dependents before the scope
+gate and PRUNE unsafe options (here: re-derive-from-CSV,
+drop-required-column) so the owner only chooses among safe ones\]\[a
+data change and its `R/data.R` doc + `man/` regen are ONE deliverable —
+splitting them reopens the data-doc-mismatch class (S114–S122)\]\[RED
+tests for a type fix must pin VALUE preservation (dim, NA counts, known
+id→value pairs, ranges), not only types\]\[Phase 3E for a DATA change =
+run the real consumer on the SHIPPED object with no test-harness
+conversions — “suite passes” can be masked by now-no-op conversions\].
+**Apply:** any task that re-exports / corrects a bundled data object —
+check whether a reproducible generator exists (if not, coerce-in-place
+via data-raw), investigate dependents to prune unsafe options before
+gating, bundle the doc+man+tests with the data change, and
+value-preserve in both the tests and a consumer-on-shipped-object smoke
+test.
+
+------------------------------------------------------------------------
+
+#### Learning 117 — When re-exporting a SIBLING opaque object on a predecessor’s one-line characterization, re-derive the FULL degradation firsthand — the named symptom (“id still factor”) can be the least consequential of several, and a “cosmetic type fix” can intersect downstream code semantics (factor-indexing) so scope becomes a CORRECTNESS decision, not a cosmetic one. Flag the surfaced code fragility; keep the data change atomic. (S124, owner pick A7 — re-export `rhesusGenotypes` with corrected column types)
+
+**What happened.** S123’s handoff flagged A7 as “de-factor
+`rhesusGenotypes$id`→character (id still factor) to match the
+convention.” The firsthand investigation found the object ships ALL
+THREE columns as factors (`id` 31 levels, `first_name` 18, `second_name`
+23), and — crucially — that the `id` type is the one that does NOT
+matter (merge coerces it either way; every consumer is id-agnostic,
+confirmed independently by the dependents scan), while the two allele
+columns being factors silently corrupts `addGenotype`’s output. Its
+dictionary lookup `genoDict[genotype[, 2L]]` indexes a name-keyed vector
+by a factor, so R uses the factor’s INTEGER CODES instead of its labels,
+producing an inconsistent encoding (the same allele gets different codes
+in the first vs second column). With character columns the lookup is by
+name and the encoding is consistent (verified: same allele → same code =
+TRUE for character / FALSE for factor; the combined dictionary is 35
+alleles, codes 10001–10035 — vs the buggy per-column-levels ranges
+10001–10018 / 10001–10023 under factors). The package’s own
+`test_addGenotype.R` feeds `stringsAsFactors = FALSE` input, so the
+shipped factor object was the anomaly, not the function’s contract.
+Owner chose to coerce all three columns (full type-correctness). Same
+coerce-in-place + `data-raw/` + atomic doc/man/test pattern as Learning
+116; full suite 0/0, checkRd 0, NAMESPACE byte-identical, idempotent,
+and an independent CSV cross-check (all three columns identical to the
+shipping `inst/extdata/obfuscated_rhesus_mhc_breeder_genotypes.csv`).
+
+**A predecessor’s one-line characterization is a lead, not a spec —
+re-derive the full degradation against the live object.** “id still
+factor” was true but framed the task as cosmetic id-only. Probing the
+object showed the real degradation was three columns; probing the
+*consumer* (`addGenotype`) showed the named column was the irrelevant
+one. Had I implemented the literal flag, I’d have shipped a
+half-degraded object that still produced inconsistent genotype codes.
+Learnings 110/113/114’s “a flag / file-list is a sample” extends to a
+predecessor’s scope LABEL: confirm the whole degradation firsthand
+before fixing scope.
+
+**A “type cleanup” can be a correctness fix in disguise — check how each
+column flows through its consumers before calling it cosmetic.** What
+looked like stringsAsFactors hygiene was, for the allele columns, the
+difference between a correct and an inconsistent genotype encoding,
+because factor-vs-character changes how a value is used as an index (and
+as a [`c()`](https://rdrr.io/r/base/c.html) argument) downstream. That
+made the scope gate a correctness decision (does the shipped example
+produce right codes?), not a style preference — which is exactly why it
+warranted the owner’s call rather than a silent default.
+
+**Flag the surfaced code fragility; keep the data change atomic.** The
+investigation exposed that `addGenotype` is itself fragile to factor
+inputs — it would mis-encode ANY factor-columned genotype, not just the
+bundled one. Hardening `addGenotype.R`
+(e.g. [`as.character()`](https://rdrr.io/r/base/character.html) on the
+allele columns inside the function, or in `checkGenotypeFile`) is a
+separate code-fix deliverable with its own tests — flagged for a future
+session, NOT bundled (FM \#8). Fixing the data made the shipped example
+correct; it did not make the function robust.
+
+**Reflexes:** \[a predecessor’s one-line scope label (“X still factor”)
+is a lead — re-derive the FULL degradation firsthand; the named symptom
+may be the least consequential column\]\[before calling a type coercion
+“cosmetic,” trace how each affected column flows through its consumers —
+factor-vs-character changes index/[`c()`](https://rdrr.io/r/base/c.html)
+semantics, so a hygiene fix can secretly be a correctness fix\]\[when
+the data fix exposes a latent CODE fragility (here: addGenotype
+mis-indexing factor allele columns), FLAG it as a separate deliverable —
+keep the data re-export atomic (FM \#8)\]\[reuse the Learning 116
+pattern: coerce-in-place via idempotent data-raw, bundle doc+man+tests,
+value-preserve in tests + an independent cross-check (the shipping
+CSV) + a consumer-on-shipped-object smoke test\]. **Apply:** any session
+re-exporting a sibling/related opaque data object on a prior session’s
+characterization — verify the full set of degraded columns AND how each
+flows through consumers before fixing scope; a column the predecessor
+named may matter less than one it didn’t.
+
+------------------------------------------------------------------------
+
+#### Learning 118 — When realizing a predecessor’s flagged CODE fix, decide the fix’s HOME by the call graph, not the doc contract — direct callers that bypass the documented “gate” mean the only complete fix lives at the point of use. Coerce at the TOP of the function (not just at the buggy index expression) to also neutralize an adjacent version-fragile path. Drive the RED test from a minimal fixture whose per-column factor codes DIVERGE from the global sort. (S125, owner pick A9 — harden `addGenotype()` against factor allele columns)
+
+**What happened.** S124’s Learning 117 flagged that
+[`addGenotype()`](https://github.com/rmsharp/nprcgenekeepr/reference/addGenotype.md)
+is fragile to factor allele columns — `genoDict[genotype[, 2L]]` indexes
+a name-keyed integer vector by a factor, so R uses the factor’s INTEGER
+CODES not its labels, giving an encoding that is inconsistent between
+the two allele columns. S124 deliberately did NOT fix the function (FM
+\#8 — kept the data re-export atomic) and pre-named the code fix as A9.
+This session realized it. Strict TDD: a pre-RED scope gate
+(addGenotype-only vs also-checkGenotypeFile), then RED (two failing
+tests, 2 failed / 0 error) → GREEN (2-line coercion; all green) →
+REFACTOR (one-line `@details` note + `man/` regen). Verified: full suite
+0/0, checkRd 0, NAMESPACE byte-identical, diff confined to three files,
+and a Phase-3E smoke on a factor-coerced copy of the real
+`rhesusGenotypes` (first/second identical to the character path; max
+distinct codes per allele = 1; the 35-allele dictionary 10001–10035).
+
+**The fix’s HOME is decided by the call graph, not the doc contract.**
+`addGenotype`’s own roxygen says genotype “is to be provided by
+`checkGenotypeFile` so it is not checked” — which reads as an invitation
+to harden the upstream gate. A read-only breadth scan refuted that as
+the complete answer: `addGenotype` has DIRECT callers that never touch
+`checkGenotypeFile` (the roxygen example passing `rhesusGenotypes`,
+`test_addGenotype.R`, `test_geneDrop.R`), so a gate-only coercion would
+leave every direct caller exposed. The only fix that closes the bug for
+all callers is at the point of use, inside `addGenotype`. The breadth
+scan also confirmed the bug is isolated (no sibling function indexes a
+named vector by a possibly-factor column), so the scope stayed narrow.
+Lesson: when a function’s doc says “input is pre-validated upstream,”
+verify who actually calls it before locating the fix at the gate — an
+unenforced contract is a comment, not a guarantee.
+
+**Coerce at the TOP, not only at the buggy index expression.** The
+breadth agent’s suggested patch wrapped just the two index lookups
+(`genoDict[as.character(genotype[, 2L])]`). That fixes the lookup, but
+the dictionary BUILD a few lines up
+(`sort(unique(c(genotype[, name1], genotype[, name2])))`) still relies
+on [`c()`](https://rdrr.io/r/base/c.html) combining two factors —
+behavior that differs across R versions (pre-4.1
+[`c()`](https://rdrr.io/r/base/c.html) dropped factor attributes and
+returned integer codes, which would then mis-name the dictionary).
+Coercing both columns to character once at the top of the function makes
+BOTH the build and the lookup operate on labels, in one place,
+version-robustly. When a hardening fix has more than one downstream use
+of the unsafe value, normalize at the source rather than patching each
+use site.
+
+**A minimal RED fixture for an index-by-factor bug must make the
+per-column codes DIVERGE from the global order.** The naive fixture
+(both columns the same allele set in sorted order) does NOT reproduce
+the bug — each column’s factor codes happen to align with the global
+`sort(unique())` positions, so the buggy and correct encodings coincide.
+The bug only manifests when a column’s factor level set/order differs
+from the global combined order. The minimal trigger:
+`first_name = c("a","b")`, `second_name = c("b","c")` — globally
+a→10001, b→10002, c→10003, but the per-column factor codes (a,b→1,2 and
+b,c→1,2) make allele “b” encode as 10002 in one column and 10001 in the
+other. Designing the fixture required tracing the exact index
+arithmetic, not just “make it a factor.” Character input is the oracle:
+assert the factor-input output is identical to the character-input
+output.
+
+**Reflexes:** \[locate a flagged fix by the CALL GRAPH — if direct
+callers bypass the documented validation “gate,” the complete fix lives
+at the point of use, not the gate (an unenforced “input is pre-checked”
+doc is a comment, not a guarantee)\]\[confirm the bug is isolated with a
+breadth scan before sizing scope, but verify the scan’s load-bearing
+claims firsthand\]\[when an unsafe value has multiple downstream uses,
+normalize at the SOURCE (top of the function) — patching only the
+obviously-buggy use site can leave an adjacent version-fragile path
+(here [`c()`](https://rdrr.io/r/base/c.html)-on-factors in the dict
+build)\]\[a RED fixture for an index-by-factor bug must make per-column
+codes DIVERGE from the global sort — equal/aligned sets won’t reproduce
+it; use character-input output as the oracle\]\[realize a predecessor’s
+deferred code-fix flag as its own RED→GREEN→REFACTOR deliverable — do
+not bundle it with the data change that surfaced it (FM \#8/#18)\].
+**Apply:** any session implementing a fix a prior session
+flagged-but-deferred — re-derive the bug firsthand, decide the fix’s
+home by who actually calls the function (not its doc), normalize unsafe
+inputs at the source, and build the RED fixture to actually reproduce
+(for index-by-factor bugs, diverge the per-column codes).
+
+------------------------------------------------------------------------
+
+#### Learning 119 — A data-doc `@source`/provenance citation is NOT an attribute of the live object, so an audit-vs-live-object pass structurally cannot catch it — verify it against the FILESYSTEM (cited file exists AND is value-identical to the object), and drive the RED probe off the GENERATED `man/.Rd` so the failing assertion binds to the rendered artifact (which also proves the regen ran). The phantom-citation class is plural — grep every sibling citation. (S126, owner pick A10 — correct the `rhesusGenotypes` `@source`)
+
+**What happened.** S124/S125 flagged A10: the `rhesusGenotypes` doc
+(`R/data.R:345`) cited a source file `rhesusGenotypes.csv` that does not
+exist; the real value-identical export is
+`inst/extdata/obfuscated_rhesus_mhc_breeder_genotypes.csv`. Strict TDD:
+a pre-RED scope gate (filename-swap-only vs +grammar-clarify; owner
+chose swap-only) + the three transitions. RED: a probe parsing
+`man/rhesusGenotypes.Rd` for its `\emph{}` source token, asserting the
+cited file exists in `inst/extdata` + is value-identical to
+`rhesusGenotypes`, and that the wrong name is absent from both
+`R/data.R` and the man page — 4 failures against the current doc. GREEN:
+swap one token, regen `man/` (rd roclet only), 0 failures. Verified:
+full suite 0/0, checkRd 0, NAMESPACE byte-identical, diff confined to
+two lines. Phase-3E N/A (doc-only). 0 stakeholder corrections.
+
+**A provenance citation needs a different verification target than a
+value claim.** The S114–S122 data-doc audits checked doc claims “vs live
+objects” — dims, column types, NA counts, spot-checked values — every
+one an attribute you can read off the bundled object. A `@source`
+filename is NOT such an attribute: nothing in the loaded
+`rhesusGenotypes` records where it came from, so a live-object audit
+cannot, even in principle, catch a phantom source file. That is exactly
+why `rhesusGenotypes.csv` survived nine sessions of data-doc work. The
+right check for a provenance citation is against the FILESYSTEM: does
+the named file exist under `inst/extdata`, and is it value-identical to
+the object? Do not assume a prior “full data-doc audit” covered source
+citations — by construction it didn’t.
+
+**Bind the RED probe to the generated artifact, not the source
+comment.** The fix lives in a roxygen comment (`R/data.R`), but the
+thing the user reads is the generated `man/.Rd`. A probe that parses
+`man/rhesusGenotypes.Rd` for the `\emph{}` token and checks the cited
+file (a) fails now and (b) passes only after BOTH the roxygen edit AND
+the `man/` regen — so it doubles as a regen check, catching the easy
+mistake of editing the comment and forgetting to regenerate. Verifying
+the rendered artifact is strictly stronger than verifying the source it
+is generated from.
+
+**The phantom-citation class is plural — sweep the siblings before
+closing out.** A single read-only sweep of every `\emph{...}` citation
+in `R/data.R` found the sibling `rhesusPedigree` doc (`R/data.R:358`)
+cites `rhesusPedigree.csv`, which also does NOT exist (candidate real
+source: `rhesusPedigree_fromCenter.csv` or
+`obfuscated_rhesus_mhc_ped.csv`), while `ExamplePedigree.csv` (`:18`)
+does exist. Flagged as A11, not fixed (FM \#8 — A10 was the
+deliverable). When you fix one instance of a documentation-claim class,
+grep the whole class so the next session inherits a precise, pre-located
+list instead of rediscovering it.
+
+**Reflexes:** \[a `@source`/provenance citation is NOT a live-object
+attribute — verify it against the FILESYSTEM (cited file exists +
+value-identical), since an audit-vs-live-object pass cannot catch a
+phantom source file\]\[bind the RED probe to the GENERATED `man/.Rd`
+(parse the `\emph{}`/source token), not the roxygen source — it then
+doubles as a regen check\]\[when fixing one doc-claim instance, sweep
+the whole class (grep every sibling citation) and flag the others with
+candidate fixes, don’t fix them (FM \#8)\]\[a doc-only `@source` fix is
+Phase-3E-N/A — no runtime behavior changes; the proportionate
+build-equivalent is checkRd + load_all + suite + NAMESPACE byte-diff +
+the man-source probe\]. **Apply:** any data-doc or provenance-citation
+fix — verify the cited file on disk (existence + value-identity), drive
+RED off the rendered man page, and grep every sibling citation to hand
+the next session a located list.
+
+------------------------------------------------------------------------
+
+#### Learning 120 — When more than one shipped file is value-identical to an opaque data object, a filename-based provenance guess can mislead — verify each candidate against the object firsthand and cite the exact-shape value-identical export, not a superset. To close the LAST instance of a doc-claim class, re-run the class sweep after the fix to PROVE closure; don’t inherit “this is the only one left” from a predecessor’s note. (S127, owner pick A11 — correct the `rhesusPedigree` `@source`)
+
+**What happened.** S126 (Learning 119) flagged A11: the `rhesusPedigree`
+doc (`R/data.R:358`) cited a phantom `rhesusPedigree.csv`, with two
+candidate real sources — `rhesusPedigree_fromCenter.csv` (which the
+predecessor and `data-raw/rhesusPedigree.R` both call “the obfuscation
+source”) or `obfuscated_rhesus_mhc_ped.csv`. Strict TDD: a pre-RED scope
+gate (which file + swap-only vs grammar-clarify; owner chose
+`obfuscated_rhesus_mhc_ped.csv`, swap-only) + the three transitions.
+RED: a probe parsing `man/rhesusPedigree.Rd` for its `\emph{}` token,
+asserting the phantom is absent and the cited file is present (both
+`R/data.R` and the man page), exists, and is value-identical — 4
+failures (A1–A4) against the current doc, preconditions A5–A6 passing.
+GREEN: swap one token, regen `man/` (rd roclet only), 0 failures.
+Verified: full suite 0/0, checkRd 0, NAMESPACE byte-identical, diff
+confined to two lines. Phase-3E N/A (doc-only). 0 stakeholder
+corrections.
+
+**A filename is a hypothesis about provenance, not provenance.** The
+name `rhesusPedigree_fromCenter.csv` reads as “the center’s original,
+pre-obfuscation pedigree,” and `data-raw/rhesusPedigree.R` even narrates
+it as the file the object “was obfuscated from.” Firsthand probing
+overturned that: BOTH shipped candidate CSVs carry the SAME obfuscated
+ids as the bundled object (BRI2MW, 677E7M, …), so neither is
+pre-obfuscation real data — the un-obfuscated source is simply not
+shipped (de-identification). `_fromCenter` is a post-obfuscation export
+with an extra flag column, not the input. The only reliable way to know
+which shipped file the `@source` should name is to compare values
+firsthand; the filename, and even a prior provenance comment, can be
+loose.
+
+**When two files are both value-identical, cite the exact-shape twin,
+not a superset.** `obfuscated_rhesus_mhc_ped.csv` is 375×8 and
+value-identical to the object across all 8 columns.
+`rhesusPedigree_fromCenter.csv` is value-identical only on the 8
+*shared* columns but is 375×9 (extra `fromCenter` column) — a superset.
+`@source` should name the file whose shape and values ARE the object,
+and it keeps the citation consistent with the sibling genotypes doc
+(S126, which cited the exact value-identical export). Cite the minimal
+exact match.
+
+**To close the LAST instance of a doc-claim class, prove it — don’t
+inherit it.** S126 closed `rhesusGenotypes` and flagged `rhesusPedigree`
+as the last sibling phantom. Rather than trust that note, I re-ran the
+`\emph{...csv}` sweep over `R/data.R` after the fix: all three citations
+(`ExamplePedigree.csv`, `obfuscated_rhesus_mhc_breeder_genotypes.csv`,
+`obfuscated_rhesus_mhc_ped.csv`) now resolve to existing files. The
+class is closed by demonstration, not by inheritance. A predecessor’s
+“this is the only one left” is a lead; a fresh post-fix sweep is the
+proof.
+
+**Reflexes:** \[a filename — even one a prior script calls “the source”
+— is a HYPOTHESIS about provenance; confirm which shipped file is
+value-identical by comparing values firsthand before citing it\]\[when
+multiple files are value-identical, cite the exact-shape twin (same
+columns), not a superset with extra columns\]\[to close the LAST
+instance of a doc-claim class, re-run the class sweep AFTER the fix and
+show every member resolves — prove closure, don’t inherit it from a
+predecessor’s note\]\[reuse Learning 119: provenance = filesystem
+check + value-identity, and the RED probe binds to the generated
+`man/.Rd`\]. **Apply:** any provenance/`@source` fix where more than one
+candidate file exists — verify value-identity firsthand (don’t trust the
+filename or a prior provenance note), cite the minimal exact match, and
+re-sweep the class to prove it is fully closed.
+
+------------------------------------------------------------------------
+
+#### Learning 121 — A REFACTOR-only deliverable (delete provably-redundant code) still runs the strict-TDD gate, but with NO RED phase — the existing green suite IS the safety net; you need only a pre-REFACTOR scope gate + the GREEN→REFACTOR gate. Prove “no-op” by whole-frame `identical(with, without)`, not per-column class checks, and sweep the file with a robust single-quoted ERE grep — the handoff’s named line-ranges can be incomplete, and a BRE `\|`/`\$` sweep silently matches nothing on macOS (BSD) grep. (S128, owner pick A8 — remove redundant test no-op conversions)
+
+**What happened.** S123 flagged A8: `test_getPotentialParents.R` and
+`test_modPotentialParents.R` re-coerced `rhesusPedigree`-sourced
+fixtures’ `id`/`sire`/`dam` to character and `birth` to Date —
+conversions that became no-ops once S123 re-exported `rhesusPedigree`
+with canonical column types (Learning 116). The deliverable was to
+delete them. Strict TDD with no RED: established the GREEN baseline
+(both files pass), proved the no-op precondition firsthand, gated the
+scope (which blocks) then GREEN→REFACTOR, deleted 12 lines across three
+identical-class blocks, and re-verified (both files pass, full suite
+0/0, diff confined to the deletions). 0 stakeholder corrections.
+
+**A pure refactor has no RED phase — the existing passing suite is the
+test.** TDD’s “never refactor without a test” is already satisfied: the
+code being cleaned is itself test code that passes before and must pass
+after. There is no new behavior to drive with a failing test, so writing
+one would be theater. What DOES apply is the gate sequence: a separate
+pre-REFACTOR scope decision (the author’s call) plus the GREEN→REFACTOR
+transition gate. Declaring RED here would be a phase-invention error;
+skipping the gates would be a discipline error. Correct shape: GREEN
+(prove baseline) → scope gate → GREEN→REFACTOR gate → REFACTOR →
+re-prove GREEN.
+
+**Prove “no-op” by whole-frame identity, not column class.**
+`class(col) == "character"` shows the conversion is *probably* idle; the
+airtight proof that removing it preserves behavior is
+`identical(frame-after-all-conversions, frame-before)`. That one check
+covers every column and attribute at once and generalizes: any fixture
+sourced from the same object inherits the proof (here both `pedOne` and
+`pedDF` draw from
+[`nprcgenekeepr::rhesusPedigree`](https://github.com/rmsharp/nprcgenekeepr/reference/rhesusPedigree.md),
+so one identity check licensed deleting all three blocks).
+
+**The handoff’s named line-ranges are a lead, not a census — sweep the
+file yourself.** S127’s handoff named two blocks; a robust ERE sweep
+found a THIRD identical block in the same file (`pedDF`, lines 116-119)
+it never enumerated, plus two look-alikes that were NOT the class (an
+`as.Date` inside age arithmetic at `test_fillBins.R:22`; an
+`as.character` inside an `expect_setequal` at
+`test_modGeneticValue.R:1274`). Leaving the third would have left the
+file internally inconsistent. The first sweep used double-quoted BRE
+(`as.character(pedOne\$...\|...`) and matched NOTHING — macOS `grep`
+(BSD) does not honor `\|` alternation or treat `\$` as intended — the
+same shell/backslash trap that drives this project to file-based R
+probes (Learnings 108/109), now seen in grep. Fix: single-quoted
+`grep -rEn` with a real ERE.
+
+**Reflexes:** \[a delete-redundant-code refactor has NO RED phase — the
+existing green suite is the safety net; run only the pre-REFACTOR scope
+gate + GREEN→REFACTOR gate, don’t invent a RED probe\]\[prove a
+conversion/transform is a true no-op by whole-frame
+`identical(with, without)`, not per-column class checks — one identity
+check licenses every fixture drawn from that object\]\[treat a handoff’s
+named line-ranges as a lead, not a census — sweep the file/dir for the
+same class with a single-quoted `grep -rEn` ERE; classify look-alikes
+(coercions inside arithmetic/assertions are NOT redundant
+self-assignments) and leave them\]\[the shell-backslash trap extends to
+grep: double-quoted BRE `\|`/`\$` silently matches nothing on macOS BSD
+grep — use single quotes + `-E`\]\[a test-only refactor is Phase-3E-N/A
+— no runtime/production code changes; the proportionate build-equivalent
+is targeted files green + full suite 0/0 + diff confined to the intended
+deletions\]. **Apply:** any “remove now-redundant code” cleanup — prove
+the redundancy is a true no-op (whole-frame identity), sweep the
+file/dir yourself with a robust ERE grep rather than trusting the
+handoff’s line list, and run the scope + GREEN→REFACTOR gates without
+inventing a RED phase.
+
+------------------------------------------------------------------------
+
+#### Learning 122 — A carried documentation nit’s wording is a LEAD, not a spec — verify the ground truth before applying it literally; the literal fix can be wrong. A vignette doc-fix binds RED to the `.qmd` source + the live object (not a generated `man/.Rd`), and its build-equivalent is a pkgdown/Quarto render — which writes HTML to the gitignored `pkgdown_site/` but LITTERS the tracked tree (`pkgdown/` favicons, a `*.rmarkdown` intermediate, an auto `vignettes/articles/.gitignore`); clean those before commit. (S129, owner pick A3 — fix the studbook-QC vignette’s `pedGood` column description)
+
+**What happened.** S116 flagged A3 (carried through S117–S128): the
+*Studbook Quality Control* article said `pedGood` “has deliberately
+messy headers (`ego_id`, `si.re`, `dam_id`, `birth_date`)” — and the
+one-line carried framing was “omits the `sex` column.” Strict TDD: a
+pre-RED approach gate (rewrite the lead-in vs append a clause; owner
+chose the rewrite) + `PRE-RED→RED`, `RED→GREEN`, and `GREEN→REFACTOR`
+(N/A — prose, structure preserved). RED: a file-based probe parsing the
+lead-in paragraph from the `.qmd` and binding to `names(pedGood)` — 3
+ground-truth preconditions pass, 2 RED assertions (lead-in mentions
+`sex`; states “five”) fail. GREEN: a 3-line rewrite → 0 failures.
+Build-equivalent: `pkgdown::build_article(...)` rendered clean; the new
+sentence and the unchanged 4-rename `changedCols` output both verified
+in the HTML. 0 stakeholder corrections.
+
+**The literal carried wording would have produced a WRONG fix.** “Omits
+the `sex` column” reads as “add `sex` to the parenthetical.” But a probe
+on the live object showed `sex` is NOT a messy header: `names(pedGood)`
+= `ego_id`, `si.re`, `dam_id`, `sex`, `birth_date`, and the article’s
+own `changes` chunk renames exactly the four non-`sex` columns — `sex`
+is absent from `changedCols` because it already uses the canonical name.
+Inserting `sex` into the “deliberately messy headers” list would have
+mislabeled it AND contradicted the chunk’s rendered output two lines
+below. The accurate fix conveys “five columns: four messy + an
+already-clean `sex`.” The earlier, richer S116 framing (“the dataset is
+5 columns”) survived in the notes 350 lines down; the compressed
+one-liner that propagated forward lost the nuance. Verify the claim
+against the live object before applying it.
+
+**A vignette doc-fix binds RED to the source `.qmd` + the live object —
+there is no generated `man/.Rd` to bind to.** Learning 119’s
+man-page-binding pattern does not transfer directly: a vignette has no
+checked-in generated artifact. The strongest available binding is (a)
+ground-truth preconditions read from the live object (`names(pedGood)`),
+so the test fails if the data ever diverges from the prose, plus (b) RED
+assertions on the source paragraph’s text. The render is the separate
+build-equivalent that proves the `.qmd` still compiles and the prose now
+matches the chunk output.
+
+**[`pkgdown::build_article`](https://pkgdown.r-lib.org/reference/build_articles.html)
+writes to the gitignored output dir but litters the tracked tree — clean
+before commit.** The HTML landed in `pkgdown_site/articles/...`
+(gitignored, line 39), so it never showed in `git status`. But the same
+render created three NEW untracked items in the tracked tree: `pkgdown/`
+(generated favicons),
+`vignettes/articles/studbook-quality-control.rmarkdown` (a Quarto
+intermediate), and `vignettes/articles/.gitignore` (Quarto
+auto-created). Capture `git status --porcelain` BEFORE the render, then
+`rm -rf pkgdown && rm -f vignettes/articles/.gitignore vignettes/articles/*.rmarkdown`
+after, and re-check that the tree is back to the intended set. (Same
+family as the stray-`Rplots.pdf` gotcha — a build step can drop
+artifacts the commit must exclude.)
+
+**Reflexes:** \[treat a carried/handoff nit’s wording as a HYPOTHESIS —
+verify it against the live object before applying it; the literal fix
+can be wrong (here, `sex` is not a messy header, so it must not join the
+“messy headers” list)\]\[for a vignette/`.qmd` doc-fix, bind RED to the
+source paragraph + live-object ground truth
+([`names()`](https://rdrr.io/r/base/names.html)), since there is no
+generated `man/.Rd`; the pkgdown/Quarto render is the separate
+build-equivalent\]\[render the changed article and verify BOTH the new
+prose AND that any nearby executed chunk’s output stays consistent with
+it\]\[[`pkgdown::build_article`](https://pkgdown.r-lib.org/reference/build_articles.html)/`quarto render`
+writes HTML to the gitignored `pkgdown_site/` but litters the tracked
+tree (`pkgdown/`, `*.rmarkdown`, an auto `.gitignore`) — snapshot
+`git status` before, clean after, re-check\]\[`vignettes/articles/` is
+website-only (`.Rbuildignore`d) — no CRAN ship, no NEWS line,
+quarto/pkgdown are dev-lib only\]. **Apply:** any documentation/vignette
+fix carried as a one-line nit — re-derive the ground truth firsthand,
+drive RED off the source + live object, render as the build-equivalent,
+and clean the render’s tracked-tree litter before committing.
+
+------------------------------------------------------------------------
+
+#### Learning 123 — To rewrite a large doc section deterministically, write the new section to a FILE and SPLICE it in by heading boundaries with R (read lines, find the start heading + the next heading, recombine head/new/tail) — far more robust than a fragile multi-hundred-line Edit match. For a NEWS rewrite: bind RED to the rendered `NEWS.md`; fold the user-facing delta from the per-session CHANGELOG/handoffs (DROP internal/test/VCS sessions); then adversarially verify completeness (vs `git show HEAD:NEWS.md` + the plan’s classification), accuracy (every named function exists/exported), and dedup/style BEFORE tightening prose. `rmarkdown::render(output_format="github_document")` drops an untracked `NEWS.html` preview — clean it before commit. (S130, owner pick B — CRAN Phase 3a, the NEWS 2.0.0 rewrite)
+
+**What happened.** The CRAN plan’s Phase 3 headline was to rewrite the
+single verbose, internally-doubled `1.1.0.9000` NEWS section into a
+terse `# nprcgenekeepr 2.0.0` Major/Minor entry and fold in the
+S112–S129 user-facing changes. The plan (line 154) authorized splitting
+content-rewrite from version-bump+regenerate; the owner chose the split,
+so this session delivered only the NEWS rewrite + re-render (Phase 3a).
+Strict TDD: scope gate (full vs split) + the three transitions. RED: a
+probe bound to the rendered `NEWS.md` (one 2.0.0 heading; 1.1.0.9000
+gone; Major+Minor; no NEW-/PED-/XARCH-; `addGenotype` + rhesus data
+folded in; module mechanics dropped) — 6 fail → 0 after rewrite+render.
+A 3-lens adversarial workflow (completeness/accuracy/dedup-style)
+returned 0 completeness, 0 accuracy, 0 dedup findings and 6 style nits;
+the REFACTOR tighten resolved them with the probe staying 7/7. 0
+stakeholder corrections.
+
+**Splice by heading boundary, do not Edit-match hundreds of lines.** The
+old section spanned 178 lines. An `Edit` requires the entire
+`old_string` to match byte-for-byte — fragile and error-prone at that
+size. Instead: `Write` the new section to a scratch file, then an R
+splice —
+`x <- readLines("NEWS.Rmd"); v <- grep("^# nprcgenekeepr 1\\.1\\.0\\.9000", x); w <- grep("^# nprcgenekeepr 1\\.0\\.8 ", x); writeLines(c(x[seq_len(v-1)], readLines(newfile), "", x[w:length(x)]), "NEWS.Rmd")`.
+Deterministic, keys only on stable heading anchors, and leaves all prior
+history untouched. The REFACTOR re-splice keyed on the new `2.0.0`
+heading the same way. (This is the document-section cousin of the
+dry-run-first R-script edits used for the roxygen sweeps in S114/S116.)
+
+**Fold the user-facing delta from the per-session CHANGELOG, classifying
+ship-vs-internal.** The plan’s §6.3 classification predated S112–S129,
+so the recent sessions had to be folded in. The per-session CHANGELOG
+entries are the source: the ship/user-facing ones (S123/S124 data-type
+re-exports; S125 `addGenotype` behavior) became their own Minor bullets,
+and the many shipped help/data-doc corrections
+(S112/S114–S117/S120–S122/S126/S127) collapsed into ONE omnibus
+“Documentation” Minor bullet rather than 12 lines. The non-shipping
+sessions — S113 (roxygen tooling), S118/S119 (PR/VCS), S128
+(test-fixture cleanup), S129 (website-only article) — were correctly
+DROPPED. Each handoff’s own `[news-vs-changelog]` note (“this ships →
+fold into NEWS” vs “website-only → no NEWS line”) is the classification
+signal; trust it but confirm against what the change actually touches.
+
+**Bind RED to the rendered artifact, and adversarially verify a
+user-facing release artifact before polishing.** As with the man-page
+doc fixes (Learning 119), the probe binds to the GENERATED `NEWS.md`
+(not just `NEWS.Rmd`), so it also proves the re-render ran. For a
+CRAN-facing release note, a 3-lens workflow earned its keep:
+completeness compared the draft against the OLD content
+(`git show HEAD:NEWS.md`), the plan’s Major/Minor lists, AND the
+CHANGELOG delta; accuracy grepped `NAMESPACE`/`R/` to confirm every
+named function exists and is exported and cross-checked each behavior
+claim; dedup/style checked the house convention. Run the verify BEFORE
+the style-tighten so the tighten can’t silently drop a fact — then a
+token-presence sweep confirms it did not.
+
+**`github_document` render litters `NEWS.html`.**
+`rmarkdown::render(output_format = "github_document")` has
+`html_preview = TRUE` by default, which drops an untracked `NEWS.html`
+next to `NEWS.md` (the shipped artifact). `NEWS.html` is not gitignored
+— remove it before commit (or render with `html_preview = FALSE`). Same
+family as the `pkgdown` render litter (Learning 122) and the stray
+`Rplots.pdf`: a build step can emit artifacts the commit must exclude —
+snapshot `git status` before, clean after.
+
+**Reflexes:** \[to replace a large contiguous doc region, Write the
+replacement to a file and splice by stable heading anchors in R — never
+hand-match hundreds of lines in one Edit\]\[fold a NEWS/changelog delta
+from the per-session CHANGELOG, using each handoff’s news-vs-changelog
+note to classify ship-vs-internal; collapse many small shipped doc fixes
+into one omnibus bullet\]\[bind the RED probe to the rendered `NEWS.md`
+so it also proves the re-render ran\]\[adversarially verify a
+user-facing release artifact (completeness vs `git show HEAD:` + plan +
+CHANGELOG; accuracy vs `NAMESPACE`/`R/`; dedup/style) BEFORE tightening
+prose, then token-sweep to confirm the tighten dropped no
+fact\]\[`rmarkdown::render(github_document)` drops an untracked
+`NEWS.html` preview — clean it before commit\]. **Apply:** any large
+documentation-section rewrite, especially a NEWS/release-notes rewrite —
+splice deterministically, fold the delta from per-session history,
+RED-bind to the rendered file, adversarially verify, then tighten and
+clean render litter.
+
+------------------------------------------------------------------------
+
+#### Learning 124 — For a version bump / metadata change with NO new behavior, do strict TDD by binding RED to the *version-consistency invariant* (every version-bearing artifact == target; stale strings absent), not to a function’s behavior. Re-render generated docs with `rmarkdown::render(output_format = <fmt>(html_preview = FALSE))` to avoid the HTML-preview litter outright (improves on Learning 123’s clean-up-after). `getVersion()` tracks DESCRIPTION under `load_all`, so re-rendering README auto-updates its version line; its *date* is `sessioninfo`-derived (provisional, not literal-today). A version *retitle* in one file leaves *dangling cross-references* in other docs — sweep for them. (S131, owner pick B-cont — CRAN Phase 3b, the 2.0.0 version bump)
+
+**What happened.** CRAN plan Phase 3 was split (Learning 123): S130 did
+the NEWS rewrite (Phase 3a), leaving the version bump as Phase 3b. The
+deliverable was purely mechanical — `DESCRIPTION:4` Version `1.1.0.9000`
+→ `2.0.0`, re-render `README.md`, `CITATION.cff` version `1.0.7` (stale)
+→ `2.0.0` + a `date-released` field — and the two version-dependent
+tests (`test_getVersion.R`, `test_appUI_version.R`) are both *dynamic*
+(they read
+[`packageVersion()`](https://rdrr.io/r/utils/packageDescription.html)),
+so the bump does not make any existing test go red-then-green. There was
+no new behavior. Strict TDD still applied: two pre-RED scope gates
+(version-consistency only; defer the carried NEWS Minor→Major
+promotion) + the three transitions, `GREEN→REFACTOR` declared N/A. Full
+suite stayed 191 files / 0-0. 0 stakeholder corrections.
+
+**The RED surface for a no-new-behavior change is an invariant, not a
+behavior.** When the deliverable changes configuration/metadata rather
+than logic, bind RED to the *property the change must establish*. Here
+that property is the version-string inventory being consistent: a
+file-based probe parsed `DESCRIPTION`
+(`read.dcf(..., fields="Version")`), `CITATION.cff` (the `version:`
+line), and `README.md` (the rendered version line) and asserted all
+three equal the target and that the stale strings (`1.1.0.9000`,
+`1.0.7`) are gone, plus a `date-released` field exists — 7 assertions,
+all failing on the current tree, all passing after the edits +
+re-render. This is the metadata-bump analog of binding RED to a rendered
+`NEWS.md` (Learning 123) or a generated `man/.Rd` (Learning 119): the
+probe verifies the *deliverable’s invariant*, and the existing dynamic
+tests verify the *runtime path* (the
+[`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
+About-tab render = Phase 3E). The probe is transient (removed before
+commit); no permanent test is added unless the owner asks (offered,
+declined).
+
+**`html_preview = FALSE` beats clean-up-after.** Learning 122/123 note
+that `rmarkdown::render(github_document)` drops an untracked
+`NEWS.html`/preview that must be cleaned. Passing
+`output_format = rmarkdown::github_document(html_preview = FALSE)`
+suppresses it at the source — the render produced *only* the intended
+`README.md` change, no litter to remove. Prefer this over
+snapshot-and-clean when re-rendering a github_document.
+
+**[`getVersion()`](https://github.com/rmsharp/nprcgenekeepr/reference/getVersion.md)
+tracks DESCRIPTION under `load_all`; the README date is
+`sessioninfo`-derived.** `README.Rmd:10` calls
+[`nprcgenekeepr::getVersion()`](https://github.com/rmsharp/nprcgenekeepr/reference/getVersion.md),
+and under
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)
+`packageVersion("nprcgenekeepr")` returns the *dev DESCRIPTION* version
+— so editing DESCRIPTION then re-rendering README auto-updates the
+version line; README.Rmd needs NO edit (it is on the §3.1 “NO edit —
+auto-tracks” list, like the `appUI` About panel). But
+[`getVersion()`](https://github.com/rmsharp/nprcgenekeepr/reference/getVersion.md)’s
+date comes from
+[`sessioninfo::package_info()`](https://sessioninfo.r-lib.org/reference/package_info.html),
+which for a source package is an environment-derived date (here
+`2026-06-17`, not the literal today `2026-06-18`) — so the README date
+can differ from a hand-set `date-released`. Both are provisional and
+reconfirmed at the actual submission (Phase 5); do not force them to
+match.
+
+**A version retitle leaves dangling pointers.** S130 retitled the NEWS
+`1.1.0.9000` section to `2.0.0`; a closing sweep for the old version
+string found `ROADMAP.md:6` still says “see `NEWS.md` 1.1.0.9000” — now
+a *dangling* cross-reference to a section that no longer exists. Also
+`CLAUDE.md:18` carries stale “(Version 1.1.0.9000)” prose and
+`nprcgenekeepr_notes.txt:5` a now-resolved TODO. These are
+`.Rbuildignore`d dev docs (not CRAN artifacts) and out of a locked
+three-file scope — flagged for follow-up, not fixed mid-session (FM
+\#8). The lesson: after any version *rename* (not just a numeric bump),
+grep the whole tree for the old string and triage hits into bumpable /
+historical-keep / dangling-pointer.
+
+**Reflexes:** \[for a config/metadata change with no new behavior, bind
+RED to the change’s invariant (version-string inventory consistent;
+stale strings absent), not to a function’s behavior — the metadata-bump
+cousin of RED-binding to a rendered artifact\]\[verify the plan’s
+version-string inventory (§3.1) against the live tree with a `git grep`
+before editing, and split hits into bumpable vs historical-must-not-bump
+vs dangling-pointer\]\[re-render a github_document with
+`html_preview = FALSE` to avoid the preview litter
+outright\]\[[`getVersion()`](https://github.com/rmsharp/nprcgenekeepr/reference/getVersion.md)/[`packageVersion()`](https://rdrr.io/r/utils/packageDescription.html)
+track DESCRIPTION under `load_all`, so re-rendering README auto-updates
+its version line — README.Rmd needs no edit; its date is
+`sessioninfo`-derived and provisional\]\[after a version *retitle*,
+sweep the whole tree for the old string — a rename leaves dangling
+cross-references in dev docs\]. **Apply:** any version bump or
+metadata-only change — drive RED off the consistency invariant, verify
+the inventory against the tree, re-render with `html_preview=FALSE`, and
+triage every lingering old-version hit.
+
+------------------------------------------------------------------------
+
+#### Learning 125 — When a plan marks a phase “open,” a prior session may have already executed it — verify against process history (`git log` on the phase’s target files + the CHANGELOG + the handoff chain) BEFORE re-running; a stale status propagates through many handoffs unreconciled. And a string fixed only at its canonical source can survive in its DOWNSTREAM SINKS — a generated file, a child-include rendered into multiple places, and a hand-maintained mirror — so sweep the whole tree and scope the invariant probe to git-TRACKED files (an unscoped sweep flags untracked render litter as false offenders). (S132, owner pick B-Phase1 re-scoped — finish the `mulatto`→`mulatta` typo across README/vignette/CITATION)
+
+**What happened.** The owner picked “CRAN Phase 1 static hygiene.”
+Orientation’s process-history check (memory
+\[\[check-process-history-before-rerunning-work\]\]) found **Phase 1 was
+already executed by S102** (commit `a3cf3623`) — the `.Rbuildignore`
+cruft lines, the DESCRIPTION `mulatto`→`mulatta` typo, the renv
+`Config/*` reordering, `VignetteBuilder: knitr`, the `@return`/`\value`
+docs, and the LICENSE-year reconcile — all verified in place against the
+live tree. Yet the plan (authored S101) was never marked done, and the
+handoff chain S102→…→S131 carried “Phase 1 … still open” forward; S131’s
+gotcha even named `DESCRIPTION:23` as still carrying the typo, which
+S102 had fixed. A tree-wide `mulatto` sweep then showed S102 fixed the
+typo **only in DESCRIPTION**: it survived in `README.Rmd:48` (→ shipped
+`README.md`, twice), the shipped vignette child
+`vignettes/manual_components/_introduction.Rmd:48`, and
+`CITATION.cff:16`. Re-scoped with the owner to finishing the typo
+tree-wide; strict TDD throughout (3 transition gates + a pre-RED scope
+gate; REFACTOR N/A); RED probe 9 failures → 0; full suite 0/0; 0
+stakeholder corrections.
+
+**A plan’s phase *status* is a claim, not ground truth — verify it
+against process history before executing.** SESSION_RUNNER’s planning
+discipline says a plan’s “files to change” come from search results, not
+architectural memory; the dual at *execution* time is that a plan’s
+*completion* status comes from the commit record, not the plan’s own
+text. Before re-running any phase a plan calls “open,”
+`git log --oneline -- <the phase's target files>`, `grep` the CHANGELOG,
+and scan the handoff chain for evidence it is already done. Here two
+commands (`git log -- .Rbuildignore DESCRIPTION` →
+`a3cf3623 … CRAN Phase 1 static hygiene (S102)`, and
+`grep -ni 'phase 1' CHANGELOG.md`) proved Phase 1 was complete and saved
+the session from re-doing settled work. A stale status propagates:
+S101’s plan said open, S102 did the work without marking the plan done,
+and every handoff since copied “Phase 1 open” forward. The fix is
+twofold — verify before executing, AND reconcile the artifacts (the
+plan + CHANGELOG) when you find the drift, so the next session inherits
+truth instead of re-discovering it.
+
+**A fix at the canonical source can survive in its downstream sinks.**
+S102 corrected the typo in DESCRIPTION (the canonical Description field)
+and reasonably treated it as handled. But the same species name lives in
+**five** independent sinks: (1) a hand-maintained *mirror* —
+`CITATION.cff`’s abstract duplicates the Description prose (cffr would
+regenerate it from DESCRIPTION, but cffr is absent, so it drifted); (2)
+a *generated* file — `README.md` is knit from `README.Rmd`; (3) a
+*child-include* — `README.Rmd` states the reference directly (line 48)
+AND `child`-includes `_introduction.Rmd` (line 32), which carries the
+same block, so the typo renders into README.md *twice*; (4) that same
+child ships into the `a3manual.Rmd` vignette; (5) a *website-config
+mirror* — `_pkgdown.yml`’s `description:` field also copies the
+Description prose, so the typo would appear on the published pkgdown
+site. The plan’s own location list (“DESCRIPTION:23 + CITATION.cff:15”)
+missed the README, vignette, AND `_pkgdown.yml` sinks. Lesson: when
+fixing a string that appears in user-facing prose, sweep the *whole
+tree* for it and trace generation/include/mirror chains — fixing the
+source is not fixing the output.
+
+**Scope a tree-wide invariant probe to git-tracked files — but ALL of
+them, not a curated dir list.** Two opposite scoping errors bit this
+session and both were caught. (a) *Too broad:* the RED probe’s first
+sweep flagged untracked, git-ignored local render litter
+(`vignettes/a3manual.html|md`, stale builds) as offenders; filtering to
+`git ls-files` fixed it — the invariant is about *committed/shipped*
+content, not the working tree. (b) *Too narrow:* I then scoped the sweep
+to a hand-picked dir list (`R/`/`man/`/`vignettes/` + `README.md` +
+`DESCRIPTION`) — which **missed `_pkgdown.yml`**, the fifth sink. The
+miss was caught only by a close-out belt-and-suspenders
+`git ls-files | grep mulatto` over **all** tracked files. The lesson: a
+curated dir list embeds the same blind spot that let the typo survive in
+the first place. Sweep **every** tracked file (`git ls-files`), and
+*subtract* only the dev-process-history docs that legitimately
+*describe* the fix (CHANGELOG, SESSION_NOTES, PROJECT_LEARNINGS,
+`docs/planning/*`, dev notes) — don’t *add back* a curated content
+subset.
+
+**Reflexes:** \[before re-running any phase a plan calls “open,” verify
+against process history — `git log --oneline -- <phase target files>`,
+`grep` the CHANGELOG, scan the handoff chain — a stale status propagates
+through many handoffs unreconciled\]\[when you find plan/CHANGELOG
+drift, reconcile the artifacts (mark the phase done; correct the false
+status transparently) so the next session inherits truth, don’t just
+route around it\]\[a typo/string fixed at its canonical source can
+survive in downstream sinks — a generated file, a child-include rendered
+into multiple places, a hand-maintained mirror, a website-config copy —
+sweep the whole tree and trace generation/include/mirror chains\]\[scope
+a tree-wide invariant sweep to `git ls-files` (excludes git-ignored
+render litter) but over ALL tracked files minus only the fix-describing
+dev docs — a curated dir list re-creates the original blind spot; always
+run a close-out `git ls-files | grep` belt-and-suspenders pass\].
+**Apply:** any “resume the plan / do Phase N” pickup (verify N isn’t
+already done before executing) and any single-location content/typo fix
+(sweep ALL tracked files, subtract only the fix-describing docs, run the
+close-out grep).
+
+#### Learning 126 — A plan’s named root cause is a *hypothesis*: measure before fixing. The documented cause (“timing”) may not reproduce in the current tree, and the profile may instead surface a *different* real defect the owner re-scopes to. Verify a handoff’s environment/feasibility claim firsthand (the “Phase 2 blocked — devtools/renv absent” premise was stale; base-R `R CMD build`/`check --as-cran` need no devtools). Don’t invent a fix where the measurement shows no problem. And encode a check’s invariant with the tool’s OWN mechanism (R’s parser `SYMBOL_PACKAGE` tokens for `pkg::`), not a fragile text regex. (S133, owner pick B-Phase2 re-scoped — CRAN Phase 2 archival timing root cause)
+
+**What happened.** The owner picked “CRAN Phase 2 — archival timing root
+cause.” The plan named example/test/vignette elapsed time as the cause
+and listed the gene-drop vignettes + LabKey examples as “prime
+suspects,” but it also (dragon \#1) said *measure first; let the profile
+name the offender*. Profiling — an authoritative
+`R CMD check --as-cran --timings` — showed the timing defect **does not
+reproduce** in the 2.0.0 tree: examples 20s, vignettes 16s, slowest
+example `countLoops` 1.43s, zero examples ≥ 5s; the “prime suspect”
+gene-drop vignettes rebuild in 16s total (cheap on the tiny `smallPed`).
+What the profile *did* expose was a different, genuinely CRAN-blocking
+finding: `Status: 1 WARNING` for an undeclared `withr` test dependency.
+Per the plan’s STOP-and-re-scope rule, the owner re-scoped the session
+to fixing that (one `Suggests` line, strict TDD); the re-run `--as-cran`
+dropped to 0 ERROR / 0 WARNING. 0 stakeholder corrections.
+
+**A phase’s *premise* is a claim too — measure it before executing, just
+as you verify a phase’s *status* (Learning 125).** Learning 125 said a
+plan’s open/done status is a claim to verify against process history.
+Its sibling at execution time: a plan’s named *root cause* is a
+hypothesis to verify against a measurement. A plan that says “fix
+timing” can be wrong about *whether timing is still broken* — the
+archived defect was at 1.0.7/1.0.8, and the post-1.0.8 work (or merely
+faster hardware here) may have resolved it. The plan anticipated exactly
+this (dragon \#1, “let the profile name the offender”) and gave a
+STOP-and-re-scope boundary; honoring it — running the gold-standard
+measurement and surfacing the changed premise to the owner with a
+grounded re-scope question — is what kept the session from inventing a
+timing “fix” for a non-problem.
+
+**Verify a handoff’s environment/feasibility claim firsthand before
+accepting a “blocked.”** Both the S131 and S132 handoffs said Phase 2
+was “blocked here — needs devtools +
+[`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html),
+absent in this env.” A 20-line env probe disproved it: R 4.6.0 with the
+renv library already materialized, all 18 Imports present, pandoc
+present — and crucially `R CMD build`/`R CMD check --as-cran` are
+*base-R binaries* that need no devtools. The only real gap was a couple
+of missing build-only Suggests (`markdown` for a vignette; installed in
+seconds). A “blocked” inherited from a handoff is a hypothesis, not a
+fact — the cost to test it (one probe script) is far below the cost of
+deferring a runnable, critical-path phase.
+
+**Don’t invent a fix where the measurement shows no problem.** The plan
+offered timing mechanisms (`\donttest`, `skip_on_cran()`, reduce
+iterations). With the profile showing no unit near the limit, applying
+them would *solve a non-problem* — and reducing simulation iterations
+risks dragon \#2 (a “speed-up” that silently changes GVA/kinship
+numbers). The disciplined output when the measurement is clean is to
+*say so with evidence and stop*, not to perform the plan’s listed
+actions for their own sake. (The owner was offered a “+guard the
+heaviest examples as machine-speed insurance” option and declined it;
+honest framing flagged it as belt-and-suspenders that slightly reduces
+CRAN example coverage.)
+
+**Encode a check’s invariant with the tool’s own mechanism, not a
+hand-rolled text scan.** The RED probe had to mirror `R CMD check`’s
+“unstated dependencies in tests” check. A first-draft regex over raw
+test text false-flagged two non-deps: `devtools` (appears only in `#'`
+comments) and `shinytest2.R` (a filename in a comment). `R CMD check`
+ignores both because it parses *code*. Rewriting the probe to use
+`getParseData(parse(f))` and collect `SYMBOL_PACKAGE` tokens — exactly
+what the parser resolves the package half of `pkg::` to — made it
+comment/string/filename-immune and yielded precisely the one real
+offender (`withr`), matching the check. When a probe must reproduce a
+tool’s code-level judgment, reach for the tool’s own parser/AST, not a
+regex approximation of it.
+
+**Reflexes:** \[a plan’s named root cause is a hypothesis — run the
+gold-standard measurement (here `R CMD check --as-cran --timings`)
+BEFORE applying the plan’s fix; the documented cause may not
+reproduce\]\[honor a plan’s STOP-and-re-scope boundary: when the profile
+contradicts the premise, surface it to the owner with evidence + a
+grounded re-scope question — don’t barrel into the listed fix or
+silently narrow\]\[verify a handoff’s “blocked / tool absent” claim
+firsthand with a quick env probe — base-R
+`R CMD build`/`check --as-cran` need no devtools; renv may already be
+materialized\]\[when the measurement is clean, say so with evidence and
+STOP — don’t apply timing fixes to units that aren’t slow (non-problem +
+dragon \#2 risk)\]\[to reproduce a tool’s code-level judgment in a
+probe, use the tool’s own parser (`getParseData`/`SYMBOL_PACKAGE`), not
+a text regex that scans comments/strings\]. **Apply:** any “fix \[named
+root cause\]” pickup (measure that the cause reproduces first) and any
+probe that must mirror an `R CMD check` finding (parse, don’t regex).
+
+#### Learning 127 — Verify a spell-flagged word before adding it to WORDLIST: a “misspelling” can be the *symptom of a real defect*, and adding it masks the defect. A dictionary the plan calls “nearly clean” can be far off — reconcile against the live tool output, not the plan’s guess. And `R CMD check --as-cran` is a base-R gate that needs no devtools wrappers; for a *true* gate, install the missing Suggests so nothing is skipped. (S134, owner pick A — CRAN Phase 4 full `--as-cran` gate)
+
+**What happened.** Phase 4’s gate came back clean on the first run —
+`Status: 2 NOTEs` = 0 ERROR / 0 WARNING (NOTE 1 = expected
+archived/new-submission incoming-feasibility; NOTE 2 = local-only
+old-HTML-Tidy/no-V8, CRAN-absent), timings all comfortable, regression
+read 0 failed / 0 error. The interesting work was the `inst/WORDLIST`
+reconciliation the plan listed almost as an afterthought (“confirm only
+EHR/Raboin/kinships remain after the `mulatta` fix”). Reality:
+[`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+flagged **37** words — the dictionary had drifted ~35 legitimate code
+identifiers behind the S100–S133 work (`changedCols`, `femaleSires`,
+`qcResult`, …) — i.e. the plan’s stated expectation was wrong by an
+order of magnitude. Verifying each flagged word against its source
+location (not blindly running `update_wordlist()`) paid off twice: it
+isolated a curly-quote tokenizer artifact (`names'` from the quoted
+base-R error `'row.names'` in NEWS — a faithful quote, not a word) and,
+more importantly, surfaced a **real data defect**.
+
+**A spell flag can be the visible symptom of a defect that has nothing
+to do with spelling.** The flagged token `si` traced to a column
+literally named **`si.re`** in 5 of the 6 example pedigree datasets
+(`pedGood`, `pedDuplicateIds`, `pedFemaleSireMaleDam`,
+`pedMissingBirth`, `pedSameMaleIsSireAndDam`); the 6th
+(`pedInvalidDates`) correctly uses `sire`. `si.re` is almost certainly a
+data defect (should be `sire`/`sire_id`, to pair with `ego_id`/`dam_id`)
+— `spell_check` split it on the period and flagged the `si` fragment.
+Had I run `update_wordlist()` (which adds *all* flagged words), `si`
+would have been enshrined in the dictionary and the defect masked
+forever. Instead I added the 35 clean terms and **deliberately left `si`
+flagged** so it stays visible, then documented the `si.re` finding for
+its own session. Lesson: before adding a flagged word to a project
+dictionary, look at where it occurs — if it’s a fragment of a malformed
+identifier, the right fix is upstream, not the WORDLIST.
+
+**The owner-approved scope can be refined by what verification reveals —
+transparently, and more conservatively.** The owner approved “add the 36
+legitimate terms” before I’d traced `si` to `si.re`. Discovering `si`
+was a defect symptom, I narrowed to 35 (excluding both `names'` and
+`si`) — *more* conservative than approved, serving the same stated
+intent (“don’t enshrine artifacts”), and reported the deviation
+explicitly so the owner could redirect. New information that post-dates
+an approval should refine the action toward the approval’s intent, with
+the change surfaced — not silently, and not by rigidly executing the
+now-outdated literal instruction.
+
+**A “true” `--as-cran` gate installs the Suggests; the forced check is a
+weaker proxy.** S133’s check used `_R_CHECK_FORCE_SUGGESTS_=false`
+because `covr`/`shinytest2`/`shinyWidgets`/`spelling` were absent (a
+real but partial gate). S134 installed all four (+ `urlchecker`) into
+the renv library — installing the *package* `shinytest2` does **not**
+install Chrome (chromote fetches it lazily, and the e2e tests
+`skip_on_cran` so the check never launches a browser), so it was safe —
+and ran with no forcing flag, the condition CRAN itself checks under.
+Pre-gate hygiene that the single `R CMD check` subsumes anyway is still
+worth running explicitly for the captured evidence: `roxygenise()` (zero
+diff → docs in sync), `urlchecker::url_check()` (17/17 correct),
+`spell_check_package()` (the WORDLIST reconcile). WORDLIST is
+*gate-invariant* (consumed only by the `skip_on_cran`
+`tests/spelling.R`), so changing it cannot alter the check result —
+confirmed by a second rebuild+recheck (identical `2 NOTEs`).
+
+**Reflexes:** \[before adding a spell-flagged word to `inst/WORDLIST`,
+read its source location — a fragment of a malformed identifier (`si` ←
+`si.re`) is a defect symptom; `update_wordlist()` would mask it, so add
+the clean terms by hand and leave the symptom flagged\]\[treat a plan’s
+“the dictionary should be nearly clean” as a guess — reconcile against
+the live `spell_check_package()` output; drift accumulates silently as
+code adds identifiers\]\[installing the R package `shinytest2` does not
+install Chrome — safe to add for a true `--as-cran` gate when the e2e
+tests `skip_on_cran`; install the missing Suggests rather than
+`_R_CHECK_FORCE_SUGGESTS_=false`\]\[WORDLIST is gate-invariant (only the
+`skip_on_cran` spell test reads it) — don’t re-run the full check “to be
+safe” on a WORDLIST-only change unless the session is itself the
+submission gate\]\[the HTML-manual NOTE (`'tidy' not recent enough` /
+`package 'V8' unavailable`) is a local-toolchain artifact, CRAN-absent —
+document it, don’t chase it\]. **Apply:** any WORDLIST/spell
+reconciliation (verify each word’s source before adding) and any local
+`--as-cran` gate (install Suggests for a true gate; know which NOTEs are
+CRAN-absent).
+
+#### Learning 128 — A guessed future identifier (a PR number, a branch name, a “next” version) is a claim that propagates through handoffs unverified — confirm branch/PR/remote state firsthand (`gh pr view N`, `gh pr list --state all`, `git show origin/<branch>:DESCRIPTION`, `git merge-base --is-ancestor`) before citing it in a runbook or handoff. And adversarially verify an external-facing submission document (a CRAN cover note) with a skeptical fresh-eyes pass — the author, close to the work, misses implied-passes framing, “delete-before-pasting” foot-guns, and over-scoped quantitative claims. (S135, owner pick B-Phase5 scope A — CRAN Phase 5 cover note + runbook)
+
+**What happened.** Phase 5’s local half (rewrite `cran-comments.md`;
+write the win-builder/R-hub runbook) was authored from verified repo
+facts, then run through a 3-lens adversarial verification (repo
+fact-check + runbook-command/API + skeptical-CRAN-reviewer). Every
+*factual* claim in the cover note confirmed against the tree, but the
+pass caught three classes of author-blind defect — and one was a
+long-propagated false premise.
+
+**A guessed identifier rides the handoff chain as if it were a fact.**
+Every handoff since ~S112 said the branch “rides a future **PR \#53**
+(Learning 112).” It does not: `gh pr view 53` → “Could not resolve to a
+PullRequest,” because GitHub shares one number space between issues and
+PRs and issues \#45/#46 consumed that range — the next PR will be some
+later number, not 53. Worse, `gh pr list --state all` showed **PR \#52
+is already merged** but carried only S101-S117, and
+`git show origin/master:DESCRIPTION` is still `Version: 1.1.0.9000` with
+`git merge-base --is-ancestor e24a53a2 origin/master` = NO — so `master`
+has **none** of the 2.0.0 commits. The runbook’s first draft repeated
+the “PR \#53 / merge to master” framing and miscast the branch risk as
+“an older tree, not 2.0.0” when `origin/add-methodology` is in fact
+already 2.0.0 but missing S133’s `withr` fix (so R-hub on the unpushed
+tree would re-report the WARNING win-builder won’t). Lesson: a future PR
+number, a “rides PR \#N” note, or “merge to master” is a *prediction*;
+verify it against `gh`/`git` the moment you depend on it, and never let
+a guessed number sit in a handoff as settled fact (Learning 125/126 —
+verify inherited status/premises — applied to repository plumbing).
+
+**Adversarially verify the external-facing artifact, not just the
+code.** A CRAN cover note is read by a skeptical human reviewer; its
+failure modes are rhetorical, not compilable, so the build-equivalent
+(it’s valid markdown) tells you nothing. The reviewer-lens agent caught
+what I, close to the draft, did not: (1) listing win-builder/R-hub under
+“## Test environments” with no results reads as *implied passes* for a
+twice-archived package — fixed by explicit “to be run before submission”
+markers; (2) a “NOTE TO MAINTAINER (delete before pasting)” block with
+placeholder result numbers *inside the file pasted to CRAN* is a
+foot-gun (if left in, you ship fake numbers + an internal path) — moved
+entirely into the runbook so the cover note is CRAN-facing-only; (3)
+“3-5x headroom” is true per-example (~1.4s vs ~5s) but false per-phase
+(the tests phase ~43s is ~1.4x under a minute) — scoped the claim; (4)
+wording that implies a deliberate timing *fix* when the measured truth
+is “the cause does not reproduce” overclaims for a timing-archived
+package — reworded to state what’s true and point at win-builder/R-hub
+(independent, slower hardware) as the confirming evidence. None were
+factual errors; all were framing/honesty risks a fresh adversarial
+reader surfaces and the author misses.
+
+**Reflexes:** \[before citing a PR number / “merge to master” / “rides
+PR \#N” in a runbook or handoff, run `gh pr view N` and
+`gh pr list --state all`, and check the target branch’s real version
+with `git show origin/<branch>:DESCRIPTION` +
+`git merge-base --is-ancestor <commit> origin/<branch>`\]\[a guessed
+future PR number is unreliable — GitHub shares the issue/PR number
+space, so intervening issues shift it; don’t enshrine a specific number
+in a handoff\]\[R-hub v2 checks the pushed GitHub tree, win-builder
+uploads the local tarball — if the local branch is ahead, push before
+`rhub_check()` or R-hub re-reports already-fixed problems\]\[keep a CRAN
+cover note CRAN-facing-only: no “delete-before-pasting” blocks, no
+placeholder numbers, no internal paths — stage those in the
+runbook\]\[never list a test platform under “Test environments” without
+a result or an explicit “pending” marker — for an archived package it
+reads as an implied pass\]\[scope a quantitative headroom/limit claim to
+the unit it actually holds for (per-example vs per-phase); don’t imply a
+deliberate fix the measurement shows was never needed\]. **Apply:** any
+runbook/handoff referencing branch/PR/remote state (verify firsthand),
+and any external-facing submission/correspondence document (run a
+skeptical fresh-eyes adversarial pass before it ships).
+
+#### Learning 129 — A firsthand-verified remote-state claim still has a shelf life: a branch can be pushed or changed between sessions, so a prior session’s *correct* “push first / N commits behind” snapshot can be stale by the time you act on it. `git status` “up to date with origin/” compares only against the LOCAL tracking ref, which updates **only on fetch** — so it reads “up to date” both when you already pushed and when your view of the remote is merely stale. Run `git fetch` THEN `git rev-list --left-right --count origin/<branch>...HEAD` to get ground truth before acting on an inherited “push first” prerequisite. (S136, owner pick Phase5-finish scope “prep + hand off” — CRAN Phase 5 local prep)
+
+**What happened.** S135’s handoff and the runbook both said
+`origin/add-methodology` was “2 commits behind — `git push` before
+`rhub_check()` or R-hub re-reports the already-fixed `withr` WARNING.”
+That was *true when S135 verified it* (Learning 128 was about getting
+exactly this right). But between S135 and S136 the branch was pushed, so
+by the time S136 ran the prerequisite was **already satisfied** —
+`git fetch` +
+`git rev-list --left-right --count origin/add-methodology...HEAD` →
+`0 / 0`, fully in sync at HEAD `24175785`. The session’s job flipped
+from “push” to “confirm and supersede the caveat.” The trap that nearly
+hid this: the orientation `git status` said “Your branch is up to date
+with ‘origin/add-methodology’”, which I could not safely read as
+“already pushed” — it equally means “your tracking ref hasn’t been
+fetched.” Only the explicit `fetch` + `rev-list` disambiguated. This is
+Learning 128’s sibling pointed at *time* rather than *guessing*: 128
+says verify an inherited/guessed identifier; 129 says even a
+**correctly-verified** remote snapshot expires — re-fetch at the moment
+you depend on it, and when you retire an inherited caveat, mark it
+**superseded** in the doc (with the command + result that retired it) so
+the next reader doesn’t re-run the obsolete step.
+
+**Reflexes:** \[before acting on any inherited “push first / N commits
+behind / unpushed commits” prerequisite, run `git fetch` THEN
+`git rev-list --left-right --count origin/<branch>...HEAD` — a remote
+can change between sessions, and `git status` “up to date” reflects only
+the last-fetched tracking ref\]\[distinguish “I already pushed” from “my
+local view of the remote is stale” — both surface as “up to date”; the
+fetch is what disambiguates\]\[when superseding a prior caveat in a
+runbook/plan, write “superseded by on ” with the exact command + result,
+not just a silent deletion, so the supersession is auditable\]\[a
+documentation/prep deliverable’s build-equivalent is still real:
+`R CMD build .` to confirm the artifact assembles + re-confirm every
+external-doc fact firsthand against the current tree, even when “nothing
+changed since the gate” — verify the *unchanged* claim too
+(`git diff --name-only <gate>..HEAD`)\]. **Apply:** any session that
+inherits a branch/remote/push prerequisite, or that hands off a “do X to
+the remote first” instruction to a later session.
+
+#### Learning 130 — An adversarial verify pass can itself be wrong — cross-check ITS corrections firsthand, not just the synthesis it attacks; and when the evidence genuinely splits, FRAME the decision for the owner instead of manufacturing one “correct” answer. A fan-out’s skeptic struck the synthesis’s recommended target name and argued for a different one, citing the package’s own `@example` as its evidence — but reading that example firsthand showed it used the *opposite* form, undercutting the skeptic’s own claim. Both the proposer and its adversary were partly right; only the firsthand file read settled the ground truth. Also re-derive inherited magnitudes: the carried “`si.re` in 5 of 6 pedigrees” note undercounted — 6 datasets are malformed (a second, space-form variant was missed). (S137, owner pick F — investigate + file the `si.re` example-data defect as GitHub issue \#53)
+
+**What happened.** Auditing the `si.re` malformed-sire-column defect for
+a GitHub issue, I ran a 4-reader → synthesize → adversarial-verify
+workflow. The synthesis recommended renaming the malformed column to
+**`sire_id`** (symmetric with the sibling `ego_id`/`dam_id`). The
+adversarial pass *correctly* caught that the synthesis had overstated
+its case (its headline “the period header contradicts the package’s
+value-level period-rejection rule” was false — headers and data values
+are separate code paths in `qcStudbook`), and it argued the
+convention-consistent target was instead the **space form `si re`**,
+citing `R/fixColumnNames.R`’s documented `@example` as evidence the
+package’s own sire exemplar uses a space. I did **not** take that at
+face value: reading `R/fixColumnNames.R:16` firsthand, the `@example`
+actually uses **`Sire_ID`** (underscore) — the opposite of what the
+skeptic claimed, and evidence *for* the synthesis’s underscore idea, not
+the skeptic’s space idea. The real ground truth (from reading the files,
+not either agent’s summary): the repo ships **three** messy-sire
+conventions — `si re` (space, in `createPedOne` + ~8 local fixtures),
+`Sire_ID` (underscore, the `@example`), and `si.re` (period, the five
+`.RData` files) — and the period form matches none. So neither the
+proposer’s nor the adversary’s single “correct name” was right; the
+honest deliverable was to document the defect and **present the
+target-name choice (`si re` / `sire_id` / `sire`) with trade-offs as a
+maintainer decision** in the issue. Separately, the inherited handoff’s
+“5 of 6” framing undercounted: a firsthand
+[`names()`](https://rdrr.io/r/base/names.html) scan of every dataset
+found `pedOne` *also* carries a malformed `si re` (space) sire column,
+making it 6 — and
+[`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)
+empirically normalizes all forms to canonical `sire`, so the defect is
+internal inconsistency, not a functional break (confirmed not a CRAN
+blocker). Filed as issue \#53 with `bug` + `low priority`.
+
+**Reflexes:** \[when an adversarial/verification agent CORRECTS a
+synthesis, re-verify the correction’s *cited evidence* firsthand before
+adopting it — a skeptic can be confidently wrong, and “the verifier said
+so” is not ground truth\]\[when two passes disagree on a decision and
+both have partial evidence, read the primary source yourself; if the
+evidence genuinely splits, the deliverable is to frame the choice with
+trade-offs for the owner, not to assert a false single answer (FM \#23 —
+a contested call is the owner’s)\]\[re-derive any inherited
+count/magnitude (“N of M”, “5 files”, “~35 words”) firsthand — a carried
+characterization drifts in magnitude, not just in truth value\]\[for a
+shipped-DATA defect, separate “functionally broken” (does
+ingestion/mapping still produce the canonical schema?) from “internally
+inconsistent / typo-looking” — run the normalizer (`fixColumnNames`) on
+each variant to prove which it is before calling it a blocker\]\[an
+audit/issue deliverable’s “build-equivalent” is firsthand verification
+of every <file:line> claim it makes + running the relevant code path
+(here
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html) +
+`fixColumnNames`), not just assembling prose\]. **Apply:** any session
+that runs a verify/adversarial pass over its own findings (standing
+practice under ultracode), any issue/audit that must recommend a
+contested decision, and any fix scoping that inherits a count or “it’s
+broken” claim.
+
+#### Learning 131 — A data/fixture change can break a test that asserts on the SHAPE of derived output (a count, a row total, a newline tally) without that test ever referencing the changed value literally — so a grep-for-the-changed-token pre-flight scan will miss it; the full test suite is the only reliable breakage check. (S138, owner pick — the real fix for issue \#53: rename the example datasets’ sire column to `sire.id`)
+
+**What happened.** Before regenerating the 6 example pedigrees
+(`si.re`/`si re` → `sire.id`), I ran a breakage scan: grep `tests/` for
+the literal `si.re`/`si re` and for change-log bucket names. It reported
+“no test breaks” — every `si re` in tests was a self-contained local
+fixture, and no test referenced the shipped data’s sire column by its
+literal name. That was *true* yet incomplete: the full-suite VERIFY
+surfaced one real failure in `test_summary.nprcgenekeeprErr.R`, which
+counts newlines in a qcStudbook summary
+(`stri_count_regex(...$txt, "\\n") == 9L`). Renaming the column to
+`sire.id` makes normalization fire one EXTRA step (`sireIdToSire`,
+because `sire.id`→`sireid`→`sire`, whereas `si re`→`sire` was already
+canonical), so the summary gained a line and the count became 10. The
+test never mentions `si.re`/`si re`/`sire.id` — it asserts on the
+*shape* of output derived from the data — so no token grep could have
+found it. Updated `9L`→`10L` after confirming the new output is correct
+(it reports one more real normalization step). The fix was otherwise
+clean (full suite 0/0, `R CMD check` Status: OK).
+
+**Reflexes:** \[a fixture/data change’s breakage check is the FULL test
+suite, not a grep for the changed token — tests asserting on counts, row
+totals, lengths, or formatted-text shape break invisibly to grep\]\[when
+changing example data that flows through a reporting/summary/format
+function, expect output-shape assertions (newline counts, “N rows”,
+`nrow(...)`) to shift; re-run them\]\[pin the data CONTRACT in a RED
+test (exact column names) rather than trusting a pre-flight grep to
+predict breakage — the contract test is deterministic, the grep is
+heuristic\]\[when an output-shape count changes, verify the NEW value is
+correct before updating the literal — don’t just bump the number to make
+it pass\]. **Apply:** any session that regenerates shipped/example data
+or fixtures consumed by reporting/summary/format functions.
+
+#### Learning 132 — A spell/lint flag on a GENERATED file can be a render-time artifact, not a source defect: pandoc’s smart-quotes turn straight `'...'` in an `.Rmd` into curly `'...'` in the `.md`, and a quote sitting against a word (`'row.names'` → `names'`) becomes a bogus token. Fix it at the SOURCE in a way the renderer can’t undo — a code span (backticks) bypasses smart-quotes — then RE-RENDER and confirm the regenerated-file diff is confined to the one intended line. Never hand-edit the generated `.md`. (S139, owner directive — clear S138’s punch-list)
+
+**What happened.** S138 flagged a lone `names'` spell hit at
+`NEWS.md:51` (“fix the quote, don’t whitelist”). The obvious read —
+“there’s a curly quote to straighten in the source” — was wrong:
+`NEWS.Rmd:53` *already* used straight ASCII quotes
+(`"duplicate 'row.names' are not allowed"`). The curl is introduced by
+pandoc’s `smart` extension at render time (github_document); because the
+closing `'` sits directly against `names`, the tokenizer emits the bogus
+`names'`. So there was nothing to “straighten” at the source. Two
+tempting wrong fixes: editing `NEWS.md` directly (it’s generated from
+`NEWS.Rmd` — would be overwritten, plan gotcha \#3), or disabling
+`smart` globally (would curl-strip every other quote in the 500-line
+file — a huge unwanted diff). The right fix wraps the literal base-R
+message in backticks in `NEWS.Rmd`
+(`` `duplicate 'row.names' are not allowed` ``): code spans are exempt
+from smart-quotes, the straight quotes survive, and it reads better (a
+verbatim error message *is* code). Re-rendered `NEWS.md`
+(github_document, `html_preview=FALSE`) → exactly a one-line diff;
+`spell_check_package()` 1 flag → 0. Same discipline on the README
+de-dup: edited the `.Rmd` source (removed README.Rmd’s own hardcoded
+citation block, leaving the copy that renders from the shared
+`_introduction.Rmd` child so the manual/tutorial vignettes were
+untouched), re-rendered via `build_readme()`, and read the `git diff` to
+confirm it was confined to the removed block (+ a correct incidental
+[`getVersion()`](https://github.com/rmsharp/nprcgenekeepr/reference/getVersion.md)
+date refresh) before committing.
+
+**Reflexes:** \[a spell/URL/lint flag on a generated file (`NEWS.md`,
+`README.md`, `man/*.Rd`) — trace it to the SOURCE (`.Rmd`/roxygen) and
+fix there, then re-render; never hand-edit the generated file (it’s
+overwritten)\]\[a `name'`-style bogus token usually comes from pandoc
+smart-quotes curling a straight quote that sits against a word — the
+source may already be “correct”; wrap the literal in a code span
+(backticks) so the renderer leaves it alone, rather than disabling
+`smart` globally (which rewrites every quote in the file)\]\[after
+editing a generated file’s source, RE-RENDER and `git diff` the
+generated file — confirm the diff is confined to the intended change; an
+incidental-but-correct refresh (a
+[`getVersion()`](https://github.com/rmsharp/nprcgenekeepr/reference/getVersion.md)
+date) is fine, a storm of formatting changes means the committed file
+had drifted from its source — investigate before committing\]\[when a
+duplicate renders from a shared child doc + a local block, remove the
+LOCAL block to keep blast radius to the one file — deleting the shared
+child changes every consumer (here `a3manual.Rmd` +
+`ColonyManagerTutorial.Rmd`)\]\[re-run the checker after the fix
+(`spell_check_package()` → 0) — don’t assume the edit worked\].
+**Apply:** any fix to a flag/warning on a knitr/pandoc/roxygen-generated
+artifact, and any edit that requires re-rendering `NEWS.md` /
+`README.md`.

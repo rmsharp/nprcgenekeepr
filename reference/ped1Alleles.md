@@ -20,17 +20,17 @@ A dataframe with 554 rows and 6 variables
 - V2:
 
   alleles assigned to the parents of the animals identified in the `id`
-  column during iteration 1 of gene dropping performed by `geneDrop`.
+  column during iteration 2 of gene dropping performed by `geneDrop`.
 
 - V3:
 
   alleles assigned to the parents of the animals identified in the `id`
-  column during iteration 1 of gene dropping performed by `geneDrop`.
+  column during iteration 3 of gene dropping performed by `geneDrop`.
 
 - V4:
 
   alleles assigned to the parents of the animals identified in the `id`
-  column during iteration 1 of gene dropping performed by `geneDrop`.
+  column during iteration 4 of gene dropping performed by `geneDrop`.
 
 - id:
 

@@ -10,10 +10,10 @@ column. Unknown sires are indicated with NA
 
 dam
 – the female parent of the animal indicated by the id
-column.Unknown dams are indicated with NA
+column. Unknown dams are indicated with NA
 
 sex
-– factor with levels: &quot;M&quot;, &quot;F&quot;, &quot;U&quot;. Sex specifier for an
+– factor with levels: &quot;F&quot;, &quot;M&quot;, &quot;H&quot;, &quot;U&quot;. Sex specifier for an
 individual.
 
 gen
@@ -30,8 +30,8 @@ age
 – numerical vector of age in years
 
 ancestry
-– character vector or NA with free-form text providing
-information about the geographic population of origin.
+– factor with levels: INDIAN, CHINESE, HYBRID, JAPANESE,
+OTHER, UNKNOWN indicating the geographic population of origin.
 
 origin
 – character vector or NA (optional) that indicates
@@ -45,7 +45,7 @@ factor {levels: ALIVE, DECEASED, SHIPPED, UNKNOWN}. Vector of
 standardized status codes with the possible values
 ALIVE, DECEASED, SHIPPED, or UNKNOWN
 
-recordStats
+recordStatus
 – character vector with value of &quot;added&quot; or
 &quot;original&quot;.
 
@@ -62,10 +62,10 @@ column. Unknown sires are indicated with NA
 
 dam
 – the female parent of the animal indicated by the id
-column.Unknown dams are indicated with NA
+column. Unknown dams are indicated with NA
 
 sex
-– factor with levels: &quot;M&quot;, &quot;F&quot;, &quot;U&quot;. Sex specifier for an
+– factor with levels: &quot;F&quot;, &quot;M&quot;, &quot;H&quot;, &quot;U&quot;. Sex specifier for an
 individual.
 
 gen
@@ -82,8 +82,8 @@ age
 – numerical vector of age in years
 
 ancestry
-– character vector or NA with free-form text providing
-information about the geographic population of origin.
+– factor with levels: INDIAN, CHINESE, HYBRID, JAPANESE,
+OTHER, UNKNOWN indicating the geographic population of origin.
 
 origin
 – character vector or NA (optional) that indicates
@@ -97,7 +97,7 @@ factor {levels: ALIVE, DECEASED, SHIPPED, UNKNOWN}. Vector of
 standardized status codes with the possible values
 ALIVE, DECEASED, SHIPPED, or UNKNOWN
 
-recordStats
+recordStatus
 – character vector with value of &quot;added&quot; or
 &quot;original&quot;.
 
@@ -111,7 +111,7 @@ recordStats
 
     <a class="navbar-brand me-2" href="../index.html">nprcgenekeepr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -158,10 +158,10 @@ column. Unknown sires are indicated with <code>NA</code></p></dd>
 
 <dt>dam</dt>
 <dd><p>– the female parent of the animal indicated by the <code>id</code>
-column.Unknown dams are indicated with <code>NA</code></p></dd>
+column. Unknown dams are indicated with <code>NA</code></p></dd>
 
 <dt>sex</dt>
-<dd><p>– factor with levels: "M", "F", "U". Sex specifier for an
+<dd><p>– factor with levels: "F", "M", "H", "U". Sex specifier for an
 individual.</p></dd>
 
 <dt>gen</dt>
@@ -178,8 +178,8 @@ generation) of the animal indicated by the <code>id</code> column.</p></dd>
 <dd><p>– numerical vector of age in years</p></dd>
 
 <dt>ancestry</dt>
-<dd><p>– character vector or NA with free-form text providing
-information about the geographic population of origin.</p></dd>
+<dd><p>– factor with levels: INDIAN, CHINESE, HYBRID, JAPANESE,
+OTHER, UNKNOWN indicating the geographic population of origin.</p></dd>
 
 <dt>origin</dt>
 <dd><p>– character vector or <code>NA</code> (optional) that indicates
@@ -193,7 +193,7 @@ factor {levels: ALIVE, DECEASED, SHIPPED, UNKNOWN}. Vector of
 standardized status codes with the possible values
 ALIVE, DECEASED, SHIPPED, or UNKNOWN</p></dd>
 
-<dt>recordStats</dt>
+<dt>recordStatus</dt>
 <dd><p>– character vector with value of <code>"added"</code> or
 <code>"original"</code>.</p></dd>
 

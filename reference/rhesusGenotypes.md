@@ -14,10 +14,10 @@ An object of class `data.frame` with 31 rows and 3 columns.
 
 ## Details
 
-There are object.
+There are 31 rows and 3 columns.
 
 Represents 31 animals that are also in the obfuscated `rhesusPedigree`
-pedigree from *rhesusGenotypes.csv*.
+pedigree from *obfuscated_rhesus_mhc_breeder_genotypes.csv*.
 
 - id:
 

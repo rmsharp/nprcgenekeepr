@@ -14,12 +14,13 @@ A pedigree object created by `qcStudbook`. Represents pedigree from
 
 - dam:
 
-  – the female parent of the animal indicated by the `id` column.Unknown
-  dams are indicated with `NA`
+  – the female parent of the animal indicated by the `id` column.
+  Unknown dams are indicated with `NA`
 
 - sex:
 
-  – factor with levels: "M", "F", "U". Sex specifier for an individual.
+  – factor with levels: "F", "M", "H", "U". Sex specifier for an
+  individual.
 
 - gen:
 
@@ -40,8 +41,8 @@ A pedigree object created by `qcStudbook`. Represents pedigree from
 
 - ancestry:
 
-  – character vector or NA with free-form text providing information
-  about the geographic population of origin.
+  – factor with levels: INDIAN, CHINESE, HYBRID, JAPANESE, OTHER,
+  UNKNOWN indicating the geographic population of origin.
 
 - origin:
 
@@ -55,7 +56,7 @@ A pedigree object created by `qcStudbook`. Represents pedigree from
   DECEASED, SHIPPED, UNKNOWN}. Vector of standardized status codes with
   the possible values ALIVE, DECEASED, SHIPPED, or UNKNOWN
 
-- recordStats:
+- recordStatus:
 
   – character vector with value of `"added"` or `"original"`.
 

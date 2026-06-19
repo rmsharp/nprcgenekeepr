@@ -39,9 +39,10 @@ errorList <- qcStudbook(nprcgenekeepr::pedOne,
 summary(errorList)
 #> Error: The animal listed as a sire and also listed as a female is: s1.
 #> Error: The animal listed as a dam and also listed as a male is: d1.
-#> Change: The column where space was removed is: si re to sire.
+#> Change: The column where period was removed is: sire.id to sireid.
 #> Change: The columns where underscore was removed are: ego_id, dam_id, and birth_date to egoid, damid, and birthdate.
 #> Change: The column changed from: egoid to id.
+#> Change: The column changed from: sireid to sire.
 #> Change: The column changed from: damid to dam.
 #> Change: The column changed from: birthdate to birth.
 #> 

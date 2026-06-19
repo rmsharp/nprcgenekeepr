@@ -1,6 +1,6 @@
 # Example studbook with a male as both sire and dam
 
-A data frame with 8 rows and 5 columns (ego_id, si.re, dam_id, sex,
+A data frame with 8 rows and 5 columns (ego_id, sire.id, dam_id, sex,
 birth_date) representing a full pedigree in which the same male animal
 is listed as both a sire and a dam.
 

@@ -33,7 +33,7 @@ have independent ancestries.
 
 - dam:
 
-  the female parent of the animal indicated by the `id` column.Unknown
+  the female parent of the animal indicated by the `id` column. Unknown
   dams are indicated with `NA`
 
 - gen:

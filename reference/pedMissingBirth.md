@@ -1,6 +1,6 @@
 # Example studbook missing the birth date column
 
-A data frame with 8 rows and 4 columns (ego_id, si.re, dam_id, sex)
+A data frame with 8 rows and 4 columns (ego_id, sire.id, dam_id, sex)
 representing a full pedigree that is missing the birth_date column.
 
 ## Usage

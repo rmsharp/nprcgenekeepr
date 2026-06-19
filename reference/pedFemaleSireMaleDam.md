@@ -1,6 +1,6 @@
 # Example studbook with sex-mismatched parents
 
-A data frame with 8 rows and 5 columns (ego_id, si.re, dam_id, sex,
+A data frame with 8 rows and 5 columns (ego_id, sire.id, dam_id, sex,
 birth_date) representing a full pedigree with the errors of having a
 sire labeled as female and a dam labeled as male.
 
