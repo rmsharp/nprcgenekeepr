@@ -29,9 +29,20 @@
 # It must be edited so that the various terms are appropriately defined.
 # The file is to be place in the user's home directory.
 
-# This file is dependent on the user having an appropriately configure
-# "_netrc" (Windows) or ".netrc" (non-Windows) file as described at
-# https://www.labkey.org/Documentation/wiki-page.view?name=netrc
+# Authentication. nprcgenekeepr authenticates to LabKey in one of two ways,
+# tried in this order of precedence:
+#   1. An API key. Supply it in the environment variable
+#      NPRCGENEKEEPR_LABKEY_APIKEY, or as the optional "apiKey" token below.
+#      The environment variable wins when both are set. Keep API keys out of
+#      shared/version-controlled files. API keys must be enabled by a LabKey
+#      site administrator before they can be created.
+#   2. A netrc file. If no API key is found, an appropriately configured
+#      "_netrc" (Windows) or ".netrc" (non-Windows) file is used, as described
+#      at https://www.labkey.org/Documentation/wiki-page.view?name=netrc
+# If neither is found, setLabKeyDefaults() stops with a clear error.
+#
+# Optional API-key token (uncomment and set to use the config-file path):
+# apiKey = "paste-your-labkey-api-key-here"
 
 
 center = "SNPRC"

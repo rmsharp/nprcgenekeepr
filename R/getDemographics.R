@@ -36,6 +36,7 @@
 #' @export
 getDemographics <- function(colSelect = NULL) {
   siteInfo <- getSiteInfo()
+  setLabKeyDefaults(siteInfo)
   demoDf <- labkey.selectRows(
     baseUrl = siteInfo$baseUrl, folderPath = siteInfo$folderPath,
     schemaName = siteInfo$schemaName, queryName = siteInfo$queryName,
