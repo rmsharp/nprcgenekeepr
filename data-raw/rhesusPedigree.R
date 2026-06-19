@@ -18,7 +18,7 @@
 #'   Rscript data-raw/rhesusPedigree.R
 
 ## Load the current shipped object, preserving its obfuscated id/birth values.
-load("data/rhesusPedigree.RData")
+load(file.path("data", "rhesusPedigree.RData"))
 
 ## id / sire / dam: factor -> character (a stringsAsFactors-era artifact;
 ## as.character() preserves the exact string values, NA included).
@@ -30,12 +30,13 @@ rhesusPedigree$dam <- as.character(rhesusPedigree$dam)
 ## that parses cleanly, so the NA pattern is preserved exactly.
 rhesusPedigree$birth <- as.Date(as.character(rhesusPedigree$birth))
 
-## exit: all-NA logical -> all-NA Date. The source records no exit dates, but the
-## column must be Date-typed to match the canonical pedigree structure and the
-## Date arithmetic in getPotentialParents() (ba$exit >= birth comparisons).
+## exit: all-NA logical -> all-NA Date. The source records no exit dates, but
+## the column must be Date-typed to match the canonical pedigree structure and
+## the Date arithmetic in getPotentialParents() (ba$exit >= birth comparisons).
 rhesusPedigree$exit <- as.Date(rep(NA_character_, nrow(rhesusPedigree)))
 
 ## sex (factor F,M), gen (integer), and age (numeric) are already correct and
 ## are left unchanged.
 
-save(rhesusPedigree, file = "data/rhesusPedigree.RData", compress = "xz")
+save(rhesusPedigree, file = file.path("data", "rhesusPedigree.RData"),
+     compress = "xz")

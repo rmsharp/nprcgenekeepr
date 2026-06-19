@@ -355,7 +355,8 @@
 #' Obfuscated rhesus pedigree object
 #'
 #' A pedigree object.
-#' Represents an obfuscated pedigree from \emph{obfuscated_rhesus_mhc_ped.csv} where the
+#' Represents an obfuscated pedigree from
+#' \emph{obfuscated_rhesus_mhc_ped.csv} where the
 #' IDs and dates have been modified to de-identify the data.
 #' \describe{
 #' \item{id}{-- character column of animal IDs}

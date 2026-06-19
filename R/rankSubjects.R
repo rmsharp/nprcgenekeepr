@@ -27,7 +27,7 @@
 rankSubjects <- function(rpt) {
   rnk <- 1L
 
-  for (i in seq_len(length(rpt))) {
+  for (i in seq_along(rpt)) {
     if (nrow(rpt[[i]]) == 0L) {
       next
     }

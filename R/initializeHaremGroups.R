@@ -22,7 +22,7 @@ initializeHaremGroups <- function(numGp, currentGroups, candidates, ped,
                                   minAge) {
   groupMembers <- list()
   if (length(currentGroups) > 0L) {
-    for (i in seq_len(length(currentGroups))) {
+    for (i in seq_along(currentGroups)) {
       currentGroup <- currentGroups[[i]]
       if (length(getPotentialSires(currentGroup, ped, minAge)) > 1L) {
         stop(
@@ -55,7 +55,7 @@ initializeHaremGroups <- function(numGp, currentGroups, candidates, ped,
     }
   }
   if (length(currentGroups) > 0L) {
-    for (i in seq_len(length(currentGroups))) {
+    for (i in seq_along(currentGroups)) {
       currentGroup <- currentGroups[[i]]
       if (length(currentGroup) > 0L) {
         if (length(getPotentialSires(currentGroup, ped, minAge)) > 0L) {

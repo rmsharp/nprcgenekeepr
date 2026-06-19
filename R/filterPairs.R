@@ -44,7 +44,7 @@ filterPairs <- function(kin, ped, ignore = list(c("F", "F"))) {
 
   keep <- rep(TRUE, length(g1))
 
-  for (i in seq_len(length(ignore))) {
+  for (i in seq_along(ignore)) {
     rel <- ignore[[i]]
     k <- !(((g1 == rel[1L]) &
       (g2 == rel[2L])) |
@@ -57,5 +57,5 @@ filterPairs <- function(kin, ped, ignore = list(c("F", "F"))) {
   if (nrow(kin) > 0L) {
     rownames(kin) <- seq_len(nrow(kin))
   }
-  return(kin[!is.na(kin[[1L]]), ])
+  kin[!is.na(kin[[1L]]), ]
 }

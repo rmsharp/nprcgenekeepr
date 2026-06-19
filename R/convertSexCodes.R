@@ -44,5 +44,5 @@ convertSexCodes <- function(sex, ignoreHerm = TRUE) {
     sex[sex %in% c("HERMAPHRODITE", "H", "4")] <- "H"
   }
   sex <- factor(sex, levels = c("F", "M", "H", "U"))
-  return(sex)
+  sex
 }

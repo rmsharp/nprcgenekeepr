@@ -30,5 +30,5 @@ filterThreshold <- function(kin, threshold = 0.015625) {
   if (nrow(kin) > 0L) {
     rownames(kin) <- seq_len(nrow(kin))
   }
-  return(kin)
+  kin
 }

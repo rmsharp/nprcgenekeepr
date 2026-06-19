@@ -22,7 +22,7 @@
 #'   Rscript data-raw/rhesusGenotypes.R
 
 ## Load the current shipped object, preserving its obfuscated values.
-load("data/rhesusGenotypes.RData")
+load(file.path("data", "rhesusGenotypes.RData"))
 
 ## id / first_name / second_name: factor -> character (a stringsAsFactors-era
 ## artifact; as.character() preserves the exact string values). The allele
@@ -34,4 +34,5 @@ rhesusGenotypes$id <- as.character(rhesusGenotypes$id)
 rhesusGenotypes$first_name <- as.character(rhesusGenotypes$first_name)
 rhesusGenotypes$second_name <- as.character(rhesusGenotypes$second_name)
 
-save(rhesusGenotypes, file = "data/rhesusGenotypes.RData", compress = "xz")
+save(rhesusGenotypes, file = file.path("data", "rhesusGenotypes.RData"),
+     compress = "xz")

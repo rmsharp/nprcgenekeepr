@@ -31,14 +31,14 @@
 #' chooseDate(someDates[1], someDates[2], earlier = FALSE)
 chooseDate <- function(d1, d2, earlier = TRUE) {
   if (is.na(d1)) {
-    return(d2)
+    d2
   } else if (is.na(d2)) {
-    return(d1)
+    d1
   } else if ((d1 < d2) && earlier) {
-    return(d1)
+    d1
   } else if ((d1 > d2) && !earlier) {
-    return(d1)
+    d1
   } else {
-    return(d2)
+    d2
   }
 }

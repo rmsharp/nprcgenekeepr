@@ -29,5 +29,5 @@ alleleFreq <- function(alleles, ids = NULL) {
 
   a <- as.data.frame(table(alleles))
   colnames(a) <- c("allele", "freq")
-  return(a)
+  a
 }

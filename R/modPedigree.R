@@ -73,7 +73,8 @@ modPedigreeUI <- function(id) {
             "Choose CSV file with focal animals",
             multiple = FALSE,
             accept = c("text/csv", # nolint: nonportable_path_linter
-                       "text/comma-separated-values,text/plain", ".csv")
+                       "text/comma-separated-values,text/plain", # nolint: nonportable_path_linter
+                       ".csv")
           ),
           actionButton(
             ns("updateFocalAnimals"),
