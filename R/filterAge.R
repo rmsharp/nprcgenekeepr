@@ -31,5 +31,5 @@ filterAge <- function(kin, ped, minAge = 1L) {
   if (nrow(kin) > 0L) {
     rownames(kin) <- seq_len(nrow(kin))
   }
-  return(kin)
+  kin
 }

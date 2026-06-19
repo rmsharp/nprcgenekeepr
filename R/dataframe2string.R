@@ -22,7 +22,7 @@
 dataframe2string <- function(object, ..., digits = NULL, addRowNames = TRUE) {
   nRows <- length(row.names(object))
   if (length(object) == 0L) {
-    return(paste0(
+    paste0(
       sprintf(
         ngettext(
           nRows, "data frame with 0 columns and %d row",
@@ -31,9 +31,9 @@ dataframe2string <- function(object, ..., digits = NULL, addRowNames = TRUE) {
         nRows
       ),
       "\\n"
-    ))
+    )
   } else if (nRows == 0L) {
-    return(gettext("<0 rows> (or 0-length row names)\\n"))
+    gettext("<0 rows> (or 0-length row names)\\n")
   } else {
     # get text-formatted version of the data.frame
     m <- as.matrix(format.data.frame(object,
@@ -69,6 +69,6 @@ dataframe2string <- function(object, ..., digits = NULL, addRowNames = TRUE) {
     # merge columns
     m <- apply(m, 1L, paste, collapse = "")
     # merge rows (and return)
-    return(paste(m, collapse = "\n"))
+    paste(m, collapse = "\n")
   }
 }

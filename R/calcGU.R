@@ -94,5 +94,5 @@ calcGU <- function(alleles, threshold = 1L, byID = FALSE, pop = NULL) {
   gu <- gu * 100L
   gu <- as.data.frame(gu)
 
-  return(gu)
+  gu
 }

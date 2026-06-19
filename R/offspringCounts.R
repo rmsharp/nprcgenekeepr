@@ -40,5 +40,5 @@ offspringCounts <- function(probands, ped, considerPop = FALSE) {
     livingOffspring <- findOffspring(probands, pop)
     results <- cbind(results, livingOffspring)
   }
-  return(results)
+  results
 }

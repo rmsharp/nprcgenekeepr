@@ -25,5 +25,5 @@ toCharacter <- function(df, headers = c("id", "sire", "dam")) {
   for (col in headers) {
     df[[col]] <- as.character(df[[col]])
   }
-  return(df)
+  df
 }

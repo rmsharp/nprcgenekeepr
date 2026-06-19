@@ -38,5 +38,5 @@ kinMatrix2LongForm <- function(kinMatrix, removeDups = FALSE) {
 
   k <- k[!is.na(k$kinship), ]
 
-  return(k[, c("id1", "id2", "kinship")])
+  k[, c("id1", "id2", "kinship")]
 }

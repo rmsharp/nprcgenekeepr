@@ -62,5 +62,5 @@ setExit <- function(ped, timeOrigin = as.Date("1970-01-01")) {
       ped$exit <- as.Date(NA, origin = timeOrigin)
     }
   }
-  return(ped)
+  ped
 }

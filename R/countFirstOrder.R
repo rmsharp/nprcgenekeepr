@@ -61,5 +61,5 @@ countFirstOrder <- function(ped, ids = NULL) {
   ped["siblings"] <- siblings
   ped["total"] <- total
 
-  return(ped[, c("id", "parents", "offspring", "siblings", "total")])
+  ped[, c("id", "parents", "offspring", "siblings", "total")]
 }

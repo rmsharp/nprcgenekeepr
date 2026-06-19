@@ -150,7 +150,7 @@ geneDrop <- function(ids, sires, dams, gen, genotype = NULL, n = 5000L,
 
   id <- character(0L)
   parent <- character(0L)
-  for (i in seq_len(length(keys))) {
+  for (i in seq_along(keys)) {
     key <- keys[[i]]
     id <- c(id, key[1L])
     parent <- c(parent, key[2L])
@@ -159,5 +159,5 @@ geneDrop <- function(ids, sires, dams, gen, genotype = NULL, n = 5000L,
   alleles$id <- id
   alleles$parent <- parent
   rownames(alleles) <- seq_len(nrow(alleles))
-  return(alleles)
+  alleles
 }

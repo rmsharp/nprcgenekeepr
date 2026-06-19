@@ -160,5 +160,5 @@ reportGV <- function(ped, guIter = 5000L, guThresh = 1L, pop = NULL,
   )
   class(finalData) <- append(class(finalData), "nprcgenekeeprGV")
 
-  return(finalData)
+  finalData
 }

@@ -39,5 +39,5 @@ calcA <- function(alleles, threshold = 1L, byID = FALSE) {
     tapply(a, ids, sum)
   }
 
-  return(apply(alleles, 2L, countRare))
+  apply(alleles, 2L, countRare)
 }

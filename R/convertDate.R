@@ -159,12 +159,12 @@ convertDate <- function(ped, timeOrigin = as.Date("1970-01-01"),
     if (!is.null(invalid_date_rows)) {
       invalid_date_rows <- as.character(sort(invalid_date_rows))
     }
-    return(invalid_date_rows)
+    invalid_date_rows
   } else {
     ## Add back records of unknown parents
     if (any("recordStatus" %in% names(ped))) {
       ped <- rbind(ped, addedPed)
     }
-    return(ped)
+    ped
   }
 }

@@ -31,17 +31,16 @@ removeDuplicates <- function(ped, reportErrors = FALSE) {
     stop("ped must have columns \"id\" and \"recordStatus\".")
   }
   if (reportErrors) {
-    if (sum(duplicated(ped$id[ped$recordStatus == "original"])) == 0L) {
-      return(NULL)
+    if (anyDuplicated(ped$id[ped$recordStatus == "original"]) > 0L) {
+      ped$id[duplicated(ped$id[ped$recordStatus == "original"])]
     } else {
-      return(ped$id[duplicated(ped$id[ped$recordStatus == "original"])])
+      NULL
     }
   } else {
     p <- unique(ped)
-    if (sum(duplicated(p$id)) == 0L) {
-      return(p)
-    } else {
+    if (anyDuplicated(p$id) > 0L) {
       stop("Duplicate IDs with mismatched information present")
     }
+    p
   }
 }

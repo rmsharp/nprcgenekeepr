@@ -287,8 +287,8 @@ qcStudbook <- function(sb, minParentAge = 2.0, reportChanges = FALSE,
   # Ensuring the IDs are stored as characters
   sb <- toCharacter(sb, headers = c("id", "sire", "dam"))
   if (reportErrors) {
-    return(checkChangedColAndErrorLst(errorLst))
+    checkChangedColAndErrorLst(errorLst)
   } else {
-    return(sb)
+    sb
   }
 }

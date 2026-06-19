@@ -97,5 +97,5 @@ convertRelationships <- function(kmat, ped, ids = NULL, updateProgress = NULL) {
     }
   }
   kin["relation"] <- r
-  return(kin)
+  kin
 }

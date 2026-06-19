@@ -59,5 +59,5 @@ trimPedigree <- function(probands, ped, removeUninformative = FALSE,
   } else {
     p <- ped
   }
-  return(p)
+  p
 }

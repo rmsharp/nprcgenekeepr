@@ -19,7 +19,7 @@ rbindFill <- function(df1, df2) {
 
   # Add the missing columns to df2 (containing NA values)
   if (!isEmpty(addHeaders)) {
-    for (i in seq_len(length(addHeaders))) {
+    for (i in seq_along(addHeaders)) {
       col <- df1[[addHeaders[i]]] # We want to extract not subset
       colType <- mode(col)
       if (colType == "numeric") {
