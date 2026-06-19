@@ -36,6 +36,8 @@ docs/*
 !docs/planning/**
 !docs/audits/
 !docs/audits/**
+!docs/research/
+!docs/research/**
 pkgdown_site/
 .quarto/
 dashboard.html
