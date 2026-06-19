@@ -15,6 +15,36 @@ Run these from the package root, in an R session with network access.
 
 ---
 
+## Quick sequence (copy-paste, in order)
+
+The full rationale for each step is in the numbered sections below; this is the condensed
+run-list. The R-hub push prerequisite is **already done** — `origin/add-methodology` is
+current as of 2026-06-18 (see step 3), so no `git push` is in this list.
+
+```r
+# one-time (skip any already installed):
+install.packages(c("devtools", "rhub", "gitcreds"))
+gitcreds::gitcreds_set()                 # paste a GitHub PAT (repo + workflow scopes)
+
+# build the artifact win-builder and CRAN receive:
+devtools::build()                        # -> nprcgenekeepr_2.0.0.tar.gz
+
+# cross-platform checks (results arrive async: win-builder by email, R-hub on GitHub):
+devtools::check_win_devel()              # ~30 min each, emails rmsharp@me.com
+devtools::check_win_release()
+devtools::check_win_oldrelease()
+rhub::rhub_doctor()                      # verify PAT + setup
+rhub::rhub_check(platforms = c("linux", "windows", "macos"))   # no push needed; origin is current
+
+# only after ALL results are in and clean, and folded into cran-comments.md (step 4):
+devtools::submit_cran()                  # HARD STOP -- owner only; then click the email confirmation link
+```
+
+Expected results per platform, and what to do if a surprise ERROR/WARNING appears, are in
+steps 2-4 below.
+
+---
+
 ## 0. One-time prerequisites
 
 ```r
@@ -46,6 +76,12 @@ devtools::build()               # or: R CMD build .   -> nprcgenekeepr_2.0.0.tar
 This is the artifact win-builder checks and the artifact you upload to CRAN. Confirm it
 is named `nprcgenekeepr_2.0.0.tar.gz`.
 
+> Session 136 (2026-06-18) ran `R CMD build .` on the current tree and confirmed it builds
+> cleanly to `nprcgenekeepr_2.0.0.tar.gz` (1.9 MB; vignettes created OK, no errors or
+> warnings) on macOS, R 4.6.0. The code/data/metadata tree is unchanged since S134's
+> `--as-cran` gate (`0 errors | 0 warnings | 2 notes`), so that result still applies — the
+> rebuild here is only to produce a fresh artifact to upload.
+
 ---
 
 ## 2. win-builder x3 (uploads the LOCAL tarball — checks the local 2.0.0 tree)
@@ -74,13 +110,20 @@ rhub::rhub_check(platforms = c("linux", "windows", "macos"))
 
 * `.github/workflows/rhub.yaml` already exists (it ran for the 1.0.8 submission), so
   `rhub_setup()` is **not** needed again.
-* **BRANCH CAVEAT (important).** R-hub v2 checks the code that is **on GitHub**, not your
-  local working tree. `origin/add-methodology` is already at version 2.0.0, but is
-  **2 commits behind your local branch**: it is missing S133's `withr`-in-Suggests fix
-  (commit `b93a5b4c`, which clears a CRAN tests WARNING) and S134's Phase-4 WORDLIST work
-  (`56b66ae0`). If you run `rhub_check()` without pushing first, R-hub checks that stale
-  tree and will **re-report the very `withr` WARNING S133 fixed** — a result that disagrees
-  with win-builder. So run `git push origin add-methodology` **before** `rhub_check()`.
+* **BRANCH STATE (verified — Session 136, 2026-06-18).** R-hub v2 checks the code that is
+  **on GitHub**, not your local working tree. `origin/add-methodology` already contains the
+  full 2.0.0 **package** code, including S133's `withr`-in-Suggests fix (`b93a5b4c`, which
+  clears a CRAN tests WARNING) and S134's Phase-4 WORDLIST work (`56b66ae0`) — confirmed this
+  session with `git fetch` + `git rev-list --left-right --count origin/add-methodology...HEAD`
+  (the package tree on origin equals local). **No push is needed** before `rhub_check()` — it
+  will check the correct 2.0.0 package code. (S135's earlier "2 commits behind / push first"
+  note is **superseded**: the branch was pushed after S135's handoff was written.) Any commits
+  that are local-ahead of the remote are **documentation only** (session notes, changelog,
+  this runbook, the plan — all `.Rbuildignore`d and not part of the built package), so they do
+  **not** change what R-hub sees. Verify before running: `git diff --name-only
+  origin/add-methodology..HEAD` should list **only** docs (nothing under `R/` `data/` `man/`
+  `DESCRIPTION` `tests/` `NEWS`); if it lists any package file, `git push origin add-methodology`
+  first.
   * To instead check `master`: `origin/master` is still at **1.1.0.9000** and contains
     **none** of the 2.0.0 commits (the merged PR #52 carried only S101-S117, not the
     version bump). You would first have to open a **new** PR to merge `add-methodology` ->
