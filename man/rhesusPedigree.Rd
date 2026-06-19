@@ -12,20 +12,21 @@ data(rhesusPedigree)
 }
 \description{
 A pedigree object.
-Represents an obfuscated pedigree from \emph{rhesusPedigree.csv} where the
+Represents an obfuscated pedigree from \emph{obfuscated_rhesus_mhc_ped.csv} where the
 IDs and dates have been modified to de-identify the data.
 \describe{
 \item{id}{-- character column of animal IDs}
 \item{sire}{-- the male parent of the animal indicated by the \code{id}
 column. Unknown sires are indicated with \code{NA}}
 \item{dam}{-- the female parent of the animal indicated by the \code{id}
-column.Unknown dams are indicated with \code{NA}}
-\item{sex}{-- factor with levels: "M", "F", "U". Sex specifier for an
+column. Unknown dams are indicated with \code{NA}}
+\item{sex}{-- factor with levels: "F", "M". Sex specifier for an
 individual.}
 \item{gen}{-- generation number (integers beginning with 0 for the founder
 generation) of the animal indicated by the \code{id} column.}
-\item{birth}{-- Date vector of birth dates}
-\item{exit}{-- Date vector of exit dates}
+\item{birth}{-- \code{Date} vector of birth dates}
+\item{exit}{-- \code{Date} vector, all \code{NA} (no exit dates are recorded
+in this obfuscated pedigree)}
 \item{age}{-- numerical vector of age in years}
 }
 }

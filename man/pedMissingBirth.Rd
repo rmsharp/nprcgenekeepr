@@ -11,7 +11,7 @@ An object of class \code{data.frame} with 8 rows and 4 columns.
 data(pedMissingBirth)
 }
 \description{
-A data frame with 8 rows and 4 columns (ego_id, si.re,
+A data frame with 8 rows and 4 columns (ego_id, sire.id,
 dam_id, sex) representing a full pedigree that is missing the birth_date
 column.
 }

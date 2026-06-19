@@ -1,10 +1,6 @@
 #' Copyright(c) 2017-2023 R. Mark Sharp
 #' This file is part of nprcgenekeepr
 pedOne <- nprcgenekeepr::rhesusPedigree
-pedOne$id <- as.character(pedOne$id)
-pedOne$sire <- as.character(pedOne$sire)
-pedOne$dam <- as.character(pedOne$dam)
-pedOne$birth <- as.Date(pedOne$birth)
 pedOne$fromCenter <- TRUE
 potentialParents <-
   getPotentialParents(
@@ -113,10 +109,6 @@ test_that("getPotentialParents does not mutate the caller's pedigree (NEW-53)", 
   ## NEW-53: getPotentialParents must not flip the caller's data.frame to a
   ## data.table by reference (setDT at getPotentialParents.R:28).
   pedDF <- nprcgenekeepr::rhesusPedigree
-  pedDF$id <- as.character(pedDF$id)
-  pedDF$sire <- as.character(pedDF$sire)
-  pedDF$dam <- as.character(pedDF$dam)
-  pedDF$birth <- as.Date(pedDF$birth)
   pedDF$fromCenter <- TRUE
   pedDF <- as.data.frame(pedDF)
   expect_identical(class(pedDF), "data.frame") # precondition

@@ -1,7 +1,7 @@
 Package: nprcgenekeepr
 Type: Package
 Title: Genetic Tools for Colony Management
-Version: 1.1.0.9000
+Version: 2.0.0
 Authors@R: c(
     person("Michael", "Raboin", role = c("aut")),
     person("Terry", "Therneau", role = c("aut")),
@@ -71,7 +71,8 @@ Suggests:
     shinyBS,
     shinyWidgets,
     spelling,
-    testthat
+    testthat,
+    withr
 Language: en-US
 Encoding: UTF-8
 License: MIT + file LICENSE

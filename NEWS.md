@@ -3,206 +3,74 @@ NEWS
 R. Mark Sharp, Ph.D.
 2026-01-26
 
-# nprcgenekeepr 1.1.0.9000 (20260126)
+# nprcgenekeepr 2.0.0 (20260618)
 
-- Shiny application
-  - New **Potential Parents** tab. For a loaded pedigree it identifies
-    in-colony animals (`fromCenter`) that have at least one unknown
-    parent and lists candidate sires and dams, screened by estimated
-    conception date (birth minus the maximum gestational period). A
-    numeric **Maximum Gestational Period (days)** input (default 210,
-    the rhesus upper bound) is overridable per run; a **Find Potential
-    Parents** button computes on the current pedigree; results display
-    in a sortable table and download as CSV. The tab degrades gracefully
-    when no pedigree is loaded, when the pedigree lacks the `fromCenter`
-    colony-origin field, or when no animal has an unknown parent. This
-    wires the exported `getPotentialParents()` (including the
-    gestation-derived dam-exclusion window) into the app. (#48)
-  - New **ORIP Reporting** tab. Provides formatted colony summaries for
-    submission to the NIH Office of Research Infrastructure Programs
-    (ORIP): site information, a colony summary table (totals by sex with
-    founder counts via `isFounder()`), and genetic-diversity metrics
-    (mean kinship and mean genome uniqueness) computed from the loaded
-    pedigree and genetic-value results. Two **Export** buttons download
-    the ORIP report and the demographics as CSV. This mounts the
-    previously unwired `modORIPReporting` module pair into the
-    application. The tab is **ONPRC-specific**: it is shown only when an
-    actual site configuration file identifies the colony as ONPRC, and
-    is hidden at other sites and when no configuration file is present.
-    (#47, \#49)
-  - Fixed a startup crash. The application no longer fails to launch
-    when a site configuration file written in the documented format
-    (comment lines, blank lines, and multi-line / quoted /
-    comma-separated values, as in `example_nprcgenekeepr_config`) is
-    present in the user’s home directory. Configuration is now read
-    through the same tolerant parser used by `getSiteInfo()`, via the
-    new `loadSiteConfig()`, which logs a warning and leaves the
-    configuration unset (rather than aborting boot) if the file is
-    missing or malformed. The previous loader used
-    `read.table(sep = "=")`, which assumed a strict two-column table and
-    stopped with “line N did not have 2 elements”. (#50)
-  - The **About** panel now shows the installed package version
-    dynamically (via `getVersion()`), reading it from the package
-    `DESCRIPTION` instead of a hard-coded string. The previous static
-    “Version 1.0.8” had drifted out of date; deriving it at run time
-    keeps it from going stale again.
-- Data input / quality control
-  - IDs may no longer contain a period (“.”). `qcStudbook()` and
-    `geneDrop()` now reject `id`/`sire`/`dam` values that contain a
-    period; with `reportErrors = TRUE`, the offending values are
-    reported in `errorLst$invalidIdChars`. Periods cause problems across
-    software environments (R column-name/formula parsing, file
-    extensions, namespaces, regular expressions). All automatically
-    generated IDs remain period-free. (NEW-45)
-  - `geneDrop()` now rejects duplicate animal IDs with a clear error.
-    Animal IDs uniquely identify animals (already enforced upstream by
-    `qcStudbook()` via `removeDuplicates()` and by `kinship()`); a
-    duplicate id previously triggered the cryptic base-R error
-    “duplicate ‘row.names’ are not allowed”. (NEW-46)
-  - Reading an animal list or pedigree file whose final line has no
-    trailing newline no longer emits the confusing “incomplete final
-    line found by readTableHeader” warning. Every row, including the
-    last, was always read correctly – the warning was harmless noise.
-    `getPedigree()`, `getGenotypes()`, `getFocalAnimalPed()`, and the
-    Shiny file upload now suppress only that one warning while letting
-    every other read warning through. (#4)
-- Genetic value analysis
-  - `summarizeKinshipValues()` now reports the `secondQuartile` column
-    as the lower hinge (`fivenum()[2]`, approximately the first
-    quartile) instead of silently duplicating `min` (`fivenum()[1]`).
-    The `thirdQuartile` column (the upper hinge) was already correct.
-    (NEW-16)
-  - `calcFE()`, `calcFG()`, and `calcFEFG()` no longer duplicate the
-    founder- contribution algorithm and the partial-parentage guard they
-    shared verbatim; both now live in a single internal helper. Results,
-    signatures, and error messages are unchanged. (NEW-13 / NEW-23)
-- Pedigree curation
-  - Added two exported helpers, `isFounder()` and `getFounders()`, that
-    identify pedigree founders (animals whose sire and dam are both
-    unknown). `isFounder(ped)` returns the logical mask and
-    `getFounders(ped)` returns the founder `id` values. The founder
-    predicate had been written inline in a dozen places; it is now
-    defined once and reused throughout the genetic-value and reporting
-    functions. (PED-1 / NEW-17)
-  - The Pedigree Browser’s “Trim pedigree based on focal animals” option
-    now includes both the ancestors **and** the descendants of the focal
-    animals (it previously included ancestors only). A new exported
-    helper, `getDescendantPedigree()`, returns the transitive
-    descendants of a set of probands – the downward mirror of
-    `getProbandPedigree()`. Trimming is strict-lineal: collateral
-    relatives (siblings, cousins, mates) are not added. (NEW-47)
-  - The format of the auto-generated placeholder IDs created for unknown
-    parents (see `addUIds()`) is now configurable from a single source
-    of truth shared by ID generation and detection. Two new exported
-    helpers, `getAutoIdFormat()` and `setAutoIdFormat()`, read and set
-    the `sprintf` format (default `"U%04d"`); with no configuration all
-    existing behavior is unchanged. Detection is now centralized in one
-    internal predicate used by `removeAutoGenIds()`, the Pedigree
-    Browser display filter, `reportGV()` founder counts, and
-    `obfuscateId()` – replacing eight scattered string literals and
-    reconciling their formerly inconsistent case-handling to
-    case-sensitive (matching the uppercase prefix that generation
-    emits). (NEW-48 / issue \#44 / \#38)
-  - `getPotentialParents()` now selects candidate dams using a
-    gestation-derived exclusion window driven by its existing
-    `maxGestationalPeriod` parameter, replacing a fixed half-year
-    window. A female who delivered another offspring within
-    `maxGestationalPeriod` days of a focal animal’s birth is excluded as
-    a candidate dam (a female bears one offspring at a time), so dam
-    selection now responds to the species’ gestation length rather than
-    a hard-coded +/- 182.5 days. Sire selection already used this
-    parameter; the sire (presence at conception) / dam (presence at
-    birth) exit-check asymmetry is intentional and now documented.
-    (NEW-49 / issue \#31)
 - Major changes
-  - Architectural Changes
-    - Modular Shiny Architecture
-      - Refactored monolithic Shiny application into discrete, testable
-        modules using shiny::moduleServer()  
-      - New module files:
-        - modInput.R - Data input and QC processing  
-        - modPedigree.R - Pedigree browser with trim/filter
-          capabilities  
-        - modPyramid.R - Age-sex pyramid visualization  
-        - modGeneticValue.R - Genetic value analysis (mean kinship,
-          genome uniqueness)  
-        - modSummaryStats.R - Summary statistics with interactive
-          visualizations
-        - modBreedingGroups.R - Breeding group formation using
-          groupAddAssign()
-        - modORIPReporting.R - ORIP reporting module  
-      - New appServer.R and appUI.R orchestrate module communication via
-        shared reactive values
-      - runModularApp() provides entry point for modular application
-      - **Monolith retired (Phase 9).** The legacy monolithic
-        application (`inst/application/`) has been deleted.
-        `runGeneKeepR()` is now a soft-deprecated alias that launches
-        the modular application via `runModularApp()`; existing
-        zero-argument calls continue to work. Also removed the
-        now-unused exports `getLogo()`, `shouldShowErrorTab()`,
-        `modMinimalTestUI()`, and `modMinimalTestServer()`, plus the
-        unexported `getMinParentAge()`. (XARCH-1 / issue \#27)
-  - New Features
-    - Dynamic Tab Management
-      - Error List and Changed Columns tabs appear/disappear dynamically
-        based on QC results  
-      - Uses insertTab()/removeTab() for cleaner UI when no errors
-        present
-    - Enhanced QC Pipeline
-      - runQcStudbook() wrapper provides UI-friendly error reporting  
-      - processQcStudbookResult() transforms QC output for display  
-      - shouldShowChangedColsTab() helper function
-    - Improved Visualizations
-      - getBoxWhiskerDescription() provides educational popover content
-        for box plots
-      - savePlotToFile() supports PNG, PDF, and SVG export
-      - Enhanced pyramid plots with getPyramidPlot()
-    - Genetic Value Analysis tab parity (modular app)
-      - Exposed the genome-uniqueness threshold as a user control with a
-        default of 4, matching the legacy application. The modular app
-        previously hard-coded a threshold of 1, so default
-        genome-uniqueness values from `runModularApp()` now match the
-        legacy app. (The analytical `reportGV()` default,
-        `guThresh = 1`, is unchanged.)
-      - Added a subset filter (view by animal IDs) and an “Export
-        Subset” download, matching the legacy “Filter View” / “Export
-        Current Subset”.
-      - Changed the default gene-drop iterations to 1000 for legacy
-        parity (was 5000); removed an inert “Minimum breeding age”
-        slider that had no effect on the analysis.
-    - Utility Functions
-      - safeExecute() - Error-handling wrapper for module operations  
-      - logModuleEvent() - Structured logging with futile.logger
-        integration
-      - makeFounderStatsTable(), makeGeneticSummaryTable() - Table
-        generators
-  - Testing Improvements
-    - Added shiny::testServer() unit tests  
-    - ~145 new/modified test files with comprehensive module coverage  
-    - Tests for edge cases: NULL inputs, empty pedigrees, single-animal
-      scenarios
-    - Strict TDD development process used for all new features  
+  - **(breaking)** `qcStudbook()` and `geneDrop()` now reject `id`,
+    `sire`, or `dam` values containing a period (offenders returned in
+    `errorLst$invalidIdChars`); auto-generated IDs remain period-free.
+  - **(breaking)** `runModularApp()` is the new Shiny entry point and
+    the monolithic application was retired; `runGeneKeepR()` is now a
+    soft-deprecated alias (zero-argument calls still work), and the
+    unused exports `getLogo()`, `shouldShowErrorTab()`,
+    `modMinimalTestUI()`, and `modMinimalTestServer()` were removed.
+    (#27)
+  - New **Potential Parents** tab listing candidate sires and dams for
+    in-colony animals with at least one unknown parent, screened by
+    estimated conception date (wiring in the exported
+    `getPotentialParents()`); dam selection now uses a
+    `maxGestationalPeriod`-driven exclusion window (was a fixed +/-
+    182.5-day window). (#48, \#31)
+  - New **ORIP Reporting** tab with ONPRC colony summaries for the NIH
+    Office of Research Infrastructure Programs (site information, a
+    colony table with founder counts, genetic-diversity metrics, and CSV
+    exports); shown only at ONPRC. (#47, \#49)
+  - The Pedigree Browser “trim based on focal animals” option now
+    includes descendants as well as ancestors, via the new exported
+    `getDescendantPedigree()`. (#35)
+  - Added the exported founder helpers `isFounder()` and
+    `getFounders()`.
+  - Added the exported `getAutoIdFormat()` and `setAutoIdFormat()`,
+    making the auto-generated placeholder-ID format configurable
+    (default `"U%04d"`). (#44, \#38)
+  - Genetic Value Analysis tab parity: the genome-uniqueness threshold
+    is now a user control (default 4), a subset filter and “Export
+    Subset” download were added, the default gene-drop iterations
+    changed to 1000, and an inert “Minimum breeding age” slider was
+    removed.
+  - Improved visualizations: educational box-plot popovers
+    (`getBoxWhiskerDescription()`), plot export to PNG, PDF, and SVG
+    (`savePlotToFile()`), and an enhanced age-sex pyramid
+    (`getPyramidPlot()`).
 - Minor changes
-  - New Dependencies
-    - Added to Imports: bslib, DT, ggplot2  
-    - Added to Suggests: shinytest2
-  - Bug Fixes
-    - Fixed undefined global variables in ggplot2 aes() calls
-    - Fixed column name expectations in genetic value tests
-      (meanKinship/genomeUniqueness)
-    - Network-dependent tests now skip gracefully
-  - Documentation
-    - Corrected the roxygen `@examples` for `getPedDirectRelatives()`,
-      `cumulateSimKinships()`, and `getIdsWithOneParent()` so each help
-      example calls the function it documents. Previously each example
-      demonstrated a different function; in particular
-      `getPedDirectRelatives()` showed `getLkDirectRelatives()` and
-      omitted its required `ped` argument.
-  - Code modernization
-    - Replaced the magrittr pipe (`%>%`) with the base R native pipe
-      (`|>`) in package vignettes and examples (the package already
-      requires R \>= 4.1, so the native pipe is always available);
-      `magrittr` is no longer used.
+  - Fixed a startup crash that occurred when a documented-format site
+    configuration file was present, via the new tolerant
+    `loadSiteConfig()`. (#50)
+  - The **About** panel now shows the installed package version
+    dynamically (it previously displayed a hard-coded “Version 1.0.8”).
+  - `geneDrop()` now reports duplicate animal IDs with a clear error
+    instead of the base-R `duplicate 'row.names' are not allowed`
+    message.
+  - Reading a file whose final line lacks a trailing newline no longer
+    emits the spurious “incomplete final line” warning. (#4)
+  - `addGenotype()` now coerces its allele columns to character, so the
+    integer allele encoding is consistent whether they are supplied as
+    character or factor.
+  - Re-exported the bundled `rhesusPedigree` and `rhesusGenotypes` data
+    sets with canonical column types (character `id`, `sire`, and `dam`
+    and `Date` `birth` and `exit` in `rhesusPedigree`; all-character
+    columns in `rhesusGenotypes`), preserving every value.
+  - `summarizeKinshipValues()` now reports the `secondQuartile` column
+    as the lower hinge (`fivenum()[2]`) instead of duplicating `min`.
+  - New dependencies: `bslib`, `DT`, and `ggplot2` (Imports);
+    `shinytest2` (Suggests).
+  - Replaced the magrittr pipe (`%>%`) with the base R native pipe
+    (`|>`) in vignettes and examples; `magrittr` is no longer used.
+  - Documentation: extensive help-page and dataset-documentation
+    corrections, including the genetic-value `@return` and parameter
+    descriptions, dataset titles and descriptions, and the `@examples`
+    for `getPedDirectRelatives()`, `cumulateSimKinships()`, and
+    `getIdsWithOneParent()`.
 
 # nprcgenekeepr 1.0.8 (20250723)
 

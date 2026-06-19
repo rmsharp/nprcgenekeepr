@@ -12,7 +12,7 @@ data(pedSameMaleIsSireAndDam)
 }
 \description{
 A data frame with 8 rows and 5 columns (ego_id,
-si.re, dam_id, sex, birth_date) representing a full pedigree in which the
+sire.id, dam_id, sex, birth_date) representing a full pedigree in which the
 same male animal is listed as both a sire and a dam.
 }
 \details{

@@ -20,7 +20,7 @@ test_that("summary.nprcgenekeeprErr provides expected output", {
   expect_identical(stri_count_regex(
     summary(qcStudbook(pedOne, reportChanges = TRUE, reportErrors = TRUE))$txt,
     "\\n"
-  ), 9L)
+  ), 10L) # sire.id normalizes via periodRemoved + sireIdToSire (one more line)
   pedTwo <- pedOne
   pedTwo$sex <- NULL
   expect_true(stri_detect_regex(

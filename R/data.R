@@ -3,7 +3,7 @@
 #' A loadable version of the example
 #' configuration file \code{example_nprcgenekeepr_config}.
 #' It contains a working version of a \strong{nprcgenekeepr} configuration
-#' file created the SNPRC.
+#' file created at the SNPRC.
 #' Users of LabKey's EHR can adapt it to their systems and put it
 #' in their home directory. Instructions are embedded as comments
 #' within the file.
@@ -21,16 +21,16 @@
 #' \item{sire}{-- the male parent of the animal indicated by the \code{id}
 #' column. Unknown sires are indicated with \code{NA}}
 #' \item{dam}{-- the female parent of the animal indicated by the \code{id}
-#' column.Unknown dams are indicated with \code{NA}}
-#' \item{sex}{-- factor with levels: "M", "F", "U". Sex specifier for an
+#' column. Unknown dams are indicated with \code{NA}}
+#' \item{sex}{-- factor with levels: "F", "M", "H", "U". Sex specifier for an
 #' individual.}
 #' \item{gen}{-- generation number (integers beginning with 0 for the founder
 #' generation) of the animal indicated by the \code{id} column.}
 #' \item{birth}{-- Date vector of birth dates}
 #' \item{exit}{-- Date vector of exit dates}
 #' \item{age}{-- numerical vector of age in years}
-#' \item{ancestry}{-- character vector or NA with free-form text providing
-#' information about the geographic population of origin.}
+#' \item{ancestry}{-- factor with levels: INDIAN, CHINESE, HYBRID, JAPANESE,
+#' OTHER, UNKNOWN indicating the geographic population of origin.}
 #' \item{origin}{-- character vector or \code{NA} (optional) that indicates
 #' the name of the facility that the individual was imported from if other than
 #' local.}
@@ -39,7 +39,7 @@
 #'  factor \{levels: ALIVE, DECEASED, SHIPPED, UNKNOWN\}. Vector of
 #' standardized status codes with the possible values
 #' ALIVE, DECEASED, SHIPPED, or UNKNOWN}
-#' \item{recordStats}{-- character vector with value of \code{"added"} or
+#' \item{recordStatus}{-- character vector with value of \code{"added"} or
 #'  \code{"original"}.}
 #' }
 #' @examples
@@ -94,7 +94,7 @@
 #' \item{sire}{the male parent of the animal indicated by the \code{id} column.
 #' Unknown sires are indicated with \code{NA}}
 #' \item{dam}{the female parent of the animal indicated by the \code{id}
-#' column.Unknown dams are indicated with \code{NA}}
+#' column. Unknown dams are indicated with \code{NA}}
 #' \item{gen}{generation number (integers beginning with 0 for the founder
 #' generation) of the animal indicated by the \code{id} column.}
 #' \item{population}{logical vector with all values set TRUE}
@@ -132,13 +132,13 @@
 #' the \code{id} column during iteration 1 of gene dropping performed by
 #' \code{geneDrop}.}
 #' \item{V2}{alleles assigned to the parents of the animals identified in
-#' the \code{id} column during iteration 1 of gene dropping performed by
+#' the \code{id} column during iteration 2 of gene dropping performed by
 #' \code{geneDrop}.}
 #' \item{V3}{alleles assigned to the parents of the animals identified in
-#' the \code{id} column during iteration 1 of gene dropping performed by
+#' the \code{id} column during iteration 3 of gene dropping performed by
 #' \code{geneDrop}.}
 #' \item{V4}{alleles assigned to the parents of the animals identified in
-#' the \code{id} column during iteration 1 of gene dropping performed by
+#' the \code{id} column during iteration 4 of gene dropping performed by
 #' \code{geneDrop}.}
 #' \item{id}{character vector of animal IDs provided to the gene dropping
 #' function \code{geneDrop}.}
@@ -151,7 +151,7 @@
 "ped1Alleles"
 #' Example studbook with a duplicated record
 #'
-#' A data frame with 9 rows and 5 columns (ego_id, si.re,
+#' A data frame with 9 rows and 5 columns (ego_id, sire.id,
 #' dam_id, sex, birth_date) representing a full pedigree with a duplicated
 #' record.
 #'
@@ -163,7 +163,7 @@
 "pedDuplicateIds"
 #' Example studbook with sex-mismatched parents
 #'
-#' A data frame with 8 rows and 5 columns (ego_id, si.re,
+#' A data frame with 8 rows and 5 columns (ego_id, sire.id,
 #' dam_id, sex, birth_date) representing a full pedigree with the errors of
 #' having a sire labeled as female and a dam labeled as male.
 #'
@@ -175,7 +175,7 @@
 "pedFemaleSireMaleDam"
 #' Valid example studbook (no QC errors)
 #'
-#' A data frame with 8 rows and 5 columns (ego_id, si.re, dam_id,
+#' A data frame with 8 rows and 5 columns (ego_id, sire.id, dam_id,
 #' sex, birth_date) representing a full pedigree with no errors.
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
@@ -198,7 +198,7 @@
 "pedInvalidDates"
 #' Example studbook missing the birth date column
 #'
-#' A data frame with 8 rows and 4 columns (ego_id, si.re,
+#' A data frame with 8 rows and 4 columns (ego_id, sire.id,
 #' dam_id, sex) representing a full pedigree that is missing the birth_date
 #' column.
 #'
@@ -220,7 +220,7 @@
 #' Example studbook with a male as both sire and dam
 #'
 #' A data frame with 8 rows and 5 columns (ego_id,
-#' si.re, dam_id, sex, birth_date) representing a full pedigree in which the
+#' sire.id, dam_id, sex, birth_date) representing a full pedigree in which the
 #' same male animal is listed as both a sire and a dam.
 #'
 #' It is one of six pedigrees (\code{pedDuplicateIds},
@@ -270,8 +270,8 @@
 "pedWithGenotypeReport"
 #' Potential breeder IDs (29 baboons)
 #'
-#' A list of 29 baboon IDs that are potential breeders.
-#' @source qcBreeders is a list of 3 males and 26 females from
+#' A character vector of 29 baboon IDs that are potential breeders.
+#' @source qcBreeders is a character vector of 3 males and 26 females from
 #' the \code{qcPed} data set.
 #'
 #' \describe{
@@ -339,10 +339,10 @@
 #'
 #' A dataframe with two haplotypes per animal.
 #'
-#' There are  object.
+#' There are 31 rows and 3 columns.
 #'
 #' Represents 31 animals that are also in the obfuscated \code{rhesusPedigree}
-#' pedigree from \emph{rhesusGenotypes.csv}.
+#' pedigree from \emph{obfuscated_rhesus_mhc_breeder_genotypes.csv}.
 #' \describe{
 #' \item{id}{-- character column of animal IDs}
 #' \item{first_name}{-- a generic name for the first haplotype}
@@ -355,20 +355,21 @@
 #' Obfuscated rhesus pedigree object
 #'
 #' A pedigree object.
-#' Represents an obfuscated pedigree from \emph{rhesusPedigree.csv} where the
+#' Represents an obfuscated pedigree from \emph{obfuscated_rhesus_mhc_ped.csv} where the
 #' IDs and dates have been modified to de-identify the data.
 #' \describe{
 #' \item{id}{-- character column of animal IDs}
 #' \item{sire}{-- the male parent of the animal indicated by the \code{id}
 #' column. Unknown sires are indicated with \code{NA}}
 #' \item{dam}{-- the female parent of the animal indicated by the \code{id}
-#' column.Unknown dams are indicated with \code{NA}}
-#' \item{sex}{-- factor with levels: "M", "F", "U". Sex specifier for an
+#' column. Unknown dams are indicated with \code{NA}}
+#' \item{sex}{-- factor with levels: "F", "M". Sex specifier for an
 #' individual.}
 #' \item{gen}{-- generation number (integers beginning with 0 for the founder
 #' generation) of the animal indicated by the \code{id} column.}
-#' \item{birth}{-- Date vector of birth dates}
-#' \item{exit}{-- Date vector of exit dates}
+#' \item{birth}{-- \code{Date} vector of birth dates}
+#' \item{exit}{-- \code{Date} vector, all \code{NA} (no exit dates are recorded
+#' in this obfuscated pedigree)}
 #' \item{age}{-- numerical vector of age in years}
 #' }
 #' @examples
