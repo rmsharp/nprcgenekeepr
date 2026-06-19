@@ -1,126 +1,58 @@
-## Bug fix in unit test plus minor code style improvements
-This is a bug fix in the unit test `test-get_elapsed_time_str.R`, which was
-unnecessarily using `proc.time()` to measure elapsed time. Its use has
-been replaced by mocking `proc.time()` using the `mockery` package.
+## Resubmission
 
-## Test environments (P/F; Pass/Fail)
+This is a resubmission of an archived package as a new major version, 2.0.0.
 
-*  There were 18 Passes (P)
-*  There were 12 Failures (F)
-   *   2 m1-san and macos-arm64 had "ERROR: compilation failed for package ‘httpuv’"
-   *   1 rchk had "No files were found with the provided path: check."
-   *   9 had "there is no package called ‘pak’"
- 
-── Virtual machines ─────────────────
+`nprcgenekeepr` was archived on CRAN on 2025-07-29 ("Archived ... as issues were
+not corrected in time"). It had been accepted and published as 1.0.8 on
+2025-07-26; the issue subsequently raised on the R-package-devel list was
+"Tested elapsed times" (CRAN example / test / vignette timing limits).
 
-*  P  1 linux
-   All R versions on GitHub Actions ubuntu-latest
-*  F  2 m1-san ERROR: compilation failed for package ‘httpuv’
-   All R versions on GitHub Actions macos-15, ASAN + UBSAN on macOS
-*  P  3 macos
-   All R versions on GitHub Actions macos-13
-*  F  4 macos-arm64 ERROR: compilation failed for package ‘httpuv’
-   All R versions on GitHub Actions macos-latest
-*  P  5 windows
-   All R versions on GitHub Actions windows-latest
+For 2.0.0, the elapsed times were re-profiled under
+`R CMD check --as-cran --timings`. The timing condition that led to archival no
+longer reproduces on the 2.0.0 codebase: the slowest single example runs in about
+1.4 seconds (no example exceeds 5 seconds) -- roughly 3-5x inside CRAN's soft
+per-example limit -- and the examples (about 20s), tests (about 43s), and
+vignette-rebuild (about 16s) phases each complete in well under a minute. The
+win-builder and R-hub results below re-confirm these times on independent, and
+slower, hardware before submission.
 
-── Containers ────────────────────────
+A previously undeclared test-time dependency (`withr`) was also declared in
+Suggests, which had produced a check WARNING.
 
-*  F  6 atlas  [ATLAS] - there is no package called ‘pak’
-   R Under development (unstable) (2025-07-15 r88411) on Fedora Linux 38 (Container Image)
-   ghcr.io/r-hub/containers/atlas:latest
-*  P  7 c23  [C23]
-   R Under development (unstable) (2025-07-15 r88411) on Ubuntu 22.04.5 LTS
-   ghcr.io/r-hub/containers/c23:latest
-*  P  8 clang-asan  [asan, clang-ASAN]
-   R Under development (unstable) (2025-07-15 r88411) on Ubuntu 22.04.5 LTS
-   ghcr.io/r-hub/containers/clang-asan:latest
-*  P  9 clang-ubsan  [clang-UBSAN, ubsan]
-   R Under development (unstable) (2025-07-15 r88411) on Ubuntu 22.04.5 LTS
-   ghcr.io/r-hub/containers/clang-ubsan:latest
-*  P 10 clang16  [clang16]
-   R Under development (unstable) (2025-07-15 r88411) on Ubuntu 22.04.5 LTS
-   ghcr.io/r-hub/containers/clang16:latest
-*  P 11 clang17  [clang17]
-   R Under development (unstable) (2025-07-15 r88411) on Ubuntu 22.04.5 LTS
-   ghcr.io/r-hub/containers/clang17:latest
-*  P 12 clang18  [clang18]
-   R Under development (unstable) (2025-07-15 r88411) on Ubuntu 22.04.5 LTS
-   ghcr.io/r-hub/containers/clang18:latest
-*  P 13 clang19  [clang19]
-   R Under development (unstable) (2025-07-15 r88411) on Ubuntu 22.04.5 LTS
-   ghcr.io/r-hub/containers/clang19:latest
-*  P 14 clang20  [clang20]
-   R Under development (unstable) (2025-06-03 r88266) on Ubuntu 22.04.5 LTS
-   ghcr.io/r-hub/containers/clang20:latest
-*  P 15 donttest  [donttest]
-   R Under development (unstable) (2025-07-15 r88411) on Ubuntu 22.04.5 LTS
-   ghcr.io/r-hub/containers/donttest:latest
-*  F 16 gcc-asan  [gcc-ASAN, gcc-UBSAN] there is no package called ‘pak’
-   R Under development (unstable) (2025-07-15 r88411) on Fedora Linux 40 (Container Image)
-   ghcr.io/r-hub/containers/gcc-asan:latest
-*  F 17 gcc13  [gcc13] there is no package called ‘pak’
-   R Under development (unstable) (2025-07-15 r88411) on Fedora Linux 38 (Container Image)
-   ghcr.io/r-hub/containers/gcc13:latest
-*  F 18 gcc14  [gcc14] there is no package called ‘pak’
-   R Under development (unstable) (2025-07-15 r88411) on Fedora Linux 40 (Container Image)
-   ghcr.io/r-hub/containers/gcc14:latest
-*  F 19 gcc15  [gcc15] there is no package called ‘pak’
-   R Under development (unstable) (2025-07-15 r88411) on Fedora Linux 42 (Container Image)
-   ghcr.io/r-hub/containers/gcc15:latest
-*  F 20 intel  [Intel] there is no package called ‘pak’
-   R Under development (unstable) (2025-07-15 r88411) on Fedora Linux 38 (Container Image)
-   ghcr.io/r-hub/containers/intel:latest
-*  F 21 mkl  [MKL] there is no package called ‘pak’
-   R Under development (unstable) (2025-07-15 r88411) on Fedora Linux 38 (Container Image)
-   ghcr.io/r-hub/containers/mkl:latest
-*  P 22 nold  [noLD]
-   R Under development (unstable) (2025-07-15 r88411) on Ubuntu 22.04.5 LTS
-   ghcr.io/r-hub/containers/nold:latest
-*  P 23 noremap  [noRemap]
-   R Under development (unstable) (2025-07-15 r88411) on Ubuntu 22.04.5 LTS
-   ghcr.io/r-hub/containers/noremap:latest
-*  F 24 nosuggests  [noSuggests] there is no package called ‘pak’
-   R Under development (unstable) (2025-07-15 r88411) on Fedora Linux 38 (Container Image)
-   ghcr.io/r-hub/containers/nosuggests:latest
-*  F 25 rchk  [rchk] No files were found with the provided path: check.
-   R Under development (unstable) (2025-07-15 r88411) on Ubuntu 22.04.5 LTS
-   ghcr.io/r-hub/containers/rchk:latest
-*  P 26 ubuntu-clang  [r-devel-linux-x86_64-debian-clang]
-   R Under development (unstable) (2025-07-15 r88411) on Ubuntu 22.04.5 LTS
-   ghcr.io/r-hub/containers/ubuntu-clang:latest
-*  P 27 ubuntu-gcc12  [r-devel-linux-x86_64-debian-gcc]
-   R Under development (unstable) (2025-07-15 r88411) on Ubuntu 22.04.5 LTS
-   ghcr.io/r-hub/containers/ubuntu-gcc12:latest
-*  P 28 ubuntu-next  [r-next, r-patched, r-patched-linux-x86_64]
-   R version 4.5.1 Patched (2025-07-14 r88411) on Ubuntu 22.04.5 LTS
-   ghcr.io/r-hub/containers/ubuntu-next:latest
-*  P 29 ubuntu-release  [r-release, r-release-linux-x86_64, ubuntu]
-   R version 4.5.1 (2025-06-13) on Ubuntu 22.04.5 LTS
-   ghcr.io/r-hub/containers/ubuntu-release:latest
-*  F 30 valgrind  [valgrind] there is no package called ‘pak’
-   R Under development (unstable) (2025-07-15 r88411) on Fedora Linux 38 (Container Image)
-   ghcr.io/r-hub/containers/valgrind:latest
+2.0.0 is a major release. See `NEWS.md` for the user-facing Major / Minor
+changes, including breaking changes: rejection of a period in `id`, `sire`, or
+`dam` values; removed exports; and the soft-deprecation of `runGeneKeepR()` in
+favour of `runModularApp()`.
 
-## Local R CMD check results
+## R CMD check results
 
-0 errors | 0 warnings | 0 note
+Local `R CMD check --as-cran` (macOS, R 4.6.0) on the built 2.0.0 tarball:
 
-*  Some test systems are reading historical sections of the NEWS file and 
-   falsely identifying an old URL as possibly incorrect. Please ignore the note.
-*  Automated tests indicate that 
-   URL: https://pmc.ncbi.nlm.nih.gov/articles/PMC4671785/
-   is inaccessable (403) and it is accessable as of 2025-07-25 CST.
-   I suspect the website is blocked to the automated access request.
-*  Words identified as possible misspellings in DESCRIPTION: EHR, Raboin, and
-   kinships are all correctly spelled.
+    0 errors | 0 warnings | 2 notes
 
+* NOTE 1 -- checking CRAN incoming feasibility:
+  "New submission" and "Package was archived on CRAN" / "Archived on 2025-07-29
+  as issues were not corrected in time." This is expected for the resubmission;
+  the timing cause is addressed above. This note also reports possibly-misspelled
+  words in DESCRIPTION (for example "Raboin" -- an author surname -- "EHR",
+  "LabKey", "studbooks", and "kinships") and the reference URL
+  <https://pmc.ncbi.nlm.nih.gov/articles/PMC4671785/>: the words are all spelled
+  correctly, and the URL returns 403 to automated checkers but is reachable in a
+  browser.
 
-## Reverse dependencies
+* NOTE 2 -- checking HTML version of manual:
+  This note does not arise on CRAN's check machines. It appears here only because
+  the local machine's HTML Tidy is outdated and the V8 package is not installed,
+  so both sub-checks ("'tidy' not recent enough", "package 'V8' unavailable") are
+  skipped locally. CRAN's machines have both.
 
-* There are currently no downstream dependencies for this package.
+## Test environments
 
-## Reverse dependencies
+* Local: macOS, R 4.6.0 -- `R CMD check --as-cran` (results above)
+* win-builder: R-devel, R-release, R-oldrelease -- to be run before submission
+* R-hub v2: linux, windows, macos -- to be run before submission
 
-* There are currently no downstream dependencies for this package.
+## Downstream dependencies
 
+There are currently no reverse/downstream dependencies for this package on CRAN
+(the `revdep/README.md` Revdeps section is empty).
