@@ -22,6 +22,14 @@
 # being queried.
 # mapPedColumns are a one to one mapping of the lkPedColumns to the column
 # names used by the nprcgenekeepr package.
+#
+# Note: lkPedColumns is center-specific. This SNPRC example uses the flat parent
+# columns "dam" and "sire", which exist as direct columns on the SNPRC
+# demographics table. An ONPRC instance instead uses the lookup-traversal form
+# "Id/parents/dam" and "Id/parents/sire", which resolves to the curated
+# genetic-preferred parentage. (The package's built-in no-config default uses
+# the ONPRC form; see getSiteInfo().) Set lkPedColumns to the form your center's
+# LabKey instance exposes; mapPedColumns is unchanged.
 
 # To use this file or one similar, it must be renamed to "_nprcgenekeepr_config"
 # for users of Microsoft Windows operating systems and ".nprcgenekeepr_config"

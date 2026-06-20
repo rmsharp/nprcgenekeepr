@@ -32,6 +32,26 @@ test_that("loadSiteConfig parses the documented config format (#50)", {
   expect_gte(length(cfg$lkPedColumns), 6L)
 })
 
+test_that("example config keeps the flat SNPRC lkPedColumns form (Rec #2)", {
+  # Characterization guard: the shipped example is an SNPRC template, so its
+  # lkPedColumns must stay the FLAT dam/sire form (direct columns), NOT the
+  # ONPRC Id/parents/dam lookup-traversal form. Stays green before and after the
+  # Rec #2 doc reconciliation; fails loudly if anyone "aligns" the example to the
+  # lookup form (which would make the SNPRC example incorrect).
+  tmp <- withr::local_tempdir()
+  withr::local_envvar(c(HOME = tmp))
+  example_cfg <- system.file("extdata", "example_nprcgenekeepr_config",
+                             package = "nprcgenekeepr")
+  cfg_name <- basename(getConfigFileName(Sys.info())[["configFile"]])
+  file.copy(example_cfg, file.path(tmp, cfg_name))
+  cfg <- loadSiteConfig()
+  expect_equal(
+    cfg$lkPedColumns,
+    c("Id", "gender", "birth", "death", "lastDayAtCenter", "dam", "sire")
+  )
+  expect_false(any(grepl("/", cfg$lkPedColumns, fixed = TRUE)))
+})
+
 test_that("loadSiteConfig returns NULL (no crash) on a malformed config (#50)", {
   # tryCatch safety net: a present-but-unparseable file -- here missing the
   # required 'center' definition, which getParamDef() stop()s on -- must not
