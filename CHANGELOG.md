@@ -15,6 +15,39 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-20 — Published S143 + S144 to `master` via PR \#56 (LabKey API-key auth now green across 5 platforms) (Session 145)
+
+- **Deliverable (owner pick “Publish S144”; publish path “PR, CI, then
+  merge” via `AskUserQuestion`):** push the local `labkey-apikey-auth`
+  branch (2 unpushed commits — S143 close-out `1a61dd4a` + S144 auth
+  feature `6b0e892b`), open a PR to `master`, watch CI go green, merge.
+  **VERIFICATION/admin phase** — no production-code change, no TDD
+  gates; **0 stakeholder corrections.**
+- **PR \#56 (`labkey-apikey-auth` → `master`):** pushed the branch,
+  opened the PR with a scoped body. Watched all checks → **10/10 PASS**
+  (`lint` 4m6s; all 5 `R CMD check` platforms — macOS / Windows / Ubuntu
+  devel+oldrel+release; `pkgdown`; `test-coverage`; `codecov/patch`;
+  `codecov/project`). This is the first time the S144 API-key auth
+  feature is verified green across **all 5 platforms** (S144 had only a
+  local single-platform `R CMD check` OK + mocked tests). Confirmed
+  `mergeStateStatus: CLEAN` before merging (did not merge blind —
+  Learning 133).
+- **Merge + reconcile:** `gh pr merge 56 --merge` → merge commit
+  **`a39e73dc`**; verified it landed (`state: MERGED`; both `6b0e892b`
+  and `1a61dd4a` are ancestors of `origin/master`; `DESCRIPTION` Version
+  still 2.0.0). Reconciled local `master` with `git fetch` +
+  (strict-ancestor confirmed) `git reset --hard origin/master` — not
+  `git pull` (Learning 135). The 3 auth files (`R/setLabKeyDefaults.R`,
+  `R/getConfigApiKey.R`, `R/hasNetrc.R`) confirmed present on `master`.
+- **State:** `master` (local + `origin`) at `a39e73dc`, 2.0.0. The
+  feature branch `labkey-apikey-auth` is now merged & dormant (local +
+  remote still exist — a deletion candidate, owner’s call, the same
+  hygiene S143 did for `add-methodology`). The live LabKey-server
+  handshake remains unverified-from-here (inherited from S144); CI now
+  confirms build/test/lint green across 5 platforms. **No new project
+  learning warranted** (executed the S142-established publish pattern
+  cleanly).
+
 ### 2026-06-19 — Explicit optional LabKey API-key authentication with netrc fallback (Session 144)
 
 - **Deliverable (owner pick from the LabKey research doc’s three
