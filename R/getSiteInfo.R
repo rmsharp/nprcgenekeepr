@@ -62,17 +62,15 @@ getSiteInfo <- function(expectConfigFile = TRUE) {
         config[["configFile"]], ".\n"
       )
     }
+    defaults <- defaultSiteParams()
     list(
-      center = "ONPRC",
-      baseUrl = "https://primeuat.ohsu.edu",
-      schemaName = "study",
-      folderPath = "/ONPRC/EHR", # nolint: nonportable_path_linter
-      queryName = "demographics",
-      lkPedColumns = c(
-        "Id", "gender", "birth", "death", "lastDayAtCenter",
-        "Id/parents/dam", "Id/parents/sire" # nolint: nonportable_path_linter
-      ),
-      mapPedColumns = c("id", "sex", "birth", "death", "exit", "dam", "sire"),
+      center = defaults[["center"]],
+      baseUrl = defaults[["baseUrl"]],
+      schemaName = defaults[["schemaName"]],
+      folderPath = defaults[["folderPath"]],
+      queryName = defaults[["queryName"]],
+      lkPedColumns = defaults[["lkPedColumns"]],
+      mapPedColumns = defaults[["mapPedColumns"]],
       sysname = sysInfo[["sysname"]],
       release = sysInfo[["release"]],
       version = sysInfo[["version"]],

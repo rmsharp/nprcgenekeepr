@@ -12,9 +12,12 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       API-key auth with `.netrc` fallback + clear error) DONE — S144, `setLabKeyDefaults()`.
       Rec #1 (`Rlabkey` version floor) DONE — S146, `Rlabkey (>= 3.2.0)` in `DESCRIPTION` (all four
       EHR-module repos target LabKey 26.6; the live ONPRC/SNPRC server version, doc §8.1, is still
-      unobserved). See `CHANGELOG.md`.** Remaining quick win (before CRAN re-submission): **Rec #2** —
-      move the hardcoded ONPRC defaults out of `getSiteInfo()` into config + reconcile the
-      example-config drift (flat `dam`/`sire` vs `Id/parents/dam`). Larger: formalize a data-source
+      unobserved). See `CHANGELOG.md`.
+      Rec #2 (config-ize the ONPRC defaults) DONE — S147: centralized into the internal
+      `defaultSiteParams()` (single source of truth for `getSiteInfo()`'s no-config fallback; no
+      behavior change) + documented the center-specific `lkPedColumns` form in the example config
+      (flat `dam`/`sire` = SNPRC direct columns; `Id/parents/dam` = ONPRC curated lookup). All three
+      quick wins (Rec #1/#2/#3) DONE.** Larger: formalize a data-source
       adapter on the existing `getPedDirectRelatives` seam + a mocked integration test (would consume
       the new `setLabKeyDefaults()` auth on the adapter's LabKey provider). Each is a candidate GitHub
       issue / separate implementation session. (Deferred until measured: server-side filtering /
