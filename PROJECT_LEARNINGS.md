@@ -9233,3 +9233,73 @@ functions (expect the object_usage artifact), any new optional config
 token, any test of a credential/server/IO function, and any future work
 on nprcgenekeepr’s LabKey auth (start from `R/setLabKeyDefaults.R` +
 `docs/setup/labkey-authentication.md`).
+
+#### Learning 138 — Pinning a dependency VERSION FLOOR: derive the client-correctness minimum from the dependency’s OWN changelog matched to the EXACT call you make (every argument, not just the headline feature), and resolve a “what version does the site run” gate by mining the vendor’s open-source module repos (highest non-SNAPSHOT release branch = targeted version) — but a `>=` floor only enforces client-correctness + CRAN hygiene, NOT server-compat (a too-new client outrunning an old server needs an upper bound, which CRAN discourages). (S146, owner “1 then 2” — delete merged `labkey-apikey-auth` branch + `Rlabkey` version floor)
+
+**What happened.** Pinning the unversioned `Rlabkey,` in `DESCRIPTION`.
+The S143 research doc said the API-key arg landed in `Rlabkey` 2.1.130,
+but the package’s actual S144 call passes BOTH args —
+`labkey.setDefaults(apiKey=, baseUrl=)` — and `Rlabkey`’s own installed
+NEWS shows `baseUrl=` support landed one version LATER, at **2.1.131**
+(apiKey 2.1.130, baseUrl 2.1.131). So the true minimal
+client-correctness floor is 2.1.131, not 2.1.130 — a one-version
+off-by-one the doc would have led me into; reading the dependency’s
+changelog firsthand against the EXACT call (all arguments) caught it.
+The doc’s headline RISK was the opposite direction — a client too NEW
+for the live server (`Rlabkey` 3.x ratchets a LabKey-SERVER minimum:
+3.2.0 needs server ≥ 24.1, 3.4.1 ≥ 24.12) — but a `>=` floor cannot
+defend against that (only an upper bound would, and CRAN discourages
+upper bounds; server-compat is a deployment matter, not a DESCRIPTION
+constraint). To resolve the gated “what version do ONPRC/SNPRC run?”
+(research doc Open Q §8.1, previously framed as answerable only against
+the live server), I mined the four vendor EHR-module repos via a
+workflow: none pins a server version in-file (module versions are
+build-injected via `ManageVersion`/centralized Gradle), so the
+authoritative signal is the highest non-SNAPSHOT `release` branch name
+under LabKey’s `YY.M` scheme — **all four (base + ONPRC + SNPRC + NIRC)
+target 26.6** (corroborated by the newest `*-26.000-26.001.sql`
+dbscripts), adversarially verified per repo. Caveat carried into the
+handoff: a maintained release branch = the version the module code is
+BUILT FOR, NOT proof of the DEPLOYED production version (a center can
+run older) — bounded by the maintained range (~19.x..26.6) but not
+pinned. Net: the floor’s real job is client-correctness + CRAN hygiene,
+so the owner’s pick of a conservative `>= 3.2.0` (server ≥ 24.1,
+consistent with the 26.6 evidence) is a defensible POLICY bump above the
+2.1.131 correctness minimum, not a correctness necessity. Before writing
+“3.2.0” I confirmed firsthand it is a real release header in NEWS
+(`Changes in 3.2.0`, “only supported for LabKey Server v24.1 or later”)
+and that installed 3.4.6 ≥ 3.2.0 (claim never precedes evidence —
+Learning 137). Verified as a CONFIG change (owner pick “Config change, R
+CMD check”): `devtools::check()` Status OK 0/0/0 — a satisfied floor
+bump is runtime-inert, so no RED→GREEN→REFACTOR (no behavioral logic to
+test; the build equivalent IS the verification, and a guard test
+asserting the floor’s mere presence would be near-tautological).
+
+**Reflexes:** \[pin/bump a dependency floor against the dependency’s OWN
+NEWS/changelog, matched to the EXACT call you make — check EVERY
+argument’s introduction version, not just the headline feature (here
+`baseUrl=` at 2.1.131 was one past the `apiKey=` 2.1.130 a research doc
+cited)\]\[a `>=` floor protects only against a too-OLD client
+(client-correctness) + satisfies CRAN’s version-your-deps preference —
+it CANNOT stop a too-NEW client outrunning an old server; that’s a
+deployment concern, and CRAN discourages the `<=` upper bound that
+would\]\[resolve a “what server/site version is running” gate by mining
+the vendor’s open-source module repos: highest non-SNAPSHOT `release`
+branch = targeted version (LabKey = `YY.M`); `module.properties`
+`ManageVersion:true`/centralized-Gradle ⇒ NO in-file version pin, so the
+branch name is the signal — corroborate with dbscript version
+ranges\]\[ALWAYS distinguish module-TARGET (release branch) from
+DEPLOYED production version — a maintained branch proves what the code
+is built for, not what’s running; bound it by the maintained range and
+mark the residual unobserved\]\[confirm a specific version is a REAL
+release (changelog header) AND that the installed copy satisfies it
+BEFORE writing it into DESCRIPTION\]\[a DESCRIPTION version-floor change
+has no behavioral logic to unit-test — verify it as a CONFIG change via
+`R CMD check`/`devtools::check()` (the build equivalent); a satisfied
+floor bump is runtime-inert, so no RED→GREEN→REFACTOR and a
+presence-asserting guard test is near-tautological\]. **Apply:** any
+time you pin or bump a dependency version constraint, any “what version
+is the server/site on” question (mine the vendor repos), and any future
+`Rlabkey`/LabKey floor revisit on nprcgenekeepr (start from
+`DESCRIPTION` + `docs/research/labkey-integration-options-2026-06-19.md`
+§3.4 / §7 Rec 1 / §8.1).

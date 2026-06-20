@@ -15,6 +15,48 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-20 — Pinned `Rlabkey (>= 3.2.0)` version floor + deleted the merged `labkey-apikey-auth` branch (LabKey research Rec \#1) (Session 146)
+
+- **Deliverable (owner directive “1 then 2”, an owner-authorized 2-item
+  pairing):** (1) delete the merged-dormant `labkey-apikey-auth`
+  branch; (2) **LabKey research Rec \#1** — pin an `Rlabkey` version
+  floor in `DESCRIPTION`. Item 1 = VERIFICATION/admin (a ref op); item 2
+  = a **config/packaging change** (owner pick “Config change, R CMD
+  check” — a `DESCRIPTION` version floor has no behavioral logic to
+  unit-test, so **no TDD gates**). **0 stakeholder corrections.**
+- **Item 1 — branch deletion:** confirmed `labkey-apikey-auth` (local +
+  remote at `6b0e892b`) was a strict ancestor of `origin/master` (fully
+  merged via PR \#56), deleted local (`git branch -d`) + remote
+  (`git push origin --delete`); verified no ref remains and `master`
+  still carries the auth feature. (Same hygiene S143 did for
+  `add-methodology`.)
+- **Item 2 — `Rlabkey (>= 3.2.0)` floor (`DESCRIPTION:52`, commit
+  `4fd9bd40` on branch `rlabkey-version-floor`):** the package calls
+  `labkey.setDefaults(apiKey=, baseUrl=)` (S144) +
+  `labkey.selectRows()`; the minimal client-correctness floor is
+  **2.1.131** (apiKey landed in `Rlabkey` 2.1.130, baseUrl in 2.1.131 —
+  both verified firsthand in `Rlabkey` NEWS; the S143 research doc’s
+  “2.1.130” missed the `baseUrl=` arg). The owner chose the conservative
+  policy floor **3.2.0** (`Rlabkey` 3.2.0 assumes LabKey Server ≥ 24.1).
+- **Version research (workflow):** to resolve research-doc Open Q §8.1
+  (“what LabKey version do the centers run”), mined the four vendor
+  EHR-module repos (base + ONPRC + SNPRC + NIRC) via `gh api` — none
+  pins a server version in-file (`ManageVersion`/centralized Gradle), so
+  the signal is the highest non-SNAPSHOT `release` branch: **all four
+  target LabKey 26.6** (maintained range ~19.x..26.6; corroborated by
+  the newest `*-26.000-26.001.sql` dbscripts), adversarially verified
+  per repo. **Caveat:** module-target ≠ deployed production version (a
+  center can run older) — Open Q §8.1 remains strictly unobserved.
+- **Verification:** `devtools::check()` **Status OK (0/0/0)** — full
+  testthat suite + spelling + examples + `--run-donttest` + vignette
+  rebuild all passed; installed `Rlabkey` 3.4.6 satisfies the floor. A
+  `>=` floor removes the unversioned-dependency CRAN concern +
+  guarantees the client API the code calls is present; it cannot
+  constrain a too-new client against an old server (deployment matter;
+  CRAN discourages upper bounds). → Learning 138. The floor change is
+  committed on `rlabkey-version-floor` (unpushed — publishing is the
+  owner’s call).
+
 ### 2026-06-20 — Published S143 + S144 to `master` via PR \#56 (LabKey API-key auth now green across 5 platforms) (Session 145)
 
 - **Deliverable (owner pick “Publish S144”; publish path “PR, CI, then

@@ -14,11 +14,12 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 pass DONE (`docs/research/labkey-integration-options-2026-06-19.md`,
 S143). **Rec \#3 (explicit optional API-key auth with `.netrc`
 fallback + clear error) DONE — S144,
-[`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md);
-see `CHANGELOG.md`.** Remaining quick wins (before CRAN re-submission):
-(1) pin an `Rlabkey` version floor in `DESCRIPTION:52` — *needs the live
-ONPRC/SNPRC server version first (doc §8.1), or a conservative pick*;
-(2) move the hardcoded ONPRC defaults out of
+[`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md).
+Rec \#1 (`Rlabkey` version floor) DONE — S146, `Rlabkey (>= 3.2.0)` in
+`DESCRIPTION` (all four EHR-module repos target LabKey 26.6; the live
+ONPRC/SNPRC server version, doc §8.1, is still unobserved). See
+`CHANGELOG.md`.** Remaining quick win (before CRAN re-submission): **Rec
+\#2** — move the hardcoded ONPRC defaults out of
 [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
 into config + reconcile the example-config drift (flat `dam`/`sire` vs
 `Id/parents/dam`). Larger: formalize a data-source adapter on the
