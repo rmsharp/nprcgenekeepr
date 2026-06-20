@@ -9303,3 +9303,83 @@ is the server/site on” question (mine the vendor repos), and any future
 `Rlabkey`/LabKey floor revisit on nprcgenekeepr (start from
 `DESCRIPTION` + `docs/research/labkey-integration-options-2026-06-19.md`
 §3.4 / §7 Rec 1 / §8.1).
+
+#### Learning 139 — Re-rendering a `github_document` Rmd (e.g. `NEWS.Rmd`) drops a `<name>.html` PREVIEW byproduct (`github_document`’s `html_preview: true` default) at the top level, which `R CMD check` then flags as a “Non-standard file/directory found at top level” NOTE — so after rendering NEWS, delete the stray `NEWS.html` (and any `*_files/` dir) BEFORE checking/committing. (S147, LabKey research Rec \#2)
+
+**What happened.** REFACTOR re-rendered `NEWS.Rmd` → `NEWS.md` via
+`rmarkdown::render("NEWS.Rmd")`. The Rmd’s
+`output: github_document: default` carries `html_preview = TRUE`, so the
+render ALSO wrote a `NEWS.html` preview (untracked, not git-ignored).
+The first `devtools::check()` came back **0 errors / 0 warnings / 1
+NOTE** — the NOTE being exactly “Non-standard file/directory found at
+top level: ‘NEWS.html’”, which would have broken the project’s standing
+0/0/0 bar. `rm -f NEWS.html` (it was untracked, never part of the
+intended change set) and a re-run of `devtools::check()` → **0/0/0**.
+(S144 also re-rendered NEWS but its handoff never flagged this — either
+it cleaned the artifact silently or the artifact predated its check
+baseline; recording it now so the next NEWS-rendering session expects
+it.) Permanent fixes exist but were left as candidates to avoid scope
+creep: set `html_preview: false` in the NEWS.Rmd YAML, or add
+`NEWS.html` to `.Rbuildignore` (the NOTE is about presence in the build,
+so `.Rbuildignore` is the real fix) and `.gitignore`.
+
+**Reflexes:** \[after
+[`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)
+of a `github_document` Rmd, expect a `<name>.html` preview byproduct
+(`html_preview` defaults TRUE) + possibly a `<name>_files/` dir — delete
+them before `R CMD check`/commit, or they surface as a top-level NOTE
+and flip OK→1-NOTE\]\[always re-run `devtools::check()` after removing
+any stray artifact before claiming 0/0/0\]\[permanent fixes (candidates,
+not done S147): `html_preview: false` in the Rmd YAML, or
+`.Rbuildignore` + `.gitignore` entries for `NEWS.html`\]. **Apply:** any
+session that re-renders `NEWS.Rmd` (or any `github_document`) and then
+runs `R CMD check`.
+
+#### Learning 140 — A research/recommendation doc can be internally inconsistent — its Recommendation prose can contradict its OWN ground-truth sections and the live codebase — so before implementing a recommendation, ground it firsthand against (a) the doc’s evidence sections and (b) the actual code; here BOTH of Rec \#2’s literal sub-instructions were unsafe for this repo. (S147, LabKey research Rec \#2)
+
+**What happened.** Implementing the LabKey research doc’s Rec \#2 (“move
+hardcoded ONPRC defaults into config; reconcile the example-config
+drift”), firsthand grounding showed both literal phrasings were wrong
+for this codebase: (1) the doc’s alternative “reduce the no-config
+fallback to a clear error” is a BREAKING change, not a quick win —
+`getSiteInfo(expectConfigFile = FALSE)`’s ONPRC fallback is
+load-bearing: it backs the Shiny app’s default launch
+(`appUI`/`appServer`/`modORIPReporting`) and its values/structure are
+pinned by 5 test files (`test_getSiteInfo`, `test_modSiteConfig`,
+`test-e2e-orip-module`, `test_shouldShowOripTab`,
+`test_modORIPReporting`) + the exported examples + the
+silent-`expectConfigFile = FALSE` contract; (2) the doc’s “align the
+example’s flat `dam`/`sire` to the `Id/parents/dam` lookup form” would
+make the SNPRC example WRONG — the SAME doc’s §4.3 establishes flat
+`dam`/`sire` is the CORRECT form for SNPRC (direct columns) and the
+lookup form is ONPRC-specific. I surfaced both contradictions to the
+owner via a pre-RED scope `AskUserQuestion`; the owner chose the safe
+readings — “Centralize, no behavior change” (extract the fallback into
+internal `defaultSiteParams()` as a single source of truth; return
+byte-identical) and “Document the center-specific form” (comment the
+example so a reader sees WHY SNPRC ≠ ONPRC, rather than unify it). Net
+deliverable matched the recommendation’s INTENT (one source of truth + a
+clear example) while rejecting its literal STEPS. The blast-radius
+inventory (grep every `getSiteInfo` caller + every test asserting its
+shape) was the load-bearing step that decided refactor-vs-breaking — the
+same evidence-based-inventory discipline a deletion/migration plan
+requires.
+
+**Reflexes:** \[before implementing a recommendation from a
+research/plan doc, ground it firsthand against BOTH the doc’s own
+evidence sections AND the live code — a Recommendation can contradict
+the same doc’s ground-truth (Rec \#2 vs §4.3) and the codebase (a “quick
+win” that’s actually breaking)\]\[for any change to a widely-used
+accessor’s fallback/shape, grep ALL callers + every test asserting its
+structure FIRST (here 5 test files + the app default-launch path +
+examples) — that inventory decides refactor vs breaking change\]\[when a
+recommendation’s literal steps are unsafe but its intent is sound,
+surface the contradiction via a pre-RED scope `AskUserQuestion` with the
+safe interpretations as options, then implement the intent, not the
+wrong literal step\]\[centralize-without-behavior-change = extract to
+one internal source + a fallback-equals-source agreement test + a
+characterization guard pinning the documented invariant; verify the
+consumer’s output is byte-identical to the pre-change literals\].
+**Apply:** any session acting on a recommendation from `docs/research/`
+or a plan doc (next up: Rec \#4, the data-source adapter), and any
+change to a shared accessor’s default/fallback.

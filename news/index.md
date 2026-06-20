@@ -14,6 +14,12 @@
     now configures authentication automatically before querying, so a
     missing credential fails fast instead of producing an opaque error
     later.
+- Documentation
+  - The example configuration file
+    (`inst/extdata/example_nprcgenekeepr_config`) now documents that
+    `lkPedColumns` is center-specific: SNPRC uses the flat `dam`/`sire`
+    columns (direct columns) while ONPRC uses the `Id/parents/dam`
+    lookup-traversal form (curated parentage).
 
 ## nprcgenekeepr 2.0.0 (20260618)
 

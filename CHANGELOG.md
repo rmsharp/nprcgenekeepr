@@ -15,6 +15,60 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-20 — Published S146 (PR \#57) + config-ized the ONPRC defaults (LabKey research Rec \#2) (Session 147)
+
+- **Deliverable (owner directive “Publish S146; LabKey Rec \#2”, an
+  owner-authorized 2-item pairing):** (1) publish S146’s
+  `Rlabkey (>= 3.2.0)` floor to `master`; (2) **LabKey research Rec
+  \#2** — config-ize the hardcoded ONPRC defaults in
+  [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md) +
+  reconcile the example-config drift. Item 1 = VERIFICATION/admin (push
+  → PR → CI → merge); item 2 = **strict-TDD** (RED → GREEN → REFACTOR,
+  all three gates via `AskUserQuestion`, plus a pre-RED scope
+  `AskUserQuestion`). **0 stakeholder corrections.**
+- **Item 1 — publish:** pushed `rlabkey-version-floor`, opened **PR
+  \#57** → `master`, watched CI go green (**11/11**: `lint`, all 5
+  `R CMD check` platforms, `pkgdown`, `test-coverage`, `codecov`
+  patch+project), confirmed `mergeStateStatus: CLEAN`, merged (merge
+  commit **`c12cfafd`**). Reconciled local `master` via `git fetch` +
+  (strict-ancestor confirmed) `reset --hard` (Learning 135). The floor
+  `Rlabkey (>= 3.2.0)` is now on `master` (`DESCRIPTION:52`).
+- **Item 2 scope (pre-RED `AskUserQuestion`, owner-chosen):**
+  “Centralize, no behavior change” + “Document the center-specific
+  form.” Firsthand grounding showed the research doc’s literal
+  alternatives are wrong for this codebase: the no-config ONPRC fallback
+  is **load-bearing** (it backs the Shiny app’s default launch and is
+  pinned by 5 test files + examples + the `expectConfigFile = FALSE`
+  contract), so “reduce the fallback to a clear error” would be a
+  **breaking** change, not a quick win; and flat `dam`/`sire` is
+  **correct** for SNPRC (direct columns, doc §4.3), so “align the
+  example to the lookup form” would make the SNPRC example wrong. →
+  Learning 140.
+- **Item 2 implementation (branch `labkey-config-defaults`):** new
+  internal `defaultSiteParams()` (`R/defaultSiteParams.R`, `@noRd`) is
+  the single source of truth for the seven ONPRC fallback params;
+  [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)’s
+  no-config branch now sources them from it, with the returned list
+  **byte-identical** (names/order/values), so the app + all 5
+  structure-pinning test files + examples stay green. RED-first:
+  `tests/testthat/test_defaultSiteParams.R` (canonical values/names + a
+  fallback-equals-source agreement test, made deterministic with
+  `withr::local_envvar(HOME = tempdir)`). The example config now
+  documents that `lkPedColumns` is center-specific (SNPRC flat
+  `dam`/`sire` = direct columns; ONPRC `Id/parents/dam` = curated
+  lookup); a characterization guard in `test_loadSiteConfig.R` pins the
+  SNPRC example’s flat form.
+- **Verification:** full testthat suite **0 failed / 0 error** (1943
+  passed; +17 vs S144 = the new assertions); `lint_package()` **0** (the
+  lone `object_usage_linter` flag on `defaultSiteParams` was the
+  stale-install artifact — clean once loaded; Learning 137);
+  `roxygenise` made **no** `NAMESPACE`/`man` change (`@noRd`);
+  **`devtools::check()` OK (0/0/0)**; runtime smoke confirmed
+  `getSiteInfo(expectConfigFile = FALSE)` returns values identical to
+  the pre-change literals. (Caught + removed a stray `NEWS.html` render
+  artifact that R CMD check flagged as a top-level NOTE —
+  `github_document` `html_preview` byproduct; → Learning 139.)
+
 ### 2026-06-20 — Pinned `Rlabkey (>= 3.2.0)` version floor + deleted the merged `labkey-apikey-auth` branch (LabKey research Rec \#1) (Session 146)
 
 - **Deliverable (owner directive “1 then 2”, an owner-authorized 2-item

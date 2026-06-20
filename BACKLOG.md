@@ -12,19 +12,22 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 **Act on the LabKey integration research recommendations** — research
 pass DONE (`docs/research/labkey-integration-options-2026-06-19.md`,
-S143). **Rec \#3 (explicit optional API-key auth with `.netrc`
+S143). \*\*Rec \#3 (explicit optional API-key auth with `.netrc`
 fallback + clear error) DONE — S144,
 [`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md).
 Rec \#1 (`Rlabkey` version floor) DONE — S146, `Rlabkey (>= 3.2.0)` in
 `DESCRIPTION` (all four EHR-module repos target LabKey 26.6; the live
 ONPRC/SNPRC server version, doc §8.1, is still unobserved). See
-`CHANGELOG.md`.** Remaining quick win (before CRAN re-submission): **Rec
-\#2** — move the hardcoded ONPRC defaults out of
-[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
-into config + reconcile the example-config drift (flat `dam`/`sire` vs
-`Id/parents/dam`). Larger: formalize a data-source adapter on the
-existing `getPedDirectRelatives` seam + a mocked integration test (would
-consume the new
+`CHANGELOG.md`. Rec \#2 (config-ize the ONPRC defaults) DONE — S147:
+centralized into the internal `defaultSiteParams()` (single source of
+truth for
+[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)‘s
+no-config fallback; no behavior change) + documented the center-specific
+`lkPedColumns` form in the example config (flat `dam`/`sire` = SNPRC
+direct columns; `Id/parents/dam` = ONPRC curated lookup). All three
+quick wins (Rec \#1/#2/#3) DONE.\*\* Larger: formalize a data-source
+adapter on the existing `getPedDirectRelatives` seam + a mocked
+integration test (would consume the new
 [`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md)
 auth on the adapter’s LabKey provider). Each is a candidate GitHub issue
 / separate implementation session. (Deferred until measured: server-side
