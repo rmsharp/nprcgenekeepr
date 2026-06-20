@@ -3,6 +3,18 @@ NEWS
 R. Mark Sharp, Ph.D.
 2026-01-26
 
+# nprcgenekeepr (development version)
+
+- New features
+  - Added the exported `setLabKeyDefaults()`, which configures `Rlabkey`
+    authentication for the session: it prefers an API key (from the
+    `NPRCGENEKEEPR_LABKEY_APIKEY` environment variable, then an `apiKey`
+    configuration-file token), falls back to a `.netrc`/`_netrc` file,
+    and otherwise stops with a clear `No LabKey credential found` error.
+    `getDemographics()` now configures authentication automatically
+    before querying, so a missing credential fails fast instead of
+    producing an opaque error later.
+
 # nprcgenekeepr 2.0.0 (20260618)
 
 - Major changes
