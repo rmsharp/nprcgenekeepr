@@ -20,6 +20,13 @@
     `lkPedColumns` is center-specific: SNPRC uses the flat `dam`/`sire`
     columns (direct columns) while ONPRC uses the `Id/parents/dam`
     lookup-traversal form (curated parentage).
+- Internal changes
+  - The LabKey pedigree fetch used by
+    [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+    is now obtained through an internal data-source adapter
+    (`getPedigreeSource()`), isolating the LabKey pull behind a single
+    seam and enabling offline, deterministic tests of the pedigree walk.
+    No change to behavior.
 
 ## nprcgenekeepr 2.0.0 (20260618)
 

@@ -15,6 +15,65 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-20 — Published S147 (PR \#58) + data-source adapter on the `getPedDirectRelatives` fetch boundary (LabKey research Rec \#4/#5) (Session 148)
+
+- **Deliverable (owner directive “Publish S147”, re-scoped via
+  `AskUserQuestion` after the owner flagged that a publish is admin, not
+  a true deliverable):** the S146/S147 2-item pairing — (1) publish
+  S147’s Rec \#2 work to `master`; (2) **LabKey research Rec \#4/#5** —
+  formalize a data-source adapter on the `getPedDirectRelatives` fetch
+  boundary + a deterministic mocked integration test. Item 1 =
+  VERIFICATION/admin; item 2 = **strict-TDD** (RED → GREEN → REFACTOR,
+  all three gates via `AskUserQuestion`, plus pre-RED **scope** and
+  **approach** `AskUserQuestion`s). **0 stakeholder corrections.**
+- **Item 1 — publish:** pushed `labkey-config-defaults`, opened **PR
+  \#58** → `master`, watched CI go green (**10/10**: `lint`, all 5
+  `R CMD check` platforms, `pkgdown`, `test-coverage`, `codecov`
+  patch+project), confirmed `mergeStateStatus: CLEAN` (did not merge
+  blind — Learning 133), merged (merge commit **`1dd0c7e6`**). The Rec
+  \#2 centralization is now on `master`.
+- **Item 2 grounding (→ Learning 141):** the research doc’s Rec \#4 said
+  to “make
+  [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+  delegate its walk to
+  [`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md),”
+  but reading both walks firsthand showed they are NOT equivalent —
+  [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+  walks a strict ancestor-up/descendant-down lineage (re-seeds from the
+  previous generation only) while
+  [`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
+  walks the full connected-component closure (re-seeds from all
+  accumulated ids, pulling in collaterals). So “delegate the walk” is a
+  **behavior change**, not a refactor — deferred. Owner (pre-RED scope
+  `AskUserQuestion`) chose the true-refactor slice: the **fetch boundary
+  only**, walk byte-identical; (approach `AskUserQuestion`) an
+  **internal `@noRd`** adapter.
+- **Item 2 implementation (branch `labkey-pedsource-adapter`):** new
+  internal
+  `getPedigreeSource(sourceType = c("labkey","dataframe"), siteInfo, ped)`
+  (`R/getPedigreeSource.R`, `@noRd`) — the `labkey` source pulls via
+  [`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+  in the existing `tryCatch`→NULL idiom and renames via `mapPedColumns`;
+  the `dataframe` source is the offline/deterministic seam.
+  [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+  now obtains `pedSourceDf` from the adapter; its walk + `addIdRecords`
+  tail are **byte-identical** (the ignored `unrelatedParents` arg
+  preserved). RED-first: new `tests/testthat/test_getPedigreeSource.R`
+  (6 tests) + a deterministic walk test in `test_getLkDirectRelatives.R`
+  (asserts the strict-lineage id set and the EXCLUDED collateral sibling
+  — the guard against silently swapping the walk; Rec \#5 satisfied).
+  The selector param is `sourceType` (not `source`) to satisfy
+  `undesirable_function_linter`.
+- **Verification:** full testthat suite **0 failed / 0 error** (1959
+  passed / 167 skipped); `lint_package()` **0**; `roxygenise` made
+  **no** `NAMESPACE`/`man` change (`@noRd`; verified after also removing
+  the now-unused `@import`/`@importFrom` tags from
+  `getLkDirectRelatives`); **`devtools::check()` OK (0/0/0)**; Phase-3E
+  runtime smoke exercised the real `getPedigreeSource` (dataframe
+  passthrough; the three error branches; the `getLkDirectRelatives`
+  rewiring). The Rec \#4 work is committed on `labkey-pedsource-adapter`
+  (unpushed — publishing is the owner’s call).
+
 ### 2026-06-20 — Published S146 (PR \#57) + config-ized the ONPRC defaults (LabKey research Rec \#2) (Session 147)
 
 - **Deliverable (owner directive “Publish S146; LabKey Rec \#2”, an

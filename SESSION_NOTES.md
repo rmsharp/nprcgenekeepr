@@ -7,6 +7,274 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 148 Did
+
+**Deliverable:** Owner-directed 2-item pairing (the S146/S147 pattern –
+trivial admin + one substantive deliverable): **(1)** publish S147’s
+LabKey Rec \#2 work (`defaultSiteParams()` centralization) from branch
+`labkey-config-defaults` to `master` \[admin/verification\]; **(2)**
+LabKey research **Rec \#4/#5** – formalize a data-source adapter on the
+`getPedDirectRelatives` **fetch boundary** + a deterministic mocked
+integration test \[the substantive deliverable, strict-TDD\]. **(BOTH
+DONE.)** **Started / Completed:** 2026-06-20 **Status:** **DONE.** Owner
+first said “Publish S147”; I claimed the session (1B stub) and started
+the publish, but the owner immediately flagged that **a publish is
+admin, not a true deliverable** – a correct call. I agreed, gave the
+honest analysis (the publish is the deferred tail of S147’s work), and
+**re-scoped via `AskUserQuestion`** to the 2-item pairing (publish rides
+along as the trivial admin item; the owner picked **Rec \#4** as the
+real work). Item 1 = **VERIFICATION/admin** (push -\> PR -\> CI -\>
+confirm CLEAN -\> merge; no production code -\> no TDD gates). Item 2 =
+**strict-TDD** (RED -\> GREEN -\> REFACTOR, all three phase gates via
+`AskUserQuestion`, preceded by a pre-RED **scope** `AskUserQuestion`
+(fetch-boundary slice vs walk-unification vs plan-only) and a pre-RED
+**approach** `AskUserQuestion` (internal `@noRd` vs exported)). **0
+stakeholder corrections.** Right-sized **SOLO** (a serial publish + one
+small cohesive TDD refactor against one package; fanning out
+file-mutating agents would risk conflicts and add no confidence over
+firsthand verification – the S144/S145/S147 rationale). - **REAL WORK
+\#1 – item 1, published with full CI gate (Learning 133/135):**
+`git fetch`; confirmed `labkey-config-defaults` was **2 ahead / 0 behind
+`origin/master`** (exactly S147’s two commits `cefc14a4` + `3da6723f`),
+origin/master a strict ancestor (clean publish); the uncommitted 1B stub
+was NOT pushed (commits only). `git push -u origin`; opened **PR \#58**
+-\> `master`; watched all checks via a background
+`gh pr checks 58 --watch` -\> **10/10 PASS** (`lint` 3m26s, all 5
+`R CMD check` platforms incl. ubuntu-devel 16m17s, `pkgdown`,
+`test-coverage`, `codecov` patch+project). Confirmed
+`mergeStateStatus: CLEAN` BEFORE `gh pr merge 58 --merge` -\> merge
+commit **`1dd0c7e6`**; verified it landed (PR `state: MERGED`; both
+`cefc14a4` and `3da6723f` are ancestors of `origin/master`). The Rec \#2
+centralization is now on `master`. - **REAL WORK \#2 – item 2 grounding
+caught a walk-divergence landmine (-\> Learning 141):** read
+`getPedDirectRelatives.R`, `getLkDirectRelatives.R`,
+`getDemographics.R`, `getParents.R`, `getOffspring.R`, `addIdRecords.R`,
+`test_getDemographics.R`, `test_getLkDirectRelatives.R`, `.lintr`, and
+the research doc (§5 Option B, §6 risk 6, §7 Rec 4/5). The doc’s Rec \#4
+says “make
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+delegate its walk to
+[`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)”
+– but reading both walks, they are **NOT equivalent**:
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+re-seeds `parents`/`offspring` from the **previous generation only** (a
+strict ancestor-up + descendant-down lineage), while
+[`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
+re-seeds from the **full accumulated id set** (the full
+connected-component closure, pulling in collaterals – siblings/cousins).
+So “delegate the walk” is a **behavior change**, not a refactor.
+Surfaced this via the pre-RED scope `AskUserQuestion`; owner chose
+**“Adapter at fetch boundary”** (true refactor, walk byte-identical) +
+**“Internal @noRd adapter.”** - **REAL WORK \#3 – strict TDD (RED -\>
+GREEN -\> REFACTOR):** **RED:** new
+`tests/testthat/test_getPedigreeSource.R` (6 tests: dataframe
+passthrough; dataframe validation errors; labkey rename via
+`mapPedColumns`; labkey NULL-on-warning + NULL-on-error; bad-source
+`match.arg`) + a deterministic walk test in
+`test_getLkDirectRelatives.R` (focal `O1` -\> strict-lineage set
+`{O1,S1,D1,GC1,X1}`, EXCLUDING the collateral sibling `O2` – the guard
+against swapping in the full-component walk). Ran -\> failing.
+**Caught + fixed a RED-discipline flaw:** the `expect_error` tests
+initially PASSED falsely (a bare `expect_error` is satisfied by “could
+not find function”) – constrained them to the intended error regexps so
+absence-of-function no longer satisfies them -\> genuinely RED.
+**GREEN:** new internal `R/getPedigreeSource.R` (`@noRd`,
+`sourceType = c("labkey","dataframe")`); rewired
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+to obtain `pedSourceDf` from the adapter, walk + `addIdRecords` tail
+**byte-identical** (the ignored `unrelatedParents` arg preserved).
+**REFACTOR:** removed the now-unused
+`@import futile.logger`/`@importFrom stringi stri_c` tags from
+`getLkDirectRelatives` (verified `git diff NAMESPACE` empty); NEWS.Rmd
+“Internal changes” entry + re-rendered NEWS.md;
+CHANGELOG/BACKLOG/PROJECT_LEARNINGS. - **REAL WORK \#4 – lint
+false-positive caught + resolved by rename, not nolint:**
+`undesirable_function_linter` flagged the selector parameter named
+`source` (the bare symbol resolves to base
+[`source()`](https://rdrr.io/r/base/source.html)). `.lintr` excludes
+`tests/` and there is no existing `source` identifier in `R/`. Rather
+than scatter `# nolint`, I **renamed the parameter `source` -\>
+`sourceType`** (lint-clean by construction; function name + behavior
+unchanged), updating the two `R/` files + the (lint-excluded but
+call-bound) test calls.
+
+**Phase-3E (runtime smoke test): SATISFIED.** The deliverable changes
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)’s
+runtime fetch path, so I exercised the **real, un-stubbed**
+`getPedigreeSource`: `"dataframe"` passthrough returns the ped
+identical; `ped=NULL` -\> error matching `data.frame`; missing
+`id/sire/dam` -\> error matching `column`; `"bogus"` -\> `match.arg`
+“should be one of”; and confirmed `getLkDirectRelatives`’s body now
+**calls `getPedigreeSource`** and **no longer calls `getDemographics`
+directly**. Build equivalent: **`devtools::check()` Status OK (0/0/0)**
+(full testthat suite + spelling + examples + vignette rebuild ran inside
+it). Full suite `test_dir`: **0 failed / 0 error / 1959 passed / 167
+skipped**; `lint_package()` **0**; `roxygenise` made **no**
+`NAMESPACE`/`man` change. Caught + removed the `NEWS.html` render
+artifact before check (Learning 139); no smart-quote artifacts in the
+NEWS.md diff (Learning 132).
+
+**Session 147 Handoff Evaluation (by Session 148): Score 9/10.** S147’s
+handoff (my own immediately-prior session) was a near-perfect executor’s
+map. Its SUGGESTED-NEXT listed **both of my items as the first and third
+options** – “(Publish S147) push `labkey-config-defaults` -\> PR -\> CI
+-\> merge” (both publish paths pre-stated) and “(LabKey Rec \#4 – the
+larger remaining work) formalize a data-source adapter on the
+`getPedDirectRelatives` seam + a mocked integration test. The last
+substantial LabKey item before CRAN re-submission.” Gotcha 1 (Rec \#2
+UNPUSHED on `labkey-config-defaults`; `master` at `c12cfafd`) held
+**exactly** firsthand (`2 ahead / 0 behind`). Every operational gotcha
+held: `pull.rebase=true` -\> `fetch` (used it), the NEWS.html render
+artifact (deleted it again), the load-bearing no-config fallback /
+`defaultSiteParams()` single-source-of-truth (the adapter consumes
+`siteInfo$lkPedColumns`/`mapPedColumns`, didn’t touch it),
+feature-branch -\> PR -\> merge convention. ROI strongly positive – I
+executed straight off it. **The -1 (to make it a 10):** it pointed at
+Rec \#4 as “formalize a data-source adapter … + a mocked integration
+test” but carried the research doc’s “delegate the walk” framing
+**without flagging that `getLkDirectRelatives`’s walk and
+`getPedDirectRelatives`’s walk produce different result sets** – the
+landmine I had to find firsthand in the grounding pass (Learning 141).
+Minor and discoverable (arguably the research doc’s gap, not the
+handoff’s), but naming it would have made it a 10.
+
+**Self-assessment (Session 148): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK read in chunks;
+dashboard 98/100; ghost-check -\> HEAD `3da6723f` = S147, no
+undocumented commits), reported, STOPPED for the owner; claimed the
+session (1B stub BEFORE technical work). **Headline strengths:** (1)
+**took the owner’s pushback seriously** – when the owner flagged
+“Publish S147” is not a true deliverable, I agreed, gave the honest
+analysis, and re-scoped to a genuine substantive deliverable via
+`AskUserQuestion` rather than dressing up an admin task
+(observation-vs-decision, applied); (2) **grounding caught the
+walk-divergence landmine** (`getLkDirectRelatives` strict-lineage vs
+`getPedDirectRelatives` full-component) and I surfaced it via the
+pre-RED scope `AskUserQuestion` rather than blindly following the doc
+-\> Learning 141; (3) **published item 1 with the full CI gate**
+(10/10 + CLEAN before merge, verified landed firsthand); (4) **strict
+TDD held end-to-end** – phase declared every response, scope +
+approach + all 3 gates, RED proven failing before GREEN, no impl in RED,
+REFACTOR behavior-neutral; (5) **caught my own RED-discipline flaw**
+(bare `expect_error` false-passes) and tightened the regexps so the
+tests genuinely fail RED; (6) **no-behavior-change verified, not
+assumed** – byte-identical walk + a characterization test that pins the
+strict lineage AND the deliberately-excluded collateral; (7) **lint
+false-positive resolved by rename, not `# nolint`** + cleaned the stale
+import tags with `git diff NAMESPACE` verification; (8) full
+verification – suite 0/0, lint 0, check 0/0/0, 3E, NEWS.html deleted;
+ASCII-only, plain language, 0 corrections, scope confined. **Weaknesses
+(honest):** (a) the **RED tests had false-passes on the first run**
+(caught + fixed, but a cleaner first pass would have constrained the
+`expect_error` regexps from the start); (b) the **lint false-positive on
+`source` cost a rename iteration** – anticipatable (a param named
+`source` is a known `undesirable_function_linter` trip); (c) **moderate
+difficulty** – a bounded TDD refactor + a publish; the value is the
+grounding discipline + the walk-divergence catch, not algorithmic depth;
+(d) the deliverable is the **fetch-boundary SLICE** of Rec \#4
+(walk-unification + a `file`/other-EHR provider deferred) – correct
+scoping (the full thing is a behavior change + ~1-2 days), but a slice.
+I reserve 9-10 for a higher-difficulty single deliverable with a clean
+first-pass (no RED false-pass fix, no lint-rename iteration).
+
+**Learnings:** **Learning 141** (two similarly-named functions can
+produce different result sets, so a “make A delegate its walk to B”
+recommendation is a BEHAVIOR change, not a refactor – read both
+algorithms + diff their results before unifying; the true-refactor slice
+is the FETCH boundary with the consuming algorithm byte-identical,
+locked with a characterization test) added to `PROJECT_LEARNINGS.md`.
+Carried as applied: 133 (don’t merge blind), 135 (`fetch` not `pull`),
+137 (re-lint after `load_all`), 139 (delete NEWS.html), 140 (ground a
+recommendation firsthand).
+
+**=\> SUGGESTED NEXT = owner’s pick.** Both items DONE. Item 1 published
+(`master` = `1dd0c7e6`). Item 2 (Rec \#4 fetch-slice) is committed on
+`labkey-pedsource-adapter` (UNPUSHED). Natural options (plain ASCII
+labels): - **(Publish S148)** push `labkey-pedsource-adapter` -\> PR -\>
+CI (lint + `R CMD check` x5) -\> merge (the S142 convention), OR
+fast-forward `master` + push. **Owner’s call** – I took no outward
+action on item 2’s publish. - **(Delete the merged
+`labkey-config-defaults` branch)** fully merged via PR \#58; local +
+remote can be deleted (the S143/S146 hygiene). Owner’s call. - **(LabKey
+Rec \#4 – walk unification, a BEHAVIOR CHANGE)** decide whether to unify
+`getLkDirectRelatives`’s strict ancestor/descendant walk with
+`getPedDirectRelatives`’s full-connected-component walk, and add a
+`file`/other-EHR provider on the new `getPedigreeSource` seam. Needs
+explicit acceptance that the live LabKey result set GROWS (adds
+collaterals). The deterministic test guards the current behavior, so
+this change is now safe to attempt deliberately. - **(Permanent
+NEWS.html fix)** tiny hygiene: `html_preview: false` in `NEWS.Rmd` or
+`NEWS.html` in `.Rbuildignore`/`.gitignore` (Learning 139). Candidate,
+not done this session. - **(Answer Open Q §8.1 against the live
+server)** the actual ONPRC/SNPRC LabKey server version (owner /
+live-server only). - **(CRAN Phase 5, owner-run)** win-builder x3 +
+R-hub v2 + `submit_cran()` – owner PAT + email; HARD STOP
+(`docs/planning/cran-2.0.0-phase5-runbook.md`). - **A GitHub issue** –
+\#46, \#45/#28/#9, \#2, \#37, \#36, \#29, or older
+\#13/#12/#11/#10/#5/#1. **Do NOT** bundle options (FM \#18/#25); **do
+NOT** start any without the owner picking.
+
+**Key files (this session):** **CHANGED – code (branch
+`labkey-pedsource-adapter`, this close-out commit):**
+`R/getPedigreeSource.R` (**NEW**, internal `@noRd` data-source adapter,
+`sourceType = c("labkey","dataframe")`), `R/getLkDirectRelatives.R`
+(fetch now via `getPedigreeSource("labkey")`; walk + `addIdRecords`
+byte-identical; removed now-unused `@import`/`@importFrom` tags),
+`tests/testthat/test_getPedigreeSource.R` (**NEW**, 6 tests),
+`tests/testthat/test_getLkDirectRelatives.R` (+ deterministic
+strict-lineage walk test), `NEWS.Rmd` + `NEWS.md` (“Internal changes”
+entry). **CHANGED – docs:** `CHANGELOG.md` (S148 `[Unreleased]`),
+`BACKLOG.md` (Rec \#4/#5 fetch-slice DONE; walk-unification +
+file-provider deferred), `PROJECT_LEARNINGS.md` (Learning 141),
+`SESSION_NOTES.md` (this handoff). **GIT:** item 1 published – **PR \#58
+MERGED** (merge `1dd0c7e6`); `origin/master` now at `1dd0c7e6`. New
+branch `labkey-pedsource-adapter` off `3da6723f` (UNPUSHED). **NO change
+to:** `NAMESPACE`, `man/` (`@noRd`), `data/`, `DESCRIPTION`. **Read
+firsthand:** `R/getPedDirectRelatives.R`, `R/getLkDirectRelatives.R`,
+`R/getDemographics.R`, `R/getParents.R`, `R/getOffspring.R`,
+`R/addIdRecords.R`, `R/defaultSiteParams.R`,
+`tests/testthat/test_getDemographics.R` + `test_getLkDirectRelatives.R`,
+`.lintr`, `docs/research/labkey-integration-options-2026-06-19.md` (§5
+Option B, §6 risk 6, §7 Rec 4/5). **NOT committed (standing keeps):**
+`PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`. **REMOVED
+(render artifact, never committed):** `NEWS.html`.
+
+**Gotchas:** (1) **S148’s Rec \#4 work is on branch
+`labkey-pedsource-adapter` (UNPUSHED after this commit); `origin/master`
+is at `1dd0c7e6`** (carries S147’s Rec \#2 + S146’s floor). **Local
+`master` may be stale at `c12cfafd`** – reconcile via `git fetch` +
+(strict-ancestor confirmed) `git reset --hard origin/master`, NOT
+`git pull` (Learning 135). Publishing S148 is the owner’s call. (2)
+**`labkey-config-defaults` is MERGED (via PR \#58) but still exists
+local + remote** – a deletion candidate (owner’s call; history preserved
+in merge `1dd0c7e6`). (3) **THE WALK DIVERGENCE IS LOAD-BEARING:**
+`getLkDirectRelatives` walks a **strict ancestor/descendant lineage**;
+`getPedDirectRelatives` walks the **full connected component** (adds
+collaterals). They are NOT interchangeable – the research doc’s
+“delegate the walk” is a **behavior change** (deferred). The
+deterministic test in `test_getLkDirectRelatives.R` pins the strict
+lineage (asserts `{O1,S1,D1,GC1,X1}`, excludes sibling `O2`) – it will
+FAIL if anyone swaps in the full-component walk. (4)
+**`getPedigreeSource` is INTERNAL (`@noRd`)**, selector param
+**`sourceType`** (not `source` – avoids `undesirable_function_linter`),
+values `"labkey"`\|`"dataframe"`; the `"dataframe"` source is the
+offline/deterministic seam (and the foundation for a future
+`file`/other-EHR provider). (5) **NEWS render artifact:** re-rendering
+`NEWS.Rmd` creates `NEWS.html` (`github_document` `html_preview`) which
+`R CMD check` flags as a top-level NOTE – delete it before check/commit
+(Learning 139; permanent fix not yet applied). (6) **`.lintr` excludes
+`tests/`** (so test files are not linted) and disables
+`coalesce_linter`; a parameter named `source` trips
+`undesirable_function_linter`. (7) **`git pull` is rebase**
+(`pull.rebase=true`) and chokes on the `.DS_Store` keep – use
+`git fetch` + `git reset --hard origin/<branch>` on a stale
+strict-ancestor branch (Learning 135). (8) **Standing keeps:**
+`.DS_Store` + `PED_GV_AUDIT_2026-05-30.html` – never commit. (9)
+Carried: feature-branch -\> PR -\> merge; package **ARCHIVED on CRAN
+2025-07-29**; CRAN Phase 5 owner-gated;
+[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAILS FAST without a credential (S144).
+
 ### What Session 147 Did
 
 **Deliverable:** Owner-directed 2-item pairing (“Publish S146; LabKey

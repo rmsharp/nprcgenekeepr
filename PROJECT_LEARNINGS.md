@@ -9383,3 +9383,57 @@ consumer’s output is byte-identical to the pre-change literals\].
 **Apply:** any session acting on a recommendation from `docs/research/`
 or a plan doc (next up: Rec \#4, the data-source adapter), and any
 change to a shared accessor’s default/fallback.
+
+#### Learning 141 — Two functions that look like the “same walk” can diverge in result, so a recommendation to “make A delegate its walk to B” is a BEHAVIOR change, not a refactor — read BOTH algorithms and diff their results on a worked example before unifying them. (S148, LabKey research Rec \#4 — data-source adapter)
+
+**What happened.** Rec \#4 of the LabKey research doc said to formalize
+a data-source adapter AND “make
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+delegate its walk to the source-agnostic
+[`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md).”
+Reading both walks firsthand showed they are NOT equivalent:
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+re-seeds `parents`/`offspring` from the PREVIOUS generation only
+(`parents <- getParents(ped, parents)`) — a strict ancestors-up +
+descendants-down lineage;
+[`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
+re-seeds from the FULL accumulated id set each iteration
+(`parents <- getParents(ped, ids)`, `ids` growing) — the full
+connected-component closure, which pulls in collaterals (siblings,
+cousins) because once a parent is added, the next iteration collects
+that parent’s other offspring. So “delegate the walk” would ENLARGE the
+live LabKey result set: a behavior change, not a refactor. The doc even
+hedged (“functionally analogous, not byte-identical; differ in seeding
+and accumulation”) — the code confirmed it materially. I scoped the
+session to the FETCH boundary only (extract the pull+normalize into
+internal `getPedigreeSource()`;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+keeps its exact walk), surfaced the walk-unification as a separate
+behavior-changing decision via a pre-RED scope `AskUserQuestion` (owner
+chose the true-refactor slice + an internal `@noRd` adapter via a second
+approach `AskUserQuestion`), and the deterministic RED test asserts the
+strict-lineage id set {O1,S1,D1,GC1,X1} while EXCLUDING the collateral
+sibling O2 — a guard that fails if anyone later swaps in the
+full-component walk.
+
+**Reflexes:** \[before unifying/delegating two similarly-named
+functions, read BOTH algorithms and diff their RESULTS on a worked
+example — superficial structural similarity (“both walk a pedigree”)
+hides a different result set\]\[a recommendation that says “make A
+delegate to B” is a behavior-change proposal until you have PROVEN A and
+B produce identical output — treat it like a breaking change, not a
+cleanup; this is Learning 140’s “ground the recommendation firsthand”
+applied to a refactor\]\[the true-refactor slice of “formalize the
+adapter” is the FETCH boundary (swap how data is OBTAINED) with the
+consuming algorithm byte-identical; lock the existing behavior with a
+characterization test (here: the id set incl. the deliberately-EXCLUDED
+collateral) before touching it\]\[an internal `@noRd` adapter that
+declares its own `@import`/`@importFrom` tags keeps NAMESPACE stable
+even when you remove those tags from the function it was extracted from
+— verify with `git diff NAMESPACE` after `roxygenise`\]\[a parameter
+named `source` trips `undesirable_function_linter` (the bare symbol
+resolves to base [`source()`](https://rdrr.io/r/base/source.html));
+rename it (e.g. `sourceType`) rather than scatter `# nolint`\].
+**Apply:** any “make X use/delegate-to Y” or “consolidate these two”
+task; any data-source/adapter extraction; any refactor claiming “no
+behavior change” over two non-identical code paths.

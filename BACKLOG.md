@@ -12,7 +12,7 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 **Act on the LabKey integration research recommendations** — research
 pass DONE (`docs/research/labkey-integration-options-2026-06-19.md`,
-S143). \*\*Rec \#3 (explicit optional API-key auth with `.netrc`
+S143). **Rec \#3 (explicit optional API-key auth with `.netrc`
 fallback + clear error) DONE — S144,
 [`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md).
 Rec \#1 (`Rlabkey` version floor) DONE — S146, `Rlabkey (>= 3.2.0)` in
@@ -21,18 +21,23 @@ ONPRC/SNPRC server version, doc §8.1, is still unobserved). See
 `CHANGELOG.md`. Rec \#2 (config-ize the ONPRC defaults) DONE — S147:
 centralized into the internal `defaultSiteParams()` (single source of
 truth for
-[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)‘s
+[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)’s
 no-config fallback; no behavior change) + documented the center-specific
 `lkPedColumns` form in the example config (flat `dam`/`sire` = SNPRC
 direct columns; `Id/parents/dam` = ONPRC curated lookup). All three
-quick wins (Rec \#1/#2/#3) DONE.\*\* Larger: formalize a data-source
-adapter on the existing `getPedDirectRelatives` seam + a mocked
-integration test (would consume the new
-[`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md)
-auth on the adapter’s LabKey provider). Each is a candidate GitHub issue
-/ separate implementation session. (Deferred until measured: server-side
-filtering / `executeSql` / consuming the centers’
-`study.Pedigree`/`ehr.kinship`.)
+quick wins (Rec \#1/#2/#3) DONE.** Rec \#4/#5 (formalize a data-source
+adapter on the `getPedDirectRelatives` seam + a deterministic mocked
+integration test) DONE (fetch-boundary slice) — S148: internal
+`getPedigreeSource()` (`labkey` \| `dataframe`) now backs
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)‘s
+fetch with the walk byte-identical, plus the first deterministic walk
+test. **Deferred (separate, behavior-CHANGING decision):** unifying
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)’s
+strict ancestor/descendant walk with
+[`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)’s
+full-connected-component walk, and adding a `file`/other-EHR provider.
+(Deferred until measured: server-side filtering / `executeSql` /
+consuming the centers’ `study.Pedigree`/`ehr.kinship`.)
 
 **Strengthen the shinytest2 E2E assertions + CI stability** — GitHub
 issue **\#40**, the open follow-on to the now-complete Phase 8 E2E
