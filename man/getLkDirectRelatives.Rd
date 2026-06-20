@@ -2,7 +2,7 @@
 % Please edit documentation in R/getLkDirectRelatives.R
 \name{getLkDirectRelatives}
 \alias{getLkDirectRelatives}
-\title{Get the direct ancestors of selected animals}
+\title{Get the direct relatives of selected animals from the LabKey EHR}
 \usage{
 getLkDirectRelatives(ids, unrelatedParents = FALSE)
 }
@@ -15,12 +15,17 @@ a place holder record where parent (\code{sire},
 \code{dam}) IDs are set to \code{NA}.}
 }
 \value{
-A data.frame with pedigree structure having all of the direct
-ancestors for the Ids provided.
+A data.frame with pedigree structure containing all direct relatives
+-- the full connected pedigree component (ancestors, descendants, and
+collaterals) -- for the Ids provided.
 }
 \description{
-Gets direct ancestors from labkey \code{study} schema and \code{demographics}
-table.
+Builds the pedigree of relatives for the provided focal animals from the
+LabKey \code{study} schema \code{demographics} table, obtained through the
+internal \code{getPedigreeSource()} adapter. The pedigree walk is delegated
+to \code{getPedDirectRelatives()}, so the result is the full connected
+pedigree component (ancestors, descendants, and collaterals such as siblings
+and mates) reachable from the focal animals.
 }
 \examples{
 \donttest{

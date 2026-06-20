@@ -1,12 +1,17 @@
-#' Get the direct ancestors of selected animals
+#' Get the direct relatives of selected animals from the LabKey EHR
 #'
 ## Copyright(c) 2017-2024 R. Mark Sharp
 ## This file is part of nprcgenekeepr
-#' Gets direct ancestors from labkey \code{study} schema and \code{demographics}
-#' table.
+#' Builds the pedigree of relatives for the provided focal animals from the
+#' LabKey \code{study} schema \code{demographics} table, obtained through the
+#' internal \code{getPedigreeSource()} adapter. The pedigree walk is delegated
+#' to \code{getPedDirectRelatives()}, so the result is the full connected
+#' pedigree component (ancestors, descendants, and collaterals such as siblings
+#' and mates) reachable from the focal animals.
 #'
-#' @return A data.frame with pedigree structure having all of the direct
-#' ancestors for the Ids provided.
+#' @return A data.frame with pedigree structure containing all direct relatives
+#' -- the full connected pedigree component (ancestors, descendants, and
+#' collaterals) -- for the Ids provided.
 #'
 #' @param ids character vector with Ids.
 #' @param unrelatedParents logical vector when \code{FALSE} the unrelated
@@ -28,33 +33,8 @@ getLkDirectRelatives <- function(ids, unrelatedParents = FALSE) {
   if (is.null(pedSourceDf)) {
     return(NULL)
   }
-  parents <- ids
-  offspring <- ids
-  len <- length(parents)
-  relativesDf <- pedSourceDf[pedSourceDf$id %in% ids, ]
-  while (len > 0L) {
-    parents <- getParents(pedSourceDf, parents)
-    offspring <- getOffspring(pedSourceDf, offspring)
-    len <- length(parents) + length(offspring)
-    if (len > 0L) {
-      if (length(parents) > 0L) {
-        relativesDf <- rbind(relativesDf,
-          pedSourceDf[pedSourceDf$id %in% parents, ],
-          stringsAsFactors = FALSE
-        )
-      }
-      if (length(offspring) > 0L) {
-        relativesDf <- rbind(relativesDf,
-          pedSourceDf[pedSourceDf$id %in% offspring, ],
-          stringsAsFactors = FALSE
-        )
-      }
-      relativesDf <- relativesDf[!duplicated(relativesDf$id), ]
-    }
-  }
-  unrelated <- unique(c(
-    relativesDf$sire[!relativesDf$sire %in% relativesDf$id],
-    relativesDf$dam[!relativesDf$dam %in% relativesDf$id]
-  ))
-  addIdRecords(ids = unrelated, fullPed = pedSourceDf, partialPed = relativesDf)
+  getPedDirectRelatives(
+    ids = ids, ped = pedSourceDf,
+    unrelatedParents = unrelatedParents
+  )
 }

@@ -11,6 +11,14 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 # nprcgenekeepr (development version)
+- Changes
+  - `getLkDirectRelatives()` now returns the full connected pedigree component
+    for the focal animals (ancestors, descendants, and collaterals such as
+    siblings, mates, and their lineages) by delegating its pedigree walk to
+    `getPedDirectRelatives()`. Previously it returned only the strict
+    ancestor/descendant lineage and omitted collateral relatives. Pedigrees
+    built from the LabKey/EHR path (via `getFocalAnimalPed()`) are now more
+    complete and consistent with the in-memory `getPedDirectRelatives()`.
 - New features
   - Added the exported `setLabKeyDefaults()`, which configures `Rlabkey`
     authentication for the session: it prefers an API key (from the
