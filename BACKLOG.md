@@ -9,15 +9,16 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 ## Up Next
 - [ ] **Act on the LabKey integration research recommendations** — research pass DONE
       (`docs/research/labkey-integration-options-2026-06-19.md`, S143). **Rec #3 (explicit optional
-      API-key auth with `.netrc` fallback + clear error) DONE — S144, `setLabKeyDefaults()`; see
-      `CHANGELOG.md`.** Remaining quick wins (before CRAN re-submission): (1) pin an `Rlabkey` version
-      floor in `DESCRIPTION:52` — *needs the live ONPRC/SNPRC server version first (doc §8.1), or a
-      conservative pick*; (2) move the hardcoded ONPRC defaults out of `getSiteInfo()` into config +
-      reconcile the example-config drift (flat `dam`/`sire` vs `Id/parents/dam`). Larger: formalize a
-      data-source adapter on the existing `getPedDirectRelatives` seam + a mocked integration test
-      (would consume the new `setLabKeyDefaults()` auth on the adapter's LabKey provider). Each is a
-      candidate GitHub issue / separate implementation session. (Deferred until measured: server-side
-      filtering / `executeSql` / consuming the centers' `study.Pedigree`/`ehr.kinship`.)
+      API-key auth with `.netrc` fallback + clear error) DONE — S144, `setLabKeyDefaults()`.
+      Rec #1 (`Rlabkey` version floor) DONE — S146, `Rlabkey (>= 3.2.0)` in `DESCRIPTION` (all four
+      EHR-module repos target LabKey 26.6; the live ONPRC/SNPRC server version, doc §8.1, is still
+      unobserved). See `CHANGELOG.md`.** Remaining quick win (before CRAN re-submission): **Rec #2** —
+      move the hardcoded ONPRC defaults out of `getSiteInfo()` into config + reconcile the
+      example-config drift (flat `dam`/`sire` vs `Id/parents/dam`). Larger: formalize a data-source
+      adapter on the existing `getPedDirectRelatives` seam + a mocked integration test (would consume
+      the new `setLabKeyDefaults()` auth on the adapter's LabKey provider). Each is a candidate GitHub
+      issue / separate implementation session. (Deferred until measured: server-side filtering /
+      `executeSql` / consuming the centers' `study.Pedigree`/`ehr.kinship`.)
 - [ ] **Strengthen the shinytest2 E2E assertions + CI stability** — GitHub issue **#40**, the open
       follow-on to the now-complete Phase 8 E2E harness: replace boot-level tautologies with behavioral
       checks, and harden the full-tier Chrome process-count flake (per-group fresh processes). Coverage
