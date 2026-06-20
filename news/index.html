@@ -43,6 +43,12 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="development version" id="nprcgenekeepr-development-version">nprcgenekeepr (development version)<a class="anchor" aria-label="anchor" href="#nprcgenekeepr-development-version"></a></h2>
+<ul><li>New features
+<ul><li>Added the exported <code><a href="../reference/setLabKeyDefaults.html">setLabKeyDefaults()</a></code>, which configures <code>Rlabkey</code> authentication for the session: it prefers an API key (from the <code>NPRCGENEKEEPR_LABKEY_APIKEY</code> environment variable, then an <code>apiKey</code> configuration-file token), falls back to a <code>.netrc</code>/<code>_netrc</code> file, and otherwise stops with a clear <code>No LabKey credential found</code> error. <code><a href="../reference/getDemographics.html">getDemographics()</a></code> now configures authentication automatically before querying, so a missing credential fails fast instead of producing an opaque error later.</li>
+</ul></li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.0.0" id="nprcgenekeepr-200-20260618">nprcgenekeepr 2.0.0 (20260618)<a class="anchor" aria-label="anchor" href="#nprcgenekeepr-200-20260618"></a></h2>
 <ul><li>Major changes
 <ul><li>

@@ -10,13 +10,25 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Up Next
 
-**Research LabKey integration options** — a research/evaluation pass
-(RESEARCH_DOCUMENTATION workstream) on how nprcgenekeepr integrates with
-LabKey: the current `Rlabkey` API surface and auth model,
-alternative/updated integration approaches, schema/query options, and
-version/maintenance risk. Output: one research document with a
-recommendation. (Added S142 per owner request; could be promoted to a
-GitHub issue for the formal tracker.)
+**Act on the LabKey integration research recommendations** — research
+pass DONE (`docs/research/labkey-integration-options-2026-06-19.md`,
+S143). **Rec \#3 (explicit optional API-key auth with `.netrc`
+fallback + clear error) DONE — S144,
+[`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md);
+see `CHANGELOG.md`.** Remaining quick wins (before CRAN re-submission):
+(1) pin an `Rlabkey` version floor in `DESCRIPTION:52` — *needs the live
+ONPRC/SNPRC server version first (doc §8.1), or a conservative pick*;
+(2) move the hardcoded ONPRC defaults out of
+[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+into config + reconcile the example-config drift (flat `dam`/`sire` vs
+`Id/parents/dam`). Larger: formalize a data-source adapter on the
+existing `getPedDirectRelatives` seam + a mocked integration test (would
+consume the new
+[`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md)
+auth on the adapter’s LabKey provider). Each is a candidate GitHub issue
+/ separate implementation session. (Deferred until measured: server-side
+filtering / `executeSql` / consuming the centers’
+`study.Pedigree`/`ehr.kinship`.)
 
 **Strengthen the shinytest2 E2E assertions + CI stability** — GitHub
 issue **\#40**, the open follow-on to the now-complete Phase 8 E2E

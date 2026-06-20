@@ -579,6 +579,9 @@
 - [`setExit()`](https://github.com/rmsharp/nprcgenekeepr/reference/setExit.md)
   : Sets the exit date, if there is no exit column in the table
 
+- [`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md)
+  : Configure Rlabkey authentication for the current session
+
 - [`setPopulation()`](https://github.com/rmsharp/nprcgenekeepr/reference/setPopulation.md)
   : Population designation function
 
