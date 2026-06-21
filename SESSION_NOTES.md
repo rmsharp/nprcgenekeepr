@@ -7,6 +7,235 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 155 Did
+
+**Deliverable:** Richer offline-focal error messages – replace the
+offline focal-file path’s generic NULL -\> “File Read Error” / “Could
+not read the uploaded file.” with a SPECIFIC reason the user can act on.
+**(DONE.)** **Started / Completed:** 2026-06-21 **Status:** **DONE.**
+Strict-TDD (RED -\> GREEN -\> REFACTOR, all three phase gates via
+`AskUserQuestion`, preceded by a pre-RED scope/approach
+`AskUserQuestion` after a read-only grounding sweep). **0 stakeholder
+corrections.** Right-sized hybrid (ultracode): a read-only 4-agent
+grounding workflow informed the scope/shape decision; ALL file mutation
+stayed SOLO. **TDD phase declared at the top of every response.** -
+**GROUNDING (read-only 4-agent sweep + firsthand reads):** mapped the
+offline focal pipeline (`getFocalAnimalPedFromFile` -\>
+`readFocalAnimalIds` + `getFileDirectRelatives` -\>
+`getPedigreeSource("file")`), the modInput focal error-render path, the
+`nprcgenekeeprErr` contract family, and the test surface. Surfaced THREE
+distinct failure modes (none named by the deliverable’s one-line
+description): **(a)** the focal-id read at
+`getFocalAnimalPedFromFile.R:50` is OUTSIDE the `tryCatch` -\> a bad
+focal-id file threw UNCAUGHT inside `observeEvent` (a latent app crash,
+worse than the generic message); **(b)** pedigree-file problems caught
+-\> NULL -\> generic message (the specific `getPedigreeSource()` stop()
+reason was logged to flog.debug and discarded); **(c)** focal IDs absent
+from the pedigree -\> a SILENT 0-row data.frame. The app already shows a
+per-error `Details` column (LabKey path shows `failedDatabaseConnection`
+there). - **SCOPE/APPROACH (pre-RED `AskUserQuestion`, 2 questions):**
+owner chose **(Q1 shape)** a DEDICATED classed error object
+`nprcgenekeeprFileErr` (over adding a sibling field to the shared
+`nprcgenekeeprErr`/`getEmptyErrorLst` QC object, or making the fn
+throw + catching in modInput) and **(Q2 scope, multiSelect)** ALL THREE
+failure modes (a)+(b)+(c). - **RED:** in
+`test_getFocalAnimalPedFromFile.R` rewrote the 3 `expect_null` tests +
+added unreadable-pedigree, nonexistent + empty focal-id-file, and
+no-IDs-matched cases (each asserts
+`expect_s3_class(result, "nprcgenekeeprFileErr")` + `expect_match` on
+the specific message); strengthened the modInput “File Read Error” test
+to assert a SPECIFIC `Details` (and NOT the generic string) + added a
+missing-columns testServer case. Ran with `NOT_CRAN=true`: function file
+**5 failed + 7 errored** (returns NULL / throws uncaught / 0-row today),
+modInput **3 assertions failed** – all for the RIGHT reason (function
+exists -\> no “could not find function” false-pass); checked BOTH failed
+AND error (Learning 145); the 4 unchanged function tests + 167 other
+modInput tests stayed green as the regression guard. - **GREEN:**
+[`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md)
+now wraps BOTH reads and returns `nprcgenekeeprFileErr` (internal
+`nprcgenekeeprFileErr()` constructor + `pedigreeReadReason()` mapper
+turning the internal `getPedigreeSource(): ...` stop() text into clean
+user-facing messages) instead of NULL/throw/0-row; `modInput.R` gained
+an `inherits(built, "nprcgenekeeprFileErr")` branch placed BEFORE, and
+mirroring, the existing `nprcgenekeeprErr` branch, putting the specific
+`message` in the error table’s `Details`. `roxygenise` -\> regenerated
+`man/getFocalAnimalPedFromFile.Rd` only; **NO NAMESPACE change** (no new
+export; the class registers no methods). 27/173 green. - **REFACTOR:**
+kept the implementation as-is (owner-approved: did NOT restructure
+modInput’s 3 working error-result blocks – avoids touching working
+siblings, the Learning 145 risk); docs only – NEWS.Rmd entry updated IN
+PLACE (the feature is unreleased) + NEWS.md re-rendered (pure ASCII,
+NEWS.html removed), CHANGELOG/BACKLOG/PROJECT_LEARNINGS. Fixed the 4
+lints my edits introduced (3 over-80-char lines + the project
+`.lintr`-banned [`structure()`](https://rdrr.io/r/base/structure.html)
+-\> `class(x) <- ...`).
+
+**Phase-3E (runtime smoke test): SATISFIED.** Exercised the **real,
+un-mocked** `getFocalAnimalPedFromFile` across all SEVEN paths: happy
+(data.frame) + six `nprcgenekeeprFileErr` with the exact messages
+(pedigree must be supplied / not found / missing id,sire,dam columns /
+unreadable pedigree / unreadable focal-id list file / none of the focal
+IDs matched). A
+[`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html)
+check confirmed the specific reason reaches the app’s `Details` column
+(missing-columns -\> “…id, sire, and dam”; not-found -\> “not found”),
+NOT the old generic message. Build equivalent: **`devtools::check()`
+Status OK (0/0/0)** (full testthat + spelling + examples
+incl. `--run-donttest` + vignette rebuild). `lint_package()` **0**.
+
+**Session 154 Handoff Evaluation (by Session 155): Score 9/10.** S154’s
+handoff (my own immediately-prior hygiene session) listed **“(Richer
+offline-focal error messages)” as its FIRST suggested-next option**,
+with an accurate one-line gap statement – “the offline path fail-softs
+to a generic ‘File Read Error’ (NULL); surface WHY (missing file vs
+missing id/sire/dam columns) via a dedicated error field/branch,
+distinct from the LabKey `failedDatabaseConnection`. Small, additive,
+strict-TDD.” – which both named the deliverable I picked AND
+foreshadowed the owner’s chosen shape (a dedicated error object,
+distinct from `failedDatabaseConnection`). Repo-state claims held
+exactly firsthand (`master` = `origin/master` at `791c51e4` after S154’s
+own close-out; the S150-S152 file-pedigree-source line fully landed, no
+dangling branches). **The -1 (to make it a 10):** S154’s gotchas were
+all git/hygiene-oriented (correct for ITS task) and gave no code-file
+pointer (`getFocalAnimalPedFromFile.R:50` out-of-tryCatch; `modInput.R`
+focal branch) for this follow-on – so the three concrete failure modes
+were mine to discover in grounding. Minor and arguably out of scope for
+a hygiene handoff; ROI strongly positive (I started straight off it).
+
+**Self-assessment (Session 155): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK read in chunks;
+dashboard 98/100; ghost-check -\> HEAD `791c51e4` = S154, no
+undocumented commits), reported, STOPPED for the owner; claimed the
+session (1B stub BEFORE technical work). **Strengths:** (1) **strict TDD
+held end-to-end** – phase declared every response, pre-RED scope gate +
+all 3 phase gates, genuine RED with constrained matchers (no false-pass)
+checking BOTH failed AND error; (2) **grounded the scope/shape fork
+firsthand** (read-only sweep + reads), surfacing the THREE failure modes
+so the owner picked in one shot; (3) **completed the whole job, not the
+literal minimum (anti-FM \#13)** – fixed the latent UNCAUGHT
+focal-id-file throw and the SILENT 0-row case, not just the asked-for
+pedigree messages; (4) **chose the lowest-blast-radius shape** (a
+dedicated class) and kept the shared QC error object untouched; (5)
+**behavior-neutral REFACTOR that deliberately did NOT touch working
+siblings** (Learning 145); (6) **full verification** – 27/173,
+`devtools::check()` 0/0/0, lint 0, Phase-3E smoke of all 7 real paths +
+a testServer Details check; ASCII NEWS, plain language, 0 corrections,
+scope confined; right ultracode hybrid (read-only grounding workflow,
+SOLO mutation). **Weaknesses (honest):** (a) I first ran
+`lint_package(linters = default_linters)`, BYPASSING the project
+`.lintr`, which flooded camelCase/line-length false positives and cost a
+diagnostic cycle before I switched to bare `lint_package()` – a real
+process slip (now in Learning 147); (b) my GREEN introduced 4 lints
+(over-length lines + a `.lintr`-banned
+[`structure()`](https://rdrr.io/r/base/structure.html)) fixed in
+REFACTOR – caught by my own gate, but a cleaner first pass would have
+honored 80-col + the `class(x)<-` idiom from the start; (c) a benign
+residual: a bad focal-id file still prints a `read.csv` “cannot open
+file” WARNING before the tryCatch catches the error (the fn returns the
+correct fileErr; harmless console noise) – I left it (suppressing it is
+a behavior tweak outside the approved REFACTOR) and flag it as a tiny
+follow-on. Moderate-difficulty vertical-slice feature with a real design
+fork, delivered clean on verification but with two self-caught process
+slips en route -\> 8/10.
+
+**Learnings:** **Learning 147** (to enrich a fail-soft boundary that
+swallows WHY into a bare NULL: return a DEDICATED classed error carrying
+the reason – do not overload the shared error/QC object; wrap EVERY read
+the boundary performs – a read outside the `tryCatch` is a latent
+uncaught throw; MAP low-level stop() text to clean user-facing messages,
+no leaked `fnName(): ...` prefix; treat a “silent empty”
+0-row/opaque-NULL result as its own reported failure; on this repo run
+BARE `lint_package()` so `.lintr` applies and use `class(x)<-` not
+[`structure()`](https://rdrr.io/r/base/structure.html)) added to
+`PROJECT_LEARNINGS.md`. Carried as applied: 132 (ASCII NEWS), 137
+(reinstall to clear object_usage stale-install before lint), 139 (delete
+NEWS.html), 140/143/145 (ground firsthand; ground a scope fork; do not
+restructure a working sibling in REFACTOR).
+
+**=\> SUGGESTED NEXT = owner’s pick.** The deliverable is committed on
+branch **`richer-offline-focal-errors`** (UNPUSHED). Natural options
+(plain ASCII labels): - **(Publish S155)** push
+`richer-offline-focal-errors` -\> PR -\> CI (lint + `R CMD check` x5 +
+pkgdown + coverage) -\> merge (the S142 convention), OR fast-forward
+`master` + push. **Owner’s call** – I took no outward action. - **(Quiet
+the residual warning)** muffle the benign `read.csv` “cannot open file”
+warning in the focal-id read so the offline fail-soft path is silent.
+Tiny, strict-TDD. - **(Document/expose the offline focal workflow)** a
+vignette or app help note for the focal-id-file + pedigree-file offline
+path (now with rich error messages; still undocumented for end users
+beyond NEWS). - **(Remaining LabKey Rec \#5 / server-side – deferred)**
+server-side filtering / `executeSql` / centers’
+`study.Pedigree`/`ehr.kinship`; and/or a non-LabKey other-EHR provider
+on the same seam. Gated on a live server. - **(Permanent NEWS render
+fix)** `html_preview: false` in `NEWS.Rmd` + pandoc smart-off – ends
+BOTH the NEWS.html NOTE (Learning 139) and the smart-quote/en-dash trap
+(Learning 132). Candidate, not done. - **(CRAN Phase 5, owner-run)**
+win-builder x3 + R-hub v2 + `submit_cran()` – owner PAT + email; HARD
+STOP (`docs/planning/cran-2.0.0-phase5-runbook.md`). - **A GitHub
+issue** – \#46, \#45/#28/#9, \#2, \#37, \#36, \#29, or older
+\#13/#12/#11/#10/#5/#1. **Do NOT** bundle options (FM \#18/#25); **do
+NOT** start any without the owner picking.
+
+**Key files (this session):** **CHANGED – code (branch
+`richer-offline-focal-errors`, this close-out commit):**
+`R/getFocalAnimalPedFromFile.R` (wraps BOTH reads; returns
+`nprcgenekeeprFileErr` per failure mode; + internal
+`nprcgenekeeprFileErr()` constructor + `pedigreeReadReason()` mapper,
+both `@noRd`), `R/modInput.R` (new
+`inherits(built, "nprcgenekeeprFileErr")` File Read Error +
+`built$message` branch @ ~344, before the existing `nprcgenekeeprErr`
+check), `man/getFocalAnimalPedFromFile.Rd` (regenerated `@return`),
+`tests/testthat/test_getFocalAnimalPedFromFile.R` (3 NULL tests
+rewritten + 4 new error tests), `tests/testthat/test_modInput.R`
+(strengthened File Read Error test + new missing-columns testServer
+test), `NEWS.Rmd` + `NEWS.md` (entry updated in place). **CHANGED –
+docs:** `CHANGELOG.md` (S155 `[Unreleased]`), `BACKLOG.md` (de-staled
+the Option C “fail-soft NULL” description), `PROJECT_LEARNINGS.md`
+(Learning 147), `SESSION_NOTES.md` (this handoff). **NO change:**
+`NAMESPACE`, `DESCRIPTION`, `data/`, `R/getEmptyErrorLst.R` (shared QC
+error object deliberately left untouched). **NOT committed (standing
+keeps):** `PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
+**REMOVED (render artifact, never committed):** `NEWS.html`.
+
+**Gotchas:** (1) **The offline focal path NO LONGER returns NULL** –
+[`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md)
+returns a data.frame on success OR an `nprcgenekeeprFileErr` (a list
+with `$message`, class `"nprcgenekeeprFileErr"`) on ANY failure
+(focal-id file unreadable; pedigree
+missing/not-found/wrong-column/unreadable; or no IDs matched).
+`modInput` dispatches it via `inherits(built, "nprcgenekeeprFileErr")`
+-\> “File Read Error” + `built$message` in `Details`. The generic
+`is.null(rawData)` handler is now UNREACHABLE by the focal-file path
+(still serves the non-focal `readDataFile` path). (2) **The class is
+INTERNAL** (not exported, no methods) – no NAMESPACE entry; `modInput`
+uses [`inherits()`](https://rdrr.io/r/base/class.html).
+`getEmptyErrorLst`/`nprcgenekeeprErr` (the studbook-QC error object)
+were deliberately NOT touched – file-read errors are a separate concern.
+(3) **Residual benign warning:** a bad focal-id file still emits a
+`read.csv` “cannot open file” WARNING (printed before the tryCatch
+catches the error); the function returns the correct fileErr – harmless
+console noise, not a failure. Quieting it is a tiny future item. (4)
+**Lint on this repo:** run BARE `lint_package()` (no `linters=` arg) so
+the project `.lintr` applies (camelCase + `line_length(80)` + bans
+`structure`/`source`); `lintr::lint_package(linters = default_linters)`
+BYPASSES `.lintr` and floods false positives. Use the package’s
+`class(x) <- ...` idiom, not
+[`structure()`](https://rdrr.io/r/base/structure.html). Reinstall
+(`devtools::install(quick = TRUE)` / `R CMD INSTALL`) before linting to
+clear the object_usage stale-install artifact (Learning 137). (5) **This
+is CODE** -\> standing convention is feature-branch -\> PR -\> merge;
+committed on `richer-offline-focal-errors`, publishing is the owner’s
+call (the S150-S152 pattern). (6) Carried: package **ARCHIVED on CRAN
+2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT (warning + NULL) without a LabKey credential/config;
+`skip_on_cran()`-gated test files (`test_modInput.R`) need
+`NOT_CRAN=true`; NEWS render traps (132/139); `git pull` is rebase
+(`pull.rebase=true`) + chokes on `.DS_Store` -\> use `fetch`+`reset`
+(135); post-merge `fetch` before `reset --hard` must be
+verified-succeeded (146); standing keeps `.DS_Store` +
+`PED_GV_AUDIT_2026-05-30.html`.
+
 ### What Session 154 Did
 
 **Deliverable:** Owner-directed hygiene – delete the two merged feature

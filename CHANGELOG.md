@@ -15,6 +15,52 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-21 — Richer offline-focal error messages: `getFocalAnimalPedFromFile()` returns a classed `nprcgenekeeprFileErr` naming WHY (Session 155)
+
+- **Deliverable (owner-picked, single item):** the app’s offline
+  focal-animal file path previously fail-softed to a generic “File Read
+  Error” / “Could not read the uploaded file.” — surface the SPECIFIC
+  reason instead. **Strict-TDD** (RED → GREEN → REFACTOR, all three
+  phase gates + a pre-RED scope/approach decision, each via
+  `AskUserQuestion`). **0 stakeholder corrections.** SOLO mutation; a
+  read-only 4-agent grounding sweep (run first) informed the scope/shape
+  decision.
+- **Scope (owner-chosen — all three failure modes found in
+  grounding):** (a) the focal-id list file read — previously an
+  **uncaught throw** inside `observeEvent` (the read sat outside the
+  `tryCatch`); (b) pedigree-file problems (missing/NULL argument,
+  not-found, wrong-column, unreadable); (c) the silent 0-row “no focal
+  IDs matched” case. Error shape (owner-chosen): a **dedicated** classed
+  object, NOT the shared `nprcgenekeeprErr` studbook-QC object.
+- **Implementation:**
+  [`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md)
+  now wraps BOTH the focal-id read and the relatives walk; on any
+  failure it returns an `nprcgenekeeprFileErr` (an internal
+  constructor + a `pedigreeReadReason()` mapper that translates the
+  low-level `getPedigreeSource()`
+  [`stop()`](https://rdrr.io/r/base/stop.html) text into a clean
+  user-facing message) instead of `NULL` / throwing / returning a 0-row
+  frame. `R/modInput.R` gained an
+  `inherits(built, "nprcgenekeeprFileErr")` branch (mirroring, and
+  placed before, the existing `nprcgenekeeprErr` branch) that puts the
+  specific `message` into the error table’s `Details` column. **No
+  NAMESPACE change** (the class registers no exported methods);
+  [`getEmptyErrorLst()`](https://github.com/rmsharp/nprcgenekeepr/reference/getEmptyErrorLst.md)
+  deliberately untouched.
+- **Verification:** RED proved each new/changed test failed for the
+  right reason (function returned `NULL` / threw / 0-row; modInput
+  showed the generic detail), no false-pass. GREEN →
+  `test_getFocalAnimalPedFromFile.R` **27 passed**, `test_modInput.R`
+  **173 passed**; the regression guard (4 unchanged function tests + 167
+  other modInput tests) stayed green. `lint_package()` **0** (project
+  `.lintr`); **`devtools::check()` Status OK (0/0/0)** (full testthat +
+  spelling + examples incl. `--run-donttest` + vignette rebuild).
+  **Phase-3E** smoke exercised the real un-mocked function across all
+  seven paths (happy + six classed errors with the exact messages) and a
+  `testServer` check confirmed the specific `Details` reaches the app.
+  NEWS.Rmd entry updated in place + NEWS.md re-rendered (pure ASCII;
+  NEWS.html byproduct removed). → Learning 147.
+
 ### 2026-06-21 — Deleted the two merged file-pedigree-source carrier branches (Session 154)
 
 - **Deliverable (owner directive, single hygiene item):** delete

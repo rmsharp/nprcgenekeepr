@@ -89,10 +89,15 @@ files (default <code>","</code>); ignored for Excel files.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A data.frame with the focal animals' full connected pedigree
-component (ancestors, descendants, and collaterals), as returned by
-<code><a href="getFileDirectRelatives.html">getFileDirectRelatives</a></code>; or <code>NULL</code> if the pedigree file
-cannot be read.</p>
+    <p>On success, a data.frame with the focal animals' full connected
+pedigree component (ancestors, descendants, and collaterals), as returned by
+<code><a href="getFileDirectRelatives.html">getFileDirectRelatives</a></code>. On any failure this function does NOT
+throw: it returns a classed <code>nprcgenekeeprFileErr</code> object (a list with a
+<code>message</code> element) naming WHY the read failed – an unreadable focal-id
+list file, a missing / not-found / unreadable / wrong-column pedigree file, or
+no focal IDs present in the pedigree. The application surfaces <code>message</code>
+as the "File Read Error" detail. (This is distinct from the LabKey path, which
+returns an <code>nprcgenekeeprErr</code>.)</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

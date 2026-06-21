@@ -9790,3 +9790,71 @@ actually advanced to the expected SHA\]. **Apply:** every post-merge
 local reconcile; any `reset --hard origin/<branch>` that depends on a
 just-run fetch; sandboxed/flaky-network sessions where `git fetch` can
 fail transiently.
+
+#### Learning 147 — To enrich a fail-soft boundary that swallows WHY into a bare NULL, return a DEDICATED classed error carrying the reason (do NOT overload the shared error/QC object with a different concern); wrap EVERY read the boundary performs (a read left outside the `tryCatch` is a latent UNCAUGHT throw, not fail-soft); MAP low-level `stop()` text to clean user-facing messages rather than leaking an internal `fnName(): ...` prefix; and treat a “silent empty” result (0-row / opaque NULL) as its own reported failure. (S155, richer offline-focal error messages)
+
+**What happened.** S152 made
+[`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md)
+fail-soft by returning `NULL` → the app’s generic “File Read Error” /
+“Could not read the uploaded file.” S155’s deliverable was to surface
+WHY. A read-only 4-agent grounding sweep + firsthand reads found three
+things that shaped the work, none of which the deliverable’s one-line
+description (“missing file vs missing columns”) had named: (1) the
+focal-id read at `getFocalAnimalPedFromFile.R:50` was OUTSIDE the
+`tryCatch`, so a bad focal-id file threw UNCAUGHT inside `observeEvent`
+— a latent app crash, strictly worse than a generic message, so “richer
+errors” had to also CATCH it; (2) the specific reasons already existed
+as `getPedigreeSource()` [`stop()`](https://rdrr.io/r/base/stop.html)
+strings (e.g. “…must contain columns id, sire, and dam”) but were
+discarded by the catch (logged only to `flog.debug`); (3) the
+focal-IDs-absent case returned a SILENT 0-row data.frame. The app
+already renders a per-error `Details` column (the LabKey path shows
+`failedDatabaseConnection` there), so the richer “why” had a natural
+home. Owner chose (pre-RED `AskUserQuestion`) a DEDICATED
+`nprcgenekeeprFileErr` class over (A) adding a sibling field to the
+shared `nprcgenekeeprErr`/`getEmptyErrorLst` studbook-QC object —
+symmetric with `failedDatabaseConnection` but a category stretch that
+widens blast radius across
+`checkErrorLst`/`summary`/`processQcStudbookResult` — and over (C)
+making the function throw and catching in `modInput` (smallest code, but
+leaks the raw “getPedigreeSource(): …” prefix and flips the documented
+fail-soft contract). Implementation wrapped BOTH reads, returned the
+classed object with a `pedigreeReadReason()` mapper turning internal
+stop() text into clean user-facing messages, and converted the silent
+0-row walk into a reported “None of the focal IDs were found” error;
+`modInput` got one [`inherits()`](https://rdrr.io/r/base/class.html)
+branch mirroring the existing one. RED was genuine (function returned
+NULL / threw / 0-row; modInput showed the generic detail — no “could not
+find function” false-pass) with the regression guard (4 unchanged
+function tests + 167 modInput tests) green. Two self-caught process
+slips: (i) I first ran `lintr::lint_package(linters = default_linters)`,
+which BYPASSES the project `.lintr` (camelCase + `line_length(80)` +
+bans `structure`/`source`) and flooded camelCase/line-length false
+positives — masking that the real count is tiny; running BARE
+`lint_package()` showed exactly 4 real lints, all mine; (ii) the new
+constructor’s `structure(list(...), class = ...)` tripped the project’s
+`undesirable_function_linter` → switched to the package’s
+`class(x) <- ...` idiom. Verified: focal 27, modInput 173, full suite
+0/0 via check, lint 0, `devtools::check()` 0/0/0, Phase-3E smoke of all
+7 real paths + a `testServer` Details check.
+
+**Reflexes:** \[enriching a fail-soft boundary = return a DEDICATED
+classed error object carrying the reason; do NOT overload a shared/QC
+error type with a different concern — sibling-field symmetry is tempting
+but stretches the category and widens blast radius across that type’s
+readers\]\[audit the boundary for reads/calls left OUTSIDE the
+`tryCatch` — an “uncaught throw” path masquerading as fail-soft is a
+latent crash; fix it as part of “richer errors,” do not just add a
+message to the already-caught path\]\[map low-level
+[`stop()`](https://rdrr.io/r/base/stop.html) text to clean user-facing
+messages with a small reason-mapper; never surface an internal
+`fnName(): ...` prefix to the user\]\[a “silent empty” result (0-row,
+opaque NULL) is a failure to REPORT, not a success — convert it to a
+named error\]\[on THIS repo run BARE `lint_package()` so `.lintr`
+applies — `linters = default_linters` bypasses it and floods false
+positives; use `class(x) <- ...` not `structure(...)`\]\[a
+behavior-neutral REFACTOR can decline to DRY working sibling branches
+when touching them adds blast radius for cosmetics (Learning 145)\].
+**Apply:** any “improve/enrich error messages” or “surface why X failed”
+task; any fail-soft boundary that collapses distinct failures into one
+opaque value; any lint run on this repo.

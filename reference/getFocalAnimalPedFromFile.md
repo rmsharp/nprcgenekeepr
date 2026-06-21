@@ -38,10 +38,16 @@ getFocalAnimalPedFromFile(fileName, pedigreeFileName = NULL, sep = ",")
 
 ## Value
 
-A data.frame with the focal animals' full connected pedigree component
-(ancestors, descendants, and collaterals), as returned by
-[`getFileDirectRelatives`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md);
-or `NULL` if the pedigree file cannot be read.
+On success, a data.frame with the focal animals' full connected pedigree
+component (ancestors, descendants, and collaterals), as returned by
+[`getFileDirectRelatives`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md).
+On any failure this function does NOT throw: it returns a classed
+`nprcgenekeeprFileErr` object (a list with a `message` element) naming
+WHY the read failed – an unreadable focal-id list file, a missing /
+not-found / unreadable / wrong-column pedigree file, or no focal IDs
+present in the pedigree. The application surfaces `message` as the "File
+Read Error" detail. (This is distinct from the LabKey path, which
+returns an `nprcgenekeeprErr`.)
 
 ## Details
 

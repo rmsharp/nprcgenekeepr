@@ -60,12 +60,16 @@ file-sourced sibling of
 [`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md)
 (reads focal Ids from one file, builds the connected component from a
 separate pedigree file via
-[`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md),
-fail-soft `NULL` on a bad pedigree file). `modInput` gained an optional
-pedigree-file input on the focal-animals path and dispatches to the
-offline function when supplied, else the unchanged LabKey path — so the
-Shiny focal-animal workflow can now run offline with no LabKey/EHR
-connection. (The focal-id read was factored into a shared internal
+[`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md);
+fail-soft to a classed `nprcgenekeeprFileErr` whose `message` names WHY
+the read failed — bad focal-id list file, a
+missing/not-found/unreadable/ wrong-column pedigree file, or no focal
+IDs matched — surfaced as the app’s “File Read Error” detail (richer
+error messages added S155). `modInput` gained an optional pedigree-file
+input on the focal-animals path and dispatches to the offline function
+when supplied, else the unchanged LabKey path — so the Shiny
+focal-animal workflow can now run offline with no LabKey/EHR connection.
+(The focal-id read was factored into a shared internal
 `readFocalAnimalIds()`.) **Still deferred:** a non-LabKey other-EHR
 provider on the same seam; server-side filtering / `executeSql` /
 consuming the centers’ `study.Pedigree`/`ehr.kinship` (research doc
