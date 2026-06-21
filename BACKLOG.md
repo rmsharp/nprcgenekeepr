@@ -28,8 +28,16 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       component incl. the previously-excluded collateral sibling. **`file` provider DONE — S150:**
       `getPedigreeSource()` gained a `"file"` source (params `fileName`/`sep`) that reads a pedigree file
       (CSV or Excel) via the exported `getPedigree()`, alongside `"labkey"` and `"dataframe"`;
-      offline-deterministic, validates id/sire/dam, errors loudly like the `dataframe` branch. Not yet
-      wired to a production caller (`getLkDirectRelatives()` still uses `"labkey"`). **Still deferred:**
+      offline-deterministic, validates id/sire/dam, errors loudly like the `dataframe` branch.
+      **`"file"` provider WIRED to a first-class caller DONE — S151:** new exported
+      `getFileDirectRelatives(ids, fileName, sep, unrelatedParents)`, a file-sourced sibling of
+      `getLkDirectRelatives()` (reads via the `"file"` provider, then the source-agnostic
+      `getPedDirectRelatives()` walk). The clean symmetric family is now `getPedDirectRelatives`
+      (in-memory) / `getLkDirectRelatives` (LabKey) / `getFileDirectRelatives` (file). **Still open
+      (future option, owner's call):** wire a file pedigree source through the focal-animal app pipeline
+      (`getFocalAnimalPed()` / `modInput.R`) so the Shiny app can build a focal-animal pedigree offline
+      from a pedigree file (needs a separate pedigree-file param distinct from the focal-ID list, plus
+      fail-soft-NULL vs errors-loudly handling and the positional 7-column rename). **Still deferred:**
       a non-LabKey other-EHR provider on the same seam; server-side filtering / `executeSql` / consuming
       the centers' `study.Pedigree`/`ehr.kinship` (research doc explicitly defers until pull size is
       measured + per-center query availability/permissions are confirmed; needs a live LabKey server to
