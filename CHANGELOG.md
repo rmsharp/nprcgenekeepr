@@ -14,6 +14,11 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-21 — Deleted the two merged file-pedigree-source carrier branches (Session 154)
+- **Deliverable (owner directive, single hygiene item):** delete `wire-focal-file-source` (S152, merged via PR #63) and `wire-file-pedsource` (S151, merged via PR #62), local + remote. **Admin/hygiene** (no production-code logic → no TDD gates). **0 stakeholder corrections.**
+- **Verified-merged-before-delete (S143/S146/S149–S152 pattern):** confirmed both branches (`4f362be9`, `1145d3ef`) are strict ancestors of `origin/master` (`43822c80`); deleted local (`git branch -d` — the safe merged-only form) + remote (`git push origin --delete`); `git fetch --prune`; verified **no ref remains** either side (local + remote-tracking lists empty; `gh api .../branches/<b>` → **404** for both). History preserved in merge commits `e1780c02`/`cb46616e` on `master`.
+- **Net:** the S150–S152 file-pedigree-source line (`getPedigreeSource()` `"file"` provider → `getFileDirectRelatives()` → `getFocalAnimalPedFromFile()` + modInput offline-focal wiring) is fully landed on `master` with no dangling branches. Close-out docs committed direct to `master` (owner-authorized bookkeeping).
+
 ### 2026-06-21 — Published S152 (PR #63): `getFocalAnimalPedFromFile()` + modInput offline-focal wiring now on `master` (Session 153)
 - **Deliverable (owner directive, single item):** publish S152's Option C work (`getFocalAnimalPedFromFile()` + `readFocalAnimalIds()` + the modInput `focalPedigreeFile` UI/dispatch — the app's offline focal-animal path) from `wire-focal-file-source` to `master`. **Admin/verification** (no production-code logic → no TDD gates). **0 stakeholder corrections.**
 - **Pre-flight (Learning 133/135):** `git fetch`; confirmed `wire-focal-file-source` **1 ahead / 0 behind** `origin/master` (`cb46616e` a strict ancestor → clean fast-forward), `git merge-tree --write-tree` dry-run clean (**0 conflict markers**); confirmed the single published commit was exactly S152's `4f362be9` and the 15-file diff matched S152's key-files list.
