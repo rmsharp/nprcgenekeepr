@@ -412,29 +412,25 @@ test_that("getFocalAnimalPed handles NA dates correctly", {
 })
 
 # Test Excel file detection (mock the readExcelPOSIXToCharacter function)
-test_that("getFocalAnimalPed detects Excel file format", {
+# Excel-format detection now lives in the shared readFocalAnimalIds() helper
+# (used by both getFocalAnimalPed and getFocalAnimalPedFromFile), so the
+# Excel-format branch is exercised there rather than inside getFocalAnimalPed.
+test_that("readFocalAnimalIds detects Excel file format", {
   skip_if_not_installed("mockery")
   skip_if_not_installed("readxl")
 
   temp_file <- tempfile(fileext = ".xlsx")
-  # Create a mock Excel file by writing a simple marker
-  # We won't actually create an Excel file, just mock the detection
+  # Not a real Excel file -- we mock both the detection and the reader.
   writeLines("placeholder", temp_file)
+  on.exit(unlink(temp_file), add = TRUE)
 
-  # Create mock data
-  mock_ped <- create_mock_ped_data(c("FJS7RQ"))
-  mock_focal_data <- data.frame(id = c("FJS7RQ"))
+  mock_focal_data <- data.frame(id = c("FJS7RQ"), stringsAsFactors = FALSE)
+  mockery::stub(readFocalAnimalIds, "excel_format", "xlsx")
+  mockery::stub(readFocalAnimalIds, "readExcelPOSIXToCharacter", mock_focal_data)
 
-  # Stub both excel_format to return xlsx and readExcelPOSIXToCharacter
-  mockery::stub(getFocalAnimalPed, "excel_format", "xlsx")
-  mockery::stub(getFocalAnimalPed, "readExcelPOSIXToCharacter", mock_focal_data)
-  mockery::stub(getFocalAnimalPed, "getLkDirectRelatives", mock_ped)
+  result <- readFocalAnimalIds(temp_file)
 
-  result <- getFocalAnimalPed(temp_file)
-
-  expect_s3_class(result, "data.frame")
-
-  unlink(temp_file)
+  expect_identical(result, "FJS7RQ")
 })
 
 # Test that focal animal IDs are extracted from first column

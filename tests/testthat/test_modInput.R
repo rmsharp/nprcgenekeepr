@@ -1040,3 +1040,90 @@ test_that("modInputServer focalAnimals path surfaces the EHR-failure errorLst", 
     }
   )
 })
+
+# OFFLINE focal-animal path (no EHR): when the user ALSO supplies a pedigree
+# file (input$focalPedigreeFile), modInputServer must build the focal animals'
+# pedigree from that FILE via getFocalAnimalPedFromFile() instead of calling the
+# LabKey/EHR seam. We mock getLkDirectRelatives to STOP so any EHR call is a
+# loud test failure -- proving the offline path never touches the database.
+
+test_that("modInputServer focalAnimals path builds pedigree from a FILE (offline, no EHR)", {
+  skip_if_not_installed("shiny")
+  shortlist <- system.file("extdata", "focalAnimalsShortList.csv",
+                           package = "nprcgenekeepr")
+  focal_ids <- as.character(read.csv(shortlist, stringsAsFactors = FALSE)[, 1L])
+  pedFile <- system.file("extdata", "ExamplePedigree.csv",
+                         package = "nprcgenekeepr")
+
+  testthat::local_mocked_bindings(
+    getLkDirectRelatives = function(ids, ...)
+      stop("EHR must not be called on the offline file path"),
+    .package = "nprcgenekeepr"
+  )
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(
+        fileContent = "focalAnimals",
+        fileType = "fileTypeText",
+        separator = ",",
+        minParentAge = "2.0"
+      )
+      session$setInputs(
+        breederFile = list(name = basename(shortlist), datapath = shortlist),
+        focalPedigreeFile = list(name = basename(pedFile), datapath = pedFile)
+      )
+      session$setInputs(getData = 1)
+
+      res <- storedResults()
+      # The FILE-built pedigree is QC-cleaned and contains the focal animals'
+      # connected component -- built entirely offline (getLkDirectRelatives,
+      # mocked to stop(), is never reached).
+      expect_false(is.null(res$cleaned))
+      expect_true(is.data.frame(res$cleaned))
+      expect_true(all(c("id", "sire", "dam", "sex", "gen") %in%
+                        names(res$cleaned)))
+      expect_true(all(focal_ids %in% res$cleaned$id))
+    }
+  )
+})
+
+test_that("modInputServer offline focal-file path surfaces a File Read Error on a bad pedigree file", {
+  skip_if_not_installed("shiny")
+  shortlist <- system.file("extdata", "focalAnimalsShortList.csv",
+                           package = "nprcgenekeepr")
+  badPed <- file.path(tempdir(), "no_such_pedigree.csv")
+
+  testthat::local_mocked_bindings(
+    getLkDirectRelatives = function(ids, ...)
+      stop("EHR must not be called on the offline file path"),
+    .package = "nprcgenekeepr"
+  )
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(
+        fileContent = "focalAnimals",
+        fileType = "fileTypeText",
+        separator = ",",
+        minParentAge = "2.0"
+      )
+      session$setInputs(
+        breederFile = list(name = basename(shortlist), datapath = shortlist),
+        focalPedigreeFile = list(name = "no_such_pedigree.csv",
+                                 datapath = badPed)
+      )
+      session$setInputs(getData = 1)
+
+      # A bad pedigree file makes getFocalAnimalPedFromFile() return NULL, which
+      # flows to the existing is.null(rawData) "File Read Error" handler.
+      res <- storedResults()
+      expect_true(is.null(res$cleaned))
+      expect_true(any(grepl("File Read Error", res$errors$Error)))
+    }
+  )
+})
