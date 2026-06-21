@@ -7,6 +7,287 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 149 Did
+
+**Deliverable:** Owner-directed 3-item pairing (two admin/hygiene + one
+substantive behavior-change deliverable): **(1)** publish S148’s
+`getPedigreeSource` fetch-adapter from `labkey-pedsource-adapter` to
+`master` \[admin/verification\]; **(2)** delete the merged
+`labkey-config-defaults` branch \[admin/hygiene\]; **(3)** LabKey Rec
+\#4 **walk-unification** – make
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+delegate its pedigree walk to
+[`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md),
+a deliberate BEHAVIOR CHANGE (live LabKey/EHR focal-animal pedigree now
+returns the full connected component – collaterals included)
+\[strict-TDD, the real deliverable\]. **(ALL THREE DONE.)** **Started /
+Completed:** 2026-06-20 **Status:** **DONE.** Items 1-2 =
+VERIFICATION/admin (no production-code logic -\> no TDD gates). Item 3 =
+**strict-TDD** (RED -\> GREEN -\> REFACTOR, all three phase gates via
+`AskUserQuestion`, preceded by a pre-RED **approach**
+`AskUserQuestion`). **0 stakeholder corrections.** Right-sized **SOLO**
+(a serial publish + a branch delete + one small cohesive TDD change
+against one package; fanning out file-mutating agents would risk
+conflicts and add no confidence over firsthand verification – the
+S144/S145/S147/S148 rationale). The behavior-change acceptance was
+already given in the owner’s directive (“a deliberate behavior change …
+the live result set would grow to include collaterals; the deterministic
+test now guards current behavior so this is safe to attempt”), so the
+one genuine open decision was the implementation approach. - **REAL WORK
+\#1 – item 1, published with full CI gate (Learning 133/135):**
+`git fetch`; confirmed `labkey-pedsource-adapter` was **1 ahead / 1
+behind** `origin/master` (the 1 ahead = `e0aabfe0`; the 1 behind = the
+PR \#58 merge node, whose file content is already in the branch’s
+history via `3da6723f`-\>`cefc14a4`), branch base a strict ancestor of
+`origin/master`, `merge-tree` dry-run showed no conflicts. Stashed the
+uncommitted 1B stub (commits-only push). `git push -u origin`; opened
+**PR \#59** -\> `master`; watched all checks via a background
+`gh pr checks 59 --watch` -\> **10/10 PASS** (`lint` 3m49s, all 5
+`R CMD check` platforms incl. ubuntu-devel 16m7s, `pkgdown`,
+`test-coverage`, `codecov` patch+project). Confirmed
+`mergeStateStatus: CLEAN` BEFORE `gh pr merge 59 --merge` -\> merge
+commit **`6424509b`**; verified it landed (PR `state: MERGED`;
+`e0aabfe0` is an ancestor of `origin/master`). Reconciled local `master`
+(was stale, ff-able): confirmed strict-ancestor,
+`git reset --hard origin/master` (not `git pull` – Learning 135). S148’s
+`getPedigreeSource` adapter is now on `master`. - **REAL WORK \#2 – item
+2, verified-merged-before-delete (S143/S146 pattern):** confirmed
+`labkey-config-defaults` is a strict ancestor of `origin/master` (fully
+merged via PR \#58), deleted local (`git branch -d` – safe
+merged-only) + remote (`git push origin --delete` – outward-facing,
+explicitly owner-authorized). Verified **no ref remains** either side.
+Created branch **`walk-unification`** off the reconciled `master`
+(`6424509b`) and popped the stub back cleanly. - **REAL WORK \#3 – item
+3 grounding (the load-bearing analysis -\> Learning 142):** read both
+walks + traced the worked fixture firsthand.
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+walked a strict ancestor/descendant lineage (two separate frontiers,
+each re-seeding from the previous generation only) -\>
+`{O1,S1,D1,GC1,X1}`;
+[`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
+walks the full connected component (re-seeds from the whole accumulated
+id set) -\> `{S1,D1,X1,O1,O2,GC1}` (pulls in the collateral sibling O2).
+**Proved delegate == in-place:** after a full-component walk the
+trailing `addIdRecords(unrelated, ...)` is a GUARANTEED no-op – the
+walk’s fixpoint is exactly `getParents(ids) subset-of ids`, so no
+referenced parent is ever missing -\> “delegate to
+`getPedDirectRelatives`” and “widen the walk in-place” produce IDENTICAL
+results in all cases. **Blast radius (grep):** the sole PRODUCTION
+consumer is
+[`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md)
+(renames 7 positional columns, formats dates -\> feeds QC/kinship/GVA; a
+larger pedigree is more complete, not breaking; the column contract is
+preserved by `getPedDirectRelatives`’s `ped[ped$id %in% ids,]` return);
+every other reference MOCKS `getLkDirectRelatives` wholesale
+(walk-agnostic), so no other test moved. Owner (pre-RED approach
+`AskUserQuestion`) chose **delegate** (the cleaner, research-doc-Rec-#4
+path). - **REAL WORK \#4 – strict TDD (RED -\> GREEN -\> REFACTOR):**
+**RED** – FLIPPED S148’s deferred guard in `test_getLkDirectRelatives.R`
+to assert the full component `{S1,D1,X1,O1,O2,GC1}` (incl. the
+previously-EXCLUDED sibling O2) + a new equivalence assertion
+(`result$id` setequal to
+`getPedDirectRelatives(ids="O1", ped=fixture)$id`); ran -\> 3 assertions
+FAIL (Absent: O2), no-session warning test + `expect_called` still pass.
+The deferred-and-guarded behavior change carried its own RED spec (-\>
+Learning 142). **GREEN** –
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+now fetches `pedSourceDf` via `getPedigreeSource("labkey")`,
+NULL-guards, then returns
+`getPedDirectRelatives(ids=ids, ped=pedSourceDf, unrelatedParents=unrelatedParents)`;
+the in-line strict-lineage while-loop + `addIdRecords` tail removed.
+Target 5/5; full suite 0/0. **REFACTOR** – roxygen @return/title now
+describe the full connected component + delegation; removed the now-dead
+`getSiteInfo`/`getDemographics` test stubs (getLkDirectRelatives no
+longer calls them); NEWS.Rmd “Changes” entry + re-rendered NEWS.md;
+CHANGELOG/BACKLOG/PROJECT_LEARNINGS. - **REAL WORK \#5 – caught BOTH
+NEWS render traps:** the re-render dropped a `NEWS.html` byproduct
+(deleted – Learning 139) AND smart-converted my `--` to a non-ASCII
+en-dash in NEWS.md (Learning 132) – reworded the source to drop `--`
+(the rest of NEWS avoids it) and re-verified NEWS.md is **pure ASCII**
+(`LC_ALL=C grep -P '[\x80-\xFF]'` -\> none).
+
+**Phase-3E (runtime smoke test): SATISFIED.** The deliverable changes
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)’s
+runtime walk, so I exercised the **real** function (fetch boundary
+stubbed to a fixture, mirroring the test but outside the harness):
+`getLkDirectRelatives(ids="O1")` -\> the full component
+`{D1,GC1,O1,O2,S1,X1}` (**includes collateral O2**), setequal to
+`getPedDirectRelatives(ids="O1", ped=fixture)$id`, 7-column positional
+contract preserved; the no-config fail-soft path still returns NULL; the
+body now CALLS `getPedDirectRelatives` and the in-line
+`getParents`/`addIdRecords` walk is GONE. Build equivalent:
+**`devtools::check()` Status OK (0/0/0)** (full testthat suite +
+spelling + examples + vignette rebuild ran inside it). Full suite
+`test_dir`: **0 failed / 0 error / 1960 passed / 167 skipped**;
+`lint_package()` **0**; `roxygenise` changed only
+`man/getLkDirectRelatives.Rd` (**no** `NAMESPACE` change). NEWS.html
+deleted (Learning 139); NEWS.md verified pure ASCII (Learning 132).
+
+**Session 148 Handoff Evaluation (by Session 149): Score 9/10.** S148’s
+handoff (my own immediately-prior session) was a near-perfect executor’s
+map. Its SUGGESTED-NEXT listed **exactly my three items as the first
+three options** – “(Publish S148) push `labkey-pedsource-adapter` -\> PR
+-\> CI -\> merge”, “(Delete the merged `labkey-config-defaults`
+branch)”, and “(LabKey Rec \#4 – walk unification, a BEHAVIOR CHANGE) …
+Needs explicit acceptance that the live LabKey result set GROWS (adds
+collaterals). The deterministic test now guards the current behavior, so
+this change is now safe to attempt deliberately.” That last clause was
+the single most useful thing in the handoff: it told me the RED step was
+simply to FLIP the existing guard, not author a test from scratch (-\>
+Learning 142). Every operational gotcha held firsthand: the
+1-ahead/1-behind git topology (gotcha 1 -\> `fetch`+`reset` reconcile),
+the walk divergence being load-bearing (gotcha 3 – the exact result sets
+matched my trace), `getPedigreeSource` being internal `@noRd` with
+`sourceType` selector (gotcha 4), the `labkey-config-defaults` deletion
+candidate (gotcha 2), the NEWS.html trap (gotcha 5), `pull.rebase=true`
+(gotcha 7), the standing keeps (gotcha 8). ROI strongly positive – I
+executed straight off it. **The -1 (to make it a 10):** it stated the
+result set GROWS but did NOT name the concrete downstream surface
+(`getFocalAnimalPed` is the *sole* production consumer, feeding
+kinship/GVA) nor pre-note that delegate == in-place (the
+`addIdRecords`-no-op proof) – both of which I had to establish in the
+grounding pass. Minor and discoverable; naming the consumer would have
+made it a 10.
+
+**Self-assessment (Session 149): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK read in chunks;
+dashboard 98/100; ghost-check -\> HEAD `e0aabfe0` = S148, no
+undocumented commits), reported, STOPPED for the owner; claimed the
+session (1B stub BEFORE technical work). **Headline strengths:** (1)
+**published item 1 + deleted item 2 with the full safety discipline** –
+10/10 CI + CLEAN before merge (did not merge blind), verified landed
+firsthand, reconciled `master` via provably-safe `fetch`+`reset`,
+verified-merged-before-delete with no-ref-remains check; (2) **grounded
+item 3 firsthand and PROVED delegate == in-place** (the
+`addIdRecords`-no-op-after-full-component proof) rather than assuming –
+so the approach choice rested on a proof, not a guess; (3) **used S148’s
+deferred guard test as the RED spec** (flip the assertion) – the
+cleanest possible RED for a deferred-and-guarded behavior change (-\>
+Learning 142); (4) **strict TDD held end-to-end** – phase declared every
+response, approach gate + all 3 phase gates via `AskUserQuestion`, RED
+proven failing before GREEN, no impl in RED, REFACTOR behavior-neutral;
+(5) **ran the blast-radius inventory** (grep all callers;
+mock-vs-exercise) -\> the change is contained to one characterization
+test; (6) **caught BOTH NEWS render traps** (NEWS.html byproduct +
+`--`-\>en-dash smart-render) and re-verified NEWS.md pure ASCII; (7)
+full verification – suite 0/0, lint 0, check 0/0/0, Phase-3E runtime
+smoke of the REAL function, no NAMESPACE drift; ASCII-only in prompts,
+plain language, 0 corrections, scope confined. **Weaknesses (honest):**
+(a) **the GREEN change itself is tiny** (a 4-line delegating wrapper) –
+the value is the equivalence proof + grounding + clean TDD execution,
+not algorithmic depth; (b) the **`--`-\>en-dash NEWS artifact cost a
+re-render iteration** – anticipatable (Learning 132 was already known);
+a cleaner first pass would have avoided `--` from the start; (c) **three
+items** (two admin + one substantive) – owner-authorized pairing,
+legitimate, but the substantive deliverable is a small behavior-change
+refactor; (d) the **live LabKey-server result-set growth is verified
+only via the in-memory fixture + Phase-3E**, not observed against a real
+EHR (no server/credentials here) – inherited limitation, stated not
+skipped. I reserve 9-10 for a higher-difficulty single deliverable with
+a clean first-pass (no NEWS re-render iteration).
+
+**Learnings:** **Learning 142** (a behavior change a prior session
+deferred-and-GUARDED carries its own RED spec – flip the guard’s
+assertion; and PROVE delegate == in-place before choosing – the
+`addIdRecords`-no-op-after-full-component-walk proof; plus the
+`--`-\>en-dash NEWS trap) added to `PROJECT_LEARNINGS.md`. Carried as
+applied: 133 (don’t merge blind), 135 (`fetch`+`reset` not `pull`), 139
+(delete NEWS.html), 140 (blast-radius inventory before a shared-function
+change), 141 (the walk divergence this session executed).
+
+**=\> SUGGESTED NEXT = owner’s pick.** All three items DONE. Item 1
+published (`master` = `6424509b`); item 2 done (`labkey-config-defaults`
+deleted). Item 3 (walk-unification) is committed on `walk-unification`
+(UNPUSHED). Natural options (plain ASCII labels): - **(Publish S149)**
+push `walk-unification` -\> PR -\> CI (lint + `R CMD check` x5) -\>
+merge (the S142 convention), OR fast-forward `master` + push. **Owner’s
+call** – I took no outward action on item 3’s publish. - **(Delete the
+merged `labkey-pedsource-adapter` branch)** fully merged via PR \#59;
+local + remote can be deleted (the S143/S146 hygiene). Owner’s call – I
+deleted ONLY the explicitly-authorized `labkey-config-defaults` this
+session. - **(Remaining LabKey Rec \#4/#5 – deferred)** add a
+`file`/other-EHR provider on the `getPedigreeSource()` seam; and/or
+server-side filtering / `executeSql` / consuming the centers’
+`study.Pedigree`/`ehr.kinship` (until measured). - **(Permanent NEWS
+render fix)** `html_preview: false` in `NEWS.Rmd` + pandoc smart-off (or
+`.Rbuildignore`/`.gitignore` for `NEWS.html`) – would end BOTH the
+NEWS.html NOTE (Learning 139) and the `--`-\>en-dash smart-render trap
+(Learning 132). Candidate, not done this session. - **(Answer Open Q
+§8.1 against the live server)** the actual ONPRC/SNPRC LabKey server
+version (owner / live-server only); also the only way to OBSERVE the
+live result-set growth this change introduces. - **(CRAN Phase 5,
+owner-run)** win-builder x3 + R-hub v2 + `submit_cran()` – owner PAT +
+email; HARD STOP (`docs/planning/cran-2.0.0-phase5-runbook.md`). - **A
+GitHub issue** – \#46, \#45/#28/#9, \#2, \#37, \#36, \#29, or older
+\#13/#12/#11/#10/#5/#1. **Do NOT** bundle options (FM \#18/#25); **do
+NOT** start any without the owner picking.
+
+**Key files (this session):** **CHANGED – code (branch
+`walk-unification`, this close-out commit):** `R/getLkDirectRelatives.R`
+(now DELEGATES to `getPedDirectRelatives` – 4-line wrapper: fetch via
+`getPedigreeSource("labkey")`, NULL-guard, delegate; in-line
+strict-lineage walk + `addIdRecords` tail removed; roxygen @return/title
+updated), `tests/testthat/test_getLkDirectRelatives.R` (flipped the
+guard to the full component incl. sibling O2 + equivalence assertion;
+removed dead `getSiteInfo`/`getDemographics` stubs),
+`man/getLkDirectRelatives.Rd` (regenerated), `NEWS.Rmd` + `NEWS.md`
+(“Changes” entry). **CHANGED – docs:** `CHANGELOG.md` (S149
+`[Unreleased]`), `BACKLOG.md` (walk-unification DONE; file-provider +
+server-side-filtering still deferred), `PROJECT_LEARNINGS.md` (Learning
+142), `SESSION_NOTES.md` (this handoff). **GIT:** item 1 published –
+**PR \#59 MERGED** (merge `6424509b`); `origin/master` now at
+`6424509b`. Item 2 – `labkey-config-defaults` DELETED (local + remote).
+New branch `walk-unification` off `6424509b` (UNPUSHED). **NO change
+to:** `NAMESPACE`, `data/`, `DESCRIPTION`. **Read firsthand:**
+`R/getLkDirectRelatives.R`, `R/getPedDirectRelatives.R`,
+`R/getParents.R`, `R/getOffspring.R`, `R/addIdRecords.R`,
+`R/getFocalAnimalPed.R`, `tests/testthat/test_getLkDirectRelatives.R`,
+`NEWS.Rmd`, `BACKLOG.md`/`CHANGELOG.md`/`PROJECT_LEARNINGS.md` (tails).
+**NOT committed (standing keeps):** `PED_GV_AUDIT_2026-05-30.html`
+(untracked); `.DS_Store`. **REMOVED (render artifact, never
+committed):** `NEWS.html`.
+
+**Gotchas:** (1) **S149’s walk-unification is on branch
+`walk-unification` (UNPUSHED after this commit); `origin/master` is at
+`6424509b`** (carries S148’s `getPedigreeSource`). **Local `master` is
+reconciled to `6424509b`.** Publishing S149 is the owner’s call;
+reconcile any stale branch via `git fetch` + (strict-ancestor confirmed)
+`git reset --hard`, NOT `git pull` (Learning 135). (2)
+**`labkey-pedsource-adapter` is now MERGED (via PR \#59) but still
+exists local + remote** – a deletion candidate (owner’s call; history
+preserved in merge `6424509b`). I deleted ONLY `labkey-config-defaults`
+this session (the explicitly-authorized one). (3) **THE BEHAVIOR CHANGE
+IS LIVE:**
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+now returns the **full connected pedigree component** (collaterals
+included), so the LabKey/EHR focal-animal pedigree (via
+[`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md))
+GROWS vs the old strict lineage. The deterministic test in
+`test_getLkDirectRelatives.R` asserts `{S1,D1,X1,O1,O2,GC1}`
+incl. sibling O2 – it FAILS if anyone reverts to the strict-lineage
+walk. Verified via in-memory fixture + Phase-3E; **NOT observed against
+a live LabKey server** (none here) – the actual EHR result-set growth is
+inferred, not observed. (4)
+**[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+now DELEGATES to
+[`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)**
+(fetch via `getPedigreeSource("labkey")`, NULL-guard, delegate).
+`getParents`/`getOffspring`/`addIdRecords` remain in the package (used
+by `getPedDirectRelatives`). (5) **NEWS render traps (BOTH):**
+re-rendering `NEWS.Rmd` (a) drops a `NEWS.html` byproduct that
+`R CMD check` flags as a top-level NOTE – delete it (Learning 139); (b)
+smart-converts `--` to a non-ASCII en-dash in NEWS.md – avoid `--` in
+the source (Learning 132). Permanent fix (`html_preview: false` + pandoc
+smart-off / `.Rbuildignore`) still a candidate, not applied. (6)
+**`git pull` is rebase** (`pull.rebase=true`) and chokes on the
+`.DS_Store` keep – use `git fetch` + `git reset --hard origin/<branch>`
+on a stale strict-ancestor branch (Learning 135). (7) **Standing
+keeps:** `.DS_Store` + `PED_GV_AUDIT_2026-05-30.html` – never commit.
+(8) Carried: feature-branch -\> PR -\> merge; package **ARCHIVED on CRAN
+2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT (warning + NULL) without a LabKey credential/config.
+
 ### What Session 148 Did
 
 **Deliverable:** Owner-directed 2-item pairing (the S146/S147 pattern –

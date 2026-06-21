@@ -1,7 +1,13 @@
-# Get the direct ancestors of selected animals
+# Get the direct relatives of selected animals from the LabKey EHR
 
-Gets direct ancestors from labkey `study` schema and `demographics`
-table.
+Builds the pedigree of relatives for the provided focal animals from the
+LabKey `study` schema `demographics` table, obtained through the
+internal `getPedigreeSource()` adapter. The pedigree walk is delegated
+to
+[`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md),
+so the result is the full connected pedigree component (ancestors,
+descendants, and collaterals such as siblings and mates) reachable from
+the focal animals.
 
 ## Usage
 
@@ -23,8 +29,9 @@ getLkDirectRelatives(ids, unrelatedParents = FALSE)
 
 ## Value
 
-A data.frame with pedigree structure having all of the direct ancestors
-for the Ids provided.
+A data.frame with pedigree structure containing all direct relatives –
+the full connected pedigree component (ancestors, descendants, and
+collaterals) – for the Ids provided.
 
 ## Examples
 

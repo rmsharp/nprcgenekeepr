@@ -2,6 +2,18 @@
 
 ## nprcgenekeepr (development version)
 
+- Changes
+  - [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+    now returns the full connected pedigree component for the focal
+    animals (ancestors, descendants, and collaterals such as siblings,
+    mates, and their lineages) by delegating its pedigree walk to
+    [`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md).
+    Previously it returned only the strict ancestor/descendant lineage
+    and omitted collateral relatives. Pedigrees built from the
+    LabKey/EHR path (via
+    [`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md))
+    are now more complete and consistent with the in-memory
+    [`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md).
 - New features
   - Added the exported
     [`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md),

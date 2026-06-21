@@ -15,6 +15,76 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-20 — Published S148 (PR \#59) + deleted merged `labkey-config-defaults` + walk-unification: `getLkDirectRelatives()` now returns the full connected component (LabKey research Rec \#4) (Session 149)
+
+- **Deliverable (owner directive, a 3-item pairing — two admin/hygiene +
+  one substantive behavior-change deliverable):** (1) publish S148’s
+  `getPedigreeSource` fetch-adapter to `master`; (2) delete the merged
+  `labkey-config-defaults` branch; (3) **LabKey research Rec \#4
+  walk-unification** — make
+  [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)’s
+  pedigree walk match
+  [`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)’s.
+  Items 1–2 = VERIFICATION/admin; item 3 = **strict-TDD** (RED → GREEN →
+  REFACTOR, all three gates via `AskUserQuestion`, plus a pre-RED
+  **approach** `AskUserQuestion`). **0 stakeholder corrections.**
+- **Item 1 — publish:** pushed `labkey-pedsource-adapter`, opened **PR
+  \#59** → `master`, watched CI go green (**10/10**: `lint`, all 5
+  `R CMD check` platforms incl. ubuntu-devel 16m7s, `pkgdown`,
+  `test-coverage`, `codecov` patch+project), confirmed
+  `mergeStateStatus: CLEAN` (did not merge blind — Learning 133), merged
+  (merge commit **`6424509b`**). Reconciled local `master` via
+  `git fetch` + strict-ancestor `reset --hard` (Learning 135). S148’s
+  `getPedigreeSource` adapter is now on `master`.
+- **Item 2 — branch deletion:** confirmed `labkey-config-defaults`
+  (merged via PR \#58) is a strict ancestor of `origin/master`, deleted
+  local (`git branch -d`) + remote (`git push origin --delete`);
+  verified no ref remains either side. (Same hygiene S143/S146 did.)
+- **Item 3 grounding (the load-bearing analysis):** the two walks differ
+  —
+  [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+  walked a strict ancestor/descendant lineage;
+  [`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
+  walks the full connected component (adds collaterals). Unifying GROWS
+  the live LabKey result set (a behavior change, owner-accepted; S148’s
+  Learning 141). The sole production consumer is
+  [`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md)
+  — a larger pedigree is more complete for kinship/GVA, not breaking;
+  every other reference mocks `getLkDirectRelatives` wholesale
+  (walk-agnostic). **Proof that delegate ≡ in-place:** after a
+  full-component walk the trailing `addIdRecords(unrelated, …)` is a
+  guaranteed no-op (the walk’s fixpoint is exactly
+  `getParents(ids) ⊆ ids`, so no referenced parent is ever missing) — so
+  “delegate to `getPedDirectRelatives`” and “widen the walk in-place”
+  produce identical results in all cases. Owner (pre-RED approach
+  `AskUserQuestion`) chose **delegate**. → Learning 142.
+- **Item 3 implementation (branch `walk-unification`, strict-TDD):**
+  **RED** — flipped the strict-lineage guard in
+  `test_getLkDirectRelatives.R` to assert the full component for focal
+  O1 (`{S1,D1,X1,O1,O2,GC1}` incl. the previously-excluded sibling O2,
+  plus equivalence to
+  `getPedDirectRelatives(ids="O1", ped=fixture)$id`); ran → 3 assertions
+  fail (Absent: O2). **GREEN** —
+  [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+  now fetches `pedSourceDf` via `getPedigreeSource("labkey")` then
+  returns
+  `getPedDirectRelatives(ids, ped=pedSourceDf, unrelatedParents)`; the
+  in-line strict-lineage while-loop + `addIdRecords` tail removed.
+  **REFACTOR** — updated the roxygen (@return/title now describe the
+  full connected component + delegation), removed the now-dead
+  `getSiteInfo`/`getDemographics` test stubs, added a NEWS.Rmd “Changes”
+  entry + re-rendered NEWS.md (deleted the `NEWS.html` artifact —
+  Learning 139; reworded to avoid the `--`→en-dash smart-render artifact
+  — Learning 132).
+- **Verification:** full testthat suite **0 failed / 0 error** (1960
+  passed / 167 skipped); `lint_package()` **0**; `roxygenise` changed
+  only `man/getLkDirectRelatives.Rd` (no `NAMESPACE` change);
+  **`devtools::check()` OK (0/0/0)**; Phase-3E runtime smoke exercised
+  the real `getLkDirectRelatives` (full-component result
+  incl. collateral O2, 7-column positional contract preserved, fail-soft
+  NULL path intact, body delegates). Committed on `walk-unification`
+  (unpushed — publishing is the owner’s call).
+
 ### 2026-06-20 — Published S147 (PR \#58) + data-source adapter on the `getPedDirectRelatives` fetch boundary (LabKey research Rec \#4/#5) (Session 148)
 
 - **Deliverable (owner directive “Publish S147”, re-scoped via

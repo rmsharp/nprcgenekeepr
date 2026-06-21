@@ -9437,3 +9437,68 @@ rename it (e.g. `sourceType`) rather than scatter `# nolint`\].
 **Apply:** any “make X use/delegate-to Y” or “consolidate these two”
 task; any data-source/adapter extraction; any refactor claiming “no
 behavior change” over two non-identical code paths.
+
+#### Learning 142 — When you EXECUTE a behavior change a prior session deliberately deferred and GUARDED, the guard/characterization test IS the RED spec — flip its assertion to the new behavior; and before choosing between a “delegate” and an “in-place” implementation, PROVE they are result-equivalent (or characterize where they differ) instead of assuming. (S149, LabKey research Rec \#4 — walk-unification)
+
+**What happened.** S148 deferred unifying
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)’s
+strict ancestor/descendant walk with
+[`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)’s
+full-connected-component walk (a behavior change — the live LabKey
+result set grows to include collaterals; Learning 141) and left a
+characterization test pinning the OLD behavior (focal O1 →
+`{O1,S1,D1,GC1,X1}`, asserting the collateral sibling O2 was EXCLUDED).
+Executing the change this session, the RED step was simply to FLIP that
+guard: assert the full component `{S1,D1,X1,O1,O2,GC1}` INCLUDING O2
+(plus equivalence to `getPedDirectRelatives(ids="O1", ped=fixture)$id`).
+The deferred-and-guarded behavior change made its own RED test — the
+guard’s inverted assertion was the spec, and it failed against the
+current code exactly where predicted (Absent: O2). On approach: the
+research doc’s “delegate to `getPedDirectRelatives`” and a “widen the
+walk in-place” rewrite LOOK different, but I proved them
+result-IDENTICAL in all cases before asking the owner — after a
+full-component walk the trailing `addIdRecords(unrelated, …)` is a
+guaranteed no-op, because that walk’s fixpoint is exactly
+`getParents(ids) ⊆ ids` (the loop runs until
+`setdiff(union(getParents(ids), getOffspring(ids)), ids)` is empty), so
+every non-NA sire/dam reference is already in the set and `unrelated` is
+always empty. With equivalence proven, “delegate” is the clearly-cleaner
+choice (one walk implementation, matches the research doc) and the owner
+picked it via a pre-RED approach `AskUserQuestion`. Blast-radius check
+first (the Learning 140 reflex): the sole production consumer is
+[`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md)
+(a larger pedigree is more complete for kinship/GVA, not breaking; it
+renames 7 positional columns — preserved by `getPedDirectRelatives`’s
+`ped[ped$id %in% ids, ]` return), and every other reference mocks
+`getLkDirectRelatives` wholesale (walk-agnostic), so no other test
+moved. Verified end-to-end: suite 0/0 (1960 passed), lint 0,
+`devtools::check()` 0/0/0, and a Phase-3E smoke of the REAL
+`getLkDirectRelatives` (full component incl. O2, fail-soft NULL path
+intact, body delegates). NEWS render trap recurred: `--` in the Rmd
+smart-rendered to an en-dash in NEWS.md (Learning 132) — reworded the
+source to drop `--` (the rest of NEWS avoids it) and re-verified NEWS.md
+is pure ASCII; deleted the `NEWS.html` byproduct (Learning 139).
+
+**Reflexes:** \[when you execute a behavior change a prior session
+deferred-and-guarded with a characterization test, the RED step is to
+FLIP that guard’s assertion to the new behavior — the deferred change
+carries its own spec; don’t write a brand-new test from scratch and
+leave the stale guard to fail confusingly\]\[before choosing between
+“delegate to an existing function” and “reimplement in-place” for a
+behavior change, PROVE the two produce identical results (or
+characterize the difference) — here the proof was that a full-component
+walk’s fixpoint (`getParents(ids) ⊆ ids`) makes the trailing
+`addIdRecords(unrelated,…)` a guaranteed no-op, so delegate ≡ in-place
+in ALL cases; with equivalence proven, pick the cleaner one and confirm
+via a pre-RED approach `AskUserQuestion`\]\[run the blast-radius
+inventory before a behavior change (grep all callers + which tests MOCK
+vs EXERCISE the function) — if the only real consumer tolerates the
+larger output and every other reference mocks the function, the change
+is contained to the one characterization test\]\[a NEWS.Rmd `--`
+smart-renders to a non-ASCII en-dash in NEWS.md — reword the source to
+avoid `--` (parentheses/commas) and re-verify NEWS.md is pure ASCII
+(`LC_ALL=C grep -P '[\x80-\xFF]'`), then delete the `NEWS.html`
+byproduct\]. **Apply:** any session that executes a behavior change a
+prior session deferred (flip its guard test); any “delegate vs
+reimplement” choice (prove equivalence first); any NEWS.Rmd re-render
+(mind the `--`→en-dash + `NEWS.html` traps).

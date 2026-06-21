@@ -975,7 +975,7 @@ ped <- qcStudbook(pedOne, minParentAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpAYBdtk/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpRECU60/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -1136,8 +1136,8 @@ examplePedigree[unlist(exampleLoops), c("id", "sire", "dam")][1L:10L, ]
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-06-20 22:18:15.827263. The processing
-time for this document was 15 seconds..
+The current date and time is 2026-06-21 00:53:46.816697. The processing
+time for this document was 14 seconds..
 
 ``` r
 
@@ -1173,7 +1173,7 @@ sessionInfo()
     ## [1] nprcgenekeepr_2.0.0 knitr_1.51          ggplot2_4.0.3       stringi_1.8.7      
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] gtable_0.3.6         anytime_0.3.13       xfun_0.58            bslib_0.11.0        
+    ##  [1] gtable_0.3.6         anytime_0.3.13       xfun_0.59            bslib_0.11.0        
     ##  [5] htmlwidgets_1.6.4    lattice_0.22-9       vctrs_0.7.3          tools_4.6.0         
     ##  [9] generics_0.1.4       tibble_3.3.1         pkgconfig_2.0.3      Matrix_1.7-5        
     ## [13] data.table_1.18.4    checkmate_2.3.4      RColorBrewer_1.1-3   S7_0.2.2            
@@ -1184,7 +1184,7 @@ sessionInfo()
     ## [33] jquerylib_0.1.4      DT_0.34.0            cachem_1.1.0         sessioninfo_1.2.4   
     ## [37] mime_0.13            tidyselect_1.2.1     digest_0.6.39        dplyr_1.2.1         
     ## [41] labeling_0.4.3       WriteXLS_6.8.0       fastmap_1.2.0        grid_4.6.0          
-    ## [45] cli_3.6.6            magrittr_2.0.5       withr_3.0.2          scales_1.4.0        
+    ## [45] cli_3.6.6            magrittr_2.0.5       withr_3.0.3          scales_1.4.0        
     ## [49] promises_1.5.0       backports_1.5.1      plotrix_3.8-14       lubridate_1.9.5     
     ## [53] timechange_0.4.0     rmarkdown_2.31       lambda.r_1.2.4       httr_1.4.8          
     ## [57] otel_0.2.0           cellranger_1.1.0     futile.logger_1.4.9  ragg_1.5.2          

@@ -44,7 +44,11 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="nprcgenekeepr-development-version">nprcgenekeepr (development version)<a class="anchor" aria-label="anchor" href="#nprcgenekeepr-development-version"></a></h2>
-<ul><li>New features
+<ul><li>Changes
+<ul><li>
+<code><a href="../reference/getLkDirectRelatives.html">getLkDirectRelatives()</a></code> now returns the full connected pedigree component for the focal animals (ancestors, descendants, and collaterals such as siblings, mates, and their lineages) by delegating its pedigree walk to <code><a href="../reference/getPedDirectRelatives.html">getPedDirectRelatives()</a></code>. Previously it returned only the strict ancestor/descendant lineage and omitted collateral relatives. Pedigrees built from the LabKey/EHR path (via <code><a href="../reference/getFocalAnimalPed.html">getFocalAnimalPed()</a></code>) are now more complete and consistent with the in-memory <code><a href="../reference/getPedDirectRelatives.html">getPedDirectRelatives()</a></code>.</li>
+</ul></li>
+<li>New features
 <ul><li>Added the exported <code><a href="../reference/setLabKeyDefaults.html">setLabKeyDefaults()</a></code>, which configures <code>Rlabkey</code> authentication for the session: it prefers an API key (from the <code>NPRCGENEKEEPR_LABKEY_APIKEY</code> environment variable, then an <code>apiKey</code> configuration-file token), falls back to a <code>.netrc</code>/<code>_netrc</code> file, and otherwise stops with a clear <code>No LabKey credential found</code> error. <code><a href="../reference/getDemographics.html">getDemographics()</a></code> now configures authentication automatically before querying, so a missing credential fails fast instead of producing an opaque error later.</li>
 </ul></li>
 <li>Documentation

@@ -269,7 +269,7 @@
   : Get the direct ancestors of selected animals
 
 - [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
-  : Get the direct ancestors of selected animals
+  : Get the direct relatives of selected animals from the LabKey EHR
 
 - [`getOffspring()`](https://github.com/rmsharp/nprcgenekeepr/reference/getOffspring.md)
   : Get offspring to corresponding animal IDs provided
