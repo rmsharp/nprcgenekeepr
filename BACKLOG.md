@@ -25,9 +25,16 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       now delegates its pedigree walk to `getPedDirectRelatives()`, so the LabKey/EHR path returns the
       full connected pedigree component (collaterals included), consistent with the in-memory function —
       a deliberate, owner-accepted behavior change; the deterministic test now asserts the full
-      component incl. the previously-excluded collateral sibling. **Still deferred:** a `file`/other-EHR
-      provider on the `getPedigreeSource()` seam; server-side filtering / `executeSql` / consuming the
-      centers' `study.Pedigree`/`ehr.kinship` (until measured).
+      component incl. the previously-excluded collateral sibling. **`file` provider DONE — S150:**
+      `getPedigreeSource()` gained a `"file"` source (params `fileName`/`sep`) that reads a pedigree file
+      (CSV or Excel) via the exported `getPedigree()`, alongside `"labkey"` and `"dataframe"`;
+      offline-deterministic, validates id/sire/dam, errors loudly like the `dataframe` branch. Not yet
+      wired to a production caller (`getLkDirectRelatives()` still uses `"labkey"`). **Still deferred:**
+      a non-LabKey other-EHR provider on the same seam; server-side filtering / `executeSql` / consuming
+      the centers' `study.Pedigree`/`ehr.kinship` (research doc explicitly defers until pull size is
+      measured + per-center query availability/permissions are confirmed; needs a live LabKey server to
+      test/observe, and a naive focal-id server filter is incompatible with the client-side
+      connected-component walk).
 - [ ] **Strengthen the shinytest2 E2E assertions + CI stability** — GitHub issue **#40**, the open
       follow-on to the now-complete Phase 8 E2E harness: replace boot-level tautologies with behavioral
       checks, and harden the full-tier Chrome process-count flake (per-group fresh processes). Coverage

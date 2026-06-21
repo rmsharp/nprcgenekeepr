@@ -89,3 +89,57 @@ test_that("getPedigreeSource('labkey') returns NULL when the fetch errors", {
 test_that("getPedigreeSource() rejects an unknown source", {
   expect_error(getPedigreeSource(sourceType = "bogus"), "should be one of")
 })
+
+test_that("getPedigreeSource('file') reads a CSV and returns the normalized ped", {
+  ped <- normalizedPedFixture()
+  tmp <- tempfile(fileext = ".csv")
+  on.exit(unlink(tmp), add = TRUE)
+  write.csv(ped, tmp, row.names = FALSE)
+  result <- getPedigreeSource(sourceType = "file", fileName = tmp)
+  expect_true(is.data.frame(result))
+  expect_true(all(c("id", "sire", "dam") %in% names(result)))
+  expect_identical(result$id, ped$id)
+})
+
+test_that("getPedigreeSource('file') errors when fileName is missing", {
+  expect_error(getPedigreeSource(sourceType = "file"), "fileName")
+  expect_error(getPedigreeSource(sourceType = "file", fileName = NULL), "fileName")
+})
+
+test_that("getPedigreeSource('file') errors when the file does not exist", {
+  expect_error(
+    getPedigreeSource(
+      sourceType = "file",
+      fileName = file.path(tempdir(), "no_such_pedigree_file.csv")
+    ),
+    "not found"
+  )
+})
+
+test_that("getPedigreeSource('file') errors when the file lacks id/sire/dam", {
+  tmp <- tempfile(fileext = ".csv")
+  on.exit(unlink(tmp), add = TRUE)
+  write.csv(data.frame(id = c("A", "B"), stringsAsFactors = FALSE), tmp,
+            row.names = FALSE)
+  expect_error(
+    getPedigreeSource(sourceType = "file", fileName = tmp), "column"
+  )
+})
+
+test_that("getPedigreeSource('file') delegates to getPedigree with fileName and sep", {
+  skip_if_not_installed("mockery")
+  ped <- normalizedPedFixture()
+  tmp <- tempfile(fileext = ".csv")
+  on.exit(unlink(tmp), add = TRUE)
+  write.csv(ped, tmp, row.names = FALSE)  # must exist for the file.exists() guard
+  pedMock <- mockery::mock(ped)
+  mockery::stub(getPedigreeSource, "getPedigree", pedMock)
+
+  result <- getPedigreeSource(sourceType = "file", fileName = tmp, sep = ";")
+
+  mockery::expect_called(pedMock, 1)
+  callArgs <- mockery::mock_args(pedMock)[[1]]
+  expect_identical(callArgs[[1]], tmp)        # fileName threaded to getPedigree
+  expect_identical(callArgs[["sep"]], ";")    # sep threaded to getPedigree
+  expect_identical(result, ped)
+})
