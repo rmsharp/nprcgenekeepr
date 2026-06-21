@@ -37,7 +37,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       **Option C — file pedigree source through the focal-animal app pipeline DONE — S152:** new exported
       `getFocalAnimalPedFromFile(fileName, pedigreeFileName, sep)`, a file-sourced sibling of
       `getFocalAnimalPed()` (reads focal Ids from one file, builds the connected component from a separate
-      pedigree file via `getFileDirectRelatives()`, fail-soft `NULL` on a bad pedigree file). `modInput`
+      pedigree file via `getFileDirectRelatives()`; fail-soft to a classed `nprcgenekeeprFileErr` whose
+      `message` names WHY the read failed — bad focal-id list file, a missing/not-found/unreadable/
+      wrong-column pedigree file, or no focal IDs matched — surfaced as the app's "File Read Error"
+      detail (richer error messages added S155). `modInput`
       gained an optional pedigree-file input on the focal-animals path and dispatches to the offline
       function when supplied, else the unchanged LabKey path — so the Shiny focal-animal workflow can now
       run offline with no LabKey/EHR connection. (The focal-id read was factored into a shared internal

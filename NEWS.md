@@ -43,8 +43,12 @@ R. Mark Sharp, Ph.D.
     the focal animals path; when a pedigree file is supplied the
     pedigree is built from that file, otherwise the LabKey/EHR path is
     used as before. Being the application boundary, the function is
-    fail-soft (returns `NULL` on an unreadable pedigree file, which the
-    app surfaces as a File Read Error).
+    fail-soft: rather than throwing, it returns a classed error whose
+    message names WHY the read failed (an unreadable focal-id list file;
+    a missing, not-found, unreadable, or wrong-column pedigree file; or
+    no focal IDs found in the pedigree), and the app surfaces that
+    message as the specific File Read Error detail instead of a generic
+    one.
 - Documentation
   - The example configuration file
     (`inst/extdata/example_nprcgenekeepr_config`) now documents that

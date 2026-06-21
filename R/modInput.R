@@ -331,14 +331,43 @@ modInputServer <- function(id, config = NULL) {
       if (identical(input$fileContent, "focalAnimals")) {
         # If the user also supplied a pedigree file, build the focal animals'
         # pedigree from that FILE (offline, no database). Otherwise fall back to
-        # the LabKey/EHR path. A NULL from the file path (an unreadable pedigree
-        # file) flows to the is.null(rawData) "File Read Error" handler below.
+        # the LabKey/EHR path. The file path fails soft to an
+        # nprcgenekeeprFileErr (handled just below) that names WHY it could not
+        # build the pedigree.
         pedFile <- input$focalPedigreeFile
         if (!is.null(pedFile)) {
           built <- getFocalAnimalPedFromFile(file$datapath, pedFile$datapath,
                                              sep = sep)
         } else {
           built <- getFocalAnimalPed(file$datapath, sep = sep)
+        }
+        if (inherits(built, "nprcgenekeeprFileErr")) {
+          # Offline file path failed: surface the SPECIFIC reason (bad focal-id
+          # list file; a missing/not-found/unreadable/wrong-column pedigree
+          # file; or no focal IDs found) as the "File Read Error" detail,
+          # instead of the generic is.null(rawData) message.
+          storedResults(list(
+            cleaned = NULL,
+            errors = data.frame(
+              Row = NA_integer_,
+              Error = "File Read Error",
+              Details = built$message,
+              stringsAsFactors = FALSE
+            ),
+            warnings = data.frame(
+              Row = integer(0L), Warning = character(0L),
+              Details = character(0L), stringsAsFactors = FALSE
+            ),
+            changedCols = NULL,
+            hasChangedCols = FALSE,
+            genotype = NULL
+          ))
+          storedErrorLst(NULL)
+          session$sendCustomMessage("setDataReady", list(
+            selector = paste0("#", session$ns("moduleContainer")),
+            ready = TRUE
+          ))
+          return()
         }
         if (inherits(built, "nprcgenekeeprErr")) {
           # getLkDirectRelatives returned NULL: a database connection failure.

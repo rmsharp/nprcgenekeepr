@@ -1119,11 +1119,56 @@ test_that("modInputServer offline focal-file path surfaces a File Read Error on 
       )
       session$setInputs(getData = 1)
 
-      # A bad pedigree file makes getFocalAnimalPedFromFile() return NULL, which
-      # flows to the existing is.null(rawData) "File Read Error" handler.
+      # A bad pedigree file makes getFocalAnimalPedFromFile() return a classed
+      # nprcgenekeeprFileErr; modInput surfaces it as a "File Read Error" whose
+      # Details name WHY -- the SPECIFIC reason, not the old generic message.
       res <- storedResults()
       expect_true(is.null(res$cleaned))
       expect_true(any(grepl("File Read Error", res$errors$Error)))
+      expect_true(any(grepl("not found", res$errors$Details, ignore.case = TRUE)))
+      expect_false(any(grepl("Could not read the uploaded file",
+                             res$errors$Details)))
+    }
+  )
+})
+
+test_that("modInputServer offline focal-file path reports a missing-column pedigree file", {
+  skip_if_not_installed("shiny")
+  shortlist <- system.file("extdata", "focalAnimalsShortList.csv",
+                           package = "nprcgenekeepr")
+  badPed <- tempfile(fileext = ".csv")
+  utils::write.csv(data.frame(id = c("A", "B"), stringsAsFactors = FALSE),
+                   badPed, row.names = FALSE)
+  on.exit(unlink(badPed), add = TRUE)
+
+  testthat::local_mocked_bindings(
+    getLkDirectRelatives = function(ids, ...)
+      stop("EHR must not be called on the offline file path"),
+    .package = "nprcgenekeepr"
+  )
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(
+        fileContent = "focalAnimals",
+        fileType = "fileTypeText",
+        separator = ",",
+        minParentAge = "2.0"
+      )
+      session$setInputs(
+        breederFile = list(name = basename(shortlist), datapath = shortlist),
+        focalPedigreeFile = list(name = basename(badPed), datapath = badPed)
+      )
+      session$setInputs(getData = 1)
+
+      # The specific reason -- a wrong-column pedigree file -- reaches the UI
+      # Details column, not the old generic "Could not read the uploaded file."
+      res <- storedResults()
+      expect_true(is.null(res$cleaned))
+      expect_true(any(grepl("File Read Error", res$errors$Error)))
+      expect_true(any(grepl("id, sire, and dam", res$errors$Details)))
     }
   )
 })
