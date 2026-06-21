@@ -33,28 +33,7 @@ getFocalAnimalPed <- function(fileName, sep = ",") {
   flog.debug(paste0("in getFocalAnimalPed\n"),
     name = "nprcgenekeepr"
   )
-  if (excel_format(fileName) %in% c("xls", "xlsx")) {
-    focalAnimals <- readExcelPOSIXToCharacter(fileName)
-    flog.debug(paste0(
-      "in getFocalAnimalPed after readxl, ",
-      "nrow(focalAnimals) = ",
-      nrow(focalAnimals), "\n"
-    ), name = "nprcgenekeepr")
-  } else {
-    focalAnimals <- muffleIncompleteFinalLine(read.csv(fileName,
-      header = TRUE,
-      sep = sep,
-      stringsAsFactors = FALSE,
-      na.strings = c("", "NA"),
-      check.names = FALSE
-    ))
-    flog.debug(paste0(
-      "in getFocalAnimalPed after read.csv, ",
-      "nrow(focalAnimals) = ",
-      nrow(focalAnimals), "\n"
-    ), name = "nprcgenekeepr")
-  }
-  focalAnimals <- as.character(focalAnimals[, 1L])
+  focalAnimals <- readFocalAnimalIds(fileName, sep = sep)
   ped <- getLkDirectRelatives(ids = focalAnimals)
   if (is.null(ped)) {
     flog.debug(paste0(

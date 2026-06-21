@@ -115,6 +115,10 @@ modInputUI <- function(id) {
           condition = "input.fileContent == 'focalAnimals'",
           ns = ns,
           fileInput(ns("breederFile"), label = "Select Focal Animals File",
+                    accept = c(".csv", ".txt", ".xlsx", ".xls")),
+          fileInput(ns("focalPedigreeFile"),
+                    label = paste("Optional: Pedigree File (build offline;",
+                                  "no database)"),
                     accept = c(".csv", ".txt", ".xlsx", ".xls"))
         ),
 
@@ -325,7 +329,17 @@ modInputServer <- function(id, config = NULL) {
       # is.element("nprckeepErr", ...) is a typo that never matched).
       sep <- if (is.null(input$separator)) "," else input$separator
       if (identical(input$fileContent, "focalAnimals")) {
-        built <- getFocalAnimalPed(file$datapath, sep = sep)
+        # If the user also supplied a pedigree file, build the focal animals'
+        # pedigree from that FILE (offline, no database). Otherwise fall back to
+        # the LabKey/EHR path. A NULL from the file path (an unreadable pedigree
+        # file) flows to the is.null(rawData) "File Read Error" handler below.
+        pedFile <- input$focalPedigreeFile
+        if (!is.null(pedFile)) {
+          built <- getFocalAnimalPedFromFile(file$datapath, pedFile$datapath,
+                                             sep = sep)
+        } else {
+          built <- getFocalAnimalPed(file$datapath, sep = sep)
+        }
         if (inherits(built, "nprcgenekeeprErr")) {
           # getLkDirectRelatives returned NULL: a database connection failure.
           # Route the errorLst to storedErrorLst() so the already-wired
