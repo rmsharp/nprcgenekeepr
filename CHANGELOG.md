@@ -15,6 +15,30 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-21 — Deleted the two merged file-pedigree-source carrier branches (Session 154)
+
+- **Deliverable (owner directive, single hygiene item):** delete
+  `wire-focal-file-source` (S152, merged via PR \#63) and
+  `wire-file-pedsource` (S151, merged via PR \#62), local + remote.
+  **Admin/hygiene** (no production-code logic → no TDD gates). **0
+  stakeholder corrections.**
+- **Verified-merged-before-delete (S143/S146/S149–S152 pattern):**
+  confirmed both branches (`4f362be9`, `1145d3ef`) are strict ancestors
+  of `origin/master` (`43822c80`); deleted local (`git branch -d` — the
+  safe merged-only form) + remote (`git push origin --delete`);
+  `git fetch --prune`; verified **no ref remains** either side (local +
+  remote-tracking lists empty; `gh api .../branches/<b>` → **404** for
+  both). History preserved in merge commits `e1780c02`/`cb46616e` on
+  `master`.
+- **Net:** the S150–S152 file-pedigree-source line
+  (`getPedigreeSource()` `"file"` provider →
+  [`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md)
+  →
+  [`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md) +
+  modInput offline-focal wiring) is fully landed on `master` with no
+  dangling branches. Close-out docs committed direct to `master`
+  (owner-authorized bookkeeping).
+
 ### 2026-06-21 — Published S152 (PR \#63): `getFocalAnimalPedFromFile()` + modInput offline-focal wiring now on `master` (Session 153)
 
 - **Deliverable (owner directive, single item):** publish S152’s Option

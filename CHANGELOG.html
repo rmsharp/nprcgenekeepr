@@ -52,6 +52,16 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-06-21--deleted-the-two-merged-file-pedigree-source-carrier-branches-session-154">2026-06-21 — Deleted the two merged file-pedigree-source carrier branches (Session 154)<a class="anchor" aria-label="anchor" href="#id_2026-06-21--deleted-the-two-merged-file-pedigree-source-carrier-branches-session-154"></a></h3>
+<ul><li>
+<strong>Deliverable (owner directive, single hygiene item):</strong> delete <code>wire-focal-file-source</code> (S152, merged via PR #63) and <code>wire-file-pedsource</code> (S151, merged via PR #62), local + remote. <strong>Admin/hygiene</strong> (no production-code logic → no TDD gates). <strong>0 stakeholder corrections.</strong>
+</li>
+<li>
+<strong>Verified-merged-before-delete (S143/S146/S149–S152 pattern):</strong> confirmed both branches (<code>4f362be9</code>, <code>1145d3ef</code>) are strict ancestors of <code>origin/master</code> (<code>43822c80</code>); deleted local (<code>git branch -d</code> — the safe merged-only form) + remote (<code>git push origin --delete</code>); <code>git fetch --prune</code>; verified <strong>no ref remains</strong> either side (local + remote-tracking lists empty; <code>gh api .../branches/&lt;b&gt;</code> → <strong>404</strong> for both). History preserved in merge commits <code>e1780c02</code>/<code>cb46616e</code> on <code>master</code>.</li>
+<li>
+<strong>Net:</strong> the S150–S152 file-pedigree-source line (<code>getPedigreeSource()</code> <code>"file"</code> provider → <code><a href="reference/getFileDirectRelatives.html">getFileDirectRelatives()</a></code> → <code><a href="reference/getFocalAnimalPedFromFile.html">getFocalAnimalPedFromFile()</a></code> + modInput offline-focal wiring) is fully landed on <code>master</code> with no dangling branches. Close-out docs committed direct to <code>master</code> (owner-authorized bookkeeping).</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-06-21--published-s152-pr-63-getfocalanimalpedfromfile--modinput-offline-focal-wiring-now-on-master-session-153">2026-06-21 — Published S152 (PR #63): <code>getFocalAnimalPedFromFile()</code> + modInput offline-focal wiring now on <code>master</code> (Session 153)<a class="anchor" aria-label="anchor" href="#id_2026-06-21--published-s152-pr-63-getfocalanimalpedfromfile--modinput-offline-focal-wiring-now-on-master-session-153"></a></h3>
 <ul><li>
 <strong>Deliverable (owner directive, single item):</strong> publish S152’s Option C work (<code><a href="reference/getFocalAnimalPedFromFile.html">getFocalAnimalPedFromFile()</a></code> + <code>readFocalAnimalIds()</code> + the modInput <code>focalPedigreeFile</code> UI/dispatch — the app’s offline focal-animal path) from <code>wire-focal-file-source</code> to <code>master</code>. <strong>Admin/verification</strong> (no production-code logic → no TDD gates). <strong>0 stakeholder corrections.</strong>
