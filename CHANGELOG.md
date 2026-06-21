@@ -15,6 +15,76 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-20 — Published S150 (PR \#61) + deleted merged `walk-unification` + wired the `"file"` provider to a first-class caller `getFileDirectRelatives()` (Session 151)
+
+- **Deliverable (owner directive, a 3-item pairing — two admin/hygiene +
+  one substantive deliverable):** (1) publish S150’s
+  `getPedigreeSource()` `"file"` provider to `master`; (2) delete the
+  merged `walk-unification` branch; (3) **wire the `"file"` provider to
+  a production caller** (S150 left it capability-only —
+  [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+  hardcodes `"labkey"`). Items 1–2 = VERIFICATION/admin; item 3 =
+  **strict-TDD** (RED → GREEN → REFACTOR, all three gates via
+  `AskUserQuestion`, plus a pre-RED **scope** `AskUserQuestion`). **0
+  stakeholder corrections.**
+- **Item 1 — publish:** pushed `pedsource-file-provider`, opened **PR
+  \#61** → `master`, watched CI go green (**10/10**: `lint`, all 5
+  `R CMD check` platforms incl. ubuntu-devel 17m3s, `pkgdown`,
+  `test-coverage`, `codecov` patch+project), confirmed
+  `mergeStateStatus: CLEAN` + `MERGEABLE` (did not merge blind —
+  Learning 133), merged (merge commit **`b8a6a5ec`**). Reconciled local
+  `master` via `git fetch` + strict-ancestor `reset --hard` (Learning
+  135). S150’s `"file"` provider is now on `master`.
+- **Item 2 — branch deletion:** confirmed `walk-unification` (local +
+  remote, both `17a3ee24`, merged via PR \#60) is a strict ancestor of
+  `origin/master`, deleted local (`git branch -d`) + remote
+  (`git push origin --delete`); verified no ref remains either side.
+  (Same hygiene S143/S146/S149/S150 did.)
+- **Item 3 scope (pre-RED `AskUserQuestion`, owner-chosen “New
+  [`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md)”):**
+  grounded the wiring options via a read-only 4-agent sweep + firsthand
+  reads. Key findings:
+  [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+  is a thin wrapper (fetch → `getPedDirectRelatives` walk); its sole
+  production consumer is
+  [`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md)
+  whose `fileName` is the focal-**ID list**, not a pedigree; the
+  fail-soft NULL contract is LabKey-only (the `"file"` source errors
+  loudly); an offline focal-subset is already composable via
+  `getPedDirectRelatives(ids, getPedigree(file))`; and the research doc
+  framed the `"file"` source as a test/offline-pluggability provider, so
+  production wiring is new owner-directed scope. The owner chose a clean
+  symmetric sibling over parameterizing the LabKey-named function (no
+  naming smell, no new params on existing functions) and over the larger
+  `getFocalAnimalPed`/app-pipeline wiring (deferred). → Learning 144.
+- **Item 3 implementation (branch `wire-file-pedsource`, strict-TDD):**
+  **RED** — new `tests/testthat/test_getFileDirectRelatives.R` (7 tests:
+  full-component read from a CSV incl. collateral O2; equivalence to
+  `getPedDirectRelatives` over the same file; a `mockery` delegation
+  check that `getPedigreeSource(sourceType="file", fileName, sep)` then
+  `getPedDirectRelatives(ids, ped, unrelatedParents)` are called with
+  the right args; constrained-message errors for NULL/missing
+  `fileName`, missing file, missing id/sire/dam; a `sep=";"` round-trip)
+  all failed, with the error-contract regexps NOT matched by “could not
+  find function” (genuine RED, no false-pass — the S148 lesson).
+  **GREEN** — new exported `R/getFileDirectRelatives.R`:
+  `getFileDirectRelatives(ids, fileName = NULL, sep = ",", unrelatedParents = FALSE)`
+  = `getPedigreeSource(sourceType = "file", fileName, sep)` then
+  `getPedDirectRelatives(ids, ped, unrelatedParents)`; no NULL guard
+  (the file source errors loudly by design). **REFACTOR** — no
+  structural change needed (the wrapper is already minimal, mirroring
+  `getLkDirectRelatives` minus the fail-soft guard); roxygen
+  `@export`/@param/@return + a runnable tempfile example; `roxygenise`
+  regenerated `NAMESPACE` (+`export(getFileDirectRelatives)`) and
+  `man/getFileDirectRelatives.Rd`; NEWS.Rmd “New features” entry +
+  re-rendered NEWS.md.
+- **Verification:** new test file 7/7 (17 expectations); full testthat
+  suite **0 failed / 0 error**; `lint_package()` **0**;
+  **`devtools::check()` OK (0/0/0)**; Phase-3E runtime smoke exercised
+  the real (un-mocked) `getFileDirectRelatives` (reads a CSV → full
+  connected component; all three loud-error paths fire). Committed on
+  `wire-file-pedsource` (unpushed — publishing is the owner’s call).
+
 ### 2026-06-20 — Published S149 (PR \#60) + deleted merged `labkey-pedsource-adapter` + `getPedigreeSource()` gains a `"file"` source (LabKey research Rec \#4/#5) (Session 150)
 
 - **Deliverable (owner directive, a 3-item pairing — two admin/hygiene +

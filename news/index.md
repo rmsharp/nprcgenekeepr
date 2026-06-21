@@ -26,6 +26,21 @@
     now configures authentication automatically before querying, so a
     missing credential fails fast instead of producing an opaque error
     later.
+  - Added the exported
+    [`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md),
+    a file-sourced sibling of
+    [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md):
+    it reads a pedigree file (CSV or Excel) via
+    [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md)
+    and returns the full connected pedigree component (ancestors,
+    descendants, and collaterals) for the focal animals, reusing the
+    source-agnostic
+    [`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
+    walk. It is fully offline and deterministic, and (unlike the
+    fail-soft LabKey source) errors on a missing or invalid file. This
+    wires the `getPedigreeSource()` `"file"` provider to a first-class
+    caller, giving file pedigrees the same direct-relatives entry point
+    LabKey already has.
 - Documentation
   - The example configuration file
     (`inst/extdata/example_nprcgenekeepr_config`) now documents that

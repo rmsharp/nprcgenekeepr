@@ -450,6 +450,9 @@ groups and restricts the number of males to one per group.
 - [`getErrorTab()`](https://github.com/rmsharp/nprcgenekeepr/reference/getErrorTab.md)
   : getErrorTab skeleton of list of errors
 
+- [`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md)
+  : Get the direct relatives of selected animals from a pedigree file
+
 - [`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md)
   : Get pedigree based on list of focal animals
 

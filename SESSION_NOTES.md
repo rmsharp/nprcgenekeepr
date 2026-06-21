@@ -7,6 +7,335 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 151 Did
+
+**Deliverable:** Owner-directed 3-item pairing (the S146-S150 pattern –
+two admin/hygiene + one substantive deliverable): **(1)** publish S150’s
+`getPedigreeSource()` `"file"` provider from branch
+`pedsource-file-provider` to `master` \[admin/verification\]; **(2)**
+delete the merged `walk-unification` branch (local + remote)
+\[admin/hygiene\]; **(3)** wire the `"file"` provider to a production
+caller – S150 left it capability-only
+([`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+hardcodes `"labkey"`) \[strict-TDD, the real deliverable\]. **(ALL THREE
+DONE.)** **Started / Completed:** 2026-06-20 **Status:** **DONE.** Items
+1-2 = VERIFICATION/admin (no production-code logic -\> no TDD gates).
+Item 3 = **strict-TDD** (RED -\> GREEN -\> REFACTOR, all three phase
+gates via `AskUserQuestion`, preceded by a pre-RED **scope**
+`AskUserQuestion` that followed a read-only grounding sweep). **0
+stakeholder corrections.** Right-sized **hybrid** (ultracode): a
+read-only 4-agent grounding workflow informed the scope decision;
+everything that MUTATES files (the serial publish + branch delete + the
+one cohesive TDD change against one package) stayed SOLO – fanning out
+file-mutating agents would risk conflicts and add no confidence over
+firsthand verification (the S144-S150 rationale). - **REAL WORK \#1 –
+item 1, published with full CI gate (Learning 133/135):** `git fetch`;
+confirmed `pedsource-file-provider` was **1 ahead / 1 behind**
+`origin/master` (1 ahead = S150’s `4af5e020`; 1 behind = the PR \#60
+merge `1c883d16`), the branch base `17a3ee24` a strict ancestor of
+`origin/master`, merge-base == `17a3ee24`, `merge-tree --write-tree`
+dry-run clean (no conflict markers – the file-provider +
+walk-unification touch different files). `git push -u origin`; opened
+**PR \#61** -\> `master`; watched all checks via a background
+`gh pr checks 61 --watch` -\> **10/10 PASS** (`lint` 3m58s, all 5
+`R CMD check` platforms incl. ubuntu-devel 17m3s, `pkgdown`,
+`test-coverage`, `codecov` patch+project). Confirmed
+`mergeStateStatus: CLEAN` + `mergeable: MERGEABLE` BEFORE
+`gh pr merge 61 --merge` -\> merge commit **`b8a6a5ec`**; verified it
+landed (PR `state: MERGED`; `4af5e020` is now an ancestor of
+`origin/master`). Reconciled local `master` (was 2 behind,
+strict-ancestor confirmed) via `git fetch` +
+`reset --hard origin/master` (NOT `git pull` – Learning 135). S150’s
+`"file"` provider is now on `master`. - **REAL WORK \#2 – item 2,
+verified-merged-before-delete (S143/S146/S149/S150 pattern):** confirmed
+`walk-unification` (local + `origin/walk-unification`, both at
+`17a3ee24`) is a strict ancestor of `origin/master` (fully merged via PR
+\#60), deleted local (`git branch -d` – safe merged-only) + remote
+(`git push origin --delete` – explicitly owner-authorized);
+`git fetch --prune` + verified **no ref remains** either side. Created
+branch **`wire-file-pedsource`** off reconciled `master` (`b8a6a5ec`);
+the 1B stub carried over via stash/pop. - **REAL WORK \#3 – item 3
+grounding (the wiring-SHAPE analysis -\> Learning 144):** a read-only
+4-agent workflow (the `getPedigreeSource` seam + all callers; the LabKey
+caller chain; the existing file-ingestion subsystem; the research doc
+Rec \#4/#5) + firsthand reads of `getPedigreeSource.R`,
+`getLkDirectRelatives.R`, `getFocalAnimalPed.R`,
+`getPedDirectRelatives.R`, `getPedigree.R`,
+`test_getLkDirectRelatives.R`, `test_getPedigreeSource.R`. Surfaced 4
+wiring shapes with very different blast radius/value: (A) new sibling
+[`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md);
+(B) parameterize `getLkDirectRelatives(sourceType=)`; (C) wire the
+focal-animal app pipeline (`getFocalAnimalPed`/`modInput.R`); (D)
+reconsider (the doc framed the file source for offline TESTS; an offline
+focal-subset is already composable via
+`getPedDirectRelatives(ids, getPedigree(file))`; the app already reads
+pedigree files directly). Plus the contract landmines: the
+fail-soft-NULL contract is LabKey-ONLY (file errors loudly);
+`getFocalAnimalPed`’s `fileName` is the focal-ID LIST not a pedigree;
+the positional 7-column rename. Owner (pre-RED scope `AskUserQuestion`)
+chose **A** – the clean symmetric family (`getPedDirectRelatives` engine
+/ `getLkDirectRelatives` LabKey / `getFileDirectRelatives` file), no
+naming smell, zero change to existing signatures. - **REAL WORK \#4 –
+strict TDD (RED -\> GREEN -\> REFACTOR):** **RED** – new
+`tests/testthat/test_getFileDirectRelatives.R` (7 tests: CSV
+full-component read incl. collateral O2; equivalence to
+`getPedDirectRelatives` over the same file; a `mockery` delegation check
+pinning `getPedigreeSource(sourceType="file", fileName, sep)` then
+`getPedDirectRelatives(ids, ped, unrelatedParents)` with
+`unrelatedParents` threaded; constrained-message errors for NULL/missing
+`fileName` (`"fileName"`), missing file (`"not found"`), missing
+id/sire/dam (`"column"`); a `sep=";"` round-trip). Ran -\> all 7 FAIL;
+the 3 error-contract regexps were NOT matched by “could not find
+function” (genuine RED, no false-pass – the S148 RED-discipline lesson).
+**GREEN** – new exported `R/getFileDirectRelatives.R`:
+`getFileDirectRelatives(ids, fileName = NULL, sep = ",", unrelatedParents = FALSE)`
+= `getPedigreeSource(sourceType = "file", fileName, sep)` then
+`getPedDirectRelatives(ids, ped, unrelatedParents)`; NO NULL guard (the
+file source errors loudly by design – a NULL guard would be untested
+dead code). `roxygenise` -\> `NAMESPACE`
+(+`export(getFileDirectRelatives)`) + `man/getFileDirectRelatives.Rd`.
+7/7 (17 expectations). **REFACTOR** – no structural code change needed
+(the 5-line wrapper is already minimal, mirroring `getLkDirectRelatives`
+minus the fail-soft guard); roxygen `@export`/@param/@return + a
+runnable tempfile `@examples`; NEWS.Rmd “New features” entry +
+re-rendered NEWS.md; CHANGELOG/BACKLOG/PROJECT_LEARNINGS. - **REAL WORK
+\#5 – proactive spelling check (no check iteration):**
+[`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+after the NEWS re-render found **no errors** (`collaterals` already
+whitelisted by S150; my new words `sibling`/`deterministic`/`agnostic`
+are in the base dictionary), so `devtools::check()` came back **0/0/0 in
+one pass**. Caught + removed the `NEWS.html` byproduct (Learning 139);
+NEWS.md verified pure ASCII (Learning 132 – avoided `--` in the new
+bullet from the start).
+
+**Phase-3E (runtime smoke test): SATISFIED.** The deliverable adds an
+exported runtime function, so I exercised the **real, un-mocked**
+`getFileDirectRelatives` outside the harness: confirmed it is exported
+in the namespace; wrote a 6-row CSV pedigree,
+`getFileDirectRelatives(ids="O1", fileName=tmp)` -\> the full connected
+component `{D1,GC1,O1,O2,S1,X1}` (**includes collateral O2**); all three
+loud-error paths fire with the correct messages (NULL `fileName` -\>
+“‘fileName’ must be supplied”; missing file -\> “file not found”; no
+id/sire/dam -\> “must contain columns id, sire, and dam”); `sep=";"`
+round-trip returns the full component. Build equivalent:
+**`devtools::check()` Status OK (0/0/0)** (full testthat suite +
+spelling + examples incl. `--run-donttest` + vignette rebuild ran inside
+it). Full suite `test_dir`: **0 failed / 0 error / 1988 passed / 167
+skipped** (5 warnings = pre-existing baseline noise, my new file 0);
+`lint_package()` **0**; `roxygenise` drift confined to the `NAMESPACE`
+export line + the new `man/getFileDirectRelatives.Rd`.
+
+**Session 150 Handoff Evaluation (by Session 151): Score 9/10.** S150’s
+handoff (my own immediately-prior session) was a near-perfect executor’s
+map. Its SUGGESTED-NEXT listed **exactly my three items as the first
+three options** – “(Publish S150) push `pedsource-file-provider` -\> PR
+-\> CI -\> merge”, “(Delete the merged `walk-unification` branch)”, and
+“(Wire the `"file"` provider to a caller) …
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+still hardcodes `"labkey"`, so the `"file"` source is capability-only.”
+Every operational gotcha held firsthand: gotcha 1 (file-provider
+UNPUSHED, `origin/master` at `1c883d16`, branch based on `17a3ee24` now
+an ancestor of master so “PRs cleanly”) held EXACTLY
+(`1 ahead / 1 behind`, merge-base `17a3ee24`, merge-tree clean, PR
+CLEAN); gotcha 2 (`walk-unification` merged-but-exists -\> deletion
+candidate; confirmed strict ancestor); gotcha 3 (the file source
+unwired, un-curated, loud-erroring – all confirmed in grounding); gotcha
+4 (`getPedigreeSource` signature/`"file"` requires `fileName`); gotcha 6
+(NEWS.html + en-dash traps – handled); gotcha 7 (`pull.rebase` -\>
+`fetch`+`reset`); gotcha 8 (standing keeps). Key files named
+`getPedigreeSource.R`/`getLkDirectRelatives.R`. ROI strongly positive –
+I executed straight off it. **The -1 (to make it a 10):** the “wire the
+file provider” option gave EXAMPLES (“an offline/file-based focal-animal
+pedigree path, or exposing file-sourced pedigrees through the seam”) but
+did NOT name the actual wiring-SHAPE decision (new sibling vs
+parameterize vs full-pipeline vs reconsider) or pre-flag the contract
+landmines I had to surface in grounding (the
+fail-soft-NULL-vs-loud-error mismatch; the overloaded `fileName`; the
+composition-already-possible critique). Discoverable and minor –
+arguably grounding’s job – but naming the wiring-shape decision would
+have made it a 10. (Symmetric to S150’s own -1 against S149.)
+
+**Self-assessment (Session 151): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK read in chunks;
+dashboard 98/100; ghost-check -\> HEAD `4af5e020` = S150, no
+undocumented commits), reported, STOPPED for the owner; claimed the
+session (1B stub BEFORE technical work). **Headline strengths:** (1)
+**published item 1 + deleted item 2 with full safety discipline** –
+10/10 CI + CLEAN + MERGEABLE before merge (did not merge blind),
+verified landed firsthand, reconciled `master` via provably-safe
+`fetch`+`reset`, verified-merged-before-delete with a no-ref-remains
+check both sides; (2) **grounded the wiring-SHAPE decision** (read-only
+4-agent sweep + firsthand reads), surfacing 4 options with different
+blast radius/value AND the contract landmines, so the owner picked in
+one shot -\> Learning 144; (3) **recognized the clean symmetric FAMILY
+pattern** (Ped/Lk/File) and the PARITY argument that answers the
+duplication critique (`getLkDirectRelatives` is itself a thin wrapper),
+and chose **no NULL guard** (inherits the loud-error contract – no
+untested dead code); (4) **strict TDD held end-to-end with a clean first
+pass** – phase declared every response, scope gate + all 3 phase gates,
+RED proven failing with **constrained** error regexps (no false-pass),
+GREEN minimal (5-line wrapper), REFACTOR behavior-neutral (no code
+change); (5) **proactive spell-check -\> `devtools::check()` 0/0/0 in
+ONE pass**; (6) **right ultracode hybrid** – read-only workflow for
+grounding, SOLO for all file mutation; (7) full verification – new file
+7/7, suite 0/0, lint 0, check 0/0/0, Phase-3E smoke of the real
+un-mocked function, roxygenise drift confined to the export line + new
+`.Rd`; ASCII-only prompts, plain language, 0 corrections, scope
+confined. **Weaknesses (honest):** (a) the **GREEN change is small** – a
+5-line exported wrapper; the value is the grounding/scope discipline +
+clean TDD + first-class capability parity, not algorithmic depth; (b)
+this is **capability/plumbing parity, NOT an end-user feature** – it
+gives the file source a first-class entry point, but the HIGHER-value
+wiring (the focal-animal app pipeline, Option C) stays deferred, so like
+S150 this is an honest tracer-bullet (a clean new export not yet
+consumed by the app/pipeline); (c) the **composition-already-possible
+critique is real** – `getPedDirectRelatives(ids, getPedigree(file))`
+works today; the new function’s marginal value is the validated seam +
+named parity (I made the parity case explicitly, but a skeptic could
+call it thin); (d) **three items** (two admin + one substantive) –
+owner-authorized pairing, legitimate, but the substantive deliverable is
+a bounded additive wrapper. The first pass was clean (genuine RED,
+minimal GREEN, check 0/0/0 first try, no NEWS re-render iteration, no
+spelling iteration). Consistent with S149/S150’s 8/10; I reserve 9-10
+for a higher-difficulty single deliverable (e.g., the app-pipeline
+wiring or a genuinely algorithmic change).
+
+**Learnings:** **Learning 144** (to WIRE a new provider/capability to a
+caller, prefer a clean SYMMETRIC SIBLING over parameterizing a
+domain-named function – one export, zero blast radius on existing
+signatures, no naming smell; answer the “composition already works”
+critique with PARITY not novelty; a wrapper inherits its source’s
+contract so don’t copy a guard that can’t fire – no NULL guard on a
+loud-erroring source; enumerate wiring shapes in a pre-RED scope
+`AskUserQuestion`; an exported function changes NAMESPACE + man) added
+to `PROJECT_LEARNINGS.md`. Carried as applied: 133 (don’t merge blind),
+135 (`fetch`+`reset` not `pull`), 137 (claim never precedes evidence;
+expect the object_usage stale-install artifact on a new function), 139
+(delete NEWS.html), 140/143 (ground a recommendation firsthand; ground a
+scope fork), 141/142 (the walk semantics this family relies on).
+
+**=\> SUGGESTED NEXT = owner’s pick.** All three items DONE. Item 1
+published (`master` = `b8a6a5ec`); item 2 done (`walk-unification`
+deleted). Item 3
+([`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md))
+is committed on `wire-file-pedsource` (UNPUSHED). Natural options (plain
+ASCII labels): - **(Publish S151)** push `wire-file-pedsource` -\> PR
+-\> CI (lint + `R CMD check` x5 + pkgdown + coverage) -\> merge (the
+S142 convention), OR fast-forward `master` + push. **Owner’s call** – I
+took no outward action on item 3’s publish. - **(Delete the merged
+`pedsource-file-provider` branch)** fully merged via PR \#61; local +
+remote can be deleted (the S143/S146 hygiene). Owner’s call – I deleted
+ONLY the explicitly-authorized `walk-unification` this session. -
+**(Wire a file pedigree source through the focal-animal APP pipeline –
+Option C, deferred)** the higher-value follow-on now that
+[`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md)
+exists: let
+[`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md)
+/ `modInput.R` build a focal-animal pedigree OFFLINE from a pedigree
+file so the Shiny app no longer requires LabKey for that path. Needs a
+SEPARATE pedigree-file param (distinct from the focal-ID list
+`fileName`), fail-soft-NULL vs errors-loudly handling (the file source
+errors; the app’s NULL-\>`nprcgenekeeprErr` path at `modInput.R:329`
+expects fail-soft), and the positional 7-column rename. Larger; likely
+its own session. - **(Remaining LabKey Rec \#5 / server-side –
+deferred)** server-side filtering / `executeSql` / consuming the
+centers’ `study.Pedigree`/`ehr.kinship`; and/or a non-LabKey other-EHR
+provider on the same seam. Gated on measured pull size + per-center
+availability + a live server (and the focal-id-filter vs
+connected-component-walk landmine). - **(Permanent NEWS render fix)**
+`html_preview: false` in `NEWS.Rmd` + pandoc smart-off (or
+`.Rbuildignore`/`.gitignore` for `NEWS.html`) – ends BOTH the NEWS.html
+NOTE (Learning 139) and the `--`-\>en-dash trap (Learning 132).
+Candidate, not done. - **(Answer Open Q 8.1 against the live server)**
+the actual ONPRC/SNPRC LabKey server version (owner / live-server
+only). - **(CRAN Phase 5, owner-run)** win-builder x3 + R-hub v2 +
+`submit_cran()` – owner PAT + email; HARD STOP
+(`docs/planning/cran-2.0.0-phase5-runbook.md`). - **A GitHub issue** –
+\#46, \#45/#28/#9, \#2, \#37, \#36, \#29, or older
+\#13/#12/#11/#10/#5/#1. **Do NOT** bundle options (FM \#18/#25); **do
+NOT** start any without the owner picking.
+
+**Key files (this session):** **CHANGED – code (branch
+`wire-file-pedsource`, this close-out commit):**
+`R/getFileDirectRelatives.R` (NEW exported file-sourced sibling of
+`getLkDirectRelatives`), `tests/testthat/test_getFileDirectRelatives.R`
+(NEW, 7 tests), `NAMESPACE` (+`export(getFileDirectRelatives)`),
+`man/getFileDirectRelatives.Rd` (NEW, generated), `NEWS.Rmd` + `NEWS.md`
+(“New features” entry). **CHANGED – docs:** `CHANGELOG.md` (S151
+`[Unreleased]`), `BACKLOG.md` (file provider now wired via
+`getFileDirectRelatives`; app-pipeline wiring = future option;
+server-side + other-EHR still deferred), `PROJECT_LEARNINGS.md`
+(Learning 144), `SESSION_NOTES.md` (this handoff). **GIT:** item 1
+published – **PR \#61 MERGED** (merge `b8a6a5ec`); `origin/master` now
+at `b8a6a5ec`. Item 2 – `walk-unification` DELETED (local + remote). New
+branch `wire-file-pedsource` off `b8a6a5ec` (UNPUSHED). **NO change
+to:** `data/`, `DESCRIPTION`, `inst/WORDLIST` (no new words needed).
+**Read firsthand:** `R/getFileDirectRelatives.R`,
+`R/getPedigreeSource.R`, `R/getLkDirectRelatives.R`,
+`R/getFocalAnimalPed.R`, `R/getPedDirectRelatives.R`, `R/getPedigree.R`,
+`tests/testthat/test_getLkDirectRelatives.R`,
+`tests/testthat/test_getPedigreeSource.R`, `NEWS.Rmd`,
+`BACKLOG.md`/`CHANGELOG.md`/`PROJECT_LEARNINGS.md` (tails). **NOT
+committed (standing keeps):** `PED_GV_AUDIT_2026-05-30.html`
+(untracked); `.DS_Store`. **REMOVED (render artifact, never
+committed):** `NEWS.html`.
+
+**Gotchas:** (1) **S151’s
+[`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md)
+is on branch `wire-file-pedsource` (UNPUSHED after this commit);
+`origin/master` is at `b8a6a5ec`** (carries S150’s `"file"` provider).
+**Local `master` reconciled to `b8a6a5ec`.** The branch was based on
+`b8a6a5ec` (current master), so it PRs cleanly (0 behind). Publishing
+S151 is the owner’s call; reconcile any stale branch via `git fetch` +
+(strict-ancestor confirmed) `git reset --hard`, NOT `git pull` (Learning
+135). (2) **`pedsource-file-provider` is now MERGED (via PR \#61) but
+still exists local + remote** – a deletion candidate (owner’s call;
+history preserved in merge `b8a6a5ec`). I deleted ONLY
+`walk-unification` this session (the explicitly-authorized one). (3)
+**[`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md)
+is a NEW EXPORTED capability, NOT consumed by any caller yet** – it is
+the file twin of
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+(reads via the `"file"` provider, then the source-agnostic
+[`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
+walk). It returns an **UN-CURATED** ped (column-shaped via
+`getPedigree`, validates only id/sire/dam; downstream
+[`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md)
+curates) and **errors loudly** (like the `dataframe`/`file` seam
+branches), NOT fail-soft (unlike `labkey`/`getLkDirectRelatives`). NO
+NULL guard by design. (4) **The clean symmetric family is now
+`getPedDirectRelatives` (in-memory engine) / `getLkDirectRelatives`
+(LabKey) / `getFileDirectRelatives` (file).** An offline focal-subset
+was already composable via
+`getPedDirectRelatives(ids, getPedigree(file))`; the new function adds
+the validated seam + a named, first-class, tested entry point with
+parity to the LabKey wrapper. (5) **The HIGHER-value wiring (the
+focal-animal app pipeline) is the natural deferred follow-on** –
+[`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md)/`modInput.R`
+still require LabKey for the focal-animal path. Wiring a file pedigree
+source there needs a SEPARATE pedigree-file param (its `fileName` is the
+focal-ID LIST, not a pedigree), fail-soft-vs-loud handling (the app’s
+`nprcgenekeeprErr`/`failedDatabaseConnection` path at `modInput.R:329`
+expects NULL, but the file source errors), and the positional 7-column
+rename (`getFocalAnimalPed.R:76`). (6) **Server-side filtering /
+`executeSql` remains DEFERRED** – gated on measured pull size +
+per-center query availability/permissions + a live server; AND a naive
+focal-id server filter is incompatible with the client-side
+connected-component walk. Not attemptable/observable here. (7) **NEWS
+render traps (BOTH):** re-rendering `NEWS.Rmd` (a) drops a `NEWS.html`
+byproduct that `R CMD check` flags as a top-level NOTE – delete it
+(Learning 139); (b) smart-converts `--` to a non-ASCII en-dash in
+NEWS.md – avoid `--` in the source (Learning 132). Permanent fix still a
+candidate. (8) **`git pull` is rebase** (`pull.rebase=true`) and chokes
+on the `.DS_Store` keep – use `git fetch` +
+`git reset --hard origin/<branch>` on a stale strict-ancestor branch
+(Learning 135). (9) **Standing keeps:** `.DS_Store` +
+`PED_GV_AUDIT_2026-05-30.html` – never commit. (10) Carried:
+feature-branch -\> PR -\> merge; package **ARCHIVED on CRAN
+2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT (warning + NULL) without a LabKey credential/config.
+
 ### What Session 150 Did
 
 **Deliverable:** Owner-directed 3-item pairing (two admin/hygiene + one

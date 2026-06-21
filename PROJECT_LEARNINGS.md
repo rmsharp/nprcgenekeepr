@@ -9578,3 +9578,89 @@ new provider on an existing adapter/strategy seam; any “optimize the
 fetch/push it server-side” proposal that interacts with downstream
 client-side traversal; any NEWS/Rd change that introduces new
 vocabulary.
+
+#### Learning 144 — To WIRE a new provider/capability to a caller, prefer adding a clean SYMMETRIC SIBLING over parameterizing a domain-named function: a new wrapper costs one export but has zero blast radius on existing signatures and avoids a naming smell (a LabKey-named function that also reads files); the “but a user can already compose it” critique is answered by PARITY — the sibling gives the new source the same first-class entry point the old source already has (the existing function is itself just a thin fetch→delegate wrapper). And a wrapper inherits its source’s contract, so do NOT copy a guard that can’t fire (no NULL guard on a loud-erroring source = no untested dead code). (S151, owner “publish + delete + wire the file provider”)
+
+**What happened.** S150 added a `"file"` provider to the internal
+`getPedigreeSource()` seam but left it capability-only —
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+hardcodes `getPedigreeSource("labkey")`, so the file source was
+unreachable in production. Item 3 was to wire it to a caller. A
+read-only 4-agent grounding sweep + firsthand reads surfaced four wiring
+shapes with very different blast radius/value: (A) **new sibling**
+[`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md);
+(B) **parameterize** `getLkDirectRelatives(sourceType=…)`; (C) wire into
+the **focal-animal app pipeline** (`getFocalAnimalPed`/`modInput.R`);
+(D) **reconsider** (the doc framed the file source as a test/offline
+provider; an offline focal-subset is already composable via
+`getPedDirectRelatives(ids, getPedigree(file))`; the app already reads
+pedigree files directly). I surfaced all four via a pre-RED **scope**
+`AskUserQuestion` with an evidence-backed recommendation; the owner
+chose **A**. The decisive arguments for A over B: B makes a LabKey-named
+function (`getLk…`) read files — a genuine naming smell, not cosmetic —
+and would add params to an existing signature; A costs only one new
+export and yields a clean symmetric **family** — `getPedDirectRelatives`
+(in-memory engine) / `getLkDirectRelatives` (LabKey wrapper) /
+`getFileDirectRelatives` (file wrapper). The “composition already works,
+so a sibling is duplicative” objection is real but answered by PARITY:
+`getLkDirectRelatives` is ITSELF just `getPedigreeSource("labkey")` →
+`getPedDirectRelatives`, i.e. a thin wrapper whose value is a named,
+tested, discoverable entry point — `getFileDirectRelatives` gives the
+file source that same first-class status, and routes through the
+internal validated seam (id/sire/dam) that a bare composition skips.
+Contract: the wrapper inherits its source’s behavior, so
+`getFileDirectRelatives` has **no NULL guard** (unlike
+`getLkDirectRelatives`, whose guard exists only because the LabKey
+source fails soft to NULL on a flaky fetch) — the file source errors
+loudly, so a NULL guard would be untested dead code; I documented the
+loud-error contract instead. Strict TDD held clean on the first pass: 7
+RED tests (CSV full-component read incl. collateral O2; equivalence to
+`getPedDirectRelatives` over the same file; a `mockery` delegation check
+pinning `getPedigreeSource(sourceType="file", fileName, sep)` then
+`getPedDirectRelatives(ids, ped, unrelatedParents)` with
+`unrelatedParents` threaded; constrained-message errors for NULL/missing
+`fileName`, missing file, missing id/sire/dam; a `sep=";"` round-trip)
+all failed genuinely — the error-contract regexps
+(`fileName`/`not found`/`column`) were NOT matched by “could not find
+function” (no false-pass; the S148 lesson). GREEN was a 5-line exported
+wrapper (no NULL guard); `roxygenise` added
+`export(getFileDirectRelatives)` + the man page (an EXPORT, unlike
+S148-S150’s `@noRd` work, so NAMESPACE/man DID change — expected).
+REFACTOR needed no structural code change (the wrapper is already
+minimal). Verified: new file 7/7, suite 0/0, lint 0, `devtools::check()`
+0/0/0, Phase-3E smoke of the real un-mocked function. Honest scope note:
+this is capability/plumbing parity (a first-class file entry point), not
+the higher-value app-pipeline wiring (C, deferred) that would let the
+Shiny focal-animal path run offline.
+
+**Reflexes:** \[to wire a new provider/source/capability to a caller,
+prefer a clean SYMMETRIC SIBLING function over adding a `type=` param to
+a domain-named function — the sibling has zero blast radius on existing
+signatures and avoids the smell of a `getLk…`/`getOracle…`/etc. function
+doing something off-name; the cost is one new export\]\[answer the “a
+user can already compose this, so the wrapper is duplicative” objection
+with PARITY, not novelty: if the EXISTING wrapper for the old source is
+itself a thin fetch→delegate, a sibling for the new source is the same
+legitimate pattern — its value is a named, tested, discoverable,
+validated entry point, and it routes through the internal seam a bare
+composition skips\]\[a wrapper INHERITS its source’s contract — do not
+copy a guard that cannot fire (no NULL guard on a loud-erroring source;
+the LabKey NULL guard exists only because that source fails soft) — an
+unreachable guard is untested dead code; document the differing contract
+in roxygen instead\]\[when several wiring shapes exist with different
+blast radius/value (new sibling vs parameterize vs full-pipeline vs
+reconsider), enumerate them in a pre-RED SCOPE `AskUserQuestion` with an
+evidence-backed recommendation — don’t assume the owner’s example
+function names the implementation site\]\[an EXPORTED new function
+changes NAMESPACE + adds a man page (expect the `roxygenise` diff),
+unlike an `@noRd` internal — verify the diff is confined to the export
+line + the new `.Rd`\]\[a runnable `@examples` that writes a tempfile,
+calls the function, and
+[`unlink()`](https://rdrr.io/r/base/unlink.html)s keeps the example real
+(exercised by `R CMD check`) without depending on a fixture file\].
+**Apply:** any task that wires a new provider/source on an existing
+adapter/strategy seam to a caller; any “add a `type`/`source` switch vs
+add a parallel function” decision; any thin wrapper over a
+fetch→delegate pattern; any new EXPORTED R function (expect the
+NAMESPACE/man diff + the object_usage stale-install artifact, Learning
+137).

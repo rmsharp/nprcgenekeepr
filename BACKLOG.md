@@ -44,15 +44,27 @@ sibling. **`file` provider DONE — S150:** `getPedigreeSource()` gained a
 (CSV or Excel) via the exported
 [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md),
 alongside `"labkey"` and `"dataframe"`; offline-deterministic, validates
-id/sire/dam, errors loudly like the `dataframe` branch. Not yet wired to
-a production caller
-([`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
-still uses `"labkey"`). **Still deferred:** a non-LabKey other-EHR
-provider on the same seam; server-side filtering / `executeSql` /
-consuming the centers’ `study.Pedigree`/`ehr.kinship` (research doc
-explicitly defers until pull size is measured + per-center query
-availability/permissions are confirmed; needs a live LabKey server to
-test/observe, and a naive focal-id server filter is incompatible with
+id/sire/dam, errors loudly like the `dataframe` branch. **`"file"`
+provider WIRED to a first-class caller DONE — S151:** new exported
+`getFileDirectRelatives(ids, fileName, sep, unrelatedParents)`, a
+file-sourced sibling of
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+(reads via the `"file"` provider, then the source-agnostic
+[`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
+walk). The clean symmetric family is now `getPedDirectRelatives`
+(in-memory) / `getLkDirectRelatives` (LabKey) / `getFileDirectRelatives`
+(file). **Still open (future option, owner’s call):** wire a file
+pedigree source through the focal-animal app pipeline
+([`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md)
+/ `modInput.R`) so the Shiny app can build a focal-animal pedigree
+offline from a pedigree file (needs a separate pedigree-file param
+distinct from the focal-ID list, plus fail-soft-NULL vs errors-loudly
+handling and the positional 7-column rename). **Still deferred:** a
+non-LabKey other-EHR provider on the same seam; server-side filtering /
+`executeSql` / consuming the centers’ `study.Pedigree`/`ehr.kinship`
+(research doc explicitly defers until pull size is measured + per-center
+query availability/permissions are confirmed; needs a live LabKey server
+to test/observe, and a naive focal-id server filter is incompatible with
 the client-side connected-component walk).
 
 **Strengthen the shinytest2 E2E assertions + CI stability** — GitHub
