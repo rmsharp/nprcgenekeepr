@@ -15,6 +15,89 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-21 — Published S151 (PR \#62) + deleted merged `pedsource-file-provider` + wired a file pedigree source through the focal-animal app pipeline (Option C) (Session 152)
+
+- **Deliverable (owner directive, a 3-item pairing — two admin/hygiene +
+  one substantive deliverable):** (1) publish S151’s
+  [`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md)
+  to `master`; (2) delete the merged `pedsource-file-provider`
+  branch; (3) **Option C** — wire a file pedigree source through the
+  focal-animal **app pipeline** so the app’s focal path no longer
+  requires LabKey. Items 1–2 = VERIFICATION/admin; item 3 =
+  **strict-TDD** (RED → GREEN → REFACTOR, all three gates via
+  `AskUserQuestion`, plus a pre-RED **scope** `AskUserQuestion`). **0
+  stakeholder corrections.**
+- **Item 1 — publish:** pushed `wire-file-pedsource`, opened **PR \#62**
+  → `master`, watched CI go green (**10/10**: `lint`, all 5
+  `R CMD check` platforms incl. ubuntu-devel 16m21s, `pkgdown`,
+  `test-coverage`, `codecov` patch+project), confirmed
+  `mergeStateStatus: CLEAN` + `MERGEABLE` (did not merge blind —
+  Learning 133), merged (merge commit **`cb46616e`**). Reconciled local
+  `master` via `git fetch` + strict-ancestor `reset --hard` (Learning
+  135). S151’s
+  [`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md)
+  is now on `master`.
+- **Item 2 — branch deletion:** confirmed `pedsource-file-provider`
+  (local + remote, `4af5e020`, merged via PR \#61) is a strict ancestor
+  of `origin/master`, deleted local (`git branch -d`) + remote
+  (`git push origin --delete`); verified no ref remains either side.
+  (Same hygiene S143/S146/S149/S150/S151 did.)
+- **Item 3 scope (pre-RED `AskUserQuestion`, owner-chosen “Sibling +
+  full app wiring”):** grounded the wiring shape via a read-only 4-agent
+  sweep + firsthand reads of `getFocalAnimalPed.R`, `modInput.R`, the
+  relatives family, and the test surface. Two load-bearing constraints
+  decided the shape: (a) the positional 7-column rename at
+  `getFocalAnimalPed.R:76` is **LabKey-shaped**, so a file pedigree
+  (with its own named columns) cannot share it — favoring a separate
+  function over parameterizing the existing one; (b)
+  [`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md)
+  errors **loudly** but the focal-ped layer is fail-soft, so a
+  loud→fail-soft boundary is needed. Owner chose a clean symmetric
+  sibling + full pipeline wiring over a function-only tracer or
+  parameterizing the LabKey-named function. → Learning 145.
+- **Item 3 implementation (branch `wire-focal-file-source`,
+  strict-TDD):** **RED** — new
+  `tests/testthat/test_getFocalAnimalPedFromFile.R` (7 tests:
+  connected-component read from a focal-id file + pedigree file
+  incl. collateral; equivalence to `getFileDirectRelatives`; a `mockery`
+  delegation check with `ids`/`fileName`/`sep` threaded; fail-soft
+  `NULL` on NULL/missing pedigree file, nonexistent file, and missing
+  id/sire/dam columns; a `sep=";"` round-trip) plus 2 new
+  `test_modInput.R`
+  [`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html)
+  tests (offline focal-file path builds the pedigree with
+  `getLkDirectRelatives` mocked to
+  [`stop()`](https://rdrr.io/r/base/stop.html) to prove no EHR call; a
+  bad pedigree file surfaces a “File Read Error”) all failed for the
+  right reason (no `getFocalAnimalPedFromFile`; `modInput` ignored the
+  pedigree-file input) with no false-pass. **GREEN** — new exported
+  `R/getFocalAnimalPedFromFile(fileName, pedigreeFileName = NULL, sep = ",")`
+  = read focal Ids →
+  `tryCatch(getFileDirectRelatives(ids, pedigreeFileName, sep), error = NULL)`;
+  `modInput` UI gains an optional `focalPedigreeFile` input and its
+  focal server branch dispatches to the offline function when a pedigree
+  file is supplied, else the unchanged LabKey path (a `NULL` flows to
+  the existing “File Read Error” handler). **REFACTOR** — extracted the
+  duplicated focal-id file read into a shared internal
+  `readFocalAnimalIds()` used by both
+  [`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md)
+  and
+  [`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md)
+  (behavior-neutral); roxygen `@export`/@param/@return + a runnable
+  example; `roxygenise` regenerated `NAMESPACE`
+  (+`export(getFocalAnimalPedFromFile)`) and
+  `man/getFocalAnimalPedFromFile.Rd`; NEWS.Rmd “New features” entry +
+  re-rendered NEWS.md.
+- **Verification:** new function file 7/7 (15 expectations);
+  `test_getFocalAnimalPed.R` 62, `test_modInput.R` 168 (incl. the 2
+  new); full testthat suite **0 failed / 0 error**; `lint_package()`
+  **0**; **`devtools::check()` OK (0/0/0)**; Phase-3E runtime smoke
+  exercised the real (un-mocked) `getFocalAnimalPedFromFile` (focal-id
+  file + `ExamplePedigree` → connected component; fail-soft `NULL` paths
+  fire) and confirmed the optional pedigree-file input renders in
+  `modInput`. Committed on `wire-focal-file-source` (unpushed —
+  publishing is the owner’s call).
+
 ### 2026-06-20 — Published S150 (PR \#61) + deleted merged `walk-unification` + wired the `"file"` provider to a first-class caller `getFileDirectRelatives()` (Session 151)
 
 - **Deliverable (owner directive, a 3-item pairing — two admin/hygiene +

@@ -249,6 +249,10 @@
 - [`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md)
   : Get pedigree based on list of focal animals
 
+- [`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md)
+  : Get a focal-animal pedigree from a pedigree file (offline, no
+  database)
+
 - [`getFounders()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFounders.md)
   : Gets the founder ids from a pedigree
 

@@ -9664,3 +9664,88 @@ add a parallel function” decision; any thin wrapper over a
 fetch→delegate pattern; any new EXPORTED R function (expect the
 NAMESPACE/man diff + the object_usage stale-install artifact, Learning
 137).
+
+#### Learning 145 — When wiring a capability THROUGH an app pipeline (not just adding a sibling fn), the wiring SHAPE is decided by concrete data-shape and error-contract mismatches found in grounding, not by abstract preference: a source-shaped transform can’t be shared by a differently-shaped source, and the new fn’s fail contract should match the CALLER’s modality (so it reuses the most existing caller code). (S152, Option C — file pedigree source through the focal-animal app pipeline)
+
+**What happened.** S151 left
+[`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md)
+as a first-class file capability but unwired to the app; Option C was to
+wire a file pedigree source THROUGH the focal-animal pipeline so the
+Shiny app’s focal path runs offline. A read-only 4-agent grounding
+sweep + firsthand reads surfaced two CONCRETE constraints that decided
+the design — beyond Learning 144’s naming-smell argument for a sibling
+over parameterizing. (1) **Data-shape incompatibility:**
+`getFocalAnimalPed.R:76` does a POSITIONAL 7-column rename
+(`c("id","sex","birth","death","departure","dam","sire")`) that is
+LabKey-shaped; a file pedigree read by
+[`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md)
+carries its OWN named columns in the file’s order
+(e.g. `id,sire,dam,sex,gen,birth,exit,...`), so sharing that rename
+would CORRUPT a file pedigree — a concrete reason a separate
+[`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md)
+is correct, not just stylistic. (2) **Error-contract direction:**
+[`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md)
+errors loudly, but the app needs fail-soft. Rather than mirror the
+sibling
+[`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md)
+(which returns an `nprcgenekeeprErr` for the DB modality), I made
+[`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md)
+return **NULL** on a bad pedigree file — matching the app’s FILE
+modality (`readDataFile()` returns NULL → the existing
+`is.null(rawData)` “File Read Error” handler), so the dispatch reused
+the most existing caller code and added ZERO new error branches. The
+deliverable was a genuine VERTICAL slice (FM \#25): new fn + `modInput`
+server dispatch + an optional UI `fileInput`, end-to-end. The testable
+core held under strict TDD — 7 function unit tests (offline fixtures) +
+2 [`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html)
+dispatch tests, the offline test mocking `getLkDirectRelatives` to
+[`stop()`](https://rdrr.io/r/base/stop.html) to PROVE the file path
+never touches the EHR; the one-line UI input was Phase-3E
+smoke-verified. RED was genuine (function: “could not find function”;
+modInput: the EHR [`stop()`](https://rdrr.io/r/base/stop.html) fired
+because dispatch didn’t exist yet — 163 existing modInput tests stayed
+green as the regression guard). REFACTOR safely touched the WORKING
+sibling: extracted the duplicated focal-id read into a shared internal
+`readFocalAnimalIds()` used by both focal functions (behavior-neutral,
+both test files + the 168-test modInput suite re-verified green); moving
+the `@importFrom readxl excel_format`/`utils read.csv` tags to the
+extracted helper kept NAMESPACE stable (verified the imports survived).
+Verified: new file 7/7, `getFocalAnimalPed` 62, `modInput` 168, full
+suite 0/0, lint 0, `devtools::check()` 0/0/0, Phase-3E smoke of the real
+un-mocked function + the rendered UI input.
+
+**Reflexes:** \[when wiring a capability THROUGH a pipeline, let
+GROUNDING (not abstract design taste) pick the shape — look specifically
+for a source-shaped transform (a positional rename, a date format, a
+column map) that the new source would break: that concrete
+incompatibility, not just a naming smell, is the decisive argument for a
+separate sibling over parameterizing\]\[choose the new function’s fail
+contract to match the CALLER’S modality, not reflexively its sibling’s —
+here NULL (file modality → reuse the app’s existing “File Read Error”
+path) beat `nprcgenekeeprErr` (DB modality), adding zero new caller
+code; ask “which contract lets the caller reuse the most existing
+handling?”\]\[make a function+server+UI change a real VERTICAL slice (FM
+\#25): unit-test the function, `testServer`-test the dispatch,
+smoke-test the one-line UI — and PROVE a “no longer needs X” claim by
+mocking X to [`stop()`](https://rdrr.io/r/base/stop.html) so any X call
+is a loud failure\]\[a behavior-neutral REFACTOR may touch a WORKING
+sibling (extract a shared helper) when BOTH are test-covered, BUT
+extracting a helper RELOCATES the calls it absorbs, so any
+implementation-coupled test that
+`mockery::stub(where = sibling, what = movedFn)`s those calls SILENTLY
+BREAKS — the stub no longer intercepts (it patches only the `where`
+function’s body), the real fn runs, and it surfaces as an ERROR not a
+FAIL; re-point such tests to the new owner (`stub(where = helper, ...)`,
+or test the helper directly) AND re-verify the **ERROR** column, not
+just FAIL/SKIP (testthat counts a thrown error separately — a re-verify
+that prints only PASS/FAIL/SKIP will miss it; `devtools::check()`
+won’t)\]\[when moving `@importFrom` tags to an extracted helper, confirm
+`roxygenise` keeps NAMESPACE imports intact (the symbols just need ONE
+declarer in the package)\]\[R-package test files gated by top-level
+`skip_on_cran()` need `NOT_CRAN=true` to actually run via
+`Rscript`/`test_file` — a “0 failed, all skipped” result is the gate,
+not a pass\]. **Apply:** any task wiring a capability through an app/UI
+pipeline; any “new sibling vs parameterize” decision where the sources
+differ in column shape or error contract; any change spanning function +
+server + UI; any behavior-neutral helper extraction across two
+functions; any `skip_on_cran()`-gated test run.

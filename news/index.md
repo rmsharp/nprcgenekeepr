@@ -41,6 +41,22 @@
     wires the `getPedigreeSource()` `"file"` provider to a first-class
     caller, giving file pedigrees the same direct-relatives entry point
     LabKey already has.
+  - Added the exported
+    [`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md),
+    a file-sourced sibling of
+    [`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md):
+    it reads a list of focal animal Ids from one file and builds the
+    full connected pedigree component for those focal animals from a
+    separate pedigree file via
+    [`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md),
+    so the focal-animal workflow can run entirely offline with no
+    LabKey/EHR connection. The Shiny input module (`modInput`) now
+    offers an optional pedigree-file input on the focal animals path;
+    when a pedigree file is supplied the pedigree is built from that
+    file, otherwise the LabKey/EHR path is used as before. Being the
+    application boundary, the function is fail-soft (returns `NULL` on
+    an unreadable pedigree file, which the app surfaces as a File Read
+    Error).
 - Documentation
   - The example configuration file
     (`inst/extdata/example_nprcgenekeepr_config`) now documents that
