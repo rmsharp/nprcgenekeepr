@@ -5,29 +5,49 @@
 #'
 #' Internal data-source adapter for the pedigree fetch boundary used by
 #' \code{getLkDirectRelatives()}. It isolates the brittle LabKey pull behind a
-#' single seam and makes LabKey one pluggable provider, which also enables
-#' offline, deterministic testing via the \code{"dataframe"} source.
+#' single seam and makes LabKey one pluggable provider among several
+#' (\code{"labkey"}, \code{"dataframe"}, \code{"file"}), which also enables
+#' offline, deterministic testing via the \code{"dataframe"} and \code{"file"}
+#' sources.
 #'
 #' @return A normalized pedigree data.frame with columns \code{id}, \code{sex},
-#' \code{birth}, \code{death}, \code{exit}, \code{dam}, and \code{sire}; or
-#' \code{NULL} when a LabKey fetch fails (warning or error), preserving the
-#' fail-soft contract \code{getLkDirectRelatives()} relies on.
+#' \code{birth}, \code{death}, \code{exit}, \code{dam}, and \code{sire}. The
+#' \code{"labkey"} source returns \code{NULL} when its fetch fails (warning or
+#' error), preserving the fail-soft contract \code{getLkDirectRelatives()}
+#' relies on; the \code{"dataframe"} and \code{"file"} sources return the
+#' supplied or read pedigree and error on invalid input.
 #'
 #' @param sourceType one of \code{"labkey"} (pull demographics via
-#' \code{getDemographics()} and rename to the package's internal column names)
-#' or \code{"dataframe"} (use a caller-supplied, already-normalized pedigree --
-#' the offline/deterministic seam).
+#' \code{getDemographics()} and rename to the package's internal column names),
+#' \code{"dataframe"} (use a caller-supplied, already-normalized pedigree -- the
+#' offline/deterministic seam), or \code{"file"} (read a pedigree file via
+#' \code{getPedigree()}).
 #' @param siteInfo (\code{"labkey"} only) site configuration list; defaults to
 #' \code{getSiteInfo()}. Supplies \code{lkPedColumns} (the columns to pull) and
 #' \code{mapPedColumns} (the one-to-one rename to the internal column names).
 #' @param ped (\code{"dataframe"} only) an already-normalized pedigree
 #' data.frame containing at least \code{id}, \code{sire}, and \code{dam}.
+#' @param fileName (\code{"file"} only) path to a pedigree file (CSV or Excel)
+#' read via \code{getPedigree()}; the file must provide at least \code{id},
+#' \code{sire}, and \code{dam} columns.
+#' @param sep (\code{"file"} only) column separator passed to
+#' \code{getPedigree()} for delimited text files (default \code{","}).
 #' @import futile.logger
 #' @importFrom stringi stri_c
 #' @noRd
-getPedigreeSource <- function(sourceType = c("labkey", "dataframe"),
-                              siteInfo = NULL, ped = NULL) {
+getPedigreeSource <- function(sourceType = c("labkey", "dataframe", "file"),
+                              siteInfo = NULL, ped = NULL,
+                              fileName = NULL, sep = ",") {
   sourceType <- match.arg(sourceType)
+  requirePedColumns <- function(p, subject) {
+    if (!all(c("id", "sire", "dam") %in% names(p))) {
+      stop(
+        "getPedigreeSource(): ", subject, " must contain columns ",
+        "id, sire, and dam.",
+        call. = FALSE
+      )
+    }
+  }
   if (sourceType == "dataframe") {
     if (is.null(ped) || !is.data.frame(ped)) {
       stop(
@@ -36,12 +56,26 @@ getPedigreeSource <- function(sourceType = c("labkey", "dataframe"),
         call. = FALSE
       )
     }
-    if (!all(c("id", "sire", "dam") %in% names(ped))) {
+    requirePedColumns(ped, "'ped'")
+    return(ped)
+  }
+
+  if (sourceType == "file") {
+    if (is.null(fileName)) {
       stop(
-        "getPedigreeSource(): 'ped' must contain columns id, sire, and dam.",
+        "getPedigreeSource(): 'fileName' must be supplied for ",
+        "source = 'file'.",
         call. = FALSE
       )
     }
+    if (!file.exists(fileName)) {
+      stop(
+        "getPedigreeSource(): file not found: ", fileName,
+        call. = FALSE
+      )
+    }
+    ped <- getPedigree(fileName, sep = sep)
+    requirePedColumns(ped, "file pedigree")
     return(ped)
   }
 

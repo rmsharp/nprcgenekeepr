@@ -96,6 +96,7 @@ checkRequiredCols
 ci
 coeficient
 coeficients
+collaterals
 colorIndex
 columm
 columms
@@ -259,6 +260,7 @@ pedWithGenotypeReport
 pedigreeFile
 pgp
 pkgdown
+pluggable
 png
 portential
 pre
