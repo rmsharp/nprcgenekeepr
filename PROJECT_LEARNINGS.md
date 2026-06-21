@@ -9502,3 +9502,79 @@ byproduct\]. **Apply:** any session that executes a behavior change a
 prior session deferred (flip its guard test); any “delegate vs
 reimplement” choice (prove equivalence first); any NEWS.Rmd re-render
 (mind the `--`→en-dash + `NEWS.html` traps).
+
+#### Learning 143 — When an owner offers a scope fork (“do A or B”), ground BOTH directions before recommending (a read-only parallel sweep is the right tool — keep file-mutating work solo), and weight OFFLINE TESTABILITY heavily; and when you EXTEND a pluggable seam, derive the new provider’s contract by mirroring its sibling branches, not by inventing one. (S150, LabKey research Rec \#4/#5 — `getPedigreeSource()` `"file"` provider)
+
+**What happened.** The owner’s directive named item 3 as “add a
+`file`/other-EHR provider on the `getPedigreeSource()` seam; or
+server-side filtering / `executeSql`.” Rather than pick, I treated the
+“or” as a scope decision to ground: a read-only 4-agent workflow (the
+`getPedigreeSource` seam + its callers; the research doc’s Rec \#4/#5;
+the package’s existing file-ingestion subsystem; the LabKey fetch path +
+offline testability) plus firsthand reads. The evidence came back
+lopsided, and that asymmetry drove a fast, confident scope
+`AskUserQuestion`: **Direction A (file provider)** is the doc’s
+prioritized Rec \#4 (the walk-delegation half was S149), reuses the
+exported
+[`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md),
+is additive/low-risk, and is **fully offline-deterministic**;
+**Direction B (server-side filtering/`executeSql`)** is **explicitly
+deferred** by the doc (benefit unmeasured; `executeSql` needs per-center
+dot-notation SQL), **cannot be tested or observed without a live LabKey
+server** (absent here), and carries a landmine — a naive focal-id server
+filter is incompatible with the client-side connected-component walk
+(filtering to focal rows leaves the walk nothing to traverse; it’s a
+re-architecture, not a drop-in optimization). Owner picked A. For the
+implementation contract, I did NOT invent how `"file"` should behave — I
+read its siblings: the `"labkey"` branch fails soft (NULL) because it is
+a flaky network fetch; the `"dataframe"` branch errors loudly on bad
+input; **neither runs `qcStudbook`** (both return un-curated,
+column-shaped peds — downstream
+[`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md)
+curates). A file is the on-disk twin of the `"dataframe"` source, so
+`"file"` mirrors it: delegate to `getPedigree(fileName, sep)`, validate
+id/sire/dam, return the un-curated ped, error loudly on
+NULL/missing-file/missing-columns. Strict TDD held clean on the first
+pass: 5 RED tests (CSV round-trip + 3 **constrained-message** error
+paths + a `mockery` delegation/`sep`-threading check) failed genuinely
+(`match.arg`/unused-argument + message mismatch — not false-passes; the
+S148 RED-discipline lesson), GREEN added one branch + two defaulted
+params (backward-compatible), REFACTOR extracted the duplicated
+id/sire/dam check into a local helper preserving both exact messages.
+Proactively whitelisted the words my rendered docs introduced
+(`pluggable`, plus S149’s never-listed `collaterals`) in `inst/WORDLIST`
+**before** `devtools::check()`, so the build came back 0/0/0 in a single
+pass (no spelling-NOTE iteration). Verified: suite 0/0 (1979 passed),
+lint 0, check 0/0/0, Phase-3E smoke of the real un-mocked `"file"`
+branch. The provider is a new internal capability on the seam, not yet
+wired to a production caller — an honest tracer-bullet (end-to-end
+working + tested, but
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+still hardcodes `"labkey"`).
+
+**Reflexes:** \[when the owner offers “A or B”, treat it as a scope
+decision to GROUND, not a coin-flip — sweep both directions and bring a
+recommendation backed by doc priority + reuse surface + offline
+testability + blast radius; a read-only parallel workflow grounds both
+while keeping the file-mutating TDD solo (the right ultracode
+hybrid)\]\[weight OFFLINE TESTABILITY heavily: a direction that “cannot
+be tested or observed in this environment” (needs a live
+server/credential) is a weak near-term deliverable vs one that is fully
+deterministic offline\]\[when extending a pluggable
+seam/adapter/strategy, READ THE SIBLING branches and mirror their
+contract — return shape, error-vs-fail-soft, curated-vs-raw —
+consistency across providers is the spec, not invention; here `"file"`
+mirrors `"dataframe"` (loud errors, un-curated return), not `"labkey"`
+(fail-soft NULL)\]\[a naive server-side focal-id filter is incompatible
+with a downstream client-side connected-component walk — filtering to
+focal rows leaves nothing to traverse; “push the filter down” is a
+re-architecture, not a drop-in\]\[adding defaulted params
+(`fileName = NULL`, `sep = ","`) to an internal adapter is
+backward-compatible — existing callers are unaffected\]\[when your
+rendered NEWS/Rd introduces a domain word, add it to `inst/WORDLIST` in
+the SAME pass so `devtools::check()` is 0/0/0 on the first run — no
+spelling-NOTE iteration\]. **Apply:** any owner “A or B” scope fork; any
+new provider on an existing adapter/strategy seam; any “optimize the
+fetch/push it server-side” proposal that interacts with downstream
+client-side traversal; any NEWS/Rd change that introduces new
+vocabulary.

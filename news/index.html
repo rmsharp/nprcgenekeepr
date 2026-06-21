@@ -56,6 +56,7 @@
 </ul></li>
 <li>Internal changes
 <ul><li>The LabKey pedigree fetch used by <code><a href="../reference/getLkDirectRelatives.html">getLkDirectRelatives()</a></code> is now obtained through an internal data-source adapter (<code>getPedigreeSource()</code>), isolating the LabKey pull behind a single seam and enabling offline, deterministic tests of the pedigree walk. No change to behavior.</li>
+<li>The internal <code>getPedigreeSource()</code> adapter gained a <code>"file"</code> source that reads a pedigree file (CSV or Excel) via <code><a href="../reference/getPedigree.html">getPedigree()</a></code>, alongside the existing <code>"labkey"</code> and <code>"dataframe"</code> sources. This makes LabKey one pluggable provider among several and extends the offline, deterministic test seam.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">

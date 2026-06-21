@@ -39,6 +39,12 @@
     (`getPedigreeSource()`), isolating the LabKey pull behind a single
     seam and enabling offline, deterministic tests of the pedigree walk.
     No change to behavior.
+  - The internal `getPedigreeSource()` adapter gained a `"file"` source
+    that reads a pedigree file (CSV or Excel) via
+    [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md),
+    alongside the existing `"labkey"` and `"dataframe"` sources. This
+    makes LabKey one pluggable provider among several and extends the
+    offline, deterministic test seam.
 
 ## nprcgenekeepr 2.0.0 (20260618)
 
