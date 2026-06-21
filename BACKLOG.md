@@ -21,11 +21,13 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Rec #4/#5 (formalize a data-source adapter on the `getPedDirectRelatives` seam + a deterministic
       mocked integration test) DONE (fetch-boundary slice) — S148: internal `getPedigreeSource()`
       (`labkey` | `dataframe`) now backs `getLkDirectRelatives()`'s fetch with the walk byte-identical,
-      plus the first deterministic walk test. **Deferred (separate, behavior-CHANGING decision):**
-      unifying `getLkDirectRelatives()`'s strict ancestor/descendant walk with
-      `getPedDirectRelatives()`'s full-connected-component walk, and adding a `file`/other-EHR provider.
-      (Deferred until measured: server-side filtering / `executeSql` / consuming the centers'
-      `study.Pedigree`/`ehr.kinship`.)
+      plus the first deterministic walk test. **Walk-unification DONE — S149:** `getLkDirectRelatives()`
+      now delegates its pedigree walk to `getPedDirectRelatives()`, so the LabKey/EHR path returns the
+      full connected pedigree component (collaterals included), consistent with the in-memory function —
+      a deliberate, owner-accepted behavior change; the deterministic test now asserts the full
+      component incl. the previously-excluded collateral sibling. **Still deferred:** a `file`/other-EHR
+      provider on the `getPedigreeSource()` seam; server-side filtering / `executeSql` / consuming the
+      centers' `study.Pedigree`/`ehr.kinship` (until measured).
 - [ ] **Strengthen the shinytest2 E2E assertions + CI stability** — GitHub issue **#40**, the open
       follow-on to the now-complete Phase 8 E2E harness: replace boot-level tautologies with behavioral
       checks, and harden the full-tier Chrome process-count flake (per-group fresh processes). Coverage
