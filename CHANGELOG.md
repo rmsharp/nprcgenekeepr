@@ -15,6 +15,50 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-21 — Published S155 (PR \#64): richer offline-focal error messages (`nprcgenekeeprFileErr`) now on `master` (Session 156)
+
+- **Deliverable (owner directive, single item):** publish S155’s work
+  ([`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md)
+  returns a classed `nprcgenekeeprFileErr` naming WHY the offline focal
+  read failed + the `modInput.R` dispatch) from
+  `richer-offline-focal-errors` to `master`. **Admin/publish** (no
+  production-code logic → no TDD gates). **0 stakeholder corrections.**
+  SOLO.
+- **Pre-flight (Learning 133/135):** `git stash` the S156 1B stub
+  (stash-carry); `git fetch` (verified); confirmed the branch **1 ahead
+  / 0 behind** `origin/master` (`791c51e4` a strict ancestor → clean
+  fast-forward), `git merge-tree --write-tree` **0 conflict markers**,
+  the single published commit exactly S155’s `cd39be9a`, its 11-file
+  diff matching S155’s key-files set (no NAMESPACE, no stray files).
+- **Publish + CI:** pushed `richer-offline-focal-errors`, opened **PR
+  \#64** → `master`, watched CI via a background
+  `gh pr checks 64 --watch` — **8/8 real jobs PASS** (`lint`, all 5
+  `R CMD check` platforms incl. ubuntu-devel 16m25s, `pkgdown`,
+  `test-coverage`) + `codecov/patch` **PASS (100% of diff hit)**.
+  `codecov/project` **FAILED** on a −0.18% total-coverage dip.
+- **Codecov triage:** diagnosed the red as a **config artifact** (two
+  codecov configs — `codecov.yml` threshold 1% + `.codecov.yml`
+  no-status — so the intended 1% is not applied; default 0%, any dip
+  fails), **non-blocking** (`master` unprotected) and **advisory** (the
+  coverage-generating workflow passed; `codecov/patch` 100%). Surfaced
+  the merge call via `AskUserQuestion` (did not merge blind — Learning
+  133); owner chose merge. Logged the config fix as its own **issue
+  \#65** (not scope-crept — FM \#8).
+- **Merge + reconcile:** fresh `MERGEABLE`/headRefOid re-check,
+  `gh pr merge 64 --merge` → merge commit **`d2c1e5e3`** (verified
+  `state: MERGED` firsthand); reconciled local `master` via a
+  verified-successful `git fetch` + ancestor-gated
+  `git reset --hard origin/master` (Learning 146). `master` =
+  `origin/master` = `d2c1e5e3`; S155’s feature confirmed present.
+- **Verification (Phase-3E via CI):** no runtime code changed (publish
+  only; S155 firsthand-smoke-tested the feature). The full PR \#64 CI
+  matrix ran `R CMD check` ×5 + pkgdown + test-coverage on the exact
+  merge-result tree, all **PASS** → `master` builds clean and contains
+  the deliverable. Close-out docs committed **direct to `master`**
+  (owner-authorized bookkeeping — `AskUserQuestion`). Branch
+  `richer-offline-focal-errors` left as a deletion candidate (owner’s
+  call). → Learning 148.
+
 ### 2026-06-21 — Richer offline-focal error messages: `getFocalAnimalPedFromFile()` returns a classed `nprcgenekeeprFileErr` naming WHY (Session 155)
 
 - **Deliverable (owner-picked, single item):** the app’s offline

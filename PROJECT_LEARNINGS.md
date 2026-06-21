@@ -9858,3 +9858,59 @@ when touching them adds blast radius for cosmetics (Learning 145)\].
 **Apply:** any “improve/enrich error messages” or “surface why X failed”
 task; any fail-soft boundary that collapses distinct failures into one
 opaque value; any lint run on this repo.
+
+#### Learning 148 — When publishing a PR, `codecov/project` can red on a fractional total-coverage dip even when `codecov/patch` is 100% — diagnose before deciding: confirm it is NON-BLOCKING (master unprotected) + ADVISORY (the coverage-generating workflow passed; patch is the meaningful signal), surface the real-but-non-blocking merge call via `AskUserQuestion`, and log any config fix as its OWN issue, not a scope-crept edit. (S156, publish S155 — PR \#64)
+
+**What happened.** Publishing S155 (PR \#64), the 8 real CI jobs (lint +
+`R CMD check` ×5 incl. ubuntu-devel + pkgdown + test-coverage) all
+passed and `codecov/patch` passed at **100.00% of diff hit** — but
+`codecov/project` **FAILED**: “89.66% (−0.18%) vs 791c51e”. The instinct
+to “merge, it’s just codecov” and the opposite instinct to “refuse, a
+check is red” are both wrong; the disciplined move was to diagnose the
+red, then surface the decision. Diagnosis: the repo has **two** codecov
+configs at root — `codecov.yml`
+(`coverage.status.project.default.threshold: 1%`) and `.codecov.yml`
+(“Team/Repository Yaml” with only `round`/`range`/`precision`, **no
+`status` block**). Under the intended 1% threshold (`target: auto`, base
+89.84% → floor 88.84%) a −0.18% dip (head 89.66%) would **PASS**; it
+failed → the 1% is **not applied** (codecov default **0%** in effect,
+any dip fails), consistent with the two files conflicting. `master` is
+**unprotected** (`gh api .../branches/master/protection` → 404) so
+`codecov/project` is **non-blocking** (`mergeStateStatus: UNSTABLE`,
+`mergeable: MERGEABLE` — `gh pr merge --merge` goes through). This is
+the same class S41’s `[triage-to-root-cause]` named (“codecov status
+checks are external advisory; the `test-coverage` workflow that
+GENERATES coverage passed”), now with the precise config mechanism.
+Surfaced it via `AskUserQuestion` with a grounded recommendation (merge
+— patch 100%, dip within the *intended* tolerance, config artifact);
+owner chose merge. Mid-session the owner asked whether the degradation
+was a backlog item — answered by reading
+BACKLOG/issues/PROJECT_LEARNINGS/ROADMAP **firsthand** (not tracked;
+only the S41 reflex + a ROADMAP \>80% aspiration), then logged the
+**config** fix as its own **issue \#65** rather than fixing it inline
+(FM \#8 — a config change is a separate, verify-on-next-PR deliverable).
+One honesty-calibration slip: I first stated “the red is a config
+artifact” with more certainty than the (strong) evidence warranted
+before confirming codecov’s file-precedence rule — frame such a
+diagnosis as “evidence strongly indicates” from the first mention.
+
+**Reflexes:** \[a red `codecov/project` with a green `codecov/patch` and
+all real CI jobs green is almost always advisory, not a correctness
+failure — diagnose to root cause before merging OR refusing\]\[before
+treating a failing check as blocking, check branch protection
+(`gh api .../branches/<b>/protection` → 404 = unprotected =
+non-required); an UNSTABLE+MERGEABLE PR merges\]\[a fractional
+total-coverage dip failing despite a configured threshold is evidence
+the threshold is not applied — look for duplicate/misplaced config
+files; the `target: auto` floor = base − threshold\]\[surface a
+real-but-non-blocking merge decision via `AskUserQuestion`
+(\[author-decision\]); do not merge silently over a red check and do not
+refuse the owner’s directive\]\[log a config/infra fix as its OWN issue
+(#65) — do not scope-creep it into a publish (FM \#8)\]\[when asked
+whether a recurring CI annoyance is tracked, read
+BACKLOG/issues/learnings/ROADMAP firsthand before answering — do not
+answer from memory\]\[frame a confident-but-unconfirmed diagnosis as
+“evidence strongly indicates”, not as fact, from the first mention\].
+**Apply:** any publish/merge session where a codecov (or other advisory)
+check reds; any “is X tracked?” question; any time you state a
+root-cause diagnosis before fully confirming the mechanism.
