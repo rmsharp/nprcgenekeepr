@@ -15,6 +15,51 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-21 — Published S152 (PR \#63): `getFocalAnimalPedFromFile()` + modInput offline-focal wiring now on `master` (Session 153)
+
+- **Deliverable (owner directive, single item):** publish S152’s Option
+  C work
+  ([`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md) +
+  `readFocalAnimalIds()` + the modInput `focalPedigreeFile` UI/dispatch
+  — the app’s offline focal-animal path) from `wire-focal-file-source`
+  to `master`. **Admin/verification** (no production-code logic → no TDD
+  gates). **0 stakeholder corrections.**
+- **Pre-flight (Learning 133/135):** `git fetch`; confirmed
+  `wire-focal-file-source` **1 ahead / 0 behind** `origin/master`
+  (`cb46616e` a strict ancestor → clean fast-forward),
+  `git merge-tree --write-tree` dry-run clean (**0 conflict markers**);
+  confirmed the single published commit was exactly S152’s `4f362be9`
+  and the 15-file diff matched S152’s key-files list.
+- **Publish:** pushed `wire-focal-file-source` (new remote tracking
+  branch), opened **PR \#63** → `master`, watched CI go green via a
+  background `gh pr checks 63 --watch` (**10/10**: `lint` 3m51s, all 5
+  `R CMD check` platforms incl. ubuntu-devel 15m58s, `pkgdown`,
+  `test-coverage`, `codecov` patch+project), a fresh re-check confirmed
+  `failingChecks: 0` + `mergeStateStatus: CLEAN` + `MERGEABLE` (did not
+  merge blind — Learning 133), merged (merge commit **`e1780c02`**);
+  verified `state: MERGED` firsthand.
+- **Reconcile + a caught silent failure (→ Learning 146):** the first
+  post-merge `git fetch` hit a transient DNS error
+  (`Could not resolve host`), leaving local `origin/master` STALE at
+  `cb46616e`; `git reset --hard origin/master` then reset to that OLD
+  commit *without erroring*. Caught it via an ancestor assertion
+  (`4f362be9` reported NOT an ancestor of `origin/master` — impossible
+  post-merge → stale ref); retried `git fetch` to success
+  (`cb46616e..e1780c02`), re-asserted the merged commit IS now an
+  ancestor, `reset --hard` → local `master` = `e1780c02`. Confirmed
+  `R/getFocalAnimalPedFromFile.R` + `R/readFocalAnimalIds.R` present on
+  `master`.
+- **Verification (Phase-3E via CI):** no runtime code changed this
+  session (publish only; S152 firsthand-smoke-tested the feature). The
+  full PR \#63 CI matrix ran `R CMD check` x5 + pkgdown + test-coverage
+  on the exact merge-result tree, all **PASS** → `master` at `e1780c02`
+  builds clean and contains the deliverable. Close-out docs
+  (`SESSION_NOTES.md`, this entry, `PROJECT_LEARNINGS.md` Learning 146)
+  committed **direct to `master`** (owner-authorized via
+  `AskUserQuestion` — master unprotected, docs-only). Both now-merged
+  branches (`wire-focal-file-source` PR \#63, `wire-file-pedsource` PR
+  \#62) left as deletion candidates (owner’s call).
+
 ### 2026-06-21 — Published S151 (PR \#62) + deleted merged `pedsource-file-provider` + wired a file pedigree source through the focal-animal app pipeline (Option C) (Session 152)
 
 - **Deliverable (owner directive, a 3-item pairing — two admin/hygiene +

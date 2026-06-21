@@ -7,6 +7,213 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 153 Did
+
+**Deliverable:** Publish S152 – push `wire-focal-file-source` -\> PR -\>
+CI -\> merge to `master` (the S142 publish convention). **(DONE.)**
+**Started / Completed:** 2026-06-21 **Status:** **DONE.** Single
+owner-directed item: publish S152’s
+[`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md) +
+modInput wiring (Option C) from `wire-focal-file-source` to `master`.
+This is **admin/verification** (no production-code logic -\> no TDD
+gates; TDD phase declared N/A at the top of every response). **0
+stakeholder corrections.** SOLO (a serial, outward-facing, irreversible
+git sequence – no decomposition/parallelism to gain; the S150-S152
+publish rationale). Close-out docs landed **direct-to-master**
+(owner-authorized via `AskUserQuestion` – master is unprotected,
+docs-only, no package-build impact, avoids a ~17-min CI cycle on docs; a
+one-time deviation from the feature-branch-\>PR convention for pure
+session bookkeeping). - **REAL WORK \#1 – safe-publish pre-flight
+(Learning 133/135):** `git fetch`; confirmed `wire-focal-file-source`
+was **1 ahead / 0 behind** `origin/master` (1 ahead = S152’s
+`4f362be9`), `origin/master` (`cb46616e`) a **strict ancestor** of HEAD
+(clean fast-forward), `git merge-tree --write-tree origin/master HEAD`
+dry-run clean (**0 conflict markers**). Confirmed the single commit
+being published was exactly S152’s `4f362be9` and the 15-file diff
+matched S152’s documented key-files list (no stray files). - **REAL WORK
+\#2 – push (S151/S152 stash-carry pattern):**
+`git stash push SESSION_NOTES.md` (carry the S153 1B stub across the
+branch ops); `git push -u origin wire-focal-file-source` (new remote
+tracking branch); working tree clean apart from the standing-keep
+`PED_GV_AUDIT_2026-05-30.html`. - **REAL WORK \#3 – PR + CI gate (did
+NOT merge blind, Learning 133):** opened **PR \#63** -\> `master`;
+initial `mergeable: MERGEABLE` / `UNSTABLE` (checks in flight); watched
+all checks via a background `gh pr checks 63 --watch --interval 30`
+(re-invoked on completion). **10/10 PASS:** `lint` 3m51s;
+`macos-latest (release)` 7m02s; `ubuntu-latest (release)` 7m39s /
+`(oldrel-1)` 7m07s / `(devel)` **15m58s** (the gating job);
+`windows-latest (release)` 8m52s; `pkgdown` 6m00s; `test-coverage`
+4m18s; `codecov/patch` + `codecov/project`. A fresh re-check before
+merging confirmed `failingChecks: 0` + `mergeStateStatus: CLEAN` +
+`mergeable: MERGEABLE`. - **REAL WORK \#4 – merge + verify landed:**
+`gh pr merge 63 --merge` -\> merge commit **`e1780c02`**; verified
+firsthand (`gh pr view 63` -\> `state: MERGED`, `mergedAt` set,
+`mergeCommit.oid e1780c02`). - **REAL WORK \#5 – reconcile local master,
+caught a transient fetch failure (-\> Learning 146):** the first
+post-merge `git fetch` hit a **transient DNS error** (“Could not resolve
+host: github.com”); because the fetch failed, local `origin/master`
+stayed **stale at `cb46616e`** and my `git reset --hard origin/master`
+reset local `master` to that **old** commit *without erroring* –
+silently leaving `master` BEHIND the real remote. Caught it by checking
+the ancestor assertion (“is `4f362be9` an ancestor of origin/master?”
+returned **NO**, which is impossible post-merge -\> the ref was stale).
+Retried `git fetch` (loop, succeeded attempt 1) -\> `origin/master`
+advanced `cb46616e..e1780c02`; re-asserted `4f362be9` **IS** now an
+ancestor (YES); `git reset --hard origin/master` -\> local `master` =
+`e1780c02`. Confirmed `R/getFocalAnimalPedFromFile.R` +
+`R/readFocalAnimalIds.R` present on `master`.
+
+**Phase-3E (runtime smoke test): SATISFIED via CI.** This session
+changed **no runtime/production code** (publish only); the runtime
+behavior (the offline focal-file path) was firsthand-smoke-tested by
+**S152** (real un-mocked `getFocalAnimalPedFromFile` against
+`ExamplePedigree.csv`). The publish itself was verified by the **full PR
+\#63 CI matrix running on the exact merge-result tree** – `R CMD check`
+x5 (incl. ubuntu-devel) + pkgdown + test-coverage all **PASS** -\>
+`master` at `e1780c02` builds clean and contains the deliverable. No new
+launch needed (no new runtime change to exercise).
+
+**Session 152 Handoff Evaluation (by Session 153): Score 9/10.** S152’s
+handoff was a near-perfect executor’s map for this publish. Its
+**SUGGESTED NEXT listed “(Publish S152)” as the first option** – “push
+`wire-focal-file-source` -\> PR -\> CI (lint + `R CMD check` x5 +
+pkgdown + coverage) -\> merge (the S142 convention)” – which I executed
+verbatim. Every operational gotcha held firsthand: **gotcha 1** (S152’s
+work UNPUSHED on `wire-focal-file-source`, `origin/master` at
+`cb46616e`, branch based on `cb46616e` so “PRs cleanly / 0 behind”) held
+EXACTLY (0 behind / 1 ahead, `cb46616e` strict ancestor, clean FF,
+merge-tree 0 conflicts, PR CLEAN); **gotcha 8** (`git pull` is rebase +
+chokes on `.DS_Store` -\> use `fetch` + `reset --hard`, Learning 135)
+was load-bearing – I used `fetch`+`reset` throughout; **gotcha 9**
+(standing keeps `PED_GV_AUDIT_2026-05-30.html` + `.DS_Store`) held
+(never staged). The named CI shape (10/10: lint + 5 platforms +
+pkgdown + coverage + 2 codecov) matched precisely. ROI strongly positive
+– I executed straight off it with zero discovery. **The -1 (to make it a
+10):** S152’s handoff did not pre-flag that the post-merge `fetch`
+before `reset --hard` can fail transiently and silently leave
+`origin/master` stale (so `reset --hard origin/master` resets to the OLD
+commit) – the failure mode I hit and now capture as Learning 146.
+Discoverable (I caught it via the ancestor assertion), and arguably an
+environment flake rather than a handoff gap – hence -1, not more.
+
+**Self-assessment (Session 153): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK read in chunks;
+dashboard 98/100; ghost-check -\> HEAD `4f362be9` = S152, no
+undocumented commits), reported, STOPPED for the owner; claimed the
+session (1B stub BEFORE technical work). **Headline strengths:** (1)
+**published with full safety discipline** – pre-flight (0-behind +
+strict-ancestor + merge-tree 0-conflict + exact-commit/exact-files
+confirmation), did **not** merge blind (watched 10/10 to completion + a
+fresh CLEAN/MERGEABLE re-check immediately before merge), verified the
+merge landed firsthand, reconciled `master` via provably-safe
+`fetch`+`reset`; (2) **caught a silent failure** – the transient DNS
+fetch failure that left `origin/master` stale and made `reset --hard`
+reset to the OLD commit; caught by an ancestor assertion (not by the
+absent error), retried to success, re-asserted -\> Learning 146; (3)
+**right scope discipline** – published ONLY S152 (the one picked item);
+left BOTH now-merged branches (`wire-focal-file-source`,
+`wire-file-pedsource`) as deletion candidates for the owner, did NOT
+bundle hygiene (FM \#18); (4) **declared TDD phase N/A every response**
+(admin, no production logic) and kept the whole serial mutation SOLO
+(correct – no parallelism to gain on an irreversible git sequence); (5)
+**asked the one genuine fork** (direct-to-master vs docs PR) via
+`AskUserQuestion` rather than guessing on an outward-facing action; (6)
+full verification + ASCII + plain language + 0 corrections. **Weaknesses
+(honest):** (a) **low difficulty** – this is an admin/publish session
+(push + PR + watch + merge + reconcile), not a feature; the value is
+safety discipline + the catch, not algorithmic depth, so the ceiling is
+~8; (b) my **first `reset --hard` reset to a stale ref** because I ran
+it in the same block as the fetch that failed – I recovered cleanly via
+the ancestor assertion, but a stricter sequence would gate
+`reset --hard origin/<b>` on a verified-successful fetch FIRST (now
+Learning 146); minor, caught, no lasting effect. Clean first-pass
+publish with a real catch, but low difficulty -\> 8/10 (I reserve 9-10
+for a higher-difficulty deliverable delivered clean).
+
+**Learnings:** **Learning 146** (after `gh pr merge`, the `git fetch`
+that precedes `reset --hard origin/<branch>` MUST be verified to have
+SUCCEEDED before resetting – a transient network/DNS failure leaves the
+local `origin/<branch>` ref STALE, and
+`git reset --hard origin/<branch>` then resets to the OLD commit
+*without any error*, silently leaving the local branch behind the real
+remote; gate the reset on a post-fetch assertion that the just-merged
+commit is now an ancestor of `origin/<branch>`, and retry the fetch
+until it succeeds) added to `PROJECT_LEARNINGS.md`. Carried as applied:
+133 (don’t merge blind – watched 10/10 + fresh CLEAN/MERGEABLE before
+merge), 135 (`fetch`+`reset` not `pull`), the S150-S152
+publish/stash-carry pattern, standing keeps (132/139 are
+NEWS-render-only and did not apply – no NEWS change this session).
+
+**=\> SUGGESTED NEXT = owner’s pick.** S152 published (`master` =
+`e1780c02`, PR \#63 MERGED). S153’s own close-out is on `master`
+directly (no “publish S153” needed). Natural options (plain ASCII
+labels): - **(Delete the two merged branches)** BOTH
+`wire-focal-file-source` (S152, merged via PR \#63) and
+`wire-file-pedsource` (S151, merged via PR \#62) still exist local +
+remote and are strict ancestors of `master` – pure hygiene, owner’s call
+(the S143/S146 verified-merged-before-delete pattern). I deleted neither
+this session (FM \#18 – not the picked item). - **(Richer offline-focal
+error messages)** the offline path fail-softs to a generic “File Read
+Error” (NULL); surface WHY (missing file vs missing id/sire/dam columns)
+via a dedicated error field/branch, distinct from the LabKey
+`failedDatabaseConnection`. Small, additive, strict-TDD. -
+**(Document/expose the offline focal workflow)** a vignette or app help
+note for the focal-id-file + pedigree-file offline path (wired but
+undocumented for end users beyond NEWS). - **(Remaining LabKey Rec \#5 /
+server-side – deferred)** server-side filtering / `executeSql` /
+centers’ `study.Pedigree`/`ehr.kinship`; and/or a non-LabKey other-EHR
+provider on the same seam. Gated on measured pull size + per-center
+availability + a live server. - **(Permanent NEWS render fix)**
+`html_preview: false` in `NEWS.Rmd` + pandoc smart-off – ends BOTH the
+NEWS.html NOTE (Learning 139) and the smart-quote/en-dash trap (Learning
+132). Candidate, not done. - **(CRAN Phase 5, owner-run)** win-builder
+x3 + R-hub v2 + `submit_cran()` – owner PAT + email; HARD STOP
+(`docs/planning/cran-2.0.0-phase5-runbook.md`). - **A GitHub issue** –
+\#46, \#45/#28/#9, \#2, \#37, \#36, \#29, or older
+\#13/#12/#11/#10/#5/#1. **Do NOT** bundle options (FM \#18/#25); **do
+NOT** start any without the owner picking.
+
+**Key files (this session):** **CHANGED – docs only (committed direct to
+`master`):** `SESSION_NOTES.md` (this handoff), `CHANGELOG.md` (S153
+`[Unreleased]` publish entry), `PROJECT_LEARNINGS.md` (Learning 146).
+**NO code/test/man/NAMESPACE/NEWS/DESCRIPTION/data change** (S152’s code
+was already merged via PR \#63). **GIT:** **PR \#63 MERGED** (merge
+`e1780c02`); `origin/master` + local `master` now at `e1780c02`. Branch
+`wire-focal-file-source` PUSHED + merged (still exists local + remote at
+`4f362be9`). **NOT committed (standing keeps):**
+`PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
+
+**Gotchas:** (1) **S152’s deliverable is now on `master` (`e1780c02`,
+via PR \#63).**
+[`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md) +
+`readFocalAnimalIds()` + the modInput `focalPedigreeFile` wiring are
+live on `master`; the app’s focal-animal path runs OFFLINE when a
+pedigree file is supplied (S152 gotchas 3-5 still hold for the feature
+itself). (2) **TWO merged feature branches are deletion candidates:**
+`wire-focal-file-source` (S152, PR \#63) and `wire-file-pedsource`
+(S151, PR \#62) – both still exist local + remote, both strict ancestors
+of `master` (history preserved in merges `e1780c02`/`cb46616e`). Owner’s
+call; verify-merged-before-delete then `git branch -d` +
+`git push origin --delete` + `fetch --prune` + no-ref-remains check. (3)
+**Learning 146 (NEW):** after `gh pr merge`, a transient `git fetch`
+failure leaves `origin/<branch>` STALE, and
+`git reset --hard origin/<branch>` then resets to the OLD commit WITHOUT
+erroring – always re-fetch-until-success and assert the merged commit is
+an ancestor of `origin/<branch>` BEFORE/AFTER the reset. (4)
+**`git pull` is rebase** (`pull.rebase=true`) and chokes on the
+`.DS_Store` keep – use `git fetch` + `git reset --hard origin/<branch>`
+(Learning 135). (5) **Standing keeps:** `.DS_Store` +
+`PED_GV_AUDIT_2026-05-30.html` – never commit. (6) **Master is
+UNPROTECTED** (`gh api .../branches/master/protection` -\> 404) – direct
+push works, but the standing convention is feature-branch -\> PR -\>
+merge for CODE; S153’s direct-to-master was an owner-authorized
+exception for docs-only bookkeeping. (7) Carried: feature-branch -\> PR
+-\> merge; package **ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5
+owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT (warning + NULL) without a LabKey credential/config;
+`skip_on_cran()`-gated test files need `NOT_CRAN=true` to actually run.
+
 ### What Session 152 Did
 
 **Deliverable:** Owner-directed 3-item pairing (the S146-S151 pattern –

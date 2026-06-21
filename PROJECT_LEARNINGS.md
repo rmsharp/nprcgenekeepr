@@ -9749,3 +9749,44 @@ pipeline; any “new sibling vs parameterize” decision where the sources
 differ in column shape or error contract; any change spanning function +
 server + UI; any behavior-neutral helper extraction across two
 functions; any `skip_on_cran()`-gated test run.
+
+#### Learning 146 — After `gh pr merge`, the `git fetch` that precedes `git reset --hard origin/<branch>` MUST be verified to have SUCCEEDED before resetting — a transient network/DNS failure leaves the local `origin/<branch>` ref STALE, and `reset --hard origin/<branch>` then resets to the OLD pre-merge commit *without any error*, silently leaving the local branch BEHIND the real remote. Gate the reset on a post-fetch assertion that the just-merged commit is now an ancestor of `origin/<branch>`. (S153, publish S152 — focal-file source merge)
+
+**What happened.** Publishing S152: pushed `wire-focal-file-source`,
+opened PR \#63, watched CI to 10/10, confirmed `CLEAN`/`MERGEABLE`,
+`gh pr merge 63 --merge` → merge commit `e1780c02` (verified
+`state: MERGED` firsthand). Then the standard reconcile (Learning 135:
+`fetch`+`reset`, not `pull`). I ran the post-merge `git fetch` and the
+`git reset --hard origin/master` in the SAME command block — and the
+fetch hit a transient `Could not resolve host: github.com`. Because the
+fetch failed, local `origin/master` stayed STALE at the pre-merge
+`cb46616e`, and `git reset --hard origin/master` happily reset local
+`master` to that OLD commit, exit 0, NO error. The only reason I caught
+it: the same block also asserted “is the merged commit `4f362be9` an
+ancestor of `origin/master`?” and it printed **NO** — which is
+*impossible* right after a confirmed merge, so the ref had to be stale.
+Recovered: retried `git fetch` in a loop (succeeded attempt 1) →
+`origin/master` advanced `cb46616e..e1780c02`; re-asserted `4f362be9` IS
+now an ancestor (YES); `git reset --hard origin/master` → local `master`
+= `e1780c02`; confirmed `R/getFocalAnimalPedFromFile.R` +
+`R/readFocalAnimalIds.R` present. The trap:
+`git reset --hard origin/<branch>` operates on whatever the LOCAL
+remote-tracking ref currently is — a failed/skipped fetch makes it a
+no-op-to-stale, not an error, so “exit 0” is NOT evidence the reconcile
+worked.
+
+**Reflexes:** \[never chain `git fetch` and
+`git reset --hard origin/<branch>` as if the fetch can’t fail — verify
+the fetch SUCCEEDED (its exit status / its `old..new` ref update line)
+before resetting\]\[after `gh pr merge`, assert the merged commit is an
+ancestor of `origin/<branch>`
+(`git merge-base --is-ancestor <mergedSHA> origin/<branch>`) BOTH before
+and after the reset — a NO post-merge means a stale ref, not a missing
+merge\]\[retry a transient `git fetch` (DNS / `Could not resolve host`)
+in a short loop rather than treating the first failure as
+terminal\]\[treat “exit 0” from `git reset --hard origin/<branch>` as
+necessary-not-sufficient — confirm `git rev-parse origin/<branch>`
+actually advanced to the expected SHA\]. **Apply:** every post-merge
+local reconcile; any `reset --hard origin/<branch>` that depends on a
+just-run fetch; sandboxed/flaky-network sessions where `git fetch` can
+fail transiently.
