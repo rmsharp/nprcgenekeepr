@@ -18,10 +18,15 @@ text, or Excel) read via \code{\link{getPedigree}}; it must provide at least
 files (default \code{","}); ignored for Excel files.}
 }
 \value{
-A data.frame with the focal animals' full connected pedigree
-component (ancestors, descendants, and collaterals), as returned by
-\code{\link{getFileDirectRelatives}}; or \code{NULL} if the pedigree file
-cannot be read.
+On success, a data.frame with the focal animals' full connected
+pedigree component (ancestors, descendants, and collaterals), as returned by
+\code{\link{getFileDirectRelatives}}. On any failure this function does NOT
+throw: it returns a classed \code{nprcgenekeeprFileErr} object (a list with a
+\code{message} element) naming WHY the read failed -- an unreadable focal-id
+list file, a missing / not-found / unreadable / wrong-column pedigree file, or
+no focal IDs present in the pedigree. The application surfaces \code{message}
+as the "File Read Error" detail. (This is distinct from the LabKey path, which
+returns an \code{nprcgenekeeprErr}.)
 }
 \description{
 File-sourced sibling of \code{\link{getFocalAnimalPed}}: reads a list of

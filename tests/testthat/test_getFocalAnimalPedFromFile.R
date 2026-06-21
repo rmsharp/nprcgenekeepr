@@ -7,9 +7,12 @@
 # pedigree component from a SEPARATE pedigree file via getFileDirectRelatives()
 # -- so the focal-animal pipeline no longer requires a LabKey/EHR connection.
 # Fully offline and deterministic. The underlying file source errors loudly, but
-# this function is the app boundary, so it is FAIL-SOFT: it returns NULL on any
-# pedigree-file problem (mirroring the app's other file inputs, which surface a
-# "File Read Error"), distinct from the LabKey path's nprcgenekeeprErr.
+# this function is the app boundary, so it is FAIL-SOFT: instead of throwing, it
+# returns a classed "nprcgenekeeprFileErr" object whose $message names WHY the
+# read failed (unreadable focal-id list file, a missing / not-found / unreadable
+# / wrong-column pedigree file, or no focal IDs present in the pedigree). The app
+# surfaces that $message as the "File Read Error" detail. This is distinct from
+# the LabKey path, which returns an nprcgenekeeprErr.
 
 focalFileTestPed <- function() {
   # Founders S1, D1, X1; O1 & O2 are full sibs of S1 x D1; GC1 is the offspring
@@ -93,34 +96,97 @@ test_that(
   }
 )
 
-test_that("getFocalAnimalPedFromFile returns NULL when pedigreeFileName is missing", {
+# --- Pedigree-file problems: a classed error naming WHY, not a bare NULL -------
+
+test_that("getFocalAnimalPedFromFile reports a missing pedigree file argument", {
   focalFile <- writeFocalIdFile("O1")
   on.exit(unlink(focalFile), add = TRUE)
 
-  expect_null(getFocalAnimalPedFromFile(focalFile))
-  expect_null(getFocalAnimalPedFromFile(focalFile, pedigreeFileName = NULL))
+  res1 <- getFocalAnimalPedFromFile(focalFile)
+  res2 <- getFocalAnimalPedFromFile(focalFile, pedigreeFileName = NULL)
+
+  expect_s3_class(res1, "nprcgenekeeprFileErr")
+  expect_match(res1$message, "pedigree file must be supplied", ignore.case = TRUE)
+  expect_s3_class(res2, "nprcgenekeeprFileErr")
+  expect_match(res2$message, "pedigree file must be supplied", ignore.case = TRUE)
 })
 
-test_that("getFocalAnimalPedFromFile returns NULL when the pedigree file does not exist", {
+test_that("getFocalAnimalPedFromFile reports a pedigree file that does not exist", {
   focalFile <- writeFocalIdFile("O1")
   on.exit(unlink(focalFile), add = TRUE)
 
-  expect_null(
-    getFocalAnimalPedFromFile(
-      focalFile,
-      file.path(tempdir(), "no_such_pedigree_file.csv")
-    )
+  result <- getFocalAnimalPedFromFile(
+    focalFile,
+    file.path(tempdir(), "no_such_pedigree_file.csv")
   )
+
+  expect_s3_class(result, "nprcgenekeeprFileErr")
+  expect_match(result$message, "not found", ignore.case = TRUE)
 })
 
-test_that("getFocalAnimalPedFromFile returns NULL when the pedigree file lacks id/sire/dam", {
+test_that("getFocalAnimalPedFromFile reports a pedigree file lacking id/sire/dam", {
   focalFile <- writeFocalIdFile("A")
   badPed <- tempfile(fileext = ".csv")
   utils::write.csv(data.frame(id = c("A", "B"), stringsAsFactors = FALSE),
                    badPed, row.names = FALSE)
   on.exit(unlink(c(focalFile, badPed)), add = TRUE)
 
-  expect_null(getFocalAnimalPedFromFile(focalFile, badPed))
+  result <- getFocalAnimalPedFromFile(focalFile, badPed)
+
+  expect_s3_class(result, "nprcgenekeeprFileErr")
+  expect_match(result$message, "id, sire, and dam", ignore.case = TRUE)
+})
+
+test_that("getFocalAnimalPedFromFile reports an unreadable pedigree file", {
+  focalFile <- writeFocalIdFile("O1")
+  # An .xlsx-named file holding plain CSV text is dispatched to the Excel reader
+  # by extension but cannot be parsed as a workbook -- an unreadable file.
+  badPed <- tempfile(fileext = ".xlsx")
+  writeLines(c("id,sire,dam", "O1,NA,NA"), badPed)
+  on.exit(unlink(c(focalFile, badPed)), add = TRUE)
+
+  result <- getFocalAnimalPedFromFile(focalFile, badPed)
+
+  expect_s3_class(result, "nprcgenekeeprFileErr")
+  expect_match(result$message, "could not be read", ignore.case = TRUE)
+})
+
+# --- Focal-id list file problems: was an UNCAUGHT throw; now a classed error ---
+
+test_that("getFocalAnimalPedFromFile reports an unreadable focal-id list file", {
+  pedFile <- writePedFile()
+  on.exit(unlink(pedFile), add = TRUE)
+  missingFocal <- file.path(tempdir(), "no_such_focal_id_file.csv")
+
+  result <- getFocalAnimalPedFromFile(missingFocal, pedFile)
+
+  expect_s3_class(result, "nprcgenekeeprFileErr")
+  expect_match(result$message, "focal animal ID list", ignore.case = TRUE)
+})
+
+test_that("getFocalAnimalPedFromFile reports an empty focal-id list file", {
+  pedFile <- writePedFile()
+  emptyFocal <- tempfile(fileext = ".csv")
+  file.create(emptyFocal)
+  on.exit(unlink(c(pedFile, emptyFocal)), add = TRUE)
+
+  result <- getFocalAnimalPedFromFile(emptyFocal, pedFile)
+
+  expect_s3_class(result, "nprcgenekeeprFileErr")
+  expect_match(result$message, "focal animal ID list", ignore.case = TRUE)
+})
+
+# --- Empty result: focal IDs absent from the pedigree (was a silent 0-row) -----
+
+test_that("getFocalAnimalPedFromFile reports when no focal IDs are in the pedigree", {
+  focalFile <- writeFocalIdFile("ZZZ") # not present in the fixture pedigree
+  pedFile <- writePedFile()
+  on.exit(unlink(c(focalFile, pedFile)), add = TRUE)
+
+  result <- getFocalAnimalPedFromFile(focalFile, pedFile)
+
+  expect_s3_class(result, "nprcgenekeeprFileErr")
+  expect_match(result$message, "None of the focal IDs", ignore.case = TRUE)
 })
 
 test_that("getFocalAnimalPedFromFile threads sep through to the pedigree file reader", {
