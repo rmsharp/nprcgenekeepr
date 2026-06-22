@@ -10089,3 +10089,44 @@ on a fail-soft read path; any place a caught error is preceded by a
 leaked
 `read.csv`/`read.table`/[`file()`](https://rdrr.io/r/base/connections.html)
 warning.
+
+#### Learning 152 – A config/threshold fix verified only AT THE CONFIG LAYER (e.g. codecov’s `/validate` echoing the parsed threshold, S158/Learning 150) is verified but not yet CONFIRMED: the live signal is the first real PR whose coverage delta actually exercises the check. When a prior session “verified but deferred confirmation to the next PR”, that next publish IS the confirming experiment – watch the SPECIFIC check that was failing (not just “all green”), and record the before/after so a multi-session infra saga (diagnose -\> fix -\> confirm) is auditably closed. (S160, publish S159 – PR \#66, the live \#65 confirmation)
+
+**What happened.** S158 fixed issue \#65 – two root codecov configs
+meant the intended 1% threshold was not applied (default 0% in effect,
+so any total-coverage dip failed `codecov/project`; empirically PR
+\#64’s -0.18% dip with a 100%-covered patch) – by consolidating to a
+single `codecov.yml`, and verified it at the config layer (codecov’s
+`https://codecov.io/validate` echoed `threshold: 1.0` for project and
+patch). But Learning 150 itself conceded the full PR-level confirmation
+could only come from “the next PR with a coverage delta.” S160 published
+S159’s warning-muffle, which adds 2 tests (a small positive coverage
+delta) – the first coverage-changing PR since the fix. The standard safe
+publish ran (pre-flight: clean fast-forward, `merge-tree` 0 conflicts,
+exact-commit + 8-file check; pushed; opened PR \#66; watched all checks
+via a background `gh pr checks 66 --watch`), and `codecov/project` came
+back **PASS** – versus its **FAIL** on PR \#64 under the old two-config
+state. That is the live experiment confirming the \#65 fix end-to-end
+(S156 diagnosed -\> S158 fixed + config-layer-verified -\> S160
+PR-confirmed). The merge itself used full carried discipline
+(don’t-merge-blind fresh re-check; `AskUserQuestion` for the
+irreversible merge; Learning-146 ancestor-gated `reset --hard`;
+verified-merged-before-delete branch cleanup with a `gh api` 404 check)
+– no new wrinkle there; the new lesson is purely about *when a config
+fix counts as confirmed*.
+
+**Reflexes:** \[a config/threshold fix verified only at the config layer
+is verified, NOT yet confirmed – the confirming signal is the first live
+PR whose delta exercises the check; when a prior handoff says “verified,
+confirm on the next PR”, that next publish IS the experiment, so run it
+deliberately\]\[when publishing the PR that confirms a prior fix, watch
+the SPECIFIC check that was failing (here `codecov/project`), not just
+“all green” – and record the before/after (PR \#64 FAIL -\> PR \#66
+PASS) so the loop is auditably closed\]\[a multi-session infra saga
+(diagnose -\> fix -\> confirm) is only “closed” once the live
+confirmation lands; update the standing gotcha from “X will keep failing
+until fixed” to “X confirmed resolved (PR \#N)” so successors stop
+carrying a stale warning\]. **Apply:** any session that publishes the
+first coverage/threshold-changing PR after a CI-config fix; any
+“verified at the config layer, confirm on next PR” carryover; closing
+out any multi-session infra fix.

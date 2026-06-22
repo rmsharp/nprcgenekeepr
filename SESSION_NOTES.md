@@ -7,6 +7,216 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 160 Did
+
+**Deliverable:** Publish S159 – push `quiet-focal-read-warning` -\> PR
+-\> CI -\> merge to `master` (the S156 publish convention). **(DONE.)**
+**Started / Completed:** 2026-06-21 **Status:** **DONE.** Admin/publish
+(no production-code logic -\> TDD declared **N/A** every response). **0
+stakeholder corrections.** SOLO (a serial, outward-facing, irreversible
+git sequence – no decomposition/parallelism to gain; a workflow adds
+risk-not-coverage on irreversible git mutation; ultracode is on but this
+is publish hygiene). Owner picked **“Publish S159 first”** (1-and-done;
+documenting the offline focal workflow is a separate next session).
+S159’s offline focal-id warning-muffle (`muffleCannotOpenFile()` in
+`readFocalAnimalIds()`) is now on `master`. - **PRE-FLIGHT (Learning
+133/135):** wrote the S160 1B stub then **stash-carried** it
+(`git stash push SESSION_NOTES.md`) so the branch/PR published exactly
+S159’s reviewed commit (the S151-S153/S156 stash-carry pattern);
+`git fetch` (verified exit 0; advanced only `gh-pages`, `origin/master`
+unchanged). Confirmed `quiet-focal-read-warning` **1 ahead / 0 behind**
+`origin/master` (`2d1c19b1`=S158 a **strict ancestor** of HEAD -\> clean
+fast-forward), `git merge-tree --write-tree origin/master HEAD` **0
+conflict markers**, the single published commit exactly S159’s
+**`363cf9a2`**, its **8-file** diff matching S159’s documented key-files
+set (`R/readFocalAnimalIds.R`,
+`tests/testthat/test_getFocalAnimalPedFromFile.R` \[+42 lines = the 2
+new tests = the coverage delta\], `man/getFocalAnimalPedFromFile.Rd`,
+`NEWS.Rmd`, `NEWS.md`, `CHANGELOG.md`, `PROJECT_LEARNINGS.md`,
+`SESSION_NOTES.md`); verified **NAMESPACE / DESCRIPTION / the shared
+`muffleIncompleteFinalLine` / the online `getFocalAnimalPed` sibling all
+untouched** (blast radius confined exactly as S159 documented). -
+**PUSH + PR:** `git push -u origin quiet-focal-read-warning` (new remote
+tracking branch, exit 0); opened **PR \#66** -\> `master` (initial
+`MERGEABLE` / `UNSTABLE`, 8 real jobs queued). - **CI (did NOT merge
+blind, Learning 133):** watched all checks to completion via a
+background `gh pr checks 66 --watch --interval 30` (exit 0). **All 10
+checks PASS:** `lint` 3m25s; `macos-latest (release)` 5m37s;
+`ubuntu-latest (release)` 6m55s / `(oldrel-1)` 7m7s / `(devel)`
+**15m6s** (gating); `windows-latest (release)` 9m56s; `pkgdown` 5m11s;
+`test-coverage` 3m52s; **`codecov/patch` PASS (100% of diff)**;
+**`codecov/project` PASS**. - **\#65 CONFIRMED LIVE (the headline):** on
+PR \#64 (S156) `codecov/project` FAILED on a -0.18% dip because the
+two-config precedence bug meant the intended 1% threshold was not
+applied (default 0% -\> any dip fails); S158 consolidated to one
+`codecov.yml` and verified at the config layer (codecov `/validate`
+echoed `threshold: 1.0`). This PR – the first coverage-changing PR since
+– is the **live PR-level confirmation**: `codecov/project` now
+**PASSES**. The \#65 saga (S156 diagnosed -\> S158 fixed -\> S160
+confirmed) is closed end-to-end. **-\> Learning 152.** - **MERGE (the
+one real decision – surfaced via `AskUserQuestion`):** the option the
+owner picked said “merge to master after your go,” so I held for
+confirmation. Did NOT merge blind – fresh pre-merge re-check (still
+`MERGEABLE`/`CLEAN`, `headRefOid` == local `363cf9a2`, no non-pass
+checks), surfaced the irreversible merge via `AskUserQuestion`; **owner
+chose “Merge now (merge commit).”** `gh pr merge 66 --merge` (exit 0)
+-\> merge commit **`201217ed`**; verified landed firsthand
+(`state: MERGED`, `mergedAt: 2026-06-22T03:08:57Z`,
+`mergedBy: rmsharp`). - **RECONCILE (Learning 146 – gate `reset --hard`
+on a verified-successful fetch + ancestor assertion):**
+`git checkout master`; `git fetch` (verified exit 0; `origin/master`
+advanced `2d1c19b1..201217ed`); asserted `363cf9a2` **IS** now an
+ancestor of `origin/master` (YES) BEFORE resetting;
+`git reset --hard origin/master` -\> local `master` = `201217ed`;
+confirmed `muffleCannotOpenFile` present on `master`
+(`R/readFocalAnimalIds.R:22,47`); `git stash pop` restored the S160 stub
+cleanly (pre-existing `stash@{1}` “WIP on dev” untouched). - **BRANCH
+CLEANUP (verified-merged-before-delete, S154/S157 – owner-approved in
+the merge option):** `git branch -d quiet-focal-read-warning` (safe
+merged-only form, exit 0, “Deleted … was 363cf9a2”) +
+`git push origin --delete` (exit 0) + `git fetch --prune`; verified **NO
+ref remains** (local list empty, remote-tracking list empty,
+`gh api .../branches/quiet-focal-read-warning` -\> **404 Branch not
+found**). History preserved in merge commit `201217ed` on `master`.
+
+**Phase-3E (runtime smoke test): SATISFIED via CI.** No
+runtime/production code changed this session (publish only); S159
+firsthand-smoke-tested the feature across all paths. The full PR \#66 CI
+matrix ran `R CMD check` x5 (incl. ubuntu-devel) + pkgdown +
+test-coverage on the exact merge-result tree, all **PASS** -\> `master`
+at `201217ed` builds clean and contains the deliverable. No new launch
+needed.
+
+**Session 159 Handoff Evaluation (by Session 160): Score 9/10.** S159’s
+handoff (my own immediately-prior turn) listed **“(Publish S159)” as the
+FIRST SUGGESTED NEXT option** with the exact procedure – “push
+`quiet-focal-read-warning` -\> PR -\> CI (lint + `R CMD check` x5 +
+pkgdown + coverage) -\> merge (the S155/S156 convention)” – which I
+executed verbatim. The load-bearing **prediction held exactly**: “This
+PR carries a +coverage delta (the 2 new tests), so it is the LIVE
+confirmation of the \#65 codecov fix – `codecov/project` should now
+PASS.” It did. Gotcha 1 carried the precise codecov mechanism AND the
+fallback (“if it still reds, look for a codecov web-dashboard Repository
+YAML override”). Every repo-state claim held firsthand: branch at
+`363cf9a2` UNPUSHED, 1 ahead of `master` (`2d1c19b1`), clean FF; the
+8-file key-files set matched the diff exactly; the blast-radius claims
+(shared muffler + online sibling untouched) held. ROI strongly positive
+– zero discovery for the publish. **The -1:** low ceiling for a
+suggested-next handoff; the only tiny gap is that S159 did not enumerate
+the exact 10-check set or the 1-ahead/0-behind state – both mine to
+verify in pre-flight regardless, so barely a gap.
+
+**Self-assessment (Session 160): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK read; dashboard
+98/100; ghost-check -\> HEAD `363cf9a2` = S159, no undocumented
+commits), reported, STOPPED for the owner; **enforced 1-and-done** when
+the owner listed two items (surfaced via `AskUserQuestion` -\> “Publish
+S159 first”; did NOT start the documentation item, FM \#18); claimed the
+session (1B stub BEFORE technical work, stash-carried). **Strengths:**
+(1) **full safe-publish discipline** – pre-flight (clean-FF +
+strict-ancestor + merge-tree 0-conflict + exact-commit +
+8-file/blast-radius check), did NOT merge blind (watched 10/10 to
+completion + a fresh `MERGEABLE`/headRefOid re-check immediately before
+merge), surfaced the irreversible merge via `AskUserQuestion` exactly as
+the picked option promised (“after your go”), verified the merge landed
+firsthand, reconciled `master` via a verified-successful-fetch +
+ancestor-gated `reset --hard` (Learning 146),
+verified-merged-before-delete branch cleanup with a `gh api` 404 check;
+(2) **confirmed the \#65 fix LIVE and closed the saga** – watched the
+specific check that had been failing (`codecov/project`), recorded the
+before/after (PR \#64 FAIL -\> PR \#66 PASS), captured **Learning 152**;
+(3) **scope confined** – TDD N/A declared every response, SOLO (correct
+for irreversible git), ASCII, plain language, 0 corrections.
+**Weaknesses (honest):** (a) **low base difficulty** – admin/publish;
+the value is the discipline + the live confirmation, not algorithmic
+depth -\> ceiling ~8; (b) **one small process miss** – my first
+merge-verify `gh pr view` query used an invalid JSON field (`merged`)
+and errored; harmless (the merge had already succeeded with exit 0; I
+immediately re-queried with valid fields and confirmed `MERGED`), but a
+cleaner first query would have used only documented fields; (c) **judged
+the merge-confirm gate correctly but worth noting** – the owner’s task
+literally said “merge”, yet the picked option I authored said “after
+your go”, so I held for an explicit `AskUserQuestion` before the
+irreversible step (correct, matches S156). Clean first-pass publish with
+the headline confirmation, low base difficulty -\> 8/10.
+
+**Learnings:** **Learning 152** (a config/threshold fix verified only AT
+THE CONFIG LAYER is verified but not yet CONFIRMED – the live signal is
+the first real PR whose coverage delta exercises the check; when a prior
+session “verified but deferred to the next PR”, that next publish IS the
+confirming experiment: watch the SPECIFIC check that was failing, record
+the before/after, and update the standing gotcha from “X will keep
+failing until fixed” to “X confirmed resolved (PR \#N)”) added to
+`PROJECT_LEARNINGS.md`. Carried as applied: 133 (don’t merge blind –
+watched 10/10 + fresh re-check), 135 (`fetch`+`reset` not `pull`;
+stash-carry), 146 (verified-fetch + ancestor-gated `reset --hard`), the
+S154/S157 verified-merged-before-delete pattern (`gh api` 404).
+
+**=\> SUGGESTED NEXT = owner’s pick.** `master` clean at `201217ed`;
+S159 published + \#65 confirmed resolved; no dangling feature branches.
+Natural options (plain ASCII labels): - **(Document/expose the offline
+focal workflow – the queued 2nd item)** a vignette or app help note for
+the focal-id-file + pedigree-file offline path (rich
+`nprcgenekeeprFileErr` messages; undocumented for end users beyond
+NEWS). This is the natural next session (the other half of what the
+owner named this session). - **(Permanent NEWS render fix)**
+`html_preview: false` in `NEWS.Rmd` + pandoc smart-off – ends BOTH the
+NEWS.html NOTE (Learning 139) and the smart-quote/en-dash trap (Learning
+132); would also clean the PRE-EXISTING curly-quote bytes still in old
+NEWS.md sections. Candidate, not done. - **(Embedded codecov token –
+owner’s security call)** remove/rotate the committed upload token in
+`codecov.yml` (redundant with `secrets.CODECOV_TOKEN`; removing from the
+file does not purge git history). NOT acted on (FM \#8). - **(Remaining
+LabKey Rec \#5 / server-side – deferred)** server-side filtering /
+`executeSql` / centers’ `study.Pedigree`/`ehr.kinship`; non-LabKey
+other-EHR provider. Gated on a live server. - **(CRAN Phase 5,
+owner-run)** win-builder x3 + R-hub v2 + `submit_cran()` – owner PAT +
+email; HARD STOP (`docs/planning/cran-2.0.0-phase5-runbook.md`). - **A
+GitHub issue** – \#46, \#45/#28/#9, \#2, \#37, \#36, \#29, or older
+\#13/#12/#11/#10/#5/#1. **Do NOT** bundle options (FM \#18/#25); **do
+NOT** start any without the owner picking.
+
+**Key files (this session):** **CHANGED – docs only (close-out commit,
+direct to `master`):** `SESSION_NOTES.md` (this handoff), `CHANGELOG.md`
+(S160 `[Unreleased]` entry), `PROJECT_LEARNINGS.md` (Learning 152). **NO
+code/test/man/NAMESPACE/NEWS change this session** – S159’s
+already-reviewed commit `363cf9a2` carried those and is now on `master`
+via merge commit `201217ed`. **GIT:** pushed `quiet-focal-read-warning`
+-\> PR \#66 -\> watched 10/10 CI -\> merged (`gh pr merge --merge`,
+commit `201217ed`) -\> reconciled local `master` -\> deleted the branch
+local+remote (no ref remains, `gh api` 404). **NOT committed (standing
+keep):** `PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
+
+**Gotchas:** (1) **\#65 is CONFIRMED RESOLVED** – `codecov/project`
+PASSED on PR \#66 (the first coverage-delta PR since the S158 fix). The
+old standing warning “`codecov/project` will keep reding on PRs until
+\#65 is fixed” is now **obsolete** – future PRs with sub-1% dips should
+pass `codecov/project`. (If it ever reds again on a sub-threshold dip,
+the next place to look is a codecov web-dashboard “Repository YAML”
+override, outside the repo.) (2) **S159’s warning-muffle is on
+`master`** (`R/readFocalAnimalIds.R`: `muffleCannotOpenFile()` nested
+around `muffleIncompleteFinalLine()`). Control-flow-neutral; **BOTH
+mufflers are needed** – do NOT drop either (incomplete-final-line on the
+success path; cannot-open-file on the failure path). (3) **The queued
+2nd item (document the offline focal workflow) is NOT started** – it is
+the natural next session. (4) **NEWS.md still carries PRE-EXISTING
+smart-quote/en-dash bytes in OLD release sections** (Learning 132’s
+known issue, not introduced here); the permanent fix
+(`html_preview: false` + pandoc smart-off) remains a candidate. (5)
+Carried: package **ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5
+owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT (warning + NULL) without a LabKey credential/config; the
+offline focal path returns `nprcgenekeeprFileErr` not NULL (S155); there
+is exactly **ONE** codecov config (`codecov.yml`) – do NOT re-add a
+second; its embedded upload token is redundant with
+`secrets.CODECOV_TOKEN` + flagged (owner’s call); `skip_on_cran()`-gated
+test files (`test_modInput.R`) need `NOT_CRAN=true`; `git pull` is
+rebase (`pull.rebase=true`) + chokes on `.DS_Store` -\> use
+`fetch`+`reset` (135); post-merge `fetch` before `reset --hard` must be
+verified-succeeded + ancestor-gated (146); NEWS render traps (132/139);
+standing keeps `.DS_Store` + `PED_GV_AUDIT_2026-05-30.html`.
+
 ### What Session 159 Did
 
 **Deliverable:** Quiet the benign `read.csv` “cannot open file” WARNING

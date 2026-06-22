@@ -15,6 +15,58 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-21 — Published S159 (PR \#66): the offline focal-id warning-muffle is on `master` — and `codecov/project` PASSED, confirming the \#65 fix live (Session 160)
+
+- **Deliverable (owner pick, single item):** publish S159’s
+  warning-muffle (`muffleCannotOpenFile()` in `readFocalAnimalIds()`)
+  from `quiet-focal-read-warning` to `master`. **Admin/publish** (no
+  production-code logic → TDD N/A). **0 stakeholder corrections.** SOLO
+  (a serial, irreversible git sequence — a workflow adds risk, not
+  coverage). Owner picked “Publish S159 first” (1-and-done; documenting
+  the offline focal workflow is a separate next session).
+- **Pre-flight (Learning 133/135):** stash-carried the S160 1B stub so
+  the branch/PR published exactly S159’s reviewed commit; `git fetch`
+  (verified exit 0); confirmed the branch **1 ahead / 0 behind**
+  `origin/master` (`2d1c19b1` a strict ancestor → clean fast-forward),
+  `git merge-tree --write-tree` **0 conflict markers**, the single
+  published commit exactly S159’s `363cf9a2`, its **8-file** diff
+  matching S159’s documented key-files set (NAMESPACE / DESCRIPTION /
+  the shared `muffleIncompleteFinalLine` / the online
+  `getFocalAnimalPed` sibling all untouched).
+- **Publish + CI:** pushed `quiet-focal-read-warning`, opened **PR
+  \#66** → `master`, watched CI via a background
+  `gh pr checks 66 --watch` — **all 10 checks PASS**: `lint`,
+  `R CMD check` ×5 (`macos` / `ubuntu` release + oldrel-1 + **devel
+  15m6s** / `windows`), `pkgdown`, `test-coverage`, **`codecov/patch`
+  100% of diff**, **`codecov/project` PASS**.
+- **\#65 confirmed live (the headline):** on PR \#64 (S156)
+  `codecov/project` FAILED on a −0.18% dip because the two-config
+  precedence bug meant the 1% threshold was not applied; S158
+  consolidated to one `codecov.yml` and verified at the config layer
+  (codecov `/validate` echoed `threshold: 1.0`). This PR — the first
+  coverage-changing PR since — is the **live PR-level confirmation**:
+  `codecov/project` now **PASSES**. The \#65 saga (S156 diagnosed → S158
+  fixed → S160 confirmed) is closed end-to-end. → Learning 152.
+- **Merge + reconcile (Learning 133/146):** did NOT merge blind — fresh
+  pre-merge re-check (still MERGEABLE/CLEAN, `headRefOid` == local
+  `363cf9a2`, no non-pass checks), surfaced the irreversible merge via
+  `AskUserQuestion` (owner: merge now), `gh pr merge 66 --merge` → merge
+  commit **`201217ed`** (verified `state: MERGED`, `mergedAt` set);
+  reconciled local `master` via verified `git fetch` + ancestor-gated
+  `reset --hard` (asserted `363cf9a2` is an ancestor of `origin/master`
+  **before** resetting); confirmed `muffleCannotOpenFile` present on
+  `master`.
+- **Branch cleanup (verified-merged-before-delete, S154/S157):** deleted
+  `quiet-focal-read-warning` local (`git branch -d`, merged-only safe
+  form) + remote (`git push origin --delete`) + `fetch --prune`;
+  verified **no ref remains** (local + remote-tracking empty;
+  `gh api .../branches/quiet-focal-read-warning` → **404**).
+- **Verification (Phase-3E via CI):** no runtime/production code changed
+  (publish only); S159 firsthand-smoke-tested the feature. The full PR
+  \#66 CI matrix ran `R CMD check` ×5 + pkgdown + coverage on the exact
+  merge-result tree, all PASS → `master` at `201217ed` builds clean and
+  contains the deliverable.
+
 ### 2026-06-21 — Quieted the benign `read.csv` “cannot open file” warning on the offline focal-id read (Session 159)
 
 - **Deliverable (owner pick, single item):** silence the benign
