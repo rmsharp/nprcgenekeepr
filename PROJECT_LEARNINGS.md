@@ -9914,3 +9914,46 @@ answer from memory\]\[frame a confident-but-unconfirmed diagnosis as
 **Apply:** any publish/merge session where a codecov (or other advisory)
 check reds; any “is X tracked?” question; any time you state a
 root-cause diagnosis before fully confirming the mechanism.
+
+#### Learning 149 – After ANY renv bump / self-upgrade, run a fresh-R-startup smoke test (Phase 3E): an renv self-upgrade can leave `renv/activate.R` with an UNSUBSTITUTED `..md5..` template placeholder, which throws `object '..md5..' not found` the moment `.Rprofile` sources it – breaking every R session started in the project. The lockfile looks correct and a check that does not cold-start R in the project root will not catch it. Fix by regenerating with the installed renv (`renv::activate()`), which fills in the md5; then re-source to confirm. (S157, commit the renv 1.1.4-\>1.2.3 bump)
+
+**What happened.** Orientation found `renv.lock` + `renv/activate.R`
+modified – an renv self-upgrade (1.1.4 -\> 1.2.3) the owner ran between
+sessions. The task was “just commit it.” I committed the two files, then
+– because the regenerated `activate.R` runs at every R startup (runtime
+behavior) – ran the Phase 3E smoke test: `Rscript -e '...'` from the
+project root. It FAILED: `object '..md5..' not found`, halted, from
+`source("renv/activate.R")` (called by `.Rprofile`). Diagnosis: line 6
+of the new `activate.R` was `attr(version, "md5") <- ..md5..` – the
+literal `..md5..` template token, never substituted (the sibling
+`version <- "1.2.3"` WAS substituted; only the md5 placeholder leaked).
+Confirmed it a REGRESSION, not pre-existing: the old 1.1.4 `activate.R`
+sourced cleanly under `--vanilla` (only warning installed!=recorded
+renv, the very mismatch the bump was meant to fix); the new one threw on
+`..md5..`. renv 1.2.3 was installed in the system library, so I
+regenerated via `Rscript --vanilla -e 'renv::activate(project=getwd())'`
+(no `.Rprofile`, so the broken file is not auto-sourced; no
+restore/snapshot side effects – only `activate.R` changed, `renv.lock`
+untouched). Line 6 became `attr(version, "md5") <- "1bd9f58e..."` and a
+fresh `.Rprofile` startup then printed “renv: 1.2.3 – startup OK”. The
+broken `activate.R` lived only in a local-unpushed commit, so I
+`--amend`ed it away (the renv.lock half was already correct; only
+`activate.R` needed the md5). Net: the broken artifact never entered
+shared history.
+
+**Reflexes:** \[an renv lockfile bump is a RUNTIME change (`activate.R`
+runs at every R startup via `.Rprofile`) -\> Phase 3E applies:
+cold-start R in the project root and watch for startup errors, do not
+treat “lockfile committed” as done\]\[a leftover `..xxx..` template
+token in a generated file = the generator did not substitute it;
+`grep -nE '\.\.[a-zA-Z0-9_]+\.\.'` the file to find unsubstituted
+placeholders\]\[regenerate renv infra with the INSTALLED renv via
+`renv::activate(project=getwd())` under `--vanilla` (skips the broken
+`.Rprofile`; no restore/snapshot); it rewrites only `activate.R`, not
+`renv.lock`\]\[when a just-committed, still-local artifact is found
+broken, `--amend` the fix in so the broken bytes never reach the remote
+– do not ship-then-fix\]\[isolate regression-vs-pre-existing by sourcing
+the OLD file (`git show <ref>:path`) the same way before blaming the
+change\]. **Apply:** any session that touches `renv.lock` /
+`renv/activate.R` (bump, self-upgrade, snapshot); any “just commit this
+generated file” task – verify it actually works before calling it done.
