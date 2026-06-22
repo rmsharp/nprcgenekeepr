@@ -221,6 +221,8 @@ clean pedigree the analyses consume.
   by genetic value.
 - The **Forming Breeding Groups** article -- assembles breeding groups from a
   quality-controlled pedigree.
+- The **Building a Focal-Animal Pedigree Offline** article -- builds a focal
+  pedigree from files with no database; quality-control it here as the next step.
 - `qcStudbook()` -- the function documented here.
 - `runModularApp()` -- the Shiny app, whose Quality Control tab drives this same
   function interactively.
