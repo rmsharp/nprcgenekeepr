@@ -44,7 +44,7 @@ test_that(
       minAge = minAge
     )
     groupMembersStart <- groupMembers
-    grpNum <- nprcgenekeepr::makeGrpNum(numGp)
+    grpNum <- nprcgenekeepr::makeGroupNum(numGp)
 
     expect_equal(groupMembers[[1]], c("N54ICI", "VJ08BW", "2ZMHG7"))
     for (i in 1L:20L) {

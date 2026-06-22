@@ -65,7 +65,7 @@
 #'   minAge = minAge
 #' )
 #' groupMembersStart <- groupMembers
-#' grpNum <- nprcgenekeepr::makeGrpNum(numGp)
+#' grpNum <- nprcgenekeepr::makeGroupNum(numGp)
 #'
 #' groupMembers <- fillGroupMembersWithSexRatio(
 #'   candidates, groupMembers, grpNum, kin, ped, minAge, numGp,

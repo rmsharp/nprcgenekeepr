@@ -37,7 +37,7 @@ fillGroupMembers <- function(candidates,
     numGp, currentGroups, candidates, ped,
     harem, minAge
   )
-  grpNum <- makeGrpNum(numGp)
+  grpNum <- makeGroupNum(numGp)
 
   if (harem) {
     # Sires were added to groupMembers
