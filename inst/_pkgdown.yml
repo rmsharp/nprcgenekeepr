@@ -214,6 +214,7 @@ reference:
   - '`makeCEPH`'
   - '`makeExamplePedigreeFile`'
   - '`makeGroupMembers`'
+  - '`makeGroupNum`'
   - '`makeGrpNum`'
   - '`makeRelationClassesTable`'
   - '`makeRoundUp`'
