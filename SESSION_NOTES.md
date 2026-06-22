@@ -196,9 +196,11 @@ branches; dashboard 98/100. Natural options (plain ASCII labels): -
 tracked `test_species_first_class.R` -\> zero content loss; it trips the
 local build-equivalent’s portable-filename WARNING). One-line cleanup;
 owner’s call since it is an uncommitted file (SAFEGUARDS). See Gotcha
-2 + Learning 161. - **(#46 item 3 – DEFERRED)** species-keyed postnatal
-co-housing window – do NOT start until \#28’s single-species colocation
-model exists in code (it has ZERO code today). - **(Embedded codecov
+2 + Learning 161. - **(#46 is CLOSED by owner; former item 3 not
+pursued)** the species-keyed postnatal co-housing window (former \#46
+item 3) was deferred and \#46 is now closed – do NOT start it; it
+depends on **\#28** (single-species colocation, ZERO code today). If
+still wanted, open a NEW issue gated on \#28. - **(Embedded codecov
 token – owner’s security call)** remove/rotate the committed upload
 token in `codecov.yml` (redundant with `secrets.CODECOV_TOKEN`; removing
 from the file does not purge git history). NOT acted on (FM \#8). -
@@ -229,9 +231,15 @@ flagged for deletion as the option above).
 
 **Gotchas:** (1) **Issue \#46 items 1, 2, AND 2b are DONE and on
 `master`** (`3446577a`); the user-facing NEWS entries are live. **\#46
-is NOT closed** – **item 3** (postnatal co-housing window, deferred
-until \#28 has code) remains; PR \#70 used “Refs \#46”, not a closing
-keyword. (2) **NEW untracked stray
+was CLOSED by the owner (rmsharp) on 2026-06-22T12:59:26Z** – a MANUAL
+close (commit_id null; no PR keyword – PR \#70 used “Refs \#46”,
+non-closing), made BEFORE this session started, so it was already absent
+from the Phase-0 `gh issue list`. The S168/S169 handoffs predate that
+close and wrongly carried “#46 not closed” – **corrected here.** **Item
+3** (species-keyed postnatal co-housing window) was DEFERRED and is NOT
+tracked as an open \#46 item; it depends on **\#28** (single-species
+colocation, ZERO code today) – if still wanted it would be a NEW issue
+gated on \#28. (2) **NEW untracked stray
 `tests/testthat/test_species_first_class 2.R`** – a macOS/cloud-sync ”
 2” duplicate, **byte-identical** to the tracked
 `test_species_first_class.R`. It is swept into `R CMD build` and trips
