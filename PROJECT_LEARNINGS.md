@@ -10186,3 +10186,66 @@ NEWS-class smart-quote/en-dash traps\]\[a tiny self-contained
 shipped pair is the clearest worked-example pattern\]. **Apply:** any
 “document/expose function X”, “write a vignette/article”, or “add an
 example for X” task on this repo.
+
+#### Learning 154 – When the deliverable is “make X CONSISTENT across a SET of parallel docs/files”, it is ONE coherent deliverable (single theme + single definition-of-done), NOT bundling – but only if the items genuinely share that theme; stitching unrelated small carryovers together IS bundling (FM \#18/#25). Do it in this order: (1) build the actual coverage MATRIX first by firsthand reads (FROM-\>TO) so “consistent” is a measurable target, not a vibe; (2) MATCH the existing convention – do not redesign the mechanism (here: bold-title prose mentions, not hyperlinks; switching to links would be a separate out-of-scope mode switch); (3) pick a single canonical order + a per-item description policy so consistency is verifiable, not just asserted; (4) verify completeness with a GREP over the matrix, not by eyeballing; (5) the build-equivalent is proportionate to WHAT CHANGED – a prose-only edit needs the markdown-\>HTML render to pass, not a re-derivation of unchanged simulation outputs. (S162, cross-link the five `vignettes/articles/*.qmd` scripting articles)
+
+**What happened.** Orientation surfaced five carried-over “suggested
+next” items, several tiny; the owner asked whether more than one could
+be done in a session under 1-and-done. Answered from the protocol’s OWN
+rules (`SESSION_RUNNER.md`): “1 and done” constrains ONE *deliverable*,
+not one file/commit – the test is COHERENCE, not size. So several small
+items can ship together ONLY if they collapse into one deliverable with
+a single definition-of-done. Among the five, only the
+documentation-completeness items cohered (the back-link follow-on S161
+flagged, generalized to a full consistency pass); the NEWS render fix,
+the codecov-token removal, and any feature issue are each their own
+deliverable in their own workstream – stitching them would be exactly
+the bundling FM \#18/#25 forbids. Owner picked the cross-link pass.
+Grounding read all five articles and built the real See-also matrix: it
+was uneven – **Forming Breeding Groups linked to ZERO siblings**,
+Offline Focal and Genetic Value one each, Studbook QC and Age-Sex
+Pyramid three; two articles named siblings only as bare functions, not
+as the article. The five files already shared a convention –
+**bold-title prose mentions, not hyperlinks** (S161 had deliberately
+swapped its one crossref to plain text) – so the consistent fix was to
+MATCH that convention and complete coverage, NOT to convert everything
+to links (that would be a redesign, a mode switch beyond “make
+consistent”). Set a single canonical workflow order (QC -\> Offline -\>
+GV -\> Breeding -\> AgeSex, each omitting itself), gave each sibling
+bullet a short relationship line naming the article + its primary
+function, and preserved each article’s own functions +
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md).
+Verified with a grep that each See-also names exactly its four siblings
+(5/5), confirmed pure ASCII, ran `quarto render` (all five HTML
+produced, sibling links present, zero error markers – and the heavy R
+chunks executed even though I passed `--no-execute`, so I got a full
+render), then removed the render litter with `git clean -fd` +
+`git clean -fdX` on the articles dir (which also swept a pre-existing
+empty `_files` litter dir). Direct to `master` (website-only docs;
+S160/S161 pattern), CHANGELOG not NEWS (S116 +
+\[\[news-vs-changelog\]\]).
+
+**Reflexes:** \[a “make X consistent across a set” deliverable is ONE
+coherent unit (shared theme + single definition-of-done), not bundling –
+but answer the owner’s “can I batch these?” from the protocol’s own
+COHERENCE test, not size: several items ship together only if they
+collapse into one definition-of-done\]\[before editing for
+“consistency”, build the actual coverage MATRIX (FROM-\>TO) by firsthand
+reads so the target is measurable – “consistent” without a matrix is a
+vibe, and you will miss the worst offender (here one article linked to
+zero siblings)\]\[match the EXISTING convention, do not redesign the
+mechanism while “making it consistent” – bold-prose-vs-hyperlink,
+ordering, bullet style are all conventions to MATCH; switching them is a
+separate mode switch needing its own approval\]\[verify completeness
+with a grep over the matrix (each item references exactly its N
+siblings), not by eyeballing the diff\]\[scope the build-equivalent to
+what changed: a prose-only docs edit is validated by the markdown-\>HTML
+render passing with the new text present + zero error markers – you do
+NOT need to re-derive unchanged executable
+outputs\]\[`quarto render --no-execute` (quarto 1.7.33) did NOT skip
+chunk execution in this articles project – do not rely on it to dodge
+heavy sims; either accept the full render or use `freeze`\]. **Apply:**
+any “make X consistent / uniform across these files”, “cross-link these
+docs”, “standardize the See-also / front-matter / headers” task; any
+time an owner asks whether several small items fit one 1-and-done
+session.

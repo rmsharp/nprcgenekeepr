@@ -121,10 +121,18 @@ the per-bar counts for a cleaner figure.
 ## See also
 
 - The **Studbook Quality Control** article – clean the studbook (sexes,
-  dates, birth records) before plotting, so the pyramid reflects the
-  whole living colony.
-- The **Genetic Value Analysis** and **Forming Breeding Groups**
-  articles – the other colony-management tools in the package.
+  dates, birth records) with
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  before plotting, so the pyramid reflects the whole living colony.
+- The **Building a Focal-Animal Pedigree Offline** article – build a
+  focal-animal pedigree from files with no database, via
+  [`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md).
+- The **Genetic Value Analysis** article – rank a quality-controlled
+  pedigree by mean kinship and genome uniqueness with
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md).
+- The **Forming Breeding Groups** article – assemble genetically diverse
+  breeding groups with
+  [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md).
 - [`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md)
   – the function documented here.
 - [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)

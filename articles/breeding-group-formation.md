@@ -191,11 +191,24 @@ place more of them.
 
 ## See also
 
-- [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-  and
-  [`rankSubjects()`](https://github.com/rmsharp/nprcgenekeepr/reference/rankSubjects.md)
-  – the genetic value analysis that produces the kinship matrix and
-  ranks animals by mean kinship and genome uniqueness.
+- The **Studbook Quality Control** article –
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  validates and standardizes a studbook, the first step before forming
+  groups.
+- The **Building a Focal-Animal Pedigree Offline** article – build a
+  focal-animal pedigree from files with no database, via
+  [`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md).
+- The **Genetic Value Analysis** article –
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+  produces the kinship matrix
+  [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+  consumes here, and ranks animals by mean kinship and genome
+  uniqueness.
+- The **Age-Sex Pyramid Plots** article – picture the colony’s age and
+  sex structure with
+  [`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md).
+- [`rankSubjects()`](https://github.com/rmsharp/nprcgenekeepr/reference/rankSubjects.md)
+  – the ranking scheme applied to a genetic value report.
 - [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
   – pairwise kinship coefficients from a pedigree.
 - [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)

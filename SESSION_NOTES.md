@@ -7,6 +7,206 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 162 Did
+
+**Deliverable:** Documentation cross-link pass on the article scripting
+series – make the “See also” sections consistent across all five
+`vignettes/articles/*.qmd` scripting articles so each points to its four
+siblings. **(DONE.)** **Started / Completed:** 2026-06-21 **Status:**
+**DONE.** Pure website-only docs (`vignettes/articles/` is
+`.Rbuildignore`d -\> **TDD declared N/A every response**; confirmed
+docs-only in grounding BEFORE declaring, so TDD was not over-applied).
+**0 stakeholder corrections.** SOLO (file-mutating prose editing;
+grounding was five firsthand reads, not a fan-out – a workflow would be
+theater here). - **METHODOLOGY Q FIRST (the owner’s actual opening
+question):** the owner asked whether several of the small carried-over
+“suggested next” items could be done in one session under 1-and-done.
+Answered from the protocol’s OWN rules (`SESSION_RUNNER.md`): “1 and
+done” constrains ONE **deliverable**, not one file/commit – the test is
+**coherence** (single theme + single definition-of-done), not size.
+Several small items can ship together ONLY if they collapse into one
+deliverable. Built a per-item table showing only the
+documentation-completeness items cohere; the NEWS render fix / codecov
+token / a feature issue are each their own deliverable in their own
+workstream -\> stitching them would be the exact bundling FM \#18/#25
+forbids. Offered the one legitimate grouping (a full See-also
+consistency pass); owner picked it. **-\> Learning 154.** - **GROUNDING
+(read-only, firsthand – 5 article reads):** built the actual FROM-\>TO
+See-also link matrix before touching anything. It was genuinely uneven:
+**Forming Breeding Groups linked to ZERO sibling articles**; Offline
+Focal and Genetic Value linked to one each; Studbook QC and Age-Sex
+Pyramid linked to three. Two articles (Breeding, GV) named siblings only
+as **bare functions**
+([`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)/[`rankSubjects()`](https://github.com/rmsharp/nprcgenekeepr/reference/rankSubjects.md),
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md))
+rather than as the article. **Convention to preserve:** all five use
+**bold-title prose mentions, not hyperlinks** (S161 deliberately swapped
+its one crossref to plain text) – so the consistent fix is to MATCH that
+convention + complete coverage, NOT convert to links (a redesign / mode
+switch beyond “make consistent”). - **CHANGE (5 files, See-also sections
+only):** every article’s See-also now names **all four siblings** in one
+canonical workflow order – **Studbook QC -\> Offline Focal -\> Genetic
+Value -\> Breeding Groups -\> Age-Sex Pyramid** (each omitting itself) –
+each bullet naming the article + its primary function, with the
+article’s own function links and
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+preserved, and the most-coupled relationships keeping their specific
+prose (GV\<-\>Breeding “the kinship matrix this analysis returns”;
+Offline’s online-sibling/`getFileDirectRelatives` notes). Body prose
+untouched (scope = See-also only). - **VERIFIED (doc
+build-equivalent):** grep over the matrix confirmed each article’s
+See-also names exactly its four siblings (**5/5**); all five `.qmd`
+**pure ASCII**; `quarto render` (quarto 1.7.33) of the articles project
+produced **all five HTML** with the sibling links present and **zero
+error markers**; then removed the render litter (`.html`, `_files/`, the
+quarto-created `.gitignore`, `.quarto/`, plus a pre-existing **empty**
+`studbook-quality-control_files` litter dir) via `git clean -fd` +
+`git clean -fdX` on the articles dir – only the `.qmd` + `_quarto.yml`
+are tracked.
+
+**Phase-3E (runtime smoke test): SATISFIED via the render.** A
+documentation deliverable changes no runtime/production behavior; the
+doc build-equivalent (SAFEGUARDS “Verify the Build Equivalent”) is the
+render, which I ran end-to-end (it executed the live R chunks too)
+against the articles project. No `R/`/app change -\> no app launch
+needed.
+
+**Session 161 Handoff Evaluation (by Session 162): Score 9/10.** S161’s
+handoff listed **“(Back-link the new article from the other See-also
+lists)”** as the FIRST suggested-next option, naming the precise files
+(`genetic-value-analysis.qmd` and/or `breeding-group-formation.qmd` See
+also) and calling it “the tiny optional follow-on from weakness (b).”
+That pointer is exactly what this session grew into. Every repo-state
+claim held firsthand: clean `master` at the S161 close-out commit, the
+five articles with their See-also structure, the **website-only /
+`.Rbuildignore`d** nature, the **ASCII** convention, and – load-bearing
+– **gotcha 2 (render litter: `.html` + `_files/` + quarto `.gitignore` +
+`.quarto/`; only the `.qmd` is tracked)**, which I relied on directly to
+clean up, and **gotcha 3 (the pkgdown reference index)**. ROI strongly
+positive – zero rediscovery of WHERE or HOW. **The -1:** S161 framed the
+item as a “tiny optional follow-on” touching just 1-2 articles’ See-also
+(back-link the NEW article), but the honest consistency fix was broader
+– the inconsistency PRE-DATED the new article (Breeding linked to zero
+siblings; GV/QC named siblings only as functions), so the real pass
+touched all five. A minor under-scoping of the suggested item, the kind
+of thing grounding is meant to surface -\> 9/10.
+
+**Self-assessment (Session 162): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK read; GH issues;
+dashboard 98/100; ghost-check -\> HEAD `c55b2ff4` = S161, no
+undocumented commits), reported, STOPPED for the owner; claimed the
+session (1B stub BEFORE technical work). **Strengths:** (1) **answered
+the owner’s methodology question from the protocol’s own rules** before
+acting – turned a fuzzy “are these deliverables?” into a crisp coherence
+test and only proceeded on the one grouping that genuinely cohered (did
+NOT bundle the unrelated carryovers – anti-FM \#18/#25); (2) **confirmed
+docs-only FIRST** -\> correctly declared **TDD N/A** (not over-applied
+to prose); (3) **matrix-first grounding** – built the real FROM-\>TO
+link map by firsthand reads so “consistent” had a measurable target,
+which is how I caught that Breeding linked to ZERO siblings (eyeballing
+would have missed it); (4) **matched the existing convention** (bold
+prose, not hyperlinks; canonical order) rather than redesigning the link
+mechanism – scope discipline; (5) **verified the right way** – grep
+completeness (5/5), ASCII, full `quarto render` with sibling links
+present + 0 error markers, then cleaned ALL render litter (incl. a
+pre-existing empty `_files` dir); (6) correct **CHANGELOG-not-NEWS**
+call (website-only; S116 + \[\[news-vs-changelog\]\]); pure ASCII, plain
+language, 0 corrections, scope confined to See-also; captured **Learning
+154**. **Weaknesses (honest):** (a) **low-moderate base difficulty** – a
+docs consistency pass; the value is the matrix-first discipline +
+convention-matching + the 1-and-done coherence judgment, not algorithmic
+depth -\> ceiling ~8; (b) the **canonical-order and per-bullet wording
+are my calls** (defensible – a fixed workflow order makes consistency
+grep-verifiable – but a reader might prefer relatedness-ordering; I
+chose verifiability); (c) **`--no-execute` did not behave as I
+expected** – I passed it intending to skip the heavy gene-drop/QC sims
+and validate only the markdown, but quarto 1.7.33 executed the chunks
+anyway; harmless (I got a stronger full render) but I had not
+pre-verified that flag’s behavior in this project. Clean,
+fully-verified, complete, scope-disciplined docs delivery at
+low-moderate difficulty -\> 8/10.
+
+**Learnings:** **Learning 154** (a “make X consistent across a SET of
+parallel docs/files” task is ONE coherent deliverable, not bundling, IFF
+the items share a theme; do it matrix-first \[build the FROM-\>TO
+coverage map by firsthand reads so “consistent” is measurable\], MATCH
+the existing convention rather than redesign the mechanism, pick a
+single canonical order, verify completeness by GREP not eyeball, and
+scope the build-equivalent to what changed \[prose-only -\> markdown
+render, not re-deriving unchanged outputs\]) added to
+`PROJECT_LEARNINGS.md`. Carried as applied: the 1-and-done coherence
+test (FM \#2/#18/#25); the read-only-grounding / solo-for-mutation
+split; 132/139 (ASCII); S116 website-only-article-gets-no-NEWS +
+\[\[news-vs-changelog\]\]; the \[\[consult-project-source-of-truth\]\]
+reflex (answered the methodology Q from SESSION_RUNNER, not general
+convention); \[\[observation-vs-decision\]\] (treated the owner’s “these
+seem small” as a question to analyze, not a go-ahead).
+
+**=\> SUGGESTED NEXT = owner’s pick.** `master` clean; the five
+scripting articles now cross-link symmetrically (each See-also names its
+four siblings in canonical order). The S161 back-link follow-on is fully
+absorbed and DONE. Natural options (plain ASCII labels): - **(Permanent
+NEWS render fix)** `html_preview: false` in `NEWS.Rmd` + pandoc
+smart-off – ends BOTH the NEWS.html NOTE (Learning 139) and the
+smart-quote/en-dash trap (Learning 132); would also clean the
+PRE-EXISTING curly-quote bytes still in old NEWS.md sections. Candidate,
+not done. - **(Embedded codecov token – owner’s security call)**
+remove/rotate the committed upload token in `codecov.yml` (redundant
+with `secrets.CODECOV_TOKEN`; removing from the file does not purge git
+history). NOT acted on (FM \#8). - **(Remaining LabKey Rec \#5 /
+server-side – deferred)** server-side filtering / `executeSql` /
+centers’ `study.Pedigree`/`ehr.kinship`; non-LabKey other-EHR provider.
+Gated on a live server. - **(CRAN Phase 5, owner-run)** win-builder x3 +
+R-hub v2 + `submit_cran()` – owner PAT + email; HARD STOP
+(`docs/planning/cran-2.0.0-phase5-runbook.md`). - **A GitHub issue** –
+\#46 (species first-class), \#45/#28/#9 (parent-identification cluster),
+\#2 (GVA iterations evidence), \#37, \#36, \#29, or older
+\#13/#12/#11/#10/#5/#1. **Do NOT** bundle options (FM \#18/#25); **do
+NOT** start any without the owner picking.
+
+**Key files (this session):** **CHANGED – website/docs (the
+deliverable):** all five `vignettes/articles/*.qmd` See-also sections –
+`age-sex-pyramid.qmd`, `breeding-group-formation.qmd`,
+`genetic-value-analysis.qmd`, `offline-focal-animal-workflow.qmd`,
+`studbook-quality-control.qmd`. **CHANGED – close-out docs (this commit,
+direct to `master`):** `CHANGELOG.md` (S162 `[Unreleased]` entry),
+`PROJECT_LEARNINGS.md` (Learning 154), `SESSION_NOTES.md` (this
+handoff). **NO
+`R/`/test/`man/`/NAMESPACE/DESCRIPTION/NEWS/`data/`/`inst/_pkgdown.yml`
+change** – pure docs, See-also prose only. **NOT committed (standing
+keeps):** `PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
+
+**Gotchas:** (1) **The cross-link convention is BOLD-TITLE PROSE
+MENTIONS, not hyperlinks** – if a future session adds a 6th scripting
+article, add it to all five existing See-also lists (and have it link to
+all five others) in the canonical order, then re-run the grep to confirm
+the matrix stays complete. (2) **Canonical sibling order = Studbook QC
+-\> Offline Focal -\> Genetic Value -\> Breeding Groups -\> Age-Sex
+Pyramid** (each article omits itself). (3) **Render litter** –
+`quarto render` in `vignettes/articles/` creates `.html` + `*_files/` +
+a quarto `.gitignore` + `.quarto/`; only the `.qmd` + `_quarto.yml` are
+tracked. `git clean -fd <dir>` + `git clean -fdX <dir>` sweeps both the
+non-ignored and the ignored (`.quarto/`) litter (this also removed a
+stale EMPTY `_files` dir from a prior session). (4)
+**`quarto render --no-execute` (quarto 1.7.33) did NOT skip chunk
+execution here** – the live R chunks ran anyway. Harmless (stronger
+verification) but do NOT rely on `--no-execute` to dodge the heavy
+gene-drop/QC sims; use `freeze` if you need that. (5) Carried standing
+keeps (unchanged): package **ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5
+owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT (warning + NULL) without a LabKey credential/config; the
+offline focal path returns `nprcgenekeeprFileErr` not NULL (S155);
+exactly **ONE** codecov config (`codecov.yml`) – do NOT re-add a second;
+its embedded upload token is redundant with `secrets.CODECOV_TOKEN` +
+flagged (owner’s call); `#65` CONFIRMED RESOLVED (S160);
+`skip_on_cran()`-gated test files (`test_modInput.R`) need
+`NOT_CRAN=true`; `git pull` is rebase (`pull.rebase=true`) + chokes on
+`.DS_Store` -\> use `fetch`+`reset` (135); post-merge `fetch` before
+`reset --hard` must be verified-succeeded + ancestor-gated (146); NEWS
+render traps (132/139); standing keeps `.DS_Store` +
+`PED_GV_AUDIT_2026-05-30.html`.
+
 ### What Session 161 Did
 
 **Deliverable:** Document/expose the offline focal-animal workflow

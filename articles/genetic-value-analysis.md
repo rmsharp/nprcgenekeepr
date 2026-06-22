@@ -240,16 +240,24 @@ pool.
 
 ## See also
 
+- The **Studbook Quality Control** article –
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  validates and standardizes the studbook this analysis consumes, the
+  first step before ranking.
+- The **Building a Focal-Animal Pedigree Offline** article – build a
+  focal-animal pedigree from files with no database, via
+  [`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md).
 - The **Forming Breeding Groups** article –
   [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
   uses the kinship matrix this analysis returns to assemble genetically
   diverse groups.
+- The **Age-Sex Pyramid Plots** article – picture the colony’s age and
+  sex structure with
+  [`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md).
 - [`rankSubjects()`](https://github.com/rmsharp/nprcgenekeepr/reference/rankSubjects.md)
   – the ranking scheme applied to a report.
 - [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
   – pairwise kinship coefficients from a pedigree.
-- [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-  – the studbook quality control that precedes the analysis.
 - [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
   – the Shiny app that performs this workflow interactively.
 

@@ -15,6 +15,50 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-21 — Documentation cross-link pass: consistent “See also” sections across the five scripting articles (Session 162)
+
+- **Deliverable (owner pick, single item):** make the “See also”
+  sections consistent across all five `vignettes/articles/*.qmd`
+  scripting articles so each one points to its four siblings. **Pure
+  website-only docs** (`vignettes/articles/` is `.Rbuildignore`d → **TDD
+  N/A**, confirmed docs-only before declaring). **0 stakeholder
+  corrections.** SOLO (file-mutating prose editing; grounding was five
+  firsthand reads, not a fan-out).
+- **Why one deliverable, not bundling:** the owner first asked whether
+  several small carried-over items could be done together under
+  1-and-done. They can — but only when they collapse into ONE coherent
+  deliverable with a single definition-of-done, which the See-also items
+  do (one theme, one verification) and the unrelated carryovers (NEWS
+  render fix, codecov token, a feature issue) do not. So this session
+  did exactly the cross-link pass and nothing else (anti-FM \#18/#25).
+- **Grounding (read-only, firsthand):** built the actual FROM→TO link
+  matrix before editing. It was genuinely uneven — **Forming Breeding
+  Groups linked to zero siblings**; Offline Focal and Genetic Value
+  linked to one each; Studbook QC and Age-Sex Pyramid linked to three.
+  Two articles named siblings only as bare functions
+  ([`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)/[`rankSubjects()`](https://github.com/rmsharp/nprcgenekeepr/reference/rankSubjects.md),
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md))
+  rather than as the article. The established convention is **bold-title
+  prose mentions, not hyperlinks** (S161 deliberately avoided crossrefs)
+  — matched, not redesigned.
+- **Change:** every article’s See-also now names all four siblings in
+  one canonical workflow order (Studbook QC → Offline Focal → Genetic
+  Value → Breeding Groups → Age-Sex Pyramid, each omitting itself), each
+  bullet naming the article and its primary function, with the article’s
+  own functions and
+  [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+  preserved. The most-coupled relationships keep their specific prose
+  (e.g. GV↔︎Breeding, “the kinship matrix this analysis returns”).
+- **Verification (the doc build-equivalent):** a grep confirmed each
+  article’s See-also names exactly its four siblings (5/5); all five
+  `.qmd` are pure ASCII; `quarto render` of the articles project
+  produced all five HTML with the sibling links present and **zero error
+  markers**; then removed the render litter (`.html`, `_files/`, the
+  quarto-created `.gitignore`, `.quarto/`, plus a pre-existing empty
+  `_files` litter dir) — only the `.qmd` are tracked.
+- **No NEWS entry:** website-only articles get a CHANGELOG entry, not a
+  NEWS line (S116 precedent + `[[news-vs-changelog]]`). → Learning 154.
+
 ### 2026-06-21 — Documented/exposed the offline focal-animal workflow as a website article (Session 161)
 
 - **Deliverable (owner pick, single item):** make the offline

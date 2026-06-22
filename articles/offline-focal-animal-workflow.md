@@ -227,6 +227,19 @@ for you and routes any `nprcgenekeeprFileErr` to the Errors tab.
 
 ## See also
 
+- The **Studbook Quality Control** article –
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  validates and standardizes a pedigree, the usual next step once you
+  have a focal pedigree.
+- The **Genetic Value Analysis** article – rank a quality-controlled
+  pedigree by mean kinship and genome uniqueness with
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md).
+- The **Forming Breeding Groups** article – assemble genetically diverse
+  breeding groups with
+  [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md).
+- The **Age-Sex Pyramid Plots** article – picture the colony’s age and
+  sex structure with
+  [`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md).
 - [`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md)
   – the online sibling that pulls the surrounding pedigree from a LabKey
   / EHR database instead of a file.
@@ -235,9 +248,6 @@ for you and routes any `nprcgenekeeprFileErr` to the Errors tab.
   connected component (and exposes the `unrelatedParents` option, which
   [`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md)
   leaves at its default).
-- The **Studbook Quality Control** article –
-  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md),
-  the usual next step once you have a focal pedigree.
 - [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
   – the Shiny app, whose Input tab drives this same offline workflow
   interactively.

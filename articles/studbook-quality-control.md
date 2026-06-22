@@ -274,13 +274,18 @@ mode to get the clean pedigree the analyses consume.
 
 ## See also
 
-- The **Genetic Value Analysis** article – ranks a quality-controlled
-  pedigree by genetic value.
-- The **Forming Breeding Groups** article – assembles breeding groups
-  from a quality-controlled pedigree.
-- The **Building a Focal-Animal Pedigree Offline** article – builds a
+- The **Building a Focal-Animal Pedigree Offline** article – build a
   focal pedigree from files with no database; quality-control it here as
   the next step.
+- The **Genetic Value Analysis** article – rank a quality-controlled
+  pedigree by mean kinship and genome uniqueness with
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md).
+- The **Forming Breeding Groups** article – assemble genetically diverse
+  breeding groups from a quality-controlled pedigree with
+  [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md).
+- The **Age-Sex Pyramid Plots** article – picture the colony’s age and
+  sex structure with
+  [`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md).
 - [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
   – the function documented here.
 - [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
