@@ -25,6 +25,19 @@
     macaque (210 days) and falls back to 210 for other species, so
     results on existing data are unchanged; adding species rows enables
     per-species windows.
+  - In the Potential Parents tab, the “Maximum Gestational Period
+    (days)” input now defaults to the value looked up from the loaded
+    pedigree’s species (via
+    [`getSpeciesGestation()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesGestation.md))
+    rather than to a fixed 210, keeping the Shiny application consistent
+    with the species-keyed
+    [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+    window. The user can still edit the value, and a manual edit is
+    preserved when the pedigree is reloaded. As with
+    [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md),
+    the shipped species table defines only rhesus macaque (210 days) and
+    falls back to 210, so the default is unchanged on existing data
+    until species rows are added.
   - [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
     now returns the full connected pedigree component for the focal
     animals (ancestors, descendants, and collaterals such as siblings,

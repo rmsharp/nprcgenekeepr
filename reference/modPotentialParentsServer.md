@@ -10,7 +10,12 @@ colony-origin field, or when no in-colony animal has an unknown parent.
 ## Usage
 
 ``` r
-modPotentialParentsServer(id, pedigree = NULL, minParentAge = 2)
+modPotentialParentsServer(
+  id,
+  pedigree = NULL,
+  minParentAge = 2,
+  gestationTable = NULL
+)
 ```
 
 ## Arguments
@@ -28,6 +33,15 @@ modPotentialParentsServer(id, pedigree = NULL, minParentAge = 2)
   numeric minimum age in years for an animal to be a parent. Defaults to
   2 (the QC default).
 
+- gestationTable:
+
+  optional species-to-gestation lookup passed to
+  [`getSpeciesGestation`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesGestation.md)
+  when defaulting the gestation window; `NULL` (the default) uses the
+  bundled
+  [`speciesGestation`](https://github.com/rmsharp/nprcgenekeepr/reference/speciesGestation.md)
+  table.
+
 ## Value
 
 A list of reactive expressions:
@@ -35,6 +49,9 @@ A list of reactive expressions:
 - `potentialParents` - the raw `getPotentialParents` result (or `NULL`).
 
 - `tableData` - the flattened results data.frame.
+
+- `gestationDefault` - the species-keyed default gestation window (days)
+  used to prefill the maximum-gestational-period input.
 
 ## See also
 

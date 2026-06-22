@@ -65,7 +65,12 @@ unknown parent.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">modPotentialParentsServer</span><span class="op">(</span><span class="va">id</span>, pedigree <span class="op">=</span> <span class="cn">NULL</span>, minParentAge <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">modPotentialParentsServer</span><span class="op">(</span></span>
+<span>  <span class="va">id</span>,</span>
+<span>  pedigree <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  minParentAge <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  gestationTable <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -84,12 +89,21 @@ unknown parent.</p>
 <dd><p>numeric minimum age in years for an animal to be a
 parent. Defaults to 2 (the QC default).</p></dd>
 
+
+<dt id="arg-gestationtable">gestationTable<a class="anchor" aria-label="anchor" href="#arg-gestationtable"></a></dt>
+<dd><p>optional species-to-gestation lookup passed to
+<code><a href="getSpeciesGestation.html">getSpeciesGestation</a></code> when defaulting the gestation window;
+<code>NULL</code> (the default) uses the bundled <code><a href="speciesGestation.html">speciesGestation</a></code>
+table.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list of reactive expressions:</p><ul><li><p><code>potentialParents</code> - the raw <code>getPotentialParents</code> result
 (or <code>NULL</code>).</p></li>
 <li><p><code>tableData</code> - the flattened results data.frame.</p></li>
+<li><p><code>gestationDefault</code> - the species-keyed default gestation window
+(days) used to prefill the maximum-gestational-period input.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

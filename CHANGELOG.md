@@ -15,6 +15,97 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-22 — Issue \#46 item 2b: species-keyed prefill of the gestation window in the Potential Parents module (Session 169)
+
+- **Deliverable (owner pick, single item):** issue \#46 **item 2b** –
+  reactively default the gestation `numericInput` in
+  `R/modPotentialParents.R` from the loaded pedigree’s species via
+  [`getSpeciesGestation()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesGestation.md),
+  kept user-overridable, guarding against clobbering a manual edit when
+  the pedigree reactive re-fires. **Code change** (`R/` + tests) -\>
+  **strict TDD**, every transition gated via `AskUserQuestion` (pre-RED
+  scope/approach -\> PRE-RED-\>RED -\> RED-\>GREEN; REFACTOR skipped,
+  owner-approved). **0 stakeholder corrections.** HYBRID under
+  ultracode: a read-only 4-agent grounding workflow, then SOLO for the
+  file-mutating TDD work.
+- **Design (pre-RED `AskUserQuestion` gate, 3 owner decisions):** (1)
+  **architecture** – keep the static UI `numericInput` and add a server
+  `observeEvent(pedigree())` + `updateNumericInput` + override guard
+  (smallest blast radius; the existing UI test stays green), over a more
+  invasive server-rendered `uiOutput`; (2) **representative species** –
+  the **first non-NA/non-empty** value of the pedigree’s `species`
+  column (absent/all-NA -\> 210L); (3) **override guard** – a user’s
+  manual edit **always wins** (a pedigree re-fire never clobbers it; a
+  genuinely new pedigree re-prefills only if the user has not
+  customized).
+- **Testability (the load-bearing call, per Learning 158):** in
+  [`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html),
+  `updateNumericInput()` does NOT echo back into
+  `input$maxGestationalPeriod` (no browser round-trip), so a “read the
+  input after prefill” test would never see the change. Fix: factor the
+  logic that matters into **pure helpers** and expose the computed
+  default as a reactive – the side-effect is driven by tested logic, not
+  asserted directly. And because the shipped `speciesGestation` table
+  collapses every species to the 210 fallback (Learning 158),
+  differentiation is proven by an **injected `gestationTable`**
+  (RHESUS=210 vs TESTSP=90).
+- **Change (`R/modPotentialParents.R`):** three internal `@noRd` helpers
+  – `firstPedigreeSpecies(ped)` (first usable species or
+  `NA_character_`; handles NULL/non-df/no-column),
+  `pedigreeGestationDefault(ped, gestationTable = NULL)`
+  (`= getSpeciesGestation(firstPedigreeSpecies(ped), gestationTable)`),
+  and `prefillGuardAllows(current, lastAuto)` (the override-guard
+  decision: TRUE when `current` is NULL/NA or equals `lastAuto`, else
+  FALSE). `modPotentialParentsServer` gained a trailing
+  `gestationTable = NULL` param, a `lastAutoSet <- reactiveVal(210L)`
+  sentinel, a `gestationDefault` reactive (added to the returned list),
+  and an `observeEvent(pedigree(), ...)` that calls `updateNumericInput`
+  only when the guard allows, recording `lastAutoSet`. No loop risk: the
+  observer keys on `pedigree()`, not on the input it writes. The static
+  UI numericInput (value 210L) is unchanged.
+- **Tests (RED -\> GREEN, 21 new blocks / 27 expectations in
+  `tests/testthat/test_modPotentialParents.R`):** `firstPedigreeSpecies`
+  (6: first non-NA, skips empty/whitespace, all-NA -\> NA, no column -\>
+  NA, NULL/non-df -\> NA); `pedigreeGestationDefault` (7: injected-table
+  TESTSP -\> 90 \[differentiation\], RHESUS -\> 210, no column -\> 210,
+  all-NA -\> 210, integer length 1, bundled-table default);
+  `prefillGuardAllows` (4: NULL/NA/equal -\> TRUE, differs -\> FALSE);
+  `modPotentialParentsServer` via testServer (4: returned list exposes
+  `gestationDefault`, `gestationDefault()` == 90 for an injected-table
+  TESTSP pedigree, == 210 for a species-less pedigree, and a
+  user-override + pedigree-reload scenario exercising the guard’s skip
+  branch). Each failed for the right reason before GREEN; the existing
+  flatten/UI/server tests stayed green throughout.
+- **Verification:** full suite **2642 passed / 0 failed / 0 errors** (5
+  warnings pre-existing in `test_modPyramid.R`); `lintr` **0 lints** on
+  both changed files (no `object_usage` issue – the helpers are
+  same-file and `getSpeciesGestation` is already installed); all changed
+  files **0 non-ASCII**; `document()` regenerated `NAMESPACE` (+1
+  `importFrom(shiny,updateNumericInput)`) and
+  `man/modPotentialParentsServer.Rd` (both confined). The regenerated
+  man page introduced one new PROSE word, “prefill”
+  (`modPotentialParentsServer.Rd:34`), which `R CMD check` flagged as a
+  spelling NOTE – cleared by adding “prefill” to `inst/WORDLIST` (the
+  same lever S168 used for “untyped”; Learning 159), so the word ships
+  with the change that introduced it. After that, fast `R CMD check`
+  (`--as-cran`, no vignettes/manual) = **0 errors / 0 warnings / 0
+  notes**. Phase-3E: the prefill observer’s runtime reactive path is
+  exercised by the testServer suite (the observer fires,
+  `updateNumericInput` runs, the guard skips on a user edit); a full
+  browser E2E is the pre-existing `test-e2e-*` baseline-noise harness,
+  not a clean smoke in this environment.
+- **Deferred (flagged, not omitted):** the **NEWS entry** for this
+  user-facing change is the **publish session’s** pre-publish step (the
+  implementation-session -\> CHANGELOG, publish-session -\> NEWS
+  convention, S165-\>S166 / S167-\>S168). The app still passes the (now
+  species-defaulted) scalar `maxGestationalPeriod` to
+  [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md),
+  so per-animal multi-species windows in the app remain a possible later
+  enhancement, out of this slice’s scope.
+- **Committed on feature branch `issue-46-ui-prefill`** (not `master`);
+  publish (PR -\> CI -\> gated merge) is a separate owner-gated session
+  per the standing convention.
+
 ### 2026-06-22 — Published S167 (PR \#69): species-keyed gestation is on `master`; NEWS entry added; pre-existing spelling NOTE cleared (Session 168)
 
 - **Deliverable (owner pick, single item):** publish S167’s issue \#46

@@ -10559,3 +10559,65 @@ the SAME PR (Learning 157a); the close-out docs – CHANGELOG / learnings
 published branch\]. **Apply:** any publish session with a NEWS/spelling
 step; any session inheriting a prescribed fix recipe from a prior
 handoff; any doc edit that might introduce new words.
+
+#### Learning 160 – A Shiny reactive PREFILL (“default this input from loaded data, but let the user override”) has a testServer trap and a clobber trap; both are solved by moving the logic OUT of the side-effect. **Trap 1 (testServer):** in `shiny::testServer` (MockShinySession) an `update*Input()` call does NOT echo back into `input$<id>` – there is no browser round-trip – so `input$maxGestationalPeriod` stays whatever `session$setInputs()` last made it, and a test that “sets a pedigree, then reads the input to see the prefill” can NEVER observe the update; it is a structurally false test. Fix: do not assert the `updateNumericInput` side-effect. Factor the computation that matters into PURE helpers (`firstPedigreeSpecies(ped)` -\> first non-NA/non-empty species or `NA_character_`; `pedigreeGestationDefault(ped, gestationTable=NULL)` = `getSpeciesGestation(firstPedigreeSpecies(ped), gestationTable)`) and expose the computed default as a reactive in the module’s returned list (`gestationDefault`), so testServer asserts `session$getReturned()$gestationDefault()` directly while the observer merely drives the (untested-by-assertion, exercised-for-coverage) side-effect. The shipped-table-collapses-to-default false-GREEN (Learning 158) recurs here too: bundled `speciesGestation` maps every species to 210, so differentiation is proven only with an INJECTED `gestationTable` (RHESUS=210 vs TESTSP=90) threaded through a new optional module param. **Trap 2 (clobber / re-fire):** the documented “dragon” – an unguarded `observeEvent(data(), update*Input(...))` (precedent `modBreedingGroups.R:429`, which resets `viewGrp` to 1 every time groups reform) overwrites a user’s manual edit whenever the data reactive re-invalidates. Guard with a `reactiveVal` sentinel holding the last value the module wrote (`lastAutoSet <- reactiveVal(<UI initial>)`) and a pure decision helper `prefillGuardAllows(current, lastAuto)` = TRUE iff `current` is NULL/NA or `== lastAuto` (i.e. the user has NOT edited away from what we set); prefill + record `lastAutoSet(newDefault)` only when it returns TRUE. Critically, the observer keys on the DATA reactive (`pedigree()`), never on the input it writes, so the `updateNumericInput` -\> `input$` change does not re-trigger it (no loop). Architecture choice at the pre-RED gate: keep the STATIC UI `numericInput` + a server observer over a server-rendered `uiOutput`/`renderUI` – smaller blast radius, the existing `value="210"` UI test stays green, and adding a reactive to the returned list is safe because the existing list test uses `%in%` (subset), not identity. (S169, issue \#46 item 2b – species-keyed UI prefill of the gestation window)
+
+**What happened.** Owner picked \#46 item 2b (the deferred UI-prefill
+slice). A read-only 4-agent grounding workflow + firsthand reads of
+`modPotentialParents.R`/`appServer.R`/`getSpeciesGestation.R`
+established: the gestation `numericInput` (`value = 210L`) is built
+STATICALLY in the UI fn (`:77-81`); on button press the server passes
+`input$maxGestationalPeriod` as an EXPLICIT scalar to
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+(`:146-153`), so item 2’s per-species path is never exercised in the app
+today; the module already returns a
+[`list()`](https://rdrr.io/r/base/list.html) and existing tests assert
+membership with `%in%`; and the app instantiates the module with NAMED
+args (`appServer.R:307-310`), so a trailing param is safe. The grounding
+surfaced the testServer-can’t-read-updateInput fact (Trap 1) and the
+unguarded-`updateSelectInput`-clobber precedent (Trap 2) – the two
+load-bearing design constraints. A pre-RED `AskUserQuestion` gate took 3
+owner decisions (static-UI+observer architecture; first-non-NA species;
+user-edit-always-wins guard). RED: 21 new blocks (3 pure-helper groups +
+4 testServer) failing for the right reason (missing helpers / unused
+`gestationTable` / `gestationDefault` absent from the returned list);
+the existing 43 expectations stayed green. GREEN (minimum): the three
+`@noRd` helpers + the server’s `gestationTable=NULL` param,
+`lastAutoSet` reactiveVal, `gestationDefault` reactive (exposed), and
+the guarded `observeEvent(pedigree())`. Verification: full suite
+2642/0/0 (5 pre-existing `test_modPyramid` warnings), lintr 0 on both
+files (no `object_usage` FALSE-lint this time – helpers are same-file,
+`getSpeciesGestation` already installed, so no `install(quick=TRUE)`
+needed unlike Learning 158b), 0 non-ASCII, `document()` confined
+(`NAMESPACE` +1 `updateNumericInput` import +
+`man/modPotentialParentsServer.Rd`), fast `R CMD check` 0/0/0. REFACTOR
+skipped (owner-approved): the minimum impl already matched the
+`flattenPotentialParents` house style. NEWS deferred to the publish
+session (the implementation-\>CHANGELOG, publish-\>NEWS convention).
+Committed on feature branch `issue-46-ui-prefill`; publish is a separate
+owner-gated session.
+
+**Reflexes:** \[a Shiny reactive PREFILL is tested by exposing the
+computed default as a reactive + a PURE guard helper, NOT by reading
+`input$<id>` after `update*Input` – in testServer the update does not
+echo back into `input$`, so that assertion can never see it\]\[guard a
+“default from data, user can override” input with a `reactiveVal`
+holding the last value the module wrote + a pure
+`current is NULL/NA or == lastAuto` check; prefill only when it passes,
+and key the observer on the DATA reactive (never the input it writes) so
+there is no feedback loop\]\[the shipped-table-collapses-to-fallback
+false-GREEN (Learning 158) recurs for UI defaults too -\> prove species
+differentiation with an INJECTED lookup table (TESTSP=90 vs RHESUS=210),
+not the bundled single-row one\]\[prefer a STATIC UI input + server
+observer over a server-rendered `uiOutput` when the only need is a
+reactive DEFAULT – smaller blast radius and the existing UI test stays
+green\]\[adding a reactive to a module’s returned
+[`list()`](https://rdrr.io/r/base/list.html) is safe when existing tests
+assert membership with `%in%` (subset), not identity\]\[a same-file new
+helper consumed only within its file (and calling an already-installed
+exported fn) does NOT trip `lintr` object_usage – the
+`install(quick=TRUE)` dance (Learning 158b) is only needed for NEW
+cross-file/exported symbols\]. **Apply:** any Shiny module that should
+default an input from loaded data while staying user-overridable; any
+testServer test of an `update*Input` effect; any per-key UI default
+whose shipped lookup collapses to the fallback.

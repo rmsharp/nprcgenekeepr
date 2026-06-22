@@ -7,6 +7,298 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 169 Did
+
+**Deliverable:** Issue \#46 **item 2b** – UI prefill: in
+`R/modPotentialParents.R`, reactively default the gestation
+`numericInput` (was hard-coded `210L`) from the loaded pedigree’s
+species via
+[`getSpeciesGestation()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesGestation.md),
+kept user-overridable; guard against clobbering a manual edit when the
+pedigree reactive re-fires. Strict TDD. **(DONE – committed on feature
+branch `issue-46-ui-prefill` as `f4ac6509`; UNPUBLISHED.)** **Started /
+Completed:** 2026-06-22 **Status:** **DONE.** Code change (`R/` +
+tests + regenerated `man/`/`NAMESPACE` + a 1-word `inst/WORDLIST` add)
+-\> **strict TDD**, every transition gated via `AskUserQuestion`
+(pre-RED scope/approach \[3 owner decisions\] -\> PRE-RED-\>RED -\>
+RED-\>GREEN -\> GREEN-\>REFACTOR\[skipped, owner-approved\]). **0
+stakeholder corrections.** HYBRID under ultracode: a read-only **4-agent
+grounding workflow** (module structure / testServer patterns /
+`getSpeciesGestation` contract / update-input precedents+the dragon),
+then SOLO for the file-mutating TDD work. The deliverable is **committed
+but UNPUBLISHED** on branch `issue-46-ui-prefill`; `master` unchanged at
+`baf916cb`. - **DESIGN (the pre-RED `AskUserQuestion` scope/approach
+gate – 3 owner decisions):** (1) **architecture** = keep the STATIC UI
+`numericInput` (`value = 210L`) + a server `observeEvent(pedigree())` +
+`updateNumericInput` + an override guard, over a more invasive
+server-rendered `uiOutput`/`renderUI` (smaller blast radius; the
+existing `value="210"` UI test stays green); (2) **representative
+species** = the **first non-NA/non-empty** value of the pedigree’s
+`species` column (absent / all-NA -\> 210L); (3) **override guard** =
+**user’s manual edit always wins** (a pedigree re-fire never clobbers
+it; a genuinely new pedigree re-prefills only when the user has not
+customized). All three were my recommended option; owner accepted all
+three. - **GROUNDING -\> two load-bearing facts:** (a) The app already
+passes `input$maxGestationalPeriod` as an **explicit scalar** to
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+(`modPotentialParents.R:146-153`), so item 2’s per-species path is
+**never exercised in the app today** – item 2b’s job is to default that
+scalar from species. (b) **testServer trap:** in
+[`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html),
+`updateNumericInput()` does NOT echo back into
+`input$maxGestationalPeriod` (no browser round-trip), so a “set a
+pedigree, then read the input to see the prefill” test can NEVER observe
+the change – structurally false. Fix: factor the logic that matters into
+PURE helpers and expose the computed default as a reactive; the
+side-effect is driven by tested logic, not asserted. And (Learning 158
+recurs) the shipped `speciesGestation` collapses every species to the
+210 fallback, so differentiation is proven only via an INJECTED
+`gestationTable` (RHESUS=210 vs TESTSP=90). -\> **Learning 160.** -
+**RED (gated):** appended 21 blocks / 27 expectations to
+`tests/testthat/test_modPotentialParents.R` – `firstPedigreeSpecies`
+(6), `pedigreeGestationDefault` (7, incl. the injected-table TESTSP-\>90
+differentiation), `prefillGuardAllows` (4), `modPotentialParentsServer`
+via testServer (4: returned list exposes `gestationDefault`,
+`gestationDefault()`==90 for an injected-table TESTSP ped, ==210 for a
+species-less ped, a user-override+pedigree-reload scenario exercising
+the guard’s skip branch). All 21 failed for the RIGHT reason (missing
+helpers / unused `gestationTable` arg / `gestationDefault` absent from
+the returned list); the existing 43 expectations stayed green. - **GREEN
+(gated, minimum impl):** three internal `@noRd` helpers in
+`R/modPotentialParents.R` – `firstPedigreeSpecies(ped)` (first usable
+species or `NA_character_`; NULL/non-df/no-column safe),
+`pedigreeGestationDefault(ped, gestationTable = NULL)`
+(`= getSpeciesGestation(firstPedigreeSpecies(ped), gestationTable)`),
+`prefillGuardAllows(current, lastAuto)` (TRUE iff `current` is NULL/NA
+or `== lastAuto`). `modPotentialParentsServer` gained a trailing
+`gestationTable = NULL` param, `lastAutoSet <- reactiveVal(210L)`, a
+`gestationDefault` reactive (added to the returned
+[`list()`](https://rdrr.io/r/base/list.html)), and a guarded
+`observeEvent(pedigree(), ...)` that calls `updateNumericInput` +
+records `lastAutoSet` only when the guard allows. **No feedback loop:**
+the observer keys on `pedigree()`, not on the input it writes.
+`document()` regenerated `man/modPotentialParentsServer.Rd` +
+`NAMESPACE` (+1 `importFrom(shiny,updateNumericInput)`). - **REFACTOR:
+skipped (owner-approved at the GREEN-\>REFACTOR gate)** – the minimum
+impl already matched the `flattenPotentialParents` house style (small
+pure `@noRd` helpers); no structural change added value without risk. -
+**Spelling NOTE (self-inflicted, caught by the build-equivalent):** the
+regenerated man page introduced one new PROSE word, “prefill”
+(`modPotentialParentsServer.Rd:34`); the first `R CMD check` flagged it
+(Status: 1 NOTE, the `spelling.Rout`-vs-`spelling.Rout.save`
+comparison). Cleared by adding “prefill” to `inst/WORDLIST` (the same
+lever S168 used for “untyped”; Learning 159) -\> re-ran `R CMD check`
+-\> **0/0/0**. (Note: `tests/spelling.Rout.save` is NOT in the tree, yet
+`R CMD check` still does the comparison and flags new shipped prose; the
+WORDLIST is the lever, as Learning 159 says.)
+
+**Phase-3E (build-equivalent / runtime smoke): SATISFIED.** Fast
+`R CMD check` (`--as-cran`, no vignettes/manual) on the deliverable tree
+= **0 errors / 0 warnings / 0 notes** (Status: OK), including the full
+`testthat` suite. Full suite (NOT_CRAN=true) = **2642 passed / 0 failed
+/ 0 errors** (5 warnings pre-existing in `test_modPyramid.R`); `lintr`
+**0 lints** on both changed files; all changed files **0 non-ASCII**.
+**Runtime:** the prefill observer’s reactive path is exercised by the
+testServer suite (the observer fires on a loaded pedigree,
+`updateNumericInput` runs, `gestationDefault` computes, the guard skips
+on a user edit) – this is genuine runtime reactive-graph execution, not
+just compilation. A full BROWSER E2E (visually confirm the field
+updates) is the pre-existing `test-e2e-*`/`shinytest2` harness, which is
+baseline noise in this environment, so it is not a clean smoke here –
+stated, not silently skipped.
+
+**Session 168 Handoff Evaluation (by Session 169): Score 9/10.** S168’s
+`=> SUGGESTED NEXT` listed **“#46 item 2b – UI prefill”** as the FIRST
+option, and its **Gotcha 5** spelled out the deliverable precisely (the
+hard-coded `210L` numericInput,
+`observeEvent pedigree -> updateNumericInput`, “guard against clobbering
+a user’s manual override when the pedigree reactive re-fires”, testable
+via
+[`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html),
+strict TDD) – near-zero rediscovery of WHAT/WHERE. Its **Gotcha 2**
+(“fix a spelling NOTE by adding the bare PROSE word to `inst/WORDLIST`;
+backtick-wrapped code is SKIPPED; verify with `spell_check_package`”)
+was EXACTLY the recipe I needed when my regenerated man page introduced
+“prefill” – I went straight to the WORDLIST, no flailing. Its **Gotchas
+3/4** (the single-row table is a no-op on shipped data;
+`getPotentialParents` is backward-compatible) directly justified the
+injected-`gestationTable` differentiation design (Learning 158 reuse).
+Every standing keep held firsthand: clean `master` at `baf916cb`,
+dashboard 98/100, ghost-check clean, the `getPotentialParents`
+scalar-vs-NULL signature, fail-soft LabKey, archived-on-CRAN. ROI
+strongly positive. **The -1:** Gotcha 2’s literal framing (“There is NO
+`tests/spelling.Rout.save`”) is true as an `ls` fact but slightly
+undersells that `R CMD check` STILL performs a `spelling.Rout.save`
+comparison and flags new shipped prose (I hit exactly that) – though the
+operative advice (WORDLIST is the lever) was spot-on, so it cost me
+nothing. A comprehensive, accurate, well-organized handoff.
+
+**Self-assessment (Session 169): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check -\> HEAD `866da44f` = S168, no
+undocumented commits), reported, STOPPED for the owner’s pick; claimed
+the session with a 1B stub BEFORE technical work. **Strengths:** (1)
+**grounded before designing** – a read-only 4-agent workflow + firsthand
+reads turned “prefill the input” into three crisp owner decisions and
+surfaced the two load-bearing facts (the app passes a scalar; testServer
+can’t read `updateNumericInput`); (2) **caught the testServer false-test
+trap before writing tests** – designed the logic that matters as PURE
+helpers + an exposed `gestationDefault` reactive, so correctness is
+asserted on tested units, not on an unobservable side-effect (the
+session’s best call, Learning 160); (3) **designed the override guard to
+be loop-free and testable** – a `lastAutoSet` sentinel + a pure
+`prefillGuardAllows`, with the observer keyed on `pedigree()` (not the
+input it writes); (4) **reused Learning 158** – injected
+`gestationTable` (RHESUS=210 vs TESTSP=90) to prove per-species
+differentiation against the collapses-to-fallback shipped table; (5)
+**strict TDD, every transition gated**, RED failing for the right reason
+on all 21, GREEN the minimum impl, REFACTOR consciously skipped; (6)
+**the build-equivalent earned its keep** – it caught a self-inflicted
+spelling NOTE (“prefill”) that the unit tests + lint + ASCII checks all
+passed over, and I cleared it via the WORDLIST (Learning 159) to a true
+0/0/0 before committing. **Weaknesses (honest):** (a) **moderate base
+difficulty** – a Shiny prefill + a guard; the value is the testability
+design + TDD rigor, not algorithmic depth -\> ceiling ~9; (b) **a
+self-inflicted spelling NOTE** – my new prose word “prefill” tripped
+`R CMD check`; I should have anticipated a new bare-prose word in the
+roxygen would need a WORDLIST entry (the Learning 159 knowledge was
+right there), though Phase 3E caught it and the fix shipped in the same
+commit; (c) in the RED-\>GREEN gate I said `document()` would leave
+NAMESPACE “unchanged (no new exports)” – true about exports, but it
+gained one `importFrom` line; minor, surfaced honestly when `document()`
+ran; (d) **the deliverable is UNPUBLISHED** on a feature branch – the PR
+-\> CI -\> merge is a separate owner-gated step (correct per
+“commit/push only when asked”). Clean, fully-verified, scope-disciplined
+TDD delivery with a genuinely sharp testability call and a self-caught
+check NOTE -\> 9/10.
+
+**Learnings:** **Learning 160** added to `PROJECT_LEARNINGS.md` – a
+Shiny reactive PREFILL has a testServer trap (`update*Input` does not
+echo into `input$` in `testServer`, so test by exposing the computed
+default as a reactive + a PURE guard helper, never by reading the input
+after the update) and a clobber trap (guard an
+`observeEvent(data(), update*Input)` with a `reactiveVal` “last value we
+wrote” sentinel + a pure `current is NULL/NA or == lastAuto` check, and
+key the observer on the DATA reactive so there is no feedback loop); the
+shipped-table-collapses-to-fallback false-GREEN (Learning 158) recurs
+for UI defaults -\> prove differentiation with an injected lookup;
+prefer a static UI input + server observer over `uiOutput` for a
+reactive DEFAULT; adding a reactive to a returned
+[`list()`](https://rdrr.io/r/base/list.html) is safe when tests assert
+membership with `%in%`. Carried as applied:
+\[\[consult-project-source-of-truth\]\] (design/scope from the package’s
+own conventions + the TDD-gate contract);
+\[\[observation-vs-decision\]\] / \[\[ascii-only-in-question-options\]\]
+(the design + phase-gate `AskUserQuestion`s); \[\[news-vs-changelog\]\]
+(CHANGELOG now, NEWS at publish);
+\[\[avoid-jargon-use-plain-language\]\] (kept the design discussion
+concrete); Learnings 152/156/158/159 + the
+read-only-workflow-for-grounding / solo-for-mutation split.
+
+**=\> SUGGESTED NEXT = owner’s pick.** The deliverable is committed on
+feature branch **`issue-46-ui-prefill`** (see Key files); `master` is
+unchanged at `baf916cb`. Natural options (plain ASCII labels): -
+**(Publish S169 – the natural next session)** push `issue-46-ui-prefill`
+-\> PR -\> watch CI to completion (lint + `R CMD check` x5
+incl. ubuntu-devel + pkgdown + test-coverage), **don’t merge blind**
+(re-query fresh non-watch `gh pr checks <n>`, every check `pass` + exit
+0; the `--watch` is not a terminal signal, Learning 157),
+`AskUserQuestion` before the irreversible merge,
+verified-merged-before-delete cleanup (`git pull` is rebase -\> use
+`fetch`+`reset`; post-merge `fetch` before `reset --hard` must be
+verified + ancestor-gated, Learning 146). This PR **ADDS tests** -\>
+`codecov/project` should stay green (Learning 152). **ONE pre-publish
+step:** add the **NEWS entry** for this user-facing change (the
+gestation window now defaults from the loaded pedigree’s species,
+user-overridable) – write plain ASCII `--`/`"` in `NEWS.Rmd`, re-render
+`NEWS.md` (permanent `html_preview:false`+`md_extensions:"-smart"`,
+Learning 155), confirm `grep -cP '[^\x00-\x7F]' NEWS.md` -\> 0 and a
+confined insertion. **“prefill” is ALREADY in `inst/WORDLIST`** (added
+this session), so NEWS prose may use it without a new spelling NOTE –
+but still run `spell_check_package(".")` before/after to KNOW the delta
+(Learning 159). - **(#46 item 3 – DEFERRED)** species-keyed postnatal
+co-housing window – do NOT start until \#28’s single-species colocation
+model exists in code (it has ZERO code today). - **(Embedded codecov
+token – owner’s security call)** remove/rotate the committed upload
+token in `codecov.yml` (redundant with `secrets.CODECOV_TOKEN`; removing
+from the file does not purge git history). NOT acted on (FM \#8). -
+**(CRAN Phase 5, owner-run)** win-builder x3 + R-hub v2 +
+`submit_cran()` – owner PAT + email; HARD STOP
+(`docs/planning/cran-2.0.0-phase5-runbook.md`). - **Other GitHub
+issues** – \#45/#28/#9 (parent-ID cluster), \#37, \#36, \#29, \#2, or
+older \#13/#12/#11/#10/#5/#1. **Do NOT** bundle options (FM \#18/#25);
+**do NOT** start any without the owner picking.
+
+**Key files (this session):** **CHANGED – the deliverable (on branch
+`issue-46-ui-prefill`, commit `f4ac6509`):** **MODIFIED**
+`R/modPotentialParents.R` (3 new `@noRd` helpers
+`firstPedigreeSpecies`/`pedigreeGestationDefault`/`prefillGuardAllows`;
+`modPotentialParentsServer` gains `gestationTable = NULL`, `lastAutoSet`
+reactiveVal, the `gestationDefault` reactive + returned-list entry, the
+guarded `observeEvent(pedigree())`; roxygen + `@importFrom` updated),
+`tests/testthat/test_modPotentialParents.R` (+21 blocks),
+`man/modPotentialParentsServer.Rd` (regenerated – new `gestationTable`
+param + `gestationDefault` return item + usage signature), `NAMESPACE`
+(+`importFrom(shiny,updateNumericInput)`), `inst/WORDLIST` (`prefill` at
+`:267`). **CHANGED – close-out docs (separate `docs` commit on the same
+branch):** `CHANGELOG.md` (S169 `[Unreleased]` entry),
+`PROJECT_LEARNINGS.md` (Learning 160), `SESSION_NOTES.md` (this
+handoff). **NO change to** `R/appServer.R` (the module is instantiated
+with NAMED args at `:307-310`, so the trailing `gestationTable = NULL`
+is back-compatible – the app keeps the bundled table),
+`R/getSpeciesGestation.R`, `getPotentialParents.R`, `NEWS.md`/`NEWS.Rmd`
+(NEWS deferred to publish), `DESCRIPTION`, `data/`. **NOT committed
+(standing keeps):** `PED_GV_AUDIT_2026-05-30.html` (untracked);
+`.DS_Store`.
+
+**Gotchas:** (1) **The deliverable is committed but UNPUBLISHED on
+branch `issue-46-ui-prefill` (`f4ac6509` feat + the docs commit);
+`master` is at `baf916cb`.** Publish via the standing convention (push
+-\> PR -\> watch CI to completion, don’t merge blind -\>
+`AskUserQuestion` before merge -\> verified-merged-before-delete;
+`git pull` is rebase + chokes on `.DS_Store` -\> use `fetch`+`reset`
+(135); post-merge `fetch` before `reset --hard` must be verified +
+ancestor-gated (146)). **Do the NEWS pre-publish step FIRST so it ships
+in the SAME PR** (Learning 157a). (2) **The app passes a SCALAR
+`maxGestationalPeriod` to
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)**
+(`modPotentialParents.R:146-153`), so item 2’s per-FOCAL-animal
+multi-species path is still not used in the app – item 2b only defaults
+that single scalar from the pedigree’s first species. Per-animal
+multi-species windows in the app would be a later enhancement (out of
+this slice’s scope). (3) **The prefill is a no-op on shipped/real data**
+– the bundled `speciesGestation` is RHESUS-\>210 with a 210 fallback, so
+`gestationDefault` is 210 for ANY pedigree (incl. the JMAC “JAPANESE
+MACAQUE” ped -\> 210); differentiation is exercised ONLY by
+injected-`gestationTable` test fixtures. To make it observable on real
+data, add a non-210 species row in `data-raw/speciesGestation.R` and
+re-run it. (4) **testServer cannot read `updateNumericInput`’s effect**
+– `input$maxGestationalPeriod` does NOT change after an
+`updateNumericInput` call in `testServer` (no browser); test prefill via
+the exposed `gestationDefault` reactive + the pure `prefillGuardAllows`
+helper, NOT by reading the input (Learning 160). (5) **A NEW bare-PROSE
+word in shipped roxygen/`.Rd`/`NEWS.md` trips the `R CMD check` spelling
+NOTE** (the `spelling.Rout` comparison) even though
+`tests/spelling.Rout.save` is not in the tree; the fix is
+`inst/WORDLIST` (backticked code is skipped). “prefill” was added this
+session; “untyped” by S168. Run `spell_check_package(".")` to KNOW the
+delta (Learning 159). (6) Carried standing keeps (unchanged): package
+**ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5 owner-gated
+(`docs/planning/cran-2.0.0-phase5-runbook.md`);
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT (warning + NULL) without a LabKey credential/config; the
+offline focal path returns `nprcgenekeeprFileErr` not NULL (S155);
+exactly **ONE** codecov config (`codecov.yml`) – do NOT re-add a second;
+its embedded upload token is redundant with `secrets.CODECOV_TOKEN` +
+flagged (owner’s call); `#65` CONFIRMED RESOLVED (S160); NEWS render
+traps 132/139 CLOSED at the source on `master` (S163); the shipped
+`deidentified_jmac_ped.csv` halts a full
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+run on a pre-existing “both sire and dam” conflict (test the layer you
+change, Learning 156); `skip_on_cran()`-gated test files
+(`test_modInput.R`) need `NOT_CRAN=true`; standing keeps `.DS_Store` +
+`PED_GV_AUDIT_2026-05-30.html`.
+
 ### What Session 168 Did
 
 **Deliverable:** Publish S167 – issue \#46 **item 2** (species-keyed
