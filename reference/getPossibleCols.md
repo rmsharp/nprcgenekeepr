@@ -31,6 +31,12 @@ The possible columns are as follows:
 
   – factor (levels: "M", "F", "U") Sex specifier for an individual
 
+- species:
+
+  – character vector or `NA` (optional) naming the species of the
+  individual (e.g. "rhesus"). Recognized as a first-class column rather
+  than retained as an unrecognized novel column.
+
 - gen:
 
   – integer vector with the generation number of the individual
@@ -97,9 +103,9 @@ The possible columns are as follows:
 ``` r
 library(nprcgenekeepr)
 getPossibleCols()
-#>  [1] "id"           "sire"         "dam"          "sex"          "gen"         
-#>  [6] "birth"        "exit"         "death"        "age"          "ancestry"    
-#> [11] "population"   "origin"       "status"       "condition"    "departure"   
-#> [16] "spf"          "vasxOvx"      "pedNum"       "first"        "second"      
-#> [21] "first_name"   "second_name"  "recordStatus"
+#>  [1] "id"           "sire"         "dam"          "sex"          "species"     
+#>  [6] "gen"          "birth"        "exit"         "death"        "age"         
+#> [11] "ancestry"     "population"   "origin"       "status"       "condition"   
+#> [16] "departure"    "spf"          "vasxOvx"      "pedNum"       "first"       
+#> [21] "second"       "first_name"   "second_name"  "recordStatus"
 ```

@@ -15,6 +15,61 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-22 — Issue \#46 item 1: `species` is now a first-class pedigree column (Session 165)
+
+- **Deliverable (owner pick, single item):** make `species` a
+  first-class column in file-based pedigree ingestion — issue \#46
+  **item 1 only**. **Code change** (`R/` + tests) → **strict TDD** (RED
+  → GREEN → REFACTOR, all three transitions gated via
+  `AskUserQuestion`). **0 stakeholder corrections.** Grounding was a
+  read-only 4-agent workflow; the file-mutating TDD work was SOLO.
+- **Dependency direction corrected (owner-flagged):** the issue says
+  \#46 is a **“Dependency for” \#28** → **\#28 depends on \#46**, not
+  the reverse (and \#28 v1, rhesus-only, does not block on \#46).
+  Grounding confirmed **\#28 has zero code** (S76 spec + S77
+  ratification only — no colocation/co-housing/postnatal/location logic
+  in `R/` or `tests/`), so \#46 **item 3** (species-keyed postnatal
+  co-housing window, “the multi-species generalization of \#28’s
+  missing-dam parameter”) is **premature groundwork for an unbuilt
+  consumer → deferred**. Item 2 (species-keyed gestation) builds on item
+  1 and is a separate session.
+- **Why item 1 needed real work, not just retention:** a `species`
+  column already *survived*
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  as a trailing, untyped `novelCol`. “First-class” means recognized in
+  the column registry **and** sorted into canonical position **and**
+  typed — so the discriminator the tests pin is **order + type**, not
+  mere presence.
+- **Change (2 production edits):** `R/getPossibleCols.R` — added
+  `"species"` to the canonical vector immediately after `"sex"` (+ a
+  roxygen `\item{species}`); `R/qcStudbook.R` — added
+  `if (any("species" %in% cols)) sb$species <- as.character(sb$species)`
+  beside the sibling optional-column conversions, so a factor `species`
+  is coerced to character.
+- **Tests (RED → GREEN):** updated
+  `tests/testthat/test_getPossibleCols.R` (expected vector now 24 cols)
+  and added `tests/testthat/test_species_first_class.R` (6 expectations:
+  species in
+  [`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md);
+  `qcStudbook` places it immediately after `sex`; a genuine novel column
+  still trails it; a factor `species` is coerced to character; the
+  shipped JMAC header maps `species` into the canonical set). Each
+  failed for the right reason before GREEN.
+- **Scoped out (deferred, evidence-based — not guessed):** speculative
+  [`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)
+  aliases (the literal `species` header already normalizes) and the
+  LabKey `mapPedColumns` species mapping (the source column name is
+  unknown). Noted for follow-on.
+- **Verification:** full test suite **0 failed / 0 errors**; `lintr` **0
+  lints** on all changed files; all changed/new files **0 non-ASCII**;
+  `document()` confined to `man/getPossibleCols.Rd`; `R CMD check`
+  (no-vignette/-manual) run as the Phase-3E build-equivalent. →
+  Learning 156. **Discovered (unrelated to \#46):** the shipped
+  `deidentified_jmac_ped.csv` halts a full
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  run on a pre-existing “Subject(s) listed as both sire and dam”
+  conflict.
+
 ### 2026-06-22 — Published S163 (PR \#67): the permanent NEWS render fix is on `master`; full CI matrix green (Session 164)
 
 - **Deliverable (owner pick, single item):** publish S163’s permanent

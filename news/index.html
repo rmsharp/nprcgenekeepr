@@ -46,7 +46,8 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="nprcgenekeepr-development-version">nprcgenekeepr (development version)<a class="anchor" aria-label="anchor" href="#nprcgenekeepr-development-version"></a></h2>
 <ul><li>Changes
-<ul><li>
+<ul><li>File-based pedigree ingestion now treats <code>species</code> as a first-class column: <code><a href="../reference/getPossibleCols.html">getPossibleCols()</a></code> recognizes it and places it immediately after <code>sex</code> in the canonical column order, and <code><a href="../reference/qcStudbook.html">qcStudbook()</a></code> types it as character. Previously a <code>species</code> column survived only as a trailing, untyped extra column. Studbooks that include a <code>species</code> column now have it consistently ordered and typed.</li>
+<li>
 <code><a href="../reference/getLkDirectRelatives.html">getLkDirectRelatives()</a></code> now returns the full connected pedigree component for the focal animals (ancestors, descendants, and collaterals such as siblings, mates, and their lineages) by delegating its pedigree walk to <code><a href="../reference/getPedDirectRelatives.html">getPedDirectRelatives()</a></code>. Previously it returned only the strict ancestor/descendant lineage and omitted collateral relatives. Pedigrees built from the LabKey/EHR path (via <code><a href="../reference/getFocalAnimalPed.html">getFocalAnimalPed()</a></code>) are now more complete and consistent with the in-memory <code><a href="../reference/getPedDirectRelatives.html">getPedDirectRelatives()</a></code>.</li>
 </ul></li>
 <li>New features

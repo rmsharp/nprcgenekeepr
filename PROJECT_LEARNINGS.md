@@ -10309,3 +10309,77 @@ task for an `.Rmd`/`.qmd`/templated generated file; any standing gotcha
 of the form “after rendering X, delete/reword Y” – prefer closing it at
 the config source; any bulk re-render where you must prove no content
 changed.
+
+#### Learning 156 – When “make X a FIRST-CLASS column/field” lands in a pipeline that ALREADY retains unknown inputs (here `qcStudbook()` keeps any unrecognized header as a trailing `novelCol` via `intersect(getPossibleCols(), cols)` then `c(cols, novelCols)`), the discriminator between first-class and retained-but-orphaned is CANONICAL ORDER + DECLARED TYPE, never mere presence – so the RED tests must assert PLACEMENT (the new column sorts into its registry position, e.g. immediately after `sex`) and TYPE-COERCION (a factor input becomes character), because “is in the output” and “is character (from a CSV read)” already pass for a novelCol and would be false-GREEN. The minimal GREEN was two edits: add `"species"` to `getPossibleCols()` (which alone fixes presence + ordering, since the intersect orders by the registry) and one `if (any("species" %in% cols)) sb$species <- as.character(sb$species)` beside the sibling optional-column conversions (which fixes the factor case). (S165, issue \#46 item 1 – species as a first-class column)
+
+**What happened.** Owner picked issue \#46 (“make species a first-class
+attribute”). \#46 has 3 parts; a read-only 4-agent grounding workflow +
+firsthand reads established that only item 1 (the species column) is
+self-contained: item 2 (species-keyed gestation) builds on it, and item
+3 (species-keyed postnatal co-housing window) is **premature** – its
+only consumer, \#28’s colocation/missing-dam model, has **zero code**
+(S76 spec + S77 ratification only; no
+colocation/co-housing/postnatal/location logic anywhere in `R/` or
+`tests/`). **Dependency-direction correction (owner-flagged):** I
+initially framed “item 3 depends on \#28”, but the issue’s own
+“**Dependency for:** \#28” wording means **\#28 depends on \#46**, not
+the reverse (and \#28 v1, rhesus-only, does not block on \#46 at all).
+The only thing that read like a reverse dependency was item 3’s phrasing
+“the multi-species *generalization of* \#28’s missing-dam parameter” –
+but a generalization of an UNBUILT thing is premature groundwork, not a
+blocking dependency. Owner chose item 1 only. Grounding facts that
+shaped the tests: a `species` column already SURVIVES ingestion as a
+trailing novelCol (retained, untyped, ordered last), so the new behavior
+to pin is ORDER (registry placement) and TYPE; the shipped
+`deidentified_jmac_ped.csv` is the only example data with a species
+column (all “JAPANESE MACAQUE”) but its full
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+run HALTS on a pre-existing, \#46-unrelated “Subject(s) listed as both
+sire and dam” QC error – so the real-data RED test asserts on the IMPORT
+COLUMN-MAPPING layer
+([`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md) +
+`intersect(getPossibleCols(), fixed)`) rather than the full pipeline,
+which both dodges the unrelated defect AND is exactly the
+“recognized/retained as first-class” requirement. Two test-authoring
+bugs surfaced in the first RED run and were fixed BEFORE declaring RED
+clean (the discipline that RED must fail for the RIGHT reason): (1)
+[`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)
+lowercases every header, so a `zNovelNote` fixture column became
+`znovelnote` and [`match()`](https://rdrr.io/r/base/match.html) returned
+NA – fixed by using a lowercase novel name; (2) the full-pipeline JMAC
+test errored on the sire/dam conflict – replaced with the column-mapping
+assertion. RED then failed cleanly on all 6 expectations for the right
+reason; GREEN (the 2 edits above) made them pass with the full suite at
+0 failed / 0 errors; REFACTOR added a roxygen `\item{species}` +
+`document()` (confined to `man/getPossibleCols.Rd`). Scoped OUT
+(deferred, evidence-based, not guessed): speculative
+[`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)
+aliases (the literal “species” header already normalizes) and the LabKey
+`mapPedColumns` species mapping (the source column name is unknown).
+
+**Reflexes:** \[to “make X first-class” in a pipeline that already
+RETAINS unknowns, pin the discriminator – canonical ORDER + declared
+TYPE – not presence; presence/character-from-CSV already pass for a
+retained novelCol and would be a false-GREEN\]\[read the dependency
+ARROW from the issue’s own words: “Dependency FOR Y” means Y depends on
+this, not this depends on Y – state it back and let the owner correct
+before scoping (\[\[observation-vs-decision\]\])\]\[a
+“multi-species/general version of an UNBUILT single-species thing” is
+premature groundwork for an absent consumer -\> defer, do not treat as a
+blocking dependency; confirm the consumer’s code exists before
+generalizing it\]\[a real example dataset can carry an unrelated
+PIPELINE-HALTING defect (here a sire/dam conflict) – test the LAYER YOU
+CHANGED (column mapping) not the whole pipeline run, which also keeps
+the test honest about what it
+proves\]\[[`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)
+lowercases ALL headers -\> test fixtures for “novel”/passthrough columns
+must use lowercase names or
+[`match()`](https://rdrr.io/r/base/match.html) silently returns NA – a
+spurious RED, not a real one\]\[RED must fail for the RIGHT reason:
+re-run, read each failure, and fix test-authoring bugs (NA matches,
+data-defect errors) before declaring RED clean\]. **Apply:** any
+“promote/recognize field X as first-class / canonical” task, especially
+where unknown inputs are already passed through; any feature whose scope
+item references “the multi-species/general version of” another issue –
+check that issue’s CODE state first; any test that ingests a real
+shipped dataset end-to-end.

@@ -7,6 +7,238 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 165 Did
+
+**Deliverable:** Issue \#46 **item 1 only** – make `species` a
+**first-class column** in file-based pedigree ingestion (recognized in
+[`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md),
+sorted into canonical position, and character-typed by
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+– no longer a trailing untyped `novelCol`). **(DONE.)** **Started /
+Completed:** 2026-06-22 **Status:** **DONE.** Code change (`R/` + tests)
+-\> **strict TDD**, all three transitions gated via `AskUserQuestion`
+(PRE-RED scope -\> PRE-RED-\>RED -\> RED-\>GREEN -\> GREEN-\>REFACTOR).
+**0 stakeholder corrections.** HYBRID under ultracode: a read-only
+**4-agent grounding workflow** (ingestion column flow / gestation usage
+/ \#28 dependency state / tests+data), then SOLO for the file-mutating
+TDD work. - **DEPENDENCY DIRECTION CORRECTED (owner-flagged,
+mid-session):** the issue’s own “**Dependency for:** \#28” wording means
+**\#28 depends on \#46**, NOT the reverse; \#28 v1 (rhesus-only) does
+not block on \#46 at all. My initial “item 3 depends on \#28” framing
+was backwards. The only coupling is that item 3 is *worded* as the
+multi-species *generalization of* \#28’s missing-dam parameter – and
+grounding confirmed **\#28 is design-only (S76 spec + S77 ratification,
+ZERO code** – no colocation/co-housing/postnatal/location logic anywhere
+in `R/` or `tests/`). So item 3 has no single-species original to
+generalize -\> **premature groundwork for an unbuilt consumer -\>
+deferred**. Owner then chose **item 1 only**. - **GROUNDING -\> the real
+design point:** a `species` column already SURVIVED
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+as a trailing untyped `novelCol` (`intersect(getPossibleCols(), cols)`
+then `c(cols, novelCols)`, `R/qcStudbook.R:281-283`). So “first-class”
+is NOT “is retained” (already true) – it is **canonical ORDER + declared
+TYPE**. The RED tests pin exactly those. - **RED (gated):** updated
+`tests/testthat/test_getPossibleCols.R` (expected vector 23 -\> 24,
+`species` after `sex`); added
+`tests/testthat/test_species_first_class.R` (6 expectations). First RED
+run exposed **2 test-authoring bugs**, fixed before declaring RED clean
+(RED must fail for the RIGHT reason): (a)
+[`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)
+lowercases ALL headers, so a `zNovelNote` fixture -\> `znovelnote` and
+[`match()`](https://rdrr.io/r/base/match.html) returned NA -\> used a
+lowercase novel name; (b) the full-pipeline JMAC test ERRORED on a
+pre-existing, \#46-unrelated “Subject(s) listed as both sire and dam” QC
+halt -\> rewrote it to assert on the **import column-mapping layer**
+([`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md) +
+`intersect(getPossibleCols(), fixed)`), which dodges the unrelated
+defect and is exactly the “recognized as first-class” requirement. All 6
+then failed for the right reason. - **GREEN (gated, 2 production
+edits):** `R/getPossibleCols.R` – inserted `"species"` immediately after
+`"sex"` (the intersect orders by the registry, so this alone fixes
+presence + placement); `R/qcStudbook.R` – added
+`if (any("species" %in% cols)) sb$species <- as.character(sb$species)`
+beside the sibling optional-column conversions (fixes the factor case).
+All target tests green; full suite **0 failed / 0 errors**. - **REFACTOR
+(gated):** added a roxygen `\item{species}` to `getPossibleCols.R`;
+`devtools::document()` regenerated **only** `man/getPossibleCols.Rd`
+(confined). Re-verified green. - **Scoped OUT (deferred, evidence-based
+– NOT guessed):** speculative
+[`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)
+aliases (the literal `species` header already normalizes) and the LabKey
+`mapPedColumns` species mapping (the source column name is unknown).
+Both are follow-ons, not omissions.
+
+**Phase-3E (build-equivalent / runtime smoke): SATISFIED.**
+`R CMD check` (no-vignette/-manual, the documented fast
+build-equivalent) = **0 errors / 0 warnings / 0 notes** (Status: OK),
+including the full `testthat` suite (61s), `--run-donttest` examples
+(the
+[`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md)
+example runs), `spelling.R`, and the data non-ASCII check. The change
+touches no vignette; the CI matrix on a PR is the full-vignette
+confirmation (the publish step below). `lintr` **0 lints** on all
+changed files; all changed/new files **0 non-ASCII**.
+
+**Session 164 Handoff Evaluation (by Session 165): Score 9/10.** S164’s
+handoff `=> SUGGESTED NEXT` listed “A GitHub issue – \#46 (species
+first-class), …” as an explicit owner-pick option, and every
+standing-keep it carried held firsthand: clean `master` at `5f4bcbe9` (=
+S164’s own close-out commit, ghost-check clean), dashboard 98/100, the
+package archived-on-CRAN status,
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+fail-soft, the offline focal `nprcgenekeeprFileErr` contract, exactly
+one `codecov.yml`, and the `git pull`-is-rebase / `fetch`+`reset` /
+ancestor-gated-`reset --hard` publish mechanics (which I will rely on
+for the publish step). The handoff’s gotchas were accurate background.
+ROI clearly positive – zero rediscovery of repo state. **The -1:** a
+suggested-next *menu* has a low ceiling by nature (it points at options,
+not at the work); it could not have known \#46’s internal 3-part
+decomposition or the \#28-dependency subtlety – but that is mine to
+ground, not S164’s to predict, so it is barely a gap. A clean, accurate,
+well-organized handoff.
+
+**Self-assessment (Session 165): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check clean), reported, STOPPED for the owner’s
+pick; claimed the session with a 1B stub BEFORE technical work.
+**Strengths:** (1) **grounded before scoping** – a read-only 4-agent
+workflow established that \#28 has zero code, which turned a vague
+“implement \#46” into a defensible 1-item scope (item 3 is premature,
+not blocked); (2) **took the dependency correction cleanly** – when the
+owner flagged the arrow direction, I conceded, re-derived it from the
+issue’s own “Dependency for:” wording, and corrected the record (Anti-FM
+\#23: treated the owner’s probe as a correction to absorb, not noise);
+(3) **found the real discriminator** – because a species column already
+survives as a novelCol, “presence” + “character-from-CSV” are
+false-GREEN traps, so I pinned ORDER + TYPE instead (Learning 156); (4)
+**strict TDD with every transition gated via `AskUserQuestion`** per the
+project contract, and **made RED fail for the RIGHT reason** – caught +
+fixed 2 test-authoring bugs (the lowercase-header NA match; the JMAC
+pipeline-halt) before declaring RED clean; (5) **evidence-based
+scope-out** – deferred aliases / LabKey mapping with stated reasons
+rather than guessing unrequested behavior; (6) **full verification** –
+`R CMD check` 0/0/0, full suite 0/0, lint 0, ASCII 0, `document()`
+confined; CHANGELOG-not-only (this is a real package change -\> NEWS is
+arguably warranted, see Gotcha 4) and Learning 156 captured.
+**Weaknesses (honest):** (a) **initial dependency-direction error** – I
+framed item 3 as depending on \#28 before the owner corrected me; the
+issue text was right there (“Dependency for: \#28”). Caught and fixed,
+but it should not have needed the owner; (b) **moderate base
+difficulty** – the GREEN is two small edits; the value is the
+grounding + the order/type discriminator + TDD rigor, not algorithmic
+depth -\> ceiling ~9; (c) **the deliverable is committed but
+UNPUBLISHED** on a feature branch – the PR -\> CI -\> merge is a
+separate owner-gated step (correct per “commit/push only when asked”,
+but the work is not on `master` yet). Clean, fully-verified,
+scope-disciplined TDD code delivery with one self-corrected framing
+error -\> 9/10.
+
+**Learnings:** **Learning 156** added to `PROJECT_LEARNINGS.md` – the
+first-class-vs-retained-novelCol discriminator is ORDER+TYPE not
+presence; read the dependency ARROW from the issue’s own words; a
+“generalization of an UNBUILT thing” is premature groundwork (defer);
+real shipped data can carry an unrelated pipeline-halting defect (test
+the layer you changed);
+[`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)
+lowercases headers (fixtures need lowercase novel names); RED must fail
+for the right reason. Carried as applied:
+\[\[observation-vs-decision\]\] (took the owner’s dependency probe as a
+correction, re-derived, waited); the pre-RED scope `AskUserQuestion` +
+every-transition-gated TDD contract; the
+read-only-workflow-for-grounding / solo-for-mutation split; ASCII
+discipline (132/139).
+
+**=\> SUGGESTED NEXT = owner’s pick.** The deliverable is committed on
+feature branch **`issue-46-species-first-class`** (see Key files);
+`master` is unchanged at `5f4bcbe9`. Natural options (plain ASCII
+labels): - **(Publish S165 – the natural next session)** push
+`issue-46-species-first-class` -\> PR -\> watch CI to completion (lint +
+`R CMD check` x5 incl. ubuntu-devel + pkgdown + test-coverage), don’t
+merge blind, `AskUserQuestion` before the irreversible merge,
+verified-merged-before-delete cleanup (the S159-\>S160 / S163-\>S164
+convention; `git pull` is rebase -\> use `fetch`+`reset`; post-merge
+`fetch` before `reset --hard` must be verified + ancestor-gated,
+Learning 146). NOTE this PR ADDS tests (a positive coverage delta) –
+`codecov/project` should stay green (Learning 152). **Decide first:**
+whether to add a `NEWS.md` line (this is a real user-facing package
+change – see Gotcha 4) BEFORE opening the PR. - **(#46 item 2 –
+species-keyed gestation)** the natural follow-on: replace/augment the
+scalar `maxGestationalPeriod` (210, rhesus-specific;
+`R/getPotentialParents.R`, UI default in `R/modPotentialParents.R:80`)
+with a per-species lookup keyed on the now-first-class `species` column.
+Independent of \#28. Needs a species-\>gestation table (new data object
+or `inst/extdata` config) – a pre-RED design decision. - **(#46 item 3 –
+DEFERRED)** species-keyed postnatal co-housing window – do NOT start
+until \#28’s single-species colocation model exists in code (it does not
+today). - **(Embedded codecov token – owner’s security call)**
+remove/rotate the committed upload token in `codecov.yml`. NOT acted on
+(FM \#8). - **(CRAN Phase 5, owner-run)** win-builder x3 + R-hub v2 +
+`submit_cran()` – owner PAT + email; HARD STOP
+(`docs/planning/cran-2.0.0-phase5-runbook.md`). - **Other GitHub
+issues** – \#45/#28/#9 (parent-ID cluster), \#37, \#36, \#29, \#2, or
+older \#13/#12/#11/#10/#5/#1. **Do NOT** bundle options (FM \#18/#25);
+**do NOT** start any without the owner picking.
+
+**Key files (this session):** **CHANGED – the deliverable (on branch
+`issue-46-species-first-class`):** `R/getPossibleCols.R` (added
+`"species"` after `"sex"` in the canonical vector + roxygen
+`\item{species}`), `R/qcStudbook.R` (added the `species` -\>
+`as.character` conditional beside the optional-column conversions, ~line
+232), `man/getPossibleCols.Rd` (regenerated by `document()`),
+`tests/testthat/test_getPossibleCols.R` (expected vector now 24 cols).
+**ADDED:** `tests/testthat/test_species_first_class.R` (6 species
+first-class expectations). **CHANGED – close-out docs (this commit, on
+branch):** `CHANGELOG.md` (S165 `[Unreleased]` entry),
+`PROJECT_LEARNINGS.md` (Learning 156), `SESSION_NOTES.md` (this
+handoff). **NO change to** `R/fixColumnNames.R`, `R/defaultSiteParams.R`
+(LabKey mapping), `R/getPotentialParents.R`, NAMESPACE, DESCRIPTION,
+`data/`, `inst/`. **NOT committed (standing keeps):**
+`PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
+
+**Gotchas:** (1) **The deliverable is committed but UNPUBLISHED on
+branch `issue-46-species-first-class`; `master` is at `5f4bcbe9`.**
+Publish via the standing convention (push -\> PR -\> watch CI to
+completion, don’t merge blind -\> `AskUserQuestion` before merge -\>
+verified-merged-before-delete; `git pull` is rebase + chokes on
+`.DS_Store` -\> use `fetch`+`reset` (135); post-merge `fetch` before
+`reset --hard` must be verified + ancestor-gated (146)). (2) **`species`
+placement is a deliberate contract:** it sits **immediately after
+`sex`** in
+[`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md),
+so
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+output orders it there whenever present; the after-sex assertion in
+`test_species_first_class.R` pins this. If you ever reorder
+[`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md),
+update that test. (3) **The shipped
+`inst/extdata/deidentified_jmac_ped.csv` cannot be cleanly QC’d by a
+plain `qcStudbook(sb)`** – it halts on a pre-existing “Subject(s) listed
+as both sire and dam” conflict (unrelated to \#46; surfaces only with
+`reportErrors = FALSE`). The species test therefore asserts on the
+column-MAPPING layer, not a full run. This data defect is a separate
+potential ticket. (4) **NEWS decision pending:** unlike the recent
+docs/config sessions, this IS a real user-facing package change (a new
+recognized pedigree column) -\> a `NEWS.md` line is arguably warranted.
+I added a CHANGELOG entry (always) but **did NOT add a NEWS line** –
+flagged as a pre-publish decision so it is a deliberate call, not an
+omission. If adding one, write plain ASCII `--`/`"` and re-render per
+the now-permanent `NEWS.Rmd` config (Learning 155);
+`grep -cP '[^\x00-\x7F]' NEWS.md` -\> 0. (5) **Item 2 (species-keyed
+gestation) is the clean follow-on** and is independent of \#28; **item 3
+is deferred** until \#28’s colocation model exists in code. (6) Carried
+standing keeps (unchanged): package **ARCHIVED on CRAN 2025-07-29**;
+CRAN Phase 5 owner-gated (`docs/planning/cran-2.0.0-phase5-runbook.md`);
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT (warning + NULL) without a LabKey credential/config; the
+offline focal path returns `nprcgenekeeprFileErr` not NULL (S155);
+exactly **ONE** codecov config (`codecov.yml`) – do NOT re-add a second;
+its embedded upload token is redundant with `secrets.CODECOV_TOKEN` +
+flagged (owner’s call); `#65` CONFIRMED RESOLVED (S160); NEWS render
+traps 132/139 CLOSED at the source on `master` (S163);
+`skip_on_cran()`-gated test files (`test_modInput.R`) need
+`NOT_CRAN=true`; standing keeps `.DS_Store` +
+`PED_GV_AUDIT_2026-05-30.html`.
+
 ### What Session 164 Did
 
 **Deliverable:** Publish S163 – push `fix-news-render` -\> PR \#67 -\>

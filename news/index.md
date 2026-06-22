@@ -3,6 +3,15 @@
 ## nprcgenekeepr (development version)
 
 - Changes
+  - File-based pedigree ingestion now treats `species` as a first-class
+    column:
+    [`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md)
+    recognizes it and places it immediately after `sex` in the canonical
+    column order, and
+    [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+    types it as character. Previously a `species` column survived only
+    as a trailing, untyped extra column. Studbooks that include a
+    `species` column now have it consistently ordered and typed.
   - [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
     now returns the full connected pedigree component for the focal
     animals (ancestors, descendants, and collaterals such as siblings,
