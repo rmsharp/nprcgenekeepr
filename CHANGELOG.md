@@ -15,7 +15,82 @@ here.
 
 ## \[Unreleased\]
 
-### 2026-06-22 — Issue \#29: renamed the exported `makeGrpNum()` to `makeGroupNum()` with a deprecated alias (Session 171)
+### 2026-06-22 — Published S171 (PR \#71): the `makeGrpNum()` -\> `makeGroupNum()` rename is on `master`; NEWS entry added; issue \#29 closed (Session 172)
+
+- **Deliverable (owner pick, single item):** publish S171’s issue \#29
+  rename
+  ([`makeGrpNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGrpNum.md)
+  -\>
+  [`makeGroupNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGroupNum.md)
+  with a deprecated alias) from `issue-29-rename-makegrpnum` to
+  `master`. **Admin/publish + docs** (no production-code logic -\> TDD
+  N/A), folding the user-facing NEWS entry into the SAME PR (Learning
+  157a). **0 stakeholder corrections.** SOLO (a serial, irreversible git
+  sequence – a workflow adds risk, not coverage). Owner picked option 1
+  (publish), then approved the merge (merge commit) at the
+  `AskUserQuestion` gate.
+
+- **Pre-publish content (one PR, Learning 157a):** added a dev-version
+  *Changes* bullet to `NEWS.Rmd` – the exported
+  [`makeGrpNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGrpNum.md)
+  is renamed to
+  [`makeGroupNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGroupNum.md)
+  for consistency with
+  [`makeGroupMembers()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGroupMembers.md),
+  with the old name kept as a deprecated alias that still works but
+  warns. Both names backtick-wrapped (so spell_check skips them) and
+  `makeGroupNum` was already in `inst/WORDLIST` (S171). Re-rendered
+  `NEWS.md` (permanent `html_preview:false`+`md_extensions:"-smart"`,
+  Learning 155) -\> **0 non-ASCII**, no stray `.html`, a confined
+  pure-insertion diff (+6/+6, line-wrap only).
+  `spell_check_package(".")` = **0 unrecognized** before and after -\>
+  no WORDLIST change needed. Committed NEWS only as `d5f58d01`; kept the
+  S172 1B stub OUT of the PR (stash-carried).
+
+- **Pre-flight (Learning 133/135):** `git fetch` (`origin/master`
+  unchanged at `25c8a14d`); branch **3 ahead / 0 behind** (clean FF,
+  `origin/master` a strict ancestor of HEAD);
+  `git merge-tree --write-tree` **0 conflict markers**; 17-file blast
+  radius = S171’s rename deliverable + S171 close-out docs + the S172
+  NEWS, all accounted for.
+
+- **Publish + CI (did NOT merge blind):** pushed; opened **PR \#71** -\>
+  `master` (body uses `Closes #29`); **all 10 checks PASS** – `lint`
+  3m33s; `R CMD check` x5 (`macos` 6m5s / `ubuntu` release 7m3s +
+  oldrel-1 7m28s + **devel 16m34s** / `windows` 9m44s); **`pkgdown`
+  5m44s** (confirms the two-name `inst/_pkgdown.yml` change, S171 Gotcha
+  4); `test-coverage` 4m51s; **`codecov/patch` + `codecov/project`
+  PASS** (test-adding PR -\> coverage stayed green, Learning 152). The
+  background `--watch` exited 0 but I re-queried FRESH with non-watch
+  `gh pr checks 71` (10 `pass`, exit 0) before proceeding (Learning
+  157).
+
+- **Merge + reconcile (Learning 133/146):** `AskUserQuestion`-gated the
+  irreversible merge (owner: “Yes, merge commit”); guarded fresh
+  pre-merge re-check (state OPEN, MERGEABLE, CLEAN, `headRefOid` ==
+  local `d5f58d01`, `origin/master` still `25c8a14d`);
+  `gh pr merge 71 --merge` -\> merge commit **`ae3b8bb6`** (verified
+  `state: MERGED`, `mergedBy: rmsharp` firsthand); **issue \#29
+  auto-closed** by `Closes #29` (`closedAt` 21:48:51, one second after
+  the merge). Reconciled local `master` via verified `git fetch` +
+  ancestor-gated `reset --hard` (asserted both old-master `25c8a14d` AND
+  merged-head `d5f58d01` are ancestors of `origin/master` BEFORE
+  resetting); popped the S172 stub.
+
+- **Branch cleanup (verified-merged-before-delete, S154/S157):** deleted
+  `issue-29-rename-makegrpnum` local (`git branch -d`, was `d5f58d01`) +
+  remote (`git push origin --delete`) + `fetch --prune`; verified **NO
+  ref remains** (local + remote-tracking empty;
+  `gh api .../branches/issue-29-rename-makegrpnum` -\> **404**).
+
+- **Verification (Phase-3E):** no NEW runtime behavior introduced by
+  S172 – the runtime change is S171’s rename, re-verified on the exact
+  merge-result tree by PR \#71’s `R CMD check` x5 matrix
+  (incl. ubuntu-devel), all PASS -\> `master` at `ae3b8bb6` builds clean
+  and contains the deliverable (confirmed firsthand: `R/makeGroupNum.R`
+  present, `R/makeGrpNum.R` gone, NAMESPACE exports both, NEWS entry
+  present, `test_makeGroupNum.R` present). The NEWS change is docs
+  (render clean, 0 non-ASCII, 0 spell delta).
 
 - **Deliverable (owner pick, single item):** issue \#29 – rename the
   exported convenience helper
@@ -32,6 +107,7 @@ here.
   corrections.** SOLO (a contained, fully `git grep`-inventoried,
   test-anchored rename – a multi-agent sweep adds no coverage over the
   exhaustive grep).
+
 - **Decisions (pre-RED `AskUserQuestion` gates):** (1) **backward
   compatibility** – keep
   [`makeGrpNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGrpNum.md)
@@ -45,6 +121,7 @@ here.
   structure** (at the GREEN gate) – document the alias on its OWN man
   page (`man/makeGrpNum.Rd`, deprecation note + `@seealso`) over merging
   onto one page via `@rdname`.
+
 - **Evidence-based inventory (`git grep`, exhaustive over tracked
   files):** 8 code locations – `R/makeGrpNum.R` (def),
   `R/fillGroupMembers.R:40` (the one real in-package caller),
@@ -56,6 +133,7 @@ here.
   `TECH_DEBT_AUDIT_*`, `docs/audits/*`) describe the past state and were
   NOT rewritten. The target name `makeGroupNum` was unused everywhere
   beforehand.
+
 - **Change:** `git mv R/makeGrpNum.R R/makeGroupNum.R`;
   `makeGroupNum(numGp)` is the canonical function (original body
   unchanged, full roxygen, `@export`); `makeGrpNum(numGp)` is a thin
@@ -69,6 +147,7 @@ here.
   names. `inst/WORDLIST` += `makeGroupNum` (the function name appears as
   bare prose in the alias page `\title{}`; same lever as the
   already-present `grpNum`, Learning 159).
+
 - **Tests (RED -\> GREEN, new `tests/testthat/test_makeGroupNum.R`, 2
   blocks / 4 expectations):** `makeGroupNum(3L) == list(1L,2L,3L)` and
   `makeGroupNum(1L) == list(1L)` (RED failed: function did not exist);
@@ -77,6 +156,7 @@ here.
   function did not warn). Both pass at GREEN; the existing
   `test_fillGroupMembersWithSexRatio.R` (its call switched to
   `makeGroupNum`) stays green with no deprecation-warning leak.
+
 - **Verification:** build-equivalent
   `devtools::check(vignettes = FALSE)` (Learning 161) = **0 errors / 0
   warnings / 0 notes**; full suite **0 failed / 0 errors** (5 warnings =
@@ -91,6 +171,7 @@ here.
   [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html) +
   re-lint -\> 0); `spell_check_package(".")` **0 unrecognized**; **0
   non-ASCII** across all changed files.
+
 - **Committed on feature branch `issue-29-rename-makegrpnum`** (not
   `master`); the **NEWS entry** (user-facing: a renamed exported
   function with a soft-deprecated alias) is the publish session’s
