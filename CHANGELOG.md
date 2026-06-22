@@ -15,6 +15,54 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-21 — Permanent NEWS render fix: `html_preview:false` + pandoc smart-off in `NEWS.Rmd`, re-rendered `NEWS.md` to pure ASCII (Session 163)
+
+- **Deliverable (owner pick, single item):** fix the two recurring NEWS
+  render traps **at the source** instead of working around them on every
+  render. **Build-config/docs hygiene** — `NEWS.Rmd` is the
+  `.Rbuildignore`d source (`.Rbuildignore:39`) for the shipped
+  `NEWS.md`; no package R code, no tests → **TDD N/A** (confirmed in
+  grounding before declaring). **0 stakeholder corrections.** SOLO (a
+  small surgical config + re-render; grounding was firsthand reads + a
+  throwaway-file mechanism test, not a fan-out). Committed on feature
+  branch `fix-news-render` (owner pick); publish is a separate
+  decision/session.
+- **The two traps (both confirmed live in grounding):** (1) **Learning
+  139** — `github_document` defaults to `html_preview: true`, dropping a
+  top-level `NEWS.html` that `R CMD check` flags as a non-standard-file
+  NOTE; the standing workaround was deleting it after every render. (2)
+  **Learning 132** — pandoc’s `smart` extension turned source `--` →
+  en-dash and straight quotes → curly in `NEWS.md` (**40 non-ASCII
+  lines**), and a quote sitting against a word became a bogus spell/lint
+  token.
+- **Mechanism verified before touching anything tracked:** on throwaway
+  `/tmp` Rmds (pandoc 3.1.1 / rmarkdown 2.31), `md_extensions: "-smart"`
+  rendered the same input to pure ASCII and `html_preview: false`
+  suppressed the `.html` byproduct — a verified plan, not a hypothesis.
+- **Change (4 source edits to `NEWS.Rmd`):** set the `github_document`
+  output to `html_preview: false` + `md_extensions: "-smart"`; fixed the
+  2 source lines (`:189`, `:213`) carrying **literal** curly quotes
+  baked into the source (a smart-off re-render alone would not touch
+  those). Re-rendered `NEWS.Rmd` → `NEWS.md`.
+- **Verification (content-invariance + both build-equivalents):**
+  `NEWS.md` is now **0 non-ASCII** (was 40 lines); **no `NEWS.html`
+  byproduct** is created; normalizing the old `NEWS.md`’s smart-bytes
+  back to ASCII and diffing vs the new render left only **one benign
+  soft-wrap shift** (`--as-cran` is 4 columns wider than `–as-cran`, so
+  “system.” breaks one word later) — **zero content change**. The
+  package build-equivalent (`R CMD build` + `R CMD check --as-cran`)
+  passed with **no NEWS-related finding** (no top-level `NEWS.html`
+  NOTE; full `testthat` suite OK); the 2 WARNINGs + the vignette-index
+  part of the 1 NOTE are artifacts of the fast `--no-build-vignettes`
+  build, and the remaining NOTE items are standing (archived-on-CRAN,
+  new-submission).
+- **No NEWS entry:** a NEWS infrastructure/encoding change is not a
+  user-facing package change → CHANGELOG only
+  (\[\[news-vs-changelog\]\]; mirrors how S139 handled the original
+  render fix). **Standing gotchas 132/139 are now closed** —
+  re-rendering NEWS no longer needs a manual delete/reword. → Learning
+  155.
+
 ### 2026-06-21 — Documentation cross-link pass: consistent “See also” sections across the five scripting articles (Session 162)
 
 - **Deliverable (owner pick, single item):** make the “See also”

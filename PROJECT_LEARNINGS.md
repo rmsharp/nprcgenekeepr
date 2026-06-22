@@ -10249,3 +10249,63 @@ any “make X consistent / uniform across these files”, “cross-link these
 docs”, “standardize the See-also / front-matter / headers” task; any
 time an owner asks whether several small items fit one 1-and-done
 session.
+
+#### Learning 155 – A recurring render-time artifact that a standing gotcha tells you to “work around on every render” should be eliminated at the RENDERER-CONFIG SOURCE so the workaround is never needed again – this turns a standing gotcha into a CLOSED one. Here two NEWS render traps that S139/S147 had been hand-mitigating every time were fixed permanently with two `NEWS.Rmd` `github_document` knobs: `html_preview: false` (no top-level `NEWS.html` byproduct -\> no “non-standard file at top level” `R CMD check` NOTE; Learning 139) and `md_extensions: "-smart"` (pandoc’s `smart` extension OFF -\> source `--` and straight quotes render to ASCII `--`/`"` instead of en-dash/curly; Learning 132). Three execution rules that made it clean: (1) VERIFY both knobs on throwaway `/tmp` Rmds BEFORE touching anything tracked – prove `-smart` yields ASCII output and `html_preview:false` suppresses the `.html`; you then present a verified plan, not a hypothesis. (2) Smart-off fixes FUTURE renders, but pre-existing LITERAL curly quotes baked into the SOURCE survive a re-render – find them with `grep -nP '[^\x00-\x7F]'` on the `.Rmd` (here `NEWS.Rmd:189`/`:213`) and fix each at the source. (3) When re-rendering to clean historical bytes, prove the regenerated file is CONTENT-INVARIANT by normalizing the OLD file’s smart-bytes back to ASCII (`perl -CSD -pe 's/\x{201C}|\x{201D}/"/g; s/\x{2018}|\x{2019}/\x27/g; s/\x{2013}/--/g; s/\x{2014}/---/g; s/\x{2026}/.../g'`) and diffing vs the new render – the residual should be EMPTY or only a benign SOFT-WRAP shift (an en-dash is 1 column, `--` is 2, so a line near pandoc’s ~79-col wrap can break one word later – same words, different newline; NOT a content change). The NEWS-encoding change earns a CHANGELOG entry, NOT a NEWS line (NEWS infrastructure is not a user-facing package change; \[\[news-vs-changelog\]\]). (S163, permanent NEWS render fix)
+
+**What happened.** Orientation’s S162 handoff listed “Permanent NEWS
+render fix” as the first suggested-next, naming the exact mechanism
+(`html_preview:false` + smart-off, ends both Learning 139 and 132,
+cleans the pre-existing curly bytes). Owner picked it. Grounding read
+`NEWS.Rmd` + `NEWS.md` firsthand and Learnings 132/139 verbatim: the
+`github_document` output was `github_document: default` (so
+`html_preview` defaulted true; the dev had to delete `NEWS.html` after
+every render) and `NEWS.md` carried **40** non-ASCII lines (curly
+quotes + en-dashes from pandoc smart). Crucially,
+`grep -P '[^\x00-\x7F]'` on the SOURCE showed `NEWS.Rmd` itself had 2
+lines (`:189` `lint_dir(`+curly`R`+curly`)`, `:213` curly `Y`/`YES`/…)
+with LITERAL curly quotes – a smart-off re-render would leave those, so
+they needed their own source edit. Verified the mechanism on two `/tmp`
+Rmds before touching the repo: default output produced `– none`/`“Y”`,
+while `md_extensions:"-smart"` + `html_preview:false` produced ASCII
+`-- none`/`"Y"` and NO `.html`. Then on branch `fix-news-render`: 4
+edits to `NEWS.Rmd` (the 2 YAML knobs + the 2 source-curly lines),
+re-rendered
+([`rmarkdown::render`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)).
+Result: `NEWS.md` 0 non-ASCII (was 40), no `NEWS.html` created, title
+block reproduced faithfully. Content-invariance proof: normalized the
+old `NEWS.md`’s smart-bytes to ASCII and diffed vs the new render -\>
+the ONLY residual was one soft-wrap
+(`Checking (--as-cran --run-donttest) ... on my system.` – `--as-cran`
+is 4 cols wider than the old `–as-cran`, so pandoc wrapped “system.” to
+the next line; identical words). Package build-equivalent:
+`R CMD build` + `R CMD check --as-cran` (exit 0) -\> tarball has
+`NEWS.md` only (no `NEWS.Rmd`/`NEWS.html`), no top-level-`NEWS.html`
+NOTE, full `testthat` suite OK; the 2 WARNINGs + vignette-index NOTE
+were artifacts of my fast `--no-build-vignettes` build, the rest
+standing (archived-on-CRAN/new-submission) – zero NEWS-related findings.
+CHANGELOG not NEWS (S139 precedent + \[\[news-vs-changelog\]\]).
+
+**Reflexes:** \[eliminate a recurring render/tooling artifact at the
+renderer-config SOURCE rather than re-applying the manual workaround
+each time – a standing “delete X / reword Y every render” gotcha is a
+signal to close it permanently\]\[verify a tooling-config fix on
+throwaway files BEFORE touching tracked files, so the phase gate
+presents a proven plan not a hypothesis
+(\[\[consult-project-source-of-truth\]\]/verify-first)\]\[a `smart`-off
+re-render fixes FUTURE output but pre-existing LITERAL non-ASCII baked
+into the SOURCE survives – grep the SOURCE for `[^\x00-\x7F]` and fix
+each at the source\]\[prove a bulk re-render is content-invariant by
+normalizing the OLD file’s smart-bytes to ASCII and diffing vs the new
+render; expect EMPTY or only a benign soft-wrap shift (en-dash 1 col vs
+`--` 2 cols moves a wrap), never new/changed words – Learning 132’s
+“confirm the diff is confined” made rigorous\]\[a NEWS
+encoding/infrastructure change is CHANGELOG-not-NEWS
+(\[\[news-vs-changelog\]\])\]\[scope the build-equivalent honestly: a
+`--no-build-vignettes` fast check introduces vignette-index WARNINGs
+that are build-flag artifacts, not regressions – say so rather than
+treating them as findings, and note CI’s full build won’t have them\].
+**Apply:** any “fix the render config / make the rendered output clean”
+task for an `.Rmd`/`.qmd`/templated generated file; any standing gotcha
+of the form “after rendering X, delete/reword Y” – prefer closing it at
+the config source; any bulk re-render where you must prove no content
+changed.

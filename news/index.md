@@ -251,7 +251,7 @@ CRAN release: 2025-04-24
     getDatedFileName.R to prepare for newer code in development version
     of
     18. 
-  - Technical edits of R code based on `lintr::lint_dir(“R”)`
+  - Technical edits of R code based on `lintr::lint_dir("R")`
 
 ## nprcgenekeepr 1.0.5.9003 (20220625)
 
