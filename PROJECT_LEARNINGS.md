@@ -10621,3 +10621,56 @@ cross-file/exported symbols\]. **Apply:** any Shiny module that should
 default an input from loaded data while staying user-overridable; any
 testServer test of an `update*Input` effect; any per-key UI default
 whose shipped lookup collapses to the fallback.
+
+#### Learning 161 – The local fast `R CMD check` is NOT apples-to-apples with the PR CI matrix, and its extra WARNINGs/NOTE can be artifacts of the LOCAL tree + build flags rather than publishable-tree defects – prove each is outside the git tree before chasing it, and treat PR CI (which checks out the git tree on 5 platforms and builds vignettes) as the authoritative gate. Three concrete sources seen this session, none a real defect: (a) **an untracked stray file with a non-portable name trips “checking for portable file names”** – `R CMD build` sweeps in UNTRACKED files from the package dir, so a macOS/cloud-sync duplicate like `tests/testthat/test_species_first_class 2.R` (the ” 2” suffix, a space -\> non-portable) lands in the tarball and WARNs locally, yet it is not in git so CI never sees it; ISOLATE by moving it aside (`mv` to /tmp) and re-running the check (WARNING -\> OK confirms it was the sole delta), then restore it as-found (do not delete an uncommitted file without owner say-so, SAFEGUARDS); (b) **`--no-build-vignettes` leaves `inst/doc` empty -\> two spurious vignette WARNINGs** (“Files in the ‘vignettes’ directory but no files in ‘inst/doc’” + “Directory ‘inst/doc’ does not exist”) – CI builds vignettes so they do not appear there; for a clean local read use `devtools::check(vignettes = FALSE)` (suppresses the inst/doc check) or actually build vignettes; (c) **`--as-cran` incoming-feasibility yields the STANDING archived-on-CRAN NOTE** (“Package was archived on CRAN”, “New submission”) whenever the check reaches the network – permanent since 2025-07-29, not a finding. Net: a docs-only publish that returns “3 WARNINGs + 1 NOTE” locally can still be 0 publishable-tree findings; the proof is PR CI passing clean on the merge-result tree. (S170, publish S169 – PR \#70, issue \#46 item 2b)
+
+**What happened.** Owner picked option 1 (publish S169’s item-2b UI
+prefill). One pre-publish step per the S169 handoff: a NEWS *Changes*
+bullet for the prefill, phrased to match item 2’s honest “no-op on
+shipped data” framing; re-rendered `NEWS.md` (Learning 155 config) -\> 0
+non-ASCII, confined insertion; `spell_check_package` 0 unrecognized
+before/after (dictionary covers “gestational”/“rhesus”/“macaque”;
+“prefill” already in WORDLIST from S169) -\> no WORDLIST change. The
+build-equivalent pre-flight on the deliverable tree returned 3
+WARNINGs + 1 NOTE; rather than hand-wave, I attributed each: the
+portable-file-names WARNING named the untracked stray
+`test_species_first_class 2.R` outright (log line: “Found the following
+file with a non-portable file name”), so I moved it to /tmp and
+re-checked (-\> portable-file-names OK; remaining = the 2 vignette
+WARNINGs from `--no-build-vignettes` + the standing CRAN NOTE),
+confirming the stray was the sole non-artifact WARNING, then restored it
+exactly as found. Committed NEWS only (`9c8e0d0f`; the S170 1B stub
+stash-carried out of the PR). Pre-flight clean (fetch exit 0,
+`origin/master` `866da44f`, 3-ahead/0-behind clean FF, merge-tree 0
+conflicts, 10-file blast radius all expected). PR \#70; all 10 checks
+PASS (ubuntu-devel 21m54s the long pole; codecov/project green per
+Learning 152) – the clean `--watch` exit re-verified fresh non-watch
+(Learning 157). `AskUserQuestion`-gated merge (owner: merge commit) with
+a guarded fresh pre-merge re-check -\> merge commit `3446577a` (verified
+MERGED firsthand); reconciled `master` via verified fetch +
+ancestor-gated `reset --hard` (both old-master `866da44f` and
+merged-head `9c8e0d0f` asserted ancestors first); stash-popped the stub;
+verified-merged-before-delete branch cleanup (local+remote deleted,
+`gh api` 404).
+
+**Reflexes:** \[local fast `R CMD check` is not apples-to-apples with PR
+CI – attribute every extra WARNING/NOTE to either the LOCAL tree
+(untracked files) or a build FLAG before treating it as a defect; PR CI
+on the git tree across 5 platforms is the authoritative
+gate\]\[`R CMD build` includes UNTRACKED files from the package dir -\>
+a stray file with a space/non-portable name (a macOS/cloud-sync ” 2”
+duplicate) WARNs locally but is not in git and never reaches CI; isolate
+by moving it aside + re-checking, then restore as-found – do not delete
+an uncommitted file without owner say-so\]\[`--no-build-vignettes`
+empties `inst/doc` -\> spurious “files in vignettes / no inst/doc”
+WARNINGs; use `devtools::check(vignettes = FALSE)` or build vignettes
+for a clean local read\]\[`--as-cran` incoming-feasibility re-emits the
+STANDING archived-on-CRAN NOTE when it reaches the network – permanent,
+not a finding\]\[a NEWS edit usually needs no WORDLIST change:
+dictionary words (gestational, rhesus, macaque) and backticked code are
+not flagged – but run `spell_check_package` before/after to KNOW the
+delta (Learning 159)\]. **Apply:** any publish/build-equivalent run that
+returns more WARNINGs/NOTEs than the prior session’s reported baseline;
+any local `R CMD check` after a macOS/iCloud/Dropbox sync (stray ” 2”
+duplicates); any time deciding whether a local check finding blocks a
+push to `master`.
