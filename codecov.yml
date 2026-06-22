@@ -1,7 +1,15 @@
+# Single source of truth for Codecov configuration (issue #65).
+# Consolidated from the former codecov.yml + .codecov.yml: two root config
+# files caused the status-less .codecov.yml to win precedence, so the intended
+# project/patch thresholds were never applied -- Codecov fell back to its
+# default 0% threshold, failing PRs on any coverage dip. Keep ONE file.
 comment: false
 codecov:
- token: 91d6f123-db2d-4177-ae13-35b926f8240f
+  token: 91d6f123-db2d-4177-ae13-35b926f8240f
 coverage:
+  round: up
+  range: 20..100
+  precision: 2
   status:
     project:
       default:

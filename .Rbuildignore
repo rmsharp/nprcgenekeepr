@@ -46,7 +46,6 @@ README\.*\.png$
 ^inst/extdata/meeting_notes\.
 ^inst/extdata/rhesus_studbook*$
 ^CODE_OF_CONDUCT\.md$
-^\.codecov\.yml$
 ^rsconnect*$
 ^rsconnect/*$
 ^images$
