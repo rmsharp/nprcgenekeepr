@@ -50,7 +50,12 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getPotentialParents</span><span class="op">(</span><span class="va">ped</span>, <span class="va">minParentAge</span>, <span class="va">maxGestationalPeriod</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getPotentialParents</span><span class="op">(</span></span>
+<span>  <span class="va">ped</span>,</span>
+<span>  <span class="va">minParentAge</span>,</span>
+<span>  maxGestationalPeriod <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  gestationTable <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -70,17 +75,28 @@ performed for animals with missing birth dates.</p></dd>
 
 
 <dt id="arg-maxgestationalperiod">maxGestationalPeriod<a class="anchor" aria-label="anchor" href="#arg-maxgestationalperiod"></a></dt>
-<dd><p>integer value describing the maximum number of
-days between conception and birth for the species being analyzed (a
-conservative upper bound, e.g. 210 for rhesus whose typical gestation is
-about 165 days). It is used two ways: (1) a sire who exited the colony
-between conception (birth - maxGestationalPeriod) and birth is still
-retained as a candidate; and (2) a female who delivered another offspring
-within maxGestationalPeriod days of the focal birth is excluded as a
-candidate dam, because a female bears one offspring at a time. The sire
-check uses presence at conception while the dam check uses presence at
-birth; this asymmetry is intentional – a sire need only be present to
-conceive, whereas a dam must be present through the pregnancy to give birth.</p></dd>
+<dd><p>integer maximum number of days between conception
+and birth for the species being analyzed (a conservative upper bound, e.g.
+210 for rhesus whose typical gestation is about 165 days). When <code>NULL</code>
+(the default) the window is looked up per animal from the <code>species</code>
+column of <code>ped</code> via <code><a href="getSpeciesGestation.html">getSpeciesGestation</a></code>, falling back to
+210 days for animals whose species is missing or unrecognized; supply an
+explicit integer to use one fixed window for every animal. It is used two
+ways: (1) a sire who exited the colony between conception
+(birth - maxGestationalPeriod) and birth is still retained as a candidate;
+and (2) a female who delivered another offspring within maxGestationalPeriod
+days of the focal birth is excluded as a candidate dam, because a female
+bears one offspring at a time. The sire check uses presence at conception
+while the dam check uses presence at birth; this asymmetry is intentional –
+a sire need only be present to conceive, whereas a dam must be present
+through the pregnancy to give birth.</p></dd>
+
+
+<dt id="arg-gestationtable">gestationTable<a class="anchor" aria-label="anchor" href="#arg-gestationtable"></a></dt>
+<dd><p>optional data.frame (columns <code>species</code>,
+<code>gestation</code>) passed to <code><a href="getSpeciesGestation.html">getSpeciesGestation</a></code> for the
+per-animal lookup when <code>maxGestationalPeriod</code> is <code>NULL</code>. Defaults
+to <code>NULL</code>, which uses the bundled <code><a href="speciesGestation.html">speciesGestation</a></code> table.</p></dd>
 
 </dl></div>
     <div class="section level2">

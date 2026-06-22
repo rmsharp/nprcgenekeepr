@@ -10432,3 +10432,75 @@ origin/master unchanged) – “don’t merge blind” is about VERIFICATION,
 the gate that the owner removed is only the prompt\]. **Apply:** any
 publish session, especially one carrying a user-facing code/feature
 change; any session that watches CI via `gh pr checks --watch`.
+
+#### Learning 158 – When a per-key feature ships a lookup table whose only seeded value EQUALS the fallback default (here `speciesGestation` = one row, rhesus -\> 210, with a 210 fallback), the feature is a no-op on shipped data, so a CONSUMER-level test cannot observe key differentiation and an “ignores the key, always uses the default” bug would pass GREEN – the consumer-boundary corollary of Learning 156 (test the discriminator, not presence). The fix that keeps the owner’s single-row table AND makes per-key behavior genuinely testable is to add a table-INJECTION parameter at the consumer boundary (`getPotentialParents(..., gestationTable = NULL)`, threaded to `getSpeciesGestation`) so a RED test can inject a multi-row fixture with DISTINCT values plus a mixed-key fixture and assert the per-key path changes the output (here a RHESUS=210 vs TESTSP=90 mixed-species pedigree where one shared candidate dam is excluded for the 210 focal but retained for the 90 focal – a single fixed window cannot satisfy both). Two operational corollaries on consuming a NEW `data/` object from a package function: (a) reference it by bare name and add `utils::globalVariables("<obj>")` to suppress the “no visible binding for global variable” `R CMD check` NOTE (precedent `R/modSummaryStats.R:4`); (b) `lintr`’s `object_usage_linter` resolves globals against the INSTALLED namespace, so a NEW exported function or NEW data object referenced across files throws a FALSE “no visible global function/binding” lint until you `devtools::install(quick = TRUE)` – re-install before trusting single-file lint, then the warnings clear. (S167, issue \#46 item 2 – species-keyed gestation period)
+
+**What happened.** Owner picked \#46 item 2 (make the 210-day
+rhesus-specific `maxGestationalPeriod` species-keyed off the
+now-first-class `species` column). A read-only 4-agent grounding
+workflow + firsthand reads of
+`getPotentialParents.R`/`modPotentialParents.R` established the flow: a
+single scalar window used per focal animal at the sire (`:69`) and dam
+(`:84-85`) checks; species rides along on `ped` but nothing keys off it;
+the package ships reference data as 24 `data/*.RData` objects (LazyData)
+built in `data-raw/`, vs `inst/extdata` for user site-config; the only
+real species strings are “JAPANESE MACAQUE” (JMAC csv, falls back to
+210) and rhesus (the 210 default). A pre-RED `AskUserQuestion` gate let
+the owner choose: exported `data/` object, seed rhesus=210 + 210
+fallback, optional arg + per-focal lookup. The load-bearing realization:
+with rhesus=210=fallback, the shipped table makes the feature observably
+identical to today, so the consumer test of “keys per species” would be
+a false-GREEN against an ignores-species impl – hence the
+`gestationTable` injection param, which made the mixed-species
+RHESUS/TESTSP discriminator test possible. RED: 10 helper expectations
+(`test_getSpeciesGestation.R`) + 3 `getPotentialParents` expectations,
+all failing for the right reason (missing function/data object, missing
+arg default, unused `gestationTable`). GREEN (minimum): the `data/`
+object + build script + `R/data.R` doc, the vectorized
+`getSpeciesGestation` (case/whitespace-insensitive
+[`match()`](https://rdrr.io/r/base/match.html), NA/unknown/empty -\>
+default, integer) + `globalVariables`, and `getPotentialParents`
+precomputing `mgpVec` once (per-focal
+`getSpeciesGestation(pUnknown$species, gestationTable)` when
+`maxGestationalPeriod` is NULL, recycled scalar otherwise) then
+`mgp <- mgpVec[i]` in the loop. First lint pass flagged the new
+cross-file symbols as “no visible global function/binding” – artifacts
+of linting under `load_all` before install;
+`devtools::install(quick=TRUE)` cleared both to 0 lints. Verification:
+full suite 0/0, `R CMD check` 0 errors/0 warnings/1 NOTE – and the NOTE
+was firsthand-proven PRE-EXISTING (S166’s “untyped” in `NEWS.md`,
+wordlist gap; `NEWS.md`/`WORDLIST`/`spelling.Rout.save` unchanged this
+session, none of my files contain “untyped”), so my change introduced
+zero new check findings. REFACTOR skipped (owner-approved): the GREEN
+code already matched house style. UI prefill + the NEWS entry + the
+pre-existing spelling NOTE were each deferred (flagged, not omitted).
+Committed on `issue-46-species-gestation`; publish is a separate
+session.
+
+**Reflexes:** \[a per-key feature whose SHIPPED table collapses to the
+fallback (only value == default) is observably a no-op on shipped data –
+a consumer test can’t see differentiation and an “ignores the key” bug
+passes GREEN; add a table/lookup INJECTION parameter at the consumer
+boundary so a RED fixture can supply DISTINCT values + a mixed-key case
+and prove the per-key path changes output (consumer-boundary corollary
+of Learning 156)\]\[to test per-FOCAL keying, build a mixed-key fixture
+where ONE shared candidate is included under one key’s window and
+excluded under another’s, and keep a second always-valid candidate so
+the exclusion does not trip the empty-set fallback\]\[consuming a NEW
+`data/` object from a package function: reference it bare +
+`utils::globalVariables("<obj>")` to kill the no-visible-binding NOTE
+(precedent `modSummaryStats.R`)\]\[`lintr` object_usage resolves against
+the INSTALLED namespace -\> NEW cross-file functions/data objects throw
+FALSE lints under `load_all`; `devtools::install(quick=TRUE)` before
+trusting single-file lint\]\[make a new exported optional arg
+backward-compatible by defaulting it to the historical behavior (here
+`maxGestationalPeriod = NULL` keys by species, an explicit integer
+recycles the old single-window path – existing callers passing `210L`
+are unchanged)\]\[a verification NOTE that surfaces in YOUR check but
+lives in a file you did not touch: prove it pre-existing firsthand (git
+blame / unchanged-in-working-tree / your files don’t contain the term)
+and flag it as a follow-up rather than silently fixing it out of scope
+(FM \#8)\]. **Apply:** any “key behavior X off field Y via a lookup”
+feature, especially where the shipped table is small or collapses to the
+default; any package function that consumes a new `data/` object; any
+session whose verification surfaces a NOTE in an untouched file.

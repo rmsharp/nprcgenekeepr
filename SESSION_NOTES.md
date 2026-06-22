@@ -7,6 +7,273 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 167 Did
+
+**Deliverable:** Issue \#46 **item 2** – make the gestation window
+**species-keyed**: replace the rhesus-specific scalar
+`maxGestationalPeriod` (210) with a per-species lookup keyed on the
+now-first-class `species` column. **(DONE – committed on feature branch
+`issue-46-species-gestation`; UNPUBLISHED.)** **Started / Completed:**
+2026-06-22 **Status:** **DONE.** Code change (`R/` + tests + a new
+`data/` object) -\> **strict TDD**, every transition gated via
+`AskUserQuestion` (pre-RED design decision -\> PRE-RED-\>RED -\>
+RED-\>GREEN -\> GREEN-\>REFACTOR\[skipped, owner-approved\]). **0
+stakeholder corrections.** HYBRID under ultracode: a read-only **4-agent
+grounding workflow** (gestation flow / data+config patterns / species
+values+tests / per-species precedents), then SOLO for the file-mutating
+TDD work. The deliverable is **committed but UNPUBLISHED** on branch
+`issue-46-species-gestation`; `master` unchanged at `cae02dde`. -
+**DESIGN (the load-bearing pre-RED `AskUserQuestion` gate):** owner
+chose **(1)** an **exported `data/` object** (`speciesGestation`) –
+matches the package’s 24 `data/*.RData` objects (LazyData, built in
+`data-raw/`), not an `inst/extdata` site-config; **(2)** seed **rhesus =
+210 + a 210 fallback** (ship the mechanism; the table is the extensible
+home – differentiation is exercised by test fixtures, not the single-row
+shipped table); **(3)** make `maxGestationalPeriod` **optional (NULL)**
+with a **per-focal-animal** species lookup. Pre-RED scope gate also
+deferred the **UI prefill** to a follow-up slice (vertical-slice
+discipline: this slice is end-to-end for scripted use). - **GROUNDING
+-\> the discriminator problem:**
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+uses one scalar window per focal animal at the sire (`:69`) and dam
+(`:84-85`) checks; species rides along on `ped` but nothing keys off it.
+KEY realization: with rhesus=210=fallback, the **shipped** table makes
+the feature observably identical to today, so a consumer-level “keys per
+species” test would be a **false-GREEN** against an ignores-species impl
+(Learning 156’s consumer-boundary corollary). Fix: add a
+`gestationTable = NULL` **injection param** to `getPotentialParents` so
+a RED test can inject a 2-row fixture with DISTINCT values + a
+mixed-species pedigree and prove the per-animal path changes the output.
+-\> **Learning 158.** - **RED (gated):** `test_getSpeciesGestation.R`
+(new, 10 blocks) + `test_getPotentialParents.R` (+3). All 13 failed for
+the RIGHT reason (missing `getSpeciesGestation`, missing
+`speciesGestation` data object, missing `maxGestationalPeriod` default,
+unused `gestationTable`); existing 7 `getPotentialParents` tests stayed
+green. - **GREEN (gated, minimum impl):** `data-raw/speciesGestation.R`
+(seed `RHESUS`-\>210L) run to build `data/speciesGestation.RData`;
+`R/data.R` roxygen block; new exported
+`getSpeciesGestation(species, gestationTable = NULL, default = 210L)`
+(`R/getSpeciesGestation.R`) – vectorized, case/whitespace-insensitive
+[`match()`](https://rdrr.io/r/base/match.html), NA/unknown/empty -\>
+default, integer return, `utils::globalVariables("speciesGestation")`;
+`R/getPotentialParents.R` – `maxGestationalPeriod = NULL` +
+`gestationTable = NULL`, precompute `mgpVec` once (per-focal
+`getSpeciesGestation(pUnknown$species, gestationTable)` when NULL,
+recycled scalar otherwise), `mgp <- mgpVec[i]` at the two windows;
+roxygen updated. `document()` regenerated `man/getSpeciesGestation.Rd`,
+`man/speciesGestation.Rd`, `man/getPotentialParents.Rd` + `NAMESPACE`. -
+**REFACTOR: skipped (owner-approved at the GREEN-\>REFACTOR gate)** –
+the minimum impl already matched house style; no structural change added
+value without risk.
+
+**Phase-3E (build-equivalent / runtime smoke): SATISFIED.** Deliverable
+is library-function behavior
+(`getPotentialParents`/`getSpeciesGestation`), exercised by the full
+`testthat` suite under `R CMD check` (no-vignette/-manual, the
+documented fast build-equivalent) = **0 errors / 0 warnings / 1 NOTE**.
+Target files 23 + 27 pass; full suite **0 failed / 0 errors** (5
+warnings pre-existing in `test_modPyramid.R`); `lintr` **0 lints** on
+changed files (after `devtools::install(quick=TRUE)`); all changed/new
+files **0 non-ASCII**. No Shiny/startup behavior changed (UI deferred)
+-\> no app launch needed. **The 1 NOTE is pre-existing and not mine**
+(see Gotcha 4).
+
+**Session 166 Handoff Evaluation (by Session 167): Score 9/10.** S166’s
+`=> SUGGESTED NEXT` listed **“#46 item 2 – species-keyed gestation)
+\[the agreed next session\]”** as the FIRST option with the exact
+consumer sites (`R/getPotentialParents.R`; UI default
+`R/modPotentialParents.R:80`), the independence from \#28, and – most
+valuably – the **load-bearing pre-RED design decision named explicitly**
+(“WHERE the species-\>gestation table lives (a new `data/` object vs an
+`inst/extdata` config), and WHICH species/values to seed … needs an
+`AskUserQuestion` scope/approach gate BEFORE RED”). That is exactly the
+gate I ran, so zero rediscovery of WHAT/WHERE. Its **Gotcha 3 held and
+steered the tests**: “item 2’s tests should NOT rely on a full JMAC
+pipeline run (assert on the layer they change, per Learning 156)” – I
+built hand-made fixtures and asserted on the helper + a targeted
+`getPotentialParents` discriminator, never a full JMAC run. Every
+standing keep held firsthand (clean `master` at `cae02dde` = S166
+close-out, ghost-check clean; dashboard 98/100; the species-after-sex
+placement contract; the JMAC “both sire and dam” defect;
+archived-on-CRAN; fail-soft LabKey). ROI strongly positive. **The -1:**
+a suggested-next pointer has a low ceiling – it could not foresee the
+*single-row-table-collapses-to-fallback* testability problem or the
+`gestationTable`-injection insight (mine to derive via grounding), and
+it did not enumerate the data/config patterns (I grounded those). Clean,
+accurate, well-organized.
+
+**Self-assessment (Session 167): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check -\> HEAD `cae02dde` = S166, no
+undocumented commits), reported, STOPPED for the owner’s pick; claimed
+the session with a 1B stub BEFORE technical work. **Strengths:** (1)
+**grounded before designing** – a read-only 4-agent workflow + firsthand
+reads of the two files I’d modify turned “make it species-keyed” into
+three crisp owner decisions surfaced via `AskUserQuestion`; (2) **caught
+the false-GREEN trap before writing tests** – recognized that
+rhesus=210=fallback makes the shipped feature a no-op, so a naive
+consumer test would pass against an ignores-species impl; added the
+`gestationTable` injection param so the per-animal discriminator is
+genuinely testable (the mixed-species RHESUS=210/TESTSP=90 fixture,
+hand-verified through the dam-exclusion + proven-breeder logic), the
+session’s best decision (Learning 158); (3) **strict TDD with every
+transition gated** per the project contract, RED failing for the right
+reason on all 13, GREEN the minimum impl, REFACTOR consciously skipped
+with owner approval; (4) **vertical-slice discipline** – deferred the UI
+prefill as a separate slice rather than horizontal-slicing the whole
+feature, and the scripted path is end-to-end working; (5) **backward
+compatibility proven** – `maxGestationalPeriod = NULL` keys by species
+while explicit `210L` recycles the old path, so all existing callers +
+the 7 existing tests stayed green; (6) **honest handling of the
+pre-existing NOTE** – proved firsthand the “untyped” spelling NOTE is
+S166’s, not mine, and flagged it as a follow-up rather than silently
+fixing it out of scope (FM \#8). **Weaknesses (honest):** (a) **moderate
+base difficulty** – the GREEN is a small helper + a per-animal
+precompute; the value is the grounding + the discriminator insight + TDD
+rigor, not algorithmic depth -\> ceiling ~9; (b) **one lint round-trip**
+– the first lint flagged the new cross-file symbols as object_usage
+warnings (a `load_all`-before-install artifact), costing one
+re-install + re-lint before confirming 0 (now Learning 158b); (c) **the
+deliverable is committed but UNPUBLISHED** on a feature branch – the PR
+-\> CI -\> merge is a separate owner-gated step (correct per
+“commit/push only when asked”), so the work is not on `master` yet.
+Clean, fully-verified, scope-disciplined TDD delivery with a genuinely
+sharp testability call -\> 9/10.
+
+**Learnings:** **Learning 158** added to `PROJECT_LEARNINGS.md` – a
+per-key feature whose shipped lookup collapses to the fallback is a
+consumer-level no-op (false-GREEN risk -\> inject a table param at the
+consumer boundary to test differentiation; the consumer-boundary
+corollary of Learning 156); plus operational corollaries
+([`utils::globalVariables`](https://rdrr.io/r/utils/globalVariables.html)
+for a consumed `data/` object; `lintr` object_usage is
+install-state-sensitive -\> install before trusting it; default a new
+optional arg to the historical behavior for back-compat; prove a
+verification NOTE in an untouched file pre-existing and flag rather than
+fix out of scope). Carried as applied:
+\[\[consult-project-source-of-truth\]\] (design/scope answered from the
+package’s own conventions – data/ vs inst/extdata, the TDD gate
+contract); \[\[observation-vs-decision\]\] /
+\[\[ascii-only-in-question-options\]\] (the design `AskUserQuestion`);
+\[\[news-vs-changelog\]\] (CHANGELOG now, NEWS at publish – the
+S165-\>S166 convention); Learnings 152/156 + the
+read-only-workflow-for-grounding / solo-for-mutation split.
+
+**=\> SUGGESTED NEXT = owner’s pick.** The deliverable is committed on
+feature branch **`issue-46-species-gestation`** (see Key files);
+`master` is unchanged at `cae02dde`. Natural options (plain ASCII
+labels): - **(Publish S167 – the natural next session)** push
+`issue-46-species-gestation` -\> PR -\> watch CI to completion (lint +
+`R CMD check` x5 incl. ubuntu-devel + pkgdown + test-coverage), **don’t
+merge blind** (re-query fresh non-watch `gh pr checks <n>`, every check
+`pass` + exit 0; the `--watch` is not a terminal signal, Learning 157),
+`AskUserQuestion` before the irreversible merge,
+verified-merged-before-delete cleanup (the S160/S164/S166 convention;
+`git pull` is rebase -\> use `fetch`+`reset`; post-merge `fetch` before
+`reset --hard` must be verified + ancestor-gated, Learning 146). NOTE
+this PR ADDS tests (a positive coverage delta) -\> `codecov/project`
+should stay green (Learning 152). **THREE pre-publish steps for the
+publish session** (all flagged, none done this session): **(a)** add the
+**NEWS entry** for this user-facing change (new exported
+[`getSpeciesGestation()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesGestation.md),
+new `speciesGestation` data object, species-keyed
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md));
+write plain ASCII `--`/`"` in `NEWS.Rmd`, re-render `NEWS.md` (permanent
+`html_preview:false`+`-smart` config, Learning 155), confirm
+`grep -cP '[^\x00-\x7F]' NEWS.md` -\> 0 and a confined insertion
+(Learning 157a); **(b)** fold in the tiny **“untyped” spelling NOTE
+fix** (it lives in `NEWS.md` which you’re already touching) – add
+`untyped` to `inst/WORDLIST` (and any NEW words your item-2 NEWS line
+introduces) and regenerate `tests/spelling.Rout.save` so CI’s
+`R CMD check` is 0/0/0; **(c)** watch for any NEW spelling words your
+NEWS line adds. - **(#46 item 2b – UI prefill, the deferred slice)** in
+`R/modPotentialParents.R`, reactively default the gestation numericInput
+(currently hard-coded `210L` at `:80`) from the loaded pedigree’s
+species via
+[`getSpeciesGestation()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesGestation.md)
+(observeEvent pedigree -\> updateNumericInput), keeping it
+user-overridable. **Dragon:** guard against clobbering a user’s manual
+override when the pedigree reactive re-fires; testable via
+[`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html). A
+clean separate vertical slice; strict TDD. - **(#46 item 3 – DEFERRED)**
+species-keyed postnatal co-housing window – do NOT start until \#28’s
+single-species colocation model exists in code (it has ZERO code
+today). - **(Embedded codecov token – owner’s security call)**
+remove/rotate the committed upload token in `codecov.yml`. NOT acted on
+(FM \#8). - **(CRAN Phase 5, owner-run)** win-builder x3 + R-hub v2 +
+`submit_cran()` – owner PAT + email; HARD STOP
+(`docs/planning/cran-2.0.0-phase5-runbook.md`). - **Other GitHub
+issues** – \#45/#28/#9 (parent-ID cluster), \#37, \#36, \#29, \#2, or
+older \#13/#12/#11/#10/#5/#1. **Do NOT** bundle options (FM \#18/#25);
+**do NOT** start any without the owner picking.
+
+**Key files (this session):** **CHANGED – the deliverable (on branch
+`issue-46-species-gestation`):** **ADDED** `R/getSpeciesGestation.R`
+(exported helper + `globalVariables`), `data-raw/speciesGestation.R`
+(build script), `data/speciesGestation.RData` (the object,
+RHESUS-\>210L), `man/getSpeciesGestation.Rd`, `man/speciesGestation.Rd`,
+`tests/testthat/test_getSpeciesGestation.R` (10 blocks). **MODIFIED**
+`R/getPotentialParents.R` (`maxGestationalPeriod = NULL` +
+`gestationTable = NULL`; per-focal `mgpVec`; `mgp` at `:69`/`:84-85`;
+roxygen), `R/data.R` (`speciesGestation` doc block),
+`man/getPotentialParents.Rd` (regenerated), `NAMESPACE`
+(`export(getSpeciesGestation)`),
+`tests/testthat/test_getPotentialParents.R` (+3 tests). **CHANGED –
+close-out docs:** `CHANGELOG.md` (S167 `[Unreleased]` entry),
+`PROJECT_LEARNINGS.md` (Learning 158), `SESSION_NOTES.md` (this
+handoff). **NO change to** `R/modPotentialParents.R` (UI prefill
+deferred), `NEWS.md`/`NEWS.Rmd` (NEWS deferred to publish), `inst/`,
+`DESCRIPTION`. **NOT committed (standing keeps):**
+`PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
+
+**Gotchas:** (1) **The deliverable is committed but UNPUBLISHED on
+branch `issue-46-species-gestation`; `master` is at `cae02dde`.**
+Publish via the standing convention (push -\> PR -\> watch CI to
+completion, don’t merge blind -\> `AskUserQuestion` before merge -\>
+verified-merged-before-delete; `git pull` is rebase + chokes on
+`.DS_Store` -\> use `fetch`+`reset` (135); post-merge `fetch` before
+`reset --hard` must be verified + ancestor-gated (146)). **Do the three
+pre-publish steps (NEWS + the untyped wordlist + new-word check) FIRST
+so they ship in the SAME PR** (Learning 157a). (2) **The
+species-\>gestation table ships as ONE row (RHESUS-\>210) with a 210
+fallback by owner choice**, so the feature is a no-op on shipped/real
+data (incl. the JMAC “JAPANESE MACAQUE” pedigree, which falls back to
+210); differentiation is exercised only by the injected-`gestationTable`
+test fixtures. To add a real second species later, add a row in
+`data-raw/speciesGestation.R` and re-run it. (3) **`getPotentialParents`
+signature is now backward compatible but wider:**
+`maxGestationalPeriod = NULL` (was required) keys per focal animal’s
+species; an explicit integer recycles the old single-window behavior;
+`gestationTable = NULL` uses the bundled `speciesGestation`. All
+existing callers (tests, `inst/extdata/trulyUnknownParents.R`) pass
+`210L` explicitly -\> unchanged. If you ever make `maxGestationalPeriod`
+required again, update `getSpeciesGestation`’s callers. (4) **The 1
+`R CMD check` NOTE is PRE-EXISTING, not from this session:** the
+`spelling.R` comparison flags “untyped” in `NEWS.md` (S166’s entry
+`d2ea5919`), absent from `inst/WORDLIST`. CI passes on NOTEs, so it was
+latent. `NEWS.md`/`inst/WORDLIST`/`tests/spelling.Rout.save` are
+unchanged here and none of this session’s files contain “untyped”. Fix
+it in the publish session (it touches `NEWS.md` anyway). (5) **`lintr`
+object_usage is install-state-sensitive:** a NEW exported function /
+`data/` object referenced across files throws a FALSE “no visible global
+function/binding” lint until `devtools::install(quick=TRUE)`; install
+before trusting single-file lint (Learning 158b). (6) Carried standing
+keeps (unchanged): package **ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5
+owner-gated (`docs/planning/cran-2.0.0-phase5-runbook.md`);
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT (warning + NULL) without a LabKey credential/config; the
+offline focal path returns `nprcgenekeeprFileErr` not NULL (S155);
+exactly **ONE** codecov config (`codecov.yml`) – do NOT re-add a second;
+its embedded upload token is redundant with `secrets.CODECOV_TOKEN` +
+flagged (owner’s call); `#65` CONFIRMED RESOLVED (S160); NEWS render
+traps 132/139 CLOSED at the source on `master` (S163); the shipped
+`deidentified_jmac_ped.csv` halts a full
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+run on a pre-existing “both sire and dam” conflict (test the layer you
+change, Learning 156); `skip_on_cran()`-gated test files
+(`test_modInput.R`) need `NOT_CRAN=true`; standing keeps `.DS_Store` +
+`PED_GV_AUDIT_2026-05-30.html`.
+
 ### What Session 166 Did
 
 **Deliverable:** Publish S165 – issue \#46 item 1 (`species` as a

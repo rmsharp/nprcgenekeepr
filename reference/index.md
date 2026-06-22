@@ -319,6 +319,11 @@
 - [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
   : Get site information
 
+- [`getSpeciesGestation()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesGestation.md)
+  : Copyright(c) 2017-2026 R. Mark Sharp This file is part of
+  nprcgenekeepr Look up the maximum gestation period (days) for one or
+  more species
+
 - [`getTokenList()`](https://github.com/rmsharp/nprcgenekeepr/reference/getTokenList.md)
   : Gets tokens from character vector of lines
 
@@ -607,6 +612,9 @@
 
 - [`smallPedTree`](https://github.com/rmsharp/nprcgenekeepr/reference/smallPedTree.md)
   : Pedigree tree built from smallPed
+
+- [`speciesGestation`](https://github.com/rmsharp/nprcgenekeepr/reference/speciesGestation.md)
+  : Per-species maximum gestation period (days)
 
 - [`summarizeKinshipValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/summarizeKinshipValues.md)
   : Summary statistics for imputed kinship values
