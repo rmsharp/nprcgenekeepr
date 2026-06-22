@@ -13,6 +13,9 @@
 #' individual's mother (\code{NA} if unknown).}
 #' \item{sex}{ -- factor (levels: "M", "F", "U") Sex specifier for an
 #' individual}
+#' \item{species}{ -- character vector or \code{NA} (optional) naming the
+#' species of the individual (e.g. "rhesus"). Recognized as a first-class
+#' column rather than retained as an unrecognized novel column.}
 #' \item{gen}{ -- integer vector with the generation number of the
 #' individual}
 #' \item{birth}{ -- Date or \code{N} (optional) with the individual's birth
@@ -47,9 +50,9 @@
 #' getPossibleCols()
 getPossibleCols <- function() {
   c(
-    "id", "sire", "dam", "sex", "gen", "birth", "exit", "death", "age",
-    "ancestry", "population", "origin", "status", "condition", "departure",
-    "spf", "vasxOvx", "pedNum", "first", "second", "first_name",
+    "id", "sire", "dam", "sex", "species", "gen", "birth", "exit", "death",
+    "age", "ancestry", "population", "origin", "status", "condition",
+    "departure", "spf", "vasxOvx", "pedNum", "first", "second", "first_name",
     "second_name", "recordStatus"
   )
 }

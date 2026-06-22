@@ -229,6 +229,9 @@ qcStudbook <- function(sb, minParentAge = 2.0, reportChanges = FALSE,
   if (any("fromCenter" %in% cols)) {
     sb$fromCenter <- convertFromCenter(sb$fromCenter)
   }
+  if (any("species" %in% cols)) {
+    sb$species <- as.character(sb$species)
+  }
   # converting date column entries from strings and integers to date
   if (reportErrors) {
     sbAndErrors <- getDateErrorsAndConvertDatesInPed(sb, errorLst)

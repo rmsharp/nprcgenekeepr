@@ -8,7 +8,7 @@ cols <- c(
   "second_name", "recordStatus"
 )
 cols <- c(
-  "id", "sire", "dam", "sex", "gen", "birth", "exit", "death",
+  "id", "sire", "dam", "sex", "species", "gen", "birth", "exit", "death",
   "age", "ancestry", "population", "origin", "status", "condition",
   "departure", "spf", "vasxOvx", "pedNum", "first", "second",
   "first_name",
