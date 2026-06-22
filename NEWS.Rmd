@@ -3,7 +3,9 @@ title: "NEWS"
 author: "R. Mark Sharp, Ph.D."
 date: "2026-01-26"
 output:
-   github_document: default
+   github_document:
+     html_preview: false
+     md_extensions: "-smart"
 
 ---
 
@@ -186,7 +188,7 @@ knitr::opts_chunk$set(echo = TRUE)
     getDatedFileName.R to prepare for newer code in development version
     of
     18. 
-  - Technical edits of R code based on `lintr::lint_dir(“R”)`
+  - Technical edits of R code based on `lintr::lint_dir("R")`
 
 # nprcgenekeepr 1.0.5.9003 (20220625)
 
@@ -210,7 +212,7 @@ knitr::opts_chunk$set(echo = TRUE)
     animals with incomplete parental information that are known to have
     been born within the colony. These animals may have 0 or 1 known
     parents but have a value in the pedigree file or database for the
-    *fromcenter* or *fromCenter* field of “Y”, “YES”, “T”, or “TRUE”.
+    *fromcenter* or *fromCenter* field of "Y", "YES", "T", or "TRUE".
 - Minor changes
   - Increase unit test coverage primarily to include more rare events
     and events that should not happen and are trapped and result in
