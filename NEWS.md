@@ -40,6 +40,12 @@ R. Mark Sharp, Ph.D.
     and omitted collateral relatives. Pedigrees built from the
     LabKey/EHR path (via `getFocalAnimalPed()`) are now more complete
     and consistent with the in-memory `getPedDirectRelatives()`.
+  - The exported convenience function `makeGrpNum()` has been renamed to
+    `makeGroupNum()` for naming consistency with the sibling export
+    `makeGroupMembers()`. The old name `makeGrpNum()` is kept as a
+    deprecated alias: it still works but now emits a deprecation warning
+    and delegates to `makeGroupNum()`. Prefer `makeGroupNum()` in new
+    code; `makeGrpNum()` may be removed in a future release.
 - New features
   - Added the exported `setLabKeyDefaults()`, which configures `Rlabkey`
     authentication for the session: it prefers an API key (from the
