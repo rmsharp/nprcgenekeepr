@@ -16,6 +16,9 @@ individual's father (\code{NA} if unknown).}
 individual's mother (\code{NA} if unknown).}
 \item{sex}{ -- factor (levels: "M", "F", "U") Sex specifier for an
 individual}
+\item{species}{ -- character vector or \code{NA} (optional) naming the
+species of the individual (e.g. "rhesus"). Recognized as a first-class
+column rather than retained as an unrecognized novel column.}
 \item{gen}{ -- integer vector with the generation number of the
 individual}
 \item{birth}{ -- Date or \code{N} (optional) with the individual's birth
