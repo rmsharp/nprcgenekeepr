@@ -1,6 +1,11 @@
-# Convenience function to make the initial grpNum list
+# Deprecated alias for makeGroupNum
 
-Convenience function to make the initial grpNum list
+`makeGrpNum` has been renamed to
+[`makeGroupNum`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGroupNum.md)
+for consistency with
+[`makeGroupMembers`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGroupMembers.md).
+It remains as a deprecated wrapper that issues a warning and then calls
+`makeGroupNum`.
 
 ## Usage
 
@@ -18,3 +23,7 @@ makeGrpNum(numGp)
 ## Value
 
 Initial grpNum list
+
+## See also
+
+[`makeGroupNum`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGroupNum.md)

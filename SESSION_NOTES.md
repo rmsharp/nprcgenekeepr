@@ -7,6 +7,286 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 171 Did
+
+**Deliverable:** Issue \#29 – rename the exported convenience helper
+[`makeGrpNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGrpNum.md)
+-\>
+[`makeGroupNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGroupNum.md)
+(naming consistency with the sibling export
+[`makeGroupMembers()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGroupMembers.md)),
+keeping
+[`makeGrpNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGrpNum.md)
+as a deprecated alias. Strict TDD. **(DONE – committed on feature branch
+`issue-29-rename-makegrpnum`; UNPUBLISHED; `master` unchanged at
+`25c8a14d`.)** **Started / Completed:** 2026-06-22 **Status:** **DONE.**
+Code change (`R/` rename + new test + regenerated `man/`/`NAMESPACE` +
+`inst/_pkgdown.yml`/`inst/WORDLIST`) -\> **strict TDD**, every
+transition gated via `AskUserQuestion` (pre-RED scope/approach \[2 owner
+decisions\] -\> PRE-RED-\>RED -\> RED-\>GREEN -\> GREEN-\>REFACTOR
+\[skipped, owner-approved\]). **0 stakeholder corrections.** SOLO under
+ultracode (a contained, fully `git grep`-inventoried, test-anchored
+rename – a multi-agent sweep adds no coverage over the exhaustive grep;
+the S160/S164/S166/S168/S170 serial-contained-work judgment). The
+deliverable is **committed but UNPUBLISHED** on branch
+`issue-29-rename-makegrpnum`; `master` unchanged at `25c8a14d`. -
+**DECISIONS (the pre-RED `AskUserQuestion` scope/approach gate – 2 owner
+decisions, then a 3rd at the GREEN gate):** (1) **backward
+compatibility** = keep
+[`makeGrpNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGrpNum.md)
+as a **DEPRECATED ALIAS** (both `@export`ed; the old name calls
+`.Deprecated("makeGroupNum")` then delegates to `makeGroupNum(numGp)`)
+over a hard rename, because `makeGrpNum` is **public API** (shipped on
+CRAN before the 2025-07-29 archive) so a hard rename would break
+external scripts; (2) **deliverable shape** = implement this session via
+TDD (the grep inventory was already complete; the blast radius is 8
+contained code locations with existing coverage) over writing a separate
+plan doc; (3) **doc structure** (GREEN gate) = document the alias on its
+**OWN** man page (`man/makeGrpNum.Rd`, deprecation note + `@seealso`)
+over merging onto one page via `@rdname`. All were my recommended
+option; owner accepted each. - **INVENTORY (`git grep`, exhaustive over
+tracked files):** 8 must-change code locations – `R/makeGrpNum.R` (def),
+`R/fillGroupMembers.R:40` (the ONE real in-package caller),
+`R/fillGroupMembersWithSexRatio.R:68` (roxygen `@examples`),
+`tests/testthat/test_fillGroupMembersWithSexRatio.R:47` (test call),
+`NAMESPACE:119`, `man/makeGrpNum.Rd`,
+`man/fillGroupMembersWithSexRatio.Rd:92`, `inst/_pkgdown.yml:217`. The
+target `makeGroupNum` was unused everywhere beforehand. Historical docs
+(`SESSION_NOTES.md`, `20250504_cran-comments.md`,
+`TECH_DEBT_AUDIT_2026-05-30.md`, `docs/audits/*`) describe the PAST
+state -\> NOT rewritten (rewriting history is scope creep). - **RED
+(gated):** new `tests/testthat/test_makeGroupNum.R` (2 blocks / 4
+expectations) – `makeGroupNum(3L) == list(1L,2L,3L)` +
+`makeGroupNum(1L) == list(1L)` (failed: “could not find function”), and
+the deprecated `makeGrpNum(3L)` returns the same list AND
+`expect_warning(..., "makeGroupNum")` (failed: the old function did not
+warn). Both failed for the right reason; the existing suite untouched. -
+**GREEN (gated, minimum impl):**
+`git mv R/makeGrpNum.R R/makeGroupNum.R`; `makeGroupNum(numGp)`
+canonical (original body unchanged, full roxygen, `@export`);
+`makeGrpNum(numGp)` a thin deprecated wrapper
+(`.Deprecated("makeGroupNum")` then `makeGroupNum(numGp)`, own roxygen +
+`@seealso`, still `@export`). Switched the 3 in-package callers to
+`makeGroupNum`. `devtools::document()` regenerated `NAMESPACE` (exports
+BOTH: `export(makeGroupNum)` + `export(makeGrpNum)`) +
+`man/makeGroupNum.Rd` (new) + `man/makeGrpNum.Rd` (now the deprecation
+note) + `man/fillGroupMembersWithSexRatio.Rd` (example updated).
+`inst/_pkgdown.yml` reference index now lists both names.
+`inst/WORDLIST` += `makeGroupNum` (it appears as bare prose in the alias
+page `\title{}`; same lever as the already-present `grpNum`, Learning
+159; inserted in C-locale sort position). - **REFACTOR: skipped
+(owner-approved at the GREEN-\>REFACTOR gate)** – the minimum impl
+already matched house style (the original two-functions-in-one-file
+shape, a thin wrapper); no structural change added value without risk.
+
+**Phase-3E (build-equivalent / runtime smoke): SATISFIED.**
+Build-equivalent `devtools::check(vignettes = FALSE)` (the clean local
+recipe per Learning 161) on the deliverable tree = **0 errors / 0
+warnings / 0 notes** – this builds the package FRESH (so the rename
+resolves in the namespace), runs ALL examples (the updated
+`fillGroupMembersWithSexRatio` example now calls `makeGroupNum`, no
+deprecation warning), runs the full `testthat` suite, and runs the
+spelling test (0 unrecognized). Full suite (NOT_CRAN=true) = **0 failed
+/ 0 errors** (5 warnings = the pre-existing `test_modPyramid.R` baseline
+– the new deprecation warning is **captured** by the alias’s
+`expect_warning` and does NOT leak, confirmed by isolating warning
+sources). The renamed helper’s runtime path is exercised by
+`fillGroupMembers` -\> `makeGroupNum` in the suite (genuine execution,
+not just compilation). A full browser E2E is the pre-existing
+`test-e2e-*`/`shinytest2` baseline-noise harness, not a clean smoke in
+this environment -\> stated, not silently skipped.
+
+**Session 170 Handoff Evaluation (by Session 171): Score 9/10.** S170’s
+`=> SUGGESTED NEXT` listed **\#29 (“Other GitHub issues – … \#29”)** as
+an explicit option and its **Gotcha 6** carried the standing keeps I
+relied on firsthand (archived-on-CRAN -\> the public-API rename
+decision; `git pull` is rebase -\> use `fetch`+`reset`;
+`.DS_Store`/`PED_GV_AUDIT_*` untracked standing keeps -\> I knew NOT to
+commit the audit html when `git add -A` swept it in). Its **Learning
+161** (just-written) was directly load-bearing: it told me to use
+`devtools::check(vignettes = FALSE)` as the clean local build-equivalent
+rather than the `--no-build-vignettes` recipe that produces spurious
+vignette WARNINGs -\> I got a clean 0/0/0 first try with no
+artifact-chasing. The clean-`master`-at-`25c8a14d` / dashboard-98 /
+no-ghost claims all held on firsthand check. **The -1:** S170’s handoff
+(and the broader notes) framed \#29 only as a one-line “rename
+`makeGrpNum`” with the recurring “grep inventory FIRST” reminder, but
+did NOT flag that `makeGrpNum` is **EXPORTED public API** – the single
+most consequential fact for the approach (it forces the
+deprecated-alias-vs-hard-rename decision). I surfaced it myself from the
+grep (`NAMESPACE` export + the cran-comments). A one-line “note: it is
+exported, so decide back-compat” would have been zero-cost. Minor; ROI
+strongly positive.
+
+**Self-assessment (Session 171): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check -\> HEAD `25c8a14d`+`8944aced` = S170, no
+undocumented commits), reported, STOPPED for the owner’s pick; claimed
+the session with a 1B stub BEFORE technical work. **Strengths:** (1)
+**surfaced the load-bearing fact the backlog hid** – recognized from the
+grep that `makeGrpNum` is EXPORTED public API (CRAN history), which
+reframed a “trivial rename” into a real back-compat decision, and posed
+it cleanly (deprecated alias, owner-approved); (2) **complete
+evidence-based inventory before any edit** (`git grep` exhaustive; split
+must-change CODE from do-not-touch HISTORY) per the SESSION_RUNNER
+planning rules + SAFEGUARDS rename caution, satisfied via the scope
+`AskUserQuestion` as the plan-mode gate; (3) **strict TDD, every
+transition gated**, RED failing for the right reason on all 4
+expectations, GREEN the minimum impl, REFACTOR consciously skipped; (4)
+**did not hand-wave two findings** – proved the `object_usage_linter`
+“no visible global function ‘makeGroupNum’” is a stale-namespace
+artifact
+([`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html) +
+re-lint -\> 0; the sibling `makeGroupMembers` already resolves; CI
+installs first), and resolved the spell-check hit on the alias title via
+the documented WORDLIST lever (matching the existing `grpNum`); (5)
+**caught my own `git add -A` slip** – it staged the untracked
+`PED_GV_AUDIT_2026-05-30.html` standing keep; I unstaged it (SAFEGUARDS:
+do not commit an untracked previous-session file) rather than committing
+it; (6) build-equivalent 0/0/0, suite 0/0, 0 non-ASCII, 0 spell delta;
+TDD phase declared every response, plain language, ASCII. **Weaknesses
+(honest):** (a) **low base difficulty** – a one-line helper rename with
+a 4-expectation test; the value is the discipline (public-API
+recognition, the back-compat decision, the inventory) not depth -\>
+ceiling ~8; (b) **the `git add -A` slip** – I should have staged the
+explicit file list, not `-A`, given a known untracked standing keep;
+caught and corrected, but avoidable; (c) **CI not yet run** – the
+deliverable is UNPUBLISHED, so the authoritative 5-platform gate
+(incl. pkgdown, which is where the `_pkgdown.yml` two-name change really
+gets tested) is the publish session’s job. Clean, fully-verified,
+scope-disciplined TDD delivery with one self-caught staging slip -\>
+8/10.
+
+**Learnings:** **Learning 162** added to `PROJECT_LEARNINGS.md` –
+renaming an EXPORTED function is a public-API change, so the safe shape
+is new-canonical + old-deprecated-alias (both exported; old body =
+`.Deprecated("<new>")` then delegate);
+[`.Deprecated()`](https://rdrr.io/r/base/Deprecated.html) infers the old
+name and names the new one in its message, so RED-pin with
+`expect_warning(old(x), "new")` + `expect_identical(old(x), new(x))`.
+Three rename reflexes: `git grep` is the exhaustive inventory (split
+must-change CODE from do-not-touch HISTORY); a newly-added cross-file
+function trips a FALSE `object_usage_linter` “no visible global
+function” until the package is loaded/installed (`load_all` + re-lint
+-\> 0; same root as Learning 158b); a function NAME in man-page PROSE
+(an alias `\title{}`) trips spell_check -\> WORDLIST (like the existing
+`grpNum`) or `\code{}`; list BOTH names in `inst/_pkgdown.yml` or
+pkgdown warns “missing topics”. Carried as applied:
+\[\[consult-project-source-of-truth\]\] (the public-API/back-compat
+call + the TDD-gate contract + the
+implementation-\>CHANGELOG/publish-\>NEWS rhythm);
+\[\[observation-vs-decision\]\] / \[\[ascii-only-in-question-options\]\]
+(the scope + phase-gate `AskUserQuestion`s); \[\[news-vs-changelog\]\]
+(CHANGELOG now, NEWS at publish); \[\[backlog-vs-changelog-placement\]\]
+(completed work -\> CHANGELOG; \#29 closes on publish);
+\[\[avoid-jargon-use-plain-language\]\]; Learnings 157a/158b/159/161 +
+the read-only-grep-for-inventory / solo-for-contained-mutation split.
+
+**=\> SUGGESTED NEXT = owner’s pick.** The deliverable is committed on
+feature branch **`issue-29-rename-makegrpnum`** (see Key files);
+`master` is unchanged at `25c8a14d`. Natural options (plain ASCII
+labels): - **(Publish S171 – the natural next session)** push
+`issue-29-rename-makegrpnum` -\> PR -\> watch CI to completion (lint +
+`R CMD check` x5 incl. ubuntu-devel + **pkgdown** \[where the two-name
+`_pkgdown.yml` change is really exercised\] + test-coverage), **don’t
+merge blind** (re-query fresh non-watch `gh pr checks <n>`, every check
+`pass` + exit 0; the `--watch` is not a terminal signal, Learning 157),
+`AskUserQuestion` before the irreversible merge,
+verified-merged-before-delete cleanup (`git pull` is rebase -\> use
+`fetch`+`reset`; post-merge `fetch` before `reset --hard` must be
+verified + ancestor-gated, Learning 146). This PR **ADDS a test** -\>
+`codecov/project` should stay green (Learning 152). **ONE pre-publish
+step:** add the **NEWS entry** for this user-facing change (the
+convenience function
+[`makeGrpNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGrpNum.md)
+is renamed to
+[`makeGroupNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGroupNum.md);
+the old name still works but is deprecated and warns) – write plain
+ASCII `--`/`"` in `NEWS.Rmd`, re-render `NEWS.md` (permanent
+`html_preview:false`+`md_extensions:"-smart"`, Learning 155), confirm
+`grep -cP '[^\x00-\x7F]' NEWS.md` -\> 0 and a confined insertion.
+**“makeGroupNum” is ALREADY in `inst/WORDLIST`** (added this session),
+so NEWS prose may name it without a new spelling NOTE – but still run
+`spell_check_package(".")` before/after to KNOW the delta (Learning
+159). After publishing, **close issue \#29** (PR can use “Closes \#29”,
+or close manually like \#46). - **(Issue \#29 is satisfied by this
+work)** the rename is complete once published; nothing else is needed
+for \#29. - **(Embedded codecov token – owner’s security call)**
+remove/rotate the committed upload token in `codecov.yml` (redundant
+with `secrets.CODECOV_TOKEN`; removing from the file does not purge git
+history). NOT acted on (FM \#8). - **(CRAN Phase 5, owner-run)**
+win-builder x3 + R-hub v2 + `submit_cran()` – owner PAT + email; HARD
+STOP (`docs/planning/cran-2.0.0-phase5-runbook.md`). - **Other GitHub
+issues** – \#45/#28/#9 (parent-ID cluster), \#37, \#36, \#2, or older
+\#13/#12/#11/#10/#5/#1. **Do NOT** bundle options (FM \#18/#25); **do
+NOT** start any without the owner picking.
+
+**Key files (this session):** **CHANGED – the deliverable (on branch
+`issue-29-rename-makegrpnum`):** `R/makeGroupNum.R` (**renamed** from
+`R/makeGrpNum.R` via `git mv`; now defines `makeGroupNum` canonical +
+`makeGrpNum` deprecated alias), `tests/testthat/test_makeGroupNum.R`
+(**new**, 4 expectations), `R/fillGroupMembers.R:40` (caller -\>
+`makeGroupNum`), `R/fillGroupMembersWithSexRatio.R:68` (roxygen example
+-\> `makeGroupNum`),
+`tests/testthat/test_fillGroupMembersWithSexRatio.R:47` (test call -\>
+`makeGroupNum`), `NAMESPACE` (+`export(makeGroupNum)`, keeps
+`export(makeGrpNum)`), `man/makeGroupNum.Rd` (**new**, regenerated),
+`man/makeGrpNum.Rd` (regenerated – deprecation note + `@seealso`),
+`man/fillGroupMembersWithSexRatio.Rd` (regenerated example),
+`inst/_pkgdown.yml` (reference index lists both names), `inst/WORDLIST`
+(+`makeGroupNum`). **CHANGED – close-out docs (same branch):**
+`CHANGELOG.md` (S171 `[Unreleased]` entry), `PROJECT_LEARNINGS.md`
+(Learning 162), `SESSION_NOTES.md` (this handoff). **NEW since
+publish:** NEWS deferred to the publish session. **NOT committed
+(standing keeps):** `PED_GV_AUDIT_2026-05-30.html` (untracked – I
+unstaged it after a `git add -A` slip); `.DS_Store`.
+
+**Gotchas:** (1) **The deliverable is committed but UNPUBLISHED on
+branch `issue-29-rename-makegrpnum`; `master` is at `25c8a14d`.**
+Publish via the standing convention (push -\> PR -\> watch CI to
+completion, don’t merge blind -\> `AskUserQuestion` before merge -\>
+verified-merged-before-delete; `git pull` is rebase + chokes on
+`.DS_Store` -\> use `fetch`+`reset` (135); post-merge `fetch` before
+`reset --hard` must be verified + ancestor-gated (146)). **Do the NEWS
+pre-publish step FIRST so it ships in the SAME PR** (Learning 157a);
+“makeGroupNum” is already in `inst/WORDLIST`. **Then close \#29.** (2)
+**[`makeGrpNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGrpNum.md)
+is now a DEPRECATED alias, not removed** – both names are exported. Any
+in-package call should use `makeGroupNum` (the 3 callers were switched);
+calling `makeGrpNum` anywhere now emits a `.Deprecated` warning. The
+ONLY remaining caller of `makeGrpNum` is its own `expect_warning` test
+(intentional). (3) **A newly-added cross-file function trips a FALSE
+`object_usage_linter` “no visible global function ‘makeGroupNum’”** in
+bare `lintr::lint()`/`lint_package()` until the package is
+loaded/installed – it is NOT a real lint
+([`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html) +
+re-lint -\> 0; CI installs before linting; `devtools::check()` does not
+run lintr). Same root as Learning 158b. (4) **`inst/_pkgdown.yml` now
+lists BOTH `makeGroupNum` and `makeGrpNum`** – both are
+exported+documented, so both must appear or the pkgdown CI job warns
+“missing topics”; the real test of this is the publish PR’s `pkgdown`
+check. (5) **`inst/WORDLIST` is C-locale sorted** – `makeGroupNum` was
+inserted between `makeGeneticDiversityDashboard` and `maleDams`; keep
+that order (verify with `LC_ALL=C sort -c inst/WORDLIST`). (6) Carried
+standing keeps (unchanged): package **ARCHIVED on CRAN 2025-07-29**;
+CRAN Phase 5 owner-gated (`docs/planning/cran-2.0.0-phase5-runbook.md`);
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT (warning + NULL) without a LabKey credential/config; the
+offline focal path returns `nprcgenekeeprFileErr` not NULL (S155);
+exactly **ONE** codecov config (`codecov.yml`) – do NOT re-add a second;
+its embedded upload token is redundant with `secrets.CODECOV_TOKEN` +
+flagged (owner’s call); NEWS render traps 132/139 CLOSED at the source
+on `master` (S163, permanent
+`html_preview:false`+`md_extensions:"-smart"`); the shipped
+`deidentified_jmac_ped.csv` halts a full
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+run on a pre-existing “both sire and dam” conflict (test the layer you
+change, Learning 156); `skip_on_cran()`-gated test files need
+`NOT_CRAN=true`; the untracked stray
+`tests/testthat/test_species_first_class 2.R` flagged by S170 is **no
+longer present** (current `git status` shows only
+`PED_GV_AUDIT_2026-05-30.html` untracked).
+
 ### What Session 170 Did
 
 **Deliverable:** Publish S169 – issue \#46 **item 2b** (species-keyed UI
