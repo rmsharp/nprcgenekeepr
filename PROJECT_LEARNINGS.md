@@ -10383,3 +10383,52 @@ where unknown inputs are already passed through; any feature whose scope
 item references “the multi-species/general version of” another issue –
 check that issue’s CODE state first; any test that ingests a real
 shipped dataset end-to-end.
+
+#### Learning 157 – Two sharpenings of the publish convention from publishing a user-facing CODE change (vs the recent NEWS-infra-only publishes). (a) NEWS-vs-CHANGELOG for the CHANGE TYPE, not the session: when the session being published shipped a real user-facing package change (here a newly recognized + typed pedigree column) and the prior session deliberately DEFERRED the NEWS line as “a pre-publish decision”, the publish session’s FIRST step is to resolve it – per \[\[news-vs-changelog\]\] a user-facing code change earns a NEWS entry (not CHANGELOG-only like the S155/S163/S164 NEWS-infra publishes) – add the bullet to `NEWS.Rmd`, re-render to `NEWS.md` with the permanent `html_preview:false`+`md_extensions:"-smart"` config (Learning 155; verify `grep -cP '[^\x00-\x7F]' NEWS.md` -\> 0 and the diff is a confined pure-insertion), and COMMIT it on the feature branch so it ships WITH the feature in the same PR (one PR, not a follow-up). (b) A long `gh pr checks <n> --watch` is NOT a reliable terminal signal: it can die mid-run on a transient `HTTP 401: Requires authentication` and exit NON-zero, AND the harness background-completion notification can report “exit code 0” while the captured `$?` was 1 – a disagreement that can read as “all green” when ~half the matrix was still pending. Defensive “don’t merge blind”: never trust the watch’s exit; after it returns, re-query FRESH with a non-watch `gh pr checks <n>` and confirm EVERY check is `pass` with overall exit 0 (gh returns 8 while any check is pending) before the merge. (S166, publish S165 – PR \#68, issue \#46 item 1)
+
+**What happened.** Owner picked “1 and 2” (publish S165 + start \#46
+item 2); I flagged that these are two deliverables in two workstreams
+(publish is admin/irreversible git; item 2 is strict TDD needing a
+pre-RED design decision) and that publish has always been its own
+session (S160, S164) – bundling would be FM \#18/#25. Owner chose
+“publish now, item 2 next.” Resolved S165’s deferred NEWS decision via
+`AskUserQuestion` (recommended “add it” per \[\[news-vs-changelog\]\];
+owner agreed), added the bullet under the dev-version *Changes* subhead,
+re-rendered (0 non-ASCII, no `NEWS.html`, diff a confined 6-line
+insertion), committed on the branch as `d2ea5919` (HEAD now f9d74448
+code + d2ea5919 NEWS = 2 ahead / 0 behind). Stash-carried the S166 1B
+stub (so the branch published exactly the reviewed commits); pre-flight
+clean (merge-tree 0 conflicts, clean fast-forward, deliverable confirmed
+firsthand at HEAD). Pushed, opened **PR \#68**. The first background
+`gh pr checks 68 --watch` died on a transient HTTP 401 with ~5/10 checks
+still pending though codecov/patch + codecov/project had already passed
+(the added-tests coverage prediction, Learning 152, held); re-queried
+fresh -\> 9/10 pass, only ubuntu-devel pending; a second watch confirmed
+ubuntu-devel pass (17m5s) and `gh pr checks 68` returned exit 0 on all
+10. Owner had pre-authorized “merge it once devel passes” -\> fresh
+pre-merge re-check (MERGEABLE/CLEAN, head == d2ea5919, origin/master
+still 5f4bcbe9), `gh pr merge 68 --merge` -\> merge commit
+**`0574648b`** (verified state=MERGED firsthand); reconciled `master`
+via verified fetch + ancestor-gated `reset --hard` (Learning 146; gate
+asserted BOTH old-master 5f4bcbe9 and merged-head d2ea5919 are ancestors
+of origin/master before resetting); popped the stub (pre-existing
+`WIP on dev` stash untouched); verified-merged-before-delete branch
+cleanup (local + remote deleted, `gh api` 404).
+
+**Reflexes:** \[decide NEWS-vs-CHANGELOG by the CHANGE the publish
+carries, not the session kind – a user-facing CODE change earns a NEWS
+line even in an “admin/publish” session, and a prior session’s
+explicitly-deferred pre-publish content decision is the publish
+session’s first step, committed onto the branch so it ships in the SAME
+PR\]\[re-render `NEWS.md` from `NEWS.Rmd` after any NEWS edit, confirm 0
+non-ASCII + a confined insertion diff (Learning 155 config is
+permanent)\]\[a `--watch` is not a terminal signal: it can die on a
+transient HTTP 401 and the completion notification’s exit code can
+disagree with the real one – re-query fresh with non-watch
+`gh pr checks <n>` and require every check `pass` + exit 0 (8 = still
+pending) before merging\]\[even with the owner’s merge pre-authorized,
+still run the fresh pre-merge re-check (MERGEABLE/CLEAN + head +
+origin/master unchanged) – “don’t merge blind” is about VERIFICATION,
+the gate that the owner removed is only the prompt\]. **Apply:** any
+publish session, especially one carrying a user-facing code/feature
+change; any session that watches CI via `gh pr checks --watch`.

@@ -7,6 +7,260 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 166 Did
+
+**Deliverable:** Publish S165 – issue \#46 item 1 (`species` as a
+first-class pedigree column) from branch `issue-46-species-first-class`
+to `master`: resolve the deferred NEWS-line decision, push -\> PR -\> CI
+-\> gated merge (the S160/S164 publish convention). **(DONE.)**
+**Started / Completed:** 2026-06-22 **Status:** **DONE.** Published via
+merge commit **`0574648b`** (PR \#68). Admin/publish + one user-facing
+NEWS doc edit -\> **TDD declared N/A every response** (confirmed
+publish/docs-only before declaring). **0 stakeholder corrections.** SOLO
+(a serial, irreversible git sequence – a workflow adds risk, not
+coverage on irreversible git; the S160/S164 judgment). Owner opened with
+**“1 and 2”** (publish S165 + start \#46 item 2); I flagged that these
+are **two deliverables in two workstreams** (publish =
+admin/irreversible git; item 2 = strict TDD needing a pre-RED design
+decision) and that publish has always been its own session (S160, S164)
+– bundling is FM \#18/#25. Owner chose **“publish now, item 2 next.”** -
+**NEWS decision (S165’s flagged pre-publish call):** surfaced via
+`AskUserQuestion`; recommended **add it** per \[\[news-vs-changelog\]\]
+– this is a real **user-facing** package change (a newly recognized +
+typed pedigree column), unlike the recent NEWS-infra-only publishes
+(S155/S163/S164 = CHANGELOG-only). Owner agreed. Added a bullet under
+the dev-version *Changes* subhead of `NEWS.Rmd`; re-rendered `NEWS.md`
+via
+[`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)
+with the now-permanent `html_preview:false` + `md_extensions:"-smart"`
+config (Learning 155) -\> **0 non-ASCII**, **no `NEWS.html`** byproduct,
+the diff a **confined 6-line pure insertion** (nothing else reflowed).
+Committed on the branch as **`d2ea5919`** (`git add NEWS.Rmd NEWS.md`
+only – SESSION_NOTES stub left out). Branch HEAD now `f9d74448` (S165
+code) + `d2ea5919` (S166 NEWS) = **2 ahead / 0 behind** master. -
+**PRE-FLIGHT (Learning 133/135):** wrote the S166 1B stub then
+**stash-carried** it (`git stash push SESSION_NOTES.md`) so the branch
+published exactly the reviewed commits. `git fetch` verified exit 0
+(only `gh-pages` moved; `origin/master` unchanged at `5f4bcbe9`).
+Confirmed branch **2 ahead / 0 behind** `origin/master` (clean
+fast-forward), `git merge-tree --write-tree origin/master HEAD` **0
+conflict markers**. **Firsthand-confirmed the deliverable at HEAD before
+pushing:** `getPossibleCols.R:53` (`"sex", "species"`),
+`qcStudbook.R:232-233` (`species -> as.character`),
+`tests/testthat/test_species_first_class.R` present, `NEWS.md` bullet +
+**0 non-ASCII**. 10-file blast radius = item-1 code/tests/man
+(`getPossibleCols.R`, `qcStudbook.R`, `getPossibleCols.Rd`,
+`test_getPossibleCols.R`, `test_species_first_class.R`) + S165 close-out
+docs (`CHANGELOG.md`, `PROJECT_LEARNINGS.md`, `SESSION_NOTES.md`) + the
+S166 NEWS (`NEWS.Rmd`, `NEWS.md`). - **PUSH + PR:**
+`git push -u origin issue-46-species-first-class` (new tracking branch,
+exit 0); opened **PR \#68** -\> `master` (MERGEABLE, head `d2ea5919` ==
+local HEAD). - **CI (did NOT merge blind):** **all 10 checks PASS** –
+`lint` 3m49s; `R CMD check` x5: `macos-latest (release)` 6m46s,
+`ubuntu-latest (release)` 7m50s / `(oldrel-1)` 6m58s / **`(devel)`
+17m5s** (the gating job), `windows-latest (release)` 9m3s; `pkgdown`
+5m58s; `test-coverage` 4m58s; **`codecov/patch` PASS**;
+**`codecov/project` PASS**. As predicted, this PR **ADDS tests** -\>
+coverage stayed green (Learning 152). **GOTCHA -\> Learning 157:** the
+first background `gh pr checks 68 --watch` **died mid-run on a transient
+`HTTP 401`** with ~5/10 checks still pending (the harness completion
+notification even reported “exit code 0” while the captured `$?` was 1)
+– I did NOT trust it; re-queried fresh with non-watch `gh pr checks 68`
+(9/10 pass, ubuntu-devel pending), then re-watched to a clean **exit 0**
+on all 10 before proceeding. - **MERGE (owner pre-authorized “merge it
+once devel passes”):** still ran a fresh pre-merge re-check (state OPEN,
+`mergeable=MERGEABLE`, `mergeStateStatus=CLEAN`, `headRefOid` == local
+`d2ea5919`, `origin/master` still `5f4bcbe9`); `gh pr merge 68 --merge`
+(exit 0) -\> merge commit **`0574648b`**; verified landed firsthand
+(`state: MERGED`, `mergedAt: 2026-06-22T12:59:23Z`, `mergedBy: rmsharp`,
+`mergeCommit.oid: 0574648b`). - **RECONCILE (Learning 146):**
+`git checkout master`; `git fetch` verified exit 0 (`origin/master`
+advanced `5f4bcbe9..0574648b`); **ancestor-gated the reset** – asserted
+BOTH old-master `5f4bcbe9` AND merged-head `d2ea5919` are now ancestors
+of `origin/master` BEFORE `git reset --hard origin/master` -\> local
+`master` = `0574648b`. Verified the deliverable on `master` firsthand
+(`getPossibleCols.R:53`, `qcStudbook.R:232-233`, `NEWS.md` bullet + 0
+non-ASCII, test file present). `git stash pop` restored the S166 stub
+cleanly (pre-existing `stash@{1}` “WIP on dev” untouched). - **BRANCH
+CLEANUP (verified-merged-before-delete, S154/S157):**
+`git branch -d issue-46-species-first-class` (merged-only safe form,
+“was d2ea5919”) + `git push origin --delete` + `git fetch --prune`;
+verified **NO ref remains** (local empty, remote-tracking empty,
+`gh api .../branches/issue-46-species-first-class` -\> **404**).
+
+**Phase-3E (build-equivalent / runtime smoke): SATISFIED via CI.** The
+deliverable is library-function behavior
+([`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+/
+[`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md)),
+exercised by the full `testthat` suite across the PR \#68 `R CMD check`
+x5 matrix (incl. ubuntu-devel) on the **exact merge-result tree**, all
+PASS -\> `master` at `0574648b` builds clean and contains the
+deliverable. No Shiny/runtime startup behavior changed -\> no app launch
+needed.
+
+**Session 165 Handoff Evaluation (by Session 166): Score 9/10.** S165’s
+handoff listed **“(Publish S165 – the natural next session)”** as the
+**FIRST** suggested-next option with the exact procedure (push -\> PR
+-\> watch CI -\> don’t merge blind -\> `AskUserQuestion` before merge
+-\> verified-merged-before-delete; `git pull` is rebase -\>
+`fetch`+`reset`; post-merge fetch verified + ancestor-gated, Learning
+146), which I executed verbatim. Its **load-bearing prediction held**:
+“this PR ADDS tests (a positive coverage delta) -\> `codecov/project`
+should stay green (Learning 152)” – both codecov checks PASSED. Its
+**Gotcha 4 explicitly flagged the NEWS decision** (“this IS a real
+user-facing package change -\> a `NEWS.md` line is arguably warranted …
+write plain ASCII, re-render per the now-permanent `NEWS.Rmd` config
+(Learning 155)”) – exactly the pre-publish step, with the mechanism
+pre-stated, so zero rediscovery. Every repo-state claim held firsthand:
+clean `master` at `5f4bcbe9`, the branch UNPUBLISHED at `f9d74448`, the
+placement contract (`species` immediately after `sex`), the JMAC
+full-run defect (irrelevant to the publish), all standing keeps. ROI
+strongly positive. **The -1:** a publish-pointer has a low ceiling (it
+points at the procedure, not the work), and the one thing it could not
+predict – the transient-401 watch failure – is mine to handle, not
+S165’s to foresee. Clean, accurate, well-organized; it set me up to
+publish with no surprises.
+
+**Self-assessment (Session 166): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check -\> HEAD `f9d74448` = S165, no
+undocumented commits), reported, STOPPED for the owner’s pick; claimed
+the session with a 1B stub BEFORE technical work. **Strengths:** (1)
+**refused the bundle, kept it disciplined** – when the owner said “1 and
+2”, I flagged the two-workstream split (publish vs TDD) and the
+publish-is-its-own-session precedent rather than charging ahead (FM
+\#18/#25), and surfaced the sequencing decision via `AskUserQuestion`;
+(2) **resolved S165’s deferred NEWS call correctly** – recommended “add
+it” from the project’s OWN \[\[news-vs-changelog\]\] rule (user-facing
+code change -\> NEWS), re-rendered with the permanent config, proved the
+diff a confined pure-insertion + 0 non-ASCII, committed it onto the
+branch so it ships in ONE PR; (3) **caught the transient-401 watch
+failure** – did NOT trust the dead watch’s exit (or the misleading “exit
+code 0” notification), re-queried fresh, and confirmed all 10 checks
+`pass` + exit 0 before merging (a real “don’t merge blind” save -\>
+Learning 157); (4) **full safe-publish discipline** – stash-carried
+stub, pre-flight (clean-FF + merge-tree 0-conflict + firsthand
+deliverable confirmation), gated merge with a fresh re-check even though
+the owner pre-authorized it, ancestor-gated `reset --hard` (asserted
+BOTH old-master and merged-head are ancestors before resetting),
+verified-merged-before-delete cleanup with a `gh api` 404; (5) scope
+confined, TDD N/A declared every response, plain language, ASCII, 0
+corrections, Learning 157 captured (not manufactured – the 401-watch +
+NEWS-on-a-code-change are genuinely new vs the prior NEWS-infra
+publishes). **Weaknesses (honest):** (a) **low base difficulty** –
+admin/publish + one doc bullet; the value is the discipline + the 401
+save + the correct NEWS call, not algorithmic depth -\> ceiling ~8; (b)
+**the 401 cost one extra round-trip** – I had launched the watch in the
+background expecting a clean terminal signal; a more defensive first
+move would have been a shorter watch interval or an upfront “re-query
+fresh after the watch regardless” habit (now encoded as Learning 157),
+though the outcome was correct. Clean, fully-verified, scope-disciplined
+publish with one genuine CI-signal save -\> 8/10.
+
+**Learnings:** **Learning 157** added to `PROJECT_LEARNINGS.md` – (a)
+NEWS-vs-CHANGELOG is decided by the CHANGE the publish carries, not the
+session kind: a user-facing CODE change earns a NEWS line even in an
+admin/publish session, and a prior session’s explicitly-deferred
+pre-publish content decision is the publish session’s first step,
+committed onto the branch so it ships in the SAME PR; (b) a long
+`gh pr checks --watch` is NOT a reliable terminal signal (can die on a
+transient HTTP 401; the completion-notification exit code can disagree
+with the real one) -\> re-query fresh with non-watch `gh pr checks <n>`
+and require every check `pass` + exit 0 (gh returns 8 while pending)
+before merging; (c) even with the owner’s merge pre-authorized, still
+run the fresh pre-merge re-check – “don’t merge blind” is the
+VERIFICATION, not the prompt. Carried as applied:
+\[\[news-vs-changelog\]\]; \[\[consult-project-source-of-truth\]\]
+(answered the bundle + NEWS questions from the protocol’s own rules);
+\[\[observation-vs-decision\]\] /
+\[\[ascii-only-in-question-options\]\]; Learnings 133/135/146/152 + the
+S154/S157 verified-merged-before-delete pattern.
+
+**=\> SUGGESTED NEXT = owner’s pick (queued: \#46 item 2).** `master`
+clean at `0574648b`; item 1 published; no dangling branches. The owner
+agreed **\#46 item 2 is the next session.** Natural options (plain ASCII
+labels): - **(#46 item 2 – species-keyed gestation) \[the agreed next
+session\]** replace/augment the scalar `maxGestationalPeriod` (210,
+rhesus-specific) with a per-species lookup keyed on the now-first-class
+`species` column. Sites: `R/getPotentialParents.R` (the consumer) and
+the UI default at `R/modPotentialParents.R:80`. **Independent of \#28.**
+**Pre-RED design decision (the load-bearing one):** WHERE the
+species-\>gestation table lives (a new `data/` object vs an
+`inst/extdata` config), and WHICH species/values to seed (the example
+data has “JAPANESE MACAQUE”; rhesus is the current 210-day default).
+This needs an `AskUserQuestion` scope/approach gate BEFORE RED. Then
+strict TDD per the project contract. - **(#46 item 3 – DEFERRED)**
+species-keyed postnatal co-housing window – do NOT start until \#28’s
+single-species colocation model exists in code (it has ZERO code
+today). - **(Embedded codecov token – owner’s security call)**
+remove/rotate the committed upload token in `codecov.yml` (redundant
+with `secrets.CODECOV_TOKEN`; removing from the file does not purge git
+history). NOT acted on (FM \#8). - **(CRAN Phase 5, owner-run)**
+win-builder x3 + R-hub v2 + `submit_cran()` – owner PAT + email; HARD
+STOP (`docs/planning/cran-2.0.0-phase5-runbook.md`). - **Other GitHub
+issues** – \#45/#28/#9 (parent-ID cluster), \#37, \#36, \#29, \#2, or
+older \#13/#12/#11/#10/#5/#1. **Do NOT** bundle options (FM \#18/#25);
+**do NOT** start any without the owner picking.
+
+**Key files (this session):** **The DELIVERABLE is S165’s item-1 change,
+now on `master` via merge commit `0574648b`** (`R/getPossibleCols.R`,
+`R/qcStudbook.R`, `man/getPossibleCols.Rd`,
+`tests/testthat/test_getPossibleCols.R`,
+`tests/testthat/test_species_first_class.R` – published as reviewed).
+**CHANGED – the S166 NEWS addition (on the branch as `d2ea5919`, now on
+`master`):** `NEWS.Rmd` (new bullet under dev-version *Changes*),
+`NEWS.md` (re-rendered, pure ASCII). **CHANGED – close-out docs (this
+commit, direct to `master`):** `CHANGELOG.md` (S166 `[Unreleased]`
+entry), `PROJECT_LEARNINGS.md` (Learning 157), `SESSION_NOTES.md` (this
+handoff). **NO `R/`/test/`man/`/NAMESPACE/DESCRIPTION/`data/`/`inst/`
+change by S166** (the R/test/man files are S165’s, published unchanged).
+**NOT committed (standing keeps):** `PED_GV_AUDIT_2026-05-30.html`
+(untracked); `.DS_Store`.
+
+**Gotchas:** (1) **Issue \#46 item 1 is DONE and on `master`**
+(`0574648b`); the user-facing NEWS entry is live. **\#46 is NOT closed**
+– items 2 (species-keyed gestation) and 3 (postnatal window, deferred)
+remain open; PR \#68 used “Refs \#46”, not a closing keyword. (2)
+**`species` placement is a deliberate contract:** it sits **immediately
+after `sex`** in
+[`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md)
+(`:53`), so
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+orders it there whenever present; `test_species_first_class.R` pins
+this. If you reorder
+[`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md),
+update that test. (3) **The shipped
+`inst/extdata/deidentified_jmac_ped.csv` still cannot be cleanly QC’d by
+a plain `qcStudbook(sb)`** – it halts on a pre-existing “Subject(s)
+listed as both sire and dam” conflict (unrelated to \#46; surfaces with
+`reportErrors = FALSE`). A separate potential ticket; item 2’s tests
+should NOT rely on a full JMAC pipeline run (assert on the layer they
+change, per Learning 156). (4) **`gh pr checks --watch` is not a
+trustworthy terminal signal** (Learning 157) – it can die on a transient
+HTTP 401 and the completion-notification exit code can disagree with
+reality; ALWAYS re-query fresh with non-watch `gh pr checks <n>` (every
+check `pass` + exit 0; gh returns 8 while pending) before merging. (5)
+**NEWS edits:** write plain ASCII `--`/`"` in `NEWS.Rmd`, re-render with
+`rmarkdown::render("NEWS.Rmd")`, confirm
+`grep -cP '[^\x00-\x7F]' NEWS.md` -\> 0 and the diff is confined (the
+`html_preview:false`+`-smart` config is permanent, Learning 155).
+`NEWS.Rmd` is `.Rbuildignore`d; `NEWS.md` IS shipped. (6) Carried
+standing keeps (unchanged): package **ARCHIVED on CRAN 2025-07-29**;
+CRAN Phase 5 owner-gated (`docs/planning/cran-2.0.0-phase5-runbook.md`);
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT (warning + NULL) without a LabKey credential/config; the
+offline focal path returns `nprcgenekeeprFileErr` not NULL (S155);
+exactly **ONE** codecov config (`codecov.yml`) – do NOT re-add a second;
+its embedded upload token is redundant with `secrets.CODECOV_TOKEN` +
+flagged (owner’s call); `#65` CONFIRMED RESOLVED (S160); NEWS render
+traps 132/139 CLOSED at the source on `master` (S163); `git pull` is
+rebase (`pull.rebase=true`) + chokes on `.DS_Store` -\> use
+`fetch`+`reset` (135); post-merge `fetch` before `reset --hard` must be
+verified + ancestor-gated (146); `skip_on_cran()`-gated test files
+(`test_modInput.R`) need `NOT_CRAN=true`; standing keeps `.DS_Store` +
+`PED_GV_AUDIT_2026-05-30.html`.
+
 ### What Session 165 Did
 
 **Deliverable:** Issue \#46 **item 1 only** – make `species` a

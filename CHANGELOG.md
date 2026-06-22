@@ -15,6 +15,64 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-22 — Published S165 (PR \#68): `species` first-class column is on `master`; full CI matrix green; user-facing NEWS entry added (Session 166)
+
+- **Deliverable (owner pick, single item):** publish S165’s issue \#46
+  item 1 (`species` as a first-class pedigree column) from
+  `issue-46-species-first-class` to `master`. **Admin/publish** (no
+  production-code logic → TDD N/A), with one pre-publish content
+  decision: per \[\[news-vs-changelog\]\] this is a real **user-facing**
+  package change, so a `NEWS.md` entry was warranted (unlike the recent
+  NEWS-infra-only publishes S155/S163/S164). **0 stakeholder
+  corrections.** SOLO (a serial, irreversible git sequence). Owner
+  picked “publish now, item 2 next” over bundling publish + \#46 item 2
+  (two workstreams → FM \#18/#25).
+- **NEWS entry (owner-approved via `AskUserQuestion`):** added a bullet
+  under the dev-version *Changes* subhead of `NEWS.Rmd`, re-rendered
+  `NEWS.md` with the permanent `html_preview:false` +
+  `md_extensions:"-smart"` config (Learning 155) — **0 non-ASCII**, no
+  `NEWS.html` byproduct, the diff a confined 6-line pure insertion;
+  committed on the branch as `d2ea5919` so it ships with the feature in
+  one PR.
+- **Pre-flight (Learning 133/135):** stash-carried the S166 1B stub so
+  the branch published exactly the reviewed commits; `git fetch`
+  verified (only `gh-pages` moved, `origin/master` unchanged at
+  `5f4bcbe9`); branch **2 ahead / 0 behind** (clean fast-forward),
+  `git merge-tree --write-tree` **0 conflict markers**;
+  firsthand-confirmed the deliverable at HEAD (`getPossibleCols.R:53`
+  `species` after `sex`, `qcStudbook.R:232-233`, `NEWS.md` bullet + 0
+  non-ASCII, test file present). 10-file blast radius = item-1
+  code/tests/man + S165 close-out docs + the S166 NEWS entry.
+- **Publish + CI:** pushed the branch, opened **PR \#68** → `master`,
+  watched CI — **all 10 checks PASS**: `lint` (3m49s), `R CMD check` ×5
+  (`macos` release 6m46s / `ubuntu` release 7m50s + oldrel-1 6m58s +
+  **devel 17m5s** / `windows` 9m3s), `pkgdown` (5m58s), `test-coverage`
+  (4m58s), **`codecov/patch` PASS**, **`codecov/project` PASS** (this PR
+  ADDS tests → coverage stayed green, Learning 152). **Gotcha:** the
+  first `gh pr checks --watch` died mid-run on a transient HTTP 401 with
+  ~half the matrix still pending; re-queried fresh and re-watched to a
+  clean exit 0 before merging → Learning 157.
+- **Merge + reconcile (Learning 133/146):** owner pre-authorized “merge
+  once devel passes”; still ran a fresh pre-merge re-check
+  (MERGEABLE/CLEAN, `headRefOid` == local `d2ea5919`, `origin/master`
+  still `5f4bcbe9`), `gh pr merge 68 --merge` → merge commit
+  **`0574648b`** (verified `state: MERGED`, `mergedBy: rmsharp`
+  firsthand); reconciled local `master` via verified `git fetch` +
+  ancestor-gated `reset --hard` (asserted both old-master `5f4bcbe9` and
+  merged-head `d2ea5919` are ancestors of `origin/master` **before**
+  resetting); popped the S166 stub (pre-existing `WIP on dev` stash
+  untouched).
+- **Branch cleanup (verified-merged-before-delete, S154/S157):** deleted
+  `issue-46-species-first-class` local (`git branch -d`, merged-only
+  safe form) + remote (`git push origin --delete`) + `fetch --prune`;
+  verified **no ref remains** (local + remote-tracking empty;
+  `gh api .../branches/issue-46-species-first-class` → **404**).
+- **Verification (Phase-3E via CI):** the deliverable is
+  library-function behavior (`qcStudbook`/`getPossibleCols`), exercised
+  by the full `testthat` suite across the PR \#68 `R CMD check` ×5
+  matrix on the exact merge-result tree, all PASS → `master` at
+  `0574648b` builds clean and contains the deliverable. → Learning 157.
+
 ### 2026-06-22 — Issue \#46 item 1: `species` is now a first-class pedigree column (Session 165)
 
 - **Deliverable (owner pick, single item):** make `species` a
