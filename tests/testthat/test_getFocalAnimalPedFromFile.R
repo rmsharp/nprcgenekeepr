@@ -198,3 +198,45 @@ test_that("getFocalAnimalPedFromFile threads sep through to the pedigree file re
 
   expect_setequal(result$id, c("S1", "D1", "X1", "O1", "O2", "GC1"))
 })
+
+# --- Console hygiene: a missing focal-id file errors silently --------------
+# read.csv() on a missing/unreadable file signals a "cannot open file ..."
+# WARNING before it errors. The error is caught and turned into a classed
+# nprcgenekeeprFileErr, but the benign warning otherwise leaks to the console.
+# The function should fail soft AND silently: no leaked warning, same classed
+# error, error still propagates from the underlying read (control preserved).
+
+test_that(
+  "getFocalAnimalPedFromFile emits no warning for a missing focal-id file", {
+  pedFile <- writePedFile()
+  on.exit(unlink(pedFile), add = TRUE)
+  missingFocal <- file.path(tempdir(), "no_such_focal_id_file.csv")
+
+  expect_no_warning(
+    result <- getFocalAnimalPedFromFile(missingFocal, pedFile)
+  )
+  # Behaviour is unchanged apart from the silenced warning.
+  expect_s3_class(result, "nprcgenekeeprFileErr")
+  expect_match(result$message, "focal animal ID list", ignore.case = TRUE)
+})
+
+test_that(
+  "readFocalAnimalIds still errors but emits no warning on a missing file", {
+  missingFocal <- file.path(tempdir(), "no_such_focal_id_file.csv")
+
+  warned <- FALSE
+  threw <- FALSE
+  withCallingHandlers(
+    tryCatch(
+      readFocalAnimalIds(missingFocal),
+      error = function(e) threw <<- TRUE
+    ),
+    warning = function(w) {
+      warned <<- TRUE
+      invokeRestart("muffleWarning")
+    }
+  )
+
+  expect_true(threw) # the read error still propagates (control flow preserved)
+  expect_false(warned) # but the "cannot open file" warning is muffled
+})

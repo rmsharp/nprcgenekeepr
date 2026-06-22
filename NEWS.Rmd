@@ -67,6 +67,13 @@ knitr::opts_chunk$set(echo = TRUE)
     existing `"labkey"` and `"dataframe"` sources. This makes LabKey one
     pluggable provider among several and extends the offline, deterministic
     test seam.
+  - The offline focal-animal path no longer prints a benign
+    `cannot open file ...` warning when the focal-id list file is missing or
+    unreadable. `getFocalAnimalPedFromFile()` already reported the failure as a
+    classed error; the underlying `read.csv()` warning that leaked to the
+    console ahead of the caught error is now muffled at the read site, so the
+    fail-soft path is silent. The returned value and the reported error are
+    unchanged.
 
 # nprcgenekeepr 2.0.0 (20260618)
 - Major changes
