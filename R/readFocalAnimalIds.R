@@ -19,13 +19,38 @@ readFocalAnimalIds <- function(fileName, sep = ",") {
   if (excel_format(fileName) %in% c("xls", "xlsx")) {
     focalAnimals <- readExcelPOSIXToCharacter(fileName)
   } else {
-    focalAnimals <- muffleIncompleteFinalLine(read.csv(fileName,
-      header = TRUE,
-      sep = sep,
-      stringsAsFactors = FALSE,
-      na.strings = c("", "NA"),
-      check.names = FALSE
-    ))
+    focalAnimals <- muffleCannotOpenFile(
+      muffleIncompleteFinalLine(read.csv(fileName,
+        header = TRUE,
+        sep = sep,
+        stringsAsFactors = FALSE,
+        na.strings = c("", "NA"),
+        check.names = FALSE
+      ))
+    )
   }
   as.character(focalAnimals[, 1L])
+}
+
+#' Evaluate an expression, muffling the "cannot open file" warning.
+#'
+#' Runs \code{expr} and suppresses only the \code{"cannot open file '...'"}
+#' warning that \code{\link[utils]{read.csv}} (via \code{\link[base]{file}})
+#' emits when the path is missing or unreadable. The accompanying error is left
+#' to propagate, so the caller's \code{tryCatch} still sees the failure; only
+#' the benign console warning is removed. All other warnings propagate to the
+#' caller.
+#'
+#' @param expr expression to evaluate, typically a \code{read.csv} call.
+#' @return The value of \code{expr}.
+#' @noRd
+muffleCannotOpenFile <- function(expr) {
+  withCallingHandlers(
+    expr,
+    warning = function(w) {
+      if (grepl("cannot open file", conditionMessage(w), fixed = TRUE)) {
+        invokeRestart("muffleWarning")
+      }
+    }
+  )
 }

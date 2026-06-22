@@ -23,10 +23,10 @@ pedigree component (ancestors, descendants, and collaterals), as returned by
 \code{\link{getFileDirectRelatives}}. On any failure this function does NOT
 throw: it returns a classed \code{nprcgenekeeprFileErr} object (a list with a
 \code{message} element) naming WHY the read failed -- an unreadable focal-id
-list file, a missing / not-found / unreadable / wrong-column pedigree file, or
-no focal IDs present in the pedigree. The application surfaces \code{message}
-as the "File Read Error" detail. (This is distinct from the LabKey path, which
-returns an \code{nprcgenekeeprErr}.)
+list file; a missing, not-found, unreadable, or wrong-column pedigree file;
+or no focal IDs present in the pedigree. The application surfaces
+\code{message} as the "File Read Error" detail (distinct from the LabKey
+path, which returns an \code{nprcgenekeeprErr}).
 }
 \description{
 File-sourced sibling of \code{\link{getFocalAnimalPed}}: reads a list of
