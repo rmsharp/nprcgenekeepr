@@ -180,3 +180,78 @@ test_that("dam selection responds to maxGestationalPeriod (#31 acceptance crit. 
   ## a wider gestation window only removes dams, never adds them
   expect_true(all(d210 %in% d165))
 })
+test_that("maxGestationalPeriod = NULL falls back to 210 on a species-less pedigree (#46 item 2)", {
+  ## rhesusPedigree carries no species column, so the optional per-animal
+  ## species lookup resolves to the 210-day default for every focal animal --
+  ## identical to the historical explicit-210 behavior. This pins backward
+  ## compatibility for species-less pedigrees when the argument is omitted.
+  null_pp <- getPotentialParents(ped = pedOne, minParentAge = 2.0)
+  explicit_pp <- getPotentialParents(
+    ped = pedOne, minParentAge = 2.0, maxGestationalPeriod = 210L
+  )
+  expect_identical(null_pp, explicit_pp)
+})
+test_that("maxGestationalPeriod = NULL resolves a rhesus-species pedigree to 210 (#46 item 2)", {
+  ## With a species column present and every focal animal RHESUS, the per-animal
+  ## lookup must resolve to the shipped rhesus value (210), so the omitted-argument
+  ## result equals the explicit-210 result. Exercises the species-column-present
+  ## code path.
+  pedSpecies <- pedOne
+  pedSpecies$species <- "RHESUS"
+  null_pp <- getPotentialParents(ped = pedSpecies, minParentAge = 2.0)
+  explicit_pp <- getPotentialParents(
+    ped = pedSpecies, minParentAge = 2.0, maxGestationalPeriod = 210L
+  )
+  expect_identical(null_pp, explicit_pp)
+})
+test_that("getPotentialParents keys the gestation window per focal animal's species (#46 item 2)", {
+  ## The real discriminator: two from-center focal animals born the same day but
+  ## of different species. Via the injected gestationTable, RHESUS -> a 210-day
+  ## window and TESTSP -> a 90-day window. DAM delivered KID_GEST 150 d after the
+  ## focal birth: inside +/-210 (so DAM is excluded as a candidate dam for the
+  ## RHESUS focal) but outside +/-90 (so DAM stays a candidate for the TESTSP
+  ## focal). DAM2 is a proven breeder (KID2_PROVEN at +300 d, in the +0.5-1.5 y
+  ## band) with no offspring in either window, so she is always a candidate and
+  ## keeps the dam set non-empty (avoiding the all-females fallback). An
+  ## implementation that ignores species (one fixed window for all animals)
+  ## cannot satisfy both DAM assertions at once.
+  D0 <- as.Date("2010-01-01")
+  ped <- data.frame(
+    id   = c(
+      "FOCAL_R", "FOCAL_T", "DAM", "DAM2", "SIRE",
+      "KID_GEST", "KID_PROVEN", "KID2_PROVEN"
+    ),
+    sire = c(NA, NA, NA, NA, NA, "SIRE", "SIRE", "SIRE"),
+    dam  = c(NA, NA, NA, NA, NA, "DAM", "DAM", "DAM2"),
+    sex  = c("F", "F", "F", "F", "M", "M", "F", "F"),
+    species = c(
+      "RHESUS", "TESTSP", "RHESUS", "RHESUS", "RHESUS",
+      "RHESUS", "RHESUS", "RHESUS"
+    ),
+    birth = c(
+      D0, D0, as.Date("2000-01-01"), as.Date("2000-01-01"),
+      as.Date("2000-01-01"), D0 + 150L, D0 + 300L, D0 + 300L
+    ),
+    exit = as.Date(NA),
+    fromCenter = c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE),
+    stringsAsFactors = FALSE
+  )
+  tbl <- data.frame(
+    species = c("RHESUS", "TESTSP"),
+    gestation = c(210L, 90L),
+    stringsAsFactors = FALSE
+  )
+  pp <- getPotentialParents(
+    ped = ped, minParentAge = 2.0,
+    maxGestationalPeriod = NULL, gestationTable = tbl
+  )
+  damsOf <- function(animalId) {
+    idx <- which(vapply(pp, function(x) x$id, character(1L)) == animalId)
+    pp[[idx]]$dams
+  }
+  expect_false("DAM" %in% damsOf("FOCAL_R")) # 210-day window excludes DAM
+  expect_true("DAM" %in% damsOf("FOCAL_T")) # 90-day window retains DAM
+  ## DAM2 has no offspring in either window -> always a candidate for both
+  expect_true("DAM2" %in% damsOf("FOCAL_R"))
+  expect_true("DAM2" %in% damsOf("FOCAL_T"))
+})

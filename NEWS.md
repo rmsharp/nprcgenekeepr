@@ -12,6 +12,17 @@ R. Mark Sharp, Ph.D.
     it as character. Previously a `species` column survived only as a
     trailing, untyped extra column. Studbooks that include a `species`
     column now have it consistently ordered and typed.
+  - `getPotentialParents()` now derives its gestation-based conception
+    window per focal animal from the animal's `species` rather than from
+    a single fixed value. The `maxGestationalPeriod` argument is now
+    optional (default `NULL`): when it is omitted, the window for each
+    focal animal is looked up by species via the new
+    `getSpeciesGestation()`; when an explicit value is supplied it is
+    used for all animals, preserving the previous behavior, so existing
+    callers are unaffected. The shipped species table currently defines
+    only rhesus macaque (210 days) and falls back to 210 for other
+    species, so results on existing data are unchanged; adding species
+    rows enables per-species windows.
   - `getLkDirectRelatives()` now returns the full connected pedigree
     component for the focal animals (ancestors, descendants, and
     collaterals such as siblings, mates, and their lineages) by
@@ -55,6 +66,17 @@ R. Mark Sharp, Ph.D.
     no focal IDs found in the pedigree), and the app surfaces that
     message as the specific File Read Error detail instead of a generic
     one.
+  - Added the exported `getSpeciesGestation()`, which returns the
+    maximum gestation period (in days) for one or more species by
+    looking them up in the new `speciesGestation` table. Matching is
+    case- and whitespace-insensitive, and unknown, missing, or empty
+    species fall back to a default (210 days, the rhesus macaque value).
+    This is the per-species lookup that `getPotentialParents()` uses
+    when `maxGestationalPeriod` is not supplied.
+  - Added the exported `speciesGestation` data set, a
+    species-to-gestation lookup table (in days) seeded with rhesus
+    macaque (210). It is the extensible home for per-species gestation
+    lengths; add a row to support an additional species.
 - Documentation
   - The example configuration file
     (`inst/extdata/example_nprcgenekeepr_config`) now documents that
