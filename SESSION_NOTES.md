@@ -7,6 +7,211 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 164 Did
+
+**Deliverable:** Publish S163 – push `fix-news-render` -\> PR \#67 -\>
+CI (lint + `R CMD check` x5 + pkgdown + coverage) -\> merge to `master`
+(the S156/S160 publish convention). **(DONE.)** **Started / Completed:**
+2026-06-22 **Status:** **DONE.** Admin/publish (no production-code logic
+-\> **TDD declared N/A every response**; confirmed publish-only before
+declaring). **0 stakeholder corrections.** SOLO (a serial,
+outward-facing, irreversible git sequence – no decomposition/parallelism
+to gain; a workflow adds risk-not-coverage on irreversible git mutation;
+ultracode is on but this is publish hygiene – the S160 judgment). Owner
+picked **“Publish S163”** (1-and-done). S163’s permanent NEWS render fix
+(`html_preview: false` + `md_extensions: "-smart"` in `NEWS.Rmd`;
+`NEWS.md` re-rendered to pure ASCII) is now on `master` via merge commit
+**`fdbe1158`**. - **PRE-FLIGHT (Learning 133/135):** wrote the S164 1B
+stub then **stash-carried** it (`git stash push SESSION_NOTES.md`) so
+the branch/PR published exactly S163’s reviewed commit `1be6a350` (the
+S151-S153/S156/S160 stash-carry pattern). `git fetch` (verified exit 0;
+advanced only `gh-pages`, `origin/master` unchanged at `509529c0`).
+Confirmed `fix-news-render` **1 ahead / 0 behind** `origin/master`
+(`509529c0` a **strict ancestor** of HEAD -\> clean fast-forward),
+`git merge-tree --write-tree origin/master HEAD` **0 conflict markers**,
+the single published commit exactly S163’s **`1be6a350`**, its
+**5-file** diff matching S163’s documented key-files set (`NEWS.Rmd`,
+`NEWS.md`, `CHANGELOG.md`, `PROJECT_LEARNINGS.md`, `SESSION_NOTES.md`);
+verified **NO
+`R/`/test/`man/`/NAMESPACE/DESCRIPTION/`data/`/`inst/_pkgdown.yml`
+change** (blast radius confined exactly as S163 documented).
+**Firsthand-confirmed the deliverable at HEAD before pushing:**
+`NEWS.md` **0 non-ASCII** (`grep -cP '[^\x00-\x7F]'`), `NEWS.Rmd:7-8`
+carry `html_preview: false` + `md_extensions: "-smart"`, no stray
+top-level `NEWS.html`, `NEWS.Rmd` still `.Rbuildignore`d (`:39`). -
+**PUSH + PR:** `git push -u origin fix-news-render` (new remote tracking
+branch, exit 0); opened **PR \#67** -\> `master` (initial `MERGEABLE` /
+`UNSTABLE`, 8 jobs queued + the 2 codecov checks once `test-coverage`
+uploaded = 10). - **CI (did NOT merge blind, Learning 133):** watched
+all checks to completion via a background
+`gh pr checks 67 --watch --interval 30` (exit 0). **All 10 checks
+PASS:** `lint` 3m49s; `macos-latest (release)` 5m6s;
+`ubuntu-latest (release)` 6m51s / `(oldrel-1)` 6m30s / `(devel)`
+**13m57s** (gating); `windows-latest (release)` 9m11s; `pkgdown` 5m15s;
+`test-coverage` 4m48s; **`codecov/patch` PASS**; **`codecov/project`
+PASS**. As predicted for a pure encoding/config change, **coverage is
+unaffected** (both codecov green), and the **full-vignette CI matrix is
+the full-build confirmation** that S163’s local `--no-build-vignettes`
+check deferred – **no NEWS-related finding anywhere**. - **MERGE (the
+one real decision – surfaced via `AskUserQuestion`):** held for an
+explicit go before the irreversible step (the S156/S160 convention).
+Fresh pre-merge re-check (still `MERGEABLE`/`CLEAN`, `headRefOid` ==
+local `1be6a350`, `origin/master` still `509529c0`), surfaced the
+irreversible merge via `AskUserQuestion`; **owner chose “Merge now
+(merge commit).”** `gh pr merge 67 --merge` (exit 0) -\> merge commit
+**`fdbe1158`**; verified landed firsthand (`state: MERGED`,
+`mergedAt: 2026-06-22T05:27:43Z`, `mergedBy: rmsharp`,
+`mergeCommit.oid: fdbe1158`). - **RECONCILE (Learning 146 – gate
+`reset --hard` on a verified-successful fetch + ancestor assertion):**
+`git checkout master`; `git fetch` (verified exit 0; `origin/master`
+advanced `509529c0..fdbe1158`); asserted `1be6a350` **IS** now an
+ancestor of `origin/master` (YES) BEFORE resetting;
+`git reset --hard origin/master` -\> local `master` = `fdbe1158`;
+confirmed the fix present on `master` (`NEWS.md` 0 non-ASCII;
+`NEWS.Rmd:7-8` knobs present); then `git stash pop` restored the S164
+stub cleanly (pre-existing `stash@{1}` “WIP on dev” untouched). -
+**BRANCH CLEANUP (verified-merged-before-delete, S154/S157 –
+owner-approved in the merge option):** `git branch -d fix-news-render`
+(safe merged-only form, exit 0, “Deleted … was 1be6a350”) +
+`git push origin --delete` (exit 0) + `git fetch --prune`; verified **NO
+ref remains** (local list empty, remote-tracking list empty,
+`gh api .../branches/fix-news-render` -\> **404 Branch not found**).
+History preserved in merge commit `fdbe1158` + `1be6a350` on `master`.
+
+**Phase-3E (runtime smoke test): SATISFIED via CI.** No
+runtime/production code changed this session (publish only); S163
+firsthand-verified the deliverable (render + `R CMD check --as-cran`
+exit 0). The full PR \#67 CI matrix ran `R CMD check` x5
+(incl. ubuntu-devel) + pkgdown + test-coverage on the exact merge-result
+tree, all **PASS** -\> `master` at `fdbe1158` builds clean and contains
+the deliverable. No new launch needed.
+
+**Session 163 Handoff Evaluation (by Session 164): Score 9/10.** S163’s
+handoff listed **“(Publish S163 – the natural next session)”** as the
+**FIRST** suggested-next option with the exact procedure – “push
+`fix-news-render` -\> PR -\> CI (lint + `R CMD check` x5 + pkgdown +
+coverage) -\> merge to `master` (the S159-\>S160 / S156 convention)” –
+which I executed verbatim. The load-bearing **prediction held exactly**:
+“This is a pure-encoding/config change carrying no `R/` delta, so
+coverage is unaffected” – both codecov checks PASSED; and “The CI matrix
+is also the full-vignette-build confirmation that the only check changes
+are the intended NEWS ones (my local check used `--no-build-vignettes`)”
+– confirmed, no NEWS finding. Every repo-state claim held firsthand:
+HEAD `1be6a350` = S163 UNPUBLISHED, 1 ahead of `master` (`509529c0`),
+clean FF; the 5-file diff matched the documented key-files set exactly;
+`NEWS.md` 0 non-ASCII and the two `NEWS.Rmd` knobs present. Gotcha 5
+carried the entire publish playbook (UNPUBLISHED; S159-\>S160
+convention; `git pull` is rebase + chokes on `.DS_Store` -\> use
+`fetch`+`reset`; post-merge `fetch` before `reset --hard` must be
+verified-succeeded + ancestor-gated). ROI strongly positive – zero
+rediscovery of WHAT or HOW. **The -1:** low ceiling for a suggested-next
+pointer; the only tiny gap is S163 did not enumerate the exact 10-check
+set or the 1-ahead/0-behind state – both mine to verify in pre-flight
+regardless, so barely a gap.
+
+**Self-assessment (Session 164): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK read; GH issues;
+dashboard 98/100; ghost-check -\> HEAD `1be6a350` = S163, no
+undocumented commits), reported, STOPPED for the owner’s pick; claimed
+the session (1B stub BEFORE technical work, stash-carried).
+**Strengths:** (1) **full safe-publish discipline** – pre-flight
+(clean-FF + strict-ancestor + merge-tree 0-conflict + exact-commit +
+5-file/blast-radius check + **firsthand deliverable confirmation at
+HEAD** before pushing), did NOT merge blind (watched 10/10 to
+completion + a fresh `MERGEABLE`/`headRefOid` re-check immediately
+before merge), surfaced the irreversible merge via `AskUserQuestion`
+exactly as the picked option promised, verified the merge landed
+firsthand, reconciled `master` via a verified-successful-fetch +
+ancestor-gated `reset --hard` (Learning 146),
+verified-merged-before-delete branch cleanup with a `gh api` 404 check;
+(2) **confirmed S163’s two predictions LIVE** – coverage unaffected
+(both codecov green) and the full-vignette CI matrix as the full-build
+confirmation of the `--no-build-vignettes` gap; (3) **scope confined** –
+TDD N/A declared every response, SOLO (correct for irreversible git
+under ultracode), ASCII, plain language, 0 corrections, no scope creep;
+(4) **honest non-fabrication** – recorded **no new PROJECT_LEARNINGS
+entry** because nothing new was learned (a clean application of the
+documented publish convention + Learnings 133/135/146/152), rather than
+manufacturing a learning to look productive (anti-FM \#16). **Weaknesses
+(honest):** (a) **low base difficulty** – admin/publish; the value is
+the discipline + the live confirmation of S163’s predictions, not
+algorithmic depth -\> ceiling ~8; (b) **one cosmetic diagnostic
+mislabel** – in my pre-flight `git rev-list --left-right --count` echo I
+labeled “left=ahead / right=behind” backwards (left is actually the
+behind count), though I read the `0 1` result correctly as 0-behind /
+1-ahead and the ancestor + merge-tree checks were the load-bearing gates
+anyway; harmless, but worth naming; (c) **no wrinkle encountered** – a
+textbook clean publish, so there was no recovery/judgment test that
+would push the score higher. Clean first-pass publish with both S163
+predictions confirmed, low base difficulty -\> 8/10.
+
+**Learnings:** **None new.** This session was a clean application of the
+documented publish convention and Learnings 133 (don’t merge blind), 135
+(`fetch`+`reset` not `pull`; stash-carry), 146 (verified-fetch +
+ancestor-gated `reset --hard`), 152 (the next real PR is the confirming
+experiment – here it confirmed S163’s coverage-unaffected + full-build
+predictions), and the S154/S157 verified-merged-before-delete pattern.
+Manufacturing a numbered learning where none exists would be theater
+(anti-FM \#16). Carried as applied: \[\[news-vs-changelog\]\] (publish
+session -\> CHANGELOG entry, not NEWS); the pre-RED scope/approach
+`AskUserQuestion` convention (used for the irreversible merge gate);
+\[\[consult-project-source-of-truth\]\];
+\[\[observation-vs-decision\]\].
+
+**=\> SUGGESTED NEXT = owner’s pick.** `master` clean at `fdbe1158`;
+S163’s permanent NEWS render fix is published; no dangling feature
+branches. Natural options (plain ASCII labels): - **(Embedded codecov
+token – owner’s security call)** remove/rotate the committed upload
+token in `codecov.yml` (redundant with `secrets.CODECOV_TOKEN`; removing
+from the file does not purge git history). NOT acted on (FM \#8). -
+**(Remaining LabKey Rec \#5 / server-side – deferred)** server-side
+filtering / `executeSql` / centers’ `study.Pedigree`/`ehr.kinship`;
+non-LabKey other-EHR provider. Gated on a live server. - **(CRAN Phase
+5, owner-run)** win-builder x3 + R-hub v2 + `submit_cran()` – owner
+PAT + email; HARD STOP (`docs/planning/cran-2.0.0-phase5-runbook.md`). -
+**A GitHub issue** – \#46 (species first-class), \#45/#28/#9
+(parent-identification cluster), \#37 (exported-but-unused fns), \#36
+(chimp age pyramid), \#29 (rename makeGrpNum), \#2 (GVA iterations
+evidence), or older \#13/#12/#11/#10/#5/#1. **Do NOT** bundle options
+(FM \#18/#25); **do NOT** start any without the owner picking.
+
+**Key files (this session):** **The DELIVERABLE is S163’s
+already-reviewed NEWS fix, now on `master` via merge commit `fdbe1158`**
+(`NEWS.Rmd` + `NEWS.md`, unchanged by S164 – published as-is). **CHANGED
+– close-out docs (this commit, direct to `master`):** `CHANGELOG.md`
+(S164 `[Unreleased]` entry), `SESSION_NOTES.md` (this handoff). **NO
+`PROJECT_LEARNINGS.md` change** (no new learning – see Learnings above).
+**NO
+`R/`/test/`man/`/NAMESPACE/DESCRIPTION/NEWS/`data/`/`inst/_pkgdown.yml`
+change.** **NOT committed (standing keeps):**
+`PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
+
+**Gotchas:** (1) **The NEWS render traps 132/139 are now CLOSED at the
+source ON `master`** – with `html_preview: false` +
+`md_extensions: "-smart"` in `NEWS.Rmd`, re-rendering no longer creates
+a top-level `NEWS.html` and no longer manufactures smart
+quotes/en-dashes. Do NOT re-add `html_preview: true` /
+`github_document: default`. Future NEWS edits: write plain ASCII `--`
+and `"..."` in `NEWS.Rmd`, re-render with
+`rmarkdown::render("NEWS.Rmd")`, confirm
+`grep -cP '[^\x00-\x7F]' NEWS.md` -\> 0. `NEWS.Rmd` is `.Rbuildignore`d
+(not shipped); `NEWS.md` IS shipped. (2) **`master` is clean at
+`fdbe1158`; no dangling branches** (local + remote-tracking empty;
+`gh api` 404 for `fix-news-render`). (3) Carried standing keeps
+(unchanged): package **ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5
+owner-gated (`docs/planning/cran-2.0.0-phase5-runbook.md`);
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT (warning + NULL) without a LabKey credential/config; the
+offline focal path returns `nprcgenekeeprFileErr` not NULL (S155);
+exactly **ONE** codecov config (`codecov.yml`) – do NOT re-add a second;
+its embedded upload token is redundant with `secrets.CODECOV_TOKEN` +
+flagged (owner’s call); `#65` CONFIRMED RESOLVED (S160);
+`skip_on_cran()`-gated test files (`test_modInput.R`) need
+`NOT_CRAN=true`; `git pull` is rebase (`pull.rebase=true`) + chokes on
+`.DS_Store` -\> use `fetch`+`reset` (135); post-merge `fetch` before
+`reset --hard` must be verified-succeeded + ancestor-gated (146);
+standing keeps `.DS_Store` + `PED_GV_AUDIT_2026-05-30.html`.
+
 ### What Session 163 Did
 
 **Deliverable:** Permanent NEWS render fix – `html_preview: false` +
