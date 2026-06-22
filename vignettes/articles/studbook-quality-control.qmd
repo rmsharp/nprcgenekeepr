@@ -217,12 +217,14 @@ clean pedigree the analyses consume.
 
 ## See also {#sec-seealso}
 
-- The **Genetic Value Analysis** article -- ranks a quality-controlled pedigree
-  by genetic value.
-- The **Forming Breeding Groups** article -- assembles breeding groups from a
-  quality-controlled pedigree.
-- The **Building a Focal-Animal Pedigree Offline** article -- builds a focal
+- The **Building a Focal-Animal Pedigree Offline** article -- build a focal
   pedigree from files with no database; quality-control it here as the next step.
+- The **Genetic Value Analysis** article -- rank a quality-controlled pedigree by
+  mean kinship and genome uniqueness with `reportGV()`.
+- The **Forming Breeding Groups** article -- assemble genetically diverse breeding
+  groups from a quality-controlled pedigree with `groupAddAssign()`.
+- The **Age-Sex Pyramid Plots** article -- picture the colony's age and sex
+  structure with `getPyramidPlot()`.
 - `qcStudbook()` -- the function documented here.
 - `runModularApp()` -- the Shiny app, whose Quality Control tab drives this same
   function interactively.

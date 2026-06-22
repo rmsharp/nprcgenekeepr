@@ -198,13 +198,19 @@ unlink(c(pedFile, focalFile, strangers))
 
 ## See also {#sec-seealso}
 
-- `getFocalAnimalPed()` -- the online sibling that pulls the surrounding
-  pedigree from a LabKey / EHR database instead of a file.
+- The **Studbook Quality Control** article -- `qcStudbook()` validates and
+  standardizes a pedigree, the usual next step once you have a focal pedigree.
+- The **Genetic Value Analysis** article -- rank a quality-controlled pedigree by
+  mean kinship and genome uniqueness with `reportGV()`.
+- The **Forming Breeding Groups** article -- assemble genetically diverse breeding
+  groups with `groupAddAssign()`.
+- The **Age-Sex Pyramid Plots** article -- picture the colony's age and sex
+  structure with `getPyramidPlot()`.
+- `getFocalAnimalPed()` -- the online sibling that pulls the surrounding pedigree
+  from a LabKey / EHR database instead of a file.
 - `getFileDirectRelatives()` -- the lower-level function that walks the pedigree
   file to build the connected component (and exposes the `unrelatedParents`
   option, which `getFocalAnimalPedFromFile()` leaves at its default).
-- The **Studbook Quality Control** article -- `qcStudbook()`, the usual next
-  step once you have a focal pedigree.
 - `runModularApp()` -- the Shiny app, whose Input tab drives this same offline
   workflow interactively.
 

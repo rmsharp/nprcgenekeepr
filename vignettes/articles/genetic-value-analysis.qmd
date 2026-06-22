@@ -197,11 +197,16 @@ ideal founders" -- a smaller number signals a narrower gene pool.
 
 ## See also {#sec-seealso}
 
+- The **Studbook Quality Control** article -- `qcStudbook()` validates and
+  standardizes the studbook this analysis consumes, the first step before ranking.
+- The **Building a Focal-Animal Pedigree Offline** article -- build a focal-animal
+  pedigree from files with no database, via `getFocalAnimalPedFromFile()`.
 - The **Forming Breeding Groups** article -- `groupAddAssign()` uses the kinship
   matrix this analysis returns to assemble genetically diverse groups.
+- The **Age-Sex Pyramid Plots** article -- picture the colony's age and sex
+  structure with `getPyramidPlot()`.
 - `rankSubjects()` -- the ranking scheme applied to a report.
 - `kinship()` -- pairwise kinship coefficients from a pedigree.
-- `qcStudbook()` -- the studbook quality control that precedes the analysis.
 - `runModularApp()` -- the Shiny app that performs this workflow interactively.
 
 **References.**

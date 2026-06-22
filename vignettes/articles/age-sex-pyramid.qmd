@@ -120,10 +120,14 @@ for a cleaner figure.
 ## See also {#sec-seealso}
 
 - The **Studbook Quality Control** article -- clean the studbook (sexes, dates,
-  birth records) before plotting, so the pyramid reflects the whole living
-  colony.
-- The **Genetic Value Analysis** and **Forming Breeding Groups** articles -- the
-  other colony-management tools in the package.
+  birth records) with `qcStudbook()` before plotting, so the pyramid reflects the
+  whole living colony.
+- The **Building a Focal-Animal Pedigree Offline** article -- build a focal-animal
+  pedigree from files with no database, via `getFocalAnimalPedFromFile()`.
+- The **Genetic Value Analysis** article -- rank a quality-controlled pedigree by
+  mean kinship and genome uniqueness with `reportGV()`.
+- The **Forming Breeding Groups** article -- assemble genetically diverse breeding
+  groups with `groupAddAssign()`.
 - `getPyramidPlot()` -- the function documented here.
 - `runModularApp()` -- the Shiny app, whose Age-Sex Pyramid tab draws this plot
   interactively.
