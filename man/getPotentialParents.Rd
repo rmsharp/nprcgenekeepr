@@ -5,7 +5,12 @@
 \title{Get the lists of portential parents for all individuals born in the colony
 with one or two unknown parents}
 \usage{
-getPotentialParents(ped, minParentAge, maxGestationalPeriod)
+getPotentialParents(
+  ped,
+  minParentAge,
+  maxGestationalPeriod = NULL,
+  gestationTable = NULL
+)
 }
 \arguments{
 \item{ped}{the pedigree information in data.frame format. Pedigree
@@ -16,17 +21,26 @@ This requires complete pedigree information.}
 an animal to have an offspring. Defaults to 2 years. The check is not
 performed for animals with missing birth dates.}
 
-\item{maxGestationalPeriod}{integer value describing the maximum number of
-days between conception and birth for the species being analyzed (a
-conservative upper bound, e.g. 210 for rhesus whose typical gestation is
-about 165 days). It is used two ways: (1) a sire who exited the colony
-between conception (birth - maxGestationalPeriod) and birth is still
-retained as a candidate; and (2) a female who delivered another offspring
-within maxGestationalPeriod days of the focal birth is excluded as a
-candidate dam, because a female bears one offspring at a time. The sire
-check uses presence at conception while the dam check uses presence at
-birth; this asymmetry is intentional -- a sire need only be present to
-conceive, whereas a dam must be present through the pregnancy to give birth.}
+\item{maxGestationalPeriod}{integer maximum number of days between conception
+and birth for the species being analyzed (a conservative upper bound, e.g.
+210 for rhesus whose typical gestation is about 165 days). When \code{NULL}
+(the default) the window is looked up per animal from the \code{species}
+column of \code{ped} via \code{\link{getSpeciesGestation}}, falling back to
+210 days for animals whose species is missing or unrecognized; supply an
+explicit integer to use one fixed window for every animal. It is used two
+ways: (1) a sire who exited the colony between conception
+(birth - maxGestationalPeriod) and birth is still retained as a candidate;
+and (2) a female who delivered another offspring within maxGestationalPeriod
+days of the focal birth is excluded as a candidate dam, because a female
+bears one offspring at a time. The sire check uses presence at conception
+while the dam check uses presence at birth; this asymmetry is intentional --
+a sire need only be present to conceive, whereas a dam must be present
+through the pregnancy to give birth.}
+
+\item{gestationTable}{optional data.frame (columns \code{species},
+\code{gestation}) passed to \code{\link{getSpeciesGestation}} for the
+per-animal lookup when \code{maxGestationalPeriod} is \code{NULL}. Defaults
+to \code{NULL}, which uses the bundled \code{\link{speciesGestation}} table.}
 }
 \value{
 a list of list with each internal list being made up of an animal

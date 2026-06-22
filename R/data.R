@@ -377,3 +377,23 @@
 #' library(nprcgenekeepr)
 #' data("rhesusPedigree")
 "rhesusPedigree"
+#' Per-species maximum gestation period (days)
+#'
+#' A lookup table mapping a species name to a conservative upper bound on the
+#' number of days from conception to birth. It keys the gestation window in
+#' \code{\link{getPotentialParents}} through \code{\link{getSpeciesGestation}}
+#' (issue #46 item 2). Species names are matched case- and whitespace-
+#' insensitively; any species not present falls back to 210 days. Seeded with
+#' rhesus = 210 (the conservative bound used historically; typical rhesus
+#' gestation is about 165 days, per Vinson & Raboin 2015). Extend it by adding
+#' rows in \code{data-raw/speciesGestation.R} and re-running that script.
+#' \describe{
+#' \item{species}{-- character species name (e.g. "RHESUS").}
+#' \item{gestation}{-- integer maximum gestation period in days (a conservative
+#' upper bound).}
+#' }
+#' @examples
+#' library(nprcgenekeepr)
+#' data("speciesGestation")
+#' speciesGestation
+"speciesGestation"
