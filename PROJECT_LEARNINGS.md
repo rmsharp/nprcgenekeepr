@@ -10130,3 +10130,59 @@ carrying a stale warning\]. **Apply:** any session that publishes the
 first coverage/threshold-changing PR after a CI-config fix; any
 “verified at the config layer, confirm on next PR” carryover; closing
 out any multi-session infra fix.
+
+#### Learning 153 – To DOCUMENT/EXPOSE an already-exported-but-undocumented function, the right artifact is a WEBSITE-ONLY Quarto article in the existing scripting series (`vignettes/articles/*.qmd`, which is `.Rbuildignore`d) – NOT a NEWS line, and NOT a shipped CRAN vignette unless the owner asks. Copy a sibling article’s EXACT shape (`genetic-value-analysis.qmd`: YAML `title:`-only, a hidden `setup` chunk `knitr::opts_chunk$set(collapse=TRUE, comment="#>")`, `## X {#sec-x}` sections, then `Key arguments` + `See also` + `References`), and ALSO add the function to `inst/_pkgdown.yml`’s reference list(s) so `pkgdown` does not warn “topic missing from index”. Verify the EXECUTABLE doc in two steps: (1) run every intended chunk in-session under `pkgload::load_all` to confirm REAL outputs BEFORE writing prose; (2) render via `quarto render <file>.qmd` as the doc build-equivalent, then REMOVE the render litter (`.html`, `_files/`, the quarto-created `.gitignore`, `.quarto/`) – only the `.qmd` is tracked. A website-only article earns a CHANGELOG entry but NO NEWS entry (NEWS is for SHIPPED package changes; S116 precedent + \[\[news-vs-changelog\]\]), which also sidesteps the NEWS smart-quote/en-dash render traps (132/139) – keep the `.qmd` pure ASCII regardless. (S161, document/expose the offline focal-animal workflow)
+
+**What happened.** Owner picked the S159/S160-queued 2nd item:
+document/expose the offline focal workflow. Grounding (a read-only
+4-agent sweep) found
+[`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md)
+was already EXPORTED with a full man page but covered by zero
+vignette/article AND missing from the `inst/_pkgdown.yml` reference
+index – so “expose” meant DISCOVERABILITY (docs), not a NAMESPACE/code
+change (TDD therefore N/A throughout). The sweep mapped: the app
+exposure (Input tab “Focal animals only; pedigree built from database”
+radio -\> the “Optional: Pedigree File (build offline; no database)”
+upload, `modInput.R:331-343`; an `nprcgenekeeprFileErr` surfaces as a
+“File Read Error” row); two parallel doc systems (4 website-only `.qmd`
+scripting articles vs 4 shipped `.Rmd` CRAN vignettes); the exact input
+formats (focal-id file: first column = IDs; pedigree file: requires
+`id`/`sire`/`dam`) and all SIX `nprcgenekeeprFileErr` messages; and the
+shipped example pair (`focalAnimalsShortList.csv` +
+`ExamplePedigree.csv`). A pre-RED scope `AskUserQuestion` offered three
+homes (website article / new CRAN vignette / section in
+`a2interactive.Rmd`); owner chose the **website article**. Wrote
+`vignettes/articles/offline-focal-animal-workflow.qmd` (5th in the
+series), cross-linked it from `studbook-quality-control.qmd`’s See also,
+and added `getFocalAnimalPedFromFile` to BOTH `inst/_pkgdown.yml`
+reference lists. Verified every chunk under `load_all` FIRST (focal
+`"C"` -\> 4 rows incl. the full-sibling collateral `D`; the shipped 5-ID
+list -\> a **2922 x 11** connected component; all 6 error messages
+reproduced verbatim) THEN `quarto render` (all 19 steps clean; HTML
+contained the outputs; `.qmd` pure ASCII; no unresolved `@sec-` ref
+after I swapped the one prose cross-ref to plain text), then removed the
+render litter. No NEWS line (website-only; S116 precedent).
+
+**Reflexes:** \[a task to “document/expose function X” where X is
+already exported = a DISCOVERABILITY gap (vignette/article + reference
+index), not a code change – confirm export status FIRST; if exported,
+TDD is N/A (pure docs)\]\[default home for “script function X directly”
+docs on this repo = a NEW website-only `vignettes/articles/*.qmd`
+mirroring `genetic-value-analysis.qmd`; offer the owner the home
+(website article vs shipped CRAN vignette vs extend an existing
+vignette) as a pre-RED scope `AskUserQuestion` – it changes who can read
+it and the `R CMD check` surface\]\[an exported function absent from
+`inst/_pkgdown.yml` makes `pkgdown` warn “topic missing from index” –
+add it next to its sibling when you document it\]\[verify an executable
+doc in two steps: run EVERY chunk in-session under `load_all` to capture
+real outputs before writing prose, THEN `quarto render` as the
+build-equivalent – and CLEAN the litter (`.html`, `_files/`, quarto’s
+`.gitignore`, `.quarto/`); only the `.qmd` is tracked\]\[website-only
+article -\> CHANGELOG yes, NEWS no (S116 precedent +
+\[\[news-vs-changelog\]\]); keep the `.qmd` ASCII to dodge the
+NEWS-class smart-quote/en-dash traps\]\[a tiny self-contained
+[`tempfile()`](https://rdrr.io/r/base/tempfile.html) example FIRST
+(reader sees the structure, install-independent) THEN the realistic
+shipped pair is the clearest worked-example pattern\]. **Apply:** any
+“document/expose function X”, “write a vignette/article”, or “add an
+example for X” task on this repo.

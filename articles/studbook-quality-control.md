@@ -278,6 +278,9 @@ mode to get the clean pedigree the analyses consume.
   pedigree by genetic value.
 - The **Forming Breeding Groups** article – assembles breeding groups
   from a quality-controlled pedigree.
+- The **Building a Focal-Animal Pedigree Offline** article – builds a
+  focal pedigree from files with no database; quality-control it here as
+  the next step.
 - [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
   – the function documented here.
 - [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)

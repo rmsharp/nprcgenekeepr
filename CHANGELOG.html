@@ -24,6 +24,7 @@
     <li><a class="dropdown-item" href="articles/breeding-group-formation.html">Forming Breeding Groups</a></li>
     <li><a class="dropdown-item" href="articles/ColonyManagerTutorial.html">GeneKeepR: A Colony Manager's Tutorial</a></li>
     <li><a class="dropdown-item" href="articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
+    <li><a class="dropdown-item" href="articles/offline-focal-animal-workflow.html">Building a Focal-Animal Pedigree Offline</a></li>
     <li><a class="dropdown-item" href="articles/simulatedKValues.html">Quick Example of Simulated Kinships with Partial Parentage</a></li>
     <li><a class="dropdown-item" href="articles/studbook-quality-control.html">Studbook Quality Control</a></li>
   </ul></li>
@@ -51,6 +52,22 @@
 <p>Format loosely follows <a href="https://keepachangelog.com/" class="external-link">Keep a Changelog</a>. When completing work, remove the item from <code>BACKLOG.md</code> and add an entry here.</p>
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
+<div class="section level3">
+<h3 id="id_2026-06-21--documentedexposed-the-offline-focal-animal-workflow-as-a-website-article-session-161">2026-06-21 — Documented/exposed the offline focal-animal workflow as a website article (Session 161)<a class="anchor" aria-label="anchor" href="#id_2026-06-21--documentedexposed-the-offline-focal-animal-workflow-as-a-website-article-session-161"></a></h3>
+<ul><li>
+<strong>Deliverable (owner pick, single item):</strong> make the offline focal-animal pedigree workflow (<code><a href="reference/getFocalAnimalPedFromFile.html">getFocalAnimalPedFromFile()</a></code>) discoverable for end users. The function was already <strong>exported</strong> with a full man page but covered by no vignette/article and missing from the pkgdown reference index — so “expose” meant documentation, not a code/NAMESPACE change (<strong>TDD N/A</strong> — pure docs). <strong>0 stakeholder corrections.</strong>
+</li>
+<li>
+<strong>Grounding (read-only 4-agent sweep):</strong> mapped (1) the app exposure — Input tab “Focal animals only; pedigree built from database” radio → the “Optional: Pedigree File (build offline; no database)” upload (<code>modInput.R:331-343</code>); a returned <code>nprcgenekeeprFileErr</code> surfaces as a “File Read Error” row; (2) the two doc systems — 4 website-only <code>.qmd</code> scripting articles vs 4 shipped <code>.Rmd</code> CRAN vignettes; (3) the exact input formats (focal-id file: first column = IDs; pedigree file requires <code>id</code>/<code>sire</code>/<code>dam</code>) and all six <code>nprcgenekeeprFileErr</code> messages; (4) the shipped example pair <code>focalAnimalsShortList.csv</code> + <code>ExamplePedigree.csv</code>.</li>
+<li>
+<strong>Scope decision (pre-RED <code>AskUserQuestion</code>):</strong> owner chose a <strong>website-only Quarto article</strong> over a new shipped CRAN vignette or a section in <code>a2interactive.Rmd</code>.</li>
+<li>
+<strong>Wrote</strong> <code>vignettes/articles/offline-focal-animal-workflow.qmd</code> — the 5th in the scripting-article series, mirroring <code>genetic-value-analysis.qmd</code> (overview; the two inputs; a self-contained <code><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile()</a></code> example; the shipped colony pair; the fail-soft error table; the Shiny-app steps; Key arguments; See also; References). <strong>Cross-linked</strong> it from <code>studbook-quality-control.qmd</code>’s See also, and <strong>added</strong> <code>getFocalAnimalPedFromFile</code> to both <code>inst/_pkgdown.yml</code> reference lists (it was missing → <code>pkgdown</code> would warn “topic missing from index”).</li>
+<li>
+<strong>Verification (the doc build-equivalent):</strong> ran every chunk in-session under <code><a href="https://pkgload.r-lib.org/reference/load_all.html" class="external-link">pkgload::load_all</a></code> first — focal <code>"C"</code> → 4 rows (incl. the full-sibling collateral <code>D</code>); the shipped 5-ID list → a 2922×11 connected component; all six error messages reproduced — then <code>quarto render</code> (all 19 steps clean; HTML contains the outputs; the <code>.qmd</code> is pure ASCII; no unresolved <code>@sec-</code> ref). Removed the render litter (<code>.html</code>, <code>_files/</code>, quarto <code>.gitignore</code>, <code>.quarto/</code>) — only the <code>.qmd</code> is tracked.</li>
+<li>
+<strong>No NEWS entry:</strong> the article is website-only (<code>vignettes/articles/</code> is <code>.Rbuildignore</code>d), so per the Session 116 precedent and <code>[[news-vs-changelog]]</code> it gets this CHANGELOG entry, not a NEWS line — which also avoids the NEWS smart-quote/en-dash render traps. → Learning 153.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="id_2026-06-21--published-s159-pr-66-the-offline-focal-id-warning-muffle-is-on-master--and-codecovproject-passed-confirming-the-65-fix-live-session-160">2026-06-21 — Published S159 (PR #66): the offline focal-id warning-muffle is on <code>master</code> — and <code>codecov/project</code> PASSED, confirming the #65 fix live (Session 160)<a class="anchor" aria-label="anchor" href="#id_2026-06-21--published-s159-pr-66-the-offline-focal-id-warning-muffle-is-on-master--and-codecovproject-passed-confirming-the-65-fix-live-session-160"></a></h3>
 <ul><li>

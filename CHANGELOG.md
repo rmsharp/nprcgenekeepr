@@ -15,6 +15,54 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-21 — Documented/exposed the offline focal-animal workflow as a website article (Session 161)
+
+- **Deliverable (owner pick, single item):** make the offline
+  focal-animal pedigree workflow
+  ([`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md))
+  discoverable for end users. The function was already **exported** with
+  a full man page but covered by no vignette/article and missing from
+  the pkgdown reference index — so “expose” meant documentation, not a
+  code/NAMESPACE change (**TDD N/A** — pure docs). **0 stakeholder
+  corrections.**
+- **Grounding (read-only 4-agent sweep):** mapped (1) the app exposure —
+  Input tab “Focal animals only; pedigree built from database” radio →
+  the “Optional: Pedigree File (build offline; no database)” upload
+  (`modInput.R:331-343`); a returned `nprcgenekeeprFileErr` surfaces as
+  a “File Read Error” row; (2) the two doc systems — 4 website-only
+  `.qmd` scripting articles vs 4 shipped `.Rmd` CRAN vignettes; (3) the
+  exact input formats (focal-id file: first column = IDs; pedigree file
+  requires `id`/`sire`/`dam`) and all six `nprcgenekeeprFileErr`
+  messages; (4) the shipped example pair `focalAnimalsShortList.csv` +
+  `ExamplePedigree.csv`.
+- **Scope decision (pre-RED `AskUserQuestion`):** owner chose a
+  **website-only Quarto article** over a new shipped CRAN vignette or a
+  section in `a2interactive.Rmd`.
+- **Wrote** `vignettes/articles/offline-focal-animal-workflow.qmd` — the
+  5th in the scripting-article series, mirroring
+  `genetic-value-analysis.qmd` (overview; the two inputs; a
+  self-contained [`tempfile()`](https://rdrr.io/r/base/tempfile.html)
+  example; the shipped colony pair; the fail-soft error table; the
+  Shiny-app steps; Key arguments; See also; References).
+  **Cross-linked** it from `studbook-quality-control.qmd`’s See also,
+  and **added** `getFocalAnimalPedFromFile` to both `inst/_pkgdown.yml`
+  reference lists (it was missing → `pkgdown` would warn “topic missing
+  from index”).
+- **Verification (the doc build-equivalent):** ran every chunk
+  in-session under
+  [`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)
+  first — focal `"C"` → 4 rows (incl. the full-sibling collateral `D`);
+  the shipped 5-ID list → a 2922×11 connected component; all six error
+  messages reproduced — then `quarto render` (all 19 steps clean; HTML
+  contains the outputs; the `.qmd` is pure ASCII; no unresolved `@sec-`
+  ref). Removed the render litter (`.html`, `_files/`, quarto
+  `.gitignore`, `.quarto/`) — only the `.qmd` is tracked.
+- **No NEWS entry:** the article is website-only (`vignettes/articles/`
+  is `.Rbuildignore`d), so per the Session 116 precedent and
+  `[[news-vs-changelog]]` it gets this CHANGELOG entry, not a NEWS line
+  — which also avoids the NEWS smart-quote/en-dash render traps. →
+  Learning 153.
+
 ### 2026-06-21 — Published S159 (PR \#66): the offline focal-id warning-muffle is on `master` — and `codecov/project` PASSED, confirming the \#65 fix live (Session 160)
 
 - **Deliverable (owner pick, single item):** publish S159’s
