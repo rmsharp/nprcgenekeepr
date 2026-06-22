@@ -4,7 +4,12 @@
 \alias{modPotentialParentsServer}
 \title{Potential Parents Module - Server Function}
 \usage{
-modPotentialParentsServer(id, pedigree = NULL, minParentAge = 2)
+modPotentialParentsServer(
+  id,
+  pedigree = NULL,
+  minParentAge = 2,
+  gestationTable = NULL
+)
 }
 \arguments{
 \item{id}{character vector of length 1. Module namespace identifier.}
@@ -13,6 +18,11 @@ modPotentialParentsServer(id, pedigree = NULL, minParentAge = 2)
 
 \item{minParentAge}{numeric minimum age in years for an animal to be a
 parent. Defaults to 2 (the QC default).}
+
+\item{gestationTable}{optional species-to-gestation lookup passed to
+\code{\link{getSpeciesGestation}} when defaulting the gestation window;
+\code{NULL} (the default) uses the bundled \code{\link{speciesGestation}}
+table.}
 }
 \value{
 A list of reactive expressions:
@@ -20,6 +30,8 @@ A list of reactive expressions:
 \item \code{potentialParents} - the raw \code{getPotentialParents} result
 (or \code{NULL}).
 \item \code{tableData} - the flattened results data.frame.
+\item \code{gestationDefault} - the species-keyed default gestation window
+(days) used to prefill the maximum-gestational-period input.
 }
 }
 \description{

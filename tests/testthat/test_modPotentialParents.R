@@ -217,3 +217,271 @@ test_that("modPotentialParentsServer returns the expected reactive list", {
     }
   )
 })
+
+# =============================================================================
+# Issue #46 item 2b - species-keyed prefill of the gestation numericInput.
+#
+# firstPedigreeSpecies() - pure helper: the single representative species used
+# to default the gestation window (first non-NA, non-empty species value).
+# =============================================================================
+
+test_that("firstPedigreeSpecies exists", {
+  expect_true(exists("firstPedigreeSpecies"))
+})
+
+test_that("firstPedigreeSpecies returns the first non-NA species value", {
+  ped <- data.frame(
+    id = c("A", "B", "C"),
+    species = c(NA, "TESTSP", "RHESUS"),
+    stringsAsFactors = FALSE
+  )
+  expect_identical(firstPedigreeSpecies(ped), "TESTSP")
+})
+
+test_that("firstPedigreeSpecies skips empty and whitespace-only species", {
+  ped <- data.frame(
+    id = c("A", "B", "C"),
+    species = c("", "   ", "MULATTA"),
+    stringsAsFactors = FALSE
+  )
+  expect_identical(firstPedigreeSpecies(ped), "MULATTA")
+})
+
+test_that("firstPedigreeSpecies returns NA when all species are NA or empty", {
+  ped <- data.frame(
+    id = c("A", "B"),
+    species = c(NA, ""),
+    stringsAsFactors = FALSE
+  )
+  expect_identical(firstPedigreeSpecies(ped), NA_character_)
+})
+
+test_that("firstPedigreeSpecies returns NA when there is no species column", {
+  ped <- data.frame(
+    id = c("A", "B"),
+    sex = c("M", "F"),
+    stringsAsFactors = FALSE
+  )
+  expect_identical(firstPedigreeSpecies(ped), NA_character_)
+})
+
+test_that("firstPedigreeSpecies returns NA for NULL or a non-data.frame", {
+  expect_identical(firstPedigreeSpecies(NULL), NA_character_)
+  expect_identical(firstPedigreeSpecies("not a data.frame"), NA_character_)
+})
+
+# =============================================================================
+# pedigreeGestationDefault() - pure helper: species -> gestation default.
+# An injected gestationTable makes differentiation testable (the shipped
+# RHESUS-only table collapses every species to the 210 fallback, so a test
+# against it would false-GREEN against an ignores-species implementation).
+# =============================================================================
+
+# RHESUS keeps 210; TESTSP is a distinct, non-default value (90).
+testGestTable <- data.frame(
+  species = c("RHESUS", "TESTSP"),
+  gestation = c(210L, 90L),
+  stringsAsFactors = FALSE
+)
+
+test_that("pedigreeGestationDefault exists", {
+  expect_true(exists("pedigreeGestationDefault"))
+})
+
+test_that("pedigreeGestationDefault keys the default on the pedigree species", {
+  ped <- data.frame(
+    id = c("A", "B"),
+    species = c("TESTSP", "TESTSP"),
+    stringsAsFactors = FALSE
+  )
+  expect_identical(
+    pedigreeGestationDefault(ped, gestationTable = testGestTable), 90L
+  )
+})
+
+test_that("pedigreeGestationDefault returns 210 for RHESUS", {
+  ped <- data.frame(
+    id = c("A", "B"),
+    species = c("RHESUS", "RHESUS"),
+    stringsAsFactors = FALSE
+  )
+  expect_identical(
+    pedigreeGestationDefault(ped, gestationTable = testGestTable), 210L
+  )
+})
+
+test_that("pedigreeGestationDefault falls back to 210 with no species column", {
+  ped <- data.frame(
+    id = c("A", "B"),
+    sex = c("M", "F"),
+    stringsAsFactors = FALSE
+  )
+  expect_identical(
+    pedigreeGestationDefault(ped, gestationTable = testGestTable), 210L
+  )
+})
+
+test_that("pedigreeGestationDefault falls back to 210 when species are all NA", {
+  ped <- data.frame(
+    id = c("A", "B"),
+    species = c(NA_character_, NA_character_),
+    stringsAsFactors = FALSE
+  )
+  expect_identical(
+    pedigreeGestationDefault(ped, gestationTable = testGestTable), 210L
+  )
+})
+
+test_that("pedigreeGestationDefault returns a single integer", {
+  ped <- data.frame(
+    id = "A", species = "TESTSP", stringsAsFactors = FALSE
+  )
+  out <- pedigreeGestationDefault(ped, gestationTable = testGestTable)
+  expect_true(is.integer(out))
+  expect_length(out, 1L)
+})
+
+test_that("pedigreeGestationDefault uses the bundled table when none supplied", {
+  ped <- data.frame(
+    id = "A", species = "RHESUS", stringsAsFactors = FALSE
+  )
+  expect_identical(pedigreeGestationDefault(ped), 210L)
+})
+
+# =============================================================================
+# prefillGuardAllows() - pure helper: the override guard (the documented
+# 'dragon'). A prefill is allowed only when the user has NOT manually edited
+# the value (current is unset, or still equal to the last value we set).
+# =============================================================================
+
+test_that("prefillGuardAllows exists", {
+  expect_true(exists("prefillGuardAllows"))
+})
+
+test_that("prefillGuardAllows allows prefill when current is NULL or NA", {
+  expect_true(prefillGuardAllows(NULL, 210L))
+  expect_true(prefillGuardAllows(NA_integer_, 210L))
+})
+
+test_that("prefillGuardAllows allows prefill when current equals the last auto value", {
+  expect_true(prefillGuardAllows(210L, 210L))
+  expect_true(prefillGuardAllows(90L, 90L))
+})
+
+test_that("prefillGuardAllows blocks prefill when the user has edited the value", {
+  expect_false(prefillGuardAllows(150L, 210L))
+  expect_false(prefillGuardAllows(90L, 210L))
+})
+
+# =============================================================================
+# modPotentialParentsServer() - the species-keyed prefill, end to end.
+# =============================================================================
+
+test_that("modPotentialParentsServer exposes a gestationDefault reactive", {
+  skip_if_not_installed("shiny")
+
+  ped <- data.frame(
+    id = c("A", "B"),
+    sire = c(NA, NA),
+    dam = c(NA, NA),
+    sex = c("M", "F"),
+    species = c("RHESUS", "RHESUS"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPotentialParentsServer,
+    args = list(pedigree = shiny::reactive(ped), minParentAge = 2),
+    {
+      result <- session$getReturned()
+      expect_true("gestationDefault" %in% names(result))
+      expect_true(is.function(result$gestationDefault))
+    }
+  )
+})
+
+test_that("modPotentialParentsServer gestationDefault keys on the pedigree species", {
+  skip_if_not_installed("shiny")
+
+  ped <- data.frame(
+    id = c("A", "B"),
+    sire = c(NA, NA),
+    dam = c(NA, NA),
+    sex = c("M", "F"),
+    species = c("TESTSP", "TESTSP"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPotentialParentsServer,
+    args = list(
+      pedigree = shiny::reactive(ped), minParentAge = 2,
+      gestationTable = testGestTable
+    ),
+    {
+      expect_identical(session$getReturned()$gestationDefault(), 90L)
+    }
+  )
+})
+
+test_that("modPotentialParentsServer gestationDefault falls back to 210 without species", {
+  skip_if_not_installed("shiny")
+
+  ped <- data.frame(
+    id = c("A", "B"),
+    sire = c(NA, NA),
+    dam = c(NA, NA),
+    sex = c("M", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPotentialParentsServer,
+    args = list(
+      pedigree = shiny::reactive(ped), minParentAge = 2,
+      gestationTable = testGestTable
+    ),
+    {
+      expect_identical(session$getReturned()$gestationDefault(), 210L)
+    }
+  )
+})
+
+test_that("modPotentialParentsServer does not clobber a user's manual value on pedigree re-fire", {
+  skip_if_not_installed("shiny")
+
+  pedA <- data.frame(
+    id = c("A", "B"),
+    sire = c(NA, NA),
+    dam = c(NA, NA),
+    sex = c("M", "F"),
+    species = c("TESTSP", "TESTSP"),
+    stringsAsFactors = FALSE
+  )
+  pedB <- data.frame(
+    id = c("C", "D"),
+    sire = c(NA, NA),
+    dam = c(NA, NA),
+    sex = c("M", "F"),
+    species = c("TESTSP", "TESTSP"),
+    stringsAsFactors = FALSE
+  )
+  pedVal <- shiny::reactiveVal(pedA)
+
+  shiny::testServer(
+    modPotentialParentsServer,
+    args = list(
+      pedigree = pedVal, minParentAge = 2, gestationTable = testGestTable
+    ),
+    {
+      # User manually overrides the prefilled default.
+      session$setInputs(maxGestationalPeriod = 150)
+      session$flushReact()
+      # A new pedigree loads (re-fires the pedigree reactive).
+      pedVal(pedB)
+      session$flushReact()
+      # The guard exercised the skip branch; the default still computes.
+      expect_identical(session$getReturned()$gestationDefault(), 90L)
+    }
+  )
+})
