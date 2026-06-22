@@ -15,6 +15,59 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-21 — Quieted the benign `read.csv` “cannot open file” warning on the offline focal-id read (Session 159)
+
+- **Deliverable (owner pick, single item):** silence the benign
+  `read.csv` “cannot open file …” **warning** that leaked to the console
+  on the offline focal path when the focal-id list file is
+  missing/unreadable. The function already returned the correct classed
+  `nprcgenekeeprFileErr`; only the deferred warning printed ahead of the
+  caught error (S155 carryover, the queued 2nd item). **Strict TDD**
+  (RED → GREEN → REFACTOR, all phase gates via `AskUserQuestion`). **0
+  stakeholder corrections.** SOLO.
+- **Root cause:** `readFocalAnimalIds()` calls
+  `read.csv(fileName, ...)`; on a missing/unreadable path `read.csv`
+  signals a `cannot open file` **warning** *and then* an error. The
+  existing `muffleIncompleteFinalLine()` wrapper muffles only the
+  “incomplete final line” warning, so the “cannot open file” warning
+  deferred to the top level and printed. The error was caught by the
+  `tryCatch` in
+  [`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md)
+  and turned into `nprcgenekeeprFileErr`. Only the *focal-id* read
+  leaked — the pedigree read is already guarded by
+  `getPedigreeSource()`’s
+  [`file.exists()`](https://rdrr.io/r/base/files.html) pre-check.
+- **Fix (control-flow-neutral):** added a small `@noRd` sibling muffler
+  `muffleCannotOpenFile()` (a `withCallingHandlers` that
+  `invokeRestart("muffleWarning")`s only on the `cannot open file`
+  message) and nested it around the existing
+  `muffleIncompleteFinalLine(read.csv(...))` in `readFocalAnimalIds()`.
+  The accompanying error still propagates, so the caught classed error
+  is unchanged; only the console warning is removed. Covers both missing
+  and exists-but-unreadable files. Chose this over a
+  [`file.exists()`](https://rdrr.io/r/base/files.html) pre-check, which
+  would change the thrown error of a SHARED helper (also used by the
+  online
+  [`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md))
+  and miss the unreadable case. The shared `muffleIncompleteFinalLine`
+  and its 4 callers are untouched (Learning 145).
+- **Tests (RED → GREEN):** added 2 tests to
+  `test_getFocalAnimalPedFromFile.R` — a boundary test
+  ([`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md)
+  on a missing focal-id file emits no warning yet still returns the
+  classed error) and a helper test (`readFocalAnimalIds()` still throws
+  but emits no warning). RED: both failed for the right reason (warning
+  leaked; function resolved — no false-pass), 0 errored (Learning 145).
+  GREEN: all 13 file tests pass, and the pre-existing test 8’s
+  leaked-warning count dropped 1 → 0.
+- **Verification:** lint 0; full suite 1120 tests, 0 failed / 0 error;
+  `devtools::check()` **0/0/0**; Phase-3E cold-call smoke (installed
+  package) — a missing focal-id file is **silent** and returns
+  `nprcgenekeeprFileErr`, happy path unchanged. Incidental: the standard
+  `document()` step re-synced a stale `man/getFocalAnimalPedFromFile.Rd`
+  (an S155-era `@return` reword never re-documented; pure text reflow,
+  no semantic change). → Learning 151.
+
 ### 2026-06-21 — Consolidated the two codecov configs into one so the 1% threshold applies (issue \#65, Session 158)
 
 - **Deliverable (owner directive, single item):** fix **issue \#65** —

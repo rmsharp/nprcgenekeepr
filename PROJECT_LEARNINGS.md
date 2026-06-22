@@ -10023,3 +10023,69 @@ config\]. **Apply:** any “consolidate/duplicate config” or CI-config
 fix; any task touching codecov / CI YAML; any time a configured
 threshold is provably not being applied; any file rewrite that happens
 to contain a secret.
+
+#### Learning 151 – To silence a benign warning that a fail-soft boundary’s underlying read emits BEFORE the error that gets caught, add a TARGETED warning muffler at the READ SITE (`withCallingHandlers` + `invokeRestart("muffleWarning")` matched to the specific message) – do NOT broaden the shared muffler (widens blast radius across all its callers) and do NOT pre-check `file.exists()` (that changes a SHARED helper’s THROWN error and misses the exists-but-unreadable case). The muffle is control-flow-neutral: the error still propagates, so the caught classed result is unchanged – assert BOTH “no warning” AND “error still thrown”. (S159, quiet the offline focal-id read’s `read.csv` “cannot open file” warning)
+
+**What happened.** S155 left a benign residual: a missing/unreadable
+focal-id file made
+[`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md)
+return the correct classed `nprcgenekeeprFileErr`, but
+[`read.csv()`](https://rdrr.io/r/utils/read.table.html) (inside
+`readFocalAnimalIds()`) signals a `cannot open file '...'` WARNING *and
+then* an error – and the existing `muffleIncompleteFinalLine()` wrapper
+muffles only the “incomplete final line” warning, so the “cannot open
+file” warning deferred to the top level and printed to the console even
+though the error was already caught and reported. Grounding pinned the
+leak to the FOCAL-ID read only: the pedigree read is already guarded by
+`getPedigreeSource()`’s
+[`file.exists()`](https://rdrr.io/r/base/files.html) pre-check (a
+not-found pedigree never reaches `read.table`, so it never warns). Two
+fix shapes were on the table: (a) a
+[`file.exists()`](https://rdrr.io/r/base/files.html) pre-check + clean
+[`stop()`](https://rdrr.io/r/base/stop.html) mirroring
+`getPedigreeSource` – rejected because `readFocalAnimalIds()` is SHARED
+with the online
+[`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md),
+so it would change that helper’s thrown error AND it misses the
+exists-but-unreadable (permission) case; (b) a targeted warning muffler
+at the read site – chosen (owner-approved). Added a small `@noRd`
+sibling `muffleCannotOpenFile()` (a `withCallingHandlers` that
+`invokeRestart("muffleWarning")`s only when `conditionMessage(w)`
+matches “cannot open file”) and nested it around the existing
+`muffleIncompleteFinalLine(read.csv(...))`. Because the muffler handles
+only the warning, the error still propagates to the caller’s `tryCatch`
+– so the classed result is byte-identical; ONLY the console noise is
+gone. The shared `muffleIncompleteFinalLine` and its 4 call sites stayed
+untouched (Learning 145 – do not broaden working shared code for a
+one-site need). RED asserted BOTH facets: a boundary test
+(`expect_no_warning` + still-classed-error) AND a helper test (still
+throws, via an explicit `withCallingHandlers`/`tryCatch` recorder, +
+asserts no warning) – both failed for the right reason (warning leaked;
+function resolved, 0 errored, Learning 145), then passed GREEN, and the
+pre-existing test’s leaked-warning count dropped 1 -\> 0 (independent
+confirmation). Incidental: the standard `document()` step re-synced a
+stale `man/getFocalAnimalPedFromFile.Rd` (an S155-era `@return` reword
+never re-documented; pure text reflow, no semantic change) – included +
+flagged, not scope creep.
+
+**Reflexes:** \[a fail-soft boundary that already returns a classed
+error can STILL leak a console warning – the underlying
+`read.*`/[`file()`](https://rdrr.io/r/base/connections.html) signals a
+warning BEFORE the error; muffle the warning, the error still
+flows\]\[muffle at the READ SITE with a message-matched
+`withCallingHandlers`/`invokeRestart("muffleWarning")`, NOT by
+broadening a shared muffler (blast radius across its callers) and NOT by
+[`file.exists()`](https://rdrr.io/r/base/files.html)-pre-checking a
+SHARED helper (changes its thrown error; misses
+exists-but-unreadable)\]\[a warning muffle is control-flow-neutral –
+PROVE it: assert BOTH “no warning” AND “error/return unchanged”, so a
+later refactor that accidentally swallows the error fails the
+test\]\[when two siblings share an internal helper, fix the one site
+without touching the helper unless BOTH need it (Learning 145)\]\[a
+stale generated artifact surfaced by the standard `document()` step is a
+sync, not scope creep – include it and flag the pre-existing drift\].
+**Apply:** any “quiet a benign warning” / “silence console noise” task
+on a fail-soft read path; any place a caught error is preceded by a
+leaked
+`read.csv`/`read.table`/[`file()`](https://rdrr.io/r/base/connections.html)
+warning.

@@ -79,6 +79,15 @@
     alongside the existing `"labkey"` and `"dataframe"` sources. This
     makes LabKey one pluggable provider among several and extends the
     offline, deterministic test seam.
+  - The offline focal-animal path no longer prints a benign
+    `cannot open file ...` warning when the focal-id list file is
+    missing or unreadable.
+    [`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md)
+    already reported the failure as a classed error; the underlying
+    [`read.csv()`](https://rdrr.io/r/utils/read.table.html) warning that
+    leaked to the console ahead of the caught error is now muffled at
+    the read site, so the fail-soft path is silent. The returned value
+    and the reported error are unchanged.
 
 ## nprcgenekeepr 2.0.0 (20260618)
 
