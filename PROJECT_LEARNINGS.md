@@ -10504,3 +10504,58 @@ and flag it as a follow-up rather than silently fixing it out of scope
 feature, especially where the shipped table is small or collapses to the
 default; any package function that consumes a new `data/` object; any
 session whose verification surfaces a NOTE in an untouched file.
+
+#### Learning 159 – A prior handoff’s prescribed fix can carry a wrong MECHANISM; verify the fix PATH exists before following it. The S167 handoff (and its CHANGELOG/Learning 158) said the pre-existing `R CMD check` spelling NOTE (“untyped” in `NEWS.md`) should be cleared by “adding to `inst/WORDLIST` AND regenerating `tests/spelling.Rout.save`” – but `tests/spelling.Rout.save` DOES NOT EXIST in this package. The spelling check is `spelling::spell_check_test(vignettes = TRUE, error = FALSE, skip_on_cran = TRUE)` (`tests/spelling.R`) backed by `inst/WORDLIST` as the whitelist; the WORDLIST is the ONLY lever – there is no `.Rout.save` to regenerate. Adding the bare word “untyped” to `inst/WORDLIST` took the local fast `R CMD check` (`--as-cran`, no vignettes/manual) from 1 NOTE -\> **0/0/0**, confirming both the NOTE’s source and the fix in one run. Second, empirically grounded: `spelling::spell_check_package(".")` SKIPS markdown code spans (backtick-delimited inline code), so backticked identifiers are never checked and need no WORDLIST entry – only bare PROSE words are. Proof: two new NEWS bullets dense with NEW backticked identifiers (`getSpeciesGestation`, `speciesGestation`) plus prose (“macaque”, “whitespace”, “lookup”, “extensible”, “seeded”) added ZERO new flagged words; the only unrecognized word stayed “untyped” (S166’s bare-prose term, which sits outside backticks). So a user-facing NEWS edit normally needs no WORDLIST change as long as code is backticked and prose stays dictionary-clean – but RUN `spell_check_package` to KNOW the exact delta rather than predicting which words trip. (S168, publish S167 – PR \#69, issue \#46 item 2)
+
+**What happened.** Owner picked option 1 (“publish S167”), then directed
+“if 2 deliverables, only do 1” – so this was a single publish session
+(item 2b UI prefill stays owner’s-pick; bundling publish + a TDD slice
+is FM \#18/#25). Three S167-flagged pre-publish steps, shipped in one
+PR: (a) the NEWS entry – a dev-version `Changes` bullet for the
+species-keyed
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+window (phrased honestly: the shipped rhesus-only table falls back to
+210, so existing data is unchanged; the mechanism is the extensible
+part) + two `New features` bullets for the exported
+[`getSpeciesGestation()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesGestation.md)
+and the `speciesGestation` data object; re-rendered `NEWS.md` (permanent
+`html_preview:false`+`md_extensions:"-smart"`, Learning 155) -\> 0
+non-ASCII, no stray `.html`, a confined pure-insertion diff. (b)/(c): a
+BASELINE `spell_check_package(".")` BEFORE editing flagged exactly
+“untyped” (NEWS.md:9 prose); AFTER my edits it STILL flagged only
+“untyped” – so the code-span-skip held and the WORDLIST delta was a
+single word. Discovered `tests/spelling.Rout.save` does not exist (the
+handoff’s “regenerate” step was a wrong assumption); added “untyped” to
+`inst/WORDLIST` in alpha position; re-ran -\> 0 unrecognized; local
+`R CMD check` -\> 0/0/0. Committed NEWS+WORDLIST (`a89e9e2e`),
+stash-carried the S168 stub. Pre-flight: fetch exit 0, 0-behind/3-ahead
+clean FF, ancestor-confirmed, merge-tree 0 conflicts, 17-file blast
+radius all expected, deliverable symbols confirmed firsthand at HEAD.
+Pushed; PR \#69; all 10 CI checks PASS first try (`codecov/project`
+green – test-adding PR, Learning 152; ubuntu-devel 17m24s the long pole)
+– this time `--watch` exited cleanly but I still re-queried fresh
+non-watch (Learning 157) before the `AskUserQuestion`-gated merge.
+`gh pr merge 69 --merge` -\> merge commit `baf916cb` (verified MERGED
+firsthand); reconciled `master` via verified fetch + ancestor-gated
+`reset --hard` (both old-master `cae02dde` and merged-head `a89e9e2e`
+confirmed ancestors first); stash-popped the stub; verified the
+deliverable on `master`; verified-merged-before-delete branch cleanup
+(local+remote deleted, `gh api` 404).
+
+**Reflexes:** \[a prior handoff’s fix RECIPE can be mechanically wrong
+(a phantom `.Rout.save`) – verify the fix PATH exists before following
+it; for `spelling`, the lever is `inst/WORDLIST`, confirmed by a local
+`R CMD check` going 1 NOTE -\> 0\]\[run
+`spelling::spell_check_package(".")` BEFORE and AFTER a doc edit to KNOW
+the exact unrecognized-word delta, rather than predicting which words
+trip the checker\]\[`spell_check_package` skips backtick code spans -\>
+backticked identifiers need no WORDLIST entry; only bare PROSE words do,
+so backtick code in NEWS/docs and keep prose dictionary-clean\]\[a clean
+`--watch` exit is still not authoritative (Learning 157) – re-query
+fresh non-watch even when the watch returns exit 0\]\[a publish carrying
+a user-facing change ships its NEWS entry + any spelling-wordlist fix in
+the SAME PR (Learning 157a); the close-out docs – CHANGELOG / learnings
+/ handoff – commit to `master` AFTER the reconcile, never on the
+published branch\]. **Apply:** any publish session with a NEWS/spelling
+step; any session inheriting a prescribed fix recipe from a prior
+handoff; any doc edit that might introduce new words.
