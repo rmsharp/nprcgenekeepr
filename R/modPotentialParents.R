@@ -42,6 +42,69 @@ flattenPotentialParents <- function(potentialParents) {
   )
 }
 
+#' First representative species in a pedigree
+#'
+#' Returns the first non-\code{NA}, non-empty (whitespace-trimmed) value of the
+#' \code{species} column of \code{ped}. Used to default the gestation window in
+#' \code{\link{modPotentialParentsServer}}. Returns \code{NA_character_} when
+#' \code{ped} is \code{NULL}, is not a data.frame, lacks a \code{species}
+#' column, or has no usable species value.
+#'
+#' @param ped a pedigree data.frame (or \code{NULL}).
+#' @return a length-1 character vector: the first usable species, or
+#'   \code{NA_character_}.
+#' @keywords internal
+#' @noRd
+firstPedigreeSpecies <- function(ped) {
+  if (is.null(ped) || !is.data.frame(ped) || !"species" %in% names(ped)) {
+    return(NA_character_)
+  }
+  sp <- trimws(as.character(ped$species))
+  sp <- sp[!is.na(sp) & nzchar(sp)]
+  if (length(sp) == 0L) {
+    return(NA_character_)
+  }
+  sp[1L]
+}
+
+#' Species-keyed default for the gestation numericInput
+#'
+#' Maps a pedigree's representative species (see \code{firstPedigreeSpecies})
+#' to a gestation-window default via \code{\link{getSpeciesGestation}}. Falls
+#' back to 210 days when the species is absent, \code{NA}, or unknown.
+#'
+#' @param ped a pedigree data.frame (or \code{NULL}).
+#' @param gestationTable optional species-to-gestation lookup passed through to
+#'   \code{\link{getSpeciesGestation}}; \code{NULL} uses the bundled
+#'   \code{\link{speciesGestation}} table.
+#' @return a length-1 integer: the gestation default in days.
+#' @keywords internal
+#' @noRd
+pedigreeGestationDefault <- function(ped, gestationTable = NULL) {
+  getSpeciesGestation(firstPedigreeSpecies(ped),
+                      gestationTable = gestationTable)
+}
+
+#' Override guard for the gestation prefill
+#'
+#' Decides whether the species-keyed default may be written into the gestation
+#' numericInput. A prefill is allowed only when the user has not manually
+#' changed the value: \code{current} is unset (\code{NULL}/\code{NA}) or still
+#' equal to the last value the module wrote into the input.
+#'
+#' @param current the current input value (may be \code{NULL} or \code{NA}).
+#' @param lastAuto the last value the module wrote into the input.
+#' @return \code{TRUE} when prefill is allowed, \code{FALSE} when the user has
+#'   edited the value.
+#' @keywords internal
+#' @noRd
+prefillGuardAllows <- function(current, lastAuto) {
+  if (is.null(current) || length(current) == 0L || is.na(current)) {
+    return(TRUE)
+  }
+  isTRUE(current == lastAuto)
+}
+
 #' Potential Parents Module - UI Function
 #'
 #' Copyright(c) 2017-2025 R. Mark Sharp
@@ -122,21 +185,50 @@ modPotentialParentsUI <- function(id) {
 #'   \item \code{potentialParents} - the raw \code{getPotentialParents} result
 #'     (or \code{NULL}).
 #'   \item \code{tableData} - the flattened results data.frame.
+#'   \item \code{gestationDefault} - the species-keyed default gestation window
+#'     (days) used to prefill the maximum-gestational-period input.
 #' }
 #'
 #' @param id character vector of length 1. Module namespace identifier.
 #' @param pedigree reactive returning the current pedigree data.frame.
 #' @param minParentAge numeric minimum age in years for an animal to be a
 #'   parent. Defaults to 2 (the QC default).
+#' @param gestationTable optional species-to-gestation lookup passed to
+#'   \code{\link{getSpeciesGestation}} when defaulting the gestation window;
+#'   \code{NULL} (the default) uses the bundled \code{\link{speciesGestation}}
+#'   table.
 #'
 #' @seealso \code{\link{modPotentialParentsUI}} for the user interface.
 #' @seealso \code{\link{getPotentialParents}} for the underlying computation.
 #' @importFrom shiny moduleServer eventReactive reactive renderUI
 #' @importFrom shiny downloadHandler div helpText
+#' @importFrom shiny observeEvent reactiveVal updateNumericInput
 #' @importFrom utils write.csv
 #' @export
-modPotentialParentsServer <- function(id, pedigree = NULL, minParentAge = 2.0) {
+modPotentialParentsServer <- function(id, pedigree = NULL, minParentAge = 2.0,
+                                      gestationTable = NULL) {
   moduleServer(id, function(input, output, session) {
+
+    # Species-keyed default for the gestation window, plus the last value the
+    # module wrote into the input (so a user's manual edit is never clobbered).
+    lastAutoSet <- reactiveVal(210L)
+
+    gestationDefault <- reactive({
+      ped <- tryCatch(pedigree(), error = function(e) NULL)
+      pedigreeGestationDefault(ped, gestationTable = gestationTable)
+    })
+
+    # Prefill the gestation window from the loaded pedigree's species, unless
+    # the user has manually changed it (the override guard).
+    observeEvent(pedigree(), {
+      if (prefillGuardAllows(input$maxGestationalPeriod, lastAutoSet())) {
+        newDefault <- gestationDefault()
+        updateNumericInput(
+          session, "maxGestationalPeriod", value = newDefault
+        )
+        lastAutoSet(newDefault)
+      }
+    })
 
     potentialParents <- eventReactive(input$findParents, {
       ped <- tryCatch(pedigree(), error = function(e) NULL)
@@ -214,7 +306,8 @@ modPotentialParentsServer <- function(id, pedigree = NULL, minParentAge = 2.0) {
 
     list(
       potentialParents = potentialParents,
-      tableData = tableData
+      tableData = tableData,
+      gestationDefault = gestationDefault
     )
   })
 }
