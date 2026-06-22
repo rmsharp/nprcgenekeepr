@@ -15,6 +15,42 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-21 — Consolidated the two codecov configs into one so the 1% threshold applies (issue \#65, Session 158)
+
+- **Deliverable (owner directive, single item):** fix **issue \#65** —
+  the repo had **two** root codecov configs (`codecov.yml` with the
+  `status.project/patch` `threshold: 1%` block + `.codecov.yml` with no
+  `status` block), so the status-less file won precedence and codecov
+  fell back to its default **0%** threshold, failing `codecov/project`
+  on any coverage dip (empirically: PR \#64’s −0.18% dip with a
+  100%-covered patch). **Config-only** (no production-code logic → TDD
+  N/A). **0 stakeholder corrections.** SOLO (trivial mechanical config
+  edit — a workflow would be theater).
+- **Fix:** consolidated to a **single** `codecov.yml` — folded the
+  display settings from `.codecov.yml` (`round: up`, `range: 20..100`,
+  `precision: 2`) into the `coverage:` block, kept the explicit
+  `status.project`/`status.patch` `threshold: 1%`, added a header
+  comment documenting why one file matters, and **deleted
+  `.codecov.yml`** (verified committed — `58a9db26` — before `git rm`).
+  Removed the now-dead `^\.codecov\.yml$` line from `.Rbuildignore`
+  (complete-job; kept `^codecov\.yml$`).
+- **Token preserved, flagged not removed:** `codecov.yml` carries an
+  embedded upload token that is **redundant** with the workflow’s
+  `secrets.CODECOV_TOKEN` (`test-coverage.yaml` authenticates the
+  `codecov/codecov-action@v4` upload via the GitHub secret, not the YAML
+  token). Preserved it verbatim — removing/rotating a committed
+  credential is a separate owner’s-call security decision, out of scope
+  for \#65 (FM \#8). Flagged for the owner.
+- **Verification (config-layer, this session):** local YAML parse
+  confirmed valid + **no duplicate keys** (the root cause); **codecov’s
+  own validator** (`https://codecov.io/validate`, token redacted so no
+  secret transmitted) returned **`Valid!`** and echoed the parsed
+  `coverage.status.project.default.threshold: 1.0` +
+  `patch.default.threshold: 1.0` — conclusive proof codecov now reads
+  and will apply the 1% thresholds. Full PR-level confirmation (a sub-1%
+  dip passing `codecov/project`) happens on the next PR with a coverage
+  delta — e.g. the queued strict-TDD read.csv fix. → Learning 150.
+
 ### 2026-06-21 — renv bump 1.1.4 → 1.2.3 (caught + fixed a broken `activate.R`) and deleted the merged `richer-offline-focal-errors` branch (Session 157)
 
 - **Deliverable (owner directive, two hygiene items):** (1) commit the

@@ -9957,3 +9957,69 @@ the OLD file (`git show <ref>:path`) the same way before blaming the
 change\]. **Apply:** any session that touches `renv.lock` /
 `renv/activate.R` (bump, self-upgrade, snapshot); any “just commit this
 generated file” task – verify it actually works before calling it done.
+
+#### Learning 150 – When a duplicate-config-file precedence bug is the diagnosis, the fix is exactly ONE file (eliminate the precedence question entirely) – and you can verify the fix AT THE CONFIG LAYER this session rather than deferring to “the next PR”: codecov exposes `https://codecov.io/validate`, which echoes the PARSED config (so you see the actual thresholds it will apply); POST a SECRET-REDACTED copy so no committed token leaves the machine. Do the complete job (remove the now-dead `.Rbuildignore` entry for the deleted file), and PRESERVE – do not silently strip – an embedded credential you happen to be rewriting (rotation is a separate owner decision; FM \#8). (S158, fix issue \#65 – consolidate the two codecov configs)
+
+**What happened.** Issue \#65 (logged by S156 during the PR \#64
+publish): the repo had **two** root codecov configs – `codecov.yml` (the
+real one: `comment: false`, an embedded `token:`, and a
+`coverage.status.project/patch.default.threshold: 1%` block) and
+`.codecov.yml` (a junk template artifact – its comments `# Team Yaml` /
+`# Repository Yaml` / `# Used in Codecov after updating` are copied
+verbatim from codecov’s *documentation example* explaining YAML
+layering, and it has THREE duplicate `coverage:` keys \[last-wins -\>
+`round: up`, `range: 20..100`, `precision: 2`\] and **no `status`
+block**). With both present the status-less `.codecov.yml` won
+precedence, so codecov never applied the 1% threshold (default 0% in
+effect -\> PR \#64’s -0.18% dip failed `codecov/project` despite a
+100%-covered patch). **Evidence-based inventory before deleting**
+(SAFEGUARDS): `git log -- .codecov.yml` proved it committed
+(`58a9db26`); a repo-wide `grep -i codecov` found only two functional
+references – both in `.Rbuildignore` (`^codecov\.yml$` +
+`^\.codecov\.yml$`); the README hit is the badge (app.codecov.io, not a
+config ref); no CI workflow names a config path (`test-coverage.yaml`
+uploads `cobertura.xml` via `codecov/codecov-action@v4`, authenticating
+with `secrets.CODECOV_TOKEN` – so the YAML config is read SERVER-SIDE by
+codecov.io to compute the status checks, and the YAML’s embedded
+`token:` is redundant with the action’s secret). Fix: rewrote
+`codecov.yml` as the single source (folded in `.codecov.yml`’s display
+settings, kept the 1% status block, added a why-one-file header
+comment), `git rm .codecov.yml`, removed the dead `^\.codecov\.yml$`
+from `.Rbuildignore`. **Verified this session, not deferred:** local
+`yaml.safe_load` confirmed valid + no duplicate keys (the root cause);
+`curl --data-binary @<token-redacted-copy> https://codecov.io/validate`
+returned `Valid!` and echoed `threshold: 1.0` for both project and patch
+– conclusive that codecov now reads and applies the 1%. Preserved the
+embedded token verbatim and flagged it (redundant with the GH secret,
+low-sensitivity for a public repo, but a committed credential -\>
+rotation is the owner’s separate call, not a \#65 scope-creep). Direct
+to `master` (CI/build config + bookkeeping, `.Rbuildignore`d out of the
+package, cannot break `R CMD check`; the S156/S157 hygiene-to-master
+pattern).
+
+**Reflexes:** \[when the diagnosis is “duplicate config files -\> wrong
+precedence”, the fix is ONE file – not “fix the loser”; one file makes
+the precedence question moot regardless of the host’s documented
+precedence order\]\[verify a config fix AT THE CONFIG LAYER instead of
+deferring to “next PR” when the tool offers a validator – codecov’s
+`https://codecov.io/validate` echoes the parsed thresholds; many CI
+services have an equivalent (`gitlab-ci/lint`,
+`circleci config validate`, `actionlint`)\]\[REDACT secrets before
+POSTing a config to any external validator –
+`sed 's#token:.*#token: REDACTED#'`; the schema check does not need the
+real secret\]\[a config-file change that is `.Rbuildignore`d / not
+package code cannot break `R CMD check`, so a feature-branch+PR adds no
+CI-gating value and a config-only PR has ~no coverage delta to
+demonstrate the dip-tolerance fix -\> direct-to-master (S156/S157
+hygiene pattern) is correct\]\[complete the job: deleting a file means
+removing its now-dead `.Rbuildignore` / `.gitignore` / manifest entries
+too (anti-FM \#13)\]\[when rewriting a file that contains an embedded
+credential, PRESERVE it verbatim and FLAG it – removing/rotating a
+committed secret is a separate, hard-to-reverse, owner’s-call decision;
+do not fold it into an unrelated config fix (FM \#8)\]\[a `.codecov.yml`
+full of `# Team/Repository Yaml` comments with duplicate `coverage:`
+keys is codecov’s DOC EXAMPLE pasted in by mistake, not an intentional
+config\]. **Apply:** any “consolidate/duplicate config” or CI-config
+fix; any task touching codecov / CI YAML; any time a configured
+threshold is provably not being applied; any file rewrite that happens
+to contain a secret.

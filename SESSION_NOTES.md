@@ -7,6 +7,204 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 158 Did
+
+**Deliverable:** Fix **issue \#65** – consolidate the two root codecov
+configs (`codecov.yml` + `.codecov.yml`) into ONE so the intended 1%
+project/patch threshold applies. **(DONE.)** **Started / Completed:**
+2026-06-21 **Status:** **DONE.** Config-only (no production-code logic
+-\> TDD declared **N/A** every response). **0 stakeholder corrections.**
+SOLO (a trivial mechanical config edit – ultracode is on but a workflow
+would be theater; the substantive verification, the codecov validator
+call, I did myself). - **OWNER PICKED 2 ITEMS; protocol is 1-and-done.**
+Owner chose (`AskUserQuestion`) **“One at a time, \#65 first”** -\> this
+session = ONLY the codecov config fix. The 2nd item (quiet the residual
+`read.csv` warning, strict-TDD) is its own next session. - **ROOT CAUSE
+(confirmed, S156/Learning 148 diagnosis held):** two root configs –
+`codecov.yml` (real: `comment: false` + embedded `token:` +
+`coverage.status.project/patch.default.threshold: 1%`) and
+`.codecov.yml` (a junk **template artifact** – comments
+`# Team Yaml`/`# Repository Yaml`/`# Used in Codecov after updating` are
+codecov’s DOC EXAMPLE pasted verbatim; THREE duplicate `coverage:` keys
+\[last-wins -\> `round: up`, `range: 20..100`, `precision: 2`\]; **no
+`status` block**). Status-less `.codecov.yml` won precedence -\> codecov
+fell back to default **0%** -\> any dip failed `codecov/project` (PR
+\#64’s -0.18% with a 100% patch). - **EVIDENCE-BASED INVENTORY before
+deleting (SAFEGUARDS):** `git log -- .codecov.yml` -\> committed
+`58a9db26` (safe to `git rm`); repo-wide `grep -i codecov` -\> only two
+functional refs, both `.Rbuildignore` (`^codecov\.yml$` +
+`^\.codecov\.yml$`); README hit = the badge (app.codecov.io, not a
+config ref); **no CI workflow names a config path** –
+`test-coverage.yaml` uploads `cobertura.xml` via
+`codecov/codecov-action@v4` authenticating with `secrets.CODECOV_TOKEN`,
+so the root YAML is read **server-side** by codecov.io to compute the
+status checks (and the YAML’s embedded `token:` is **redundant** with
+the action’s GH secret). - **FIX:** rewrote `codecov.yml` as the single
+source (folded `.codecov.yml`’s display settings into `coverage:`, kept
+the explicit 1% `status.project`/`status.patch`, added a why-one-file
+header comment); `git rm .codecov.yml`; removed the now-dead
+`^\.codecov\.yml$` line from `.Rbuildignore` (complete-job, anti-FM
+\#13; kept `^codecov\.yml$`). - **TOKEN: preserved verbatim + flagged,
+NOT removed.** The embedded `91d6f1...` upload token is redundant with
+`secrets.CODECOV_TOKEN` and low-sensitivity for a public repo, but it is
+a committed credential – removing/rotating it is a separate,
+owner’s-call security decision, out of scope for \#65 (FM \#8). Surfaced
+to the owner.
+
+**Phase-3E (runtime smoke test): SATISFIED at the config layer (and it
+earned its keep – did NOT defer to “next PR”).** The codecov config is
+read server-side, so the build-equivalent is **schema validation**: (1)
+local `yaml.safe_load` -\> valid, **no duplicate keys** (the root cause
+eliminated); (2) **codecov’s own validator**
+`curl --data-binary @<token-REDACTED copy> https://codecov.io/validate`
+-\> **`Valid!`** and echoed
+`coverage.status.project.default.threshold: 1.0` +
+`patch.default.threshold: 1.0` – conclusive that codecov now reads and
+will apply the 1%. (Redacted the token so no secret was transmitted.)
+The R-package build is unaffected (`codecov.yml` is `.Rbuildignore`d;
+`.codecov.yml` was too). **Full live confirmation** (a sub-1% dip
+actually passing `codecov/project`) lands on the **next PR with a
+coverage delta** – e.g. the queued read.csv fix; not runnable this
+session (no PR), stated explicitly per Phase-3E, not silently skipped.
+
+**Session 157 Handoff Evaluation (by Session 158): Score 9/10.** S157’s
+handoff (my own immediately-prior turn) listed **“(Fix codecov config –
+issue \#65)” as the FIRST suggested-next option** with an accurate
+one-line scope (“consolidate `codecov.yml` / `.codecov.yml` into one
+file so the intended 1% project threshold applies … Tiny config change;
+verify on the next PR. (See Learning 148.)”), and **gotcha 3** stated
+the mechanism precisely (two configs -\> 1% not applied -\> default 0%
+-\> any dip fails; non-blocking + advisory). Learning 148 carried the
+full diagnosis, so I spent **zero** time re-diagnosing WHY – straight to
+fix + verification. Every repo-state claim held firsthand (clean
+`master`, renv 1.2.3 committed + startup-OK, no dangling branches; the
+`git pull` rebase/`.DS_Store` + standing-keep gotchas accurate). ROI
+strongly positive. **The -1:** the handoff (and Learning 148) did not
+pre-note that the workflow authenticates via `secrets.CODECOV_TOKEN`
+(making the YAML `token:` redundant), nor that `.codecov.yml` is
+codecov’s doc-example template, nor that `.Rbuildignore` carried entries
+for both – all mine to discover in grounding. Minor and arguably beyond
+a suggested-next pointer’s job; the codecov-validator verification trick
+was a discovery, not a gap. Low ceiling for a suggested-next handoff -\>
+9, not 10.
+
+**Self-assessment (Session 158): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK read in chunks;
+dashboard 98/100; ghost-check -\> HEAD `a99b400f` = S157, no
+undocumented commits), reported, STOPPED for the owner; claimed the
+session (1B stub BEFORE technical work). **Strengths:** (1) **verified
+at the config layer this session instead of deferring** – the issue
+itself only knew “verify on the next PR”, but codecov’s `/validate`
+endpoint echoed the parsed `threshold: 1.0` for both project and patch,
+proving the fix conclusively now (anti-FM \#24 – did not treat “looks
+right” as verified); (2) **evidence-based inventory before deleting**
+(committed-check + repo-wide grep) found the two `.Rbuildignore` refs
+and confirmed no workflow names a config path -\> removed the dead
+`.Rbuildignore` line (complete job, anti-FM \#13); (3) **correct
+credential judgment** – preserved the embedded token verbatim and
+flagged it rather than silently stripping it (rotation is the owner’s
+separate call; FM \#8); (4) **enforced 1-and-done** when the owner
+picked two items (surfaced via `AskUserQuestion`, did only \#65); (5)
+**redacted the secret** before the external validator call; scope
+confined, TDD N/A declared, ASCII, plain language, 0 corrections;
+captured **Learning 150**. **Weaknesses (honest):** (a) **low base
+difficulty** – a two-file config consolidation; the value is the
+discipline + the config-layer verification + the token judgment, not
+algorithmic depth -\> ceiling ~8; (b) **judgment call I made
+autonomously:** committed direct to `master` (rather than asking) on the
+reasoning that a `.Rbuildignore`d CI-config file cannot break
+`R CMD check` so a PR adds no gating value, matching the S156/S157
+hygiene-to-master pattern – defensible and flagged here, but a more
+conservative read would have asked the publish path; (c) I let the
+commit auto-close \#65 (`Fixes #65`) on a
+config-layer-verified-but-not-yet-PR-confirmed fix – reasonable (the fix
+is implemented + validated), but the final live signal is still the next
+PR. Clean, well-verified, complete delivery at low difficulty -\> 8/10.
+
+**Learnings:** **Learning 150** (duplicate-config-precedence bug -\> fix
+is exactly ONE file; verify AT THE CONFIG LAYER via the tool’s validator
+\[`codecov.io/validate` echoes parsed thresholds\] instead of deferring
+to “next PR”, REDACTING secrets first; complete the job by removing the
+dead `.Rbuildignore` entry; PRESERVE + FLAG an embedded credential
+rather than silently stripping it \[FM \#8\]; a `.codecov.yml` of
+`# Team/Repository Yaml` comments + duplicate `coverage:` keys is
+codecov’s doc example pasted in) added to `PROJECT_LEARNINGS.md`.
+Carried as applied: SAFEGUARDS evidence-based-inventory-before-delete;
+FM \#8 (no scope creep – token left, 2nd item deferred); FM \#13
+(complete job – dead `.Rbuildignore` line); the S156/S157
+config/hygiene-to-master pattern.
+
+**=\> SUGGESTED NEXT = the 2nd item the owner already queued, then
+owner’s pick.** `master` clean; \#65 fixed + config-layer-verified. -
+**(Quiet the residual `read.csv` warning – the queued 2nd item)** muffle
+the benign `read.csv` “cannot open file” WARNING on the offline focal
+path (S155 carryover). A bad focal-id file returns the correct
+`nprcgenekeeprFileErr` but prints a console warning before the
+`tryCatch` catches it. **Tiny, strict-TDD** (RED-\>GREEN-\>REFACTOR,
+phase gates via `AskUserQuestion`). Start in
+`R/getFocalAnimalPedFromFile.R` / `R/readFocalAnimalIds.R` (the focal-id
+read). **This will be the live PR that confirms the \#65 fix**
+(codecov/project should now pass on its coverage delta). -
+**(Document/expose the offline focal workflow)** a vignette or app help
+note for the focal-id-file + pedigree-file offline path (rich
+`nprcgenekeeprFileErr` messages; undocumented for end users beyond
+NEWS). - **(Embedded codecov token – owner’s security call)** decide
+whether to remove/rotate the committed upload token in `codecov.yml`
+(redundant with `secrets.CODECOV_TOKEN`; low-sensitivity public-repo
+upload token; removing it from the file does not purge git history). NOT
+acted on this session (FM \#8). - **(Remaining LabKey Rec \#5 /
+server-side – deferred)** server-side filtering / `executeSql` /
+centers’ `study.Pedigree`/`ehr.kinship`; non-LabKey other-EHR provider
+on the same seam. Gated on a live server. - **(Permanent NEWS render
+fix)** `html_preview: false` in `NEWS.Rmd` + pandoc smart-off – ends
+BOTH the NEWS.html NOTE (Learning 139) and the smart-quote/en-dash trap
+(Learning 132). Candidate, not done. - **(CRAN Phase 5, owner-run)**
+win-builder x3 + R-hub v2 + `submit_cran()` – owner PAT + email; HARD
+STOP (`docs/planning/cran-2.0.0-phase5-runbook.md`). - **A GitHub
+issue** – \#46, \#45/#28/#9, \#2, \#37, \#36, \#29, or older
+\#13/#12/#11/#10/#5/#1 (#65 now closed). **Do NOT** bundle options (FM
+\#18/#25); **do NOT** start any without the owner picking.
+
+**Key files (this session):** **CHANGED – config (the fix, this
+close-out commit, direct to `master`):** `codecov.yml` (rewritten as the
+single consolidated config – 1% project/patch status block + folded-in
+display settings + header comment), `.Rbuildignore` (removed the dead
+`^\.codecov\.yml$` line). **DELETED:** `.codecov.yml` (`git rm`; was
+committed `58a9db26`). **CHANGED – docs (this close-out commit):**
+`SESSION_NOTES.md` (this handoff), `CHANGELOG.md` (S158 entry),
+`PROJECT_LEARNINGS.md` (Learning 150). **NO code/test/man/NAMESPACE/NEWS
+change.** **GITHUB:** commit message uses `Fixes #65` -\> auto-closes
+issue \#65 on push to `master`. **NOT committed (standing keep):**
+`PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
+
+**Gotchas:** (1) **There is now exactly ONE codecov config –
+`codecov.yml`** – with the 1% project/patch `status` block; codecov’s
+validator confirms it parses `threshold: 1.0`. Do NOT re-add a second
+root config (`.codecov.yml` / `codecov.yaml`) – that reintroduces the
+precedence bug. (2) **The next PR with a coverage delta is the LIVE
+confirmation of \#65** – `codecov/project` should now PASS on a sub-1%
+dip (allowed floor = base - 1%). If it STILL fails after this
+consolidation, the next place to look is a codecov **web-dashboard
+“Repository YAML” override** (set in the codecov UI, outside the repo,
+higher precedence than the committed file) – not inspectable without
+codecov credentials. (3) **`codecov.yml` carries an embedded upload
+token** (`91d6f1...`) that is **redundant** with `secrets.CODECOV_TOKEN`
+(the action authenticates with the GH secret). It is preserved verbatim
+(a \#65-scope decision would be creep); removing/rotating it is a
+separate owner item – and note removing it from the file would NOT purge
+it from git history. (4) Carried: package **ARCHIVED on CRAN
+2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT (warning + NULL) without a LabKey credential/config; the
+offline focal path returns `nprcgenekeeprFileErr` not NULL (S155);
+residual benign `read.csv` “cannot open file” warning on a bad focal-id
+file (S155 carryover – the queued next item); `skip_on_cran()`-gated
+test files (`test_modInput.R`) need `NOT_CRAN=true`; `git pull` is
+rebase (`pull.rebase=true`) + chokes on `.DS_Store` -\> use
+`fetch`+`reset` (135); post-merge `fetch` before `reset --hard` must be
+verified-succeeded + ancestor-gated (146); NEWS render traps (132/139);
+standing keeps `.DS_Store` + `PED_GV_AUDIT_2026-05-30.html`.
+
 ### What Session 157 Did
 
 **Deliverable:** Owner-directed hygiene – (1) commit the uncommitted
