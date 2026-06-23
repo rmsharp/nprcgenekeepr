@@ -375,8 +375,8 @@ summary(geneticValue)
     ## Founder Equivalents: 241.84 
     ## Founder Genome Equivalents: 164.01 
     ## Live Offspring: 4052 
-    ## High Value Individuals: 2947 
-    ## Low Value Individuals: 747
+    ## High Value Individuals: 2958 
+    ## Low Value Individuals: 736
 
 What happens if we limit our analysis to the trimmed pedigree? Remember
 that the trimmed pedigree still contains all of the genetic information
@@ -401,8 +401,8 @@ summary(trimmedGeneticValue)
     ## Founder Equivalents: 109.67 
     ## Founder Genome Equivalents: 47.49 
     ## Live Offspring: 321 
-    ## High Value Individuals: 226 
-    ## Low Value Individuals: 101
+    ## High Value Individuals: 233 
+    ## Low Value Individuals: 94
 
 It is clear that limiting your analysis to the animals of interest
 reduces the effort required to examine the animals of interest.
@@ -458,16 +458,16 @@ knitr::kable(rpt[1L:10L, ]) # needs more work for display purposes.
 
 | Ego ID | Sex | Age (in years) | Birth Date | Exit Date | Breeding Colony Member | Origin | Sire ID | Dam ID | Individual Mean Kinship | Z-score (Mean Kinship) | Genome Uniqueness (%) | Total Offspring | Living Offspring | Value Designation | Rank |
 |:---|:---|---:|:---|:---|:---|:---|:---|:---|---:|---:|---:|---:|---:|:---|---:|
-| KZM9RB | M | 30.1 | 1989-05-03 | NA | TRUE |  | UWTJQ0 | BLLUWW | 0.00329 | -1.90 | 92 | 0 | 0 | High Value | 1 |
-| CLSVU6 | F | 23.9 | 1995-08-02 | NA | TRUE |  | ULV9M7 | SUFWJI | 0.00287 | -1.97 | 90 | 1 | 1 | High Value | 2 |
-| 1SPLS8 | F | 7.9 | 2011-07-26 | NA | TRUE |  | U9APLW | 142GKP | 0.00373 | -1.83 | 84 | 0 | 0 | High Value | 3 |
-| WK89I9 | F | 21.1 | 1998-05-26 | NA | TRUE |  | U5QF9U | KZX47Z | 0.00582 | -1.49 | 80 | 0 | 0 | High Value | 4 |
-| 8YP6PA | M | 5.0 | 2014-07-04 | NA | TRUE |  | UD26S6 | PU7RSG | 0.00485 | -1.65 | 77 | 0 | 0 | High Value | 5 |
-| 01QRQ4 | F | 18.2 | 2001-04-04 | NA | TRUE |  | VDBGDP | TH7HTY | 0.00373 | -1.83 | 74 | 0 | 0 | High Value | 6 |
-| IZDV8K | M | 7.7 | 2011-09-29 | NA | TRUE |  | U5B4PI | PI4VHT | 0.00480 | -1.66 | 74 | 0 | 0 | High Value | 7 |
-| R6HV9A | M | 22.1 | 1997-05-13 | NA | TRUE |  | HPSHXC | BCJJKN | 0.00625 | -1.42 | 73 | 0 | 0 | High Value | 8 |
-| CFD12A | M | 20.8 | 1998-08-25 | NA | TRUE |  | U79BJ1 | WFQENR | 0.00509 | -1.61 | 71 | 0 | 0 | High Value | 9 |
-| 3MMZD4 | M | 12.2 | 2007-03-24 | NA | TRUE |  | K7900I | 5W3NTM | 0.00536 | -1.57 | 70 | 0 | 0 | High Value | 10 |
+| KZM9RB | M | 30.1 | 1989-05-03 | NA | TRUE |  | UWTJQ0 | BLLUWW | 0.00329 | -2.30 | 92 | 0 | 0 | High Value | 1 |
+| CLSVU6 | F | 23.9 | 1995-08-02 | NA | TRUE |  | ULV9M7 | SUFWJI | 0.00951 | -1.18 | 90 | 1 | 1 | High Value | 2 |
+| 1SPLS8 | F | 7.9 | 2011-07-26 | NA | TRUE |  | U9APLW | 142GKP | 0.01066 | -0.97 | 84 | 0 | 0 | High Value | 3 |
+| WK89I9 | F | 21.1 | 1998-05-26 | NA | TRUE |  | U5QF9U | KZX47Z | 0.01212 | -0.71 | 80 | 0 | 0 | High Value | 4 |
+| 8YP6PA | M | 5.0 | 2014-07-04 | NA | TRUE |  | UD26S6 | PU7RSG | 0.01208 | -0.72 | 77 | 0 | 0 | High Value | 5 |
+| 01QRQ4 | F | 18.2 | 2001-04-04 | NA | TRUE |  | VDBGDP | TH7HTY | 0.00373 | -2.23 | 74 | 0 | 0 | High Value | 6 |
+| IZDV8K | M | 7.7 | 2011-09-29 | NA | TRUE |  | U5B4PI | PI4VHT | 0.01173 | -0.78 | 74 | 0 | 0 | High Value | 7 |
+| R6HV9A | M | 22.1 | 1997-05-13 | NA | TRUE |  | HPSHXC | BCJJKN | 0.00625 | -1.77 | 73 | 0 | 0 | High Value | 8 |
+| CFD12A | M | 20.8 | 1998-08-25 | NA | TRUE |  | U79BJ1 | WFQENR | 0.01139 | -0.84 | 71 | 0 | 0 | High Value | 9 |
+| 3MMZD4 | M | 12.2 | 2007-03-24 | NA | TRUE |  | K7900I | 5W3NTM | 0.00536 | -1.93 | 70 | 0 | 0 | High Value | 10 |
 
 We start the next lines of code by getting a fresh copy of the genetic
 value report since we changed all of the numeric values to characters in
@@ -975,7 +975,7 @@ ped <- qcStudbook(pedOne, minParentAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpWzHwPA/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpEf58R1/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -1136,8 +1136,8 @@ examplePedigree[unlist(exampleLoops), c("id", "sire", "dam")][1L:10L, ]
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-06-23 04:16:30.886228. The processing
-time for this document was 15 seconds..
+The current date and time is 2026-06-23 04:41:05.310157. The processing
+time for this document was 18 seconds..
 
 ``` r
 

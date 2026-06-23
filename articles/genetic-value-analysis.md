@@ -134,15 +134,15 @@ names(rpt)
 #> [13] "totalOffspring"  "livingOffspring" "value"           "rank"
 head(rpt[, c("id", "sex", "age", "indivMeanKin", "zScores", "gu",
   "value", "rank")], 8)
-#>       id sex  age indivMeanKin   zScores gu      value rank
-#> 1 1SPLS8   F  7.9  0.003727064 -1.832385 79 High Value    1
-#> 2 KZM9RB   M 30.1  0.003292539 -1.903034 74 High Value    2
-#> 3 WK89I9   F 21.1  0.005823538 -1.491523 64 High Value    3
-#> 4 CFD12A   M 20.8  0.005090369 -1.610727 57 High Value    4
-#> 5 01QRQ4   F 18.2  0.003727064 -1.832385 54 High Value    5
-#> 6 G25E3F   F  7.8  0.007858790 -1.160614 52 High Value    6
-#> 7 CLSVU6   F 23.9  0.002866972 -1.972226 50 High Value    7
-#> 8 50D77I   F 20.1  0.004508016 -1.705411 50 High Value    8
+#>       id sex  age indivMeanKin    zScores gu      value rank
+#> 1 1SPLS8   F  7.9  0.010663266 -0.9714998 79 High Value    1
+#> 2 KZM9RB   M 30.1  0.003292539 -2.3044922 74 High Value    2
+#> 3 WK89I9   F 21.1  0.012121545 -0.7077708 64 High Value    3
+#> 4 CFD12A   M 20.8  0.011388376 -0.8403640 57 High Value    4
+#> 5 01QRQ4   F 18.2  0.003727064 -2.2259085 54 High Value    5
+#> 6 G25E3F   F  7.8  0.014794992 -0.2242792 52 High Value    6
+#> 7 CLSVU6   F 23.9  0.009512525 -1.1796107 50 High Value    7
+#> 8 50D77I   F 20.1  0.010806022 -0.9456824 50 High Value    8
 ```
 
 The key columns:
@@ -178,9 +178,9 @@ and the top of the table shows it:
 
 head(rpt[, c("id", "indivMeanKin", "gu", "rank")], 3)
 #>       id indivMeanKin gu rank
-#> 1 1SPLS8  0.003727064 79    1
+#> 1 1SPLS8  0.010663266 79    1
 #> 2 KZM9RB  0.003292539 74    2
-#> 3 WK89I9  0.005823538 64    3
+#> 3 WK89I9  0.012121545 64    3
 ```
 
 An animal need not have the very lowest mean kinship to rank first;
@@ -193,7 +193,7 @@ rather than either one alone.
 table(rpt$value)
 #> 
 #> High Value  Low Value 
-#>        199        128
+#>        207        120
 ```
 
 ## Colony-level diversity

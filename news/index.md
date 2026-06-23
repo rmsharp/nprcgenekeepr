@@ -71,6 +71,16 @@
     parent (shown by a placeholder parent identifier). The columns are
     added after the existing demographic columns; no existing column is
     removed or reordered.
+  - The Genetic Value Analysis now corrects the mean kinship of animals
+    that are missing one parent. Previously such an animal’s mean
+    kinship was computed only from its known relatives, which
+    understated its relatedness to the colony and let it rank as more
+    genetically valuable (lower mean kinship) than it should. The report
+    now adds an estimate of the missing parent’s contribution, derived
+    from a contemporaneous breeding-age peer cohort of the same sex as
+    the missing parent, so these animals no longer falsely rank low on
+    mean kinship. Animals with both parents known, and animals missing
+    both parents, are unchanged.
 - New features
   - Added the exported
     [`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md),

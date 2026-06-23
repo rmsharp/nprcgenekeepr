@@ -324,6 +324,11 @@
   nprcgenekeepr Look up the maximum gestation period (days) for one or
   more species
 
+- [`getSpeciesMinBreedingAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesMinBreedingAge.md)
+  : Copyright(c) 2017-2026 R. Mark Sharp This file is part of
+  nprcgenekeepr Look up the minimum breeding age (years) for one or more
+  species and sexes
+
 - [`getTokenList()`](https://github.com/rmsharp/nprcgenekeepr/reference/getTokenList.md)
   : Gets tokens from character vector of lines
 
@@ -617,7 +622,7 @@
   : Pedigree tree built from smallPed
 
 - [`speciesGestation`](https://github.com/rmsharp/nprcgenekeepr/reference/speciesGestation.md)
-  : Per-species maximum gestation period (days)
+  : Per-species reproductive parameters
 
 - [`summarizeKinshipValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/summarizeKinshipValues.md)
   : Summary statistics for imputed kinship values

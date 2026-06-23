@@ -15,6 +15,50 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-22 — Implemented issue \#9 Slice 2: mean-kinship correction for one-unknown-parent animals (Session 178)
+
+- **Deliverable (owner pick, single item):** implement Slice 2 of the
+  issue \#9 plan per the authoritative **§8-E** spec — correct the
+  Genetic Value Analysis mean kinship of animals missing **exactly one**
+  parent. Strict TDD (RED→GREEN→REFACTOR, every transition
+  `AskUserQuestion`-gated). **0 stakeholder corrections.** Committed on
+  branch `issue-9-slice2-unknown-parent-mean-kinship` (feat `af4b7f69`);
+  **UNPUBLISHED** — `master` unchanged at `2bee0f03`. Did NOT publish
+  and did NOT start Slice 3 (FM \#18/#25).
+- **What the fix does:** `reportGV` now raises a one-unknown animal’s
+  individual mean kinship by `sexMean/2` — half the mean individual mean
+  kinship of its *contemporaneous breeding-age peers of the missing
+  parent’s sex* — modeling the unknown parent as a typical opposite-sex
+  colony member (the owner’s 2020 remedy). Known-parentage and
+  both-unknown founders are unchanged (both-unknown deferred to Slice
+  3). Injected at the shared `indivMeanKin` choke point
+  (`R/reportGV.R:94`), so both rank paths and the report column reflect
+  it;
+  [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+  untouched (5 callers).
+- **New infrastructure:** exported
+  `getSpeciesMinBreedingAge(species, sex)` (mirrors
+  `getSpeciesGestation`); `speciesGestation` gains
+  `minMaleBreedingAge`/`minFemaleBreedingAge` (rhesus 4/3;
+  absent/unknown species or non-M/F sex → default 2); internal
+  `getBreedingPeerCohort()` + `correctUnknownParentMeanKinship()`
+  (U-id-aware targeting; present-at-conception cohort;
+  `pmin(MK+sexMean/2, 1)` clamp; empty/no-birth cohort → flag + add 0,
+  never NA). Tier-2 same-era fallback **deferred** (owner decision S178
+  — never fires on `qcPed`, no era mechanism exists; documented
+  limitation).
+- **Owner decision (pre-RED scope gate):** the ratified §8-C 3-tier
+  fallback ladder → **tier 1 + tier 3 only**; tier 2 deferred (verified
+  firsthand the strict cohort never empties on `qcPed` — all 43
+  one-unknown animals get male cohorts of 17–26).
+- **Verification:** 3 targeted test files green (29+20+19); clean
+  regression read 0 failed / 0 error (real files); lint clean under the
+  namespace-loaded CI mode; build-equivalent
+  `devtools::check(vignettes = FALSE)` = **0/0/0**. **NEWS deferred to
+  the publish PR** (Learning 157a; user-facing: corrected mean kinship
+  for partial-parentage animals). **Issue \#9 stays OPEN** (Slice 3
+  remains; \#9 does not close on Slice 2 per §8-A). Learning 167 added.
+
 ### 2026-06-22 — Ratified issue \#9 §7 design decisions via `/grill-me`; reshaped Slice 2; filed follow-up \#73 (Session 177)
 
 - **Deliverable (owner pick, single item):** ratify §7 of the issue \#9

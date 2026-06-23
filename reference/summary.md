@@ -95,8 +95,8 @@ summary(geneticValue)
 #> Founder Equivalents: 109.67 
 #> Founder Genome Equivalents: 47.01 
 #> Live Offspring: 321 
-#> High Value Individuals: 231 
-#> Low Value Individuals: 96 
+#> High Value Individuals: 238 
+#> Low Value Individuals: 89 
 summary(trimmedGeneticValue)
 #> The genetic value report 
 #> Individuals in Pedigree: 704 
@@ -106,6 +106,6 @@ summary(trimmedGeneticValue)
 #> Founder Equivalents: 116.8 
 #> Founder Genome Equivalents: 65.85 
 #> Live Offspring: 1004 
-#> High Value Individuals: 451 
-#> Low Value Individuals: 253 
+#> High Value Individuals: 470 
+#> Low Value Individuals: 234 
 ```
