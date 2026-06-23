@@ -15,6 +15,110 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-22 — Ratified issue \#9 §7 design decisions via `/grill-me`; reshaped Slice 2; filed follow-up \#73 (Session 177)
+
+- **Deliverable (owner pick, single item):** ratify §7 of the issue \#9
+  plan (`docs/planning/issue9-gva-unknown-parent-ranking-plan.md`)
+  BEFORE implementing Slice 2 – resolve D1/D3/D4/D6/D7/D8 + slice order
+  and run a `/grill-me` on D2 (the substitution algebra).
+  **Design/ratification deliverable -\> TDD code-phases N/A; NO
+  production code changed.** **0 stakeholder corrections** (the owner
+  materially reshaped the design during the grill). Did NOT implement
+  (FM \#18/#25 – Slice 2 is a separate future session).
+- **Load-bearing finding (precompute workflow `wf_7f819b92-a12` on real
+  `qcPed`):** the DISPLAYED GVA rank is dominated by genome uniqueness
+  (`gu` 0..50), not mean kinship (~0.003..0.017), by 3-4 orders of
+  magnitude – so the mean-kinship fix corrects the number but does NOT
+  move the visible top-20. \#9’s false top-ranking has TWO causes
+  (deflated mean kinship + inflated `gu`); the 2020 remedy fixes only
+  the first. (Learning 166.)
+- **Ratified (plan §8, authoritative):** D1 scalar-level fix; D2 =
+  per-focal CONTEMPORANEOUS peer cohort (NOT a global mean –
+  era-specificity in line-bred colonies),
+  `MK_corrected = pmin(MK_current + sexMean/2, 1)`, `sexMean` = mean of
+  the cohort’s individual mean-kinships, self-term -\> `(1+sexMean)/2`;
+  **Slice 2 corrects ONE-unknown animals only** (both-unknown deferred);
+  a species/sex breeding-age table (extend `speciesGestation` +
+  `getSpeciesMinBreedingAge`, rhesus male 4 / female 3, fallback 2)
+  replaces the scalar `minParentAge`; D6 `gu` axis flips IN-SCOPE
+  (expanded Slice 3); D7 deferred to Slice 3; D8
+  `test_orderReport:24,42` NOT changed by Slice 2 (verified – they count
+  both-unknown U-stubs on a frozen fixture).
+- **Adversarial self-review (workflow `wf_1408109e-bf8`, 4 reviewers):**
+  GO-WITH-FIXES – caught a MAJOR implementability gap (the `species`
+  column is absent on `qcPed`/`breederPed`, so the helper must guard it
+  and the seeded rhesus values are not exercised on the fixture) + three
+  stale §3/§6 statements contradicting the ratified §8; all fixes
+  applied (per-item SUPERSEDED banners + the §8 corrections).
+- **Owner-requested follow-up filed as \#73** (species breeding-age
+  values for all common colony NHP + user-configurable). **Phase-3E
+  N/A** (ratification document; no runtime behavior changed). Issue \#9
+  stays OPEN (Slice 2 + Slice 3 remain).
+
+### 2026-06-22 — Published issue \#9 Slice 1 (S3): Sire/Dam GVA columns are on `master` via PR \#72; NEWS entry added; \#9 stays open (Session 176)
+
+- **Deliverable (owner pick, single item):** publish S175’s issue \#9
+  Slice 1 (S3) – the `sire`/`dam` columns in the GVA report + both CSV
+  exports – from `issue-9-s3-sire-dam-columns` to `master`, folding the
+  user-facing NEWS entry into the SAME PR (Learning 157a).
+  **Admin/publish + docs** (no production-code logic -\> TDD N/A). **0
+  stakeholder corrections.** SOLO (a serial, irreversible git sequence –
+  a workflow adds risk, not coverage). Owner picked option 1 (publish),
+  then approved the merge (merge commit) at the `AskUserQuestion` gate.
+- **Pre-publish content (one PR, Learning 157a):** added a dev-version
+  *Changes* bullet to `NEWS.Rmd` – the GVA report and both of its CSV
+  exports now include `sire`/`dam` columns, so it is visible which
+  animals have an unknown parent. Column names backtick-wrapped
+  (spell_check skips code spans). Re-rendered `NEWS.md` (permanent
+  `html_preview:false`+`md_extensions:"-smart"`, Learning 155) -\> **0
+  non-ASCII**, no stray `.html`, a confined pure-insertion diff (NEWS.md
+  +6 / NEWS.Rmd +5). `spell_check_package(".")` = **0 unrecognized**
+  before and after -\> no WORDLIST change. Committed NEWS only as
+  `823617ae`; kept the S176 1B stub OUT of the PR (stash-carried).
+- **Push master first (S175 Gotcha 2):** `master` was 2 ahead of
+  `origin/master` (S173 `658f32d9` + S174 `20f51391`, unpushed) and the
+  branch was cut from that master -\> pushed `master` first (FF
+  `origin/master` `c7f6ea86` -\> `20f51391`) so the PR diff is
+  S175-only; verified the PR diff = 3 commits (S175 feat + close-out +
+  S176 NEWS) / 8 expected files, no S173/S174 bundling.
+- **PR + CI (did NOT merge blind):** opened **PR \#72** -\> `master`
+  (body uses “Relates to \#9”, NOT `Closes #9` – only Slice 1 of 3).
+  **All 10 checks PASS** – lint 3m35s; `R CMD check` x5 (macos 6m44s /
+  ubuntu release 6m28s + oldrel-1 6m33s + **devel 16m5s** the long pole
+  / windows 9m2s); pkgdown 5m17s; test-coverage 4m26s; **codecov/patch
+  PASS**; **codecov/project PASS**. The background watch exited 0, but
+  per Learning 157 I re-queried FRESH with non-watch `gh pr checks 72`
+  (10 `pass`, exit 0) before proceeding.
+- **Merge (the one irreversible step – `AskUserQuestion`-gated):** owner
+  chose “Yes, merge commit.” Guarded fresh pre-merge re-check (state
+  OPEN, mergeable MERGEABLE, mergeStateStatus CLEAN, `headRefOid`==local
+  `823617ae`, `origin/master`==`20f51391`); `gh pr merge 72 --merge` -\>
+  merge commit **`0d559d3b`**; verified landed firsthand (state MERGED,
+  `mergedAt 2026-06-23T00:45:42Z`, `mergedBy rmsharp`). **Issue \#9
+  verified still OPEN** after the merge (no closing keyword).
+- **Reconcile (Learning 146):** stash-carried the S176 stub;
+  `git checkout master`; `git fetch`; **ancestor-gated the reset** (both
+  old-master `20f51391` AND merged-head `823617ae` asserted ancestors of
+  `origin/master` `0d559d3b`) -\> `git reset --hard origin/master`;
+  `git stash pop` restored the S176 stub cleanly onto master.
+- **Branch cleanup (verified-merged-before-delete):** `git branch -d`
+  (was `823617ae`) + `git push origin --delete` + `git fetch --prune`;
+  verified NO ref remains (local 0, remote-tracking 0,
+  `gh api .../branches/issue-9-s3-sire-dam-columns` -\> **404**).
+- **Verification (Phase-3E):** the deliverable was re-verified on the
+  merge-result tree by PR \#72’s `R CMD check` x5 matrix
+  (incl. ubuntu-devel), all PASS; confirmed firsthand on `master`:
+  `R/reportGV.R:132` carries `sire`/`dam`, `NEWS.md` has the GVA bullet,
+  both test files present, `test_reportGV.R` passes locally on master.
+  The runtime data flow (sire/dam to the table + CSV) is exercised by
+  the S175 `testServer` integration test, now on master and green in CI.
+  A full browser
+  [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+  smoke is the pre-existing shinytest2 baseline-noise harness, not run –
+  stated, not silently skipped. **No new numbered learning** (clean
+  re-execution of the documented publish convention
+  133/135/146/152/155/157/157a/159/161).
+
 ### 2026-06-22 — Issue \#9 Slice 1 (S3): Sire and Dam columns in the Genetic Value Analysis report and CSV exports (Session 175)
 
 - **Deliverable (owner pick, single item):** implement the first

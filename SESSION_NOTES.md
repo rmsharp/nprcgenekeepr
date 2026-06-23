@@ -7,6 +7,446 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 177 Did
+
+**Deliverable:** Ratify **§7** of the issue \#9 plan
+(`docs/planning/issue9-gva-unknown-parent-ranking-plan.md`) before
+implementing Slice 2 – resolve D1/D3/D4/D6/D7/D8 + slice order for owner
+sign-off, run a **`/grill-me` on D2** (the substitution algebra), and
+record the ratified decisions into the plan. **(DONE – plan §8
+“Ratification Record” written + §7 boxes checked + per-item SUPERSEDED
+banners; follow-up issue \#73 filed; NO production code changed.)**
+**Started / Completed:** 2026-06-22 **Status:** **DONE.
+Design/ratification deliverable -\> TDD code-phases N/A every response**
+(the plan doc states RED/GREEN/REFACTOR are inapplicable to a plan;
+nothing under `R/`/`tests/`/`man/`/`NAMESPACE`/`data/` changed). **0
+stakeholder corrections** (the owner OVERRODE two of my data-driven
+recommendations on genetics grounds during the grill – design refinement
+via the grill, exactly its purpose, not fixes of my errors). **Did NOT
+implement Slice 2** (FM \#18/#25 – a separate next session). Owner
+picked **“Ratify §7 incl. D2 grill”** at the scope `AskUserQuestion`.
+Used TWO workflows (a pre-compute to ground the grill + an adversarial
+self-review of the ratification record); the grill itself was the
+interactive core. - **Pre-compute workflow (`wf_7f819b92-a12`, real
+`qcPed`):** produced the **load-bearing finding** that reframed \#9 –
+the DISPLAYED GVA rank is dominated by genome uniqueness (`gu` 0..50),
+NOT mean kinship (~0.003..0.017), by 3-4 orders of magnitude, so the
+mean-kinship fix corrects the number but **moves NOTHING in the app
+top-20** (same 20 both-unknown founders, ranks 1-20; `orderReport`‘s
+`gu>10` tier sits above the kinship tiers). \#9’s false top-ranking has
+TWO causes; the 2020 remedy fixes only one. Also: verified
+`MK_corrected = MK_current + sexMean/2` (numeric 8e-18
+self-consistency), the `[0,1]` invariant, the U-id-normalization
+targeting trap, 43 one-unknown (all sire-missing) / 124 both-unknown (47
+NA-birth) / 113 known. - **The `/grill-me` (9 decisions, owner ratified
+each):** Root target = hybrid A+B sequenced (Slice 2 = correctness fix,
+NOT advertised as fixing the visible top; D6 `gu` axis flips IN-SCOPE
+-\> expanded Slice 3; \#9 does not close on Slice 2). D2(a) `sexMean` =
+mean of the cohort’s individual mean-kinships. D2(c) self-term -\>
+`(1+sexMean)/2` (implied inbreeding = `sexMean`). **D2(b) OWNER
+OVERRIDE: per-focal CONTEMPORANEOUS peer cohort, NOT a global mean** –
+line-bred colonies’ inbreeding distribution drifts across eras (SNPRC
+baboon example), so a colony-wide mean imports the wrong era. D2(d)
+Slice 2 = ONE-unknown animals only (both-unknown deferred). Fallback =
+strict cohort -\> nearest-earlier same-era cohort -\> flag-uncorrected
+(never NA, never cross-era global); clamp `[0,1]`. **6c OWNER OVERRIDE:
+breeding age from a species/sex table, NOT scalar `minParentAge=2`** –
+extend `speciesGestation` + `getSpeciesMinBreedingAge` (rhesus male 4 /
+female 3, fallback 2); generalization -\> new issue **\#73**. Batch
+confirm: D1 scalar-level, D3 = the peer cohort, D4 direct mean, D7
+deferred to Slice 3, D8 `test_orderReport:24,42` NOT changed by Slice 2
+(verified – both-unknown U-stubs on a frozen fixture), slice order
+S3(done)-\>Slice 2-\>Slice 3. - **Adversarial self-review
+(`wf_1408109e-bf8`, 4 reviewers):** GO-WITH-FIXES – caught a **MAJOR
+implementability gap** (the `species` column is ABSENT on
+`qcPed`/`breederPed`, so the helper must guard it AND the seeded rhesus
+4/3 is never exercised on the fixture -\> RED numbers use cutoff 2) +
+three stale §3/§6 statements that now contradicted §8. **All fixes
+applied** (the absent-column guard in §8-D/E, the missing-DAM fixture
+note, the `8e-18`-is-self-consistency wording, per-item SUPERSEDED
+banners in §1/§3/§4/§6, the roxygen/man update step, the §7 new-issue
+line).
+
+**Phase-3E (build-equivalent / runtime smoke): N/A – stated, not
+silently skipped.** No runtime behavior changed: the deliverable is the
+plan’s Ratification Record (§8) + close-out docs; no
+`R/`/test/`man/`/`NAMESPACE`/`data/` change. Package build/runtime on
+`master` is unchanged from `488f2b09`. The design’s correctness is
+verified at the algebra/real-numbers level (the pre-compute workflow +
+the adversarial review), not by an implementation – that is Slice 2’s
+RED.
+
+**Session 176 Handoff Evaluation (by Session 177): Score 9/10.** S176’s
+`=> SUGGESTED NEXT` named Slice 2 with the EXACT load-bearing guidance
+that shaped this whole session: “requires the §7 ratification FIRST …
+Best done as: **ratify (its own focused session, D2 via `/grill-me`) -\>
+THEN implement Slice 2** … **Do NOT bundle** ratify+implement (D2 is
+genuinely deep, the \#1 here-be-dragons).” That single instruction (a)
+blocked me from the implement-Slice-2 trap when the owner picked “Slice
+2,” (b) named the real deliverable (ratify §7), (c) flagged D2 as THE
+grill candidate and the deepest decision, (d) pointed to the plan. Every
+standing fact held firsthand: `master` 1 ahead of `origin/master` (the
+documented Gotcha 2), \#9 OPEN / Slice 1 of 3 published, dashboard
+98/100, the standing keeps (so I knew not to commit
+`PED_GV_AUDIT_2026-05-30.html`). **The -1:** nothing pre-warned that
+ratifying would REVERSE several of the plan’s OWN recommendations
+(global-\>per-focal `sexMean`; `gu` out-of-scope-\>in-scope) or that
+Slice 2’s scope would balloon from “one line in `reportGV`” to a
+species/sex table + helper – but those are genuine discoveries of THIS
+session’s workflow+grill, and S176 DID flag D2 as “the \#1
+here-be-dragons,” which was the honest warning. ROI maximal.
+
+**Self-assessment (Session 177): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check -\> HEAD `488f2b09` = S176, no
+undocumented commits), reported, STOPPED for the owner’s pick; surfaced
+the **ratify-vs-implement** decision via `AskUserQuestion` rather than
+coding from the “Slice 2” prompt (FM \#18/#19/#23); claimed with a 1B
+stub BEFORE technical work; TDD N/A declared every response.
+**Strengths:** (1) **grounded the grill in REAL numbers** via the
+pre-compute workflow, which surfaced the **`gu`-dominance finding** –
+the single highest-value output, since Slice 2 would otherwise ship a
+user-visible no-op; this directly fixed S174’s self-noted “D2 left as a
+recommendation, no worked numbers” gap; (2) **ran a genuine
+`/grill-me`** where the owner MATERIALLY reshaped the design (per-focal
+peer cohort; species/sex table) – the grill caught era-specificity
+genetics a data-only recommendation missed; (3) **adversarially reviewed
+my OWN record before commit** and caught a MAJOR implementability gap
+(absent species column) + 3 stale contradictions, then fixed all; (4)
+**recording discipline** – kept the predecessor’s plan intact, added an
+authoritative §8 + per-item SUPERSEDED banners so the implementer can’t
+follow stale specs; filed the owner-requested \#73; (5)
+**scope-disciplined** (ratify only; did NOT implement; one deliverable),
+plain language, ASCII. **Weaknesses (honest):** (a) my FIRST §8 draft
+carried the major absent-`species`-column gap – caught by the review,
+but `getPotentialParents` already guards it, so a more careful first
+pass should have too; (b) the grill ran long (9 turns) – justified by
+genuine depth, but tighter early bundling of confirmations was possible;
+(c) **no executable/runtime verification** (inherent to a ratification)
+– correctness rests on the algebra + real numbers + the adversarial
+review, with the true test being Slice 2’s RED; (d) the rhesus 4/3
+values are owner-supplied biology I can’t verify and aren’t even
+exercised on `qcPed` (fallback 2) – they ride on the owner’s authority +
+\#73.
+
+**Learnings:** **Learning 166** added to `PROJECT_LEARNINGS.md` – the
+`gu`-dominance finding (the GVA displayed rank is governed by genome
+uniqueness, not mean kinship, so a kinship-only fix is a visible no-op;
+verify WHICH signal drives the displayed order before scoping a ranking
+fix) + the three D2 findings (per-focal era-specificity over a global
+mean; species/sex breeding-age table with the absent-`species`-column
+guard so `qcPed` uses fallback 2 not rhesus 4; the `+sexMean/2` identity
+is exact by construction, not a
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+rebuild) + the two-workflow process pattern (ground a `/grill-me` with a
+pre-compute workflow of real numbers; adversarially review your OWN
+ratification record before commit) + the ratification-recording pattern
+(authoritative §8 + per-item SUPERSEDED banners). Carried as applied:
+\[\[observation-vs-decision\]\] (surfaced ratify-vs-implement +
+presented the `gu` finding as input, not a unilateral plan change),
+\[\[consult-project-source-of-truth\]\] (the don’t-bundle / ratify-first
+contract + the `/grill-me` convention from the plan),
+\[\[ascii-only-in-question-options\]\] /
+\[\[avoid-jargon-use-plain-language\]\] (the `AskUserQuestion`s + the
+grill), \[\[check-process-history-before-rerunning-work\]\] (read the
+plan + the prior audit’s \#9 disposition); Learnings 161
+(build-equivalent), 164 (the two-rank-paths structure), 165 (the
+column-agnostic GVA chain).
+
+**=\> SUGGESTED NEXT = owner’s pick.** `origin/master` clean at
+`0d559d3b`; local `master` will be 1 commit ahead after this S177
+close-out commit (unpushed docs – Gotcha 6). **Issue \#9 remains OPEN**
+(Slice 2 + Slice 3 remain); \#73 newly filed. Natural options: -
+**(Implement Slice 2 / S1 – the ratified design)** a strict-TDD session
+implementing **§8-E** of the plan (the AUTHORITATIVE spec – the §3/§4/§6
+specs are SUPERSEDED). RED tests are spelled out in §8-E; the design is
+fully ratified and adversarially reviewed, so no further grill is
+needed. **Read plan §8 FIRST.** ONE session; NEWS entry folded into the
+publish PR (157a); publish is a SEPARATE session (the S175/S176
+rhythm). - **(Other options)** \#73 (species breeding-age generalization
+– logically better AFTER Slice 2 seeds the table); Slice 3 / S2
+(expanded: classify both-unknown + `gu` axis + `origin` import
+distinction + D7 – needs an `origin`-bearing fixture + a
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+smoke); \#37 (unused exports); \#36 (chimpanzee age-pyramid); \#2 (GVA
+iteration-count advice); \#28 (large, own plan); older
+\#13/#12/#11/#10/#5/#1; CRAN Phase 5 (owner-run). **Do NOT** bundle
+Slice 2 + Slice 3, or Slice 2 implement + publish (FM \#18/#25).
+
+**Key files (this session):** **CHANGED – the deliverable:**
+`docs/planning/issue9-gva-unknown-parent-ranking-plan.md` (added **§8
+Ratification Record** \[authoritative\], checked the §7 boxes, added
+per-item SUPERSEDED banners to §1/§3/§4/§6). **CHANGED – close-out
+docs:** `CHANGELOG.md` (S177 `[Unreleased]` entry),
+`PROJECT_LEARNINGS.md` (Learning 166), `SESSION_NOTES.md` (this
+handoff). **CREATED – external:** GitHub issue **\#73** (species
+breeding-age generalization + user-configurable). **NO
+`R/`/test/`man/`/`NAMESPACE`/`data/` change** (ratification; no code).
+**Referenced read-only (firsthand):** `R/kinship.R`, `R/meanKinship.R`,
+`R/reportGV.R`, `R/getPotentialParents.R:39-154`,
+`R/getIdsWithOneParent.R`, `R/orderReport.R`, `R/rankSubjects.R`,
+`R/modGeneticValue.R:180-330`, `R/getSpeciesGestation.R`, `R/data.R`
+(species-table doc), `tests/testthat/test_orderReport.R`. **Workflows:**
+`wf_7f819b92-a12` (pre-compute), `wf_1408109e-bf8` (adversarial review)
+– scripts under the session dir, NOT in the repo. **NOT committed
+(standing keeps):** `PED_GV_AUDIT_2026-05-30.html` (untracked);
+`.DS_Store`.
+
+**Gotchas:** (1) **Issue \#9 OPEN** – Slice 2 (one-unknown
+peer-substitution, §8-E) + Slice 3 (expanded: classify + `gu` +
+`origin` + D7) remain; **\#9 does NOT close on Slice 2** (the `gu` axis
+dominates the visible rank, §8-A). (2) **Slice 2 is BIGGER than the
+plan’s original “one line”** – a species/sex table + accessor +
+per-focal peer-cohort helper + the substitution. **Read plan §8
+(authoritative) FIRST; §3/§4/§6 are SUPERSEDED** (per-item banners point
+to §8). (3) **`qcPed` has NO `species` column** -\> the seeded rhesus
+4/3 is NOT exercised; the cohort uses fallback cutoff **2**. RED
+expected numbers must use cutoff 2; guard the absent column
+(`getPotentialParents.R:64-68` pattern). (4) **`qcPed`’s 43 one-unknown
+animals are ALL missing the SIRE** (0 dam-missing) -\> add a missing-DAM
+fixture in RED to exercise the female-cohort branch. (5) **Slice 2 must
+NOT change `test_orderReport:24,42`** (both-unknown U-stubs on a frozen
+fixture – verified S177). (6) **Local `master` is 1 commit AHEAD of
+`origin/master`** after this close-out commit (the documented rhythm)
+-\> if the next session cuts a branch from local `master` and PRs it,
+**push `master` first** to keep the PR diff clean. (7) Carried standing
+keeps (unchanged from S176): package **ARCHIVED on CRAN 2025-07-29**;
+CRAN Phase 5 owner-gated (`docs/planning/cran-2.0.0-phase5-runbook.md`);
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT (warning + NULL) without a LabKey credential/config; exactly
+**ONE** codecov config (`codecov.yml`) – do NOT re-add a second; NEWS
+render traps CLOSED at the source (permanent
+`html_preview:false`+`md_extensions:"-smart"`, Learning 155); `git pull`
+is rebase (`pull.rebase=true`) + chokes on `.DS_Store` -\> use
+`fetch`+`reset` (135); post-merge `fetch` before `reset --hard` must be
+ancestor-gated (146); the shipped `deidentified_jmac_ped.csv` halts a
+full
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+run on a pre-existing “both sire and dam” conflict (test the layer you
+change, Learning 156); `skip_on_cran()`-gated test files need
+`NOT_CRAN=true`; the build-equivalent is
+`devtools::check(vignettes = FALSE)` = 0/0/0 (Learning 161).
+
+### What Session 176 Did
+
+**Deliverable:** Publish **issue \#9 Slice 1 (S3)** – S175’s
+`sire`/`dam` columns in the GVA report + both CSV exports – from
+`issue-9-s3-sire-dam-columns` to `master` via PR, folding the
+user-facing NEWS entry into the SAME PR (Learning 157a); issue \#9 stays
+OPEN (only Slice 1 of 3). **(DONE – merged to `master` via PR \#72,
+merge commit `0d559d3b`; \#9 verified OPEN; branch deleted.)** **Started
+/ Completed:** 2026-06-22 **Status:** **DONE.** The `sire`/`dam` GVA
+columns + the NEWS entry are LIVE on `origin/master` (`0d559d3b`).
+**Admin/publish + docs -\> TDD declared N/A every response** (confirmed
+publish/docs-only – the S3 code was already written/tested/committed in
+S175; the only content change is a NEWS bullet). **0 stakeholder
+corrections.** SOLO (a serial, irreversible git sequence – a workflow
+adds risk, not coverage; the S171/S172 judgment). Owner picked **option
+1 (publish)** at orientation, then **“Yes, merge commit”** at the
+`AskUserQuestion` merge gate. - **Pre-publish content (one PR, Learning
+157a):** added a dev-version *Changes* bullet to `NEWS.Rmd` – the GVA
+report and both CSV exports now include `sire`/`dam` columns so it is
+visible which animals have an unknown parent. Column names
+backtick-wrapped (spell_check skips code spans). Re-rendered `NEWS.md`
+(permanent `html_preview:false`+`md_extensions:"-smart"`, Learning 155)
+-\> **0 non-ASCII**, no stray `.html`, a confined pure-insertion diff
+(NEWS.md +6 / NEWS.Rmd +5, exactly my bullet, nothing reflowed).
+`spell_check_package(".")` = **0 unrecognized** before AND after -\> no
+WORDLIST change. Committed NEWS only as `823617ae`; kept the S176 1B
+stub OUT of the PR (stash-carried, popped clean post-merge). - **Push
+master first (S175 Gotcha 2 – WORKED exactly as predicted):** `master`
+was 2 ahead of `origin/master` (S173 `658f32d9` + S174 `20f51391`
+close-out docs, unpushed) and the branch was cut from that master -\>
+pushed `master` first (FF `origin/master` `c7f6ea86` -\> `20f51391`)
+THEN PRed the branch; verified the PR diff = 3 commits (S175 feat
+`ba2cdf52` + close-out `69a99e73` + S176 NEWS `823617ae`) / 8 expected
+files, NO S173/S174 bundling. - **PR + CI (did NOT merge blind):**
+opened **PR \#72** -\> `master` (body “Relates to \#9”, NOT
+`Closes #9`). **All 10 checks PASS** – lint; `R CMD check` x5 (macos /
+ubuntu release + oldrel-1 + **devel 16m5s** the long pole / windows);
+pkgdown; test-coverage; **codecov/patch + codecov/project PASS**.
+Background watch exited 0, but per Learning 157 re-queried FRESH
+non-watch `gh pr checks 72` (10 `pass`, exit 0) before proceeding. -
+**Merge (irreversible – `AskUserQuestion`-gated):** guarded fresh
+pre-merge re-check (state OPEN / MERGEABLE / CLEAN, `headRefOid`==local
+`823617ae`, `origin/master`==`20f51391`) -\> `gh pr merge 72 --merge`
+-\> **`0d559d3b`**; verified landed firsthand (MERGED,
+`mergedAt 2026-06-23T00:45:42Z`, `mergedBy rmsharp`); **\#9 re-verified
+OPEN** after the merge. - **Reconcile + cleanup (Learning 146):**
+stash-carried the stub; checkout master; fetch; **ancestor-gated reset**
+(both `20f51391` AND `823617ae` asserted ancestors of `0d559d3b`) -\>
+`reset --hard origin/master`; `stash pop` clean. Branch deleted
+verified-merged-before-delete: `git branch -d` (was `823617ae`) +
+`push origin --delete` + `fetch --prune` -\> NO ref remains (local 0 /
+remote-tracking 0 / `gh api` **404**).
+
+**Phase-3E (build-equivalent / runtime smoke): SATISFIED on the
+merge-result tree.** PR \#72’s `R CMD check` x5 matrix
+(incl. ubuntu-devel) re-verified the deliverable on the merge result,
+all PASS. Confirmed firsthand on `master` AFTER the reset:
+`R/reportGV.R:132` carries `sire`/`dam`, `NEWS.md:49-51` has the GVA
+bullet, both test files present, and `test_reportGV.R` passes locally on
+master. The runtime data flow (sire/dam reaching the table + the
+GVA-subset CSV) is exercised by the S175 `testServer` integration test,
+now on master and green in CI. A full browser
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+smoke of the rendered DT table is the pre-existing
+`test-e2e-*`/`shinytest2` baseline-noise harness, not a clean smoke in
+this environment -\> stated, not silently skipped.
+
+**Session 175 Handoff Evaluation (by Session 176): Score 10/10.** S175’s
+`=> SUGGESTED NEXT` listed **“Publish Slice 1 / S3”** as the FIRST
+option with the EXACT end-to-end procedure (push branch -\> PR -\> watch
+5-platform CI -\> do NOT merge blind via fresh non-watch \[157\] -\>
+`AskUserQuestion`-gate merge -\> verified-merged-before-delete with
+`fetch`+`reset` ancestor-gated \[146\]) AND the single pre-publish step
+spelled out precisely (fold NEWS into the SAME PR \[157a\]; user-facing
+text = Sire/Dam columns now in the GVA report + both CSV exports; plain
+ASCII; re-render with `html_preview:false`+`md_extensions:"-smart"`
+\[155\]; `sire`/`dam` are lowercase prose, likely fine but verify the
+spell delta \[159\]). I executed all of it near-verbatim with **zero
+rediscovery and zero corrections.** Every load-bearing fact held
+firsthand: `master` at `20f51391` 2-ahead of `origin/master` `c7f6ea86`;
+the branch contained the S175 feat + close-out cut from `20f51391`;
+`sire`/`dam` produced a 0/0 spell delta (no WORDLIST change). **Gotcha
+2** (“push `master` first or the PR bundles S173+S174 docs”) was the one
+non-obvious, load-bearing instruction and it was exactly right – I
+pushed master first and the PR diff came out S175-only. This is what a
+10 looks like: the path was fully paved, every claim verified true,
+nothing left to discover. ROI maximal.
+
+**Self-assessment (Session 176): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check -\> HEAD `69a99e73` = S175, no
+undocumented commits), reported, STOPPED for the owner’s pick; claimed
+the session with a 1B stub BEFORE technical work. **Strengths:** (1)
+**full safe-publish discipline, executed clean first try** – NEWS in the
+SAME PR (157a) with 0 non-ASCII + 0 spell-delta + a confined +6
+insertion; pushed `master` first per Gotcha 2 and VERIFIED the resulting
+PR diff was S175-only (3 commits / 8 files, no S173/S174 bundling); PR
+body deliberately “Relates to \#9” not `Closes #9` and **re-verified \#9
+OPEN after the merge**; did NOT merge blind (fresh non-watch re-query
+even though the watch exited 0, Learning 157); guarded
+`AskUserQuestion`-gated merge with a fresh pre-merge gate matching
+`headRefOid` to local and `origin/master` to expected; ancestor-gated
+`reset --hard` (both old-master AND merged-head asserted ancestors
+first); stash-carried the S176 stub through the destructive reset and
+popped it clean; verified-merged-before-delete cleanup with a `gh api`
+404; (2) **verified the deliverable on `master` firsthand** rather than
+trusting the green merge – `reportGV.R:132`, the NEWS bullet, both test
+files, and a local `test_reportGV.R` pass; (3) **confirmed S175’s
+load-bearing prediction** – Gotcha 2’s master-first push kept the PR
+diff clean; (4) TDD N/A declared every response (confirmed
+docs/admin-only), plain language, ASCII, scope-disciplined (one
+deliverable, no creep into Slice 2/3). **Weaknesses (honest):** (a)
+**low base difficulty** – a textbook publish on a fully-paved convention
+with a flawless (10/10) predecessor handoff; the value is the
+discipline, not depth or recovery -\> ceiling ~8; (b) **no new numbered
+learning emerged** – every step reused a documented Learning
+(133/135/146/152/155/157/157a/159/161); manufacturing one would be noise
+(the honest S172 outcome); (c) **CI was textbook-green first try** – no
+recovery/judgment test to push the score higher; (d) **I left the S176
+close-out docs UNPUSHED on local `master`** (the S173/S174 rhythm)
+rather than pushing – this re-creates a 1-commit-ahead drift the next
+publish must FF (documented in Gotcha 2 below); a defensible convention
+call, not a defect, but worth flagging. Clean, fully-verified,
+scope-disciplined publish with a firsthand on-master confirmation and
+zero corrections -\> 8/10.
+
+**Learnings:** **No NEW numbered learning** – this publish was a clean
+re-execution of the documented convention; manufacturing a learning
+where none exists is noise (the honest S172 outcome). Carried as
+applied: \[\[consult-project-source-of-truth\]\] (the publish
+convention + the irreversible-merge gate from the protocol’s own rules +
+the implementation-\>CHANGELOG / publish-\>NEWS rhythm),
+\[\[observation-vs-decision\]\] / \[\[ascii-only-in-question-options\]\]
+(the merge `AskUserQuestion`), \[\[news-vs-changelog\]\] (NEWS for the
+user-facing columns; CHANGELOG for process history),
+\[\[backlog-vs-changelog-placement\]\] (completed work -\> CHANGELOG;
+\#9 stays OPEN in GitHub Issues, the backlog),
+\[\[avoid-jargon-use-plain-language\]\]; Learnings
+133/135/146/152/155/157/157a/159/161 + the
+solo-for-irreversible-git-sequence judgment. One confirmation worth
+carrying (not a new learning): S175 Gotcha 2’s “push the local-ahead
+`master` first” works exactly as predicted – the PR diff came out
+S175-only with no S173/S174 bundling.
+
+**=\> SUGGESTED NEXT = owner’s pick.** `origin/master` clean at
+`0d559d3b` (the merge); local `master` will be 1 commit ahead after this
+S176 close-out commit (unpushed docs – see Gotcha 2); **issue \#9
+remains OPEN** (Slice 1 of 3 published); no dangling branches; dashboard
+98/100. Natural options (plain ASCII labels): - **(Slice 2 / S1 – the
+core mean-kinship fix)** the substantive remaining work on \#9. Requires
+the plan’s §7 ratification FIRST (D1-D4, D6, D7, D8 + the **D2
+substitution-algebra `/grill-me`**) – a RED test cannot assert a number
+until D2 is fixed. Best done as: **ratify (its own focused session, D2
+via `/grill-me`) -\> THEN implement Slice 2** as a strict-TDD session.
+Do NOT bundle ratify+implement (D2 is genuinely deep, the \#1
+here-be-dragons). Plan:
+`docs/planning/issue9-gva-unknown-parent-ranking-plan.md`. - **(Slice 3
+/ S2 – classify unknown-parent animals + reconcile the two rank paths)**
+requires D7 ratified; changes Shiny display -\> needs a
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+Phase-3E smoke. - **(Other options, unchanged)** \#28 v1 source-agnostic
+slice (large, wants its own plan); \#37 (unused exports); \#36
+(chimpanzee age-pyramid); \#2 (GVA iteration-count advice); embedded
+codecov token (owner’s security call); CRAN Phase 5 (owner-run,
+`docs/planning/cran-2.0.0-phase5-runbook.md`); older
+\#13/#12/#11/#10/#5/#1. **Do NOT** bundle options or slices (FM
+\#18/#25); **do NOT** start Slice 2’s RED without the §7 ratification
+(esp. D2).
+
+**Key files (this session):** **CHANGED – the publish content (NEWS
+commit `823617ae`, now on `master` via PR \#72):** `NEWS.Rmd` (+5,
+dev-version *Changes* bullet), `NEWS.md` (+6, re-rendered). **CHANGED –
+close-out docs (this S176 docs commit, direct to local `master`,
+UNPUSHED):** `CHANGELOG.md` (S176 `[Unreleased]` entry),
+`SESSION_NOTES.md` (this handoff). **NO
+`R/`/test/`man/`/NAMESPACE/`data/`/`PROJECT_LEARNINGS.md` change** (the
+S3 code was S175’s; no new learning this session). **Published
+deliverable (S175’s, now on `origin/master` `0d559d3b`):**
+`R/reportGV.R:132`, `tests/testthat/test_reportGV.R`,
+`tests/testthat/test_modGeneticValue.R:748`. **The plan (context):**
+`docs/planning/issue9-gva-unknown-parent-ranking-plan.md`. **NOT
+committed (standing keeps):** `PED_GV_AUDIT_2026-05-30.html`
+(untracked); `.DS_Store` (regenerates).
+
+**Gotchas:** (1) **Issue \#9 is OPEN – only Slice 1 of 3 is published.**
+Slice 2 (S1, core mean-kinship fix) needs the §7 ratification + the D2
+`/grill-me` FIRST; Slice 3 (S2, classify) needs D7 ratified + a
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+smoke. (2) **Local `master` is 1 commit AHEAD of `origin/master`** (this
+S176 close-out docs commit, unpushed – the S173/S174 rhythm) -\> if the
+next session cuts a branch from local `master` and PRs it, **push
+`master` first** (FF `origin/master` to the S176 close-out commit) to
+keep that PR’s diff clean; this is now the routine Gotcha-2 pattern. (3)
+**The Slice 1 deliverable is LIVE on `origin/master` `0d559d3b`** –
+`sire`/`dam` columns in the GVA report + both CSV exports + the NEWS
+entry; no further publish action needed for S3. (4) **`sire`/`dam` are
+appended after the include columns** (report order:
+`id, sex, age, birth, exit, population, sire, dam, indivMeanKin, zScores, gu, totalOffspring, livingOffspring, value, rank`);
+if the owner later wants them right after `id` for a studbook layout,
+that is a trivial follow-up (reorder the demographics subset + the two
+`expect_named` orders). (5) Carried standing keeps (unchanged from
+S175): package **ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5 owner-gated
+(`docs/planning/cran-2.0.0-phase5-runbook.md`);
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT (warning + NULL) without a LabKey credential/config; the
+offline focal path returns `nprcgenekeeprFileErr` not NULL (S155);
+exactly **ONE** codecov config (`codecov.yml`) – do NOT re-add a second;
+its embedded upload token is redundant with `secrets.CODECOV_TOKEN` +
+flagged (owner’s call); NEWS render traps 132/139 CLOSED at the source
+(S163, permanent `html_preview:false`+`md_extensions:"-smart"`);
+`git pull` is rebase (`pull.rebase=true`) + chokes on `.DS_Store` -\>
+use `fetch`+`reset` (135); post-merge `fetch` before `reset --hard` must
+be verified + ancestor-gated (146); the shipped
+`deidentified_jmac_ped.csv` halts a full
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+run on a pre-existing “both sire and dam” conflict (test the layer you
+change, Learning 156); `skip_on_cran()`-gated test files need
+`NOT_CRAN=true`; the build-equivalent is
+`devtools::check(vignettes = FALSE)` = 0/0/0 (Learning 161).
+
 ### What Session 175 Did
 
 **Deliverable:** Implement **Slice 1 (S3)** of the issue \#9 plan –
