@@ -154,15 +154,16 @@ Reading A implementation). **Weaknesses (honest):** (a) **low base
 difficulty** – a textbook publish on a fully-paved 10/10 predecessor
 handoff; the value is the discipline + the one honest decision, not
 depth or recovery -\> ceiling ~8; (b) **CI was textbook-green first
-try** – no recovery/judgment test to push the score higher; (c) **I left
-the S181 close-out docs UNPUSHED on local `master`** (the documented
-S173-S180 rhythm) rather than pushing – this re-creates a 1-commit-ahead
-drift the next publish must FF (Gotcha 2 below); a defensible convention
-call, but the perpetual drift could be eliminated by simply pushing
-close-out docs (flagged as an observation for the owner, not changed
-unilaterally). Clean, fully-verified, scope-disciplined publish with a
-firsthand on-master confirmation, one genuine decision surfaced +
-honored, a real new learning, and zero corrections -\> 8/10.
+try** – no recovery/judgment test to push the score higher; (c) **the
+close-out docs were initially left UNPUSHED** per the documented
+S173-S180 rhythm (I flagged the recurring 1-ahead drift as an owner
+observation rather than changing the convention unilaterally); **the
+owner then directed pushing them**, so `origin/master` == local `master`
+at `172252bf` and the drift is resolved this cycle – the next session
+can branch directly from `master`. Clean, fully-verified,
+scope-disciplined publish with a firsthand on-master confirmation, one
+genuine decision surfaced + honored, a real new learning, and zero
+corrections -\> 8/10.
 
 **Learnings:** **Learning 169** added to `PROJECT_LEARNINGS.md` – the
 close-with-explicit-follow-up backlog-hygiene pattern (a slice that
@@ -182,29 +183,30 @@ rhythm), \[\[observation-vs-decision\]\] /
 133/135/146/152/155/157/157a/159/161 + the
 solo-for-irreversible-git-sequence judgment.
 
-**=\> SUGGESTED NEXT = owner’s pick.** `origin/master` clean at
-`5ada4b71` (the PR \#75 merge – Slice 3 LIVE); local `master` will be 1
-commit ahead after this S181 close-out commit (unpushed docs – see
-Gotcha 2); **issue \#9 is CLOSED** (all three slices published); **\#76
-(Reading A) is the new OPEN follow-up**; no dangling branches; dashboard
-98/100. Natural options (plain ASCII labels): - **(#76 – Reading A, deep
-genetics)** the now-tracked follow-up: genuinely de-inflate the
-genome-uniqueness statistic for both-unknown founders inside
-`calcGU`/`calcA`/gene-drop. This is NOT a “just implement” – it reverses
-the documented `calcGU.R:10-34` stance and breaks the golden invariants,
-so it needs a **§8-E-style RATIFICATION first** (an agreed formula +
-replacement `calcGU`/`calcA` golden values), and only then a separate
-strict-TDD implement. Expect a ratification session, then an implement
-session (two sessions minimum; do NOT bundle). - **(#73 – species
-breeding-age generalization)** logically follows Slice 2 seeding the
-`minMaleBreedingAge`/`minFemaleBreedingAge` table; generalize to more
-species + make user-configurable. - **(Other options)** \#37 (unused
-exports); \#36 (chimpanzee age-pyramid); \#2 (GVA iteration-count
-advice); \#28 (large, own plan); older \#13/#12/#11/#10/#5/#1; CRAN
-Phase 5 (owner-run, `docs/planning/cran-2.0.0-phase5-runbook.md`). **Do
-NOT** start \#76 (Reading A) implementation without ratifying the gu
-formula + replacement golden values FIRST (FM \#18/#19/#25); **do NOT**
-bundle the \#76 ratification + implement.
+**=\> SUGGESTED NEXT = owner’s pick.** `origin/master` == local `master`
+at `172252bf` (the PR \#75 merge `5ada4b71` – Slice 3 LIVE – plus the
+S181 close-out docs, which the owner directed pushing to origin -\> no
+drift this cycle); **issue \#9 is CLOSED** (all three slices published);
+**\#76 (Reading A) is the new OPEN follow-up**; no dangling branches;
+dashboard 98/100. Natural options (plain ASCII labels): - **(#76 –
+Reading A, deep genetics)** the now-tracked follow-up: genuinely
+de-inflate the genome-uniqueness statistic for both-unknown founders
+inside `calcGU`/`calcA`/gene-drop. This is NOT a “just implement” – it
+reverses the documented `calcGU.R:10-34` stance and breaks the golden
+invariants, so it needs a **§8-E-style RATIFICATION first** (an agreed
+formula + replacement `calcGU`/`calcA` golden values), and only then a
+separate strict-TDD implement. Expect a ratification session, then an
+implement session (two sessions minimum; do NOT bundle). - **(#73 –
+species breeding-age generalization)** logically follows Slice 2 seeding
+the `minMaleBreedingAge`/`minFemaleBreedingAge` table; generalize to
+more species + make user-configurable. - **(Other options)** \#37
+(unused exports); \#36 (chimpanzee age-pyramid); \#2 (GVA
+iteration-count advice); \#28 (large, own plan); older
+\#13/#12/#11/#10/#5/#1; CRAN Phase 5 (owner-run,
+`docs/planning/cran-2.0.0-phase5-runbook.md`). **Do NOT** start \#76
+(Reading A) implementation without ratifying the gu formula +
+replacement golden values FIRST (FM \#18/#19/#25); **do NOT** bundle the
+\#76 ratification + implement.
 
 **Key files (this session):** **CHANGED – the publish content (NEWS
 commit `3b1c7d9f`, now on `master` via PR \#75):** `NEWS.Rmd` (+11,
@@ -225,26 +227,26 @@ keeps):** `PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
 the displayed GVA top no longer shows both-unknown founders. **Reading A
 (genuine `gu` de-inflation) is tracked in the NEW open issue \#76**, NOT
 in \#9 – it needs a §8-E-style ratification (formula + replacement
-`calcGU`/`calcA` golden values) BEFORE any implement. (2) **Local
-`master` is 1 commit AHEAD of `origin/master`** (this S181 close-out
-docs commit, unpushed – the documented S173-S180 rhythm) -\> if the next
-session cuts a branch from local `master` and PRs it, **push `master`
-first** (FF `origin/master` `5ada4b71` to the S181 close-out commit) to
-keep that PR’s diff clean; routine Gotcha-2. (The perpetual drift could
-be ended by just pushing close-out docs – an owner call, not changed
-this session.) (3) **The Slice 3 deliverable is LIVE on `origin/master`
-`5ada4b71`** – the `parentage` column + the classification-aware
-displayed rank; no further publish action for \#9. (4) **The
-import-vs-stub (`origin`) distinction is exercised ONLY by the synthetic
-`orderReport` fixture** – no shipped dataset
-(`qcPed`/`breederPed`/`examplePedigree`) carries an `origin` column, so
-on real data ALL both-unknown founders are treated as ONPRC-born and
-demoted (carried from S180). (5) **A `skip_on_cran()`-gated `testServer`
-test shows as a silent “S” skip** under a default local `test_file` run
-– set `NOT_CRAN=true` to actually execute it (e.g. the
-`test_modGeneticValue.R` demotion Phase-3E test). (6) Carried standing
-keeps (unchanged from S180): package **ARCHIVED on CRAN 2025-07-29**;
-CRAN Phase 5 owner-gated (`docs/planning/cran-2.0.0-phase5-runbook.md`);
+`calcGU`/`calcA` golden values) BEFORE any implement. (2)
+**`origin/master` and local `master` are IN SYNC at `172252bf`** – the
+owner directed pushing the S181 close-out docs to origin, ending the
+recurring S173-S180 “local 1-ahead” drift. So the next session can
+branch directly from `master` with NO FF-first step. (If a future
+session again leaves close-out docs local-only, the routine “push master
+first” Gotcha-2 returns – but it does not apply now.) (3) **The Slice 3
+deliverable is LIVE on `origin/master` `5ada4b71`** – the `parentage`
+column + the classification-aware displayed rank; no further publish
+action for \#9. (4) **The import-vs-stub (`origin`) distinction is
+exercised ONLY by the synthetic `orderReport` fixture** – no shipped
+dataset (`qcPed`/`breederPed`/`examplePedigree`) carries an `origin`
+column, so on real data ALL both-unknown founders are treated as
+ONPRC-born and demoted (carried from S180). (5) **A
+`skip_on_cran()`-gated `testServer` test shows as a silent “S” skip**
+under a default local `test_file` run – set `NOT_CRAN=true` to actually
+execute it (e.g. the `test_modGeneticValue.R` demotion Phase-3E test).
+(6) Carried standing keeps (unchanged from S180): package **ARCHIVED on
+CRAN 2025-07-29**; CRAN Phase 5 owner-gated
+(`docs/planning/cran-2.0.0-phase5-runbook.md`);
 [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
 FAIL SOFT (warning + NULL) without a LabKey credential/config; exactly
 **ONE** codecov config (`codecov.yml`); NEWS render traps CLOSED at the
