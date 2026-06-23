@@ -773,6 +773,43 @@ test_that("modGeneticValueServer report carries sire and dam columns (#9 S3)", {
   )
 })
 
+test_that("modGeneticValueServer demotes both-unknown founders to the bottom (#9 Slice 3)", {
+  skip_if_not_installed("shiny")
+
+  # makeValidTestPed founders have NA/NA parents (both unknown) AND offspring,
+  # and there is no origin column -> they are the no-origin both-unknown founders
+  # that Slice 3 must classify and rank last. The offspring are fully known.
+  test_ped <- makeValidTestPed(nFounders = 6, nOffspring = 12)
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped })
+    ),
+    {
+      session$setInputs(nIterations = 100)
+      session$setInputs(runAnalysis = 1)
+
+      results <- gvResults()
+      founders <- test_ped$id[is.na(test_ped$sire) & is.na(test_ped$dam)]
+
+      # the classification column reaches the displayed results
+      expect_true("parentage" %in% names(results))
+      expect_true(all(results$parentage[results$id %in% founders] ==
+        "both unknown"))
+
+      # D7: both-unknown founders (no origin) are ranked LAST, not in the top
+      # block, so they no longer falsely top-rank the displayed table.
+      nF <- length(founders)
+      topBlock <- results$id[results$rank <= (nrow(results) - nF)]
+      expect_false(any(founders %in% topBlock))
+      # every founder sits in the bottom nF ranks
+      expect_true(all(results$rank[results$id %in% founders] >
+        (nrow(results) - nF)))
+    }
+  )
+})
+
 test_that("modGeneticValueServer results have unique IDs", {
   skip_if_not_installed("shiny")
 

@@ -200,9 +200,18 @@ modGeneticValueServer <- function(id, pedigree) {
           return(report)
         }
 
-        # Add rank based on genetic value (low kinship + high uniqueness)
+        # Add rank based on genetic value (low kinship + high uniqueness).
+        # Issue #9 Slice 3 (D7): both-unknown founders lacking a recorded origin
+        # are flagged "Undetermined" by orderReport. Rank them LAST so the
+        # genome uniqueness inflation no longer pins them to the top of the
+        # displayed table; imports, one-unknown, known animals rank normally.
         report$rank <- rank(report$indivMeanKin - report$gu)
-        report <- report[order(report$rank), ]
+        demote <- if ("value" %in% names(report)) {
+          !is.na(report$value) & report$value == "Undetermined"
+        } else {
+          rep(FALSE, nrow(report))
+        }
+        report <- report[order(demote, report$rank), ]
         report$rank <- seq_len(nrow(report))
 
         # Signal that genetic value analysis is complete (for E2E testing)

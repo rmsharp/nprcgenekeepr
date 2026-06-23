@@ -18,8 +18,11 @@
 #' }
 #'
 #' @param rpt a dataframe with required colnames \code{id}, \code{gu},
-#' \code{zScores}, \code{import}, \code{totalOffspring}, which is
-#' a data.frame of results from a genetic value analysis.
+#' \code{zScores}, and optionally \code{origin} and \code{parentage}, which is
+#' a data.frame of results from a genetic value analysis. When \code{parentage}
+#' is absent the both-unknown founders are taken from \code{getFounders(ped)};
+#' when \code{origin} is absent every both-unknown founder is treated as
+#' ONPRC-born (no recorded origin).
 #' @param ped the pedigree information in datatable format with required
 #' colnames \code{id}, \code{sire}, \code{dam}, \code{gen}, \code{population}).
 #' This requires complete pedigree information..
@@ -27,33 +30,43 @@
 orderReport <- function(rpt, ped) {
   finalRpt <- list()
 
-  founders <- getFounders(ped)
-
-  if ("origin" %in% names(rpt)) {
-    # imports with no offspring
-    i <- (!is.na(rpt$origin) & (rpt$totalOffspring == 0L) &
-      (rpt$id %in% founders))
-
-    imports <- rpt[i, ]
-    rpt <- rpt[!i, ]
-    if ("age" %in% names(rpt)) {
-      finalRpt$imports <- imports[with(imports, order(age)), ]
-    } else {
-      finalRpt$imports <- imports[with(imports, order(id)), ]
-    }
-
-    # ONPRC-born animals with no parentage
-    i <- (is.na(rpt$origin) & (rpt$totalOffspring == 0L) &
-      (rpt$id %in% founders))
-
-    noParentage <- rpt[i, ]
-    rpt <- rpt[!i, ]
-    if ("age" %in% names(rpt)) {
-      finalRpt$noParentage <- noParentage[with(noParentage, order(age)), ]
-    } else {
-      finalRpt$noParentage <- noParentage[with(noParentage, order(id)), ]
-    }
+  # Issue #9 Slice 3: both-unknown founders (U-id aware via parentage, falling
+  # back to getFounders) are split by recorded origin. Genuine imports (origin
+  # present) are kept and ranked; ONPRC-born founders with no recorded origin
+  # -- including those WITH offspring -- become noParentage so the displayed
+  # rank can demote them. An absent origin column is treated as all-NA.
+  bothUnknown <- if ("parentage" %in% names(rpt)) {
+    rpt$parentage == "both unknown"
+  } else {
+    rpt$id %in% getFounders(ped)
   }
+  origin <- if ("origin" %in% names(rpt)) {
+    rpt$origin
+  } else {
+    rep(NA_character_, nrow(rpt))
+  }
+
+  # imports: both-unknown founders with a recorded origin -> kept and ranked
+  i <- !is.na(origin) & bothUnknown
+  imports <- rpt[i, ]
+  if ("age" %in% names(imports)) {
+    finalRpt$imports <- imports[with(imports, order(age)), ]
+  } else {
+    finalRpt$imports <- imports[with(imports, order(id)), ]
+  }
+  rpt <- rpt[!i, ]
+  origin <- origin[!i]
+  bothUnknown <- bothUnknown[!i]
+
+  # ONPRC-born both-unknown founders (no recorded origin) -> noParentage
+  i <- is.na(origin) & bothUnknown
+  noParentage <- rpt[i, ]
+  if ("age" %in% names(noParentage)) {
+    finalRpt$noParentage <- noParentage[with(noParentage, order(age)), ]
+  } else {
+    finalRpt$noParentage <- noParentage[with(noParentage, order(id)), ]
+  }
+  rpt <- rpt[!i, ]
 
   # subjects with > 10% genome uniqueness
   highGu <- rpt[(rpt$gu > 10L), ]

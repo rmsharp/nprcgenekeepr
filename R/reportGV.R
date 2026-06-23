@@ -158,7 +158,15 @@ reportGV <- function(ped, guIter = 5000L, guThresh = 1L, pop = NULL,
   females <- founders[(founders$sex == "F") &
     !isGeneratedUnknownId(founders$id), ]
 
-  finalData <- cbind(demographics, indivMeanKin, zScores, gu, offspring)
+  # Issue #9 Slice 3: classify each proband's parentage (U-id aware) so the
+  # report can flag both-unknown founders and the displayed rank can demote
+  # those lacking a recorded origin. Both-known and one-unknown animals rank
+  # normally; kinship() and genome uniqueness are untouched.
+  parentage <- classifyParentage(demographics$sire, demographics$dam)
+
+  finalData <- cbind(
+    demographics, indivMeanKin, zScores, gu, offspring, parentage
+  )
   finalData <- list(
     report = orderReport(finalData, ped),
     kinship = kmat,
