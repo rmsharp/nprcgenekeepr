@@ -11,7 +11,7 @@ test_that("reportGV forms correct genetic value report", {
   ))
   expect_named(gvReport$report,
     c(
-      "id", "sex", "age", "birth", "exit", "population",
+      "id", "sex", "age", "birth", "exit", "population", "sire", "dam",
       "indivMeanKin", "zScores", "gu", "totalOffspring",
       "livingOffspring", "value", "rank"
     )
@@ -36,7 +36,7 @@ test_that(
     ))
     expect_named(gvReport$report,
       c(
-        "id", "sex", "age", "birth", "exit", "population",
+        "id", "sex", "age", "birth", "exit", "population", "sire", "dam",
         "indivMeanKin", "zScores", "gu", "totalOffspring",
         "livingOffspring", "value", "rank"
       )

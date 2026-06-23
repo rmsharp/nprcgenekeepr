@@ -124,9 +124,12 @@ reportGV <- function(ped, guIter = 5000L, guThresh = 1L, pop = NULL,
 
   includeCols <- intersect(getIncludeColumns(), names(ped))
 
-  # Subsetting out the needed demographic information from the pedigree
+  # Subsetting out the needed demographic information from the pedigree.
+  # sire and dam are included so the report shows which animals have unknown
+  # (U-id) parents (issue #9 / S3). They are always present because kinship()
+  # above requires ped$sire and ped$dam.
   rownames(ped) <- ped$id
-  demographics <- ped[probands, includeCols]
+  demographics <- ped[probands, c(includeCols, "sire", "dam")]
 
   if (!is.null(updateProgress)) {
     updateProgress(
