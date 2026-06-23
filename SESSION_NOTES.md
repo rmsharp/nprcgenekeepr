@@ -7,6 +7,421 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 174 Did
+
+**Deliverable:** A **planning document** for GitHub issue \#9 (animals
+missing a parent falsely top-rank in the Genetic Value Analysis) -\>
+`docs/planning/issue9-gva-unknown-parent-ranking-plan.md`, covering all
+three issue solutions. **(DONE – plan written; committed direct to
+`master` with the close-out docs.)** **Started / Completed:** 2026-06-22
+**Status:** **DONE. PLANNING session -\> the plan IS the deliverable; NO
+`R/`/test/`man/`/NAMESPACE/`data/` change (FM \#18/#25 – implementation
+is separate future sessions, one slice each).** **0 stakeholder
+corrections.** Owner picked **\#9** at orientation, then at a scope
+`AskUserQuestion` chose **“Write a planning doc”** + scope **S1 + S2 +
+S3** (all three solutions). Used a **WORKFLOW** for the understanding
+phase under ultracode (genuine read-across-many-files), then SOLO for
+the plan authoring. - **Scoping (firsthand, before plan-vs-implement):**
+6-agent understanding workflow `wf_e8ff66e0-7ed` mapped founder creation
+/ mean kinship / genome uniqueness + ranking / results table + tests,
+with an **adversarial agent that CONFIRMED the top-rank premise on real
+data** (`qcPed`: top-20 GVA ranks are 100% founders, mean kinship
+0.0027-0.0035 vs colony 0.0066). Spot-verified the load-bearing
+structural claims firsthand: the single choke point
+`indivMeanKin <- meanKinship(kmat)` (`R/reportGV.R:93`); the **two rank
+paths** – library `orderReport` (`R/reportGV.R:150`,
+`R/orderReport.R:27-85`) vs the Shiny module’s **override**
+`rank(indivMeanKin - gu)` (`R/modGeneticValue.R:204-206`); the
+bug-encoding test (`tests/testthat/test_orderReport.R:24,42` -\>
+`countUnk(top 100)==34`). Ran a firsthand `git grep` blast-radius
+inventory
+(esp. [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+= 5 R/ callers -\> confine the fix to `reportGV`). - **The plan (8
+numbered sections):** §1 context + confirmed mechanism, §2 evidence
+inventory (<file:line>), §3 **8 design decisions with my recommendations
+flagged for owner ratification**, §4 **3 vertical slices** (one session
+each, RED-\>GREEN-\>REFACTOR) with DONE criteria + verification
+commands + STOP + here-be-dragons, §5 cross-slice notes, §6 consolidated
+risks, §7 owner ratification checklist. Recommended slice order: **S3
+(sire/dam columns – visibility, tracer bullet) -\> S1 (core mean-kinship
+fix) -\> S2 (classify + reconcile the two rank paths)**. - **Prior
+process history honored:**
+`docs/audits/IMPLEMENTED_BUT_OPEN_AUDIT_2026-06-16.md:65-68` already
+classified \#9 as a policy-hold needing an owner decision; a Monte-Carlo
+kinship-imputation toolkit
+(`createSimKinships`/`makeSimPed`/`cumulateSimKinships`) exists but is
+unwired (plan D4 addresses reuse-vs-direct-mean).
+
+**Phase-3E (build-equivalent / runtime smoke): N/A – stated, not
+silently skipped.** No runtime behavior changed: the deliverable is a
+Markdown planning document + close-out docs; no
+`R/`/test/`man/`/NAMESPACE/`data/` change. Package build/runtime on
+`master` is unchanged from `658f32d9` (S173’s verified close-out tree).
+(Each implementation slice in §4 carries its OWN Phase-3E – Slice 3/S2
+explicitly requires a
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+smoke since it changes Shiny runtime behavior.)
+
+**Session 173 Handoff Evaluation (by Session 174): Score 9/10.** S173’s
+`=> SUGGESTED NEXT` listed **\#9** as an explicit option with an
+accurate, load-bearing framing (line 32): “animals missing one parent
+distort GVA ranks (founders with U IDs falsely top-rank) … use the mean
+kinship of breeding-age animals of the appropriate sex … distinct from
+\#28 which IDENTIFIES parents.” That single sentence correctly (a) named
+the symptom, (b) gave the owner’s remedy, and (c) **disambiguated \#9
+(consumes parentage) from \#28 (identifies parentage)** – which framed
+my whole approach. Every standing fact held firsthand: `master` clean at
+`658f32d9` (S173’s close-out, ghost-check clean), dashboard 98/100,
+GitHub Issues is the backlog (#9 OPEN), and the standing keeps (so I
+knew NOT to commit the untracked `PED_GV_AUDIT_2026-05-30.html`). **The
+-1:** S173 (Gotcha 3) called \#9 a function-level GVA concern but,
+reasonably, gave no hint of its true scope – it is large-multi-module
+with two rank paths and ~8 design decisions. Not a real miss (scoping
+\#9 firsthand IS the planning session’s job, and S173’s deliverable was
+closing \#45, not sizing \#9), but a one-line “note: \#9 likely needs a
+planning session, GVA ranking is multi-module” would have pre-confirmed
+the shape. ROI strongly positive.
+
+**Self-assessment (Session 174): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check -\> HEAD `658f32d9` = S173, no
+undocumented commits), reported, STOPPED for the owner’s pick; claimed
+the session with a 1B stub BEFORE technical work. **Strengths:** (1)
+**scoped firsthand BEFORE recommending plan-vs-implement** –
+understanding workflow + adversarial premise-verification (real-data) +
+spot-verified the structural claims myself + `git grep` blast radius, so
+the “plan-first, large-multi-module” recommendation rested on code
+state, not the issue body (FM \#6/#11); (2) **surfaced the genuine owner
+decision** (plan vs implement + which solutions) via `AskUserQuestion`
+rather than assuming (FM \#23 / \[\[observation-vs-decision\]\]); (3)
+**the plan is evidence-based throughout** (<file:line> inventory, the
+mandatory grep, per-slice DONE criteria + verification commands + STOP,
+here-be-dragons per Learning 3, vertical not horizontal slices per FM
+\#25); (4) **found the non-obvious load-bearing fact** – the Shiny rank
+OVERRIDES the library `orderReport` rank, so a fix must hit the shared
+`indivMeanKin` choke point (Learning 164); (5) **honest about D2** – the
+substitution algebra is genetics/methodology, so the plan recommends a
+default but flags it for ratification / `/grill-me` rather than baking
+in a unilateral choice; (6) did NOT implement (FM \#18/#25), TDD
+declared/clarified per response, plain language, ASCII,
+scope-disciplined. **Weaknesses (honest):** (a) **the plan is not fully
+self-contained** – 8 design decisions await owner ratification before
+Slice 2 RED; this is correct (they are the owner’s methodology calls)
+but means the plan is a draft until §7 is signed off; (b) **D2 left as a
+recommendation, not resolved** – a deeper session could have
+pre-computed candidate substitution formulas with worked fixture
+numbers; I judged that premature before ratification; (c) **nothing
+executable verified** – inherent to a planning deliverable (no code),
+but it caps demonstrable correctness. Clean, evidence-based,
+scope-disciplined planning deliverable with zero corrections -\> 8/10.
+
+**Learnings:** **Learning 164** added to `PROJECT_LEARNINGS.md` – the
+GVA has TWO rank paths fed by ONE upstream value (`indivMeanKin` at
+`reportGV.R:93`) and the Shiny-displayed rank OVERRIDES the library
+`orderReport` rank, so a ranking fix must hit the shared choke point;
+plus the scope-before-plan reflex (understanding-workflow + adversarial
+premise-verification + grep blast-radius before plan-vs-implement) and
+the blast-radius boundaries
+([`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+5 callers; `test_orderReport.R:24,42` encodes the bug). Carried as
+applied: \[\[check-process-history-before-rerunning-work\]\] (read the
+prior audit’s \#9 disposition + CHANGELOG before scoping),
+\[\[observation-vs-decision\]\] / \[\[ascii-only-in-question-options\]\]
+(the scope `AskUserQuestion`), \[\[consult-project-source-of-truth\]\]
+(the planning-session contract – plan is the deliverable, evidence
+inventory, per-phase criteria, vertical slices),
+\[\[backlog-vs-changelog-placement\]\] (completed planning work -\>
+CHANGELOG; GitHub Issues is the backlog),
+\[\[avoid-jargon-use-plain-language\]\]; Learnings 161 (the
+build-equivalent recipe, cited in the plan’s verification commands) +
+163 (don’t take a predecessor’s framing at face value – verify
+firsthand).
+
+**=\> SUGGESTED NEXT = owner’s pick.** `master` clean at the S174
+close-out commit; **issue \#9 remains OPEN** (the plan is written, not
+yet implemented). The natural next step for \#9: - **(Ratify the plan,
+then implement Slice 1)** Work through the **§7 ratification checklist**
+in `docs/planning/issue9-gva-unknown-parent-ranking-plan.md` – 8 design
+decisions (D1-D8) with my recommendations; **D2 (the substitution
+algebra) is the deepest and a `/grill-me` candidate**. Once ratified,
+implement the recommended first slice **S3 (sire/dam columns – lowest
+risk, gives visibility into which top-ranked animals have U-id
+parents)** as a strict-TDD session, OR S1 first if the owner prefers the
+core fix. Each slice is ONE session (FM \#18/#25). - **(Other options,
+unchanged from S173)** \#28 v1 source-agnostic slice (large, wants its
+own plan); \#37 (unused exports); \#36 (chimpanzee age-pyramid
+settings); \#2 (GVA iteration-count advice); embedded codecov token
+(owner’s security call); CRAN Phase 5 (owner-run,
+`docs/planning/cran-2.0.0-phase5-runbook.md`); older
+\#13/#12/#11/#10/#5/#1. **Do NOT** bundle options or slices (FM
+\#18/#25); **do NOT** start any implementation without the owner
+ratifying the §7 design decisions first (a RED test can’t assert a
+number until D1-D3 + D8 are fixed).
+
+**Key files (this session):** **CREATED – the deliverable:**
+`docs/planning/issue9-gva-unknown-parent-ranking-plan.md`. **CHANGED –
+close-out docs (this commit, direct to `master`):** `CHANGELOG.md` (S174
+`[Unreleased]` entry), `PROJECT_LEARNINGS.md` (Learning 164),
+`SESSION_NOTES.md` (this handoff). **NO
+`R/`/test/`man/`/NAMESPACE/`data/`/`NEWS` change** (planning deliverable
+-\> CHANGELOG only; NEWS belongs to the implementation slices’ publish
+PRs, S1 + S3 are user-facing). **Referenced read-only (firsthand,
+unchanged):** `R/reportGV.R:85-154`,
+`R/modGeneticValue.R:195-214,240-330`, `R/orderReport.R:27-85`,
+`R/getIncludeColumns.R:14-19`, `tests/testthat/test_orderReport.R`,
+`R/kinship.R`, `R/meanKinship.R`, `R/getPotentialParents.R:39-154`.
+**NOT committed (standing keeps):** `PED_GV_AUDIT_2026-05-30.html`
+(untracked); `.DS_Store` (regenerates).
+
+**Gotchas:** (1) **Issue \#9 is OPEN; the plan is a DRAFT until §7 is
+ratified.** Do NOT start a slice’s RED until D1-D3 + D8 are fixed – the
+substitution formula (D2) determines the RED test’s expected numbers and
+is the owner’s genetics call (grill candidate). (2) **GVA has TWO rank
+paths** – the user-facing app rank (`modGeneticValue.R:204`) OVERRIDES
+the library `orderReport` rank; fix the shared `indivMeanKin` choke
+point (`reportGV.R:93`) to move both (Learning 164). (3) **Do NOT change
+shared
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)**
+– 5 R/ callers
+(`reportGV`/`modBreedingGroups`/`modSummaryStats`/`createSimKinships`/`cumulateSimKinships`);
+confine the fix to `reportGV`. (4) **`test_orderReport.R:24,42`
+hard-codes the bug** (34 U-ids in top 100) – a correct fix breaks it by
+design; update intentionally (plan D8). (5) **GitHub Issues is the
+backlog, NOT `BACKLOG.md`** (the repo exists). (6) Carried standing
+keeps (unchanged from S173): package **ARCHIVED on CRAN 2025-07-29**;
+CRAN Phase 5 owner-gated (`docs/planning/cran-2.0.0-phase5-runbook.md`);
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT (warning + NULL) without a LabKey credential/config; the
+offline focal path returns `nprcgenekeeprFileErr` not NULL (S155);
+exactly **ONE** codecov config (`codecov.yml`) – do NOT re-add a second;
+its embedded upload token is redundant with `secrets.CODECOV_TOKEN` +
+flagged (owner’s call); NEWS render traps 132/139 CLOSED at the source
+(S163, permanent `html_preview:false`+`md_extensions:"-smart"`);
+`git pull` is rebase (`pull.rebase=true`) + chokes on `.DS_Store` -\>
+use `fetch`+`reset` (135); post-merge `fetch` before `reset --hard` must
+be verified + ancestor-gated (146); the shipped
+`deidentified_jmac_ped.csv` halts a full
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+run on a pre-existing “both sire and dam” conflict (test the layer you
+change, Learning 156); `skip_on_cran()`-gated test files need
+`NOT_CRAN=true`; the local fast `R CMD check` is not apples-to-apples
+with CI -\> use `devtools::check(vignettes = FALSE)` for a clean read
+(Learning 161); the build-equivalent is
+`devtools::check(vignettes = FALSE)` = 0/0/0.
+
+### What Session 173 Did
+
+**Deliverable:** Close umbrella issue \#45 (Principled parent
+identification in `getPotentialParents` via estimated conception date =
+birth - gestation) – post an evidence-backed close-out comment
+documenting that all four acceptance criteria are met, then close \#45,
+leaving \#28 open and gated independently. **(DONE – comment
+`4773497458` posted; \#45 CLOSED `2026-06-22T22:06:29Z`; \#28 verified
+still OPEN.)** **Started / Completed:** 2026-06-22 **Status:** **DONE.**
+**Admin/docs -\> TDD declared N/A every response** (confirmed
+docs/admin-only – a public GitHub comment + closing an issue, no
+production code – before declaring). **0 stakeholder corrections.** SOLO
+(a contained, serial firsthand verification of issue states + code; a
+fan-out adds no coverage over a handful of targeted reads – the
+S160/S164/S166/S168/S170/S172 contained-work judgment). Owner picked
+**“Close umbrella \#45”** at the deliverable `AskUserQuestion`, then
+approved the **exact comment text** at the post+close gate (“Yes, post
+and close \#45”). - **Why closeable – verified FIRSTHAND, not from the
+umbrella body (which predates the sessions that completed its
+children):** all four umbrella acceptance criteria are met. (1) \#31’s
+dam-exclusion window is gestation-derived from the existing
+`maxGestationalPeriod`, **no parallel parameter**
+(`R/getPotentialParents.R:108-131` – `births` window is `birth +/- mgp`,
+`mgp` from `maxGestationalPeriod`; the former fixed `dYear/2` +/-182.5 d
+window is gone). (2) A regression test shows dam selection responds to
+`maxGestationalPeriod` (`tests/testthat/test_getPotentialParents.R:163`,
+`"dam selection responds to maxGestationalPeriod (#31 acceptance crit. 2)"`;
+`:123` adds the gestation-conflict exclusion case). (3) The `:92-93`
+“hack” TODO is gone; the dam logic is the principled gestation-derived
+exclusion, commented with `#31`. (4) \#28 has a written, ratified
+colocation data-model spec recorded on the issue (S76 spec + S77
+ratification of the §13 register). - **Sub/related issue states
+(firsthand `gh issue view`):** \#31 **CLOSED** 2026-06-14; \#46
+(first-class species + species-keyed gestation –
+`getPotentialParents(maxGestationalPeriod = NULL)` keys the window per
+focal animal’s species, `R/getPotentialParents.R:63-72`, 210-d fallback)
+**CLOSED** 2026-06-22; \#48 (wire `getPotentialParents` into the Shiny
+app) **CLOSED** 2026-06-16. The umbrella’s one open child **\#28 stays
+OPEN** and gated for implementation on a concrete location source (#11
+Oracle / \#12 ARMS, both OPEN). \#28’s v1 source-agnostic slice
+(optional `location` arg, byte-identical when `location = NULL`) does
+NOT exist in code yet (grep for
+`exampleLocations`/`colocation`/`getColocations` -\> nothing). -
+**Action (outward-facing, double-gated):** drafted the close-out
+comment, showed the exact text, and gated the post via `AskUserQuestion`
+(decision was already made at the deliverable gate – this was
+eyes-on-the-wording before it went public).
+`gh issue comment 45 --body-file` -\> comment `4773497458`;
+`gh issue close 45` -\> verified `state=CLOSED`
+(`closedAt 2026-06-22T22:06:29Z`); re-verified **\#28 `state=OPEN`**
+after the close (closing an umbrella does not close its children).
+
+**Phase-3E (build-equivalent / runtime smoke): N/A – stated, not
+silently skipped.** No runtime behavior changed: this was an issue
+close-out (a public GitHub comment + closing \#45), no
+`R/`/test/`man/`/NAMESPACE/`data/` change. The package build/runtime on
+`master` is unchanged from `c7f6ea86` (S172’s verified-clean close-out
+tree).
+
+**Session 172 Handoff Evaluation (by Session 173): Score 8/10.** S172’s
+handoff was thorough and accurate on everything it directly covered: it
+pointed me to the exact “Parent-ID cluster” (#45/#28/#9) as an owner
+option, and every standing fact held firsthand – `master` clean (now
+`c7f6ea86` after S172’s own close-out commit, not `ae3b8bb6`;
+ghost-check clean), dashboard 98/100, and the standing keeps (so I knew
+NOT to commit the untracked `PED_GV_AUDIT_2026-05-30.html`). **The -2:**
+it framed \#45 as “may want a **planning session** first” without
+flagging that the umbrella was already **complete and closeable** – all
+four acceptance criteria met, \#31/#46/#48 all closed. That framing
+actively pointed toward the wrong shape of work (plan), and a less
+careful successor could have burned a session planning \#28 (or
+“planning” an already-satisfied umbrella). I discovered the real state
+firsthand (issue states + `getPotentialParents.R` + the test file). A
+one-line “note: \#45’s criteria all appear met; its children are closed;
+it may be ready to CLOSE rather than plan” would have been zero-cost and
+saved the discovery. Understandable – S172 was a publish session for
+\#29, not focused on \#45, and suggested-next pointers are meant to be
+lightweight – but the mis-frame is exactly Learning 163’s failure mode.
+ROI still positive.
+
+**Self-assessment (Session 173): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check -\> HEAD `c7f6ea86` = S172 close-out, no
+undocumented commits), reported, STOPPED for the owner’s pick; claimed
+the session with a 1B stub BEFORE technical work. **Strengths:** (1)
+**did NOT take S172’s “may want a planning session” framing at face
+value** – verified the umbrella’s actual state firsthand (states of
+\#31/#46/#48/#28/#11/#12 + `getPotentialParents.R` +
+`test_getPotentialParents.R`) and found it was complete and closeable,
+avoiding a wasted planning session on already-done work
+(\[\[check-process-history-before-rerunning-work\]\]); (2) **surfaced
+the genuine ambiguity** – “#45” maps to close vs plan \#28 vs build
+\#28, a decision that is the owner’s, so I posed it via
+`AskUserQuestion` rather than assuming (FM \#23 /
+\[\[observation-vs-decision\]\]); (3) **double-gated the outward-facing
+public action** – showed the exact close-out comment text and gated the
+post+close, even though “close” was already chosen, because a
+public/indexed comment deserves eyes-on-the-wording; (4)
+**evidence-backed comment** – every criterion cited against firsthand
+code-line / test-line / issue-state evidence, not the stale umbrella
+body; (5) **left \#28 open + gated and verified it firsthand** after the
+close; (6) TDD N/A declared every response, plain language, ASCII,
+scope-disciplined (one deliverable, no creep). **Weaknesses (honest):**
+(a) **low base difficulty** – an issue close-out, no code; the value is
+the state-verification + the right ambiguity call, not depth -\> ceiling
+~8; (b) **SOLO under ultracode** – the verification was a handful of
+targeted reads done inline rather than a workflow; appropriate (a
+fan-out adds no coverage over `gh issue view` + reading one function and
+one test), but worth noting; (c) the one new learning (163) is
+process-level, not a deep technical recovery. Clean, fully-verified,
+scope-disciplined close-out with zero corrections -\> 8/10.
+
+**Learnings:** **Learning 163** added to `PROJECT_LEARNINGS.md` – an
+umbrella/tracking issue accrues completed children, so its body and a
+predecessor’s suggested-next can be stale; re-verify the umbrella’s OWN
+acceptance criteria firsthand (sub-issue states + code/tests) before
+choosing plan-vs-close; a satisfied umbrella should be CLOSED with an
+evidence-backed comment, not re-planned; closing it does not close its
+children (leave them open + gated, verify after); gate the
+outward-facing post+close behind an `AskUserQuestion` showing the exact
+text. Carried as applied:
+\[\[check-process-history-before-rerunning-work\]\] (the audit-delta
+reflex applied to umbrellas), \[\[observation-vs-decision\]\] /
+\[\[ascii-only-in-question-options\]\] (the two `AskUserQuestion`
+gates), \[\[consult-project-source-of-truth\]\] (the close-out +
+gate-the-irreversible convention),
+\[\[backlog-vs-changelog-placement\]\] / \[\[news-vs-changelog\]\]
+(process work -\> CHANGELOG only; no NEWS since no user-facing change;
+GitHub Issues is the backlog, not BACKLOG.md),
+\[\[avoid-jargon-use-plain-language\]\].
+
+**=\> SUGGESTED NEXT = owner’s pick.** `master` clean at `c7f6ea86`
+(this session’s close-out commit will advance it); **issue \#45 is
+CLOSED**; no dangling branches; dashboard 98/100. Natural options (plain
+ASCII labels): - **(Parent-ID cluster – the only remaining open child of
+\#45)** **\#28** (timestamped colocation to identify potential parents)
+is fully designed + ratified (S76/S77) but **deferred and gated** on a
+concrete location source (#11 Oracle / \#12 ARMS, both OPEN). Its **v1
+source-agnostic slice** – the optional `location` arg + an
+`exampleLocations` model that degrades to **byte-identical** output when
+`location = NULL` – was explicitly scoped to NOT block on \#11/#12 (S76
+spec section 1), so it is the one non-blocked piece. It is **large**
+(data model + overlap predicate + obfuscation change + 4 acceptance
+tests) -\> wants a **planning session first** (write the vertical-slice
+plan to `docs/planning/`), THEN implement one slice per session. - **(#9
+– the cluster’s third member)** animals missing one parent distort GVA
+ranks (founders with U IDs falsely top-rank). The owner’s comment
+proposes: instead of colony mean kinship for an unknown parent, use the
+mean kinship of breeding-age animals of the appropriate sex (separate
+means for potential sires vs dams). A GVA/ranking concern that CONSUMES
+parentage state; distinct from \#28 which IDENTIFIES parents. -
+**(Embedded codecov token – owner’s security call)** remove/rotate the
+committed upload token in `codecov.yml` (redundant with
+`secrets.CODECOV_TOKEN`; removing from the file does not purge git
+history). NOT acted on (FM \#8) – long-standing carried item; owner’s
+call. - **(CRAN Phase 5, owner-run)** win-builder x3 + R-hub v2 +
+`submit_cran()` – owner PAT + email; HARD STOP
+(`docs/planning/cran-2.0.0-phase5-runbook.md`). Package ARCHIVED on CRAN
+2025-07-29; this is the resubmission path. - **(Other GitHub issues)**
+\#37 (exported functions not used by the app), \#36 (chimpanzee-specific
+age pyramid settings), \#2 (evidence-based advice on GVA iteration
+count), or older \#13/#12/#11/#10/#5/#1. **Do NOT** bundle options (FM
+\#18/#25); **do NOT** start any without the owner picking.
+
+**Key files (this session):** **CHANGED – close-out docs only (this
+commit, direct to `master`):** `CHANGELOG.md` (S173 `[Unreleased]`
+entry), `PROJECT_LEARNINGS.md` (Learning 163), `SESSION_NOTES.md` (this
+handoff). **NO `R/`/test/`man/`/NAMESPACE/`data/`/`NEWS` change** (no
+code and no user-facing change – closing an umbrella is process history
+-\> CHANGELOG only). **Referenced read-only (firsthand, unchanged):**
+`R/getPotentialParents.R` (`:63-72` species lookup, `:108-131` the \#31
+gestation-derived dam window),
+`tests/testthat/test_getPotentialParents.R` (`:123`, `:163` the
+responsiveness tests). **Close-out comment drafted at**
+`<scratchpad>/issue45_closeout.md` (transient). **NOT committed
+(standing keeps):** `PED_GV_AUDIT_2026-05-30.html` (untracked);
+`.DS_Store` (regenerates).
+
+**Gotchas:** (1) **Umbrella \#45 is CLOSED** (comment `4773497458`); its
+acceptance criteria are all satisfied on `master`. **\#28 is the only
+remaining OPEN child** and is **deferred + gated** on \#11/#12 (location
+source) – do NOT size it as ready-to-implement; its v1 NULL-default
+`location` slice is the only non-blocked piece and is large (wants a
+plan first). (2) **GitHub Issues is the backlog, NOT `BACKLOG.md`** (the
+repo exists). `BACKLOG.md` exists but does not track \#45 (the only grep
+hit is an unrelated pedigree column-mapping note) – no pruning was
+needed. (3) **\#9 is in the cluster but distinct** – it CONSUMES
+parentage state (GVA rank distortion from U-ID founders), it does not
+IDENTIFY parents; the owner’s comment specifies sex-specific
+breeding-age mean kinship for the unknown parent (not colony mean). (4)
+**`getPotentialParents` is now WIRED into the app** (#48, the “Potential
+Parents” tab) – it is no longer the “exported-but-unwired” function the
+older \#45/#28 text describes; \#37 (other unused exports) is broader
+and still OPEN. (5) Carried standing keeps (unchanged from S172):
+package **ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5 owner-gated
+(`docs/planning/cran-2.0.0-phase5-runbook.md`);
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT (warning + NULL) without a LabKey credential/config; the
+offline focal path returns `nprcgenekeeprFileErr` not NULL (S155);
+exactly **ONE** codecov config (`codecov.yml`) – do NOT re-add a second;
+its embedded upload token is redundant with `secrets.CODECOV_TOKEN` +
+flagged (owner’s call); NEWS render traps 132/139 CLOSED at the source
+on `master` (S163, permanent
+`html_preview:false`+`md_extensions:"-smart"`); `git pull` is rebase
+(`pull.rebase=true`) + chokes on `.DS_Store` -\> use `fetch`+`reset`
+(135); post-merge `fetch` before `reset --hard` must be verified +
+ancestor-gated (146); the shipped `deidentified_jmac_ped.csv` halts a
+full
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+run on a pre-existing “both sire and dam” conflict (test the layer you
+change, Learning 156); `skip_on_cran()`-gated test files need
+`NOT_CRAN=true`.
+
 ### What Session 172 Did
 
 **Deliverable:** Publish S171 – issue \#29 (rename the exported

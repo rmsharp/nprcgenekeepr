@@ -15,6 +15,73 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-22 — Planning doc for issue \#9 (animals missing a parent falsely top-rank in the GVA) covering all three solutions (Session 174)
+
+- **Deliverable (owner pick, single item):** a planning document,
+  `docs/planning/issue9-gva-unknown-parent-ranking-plan.md`, for GitHub
+  issue \#9. **Planning session** -\> TDD code-phases inapplicable to
+  the doc; each implementation slice is its own future strict-TDD
+  session. **0 stakeholder corrections.** Owner chose “write a planning
+  doc” covering **all three** issue solutions (S1 sex-stratified
+  breeding-age mean kinship for unknown parents; S2 flag/classify
+  unknown-parent animals; S3 add Sire/Dam columns) via
+  `AskUserQuestion`, after I scoped the work firsthand.
+- **Scoping (firsthand):** a 6-agent understanding workflow
+  (`wf_e8ff66e0-7ed`) + adversarial premise-verification + a `git grep`
+  blast-radius inventory mapped the GVA / mean-kinship /
+  genome-uniqueness / U-id-founder subsystem. Confirmed the premise on
+  real `qcPed` (top-20 ranks are 100% founders), the single choke point
+  (`indivMeanKin` at `R/reportGV.R:93`), the **two rank paths** (the
+  Shiny `modGeneticValue.R:204` rank overrides the library `orderReport`
+  rank), and the test that hard-codes the bug
+  (`test_orderReport.R:24,42`).
+- **The plan:** evidence inventory with <file:line>; **8 design
+  decisions** with recommendations flagged for owner ratification (§3/§7
+  checklist) – the deepest (D2, the substitution algebra) is
+  genetics/methodology and a `/grill-me` candidate; **3 vertical
+  slices** (one session each) with completion criteria, verification
+  commands, session-boundary STOPs, and here-be-dragons; recommended
+  order S3 (visibility) -\> S1 (core fix) -\> S2 (classify + reconcile
+  the two rank paths).
+- **No production code changed** (planning deliverable). New learning
+  **164** added to `PROJECT_LEARNINGS.md` (the GVA two-rank-paths /
+  single-choke-point structure + the scope-before-plan reflex).
+  **Phase-3E N/A** (no runtime behavior changed – a plan document).
+
+### 2026-06-22 — Closed umbrella \#45 (parent identification via estimated conception date): all four acceptance criteria met; \#28 stays open and gated (Session 173)
+
+- **Deliverable (owner pick, single item):** close umbrella issue \#45
+  (principled parent identification in `getPotentialParents` via
+  estimated conception date = birth - gestation). **Admin/docs** – a
+  public GitHub close-out comment + closing the issue, no production
+  code -\> **TDD N/A** (confirmed docs/admin-only before declaring). **0
+  stakeholder corrections.** SOLO (a contained, serial firsthand
+  verification of issue states + code – a fan-out adds no coverage over
+  targeted reads). Owner chose “Close umbrella \#45” at the deliverable
+  `AskUserQuestion`, then approved the exact comment text at the
+  post+close gate.
+- **Why closeable (verified firsthand, NOT from the umbrella body, which
+  predates the sessions that completed its children):** all four
+  umbrella acceptance criteria are met – (1) \#31’s dam-exclusion window
+  is gestation-derived from the existing `maxGestationalPeriod`, no
+  parallel parameter (`R/getPotentialParents.R:108-131`); (2) a
+  regression test shows dam selection responds to `maxGestationalPeriod`
+  (`tests/testthat/test_getPotentialParents.R:163`); (3) the former
+  `:92-93` “hack” TODO is gone and the dam logic is principled +
+  documented; (4) \#28 has a written, ratified colocation data-model
+  spec recorded on the issue (S76/S77). Sub/related issues \#31 (CLOSED
+  2026-06-14), \#46 (species-keyed gestation, CLOSED 2026-06-22), and
+  \#48 (app wire-in, CLOSED 2026-06-16) are all done.
+- **Action:** posted the evidence-backed close-out comment (issue \#45
+  comment `4773497458`), then `gh issue close 45` -\> verified
+  `state=CLOSED` (`closedAt 2026-06-22T22:06:29Z`). Verified the
+  umbrella’s one open child **\#28 remains OPEN** – it tracks
+  independently and stays gated for implementation on a concrete
+  location source (#11 Oracle / \#12 ARMS).
+- **Verification (Phase-3E):** N/A – no runtime behavior changed (an
+  issue close-out, no code touched). The package build/runtime is
+  unchanged from `master` `c7f6ea86`.
+
 ### 2026-06-22 — Published S171 (PR \#71): the `makeGrpNum()` -\> `makeGroupNum()` rename is on `master`; NEWS entry added; issue \#29 closed (Session 172)
 
 - **Deliverable (owner pick, single item):** publish S171’s issue \#29
