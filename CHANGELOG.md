@@ -15,6 +15,58 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-22 — Issue \#9 Slice 1 (S3): Sire and Dam columns in the Genetic Value Analysis report and CSV exports (Session 175)
+
+- **Deliverable (owner pick, single item):** implement the first
+  vertical slice of the issue \#9 plan
+  (`docs/planning/issue9-gva-unknown-parent-ranking-plan.md`) – **S3:
+  add `sire` and `dam` columns to the GVA report** so users can see
+  which top-ranked animals have unknown (U-id) parents. **Code change**
+  (`R/reportGV.R` + 2 test files) -\> **strict TDD**, every transition
+  gated via `AskUserQuestion` (pre-RED scope/approach \[2 owner
+  decisions\] -\> PRE-RED-\>RED -\> RED-\>GREEN -\> GREEN-\>REFACTOR
+  \[skipped, owner-approved\]). **0 stakeholder corrections.** SOLO (a
+  one-line, fully test-anchored data-flow change – a multi-agent sweep
+  adds no coverage). Committed on feature branch
+  `issue-9-s3-sire-dam-columns`; **UNPUBLISHED**; `master` unchanged.
+- **Scope decision (owner, `AskUserQuestion`):** Slice 1 (S3) is
+  independent of the §7 ratification (D1-D3 only gate Slice 2’s
+  number-asserting RED, not the additive S3 columns). Owner chose
+  “implement Slice 1 now; hold the full D1-D8 ratification and the D2
+  `/grill-me` for the session right before Slice 2”, and mechanism “add
+  sire/dam directly in `reportGV`” over broadening the exported
+  [`getIncludeColumns()`](https://github.com/rmsharp/nprcgenekeepr/reference/getIncludeColumns.md).
+- **Implementation (minimum, one line):** `R/reportGV.R:129`
+  `demographics <- ped[probands, c(includeCols, "sire", "dam")]`
+  (sire/dam guaranteed present since
+  [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+  at `:87` already consumes them). They `cbind` into `finalData`,
+  survive `orderReport`/`rankSubjects` (column-preserving) into
+  `report`, and propagate AUTOMATICALLY through
+  `gvResults`/`geneticValues`/`gvaView` and both CSV download handlers
+  because every `modGeneticValue.R` consumer passes whole data frames –
+  so NO `modGeneticValue.R`, `getIncludeColumns`, or man-page change was
+  needed (Learning 165).
+- **Tests (RED -\> GREEN):** updated both
+  `expect_named(gvReport$report, ...)` blocks in `test_reportGV.R` to
+  require `sire`/`dam` after `population`; added a new `testServer`
+  integration test in `test_modGeneticValue.R` asserting
+  `c("sire","dam")` reach `gvResults()`, the returned `geneticValues()`,
+  and `gvaView()`. 5 assertions RED for the right reason, all GREEN
+  after the fix.
+- **Verification:** `test_reportGV.R` 12/0/0 + `test_modGeneticValue.R`
+  144/0/0; full clean regression read 0 failed / 0 error (real, excl
+  `test-app-`/`test-e2e-`); build-equivalent
+  `devtools::check(vignettes = FALSE)` = **0/0/0**. New learning **165**
+  added to `PROJECT_LEARNINGS.md`. **NEWS** entry (user-facing new
+  columns) deferred to the publish PR per Learning 157a.
+- **Phase-3E:** the runtime data flow is verified at the server-reactive
+  level by the new `testServer` test (real `modGeneticValueServer`
+  reactives in-process) + the build-equivalent; a full browser
+  [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+  smoke of the rendered table is the pre-existing shinytest2
+  baseline-noise harness, not run – stated, not silently skipped.
+
 ### 2026-06-22 — Planning doc for issue \#9 (animals missing a parent falsely top-rank in the GVA) covering all three solutions (Session 174)
 
 - **Deliverable (owner pick, single item):** a planning document,

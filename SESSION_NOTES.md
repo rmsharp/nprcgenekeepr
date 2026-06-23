@@ -7,6 +7,242 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 175 Did
+
+**Deliverable:** Implement **Slice 1 (S3)** of the issue \#9 plan –
+**add `sire` and `dam` columns to the Genetic Value Analysis report +
+both CSV exports**, so users can see which top-ranked animals have
+unknown (U-id) parents. Strict TDD. **(DONE – committed on feature
+branch `issue-9-s3-sire-dam-columns`; UNPUBLISHED; `master` unchanged at
+`20f51391`.)** **Started / Completed:** 2026-06-22 **Status:** **DONE.**
+Code change (`R/reportGV.R` one line + 2 test files) -\> **strict TDD**,
+every transition gated via `AskUserQuestion` (pre-RED scope/approach \[2
+owner decisions: session scope + column mechanism\] -\> PRE-RED-\>RED
+-\> RED-\>GREEN -\> GREEN-\>REFACTOR \[skipped, owner-approved\]). **0
+stakeholder corrections.** SOLO under ultracode (a one-line, fully
+test-anchored, grep-inventoried data-flow change – a multi-agent sweep
+adds no coverage; the contained-work judgment of
+S160/S164/S166/S168/S170-S173). The deliverable is **committed but
+UNPUBLISHED** on `issue-9-s3-sire-dam-columns`; `master` unchanged at
+`20f51391`. - **DECISIONS (the pre-RED `AskUserQuestion` scope/approach
+gate – 2 owner decisions):** (1) **session scope** = “implement Slice 1
+now” – Slice 1 (S3) is INDEPENDENT of the §7 D1-D8 ratification (those
+gate only Slice 2’s number-asserting RED), so ratify only what S3 needs
+(slice order S3-first + the column mechanism) and implement it this
+session, HOLDING the full D1-D8 ratification and the D2 `/grill-me` for
+the session right before Slice 2; (2) **column mechanism** = “add
+sire/dam DIRECTLY in `reportGV`” over broadening the EXPORTED
+[`getIncludeColumns()`](https://github.com/rmsharp/nprcgenekeepr/reference/getIncludeColumns.md)
+(keeps the public contract + `test_getIncludeColumns.R` unchanged). Both
+were my recommended option; owner accepted each. REFACTOR skipped
+(owner-approved at the GREEN-\>REFACTOR gate – the minimum impl already
+matches house style). - **INVENTORY (firsthand, before RED):** read the
+full Slice-1 surface – `reportGV.R` (demographics subset `:125-129` +
+`cbind` `:148` + `orderReport` `:150`),
+`orderReport.R`/`rankSubjects.R`/`filterReport.R` (all
+column-preserving), `modGeneticValue.R:185-330` (the
+`gvResults`/`gvaView`/`geneticValues` reactives + both CSV handlers, all
+column-agnostic). `grep` confirmed **`test_reportGV.R:12-17,37-42` is
+the ONLY test pinning the report column NAMES**; no other `reportGV`
+consumer asserts columns positionally/by `ncol`; `getIncludeColumns` is
+consumed only at `reportGV.R:125`. - **RED (gated):** (a) updated BOTH
+`expect_named(gvReport$report, ...)` blocks in `test_reportGV.R` to
+require `"sire","dam"` after `"population"` (failed: report lacks them);
+(b) new `testServer` test in `test_modGeneticValue.R` (“…carries sire
+and dam columns (#9 S3)”) asserting `c("sire","dam") %in% names()` of
+`gvResults()`, `result$geneticValues()`, and `gvaView()` (3 assertions
+failed). 5 assertions RED for the right reason; existing suite
+untouched. - **GREEN (gated, minimum impl):** one line –
+`R/reportGV.R:129`
+`demographics <- ped[probands, c(includeCols, "sire", "dam")]` (+ a
+3-line comment). NO `modGeneticValue.R`/`getIncludeColumns`/man change
+(the columns propagate automatically – Learning 165).
+
+**Phase-3E (build-equivalent / runtime smoke): SATISFIED at the
+server-reactive level + build-equivalent.** Build-equivalent
+`devtools::check(vignettes = FALSE)` = **0 errors / 0 warnings / 0
+notes** on the deliverable tree (builds fresh, runs all examples + the
+full testthat suite + spelling). The runtime data flow (sire/dam
+reaching the table + the GVA-subset CSV) is exercised by the new
+`testServer` integration test, which runs the REAL
+`modGeneticValueServer` reactives in-process
+(`gvResults`/`geneticValues`/`gvaView`). A full browser
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+smoke of the rendered DT table is the pre-existing
+`test-e2e-*`/`shinytest2` baseline-noise harness, not a clean smoke in
+this environment -\> stated, not silently skipped. (There is no logic
+between `gvaView()` and `output$rankingsTable`’s
+[`DT::renderDT`](https://rdrr.io/pkg/DT/man/dataTableOutput.html) other
+than the `topN` row cap, so the columns are guaranteed to render.)
+
+**Session 174 Handoff Evaluation (by Session 175): Score 9/10.** S174’s
+deliverable (the plan
+`docs/planning/issue9-gva-unknown-parent-ranking-plan.md`) WAS my input
+and it was excellent: §4’s Slice 1 spec named the exact touch points
+(`getIncludeColumns` vs direct subset, the `geneticValues()` rename,
+both CSV handlers), the dragons note RECOMMENDED the direct-subset
+mechanism I used, and every structural claim I spot-verified firsthand
+held (orderReport preserves columns; the modGeneticValue consumers are
+column-agnostic). Its `=> SUGGESTED NEXT` listed “Ratify the plan, then
+implement Slice 1” with S3 as the recommended first slice; Learning 164
+(the two-rank-paths / choke-point structure) framed my understanding.
+Every standing fact held firsthand: `master` at `20f51391` (S174
+close-out, ghost-check clean), dashboard 98/100, GitHub Issues backlog
+(#9 OPEN), standing keeps (so I knew NOT to commit
+`PED_GV_AUDIT_2026-05-30.html`). **The -1:** S174’s Gotcha 1 stated “Do
+NOT start a slice’s RED until D1-D3 + D8 are fixed” as a BLANKET rule –
+but the plan body (§3 + the Slice 1 spec) is precise that D1-D3 gate
+only the NUMBER-asserting Slice 2 RED; Slice 1 (S3, additive columns)
+asserts no number and needs none of D1-D8. The blanket gotcha, read
+literally, would have blocked Slice 1 unnecessarily; I caught the real
+gating from the plan body. A one-line “(Slice 1/S3 is exempt – it
+asserts no number)” in the gotcha would have removed the tension. Minor;
+ROI strongly positive.
+
+**Self-assessment (Session 175): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check -\> HEAD `20f51391` = S174, no
+undocumented commits), reported, STOPPED for the owner’s pick; claimed
+the session with a 1B stub BEFORE technical work. **Strengths:** (1)
+**recognized the scope nuance** – “ratify the plan” could imply a full
+D1-D8 ratification + D2 grill, but Slice 1 (S3) needs none of it;
+surfaced this via `AskUserQuestion` rather than over-ratifying, keeping
+the session to “1 and done” and deferring D2’s grill to where it belongs
+(FM \#5 volume!=value, \[\[observation-vs-decision\]\]); (2) **verified
+the plan’s Slice-1 claims FIRSTHAND before any test** – read
+reportGV/orderReport/rankSubjects/filterReport/modGeneticValue + grepped
+for every column-pinning test, so the RED was COMPLETE and GREEN broke
+nothing (FM \#6/#11/#20); (3) **found the simplifying fact** – all
+modGeneticValue consumers pass whole data frames, so the fix is one line
+in reportGV with zero module change (Learning 165), proven by the
+testServer integration test; (4) **strict TDD, every transition gated**,
+RED failing for the right reason (5 assertions), GREEN minimum, REFACTOR
+consciously skipped; (5) full verification (target files 12/0/0 +
+144/0/0; clean regression 0 failed/0 error real; build-equivalent
+0/0/0); (6) plain language, ASCII, scope-disciplined (no creep into
+S1/S2; NEWS deferred to publish per Learning 157a). **Weaknesses
+(honest):** (a) **low base difficulty** – S3 is “pure additive
+visibility, lowest risk” BY DESIGN (the plan chose it as the
+tracer-bullet first slice); the value is the discipline (scope nuance,
+complete RED inventory, the column-agnostic finding) not depth -\>
+ceiling ~8; (b) **no full browser E2E** – Phase-3E is satisfied at the
+server-reactive level (testServer runs the real reactives) +
+build-equivalent, but a runModularApp render smoke is the baseline-noise
+harness, not run; acceptable for a column addition but caps demonstrable
+visual confirmation; (c) **UNPUBLISHED** – the authoritative 5-platform
+CI gate is the publish session’s job (matches S171). Clean,
+fully-verified, scope-disciplined TDD slice with zero corrections -\>
+8/10.
+
+**Learnings:** **Learning 165** added to `PROJECT_LEARNINGS.md` – the
+Shiny GVA consumer chain is column-agnostic (a column added at the
+`reportGV` demographics subset propagates to the table + both CSVs with
+zero module change); the library ranking helpers
+(`orderReport`/`rankSubjects`/`filterReport`) are all column-preserving;
+the complete RED surface for a report-column change is just
+`test_reportGV.R`; prove propagation with a `testServer` test over
+`gvResults`/`geneticValues`/`gvaView`; prefer the direct demographics
+subset over broadening the exported `getIncludeColumns`; S3 needed none
+of the §7 D1-D8 ratification (slice independence). Carried as applied:
+\[\[consult-project-source-of-truth\]\] (the TDD-gate contract + the
+implementation-\>CHANGELOG / publish-\>NEWS rhythm +
+branch-for-code-changes), \[\[observation-vs-decision\]\] /
+\[\[ascii-only-in-question-options\]\] (the scope + phase-gate
+`AskUserQuestion`s), \[\[backlog-vs-changelog-placement\]\] (completed
+work -\> CHANGELOG; NEWS at publish),
+\[\[avoid-jargon-use-plain-language\]\]; Learnings 157a (fold NEWS into
+the publish PR), 161 (the build-equivalent recipe), 164 (the GVA
+two-rank-paths structure).
+
+**=\> SUGGESTED NEXT = owner’s pick.** The deliverable is committed on
+**`issue-9-s3-sire-dam-columns`** (see Key files); `master` unchanged at
+`20f51391`. Natural options (plain ASCII labels): - **(Publish Slice 1 /
+S3)** push `issue-9-s3-sire-dam-columns`, open a PR -\> `master`, watch
+the 5-platform CI to completion (do NOT merge blind – fresh non-watch
+re-query, Learning 157), `AskUserQuestion`-gate the merge, then
+verified-merged-before-delete cleanup (Learning 146). **FOLD a NEWS
+entry into the SAME PR** (Learning 157a) – user-facing: the GVA report +
+both CSV exports now include Sire and Dam columns; keep it plain ASCII,
+re-render `NEWS.md` (`html_preview:false`+`md_extensions:"-smart"`,
+Learning 155), run `spell_check_package(".")` before/after (the words
+`sire`/`dam` are lowercase prose, likely already fine – verify the
+delta, Learning 159). **GOTCHA:** `master` is **2 commits AHEAD of
+`origin/master`** (S173 `658f32d9`, S174 `20f51391` close-out docs,
+never pushed) and the branch was cut from that master, so it CONTAINS
+them – to keep the PR diff to S175 only, **push `master` first**
+(fast-forward `origin/master` to `20f51391`) THEN PR the branch;
+otherwise the PR bundles S173+S174 docs (harmless but noisy). Issue \#9
+stays OPEN after this (only Slice 1 of 3). - **(Slice 2 / S1 – the core
+mean-kinship fix)** requires the §7 ratification FIRST (D1-D4, D6, D7,
+D8 + the D2 substitution-algebra `/grill-me`) – a RED test cannot assert
+a number until D2 is fixed. Best done as: ratify (its own focused
+session, D2 via `/grill-me`) -\> THEN implement Slice 2. Do NOT bundle
+ratify+implement (D2 is genuinely deep, the \#1 here-be-dragons). -
+**(Slice 3 / S2 – classify unknown-parent animals + reconcile the two
+rank paths)** requires D7 ratified; changes Shiny display -\> needs a
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+Phase-3E smoke. - **(Other options, unchanged)** \#28 v1 source-agnostic
+slice (large, wants its own plan); \#37 (unused exports); \#36
+(chimpanzee age-pyramid); \#2 (GVA iteration-count advice); embedded
+codecov token (security call); CRAN Phase 5 (owner-run,
+`docs/planning/cran-2.0.0-phase5-runbook.md`); older
+\#13/#12/#11/#10/#5/#1. **Do NOT** bundle options or slices (FM
+\#18/#25); **do NOT** start Slice 2’s RED without the §7 ratification
+(esp. D2).
+
+**Key files (this session):** **CHANGED – the deliverable (feat commit
+on `issue-9-s3-sire-dam-columns`):** `R/reportGV.R` (line 129
+demographics subset + comment), `tests/testthat/test_reportGV.R` (both
+`expect_named` blocks), `tests/testthat/test_modGeneticValue.R` (new \#9
+S3 `testServer` test). **CHANGED – close-out docs (docs commit, same
+branch):** `CHANGELOG.md` (S175 `[Unreleased]` entry),
+`PROJECT_LEARNINGS.md` (Learning 165), `SESSION_NOTES.md` (this
+handoff). **NO
+`getIncludeColumns`/`modGeneticValue.R`/`man/`/`NAMESPACE`/`data/`/`NEWS`
+change** (columns propagate automatically; NEWS belongs to the publish
+PR). **Referenced read-only (firsthand):** `R/orderReport.R`,
+`R/rankSubjects.R`, `R/filterReport.R`, `R/getIncludeColumns.R`,
+`R/modGeneticValue.R:160-340`. **The plan (input):**
+`docs/planning/issue9-gva-unknown-parent-ranking-plan.md`. **NOT
+committed (standing keeps):** `PED_GV_AUDIT_2026-05-30.html`
+(untracked); `.DS_Store` (regenerates).
+
+**Gotchas:** (1) **Issue \#9 is OPEN – only Slice 1 of 3 is done.**
+Slice 2 (S1, core mean-kinship fix) and Slice 3 (S2, classify) remain;
+Slice 2 needs the §7 ratification + D2 `/grill-me` FIRST. (2) **`master`
+is 2 commits ahead of `origin/master`** (S173 `658f32d9` + S174
+`20f51391`, unpushed) and the S175 branch was cut from it -\> push
+`master` before PRing the branch to keep the PR diff clean (see
+Suggested Next). (3) **The S175 work is UNPUBLISHED on
+`issue-9-s3-sire-dam-columns`** – working tree is on that branch; the
+authoritative 5-platform CI gate is the publish session’s job. (4)
+**NEWS entry NOT yet written** – fold it into the publish PR (Learning
+157a); user-facing change = Sire/Dam columns now in the GVA report +
+both CSV exports. (5) **`sire`/`dam` are appended after the include
+columns** (report order:
+`id, sex, age, birth, exit, population, sire, dam, indivMeanKin, zScores, gu, totalOffspring, livingOffspring, value, rank`);
+if the owner later wants them right after `id` for a studbook layout,
+that is a trivial follow-up (reorder the demographics subset + update
+the two `expect_named` orders). (6) Carried standing keeps (unchanged
+from S174): package **ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5
+owner-gated (`docs/planning/cran-2.0.0-phase5-runbook.md`);
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT (warning + NULL) without a LabKey credential/config; the
+offline focal path returns `nprcgenekeeprFileErr` not NULL (S155);
+exactly **ONE** codecov config (`codecov.yml`) – do NOT re-add a second;
+its embedded upload token is redundant with `secrets.CODECOV_TOKEN` +
+flagged (owner’s call); NEWS render traps 132/139 CLOSED at the source
+(S163, permanent `html_preview:false`+`md_extensions:"-smart"`);
+`git pull` is rebase (`pull.rebase=true`) + chokes on `.DS_Store` -\>
+use `fetch`+`reset` (135); post-merge `fetch` before `reset --hard` must
+be verified + ancestor-gated (146); the shipped
+`deidentified_jmac_ped.csv` halts a full
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+run on a pre-existing “both sire and dam” conflict (test the layer you
+change, Learning 156); `skip_on_cran()`-gated test files need
+`NOT_CRAN=true`; the build-equivalent is
+`devtools::check(vignettes = FALSE)` = 0/0/0 (Learning 161).
+
 ### What Session 174 Did
 
 **Deliverable:** A **planning document** for GitHub issue \#9 (animals

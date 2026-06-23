@@ -65,6 +65,12 @@
     in new code;
     [`makeGrpNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGrpNum.md)
     may be removed in a future release.
+  - The Genetic Value Analysis report and both of its CSV exports (the
+    full ranked report and the genetic-value subset) now include `sire`
+    and `dam` columns, so it is visible which animals have an unknown
+    parent (shown by a placeholder parent identifier). The columns are
+    added after the existing demographic columns; no existing column is
+    removed or reordered.
 - New features
   - Added the exported
     [`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md),
