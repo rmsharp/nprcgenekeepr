@@ -745,6 +745,34 @@ test_that("modGeneticValueServer genomeUniqueness values are valid", {
   )
 })
 
+test_that("modGeneticValueServer report carries sire and dam columns (#9 S3)", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeValidTestPed(nFounders = 10, nOffspring = 20)
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped })
+    ),
+    {
+      session$setInputs(nIterations = 100)
+      session$setInputs(runAnalysis = 1)
+
+      result <- session$getReturned()
+
+      # S3 (#9): Sire and Dam columns must reach the analysis results so users
+      # can see which top-ranked animals have unknown (U-id) parents. The
+      # columns must survive every consumer: the raw results, the renamed
+      # geneticValues() returned to other modules, and the filtered gvaView()
+      # that feeds the table and the GVA-subset CSV download.
+      expect_true(all(c("sire", "dam") %in% names(gvResults())))
+      expect_true(all(c("sire", "dam") %in% names(result$geneticValues())))
+      expect_true(all(c("sire", "dam") %in% names(gvaView())))
+    }
+  )
+})
+
 test_that("modGeneticValueServer results have unique IDs", {
   skip_if_not_installed("shiny")
 
