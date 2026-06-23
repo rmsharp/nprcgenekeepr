@@ -7,6 +7,263 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 180 Did
+
+**Deliverable:** Implement **issue \#9 Slice 3** (§8-F charter: classify
+unknown-parent animals + make the Shiny-displayed Genetic Value rank
+classification-aware so both-unknown founders no longer falsely
+top-rank). Strict TDD. **(DONE – committed on branch
+`issue-9-slice3-classify-rank-aware`; UNPUBLISHED; `master`
+unchanged.)** **Started / Completed:** 2026-06-22 / 2026-06-23
+**Status:** **DONE.** New internal `classifyParentage` + a `parentage`
+report column + a U-id-aware, origin-robust `orderReport` + a
+classification-aware path-B rank -\> **strict TDD**, every transition
+`AskUserQuestion`-gated (PRE-RED scope: Reading A-vs-B -\>
+demote-all-vs-flag -\> PRE-RED-\>RED -\> RED-\>GREEN -\>
+GREEN-\>REFACTOR). **0 stakeholder corrections.** Grounding fanned out
+via a read-only 5-agent workflow + 3 targeted real-data probes; design
+synthesis + owner gates were main-loop (ultracode honored for the
+grounding; the decisions are inherently solo). Owner directed “Slice 3”,
+then chose **Reading B (classify + rank-aware, gu untouched)** and
+**demote-all-keep-imports** at the two pre-RED scope gates, and approved
+every TDD transition. - **Grounding surfaced that §8-F is a CHARTER, not
+a spec.** Unlike Slice 2’s authoritative §8-E formula, §8-F bundled four
+concerns and the load-bearing one (“address the `gu` inflation”) had
+**NO algorithm**. Split into **Reading B** (rank AROUND gu –
+classification-aware display, gu untouched, all `calcGU`/`calcA`
+invariants preserved, faithful to the ratified D7: implementable now) vs
+**Reading A** (recompute founder gu in `calcGU`/`calcA`/gene-drop –
+reverses the documented `calcGU.R:10-34` stance, breaks golden
+invariants, needs a §8-E-style ratification first). Surfaced via
+`AskUserQuestion`; owner picked **Reading B**. - **Second decision,
+surfaced by real data:** the plan called the both-unknown founders
+“stubs,” but on `qcPed` **ALL 124 have offspring** (they are the
+colony’s real founding breeders; verified `readRDS(gv5000.rds)` +
+simulated both gate variants). The existing `noParentage` bucket
+requires `totalOffspring==0` -\> keeping the gate flags **zero** of them
+(no-op); dropping it demotes **all 124 (44% of the colony)**. Genuine
+genetics-policy fork -\> `AskUserQuestion`; owner picked **demote-all,
+keep imports** (drop the offspring gate; imports with a recorded origin
+stay ranked). - **Dissolved a potential cross-cutting bug firsthand:**
+`isGeneratedUnknownId` = `startsWith(id,"U")` over-matches, but a
+20-line probe proved `qcPed`’s 43 “U…” parents are genuine unknown stubs
+(both parents NA, NO birth, gen 0; `examplePedigree` has 1372 “U” ids
+-\> “U” IS the ONPRC unknown convention). So the predicate is right,
+Slice 2 is sound, counts hold (124 / 43 / 113). - **RED (gated):** 4
+specs failing for the right reason – `test_classifyParentage.R` \[new\]
+(U-id-aware known/one/both, vectorized, qcPed 124/43/113);
+`test_orderReport.R` rewritten (D8: brittle `34`/`21` golden counts -\>
+named-animal behavior assertions on a deterministic `origin`-bearing
+fixture – STUB1 no-origin both-unknown founder WITH offspring -\>
+Undetermined/rank NA, IMPORT1 origin-present -\> kept);
+`test_reportGV.R` (the report carries `parentage`; the 124 both-unknown
+-\> “Undetermined”); `test_modGeneticValue.R` (`testServer`:
+both-unknown founders ranked LAST, parentage column present). Confirmed
+only these 4 fail (3 errors + behavior failures), no collateral. -
+**GREEN (gated, minimum):** new `R/classifyParentage.R`
+(`out <- rep("known",n); out[anyU]<-...; out[bothU]<-...` – not
+`ifelse`, which returns `logical(0)` on empty input); `reportGV` cbinds
+`parentage` into `finalData`; `orderReport` treats absent `origin` as
+all-NA, keys on `rpt$parentage` (fallback `getFounders`), DROPS the
+`totalOffspring==0` gate, fixes the stale `@param`
+(`import`-\>`origin`+`parentage`); `modGeneticValue.R:204-206` ranks
+`value=="Undetermined"` LAST (`order(demote, indivMeanKin - gu)` then
+reseq, guarded for an absent value column). `document()` -\> no
+man/NAMESPACE change (all internal). All 4 targeted files green; full
+clean regression **0 failed / 0 error** (209 files / 1192 tests). -
+**REFACTOR (gated):** lint only – fixed 4 line-length(80) lints in the
+comments/roxygen I added (namespace-loaded lint, Learning 167); 0 lints
+across all 4 changed files; tests still green.
+
+**Phase-3E (build-equivalent + runtime smoke): SATISFIED.**
+Build-equivalent `devtools::check(vignettes = FALSE)` = **0/0/0**;
+`spell_check_package(".")` = **0 unrecognized** (no WORDLIST change).
+Runtime: the **real `modGeneticValueServer` on shipped `qcPed`**
+(`testServer`) -\> the displayed top-20 is now **18 known + 2
+one-unknown, ZERO both-unknown**; all 45 living both-unknown founders
+demoted to ranks 45-89 (“Undetermined”); the `parentage` column is
+present; `shinyApp(appUI(), appServer)` builds. The DT table
+auto-renders the new column (no column spec). A browser-driven DT render
+smoke is not run in this environment (the `test-e2e-`/shinytest2 harness
+is baseline noise; the server reactive IS the logic and is exercised on
+real data) -\> stated, not silently skipped.
+
+**Session 179 Handoff Evaluation (by Session 180): Score 9/10.** S179’s
+`=> SUGGESTED NEXT` listed **“Slice 3 / S2 – the substantive remaining
+work that closes \#9”** as the FIRST option with the exact four concerns
+(classify + `gu` + `origin` + D7 + D8), the **“Read plan §8-F”**
+pointer, the **“needs a fixture WITH `origin` + a
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+Phase-3E smoke”** note, and two load-bearing warnings I followed
+exactly: **“do NOT bundle Slice 3 implement + publish”** and **“do NOT
+start Slice 3’s RED without re-reading plan §8-F (it expands the
+original Slice 3 scope).”** Every publish-state fact held firsthand
+(`origin/master` `800fb98c`, local `master` 1-ahead, \#9 OPEN, the
+standing keeps). Gotcha 4 correctly flagged that Slice 3 is bigger than
+the plan’s original “classify.” **The -1:** neither S179 nor the §8-F it
+pointed to flagged that §8-F is a CHARTER with no `gu` algorithm, nor
+that the both-unknown founders all have offspring (making the
+`noParentage` gate a no-op) – both were genuine discoveries of THIS
+session’s grounding, surfaced as the two owner decisions. A one-line
+“§8-F is a charter not a spec – expect to surface the gu-algorithm + the
+classification treatment as owner decisions” would have pre-framed it.
+But those lived in the data + §8-F (which S179 correctly told me to
+read), and S179 was a publish session, so this is a minor pre-framing
+gap, not a handoff defect. ROI high – it paved the publish-state facts
+perfectly and pointed me at the right deliverable with the right
+guardrails.
+
+**Self-assessment (Session 180): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check -\> HEAD `25d0d191` = S179, no
+undocumented commits), reported, STOPPED for the owner’s pick; claimed
+with a 1B stub BEFORE technical work; declared the TDD phase every
+response; branched off `master` before code. **Strengths:** (1)
+**grounded the whole design firsthand before RED** – a read-only 5-agent
+workflow mapped both rank paths + the gu mechanism + the predicates +
+real qcPed facts, then 3 targeted probes verified the load-bearing
+claims, surfacing the charter-vs-spec gap, the gu Reading A/B fork, the
+all-founders-have-offspring no-op trap, and the U-prefix false alarm;
+(2) **surfaced the TWO genuine owner decisions** (Reading B; demote-all)
+via `AskUserQuestion` rather than silently picking either – both are
+genetics/scope calls that materially change the deliverable
+(\[\[observation-vs-decision\]\], FM \#23); (3) **dissolved a would-be
+cross-cutting bug** with a firsthand data probe instead of assuming
+`isGeneratedUnknownId` was broken (it’s correct; Slice 2 is sound); (4)
+**strict TDD, every transition gated**, RED failing for the right
+reasons (4 specs, no collateral), GREEN minimum (single source of truth:
+classify once -\> mark via value==“Undetermined” -\> demote in path B),
+REFACTOR lint-only; (5) **full verification incl. real-data Phase-3E**
+through the actual module server (not just a synthetic fixture) +
+build-equivalent 0/0/0 + 0 lints + 0 spelling; (6) scope-disciplined
+(implement only; no publish; Reading A deferred; no bundling), plain
+language, ASCII. **Weaknesses (honest):** (a) **Reading A (genuine gu
+de-inflation) is DEFERRED** – Slice 3 ranks AROUND gu rather than
+correcting the statistic; §8-A’s “two causes” are addressed in the
+DISPLAY, not in the gu number; if the owner wants true de-inflation it
+needs its own ratify+implement (owner-approved, documented, but worth
+naming); (b) **the import-vs-stub (`origin`) branch is exercised only by
+the synthetic `orderReport` fixture** – no shipped dataset carries an
+`origin` column, so “keep imports” has unit coverage but no real-data
+exercise (inherent to the data); (c) **no browser-driven DT render
+smoke** – the `testServer` + `shinyApp`-builds is strong runtime
+evidence but the rendered table in a real browser is not demonstrated
+(consistent with the Slice 2 precedent + baseline e2e noise). High base
+difficulty (a charter-level slice, two unanticipated owner decisions, a
+dissolved false-bug, two rank paths, real-data Phase-3E), zero
+corrections, fully verified -\> 9/10.
+
+**Learnings:** **Learning 168** added to `PROJECT_LEARNINGS.md` – the
+five Slice-3 reflexes: (1) a charter (“address X”, no formula) carries
+unratified decisions -\> enumerate implementable-now vs
+needs-ratification and let the owner choose; (2) simulate the proposed
+fix on REAL data before RED (a charter assumption can make it a no-op or
+a 44%-of-colony change); (3) the U-prefix predicate over-matches but is
+correct on qcPed – verify the data, don’t assume a bug; (4) the
+classify-once -\> mark-via-value==“Undetermined” -\> demote-in-path-B
+architecture (one source of truth across both rank paths;
+`classifyParentage` built with `rep`+assignment not `ifelse`); (5)
+Phase-3E without a browser via `testServer` on the real shipped data.
+Carried as applied: \[\[consult-project-source-of-truth\]\] (the
+TDD-gate contract + branch-for-code + implementation-\>CHANGELOG /
+publish-\>NEWS rhythm + §8-F as authoritative-but-charter),
+\[\[observation-vs-decision\]\] / \[\[ascii-only-in-question-options\]\]
+/ \[\[avoid-jargon-use-plain-language\]\] (the two scope + three
+phase-gate `AskUserQuestion`s),
+\[\[check-process-history-before-rerunning-work\]\] (read §8 + verified
+its claims firsthand), \[\[backlog-vs-changelog-placement\]\] (completed
+work -\> CHANGELOG; \#9 stays OPEN in GitHub Issues until publish);
+Learnings 161 (build-equivalent), 164 (the two rank paths), 165 (the
+column-agnostic GVA chain -\> parentage auto-propagates), 166
+(gu-dominance), 167 (Slice 2 reflexes + namespace-loaded lint).
+
+**=\> SUGGESTED NEXT = owner’s pick.** The deliverable is committed on
+**`issue-9-slice3-classify-rank-aware`** (feat + this docs commit);
+`master` unchanged. **Issue \#9 remains OPEN** until this slice
+publishes. Natural options (plain ASCII labels): - **(Publish Slice 3)**
+the standard publish session: **push `master` FIRST** (FF
+`origin/master` `800fb98c` to the S179 close-out commit – local `master`
+is 1 ahead, Gotcha 2) THEN push the branch and open a PR -\> `master`;
+watch the 5-platform CI to completion (do NOT merge blind – fresh
+non-watch re-query, Learning 157); `AskUserQuestion`-gate the merge;
+verified-merged-before-delete cleanup (Learning 146). **FOLD a NEWS
+entry into the SAME PR** (Learning 157a) – user-facing: the GVA now
+flags each animal’s parentage (a new column) and no longer top-ranks
+animals whose parents are both unknown; keep it plain ASCII, re-render
+`NEWS.md` (`html_preview:false`+`md_extensions:"-smart"`, 155),
+`spell_check_package(".")` before/after (159). **DECIDE at publish
+whether the PR uses `Closes #9`:** Reading B resolves \#9’s DISPLAYED
+complaint (both-unknown founders no longer top-rank), so \#9 CAN close
+on this slice – BUT Reading A (genuine `gu` de-inflation in
+`calcGU`/`calcA`) was deferred; if the owner wants that too, keep \#9
+open (or file Reading A as a follow-up issue) and use “Relates to
+\#9”. - **(Reading A follow-up, optional)** if the owner wants the `gu`
+statistic itself de-inflated (not just ranked around), that is a NEW
+deep-genetics decision needing a §8-E-style ratification (formula +
+replacement `calcGU`/`calcA` golden values) FIRST, then a separate
+implement – file it as an issue. - **(Other options)** \#73 (species
+breeding-age generalization); \#37 (unused exports); \#36 (chimpanzee
+age-pyramid); \#2 (GVA iteration-count advice); \#28 (large, own plan);
+older \#13/#12/#11/#10/#5/#1; CRAN Phase 5 (owner-run runbook). **Do
+NOT** bundle Slice 3 publish with a Reading-A gu change (FM \#18/#25).
+
+**Key files (this session):** **CHANGED – the deliverable (on the
+branch):** NEW `R/classifyParentage.R`; `R/reportGV.R` (cbind
+`parentage` ~`:161`); `R/orderReport.R` (origin-robust + parentage +
+dropped offspring gate + `@param` fix); `R/modGeneticValue.R`
+(`:204-216` classification-aware rank); NEW
+`tests/testthat/test_classifyParentage.R`;
+`tests/testthat/test_orderReport.R` (rewritten, D8 behavior assertions);
+`tests/testthat/test_reportGV.R` (+parentage block, +2 `expect_named`);
+`tests/testthat/test_modGeneticValue.R` (+D7 `testServer` test).
+**CHANGED – close-out docs (this docs commit, same branch):**
+`CHANGELOG.md` (S180 `[Unreleased]` entry), `PROJECT_LEARNINGS.md`
+(Learning 168), `SESSION_NOTES.md` (this handoff). **NO NEWS change**
+(folded into the publish PR, 157a). **NO `man/`/NAMESPACE/`data/`
+change** (all new functions are internal `@noRd`). **The charter
+(input):** `docs/planning/issue9-gva-unknown-parent-ranking-plan.md`
+§8-F. **Grounding workflow:** `wf_d9e4d6d6-e12` (5 read-only agents –
+script under the session dir, NOT in the repo); scratchpad probes
+`verify_classify.R`/`verify_uid.R`/`verify_uanimals.R`/`verify_demote.R`/`smoke.R` +
+`gv5000.rds`/`gv1000.rds` (NOT in the repo). **NOT committed (standing
+keeps):** `PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
+
+**Gotchas:** (1) **Issue \#9: Slice 3 implemented (UNPUBLISHED),
+addresses the DISPLAYED ranking (Reading B). Reading A (recompute `gu`
+in `calcGU`/`calcA`) was DEFERRED** – if genuine gu de-inflation is
+wanted it is a separate ratify+implement (a §8-E-style gate). **Decide
+at publish whether \#9 closes on this slice** (the ranking fix) or stays
+open for Reading A. (2) **Local `master` is 1 commit AHEAD of
+`origin/master`** (S179 close-out docs, unpushed) AND this branch was
+cut from local `master` -\> when publishing, **push `master` first** (FF
+`origin/master` `800fb98c` to the S179 commit) so the PR diff is
+Slice-3-only (routine Gotcha-2). This S180 close-out commit lands on the
+BRANCH, not master. (3) **The import-vs-stub (`origin`) distinction is
+exercised ONLY by the synthetic `orderReport` fixture** – no shipped
+dataset (`qcPed`/`breederPed`/`examplePedigree`) carries an `origin`
+column, so on real data ALL both-unknown founders are treated as
+ONPRC-born and demoted. (4) **The `parentage` column now appears in the
+GVA report -\> the displayed table + BOTH CSV exports** (auto, Learning
+165); the NEWS entry should mention it. (5) **The displayed-rank
+demotion keys on `value == "Undetermined"`** (orderReport’s
+`noParentage` marker); `orderReport` now fires `noParentage` even
+WITHOUT an `origin` column (treats absent origin as all-NA) and WITHOUT
+the `totalOffspring==0` gate. (6) **`test_orderReport`’s old `34`/`21`
+golden counts are GONE** (replaced by named-animal behavior assertions
+on an `origin`-bearing fixture) – do not expect them. (7) Carried
+standing keeps (unchanged from S179): package **ARCHIVED on CRAN
+2025-07-29**; CRAN Phase 5 owner-gated
+(`docs/planning/cran-2.0.0-phase5-runbook.md`);
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT (warning + NULL) without a LabKey credential/config; exactly
+**ONE** codecov config (`codecov.yml`); NEWS render traps CLOSED at the
+source (permanent `html_preview:false`+`md_extensions:"-smart"`,
+Learning 155); `git pull` is rebase (`pull.rebase=true`) + chokes on
+`.DS_Store` -\> use `fetch`+`reset` (135); post-merge `fetch` before
+`reset --hard` must be ancestor-gated (146); `skip_on_cran()`-gated test
+files need `NOT_CRAN=true`; the build-equivalent is
+`devtools::check(vignettes = FALSE)` = 0/0/0 (Learning 161).
+
 ### What Session 179 Did
 
 **Deliverable:** Publish **issue \#9 Slice 2** (one-unknown-parent

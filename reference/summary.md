@@ -106,6 +106,6 @@ summary(trimmedGeneticValue)
 #> Founder Equivalents: 116.8 
 #> Founder Genome Equivalents: 65.85 
 #> Live Offspring: 1004 
-#> High Value Individuals: 470 
+#> High Value Individuals: 288 
 #> Low Value Individuals: 234 
 ```

@@ -52,6 +52,6 @@ summary(reportGV(ped, guIter = 10))
 #> Founder Equivalents: 3.56 
 #> Founder Genome Equivalents: 2.68 
 #> Live Offspring: 8 
-#> High Value Individuals: 5 
+#> High Value Individuals: 1 
 #> Low Value Individuals: 3 
 ```

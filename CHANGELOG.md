@@ -15,6 +15,58 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-23 — Implemented issue \#9 Slice 3: classify unknown-parent animals + demote both-unknown founders in the displayed rank (Session 180)
+
+- **Deliverable (owner pick, single item):** implement Slice 3 of the
+  issue \#9 plan per the §8-F charter — classify each animal’s parentage
+  and make the Shiny-displayed Genetic Value rank classification-aware
+  so both-unknown founders no longer falsely top-rank. Strict TDD
+  (RED→GREEN→REFACTOR, every transition `AskUserQuestion`-gated). **0
+  stakeholder corrections.** Committed on branch
+  `issue-9-slice3-classify-rank-aware`; **UNPUBLISHED** — `master`
+  unchanged. Did NOT publish and did NOT recompute `gu` (FM \#18/#25).
+- **Two owner decisions surfaced by real-data grounding (a charter is
+  not a spec):** §8-F’s “address the `gu` inflation” had no ratified
+  algorithm. Grounding offered **Reading B** (rank *around* `gu` — make
+  the display classification-aware, `gu` untouched, implementable now)
+  vs **Reading A** (recompute founder `gu` in `calcGU`/`calcA` —
+  reverses the documented `calcGU.R:10-34` stance, breaks golden
+  invariants, needs a §8-E-style ratification first). Owner chose
+  **Reading B**. Then grounding revealed all 124 both-unknown founders
+  on `qcPed` HAVE offspring, so the existing `noParentage`
+  `totalOffspring==0` gate would make the fix a no-op; owner chose
+  **demote-all-keep-imports** (drop the offspring gate; keep genuine
+  imports ranked).
+- **What the change does:** new internal `classifyParentage(sire, dam)`
+  (U-id aware) adds a `parentage` column to the report (`known` /
+  `one unknown parent` / `both unknown`); `orderReport` now treats an
+  absent `origin` column as all-NA and flags no-origin both-unknown
+  founders (regardless of offspring) as `noParentage`/“Undetermined”
+  while keeping genuine imports; `modGeneticValue.R:204-206` ranks
+  “Undetermined” animals LAST (`order(demote, indivMeanKin - gu)` then
+  reseq) so they no longer top-rank the displayed table. `gu`,
+  `calcGU`/`calcA`, and
+  [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+  are untouched.
+- **Files:** new `R/classifyParentage.R`; edits to `R/reportGV.R`,
+  `R/orderReport.R`, `R/modGeneticValue.R`. Tests: new
+  `tests/testthat/test_classifyParentage.R`; `test_orderReport.R`
+  rewritten (D8 brittle `34`/`21` golden counts → named-animal behavior
+  assertions on an `origin`-bearing fixture); `test_reportGV.R` +
+  `test_modGeneticValue.R` extended (parentage column + D7 demotion via
+  `testServer`).
+- **Verification:** 4 targeted test files green; full clean regression
+  read **0 failed / 0 errors** (209 files, 1192 tests); **0 lints**
+  (namespace-loaded, Learning 167); **0 spelling**; build-equivalent
+  `devtools::check(vignettes = FALSE)` = **0/0/0** (Learning 161).
+  **Phase-3E:** the real `modGeneticValueServer` on shipped `qcPed`
+  (`testServer`) shows the displayed top-20 is now 18 known + 2
+  one-unknown (0 both-unknown), all 45 living both-unknown founders
+  demoted to ranks 45-89; `shinyApp(appUI(), appServer)` builds. **NEWS
+  deferred to the publish PR** (Learning 157a). Learning 168 added.
+  **Issue \#9 can close on publish of this slice** (the displayed top no
+  longer shows both-unknown founders); confirm at publish.
+
 ### 2026-06-23 — Published issue \#9 Slice 2: one-unknown-parent mean-kinship correction is on `master` via PR \#74; NEWS entry added; \#9 stays open (Session 179)
 
 - **Deliverable (owner pick, single item):** publish S178’s issue \#9
