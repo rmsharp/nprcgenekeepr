@@ -7,6 +7,261 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 183 Did
+
+**Deliverable:** Publish **issue \#73 Part 1** (S182 feat `2cee7fa4` –
+generalize `speciesGestation` from rhesus-only to 14 common colony NHP
+species; breeding-age columns integer-\>numeric) from
+`issue-73-populate-breeding-age-table` to `master` via PR, folding the
+user-facing NEWS entry into the SAME PR (Learning 157a). **(DONE –
+merged to `master` via PR \#77, merge commit `5082df83`; \#73 verified
+OPEN; branch deleted.)** **Started / Completed:** 2026-06-23 /
+2026-06-23 **Status:** **DONE.** The 14-species reproductive-parameter
+table + its NEWS entry are LIVE on `origin/master` (`5082df83`).
+**Admin/publish + docs -\> TDD code-phases N/A every response** (the
+Part 1 code was written/tested under strict TDD in S182; the only
+content change this session is one NEWS bullet). **0 stakeholder
+corrections.** SOLO (a serial, irreversible git sequence – a workflow
+adds risk, not coverage; held solo despite ultracode, the S179/S181
+judgment). Owner picked **“Publish \#73 Part 1”** at orientation and
+**“Merge (merge commit)”** at the `AskUserQuestion` merge gate. -
+**Pre-publish content (one PR, Learning 157a):** read S182’s changed
+files firsthand (`data-raw/speciesGestation.R`,
+`R/getSpeciesMinBreedingAge.R`, `R/data.R`) and diffed vs `master` –
+which surfaced that S182’s data change populated BOTH columns (the
+suggested NEWS text framed it as breeding ages only). Appended ONE
+dev-version *Changes* bullet to `NEWS.Rmd` describing both consumers:
+per-species maximum gestation (`getPotentialParents` via
+`getSpeciesGestation`) AND per-species minimum male/female breeding ages
+(the GVA unknown-parent mean-kinship correction via
+`getSpeciesMinBreedingAge`), the integer-\>numeric move (fractional
+minima like rhesus female 2.5 exact), and the
+unchanged-for-species-less-data fallback. **Self-framed the bullet
+(“previously seeded with only rhesus macaque … now populated for 14
+species”)** so it reads coherently with the three earlier dev “only
+rhesus” bullets WITHOUT rewriting them (append-don’t-rewrite; Learning
+171). Re-rendered `NEWS.md` (permanent
+`html_preview:false`+`md_extensions:"-smart"`, Learning 155) -\> **0
+non-ASCII**, no stray `.html`, a confined pure-insertion diff (NEWS.Rmd
++13 / NEWS.md +15, nothing reflowed, no date churn).
+`spell_check_package(".")` = **0 unrecognized** before AND after -\> no
+WORDLIST change (held the bullet at summary level; enumerating species
+names would have needed WORDLIST entries). Committed NEWS only as
+`f13da525`; kept the S183 1B stub OUT of the PR (stash-carried, popped
+clean post-merge). - **No “push master first” this cycle:**
+`master`==`origin/master`==`3937a918` (S181 ended the local-ahead drift
+per \[\[push-close-out-docs-to-origin\]\]) and the branch was cut
+DIRECTLY off master -\> the routine S178/S180 FF-first Gotcha did NOT
+apply. The PR diff came out Part-1-only = **3 commits** (S182 feat
+`2cee7fa4` + S182 close-out `068aeba5` + S183 NEWS `f13da525`), verified
+firsthand (commit list + changed-file list = the S182 deliverable + its
+close-out docs + my NEWS). - **PR + CI (did NOT merge blind):** opened
+**PR \#77** -\> `master` (body “Relates to \#73”, NOT `Closes #73`).
+**All 10 checks PASS** – lint 4m40s; `R CMD check` x5 (macos 5m54s /
+ubuntu release 7m38s + oldrel-1 7m42s + **devel 16m12s** the long pole /
+windows 9m28s); pkgdown 5m56s; test-coverage 4m24s; **codecov/patch +
+codecov/project PASS**. Background watch exited 0, but per Learning 157
+re-queried FRESH non-watch `gh pr checks 77` (10 `pass`, exit 0) before
+proceeding. - **Merge (irreversible – `AskUserQuestion`-gated):**
+guarded fresh pre-merge re-check (state OPEN / MERGEABLE / CLEAN,
+`headRefOid`==local `f13da525`, `origin/master`==`3937a918`) -\>
+`gh pr merge 77 --merge` -\> **`5082df83`**; verified landed firsthand
+(MERGED, `mergedAt 2026-06-23T19:22:05Z`, `mergedBy rmsharp`); **\#73
+re-verified OPEN** after the merge (no closing keyword). - **Reconcile +
+cleanup (Learning 146):** stash-carried the stub; checkout master;
+fetch; **ancestor-gated reset** (both old `3937a918` AND merged tip
+`f13da525` asserted ancestors of `5082df83`) -\>
+`reset --hard origin/master`; `stash pop` clean. Branch deleted
+verified-merged-before-delete: `git branch -d` (was `f13da525`) +
+`push origin --delete` + `fetch --prune` -\> NO ref remains (local 0 /
+remote-tracking 0 / `gh api` **404** “Branch not found”).
+
+**Phase-3E (build-equivalent / runtime smoke): SATISFIED.** PR \#77’s
+`R CMD check` x5 matrix (incl. ubuntu-devel) re-verified the deliverable
+on the merge result, all PASS. Confirmed firsthand on `master` AFTER the
+reset (via
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)):
+`speciesGestation` has **14 rows**, both breeding-age columns
+**numeric**, `getSpeciesMinBreedingAge("RHESUS","F")` = **2.5** (numeric
+TRUE), rhesus M = 4, `getSpeciesGestation("BONOBO")` = 240, unknown
+species -\> 210 fallback, and the NEWS bullet is live on `master`
+(NEWS.Rmd:79 / NEWS.md). This is a bundled-data + accessor + docs change
+with NO app-wiring change -\> a browser smoke is N/A; the accessor
+checks + the PR’s full `R CMD check` matrix are the runtime evidence.
+The new-species values are NOT exercised on real shipped data (no
+`species` column in any shipped pedigree – carried from Slice 2/3) -\>
+stated, not silently skipped.
+
+**Session 182 Handoff Evaluation (by Session 183): Score 9/10.** S182’s
+`=> SUGGESTED NEXT` listed **“(Publish \#73 Part 1)”** as the FIRST
+option with the EXACT end-to-end procedure, and every load-bearing fact
+held FIRSTHAND: `master`==`origin/master`==`3937a918`, the branch cut
+DIRECTLY off master so **no “push master first” FF step** (exactly right
+– I verified and skipped it), `#73` OPEN, the standing keep
+(`PED_GV_AUDIT` untracked). It pre-decided the one genuine publish
+decision (**“Relates to \#73” NOT “Closes”** – Part 2 remains) and
+spelled out the full safe-publish chain (fold NEWS into the SAME PR
+\[157a\], render flags \[155\], spell-check before/after \[159\], watch
+5-platform CI then do-not-merge-blind \[157\], `AskUserQuestion`-gate
+the merge, verified-merged-before-delete \[146\]). I executed all of it
+near-verbatim with zero rediscovery and zero corrections. Gotchas (line
+35) all held. **The -1:** S182 did NOT pre-flag the NEWS-COHERENCE
+supersede problem – that the new “14 species” bullet would directly
+contradict the three earlier dev “only rhesus” bullets in the same
+unreleased section (the first such contradiction in this project’s
+incremental NEWS). I discovered it reading the file and resolved it with
+the self-framing “previously…now” wording (Learning 171) – a genuine
+editorial decision (append-vs-rewrite), not just wording precision, so
+slightly more than the “wording refinement” that kept S179’s score of
+S178 at a 10. A one-line “the new NEWS bullet supersedes the earlier
+‘only rhesus’ bullets – self-frame it, don’t rewrite them” would have
+pre-framed it. Also minor: the suggested NEWS text framed the change as
+breeding ages only; the data change also populated gestation for 14
+species, which I caught by diffing firsthand and folded into the bullet
+(a precision add, not a gap). ROI maximal: the path was fully paved,
+every fact firsthand-true, the one decision pre-made.
+
+**Self-assessment (Session 183): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check -\> HEAD `068aeba5` = S182, no
+undocumented commits), reported, STOPPED for the owner’s pick; claimed
+the session with a 1B stub BEFORE technical work (stash-carried to keep
+it out of the PR). **Strengths:** (1) **full safe-publish discipline,
+executed clean first try** – no push-master-first needed (verified
+`master`==`origin/master` firsthand rather than assuming the handoff),
+PR diff verified Part-1-only (3 commits, no bundling); did NOT merge
+blind (fresh non-watch re-query even though the watch exited 0, Learning
+157); guarded `AskUserQuestion`-gated merge with a fresh pre-merge gate
+matching `headRefOid` to local and `origin/master` to expected;
+ancestor-gated `reset --hard` (both old-master AND merged-tip asserted
+ancestors first); stash-carried the stub through the destructive reset
+and popped it clean; verified-merged-before-delete with a `gh api` 404;
+(2) **grounded the NEWS bullet by reading S182’s changed files AND
+diffing vs master firsthand** – which caught that the data change feeds
+BOTH consumers (gestation + breeding ages), so the bullet is complete,
+not just the breeding-age framing the handoff suggested; (3) **made a
+sound, in-scope NEWS-coherence editorial call** – self-framed the
+supersede (“previously…now”) rather than rewriting the three earlier
+“only rhesus” bullets, resolving the contradiction without history
+rewrite or scope creep (Learning 171); (4) **held spell-check at 0
+delta** by keeping the bullet at summary level; (5) **verified the
+deliverable on `master` firsthand** (14 rows, numeric columns, rhesus
+F=2.5, BONOBO=240, fallback 210, NEWS live) rather than trusting the
+green merge; (6) one genuinely-new learning (171); TDD N/A declared
+every response, plain language, ASCII, scope-disciplined (Part 1 publish
+only – did NOT touch Part 2). **Weaknesses (honest):** (a) **low base
+difficulty** – a textbook publish on a fully-paved 9/10 predecessor
+handoff; the value is the discipline + the one editorial call, not depth
+or recovery -\> ceiling ~8; (b) **CI was textbook-green first try** – no
+recovery/judgment test to push the score higher; (c) **the new-species
+values still have no real-shipped-data exercise** – inherent to the data
+(no shipped pedigree has a `species` column), carried from Slice 2/3,
+documented not hidden; (d) the NEWS-coherence call is small. Clean,
+fully-verified, scope-disciplined publish with a firsthand on-master
+confirmation, one genuine editorial decision, a real new learning, and
+zero corrections -\> 8/10.
+
+**Learnings:** **Learning 171** added to `PROJECT_LEARNINGS.md` – the
+NEWS-supersede pattern (append a self-framing “previously X … now Y”
+bullet rather than rewriting prior-slice dev bullets that a new bullet
+contradicts; keep the bullet at summary level for 0 spell-delta;
+pandoc’s mid-line `\#NN` is normal, not a render trap). Carried as
+applied: \[\[consult-project-source-of-truth\]\] (the publish
+convention + the irreversible-merge gate + implementation-\>CHANGELOG /
+publish-\>NEWS rhythm), \[\[push-close-out-docs-to-origin\]\] (S181
+ended the drift -\> branch cut directly off in-sync master; this session
+pushes its close-out docs too), \[\[observation-vs-decision\]\] /
+\[\[ascii-only-in-question-options\]\] /
+\[\[avoid-jargon-use-plain-language\]\] (the merge `AskUserQuestion`,
+plain-ASCII NEWS), \[\[backlog-vs-changelog-placement\]\] (completed
+work -\> CHANGELOG; \#73 stays OPEN for Part 2); Learnings
+133/135/146/152/155/157/157a/159/161 + the
+solo-for-irreversible-git-sequence judgment.
+
+**=\> SUGGESTED NEXT = owner’s pick.** `origin/master` == local `master`
+at `5082df83` after the close-out push (PR \#77 merge – Part 1 LIVE –
+plus this S183 close-out docs commit); **issue \#73 is OPEN** (Part 1
+published; Part 2 – user-configurable override path – remains); no
+dangling branches; dashboard 98/100. Natural options (plain ASCII
+labels): - **(#73 Part 2 – user-configurable override path)** the
+remaining part of \#73, which **closes \#73 when shipped**. The
+accessors already accept `breedingTable`/`gestationTable` overrides but
+nothing threads them through `reportGV` -\>
+`correctUnknownParentMeanKinship` and
+`modGeneticValue`/`modPotentialParents` (`reportGV.R:103` passes NULL
+today); and the Settings tab at `appUI.R:223-228` is an empty
+placeholder, with a config-file path available via `loadSiteConfig`. A
+genuine feature – **likely a design/plan session THEN a separate
+implement** (do NOT bundle, FM \#18/#25). **Decide the config mechanism
+FIRST** (Settings UI vs config-file via `loadSiteConfig`, or both) – the
+plan depends on that choice. When the NEWS bullet is written it will
+SUPERSEDE this published bullet’s “Making these values user-configurable
+is the remaining part of issue \#73” – self-frame it again (Learning
+171). - **(#76 – Reading A, deep genetics)** genuinely de-inflate the
+genome-uniqueness statistic for both-unknown founders inside
+`calcGU`/`calcA`/gene-drop. NOT a “just implement” – it reverses the
+documented `calcGU.R:10-34` stance and breaks golden invariants, so it
+needs a **§8-E-style RATIFICATION first** (agreed formula + replacement
+`calcGU`/`calcA` golden values), THEN a separate strict-TDD implement
+(two sessions minimum; do NOT bundle). - **(Other options)** \#37
+(unused exports); \#36 (chimpanzee age-pyramid); \#2 (GVA
+iteration-count advice); \#28 (large, own plan); older
+\#13/#12/#11/#10/#5/#1; CRAN Phase 5 (owner-run,
+`docs/planning/cran-2.0.0-phase5-runbook.md`). **Do NOT** bundle the
+\#73 Part 2 plan with its implement (FM \#18/#25); **do NOT** start Part
+2 without deciding the config mechanism first.
+
+**Key files (this session):** **CHANGED – the publish content (NEWS
+commit `f13da525`, now on `master` via PR \#77):** `NEWS.Rmd` (+13,
+dev-version *Changes* bullet – the 14-species supersede bullet, after
+the Slice 3 parentage bullet), `NEWS.md` (+15, re-rendered). **CHANGED –
+close-out docs (this S183 docs commit, direct to local `master`, then
+pushed to origin):** `CHANGELOG.md` (S183 `[Unreleased]` publish entry),
+`PROJECT_LEARNINGS.md` (Learning 171), `SESSION_NOTES.md` (this
+handoff). **NO `R/`/test/`man/`/NAMESPACE/`data/` change** (the Part 1
+code was S182’s). **Published deliverable (S182’s, now on
+`origin/master` `5082df83`):** `data-raw/speciesGestation.R`,
+`data/speciesGestation.RData`, `R/getSpeciesMinBreedingAge.R`,
+`R/getSpeciesGestation.R`, `R/data.R`, the 3 `man/*.Rd`,
+`test_getSpeciesMinBreedingAge.R`, `test_getSpeciesGestation.R`. **The
+issue (input):** \#73 body (owner-supplied 14-species table). **NOT
+committed (standing keeps):** `PED_GV_AUDIT_2026-05-30.html`
+(untracked); `.DS_Store`.
+
+**Gotchas:** (1) **Issue \#73 is OPEN – Part 1 (data) is now LIVE on
+`origin/master` `5082df83`; Part 2 (user-configurable override path)
+remains.** A Part 2 publish uses **“Closes \#73”** (it is the last
+part). (2) **`origin/master` == local `master` at `5082df83`** after the
+S183 close-out push (per \[\[push-close-out-docs-to-origin\]\]) – the
+next session can branch directly from `master` with NO FF-first step.
+(If a future session leaves close-out docs local-only, the routine “push
+master first” Gotcha returns.) (3) **The dev-version `NEWS.md` now
+carries the 14-species supersede bullet** – it supersedes the earlier
+“only rhesus” bullets (the
+`getPotentialParents`/Potential-Parents-tab/`speciesGestation`-dataset
+ones) via self-framing, NOT a rewrite; when Part 2’s NEWS is written it
+supersedes THIS bullet’s “Making these values user-configurable is the
+remaining part of issue \#73” – self-frame it again (Learning 171). (4)
+**The new-species breeding-age + gestation values are NOT exercised on
+real shipped data** – no `species` column in
+`qcPed`/`breederPed`/`examplePedigree`; only accessor unit tests + the
+synthetic fixture exercise them (carried from Slice 2/3). (5) **The
+breeding-age columns are NUMERIC** (gestation stays integer);
+`getSpeciesMinBreedingAge` returns numeric – any later code/test
+asserting integer breeding ages will break (Learning 170). (6) Carried
+standing keeps (unchanged): package **ARCHIVED on CRAN 2025-07-29**;
+CRAN Phase 5 owner-gated (`docs/planning/cran-2.0.0-phase5-runbook.md`);
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT (warning + NULL) without a LabKey credential/config; exactly
+ONE codecov config (`codecov.yml`); NEWS render traps CLOSED at source
+(`html_preview:false`+`md_extensions:"-smart"`, 155) and pandoc’s
+mid-line `\#NN` is normal; `git pull` is rebase (`pull.rebase=true`) +
+chokes on `.DS_Store` -\> use `fetch`+`reset` (135); post-merge `fetch`
+before `reset --hard` must be ancestor-gated (146);
+`skip_on_cran()`-gated `testServer` tests need `NOT_CRAN=true`; the
+build-equivalent is `devtools::check(vignettes = FALSE)` = 0/0/0
+(Learning 161).
+
 ### What Session 182 Did
 
 **Deliverable:** Implement **issue \#73 Part 1** – generalize the

@@ -15,6 +15,89 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-23 — Published issue \#73 Part 1: the 14-species reproductive-parameter table is on `master` via PR \#77; NEWS entry added; \#73 stays OPEN (Session 183)
+
+- **Deliverable (owner pick, single item):** publish S182’s issue \#73
+  Part 1 (feat `2cee7fa4` — generalize `speciesGestation` from
+  rhesus-only to 14 common colony NHP species; breeding-age columns
+  integer → numeric) from `issue-73-populate-breeding-age-table` to
+  `master`, folding the user-facing NEWS entry into the SAME PR
+  (Learning 157a). **Admin/publish + docs** (the Part 1 code was
+  written/tested under strict TDD in S182 → TDD code-phases N/A). **0
+  stakeholder corrections.** SOLO (a serial, irreversible git sequence —
+  a workflow adds risk, not coverage; held solo despite ultracode, the
+  S179/S181 judgment). Owner picked “Publish \#73 Part 1” at orientation
+  and “Merge (merge commit)” at the `AskUserQuestion` merge gate.
+- **Pre-publish content (one PR, Learning 157a):** read S182’s changed
+  files firsthand (`data-raw/speciesGestation.R`,
+  `R/getSpeciesMinBreedingAge.R`, `R/data.R`) and diffed them vs
+  `master`, then appended ONE dev-version *Changes* bullet to `NEWS.Rmd`
+  describing BOTH consumers the single shared table feeds — per-species
+  maximum gestation
+  ([`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+  via
+  [`getSpeciesGestation()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesGestation.md))
+  AND per-species minimum male/female breeding ages (the GVA
+  unknown-parent mean-kinship correction via
+  [`getSpeciesMinBreedingAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesMinBreedingAge.md))
+  — plus the integer → numeric move (fractional minima like rhesus
+  female 2.5 exact) and the unchanged-for-species-less-data fallback.
+  **Self-framed the bullet (“previously seeded with only rhesus macaque
+  … now populated for 14 species”)** so it reads coherently with the
+  earlier dev-version “only rhesus” bullets WITHOUT rewriting them
+  (append-don’t-rewrite; Learning 171). Re-rendered `NEWS.md` (permanent
+  `html_preview:false`+`md_extensions:"-smart"`, Learning 155) → **0
+  non-ASCII**, no stray `.html`, a confined pure-insertion diff
+  (NEWS.Rmd +13 / NEWS.md +15, nothing reflowed, no date churn).
+  `spell_check_package(".")` = **0 unrecognized** before AND after → no
+  WORDLIST change (held the bullet at summary level rather than
+  enumerating species names, which would have needed WORDLIST entries).
+  Committed NEWS only as `f13da525`; kept the S183 1B stub OUT of the PR
+  (stash-carried, popped clean post-merge).
+- **No “push master first” step this cycle:** `master` ==
+  `origin/master` == `3937a918` (S181 ended the local-ahead drift per
+  \[\[push-close-out-docs-to-origin\]\]) and the branch was cut DIRECTLY
+  off master, so the routine S178/S180 FF-first Gotcha did NOT apply.
+  The PR diff came out Part-1-only = 3 commits (S182 feat `2cee7fa4` +
+  S182 close-out `068aeba5` + S183 NEWS `f13da525`), verified firsthand
+  (commit list + changed-file list).
+- **PR + CI (did NOT merge blind):** opened **PR \#77** → `master` (body
+  “Relates to \#73”, NOT `Closes #73` — Part 2 remains). **All 10 checks
+  PASS** — lint 4m40s; `R CMD check` x5 (macos 5m54s / ubuntu release
+  7m38s + oldrel-1 7m42s + **devel 16m12s** the long pole / windows
+  9m28s); pkgdown 5m56s; test-coverage 4m24s; **codecov/patch +
+  codecov/project PASS**. The background watch exited 0, but per
+  Learning 157 I re-queried FRESH with non-watch `gh pr checks 77` (10
+  `pass`, exit 0) before proceeding.
+- **Merge (the one irreversible step — `AskUserQuestion`-gated):** owner
+  chose “Merge (merge commit).” Guarded fresh pre-merge re-check (state
+  OPEN, mergeable MERGEABLE, mergeStateStatus CLEAN, `headRefOid`==local
+  `f13da525`, `origin/master`==`3937a918`); `gh pr merge 77 --merge` →
+  merge commit **`5082df83`**; verified landed firsthand (state MERGED,
+  `mergedAt 2026-06-23T19:22:05Z`, `mergedBy rmsharp`). **Issue \#73
+  verified still OPEN** after the merge (no closing keyword; Part 2
+  remains).
+- **Reconcile (Learning 146):** stash-carried the S183 stub;
+  `git checkout master`; `git fetch`; **ancestor-gated the reset** (both
+  old-master `3937a918` AND merged branch tip `f13da525` asserted
+  ancestors of `origin/master` `5082df83`) →
+  `git reset --hard origin/master`; `git stash pop` restored the S183
+  stub cleanly onto master.
+- **Branch cleanup (verified-merged-before-delete):** `git branch -d`
+  (was `f13da525`) + `git push origin --delete` + `git fetch --prune`;
+  verified NO ref remains (local 0, remote-tracking 0, `gh api` →
+  **404** “Branch not found”).
+- **Verification (Phase-3E):** re-verified on the merge-result tree by
+  PR \#77’s `R CMD check` x5 matrix (incl. ubuntu-devel), all PASS;
+  confirmed firsthand on `master` after the reset (via
+  [`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)):
+  `speciesGestation` has 14 rows, both breeding-age columns numeric,
+  `getSpeciesMinBreedingAge("RHESUS","F")` = 2.5 (numeric), rhesus M =
+  4, `getSpeciesGestation("BONOBO")` = 240, unknown species → 210
+  fallback, and the NEWS bullet is live on `master`. **Learning 171
+  added.** **Issue \#73 stays OPEN** (Part 2 user-configurable override
+  path remains).
+
 ### 2026-06-23 — Implemented issue \#73 Part 1: populated the species reproductive-parameter table for all common colony NHP species; breeding-age columns moved to numeric (Session 182)
 
 - **Deliverable (owner pick, single item):** generalize the bundled
