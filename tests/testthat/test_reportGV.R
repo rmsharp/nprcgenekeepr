@@ -13,7 +13,7 @@ test_that("reportGV forms correct genetic value report", {
     c(
       "id", "sex", "age", "birth", "exit", "population", "sire", "dam",
       "indivMeanKin", "zScores", "gu", "totalOffspring",
-      "livingOffspring", "value", "rank"
+      "livingOffspring", "parentage", "value", "rank"
     )
   )
   expect_identical(nrow(gvReport$report), nrow(qcPed))
@@ -38,7 +38,7 @@ test_that(
       c(
         "id", "sex", "age", "birth", "exit", "population", "sire", "dam",
         "indivMeanKin", "zScores", "gu", "totalOffspring",
-        "livingOffspring", "value", "rank"
+        "livingOffspring", "parentage", "value", "rank"
       )
     )
     expect_identical(nrow(gvReport$report), nrow(qcPed))
@@ -105,3 +105,23 @@ test_that("reportGV raises one-unknown animals' mean kinship by sexMean/2 (issue
   expect_true(all(imk >= 0))
   expect_true(all(imk <= 1))
 })
+
+# ---------------------------------------------------------------------------
+# Issue #9 Slice 3: reportGV carries a parentage classification column
+# (U-id aware), and on qcPed -- which has no origin column -- every both-unknown
+# founder is flagged as noParentage ("Undetermined") so the displayed rank can
+# demote them. One-unknown and known animals are not flagged.
+# ---------------------------------------------------------------------------
+test_that("reportGV classifies parentage and flags both-unknown founders (issue #9 Slice 3)", {
+  ped <- nprcgenekeepr::qcPed
+  rpt <- reportGV(ped, guIter = 100L)$report
+  expect_true("parentage" %in% names(rpt))
+  expect_identical(sum(rpt$parentage == "both unknown"), 124L)
+  expect_identical(sum(rpt$parentage == "one unknown parent"), 43L)
+  expect_identical(sum(rpt$parentage == "known"), 113L)
+  ## qcPed has no origin -> all 124 both-unknown founders become Undetermined
+  expect_true(all(rpt$value[rpt$parentage == "both unknown"] == "Undetermined"))
+  ## known and one-unknown animals are not flagged as no-parentage
+  expect_true(all(rpt$value[rpt$parentage != "both unknown"] != "Undetermined"))
+})
+
