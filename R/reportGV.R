@@ -92,6 +92,16 @@ reportGV <- function(ped, guIter = 5000L, guThresh = 1L, pop = NULL,
   # Calculate the mean kinship, and convert to z-scores
   indivMeanKin <- meanKinship(kmat)
   indivMeanKin <- indivMeanKin[probands] # making sure the order is correct
+
+  # Issue #9 Slice 2: raise the mean kinship of animals missing exactly one
+  # parent toward the mean of their contemporaneous breeding-age peers of the
+  # missing parent's sex (+ sexMean / 2), so a single unknown (U-id) parent no
+  # longer falsely elevates an animal's genetic value. Known and both-unknown
+  # animals are left unchanged. This feeds both the z-scores below and the
+  # report column, so both rank paths reflect it; kinship() is untouched.
+  indivMeanKin <-
+    correctUnknownParentMeanKinship(indivMeanKin, ped)$indivMeanKin
+
   zScores <- scale(indivMeanKin)
 
   # Perform the gene drop simulation
