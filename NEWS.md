@@ -62,6 +62,18 @@ R. Mark Sharp, Ph.D.
     the missing parent, so these animals no longer falsely rank low on
     mean kinship. Animals with both parents known, and animals missing
     both parents, are unchanged.
+  - The Genetic Value Analysis report now labels each animal's parentage
+    in a new `parentage` column, with the values "known", "one unknown
+    parent", or "both unknown"; a missing parent and an unknown-parent
+    placeholder identifier are both treated as unknown. The column
+    appears in the displayed report and in both CSV exports (the full
+    ranked report and the genetic-value subset). In the Shiny Genetic
+    Value display, animals whose parents are both unknown and that have
+    no recorded origin are now marked "Undetermined" and ranked last,
+    rather than appearing among the most genetically valuable animals
+    where their inflated genome uniqueness had falsely ranked them high.
+    Animals recorded as genuine imports (those carrying an `origin`)
+    continue to be ranked normally.
 - New features
   - Added the exported `setLabKeyDefaults()`, which configures `Rlabkey`
     authentication for the session: it prefers an API key (from the
