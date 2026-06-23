@@ -8,6 +8,8 @@
 
 > **Scope.** This is the planning deliverable. **No `R/`, `tests/`, `man/`, `NAMESPACE`, or `data/` content is changed by writing it.** The owner chose to cover **all three** issue solutions (S1 + S2 + S3) via this plan, implemented one slice per session in subsequent sessions. The design decisions in §3 carry my recommendations and are **flagged for owner ratification before the first implementation slice declares RED**.
 
+> **RATIFIED — read §8 first.** Session 177 ratified §7 via `/grill-me`. **§8 is the authoritative record and overrides §3/§4/§6 where they differ.** Two things every later session must know: (1) the displayed GVA rank is **dominated by genome uniqueness, not mean kinship**, so the Slice 2 mean-kinship fix corrects the number but does NOT change the visible top-of-list (§8-A); (2) Slice 2 was re-scoped to **one-unknown animals only** with a **per-focal peer-cohort** substitution and a **species/sex breeding-age table** (§8-C/D/E). Both-unknown founders + the `gu` axis moved into an expanded Slice 3 (§8-F).
+
 ---
 
 ## 1. Context
@@ -38,7 +40,7 @@ On the shipped `qcPed`, the **top-20 GVA-ranked animals are 100% founders** (bot
 ### Two distinct rank paths (both fed by `indivMeanKin`)
 
 - **(A) `reportGV` -> `orderReport`** (`R/reportGV.R:148-150`). `orderReport` (`R/orderReport.R:27-85`) partitions into `imports` / `noParentage` / `highGu(>10%)` / `lowMk(zScores<=0.25)` / `lowVal`, and `rankSubjects` (`R/rankSubjects.R:27-51`) assigns sequential ranks, giving `noParentage` the value "Undetermined" and rank NA. **The only protection** for missing-parent animals is the `noParentage` bucket, which fires *only* when `is.na(origin) & totalOffspring == 0 & id %in% founders` (`R/orderReport.R:46-47`). A U-id stub that has offspring, or an import (`origin` not NA), escapes it and top-ranks via `lowMk`. (This `noParentage` bucket shipped under the separate, closed issue #8 — not #9.)
-- **(B) The Shiny module overrides (A).** `report$rank <- rank(report$indivMeanKin - report$gu)`, then re-orders and re-sequences (`R/modGeneticValue.R:204-206`). **The table users actually see ignores `orderReport`'s categories** and ranks by `indivMeanKin - gu` directly. A missing-parent animal has both low `indivMeanKin` and high `gu`, so this formula drives it to the very top. **Consequence:** a fix at the math layer (choke point) corrects both paths; a fix only in `orderReport` is invisible in the app (see D7).
+- **(B) The Shiny module overrides (A).** `report$rank <- rank(report$indivMeanKin - report$gu)`, then re-orders and re-sequences (`R/modGeneticValue.R:204-206`). **The table users actually see ignores `orderReport`'s categories** and ranks by `indivMeanKin - gu` directly. A missing-parent animal has both low `indivMeanKin` and high `gu`, so this formula drives it to the very top. **Consequence:** a fix at the math layer (choke point) corrects both paths; a fix only in `orderReport` is invisible in the app (see D7). **NOTE (§8-A, S177): the DISPLAYED rank is dominated by `gu`, not mean kinship (3-4 orders of magnitude) — the Slice 2 mean-kinship fix corrects the number but does NOT move the visible top-of-list. See §8-A.**
 
 ### Prior process history
 
@@ -89,11 +91,14 @@ On the shipped `qcPed`, the **top-20 GVA-ranked animals are 100% founders** (bot
 
 These must be settled before the first implementation slice declares RED — a RED test cannot assert a number until D1-D3 are fixed. Each shows options and my **recommendation**. The owner ratifies (edit this doc, or a focused `/grill-me`).
 
+**>> RATIFIED S177 — several items below were REVISED at ratification; §8 (and the §7 checklist) is authoritative. See the per-item SUPERSEDED banners.**
+
 **D1 — Where to substitute (level of the fix).**
 Options: (a) at the **mean-kinship scalar** level inside `reportGV` (after `meanKinship()`, `R/reportGV.R:93`); (b) at the **kinship-matrix** level (replace the unknown-parent placeholder contribution, `R/kinship.R:83-88`).
 **Recommend (a).** Rationale: matches the owner's wording ("mean kinship of breeding-age animals"); both rank paths consume `indivMeanKin`, so one change fixes both; leaves shared `kinship()` (5 callers, §2) untouched, so breeding groups / summary stats / simulations are unaffected. *Load-bearing — ratify.*
 
 **D2 — The substitution formula (replace vs blend; the deepest decision).**
+**>> SUPERSEDED by §8-B/C (S177):** per-focal contemporaneous peer cohort (NOT a global mean); **one-unknown animals only** in Slice 2 (both-unknown deferred to Slice 3, no F3 in Slice 2); formula `MK_corrected = pmin(MK_current + sexMean/2, 1)`, `sexMean` = mean of the cohort's individual mean-kinships.
 For an animal missing **one** parent, it still has one known parent (real kinship). Candidate formulas (operating at the `indivMeanKin` scalar):
   - **F1 (blend):** `mk_corrected = 0.5 * mk_knownParentSide + 0.5 * sexMean`, where `sexMean` is the mean kinship of breeding-age animals of the missing parent's sex, and `mk_knownParentSide` is the contribution from the known lineage. (Requires isolating the known-parent half — non-trivial from `colMeans`.)
   - **F2 (replace the unknown half with a floor):** keep the animal's computed `indivMeanKin` but **add** the missing contribution: raise it by the amount the zero-placeholder suppressed it, using `sexMean` as the unknown parent's stand-in. Concretely, give the unknown parent a stand-in mean kinship of `sexMean` and recompute the offspring's mean as the average of the known parent's and the stand-in's.
@@ -101,6 +106,7 @@ For an animal missing **one** parent, it still has one known parent (real kinshi
 **Recommend:** specify the formula as **F2** for one-unknown-parent animals and **F3** for both-unknown, computed at the scalar level. *This is the #1 "here be dragons" decision and the most genetics-laden — strongly consider a `/grill-me` to nail the exact algebra with the owner before Slice 1. The RED test's expected numbers depend entirely on this.*
 
 **D3 — Candidate population for "breeding-age animals of the appropriate sex."**
+**>> SUPERSEDED by §8-C/D (S177):** the per-focal contemporaneous peer cohort, breeding age via the species/sex table (`getSpeciesMinBreedingAge`); the scalar `minParentAge` is NOT threaded into `reportGV`.
 Options: whole pedigree / analysis probands / living animals / `getPotentialParents`-style date+exit filtered, relative to the focal animal's birth.
 **Recommend:** breeding-age animals of the appropriate sex over the **analysis population (`probands`)**, with the breeding-age window reused from `getPotentialParents` (`birth <= focal_birth - 365*minParentAge`, `R/getPotentialParents.R:84`). Factor the breeding-age + sex selection into a small, unit-testable helper reused by both. *Dragon: depends on birth dates; the trimmed ped (`R/modGeneticValue.R:173`) may lack columns -> guard against empty candidate sets and silent fallback (R3).*
 
@@ -110,12 +116,14 @@ Options: whole pedigree / analysis probands / living animals / `getPotentialPare
 **D5 — Scope.** Owner chose **S1 + S2 + S3** (recorded; no decision needed). Recommended slice ordering in §4.
 
 **D6 — The genome-uniqueness axis.**
+**>> SUPERSEDED by §8-A/F (S177): `gu` is IN-SCOPE for #9** (folded into the expanded Slice 3), NOT out of scope / a separate issue; the mean-kinship fix alone moves NOTHING visible (§8-A), so #9 does not close on Slice 2.
 The displayed rank is `indivMeanKin - gu` (`R/modGeneticValue.R:204`); founders also inflate `gu` (gene-drop gives them own "rare" alleles). The owner's 2020 comment addresses **mean kinship only**. **Recommend:** keep `gu` handling **out of scope for #9 v1**, but document in the slice notes that fixing mean kinship alone will *reduce but may not fully eliminate* the elevation because `gu` still inflates. *Ratify — if the owner wants `gu` addressed too, that likely belongs in a new issue.*
 
 **D7 — Reconcile the two rank paths (required for S2 to be visible).**
 `R/modGeneticValue.R:204-206` overwrites `orderReport`'s category rank. **Recommend:** keep the `indivMeanKin - gu` formula but make it **classification-aware** — flagged/Undetermined animals are preserved (not silently re-ranked into the top) and either excluded from the `rank()` ordering or ranked last with their flag shown. *Ratify whether to unify on `orderReport`'s categories instead.*
 
 **D8 — The `test_orderReport` golden counts.**
+**>> SUPERSEDED by §8-E/F (S177): Slice 2 does NOT change `:24,42`** (those count both-unknown U-stubs on a frozen fixture — verified S177); the golden-count change moves to Slice 3.
 `tests/testthat/test_orderReport.R:24,42` assert `countUnk(top 100) == 34`. A correct S1/S2 fix **will** change these by design. **Recommend:** replace the brittle count assertions with behavior assertions (a fixture pedigree with a known partial-parentage animal that must **not** appear in the top-N after the fix) **and** update the golden counts to the new measured values. *Confirm these are accepted to change.*
 
 ---
@@ -134,7 +142,8 @@ Vertical, not horizontal (FM #25): each slice ships a working, end-to-end narrow
 **Dragons:** `getIncludeColumns()` is exported and described as "superset of columns that can be in a pedigree file" — changing it shifts its public contract + its test. Prefer adding sire/dam to the reportGV demographics subset *without* changing `getIncludeColumns` unless the owner wants the superset broadened.
 
 ### Slice 2 = S1: sex-stratified breeding-age mean-kinship substitution (the core fix)
-**Prerequisite:** D1-D4, D8 ratified (especially the D2 formula). Do **not** start RED until the formula is fixed.
+**>> SUPERSEDED by §8-E (Ratification Record, S177). Implement §8-E, not this subsection.** Key changes: per-focal peer cohort (not global); one-unknown animals only (both-unknown -> Slice 3); species/sex breeding-age table replaces the scalar `minParentAge`; `test_orderReport` golden counts are NOT changed by Slice 2. The RED/GREEN below is the pre-ratification draft, retained for history.
+**Prerequisite:** ~~D1-D4, D8 ratified~~ — **DONE (S177, §8).** Ratified design is §8-E.
 **RED:** (a) a unit test for the new helper computing the sex-appropriate breeding-age mean kinship for a focal animal on a small fixture pedigree (deterministic expected value hand-computed from the fixture); (b) an integration test on a fixture pedigree with a known partial-parentage animal asserting it **no longer top-ranks** after the fix; (c) update `test_orderReport.R:24,42` golden counts (D8) to the new measured values / behavior assertion.
 **GREEN:** add the helper (breeding-age + sex selection, reusing the `getPotentialParents` window per D3); inject the substitution at `R/reportGV.R:93-95` per the D2 formula; thread `minParentAge` into `reportGV` (signature `R/reportGV.R:72`, call site `R/modGeneticValue.R:185`, default 2).
 **DONE looks like:** partial-parentage and U-id animals receive the substituted mean kinship; the fixture animal drops out of the top; both rank paths reflect it (because the choke point feeds both); `indivMeanKin` stays in `[0,1]` (`test_modGeneticValue.R:703-745`).
@@ -161,23 +170,78 @@ Vertical, not horizontal (FM #25): each slice ships a working, end-to-end narrow
 
 ## 6. Here be dragons (consolidated load-bearing risks)
 
+**>> Several risks below were REVISED at ratification (S177) — §8 / §7 are authoritative; see the per-item SUPERSEDED banners.**
+
 - **R1 — Two rank paths.** The app ignores `orderReport`'s ranking (`R/modGeneticValue.R:204-206`). Fix the math layer (Slice 2) to affect both; never assume an `orderReport`-only change is visible.
-- **R2 — `test_orderReport` encodes the bug.** `:24,42` (34/21 U-ids in top) will break by design; update intentionally (D8) or the suite looks regressed.
+- **R2 — `test_orderReport` encodes the bug.** `:24,42` (34/21 U-ids in top) will break by design; update intentionally (D8) or the suite looks regressed. **>> SUPERSEDED S177: NOT in Slice 2** — Slice 2 leaves `:24,42` unchanged (verified); this applies to Slice 3.
 - **R3 — Silent fallback.** Breeding-age candidate selection depends on birth/exit columns the trimmed analysis ped may lack -> empty candidate set -> silent reversion to current behavior. Guard explicitly and test the empty case.
 - **R4 — `[0,1]` invariant.** Substituted mean kinship must stay in `[0,1]` (`test_modGeneticValue.R:703-745`).
 - **R5 — Shared `kinship()`.** 5 R/ callers (§2) — out of bounds for this work.
-- **R6 — The `gu` axis (D6).** Mean-kinship-only fix may not fully de-elevate founders because `gu` still inflates; set expectations / consider a follow-up issue.
+- **R6 — The `gu` axis (D6).** Mean-kinship-only fix may not fully de-elevate founders because `gu` still inflates; set expectations / consider a follow-up issue. **>> REVISED S177: `gu` is IN-SCOPE for #9 (expanded Slice 3), not a separate issue; on real data the mean-kinship fix moves NOTHING visible (§8-A), not merely "may not fully".**
 - **R7 — D2 is genetics, not code.** The exact substitution algebra is the owner's methodology call; a wrong formula produces plausible-but-wrong rankings. Strongly consider `/grill-me` before Slice 2 RED.
 
 ## 7. Owner ratification checklist (resolve before Slice 2 RED)
 
-- [ ] **D1** — fix at the `reportGV` mean-kinship level (recommended), not in shared `kinship()`.
-- [ ] **D2** — the substitution formula (F2 one-unknown / F3 both-unknown recommended). **Highest-stakes; grill candidate.**
-- [ ] **D3** — candidate population = breeding-age, sex-appropriate, over probands, `getPotentialParents` window (recommended).
-- [ ] **D4** — direct mean (recommended) vs. Monte-Carlo toolkit.
-- [ ] **D6** — `gu` axis out of scope for #9 v1 (recommended)?
-- [ ] **D7** — keep `indivMeanKin - gu` formula but make it classification-aware (recommended)?
-- [ ] **D8** — accept changing the `test_orderReport` golden counts; replace with behavior assertions (recommended).
-- [ ] **Slice order** — S3 -> S1 -> S2 (recommended) vs. S1 first.
-</content>
-</invoke>
+**RATIFIED Session 177 (2026-06-22) via `/grill-me` — see §8 for the authoritative record. Several recommendations were REVISED by the owner during the grill; the boxes below reflect the FINAL decision, not the original recommendation.**
+
+- [x] **D1** — fix at the `reportGV` mean-kinship scalar level (after `meanKinship()`), never shared `kinship()`. *(as recommended)*
+- [x] **D2** — substitution at the scalar level; `MK_corrected = MK_current + sexMean/2` per missing parent. **REVISED:** `sexMean` is computed over a **per-focal contemporaneous peer cohort**, NOT a global mean (era-specificity, §8-B2); `sexMean` = mean of the cohort's **individual** mean-kinships; the self-term moves to `(1+sexMean)/2`. **Slice 2 corrects ONE-unknown animals only** (both-unknown deferred to Slice 3).
+- [x] **D3** — candidate population = the per-focal peer cohort (contemporaneous, sex-appropriate, breeding-age via the species/sex table, present at conception). *(settled by D2)*
+- [x] **D4** — direct mean of the peer cohort. *(as recommended; Monte-Carlo toolkit unused)*
+- [x] **D6** — **REVISED: `gu` axis is IN-SCOPE for #9**, folded into the expanded **Slice 3** (not out of scope). The mean-kinship fix alone does NOT move the displayed top (§8-A); #9 cannot close on Slice 2 alone.
+- [x] **D7** — keep `indivMeanKin - gu` but make it classification-aware. **Deferred to Slice 3** (N/A for Slice 2). *(as recommended, deferred)*
+- [x] **D8** — **REVISED: Slice 2 does NOT change `test_orderReport:24,42`** (those count both-unknown U-stubs on a frozen fixture — verified S177). Slice 2 adds NEW behavior tests; the golden-count change moves to **Slice 3**.
+- [x] **Slice order** — S3 (done) -> **Slice 2 (one-unknown peer-substitution, this ratified design)** -> Slice 3 (expanded: classify both-unknown + `gu` axis + `origin` import distinction + D7).
+- [x] **minParentAge** — **REVISED: NOT threaded as a scalar.** Breeding age comes from a species/sex table (`getSpeciesMinBreedingAge`), §8-D.
+- [x] **Empty-cohort fallback + clamp** — strict peer cohort -> nearest-earlier same-era cohort -> flag-uncorrected (add 0); NEVER NA, NEVER a cross-era global mean. Clamp corrected MK to `[0,1]` (`pmin`). §8-C.
+- [x] **New issue (§8-G) FILED as #73** — species breeding-age table generalization (all common colony NHP) + user-configurable override.
+
+---
+
+## 8. Ratification Record (Session 177, 2026-06-22)
+
+Ratified by the owner (repo owner / geneticist) via `/grill-me`, grounded by a pre-compute workflow on real `qcPed` data (`wf_7f819b92-a12`) that produced verified numbers and an adversarial check of the algebra/invariants. **This section is authoritative; where it conflicts with §3/§4/§6, §8 wins.**
+
+### A. Load-bearing finding (reframes #9)
+
+**The displayed GVA ranking is dominated by genome uniqueness (`gu`, scale 0..50), not mean kinship (~0.003..0.017), by 3-4 orders of magnitude.** On `qcPed` the mean-kinship substitution moves NOTHING in the app top-20 (the same 20 both-unknown founders stay at ranks 1-20); the de-elevation is real but visible **only on a kinship-only ranking** AND **only after the BOTH-unknown founders are corrected (Slice 3)** — in the precompute workflow's projection (`wf_7f819b92-a12`) those founders drop from ranks 1-20 to ~89-135 and known-parentage animals fill the top-20. **A Slice 2 (one-unknown-only) fix moves NOTHING in the app top-20**, whose 20 rows are all both-unknown founders that Slice 2 leaves untouched; the 1-20 -> 89-135 figure is a workflow projection, not derivable from the frozen test fixture. The real `orderReport` scheme (a `gu > 10` tier ranked by descending `gu`, above the kinship tiers) makes `gu`-dominance **stronger**, not weaker. **Consequence:** the false top-ranking in #9 has TWO causes — deflated mean kinship AND inflated `gu` (gene-drop hands U-id "parents" their own "rare" alleles). The owner's 2020 mean-kinship remedy fixes only the first.
+
+### B. Root target + the two genetics calls that reshaped D2
+
+- **B1 — Target = hybrid A+B, sequenced.** Slice 2 ships as the mean-kinship **correctness** fix (NOT advertised as fixing the visible top-ranking, because it does not). **D6 flips IN-SCOPE for #9**: the `gu` artifact is owned by the expanded Slice 3. #9 must not close on Slice 2 alone.
+- **B2 — Per-focal peer cohort, NOT a global mean.** These are long-lived, **non-randomly-bred** colonies (e.g., SNPRC baboons under near-exclusive line-breeding for ~half the colony over a decade); the inbreeding distribution drifts across management eras. A colony-wide `sexMean` would import the wrong era's relatedness. So the missing-parent stand-in must be estimated from the animal's **contemporaneous breeding peers** (the `getPotentialParents`-style window: breeding-age AND present in the colony at the focal's conception), of the appropriate sex.
+- **B3 — `sexMean` definition + self-term.** `sexMean` = **mean of the peer cohort's individual mean-kinships** (definition i), not mean pairwise kinship. The correction is applied as a **scalar floor at the `indivMeanKin` level — a modeling choice, NOT a rebuild of the kinship matrix.** The unknown parent is modeled as a typical contemporaneous opposite-sex peer contributing `sexMean` to the focal's relatedness, so the focal's off-diagonal mean rises by `sexMean/2` and its self-term (inbreeding) moves from `0.5` to `(1+sexMean)/2`; both contributions equal `sexMean/2`, so the per-parent add is `+sexMean/2`. Implied inbreeding = `sexMean` is the random-mating expectation (offspring of a known parent and a typical opposite-sex colony member). **Caveat for the test author:** the workflow's `8e-18` figure verifies the scalar arithmetic's **self-consistency** (the two `sexMean/2` contributions agree), NOT agreement with a re-run of `kinship()` — a full matrix rebuild with a real cohort-average stand-in row differs by ~`1e-2`. Do NOT write a RED test expecting an `8e-18` match against a matrix rebuild; assert the scalar formula directly.
+
+### C. The Slice 2 substitution (authoritative formula)
+
+For each **one-unknown** animal (exactly one parent missing/U-id; the other parent known):
+- `sexMean = mean( indivMeanKin of the focal's contemporaneous breeding-age peers of the MISSING parent's sex )`.
+- `MK_corrected = pmin( MK_current + sexMean / 2 , 1 )`.
+- Fully-known-parentage animals: **unchanged**. Both-unknown founders: **unchanged in Slice 2** (deferred to Slice 3).
+- **Targeting:** identify the one-unknown set with a U-id-aware predicate (`is.na(x) | isGeneratedUnknownId(x)` on sire/dam), or normalize U-ids to NA before `getIdsWithOneParent` — the raw `is.na()` predicates return 0 on un-normalized `qcPed` (adversary-confirmed trap).
+- **Fallback (total function):** strict contemporaneous peer cohort -> if empty, nearest-earlier breeding cohort of that sex on the same era side -> if still none (e.g., no birth date), **leave the animal uncorrected and flag it** (add 0). **NEVER inject NA** (poisons the ranking) and **NEVER fall back to a cross-era global/colony mean** (defeats B2). On `qcPed` the fallback never fires (all 43 one-unknown animals have births and non-empty cohorts).
+
+### D. Species/sex breeding-age table (new infrastructure for Slice 2)
+
+- **Extend** the bundled `speciesGestation` table with two columns: `minMaleBreedingAge`, `minFemaleBreedingAge` (years). Seed the rhesus row: **gestation 210 (existing), min male 4, min female 3.** Regenerate via `data-raw/speciesGestation.R` (real + idempotent), AND update the `\describe{}` roxygen block in `R/data.R` (the `speciesGestation` doc currently lists only `species`/`gestation`) + regen `man/speciesGestation.Rd` — otherwise `devtools::check` throws a documentation-mismatch NOTE and the §8-E `0/0/0` gate fails.
+- **Add** accessor `getSpeciesMinBreedingAge(species, sex, default = 2L)`. "Mirrors `getSpeciesGestation`" means the same **lookup/fallback structure** (case/whitespace-insensitive species match, scalar default), NOT the same default value — gestation's default is `210`, this one's is `2`. **Unknown-species fallback = 2** for both sexes (preserves legacy behavior; becomes user-configurable via the new issue, §G).
+- Used by the peer-cohort selection (min male age for a missing sire, min female age for a missing dam), keyed to the pedigree's `species` column. **CRITICAL — the `species` column is often ABSENT** (neither `qcPed` nor `qcStudbook`'s `breederPed` carries one). The peer-cohort helper MUST derive the species vector defensively, mirroring `R/getPotentialParents.R:64-68`: `spp <- if ("species" %in% names(ped)) ped$species else rep(NA_character_, nrow(ped))`, then `getSpeciesMinBreedingAge(spp, sex)` returns the default `2` for absent/NA species. **Consequence: on `qcPed` (no `species` column) the seeded rhesus 4/3 row is NEVER exercised — the cohort uses breeding-age cutoff 2.** Exercising the rhesus 4/3 path requires a fixture that carries a `species` column.
+- **Scope:** Slice 2 only. **Do NOT** retrofit `getPotentialParents`/`checkParentAge` (they run on a scalar `minParentAge` today; changing them touches breeding-group formation — out of scope). Unifying breeding-age determination package-wide is a follow-up.
+
+### E. Slice 2 spec — RATIFIED (supersedes §4 "Slice 2 = S1")
+
+**Scope:** correct the mean kinship of **one-unknown (partial-parentage) animals only**, via the per-focal peer-cohort substitution above. This grew from the plan's "one line in `reportGV`" to a real vertical slice: a species/sex breeding-age table + accessor + a per-focal peer-cohort helper + the scalar substitution (clamp + fallback). **Biggest dragon: scope size — do not let it sprawl into Slice 3's both-unknown/`gu` work.**
+
+- **RED:** (a) unit test for `getSpeciesMinBreedingAge` — rhesus male 4 / female 3; **unknown species OR absent `species` column -> default 2**. (b) unit test for the peer-cohort helper on a small fixture (deterministic cohort + hand-computed `sexMean`), covering BOTH a **column-absent** case (cutoff 2) and a **`species`-present** case (rhesus cutoff 4). (c) unit test for the scalar substitution: a one-unknown fixture animal's `MK_corrected == pmin(MK_current + sexMean/2, 1)`, clamp holds, known + both-unknown animals unchanged, empty-cohort -> flagged-not-NA. **Include a missing-DAM fixture animal** so the female-cohort branch is exercised (`qcPed` has none — all 43 are missing-sire). (d) integration: on `qcPed`, each of the 43 one-unknown animals' `indivMeanKin` rises by exactly `sexMean/2` of its **missing parent's-sex** cohort — and because `qcPed` has **no `species` column the cohort cutoff is the default 2, NOT rhesus 4**, and all 43 are missing-sire so only the male branch runs; known + both-unknown animals are untouched. **Do NOT** assert a change in `test_orderReport:24,42` (verified unchanged).
+- **GREEN:** extend `speciesGestation` (+ `data-raw` regen + the `R/data.R` `\describe{}` update + `man/speciesGestation.Rd` regen, §8-D), add `getSpeciesMinBreedingAge`, add the peer-cohort helper (**with the absent-`species`-column guard**, §8-D), inject the substitution at the `indivMeanKin` scalar in `reportGV` (`R/reportGV.R:93-95`) for one-unknown animals only, **branching on which parent is missing**. Keep `kinship()` untouched (5 callers).
+- **DONE looks like:** one-unknown animals receive the peer-based `+sexMean/2`; `indivMeanKin` stays in `[0,1]`; known + both-unknown animals unchanged; new tests green; `test_orderReport`/`test_modGeneticValue` invariant tests still green. **The displayed app top-20 will NOT change — that is expected (A); do not treat it as a failure.**
+- **Verify:** targeted test files green; clean regression read (`!grepl("test-app-|test-e2e-", file)`, `sum(failed)`+`sum(error)`); build-equivalent `devtools::check(vignettes = FALSE)` = 0/0/0 (Learning 161). No `runModularApp()` smoke needed (no visible/runtime ranking change in Slice 2).
+- **Session boundary:** one session. Close out. **NEWS** entry required (user-facing: corrected mean kinship for partial-parentage animals) folded into the publish PR (Learning 157a).
+
+### F. Expanded Slice 3 charter (was "S2: classify")
+
+Slice 3 now owns BOTH the original classification AND the `gu` axis: (1) classify unknown-parent animals (flag both-unknown founders; distinguish genuine **imports** via `origin` from ONPRC-born missing-data stubs); (2) address the `gu` inflation that actually pins them at the top (D6); (3) reconcile the two rank paths so the classification/`gu` fix survives the Shiny `rank(indivMeanKin - gu)` override (D7); (4) update `test_orderReport:24,42` golden counts -> behavior assertions (D8). Requires a `runModularApp()` Phase-3E smoke (changes the displayed ranking). Needs a fixture **with** an `origin` column (`qcPed` lacks it).
+
+### G. New issue to file (owner-requested)
+
+*"Provide minimum male/female breeding-age values for all common colony NHP species in the species reproductive-parameter table, and make those values user-configurable."* Generalizes §D beyond the single seeded rhesus row and adds a user override path. **Filed as issue #73 (S177).**
