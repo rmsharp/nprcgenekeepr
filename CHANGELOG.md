@@ -15,6 +15,73 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-23 — Implemented issue \#73 Part 1: populated the species reproductive-parameter table for all common colony NHP species; breeding-age columns moved to numeric (Session 182)
+
+- **Deliverable (owner pick, single item):** generalize the bundled
+  `speciesGestation` lookup from rhesus-only to all 14 common colony NHP
+  species (issue \#73 Part 1 — the data population), moving the two
+  breeding-age columns integer → numeric to hold fractional minima.
+  Strict TDD (RED→GREEN→REFACTOR, every transition
+  `AskUserQuestion`-gated). **0 stakeholder corrections.** Committed on
+  branch `issue-73-populate-breeding-age-table`; **UNPUBLISHED** —
+  `master` unchanged. **Part 2 (user-configurable override path)
+  deferred to a separate session — issue \#73 stays OPEN.**
+- **Owner supplied the biological values (a methodology/veterinary call,
+  not a code default):** 14 species with minimum female/male
+  breeding-age ranges and gestation ranges. Conversion rules
+  (owner-confirmed via `AskUserQuestion`): minimum breeding age = LOW
+  end of each range; gestation column = conservative maximum = HIGH end
+  of each range. Rhesus gestation kept at its existing conservative 210
+  (owner chose “keep 210” over the supplied 164–166 typical figure — the
+  issue scopes gestation to “where missing” and rhesus is not missing;
+  avoids changing `getPotentialParents` behavior + its tests).
+- **What changed:** `data-raw/speciesGestation.R` now builds a 14-row
+  table (RHESUS, CYNOMOLGUS, JAPANESE MACAQUE, PIG-TAILED MACAQUE,
+  BABOON, VERVET, AFRICAN GREEN MONKEY, SQUIRREL MONKEY, COMMON
+  MARMOSET, COTTON-TOP TAMARIN, OWL MONKEY, CAPUCHIN, CHIMPANZEE,
+  BONOBO); the `minMaleBreedingAge`/`minFemaleBreedingAge` columns moved
+  **integer → numeric** to hold fractional minima (rhesus female 2.5,
+  squirrel-monkey male 3.5, marmoset 1.0, tamarin 1.5).
+  [`getSpeciesMinBreedingAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesMinBreedingAge.md)
+  coercions [`as.integer()`](https://rdrr.io/r/base/integer.html) →
+  [`as.numeric()`](https://rdrr.io/r/base/numeric.html) (the two age
+  columns, the `default`, and the empty-input return `integer(0L)` →
+  `numeric(0L)`); the gestation column stays integer. Roxygen
+  (`R/data.R`, both accessors) + `man/*.Rd` regenerated; NAMESPACE
+  byte-identical.
+- **Rhesus female moved 3 → 2.5 — confirmed zero real-data/GVA impact
+  (verified firsthand, not assumed):** no shipped pedigree
+  (`qcPed`/`breederPed`/`examplePedigree`) carries a `species` column,
+  so the GVA unknown-parent mean-kinship correction uses the
+  species-absent default cutoff of 2 on real data; the rhesus and
+  new-species cutoffs are exercised only by the accessor unit tests +
+  the synthetic species-bearing fixture in
+  `test_correctUnknownParentMeanKinship.R` (which uses the rhesus MALE
+  cutoff 4, unchanged). The change is therefore contained to two test
+  files.
+- **Files:** `data-raw/speciesGestation.R`,
+  `data/speciesGestation.RData` (regenerated),
+  `R/getSpeciesMinBreedingAge.R`, `R/getSpeciesGestation.R` (doc/example
+  only), `R/data.R` (doc), `man/speciesGestation.Rd` +
+  `man/getSpeciesMinBreedingAge.Rd` + `man/getSpeciesGestation.Rd`
+  (regenerated). Tests: `test_getSpeciesMinBreedingAge.R` (rewritten to
+  numeric + 14-species assertions) and `test_getSpeciesGestation.R`
+  (new-species gestation assertions; `JAPANESE MACAQUE` repointed off
+  the unknown-species fallback case).
+  `test_correctUnknownParentMeanKinship.R` + `test_reportGV.R` unchanged
+  (verified unaffected).
+- **Verification:** RED = 49 failing assertions across the two files,
+  failing for the right reason, no collateral (the 2 unaffected files
+  stayed green — 20/0 and 25/0). GREEN = data + accessor coercion only.
+  REFACTOR = doc/roxygen + lint (`.lintr` excludes `tests/` but not
+  `data-raw/`, so the data vectors use explicit doubles `4.0`). Full
+  clean regression **2183 pass / 0 fail / 0 error** (203 files); **0
+  lints** (namespace-loaded, Learning 167); **0 spelling** (no WORDLIST
+  change); build-equivalent `devtools::check(vignettes = FALSE)` =
+  **0/0/0** (Learning 161). **NEWS deferred to the publish PR**
+  (Learning 157a). Learning 170 added. **Issue \#73 stays OPEN** (Part 2
+  user-config remains).
+
 ### 2026-06-23 — Published issue \#9 Slice 3: classify unknown-parent animals + classification-aware GVA rank is on `master` via PR \#75; NEWS added; \#9 CLOSED; filed Reading A follow-up \#76 (Session 181)
 
 - **Deliverable (owner pick, single item):** publish S180’s issue \#9

@@ -45,6 +45,6 @@ order as `species`.
 ``` r
 getSpeciesGestation("RHESUS")
 #> [1] 210
-getSpeciesGestation(c("RHESUS", "JAPANESE MACAQUE", NA))
+getSpeciesGestation(c("RHESUS", "UNICORN", NA))
 #> [1] 210 210 210
 ```

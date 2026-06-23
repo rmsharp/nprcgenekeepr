@@ -93,6 +93,25 @@
     where their inflated genome uniqueness had falsely ranked them high.
     Animals recorded as genuine imports (those carrying an `origin`)
     continue to be ranked normally.
+  - The bundled `speciesGestation` reproductive-parameter table,
+    previously seeded with only rhesus macaque, is now populated for 14
+    common colony NHP species. Each species has its own maximum
+    gestation period (used by
+    [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+    via
+    [`getSpeciesGestation()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesGestation.md)
+    to set the conception window) and its own minimum male and female
+    breeding ages (used by the Genetic Value Analysis unknown-parent
+    mean-kinship correction via
+    [`getSpeciesMinBreedingAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesMinBreedingAge.md)).
+    The two breeding-age columns are now numeric rather than integer, so
+    fractional minima such as the rhesus minimum female breeding age of
+    2.5 years are represented exactly. Species not listed in the table
+    continue to fall back to the defaults (a 210-day gestation and a
+    2-year minimum breeding age), so results are unchanged for pedigrees
+    without a `species` column. Making these values user-configurable is
+    the remaining part of issue
+    [\#73](https://github.com/rmsharp/nprcgenekeepr/issues/73).
 - New features
   - Added the exported
     [`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md),

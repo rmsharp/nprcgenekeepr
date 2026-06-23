@@ -10,12 +10,13 @@ Analysis unknown-parent mean-kinship correction through
 [`getSpeciesMinBreedingAge`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesMinBreedingAge.md)
 (issue \#9 Slice 2). Species names are matched case- and
 whitespace-insensitively; any species not present falls back to 210 days
-for gestation and 2 years for the breeding ages. Seeded with rhesus =
-210-day gestation (the conservative bound used historically; typical
-rhesus gestation is about 165 days, per Vinson & Raboin 2015) and rhesus
-minimum breeding ages male = 4, female = 3. Generalizing this table to
-all common colony NHP species and making the values user-configurable is
-tracked as issue \#73. Extend it by adding rows in
+for gestation and 2 years for the breeding ages. Rhesus gestation is 210
+days (the historical conservative bound; typical rhesus gestation is
+about 165 days, per Vinson & Raboin 2015), and rhesus minimum breeding
+ages are male = 4, female = 2.5. The table is populated for the common
+colony NHP species (issue \#73), with gestation values as conservative
+upper bounds; making the values user-configurable is the remaining part
+of that issue. Extend or adjust it by editing
 `data-raw/speciesGestation.R` and re-running that script.
 
 - species:
@@ -29,12 +30,12 @@ tracked as issue \#73. Extend it by adding rows in
 
 - minMaleBreedingAge:
 
-  – integer minimum age in years at which a male of the species can sire
+  – numeric minimum age in years at which a male of the species can sire
   offspring.
 
 - minFemaleBreedingAge:
 
-  – integer minimum age in years at which a female of the species can
+  – numeric minimum age in years at which a female of the species can
   bear offspring.
 
 ## Usage
@@ -45,7 +46,7 @@ data(speciesGestation)
 
 ## Format
 
-An object of class `data.frame` with 1 rows and 4 columns.
+An object of class `data.frame` with 14 rows and 4 columns.
 
 ## Examples
 
@@ -53,6 +54,19 @@ An object of class `data.frame` with 1 rows and 4 columns.
 library(nprcgenekeepr)
 data("speciesGestation")
 speciesGestation
-#>   species gestation minMaleBreedingAge minFemaleBreedingAge
-#> 1  RHESUS       210                  4                    3
+#>                 species gestation minMaleBreedingAge minFemaleBreedingAge
+#> 1                RHESUS       210                4.0                  2.5
+#> 2            CYNOMOLGUS       170                4.0                  2.5
+#> 3      JAPANESE MACAQUE       180                5.0                  4.0
+#> 4    PIG-TAILED MACAQUE       175                4.0                  3.0
+#> 5                BABOON       187                6.0                  4.0
+#> 6                VERVET       170                4.0                  3.0
+#> 7  AFRICAN GREEN MONKEY       170                4.0                  3.0
+#> 8       SQUIRREL MONKEY       170                3.5                  2.5
+#> 9       COMMON MARMOSET       145                1.0                  1.0
+#> 10   COTTON-TOP TAMARIN       185                1.5                  1.5
+#> 11           OWL MONKEY       140                2.0                  2.0
+#> 12             CAPUCHIN       160                6.0                  4.0
+#> 13           CHIMPANZEE       240               12.0                  8.0
+#> 14               BONOBO       240               12.0                  8.0
 ```
