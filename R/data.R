@@ -377,20 +377,30 @@
 #' library(nprcgenekeepr)
 #' data("rhesusPedigree")
 "rhesusPedigree"
-#' Per-species maximum gestation period (days)
+#' Per-species reproductive parameters
 #'
-#' A lookup table mapping a species name to a conservative upper bound on the
-#' number of days from conception to birth. It keys the gestation window in
+#' A lookup table mapping a species name to reproductive parameters used across
+#' the package. It keys the gestation window in
 #' \code{\link{getPotentialParents}} through \code{\link{getSpeciesGestation}}
-#' (issue #46 item 2). Species names are matched case- and whitespace-
-#' insensitively; any species not present falls back to 210 days. Seeded with
-#' rhesus = 210 (the conservative bound used historically; typical rhesus
-#' gestation is about 165 days, per Vinson & Raboin 2015). Extend it by adding
-#' rows in \code{data-raw/speciesGestation.R} and re-running that script.
+#' (issue #46 item 2) and the minimum
+#' breeding ages in the Genetic Value Analysis unknown-parent mean-kinship
+#' correction through \code{\link{getSpeciesMinBreedingAge}} (issue #9 Slice 2).
+#' Species names are matched case- and whitespace-insensitively; any species not
+#' present falls back to 210 days for gestation and 2 years for the breeding
+#' ages. Seeded with rhesus = 210-day gestation (the conservative bound used
+#' historically; typical rhesus gestation is about 165 days, per Vinson &
+#' Raboin 2015) and rhesus minimum breeding ages male = 4, female = 3.
+#' Generalizing this table to all common colony NHP species and making the
+#' values user-configurable is tracked as issue #73. Extend it by adding rows in
+#' \code{data-raw/speciesGestation.R} and re-running that script.
 #' \describe{
 #' \item{species}{-- character species name (e.g. "RHESUS").}
 #' \item{gestation}{-- integer maximum gestation period in days (a conservative
 #' upper bound).}
+#' \item{minMaleBreedingAge}{-- integer minimum age in years at which a male of
+#' the species can sire offspring.}
+#' \item{minFemaleBreedingAge}{-- integer minimum age in years at which a female
+#' of the species can bear offspring.}
 #' }
 #' @examples
 #' library(nprcgenekeepr)
