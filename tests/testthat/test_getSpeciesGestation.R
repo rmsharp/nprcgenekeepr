@@ -30,8 +30,19 @@ test_that("getSpeciesGestation is case- and whitespace-insensitive", {
 })
 
 test_that("getSpeciesGestation falls back to the default for unknown species", {
-  expect_identical(getSpeciesGestation("JAPANESE MACAQUE"), 210L)
   expect_identical(getSpeciesGestation("UNICORN"), 210L)
+  expect_identical(getSpeciesGestation("TYRANNOSAURUS"), 210L)
+})
+
+test_that("getSpeciesGestation returns the shipped values for issue #73 species", {
+  ## new species added in issue #73 (conservative upper-bound gestation, days);
+  ## rhesus stays 210 (its existing conservative bound, unchanged)
+  expect_identical(getSpeciesGestation("JAPANESE MACAQUE"), 180L)
+  expect_identical(getSpeciesGestation("BABOON"), 187L)
+  expect_identical(getSpeciesGestation("COMMON MARMOSET"), 145L)
+  expect_identical(getSpeciesGestation("OWL MONKEY"), 140L)
+  expect_identical(getSpeciesGestation("CHIMPANZEE"), 240L)
+  expect_identical(getSpeciesGestation("BONOBO"), 240L)
 })
 
 test_that("getSpeciesGestation falls back to the default for NA and empty strings", {

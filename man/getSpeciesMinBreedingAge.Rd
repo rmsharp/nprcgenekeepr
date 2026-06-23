@@ -6,7 +6,7 @@
 This file is part of nprcgenekeepr
 Look up the minimum breeding age (years) for one or more species and sexes}
 \usage{
-getSpeciesMinBreedingAge(species, sex, breedingTable = NULL, default = 2L)
+getSpeciesMinBreedingAge(species, sex, breedingTable = NULL, default = 2)
 }
 \arguments{
 \item{species}{character vector of species names (may contain \code{NA}).}
@@ -15,17 +15,17 @@ getSpeciesMinBreedingAge(species, sex, breedingTable = NULL, default = 2L)
 the length of \code{species} (or vice versa).}
 
 \item{breedingTable}{optional data.frame with a character column
-\code{species} and integer columns \code{minMaleBreedingAge} and
+\code{species} and numeric columns \code{minMaleBreedingAge} and
 \code{minFemaleBreedingAge} to use instead of the bundled
 \code{\link{speciesGestation}} table. Defaults to \code{NULL}, which uses the
 bundled table.}
 
-\item{default}{integer fallback returned for species that are missing,
+\item{default}{numeric fallback returned for species that are missing,
 \code{NA}, empty, or not found, and for a sex that is not \code{"M"}/\code{"F"}.
-Defaults to \code{2L}.}
+Defaults to \code{2}.}
 }
 \value{
-an integer vector of minimum breeding ages in years, the same length
+a numeric vector of minimum breeding ages in years, the same length
 as the longer of \code{species} and \code{sex}.
 }
 \description{
@@ -38,8 +38,9 @@ not present in the table -- and any sex that is not \code{"M"} or \code{"F"}
 -- falls back to \code{default} (2 years, the legacy package-wide minimum
 parent age). Used by the Genetic Value Analysis unknown-parent mean-kinship
 correction to form a focal animal's contemporaneous breeding-age peer cohort
-(issue #9 Slice 2). Generalizing the seeded values to all common colony NHP
-species and making them user-configurable is tracked as issue #73.
+(issue #9 Slice 2). The bundled table is populated for the common colony
+NHP species (issue #73); the user-configurable override path is a separate
+slice.
 }
 \examples{
 getSpeciesMinBreedingAge("RHESUS", "M")

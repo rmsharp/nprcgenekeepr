@@ -35,5 +35,5 @@ key its gestation window on the first-class \code{species} pedigree column
 }
 \examples{
 getSpeciesGestation("RHESUS")
-getSpeciesGestation(c("RHESUS", "JAPANESE MACAQUE", NA))
+getSpeciesGestation(c("RHESUS", "UNICORN", NA))
 }

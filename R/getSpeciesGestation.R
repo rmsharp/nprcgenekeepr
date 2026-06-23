@@ -23,7 +23,7 @@
 #' order as \code{species}.
 #' @examples
 #' getSpeciesGestation("RHESUS")
-#' getSpeciesGestation(c("RHESUS", "JAPANESE MACAQUE", NA))
+#' getSpeciesGestation(c("RHESUS", "UNICORN", NA))
 #' @export
 getSpeciesGestation <- function(species, gestationTable = NULL,
                                 default = 210L) {

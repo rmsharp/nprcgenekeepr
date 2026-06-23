@@ -387,19 +387,20 @@
 #' correction through \code{\link{getSpeciesMinBreedingAge}} (issue #9 Slice 2).
 #' Species names are matched case- and whitespace-insensitively; any species not
 #' present falls back to 210 days for gestation and 2 years for the breeding
-#' ages. Seeded with rhesus = 210-day gestation (the conservative bound used
-#' historically; typical rhesus gestation is about 165 days, per Vinson &
-#' Raboin 2015) and rhesus minimum breeding ages male = 4, female = 3.
-#' Generalizing this table to all common colony NHP species and making the
-#' values user-configurable is tracked as issue #73. Extend it by adding rows in
+#' ages. Rhesus gestation is 210 days (the historical conservative bound;
+#' typical rhesus gestation is about 165 days, per Vinson & Raboin 2015), and
+#' rhesus minimum breeding ages are male = 4, female = 2.5. The table is
+#' populated for the common colony NHP species (issue #73), with gestation
+#' values as conservative upper bounds; making the values user-configurable is
+#' the remaining part of that issue. Extend or adjust it by editing
 #' \code{data-raw/speciesGestation.R} and re-running that script.
 #' \describe{
 #' \item{species}{-- character species name (e.g. "RHESUS").}
 #' \item{gestation}{-- integer maximum gestation period in days (a conservative
 #' upper bound).}
-#' \item{minMaleBreedingAge}{-- integer minimum age in years at which a male of
+#' \item{minMaleBreedingAge}{-- numeric minimum age in years at which a male of
 #' the species can sire offspring.}
-#' \item{minFemaleBreedingAge}{-- integer minimum age in years at which a female
+#' \item{minFemaleBreedingAge}{-- numeric minimum age in years at which a female
 #' of the species can bear offspring.}
 #' }
 #' @examples
