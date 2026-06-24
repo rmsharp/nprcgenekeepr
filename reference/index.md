@@ -382,6 +382,9 @@
 - [`loadSiteConfig()`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSiteConfig.md)
   : Load the site configuration for the modular Shiny application
 
+- [`loadSpeciesOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSpeciesOverrides.md)
+  : Load user-configurable species reproductive-parameter overrides
+
 - [`logModuleEvent()`](https://github.com/rmsharp/nprcgenekeepr/reference/logModuleEvent.md)
   : Log Module Events
 

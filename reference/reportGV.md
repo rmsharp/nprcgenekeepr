@@ -11,7 +11,11 @@ reportGV(
   guThresh = 1L,
   pop = NULL,
   byID = TRUE,
-  updateProgress = NULL
+  updateProgress = NULL,
+  breedingTable = NULL,
+  gestationTable = NULL,
+  breedingAgeDefault = NULL,
+  gestationDefault = NULL
 )
 ```
 
@@ -53,6 +57,30 @@ reportGV(
   during each iteration to update a
   [`shiny::Progress`](https://rdrr.io/pkg/shiny/man/Progress.html)
   object.
+
+- breedingTable:
+
+  Optional data.frame overriding the bundled per-species minimum
+  breeding ages used by the unknown-parent mean-kinship correction
+  (issue \#73 Part 2). `NULL` (the default) uses the bundled
+  [`speciesGestation`](https://github.com/rmsharp/nprcgenekeepr/reference/speciesGestation.md)
+  table.
+
+- gestationTable:
+
+  Optional data.frame overriding the bundled per-species gestation
+  windows used by the correction's conception window. `NULL` uses the
+  bundled table.
+
+- breedingAgeDefault:
+
+  Optional numeric fallback minimum breeding age (years) for species
+  absent from the table. `NULL` uses the built-in 2 years.
+
+- gestationDefault:
+
+  Optional integer fallback gestation window (days) for species absent
+  from the table. `NULL` uses the built-in 210 days.
 
 ## Value
 

@@ -50,7 +50,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">modGeneticValueServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">pedigree</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">modGeneticValueServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">pedigree</span>, speciesOverrides <span class="op">=</span> <span class="fu">reactive</span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -63,6 +63,15 @@
 
 <dt id="arg-pedigree">pedigree<a class="anchor" aria-label="anchor" href="#arg-pedigree"></a></dt>
 <dd><p>reactive returning pedigree data frame.</p></dd>
+
+
+<dt id="arg-speciesoverrides">speciesOverrides<a class="anchor" aria-label="anchor" href="#arg-speciesoverrides"></a></dt>
+<dd><p>reactive returning the user-configurable species
+overrides loaded at boot by <code><a href="loadSpeciesOverrides.html">loadSpeciesOverrides</a></code> (a list with
+<code>breedingTable</code>, <code>gestationTable</code>, <code>breedingAgeDefault</code>,
+<code>gestationDefault</code>), or <code>NULL</code>. Threaded into
+<code><a href="reportGV.html">reportGV</a></code> (issue #73 Part 2). Defaults to <code>reactive(NULL)</code>
+so no config file means bundled behavior.</p></dd>
 
 </dl></div>
     <div class="section level2">

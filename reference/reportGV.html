@@ -56,7 +56,11 @@
 <span>  guThresh <span class="op">=</span> <span class="fl">1L</span>,</span>
 <span>  pop <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  byID <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  updateProgress <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  updateProgress <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  breedingTable <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  gestationTable <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  breedingAgeDefault <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  gestationDefault <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -96,6 +100,30 @@ the function will only count the unique alleles for an individual
 <dd><p>Function or NULL. If this function is defined, it
 will be called during each iteration to update a
 <code><a href="https://rdrr.io/pkg/shiny/man/Progress.html" class="external-link">shiny::Progress</a></code> object.</p></dd>
+
+
+<dt id="arg-breedingtable">breedingTable<a class="anchor" aria-label="anchor" href="#arg-breedingtable"></a></dt>
+<dd><p>Optional data.frame overriding the bundled per-species
+minimum breeding ages used by the unknown-parent mean-kinship correction
+(issue #73 Part 2). <code>NULL</code> (the default) uses the bundled
+<code><a href="speciesGestation.html">speciesGestation</a></code> table.</p></dd>
+
+
+<dt id="arg-gestationtable">gestationTable<a class="anchor" aria-label="anchor" href="#arg-gestationtable"></a></dt>
+<dd><p>Optional data.frame overriding the bundled per-species
+gestation windows used by the correction's conception window. <code>NULL</code>
+uses the bundled table.</p></dd>
+
+
+<dt id="arg-breedingagedefault">breedingAgeDefault<a class="anchor" aria-label="anchor" href="#arg-breedingagedefault"></a></dt>
+<dd><p>Optional numeric fallback minimum breeding age
+(years) for species absent from the table. <code>NULL</code> uses the built-in
+2 years.</p></dd>
+
+
+<dt id="arg-gestationdefault">gestationDefault<a class="anchor" aria-label="anchor" href="#arg-gestationdefault"></a></dt>
+<dd><p>Optional integer fallback gestation window (days) for
+species absent from the table. <code>NULL</code> uses the built-in 210 days.</p></dd>
 
 </dl></div>
     <div class="section level2">
