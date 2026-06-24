@@ -89,6 +89,20 @@ R. Mark Sharp, Ph.D.
     results are unchanged for pedigrees without a `species` column.
     Making these values user-configurable is the remaining part of issue
     \#73.
+  - The minimum male and female breeding ages and the maximum gestation
+    period that the Genetic Value Analysis uses to correct the mean
+    kinship of animals missing one parent, together with the values
+    applied to species not in the bundled table, are now
+    user-configurable through the configuration file. An optional
+    `speciesOverridesPath` entry points to a CSV with the same columns
+    as the bundled `speciesGestation` table; its rows override the
+    bundled values for the species listed, while species not listed keep
+    their bundled values, and optional `minBreedingAgeDefault` and
+    `gestationDefault` entries set the values used for species absent
+    from the table. With no configuration file, or none of these
+    entries, the Genetic Value Analysis is unchanged. This makes the
+    Genetic Value Analysis configurable; making the Potential Parents
+    tab configurable is the remaining part of issue \#73.
 - New features
   - Added the exported `setLabKeyDefaults()`, which configures `Rlabkey`
     authentication for the session: it prefers an API key (from the
@@ -135,6 +149,15 @@ R. Mark Sharp, Ph.D.
     species-to-gestation lookup table (in days) seeded with rhesus
     macaque (210). It is the extensible home for per-species gestation
     lengths; add a row to support an additional species.
+  - Added the exported `loadSpeciesOverrides()`, which reads the
+    optional species-override entries from the configuration file
+    (`speciesOverridesPath` and the `minBreedingAgeDefault` and
+    `gestationDefault` settings) and returns the breeding-age and
+    gestation tables merged onto the bundled `speciesGestation` table
+    (configured species override the bundled values; the rest are kept)
+    for the Genetic Value Analysis to use. It fails soft: a missing or
+    unreadable configuration yields the bundled values with a warning
+    rather than an error.
 - Documentation
   - The example configuration file
     (`inst/extdata/example_nprcgenekeepr_config`) now documents that
