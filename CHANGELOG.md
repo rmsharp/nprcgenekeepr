@@ -15,6 +15,89 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-24 — Published issue \#73 Part 2 Slice 2: user-configurable Potential Parents gestation override is on `master` via PR \#79; **issue \#73 CLOSED** (Session 189)
+
+- **Deliverable (owner pick, single item):** publish S188’s issue \#73
+  Part 2 Slice 2 (the user-configurable gestation override wired through
+  the Potential Parents tab) from
+  `issue-73-part2-slice2-potential-parents` to `master`, folding the
+  user-facing NEWS entry into the SAME PR (Learning 157a), PR body
+  **“Closes \#73”** (the last line). **Admin/publish + docs** (the Slice
+  2 code was written/tested under strict TDD in S188 → TDD code-phases
+  N/A). **0 stakeholder corrections.** SOLO (a serial, irreversible git
+  sequence — a workflow adds risk, not coverage; held solo despite
+  ultracode, the S179/S181/S183/S187 judgment). Owner picked “Publish
+  \#73 Part 2 Slice 2” at orientation and “Merge now (merge commit)” at
+  the `AskUserQuestion` merge gate.
+- **Pre-publish content (one PR, Learning 157a):** appended one
+  dev-version `NEWS.Rmd` *Changes* bullet — the Potential Parents tab’s
+  “Maximum Gestational Period (days)” default now honors the same
+  `speciesOverridesPath` CSV + `gestationDefault` config entry the
+  Genetic Value Analysis uses, and is unchanged with no configuration.
+  **Self-framed to supersede the Slice 1 “making the Potential Parents
+  tab configurable is the remaining part of issue \#73” line**
+  (append-don’t-rewrite, Learning 171, fulfilling 171’s own prediction)
+  — “This completes issue \#73: both the Genetic Value Analysis and the
+  Potential Parents tab are now configurable.” Slice 2 added no new
+  exported function, so **no** *New features* bullet. Re-rendered
+  `NEWS.md` (permanent `html_preview:false`+`md_extensions:"-smart"`,
+  Learning 155) → **0 non-ASCII**, no stray `.html`, confined
+  pure-insertion (NEWS.Rmd +11 / NEWS.md +13).
+  `spell_check_package(".")` = 0 before AND after (Learning 175 — verb
+  idiom + backticked identifiers, 0-delta; no WORDLIST change).
+  Committed NEWS as `8ce3f937`; kept the S189 1B stub OUT of the PR
+  (stash-carried, popped clean post-merge).
+- **No push-master-first:** `master` == `origin/master` == `c512771a`
+  verified firsthand; the PR diff came out Slice-2-only = 3 commits
+  (S188 feat `e012e6ad` + S188 close-out `866b0a7f` + S189 NEWS
+  `8ce3f937`).
+- **PR + CI (did NOT merge blind — Learning 157b earned its keep):**
+  opened **PR \#79** → `master` (body “Closes \#73”). The `--watch`
+  exited 0, but the FRESH non-watch `gh pr checks 79` returned exit 1:
+  **`codecov/patch` FAILED — 76.93% of diff hit vs auto target 90.01%.**
+  All 9 `R CMD check`/lint/pkgdown/test-coverage jobs PASS
+  (incl. ubuntu-devel 16m29s) and `codecov/project` passes (89.99%,
+  −0.02%, flat). **Diagnosed firsthand:** the shortfall is the 2 new
+  `appServer` boot-wiring lines (`gestationTable`/`gestationDefault`
+  passed to the module), which `covr` cannot execute — verified instead
+  by S188’s deparse-match test + the Phase-3E runtime smoke; the module
+  logic (both `pedigreeGestationDefault` branches, the reactive) IS
+  covered. Slice 1’s PR \#78 had the same wiring blind spot but passed
+  at 94.24% — its large reader-heavy patch diluted it; Slice 2’s
+  ~13-line patch could not. A patch-composition artifact, not a
+  deliverable defect. `codecov/patch` is NOT a required check (no branch
+  protection on `master`; `mergeStateStatus` UNSTABLE, `mergeable`
+  MERGEABLE). **Learning 177** added.
+- **Merge (owner-decided via `AskUserQuestion` — “Merge now (merge
+  commit)”):** surfaced the red `codecov/patch` + its diagnosed cause to
+  the owner BEFORE merging (not papered over, no test code added in a
+  publish session — FM \#18/#25); owner chose merge now. Guarded fresh
+  pre-merge re-check (state OPEN, mergeable MERGEABLE,
+  `headRefOid`==local `8ce3f937`, `origin/master`==`c512771a`);
+  `gh pr merge 79 --merge` → merge commit **`0980a028`** (verified
+  MERGED firsthand, `mergedAt 2026-06-24T18:00:22Z`). **Issue \#73
+  verified CLOSED** (`closedAt 2026-06-24T18:00:23Z` == merge time —
+  “Closes \#73” worked).
+- **Reconcile (Learning 146):** `git checkout master`; verified `fetch`
+  (exit 0, `c512771a..0980a028`); **ancestor-gated the reset** (both
+  old-master `c512771a` AND merged branch tip `8ce3f937` asserted
+  ancestors of `origin/master` `0980a028`) →
+  `git reset --hard origin/master`; `git stash pop` restored the S189
+  stub cleanly (pre-existing `WIP on dev` stash untouched).
+- **Branch cleanup (verified-merged-before-delete):** confirmed PR \#79
+  MERGED + tip ancestor of master; `git branch -d` (was `8ce3f937`) +
+  `git push origin --delete`; verified remote gone (`gh api` → **404**
+  “Branch not found”).
+- **Verification (Phase-3E):** the merge tree was build-verified by PR
+  \#79’s `R CMD check` x5 matrix (incl. ubuntu-devel 16m29s), all PASS —
+  stronger than a single local check; confirmed the deliverable
+  firsthand on `master` after the reset — the appServer wiring
+  (`R/appServer.R:319-320`), the renamed internal reactive
+  `gestationDefaultReactive`, the `gestationDefault = NULL` param, and
+  the Slice 2 NEWS bullet are all live. **Issue \#73 is CLOSED** — Part
+  1 (data) + Part 2 Slice 1 (GVA tab) + Part 2 Slice 2 (Potential
+  Parents tab) are all on `master`.
+
 ### 2026-06-24 — Implemented issue \#73 Part 2 Slice 2: user-configurable gestation override wired through the Potential Parents tab (Session 188)
 
 - **Deliverable (owner pick, single item, strict-TDD IMPLEMENTATION

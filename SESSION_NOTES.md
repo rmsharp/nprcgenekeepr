@@ -7,6 +7,230 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 189 Did
+
+**Deliverable:** Publish **issue \#73 Part 2 Slice 2** – S188’s
+user-configurable Potential Parents gestation override – from branch
+`issue-73-part2-slice2-potential-parents` to `master` via PR, folding
+the user-facing NEWS entry into the SAME PR (Learning 157a); PR body
+**“Closes \#73”** so the merge auto-closes \#73. **(DONE – merged to
+`master` via PR \#79, merge commit `0980a028`; \#73 verified CLOSED;
+branch deleted.)** **Started / Completed:** 2026-06-24 / 2026-06-24
+**Status:** **DONE.** Admin/publish + docs session (Slice 2 code was
+written/tested under strict TDD in S188 -\> **TDD code-phases N/A**
+every response). **0 stakeholder corrections.** SOLO (serial,
+irreversible git – a workflow adds risk not coverage; held solo despite
+ultracode, the S179/S181/S183/S187 judgment). Owner picked “Publish \#73
+Part 2 Slice 2” at orientation and “Merge now (merge commit)” at the
+`AskUserQuestion` merge gate. - **Pre-publish content (one PR, Learning
+157a):** appended ONE dev-version `NEWS.Rmd` *Changes* bullet – the
+Potential Parents tab’s “Maximum Gestational Period (days)” default now
+honors the same `speciesOverridesPath` CSV + `gestationDefault` config
+entry the GVA uses; unchanged with no configuration. **Self-framed to
+supersede the Slice 1 “making the Potential Parents tab configurable is
+the remaining part of issue \#73” line** (Learning 171, fulfilling 171’s
+own prediction): “This completes issue \#73: both the Genetic Value
+Analysis and the Potential Parents tab are now configurable.” Slice 2
+added no new export -\> **no** *New features* bullet. Re-rendered
+`NEWS.md` (`html_preview:false`+`md_extensions:"-smart"`, 155): **0
+non-ASCII**, no `.html`, confined pure-insertion (NEWS.Rmd +11 / NEWS.md
++13). `spell_check_package(".")` = 0 before AND after (175 – verb
+idiom + backticks, 0-delta; no WORDLIST change). Committed NEWS
+`8ce3f937`; S189 1B stub stash-carried OUT of the PR, popped clean
+post-merge. - **Publish mechanics:**
+`master`==`origin/master`==`c512771a` verified FIRSTHAND (no
+push-master-first); pushed branch; opened **PR \#79** -\> `master` (body
+“Closes \#73”). PR diff Slice-2-only = 3 commits (S188 feat `e012e6ad` +
+S188 close-out `866b0a7f` + S189 NEWS `8ce3f937`). - **CI – Learning
+157b EARNED ITS KEEP (caught a red check):** the
+`gh pr checks 79 --watch` exited 0, but the FRESH non-watch re-query
+returned exit 1 – **`codecov/patch` FAILED, 76.93% of diff hit vs auto
+target 90.01%.** All 9 `R CMD check`/lint/pkgdown/test-coverage jobs
+PASS (incl. ubuntu-devel 16m29s) + `codecov/project` PASS (89.99%,
+-0.02%, flat). **Diagnosed firsthand:** the shortfall is the 2 new
+`appServer` boot-wiring lines (`gestationTable`/`gestationDefault`),
+which `covr` cannot execute (S188 verified them by a `deparse`-match
+test + Phase-3E runtime smoke, neither counted by covr); the module
+logic IS covered. Slice 1’s PR \#78 had the SAME wiring blind spot but
+passed at 94.24% – its large reader-heavy patch diluted it; Slice 2’s
+~13-line patch could not. A patch-composition artifact, NOT a
+deliverable defect. `codecov/patch` is NOT a required check (no branch
+protection on `master`; UNSTABLE/MERGEABLE). **Learning 177.** Surfaced
+the red check + diagnosed cause to the owner via `AskUserQuestion` (did
+NOT paper over it, did NOT add test code in a publish session – FM
+\#18/#25); owner chose “Merge now.” - **Merge + reconcile:** guarded
+fresh pre-merge re-check (OPEN/MERGEABLE, `headRefOid`==local
+`8ce3f937`, `origin/master`==`c512771a`); `gh pr merge 79 --merge` -\>
+**`0980a028`** (verified MERGED, `mergedAt 18:00:22Z`); **\#73 verified
+CLOSED** (`closedAt 18:00:23Z` == merge time, “Closes \#73” worked);
+ancestor-gated `reset --hard` (old-master `c512771a` AND tip `8ce3f937`
+both ancestors of `0980a028`, Learning 146); `git stash pop` restored
+the stub (pre-existing `WIP on dev` stash untouched);
+verified-merged-before-delete branch cleanup (`gh api` 404).
+
+**Phase-3E (build-equivalent / runtime smoke): SATISFIED.** The merge
+tree was build-verified by PR \#79’s `R CMD check` x5 matrix
+(incl. ubuntu-devel 16m29s), all PASS – stronger than a single local
+check. Confirmed FIRSTHAND on `master` after the reset: the appServer
+wiring (`R/appServer.R:319-320`), the renamed internal reactive
+`gestationDefaultReactive`, the `gestationDefault = NULL` param
+(`R/modPotentialParents.R:90,228`), and the Slice 2 NEWS bullet are all
+live; `master`==`origin/master`==`0980a028`. (No browser click – the e2e
+harness is baseline-flaky and unchanged by a docs/publish session; the
+CI matrix + the firsthand master checks are the runtime evidence.)
+
+**Session 188 Handoff Evaluation (by Session 189): Score 9/10.** S188’s
+`=> SUGGESTED NEXT` named THIS session first (“(Publish \#73 Part 2
+Slice 2 – this CLOSES \#73) the predicted next”) and gave a COMPLETE,
+accurate turn-by-turn recipe: `git push -u origin ...` -\> PR -\>
+`master` body “Closes \#73” (the LAST part; **verify \#73 closed after
+merge**), fold NEWS into the SAME PR (157a), self-frame to supersede the
+Slice 1 line WITHOUT rewriting it (171), watch CI + fresh non-watch
+re-query (157b), `AskUserQuestion`-gate the merge, ancestor-gated
+`reset --hard` + verified-merged-before-delete (146), SOLO, spell-check
+before/after (159/175), render NEWS with the permanent knobs (155).
+**Every load-bearing fact held FIRSTHAND:** the branch was local +
+unpushed exactly as gotcha 1 said, `master`==`origin/master`==`c512771a`
+as claimed, the supersede line was exactly the one named, “Closes \#73”
+closed \#73, spelling held 0-delta. **The -1:** the handoff (and S187
+before it) reported “all 10 CI checks PASS” for the prior publishes and
+did not anticipate that the SMALLER Slice 2 patch would FAIL
+`codecov/patch` on the same appServer-wiring blind spot that Slice 1’s
+larger patch diluted. Arguably unforeseeable (it depends on the publish
+PR’s patch composition, which includes the NEWS commit) – it became
+Learning 177 – so a small deduction. ROI maximal: the recipe was a
+script I executed without re-deriving anything; the one surprise was
+handled by the very guard (157b) the recipe told me to run.
+
+**Self-assessment (Session 189): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check -\> HEAD `866b0a7f` = S188 close-out, no
+undocumented commits), reported, STOPPED for the owner’s pick; claimed
+with a 1B stub BEFORE technical work; declared TDD N/A every response.
+**Strengths:** (1) **Learning 157b earned its keep** – the `--watch`
+exited 0 but the fresh non-watch re-query caught the red
+`codecov/patch`; did NOT merge blind; (2) **diagnosed the red check
+firsthand** rather than guessing – pulled the codecov check-run summary,
+read the R diff, checked branch protection, compared to Slice 1’s PR
+\#78 – and correctly attributed it to structurally-uncovered appServer
+boot-wiring (verified by other means), confirming it’s not a required
+check and not a deliverable defect -\> genuinely-new **Learning 177**;
+(3) **surfaced the decision to the owner** via `AskUserQuestion` rather
+than papering over a red check OR unilaterally adding test code in a
+publish session (FM \#18/#25); (4) **ran every publish guard** –
+`master`==`origin/master` firsthand, guarded pre-merge re-check,
+`AskUserQuestion`-gated merge, **\#73 verified CLOSED**, ancestor-gated
+reset (both old-master AND tip), verified-merged-before-delete (`gh api`
+404); (5) executed Learning 171’s self-frame-supersede exactly (prior
+bullet untouched, 0-delta spelling, confined pure-insertion render); (6)
+close-out docs pushed to origin (\[\[push-close-out-docs-to-origin\]\]).
+**Weaknesses (honest):** (a) **lower base difficulty** – admin/publish
+following a turn-by-turn recipe; the value is the disciplined
+`codecov/patch` diagnosis + the owner-gated decision, not depth -\>
+ceiling ~8; (b) **two gh `--json` field fumbles** – `baseRefOid`
+(invalid, broke the first guarded-merge query – though the guard then
+refused to merge on the empty values, so the safety net WORKED) and
+`stateReason` (invalid, errored the first \#73 check); both recovered
+immediately with valid fields, but cleaner first queries would have
+avoided the blips; (c) diagnosed the uncovered lines from the diff +
+codecov summary rather than a local `covr` run – confident and correct,
+but a local covr would have been line-level definitive (judged it not
+worth a full-suite covr run for a non-required check). Clean,
+fully-guarded publish that caught + correctly handled a NEW red check
+and recorded the new learning, but moderate difficulty + two minor
+fumbles -\> 8/10.
+
+**Learnings:** **Learning 177** added to `PROJECT_LEARNINGS.md` –
+`codecov/patch` is patch-composition-sensitive (a small publish patch
+can fail where the same wiring passed in a larger slice); diagnose
+firsthand (codecov check-run summary + R diff + branch-protection
+check + prior-PR comparison), confirm it’s not a required check, and
+surface the merge-vs-defer decision to the owner rather than papering
+over or adding test code in a publish session; plus the `gh`
+invalid-`--json`-field gotcha (`baseRefOid`/`stateReason` empty the
+whole query). Carried as applied:
+\[\[consult-project-source-of-truth\]\] (publish convention:
+implementation-\>CHANGELOG, publish-\>NEWS; build-equivalent),
+\[\[observation-vs-decision\]\] / \[\[ascii-only-in-question-options\]\]
+/ \[\[avoid-jargon-use-plain-language\]\] (the merge-gate
+`AskUserQuestion`, plain-ASCII labels, recommended-first),
+\[\[check-process-history-before-rerunning-work\]\] (read S188 handoff +
+the load-bearing learnings firsthand),
+\[\[backlog-vs-changelog-placement\]\] (publish -\> CHANGELOG; \#73 -\>
+CLOSED), \[\[push-close-out-docs-to-origin\]\] (push this close-out to
+origin/master FF); Learnings 146/155/157/157a/157b/159/161/171/175 (the
+publish mechanics this session executed).
+
+**=\> SUGGESTED NEXT = owner’s pick.** `origin/master` == local `master`
+== `0980a028` after this S189 close-out push; **issue \#73 is CLOSED**
+(Part 1 data + Slice 1 GVA tab + Slice 2 Potential Parents tab all LIVE
+on `master`); no dangling branches; dashboard 98/100. Natural options
+(plain ASCII): - **(#76 – Reading A, deep genetics)** de-inflate the
+genome-uniqueness statistic for both-unknown founders inside
+`calcGU`/`calcA`/gene-drop. NOT a “just implement” – it reverses the
+documented `calcGU.R:10-34` stance and breaks golden invariants, so a
+RATIFICATION first, THEN a separate TDD implement (two sessions min; do
+NOT bundle). - **(Optional – codecov/patch coverage follow-up)** add
+execution coverage for the appServer boot-wiring (BOTH the Slice 2
+Potential Parents and the analogous Slice 1 GVA module wiring), via a
+test that BOOTS `appServer` under coverage so covr counts those lines
+-\> greens `codecov/patch` on future small patches. This is a separate
+strict-TDD IMPLEMENTATION session (mind the Phase-3E `getSiteInfo` boot
+trap, Learning 176). Owner picked “Merge now” (not “Merge + file
+follow-up”), so this is NOT tracked as an issue – raise it only if the
+owner wants it. - **(Other)** \#37 (unused exports); \#36 (chimpanzee
+age-pyramid); \#2 (GVA iteration-count advice); \#28 (large, own plan);
+older \#13/#12/#11/#10/#5/#1; CRAN Phase 5 (owner-run,
+`docs/planning/cran-2.0.0-phase5-runbook.md`). **Do NOT** reopen \#73
+(it is correctly CLOSED – all parts on `master`); the **same latent
+comment-strip bug remains UNFIXED in `R/getConfigApiKey.R`** (out of
+scope, Learning 174 – flag if apiKey-from-example misbehaves).
+
+**Key files (this session):** **CHANGED – the publish content (committed
+to the branch as `8ce3f937`, now on `master` via PR \#79):** `NEWS.Rmd`
+(+1 dev-version *Changes* bullet), `NEWS.md` (re-rendered). **CHANGED –
+close-out docs (this S189 docs commit, direct to local `master`, then
+pushed to origin):** `CHANGELOG.md` (S189 `[Unreleased]` publish entry),
+`PROJECT_LEARNINGS.md` (Learning 177), `SESSION_NOTES.md` (this
+handoff + the 1B stub it overwrote). **Read firsthand (publish
+verification, NOT changed):** `R/appServer.R:319-320` (wiring on
+master), `R/modPotentialParents.R` (param + `gestationDefaultReactive`),
+`codecov.yml` (patch target auto / threshold 1%), the S188 handoff,
+Learnings 146/155/157/157b/159/171/175. **NOT changed:** any `R/` logic,
+tests, or `man/` (publish session – the code shipped as S188 wrote it).
+**NOT committed (standing keep):** `PED_GV_AUDIT_2026-05-30.html`
+(untracked); `.DS_Store`.
+
+**Gotchas:** (1) **Issue \#73 is CLOSED** – Part 1 (data) + Slice 1 (GVA
+tab) + Slice 2 (Potential Parents tab) are ALL on `master`. Do NOT
+reopen unless reverting. (2) **`codecov/patch` is informational here
+(Learning 177)** – `master` has NO branch protection, so a red
+`codecov/patch` does NOT block a merge; on a SMALL patch it can fail on
+a few uncovered glue lines even when the wiring is verified by other
+means. The appServer boot-wiring (both the Slice 1 GVA and Slice 2
+Potential Parents module wiring) is STRUCTURALLY uncovered by covr
+(appServer is never executed under coverage); to green `codecov/patch`
+on a future small patch, add a test that BOOTS `appServer` under
+coverage – an IMPLEMENTATION session, not a publish (mind the
+`getSiteInfo` boot trap, Learning 176). (3) **`gh` invalid-field gotcha
+(Learning 177c)** – `gh pr view` has NO `baseRefOid`; `gh issue view`
+has NO `stateReason`; an invalid `--json` field empties the WHOLE query
+(a guard reads it as failure). Use valid fields
+(`state`/`mergeable`/`headRefOid` for PRs; `state`/`closed`/`closedAt`
+for issues) and verify `origin/master` via `git rev-parse` separately.
+(4) **`getConfigApiKey` still has the latent comment-strip bug**
+(Learning 174, out of scope). (5) Carried standing keeps (unchanged):
+package **ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without a LabKey credential/config; exactly ONE codecov config
+(`codecov.yml`); NEWS render traps CLOSED at source
+(`html_preview:false`+`md_extensions:"-smart"`, 155); `git pull` is
+rebase + chokes on `.DS_Store` -\> use `fetch`+`reset` (135); post-merge
+`fetch` before `reset --hard` ancestor-gated (146); `skip_on_cran()`
+`testServer` tests need `NOT_CRAN=true`; build-equivalent is
+`devtools::check(vignettes = FALSE)` = 0/0/0 (Learning 161); a 0/0/0
+check does NOT imply spelling-clean – run `spell_check_package` (175).
+
 ### What Session 188 Did
 
 **Deliverable:** Implement **issue \#73 Part 2 Slice 2** – the
