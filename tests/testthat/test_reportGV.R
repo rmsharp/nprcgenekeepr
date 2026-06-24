@@ -285,3 +285,76 @@ test_that("reportGV with explicit NULL overrides equals the no-override default 
   expect_equal(ia, ib)
 })
 
+# ---------------------------------------------------------------------------
+# Issue #76 (Reading A): reportGV declines to credit genome uniqueness whose
+# apparent rarity is an artifact of unknown parentage. Animals whose parentage
+# is "both unknown" (U-id aware) AND that lack a recorded origin -- the
+# "Undetermined" / noParentage set the displayed rank demotes (issue #9 Slice 3)
+# -- have their reported genome uniqueness set to 0 in BOTH the report's gu
+# column and the returned $gu element. Imports (both-unknown WITH a recorded
+# origin) and all known / one-unknown animals are preserved. calcGU()/calcA()/
+# geneDrop() are untouched -- this is a report-layer colony policy.
+#
+# A fixture WITH an origin column is required to exercise the import-preservation
+# branch (qcPed has no origin column). guThresh = 2 so the both-unknown founders
+# AND the U-id-parented proband carry strictly positive genome uniqueness on the
+# pre-de-inflation code, making the change observable; a fixed seed keeps the
+# preserved values deterministic. Only the discriminating properties are asserted
+# (== 0 for targets, > 0 for preserved), so the test is robust to RNG / R-version
+# differences.
+# ---------------------------------------------------------------------------
+makeOriginTestPed <- function() {
+  ped <- data.frame(
+    id = c("U0001", "U0002", "M1", "F1", "M2", "F2", "P1", "O1", "O2", "O3"),
+    sire = c(NA, NA, NA, NA, NA, NA, "U0001", "M1", "M2", "M1"),
+    dam = c(NA, NA, NA, NA, NA, NA, "U0002", "F1", "F2", "F2"),
+    sex = c("M", "F", "M", "F", "M", "F", "M", "F", "M", "F"),
+    origin = c(NA, NA, NA, NA, "CHINA", "CHINA", NA, NA, NA, NA),
+    stringsAsFactors = FALSE
+  )
+  ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+  ped
+}
+
+test_that("reportGV de-inflates gu to 0 for unknown-origin both-unknown animals, preserving imports (issue #76)", {
+  ped <- makeOriginTestPed()
+  set.seed(17L)
+  gv <- reportGV(ped, guIter = 1000L, guThresh = 2L)
+
+  rptGu <- stats::setNames(gv$report$gu, as.character(gv$report$id))
+  eltGu <- stats::setNames(gv$gu$gu, rownames(gv$gu))
+
+  ## ONPRC-born both-unknown founders (origin NA) -> de-inflated to 0 in BOTH
+  ## the report's gu column and the returned $gu element.
+  expect_equal(unname(rptGu[c("M1", "F1")]), c(0, 0))
+  expect_equal(unname(eltGu[c("M1", "F1")]), c(0, 0))
+
+  ## imports (both-unknown WITH a recorded origin) -> preserved, not de-inflated
+  expect_true(all(rptGu[c("M2", "F2")] > 0))
+  expect_equal(unname(rptGu[c("M2", "F2")]), unname(eltGu[c("M2", "F2")]))
+
+  ## a fully-known animal is left unchanged (not forced to 0)
+  expect_true(rptGu[["O2"]] > 0)
+  expect_equal(rptGu[["O2"]], eltGu[["O2"]])
+})
+
+test_that("reportGV gu de-inflation predicate is U-id aware, not raw is.na (issue #76)", {
+  ped <- makeOriginTestPed()
+  set.seed(17L)
+  gv <- reportGV(ped, guIter = 1000L, guThresh = 2L)
+
+  rptGu <- stats::setNames(gv$report$gu, as.character(gv$report$id))
+  eltGu <- stats::setNames(gv$gu$gu, rownames(gv$gu))
+
+  ## P1's parents are generated U-ids (U0001 / U0002), not literal NA, and P1
+  ## has no recorded origin. classifyParentage() treats U-ids as unknown, so P1
+  ## is "both unknown" / Undetermined and must be de-inflated to 0. A raw
+  ## is.na(sire) & is.na(dam) predicate would wrongly leave P1's gu > 0.
+  expect_identical(
+    as.character(gv$report$parentage[gv$report$id == "P1"]),
+    "both unknown"
+  )
+  expect_equal(rptGu[["P1"]], 0)
+  expect_equal(eltGu[["P1"]], 0)
+})
+

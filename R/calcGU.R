@@ -33,6 +33,12 @@
 #' calculated by this function should match the "founder genome uniqueness"
 #' measure calculated by Pedscope.
 #'
+#' Note that \code{calcGU} computes this statistic for every animal and still
+#' includes living founders' alleles; it is unchanged. The genetic value report
+#' (\code{\link{reportGV}}) separately applies a colony decline-to-credit policy
+#' that reports genome uniqueness as 0 for unknown-origin both-unknown
+#' ("Undetermined") animals (issue #76).
+#'
 #' @description \{Genome Uniqueness Functions\}\{\}
 #'
 #' @references Ballou JD, Lacy RC.  1995. Identifying genetically important

@@ -4,10 +4,19 @@
 ## This file is part of nprcgenekeepr
 #' This is the main function for the Genetic Value Analysis.
 #'
+#' Reported genome uniqueness (\code{gu}) is set to 0 for "Undetermined"
+#' animals -- those with both parents unknown (U-id aware) and no recorded
+#' origin -- because their apparent uniqueness is an artifact of unknown
+#' parentage (decline-to-credit policy, issue #76). Imports (both parents
+#' unknown but with a recorded origin) and all other animals are unaffected,
+#' and \code{\link{calcGU}} itself is unchanged.
+#'
 #' @return An object of class \code{nprcgenekeeprGV}: a list with elements
 #' \code{report} (a dataframe with the genetic value report, with animals
 #' ranked in order of descending value), \code{kinship} (the kinship matrix),
-#' \code{gu} (genome uniqueness values), \code{fe} (founder equivalents),
+#' \code{gu} (genome uniqueness values; reported as 0 for unknown-origin
+#' both-unknown "Undetermined" animals, whose apparent uniqueness is an
+#' artifact of unknown parentage (issue #76)), \code{fe} (founder equivalents),
 #' \code{fg} (founder genome equivalents), \code{maleFounders} and
 #' \code{femaleFounders} (dataframes of the known male and female founder
 #' records), \code{nMaleFounders} and \code{nFemaleFounders} (the counts of
@@ -180,8 +189,26 @@ reportGV <- function(ped, guIter = 5000L, guThresh = 1L, pop = NULL,
   # Issue #9 Slice 3: classify each proband's parentage (U-id aware) so the
   # report can flag both-unknown founders and the displayed rank can demote
   # those lacking a recorded origin. Both-known and one-unknown animals rank
-  # normally; kinship() and genome uniqueness are untouched.
+  # normally; kinship() is untouched.
   parentage <- classifyParentage(demographics$sire, demographics$dam)
+
+  # Issue #76 (Reading A): decline to credit genome uniqueness whose apparent
+  # rarity is an artifact of unknown parentage. Both-unknown animals (U-id
+  # aware, via parentage above) that lack a recorded origin -- the
+  # "Undetermined" / noParentage set orderReport() demotes -- have both
+  # gene-drop alleles minted from unknown-parent phantom founders, so their
+  # reported genome uniqueness is set to 0. Imports (both-unknown WITH a
+  # recorded origin) and all known / one-unknown animals are preserved.
+  # calcGU() itself is unchanged; this is a report-layer colony policy.
+  # Mutating gu here updates BOTH the report's gu column (via the cbind below)
+  # and the returned $gu element.
+  origin <- if ("origin" %in% names(demographics)) {
+    demographics$origin
+  } else {
+    rep(NA_character_, nrow(demographics))
+  }
+  undetermined <- parentage == "both unknown" & is.na(origin)
+  gu$gu[undetermined] <- 0.0
 
   finalData <- cbind(
     demographics, indivMeanKin, zScores, gu, offspring, parentage
