@@ -14,7 +14,8 @@ modPotentialParentsServer(
   id,
   pedigree = NULL,
   minParentAge = 2,
-  gestationTable = NULL
+  gestationTable = NULL,
+  gestationDefault = NULL
 )
 ```
 
@@ -40,7 +41,16 @@ modPotentialParentsServer(
   when defaulting the gestation window; `NULL` (the default) uses the
   bundled
   [`speciesGestation`](https://github.com/rmsharp/nprcgenekeepr/reference/speciesGestation.md)
-  table.
+  table. Supplied at boot from the user-configurable species overrides
+  (issue \#73 Part 2), so a colony's CSV values drive the prefill
+  default.
+
+- gestationDefault:
+
+  optional integer fallback (days) for a pedigree whose species is
+  absent from `gestationTable`, passed through to the gestation prefill;
+  `NULL` (the default) keeps the built-in 210. Supplied at boot from the
+  user-configurable species overrides (issue \#73 Part 2).
 
 ## Value
 

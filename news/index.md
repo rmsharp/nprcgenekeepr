@@ -127,6 +127,20 @@
     Genetic Value Analysis configurable; making the Potential Parents
     tab configurable is the remaining part of issue
     [\#73](https://github.com/rmsharp/nprcgenekeepr/issues/73).
+  - In the Potential Parents tab, the “Maximum Gestational Period
+    (days)” default now reflects the same user-configurable species
+    overrides in the configuration file. The value, previously looked up
+    only from the bundled `speciesGestation` table, now also honors an
+    optional `speciesOverridesPath` CSV (its gestation column overrides
+    the bundled value for the species listed) and an optional
+    `gestationDefault` entry (the value used for species absent from the
+    table), so the suggested conception window for the loaded pedigree’s
+    species matches what the Genetic Value Analysis uses. With no
+    configuration file, or none of these entries, the default is
+    unchanged (the bundled table, or 210 days). This completes issue
+    [\#73](https://github.com/rmsharp/nprcgenekeepr/issues/73): both the
+    Genetic Value Analysis and the Potential Parents tab are now
+    configurable.
 - New features
   - Added the exported
     [`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md),

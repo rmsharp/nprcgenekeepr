@@ -15,6 +15,69 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-24 — Implemented issue \#73 Part 2 Slice 2: user-configurable gestation override wired through the Potential Parents tab (Session 188)
+
+- **Deliverable (owner pick, single item, strict-TDD IMPLEMENTATION
+  session):** the user-configurable species gestation override now
+  reaches the Potential Parents tab’s gestation-window prefill, per
+  `docs/planning/issue73-part2-user-configurable-plan.md` Slice 2.
+  Committed to branch `issue-73-part2-slice2-potential-parents`; **not
+  published** (PR → CI → merge is a separate session, FM \#18/#25).
+  Every TDD transition `AskUserQuestion`-gated (PRE-RED→RED→GREEN; no
+  REFACTOR needed — 0 lints, code already clean). **0 stakeholder
+  corrections.** Owner picked “implement Slice 2” at orientation,
+  “plan-literal plain params” at the pre-RED approach gate, and approved
+  each phase transition.
+- **Reused Slice 1’s reader (no re-merge):**
+  [`loadSpeciesOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSpeciesOverrides.md)
+  already runs at boot into `shared$speciesOverrides` (Slice 1),
+  carrying the merged `gestationTable` (D4 — user CSV merged onto
+  bundled `speciesGestation`) and the `gestationDefault` fallback. Slice
+  2 only wires those two fields down to the existing prefill seam.
+- **Threading (R2 honored):** added a `gestationDefault = NULL` argument
+  to `pedigreeGestationDefault` and `modPotentialParentsServer`,
+  threaded to `getSpeciesGestation`’s `default` via omit-when-NULL
+  (`if (is.null(gestationDefault)) accessor(...) else accessor(..., default = gestationDefault)`)
+  so the accessor’s built-in 210 applies for no-config; wired
+  `appServer` (`R/appServer.R:313-318`) to pass
+  `gestationTable = shared$speciesOverrides$gestationTable` and
+  `gestationDefault = shared$speciesOverrides$gestationDefault` (today
+  it passed NEITHER).
+- **Name-collision fix (Learning 176):** the module already had a local
+  reactive `gestationDefault` that is ALSO its public returned key — a
+  same-named argument would have shadowed it inside the closure and
+  silently passed the reactive object instead of the value. Renamed the
+  internal reactive to `gestationDefaultReactive` (kept the public key
+  `gestationDefault`); the argument stays a lazily-forced promise so the
+  boot-loaded override (populated by an `observe` after module
+  construction) is read correctly.
+- **D5 prefill-only scope respected:**
+  `gestationTable`/`gestationDefault` drive only the suggested-window
+  prefill, never the computed window (the module forces
+  `maxGestationalPeriod` non-NULL, so `getPotentialParents` never
+  consults the table) — `R/modPotentialParents.R:242` untouched. No
+  scope creep to per-animal windows.
+- **Backward-compatibility invariant (hard acceptance test):** both new
+  arguments default `NULL`; no config file ⇒
+  `shared$speciesOverrides$gestationTable`/`$gestationDefault` are
+  `NULL` ⇒ bundled table + built-in 210, byte-identical to today.
+- **Verification:** 6 new tests in `test_modPotentialParents.R` (RED
+  confirmed failing for the right reason — unused argument / unwired
+  appServer); targeted file green (77 expectations, 0/0); clean
+  regression read **2986 expectations / 0 failed / 0 error** across 210
+  files (0 true offenders); `spell_check_package(".")` = 0 (Learning 175
+  reflex); build-equivalent `devtools::check(vignettes = FALSE)` =
+  **0/0/0**; 0 lints on all changed files; **Phase-3E runtime smoke** —
+  a config CSV overriding RHESUS gestation (210→999) +
+  `gestationDefault = 300` drives the prefill to 999 (override) / 300
+  (species-less fallback), unlisted CYNOMOLGUS keeps its bundled 170,
+  `appServer` boots clean with `shared$speciesOverrides` populated, and
+  a no-config boot prefills 210 (identical to today).
+- **Issue \#73 stays OPEN** — Part 1 (data) + Part 2 Slice 1 (GVA tab)
+  live on `master`; Slice 2 (Potential Parents tab) now implemented on
+  the branch (unpublished). Its PR uses **“Closes \#73”** (the last
+  part).
+
 ### 2026-06-24 — Published issue \#73 Part 2 Slice 1: user-configurable GVA species overrides are on `master` via PR \#78; NEWS added; \#73 stays OPEN (Session 187)
 
 - **Deliverable (owner pick, single item):** publish S186’s issue \#73

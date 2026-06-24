@@ -7,6 +7,249 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 188 Did
+
+**Deliverable:** Implement **issue \#73 Part 2 Slice 2** – the
+user-configurable species gestation override wired through the
+**Potential Parents tab** end-to-end (reuse Slice 1’s
+`loadSpeciesOverrides` boot load -\> `appServer` -\>
+`modPotentialParentsServer` -\> `pedigreeGestationDefault` -\>
+`getSpeciesGestation`, driving the gestation-window prefill), per
+`docs/planning/issue73-part2-user-configurable-plan.md` Slice 2. **(DONE
+– code+tests+docs committed to branch
+`issue-73-part2-slice2-potential-parents`; NOT published – PR/CI/merge
+is a separate session, FM \#18/#25.)** **Started / Completed:**
+2026-06-24 / 2026-06-24 **Status:** **DONE.** Strict-TDD IMPLEMENTATION
+session. Every TDD transition `AskUserQuestion`-gated (**pre-RED
+approach -\> PRE-RED→RED -\> RED→GREEN**; no REFACTOR – 0 lints, code
+already clean, declared not skipped); phase declared every response. **0
+stakeholder corrections.** Owner picked “implement Slice 2” at
+orientation, **“plan-literal plain params”** at the pre-RED approach
+gate, and “Yes, proceed” at the RED and GREEN gates. - **PRE-RED
+(firsthand, current `master` after Slice 1):** Slice 1 already loads
+`shared$speciesOverrides <- loadSpeciesOverrides()` at boot
+(`appServer.R:74`), carrying the merged `gestationTable` (D4) +
+`gestationDefault`. The gap was exactly two things:
+`appServer.R:313-316` passed the module NEITHER override; and
+`pedigreeGestationDefault` had no `default` param (hardcoded the
+accessor’s 210). **Pre-RED approach decision (author’s call, surfaced
+via `AskUserQuestion`):** plan-literal plain params (keep the existing
+`gestationTable` seam + add a plain `gestationDefault`) vs a
+Slice-1-style reactive `speciesOverrides` param. Owner chose
+**plan-literal** – smallest diff, preserves the 3 existing \#46 prefill
+tests, matches the ratified plan verbatim. - **RED (6 tests appended to
+`test_modPotentialParents.R`):** 3 genuinely-failing unused-argument
+errors (unit `pedigreeGestationDefault(..., gestationDefault=300L)` x2;
+module testServer `gestationDefault=300L`), 1 failing appServer-wiring
+`deparse` match (appServer passed neither field), 2 regression/intent
+guards (R2 omit-when-NULL -\> built-in 210; override `gestationTable`
+RHESUS-\>999 drives the prefill). **Every numeric target verified
+firsthand against the real `getSpeciesGestation` BEFORE writing the
+assertions** (FM \#11/Learning 6). Confirmed RED failed for the right
+reason – error message literally
+`unused argument (gestationDefault = 300)` – with the 70 pre-existing
+expectations green. - **GREEN (minimal, 3 files):** added
+`gestationDefault = NULL` to `pedigreeGestationDefault` (R2
+omit-when-NULL threading to `getSpeciesGestation`’s `default`) and to
+`modPotentialParentsServer`; **renamed the internal reactive
+`gestationDefault` -\> `gestationDefaultReactive`** to avoid shadowing
+the new arg (the local was ALSO the public returned key – kept that key
+`gestationDefault`); wired `appServer.R:313-318` to pass
+`gestationTable = shared$speciesOverrides$gestationTable` +
+`gestationDefault = shared$speciesOverrides$gestationDefault`; roxygen
+`@param` on both; `devtools::document()` regenerated
+`man/modPotentialParentsServer.Rd`. **Backward-compat invariant:** both
+args default NULL -\> no config =\> bundled table + built-in 210,
+byte-identical to today. **Learning 176.**
+
+**Phase-3E (build-equivalent / runtime smoke): SATISFIED.**
+Build-equivalent `devtools::check(vignettes = FALSE)` = **0/0/0**. This
+changes Shiny boot wiring + a module arg, so a real runtime check was
+required (FM \#24): **(A)** a real temp config CSV (RHESUS gestation
+210-\>999) + `gestationDefault = 300` through
+[`loadSpeciesOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSpeciesOverrides.md)
+-\> module `testServer`: prefill `gestationDefault()` = 999 (override)
+and 300 (species-less fallback); unlisted CYNOMOLGUS kept its bundled
+170 (D4 merge). **(B)** no config file -\> NULL members -\> prefill 210
+(bundled, identical to today). **(C)** full `appServer` boots clean in
+[`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html)
+with the bundled example config + appended override keys;
+`shared$speciesOverrides` populated at boot (RHESUS 999,
+gestationDefault 300, CYNOMOLGUS 170). (No browser click – the e2e
+harness is baseline-flaky; the testServer A/B/C checks are the runtime
+evidence.) **One smoke fumble, recovered:** my first (C) used an
+override-ONLY config and hit the pre-existing ORIP-tab
+`getSiteInfo(expectConfigFile=FALSE)` strict parse (`appServer.R:294`)
+which STOPs on the missing `center` key – NOT a Slice 2 defect; re-ran
+(C) with the example config + appended keys (the S186 pattern). Captured
+in Learning 176.
+
+**Session 187 Handoff Evaluation (by Session 188): Score 9/10.** S187’s
+`=> SUGGESTED NEXT` named THIS session first (“Implement \#73 Part 2
+Slice 2 – Potential Parents tab … the predicted next, now unblocked”)
+and gave a complete, accurate recipe: reuse `loadSpeciesOverrides` and
+do NOT re-merge (D4 in the reader); wire `appServer` to pass
+`gestationTable`+`gestationDefault` (today passes NEITHER); add a
+`gestationDefault` param to
+`modPotentialParentsServer`+`pedigreeGestationDefault`; **D5
+prefill-only** (the module forces `maxGestationalPeriod` non-NULL); **R2
+– never thread a bare NULL into the accessor’s `default`, reuse the
+omit-when-NULL if/else**; plan §4 Slice 2 is the spec; RED values
+computed by the executor; PR uses “Closes \#73”; Phase-3E required;
+don’t bundle. **Every load-bearing fact held FIRSTHAND** – `appServer`
+passed neither override, the two target functions were exactly as named,
+D5 was structurally true, R2 was the right pattern. **The -1:** the
+<file:line> anchors were slightly stale (`appServer.R:307-310` -\>
+actually `313-316` after Slice 1 shifted them; the SEMANTIC claim
+“passes NEITHER” held exactly), and the handoff did not flag the
+internal-reactive **name collision** (the module’s local
+`gestationDefault` reactive == its public returned key, which a
+same-named arg would shadow) – I found that firsthand and it became
+Learning 176. A small deduction; ROI maximal (the R2 + D5 + no-re-merge
+caveats saved real cycles).
+
+**Self-assessment (Session 188): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check -\> HEAD `c512771a` = S187 close-out, no
+undocumented commits), reported, STOPPED for the owner’s pick; claimed
+with a 1B stub BEFORE technical work; declared the TDD phase every
+response and gated every transition (incl. the separate pre-RED approach
+decision) with `AskUserQuestion`. **Strengths:** (1) **strict TDD held**
+– RED-first, RED confirmed failing for the literal right reason
+(`unused argument`), GREEN minimal, no REFACTOR forced where none was
+warranted; (2) **caught a real design subtlety BEFORE it became a bug**
+– the param/reactive name collision (would have silently passed the
+reactive object as `default`) – and resolved it cleanly (rename
+internal, keep public key, keep the arg lazily forced), recording the
+WHY (incl. why pre-capturing the arg would break the boot timing) as the
+genuinely-new **Learning 176**; (3) **verified every RED numeric target
+with standalone R first** (FM \#11/Learning 6); (4) **applied the
+load-bearing caveats exactly** (R2 omit-when-NULL; D4 no-re-merge; D5
+prefill-only -\> `:242` untouched); (5) **fully verified** – targeted
+77/0/0, regression 2986/0/0, spelling 0 (Learning 175 reflex), build
+0/0/0, lint 0, Phase-3E A/B/C; (6) scope-disciplined (Slice 2 only,
+prefill-only, did NOT touch the computed-window path, did NOT bundle the
+publish). **Weaknesses (honest):** (a) **lower base difficulty than
+Slice 1** – this reuses Slice 1’s reader; the net source change is one
+arg + a rename + a 4-line wiring (~13 lines), not a heavy slice -\>
+ceiling ~8; (b) **one Phase-3E smoke fumble** – the override-only config
+tripped the pre-existing ORIP `getSiteInfo` strict parse; I should have
+anticipated it (S186 deliberately used the example config), recovered
+immediately but it cost a run. Clean, fully-verified, gated,
+scope-disciplined slice with a genuine design catch + new learning, but
+moderate difficulty -\> 8/10.
+
+**Learnings:** **Learning 176** added to `PROJECT_LEARNINGS.md` – adding
+a `moduleServer` arg whose name collides with an existing local reactive
+SHADOWS the arg (silent bug); rename the internal reactive, keep the
+public key, and keep the arg a lazily-forced promise (do NOT pre-capture
+it at setup – that forces the boot-loaded override to its pre-boot
+NULL); plus the Phase-3E config-completeness gotcha (an override-only
+config crashes boot via the pre-existing ORIP `getSiteInfo:294`; use
+example-config + appended keys). Carried as applied:
+\[\[consult-project-source-of-truth\]\] (strict-TDD RED→GREEN→REFACTOR +
+vertical-slice + build-equivalent), \[\[observation-vs-decision\]\] /
+\[\[ascii-only-in-question-options\]\] /
+\[\[avoid-jargon-use-plain-language\]\] (the pre-RED approach + the two
+phase gates – plain-ASCII, recommended-first),
+\[\[check-process-history-before-rerunning-work\]\] (read the ratified
+plan + S187 handoff + the load-bearing files firsthand),
+\[\[backlog-vs-changelog-placement\]\] (Slice 2 -\> CHANGELOG; \#73
+stays OPEN); Learnings 6 (read implementations first), 161
+(build-equivalent 0/0/0), 170 (gestation integer), 173 (rep(NULL,n)
+empties -\> R2), 175 (0/0/0 check does NOT imply spelling-clean – ran
+`spell_check_package` = 0).
+
+**=\> SUGGESTED NEXT = owner’s pick.** Slice 2 code is on LOCAL branch
+**`issue-73-part2-slice2-potential-parents`** (committed, **not yet
+pushed** – push is the publish session’s job), NOT on `master`; `master`
+== `origin/master` == `c512771a` (unchanged this session). Natural
+options (plain ASCII): - **(Publish \#73 Part 2 Slice 2 – this CLOSES
+\#73)** the predicted next.
+`git push -u origin issue-73-part2-slice2-potential-parents`, open a PR
+-\> `master`, body **“Closes \#73”** (the LAST part – so the merge
+auto-closes \#73; **verify \#73 closed after merge**), **fold a
+user-facing NEWS entry into the SAME PR** (Learning 157a). This NEWS
+bullet SUPERSEDES the Slice 1 dev “making the Potential Parents tab
+configurable is the remaining part of issue \#73” line – **self-frame**
+(“…the Potential Parents gestation window is now configurable too; issue
+\#73 is complete”), do NOT rewrite the prior bullet (Learning 171).
+Watch all CI + fresh non-watch `gh pr checks` re-query (157b – never
+trust `--watch`), `AskUserQuestion`-gate the merge, ancestor-gated
+`reset --hard` + verified-merged-before-delete (146). SOLO (serial
+irreversible git). **Spell-check before/after (159/175)**; render NEWS
+with `html_preview:false`+`md_extensions:"-smart"` (155). - **(#76 –
+Reading A, deep genetics)** de-inflate genome-uniqueness for
+both-unknown founders inside `calcGU`/`calcA`/gene-drop. NOT a “just
+implement” – it reverses the documented `calcGU.R:10-34` stance and
+breaks golden invariants; RATIFY first, THEN a separate TDD implement
+(two sessions min; do NOT bundle). - **(Other)** \#37 (unused exports);
+\#36 (chimpanzee age-pyramid); \#2 (GVA iteration-count advice); \#28
+(large, own plan); older \#13/#12/#11/#10/#5/#1; CRAN Phase 5
+(owner-run, `docs/planning/cran-2.0.0-phase5-runbook.md`). **Do NOT**
+bundle the publish with anything; **the publish PR uses “Closes \#73”**
+(verify it closes after merge); the **same latent comment-strip bug
+remains UNFIXED in `R/getConfigApiKey.R`** (out of scope, Learning 174 –
+flag if apiKey-from-example misbehaves).
+
+**Key files (this session):** **CHANGED – R/:**
+`R/modPotentialParents.R` (`pedigreeGestationDefault` +
+`modPotentialParentsServer` gain `gestationDefault = NULL`; internal
+reactive renamed `gestationDefaultReactive`, public returned key
+`gestationDefault` preserved), `R/appServer.R` (`:313-318` pass the two
+override fields). **CHANGED – tests:**
+`tests/testthat/test_modPotentialParents.R` (+6 tests). **CHANGED –
+docs/generated:** `man/modPotentialParentsServer.Rd` (regenerated
+`@param gestationDefault`). **CHANGED – close-out:** `CHANGELOG.md`
+(S188 `[Unreleased]` entry), `PROJECT_LEARNINGS.md` (Learning 176),
+`SESSION_NOTES.md` (this handoff + the 1B stub it overwrote). **Read
+firsthand (NOT changed):** `R/loadSpeciesOverrides.R` (reused – D4 merge
+already in the reader), `R/getSpeciesGestation.R` (the accessor –
+unchanged), `R/modGeneticValue.R` (the Slice 1 reactive-consume pattern,
+for contrast), `docs/planning/issue73-part2-user-configurable-plan.md`
+Slice 2 + §6. **Smoke script (scratchpad, NOT in repo):**
+`phase3e_slice2_smoke.R`. **NOT committed (standing keep):**
+`PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
+
+**Gotchas:** (1) **Slice 2 is on LOCAL branch
+`issue-73-part2-slice2-potential-parents`, NOT on `master`, NOT yet
+pushed** – the publish session’s Phase-0 git status will show this
+branch (left checked out). The publish session pushes it then opens the
+PR (do NOT re-implement). `master` == `origin/master` == `c512771a`. (2)
+**The publish PR uses “Closes \#73”** (the LAST part) – after merge,
+VERIFY \#73 actually closed. (3) **Name collision (Learning 176)** – the
+module’s internal reactive is `gestationDefaultReactive`; the public
+returned key stays `gestationDefault`; the `gestationDefault` arg must
+stay LAZILY forced (do NOT pre-capture it at module setup or it reads
+the pre-boot NULL). (4) **Phase-3E config-completeness (Learning 176)**
+– an override-ONLY config crashes `appServer` boot via the pre-existing
+ORIP `getSiteInfo(expectConfigFile=FALSE)` at `:294`; boot-smoke with
+the bundled example config + appended
+`speciesOverridesPath`/`gestationDefault`. (5) **D5 = prefill-only** –
+`gestationTable`/`gestationDefault` drive only the suggested-window
+prefill, NOT the computed window (`R/modPotentialParents.R:242`
+untouched); do NOT expand to per-animal windows. (6) **Backward-compat
+is the invariant** – both new args default NULL; no config =\> identical
+to today (explicitly tested A/B). (7) **A 0/0/0
+`devtools::check(vignettes=FALSE)` does NOT imply spelling-clean**
+(Learning 175) – I ran `spell_check_package(".")` = 0; the publish
+session MUST too, and keep the NEWS bullet in the clean idiom + backtick
+identifiers. (8) **`getConfigApiKey` still has the latent comment-strip
+bug** (Learning 174, out of scope). (9) The gestation column is
+**integer** (Learning 170); `getSpeciesGestation` returns integer. (10)
+**`testServer(appServer)` does NOT return the block’s value** – the
+block runs in the server env, so capture `shared$...` via `<<-` (used in
+Phase-3E (C)). (11) Carried standing keeps (unchanged): package
+**ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without a LabKey credential/config; exactly ONE codecov
+config; NEWS render traps CLOSED at source
+(`html_preview:false`+`md_extensions:"-smart"`, 155); `git pull` is
+rebase + chokes on `.DS_Store` -\> use `fetch`+`reset` (135); post-merge
+`fetch` before `reset --hard` ancestor-gated (146); `skip_on_cran()`
+`testServer` tests need `NOT_CRAN=true`; build-equivalent is
+`devtools::check(vignettes = FALSE)` = 0/0/0 (Learning 161).
+
 ### What Session 187 Did
 
 **Deliverable:** Publish **issue \#73 Part 2 Slice 1** – S186’s
