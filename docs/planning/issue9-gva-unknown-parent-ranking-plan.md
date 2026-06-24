@@ -242,6 +242,8 @@ For each **one-unknown** animal (exactly one parent missing/U-id; the other pare
 
 Slice 3 now owns BOTH the original classification AND the `gu` axis: (1) classify unknown-parent animals (flag both-unknown founders; distinguish genuine **imports** via `origin` from ONPRC-born missing-data stubs); (2) address the `gu` inflation that actually pins them at the top (D6); (3) reconcile the two rank paths so the classification/`gu` fix survives the Shiny `rank(indivMeanKin - gu)` override (D7); (4) update `test_orderReport:24,42` golden counts -> behavior assertions (D8). Requires a `runModularApp()` Phase-3E smoke (changes the displayed ranking). Needs a fixture **with** an `origin` column (`qcPed` lacks it).
 
+> **Update (S190):** Slice 3 (PR #75) shipped **Reading B** for item (2) — it ranks *around* the inflated `gu` (demotes the `noParentage` set) but leaves the `gu` *number* inflated. **Reading A** — actually de-inflating the displayed `gu` for the Undetermined set — was split out as **issue #76** and is now **ratified** in [`issue76-gu-deinflation-ratification.md`](issue76-gu-deinflation-ratification.md) (report-layer decline-to-credit: reported `gu` = 0 for both-unknown, no-origin animals; `calcGU`/`calcA`/gene-drop untouched). Implementation pending.
+
 ### G. New issue to file (owner-requested)
 
 *"Provide minimum male/female breeding-age values for all common colony NHP species in the species reproductive-parameter table, and make those values user-configurable."* Generalizes §D beyond the single seeded rhesus row and adds a user override path. **Filed as issue #73 (S177).**
