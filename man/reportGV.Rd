@@ -60,7 +60,9 @@ species absent from the table. \code{NULL} uses the built-in 210 days.}
 An object of class \code{nprcgenekeeprGV}: a list with elements
 \code{report} (a dataframe with the genetic value report, with animals
 ranked in order of descending value), \code{kinship} (the kinship matrix),
-\code{gu} (genome uniqueness values), \code{fe} (founder equivalents),
+\code{gu} (genome uniqueness values; reported as 0 for unknown-origin
+both-unknown "Undetermined" animals, whose apparent uniqueness is an
+artifact of unknown parentage (issue #76)), \code{fe} (founder equivalents),
 \code{fg} (founder genome equivalents), \code{maleFounders} and
 \code{femaleFounders} (dataframes of the known male and female founder
 records), \code{nMaleFounders} and \code{nFemaleFounders} (the counts of
@@ -68,6 +70,14 @@ those founders), and \code{total} (the total number of known founders).
 }
 \description{
 This is the main function for the Genetic Value Analysis.
+}
+\details{
+Reported genome uniqueness (\code{gu}) is set to 0 for "Undetermined"
+animals -- those with both parents unknown (U-id aware) and no recorded
+origin -- because their apparent uniqueness is an artifact of unknown
+parentage (decline-to-credit policy, issue #76). Imports (both parents
+unknown but with a recorded origin) and all other animals are unaffected,
+and \code{\link{calcGU}} itself is unchanged.
 }
 \examples{
 library(nprcgenekeepr)

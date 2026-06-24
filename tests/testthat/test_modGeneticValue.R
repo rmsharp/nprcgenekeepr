@@ -806,6 +806,11 @@ test_that("modGeneticValueServer demotes both-unknown founders to the bottom (#9
       # every founder sits in the bottom nF ranks
       expect_true(all(results$rank[results$id %in% founders] >
         (nrow(results) - nF)))
+
+      # Issue #76 (Reading A): these Undetermined founders (both-unknown, no
+      # recorded origin) have their displayed genome uniqueness de-inflated to
+      # 0 -- their apparent uniqueness is an artifact of unknown parentage.
+      expect_true(all(results$gu[results$id %in% founders] == 0))
     }
   )
 })

@@ -72,6 +72,12 @@ slightly higher for non-founders than what this function will calculate.
 The estimates of genome uniqueness for founders within the population
 calculated by this function should match the "founder genome uniqueness"
 measure calculated by Pedscope.
+
+Note that \code{calcGU} computes this statistic for every animal and still
+includes living founders' alleles; it is unchanged. The genetic value report
+(\code{\link{reportGV}}) separately applies a colony decline-to-credit policy
+that reports genome uniqueness as 0 for unknown-origin both-unknown
+("Undetermined") animals (issue #76).
 }
 \examples{
 library(nprcgenekeepr)
