@@ -15,6 +15,88 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-24 — Published issue \#73 Part 2 Slice 1: user-configurable GVA species overrides are on `master` via PR \#78; NEWS added; \#73 stays OPEN (Session 187)
+
+- **Deliverable (owner pick, single item):** publish S186’s issue \#73
+  Part 2 Slice 1 (the config-file → app → accessor override path for the
+  Genetic Value Analysis) from `issue-73-part2-slice1-gva-overrides` to
+  `master`, folding the user-facing NEWS entry into the SAME PR
+  (Learning 157a). **Admin/publish + docs** (the Slice 1 code was
+  written/tested under strict TDD in S186 → TDD code-phases N/A). **0
+  stakeholder corrections.** SOLO (a serial, irreversible git sequence —
+  a workflow adds risk, not coverage; held solo despite ultracode, the
+  S179/S181/S183 judgment). Owner picked “Publish \#73 Part 2 Slice 1”
+  at orientation and “Merge (merge commit)” at the `AskUserQuestion`
+  merge gate.
+- **Pre-publish content (one PR, Learning 157a):** appended two
+  dev-version `NEWS.Rmd` bullets — a *Changes* bullet (the minimum
+  male/female breeding ages, maximum gestation, and absent-species
+  values the Genetic Value Analysis uses to correct unknown-parent mean
+  kinship are now user-configurable via the configuration file: a
+  `speciesOverridesPath` CSV plus optional
+  `minBreedingAgeDefault`/`gestationDefault`) and a *New features*
+  bullet (the exported
+  [`loadSpeciesOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSpeciesOverrides.md)
+  reader). **Self-framed the Changes bullet** to supersede the Part 1
+  “Making these values user-configurable is the remaining part of issue
+  \#73” line — narrowing “the remaining part” to the Potential Parents
+  tab — WITHOUT rewriting the prior bullet (append-don’t-rewrite,
+  Learning 171, whose prediction this fulfills). Re-rendered `NEWS.md`
+  (permanent `html_preview:false`+`md_extensions:"-smart"`,
+  Learning 155) → **0 non-ASCII**, no stray `.html`, a confined
+  pure-insertion diff (NEWS.Rmd +20 / NEWS.md +23). Committed NEWS +
+  WORDLIST as `7e4404e8`; kept the S187 1B stub OUT of the PR
+  (stash-carried, popped clean post-merge).
+- **Spelling (Learning 159 / new Learning 175):** the publish-session
+  `spell_check_package(".")` flagged one word, `fallbacks`, introduced
+  by S186’s `man/loadSpeciesOverrides.Rd` — S186’s
+  `devtools::check(vignettes = FALSE)` 0/0/0 did NOT surface it because
+  the spelling test `skip_on_cran`s under `--as-cran`. Added `fallbacks`
+  to `inst/WORDLIST` → 0 unrecognized; the two new NEWS bullets used the
+  verb idiom “fall back” + backticked identifiers → 0 new flagged words
+  (verified before and after). A 0/0/0 build-equivalent does not imply
+  spelling-clean — the publish session’s independent
+  `spell_check_package` is the catch.
+- **No push-master-first this cycle:** `master` == `origin/master` ==
+  `32155f3a` verified firsthand and the branch was cut directly off
+  master, so the routine FF-first step did not apply. The PR diff came
+  out Slice-1-only = 3 commits (S186 feat `2ec4c329` + S186 close-out
+  `81319c10` + S187 NEWS `7e4404e8`).
+- **PR + CI (did NOT merge blind):** opened **PR \#78** → `master` (body
+  “Relates to \#73”, NOT `Closes` — Slice 2 remains). **All 10 checks
+  PASS** — lint 3m47s; `R CMD check` x5 (macos 7m42s / ubuntu release
+  20m35s + oldrel-1 7m08s + **devel 17m26s** / windows 10m09s); pkgdown
+  6m02s; test-coverage 4m20s; codecov/patch + codecov/project. Per
+  Learning 157b re-queried FRESH with a non-watch `gh pr checks 78` (10
+  `pass`, exit 0) before the merge — never trusted the `--watch` exit.
+- **Merge (the one irreversible step — `AskUserQuestion`-gated):** owner
+  chose “Merge (merge commit).” Guarded fresh pre-merge re-check (state
+  OPEN, mergeable MERGEABLE, mergeStateStatus CLEAN, `headRefOid`==local
+  `7e4404e8`, `origin/master`==`32155f3a`); `gh pr merge 78 --merge` →
+  merge commit **`54b11740`**; verified landed firsthand (state MERGED,
+  `mergedAt 2026-06-24T15:12:59Z`, `mergedBy rmsharp`). **Issue \#73
+  verified still OPEN** (no closing keyword; Slice 2 remains).
+- **Reconcile (Learning 146):** stash-carried the S187 stub;
+  `git checkout master`; `git fetch`; **ancestor-gated the reset** (both
+  old-master `32155f3a` AND merged branch tip `7e4404e8` asserted
+  ancestors of `origin/master` `54b11740`) →
+  `git reset --hard origin/master`; `git stash pop` restored the S187
+  stub cleanly onto master.
+- **Branch cleanup (verified-merged-before-delete):** `git branch -d`
+  (was `7e4404e8`) + `git push origin --delete` + `git fetch --prune`;
+  verified NO ref remains (local 0, remote-tracking 0, `gh api` →
+  **404** “Branch not found”).
+- **Verification (Phase-3E):** the merge tree was build-verified by PR
+  \#78’s `R CMD check` x5 matrix (incl. ubuntu-devel), all PASS;
+  confirmed firsthand on `master` after the reset (via
+  [`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)):
+  [`loadSpeciesOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSpeciesOverrides.md)
+  is exported and no-config → all members `NULL` (backward-compat),
+  `reportGV`/`correctUnknownParentMeanKinship` carry the four/two
+  override params, and both NEWS bullets are live on `master`.
+  **Learning 175 added.** **Issue \#73 stays OPEN** (Slice 2 — Potential
+  Parents tab — remains; its PR will use “Closes \#73”).
+
 ### 2026-06-24 — Implemented issue \#73 Part 2 Slice 1: user-configurable species overrides wired through the GVA tab end-to-end (Session 186)
 
 - **Deliverable (owner pick, single item, strict-TDD IMPLEMENTATION

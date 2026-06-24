@@ -7,6 +7,226 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 187 Did
+
+**Deliverable:** Publish **issue \#73 Part 2 Slice 1** – S186’s
+user-configurable GVA species-override path – from branch
+`issue-73-part2-slice1-gva-overrides` to `master` via PR, folding the
+user-facing NEWS entry into the SAME PR (Learning 157a). **(DONE –
+merged to `master` via PR \#78, merge commit `54b11740`; \#73 verified
+OPEN; branch deleted.)** **Started / Completed:** 2026-06-24 /
+2026-06-24 **Status:** **DONE.** Admin/publish + docs session (Slice 1
+code was written/tested under strict TDD in S186 -\> **TDD code-phases
+N/A** every response). **0 stakeholder corrections.** SOLO (serial,
+irreversible git – a workflow adds risk not coverage; held solo despite
+ultracode, the S179/S181/S183 judgment). Owner picked “Publish \#73 Part
+2 Slice 1” at orientation and “Merge (merge commit)” at the
+`AskUserQuestion` merge gate. - **Pre-publish content (one PR, Learning
+157a):** appended two dev-version `NEWS.Rmd` bullets – a *Changes*
+bullet (the min male/female breeding ages, max gestation, and
+absent-species values the GVA uses to correct unknown-parent mean
+kinship are now user-configurable via the config file: a
+`speciesOverridesPath` CSV + optional
+`minBreedingAgeDefault`/`gestationDefault`) and a *New features* bullet
+(the exported
+[`loadSpeciesOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSpeciesOverrides.md)
+reader). **Self-framed the Changes bullet** to supersede the Part 1
+“Making these values user-configurable is the remaining part of issue
+\#73” line – narrowing “the remaining part” to the Potential Parents tab
+– WITHOUT rewriting the prior bullet (Learning 171, whose prediction
+this fulfills). Re-rendered `NEWS.md`
+(`html_preview:false`+`md_extensions:"-smart"`, Learning 155): **0
+non-ASCII**, no stray `.html`, confined pure-insertion (NEWS.Rmd +20 /
+NEWS.md +23). Verified the GVA path consumes BOTH overrides FIRSTHAND
+before writing NEWS (`getBreedingPeerCohort` uses
+`getSpeciesMinBreedingAge` for the candidate cutoff AND
+`getSpeciesGestation` for the focal conception window). Committed
+NEWS+WORDLIST `7e4404e8`; kept the S187 1B stub OUT of the PR
+(stash-carried). - **Spelling catch (Learning 159 -\> new Learning
+175):** baseline `spell_check_package(".")` flagged ONE word,
+`fallbacks`, from S186’s `man/loadSpeciesOverrides.Rd` – S186’s
+`devtools::check(vignettes=FALSE)` 0/0/0 did NOT surface it because the
+spelling test `skip_on_cran`s under `--as-cran`. Added `fallbacks` to
+`inst/WORDLIST` -\> 0; the two NEWS bullets used the verb idiom “fall
+back” + backticked identifiers -\> 0 new flagged words (verified before
+AND after). - **Publish mechanics:**
+`master`==`origin/master`==`32155f3a` verified FIRSTHAND (no
+push-master-first); pushed branch; opened **PR \#78** -\> `master` (body
+“Relates to \#73”). **All 10 CI checks PASS**, re-queried FRESH
+non-watch (Learning 157b – never trust the `--watch` exit);
+`AskUserQuestion`-gated merge after a guarded OPEN/MERGEABLE/CLEAN +
+`headRefOid`==local `7e4404e8` re-check; `gh pr merge 78 --merge` -\>
+`54b11740`; verified MERGED; **\#73 verified OPEN**; ancestor-gated
+`reset --hard` (old-master `32155f3a` AND tip `7e4404e8` both ancestors
+of `54b11740`, Learning 146); `git stash pop` restored the stub;
+verified-merged-before-delete branch cleanup (`gh api` 404).
+
+**Phase-3E (build-equivalent / runtime smoke): SATISFIED.** The merge
+tree was build-verified by PR \#78’s `R CMD check` x5 matrix
+(incl. ubuntu-devel 17m26s), all PASS – stronger than a single local
+check. Confirmed FIRSTHAND on `master` after the reset (via
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)):
+[`loadSpeciesOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSpeciesOverrides.md)
+exported and no-config -\> all members NULL (backward-compat),
+`reportGV`/`correctUnknownParentMeanKinship` carry the four/two override
+params, both NEWS bullets live on `master`. (No browser GVA-tab click –
+the e2e harness is baseline-flaky and unchanged by a docs/publish
+session; the CI matrix + the load_all checks are the runtime evidence.)
+
+**Session 186 Handoff Evaluation (by Session 187): Score 9/10.** S186’s
+`=> SUGGESTED NEXT` named THIS session first (“(Publish \#73 Part 2
+Slice 1) the predicted next”) and gave a COMPLETE, accurate publish
+recipe: `git push -u origin ...` -\> PR -\> `master` body “Relates to
+\#73” (NOT “Closes”), fold NEWS into the same PR (157a), the NEWS
+SUPERSEDES the dev “remaining part of issue \#73” line – self-frame,
+don’t rewrite (171), watch CI + fresh non-watch re-query (157b),
+`AskUserQuestion`-gate the merge, ancestor-gated `reset --hard` +
+verified-merged-before-delete (146), spell-check before/after (159),
+render NEWS with the permanent knobs (155), SOLO. **Every step held
+FIRSTHAND** – the branch was exactly where it said (local, unpushed),
+`master`==`origin/master` as claimed, the supersede line was exactly the
+one named. The Gotchas were all accurate. **The -1:** S186 did not
+itself run `spell_check_package` in its close-out, so it shipped
+`fallbacks` as an unrecognized word in `loadSpeciesOverrides.Rd` without
+flagging it – though its suggested-next DID say “Spell-check
+before/after (Learning 159)”, which pointed me at the check that caught
+it. A small deduction (the tool was named; the specific word was not
+pre-flagged). ROI maximal – the recipe was a turn-by-turn script with
+the right learning citations; I executed it without re-deriving
+anything.
+
+**Self-assessment (Session 187): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check -\> HEAD `81319c10` = S186 close-out, no
+undocumented commits), reported, STOPPED for the owner’s pick; claimed
+with a 1B stub BEFORE technical work; declared TDD N/A every response.
+**Strengths:** (1) **ran every publish guard, no blind step** –
+`master`==`origin/master` firsthand, fresh non-watch CI re-query (157b,
+all 10 pass exit 0), guarded pre-merge state re-check,
+`AskUserQuestion`-gated merge, ancestor-gated reset (146, both
+old-master AND branch tip), verified-merged-before-delete (`gh api`
+404); (2) **caught a real defect the implementer shipped** – `fallbacks`
+flagged only by the publish session’s independent `spell_check_package`
+(S186’s 0/0/0 missed it because `skip_on_cran`), fixed it in scope (one
+WORDLIST line), and recorded WHY a 0/0/0 check can hide it as the
+genuinely-new **Learning 175**; (3) **verified the GVA path firsthand
+before writing NEWS** (FM \#11) – confirmed both overrides feed the
+cohort, so the bullet is accurate not assumed; (4) **executed Learning
+171’s self-frame-supersede exactly as 171 predicted** – new bullet
+narrows “the remaining part” to the Potential Parents tab, prior bullet
+untouched, 0-delta spelling, confined pure-insertion render; (5)
+scope-disciplined – published Slice 1 only, did NOT bundle Slice 2, kept
+the stub out of the PR; (6) close-out docs pushed to origin
+(\[\[push-close-out-docs-to-origin\]\]). **Weaknesses (honest):** (a)
+**lower base difficulty** – this is an admin/publish session following a
+turn-by-turn recipe; the value is execution discipline + the spelling
+catch, not depth -\> ceiling ~8; (b) one grep fumble – a wrap-spanning
+pattern (“now user-configurable…”) returned 0, which I immediately
+re-checked with a wrap-correct pattern (live, count 1); a harness
+fumble, not a defect, but a cleaner first grep would have avoided the
+blip. Clean, fully-verified, scope-disciplined publish with a genuine
+implementer-defect catch and a new learning, but light difficulty -\>
+8/10.
+
+**Learnings:** **Learning 175** added to `PROJECT_LEARNINGS.md` – a
+0/0/0 `devtools::check(vignettes=FALSE)` does NOT imply
+`spell_check_package(".")`=0 (the spelling test `skip_on_cran`s under
+`--as-cran`), so the publish session’s independent `spell_check_package`
+is the catch; keep NEWS prose in the clean verb idiom + backtick
+identifiers for 0-delta; Learning 171’s self-frame-supersede prediction
+held exactly. Carried as applied:
+\[\[consult-project-source-of-truth\]\] (publish convention:
+implementation-\>CHANGELOG, publish-\>NEWS; build-equivalent),
+\[\[observation-vs-decision\]\] / \[\[ascii-only-in-question-options\]\]
+/ \[\[avoid-jargon-use-plain-language\]\] (the merge-gate
+`AskUserQuestion`, plain-ASCII labels, recommended-first),
+\[\[check-process-history-before-rerunning-work\]\] (read S186 handoff +
+the load-bearing learnings firsthand),
+\[\[backlog-vs-changelog-placement\]\] (publish -\> CHANGELOG; \#73
+stays OPEN), \[\[push-close-out-docs-to-origin\]\] (push this close-out
+to origin/master FF); Learnings 146/155/157/157a/159/161/171 (the
+publish mechanics this session executed).
+
+**=\> SUGGESTED NEXT = owner’s pick.** `origin/master` == local `master`
+== `54b11740` after this S187 close-out push; **issue \#73 is OPEN**
+(Part 1 data live; Part 2 Slice 1 – GVA tab – now LIVE on `master`;
+Slice 2 – Potential Parents tab – UNIMPLEMENTED); no dangling branches;
+dashboard 98/100. Natural options (plain ASCII): - **(Implement \#73
+Part 2 Slice 2 – Potential Parents tab)** the predicted next, now
+unblocked (Slice 1 published). A separate **strict-TDD** session (every
+transition `AskUserQuestion`-gated). **Reuse this slice’s
+`loadSpeciesOverrides` reader** (do NOT re-merge – D4 merge already
+happens in the reader). Wire `appServer` to pass
+`gestationTable`+`gestationDefault` to `modPotentialParentsServer`
+(`appServer.R:307-310`, today passes NEITHER); add a `gestationDefault`
+param to `modPotentialParentsServer` + `pedigreeGestationDefault`
+(`modPotentialParents.R:208,83`); **D5 = prefill-only scope** (the §2C
+subtlety – `gestationTable` drives only the suggested-window prefill,
+not the computed window, because the module forces
+`maxGestationalPeriod` non-NULL). **R2 caveat – never thread a bare NULL
+into the accessor’s `default`** (`rep(NULL,n)` empties; reuse Slice 1’s
+`if (is.null(default)) accessor(...) else accessor(..., default=default)`).
+Plan §4 Slice 2 is the spec; RED expected-values computed by the
+executor. Its PR uses **“Closes \#73”** (the last part). Phase-3E
+runtime smoke REQUIRED (Shiny wiring). Do NOT bundle with anything
+else. - **(#76 – Reading A, deep genetics)** de-inflate the
+genome-uniqueness statistic for both-unknown founders inside
+`calcGU`/`calcA`/gene-drop. NOT a “just implement” – it reverses the
+documented `calcGU.R:10-34` stance and breaks golden invariants, so a
+RATIFICATION first, THEN a separate TDD implement (two sessions min; do
+NOT bundle). - **(Other)** \#37 (unused exports); \#36 (chimpanzee
+age-pyramid); \#2 (GVA iteration-count advice); \#28 (large, own plan);
+older \#13/#12/#11/#10/#5/#1; CRAN Phase 5 (owner-run,
+`docs/planning/cran-2.0.0-phase5-runbook.md`). **Do NOT** bundle Slice 2
+with anything; **do NOT** thread a bare NULL into the accessors’
+`default` (R2); the **same latent comment-strip bug remains UNFIXED in
+`R/getConfigApiKey.R`** (out of scope, Learning 174 – flag if
+apiKey-from-example misbehaves).
+
+**Key files (this session):** **CHANGED – the publish content (committed
+to the branch as `7e4404e8`, now on `master` via PR \#78):** `NEWS.Rmd`
+(+2 dev-version bullets: Changes + New features), `NEWS.md`
+(re-rendered), `inst/WORDLIST` (+`fallbacks`). **CHANGED – close-out
+docs (this S187 docs commit, direct to local `master`, then pushed to
+origin):** `CHANGELOG.md` (S187 `[Unreleased]` publish entry),
+`PROJECT_LEARNINGS.md` (Learning 175), `SESSION_NOTES.md` (this
+handoff + the 1B stub it overwrote). **Read firsthand (publish
+verification, NOT changed):** `R/correctUnknownParentMeanKinship.R`
+(confirmed the GVA path uses both overrides), `tests/spelling.R`,
+`inst/WORDLIST`, the S186 handoff, Learnings 146/155/157/159/171/174.
+**NOT changed:** any `R/` logic, tests, or `man/` (publish session – the
+code shipped as S186 wrote it). **NOT committed (standing keep):**
+`PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
+
+**Gotchas:** (1) **Issue \#73 is OPEN – Part 1 (data) + Part 2 Slice 1
+(GVA tab) are LIVE on `master`; Slice 2 (Potential Parents tab) remains
+UNIMPLEMENTED.** The Slice 2 PR uses **“Closes \#73”** (the last part).
+(2) **A 0/0/0 `devtools::check(vignettes=FALSE)` does NOT mean
+spelling-clean** (the spelling test `skip_on_cran`s under `--as-cran`,
+Learning 175) – the implementing session should run
+`spell_check_package(".")` itself, and the publish session MUST. Keep
+NEWS prose in the verb idiom “fall back” + backtick identifiers for
+0-delta. (3) **R2 – never thread a bare NULL into the accessors’
+`default`** (`rep(NULL,n)` empties); reuse Slice 1’s omit-when-NULL
+if/else in Slice 2’s `pedigreeGestationDefault` threading. (4) **D4 =
+MERGE in the reader** – Slice 2 reuses `loadSpeciesOverrides` (do NOT
+re-merge). (5) **Backward-compat is the invariant** – all new params
+default NULL; no config =\> identical to today (explicitly tested). (6)
+**`getConfigApiKey` still has the latent comment-strip bug** (Learning
+174, out of scope). (7) The breeding-age columns are **NUMERIC**,
+gestation **integer** (Learning 170). (8) **`testServer(appServer)` does
+NOT return the block’s value** – capture via `<<-`/an env if you script
+a boot check. (9) Carried standing keeps (unchanged): package **ARCHIVED
+on CRAN 2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without a LabKey credential/config; exactly ONE codecov
+config; NEWS render traps CLOSED at source
+(`html_preview:false`+`md_extensions:"-smart"`, 155); `git pull` is
+rebase + chokes on `.DS_Store` -\> use `fetch`+`reset` (135); post-merge
+`fetch` before `reset --hard` ancestor-gated (146); `skip_on_cran()`
+`testServer` tests need `NOT_CRAN=true`; build-equivalent is
+`devtools::check(vignettes = FALSE)` = 0/0/0 (Learning 161).
+
 ### What Session 186 Did
 
 **Deliverable:** Implement **issue \#73 Part 2 Slice 1** – the
