@@ -7,6 +7,246 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 184 Did
+
+**Deliverable:** Plan **issue \#73 Part 2** – the user-configurable
+override path for the species reproductive-parameter table (minimum
+male/female breeding ages, gestation, and the absent-species fallback),
+via the config file. **(DONE –
+`docs/planning/issue73-part2-user-configurable-plan.md` written;
+committed to `master`; NOT implemented – FM \#18/#25.)** **Started /
+Completed:** 2026-06-23 / 2026-06-23 **Status:** **DONE.** PLANNING
+session – the plan is the deliverable; implementation is a separate
+session per slice (do NOT bundle). **TDD code-phases N/A every
+response** (planning doc, no `R/`/test change). **0 stakeholder
+corrections.** Two owner decisions taken at orientation via
+`AskUserQuestion`: **mechanism = config file** (extend
+`~/.nprcgenekeepr_config`, loaded at boot via
+[`loadSiteConfig()`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSiteConfig.md);
+the empty Settings-tab UI at `appUI.R:223-228` is OUT of scope) and
+**scope = all three value groups** (breeding ages, gestation, fallback).
+Grounded via a 4-mapper read-only workflow (`wf_c21598f3-932`:
+config-file / breeding-age-chain / gestation-chain / test-validation)
+THEN firsthand verification of every load-bearing call site (FM \#11/#20
+– did NOT trust the agents; the verification corrected two mapper
+claims, see Self-assessment). Plan synthesis main-loop. - **The plan**
+mirrors the established `issue9-...-plan.md` format: §1 Context (Part 1
+shipped the accessors which ALREADY accept
+`breedingTable`/`gestationTable`/`default`; Part 2 is purely
+supply-from-config + thread-down), §2 evidence inventory with firsthand
+`file:line` (config subsystem / breeding-age GVA chain / gestation chain
+/ module wiring / tests), §3 seven design decisions D1-D7 with
+recommendations, §4 two vertical slices (FM \#25) each with
+RED/GREEN/DONE/Verify/boundary/dragons, §5 cross-slice notes, §6
+here-be-dragons (R1-R8), §7 owner ratification checklist. - **Headline
+recommendations awaiting ratification:** **D1 = CSV-path key**
+(`speciesOverridesPath`, read by a `getConfigApiKey`-style soft-lookup
+helper -\> ZERO `getSiteInfo` change, since `getSiteInfo` is a fixed
+hardcoded-key schema and `getParamDef` STOPs on missing keys) over
+inline per-species config keys; **D4 = merge-onto-bundled** (NOT
+replace) so a partial colony CSV does not silently mis-age the unlisted
+13 species (the accessors REPLACE). D5 = gestation override is
+prefill-only in the Potential Parents tab (per-animal window
+deferred). - **Slices:** Slice 1 = GVA tab end-to-end (build the shared
+CSV reader + thread both tables + both fallbacks through `reportGV` -\>
+`correctUnknownParentMeanKinship` -\> `getBreedingPeerCohort` (adding
+the missing `default` params) + wire `modGeneticValueServer` to receive
+config + `appServer` passes it). Slice 2 = Potential Parents tab
+end-to-end (reuse the reader; wire `modPotentialParentsServer` to
+receive the gestation override from config). Backward-compat invariant
+(no config ⇒ identical to today) is the through-line; Phase-3E runtime
+smoke REQUIRED for both implementation slices.
+
+**Phase-3E (build-equivalent / runtime smoke): N/A this session, stated
+not skipped.** The deliverable is a markdown planning document – no
+`R/`/test/`man`/NAMESPACE/data change, no runtime behavior touched,
+nothing to build or smoke. The plan’s own integrity check is that its
+evidence-based `file:line` inventory is accurate: every load-bearing
+reference was read firsthand this session (the §2 tables, the appServer
+call sites, the two accessors, reportGV:103, the modPotentialParents
+prefill subtlety, getPotentialParents:63-69). The two IMPLEMENTATION
+slices each carry an explicit Phase-3E requirement (they change Shiny
+module params + boot loading).
+
+**Session 183 Handoff Evaluation (by Session 184): Score 8/10.** S183’s
+`=> SUGGESTED NEXT` listed **“#73 Part 2 – user-configurable override
+path”** as the FIRST option and framed it EXACTLY right: “likely a
+design/plan session THEN a separate implement (do NOT bundle, FM
+\#18/#25). **Decide the config mechanism FIRST** (Settings UI vs
+config-file via `loadSiteConfig`, or both) – the plan depends on that
+choice.” That framing drove this whole session: I surfaced the
+mechanism + scope via `AskUserQuestion` and wrote a plan, not code.
+Every entry-point fact held FIRSTHAND: the accessors already accept
+`breedingTable`/`gestationTable` (true), `reportGV.R:103` passes NULL
+today (verified exact), `modGeneticValue`/`modPotentialParents` are the
+threading consumers (true), the Settings tab `appUI.R:223-228` is an
+empty placeholder (verified), `loadSiteConfig` is the config-file path
+(true and central). It also pre-flagged the NEWS-supersede gotcha for a
+future Part 2 publish (Learning 171). **The -2:** it offered “Settings
+UI vs config-file via `loadSiteConfig`, or both” without noting that the
+config-file subsystem is a FIXED hardcoded-key schema whose design
+strongly shapes the within-config representation (D1) – the single most
+decision-relevant config fact, which I had to discover via the grounding
+workflow + firsthand parser read. A one-line “note `getSiteInfo` is
+fixed-schema; optional keys follow the `getConfigApiKey` soft-lookup
+precedent” would have pre-framed D1. Also it did not mention the
+`modPotentialParents` partial-wiring subtlety (accepts `gestationTable`,
+uses it for prefill only; `appServer` passes none). Both are reasonable
+to leave to a planning session to discover – S183 was a publish session,
+and it appropriately gave entry points + the load-bearing
+“decide-config-first” decision rather than pre-grounding a feature it
+wasn’t building. ROI solid: the decision framing + entry points were
+exactly right and saved real time.
+
+**Self-assessment (Session 184): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check -\> HEAD `37c38bfd` = S183 close-out, no
+undocumented commits), reported, STOPPED for the owner’s pick; claimed
+with a 1B stub BEFORE technical work; declared TDD N/A every response;
+produced a PLAN and did NOT implement (held the FM \#18/#25 line – no
+`R/` change). **Strengths:** (1) **surfaced both genuine owner
+decisions** (config mechanism + scope) via `AskUserQuestion` rather than
+picking (\[\[observation-vs-decision\]\]), so the plan rests on owner
+choices, not my assumptions; (2) **grounded via a read-only fan-out THEN
+adjudicated firsthand** – the 4 mappers disagreed on D1 (config
+specialist: CSV path; chain mappers: inline keys) and I resolved it on
+the merits by reading the parser firsthand (fixed-schema + `getParamDef`
+STOP + `getConfigApiKey` precedent), not by vote; (3) **caught a mapper
+OVERSTATEMENT** – the gestation mapper called `modPotentialParents` not
+passing `gestationTable` to `getPotentialParents` “the single most
+load-bearing finding … broken at the critical call site,” but firsthand
+reading showed it is a prefill-only no-op (the module forces
+`maxGestationalPeriod` non-NULL, and `getPotentialParents` consults the
+table only when that is NULL) – the real gap is `appServer` passing the
+module nothing; (4) **identified the D4 replace-vs-merge dragon
+independently** (no mapper flagged it as a user-facing decision) – the
+accessors REPLACE, so a partial CSV would silently mis-age unlisted
+species; (5) **plan is executable** – evidence inventory with firsthand
+`file:line`, vertical slices (FM \#25, not horizontal), per-slice
+completion criteria + verify commands + session boundaries + dragons,
+ratification checklist; (6) one genuinely-new learning (172); plain
+language, ASCII gates, scope-disciplined. **Weaknesses (honest):** (a)
+**the plan is recommendations, not ratified** – D1/D4 are genuinely the
+owner’s calls and I deferred them to §7 (correct per the planning model,
+but the plan is not “ready to RED” until ratified); (b) **the slices’
+RED expected-values are sketched, not computed** – appropriate for a
+plan, but the executor must derive exact numbers; (c) **moderate base
+difficulty** – a feature plan with one contested design decision + one
+subtle latent-wiring finding, grounded by a workflow; not a
+deep-genetics or recovery test -\> ceiling ~8; (d) no runtime
+verification (planning doc – N/A, stated). Clean, fully-grounded,
+scope-disciplined plan with two firsthand corrections of the grounding
+agents, a genuine new dragon, a real new learning, and zero corrections
+-\> 8/10.
+
+**Learnings:** **Learning 172** added to `PROJECT_LEARNINGS.md` –
+planning a config-extension feature here: `getSiteInfo` is a fixed
+hardcoded-key schema (`getParamDef` STOPs) so optional keys follow the
+`getConfigApiKey` soft-lookup precedent (D1 CSV-path); a grounding
+workflow’s load-bearing claims must be adjudicated firsthand (the
+mappers disagreed on D1 and overstated the `modPotentialParents`
+prefill-only no-op as a “critical blocker”); the override accessors
+REPLACE so a config override must MERGE onto the bundled table (D4
+dragon); the module-config wiring template already exists
+(`modInputServer` at `appServer.R:106`); a configurable `default`
+threaded above the accessor must default to `NULL` not 2.0/210. Carried
+as applied: \[\[consult-project-source-of-truth\]\] (the
+planning-workstream evidence requirement + the
+vertical-slice/RED-GREEN-REFACTOR contract +
+implementation-\>CHANGELOG/publish-\>NEWS rhythm),
+\[\[observation-vs-decision\]\] / \[\[ascii-only-in-question-options\]\]
+/ \[\[avoid-jargon-use-plain-language\]\] (the two owner
+`AskUserQuestion`s, plain-ASCII labels),
+\[\[check-process-history-before-rerunning-work\]\] (read the issue9
+plan + Part-1 learnings 170/171 firsthand),
+\[\[backlog-vs-changelog-placement\]\] (planning deliverable -\>
+CHANGELOG; \#73 stays OPEN), \[\[push-close-out-docs-to-origin\]\] (push
+this close-out to origin); Learnings 6 (read implementations before
+estimating), 161 (build-equivalent).
+
+**=\> SUGGESTED NEXT = owner’s pick.** `origin/master` == local `master`
+after this S184 close-out push; **issue \#73 is OPEN** (Part 1 live;
+Part 2 PLANNED but unimplemented); no dangling branches; dashboard
+98/100. Natural options (plain ASCII labels): - **(Ratify \#73 Part 2,
+then implement Slice 1)** the predicted next. FIRST resolve §7’s
+checklist – especially **D1** (CSV-path vs inline keys) and **D4**
+(merge vs replace), the two load-bearing calls – via owner edit of the
+plan or a focused `/grill-me`. THEN a separate strict-TDD session
+implements **Slice 1 (GVA tab end-to-end)**: build the CSV reader +
+thread the overrides through `reportGV` -\>
+`correctUnknownParentMeanKinship`/`getBreedingPeerCohort` (add the
+`default` params) + wire `modGeneticValueServer` + `appServer`. Do NOT
+bundle ratification with implementation, nor Slice 1 with Slice 2 (FM
+\#18/#25). Slice 1 is the HEAVY slice (reader + 3 signatures + module +
+appServer) – expect a full session. - **(#76 – Reading A, deep
+genetics)** de-inflate the genome-uniqueness statistic for both-unknown
+founders inside `calcGU`/`calcA`/gene-drop. NOT a “just implement” – it
+reverses the documented `calcGU.R:10-34` stance and breaks golden
+invariants, so a §8-E-style RATIFICATION first, THEN a separate TDD
+implement (two sessions min; do NOT bundle). - **(Other options)** \#37
+(unused exports); \#36 (chimpanzee age-pyramid); \#2 (GVA
+iteration-count advice); \#28 (large, own plan); older
+\#13/#12/#11/#10/#5/#1; CRAN Phase 5 (owner-run,
+`docs/planning/cran-2.0.0-phase5-runbook.md`). **Do NOT** start Slice 1
+RED before D1/D4 are ratified (the RED tests’ shape depends on
+CSV-path-and-merge); **do NOT** bundle the ratification with the
+implement, nor Slice 1 with Slice 2.
+
+**Key files (this session):** **CREATED – the deliverable:**
+`docs/planning/issue73-part2-user-configurable-plan.md` (the plan).
+**CHANGED – close-out docs (this S184 docs commit, direct to local
+`master`, then pushed to origin):** `CHANGELOG.md` (S184 `[Unreleased]`
+planning entry), `PROJECT_LEARNINGS.md` (Learning 172),
+`SESSION_NOTES.md` (this handoff). **NO `R/`/test/`man`/NAMESPACE/`data`
+change** (planning session). **Read firsthand (plan evidence, NOT
+changed):** `R/getSpeciesMinBreedingAge.R:37`,
+`R/getSpeciesGestation.R:28`, `R/reportGV.R:72,103`,
+`R/correctUnknownParentMeanKinship.R:31,96`,
+`R/modGeneticValue.R:121,185`,
+`R/modPotentialParents.R:83,208,216-219,239-245`,
+`R/getPotentialParents.R:39,63-72`,
+`R/appServer.R:69,106,266-269,291-296,307-310`, `R/loadSiteConfig.R`,
+`inst/extdata/example_nprcgenekeepr_config`; the issue9 plan as the
+format template. **Grounding workflow:** `wf_c21598f3-932` (4 read-only
+mappers; script + result under the session dir, NOT in the repo). **The
+issue (input):** \#73 body (owner Part 2 ask). **NOT committed (standing
+keeps):** `PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
+
+**Gotchas:** (1) **Issue \#73 is OPEN – Part 1 (data) LIVE on `master`;
+Part 2 is PLANNED (this doc) but UNIMPLEMENTED.** A Part 2 publish
+(after both slices) uses **“Closes \#73”** (last part). (2) **The plan
+is a DRAFT awaiting ratification – D1 (CSV-path vs inline) and D4 (merge
+vs replace) are the load-bearing owner calls; the Slice 1 RED tests
+depend on them.** Resolve §7 before RED (do NOT start coding from the
+plan unratified – FM \#19). (3) **`getSiteInfo` is a FIXED hardcoded-key
+schema** (`getParamDef` STOPs on a missing key) – new config keys MUST
+follow the `getConfigApiKey` optional-soft-lookup precedent, NOT the
+`getSiteInfo` hardcoded list (Learning 172). (4) **The override
+accessors REPLACE, not merge** – a non-NULL
+`breedingTable`/`gestationTable` makes absent species fall to the
+fallback, not the bundled value; the reader must merge onto bundled
+`speciesGestation` (D4/R1). (5) **In the running app the
+`gestationTable` override only drives the Potential-Parents prefill**
+(the module forces `maxGestationalPeriod` non-NULL;
+`getPotentialParents` consults the table only when that is NULL) –
+per-animal windows are a deeper, deferred change (D5/R4). (6) **A
+configurable `default` threaded above the accessor must default to
+`NULL`, not 2.0/210**, so the accessor’s built-in is respected when no
+config is present (R2). (7) **The breeding-age columns are NUMERIC**
+(gestation integer); any later code/test asserting integer breeding ages
+breaks (Learning 170). (8) `origin/master` == local `master` after this
+S184 close-out push – next session branches directly. (9) Carried
+standing keeps (unchanged): package **ARCHIVED on CRAN 2025-07-29**;
+CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without a LabKey credential/config; exactly ONE codecov
+config; NEWS render traps CLOSED at source
+(`html_preview:false`+`md_extensions:"-smart"`, 155); `git pull` is
+rebase + chokes on `.DS_Store` -\> use `fetch`+`reset` (135); post-merge
+`fetch` before `reset --hard` ancestor-gated (146); `skip_on_cran()`
+`testServer` tests need `NOT_CRAN=true`; build-equivalent is
+`devtools::check(vignettes = FALSE)` = 0/0/0 (Learning 161).
+
 ### What Session 183 Did
 
 **Deliverable:** Publish **issue \#73 Part 1** (S182 feat `2cee7fa4` –

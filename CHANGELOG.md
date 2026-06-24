@@ -15,6 +15,53 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-23 — Planned issue \#73 Part 2: user-configurable species overrides via the config file (Session 184)
+
+- **Deliverable (owner pick, single item, PLANNING session):** wrote
+  `docs/planning/issue73-part2-user-configurable-plan.md` — the plan for
+  making the species minimum-breeding-age / gestation /
+  absent-species-fallback values user-configurable (issue \#73 Part 2).
+  **No implementation** (FM \#18/#25; the plan is the deliverable,
+  implementation is a separate session per slice). **TDD code-phases
+  N/A** (planning doc, no R/ change). **0 stakeholder corrections.**
+- **Two owner decisions taken at orientation** (`AskUserQuestion`):
+  mechanism = **config file** (extend `~/.nprcgenekeepr_config`, loaded
+  at boot via
+  [`loadSiteConfig()`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSiteConfig.md);
+  the empty Settings-tab UI is out of scope); scope = **all three value
+  groups** (breeding ages, gestation, fallback).
+- **Grounding:** a 4-mapper read-only workflow (`wf_c21598f3-932`:
+  config-file / breeding-age-chain / gestation-chain / test-validation)
+  plus **firsthand verification of every load-bearing call site** —
+  `reportGV.R:103` (no override),
+  `correctUnknownParentMeanKinship.R:96`/`getBreedingPeerCohort:31`
+  (thread both tables, no configurable `default`),
+  `modGeneticValue.R:121,185` (no config param),
+  `modPotentialParents.R:208,242` (accepts `gestationTable` but uses it
+  only for the prefill; the `getPotentialParents` call passes none, a
+  no-op while `maxGestationalPeriod` is non-NULL),
+  `getPotentialParents.R:63-69` (consults `gestationTable` only when
+  `maxGestationalPeriod` is NULL), `appServer.R:106,266,307` (the
+  `modInputServer` config-reactive precedent vs. the two un-wired target
+  modules), and the config subsystem (`getSiteInfo` fixed-schema,
+  `getParamDef` STOPs on missing keys, `getConfigApiKey`
+  optional-soft-lookup precedent).
+- **Plan content:** evidence-based inventory (§2) with verified
+  `file:line`; seven design decisions for ratification (§3) — headline
+  recommendations: **D1 CSV-path key** (a `getConfigApiKey`-style
+  helper; no `getSiteInfo` change) over inline keys, and **D4
+  merge-onto-bundled** (not replace) so a partial CSV does not silently
+  mis-age unlisted species; two **vertical slices** (§4, FM \#25) each
+  with RED/GREEN/DONE/Verify/boundary/dragons — Slice 1 GVA tab
+  end-to-end (builds the shared reader), Slice 2 Potential Parents tab
+  end-to-end (reuses it); here-be-dragons (§6) and an owner ratification
+  checklist (§7). Backward-compat invariant (no config ⇒ identical to
+  today) is the through-line; **Phase-3E runtime smoke required for both
+  implementation slices** (Shiny wiring changes).
+- **Issue \#73 stays OPEN** — Part 1 (data) is live; Part 2 (this plan)
+  is unimplemented. A future Part 2 publish uses **“Closes \#73”** (it
+  is the last part). **Learning 172** added to `PROJECT_LEARNINGS.md`.
+
 ### 2026-06-23 — Published issue \#73 Part 1: the 14-species reproductive-parameter table is on `master` via PR \#77; NEWS entry added; \#73 stays OPEN (Session 183)
 
 - **Deliverable (owner pick, single item):** publish S182’s issue \#73
