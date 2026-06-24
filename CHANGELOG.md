@@ -15,6 +15,58 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-24 — Ratified issue \#76 (Reading A): de-inflate genome uniqueness for both-unknown founders — design agreed, implementation pending (Session 190)
+
+- **Deliverable (owner pick, single item):** the **ratification design
+  document** required by issue \#76 acceptance criterion \#1, written to
+  `docs/planning/issue76-gu-deinflation-ratification.md` in the §8-E
+  (S177) house style. **DESIGN/ratification session → TDD code-phases
+  N/A, Phase-3E N/A** (no production code/tests; strict-TDD
+  implementation is the next session). **0 stakeholder corrections.**
+  Ran a 10-agent research + adversarial-critique workflow
+  (`wf_67d4c94a-691`) under ultracode, then surfaced the genuine
+  modeling decisions to the owner via four `AskUserQuestion` gates.
+- **Ratified design — targeted decline-to-credit, report layer:**
+  reported genome uniqueness (`gu`) is set to **0** for the
+  **Undetermined / `noParentage`** set —
+  `classifyParentage == "both unknown"` (U-id aware) AND `origin`
+  NA/absent, i.e. exactly the set Reading B (Slice 3) already demotes —
+  applied in `reportGV` after `classifyParentage` (`reportGV.R:184`), to
+  both the report `gu` column and the returned `$gu`. Imports
+  (both-unknown with a recorded `origin`) are preserved.
+- **Key reframing (Learning 178):** the issue body and the S189 handoff
+  assumed Reading A had to change `calcGU`/`calcA`/gene-drop, reverse
+  the `calcGU.R:10-34` stance, and supply replacement gene-drop golden
+  values (acceptance criterion \#1). The adversarial review + firsthand
+  pipeline reads showed the clean realization changes **none** of those
+  — `calcGU`/`calcA`/`geneDrop` and all their golden tests stay
+  byte-identical; the stance is not reversed. Criterion \#1 is met by
+  the agreed design + new report-layer tests, with **zero** gene-drop
+  golden churn.
+- **Candidates rejected (verified fatal flaws):** A4 rescales the wrong
+  term (inflation is the numerator `rowSums(rare)`, not the
+  `/(2L*iterations)` denominator); A3 injects per-iteration randomness
+  and breaks seeded goldens; A2 mis-targets all founders (the gene-drop
+  founder set ≠ the classification “both unknown” set after
+  `addParents`). Adopted survivor: refined A1 (target `noParentage`,
+  preserving imports).
+- **Firsthand verification (FM \#11):** read
+  `reportGV`/`orderReport`/`classifyParentage`/`rankSubjects`/`calcGU`/`calcA`/`geneDrop`/`getIncludeColumns`;
+  confirmed `origin` ∈
+  [`getIncludeColumns()`](https://github.com/rmsharp/nprcgenekeepr/reference/getIncludeColumns.md)
+  (`:16`) and that existing goldens hold
+  (`test_modGeneticValue.R:742-743,798-808,1394-1395`;
+  `test_reportGV.R:20,45`).
+- **Files:** created
+  `docs/planning/issue76-gu-deinflation-ratification.md`; added a
+  one-line cross-ref to
+  `docs/planning/issue9-gva-unknown-parent-ranking-plan.md` §8-F;
+  `PROJECT_LEARNINGS.md` (Learning 178); this entry; `SESSION_NOTES.md`
+  (S190 handoff). No `R/`, test, or `man/` change. **Issue \#76 stays
+  OPEN** (ratified, not implemented). Next: strict-TDD implementation
+  per the doc’s §E charter (then a separate publish session, PR “Closes
+  \#76”).
+
 ### 2026-06-24 — Published issue \#73 Part 2 Slice 2: user-configurable Potential Parents gestation override is on `master` via PR \#79; **issue \#73 CLOSED** (Session 189)
 
 - **Deliverable (owner pick, single item):** publish S188’s issue \#73
