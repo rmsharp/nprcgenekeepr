@@ -108,6 +108,12 @@ modGeneticValueUI <- function(id) {
 #'
 #' @param id character vector of length 1. Module namespace identifier.
 #' @param pedigree reactive returning pedigree data frame.
+#' @param speciesOverrides reactive returning the user-configurable species
+#' overrides loaded at boot by \code{\link{loadSpeciesOverrides}} (a list with
+#' \code{breedingTable}, \code{gestationTable}, \code{breedingAgeDefault},
+#' \code{gestationDefault}), or \code{NULL}. Threaded into
+#' \code{\link{reportGV}} (issue #73 Part 2). Defaults to \code{reactive(NULL)}
+#' so no config file means bundled behavior.
 #'
 #' @seealso \code{\link{modGeneticValueUI}}
 #' @seealso \code{\link{modBreedingGroupsServer}} for using results.
@@ -118,7 +124,8 @@ modGeneticValueUI <- function(id) {
 #' @importFrom shiny moduleServer reactive eventReactive withProgress
 #' @importFrom shiny incProgress
 #' @export
-modGeneticValueServer <- function(id, pedigree) {
+modGeneticValueServer <- function(id, pedigree,
+                                  speciesOverrides = reactive(NULL)) {
   moduleServer(id, function(input, output, session) {
 
     # Store full reportGV results
@@ -181,13 +188,22 @@ modGeneticValueServer <- function(id, pedigree) {
 
         incProgress(0.2, detail = "Running genetic value analysis")
 
+        # Issue #73 Part 2: thread the user-configurable species overrides
+        # (loaded at boot from the config file) into reportGV. NULL fields (no
+        # config, or no override) leave reportGV on the bundled defaults.
+        ov <- speciesOverrides()
+
         # Call the real reportGV function
         gvReport <- reportGV(
           ped,
           guIter = input$nIterations,
           guThresh = guThreshold(),
           byID = TRUE,
-          updateProgress = updateProgress
+          updateProgress = updateProgress,
+          breedingTable = ov$breedingTable,
+          gestationTable = ov$gestationTable,
+          breedingAgeDefault = ov$breedingAgeDefault,
+          gestationDefault = ov$gestationDefault
         )
 
         # Store full results

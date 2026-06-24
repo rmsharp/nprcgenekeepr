@@ -52,6 +52,7 @@ appServer <- function(input, output, session) {
   # ========================================
   shared <- reactiveValues(
     config = NULL,
+    speciesOverrides = NULL,
     currentStudbook = NULL,
     currentPedigree = NULL,
     qcResults = NULL,
@@ -67,6 +68,10 @@ appServer <- function(input, output, session) {
     # on a missing or malformed config file, so a documented-format config can
     # never crash the app on boot (issue #50).
     shared$config <- loadSiteConfig()
+    # Load the optional user-configurable species reproductive-parameter
+    # overrides (issue #73 Part 2). loadSpeciesOverrides() soft-fails to the
+    # bundled values, so a missing/malformed override CSV never crashes boot.
+    shared$speciesOverrides <- loadSpeciesOverrides()
   })
 
   # ========================================
@@ -265,7 +270,8 @@ appServer <- function(input, output, session) {
   # Genetic Value Analysis Module
   gvResults <- modGeneticValueServer(
     "geneticValue",
-    pedigree = reactive(shared$currentPedigree)
+    pedigree = reactive(shared$currentPedigree),
+    speciesOverrides = reactive(shared$speciesOverrides)
   )
 
   # Update shared data when genetic values are calculated

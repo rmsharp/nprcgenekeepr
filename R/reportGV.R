@@ -29,6 +29,18 @@
 #' @param updateProgress Function or NULL. If this function is defined, it
 #' will be called during each iteration to update a
 #' \code{shiny::Progress} object.
+#' @param breedingTable Optional data.frame overriding the bundled per-species
+#' minimum breeding ages used by the unknown-parent mean-kinship correction
+#' (issue #73 Part 2). \code{NULL} (the default) uses the bundled
+#' \code{\link{speciesGestation}} table.
+#' @param gestationTable Optional data.frame overriding the bundled per-species
+#' gestation windows used by the correction's conception window. \code{NULL}
+#' uses the bundled table.
+#' @param breedingAgeDefault Optional numeric fallback minimum breeding age
+#' (years) for species absent from the table. \code{NULL} uses the built-in
+#' 2 years.
+#' @param gestationDefault Optional integer fallback gestation window (days) for
+#' species absent from the table. \code{NULL} uses the built-in 210 days.
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
@@ -70,7 +82,9 @@
 #' fe <- trimmedGeneticValue[["fe"]]
 #' fg <- trimmedGeneticValue[["fg"]]
 reportGV <- function(ped, guIter = 5000L, guThresh = 1L, pop = NULL,
-                     byID = TRUE, updateProgress = NULL) {
+                     byID = TRUE, updateProgress = NULL,
+                     breedingTable = NULL, gestationTable = NULL,
+                     breedingAgeDefault = NULL, gestationDefault = NULL) {
   # Generates a genetic value report for a provided pedigree
 
   ## If user has limited the population of interest by defining 'pop',
@@ -100,7 +114,12 @@ reportGV <- function(ped, guIter = 5000L, guThresh = 1L, pop = NULL,
   # animals are left unchanged. This feeds both the z-scores below and the
   # report column, so both rank paths reflect it; kinship() is untouched.
   indivMeanKin <-
-    correctUnknownParentMeanKinship(indivMeanKin, ped)$indivMeanKin
+    correctUnknownParentMeanKinship(indivMeanKin, ped,
+      gestationTable = gestationTable,
+      breedingTable = breedingTable,
+      breedingAgeDefault = breedingAgeDefault,
+      gestationDefault = gestationDefault
+    )$indivMeanKin
 
   zScores <- scale(indivMeanKin)
 

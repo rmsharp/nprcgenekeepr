@@ -26,11 +26,19 @@
 #' \code{\link{getSpeciesGestation}}.
 #' @param breedingTable optional breeding-age lookup passed to
 #' \code{\link{getSpeciesMinBreedingAge}}.
+#' @param breedingAgeDefault optional numeric fallback breeding age (years) for
+#' species absent from the table; \code{NULL} (the default) uses the accessor's
+#' built-in (2 years). Issue #73 Part 2.
+#' @param gestationDefault optional integer fallback gestation window (days) for
+#' species absent from the table; \code{NULL} (the default) uses the accessor's
+#' built-in (210 days). Issue #73 Part 2.
 #' @return a character vector of candidate ids in the cohort (possibly empty).
 #' @noRd
 getBreedingPeerCohort <- function(focalBirth, focalSpecies, missingSex,
                                   candidatePed, gestationTable = NULL,
-                                  breedingTable = NULL) {
+                                  breedingTable = NULL,
+                                  breedingAgeDefault = NULL,
+                                  gestationDefault = NULL) {
   if (length(focalBirth) != 1L || is.na(focalBirth) ||
     nrow(candidatePed) == 0L) {
     return(character(0L))
@@ -40,13 +48,24 @@ getBreedingPeerCohort <- function(focalBirth, focalSpecies, missingSex,
   } else {
     rep(NA_character_, nrow(candidatePed))
   }
-  minAge <- getSpeciesMinBreedingAge(spp, missingSex,
-    breedingTable = breedingTable
-  )
+  # A configurable default of NULL means "use the accessor's built-in". The
+  # accessors do not accept default = NULL (rep(NULL, n) empties the result), so
+  # omit the argument rather than threading a bare NULL (issue #73 Part 2, R2).
+  minAge <- if (is.null(breedingAgeDefault)) {
+    getSpeciesMinBreedingAge(spp, missingSex, breedingTable = breedingTable)
+  } else {
+    getSpeciesMinBreedingAge(spp, missingSex, breedingTable = breedingTable,
+      default = breedingAgeDefault
+    )
+  }
   dYear <- 365L
-  gestWindow <- getSpeciesGestation(focalSpecies,
-    gestationTable = gestationTable
-  )
+  gestWindow <- if (is.null(gestationDefault)) {
+    getSpeciesGestation(focalSpecies, gestationTable = gestationTable)
+  } else {
+    getSpeciesGestation(focalSpecies, gestationTable = gestationTable,
+      default = gestationDefault
+    )
+  }
   birth <- candidatePed$birth
   exit <- candidatePed$exit
   keep <- candidatePed$sex == missingSex &
@@ -89,13 +108,21 @@ getBreedingPeerCohort <- function(focalBirth, focalSpecies, missingSex,
 #' \code{species} columns refine the cohort.
 #' @param gestationTable optional gestation lookup passed through.
 #' @param breedingTable optional breeding-age lookup passed through.
+#' @param breedingAgeDefault optional numeric fallback breeding age (years)
+#' passed through to the cohort selection; \code{NULL} uses the built-in 2 years
+#' (issue #73 Part 2).
+#' @param gestationDefault optional integer fallback gestation window (days)
+#' passed through to the cohort selection; \code{NULL} uses the built-in 210
+#' days (issue #73 Part 2).
 #' @return a list with \code{indivMeanKin} (the corrected vector, names and
 #' order preserved) and \code{flagged} (character vector of ids left
 #' uncorrected for lack of a peer cohort).
 #' @noRd
 correctUnknownParentMeanKinship <- function(indivMeanKin, ped,
                                             gestationTable = NULL,
-                                            breedingTable = NULL) {
+                                            breedingTable = NULL,
+                                            breedingAgeDefault = NULL,
+                                            gestationDefault = NULL) {
   flagged <- character(0L)
   ## Cohort formation needs id/parentage/sex/birth; without them, no correction.
   if (!all(c("id", "sire", "dam", "sex", "birth") %in% names(ped))) {
@@ -134,7 +161,9 @@ correctUnknownParentMeanKinship <- function(indivMeanKin, ped,
       missingSex = missingSex,
       candidatePed = candPed,
       gestationTable = gestationTable,
-      breedingTable = breedingTable
+      breedingTable = breedingTable,
+      breedingAgeDefault = breedingAgeDefault,
+      gestationDefault = gestationDefault
     )
     cohort <- setdiff(cohort, focalId)
     cohort <- cohort[cohort %in% names(original)]
