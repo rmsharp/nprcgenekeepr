@@ -87,11 +87,23 @@ reportGV(
 An object of class `nprcgenekeeprGV`: a list with elements `report` (a
 dataframe with the genetic value report, with animals ranked in order of
 descending value), `kinship` (the kinship matrix), `gu` (genome
-uniqueness values), `fe` (founder equivalents), `fg` (founder genome
-equivalents), `maleFounders` and `femaleFounders` (dataframes of the
-known male and female founder records), `nMaleFounders` and
-`nFemaleFounders` (the counts of those founders), and `total` (the total
-number of known founders).
+uniqueness values; reported as 0 for unknown-origin both-unknown
+"Undetermined" animals, whose apparent uniqueness is an artifact of
+unknown parentage (issue \#76)), `fe` (founder equivalents), `fg`
+(founder genome equivalents), `maleFounders` and `femaleFounders`
+(dataframes of the known male and female founder records),
+`nMaleFounders` and `nFemaleFounders` (the counts of those founders),
+and `total` (the total number of known founders).
+
+## Details
+
+Reported genome uniqueness (`gu`) is set to 0 for "Undetermined" animals
+– those with both parents unknown (U-id aware) and no recorded origin –
+because their apparent uniqueness is an artifact of unknown parentage
+(decline-to-credit policy, issue \#76). Imports (both parents unknown
+but with a recorded origin) and all other animals are unaffected, and
+[`calcGU`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md)
+itself is unchanged.
 
 ## Examples
 

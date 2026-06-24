@@ -93,6 +93,20 @@
     where their inflated genome uniqueness had falsely ranked them high.
     Animals recorded as genuine imports (those carrying an `origin`)
     continue to be ranked normally.
+  - The Genetic Value Analysis now reports a genome uniqueness of 0 for
+    the “Undetermined” animals described above (those whose parents are
+    both unknown and that have no recorded origin). Because both parents
+    are unknown, such an animal enters the genome-uniqueness simulation
+    as a founder whose alleles are all freshly assigned and therefore
+    unique to it, so the genome uniqueness computed for it reflects only
+    that modeling artifact rather than genuinely rare alleles shared
+    sparingly across the colony. Rather than credit that artifact, the
+    report now shows their genome uniqueness as 0 wherever it appears
+    (the displayed report and the genetic-value CSV export). Animals
+    recorded as genuine imports (those carrying an `origin`), and
+    animals with one or both parents known, are unaffected. This
+    complements the ranking change above, which already moves these
+    animals to the bottom of the Genetic Value report.
   - The bundled `speciesGestation` reproductive-parameter table,
     previously seeded with only rhesus macaque, is now populated for 14
     common colony NHP species. Each species has its own maximum

@@ -131,11 +131,22 @@ species absent from the table. <code>NULL</code> uses the built-in 210 days.</p>
     <p>An object of class <code>nprcgenekeeprGV</code>: a list with elements
 <code>report</code> (a dataframe with the genetic value report, with animals
 ranked in order of descending value), <code>kinship</code> (the kinship matrix),
-<code>gu</code> (genome uniqueness values), <code>fe</code> (founder equivalents),
+<code>gu</code> (genome uniqueness values; reported as 0 for unknown-origin
+both-unknown "Undetermined" animals, whose apparent uniqueness is an
+artifact of unknown parentage (issue #76)), <code>fe</code> (founder equivalents),
 <code>fg</code> (founder genome equivalents), <code>maleFounders</code> and
 <code>femaleFounders</code> (dataframes of the known male and female founder
 records), <code>nMaleFounders</code> and <code>nFemaleFounders</code> (the counts of
 those founders), and <code>total</code> (the total number of known founders).</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>Reported genome uniqueness (<code>gu</code>) is set to 0 for "Undetermined"
+animals – those with both parents unknown (U-id aware) and no recorded
+origin – because their apparent uniqueness is an artifact of unknown
+parentage (decline-to-credit policy, issue #76). Imports (both parents
+unknown but with a recorded origin) and all other animals are unaffected,
+and <code><a href="calcGU.html">calcGU</a></code> itself is unchanged.</p>
     </div>
 
     <div class="section level2">

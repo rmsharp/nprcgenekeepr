@@ -15,6 +15,77 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-24 — Implemented issue \#76 (Reading A): genome uniqueness de-inflated to 0 for unknown-origin both-unknown (“Undetermined”) animals (Session 191)
+
+- **Deliverable (owner pick, single item, strict-TDD IMPLEMENTATION
+  session):** the ratified Reading A from
+  `docs/planning/issue76-gu-deinflation-ratification.md` §E — `reportGV`
+  now reports genome uniqueness (`gu`) as **0** for the Undetermined /
+  `noParentage` set (`classifyParentage == "both unknown"`, U-id aware,
+  AND `origin` NA/absent), in BOTH the report’s `gu` column and the
+  returned `$gu` element. Committed to branch `issue-76-gu-deinflation`;
+  **not published** (PR → CI → merge is a separate session, FM \#18/#25,
+  PR body “Closes \#76”). Every TDD transition `AskUserQuestion`-gated
+  (PRE-RED→RED→GREEN→REFACTOR). **0 stakeholder corrections.**
+- **GREEN (report-layer, ~12 lines):** in `R/reportGV.R`, after
+  `parentage <- classifyParentage(...)` (`:184`) and before the `cbind`,
+  compute `undetermined <- parentage == "both unknown" & is.na(origin)`
+  (origin = `demographics$origin` if present, else
+  `rep(NA_character_, n)` — mirrors `orderReport.R:43-47`’s
+  origin-absence handling) and set `gu$gu[undetermined] <- 0.0`.
+  Mutating the single `gu` data.frame updates both surfaces.
+  `calcGU`/`calcA`/`geneDrop` and all their golden tests are UNTOUCHED
+  and the `calcGU.R:10-34` stance is NOT reversed — added one clarifying
+  roxygen sentence to `calcGU` (it computes the textbook statistic for
+  every animal; `reportGV` applies the report-layer policy) and
+  documented the decline-to-credit policy in `reportGV`’s roxygen;
+  regenerated `man/reportGV.Rd` + `man/calcGU.Rd`.
+- **RED (3 tests, verified failing for the right reason first):** (1)
+  `test_reportGV.R` — a new origin-carrying fixture (ONPRC both-unknown
+  founders origin NA, a both-unknown import origin “CHINA”, a
+  U-id-parented both-unknown proband, known offspring) at `guThresh = 2`
+  / `set.seed(17)`: ONPRC founders’ `gu` == 0 in `$report` AND `$gu`,
+  imports preserved (\> 0, `$report` gu == `$gu`), a known animal
+  preserved; (2) `test_reportGV.R` — the U-id-parented proband is
+  de-inflated to 0, proving the predicate is
+  `classifyParentage`/U-id-aware not raw `is.na`; (3) extended
+  `test_modGeneticValue.R`’s demotion test (`:776`) to assert the
+  displayed `results$gu` == 0 for the Undetermined founders (the
+  demotion assertions still pass).
+- **`guThresh = 2` is load-bearing for the U-id RED test (Learning
+  179):** a U-id-parented proband is a gene-drop NON-founder, so at the
+  default `guThresh = 1` its inherited alleles are always shared with
+  its in-population parent → its `gu` is structurally 0 already → the
+  de-inflation would be invisible (the “failing” assertion would
+  silently pass on unchanged code). At `guThresh = 2` (alleles held by ≤
+  2 animals count as rare) the proband carries `gu` = 100 on the
+  pre-change code, making the de-inflation observable and the test
+  RED-meaningful.
+- **REFACTOR:** the 2 style lints introduced by GREEN fixed (re-wrapped
+  the issue-#76 comment ≤ 80 chars; `0` → `0.0` for the double `gu`
+  percentage column, silencing `implicit_integer_linter`). No behavior
+  change.
+- **Verification:** the 3 targeted tests green; full regression
+  **1225/0/0** (no true offenders; even the baseline
+  `test-app-`/`test-e2e-` files passed this run);
+  `devtools::check(vignettes = FALSE)` = **0/0/0** (run after GREEN and
+  again after REFACTOR); `spell_check_package(".")` = 0; lintr clean on
+  the changed lines. **Phase-3E (changes a displayed value, FM \#24):**
+  booted `modGeneticValueServer` via `testServer` on the origin fixture
+  — the displayed GVA rankings table shows `gu` = 0 for the Undetermined
+  set (ranked LAST, 6–10 of 10), imports preserved at 100/75 (ranked
+  1–2), known animals preserved; the `origin` column survives
+  `trimPedigree → reportGV` so import-preservation holds end-to-end; the
+  Slice-3 demotion still ranks Undetermined last (the two corrections
+  compose). No browser click (e2e harness baseline-flaky; the
+  `testServer` boot is the established runtime evidence).
+- **Files (feat):** `R/reportGV.R` (de-inflation + roxygen),
+  `R/calcGU.R` (clarifying roxygen), `man/reportGV.Rd`, `man/calcGU.Rd`,
+  `tests/testthat/test_reportGV.R` (+`makeOriginTestPed` helper +2
+  tests), `tests/testthat/test_modGeneticValue.R` (+1 assertion).
+  **Issue \#76 stays OPEN** until the publish session merges (PR “Closes
+  \#76”).
+
 ### 2026-06-24 — Ratified issue \#76 (Reading A): de-inflate genome uniqueness for both-unknown founders — design agreed, implementation pending (Session 190)
 
 - **Deliverable (owner pick, single item):** the **ratification design
