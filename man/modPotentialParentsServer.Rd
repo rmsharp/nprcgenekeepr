@@ -8,7 +8,8 @@ modPotentialParentsServer(
   id,
   pedigree = NULL,
   minParentAge = 2,
-  gestationTable = NULL
+  gestationTable = NULL,
+  gestationDefault = NULL
 )
 }
 \arguments{
@@ -22,7 +23,14 @@ parent. Defaults to 2 (the QC default).}
 \item{gestationTable}{optional species-to-gestation lookup passed to
 \code{\link{getSpeciesGestation}} when defaulting the gestation window;
 \code{NULL} (the default) uses the bundled \code{\link{speciesGestation}}
-table.}
+table. Supplied at boot from the user-configurable species overrides
+(issue #73 Part 2), so a colony's CSV values drive the prefill default.}
+
+\item{gestationDefault}{optional integer fallback (days) for a pedigree whose
+species is absent from \code{gestationTable}, passed through to the
+gestation prefill; \code{NULL} (the default) keeps the built-in 210.
+Supplied at boot from the user-configurable species overrides (issue #73
+Part 2).}
 }
 \value{
 A list of reactive expressions:

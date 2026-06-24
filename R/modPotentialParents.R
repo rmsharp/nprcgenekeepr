@@ -77,12 +77,24 @@ firstPedigreeSpecies <- function(ped) {
 #' @param gestationTable optional species-to-gestation lookup passed through to
 #'   \code{\link{getSpeciesGestation}}; \code{NULL} uses the bundled
 #'   \code{\link{speciesGestation}} table.
+#' @param gestationDefault optional integer fallback (days) for a species that
+#'   is absent, \code{NA}, or not found in \code{gestationTable}, passed through
+#'   to \code{\link{getSpeciesGestation}}'s \code{default}; \code{NULL} (the
+#'   default) keeps the accessor's built-in 210. A bare \code{NULL} is never
+#'   threaded into \code{default} (the accessor does not handle it -- issue #73
+#'   Part 2 R2); the argument is omitted instead.
 #' @return a length-1 integer: the gestation default in days.
 #' @keywords internal
 #' @noRd
-pedigreeGestationDefault <- function(ped, gestationTable = NULL) {
-  getSpeciesGestation(firstPedigreeSpecies(ped),
-                      gestationTable = gestationTable)
+pedigreeGestationDefault <- function(ped, gestationTable = NULL,
+                                     gestationDefault = NULL) {
+  species <- firstPedigreeSpecies(ped)
+  if (is.null(gestationDefault)) {
+    getSpeciesGestation(species, gestationTable = gestationTable)
+  } else {
+    getSpeciesGestation(species, gestationTable = gestationTable,
+                        default = gestationDefault)
+  }
 }
 
 #' Override guard for the gestation prefill
@@ -196,7 +208,13 @@ modPotentialParentsUI <- function(id) {
 #' @param gestationTable optional species-to-gestation lookup passed to
 #'   \code{\link{getSpeciesGestation}} when defaulting the gestation window;
 #'   \code{NULL} (the default) uses the bundled \code{\link{speciesGestation}}
-#'   table.
+#'   table. Supplied at boot from the user-configurable species overrides
+#'   (issue #73 Part 2), so a colony's CSV values drive the prefill default.
+#' @param gestationDefault optional integer fallback (days) for a pedigree whose
+#'   species is absent from \code{gestationTable}, passed through to the
+#'   gestation prefill; \code{NULL} (the default) keeps the built-in 210.
+#'   Supplied at boot from the user-configurable species overrides (issue #73
+#'   Part 2).
 #'
 #' @seealso \code{\link{modPotentialParentsUI}} for the user interface.
 #' @seealso \code{\link{getPotentialParents}} for the underlying computation.
@@ -206,23 +224,29 @@ modPotentialParentsUI <- function(id) {
 #' @importFrom utils write.csv
 #' @export
 modPotentialParentsServer <- function(id, pedigree = NULL, minParentAge = 2.0,
-                                      gestationTable = NULL) {
+                                      gestationTable = NULL,
+                                      gestationDefault = NULL) {
   moduleServer(id, function(input, output, session) {
 
     # Species-keyed default for the gestation window, plus the last value the
     # module wrote into the input (so a user's manual edit is never clobbered).
     lastAutoSet <- reactiveVal(210L)
 
-    gestationDefault <- reactive({
+    # gestationDefaultReactive is named distinctly from the gestationDefault
+    # argument so the argument is not shadowed inside this closure (it must stay
+    # a lazily forced promise -- the boot-time overrides are not populated when
+    # the module is constructed).
+    gestationDefaultReactive <- reactive({
       ped <- tryCatch(pedigree(), error = function(e) NULL)
-      pedigreeGestationDefault(ped, gestationTable = gestationTable)
+      pedigreeGestationDefault(ped, gestationTable = gestationTable,
+                               gestationDefault = gestationDefault)
     })
 
     # Prefill the gestation window from the loaded pedigree's species, unless
     # the user has manually changed it (the override guard).
     observeEvent(pedigree(), {
       if (prefillGuardAllows(input$maxGestationalPeriod, lastAutoSet())) {
-        newDefault <- gestationDefault()
+        newDefault <- gestationDefaultReactive()
         updateNumericInput(
           session, "maxGestationalPeriod", value = newDefault
         )
@@ -307,7 +331,7 @@ modPotentialParentsServer <- function(id, pedigree = NULL, minParentAge = 2.0,
     list(
       potentialParents = potentialParents,
       tableData = tableData,
-      gestationDefault = gestationDefault
+      gestationDefault = gestationDefaultReactive
     )
   })
 }

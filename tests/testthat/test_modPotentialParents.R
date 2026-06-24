@@ -485,3 +485,112 @@ test_that("modPotentialParentsServer does not clobber a user's manual value on p
     }
   )
 })
+
+# =============================================================================
+# Issue #73 Part 2 Slice 2 - user-configurable gestation override reaches the
+# Potential Parents prefill. The merged override table (a user CSV merged onto
+# the bundled speciesGestation by loadSpeciesOverrides) supplies per-species
+# gestation values; gestationDefault supplies the absent-species fallback. Both
+# are loaded once at boot (shared$speciesOverrides) and passed to the module.
+# Scope is the prefill default only (D5); the computed window is unchanged.
+# =============================================================================
+
+# RHESUS overridden to a distinct, non-default value (999); TESTSP stays 90.
+overGestTable <- data.frame(
+  species = c("RHESUS", "TESTSP"),
+  gestation = c(999L, 90L),
+  stringsAsFactors = FALSE
+)
+
+test_that("pedigreeGestationDefault honors a custom gestationDefault for a species-less pedigree", {
+  ped <- data.frame(
+    id = c("A", "B"),
+    sex = c("M", "F"),
+    stringsAsFactors = FALSE
+  )
+  expect_identical(
+    pedigreeGestationDefault(ped, gestationTable = testGestTable,
+                             gestationDefault = 300L),
+    300L
+  )
+})
+
+test_that("pedigreeGestationDefault honors a custom gestationDefault for a species absent from the table", {
+  ped <- data.frame(
+    id = c("A", "B"),
+    species = c("UNICORN", "UNICORN"),
+    stringsAsFactors = FALSE
+  )
+  expect_identical(
+    pedigreeGestationDefault(ped, gestationTable = testGestTable,
+                             gestationDefault = 300L),
+    300L
+  )
+})
+
+test_that("pedigreeGestationDefault with gestationDefault omitted falls to the built-in 210 (R2)", {
+  # Backward-compat guard: a bare NULL must NOT be threaded into the accessor's
+  # default (rep(NULL, n) empties); omitting it leaves the built-in 210.
+  ped <- data.frame(
+    id = c("A", "B"),
+    species = c("UNICORN", "UNICORN"),
+    stringsAsFactors = FALSE
+  )
+  expect_identical(
+    pedigreeGestationDefault(ped, gestationTable = testGestTable),
+    210L
+  )
+})
+
+test_that("modPotentialParentsServer honors a custom gestationDefault for a species-less pedigree", {
+  skip_if_not_installed("shiny")
+
+  ped <- data.frame(
+    id = c("A", "B"),
+    sire = c(NA, NA),
+    dam = c(NA, NA),
+    sex = c("M", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPotentialParentsServer,
+    args = list(
+      pedigree = shiny::reactive(ped), minParentAge = 2,
+      gestationTable = testGestTable, gestationDefault = 300L
+    ),
+    {
+      expect_identical(session$getReturned()$gestationDefault(), 300L)
+    }
+  )
+})
+
+test_that("modPotentialParentsServer override gestationTable drives the prefill (Slice 2 end-to-end)", {
+  skip_if_not_installed("shiny")
+
+  ped <- data.frame(
+    id = c("A", "B"),
+    sire = c(NA, NA),
+    dam = c(NA, NA),
+    sex = c("M", "F"),
+    species = c("RHESUS", "RHESUS"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPotentialParentsServer,
+    args = list(
+      pedigree = shiny::reactive(ped), minParentAge = 2,
+      gestationTable = overGestTable
+    ),
+    {
+      expect_identical(session$getReturned()$gestationDefault(), 999L)
+    }
+  )
+})
+
+test_that("appServer wires the override gestationTable and gestationDefault into the Potential Parents module", {
+  src <- paste(deparse(appServer), collapse = "\n")
+  expect_match(src, "speciesOverrides$gestationTable", fixed = TRUE)
+  expect_match(src, "speciesOverrides$gestationDefault", fixed = TRUE)
+})
