@@ -7,6 +7,234 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 185 Did
+
+**Deliverable:** **Ratify the issue \#73 Part 2 plan**
+(`docs/planning/issue73-part2-user-configurable-plan.md`) – resolve §7’s
+checklist (especially D1 CSV-path-vs-inline and D4 merge-vs-replace) and
+flip the plan `Status: DRAFT` -\> `Status: RATIFIED -- ready to RED`.
+**(DONE – plan ratified + committed to `master` + pushed to origin; NOT
+implemented – FM \#18/#25.)** **Started / Completed:** 2026-06-23 /
+2026-06-23 **Status:** **DONE.** RATIFICATION session – a discrete
+session in the plan -\> ratify -\> implement arc; the ratified plan is
+the deliverable; **Slice 1 implementation is a SEPARATE strict-TDD
+session (do NOT bundle Slice 1 with Slice 2 either – FM \#18/#25).**
+**TDD code-phases N/A every response** (docs-only; no `R/`/test change).
+**0 stakeholder corrections.** The owner ratified **all** open decisions
+**as recommended** via one 4-question `AskUserQuestion` (D1 / D4 / D5
+surfaced individually; D2/D3/D6/D7 bundled as “accept all vs review
+individually” to respect the 4-question max). Before presenting the
+recommendations I re-verified the load-bearing claims FIRSTHAND (did NOT
+rubber-stamp S184). - **Ratified (all as recommended):** **D1** = CSV
+file path (one optional config key, `getConfigApiKey`-style soft-lookup;
+ZERO `getSiteInfo` change); **D2** = four bundled columns, header
+required, matched by name, rows-partial only (no column-level partial in
+v1); **D3** = two optional fallback keys `minBreedingAgeDefault` (2.0) /
+`gestationDefault` (210); **D4** = **MERGE** (a user CSV overrides only
+listed species; unlisted keep bundled values; merge in the reader,
+accessors unchanged); **D5** = gestation override = prefill the
+suggested window only (per-animal deferred); **D6** = GVA tab first
+(Slice 1), Potential Parents second (Slice 2); **D7** = sibling
+`shared$speciesOverrides` passed to modules as a reactive. Confirmed:
+config file only (no Settings-tab UI; `appUI.R:223-228` stays a
+placeholder); backward-compat invariant (no config =\> identical to
+today) is a hard acceptance test per slice. - **Firsthand
+re-verification (FM \#11/#20, Learning 6):** read the four load-bearing
+files directly. `getSpeciesMinBreedingAge.R:39-41` substitutes the
+bundled table only when the override is NULL, then
+[`match()`](https://rdrr.io/r/base/match.html)es against ONLY the
+supplied table -\> an absent species gets `idx=NA` -\> falls to
+`default`, **confirming D4-replace is real** (the \#1 dragon);
+`getSpeciesGestation.R:30-32,40` same (`out[is.na(out)] <- default`).
+`getParamDef.R:12` [`stop()`](https://rdrr.io/r/base/stop.html)s on a
+missing key; `getConfigApiKey.R` is the optional soft-lookup (reads the
+token list directly, returns `""` if absent, NOT via `getParamDef`) -\>
+**confirming D1**. All S184 recommendations HELD – this was a confirm,
+not a correction – BUT the firsthand read **SHARPENED R2**: the
+accessors have NO `NULL` handling on `default` (`out <- rep(default, n)`
+with `default=NULL` yields `numeric(0)`/`integer(0)`), so an upper layer
+must translate “no configured default” into NOT passing `default` to the
+accessor (omit the arg, or `x %||% <built-in>` AT the accessor call) –
+never thread a bare `NULL` into the accessor’s `default`. I added this
+caveat to the plan’s R2 so the Slice 1 implementer inherits it. - **Plan
+marked ratified at every executor-read point:** top
+`Status: RATIFIED -- ready to RED` banner + a “Ratification record”
+block (the 7 decisions + the 2 confirmations) + a §3-header note
+(“inline ‘*Ratify …*’ notes are now settled”) + §7 checklist flipped to
+`[x]` with each chosen option.
+
+**Phase-3E (build-equivalent / runtime smoke): N/A this session, stated
+not skipped.** The deliverable is a markdown ratification edit – no
+`R/`/test/`man`/NAMESPACE/`data` change, no runtime behavior touched,
+nothing to build or smoke. The integrity check is that the ratified
+decisions are internally consistent and that the firsthand-verified
+claims (D1/D4/R2) are accurate – all four files read this session. The
+two IMPLEMENTATION slices each carry an explicit Phase-3E requirement
+(they change Shiny module params + boot loading).
+
+**Session 184 Handoff Evaluation (by Session 185): Score 9/10.** S184’s
+`=> SUGGESTED NEXT` listed **“(Ratify \#73 Part 2, then implement Slice
+1)”** as the predicted next and framed THIS session exactly: “FIRST
+resolve §7’s checklist – especially **D1** (CSV-path vs inline keys) and
+**D4** (merge vs replace), the two load-bearing calls … THEN a separate
+strict-TDD session implements Slice 1. Do NOT bundle ratification with
+implementation.” That pointed me straight at the two decisions that
+actually gate Slice 1’s RED, so I surfaced exactly those (plus D5 and
+the D2/D3/D6/D7 bundle) and did NOT start coding. **Every load-bearing
+fact in the plan held FIRSTHAND** – D4-replace (verified at the
+accessors), D1 fixed-schema + `getConfigApiKey` precedent (verified at
+`getParamDef`/`getConfigApiKey`), the threading gaps, the
+`modPotentialParents` prefill-only subtlety – so ratification was a
+confirm, not a rediscovery. The Gotchas (issue \#73 OPEN, origin==local,
+the NUMERIC breeding-age columns) all held. **The -1:** S184’s R2 said
+the configurable `default` “must default to `NULL`” but did NOT note
+that you cannot then pass that `NULL` into the accessor (the accessors
+have no NULL guard -\> `rep(NULL,n)` empties the result); I found that
+sharp edge by reading the accessor firsthand. It is an implementer-level
+detail and arguably belongs to the Slice 1 session, so a small deduction
+– the framing and evidence were otherwise exactly right. ROI maximal:
+the decision framing saved the time of re-deriving which decisions gate
+RED.
+
+**Self-assessment (Session 185): 7/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check -\> HEAD `8f8dfae4` = S184 close-out, no
+undocumented commits), reported, STOPPED for the owner’s pick; claimed
+with a 1B stub BEFORE technical work; declared TDD N/A every response;
+ratified the plan and did NOT implement (held the FM \#18/#25 line – no
+`R/` change). **Strengths:** (1) **surfaced the genuine owner decisions
+via `AskUserQuestion` rather than picking**
+(\[\[observation-vs-decision\]\]) – four questions, the three
+load-bearing ones (D1/D4/D5) individual and the four low-stakes ones
+bundled, plain-ASCII labels with the recommended option first; (2)
+**re-verified the load-bearing claims FIRSTHAND before presenting them**
+(FM \#11/#20) – did not rubber-stamp S184; confirmed D1/D4 at the source
+and SHARPENED R2 with a real implementation trap (the `rep(NULL,n)`
+empty-result), folding it into the plan for the Slice 1 implementer; (3)
+**marked the ratification at every place an executor reads** (banner +
+record + §3 header + §7 `[x]`), so a future session jumping to any
+section sees the decisions are closed; (4) **scope-disciplined** –
+ratification only, no code, no Slice bundling; one genuinely-new
+learning (173); plain language, ASCII gates. **Weaknesses (honest):**
+(a) **low base difficulty** – the plan was already strong (S184 8/10)
+and every recommendation HELD, so there was no contested adjudication or
+correction this session (unlike S184, which had to break a mapper tie on
+D1 and overturn a mapper overstatement); the value is the firsthand
+re-verify + the R2 sharpening + clean decision-surfacing, not depth -\>
+ceiling ~7; (b) the R2 sharpening is a modest catch, not a major
+correction; (c) no runtime verification (docs-only – N/A, stated). A
+clean, fully-verified, scope-disciplined ratification with one genuine
+plan-sharpening and zero corrections, but light in difficulty -\> 7/10.
+
+**Learnings:** **Learning 173** added to `PROJECT_LEARNINGS.md` –
+ratifying a predecessor’s plan is its own discrete session in the
+plan-\>ratify-\>implement arc: surface the genuine owner calls via
+`AskUserQuestion`, re-verify the load-bearing claims FIRSTHAND before
+presenting (the predecessor may be right yet have left a sharp edge –
+here R2’s `rep(NULL,n)` accessor trap), and mark the ratification at
+every executor-read point (banner/record/§3-header/§7-`[x]`). Carried as
+applied: \[\[consult-project-source-of-truth\]\] (the
+planning-workstream ratify-before-RED gate + the
+vertical-slice/RED-GREEN-REFACTOR contract),
+\[\[observation-vs-decision\]\] / \[\[ascii-only-in-question-options\]\]
+/ \[\[avoid-jargon-use-plain-language\]\] (the 4-question ratification
+`AskUserQuestion`, plain-ASCII labels),
+\[\[check-process-history-before-rerunning-work\]\] (read the S184
+plan + handoff firsthand rather than re-grounding),
+\[\[backlog-vs-changelog-placement\]\] (ratification deliverable -\>
+CHANGELOG; \#73 stays OPEN), \[\[push-close-out-docs-to-origin\]\] (push
+this close-out to origin); Learnings 6 (read implementations before
+relying on a claim), 161 (build-equivalent), 172 (the S184 plan facts
+this session ratified).
+
+**=\> SUGGESTED NEXT = owner’s pick.** `origin/master` == local `master`
+after this S185 close-out push; **issue \#73 is OPEN** (Part 1 live;
+Part 2 PLANNED + now RATIFIED, but UNIMPLEMENTED); the plan is
+**ready-to-RED**; no dangling branches; dashboard 98/100. Natural
+options (plain ASCII labels): - **(Implement \#73 Part 2 Slice 1 – GVA
+tab end-to-end)** the predicted next, now unblocked (D1/D4 ratified). A
+separate **strict-TDD** session (every transition
+`AskUserQuestion`-gated): build the shared CSV reader
+(`getSpeciesOverridesPath()` soft-lookup + `loadSpeciesOverrides()` that
+reads the CSV, validates, **MERGES onto bundled `speciesGestation` per
+D4**, returns
+`list(breedingTable, gestationTable, breedingAgeDefault, gestationDefault)`,
+fails soft like `loadSiteConfig`); add
+`breedingAgeDefault`/`gestationDefault` params to
+`getBreedingPeerCohort` + `correctUnknownParentMeanKinship` (mind the
+**R2 caveat** – do NOT thread bare NULL into the accessor’s `default`);
+add the four override params to `reportGV` (thread at `reportGV.R:103`);
+wire `modGeneticValueServer` to receive config + pass to `reportGV`;
+load overrides at boot in `appServer` and pass to
+`modGeneticValueServer` (`appServer.R:266`); document the CSV + keys in
+`inst/extdata/example_nprcgenekeepr_config`. **This is the HEAVY slice**
+(reader + 3 signatures + module + appServer) – expect a full session.
+**Phase-3E runtime smoke REQUIRED** (Shiny wiring). Plan §4 Slice 1 is
+the spec; RED expected-values must be computed by the executor. Do NOT
+bundle with Slice 2. - **(#76 – Reading A, deep genetics)** de-inflate
+the genome-uniqueness statistic for both-unknown founders inside
+`calcGU`/`calcA`/gene-drop. NOT a “just implement” – it reverses the
+documented `calcGU.R:10-34` stance and breaks golden invariants, so a
+§8-E-style RATIFICATION first, THEN a separate TDD implement (two
+sessions min; do NOT bundle). - **(Other options)** \#37 (unused
+exports); \#36 (chimpanzee age-pyramid); \#2 (GVA iteration-count
+advice); \#28 (large, own plan); older \#13/#12/#11/#10/#5/#1; CRAN
+Phase 5 (owner-run, `docs/planning/cran-2.0.0-phase5-runbook.md`). **Do
+NOT** bundle Slice 1 with Slice 2 (FM \#18/#25); **do NOT** thread a
+bare `NULL` into the accessors’ `default` (R2 caveat – it empties the
+result).
+
+**Key files (this session):** **CHANGED – the deliverable:**
+`docs/planning/issue73-part2-user-configurable-plan.md`
+(DRAFT-\>RATIFIED banner + Ratification record + §3-header note + R2
+firsthand caveat + §7 checklist flipped to `[x]`). **CHANGED – close-out
+docs (this S185 docs commit, direct to local `master`, then pushed to
+origin):** `CHANGELOG.md` (S185 `[Unreleased]` ratification entry),
+`PROJECT_LEARNINGS.md` (Learning 173), `SESSION_NOTES.md` (this
+handoff + the 1B stub it overwrote). **Read firsthand (ratification
+verification, NOT changed):** `R/getSpeciesMinBreedingAge.R:37-61`,
+`R/getSpeciesGestation.R:28-42`, `R/getConfigApiKey.R`,
+`R/getParamDef.R:11-19`; the full S184 plan (the ratification target).
+**NO `R/`/test/`man`/NAMESPACE/`data` change** (ratification session).
+**The input:** S184’s plan + handoff. **NOT committed (standing
+keeps):** `PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
+
+**Gotchas:** (1) **Issue \#73 is OPEN – Part 1 (data) LIVE on `master`;
+Part 2 is PLANNED + RATIFIED (this session) but UNIMPLEMENTED.** A Part
+2 publish (after both slices) uses **“Closes \#73”** (last part). (2)
+**The plan is now RATIFIED – ready-to-RED.** Slice 1 may declare RED
+(D1/D4 are settled). Do NOT bundle Slice 1 with Slice 2 (FM \#18/#25);
+do NOT re-litigate the ratified decisions absent new evidence. (3) **R2
+firsthand caveat (new this session):** the accessors
+(`getSpeciesMinBreedingAge`/`getSpeciesGestation`) have NO `NULL`
+handling on `default` – `out <- rep(default, n)` with `default=NULL`
+yields `numeric(0)`/`integer(0)`. The Slice 1 threading must translate
+“no configured default” into NOT passing `default` to the accessor (omit
+the arg, or `x %||% <built-in>` at the call); never thread a bare
+`NULL`. (4) **D4 = MERGE in the reader** – the accessors REPLACE (a
+non-NULL table makes absent species fall to the fallback, not the
+bundled value), so `loadSpeciesOverrides()` must merge the user CSV onto
+bundled `speciesGestation` (user wins per-species; unlisted keep
+bundled). (5) **D1 = CSV-path soft-lookup** – a single optional key read
+`getConfigApiKey`-style; ZERO `getSiteInfo` change (it is a fixed
+hardcoded-key schema; `getParamDef` STOPs on a missing key). (6) **D7 =
+sibling `shared$speciesOverrides`** (separate from `shared$config`),
+passed to the modules as a reactive (per `modInputServer`
+`appServer.R:106`). (7) **The breeding-age columns are NUMERIC**
+(gestation integer); any later code/test asserting integer breeding ages
+breaks (Learning 170). (8) `origin/master` == local `master` after this
+S185 close-out push – next session branches directly off `master` for
+the Slice 1 code. (9) Carried standing keeps (unchanged): package
+**ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without a LabKey credential/config; exactly ONE codecov
+config; NEWS render traps CLOSED at source
+(`html_preview:false`+`md_extensions:"-smart"`, 155); `git pull` is
+rebase + chokes on `.DS_Store` -\> use `fetch`+`reset` (135); post-merge
+`fetch` before `reset --hard` ancestor-gated (146); `skip_on_cran()`
+`testServer` tests need `NOT_CRAN=true`; build-equivalent is
+`devtools::check(vignettes = FALSE)` = 0/0/0 (Learning 161).
+
 ### What Session 184 Did
 
 **Deliverable:** Plan **issue \#73 Part 2** – the user-configurable
