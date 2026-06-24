@@ -125,3 +125,163 @@ test_that("reportGV classifies parentage and flags both-unknown founders (issue 
   expect_true(all(rpt$value[rpt$parentage != "both unknown"] != "Undetermined"))
 })
 
+# ---------------------------------------------------------------------------
+# Issue #73 Part 2 Slice 1: reportGV threads the user-configurable species
+# overrides (breedingTable / gestationTable / breedingAgeDefault /
+# gestationDefault) down to the unknown-parent mean-kinship correction. Each
+# expected correction is recomputed independently in base R from the uncorrected
+# baseline. On qcPed all 43 one-unknown animals are missing the sire (male
+# cohort) and there is no species column, so the *Default params drive the
+# cutoff/window directly; the *Table params bite only when a species column is
+# present (so those two tests add species = "RHESUS").
+# ---------------------------------------------------------------------------
+
+# Independent base-R recomputation of the one-unknown correction at a given
+# breeding-age cutoff (years) and gestation window (days).
+recomputeCorrection <- function(ped, mk0, probands, minAgeYears, gestDays) {
+  dYear <- 365L
+  isU <- function(x) is.na(x) | nprcgenekeepr:::isGeneratedUnknownId(x)
+  sireMiss <- isU(ped$sire)
+  oneU <- xor(sireMiss, isU(ped$dam))
+  expected <- mk0
+  for (i in which(oneU)) {
+    bf <- ped$birth[i]
+    missingSex <- if (sireMiss[i]) "M" else "F"
+    cand <- ped$sex == missingSex & !is.na(ped$birth) &
+      ped$birth <= (bf - dYear * minAgeYears) &
+      (is.na(ped$exit) | ped$exit >= (bf - gestDays)) &
+      ped$id != ped$id[i]
+    cohort <- as.character(ped$id[cand])
+    cohort <- cohort[cohort %in% probands]
+    if (length(cohort) == 0L) next
+    expected[ped$id[i]] <- min(mk0[ped$id[i]] + mean(mk0[cohort]) / 2, 1)
+  }
+  expected
+}
+
+makeMk0 <- function(ped) {
+  probands <- as.character(ped$id)
+  meanKinship(nprcgenekeepr:::filterKinMatrix(
+    probands, kinship(ped$id, ped$sire, ped$dam, ped$gen)
+  ))[probands]
+}
+
+alignImk <- function(gvr, probands) {
+  stats::setNames(
+    gvr$report$indivMeanKin, as.character(gvr$report$id)
+  )[probands]
+}
+
+test_that("reportGV threads breedingAgeDefault into the correction (#73 Part 2)", {
+  ped <- nprcgenekeepr::qcPed
+  probands <- as.character(ped$id)
+  mk0 <- makeMk0(ped)
+  isU <- function(x) is.na(x) | nprcgenekeepr:::isGeneratedUnknownId(x)
+  oneU <- xor(isU(ped$sire), isU(ped$dam))
+  expect_true(any(oneU))
+
+  over <- reportGV(ped, guIter = 100L, breedingAgeDefault = 4)
+  base <- reportGV(ped, guIter = 100L)
+  imkOver <- alignImk(over, probands)
+  imkBase <- alignImk(base, probands)
+
+  expected <- recomputeCorrection(ped, mk0, probands, 4L, 210L)
+  expect_equal(unname(imkOver[ped$id[oneU]]), unname(expected[ped$id[oneU]]))
+  ## the override actually changed the result vs the default-2 baseline
+  expect_false(isTRUE(all.equal(
+    unname(imkOver[ped$id[oneU]]), unname(imkBase[ped$id[oneU]])
+  )))
+})
+
+test_that("reportGV threads gestationDefault into the correction (#73 Part 2)", {
+  ped <- nprcgenekeepr::qcPed
+  probands <- as.character(ped$id)
+  mk0 <- makeMk0(ped)
+  isU <- function(x) is.na(x) | nprcgenekeepr:::isGeneratedUnknownId(x)
+  oneU <- xor(isU(ped$sire), isU(ped$dam))
+
+  over <- reportGV(ped, guIter = 100L, gestationDefault = 36500L)
+  base <- reportGV(ped, guIter = 100L)
+  imkOver <- alignImk(over, probands)
+  imkBase <- alignImk(base, probands)
+
+  expected <- recomputeCorrection(ped, mk0, probands, 2L, 36500L)
+  expect_equal(unname(imkOver[ped$id[oneU]]), unname(expected[ped$id[oneU]]))
+  expect_false(isTRUE(all.equal(
+    unname(imkOver[ped$id[oneU]]), unname(imkBase[ped$id[oneU]])
+  )))
+})
+
+test_that("reportGV threads a custom breedingTable into the correction (#73 Part 2)", {
+  ped <- nprcgenekeepr::qcPed
+  pedSpp <- ped
+  pedSpp$species <- "RHESUS"
+  probands <- as.character(ped$id)
+  mk0 <- makeMk0(ped)
+  isU <- function(x) is.na(x) | nprcgenekeepr:::isGeneratedUnknownId(x)
+  oneU <- xor(isU(ped$sire), isU(ped$dam))
+
+  ## custom RHESUS male cutoff 2 (vs bundled 4); gestation 210 unchanged
+  custom <- data.frame(
+    species = "RHESUS", gestation = 210L,
+    minMaleBreedingAge = 2.0, minFemaleBreedingAge = 2.0,
+    stringsAsFactors = FALSE
+  )
+  over <- reportGV(pedSpp, guIter = 100L, breedingTable = custom)
+  bundled <- reportGV(pedSpp, guIter = 100L) # bundled RHESUS male 4
+  imkOver <- alignImk(over, probands)
+  imkBundled <- alignImk(bundled, probands)
+
+  ## custom cutoff 2 reproduces the default-2 baseline
+  expected <- recomputeCorrection(ped, mk0, probands, 2L, 210L)
+  expect_equal(unname(imkOver[ped$id[oneU]]), unname(expected[ped$id[oneU]]))
+  ## bundled RHESUS cutoff 4 differs from the custom cutoff 2
+  expect_false(isTRUE(all.equal(
+    unname(imkOver[ped$id[oneU]]), unname(imkBundled[ped$id[oneU]])
+  )))
+})
+
+test_that("reportGV threads a custom gestationTable into the correction (#73 Part 2)", {
+  ped <- nprcgenekeepr::qcPed
+  pedSpp <- ped
+  pedSpp$species <- "RHESUS"
+  probands <- as.character(ped$id)
+  mk0 <- makeMk0(ped)
+  isU <- function(x) is.na(x) | nprcgenekeepr:::isGeneratedUnknownId(x)
+  oneU <- xor(isU(ped$sire), isU(ped$dam))
+
+  ## fix the cutoff at 2 via a custom breedingTable, vary only the gestation
+  ## window: a 10-day window (vs bundled RHESUS 210) excludes more exited peers.
+  customAge <- data.frame(
+    species = "RHESUS", gestation = 210L,
+    minMaleBreedingAge = 2.0, minFemaleBreedingAge = 2.0,
+    stringsAsFactors = FALSE
+  )
+  customGest <- data.frame(
+    species = "RHESUS", gestation = 10L, stringsAsFactors = FALSE
+  )
+  over <- reportGV(pedSpp, guIter = 100L,
+                   breedingTable = customAge, gestationTable = customGest)
+  base <- reportGV(pedSpp, guIter = 100L, breedingTable = customAge)
+  imkOver <- alignImk(over, probands)
+  imkBase <- alignImk(base, probands)
+
+  expected <- recomputeCorrection(ped, mk0, probands, 2L, 10L)
+  expect_equal(unname(imkOver[ped$id[oneU]]), unname(expected[ped$id[oneU]]))
+  expect_false(isTRUE(all.equal(
+    unname(imkOver[ped$id[oneU]]), unname(imkBase[ped$id[oneU]])
+  )))
+})
+
+test_that("reportGV with explicit NULL overrides equals the no-override default (#73 Part 2)", {
+  ped <- nprcgenekeepr::qcPed
+  a <- reportGV(ped, guIter = 100L)
+  b <- reportGV(ped, guIter = 100L, breedingTable = NULL, gestationTable = NULL,
+                breedingAgeDefault = NULL, gestationDefault = NULL)
+  ## indivMeanKin is deterministic (kinship + correction; no gene-drop random);
+  ## explicit-NULL overrides must reproduce today's behavior byte for byte.
+  ia <- a$report$indivMeanKin[order(a$report$id)]
+  ib <- b$report$indivMeanKin[order(b$report$id)]
+  expect_equal(ia, ib)
+})
+

@@ -52,6 +52,29 @@
 # Optional API-key token (uncomment and set to use the config-file path):
 # apiKey = "paste-your-labkey-api-key-here"
 
+# Optional species reproductive-parameter overrides (issue #73 Part 2).
+# By default the Genetic Value Analysis uses the bundled per-species minimum
+# breeding ages and gestation windows (the speciesGestation table). A colony
+# can override them with up to three optional keys; all are absent by default
+# and any that is absent keeps the bundled value.
+#
+#   speciesOverridesPath -- path to a CSV with a header row and the four
+#     columns species, gestation, minMaleBreedingAge, minFemaleBreedingAge
+#     (column order is matched by name). List only the species you want to
+#     change: each listed species is MERGED onto the bundled table, so every
+#     unlisted species keeps its bundled value. gestation is whole days
+#     (integer); the breeding-age columns are years (numeric, so 2.5 is exact).
+#   minBreedingAgeDefault -- numeric fallback breeding age (years) for a species
+#     not found in the table (built-in default 2).
+#   gestationDefault -- integer fallback gestation window (days) for a species
+#     not found in the table (built-in default 210).
+#
+# Example (uncomment and edit; keep the CSV path unquoted-friendly, i.e. no
+# spaces or commas in the path):
+# speciesOverridesPath = "/home/you/colony_species_overrides.csv"
+# minBreedingAgeDefault = 2
+# gestationDefault = 210
+
 
 center = "SNPRC"
  baseUrl = "http://deepthought:8080/labkey"

@@ -192,3 +192,72 @@ test_that("correctUnknownParentMeanKinship keeps the corrected vector in [0,1]",
   expect_true(all(res$indivMeanKin >= 0))
   expect_true(all(res$indivMeanKin <= 1))
 })
+
+# ---------------------------------------------------------------------------
+# Issue #73 Part 2 Slice 1: configurable absent-species fallbacks threaded down
+# to the accessors. getBreedingPeerCohort and correctUnknownParentMeanKinship
+# gain breedingAgeDefault / gestationDefault params; NULL (the default) means
+# "use the accessor's built-in" (2 years / 210 days) so no-config behavior is
+# byte-identical to today. The breedingTable / gestationTable params already
+# exist (issue #9 Slice 2) and are exercised above.
+# ---------------------------------------------------------------------------
+
+test_that("getBreedingPeerCohort honors a configurable breedingAgeDefault", {
+  ## cutoff 4 (no species -> default): birth <= 2010-01-01 - 1460 d = 2006-01-02,
+  ## so M_mid (born 2007-06-01) drops out vs the default-2 cohort.
+  cohort <- nprcgenekeepr:::getBreedingPeerCohort(
+    focalBirth = d("2010-01-01"),
+    focalSpecies = NA_character_,
+    missingSex = "M",
+    candidatePed = cohortPedNoSpecies,
+    breedingAgeDefault = 4
+  )
+  expect_setequal(cohort, c("M_old", "M_exited_ok"))
+})
+
+test_that("getBreedingPeerCohort honors a configurable gestationDefault", {
+  ## widening the conception window to 365 d (cutoff 2009-01-01) lets M_exited
+  ## (exit 2009-01-01) back into the cohort vs the default-210 window.
+  cohort <- nprcgenekeepr:::getBreedingPeerCohort(
+    focalBirth = d("2010-01-01"),
+    focalSpecies = NA_character_,
+    missingSex = "M",
+    candidatePed = cohortPedNoSpecies,
+    gestationDefault = 365L
+  )
+  expect_setequal(cohort, c("M_old", "M_mid", "M_exited_ok", "M_exited"))
+})
+
+test_that("correctUnknownParentMeanKinship honors a configurable breedingAgeDefault", {
+  ## cutoff 5 (birth <= 2005-01-02) shrinks the male cohort to {m1, sire_known}
+  ## (mean .15) and the female cohort to {f1, dam_known} (mean .45).
+  res <- nprcgenekeepr:::correctUnknownParentMeanKinship(
+    orchImk, orchPed, breedingAgeDefault = 5
+  )
+  expect_equal(res$indivMeanKin[["foc_sire"]], 0.125)
+  expect_equal(res$indivMeanKin[["foc_uid"]], 0.125)
+  expect_equal(res$indivMeanKin[["foc_dam"]], 0.275)
+})
+
+test_that("correctUnknownParentMeanKinship honors a configurable gestationDefault", {
+  gestPed <- data.frame(
+    id = c("foc", "m_in", "m_exit_edge", "dk"),
+    sex = c("F", "M", "M", "F"),
+    birth = d(c("2010-01-01", "2005-01-01", "2005-01-01", "2004-01-01")),
+    exit = d(c(NA, NA, "2009-03-01", NA)),
+    sire = c("U0001", NA, NA, NA),
+    dam = c("dk", NA, NA, NA),
+    stringsAsFactors = FALSE
+  )
+  gestImk <- c(foc = 0.05, m_in = 0.10, m_exit_edge = 0.30, dk = 0.50)
+  ## default 210 d: conception window cutoff 2009-06-05; m_exit_edge (exit
+  ## 2009-03-01) is excluded -> male cohort {m_in} mean .10 -> foc 0.05 + .05.
+  resDefault <- nprcgenekeepr:::correctUnknownParentMeanKinship(gestImk, gestPed)
+  expect_equal(resDefault$indivMeanKin[["foc"]], 0.10)
+  ## 400 d: cutoff 2008-11-27; m_exit_edge now present -> cohort {m_in,
+  ## m_exit_edge} mean .20 -> foc 0.05 + .10.
+  resWide <- nprcgenekeepr:::correctUnknownParentMeanKinship(
+    gestImk, gestPed, gestationDefault = 400L
+  )
+  expect_equal(resWide$indivMeanKin[["foc"]], 0.15)
+})

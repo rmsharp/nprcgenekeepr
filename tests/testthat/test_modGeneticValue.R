@@ -1488,3 +1488,107 @@ test_that("modGeneticValueServer: NPRC_GVA_SEED env var is read when option abse
   expect_true(recorder$called)
   expect_equal(recorder$seed, 7L)
 })
+
+# ============================================================================
+# Issue #73 Part 2 Slice 1: modGeneticValueServer receives the species
+# overrides (loaded at boot from the config file) as a reactive and threads
+# them into reportGV. With no overrides (the default), reportGV is called with
+# all-NULL override args -> bundled behavior, identical to today.
+# ============================================================================
+
+# A minimal nprcgenekeeprGV-shaped stub so the gvResults eventReactive body can
+# complete after a mocked reportGV (it needs report$id/indivMeanKin/gu/value).
+fakeGvReport <- function() {
+  list(
+    report = data.frame(
+      id = c("A", "B"),
+      indivMeanKin = c(0.10, 0.20),
+      gu = c(0.50, 0.40),
+      value = c("a", "b"),
+      stringsAsFactors = FALSE
+    ),
+    kinship = matrix(0, 2L, 2L),
+    gu = data.frame(),
+    fe = 1, fg = 1, total = 2L,
+    nMaleFounders = 1L, nFemaleFounders = 1L,
+    maleFounders = data.frame(), femaleFounders = data.frame()
+  )
+}
+
+test_that("modGeneticValueServer threads speciesOverrides into reportGV (#73 Part 2)", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeValidTestPed(nFounders = 6, nOffspring = 14)
+  captured <- new.env(parent = emptyenv())
+  local_mocked_bindings(
+    reportGV = function(ped, guIter = 5000L, guThresh = 1L, pop = NULL,
+                        byID = TRUE, updateProgress = NULL,
+                        breedingTable = NULL, gestationTable = NULL,
+                        breedingAgeDefault = NULL, gestationDefault = NULL) {
+      captured$breedingTable <- breedingTable
+      captured$gestationTable <- gestationTable
+      captured$breedingAgeDefault <- breedingAgeDefault
+      captured$gestationDefault <- gestationDefault
+      fakeGvReport()
+    }
+  )
+
+  overrides <- list(
+    breedingTable = data.frame(
+      species = "RHESUS", gestation = 210L,
+      minMaleBreedingAge = 7.0, minFemaleBreedingAge = 7.0,
+      stringsAsFactors = FALSE
+    ),
+    gestationTable = data.frame(
+      species = "RHESUS", gestation = 199L, stringsAsFactors = FALSE
+    ),
+    breedingAgeDefault = 5,
+    gestationDefault = 99L
+  )
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      speciesOverrides = shiny::reactive({ overrides })
+    ),
+    {
+      session$setInputs(nIterations = 100)
+      session$setInputs(runAnalysis = 1)
+      gvResults()
+
+      expect_equal(captured$breedingAgeDefault, 5)
+      expect_equal(captured$gestationDefault, 99L)
+      expect_identical(captured$breedingTable, overrides$breedingTable)
+      expect_identical(captured$gestationTable, overrides$gestationTable)
+    }
+  )
+})
+
+test_that("modGeneticValueServer defaults to no overrides (backward compat, #73 Part 2)", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeValidTestPed(nFounders = 6, nOffspring = 14)
+  captured <- new.env(parent = emptyenv())
+  local_mocked_bindings(
+    reportGV = function(ped, guIter = 5000L, guThresh = 1L, pop = NULL,
+                        byID = TRUE, updateProgress = NULL,
+                        breedingTable = NULL, gestationTable = NULL,
+                        breedingAgeDefault = NULL, gestationDefault = NULL) {
+      captured$args <- list(breedingTable, gestationTable,
+                            breedingAgeDefault, gestationDefault)
+      fakeGvReport()
+    }
+  )
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(pedigree = shiny::reactive({ test_ped })),
+    {
+      session$setInputs(nIterations = 100)
+      session$setInputs(runAnalysis = 1)
+      gvResults()
+      expect_true(all(vapply(captured$args, is.null, logical(1L))))
+    }
+  )
+})

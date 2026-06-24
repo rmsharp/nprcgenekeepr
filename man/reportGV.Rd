@@ -10,7 +10,11 @@ reportGV(
   guThresh = 1L,
   pop = NULL,
   byID = TRUE,
-  updateProgress = NULL
+  updateProgress = NULL,
+  breedingTable = NULL,
+  gestationTable = NULL,
+  breedingAgeDefault = NULL,
+  gestationDefault = NULL
 )
 }
 \arguments{
@@ -35,6 +39,22 @@ the function will only count the unique alleles for an individual
 \item{updateProgress}{Function or NULL. If this function is defined, it
 will be called during each iteration to update a
 \code{shiny::Progress} object.}
+
+\item{breedingTable}{Optional data.frame overriding the bundled per-species
+minimum breeding ages used by the unknown-parent mean-kinship correction
+(issue #73 Part 2). \code{NULL} (the default) uses the bundled
+\code{\link{speciesGestation}} table.}
+
+\item{gestationTable}{Optional data.frame overriding the bundled per-species
+gestation windows used by the correction's conception window. \code{NULL}
+uses the bundled table.}
+
+\item{breedingAgeDefault}{Optional numeric fallback minimum breeding age
+(years) for species absent from the table. \code{NULL} uses the built-in
+2 years.}
+
+\item{gestationDefault}{Optional integer fallback gestation window (days) for
+species absent from the table. \code{NULL} uses the built-in 210 days.}
 }
 \value{
 An object of class \code{nprcgenekeeprGV}: a list with elements
