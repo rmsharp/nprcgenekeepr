@@ -15,6 +15,74 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-24 — Published issue \#76 (Reading A): genome-uniqueness de-inflation is on `master` via PR \#80; **issue \#76 CLOSED** (Session 192)
+
+- **Deliverable (owner pick, single item):** publish S191’s issue \#76
+  Reading A (genome uniqueness reported as 0 for unknown-origin
+  both-unknown “Undetermined” animals) from `issue-76-gu-deinflation` to
+  `master`, folding the user-facing NEWS entry into the SAME PR
+  (Learning 157a), PR body **“Closes \#76”** (the last line).
+  **Admin/publish + docs** (the Reading A code was written/tested under
+  strict TDD in S191 → TDD code-phases N/A). **0 stakeholder
+  corrections.** SOLO (a serial, irreversible git sequence — a workflow
+  adds risk, not coverage; the S179/S181/S183/S187/S189 judgment). Owner
+  picked “Publish \#76” at orientation and “Merge now (merge commit)” at
+  the `AskUserQuestion` merge gate.
+- **Pre-publish content (one PR, Learning 157a):** appended one
+  dev-version `NEWS.Rmd` *Changes* bullet — the Genetic Value Analysis
+  now reports a genome uniqueness of 0 for the “Undetermined” animals
+  (both parents unknown and no recorded origin): such an animal enters
+  the gene-drop simulation as a founder whose alleles are all freshly
+  minted and therefore unique, so its computed genome uniqueness
+  measures only that modeling artifact and the report declines to credit
+  it. Genuine imports (carrying an `origin`) and animals with one or
+  both parents known are unaffected. Placed immediately after the
+  existing “Undetermined” ranking bullet (Reading B / Slice 3) as its
+  genome-uniqueness companion (append-don’t-rewrite, Learning 171 — the
+  prior bullet untouched). Reading A added no new exported function, so
+  **no** *New features* bullet. Re-rendered `NEWS.md` (permanent
+  `html_preview:false`+`md_extensions:"-smart"`, Learning 155) → **0
+  non-ASCII**, no stray `.html`, confined pure-insertion (NEWS.Rmd +13 /
+  NEWS.md +14). `spell_check_package(".")` = 0 before AND after
+  (Learning 175 — 0-delta; no WORDLIST change). Committed NEWS as
+  `b289776c`; kept the S192 1B stub OUT of the PR (stash-carried, popped
+  clean post-merge; the pre-existing `WIP on dev` stash untouched).
+- **No push-master-first:** `master` == `origin/master` == `45457961`
+  verified firsthand; the PR diff came out \#76-only = 3 commits (S191
+  feat `7d1e9b4f` + S191 close-out `d4de9026` + S192 NEWS `b289776c`).
+- **PR + CI (did NOT merge blind — Learning 157b):** opened **PR \#80**
+  → `master` (body “Closes \#76”). The `--watch` AND the FRESH non-watch
+  `gh pr checks 80` both returned exit 0 — **all 11 checks PASS**,
+  including `codecov/patch` and `codecov/project`. Contrast
+  S189/Learning 177 (`codecov/patch` failed there on appServer
+  boot-wiring covr cannot execute): this Reading A patch SHIPS ITS OWN
+  TESTS (`test_reportGV.R` + `test_modGeneticValue.R`) that exercise the
+  changed `reportGV.R` lines, so the diff is covered and `codecov/patch`
+  is green — confirming 177’s “patch-composition-sensitive” thesis from
+  the positive side (no new learning warranted). `mergeStateStatus` went
+  UNSTABLE → CLEAN.
+- **Merge (owner-decided via `AskUserQuestion` — “Merge now (merge
+  commit)”):** guarded fresh pre-merge re-check (state OPEN, mergeable
+  MERGEABLE, `headRefOid`==local `b289776c`,
+  `origin/master`==`45457961`); `gh pr merge 80 --merge` → merge commit
+  **`9f1e4687`** (verified MERGED, `mergedAt 2026-06-24T21:58:04Z`).
+  **Issue \#76 verified CLOSED** (`closedAt 2026-06-24T21:58:05Z` ==
+  merge time — “Closes \#76” worked).
+- **Reconcile (Learning 146):** `git checkout master`; verified `fetch`
+  (`45457961..9f1e4687`); **ancestor-gated the reset** (both old-master
+  `45457961` AND merged branch tip `b289776c` asserted ancestors of
+  `origin/master` `9f1e4687`) → `git reset --hard origin/master`;
+  `git stash pop` restored the S192 stub cleanly (pre-existing
+  `WIP on dev` stash preserved); verified-merged-before-delete branch
+  cleanup (local `-d` + remote `--delete`; `git ls-remote` empty).
+  **Issue \#76 is CLOSED**; no dangling branches.
+- **Files:** `NEWS.Rmd` (+1 *Changes* bullet) + `NEWS.md` (re-rendered)
+  shipped via PR \#80; close-out docs (`CHANGELOG.md` this entry,
+  `SESSION_NOTES.md` S192 handoff) committed direct to `master` and
+  pushed to origin (\[\[push-close-out-docs-to-origin\]\]). No `R/`
+  logic, test, or `man/` change this session (the code shipped as S191
+  wrote it).
+
 ### 2026-06-24 — Implemented issue \#76 (Reading A): genome uniqueness de-inflated to 0 for unknown-origin both-unknown (“Undetermined”) animals (Session 191)
 
 - **Deliverable (owner pick, single item, strict-TDD IMPLEMENTATION

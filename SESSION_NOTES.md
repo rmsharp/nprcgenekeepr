@@ -7,6 +7,226 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 192 Did
+
+**Deliverable:** Publish **issue \#76** (Reading A — de-inflate genome
+uniqueness `gu` to 0 for unknown-origin both-unknown “Undetermined”
+animals) from branch `issue-76-gu-deinflation` to `master` via PR,
+folding the user-facing NEWS entry into the SAME PR (Learning 157a); PR
+body **“Closes \#76”** so the merge auto-closes \#76. **(DONE — merged
+to `master` via PR \#80, merge commit `9f1e4687`; \#76 verified CLOSED;
+branch deleted local+remote.)** **Started / Completed:** 2026-06-24 /
+2026-06-24 **Status:** **DONE.** Admin/publish + docs session (the
+Reading A code was written/tested under strict TDD in S191 → **TDD
+code-phases N/A** every response). **0 stakeholder corrections.** SOLO
+(serial, irreversible git — a workflow adds risk not coverage; held solo
+despite ultracode, the S179/S181/S183/S187/S189 judgment). Owner picked
+“Publish \#76” at orientation and “Merge now (merge commit)” at the
+`AskUserQuestion` merge gate. - **Pre-publish content (one PR, Learning
+157a):** appended ONE dev-version `NEWS.Rmd` *Changes* bullet — the
+Genetic Value Analysis now reports a genome uniqueness of 0 for the
+“Undetermined” animals (both parents unknown AND no recorded `origin`):
+such an animal enters the gene-drop simulation as a founder whose
+alleles are all freshly minted and therefore unique, so its computed
+`gu` measures only that modeling artifact and the report declines to
+credit it; genuine imports (carrying an `origin`) and animals with one
+or both parents known are unaffected. **Placed immediately after the
+existing “Undetermined” ranking bullet** (Reading B / Slice 3) as its
+genome-uniqueness companion — append-don’t-rewrite (Learning 171), the
+prior bullet UNTOUCHED, so “described above”/“the ranking change above”
+resolve correctly. Reading A added no new export → **no** *New features*
+bullet. Re-rendered `NEWS.md`
+(`html_preview:false`+`md_extensions:"-smart"`, 155): **0 non-ASCII**,
+no stray `.html`, confined pure-insertion (NEWS.Rmd +13 / NEWS.md +14, 0
+deletions). `spell_check_package(".")` = **0 before AND after** (175 —
+verb idiom + backticked identifiers, 0-delta; no WORDLIST change).
+Committed NEWS `b289776c`; S192 1B stub stash-carried OUT of the PR,
+popped clean post-merge (pre-existing `WIP on dev` stash preserved
+throughout). - **No push-master-first:**
+`master`==`origin/master`==`45457961` verified FIRSTHAND; PR diff came
+out \#76-only = 3 commits (S191 feat `7d1e9b4f` + S191 close-out
+`d4de9026` + S192 NEWS `b289776c`). - **PR + CI (did NOT merge blind —
+Learning 157b):** opened **PR \#80** → `master` (body “Closes \#76”).
+BOTH `gh pr checks 80 --watch` AND the FRESH non-watch re-query returned
+**exit 0 — all 11 checks PASS** (lint, pkgdown, test-coverage,
+macOS/Windows/Ubuntu release+oldrel-1, ubuntu-devel 16m33s,
+`codecov/patch`, `codecov/project`); `mergeStateStatus` UNSTABLE →
+CLEAN. **`codecov/patch` was GREEN here** — contrast S189/Learning 177
+(it FAILED there on appServer boot-wiring covr cannot execute): this
+Reading A patch SHIPS ITS OWN TESTS (`test_reportGV.R` +
+`test_modGeneticValue.R`) that exercise the changed `reportGV.R` lines,
+so the diff is covered. **Confirms 177’s “patch-composition-sensitive”
+thesis from the positive side — no NEW numbered learning warranted**
+(it’s confirmation, not a new pattern; recorded in the CHANGELOG entry +
+here). - **Merge (owner-decided via `AskUserQuestion`):** guarded fresh
+pre-merge re-check (OPEN/MERGEABLE, `headRefOid`==local `b289776c`,
+`origin/master`==`45457961` — all 4 asserted, “ALL GUARDS PASS”);
+`gh pr merge 80 --merge` → **`9f1e4687`** (verified MERGED,
+`mergedAt 21:58:04Z`); **\#76 verified CLOSED** (`closedAt 21:58:05Z` ==
+merge time — “Closes \#76” worked). - **Reconcile (Learning 146):**
+`git checkout master`; verified `fetch` (`45457961..9f1e4687`);
+**ancestor-gated `reset --hard`** (both old-master `45457961` AND tip
+`b289776c` asserted ancestors of `9f1e4687`); `git stash pop` restored
+the stub cleanly (`WIP on dev` preserved); verified-merged-before-delete
+cleanup (local `-d` “was b289776c” + remote `--delete`; `git ls-remote`
+empty).
+
+**Phase-3E (build-equivalent / runtime smoke): SATISFIED.** The merge
+tree was build-verified by PR \#80’s `R CMD check` x5 matrix
+(macOS/Windows/Ubuntu release + oldrel-1 + ubuntu-devel 16m33s), all
+PASS — stronger than a single local check. Confirmed FIRSTHAND on
+`master` after the reset: the de-inflation block is live
+(`R/reportGV.R:210-211` —
+`undetermined <- parentage == "both unknown" & is.na(origin)` /
+`gu$gu[undetermined] <- 0.0`) and the NEWS bullet is on `NEWS.md:77`;
+`master`==`origin/master`==`9f1e4687`. (No browser click — the e2e
+harness is baseline-flaky and unchanged by a docs/publish session; the
+CI matrix + the firsthand master checks are the runtime evidence, per
+S188/S189.)
+
+**Session 191 Handoff Evaluation (by Session 192): Score 9/10.** S191’s
+`=> SUGGESTED NEXT` named THIS publish first (“the predicted next, this
+CLOSES \#76”) and gave a COMPLETE, accurate turn-by-turn recipe:
+`git push -u origin issue-76-gu-deinflation` → PR → `master` body
+**“Closes \#76”** (the LAST line; **verify \#76 closed after merge**),
+fold a NEWS *Changes* bullet into the SAME PR (157a; no new export → no
+*New features* bullet), clean idiom + backticked identifiers (175),
+render with `html_preview:false`+`md_extensions:"-smart"` (155),
+`spell_check_package` before/after (175/159), watch ALL CI + a FRESH
+non-watch `gh pr checks` re-query (157b), `AskUserQuestion`-gate the
+merge, ancestor-gated `reset --hard` + verified-merged-before-delete
+(146), SOLO. **Every load-bearing anchor held FIRSTHAND:** the branch
+was local + unpushed exactly as gotcha 1 said,
+`master`==`origin/master`==`45457961` as claimed, “Closes \#76” closed
+\#76, spelling held 0-delta, the NEWS bullet had a natural topical home
+next to the existing Undetermined bullet. **The standout:** S191 even
+pre-reasoned the `codecov/patch` outcome — “expect `codecov/patch` to
+possibly be red … but `reportGV` is exercised by tests … Learning 177
+applies if a few lines miss” — which gave me the exact frame to read the
+GREEN result correctly. **The −1:** the only thing left to me was the
+NEWS prose itself + its placement decision (minor authoring), and the
+codecov hedge (“possibly red”) could have been a confident “green — the
+patch ships its own tests”; trivial. ROI maximal: the recipe was a
+script I executed with zero re-derivation.
+
+**Self-assessment (Session 192): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check → HEAD `d4de9026` = S191 close-out, no
+undocumented commits), reported, STOPPED for the owner’s pick; claimed
+with a 1B stub BEFORE technical work; declared TDD N/A every response.
+**Strengths:** (1) **ran every publish guard** —
+`master`==`origin/master`==`45457961` firsthand (no push-master-first),
+the 157b FRESH non-watch re-query WITH its exit code (not just
+`--watch`), an `AskUserQuestion`-gated merge, a 4-assertion guarded
+pre-merge re-check, **\#76 verified CLOSED**, ancestor-gated reset on
+BOTH old-master AND tip, verified-merged-before-delete (local + remote +
+`ls-remote` empty); (2) **clean stash discipline** — stashed ONLY
+`SESSION_NOTES.md` (the stub) so NEWS edits stayed free, tracked the
+indices, popped the right one, and **preserved the pre-existing
+`WIP on dev` stash** throughout; (3) **folded NEWS correctly** — 0-delta
+spelling, confined pure-insertion, topically placed as the
+genome-uniqueness companion to the existing Undetermined bullet WITHOUT
+rewriting it (171), no *New features* bullet (no new export); (4) **read
+the GREEN `codecov/patch` correctly** against S189’s red and recorded
+WHY (patch ships its own tests) rather than manufacturing a spurious
+learning; (5) close-out docs pushed to origin
+(\[\[push-close-out-docs-to-origin\]\]). **Weaknesses (honest):** (a)
+**low base difficulty** — admin/publish executing a turn-by-turn recipe;
+the value is disciplined guard execution, not depth → ceiling ~8; (b)
+**no novel discovery** — the one “interesting” result (codecov/patch
+green) merely CONFIRMED Learning 177, so no new learning emerged
+(correctly, not a gap); (c) Phase-3E is the CI matrix + a firsthand
+master grep, not a browser click (e2e baseline-flaky) — consistent with
+prior publish sessions but not a true end-user render. Clean,
+fully-guarded, fully-verified publish that closed \#76 with zero
+corrections; moderate difficulty caps it at 8/10.
+
+**Learnings:** **NONE added** to `PROJECT_LEARNINGS.md` this session —
+honestly, the publish executed a known recipe and its one notable result
+(`codecov/patch` GREEN) CONFIRMS Learning 177 from the positive side (a
+patch whose own diff is test-covered greens `codecov/patch`, vs S189’s
+untestable boot-wiring red) rather than establishing a new pattern;
+manufacturing a numbered learning for “the recipe worked” would be
+noise. The confirmation is captured in the CHANGELOG entry + this
+handoff. Carried as applied: \[\[consult-project-source-of-truth\]\]
+(publish convention: implementation→CHANGELOG, publish→NEWS; SOLO for
+irreversible git; build-equivalent), \[\[observation-vs-decision\]\] /
+\[\[ascii-only-in-question-options\]\] /
+\[\[avoid-jargon-use-plain-language\]\] (the merge-gate
+`AskUserQuestion`, plain-ASCII labels, recommended-first),
+\[\[check-process-history-before-rerunning-work\]\] (read the S191
+handoff + the load-bearing learnings firsthand),
+\[\[backlog-vs-changelog-placement\]\] (publish → CHANGELOG; \#76 →
+CLOSED), \[\[push-close-out-docs-to-origin\]\] (push this close-out to
+origin/master FF); Learnings 146/155/157a/157b/159/171/175/177 (the
+publish mechanics this session executed).
+
+**=\> SUGGESTED NEXT = owner’s pick.** `origin/master` == local `master`
+== `9f1e4687` after this S192 close-out push; **issue \#76 is CLOSED**
+(Reading A genome-uniqueness de-inflation LIVE on `master`); no dangling
+branches; dashboard 98/100. Natural options (plain ASCII): - **\#37**
+(exported functions not currently used by app — inventory/wiring audit);
+**\#36** (chimpanzee-specific age-pyramid settings, enhancement);
+**\#2** (evidence-based GVA iteration-count advice); **\#28**
+(timestamped transactional-location data to identify potential parents —
+LARGE, needs its own plan); older **\#13** (assign kinship from outside
+info) / **\#12** (ARMS pull) / **\#11** (Oracle demographics) / **\#10**
+(breeding-simulation GVA prediction) / **\#5** (LabKey query feedback) /
+**\#1** (clear focal-animals list in Pedigree Browser). - **(Optional,
+NOT an open issue)** the appServer boot-wiring covr follow-up from
+S189’s note — add a test that BOOTS `appServer` under coverage so
+`codecov/patch` greens on future SMALL wiring-only patches (mind the
+`getSiteInfo` boot trap, Learning 176). Owner has not requested it;
+raise only if wanted. - **CRAN Phase 5** (owner-run,
+`docs/planning/cran-2.0.0-phase5-runbook.md`). **Do NOT** reopen \#76
+(correctly CLOSED — Reading A LIVE on `master`); the **latent
+comment-strip bug remains UNFIXED in `R/getConfigApiKey.R`** (out of
+scope, Learning 174).
+
+**Key files (this session):** **CHANGED — the publish content (committed
+to the branch as `b289776c`, now on `master` via PR \#80):** `NEWS.Rmd`
+(+1 dev-version *Changes* bullet, after the Undetermined ranking
+bullet), `NEWS.md` (re-rendered). **CHANGED — close-out docs (this S192
+docs commit, direct to local `master`, then pushed to origin):**
+`CHANGELOG.md` (S192 `[Unreleased]` publish entry), `SESSION_NOTES.md`
+(this handoff + the 1B stub it overwrote). **Read firsthand (publish
+verification, NOT changed):** `R/reportGV.R:193-211` (the de-inflation
+block live on master), `NEWS.Rmd` (dev-version *Changes*/*New features*
+structure, lines 15-137), `NEWS.md:77` (rendered bullet),
+`CHANGELOG.md:15-22` (insertion point), the S191 handoff. **NOT
+changed:** any `R/` logic, tests, or `man/` (publish session — the code
+shipped as S191 wrote it). **NOT committed (standing keep):**
+`PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
+
+**Gotchas:** (1) **Issue \#76 is CLOSED** — Reading A (genome-uniqueness
+de-inflation) is on `master` (merge `9f1e4687`). Do NOT reopen unless
+reverting. (2) **`codecov/patch` GREEN here, RED in S189 (Learning
+177)** — the difference is patch composition: a patch whose own diff is
+exercised by shipped tests greens `codecov/patch`; an untestable
+boot-wiring patch reds it. `master` has NO branch protection, so
+`codecov/patch` is informational either way. To green it for a FUTURE
+small wiring-only patch, add a test that BOOTS `appServer` under
+coverage (an IMPLEMENTATION session; `getSiteInfo` boot trap, Learning
+176). (3) **`gh` invalid-field gotcha (Learning 177c)** — `gh pr view`
+has NO `baseRefOid`; `gh issue view` has NO `stateReason`; an invalid
+`--json` field empties the WHOLE query. Use valid fields
+(`state`/`mergeable`/`mergeStateStatus`/`headRefOid` for PRs;
+`state`/`closed`/`closedAt` for issues) and verify `origin/master` via
+`git rev-parse` separately. (4) **`getConfigApiKey` still has the latent
+comment-strip bug** (Learning 174, out of scope). (5) **Two stashes
+existed during this session** — the S192 stub (popped) and a
+long-standing `WIP on dev` (untouched, still `stash@{0}`); do NOT drop
+the `WIP on dev` stash. (6) Carried standing keeps (unchanged): package
+**ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without a LabKey credential/config; exactly ONE codecov config
+(`codecov.yml`); NEWS render traps CLOSED at source
+(`html_preview:false`+`md_extensions:"-smart"`, 155); `git pull` is
+rebase + chokes on `.DS_Store` → use `fetch`+`reset` (135); post-merge
+`fetch` before ancestor-gated `reset --hard` (146); build-equivalent is
+`devtools::check(vignettes = FALSE)` = 0/0/0 (161); a 0/0/0 check does
+NOT imply spelling-clean → run `spell_check_package` (175).
+
 ### What Session 191 Did
 
 **Deliverable:** **Strict-TDD IMPLEMENTATION of issue \#76 (Reading A**
