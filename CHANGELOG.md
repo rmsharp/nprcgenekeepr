@@ -57,8 +57,14 @@ here.
   close \#2” contains the substring “close \#2”, and GitHub’s auto-close
   parser triggers on it (it ignores the negation). Caught within seconds
   by the standing post-merge state re-query; **`gh issue reopen 2`**
-  restored it to OPEN, with a clarifying comment. **Issue \#2 stays
-  OPEN** (Slice 1 of 3; Slice 3’s merge closes it).
+  restored it to OPEN, with a clarifying comment. It then **recurred**
+  because the first close-out commit message quoted the offending token
+  while documenting the trap and re-fired the parser on push; reopened
+  again. The refined rule (Learning 184): keep the literal
+  closing-keyword token out of the PR body AND any commit message
+  landing on the default branch, even ones explaining the trap (file
+  contents are safe). **Issue \#2 stays OPEN** (Slice 1 of 3; Slice 3’s
+  merge closes it).
 - **Reconcile (Learning 146):** `git checkout master`; `fetch`
   (`f5378caf..00500a5a`); ancestor-gated `reset --hard` (both old-master
   `f5378caf` AND tip `c8a1cf16` asserted ancestors of `00500a5a`);

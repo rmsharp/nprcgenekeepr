@@ -62,7 +62,14 @@ OPEN** – the net outcome is correct, but the trap was self-inflicted
 (the S197 handoff said “do NOT use ‘Closes \#2’”, which I followed; I
 then introduced a *negated* mention that still matched). Learning 184
 makes the rule “no `<closing-keyword> #N` substring at all, even
-negated.”
+negated.” **Then it RECURRED:** the first close-out commit message
+itself QUOTED the offending token while documenting the lesson, and
+pushing it to `master` auto-closed \#2 a SECOND time (reopened again,
+comment `4798272826`). So the rule extends to commit messages landing on
+the default branch – even ones explaining the trap – not just the PR
+body; file CONTENTS are safe (GitHub parses messages + PR descriptions,
+not the diff). Both closes were caught and reversed; \#2 is OPEN. Net
+outcome correct, but this is the single dent in the session.
 
 **Phase-3E (runtime smoke): SATISFIED.** PR \#83’s `R CMD check` x5
 matrix all PASS (stronger than one local check). Confirmed FIRSTHAND on
@@ -101,7 +108,7 @@ negated”) would have prevented the auto-close. That is a fair miss (the
 negated form is a subtle trap), and it cost only seconds because the
 same handoff’s discipline of re-querying state caught it. ROI: maximal.
 
-**Self-assessment (Session 198): 8/10.** Oriented fully (SAFEGUARDS +
+**Self-assessment (Session 198): 7/10.** Oriented fully (SAFEGUARDS +
 SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
 dashboard 98/100; ghost-check clean – HEAD `8476f215` = S197 close-out),
 reported, STOPPED for the owner’s pick; declared TDD N/A every response;
@@ -122,19 +129,25 @@ was green”; (5) plain-language, ASCII, recommended-first merge gate
 (\[\[ascii-only-in-question-options\]\],
 \[\[avoid-jargon-use-plain-language\]\]); pushed close-out to
 origin/master FF (\[\[push-close-out-docs-to-origin\]\]). **Weaknesses
-(honest):** (a) **I caused an avoidable issue-state error** – writing
-“does not close \#2” into the PR body fired the auto-close; the recovery
-was fast and complete, but a careful read of my own PR body against the
-known “closing keyword” trap would have prevented it (this is the single
-reason the score is 8, not 9+); (b) the 1B claim stub was written AFTER
-I had already authored + rendered NEWS, not strictly before technical
-work – a minor Phase-1B ordering slip, self-corrected and noted, with no
+(honest):** (a) **I caused an avoidable issue-state error TWICE** – the
+negated mention in the PR body fired the auto-close on merge, and then
+the close-out commit message that DOCUMENTED the trap quoted the same
+token and re-fired it on push; both were caught within seconds and fully
+reversed, but the second was especially avoidable (I had just written
+the rule). A careful read of my own PR body and commit message against
+the known closing-keyword trap would have prevented both – this is the
+main reason the score is 7; (b) the 1B claim stub was written AFTER I
+had already authored + rendered NEWS, not strictly before technical work
+– a minor Phase-1B ordering slip, self-corrected and noted, with no
 lost-work risk because the NEWS work was uncommitted at the time; (c)
 SOLO with no separate adversarial-verification workflow – defensible for
 a serial irreversible git publish (a workflow adds risk, not coverage,
-the standing S194 judgment), but worth naming under ultracode. A clean,
+the standing S194 judgment), but worth naming under ultracode. A
 fully-verified, owner-gated publish with firsthand runtime evidence;
-capped at 8 by the self-inflicted (and fully-recovered) \#2 auto-close.
+capped at 7 by the self-inflicted \#2 auto-close that fired TWICE (PR
+body on merge, then the close-out commit message on push) – both caught
+by the standing state re-query and fully recovered, but the recurrence
+while documenting the very trap is the honest dent.
 
 **Learnings:** **Learning 184** added to `PROJECT_LEARNINGS.md` –
 GitHub’s issue auto-close parser ignores English negation, so a PR body
