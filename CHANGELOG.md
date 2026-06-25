@@ -15,6 +15,71 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-25 — Published Slice 2 of issue \#2: `gvaConvergence()` is on `master` via PR \#84 (Session 200)
+
+- **Deliverable (owner pick, single item):** publish S199’s Slice 2 (the
+  [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+  iteration-convergence diagnostic) from branch
+  `issue-2-slice2-gvaconvergence` to `master` via PR, folding a
+  user-facing NEWS *New features* bullet into the SAME PR (Learning
+  157a). **Publish/docs session** — TDD code-phases N/A every response
+  (S199 wrote + tested the code under strict TDD). **0 stakeholder
+  corrections.** SOLO (a serial, irreversible git sequence — the
+  standing publish-session judgment, held under ultracode). Owner
+  directed “Publish Slice 2” at orientation and “Yes, merge PR \#84 now”
+  at the `AskUserQuestion` merge gate.
+- **NEWS (one PR, Learning 157a):** a *New features* bullet for the
+  newly exported
+  [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md),
+  appended at the END of the dev-version New features list
+  (append-don’t-rewrite, Learning 171). Plain-language (no “Monte Carlo”
+  jargon for a user-facing note), backticked identifiers. Re-rendered
+  `NEWS.md` (`html_preview:false`+`md_extensions:"-smart"`,
+  Learning 155) → pure insertion (NEWS.Rmd +13 / NEWS.md +14, 0
+  deletions), 0 non-ASCII, no stray `.html`; `spell_check_package(".")`
+  = **0 before AND after** (Learning 175). Committed as `9079478c`.
+- **PR + CI (did NOT merge blind, Learning 157b):** opened **PR \#84** →
+  `master` (body “Part of \#2”, **no** closing keyword). BOTH
+  `gh pr checks 84 --watch` AND a FRESH non-watch re-query returned
+  **all 10 checks PASS** (lint, pkgdown, test-coverage,
+  macOS/Windows/Ubuntu release + oldrel-1 + ubuntu-devel,
+  `codecov/patch`, `codecov/project`); `mergeStateStatus` UNSTABLE →
+  CLEAN. **`codecov/patch` GREEN** — the new code ships
+  `test_gvaConvergence.R`.
+- **Auto-close trap PREVENTED (Learning 184 → new Learning 186):**
+  unlike S198 (which auto-closed \#2 twice), the PR body was written to
+  a scratch file and grep-scanned for any closing-keyword-plus-number
+  substring BEFORE creation — clean, so the merge left **issue \#2
+  OPEN** (confirmed by the standing immediate post-merge
+  `gh issue view 2 --json state` re-query). The proactive guard worked;
+  no reopen was needed.
+- **Merge (owner-gated):** fresh pre-merge re-check
+  (OPEN/MERGEABLE/CLEAN, `headRefOid`==`9079478c`,
+  `origin/master`==`9e78e055`, \#2 OPEN); `gh pr merge 84 --merge` →
+  merge commit **`743f2459`** (MERGED); immediate issue re-query =
+  **OPEN**.
+- **Reconcile (Learning 146):** reverted the uncommitted 1B stub
+  (superseded by the handoff); `git checkout master`; `fetch`
+  (`9e78e055..743f2459`); ancestor-gated `reset --hard` (both old-master
+  `9e78e055` AND tip `9079478c` asserted ancestors of `743f2459`, and
+  `743f2459`==`origin/master`); verified-merged-before-delete cleanup
+  (local `-d` “was 9079478c” + remote `--delete`; `git ls-remote`
+  empty).
+- **Phase-3E (build-equivalent / runtime smoke): SATISFIED.** PR \#84’s
+  `R CMD check` ×5 matrix all PASS (stronger than a single local check);
+  confirmed FIRSTHAND on `master` after the reset that the deliverable
+  is live (`gvaConvergence` exported in `NAMESPACE` line 105,
+  `man/gvaConvergence.Rd` present, the NEWS bullet on `NEWS.md`) + an
+  end-to-end `gvaConvergence(qcPed, nMax = 120, grid = c(25, 40, 60))`
+  returning an `nprcgenekeeprGVConv` object (recommendedIter 25 = grid
+  floor, overlap=tau=1 at every `N`, 124 Undetermined / 156 rankable —
+  matching S199’s documented qcPed behavior).
+- **Files:** `NEWS.Rmd`/`NEWS.md` (in PR \#84 as `9079478c`); close-out
+  — `CHANGELOG.md` (this entry), `PROJECT_LEARNINGS.md` (Learning 186),
+  `SESSION_NOTES.md` (this handoff), pushed to origin/master FF. **Issue
+  \#2 stays OPEN** (Slice 2 of 3; Slice 3’s merge is the one that closes
+  it).
+
 ### 2026-06-25 — Implemented Slice 2 of issue \#2: `gvaConvergence()` iteration-convergence diagnostic (Session 199)
 
 - **Deliverable (owner pick, single item):**

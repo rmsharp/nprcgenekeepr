@@ -7,6 +7,243 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 200 Did
+
+**Deliverable:** **Publish Slice 2 of issue \#2** – S199’s
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+iteration-convergence diagnostic is now on `master` via **PR \#84**
+(merge commit `743f2459`), with a user-facing NEWS *New features* bullet
+folded into the same PR. **(DONE – merged to `master`; branch deleted
+local+remote; close-out pushed to origin/master FF.)** **Started /
+Completed:** 2026-06-25 / 2026-06-25 **Status:** **DONE.** Publish/docs
+session – **TDD code-phases N/A every response** (no production code;
+S199 wrote + tested
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+under strict TDD). **0 stakeholder corrections.** SOLO (a serial,
+irreversible git sequence – a workflow adds risk, not coverage; the
+standing publish-session judgment, held under ultracode). Owner directed
+**“Publish Slice 2”** at orientation and **“Yes, merge PR \#84 now”** at
+the `AskUserQuestion` merge gate. - **NEWS (one PR, Learning 157a):** a
+*New features* bullet for the newly exported
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md),
+appended at the END of the dev-version New features list
+(append-don’t-rewrite, Learning 171). Plain-language, no “Monte Carlo”
+jargon for a user-facing note (\[\[avoid-jargon-use-plain-language\]\]),
+backticked identifiers. Grounded FIRSTHAND by re-reading
+`R/gvaConvergence.R`’s roxygen before writing (FM \#11/#20). Re-rendered
+`NEWS.md` (`html_preview:false`+`md_extensions:"-smart"`, Learning 155):
+pure insertion (NEWS.Rmd +13 / NEWS.md +14, 0 del), **0 non-ASCII**, no
+stray `.html`; `spell_check_package(".")` = **0 before AND after**
+(Learning 175). Committed `9079478c`. - **PR + CI (did NOT merge blind,
+Learning 157b):** **PR \#84** -\> `master`, body “Part of \#2” (no
+closing keyword). BOTH `gh pr checks 84 --watch` AND a FRESH non-watch
+re-query = **all 10 checks PASS** (lint, pkgdown, test-coverage,
+macOS/Windows/Ubuntu release + oldrel-1 + ubuntu-devel, `codecov/patch`,
+`codecov/project`); UNSTABLE -\> CLEAN. **`codecov/patch` GREEN** – the
+new code ships `test_gvaConvergence.R`. - **Auto-close trap PREVENTED
+(Learning 184 -\> new Learning 186):** unlike S198 (which auto-closed
+\#2 TWICE), the PR body was written to a scratch file and grep-scanned
+for any `(clos|fix|resolv)[a-z]* #N` substring BEFORE creation – clean,
+so the merge left **issue \#2 OPEN** (confirmed by the standing
+immediate post-merge `gh issue view 2 --json state` re-query). No reopen
+was needed; the proactive guard worked. - **Merge (owner-gated):** fresh
+pre-merge re-check (OPEN/MERGEABLE/CLEAN; `headRefOid`==`9079478c`;
+`origin/master`==`9e78e055`; \#2 OPEN); `gh pr merge 84 --merge` -\>
+**`743f2459`** (MERGED); immediate issue re-query = **OPEN**. -
+**Reconcile (Learning 146):** reverted the uncommitted 1B stub
+(superseded by this handoff); `checkout master`; `fetch`
+(`9e78e055..743f2459`); ancestor-gated `reset --hard` (both `9e78e055`
+AND `9079478c` asserted ancestors of `743f2459`, and
+`743f2459`==`origin/master`); verified-merged-before-delete cleanup
+(local `-d` “was 9079478c” + remote `--delete`; `ls-remote` empty).
+
+**Phase-3E (runtime smoke): SATISFIED (firsthand).** PR \#84’s
+`R CMD check` x5 matrix all PASS (stronger than one local check).
+Confirmed FIRSTHAND on `master` after the reset: `gvaConvergence`
+exported in `NAMESPACE` (line 105); `man/gvaConvergence.Rd` present; the
+*New features* bullet on `NEWS.md`; and an end-to-end
+`gvaConvergence(qcPed, nMax = 120, grid = c(25, 40, 60))` returning an
+`nprcgenekeeprGVConv` object (`recommendedIter=25` grid floor,
+`converged=TRUE`, overlap=tau=1 at every `N`,
+`nUndetermined=124`/`nRankable=156` – matching S199’s documented qcPed
+behavior). `master`==`origin/master`==`743f2459` (then the close-out
+commit, pushed FF). No browser click – `gvaConvergence` is a non-UI
+function and a publish session adds no Shiny surface; the CI matrix +
+firsthand master run are the runtime evidence (per
+S188/S189/S192/S194/S198).
+
+**Session 199 Handoff Evaluation (by Session 200): Score 10/10.** S199’s
+`=> SUGGESTED NEXT` named **“Publish Slice 2 – the predicted next”** as
+the lead option and gave a COMPLETE, accurate recipe:
+`git push -u origin issue-2-slice2-gvaconvergence`; open a PR -\>
+`master`; **“use ‘Part of \#2’ with NO `close/fix/resolve #2` substring
+anywhere, even negated (Learning 184)”**; **re-query
+`gh issue view 2 --json state` right after merge**; fold a *New
+features* bullet
+([`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+IS a new export, Learning 157a); write NEWS in the clean idiom +
+backtick identifiers (175), render with
+`html_preview:false`+`md_extensions:"-smart"` (155),
+`spell_check_package` before/after (175/159); watch ALL CI + a FRESH
+non-watch re-query (157b); **“`codecov/patch` should be GREEN”**;
+`AskUserQuestion`-gate the merge; ancestor-gated `reset --hard` +
+verified-merged-before-delete (146). **Every anchor held FIRSTHAND:**
+the branch was at `bbb7a64f`+`ccde8333` exactly;
+`master`==`origin/master`==`9e78e055`; NEWS.Rmd had a dev “New features”
+subsection ending at the
+[`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md)
+bullet to append after; `codecov/patch` came back GREEN as predicted;
+the reconcile recipe matched S198’s proven sequence. The handoff was
+executable as written with **zero scope discovery and zero
+corrections**. **This earns a 10** (vs S199’s well-judged 9 for S198)
+because S199’s warning was the precise, sufficient rule – “no
+`close/fix/resolve #2` substring at all, even negated” – which is
+exactly what prevented the auto-close that bit S198 twice. The one
+residual judgment the handoff left open (whether to defer the
+`gvaConvergence` vignette to Slice 3) was already an explicit,
+owner-approved S199 decision, so it cost nothing. ROI: maximal.
+
+**Self-assessment (Session 200): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check clean – HEAD `ccde8333` = S199 close-out),
+reported, STOPPED for the owner’s pick; claimed with a 1B stub BEFORE
+any technical work; declared TDD N/A every response; produced ONLY the
+publish (did NOT start Slice 3, FM \#18/#25). **Strengths:** (1)
+**clean, fully-verified publish** – NEWS grounded firsthand against the
+actual `gvaConvergence.R` roxygen (not memory), pure-insertion render,
+spell 0/0, all 10 CI checks green confirmed by BOTH the watch AND an
+independent re-query (157b), owner-gated merge with a fresh pre-merge
+invariant re-check, ancestor-gated reset +
+verified-merged-before-delete; (2) **PREVENTED the Learning-184
+auto-close trap that fired twice in S198** – wrote the PR body to a
+file, grep-scanned it for the closing-keyword+`#N` pattern before
+`gh pr create`, kept the post-merge state re-query as the backstop; \#2
+stayed OPEN with no reopen needed (Learning 186); (3) **firsthand
+Phase-3E on `master`** (exported symbol + man page + NEWS bullet + an
+end-to-end run returning the documented qcPed curve), not just “CI was
+green”; (4) plain-language, ASCII, recommended-first merge gate
+(\[\[ascii-only-in-question-options\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[observation-vs-decision\]\]); pushed close-out to origin/master FF
+(\[\[push-close-out-docs-to-origin\]\]); (5) used the background-watch
+correctly so the long CI wait did not block the session, then re-queried
+independently before the gate. **Weaknesses (honest):** (a) **SOLO with
+no separate adversarial-verification workflow** – defensible for a
+serial irreversible git publish (a workflow adds risk, not coverage; the
+standing S194/S198 judgment), but worth naming under ultracode; (b) **no
+real-browser E2E** – not applicable (`gvaConvergence` is non-UI and a
+publish session adds no UI), but stated explicitly rather than skipped;
+(c) the session is a faithful REPEAT of a known recipe, so the marginal
+new learning (the proactive grep guard, Learning 186) is incremental
+rather than novel. A fully-verified, owner-gated publish with firsthand
+runtime evidence and the known auto-close trap proactively prevented;
+capped at 9 only because a publish session is inherently a low-novelty
+mechanical sequence and ran SOLO.
+
+**Learnings:** **Learning 186** added to `PROJECT_LEARNINGS.md` – the
+Learning-184 auto-close trap is fully PREVENTABLE with a one-line
+proactive grep guard
+(`grep -niE '(clos|fix|resolv)[a-z]*[[:space:]]+#[0-9]' pr_body.md`) run
+BEFORE `gh pr create` and before any commit message landing on `master`;
+author the PR body in a file (`--body-file`) so it is
+greppable/reviewable; keep BOTH the preventive grep AND the post-merge
+state re-query; to say a PR does NOT close an issue, restructure so no
+closing keyword abuts a number. Reaffirmed: a publish/docs session is
+SOLO, TDD code-phases N/A, build-equivalent = CI `R CMD check` matrix +
+firsthand on-master-after-reset smoke, close-out pushed FF. Carried as
+applied: \[\[consult-project-source-of-truth\]\] (publish/docs
+workstream: CI is the build-equivalent;
+branch-\>PR-\>gated-merge-\>reconcile),
+\[\[push-close-out-docs-to-origin\]\] (close-out pushed to origin/master
+FF), \[\[observation-vs-decision\]\] /
+\[\[ascii-only-in-question-options\]\] /
+\[\[avoid-jargon-use-plain-language\]\] (the merge gate + the NEWS
+prose), \[\[check-process-history-before-rerunning-work\]\] (S199
+handoff was the spec – executed the delta); Learnings 157a (NEWS in the
+same PR), 157b (watch + fresh re-query, no blind merge), 171
+(append-don’t-rewrite NEWS), 155 (NEWS render flags), 175 (spell
+before/after), 146 (ancestor-gated reset +
+verified-merged-before-delete), 184 (the trap itself, now prevented),
+161 (build-equivalent), FM \#11/#20 (read the roxygen before writing
+NEWS). **NOT** a TDD code-phase session (no production code).
+
+**=\> SUGGESTED NEXT = owner’s pick.** Slice 2 is **published on
+`master`** (`743f2459`); `master`==`origin/master`==this close-out
+commit. **Issue \#2 stays OPEN** (Slices 1 and 2 of 3 done; Slice 3’s
+merge is the one that closes it). Natural next steps: - **Slice 3 (the
+one whose merge CLOSES \#2) – the predicted next.** Implement the
+ratified D3 default change (`5000 -> 1000L`): it is the `guIter` default
+in `R/reportGV.R` (~line 97) and the iteration default in `R/geneDrop.R`
+(~line 90), plus the regenerated `man/`. Then fix every stale “5000” doc
+site (plan 2D names an ~84-hit inventory), reconcile the two doc
+surfaces (`inst/extdata/.../gvAndBgDesc.html` + the vignette
+`manual_components`), rewrite the
+`vignettes/ColonyManagerTutorial.Rmd:459-461` TODO into evidence-based
+guidance, and update the `guIter=5000L` behavior-pinning stubs
+(`test_modGeneticValue.R:1529,1579`). **ALSO – deferred from Slice 2
+(owner-approved) – write the short
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+vignette** (a kableExtra convergence-curve table contrasting the hard
+half-sib-web fixture vs qcPed, in the `simulatedKValues` idiom; reuse
+`makeConvergenceFixture()` from `test_gvaConvergence.R` and KEEP
+`pop = offspring` or the gu signal collapses to founders – Dragon \#2 /
+Learning 185). For Slice 3’s PR, **“Closes \#2” IS correct and
+intended** (Learning 184 – the keyword abutting the number is the
+deliberate trigger there); still grep the body first so the close fires
+ONLY on the intended issue. - **Other open issues:** \#82 (`fg` SE
+follow-up – companion to the `guSE`/`gvaConvergence` work), \#37, \#36,
+\#28, \#13/#12/#11/#10/#5; CRAN Phase 5 (owner-run). **Do NOT** bundle
+Slice 3 with anything else (FM \#18/#25); when Slice 3’s PR is meant to
+close \#2, “Closes \#2” is correct – but still run the Learning-186 grep
+on the body to confirm the ONLY closing reference is `#2` (no stray
+`#76` etc. abutting a keyword); the **latent comment-strip bug remains
+UNFIXED in `R/getConfigApiKey.R`** (out of scope, Learning 174).
+
+**Key files (this session):** **CHANGED (in PR \#84, on `master` as
+`9079478c`):** `NEWS.Rmd` (+1 *New features* bullet at end of the dev
+New features list), `NEWS.md` (re-rendered, +14). **CHANGED (close-out,
+direct to `master`, pushed FF):** `CHANGELOG.md` (S200 `[Unreleased]`
+entry), `PROJECT_LEARNINGS.md` (Learning 186), `SESSION_NOTES.md` (this
+handoff + the 1B stub it overwrote). **Read FIRSTHAND (to ground
+NEWS):** `R/gvaConvergence.R` roxygen, `NEWS.Rmd` dev New features
+subsection. **GitHub:** PR \#84 (merged `743f2459`), issue \#2 (OPEN,
+untouched). **Scratch:** `pr_body.md` (the greppable PR body). **NOT
+committed (standing keep):** `PED_GV_AUDIT_2026-05-30.html` (untracked);
+`.DS_Store`.
+
+**Gotchas:** (1) **Issue \#2 is OPEN and must stay open until Slice 3**
+– this publish did NOT close it (Learning 186 grep guard worked); when
+Slice 3’s PR is meant to close it, “Closes \#2” is then correct and
+intended. (2) **For a PR that should NOT close an issue, author the body
+in a file and grep it**
+(`grep -niE '(clos|fix|resolv)[a-z]*[[:space:]]+#[0-9]'`) BEFORE
+`gh pr create`, and keep the post-merge `gh issue view N --json state`
+re-query as the backstop (Learning 186/184). (3)
+**[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+is on `master` and purely additive** – it does NOT change
+`reportGV`/`calcA`/`orderReport`/`geneDrop` (the column-prefix trick
+needs no refactor, Learning 185); do NOT “factor `rare` out of `calcA`”
+for Slice 3. (4) **The Slice-2 fixture `makeConvergenceFixture()` lives
+in `tests/testthat/test_gvaConvergence.R`** and depends on founders
+being EXCLUDED from `pop`; if reused in the Slice-3 vignette keep
+`pop = offspring` or the gu signal collapses to founders (Dragon \#2).
+(5) **The ratified D3 default `5000 -> 1000L` is still NOT done** (Slice
+3) – `reportGV`/`geneDrop` still default `5000L` while NEWS/CHANGELOG
+claim 1000; the contradiction persists until Slice 3. (6) Carried
+standing keeps (unchanged): package **ARCHIVED on CRAN 2025-07-29**;
+CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without a LabKey credential/config; exactly ONE codecov config
+(`codecov.yml`); NEWS render traps CLOSED at source
+(`html_preview:false`+`md_extensions:"-smart"`, 155); `git pull` is
+rebase + chokes on `.DS_Store` -\> use `fetch`+`reset` (135); post-merge
+`fetch` before ancestor-gated `reset --hard` (146); build-equivalent is
+`devtools::check(vignettes = FALSE)` = 0/0/0 (161); a 0/0/0 check does
+NOT imply spelling-clean -\> run `spell_check_package` (175); the
+`getConfigApiKey` latent comment-strip bug remains UNFIXED (174);
+`man/calcGUSE.Rd` re-wraps under the local roxygen on every `document()`
+-\> revert it if an unrelated `document()` touches it.
+
 ### What Session 199 Did
 
 **Deliverable:** **Implement Slice 2 of issue \#2 under strict TDD** –
