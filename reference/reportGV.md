@@ -86,8 +86,13 @@ reportGV(
 
 An object of class `nprcgenekeeprGV`: a list with elements `report` (a
 dataframe with the genetic value report, with animals ranked in order of
-descending value), `kinship` (the kinship matrix), `gu` (genome
-uniqueness values; reported as 0 for unknown-origin both-unknown
+descending value; it carries both a `gu` column and a `guSE` column –
+the Monte Carlo sampling standard error of each genome uniqueness
+estimate, see
+[`calcGUSE`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md)),
+`kinship` (the kinship matrix), `gu` (a dataframe with a `gu` column of
+genome uniqueness values and a `guSE` column of their standard errors;
+`gu` and `guSE` are reported as 0 for unknown-origin both-unknown
 "Undetermined" animals, whose apparent uniqueness is an artifact of
 unknown parentage (issue \#76)), `fe` (founder equivalents), `fg`
 (founder genome equivalents), `maleFounders` and `femaleFounders`

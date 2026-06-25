@@ -130,10 +130,14 @@ species absent from the table. <code>NULL</code> uses the built-in 210 days.</p>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>An object of class <code>nprcgenekeeprGV</code>: a list with elements
 <code>report</code> (a dataframe with the genetic value report, with animals
-ranked in order of descending value), <code>kinship</code> (the kinship matrix),
-<code>gu</code> (genome uniqueness values; reported as 0 for unknown-origin
-both-unknown "Undetermined" animals, whose apparent uniqueness is an
-artifact of unknown parentage (issue #76)), <code>fe</code> (founder equivalents),
+ranked in order of descending value; it carries both a <code>gu</code> column and a
+<code>guSE</code> column – the Monte Carlo sampling standard error of each genome
+uniqueness estimate, see <code><a href="calcGUSE.html">calcGUSE</a></code>), <code>kinship</code> (the kinship
+matrix), <code>gu</code> (a dataframe with a <code>gu</code> column of genome uniqueness
+values and a <code>guSE</code> column of their standard errors; <code>gu</code> and
+<code>guSE</code> are reported as 0 for unknown-origin both-unknown "Undetermined"
+animals, whose apparent uniqueness is an artifact of unknown parentage
+(issue #76)), <code>fe</code> (founder equivalents),
 <code>fg</code> (founder genome equivalents), <code>maleFounders</code> and
 <code>femaleFounders</code> (dataframes of the known male and female founder
 records), <code>nMaleFounders</code> and <code>nFemaleFounders</code> (the counts of

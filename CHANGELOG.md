@@ -15,6 +15,65 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-25 — Implemented Slice 1 of issue \#2: per-animal genome-uniqueness standard error (`guSE`) (Session 197)
+
+- **Deliverable (owner pick, single item):** the additive per-animal
+  Monte Carlo sampling standard error of the genome-uniqueness (`gu`)
+  estimate, threaded through the Genetic Value Analysis. **Strict-TDD
+  implementation** — PRE-RED scope + RED → GREEN → REFACTOR, every
+  transition `AskUserQuestion`-gated; TDD phase declared every response.
+  **0 stakeholder corrections.** On LOCAL branch `issue-2-slice1-guse` —
+  **NOT published** (the publish PR + the NEWS bullet are a separate
+  session, FM \#18/#25). **Issue \#2 stays OPEN** (Slice 1 of 3; the
+  merge that closes \#2 is Slice 3).
+- **New exported helper
+  [`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md)**
+  (`R/calcGUSE.R`): `guSE_i = 100 * sqrt(var(m_i.) / K)` with
+  `m_ik = rare[i,k]/2`, computed from the same
+  [`calcA()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcA.md)
+  rare matrix
+  [`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md)
+  averages, so it is correct for any `guThresh` / `byID` (D4). Mirrors
+  [`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md)
+  (single-column data.frame named `guSE`, rownames = ids; an animal with
+  no per-iteration variation has SE 0).
+- **[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)**
+  now carries a `guSE` column in BOTH `$report` (immediately after `gu`)
+  and the returned `$gu` element (now two columns: `gu`, `guSE`). The
+  issue \#76 “Undetermined” de-inflation zeroes `guSE` in step with `gu`
+  (a policy constant has no sampling error). `gu` values and all
+  existing signatures are unchanged; `@return` roxygen updated.
+- **Shiny GVA Summary tab** (`R/modGeneticValue.R`): a “Genome
+  Uniqueness SE (max)” row reports the worst-case precision for the run,
+  guarded on the column’s presence.
+- **In-app guidance** (`inst/extdata/ui_guidance/genetic_value.html`,
+  D5): plain-language explanation that genome uniqueness is a gene-drop
+  (Monte Carlo) estimate whose reported `+/-` standard error shrinks
+  with more iterations and depends on the pedigree, and that
+  precision-of-the-number is distinct from stability of the selection
+  order (what governs breeder choice; a future tool will check it).
+- **Tests (RED-first):** new `test_calcGUSE.R` (exact golden match vs an
+  independent `calcA` recomputation; `threshold`/`byID`/`pop` parity;
+  deterministic `1/sqrt(K)` shrink via column duplication, exact factor
+  `sqrt((K-1)/(2K-1))`, no RNG); `test_reportGV.R` (both `expect_named`
+  report lists updated to include `guSE`; new `$report`/`$gu` +
+  de-inflation test); `test_modGeneticValue.R` (gvSummary SE row;
+  guidance-HTML content).
+- **Verification:** full regression **1237 tests, 0 failed / 0 error**
+  (167 skipped opt-in); `devtools::check(vignettes = FALSE)` =
+  **0/0/0**; `spell_check_package(".")` = **0**; `lintr` clean on the
+  changed files; Phase-3E runtime smoke = the gvSummary `testServer`
+  render + an end-to-end `reportGV` showing populated `guSE`
+  (e.g. `gu=48.8 ±1.10`, a founder import at `±0`, the Undetermined set
+  at `0/0`).
+- **Deferred by design:**
+  [`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md)
+  recomputes the rare matrix (a second `calcA` per `reportGV`);
+  factoring `rare` out of `calcA` so `gu`/`guSE` share one build is
+  Slice 2’s job (Finding 7). The ratified D3 default `5000 → 1000L`
+  change and the longer-doc/vignette reconciliation are Slice 3.
+- **Commit:** `1fd951a7` (feat). **Learning 183** added.
+
 ### 2026-06-25 — Ratified §8 of the issue \#2 plan + re-established its empirical basis firsthand (Session 196)
 
 - **Deliverable (owner pick, single item):** ratify the six open §8

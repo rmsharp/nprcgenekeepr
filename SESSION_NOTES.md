@@ -7,6 +7,279 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 198 Did
+
+**Deliverable:** **Publish Slice 1 of issue \#2** – push the local
+feature branch `issue-2-slice1-guse` (S197’s per-animal
+genome-uniqueness SE work), fold a user-facing NEWS entry into the PR
+(Learning 157a – a *New features* bullet for the new exported
+[`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md) +
+a *Changes* bullet for the `reportGV` `guSE` column / GVA Summary SE row
+/ in-app guidance), open a PR -\> `master` **WITHOUT** “Closes \#2”
+(Slice 1 does not close \#2; Slice 3 does), watch CI,
+`AskUserQuestion`-gate the merge, reconcile + delete the branch. (IN
+PROGRESS) **Started:** 2026-06-25 **Status:** Session claimed (1B).
+Publish/docs session – TDD code-phases N/A (no production code; S197
+wrote + tested the code under strict TDD). NEWS authored + rendered
+(spell 0/0, ASCII-clean pure insertion). Next: commit NEWS to branch,
+push, PR, CI, gated merge.
+
+### What Session 197 Did
+
+**Deliverable:** **Implement Slice 1 of issue \#2 under strict TDD** –
+the additive per-animal genome-uniqueness sampling standard error
+(`guSE`): a new exported helper
+[`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md),
+threaded through
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+into `$report` (after `gu`) and the `$gu` element (now 2-col), a “Genome
+Uniqueness SE (max)” row in the Shiny GVA Summary tab, and a
+plain-language `+/-` explanation in the in-app `genetic_value.html`.
+**(DONE – code + tests + close-out committed to LOCAL branch
+`issue-2-slice1-guse`; NOT published – the PR/CI/merge + NEWS bullet are
+a SEPARATE session, FM \#18/#25.)** **Started / Completed:** 2026-06-25
+/ 2026-06-25 **Status:** **DONE.** Strict-TDD IMPLEMENTATION. Every
+transition `AskUserQuestion`-gated (**PRE-RED-\>RED -\> RED-\>GREEN -\>
+GREEN-\>REFACTOR**; TDD phase declared every response). **0 stakeholder
+corrections.** SOLO. Owner picked “Implement Slice 1 of issue \#2 under
+strict TDD” at orientation; “Yes, proceed” at the RED and GREEN gates;
+“Do the minimal REFACTOR, then close out” at the REFACTOR gate. No
+separate pre-RED scope `AskUserQuestion` was needed – §8 of the plan
+ratified all scope (S196). - **RED (verified failing for the right
+reason first):** new `tests/testthat/test_calcGUSE.R` (3 tests, all
+ERROR – `calcGUSE` not defined): (a) exact golden match –
+`calcGUSE(ped1Alleles, threshold=3)` ==
+`100*sqrt(apply(calcA(...)/2, 1, var)/K)` recomputed independently from
+`calcA`; (b) `threshold`/`byID`/`pop` parity; (c) deterministic
+`1/sqrt(K)` shrink by duplicating the V columns (`K -> 2K`, exact factor
+`sqrt((K-1)/(2K-1))`, no RNG). `test_reportGV.R`: the **two
+`expect_named(report,...)` lists UPDATED to insert `guSE` after `gu`**
+(fail until GREEN) + a new test that `$report`/`$gu` carry a numeric
+`guSE`, the \#76 Undetermined set is `guSE==0` in BOTH, and
+`any(guSE>0)`. `test_modGeneticValue.R`: gvSummary renders a “Genome
+Uniqueness SE” row (real `reportGV`) + `genetic_value.html` mentions
+“standard error” and “iterations”. 60 existing module tests stayed green
+(no collateral breakage). - **GREEN (minimum):** `R/calcGUSE.R` mirrors
+`calcGU` – `rare <- calcA(...)` after the same `pop` filter,
+`guSE <- sqrt(apply(rare/2, 1, stats::var)/iterations) * 100`,
+[`as.data.frame()`](https://rdrr.io/r/base/as.data.frame.html) (column
+`guSE`, rownames=ids). `R/reportGV.R`: compute `guSE` reordered to
+`probands`, mirror the \#76 de-inflation
+(`guSE$guSE[undetermined] <- 0.0`), `cbind` `guSE` after `gu` into
+`finalData`, set `$gu = cbind(gu, guSE)`, update `@return`.
+`R/modGeneticValue.R`: guarded “Genome Uniqueness SE (max)” row in
+`gvSummary`. `inst/extdata/ui_guidance/genetic_value.html`: 2
+plain-language paragraphs (gene-drop estimate; `+/-` shrinks with
+iterations; precision-of-number vs selection-order stability).
+`devtools::document()` -\> export `calcGUSE` + `man/calcGUSE.Rd` +
+`man/reportGV.Rd`. - **REFACTOR (owner-approved minimal):** wrapped ONE
+81-char roxygen line in `calcGUSE.R` to \<=80 (doc-only,
+behavior-neutral); re-lint clean, 3 test files stayed green. The `calcA`
+dedup was correctly NOT done (Slice 2, Finding 7).
+
+**Phase-3E (runtime smoke): SATISFIED (module + function level).** The
+`modGeneticValueServer gvSummary` `testServer` test renders the new
+“Genome Uniqueness SE (max)” row via the REAL `reportGV` (no mock) and
+passes – that is the Shiny runtime path for the new row. End-to-end
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+on a small signal-bearing pedigree (origin-import branch,
+`set.seed(17)`, `guThresh=2`) confirmed FIRSTHAND: `$report` carries
+`gu` then `guSE`; real non-zero SE (`gu=75.0 +/-0.79`, `gu=48.8 +/-1.10`
+– SE peaks near `gu=50` as expected); a founder import whose rare allele
+is constant across iterations gets `guSE=0`; the \#76 Undetermined set
+is `gu=0`/`guSE=0`; `$gu` is 2-col (`gu`,`guSE`), `max guSE = 1.1032`.
+Build-equivalent `devtools::check(vignettes = FALSE)` = **0/0/0**; full
+regression **1237 tests / 0 fail / 0 error** (167 skipped opt-in);
+`spell_check_package(".")` = **0**; `lintr` clean on changed files. (No
+browser click – the e2e harness is baseline-flaky/opt-in and unchanged
+by this slice; the `testServer` render + firsthand `reportGV` are the
+runtime evidence, consistent with prior implementation sessions.)
+
+**Session 196 Handoff Evaluation (by Session 197): Score 10/10.** S196’s
+`=> SUGGESTED NEXT` named **“Implement Slice 1 under strict TDD … the
+real next step”** as the lead option and gave a COMPLETE, accurate
+recipe: the `guSE` column from the real `rare` matrix, the EXACT thread
+points (`reportGV.R:213-215` cbind into `$report`/`$gu`), the
+`gvSummary` location (`modGeneticValue.R:269-306`), the in-app
+`genetic_value.html` doc surface, and the load-bearing “Slice 1 is
+independent of the D1 thresholds and the D3 default – do NOT bundle
+them” boundary (gotchas 3-4). **Every anchor held FIRSTHAND:** the
+cbind/`$gu`/de-inflation structure at `reportGV.R:205-227` was exactly
+as described; `calcGU.R:95-100` `gu = rowSums(rare)/(2*iterations)`
+matched (so the SE = `sqrt(var(m)/K)` derivation was directly grounded);
+the `gvSummary` Metric/Value block and the hand-authored HTML surface
+were as stated; D4’s “compute from the real `rare` matrix, correct for
+any `guThresh`/`byID`” drove the helper design; `byID` no-op at
+`guThresh=1` (gotcha 6) matched. The ratified plan + this handoff
+together meant **zero scope discovery and zero stakeholder corrections**
+– the session was executable as written. The only thing not pre-supplied
+was the deterministic-SE-shrink test technique (a genuinely new
+contribution, Learning 183), which a handoff cannot be expected to
+pre-invent. ROI: maximal.
+
+**Self-assessment (Session 197): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check clean – HEAD `f5378caf` = S196 close-out),
+reported, STOPPED for the owner’s pick; claimed with a 1B stub BEFORE
+technical work; declared the TDD phase every response and
+`AskUserQuestion`-gated all three transitions; produced ONLY Slice 1 and
+did NOT start Slice 2/3 (FM \#18/#25). **Strengths:** (1) **strict TDD
+held cleanly** – RED verified failing for the literal right reason
+(helper undefined; `expect_named` missing `guSE`) before any production
+code, GREEN minimal, REFACTOR a single behavior-neutral doc wrap after a
+real lint check; (2) **read every touched surface firsthand before
+writing tests**
+(`calcGU`/`calcA`/`reportGV`/`orderReport`/`rankSubjects`/`modGeneticValue`/the
+HTML/the tests), which caught the behavior-pinning `expect_named` lists
+up front so RED was complete and GREEN had no surprises (FM \#11/#20);
+(3) **invented a deterministic, RNG-free test for the `1/sqrt(K)` law**
+(column duplication -\> exact `sqrt((K-1)/(2K-1))` factor) plus an
+independent golden recomputation from `calcA` – the SE correctness is
+proven, not seed-dependent (Learning 183); (4) **honored slice scope** –
+did NOT pull the `calcA` dedup forward (Slice 2, Finding 7), flagged the
+second-`calcA` cost in code + handoff rather than silently optimizing;
+(5) **fully verified** – 1237/0/0, check 0/0/0, spell 0, lint clean,
+plus a firsthand end-to-end `reportGV` runtime smoke showing real SE
+values and the de-inflation; (6) plain-language, ASCII,
+recommended-first gates (\[\[ascii-only-in-question-options\]\],
+\[\[avoid-jargon-use-plain-language\]\]). **Weaknesses (honest):** (a)
+**no real-browser E2E** for the new gvSummary row / guidance render –
+the `testServer` render + firsthand `reportGV` are strong but not a DOM
+click; an E2E assertion (like S193’s pedigree test) that the Summary tab
+shows the SE row and the guidance text is visible would be the strongest
+Phase-3E (a fair Slice-1-or-publish-session add); (b) the in-app `guSE`
+column header is the raw `guSE` – a friendlier display label is deferred
+(reasonably) to later polish/Slice 3, but a first-time user sees `guSE`
+before reading the guidance; (c) did not run a separate
+adversarial-verification workflow (ultracode leans toward one) – judged
+the exact golden + deterministic + ground-truth-`reportGV` checks as
+sufficient independent verification for a small additive slice,
+defensible but solo. A clean, fully-gated, fully-verified vertical slice
+with a novel deterministic test and zero corrections; capped at 9 only
+by the absence of a real-browser E2E for the new UI surfaces.
+
+**Learnings:** **Learning 183** added to `PROJECT_LEARNINGS.md` – the
+deterministic column-duplication technique for testing Monte Carlo SE
+`1/sqrt(K)` scaling (exact `sqrt((K-1)/(2K-1))` factor, no RNG) + the
+golden-from-`calcA` recomputation; and three concrete gotchas (the
+`as.data.frame(<named vec>)` column-name-from-variable idiom;
+`test_reportGV.R`’s exact-column `expect_named` pins mean an additive
+column is a RED edit there; column carry-through via
+`orderReport`/`rankSubjects` is by-name and free but must be confirmed);
+plus the slice-scope discipline of NOT pulling the `calcA` dedup
+forward. Carried as applied: \[\[consult-project-source-of-truth\]\]
+(strict-TDD RED-\>GREEN-\>REFACTOR + build-equivalent +
+branch-don’t-push-on-master for an implementation session),
+\[\[observation-vs-decision\]\] / \[\[ascii-only-in-question-options\]\]
+/ \[\[avoid-jargon-use-plain-language\]\] (the three gates),
+\[\[check-process-history-before-rerunning-work\]\] (the ratified plan +
+S196 handoff were the spec – executed the delta, no re-planning);
+Learnings 161 (build-equivalent 0/0/0), 175 (0/0/0 != spelling-clean -\>
+ran `spell_check_package`), 6/FM#11/FM#20 (read implementations before
+pinning tests). **NOT** \[\[push-close-out-docs-to-origin\]\] – this is
+an IMPLEMENTATION session on a feature branch (like S188/S191/S193), NOT
+a docs/publish session on `master`; nothing is pushed (the publish
+session pushes the branch and PRs it).
+
+**=\> SUGGESTED NEXT = owner’s pick.** Slice 1 is on **LOCAL branch
+`issue-2-slice1-guse`** (committed: feat `1fd951a7` + this docs
+close-out; **NOT pushed** – push is the publish session’s job), NOT on
+`master`; `master` == `origin/master` == `f5378caf` (unchanged this
+session). **Issue \#2 stays OPEN** (Slice 1 of 3 implemented, not
+merged). Natural next steps: - **(Publish Slice 1 – the predicted
+next)** `git push -u origin issue-2-slice1-guse`, open a PR -\>
+`master`. **Do NOT use “Closes \#2”** – Slice 1 does not close \#2
+(Slice 3 does); reference the issue without the closing keyword. **Fold
+a user-facing NEWS *New features* bullet into the SAME PR** (Learning
+157a) –
+[`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md)
+IS a new exported function, so a *New features* bullet is warranted,
+plus a *Changes* bullet for the new `reportGV` `guSE` column + the GVA
+Summary SE row + the guidance text. Write NEWS in the CLEAN idiom +
+backtick identifiers (175), render with
+`html_preview:false`+`md_extensions:"-smart"` (155),
+`spell_check_package` before/after (175/159). Watch ALL CI + a FRESH
+non-watch `gh pr checks` re-query (157b); **`codecov/patch` should be
+GREEN** – the new code ships its own tests (`test_calcGUSE.R` + the
+`reportGV`/`gvSummary` tests exercise the changed lines), contrast
+S189’s untestable boot-wiring (Learning 177). `AskUserQuestion`-gate the
+merge; ancestor-gated `reset --hard` + verified-merged-before-delete
+(146). SOLO. - **Slice 2** (`gvaConvergence()`) – the real answer to \#2
+– but **build the dense-mid-range fixture in RED FIRST** (Dragon \#2 /
+Learning 182: no bundled ped has usable `gu` signal; a test on bundled
+data is tautological), finalize the D1 thresholds
+(`k`/`o_min`/`rho_min`, Kendall tau-b) against it, and do the `calcA`
+refactor (factor `rare` out so prefixes – and `calcGUSE` – reuse one
+build; golden-master `gu` before/after). The S197 column-duplication +
+golden-from-`calcA` test technique (Learning 183) applies directly. -
+**Slice 3** = implement the ratified D3 default change (`5000 -> 1000L`
+in `reportGV.R:93`/`geneDrop.R:90` + `man/`), fix every stale “5000” doc
+site (plan 2D), reconcile the two doc surfaces (`gvAndBgDesc.html` + the
+vignette `manual_components`), update the `guIter=5000L`
+behavior-pinning stubs (`test_modGeneticValue.R:1529,1579`). This
+slice’s merge closes \#2. - **Other open issues** (unchanged menu): \#37
+(unused exports), \#36 (chimpanzee age-pyramid), \#28 (large, own plan),
+\#13/#12/#11/#10/#5, \#82 (`fg` SE follow-up); CRAN Phase 5 (owner-run).
+**Do NOT** use “Closes \#2” when publishing Slice 1 (it does not close
+the issue – Slice 3 does); do NOT bundle Slice 2 or the D3 default
+change with the Slice-1 publish (FM \#18/#25); do NOT start Slice 2
+without the dense fixture (tautological tests); the **latent
+comment-strip bug remains UNFIXED in `R/getConfigApiKey.R`** (out of
+scope, Learning 174).
+
+**Key files (this session):** **CREATED (the deliverable):**
+`R/calcGUSE.R` (new exported helper), `tests/testthat/test_calcGUSE.R`,
+`man/calcGUSE.Rd` (generated). **CHANGED (deliverable):**
+`R/reportGV.R:150-165` (compute `guSE`), `:210-227` (`guSE`
+de-inflation + `cbind` + `$gu = cbind(gu, guSE)`), `:14-23` (`@return`);
+`R/modGeneticValue.R:281-305` (guarded gvSummary SE row);
+`inst/extdata/ui_guidance/genetic_value.html` (+2 plain-language
+paragraphs); `NAMESPACE` (export `calcGUSE`); `man/reportGV.Rd`
+(regenerated); `tests/testthat/test_reportGV.R:12-18,37-43` (the two
+`expect_named` lists) + the new Slice-1 test at the end;
+`tests/testthat/test_modGeneticValue.R` (2 new tests appended).
+**CHANGED (close-out docs, this docs commit, on the branch – NOT
+pushed):** `CHANGELOG.md` (S197 `[Unreleased]` entry),
+`PROJECT_LEARNINGS.md` (Learning 183), `SESSION_NOTES.md` (this
+handoff + the 1B stub it overwrote). **Read FIRSTHAND (NOT changed):**
+`R/calcGU.R:88-104`, `R/calcA.R:27-43`, `R/orderReport.R:30-98`,
+`R/rankSubjects.R:27-51`, `tests/testthat/test_calcGU.R`, the plan
+§Slice 1 + §3-4 + §9A. **NOT committed (standing keep):**
+`PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
+
+**Gotchas:** (1) **Slice 1 is on a LOCAL branch `issue-2-slice1-guse`,
+NOT pushed and NOT on `master`** –
+`master`==`origin/master`==`f5378caf`. The publish session pushes + PRs
+it. (2) **When publishing, do NOT use “Closes \#2”** – Slice 1 does not
+close the issue; only Slice 3’s merge does. Reference \#2 without the
+closing keyword. (3)
+**[`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md)
+recomputes the rare matrix (a 2nd `calcA` per `reportGV` call)** – a
+real but bounded, PLANNED inefficiency; the dedup (factor `rare` out of
+`calcA`) is Slice 2 (Finding 7). Do NOT “fix” it as a drive-by in the
+publish session. (4) **`$gu` is now a 2-col data.frame (`gu`, `guSE`)**
+– `gv$gu$gu` still works; any code assuming `$gu` is single-column would
+need care (none found in `R/`; the existing tests use `gv$gu$gu` and
+pass). (5) **`test_reportGV.R` pins the EXACT report column list in two
+`expect_named` blocks** – any future `reportGV` output column change
+must update both. (6) **The in-app column header is the raw `guSE`** – a
+friendlier display label is deferred to later polish/Slice 3. (7) **The
+ratified D3 default change (`5000 -> 1000L`) was NOT touched here** – it
+is Slice 3 (the function default is still `5000L` at
+`reportGV.R:93`/`geneDrop.R:90`; NEWS/CHANGELOG still claim 1000 – the
+contradiction persists until Slice 3). (8) Carried standing keeps
+(unchanged): package **ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5
+owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without a LabKey credential/config; exactly ONE codecov config
+(`codecov.yml`); NEWS render traps CLOSED at source
+(`html_preview:false`+`md_extensions:"-smart"`, 155); `git pull` is
+rebase + chokes on `.DS_Store` -\> use `fetch`+`reset` (135); post-merge
+`fetch` before ancestor-gated `reset --hard` (146); build-equivalent is
+`devtools::check(vignettes = FALSE)` = 0/0/0 (161); a 0/0/0 check does
+NOT imply spelling-clean -\> run `spell_check_package` (175); the
+`getConfigApiKey` latent comment-strip bug remains UNFIXED (174).
+
 ### What Session 196 Did
 
 **Deliverable:** **RATIFY §8 of the issue \#2 plan**

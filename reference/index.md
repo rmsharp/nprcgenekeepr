@@ -59,6 +59,10 @@
   : Calculates genome uniqueness for each ID that is part of the
   population
 
+- [`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md)
+  : Calculates the sampling standard error of genome uniqueness for each
+  ID
+
 - [`calcRetention()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcRetention.md)
   : Calculates Allelic Retention
 
