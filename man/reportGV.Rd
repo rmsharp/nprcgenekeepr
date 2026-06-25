@@ -59,10 +59,14 @@ species absent from the table. \code{NULL} uses the built-in 210 days.}
 \value{
 An object of class \code{nprcgenekeeprGV}: a list with elements
 \code{report} (a dataframe with the genetic value report, with animals
-ranked in order of descending value), \code{kinship} (the kinship matrix),
-\code{gu} (genome uniqueness values; reported as 0 for unknown-origin
-both-unknown "Undetermined" animals, whose apparent uniqueness is an
-artifact of unknown parentage (issue #76)), \code{fe} (founder equivalents),
+ranked in order of descending value; it carries both a \code{gu} column and a
+\code{guSE} column -- the Monte Carlo sampling standard error of each genome
+uniqueness estimate, see \code{\link{calcGUSE}}), \code{kinship} (the kinship
+matrix), \code{gu} (a dataframe with a \code{gu} column of genome uniqueness
+values and a \code{guSE} column of their standard errors; \code{gu} and
+\code{guSE} are reported as 0 for unknown-origin both-unknown "Undetermined"
+animals, whose apparent uniqueness is an artifact of unknown parentage
+(issue #76)), \code{fe} (founder equivalents),
 \code{fg} (founder genome equivalents), \code{maleFounders} and
 \code{femaleFounders} (dataframes of the known male and female founder
 records), \code{nMaleFounders} and \code{nFemaleFounders} (the counts of

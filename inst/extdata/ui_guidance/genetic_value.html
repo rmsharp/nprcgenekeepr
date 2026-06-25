@@ -7,5 +7,27 @@
 </p>
 
 <p>
+	Genome uniqueness is an <em>estimate</em> produced by a gene-drop
+	simulation. The analysis drops alleles down the pedigree many times
+	(the number of iterations you choose) and reports the average result, so
+	each genome uniqueness value comes with a sampling
+	<b>standard error</b> -- the <b>+/-</b> shown in the
+	<b>guSE</b> column, and summarized as the largest value on the
+	<b>Summary</b> tab. Running more iterations makes that +/- smaller
+	(it shrinks roughly in proportion to one over the square root of the
+	number of iterations), so there is no single iteration count that is
+	right for every colony: how many you need depends on your pedigree.
+</p>
+
+<p>
+	Keep two ideas separate. The +/- tells you how
+	<em>precise the genome uniqueness number</em> is. What actually decides
+	which animals are chosen for breeding is the <em>order</em> in which
+	animals are ranked. A small +/- does not by itself mean the ranking has
+	settled; a future release will add a tool to check how stable the
+	selection order is for your pedigree.
+</p>
+
+<p>
 	For a full description of the algorithm, see the <b>Genetic Value Analysis and Breeding Group Description</b> tab.
 </p>

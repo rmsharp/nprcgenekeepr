@@ -12,7 +12,7 @@ test_that("reportGV forms correct genetic value report", {
   expect_named(gvReport$report,
     c(
       "id", "sex", "age", "birth", "exit", "population", "sire", "dam",
-      "indivMeanKin", "zScores", "gu", "totalOffspring",
+      "indivMeanKin", "zScores", "gu", "guSE", "totalOffspring",
       "livingOffspring", "parentage", "value", "rank"
     )
   )
@@ -37,7 +37,7 @@ test_that(
     expect_named(gvReport$report,
       c(
         "id", "sex", "age", "birth", "exit", "population", "sire", "dam",
-        "indivMeanKin", "zScores", "gu", "totalOffspring",
+        "indivMeanKin", "zScores", "gu", "guSE", "totalOffspring",
         "livingOffspring", "parentage", "value", "rank"
       )
     )
@@ -356,5 +356,47 @@ test_that("reportGV gu de-inflation predicate is U-id aware, not raw is.na (issu
   )
   expect_equal(rptGu[["P1"]], 0)
   expect_equal(eltGu[["P1"]], 0)
+})
+
+# ---------------------------------------------------------------------------
+# Issue #2 Slice 1: reportGV carries a per-animal genome-uniqueness standard
+# error (guSE) -- the Monte Carlo sampling SE of the gene-drop gu estimate --
+# in BOTH the report data.frame and the returned $gu element. guSE is computed
+# from the same rare matrix calcGU() uses, so it is correct for any guThresh /
+# byID. The issue #76 "Undetermined" set (gu de-inflated to 0) also has guSE
+# set to 0: a policy constant has no sampling error. A fixed seed and
+# guThresh = 2 keep the discriminating properties (== 0 for de-inflated, > 0
+# somewhere) deterministic; the fixture has a recorded-origin import branch.
+# ---------------------------------------------------------------------------
+test_that("reportGV carries a guSE column in $report and $gu (issue #2 Slice 1)", {
+  ped <- makeOriginTestPed()
+  set.seed(17L)
+  gv <- reportGV(ped, guIter = 1000L, guThresh = 2L)
+
+  ## both surfaces carry a numeric guSE column
+  expect_true("guSE" %in% names(gv$report))
+  expect_true("guSE" %in% names(gv$gu))
+  expect_true(is.numeric(gv$report$guSE))
+  expect_true(is.numeric(gv$gu$guSE))
+
+  rptSE <- stats::setNames(gv$report$guSE, as.character(gv$report$id))
+  eltSE <- stats::setNames(gv$gu$guSE, rownames(gv$gu))
+
+  ## guSE >= 0 everywhere, and the SE is genuinely computed (not hardcoded 0)
+  expect_true(all(rptSE >= 0))
+  expect_true(any(rptSE > 0))
+
+  ## the issue #76 Undetermined set (gu == 0 policy) also has guSE == 0 in BOTH
+  ## surfaces -- M1 / F1 (origin NA both-unknown) and P1 (U-id parents, no
+  ## origin); imports M2 / F2 (origin CHINA) are NOT de-inflated.
+  expect_equal(unname(rptSE[c("M1", "F1", "P1")]), c(0, 0, 0))
+  expect_equal(unname(eltSE[c("M1", "F1", "P1")]), c(0, 0, 0))
+
+  ## the report's guSE and the $gu element's guSE agree per animal
+  expect_equal(unname(rptSE[names(eltSE)]), unname(eltSE))
+
+  ## the de-inflated animals keep gu == 0 in step with guSE == 0
+  rptGu <- stats::setNames(gv$report$gu, as.character(gv$report$id))
+  expect_equal(unname(rptGu[c("M1", "F1", "P1")]), c(0, 0, 0))
 })
 

@@ -1597,3 +1597,42 @@ test_that("modGeneticValueServer defaults to no overrides (backward compat, #73 
     }
   )
 })
+
+# ---------------------------------------------------------------------------
+# Issue #2 Slice 1: the GVA Summary panel reports the worst-case (maximum)
+# per-animal genome-uniqueness sampling standard error, so the user sees how
+# precise the gene-drop gu estimate is for the run they computed.
+# ---------------------------------------------------------------------------
+test_that("modGeneticValueServer gvSummary reports max genome uniqueness SE (issue #2 Slice 1)", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeValidTestPed(nFounders = 6, nOffspring = 14)
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped })
+    ),
+    {
+      session$setInputs(nIterations = 100)
+      session$setInputs(runAnalysis = 1)
+      tbl <- output$gvSummary
+      expect_true(grepl("Genome Uniqueness SE", tbl))
+    }
+  )
+})
+
+# ---------------------------------------------------------------------------
+# Issue #2 Slice 1 (D5): the in-app GVA guidance panel must explain, where the
+# estimate is shown, what the reported +/- means -- that genome uniqueness is a
+# Monte Carlo (gene-drop) estimate whose sampling standard error shrinks as the
+# number of iterations grows.
+# ---------------------------------------------------------------------------
+test_that("genetic_value.html guidance explains the gu standard error (issue #2 Slice 1)", {
+  path <- system.file("extdata", "ui_guidance", "genetic_value.html",
+                      package = "nprcgenekeepr")
+  expect_true(nzchar(path))
+  html <- paste(readLines(path, warn = FALSE), collapse = "\n")
+  expect_match(html, "standard error", ignore.case = TRUE)
+  expect_match(html, "iterations", ignore.case = TRUE)
+})

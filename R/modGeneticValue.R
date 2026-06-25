@@ -287,6 +287,27 @@ modGeneticValueServer <- function(id, pedigree,
         stringsAsFactors = FALSE
       )
 
+      # Issue #2 Slice 1: report the worst-case (maximum) genome-uniqueness
+      # sampling standard error so the user sees how precise the gene-drop gu
+      # estimate is for the run they computed. Guarded on the column's presence.
+      seCol <- if ("guSE" %in% names(results)) {
+        "guSE"
+      } else if ("genomeUniquenessSE" %in% names(results)) {
+        "genomeUniquenessSE"
+      } else {
+        NULL
+      }
+      if (!is.null(seCol)) {
+        summaryData <- rbind(
+          summaryData,
+          data.frame(
+            Metric = "Genome Uniqueness SE (max)",
+            Value = sprintf("%.4f", max(results[[seCol]], na.rm = TRUE)),
+            stringsAsFactors = FALSE
+          )
+        )
+      }
+
       # Add founder statistics if available
       if (!is.null(fullRes)) {
         founderData <- data.frame(

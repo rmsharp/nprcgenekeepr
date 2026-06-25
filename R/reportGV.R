@@ -13,10 +13,14 @@
 #'
 #' @return An object of class \code{nprcgenekeeprGV}: a list with elements
 #' \code{report} (a dataframe with the genetic value report, with animals
-#' ranked in order of descending value), \code{kinship} (the kinship matrix),
-#' \code{gu} (genome uniqueness values; reported as 0 for unknown-origin
-#' both-unknown "Undetermined" animals, whose apparent uniqueness is an
-#' artifact of unknown parentage (issue #76)), \code{fe} (founder equivalents),
+#' ranked in order of descending value; it carries both a \code{gu} column and a
+#' \code{guSE} column -- the Monte Carlo sampling standard error of each genome
+#' uniqueness estimate, see \code{\link{calcGUSE}}), \code{kinship} (the kinship
+#' matrix), \code{gu} (a dataframe with a \code{gu} column of genome uniqueness
+#' values and a \code{guSE} column of their standard errors; \code{gu} and
+#' \code{guSE} are reported as 0 for unknown-origin both-unknown "Undetermined"
+#' animals, whose apparent uniqueness is an artifact of unknown parentage
+#' (issue #76)), \code{fe} (founder equivalents),
 #' \code{fg} (founder genome equivalents), \code{maleFounders} and
 #' \code{femaleFounders} (dataframes of the known male and female founder
 #' records), \code{nMaleFounders} and \code{nFemaleFounders} (the counts of
@@ -150,6 +154,14 @@ reportGV <- function(ped, guIter = 5000L, guThresh = 1L, pop = NULL,
   gu <- calcGU(alleles, threshold = guThresh, byID = byID, pop = probands)
   gu <- gu[probands, , drop = FALSE]
 
+  # Issue #2 Slice 1: the per-animal Monte Carlo sampling standard error of the
+  # gu estimate, computed from the same rare matrix calcGU() averages (so it is
+  # correct for any guThresh / byID). Carried alongside gu into both the report
+  # and the returned $gu element. (calcGUSE recomputes the rare matrix today;
+  # factoring it out of calcA so gu and guSE share one build is Slice 2's job.)
+  guSE <- calcGUSE(alleles, threshold = guThresh, byID = byID, pop = probands)
+  guSE <- guSE[probands, , drop = FALSE]
+
   if (!is.null(updateProgress)) {
     updateProgress(
       detail = "Calculating Numbers of Offspring", value = 1L,
@@ -209,14 +221,17 @@ reportGV <- function(ped, guIter = 5000L, guThresh = 1L, pop = NULL,
   }
   undetermined <- parentage == "both unknown" & is.na(origin)
   gu$gu[undetermined] <- 0.0
+  # The de-inflated gu is a policy constant (issue #76), not a Monte Carlo
+  # estimate, so its sampling standard error is identically 0.
+  guSE$guSE[undetermined] <- 0.0
 
   finalData <- cbind(
-    demographics, indivMeanKin, zScores, gu, offspring, parentage
+    demographics, indivMeanKin, zScores, gu, guSE, offspring, parentage
   )
   finalData <- list(
     report = orderReport(finalData, ped),
     kinship = kmat,
-    gu = gu,
+    gu = cbind(gu, guSE),
     fe = feFg$FE,
     fg = feFg$FG,
     maleFounders = males,
