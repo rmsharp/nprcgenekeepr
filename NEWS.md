@@ -220,6 +220,20 @@ R. Mark Sharp, Ph.D.
     genome uniqueness does not vary across iterations. The standard
     error shrinks as the number of gene-drop iterations grows, giving a
     direct measure of how precise a reported genome-uniqueness value is.
+  - Added the exported `gvaConvergence()`, which gives evidence-based
+    advice on how many gene-drop iterations a pedigree needs for a
+    stable Genetic Value Analysis. Because genome uniqueness is the only
+    ranked report value that carries gene-drop sampling noise, the
+    needed iteration count is pedigree-dependent rather than a single
+    universal number. From one gene drop, `gvaConvergence()` splits the
+    iteration columns into two independent halves and, for each
+    candidate iteration count, ranks each half through the same pipeline
+    `reportGV()` uses and compares the two rankings: the count is judged
+    reproducible when the top selected animals overlap and the full rank
+    order agrees closely. It returns the agreement reached at each count
+    and recommends the smallest iteration count at which the ranking is
+    reproducible, so a colony can choose an iteration count with
+    evidence instead of a guess.
 - Documentation
   - The example configuration file
     (`inst/extdata/example_nprcgenekeepr_config`) now documents that
