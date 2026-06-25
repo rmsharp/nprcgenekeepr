@@ -1526,7 +1526,7 @@ test_that("modGeneticValueServer threads speciesOverrides into reportGV (#73 Par
   test_ped <- makeValidTestPed(nFounders = 6, nOffspring = 14)
   captured <- new.env(parent = emptyenv())
   local_mocked_bindings(
-    reportGV = function(ped, guIter = 5000L, guThresh = 1L, pop = NULL,
+    reportGV = function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
                         byID = TRUE, updateProgress = NULL,
                         breedingTable = NULL, gestationTable = NULL,
                         breedingAgeDefault = NULL, gestationDefault = NULL) {
@@ -1576,7 +1576,7 @@ test_that("modGeneticValueServer defaults to no overrides (backward compat, #73 
   test_ped <- makeValidTestPed(nFounders = 6, nOffspring = 14)
   captured <- new.env(parent = emptyenv())
   local_mocked_bindings(
-    reportGV = function(ped, guIter = 5000L, guThresh = 1L, pop = NULL,
+    reportGV = function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
                         byID = TRUE, updateProgress = NULL,
                         breedingTable = NULL, gestationTable = NULL,
                         breedingAgeDefault = NULL, gestationDefault = NULL) {

@@ -40,9 +40,21 @@
 		pedigree according to Mendelian rules.  Genome uniqueness is a measure of the
 		probability that an animal possesses founder alleles that are present in at most
 		<em>x</em> other animals (usually 0-3), and thus are rare and at risk of being lost from
-		the population.  A range of 2 to 100,000 simulations may be selected.  A minimum
-		of 1,000 simulations is recommended.  A genome uniqueness threshold value between
-		0-3 should also be selected, as desired.
+		the population.  A range of 100 to 10,000 simulations may be selected.  A minimum
+		of 1,000 simulations is recommended, and 1,000 is the default.  A genome uniqueness
+		threshold value between 0-3 should also be selected, as desired.
+		<p style="padding-top:10px">
+		Because genome uniqueness is estimated from a finite number of gene-drop
+		iterations, each value carries a sampling <b>standard error</b> (the <b>guSE</b>
+		column), which shrinks roughly in proportion to one over the square root of the
+		number of iterations; the default of 1,000 iterations gives a sampling error below
+		one percentage point on the pedigrees we have examined.  Keep two ideas separate:
+		the standard error tells you how precise the genome uniqueness <em>number</em> is,
+		while what actually decides which animals are selected for breeding is the
+		<em>order</em> in which they are ranked.  A small standard error does not by itself
+		mean that order has settled.  The <b>gvaConvergence()</b> function checks how many
+		gene-drop iterations a given pedigree needs for the selection order to stop changing.
+		</p>
 	</li>
 	<li style="padding-bottom:15px">
 		Following the calculation of mean kinship, related z-scores, and genome uniqueness

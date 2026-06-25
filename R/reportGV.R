@@ -28,7 +28,7 @@
 #'
 #' @param ped The pedigree information in data.frame format
 #' @param guIter Integer indicating the number of iterations for the gene-drop
-#'  analysis. Default is 5000 iterations
+#'  analysis. Default is 1000 iterations
 #' @param guThresh Integer indicating the threshold number of animals for
 #' defining a unique allele. Default considers an allele "unique"
 #' if it is found in only 1 animal.
@@ -94,7 +94,7 @@
 #' nff <- trimmedGeneticValue[["nFemaleFounders"]]
 #' fe <- trimmedGeneticValue[["fe"]]
 #' fg <- trimmedGeneticValue[["fg"]]
-reportGV <- function(ped, guIter = 5000L, guThresh = 1L, pop = NULL,
+reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
                      byID = TRUE, updateProgress = NULL,
                      breedingTable = NULL, gestationTable = NULL,
                      breedingAgeDefault = NULL, gestationDefault = NULL) {

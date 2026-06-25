@@ -24,8 +24,10 @@
 	<em>precise the genome uniqueness number</em> is. What actually decides
 	which animals are chosen for breeding is the <em>order</em> in which
 	animals are ranked. A small +/- does not by itself mean the ranking has
-	settled; a future release will add a tool to check how stable the
-	selection order is for your pedigree.
+	settled. The package provides a tool for exactly this check -- the
+	<b>gvaConvergence()</b> function recomputes the ranking across a range of
+	iteration counts and reports the smallest number of gene-drop iterations
+	at which the selection order for your pedigree stops changing.
 </p>
 
 <p>

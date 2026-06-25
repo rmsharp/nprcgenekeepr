@@ -10,7 +10,7 @@ geneDrop(
   dams,
   gen,
   genotype = NULL,
-  n = 5000L,
+  n = 1000L,
   updateProgress = NULL
 )
 }
@@ -31,7 +31,7 @@ columns:  \code{id}, \code{first}, and \code{second}. The second and third
 columns contain the integers indicating the observed genotypes.}
 
 \item{n}{integer indicating the number of iterations to simulate.
-Default is 5000.}
+Default is 1000.}
 
 \item{updateProgress}{function or NULL. If this function is defined, it
 will be called during each iteration to update a
@@ -83,7 +83,7 @@ ids are rejected with an error. This invariant is established upstream by
 \code{\link{kinship}}, both of which require unique ids.
 }
 \examples{
-## We usually defined `n` to be >= 5000
+## We usually define `n` to be >= 1000
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::lacy1989Ped
 allelesNew <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,

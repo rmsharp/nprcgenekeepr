@@ -24,7 +24,7 @@ and Genome Uniqueness scores to help identify genetically valuable animals.
 The left panel contains controls for configuring the analysis:
 
 - **Gene Drop Iterations**: Number of iterations for the gene-drop simulation
-  (default: 5000, range: 100-10,000). More iterations provide more accurate
+  (default: 1000, range: 100-10,000). More iterations provide more accurate
   genome uniqueness estimates but take longer to compute.
 
 - **Calculate Genome Uniqueness**: Toggle whether to run the gene-drop simulation

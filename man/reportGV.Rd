@@ -6,7 +6,7 @@
 \usage{
 reportGV(
   ped,
-  guIter = 5000L,
+  guIter = 1000L,
   guThresh = 1L,
   pop = NULL,
   byID = TRUE,
@@ -21,7 +21,7 @@ reportGV(
 \item{ped}{The pedigree information in data.frame format}
 
 \item{guIter}{Integer indicating the number of iterations for the gene-drop
-analysis. Default is 5000 iterations}
+analysis. Default is 1000 iterations}
 
 \item{guThresh}{Integer indicating the threshold number of animals for
 defining a unique allele. Default considers an allele "unique"
