@@ -155,6 +155,12 @@ R. Mark Sharp, Ph.D.
     precision of the number is distinct from the stability of the
     selection order used for breeding choices. Existing `gu` values and
     all `reportGV()` signatures are unchanged.
+  - The `reportGV()` and `geneDrop()` functions now default to 1000
+    gene-drop iterations, down from 5000. This matches the Genetic Value
+    Analysis tab, which already defaulted to 1000, so the function
+    default and the application now agree. Callers that pass an explicit
+    iteration count are unaffected. Use the new `gvaConvergence()` to
+    choose an evidence-based count for a particular pedigree.
 - New features
   - Added the exported `setLabKeyDefaults()`, which configures `Rlabkey`
     authentication for the session: it prefers an API key (from the
