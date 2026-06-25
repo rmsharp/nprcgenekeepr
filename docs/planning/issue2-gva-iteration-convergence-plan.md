@@ -1,8 +1,9 @@
 # Issue #2 Plan -- Evidence-based advice on the number of gene-drop iterations for the Genetic Value Analysis
 
-**Status:** PLAN (Session 195, 2026-06-24). Deliverable of a planning session; implementation and the
-empirical study are separate later sessions (FM #18). Awaiting owner ratification of Section 4 + Section 8
-before any RED.
+**Status:** PLAN -- **Section 8 RATIFIED (Session 196, 2026-06-25).** Implementation slices are separate later
+sessions (FM #18). **Slice 1 is unblocked.** All six §8 owner decisions are resolved (§8); the S195 empirical
+claims were re-established firsthand in S196, correcting three factual errors (§2C, Findings 3-4) -- see
+"§9A. Firsthand evidence (S196)".
 
 **Issue:** [#2](https://github.com/rmsharp/nprcgenekeepr/issues/2) (OPEN since 2020-04-05) --
 "Need to provide evidence based advice on number of iterations needed for Genetic Value Analysis."
@@ -113,9 +114,20 @@ rank as `rank(indivMeanKin - gu)`; corrected here.)
 
 `reportGV.R:205-211` sets `gu$gu[undetermined] <- 0.0` for both-unknown, no-recorded-origin animals **after**
 `calcGU`; `rankSubjects` gives them `rank = NA` (the `noParentage` bucket). These zeros are a **policy
-constant**, not a Monte Carlo estimate -- their SE is identically 0 and they are unrankable. On the bundled
-`qcPed` they are **156 of 280 animals**. Every reproducibility metric must be computed on the rankable
-`gu > 0` subset, with the Undetermined count reported separately.
+constant**, not a Monte Carlo estimate -- their SE is identically 0 and they are unrankable. Every
+reproducibility metric must be computed on the rankable `gu > 0` subset, with the Undetermined count reported
+separately.
+
+**Firsthand correction (S196 -- the S195 numbers here were subagent-sourced and wrong).** On the bundled
+`qcPed` the Undetermined set is **124 of 280** (NOT 156 -- 156 is the *rankable* count). More importantly,
+firsthand (`reportGV(qcPed)` ground truth + `calcGU`/`calcA` at the defaults `guThresh=1, byID=TRUE`):
+`{gu > 0}` == `{both-unknown founders}` == `{the issue #76 Undetermined set}` are the **identical 124 animals**
+(`identical()` TRUE for both correspondences). Founders enter the gene drop with freshly minted private
+alleles, so they carry *all* the genome uniqueness; every known-parentage animal inherits from the shared pool
+and has `gu` exactly 0. So **after the issue #76 de-inflation every qcPed animal has `gu = 0`** (the 124
+founders zeroed by policy, the 156 rankable already 0). `pedWithGenotype` and `rhesusPedigree` are the same.
+Consequence: these pedigrees have **zero rankable `gu` signal**, so they cannot exercise a `gu`-based metric at
+all (see Finding 4).
 
 ### 2D. The iteration-count default contradiction (84-hit inventory; key map)
 
@@ -179,22 +191,32 @@ vignette `manual_components/_*.Rmd`.
 2. **CORRECTION 1 -- drop the "homozygotes inflate SE by up to sqrt(2)" claim.** Empirically false at the
    default `guThresh = 1`: a rare allele has population frequency `<= 1` (one copy in the whole population),
    so a homozygote cannot carry one; per-column counts are effectively `{0,1}`. At `guThresh >= 2` the
-   measured `SE_exact/SE_approx` ratio is `<= 1` (~0.81-0.84 median), i.e. the Bernoulli form slightly
-   *over*-states. **No `(1+rho)` inflation of `N`.** (Structural note: a heterozygote carrying two *distinct*
+   measured `SE_exact/SE_approx` ratio is `<= 1` (**confirmed firsthand S196: median 0.82 at `guThresh=2`, 0.85
+   at `guThresh=3`; ~1.0 at the default `guThresh=1`**), i.e. the Bernoulli form slightly *over*-states. **No
+   `(1+rho)` inflation of `N`.** (Structural note: a heterozygote carrying two *distinct*
    freq-1 alleles could in principle give count 2, which is another reason to compute SE from the real `rare`
    matrix rather than a closed form.)
 
 3. **CORRECTION 2 -- the rank is a bucketed order statistic; rank fragility is boundary-density, not
-   `1/sqrt(N)`.** On `qcPed`, Spearman vs an `N=4000` reference is `1.000` at every `N` from 125 up, while
-   "max absolute rank change" is 5-8 positions and does **not** shrink monotonically with `N` -- it is
-   dominated by avg-rank reshuffling inside the 156-animal `gu = 0` tie block (an artifact). Honest rank
-   diagnostics count animals within `2*SE` of `gu = 10` and of each integer-`trunc(gu)` boundary; do **not**
-   apply a Spearman-Brown smooth-reliability correction to a bucketed statistic.
+   `1/sqrt(N)`.** The displayed rank sorts by `-trunc(gu)` then deterministic `zScores`, so an animal's rank
+   only moves when its `gu` fluctuation crosses an integer-`trunc` (or the `gu=10`) boundary *and* that
+   reorders it past a neighbour. Honest rank diagnostics count animals within `2*SE` of `gu = 10` and of each
+   integer-`trunc(gu)` boundary; do **not** apply a Spearman-Brown smooth-reliability correction to a bucketed
+   statistic. (Firsthand S196: on every bundled pedigree the max absolute rank change is **0** across `N` from
+   5 to 2000 -- the gu-bearing animals are structurally separated, see Finding 4 -- so the S195 "5-8 positions"
+   figure was wrong; the point that fragility is boundary-density-driven, not smooth, stands.)
 
-4. **The bundled `qcPed` cannot validate a rank-stability tool.** It is degenerate-bimodal (55.7% at `gu=0`,
-   ~43% near `gu=50`, only 2 of 280 in the (1,10) mid-range); Spearman and top-20 overlap are 1.0 even at
-   `N=125`. A TDD test of "recommend a small `N`" on `qcPed` passes **tautologically**. A
-   **dense-mid-range fixture must be built first** (RED) for the rank tool to discriminate.
+4. **NO bundled pedigree can validate a rank-stability tool -- the dense fixture is mandatory (firsthand S196).**
+   The S195 "qcPed is bimodal 55.7%/43%, 2-of-280 mid-range" description was wrong. The truth, verified
+   firsthand across all 25 bundled datasets: `qcPed` / `pedWithGenotype` / `rhesusPedigree` have **zero**
+   rankable `gu` signal (2C -- all rankable animals at `gu = 0`), so their selection order is pure deterministic
+   mean-kinship. `examplePedigree` is the **only** bundled pedigree with rankable `gu > 0` (294 of 2322
+   rankable; 271 at `gu > 10`; **only 7 in the `(1,10]` mid-range**, 2 within +/-2 of the `gu=10` cutoff), and
+   even there the gu-bearing animals are structurally fixed (founder alleles at `gu = 100`/`50`), so **selection
+   order is identical at `N = 5` and `N = 2000`** (top-20 overlap 1.0, max rank change 0). A `gvaConvergence()`
+   run on any shipped pedigree would therefore tautologically "recommend" ~5 iterations. **A dense-mid-range
+   fixture built in Slice 2 RED is the only way to produce a pedigree where iteration count actually moves the
+   selection order** -- it is load-bearing, not optional (Dragon #2).
 
 5. **`fg` is also stochastic** but is a nonlinear functional (`1/sum(p^2/r)`); a naive batch SE is a
    delta-method approximation. Either derive + validate it against multi-seed replicates, or defer `fg`
@@ -249,16 +271,22 @@ criteria) for the pedigree in hand.
 bucketed **step function**, so the needed `K` is driven by *boundary crowding*, not a smooth `1/sqrt(K)` curve
 -- expect plateaus and jumps, not a clean decay (Finding 3); (ii) pure set overlap is binary at the cut line,
 so a single near-tie animal at rank `k` vs `k+1` reads as a hard miss -- pairing it with the order-agreement
-measure softens that; (iii) `qcPed`'s bimodal `gu` makes order trivially stable at low `K`, so the order
-criterion can only be **validated** on the dense-mid-range fixture built in Slice 2 RED (Finding 4).
+measure softens that; (iii) **no bundled pedigree** makes order non-trivial (all are stable at `N=5`, Finding 4),
+so the order criterion can only be **validated** on the dense-mid-range fixture built in Slice 2 RED.
 
 **Half-split soundness:** the `K` columns are i.i.d., so two disjoint halves are genuinely independent
 estimates; compare the halves **to each other** (never to their own pooled mean -- spurious `-1.0`). A
 `K/2`-vs-`K/2` split is **conservative** for the `K` run; no Spearman-Brown up-correction on a bucketed
-statistic (Finding 3). *Owner inputs still needed: `k`, `o_min`, `rho_min`, and the exact order metric
-(Section 8).*
+statistic (Finding 3).
 
-### D2 -- Architecture: ship C first, then A; B out of scope
+**RATIFIED (S196): order metric = Kendall's tau-b** (robust to the bucketed-rank ties), with provisional
+thresholds **`k = 20`, `o_min = 0.90`, `rho_min = 0.95`**. Because no bundled pedigree can calibrate them
+(Finding 4), these provisional values are **finalized against the dense-mid-range fixture in Slice 2 RED** --
+they do not gate Slice 1, which carries no order metric.
+
+### D2 -- Architecture: ship C first, then A; B out of scope (RATIFIED S196)
+
+**RATIFIED (S196): ship C (Slice 1) then A (Slice 2); B out of scope.**
 
 - **C (Slice 1) -- per-animal `guSE` column (additive, signature-stable).** Compute exact column-variance SE
   from the `rare` matrix `calcGU` already builds, carry a `guSE` column through `reportGV`'s `cbind`
@@ -274,26 +302,40 @@ statistic (Finding 3). *Owner inputs still needed: `k`, `o_min`, `rho_min`, and 
   `V1..Vn` return contract, the fixed-`N` example datasets, and the seeded tests. Revisit only if, after
   seeing C+A, the owner explicitly wants live early-stop and accepts that blast radius.
 
-### D3 -- Reconcile the 5000/1000/10000 default contradiction (owner decision)
+### D3 -- Reconcile the 5000/1000/10000 default contradiction (RATIFIED S196: align to 1000)
 
-The deliverable must **resolve, or explicitly schedule resolution of**, 2D, or #2 gains a tool but stays
-"open." The S195 evidence (`qcPed` converges by `N ~ 250-500`; worst-animal SE ~1.1pp at `N=1000`,
-~0.5pp at `N=5000`) supports **aligning the `reportGV`/`geneDrop` function default down to 1000** to match the
-Shiny UI and the NEWS/CHANGELOG claim -- with the explicit caveat that 1000 is adequate for *typical*
-pedigrees and the new `gvaConvergence()` is how a user checks their own. Options for the owner:
-  (a) align function default to **1000** + fix all stale "5000" docs/man/vignettes [recommended];
-  (b) keep **5000** as a conservative default and fix NEWS/CHANGELOG to stop claiming 1000;
-  (c) make the default **adaptive** (pilot-then-recommend) -- larger, defer to its own issue.
-*Owner decision needed (Section 8).* Whichever is chosen, Slice 3 updates the vignette TODO + every stale
-doc site in 2D.
+The deliverable must **resolve** 2D, or #2 gains a tool but stays "open."
 
-### D4 -- Scope of the SE/recommendation
+**RATIFIED (S196): option (a) -- align the `reportGV`/`geneDrop` function default down to `1000L`** to match
+the Shiny UI default and the NEWS/CHANGELOG claim; Slice 3 fixes every stale "5000" doc/man/vignette site
+in 2D.
 
-`guSE` is computed from the real `rare` matrix, so it is correct across `byID` and `guThresh`. The
-*recommendation* in A is `(pedigree, guThresh, byID)`-dependent; scope the headline claim to defaults and
-expose the parameters, or state the restriction. Exclude the de-inflated `gu = 0` set from every metric (2C).
+**Evidence basis (corrected, firsthand S196).** The S195 justification ("`qcPed` converges by `N ~ 250-500`;
+worst-animal SE ~1.1pp at `N=1000`") was **vacuous** -- `qcPed`'s rankable set has no `gu` signal (2C), so
+there is nothing to converge. The grounded evidence is from `examplePedigree` (the only bundled pedigree with
+signal): selection order is stable well below 1000 (in fact at `N=5`, Finding 4), and the per-animal numeric SE
+decays cleanly `~1/sqrt(N)` -- **0.79pp at `N=1000`, 0.56pp at `N=2000`, extrapolating ~0.35pp at `N=5000`**.
+Since the owner ratified that **selection order** governs breeder choice and numeric precision is "of little
+value for breeder selection" (D1), 1000 is comfortably adequate: it already gives sub-1pp numeric precision,
+and 5000 buys only a marginally tighter `+/-` that has been explicitly deprioritized. The new
+`gvaConvergence()` (Slice 2) is how a user checks an atypical pedigree of their own. Rejected: (b) keep 5000
+(spends compute for deprioritized precision and leaves the UI/function split as a smaller mismatch); (c)
+adaptive default (larger -- its own issue).
 
-### D5 -- User-facing in-app documentation of the estimate (owner requirement, S195)
+### D4 -- Scope of the SE/recommendation (RATIFIED S196)
+
+**RATIFIED (S196): compute `guSE` from the real `rare` matrix (automatically correct for any `guThresh`/`byID`);
+scope the iteration *recommendation* to the defaults while exposing the parameters.** `guSE` is computed from
+the real `rare` matrix, so it is correct across `byID` and `guThresh` with no extra work. The *recommendation*
+in A is `(pedigree, guThresh, byID)`-dependent; scope the headline claim to defaults and expose the parameters.
+Exclude the de-inflated `gu = 0` set from every metric (2C). (Firsthand S196: `byID` makes **no** difference at
+the default `guThresh=1` -- `byID=TRUE` and `FALSE` give identical `rare` sums -- so the default path is
+`byID`-insensitive; `guThresh` does change the counts.)
+
+### D5 -- User-facing in-app documentation of the estimate (owner requirement, S195; scope RATIFIED S196)
+
+**RATIFIED (S196): Slice 1 updates the in-app `genetic_value.html` only**; the longer `gvAndBgDesc.html` and the
+parallel vignette `manual_components` are reconciled in Slice 3 (keeps Slice 1 small and vertical).
 
 Per owner direction: the estimation technique must be **documented and explained in the application's
 user-facing documentation, accessible from the UI where the estimate is displayed** -- not only in
@@ -311,8 +353,14 @@ order** (what actually governs which breeders are chosen, reported by `gvaConver
 not by itself mean the selection is settled; that is what the order-stability check is for. Use `withMathJax` for any formula. **Split across slices:**
 Slice 1 ships the short explanation in `genetic_value.html` (where the estimate is shown); Slice 3 reconciles
 the longer `gvAndBgDesc.html` and the parallel vignette `manual_components` (including the stale-"5000" fix) so
-both surfaces tell one story. *Owner input: in-app HTML only in Slice 1, or also the vignette component in
-Slice 1? (Section 8.)*
+both surfaces tell one story.
+
+### D6 -- `fg` (founder genome equivalents) uncertainty (RATIFIED S196: deferred)
+
+**RATIFIED (S196): `fg` SE is OUT OF SCOPE for #2 -- deferred to follow-up issue [#82](https://github.com/rmsharp/nprcgenekeepr/issues/82) (opened S196).** `fg` is also
+stochastic (it reuses the same gene-drop columns) but is a nonlinear functional `1/sum(p^2/r)`, so a sound SE
+needs delta-method derivation + multi-seed validation rather than the simple column-variance used for `gu`
+(Finding 5). Keeping #2 focused on `gu` avoids hand-waving an `fg` SE. **Follow-up issue #82 opened (S196).**
 
 ---
 
@@ -391,10 +439,12 @@ the seeded E2E hook + fixed-`N` tests. Flagged out of scope; documented here so 
 ## 7. Here be dragons (consolidated load-bearing risks)
 
 1. **Do not inflate `N` for homozygotes** -- the `sqrt(2)` claim is wrong at default threshold (Finding 2).
-2. **`qcPed` cannot validate the rank tool** -- build the dense-mid-range fixture in RED *before* A, or the
-   tests are tautological (Finding 4).
-3. **Exclude the issue #76 `gu = 0` Undetermined set from every metric** (2C) -- 156/280 on `qcPed`; they are
-   a policy constant with SE 0 and rank NA.
+2. **NO bundled pedigree can validate the rank tool** -- `qcPed`/`pedWithGenotype`/`rhesusPedigree` have zero
+   rankable `gu` signal, and `examplePedigree` (the only one with signal) is order-stable at `N=5`; build the
+   dense-mid-range fixture in RED *before* A or the tests are tautological (Finding 4, firsthand S196).
+3. **Exclude the issue #76 `gu = 0` Undetermined set from every metric** (2C) -- **124/280** on `qcPed` (NOT
+   156; 156 is the rankable count), and on `qcPed` that set *is* the entire `gu > 0` set; they are a policy
+   constant with SE 0 and rank NA.
 4. **The rank is bucketed, not smooth** -- target `gu = 10`, integer-`trunc(gu)`, and `z <= 0.25` boundaries;
    no Spearman-Brown on a bucketed statistic (Finding 3).
 5. **Half-split must compare halves to each other**, never to their pooled mean (spurious `-1.0`).
@@ -409,20 +459,23 @@ the seeded E2E hook + fixed-`N` tests. Flagged out of scope; documented here so 
     is NOT generated from the vignette `manual_components/_*.Rmd`; both are edited by hand and must be kept
     consistent, or the app and the manual will disagree about iterations/precision.
 
-## 8. Owner ratification checklist (resolve before Slice 1 RED)
+## 8. Owner ratification checklist (RESOLVED -- Session 196, 2026-06-25)
+
+**All items ratified. Slice 1 is unblocked.**
 
 - [x] **D1 primary measure:** selection-order stability (RATIFIED S195 -- per-animal SE is a displayed
       diagnostic, "of interest but of little value for breeder selection," not a gate).
-- [ ] **D1 thresholds:** accept `k = 20`, `o_min = 0.90`, `rho_min = 0.95`, and the order metric (Kendall's
-      tau-b vs top-weighted Spearman on the ranked `gu > 0` set), or adjust.
-- [ ] **D2 sequencing:** confirm ship C (Slice 1) first, then A (Slice 2); B out of scope.
-- [ ] **D3 default reconciliation:** pick (a) align function default to 1000 [recommended], (b) keep 5000 +
-      fix NEWS/CHANGELOG, or (c) adaptive (own issue).
-- [ ] **D4 scope:** recommendation scoped to defaults vs fully parameterized by `(guThresh, byID)`.
-- [ ] **D5 doc scope:** Slice 1 updates the in-app `genetic_value.html` only (recommended; the longer
-      `gvAndBgDesc.html` + vignette `manual_components` reconciled in Slice 3) -- or update all surfaces in
-      Slice 1.
-- [ ] **`fg`:** in scope (derive+validate its SE) or deferred to a follow-up issue.
+- [x] **D1 thresholds (S196):** order metric = **Kendall's tau-b**; provisional **`k = 20`, `o_min = 0.90`,
+      `rho_min = 0.95`**, finalized against the Slice-2 dense fixture (they do not gate Slice 1).
+- [x] **D2 sequencing (S196):** ship **C (Slice 1) then A (Slice 2); B out of scope**.
+- [x] **D3 default reconciliation (S196):** option **(a) -- align the function default to `1000L`** + fix all
+      stale "5000" docs in Slice 3 (firsthand evidence basis; see D3).
+- [x] **D4 scope (S196):** compute `guSE` from the real `rare` matrix (correct for any `guThresh`/`byID`
+      automatically); scope the iteration *recommendation* to the defaults, exposing the parameters.
+- [x] **D5 doc scope (S196):** Slice 1 updates the **in-app `genetic_value.html` only**; longer
+      `gvAndBgDesc.html` + vignette `manual_components` reconciled in Slice 3.
+- [x] **`fg` (S196, D6):** **deferred to follow-up issue #82** (nonlinear functional; needs its own
+      delta-method derivation + validation). Opened S196.
 
 ---
 
@@ -435,6 +488,26 @@ the seeded E2E hook + fixed-`N` tests. Flagged out of scope; documented here so 
 `R/modGeneticValue.R:37-39` (UI default `1000L`), `:144-145` (`gatedSeed`), `:147-158,202` (progress),
 `:269-306` (`gvSummary`). Default-contradiction inventory: see 2D (84 sites; cross-checked against
 `test_modGeneticValue.R:38`). Research: workflow `wf_fdb7c410-95f` (investigate/design/critique, 7 agents).
+
+### 9A. Firsthand evidence (Session 196 -- re-established the load-bearing empirical claims)
+
+S195 flagged that the `qcPed` empirical numbers were subagent-sourced and not personally re-run. S196
+re-established them firsthand (scratchpad analysis scripts + `reportGV()` ground truth; column-prefix trick on
+one `Nmax` gene-drop run -- no replicate experiment). Results that **shaped or corrected** the plan:
+
+| Claim | S195 (plan) | S196 firsthand | Effect |
+|---|---|---|---|
+| `qcPed` Undetermined count | 156/280 | **124/280** (156 is the *rankable* count) | §2C, Finding 4, Dragon #3 corrected |
+| `qcPed` `gu` distribution | "bimodal 55.7%/43%, 2 mid-range" | `{gu>0}` == `{founders}` == `{Undetermined}` (124, identical sets); **all rankable at `gu=0`; all 280 at `gu=0` post-#76** | §2C, Finding 4 corrected |
+| Bundled data for validation | "`qcPed` can't (bimodal)" | **NO bundled ped can**: 3 have zero `gu` signal; `examplePedigree` (only one with signal) is order-stable at `N=5` | Finding 4, Dragon #2 strengthened (dense fixture mandatory) |
+| D3 convergence basis | "`qcPed` converges by `N~250-500`" | **vacuous** (`qcPed` has no rankable signal); grounded on `examplePedigree`: order stable `<<1000`, SE 0.79pp@1000 -> 0.56pp@2000 -> ~0.35pp@5000 (`1/sqrt(N)`) | D3 evidence basis corrected; still supports align-to-1000 |
+| SE shrinks `~1/sqrt(N)` | asserted | **confirmed** (clean decay on `examplePedigree`) | Finding 1 confirmed |
+| `SE_exact/SE_approx` | "~0.81-0.84 at `guThresh>=2`" | **confirmed** (0.82@thr2, 0.85@thr3; ~1.0@thr1) | Correction 1 confirmed |
+| column-prefix trick valid | asserted | **confirmed** (per-column rareness independent; prefix `gu` == `calcGU` exactly) | D2/Slice 2 premise confirmed |
+| `byID` effect at `guThresh=1` | (not stated) | **none** (`TRUE`/`FALSE` identical) | D4 note |
+
+Scripts (scratchpad, not in repo): `gva_convergence_study.R` (qcPed), `gva_convergence_examplePed.R`
+(examplePedigree convergence + half-split). Ground-truth cross-check: `reportGV(qcPed)` / `reportGV(examplePedigree)`.
 
 ## 10. Candidates considered and rejected
 
