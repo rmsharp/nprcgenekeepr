@@ -15,6 +15,67 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-25 — Published Slice 1 of issue \#2: per-animal genome-uniqueness SE (`guSE`) is on `master` via PR \#83 (Session 198)
+
+- **Deliverable (owner pick, single item):** publish S197’s Slice 1
+  (per-animal genome-uniqueness sampling standard error) from branch
+  `issue-2-slice1-guse` to `master` via PR, folding the user-facing NEWS
+  entry into the SAME PR (Learning 157a). **Publish/docs session** — TDD
+  code-phases N/A every response (S197 wrote + tested the code under
+  strict TDD). **0 stakeholder corrections.** SOLO (a serial,
+  irreversible git sequence — the standing publish-session judgment,
+  held under ultracode). Owner directed “Publish Slice 1” at orientation
+  and “Merge PR \#83 now” at the `AskUserQuestion` merge gate.
+- **NEWS (one PR, Learning 157a):** a *New features* bullet for the new
+  exported
+  [`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md)
+  and a *Changes* bullet for the
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+  `guSE` column / “Genome Uniqueness SE (max)” GVA Summary row / in-app
+  guidance, both appended at the END of their lists
+  (append-don’t-rewrite, Learning 171 — end-placement preserves the GVA
+  bullets’ “described above” cross-references). Re-rendered `NEWS.md`
+  (`html_preview:false`+`md_extensions:"-smart"`, Learning 155) → pure
+  insertion (NEWS.md +26), 0 non-ASCII, no stray `.html`;
+  `spell_check_package(".")` = **0 before AND after** (Learning 175).
+  Committed as `c8a1cf16`.
+- **PR + CI (did NOT merge blind, Learning 157b):** opened **PR \#83** →
+  `master` (body “Part of \#2”, **no** closing keyword). BOTH
+  `gh pr checks 83 --watch` AND a FRESH non-watch re-query returned
+  **all 10 checks PASS** (lint, pkgdown, test-coverage,
+  macOS/Windows/Ubuntu release + oldrel-1 + ubuntu-devel 15m50s,
+  `codecov/patch`, `codecov/project`); `mergeStateStatus` UNSTABLE →
+  CLEAN. **`codecov/patch` GREEN** — the new code ships its own tests
+  (`test_calcGUSE.R` + the `reportGV`/`gvSummary` tests exercise the
+  changed lines), exactly as S197 predicted.
+- **Merge (owner-gated):** fresh pre-merge re-check
+  (OPEN/MERGEABLE/CLEAN, `headRefOid`==`c8a1cf16`,
+  `origin/master`==`f5378caf`, \#2 OPEN); `gh pr merge 83 --merge` →
+  merge commit **`00500a5a`** (MERGED 10:23:26Z).
+- **Auto-close trap + recovery (Learning 184):** the merge
+  **unexpectedly CLOSED issue \#2** — the PR body’s sentence “does not
+  close \#2” contains the substring “close \#2”, and GitHub’s auto-close
+  parser triggers on it (it ignores the negation). Caught within seconds
+  by the standing post-merge state re-query; **`gh issue reopen 2`**
+  restored it to OPEN, with a clarifying comment. **Issue \#2 stays
+  OPEN** (Slice 1 of 3; Slice 3’s merge closes it).
+- **Reconcile (Learning 146):** `git checkout master`; `fetch`
+  (`f5378caf..00500a5a`); ancestor-gated `reset --hard` (both old-master
+  `f5378caf` AND tip `c8a1cf16` asserted ancestors of `00500a5a`);
+  verified-merged-before-delete cleanup (local `-d` “was c8a1cf16” +
+  remote `--delete`; `git ls-remote` empty).
+- **Phase-3E (build-equivalent / runtime smoke): SATISFIED.** PR \#83’s
+  `R CMD check` ×5 matrix all PASS (stronger than a single local check);
+  confirmed FIRSTHAND on `master` after the reset that the deliverable
+  is live (`calcGUSE` exported in `NAMESPACE`, `reportGV` carries
+  `guSE`, the gvSummary “Genome Uniqueness SE (max)” row, the two NEWS
+  bullets) + an end-to-end `calcGUSE(ped1Alleles, threshold = 3)`
+  returning a populated `guSE` data.frame (277 rows, non-zero SE).
+- **Files:** `NEWS.Rmd`/`NEWS.md` (in PR \#83 as `c8a1cf16`); close-out
+  — `CHANGELOG.md` (this entry), `PROJECT_LEARNINGS.md` (Learning 184),
+  `SESSION_NOTES.md` (this handoff + the 1B stub it overwrote), pushed
+  to origin/master FF. Issue \#2 reopened + commented.
+
 ### 2026-06-25 — Implemented Slice 1 of issue \#2: per-animal genome-uniqueness standard error (`guSE`) (Session 197)
 
 - **Deliverable (owner pick, single item):** the additive per-animal

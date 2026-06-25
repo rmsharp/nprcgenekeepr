@@ -9,20 +9,225 @@ and writes to it before closing out.
 
 ### What Session 198 Did
 
-**Deliverable:** **Publish Slice 1 of issue \#2** – push the local
-feature branch `issue-2-slice1-guse` (S197’s per-animal
-genome-uniqueness SE work), fold a user-facing NEWS entry into the PR
-(Learning 157a – a *New features* bullet for the new exported
-[`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md) +
-a *Changes* bullet for the `reportGV` `guSE` column / GVA Summary SE row
-/ in-app guidance), open a PR -\> `master` **WITHOUT** “Closes \#2”
-(Slice 1 does not close \#2; Slice 3 does), watch CI,
-`AskUserQuestion`-gate the merge, reconcile + delete the branch. (IN
-PROGRESS) **Started:** 2026-06-25 **Status:** Session claimed (1B).
-Publish/docs session – TDD code-phases N/A (no production code; S197
-wrote + tested the code under strict TDD). NEWS authored + rendered
-(spell 0/0, ASCII-clean pure insertion). Next: commit NEWS to branch,
-push, PR, CI, gated merge.
+**Deliverable:** **Publish Slice 1 of issue \#2** – S197’s per-animal
+genome-uniqueness sampling standard error (`guSE`) is now on `master`
+via **PR \#83**, with a user-facing NEWS entry folded into the same PR.
+**(DONE – merged to `master` via PR \#83, merge commit `00500a5a`;
+branch deleted local+remote; close-out pushed to origin/master FF.)**
+**Started / Completed:** 2026-06-25 / 2026-06-25 **Status:** **DONE.**
+Publish/docs session – **TDD code-phases N/A every response** (no
+production code; S197 wrote + tested the code under strict TDD). **0
+stakeholder corrections.** SOLO (a serial, irreversible git sequence – a
+workflow adds risk, not coverage; the standing publish-session judgment,
+held under ultracode). Owner directed **“Publish Slice 1”** at
+orientation and **“Merge PR \#83 now”** at the `AskUserQuestion` merge
+gate. - **NEWS (one PR, Learning 157a):** a *New features* bullet for
+the new exported
+[`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md)
+and a *Changes* bullet for the
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+`guSE` column / “Genome Uniqueness SE (max)” GVA Summary row / in-app
+guidance – both **appended at the END** of their lists
+(append-don’t-rewrite, Learning 171; end-placement preserves the GVA
+bullets’ “described above” cross-references). Grounded firsthand by
+reading `R/calcGUSE.R`, the `reportGV.R`/`modGeneticValue.R` diffs, and
+the guidance HTML before writing (FM \#11/#20). Re-rendered `NEWS.md`
+(`html_preview:false`+`md_extensions:"-smart"`, Learning 155): pure
+insertion (NEWS.md +26 / 0 del), **0 non-ASCII**, no stray `.html`;
+`spell_check_package(".")` = **0 before AND after** (Learning 175).
+Committed `c8a1cf16`. - **PR + CI (did NOT merge blind, Learning
+157b):** **PR \#83** -\> `master`, body “Part of \#2” (no closing
+keyword). BOTH `gh pr checks 83 --watch` AND a FRESH non-watch re-query
+= **all 10 checks PASS** (lint, pkgdown, test-coverage,
+macOS/Windows/Ubuntu release + oldrel-1 + ubuntu-devel 15m50s,
+`codecov/patch`, `codecov/project`); UNSTABLE -\> CLEAN.
+**`codecov/patch` GREEN** – the new code ships its own tests (S197’s
+prediction held). - **Merge (owner-gated):** fresh pre-merge re-check
+(OPEN/MERGEABLE/CLEAN; `headRefOid`==`c8a1cf16`;
+`origin/master`==`f5378caf`; \#2 OPEN); `gh pr merge 83 --merge` -\>
+**`00500a5a`** (MERGED 10:23:26Z). Reconcile (Learning 146):
+`checkout master`; `fetch` (`f5378caf..00500a5a`); ancestor-gated
+`reset --hard` (both `f5378caf` AND `c8a1cf16` asserted ancestors of
+`00500a5a`); verified-merged-before-delete cleanup (local `-d` “was
+c8a1cf16” + remote `--delete`; `ls-remote` empty).
+
+**THE ONE THING THAT WENT WRONG (Learning 184): the merge AUTO-CLOSED
+issue \#2.** The PR body contained the sentence “…does not close \#2” –
+GitHub’s auto-close parser IGNORES the negation and fired on the
+substring “close \#2”, closing the issue on merge. **Caught within
+seconds** by the standing post-merge `gh issue view 2 --json state`
+re-query; recovered immediately with **`gh issue reopen 2`** + a
+clarifying comment (issue \#2 comment `4798224771`). **Issue \#2 is
+OPEN** – the net outcome is correct, but the trap was self-inflicted
+(the S197 handoff said “do NOT use ‘Closes \#2’”, which I followed; I
+then introduced a *negated* mention that still matched). Learning 184
+makes the rule “no `<closing-keyword> #N` substring at all, even
+negated.”
+
+**Phase-3E (runtime smoke): SATISFIED.** PR \#83’s `R CMD check` x5
+matrix all PASS (stronger than one local check). Confirmed FIRSTHAND on
+`master` after the reset: `calcGUSE` exported in `NAMESPACE`;
+`reportGV.R` carries `guSE` (9 refs); the gvSummary “Genome Uniqueness
+SE (max)” row; the two NEWS bullets on `NEWS.md`; and an end-to-end
+`calcGUSE(ped1Alleles, threshold = 3)` returning a `guSE` data.frame
+(277 rows, non-zero SE). `master`==`origin/master`==`00500a5a` (then the
+close-out commit, pushed FF). No browser click – the e2e harness is
+baseline-flaky/opt-in and unchanged by a publish session; the CI
+matrix + firsthand master run are the runtime evidence (per
+S188/S189/S192/S194).
+
+**Session 197 Handoff Evaluation (by Session 198): Score 9/10.** S197’s
+`=> SUGGESTED NEXT` named “**Publish Slice 1 – the predicted next**” as
+the lead option and gave a COMPLETE, accurate publish recipe:
+`git push -u origin issue-2-slice1-guse`; open a PR -\> `master`; **“Do
+NOT use ‘Closes \#2’”**; fold a *New features* bullet
+([`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md)
+is a new export) PLUS a *Changes* bullet (Learning 157a); write NEWS in
+the clean idiom + backtick identifiers (175), render with
+`html_preview:false`+`md_extensions:"-smart"` (155),
+`spell_check_package` before/after (175/159); watch ALL CI + a FRESH
+non-watch re-query (157b); **“`codecov/patch` should be GREEN”**;
+`AskUserQuestion`-gate the merge; ancestor-gated `reset --hard` +
+verified-merged-before-delete (146). **Every anchor held FIRSTHAND:**
+the branch was at `1fd951a7`+`8476f215` exactly;
+`master`==`origin/master`==`f5378caf`; NEWS.Rmd had a dev “New features”
+subsection to append to; `codecov/patch` came back GREEN as predicted;
+the reconcile recipe matched S194’s proven sequence. The handoff was
+executable as written with zero scope discovery. **The -1:** the warning
+was the precise string “Closes \#2” – it did not anticipate that a
+*negated* mention (“does not close \#2”) would ALSO fire GitHub’s
+parser; a stronger warning (“no `close[s] #2` substring AT ALL, even
+negated”) would have prevented the auto-close. That is a fair miss (the
+negated form is a subtle trap), and it cost only seconds because the
+same handoff’s discipline of re-querying state caught it. ROI: maximal.
+
+**Self-assessment (Session 198): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check clean – HEAD `8476f215` = S197 close-out),
+reported, STOPPED for the owner’s pick; declared TDD N/A every response;
+produced ONLY the publish (did not start Slice 2/3, FM \#18/#25).
+**Strengths:** (1) clean, fully-verified publish – NEWS grounded
+firsthand against the actual diff (not memory), pure-insertion render,
+spell 0/0, all 10 CI checks green confirmed by BOTH the watch AND an
+independent re-query (157b), owner-gated merge with a fresh pre-merge
+invariant re-check, ancestor-gated reset +
+verified-merged-before-delete; (2) **caught and recovered the \#2
+auto-close within seconds** because I re-queried the issue state
+immediately after merge – the damage was a few seconds of CLOSED state,
+fully reversed with a reopen + an explanatory comment so the issue
+history isn’t misleading; (3) turned the mistake into a durable
+countermeasure (Learning 184) rather than just fixing it; (4) firsthand
+Phase-3E on `master` (exported symbol + end-to-end run), not just “CI
+was green”; (5) plain-language, ASCII, recommended-first merge gate
+(\[\[ascii-only-in-question-options\]\],
+\[\[avoid-jargon-use-plain-language\]\]); pushed close-out to
+origin/master FF (\[\[push-close-out-docs-to-origin\]\]). **Weaknesses
+(honest):** (a) **I caused an avoidable issue-state error** – writing
+“does not close \#2” into the PR body fired the auto-close; the recovery
+was fast and complete, but a careful read of my own PR body against the
+known “closing keyword” trap would have prevented it (this is the single
+reason the score is 8, not 9+); (b) the 1B claim stub was written AFTER
+I had already authored + rendered NEWS, not strictly before technical
+work – a minor Phase-1B ordering slip, self-corrected and noted, with no
+lost-work risk because the NEWS work was uncommitted at the time; (c)
+SOLO with no separate adversarial-verification workflow – defensible for
+a serial irreversible git publish (a workflow adds risk, not coverage,
+the standing S194 judgment), but worth naming under ultracode. A clean,
+fully-verified, owner-gated publish with firsthand runtime evidence;
+capped at 8 by the self-inflicted (and fully-recovered) \#2 auto-close.
+
+**Learnings:** **Learning 184** added to `PROJECT_LEARNINGS.md` –
+GitHub’s issue auto-close parser ignores English negation, so a PR body
+/ commit message containing any `<closing-keyword> #N` substring (even
+“does not close \#N”) closes issue N on merge; for an issue meant to
+stay open use only non-keyword references (“Part of \#N”), re-query
+`gh issue view N --json state` immediately after `gh pr merge` as a
+standing assertion, and recover with `gh issue reopen N` + a clarifying
+comment. Carried as applied: \[\[consult-project-source-of-truth\]\]
+(publish/docs workstream: CI is the build-equivalent;
+branch-\>PR-\>gated-merge-\>reconcile),
+\[\[push-close-out-docs-to-origin\]\] (close-out pushed to origin/master
+FF), \[\[observation-vs-decision\]\] /
+\[\[ascii-only-in-question-options\]\] /
+\[\[avoid-jargon-use-plain-language\]\] (the merge gate),
+\[\[check-process-history-before-rerunning-work\]\] (S197 handoff was
+the spec – executed the delta); Learnings 157a (NEWS in the same PR),
+157b (watch + fresh re-query, no blind merge), 171 (append-don’t-rewrite
+NEWS), 155 (NEWS render flags), 175 (spell before/after), 146
+(ancestor-gated reset + verified-merged-before-delete), 161
+(build-equivalent), FM \#11/#20 (read the diff before writing NEWS).
+**NOT** a TDD code-phase session (no production code).
+
+**=\> SUGGESTED NEXT = owner’s pick.** Slice 1 is **published on
+`master`** (`00500a5a`); `master`==`origin/master`==this close-out
+commit. **Issue \#2 stays OPEN** (Slice 1 of 3 done). Natural next
+steps: - **Slice 2** (`gvaConvergence()`) – the real answer to \#2 – but
+**build the dense-mid-range fixture in RED FIRST** (Dragon \#2 /
+Learnings 181/182: no bundled ped has usable rankable `gu` signal, so a
+test on bundled data is tautological), finalize the D1 thresholds
+(`k`/`o_min`/`rho_min`, Kendall tau-b) against it, and do the `calcA`
+refactor (factor `rare` out so `gu`/`guSE`/the prefixes reuse one build;
+golden-master `gu` before/after). The S197 column-duplication +
+golden-from-`calcA` test technique (Learning 183) applies directly. -
+**Slice 3** = implement the ratified D3 default change (`5000 -> 1000L`
+in `reportGV.R:93`/`geneDrop.R:90` + `man/`), fix every stale “5000” doc
+site (plan 2D), reconcile the two doc surfaces (`gvAndBgDesc.html` + the
+vignette `manual_components`), update the `guIter=5000L`
+behavior-pinning stubs (`test_modGeneticValue.R:1529,1579`). **This
+slice’s merge is the one that closes \#2** – and per Learning 184, it is
+safe to use “Closes \#2” there (the keyword abutting the number is the
+intended trigger). - **Other open issues:** \#82 (`fg` SE follow-up – a
+natural companion to the `guSE` work just shipped), \#37 (unused
+exports), \#36 (chimpanzee age-pyramid), \#28 (large, own plan),
+\#13/#12/#11/#10/#5; CRAN Phase 5 (owner-run). **Do NOT** start Slice 2
+without the dense fixture (tautological tests); do NOT bundle Slices 2
+and 3 (FM \#18/#25); when a future PR is meant to CLOSE \#2 use “Closes
+\#2” deliberately, and when it is NOT, keep every `close/fix/resolve #2`
+substring out of the body (Learning 184); the **latent comment-strip bug
+remains UNFIXED in `R/getConfigApiKey.R`** (out of scope, Learning 174).
+
+**Key files (this session):** **CHANGED (in PR \#83, on `master` as
+`c8a1cf16`):** `NEWS.Rmd` (+1 *Changes* bullet at end of Changes, +1
+*New features* bullet at end of New features), `NEWS.md` (re-rendered,
++26). **CHANGED (close-out, direct to `master`, pushed FF):**
+`CHANGELOG.md` (S198 `[Unreleased]` entry), `PROJECT_LEARNINGS.md`
+(Learning 184), `SESSION_NOTES.md` (this handoff + the 1B stub it
+overwrote). **Read FIRSTHAND (to ground NEWS):** `R/calcGUSE.R`, the
+`master...HEAD` diffs of `R/reportGV.R` / `R/modGeneticValue.R` /
+`inst/extdata/ui_guidance/genetic_value.html`, `NEWS.Rmd` dev section.
+**GitHub:** PR \#83 (merged), issue \#2 (reopened + commented). **NOT
+committed (standing keep):** `PED_GV_AUDIT_2026-05-30.html` (untracked);
+`.DS_Store`.
+
+**Gotchas:** (1) **Issue \#2 is OPEN and must stay open until Slice 3**
+– it was briefly auto-closed by this PR and reopened (Learning 184);
+when Slice 3’s PR is meant to close it, “Closes \#2” is then correct and
+intended. (2) **A PR/commit that should NOT close an issue must contain
+NO `close/fix/resolve #N` substring at all, even negated** – use “Part
+of \#N”; verify with `gh issue view N --json state` right after merge
+(Learning 184). (3) **`closingIssuesReferences` is not a field in this
+repo’s `gh` version** – you cannot pre-check the GraphQL closing-links;
+query the issue `state` directly before/after merge. (4) **Slice 1’s
+[`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md)
+recomputes the rare matrix (a 2nd `calcA` per `reportGV`)** – the dedup
+is Slice 2 (Finding 7); do NOT “fix” it as a drive-by. (5) **`$gu` is
+now a 2-col data.frame (`gu`, `guSE`)** and **`test_reportGV.R` pins the
+exact report column list in two `expect_named` blocks** – any future
+`reportGV` output column change updates both (Learning 183). (6) **The
+ratified D3 default `5000 -> 1000L` is still NOT done** (Slice 3) –
+`reportGV.R:93`/`geneDrop.R:90` still default `5000L`, while
+NEWS/CHANGELOG claim 1000; the contradiction persists until Slice 3. (7)
+Carried standing keeps (unchanged): package **ARCHIVED on CRAN
+2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without a LabKey credential/config; exactly ONE codecov config
+(`codecov.yml`); NEWS render traps CLOSED at source
+(`html_preview:false`+`md_extensions:"-smart"`, 155); `git pull` is
+rebase + chokes on `.DS_Store` -\> use `fetch`+`reset` (135); post-merge
+`fetch` before ancestor-gated `reset --hard` (146); build-equivalent is
+`devtools::check(vignettes = FALSE)` = 0/0/0 (161); a 0/0/0 check does
+NOT imply spelling-clean -\> run `spell_check_package` (175); the
+`getConfigApiKey` latent comment-strip bug remains UNFIXED (174).
 
 ### What Session 197 Did
 
