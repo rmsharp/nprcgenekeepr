@@ -164,3 +164,67 @@ test_that("E2E: Pedigree Browser shows pedigree columns", {
     info = "Should show pedigree columns"
   )
 })
+
+test_that("E2E: Clear Focal Animals resets the file input and typed IDs", {
+  skip_if_not_installed("shinytest2")
+  skip_if_not_installed("chromote")
+  skip_on_cran()
+
+  app_dir <- create_test_app()
+  app <- create_app_driver(app_dir, "e2e_ped_clear_resets")
+  on.exit(app$stop(), add = TRUE)
+
+  # Load a studbook so the Pedigree Browser tab is fully live.
+  fixture <- system.file("extdata", "obfuscated_rhesus_mhc_ped.csv",
+                         package = "nprcgenekeepr")
+  loaded <- upload_and_wait(app, fixture)
+  if (!loaded) skip("Upload/QC did not complete")
+
+  success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
+  if (!success) skip("Could not navigate to Pedigree Browser tab")
+
+  # The focal file input is rendered server-side (uiOutput); wait for it.
+  if (!wait_for_element(app, "#pedigree-focalAnimalFile")) {
+    skip("Focal animal file input did not render")
+  }
+
+  # A focal-animals CSV to upload.
+  focal_csv <- tempfile(fileext = ".csv")
+  utils::write.csv(data.frame(id = c("AAA", "BBB")), focal_csv,
+                   row.names = FALSE)
+  on.exit(unlink(focal_csv), add = TRUE)
+
+  # Reads the file name shown in the file-input widget ("" when none selected).
+  display_js <- paste0(
+    "(() => { const f = document.querySelector('#pedigree-focalAnimalFile'); ",
+    "if (!f) return ''; const g = f.closest('.input-group'); ",
+    "const t = g && g.querySelector('input[type=text]'); ",
+    "return (t && t.value) || ''; })()"
+  )
+
+  # Enter focal IDs by text AND by file, then Update.
+  app$set_inputs(`pedigree-focalAnimalIds` = "AAA, BBB")
+  do.call(app$upload_file,
+          stats::setNames(list(focal_csv), "pedigree-focalAnimalFile"))
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
+  app$click("pedigree-updateFocalAnimals")
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
+
+  # Sanity: the widget shows the uploaded file name and the textarea holds the
+  # typed IDs before clearing.
+  expect_match(app$get_js(display_js), "\\.csv$",
+               info = "File widget shows the uploaded CSV before clearing")
+  expect_identical(app$get_value(input = "pedigree-focalAnimalIds"),
+                   "AAA, BBB")
+
+  # Check "Clear Focal Animals" and Update.
+  app$set_inputs(`pedigree-clearFocalAnimals` = TRUE)
+  app$click("pedigree-updateFocalAnimals")
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
+
+  # Issue #1: the file name display is cleared (fresh re-rendered widget) ...
+  expect_identical(app$get_js(display_js), "",
+                   info = "File name display clears after Clear Focal Animals")
+  # ... and the typed IDs are cleared from the textarea.
+  expect_identical(app$get_value(input = "pedigree-focalAnimalIds"), "")
+})

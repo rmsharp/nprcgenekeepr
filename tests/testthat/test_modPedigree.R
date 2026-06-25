@@ -819,3 +819,210 @@ test_that("modPedigreeServer handles trim with non-matching focal IDs", {
     }
   )
 })
+
+# ---------------------------------------------------------------------------
+# Issue #1: "Clear Focal Animals" must also forget the uploaded file and the
+# typed text, so neither is silently re-read on the next "Update Focal Animals"
+# click, and the file-input widget (with its displayed file name) is reset.
+# ---------------------------------------------------------------------------
+
+test_that("modPedigreeServer cleared file is not re-read on the next update", {
+  skip_if_not_installed("shiny")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  temp_file <- tempfile(fileext = ".csv")
+  write.csv(data.frame(id = c("A", "B")), temp_file, row.names = FALSE)
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook }),
+      config = NULL
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE,
+        clearFocalAnimals = FALSE,
+        focalAnimalIds = "",
+        focalAnimalFile = list(datapath = temp_file, name = "focal.csv")
+      )
+      session$setInputs(updateFocalAnimals = 1)
+
+      result <- session$getReturned()
+      expect_equal(length(result$focalAnimals()), 2)
+
+      # Clear, then update with the clear box checked.
+      session$setInputs(clearFocalAnimals = TRUE)
+      session$setInputs(updateFocalAnimals = 2)
+      expect_equal(length(result$focalAnimals()), 0)
+
+      # Uncheck clear; the file input still holds the same file (the browser
+      # has not been reset). The next update must NOT re-read the cleared file.
+      session$setInputs(clearFocalAnimals = FALSE)
+      session$setInputs(updateFocalAnimals = 3)
+      expect_equal(length(result$focalAnimals()), 0)
+    }
+  )
+
+  unlink(temp_file)
+})
+
+test_that("modPedigreeServer cleared text is not re-read on the next update", {
+  skip_if_not_installed("shiny")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook }),
+      config = NULL
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE,
+        clearFocalAnimals = FALSE,
+        focalAnimalIds = "A, B"
+      )
+      session$setInputs(updateFocalAnimals = 1)
+
+      result <- session$getReturned()
+      expect_equal(length(result$focalAnimals()), 2)
+
+      session$setInputs(clearFocalAnimals = TRUE)
+      session$setInputs(updateFocalAnimals = 2)
+      expect_equal(length(result$focalAnimals()), 0)
+
+      # Uncheck clear; the textarea still holds the same text. The next update
+      # must NOT re-read the cleared text.
+      session$setInputs(clearFocalAnimals = FALSE)
+      session$setInputs(updateFocalAnimals = 3)
+      expect_equal(length(result$focalAnimals()), 0)
+    }
+  )
+})
+
+test_that("modPedigreeUI delegates the focal file input to a dynamic uiOutput", {
+  skip_if_not_installed("shiny")
+
+  ui_html <- as.character(modPedigreeUI("test"))
+
+  # The file input is rendered server-side (via renderUI) so it can be reset
+  # without a client-side dependency; it is no longer a static widget.
+  expect_false(grepl("type=\"file\"", ui_html, fixed = TRUE))
+  # A uiOutput placeholder for the dynamic file input is present.
+  expect_true(grepl("focalAnimalFileUI", ui_html))
+})
+
+test_that("modPedigreeServer loads a newly chosen file after a clear", {
+  skip_if_not_installed("shiny")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C", "D"),
+    sire = c(NA, NA, "A", "A"),
+    dam = c(NA, NA, "B", "B"),
+    sex = c("M", "F", "F", "M"),
+    stringsAsFactors = FALSE
+  )
+
+  file1 <- tempfile(fileext = ".csv")
+  write.csv(data.frame(id = c("A", "B")), file1, row.names = FALSE)
+  file2 <- tempfile(fileext = ".csv")
+  write.csv(data.frame(id = c("C", "D")), file2, row.names = FALSE)
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook }),
+      config = NULL
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE,
+        clearFocalAnimals = FALSE,
+        focalAnimalIds = "",
+        focalAnimalFile = list(datapath = file1, name = "file1.csv")
+      )
+      session$setInputs(updateFocalAnimals = 1)
+      result <- session$getReturned()
+      expect_equal(length(result$focalAnimals()), 2)
+
+      session$setInputs(clearFocalAnimals = TRUE)
+      session$setInputs(updateFocalAnimals = 2)
+      expect_equal(length(result$focalAnimals()), 0)
+
+      # Choose a different file; it must load normally after the clear.
+      session$setInputs(
+        clearFocalAnimals = FALSE,
+        focalAnimalFile = list(datapath = file2, name = "file2.csv")
+      )
+      session$setInputs(updateFocalAnimals = 3)
+      focal <- result$focalAnimals()
+      expect_equal(length(focal), 2)
+      expect_true(all(c("C", "D") %in% focal))
+    }
+  )
+
+  unlink(c(file1, file2))
+})
+
+test_that("modPedigreeServer loads newly typed text after a clear", {
+  skip_if_not_installed("shiny")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C", "D"),
+    sire = c(NA, NA, "A", "A"),
+    dam = c(NA, NA, "B", "B"),
+    sex = c("M", "F", "F", "M"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook }),
+      config = NULL
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = FALSE,
+        clearFocalAnimals = FALSE,
+        focalAnimalIds = "A, B"
+      )
+      session$setInputs(updateFocalAnimals = 1)
+      result <- session$getReturned()
+      expect_equal(length(result$focalAnimals()), 2)
+
+      session$setInputs(clearFocalAnimals = TRUE)
+      session$setInputs(updateFocalAnimals = 2)
+      expect_equal(length(result$focalAnimals()), 0)
+
+      # Type new IDs; they must load normally after the clear.
+      session$setInputs(
+        clearFocalAnimals = FALSE,
+        focalAnimalIds = "C, D"
+      )
+      session$setInputs(updateFocalAnimals = 3)
+      focal <- result$focalAnimals()
+      expect_equal(length(focal), 2)
+      expect_true(all(c("C", "D") %in% focal))
+    }
+  )
+})

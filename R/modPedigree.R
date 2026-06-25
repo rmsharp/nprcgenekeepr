@@ -15,7 +15,7 @@
 #' @seealso \code{\link{modPedigreeServer}} for server logic.
 #' @importFrom shiny NS div h3 h4 fluidRow column wellPanel helpText tags
 #' @importFrom shiny fileInput actionButton checkboxInput downloadButton
-#' @importFrom shiny includeHTML br
+#' @importFrom shiny includeHTML br uiOutput
 #' @importFrom DT DTOutput
 #' @export
 modPedigreeUI <- function(id) {
@@ -68,14 +68,9 @@ modPedigreeUI <- function(id) {
             placeholder = "Enter animal IDs (one per line or comma-separated)"
           ),
           br(), br(),
-          fileInput(
-            ns("focalAnimalFile"),
-            "Choose CSV file with focal animals",
-            multiple = FALSE,
-            accept = c("text/csv", # nolint: nonportable_path_linter
-                       "text/comma-separated-values,text/plain", # nolint: nonportable_path_linter
-                       ".csv")
-          ),
+          # Rendered server-side so "Clear Focal Animals" can reset the widget
+          # (and its displayed file name) without a client-side dependency.
+          uiOutput(ns("focalAnimalFileUI")),
           actionButton(
             ns("updateFocalAnimals"),
             label = "Update Focal Animals",
@@ -194,6 +189,7 @@ modPedigreeUI <- function(id) {
 #'
 #' @importFrom shiny moduleServer reactive reactiveVal eventReactive observe
 #' @importFrom shiny renderUI req showNotification updateCheckboxInput
+#' @importFrom shiny fileInput updateTextAreaInput
 #' @importFrom DT renderDT
 #' @importFrom utils read.csv write.csv
 #' @export
@@ -203,11 +199,44 @@ modPedigreeServer <- function(id, studbook, config = NULL) {
     # Reactive value to store focal animal IDs
     focalIds <- reactiveVal(character(0L))
 
+    # Bumping this key re-renders a fresh file input, which clears the file
+    # name shown in the browser after a "Clear Focal Animals" action.
+    fileInputKey <- reactiveVal(0L)
+    # Remember the file path and text that were last cleared, so a subsequent
+    # "Update" does not silently re-read content the user already cleared.
+    clearedFilePath <- reactiveVal(NULL)
+    clearedText <- reactiveVal(NULL)
+
+    # Render the focal animal file input dynamically so it can be reset.
+    output$focalAnimalFileUI <- renderUI({
+      fileInputKey()
+      fileInput(
+        session$ns("focalAnimalFile"),
+        "Choose CSV file with focal animals",
+        multiple = FALSE,
+        accept = c("text/csv", # nolint: nonportable_path_linter
+                   "text/comma-separated-values,text/plain", # nolint: nonportable_path_linter
+                   ".csv")
+      )
+    })
+
     # Parse focal animal IDs from text area or file
     observeEvent(input$updateFocalAnimals, {
       # Check if clearing
       if (input$clearFocalAnimals) {
         focalIds(character(0L))
+        # Forget the currently loaded file and text so the next update does
+        # not re-read them, and reset the file widget's displayed name.
+        clearedFilePath(
+          if (!is.null(input$focalAnimalFile)) {
+            input$focalAnimalFile$datapath
+          } else {
+            NULL
+          }
+        )
+        clearedText(input$focalAnimalIds)
+        updateTextAreaInput(session, "focalAnimalIds", value = "")
+        fileInputKey(fileInputKey() + 1L)
         showNotification("Focal animals cleared", type = "message")
         updateCheckboxInput(session, "clearFocalAnimals", value = FALSE)
         return()
@@ -215,17 +244,20 @@ modPedigreeServer <- function(id, studbook, config = NULL) {
 
       ids <- character(0L)
 
-      # Get IDs from text area
+      # Get IDs from text area (skipping text that was just cleared)
       textIds <- input$focalAnimalIds
-      if (!is.null(textIds) && nzchar(trimws(textIds))) {
+      if (!is.null(textIds) && nzchar(trimws(textIds)) &&
+            !identical(textIds, clearedText())) {
         # Split by newlines, commas, semicolons, or tabs
         ids <- unlist(strsplit(textIds, "[,;\t\n\r]+"))
         ids <- trimws(ids)
         ids <- ids[nzchar(ids)]
       }
 
-      # Get IDs from uploaded file
-      if (!is.null(input$focalAnimalFile)) {
+      # Get IDs from uploaded file (skipping a file that was just cleared;
+      # a newly chosen file has a different temp path and still loads)
+      if (!is.null(input$focalAnimalFile) &&
+            !identical(input$focalAnimalFile$datapath, clearedFilePath())) {
         tryCatch({
           fileData <- read.csv(input$focalAnimalFile$datapath,
                                stringsAsFactors = FALSE)
