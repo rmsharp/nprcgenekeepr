@@ -15,6 +15,50 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-25 — Ratified §8 of the issue \#2 plan + re-established its empirical basis firsthand (Session 196)
+
+- **Deliverable (owner pick, single item):** ratify the six open §8
+  decisions in `docs/planning/issue2-gva-iteration-convergence-plan.md`,
+  grounded in firsthand-verified evidence. **Decision/planning session**
+  — TDD code-phases N/A; implementation slices remain SEPARATE later
+  sessions (FM \#18). **0 stakeholder corrections.** **Slice 1 is now
+  unblocked.**
+- **Decisions ratified (owner via `AskUserQuestion`; all recommended
+  option):** **D3** = align the
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)/[`geneDrop()`](https://github.com/rmsharp/nprcgenekeepr/reference/geneDrop.md)
+  function default down to **1000L** (match the Shiny UI +
+  NEWS/CHANGELOG); **D1 metric** = **Kendall’s tau-b** with provisional
+  `k=20`/`o_min=0.90`/`rho_min=0.95` (finalized against the Slice-2
+  fixture); **D5** = Slice 1 updates the in-app `genetic_value.html`
+  only; **fg** = deferred to a follow-up issue. **D2** (ship C then A, B
+  out) and **D4** (compute `guSE` from the real `rare` matrix; scope the
+  recommendation to defaults) recorded as recommended.
+- **Firsthand re-verification corrected three plan errors** (S195
+  flagged its `qcPed` numbers as subagent-sourced; Learning 182): the
+  `qcPed` Undetermined count is **124/280, not 156**; on `qcPed`
+  `{gu>0}` == `{founders}` == `{the #76 Undetermined set}` (identical
+  124), so **after the issue \#76 de-inflation all 280 animals are at
+  `gu=0`** — `qcPed`/`pedWithGenotype`/`rhesusPedigree` have **zero
+  rankable `gu` signal**, and `examplePedigree` (the only bundled
+  pedigree with signal) is order-stable at **N=5**. So **no bundled
+  pedigree can validate a `gu`-based convergence/rank tool** — the
+  dense-mid-range fixture (Slice 2 RED) is mandatory. The D3 “qcPed
+  converges by N~250-500” justification was vacuous; grounded instead on
+  `examplePedigree` (order stable `<<1000`; SE `~1/sqrt(N)`:
+  <0.79pp@1000> → <0.56pp@2000> → ~<0.35pp@5000>). Claims that held
+  firsthand: SE `~1/sqrt(N)`, `SE_exact/SE_approx` ~0.82–0.85 at
+  `guThresh>=2`, the column-prefix trick, and `byID` no-op at
+  `guThresh=1`.
+- **Phase-3E:** N/A — a planning/decision document changes no runtime
+  behavior (no code touched). Not a defect.
+- **Files:** `docs/planning/issue2-gva-iteration-convergence-plan.md`
+  (status → §8 RATIFIED; D1–D6 + §8 checklist resolved; §2C/Findings
+  3–4/Dragons 2–3 corrected; new §9A firsthand-evidence table);
+  close-out — `CHANGELOG.md` (this entry), `PROJECT_LEARNINGS.md`
+  (Learning 182), `SESSION_NOTES.md` (handoff + the 1B stub it
+  overwrote). Issue \#2 stays OPEN (planned + ratified, not
+  implemented); an `fg`-SE follow-up issue opened.
+
 ### 2026-06-24 — Planned issue \#2: evidence-based GVA gene-drop iteration-count advice (`docs/planning/issue2-gva-iteration-convergence-plan.md`) (Session 195)
 
 - **Deliverable (owner pick, single item):** a PLAN for the 6-year-open
