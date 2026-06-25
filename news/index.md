@@ -183,6 +183,17 @@
     breeding choices. Existing `gu` values and all
     [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
     signatures are unchanged.
+  - The
+    [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+    and
+    [`geneDrop()`](https://github.com/rmsharp/nprcgenekeepr/reference/geneDrop.md)
+    functions now default to 1000 gene-drop iterations, down from 5000.
+    This matches the Genetic Value Analysis tab, which already defaulted
+    to 1000, so the function default and the application now agree.
+    Callers that pass an explicit iteration count are unaffected. Use
+    the new
+    [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+    to choose an evidence-based count for a particular pedigree.
 - New features
   - Added the exported
     [`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md),

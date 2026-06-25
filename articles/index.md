@@ -14,6 +14,8 @@
   Tutorial](https://github.com/rmsharp/nprcgenekeepr/articles/ColonyManagerTutorial.md):
 - [Genetic Value
   Analysis](https://github.com/rmsharp/nprcgenekeepr/articles/genetic-value-analysis.md):
+- [Gene-Drop Iteration
+  Convergence](https://github.com/rmsharp/nprcgenekeepr/articles/gvaConvergence.md):
 - [Building a Focal-Animal Pedigree
   Offline](https://github.com/rmsharp/nprcgenekeepr/articles/offline-focal-animal-workflow.md):
 - [Quick Example of Simulated Kinships with Partial

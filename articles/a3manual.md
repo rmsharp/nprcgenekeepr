@@ -328,7 +328,7 @@ genetically valuable animals.
 The left panel contains controls for configuring the analysis:
 
 - **Gene Drop Iterations**: Number of iterations for the gene-drop
-  simulation (default: 5000, range: 100-10,000). More iterations provide
+  simulation (default: 1000, range: 100-10,000). More iterations provide
   more accurate genome uniqueness estimates but take longer to compute.
 
 - **Calculate Genome Uniqueness**: Toggle whether to run the gene-drop
@@ -666,8 +666,8 @@ in a specified number or fewer.
 
 The gene-drop simulation used by the web application is a vectorized
 version and is shown in the figure below. In an un-vectorized version,
-if 5000 gene-drop simulations are desired for the estimation process,
-the population had to be iterated over 5000 times. Since each iteration
+if 1000 gene-drop simulations are desired for the estimation process,
+the population had to be iterated over 1000 times. Since each iteration
 of the gene-drop is independent, the process can be vectorized so that
 each element of a vector represents 1 iteration of the gene-drop
 simulation. In the vectorized version, the population is iterated over

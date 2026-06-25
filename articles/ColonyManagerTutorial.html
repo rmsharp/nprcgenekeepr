@@ -39,6 +39,7 @@
     <li><a class="dropdown-item" href="../articles/breeding-group-formation.html">Forming Breeding Groups</a></li>
     <li><a class="dropdown-item" href="../articles/ColonyManagerTutorial.html">GeneKeepR: A Colony Manager's Tutorial</a></li>
     <li><a class="dropdown-item" href="../articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/gvaConvergence.html">Gene-Drop Iteration Convergence</a></li>
     <li><a class="dropdown-item" href="../articles/offline-focal-animal-workflow.html">Building a Focal-Animal Pedigree Offline</a></li>
     <li><a class="dropdown-item" href="../articles/simulatedKValues.html">Quick Example of Simulated Kinships with Partial Parentage</a></li>
     <li><a class="dropdown-item" href="../articles/studbook-quality-control.html">Studbook Quality Control</a></li>
@@ -434,20 +435,33 @@ segregation throughout the pedigree according to Mendelian rules. Genome
 uniqueness is a measure of the probability that an animal possesses
 founder alleles that are present in at most x other animals (usually
 0-3), and thus are rare and at risk of being lost from the population. A
-range of 2 to 100,000 simulations may be selected. A minimum of 1,000
+range of 100 to 10,000 simulations may be selected. A minimum of 1,000
 simulations is recommended. A genome uniqueness threshold value between
 0-3 should also be selected, as desired.</p>
 <p>Select the <strong>Begin Analysis</strong> button to start the gene
 dropping process, which you can monitor with the progress meter in the
 lower right corner of the display.</p>
-<p>We are not aware of a systematic study of pedigree structure with
-this algorithm and have not performed extensive studies with pedigrees
-of various structures, but 1000 iterations has seemed to provide
-reproducible results for out pedigrees. It must be emphasized that
-pedigree structure is expected to affect precision when iterations are
-held constant.</p>
-<!--  Come up wit a definition of reproducible and see if we can run and -->
-<!-- automated test to find the needed number of iterations.-->
+<p>Genome uniqueness is an <em>estimate</em> produced by the gene-drop
+simulation, so each value carries a sampling <strong>standard
+error</strong> – reported in the <code>guSE</code> column beside it.
+That standard error shrinks roughly in proportion to one over the square
+root of the number of iterations, so more iterations give a more precise
+estimate. How many iterations are actually <em>needed</em>, though,
+depends on the structure of your pedigree: there is no single iteration
+count that is right for every colony.</p>
+<p>The default is <strong>1000 iterations</strong>. On the pedigrees we
+have examined this gives a sampling error below one percentage point in
+the genome uniqueness values and – more importantly – a stable
+<em>selection order</em>. The order in which animals are ranked is what
+actually decides which animals are chosen for breeding, and a small
+<code>guSE</code> does not by itself guarantee that order has settled.
+To check whether 1000 iterations is enough for a particular pedigree,
+run <code><a href="../reference/gvaConvergence.html">gvaConvergence()</a></code>: it recomputes the ranking across a
+range of iteration counts and reports the smallest count at which the
+selection order stops changing. See the <em>Gene-Drop Iteration
+Convergence</em> vignette
+(<code><a href="../articles/gvaConvergence.html">vignette("gvaConvergence", package = "nprcgenekeepr")</a></code>) for
+a worked example.</p>
 <p><img src="ColonyManagerTutorial_files/figure-html/gva-calculating-1.png" class="r-plt" alt="Calculation on genetic value analysis tab" width="672"></p>
 <hr>
 <p>As soon as the calculations are completed, a table showing the

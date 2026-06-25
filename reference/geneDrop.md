@@ -11,7 +11,7 @@ geneDrop(
   dams,
   gen,
   genotype = NULL,
-  n = 5000L,
+  n = 1000L,
   updateProgress = NULL
 )
 ```
@@ -45,7 +45,7 @@ geneDrop(
 - n:
 
   integer indicating the number of iterations to simulate. Default is
-  5000.
+  1000.
 
 - updateProgress:
 
@@ -106,7 +106,7 @@ both of which require unique ids.
 ## Examples
 
 ``` r
-## We usually defined `n` to be >= 5000
+## We usually define `n` to be >= 1000
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::lacy1989Ped
 allelesNew <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,

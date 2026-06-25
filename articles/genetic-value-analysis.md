@@ -234,7 +234,7 @@ pool.
 | Argument | Default | Meaning |
 |----|----|----|
 | `ped` | – | the (trimmed, QC’d) pedigree with a `population` column |
-| `guIter` | `5000L` | gene-drop iterations (more = more stable genome uniqueness) |
+| `guIter` | `1000L` | gene-drop iterations (more = more stable genome uniqueness) |
 | `guThresh` | `1L` | an allele is “unique” if carried by no more than this many animals |
 | `pop` | `NULL` | animal IDs to treat as the population (default: the `population` column) |
 | `byID` | `TRUE` | count an individual’s homozygous alleles once when scoring uniqueness |

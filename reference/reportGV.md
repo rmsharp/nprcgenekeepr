@@ -7,7 +7,7 @@ This is the main function for the Genetic Value Analysis.
 ``` r
 reportGV(
   ped,
-  guIter = 5000L,
+  guIter = 1000L,
   guThresh = 1L,
   pop = NULL,
   byID = TRUE,
@@ -28,7 +28,7 @@ reportGV(
 - guIter:
 
   Integer indicating the number of iterations for the gene-drop
-  analysis. Default is 5000 iterations
+  analysis. Default is 1000 iterations
 
 - guThresh:
 

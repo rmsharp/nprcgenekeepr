@@ -39,6 +39,7 @@
     <li><a class="dropdown-item" href="../articles/breeding-group-formation.html">Forming Breeding Groups</a></li>
     <li><a class="dropdown-item" href="../articles/ColonyManagerTutorial.html">GeneKeepR: A Colony Manager's Tutorial</a></li>
     <li><a class="dropdown-item" href="../articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/gvaConvergence.html">Gene-Drop Iteration Convergence</a></li>
     <li><a class="dropdown-item" href="../articles/offline-focal-animal-workflow.html">Building a Focal-Animal Pedigree Offline</a></li>
     <li><a class="dropdown-item" href="../articles/simulatedKValues.html">Quick Example of Simulated Kinships with Partial Parentage</a></li>
     <li><a class="dropdown-item" href="../articles/studbook-quality-control.html">Studbook Quality Control</a></li>
@@ -448,7 +449,7 @@ identify genetically valuable animals.</p>
 <p>The left panel contains controls for configuring the analysis:</p>
 <ul>
 <li><p><strong>Gene Drop Iterations</strong>: Number of iterations for
-the gene-drop simulation (default: 5000, range: 100-10,000). More
+the gene-drop simulation (default: 1000, range: 100-10,000). More
 iterations provide more accurate genome uniqueness estimates but take
 longer to compute.</p></li>
 <li><p><strong>Calculate Genome Uniqueness</strong>: Toggle whether to
@@ -909,8 +910,8 @@ alleles not present in other members of the focal population, or present
 in a specified number or fewer.</p>
 <p>The gene-drop simulation used by the web application is a vectorized
 version and is shown in the figure below. In an un-vectorized version,
-if 5000 gene-drop simulations are desired for the estimation process,
-the population had to be iterated over 5000 times. Since each iteration
+if 1000 gene-drop simulations are desired for the estimation process,
+the population had to be iterated over 1000 times. Since each iteration
 of the gene-drop is independent, the process can be vectorized so that
 each element of a vector represents 1 iteration of the gene-drop
 simulation. In the vectorized version, the population is iterated over

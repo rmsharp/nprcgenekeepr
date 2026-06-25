@@ -336,12 +336,12 @@ ped <- trimPedigree(probands, ped,
 ```
 
 The arguments to **reportGV** are all optional except for *ped*, but you
-may often want to non-default values.
+may often want to use non-default values.
 
 - **ped** Pedigree information in data.frame format
 
 - **guIter** Integer indicating the number of iterations for the
-  gene-drop analysis. Default is 5000 iterations
+  gene-drop analysis. Default is 1000 iterations
 
 - **guThresh** Integer indicating the threshold number of animals for
   defining a unique allele. Default considers an allele “unique” if it
@@ -976,7 +976,7 @@ ped <- qcStudbook(pedOne, minParentAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpYFeLBJ/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpZx4ZRk/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -1137,8 +1137,8 @@ examplePedigree[unlist(exampleLoops), c("id", "sire", "dam")][1L:10L, ]
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-06-25 19:20:58.98964. The processing
-time for this document was 18 seconds..
+The current date and time is 2026-06-25 23:21:22.431955. The processing
+time for this document was 20 seconds..
 
 ``` r
 

@@ -24,6 +24,7 @@
     <li><a class="dropdown-item" href="../articles/breeding-group-formation.html">Forming Breeding Groups</a></li>
     <li><a class="dropdown-item" href="../articles/ColonyManagerTutorial.html">GeneKeepR: A Colony Manager's Tutorial</a></li>
     <li><a class="dropdown-item" href="../articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/gvaConvergence.html">Gene-Drop Iteration Convergence</a></li>
     <li><a class="dropdown-item" href="../articles/offline-focal-animal-workflow.html">Building a Focal-Animal Pedigree Offline</a></li>
     <li><a class="dropdown-item" href="../articles/simulatedKValues.html">Quick Example of Simulated Kinships with Partial Parentage</a></li>
     <li><a class="dropdown-item" href="../articles/studbook-quality-control.html">Studbook Quality Control</a></li>
@@ -52,7 +53,7 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">reportGV</span><span class="op">(</span></span>
 <span>  <span class="va">ped</span>,</span>
-<span>  guIter <span class="op">=</span> <span class="fl">5000L</span>,</span>
+<span>  guIter <span class="op">=</span> <span class="fl">1000L</span>,</span>
 <span>  guThresh <span class="op">=</span> <span class="fl">1L</span>,</span>
 <span>  pop <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  byID <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -74,7 +75,7 @@
 
 <dt id="arg-guiter">guIter<a class="anchor" aria-label="anchor" href="#arg-guiter"></a></dt>
 <dd><p>Integer indicating the number of iterations for the gene-drop
-analysis. Default is 5000 iterations</p></dd>
+analysis. Default is 1000 iterations</p></dd>
 
 
 <dt id="arg-guthresh">guThresh<a class="anchor" aria-label="anchor" href="#arg-guthresh"></a></dt>
