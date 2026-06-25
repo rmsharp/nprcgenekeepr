@@ -133,6 +133,20 @@ knitr::opts_chunk$set(echo = TRUE)
     any typed text in place, so the same focal animals silently reappeared on the
     next update. Choosing a new file or typing new Ids after clearing still loads
     them as before.
+  - The Genetic Value Analysis now reports the sampling precision of each
+    animal's genome uniqueness. The report gains a `guSE` column (the Monte
+    Carlo standard error of the gene-drop `gu` estimate) immediately after the
+    `gu` column, and the genome-uniqueness object returned by `reportGV()` now
+    carries `gu` and `guSE` as two columns. The standard error is reported as 0
+    for the "Undetermined" animals whose genome uniqueness is already reported
+    as 0 (both parents unknown and no recorded origin), since that value is a
+    policy constant rather than a Monte Carlo estimate. The Shiny Genetic Value
+    display gains a "Genome Uniqueness SE (max)" summary row showing the
+    worst-case precision for the run, and the in-app genome-uniqueness guidance
+    now explains that genome uniqueness is a gene-drop estimate whose standard
+    error shrinks with more iterations, and that the precision of the number is
+    distinct from the stability of the selection order used for breeding
+    choices. Existing `gu` values and all `reportGV()` signatures are unchanged.
 - New features
   - Added the exported `setLabKeyDefaults()`, which configures `Rlabkey`
     authentication for the session: it prefers an API key (from the
@@ -184,6 +198,15 @@ knitr::opts_chunk$set(echo = TRUE)
     override the bundled values; the rest are kept) for the Genetic Value
     Analysis to use. It fails soft: a missing or unreadable configuration yields
     the bundled values with a warning rather than an error.
+  - Added the exported `calcGUSE()`, which returns the per-animal Monte Carlo
+    sampling standard error of the genome-uniqueness estimate from the gene-drop
+    simulation, on the same percentage scale as `calcGU()`. It is computed from
+    the same per-iteration rare-allele matrix (`calcA()`) that `calcGU()`
+    averages, so it is correct for any rare-allele `threshold` and the `byID`
+    option without a closed-form approximation, and it reports 0 for an animal
+    whose genome uniqueness does not vary across iterations. The standard error
+    shrinks as the number of gene-drop iterations grows, giving a direct measure
+    of how precise a reported genome-uniqueness value is.
 - Documentation
   - The example configuration file
     (`inst/extdata/example_nprcgenekeepr_config`) now documents that
