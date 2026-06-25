@@ -15,6 +15,60 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-24 — Planned issue \#2: evidence-based GVA gene-drop iteration-count advice (`docs/planning/issue2-gva-iteration-convergence-plan.md`) (Session 195)
+
+- **Deliverable (owner pick, single item):** a PLAN for the 6-year-open
+  issue \#2 (“evidence-based advice on the number of gene-drop
+  iterations needed for the Genetic Value Analysis”). **Planning
+  session** — TDD code-phases N/A every response; implementation + the
+  empirical study are SEPARATE later sessions (FM \#18). **0 stakeholder
+  corrections.** Used a 7-agent investigate/design/critique workflow
+  (`wf_fdb7c410-95f`, ultracode); all load-bearing code citations
+  (`calcGU`/`calcA`/`reportGV`/`orderReport`/`modGeneticValue`)
+  re-verified FIRSTHAND before authoring.
+- **What the plan decides:** genome uniqueness
+  `gu = rowSums(rare)/(2*iterations)*100` (`calcGU.R:97`) is a Monte
+  Carlo proportion, so precision is `f(iterations, pedigree)` — there is
+  no universal iteration count. Recommended design = **C then A**:
+  (Slice 1, C) an additive per-animal `guSE` column computed from the
+  real `rare` matrix + an in-app explanation; (Slice 2, A) an exported
+  `gvaConvergence()` that recomputes `gu`/ranking on nested
+  iteration-column prefixes `V1..Vk` of ONE `Nmax` run (the columns are
+  i.i.d., so the whole convergence curve comes free — no replicate
+  experiment); (Slice 3) reconcile the default contradiction + docs.
+  True in-loop streaming / early-stop (B) is OUT OF SCOPE (infeasible +
+  breaks `geneDrop`’s `V1..Vn` contract).
+- **Owner steers folded in (each recorded with attribution):** (1)
+  precision = `f(iterations, pedigree)` → Monte Carlo; (2) “report
+  convergence rate during the calculation phase” → realized faithfully
+  via the post-run column-prefix sweep (true streaming is blocked
+  because rare-allele classification needs the whole-population
+  frequency table per iteration); (3) the estimate must be explained in
+  the **in-app user-facing docs where it is displayed** — mapped to
+  `inst/extdata/ui_guidance/genetic_value.html` (rendered at
+  `modGeneticValue.R:65-68`); (4) **“selection order is the best measure
+  of stability”** + “numeric precision is of interest to the user but of
+  little value for breeder selection” → D1 defines “reproducible” on
+  selection-order (top-`k` set overlap + order agreement), with
+  per-animal SE demoted to a displayed, informational diagnostic.
+- **Adversarial critique overturned two first-pass claims** (Learning
+  181): the `sqrt(2)` homozygote SE-inflation is false at
+  `guThresh = 1`; and the rank tool cannot be validated on the bimodal
+  `qcPed` (Spearman = 1.0 at N \>= 125) so a dense-mid-range fixture
+  must be built in RED first.
+- **Evidence inventory (mandated):** 84 iteration-count sites; the
+  unresolved default contradiction documented —
+  `reportGV.R:93`/`geneDrop.R:90` = 5000 vs `modGeneticValue.R:38` =
+  1000 vs NEWS/CHANGELOG claiming “changed to 1000” vs example data at
+  10000.
+- **Phase-3E:** N/A — a planning document changes no runtime behavior
+  (no code touched). Not a defect.
+- **Files:** `docs/planning/issue2-gva-iteration-convergence-plan.md`
+  (new, the deliverable); close-out — `CHANGELOG.md` (this entry),
+  `PROJECT_LEARNINGS.md` (Learning 181), `SESSION_NOTES.md` (handoff +
+  the 1B stub it overwrote). Issue \#2 stays OPEN (planned, not
+  implemented).
+
 ### 2026-06-25 — Published issue \#1: “Clear Focal Animals” file/text reset is on `master` via PR \#81; **issue \#1 CLOSED** (Session 194)
 
 - **Deliverable (owner pick, single item):** publish S193’s issue \#1

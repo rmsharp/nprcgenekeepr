@@ -7,6 +7,213 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 195 Did
+
+**Deliverable:** **PLAN for issue \#2** (evidence-based advice on the
+number of gene-drop iterations for the Genetic Value Analysis) –
+`docs/planning/issue2-gva-iteration-convergence-plan.md`: defines
+“reproducible”, designs the Monte Carlo convergence measurement,
+reconciles the 5000-vs-1000 default contradiction, with per-phase
+completion criteria + an 84-site grep inventory. **(DONE – committed to
+`master`, pushed to origin/master FF.)** **Started / Completed:**
+2026-06-24 / 2026-06-24 **Status:** **DONE.** Planning session – **TDD
+code-phases N/A** every response (no production code; the deliverable is
+a plan document, FM \#18/#19 honored – did NOT start implementing). **0
+stakeholder corrections.** Owner picked **“Plan it first”** at
+orientation (`AskUserQuestion`), then gave **FOUR design steers** across
+the session, each folded in with attribution: (1) precision =
+`f(iterations, pedigree)` -\> Monte Carlo; (2) *“the proper approach may
+be simply to report convergence rate during the calculation phase”*; (3)
+the estimate must be **documented in the in-app user-facing docs where
+it is displayed**; (4) **“selection order is the best measure of
+stability”** + *“numeric precision is of interest to the user but of
+little value for breeder selection.”* Used a **7-agent
+investigate/design/critique workflow** (`wf_fdb7c410-95f`, ultracode);
+re-verified all load-bearing code citations FIRSTHAND before
+authoring. - **Design (Section 4 of the plan):** ship **C then A**, **B
+out of scope**. **C (Slice 1):** additive per-animal `guSE` column
+computed from the real `rare` matrix (correct across `byID`/`guThresh`),
+threaded through `reportGV.R:213-215` into `$report`/`$gu` + a “max gu
+SE” row in `gvSummary` + the in-app explanation. **A (Slice 2):**
+exported `gvaConvergence()` that recomputes `gu`/ranking on nested
+iteration-column prefixes `V1..Vk` of ONE `Nmax` run (the columns are
+i.i.d. -\> the whole convergence curve is free, NO replicate experiment)
+– needs a dense-mid-range fixture built in RED first + a `calcA`
+refactor (factor the `rare` matrix out so prefixes reuse it). **B (true
+in-loop streaming/early-stop):** infeasible (rare-allele classification
+needs the whole-population frequency table per iteration; `geneDrop` is
+animals-outer) AND breaks `geneDrop`’s `V1..Vn` return contract +
+example data + seeded tests. - **D1 (ratified S195): “reproducible” =
+selection-order stability** on the rankable `gu > 0` subset via an
+internal half-split (compare halves to EACH OTHER, never the pooled
+mean): top-`k` set overlap (`k=20`, `o_min=0.90`) AND a top-weighted
+order-agreement metric (`rho_min=0.95`, Kendall tau-b or top Spearman –
+exact metric pending). Per-animal SE is DEMOTED to a
+displayed/explanatory diagnostic. Honest property: order is a bucketed
+step function (`gu>10`, `-trunc(gu)`, `z<=0.25`) so needed N is
+boundary-crowding-driven, NOT a smooth `1/sqrt(N)`. - **D5 (owner
+req):** the in-app `inst/extdata/ui_guidance/genetic_value.html` panel
+(rendered at `modGeneticValue.R:65-68`, hand-authored, NOT generated
+from the vignette) must explain the estimate where it is shown,
+distinguishing precision-of-the-number from selection-order stability;
+ships with Slice 1, with `gvAndBgDesc.html` + the parallel vignette
+`manual_components/_*.Rmd` reconciled in Slice 3. - **Adversarial
+critique overturned two first-pass claims (Learning 181):** the
+`sqrt(2)` homozygote SE-inflation is FALSE at `guThresh=1`; the rank
+tool can’t be validated on the bimodal `qcPed` (Spearman=1.0 at N\>=125)
+-\> dense fixture in RED first. Also corrected the rank mis-description
+(bucketed `orderReport`/`rankSubjects`, NOT `rank(indivMeanKin - gu)`).
+
+**Phase-3E (runtime smoke): N/A by design.** A planning document changes
+no runtime behavior (no `R/`, no tests, no `man/` touched).
+Build-equivalent not run (nothing to build); this is correct for a
+docs/planning deliverable, NOT failure mode \#24.
+
+**Session 194 Handoff Evaluation (by Session 195): Score 8/10.** S194’s
+`=> SUGGESTED NEXT` was an owner’s-pick menu that NAMED **\#2**
+(“evidence-based GVA iteration-count advice”) among nine options, and
+flagged \#28 as “LARGE, needs its own plan” – a useful signal that big
+issues need a planning session, which applied to \#2. **What held
+FIRSTHAND:** every state claim was exact –
+`master`==`origin/master`==`dffe5690` (0/0 ahead/behind), the untracked
+`PED_GV_AUDIT_2026-05-30.html` standing keep present, issue \#1 CLOSED,
+dashboard 98/100, no ghost commits (HEAD `feace5f7` = S194 close-out).
+**What helped most:** the carried standing keeps were load-bearing –
+“package ARCHIVED on CRAN” directly drove the plan’s no-new-dependency
+constraint (D2/D5); “latent comment-strip bug in `getConfigApiKey.R`”
+correctly stayed out of scope. **The -2 (structural, not a fault):**
+because \#2 was one of nine options, the handoff carried NO \#2-specific
+anchors – I discovered `calcGU`/`geneDrop`/`reportGV`/the vignette
+TODO/the prior audits myself (a handoff cannot pre-scout every backlog
+option; same structural ceiling S192-\>S193 hit). **What was wrong:**
+nothing. ROI: high.
+
+**Self-assessment (Session 195): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check clean), reported, STOPPED for the owner’s
+pick; claimed with a 1B stub BEFORE technical work; declared TDD N/A
+every response; produced the PLAN as the deliverable and did NOT start
+implementing (FM \#18/#19). **Strengths:** (1) the adversarial-critique
+workflow caught two real statistical/empirical errors before they
+entered the plan (Learning 181) – high-ROI ultracode use, not ceremony;
+(2) firsthand verification of every load-bearing code citation before
+authoring (`calcGU.R:88-104`, `calcA.R:27-43`,
+`reportGV.R:93/136-150/205-219`, `orderReport.R:55-98`,
+`modGeneticValue.R:37-68`); (3) handled the “report convergence during
+calculation” steer HONESTLY – investigated feasibility, found the
+streaming blocker, delivered a faithful realization (column-prefix
+sweep) rather than the literal-but-impossible or a flat “can’t”; (4)
+folded FOUR sequential owner steers into a coherent,
+internally-consistent plan with attribution, including reshaping D1 to
+selection-order without leaving stale SE-as-definition language; (5)
+mapped the vague “user-facing docs” requirement to the EXACT in-app
+surface (`genetic_value.html` via `includeHTML`), not a hand-wave; (6)
+the plan meets the planning-session checklist (evidence inventory,
+per-phase DONE/Verify/Boundary, vertical slices FM#25, here-be-dragons,
+ratification checklist). **Weaknesses (honest):** (a) the plan is a
+DRAFT – §8 thresholds (`k`/`o_min`/`rho_min`, the order metric, the D3
+default reconciliation, D5 doc scope, `fg` scope) remain owner-pending
+(appropriate for a planning session per house style, but not fully
+decided); (b) the critique’s empirical `qcPed` numbers (the
+56%/43%/2-of-280 split; `SE_exact/SE_approx ~0.81-0.84`) are
+SUBAGENT-sourced – I did NOT personally re-run them; mitigated by making
+the dense fixture + golden-master the RED-phase verification, but they
+are not firsthand; (c) the exact order metric is left open. A thorough,
+evidence-grounded, adversarially-checked plan that faithfully integrated
+multiple steers; capped at 8 because key empirical claims are
+subagent-sourced and several parameters remain owner-pending.
+
+**Learnings:** **Learning 181** added to `PROJECT_LEARNINGS.md` (the
+adversarial-critique-in-planning pattern + the load-bearing-citation
+firsthand rule + the infeasible-steer-realize-the-intent corollary).
+Carried as applied: \[\[consult-project-source-of-truth\]\] (planning
+workstream: plan is the deliverable, separate from implementation;
+build-equivalent N/A for docs), \[\[observation-vs-decision\]\] (each
+owner steer treated as input to fold into the plan with
+options/implications, not a silent go-ahead; the scope pick + D1 were
+owner decisions), \[\[ascii-only-in-question-options\]\] /
+\[\[avoid-jargon-use-plain-language\]\] (the scope `AskUserQuestion` +
+plain-language explanations),
+\[\[check-process-history-before-rerunning-work\]\] (read the two
+June-2026 audits + the vignette TODO + `simulatedKValues.Rmd` precedent
+firsthand so \#2’s prior art was the delta, not a re-run),
+\[\[push-close-out-docs-to-origin\]\] (this close-out pushed to
+origin/master FF); FM \#11/#20 + Learning 6 (read implementations before
+estimating).
+
+**=\> SUGGESTED NEXT = owner’s pick.** The plan is on `master` (pushed;
+`origin/master`==local==this close-out commit). **Issue \#2 stays OPEN**
+(planned, not implemented). Natural next steps: - **Ratify §8 of the
+plan first** (the cheapest unblock): `k`/`o_min`/`rho_min` + the order
+metric (Kendall tau-b vs top-weighted Spearman); the **D3 default
+reconciliation** (recommend: align the `reportGV`/`geneDrop` function
+default DOWN to 1000 to match the Shiny UI + NEWS, vs keep 5000 + fix
+the NEWS claim, vs adaptive); the **D5 doc scope**; and whether **`fg`**
+uncertainty is in scope or its own follow-up issue. - **Then implement
+ONE slice under strict TDD** (one session each, do NOT bundle – FM
+\#18/#25). **Slice 1** = the per-animal `guSE` column + the in-app
+`genetic_value.html` explanation (small, additive, low-risk). **OR**,
+since selection-order is now the definition, the owner may prefer to
+lead with **Slice 2** = `gvaConvergence()` (the real answer to \#2) –
+but that needs the dense-mid-range fixture built in RED FIRST (Learning
+181 / plan Dragon \#2). - **Other open issues** (unchanged menu): \#37
+(unused exports), \#36 (chimpanzee age-pyramid), \#28 (large, own plan),
+\#13/#12/#11/#10/#5; CRAN Phase 5 (owner-run,
+`docs/planning/cran-2.0.0-phase5-runbook.md`). **Do NOT** start
+implementing from this plan without ratifying §8 (the thresholds are
+load-bearing for the tests); do NOT treat the critique’s `qcPed` numbers
+as settled (re-establish them in Slice 2 RED); the **latent
+comment-strip bug remains UNFIXED in `R/getConfigApiKey.R`** (out of
+scope, Learning 174).
+
+**Key files (this session):** **CREATED (the deliverable):**
+`docs/planning/issue2-gva-iteration-convergence-plan.md`. **CHANGED
+(close-out docs, direct to `master`, pushed):** `CHANGELOG.md` (S195
+`[Unreleased]` entry), `PROJECT_LEARNINGS.md` (Learning 181),
+`SESSION_NOTES.md` (this handoff + the 1B stub it overwrote). **Read
+FIRSTHAND (NOT changed):** `R/calcGU.R:88-104`, `R/calcA.R:27-43`,
+`R/reportGV.R:85-219`, `R/orderReport.R:55-98`,
+`R/modGeneticValue.R:37-83`,
+`inst/extdata/ui_guidance/genetic_value.html` (hand-authored, no
+iteration/precision text), the two June-2026 audits, the
+`ColonyManagerTutorial.Rmd:459-461` TODO,
+`vignettes/simulatedKValues.Rmd` (kinship-convergence precedent).
+**Research artifacts (scratchpad / workflow, NOT in repo):** workflow
+`wf_fdb7c410-95f` (script persisted under the session dir). **NOT
+committed (standing keep):** `PED_GV_AUDIT_2026-05-30.html` (untracked);
+`.DS_Store`.
+
+**Gotchas:** (1) **The plan’s §8 ratification items are still OPEN** –
+the D1 thresholds (`k`/`o_min`/`rho_min` + the order metric) are
+load-bearing for Slice-1/Slice-2 tests; ratify before RED. (2) **`qcPed`
+cannot validate the rank tool** (bimodal: ~56% at gu=0, Spearman=1.0 at
+N\>=125) – Slice 2 MUST build a dense-mid-range fixture in RED first or
+the test is tautological (Dragon \#2 / Learning 181). (3) **Exclude the
+issue \#76 de-inflated `gu=0` “Undetermined” set from every
+reproducibility metric** (156/280 on qcPed; a policy constant with SE 0,
+rank NA). (4) **Two parallel doc surfaces** – in-app
+`inst/extdata/ui_guidance/*.html` (hand-authored) is NOT generated from
+the vignette `manual_components/_*.Rmd`; both are edited by hand and
+must stay consistent (Dragon \#11). (5) **The default contradiction is
+real and unresolved** – `reportGV.R:93`=5000 vs
+`modGeneticValue.R:38`=1000 vs NEWS/CHANGELOG “1000” vs example data
+10000; D3 must pick one. (6) **`guSE` must be computed from the real
+`rare` matrix, not a closed form** – so it is correct for
+`byID=TRUE`/`guThresh>=2` (the UI path), not just the threshold-1
+default. (7) **The “cheap column-prefix” claim needs the `calcA`
+refactor** (precompute the `rare` matrix once) and must preserve `gu`
+exactly (golden-master). (8) Carried standing keeps (unchanged): package
+**ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without a LabKey credential/config; exactly ONE codecov config
+(`codecov.yml`); NEWS render traps CLOSED at source
+(`html_preview:false`+`md_extensions:"-smart"`, 155); `git pull` is
+rebase + chokes on `.DS_Store` -\> use `fetch`+`reset` (135); post-merge
+`fetch` before ancestor-gated `reset --hard` (146); build-equivalent is
+`devtools::check(vignettes = FALSE)` = 0/0/0 (161); a 0/0/0 check does
+NOT imply spelling-clean -\> run `spell_check_package` (175); the
+`getConfigApiKey` latent comment-strip bug remains UNFIXED (174).
+
 ### What Session 194 Did
 
 **Deliverable:** Publish **issue \#1** (“Clear Focal Animals” in the
