@@ -130,6 +130,15 @@ R. Mark Sharp, Ph.D.
     unchanged (the bundled table, or 210 days). This completes issue
     \#73: both the Genetic Value Analysis and the Potential Parents tab
     are now configurable.
+  - In the Pedigree Browser tab, the "Clear Focal Animals" option now
+    also clears a focal-animals list that was uploaded with the file
+    browser, along with the displayed file name, and any focal Ids typed
+    into the text box, so that neither is read again on the next "Update
+    Focal Animals". Previously the option cleared the in-memory
+    focal-animals list but left an uploaded file and any typed text in
+    place, so the same focal animals silently reappeared on the next
+    update. Choosing a new file or typing new Ids after clearing still
+    loads them as before.
 - New features
   - Added the exported `setLabKeyDefaults()`, which configures `Rlabkey`
     authentication for the session: it prefers an API key (from the
