@@ -6,6 +6,11 @@
 
 ## ACTIVE TASK
 
+### What Session 198 Did
+**Deliverable:** **Publish Slice 1 of issue #2** -- push the local feature branch `issue-2-slice1-guse` (S197's per-animal genome-uniqueness SE work), fold a user-facing NEWS entry into the PR (Learning 157a -- a *New features* bullet for the new exported `calcGUSE()` + a *Changes* bullet for the `reportGV` `guSE` column / GVA Summary SE row / in-app guidance), open a PR -> `master` **WITHOUT** "Closes #2" (Slice 1 does not close #2; Slice 3 does), watch CI, `AskUserQuestion`-gate the merge, reconcile + delete the branch. (IN PROGRESS)
+**Started:** 2026-06-25
+**Status:** Session claimed (1B). Publish/docs session -- TDD code-phases N/A (no production code; S197 wrote + tested the code under strict TDD). NEWS authored + rendered (spell 0/0, ASCII-clean pure insertion). Next: commit NEWS to branch, push, PR, CI, gated merge.
+
 ### What Session 197 Did
 **Deliverable:** **Implement Slice 1 of issue #2 under strict TDD** -- the additive per-animal genome-uniqueness sampling standard error (`guSE`): a new exported helper `calcGUSE()`, threaded through `reportGV()` into `$report` (after `gu`) and the `$gu` element (now 2-col), a "Genome Uniqueness SE (max)" row in the Shiny GVA Summary tab, and a plain-language `+/-` explanation in the in-app `genetic_value.html`. **(DONE -- code + tests + close-out committed to LOCAL branch `issue-2-slice1-guse`; NOT published -- the PR/CI/merge + NEWS bullet are a SEPARATE session, FM #18/#25.)**
 **Started / Completed:** 2026-06-25 / 2026-06-25
