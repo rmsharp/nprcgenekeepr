@@ -63,7 +63,7 @@
 #'
 #' @export
 #' @examples
-#' ## We usually defined `n` to be >= 5000
+#' ## We usually define `n` to be >= 1000
 #' library(nprcgenekeepr)
 #' ped <- nprcgenekeepr::lacy1989Ped
 #' allelesNew <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,

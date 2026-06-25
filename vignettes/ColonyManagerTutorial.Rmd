@@ -445,7 +445,7 @@ unique alleles to all pedigree founders, and simulating their segregation
 throughout the pedigree according to Mendelian rules. Genome uniqueness is 
 a measure of the probability that an animal possesses founder alleles that
 are present in at most x other animals (usually 0-3), and thus are rare 
-and at risk of being lost from the population. A range of 2 to 100,000 
+and at risk of being lost from the population. A range of 100 to 10,000
 simulations may be selected. A minimum of 1,000 simulations is recommended.
 A genome uniqueness threshold value between 0-3 should also be selected,
 as desired.
@@ -454,14 +454,24 @@ Select the __Begin Analysis__ button to start the gene dropping
 process, which you can monitor with the progress meter in the 
 lower right corner of the display. 
 
-We are not aware of a systematic study of pedigree structure with this 
-algorithm and have not performed extensive studies with pedigrees of various 
-structures, but 1000 iterations has seemed to provide reproducible results for
-out pedigrees. It must be emphasized that pedigree structure is expected to 
-affect precision when iterations are held constant.
+Genome uniqueness is an *estimate* produced by the gene-drop simulation, so
+each value carries a sampling __standard error__ -- reported in the `guSE`
+column beside it. That standard error shrinks roughly in proportion to one
+over the square root of the number of iterations, so more iterations give a
+more precise estimate. How many iterations are actually *needed*, though,
+depends on the structure of your pedigree: there is no single iteration count
+that is right for every colony.
 
-<!--  Come up wit a definition of reproducible and see if we can run and -->
-<!-- automated test to find the needed number of iterations.-->
+The default is __1000 iterations__. On the pedigrees we have examined this
+gives a sampling error below one percentage point in the genome uniqueness
+values and -- more importantly -- a stable *selection order*. The order in
+which animals are ranked is what actually decides which animals are chosen
+for breeding, and a small `guSE` does not by itself guarantee that order has
+settled. To check whether 1000 iterations is enough for a particular pedigree,
+run `gvaConvergence()`: it recomputes the ranking across a range of iteration
+counts and reports the smallest count at which the selection order stops
+changing. See the *Gene-Drop Iteration Convergence* vignette
+(`vignette("gvaConvergence", package = "nprcgenekeepr")`) for a worked example.
 
 `r fig_alt_txt <- "Calculation on genetic value analysis tab"`
 

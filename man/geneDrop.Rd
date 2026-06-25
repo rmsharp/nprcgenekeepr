@@ -83,7 +83,7 @@ ids are rejected with an error. This invariant is established upstream by
 \code{\link{kinship}}, both of which require unique ids.
 }
 \examples{
-## We usually defined `n` to be >= 5000
+## We usually define `n` to be >= 1000
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::lacy1989Ped
 allelesNew <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,

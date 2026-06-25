@@ -360,12 +360,12 @@ ped <- trimPedigree(probands, ped,
 ```
 
 The arguments to __reportGV__ are all optional except for _ped_, but
-you may often want to non-default values.
+you may often want to use non-default values.
 
 - __ped__ Pedigree information in data.frame format
 
-- __guIter__  Integer indicating the number of iterations for the gene-drop 
-analysis. Default is 5000 iterations
+- __guIter__  Integer indicating the number of iterations for the gene-drop
+analysis. Default is 1000 iterations
 
 - __guThresh__ Integer indicating the threshold number of animals for 
 defining a unique allele. Default considers an allele "unique" if it is found
