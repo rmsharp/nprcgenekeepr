@@ -7,6 +7,225 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 193 Did
+
+**Deliverable:** **Strict-TDD fix of issue \#1** – “Clear Focal Animals”
+in the Pedigree Browser now resets the uploaded CSV (and its displayed
+file name) AND the typed text, so neither silently re-reads on the next
+“Update Focal Animals.” The list-clearing checkbox already worked since
+2020; the residual the owner flagged in 2020 (“does not clear file names
+read in with the file browser”) is what this fixes. **(DONE – code +
+tests + close-out committed to LOCAL branch
+`issue-1-clear-focal-animals`; NOT published – PR/CI/merge with “Closes
+\#1” is a SEPARATE session, FM \#18/#25.)** **Started / Completed:**
+2026-06-24 / 2026-06-24 **Status:** **DONE.** Strict-TDD IMPLEMENTATION.
+Every transition `AskUserQuestion`-gated (**PRE-RED scope x2 -\> RED -\>
+GREEN -\> GREEN-\>REFACTOR**; phase declared every response). **0
+stakeholder corrections.** SOLO. Owner picked “Fix \#1 under strict TDD”
+at orientation; two pre-RED design picks ((1) **no new dependency** over
+`shinyjs`; (2) clear **file + textarea**); “Yes, proceed” at the RED and
+GREEN gates; mid-session asked “do you have E2E testing for this
+feature?” -\> picked **“Add E2E test now”**; “Skip REFACTOR, close out”
+at the REFACTOR gate. - **RED (5 tests appended to
+`tests/testthat/test_modPedigree.R`, all verified failing/passing for
+the right reason first):** 3 new-behavior tests RED – (a) a cleared FILE
+is not re-read on a 3rd Update with the file input still set; (b) a
+cleared TEXT is not re-read; (c) `modPedigreeUI` no longer carries a
+static `type="file"` but DOES carry a `focalAnimalFileUI` `uiOutput`. 2
+regression GUARDS green from the start – a newly chosen file / newly
+typed text after a clear still loads. RED tally **74 pass / 4 fail / 0
+error** (test (c) = 2 asserts). - **GREEN (`R/modPedigree.R`, no new
+dependency):** moved the focal `fileInput` into
+`output$focalAnimalFileUI <- renderUI({ fileInputKey(); fileInput(session$ns("focalAnimalFile"), ...) })`;
+the clear branch records `clearedFilePath`/`clearedText` `reactiveVal`s,
+calls `updateTextAreaInput(session, "focalAnimalIds", value = "")`, and
+bumps `fileInputKey` (fresh widget -\> displayed name clears); text/file
+reads skip content
+[`identical()`](https://rdrr.io/r/base/identical.html) to the cleared
+value (new temp `datapath` / edited text still loads).
+`@importFrom shiny uiOutput updateTextAreaInput`; `devtools::document()`
+-\> NAMESPACE only (no `.Rd` change). All 33 `test_modPedigree.R` tests
+pass (78 asserts). - **REFACTOR:** SKIPPED (owner-gated) – `lintr` clean
+on both changed files, no duplication, no behavior-neutral
+improvement. - **E2E (owner-requested):** added “E2E: Clear Focal
+Animals resets the file input and typed IDs” to
+`tests/testthat/test-e2e-pedigree-tutorial.R`. The existing pedigree E2E
+only checked the Clear option is PRESENT; nothing exercised the
+behavior. New test loads the studbook fixture, navigates, uploads a
+focal CSV + types IDs, Update, then Clear + Update, asserting the
+file-name display (`app$get_js`) AND textarea (`app$get_value`) are both
+empty – the DOM-level half `testServer` cannot reach. **Learning 180.**
+
+**Phase-3E (runtime smoke): SATISFIED at the STRONGEST level – a real
+browser.** Ran the pedigree E2E suite in Chrome with
+`NPRC_RUN_E2E=true` + `NOT_CRAN=true`: **9 tests / 13 assertions / all
+pass / 0 fail / 0 error / 0 skip**, the new test confirming the
+file-name display and textarea both clear at the DOM level. (First run
+skipped 9/9 because only `NPRC_RUN_E2E` was set – `skip_on_cran()` needs
+`NOT_CRAN=true` too; Learning 180.) Build-equivalent
+`devtools::check(vignettes = FALSE)` = **0/0/0**;
+`spell_check_package(".")` = **0**; full regression **1016 tests / 2271
+pass / 0 fail / 0 error**; lint clean.
+
+**Session 192 Handoff Evaluation (by Session 193): Score 8/10.** S192
+published \#76 and left `master`==`origin/master`==`9f1e4687`, no
+dangling branches, dashboard 98/100, and a clean **owner’s-pick** menu
+that NAMED \#1 (“clear focal-animals list in Pedigree Browser”) among
+the options. **What helped:** the state was exactly as described (clean
+tree but the standing untracked `PED_GV_AUDIT_2026-05-30.html`), and the
+carried **standing keeps** were all load-bearing this session –
+build-equivalent = `devtools::check(vignettes = FALSE)` 0/0/0 (161), a
+0/0/0 check does NOT imply spelling-clean -\> run `spell_check_package`
+(175), the e2e harness is baseline-flaky/opt-in,
+branch-and-don’t-push-on-master discipline, package ARCHIVED on CRAN
+(which directly drove the “no new dependency” pick). **What was missing
+(the -1, and it’s structural not a fault):** because \#1 was one of
+several options, the handoff had NO \#1-specific anchors – I discovered
+`modPedigree.R` and the 2020 partial-fix history myself (quick: one
+`gh issue view` + one grep). A handoff cannot pre-scout every option.
+**What was wrong:** nothing. ROI high: the standing keeps + clean-state
+claims all held firsthand.
+
+**Self-assessment (Session 193): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check -\> HEAD `ae3b80df` = S192 close-out, no
+undocumented commits), reported, STOPPED for the owner’s pick; claimed
+with a 1B stub BEFORE technical work; declared the TDD phase every
+response and `AskUserQuestion`-gated all transitions. **Strengths:** (1)
+**answered the actual question first, didn’t jump to code** – the
+owner’s opening “is \#1 still needed?” got a firsthand investigation
+(read the issue + the owner’s own 2020 comment + `modPedigree.R`)
+showing it was PARTIALLY fixed, before any edit
+(\[\[observation-vs-decision\]\], FM \#23); (2) **strict TDD held** –
+RED-first with all 3 new-behavior tests failing for the literal right
+reason, GREEN minimal, REFACTOR correctly skipped after a real lint
+check (not assumed); (3) **surfaced every genuine decision** – the
+dependency tradeoff (honoring the CRAN-archived constraint -\> no
+`shinyjs`) and the clear-scope, both `AskUserQuestion` with
+recommended-first plain-ASCII options
+(\[\[ascii-only-in-question-options\]\]); (4) **handled the mid-session
+E2E question honestly** – showed the existing E2E was presence-only,
+that the browser-display-clear was unverified, then ADDED a real E2E
+test that PASSED in Chrome (the strongest Phase-3E possible here) -\>
+**Learning 180**; (5) **fully verified at every layer** – 5 testServer +
+4 e2e assertions + full regression 1016/2271/0/0 + check 0/0/0 + spell
+0 + lint clean; (6) firsthand read-before-edit on every target section.
+**Weaknesses (honest):** (a) the E2E test is a VERIFICATION test (passes
+against already-implemented code), not strict RED-first for the
+display-clear – I was explicit about this; the mechanism WAS covered
+RED-first by the testServer uiOutput test, but a purist writes the e2e
+RED before the `renderUI`; (b) the first e2e run skipped 9/9 (forgot
+`NOT_CRAN`) – a one-iteration miss, caught and fixed in minutes; (c) the
+`clearedText` guard blocks re-entering the EXACT same cleared string
+(accepted minor edge). Clean, fully-gated, fully-verified slice with
+real-browser proof and a genuine new learning; the
+e2e-not-strictly-RED-first nuance keeps it at 9.
+
+**Learnings:** **Learning 180** added to `PROJECT_LEARNINGS.md` – the
+dependency-free Shiny `fileInput`-reset pattern (renderUI keyed by a
+`reactiveVal` + `updateTextAreaInput` + a server-side
+[`identical()`](https://rdrr.io/r/base/identical.html)-to-cleared
+guard), what `testServer` can vs cannot verify (client-side reset needs
+E2E), and the operational gotcha that the opt-in e2e suite needs BOTH
+`NPRC_RUN_E2E=true` AND `NOT_CRAN=true` to actually run locally
+(chromote + Chrome are present, so it DOES run). Carried as applied:
+\[\[consult-project-source-of-truth\]\] (strict-TDD
+RED-\>GREEN-\>REFACTOR + build-equivalent +
+branch-don’t-push-on-master), \[\[observation-vs-decision\]\] /
+\[\[ascii-only-in-question-options\]\] /
+\[\[avoid-jargon-use-plain-language\]\] (the question-first
+investigation + the four gates – plain-ASCII, recommended-first),
+\[\[check-process-history-before-rerunning-work\]\] (read the issue’s
+own 2020 comment + `modPedigree.R` + helpers firsthand); Learnings 161
+(build-equivalent 0/0/0), 175 (0/0/0 != spelling-clean -\> ran
+`spell_check_package`), 6/FM#11 (read implementations before pinning the
+tests). **NOT** \[\[push-close-out-docs-to-origin\]\] – this is an
+IMPLEMENTATION session on a feature branch (like S188/S191), NOT a
+docs/publish session on `master`; nothing is pushed (the publish session
+pushes the branch and PRs it).
+
+**=\> SUGGESTED NEXT = owner’s pick.** The fix is on **LOCAL branch
+`issue-1-clear-focal-animals`** (committed, **NOT pushed** – push is the
+publish session’s job), NOT on `master`; `master` == `origin/master` ==
+`ae3b80df` (unchanged this session). **Issue \#1 stays OPEN**
+(implemented, not merged). Natural options (plain ASCII): - **(Publish
+\#1 – the predicted next, this CLOSES \#1)**
+`git push -u origin issue-1-clear-focal-animals`, open a PR -\>
+`master`, body **“Closes \#1”** (the LAST line – so the merge
+auto-closes \#1; **verify \#1 closed after merge**), **fold a
+user-facing NEWS *Changes* bullet into the SAME PR** (Learning 157a) –
+no new exported function -\> no *New features* bullet – noting that
+“Clear Focal Animals” now also clears an uploaded focal-animals file and
+its displayed name (and the typed IDs), so they are not re-read on the
+next update. Write NEWS prose in the CLEAN idiom + backtick identifiers
+(175), render with `html_preview:false`+`md_extensions:"-smart"` (155),
+`spell_check_package` before/after (175/159). Watch ALL CI + a FRESH
+non-watch `gh pr checks` re-query (157b); **`codecov/patch` may be red**
+– the `renderUI` line + the clear-branch lines are exercised by the new
+testServer tests, but the e2e-only display path is not covered by
+`covr`; not a required check on `master` (Learning 177).
+`AskUserQuestion`-gate the merge; ancestor-gated `reset --hard` +
+verified-merged-before-delete (146). SOLO. - **(Other)** \#37 (unused
+exports); \#36 (chimpanzee age-pyramid); \#2 (GVA iteration-count
+advice); \#28 (large, own plan); older \#13/#12/#11/#10/#5; CRAN Phase 5
+(owner-run, `docs/planning/cran-2.0.0-phase5-runbook.md`). **Do NOT**
+bundle the publish with anything (FM \#18/#25); do NOT re-implement (the
+code is DONE on the branch); the **latent comment-strip bug remains
+UNFIXED in `R/getConfigApiKey.R`** (out of scope, Learning 174).
+
+**Key files (this session):** **CHANGED – R/ (feat, on branch):**
+`R/modPedigree.R` (file input -\> `renderUI`/`uiOutput`;
+`fileInputKey`/`clearedFilePath`/`clearedText` reactiveVals;
+clear-branch reset;
+[`identical()`](https://rdrr.io/r/base/identical.html)-to-cleared read
+guards; `@importFrom shiny uiOutput updateTextAreaInput`). **CHANGED –
+generated:** `NAMESPACE` (`uiOutput`, `updateTextAreaInput`; no
+`man/*.Rd` change – only importFrom tags moved). **CHANGED – tests:**
+`tests/testthat/test_modPedigree.R` (+5 tests at EOF),
+`tests/testthat/test-e2e-pedigree-tutorial.R` (+1 E2E test at EOF).
+**CHANGED – close-out (docs commit, on branch):** `CHANGELOG.md` (S193
+`[Unreleased]` entry), `PROJECT_LEARNINGS.md` (Learning 180),
+`SESSION_NOTES.md` (this handoff + the 1B stub it overwrote). **Read
+firsthand (NOT changed):** the issue \#1 thread incl. the owner’s 2020
+partial-fix comment, `R/modPedigree.R` (full),
+`tests/testthat/test_modPedigree.R` (the existing focal/clear/file
+tests + the file-fixture shape at `:682-782`),
+`tests/testthat/helper-shinytest2.R` (full –
+`create_test_app`/`create_app_driver`/`navigate_to_tab`/`upload_and_wait`/`assert_active_pane`),
+`tests/testthat/test-e2e-pedigree-tutorial.R` (the presence-only “Clear”
+test + patterns). **Smoke/verify scripts (scratchpad, NOT in repo):**
+`run_e2e_clearfocal.R`, `run_check.R`. **NOT committed (standing
+keep):** `PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
+
+**Gotchas:** (1) **The \#1 fix is on LOCAL branch
+`issue-1-clear-focal-animals`, NOT on `master`, NOT pushed** – the
+publish session’s Phase-0 git status will show this branch (left checked
+out). Push it, then PR (do NOT re-implement). `master` ==
+`origin/master` == `ae3b80df`. (2) **The publish PR uses “Closes \#1”**
+(the LAST line) – after merge, VERIFY \#1 actually closed. (3) **Running
+the opt-in e2e suite locally needs BOTH `NPRC_RUN_E2E=true` AND
+`NOT_CRAN=true`** (Learning 180) – with only the former, ALL e2e tests
+`skip_on_cran`-skip (silently). chromote + Chrome are present, so they
+DO run with both set. (4) **The new E2E test is a VERIFICATION test**
+(it passes against the implemented code, not strict RED-first); the
+RED-first coverage of the reset mechanism is the testServer `uiOutput`
+structure test. (5) **`clearedText` guard edge** – re-typing the EXACT
+string that was just cleared is (intentionally) blocked; any different
+text loads. Accepted minor limitation. (6) **`codecov/patch` may be red
+on the publish PR** (Learning 177) – the e2e-only display path isn’t
+covered by `covr`; not a required check on `master`; do NOT add test
+code in a publish session. (7) Carried standing keeps (unchanged):
+package **ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without a LabKey credential/config; exactly ONE codecov config
+(`codecov.yml`); NEWS render traps CLOSED at source
+(`html_preview:false`+`md_extensions:"-smart"`, 155); `git pull` is
+rebase + chokes on `.DS_Store` -\> use `fetch`+`reset` (135); post-merge
+`fetch` before ancestor-gated `reset --hard` (146); build-equivalent is
+`devtools::check(vignettes = FALSE)` = 0/0/0 (161); a 0/0/0 check does
+NOT imply spelling-clean -\> run `spell_check_package` (175); the
+`getConfigApiKey` latent comment-strip bug remains UNFIXED (174).
+
 ### What Session 192 Did
 
 **Deliverable:** Publish **issue \#76** (Reading A — de-inflate genome

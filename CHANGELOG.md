@@ -15,6 +15,65 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-24 — Implemented issue \#1: “Clear Focal Animals” now resets the uploaded file + typed text (Pedigree Browser); strict TDD (Session 193)
+
+- **Deliverable (owner pick, single item):** fix issue \#1 — after
+  “Clear Focal Animals,” a previously-loaded focal CSV (and typed IDs)
+  must not silently re-read on the next “Update Focal Animals,” and the
+  file-name display must clear. The list-clearing checkbox already
+  worked since 2020 (`R/modPedigree.R`); the residual the owner flagged
+  in 2020 (“does not clear file names read in with the file browser”) is
+  what this fixes. **Strict TDD** (RED→GREEN→REFACTOR; every transition
+  `AskUserQuestion`-gated; phase declared each response). **0
+  stakeholder corrections.** SOLO.
+- **Two pre-RED owner decisions (`AskUserQuestion`):** (1) reset
+  approach = **no new dependency** (server-side guard + `renderUI` +
+  `updateTextAreaInput`) over adding `shinyjs` — the package is
+  CRAN-archived and the chosen approach is fully unit-testable; (2)
+  clear scope = **file + textarea (everything)**.
+- **RED (5 tests in `tests/testthat/test_modPedigree.R`):** 3
+  new-behavior tests (cleared file not re-read; cleared text not
+  re-read; the file input is now a dynamic `uiOutput`) confirmed failing
+  for the right reason (IDs reappear; static UI still carries
+  `type="file"`); 2 regression guards (a newly chosen file/text after a
+  clear still loads) confirmed passing. RED tally: 74 pass / 4 fail / 0
+  error.
+- **GREEN (`R/modPedigree.R`):** the focal file input is now rendered
+  server-side via
+  `output$focalAnimalFileUI <- renderUI({ fileInputKey(); fileInput(session$ns("focalAnimalFile"), ...) })`;
+  checking “Clear Focal Animals” records
+  `clearedFilePath`/`clearedText`, blanks the textarea via
+  `updateTextAreaInput`, and bumps `fileInputKey` (re-renders a fresh
+  widget → the displayed file name clears); the text/file read paths
+  skip content [`identical()`](https://rdrr.io/r/base/identical.html) to
+  the cleared values (a newly chosen file gets a new temp path → still
+  loads). `@importFrom shiny uiOutput updateTextAreaInput`;
+  `devtools::document()` updated `NAMESPACE` only (no `.Rd` change). All
+  33 `test_modPedigree.R` tests pass (78 assertions).
+- **REFACTOR:** skipped (owner-gated) — `lintr` clean on both changed
+  files, no duplication, no behavior-neutral improvement identified.
+- **E2E (owner-requested, real Chrome):** added “E2E: Clear Focal
+  Animals resets the file input and typed IDs” to
+  `tests/testthat/test-e2e-pedigree-tutorial.R`; ran the pedigree E2E
+  suite with `NPRC_RUN_E2E=true` + `NOT_CRAN=true` → **9 tests, 13
+  assertions, all pass** in a real browser, confirming the file-name
+  display AND textarea clear at the DOM level (the half `testServer`
+  cannot verify). The first run silently skipped 9/9 until
+  `NOT_CRAN=true` was also set (`skip_on_cran`). Learning 180.
+- **Verification:** full regression **1016 tests / 2271 pass / 0 fail /
+  0 error**; `devtools::check(vignettes = FALSE)` **0/0/0**;
+  `spell_check_package(".")` **0**; lint clean.
+- **NOT published:** implement session — code + tests + close-out docs
+  committed to branch `issue-1-clear-focal-animals`, NOT pushed/PR’d
+  (publish is a separate owner-decided session, FM \#18/#25; the publish
+  PR uses “Closes \#1” + a user-facing NEWS *Changes* bullet, Learning
+  157a).
+- **Files:** `R/modPedigree.R`, `NAMESPACE`,
+  `tests/testthat/test_modPedigree.R` (+5 tests),
+  `tests/testthat/test-e2e-pedigree-tutorial.R` (+1 E2E test); close-out
+  docs `CHANGELOG.md` (this entry), `PROJECT_LEARNINGS.md` (Learning
+  180), `SESSION_NOTES.md` (handoff).
+
 ### 2026-06-24 — Published issue \#76 (Reading A): genome-uniqueness de-inflation is on `master` via PR \#80; **issue \#76 CLOSED** (Session 192)
 
 - **Deliverable (owner pick, single item):** publish S191’s issue \#76
