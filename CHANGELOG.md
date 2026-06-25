@@ -15,6 +15,90 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-25 — Implemented Slice 2 of issue \#2: `gvaConvergence()` iteration-convergence diagnostic (Session 199)
+
+- **Deliverable (owner pick, single item):**
+  [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+  — a new exported Genetic Value Analysis diagnostic that answers issue
+  \#2’s literal ask (“define reproducible and automate finding the
+  needed number of iterations”). **Strict-TDD implementation** — PRE-RED
+  firsthand grounding + a dense-fixture parameter-search workflow, then
+  RED → GREEN → REFACTOR plus an owner-approved hardening micro-cycle,
+  every transition `AskUserQuestion`-gated; TDD phase declared every
+  response. **0 stakeholder corrections.** On LOCAL branch
+  `issue-2-slice2-gvaconvergence` — **NOT published** (the publish PR +
+  the NEWS bullet are a separate session, FM \#18/#25). **Issue \#2
+  stays OPEN** (Slice 2 of 3; the merge that closes \#2 is Slice 3).
+- **What it does:** on the ratified D1 definition that the
+  decision-relevant quantity is the *selection order* (not the precision
+  of the `gu` number),
+  [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+  runs ONE gene drop at `nMax`, computes the per-iteration rare-allele
+  matrix ONCE via
+  [`calcA()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcA.md),
+  and for each candidate iteration count `N` splits the columns into two
+  disjoint `N`-halves, ranks each half through the real `orderReport()`
+  pipeline, and measures whether the two independent half-runs agree on
+  the selection order — top-`k` set overlap (`oMin=0.90`) AND Kendall
+  rank agreement / tau-b (`rhoMin=0.95`). It returns the metric-vs-`N`
+  curve, `recommendedIter` (smallest `N` meeting both), `converged`, the
+  criteria, and the rankable / issue-#76-Undetermined diagnostics. The
+  i.i.d. columns make every nested prefix’s `gu` exact, so **no
+  `calcA`/`reportGV`/`geneDrop` change** was needed (Finding 7 is
+  satisfied by calling `calcA` once); the function orchestrates the same
+  deterministic building blocks `reportGV` uses, leaving the central
+  path untouched. Purely additive.
+- **The dense-mid-range fixture (Dragon \#2 / Finding 4 — the
+  load-bearing part):** no bundled pedigree can validate a `gu`-based
+  ranking tool (all are order-stable at tiny `N`). The RED test fixture
+  `makeConvergenceFixture()` builds a deterministic half-sib web (14
+  founder sires × overlapping 5-dam windows over 15 founder dams;
+  **founders excluded from `pop`** so their private gene-drop alleles
+  among probands are carried only by descendants → rankable mid-range
+  `gu` straddling the `gu=10` cutoff). Found by a 7-strategy parallel
+  parameter-search workflow + a judge, then **re-validated firsthand**:
+  order unstable at `N=25` (top-20 overlap ~0.75) and converges by
+  `N≈800` (seed 11), with a monotone curve — while qcPed (no rankable
+  `gu` signal) is reproducible at the grid floor. The RED tests assert
+  ROBUST properties (fixture `recommendedIter` finite AND \> qcPed’s;
+  small-`N` instability; determinism), never a brittle exact
+  recommended-`N` (it varies 200–800 by seed).
+- **Tests (RED-first):** new `tests/testthat/test_gvaConvergence.R` — 7
+  tests / 35 assertions: object contract/shape+class; determinism under
+  a fixed seed; the discrimination (anti-tautology) test (hard fixture
+  needs finitely more iterations than qcPed, qcPed overlap=tau=1 at
+  every `N`); recommendedIter = smallest `N` meeting both criteria;
+  issue-#76 Undetermined excluded from the order + count == 124 on
+  qcPed; agreement improves from smallest to largest `N`; and a
+  grid-guard test (non-positive iteration counts filtered, no `NaN`
+  row).
+- **Adversarial verification:** a fresh-agent code review independently
+  confirmed the half-split math, row alignment, that `buildOrder`
+  reproduces `reportGV`’s ranking exactly, `nRankable`/`nUndetermined`
+  correctness, determinism, and the `k>nRankable`/empty-grid edge cases
+  — no primary-path bug. It surfaced one latent defect (a user-supplied
+  `grid` value of `0` leaked past the upper-bound-only filter →
+  `colsB = 1:0` reversal + divide-by-zero `NaN` row), fixed via the
+  gated hardening micro-cycle (positive-integer lower bound on `grid`).
+- **Verification:** new file 7 tests / 35 assertions all pass; full
+  regression **0 failed / 0 error**;
+  `devtools::check(vignettes = FALSE)` = **0/0/0**;
+  `spell_check_package(".")` = **0**; `lintr` clean on both changed
+  files; [`tools::checkRd`](https://rdrr.io/r/tools/checkRd.html) 0
+  issues; firsthand runtime smoke =
+  [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+  on the fixture (recommendedIter 800, monotone curve) and qcPed
+  (recommendedIter floor, overlap=tau=1, 124 Undetermined / 156
+  rankable), discrimination confirmed.
+- **Files:** new `R/gvaConvergence.R`,
+  `tests/testthat/test_gvaConvergence.R`, `man/gvaConvergence.Rd`
+  (generated); `NAMESPACE` (export `gvaConvergence`). Close-out —
+  `CHANGELOG.md` (this entry), `PROJECT_LEARNINGS.md` (Learning 185),
+  `SESSION_NOTES.md` (handoff + the 1B stub it overwrote). No
+  `reportGV`/`calcA`/`orderReport`/`geneDrop` change. The ratified D3
+  default `5000 → 1000L` change and the longer-doc/vignette
+  reconciliation (including the gvaConvergence vignette) are Slice 3.
+
 ### 2026-06-25 — Published Slice 1 of issue \#2: per-animal genome-uniqueness SE (`guSE`) is on `master` via PR \#83 (Session 198)
 
 - **Deliverable (owner pick, single item):** publish S197’s Slice 1
@@ -202,12 +286,13 @@ here.
   no universal iteration count. Recommended design = **C then A**:
   (Slice 1, C) an additive per-animal `guSE` column computed from the
   real `rare` matrix + an in-app explanation; (Slice 2, A) an exported
-  `gvaConvergence()` that recomputes `gu`/ranking on nested
-  iteration-column prefixes `V1..Vk` of ONE `Nmax` run (the columns are
-  i.i.d., so the whole convergence curve comes free — no replicate
-  experiment); (Slice 3) reconcile the default contradiction + docs.
-  True in-loop streaming / early-stop (B) is OUT OF SCOPE (infeasible +
-  breaks `geneDrop`’s `V1..Vn` contract).
+  [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+  that recomputes `gu`/ranking on nested iteration-column prefixes
+  `V1..Vk` of ONE `Nmax` run (the columns are i.i.d., so the whole
+  convergence curve comes free — no replicate experiment); (Slice 3)
+  reconcile the default contradiction + docs. True in-loop streaming /
+  early-stop (B) is OUT OF SCOPE (infeasible + breaks `geneDrop`’s
+  `V1..Vn` contract).
 - **Owner steers folded in (each recorded with attribution):** (1)
   precision = `f(iterations, pedigree)` → Monte Carlo; (2) “report
   convergence rate during the calculation phase” → realized faithfully

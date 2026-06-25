@@ -7,6 +7,275 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 199 Did
+
+**Deliverable:** **Implement Slice 2 of issue \#2 under strict TDD** –
+the new exported
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+iteration-convergence diagnostic: build the dense-mid-range pedigree
+fixture in RED FIRST (no bundled ped has rankable `gu` signal – Dragon
+\#2), reuse `calcA` once for the column-prefix half-split, finalize the
+D1 metric (Kendall tau-b; `k=20`, `o_min=0.90`, `rho_min=0.95`), and
+return the metrics-vs-`N` curve + recommended `N`. **(DONE – code +
+tests + close-out committed to LOCAL branch
+`issue-2-slice2-gvaconvergence`; NOT published – the PR/CI/merge + NEWS
+bullet are a SEPARATE session, FM \#18/#25.)** **Started / Completed:**
+2026-06-25 / 2026-06-25 **Status:** **DONE.** Strict-TDD IMPLEMENTATION.
+Every transition `AskUserQuestion`-gated (**pre-RED scope pick -\>
+PRE-RED-\>RED -\> RED-\>GREEN -\> GREEN-\>REFACTOR**, plus an
+owner-approved **grid-guard hardening micro-cycle** triggered by the
+adversarial review); TDD phase declared every response. **0 stakeholder
+corrections.** Owner picked “Slice 2: gvaConvergence()” at orientation,
+“Yes proceed” at each TDD gate, “Minimal REFACTOR + verify + close
+(defer vignette)” at the REFACTOR gate, and “Harden now” for the grid
+guard. Used a 7-agent parallel parameter-search **workflow**
+(`wf_6a852fad-446`) to find the fixture and a fresh-agent **adversarial
+review** to stress-test the implementation (ultracode); both
+re-validated FIRSTHAND. - **PRE-RED (firsthand grounding + de-risk the
+dragon):** read
+`calcGU`/`calcA`/`alleleFreq`/`calcGUSE`/`reportGV`/`orderReport`/`rankSubjects`/`geneDrop`/`set_seed`/`getGVPopulation` +
+`test_reportGV.R`/`test_calcGUSE.R` + the `simulatedKValues` vignette
+idiom. Clean regression baseline (0/0). Probed the fixture mechanism
+(founders excluded from `pop` -\> descendants carry rare founder alleles
+-\> rankable mid-range `gu`) and CONFIRMED the column-prefix equivalence
+golden (`rowSums(calcA(full)[,1:k])/(2k)*100 == calcGU(prefix)` EXACT) –
+so **no `calcA`/`reportGV` refactor** (Finding 7 satisfied by calling
+`calcA` once). The fixture parameter search (workflow) -\> a half-sib
+web (14 sires x overlapping 5-dam windows over 15 dams, founders
+excluded -\> 70 probands); re-validated firsthand (seed 11: unstable at
+`N=25` overlap 0.75, converges `N~800`, monotone curve; recN 200-800
+across seeds 11/22/33). - **RED:** new
+`tests/testthat/test_gvaConvergence.R` – the deterministic fixture
+helper + 6 tests calling the not-yet-defined
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+(all ERROR “could not find function”, verified failing for the right
+reason). Asserts ROBUST properties (fixture recN finite AND \> qcPed’s
+grid floor; small-`N` instability; qcPed overlap=tau=1 everywhere;
+determinism; recommendation = smallest `N` meeting BOTH criteria; \#76
+Undetermined excluded + count==124 on qcPed; agreement improves
+min-\>max `N`), never the brittle exact recN. - **GREEN:**
+`R/gvaConvergence.R` – scaffold via the same building blocks `reportGV`
+uses
+(`getGVPopulation`/`kinship`/`filterKinMatrix`/`meanKinship`/`correctUnknownParentMeanKinship`/`scale`/`classifyParentage`/demographics/#76
+predicate), ONE `geneDrop` at `nMax`, `calcA` ONCE, per-`N` half-split
+(cols `1:N` vs `(N+1):2N`) -\> per-prefix `gu` -\> `orderReport` each
+half -\> `topOverlap` (top-k set overlap) + `rankAgreement` (`cor`
+method=“kendall”); recommendedIter = smallest `N` meeting both.
+`devtools::document()` -\> export + `man/gvaConvergence.Rd` + NAMESPACE.
+6/6 pass; full regression 0/0. - **REFACTOR (owner-approved minimal):**
+wrapped 3 long roxygen lines, rephrased one comment lintr misread as
+code; lintr clean, tests green. - **Hardening micro-cycle (gated):**
+adversarial review found a user-supplied `grid` value of `0` leaks past
+the upper-bound-only filter -\> `colsB = 1:0 = c(1,0)` (R `:`
+reversal) + divide-by-zero `NaN` row. RED test added (fails: 0 leaks,
+negative errors) -\> one-line GREEN guard
+`grid[grid >= 1L & 2L*grid <= nMax]` -\> 7/7 pass.
+
+**Phase-3E (runtime smoke): SATISFIED (firsthand).**
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+run firsthand on the fixture (class `nprcgenekeeprGVConv`; monotone
+curve overlap 0.75-\>1.0 / tau 0.70-\>0.97; `recommendedIter=800`,
+`converged=TRUE`, `nRankable=70`, `nUndetermined=0`) and on qcPed
+(`recommendedIter=25` grid floor, overlap=tau=1 at every `N`,
+`nUndetermined=124`/`nRankable=156` matching `reportGV`); discrimination
+confirmed (800 \> 25). gvaConvergence is a non-UI function (no new Shiny
+surface this slice), so no browser E2E applies; the firsthand run + the
+adversarial review (which verified `buildOrder`’s order is IDENTICAL to
+a `reportGV`-style ranking) are the runtime evidence. Build-equivalent
+`devtools::check(vignettes = FALSE)` = **0/0/0** (confirmed firsthand
+AFTER the guard); full regression **0 failed / 0 error**;
+`spell_check_package(".")` = **0**; `lintr` clean (both files);
+[`tools::checkRd`](https://rdrr.io/r/tools/checkRd.html) 0.
+
+**Session 198 Handoff Evaluation (by Session 199): Score 9/10.** S198’s
+`=> SUGGESTED NEXT` named **Slice 2
+([`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md))**
+as the lead next step with the load-bearing, correct steer: **“build the
+dense-mid-range fixture in RED FIRST (Dragon \#2 / Learnings 181/182: no
+bundled ped has usable rankable `gu` signal, so a test on bundled data
+is tautological)”**, the D1 thresholds (`k`/`o_min`/`rho_min`, Kendall
+tau-b), and **“do NOT bundle Slices 2 and 3 (FM \#18/#25)”**. Every
+anchor held firsthand: the bundled-data tautology was real (qcPed -\>
+overlap=tau=1, recommends the floor); the dense fixture WAS mandatory
+and the fixture-first discipline shaped the whole RED phase; the
+thresholds were used as given; Learning 183’s deterministic-test mindset
+carried over. The handoff was executable with zero scope discovery and
+zero corrections. **The -1:** it (relaying the plan’s Finding 7) framed
+the `calcA` work as a **“refactor … golden-master `gu` before/after”**,
+implying a `calcA` signature change – but firsthand the column-prefix
+trick needs NO `calcA`/`reportGV` change at all (calcA already exposes
+the per-column rare matrix; calling it once suffices), so that part
+over-stated the work and its risk. A fair, inherited imprecision (it
+traces to the plan, not a S198 error), and it cost nothing because the
+simpler realization was found in PRE-RED. ROI: maximal.
+
+**Self-assessment (Session 199): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check clean – HEAD `9e78e055` = S198 follow-up),
+reported, STOPPED for the owner’s pick; claimed with a 1B stub BEFORE
+technical work; declared the TDD phase every response and
+`AskUserQuestion`-gated every transition; produced ONLY Slice 2 and did
+NOT start Slice 3 (FM \#18/#25). **Strengths:** (1) **solved the
+load-bearing dragon** (the fixture) with a deterministic, controllable
+recipe, de-risked by a parallel parameter-search workflow + a judge and
+then RE-VALIDATED FIRSTHAND (never trusted the subagent numbers, FM
+\#11) – the fixture mechanism (exclude founders from `pop`) is the
+reusable key (Learning 185); (2) **discovered the `calcA`-once insight**
+– the prefix trick needs no `calcA`/`reportGV` refactor, so the slice is
+purely ADDITIVE (new R file + new test file + export + man), zero
+regression risk, and the central path is untouched (SAFEGUARDS); (3)
+**strict TDD held cleanly** – RED failing-for-the-right-reason before
+any production code, GREEN minimal, REFACTOR behavior-neutral, and the
+verification-found grid-guard defect folded in via a protocol-clean
+gated micro-cycle (not a silent drive-by); (4) **RED asserts robust
+inequalities, not the seed-fragile exact recN** – the discrimination
+test (fixture \> qcPed) is the anti-tautology guarantee; (5) **ran a
+post-GREEN adversarial review (ultracode)** that independently verified
+the primary path AND caught a real edge-case defect; (6) **fully
+verified** – 0/0/0 check, 0/0 regression, 0 lint/spell/checkRd,
+firsthand runtime smoke + discrimination; (7) plain-language, ASCII,
+recommended-first gates (\[\[ascii-only-in-question-options\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[observation-vs-decision\]\]). **Weaknesses (honest):** (a) a **long
+PRE-RED runway** (extensive probing + a fixture-search workflow) before
+the first code gate – defensible because it de-risked the single
+hardest, most-uncertain part and made RED-\>GREEN mechanical, but it is
+a lot of upfront process; (b) **deferred the Slice-2 vignette to Slice
+3** (owner-approved) – a minor deviation from the plan’s literal Slice-2
+GREEN list; the functional deliverable (exported, tested, man-documented
+diagnostic that discriminates the fixture from qcPed) fully meets Slice
+2’s DONE criteria, and folding the vignette into Slice 3’s
+doc-reconciliation keeps all vignette work together, but the plan’s
+Slice-2 scope is now split; (c) the exact `recommendedIter` is
+deliberately NOT pinned (robust by design) – a reviewer wanting a
+value-level regression lock would need a separate, seed-fixed golden. A
+clean, fully-gated, fully-verified additive vertical slice with the
+dragon solved and an adversarial defect caught + fixed; capped at 9 by
+the heavy PRE-RED runway and the vignette deferral.
+
+**Learnings:** **Learning 185** added to `PROJECT_LEARNINGS.md` – the
+dense-mid-range fixture construction (exclude founders from `pop` so
+descendants carry rare founder alleles -\> rankable mid-range `gu`;
+moderate crowding converges, ties never converge, separation converges
+trivially; the half-sib-web recipe found by a parameter-search
+workflow + firsthand re-validation); the column-prefix trick needs NO
+`calcA`/`reportGV` refactor (call `calcA` once; the new function
+orchestrates `reportGV`’s building blocks + reuses `orderReport`,
+central path untouched); RED tests for a seed-varying diagnostic assert
+ROBUST inequalities not the exact value; and a post-GREEN adversarial
+review earns its keep on the UNSPECIFIED input space (caught the `grid`
+N=0 `:`-reversal divide-by-zero). Carried as applied:
+\[\[consult-project-source-of-truth\]\] (strict-TDD + build-equivalent +
+branch-don’t-push for an implementation session),
+\[\[check-process-history-before-rerunning-work\]\] (the ratified plan +
+S198 handoff were the spec – executed the delta),
+\[\[observation-vs-decision\]\] / \[\[ascii-only-in-question-options\]\]
+/ \[\[avoid-jargon-use-plain-language\]\] (all gates); Learnings 161
+(build-equivalent 0/0/0), 175 (0/0/0 != spelling-clean -\> ran
+`spell_check_package`), 6/FM#11/FM#20 (read implementations +
+re-validate subagent claims firsthand before pinning tests). **NOT**
+\[\[push-close-out-docs-to-origin\]\] – this is an IMPLEMENTATION
+session on a feature branch (like S197), NOT a docs/publish session on
+`master`; nothing is pushed.
+
+**=\> SUGGESTED NEXT = owner’s pick.** Slice 2 is on **LOCAL branch
+`issue-2-slice2-gvaconvergence`** (committed: feat `bbb7a64f` + this
+docs close-out; **NOT pushed** – push is the publish session’s job), NOT
+on `master`; `master` == `origin/master` == `9e78e055` (unchanged this
+session). **Issue \#2 stays OPEN** (Slice 2 of 3 implemented, not
+merged). Natural next steps: - **(Publish Slice 2 – the predicted
+next)** `git push -u origin issue-2-slice2-gvaconvergence`, open a PR
+-\> `master`. **Do NOT use “Closes \#2”** (Slice 2 does not close \#2 –
+Slice 3 does); use “Part of \#2” with NO `close/fix/resolve #2`
+substring anywhere in the PR body OR any commit message landing on
+`master`, even negated (Learning 184); re-query
+`gh issue view 2 --json state` right after merge. **Fold a user-facing
+NEWS *New features* bullet into the SAME PR** (Learning 157a) –
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+IS a new exported function. Write NEWS in the clean idiom + backtick
+identifiers (175), render with
+`html_preview:false`+`md_extensions:"-smart"` (155),
+`spell_check_package` before/after (175/159). Watch ALL CI + a FRESH
+non-watch re-query (157b); **`codecov/patch` should be GREEN** (the new
+code ships `test_gvaConvergence.R`). `AskUserQuestion`-gate the merge;
+ancestor-gated `reset --hard` + verified-merged-before-delete (146).
+SOLO. - **Slice 3** (the one whose merge CLOSES \#2) = implement the
+ratified D3 default change (`5000 -> 1000L` in `reportGV.R:93` (now
+~line 97 – it is the `guIter` default) + `geneDrop.R:90` + `man/`), fix
+every stale “5000” doc site (plan 2D, 84-hit inventory), reconcile the
+two doc surfaces (`gvAndBgDesc.html` + the vignette
+`manual_components`), rewrite the `ColonyManagerTutorial.Rmd:459-461`
+TODO into evidence-based guidance, update the `guIter=5000L`
+behavior-pinning stubs (`test_modGeneticValue.R:1529,1579`), **AND –
+moved here from Slice 2 – write the short
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+vignette** (kableExtra convergence-curve table contrasting the hard
+fixture vs qcPed, `simulatedKValues` idiom). For Slice 3’s PR, “Closes
+\#2” is correct and intended (Learning 184). - **Other open issues:**
+\#82 (`fg` SE follow-up – companion to the `guSE`/`gvaConvergence`
+work), \#37, \#36, \#28, \#13/#12/#11/#10/#5; CRAN Phase 5 (owner-run).
+**Do NOT** use “Closes \#2” when publishing Slice 2 (Slice 3 closes it);
+do NOT bundle Slice 3 with the Slice-2 publish (FM \#18/#25); the
+**latent comment-strip bug remains UNFIXED in `R/getConfigApiKey.R`**
+(out of scope, Learning 174).
+
+**Key files (this session):** **CREATED (the deliverable, committed
+`bbb7a64f` on the branch – NOT pushed):** `R/gvaConvergence.R` (new
+exported diagnostic), `tests/testthat/test_gvaConvergence.R` (7 tests/35
+assertions + the `makeConvergenceFixture()` half-sib-web helper),
+`man/gvaConvergence.Rd` (generated). **CHANGED (deliverable):**
+`NAMESPACE` (export `gvaConvergence`). **CHANGED (close-out docs, this
+docs commit, on the branch – NOT pushed):** `CHANGELOG.md` (S199
+`[Unreleased]` entry), `PROJECT_LEARNINGS.md` (Learning 185),
+`SESSION_NOTES.md` (this handoff + the 1B stub it overwrote). **Read
+FIRSTHAND (NOT changed):** `R/calcGU.R`, `R/calcA.R`, `R/alleleFreq.R`,
+`R/calcGUSE.R`, `R/reportGV.R`, `R/orderReport.R`, `R/rankSubjects.R`,
+`R/geneDrop.R`, `R/set_seed.R`, `R/getGVPopulation.R`,
+`tests/testthat/test_reportGV.R`, `tests/testthat/test_calcGUSE.R`,
+`vignettes/simulatedKValues.Rmd`, the plan §Slice 2 + §3-4 + §9A. **NOT
+committed (standing keep):** `PED_GV_AUDIT_2026-05-30.html` (untracked);
+`.DS_Store`.
+
+**Gotchas:** (1)
+**[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+is purely additive** – it does NOT change
+`reportGV`/`calcA`/`orderReport`/`geneDrop` (the column-prefix trick
+needs no refactor); do NOT “factor `rare` out of `calcA`” thinking Slice
+2 left it undone – it was deliberately unnecessary (Learning 185). (2)
+**The RED tests assert ROBUST inequalities, not the exact
+`recommendedIter`** (which varies 200-800 by seed); do NOT add a brittle
+`recN == 800` assertion – it would be cross-R-version-flaky. (3) **The
+fixture (`makeConvergenceFixture`) lives in the test file** and depends
+on founders being EXCLUDED from `pop`; if reused (e.g. in the Slice-3
+vignette) keep `pop = offspring` or the gu signal collapses to founders
+(Dragon \#2). (4) **Slice 2’s `recommendedIter` semantics:** smallest
+grid `N` with BOTH `topOverlap >= 0.90` AND Kendall
+`rankAgreement >= 0.95`; `NA`/`converged=FALSE` if none in `grid`; the
+issue-#76 Undetermined set (rank NA) is excluded from the order and
+reported as `nUndetermined`. (5) **Three NITs the adversarial review
+flagged as NOT-bugs-today** (deferred, optional Slice-3-or-later
+hardening): the Kendall-on-`common`-ids could use the union for
+future-proofing (currently the rank-NA set is gu-independent so
+`common`==union); populations with `<3` rankable animals always return
+`rankAgreement=NA`/`recommendedIter=NA` (Kendall undefined – could
+surface the reason); `bothHold` guards `rankAgreement` NA but not
+`topOverlap` NA (unreachable today). (6) **The ratified D3 default
+`5000 -> 1000L` is still NOT done** (Slice 3) – `reportGV`/`geneDrop`
+still default `5000L` while NEWS/CHANGELOG claim 1000; the contradiction
+persists until Slice 3. (7) Carried standing keeps (unchanged): package
+**ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without a LabKey credential/config; exactly ONE codecov
+config; NEWS render traps CLOSED at source
+(`html_preview:false`+`md_extensions:"-smart"`, 155); `git pull` is
+rebase + chokes on `.DS_Store` -\> use `fetch`+`reset` (135); post-merge
+`fetch` before ancestor-gated `reset --hard` (146); build-equivalent is
+`devtools::check(vignettes = FALSE)` = 0/0/0 (161); a 0/0/0 check does
+NOT imply spelling-clean -\> run `spell_check_package` (175); the
+`getConfigApiKey` latent comment-strip bug remains UNFIXED (174);
+`man/calcGUSE.Rd` re-wraps under the local roxygen on every `document()`
+-\> revert it if an unrelated `document()` touches it.
+
 ### What Session 198 Did
 
 **Deliverable:** **Publish Slice 1 of issue \#2** – S197’s per-animal
@@ -174,16 +443,18 @@ NEWS), 155 (NEWS render flags), 175 (spell before/after), 146
 **=\> SUGGESTED NEXT = owner’s pick.** Slice 1 is **published on
 `master`** (`00500a5a`); `master`==`origin/master`==this close-out
 commit. **Issue \#2 stays OPEN** (Slice 1 of 3 done). Natural next
-steps: - **Slice 2** (`gvaConvergence()`) – the real answer to \#2 – but
-**build the dense-mid-range fixture in RED FIRST** (Dragon \#2 /
-Learnings 181/182: no bundled ped has usable rankable `gu` signal, so a
-test on bundled data is tautological), finalize the D1 thresholds
-(`k`/`o_min`/`rho_min`, Kendall tau-b) against it, and do the `calcA`
-refactor (factor `rare` out so `gu`/`guSE`/the prefixes reuse one build;
-golden-master `gu` before/after). The S197 column-duplication +
-golden-from-`calcA` test technique (Learning 183) applies directly. -
-**Slice 3** = implement the ratified D3 default change (`5000 -> 1000L`
-in `reportGV.R:93`/`geneDrop.R:90` + `man/`), fix every stale “5000” doc
+steps: - **Slice 2**
+([`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md))
+– the real answer to \#2 – but **build the dense-mid-range fixture in
+RED FIRST** (Dragon \#2 / Learnings 181/182: no bundled ped has usable
+rankable `gu` signal, so a test on bundled data is tautological),
+finalize the D1 thresholds (`k`/`o_min`/`rho_min`, Kendall tau-b)
+against it, and do the `calcA` refactor (factor `rare` out so
+`gu`/`guSE`/the prefixes reuse one build; golden-master `gu`
+before/after). The S197 column-duplication + golden-from-`calcA` test
+technique (Learning 183) applies directly. - **Slice 3** = implement the
+ratified D3 default change (`5000 -> 1000L` in
+`reportGV.R:93`/`geneDrop.R:90` + `man/`), fix every stale “5000” doc
 site (plan 2D), reconcile the two doc surfaces (`gvAndBgDesc.html` + the
 vignette `manual_components`), update the `guIter=5000L`
 behavior-pinning stubs (`test_modGeneticValue.R:1529,1579`). **This
@@ -422,28 +693,29 @@ GREEN** – the new code ships its own tests (`test_calcGUSE.R` + the
 `reportGV`/`gvSummary` tests exercise the changed lines), contrast
 S189’s untestable boot-wiring (Learning 177). `AskUserQuestion`-gate the
 merge; ancestor-gated `reset --hard` + verified-merged-before-delete
-(146). SOLO. - **Slice 2** (`gvaConvergence()`) – the real answer to \#2
-– but **build the dense-mid-range fixture in RED FIRST** (Dragon \#2 /
-Learning 182: no bundled ped has usable `gu` signal; a test on bundled
-data is tautological), finalize the D1 thresholds
-(`k`/`o_min`/`rho_min`, Kendall tau-b) against it, and do the `calcA`
-refactor (factor `rare` out so prefixes – and `calcGUSE` – reuse one
-build; golden-master `gu` before/after). The S197 column-duplication +
-golden-from-`calcA` test technique (Learning 183) applies directly. -
-**Slice 3** = implement the ratified D3 default change (`5000 -> 1000L`
-in `reportGV.R:93`/`geneDrop.R:90` + `man/`), fix every stale “5000” doc
-site (plan 2D), reconcile the two doc surfaces (`gvAndBgDesc.html` + the
-vignette `manual_components`), update the `guIter=5000L`
-behavior-pinning stubs (`test_modGeneticValue.R:1529,1579`). This
-slice’s merge closes \#2. - **Other open issues** (unchanged menu): \#37
-(unused exports), \#36 (chimpanzee age-pyramid), \#28 (large, own plan),
-\#13/#12/#11/#10/#5, \#82 (`fg` SE follow-up); CRAN Phase 5 (owner-run).
-**Do NOT** use “Closes \#2” when publishing Slice 1 (it does not close
-the issue – Slice 3 does); do NOT bundle Slice 2 or the D3 default
-change with the Slice-1 publish (FM \#18/#25); do NOT start Slice 2
-without the dense fixture (tautological tests); the **latent
-comment-strip bug remains UNFIXED in `R/getConfigApiKey.R`** (out of
-scope, Learning 174).
+(146). SOLO. - **Slice 2**
+([`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md))
+– the real answer to \#2 – but **build the dense-mid-range fixture in
+RED FIRST** (Dragon \#2 / Learning 182: no bundled ped has usable `gu`
+signal; a test on bundled data is tautological), finalize the D1
+thresholds (`k`/`o_min`/`rho_min`, Kendall tau-b) against it, and do the
+`calcA` refactor (factor `rare` out so prefixes – and `calcGUSE` – reuse
+one build; golden-master `gu` before/after). The S197
+column-duplication + golden-from-`calcA` test technique (Learning 183)
+applies directly. - **Slice 3** = implement the ratified D3 default
+change (`5000 -> 1000L` in `reportGV.R:93`/`geneDrop.R:90` + `man/`),
+fix every stale “5000” doc site (plan 2D), reconcile the two doc
+surfaces (`gvAndBgDesc.html` + the vignette `manual_components`), update
+the `guIter=5000L` behavior-pinning stubs
+(`test_modGeneticValue.R:1529,1579`). This slice’s merge closes \#2. -
+**Other open issues** (unchanged menu): \#37 (unused exports), \#36
+(chimpanzee age-pyramid), \#28 (large, own plan), \#13/#12/#11/#10/#5,
+\#82 (`fg` SE follow-up); CRAN Phase 5 (owner-run). **Do NOT** use
+“Closes \#2” when publishing Slice 1 (it does not close the issue –
+Slice 3 does); do NOT bundle Slice 2 or the D3 default change with the
+Slice-1 publish (FM \#18/#25); do NOT start Slice 2 without the dense
+fixture (tautological tests); the **latent comment-strip bug remains
+UNFIXED in `R/getConfigApiKey.R`** (out of scope, Learning 174).
 
 **Key files (this session):** **CREATED (the deliverable):**
 `R/calcGUSE.R` (new exported helper), `tests/testthat/test_calcGUSE.R`,
@@ -644,24 +916,26 @@ plain-language `+/-` explanation in the in-app
 NOT depend on the D1 thresholds (no order metric in Slice 1) or the D3
 default change (Slice 3). Small, additive, low-risk; Phase-3E = launch
 the app + confirm the guidance renders beside the new SE line. - **Slice
-2** (`gvaConvergence()`) – the real answer to \#2 – but **build the
-dense-mid-range fixture in RED FIRST** (Dragon \#2, now confirmed
-MANDATORY: no bundled ped has usable signal; a test on bundled data is
-tautological) and finalize the D1 thresholds against it; needs the
-`calcA` refactor (golden-master `gu`). - **Slice 3** = implement the
-ratified D3 default change (`5000 -> 1000L` in
-`reportGV.R:93`/`geneDrop.R:90` + `man/`), fix every stale “5000” doc
-site (plan 2D), reconcile the two doc surfaces, and update the
-behavior-pinning tests (`test_reportGV.R`, the `guIter=5000L` stubs at
-`test_modGeneticValue.R:1529,1579`). This slice’s merge closes \#2. -
-**Other open issues** (unchanged menu): \#37 (unused exports), \#36
-(chimpanzee age-pyramid), \#28 (large, own plan), \#13/#12/#11/#10/#5,
-**\#82** (new – `fg` SE follow-up); CRAN Phase 5 (owner-run). **Do NOT**
-start Slice 2 without the dense fixture (the tests would be tautological
-– the most important carry-forward of this session); do NOT trust the
-single-seed SE figures as final (Slice 2 RED re-establishes them with
-the fixture + multi-seed); the **latent comment-strip bug remains
-UNFIXED in `R/getConfigApiKey.R`** (out of scope, Learning 174).
+2**
+([`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md))
+– the real answer to \#2 – but **build the dense-mid-range fixture in
+RED FIRST** (Dragon \#2, now confirmed MANDATORY: no bundled ped has
+usable signal; a test on bundled data is tautological) and finalize the
+D1 thresholds against it; needs the `calcA` refactor (golden-master
+`gu`). - **Slice 3** = implement the ratified D3 default change
+(`5000 -> 1000L` in `reportGV.R:93`/`geneDrop.R:90` + `man/`), fix every
+stale “5000” doc site (plan 2D), reconcile the two doc surfaces, and
+update the behavior-pinning tests (`test_reportGV.R`, the `guIter=5000L`
+stubs at `test_modGeneticValue.R:1529,1579`). This slice’s merge closes
+\#2. - **Other open issues** (unchanged menu): \#37 (unused exports),
+\#36 (chimpanzee age-pyramid), \#28 (large, own plan),
+\#13/#12/#11/#10/#5, **\#82** (new – `fg` SE follow-up); CRAN Phase 5
+(owner-run). **Do NOT** start Slice 2 without the dense fixture (the
+tests would be tautological – the most important carry-forward of this
+session); do NOT trust the single-seed SE figures as final (Slice 2 RED
+re-establishes them with the fixture + multi-seed); the **latent
+comment-strip bug remains UNFIXED in `R/getConfigApiKey.R`** (out of
+scope, Learning 174).
 
 **Key files (this session):** **CHANGED (the deliverable + close-out,
 direct to `master`, pushed):**
@@ -687,19 +961,19 @@ tests to them yet. (2) **NO bundled pedigree can validate a `gu`-based
 ranking/convergence tool** – `qcPed`/`pedWithGenotype`/`rhesusPedigree`
 have zero rankable `gu` signal (all at `gu=0` post-#76), and
 `examplePedigree` (the only one with signal) is order-stable at N=5; a
-`gvaConvergence()` test on bundled data is tautological -\> build the
-dense-mid-range fixture in Slice-2 RED FIRST (Dragon \#2). (3) **Slice 1
-is independent of D1 thresholds and the D3 default** – keep it to the
-`guSE` column + in-app doc; do NOT bundle the default change (that’s
-Slice 3, FM \#18/#25). (4) **D3 is ratified = change the function
-default `5000 -> 1000L`** (Slice 3) – update `reportGV.R:93`,
-`geneDrop.R:90`, `man/`, the stale “5000” doc sites (2D), AND the
-`guIter=5000L` behavior-pinning stubs
-(`test_modGeneticValue.R:1529,1579`); the NEWS/CHANGELOG already claim
-1000, so they become true. (5) **The S196 empirical figures are
-single-seed** – robust qualitatively (half-split + ground-truth
-cross-check) but re-establish the numbers in Slice-2 RED with the
-fixture + multi-seed. (6) **`byID` is a no-op at the default
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+test on bundled data is tautological -\> build the dense-mid-range
+fixture in Slice-2 RED FIRST (Dragon \#2). (3) **Slice 1 is independent
+of D1 thresholds and the D3 default** – keep it to the `guSE` column +
+in-app doc; do NOT bundle the default change (that’s Slice 3, FM
+\#18/#25). (4) **D3 is ratified = change the function default
+`5000 -> 1000L`** (Slice 3) – update `reportGV.R:93`, `geneDrop.R:90`,
+`man/`, the stale “5000” doc sites (2D), AND the `guIter=5000L`
+behavior-pinning stubs (`test_modGeneticValue.R:1529,1579`); the
+NEWS/CHANGELOG already claim 1000, so they become true. (5) **The S196
+empirical figures are single-seed** – robust qualitatively (half-split +
+ground-truth cross-check) but re-establish the numbers in Slice-2 RED
+with the fixture + multi-seed. (6) **`byID` is a no-op at the default
 `guThresh=1`** (firsthand) – `guThresh` is the parameter that changes
 counts. (7) Carried standing keeps (unchanged): package **ARCHIVED on
 CRAN 2025-07-29**; CRAN Phase 5 owner-gated;
@@ -741,13 +1015,15 @@ out of scope**. **C (Slice 1):** additive per-animal `guSE` column
 computed from the real `rare` matrix (correct across `byID`/`guThresh`),
 threaded through `reportGV.R:213-215` into `$report`/`$gu` + a “max gu
 SE” row in `gvSummary` + the in-app explanation. **A (Slice 2):**
-exported `gvaConvergence()` that recomputes `gu`/ranking on nested
-iteration-column prefixes `V1..Vk` of ONE `Nmax` run (the columns are
-i.i.d. -\> the whole convergence curve is free, NO replicate experiment)
-– needs a dense-mid-range fixture built in RED first + a `calcA`
-refactor (factor the `rare` matrix out so prefixes reuse it). **B (true
-in-loop streaming/early-stop):** infeasible (rare-allele classification
-needs the whole-population frequency table per iteration; `geneDrop` is
+exported
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+that recomputes `gu`/ranking on nested iteration-column prefixes
+`V1..Vk` of ONE `Nmax` run (the columns are i.i.d. -\> the whole
+convergence curve is free, NO replicate experiment) – needs a
+dense-mid-range fixture built in RED first + a `calcA` refactor (factor
+the `rare` matrix out so prefixes reuse it). **B (true in-loop
+streaming/early-stop):** infeasible (rare-allele classification needs
+the whole-population frequency table per iteration; `geneDrop` is
 animals-outer) AND breaks `geneDrop`’s `V1..Vn` return contract +
 example data + seeded tests. - **D1 (ratified S195): “reproducible” =
 selection-order stability** on the rankable `gu > 0` subset via an
@@ -860,15 +1136,16 @@ ONE slice under strict TDD** (one session each, do NOT bundle – FM
 \#18/#25). **Slice 1** = the per-animal `guSE` column + the in-app
 `genetic_value.html` explanation (small, additive, low-risk). **OR**,
 since selection-order is now the definition, the owner may prefer to
-lead with **Slice 2** = `gvaConvergence()` (the real answer to \#2) –
-but that needs the dense-mid-range fixture built in RED FIRST (Learning
-181 / plan Dragon \#2). - **Other open issues** (unchanged menu): \#37
-(unused exports), \#36 (chimpanzee age-pyramid), \#28 (large, own plan),
-\#13/#12/#11/#10/#5; CRAN Phase 5 (owner-run,
-`docs/planning/cran-2.0.0-phase5-runbook.md`). **Do NOT** start
-implementing from this plan without ratifying §8 (the thresholds are
-load-bearing for the tests); do NOT treat the critique’s `qcPed` numbers
-as settled (re-establish them in Slice 2 RED); the **latent
+lead with **Slice 2** =
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+(the real answer to \#2) – but that needs the dense-mid-range fixture
+built in RED FIRST (Learning 181 / plan Dragon \#2). - **Other open
+issues** (unchanged menu): \#37 (unused exports), \#36 (chimpanzee
+age-pyramid), \#28 (large, own plan), \#13/#12/#11/#10/#5; CRAN Phase 5
+(owner-run, `docs/planning/cran-2.0.0-phase5-runbook.md`). **Do NOT**
+start implementing from this plan without ratifying §8 (the thresholds
+are load-bearing for the tests); do NOT treat the critique’s `qcPed`
+numbers as settled (re-establish them in Slice 2 RED); the **latent
 comment-strip bug remains UNFIXED in `R/getConfigApiKey.R`** (out of
 scope, Learning 174).
 

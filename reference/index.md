@@ -349,6 +349,10 @@
 - [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
   : Add animals to an existing breeding group or forms groups:
 
+- [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+  : Evidence-based advice on the number of gene-drop iterations a
+  pedigree needs
+
 - [`hasBothParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/hasBothParents.md)
   : hasBothParents checks to see if both parents are identified
 
