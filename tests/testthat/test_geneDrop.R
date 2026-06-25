@@ -156,3 +156,15 @@ test_that("geneDrop rejects duplicate animal IDs (NEW-46)", {
   expect_s3_class(out, "data.frame")
   expect_identical(unique(out$id), c("A", "B", "C"))
 })
+
+test_that("geneDrop defaults n to 1000 iterations (issue #2 Slice 3)", {
+  ## Issue #2 D3 (RATIFIED S196): align the gene-drop default 5000 -> 1000.
+  expect_identical(eval(formals(geneDrop)[["n"]]), 1000L)
+  ## the default actually drives the simulation: a default-n run on the small
+  ## lacy1989Ped fixture returns exactly 1000 iteration (V) columns
+  ## (geneDrop returns V1..Vn, then id, parent).
+  ped <- nprcgenekeepr::lacy1989Ped
+  gd <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,
+                 genotype = NULL, updateProgress = NULL)
+  expect_identical(sum(grepl("^V[0-9]+$", names(gd))), 1000L)
+})

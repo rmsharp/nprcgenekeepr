@@ -56,7 +56,7 @@
 #' columns contain the integers indicating the observed genotypes.
 #'
 #' @param n integer indicating the number of iterations to simulate.
-#' Default is 5000.
+#' Default is 1000.
 #' @param updateProgress function or NULL. If this function is defined, it
 #' will be called during each iteration to update a
 #' \code{shiny::Progress} object.
@@ -87,7 +87,7 @@
 #'   genotype = pedGenotype,
 #'   n = 5, updateProgress = NULL
 #' )
-geneDrop <- function(ids, sires, dams, gen, genotype = NULL, n = 5000L,
+geneDrop <- function(ids, sires, dams, gen, genotype = NULL, n = 1000L,
                      updateProgress = NULL) {
   badIds <- hasInvalidIdChar(as.character(ids))
   if (any(badIds)) {

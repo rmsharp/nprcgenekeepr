@@ -10,7 +10,7 @@ geneDrop(
   dams,
   gen,
   genotype = NULL,
-  n = 5000L,
+  n = 1000L,
   updateProgress = NULL
 )
 }
@@ -31,7 +31,7 @@ columns:  \code{id}, \code{first}, and \code{second}. The second and third
 columns contain the integers indicating the observed genotypes.}
 
 \item{n}{integer indicating the number of iterations to simulate.
-Default is 5000.}
+Default is 1000.}
 
 \item{updateProgress}{function or NULL. If this function is defined, it
 will be called during each iteration to update a

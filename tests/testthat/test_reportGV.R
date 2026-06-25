@@ -400,3 +400,12 @@ test_that("reportGV carries a guSE column in $report and $gu (issue #2 Slice 1)"
   expect_equal(unname(rptGu[c("M1", "F1", "P1")]), c(0, 0, 0))
 })
 
+test_that("reportGV defaults guIter to 1000 iterations (issue #2 Slice 3)", {
+  ## Issue #2 D3 (RATIFIED S196): the reportGV/geneDrop function default is
+  ## aligned DOWN from 5000 to 1000, to match the Shiny UI default and the
+  ## NEWS/CHANGELOG claim. The effective default number of gene-drop
+  ## iterations is the contract a scripting user inherits when guIter is
+  ## omitted.
+  expect_identical(eval(formals(reportGV)[["guIter"]]), 1000L)
+})
+
