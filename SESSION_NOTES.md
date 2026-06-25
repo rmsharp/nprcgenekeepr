@@ -7,6 +7,220 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 194 Did
+
+**Deliverable:** Publish **issue \#1** (“Clear Focal Animals” in the
+Pedigree Browser now also clears an uploaded focal-animals file + its
+displayed name + the typed focal IDs) from branch
+`issue-1-clear-focal-animals` to `master` via PR, folding the
+user-facing NEWS *Changes* bullet into the SAME PR (Learning 157a); PR
+body **“Closes \#1”** so the merge auto-closes \#1. **(DONE — merged to
+`master` via PR \#81, merge commit `dffe5690`; \#1 verified CLOSED;
+branch deleted local+remote.)** **Started / Completed:** 2026-06-24 /
+2026-06-25 **Status:** **DONE.** Admin/publish + docs session (the issue
+\#1 code was written/tested under strict TDD in S193 → **TDD code-phases
+N/A** every response). **0 stakeholder corrections.** SOLO (serial,
+irreversible git — a workflow adds risk not coverage; the standing
+S179/S181/S183/S187/S189/S192 judgment, held despite ultracode). Owner
+directed “Publish \#1” at orientation, then “wait for CI then merge” (a
+direct merge instruction conditioned on CI passing — so no separate
+`AskUserQuestion` merge gate; I applied the condition: all-green →
+merge). - **Pre-publish content (one PR, Learning 157a):** appended ONE
+dev-version `NEWS.Rmd` *Changes* bullet at the END of the *Changes* list
+(the \#1 UI fix has no topical companion among the species/GVA/config
+bullets; end-placement is append-don’t-rewrite, Learning 171, and keeps
+the GVA bullets’ “described above” cross-refs intact). No new export →
+**no** *New features* bullet. Re-rendered `NEWS.md`
+(`html_preview:false`+`md_extensions:"-smart"`, 155): **0 non-ASCII**,
+no stray `.html`, confined pure-insertion (NEWS.Rmd +8 / NEWS.md +9, 0
+deletions). `spell_check_package(".")` = **0 before AND after** (175 —
+0-delta; no WORDLIST change). Committed NEWS `54e03f86`; the S194 1B
+stub stash-carried OUT of the PR (`stash push SESSION_NOTES.md`), popped
+clean post-merge (pre-existing `WIP on dev` stash preserved as
+`stash@{0}` throughout). - **No push-master-first:**
+`master`==`origin/master`==`ae3b80df` verified FIRSTHAND (after
+`fetch`); PR diff came out \#1-only = 3 commits (S193 feat `2038facb` +
+S193 close-out `573028b8` + S194 NEWS `54e03f86`). - **PR + CI (did NOT
+merge blind — Learning 157b):** opened **PR \#81** → `master` (body
+“Closes \#1”). BOTH `gh pr checks 81 --watch` AND the FRESH non-watch
+re-query returned **all 10 checks PASS** (lint, pkgdown, test-coverage,
+macOS/Windows/Ubuntu release+oldrel-1, ubuntu-devel 14m19s,
+`codecov/patch`, `codecov/project`); `mergeStateStatus` UNSTABLE →
+CLEAN. **`codecov/patch` was GREEN** — contrast S189/Learning 177 (red
+on untestable boot-wiring): this patch SHIPS ITS OWN TESTS (the 5 new
+`testServer` tests in `test_modPedigree.R` exercise the changed
+`renderUI` + clear-branch lines), so the diff is covered — confirms
+177’s positive side, exactly as S192/#76. **No new numbered learning
+warranted** (confirmation, not a new pattern). - **Merge (owner-directed
+“then merge”):** guarded fresh pre-merge re-check (OPEN/MERGEABLE/CLEAN,
+`headRefOid`==local `54e03f86`, `origin/master`==`ae3b80df` — all
+asserted); `gh pr merge 81 --merge` → **`dffe5690`** (verified MERGED,
+`mergedAt 02:24:18Z`); **\#1 verified CLOSED** (`closedAt 02:24:19Z` ≈
+merge time — “Closes \#1” worked). - **Reconcile (Learning 146):**
+`git checkout master`; verified `fetch` (`ae3b80df..dffe5690`);
+**ancestor-gated `reset --hard`** (both old-master `ae3b80df` AND tip
+`54e03f86` asserted ancestors of `dffe5690`); `git stash pop` restored
+the stub cleanly (`WIP on dev` preserved); verified-merged-before-delete
+cleanup (local `-d` “was 54e03f86” + remote `--delete`; `git ls-remote`
+empty).
+
+**Phase-3E (build-equivalent / runtime smoke): SATISFIED.** The merge
+tree was build-verified by PR \#81’s `R CMD check` x5 matrix
+(macOS/Windows/Ubuntu release + oldrel-1 + ubuntu-devel 14m19s), all
+PASS — stronger than a single local check. Confirmed FIRSTHAND on
+`master` after the reset: the fix is live (`R/modPedigree.R:73`
+`uiOutput("focalAnimalFileUI")`, `:211` `renderUI`, `:238-239`
+`updateTextAreaInput`/`fileInputKey` bump, `:250`/`:260`
+[`identical()`](https://rdrr.io/r/base/identical.html)-to-cleared read
+guards) and the NEWS bullet is on `NEWS.md:133`;
+`master`==`origin/master`==`dffe5690`. (No browser click — the e2e
+harness is baseline-flaky and unchanged by a docs/publish session; the
+CI matrix + firsthand master grep are the runtime evidence, per
+S188/S189/S192.)
+
+**Session 193 Handoff Evaluation (by Session 194): Score 9/10.** S193’s
+`=> SUGGESTED NEXT` named THIS publish first (“the predicted next, this
+CLOSES \#1”) and gave a COMPLETE, accurate turn-by-turn recipe:
+`git push -u origin issue-1-clear-focal-animals` → PR → `master` body
+**“Closes \#1”** (verify \#1 closed after merge), fold a NEWS *Changes*
+bullet into the SAME PR (157a; no new export → no *New features*
+bullet), clean idiom + backticked identifiers (175), render with
+`html_preview:false`+`md_extensions:"-smart"` (155),
+`spell_check_package` before/after (175/159), watch ALL CI + a FRESH
+non-watch re-query (157b), `AskUserQuestion`-gate the merge,
+ancestor-gated `reset --hard` + verified-merged-before-delete (146),
+SOLO. **Every load-bearing anchor held FIRSTHAND:** the branch was
+local + unpushed exactly as gotcha 1 said,
+`master`==`origin/master`==`ae3b80df` as claimed, “Closes \#1” closed
+\#1, spelling held 0-delta, and the \#1 UI fix indeed had no NEWS
+topical companion (→ end-of-*Changes*). **The −1:** S193’s
+`codecov/patch` was hedged “may be red” — but its OWN reasoning (the
+`renderUI` + clear-branch lines ARE exercised by the new `testServer`
+tests) implied GREEN, and S192/#76 had already established that a patch
+shipping its own tests greens `codecov/patch`; a confident “green — the
+patch ships its own coverage” was available. Trivial. ROI maximal: the
+recipe was a script I executed with near-zero re-derivation.
+
+**Self-assessment (Session 194): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check → HEAD `573028b8` = S193 close-out, no
+undocumented commits), reported, STOPPED for the owner’s pick; claimed
+with a 1B stub BEFORE technical work; declared TDD N/A every response.
+**Strengths:** (1) **ran every publish guard** —
+`master`==`origin/master`==`ae3b80df` firsthand (no push-master-first),
+the 157b FRESH non-watch re-query WITH its exit code (not just
+`--watch`), a 4-assertion guarded pre-merge re-check, **\#1 verified
+CLOSED**, ancestor-gated reset on BOTH old-master AND tip,
+verified-merged-before-delete (local + remote + `ls-remote` empty); (2)
+**clean stash discipline** — stashed ONLY `SESSION_NOTES.md` (the stub)
+so the NEWS edit stayed free, popped it post-merge, and **preserved the
+pre-existing `WIP on dev` stash** throughout; (3) **folded NEWS
+correctly** — 0-delta spelling, confined pure-insertion,
+end-of-*Changes* placement WITHOUT rewriting any existing bullet (171),
+no *New features* bullet (no new export); (4) **read the GREEN
+`codecov/patch` correctly** against S189’s red and recorded WHY (the
+patch ships its own `testServer` tests) rather than manufacturing a
+spurious learning; (5) **honored the owner’s direct “then merge”** as a
+conditional instruction — merged because all checks were green, and was
+explicit that a real failure would have stopped me; (6) close-out docs
+pushed to origin (\[\[push-close-out-docs-to-origin\]\]). **Weaknesses
+(honest):** (a) **low base difficulty** — admin/publish executing a
+turn-by-turn recipe; the value is disciplined guard execution, not depth
+→ ceiling ~8; (b) **no novel discovery** — the one notable result
+(`codecov/patch` green) merely CONFIRMED Learning 177, so no new
+learning emerged (correctly, not a gap); (c) Phase-3E is the CI matrix +
+a firsthand master grep, not a browser click (e2e baseline-flaky) —
+consistent with prior publish sessions but not a true end-user render.
+Clean, fully-guarded, fully-verified publish that closed \#1 with zero
+corrections; moderate difficulty caps it at 8/10.
+
+**Learnings:** **NONE added** to `PROJECT_LEARNINGS.md` this session —
+the publish executed a known recipe and its one notable result
+(`codecov/patch` GREEN) CONFIRMS Learning 177 from the positive side (a
+patch whose own diff is test-covered greens `codecov/patch`, vs S189’s
+untestable boot-wiring red) rather than establishing a new pattern;
+manufacturing a numbered learning for “the recipe worked” would be
+noise. The confirmation is captured in the CHANGELOG entry + this
+handoff. Carried as applied: \[\[consult-project-source-of-truth\]\]
+(publish convention: implementation→CHANGELOG, publish→NEWS; SOLO for
+irreversible git; build-equivalent), \[\[observation-vs-decision\]\] /
+\[\[ascii-only-in-question-options\]\] /
+\[\[avoid-jargon-use-plain-language\]\] (plain-ASCII, recommended-first
+option phrasing), \[\[check-process-history-before-rerunning-work\]\]
+(read the S193 handoff + the load-bearing learnings + the prior publish
+PR \#80 firsthand), \[\[backlog-vs-changelog-placement\]\] (publish →
+CHANGELOG; \#1 → CLOSED), \[\[push-close-out-docs-to-origin\]\] (push
+this close-out to origin/master FF); Learnings
+146/155/157a/157b/159/171/175/177 (the publish mechanics this session
+executed).
+
+**=\> SUGGESTED NEXT = owner’s pick.** `origin/master` == local `master`
+== `dffe5690` after this S194 close-out push; **issue \#1 is CLOSED**
+(the “Clear Focal Animals” file/text reset is LIVE on `master`); no
+dangling branches; dashboard 98/100. Natural options (plain ASCII): -
+**\#37** (exported functions not currently used by app —
+inventory/wiring audit); **\#36** (chimpanzee-specific age-pyramid
+settings, enhancement); **\#2** (evidence-based GVA iteration-count
+advice); **\#28** (timestamped transactional-location data to identify
+potential parents — LARGE, needs its own plan); older **\#13** (assign
+kinship from outside info) / **\#12** (ARMS pull) / **\#11** (Oracle
+demographics) / **\#10** (breeding-simulation GVA prediction) / **\#5**
+(LabKey query feedback). - **(Optional, NOT an open issue)** the
+appServer boot-wiring covr follow-up from S189’s note — add a test that
+BOOTS `appServer` under coverage so `codecov/patch` greens on future
+SMALL wiring-only patches (mind the `getSiteInfo` boot trap, Learning
+176). Owner has not requested it; raise only if wanted. - **CRAN Phase
+5** (owner-run, `docs/planning/cran-2.0.0-phase5-runbook.md`). **Do
+NOT** reopen \#1 (correctly CLOSED — fix LIVE on `master`); the **latent
+comment-strip bug remains UNFIXED in `R/getConfigApiKey.R`** (out of
+scope, Learning 174).
+
+**Key files (this session):** **CHANGED — the publish content (committed
+to the branch as `54e03f86`, now on `master` via PR \#81):** `NEWS.Rmd`
+(+1 dev-version *Changes* bullet, at the end of *Changes*), `NEWS.md`
+(re-rendered). **CHANGED — close-out docs (this S194 docs commit, direct
+to local `master`, then pushed to origin):** `CHANGELOG.md` (S194
+`[Unreleased]` publish entry), `SESSION_NOTES.md` (this handoff + the 1B
+stub it overwrote). **Read firsthand (publish verification, NOT
+changed):** `R/modPedigree.R:73,192,204-260` (the focal
+`fileInput`→`uiOutput`/`renderUI` reset live on master),
+`NEWS.Rmd:15-128` (the dev-version *Changes*/*New features* structure +
+insertion point), `NEWS.md:133` (rendered bullet), `CHANGELOG.md:15-17`
+(insertion point), PR \#80’s body (the “Closes \#N” + attribution
+convention), the S193 handoff. **NOT changed:** any `R/` logic, tests,
+or `man/` (publish session — the code shipped as S193 wrote it). **NOT
+committed (standing keep):** `PED_GV_AUDIT_2026-05-30.html` (untracked);
+`.DS_Store`.
+
+**Gotchas:** (1) **Issue \#1 is CLOSED** — the “Clear Focal Animals”
+file/text reset is on `master` (merge `dffe5690`). Do NOT reopen unless
+reverting. (2) **`codecov/patch` GREEN here, RED in S189 (Learning
+177)** — the difference is patch composition: a patch whose own diff is
+exercised by shipped tests greens `codecov/patch`; an untestable
+boot-wiring patch reds it. `master` has NO branch protection, so
+`codecov/patch` is informational either way. (3) **PR-body
+closing-keyword convention** — `Closes #N` then a blank line then the
+`🤖 Generated with Claude Code` attribution as the final line (matches
+PR \#80, which closed \#76); GitHub recognizes the keyword anywhere in
+the body. (4) **`gh` invalid-field gotcha (Learning 177c)** —
+`gh pr view --json merged` is INVALID and empties the whole query; use
+`state`/`mergedAt`/`mergeCommit` for PRs and `state`/`closed`/`closedAt`
+for issues, and verify `origin/master` via `git rev-parse` separately.
+(5) **Two stashes existed during this session** — the S194 stub (popped)
+and a long-standing `WIP on dev` (untouched, still `stash@{0}`); do NOT
+drop the `WIP on dev` stash. (6) **`getConfigApiKey` still has the
+latent comment-strip bug** (Learning 174, out of scope). (7) Carried
+standing keeps (unchanged): package **ARCHIVED on CRAN 2025-07-29**;
+CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without a LabKey credential/config; exactly ONE codecov config
+(`codecov.yml`); NEWS render traps CLOSED at source
+(`html_preview:false`+`md_extensions:"-smart"`, 155); `git pull` is
+rebase + chokes on `.DS_Store` → use `fetch`+`reset` (135); post-merge
+`fetch` before ancestor-gated `reset --hard` (146); build-equivalent is
+`devtools::check(vignettes = FALSE)` = 0/0/0 (161); a 0/0/0 check does
+NOT imply spelling-clean → run `spell_check_package` (175).
+
 ### What Session 193 Did
 
 **Deliverable:** **Strict-TDD fix of issue \#1** – “Clear Focal Animals”
