@@ -22,6 +22,12 @@ The list containing the founder equivalents,
 \code{FG = 1 / sum( (p ^ 2) / r)} where \code{p} is the vector of founder
 mean contributions to the current descendants and \code{r} is the mean
 number of founder alleles retained in the gene dropping experiment.
+
+\code{FE} is deterministic and always returned. \code{FG} is \code{NA} (with a
+warning) when a contributing founder (\code{p > 0}) is retained in zero of the
+gene-drop iterations (\code{r == 0}), which would otherwise collapse \code{FG}
+silently to 0; raise the number of iterations. See \code{\link{calcFGSE}} for
+the sampling standard error of \code{FG}.
 }
 \description{
 Part of the Genetic Value Analysis
@@ -45,7 +51,7 @@ pedFactors <- data.frame(
 )
 allelesFactors <- geneDrop(pedFactors$id, pedFactors$sire, pedFactors$dam,
   pedFactors$gen,
-  genotype = NULL, n = 5000,
+  genotype = NULL, n = 1000,
   updateProgress = NULL
 )
 feFg <- calcFEFG(ped, alleles)

@@ -75,3 +75,19 @@ test_that("reportGV surfaces the partial-parentage error through its real caller
     regexp = "partial parentage"
   )
 })
+
+## --- Issue #82 D2 (Session 205): hard-fail the silent FG collapse -------------
+## Same silent-collapse degeneracy as calcFG (r == 0 with p > 0 -> FG quietly 0).
+## FG must become NA with a warning; FE is deterministic (no retention term) and
+## stays a valid finite value.
+test_that("calcFEFG returns FG = NA with a warning but a valid FE on zero retention", {
+  ped <- makeFgPed()
+  hf <- makeFgAlleles(ped, k = 200L, hardFail = TRUE)
+  expect_warning(res <- calcFEFG(ped, hf), regexp = "retained in 0")
+  expect_true(is.na(res$FG))
+  expect_true(is.finite(res$FE))
+  expect_equal(
+    res$FE,
+    1 / sum(calcFounderContributions(ped, "calcFEFG")$p^2L)
+  )
+})

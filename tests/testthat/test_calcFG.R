@@ -61,3 +61,15 @@ test_that("calcFG stops with a clear error on partial parentage", {
   ## alleles unused: guard short-circuits before calcRetention().
   expect_error(calcFG(partialPed, alleles = NULL), regexp = "partial parentage")
 })
+
+## --- Issue #82 D2 (Session 205): hard-fail the silent FG collapse -------------
+## When a contributing founder (p > 0) is retained in ZERO gene-drop iterations
+## (r == 0), the term p^2 / 0 = Inf and na.rm strips only NaN, not Inf, so the
+## sum is Inf and FG silently collapses to 0. The fix detects this and returns
+## NA with a warning (advising more iterations) instead of a misleading 0.
+test_that("calcFG returns NA with a warning when a contributing founder has zero retention", {
+  ped <- makeFgPed()
+  hf <- makeFgAlleles(ped, k = 200L, hardFail = TRUE)
+  expect_warning(res <- calcFG(ped, hf), regexp = "retained in 0")
+  expect_true(is.na(res))
+})

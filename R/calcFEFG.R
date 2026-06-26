@@ -10,6 +10,12 @@
 #' mean contributions to the current descendants and \code{r} is the mean
 #' number of founder alleles retained in the gene dropping experiment.
 #'
+#' \code{FE} is deterministic and always returned. \code{FG} is \code{NA} (with a
+#' warning) when a contributing founder (\code{p > 0}) is retained in zero of the
+#' gene-drop iterations (\code{r == 0}), which would otherwise collapse \code{FG}
+#' silently to 0; raise the number of iterations. See \code{\link{calcFGSE}} for
+#' the sampling standard error of \code{FG}.
+#'
 #' @param ped the pedigree information in datatable format.  Pedigree
 #' (req. fields: id, sire, dam, gen, population).
 #'
@@ -37,7 +43,7 @@
 #' )
 #' allelesFactors <- geneDrop(pedFactors$id, pedFactors$sire, pedFactors$dam,
 #'   pedFactors$gen,
-#'   genotype = NULL, n = 5000,
+#'   genotype = NULL, n = 1000,
 #'   updateProgress = NULL
 #' )
 #' feFg <- calcFEFG(ped, alleles)
@@ -49,5 +55,11 @@ calcFEFG <- function(ped, alleles) {
   ## pre-refactor code did.
   fc <- calcFounderContributions(ped, "calcFEFG") # nolint: object_usage_linter
   r <- calcRetention(fc$ped, alleles)
-  list(FE = 1L / sum(fc$p^2L), FG = 1L / sum((fc$p^2L) / r, na.rm = TRUE))
+  fe <- 1L / sum(fc$p^2L)
+  ## FE is deterministic and always returned; FG hard-fails (NA + warning) on the
+  ## same zero-retention silent collapse calcFG guards against.
+  if (checkFgDegeneracy(fc$p, r)) {
+    return(list(FE = fe, FG = NA_real_))
+  }
+  list(FE = fe, FG = 1L / sum((fc$p^2L) / r, na.rm = TRUE))
 }
