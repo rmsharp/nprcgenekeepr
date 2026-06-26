@@ -55,6 +55,12 @@ calcFEFG <- function(ped, alleles) {
   ## pre-refactor code did.
   fc <- calcFounderContributions(ped, "calcFEFG") # nolint: object_usage_linter
   r <- calcRetention(fc$ped, alleles)
+  ## Align retention to contributions by NAME before dividing (issue #86,
+  ## Dragon D-3): r is id-sorted while fc$p is in getFounders() pedigree-row
+  ## order, so a positional p^2 / r yields a silently wrong FG on any
+  ## unsorted-founder pedigree. FE (1 / sum(p^2)) has no retention term and is
+  ## unaffected by the ordering.
+  r <- r[names(fc$p)]
   fe <- 1L / sum(fc$p^2L)
   ## FE is deterministic and always returned; FG hard-fails (NA + warning) on the
   ## same zero-retention silent collapse calcFG guards against.

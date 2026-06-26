@@ -64,6 +64,12 @@ calcFG <- function(ped, alleles) {
   ## is the toCharacter()-coerced pedigree, fed to calcRetention() as before.
   fc <- calcFounderContributions(ped, "calcFG") # nolint: object_usage_linter
   r <- calcRetention(fc$ped, alleles)
+  ## Align retention to contributions by NAME before dividing (issue #86,
+  ## Dragon D-3): calcRetention() returns r id-sorted (tapply) while fc$p is in
+  ## getFounders() pedigree-row order, so a positional p^2 / r pairs the wrong
+  ## founders -- a silently wrong FG (e.g. a collapse to 0) on any pedigree whose
+  ## founders are not already in sorted id order.
+  r <- r[names(fc$p)]
   ## Hard-fail (NA + warning) the silent FG collapse when a contributing founder
   ## is retained in zero drops; the point estimate is unchanged otherwise.
   if (checkFgDegeneracy(fc$p, r)) {

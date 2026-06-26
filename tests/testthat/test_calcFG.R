@@ -73,3 +73,30 @@ test_that("calcFG returns NA with a warning when a contributing founder has zero
   expect_warning(res <- calcFG(ped, hf), regexp = "retained in 0")
   expect_true(is.na(res))
 })
+
+## --- Issue #86 (Session 206): name-align founders before the FG sum ----------
+## calcFG divided p (getFounders/pedigree-row order) by r (calcRetention,
+## id-sorted via tapply) BY POSITION. On an unsorted-founder pedigree the two
+## orders differ, so FG was silently wrong. The crafted unsorted fixture
+## (founders Z3, Z1, Z0, Z2) drives p and r out of order: the contributor with
+## p = 0.25 is paired with the isolated founder's r = 0, collapsing FG to 0 with
+## NO warning (the zero-retention guard does not fire -- the truly unretained
+## founder has p == 0). Name-aligning r to names(p) yields the correct,
+## order-invariant FG = 32 / 21 (= 1.5238...).
+test_that("calcFG aligns founders by name on an unsorted-founder pedigree (issue #86)", {
+  ped <- makeFgPed(unsorted = TRUE)
+  fgValue <- calcFG(ped, makeFgAlleles(ped))
+  expect_equal(fgValue, 32 / 21) # the name-aligned value (was a silent 0)
+  expect_gt(fgValue, 0) # not the positional collapse to 0
+  expect_true(is.finite(fgValue))
+})
+
+test_that("calcFG is invariant to founder ordering (issue #86)", {
+  ## same fixture structure, founders relabeled/reordered -> identical FG
+  pedU <- makeFgPed(unsorted = TRUE)
+  pedS <- makeFgPed(unsorted = FALSE)
+  expect_equal(
+    calcFG(pedU, makeFgAlleles(pedU)),
+    calcFG(pedS, makeFgAlleles(pedS))
+  )
+})

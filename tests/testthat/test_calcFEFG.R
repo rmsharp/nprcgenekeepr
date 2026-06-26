@@ -91,3 +91,24 @@ test_that("calcFEFG returns FG = NA with a warning but a valid FE on zero retent
     1 / sum(calcFounderContributions(ped, "calcFEFG")$p^2L)
   )
 })
+
+## --- Issue #86 (Session 206): name-align founders before the FG sum ----------
+## Same positional p/r misalignment as calcFG. calcFEFG$FG was silently 0 on the
+## unsorted fixture; name-aligning gives FG = 32 / 21. FE (1 / sum(p^2)) has no
+## retention term, so it is order-invariant and unchanged either way.
+test_that("calcFEFG aligns founders by name on an unsorted-founder pedigree (issue #86)", {
+  pedU <- makeFgPed(unsorted = TRUE)
+  res <- calcFEFG(pedU, makeFgAlleles(pedU))
+  expect_equal(res$FG, 32 / 21)
+  expect_gt(res$FG, 0)
+  expect_true(is.finite(res$FG))
+})
+
+test_that("calcFEFG FG is invariant to founder ordering; FE always is (issue #86)", {
+  pedU <- makeFgPed(unsorted = TRUE)
+  pedS <- makeFgPed(unsorted = FALSE)
+  resU <- calcFEFG(pedU, makeFgAlleles(pedU))
+  resS <- calcFEFG(pedS, makeFgAlleles(pedS))
+  expect_equal(resU$FG, resS$FG) # FG now order-invariant (was 0 vs 32/21)
+  expect_equal(resU$FE, resS$FE) # FE order-invariant already (no r term)
+})
