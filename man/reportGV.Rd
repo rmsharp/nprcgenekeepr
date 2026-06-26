@@ -67,7 +67,11 @@ values and a \code{guSE} column of their standard errors; \code{gu} and
 \code{guSE} are reported as 0 for unknown-origin both-unknown "Undetermined"
 animals, whose apparent uniqueness is an artifact of unknown parentage
 (issue #76)), \code{fe} (founder equivalents),
-\code{fg} (founder genome equivalents), \code{maleFounders} and
+\code{fg} (founder genome equivalents), \code{fgSE} (the Monte Carlo sampling
+standard error of \code{fg}, computed from the same gene drop; a single
+colony-level number, \code{NA} when a contributing founder is retained in
+zero gene-drop iterations -- see \code{\link{calcFGSE}}), \code{maleFounders}
+and
 \code{femaleFounders} (dataframes of the known male and female founder
 records), \code{nMaleFounders} and \code{nFemaleFounders} (the counts of
 those founders), and \code{total} (the total number of known founders).

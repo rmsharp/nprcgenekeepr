@@ -210,6 +210,7 @@ summary.nprcgenekeeprGV <- function(object, ...) {
   ff <- gvReport[["nFemaleFounders"]]
   fe <- gvReport[["fe"]]
   fg <- gvReport[["fg"]]
+  fgSE <- gvReport[["fgSE"]] # issue #82: scalar FG sampling SE (or NULL)
   txt <- "The genetic value report"
   txt <- c(txt, stri_c("Individuals in Pedigree: ", nrow(rpt)))
   txt <-
@@ -225,8 +226,16 @@ summary.nprcgenekeeprGV <- function(object, ...) {
       )
     )
   txt <- c(txt, stri_c("Founder Equivalents: ", round(fe, 2L)))
+  # Issue #82 Slice 3: append the sampling SE inline after FG when a finite
+  # fgSE is present; otherwise the bare FG (older objects / bundled reports
+  # predating fgSE).
+  fgText <- if (!is.null(fgSE) && is.finite(fgSE)) {
+    sprintf("%.2f +/- %.2f", fg, fgSE) # nolint: nonportable_path_linter.
+  } else {
+    as.character(round(fg, 2L))
+  }
   txt <-
-    c(txt, stri_c("Founder Genome Equivalents: ", round(fg, 2L)))
+    c(txt, stri_c("Founder Genome Equivalents: ", fgText))
   txt <-
     c(txt, stri_c("Live Offspring: ", sum(rpt$livingOffspring)))
   txt <-

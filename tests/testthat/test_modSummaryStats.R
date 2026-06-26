@@ -277,3 +277,44 @@ test_that("modSummaryStatsServer works with kinship matrix", {
     }
   )
 })
+
+# ---------------------------------------------------------------------------
+# Issue #82 Slice 3: the Summary-Statistics founder table shows founder genome
+# equivalents inline as "FG +/- SE" when founderStats() carries the scalar fgSE
+# threaded through from reportGV(); it degrades to the bare FG otherwise.
+# ---------------------------------------------------------------------------
+test_that("modSummaryStatsServer founder table shows FG +/- SE when fgSE present (issue #82 Slice 3)", {
+  skip_if_not_installed("shiny")
+
+  test_gv <- data.frame(
+    id = c("A", "B", "C"),
+    meanKinship = c(0.1, 0.2, 0.3),
+    genomeUniqueness = c(0.9, 0.8, 0.7),
+    stringsAsFactors = FALSE
+  )
+  test_ped <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+  fstats <- list(
+    total = 124L, nMaleFounders = 60L, nFemaleFounders = 64L,
+    fe = 77.04, fg = 52.76, fgSE = 0.05
+  )
+
+  shiny::testServer(
+    modSummaryStatsServer,
+    args = list(
+      geneticValues = shiny::reactive({ test_gv }),
+      pedigree = shiny::reactive({ test_ped }),
+      kinshipMatrix = NULL,
+      founderStats = shiny::reactive({ fstats })
+    ),
+    {
+      html <- as.character(output$summaryStats)
+      expect_true(any(grepl("52.76 \\+/- 0.05", html)))
+    }
+  )
+})

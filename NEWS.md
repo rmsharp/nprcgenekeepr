@@ -161,6 +161,34 @@ R. Mark Sharp, Ph.D.
     default and the application now agree. Callers that pass an explicit
     iteration count are unaffected. Use the new `gvaConvergence()` to
     choose an evidence-based count for a particular pedigree.
+  - The Genetic Value Analysis now reports the sampling precision of the
+    colony's founder genome equivalents (FG). Wherever FG is shown -- the
+    Genetic Value summary, the Summary Statistics founder table, the text
+    `summary()` of a Genetic Value report, and the
+    `makeFounderStatsTable()` HTML table -- it now appears as
+    `FG +/- SE`: the estimate plus or minus its Monte Carlo sampling
+    standard error (for example, `52.79 +/- 0.05`). The genetic-value
+    object returned by `reportGV()` gains a matching `fgSE` element (a
+    single colony-level value) alongside `fg`. The standard error shrinks
+    as the number of gene-drop iterations grows; FG is shown on its own,
+    with no standard error, for genetic-value objects produced before
+    this release and for the degenerate case in which FG itself cannot be
+    estimated. The in-app genome-uniqueness guidance gains a note
+    explaining the FG standard error and its finite-iteration caveat.
+    Existing `fg` values are unchanged.
+  - Corrected the founder genome equivalents (FG) computation for
+    pedigrees whose founders are not already in sorted identifier order.
+    `calcFG()` and `calcFEFG()` previously divided each founder's
+    contribution by another founder's gene-drop retention -- pairing the
+    two vectors by position rather than by founder identifier -- so FG
+    could be wrong, and on some pedigrees silently collapsed to 0 with no
+    warning, whenever the founders were unsorted. Both functions now
+    align the contribution and retention vectors by founder identifier.
+    The two bundled example Genetic Value reports (`qcPedGvReport` and
+    `pedWithGenotypeReport`) carried the incorrect value and have been
+    regenerated: their founder genome equivalents change from 39.92 to
+    the correct 52.76. Pedigrees whose founders were already sorted
+    (including the `lacy1989` reference) are unaffected.
 - New features
   - Added the exported `setLabKeyDefaults()`, which configures `Rlabkey`
     authentication for the session: it prefers an API key (from the
@@ -240,6 +268,15 @@ R. Mark Sharp, Ph.D.
     and recommends the smallest iteration count at which the ranking is
     reproducible, so a colony can choose an iteration count with
     evidence instead of a guess.
+  - Added the exported `calcFGSE()`, which returns the Monte Carlo
+    sampling standard error of a pedigree's founder genome equivalents
+    (FG) from a gene-drop allele table. It is the FG counterpart of
+    `calcGUSE()` for genome uniqueness, computed by the delta method in a
+    covariance-aware influence form so it accounts for the correlation
+    among founder retentions within each gene-drop iteration. Like FG, it
+    returns `NA` with a warning for the degenerate case in which a
+    contributing founder is retained in no gene-drop iteration. This is
+    the estimate surfaced as `FG +/- SE` in the Genetic Value Analysis.
 - Documentation
   - The example configuration file
     (`inst/extdata/example_nprcgenekeepr_config`) now documents that

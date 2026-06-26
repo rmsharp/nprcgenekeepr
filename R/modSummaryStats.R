@@ -603,7 +603,18 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
             tags$td(as.character(fs$nFemaleFounders)),
             tags$td(as.character(fs$nMaleFounders)),
             tags$td(sprintf("%.2f", fs$fe)),
-            tags$td(sprintf("%.2f", fs$fg))
+            # Issue #82 Slice 3: founder genome equivalents inline with its
+            # sampling SE when a finite fgSE is threaded through founderStats();
+            # otherwise the bare FG.
+            tags$td(
+              if (!is.null(fs$fgSE) && is.finite(fs$fgSE)) {
+                # nolint start: nonportable_path_linter.
+                sprintf("%.2f +/- %.2f", fs$fg, fs$fgSE)
+                # nolint end: nonportable_path_linter.
+              } else {
+                sprintf("%.2f", fs$fg)
+              }
+            )
           ))
         )
       }

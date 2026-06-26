@@ -21,7 +21,11 @@
 #' \code{guSE} are reported as 0 for unknown-origin both-unknown "Undetermined"
 #' animals, whose apparent uniqueness is an artifact of unknown parentage
 #' (issue #76)), \code{fe} (founder equivalents),
-#' \code{fg} (founder genome equivalents), \code{maleFounders} and
+#' \code{fg} (founder genome equivalents), \code{fgSE} (the Monte Carlo sampling
+#' standard error of \code{fg}, computed from the same gene drop; a single
+#' colony-level number, \code{NA} when a contributing founder is retained in
+#' zero gene-drop iterations -- see \code{\link{calcFGSE}}), \code{maleFounders}
+#' and
 #' \code{femaleFounders} (dataframes of the known male and female founder
 #' records), \code{nMaleFounders} and \code{nFemaleFounders} (the counts of
 #' those founders), and \code{total} (the total number of known founders).
@@ -191,6 +195,14 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
   # Calculating founder equivalents and founder genome equivalents
   feFg <- calcFEFG(ped, alleles)
 
+  # Issue #82 Slice 3: the Monte Carlo sampling standard error of the founder
+  # genome equivalents (FG), computed from the SAME gene drop that produces fg
+  # (as guSE reuses gu's alleles). FG is a colony-level scalar, so fgSE is one
+  # number that rides next to fg -- it is NOT a per-animal report column. NA
+  # (with a warning) when a contributing founder is retained in zero iterations,
+  # the same degeneracy calcFEFG reports for FG itself.
+  fgSE <- calcFGSE(ped, alleles)
+
   # Calculating known founders
   founders <- ped[isFounder(ped), ]
   males <- founders[(founders$sex == "M") &
@@ -234,6 +246,7 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
     gu = cbind(gu, guSE),
     fe = feFg$FE,
     fg = feFg$FG,
+    fgSE = fgSE,
     maleFounders = males,
     femaleFounders = females,
     nMaleFounders = nrow(males),

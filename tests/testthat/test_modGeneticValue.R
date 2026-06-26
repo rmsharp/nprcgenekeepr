@@ -1636,3 +1636,50 @@ test_that("genetic_value.html guidance explains the gu standard error (issue #2 
   expect_match(html, "standard error", ignore.case = TRUE)
   expect_match(html, "iterations", ignore.case = TRUE)
 })
+
+# ---------------------------------------------------------------------------
+# Issue #82 Slice 3: the GVA Summary panel shows founder genome equivalents
+# inline as "FG +/- SE" (its colony-level sampling standard error), and the
+# module re-exports the scalar fgSE in founderStats() so the Summary-Statistics
+# tab and the founder HTML table can show the same number.
+# ---------------------------------------------------------------------------
+test_that("modGeneticValueServer surfaces fgSE inline and re-exports it (issue #82 Slice 3)", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeValidTestPed(nFounders = 8, nOffspring = 20)
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped })
+    ),
+    {
+      set.seed(42L)
+      session$setInputs(nIterations = 1000)
+      session$setInputs(runAnalysis = 1)
+
+      ## founderStats() re-exports the scalar fgSE threaded from reportGV()
+      fs <- session$getReturned()$founderStats()
+      expect_true("fgSE" %in% names(fs))
+      expect_true(is.numeric(fs$fgSE))
+      expect_length(fs$fgSE, 1L)
+
+      ## the GV-tab summary table shows FG inline as "FG +/- SE"
+      tbl <- output$gvSummary
+      expect_true(grepl("\\+/-", tbl))
+    }
+  )
+})
+
+# ---------------------------------------------------------------------------
+# Issue #82 Slice 3 (D6): the in-app GVA guidance must also explain, where the
+# estimate is shown, the founder genome equivalents (FG) sampling standard error
+# -- a gene-drop estimate whose +/- shrinks as the iteration count grows.
+# ---------------------------------------------------------------------------
+test_that("genetic_value.html guidance explains the FG standard error (issue #82 Slice 3)", {
+  path <- system.file("extdata", "ui_guidance", "genetic_value.html",
+                      package = "nprcgenekeepr")
+  expect_true(nzchar(path))
+  html <- paste(readLines(path, warn = FALSE), collapse = "\n")
+  expect_match(html, "founder genome", ignore.case = TRUE)
+})

@@ -61,3 +61,42 @@ test_that("calcFG stops with a clear error on partial parentage", {
   ## alleles unused: guard short-circuits before calcRetention().
   expect_error(calcFG(partialPed, alleles = NULL), regexp = "partial parentage")
 })
+
+## --- Issue #82 D2 (Session 205): hard-fail the silent FG collapse -------------
+## When a contributing founder (p > 0) is retained in ZERO gene-drop iterations
+## (r == 0), the term p^2 / 0 = Inf and na.rm strips only NaN, not Inf, so the
+## sum is Inf and FG silently collapses to 0. The fix detects this and returns
+## NA with a warning (advising more iterations) instead of a misleading 0.
+test_that("calcFG returns NA with a warning when a contributing founder has zero retention", {
+  ped <- makeFgPed()
+  hf <- makeFgAlleles(ped, k = 200L, hardFail = TRUE)
+  expect_warning(res <- calcFG(ped, hf), regexp = "retained in 0")
+  expect_true(is.na(res))
+})
+
+## --- Issue #86 (Session 206): name-align founders before the FG sum ----------
+## calcFG divided p (getFounders/pedigree-row order) by r (calcRetention,
+## id-sorted via tapply) BY POSITION. On an unsorted-founder pedigree the two
+## orders differ, so FG was silently wrong. The crafted unsorted fixture
+## (founders Z3, Z1, Z0, Z2) drives p and r out of order: the contributor with
+## p = 0.25 is paired with the isolated founder's r = 0, collapsing FG to 0 with
+## NO warning (the zero-retention guard does not fire -- the truly unretained
+## founder has p == 0). Name-aligning r to names(p) yields the correct,
+## order-invariant FG = 32 / 21 (= 1.5238...).
+test_that("calcFG aligns founders by name on an unsorted-founder pedigree (issue #86)", {
+  ped <- makeFgPed(unsorted = TRUE)
+  fgValue <- calcFG(ped, makeFgAlleles(ped))
+  expect_equal(fgValue, 32 / 21) # the name-aligned value (was a silent 0)
+  expect_gt(fgValue, 0) # not the positional collapse to 0
+  expect_true(is.finite(fgValue))
+})
+
+test_that("calcFG is invariant to founder ordering (issue #86)", {
+  ## same fixture structure, founders relabeled/reordered -> identical FG
+  pedU <- makeFgPed(unsorted = TRUE)
+  pedS <- makeFgPed(unsorted = FALSE)
+  expect_equal(
+    calcFG(pedU, makeFgAlleles(pedU)),
+    calcFG(pedS, makeFgAlleles(pedS))
+  )
+})

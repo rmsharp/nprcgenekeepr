@@ -5,7 +5,7 @@ qcPed <- nprcgenekeepr::qcPed
 gvReport <- reportGV(qcPed, guIter = 100L)
 test_that("reportGV forms correct genetic value report", {
   expect_named(gvReport, c(
-    "report", "kinship", "gu", "fe", "fg",
+    "report", "kinship", "gu", "fe", "fg", "fgSE",
     "maleFounders", "femaleFounders",
     "nMaleFounders", "nFemaleFounders", "total"
   ))
@@ -30,7 +30,7 @@ test_that(
   "reportGV forms correct genetic value report with updateProgress defined",
   {
     expect_named(gvReport, c(
-      "report", "kinship", "gu", "fe", "fg",
+      "report", "kinship", "gu", "fe", "fg", "fgSE",
       "maleFounders", "femaleFounders",
       "nMaleFounders", "nFemaleFounders", "total"
     ))
@@ -407,5 +407,60 @@ test_that("reportGV defaults guIter to 1000 iterations (issue #2 Slice 3)", {
   ## iterations is the contract a scripting user inherits when guIter is
   ## omitted.
   expect_identical(eval(formals(reportGV)[["guIter"]]), 1000L)
+})
+
+# ---------------------------------------------------------------------------
+# Issue #86 (Session 206): the bundled genetic-value reports embed the
+# name-aligned (correct) founder genome equivalent. calcFEFG paired the founder
+# contribution vector p (row order) and retention r (id-sorted) BY POSITION, so
+# the shipped qcPedGvReport$fg and pedWithGenotypeReport$fg were the wrong
+# positional 39.92 -- both pedigrees have unsorted founders. The fix plus a full
+# regeneration (set.seed(10); reportGV(ped, guIter = 10000)) replaces them with
+# the aligned 52.76 and refreshes the otherwise-stale objects (they predated
+# guSE / nMaleFounders / parentage). FE (no retention term) is unchanged.
+# ---------------------------------------------------------------------------
+test_that("bundled GV reports embed the name-aligned fg (issue #86)", {
+  for (rpt in list(nprcgenekeepr::qcPedGvReport,
+                   nprcgenekeepr::pedWithGenotypeReport)) {
+    expect_gt(rpt$fg, 50) # not the old positional 39.92
+    expect_equal(rpt$fg, 52.7641277, tolerance = 1e-6) # the aligned value
+    expect_equal(rpt$fe, 77.0402760, tolerance = 1e-6) # FE unaffected
+  }
+})
+
+test_that("bundled GV reports are regenerated to the current reportGV structure (issue #86)", {
+  for (rpt in list(nprcgenekeepr::qcPedGvReport,
+                   nprcgenekeepr::pedWithGenotypeReport)) {
+    expect_true(all(c("nMaleFounders", "nFemaleFounders") %in% names(rpt)))
+    expect_true("guSE" %in% names(rpt$gu))
+    expect_true(all(c("guSE", "parentage") %in% names(rpt$report)))
+  }
+})
+
+# ---------------------------------------------------------------------------
+# Issue #82 Slice 3: reportGV carries the founder-genome-equivalent sampling
+# standard error (fgSE) as a colony-level SCALAR alongside fg, computed from the
+# SAME gene drop that produces fg. Unlike guSE (per-animal), fgSE is one number,
+# so it rides next to fg and is NOT a column in $report or $gu (plan F2). qcPed
+# has real retention variance and no degeneracy at K = 1000 (seed 1), giving a
+# finite, strictly positive SE.
+# ---------------------------------------------------------------------------
+test_that("reportGV carries a scalar fgSE alongside fg (issue #82 Slice 3)", {
+  skip_on_cran()
+  set.seed(1L)
+  gv <- reportGV(nprcgenekeepr::qcPed, guIter = 1000L)
+
+  expect_true("fgSE" %in% names(gv))
+  expect_true(is.numeric(gv$fgSE))
+  expect_length(gv$fgSE, 1L)
+  expect_true(is.finite(gv$fgSE))
+  expect_gt(gv$fgSE, 0)
+
+  ## fg itself stays a scalar and is unchanged (additive)
+  expect_length(gv$fg, 1L)
+
+  ## FG is a colony-level scalar: fgSE must NOT be a per-animal column
+  expect_false("fgSE" %in% names(gv$report))
+  expect_false("fgSE" %in% names(gv$gu))
 })
 

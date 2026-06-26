@@ -310,6 +310,17 @@ modGeneticValueServer <- function(id, pedigree,
 
       # Add founder statistics if available
       if (!is.null(fullRes)) {
+        # Issue #82 Slice 3: show founder genome equivalents inline with its
+        # colony-level sampling standard error when reportGV supplied a finite
+        # fgSE; otherwise the bare FG (older results / bundled objects predating
+        # fgSE).
+        fgDisplay <- if (!is.null(fullRes$fgSE) && is.finite(fullRes$fgSE)) {
+          # nolint start: nonportable_path_linter.
+          sprintf("%.2f +/- %.2f", fullRes$fg, fullRes$fgSE)
+          # nolint end: nonportable_path_linter.
+        } else {
+          sprintf("%.2f", fullRes$fg)
+        }
         founderData <- data.frame(
           Metric = c("Total Founders", "Male Founders", "Female Founders",
                      "Founder Equivalents (FE)", "Founder Genome Equiv. (FG)"),
@@ -317,7 +328,7 @@ modGeneticValueServer <- function(id, pedigree,
                     as.character(fullRes$nMaleFounders),
                     as.character(fullRes$nFemaleFounders),
                     sprintf("%.2f", fullRes$fe),
-                    sprintf("%.2f", fullRes$fg)),
+                    fgDisplay),
           stringsAsFactors = FALSE
         )
         summaryData <- rbind(summaryData, founderData)
@@ -384,6 +395,7 @@ modGeneticValueServer <- function(id, pedigree,
         list(
           fe = fr$fe,
           fg = fr$fg,
+          fgSE = fr$fgSE, # issue #82 Slice 3: scalar FG sampling SE (or NULL)
           total = fr$total,
           nMaleFounders = fr$nMaleFounders,
           nFemaleFounders = fr$nFemaleFounders
