@@ -15,6 +15,49 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-25 — Ratified the issue \#82 plan (D1–D6 + slice plan) — `docs/planning/issue82-fg-se-plan.md` (Session 204)
+
+- **Deliverable (owner pick, single item):** owner ratification of the
+  six decisions (D1–D6) and the slice plan in the S203 `fg`-SE plan.
+  **Ratification session** — the recorded decisions ARE the deliverable;
+  TDD code-phases N/A (no production code); implementation (Slice 1) is
+  a separate session (FM \#18). **0 stakeholder corrections.** Owner
+  directed “ratify the \#82 plan (D1–D6)” at Phase 1.
+- **Adversarial re-verification before posing (ultracode, 3-agent
+  workflow `wf_3d099409-d67`):** before forwarding the recommendations,
+  re-grounded the load-bearing facts firsthand (confirmed the
+  `calcFG.R:61`/`calcFEFG.R:52` silent-collapse bug — `p^2/0=Inf`,
+  `na.rm` strips `NaN` not `Inf`; the `calcRetention.R:43`
+  id-sort-vs-position misalignment; the `calcGUSE` precedent) and ran
+  one independent reviewer per decision-pair to try to find a flaw or an
+  unshown tradeoff. **All six verdicts: sound.** Two useful catches: (1)
+  **D4’s recipe pseudocode contradicted its own policy** — Section 2.5’s
+  `keep <- rhat > 0` silently implemented *soft-success* while the text
+  specified *hard-fail*; surfaced as the explicit owner choice. (2) **D6
+  doc-reconciliation scope was ambiguous** (include the longer-form
+  docs + vignette?) — surfaced as a 3-way scope choice.
+- **Ratified outcomes (recorded in the plan, Section 5.1 + checked
+  Section 9):** **D1** influence-form delta SE + mandatory bootstrap
+  cross-check (accepted); **D2** fold the silent-collapse guard into
+  Slice 1 (not a separate issue); **D3** surface in all 5 places,
+  display **inline `FG +/- SE`**; **D4 HARD-FAIL** — `any(p>0 & r==0)` →
+  `NA` + warning for FG *and* SE, advise raising K (NOT soft-drop), skew
+  threshold `n_f<~5-10` adopted as a documented heuristic; **D5** build
+  the crafted deterministic fixture; **D6 broadest** doc scope (all FG
+  surfaces incl. `gvAndBgDesc.html` + the GVA vignette); **slice plan**
+  confirmed (4 sessions, compute → validate → surface).
+- **Plan reconciled to the ratified choices:** Status flipped to
+  RATIFIED; Section 2.5 recipe step 5 gained an explicit pre-`keep`
+  hard-fail guard so the executor codes the ratified behavior (matching
+  Section 2.6 case 3), not the soft-success the old pseudocode implied;
+  Slice 3’s doc list expanded to the broad D6 set.
+- **Files:** `docs/planning/issue82-fg-se-plan.md` (ratification
+  recorded: Status, Section 2.5 recipe, Section 5.1, Slice 3, Section
+  9); close-out — `CHANGELOG.md` (this entry), `PROJECT_LEARNINGS.md`
+  (Learning 190), `SESSION_NOTES.md` (handoff). No code changed; nothing
+  implemented (FM \#18). **Issue \#82 stays OPEN** — Slice 1 is the next
+  session.
+
 ### 2026-06-25 — Planned issue \#82: sampling SE for founder genome equivalents (`fg`) — `docs/planning/issue82-fg-se-plan.md` (Session 203)
 
 - **Deliverable (owner pick, single item):** a planning document for

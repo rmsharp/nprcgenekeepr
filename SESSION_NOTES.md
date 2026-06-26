@@ -7,6 +7,204 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 204 Did
+
+**Deliverable:** **Ratify the issue \#82 plan (D1-D6 + slice plan)** –
+owner decisions on the founder-genome-equivalent (`fg`) sampling-SE
+plan, recorded INTO `docs/planning/issue82-fg-se-plan.md` (new Section
+5.1 + checked Section 9 + Status flipped to RATIFIED + recipe/Slice-3
+reconciled to the chosen options). **(DONE – decisions recorded on
+`master`; close-out pushed origin/master FF; NOTHING implemented – Slice
+1 is a separate session, FM \#18.)** **Started / Completed:** 2026-06-25
+/ 2026-06-25 **Status:** **DONE.** Ratification session
+(Planning/ARCHITECTURE workstream). **TDD code-phases N/A every
+response** (the recorded decisions ARE the deliverable – no production
+code). **0 stakeholder corrections.** Owner directed “ratify the \#82
+plan (D1-D6)” at Phase 1; answered a single 4-question `AskUserQuestion`
+covering all six decisions + the slice-count confirmation. - **Ratified
+outcomes (now in plan Section 5.1):** **D1** influence-form delta SE +
+mandatory bootstrap cross-check (accepted as recommended); **D2** fold
+the `calcFG`/`calcFEFG` silent-collapse guard into Slice 1 (NOT a
+separate issue); **D3** surface in all 5 places, display **inline
+`FG +/- SE`** (not a separate row); **D4 HARD-FAIL** – `any(p>0 & r==0)`
+-\> `NA` + warning for FG AND SE, advise raising K (NOT soft-drop the
+unretained founder), skew threshold `n_f = K*r_f < ~5-10` adopted as a
+documented heuristic (the delta-vs-bootstrap disagreement is the real
+backstop); **D5** YES build the crafted deterministic fixture; **D6
+broadest** doc scope (all FG surfaces incl. the longer-form
+`gvAndBgDesc.html` + the GVA vignette); **slice plan** confirmed (4
+sessions, compute -\> validate -\> surface). - **Adversarial
+re-verification BEFORE posing (ultracode, 3-agent workflow
+`wf_3d099409-d67`, agentType Explore, structured verdicts):**
+re-grounded the load-bearing facts FIRSTHAND (confirmed the
+`calcFG.R:61`/`calcFEFG.R:52` silent-collapse bug – `p^2/0=Inf`, `na.rm`
+strips `NaN` not `Inf` -\> `FG=1/Inf=0`; the `calcRetention.R:43`
+id-sort-vs-position-`/` misalignment; the `calcGUSE.R` precedent), then
+one reviewer per decision-pair tasked to FIND a flaw or an unshown
+tradeoff. **All six verdicts: sound.** Two useful catches folded into
+the gate + the plan: **(1) D4’s recipe pseudocode contradicted its own
+policy** – Section 2.5 `keep <- rhat > 0` silently did SOFT-SUCCESS
+while the text said HARD-FAIL; I posed it as the explicit owner choice
+(hard-fail chosen) and then RECONCILED the recipe (inserted a pre-`keep`
+`if (any(p>0 & rhat==0)) {warning; return(NA_real_)}`) so the Slice 1
+executor codes the ratified behavior, matching Section 2.6 case 3. **(2)
+D6 scope was ambiguous** (include long-form docs + vignette?) -\> posed
+as a 3-way scope choice (broadest chosen).
+
+**Phase-3E (runtime smoke): N/A (stated, not skipped).** The deliverable
+is a markdown planning document recording owner decisions – it changes
+NO runtime behavior (no code, no startup/config/dispatch). The
+build-equivalent for a ratification session is the plan’s internal
+consistency, which I actively RESTORED this session (the
+recipe-vs-policy contradiction is now reconciled; Section 5.1 / Section
+9 / Slice 3 / Status all agree on the ratified choices). No
+`devtools::check` needed (no R code touched).
+
+**Session 203 Handoff Evaluation (by Session 204): Score 9/10.** S203’s
+`=> SUGGESTED NEXT` named **“RATIFY D1-D6, then implement Slice 1”** as
+the exact next step, with the full D1-D6 summary, the plan path, and
+accurate gotchas. **Every anchor held FIRSTHAND:** the plan is at
+`docs/planning/issue82-fg-se-plan.md`; D1-D6 matched Section 5 verbatim;
+the `calcFG`/`calcFEFG` silent-collapse bug it flagged as “REAL but it
+is plan decision D2, not a drive-by fix” I confirmed firsthand at
+`calcFG.R:61`/`calcFEFG.R:52`; “FG is a SCALAR” held;
+`master`==`origin/master`==`eef0eadb` (its own close-out, ghost-check
+clean). The “do NOT start Slice 1 in the ratification turn (FM \#18)”
+and “do NOT drive-by fix the bug (it is D2)” guardrails kept me on the
+deliverable. ROI: high – the pointer + the verified-clean state + the
+accurate D2 framing meant orientation went straight to the work. **The
+-1:** the plan S203 produced carried a latent internal contradiction it
+did not flag – Section 2.6 case 3 specified hard-fail, but the Section
+2.5 recipe pseudocode (`keep <- rhat>0`) silently implemented
+soft-success for the SAME `r==0` case. S203’s own self-assessment had
+flagged “6 decisions is a lot to ratify” but not this recipe-vs-policy
+mismatch; the adversarial re-verification this session caught it, and
+ratifying D4=hard-fail forced the reconciliation. A fair, minor -1 on an
+otherwise excellent, fully-accurate handoff; a 10 would have caught (or
+flagged) that its own recipe and degeneracy-policy text disagreed.
+
+**Self-assessment (Session 204): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read IN FULL; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check clean – HEAD `eef0eadb` = S203 close-out),
+reported, STOPPED for the owner’s direction; wrote the **1B stub BEFORE
+technical work**; declared TDD code-phases N/A every response; produced
+ONLY the ratification (did NOT start Slice 1 – FM \#18/#25; did NOT
+drive-by fix the `calcFG` bug – it is D2). **Strengths:** (1) **did not
+rubber-stamp** – re-grounded the load-bearing facts firsthand (FM
+\#11/#20: confirmed the bug, the misalignment, the precedent) and ran an
+adversarial 3-agent re-verification that tried to break each
+recommendation before forwarding it; (2) **the re-verification earned
+its keep** – it caught the recipe-vs-policy (D4) contradiction and the
+D6 scope ambiguity, both of which became explicit owner choices instead
+of silent assumptions; (3) **closed the loop** – after the owner chose
+hard-fail, I edited the recipe pseudocode so the plan is now
+self-consistent (the executor will not code soft-success while believing
+they implemented hard-fail); (4) **recorded the deliverable IN the
+plan** (Section 5.1, checked Section 9, Status, reconciled Slice 3), not
+just in chat – the executor reads choices, not open questions; (5)
+**efficient question design** – 4 `AskUserQuestion`s covered all 6
+decisions + the slice confirmation (bundled the pure-accept
+D1/D5/slices; reserved slots for the genuine forks), recommended-first,
+plain ASCII (`+/-`, `->`), plain language
+(\[\[ascii-only-in-question-options\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[observation-vs-decision\]\]); (6) close-out pushed origin/master FF
+(\[\[push-close-out-docs-to-origin\]\]). **Weaknesses (honest):** (a)
+the D6 “broadest” choice names `gvAndBgDesc.html` + the GVA vignette but
+I did NOT firsthand-verify the exact vignette path this session (the
+plan says `_genetic_value_analysis.Rmd`; Slice 3’s executor must confirm
+the path) – a deferred-verification I flagged in the plan rather than
+resolving, a small ding; (b) I did not re-run the S203 empirical
+validation numbers (still a Slice 2 gate, as in S203) – correct to
+defer, but worth naming; (c) Phase-3E is N/A (markdown, no runtime
+change) – stated, not skipped. Capped at 9 by (a).
+
+**Learnings:** **Learning 190** added to `PROJECT_LEARNINGS.md` – a
+ratification session is not a rubber stamp: adversarially re-verify the
+recommendations against source BEFORE posing them, fold each chosen
+option back INTO the plan, and reconcile any text-vs-pseudocode
+contradiction the choice exposes (here, D4=hard-fail forced reconciling
+the Section 2.5 recipe’s soft-success pseudocode) – a ratified plan that
+still contains the pre-ratification contradiction misleads the executor
+exactly as a wrong derivation would. Carried as applied:
+\[\[consult-project-source-of-truth\]\] (Planning/ARCHITECTURE
+workstream; the ratified plan format),
+\[\[check-process-history-before-rerunning-work\]\] (the S203 plan +
+handoff were the spec – did the ratification delta, not a re-plan),
+\[\[observation-vs-decision\]\] / \[\[ascii-only-in-question-options\]\]
+/ \[\[avoid-jargon-use-plain-language\]\] (decisions are the owner’s; I
+present + verify, owner picks; ASCII/plain-language gate),
+\[\[push-close-out-docs-to-origin\]\] (close-out pushed FF). **NOT** a
+TDD code-phase session (no production code).
+
+**=\> SUGGESTED NEXT = owner’s pick. Implement Slice 1 of \#82** (the
+math core), now that D1-D6 are RATIFIED. The plan is on `master`
+(`docs/planning/issue82-fg-se-plan.md`, Section 5.1 = the ratified
+choices, Section 6 Slice 1 = the spec); `master`==`origin/master`==this
+close-out commit. **Issue \#82 is OPEN.** Natural next step: - **Slice 1
+(strict TDD, FM \#18 – its own session):** `R/calcFGSE.R`
+(influence/score form, plan Section 2.5 – now with the reconciled
+HARD-FAIL pre-`keep` guard) + the degeneracy guard folded into
+`calcFG`/`calcFEFG` (D2, HARD-FAIL: `any(p>0 & r==0)` -\> `NA`+warning,
+not silent 0) + the crafted deterministic fixture (D5: one `p_f>0,r_f=0`
+founder, one `p_f=0,r_f=0` founder, a mid-range-`r` case) +
+`@export`/`NAMESPACE`/`man/calcFGSE.Rd`/`inst/_pkgdown.yml`; update the
+stale `n=5000` examples in `calcFG.R`/`calcFEFG.R` (F7/D-9). **RED
+first** (plan Section 6, Slice 1 tests a-f + the `calcFG`/`calcFEFG`
+guard test). Pre-RED, pose the RED-\>GREEN gate via `AskUserQuestion`
+per the project TDD contract. Build-equivalent
+`devtools::check(vignettes = FALSE)` = 0/0/0 +
+`spell_check_package(".")` = 0 + golden-master `FG`/`FE`/`r`/`p` on
+`lacy1989`/`qcPed` UNCHANGED. - **Then** Slice 2 (validation gate on a
+REAL deep pedigree – the owner’s “validate before expose” gate), Slice 3
+(surface inline `FG +/- SE` + the broad D6 doc set), publish. - **Other
+open issues:** \#37, \#36, \#28, \#13/#12/#11/#10/#5; CRAN Phase 5
+(owner-run; package ARCHIVED on CRAN 2025-07-29). **Do NOT** re-ratify
+(D1-D6 are decided – Section 5.1); **do NOT** implement soft-success for
+the `r==0` case (the ratified behavior is HARD-FAIL – the recipe is now
+reconciled to it); **do NOT** add an `feSE` (`FE` is deterministic).
+
+**Key files (this session):** **CHANGED (ratification recorded, direct
+to `master`, pushed FF):** `docs/planning/issue82-fg-se-plan.md` (Status
+-\> RATIFIED; Section 2.5 recipe step 5 hard-fail pre-`keep` guard; NEW
+Section 5.1 ratified-outcomes block; Slice 3 doc-list broadened; Section
+9 boxes checked), `CHANGELOG.md` (S204 `[Unreleased]` entry),
+`PROJECT_LEARNINGS.md` (Learning 190), `SESSION_NOTES.md` (this
+handoff + the 1B stub it superseded). **Read FIRSTHAND (to verify the
+recommendations):** `R/calcFG.R`, `R/calcFEFG.R`, `R/calcRetention.R`,
+`R/calcGUSE.R`, the full plan. **Workflow:** `wf_3d099409-d67` (3-agent
+adversarial verification; output at `.../tasks/w7ppfc0r5.output`). **NOT
+committed (standing keep):** `PED_GV_AUDIT_2026-05-30.html` (untracked);
+`.DS_Store`.
+
+**Gotchas:** (1) **Issue \#82 is OPEN; this session only RATIFIED the
+plan** – Slice 1 (the code) is the next, separate session. (2) **The
+ratified `r==0` behavior is HARD-FAIL, not soft-success** – the Section
+2.5 recipe is now reconciled to it (pre-`keep` `NA`+warning); do NOT
+regress to dropping the founder and reporting on the rest. (3) **The
+`calcFG`/`calcFEFG` silent-collapse bug is fixed AS PART OF Slice 1
+(D2)** – not a separate issue, and not a drive-by before Slice 1. (4)
+**D6 doc scope is BROADEST** (incl. `gvAndBgDesc.html` + the GVA
+vignette `_genetic_value_analysis.Rmd`) – the executor must confirm the
+exact vignette path firsthand (I did not this session). (5) **Validate
+on a REAL deep pedigree in Slice 2, never only `lacy1989`**
+(off-diagonal covariance ~46% deep vs ~3% lacy). (6) **`git grep` for
+`fg`** – POSIX ERE `\b` fails; use `git grep -niwE 'fg'` (Dragon D-10).
+(7) Carried standing keeps (unchanged): package **ARCHIVED on CRAN
+2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without LabKey config; exactly ONE codecov config
+(`codecov.yml`); NEWS render traps CLOSED at source
+(`html_preview:false`+`md_extensions:"-smart"`, 155); `git pull` is
+rebase + chokes on `.DS_Store` -\> use `fetch`+`reset` (135); post-merge
+`fetch` before ancestor-gated `reset --hard` (146); build-equivalent is
+`devtools::check(vignettes = FALSE)` = 0/0/0 (161); a 0/0/0 check does
+NOT imply spelling-clean -\> run `spell_check_package` (175); the GitHub
+auto-close keyword trap (184/186 – this session’s commit message names
+the issue only as “issue \#82”/“#82”, no closing keyword -\> \#82 stays
+OPEN); `man/calcGUSE.Rd` re-wraps under the local roxygen on every
+`document()`.
+
 ### What Session 203 Did
 
 **Deliverable:** **Plan issue \#82** –
