@@ -16,6 +16,8 @@
 #'     \item \code{nFemaleFounders} - Number of female founders
 #'     \item \code{fe} - Founder equivalents
 #'     \item \code{fg} - Founder genome equivalents
+#'     \item \code{fgSE} - (optional) sampling standard error of \code{fg};
+#'       when finite it is shown inline as \code{FG +/- SE} (issue #82)
 #'   }
 #'
 #' @examples
@@ -62,6 +64,16 @@ makeFounderStatsTable <- function(founderStats) {
   } else {
     NA
   }
+  # Issue #82 Slice 3: append the sampling SE inline after founder genome
+  # equivalents when a finite value is supplied; otherwise the bare FG (or N/A).
+  fgSE <- if (!is.null(founderStats$fgSE)) founderStats$fgSE else NA
+  fgCell <- if (is.na(fg)) {
+    "N/A"
+  } else if (!is.na(fgSE) && is.finite(fgSE)) {
+    sprintf("%.2f +/- %.2f", fg, fgSE) # nolint: nonportable_path_linter.
+  } else {
+    as.character(fg)
+  }
 
   # Build HTML table
   html <- paste0(
@@ -81,7 +93,7 @@ makeFounderStatsTable <- function(founderStats) {
     "<td>", as.character(nFemale), "</td>",
     "<td>", as.character(nMale), "</td>",
     "<td>", ifelse(is.na(fe), "N/A", as.character(fe)), "</td>",
-    "<td>", ifelse(is.na(fg), "N/A", as.character(fg)), "</td>",
+    "<td>", fgCell, "</td>",
     "</tr>",
     "</tbody>",
     "</table>"

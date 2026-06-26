@@ -5,7 +5,7 @@
 \alias{pedWithGenotypeReport}
 \title{Genetic-value report for pedWithGenotype}
 \format{
-An object of class \code{list} (inherits from \code{GVnprcmanag}) of length 8.
+An object of class \code{list} (inherits from \code{nprcgenekeeprGV}) of length 10.
 }
 \source{
 pedWithGenotypeReport was made with pedWithGenotype as input into
