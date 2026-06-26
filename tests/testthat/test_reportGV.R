@@ -415,15 +415,18 @@ test_that("reportGV defaults guIter to 1000 iterations (issue #2 Slice 3)", {
 # contribution vector p (row order) and retention r (id-sorted) BY POSITION, so
 # the shipped qcPedGvReport$fg and pedWithGenotypeReport$fg were the wrong
 # positional 39.92 -- both pedigrees have unsorted founders. The fix plus a full
-# regeneration (set.seed(10); reportGV(ped, guIter = 10000)) replaces them with
-# the aligned 52.76 and refreshes the otherwise-stale objects (they predated
+# regeneration (set_seed(10); reportGV(ped, guIter = 10000)) replaces them with
+# the aligned ~52.75 and refreshes the otherwise-stale objects (they predated
 # guSE / nMaleFounders / parentage). FE (no retention term) is unchanged.
+# Session 210: S206 had saved a NON-reproducible fg=52.7641277 (a contaminated
+# RNG state at save time); the documented recipe deterministically yields
+# 52.7546854 (display 52.75). S210 regenerated to that reproducible value.
 # ---------------------------------------------------------------------------
 test_that("bundled GV reports embed the name-aligned fg (issue #86)", {
   for (rpt in list(nprcgenekeepr::qcPedGvReport,
                    nprcgenekeepr::pedWithGenotypeReport)) {
     expect_gt(rpt$fg, 50) # not the old positional 39.92
-    expect_equal(rpt$fg, 52.7641277, tolerance = 1e-6) # the aligned value
+    expect_equal(rpt$fg, 52.7546854, tolerance = 1e-6) # reproducible value (S210)
     expect_equal(rpt$fe, 77.0402760, tolerance = 1e-6) # FE unaffected
   }
 })
@@ -434,6 +437,22 @@ test_that("bundled GV reports are regenerated to the current reportGV structure 
     expect_true(all(c("nMaleFounders", "nFemaleFounders") %in% names(rpt)))
     expect_true("guSE" %in% names(rpt$gu))
     expect_true(all(c("guSE", "parentage") %in% names(rpt$report)))
+  }
+})
+
+# ---------------------------------------------------------------------------
+# Session 210: the bundled GV reports were regenerated (set_seed(10);
+# reportGV(ped, guIter = 10000)) AFTER fgSE was added to reportGV()'s return
+# (issue #82 Slice 3, S208), so they now carry the founder-genome-equivalent
+# sampling SE as a finite, positive colony-level scalar alongside fg.
+# ---------------------------------------------------------------------------
+test_that("bundled GV reports carry a finite positive scalar fgSE (issue #82, S210)", {
+  for (rpt in list(nprcgenekeepr::qcPedGvReport,
+                   nprcgenekeepr::pedWithGenotypeReport)) {
+    expect_true("fgSE" %in% names(rpt))
+    expect_length(rpt$fgSE, 1L)
+    expect_true(is.finite(rpt$fgSE))
+    expect_gt(rpt$fgSE, 0)
   }
 })
 

@@ -18,22 +18,37 @@ test_that("summary.nprcgenekeeprGV provides expected output", {
 # Issue #82 Slice 3: the text summary shows the founder-genome-equivalent
 # sampling SE inline ("Founder Genome Equivalents: FG +/- SE") when the object
 # carries fgSE, and degrades to the bare FG (no dangling "+/-") for objects that
-# lack it or carry NA. The bundled GV reports are intentionally not regenerated,
-# so qcPedGvReport (fg = 52.76, no fgSE) exercises the absent-fgSE path.
+# lack it or carry NA. As of S210 the bundled GV reports are regenerated and
+# carry fgSE, so qcPedGvReport surfaces the SE inline; the absent-fgSE
+# backward-compat path (a user's pre-2.0.0 saved report) is exercised by
+# stripping fgSE from a copy.
 test_that("summary.nprcgenekeeprGV shows FG +/- SE inline when fgSE present (issue #82 Slice 3)", {
   gv <- nprcgenekeepr::qcPedGvReport
   gv$fgSE <- 0.05
   out <- summary(gv)
   fgLine <- out[grepl("Founder Genome Equivalents:", out)]
   expect_length(fgLine, 1L)
-  expect_match(fgLine, "Founder Genome Equivalents: 52.76 \\+/- 0.05")
+  expect_match(fgLine, "Founder Genome Equivalents: 52.75 \\+/- 0.05")
+})
+
+test_that("summary.nprcgenekeeprGV surfaces the regenerated bundled fgSE inline (issue #82, S210)", {
+  ## the regenerated bundled object carries its own fgSE -> shown inline,
+  ## value-agnostic (the exact SE is golden data, pinned by test_reportGV.R)
+  out <- summary(nprcgenekeepr::qcPedGvReport)
+  fgLine <- out[grepl("Founder Genome Equivalents:", out)]
+  expect_length(fgLine, 1L)
+  expect_match(fgLine, "^Founder Genome Equivalents: 52\\.75 \\+/- [0-9]+\\.[0-9]{2}$")
 })
 
 test_that("summary.nprcgenekeeprGV degrades to bare FG when fgSE absent or NA (issue #82 Slice 3)", {
-  ## absent (bundled object, not regenerated) -> bare FG, nothing trailing
-  out <- summary(nprcgenekeepr::qcPedGvReport)
+  ## absent (a user's pre-2.0.0 saved report, predating fgSE) -> bare FG,
+  ## nothing trailing. Construct it by stripping fgSE from a copy so the
+  ## backward-compat path is tested independent of the bundled object.
+  gvabs <- nprcgenekeepr::qcPedGvReport
+  gvabs$fgSE <- NULL
+  out <- summary(gvabs)
   fgLine <- out[grepl("Founder Genome Equivalents:", out)]
-  expect_match(fgLine, "Founder Genome Equivalents: 52\\.76$")
+  expect_match(fgLine, "Founder Genome Equivalents: 52\\.75$")
   expect_false(grepl("\\+/-", fgLine))
 
   ## NA fgSE -> still bare FG, no dangling "+/- NA"

@@ -186,9 +186,11 @@ R. Mark Sharp, Ph.D.
     align the contribution and retention vectors by founder identifier.
     The two bundled example Genetic Value reports (`qcPedGvReport` and
     `pedWithGenotypeReport`) carried the incorrect value and have been
-    regenerated: their founder genome equivalents change from 39.92 to
-    the correct 52.76. Pedigrees whose founders were already sorted
-    (including the `lacy1989` reference) are unaffected.
+    regenerated from the documented recipe: their founder genome
+    equivalents change from 39.92 to the correct 52.75, and the reports
+    now also carry the matching `fgSE`, so `summary()` of either shows
+    `FG +/- SE`. Pedigrees whose founders were already sorted (including
+    the `lacy1989` reference) are unaffected.
 - New features
   - Added the exported `setLabKeyDefaults()`, which configures `Rlabkey`
     authentication for the session: it prefers an API key (from the
