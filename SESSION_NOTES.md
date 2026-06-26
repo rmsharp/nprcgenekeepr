@@ -7,6 +7,230 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 203 Did
+
+**Deliverable:** **Plan issue \#82** –
+`docs/planning/issue82-fg-se-plan.md`: the delta-method sampling SE for
+founder genome equivalents (`fg`), an evidence-based grep inventory of
+every `fg`/`FG`/`calcFG`/`calcFEFG`/`calcRetention` surface + the
+`calcGUSE` wiring precedent, 3 vertical slices (compute -\> validate -\>
+surface) each with completion criteria + verification commands + a STOP,
+an 11-item “here be dragons” list, and a D1-D6 owner-ratification
+checklist. **(DONE – plan committed to `master`; close-out pushed to
+origin/master FF; NOTHING implemented – Slice 1 is a separate session,
+FM \#18.)** **Started / Completed:** 2026-06-25 / 2026-06-25 **Status:**
+**DONE.** Planning workstream (ARCHITECTURE_WORKSTREAM + SESSION_RUNNER
+Planning Sessions). **TDD code-phases N/A every response** (the plan IS
+the deliverable – no production code). **0 stakeholder corrections.**
+Owner picked **“#82”** at orientation and **“Planning session”** at the
+separate pre-RED scope gate (`AskUserQuestion`: planning vs
+implement-now). Ran an 8-agent grounding + adversarial-math workflow
+(`wf_8672ccdd-2bf`, ultracode); cross-checked its verdict against my own
+independent hand-derivation; re-verified every surfacing line number
+FIRSTHAND before commit. - **The math (high confidence):**
+`FG = 1/sum(p^2/r)`, `p` deterministic (`calcFounderContributions`, no
+RNG – verified), only `r` (`calcRetention` per-founder gene-drop mean)
+stochastic. Gradient `dFG/dr_f = FG^2*p_f^2/r_f^2` (reconciler verified
+by finite differences vs `calcFG` on `lacy1989Ped`, 5-decimal
+agreement). Recommended estimator = the **influence/score form**
+`fgSE = sd(crossprod(g, R))/sqrt(K)` (`g_f = FG^2*p_f^2/r_f^2`, `R` = F
+x K per-iteration retention) – algebraically the full-covariance delta
+sandwich but `O(K*F)`, folds in the REQUIRED within-iteration founder
+covariance, never forms the F x F matrix. Empirically validated by the
+reconciler on `lacy1989Ped` (agreement ratio mean(SE)/sd_emp = 1.020,
+95% coverage 0.953, 1/sqrt(K) scaling 1.94). A naive per-iteration
+`FG_k` is **degenerate** (one lost founder allele -\> Inf -\> FG_k=0) –
+never used. - **Five findings folded into the plan:** (1) **latent
+silent-collapse BUG** in `calcFG`/`calcFEFG` – `r_f=0,p_f>0` -\>
+`p^2/0=Inf`, `na.rm=TRUE` strips only NaN not Inf -\> `FG` silently = 0
+(likelier at the new K=1000); plan D2 = fold a guard into Slice 1. (2)
+`FG` is a colony-level **SCALAR** -\> the SE is ONE number; the `guSE`
+mirror DROPS `orderReport` ride-through / per-animal column / issue-#76
+zeroing / [`max()`](https://rdrr.io/r/base/Extremes.html) reduction. (3)
+within-iteration covariance is **material** (~46% on a deep pedigree vs
+~3% on the too-small `lacy1989`) -\> validate on a REAL deep pedigree.
+(4) **no fast deterministic fixture** hits the degeneracy path -\> plan
+D5 crafts one. (5) `git grep -niE '\bfg\b'` returns ZERO (POSIX ERE `\b`
+= backspace) -\> use `-w`. - **Plan slices:** Slice 1 = `calcFGSE()` +
+degeneracy guard + crafted fixture (strict TDD); Slice 2 = multi-seed
+validation study (owner GATE – no surfacing until it passes on a real
+pedigree); Slice 3 = surface `FG +/- SE` in
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+return + GV tab + Summary-Stats tab + text
+[`summary()`](https://rdrr.io/r/base/summary.html) +
+`makeFounderStatsTable` HTML + in-app guidance note (D6) + NEWS. Expect
+4 sessions after ratification (S1 + S2 + S3 + publish).
+
+**Phase-3E (runtime smoke): N/A (stated, not skipped).** The deliverable
+is a markdown planning document – it changes NO runtime behavior (no
+code, no startup/config/dispatch). The build-equivalent for a planning
+session is the plan’s internal verification: evidence-based inventory
+complete (Section 4), every phase has completion criteria + verification
+commands + a STOP (Section 6), <file:line> claims re-verified firsthand
+(the surfacing grep this session confirmed `reportGV.R:192/236`,
+`modGeneticValue.R:315/320/386`, `modSummaryStats.R:599/606`,
+`summary.nprcgenekeeprErr.R:212/229`, `makeFounderStatsTable.R:60`,
+`NAMESPACE:24 export(calcGUSE)`). The MATH was runtime-verified inside
+the workflow (the reconciler ran R: finite-diff gradient + empirical
+validation) – but see Self-assessment weakness (a): I did not RE-run
+those empirical figures firsthand this session; Slice 2 establishes them
+firsthand as its explicit gate.
+
+**Session 202 Handoff Evaluation (by Session 203): Score 9/10.** S202’s
+`=> SUGGESTED NEXT` named **\#82 as “the thematically-connected next”**
+with an accurate description (the founder-genome-equivalent companion to
+the `guSE`/`gvaConvergence` precision work; the deferred-`fg` machinery
+`calcFG`/`calcFEFG`/`assignAlleles`; **“a fresh issue, not a
+continuation of \#2”**) AND flagged **`assignAlleles.R:18` as a
+pre-existing latent doc bug** (“Default is 5000” while `n` has no
+default) – which became Dragon D-11 in my plan verbatim. Its “do NOT
+reopen \#2 / do NOT reconcile released NEWS line 275 / do NOT fix the
+intentionally-left 5000 survivors” gotchas were all accurate and kept me
+from drive-by scope. **Every anchor held FIRSTHAND:** \#82 IS the
+`fg`-SE companion; \#2 is CLOSED; `master`==`origin/master`==`ddad211d`
+(S202 close-out); the `assignAlleles.R:18` note is real. ROI: high – the
+pointer + the bug note + the verified-clean state saved orientation time
+and seeded a dragon. **The -1:** as a PUBLISH-session handoff it
+correctly gave a *pointer* to \#82 but did not note that \#82 has **no
+plan yet** and would need a planning session FIRST – I determined that
+(and posed the scope gate). Also the `assignAlleles.R:18` doc bug it
+flagged is a DIFFERENT bug from the `calcFG` na.rm/Inf silent-collapse
+the workflow found (S202 could not have known the latter). A fair, minor
+-1 on an otherwise maximal-ROI handoff; a 10 would have said “#82 needs
+a planning session before any slice.”
+
+**Self-assessment (Session 203): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read IN FULL; SESSION_NOTES ACTIVE TASK; GH issues
+incl. the \#82 body; dashboard 98/100; ghost-check clean – HEAD
+`ddad211d` = S202 close-out), reported, STOPPED for the owner’s pick;
+posed a **separate pre-RED scope gate** (planning vs implement-now)
+before claiming; wrote the **1B stub BEFORE technical work**; declared
+TDD code-phases N/A every response; produced ONLY the plan (did NOT
+start Slice 1 – FM \#18/#25). **Strengths:** (1) **the math is verified,
+not asserted** – a 3-way independent derivation panel + an adversarial
+reconciler that RAN R (finite-diff gradient vs the authoritative
+`calcFG`, empirical multi-seed validation), the Learning-182 “validate
+against ground truth” discipline applied to a derivation; (2)
+**cross-checked the reconciler against my OWN independent
+hand-derivation** before trusting it (FM \#11 – did not take subagent
+math on faith), and the two agreed; (3) the research surfaced a real
+**latent correctness bug** (calcFG silent collapse) + the fixtures gap +
+the covariance materiality + the founder-order hazard, all folded into
+dragons/decisions rather than lost; (4) **evidence-based inventory with
+<file:line>, every surfacing line re-verified FIRSTHAND before commit**
+(FM \#11/#20); (5) **vertical slices** (compute -\> validate -\>
+surface) with validation as an explicit owner GATE – which is exactly
+the issue’s “validate before exposing” ask – each with completion
+criteria + verification + STOP (FM \#25); (6) recorded the open
+math/surfacing calls as a **D1-D6 ratification checklist** instead of
+deciding unilaterally; plain-language ASCII recommended-first scope gate
+(\[\[ascii-only-in-question-options\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[observation-vs-decision\]\]); close-out pushed to origin/master FF
+(\[\[push-close-out-docs-to-origin\]\]). **Weaknesses (honest):** (a)
+**I did not RE-run the empirical validation numbers
+(ratio/coverage/scaling) firsthand this session** – I verified the
+gradient algebra and the `na.rm`-strips-NaN-not-Inf semantics firsthand
+and trusted the reconciler’s R runs for the empirical figures; a 10
+would have re-run the harness on `master`. Mitigant: those numbers only
+MOTIVATE the approach (the plan does not depend on their exact values),
+and Slice 2’s explicit deliverable+gate establishes them firsthand
+before any SE is exposed. (b) The plan asks the owner to ratify **6
+decisions** – defensible because \#82 genuinely spans
+derive+validate+surface, but it is a lot to ratify. (c) Phase-3E is N/A
+(markdown plan, no runtime change) – stated explicitly, not skipped.
+Capped at 9 by (a).
+
+**Learnings:** **Learning 189** added to `PROJECT_LEARNINGS.md` – when
+PLANNING a “report the sampling SE of a nonlinear statistic” task, the
+derivation is the load-bearing risk and the highest-ROI grounding is an
+independent derivation panel + an adversarial reconciler that actually
+RUNS the language (finite-diff gradient check vs the authoritative
+function + empirical validation); doing so settles the math AND surfaces
+adjacent defects (the `calcFG` silent-collapse bug, the per-iteration
+degeneracy, the material covariance, the scalar-vs-vector surfacing
+asymmetry, the missing degeneracy fixture) a desk pass misses; plus the
+`git grep -niwE` boundary-flag gotcha for 2-letter tokens. Carried as
+applied: \[\[consult-project-source-of-truth\]\] (ARCHITECTURE/planning
+workstream + the ratified `issue2-...-plan.md` format),
+\[\[check-process-history-before-rerunning-work\]\] (the \#2 plan D6 was
+the spec – planned the delta), \[\[observation-vs-decision\]\] /
+\[\[ascii-only-in-question-options\]\] /
+\[\[avoid-jargon-use-plain-language\]\] (the scope gate + ASCII plan
+math), \[\[push-close-out-docs-to-origin\]\] (close-out pushed FF – a
+docs/planning session on `master`, like the \#2 plan); Learnings 182
+(validate against ground truth / no-bundled-fixture-validates), 183 (the
+column-doubling K-\>2K deterministic shrink test, reused for `fgSE`).
+**NOT** a TDD code-phase session (no production code).
+
+**=\> SUGGESTED NEXT = owner’s pick. RATIFY D1-D6, then implement Slice
+1 of \#82.** The plan is on `master`
+(`docs/planning/issue82-fg-se-plan.md`); `master`==`origin/master`==this
+close-out commit. **Issue \#82 is OPEN.** Natural next steps: - **Ratify
+the plan (D1-D6, Section 5/9)** – the owner-decisions gate. Quick:
+estimator (D1, influence-form delta + bootstrap cross-check), whether to
+fold the `calcFG` bug-guard into the work (D2), surfacing scope +
+`FG +/- SE` display format (D3), degeneracy policy + threshold (D4),
+build the crafted fixture (D5), user-facing doc scope (D6). Can be a
+short decisions turn OR folded into Slice 1’s pre-RED `AskUserQuestion`
+(the plan says a separate ratification `AskUserQuestion` poses D1-D6
+before RED). - **Then implement Slice 1** (strict TDD): `R/calcFGSE.R`
+(influence form, plan Section 2.5) + the degeneracy guard in `calcFGSE`
+AND `calcFG`/`calcFEFG` (D2) + the crafted deterministic fixture (D5) +
+`@export`/`NAMESPACE`/`man`/`_pkgdown`. RED first (plan Section 6, Slice
+1). Build-equivalent `devtools::check(vignettes = FALSE)` = 0/0/0 +
+spell 0 + golden-master FG/FE unchanged. - **Other open issues:** \#37,
+\#36, \#28, \#13/#12/#11/#10/#5; CRAN Phase 5 (owner-run; package
+ARCHIVED on CRAN 2025-07-29). **Do NOT** start Slice 1 in the
+ratification turn (FM \#18); **do NOT** drive-by “fix” the `calcFG`
+silent-collapse bug outside the ratified plan (it is D2 – a decision,
+not a freebie); **do NOT** add an `feSE` (`FE` is deterministic).
+
+**Key files (this session):** **NEW:**
+`docs/planning/issue82-fg-se-plan.md` (the deliverable). **CHANGED
+(close-out, direct to `master`, pushed FF):** `CHANGELOG.md` (S203
+`[Unreleased]` entry), `PROJECT_LEARNINGS.md` (Learning 189),
+`SESSION_NOTES.md` (this handoff + the 1B stub it superseded). **Read
+FIRSTHAND (to ground the plan):** `R/calcGUSE.R`, `R/calcFEFG.R`,
+`R/calcFG.R`, `R/calcRetention.R`, the \#2 plan D6/Section 5,
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`; surfacing
+grep re-verified `R/reportGV.R`, `R/modGeneticValue.R`,
+`R/modSummaryStats.R`, `R/summary.nprcgenekeeprErr.R`,
+`R/makeFounderStatsTable.R`, `NAMESPACE`. **Workflow:**
+`wf_8672ccdd-2bf` (output at `.../tasks/wngf1ix77.output`). **NOT
+committed (standing keep):** `PED_GV_AUDIT_2026-05-30.html` (untracked);
+`.DS_Store`.
+
+**Gotchas:** (1) **Issue \#82 is OPEN; this session only PLANNED it** –
+do NOT treat the plan as implemented. (2) **The `calcFG`/`calcFEFG`
+silent-collapse bug is REAL** (`r_f=0,p_f>0` -\> `Inf` -\> `FG`=0;
+`na.rm` strips NaN not Inf) – but it is plan decision **D2**, not a
+drive-by fix; raise it at ratification. (3) **`FG` is a SCALAR** – the
+`guSE` wiring is a SPIRIT mirror, not point-for-point (no per-animal
+column / orderReport / \#76 zeroing / max()). (4) **Validate on a REAL
+deep pedigree, never only `lacy1989`** (off-diagonal covariance ~46%
+deep vs ~3% lacy; Dragon D-4/D-5). (5) **`git grep` for `fg`** – POSIX
+ERE `\b` fails; use `git grep -niwE 'fg'` (Dragon D-10). (6)
+**`calcFG`/`calcFEFG` examples still build at `n=5000`** (doc drift;
+default is 1000) – fix in the relevant slice (F7/D-9). (7)
+**`assignAlleles.R:18` “Default is 5000.”** is a separate pre-existing
+latent doc bug (`n` has no default) – Dragon D-11, out of scope unless
+the SE work touches gene drop. (8) Carried standing keeps (unchanged):
+package **ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without LabKey config; exactly ONE codecov config
+(`codecov.yml`); NEWS render traps CLOSED at source
+(`html_preview:false`+`md_extensions:"-smart"`, 155); `git pull` is
+rebase + chokes on `.DS_Store` -\> use `fetch`+`reset` (135); post-merge
+`fetch` before ancestor-gated `reset --hard` (146); build-equivalent is
+`devtools::check(vignettes = FALSE)` = 0/0/0 (161); a 0/0/0 check does
+NOT imply spelling-clean -\> run `spell_check_package` (175); the GitHub
+auto-close keyword trap (184/186 – a commit message landing on `master`
+with `<close-keyword> #N` fires; this session’s messages name issues
+only as “issue \#82”/“#82”, no closing keyword – \#82 must stay OPEN);
+`man/calcGUSE.Rd` re-wraps under the local roxygen on every
+`document()`.
+
 ### What Session 202 Did
 
 **Deliverable:** **Publish Slice 3 of issue \#2** – S201’s Slice 3

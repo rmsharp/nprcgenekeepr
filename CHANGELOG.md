@@ -15,6 +15,56 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-25 — Planned issue \#82: sampling SE for founder genome equivalents (`fg`) — `docs/planning/issue82-fg-se-plan.md` (Session 203)
+
+- **Deliverable (owner pick, single item):** a planning document for
+  issue \#82 (the `fg`-SE follow-up deferred from \#2, D6/Finding 5).
+  **Planning session** — the plan IS the deliverable; TDD code-phases
+  N/A (no production code); implementation is separate sessions (FM
+  \#18). **0 stakeholder corrections.** Owner picked “#82” at
+  orientation and “Planning session” at the scope gate.
+- **Research (ultracode workflow `wf_8672ccdd-2bf`, 8 agents):**
+  evidence-based grep inventory of every
+  `fg`/`FG`/`calcFG`/`calcFEFG`/`calcRetention` surface; an end-to-end
+  trace of the `calcGUSE`/`guSE` wiring precedent; tests/fixtures
+  survey; current-FG-surfacing map; a 3-way INDEPENDENT delta-method
+  derivation panel; and an adversarial math reconciler that **ran R** to
+  verify the gradient by finite differences against `calcFG` and
+  empirically validate the recommended estimator on `lacy1989Ped`
+  (agreement ratio 1.020, 95% coverage 0.953, 1/sqrt(K) scaling 1.94).
+  Cross-checked against the session author’s own hand-derivation; all
+  surfacing line numbers verified firsthand.
+- **The math (high confidence):** `FG = 1/sum(p^2/r)` with `p`
+  deterministic and only `r` (per-founder gene-drop retention mean)
+  stochastic. SE via the delta method in the **influence/score form**
+  `fgSE = sd(crossprod(g, R))/sqrt(K)`, `g_f = FG^2*p_f^2/r_f^2`, which
+  folds in the (required) within-iteration founder covariance and is
+  `O(K*F)`. A naive per-iteration `FG_k` is **degenerate** (a single
+  lost founder allele → `Inf` → `FG_k=0`) and must NOT be used.
+- **Findings folded into the plan:** (1) **latent silent-collapse bug**
+  in `calcFG`/`calcFEFG` — `r_f=0,p_f>0` → `p^2/0=Inf`, and `na.rm=TRUE`
+  strips only `NaN` not `Inf` → `FG` silently becomes 0 (likelier at the
+  new K=1000); (2) `FG` is a colony-level **scalar**, so the SE is one
+  number — no `orderReport` pass-through / per-animal column / issue-#76
+  zeroing (unlike `guSE`); (3) the within-iteration covariance is
+  **material** (~46% on a deep pedigree vs ~3% on the too-small
+  `lacy1989`), so validation must use a real deep pedigree; (4) **no
+  fast deterministic fixture** exercises the degeneracy path — the plan
+  crafts one; (5) `git grep -niE '\bfg\b'` returns nothing (POSIX ERE
+  `\b` is backspace) — use `-w`.
+- **Plan structure:** 6 decisions to ratify (D1 estimator, D2 fold the
+  bug-guard into the work, D3 surfacing scope, D4 degeneracy policy, D5
+  crafted fixture, D6 user-facing docs) + 3 vertical slices (Slice 1
+  estimator+guard+fixture → Slice 2 multi-seed validation gate → Slice 3
+  surface `FG +/- SE`) each with completion criteria, verification
+  commands, and a STOP boundary + an 11-item “here be dragons” + an
+  owner-ratification checklist. Expect 4 implementation/publish sessions
+  after ratification.
+- **Files:** `docs/planning/issue82-fg-se-plan.md` (new); close-out —
+  `CHANGELOG.md` (this entry), `PROJECT_LEARNINGS.md` (Learning 189),
+  `SESSION_NOTES.md` (handoff). No code changed; nothing published
+  (planning session).
+
 ### 2026-06-25 — Published Slice 3 of issue \#2: default 5000→1000 + doc reconciliation merged to `master` via PR \#85; **issue \#2 CLOSED** (Session 202)
 
 - **Deliverable (owner pick, single item):** publish S201’s Slice 3 (the
