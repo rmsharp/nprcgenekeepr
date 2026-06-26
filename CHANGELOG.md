@@ -15,6 +15,73 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-25 — Published Slice 3 of issue \#2: default 5000→1000 + doc reconciliation merged to `master` via PR \#85; **issue \#2 CLOSED** (Session 202)
+
+- **Deliverable (owner pick, single item):** publish S201’s Slice 3 (the
+  gene-drop iteration default `5000L → 1000L` + the stale-“5000” doc
+  reconciliation + the
+  [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+  vignette) from branch `issue-2-slice3-default-reconciliation` to
+  `master` via PR, folding a user-facing NEWS *Changes* bullet into the
+  SAME PR (Learning 157a). This is the slice whose merge **CLOSES issue
+  \#2** (“Closes \#2” is correct and intended here — Learning 184).
+  **Publish/docs session** — TDD code-phases N/A every response
+  (S199–S201 wrote + tested the code under strict TDD). **0 stakeholder
+  corrections.** SOLO (a serial, irreversible git sequence — the
+  standing publish-session judgment, held under ultracode). Owner
+  directed “Publish Slice 3” at orientation, chose NEWS “Changes bullet
+  only” at the content gate, and “Yes, merge PR \#85 now” at the
+  `AskUserQuestion` merge gate.
+- **NEWS (one PR, Learning 157a):** one dev-version *Changes* bullet
+  documenting the FUNCTION-default change
+  ([`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)/[`geneDrop()`](https://github.com/rmsharp/nprcgenekeepr/reference/geneDrop.md)
+  now default to 1000 gene-drop iterations, was 5000; pointer to
+  [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)),
+  appended at the END of the dev Changes list (append-don’t-rewrite,
+  Learning 171). The only prior “1000” mention sits in the RELEASED
+  2.0.0 section and documents the *UI tab* default — left untouched
+  (released notes are immutable; the scopes are distinct — Learning
+  188). Re-rendered `NEWS.md`
+  (`html_preview:false`+`md_extensions:"-smart"`, Learning 155) → pure
+  insertion (+6/+6, 0 deletions), 0 non-ASCII, no stray `.html`;
+  `spell_check_package(".")` = **0 before AND after** (Learning 175).
+  Committed as `af86d38f`.
+- **PR + CI (did NOT merge blind, Learning 157b):** opened **PR \#85** →
+  `master`. The body was authored in a file and grep-scanned
+  (Learning 186) to confirm `Closes #2` is the SOLE closing reference
+  (other refs `#82`/`#84` carry no closing keyword); the GraphQL
+  `closingIssuesReferences` query independently confirmed the PR would
+  close **only \#2**. BOTH `gh pr checks 85 --watch` AND a FRESH
+  non-watch re-query returned **all 10 checks PASS** (lint, pkgdown,
+  test-coverage, macOS/Windows/Ubuntu release + oldrel-1 + ubuntu-devel,
+  `codecov/patch`, `codecov/project`); `mergeStateStatus` UNSTABLE →
+  CLEAN.
+- **Merge (owner-gated) + issue closed:** fresh pre-merge re-check
+  (OPEN/MERGEABLE/CLEAN, head `af86d38f`, `origin/master`==`c77eb540`,
+  \#2 OPEN); `gh pr merge 85 --merge` → merge commit **`b2b0c934`**
+  (MERGED); immediate post-merge `gh issue view 2` = **CLOSED** (the
+  intended close fired correctly on the sole reference).
+- **Reconcile (Learning 146):** reverted the uncommitted 1B stub;
+  `git checkout master`; `fetch`; ancestor-gated `reset --hard` (both
+  old-master `c77eb540` AND branch tip `af86d38f` asserted ancestors of
+  `b2b0c934`, and `b2b0c934`==`origin/master`);
+  verified-merged-before-delete cleanup (local `-d` “was af86d38f” +
+  remote `--delete`; `git ls-remote` empty).
+- **Phase-3E (build-equivalent / runtime smoke): SATISFIED.** PR \#85’s
+  `R CMD check` ×5 matrix all PASS (stronger than a single local check);
+  confirmed FIRSTHAND on `master` after the reset that the deliverable
+  is live: the NEWS *Changes* bullet on `NEWS.md`,
+  `vignettes/gvaConvergence.Rmd` present, and
+  `eval(formals(reportGV)$guIter)` == `eval(formals(geneDrop)$n)` ==
+  **1000** at runtime under `load_all`.
+- **Files:** `NEWS.Rmd`/`NEWS.md` (in PR \#85 as `af86d38f`); close-out
+  — `CHANGELOG.md` (this entry), `PROJECT_LEARNINGS.md` (Learning 188),
+  `SESSION_NOTES.md` (this handoff), pushed to origin/master FF. **Issue
+  \#2 is now CLOSED** — all three slices (the `guSE` precision column,
+  the
+  [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+  diagnostic, and the default + doc reconciliation) are on `master`.
+
 ### 2026-06-25 — Implemented Slice 3 of issue \#2: default 5000→1000 + doc reconciliation + `gvaConvergence()` vignette (Session 201)
 
 - **Deliverable (owner pick, single item):** Slice 3 — the slice whose

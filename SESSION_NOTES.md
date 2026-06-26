@@ -7,6 +7,241 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 202 Did
+
+**Deliverable:** **Publish Slice 3 of issue \#2** – S201’s Slice 3
+(gene-drop iteration default `5000L -> 1000L` + the stale-“5000” doc
+reconciliation + the
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+vignette) is now on `master` via **PR \#85** (merge commit `b2b0c934`),
+with a user-facing NEWS *Changes* bullet folded into the same PR. **This
+is the merge that CLOSED issue \#2.** **(DONE – merged to `master`; \#2
+CLOSED; branch deleted local+remote; close-out pushed to origin/master
+FF.)** **Started / Completed:** 2026-06-25 / 2026-06-25 **Status:**
+**DONE.** Publish/docs session – **TDD code-phases N/A every response**
+(no production code; S199-S201 wrote + tested the code under strict
+TDD). **0 stakeholder corrections.** SOLO (a serial, irreversible git
+sequence – the standing publish-session judgment; a workflow adds risk,
+not coverage; held under ultracode). Owner directed **“Publish Slice
+3”** at orientation, chose **“Changes bullet only”** at the NEWS content
+`AskUserQuestion`, and **“Yes, merge PR \#85 now”** at the merge gate. -
+**NEWS (one PR, Learning 157a + new Learning 188):** the only prior
+“1000” mention in NEWS sat at `NEWS.Rmd:275` INSIDE the RELEASED `2.0.0`
+section and documents the Shiny **GVA tab** default (UI parity), not the
+function signature. Released notes are immutable and the scopes differ,
+so I did NOT edit line 275 – I appended ONE NEW dev-version *Changes*
+bullet documenting the FUNCTION-default change
+([`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)/[`geneDrop()`](https://github.com/rmsharp/nprcgenekeepr/reference/geneDrop.md)
+now default to 1000, was 5000; pointer to
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md))
+at the END of the dev Changes list (append-don’t-rewrite, Learning 171).
+Plain-language, backticked identifiers. Grounded FIRSTHAND by reading
+the dev Changes/New-features + the released 2.0.0 section before writing
+(FM \#11/#20). Re-rendered `NEWS.md`
+(`html_preview:false`+`md_extensions:"-smart"`, Learning 155): pure
+insertion (NEWS.Rmd +6 / NEWS.md +6, 0 del), **0 non-ASCII**, no stray
+`.html`; `spell_check_package(".")` = **0 before AND after** (Learning
+175). Committed `af86d38f`. - **PR + CI (did NOT merge blind, Learning
+157b):** **PR \#85** -\> `master`, body authored in a scratch file
+(`--body-file`) and grep-scanned (Learning 186:
+`grep -niE '(clos|fix|resolv)[a-z]*[[:space:]]+#[0-9]'`) -\>
+**`Closes #2` is the SOLE closing reference** (the body’s other refs
+`#82`/`#84` carry no closing keyword). DOUBLE-confirmed via GraphQL
+`closingIssuesReferences` = **only \#2**. BOTH `gh pr checks 85 --watch`
+AND a FRESH non-watch re-query = **all 10 checks PASS** (lint, pkgdown,
+test-coverage, macOS/Windows/Ubuntu release + oldrel-1 + ubuntu-devel,
+`codecov/patch`, `codecov/project`); UNSTABLE -\> CLEAN. - **Merge
+(owner-gated) + \#2 CLOSED:** fresh pre-merge re-check
+(OPEN/MERGEABLE/CLEAN; `headRefOid`==`af86d38f`;
+`origin/master`==`c77eb540`; \#2 OPEN); `gh pr merge 85 --merge` -\>
+**`b2b0c934`** (MERGED); immediate `gh issue view 2 --json state` =
+**CLOSED** – this time the close SHOULD fire (Slice 3 is the closing
+slice), and it did, on the sole intended reference. - **Reconcile
+(Learning 146):** reverted the uncommitted 1B stub (superseded by this
+handoff); `checkout master`; `fetch` (`c77eb540..b2b0c934`);
+ancestor-gated `reset --hard` (both `c77eb540` AND `af86d38f` asserted
+ancestors of `b2b0c934`, and `b2b0c934`==`origin/master`);
+verified-merged-before-delete cleanup (local `-d` “was af86d38f” +
+remote `--delete`; `ls-remote` empty).
+
+**Phase-3E (runtime smoke): SATISFIED (firsthand).** PR \#85’s
+`R CMD check` x5 matrix all PASS (stronger than one local check).
+Confirmed FIRSTHAND on `master` after the reset: the NEWS *Changes*
+bullet on `NEWS.md` (line 158, “now default to 1000”);
+`vignettes/gvaConvergence.Rmd` present; and
+`eval(formals(reportGV)$guIter)` == `eval(formals(geneDrop)$n)` ==
+**1000** under `load_all` (the default change is ACTIVE at runtime on
+master). No browser click – the function-default change is non-UI and a
+publish session adds no Shiny surface (S201 already verified the in-app
+HTML reconciliation firsthand); the CI matrix + firsthand on-master run
+are the runtime evidence (per S188/S189/S192/S194/S198/S200).
+
+**Session 201 Handoff Evaluation (by Session 202): Score 9/10.** S201’s
+`=> SUGGESTED NEXT` named **“PUBLISH Slice 3 (the merge that CLOSES \#2)
+– the predicted next”** and gave a COMPLETE, accurate, executable
+recipe: `git push -u origin issue-2-slice3-default-reconciliation`; PR
+-\> `master`; **“Closes \#2 IS correct and intended HERE (Learning
+184)”** + **STILL grep the body first (Learning 186)** + **re-query
+`gh issue view 2` right after merge to confirm CLOSED**; the NEWS
+guidance (the existing claim at `NEWS.Rmd:275`, “this slice makes that
+claim TRUE for the function signature – it was UI-only before,” decide
+on a clarifying Changes bullet); NEWS render flags (155) + spell
+before/after (175); watch ALL CI + a FRESH non-watch re-query (157b);
+`AskUserQuestion`-gate the merge; ancestor-gated `reset --hard` +
+verified-merged-before-delete (146); **“Do NOT fix the
+intentionally-left 5000 survivors.”** **Every anchor held FIRSTHAND** –
+branch tip `af86d38f` after my NEWS commit on top of
+`557fe423`+`1c9f8434`+`f1775b68`; `master`==`origin/master`==`c77eb540`;
+\#2 OPEN pre-merge and CLOSED post-merge; the 5000-survivors guidance
+matched; `man/calcGUSE.Rd` did not re-wrap (I ran no `document()`). The
+recipe was executable with **zero corrections**. **The -1:** the handoff
+gave `NEWS.Rmd:275` as the existing claim and said “it was UI-only
+before,” but did NOT explicitly flag that line 275 sits in a RELEASED
+section (so it is immutable -\> the function-default change needs a NEW
+dev bullet, NOT an edit to 275). I resolved that firsthand (it became
+Learning 188). A fair, minor -1 on an otherwise maximal-ROI handoff; a
+10 would have pre-resolved the released-vs-dev-section nuance. ROI:
+maximal.
+
+**Self-assessment (Session 202): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check clean – HEAD `f1775b68` = S201 close-out),
+reported, STOPPED for the owner’s pick; claimed with a 1B stub BEFORE
+any technical work; declared TDD N/A every response; produced ONLY the
+publish (did NOT start \#82 or anything else, FM \#18/#25).
+**Strengths:** (1) **clean, fully-verified publish** – NEWS grounded
+firsthand against the ACTUAL NEWS state (read the released 2.0.0 section
+to confirm line 275 is immutable + UI-scoped, hence a new bullet),
+pure-insertion render, spell 0/0, all 10 CI checks green confirmed by
+BOTH the watch AND an independent re-query (157b), owner-gated merge
+with a fresh pre-merge invariant re-check, ancestor-gated reset +
+verified-merged-before-delete; (2) **the close fired CORRECTLY and was
+triple-guarded** – Learning-186 grep on the body PLUS the GraphQL
+`closingIssuesReferences` confirming ONLY \#2 PLUS the post-merge state
+re-query; \#2 is now CLOSED with no stray issue affected; (3) **gated
+the NEWS content decision via `AskUserQuestion`** (user-facing
+release-notes content is the owner’s call) rather than deciding
+unilaterally, and surfaced the released-section discovery (Learning 188)
+in the options; (4) **firsthand Phase-3E on `master`** (NEWS bullet +
+vignette present + both function defaults == 1000 at runtime), not just
+“CI was green”; (5) plain-language, ASCII, recommended-first gates
+(\[\[ascii-only-in-question-options\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[observation-vs-decision\]\]); pushed close-out to origin/master FF
+(\[\[push-close-out-docs-to-origin\]\]); (6) used the background-watch
+correctly so the ~17-min CI wait did not block the session, then
+re-queried independently before the gate. **Weaknesses (honest):** (a)
+**SOLO with no separate adversarial-verification workflow** – defensible
+for a serial irreversible git publish (a workflow adds risk, not
+coverage; the standing S194/S198/S200 judgment), but worth naming under
+ultracode; (b) **no real-browser E2E** – not applicable (the
+function-default change is non-UI; S201 already verified the in-app HTML
+firsthand; this publish adds no UI), but stated explicitly rather than
+skipped; (c) the session is largely a faithful REPEAT of the S200
+publish recipe, so the marginal new learning (the released-NEWS-scope
+nuance, Learning 188) is incremental rather than novel. A
+fully-verified, owner-gated publish with the intended close correctly
+fired + triple-guarded and firsthand runtime evidence; capped at 9
+because a publish session is inherently a low-novelty mechanical
+sequence and ran SOLO.
+
+**Learnings:** **Learning 188** added to `PROJECT_LEARNINGS.md` – when
+publishing a change whose new value already appears in a RELEASED NEWS
+section but at a NARROWER scope (here: line 275 documents the UI-tab
+default; this slice changes the FUNCTION default), do NOT edit the
+released line (released notes are immutable history) – append a NEW
+dev-version bullet, because the two are distinct user-facing facts;
+whether to document it at all is the owner’s `AskUserQuestion` call.
+Reaffirmed: a publish/docs session is SOLO, TDD code-phases N/A,
+build-equivalent = CI `R CMD check` matrix + firsthand
+on-master-after-reset smoke, close-out pushed FF; the Learning-184
+closing keyword is the deliberate trigger for the closing slice and is
+best triple-guarded (Learning-186 body grep + GraphQL
+`closingIssuesReferences` + post-merge state re-query). Carried as
+applied: \[\[consult-project-source-of-truth\]\] (publish/docs
+workstream: CI is the build-equivalent;
+branch-\>PR-\>gated-merge-\>reconcile),
+\[\[push-close-out-docs-to-origin\]\] (close-out pushed to origin/master
+FF), \[\[observation-vs-decision\]\] /
+\[\[ascii-only-in-question-options\]\] /
+\[\[avoid-jargon-use-plain-language\]\] (the NEWS + merge gates),
+\[\[check-process-history-before-rerunning-work\]\] (S201 handoff was
+the spec – executed the delta); Learnings 157a (NEWS in the same PR),
+157b (watch + fresh re-query, no blind merge), 171 (append-don’t-rewrite
+NEWS), 155 (NEWS render flags), 175 (spell before/after), 146
+(ancestor-gated reset + verified-merged-before-delete), 184/186 (the
+closing keyword + grep guard), 161 (build-equivalent), FM \#11/#20 (read
+the NEWS state before writing). **NOT** a TDD code-phase session (no
+production code).
+
+**=\> SUGGESTED NEXT = owner’s pick.** **Issue \#2 is CLOSED** – all
+three slices are on `master` (Slice 1 = the `guSE` precision column;
+Slice 2 = the exported
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+diagnostic; Slice 3 = the default `5000->1000` + doc reconciliation +
+the
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+vignette). `master`==`origin/master`==this close-out commit. Natural
+next steps: - **\#82 (`fg` SE follow-up) – the thematically-connected
+next.** “Report sampling uncertainty (SE) for founder genome equivalents
+(`fg`)” – the founder-genome-equivalent companion to the
+`guSE`/`gvaConvergence` precision work just completed. This is the
+deferred-`fg` machinery left out of \#2’s scope
+(`calcFG`/`calcFEFG`/`assignAlleles`); a fresh issue, not a continuation
+of \#2. NOTE: `assignAlleles.R:18` has a pre-existing latent doc bug
+(“Default is 5000” while `n` has NO default) – that surfaces here if the
+`fg` work touches `assignAlleles`. - **Other open issues:** \#37
+(exported functions not used by the app), \#36 (chimpanzee-specific age
+pyramid), \#28 (timestamped transactional location data to find missing
+parents), \#13/#12/#11/#10/#5; CRAN Phase 5 (owner-run; package ARCHIVED
+on CRAN 2025-07-29). **Do NOT** reopen or re-touch \#2; do NOT
+“reconcile” the released 2.0.0 NEWS line 275 (it correctly documents the
+UI default and is immutable – Learning 188); do NOT “fix” the
+intentionally-left 5000 survivors (deferred-`fg` machinery + factual
+data provenance) unless \#82 brings the `fg` work into scope.
+
+**Key files (this session):** **CHANGED (in PR \#85, on `master` as
+`af86d38f`):** `NEWS.Rmd` (+1 *Changes* bullet at end of the dev Changes
+list), `NEWS.md` (re-rendered, +6). **CHANGED (close-out, direct to
+`master`, pushed FF):** `CHANGELOG.md` (S202 `[Unreleased]` entry),
+`PROJECT_LEARNINGS.md` (Learning 188), `SESSION_NOTES.md` (this
+handoff + the 1B stub it superseded). **Read FIRSTHAND (to ground
+NEWS):** `NEWS.Rmd` dev Changes/New-features subsections + the released
+`2.0.0` section (confirmed line 275 is released + UI-scoped), the S201
+handoff. **GitHub:** PR \#85 (merged `b2b0c934`), issue \#2 (now
+CLOSED). **Scratch:** `pr_body_s3.md` (the greppable PR body). **NOT
+committed (standing keep):** `PED_GV_AUDIT_2026-05-30.html` (untracked);
+`.DS_Store`.
+
+**Gotchas:** (1) **Issue \#2 is CLOSED** – all 3 slices on `master`; do
+NOT reopen or re-publish. (2) **The released 2.0.0 NEWS line 275**
+(UI-tab default 1000) is intentionally UNTOUCHED (Learning 188) – do NOT
+“reconcile” it; it correctly documents the UI and released notes are
+immutable. (3) **The intentionally-left 5000 survivors remain**
+(deferred-`fg` machinery `calcFG`/`calcFEFG`/`assignAlleles`; factual
+data provenance – `lacy1989PedAlleles` genuinely has 5000 columns,
+example reports built at `guIter=10000`); `assignAlleles.R:18` “Default
+is 5000.” is a pre-existing latent doc bug (`assignAlleles` has NO
+default for `n`) – out of scope unless \#82’s `fg` work touches it. (4)
+**`vignettes/gvaConvergence.Rmd` keeps its prose qualitative on
+purpose** (seed/RNG-dependent `recommendedIter`: 800 at seed 11, 200 at
+seed 22) – do NOT “tighten” it to assert a specific value. (5) **\#82
+(`fg` SE) is the thematically-connected next** – the
+founder-genome-equivalent companion to the `guSE`/`gvaConvergence` work.
+(6) Carried standing keeps (unchanged): package **ARCHIVED on CRAN
+2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without a LabKey credential/config; exactly ONE codecov config
+(`codecov.yml`); NEWS render traps CLOSED at source
+(`html_preview:false`+`md_extensions:"-smart"`, 155); `git pull` is
+rebase + chokes on `.DS_Store` -\> use `fetch`+`reset` (135); post-merge
+`fetch` before ancestor-gated `reset --hard` (146); build-equivalent is
+`devtools::check(vignettes = FALSE)` = 0/0/0 (161); a 0/0/0 check does
+NOT imply spelling-clean -\> run `spell_check_package` (175); the
+`getConfigApiKey` latent comment-strip bug remains UNFIXED (174);
+`man/calcGUSE.Rd` re-wraps under the local roxygen on every `document()`
+-\> revert it if an unrelated `document()` touches it.
+
 ### What Session 201 Did
 
 **Deliverable:** **Implement Slice 3 of issue \#2** – the slice whose
