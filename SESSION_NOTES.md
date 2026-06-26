@@ -16,10 +16,18 @@ calcFG-calcFEFG name-align / Slice 2 validation gate / Slice 3 surface
 added the deferred `NEWS.md` bullets, re-ran the full merge gate on the
 branch tip, pushed the branch, and **opened PR \#87** (base `master`)
 whose body carries `Closes #82` and `Closes #86` (both verified linked).
-**\#82 and \#86 stay OPEN until the owner merges PR \#87.** **Started /
-Completed:** 2026-06-26 / 2026-06-26 **Status:** **DONE.** **Publish
-session** – no production code changed, so TDD code-phases are N/A
-(added NEWS bullets + close-out docs only; phase declared N/A each
+**Then the owner directed the merge IN-SESSION** (changed from the “you
+merge it” pick): I merged PR \#87 with a **merge commit**
+(`gh pr merge 87 --merge`). **POST-MERGE FINAL STATE:** PR \#87
+**MERGED** (merge commit `a841ff1f` “Merge pull request \#87 from
+rmsharp/issue-82-fgse”; S205-S208 + the two S209 commits preserved) -\>
+**\#82 and \#86 CLOSED**; `master` advanced `19e4b3d2 -> a841ff1f`; the
+merged `issue-82-fgse` branch DELETED locally and on origin; **local
+master == origin/master == `a841ff1f`.** The publish deliverable is now
+FULLY complete (merged + both issues closed), not just PR-open.
+**Started / Completed:** 2026-06-26 / 2026-06-26 **Status:** **DONE.**
+**Publish session** – no production code changed, so TDD code-phases are
+N/A (added NEWS bullets + close-out docs only; phase declared N/A each
 response). **0 stakeholder corrections.** Owner directed “#82 PUBLISH
 session” at Phase 1; answered 1 publish-method `AskUserQuestion`: merge
 method = **“open PR, you merge it”**; history style = **“merge commit,
@@ -104,11 +112,13 @@ precedent exactly, so the package changelog reads consistently.
 `AskUserQuestion` (merge vs squash) is only ADVISORY on the owner-merges
 path – I can put “use a merge commit” in the PR body but cannot enforce
 which button the owner clicks; (b) the original deliverable phrase
-“close \#82 AND \#86” is **owner-gated** on this path – the session ends
-with both still OPEN (correct, but the close happens at the owner’s
-merge, not in-session); (c) Phase-3E is N/A (no runtime change) –
-stated, not skipped. Capped at 9 by (b)’s gap between “publish” and
-“merged.”
+“close \#82 AND \#86” was **owner-gated** on the as-posed path – but the
+owner then directed the merge IN-SESSION, so I merged PR \#87 (merge
+commit) and **\#82/#86 are now CLOSED**, the merged branch deleted and
+`master` resynced; the deliverable fully completed in-session after all;
+(c) Phase-3E is N/A (no runtime change) – stated, not skipped. Capped at
+9 by the history-style question (a) being only advisory – not by (b),
+which resolved on the in-session merge.
 
 **Learnings:** **Learning 195** added to `PROJECT_LEARNINGS.md` – a
 publish session’s job is to make the owner’s merge SAFE and ONE-CLICK:
@@ -126,49 +136,39 @@ Carried as applied: \[\[consult-project-source-of-truth\]\],
 to origin; master stays == origin/master, no local-ahead drift). **This
 was NOT a TDD code-phase session** (publish/docs only).
 
-**=\> SUGGESTED NEXT = owner’s pick.** The publish is delivered as PR
-\#87; the next action is the owner’s. - **Owner merges PR \#87**
-(`https://github.com/rmsharp/nprcgenekeepr/pull/87`) using **“Create a
-merge commit”** (not squash) -\> **\#82 and \#86 auto-close** and
-`master` advances. **After merge:**
-`git checkout master && git fetch origin && git reset --hard origin/master`
-(gotcha: `git pull` is rebase + chokes on `.DS_Store`, use fetch+reset,
-135); then delete the merged branch locally + on origin
-(`git branch -d issue-82-fgse`;
-`git push origin --delete issue-82-fgse`); re-run the dashboard +
-ghost-check. - **If the owner wants ME to merge instead** (changed
-mind): `gh pr merge 87 --merge` (merge commit) closes both issues. -
-**Possible version bump:** DESCRIPTION is `2.0.0` (dev);
+**=\> SUGGESTED NEXT = owner’s pick.** **Issue \#82 is fully DONE and
+shipped to `master`** (PR \#87 MERGED, merge commit `a841ff1f`); **\#86
+closed with it.** No \#82/#86 follow-up remains. Live threads: -
+**Possible version bump (owner-gated):** DESCRIPTION is `2.0.0` (dev);
 [`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)
 is new public API and
 [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-gained `fgSE`. A release/version decision is **owner-gated** – NOT done
-this session. - **Other open issues:** \#37, \#36, \#28,
-\#13/#12/#11/#10/#5; CRAN Phase 5 (owner-run; ARCHIVED on CRAN
-2025-07-29). **Do NOT** merge PR \#87 yourself (owner chose to merge
-it); **do NOT** push anything to `master` directly (the owner’s merge
-advances it); **do NOT** regenerate the bundled
-`pedWithGenotypeReport`/`qcPedGvReport` (owner chose additive); **do
-NOT** re-open the closed-on-merge issues.
+gained `fgSE`. A release/version decision is the owner’s – NOT done this
+session. - **Other open issues:** \#37, \#36, \#28, \#13/#12/#11/#10/#5;
+CRAN Phase 5 (owner-run; ARCHIVED on CRAN 2025-07-29). **Do NOT**
+re-open \#82/#86 (shipped on `master` via PR \#87); **do NOT**
+regenerate the bundled `pedWithGenotypeReport`/`qcPedGvReport` (owner
+chose additive – display degrades to bare FG for them).
 
 **Key files (this session):** **EDITED (publish commit `df7d54eb`, on
 branch `issue-82-fgse`/origin):** `NEWS.md`. **Close-out (separate
 commit on the branch, pushed to update PR \#87):** `CHANGELOG.md` (S209
 entry), `PROJECT_LEARNINGS.md` (Learning 195), `SESSION_NOTES.md` (this
-handoff + the 1B stub it superseded). **PR:** \#87 (base `master`, head
-`issue-82-fgse`). **NOT committed (standing keep):**
+handoff + the 1B stub it superseded). **PR:** \#87 (MERGED, merge commit
+`a841ff1f`). **Then a post-merge handoff-accuracy commit directly on
+`master`** (this update – `SESSION_NOTES.md` + `CHANGELOG.md` corrected
+to the MERGED/CLOSED state). **NOT committed (standing keep):**
 `PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
 
-**Gotchas:** (1) **PR \#87 is OPEN; \#82 and \#86 close ONLY when it
-merges** – both are confirmed `closingIssuesReferences` links. Owner
-merges with **“Create a merge commit”** (not squash) to keep S205-S208 +
-each slice’s issue refs. (2) **The branch is NOW on origin**
-(`origin/issue-82-fgse`, pushed this session) – after merge, delete it
-locally AND on origin. (3) **`master` == origin/master == `19e4b3d2`**
-(untouched this session); the owner’s merge is what advances it – do not
-push master directly. (4) **`gh pr view --json closingIssuesReferences`
-is NOT a field in the installed gh** – to re-verify the closing links
-use
+**Gotchas:** (1) **PR \#87 is MERGED** (merge commit `a841ff1f`, “Merge
+pull request \#87 from rmsharp/issue-82-fgse”); **\#82 and \#86 are
+CLOSED** (the verified `closingIssuesReferences` links fired on merge).
+(2) **The `issue-82-fgse` branch is DELETED** locally and on origin (it
+was merged – do not recreate it). (3) **`master` == origin/master ==
+`a841ff1f`** – the merge advanced it and local was resynced via
+`git fetch origin && git reset --hard origin/master` (gotcha 135). (4)
+**`gh pr view --json closingIssuesReferences` is NOT a field in the
+installed gh** – to re-verify the closing links use
 `gh api graphql -f query='{repository(owner:"rmsharp",name:"nprcgenekeepr"){pullRequest(number:87){closingIssuesReferences(first:10){nodes{number title}}}}}'`.
 (5) A single `Closes #82 #86` only links the FIRST issue – one keyword
 per issue, each on its own line (done). (6) Carried standing keeps

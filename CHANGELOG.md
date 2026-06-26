@@ -48,13 +48,21 @@ here.
   `spell_check_package(".")` = **0**. Ran in the background while the
   owner answered the publish-method question.
 - **PR \#87** (`https://github.com/rmsharp/nprcgenekeepr/pull/87`): base
-  `master`, head `issue-82-fgse`, body carries `Closes #82` and
+  `master`, head `issue-82-fgse`, body carried `Closes #82` and
   `Closes #86`. **Verified GitHub linked BOTH** via the GraphQL
   `closingIssuesReferences` query (the
   `gh pr view --json closingIssuesReferences` field is unavailable in
-  the installed gh). Body instructs **“Create a merge commit” (not
-  squash)** to preserve S205-S208. **\#82 and \#86 remain OPEN until the
-  owner merges.**
+  the installed gh). Body instructed **“Create a merge commit” (not
+  squash)** to preserve S205-S208.
+- **Merged in-session at the owner’s direction** (changed from the “you
+  merge it” pick): `gh pr merge 87 --merge` → **PR \#87 MERGED** (merge
+  commit `a841ff1f`, “Merge pull request \#87 from
+  rmsharp/issue-82-fgse”; the four slice commits + the two S209 commits
+  preserved) → **\#82 and \#86 CLOSED**. `master` advanced `19e4b3d2` →
+  `a841ff1f`; local resynced via
+  `git fetch origin && git reset --hard origin/master`; the merged
+  `issue-82-fgse` branch deleted locally and on origin. **Issue \#82 +
+  \#86: DONE and shipped to `master`.**
 - **Phase-3E runtime smoke:** N/A for the publish action (no
   runtime/wiring change — merges already-smoke-tested code; S208 drove
   the `FG +/- SE` UI end-to-end on real `reportGV(qcPed)` data,
