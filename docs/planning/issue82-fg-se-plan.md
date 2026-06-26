@@ -1,8 +1,10 @@
 # Issue #82 -- Sampling standard error for founder genome equivalents (`fg`)
 
-**Status:** PLAN (Session 203, 2026-06-25). Awaiting owner ratification of Section 5 before any
-implementation slice begins. This document is the deliverable of a planning session; implementation is
-separate sessions (one slice each), per `SESSION_RUNNER.md` (FM #18, no planning-to-implementation bleed).
+**Status:** PLAN (Session 203, 2026-06-25). **RATIFIED by owner, Session 204, 2026-06-25** -- D1-D6 + the
+slice plan are decided; the recorded choices are in **Section 5.1** and the checked **Section 9**. The
+deliverable of a planning session is this document; implementation is separate sessions (one slice each),
+per `SESSION_RUNNER.md` (FM #18, no planning-to-implementation bleed). **Slice 1 may now begin** -- in its
+own session, under strict TDD, after the executor confirms the ratified choices below.
 
 **Issue:** [#82](https://github.com/rmsharp/nprcgenekeepr/issues/82) -- "Report sampling uncertainty (SE)
 for founder genome equivalents (`fg`)". Split off from #2 (RATIFIED deferral S196; #2 plan
@@ -142,7 +144,11 @@ Recipe (per pedigree), all names ALIGNED BY FOUNDER ID (see Dragon D-3):
 3. R    <- rowsum(retmat, fdf$id) / 2          # F x K matrix in {0,0.5,1}; rowMeans(R) == calcRetention() exactly
    rhat <- rowMeans(R)
 4. p    <- fc$p[names(rhat)]                    # ALIGN BY NAME (r is id-sorted; p is getFounders-ordered)
-5. keep <- !is.na(rhat) & rhat > 0 & !is.na(p) # same founder set the FG point estimate uses (Section 2.6)
+5. ## D4 RATIFIED (S204) = HARD-FAIL. A contributing founder (p>0) retained in ZERO drops (r==0) invalidates
+   ## the WHOLE estimate -- detect it BEFORE the keep-filter and return NA + warning. Do NOT soft-drop it
+   ## (an earlier draft of this recipe used `keep` for this case; the ratified behavior is hard-fail). See 2.6 case 3.
+   if (any(!is.na(p) & p > 0 & !is.na(rhat) & rhat == 0)) { warning("FG/SE undefined: founder(s) with p>0 retained in 0 of K drops; raise K"); return(NA_real_) }
+   keep <- !is.na(rhat) & rhat > 0 & !is.na(p) # NOW only the harmless p==0 (0/0=NaN) / r==NA drops (2.6 cases 1-2)
    S    <- sum((p[keep]^2) / rhat[keep]);  FG <- 1 / S
 6. g    <- numeric(length(rhat)); g[keep] <- FG^2 * (p[keep]^2) / (rhat[keep]^2)
 7. y_k  <- as.numeric(crossprod(g, R))         # length-K influence series
@@ -263,6 +269,40 @@ fixture for the "SE shrinks with K" test; (G4) no report-level `fgSE` coverage y
 A separate scope/approach `AskUserQuestion` will pose D1-D6 for ratification before the executor declares RED
 on Slice 1 (mirrors #2 Section 8).
 
+### 5.1 Ratified outcomes (Session 204, 2026-06-25)
+
+The owner ratified all six decisions plus the slice plan via a four-question `AskUserQuestion` gate, after a
+3-agent adversarial re-verification of the recommendations against source (all six verdicts: sound). The
+recorded choices -- **these govern Slice 1+**:
+
+- **D1 (estimator): ACCEPTED as recommended.** Influence/score-form delta method (full within-iteration
+  covariance) as production primary + a mandatory column-bootstrap cross-check; bootstrap is the reported
+  value when retention is thin. Diagonal/independence approximation rejected. The ~46% full-vs-diagonal cost
+  figure is a workflow output (S203) and is **re-validated firsthand on a real deep pedigree in Slice 2
+  before any SE is exposed** -- not load-bearing for the decision.
+- **D2 (silent-collapse guard): FOLD INTO SLICE 1** (not a separate issue). `calcFG`/`calcFEFG` get the
+  guard as the first action of Slice 1.
+- **D3 (surfacing): ACCEPTED, display INLINE `FG +/- SE`** (not a separate "FG SE" row), across all 5
+  surfaces (reportGV return, GV tab, Summary-Statistics founder table, text `summary()`, `makeFounderStatsTable`
+  HTML). FG is a colony-level scalar -> one SE number, no per-animal column.
+- **D4 (degeneracy): HARD-FAIL.** When `any(p>0 & r==0)`, `calcFG`/`calcFEFG`/`calcFGSE` return `NA` + a
+  warning for the WHOLE FG and its SE and advise raising `K` -- they do **NOT** soft-drop the unretained
+  founder and report on the rest. (Verification caught that the Section 2.5 recipe's `keep`-filter pseudocode
+  silently implied soft-success; the recipe step 5 is now reconciled to hard-fail, matching Section 2.6 case
+  3.) The skew-flag threshold `n_f = K*r_f < ~5-10` is adopted as a **documented heuristic** (it is a soft
+  bootstrap-preferred flag, not a hard gate; the delta-vs-bootstrap disagreement check in 2.5 is the real
+  backstop) -- an executor may tune the exact cutoff with a one-line note.
+- **D5 (crafted fixture): YES, BUILD IT** -- a tiny pedigree + hand-built allele table with one `p_f>0,r_f=0`
+  founder, one `p_f=0,r_f=0` founder, and a mid-range-`r` case.
+- **D6 (documentation): BROADEST SCOPE.** Reconcile every FG surface -- the plan's D6 list
+  (`genetic_value.html`, `summary_stats.html`, `population_genetics_terms.html`,
+  `manual_components/_summary_statistics.Rmd`) **AND** the longer-form `gvAndBgDesc.html` and the GVA vignette
+  (`vignettes/.../_genetic_value_analysis.Rmd` -- executor confirms the exact path) -- so the FG SE is
+  explained wherever FG is described, matching the #2 Slice 3 precedent and the "explain where displayed"
+  principle. Include the finite-K Jensen caveat (2.7).
+- **Slice plan: CONFIRMED.** 4 sessions (Slice 1 + Slice 2 + Slice 3 + a publish session) in
+  compute -> validate -> surface order; Slice 2 is the owner's "validate before expose" gate.
+
 ---
 
 ## 6. Implementation plan -- vertical slices (one session each)
@@ -327,8 +367,11 @@ this planning session.
 
 - **Deliverable:** thread `fgSE` into `reportGV()`'s return next to `fg` (`reportGV.R:236-238`, `@return`
   `14-27`); display in `modGeneticValue` gvSummary, `modSummaryStats` founder table, `summary.nprcgenekeeprErr`
-  text, and `makeFounderStatsTable` HTML, per D3; add the plain-language FG-SE note to `genetic_value.html`
-  and reconcile the parallel doc surfaces (D6). Integration test mirroring `test_reportGV.R:363-398`
+  text, and `makeFounderStatsTable` HTML, per D3 (display **inline `FG +/- SE`**); add the plain-language
+  FG-SE note to `genetic_value.html` and reconcile the **broad** set of parallel doc surfaces ratified under
+  D6 (S204): `summary_stats.html`, `population_genetics_terms.html`, `manual_components/_summary_statistics.Rmd`,
+  AND the longer-form `gvAndBgDesc.html` + the GVA vignette (`_genetic_value_analysis.Rmd`); include the
+  finite-K Jensen caveat (2.7). Integration test mirroring `test_reportGV.R:363-398`
   (`fgSE` present, numeric, scalar, `>= 0`) and a `modGeneticValue`/`modSummaryStats` display assertion. NEWS
   bullet (folds into the publish PR, Learning 157a -- separate session).
 - **DONE:** wherever `FG` is shown, its sampling SE is shown; the guidance explains it; one consistent story;
@@ -372,14 +415,13 @@ this planning session.
 
 ## 9. Owner ratification checklist
 
-- [ ] **D1** estimator (influence-form delta + bootstrap cross-check)
-- [ ] **D2** fold the `calcFG`/`calcFEFG` silent-collapse guard into Slice 1 (vs separate issue)
-- [ ] **D3** surfacing scope + display format (`FG +/- SE` inline vs separate row)
-- [ ] **D4** degeneracy / thin-retention policy + effective-count threshold
-- [ ] **D5** build the crafted deterministic fixture
-- [ ] **D6** user-facing documentation scope (which surfaces to reconcile)
-- [ ] Confirm the slice count (4 sessions: Slice 1 + Slice 2 + Slice 3 + publish) and ordering
-      (compute -> validate -> surface) is acceptable.
+- [x] **D1** estimator: influence-form delta + mandatory bootstrap cross-check. **RATIFIED S204** (Section 5.1).
+- [x] **D2** fold the `calcFG`/`calcFEFG` silent-collapse guard into Slice 1 (NOT a separate issue). **RATIFIED S204.**
+- [x] **D3** surface in all 5 places; display **inline `FG +/- SE`**. **RATIFIED S204.**
+- [x] **D4** degeneracy policy: **HARD-FAIL** (`any(p>0 & r==0)` -> `NA` + warning for FG AND SE; advise raising K). Skew threshold `n_f = K*r_f < ~5-10` adopted as a documented heuristic (bootstrap-vs-delta disagreement is the real backstop). **RATIFIED S204.**
+- [x] **D5** build the crafted deterministic fixture. **RATIFIED S204.**
+- [x] **D6** documentation scope: **broadest** -- all FG surfaces incl. the longer-form `gvAndBgDesc.html` and the GVA vignette. **RATIFIED S204.**
+- [x] Slice count (4 sessions: Slice 1 + Slice 2 + Slice 3 + publish) + ordering (compute -> validate -> surface): **CONFIRMED S204.**
 
 ## 10. References
 
