@@ -30,6 +30,13 @@ is the vector of founder mean contributions to the current descendants
 and `r` is the mean number of founder alleles retained in the gene
 dropping experiment.
 
+Returns `NA` with a warning when a contributing founder (`p > 0`) is
+retained in zero of the gene-drop iterations (`r == 0`): that term is
+`p^2 / 0 = Inf`, which would otherwise collapse `FG` silently to 0.
+Raise the number of iterations. See
+[`calcFGSE`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)
+for the sampling standard error of `FG`.
+
 ## Examples
 
 ``` r
@@ -59,11 +66,11 @@ pedFactors["gen"] <- findGeneration(
 pedFactors$population <- getGVPopulation(pedFactors, NULL)
 alleles <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,
   genotype = NULL,
-  n = 5000, updateProgress = NULL
+  n = 1000, updateProgress = NULL
 )
 allelesFactors <- geneDrop(pedFactors$id, pedFactors$sire, pedFactors$dam,
   pedFactors$gen,
-  genotype = NULL, n = 5000,
+  genotype = NULL, n = 1000,
   updateProgress = NULL
 )
 fg <- calcFG(ped, alleles)

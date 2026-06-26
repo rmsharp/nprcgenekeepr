@@ -55,6 +55,9 @@
 - [`calcFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFG.md)
   : Calculates Founder Genome Equivalents
 
+- [`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)
+  : Calculates the sampling standard error of founder genome equivalents
+
 - [`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md)
   : Calculates genome uniqueness for each ID that is part of the
   population

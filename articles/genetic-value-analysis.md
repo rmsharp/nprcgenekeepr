@@ -102,8 +102,8 @@ gv <- reportGV(trimmedPed,
 )
 names(gv)
 #>  [1] "report"          "kinship"         "gu"              "fe"             
-#>  [5] "fg"              "maleFounders"    "femaleFounders"  "nMaleFounders"  
-#>  [9] "nFemaleFounders" "total"
+#>  [5] "fg"              "fgSE"            "maleFounders"    "femaleFounders" 
+#>  [9] "nMaleFounders"   "nFemaleFounders" "total"
 ```
 
 > The small `guIter` above keeps this article quick to render. For real
@@ -211,19 +211,28 @@ c(foundersKnown = gv$total,
   femaleFounders = gv$nFemaleFounders)
 #>  foundersKnown   maleFounders femaleFounders 
 #>             20              3             17
-round(c(fe = gv$fe, fg = gv$fg), 2)
-#>     fe     fg 
-#> 109.67  47.62
+round(c(fe = gv$fe, fg = gv$fg, fgSE = gv$fgSE), 2)
+#>     fe     fg   fgSE 
+#> 109.67  47.62   0.29
 ```
 
 - **Founder equivalents** (`fe = 1 / sum(p^2)`, where `p` is each
   founder’s proportional genetic contribution) is the *effective* number
   of founders – the number of equally contributing founders that would
-  give the same diversity as the actual, unequal contributions.
+  give the same diversity as the actual, unequal contributions. It is
+  deterministic, so it has no sampling standard error.
 - **Founder genome equivalents** (`fg`) goes further, also accounting
   for the founder alleles *lost* to genetic drift over the generations
   (estimated from the same gene drop). Because some alleles are always
-  lost, `fg` is smaller than `fe`.
+  lost, `fg` is smaller than `fe`. Because `fg` is a Monte Carlo
+  estimate,
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+  also returns `fgSE`, its sampling standard error (shown above and
+  displayed inline as `fg +/- fgSE` wherever FG appears); it shrinks
+  roughly as `1 / sqrt(iterations)`. At small iteration counts `fg` also
+  carries a slight finite-sample (Jensen) bias that the standard error
+  does not capture, so prefer more iterations when the precision of `fg`
+  matters.
 
 Together they say, in effect, “the colony’s diversity is equivalent to
 this many ideal founders” – a smaller number signals a narrower gene

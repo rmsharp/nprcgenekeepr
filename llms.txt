@@ -262,6 +262,9 @@ groups and restricts the number of males to one per group.
 - [`calcFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFG.md)
   : Calculates Founder Genome Equivalents
 
+- [`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)
+  : Calculates the sampling standard error of founder genome equivalents
+
 - [`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md)
   : Calculates genome uniqueness for each ID that is part of the
   population
@@ -873,6 +876,8 @@ groups and restricts the number of males to one per group.
   Groups](https://github.com/rmsharp/nprcgenekeepr/articles/breeding-group-formation.md):
 - [GeneKeepR: A Colony Manager's
   Tutorial](https://github.com/rmsharp/nprcgenekeepr/articles/ColonyManagerTutorial.md):
+- [Validating the Founder-Genome-Equivalent Standard
+  Error](https://github.com/rmsharp/nprcgenekeepr/articles/fg-se-validation.md):
 - [Genetic Value
   Analysis](https://github.com/rmsharp/nprcgenekeepr/articles/genetic-value-analysis.md):
 - [Gene-Drop Iteration

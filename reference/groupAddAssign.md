@@ -146,6 +146,8 @@ geneticValue <- reportGV(ped,
   byID = TRUE,
   updateProgress = NULL
 )
+#> Warning: Founder genome equivalents undefined: founder(s) with positive contribution were retained in 0 of the gene-drop iterations; raise the number of iterations (K).
+#> Warning: Founder genome equivalents undefined: founder(s) with positive contribution were retained in 0 of the gene-drop iterations; raise the number of iterations (K).
 trimmedGeneticValue <- reportGV(trimmedPed,
   guIter = 50, # should be >= 1000
   guThresh = 3,

@@ -429,7 +429,8 @@ Each plot has an accompanying download button to export as PNG.
 
 The tab reports founder statistics including: - Number of known
 founders, male founders, female founders - Founder equivalents and
-founder genome equivalents
+founder genome equivalents (the latter is a gene-drop estimate, shown
+inline with its sampling standard error as `FG +/- SE`)
 
 For Mean Kinship and Genome Uniqueness, displays the Tukey five-number
 summary: minimum, 1^(st) quartile, median, mean, 3^(rd) quartile, and

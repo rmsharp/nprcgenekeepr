@@ -41,6 +41,7 @@ of iterations."><meta property="og:image" content="https://github.com/rmsharp/np
     <li><a class="dropdown-item" href="../articles/age-sex-pyramid.html">Age-Sex Pyramid Plots</a></li>
     <li><a class="dropdown-item" href="../articles/breeding-group-formation.html">Forming Breeding Groups</a></li>
     <li><a class="dropdown-item" href="../articles/ColonyManagerTutorial.html">GeneKeepR: A Colony Manager's Tutorial</a></li>
+    <li><a class="dropdown-item" href="../articles/fg-se-validation.html">Validating the Founder-Genome-Equivalent Standard Error</a></li>
     <li><a class="dropdown-item" href="../articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/gvaConvergence.html">Gene-Drop Iteration Convergence</a></li>
     <li><a class="dropdown-item" href="../articles/offline-focal-animal-workflow.html">Building a Focal-Animal Pedigree Offline</a></li>
@@ -214,6 +215,8 @@ that is specific for each group formed.</p>
 <span class="r-in"><span>  byID <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>  updateProgress <span class="op">=</span> <span class="cn">NULL</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Founder genome equivalents undefined: founder(s) with positive contribution were retained in 0 of the gene-drop iterations; raise the number of iterations (K).</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Founder genome equivalents undefined: founder(s) with positive contribution were retained in 0 of the gene-drop iterations; raise the number of iterations (K).</span>
 <span class="r-in"><span><span class="va">trimmedGeneticValue</span> <span class="op">&lt;-</span> <span class="fu"><a href="reportGV.html">reportGV</a></span><span class="op">(</span><span class="va">trimmedPed</span>,</span></span>
 <span class="r-in"><span>  guIter <span class="op">=</span> <span class="fl">50</span>, <span class="co"># should be &gt;= 1000</span></span></span>
 <span class="r-in"><span>  guThresh <span class="op">=</span> <span class="fl">3</span>,</span></span>

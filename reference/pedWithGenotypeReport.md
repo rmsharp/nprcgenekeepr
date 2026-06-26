@@ -10,7 +10,8 @@ data(pedWithGenotypeReport)
 
 ## Format
 
-An object of class `list` (inherits from `GVnprcmanag`) of length 8.
+An object of class `list` (inherits from `nprcgenekeeprGV`) of length
+10.
 
 ## Source
 

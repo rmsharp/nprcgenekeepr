@@ -38,6 +38,7 @@
     <li><a class="dropdown-item" href="../articles/age-sex-pyramid.html">Age-Sex Pyramid Plots</a></li>
     <li><a class="dropdown-item" href="../articles/breeding-group-formation.html">Forming Breeding Groups</a></li>
     <li><a class="dropdown-item" href="../articles/ColonyManagerTutorial.html">GeneKeepR: A Colony Manager's Tutorial</a></li>
+    <li><a class="dropdown-item" href="../articles/fg-se-validation.html">Validating the Founder-Genome-Equivalent Standard Error</a></li>
     <li><a class="dropdown-item" href="../articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/gvaConvergence.html">Gene-Drop Iteration Convergence</a></li>
     <li><a class="dropdown-item" href="../articles/offline-focal-animal-workflow.html">Building a Focal-Animal Pedigree Offline</a></li>
@@ -366,7 +367,7 @@ individual (homozygous alleles will be counted as 1).</p></li>
 <span><span class="co">## Female Founders: 122</span></span>
 <span><span class="co">## Total Founders: 263 </span></span>
 <span><span class="co">## Founder Equivalents: 241.84 </span></span>
-<span><span class="co">## Founder Genome Equivalents: 164.01 </span></span>
+<span><span class="co">## Founder Genome Equivalents: 164.01 +/- 0.04 </span></span>
 <span><span class="co">## Live Offspring: 4052 </span></span>
 <span><span class="co">## High Value Individuals: 1593 </span></span>
 <span><span class="co">## Low Value Individuals: 729</span></span></code></pre>
@@ -387,7 +388,7 @@ information that the full pedigree has for the focal animals.</p>
 <span><span class="co">## Female Founders: 17</span></span>
 <span><span class="co">## Total Founders: 20 </span></span>
 <span><span class="co">## Founder Equivalents: 109.67 </span></span>
-<span><span class="co">## Founder Genome Equivalents: 47.49 </span></span>
+<span><span class="co">## Founder Genome Equivalents: 47.49 +/- 0.32 </span></span>
 <span><span class="co">## Live Offspring: 321 </span></span>
 <span><span class="co">## High Value Individuals: 233 </span></span>
 <span><span class="co">## Low Value Individuals: 94</span></span></code></pre>
@@ -402,8 +403,8 @@ of code.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">trimmedGeneticValue</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] "report"          "kinship"         "gu"              "fe"             </span></span>
-<span><span class="co">##  [5] "fg"              "maleFounders"    "femaleFounders"  "nMaleFounders"  </span></span>
-<span><span class="co">##  [9] "nFemaleFounders" "total"</span></span></code></pre>
+<span><span class="co">##  [5] "fg"              "fgSE"            "maleFounders"    "femaleFounders" </span></span>
+<span><span class="co">##  [9] "nMaleFounders"   "nFemaleFounders" "total"</span></span></code></pre>
 <p>The <em>report</em> object (an R dataframe) can in-turn be
 examined.</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
@@ -1226,7 +1227,7 @@ that have generated the errors.</p>
 <code class="sourceCode R"><span><span class="va">pedOne</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="../reference/pedOne.html">pedOne</a></span> <span class="co"># put it in the local environment</span></span>
 <span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">pedOne</span>, minParentAge <span class="op">=</span> <span class="fl">0.0</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `qcStudbook()`:</span></span></span>
-<span><span class="co">## <span style="color: #BBBB00;">!</span> Parents with low age at birth of offspring are listed in /tmp/RtmpqMiFOR/lowParentAge.csv.</span></span></code></pre>
+<span><span class="co">## <span style="color: #BBBB00;">!</span> Parents with low age at birth of offspring are listed in /tmp/Rtmpbql851/lowParentAge.csv.</span></span></code></pre>
 <p>The contents of <em>lowParentAge.csv</em> is shown below.</p>
 <table class="table">
 <colgroup>
@@ -1411,8 +1412,8 @@ the following line of code:</p>
 <span><span class="co">## 2941 0VLW56 6KPKH7 MMEHXV</span></span></code></pre>
 <div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">elapsed_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_elapsed_time_str.html">get_elapsed_time_str</a></span><span class="op">(</span><span class="va">start_time</span><span class="op">)</span></span></code></pre></div>
-<p>The current date and time is 2026-06-26 02:29:40.872937. The
-processing time for this document was 19 seconds..</p>
+<p>The current date and time is 2026-06-26 17:41:20.228509. The
+processing time for this document was 20 seconds..</p>
 <div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.6.1 (2026-06-24)</span></span>

@@ -12,6 +12,8 @@
   Groups](https://github.com/rmsharp/nprcgenekeepr/articles/breeding-group-formation.md):
 - [GeneKeepR: A Colony Manager's
   Tutorial](https://github.com/rmsharp/nprcgenekeepr/articles/ColonyManagerTutorial.md):
+- [Validating the Founder-Genome-Equivalent Standard
+  Error](https://github.com/rmsharp/nprcgenekeepr/articles/fg-se-validation.md):
 - [Genetic Value
   Analysis](https://github.com/rmsharp/nprcgenekeepr/articles/genetic-value-analysis.md):
 - [Gene-Drop Iteration

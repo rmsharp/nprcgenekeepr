@@ -93,7 +93,7 @@ summary(geneticValue)
 #> Female Founders: 17
 #> Total Founders: 20 
 #> Founder Equivalents: 109.67 
-#> Founder Genome Equivalents: 47.01 
+#> Founder Genome Equivalents: 47.01 +/- 0.31 
 #> Live Offspring: 321 
 #> High Value Individuals: 238 
 #> Low Value Individuals: 89 
@@ -104,7 +104,7 @@ summary(trimmedGeneticValue)
 #> Female Founders: 17
 #> Total Founders: 20 
 #> Founder Equivalents: 116.8 
-#> Founder Genome Equivalents: 65.85 
+#> Founder Genome Equivalents: 65.85 +/- 0.19 
 #> Live Offspring: 1004 
 #> High Value Individuals: 288 
 #> Low Value Individuals: 234 

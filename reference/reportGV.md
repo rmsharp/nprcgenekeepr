@@ -95,10 +95,15 @@ genome uniqueness values and a `guSE` column of their standard errors;
 `gu` and `guSE` are reported as 0 for unknown-origin both-unknown
 "Undetermined" animals, whose apparent uniqueness is an artifact of
 unknown parentage (issue \#76)), `fe` (founder equivalents), `fg`
-(founder genome equivalents), `maleFounders` and `femaleFounders`
-(dataframes of the known male and female founder records),
-`nMaleFounders` and `nFemaleFounders` (the counts of those founders),
-and `total` (the total number of known founders).
+(founder genome equivalents), `fgSE` (the Monte Carlo sampling standard
+error of `fg`, computed from the same gene drop; a single colony-level
+number, `NA` when a contributing founder is retained in zero gene-drop
+iterations – see
+[`calcFGSE`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)),
+`maleFounders` and `femaleFounders` (dataframes of the known male and
+female founder records), `nMaleFounders` and `nFemaleFounders` (the
+counts of those founders), and `total` (the total number of known
+founders).
 
 ## Details
 

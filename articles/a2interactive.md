@@ -373,7 +373,7 @@ summary(geneticValue)
     ## Female Founders: 122
     ## Total Founders: 263 
     ## Founder Equivalents: 241.84 
-    ## Founder Genome Equivalents: 164.01 
+    ## Founder Genome Equivalents: 164.01 +/- 0.04 
     ## Live Offspring: 4052 
     ## High Value Individuals: 1593 
     ## Low Value Individuals: 729
@@ -399,7 +399,7 @@ summary(trimmedGeneticValue)
     ## Female Founders: 17
     ## Total Founders: 20 
     ## Founder Equivalents: 109.67 
-    ## Founder Genome Equivalents: 47.49 
+    ## Founder Genome Equivalents: 47.49 +/- 0.32 
     ## Live Offspring: 321 
     ## High Value Individuals: 233 
     ## Low Value Individuals: 94
@@ -418,8 +418,8 @@ names(trimmedGeneticValue)
 ```
 
     ##  [1] "report"          "kinship"         "gu"              "fe"             
-    ##  [5] "fg"              "maleFounders"    "femaleFounders"  "nMaleFounders"  
-    ##  [9] "nFemaleFounders" "total"
+    ##  [5] "fg"              "fgSE"            "maleFounders"    "femaleFounders" 
+    ##  [9] "nMaleFounders"   "nFemaleFounders" "total"
 
 The *report* object (an R dataframe) can in-turn be examined.
 
@@ -976,7 +976,7 @@ ped <- qcStudbook(pedOne, minParentAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpqMiFOR/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/Rtmpbql851/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -1137,8 +1137,8 @@ examplePedigree[unlist(exampleLoops), c("id", "sire", "dam")][1L:10L, ]
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-06-26 02:29:40.872937. The processing
-time for this document was 19 seconds..
+The current date and time is 2026-06-26 17:41:20.228509. The processing
+time for this document was 20 seconds..
 
 ``` r
 
