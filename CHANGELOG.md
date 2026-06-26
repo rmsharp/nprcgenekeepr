@@ -15,6 +15,66 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-26 — Regenerated the bundled GV example reports to carry `fgSE` and corrected a non-reproducible `fg` (Session 210)
+
+- **Deliverable (owner-directed, single item):** regenerate the two
+  bundled Genetic Value reports (`data/qcPedGvReport.RData`,
+  `data/pedWithGenotypeReport.RData`) so they carry `fgSE` (added to
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)’s
+  return in S208) and make the necessary corrections. **Strict TDD**
+  (RED → GREEN; phase declared each response; PRE-RED→RED + RED→GREEN
+  `AskUserQuestion`-gated; the `fg`-correction fork re-surfaced +
+  re-gated mid-GREEN; no REFACTOR). **0 stakeholder corrections.** On
+  branch `regen-bundled-gvreports-fgse`. Commit `e8c6745f`.
+- **Discovery — S206 had saved a NON-reproducible `fg`.** The bundled
+  `fg` was `52.7641277`, but the documented recipe
+  (`set_seed(10); reportGV(ped, guIter = 10000)`) deterministically
+  yields **`52.7546854`** (display `52.75`) at BOTH S206’s own code
+  state (commit `83d8640d`, verified in an isolated `git worktree`) and
+  HEAD. So S206’s value was a contaminated RNG-state artifact, never
+  reproducible from its own recipe — and was the value S206’s
+  investigation agent originally computed before S206 “corrected” it.
+  The regeneration adopts the reproducible value, making the bundled
+  data match its documented recipe for the first time. `fe`
+  (deterministic) unchanged at `77.0402760`; new `fgSE` = `0.0130413278`
+  (display `0.01`).
+- **Purely additive to the user-visible tables.** Old-vs-new comparison:
+  `$report` (`gu`/`rank`/`value`), the `$gu` vector, and `$kinship` are
+  byte-identical (`gu` is integer-percent, too coarse to register the
+  small gene-drop difference; kinship is deterministic). ONLY `fg`
+  changed (+ `fgSE` added). **No vignette or `@example` output changes**
+  — confirmed: no vignette/example reads `fg` from these objects (the
+  GVA article computes `fg`/`fgSE` LIVE on `examplePedigree`, not the
+  bundled reports).
+- **Tests (RED-first):** added a bundled-report `fgSE`
+  present/finite/\>0 assertion (`test_reportGV.R`) + a
+  [`summary()`](https://rdrr.io/r/base/summary.html) `52.75 +/- <SE>`
+  surfacing assertion (`test_summary.nprcgenekeeprGV.R`); rewrote the
+  absent-`fgSE` backward-compat fixture to STRIP `fgSE` from a copy
+  (degrade-to-bare-FG tested independent of the bundled object);
+  corrected the \#86 value pin `52.7641277 → 52.7546854` and the
+  `52.76 → 52.75` display patterns. `test_modSummaryStats.R` unchanged
+  (synthetic `52.76` fixture, independent of bundled data).
+- **`resaveRdaFiles` scoped to the two files** —
+  `tools::resaveRdaFiles("data/")` recompresses the WHOLE directory
+  (touched all 19 `.RData`); restored via `git checkout -- data/` and
+  re-ran scoped to the two report paths so only they changed.
+- **Verify:** `devtools::check(vignettes=FALSE)` = **0/0/0** (ran all
+  `@examples` + spelling); full suite **0 failed / 0 error**;
+  `spell_check_package(".")` = **0**; only `data/qcPedGvReport.RData` +
+  `data/pedWithGenotypeReport.RData` modified. **Phase-3E:** the
+  `test_summary` assertion drives the real
+  [`summary()`](https://rdrr.io/r/base/summary.html) render on the
+  regenerated object showing `52.75 +/- 0.01` — runtime path exercised.
+- **Follow-up filed:** issue **\#88** — the GVA article’s Quarto
+  `_freeze` cache is stale (frozen output omits `fgSE`, predating S208);
+  a doc-cache re-render, found incidentally, NOT caused by this change.
+- **Files:** `data/qcPedGvReport.RData`,
+  `data/pedWithGenotypeReport.RData`, `tests/testthat/test_reportGV.R`,
+  `tests/testthat/test_summary.nprcgenekeeprGV.R`, `NEWS.md` (commit
+  `e8c6745f`); close-out — `CHANGELOG.md` (this entry),
+  `PROJECT_LEARNINGS.md` (Learning 196), `SESSION_NOTES.md` (handoff).
+
 ### 2026-06-26 — Published the issue \#82 branch: opened PR \#87 (FG `+/- SE` + \#86 fix) for owner merge; **\#82 and \#86 close on merge** (Session 209)
 
 - **Deliverable (owner pick, single item):** the \#82 PUBLISH session —

@@ -224,10 +224,13 @@
     founders were unsorted. Both functions now align the contribution
     and retention vectors by founder identifier. The two bundled example
     Genetic Value reports (`qcPedGvReport` and `pedWithGenotypeReport`)
-    carried the incorrect value and have been regenerated: their founder
-    genome equivalents change from 39.92 to the correct 52.76. Pedigrees
-    whose founders were already sorted (including the `lacy1989`
-    reference) are unaffected.
+    carried the incorrect value and have been regenerated from the
+    documented recipe: their founder genome equivalents change from
+    39.92 to the correct 52.75, and the reports now also carry the
+    matching `fgSE`, so
+    [`summary()`](https://rdrr.io/r/base/summary.html) of either shows
+    `FG +/- SE`. Pedigrees whose founders were already sorted (including
+    the `lacy1989` reference) are unaffected.
 - New features
   - Added the exported
     [`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md),
