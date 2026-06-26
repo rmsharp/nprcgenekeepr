@@ -87,6 +87,7 @@ alleleFreq
 allelic
 baseUrl
 birthdate
+bottlenecked
 byID
 caTools
 calculateSexRatio
@@ -121,6 +122,7 @@ de
 deidentified
 designators
 deterministically
+diag
 dir
 dontrun
 donttest
@@ -291,6 +293,7 @@ reportGV
 req
 reselect
 resetPopulation
+retentions
 rhesusGenotypes
 rhesusPedigree
 rlang
