@@ -15,6 +15,55 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-27 — Verified, documented, and closed issue \#88: the GVA article’s published `fgSE` was never stale (Session 211)
+
+- **Deliverable (owner pick: “Verify, document, close”; single item):**
+  dispose of issue \#88 (“the GVA article’s Quarto `_freeze` is stale →
+  the published article omits `fgSE`”). **Verification + documentation
+  session — no production code, no tests; TDD code-phases N/A** (phase
+  declared N/A each response). **0 stakeholder corrections.** Owner
+  directed “work on issue \#88” at Phase 1; one `AskUserQuestion`
+  disposition gate (the issue premise was found false) → owner chose
+  **“Verify, document, close.”**
+- **Finding — the issue premise was FALSE for the published site.** The
+  live article already renders all three values:
+  `fe 109.67 / fg 47.62 / fgSE 0.29`
+  (`https://rmsharp.github.io/nprcgenekeepr/articles/genetic-value-analysis.html`).
+  Three independent confirmations: (1) the live page shows `fgSE`; (2)
+  `pkgdown.yaml` does a clean `checkout@v4` with **no freeze
+  restore/cache step** and installs the current source via `local::.`,
+  so CI **re-executes every article fresh** (the freeze lives under
+  gitignored `.quarto/`, `.gitignore:44`, and never reaches CI); (3) the
+  pkgdown CI run on the S210 merge **succeeded after `fgSE` shipped**
+  (run 28264621260, 2026-06-26 20:52).
+- **Root cause of the stale LOCAL freeze (no repo/published impact).**
+  The article loads
+  [`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/)
+  (the **installed** package); the local renv library held a stale 2.0.0
+  that predated `fgSE`
+  ([`renv::status`](https://rstudio.github.io/renv/reference/status.html)
+  out-of-sync — `calcFGSE` not exported, `reportGV` body has no `fgSE`),
+  so `gv$fgSE` was `NULL` at local freeze time. The stale output existed
+  only in the gitignored local freeze cache.
+- **Action:** cleared the stale local GVA freeze (gitignored,
+  regenerable — **commits nothing**; regenerating in place would
+  reproduce the stale output since the installed package still lacks
+  `fgSE`, so the correct refresh is to clear and let CI / a
+  post-`install()` build regenerate it). **Sibling audit:** all 6
+  articles publish (HTTP 200); GVA was the only one with a live
+  `fgSE`-dependent value (correct); `fg-se-validation` uses static
+  recorded numbers (`data-raw/fgSEValidation-results.rds`) so it is
+  unaffected. **No sibling is stale on the published site.**
+- **Closed issue \#88** as verified-correct with the full explanation.
+  **No repo/code change required.**
+- **Phase-3E runtime smoke:** N/A (no runtime/wiring change — closed an
+  issue + cleared a gitignored cache + docs). The “runtime” equivalent
+  (the published article render) was verified directly against the live
+  site. **Stated, not skipped.**
+- **Files:** close-out only — `CHANGELOG.md` (this entry),
+  `PROJECT_LEARNINGS.md` (Learning 197), `SESSION_NOTES.md` (handoff).
+  No tracked source/test/data files changed.
+
 ### 2026-06-26 — Regenerated the bundled GV example reports to carry `fgSE` and corrected a non-reproducible `fg` (Session 210)
 
 - **Deliverable (owner-directed, single item):** regenerate the two

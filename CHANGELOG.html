@@ -55,6 +55,27 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-06-27--verified-documented-and-closed-issue-88-the-gva-articles-published-fgse-was-never-stale-session-211">2026-06-27 — Verified, documented, and closed issue #88: the GVA article’s published <code>fgSE</code> was never stale (Session 211)<a class="anchor" aria-label="anchor" href="#id_2026-06-27--verified-documented-and-closed-issue-88-the-gva-articles-published-fgse-was-never-stale-session-211"></a></h3>
+<ul><li>
+<strong>Deliverable (owner pick: “Verify, document, close”; single item):</strong> dispose of issue #88 (“the GVA article’s Quarto <code>_freeze</code> is stale → the published article omits <code>fgSE</code>”). <strong>Verification + documentation session — no production code, no tests; TDD code-phases N/A</strong> (phase declared N/A each response). <strong>0 stakeholder corrections.</strong> Owner directed “work on issue #88” at Phase 1; one <code>AskUserQuestion</code> disposition gate (the issue premise was found false) → owner chose <strong>“Verify, document, close.”</strong>
+</li>
+<li>
+<strong>Finding — the issue premise was FALSE for the published site.</strong> The live article already renders all three values: <code>fe 109.67 / fg 47.62 / fgSE 0.29</code> (<code>https://rmsharp.github.io/nprcgenekeepr/articles/genetic-value-analysis.html</code>). Three independent confirmations: (1) the live page shows <code>fgSE</code>; (2) <code>pkgdown.yaml</code> does a clean <code>checkout@v4</code> with <strong>no freeze restore/cache step</strong> and installs the current source via <code>local::.</code>, so CI <strong>re-executes every article fresh</strong> (the freeze lives under gitignored <code>.quarto/</code>, <code>.gitignore:44</code>, and never reaches CI); (3) the pkgdown CI run on the S210 merge <strong>succeeded after <code>fgSE</code> shipped</strong> (run 28264621260, 2026-06-26 20:52).</li>
+<li>
+<strong>Root cause of the stale LOCAL freeze (no repo/published impact).</strong> The article loads <code><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">library(nprcgenekeepr)</a></code> (the <strong>installed</strong> package); the local renv library held a stale 2.0.0 that predated <code>fgSE</code> (<code><a href="https://rstudio.github.io/renv/reference/status.html" class="external-link">renv::status</a></code> out-of-sync — <code>calcFGSE</code> not exported, <code>reportGV</code> body has no <code>fgSE</code>), so <code>gv$fgSE</code> was <code>NULL</code> at local freeze time. The stale output existed only in the gitignored local freeze cache.</li>
+<li>
+<strong>Action:</strong> cleared the stale local GVA freeze (gitignored, regenerable — <strong>commits nothing</strong>; regenerating in place would reproduce the stale output since the installed package still lacks <code>fgSE</code>, so the correct refresh is to clear and let CI / a post-<code>install()</code> build regenerate it). <strong>Sibling audit:</strong> all 6 articles publish (HTTP 200); GVA was the only one with a live <code>fgSE</code>-dependent value (correct); <code>fg-se-validation</code> uses static recorded numbers (<code>data-raw/fgSEValidation-results.rds</code>) so it is unaffected. <strong>No sibling is stale on the published site.</strong>
+</li>
+<li>
+<strong>Closed issue #88</strong> as verified-correct with the full explanation. <strong>No repo/code change required.</strong>
+</li>
+<li>
+<strong>Phase-3E runtime smoke:</strong> N/A (no runtime/wiring change — closed an issue + cleared a gitignored cache + docs). The “runtime” equivalent (the published article render) was verified directly against the live site. <strong>Stated, not skipped.</strong>
+</li>
+<li>
+<strong>Files:</strong> close-out only — <code>CHANGELOG.md</code> (this entry), <code>PROJECT_LEARNINGS.md</code> (Learning 197), <code>SESSION_NOTES.md</code> (handoff). No tracked source/test/data files changed.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-06-26--regenerated-the-bundled-gv-example-reports-to-carry-fgse-and-corrected-a-non-reproducible-fg-session-210">2026-06-26 — Regenerated the bundled GV example reports to carry <code>fgSE</code> and corrected a non-reproducible <code>fg</code> (Session 210)<a class="anchor" aria-label="anchor" href="#id_2026-06-26--regenerated-the-bundled-gv-example-reports-to-carry-fgse-and-corrected-a-non-reproducible-fg-session-210"></a></h3>
 <ul><li>
 <strong>Deliverable (owner-directed, single item):</strong> regenerate the two bundled Genetic Value reports (<code>data/qcPedGvReport.RData</code>, <code>data/pedWithGenotypeReport.RData</code>) so they carry <code>fgSE</code> (added to <code><a href="reference/reportGV.html">reportGV()</a></code>’s return in S208) and make the necessary corrections. <strong>Strict TDD</strong> (RED → GREEN; phase declared each response; PRE-RED→RED + RED→GREEN <code>AskUserQuestion</code>-gated; the <code>fg</code>-correction fork re-surfaced + re-gated mid-GREEN; no REFACTOR). <strong>0 stakeholder corrections.</strong> On branch <code>regen-bundled-gvreports-fgse</code>. Commit <code>e8c6745f</code>.</li>

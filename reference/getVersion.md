@@ -24,5 +24,5 @@ Current Version
 ``` r
 library(nprcgenekeepr)
 getVersion()
-#> [1] "2.0.0 (2026-06-26)"
+#> [1] "2.0.0 (2026-06-27)"
 ```
