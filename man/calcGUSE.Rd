@@ -48,10 +48,10 @@ Monte Carlo standard error of that mean, on the same percentage scale as
 \deqn{guSE_i = 100 \times \sqrt{\frac{var(m_{i\cdot})}{K}}}
 
 The standard error is computed from the same per-iteration rare-allele matrix
-(\code{\link{calcA}}) that \code{\link{calcGU}} averages, so it is correct for
-any \code{threshold} / \code{byID} without a closed-form approximation. An
-animal whose rare-allele count does not vary across iterations has a standard
-error of 0.
+(\code{\link{calcA}}) that \code{\link{calcGU}} averages, so it is correct
+for any \code{threshold} / \code{byID} without a closed-form approximation.
+An animal whose rare-allele count does not vary across iterations has a
+standard error of 0.
 }
 \examples{
 library(nprcgenekeepr)

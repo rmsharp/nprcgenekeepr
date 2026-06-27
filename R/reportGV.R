@@ -58,6 +58,14 @@
 #' 2 years.
 #' @param gestationDefault Optional integer fallback gestation window (days) for
 #' species absent from the table. \code{NULL} uses the built-in 210 days.
+#' @param kinshipOverrides Optional data.frame of outside-information kinship
+#' overrides (\code{id1}, \code{id2}, \code{kinship}; the coefficient \emph{f},
+#' not relatedness \emph{r}) applied to the kinship matrix before mean kinship
+#' and the unknown-parent correction (issue #13). \code{NULL} (the default)
+#' leaves the pedigree-derived matrix unchanged. Ids outside the analysis set are
+#' warn-dropped (the run is not aborted); an override on a one-unknown animal
+#' supersedes its \code{+ sexMean / 2} correction. See
+#' \code{\link{applyKinshipOverrides}}.
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
@@ -101,7 +109,8 @@
 reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
                      byID = TRUE, updateProgress = NULL,
                      breedingTable = NULL, gestationTable = NULL,
-                     breedingAgeDefault = NULL, gestationDefault = NULL) {
+                     breedingAgeDefault = NULL, gestationDefault = NULL,
+                     kinshipOverrides = NULL) {
   # Generates a genetic value report for a provided pedigree
 
   ## If user has limited the population of interest by defining 'pop',
@@ -120,6 +129,37 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
     ped$gen
   ))
 
+  # Issue #13 Slice 1: apply outside-information kinship overrides to the matrix
+  # BEFORE mean kinship / the issue-#9 correction, so both reflect the supplied
+  # values. kmat is filtered to probands, so ids outside that set (e.g. an
+  # ancestor sire-dam pair) are warn-dropped here and the run continues -- the
+  # strict leaf would otherwise abort it (D5). The surviving overridden id-set is
+  # threaded into the issue-#9 correction so an override on a one-unknown animal
+  # SUPERSEDES (does not stack with) its +sexMean/2 prior (D11, blanket
+  # supersession). kinship() itself is untouched.
+  overriddenIds <- character(0L)
+  if (!is.null(kinshipOverrides) && nrow(kinshipOverrides) > 0L) {
+    overrides <- checkKinshipOverrides(kinshipOverrides)
+    inMatrix <- overrides$id1 %in% rownames(kmat) &
+      overrides$id2 %in% rownames(kmat)
+    if (any(!inMatrix)) {
+      dropped <- setdiff(
+        unique(c(overrides$id1[!inMatrix], overrides$id2[!inMatrix])),
+        rownames(kmat)
+      )
+      warning(sprintf(
+        paste0("Dropping %d kinship override row(s) referencing id(s) not in ",
+          "the analysis set: %s."),
+        sum(!inMatrix), paste(dropped, collapse = ", ")
+      ))
+      overrides <- overrides[inMatrix, , drop = FALSE]
+    }
+    if (nrow(overrides) > 0L) {
+      kmat <- applyKinshipOverrides(kmat, overrides)
+      overriddenIds <- unique(c(overrides$id1, overrides$id2))
+    }
+  }
+
   # Calculate the mean kinship, and convert to z-scores
   indivMeanKin <- meanKinship(kmat)
   indivMeanKin <- indivMeanKin[probands] # making sure the order is correct
@@ -135,7 +175,8 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
       gestationTable = gestationTable,
       breedingTable = breedingTable,
       breedingAgeDefault = breedingAgeDefault,
-      gestationDefault = gestationDefault
+      gestationDefault = gestationDefault,
+      overriddenIds = overriddenIds
     )$indivMeanKin
 
   zScores <- scale(indivMeanKin)
