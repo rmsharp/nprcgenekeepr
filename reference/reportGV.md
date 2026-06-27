@@ -15,7 +15,8 @@ reportGV(
   breedingTable = NULL,
   gestationTable = NULL,
   breedingAgeDefault = NULL,
-  gestationDefault = NULL
+  gestationDefault = NULL,
+  kinshipOverrides = NULL
 )
 ```
 
@@ -81,6 +82,17 @@ reportGV(
 
   Optional integer fallback gestation window (days) for species absent
   from the table. `NULL` uses the built-in 210 days.
+
+- kinshipOverrides:
+
+  Optional data.frame of outside-information kinship overrides (`id1`,
+  `id2`, `kinship`; the coefficient *f*, not relatedness *r*) applied to
+  the kinship matrix before mean kinship and the unknown-parent
+  correction (issue \#13). `NULL` (the default) leaves the
+  pedigree-derived matrix unchanged. Ids outside the analysis set are
+  warn-dropped (the run is not aborted); an override on a one-unknown
+  animal supersedes its `+ sexMean / 2` correction. See
+  [`applyKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md).
 
 ## Value
 

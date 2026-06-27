@@ -34,6 +34,9 @@
 - [`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
   : Main Application UI for nprcgenekeepr
 
+- [`applyKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md)
+  : Apply outside-information kinship overrides to a kinship matrix
+
 - [`assignAlleles()`](https://github.com/rmsharp/nprcgenekeepr/reference/assignAlleles.md)
   : Assign parent alleles randomly
 
@@ -81,6 +84,9 @@
 
 - [`checkGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkGenotypeFile.md)
   : Check genotype file
+
+- [`checkKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkKinshipOverrides.md)
+  : Validate a kinship overrides table
 
 - [`checkParentAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkParentAge.md)
   :

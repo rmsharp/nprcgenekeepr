@@ -11,7 +11,7 @@ data(pedWithGenotypeReport)
 ## Format
 
 An object of class `list` (inherits from `nprcgenekeeprGV`) of length
-10.
+11.
 
 ## Source
 
