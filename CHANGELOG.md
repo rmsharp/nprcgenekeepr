@@ -15,6 +15,63 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-27 — Ratified the issue \#13 kinship-overrides design plan; D11 settled via `/grill-me` (Session 214)
+
+- **Deliverable (owner pick: “ratify the \#13 design draft”, then “batch
+  recs, grill D11”; single item):** moved
+  `docs/planning/issue13-kinship-overrides-plan.md` from **DRAFT →
+  RATIFIED**, recording every resolved decision into the doc so the
+  Slice-1 RED session can proceed. **Ratification/design session — TDD
+  code-phases N/A** (no `R/`, test, `NAMESPACE`, `man/`, `DESCRIPTION`,
+  `data/`, or issue-state change; phase declared N/A / PRE-RED each
+  response). **0 stakeholder corrections / 0 owner overrides** (every
+  recommendation accepted as written).
+- **Batch ratification (`AskUserQuestion`, 10 items over 3 calls,
+  recommendation-first):** D1 separate leaf
+  ([`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+  untouched) · D2 schema `id1`/`id2`/`kinship` · D4 off-diagonal only ·
+  D5 strict leaf + `reportGV`/app warn-drop of non-member ids · D6
+  two-tier range (validator *warns* off-diagonal `> 0.5`;
+  `applyKinshipOverrides` *rejects* `> sqrt(diag·diag)`) +
+  duplicate-pair [`stop()`](https://rdrr.io/r/base/stop.html) + document
+  `f`-not-`r` · D7 Shiny upload (config-path deferred) · D8 scope
+  `reportGV → app → fallbacks`, simulations excluded, `gvaConvergence`
+  optional · D9 [`message()`](https://rdrr.io/r/base/message.html) count
+  · slice order confirmed (1 script core → 2 app upload → 3 fallbacks +
+  close \#13).
+- **D11 (the \#1 dragon, a genetics call) settled via `/grill-me`,**
+  grounded in a 4-agent firsthand analysis (`wf_a3c184ee-92b`:
+  correction mechanics + issue-9 S177 rationale + an **executed numeric
+  model on real `qcPed`** + synthesis). The analysis **quantified** the
+  override/#9-correction stacking (the `+sexMean/2` term ≈ **1 SD** of
+  the colony distribution, ~8.4× the override’s own effect, flipping a
+  worked animal **GV rank \#6 → \#179**) and **corrected** a
+  load-bearing mechanics claim in the S213 draft (the spurious
+  `+sexMean/2` is written to `corrected`, never the `original`/`sexMean`
+  that peers read, so it **cannot cascade** — contrary to the draft’s
+  “propagates into other animals’ corrections”). **Ratified: blanket
+  supersession (option A)** — skip `+sexMean/2` for any overridden
+  one-unknown-parent animal; **keep** overridden animals as cohort
+  peers; **document** the both-unknown-promotion and
+  shared-unknown-parent sib-pair edges as v1 limitations; **track
+  targeted option C** (suppress only when the override stands in for the
+  missing-parent side — needs schema metadata) **as a follow-up**; pin
+  with a 4-part regression test.
+- **Doc edits (DRAFT → RATIFIED):** status banner + ratification-record
+  paragraph; §3 header + per-`Dn` `→ RATIFIED (S214)` tags; D11 fully
+  rewritten; Slice-1 scope/RED sharpened to the specific blanket-A
+  behavior; §6 R11 + the §7 checklist (all 12 boxes `[x]`).
+- **Learning 200** added to `PROJECT_LEARNINGS.md` (ratification
+  pattern: batch recs + ground the grill in a firsthand executed
+  analysis + offer the premise-reversing option + record the resolved
+  spec back into the plan). **Previous-session handoff (S213) scored
+  9/10.**
+- Carried \[\[consult-project-source-of-truth\]\],
+  \[\[observation-vs-decision\]\],
+  \[\[ascii-only-in-question-options\]\],
+  \[\[check-process-history-before-rerunning-work\]\],
+  \[\[push-close-out-docs-to-origin\]\].
+
 ### 2026-06-27 — Design document for issue \#13 (assign kinship coefficients from outside information) (Session 213)
 
 - **Deliverable (owner pick: “#13”, then via `AskUserQuestion`
