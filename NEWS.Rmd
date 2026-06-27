@@ -14,6 +14,18 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 # nprcgenekeepr (development version)
 - Changes
+  - `reportGV()` gains an optional `kinshipOverrides` argument: a data frame
+    of outside-information kinship coefficients (`id1`, `id2`, `kinship`; the
+    coefficient *f*, not relatedness *r*) that replace the pedigree-derived
+    off-diagonal cells of the kinship matrix before mean kinship and the
+    unknown-parent correction, so molecular/genomic estimates or
+    known-but-unrecorded relationships drive the genetic-value rankings
+    (issue #13, slice 1). Two new exported helpers support it:
+    `applyKinshipOverrides()` (writes the symmetric overrides into a kinship
+    matrix) and `checkKinshipOverrides()` (validates the override table). An
+    override on an animal missing one parent supersedes that animal's
+    unknown-parent mean-kinship correction rather than stacking with it. The
+    default (`NULL`) leaves results identical to before.
   - File-based pedigree ingestion now treats `species` as a first-class
     column: `getPossibleCols()` recognizes it and places it immediately after
     `sex` in the canonical column order, and `qcStudbook()` types it as

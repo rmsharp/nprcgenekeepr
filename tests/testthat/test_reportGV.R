@@ -483,3 +483,151 @@ test_that("reportGV carries a scalar fgSE alongside fg (issue #82 Slice 3)", {
   expect_false("fgSE" %in% names(gv$gu))
 })
 
+# ---------------------------------------------------------------------------
+# Issue #13 Slice 1: reportGV accepts an optional kinshipOverrides frame
+# (id1, id2, kinship) that REPLACES the named off-diagonal cells of the kinship
+# matrix (and the symmetric twin) immediately after the matrix is built and
+# BEFORE mean kinship / the issue-#9 correction, so outside information changes
+# GV mean-kinship rankings from a script. Properties pinned:
+#  - D10: the no-override path is byte-identical to today.
+#  - D5: a non-proband override id is warn-dropped, never aborting the run.
+#  - D11 (RATIFIED S214, blanket supersession): the issue-#9 +sexMean/2 add is
+#    suppressed for any overridden one-unknown animal (corrected == original),
+#    while non-overridden one-unknown animals keep their correction and the
+#    overridden animal stays a valid cohort peer (no cascade).
+# Expected values are recomputed independently in base R from the *overridden*
+# matrix so the assertions do not depend on the implementation. qcPed has no
+# species column (default cutoff 2 years, gestation 210 days) and all 43
+# one-unknown animals are sire-missing (male cohorts).
+# ---------------------------------------------------------------------------
+
+# Independent base-R one-unknown correction on a given (possibly overridden)
+# mean-kinship vector, applying D11 blanket-A suppression for ids in `overridden`.
+i13_correctBlanketA <- function(ped, original, probands, overridden) {
+  isU <- function(x) is.na(x) | nprcgenekeepr:::isGeneratedUnknownId(x)
+  sireMiss <- isU(ped$sire)
+  oneU <- xor(sireMiss, isU(ped$dam))
+  corrected <- original
+  for (i in which(oneU)) {
+    id <- as.character(ped$id[i])
+    if (id %in% overridden) next # D11 blanket-A: skip the +sexMean/2 add
+    bf <- ped$birth[i]
+    cand <- ped$sex == "M" & !is.na(ped$birth) &
+      ped$birth <= (bf - 365L * 2L) &
+      (is.na(ped$exit) | ped$exit >= (bf - 210L)) &
+      ped$id != ped$id[i]
+    cohort <- as.character(ped$id[cand])
+    cohort <- cohort[cohort %in% probands]
+    if (length(cohort) == 0L) next
+    corrected[id] <- min(original[id] + mean(original[cohort]) / 2, 1)
+  }
+  corrected
+}
+
+test_that("reportGV no-override path is byte-identical to today (issue #13 D10)", {
+  ped <- nprcgenekeepr::qcPed
+  a <- reportGV(ped, guIter = 100L)
+  b <- reportGV(ped, guIter = 100L, kinshipOverrides = NULL)
+  ## indivMeanKin is deterministic (kinship + correction; no gene-drop random)
+  ia <- a$report$indivMeanKin[order(a$report$id)]
+  ib <- b$report$indivMeanKin[order(b$report$id)]
+  expect_equal(ia, ib)
+  ## the returned kinship matrix is unchanged by an absent override
+  expect_equal(b$kinship, a$kinship)
+})
+
+test_that("reportGV applies an outside kinship override and suppresses the #9 add for the overridden one-unknown animal (issue #13 Slice 1, D11)", {
+  ped <- nprcgenekeepr::qcPed
+  probands <- as.character(ped$id)
+  isU <- function(x) is.na(x) | nprcgenekeepr:::isGeneratedUnknownId(x)
+  oneU <- xor(isU(ped$sire), isU(ped$dam))
+
+  X <- "0K7VJN" # male, one-unknown (sire missing)
+  Y <- "N2XF08" # known parentage
+  Z <- "K0ACWS" # one-unknown (sire missing); X is in its male cohort
+  ## fixture guards: if qcPed changes, fail loudly instead of mis-testing
+  expect_true(all(c(X, Y, Z) %in% probands))
+  expect_true(oneU[ped$id == X])
+  expect_true(oneU[ped$id == Z])
+  expect_false(oneU[ped$id == Y])
+  expect_identical(as.character(ped$sex[ped$id == X]), "M")
+
+  ov <- data.frame(id1 = X, id2 = Y, kinship = 0.25, stringsAsFactors = FALSE)
+
+  ## independent expectation: apply (X, Y) = 0.25, recompute mean kinship, then
+  ## the blanket-A #9 correction (X suppressed).
+  kmat <- nprcgenekeepr:::filterKinMatrix(
+    probands, kinship(ped$id, ped$sire, ped$dam, ped$gen)
+  )
+  kmat[X, Y] <- kmat[Y, X] <- 0.25
+  original <- meanKinship(kmat)[probands]
+  expected <- i13_correctBlanketA(ped, original, probands, c(X, Y))
+
+  gvr <- suppressMessages(
+    reportGV(ped, guIter = 100L, kinshipOverrides = ov)
+  )
+  imk <- stats::setNames(
+    gvr$report$indivMeanKin, as.character(gvr$report$id)
+  )[probands]
+
+  ## backbone: the whole indivMeanKin vector matches the independent model
+  expect_equal(unname(imk[probands]), unname(expected[probands]))
+
+  ## the returned matrix carries the symmetric override
+  expect_equal(gvr$kinship[X, Y], 0.25)
+  expect_equal(gvr$kinship[Y, X], 0.25)
+
+  ## (D11 part 1) the overridden one-unknown animal omits +sexMean/2
+  expect_equal(imk[[X]], original[[X]])
+  ## (D11 part 2) a non-overridden one-unknown animal still gets its correction
+  expect_gt(imk[[Z]], original[[Z]])
+  ## (D11 part 4) no-cascade: vs the not-suppressed model, only X differs
+  expNo <- i13_correctBlanketA(ped, original, probands, character(0L))
+  differ <- probands[abs(expected[probands] - expNo[probands]) > 1e-12]
+  expect_identical(differ, X)
+})
+
+test_that("reportGV keeps an overridden animal as a valid cohort peer (issue #13 D11 part 3)", {
+  ped <- nprcgenekeepr::qcPed
+  probands <- as.character(ped$id)
+  X <- "0K7VJN" # male one-unknown, a peer in Z's male cohort
+  Y <- "N2XF08"
+  Z <- "K0ACWS"
+  ov <- data.frame(id1 = X, id2 = Y, kinship = 0.25, stringsAsFactors = FALSE)
+
+  over <- suppressMessages(reportGV(ped, guIter = 100L, kinshipOverrides = ov))
+  base <- reportGV(ped, guIter = 100L)
+  imkOver <- stats::setNames(
+    over$report$indivMeanKin, as.character(over$report$id)
+  )
+  imkBase <- stats::setNames(
+    base$report$indivMeanKin, as.character(base$report$id)
+  )
+  ## Z's correction rises because peer X's override-raised value flows through
+  ## its sexMean cohort (legit raw information only -- the spurious +sexMean/2 is
+  ## NOT propagated, D11 no-cascade).
+  expect_gt(imkOver[[Z]], imkBase[[Z]])
+})
+
+test_that("reportGV warn-drops a non-proband override id rather than aborting the run (issue #13 D5)", {
+  ped <- nprcgenekeepr::qcPed
+  probands <- as.character(ped$id)
+  bogus <- "NOT_A_PROBAND_ID"
+  expect_false(bogus %in% probands)
+  ov <- data.frame(
+    id1 = c("0K7VJN", "0K7VJN"),
+    id2 = c("N2XF08", bogus), # second pair references a non-member id
+    kinship = c(0.25, 0.25),
+    stringsAsFactors = FALSE
+  )
+  ## the run completes (not aborted) and warns about the dropped id
+  expect_warning(
+    gvr <- suppressMessages(
+      reportGV(ped, guIter = 100L, kinshipOverrides = ov)
+    )
+  )
+  expect_s3_class(gvr$report, "data.frame")
+  ## the surviving real override still took effect
+  expect_equal(gvr$kinship["0K7VJN", "N2XF08"], 0.25)
+})
+

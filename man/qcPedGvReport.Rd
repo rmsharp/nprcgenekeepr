@@ -5,7 +5,7 @@
 \alias{qcPedGvReport}
 \title{Genetic-value report for qcPed}
 \format{
-An object of class \code{list} (inherits from \code{nprcgenekeeprGV}) of length 10.
+An object of class \code{list} (inherits from \code{nprcgenekeeprGV}) of length 11.
 }
 \usage{
 data(qcPedGvReport)
