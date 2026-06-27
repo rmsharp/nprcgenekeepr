@@ -15,6 +15,66 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-27 — Delta re-verification audit of issue \#37 (exported functions not used by the app) (Session 212)
+
+- **Deliverable (owner pick: “Issue \#37 audit”; single item):**
+  `docs/audits/ISSUE_37_UNUSED_EXPORTS_AUDIT_2026-06-27.md` — a
+  read-only **delta** re-verification of \#37 against the S97 audit
+  (2026-06-16), recomputing call-graph reachability at HEAD `600e166d`
+  and auditing only what moved. **TDD code-phases N/A** (no `R/`, test,
+  `NAMESPACE`, `man/`, `DESCRIPTION`, or issue-state change; phase
+  declared N/A each response). **0 stakeholder corrections.** **0 closes
+  performed** (closing/updating \#37 is owner judgment, per the report’s
+  recommendation).
+- **Process-history first
+  (\[\[check-process-history-before-rerunning-work\]\]):** \#37 had
+  already been audited at S65/S78/S97, and S97 declared the actionable
+  surface fully drained. So the non-redundant deliverable was the
+  **delta**, not a full re-run.
+- **Recompute (documented method —
+  `codetools::findGlobals(merge = TRUE)` transitive closure seeded at
+  `runModularApp`/`runGeneKeepR`/`appUI`/`appServer`; 220/220 `R/*.R`
+  sourced cleanly):** **176 exported / 137 app-used / 39 app-unused**
+  (was 166 / 127 / 39 at S97). The unused count held at 39 across the
+  fourth re-verification.
+- **Delta — exactly 4 exports moved (`39 − 2 + 2 = 39`):** 10 new
+  exports since S97 (`calcFGSE`, `calcGUSE`, `getFileDirectRelatives`,
+  `getFocalAnimalPedFromFile`, `getSpeciesGestation`,
+  `getSpeciesMinBreedingAge`, `gvaConvergence`, `loadSpeciesOverrides`,
+  `makeGroupNum`, `setLabKeyDefaults`) — **9 wired into the app at
+  birth**; only `gvaConvergence` (a vignette diagnostic helper) is
+  app-unreachable → keep-as-public-API. **2 S97 keep-as-public-API
+  exports are now app-reached** (`getPedigree`, `getPedDirectRelatives`)
+  — wired in *for free* by the file-pedigree-source refactor (first \#37
+  export to graduate via an unrelated refactor, not a dedicated
+  wire-in). `makeGrpNum` moved *used → unused* by the deliberate **\#29
+  rename** — it is now the soft-deprecated alias
+  (`.Deprecated("makeGroupNum")` wrapper, `R/makeGroupNum.R:32`);
+  keep-as-public-API.
+- **Disposition unchanged: 0 wire-in · 39 keep-as-public-API · 0
+  retire.** No accidental regression (no previously-reached export fell
+  out of the call graph; the one used→unused move, `makeGrpNum`, is the
+  intended rename). Logging island stable (0 live callers).
+  `safeExecute` + `makeGrpNum` (post-deprecation-cycle) are the only
+  conditional future-retire candidates.
+- **Adversarial verification:** the 13-export delta was put through a
+  26-agent evidence-then-refute workflow; 12/13 verdicts agreed, and the
+  one refutation corrected a `loadSpeciesOverrides` downstream-consumer
+  mis-attribution but **confirmed “used”** (the function is called
+  directly at `appServer.R:74`). Every call path was re-confirmed
+  firsthand by the session.
+- **Phase-3E runtime smoke:** N/A (read-only audit; no runtime/wiring
+  change — no `R/` touched). Stated, not skipped.
+- **Recommendation surfaced (owner judgment):** **close \#37** (its
+  actionable surface is drained and has stayed drained across two more
+  re-verifications) **or keep it open** as the living public-API catalog
+  and **refresh its now-staler body** (last updated S98) to the HEAD
+  snapshot 176 / 137 / 39.
+- **Files:** `docs/audits/ISSUE_37_UNUSED_EXPORTS_AUDIT_2026-06-27.md`
+  (new); close-out — `CHANGELOG.md` (this entry), `PROJECT_LEARNINGS.md`
+  (Learning 198), `SESSION_NOTES.md` (handoff). No tracked
+  source/test/data files changed.
+
 ### 2026-06-27 — Verified, documented, and closed issue \#88: the GVA article’s published `fgSE` was never stale (Session 211)
 
 - **Deliverable (owner pick: “Verify, document, close”; single item):**

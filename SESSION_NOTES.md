@@ -7,6 +7,190 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 212 Did
+
+**Deliverable:**
+**`docs/audits/ISSUE_37_UNUSED_EXPORTS_AUDIT_2026-06-27.md`** – a
+read-only **delta re-verification** of issue \#37 (“Exported functions
+not used by the app”) against the S97 audit (2026-06-16), recomputing
+call-graph reachability at HEAD `600e166d` and auditing only what moved.
+**DONE.** Owner directed “Issue \#37 audit” at Phase 1; given \#37’s
+heavy audit history (S65/S78/S97), I framed the non-redundant
+deliverable as the DELTA, not a full re-run
+(\[\[check-process-history-before-rerunning-work\]\]). **No production
+code, no tests, no `NAMESPACE`/`man`/issue-state change – audit report +
+close-out docs only.** **Started / Completed:** 2026-06-27 / 2026-06-27
+**Status:** **DONE.** **Read-only audit – TDD code-phases N/A** (no
+production code; phase declared N/A each response, like the S97/S211
+read-only sessions). **0 stakeholder corrections.** **0 issue-state
+changes** (closing/updating \#37 is owner judgment, per the report’s
+recommendation and the S97 precedent). - **Recompute (documented method
+– `codetools::findGlobals(merge = TRUE)` transitive closure seeded at
+`runModularApp`/`runGeneKeepR`/`appUI`/`appServer`; 220/220 `R/*.R`
+sourced cleanly; script `scratchpad/reach_s212.R`):** **176 exported /
+137 app-used / 39 app-unused** (was 166 / 127 / 39 at S97). Unused count
+held at 39 across the FOURTH re-verification. - **Delta – exactly 4
+exports moved (`39 - 2 + 2 = 39`):** **10 new exports** since S97
+(NAMESPACE diff `a5507a35..HEAD`: 10 added, 0 removed) – **9 wired into
+the app at birth** (`calcFGSE`, `calcGUSE`, `getFileDirectRelatives`,
+`getFocalAnimalPedFromFile`, `getSpeciesGestation`,
+`getSpeciesMinBreedingAge`, `loadSpeciesOverrides`, `makeGroupNum`,
+`setLabKeyDefaults`); only **`gvaConvergence`** (vignette diagnostic
+helper, `gvaConvergence.Rmd` + `test_gvaConvergence.R`) is
+app-unreachable -\> keep-as-public-API. **2 S97 keep-as-public-API
+exports now app-reached** (`getPedigree`, `getPedDirectRelatives`) –
+wired in for FREE by the file-pedigree-source refactor (first \#37
+export to graduate via an unrelated refactor). **`makeGrpNum`** moved
+used-\>unused by the deliberate **\#29 rename** – now the
+soft-deprecated alias (`.Deprecated("makeGroupNum")` wrapper,
+`R/makeGroupNum.R:32`; still exported `NAMESPACE:125`);
+keep-as-public-API. - **Disposition unchanged: 0 wire-in / 39
+keep-as-public-API / 0 retire.** No accidental regression.
+`safeExecute` + `makeGrpNum` (post-deprecation-cycle) the only
+conditional future-retire candidates. - **Adversarial verification:**
+the 13-export delta went through a 26-agent evidence-then-refute
+Workflow (Explore agents). 12/13 verdicts agreed; the one refutation
+corrected a `loadSpeciesOverrides` consumer mis-attribution but
+confirmed “used” (called directly at `appServer.R:74`). Every call path
+re-confirmed firsthand by the session.
+
+**Phase-3E (runtime smoke): N/A (stated, not skipped).** Read-only audit
+– no runtime/wiring/startup change; no `R/` touched. The “build
+equivalent” check (`devtools::check`) was not run because nothing in
+`R/`/tests/`NAMESPACE` changed (the only new file is a docs/audit
+markdown + close-out docs).
+
+**Session 211 Handoff Evaluation (by Session 212): Score 9/10.** S211’s
+handoff was for a DIFFERENT issue (#88), so it could not pre-stage \#37
+– but it set this session up cleanly anyway. **What helped:** (1) the
+precise clean-state anchors held FIRSTHAND –
+`master == origin/master == 600e166d`, working tree clean except the
+standing untracked `PED_GV_AUDIT_2026-05-30.html`, issue \#88 CLOSED –
+so orientation was fast and nothing it claimed was wrong; (2) gotcha \#4
+(“`gh issue view <n>` errors with a Projects-classic GraphQL deprecation
+– use `--json` instead”) directly saved time: I queried \#37 with
+`--json` on the first try; (3) the standing-keep build-equivalent
+(`devtools::check(vignettes=FALSE)`=0/0/0) and the open-issues list
+(which named \#37) framed the owner’s pick. **What was missing (the -1,
+minor and not really S211’s job):** nothing \#37-specific – but the
+SUGGESTED-NEXT “owner’s pick” list named \#37 only as a bare issue
+number without noting it had been audited four times already and
+declared drained; a one-line “note: \#37 has a standing audit at
+`docs/audits/ISSUE_37_..._2026-06-16.md` – any new pass is a delta”
+would have pointed straight at the delta framing. (I recovered it myself
+via process-history scan, the
+\[\[check-process-history-before-rerunning-work\]\] reflex.) **What was
+wrong:** nothing. ROI: high.
+
+**Self-assessment (Session 212): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read IN FULL; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check clean – HEAD `600e166d` == documented
+S211), reported, STOPPED for the owner; posed the deliverable pick as an
+`AskUserQuestion` rather than guessing; wrote the **1B stub BEFORE
+technical work**; declared the phase (N/A) each response. **Strengths:**
+(1) **process-history first** – recognized \#37’s S65/S78/S97 audit
+chain and scoped the DELTA instead of re-running a 4th full audit (would
+have been ~redundant); (2) **found the delta cheaply and reconciled it
+by SET** – the NAMESPACE diff + recompute showed the unused COUNT held
+at 39 while 4 exports actually MOVED, and I explained every mover rather
+than reporting “no change” (the key audit insight, now Learning 198);
+(3) **adversarially verified** the 13-export delta with a 26-agent
+refute workflow + firsthand re-confirmation of every call path – caught
+the `loadSpeciesOverrides` mis-attribution; (4) **distinguished an
+intended status change from a regression** (`makeGrpNum` used-\>unused
+is the \#29 rename, confirmed firsthand it is a real `.Deprecated`
+wrapper, not a stale export); (5) **stayed read-only** – recommended
+close-or-refresh-body and left the issue state to the owner (S97
+precedent; \[\[observation-vs-decision\]\]); (6) one deliverable, no
+scope creep (FM \#18/#25). **Weaknesses (honest):** (a) the 26-agent
+workflow was arguably heavier than a 13-item delta strictly needs –
+ultracode-appropriate and it DID earn its keep (the one mis-attribution
+catch), but a leaner single-pass verify would have reached the same
+dispositions for fewer tokens; (b) Phase-3E is genuinely N/A (no runtime
+change), and I did not run `devtools::check` – correct here (nothing in
+`R/`/tests changed) but stated explicitly so it is not mistaken for a
+skipped gate. Capped at 9 by (a).
+
+**Learnings:** **Learning 198** added to `PROJECT_LEARNINGS.md` – for a
+recurring inventory issue, the non-redundant deliverable is the DELTA at
+current HEAD (diff the export surface between the prior-audit HEAD and
+now, recompute the documented reachability, reconcile by SET not by
+total – the composition drifts even when the count holds: 4 exports
+moved here while the unused count stayed 39); scope the work-list
+inline, then fan out adversarial verification over JUST the delta; a
+static “used” result still earns one refute pass (caught a
+mis-attribution); distinguish an intended status change (the \#29 rename
+alias) from a regression; read-only audit -\> issue close/update is
+owner judgment. Carried as applied:
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\], \[\[ascii-only-in-question-options\]\],
+\[\[push-close-out-docs-to-origin\]\]; extends the S97 \#37
+re-verification. **This was NOT a TDD code-phase session.**
+
+**=\> SUGGESTED NEXT = owner’s pick.** Issue \#37 is UNCHANGED (no
+state/body edit this session – owner judgment). `master` ==
+origin/master == `600e166d` (clean; this session’s close-out commit
+advances it – push per \[\[push-close-out-docs-to-origin\]\]). Live
+threads: - **Issue \#37 disposition (owner judgment, surfaced by this
+audit – NOT done):** (a) **close \#37** (its actionable surface is
+drained and has stayed drained across S97 + S212), OR (b) **keep it
+open** as the living public-API catalog and **refresh its now-staler
+body** (last updated S98, 2026-06-16) to the HEAD snapshot **176 / 137 /
+39** – strike `getPedigree`/`getPedDirectRelatives` (now reached), add
+`gvaConvergence` + the `makeGrpNum` deprecated alias. If the owner wants
+a one-comment summary posted to \#37 or the body refreshed, that is a
+follow-up (a GitHub write – I left it for the owner since it is
+outward-facing). - **Possible version bump / 2.0.0 release (owner-gated,
+carried from S209-S211):** DESCRIPTION `2.0.0` (dev);
+[`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md) +
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+`fgSE` shipped. Release decision is the owner’s. - **Other open
+issues:** \#36, \#28, \#13/#12/#11/#10/#5; CRAN Phase 5 (owner-run;
+ARCHIVED on CRAN 2025-07-29). **Do NOT** re-run a full \#37 audit (the
+delta is now captured at HEAD `600e166d`); **do NOT** close/edit \#37
+without owner confirmation (read-only audit – S97/this-session
+precedent); **do NOT** treat the held-at-39 unused count as “nothing
+moved” – 4 exports moved this delta (reconcile by SET, see Learning
+198).
+
+**Key files (this session):** **NEW:**
+`docs/audits/ISSUE_37_UNUSED_EXPORTS_AUDIT_2026-06-27.md` (the
+deliverable). **Close-out:** `CHANGELOG.md` (S212 entry),
+`PROJECT_LEARNINGS.md` (Learning 198), `SESSION_NOTES.md` (this
+handoff + the 1B stub it superseded). **Scratchpad (not in repo):**
+`reach_s212.R` (the reachability recompute). **No tracked
+source/test/data/`NAMESPACE`/`man` files changed. NOT committed
+(standing keep):** `PED_GV_AUDIT_2026-05-30.html` (untracked);
+`.DS_Store`.
+
+**Gotchas:** (1) **The unused-export inventory is at 176 / 137 / 39
+(HEAD `600e166d`)** – 0 wire-in / 39 keep-as-public-API / 0 retire; the
+FULL per-export catalog is the S97 audit doc + this session’s delta.
+**Re-run the recompute before acting on any snapshot** – the composition
+drifts even when the count is stable. (2) **`makeGrpNum` is a live
+soft-deprecated alias** (`.Deprecated("makeGroupNum")`,
+`R/makeGroupNum.R:32`), NOT a stale/dead export – the app calls
+`makeGroupNum` (the \#29 rename target); do not “retire” `makeGrpNum` as
+dead code (it is the back-compat wrapper; retire only after its
+deprecation cycle, owner-gated). (3) **Reachability method:**
+`codetools::findGlobals(merge = TRUE)` (NOT `$functions` – misses
+higher-order `Map`/`apply`/`do.call` uses); seed
+`{runModularApp, runGeneKeepR, appUI, appServer}`; the renv lib is not
+materialized in-checkout so
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)
+fails – `sys.source` all `R/*.R` into a throwaway env under
+`Rscript --vanilla` (codetools is base). (4) Carried standing keeps
+(unchanged): package **ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5
+owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without LabKey config; `gh issue view <n>` errors on a
+Projects-classic deprecation -\> use `--json`; build-equivalent is
+`devtools::check(vignettes=FALSE)`=0/0/0 (NOT run this session – no
+`R/`/test change); a 0/0/0 check does NOT imply spelling-clean -\>
+`spell_check_package`; `git pull` is rebase + chokes on `.DS_Store` -\>
+use `fetch`+`reset`.
+
 ### What Session 211 Did
 
 **Deliverable:** **Disposed of issue \#88** (“the GVA article’s Quarto
