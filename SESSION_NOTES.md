@@ -7,6 +7,182 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 213 Did
+
+**Deliverable:** **`docs/planning/issue13-kinship-overrides-plan.md`** –
+a design/plan document for **issue \#13** (“Assign kinship coefficients
+into the kinship coefficient matrix based on outside information”; filed
+2020-11-20, **empty body**). **DONE.** Owner picked “#13” at Phase 1;
+via `AskUserQuestion`: deliverable = **Design document**, semantics =
+**pair-level overrides** (set `(id1,id2,kinship)` cells + the symmetric
+twin, REPLACE). **This is the DRAFT** (recommendations flagged for
+ratification); per issue9/issue73 precedent, ratification is a SEPARATE
+session before Slice-1 RED. **No `R/`, tests, `NAMESPACE`, `man/`,
+`data/`, or issue-state change – design doc + close-out docs only.**
+**Started / Completed:** 2026-06-27 / 2026-06-27 **Status:** **DONE.**
+**Planning/design session – TDD code-phases N/A** (no production code;
+phase declared N/A / PRE-RED each response). **0 stakeholder
+corrections.** - **Empty-bodied issue -\> asked, did not invent**
+(\[\[observation-vs-decision\]\]): posed deliverable shape + core
+semantics as two `AskUserQuestion` options; the title + answers ARE the
+spec. Process-history scan found no prior \#13 work (S62/S95 audits
+classify it “genuinely open, large”). - **Doc home from project source
+of truth** (\[\[consult-project-source-of-truth\]\]):
+`DESIGN_WORKSTREAM.md` is UI/layout-specific (wrong fit); the project’s
+convention is `docs/planning/issueN-<slug>-plan.md`, so the doc matches
+the issue9/issue73 house style (status banner; firsthand evidence
+inventory; `Dn` decisions with recommendations flagged for ratification;
+vertical slices with RED/GREEN/DONE/Verify/Dragons; consolidated dragons
+R1-R13; ratification checklist). - **Design core:** leaf
+`applyKinshipOverrides(kmat, overrides)` + `checkKinshipOverrides`
+validator, threaded into `reportGV` as a `NULL`-default
+`kinshipOverrides` param (mirrors the `breedingTable` params \#73
+added);
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+(`R/kinship.R:69`) untouched (6 callers; \#9 blast-radius boundary). 3
+vertical slices: (1) script-level core; (2) Shiny upload in GV tab
+(gated on D7); (3) breeding-group/summary-stats fallback paths + close
+\#13. Every load-bearing `file:line` verified FIRSTHAND. - **Adversarial
+verification (3-agent workflow over the DRAFT, `wf_e52d274e-5bf`):**
+core symmetric-REPLACE-at-`reportGV:118` mechanism confirmed SOUND;
+caught 4 real issues firsthand drafting missed, all folded in pre-commit
+– D11 (#9 `+sexMean/2` STACKING for the feature’s primary
+one-unknown-parent case; the \#1 dragon, a genetics call), D5
+(`filterKinMatrix` narrows to probands -\> strict leaf would abort
+`reportGV` for the canonical sire-dam case -\> soft-drop in `reportGV`),
+D6 (`[0,1]` too loose: off-diagonal `<= 0.5`; `r`-vs-`f` confusion
+corrupts), Slice-3 `convertRelationships` label-vs-value divergence. New
+citations re-verified firsthand before folding in (FM \#11).
+
+**Phase-3E (runtime smoke): N/A (stated, not skipped).** Planning doc
+only – no runtime/wiring/`R/` change. Build-equivalent
+(`devtools::check`) not run: nothing in `R/`/tests/`NAMESPACE` changed
+(only new markdown + close-out docs).
+
+**Session 212 Handoff Evaluation (by Session 213): Score 9/10.** S212’s
+handoff was for a DIFFERENT issue (#37) so it could not pre-stage \#13,
+but it set this session up cleanly. **What helped:** (1) the clean-state
+anchors held FIRSTHAND – HEAD `008b50f4` == documented S212,
+`master == origin/master` clean except the standing untracked
+`PED_GV_AUDIT_2026-05-30.html`, so orientation + ghost-check were fast
+and nothing it claimed was wrong; (2) gotcha “`gh issue view <n>` errors
+on a Projects-classic deprecation – use `--json`” saved time: I queried
+\#13 with `--json` on the first try (and it confirmed the empty body);
+(3) the open-issues menu named \#13 and the standing build-equivalent
+note framed the orientation. **What was missing (the -1, minor, not
+really S212’s job):** the SUGGESTED-NEXT menu listed \#13 only as a bare
+number (`#13/#12/#11/#10/#5`) with no hint it is a large, empty-bodied,
+never-spec’d feature – a one-line “#13 has no body; first pass is
+design, not code” would have pointed straight at the planning framing (I
+recovered it via the empty-body read + process scan). **What was
+wrong:** nothing. ROI: high.
+
+**Self-assessment (Session 213): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read IN FULL; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check clean), reported, STOPPED for the owner;
+posed the deliverable+semantics as `AskUserQuestion` rather than
+guessing on the empty body; wrote the **1B stub BEFORE technical work**;
+declared the phase each response. **Strengths:** (1) **did not fabricate
+a spec** for an empty-bodied issue – asked; (2) **consulted project
+source of truth for the doc HOME** – caught that `DESIGN_WORKSTREAM.md`
+is UI-specific and used the real `docs/planning/issueN-plan.md`
+convention + house style; (3) **firsthand-verified every load-bearing
+citation** (and re-verified the workflow’s new citations) – not from
+agent memory; (4) **adversarially verified the DRAFT plan’s design, not
+just its inventory** – the workflow caught 4 real flaws (incl. the \#9
+stacking) that my drafting missed, and I folded them all in before
+commit; (5) **stayed in scope** – drafted, did NOT ratify or implement
+(FM \#18/#19/#25). **Weaknesses (honest):** (a) my initial draft framed
+the apply-before-`meanKinship` placement as a pure benefit (“the \#9
+correction automatically sees them”) and missed the STACKING interaction
+– a blind spot given \#9 is documented at length in the very notes I’d
+read; the red-team caught it (good that I verified, but I should have
+caught it while drafting); (b) the D5 strict-leaf/soft-loader split had
+a probands-narrowing gap I also didn’t spot until the red-team. Both
+caught + fixed pre-commit; they cap this at 9 and are exactly why the
+verification pass earned its keep.
+
+**Learnings:** **Learning 199** added to `PROJECT_LEARNINGS.md` –
+empty-bodied feature issue -\> reconstruct the spec from title + owner
+Phase-1 `AskUserQuestion` decisions (ask, don’t invent); consult project
+source of truth for the doc HOME (`docs/planning/issueN-plan.md`, NOT
+the UI-oriented `DESIGN_WORKSTREAM.md`); find the single chokepoint +
+reuse the in-repo leaf+thread-`NULL`-default pattern; and the
+meta-learning – adversarially verify the PLAN’s DESIGN (not only its
+<file:line> inventory): the red-team over the draft caught the \#9
+stacking, the probands-narrowing abort, the `r`-vs-`f` range, and the
+relation-label divergence that firsthand drafting missed. Carried as
+applied: \[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\], \[\[ascii-only-in-question-options\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[push-close-out-docs-to-origin\]\].
+
+**=\> SUGGESTED NEXT = owner’s pick.** The \#13 design DRAFT is DONE.
+**The natural next is to RATIFY it** (a `/grill-me` or `AskUserQuestion`
+pass over §3’s D1-D2, D4-D11 – D3 already decided), then implement
+**Slice 1** (script-level `applyKinshipOverrides` +
+`checkKinshipOverrides` + `reportGV` `kinshipOverrides` param) as a
+strict-TDD session. **D11 (override vs the issue-#9 `+sexMean/2`
+correction) is a genetics-methodology call and the \#1 dragon – strongly
+consider `/grill-me` for it, as issue \#9’s D2 was settled.** `master`
+== origin/master (clean; this session’s close-out commit advances it –
+push per \[\[push-close-out-docs-to-origin\]\]). Other live threads: -
+**Issue \#37 disposition** (carried from S212, owner judgment): close
+it, or keep open + refresh its body to `176/137/39`. - **Possible 2.0.0
+release** (owner-gated, carried S209-S212): DESCRIPTION `2.0.0` (dev);
+[`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md) +
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+`fgSE` shipped. - **Other open issues:** \#36, \#28, \#12/#11/#10/#5;
+CRAN Phase 5 (owner-run; ARCHIVED on CRAN 2025-07-29). **Do NOT** start
+implementing \#13 without ratifying §3 first (the RED test numbers
+depend on the ratified decisions, esp. D11); **do NOT** bundle
+ratification + implementation, nor Slice 1 + Slice 2 (FM \#18/#25); **do
+NOT** change
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+(6 callers; the blast-radius boundary).
+
+**Key files (this session):** **NEW:**
+`docs/planning/issue13-kinship-overrides-plan.md` (the deliverable).
+**Close-out:** `CHANGELOG.md` (S213 entry), `PROJECT_LEARNINGS.md`
+(Learning 199), `SESSION_NOTES.md` (this handoff + the 1B stub it
+superseded). **Scratchpad (not in repo):** the 3 research agents + the
+verification workflow. **No tracked source/test/data/`NAMESPACE`/`man`
+files changed. NOT committed (standing keep):**
+`PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
+
+**Gotchas:** (1) **The \#13 plan is a DRAFT, not ratified.** Only D3
+(pair-level REPLACE) is decided. D1-D2, D4-D11 carry recommendations the
+owner must ratify before Slice-1 RED. **D11 (the \#9-correction stacking
+interaction) is the \#1 dragon** – a genetics call; the override applied
+before `meanKinship` (`R/reportGV.R:124`) feeds the issue-#9
+`+sexMean/2` correction, so an override on a one-unknown-parent animal
+STACKS rather than replaces unless the correction is made
+override-aware. (2)
+**[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+is the blast-radius boundary** – 6 callers (`reportGV:118`,
+`modBreedingGroups:173`, `modSummaryStats:357`, `gvaConvergence:126`,
+`createSimKinships:58`, `cumulateSimKinships:61`); apply overrides via a
+separate leaf at the consumer level, NEVER inside
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md).
+The two simulations must NOT take current-kinship overrides. (3)
+**`reportGV`’s `kmat` is `filterKinMatrix(probands, ...)`** – only the
+population subset; a strict
+[`stop()`](https://rdrr.io/r/base/stop.html)-on-unknown-id leaf would
+abort the run for the canonical sire-dam override (ancestors aren’t
+probands), so `reportGV` must warn-drop non-member ids before the leaf
+(D5). (4) **`kinship` is the coefficient `f`, NOT relatedness `r`
+(=2f)** – off-diagonal `<= 0.5` for non-inbred pairs; the validator must
+reject/warn `> 0.5` and the docs/CSV template must say `f`-not-`r` (D6).
+(5) Carried standing keeps (unchanged): package **ARCHIVED on CRAN
+2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without LabKey config; `gh issue view <n>` errors on a
+Projects-classic deprecation -\> use `--json`; build-equivalent is
+`devtools::check(vignettes=FALSE)`=0/0/0 (NOT run this session – no
+`R/`/test change); a 0/0/0 check does NOT imply spelling-clean -\>
+`spell_check_package`; `git pull` is rebase + chokes on `.DS_Store` -\>
+use `fetch`+`reset`.
+
 ### What Session 212 Did
 
 **Deliverable:**
