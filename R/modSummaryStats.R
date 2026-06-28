@@ -251,7 +251,9 @@ modSummaryStatsUI <- function(id) {
 #' \itemize{
 #'   \item \code{summaryData} - Summary statistics (nAnimals, meanMK, meanGU)
 #'   \item \code{relationships} - Pairwise relationship designations from
-#'     \code{convertRelationships()}
+#'     \code{convertRelationships()}. When \code{kinshipOverrides} are supplied,
+#'     a logical \code{overridden} column flags the pairs whose kinship value
+#'     came from an override (issue #13 item-3).
 #'   \item \code{relationClasses} - Relationship class frequency table from
 #'     \code{makeRelationClassesTable()}
 #'   \item \code{firstOrderCounts} - First-order relative counts per animal from
@@ -281,7 +283,9 @@ modSummaryStatsUI <- function(id) {
 #'   kinship CSV export reflect the supplied values regardless of tab order.
 #'   The override moves the kinship \emph{value} only; the \code{relation}
 #'   \emph{label} stays pedigree-derived (it is computed from pedigree structure,
-#'   not from the kinship value). \code{NULL} (the default) is a no-op.
+#'   not from the kinship value). Overridden pairs are flagged with a logical
+#'   \code{overridden} column in the relationship table (issue #13 item-3).
+#'   \code{NULL} (the default) is a no-op.
 #'
 #' @seealso \code{\link{modSummaryStatsUI}} for the user interface
 #' @seealso \code{\link{convertRelationships}} for relationship classification
@@ -376,12 +380,17 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
       applyKinshipOverridesToMatrix(kmat, overrides)
     })
 
-    # Relationship designation using convertRelationships
+    # Relationship designation using convertRelationships. Issue #13 item-3
+    # (R13): the relation LABEL is pedigree-derived, but the kinship VALUE can
+    # be overridden, so flag pairs whose value came from an override (the flag
+    # column appears only when overrides are supplied; D10 otherwise).
     relationshipData <- reactive({
       req(pedigree())
       ped <- asDataFrame(pedigree())
       kmat <- getKinshipMatrix()
-      convertRelationships(kmat, ped)
+      rel <- convertRelationships(kmat, ped)
+      overrides <- if (is.null(kinshipOverrides)) NULL else kinshipOverrides()
+      flagOverriddenRelationships(rel, overrides)
     })
 
     # Relationship class summary using makeRelationClassesTable
