@@ -15,6 +15,78 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-27 — Implemented issue \#13 Slice 2: outside-information kinship-override upload in the Genetic Value tab (Session 216)
+
+- **Deliverable (owner pick: “merge PR \#89; reopen \#13 and continue
+  the work”; single development item = Slice 2):** the app-delivery
+  slice of issue \#13 per the RATIFIED
+  `docs/planning/issue13-kinship-overrides-plan.md` §4 Slice 2 (D7 =
+  Shiny upload). **Strict-TDD DEVELOPMENT session (RED `81dec135` →
+  GREEN `d1dabbd6`; REFACTOR offered, owner chose skip; phase declared
+  each response; all three phase gates via `AskUserQuestion`).** **0
+  stakeholder corrections / 0 owner overrides.**
+- **Admin first (owner-directed, outward-facing):** merged **PR \#89**
+  (Slice 1) into `master` (merge commit `0438c2d5`) after confirming the
+  full R-CMD-check matrix green across all platforms (the red `lint`
+  check is the long-standing, non-blocking, whole-codebase informational
+  job), and **reopened issue \#13** to track Slices 2–3.
+- **New exported reader `readKinshipOverrides(fileName, sep)`**
+  (`R/readKinshipOverrides.R`, mirrors `getGenotypes`): reads an
+  `id1,id2,kinship` CSV/text/Excel file into a data frame;
+  structure/domain validation is `checkKinshipOverrides`’s job, not the
+  reader’s.
+- **`modGeneticValueUI` gains a `fileInput`** (“Kinship Overrides
+  (optional)”, accepts `.csv/.txt/.xlsx/.xls`, with help text stating
+  `kinship` is the coefficient *f*, not relatedness *r* = 2*f*).
+- **`modGeneticValueServer` gains a soft `kinshipOverrideData`
+  reactive** that reads + validates the upload and threads the result
+  into the existing
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+  call as `kinshipOverrides`. Non-fatal in the app (D5): a malformed
+  file is reported via `showNotification` and ignored without aborting
+  the GV run; a `> 0.5` warning (D6) is surfaced but the override still
+  applies. An explicit [`is.null()`](https://rdrr.io/r/base/NULL.html)
+  guard (NOT `req()`) keeps the no-upload path from aborting
+  `gvResults()`; no upload ⇒ `NULL` ⇒ rankings identical to before
+  (D10).
+- **R9 intermediate-state caveat surfaced (NEWS):** until Slice 3 wires
+  overrides into the breeding-group / summary-stats fallback recompute
+  paths, run the Genetic Value tab first so those tabs consume the
+  override-adjusted GV results.
+- **Tests (RED-first):** new `test_readKinshipOverrides.R` (reader reads
+  the CSV; its output validates) and
+  `test_modGeneticValue_kinshipOverrides.R` (`testServer`: a valid
+  `(F1,F2,0.4)` upload raises the overridden both-unknown founder’s
+  `indivMeanKin` vs an in-test baseline — deterministic since mean
+  kinship is read off the matrix, not the gene-drop; a malformed file is
+  non-fatal and identical to baseline — D5; no upload is unaffected —
+  D10). **Regression caught + fixed inside GREEN:** two issue-#73
+  `reportGV` mocks in `test_modGeneticValue.R` hardcoded a signature
+  lacking `kinshipOverrides` and errored once the module passed it —
+  mock signatures updated to mirror the real `reportGV`.
+- **Verify:** full clean regression read **0 failed / 0 error** (incl. &
+  excl. baseline `test-app-`/`test-e2e-`);
+  `devtools::check(vignettes = FALSE)` **0/0/0**; `spell_check_package`
+  **0** (reworded one roxygen possessive rather than pad WORDLIST).
+  **Phase-3E runtime smoke (REQUIRED — done):**
+  [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+  launches clean and the GV tab serves the new `fileInput` (namespaced
+  `geneticValue-kinshipOverrideFile`) in the live page; the
+  upload→ranking-change / no-upload / malformed behaviors are covered by
+  the `testServer` integration test driving the real server with the
+  actual `fileInput` data shape (a browser file-picker click-through
+  needs a GUI/Chrome driver unavailable headlessly — stated, not
+  skipped).
+- **Issue state:** committed on branch `issue13-slice2-shiny-upload`; PR
+  uses **“Relates to \#13”** (Slice 2 of 3; Slice 3 closes \#13).
+- **Learning 202** added to `PROJECT_LEARNINGS.md`. **Previous-session
+  handoff (S215) scored 9/10.** Carried
+  \[\[consult-project-source-of-truth\]\],
+  \[\[observation-vs-decision\]\],
+  \[\[ascii-only-in-question-options\]\],
+  \[\[check-process-history-before-rerunning-work\]\],
+  \[\[push-close-out-docs-to-origin\]\].
+
 ### 2026-06-27 — Implemented issue \#13 Slice 1: outside-information kinship overrides in `reportGV()` (Session 215)
 
 - **Deliverable (owner pick: “implement \#13 Slice 1”; single item):**

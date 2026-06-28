@@ -567,6 +567,9 @@
 - [`rankSubjects()`](https://github.com/rmsharp/nprcgenekeepr/reference/rankSubjects.md)
   : Ranks animals based on genetic value
 
+- [`readKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/readKinshipOverrides.md)
+  : Read a kinship overrides table from a file
+
 - [`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)
   : Remove automatically generated IDs from pedigree
 

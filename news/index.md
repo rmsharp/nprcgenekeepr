@@ -20,6 +20,24 @@
     parent supersedes that animal’s unknown-parent mean-kinship
     correction rather than stacking with it. The default (`NULL`) leaves
     results identical to before.
+  - The Genetic Value Analysis tab now accepts an optional
+    kinship-override upload: a CSV or Excel file with `id1`, `id2`, and
+    `kinship` columns (the coefficient *f*, not relatedness *r* = 2*f*)
+    is read by the new exported
+    [`readKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/readKinshipOverrides.md),
+    validated with
+    [`checkKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkKinshipOverrides.md),
+    and threaded into
+    [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md),
+    so outside-information kinship drives the in-app genetic-value
+    rankings (issue
+    [\#13](https://github.com/rmsharp/nprcgenekeepr/issues/13), slice
+    2). A malformed file is reported and ignored without aborting the
+    run; leaving the upload empty reproduces the previous rankings
+    exactly. Until a later release wires the override into the
+    breeding-group and summary-statistics fallback recomputations, run
+    the Genetic Value Analysis tab first so those tabs consume the
+    override-adjusted results.
   - File-based pedigree ingestion now treats `species` as a first-class
     column:
     [`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md)

@@ -7,6 +7,217 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 216 Did
+
+**Deliverable:** **Implemented Slice 2 of issue \#13** (app delivery)
+per the RATIFIED `docs/planning/issue13-kinship-overrides-plan.md` §4
+Slice 2 — a Shiny upload of an outside-kinship CSV in the Genetic Value
+tab, threaded into the existing
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+call as `kinshipOverrides` (D7 = Shiny upload). **DONE.** Owner picked
+“merge PR \#89; reopen \#13 and continue the work” at Phase 1.
+**Committed on branch `issue13-slice2-shiny-upload` (RED `81dec135` +
+feat `d1dabbd6` + this close-out commit); PR “Relates to \#13” — merge
+is the owner’s pick.** **Started / Completed:** 2026-06-27 / 2026-06-27
+**Status:** **DONE.** **Strict-TDD DEVELOPMENT session (RED → GREEN;
+REFACTOR offered, owner chose skip).** Phase declared each response;
+**all three gates (PRE-RED→RED, RED→GREEN, GREEN→REFACTOR) via
+`AskUserQuestion`.** **0 stakeholder corrections / 0 owner
+overrides.** - **Admin first (owner-directed, outward-facing):**
+verified PR \#89’s full R-CMD-check matrix green (the red `lint` is the
+long-standing non-blocking whole-codebase informational job — red on
+master through S211-S214; `UNSTABLE` not `BLOCKED`), then **merged PR
+\#89** (merge commit `0438c2d5`; Slice 1 now on `master`) and **reopened
+issue \#13** (OPEN) to track Slices 2-3. Synced local master via
+`fetch`+`reset` (not `pull`), branched `issue13-slice2-shiny-upload`. -
+**Recon (5-agent workflow `wf_ced37529-171`):** mapped the GV module
+(`modGeneticValueServer(id, pedigree, speciesOverrides)` `:127`; the
+`reportGV(...)` call `:197-207`), the `getGenotypes` reader idiom, the
+`testServer` pattern + `fileInput` simulation, and Slice 1’s API — then
+**verified every load-bearing claim firsthand** (read the module
+UI/server, `test_modGeneticValue.R`, `getGenotypes.R`) before freezing
+RED. - **RED (`81dec135`):** `test_readKinshipOverrides.R` (reader reads
+an `id1,id2,kinship` CSV; output validates — fails “could not find
+function”) + `test_modGeneticValue_kinshipOverrides.R` (`testServer`: a
+valid `(F1,F2,0.4)` upload raises F1’s `indivMeanKin` vs an in-test
+baseline — fails `0.1 <= 0.1` today; plus D5 malformed-non-fatal + D10
+no-upload guards that pass throughout). Confirmed each new-behavior test
+fails for the right reason. - **GREEN (`d1dabbd6`, minimal):** new
+exported `R/readKinshipOverrides.R` (mirrors `getGenotypes`);
+`modGeneticValueUI` `fileInput` (“Kinship Overrides (optional)”);
+`modGeneticValueServer` soft `kinshipOverrideData` reactive
+([`is.null()`](https://rdrr.io/r/base/NULL.html) guard NOT `req()`;
+`tryCatch`+`withCallingHandlers` → notify+NULL on error, surface `>0.5`
+warning yet still apply) threaded as
+`kinshipOverrides = kinshipOverrideData()`. `document()` regenerated
+`man/` + `NAMESPACE`. **NEWS** (`.Rmd`+render) notes the upload AND the
+R9 “run the GV tab first” caveat. **Regression caught + fixed inside
+GREEN:** two issue-#73 `reportGV` mocks in `test_modGeneticValue.R`
+hardcoded a signature lacking `kinshipOverrides` and errored once the
+module passed it — updated both mock signatures. - **Verify (all
+clean):** new files pass (reader 8/0/0; module 3 tests pass); full clean
+regression read **0 failed / 0 error** (incl. & excl. baseline
+`test-app-`/`test-e2e-`; 3088 pass / 167 skip);
+`devtools::check(vignettes=FALSE)` **0/0/0**; `spell_check_package`
+**0** (reworded one roxygen possessive, did not pad WORDLIST).
+
+**Phase-3E (runtime smoke): DONE (REQUIRED — Shiny wiring, FM \#24).**
+Launched `runModularApp(port=6099L, launch.browser=FALSE)`; the app
+started clean (no startup errors) and the GV tab served the new
+`fileInput` namespaced `geneticValue-kinshipOverrideFile` (“Kinship
+Overrides (optional)”) in the live 101KB page — proving the change is
+wired into the running app, not just the module function.
+Upload→ranking-change / no-upload / malformed behaviors are covered by
+the `testServer` integration test driving the REAL server with the
+actual `fileInput` data shape. **Residual gap stated, not skipped:** a
+true browser file-picker click-through needs a GUI/Chrome driver
+unavailable headlessly.
+
+**Session 215 Handoff Evaluation (by Session 216): Score 9/10.** S215’s
+handoff set this app-delivery session up about as well as possible.
+**What helped:** (1) **SUGGESTED NEXT named Slice 2 precisely AND gave
+the Phase-3E recipe** (“Shiny upload of an outside-kinship CSV in the GV
+tab; D7=Shiny upload; Phase-3E REQUIRED — launch
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md),
+upload, confirm the ranking moves and a no-upload launch is unaffected”)
+— that was my exact deliverable and smoke plan; (2) **gotcha (2) named
+the fallback recompute call sites** (`modBreedingGroups.R:173`,
+`modSummaryStats.R:357`) and the R9 tab-order caveat — which is exactly
+why I kept fallbacks as Slice 3 and surfaced “run the GV tab first” in
+NEWS instead of bundling; (3) **gotcha (1) the branch/PR/#13-CLOSED
+state** was accurate and guided the merge/reopen; (4) the standing notes
+(build-equivalent, `NOT_CRAN`, `NEWS.md` generated from `.Rmd`,
+spell-not-implied-by-check, `git pull` chokes on `.DS_Store` → use
+`fetch`+`reset`) all held FIRSTHAND and saved time; clean-state anchor
+held (HEAD `fcd6407e` == documented S215). **The -1 (minor):** the
+handoff didn’t anticipate that threading `kinshipOverrides` from the
+module would break `test_modGeneticValue.R`’s issue-#73 `reportGV` mocks
+(their hand-copied signature lacked the param) — a one-line “the GV
+module’s \#73 reportGV mocks will need the new arg when Slice 2 threads
+it” would have pre-warned me; I caught it via the full regression read.
+Also the Phase-3E recipe assumed a browser-capable environment (no note
+on the headless click-through gap). ROI: very high.
+
+**Self-assessment (Session 216): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read IN FULL; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check clean), reported, STOPPED for the owner;
+wrote the **1B stub BEFORE technical work**; ran strict TDD with all
+three gates. **Strengths:** (1) **did the outward-facing admin
+carefully** — confirmed the R-CMD-check matrix green and surfaced that
+lint-red is non-blocking informational BEFORE merging, rather than
+blindly merging-over-red or blindly refusing; (2) **caught the
+`req()`-aborts-the-parent pitfall** and used an explicit
+[`is.null()`](https://rdrr.io/r/base/NULL.html) guard so the no-upload
+path can’t abort `gvResults()` (D10); (3) **caught + fixed the
+test-double regression** by running the FULL clean regression read, not
+just the new files (the breakage was invisible in isolation); (4)
+**chose a deterministic fixture** (both-unknown founder override → mean
+kinship moves off the matrix, no gene-drop noise, no \#9 interaction) so
+the assertion is stable; (5) **did a genuine headless Phase-3E** (real
+app launch + served-fileInput grep) and **stated the browser-click gap
+explicitly**; (6) **verified the recon’s load-bearing claims firsthand**
+before designing RED (FM \#11/#20); (7) **stayed strictly in Slice 2** —
+did NOT touch the fallback recompute paths (Slice 3; FM \#18/#25),
+surfaced R9 in NEWS instead. **Weaknesses (honest):** (a) the module’s
+soft `kinshipOverrideData` can’t be a pure helper (`showNotification`
+needs session context) so it stays inline — a slight density, offered as
+REFACTOR, owner skipped; (b) the browser file-picker click-through
+genuinely can’t run headlessly — mitigated by the testServer integration
+test + startup smoke, but a residual gap; (c) the recon workflow used
+~195k subagent tokens — ultracode-appropriate and it paid off (precise
+wiring map), but a leaner read could have reached the same RED design.
+Capped at 9 by (a)/(b).
+
+**Learnings:** **Learning 202** added to `PROJECT_LEARNINGS.md` — wiring
+a script-level feature into the Shiny app under strict TDD: budget the
+firsthand work for the three wiring-specific failure modes — (1) a
+soft/optional input with `req()` ABORTS its mandatory consumer (use
+[`is.null()`](https://rdrr.io/r/base/NULL.html) → NULL); (2) extending a
+real function’s signature SILENTLY breaks the test doubles that mock it
+(only the FULL regression read catches it; update every mock to mirror
+the real signature); (3) honest headless Phase-3E (launch the real app +
+grep the served HTML for the namespaced input id; lean on a `testServer`
+integration test; state the browser-click gap) — plus pick a
+deterministic fixture for a gene-drop-noisy module, and do
+owner-directed outward-facing admin (merge) carefully not blindly.
+Carried as applied: \[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\], \[\[ascii-only-in-question-options\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[push-close-out-docs-to-origin\]\]; extends Learning 199/200/201.
+
+**⇒ SUGGESTED NEXT = owner’s pick.** Slice 2 is DONE on branch
+`issue13-slice2-shiny-upload` (PR “Relates to \#13”). **The natural next
+is Slice 3 (the FINAL slice — closes \#13):** patch the breeding-group +
+summary-stats **fallback recompute** paths (`modBreedingGroups.R:173`,
+`modSummaryStats.R:357`) so overrides hold even when those tabs run
+WITHOUT GV output (removing the R9 “run the GV tab first”
+intermediate-state caveat), plus the `convertRelationships`
+label-vs-value reconciliation for relationship/export display, and
+**close \#13**. Strict-TDD; **Phase-3E runtime smoke REQUIRED again**
+(Shiny wiring; FM \#24). The override input must be fed to the SAME
+fallback paths the GV reactive uses, or results differ by tab order
+(plan R9/D8). Other live threads: - **Merge the Slice-2 PR** (owner —
+outward-facing; CI runs on the PR). Slice 3’s PR should use “Closes
+\#13.” - **Issue \#37 disposition** (carried S212-S215): close, or
+refresh body to `176/137/39`. - **Possible 2.0.0 release** (owner-gated,
+carried S209-S215): DESCRIPTION `2.0.0` (dev);
+[`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md) +
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+`fgSE` shipped; now also `reportGV` `kinshipOverrides` + the GV-tab
+upload. - **Other open issues:** \#36, \#28, \#12/#11/#10/#5; CRAN Phase
+5 (owner-run; ARCHIVED on CRAN 2025-07-29). **Do NOT** bundle Slice 3
+with anything, nor implement without declaring RED first (FM \#18/#25;
+phase gates mandatory); **do NOT** change
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+(6 callers; the blast-radius boundary); **do NOT** re-introduce the
+“stacking propagates to other animals” framing (it does NOT cascade);
+**do NOT** hand-edit `NEWS.md` (edit `NEWS.Rmd` + render).
+
+**Key files (this session):** **NEW (R/):** `R/readKinshipOverrides.R`.
+**EDITED (R/):** `R/modGeneticValue.R` (UI `fileInput` after the
+Analysis Options wellPanel ~`:51`; the `kinshipOverrideData` reactive
+after `guThreshold` ~`:141`; `kinshipOverrides = kinshipOverrideData()`
+threaded into the `reportGV(...)` call ~`:225`). **NEW (tests):**
+`tests/testthat/test_readKinshipOverrides.R`,
+`tests/testthat/test_modGeneticValue_kinshipOverrides.R` (committed in
+RED `81dec135`). **EDITED (tests):**
+`tests/testthat/test_modGeneticValue.R` (both issue-#73 `reportGV` mock
+signatures gained `kinshipOverrides = NULL`). **Regenerated:**
+`man/readKinshipOverrides.Rd`, `NAMESPACE` (export
+`readKinshipOverrides`). **Close-out:** `NEWS.Rmd` + rendered `NEWS.md`
+(feat commit), `CHANGELOG.md` (S216 entry), `PROJECT_LEARNINGS.md`
+(Learning 202), `SESSION_NOTES.md` (this handoff + the 1B stub it
+superseded). **Scratchpad (not in repo):** recon `wf_ced37529-171`;
+`app_smoke.log`, `gv_page.html` (Phase-3E). **NOT committed (standing
+keep):** `PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
+
+**Gotchas:** (1) **Slice 2 is on branch `issue13-slice2-shiny-upload`,
+NOT master** — the next session must merge the PR or `fetch`/checkout.
+**\#13 is OPEN** (reopened this session) and stays open until Slice 3’s
+PR closes it. (2) **The override does NOT yet reach the
+breeding-group/summary-stats FALLBACK recompute**
+(`modBreedingGroups.R:173`, `modSummaryStats.R:357`) — only the GV tab
+and whatever consumes the GV reactive transitively. Until Slice 3, run
+the GV tab FIRST (documented in NEWS, R9). (3) **`req()` inside a nested
+reactive ABORTS the caller** — `kinshipOverrideData` deliberately uses
+`if (is.null(input$kinshipOverrideFile)) return(NULL)`, not `req()`, so
+the no-upload GV run is not halted. Preserve this if you refactor. (4)
+**A function-signature change breaks hand-copied test mocks** — any
+future param added to `reportGV` must also be added to the
+`local_mocked_bindings(reportGV = function(...))` doubles in
+`test_modGeneticValue.R` (currently 2); the FULL regression read is what
+catches it. (5) **`testServer` simulates a `fileInput`** by
+`session$setInputs(kinshipOverrideFile = data.frame(name=, size=, type=, datapath=<real temp csv>))`.
+(6) Carried standing keeps (unchanged): package **ARCHIVED on CRAN
+2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without LabKey config; `gh issue view <n>` errors on a
+Projects-classic deprecation → use `--json`; build-equivalent is
+`devtools::check(vignettes=FALSE)`=0/0/0; a 0/0/0 check does NOT imply
+spelling-clean → `spell_check_package`; module/E2E tests need
+`NOT_CRAN=true` to run (else `skip_on_cran`); `git pull` is rebase +
+chokes on `.DS_Store` → use `fetch`+`reset`.
+
 ### What Session 215 Did
 
 **Deliverable:** **Implemented Slice 1 of issue \#13**
