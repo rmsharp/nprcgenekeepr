@@ -15,6 +15,51 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-28 — Branch hygiene + filed issue \#95 tracking the three deferred D11 follow-ups (Session 225)
+
+- **Deliverable (owner pick: “Branch hygiene; Item-3 follow-up”; two
+  bounded items):** (1) deleted the now-merged branch
+  `issue13-item3-r13-flag-overridden` (local + remote); (2) recon’d the
+  remaining issue-#13 item-3 (D11) “follow-up” and — finding **no
+  ready-to-implement TDD slice** — filed **issue \#95** to track the
+  three deferred v1 limitations with full evidence. **Admin /
+  disposition session — TDD code-phases N/A** (no
+  `R/`/tests/`NAMESPACE`/`man/`/`data`/`DESCRIPTION` change). 0
+  stakeholder corrections / 0 owner overrides.
+- **Branch hygiene (verify-before-delete, Learning 208):** confirmed the
+  branch tip `68db38c9` (the S223 close-out — the ORIGINAL feature tip,
+  NOT moved to the merge commit) is an ancestor of BOTH `master` and
+  `origin/master`, so safe `git branch -d` deleted it cleanly (no `-D`
+  force needed, unlike S222’s gvaconv branch);
+  `git push origin --delete` removed the remote. No issue-13 branches
+  remain; `master` unchanged at `6cb18ddb`.
+- **D11 follow-up recon (5-agent read-only workflow `wf_c1143706-b45`; 3
+  of 5 returned, 2 filled by hand):** the D11 **core** (blanket
+  supersession, option A) is **already shipped and 4-part-tested**
+  (`correctUnknownParentMeanKinship.R:164-171` guard; threaded from
+  `reportGV.R:159,179` + `gvaConvergence.R:151-163`; regression
+  `test_reportGV.R:539-610`). What remained as “follow-up” is THREE
+  deferred v1 limitations, **none a drop-in slice:** (1) **option C**
+  (targeted suppression) is blocked on a schema change — the
+  missing-parent side cannot be derived (unrecorded parent → no pedigree
+  edges; path-agnostic kinship value), so it needs a new 4th override
+  column + a residual genetics choice (plan-mode); (2)
+  **both-unknown→one-unknown promotion** and (3) **shared-parent
+  sib-pair coupling** are genetics-methodology decisions (#9 defers
+  both-unknown; the one-unknown loop is per-animal independent) needing
+  owner/geneticist ratification like D11 itself. Surfaced via a pre-RED
+  scope `AskUserQuestion` (\[\[observation-vs-decision\]\]); owner
+  picked “File tracking issue(s)”.
+- **Process-history delta
+  (\[\[check-process-history-before-rerunning-work\]\]):** the three
+  follow-ups were tracked ONLY as prose (`plan.md:153,212,230`;
+  CHANGELOG S214) with no issue number; filed **issue \#95**
+  (`enhancement`, “Follow-up from \#13 (D11)”, **no** closing keyword —
+  \#13 and \#9 confirmed CLOSED before and after). The issue body
+  carries each follow-up’s blocker, blast-radius <file:line> inventory,
+  and disposition so a future session can act without re-running the
+  recon. Learning 211 recorded.
+
 ### 2026-06-28 — Merged the R13 relationship-flag slice to master (PR \#94; Session 224)
 
 - **Deliverable (admin/merge):** integrated the completed S223 R13 slice
