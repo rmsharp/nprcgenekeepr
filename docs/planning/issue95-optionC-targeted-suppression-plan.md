@@ -6,7 +6,7 @@
 
 **Authored:** Session 226 (2026-06-28), **planning/architecture session.** The owner picked this as the session deliverable. The TDD code-phases (RED / GREEN / REFACTOR) are **inapplicable to this document** — it is a design doc, not code. Each implementation slice in §4 is its own strict-TDD session (RED → GREEN → REFACTOR), one slice per session (FM #18/#25: do not bundle plan + implementation, do not bundle slices).
 
-> **STATUS: DRAFT — NOT RATIFIED. Two decisions are the owner's / geneticist's to make and must be settled BEFORE any RED.** Option C is the *genetically ideal end state* but its core rule (**C2 — the residual genetics-modeling rule**) is a genetics-methodology call of exactly the kind that gated D11; like D11 it should be settled via a `/grill-me` session grounded in a firsthand numeric check, not decided by the planner. The schema-encoding decision (**C1**) is an irreversible public-contract change (a 4th override column). This plan surfaces options with a planner recommendation for each; the §7 checklist is **UNRATIFIED** until the owner signs off. Do not open a Slice-1 RED session against any unratified decision (issue #95 gotcha 2; FM #19 — plan-mode output is a draft).
+> **STATUS: RATIFIED — Session 227 (2026-06-28), Phase 0.** C1 (+C1.1/C1.2/C1.3) and C2 were settled via a `/grill-me` session grounded in a firsthand numeric check on real `qcPed` (the D11 evidentiary bar; recorded in §8). C3/C4/C5/C6, the slice order, and the D10 invariant were confirmed as recommended. The §7 checklist below is now fully ratified, and §8 records the ratification (decisions, evidence, reproduction recipe, and the reframing the evidence surfaced). **Slice 1 RED is now unblocked** as a SEPARATE later session (FM #18 — do not bundle plan ratification with implementation; this session's deliverable is the ratified decisions only). The original draft framing is preserved below for the rationale that led to each call; where §3 still reads "planner recommendation," §7/§8 record the owner's ratification of it.
 
 > **Scope of writing this doc.** This is the planning deliverable. **No `R/`, `tests/`, `man/`, `NAMESPACE`, or `data/` content is changed by writing it.** The evidence-based inventory in §2 is firsthand — every `file:line` was read (or grepped) during Session 226, and supersedes any drifted citation in the parent plan (e.g. the `+ sexMean / 2` add is **`correctUnknownParentMeanKinship.R:190`**, not the parent plan's stale `:175`).
 
@@ -125,9 +125,9 @@ The override schema is `id1`, `id2`, `kinship` (D2/D3 — a symmetric REPLACE-a-
 
 ---
 
-## 3. Design decisions (option C) — DRAFT, **UNRATIFIED**
+## 3. Design decisions (option C) — **RATIFIED Session 227** (see §7/§8)
 
-Each shows the options, the **planner's recommendation**, and the kind of sign-off required. **C1 and C2 are the gates**; C3–C6 are architectural/test-design choices the planner can recommend and the owner confirms. None is ratified.
+Each shows the options, the **planner's recommendation**, and the kind of sign-off required. **C1 and C2 are the gates**; C3–C6 are architectural/test-design choices the planner can recommend and the owner confirms. **All are now ratified** (Session 227, Phase 0): C1=(a) `missingSideFor`, C2=(i), C3/C4/C5 as recommended, C6 deferred — see the §7 checklist for the ratified values and §8 for the evidence and reasoning.
 
 ### C1 — The 4th-column schema encoding. **[SCHEMA-DESIGN call — irreversible public contract.]**
 What does the new column carry?
@@ -231,19 +231,73 @@ Vertical, not horizontal (FM #25): each slice ships a working end-to-end path. *
 - **OC-R12 — Rule (i) trades the case-(b) over-credit for a scoped one (C2).** Full-drop on one sparse missing-side override under-estimates the focal's other missing-side relationships (up to ~1 SD). Rule (i) fixes the clearly-wrong case but is not genetically complete; the `/grill-me` must weigh its residual error, not rubber-stamp (i).
 - **OC-R13 — `test_kinshipOverrideDocs.R` will break (Slice 2 — MISSED in the first inventory).** It pins exact "current limitation" / missing-parent phrasing in `modGeneticValueUI()`, `genetic_value.html`, and `summary_stats.html`. Rewriting that text for option C breaks its assertions — update the test WITH the doc surfaces, not after.
 
-## 7. Owner ratification checklist — **UNRATIFIED (DRAFT)**
+## 7. Owner ratification checklist — **RATIFIED (Session 227, 2026-06-28, `/grill-me`)**
 
-Fill in via a `/grill-me` session (Phase 0), grounded in a firsthand numeric check on real `qcPed`. Until every box is checked, no Slice-1 RED.
+Settled via a `/grill-me` session (Phase 0), grounded in a firsthand numeric check on real `qcPed` (§8). All boxes checked — **Slice-1 RED is unblocked** (separate later session).
 
-- [ ] **C1** — 4th-column encoding: **(a)** side-annotation bound to a focal animal *(planner rec)* vs **(b)** surrogate-parent id. Plus: **C1.1** two opposite defaults (whole-file-absent ⇒ blanket-A; per-row-blank ⇒ known-side); **C1.2** the "both / diffuse" answer (encode / two rows / document as a v1 limitation); **C1.3** optional column *(planner rec)*.
-- [ ] **C2** — residual rule: **(i)** full-drop-on-any-missing-side-override *(planner rec — but a judgment; note its scoped over-credit, OC-R12)* vs **(ii)** partial-residual scaled add-back. **[genetics call — `/grill-me` against a numeric check]**
-- [ ] **C3** — threading: caller-computes-the-suppress-set (redefine `overriddenIds`'s contract; no new param, no `NULL`/empty trap) *(planner rec)*.
-- [ ] **C4** — pin the existing `(X,Y)=0.25` regression fixture as **case (a)** *(planner rec)* so option C is additive.
-- [ ] **C5** — shared `classifyOverrideMissingSide()` helper using `isU(ped$sire/dam)` (NOT `classifyParentage`), called at the top of both callers *(planner rec)*.
-- [ ] **C6** — relationship-table side display: **defer** *(planner rec)* vs include.
-- [ ] **Slice order** — Phase 0 (ratify) → Slice 1 (script core) → Slice 2 (diagnostic lockstep + app + close).
-- [ ] **D10** — no side column ⇒ caller passes the full set ⇒ byte-identical (blanket-A) is a hard acceptance test in every slice. *(invariant)*
+- [x] **Upstream judgment (gates the whole feature)** — real override use is a **genuine mix** of known-side corrections and missing-side stand-ins ⇒ option C is worth building, and rule (i) captures the case-(b) value now. (If it had been "mostly missing-side," rule (i) would equal today and (ii) would be required first — see §8.)
+- [x] **C1** — 4th-column encoding: **(a)** side-annotation bound to a focal animal, column name **`missingSideFor`** (value = the id, id1 or id2, whose missing-parent side this override stands in for; blank = known-side; the sire/dam side is derived from the pedigree). **(b)** surrogate-parent id **REJECTED** (bleeds toward parentage reclassification / propagation). Plus: **C1.1** two opposite defaults RATIFIED (whole-file-absent ⇒ caller passes the full set ⇒ blanket-A; per-row-blank ⇒ known-side ⇒ do not suppress); **C1.2** the "both / diffuse" case ⇒ **document as a v1 limitation** (single-id column; a both-missing-sides pair names one focal, the other endpoint keeps its prior; validator unordered-pair dedup key UNCHANGED; a `"both"` value can be added later); **C1.3** **optional** column RATIFIED (present opts into option C; absent ⇒ blanket-A per C1.1).
+- [x] **C2** — residual rule: **(i)** full-drop-on-any-missing-side-override **RATIFIED** for option-C v1. Rationale (§8): rule (i) suppresses a strict *subset* of blanket-A's suppressions, so it is a **strict improvement over today** — it newly fixes case (b) (the clearly-wrong ≈1.3 SD over-penalty) and leaves case (a) *exactly* as today. Its case-(a) residual (≈1.2 SD; a single override justifies only ≈10% of the dropped prior) is a **pre-existing blanket-A condition, not introduced by option C**. **(ii)** partial-residual scaled add-back **DEFERRED** to a #95 follow-up (needs a pair-decomposition model `sexMean`, a scalar cohort aggregate, does not provide). **[genetics call — settled via `/grill-me` against the §8 numeric check]**
+- [x] **C3** — threading: caller-computes-the-suppress-set RATIFIED (redefine `overriddenIds`'s contract to "the set whose `+ sexMean / 2` to suppress"; no new param, no `NULL`/empty trap; function signature unchanged).
+- [x] **C4** — pin the existing `(X,Y)=0.25` regression fixture as **case (a)** RATIFIED (annotate `missingSideFor=X`; X is sire-missing so its missing side is the sire, its known side the dam — confirmed firsthand `test_reportGV.R:545-555`) so `i13_correctBlanketA` stays the case-(a) oracle and option C is additive (add a new `i13_correctOptionC` oracle + a case-(b) test).
+- [x] **C5** — shared `classifyOverrideMissingSide()` helper using `isU(ped$sire/dam)` (NOT `classifyParentage`), called at the top of both callers RATIFIED.
+- [x] **C6** — relationship-table side display: **defer** RATIFIED (display-only, non-load-bearing; matches D9).
+- [x] **Slice order** — Phase 0 (ratify — DONE Session 227) → Slice 1 (script core) → Slice 2 (diagnostic lockstep + app + close) RATIFIED.
+- [x] **D10** — no side column ⇒ caller passes the full set ⇒ byte-identical (blanket-A) is a hard acceptance test in every slice. *(invariant — confirmed)*
 
 ---
 
-*Authored Session 226 (2026-06-28), planning/architecture session. Firsthand inventory via a 9-agent read-only workflow (`wf_4012d83a-551`) + completeness grep + a firsthand read of `correctUnknownParentMeanKinship.R`. Extends `issue13-kinship-overrides-plan.md` (D11) and issue #95 follow-up 1. The plan is a DRAFT — C1 and C2 are owner/geneticist ratification gates.*
+## 8. Phase 0 ratification record (Session 227, 2026-06-28)
+
+Settled via `/grill-me`, grounded in a firsthand numeric check on real `qcPed`. **The evidence is recorded here in-plan** because the parallel D11 evidence (S214) lived only in a scratchpad workflow output and was lost — this section is the durable record so a future session need not re-run the analysis (a [[check-process-history-before-rerunning-work]] / Learning-style fix).
+
+### 8A. Firsthand numeric evidence (real `qcPed`, 280 probands, 43 one-unknown animals)
+
+| Quantity | Value | Note |
+|---|---|---|
+| SD of mean-kinship distribution (uncorrected) | 0.003309 | the spread the prior is measured against |
+| `+ sexMean / 2` prior (the term blanket-A / rule (i) drops) | median 0.004430, mean 0.004332, max 0.005025 | **median ≈ 1.34 SD**, max ≈ 1.52 SD — confirms S214's "≈ 1 SD" |
+| Single override raw effect on focal mean kinship (worked animal `O4Z4IB`) | half-sib 0.125 → ΔMK 0.000446; full-sib 0.25 → ΔMK 0.000893 | **prior / raw = 9.9×** (half-sib), 5.0× (full-sib) — reproduces S214's "8.4×" |
+| Fraction of the dropped prior one half-sib override justifies | **≈ 10%** | ⇒ rule (i) residual over-correction on case (a) ≈ **90% ≈ 1.2 SD** |
+| Rank impact (mean-kinship rank, low = higher GV; dropping one animal's prior) | worked `O4Z4IB`: 187 → 105; across the 43: swing 49–121 of 280 (median 86) | the prior moves ranks by a large fraction of the colony — mis-ranking is real |
+
+### 8B. Reproduction recipe (re-runnable — replicates `reportGV.R:118-180`)
+
+```r
+suppressMessages(pkgload::load_all(".", quiet = TRUE))
+ped <- nprcgenekeepr::qcPed
+ped$population <- getGVPopulation(ped, NULL)          # reportGV.R:118
+probands <- as.character(ped$id[ped$population])      # :121
+kmat <- filterKinMatrix(probands, kinship(ped$id, ped$sire, ped$dam, ped$gen))
+original <- meanKinship(kmat)[probands]               # :164-165
+corrected <- correctUnknownParentMeanKinship(original, ped)$indivMeanKin  # :173-180
+term <- corrected - original                          # = + sexMean/2 per corrected one-unknown
+# term / sd(original)  -> the ≈1.3 SD prior;  override a cell to 0.125 and re-meanKinship
+# for the raw effect -> the ~9.9x ratio / ~10% justified / ~90% residual.
+```
+
+(Full script as run: scratchpad `c2_numeric_check.R`; cross-checked against S214 `wf_a3c184ee-92b`'s recorded numbers in `issue13-kinship-overrides-plan.md:151-152` — same order of magnitude, independently.)
+
+### 8C. The load-bearing reframing the evidence surfaced (verified logically)
+
+Rule (i) suppresses the prior **iff** the focal has ≥1 override informing its *missing* side; blanket-A suppresses for *any* override. So rule (i) suppresses a **strict subset** of blanket-A's suppressions:
+
+- **case (a)** missing-side override → drop → **same as today**;
+- **case (b)** known-side-only override → **keep** (today wrongly drops) → **the entire fix**;
+- mixed (≥1 missing-side) → drop → same as today.
+
+⇒ **Option C with rule (i) is a strict (Pareto) improvement over blanket-A**: it fixes case (b) and changes nothing else. The case-(a) ≈1.2 SD residual is pre-existing, not introduced here. This is *why* shipping (i) for v1 is safe even though it is not the genetically complete answer (which is (ii)).
+
+### 8D. Decisions ratified (see §7 for the checklist form)
+
+Upstream "mix" judgment ⇒ build option C. **C1=(a) `missingSideFor`** (+ C1.1 two opposite defaults, C1.2 document both/diffuse as a v1 limitation, C1.3 optional). **C2=(i)** full-drop side-gated; **(ii) deferred**. **C3** caller-computes-the-suppress-set; **C4** pin fixture as case (a); **C5** shared `classifyOverrideMissingSide()` via `isU`; **C6** deferred. Slice order Phase 0 → Slice 1 → Slice 2; **D10** invariant. **0 stakeholder corrections / 0 owner overrides** — every recommendation ratified as written.
+
+### 8E. Tracked follow-ups (NOT this feature)
+
+- **Rule (ii) — partial-residual** for the case-(a) ≈1.2 SD residual (needs a pair-decomposition model). New #95 follow-up.
+- **#95 follow-up 2** (both-unknown → one-unknown promotion) and **follow-up 3** (shared-unknown-parent sib-pair coupling) — unchanged, still separate genetics calls.
+- **C1.2 `"both"` / two-rows-per-pair** encoding (with the validator dedup-key fold) — deferred enhancement, naturally bundled with rule (ii).
+
+---
+
+*Authored Session 226 (2026-06-28), planning/architecture session; **ratified Session 227 (2026-06-28), Phase 0 `/grill-me`** (§7 checklist + §8 record). Firsthand inventory via a 9-agent read-only workflow (`wf_4012d83a-551`) + completeness grep + a firsthand read of `correctUnknownParentMeanKinship.R`; ratification grounded in a firsthand `qcPed` numeric check (§8). Extends `issue13-kinship-overrides-plan.md` (D11) and issue #95 follow-up 1. **Slice-1 RED is unblocked as a separate later session.***
