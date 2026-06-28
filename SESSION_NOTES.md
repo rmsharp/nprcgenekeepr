@@ -6,6 +6,11 @@
 
 ## ACTIVE TASK
 
+### What Session 219 Did
+**Deliverable:** Add user-facing documentation of the kinship-override feature's behavior and limitations to the in-app UI -- (1) the override-upload helpText in the Genetic Value tab (R/modGeneticValue.R:51-62), (2) inst/extdata/ui_guidance/genetic_value.html, (3) inst/extdata/ui_guidance/summary_stats.html. Cover: overrides change the kinship VALUE only (off-diagonal, symmetric, coefficient f); they flow to rankings/breeding-groups/summary-stats regardless of tab order; the relationship-table LABEL stays pedigree-derived so label and value can disagree (item 3b); gvaConvergence ignores overrides (3a); missing-parent edge cases are current limitations (3c). (IN PROGRESS)
+**Started:** 2026-06-27
+**Status:** Session claimed (Phase 1B). Scope ratified by owner (content = all limitations + how it flows; placement = supply point + guidance panels). Owner chose to continue this conversation as the implementation session. Work beginning -- awaiting PRE-RED->RED phase gate.
+
 ### What Session 218 Did
 **Deliverable:** **Completed the issue #13 merge arc** (outward-facing admin) — merged **PR #90** (Slice 2) and **PR #91** (Slice 3) into `master`, so all 3 slices of issue #13 are now on `master` and **#13 is CLOSED** (via PR #91, with Slice 3 actually merged). **DONE.** Owner picked "merge PR #90" at Phase 1, then "Reopen, then merge PR #91" when the #90 merge accidentally closed #13 early.
 **Started / Completed:** 2026-06-27 / 2026-06-27
