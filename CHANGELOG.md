@@ -15,6 +15,74 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-27 — Documented issue \#13 kinship-override behavior + limits in the in-app UI (Session 219)
+
+- **Deliverable (owner ask: “Documentation should appear at a minimum in
+  the UI where the kinship coefficient(s) are supplied”; single
+  documentation item):** added user-facing documentation of the issue
+  \#13 kinship-override feature’s behavior and limitations to the three
+  surfaces a user sees inside the running app — the override-upload
+  `helpText` in the Genetic Value tab (the supply point),
+  `inst/extdata/ui_guidance/genetic_value.html`, and
+  `inst/extdata/ui_guidance/summary_stats.html`. **Strict-TDD
+  DEVELOPMENT (documentation) session (RED `ed05a0cd` → GREEN
+  `3a506772`; REFACTOR offered, owner chose skip; phase declared each
+  response; all three phase gates via `AskUserQuestion`).** **0
+  stakeholder corrections / 0 owner overrides.**
+- **Audit first (false-negative discipline):** the item-3 implications
+  (gvaConvergence ignores overrides; relationship label-vs-value
+  divergence; unknown-parent \#9 edge cases) were documented only
+  DEVELOPER-facing (roxygen + code comments in `modSummaryStats.R`) and
+  PACKAGE-level (NEWS, planning doc) — **ZERO in-app coverage**; the
+  override-upload helpText covered file FORMAT only. Enumerated every
+  in-app surface (helpText, `includeHTML` guidance assets, About tab)
+  and grepped each broadly before concluding “absent.”
+- **Content (owner-ratified = all limitations + how it flows):**
+  overrides change the kinship VALUE only (off-diagonal, symmetric,
+  coefficient *f*); they apply to rankings, breeding groups, and summary
+  statistics regardless of tab order; the relationship-table LABEL stays
+  pedigree-derived so a label and its overridden value can disagree
+  (item 3b); the gene-drop convergence check
+  [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+  ignores overrides (3a); overrides on an animal missing a parent are
+  supported, with a few edge cases (both parents unknown, or siblings
+  sharing an unknown parent) as current limitations (3c).
+- **RED (`ed05a0cd`):** `tests/testthat/test_kinshipOverrideDocs.R` — 14
+  assertions across the three surfaces; **12 failed (documentation
+  absent), 0 errors**. Asserted phrases verified absent from the current
+  rendered UI first; helpText-EXCLUSIVE discriminators chosen because
+  `as.character(modGeneticValueUI())` embeds `genetic_value.html` (which
+  already names gvaConvergence — asserting it would FALSE-PASS).
+- **GREEN (`3a506772`, minimal):** a second `helpText` at the override
+  upload (each caveat built with a single
+  [`paste()`](https://rdrr.io/r/base/paste.html) so it renders as one
+  contiguous text node — `helpText()` renders each argument as a
+  separate, newline-separated node) + an override paragraph in each of
+  the two guidance HTML files. No `man/`/`NAMESPACE` change (function
+  body + static assets only). **NEWS** updated (`.Rmd` + render).
+- **Verify (all clean):** doc tests 14/14; full clean regression read
+  **0 failed / 0 error** (3289 assertions, incl. & excl. baseline
+  `test-app-`/`test-e2e-`); `devtools::check(vignettes = FALSE)`
+  **0/0/0**; `spell_check_package` **0**.
+- **Phase-3E (REQUIRED — UI-text change, FM \#24): DONE.** Launched the
+  real
+  [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md);
+  the app started clean (0 error lines) and the served page carried all
+  six new caveat strings. Read the app’s ACTUAL port (6013) from its
+  “Listening on” log line (`runModularApp` overrode the requested
+  `shiny.port`).
+- **Learning 205** added to `PROJECT_LEARNINGS.md`. **Previous-session
+  handoff (S218) scored 9/10.** Carried
+  \[\[consult-project-source-of-truth\]\],
+  \[\[observation-vs-decision\]\],
+  \[\[ascii-only-in-question-options\]\],
+  \[\[check-process-history-before-rerunning-work\]\],
+  \[\[push-close-out-docs-to-origin\]\].
+- **Committed on branch `issue13-item3-inapp-docs` (local; push / PR is
+  the owner’s outward-facing call).** The three deeper item-3 follow-ups
+  remain UNIMPLEMENTED on the backlog — this session documented their
+  limits, it did not implement them.
+
 ### 2026-06-27 — Completed the issue \#13 merge arc: merged Slices 2 + 3 to master; \#13 CLOSED (Session 218)
 
 - **Deliverable (owner pick: “merge PR \#90”, then “Reopen, then merge
