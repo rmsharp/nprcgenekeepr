@@ -15,6 +15,51 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-28 — Phase 0: ratified C1 + C2 for issue \#95 option C via `/grill-me` (Session 227)
+
+- **Deliverable (owner pick: “ratify C1 + C2 via `/grill-me`”):** the
+  Phase-0 ratification of the two owner/geneticist gates S226’s plan
+  left UNRATIFIED.
+  `docs/planning/issue95-optionC-targeted-suppression-plan.md` updated:
+  STATUS flipped DRAFT → **RATIFIED (S227)**, §7 checklist filled with
+  the decided values, and a new **§8 ratification record** added
+  (firsthand numeric evidence + a re-runnable reproduction recipe + the
+  reframing). **Planning / Phase-0 decision session — TDD code-phases
+  N/A.** No `R/`/tests/`NAMESPACE`/`man/`/`data`/`DESCRIPTION` change
+  (plan markdown + close-out docs only). **0 stakeholder corrections / 0
+  owner overrides** — every recommendation ratified as written.
+- **Firsthand numeric check on real `qcPed` (the D11/S214 evidentiary
+  bar), recorded in plan §8 so it is not lost as S214’s was:**
+  replicated the `reportGV.R:118-180` mean-kinship path; the
+  `+ sexMean/2` prior is **median ~1.34 SD** of the mean-kinship spread,
+  a single half-sib override justifies only **~10%** of that prior
+  (prior/raw ~9.9×), and dropping one animal’s prior swings its rank
+  49–121 of 280. Independently reproduces S214’s “~1 SD” / “8.4×”
+  numbers.
+- **Decisions ratified:** upstream judgment = real override use is a
+  **genuine mix** (⇒ option C worth building). **C1=(a)**
+  side-annotation column **`missingSideFor`** (C1.1 two opposite
+  absent-column defaults; C1.2 the both/diffuse case documented as a v1
+  limitation; C1.3 optional column — C1.1/C1.3 forced by the D10
+  byte-identical invariant). **C2=(i)** full-drop side-gated — ratified
+  because rule (i) suppresses a strict *subset* of blanket-A’s
+  suppressions, so it is a **strict (Pareto) improvement over today**
+  (fixes the known-side case b; leaves the missing-side case a, whose
+  ~1.2 SD residual is pre-existing, unchanged). **(ii)**
+  partial-residual **deferred** to a new \#95 follow-up (needs a
+  pair-decomposition model `sexMean` lacks). **C3**
+  caller-computes-the-suppress-set; **C4** pin the `(X,Y)=0.25` fixture
+  as case (a); **C5** shared `classifyOverrideMissingSide()` via
+  `isU(ped$sire/dam)`; **C6** deferred. Slice order Phase 0 (DONE) →
+  Slice 1 → Slice 2; **D10** invariant confirmed. **Slice-1 RED is now
+  unblocked as a separate later session.**
+- **Learnings:** Learning 213 (PROJECT_LEARNINGS.md) — do the firsthand
+  numeric check before the grill and preserve its evidence in the plan;
+  lead the grill with the upstream domain judgment; reframe a
+  targeted-suppression rule as a strict subset (Pareto improvement) of
+  the blanket it refines; reserve `AskUserQuestion` for genuinely-open /
+  genetics calls and confirm invariant-forced sub-decisions in prose.
+
 ### 2026-06-28 — Plan-mode design for issue \#95 option C (targeted suppression of the kinship-override / unknown-parent \#9 correction) (Session 226)
 
 - **Deliverable (owner pick: “plan option C design for issue \#95”):**

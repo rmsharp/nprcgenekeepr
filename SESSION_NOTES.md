@@ -7,6 +7,215 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 227 Did
+
+**Deliverable:** **Phase 0 for issue \#95 option C – ratified C1 + C2
+(and confirmed C3/C4/C5/C6) via `/grill-me`, grounded in a firsthand
+numeric check on real `qcPed`.** Updated
+`docs/planning/issue95-optionC-targeted-suppression-plan.md`: STATUS
+flipped DRAFT -\> **RATIFIED (S227)**, §3 header updated, §7 checklist
+filled with the decided values, and a NEW **§8 ratification record**
+added (firsthand numeric evidence + a re-runnable reproduction recipe +
+the load-bearing reframing). **DONE.** **Started / Completed:**
+2026-06-28 / 2026-06-28 **Status:** **DONE.** **Planning / Phase-0
+decision session – TDD code-phases N/A** (the deliverable is the
+ratified DECISIONS; Slice-1 implementation is a SEPARATE later session –
+FM \#18). Phase declared PRE-RED / Planning each response. **0
+stakeholder corrections / 0 owner overrides** – every recommendation
+ratified as written (“Confirm all as recommended” at the consolidated
+gate). - **Firsthand numeric check BEFORE the grill (the D11/S214 bar),
+on real `qcPed`** (`scratchpad/c2_numeric_check.R`; recipe preserved in
+plan §8B): replicated the `reportGV.R:118-180` mean-kinship path
+(`getGVPopulation` -\> `kinship` -\> `filterKinMatrix` -\> `meanKinship`
+-\> `correctUnknownParentMeanKinship`). Found: the `+ sexMean/2` prior =
+**median ~1.34 SD** of the mean-kinship spread (280 probands, 43
+one-unknown); a single half-sib override justifies only **~10%** of that
+prior (prior/raw ~9.9x); dropping one animal’s prior swings its rank
+**49-121 of 280**. An Explore agent recovered S214’s recorded numbers
+(“~1 SD”, “8.4x”, rank \#6-\>#179) – mine **independently reproduce
+them**, which IS the adversarial verification for the load-bearing
+number. - **The decisive reframing (verified logically) that made C2 a
+clean call:** rule (i) suppresses the prior iff an override informs the
+focal’s MISSING side; blanket-A suppresses for ANY override -\> rule (i)
+suppresses a **strict SUBSET** of blanket-A -\> it is a **Pareto
+improvement over today** (newly fixes case b – known-side overrides;
+leaves case a exactly as today). So the alarming ~1.2 SD case-(a)
+residual is **pre-existing, not introduced by option C**; (ii) (the
+genetically complete fix) is safely deferrable. - **Grilled in
+dependency order:** Q1 = the upstream domain judgment “are real
+overrides mostly known-side / missing-side / a mix?” (owner: **genuine
+mix** -\> option C worth building) -\> C2 (genetics) -\> C1 (schema) -\>
+C1.2 (the one genuinely-open sub-decision) -\> a consolidated confirm of
+C3/C4/C5/C6 + order + D10. C1.1 + C1.3 are FORCED by the D10
+byte-identical invariant -\> stated as settled in prose, not asked
+(reserve `AskUserQuestion` for genuinely-open / genetics calls).
+Grounded C4 firsthand (`test_reportGV.R:545-555`) before recommending
+it.
+
+**Phase-3E (runtime smoke): N/A (stated, not skipped).** Planning /
+decision session – the deliverable is a markdown plan-doc update +
+close-out docs; it authored no `R/`/runtime code, so there is no runtime
+behavior to smoke-test. **Build-equivalent (`devtools::check`) not
+triggered:** nothing in
+`R/`/tests/`NAMESPACE`/`man/`/`data`/`DESCRIPTION` changed (only
+markdown), same logic as the S226 plan session and the S224/S225 admin
+sessions. (The `scratchpad/c2_numeric_check.R` numeric check ran clean
+against the loaded package – it is evidence, not package code.)
+
+**Session 226 Handoff Evaluation (by Session 227): Score 9/10.** S226’s
+handoff + the plan it produced set this Phase-0 session up about as well
+as possible. **What helped:** (1) **SUGGESTED NEXT named this
+deliverable nearly verbatim** – “Phase 0 for option C – ratify C1 + C2
+via `/grill-me` (a SEPARATE session): settle the 4th-column schema
+encoding (C1 + C1.1/C1.2/C1.3) and the residual genetics-modeling rule
+(C2 …), grounded in a firsthand numeric check on real `qcPed` (the D11
+evidentiary bar). No Slice-1 RED until this closes.” – which IS exactly
+what I did; (2) **the plan §3 laid out the full decision tree** (C1/C2
+options + planner recs + the honest OC-R12 caveat that rule (i) is a
+judgment not a slam-dunk), so the grill had a ready structure – I walked
+it rather than inventing it; (3) **the gotchas were accurate and
+load-bearing** – plan-is-a-DRAFT/no-RED (1), C1+C2 are the real gates /
+C2 needs a numeric check (2), caller-computes-the-suppress-set (3), side
+uses `isU` not `classifyParentage` (4), and the <file:line> are
+firsthand-current (6) – I relied on `:190`/`:118-180`/`:545-555` and
+they held; (4) **§1 preserved the headline magnitude** (“~1 SD”, “8.4x”,
+“#6-\>#179”) so I knew the order of magnitude before computing; (5)
+standing keeps held firsthand (build-equivalent not triggered by
+doc-only; clean-state anchor HEAD `49b47e31` == documented S226; tree
+clean except the standing untracked audit HTML). **The -1 (minor):** the
+plan said “grounded in a firsthand numeric check” and preserved the
+headline numbers, but did NOT carry a **reproduction recipe** – I had to
+rebuild the `reportGV` mean-kinship pipeline from scratch (and recover
+S214’s source via an Explore agent) to re-derive them. A one-line
+“reproduce via reportGV.R:118-180 on qcPed” pointer would have saved
+that (fair: S226 was an architecture session; the recipe gap is exactly
+what my §8B now fixes for the future). ROI: very high.
+
+**Self-assessment (Session 227): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read IN FULL; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check clean – HEAD == documented S226),
+reported, STOPPED for the owner; wrote the **1B stub BEFORE technical
+work**; declared PRE-RED/Planning each response. **Strengths:** (1)
+**firsthand numeric check BEFORE the grill** (the D11 bar), grounded on
+real `qcPed`, and **cross-validated against S214’s recorded numbers**
+(independent reproduction = the verification); (2) **surfaced the
+decisive reframing** (rule (i) = strict Pareto improvement; the case-(a)
+residual is pre-existing) and verified it logically – this turned C2
+from an agonizing genetics call into a clean one; (3) **led the grill
+with the upstream domain judgment** (mix) that gates the whole feature,
+then walked the dependency tree; (4) **reserved `AskUserQuestion` for
+the genuinely-open / genetics calls** and confirmed invariant-forced
+sub-decisions (C1.1/C1.3) in prose – efficient, did not over-ask; (5)
+**PRESERVED the evidence in the plan (§8)** – a durable fix for the S214
+evidence-loss gap; (6) grounded C4 firsthand before recommending; (7)
+**stayed strictly in the Phase-0 lane** – did NOT start Slice-1 RED (FM
+\#18), did not touch other \#95 follow-ups / 2.0.0 / \#37; 0 corrections
+/ 0 overrides. **Weaknesses (honest):** (a) **the numeric script’s first
+run failed** (`getGVPopulation` proband setup not replicated -\> N=0) –
+caught and fixed in one iteration, zero downstream effect, but a cleaner
+first pass would have checked the proband setup before running; (b)
+**did not update issue \#95** with the ratification or the
+newly-identified rule-(ii) follow-up – a deliberate scope choice
+(outward-facing; left for the owner) but a small tracker-accuracy gap,
+surfaced in what’s-next; (c) no build/runtime verification – correctly
+N/A (doc-only), stated. Capped at 9 by (a)/(b) – both cosmetic;
+technical execution clean.
+
+**Learnings:** **Learning 213** added to `PROJECT_LEARNINGS.md` – a
+Phase-0 genetics-ratification grill: do the firsthand numeric check
+FIRST and PRESERVE its evidence IN the plan (S214’s was lost in
+scratchpad); cross-validating a firsthand computation against the prior
+session’s recorded numbers IS the adversarial verification; reframe a
+“targeted-suppression” rule as a strict SUBSET (Pareto improvement) of
+the blanket it refines, and separate “worth shipping” from “genetically
+complete”; lead the grill with the upstream domain judgment and walk the
+dependency tree; reserve `AskUserQuestion` for genuinely-open / genetics
+calls, confirm invariant-forced sub-decisions in prose. Carried as
+applied: \[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[ascii-only-in-question-options\]\],
+\[\[push-close-out-docs-to-origin\]\]; extends Learning 212 (the plan) /
+211 (filed \#95) and the D11/S214 ratification precedent (Learning 200).
+**This was a planning / Phase-0 decision session – TDD code-phases
+N/A.**
+
+**=\> SUGGESTED NEXT = owner’s pick.** Option C’s Phase 0 is **DONE** –
+the plan is RATIFIED
+(`docs/planning/issue95-optionC-targeted-suppression-plan.md` §7/§8);
+**Slice-1 RED is now UNBLOCKED**. The natural next options (all
+owner-gated): - **Slice 1 of option C – a strict-TDD DEVELOPMENT session
+(RED -\> GREEN -\> REFACTOR)** per the plan’s §4 Slice 1:
+`checkKinshipOverrides` accepts + structurally validates the
+`missingSideFor` column (C1; per-row-blank =\> known-side; absent column
+=\> caller passes the full set =\> blanket-A / D10); a new shared
+`classifyOverrideMissingSide(overrides, ped, oneUnknownIds)` helper via
+`isU(ped$sire/dam)` (C5); `reportGV` computes + passes the missing-side
+subset as `overriddenIds` (C3 – `correctUnknownParentMeanKinship`
+unchanged); refined regression (pin the `(X,Y)=0.25` fixture as case
+(a), add an `i13_correctOptionC` oracle + a case-(b) test, C4). Branch
+off master; PR **“Relates to \#95”** (no closing keyword – \#95 stays
+open for follow-ups 2/3 + rule (ii)). **gvaConvergence keeps passing the
+FULL set (blanket-A) until Slice 2.** - **Update issue \#95
+(outward-facing, owner’s call):** add a comment recording the Phase-0
+ratification + the NEW **rule (ii)** follow-up (partial-residual). The
+plan §8E already records all follow-ups durably, so this is
+tracker-hygiene, not load-bearing. - **Possible 2.0.0 release**
+(owner-gated, carried S209-S227). - **Issue \#37 disposition** (carried
+S212-S227): close, or refresh body counts. - **Other open issues:** \#36
+(chimp age pyramid), \#28 (timestamped location -\> parents),
+\#12/#11/#10/#5; CRAN Phase 5 (owner-run; ARCHIVED on CRAN 2025-07-29).
+
+**Key files (this session):** **No `R/`/tests/`NAMESPACE`/`man/`/`data`
+change.** **The deliverable (EDITED on `master`):**
+`docs/planning/issue95-optionC-targeted-suppression-plan.md` (STATUS
+banner -\> RATIFIED; §3 header; §7 checklist filled; NEW §8 ratification
+record + reproduction recipe; footer). **Close-out docs (on `master`):**
+`SESSION_NOTES.md` (this handoff + the 1B stub it supersedes),
+`CHANGELOG.md` (S227 entry), `PROJECT_LEARNINGS.md` (Learning 213).
+**NOT committed (standing keep):** `PED_GV_AUDIT_2026-05-30.html`
+(untracked); `.DS_Store`. **Scratchpad / evidence (NOT in repo – the
+recipe is preserved in plan §8B):** `c2_numeric_check.R` (the firsthand
+check), `c2_evidence_summary.md` (the C2 evidence + reframing).
+
+**Gotchas:** (1) **Option C is RATIFIED and Slice-1 RED is UNBLOCKED.**
+The plan’s §7 is fully `[x]`’d; §8 records the decisions + evidence.
+**\#95 stays OPEN** (rule (ii) + follow-ups 2/3 remain); **\#13 and \#9
+stay CLOSED.** (2) **C2 = rule (i) full-drop side-gated; rule (ii)
+(partial-residual) is DEFERRED** to a new \#95 follow-up – do NOT try to
+implement (ii) in Slice 1 (it needs a pair-decomposition model
+`sexMean`, a scalar, does not provide). (3) **C1 = the `missingSideFor`
+column** (value = the id whose missing-parent side the override informs;
+blank = known-side). **Two OPPOSITE absent-defaults (C1.1):**
+whole-file-absent column =\> caller passes the FULL set =\> blanket-A
+(byte-identical / D10); per-row-blank cell =\> known-side =\> do NOT
+suppress. Do NOT collapse them. (4) **C3 = caller computes the suppress
+set** – redefine `overriddenIds`’s contract to “the set whose
+`+ sexMean/2` to suppress”; `correctUnknownParentMeanKinship`’s `:164`
+guard is UNCHANGED. Do NOT add a NULL-default param (the NULL-vs-empty
+trap). (5) **Side classification uses `isU(ped$sire/dam)`, NOT
+`classifyParentage`** (which returns class, not side). (6) **C1.2
+(both/diffuse) is a documented v1 limitation** – single-id column,
+validator unordered-pair dedup key UNCHANGED; a `"both"` value /
+two-rows-per-pair is a deferred enhancement (bundle with rule (ii)). (7)
+**Slice 2 (not Slice 1) brings gvaConvergence into lockstep + updates
+the UI helptext + `genetic_value.html` + `test_kinshipOverrideDocs.R`
+(phrase-pinning – breaks if the text changes) + Phase-3E smoke.** (8)
+**Plan `file:line` are firsthand-current (S226/S227)** – `+sexMean/2`
+add is `correctUnknownParentMeanKinship.R:190`; the guard `:164-171`;
+reportGV mean-kinship path `:118-180`. (9) Carried standing keeps
+(unchanged): package **ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5
+owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without LabKey config; `gh issue view <n>` errors on a
+Projects-classic deprecation -\> use `--json`; build-equivalent is
+`devtools::check(vignettes=FALSE)`=0/0/0 (NOT run this session – no `R/`
+change); a 0/0/0 check does NOT imply spelling-clean -\>
+`spell_check_package`; `NEWS.md` is GENERATED from `NEWS.Rmd`;
+module/E2E tests need `NOT_CRAN=true`; `git pull` is rebase + chokes on
+`.DS_Store` -\> use `fetch`+`reset`.
+
 ### What Session 226 Did
 
 **Deliverable:** **Plan-mode / architecture design for issue \#95
