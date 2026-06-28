@@ -15,6 +15,41 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-28 — Branch hygiene: deleted merged branch `issue95-optionC-slice2` (issue \#95, Session 233)
+
+- **Deliverable (owner pick):** the deferred branch-hygiene step from
+  S232’s SUGGESTED NEXT — deleted the merged branch
+  `issue95-optionC-slice2` (local + remote). **Admin/branch-hygiene
+  session — TDD code-phases N/A** (no `R/`/tests change). Third run of
+  the S229→S230(a) deferred-hygiene pattern (slice1 deleted in S230(a);
+  slice2 now).
+- **Verify-merged-firsthand (four checks):** branch tip `421f80f2` is an
+  ancestor of BOTH `master` and `origin/master`
+  (`git merge-base --is-ancestor`), local and remote branch tips
+  identical, and `git log master..issue95-optionC-slice2` empty —
+  against `master == origin/master == cd20817e`.
+- **Local delete:** safe `git branch -d issue95-optionC-slice2` (exit 0)
+  — the documented `-D`-forcing “ahead 1” quirk (Learning 207/208) did
+  not bite because PR \#97 was a true merge commit, so the tip is a
+  literal ancestor of master.
+- **Remote delete (outward-facing — owner-confirmed first via
+  `AskUserQuestion`):**
+  `git push origin --delete issue95-optionC-slice2`. Verified gone:
+  `git ls-remote origin issue95-optionC-slice2` empty; the
+  `origin/issue95-optionC-slice2` remote-tracking ref also pruned.
+  GitHub had not auto-deleted the branch on PR merge.
+- **Scope held (1-and-done):** deleted only the named merged branch;
+  left the other stale branches (`dev`, `module`,
+  `rlabkey-version-floor`) untouched. This closes the option C Slice 2
+  arc end-to-end: S230 RED/GREEN → S231 push+PR → S232 merge → S233
+  hygiene. \#95 stays **OPEN** (rule (ii) + follow-ups 2/3 remain).
+- **Learnings:** Learning 219 (PROJECT_LEARNINGS.md) — the deferred
+  branch-hygiene step is a clean ~5-command admin task when you
+  verify-merged-firsthand against BOTH refs first; try `git branch -d`
+  first (only fall back to merge-base-check-then-`-D` if `-d` refuses);
+  confirm the outward-facing remote delete before running it, then
+  verify removal with `git ls-remote`.
+
 ### 2026-06-28 — Merged option C Slice 2 to master (issue \#95, Session 232)
 
 - **Deliverable (owner pick “go with next suggested”):** integrated

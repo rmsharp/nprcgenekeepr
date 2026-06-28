@@ -55,6 +55,21 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-06-28--branch-hygiene-deleted-merged-branch-issue95-optionc-slice2-issue-95-session-233">2026-06-28 — Branch hygiene: deleted merged branch <code>issue95-optionC-slice2</code> (issue #95, Session 233)<a class="anchor" aria-label="anchor" href="#id_2026-06-28--branch-hygiene-deleted-merged-branch-issue95-optionc-slice2-issue-95-session-233"></a></h3>
+<ul><li>
+<strong>Deliverable (owner pick):</strong> the deferred branch-hygiene step from S232’s SUGGESTED NEXT — deleted the merged branch <code>issue95-optionC-slice2</code> (local + remote). <strong>Admin/branch-hygiene session — TDD code-phases N/A</strong> (no <code>R/</code>/tests change). Third run of the S229→S230(a) deferred-hygiene pattern (slice1 deleted in S230(a); slice2 now).</li>
+<li>
+<strong>Verify-merged-firsthand (four checks):</strong> branch tip <code>421f80f2</code> is an ancestor of BOTH <code>master</code> and <code>origin/master</code> (<code>git merge-base --is-ancestor</code>), local and remote branch tips identical, and <code>git log master..issue95-optionC-slice2</code> empty — against <code>master == origin/master == cd20817e</code>.</li>
+<li>
+<strong>Local delete:</strong> safe <code>git branch -d issue95-optionC-slice2</code> (exit 0) — the documented <code>-D</code>-forcing “ahead 1” quirk (Learning 207/208) did not bite because PR #97 was a true merge commit, so the tip is a literal ancestor of master.</li>
+<li>
+<strong>Remote delete (outward-facing — owner-confirmed first via <code>AskUserQuestion</code>):</strong> <code>git push origin --delete issue95-optionC-slice2</code>. Verified gone: <code>git ls-remote origin issue95-optionC-slice2</code> empty; the <code>origin/issue95-optionC-slice2</code> remote-tracking ref also pruned. GitHub had not auto-deleted the branch on PR merge.</li>
+<li>
+<strong>Scope held (1-and-done):</strong> deleted only the named merged branch; left the other stale branches (<code>dev</code>, <code>module</code>, <code>rlabkey-version-floor</code>) untouched. This closes the option C Slice 2 arc end-to-end: S230 RED/GREEN → S231 push+PR → S232 merge → S233 hygiene. #95 stays <strong>OPEN</strong> (rule (ii) + follow-ups 2/3 remain).</li>
+<li>
+<strong>Learnings:</strong> Learning 219 (PROJECT_LEARNINGS.md) — the deferred branch-hygiene step is a clean ~5-command admin task when you verify-merged-firsthand against BOTH refs first; try <code>git branch -d</code> first (only fall back to merge-base-check-then-<code>-D</code> if <code>-d</code> refuses); confirm the outward-facing remote delete before running it, then verify removal with <code>git ls-remote</code>.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-06-28--merged-option-c-slice-2-to-master-issue-95-session-232">2026-06-28 — Merged option C Slice 2 to master (issue #95, Session 232)<a class="anchor" aria-label="anchor" href="#id_2026-06-28--merged-option-c-slice-2-to-master-issue-95-session-232"></a></h3>
 <ul><li>
 <strong>Deliverable (owner pick “go with next suggested”):</strong> integrated option C Slice 2 to <code>master</code> — watched the PR #97 R-CMD-check matrix to green, then <strong>merged</strong> (merge commit <code>e893c90d</code>, 23:00:45). <strong>Admin/merge session — TDD code-phases N/A</strong> (no <code>R/</code>/tests change; the merged code is S230’s). The 5th run of the careful-admin push→PR→CI→merge arc (S218/S221/S224/S229) — and the <strong>first clean run since S229’s triple closing-keyword firing</strong>.</li>
