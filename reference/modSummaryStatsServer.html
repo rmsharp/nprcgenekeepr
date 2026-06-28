@@ -63,7 +63,8 @@ relationship designation analysis.</p>
 <span>  <span class="va">geneticValues</span>,</span>
 <span>  <span class="va">pedigree</span>,</span>
 <span>  kinshipMatrix <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  founderStats <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  founderStats <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  kinshipOverrides <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -97,6 +98,18 @@ the module will calculate kinship from the pedigree.</p></dd>
 (<code>fe</code>, <code>fg</code>, <code>total</code>, <code>nMaleFounders</code>,
 <code>nFemaleFounders</code>). When supplied, a founder summary table is rendered
 on the Summary Statistics tab (monolith parity). If NULL, it is omitted.</p></dd>
+
+
+<dt id="arg-kinshipoverrides">kinshipOverrides<a class="anchor" aria-label="anchor" href="#arg-kinshipoverrides"></a></dt>
+<dd><p>optional reactive returning a validated
+outside-information kinship-override data frame (<code>id1</code>, <code>id2</code>,
+<code>kinship</code>); see <code><a href="applyKinshipOverrides.html">applyKinshipOverrides</a></code> (issue #13).
+When the module recomputes kinship from the pedigree (the usual path), the
+overrides are applied to that matrix, so the relationship table and the
+kinship CSV export reflect the supplied values regardless of tab order.
+The override moves the kinship <em>value</em> only; the <code>relation</code>
+<em>label</em> stays pedigree-derived (it is computed from pedigree structure,
+not from the kinship value). <code>NULL</code> (the default) is a no-op.</p></dd>
 
 </dl></div>
     <div class="section level2">

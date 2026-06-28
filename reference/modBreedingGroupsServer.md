@@ -8,7 +8,12 @@ minimize relatedness within groups while maximizing group sizes.
 ## Usage
 
 ``` r
-modBreedingGroupsServer(id, pedigree, geneticValues = NULL)
+modBreedingGroupsServer(
+  id,
+  pedigree,
+  geneticValues = NULL,
+  kinshipOverrides = NULL
+)
 ```
 
 ## Arguments
@@ -28,6 +33,17 @@ modBreedingGroupsServer(id, pedigree, geneticValues = NULL)
   [`modGeneticValueServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modGeneticValueServer.md).
   If provided and contains a kinship matrix, it will be used instead of
   calculating one.
+
+- kinshipOverrides:
+
+  optional reactive returning a validated outside-information
+  kinship-override data frame (`id1`, `id2`, `kinship`); see
+  [`applyKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md)
+  (issue \#13). When the module recomputes kinship from the pedigree (no
+  genetic value output), the overrides are applied to that matrix so
+  group formation reflects them regardless of tab order. `NULL` (the
+  default) is a no-op. The genetic-value-output path already carries
+  overrides.
 
 ## Value
 

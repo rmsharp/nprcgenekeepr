@@ -12,7 +12,8 @@ modSummaryStatsServer(
   geneticValues,
   pedigree,
   kinshipMatrix = NULL,
-  founderStats = NULL
+  founderStats = NULL,
+  kinshipOverrides = NULL
 )
 ```
 
@@ -44,6 +45,19 @@ modSummaryStatsServer(
   `total`, `nMaleFounders`, `nFemaleFounders`). When supplied, a founder
   summary table is rendered on the Summary Statistics tab (monolith
   parity). If NULL, it is omitted.
+
+- kinshipOverrides:
+
+  optional reactive returning a validated outside-information
+  kinship-override data frame (`id1`, `id2`, `kinship`); see
+  [`applyKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md)
+  (issue \#13). When the module recomputes kinship from the pedigree
+  (the usual path), the overrides are applied to that matrix, so the
+  relationship table and the kinship CSV export reflect the supplied
+  values regardless of tab order. The override moves the kinship *value*
+  only; the `relation` *label* stays pedigree-derived (it is computed
+  from pedigree structure, not from the kinship value). `NULL` (the
+  default) is a no-op.
 
 ## Value
 

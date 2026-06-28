@@ -61,7 +61,12 @@ groups while maximizing group sizes.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">modBreedingGroupsServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">pedigree</span>, geneticValues <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">modBreedingGroupsServer</span><span class="op">(</span></span>
+<span>  <span class="va">id</span>,</span>
+<span>  <span class="va">pedigree</span>,</span>
+<span>  geneticValues <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  kinshipOverrides <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -81,6 +86,16 @@ id, sire, dam, sex, and optionally birth, exit, gen.</p></dd>
 <dd><p>optional reactive returning genetic value results
 from <code><a href="modGeneticValueServer.html">modGeneticValueServer</a></code>. If provided and contains a
 kinship matrix, it will be used instead of calculating one.</p></dd>
+
+
+<dt id="arg-kinshipoverrides">kinshipOverrides<a class="anchor" aria-label="anchor" href="#arg-kinshipoverrides"></a></dt>
+<dd><p>optional reactive returning a validated
+outside-information kinship-override data frame (<code>id1</code>, <code>id2</code>,
+<code>kinship</code>); see <code><a href="applyKinshipOverrides.html">applyKinshipOverrides</a></code> (issue #13).
+When the module recomputes kinship from the pedigree (no genetic value
+output), the overrides are applied to that matrix so group formation
+reflects them regardless of tab order. <code>NULL</code> (the default) is a
+no-op. The genetic-value-output path already carries overrides.</p></dd>
 
 </dl></div>
     <div class="section level2">
