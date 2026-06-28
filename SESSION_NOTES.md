@@ -7,6 +7,190 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 218 Did
+
+**Deliverable:** **Completed the issue \#13 merge arc** (outward-facing
+admin) — merged **PR \#90** (Slice 2) and **PR \#91** (Slice 3) into
+`master`, so all 3 slices of issue \#13 are now on `master` and **\#13
+is CLOSED** (via PR \#91, with Slice 3 actually merged). **DONE.** Owner
+picked “merge PR \#90” at Phase 1, then “Reopen, then merge PR \#91”
+when the \#90 merge accidentally closed \#13 early. **Started /
+Completed:** 2026-06-27 / 2026-06-27 **Status:** **DONE.** **Admin /
+merge session — TDD code-phases N/A** (no `R/`, tests, `NAMESPACE`,
+`man/`, `data/`, `DESCRIPTION` change — two PR merges + issue-state
+admin + close-out docs only; phase declared N/A / PRE-RED each response,
+like the S214 docs-only session). **0 stakeholder corrections / 0 owner
+overrides.** - **Merged PR \#90 (Slice 2) carefully, not blindly**
+(Learning 202 §0 practice): confirmed PR \#90 `MERGEABLE` / `UNSTABLE`
+with the **full R-CMD-check matrix green** (macOS, Windows, Ubuntu
+devel/oldrel-1/release; + `pkgdown`/`test-coverage`/`codecov/project`)
+and surfaced that the only reds are the known non-blocking `lint` +
+`codecov/patch` (UNSTABLE ⇒ non-required) BEFORE merging. Used a **merge
+commit** (`9bf615e9`, matching the PR \#89 precedent `0438c2d5`) and
+**kept the base branch** to protect the stacked PR \#91. - **Caught +
+handled an accidental issue close:** merging PR \#90 **auto-closed
+\#13**, because \#90’s body contains the literal substring `closes #13`
+(inside the descriptive sentence “Slice 3 closes \#13”) — GitHub reads
+any `closes/fixes/resolves #N` in a PR body as a closing keyword and
+fires it on merge to the default branch. Slice 3 was not yet merged, so
+\#13 read “done” prematurely. **Surfaced it as an owner
+`AskUserQuestion`** (reopen-and-pause / reopen-then-merge-#91 /
+leave-closed) rather than silently reopening — issue lifecycle is the
+owner’s call (\[\[observation-vs-decision\]\], FM \#23). Owner chose
+“Reopen, then merge PR \#91.” - **Reopened \#13, then merged PR \#91
+(Slice 3):** reopened \#13 **first** (so \#91’s `closes #13` fires on an
+OPEN issue → proper PR-linked close). Merging \#90 had moved \#91’s base
+and **re-triggered its CI**; two matrix jobs
+(`windows-latest (release)`, `ubuntu-latest (devel)`) went `pending`.
+**Held the same green-matrix standard** — waited (~5 min, background
+poll) for the full matrix to go **green** rather than merge over a
+pending correctness signal (UNSTABLE/non-required would have allowed an
+immediate merge). Merged via merge commit (`7cabd8e1`). **\#13 is now
+CLOSED** with Slice 3 on master. - **Synced local `master`** via
+`fetch` + `reset --hard origin/master` (not `pull`, per standing note);
+verified the merge commits (`9bf615e9`, `7cabd8e1`) and Slice 3’s
+`R/applyKinshipOverridesToMatrix.R` are present on master; working tree
+clean except the standing untracked `PED_GV_AUDIT_2026-05-30.html`.
+
+**Phase-3E (runtime smoke): N/A for the session’s own work (stated, not
+skipped).** This session authored no `R/`/runtime code — it merged
+already-tested, CI-green code. The merged code’s runtime was verified by
+**S216/S217 Phase-3E** (live
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md) +
+connected
+[`appServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md)
+instantiating the modules with the override arg + served `fileInput`)
+and by **PR \#91’s green post-merge R-CMD-check matrix** (which ran on
+`master` + Slice 3 — a fuller verification than a local check).
+**Build-equivalent (`devtools::check`) not run:** nothing in
+`R/`/tests/`NAMESPACE`/`data` changed this session (only markdown —
+close-out docs), so the build-equivalent isn’t triggered (same logic as
+the S214 docs-only session); the R/ code is covered by the CI matrix.
+
+**Session 217 Handoff Evaluation (by Session 218): Score 9/10.** S217’s
+handoff set this admin session up very well. **What helped:** (1)
+**SUGGESTED NEXT named the exact arc** — “merge PR \#90 (Slice 2), then
+merge the Slice-3 PR (‘Closes \#13’ — auto-closes \#13 on merge to
+master)” — my precise deliverable; (2) **it documented the stacking
+accurately** — “the Slice-3 PR is stacked… after \#90 merges, the
+Slice-3 diff narrows to Slice 3 alone” — which held exactly (PR \#91’s
+diff narrowed and its CI re-ran on the new base and went green); (3)
+**the “#13 stays OPEN until that merge” invariant** is precisely what
+let me recognize the premature \#13 close as wrong and reopen; (4)
+accurate PR numbers (#90, \#91) and branch names; (5) standing keeps
+(build-equivalent, `fetch`+`reset` not `pull`, `gh ... --json` for
+issues, lint-red is non-blocking) all held firsthand; clean-state anchor
+held (HEAD `fb98b3fe` == documented S217). **The -1 (minor):** the
+handoff said PR \#90 uses “Relates to \#13” but did NOT flag that \#90’s
+BODY contains the literal `closes #13` substring (in “Slice 3 closes
+\#13”), which auto-closed \#13 on \#90’s merge. A one-line “#90’s body
+says ‘Slice 3 closes \#13’ — GitHub will treat that as a closing keyword
+on merge; reword or expect to reopen” would have prevented the
+close→reopen→close churn. (Subtle GitHub-parsing gotcha, easy to miss;
+the offending text was S216’s PR-body wording, not S217’s.) ROI: very
+high.
+
+**Self-assessment (Session 218): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read IN FULL; SESSION_NOTES ACTIVE TASK; GH issues via
+`--json`; dashboard 98/100; ghost-check clean — HEAD == documented
+S217), reported, STOPPED for the owner; wrote the **1B stub BEFORE
+technical work**. **Strengths:** (1) **did the outward-facing admin
+carefully, not blindly** — verified each PR’s full R-CMD-check matrix
+green and surfaced the non-blocking reds BEFORE each merge (Learning 202
+§0; \[\[observation-vs-decision\]\]); (2) **chose the correct merge
+mechanics for a stack** — merge-commit (not squash) + keep-base-branch,
+so GitHub narrowed \#91’s diff to Slice 3 and recognized the base
+commits as merged; (3) **caught the premature \#13 close immediately,
+diagnosed the root cause** (the `closes #13` substring in \#90’s body),
+and **surfaced it as an owner decision** rather than silently reopening
+(FM \#23); (4) **held the green-matrix bar for \#91** even though
+UNSTABLE would have allowed an immediate merge — waited for the
+re-triggered matrix to go green; (5) **reopened \#13 before the final
+merge** so the close links to PR \#91; (6) **stayed strictly in the
+owner’s scope** — did not touch the other live threads (#37, 2.0.0,
+gvaConvergence). **Weaknesses (honest):** (a) the premature \#13 close
+was **preventable** — a pre-merge audit of \#90’s body for closing
+keywords would have avoided the close→reopen→close churn; I caught and
+corrected it cleanly, but prevention beats cure (the main ding); (b)
+waiting ~5 min for \#91’s CI cost wall-clock — defensible under
+careful-admin, but the code was identical to what S217 verified locally
+0/0/0, so the risk was low; (c) no independent build-equivalent run —
+defensible (doc-only changes; merged code covered by the green CI
+matrix), stated not skipped. Capped at 9 by (a).
+
+**Learnings:** **Learning 204** added to `PROJECT_LEARNINGS.md` —
+completing a stacked-PR merge arc as careful outward-facing admin:
+verify each PR’s FULL R-CMD-check matrix green (not just `mergeable`)
+before merging; for a STACK, merge the base PR with a MERGE COMMIT (not
+squash) + keep the base branch so GitHub narrows the dependent PR’s diff
+and recognizes the base commits as merged — and note that merging the
+base MOVES the dependent PR’s base and RE-TRIGGERS its CI (re-verify the
+dependent’s matrix went green on the new base before merging it); a
+closing keyword (`closes/fixes/resolves #N`) ANYWHERE in a PR body —
+even inside a descriptive sentence — fires on merge to the default
+branch, so AUDIT PR bodies for stray closing keywords before merging,
+and to restore an accidentally-closed tracking issue whose final slice
+isn’t merged yet, reopen it BEFORE merging the final PR (whose
+`closes #N` re-closes it with the work actually on master). Carried as
+applied: \[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\], \[\[ascii-only-in-question-options\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[push-close-out-docs-to-origin\]\]; extends Learning 202 §0 (the
+careful-admin merge practice). **This was an admin/merge session — TDD
+code-phases N/A.**
+
+**⇒ SUGGESTED NEXT = owner’s pick.** **Issue \#13 is fully implemented
+AND merged** — all 3 slices on `master`, **\#13 CLOSED** via PR \#91.
+The two feature branches (`issue13-slice2-shiny-upload`,
+`issue13-slice3-fallbacks`) are merged and can be **deleted** (left
+intact — branch hygiene is owner’s call). Live threads (carried): -
+**Possible 2.0.0 release** (owner-gated, carried S209-S217): with all of
+issue \#13’s override work (script-level `reportGV` `kinshipOverrides` +
+the GV-tab upload + breeding-group/summary-stats fallback support) now
+on `master`, plus
+[`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)/`fgSE`,
+this is a natural 2.0.0 trigger. DESCRIPTION is `2.0.0` (dev). - **Issue
+\#37 disposition** (carried S212-S217): close, or refresh body to
+`176/137/39`. - **`gvaConvergence` override** (D8 optional follow-up —
+the one consumer Slice 3 deliberately did NOT patch); targeted R13
+reconcile/flag (deferred by “narrow”); the D11 follow-ups (targeted
+option C, both-unknown promotion, shared-sib-pair coupling). - **Other
+open issues:** \#36, \#28, \#12/#11/#10/#5; CRAN Phase 5 (owner-run;
+ARCHIVED on CRAN 2025-07-29). **Do NOT** assume a PR body’s “Relates to
+\#N” means it won’t close \#N — a stray `closes #N` substring anywhere
+in the body will (this session’s lesson).
+
+**Key files (this session):** **No `R/`/tests/`NAMESPACE`/`man/`/`data`
+change.** **Outward-facing (the deliverable):** merged **PR \#90** →
+merge commit `9bf615e9`; merged **PR \#91** → merge commit `7cabd8e1`;
+both into `master`. Reopened then (via \#91) closed **issue \#13**.
+**Close-out docs:** `SESSION_NOTES.md` (this handoff + the 1B stub it
+superseded, which lived only on the now-merged feature branch’s working
+tree), `CHANGELOG.md` (S218 entry), `PROJECT_LEARNINGS.md` (Learning
+204). **NOT committed (standing keep):** `PED_GV_AUDIT_2026-05-30.html`
+(untracked); `.DS_Store`. **Scratchpad (not in repo):** PR \#91 CI poll
+`bx92qlfys`.
+
+**Gotchas:** (1) **A closing keyword (`closes/fixes/resolves #N`)
+ANYWHERE in a PR body auto-closes \#N on merge to the default branch** —
+even inside a descriptive sentence like “Slice 3 closes \#13.” This
+closed \#13 when PR \#90 merged (Slice 3 not yet on master). Audit PR
+bodies before merging; reopen + merge-the-final-PR to restore. (2) **For
+a stacked PR: merge the base with a MERGE COMMIT (not squash) and keep
+the base branch** — squash would orphan the dependent PR’s base commits
+and force a rebase; merging the base also RE-TRIGGERS the dependent PR’s
+CI (re-verify its matrix green before merging it). (3) **Both issue-13
+feature branches are merged** — deleting them is owner hygiene (left
+intact). (4) Carried standing keeps (unchanged): package **ARCHIVED on
+CRAN 2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without LabKey config; `gh issue view <n>` errors on a
+Projects-classic deprecation → use `--json`; build-equivalent is
+`devtools::check(vignettes=FALSE)`=0/0/0 (NOT run this session — no
+`R/`/test change); a 0/0/0 check does NOT imply spelling-clean →
+`spell_check_package`; module/E2E tests need `NOT_CRAN=true`; `git pull`
+is rebase + chokes on `.DS_Store` → use `fetch`+`reset`.
+
 ### What Session 217 Did
 
 **Deliverable:** **Implemented Slice 3 of issue \#13** (the FINAL slice
