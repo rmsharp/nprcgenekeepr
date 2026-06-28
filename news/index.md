@@ -103,6 +103,20 @@
     [\#95](https://github.com/rmsharp/nprcgenekeepr/issues/95), option
     C, slice 1). The in-app upload and the gene-drop convergence
     diagnostic gain this in a later slice.
+  - The gene-drop convergence diagnostic
+    ([`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md))
+    and the in-app Genetic Value upload now honor the `missingSideFor`
+    targeted suppression in lockstep with
+    [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md):
+    a known-side override keeps a one-missing-parent animal’s
+    `+ sexMean / 2` correction on the convergence ranking too, and only
+    a missing-side override suppresses it. The report and the
+    convergence diagnostic share one override-preparation path, so they
+    cannot disagree on an overridden one-missing-parent animal. An
+    override table with no `missingSideFor` column (or no upload)
+    reproduces the previous behavior exactly (issue
+    [\#95](https://github.com/rmsharp/nprcgenekeepr/issues/95), option
+    C, slice 2).
   - File-based pedigree ingestion now treats `species` as a first-class
     column:
     [`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md)

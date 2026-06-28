@@ -7,6 +7,423 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 231 Did
+
+**Deliverable (owner pick):** Outward-facing admin – **pushed branch
+`issue95-optionC-slice2` to origin and opened PR \#97** (“Relates to
+\#95”, base `master`, NO `closes/fixes/resolves` substring; \#95 stays
+OPEN). **Scoped to push + open PR**; watching the CI matrix to green and
+merging is a separate owner-gated step (NOT done this session).
+**DONE.** **Started / Completed:** 2026-06-28 / 2026-06-28 **Status:**
+**DONE.** **Admin/PR session – TDD code-phases N/A** (no
+`R/`/tests/`man`/`NAMESPACE` change; the code is S230’s, already
+verified across the local suite + check). Declared phase N/A at the top
+of each response. **0 stakeholder corrections / 0 owner overrides.** -
+**Pre-flight (firsthand):** re-checked `git status` (clean but for the
+1B stub in `SESSION_NOTES.md` + the standing untracked
+`PED_GV_AUDIT_2026-05-30.html`); ran the **mandatory closing-keyword
+grep on the branch commit messages** (Learning 215). The broad
+`clos|fix|resolv` grep flagged one line – the S230 commit subject
+`...gvaConvergence lockstep (issue 95)` close-out… no: it flagged
+“close-out” – but the commits carry **ZERO `#N` refs** (they write
+“(issue 95)” / “Relates to issue 95”, the bare word, never “#95”), so
+there is no `keyword #N` pattern and zero auto-close risk at merge.
+Confirmed safe-for-the-right-reason. - **Push:**
+`git push -u origin issue95-optionC-slice2` -\> new remote branch, tip
+`1992bb8b` (== local HEAD, verified via `git ls-remote`). - **PR body
+(authored to clear the broad grep entirely):** wrote the body to
+scratchpad; grepped it; the only `clos|fix|resolv` hit was a quoted
+“close-out” -\> rephrased to “docs/handoff” so the broad
+`grep -iE 'clos|fix|resolv'` returns **EMPTY** (no adjacency judgment
+call – the Learning 217 bright-line). Title carries no keyword and no
+`#N`. - **Created PR \#97** via
+`gh pr create --base master --head issue95-optionC-slice2 --body-file`
+(worked; no 401). **Verified the RENDERED body from GitHub**
+(`gh pr view 97 --json body`) -\> 0 `clos|fix|resolv` tokens;
+**`gh api .../issues/95 --jq .state` -\> open.** - **Close-out commit
+(on the branch, in PR \#97):** SESSION_NOTES handoff + CHANGELOG S231
+entry + PROJECT_LEARNINGS Learning 217; commit message uses “(issue 95)”
+/ “PR 97” (no `#`) + zero clos/fix/resolv, grepped before push (so the
+commit that lands on master at merge cannot fire – S229’s 3rd firing was
+exactly a close-out commit message).
+
+**Phase-3E (runtime smoke): N/A (stated, not skipped).** Admin/PR
+session – authored no `R/`/runtime code; the S230 code was already
+verified (full suite 0/0, `devtools::check(vignettes=FALSE)` 0/0/0,
+Phase-3E functional + app-boot) in S230, and the full R-CMD-check matrix
+will run on PR \#97 (the strongest runtime check) when the owner watches
+CI. Build-equivalent not re-run locally (no `R/` change this session).
+
+**Session 230 Handoff Evaluation (by Session 231): Score 9/10.** S230’s
+handoff set this admin session up almost perfectly. **What helped:** (1)
+**SUGGESTED NEXT named this deliverable nearly verbatim** – “push the
+branch + open a PR – body must say ‘Relates to \#95’ with NO
+`closes/fixes/resolves #95` substring (#95 stays OPEN for rule (ii) +
+follow-ups 2/3); grep the rendered PR body AND every commit message for
+`clos|fix|resolv` adjacent to a `#N` BEFORE merge … `gh issue view 95`
+at the very end” – which IS exactly the procedure I ran; (2) **gotcha
+(2)** – the closing-keyword grep mandate with the explicit “negation
+does not save you” – is THE load-bearing control given S229’s three
+firings, and it was carried prominently; (3) **gotcha (1)** – “Slice 2
+is on branch …, NOT pushed; master == origin/master == `d3854083`” –
+held firsthand (verified `master`/`origin/master` both `d3854083`); (4)
+**the standing keeps held** (build-equivalent,
+`gh ... 401 -> use gh api`, CRAN-archived). **The -1 (minor):** the
+handoff did not pre-flag that S230’s OWN branch commit subject contains
+the substring “close-out” (a `clos` token that trips the broad grep) – a
+one-line “the broad grep will flag our own ‘close-out’ commit subject;
+it’s safe because the commits carry no `#N` ref” would have pre-stated
+the 30-second reasoning I had to do live. (Fair: Learning 215 covers the
+principle; this is a micro-heads-up, not a gap.) ROI: very high.
+
+**Self-assessment (Session 231): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read; SESSION_NOTES ACTIVE TASK; GH issues; dashboard
+98/100; ghost-check clean – HEAD `1992bb8b` == documented S230),
+reported, STOPPED for the owner; wrote the **1B stub BEFORE technical
+work**; declared phase N/A each response. **Strengths:** (1) **ran the
+mandatory closing-keyword grep on BOTH surfaces** (commit messages +
+rendered PR body) and **reasoned precisely about the false positive** –
+“close-out” with no adjacent `#N` and zero `#N` refs in the commits =
+provably safe – rather than either panicking or hand-waving (the exact
+discipline S229 lacked); (2) **strengthened the control into a
+bright-line** – authored the PR body with ZERO `clos|fix|resolv` tokens
+so the broad grep is empty and no adjacency judgment is needed (Learning
+217); (3) **verified against the RENDERED artifact** (re-fetched the PR
+body from GitHub, checked `#95` state via REST), not just the local
+draft; (4) **honored the owner’s explicit scope** – delivered push +
+open PR and did NOT merge (the consequential owner-gated step),
+surfacing CI-watch + merge as the next pick (1-and-done); (5)
+**sanitized the close-out commit message** (bare-word form) so it cannot
+fire at merge. **Weaknesses (minor):** (a) the broad grep flagged
+“close-out” on two surfaces (commit subject + my first body draft)
+requiring live reasoning – inherent to the branch’s existing commits,
+but a cleaner PR body draft would have avoided the second; (b) the S231
+close-out commit adds a docs commit into PR \#97, which will re-run CI
+(harmless, matches how S230’s own close-out rides in the PR). Capped at
+9 by these cosmetic process points; the deliverable shipped clean with 0
+corrections and full verification.
+
+**Learnings:** **Learning 217** added to `PROJECT_LEARNINGS.md` – for a
+PR body / issue comment you author fresh, make the broad
+`clos|fix|resolv` grep return EMPTY (strip every token, even harmless
+hyphenated/non-adjacent ones) instead of reasoning about `keyword #N`
+adjacency; the narrow adjacency test is only for pre-existing commit
+messages you cannot rewrite; verify against the RENDERED artifact +
+`gh api .../issues/<n> --jq .state`; commit messages use the bare-word
+“(issue 95)” form. Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]; extends Learning 215 (the
+negation trap) and 207/210 (the careful-admin arc). **This was an
+admin/PR session – TDD code-phases N/A.**
+
+**=\> SUGGESTED NEXT = owner’s pick.** PR \#97 is OPEN (base `master`,
+head `issue95-optionC-slice2`); branch pushed; \#95 OPEN. **The natural
+continuation of this arc (owner-gated) is: watch the full R-CMD-check
+matrix on PR \#97 to green, then merge with a merge commit ONLY after
+green** – the lone `lint` red is the long-standing whole-package noise
+(Learning 207/210), non-blocking. **BEFORE merge, re-grep the rendered
+PR body AND every commit message for `clos|fix|resolv` adjacent to a
+`#N`** (Learning 215/217 – they are already clean, but re-verify), and
+**run `gh api .../issues/95 --jq .state` at the very end to confirm \#95
+is still OPEN.** Live threads (carried): - **Branch hygiene for
+`issue95-optionC-slice2`** AFTER it merges (the deferred SEPARATE step,
+Learning 208/210(4)) – verify-merged-firsthand against BOTH `master` and
+`origin/master` -\> safe `-d` + `git push origin --delete`; leave the
+other stale branches (`dev`/`module`/`rlabkey-version-floor`) untouched
+unless asked. - **Rule (ii) (partial-residual)** + **\#95 follow-ups 2**
+(both-unknown-\>one-unknown) **/ 3** (sib-pair coupling) – each a
+`/grill-me`; plus the C1.2 `"both"` / two-rows-per-pair encoding
+(deferred, bundle with rule (ii)). - **Systematic whole-package lint
+pass** (would also clear the standing `lint`-CI red; includes re-doing
+the `data-raw/fgSEValidation.R` cleanup the owner had in progress,
+discarded S229). - **Possible 2.0.0 release** (owner-gated, carried
+S209-S231); **Issue \#37 disposition** (carried S212-S231); other open
+issues (#36, \#28, \#12/#11/#10/#5).
+
+**Key files (this session):** **No `R/`/tests/`NAMESPACE`/`man/`/`data`
+change.** **GitHub artifacts:** branch `issue95-optionC-slice2` PUSHED
+to origin (tip `1992bb8b`); **PR \#97** OPEN (base `master`, head
+`issue95-optionC-slice2`, body “Relates to \#95”); issue **\#95** OPEN
+(unchanged). **Close-out docs (on branch `issue95-optionC-slice2`, in PR
+\#97):** `SESSION_NOTES.md` (this handoff + the 1B stub it supersedes),
+`CHANGELOG.md` (S231 entry), `PROJECT_LEARNINGS.md` (Learning 217).
+**NOT committed (standing keep):** `PED_GV_AUDIT_2026-05-30.html`
+(untracked); `.DS_Store`. **Scratchpad (not in repo):**
+`pr_body_s231.md`.
+
+**Gotchas:** (1) **PR \#97 is OPEN and NOT merged; master ==
+origin/master == `d3854083` (S229) still.** A session orienting on
+`master` sees S229 as latest until PR \#97 merges (S228-\>S229-\>S230
+pattern). The S230 + S231 commits live only on the branch / PR \#97. (2)
+**BEFORE any merge of PR \#97: re-grep the rendered PR body AND every
+commit message for `clos|fix|resolv` adjacent to a `#N`, and
+`gh api .../issues/95 --jq .state` at the very end** (Learning 215/217).
+They are CURRENTLY clean (commit messages carry no `#N`; PR body has
+zero `clos|fix|resolv` tokens), but S229 proved this fires when skipped.
+**\#95 must STAY OPEN** (rule (ii) + follow-ups 2/3 remain); \#9/#13
+stay CLOSED. (3) **The S231 close-out commit is IN PR \#97** – when the
+PR merges, S230 + S231 close-out docs
+(SESSION_NOTES/CHANGELOG/PROJECT_LEARNINGS) land on `master` together.
+(4) **`gvaConvergence` and `reportGV` now share
+`prepareKinshipOverrides()`** – change the HELPER (single source), never
+re-inline (re-opens the drift Slice 2 closed); module fallback paths
+still use `applyKinshipOverridesToMatrix` (the deferred 3-way de-dup).
+(5) **`gh pr edit` / `gh issue view <n>` 401 on the Projects-classic
+deprecation** -\> use `gh api` (REST) / `--json` (`gh pr create` and
+`gh pr view --json` both worked fine this session). (6) **Branch hygiene
+for `issue95-optionC-slice2` is a SEPARATE post-merge step** (Learning
+208/210(4)) – do not bundle. (7) Carried standing keeps (unchanged):
+package **ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without LabKey config; build-equivalent is
+`devtools::check(vignettes=FALSE)`=0/0/0; a 0/0/0 check does NOT imply
+spelling-clean -\> `spell_check_package`; `NEWS.md` is GENERATED from
+`NEWS.Rmd`; module/E2E tests need `NOT_CRAN=true`; `git pull` is
+rebase + chokes on `.DS_Store` -\> use the stash-sync; re-check
+`git status` before ANY `reset --hard` (Learning 215).
+
+### What Session 230 Did
+
+**Deliverable (owner pick “a then b”):** **(a)** branch hygiene –
+deleted the merged branch `issue95-optionC-slice1` (local + remote);
+**(b)** **option C Slice 2** – brought
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+into lockstep with
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)’s
+option-C behavior and documented the `missingSideFor` column in-app, per
+the RATIFIED plan
+(`docs/planning/issue95-optionC-targeted-suppression-plan.md` §4 Slice
+2). **DONE** on branch `issue95-optionC-slice2`. **Started /
+Completed:** 2026-06-28 / 2026-06-28 **Status:** **DONE.** (a)
+verify-merged-firsthand (tip `40b5fb5d` an ancestor of BOTH `master` and
+`origin/master`) -\> safe `git branch -d` + `git push origin --delete`,
+both verified gone (other stale branches
+`dev`/`module`/`rlabkey-version-floor` left untouched – out of scope).
+(b) **Strict-TDD DEVELOPMENT session (RED `5317aa44` -\> GREEN
+`33e07fe6`; REFACTOR offered, owner chose skip).** Phase declared each
+response; **all three phase gates (PRE-RED-\>RED, RED-\>GREEN,
+GREEN-\>REFACTOR) via `AskUserQuestion`**, PLUS a pre-RED **approach**
+`AskUserQuestion` (the test-design fork) and a mid-GREEN **“review the
+helper body first”** hold. **0 stakeholder corrections / 1 owner
+course-correction** (see below). - **The load-bearing design call
+(pre-RED approach gate):** `gvaConvergence` returns no per-animal mean
+kinship and its convergence curve is gene-drop-uniqueness-driven /
+mean-kinship-order-INVISIBLE on qcPed (documented in
+`test_gvaConvergence_kinshipOverrides.R:14-23`), so the option-C
+suppression is NOT robustly observable through its public output – a
+behavioral RED through it would be fragile/impossible. Owner chose the
+**shared-helper** option: NEW `@noRd` `prepareKinshipOverrides()`
+(validate -\> warn-drop -\> apply to matrix -\> compute the option-C
+suppress set), unit-tested directly (clean RED), with BOTH `reportGV`
+and `gvaConvergence` routed through it -\> lockstep is STRUCTURAL (they
+cannot drift), not by-convention. This is the plan’s C5 “do not widen
+the divergence”, NOT the deferred full 3-way de-dup (module fallback
+paths keep `applyKinshipOverridesToMatrix`). - **RED (`5317aa44`):** NEW
+`test_prepareKinshipOverrides.R` (8 cases -\> all error, helper absent);
+`test_kinshipOverrideDocs.R` (+2 `missingSideFor` assertions -\> FAIL at
+HEAD: docs silent); gvaConvergence + modGeneticValue option-C ACCEPTANCE
+guards (PASS at HEAD – the upload path already threads the column via
+Slice 1, so these are regression guards, not discriminating REDs).
+Confirmed clean-for-the-right-reason. - **GREEN (`33e07fe6`):** created
+the helper; routed `reportGV` (behavior-preserving – Slice-1’s
+106-assertion suite is the net) and `gvaConvergence` (the one behavior
+change: `overriddenIds = suppressIds`); appended the `missingSideFor`
+roxygen to both `@param` blocks; updated the helptext
+(`modGeneticValue.R`) + `genetic_value.html`; `document()` regenerated
+`gvaConvergence.Rd` + `reportGV.Rd` (no NAMESPACE delta – helper is
+`@noRd`). - **Owner course-correction:**
+[`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html)
+(run to reach spell=0) had silently PRUNED 31 curated WORDLIST entries
+(it reconciles WORDLIST to exactly the currently-flagged set); owner
+interrupted -\> `git checkout inst/WORDLIST` + surgical inserts
+(`focals`, `supersession`) in sorted position -\> diff is exactly `+2`,
+0 removals. - **Verify (all clean):** the 4 touched/new test files +
+`reportGV`/correction/validator/classify suites green (reportGV 106 pass
+– behavior preserved); clean regression read **0 failed / 0 error**
+(1352 results, incl. & excl. `test-app-`/`test-e2e-`, `NOT_CRAN=true`);
+`devtools::check(vignettes=FALSE)` **0/0/0**; `spell_check_package`
+**0**; **lint net REDUCTION** (new helper 0; gvaConvergence 0;
+modGeneticValue 0; reportGV 1 = pre-existing `:65`); NEWS bullet added +
+rendered (`NEWS.Rmd` -\> `NEWS.md`).
+
+**Phase-3E (runtime smoke): DONE (REQUIRED for this slice – Shiny
+helptext + parse change, FM \#24 / plan OC-R9).** (1) FUNCTIONAL – on
+real `qcPed` a known-side override KEEPS the focal’s `+ sexMean / 2`
+(meanKin 0.009198) while a missing-side override SUPPRESSES it
+(0.006027), via BOTH
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+and
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md).
+(2) APP-BOOT – `runModularApp(port=6013, launch.browser=FALSE)` served
+HTTP 200 (104 KB) with `missingSideFor` present in the LIVE served HTML
+(helptext + `includeHTML(genetic_value.html)` render); app then stopped
+cleanly.
+
+**Session 229 Handoff Evaluation (by Session 230): Score 9/10.** S229’s
+handoff set this session up very well. **What helped:** (1) **SUGGESTED
+NEXT named both of my deliverables nearly verbatim** – option (a)
+“Branch hygiene … delete the merged branch `issue95-optionC-slice1`
+(local + remote …). Verify-merged-firsthand (BOTH `master` and
+`origin/master`) -\> safe `-d`” (exactly the procedure I ran) and option
+(b) “Slice 2 of option C … bring `gvaConvergence` into lockstep … the
+in-app upload + UI helptext (`modGeneticValue.R:54-78`) +
+`inst/extdata/ui_guidance/genetic_value.html:50-61` +
+`test_kinshipOverrideDocs.R:21-78` (phrase-pinning – update in
+lockstep); Phase-3E runtime smoke REQUIRED”; (2) **gotcha (6)** –
+“`gvaConvergence` is still blanket-A … until then the GV report and the
+convergence diagnostic can disagree” – correctly framed the exact gap
+Slice 2 closes; (3) **gotcha (7)** – “Slice 2 MUST update
+`genetic_value.html` + `test_kinshipOverrideDocs.R` in lockstep” –
+spot-on, saved me from breaking the doc-consistency test; (4) **the
+standing keeps held firsthand** (build-equivalent
+`devtools::check(vignettes=FALSE)`=0/0/0; clean-state anchor HEAD
+`d3854083` == documented S229; the untracked audit HTML is the only
+standing dirt; `NOT_CRAN=true` for module/E2E). **The -1 (minor):** the
+handoff (and the plan) framed Slice 2’s gvaConvergence test as
+straightforwardly “honored in lockstep”, but did not flag that
+gvaConvergence’s output cannot ROBUSTLY show the mean-kinship change
+(the existing test file knew this) – I had to surface that as the
+pre-RED design fork. A one-line “gvaConvergence’s curve can’t show the
+\#9 numeric – decide the test seam” would have pre-stated it. ROI: very
+high.
+
+**Self-assessment (Session 230): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read; SESSION_NOTES ACTIVE TASK; GH issues; dashboard
+98/100; ghost-check clean – HEAD == documented S229), reported, STOPPED
+for the owner; wrote the **1B stub BEFORE technical work**; strict TDD
+with all gates declared each response. **Strengths:** (1) **identified
+the real testability wall before writing any test** – read the existing
+gvaConvergence test file’s own documentation of the
+gu-driven/mean-kinship-invisible curve, and surfaced the test-design
+fork as a pre-RED `AskUserQuestion` (shared helper vs return-field vs
+fragile fixture) rather than charging into a fragile RED; (2) **the
+shared-helper design is the right engineering** – it makes lockstep
+structural AND gives a clean discriminating RED, and I verified it is
+the plan’s C5 (not the deferred de-dup); (3) **recognized the app-upload
+path was already green from Slice 1** (readKinshipOverrides
+`check.names=FALSE` -\> the column rides through) so I did not write
+delivery code that already existed; (4) **honored the mid-GREEN review
+hold** – showed the exact helper body + both diffs before writing; (5)
+**full verification** incl. a real Phase-3E (functional + headless
+app-boot, grepping the live HTML); (6) **separate RED/GREEN/close-out
+commits** reconstructed from one pass. **Weaknesses (the -2):** (a)
+**the
+[`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html)
+prune** – I ran a convenience tool that silently deleted 31 curated
+WORDLIST entries; the owner had to interrupt. I should have anticipated
+that update_wordlist reconciles-to-flagged-set (destructive to curation)
+and hand-edited from the start
+(\[\[check-status-before-destructive-git\]\] family – verify before a
+tool blows away curated content). Caught and fully reverted (surgical
++2, 0 removals), but it was an avoidable owner correction; (b) the lint
+pass introduced transient lints (copied `any(!x)`/`paste` + 81-char
+comments) that I had to clean – a cleaner first GREEN write would have
+avoided the round-trip. Capped at 8 by (a) (an owner
+course-correction) + (b) (self-corrected process slip); technical
+execution otherwise clean (0 corrections to the code itself).
+
+**Learnings:** **Learning 216** added to `PROJECT_LEARNINGS.md` – when a
+function’s behavior change is not observable through its public output,
+make the discriminating RED real (and the lockstep structural) by
+extracting a shared helper and testing THAT; surface the test-design
+fork as a pre-RED `AskUserQuestion`; recognize when the “delivery” half
+is already wired; the
+[`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html)
+destructive-prune trap; net-zero lint when lifting a block verbatim; a
+headless Phase-3E recipe (functional + app-boot curl/grep). Carried as
+applied: \[\[avoid-new-lints-r-package\]\],
+\[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]; extends Learning 214 (Slice 1) /
+212-213 (the plan + ratification). **This was a strict-TDD DEVELOPMENT
+session.**
+
+**=\> SUGGESTED NEXT = owner’s pick.** Slice 2 is DONE on branch
+`issue95-optionC-slice2` (RED `5317aa44` + GREEN `33e07fe6` + this
+close-out); **NOT pushed** (master stays at S229 `d3854083` ==
+origin/master). **The natural next is outward-facing admin (owner),
+matching the S228-\>S229 arc:** push the branch + open a PR – **body
+must say “Relates to \#95” with NO `closes/fixes/resolves #95`
+substring** (#95 stays OPEN for rule (ii) + follow-ups 2/3); **grep the
+rendered PR body AND every commit message for `clos|fix|resolv` adjacent
+to a `#N` BEFORE merge** (Learning 215: negation does not save you; a
+noun between keyword and ref disarms it); watch the full R-CMD-check
+matrix to green (the lone `lint` red is the long-standing whole-package
+noise); merge with a merge commit only after green; `gh issue view 95`
+at the very end to confirm it is still OPEN. Live threads (carried): -
+**Branch hygiene for `issue95-optionC-slice2`** after it merges (the
+deferred separate step, Learning 208/210(4)). - **Rule (ii)
+(partial-residual)** + **\#95 follow-ups 2**
+(both-unknown-\>one-unknown) **/ 3** (sib-pair coupling) – each a
+`/grill-me`; plus the C1.2 `"both"` / two-rows-per-pair encoding
+(deferred, bundle with rule (ii)). - **Re-do the
+`data-raw/fgSEValidation.R` lint cleanup** the owner had in progress
+(discarded S229) as part of a systematic whole-package lint pass that
+would also clear the standing `lint`-CI red. - **Possible 2.0.0
+release** (owner-gated, carried S209-S230); **Issue \#37 disposition**
+(carried S212-S230); other open issues (#36, \#28, \#12/#11/#10/#5).
+
+**Key files (this session):** **NEW (R/):**
+`R/prepareKinshipOverrides.R` (`@noRd` shared helper). **EDITED (R/):**
+`R/reportGV.R` (routed through the helper, lines ~134-136; `@param`
+roxygen `:66-71`), `R/gvaConvergence.R` (routed through the helper + the
+one behavior change `overriddenIds = suppressIds`, lines ~143-160;
+`@param` roxygen), `R/modGeneticValue.R` (helptext `:74-80` documents
+`missingSideFor`). **NEW (tests):**
+`tests/testthat/test_prepareKinshipOverrides.R`. **EDITED (tests):**
+`test_kinshipOverrideDocs.R` (+2 assertions),
+`test_gvaConvergence_kinshipOverrides.R` (+test 6 guard),
+`test_modGeneticValue_kinshipOverrides.R` (+upload guard). **EDITED
+(doc/data):** `inst/extdata/ui_guidance/genetic_value.html`
+(missingSideFor copy), `inst/WORDLIST` (+`focals`, +`supersession`).
+**Regenerated:** `man/gvaConvergence.Rd`, `man/reportGV.Rd`.
+**Close-out:** `NEWS.Rmd` + rendered `NEWS.md`, `CHANGELOG.md` (S230
+entry), `PROJECT_LEARNINGS.md` (Learning 216), `SESSION_NOTES.md` (this
+handoff). **Commits (branch `issue95-optionC-slice2`):** RED `5317aa44`,
+GREEN `33e07fe6`, close-out (this). **NOT committed (standing keep):**
+`PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`. **Scratchpad
+(not in repo):** `check_s230.log`, `app_boot.log`.
+
+**Gotchas:** (1) **Slice 2 is on branch `issue95-optionC-slice2`, NOT
+pushed; master == origin/master == `d3854083` (S229).** Next session
+orienting on master sees S229 as latest until the PR merges (S228-\>S229
+pattern). (2) **PR body + ALL commit messages must avoid a
+`clos|fix|resolv` substring adjacent to `#95`** – \#95 stays OPEN (rule
+ii + follow-ups 2/3). Grep before merge AND before any push (Learning
+215). (3) **`gvaConvergence` and `reportGV` now share
+`prepareKinshipOverrides()`** – if you change override handling, change
+the HELPER (single source); do not re-inline (that re-opens the drift
+this slice closed). The module fallback paths
+(`modBreedingGroups`/`modSummaryStats`) still use
+`applyKinshipOverridesToMatrix` (side-agnostic, no \#9 correction) – the
+full 3-way de-dup remains the deferred S221 item. (4)
+**[`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html)
+is DESTRUCTIVE to `inst/WORDLIST`** (prunes curated entries to the
+flagged set) – hand-edit WORDLIST surgically; if you must use the tool,
+diff before committing (Learning 216 /
+\[\[check-status-before-destructive-git\]\]). (5) **gvaConvergence’s
+option-C effect is NOT visible in its convergence curve** (gu-driven;
+documented `test_gvaConvergence_kinshipOverrides.R:14-23`) – its
+option-C numeric is covered by the helper’s unit tests + reportGV’s
+option-C tests (construction parity via the shared helper). Do not try
+to assert it through the curve. (6) **`test_kinshipOverrideDocs.R` pins
+exact phrases** in the helptext + `genetic_value.html`
+(`missingSideFor`, “current limitation”, “applies these overrides”,
+“regardless of tab order”) – editing that copy WITHOUT updating the test
+breaks the suite. (7) Carried standing keeps (unchanged): package
+**ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without LabKey config; build-equivalent is
+`devtools::check(vignettes=FALSE)`=0/0/0; a 0/0/0 check does NOT imply
+spelling-clean -\> `spell_check_package`; `NEWS.md` is GENERATED from
+`NEWS.Rmd`; module/E2E tests need `NOT_CRAN=true`; `gh issue view <n>` /
+`gh pr edit` 401 on the Projects-classic deprecation -\> use `gh api`
+(REST) / `--json`; `git pull` is rebase + chokes on `.DS_Store` -\> use
+the stash-sync (Learning 210(2)); re-check `git status` before ANY
+`reset --hard` (Learning 215).
+
 ### What Session 229 Did
 
 **Deliverable:** **Integrated option C Slice 1 to `master`** – pushed

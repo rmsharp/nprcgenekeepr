@@ -15,6 +15,108 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-28 — Pushed option C Slice 2 + opened PR \#97 (issue \#95, Session 231)
+
+- **Deliverable (owner pick):** outward-facing admin — pushed branch
+  `issue95-optionC-slice2` to origin and opened **PR \#97** (“Relates to
+  \#95”, base `master`). **Admin/PR session — TDD code-phases N/A** (no
+  `R/`/tests change; the code is S230’s, already verified). Scoped to
+  **push + open PR**; watching the CI matrix to green and merging is a
+  separate owner-gated step.
+- **Closing-keyword discipline (Learning 215 → refined as 217):**
+  grepped the branch commit messages AND the rendered PR body for
+  `clos|fix|resolv` BEFORE pushing/creating. The 3 branch commits carry
+  zero `#N` refs (they write “issue 95”, not “#95”), so the lone
+  “close-out” substring was provably safe (no adjacent `#N`). The PR
+  body was authored with **zero** `clos|fix|resolv` tokens (rephrased a
+  harmless hyphenated “close-out” → “docs/handoff” so the broad grep
+  returns empty — no adjacency judgment needed). After creation,
+  re-fetched the **rendered** PR body from GitHub (clean) and confirmed
+  via REST that **\#95 is still OPEN**.
+- **Result:** branch `issue95-optionC-slice2` on origin (tip
+  `1992bb8b`); **PR \#97 OPEN** (base `master`, head
+  `issue95-optionC-slice2`); **\#95 OPEN**. Not merged (owner-gated next
+  step). master == origin/master == `d3854083` unchanged.
+- **Learnings:** Learning 217 (PROJECT_LEARNINGS.md) — for a PR body /
+  issue comment you author fresh, make the broad `clos|fix|resolv` grep
+  return EMPTY (strip every such token, even harmless
+  hyphenated/non-adjacent ones) instead of reasoning about adjacency to
+  `#N`; verify against the RENDERED artifact (`gh pr view --json body`)
+  plus `gh api .../issues/<n> --jq .state`.
+
+### 2026-06-28 — Branch hygiene + option C Slice 2: diagnostic lockstep + app delivery (issue \#95, Session 230)
+
+- **Deliverable (owner pick “a then b”):** (a) deleted the merged branch
+  `issue95-optionC-slice1` (local + remote, verify-merged-firsthand
+  against both `master` and `origin/master` → safe `-d`); (b) **option C
+  Slice 2** per the RATIFIED plan
+  (`docs/planning/issue95-optionC-targeted-suppression-plan.md` §4
+  Slice 2) on branch `issue95-optionC-slice2`.
+- **Slice 2 (strict-TDD DEVELOPMENT session; RED → GREEN →
+  REFACTOR-skipped):** brought
+  [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+  into **lockstep** with
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)’s
+  option-C behavior and documented the `missingSideFor` column in the
+  app. New `@noRd` helper **`prepareKinshipOverrides()`** (validate →
+  warn-drop → apply to matrix → compute the option-C suppress set) is
+  now the SINGLE override-preparation path both
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+  and
+  [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+  route through, so the report and the convergence diagnostic cannot
+  disagree on an overridden one-missing-parent animal. Helptext
+  (`modGeneticValue.R`) + `inst/extdata/ui_guidance/genetic_value.html`
+  document the optional `missingSideFor` column;
+  `test_kinshipOverrideDocs.R` updated in lockstep (phrase-pinning).
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+  behavior unchanged (routed through the helper; Slice-1 suite is the
+  regression net). No `missingSideFor` column / no upload ⇒
+  byte-identical (D10).
+- **All three phase gates via `AskUserQuestion`** (PRE-RED→RED,
+  RED→GREEN, GREEN→REFACTOR), plus a pre-RED approach `AskUserQuestion`
+  (the shared-helper design, owner-chosen) and a mid-GREEN “review the
+  helper body first” hold. **0 stakeholder corrections / 1 owner
+  course-correction** (stopped
+  [`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html)
+  which had pruned 31 curated WORDLIST words as a side effect →
+  reverted, did a surgical +2 add).
+- **TDD commits (branch `issue95-optionC-slice2`):** RED, GREEN,
+  close-out (this).
+- **Verify (all clean):** the 4 touched/new test files +
+  `reportGV`/correction/validator/classify suites green; clean
+  regression read **0 failed / 0 error** (1352 results, incl. & excl.
+  `test-app-`/`test-e2e-`, `NOT_CRAN=true`);
+  `devtools::check(vignettes=FALSE)` **0/0/0**; `spell_check_package`
+  **0** (surgical `inst/WORDLIST` +2: `focals`, `supersession`); **lint
+  net reduction** (new helper 0; gvaConvergence 0; modGeneticValue 0;
+  reportGV 1 = pre-existing `:65`); `document()` regenerated
+  `gvaConvergence.Rd` + `reportGV.Rd` (no NAMESPACE delta — helper is
+  `@noRd`); NEWS bullet added + rendered.
+- **Phase-3E runtime smoke (REQUIRED — done):** functional smoke — on
+  real `qcPed` a known-side override KEEPS the focal’s `+ sexMean / 2`
+  (meanKin 0.009198) while a missing-side override SUPPRESSES it
+  (0.006027), via both
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+  and
+  [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md);
+  app-boot smoke —
+  [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+  served HTTP 200 with `missingSideFor` present in the live HTML
+  (helptext + guidance render).
+- **Issue state:** \#95 stays **OPEN** (Slice 2 closes follow-up 1, but
+  rule (ii) + follow-ups 2/3 remain). Branch `issue95-optionC-slice2`
+  **NOT pushed** (push → PR “Relates to \#95” → CI → merge is a separate
+  admin session, per the S228→S229 arc).
+- **Learnings:** Learning 216 (PROJECT_LEARNINGS.md) — making a
+  non-observable diagnostic’s behavior change testable via a shared
+  helper (test the helper, route both callers through it = structural
+  lockstep) when the public output can’t show the change; and the
+  [`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html)
+  destructive-prune trap (it rewrites WORDLIST to exactly the
+  currently-flagged set, removing curated entries → add words surgically
+  instead).
+
 ### 2026-06-28 — Merged option C Slice 1 to `master` via PR \#96 (issue \#95, Session 229)
 
 - **Deliverable (owner pick “1”, then “merge it once devel passes”):**

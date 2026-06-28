@@ -24,5 +24,5 @@ YYYY-MM-DD_hh_mm_ss_basename format.
 ``` r
 library(nprcgenekeepr)
 getDatedFilename("testName")
-#> [1] "2026-06-28_21_27_24.278656_testName"
+#> [1] "2026-06-28_23_04_24.01547_testName"
 ```

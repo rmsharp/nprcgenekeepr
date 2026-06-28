@@ -115,7 +115,10 @@ gvaConvergence(
   kinship the report uses (issue \#13). `NULL` (the default) leaves the
   pedigree-derived matrix unchanged. Ids outside the analysis set are
   warn-dropped (the run is not aborted); an override on a one-unknown
-  animal supersedes its `+ sexMean / 2` correction. See
+  animal supersedes its `+ sexMean / 2` correction. An optional
+  `missingSideFor` column (issue \#95 option C) may name the one-unknown
+  focal whose MISSING parent side the override stands in for; only those
+  focals lose the correction (a blank cell, or no column, keeps it). See
   [`applyKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md).
 
 ## Value
