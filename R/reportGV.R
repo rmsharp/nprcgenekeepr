@@ -64,8 +64,11 @@
 #' and the unknown-parent correction (issue #13). \code{NULL} (the default)
 #' leaves the pedigree-derived matrix unchanged. Ids outside the analysis set are
 #' warn-dropped (the run is not aborted); an override on a one-unknown animal
-#' supersedes its \code{+ sexMean / 2} correction. See
-#' \code{\link{applyKinshipOverrides}}.
+#' supersedes its \code{+ sexMean / 2} correction. An optional
+#' \code{missingSideFor} column (issue #95 option C) may name, per row, the
+#' one-unknown focal whose MISSING parent side the override stands in for; only
+#' those focals lose the correction (a blank cell, or no column, keeps it --
+#' byte-identical to a 3-column file). See \code{\link{applyKinshipOverrides}}.
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
@@ -129,47 +132,17 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
     ped$gen
   ))
 
-  # Issue #13 Slice 1: apply outside-information kinship overrides to the matrix
-  # BEFORE mean kinship / the issue-#9 correction, so both reflect the supplied
-  # values. kmat is filtered to probands, so ids outside that set (e.g. an
-  # ancestor sire-dam pair) are warn-dropped here and the run continues -- the
-  # strict leaf would otherwise abort it (D5). The surviving overridden id-set is
-  # threaded into the issue-#9 correction so an override on a one-unknown animal
-  # SUPERSEDES (does not stack with) its +sexMean/2 prior (D11, blanket
-  # supersession). kinship() itself is untouched.
-  overriddenIds <- character(0L)
-  # Issue #95 option C: the set of one-unknown ids whose mean-kinship prior is
-  # suppressed. Default = the full overridden set (blanket-A, D11); a
-  # missingSideFor column narrows it to the missing-side focals (C1.1 / C3).
-  suppressIds <- character(0L)
-  if (!is.null(kinshipOverrides) && nrow(kinshipOverrides) > 0L) {
-    overrides <- checkKinshipOverrides(kinshipOverrides)
-    inMatrix <- overrides$id1 %in% rownames(kmat) &
-      overrides$id2 %in% rownames(kmat)
-    if (any(!inMatrix)) {
-      dropped <- setdiff(
-        unique(c(overrides$id1[!inMatrix], overrides$id2[!inMatrix])),
-        rownames(kmat)
-      )
-      warning(sprintf(
-        paste0("Dropping %d kinship override row(s) referencing id(s) not in ",
-          "the analysis set: %s."),
-        sum(!inMatrix), paste(dropped, collapse = ", ")
-      ))
-      overrides <- overrides[inMatrix, , drop = FALSE]
-    }
-    if (nrow(overrides) > 0L) {
-      kmat <- applyKinshipOverrides(kmat, overrides)
-      overriddenIds <- unique(c(overrides$id1, overrides$id2))
-      # option C: narrow to the missing-side focals when the column is present;
-      # otherwise suppress the full set (blanket-A, byte-identical today, D10).
-      suppressIds <- if ("missingSideFor" %in% names(overrides)) {
-        classifyOverrideMissingSide(overrides, ped, probands)
-      } else {
-        overriddenIds
-      }
-    }
-  }
+  # Issue 13 and issue 95 option C: validate the outside-information overrides,
+  # warn-drop rows naming ids outside the proband matrix (D5), apply survivors
+  # to the matrix BEFORE mean kinship and the issue-9 correction, and compute
+  # the set of one-unknown ids whose +sexMean/2 prior to suppress: the missing-
+  # side focals when a missingSideFor column is present (option C, case a), else
+  # the full overridden set (blanket supersession, D11; byte-identical with no
+  # column, D10). Shared with gvaConvergence via prepareKinshipOverrides so the
+  # report and the convergence diagnostic cannot drift. kinship is untouched.
+  prepared <- prepareKinshipOverrides(kmat, kinshipOverrides, ped, probands)
+  kmat <- prepared$kmat
+  suppressIds <- prepared$suppressIds
 
   # Calculate the mean kinship, and convert to z-scores
   indivMeanKin <- meanKinship(kmat)

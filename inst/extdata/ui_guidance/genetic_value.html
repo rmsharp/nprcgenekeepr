@@ -55,8 +55,10 @@
 	relationship label stays pedigree-derived, so a label and its
 	overridden value can disagree. The iteration-convergence check above
 	(<b>gvaConvergence()</b>) applies these overrides as well, ranking on the
-	overridden kinship. Overrides on an animal missing a parent are supported,
-	but a
-	few edge cases (both parents unknown, or siblings sharing an unknown
-	parent) are a current limitation.
+	overridden kinship. For an animal missing one parent, add an optional
+	<b>missingSideFor</b> column naming that animal when the override stands in
+	for its missing parent's side, so its unknown-parent kinship correction is
+	dropped only then; leave it blank for a known-side override. A few edge
+	cases (both parents unknown, or siblings sharing an unknown parent) remain
+	a current limitation.
 </p>
