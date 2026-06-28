@@ -437,6 +437,11 @@ modGeneticValueServer <- function(id, pedigree,
         req(fullResults())
         fullResults()$kinship
       }),
+      # Issue #13 Slice 3: expose the validated kinship-override frame (or NULL)
+      # so appServer can thread it to the breeding-group and summary-stats
+      # modules' fallback recompute paths. Reading the upload does not require
+      # running the GV analysis, so overrides hold regardless of tab order.
+      kinshipOverrides = kinshipOverrideData,
       founderStats = reactive({
         req(fullResults())
         fr <- fullResults()

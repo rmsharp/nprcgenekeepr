@@ -280,13 +280,17 @@ appServer <- function(input, output, session) {
     shared$geneticValues <- gvResults$geneticValues()
   })
 
-  # Summary Statistics Module
+  # Summary Statistics Module -- thread the GV-tab kinship overrides (issue #13
+  # Slice 3) so the relationship table and kinship export reflect them even when
+  # the GV analysis was not run first (summary stats always recomputes kinship
+  # because kinshipMatrix is NULL here).
   modSummaryStatsServer( # nolint: object_usage_linter
     "summaryStats",
     geneticValues = reactive(shared$geneticValues),
     pedigree = reactive(shared$currentPedigree),
     kinshipMatrix = NULL,
-    founderStats = gvResults$founderStats
+    founderStats = gvResults$founderStats,
+    kinshipOverrides = gvResults$kinshipOverrides
   )
 
   # ORIP Reporting Module (ONPRC-only, #49) -- mount only for an actual ONPRC
@@ -302,11 +306,14 @@ appServer <- function(input, output, session) {
     )
   }
 
-  # Breeding Groups Module
+  # Breeding Groups Module -- thread the GV-tab kinship overrides (issue #13
+  # Slice 3) so group formation reflects them on the fallback recompute path
+  # (used when no GV output is available), regardless of tab order.
   modBreedingGroupsServer(
     "breedingGroups",
     pedigree = reactive(shared$currentPedigree),
-    geneticValues = reactive(shared$geneticValues)
+    geneticValues = reactive(shared$geneticValues),
+    kinshipOverrides = gvResults$kinshipOverrides
   )
 
   # Potential Parents Module -- pass the user-configurable species gestation

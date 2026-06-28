@@ -9,7 +9,8 @@ modSummaryStatsServer(
   geneticValues,
   pedigree,
   kinshipMatrix = NULL,
-  founderStats = NULL
+  founderStats = NULL,
+  kinshipOverrides = NULL
 )
 }
 \arguments{
@@ -30,6 +31,16 @@ the module will calculate kinship from the pedigree.}
 (\code{fe}, \code{fg}, \code{total}, \code{nMaleFounders},
 \code{nFemaleFounders}). When supplied, a founder summary table is rendered
 on the Summary Statistics tab (monolith parity). If NULL, it is omitted.}
+
+\item{kinshipOverrides}{optional reactive returning a validated
+outside-information kinship-override data frame (\code{id1}, \code{id2},
+\code{kinship}); see \code{\link{applyKinshipOverrides}} (issue #13).
+When the module recomputes kinship from the pedigree (the usual path), the
+overrides are applied to that matrix, so the relationship table and the
+kinship CSV export reflect the supplied values regardless of tab order.
+The override moves the kinship \emph{value} only; the \code{relation}
+\emph{label} stays pedigree-derived (it is computed from pedigree structure,
+not from the kinship value). \code{NULL} (the default) is a no-op.}
 }
 \value{
 A list with reactive components:
