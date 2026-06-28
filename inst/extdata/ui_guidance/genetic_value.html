@@ -45,3 +45,17 @@
 <p>
 	For a full description of the algorithm, see the <b>Genetic Value Analysis and Breeding Group Description</b> tab.
 </p>
+
+<p>
+	<b>Kinship overrides.</b> If you upload outside-information kinship
+	values on this tab, they replace the pedigree-derived kinship for the
+	listed pairs and feed the rankings, breeding groups, and summary
+	statistics regardless of tab order. They change the kinship
+	<em>value</em> only: in the Summary Statistics relationship table the
+	relationship label stays pedigree-derived, so a label and its
+	overridden value can disagree. The iteration-convergence check above
+	does not use the overrides (<b>gvaConvergence()</b> ranks on pedigree
+	kinship). Overrides on an animal missing a parent are supported, but a
+	few edge cases (both parents unknown, or siblings sharing an unknown
+	parent) are a current limitation.
+</p>
