@@ -67,7 +67,8 @@
 <span>  breedingTable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  gestationTable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  breedingAgeDefault <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  gestationDefault <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  gestationDefault <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  kinshipOverrides <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -139,6 +140,19 @@ update a <code><a href="https://rdrr.io/pkg/shiny/man/Progress.html" class="exte
 through to <code>correctUnknownParentMeanKinship()</code> exactly as
 <code><a href="reportGV.html">reportGV</a></code> passes them (issue #73 Part 2). NULL uses the bundled
 defaults.</p></dd>
+
+
+<dt id="arg-kinshipoverrides">kinshipOverrides<a class="anchor" aria-label="anchor" href="#arg-kinshipoverrides"></a></dt>
+<dd><p>Optional data.frame of outside-information kinship
+overrides (<code>id1</code>, <code>id2</code>, <code>kinship</code>; the coefficient <em>f</em>,
+not relatedness <em>r</em>) applied to the kinship matrix before mean kinship
+and the unknown-parent correction, exactly as <code><a href="reportGV.html">reportGV</a></code> applies
+them, so the convergence diagnostic ranks on the same mean kinship the
+report uses (issue #13). <code>NULL</code> (the default) leaves the
+pedigree-derived matrix unchanged. Ids outside the analysis set are
+warn-dropped (the run is not aborted); an override on a one-unknown animal
+supersedes its
+<code>+ sexMean / 2</code> correction. See <code><a href="applyKinshipOverrides.html">applyKinshipOverrides</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
