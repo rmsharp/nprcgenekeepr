@@ -15,6 +15,31 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-28 — Merged the R13 relationship-flag slice to master (PR \#94; Session 224)
+
+- **Deliverable (admin/merge):** integrated the completed S223 R13 slice
+  into `master`. Pushed branch `issue13-item3-r13-flag-overridden`,
+  opened **PR \#94** (“Relates to \#13”, **no** closing keyword),
+  verified the full CI matrix green, and **merged to `master`** via
+  merge commit `33b0b09f`. **\#13 stayed CLOSED.** 0 stakeholder
+  corrections / 0 owner overrides. Admin/merge session — TDD code-phases
+  N/A.
+- **Verify-then-merge (careful-admin bar):** confirmed the full
+  R-CMD-check matrix (macOS release; Windows release; Ubuntu
+  devel/oldrel-1/release) + pkgdown + test-coverage + both codecov
+  checks all PASS; the only red was the long-standing non-blocking
+  `lint`, **proven pre-existing via the check-run annotations API** (all
+  12 findings in `data-raw/fgSEValidation.R` (10) + `.github`
+  workflow/exit-code (2); none in this PR’s changed files
+  `flagOverriddenRelationships.R`/`modSummaryStats.R`).
+- **PR-body hygiene for a CLOSED tracking issue:** body says “Relates to
+  \#13”; grep-scanned the commit messages and the rendered body for
+  closing keywords (none); verified \#13 CLOSED before and after merge.
+  **Clean local sync:** stashed just the 1B stub, fast-forwarded
+  `master` to `33b0b09f`, restored the stub (avoids the S221
+  uncommitted-stub `switch` trap while preserving the ghost-session
+  marker). Learning 210 recorded.
+
 ### 2026-06-28 — Relationship table flags overridden pairs (issue \#13 item-3 follow-up R13; Session 223)
 
 - **Deliverable (owner picks: Flag, not relabel; Display-layer, not
