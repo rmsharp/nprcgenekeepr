@@ -49,6 +49,18 @@ modGeneticValueUI <- function(id) {
                             class = "btn-primary btn-block")
              ),
              wellPanel(
+               h5(icon("file-csv"), "Kinship Overrides (optional)"),
+               helpText(
+                 "Upload outside-information kinship as a CSV or Excel file",
+                 "with columns id1, id2, kinship. kinship is the coefficient",
+                 "f (not relatedness r = 2f). Leave empty to use",
+                 "pedigree-derived kinship."
+               ),
+               fileInput(ns("kinshipOverrideFile"),
+                         label = NULL,
+                         accept = c(".csv", ".txt", ".xlsx", ".xls"))
+             ),
+             wellPanel(
                style = "background-color: #f8f9fa;",
                h5(icon("info-circle"), "About Genetic Values"),
                tags$ul(
@@ -138,6 +150,41 @@ modGeneticValueServer <- function(id, pedigree,
       if (is.null(thr)) 4L else as.integer(thr)
     })
 
+    # Issue #13 Slice 2: read an uploaded outside-information kinship override
+    # file (id1, id2, kinship) and validate it. Soft / non-fatal in the app
+    # (D5): a bad file warns and is ignored; the GV run is never aborted. A
+    # > 0.5 warning (valid only for inbred pairs; D6) is surfaced but the
+    # override is still applied. Returns NULL when no file is uploaded or the
+    # file cannot be read -- NULL keeps reportGV() on the pedigree-derived
+    # matrix. Uses an explicit is.null() guard rather than req() so that calling
+    # it from gvResults() never aborts the analysis when no file is present.
+    kinshipOverrideData <- reactive({
+      if (is.null(input$kinshipOverrideFile)) {
+        return(NULL)
+      }
+      tryCatch(
+        withCallingHandlers(
+          checkKinshipOverrides(
+            readKinshipOverrides(input$kinshipOverrideFile$datapath)
+          ),
+          warning = function(w) {
+            showNotification(
+              paste("Kinship override warning:", conditionMessage(w)),
+              type = "warning", duration = 10L
+            )
+            invokeRestart("muffleWarning")
+          }
+        ),
+        error = function(e) {
+          showNotification(
+            paste("Could not read kinship overrides:", conditionMessage(e)),
+            type = "error", duration = 10L
+          )
+          NULL
+        }
+      )
+    })
+
     gvResults <- eventReactive(input$runAnalysis, {
       req(pedigree())
 
@@ -203,7 +250,8 @@ modGeneticValueServer <- function(id, pedigree,
           breedingTable = ov$breedingTable,
           gestationTable = ov$gestationTable,
           breedingAgeDefault = ov$breedingAgeDefault,
-          gestationDefault = ov$gestationDefault
+          gestationDefault = ov$gestationDefault,
+          kinshipOverrides = kinshipOverrideData()
         )
 
         # Store full results
