@@ -27,10 +27,22 @@ R. Mark Sharp, Ph.D.
     outside-information kinship drives the in-app genetic-value rankings
     (issue \#13, slice 2). A malformed file is reported and ignored
     without aborting the run; leaving the upload empty reproduces the
-    previous rankings exactly. Until a later release wires the override
-    into the breeding-group and summary-statistics fallback
-    recomputations, run the Genetic Value Analysis tab first so those
-    tabs consume the override-adjusted results.
+    previous rankings exactly. (As of slice 3 the breeding-group and
+    summary-statistics tabs apply the override when they recompute
+    kinship from the pedigree, so this no longer requires running the
+    Genetic Value Analysis tab first.)
+  - The breeding-group formation and summary-statistics tabs now apply
+    an uploaded kinship override when they recompute kinship from the
+    pedigree, so outside-information kinship affects group formation,
+    the relationship table, and the kinship-matrix CSV export regardless
+    of whether the Genetic Value Analysis tab was run first (issue \#13,
+    slice 3, which closes issue \#13). The override moves the kinship
+    *value*; relationship-class *labels* remain pedigree-derived (they
+    are computed from pedigree structure, not from the kinship value),
+    so an overridden pair shows the supplied coefficient next to its
+    pedigree-based relationship label. An override id not present in the
+    analysis set is reported and dropped without aborting the run.
+    Leaving the upload empty reproduces the previous results exactly.
   - File-based pedigree ingestion now treats `species` as a first-class
     column: `getPossibleCols()` recognizes it and places it immediately
     after `sex` in the canonical column order, and `qcStudbook()` types

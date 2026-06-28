@@ -141,6 +141,13 @@ modBreedingGroupsUI <- function(id) {
 #' @param geneticValues optional reactive returning genetic value results
 #'   from \code{\link{modGeneticValueServer}}. If provided and contains a
 #'   kinship matrix, it will be used instead of calculating one.
+#' @param kinshipOverrides optional reactive returning a validated
+#'   outside-information kinship-override data frame (\code{id1}, \code{id2},
+#'   \code{kinship}); see \code{\link{applyKinshipOverrides}} (issue #13).
+#'   When the module recomputes kinship from the pedigree (no genetic value
+#'   output), the overrides are applied to that matrix so group formation
+#'   reflects them regardless of tab order. \code{NULL} (the default) is a
+#'   no-op. The genetic-value-output path already carries overrides.
 #'
 #' @seealso \code{\link{modBreedingGroupsUI}} for the UI component
 #' @seealso \code{\link{groupAddAssign}} for the underlying MIS algorithm
@@ -150,14 +157,15 @@ modBreedingGroupsUI <- function(id) {
 #' @importFrom shiny moduleServer reactive eventReactive reactiveVal
 #' @importFrom shiny withProgress incProgress req showNotification
 #' @export
-modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
+modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
+                                    kinshipOverrides = NULL) {
   moduleServer(id, function(input, output, session) {
 
     # Store results from groupAddAssign
     groupResults <- reactiveVal(NULL)
 
     # Helper: Get kinship matrix from geneticValues or calculate from pedigree
-    getKinshipMatrix <- function(ped, gvReactive) {
+    getKinshipMatrix <- function(ped, gvReactive, overrides = NULL) {
       # Try to get kinship from geneticValues module
       if (!is.null(gvReactive) && is.function(gvReactive)) {
         gvData <- tryCatch(gvReactive(), error = function(e) NULL)
@@ -166,11 +174,17 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
         }
       }
 
-      # Calculate kinship from pedigree
+      # Calculate kinship from pedigree (the fallback recompute). Issue #13
+      # Slice 3: apply outside-information kinship overrides to this freshly
+      # recomputed matrix so group formation reflects them even when the GV tab
+      # was not run first. The genetic-value-output branch above already carries
+      # overrides (applied inside reportGV). Ids absent from the matrix are
+      # warn-dropped, never aborting the module (D5).
       if (!"gen" %in% names(ped)) {
         ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
       }
-      kinship(ped$id, ped$sire, ped$dam, ped$gen)
+      kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
+      applyKinshipOverridesToMatrix(kmat, overrides)
     }
 
     # Helper: Parse sex ratio from UI input
@@ -210,7 +224,10 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL) {
         }
 
         incProgress(0.2, detail = "Calculating kinship")
-        kmat <- getKinshipMatrix(ped, geneticValues)
+        kmat <- getKinshipMatrix(
+          ped, geneticValues,
+          if (is.null(kinshipOverrides)) NULL else kinshipOverrides()
+        )
 
         incProgress(0.3, detail = "Running group formation algorithm")
 

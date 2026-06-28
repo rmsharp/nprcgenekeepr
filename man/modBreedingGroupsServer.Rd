@@ -4,7 +4,12 @@
 \alias{modBreedingGroupsServer}
 \title{Breeding Groups Module - Server Function}
 \usage{
-modBreedingGroupsServer(id, pedigree, geneticValues = NULL)
+modBreedingGroupsServer(
+  id,
+  pedigree,
+  geneticValues = NULL,
+  kinshipOverrides = NULL
+)
 }
 \arguments{
 \item{id}{character vector of length 1. Module namespace identifier.}
@@ -15,6 +20,14 @@ id, sire, dam, sex, and optionally birth, exit, gen.}
 \item{geneticValues}{optional reactive returning genetic value results
 from \code{\link{modGeneticValueServer}}. If provided and contains a
 kinship matrix, it will be used instead of calculating one.}
+
+\item{kinshipOverrides}{optional reactive returning a validated
+outside-information kinship-override data frame (\code{id1}, \code{id2},
+\code{kinship}); see \code{\link{applyKinshipOverrides}} (issue #13).
+When the module recomputes kinship from the pedigree (no genetic value
+output), the overrides are applied to that matrix so group formation
+reflects them regardless of tab order. \code{NULL} (the default) is a
+no-op. The genetic-value-output path already carries overrides.}
 }
 \value{
 List with reactive components:
