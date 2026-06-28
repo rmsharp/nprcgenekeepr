@@ -15,6 +15,32 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-28 — Branch hygiene: deleted the 5 merged issue-13 feature branches (local + remote; Session 222)
+
+- **Deliverable (owner pick: “All 5 issue-13 branches”; single admin
+  item):** deleted the issue-13 feature branches that were fully merged
+  into `master` — `issue13-slice1-kinship-overrides`,
+  `issue13-slice2-shiny-upload`, `issue13-slice3-fallbacks`,
+  `issue13-item3-inapp-docs`, `issue13-item3-gvaconv-overrides` — both
+  **local and remote (origin)**. **Admin / branch-hygiene session — TDD
+  code-phases N/A** (no
+  `R/`/tests/`NAMESPACE`/`man/`/`data`/`DESCRIPTION` change). 0
+  stakeholder corrections / 0 owner overrides.
+- **Verify-before-delete (SAFEGUARDS):** confirmed all 5 merged into
+  BOTH `master` and `origin/master` before deleting; the commits live in
+  `master`’s history so nothing was lost. The S221 handoff named only 4
+  — `git branch --merged master` surfaced the 5th (`slice1`, merged via
+  PR \#89), and the owner confirmed the full set.
+- **`git branch -d` upstream quirk:** 4 deleted cleanly with safe `-d`;
+  `issue13-item3-gvaconv-overrides` refused (`-d` compares against the
+  branch’s *upstream*, and S221’s `reset --hard` had moved its local tip
+  to the merge commit `daa7728b` — the “ahead 1” quirk). Proved
+  containment with `git merge-base --is-ancestor daa7728b master` (exit
+  0), then force-deleted with `-D`. Remote deletions via
+  `git push origin --delete`. Post-state: no issue-13 branches remain
+  (local or remote); `master` unchanged at `92cd34bd`. Learning 208
+  recorded.
+
 ### 2026-06-28 — Merged the gvaConvergence kinship-override slice to master (PR \#93; Session 221)
 
 - **Deliverable (outward-facing admin; owner picked the full arc S220
