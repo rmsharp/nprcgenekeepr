@@ -19,7 +19,8 @@ gvaConvergence(
   breedingTable = NULL,
   gestationTable = NULL,
   breedingAgeDefault = NULL,
-  gestationDefault = NULL
+  gestationDefault = NULL,
+  kinshipOverrides = NULL
 )
 }
 \arguments{
@@ -64,6 +65,17 @@ update a \code{shiny::Progress} object. Default NULL.}
 through to \code{correctUnknownParentMeanKinship()} exactly as
 \code{\link{reportGV}} passes them (issue #73 Part 2). NULL uses the bundled
 defaults.}
+
+\item{kinshipOverrides}{Optional data.frame of outside-information kinship
+overrides (\code{id1}, \code{id2}, \code{kinship}; the coefficient \emph{f},
+not relatedness \emph{r}) applied to the kinship matrix before mean kinship
+and the unknown-parent correction, exactly as \code{\link{reportGV}} applies
+them, so the convergence diagnostic ranks on the same mean kinship the
+report uses (issue #13). \code{NULL} (the default) leaves the
+pedigree-derived matrix unchanged. Ids outside the analysis set are
+warn-dropped (the run is not aborted); an override on a one-unknown animal
+supersedes its
+\code{+ sexMean / 2} correction. See \code{\link{applyKinshipOverrides}}.}
 }
 \value{
 An object of class \code{nprcgenekeeprGVConv}: a list with

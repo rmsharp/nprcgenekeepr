@@ -32,9 +32,10 @@ test_that(paste(
   ## label and the overridden value can disagree.
   expect_true(grepl("relationship label", ui, ignore.case = TRUE))
 
-  ## Item 3a: the gene-drop convergence check (gvaConvergence) ignores
-  ## overrides.
-  expect_true(grepl("convergence check ignores", ui, ignore.case = TRUE))
+  ## Item 3a: the gene-drop convergence diagnostic (gvaConvergence) now applies
+  ## the overrides as well (issue #13 item-3 follow-up, S220).
+  expect_true(grepl("gvaConvergence", ui, fixed = TRUE))
+  expect_true(grepl("applies these overrides", ui, fixed = TRUE))
 
   ## Item 3c: overrides on an animal missing a parent have edge cases that
   ## are a current limitation.
@@ -51,8 +52,8 @@ test_that(paste(
 
   expect_true(grepl("override", txt, ignore.case = TRUE))
   expect_true(grepl("regardless of tab order", txt, fixed = TRUE))
-  ## Item 3a: the convergence check does not use the overrides.
-  expect_true(grepl("does not use", txt, ignore.case = TRUE))
+  ## Item 3a: the convergence diagnostic now applies the overrides (S220).
+  expect_true(grepl("applies these overrides", txt, ignore.case = TRUE))
   ## Item 3c: edge cases are a current limitation.
   expect_true(grepl("limitation", txt, ignore.case = TRUE))
 })
