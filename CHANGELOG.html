@@ -55,6 +55,21 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-06-28--merged-option-c-slice-2-to-master-issue-95-session-232">2026-06-28 — Merged option C Slice 2 to master (issue #95, Session 232)<a class="anchor" aria-label="anchor" href="#id_2026-06-28--merged-option-c-slice-2-to-master-issue-95-session-232"></a></h3>
+<ul><li>
+<strong>Deliverable (owner pick “go with next suggested”):</strong> integrated option C Slice 2 to <code>master</code> — watched the PR #97 R-CMD-check matrix to green, then <strong>merged</strong> (merge commit <code>e893c90d</code>, 23:00:45). <strong>Admin/merge session — TDD code-phases N/A</strong> (no <code>R/</code>/tests change; the merged code is S230’s). The 5th run of the careful-admin push→PR→CI→merge arc (S218/S221/S224/S229) — and the <strong>first clean run since S229’s triple closing-keyword firing</strong>.</li>
+<li>
+<strong>Verify-then-merge held (did not merge on <code>MERGEABLE</code>):</strong> full R-CMD-check matrix green (macOS/Windows/Ubuntu release + oldrel-1 + <strong>devel</strong>, completed 22:58:53), plus pkgdown + test-coverage + both codecov. The lone <code>lint</code> red was proven pre-existing whole-package noise via the check-run <strong>annotations API</strong> (12 findings: 10 in <code>data-raw/fgSEValidation.R</code>, 2 <code>.github</code> workflow warnings; <strong>none</strong> in this PR’s changed files).</li>
+<li>
+<strong>Closing-keyword discipline held — no firing (Learning 215/217):</strong> no branch commit carried any <code>#N</code> ref (bare-word “issue 95”), so the lone “close-out” token was provably inert; the rendered PR body grep returned empty; the <strong>merge commit message was authored keyword-free</strong> via <code>gh pr merge --subject/--body</code>. Post-merge <code>gh api .../issues/95 --jq .state</code> → <strong>open</strong>; #9/#13 stay <strong>closed</strong>.</li>
+<li>
+<strong>Local sync via stash-the-stub (Learning 210(2)), not <code>reset --hard</code>:</strong> re-checked <code>git status</code> first (no unexplained modified file), stashed the 1B stub, fast-forwarded <code>master</code> (d3854083..e893c90d), popped the stub cleanly. <strong>local master == origin/master == <code>e893c90d</code></strong>; Slice-2 code present.</li>
+<li>
+<strong>Result:</strong> <strong>#95 stays OPEN</strong> (rule (ii) + follow-ups 2/3 remain). Branch <code>issue95-optionC-slice2</code> merged but <strong>not deleted</strong> (deletion is the deferred separate hygiene step, Learning 208/210(4)).</li>
+<li>
+<strong>Learnings:</strong> Learning 218 (PROJECT_LEARNINGS.md) — the careful-admin arc ran clean on the 5th run by reading 207/210/215/217 <em>before</em> acting; airtight closing-keyword proof + keyword-free authored merge-commit message; env nugget: <strong>zsh <code>status</code> is a read-only special variable</strong> (never assign to it in a Bash snippet — use <code>st</code>/<code>cc</code>); a <code>run_in_background</code> poll loop is the mechanism for waiting on an external CI leg.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-06-28--pushed-option-c-slice-2--opened-pr-97-issue-95-session-231">2026-06-28 — Pushed option C Slice 2 + opened PR #97 (issue #95, Session 231)<a class="anchor" aria-label="anchor" href="#id_2026-06-28--pushed-option-c-slice-2--opened-pr-97-issue-95-session-231"></a></h3>
 <ul><li>
 <strong>Deliverable (owner pick):</strong> outward-facing admin — pushed branch <code>issue95-optionC-slice2</code> to origin and opened <strong>PR #97</strong> (“Relates to #95”, base <code>master</code>). <strong>Admin/PR session — TDD code-phases N/A</strong> (no <code>R/</code>/tests change; the code is S230’s, already verified). Scoped to <strong>push + open PR</strong>; watching the CI matrix to green and merging is a separate owner-gated step.</li>

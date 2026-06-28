@@ -7,6 +7,203 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 232 Did
+
+**Deliverable (owner pick “go with next suggested”):** **Integrated
+option C Slice 2 to `master`** – watched the PR \#97 R-CMD-check matrix
+to green, then **merged** (merge commit `e893c90d`, 23:00:45). **DONE.**
+**Admin/merge session – TDD code-phases N/A** (no
+`R/`/tests/`man`/`NAMESPACE` change; the merged code is S230’s, already
+verified). The **5th run** of the careful-admin push-\>PR-\>CI-\>merge
+arc (S218/S221/S224/S229) – and the **first CLEAN run since S229’s
+triple closing-keyword firing**. Declared phase N/A at the top of each
+response. **0 stakeholder corrections / 0 owner overrides.** **Started /
+Completed:** 2026-06-28 / 2026-06-28 **Status:** **DONE.** Read Learning
+207/210/215/217 FIRST (the meta-lesson S229 missed –
+\[\[consult-project-source-of-truth\]\] applied, not breached), then
+executed the documented arc step for step. - **Verify-then-merge held
+(Learning 207(0)) – did NOT merge on `MERGEABLE`.** Waited for the FULL
+R-CMD-check matrix: macOS/Windows/Ubuntu release + oldrel-1 + **devel**
+(completed 22:58:53 = success) all green, plus pkgdown + test-coverage +
+both codecov. Used a background poll for the devel leg, then merged only
+after it went green. - **Lone `lint` red PROVEN pre-existing
+non-blocking noise** via the annotations API (Learning 207(1)/210(1)):
+`gh api repos/.../check-runs/83948642264/annotations` -\> 12 findings,
+**10 in `data-raw/fgSEValidation.R`** (implicit_assignment /
+implicit_integer / nonportable_path / undesirable_function / line_length
+/ commented_code) + **2 `.github`** (a Node.js-20 workflow-deprecation
+warning + the exit-31 summary). **NONE in this PR’s changed files**
+(`prepareKinshipOverrides.R`, `reportGV.R`, `gvaConvergence.R`,
+`modGeneticValue.R`, tests). This PR added nothing to the noise. -
+**Closing-keyword: AIRTIGHT on both surfaces (Learning 215/217).**
+`git log origin/master..branch` carried **ZERO `#N` refs** in any commit
+message (bare-word “(issue 95)”), so the lone “close-out” token in the
+S230 subject has no adjacent `#N` and cannot fire. Rendered PR body grep
+`clos|fix|resolv` = **EMPTY**. **Authored the merge commit message
+keyword-free** (`--subject "Merge pull request #97 from ..."`
+`--body "option C Slice 2: ... prepareKinshipOverrides helper (issue 95)"`
+– bare-word, zero clos/fix/resolv). **Post-merge:
+`gh api .../issues/95 --jq .state` -\> open** (the end-check that caught
+S229’s firings); \#9/#13 stay CLOSED. **No firing this session.** -
+**Local sync via stash-the-stub (Learning 210(2)) – NOT
+`reset --hard`.** Re-checked `git status` first (Learning 215): only
+`M SESSION_NOTES.md` (the 1B stub) + standing untracked HTML – no
+unexplained modified tracked file. `git stash push -- SESSION_NOTES.md`
+-\> `git fetch` -\> `git switch master` -\>
+`git merge --ff-only origin/master` (d3854083..e893c90d, 17 files) -\>
+`git stash pop` (clean). Verified **local master == origin/master ==
+`e893c90d`**, Slice-2 code present (`R/prepareKinshipOverrides.R`
+exists; `gvaConvergence.R`/`reportGV.R` route through it), stub
+survived, standing HTML untouched. - **One self-inflicted slip (zero
+impact):** the first background poll script assigned to `status=...`;
+**`status` is a READ-ONLY special variable in zsh** (the env shell) so
+it died with `read-only variable: status` (exit 1). Diagnosed from the
+output file; devel had already finished by then, so I just re-checked
+foreground – no impact on the merge. Recorded as Learning 218.
+
+**Phase-3E (runtime smoke): N/A (stated, not skipped).** Admin/merge
+session – authored no `R/`/runtime code; the merged S230 code was
+verified across the FULL R-CMD-check matrix on PR \#97 (the strongest
+possible runtime check) PLUS S230’s own functional + headless app-boot
+Phase-3E. Build-equivalent not re-run locally (no `R/` change this
+session; CI ran it on every matrix leg).
+
+**Session 231 Handoff Evaluation (by Session 232): Score 9/10.** S231’s
+handoff set this merge session up almost perfectly. **What helped:** (1)
+**SUGGESTED NEXT named this deliverable nearly verbatim** – “watch the
+full R-CMD-check matrix on PR \#97 to green, then merge with a merge
+commit ONLY after green … re-grep the rendered PR body AND every commit
+message for `clos|fix|resolv` adjacent to a `#N` …
+`gh api .../issues/95 --jq .state` at the very end” – which IS the
+procedure I ran; (2) **gotcha (2)** – the both-surfaces closing-keyword
+re-grep mandate + the “they are CURRENTLY clean but S229 proved this
+fires when skipped” framing – is the load-bearing control, carried
+prominently; (3) **gotcha (1)** – “PR \#97 OPEN, master == origin/master
+== `d3854083`” – held firsthand; (4) **the standing keeps held** (lint
+non-blocking noise, `gh ... 401 -> gh api`, stash-sync, re-check status
+before reset, build-equivalent). **The -1 (minor):** the handoff stated
+the closing-keyword RULE but, like S228’s, left the **annotations-API
+proof recipe** and the **stash-the-stub sync recipe** in
+PROJECT_LEARNINGS (207/210) rather than in its own gotchas – I had them
+only because I read 207/210 first (the lesson S229 learned the hard
+way). Surfacing both into the gotcha block would make the arc
+self-contained from the handoff alone. (Fair: the procedures are one
+read away in the learnings; this is a packaging nit.) Could not have
+pre-flagged the zsh `status` slip (environment-specific, novel). ROI:
+very high.
+
+**Self-assessment (Session 232): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read; SESSION_NOTES ACTIVE TASK; GH issues; dashboard
+98/100; ghost-check clean – HEAD `421f80f2` == documented S231),
+reported, STOPPED for the owner; wrote the **1B stub BEFORE technical
+work**; declared phase N/A each response. **Strengths:** (1) **read
+207/210/215/217 FIRST** – the exact
+\[\[consult-project-source-of-truth\]\] step S229 skipped, which is why
+the triple-firing-prone arc ran clean; (2) **closing-keyword airtight on
+BOTH surfaces** – proved no `#N` in any branch commit (so the
+“close-out” token is provably inert), empty grep on the rendered PR
+body, AND authored the merge commit keyword-free (bare-word), then ran
+the post-merge issue-state end-check; (3) **verify-then-merge held** –
+waited for the devel leg, did NOT merge on `MERGEABLE`, surfaced the
+lone `lint` red with annotations-API evidence that it is pre-existing
+noise with nothing from this PR; (4) **stash-the-stub sync** preserved
+the ghost-session marker and avoided the `reset --hard` trap, with a
+firsthand `git status` re-check first; (5) **1-and-done** – did NOT
+bundle branch deletion (the deferred SEPARATE step, Learning
+208/210(4)). 0 corrections / 0 overrides; first clean run of this arc
+since S229. **Weakness (the -1):** the first background-poll script died
+on the zsh `status` read-only variable – a self-inflicted shell slip;
+caught and worked around with zero impact on the deliverable (devel had
+finished), but a cleaner first script (safe var names) avoids it. Capped
+at 9 by that cosmetic slip; the deliverable shipped clean with full
+verification and the regression-prone arc fired nothing.
+
+**Learnings:** **Learning 218** added to `PROJECT_LEARNINGS.md` – the
+careful-admin arc executed CLEAN on the 5th run by reading
+207/210/215/217 BEFORE acting (the meta-lesson of 215(3) realized; the
+value of a routine arc is in NOT regressing – 210); the airtight
+closing-keyword proof (no `#N` anywhere in branch commits =\> the lone
+keyword token is inert) + keyword-free authored merge-commit message via
+`gh pr merge --subject/--body`; the new env nugget: **zsh `status` is a
+read-only special variable** – never assign to it in a Bash snippet (use
+`st`/`cc`); a `run_in_background` poll loop is the mechanism for waiting
+on an external CI leg. Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]; extends Learning 207/210/215/217
+(the careful-admin arc) and integrates Learning 216 (the S230 slice it
+merged). **This was an admin/merge session – TDD code-phases N/A.**
+
+**=\> SUGGESTED NEXT = owner’s pick.** Slice 2 is merged to `master`
+(`origin/master == e893c90d`); \#95 OPEN; \#9/#13 CLOSED. **The natural
+next is branch hygiene (the deferred SEPARATE step, Learning
+208/210(4)), matching the S229-\>S230(a) pattern:** delete the
+now-merged branch `issue95-optionC-slice2` (local + remote – both still
+present; GitHub did not auto-delete). Verify-merged-firsthand against
+BOTH `master` and `origin/master` -\> safe `git branch -d` +
+`git push origin --delete`; only `-D` after
+`git merge-base --is-ancestor <tip> master` if the “ahead 1” quirk bites
+(Learning 207/208). Remote delete is outward-facing -\> confirm the
+exact set with the owner first; leave the other stale branches
+(`dev`/`module`/`rlabkey-version-floor`) untouched unless asked. Live
+threads (carried): - **Rule (ii) (partial-residual)** + **\#95
+follow-ups 2** (both-unknown-\>one-unknown) **/ 3** (sib-pair coupling)
+– each a `/grill-me`; plus the C1.2 `"both"` / two-rows-per-pair
+encoding (deferred, bundle with rule (ii)). - **Systematic whole-package
+lint pass** (would clear the standing `lint`-CI red; includes re-doing
+the `data-raw/fgSEValidation.R` cleanup the owner had in progress,
+discarded S229). - **Possible 2.0.0 release** (owner-gated, carried
+S209-S232); **Issue \#37 disposition** (carried S212-S232); other open
+issues (#36, \#28, \#12/#11/#10/#5).
+
+**Key files (this session):** **No `R/`/tests/`NAMESPACE`/`man/`/`data`
+change.** **GitHub artifacts:** **PR \#97 MERGED** (merge commit
+`e893c90d`, 23:00:45; base `master`, head `issue95-optionC-slice2`);
+branch `issue95-optionC-slice2` **merged but NOT deleted** (local +
+remote both present – deferred hygiene step); issue **\#95 OPEN**
+(unchanged), **\#9/#13 CLOSED**. **master == origin/master ==
+`e893c90d`.** **Close-out docs (on `master`):** `SESSION_NOTES.md` (this
+handoff), `CHANGELOG.md` (S232 entry), `PROJECT_LEARNINGS.md` (Learning
+218). **NOT committed (standing keep):** `PED_GV_AUDIT_2026-05-30.html`
+(untracked); `.DS_Store`. **Scratchpad (not in repo):** the
+background-poll output file under `tasks/`.
+
+**Gotchas:** (1) **Slice 2 IS NOW ON `master`
+(`master == origin/master == e893c90d`).** The S230 (RED/GREEN) + S231
+(PR) + S232 (merge) commits are all on master; PR \#97 is MERGED. (2)
+**Branch `issue95-optionC-slice2` is MERGED but NOT deleted** (local +
+remote both present) – deletion is the deferred SEPARATE hygiene step
+(Learning 208/210(4)); verify-merged-firsthand against BOTH refs before
+`-d`. (3) **Closing-keyword discipline HELD this session (no firing)** –
+but the rule stands for ANY future merge/push: grep BOTH the rendered
+body AND commit messages for `clos|fix|resolv` adjacent to a `#N`, keep
+keywords away from `#N` even in prose/negation, author
+merge-commit/PR/issue bodies keyword-free, and run
+`gh api .../issues/<n> --jq .state` at the very end. **\#95 must STAY
+OPEN** (rule (ii) + follow-ups 2/3); \#9/#13 stay CLOSED. (4) **`status`
+is a READ-ONLY special variable in zsh** (the env shell) – a Bash
+snippet that does `status=...` dies with `read-only variable: status`
+(exit 1). Use `st`/`cc`/etc. A `run_in_background` poll loop (exits on
+the CI leg’s terminal state -\> re-invokes the agent) is the mechanism
+for waiting on an external CI leg (Learning 218). (5) **`gvaConvergence`
+and `reportGV` share `prepareKinshipOverrides()`** – change the HELPER
+(single source), never re-inline (re-opens the drift Slice 2 closed);
+module fallback paths (`modBreedingGroups`/`modSummaryStats`) still use
+`applyKinshipOverridesToMatrix` (the deferred 3-way de-dup). (6)
+**`gh pr edit` / `gh issue view <n>` 401 on the Projects-classic
+deprecation** -\> use `gh api` (REST) / `--json`. This session
+`gh pr merge --subject/--body`, `gh pr view --json`, and
+`gh api .../check-runs/<id>/annotations` all worked. (7) Carried
+standing keeps (unchanged): package **ARCHIVED on CRAN 2025-07-29**;
+CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without LabKey config; build-equivalent is
+`devtools::check(vignettes=FALSE)`=0/0/0; a 0/0/0 check does NOT imply
+spelling-clean -\> `spell_check_package`; `NEWS.md` is GENERATED from
+`NEWS.Rmd`; module/E2E tests need `NOT_CRAN=true`; `git pull` is
+rebase + chokes on `.DS_Store` -\> use the stash-sync; re-check
+`git status` before ANY `reset --hard` (Learning 215).
+
 ### What Session 231 Did
 
 **Deliverable (owner pick):** Outward-facing admin – **pushed branch
