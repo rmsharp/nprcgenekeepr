@@ -15,6 +15,34 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-28 — Merged the gvaConvergence kinship-override slice to master (PR \#93; Session 221)
+
+- **Deliverable (outward-facing admin; owner picked the full arc S220
+  suggested):** pushed branch `issue13-item3-gvaconv-overrides`, opened
+  **PR \#93** (“Relates to \#13”, **no** closing keyword so \#13 stayed
+  CLOSED), watched the full CI matrix to green, and **merged to
+  `master`** via merge commit `daa7728b`. The S220
+  [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+  kinship-override work (RED `a9e89027` → GREEN `87eae950` → close-out
+  `404ace3c`) is now on `master`. **Admin/merge session — TDD
+  code-phases N/A** (no
+  `R/`/tests/`NAMESPACE`/`man/`/`data`/`DESCRIPTION` change). 0
+  stakeholder corrections / 0 owner overrides.
+- **Verify-then-merge (careful-admin bar, Learning 204):** confirmed the
+  full R-CMD-check matrix green (macOS release; Windows release; Ubuntu
+  devel/oldrel-1/release) plus `pkgdown`, `test-coverage`, and both
+  `codecov` checks before merging. The sole red was the long-standing
+  non-blocking `lint` check; confirmed via the check-run **annotations
+  API** (`gh run view --log` came back empty — a known gh quirk) that
+  all 12 lint findings are pre-existing whole-package noise
+  (`data-raw/fgSEValidation.R` + a Node.js-20 workflow-deprecation
+  warning) with **none** in this PR’s changed files.
+- **Post-merge:** synced local `master` to `origin/master` (`daa7728b`);
+  re-verified \#13 stayed CLOSED and the `kinshipOverrides` argument is
+  present in `R/gvaConvergence.R` on `master`. Merged branch
+  `issue13-item3-gvaconv-overrides` (local + remote) is deletable (owner
+  hygiene). Learning 207 recorded.
+
 ### 2026-06-28 — gvaConvergence() honors kinship overrides (issue \#13 item-3 follow-up; Session 220)
 
 - **Deliverable (the most self-contained of the three issue-#13 item-3

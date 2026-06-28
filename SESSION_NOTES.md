@@ -7,6 +7,214 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 221 Did
+
+**Deliverable:** **Outward-facing admin – integrated the completed S220
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+kinship-override slice into `master`.** Pushed branch
+`issue13-item3-gvaconv-overrides`, opened **PR \#93** (“Relates to
+\#13”, **no** closing keyword), verified the full CI matrix green, and
+**merged to `master`** via merge commit `daa7728b`. **\#13 stayed
+CLOSED.** **DONE.** Owner picked “1” at Phase 1 (the full admin arc S220
+suggested: push + PR + watch CI green + merge). **Started / Completed:**
+2026-06-28 / 2026-06-28 **Status:** **DONE.** **Admin / merge session –
+TDD code-phases N/A** (no
+`R/`/tests/`NAMESPACE`/`man/`/`data`/`DESCRIPTION` change – a push + one
+PR + CI verification + merge + close-out docs only; phase declared
+PRE-RED / N/A each response, like the S218 admin/merge session). **0
+stakeholder corrections / 0 owner overrides.** - **Pre-push defensive
+verification (firsthand):** confirmed `master..HEAD` was exactly the 3
+documented S220 commits (RED `a9e89027` -\> GREEN `87eae950` -\> docs
+`404ace3c`) and the diff stat matched the S220 handoff (the
+`gvaConvergence.R` change + the two doc corrections + the new
+`test_gvaConvergence_kinshipOverrides.R` + close-out docs); grep-scanned
+the commit messages for stray `#13` closing keywords (the one “fixed”
+hit was prose in a commit body, not `fixed #13`). Local `master` ==
+`origin/master` == `cd62655b` before push. - **PR \#93
+(owner-directed):** pushed `-u`, created the PR against `master` with a
+body that says **“Relates to \#13”** and grep-scanned the RENDERED body
+for any `clos(e|es|ed)/fix(es|ed)/resolv(e|es|ed)` adjacent to a `#`
+(none) – the S218 close-\>reopen-\>close churn was a stray closing
+keyword in a PR body (Learning 204). Confirmed `baseRefName=master`,
+`mergeable=MERGEABLE`, `#13 CLOSED` before and after merge. -
+**Verify-then-merge (careful-admin bar, Learning 204 /
+\[\[observation-vs-decision\]\]):** watched the checks to completion
+(background `gh pr checks --watch`). **Full R-CMD-check matrix green**
+(macOS release; Windows release; Ubuntu devel/oldrel-1/release) +
+`pkgdown` + `test-coverage` + `codecov/patch` + `codecov/project` all
+PASS. The **only** red was the long-standing non-blocking `lint`.
+**Proved it pre-existing via the check-run ANNOTATIONS API**
+(`gh api repos/.../check-runs/83883148733/annotations`) because
+`gh run view --log` returned 0 bytes (a known gh quirk for some failed
+jobs): all 12 lint findings are whole-package noise
+(`data-raw/fgSEValidation.R` implicit-assignment / line-length /
+commented-code + a Node.js-20 workflow-deprecation warning) – **none**
+in this PR’s changed files (`gvaConvergence.R`, `modGeneticValue.R`),
+corroborating S220’s “lint 0 on changed files (package loaded).” -
+**Merged** via merge commit `daa7728b` (matching the \#89-#92
+precedent), then synced local `master` to `origin/master` and
+re-verified the `kinshipOverrides = NULL` arg is present in
+`R/gvaConvergence.R` on `master` and \#13 stayed CLOSED.
+
+**Phase-3E (runtime smoke): N/A for the session’s own work (stated, not
+skipped).** This session authored no `R/`/runtime code – it integrated
+already-tested, CI-green code. The merged code’s runtime was verified by
+**S220 Phase-3E** (live
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+serving the corrected in-app text) and by **PR \#93’s green post-merge
+R-CMD-check matrix** (which ran the full test suite on every platform).
+**Build-equivalent (`devtools::check`) not re-run locally:** nothing in
+`R/`/tests/`NAMESPACE`/`data` changed THIS session (only markdown
+close-out docs), so the build-equivalent isn’t triggered (same logic as
+the S214/S218 docs/admin sessions); the R/ code is covered by the green
+CI matrix.
+
+**Session 220 Handoff Evaluation (by Session 221): Score 9/10.** S220’s
+handoff set this admin session up very well. **What helped:** (1)
+**SUGGESTED NEXT named the exact admin arc with the precise warning** –
+“push the branch + open a PR – body must say ‘Relates to \#13’ with NO
+`closes/fixes/resolves #13` substring (issue \#13 is CLOSED; a stray
+closing keyword would fire on merge), watch the full R-CMD-check matrix
+to green (the long-standing `lint` red is non-blocking), and merge” –
+this WAS my deliverable, verbatim; (2) the explicit **“Do NOT put a
+closing keyword for \#13 in this branch’s PR body”** drove my PR-body
+wording + the rendered-body grep scan; (3) the standing keeps held
+firsthand (build-equivalent not triggered by doc-only; `lint` red is
+non-blocking whole-package; `git pull` is rebase + chokes on `.DS_Store`
+-\> use `fetch`/`reset`); (4) clean-state anchor held (HEAD `404ace3c`
+== documented S220; tree clean except the standing untracked
+`PED_GV_AUDIT_2026-05-30.html`); (5) the Key-files list let me confirm
+`master..HEAD` matched the claimed deliverable before pushing. **The -1
+(minor):** the handoff did not flag the git-sync ORDERING trap – that
+running the standard `fetch` + `checkout master` +
+`reset --hard origin/master` while my own Phase-1B stub is still
+uncommitted would ABORT the checkout (leaving me on the feature branch)
+and the chained `reset --hard` would then reset the WRONG branch.
+Generic git hygiene about MY session’s stub, not really S220’s to
+anticipate (a follow-up-to-its-own-suggestion); caught + corrected
+cleanly. ROI: very high.
+
+**Self-assessment (Session 221): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read IN FULL; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check clean – HEAD == documented S220),
+reported, STOPPED for the owner; wrote the **1B stub BEFORE technical
+work**. **Strengths:** (1) **did the outward-facing admin carefully, not
+blindly** – pre-push diff/commit verification, full-matrix green check,
+and the lone-red proven pre-existing before merging (Learning 204;
+\[\[observation-vs-decision\]\]); (2) **proved the `lint` red was
+pre-existing rather than asserting it** – when `gh run view --log` came
+back empty, pivoted to the check-run annotations API and showed none of
+the 12 findings touch this PR’s changed files (a concrete “surface the
+non-blocking red”); (3) **PR-body hygiene for a CLOSED tracking issue**
+– “Relates to \#13,” grep-scanned the rendered body for closing
+keywords, verified \#13 CLOSED before and after (the S218 lesson, not
+repeated); (4) **used a background CI watch** (harness-tracked -\>
+re-invoked on completion) rather than burning turns polling; (5)
+**stayed strictly in the one deliverable** – did not touch the remaining
+item-3 follow-ups (R13/D11), the cross-module refactor, \#37, or the
+2.0.0 question. **Weaknesses (honest):** (a) **the git-sync ordering
+slip – the main ding:** I chained `git checkout master` +
+`git reset --hard origin/master` in one command while my own 1B stub was
+uncommitted; the `checkout` aborted and the `reset --hard` reset the
+FEATURE branch to the merge commit (discarding the stub, moving the
+wrong pointer). Low harm (the stub is always superseded by this handoff;
+untracked files untouched), recovered cleanly with `switch master` +
+`merge --ff-only`, and memorialized (Learning 207), but it was a
+preventable git-state fumble – the tree should have been clean before
+the sync; (b) no independent build-equivalent run – defensible (doc-only
+changes; merged R/ code covered by the green CI matrix), stated not
+skipped. Capped at 8 by (a).
+
+**Learnings:** **Learning 207** added to `PROJECT_LEARNINGS.md` –
+completing the push-\>PR-\>CI-\>merge arc for an already-finished slice
+as careful admin: verify-then-merge (full matrix green + lone red
+surfaced) rather than merge-on-`MERGEABLE`; when `gh run view --log`
+returns empty for a failed job, get per-file findings from the check-run
+ANNOTATIONS API to prove the lint red is pre-existing and not from the
+PR’s changed files; syncing local master with an uncommitted 1B stub is
+a git-state trap (`checkout` aborts -\> chained `reset --hard` hits the
+wrong branch) so clean the tree FIRST then `switch` + `merge --ff-only`
+and verify the branch + sync; and PR-body hygiene for a CLOSED tracking
+issue (Relates-to, grep the rendered body, verify state before/after).
+Carried as applied: \[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\], \[\[push-close-out-docs-to-origin\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[check-process-history-before-rerunning-work\]\]; extends Learning
+204 (careful-admin merge) and closes out the S220 slice (Learning 206).
+**This was an admin/merge session – TDD code-phases N/A.**
+
+**=\> SUGGESTED NEXT = owner’s pick.** The S220 `gvaConvergence`
+kinship-override slice is now **on `master`** (PR \#93 merged,
+`daa7728b`); **\#13 remains CLOSED**. Live threads (carried): - **Branch
+hygiene (owner’s call):** the merged branch
+`issue13-item3-gvaconv-overrides` (local + remote) is deletable; note
+the LOCAL feature branch was inadvertently moved to the merge commit by
+this session’s `reset --hard` – it is still fully merged into master, so
+deleting it is safe. Earlier merged issue-13 slice branches
+(`issue13-slice2-shiny-upload`, `issue13-slice3-fallbacks`,
+`issue13-item3-inapp-docs`) also deletable. - **Remaining item-3
+IMPLEMENTATION follow-ups (2 of 3 left):** **R13** reconcile/flag in the
+relationship display (needs `convertRelationships` or display-layer work
+– wider blast radius); **D11** targeted option C / both-unknown
+promotion / shared-sib-pair coupling (option C needs override-side
+metadata the `id1/id2/kinship` schema does not carry). - **Cross-module
+REFACTOR (plan-mode work):** have `applyKinshipOverridesToMatrix()`
+return both the matrix AND `overriddenIds`, then de-dup `reportGV`’s
+inline block + drop `gvaConvergence`’s intersect (touches `reportGV` +
+both modules -\> plan mode, not a quick tidy). - **Possible 2.0.0
+release** (owner-gated, carried S209-S220): DESCRIPTION `2.0.0` (dev);
+all issue-13 override work + this gvaConvergence slice +
+[`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)/`fgSE`
+now on master. - **Issue \#37 disposition** (carried S212-S220): close,
+or refresh body to `176/137/39`. - **Other open issues:** \#36, \#28,
+\#12/#11/#10/#5; CRAN Phase 5 (owner-run; ARCHIVED on CRAN 2025-07-29).
+**Do NOT** read this as a behavior change – this session INTEGRATED
+already-tested code; the `gvaConvergence` behavior is exactly what S220
+implemented + verified. **Do NOT** put a closing keyword for \#13 in any
+future PR body (#13 is closed).
+
+**Key files (this session):** **No `R/`/tests/`NAMESPACE`/`man/`/`data`
+change.** **Outward-facing (the deliverable):** pushed
+`issue13-item3-gvaconv-overrides`; opened + merged **PR \#93** -\> merge
+commit `daa7728b` into `master`. **Close-out docs:** `SESSION_NOTES.md`
+(this handoff + the 1B stub it supersedes – the stub was discarded by
+the sync `reset --hard`, harmless), `CHANGELOG.md` (S221 entry),
+`PROJECT_LEARNINGS.md` (Learning 207). **NOT committed (standing
+keep):** `PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
+**Scratchpad (not in repo):** `pr_body_s221.md`, `lint_full.log`
+(empty), the `gh pr checks --watch` background output.
+
+**Gotchas:** (1) **PR \#93 is MERGED to `master`** (merge commit
+`daa7728b`; “Relates to \#13”, no closing keyword, so \#13 stayed
+CLOSED). The merged branch (local + remote) is deletable (owner
+hygiene); the LOCAL feature branch was moved to the merge commit by this
+session’s `reset --hard` (still merged -\> safe to delete). (2) **When
+`gh run view <run_id> --log`/`--log-failed` returns EMPTY for a failed
+job, use the check-run ANNOTATIONS API**
+(`gh api repos/OWNER/REPO/check-runs/<JOB_ID>/annotations`) to get the
+per-file findings – that is how I proved the `lint` red is pre-existing
+whole-package noise, not from this PR. (3) **Sync local master in the
+RIGHT order:** with an uncommitted 1B stub in the tree,
+`git checkout master` ABORTS and a chained
+`git reset --hard origin/master` resets the CURRENT (feature) branch
+instead – clean the tree FIRST (the stub is disposable), THEN
+`git switch master` + `git merge --ff-only origin/master`, and verify
+`rev-parse --abbrev-ref HEAD` + local-master == origin/master. (4) **The
+CI `lint` check is long-standing red and non-blocking** (whole-package
+noise in `data-raw/fgSEValidation.R` + a Node.js-20 workflow-deprecation
+warning; `mergeStateStatus` UNSTABLE not BLOCKED); your EDITS must still
+be lint-clean (\[\[avoid-new-lints-r-package\]\]). (5) Carried standing
+keeps (unchanged): package **ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5
+owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without LabKey config; `gh issue view <n>` errors on a
+Projects-classic deprecation -\> use `--json`; build-equivalent is
+`devtools::check(vignettes=FALSE)`=0/0/0 (NOT run this session – no
+`R/`/test change); a 0/0/0 check does NOT imply spelling-clean -\>
+`spell_check_package`; `NEWS.md` is GENERATED from `NEWS.Rmd`;
+module/E2E tests need `NOT_CRAN=true`; `git pull` is rebase + chokes on
+`.DS_Store` -\> use `fetch`+`reset`.
+
 ### What Session 220 Did
 
 **Deliverable:** **Implemented issue \#13 item-3 follow-up –
