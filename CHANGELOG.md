@@ -78,10 +78,13 @@ here.
   \[\[ascii-only-in-question-options\]\],
   \[\[check-process-history-before-rerunning-work\]\],
   \[\[push-close-out-docs-to-origin\]\].
-- **Committed on branch `issue13-item3-inapp-docs` (local; push / PR is
-  the owner’s outward-facing call).** The three deeper item-3 follow-ups
-  remain UNIMPLEMENTED on the backlog — this session documented their
-  limits, it did not implement them.
+- **Merged to `master` via PR \#92** (merge commit `38bf1915`; pushed +
+  CI watched to green — full R-CMD-check matrix +
+  `pkgdown`/`test-coverage`/`codecov` green, only the long-standing
+  non-blocking `lint` red; PR body used “Relates to \#13” with no
+  closing keyword, so \#13 stayed CLOSED). The three deeper item-3
+  follow-ups remain UNIMPLEMENTED on the backlog — this session
+  documented their limits, it did not implement them.
 
 ### 2026-06-27 — Completed the issue \#13 merge arc: merged Slices 2 + 3 to master; \#13 CLOSED (Session 218)
 

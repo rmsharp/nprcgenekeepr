@@ -154,20 +154,22 @@ strict-TDD DEVELOPMENT (documentation) session.**
 
 **⇒ SUGGESTED NEXT = owner’s pick.** Item 3’s in-app DOCUMENTATION gap
 is now closed; the three item-3 IMPLEMENTATION follow-ups remain on the
-backlog. Live threads (carried): - **Push / open a PR for branch
-`issue13-item3-inapp-docs`** (owner — outward-facing; the branch is
-LOCAL only). \#13 is already CLOSED, so the PR should use “Relates to
-\#13” / “Follow-up to \#13” with **NO closing keyword** anywhere in the
-body (Learning 204 gotcha). - **Item-3 IMPLEMENTATION follow-ups (now
-documented, behavior unchanged):** `gvaConvergence` override patch
-(thread `kinshipOverrides` into its `:126` kinship build — the most
-self-contained TDD slice); R13 reconcile/flag in the relationship
-display (needs `convertRelationships` or display-layer work — wider
-blast radius); D11 targeted option C / both-unknown promotion /
-shared-sib-pair coupling (option C needs override-side metadata the
-`id1/id2/kinship` schema does not carry). - **Possible 2.0.0 release**
-(owner-gated, carried S209-S218): DESCRIPTION `2.0.0` (dev); all
-issue-13 override work +
+backlog. Live threads (carried): - **DONE (post-close-out,
+owner-directed):** pushed the branch, opened **PR \#92** (“Relates to
+\#13”, no closing keyword), watched CI to green (full R-CMD-check
+matrix + `pkgdown`/`test-coverage`/`codecov` green; only the
+long-standing non-blocking `lint` red), and **MERGED to `master`** via
+merge commit `38bf1915` — **\#13 stayed CLOSED/unaffected**. The merged
+branch `issue13-item3-inapp-docs` (local + remote) can be deleted (owner
+hygiene). - **Item-3 IMPLEMENTATION follow-ups (now documented, behavior
+unchanged):** `gvaConvergence` override patch (thread `kinshipOverrides`
+into its `:126` kinship build — the most self-contained TDD slice); R13
+reconcile/flag in the relationship display (needs `convertRelationships`
+or display-layer work — wider blast radius); D11 targeted option C /
+both-unknown promotion / shared-sib-pair coupling (option C needs
+override-side metadata the `id1/id2/kinship` schema does not carry). -
+**Possible 2.0.0 release** (owner-gated, carried S209-S218): DESCRIPTION
+`2.0.0` (dev); all issue-13 override work +
 [`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)/`fgSE`
 on master. - **Issue \#37 disposition** (carried S212-S218): close, or
 refresh body to `176/137/39`. - **Other open issues:** \#36, \#28,
@@ -188,16 +190,17 @@ overrides” `<p>`). **Close-out:** `NEWS.Rmd` + rendered `NEWS.md` (GREEN
 commit `3a506772`), `CHANGELOG.md` (S219 entry), `PROJECT_LEARNINGS.md`
 (Learning 205), `SESSION_NOTES.md` (this handoff + the 1B stub it
 supersedes). **Commits:** RED `ed05a0cd`, GREEN `3a506772`, close-out
-(this commit) — all on branch `issue13-item3-inapp-docs`. **NOT
-committed (standing keep):** `PED_GV_AUDIT_2026-05-30.html` (untracked);
-`.DS_Store`. **Scratchpad (not in repo):** `check_s219.log`,
-`app_smoke_s219.log`, `gv_page_s219.html`.
+`ac9eaf05` — branch `issue13-item3-inapp-docs`, **merged to `master`**
+via PR \#92 (merge commit `38bf1915`). **NOT committed (standing
+keep):** `PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
+**Scratchpad (not in repo):** `check_s219.log`, `app_smoke_s219.log`,
+`gv_page_s219.html`.
 
-**Gotchas:** (1) **Branch `issue13-item3-inapp-docs` is LOCAL only** —
-NOT pushed, no PR (push/PR is the owner’s outward-facing call). \#13 is
-CLOSED; any PR for this branch must use “Relates to \#13” with NO
-`closes/fixes/resolves #N` substring anywhere in the body (Learning
-204). (2) **`helpText(a, b, c)` renders each argument as a SEPARATE,
+**Gotchas:** (1) **Branch `issue13-item3-inapp-docs` is MERGED to
+`master`** via PR \#92 (merge commit `38bf1915`; “Relates to \#13”, no
+closing keyword, so \#13 stayed CLOSED/unaffected). The merged branch
+(local + remote) can be deleted (owner hygiene). (2)
+**`helpText(a, b, c)` renders each argument as a SEPARATE,
 newline-separated text node** — an asserted/contiguous phrase must live
 in ONE string argument or a single `paste(...)` (joins with spaces
 BEFORE becoming one node), else `grepl(fixed=TRUE)` misses it across the
