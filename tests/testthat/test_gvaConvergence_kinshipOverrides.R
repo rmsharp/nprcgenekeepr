@@ -195,3 +195,50 @@ test_that("gvaConvergence honors an override on a one-unknown-parent animal", {
   base <- gvaConvergence(ped, nMax = 200L, grid = c(25L, 50L, 100L), seed = 1L)
   expect_equal(res$convergence, base$convergence)
 })
+
+# --------------------------------------------------------------------------
+# (6) Issue #95 option C, Slice 2 lockstep: gvaConvergence must honor the
+# optional missingSideFor column the SAME way reportGV does -- it now routes
+# overrides through the shared prepareKinshipOverrides() helper, so a known-side
+# (blank) override keeps the focal's +sexMean/2 prior on the convergence path
+# while a missing-side override suppresses it. gvaConvergence returns no
+# per-animal mean kinship, and on qcPed the convergence curve is gu-free
+# (always 1.0), so the numeric keep-vs-suppress is covered by the helper's unit
+# tests (test_prepareKinshipOverrides.R) plus reportGV's option-C tests
+# (test_reportGV.R) -- gvaConvergence and reportGV call the identical helper.
+# This case asserts the convergence path ACCEPTS and runs clean on a
+# missingSideFor-annotated frame (both case a and case b) without aborting.
+# --------------------------------------------------------------------------
+test_that("gvaConvergence accepts a missingSideFor-annotated override (option C lockstep)", {
+  ped <- nprcgenekeepr::qcPed
+  X <- "0K7VJN" # male, one-unknown (sire missing)
+  Y <- "N2XF08" # known parentage
+  isU <- function(x) is.na(x) | nprcgenekeepr:::isGeneratedUnknownId(x)
+  expect_true(all(c(X, Y) %in% as.character(ped$id)))
+  expect_true(xor(isU(ped$sire[ped$id == X]), isU(ped$dam[ped$id == X])))
+
+  grid <- c(25L, 50L, 100L)
+  base <- gvaConvergence(ped, nMax = 200L, grid = grid, seed = 1L)
+
+  # case (b) known-side: blank missingSideFor -> option C KEEPS X's prior
+  ovK <- data.frame(
+    id1 = X, id2 = Y, kinship = 0.25, missingSideFor = "",
+    stringsAsFactors = FALSE
+  )
+  resK <- suppressMessages(gvaConvergence(
+    ped, nMax = 200L, grid = grid, seed = 1L, kinshipOverrides = ovK
+  ))
+  expect_s3_class(resK, "nprcgenekeeprGVConv")
+  expect_equal(resK$convergence, base$convergence) # qcPed gu-free
+
+  # case (a) missing-side: missingSideFor = X -> option C suppresses (= blanket-A)
+  ovM <- data.frame(
+    id1 = X, id2 = Y, kinship = 0.25, missingSideFor = X,
+    stringsAsFactors = FALSE
+  )
+  resM <- suppressMessages(gvaConvergence(
+    ped, nMax = 200L, grid = grid, seed = 1L, kinshipOverrides = ovM
+  ))
+  expect_s3_class(resM, "nprcgenekeeprGVConv")
+  expect_equal(resM$convergence, base$convergence)
+})

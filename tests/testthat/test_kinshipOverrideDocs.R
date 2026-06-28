@@ -40,6 +40,11 @@ test_that(paste(
   ## Item 3c: overrides on an animal missing a parent have edge cases that
   ## are a current limitation.
   expect_true(grepl("current limitation", ui, ignore.case = TRUE))
+
+  ## Issue #95 option C (Slice 2): the optional missingSideFor column lets an
+  ## override say which animal's MISSING parent side it informs, so a known-side
+  ## override no longer drops that animal's unknown-parent correction.
+  expect_true(grepl("missingSideFor", ui, fixed = TRUE))
 })
 
 test_that(paste(
@@ -56,6 +61,8 @@ test_that(paste(
   expect_true(grepl("applies these overrides", txt, ignore.case = TRUE))
   ## Item 3c: edge cases are a current limitation.
   expect_true(grepl("limitation", txt, ignore.case = TRUE))
+  ## Issue #95 option C (Slice 2): the optional missingSideFor column.
+  expect_true(grepl("missingSideFor", txt, fixed = TRUE))
 })
 
 test_that(paste(

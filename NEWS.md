@@ -83,6 +83,16 @@ R. Mark Sharp, Ph.D.
     previous (blanket) behavior exactly (issue \#95, option C, slice 1).
     The in-app upload and the gene-drop convergence diagnostic gain this
     in a later slice.
+  - The gene-drop convergence diagnostic (`gvaConvergence()`) and the
+    in-app Genetic Value upload now honor the `missingSideFor` targeted
+    suppression in lockstep with `reportGV()`: a known-side override
+    keeps a one-missing-parent animal's `+ sexMean / 2` correction on
+    the convergence ranking too, and only a missing-side override
+    suppresses it. The report and the convergence diagnostic share one
+    override-preparation path, so they cannot disagree on an overridden
+    one-missing-parent animal. An override table with no
+    `missingSideFor` column (or no upload) reproduces the previous
+    behavior exactly (issue \#95, option C, slice 2).
   - File-based pedigree ingestion now treats `species` as a first-class
     column: `getPossibleCols()` recognizes it and places it immediately
     after `sex` in the canonical column order, and `qcStudbook()` types

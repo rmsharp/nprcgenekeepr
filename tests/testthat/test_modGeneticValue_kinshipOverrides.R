@@ -69,6 +69,38 @@ test_that(paste("modGeneticValueServer applies an uploaded kinship override and"
   )
 })
 
+test_that(paste("modGeneticValueServer accepts an override file carrying a",
+                "missingSideFor column (issue #95 option C upload path)"), {
+  skip_if_not_installed("shiny")
+  test_ped <- makeOverridePed()
+
+  ovrCsv <- tempfile(fileext = ".csv")
+  on.exit(unlink(ovrCsv), add = TRUE)
+  # 4-column file: the optional missingSideFor column must ride through
+  # readKinshipOverrides (check.names = FALSE) and checkKinshipOverrides into
+  # reportGV without breaking the upload path. F1/F2 are both-unknown, so the
+  # missing-side classification is a no-op here; the point is the new column is
+  # accepted and the matrix override still applies (F1's mean kinship rises).
+  writeLines(c("id1,id2,kinship,missingSideFor", "F1,F2,0.4,"), ovrCsv)
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(pedigree = shiny::reactive({ test_ped })),
+    {
+      session$setInputs(nIterations = 100, topN = 10)
+      session$setInputs(runAnalysis = 1)
+      baseKin <- f1MeanKin(gvResults())
+
+      session$setInputs(kinshipOverrideFile = fileInfo(ovrCsv))
+      session$setInputs(runAnalysis = 2)
+      overridden <- gvResults()
+
+      expect_true(is.data.frame(overridden))
+      expect_gt(f1MeanKin(overridden), baseKin)
+    }
+  )
+})
+
 test_that("modGeneticValueServer ignores a malformed override file (non-fatal, D5)", {
   skip_if_not_installed("shiny")
   test_ped <- makeOverridePed()
