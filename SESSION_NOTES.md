@@ -7,6 +7,230 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 228 Did
+
+**Deliverable:** **Slice 1 of issue \#95 option C – the script-core
+targeted suppression.**
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+now suppresses the issue-#9 `+ sexMean / 2` unknown-parent correction
+*targeted by override side*: a one-missing-parent animal KEEPS the
+correction for a known-side override (case b – previously wrongly
+dropped by D11 blanket-A) and has it suppressed only when an override
+stands in for its *missing* side (case a), via a new optional
+`missingSideFor` column. No `missingSideFor` column =\> byte-identical
+to today (blanket-A, D10). **DONE** on branch `issue95-optionC-slice1`.
+**Started / Completed:** 2026-06-28 / 2026-06-28 **Status:** **DONE.**
+**Strict-TDD DEVELOPMENT session (RED `5448a1a8` -\> GREEN `4cd3e509`;
+REFACTOR offered, owner chose skip).** Phase declared each response;
+**all three phase gates (PRE-RED-\>RED, RED-\>GREEN, GREEN-\>REFACTOR)
+via `AskUserQuestion`**. **0 stakeholder corrections / 0 owner
+overrides.** - **PRE-RED recon (firsthand):** read
+`checkKinshipOverrides.R` / `applyKinshipOverrides.R` (the column rides
+through name-based access – no matrix-apply change),
+`test_checkKinshipOverrides.R` +
+`test_correctUnknownParentMeanKinship.R` (the existing suites to
+extend), the `i13_correctBlanketA` oracle (`test_reportGV.R:506-525`),
+and confirmed `overriddenIds` is used ONLY at the correction call
+(`reportGV.R:140,159,179`) so a `suppressIds` threads cleanly.
+**Load-bearing finding:** `correctUnknownParentMeanKinship`’s `:164`
+guard ALREADY suppresses whatever set it is passed, so option C needs NO
+code change there – only the CALLER computes a narrower set (C3). The
+genuine RED therefore lives in the new classifier + the validator’s new
+check + the caller’s flipped case, NOT the unchanged core. - **RED
+(`5448a1a8`):** NEW `test_classifyOverrideMissingSide.R` (7 cases -\>
+error, helper absent); `test_checkKinshipOverrides.R` (+4: a
+`missingSideFor` not naming id1/id2 -\> stop \[FAILS at HEAD – no
+validation\]; accept/NA-blank/dedup-C1.2 stay green); `test_reportGV.R`
+(+ the discriminating case-(b) test: blank `missingSideFor` KEEPS the
+prior \[FAILS at HEAD – blanket-A drops it; only 1/280 animals
+differ\]; + an independent `i13_correctOptionC` oracle + a case-(a)
+suppress test that stays green);
+`test_correctUnknownParentMeanKinship.R` (+2 redefined-contract
+characterization, pass at HEAD). Confirmed clean-for-the-right-reason: 7
+helper errors + 1 validator failure + 3 case-(b) assertions fail; all
+else green. - **GREEN (`4cd3e509`, minimal):** `checkKinshipOverrides`
+validates the optional `missingSideFor` column (NA-\>““; each non-blank
+cell must name id1/id2 of its row, else stop; dedup key UNCHANGED,
+C1.2) + roxygen. NEW `R/classifyOverrideMissingSide.R` (`@noRd`, C5: the
+one-unknown focals named by a non-blank side, via `isU(ped$sire/dam)`;
+NULL/zero-row/absent-column -\> `character(0L)`). `reportGV` computes
+`suppressIds` (present column -\> `classifyOverrideMissingSide(...)`;
+absent -\> the full set = blanket-A / D10) and passes it as
+`overriddenIds` (C3). `correctUnknownParentMeanKinship`
+`@param overriddenIds` docstring redefined to”the set to suppress”
+(guard unchanged – NO behavior change). `gvaConvergence` untouched
+(still blanket-A via the full set – Slice 2). - **Verify (all clean):**
+the 4 touched test files green; clean regression read **0 failed / 0
+error** (1172 real files, incl. & excl. `test-app-`/`test-e2e-`,
+`NOT_CRAN=true`; 6 baseline warnings, none new – my code only adds
+[`stop()`](https://rdrr.io/r/base/stop.html)/pure logic and the new
+reportGV tests use in-set ids so no warn-drop);
+`devtools::check(vignettes=FALSE)` **0/0/0**; `spell_check_package`
+**0**; **lint net-zero** (in-place HEAD-vs-current:
+checkKinshipOverrides 6=6, reportGV 4=4, correctUnknownParent 2-\>1, new
+file 0; `.lintr` has no per-file line exclusions); `document()`
+regenerated only `man/checkKinshipOverrides.Rd` (no NAMESPACE delta).
+NEWS bullet added + rendered (issue \#95 option C slice 1).
+
+**Phase-3E (runtime smoke): N/A (stated, not skipped).** Slice 1 is
+SCRIPT-CORE only – it changes
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)’s
+correction-threading logic (a pure analytical function fully exercised
+by the test suite) and adds a validator/helper, with **no Shiny wiring /
+dispatch / startup change** (the in-app upload + helptext are Slice 2).
+FM \#24 (build-passes-ship-it) is about runtime wiring that only
+executes at app startup; this slice has none, so a
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+smoke is not required (the plan’s Slice-1 Verify says so explicitly).
+**Build-equivalent (`devtools::check(vignettes=FALSE)`) WAS run this
+session = 0/0/0** (R/ + tests changed).
+
+**Session 227 Handoff Evaluation (by Session 228): Score 9/10.** S227’s
+handoff set this development session up almost perfectly. **What
+helped:** (1) **SUGGESTED NEXT named this deliverable nearly verbatim**
+– “Slice 1 … checkKinshipOverrides accepts + validates missingSideFor;
+classifyOverrideMissingSide helper; reportGV computes + passes the
+missing-side subset; refined regression (pin (X,Y)=0.25 as case a; add
+i13_correctOptionC oracle + case-b test); gvaConvergence keeps blanket-A
+until Slice 2; PR ‘Relates to \#95’” – which IS what I built, step for
+step; (2) **the gotchas pre-stated every design decision**
+(missingSideFor column; two opposite defaults C1.1;
+caller-computes-the-suppress-set C3; `isU` not `classifyParentage` C5;
+C1.2 documented limitation; Slice-2 boundary), so I implemented without
+re-deriving; (3) **the plan §4 Slice 1 gave the exact RED/GREEN/Verify
+steps**, and §2 the firsthand-current `file:line`; (4) **standing keeps
+held** (build-equivalent, lint net-zero discipline, `NOT_CRAN=true`,
+clean-state anchor HEAD `eaad5a75` == documented S227). **The -1
+(minor):** the handoff said `correctUnknownParentMeanKinship` is
+“essentially unchanged” but did not explicitly flag that its RED tests
+would therefore be **characterization that PASSES at HEAD** (the guard
+already does membership) – I worked that out in recon and aimed the
+discriminating RED at the caller’s case-(b) flip instead. A one-line
+“the function’s own tests pass at HEAD; the real RED is the caller + new
+helper” would have pre-stated it. ROI: very high.
+
+**Self-assessment (Session 228): 9/10.** Oriented (state fresh from the
+S227 close-out – clean tree, HEAD == origin); wrote the **1B stub BEFORE
+technical work**; strict TDD with all gates; declared phase each
+response. **Strengths:** (1) **thorough PRE-RED recon** before writing
+tests – read the validator/apply/both test suites/the oracle and
+confirmed the `overriddenIds` usage, which surfaced that the
+load-bearing function needs NO change (only the caller + a new
+classifier); (2) **discriminating RED** aimed at the case the refinement
+FLIPS (case b – 1/280 surgical), with the unchanged case (a) + the
+contract as stays-green characterization (\[discriminating-RED\]); (3)
+**independent oracle** (`i13_correctOptionC` computes the suppress set
+itself, not via the package helper); (4) **full verification** – 4 files
+green, clean regression 0/0, check 0/0/0, spell 0, lint net-zero; (5)
+**caught my own slips** – fixed 3 self-introduced lints
+(paste-\>toString, 2 line-lengths, a commented_code false-positive) and,
+after catching that the /tmp-copy lint comparison was invalid (loses
+`.lintr`), redid net-zero IN-PLACE via stash; (6) **separate
+RED/GREEN/close-out commits** reconstructed from one working-tree pass;
+(7) **stayed strictly in Slice 1** – gvaConvergence untouched, no
+cross-module refactor, REFACTOR skipped (the only candidate was
+pre-existing cross-cutting scope creep). 0 corrections / 0 overrides.
+**Weaknesses (honest):** (a) **my first GREEN pass introduced 3 new
+lints** – caught and fixed, but a cleaner first write (anticipating
+`.lintr`) would have avoided them; (b) **the first net-zero comparison
+used the invalid /tmp-copy method** – I recognized the `.lintr`-loss and
+redid it in-place, but the \[stale-namespace\] learning had warned about
+exactly this, so I should have stashed from the start; both are
+self-corrected process slips. Capped at 9 by (a)/(b) – cosmetic;
+technical execution clean.
+
+**Learnings:** **Learning 214** added to `PROJECT_LEARNINGS.md` – a
+targeted-suppression slice where the load-bearing function is UNCHANGED
+(behavior change in the caller + a new classifier): aim the
+discriminating RED at the case the refinement FLIPS, keep
+unchanged-behavior cases as stays-green characterization; the option-C
+oracle is the existing blanket-A oracle called with the refined suppress
+set; reconstruct RED/GREEN/close-out as separate commits from one pass;
+net-zero lint MUST use the in-place stash (the /tmp-copy method loses
+`.lintr`); Phase-3E N/A for a script-core slice with no Shiny wiring.
+Carried as applied: \[\[avoid-new-lints-r-package\]\],
+\[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[push-close-out-docs-to-origin\]\]; extends Learning 213/212 (the
+ratified plan) and 209 (the R13 display slice). **This was a strict-TDD
+DEVELOPMENT session.**
+
+**=\> SUGGESTED NEXT = owner’s pick.** Option C Slice 1 is DONE on
+branch `issue95-optionC-slice1` (RED `5448a1a8` + GREEN `4cd3e509` +
+this close-out); **NOT pushed** (master stays at S227 `eaad5a75` ==
+origin/master). **The natural next is outward-facing admin (owner),
+matching the S223-\>S224 arc:** push the branch + open a PR – **body
+must say “Relates to \#95” with NO `closes/fixes/resolves #95`
+substring** (issue \#95 stays OPEN for follow-ups 2/3 + the new rule
+(ii)), watch the full R-CMD-check matrix to green (the long-standing
+`lint` red is non-blocking whole-package noise), and merge. Live threads
+(carried): - **Slice 2 of option C (after Slice 1 merges) – a strict-TDD
+session** per plan §4 Slice 2: bring `gvaConvergence` into lockstep
+(compute + pass the same missing-side subset; run it through
+`checkKinshipOverrides` so it sees the validated column); UI helptext
+(`modGeneticValue.R:54-78`) +
+**`inst/extdata/ui_guidance/genetic_value.html:50-61` +
+`test_kinshipOverrideDocs.R:21-78` (phrase-pinning – breaks when the
+limitation text changes, update in lockstep)**; **Phase-3E runtime smoke
+REQUIRED** (Shiny helptext + parse change, FM \#24); close \#95
+follow-up 1. - **Rule (ii) (partial-residual)** – the deferred genetics
+follow-up (the ~1.2 SD case-(a) residual); needs a pair-decomposition
+model. Plus \#95 follow-ups 2 (both-unknown-\>one-unknown) / 3 (sib-pair
+coupling). Each a `/grill-me`. - **Update issue \#95** (outward-facing,
+owner’s call): a comment recording the Phase-0 ratification (S227) +
+Slice 1 (S228) + the new rule-(ii) follow-up. Already durable in plan
+§8E. - **Possible 2.0.0 release** (owner-gated, carried S209-S228);
+**Issue \#37 disposition** (carried S212-S228); other open issues (#36,
+\#28, \#12/#11/#10/#5).
+
+**Key files (this session):** **NEW (R/):**
+`R/classifyOverrideMissingSide.R` (`@noRd` helper, C5). **EDITED (R/):**
+`R/checkKinshipOverrides.R` (missingSideFor validation + roxygen),
+`R/reportGV.R` (`suppressIds` threading `:140/:160/:179`),
+`R/correctUnknownParentMeanKinship.R` (`@param overriddenIds` docstring,
+C3). **NEW (tests):**
+`tests/testthat/test_classifyOverrideMissingSide.R`. **EDITED (tests):**
+`test_checkKinshipOverrides.R` (+4), `test_reportGV.R` (+2 tests + the
+`i13_correctOptionC` oracle), `test_correctUnknownParentMeanKinship.R`
+(+2). **Regenerated:** `man/checkKinshipOverrides.Rd`. **Close-out:**
+`NEWS.Rmd` + rendered `NEWS.md`, `CHANGELOG.md` (S228 entry),
+`PROJECT_LEARNINGS.md` (Learning 214), `SESSION_NOTES.md` (this
+handoff). **Commits (branch `issue95-optionC-slice1`):** RED `5448a1a8`,
+GREEN `4cd3e509`, close-out (this). **NOT committed (standing keep):**
+`PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`. **Scratchpad
+(not in repo):** `c2_numeric_check.R` / `c2_evidence_summary.md` (S227
+evidence; recipe is in plan §8B), `check_s228.log`.
+
+**Gotchas:** (1) **Slice 1 is on branch `issue95-optionC-slice1`, NOT
+pushed; master == origin/master == `eaad5a75` (S227).** The next session
+orienting on master sees S227 as latest until the PR merges (S223
+pattern). (2) **PR body must be “Relates to \#95” – NO closing keyword**
+(#95 stays OPEN for follow-ups 2/3 + rule (ii)). (3) **The
+`missingSideFor` column is the public contract:** value = the id (id1 or
+id2) whose missing-parent side the override informs; blank/NA =
+known-side. **Absent column =\> blanket-A (byte-identical / D10);
+per-row-blank =\> known-side (KEEP the prior).** (4) **`gvaConvergence`
+is still blanket-A** (passes the FULL set) – Slice 2 brings it into
+lockstep; until then the GV report and the convergence diagnostic can
+disagree on a known-side-overridden one-unknown animal. (5)
+**`correctUnknownParentMeanKinship` had NO behavior change** – only its
+`overriddenIds` docstring (now “the set to suppress”, C3); the `:164`
+guard is unchanged. (6) **Slice 2 MUST update `genetic_value.html` +
+`test_kinshipOverrideDocs.R` in lockstep** (the doc-consistency test
+pins the “current limitation” phrasing). (7) **Net-zero lint uses the
+in-place stash, NOT `git show HEAD:x > /tmp`** (the /tmp copy loses
+`.lintr` -\> false default lints). (8) Carried standing keeps
+(unchanged): package **ARCHIVED on CRAN 2025-07-29**; CRAN Phase 5
+owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without LabKey config; `gh issue view <n>` errors on a
+Projects-classic deprecation -\> use `--json`; build-equivalent is
+`devtools::check(vignettes=FALSE)`=0/0/0; a 0/0/0 check does NOT imply
+spelling-clean -\> `spell_check_package`; `NEWS.md` is GENERATED from
+`NEWS.Rmd`; module/E2E tests need `NOT_CRAN=true`; `git pull` is
+rebase + chokes on `.DS_Store` -\> use `fetch`+`reset`.
+
 ### What Session 227 Did
 
 **Deliverable:** **Phase 0 for issue \#95 option C – ratified C1 + C2
