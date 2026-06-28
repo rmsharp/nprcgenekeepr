@@ -62,6 +62,14 @@ R. Mark Sharp, Ph.D.
     ids outside the analysis set are warn-dropped without aborting, and
     the default (`NULL`) leaves the convergence curve identical to
     before (issue \#13 item-3 follow-up).
+  - The Summary Statistics relationship table now flags overridden
+    pairs: when a kinship override is supplied, the exported
+    relationships table gains a logical `overridden` column that is
+    `TRUE` for the pairs whose kinship value came from an override. The
+    relationship *label* stays pedigree-derived, so the flag lets a user
+    see which rows carry an outside-information value even though the
+    label and the value can disagree. With no override supplied the
+    table is unchanged (issue \#13 item-3 follow-up, R13).
   - File-based pedigree ingestion now treats `species` as a first-class
     column: `getPossibleCols()` recognizes it and places it immediately
     after `sex` in the canonical column order, and `qcStudbook()` types

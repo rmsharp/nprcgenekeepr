@@ -40,14 +40,18 @@ overrides are applied to that matrix, so the relationship table and the
 kinship CSV export reflect the supplied values regardless of tab order.
 The override moves the kinship \emph{value} only; the \code{relation}
 \emph{label} stays pedigree-derived (it is computed from pedigree structure,
-not from the kinship value). \code{NULL} (the default) is a no-op.}
+not from the kinship value). Overridden pairs are flagged with a logical
+\code{overridden} column in the relationship table (issue #13 item-3).
+\code{NULL} (the default) is a no-op.}
 }
 \value{
 A list with reactive components:
 \itemize{
 \item \code{summaryData} - Summary statistics (nAnimals, meanMK, meanGU)
 \item \code{relationships} - Pairwise relationship designations from
-\code{convertRelationships()}
+\code{convertRelationships()}. When \code{kinshipOverrides} are supplied,
+a logical \code{overridden} column flags the pairs whose kinship value
+came from an override (issue #13 item-3).
 \item \code{relationClasses} - Relationship class frequency table from
 \code{makeRelationClassesTable()}
 \item \code{firstOrderCounts} - First-order relative counts per animal from
