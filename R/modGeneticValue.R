@@ -58,7 +58,23 @@ modGeneticValueUI <- function(id) {
                ),
                fileInput(ns("kinshipOverrideFile"),
                          label = NULL,
-                         accept = c(".csv", ".txt", ".xlsx", ".xls"))
+                         accept = c(".csv", ".txt", ".xlsx", ".xls")),
+               helpText(
+                 strong("How overrides are used and their limits:"),
+                 paste("Overrides change the kinship value for the listed",
+                       "pair only, and apply to the rankings, breeding",
+                       "groups, and summary statistics regardless of tab",
+                       "order."),
+                 paste("In the Summary Statistics relationship table the",
+                       "relationship label stays pedigree-derived, so the",
+                       "label and the overridden value can disagree."),
+                 paste("The gene-drop convergence check ignores overrides",
+                       "(gvaConvergence ranks on pedigree kinship)."),
+                 paste("Overrides on an animal missing a parent are",
+                       "supported, but a few edge cases (both parents",
+                       "unknown, or siblings sharing an unknown parent)",
+                       "are a current limitation.")
+               )
              ),
              wellPanel(
                style = "background-color: #f8f9fa;",
