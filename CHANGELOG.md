@@ -15,6 +15,43 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-28 — Relationship table flags overridden pairs (issue \#13 item-3 follow-up R13; Session 223)
+
+- **Deliverable (owner picks: Flag, not relabel; Display-layer, not
+  core):** the Summary Statistics relationship output now flags
+  outside-information overrides. A new display-layer helper
+  `flagOverriddenRelationships()` appends a logical `overridden` column
+  to the “Export All Relationships” CSV and the returned `relationships`
+  reactive, marking the pairs whose kinship VALUE came from an override
+  so a user can see which rows carry one even though the `relation`
+  LABEL stays pedigree-derived (label and value can disagree).
+  `convertRelationships` is **untouched** (its other callers and the
+  relationship-class table are unaffected). With no override supplied
+  the output is byte-identical (D10). **Strict-TDD DEVELOPMENT session
+  (RED `7d8998e2` → GREEN `9fee8620`; REFACTOR offered, owner chose
+  skip; phase declared each response; all three phase gates + one
+  pre-RED scope gate via `AskUserQuestion`).** 0 stakeholder corrections
+  / 0 owner overrides.
+- **Why flag, not relabel:** a single kinship coefficient does not
+  identify a unique relationship (0.25 = parent-offspring or full-sib;
+  0.125 = half-sib, grandparent, or avuncular), so relabeling from the
+  value would be genetically unsound — surfaced as the owner’s genetics
+  call at a pre-RED scope `AskUserQuestion`. Recon also recovered that
+  R13’s “narrow + document” fork already shipped (S217 decision, S219
+  in-app docs); this session implements the remaining flag fork.
+- **Scope/verification:** new `@noRd` helper (no NAMESPACE change; only
+  `man/modSummaryStatsServer.Rd` regenerated); the override reaches the
+  relationship table via the `kinshipMatrix = NULL` fallback recompute
+  (the app path) — the new `testServer` tests exercise that path. Added
+  a “flagged” sentence to `inst/extdata/ui_guidance/summary_stats.html`
+  (pinned by a new doc-test). Full clean regression read **0 failed / 0
+  error** (3151 pass), `devtools::check(vignettes=FALSE)` **0/0/0**,
+  `spell_check_package` 0, **0 new lints**, and Phase-3E (real
+  `runModularApp`) confirmed the app starts clean and serves the flag
+  guidance. Branch `issue13-item3-r13-flag-overridden` is local only
+  (push/PR/merge is the next admin session; \#13 stays CLOSED — no
+  closing keyword in the PR body). Learning 209 recorded.
+
 ### 2026-06-28 — Branch hygiene: deleted the 5 merged issue-13 feature branches (local + remote; Session 222)
 
 - **Deliverable (owner pick: “All 5 issue-13 branches”; single admin

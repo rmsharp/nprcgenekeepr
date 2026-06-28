@@ -56,8 +56,9 @@ modSummaryStatsServer(
   relationship table and the kinship CSV export reflect the supplied
   values regardless of tab order. The override moves the kinship *value*
   only; the `relation` *label* stays pedigree-derived (it is computed
-  from pedigree structure, not from the kinship value). `NULL` (the
-  default) is a no-op.
+  from pedigree structure, not from the kinship value). Overridden pairs
+  are flagged with a logical `overridden` column in the relationship
+  table (issue \#13 item-3). `NULL` (the default) is a no-op.
 
 ## Value
 
@@ -66,7 +67,10 @@ A list with reactive components:
 - `summaryData` - Summary statistics (nAnimals, meanMK, meanGU)
 
 - `relationships` - Pairwise relationship designations from
-  [`convertRelationships()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertRelationships.md)
+  [`convertRelationships()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertRelationships.md).
+  When `kinshipOverrides` are supplied, a logical `overridden` column
+  flags the pairs whose kinship value came from an override (issue \#13
+  item-3).
 
 - `relationClasses` - Relationship class frequency table from
   [`makeRelationClassesTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeRelationClassesTable.md)

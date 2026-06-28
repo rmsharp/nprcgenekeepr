@@ -109,14 +109,18 @@ overrides are applied to that matrix, so the relationship table and the
 kinship CSV export reflect the supplied values regardless of tab order.
 The override moves the kinship <em>value</em> only; the <code>relation</code>
 <em>label</em> stays pedigree-derived (it is computed from pedigree structure,
-not from the kinship value). <code>NULL</code> (the default) is a no-op.</p></dd>
+not from the kinship value). Overridden pairs are flagged with a logical
+<code>overridden</code> column in the relationship table (issue #13 item-3).
+<code>NULL</code> (the default) is a no-op.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list with reactive components:</p><ul><li><p><code>summaryData</code> - Summary statistics (nAnimals, meanMK, meanGU)</p></li>
 <li><p><code>relationships</code> - Pairwise relationship designations from
-<code><a href="convertRelationships.html">convertRelationships()</a></code></p></li>
+<code><a href="convertRelationships.html">convertRelationships()</a></code>. When <code>kinshipOverrides</code> are supplied,
+a logical <code>overridden</code> column flags the pairs whose kinship value
+came from an override (issue #13 item-3).</p></li>
 <li><p><code>relationClasses</code> - Relationship class frequency table from
 <code><a href="makeRelationClassesTable.html">makeRelationClassesTable()</a></code></p></li>
 <li><p><code>firstOrderCounts</code> - First-order relative counts per animal from

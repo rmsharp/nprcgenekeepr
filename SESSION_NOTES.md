@@ -7,6 +7,236 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 223 Did
+
+**Deliverable:** **Implemented issue \#13 item-3 follow-up R13 – the
+Summary Statistics relationship table now FLAGS overridden pairs.** A
+new display-layer helper `flagOverriddenRelationships()` appends a
+logical `overridden` column to the relationship output (the “Export All
+Relationships” CSV + the returned reactive) marking the pairs whose
+kinship VALUE came from an outside-information override, so a user can
+see which rows carry an override even though the `relation` LABEL stays
+pedigree-derived (label and value can disagree). `convertRelationships`
+is UNTOUCHED (owner chose display-layer; flag, not relabel). No override
+=\> output byte-identical (D10). **DONE.** **Started / Completed:**
+2026-06-28 / 2026-06-28 **Status:** **DONE.** **Strict-TDD DEVELOPMENT
+session (RED `7d8998e2` -\> GREEN `9fee8620`; REFACTOR offered, owner
+chose skip).** Phase declared each response; **all three phase gates
+(PRE-RED-\>RED, RED-\>GREEN, GREEN-\>REFACTOR) via `AskUserQuestion`**,
+plus ONE pre-RED scope `AskUserQuestion` (two questions: flag-vs-relabel
+= Flag; blast radius = Display-layer). **0 stakeholder corrections / 0
+owner overrides** (every scope/phase decision accepted as written). -
+**Recon (4 parallel Explore agents via a workflow, then firsthand
+verification before RED):** mapped the relationship display (it is NOT
+an on-screen table – the per-pair output reaches the user only through
+the “Export All Relationships” CSV `downloadRelationships` `:765-771` +
+the returned `relationships` reactive `:849`); read
+`convertRelationships` (the `relation` LABEL is pedigree-derived
+`:51-91`; only the kinship VALUE comes from the matrix, which IS
+overridden at `modSummaryStats.R:376`); recovered R13’s history
+(`docs/planning/issue13-kinship-overrides-plan.md:214` = “Reconcile/flag
+overridden pairs, OR narrow & document”; S217 chose **narrow +
+document**, shipped S219). **Load-bearing finding:** the remaining R13
+work is the OTHER fork (flag); and a single kinship coefficient does NOT
+identify a unique relationship, so relabel-from-value is genetically
+unsound -\> surfaced flag-vs-relabel as the owner’s genetics call (FM
+\#13 avoided). - **RED (`7d8998e2`):** NEW
+`test_flagOverriddenRelationships.R` (6 blocks: NULL/zero-row return
+input identical \[D10\]; overrides append a logical `overridden` column
+with originals unchanged; correct rows TRUE; unordered (B,A) flags
+(A,B); an absent override pair flags nothing without error). ADD 2
+`testServer` tests to `test_modSummaryStats_relationships.R`
+(kinshipMatrix=NULL – the REAL app path: with override -\> `overridden`
+TRUE on the pair, value==0.25, label==“Other”; no-override -\> 4 cols,
+no flag column). ADD 1 `flagged` assertion to
+`test_kinshipOverrideDocs.R`. **Clean-for-the-right-reason:** 6 helper
+ERRORS (function absent) + the with-override FAILURE + the doc FAILURE;
+the no-override D10 guard +
+`convertRelationships`/`makeRelationsClasses` stayed green. - **GREEN
+(`9fee8620`, minimal):** NEW `R/flagOverriddenRelationships.R` (`@noRd`;
+NULL/zero-row -\> input unchanged, else append `overridden` via a
+sorted-pair `pmin`/`pmax` key match). Wired into `modSummaryStats.R`
+`relationshipData()` (reads the `kinshipOverrides` reactive, passes
+through the helper); updated the `@return`/`@param` roxygen. Added a
+one-sentence “flagged” note to
+`inst/extdata/ui_guidance/summary_stats.html` (kept the existing pinned
+phrases). NEWS (`.Rmd` + render). **No NAMESPACE change** (helper
+`@noRd`); only `man/modSummaryStatsServer.Rd` regenerated. - **Verify
+(all clean):** helper 6/6; modSummaryStats relationships 51 pass / 0
+fail (incl. the 2 new); doc-test 16/16; `convertRelationships` 15/15 +
+`makeRelationsClasses` 10/10 (extra column harmless); full clean
+regression read **0 failed / 0 error** (3151 pass / 167 skip, incl. &
+excl. baseline `test-app-`/`test-e2e-`, `NOT_CRAN=true`);
+`devtools::check(vignettes=FALSE)` **0/0/0**; `spell_check_package`
+**0**; **lint 0 new** (`flagOverriddenRelationships.R` 0; 3 pre-existing
+`line_length` hits in `modSummaryStats.R` – an `@param` line preserved
+verbatim + two `getKinshipMatrix` comments – left alone, not mine).
+
+**Phase-3E (runtime smoke): DONE (REQUIRED – UI guidance text + runtime
+relationship output change, FM \#24).** Launched the real
+`runModularApp(port = 6044L, launch.browser = FALSE)`; app started clean
+(“Listening on <http://127.0.0.1:6044>”, 0 error/warning lines) and the
+served 103KB page carried the existing guidance (`pedigree-derived` x5)
+AND the new flag sentence (`flagged` x1). The runtime flag BEHAVIOR is
+covered by the `testServer` integration tests (real app path,
+kinshipMatrix=NULL). Residual gap (stated, not skipped): a browser
+visual render needs a GUI driver unavailable headlessly; the served-HTML
+grep + the integration tests cover it.
+
+**Session 222 Handoff Evaluation (by Session 223): Score 9/10.** S222’s
+handoff set this development session up very well. **What helped:** (1)
+**the live-thread named R13 precisely with the decisive hint** – “R13
+reconcile/flag in the relationship display (needs `convertRelationships`
+or display-layer work – wider blast radius)” – which became my two
+pre-RED scope questions almost verbatim (flag-vs-relabel +
+display-layer-vs-core); (2) the **cross-module REFACTOR thread**
+correctly pre-classified the
+`applyKinshipOverridesToMatrix`-returns-`overriddenIds` de-dup as
+plan-mode/out-of-scope, which kept me from over-reaching at the REFACTOR
+gate; (3) **standing keeps held firsthand** (build-equivalent
+`devtools::check(vignettes=FALSE)`=0/0/0; spell not implied by check;
+NEWS from `NEWS.Rmd`; module tests need `NOT_CRAN=true`); (4)
+**clean-state anchor held** (HEAD `740de025` == documented S222; tree
+clean except the standing untracked `PED_GV_AUDIT_2026-05-30.html`); (5)
+the **“all 5 issue-13 branches GONE” gotcha** – confirmed, so I created
+a FRESH feature branch and never hunted for old ones. **The -1
+(minor):** the thread framed R13 as “reconcile/flag …” but did NOT note
+that the **“narrow + document” fork was ALREADY SHIPPED** (S217
+decision, S219 in-app docs) – so the remaining R13 work is specifically
+the FLAG fork; I recovered that from `plan.md:214` + S217 history via
+the recon. A one-line “R13’s document-half shipped; the flag/reconcile
+half remains” would have pre-stated it (fair: the document-half predates
+S222). ROI: high.
+
+**Self-assessment (Session 223): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read IN FULL; SESSION_NOTES ACTIVE TASK; GH issues;
+dashboard 98/100; ghost-check clean – HEAD == documented S222),
+reported, STOPPED for the owner; wrote the **1B stub BEFORE technical
+work**; strict TDD with all gates. **Strengths:** (1)
+**recon-before-design** – 4 parallel Explore agents mapped the
+surface/divergence/history, then I verified the load-bearing files
+firsthand before writing tests; (2) **surfaced the genetics fork**
+(relabel-from-value is unsound because a coefficient doesn’t determine a
+unique relationship) as the owner’s call, not the literal minimum (FM
+\#13); (3) **honored S217’s blast-radius boundary** – display-layer
+flag, `convertRelationships` untouched, proven by its suite staying
+green; (4) **D10 byte-identical** – column added only when overrides are
+supplied (`expect_identical` on the no-override path); (5) **tested the
+REAL app path** (kinshipMatrix=NULL fallback, not the bypassing
+provided-matrix branch the old tests use); (6) RED
+clean-for-the-right-reason; full Verify + a genuine Phase-3E on the real
+app; (7) **stayed strictly in the one slice** – did not implement D11,
+did not do the cross-module refactor, did not touch \#37/2.0.0. 0 owner
+corrections / 0 overrides. **Weaknesses (honest):** (a) **a JSON typo on
+the FIRST `AskUserQuestion` call** (a stray unquoted `description:` key)
+– caught immediately and retried cleanly, zero downstream effect, but a
+sloppy first attempt; (b) Phase-3E confirms the served TEXT + the
+integration tests cover the reactive, but no browser visual render (GUI
+driver unavailable headlessly) – residual gap, stated; (c) the recon
+workflow’s notification result was truncated so I read the full output
+file – handled, but a tighter return schema would have avoided it.
+Capped at 9 by (a)/(b) – cosmetic; technical execution was clean.
+
+**Learnings:** **Learning 209** added to `PROJECT_LEARNINGS.md` – adding
+a DISPLAY-LAYER FLAG for a documented divergence as the narrow
+alternative to a wider core change: the remaining work after a shipped
+“narrow + document” fork is the OTHER fork; surface flag-vs-relabel
+(relabel-from-value is genetically unsound) and blast radius
+(display-layer vs the shared core) as pre-RED scope decisions; D10 = add
+the column only when overrides are supplied; TEST THE REAL APP PATH
+(kinshipMatrix=NULL, not the provided-matrix branch that bypasses
+overrides); match pairs unordered; fold the doc forward with a new
+distinct-word doc-test without disturbing pinned phrases; `@noRd` helper
+= no NAMESPACE/man change; pre-existing lints are not yours to fix in a
+tight slice. Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\], \[\[avoid-new-lints-r-package\]\],
+\[\[ascii-only-in-question-options\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[push-close-out-docs-to-origin\]\]; extends Learning 205/206 (the
+issue \#13 item-3 arc). **This was a strict-TDD DEVELOPMENT session.**
+
+**=\> SUGGESTED NEXT = owner’s pick.** R13 is DONE on branch
+`issue13-item3-r13-flag-overridden` (RED `7d8998e2` + GREEN `9fee8620` +
+this close-out). **The natural next is outward-facing admin (owner):**
+push the branch + open a PR – **body must say “Relates to \#13” with NO
+`closes/fixes/resolves #13` substring** (issue \#13 is CLOSED; a stray
+closing keyword fires on merge – Learning 204/207), watch the full
+R-CMD-check matrix to green (the long-standing `lint` red is
+non-blocking whole-package noise), and merge (same arc S221 ran for the
+gvaConvergence slice). Live threads (carried): - **Remaining item-3
+IMPLEMENTATION follow-up (now 1 of 3 left):** **D11** targeted option C
+/ both-unknown promotion / shared-sib-pair coupling (option C needs
+override-side metadata the `id1/id2/kinship` schema does not carry). -
+**Cross-module REFACTOR (plan-mode work) – now MORE attractive:** have
+`applyKinshipOverridesToMatrix()` return both the matrix AND
+`overriddenIds`, then de-dup `reportGV`’s inline block, drop
+`gvaConvergence`’s intersect, AND simplify this session’s
+`modSummaryStats` flag (THREE override-reading sites now). Touches
+`reportGV` + three modules -\> plan mode, not a quick tidy. - **Possible
+2.0.0 release** (owner-gated, carried S209-S222): DESCRIPTION `2.0.0`
+(dev); all issue-13 override work + gvaConvergence slice + this R13
+flag +
+[`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)/`fgSE`
+on master. - **Issue \#37 disposition** (carried S212-S222): close, or
+refresh body to `176/137/39`. - **Other open issues:** \#36, \#28,
+\#12/#11/#10/#5; CRAN Phase 5 (owner-run; ARCHIVED on CRAN
+2025-07-29). - **Optional broader branch sweep (out of scope):** stale
+merged `module`/`rlabkey-version-floor` + origin-only relics remain;
+`dev`/`gh-pages` are keepers. **Do NOT** put a closing keyword for \#13
+in this branch’s PR body (#13 is closed). **Do NOT** read this as a
+`convertRelationships` change – only the display layer
+(`modSummaryStats`) + a new `@noRd` helper + docs changed.
+
+**Key files (this session):** **NEW (R/):**
+`R/flagOverriddenRelationships.R` (`@noRd` helper; sorted-pair key
+flag). **NEW (tests):**
+`tests/testthat/test_flagOverriddenRelationships.R` (6 blocks; RED
+`7d8998e2`). **EDITED (R/):** `R/modSummaryStats.R`
+(`relationshipData()` wires the helper, ~`:387`; `@return`/`@param`
+roxygen). **EDITED (tests):** `test_modSummaryStats_relationships.R` (+2
+`testServer` tests, kinshipMatrix=NULL); `test_kinshipOverrideDocs.R`
+(+1 `flagged` assertion). **EDITED (asset):**
+`inst/extdata/ui_guidance/summary_stats.html` (flag sentence).
+**Regenerated:** `man/modSummaryStatsServer.Rd`. **Close-out:**
+`NEWS.Rmd` + rendered `NEWS.md`, `CHANGELOG.md` (S223 entry),
+`PROJECT_LEARNINGS.md` (Learning 209), `SESSION_NOTES.md` (this
+handoff). **Commits (branch `issue13-item3-r13-flag-overridden`):** RED
+`7d8998e2`, GREEN `9fee8620`, close-out (this). **NOT committed
+(standing keep):** `PED_GV_AUDIT_2026-05-30.html` (untracked);
+`.DS_Store`. **Scratchpad (not in repo):** recon workflow output,
+`app_s223.log`/`.html`, `learning209.md`.
+
+**Gotchas:** (1) **Branch `issue13-item3-r13-flag-overridden` is LOCAL
+only (not pushed); `master` unchanged at `740de025`.** The push+PR+merge
+is the next admin session (S220-\>S221 precedent). **\#13 is CLOSED**
+-\> the PR body must NOT carry a closing keyword. (2) **The flag is
+DISPLAY-LAYER ONLY** – `convertRelationships` is unchanged; the
+`overridden` column appears only in `modSummaryStats`’s relationships
+output (the Export-All-Relationships CSV + the returned reactive) and
+only when an override is supplied; no-override output is byte-identical
+(D10). (3) **The override reaches the relationship table only via the
+`kinshipMatrix = NULL` fallback recompute** (the app path); a test
+passing `kinshipMatrix = reactive(...)` BYPASSES overrides (returns the
+provided matrix) – use `kinshipMatrix = NULL` +
+`kinshipOverrides = reactive(frame)`. (4) **There are now THREE
+override-reading sites** (`reportGV`, `gvaConvergence`,
+`modSummaryStats`) – the cross-module de-dup REFACTOR is more attractive
+now; still plan-mode. (5) **3 pre-existing `line_length` lints in
+`modSummaryStats.R`** (NOT introduced this session) – left alone
+(scope). (6) **`runModularApp` accepts an explicit `port` arg (default
+6013)** – pass `port = NNNN` for Phase-3E (it ignores
+`options(shiny.port=)`); confirm via the “Listening on” log line. (7)
+Carried standing keeps (unchanged): package **ARCHIVED on CRAN
+2025-07-29**; CRAN Phase 5 owner-gated;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without LabKey config; `gh issue view <n>` errors on a
+Projects-classic deprecation -\> use `--json`; build-equivalent is
+`devtools::check(vignettes=FALSE)`=0/0/0; a 0/0/0 check does NOT imply
+spelling-clean -\> `spell_check_package`; `NEWS.md` is GENERATED from
+`NEWS.Rmd`; module/E2E tests need `NOT_CRAN=true`; `git pull` is
+rebase + chokes on `.DS_Store` -\> use `fetch`+`reset`.
+
 ### What Session 222 Did
 
 **Deliverable:** **Branch hygiene – deleted the 5 merged issue-13
