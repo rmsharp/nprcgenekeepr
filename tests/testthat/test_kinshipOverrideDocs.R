@@ -70,4 +70,7 @@ test_that(paste(
   ## Item 3b: relationship label stays pedigree-derived.
   expect_true(grepl("relationship label", txt, ignore.case = TRUE))
   expect_true(grepl("pedigree-derived", txt, ignore.case = TRUE))
+  ## R13 (S223): overridden pairs are flagged in the exported relationship
+  ## table so the user can see which rows carry an outside-information value.
+  expect_true(grepl("flagged", txt, ignore.case = TRUE))
 })

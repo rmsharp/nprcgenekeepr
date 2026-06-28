@@ -655,3 +655,89 @@ test_that("firstOrderCounts works with smallPed data", {
     }
   )
 })
+
+# =============================================================================
+# Tests for kinship-override flagging (issue #13 item-3 R13, Session 223)
+# The app path is kinshipMatrix = NULL (the module recomputes kinship from the
+# pedigree and applies overrides). The relationship table's relation LABEL
+# stays pedigree-derived while the kinship VALUE is overridden, so overridden
+# pairs are flagged with a logical `overridden` column.
+# =============================================================================
+
+test_that("relationships output is unchanged when no override supplied (D10)", {
+  skip_if_not_installed("shiny")
+
+  # Three unrelated founders -> no pedigree relationships between them.
+  ped <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, NA),
+    dam = c(NA, NA, NA),
+    sex = c("M", "F", "M"),
+    stringsAsFactors = FALSE
+  )
+  ped$gen <- nprcgenekeepr::findGeneration(ped$id, ped$sire, ped$dam)
+  test_gv <- makeTestGeneticValues(ped$id)
+
+  shiny::testServer(
+    modSummaryStatsServer,
+    args = list(
+      geneticValues = shiny::reactive({ test_gv }),
+      pedigree = shiny::reactive({ ped }),
+      kinshipMatrix = NULL,
+      kinshipOverrides = NULL
+    ),
+    {
+      result <- session$getReturned()
+      rels <- result$relationships()
+
+      # No override => no flag column; schema is exactly the four base columns.
+      expect_false("overridden" %in% names(rels))
+      expect_setequal(names(rels), c("id1", "id2", "kinship", "relation"))
+    }
+  )
+})
+
+test_that("a kinship override flags the overridden pair in the table", {
+  skip_if_not_installed("shiny")
+
+  ped <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, NA),
+    dam = c(NA, NA, NA),
+    sex = c("M", "F", "M"),
+    stringsAsFactors = FALSE
+  )
+  ped$gen <- nprcgenekeepr::findGeneration(ped$id, ped$sire, ped$dam)
+  test_gv <- makeTestGeneticValues(ped$id)
+  ov <- data.frame(id1 = "A", id2 = "B", kinship = 0.25,
+                   stringsAsFactors = FALSE)
+
+  shiny::testServer(
+    modSummaryStatsServer,
+    args = list(
+      geneticValues = shiny::reactive({ test_gv }),
+      pedigree = shiny::reactive({ ped }),
+      kinshipMatrix = NULL,
+      kinshipOverrides = shiny::reactive({ ov })
+    ),
+    {
+      result <- session$getReturned()
+      rels <- result$relationships()
+
+      expect_true("overridden" %in% names(rels))
+
+      # The A-B pair (either order) is flagged, its value overridden, and its
+      # label stays pedigree-derived ("Other": kinship > 0, no pedigree tie).
+      isAB <- (rels$id1 == "A" & rels$id2 == "B") |
+        (rels$id1 == "B" & rels$id2 == "A")
+      ab <- rels[isAB, ]
+      expect_equal(nrow(ab), 1)
+      expect_true(ab$overridden)
+      expect_equal(ab$kinship, 0.25)
+      expect_equal(ab$relation, "Other")
+
+      # Every other pair (incl. self rows) is not flagged.
+      expect_false(any(rels$overridden[!isAB]))
+    }
+  )
+})
