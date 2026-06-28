@@ -15,6 +15,44 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-28 — Merged option C Slice 1 to `master` via PR \#96 (issue \#95, Session 229)
+
+- **Deliverable (owner pick “1”, then “merge it once devel passes”):**
+  integrated S228’s option C Slice 1 to `master` — pushed branch
+  `issue95-optionC-slice1`, opened **PR \#96** (“Relates to \#95”),
+  watched the CI matrix to green, merged (merge commit `6f305f37`).
+  **Admin/merge session — TDD code-phases N/A** (no `R/`/tests change;
+  the merged code is S228’s). The 4th run of the careful-admin
+  push→PR→CI→merge arc (S218/S221/S224/S229; Learning 207/210).
+- **CI (verify-then-merge):** full R-CMD-check matrix green —
+  `ubuntu (devel/oldrel-1/release)`, `macos (release)`,
+  `windows (release)` — plus `test-coverage`, `pkgdown`,
+  `codecov (patch+project)`. The lone `lint` red is the long-standing
+  whole-package noise (Learning 207/210; nothing from this PR). Merged
+  only after the matrix was green.
+- **Two self-inflicted process errors, both caught and recovered
+  (regressions against Learning 207/210):** (1) the PR body wrote “does
+  **not** close \#95” — GitHub’s parser ignores negation and
+  **auto-closed \#95** on merge; reopened (`gh issue reopen 95`),
+  corrected the body via `gh api` REST (the `gh pr edit` path 401s on
+  the Projects-classic deprecation), added an explanatory comment. (2)
+  `git reset --hard origin/master` discarded an **owner edit** to
+  `data-raw/fgSEValidation.R` made during the CI wait (owner confirmed
+  it was minor lint cleanup to be redone systematically — no recovery
+  needed); the Learning 210(2) stash-the-stub sync would have preserved
+  it.
+- **Issue state:** \#95 **OPEN** (rule (ii) + follow-ups 2/3 + Slice 2
+  remain); \#9, \#13 CLOSED. Merged branch `issue95-optionC-slice1` left
+  undeleted (branch hygiene is the deferred separate step, Learning
+  210(4)).
+- **Learnings:** Learning 215 (PROJECT_LEARNINGS.md) — the
+  closing-keyword NEGATION trap (run the Learning 207/210 body+commit
+  grep before every merge; negation does not save you) and the
+  external-edit `reset --hard` trap (re-check `git status` immediately
+  before any `reset --hard`; an unexplained modified tracked file is
+  likely the owner’s edit → stash, surface, ask); on a “routine” arc,
+  read the prior learnings for that arc first.
+
 ### 2026-06-28 — Option C Slice 1: script-core targeted suppression (issue \#95, Session 228)
 
 - **Deliverable (owner pick: “Slice 1 of option C”):** the script-core
