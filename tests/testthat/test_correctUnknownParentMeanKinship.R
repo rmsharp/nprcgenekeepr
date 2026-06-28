@@ -261,3 +261,32 @@ test_that("correctUnknownParentMeanKinship honors a configurable gestationDefaul
   )
   expect_equal(resWide$indivMeanKin[["foc"]], 0.15)
 })
+
+# ---------------------------------------------------------------------------
+# Issue #95 option C, Slice 1 (RATIFIED S227): C3 redefines the `overriddenIds`
+# contract from "ids carrying an override" to "the set whose +sexMean/2 to
+# suppress". The function's guard is UNCHANGED -- this characterizes that a
+# STRICT SUBSET suppresses only those ids while excluded one-unknown animals
+# keep their prior (so reportGV can pass the missing-side subset for option C),
+# and the FULL set still reproduces blanket-A (D10).
+# ---------------------------------------------------------------------------
+
+test_that("correctUnknownParentMeanKinship suppresses exactly the ids passed as overriddenIds (option C, C3)", {
+  ## strict subset: only foc_sire suppressed; foc_dam keeps its +sexMean/2
+  res <- nprcgenekeepr:::correctUnknownParentMeanKinship(
+    orchImk, orchPed,
+    overriddenIds = "foc_sire"
+  )
+  expect_equal(res$indivMeanKin[["foc_sire"]], 0.05) # suppressed -> unchanged
+  expect_equal(res$indivMeanKin[["foc_dam"]], 0.30) # excluded -> keeps prior
+})
+
+test_that("correctUnknownParentMeanKinship with the full one-unknown set reproduces blanket-A (D10)", {
+  res <- nprcgenekeepr:::correctUnknownParentMeanKinship(
+    orchImk, orchPed,
+    overriddenIds = c("foc_sire", "foc_uid", "foc_dam")
+  )
+  expect_equal(res$indivMeanKin[["foc_sire"]], 0.05)
+  expect_equal(res$indivMeanKin[["foc_uid"]], 0.05)
+  expect_equal(res$indivMeanKin[["foc_dam"]], 0.05)
+})

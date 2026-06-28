@@ -114,12 +114,16 @@ getBreedingPeerCohort <- function(focalBirth, focalSpecies, missingSex,
 #' @param gestationDefault optional integer fallback gestation window (days)
 #' passed through to the cohort selection; \code{NULL} uses the built-in 210
 #' days (issue #73 Part 2).
-#' @param overriddenIds character vector of animal ids carrying an outside-
-#' information kinship override (issue #13 D11). A one-unknown animal in this set
-#' keeps its (override-influenced) mean kinship -- the \code{+ sexMean / 2}
-#' correction is skipped because a known outside value supersedes the random-
-#' mating prior. Such animals still serve as peers in other animals' cohorts
-#' (membership is unaffected, so the suppression does not cascade).
+#' @param overriddenIds character vector of animal ids whose
+#' \code{+ sexMean / 2} correction is to be SUPPRESSED (issue #13 D11; contract
+#' redefined for issue #95 option C, S227, from "ids carrying an override" to
+#' "the set to suppress"). A one-unknown animal in this set keeps its (override-
+#' influenced) mean kinship -- the correction is skipped because a known outside
+#' value supersedes the random-mating prior. Callers pass the full overridden
+#' set for blanket supersession (D11), or, under option C, only the subset whose
+#' override informs the missing parent side (see classifyOverrideMissingSide).
+#' Suppressed animals still serve as peers in other animals' cohorts (membership
+#' is unaffected, so the suppression does not cascade).
 #' @return a list with \code{indivMeanKin} (the corrected vector, names and
 #' order preserved) and \code{flagged} (character vector of ids left
 #' uncorrected for lack of a peer cohort).

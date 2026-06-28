@@ -138,6 +138,10 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
   # SUPERSEDES (does not stack with) its +sexMean/2 prior (D11, blanket
   # supersession). kinship() itself is untouched.
   overriddenIds <- character(0L)
+  # Issue #95 option C: the set of one-unknown ids whose mean-kinship prior is
+  # suppressed. Default = the full overridden set (blanket-A, D11); a
+  # missingSideFor column narrows it to the missing-side focals (C1.1 / C3).
+  suppressIds <- character(0L)
   if (!is.null(kinshipOverrides) && nrow(kinshipOverrides) > 0L) {
     overrides <- checkKinshipOverrides(kinshipOverrides)
     inMatrix <- overrides$id1 %in% rownames(kmat) &
@@ -157,6 +161,13 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
     if (nrow(overrides) > 0L) {
       kmat <- applyKinshipOverrides(kmat, overrides)
       overriddenIds <- unique(c(overrides$id1, overrides$id2))
+      # option C: narrow to the missing-side focals when the column is present;
+      # otherwise suppress the full set (blanket-A, byte-identical today, D10).
+      suppressIds <- if ("missingSideFor" %in% names(overrides)) {
+        classifyOverrideMissingSide(overrides, ped, probands)
+      } else {
+        overriddenIds
+      }
     }
   }
 
@@ -176,7 +187,7 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
       breedingTable = breedingTable,
       breedingAgeDefault = breedingAgeDefault,
       gestationDefault = gestationDefault,
-      overriddenIds = overriddenIds
+      overriddenIds = suppressIds
     )$indivMeanKin
 
   zScores <- scale(indivMeanKin)
