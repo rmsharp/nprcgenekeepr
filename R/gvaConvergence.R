@@ -91,6 +91,16 @@
 #' through to \code{correctUnknownParentMeanKinship()} exactly as
 #' \code{\link{reportGV}} passes them (issue #73 Part 2). NULL uses the bundled
 #' defaults.
+#' @param kinshipOverrides Optional data.frame of outside-information kinship
+#' overrides (\code{id1}, \code{id2}, \code{kinship}; the coefficient \emph{f},
+#' not relatedness \emph{r}) applied to the kinship matrix before mean kinship
+#' and the unknown-parent correction, exactly as \code{\link{reportGV}} applies
+#' them, so the convergence diagnostic ranks on the same mean kinship the
+#' report uses (issue #13). \code{NULL} (the default) leaves the
+#' pedigree-derived matrix unchanged. Ids outside the analysis set are
+#' warn-dropped (the run is not aborted); an override on a one-unknown animal
+#' supersedes its
+#' \code{+ sexMean / 2} correction. See \code{\link{applyKinshipOverrides}}.
 #' @seealso \code{\link{reportGV}}, \code{\link{calcGU}}, \code{\link{calcGUSE}}
 #' @export
 #' @examples
@@ -103,7 +113,8 @@ gvaConvergence <- function(ped, pop = NULL, nMax = 3000L, guThresh = 1L,
                            byID = TRUE, grid = NULL, k = 20L, oMin = 0.90,
                            rhoMin = 0.95, seed = NULL, updateProgress = NULL,
                            breedingTable = NULL, gestationTable = NULL,
-                           breedingAgeDefault = NULL, gestationDefault = NULL) {
+                           breedingAgeDefault = NULL, gestationDefault = NULL,
+                           kinshipOverrides = NULL) {
   if (is.null(grid)) {
     grid <- c(25L, 50L, 100L, 200L, 400L, 800L, 1500L)
   }
@@ -126,11 +137,29 @@ gvaConvergence <- function(ped, pop = NULL, nMax = 3000L, guThresh = 1L,
   kmat <- filterKinMatrix(probands, kinship(
     ped$id, ped$sire, ped$dam, ped$gen
   ))
+  # Issue #13 item-3: apply outside-information kinship overrides to the proband
+  # matrix the same way reportGV() does, so the convergence diagnostic ranks on
+  # the same mean kinship the report uses. The surviving (in-matrix) overridden
+  # id-set is threaded into the issue-#9 one-unknown correction so an overridden
+  # one-unknown animal keeps its (override-influenced) value rather than the
+  # +sexMean/2 add (D11 supersession); the helper warn-drops absent-id rows so
+  # the strict leaf never aborts the run (D5). A NULL override is a no-op.
+  overriddenIds <- character(0L)
+  if (!is.null(kinshipOverrides) && nrow(kinshipOverrides) > 0L) {
+    inMatrix <- kinshipOverrides$id1 %in% rownames(kmat) &
+      kinshipOverrides$id2 %in% rownames(kmat)
+    overriddenIds <- unique(c(
+      kinshipOverrides$id1[inMatrix], kinshipOverrides$id2[inMatrix]
+    ))
+  }
+  kmat <- applyKinshipOverridesToMatrix(kmat, kinshipOverrides)
   indivMeanKin <- meanKinship(kmat)[probands]
   indivMeanKin <- correctUnknownParentMeanKinship(
     indivMeanKin, ped,
     gestationTable = gestationTable, breedingTable = breedingTable,
-    breedingAgeDefault = breedingAgeDefault, gestationDefault = gestationDefault
+    breedingAgeDefault = breedingAgeDefault,
+    gestationDefault = gestationDefault,
+    overriddenIds = overriddenIds
   )$indivMeanKin
   zScores <- scale(indivMeanKin)
 

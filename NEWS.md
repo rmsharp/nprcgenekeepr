@@ -49,11 +49,19 @@ R. Mark Sharp, Ph.D.
     guidance panels: overrides change the kinship *value* only and apply
     to the rankings, breeding groups, and summary statistics regardless
     of tab order; the relationship-table label stays pedigree-derived
-    (so a label and its overridden value can disagree); the gene-drop
-    convergence check (`gvaConvergence()`) ignores overrides; and
-    overrides on an animal missing a parent are supported, with a few
-    edge cases (both parents unknown, or siblings sharing an unknown
-    parent) noted as current limitations (issue \#13 follow-up).
+    (so a label and its overridden value can disagree); and overrides on
+    an animal missing a parent are supported, with a few edge cases
+    (both parents unknown, or siblings sharing an unknown parent) noted
+    as current limitations (issue \#13 follow-up).
+  - `gvaConvergence()` gains an optional `kinshipOverrides` argument and
+    now applies outside-information kinship overrides the same way
+    `reportGV()` does -- writing them into the kinship matrix before
+    mean kinship and threading the overridden ids into the
+    unknown-parent correction -- so the gene-drop convergence diagnostic
+    ranks on the same kinship the genetic-value report uses. Override
+    ids outside the analysis set are warn-dropped without aborting, and
+    the default (`NULL`) leaves the convergence curve identical to
+    before (issue \#13 item-3 follow-up).
   - File-based pedigree ingestion now treats `species` as a first-class
     column: `getPossibleCols()` recognizes it and places it immediately
     after `sex` in the canonical column order, and `qcStudbook()` types

@@ -54,8 +54,9 @@
 	<em>value</em> only: in the Summary Statistics relationship table the
 	relationship label stays pedigree-derived, so a label and its
 	overridden value can disagree. The iteration-convergence check above
-	does not use the overrides (<b>gvaConvergence()</b> ranks on pedigree
-	kinship). Overrides on an animal missing a parent are supported, but a
+	(<b>gvaConvergence()</b>) applies these overrides as well, ranking on the
+	overridden kinship. Overrides on an animal missing a parent are supported,
+	but a
 	few edge cases (both parents unknown, or siblings sharing an unknown
 	parent) are a current limitation.
 </p>
