@@ -34,17 +34,26 @@ GitHub’s closing-keyword parser IGNORES negation, saw the substring
 “close \#95”, and **closed \#95 on merge.** S228’s gotcha said “NO
 closing keyword,” and Learning 207(3)/210(3) prescribe grepping the
 rendered body for `clos|fix|resolv` adjacent to a `#N` BEFORE merge – I
-did not run that grep. **Recovery:** `gh issue reopen 95` (now OPEN);
-corrected the PR body via `gh api -X PATCH .../pulls/96 -F body=@file`
-(the `gh pr edit` path 401s on the Projects-classic deprecation – same
-family as the `gh issue view` gotcha); added an explanatory comment to
-\#95. - **ERROR 2 (`git reset --hard` discarded an EXTERNAL edit):**
-while syncing local master I ran `git reset --hard origin/master` with
-an unexplained `M data-raw/fgSEValidation.R` in the tree – an edit the
-OWNER made outside the session during the long CI wait (clean at my
-Phase-0 `git status`; mtime 16:04). It was discarded. **Owner confirmed
-it was a minor lint cleanup to be redone in a later systematic pass – no
-recovery needed** (RStudio buffer backups in
+did not run that grep. **Recovery:** `gh issue reopen 95`; corrected the
+PR body via `gh api -X PATCH .../pulls/96 -F body=@file` (the
+`gh pr edit` path 401s on the Projects-classic deprecation – same family
+as the `gh issue view` gotcha); added an explanatory comment to \#95.
+**THEN IT FIRED A THIRD TIME:** my close-out COMMIT MESSAGE (`28f99872`)
+wrote “auto-closed \#95” -\> the `closed #95` substring re-closed the
+issue on push to `master`. Reopened AGAIN (now OPEN); recorded in
+Learning 215. The routine final-state verification (`gh issue view 95`
+at the very end) is what caught both the 1st and 3rd firings – that end
+check is non-negotiable for any merge/push session. **Safe phrasing:**
+put a noun between keyword and ref (“auto-closed issue \#95” does not
+match); FILE contents never trigger (only commit messages + PR/issue
+bodies), so sanitize the COMMIT MESSAGE, not the notes. - **ERROR 2
+(`git reset --hard` discarded an EXTERNAL edit):** while syncing local
+master I ran `git reset --hard origin/master` with an unexplained
+`M data-raw/fgSEValidation.R` in the tree – an edit the OWNER made
+outside the session during the long CI wait (clean at my Phase-0
+`git status`; mtime 16:04). It was discarded. **Owner confirmed it was a
+minor lint cleanup to be redone in a later systematic pass – no recovery
+needed** (RStudio buffer backups in
 `.Rproj.user/6912B18F/sources/session-149fe178/` were located but not
 used). Learning 210(2) prescribes STASH-the-stub for exactly this sync;
 had I used it, the owner’s edit would have surfaced and survived.
@@ -76,10 +85,10 @@ preventable. (Fair: the rule was stated; the procedure is one click away
 in the learnings. The miss is shared – mine for not consulting the
 source of truth.) ROI still high.
 
-**Self-assessment (Session 229): 5/10.** The deliverable shipped
+**Self-assessment (Session 229): 4/10.** The deliverable shipped
 correctly – Slice 1 is on `master` (`6f305f37`), CI matrix green, \#95
 OPEN with an accurate comment, PR body corrected – and I caught and
-fully recovered both errors. **But two avoidable mistakes, both
+fully recovered every error. **But two avoidable mistakes, both
 REGRESSIONS against this project’s own documented arc (Learning
 207/210), cap this low.** **Strengths:** (1) verify-then-merge
 discipline held – did not merge on `MERGEABLE`, waited for the full
@@ -89,19 +98,26 @@ caught the \#95 auto-close immediately post-merge and recovered cleanly
 comment); (3) was transparent about the `reset --hard` discard the
 moment I saw it and offered recovery before the owner waved it off; (4)
 kept 1-and-done – did NOT bundle branch deletion (Learning 210(4):
-separate hygiene session). **Weaknesses (the real story):** (a)
-**introduced a closing keyword via NEGATION** – the single thing the
-handoff most explicitly warned against – because I skipped the
-documented pre-merge body grep; (b) **`reset --hard` with an unexplained
-modified tracked file present** – I should have re-checked `git status`
-and stashed (Learning 210(2)) rather than chaining a destructive reset;
-it destroyed the owner’s work (harmless only by luck/owner grace); (c)
-root cause of BOTH: I read SESSION_NOTES but did NOT read the relevant
+separate hygiene session). **Weaknesses (the real story):** (a) **the
+closing-keyword error fired THREE times the same session** – once via
+NEGATION in the PR body, and (after I wrote Learning 215 telling myself
+to grep commit messages) AGAIN in my close-out commit message
+(“auto-closed \#95”) which re-closed the issue on push. The single thing
+the handoff most explicitly warned against, repeated three times across
+two surfaces, because I never ran the documented pre-merge/pre-push
+closing-keyword grep; (b) **`reset --hard` with an unexplained modified
+tracked file present** – I should have re-checked `git status` and
+stashed (Learning 210(2)) rather than chaining a destructive reset; it
+destroyed the owner’s work (harmless only by luck/owner grace); (c) root
+cause: I read SESSION_NOTES but did NOT read the relevant
 PROJECT_LEARNINGS (207/210) before acting on a “routine” arc – the
 \[\[consult-project-source-of-truth\]\] miss. Learning 210 literally
 says “when the arc is routine the value is in NOT regressing.” I
-regressed. An honest score cannot exceed 5 when both errors were
-pre-documented and pre-warned.
+regressed, repeatedly. **The one real strength under this:** the routine
+final-state verification (`gh issue view 95` at session end) caught the
+1st and 3rd firings – without that end check the issue would have
+shipped silently closed. An honest score cannot exceed 4 when the same
+pre-warned error recurs three times in one session.
 
 **Learnings:** **Learning 215** added to `PROJECT_LEARNINGS.md` – the
 negation trap (a negated closing keyword still fires; run the Learning

@@ -32,15 +32,19 @@ here.
   only after the matrix was green.
 - **Two self-inflicted process errors, both caught and recovered
   (regressions against Learning 207/210):** (1) the PR body wrote “does
-  **not** close \#95” — GitHub’s parser ignores negation and
-  **auto-closed \#95** on merge; reopened (`gh issue reopen 95`),
-  corrected the body via `gh api` REST (the `gh pr edit` path 401s on
-  the Projects-classic deprecation), added an explanatory comment. (2)
-  `git reset --hard origin/master` discarded an **owner edit** to
-  `data-raw/fgSEValidation.R` made during the CI wait (owner confirmed
-  it was minor lint cleanup to be redone systematically — no recovery
-  needed); the Learning 210(2) stash-the-stub sync would have preserved
-  it.
+  **not** close \#95” — GitHub’s parser ignores negation and auto-closed
+  the issue on merge; reopened (`gh issue reopen 95`), corrected the
+  body via `gh api` REST (the `gh pr edit` path 401s on the
+  Projects-classic deprecation), added an explanatory comment — then the
+  SAME error recurred a third time in the first close-out commit message
+  (“auto-closed \#95”), re-closing the issue on push; reopened again.
+  File contents do not trigger the parser (only commit messages +
+  PR/issue bodies); the routine final-state `gh issue view 95` check
+  caught both firings. (2) `git reset --hard origin/master` discarded an
+  **owner edit** to `data-raw/fgSEValidation.R` made during the CI wait
+  (owner confirmed it was minor lint cleanup to be redone systematically
+  — no recovery needed); the Learning 210(2) stash-the-stub sync would
+  have preserved it.
 - **Issue state:** \#95 **OPEN** (rule (ii) + follow-ups 2/3 + Slice 2
   remain); \#9, \#13 CLOSED. Merged branch `issue95-optionC-slice1` left
   undeleted (branch hygiene is the deferred separate step, Learning
