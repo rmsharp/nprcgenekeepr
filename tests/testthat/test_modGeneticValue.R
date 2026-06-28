@@ -1529,7 +1529,8 @@ test_that("modGeneticValueServer threads speciesOverrides into reportGV (#73 Par
     reportGV = function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
                         byID = TRUE, updateProgress = NULL,
                         breedingTable = NULL, gestationTable = NULL,
-                        breedingAgeDefault = NULL, gestationDefault = NULL) {
+                        breedingAgeDefault = NULL, gestationDefault = NULL,
+                        kinshipOverrides = NULL) {
       captured$breedingTable <- breedingTable
       captured$gestationTable <- gestationTable
       captured$breedingAgeDefault <- breedingAgeDefault
@@ -1579,7 +1580,8 @@ test_that("modGeneticValueServer defaults to no overrides (backward compat, #73 
     reportGV = function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
                         byID = TRUE, updateProgress = NULL,
                         breedingTable = NULL, gestationTable = NULL,
-                        breedingAgeDefault = NULL, gestationDefault = NULL) {
+                        breedingAgeDefault = NULL, gestationDefault = NULL,
+                        kinshipOverrides = NULL) {
       captured$args <- list(breedingTable, gestationTable,
                             breedingAgeDefault, gestationDefault)
       fakeGvReport()
