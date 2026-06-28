@@ -70,6 +70,19 @@ R. Mark Sharp, Ph.D.
     see which rows carry an outside-information value even though the
     label and the value can disagree. With no override supplied the
     table is unchanged (issue \#13 item-3 follow-up, R13).
+  - `reportGV()` now supports *targeted* suppression of the
+    unknown-parent mean-kinship correction via an optional
+    `missingSideFor` column on the kinship-override table. A
+    one-missing-parent animal keeps its `+ sexMean / 2` correction when
+    an override only informs a *known*-side relationship, and has it
+    suppressed only when an override stands in for its *missing*-parent
+    side (the column names which of `id1` / `id2` is that focal; blank
+    means known-side). Previously any override on such an animal
+    suppressed the correction (blanket supersession, issue \#13 D11). An
+    override table with no `missingSideFor` column reproduces the
+    previous (blanket) behavior exactly (issue \#95, option C, slice 1).
+    The in-app upload and the gene-drop convergence diagnostic gain this
+    in a later slice.
   - File-based pedigree ingestion now treats `species` as a first-class
     column: `getPossibleCols()` recognizes it and places it immediately
     after `sex` in the canonical column order, and `qcStudbook()` types
