@@ -15,6 +15,51 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-28 — FU3 maintainer docstring note landed; issue \#95 dispositioned end-to-end (issue \#95, Session 237)
+
+- **Deliverable (owner pick — “§10C docstring + close \#95”):** the
+  implementation tail of the S236 decision split (plan
+  `docs/planning/issue95-optionC-targeted-suppression-plan.md` §10C,
+  decision D4). Added a maintainer `@noRd` docstring note to
+  `R/correctUnknownParentMeanKinship.R` recording follow-up 2
+  (both-unknown → one-unknown promotion) and follow-up 3
+  (shared-unknown-parent sib-pair coupling) as considered-and-not-built,
+  then **deliberately set issue \#95 to its terminal state**.
+  **Documentation/admin session — TDD code-phases N/A** (a `@noRd`
+  roxygen comment is stripped at build, produces no `.Rd`, and no test
+  pins it — all verified firsthand). **0 corrections / 0 overrides.**
+  Committed direct to `master` (the docs-to-master pattern;
+  behavior/code changes get a PR, a no-behavior docstring does not).
+- **The docstring note** (commit `d55ffc51`; inserted after `:102`,
+  before the `@param` block): FU3 — each one-unknown animal is corrected
+  independently, so two animals sharing the same unrecorded parent each
+  receive the full `sexMean / 2` prior (a small over-estimate of joint
+  relatedness); the coupling is deliberately not modeled because the
+  premise is undetectable (an unrecorded parent has no id). FU2 — for
+  the same path-agnostic reason an override cannot reclassify a
+  both-unknown animal to one-unknown (a kinship value cannot identify
+  which parent it informs).
+- **House-style normalizations of §10C’s “recommended” (not
+  verbatim-mandated) text:** em-dash → ASCII `--` (protects the
+  non-ASCII R-source check), markdown backticks → `\code{}` (this file’s
+  roxygen style), US “modeled” (cf. `:85`). ASCII-clean, all lines ≤80.
+- **Verify:** the 3 relevant test files green
+  (`test_correctUnknownParentMeanKinship.R`,
+  `test_kinshipOverrideDocs.R`,
+  `test_gvaConvergence_kinshipOverrides.R`); changed-file lint clean;
+  `devtools::check(vignettes=FALSE)` **0/0/0** (the lone NOTE named only
+  a misplaced check-log I had written into the package root, since
+  relocated to scratchpad). **Phase-3E:** N/A — no runtime behavior
+  change.
+- **Result:** the \#95 follow-up arc is complete end-to-end — S234
+  (reframe + revert decision) → S235 (revert impl, PR \#98) → S236
+  (FU2/FU3 grill) → S237 (FU3 docstring + deliberate close). **Issue
+  \#95 is no longer open** (deliberate, keyword-safe `gh api` PATCH;
+  state verified). \#9/#13 stay closed. A future molecular-parentage /
+  transactional-location parentage capability (cf. issue \#28) would be
+  a fresh issue.
+- **Learnings:** Learning 223 (PROJECT_LEARNINGS.md).
+
 ### 2026-06-28 — Grill: \#95 follow-ups 2 & 3 dispositioned (FU2 won’t-build, FU3 accept+document) (issue \#95, Session 236)
 
 - **Deliverable (owner pick — “#95 follow-ups 2 / 3”):** a `/grill-me`
