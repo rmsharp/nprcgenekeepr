@@ -47,7 +47,7 @@ The estimator was put through seven checks at `K = 1000` iterations. Each runs
 | 6 | **Off-diagonal** | the full (covariance-aware) SE versus the diagonal-only approximation | reported (see below) |
 | 7 | **Reproducibility** | a fixed seed list makes the whole study byte-identical run to run | exact |
 
-The pass bands are those set for this validation study. The agreement
+The pass bands were specified in advance for this validation study. The agreement
 and coverage bands are calibrated for `B = 300`: the agreement ratio's own
 sampling fluctuation is about `1/sqrt(2(B-1)) ≈ 0.04`, so a calibrated estimator
 sits near 1 with the band roughly two standard errors wide.
