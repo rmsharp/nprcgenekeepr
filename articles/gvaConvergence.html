@@ -121,10 +121,10 @@ out in the same order? (threshold <code>rhoMin = 0.95</code>)</li>
 </ul>
 <p>The run is <strong>reproducible at <code>N</code></strong> when both
 hold, and the recommended iteration count is the smallest <code>N</code>
-meeting both. The issue #76 “Undetermined” animals (both parents
-unknown, no recorded origin) are a policy constant with rank
-<code>NA</code>; they are excluded from the order and reported
-separately as <code>nUndetermined</code>.</p>
+meeting both. The “Undetermined” animals (both parents unknown, no
+recorded origin) are a policy constant with rank <code>NA</code>; they
+are excluded from the order and reported separately as
+<code>nUndetermined</code>.</p>
 <p>This is distinct from seed reproducibility. A fixed seed already
 makes <code>gu</code> bit-identical run to run – that is reproducibility
 of the <em>process</em>. <code><a href="../reference/gvaConvergence.html">gvaConvergence()</a></code> reports the
@@ -136,17 +136,17 @@ order?</p>
 <div class="section level2">
 <h2 id="a-pedigree-where-the-iteration-count-matters">A pedigree where the iteration count matters<a class="anchor" aria-label="anchor" href="#a-pedigree-where-the-iteration-count-matters"></a>
 </h2>
-<p>No bundled pedigree exercises the diagnostic well – after the issue
-#76 de-inflation the shipped pedigrees have no <code>gu</code> signal
-left to rank on, so their selection order is settled at the smallest
-iteration count. To show a pedigree where the count <em>does</em>
-matter, we build a small half-sib web in which the founders (the sources
-of the private alleles) are excluded from the analyzed population, so
-their alleles survive among the offspring only through descendants.
-Overlapping sire/dam mating windows give the offspring distinct true
-genome-uniqueness values that straddle the ranking boundary, so at low
-iteration counts the gene-drop estimate randomly crosses the boundary
-and the selection order churns.</p>
+<p>No bundled pedigree exercises the diagnostic well – after the
+<code>gu = 0</code> de-inflation the shipped pedigrees have no
+<code>gu</code> signal left to rank on, so their selection order is
+settled at the smallest iteration count. To show a pedigree where the
+count <em>does</em> matter, we build a small half-sib web in which the
+founders (the sources of the private alleles) are excluded from the
+analyzed population, so their alleles survive among the offspring only
+through descendants. Overlapping sire/dam mating windows give the
+offspring distinct true genome-uniqueness values that straddle the
+ranking boundary, so at low iteration counts the gene-drop estimate
+randomly crosses the boundary and the selection order churns.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## A deterministic dense-mid-range pedigree: 14 founder sires, each mated to a</span></span>
 <span><span class="co">## wrapping window of 5 of 15 founder dams (one offspring per pair). Windows</span></span>
@@ -322,10 +322,11 @@ guess it.</p>
 <div class="section level2">
 <h2 id="a-pedigree-that-converges-immediately">A pedigree that converges immediately<a class="anchor" aria-label="anchor" href="#a-pedigree-that-converges-immediately"></a>
 </h2>
-<p>Contrast the bundled <code>qcPed</code>. After the issue #76
-de-inflation none of its ranked animals carry a non-zero genome
-uniqueness, so the selection order is driven by deterministic mean
-kinship and does not move with the iteration count.</p>
+<p>Contrast the bundled <code>qcPed</code>. After the
+<code>gu = 0</code> de-inflation none of its ranked animals carry a
+non-zero genome uniqueness, so the selection order is driven by
+deterministic mean kinship and does not move with the iteration
+count.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">convQc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gvaConvergence.html">gvaConvergence</a></span><span class="op">(</span></span>
 <span>  <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="../reference/qcPed.html">qcPed</a></span>, nMax <span class="op">=</span> <span class="fl">400L</span>,</span>
@@ -407,7 +408,7 @@ Kendall agreement
 <span><span class="co">#&gt; [1] 25</span></span>
 <span><span class="va">convQc</span><span class="op">$</span><span class="va">nRankable</span></span>
 <span><span class="co">#&gt; [1] 156</span></span>
-<span><span class="va">convQc</span><span class="op">$</span><span class="va">nUndetermined</span>     <span class="co"># the excluded issue #76 set</span></span>
+<span><span class="va">convQc</span><span class="op">$</span><span class="va">nUndetermined</span>     <span class="co"># the excluded Undetermined set</span></span>
 <span><span class="co">#&gt; [1] 124</span></span></code></pre></div>
 <p>Overlap and agreement are at their maximum from the smallest count,
 so the recommended count is the floor of the grid: this pedigree needs

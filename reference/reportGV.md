@@ -62,8 +62,8 @@ reportGV(
 - breedingTable:
 
   Optional data.frame overriding the bundled per-species minimum
-  breeding ages used by the unknown-parent mean-kinship correction
-  (issue \#73 Part 2). `NULL` (the default) uses the bundled
+  breeding ages used by the unknown-parent mean-kinship correction.
+  `NULL` (the default) uses the bundled
   [`speciesGestation`](https://github.com/rmsharp/nprcgenekeepr/reference/speciesGestation.md)
   table.
 
@@ -88,12 +88,11 @@ reportGV(
   Optional data.frame of outside-information kinship overrides (`id1`,
   `id2`, `kinship`; the coefficient *f*, not relatedness *r*) applied to
   the kinship matrix before mean kinship and the unknown-parent
-  correction (issue \#13). `NULL` (the default) leaves the
-  pedigree-derived matrix unchanged. Ids outside the analysis set are
-  warn-dropped (the run is not aborted). An override REFINES the named
-  kinship cell; it does not suppress the `+ sexMean / 2` unknown-parent
-  correction, which is kept for every animal missing one parent (issue
-  \#95 keep-all revert). See
+  correction. `NULL` (the default) leaves the pedigree-derived matrix
+  unchanged. Ids outside the analysis set are warn-dropped (the run is
+  not aborted). An override REFINES the named kinship cell; it does not
+  suppress the `+ sexMean / 2` unknown-parent correction, which is kept
+  for every animal missing one parent. See
   [`applyKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md).
 
 ## Value
@@ -108,11 +107,11 @@ estimate, see
 genome uniqueness values and a `guSE` column of their standard errors;
 `gu` and `guSE` are reported as 0 for unknown-origin both-unknown
 "Undetermined" animals, whose apparent uniqueness is an artifact of
-unknown parentage (issue \#76)), `fe` (founder equivalents), `fg`
-(founder genome equivalents), `fgSE` (the Monte Carlo sampling standard
-error of `fg`, computed from the same gene drop; a single colony-level
-number, `NA` when a contributing founder is retained in zero gene-drop
-iterations – see
+unknown parentage), `fe` (founder equivalents), `fg` (founder genome
+equivalents), `fgSE` (the Monte Carlo sampling standard error of `fg`,
+computed from the same gene drop; a single colony-level number, `NA`
+when a contributing founder is retained in zero gene-drop iterations –
+see
 [`calcFGSE`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)),
 `maleFounders` and `femaleFounders` (dataframes of the known male and
 female founder records), `nMaleFounders` and `nFemaleFounders` (the
@@ -124,8 +123,8 @@ founders).
 Reported genome uniqueness (`gu`) is set to 0 for "Undetermined" animals
 – those with both parents unknown (U-id aware) and no recorded origin –
 because their apparent uniqueness is an artifact of unknown parentage
-(decline-to-credit policy, issue \#76). Imports (both parents unknown
-but with a recorded origin) and all other animals are unaffected, and
+(decline-to-credit policy). Imports (both parents unknown but with a
+recorded origin) and all other animals are unaffected, and
 [`calcGU`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md)
 itself is unchanged.
 

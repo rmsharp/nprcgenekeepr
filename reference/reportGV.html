@@ -107,8 +107,8 @@ will be called during each iteration to update a
 
 <dt id="arg-breedingtable">breedingTable<a class="anchor" aria-label="anchor" href="#arg-breedingtable"></a></dt>
 <dd><p>Optional data.frame overriding the bundled per-species
-minimum breeding ages used by the unknown-parent mean-kinship correction
-(issue #73 Part 2). <code>NULL</code> (the default) uses the bundled
+minimum breeding ages used by the unknown-parent mean-kinship correction.
+<code>NULL</code> (the default) uses the bundled
 <code><a href="speciesGestation.html">speciesGestation</a></code> table.</p></dd>
 
 
@@ -133,12 +133,12 @@ species absent from the table. <code>NULL</code> uses the built-in 210 days.</p>
 <dd><p>Optional data.frame of outside-information kinship
 overrides (<code>id1</code>, <code>id2</code>, <code>kinship</code>; the coefficient <em>f</em>,
 not relatedness <em>r</em>) applied to the kinship matrix before mean kinship
-and the unknown-parent correction (issue #13). <code>NULL</code> (the default)
+and the unknown-parent correction. <code>NULL</code> (the default)
 leaves the pedigree-derived matrix unchanged. Ids outside the analysis
 set are warn-dropped (the run is not aborted). An override REFINES the
 named kinship cell; it does not suppress the <code>+ sexMean / 2</code>
 unknown-parent correction, which is kept for every animal missing one
-parent (issue #95 keep-all revert). See <code><a href="applyKinshipOverrides.html">applyKinshipOverrides</a></code>.</p></dd>
+parent. See <code><a href="applyKinshipOverrides.html">applyKinshipOverrides</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -151,8 +151,8 @@ uniqueness estimate, see <code><a href="calcGUSE.html">calcGUSE</a></code>), <co
 matrix), <code>gu</code> (a dataframe with a <code>gu</code> column of genome uniqueness
 values and a <code>guSE</code> column of their standard errors; <code>gu</code> and
 <code>guSE</code> are reported as 0 for unknown-origin both-unknown "Undetermined"
-animals, whose apparent uniqueness is an artifact of unknown parentage
-(issue #76)), <code>fe</code> (founder equivalents),
+animals, whose apparent uniqueness is an artifact of unknown parentage),
+<code>fe</code> (founder equivalents),
 <code>fg</code> (founder genome equivalents), <code>fgSE</code> (the Monte Carlo sampling
 standard error of <code>fg</code>, computed from the same gene drop; a single
 colony-level number, <code>NA</code> when a contributing founder is retained in
@@ -167,7 +167,7 @@ those founders), and <code>total</code> (the total number of known founders).</p
     <p>Reported genome uniqueness (<code>gu</code>) is set to 0 for "Undetermined"
 animals – those with both parents unknown (U-id aware) and no recorded
 origin – because their apparent uniqueness is an artifact of unknown
-parentage (decline-to-credit policy, issue #76). Imports (both parents
+parentage (decline-to-credit policy). Imports (both parents
 unknown but with a recorded origin) and all other animals are unaffected,
 and <code><a href="calcGU.html">calcGU</a></code> itself is unchanged.</p>
     </div>

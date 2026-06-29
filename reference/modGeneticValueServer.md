@@ -25,9 +25,8 @@ modGeneticValueServer(id, pedigree, speciesOverrides = reactive(NULL))
   [`loadSpeciesOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSpeciesOverrides.md)
   (a list with `breedingTable`, `gestationTable`, `breedingAgeDefault`,
   `gestationDefault`), or `NULL`. Threaded into
-  [`reportGV`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-  (issue \#73 Part 2). Defaults to `reactive(NULL)` so no config file
-  means bundled behavior.
+  [`reportGV`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md).
+  Defaults to `reactive(NULL)` so no config file means bundled behavior.
 
 ## Value
 

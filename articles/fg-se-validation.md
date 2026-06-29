@@ -9,8 +9,7 @@ so it carries Monte Carlo sampling noise that shrinks as the number of
 iterations grows.
 [`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)
 reports that noise as a standard error, so `FG` can be shown as
-`FG ± SE` (issue
-[\#82](https://github.com/rmsharp/nprcgenekeepr/issues/82)).
+`FG ± SE`.
 
 Unlike genome uniqueness – a simple average, whose standard error is a
 column variance – `FG` is a **non-linear function** of the random
@@ -26,8 +25,8 @@ founders. A standard error derived this way is only trustworthy if it is
 **calibrated** – the number it reports must match the real run-to-run
 spread of `FG`. This article is the recorded evidence that it is, on a
 real deep pedigree, **before** the SE is surfaced to users. It is the
-“validate before expose” gate in the compute → validate → surface plan
-for issue \#82 (Slice 2 of three).
+“validate before expose” gate in the compute → validate → surface
+sequence.
 
 ## What “calibrated” means here
 
@@ -46,11 +45,11 @@ Each runs `B = 300` independent gene drops (one per seed), so the
 | 6 | **Off-diagonal** | the full (covariance-aware) SE versus the diagonal-only approximation | reported (see below) |
 | 7 | **Reproducibility** | a fixed seed list makes the whole study byte-identical run to run | exact |
 
-The pass bands are those ratified in the issue \#82 plan (Section 5.1).
-The agreement and coverage bands are calibrated for `B = 300`: the
-agreement ratio’s own sampling fluctuation is about
-`1/sqrt(2(B-1)) ≈ 0.04`, so a calibrated estimator sits near 1 with the
-band roughly two standard errors wide.
+The pass bands were specified in advance for this validation study. The
+agreement and coverage bands are calibrated for `B = 300`: the agreement
+ratio’s own sampling fluctuation is about `1/sqrt(2(B-1)) ≈ 0.04`, so a
+calibrated estimator sits near 1 with the band roughly two standard
+errors wide.
 
 ## The two pedigrees
 
@@ -170,7 +169,7 @@ pedigree: it matches the Monte Carlo spread of `FG`, covers a
 high-iteration reference at the nominal rate, shrinks as `1/sqrt(K)`,
 never reports a finite SE for a collapsed `FG`, and agrees with an
 independent bootstrap. The standard error is cleared to be surfaced
-beside `FG` in the reports and the Shiny app (issue \#82, Slice 3).
+beside `FG` in the reports and the Shiny app.
 
 ## References
 

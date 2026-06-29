@@ -38,12 +38,11 @@ modBreedingGroupsServer(
 
   optional reactive returning a validated outside-information
   kinship-override data frame (`id1`, `id2`, `kinship`); see
-  [`applyKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md)
-  (issue \#13). When the module recomputes kinship from the pedigree (no
-  genetic value output), the overrides are applied to that matrix so
-  group formation reflects them regardless of tab order. `NULL` (the
-  default) is a no-op. The genetic-value-output path already carries
-  overrides.
+  [`applyKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md).
+  When the module recomputes kinship from the pedigree (no genetic value
+  output), the overrides are applied to that matrix so group formation
+  reflects them regardless of tab order. `NULL` (the default) is a
+  no-op. The genetic-value-output path already carries overrides.
 
 ## Value
 

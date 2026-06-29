@@ -25,7 +25,7 @@ makeFounderStatsTable(founderStats)
   - `fg` - Founder genome equivalents
 
   - `fgSE` - (optional) sampling standard error of `fg`; when finite it
-    is shown inline as `FG +/- SE` (issue \#82)
+    is shown inline as `FG +/- SE`
 
 ## Value
 

@@ -3,10 +3,10 @@
 Reads the optional species-override settings from the user's site
 configuration file (`~/.nprcgenekeepr_config`, or
 `~/_nprcgenekeepr_config` on Windows) and assembles the override tables
-and fallbacks consumed by the Genetic Value Analysis (issue \#73 Part
-2). The configuration may carry up to three optional keys, each looked
-up softly (the `getConfigApiKey` pattern – absent keys are not an error
-and never touch the fixed-schema
+and fallbacks consumed by the Genetic Value Analysis. The configuration
+may carry up to three optional keys, each looked up softly (the
+`getConfigApiKey` pattern – absent keys are not an error and never touch
+the fixed-schema
 [`getSiteInfo`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
 parser):
 

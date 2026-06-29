@@ -1,8 +1,8 @@
 # Validate a kinship overrides table
 
 Checks the structure and domain of an outside-information kinship
-override table (issue \#13). The table supplies pairwise kinship
-coefficients (`id1`, `id2`, `kinship`) that
+override table. The table supplies pairwise kinship coefficients (`id1`,
+`id2`, `kinship`) that
 [`applyKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md)
 writes into a computed kinship matrix, replacing the pedigree-derived
 value for those pairs. It mirrors

@@ -38,10 +38,10 @@ orderings on two criteria:
   same order? (threshold `rhoMin = 0.95`)
 
 The run is **reproducible at `N`** when both hold, and the recommended
-iteration count is the smallest `N` meeting both. The issue \#76
-“Undetermined” animals (both parents unknown, no recorded origin) are a
-policy constant with rank `NA`; they are excluded from the order and
-reported separately as `nUndetermined`.
+iteration count is the smallest `N` meeting both. The “Undetermined”
+animals (both parents unknown, no recorded origin) are a policy constant
+with rank `NA`; they are excluded from the order and reported separately
+as `nUndetermined`.
 
 This is distinct from seed reproducibility. A fixed seed already makes
 `gu` bit-identical run to run – that is reproducibility of the
@@ -53,7 +53,7 @@ order?
 
 ## A pedigree where the iteration count matters
 
-No bundled pedigree exercises the diagnostic well – after the issue \#76
+No bundled pedigree exercises the diagnostic well – after the `gu = 0`
 de-inflation the shipped pedigrees have no `gu` signal left to rank on,
 so their selection order is settled at the smallest iteration count. To
 show a pedigree where the count *does* matter, we build a small half-sib
@@ -167,7 +167,7 @@ is how you would confirm that rather than guess it.
 
 ## A pedigree that converges immediately
 
-Contrast the bundled `qcPed`. After the issue \#76 de-inflation none of
+Contrast the bundled `qcPed`. After the `gu = 0` de-inflation none of
 its ranked animals carry a non-zero genome uniqueness, so the selection
 order is driven by deterministic mean kinship and does not move with the
 iteration count.
@@ -206,7 +206,7 @@ convQc$recommendedIter   # converges at the grid floor
 #> [1] 25
 convQc$nRankable
 #> [1] 156
-convQc$nUndetermined     # the excluded issue #76 set
+convQc$nUndetermined     # the excluded Undetermined set
 #> [1] 124
 ```
 

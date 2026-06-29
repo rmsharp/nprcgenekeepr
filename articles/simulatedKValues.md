@@ -28,10 +28,10 @@ other pedigree members.
 This tutorial assumes knowledge of potential parents and does not
 present methods for identifying potential parents.
 
-Capabilities to be address with resolution of Issue \#28[^1] will
-provide users the ability to fully automate the identification of
-potential parents. However, prior to that capability being available,
-users can use other methods to identify potential parents.
+Planned capabilities[^1] will provide users the ability to fully
+automate the identification of potential parents. However, prior to that
+capability being available, users can use other methods to identify
+potential parents.
 
 ### Creation of example pedigree[^2]
 
@@ -853,8 +853,9 @@ Comparision of estimated kinships between simulations of 100 (short) and
 1000 (long) {.table .table
 style="font-size: 10px; margin-left: auto; margin-right: auto;"}
 
-[^1]: Add ability to use timestamped transactional location data to
-    identify potential parents for animals with a missing parent.
+[^1]: A planned capability will use timestamped transactional location
+    data to identify potential parents for animals with a missing
+    parent.
 
 [^2]: This example is not realistic and particularly unrealistic with
     regard to potential dams. While it is possible for two animals to be

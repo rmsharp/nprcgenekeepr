@@ -1,11 +1,11 @@
 # Apply outside-information kinship overrides to a kinship matrix
 
-Writes pairwise kinship coefficients from outside information (issue
-\#13) into a computed kinship matrix, replacing the pedigree-derived
-value for the named pairs. Each `(id1, id2, kinship)` row sets both
-`kmat[id1, id2]` and its symmetric twin `kmat[id2, id1]`; all other
-cells are unchanged. This is a direct cell replacement – it does not
-propagate to descendant rows.
+Writes pairwise kinship coefficients from outside information into a
+computed kinship matrix, replacing the pedigree-derived value for the
+named pairs. Each `(id1, id2, kinship)` row sets both `kmat[id1, id2]`
+and its symmetric twin `kmat[id2, id1]`; all other cells are unchanged.
+This is a direct cell replacement – it does not propagate to descendant
+rows.
 
 ## Usage
 

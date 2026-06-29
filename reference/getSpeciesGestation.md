@@ -8,8 +8,8 @@ whitespace-insensitive. Any species that is missing, `NA`, an empty
 string, or not present in the table falls back to `default` (210 days,
 the conservative rhesus bound). Used by
 [`getPotentialParents`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
-to key its gestation window on the first-class `species` pedigree column
-(issue \#46 item 2).
+to key its gestation window on the first-class `species` pedigree
+column.
 
 ## Usage
 

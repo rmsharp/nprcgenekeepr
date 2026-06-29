@@ -9,9 +9,9 @@ missing, `NA`, an empty string, or not present in the table – and any
 sex that is not `"M"` or `"F"` – falls back to `default` (2 years, the
 legacy package-wide minimum parent age). Used by the Genetic Value
 Analysis unknown-parent mean-kinship correction to form a focal animal's
-contemporaneous breeding-age peer cohort (issue \#9 Slice 2). The
-bundled table is populated for the common colony NHP species (issue
-\#73); the user-configurable override path is a separate slice.
+contemporaneous breeding-age peer cohort. The bundled table is populated
+for the common colony NHP species; the user-configurable override path
+is a separate feature.
 
 ## Usage
 

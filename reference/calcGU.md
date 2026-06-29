@@ -97,8 +97,8 @@ includes living founders' alleles; it is unchanged. The genetic value
 report
 ([`reportGV`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md))
 separately applies a colony decline-to-credit policy that reports genome
-uniqueness as 0 for unknown-origin both-unknown ("Undetermined") animals
-(issue \#76).
+uniqueness as 0 for unknown-origin both-unknown ("Undetermined")
+animals.
 
 ## References
 

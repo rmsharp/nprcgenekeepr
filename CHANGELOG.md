@@ -15,6 +15,75 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-29 — Remove development-process tags from published documentation (Session 239)
+
+- **Deliverable (owner request):** the owner observed that user-facing
+  documentation leaked references to *how the code was developed* —
+  GitHub issue numbers and “Slice N” vertical-slice jargon (e.g. “issue
+  \#82, Slice 1”) — and asked whether their inclusion could be defended.
+  Treated as a question, not an instruction
+  (\[\[observation-vs-decision\]\], FM \#23): inventoried every
+  reference firsthand, gave an honest defend/concede analysis, then
+  ratified scope via `AskUserQuestion` = **“Published surfaces only.”**
+  **REFACTOR-class docs-only — no behavior change; TDD RED/GREEN N/A.**
+  **0 corrections / 0 overrides** (1 audit-surfaced reword refinement,
+  self-fixed).
+- **The load-bearing scope distinction — PUBLISHED vs INTERNAL.** A
+  roxygen `#'` block renders to a man page (and the pkgdown reference /
+  `?fn`) only when the function is exported / `@`-documented; a `@noRd`
+  block is stripped at build, so it is maintainer-only — the same
+  category as a plain source comment (extends S238 gotcha \#2 / Learning
+  224(3)). Of 23 R files carrying issue/slice tags, **7 are `@noRd`**
+  (`applyKinshipOverridesToMatrix`, `flagOverriddenRelationships`,
+  `prepareKinshipOverrides`, `classifyParentage`,
+  `getSpeciesOverridesPath`, `correctUnknownParentMeanKinship`,
+  `checkFgDegeneracy`) → **left untouched**; **16 render to man pages**
+  → cleaned + `man/` regenerated.
+- **Kept (out of scope, by the ratified choice):** the 7 `@noRd`
+  docstrings, the 36 plain `#` source comments (maintainer breadcrumbs),
+  and **issue NUMBERS in NEWS** (standard R changelog convention) — only
+  “slice 1/2/3” removed from NEWS.
+- **Reworded for meaning, not blind-deleted:** dropped bare “(issue
+  \#NN)” parentheticals; kept policy names (“decline-to-credit policy”,
+  dropped “issue \#76”); reworded a now-dangling antecedent (`data.R`
+  “the remaining part of that issue” → “a separate planned
+  enhancement”); kept the `compute → validate → surface` concept in the
+  fg-se article while dropping “the issue \#82 plan (Slice 2 of three)”;
+  named the gu de-inflation by mechanism (`gu = 0`) instead of “issue
+  \#76”.
+- **Verify:** rendered `man/` + 3 pkgdown articles + NEWS = **0**
+  issue/slice tags; `devtools::check(vignettes=FALSE)` **0/0/0**; full
+  suite **3173/0/0** (7 baseline-noise warnings); `spell_check_package`
+  clean; lint **0** across the 16 files; all 16 `man/*.Rd` parse via
+  [`tools::parse_Rd()`](https://rdrr.io/r/tools/parse_Rd.html),
+  re-`document()` shows zero drift. An independent **4-agent adversarial
+  audit** (`wf_b3fff352-1be`) confirmed no leaks / no over-reach / no
+  broken markup.
+- **Audit-surfaced refinement (self-fixed):** the fg-se article’s
+  “ratified in the issue \#82 plan” → “set for this validation study”
+  softened the *pre-registration* nuance (bands fixed in advance — a
+  calibration-credibility point); reworded to “specified in advance for
+  this validation study”.
+- **Self-inflicted + fixed:** renaming the `simulatedKValues.Rmd`
+  footnote label to `[^transloc]` tripped `spell_check` (it tokenizes
+  pure-letter labels; the old digit-bearing `issue28` slipped through) →
+  used the real word `[^location]`.
+- **Surfaced for a possible future pass (NOT done):**
+  `inst/extdata/example_nprcgenekeepr_config:55` carries “(issue \#73
+  Part 2)” in a user-copyable config-template comment — matches the
+  out-of-scope source-comment / issue-number KEEP pattern, so left
+  as-is.
+- **5 commits on branch `docs-strip-process-tags`** (`f7cc1f6a` roxygen,
+  `0ee62a2a` articles+NEWS.Rmd, `3d2e6dda` regen man+NEWS.md, `cb18fefa`
+  spell-safe label, `e94f6604` audit-nuance fix). **Outward push/PR is
+  owner-gated** (not pushed). Carried as applied:
+  \[\[observation-vs-decision\]\],
+  \[\[consult-project-source-of-truth\]\],
+  \[\[avoid-new-lints-r-package\]\],
+  \[\[avoid-reconcile-tools-on-curated-files\]\],
+  \[\[edit-files-in-reverse-line-order\]\],
+  \[\[push-close-out-docs-to-origin\]\]. (Learning 225.)
+
 ### 2026-06-29 — Systematic whole-package lint pass: clear the standing lint-CI red (Session 238)
 
 - **Deliverable (owner pick):** a systematic whole-package lint pass

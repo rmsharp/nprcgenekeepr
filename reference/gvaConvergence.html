@@ -138,7 +138,7 @@ update a <code><a href="https://rdrr.io/pkg/shiny/man/Progress.html" class="exte
 <dt id="arg-breedingtable-gestationtable-breedingagedefault-gestationdefault">breedingTable, gestationTable, breedingAgeDefault, gestationDefault<a class="anchor" aria-label="anchor" href="#arg-breedingtable-gestationtable-breedingagedefault-gestationdefault"></a></dt>
 <dd><p>Optional overrides for the unknown-parent mean-kinship correction, passed
 through to <code>correctUnknownParentMeanKinship()</code> exactly as
-<code><a href="reportGV.html">reportGV</a></code> passes them (issue #73 Part 2). NULL uses the bundled
+<code><a href="reportGV.html">reportGV</a></code> passes them. NULL uses the bundled
 defaults.</p></dd>
 
 
@@ -148,12 +148,12 @@ overrides (<code>id1</code>, <code>id2</code>, <code>kinship</code>; the coeffic
 not relatedness <em>r</em>) applied to the kinship matrix before mean kinship
 and the unknown-parent correction, exactly as <code><a href="reportGV.html">reportGV</a></code> applies
 them, so the convergence diagnostic ranks on the same mean kinship the
-report uses (issue #13). <code>NULL</code> (the default) leaves the
+report uses. <code>NULL</code> (the default) leaves the
 pedigree-derived matrix unchanged. Ids outside the analysis set are
 warn-dropped (the run is not aborted). An override REFINES the named kinship
 cell; it does not suppress the <code>+ sexMean / 2</code> unknown-parent
-correction, which is kept for every animal missing one parent (issue #95
-keep-all revert). See <code><a href="applyKinshipOverrides.html">applyKinshipOverrides</a></code>.</p></dd>
+correction, which is kept for every animal missing one parent. See
+<code><a href="applyKinshipOverrides.html">applyKinshipOverrides</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -169,8 +169,8 @@ criteria.</p></li>
 <li><p><code>criteria</code> – the <code>k</code>, <code>oMin</code>, and <code>rhoMin</code> used.</p></li>
 <li><p><code>nRankable</code> – the number of probands carrying a (non-<code>NA</code>)
 rank that the order metrics are computed on.</p></li>
-<li><p><code>nUndetermined</code> – the count of the excluded issue #76
-Undetermined set (2C).</p></li>
+<li><p><code>nUndetermined</code> – the count of the excluded
+Undetermined set.</p></li>
 <li><p><code>nMax</code> – the gene-drop budget actually simulated.</p></li>
 </ul></div>
     <div class="section level2">
@@ -178,8 +178,8 @@ Undetermined set (2C).</p></li>
     <p>Genome uniqueness (<code><a href="calcGU.html">calcGU</a></code>) is the only ranked Genetic Value
 Analysis output that carries Monte Carlo (gene-drop) sampling noise, so the
 number of iterations a colony actually needs is pedigree-dependent: there is
-no single universal "right" count. <code>gvaConvergence</code> answers issue #2's
-literal ask – "define reproducible and automate finding the needed number of
+no single universal "right" count. <code>gvaConvergence</code> answers the literal
+request – "define reproducible and automate finding the needed number of
 iterations" – on the ratified definition that the decision-relevant quantity
 is the <em>selection order</em> (which animals are chosen, and in what order),
 not the precision of the <code>gu</code> number itself.</p>
@@ -197,7 +197,7 @@ is judged <strong>reproducible at <code>N</code></strong> when both</p><ul><li><
 <li><p>the Kendall rank agreement of the commonly-ranked animals is at least
 <code>rhoMin</code> (they come out in the same order).</p></li>
 </ul><p>The recommended iteration count is the smallest <code>N</code> in <code>grid</code> at
-which both criteria hold. The issue #76 de-inflated <code>gu = 0</code>
+which both criteria hold. The de-inflated <code>gu = 0</code>
 "Undetermined" set (both parents unknown, no recorded origin) is a policy
 constant with rank <code>NA</code>; it is excluded from the order the criteria are
 computed on and reported separately as <code>nUndetermined</code>.</p>

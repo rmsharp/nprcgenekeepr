@@ -102,7 +102,7 @@ gvaConvergence(
   Optional overrides for the unknown-parent mean-kinship correction,
   passed through to `correctUnknownParentMeanKinship()` exactly as
   [`reportGV`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-  passes them (issue \#73 Part 2). NULL uses the bundled defaults.
+  passes them. NULL uses the bundled defaults.
 
 - kinshipOverrides:
 
@@ -112,12 +112,11 @@ gvaConvergence(
   correction, exactly as
   [`reportGV`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
   applies them, so the convergence diagnostic ranks on the same mean
-  kinship the report uses (issue \#13). `NULL` (the default) leaves the
+  kinship the report uses. `NULL` (the default) leaves the
   pedigree-derived matrix unchanged. Ids outside the analysis set are
   warn-dropped (the run is not aborted). An override REFINES the named
   kinship cell; it does not suppress the `+ sexMean / 2` unknown-parent
-  correction, which is kept for every animal missing one parent (issue
-  \#95 keep-all revert). See
+  correction, which is kept for every animal missing one parent. See
   [`applyKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md).
 
 ## Value
@@ -139,8 +138,7 @@ An object of class `nprcgenekeeprGVConv`: a list with
 - `nRankable` – the number of probands carrying a (non-`NA`) rank that
   the order metrics are computed on.
 
-- `nUndetermined` – the count of the excluded issue \#76 Undetermined
-  set (2C).
+- `nUndetermined` – the count of the excluded Undetermined set.
 
 - `nMax` – the gene-drop budget actually simulated.
 
@@ -151,11 +149,11 @@ Genome uniqueness
 is the only ranked Genetic Value Analysis output that carries Monte
 Carlo (gene-drop) sampling noise, so the number of iterations a colony
 actually needs is pedigree-dependent: there is no single universal
-"right" count. `gvaConvergence` answers issue \#2's literal ask –
-"define reproducible and automate finding the needed number of
-iterations" – on the ratified definition that the decision-relevant
-quantity is the *selection order* (which animals are chosen, and in what
-order), not the precision of the `gu` number itself.
+"right" count. `gvaConvergence` answers the literal request – "define
+reproducible and automate finding the needed number of iterations" – on
+the ratified definition that the decision-relevant quantity is the
+*selection order* (which animals are chosen, and in what order), not the
+precision of the `gu` number itself.
 
 Because the `n` gene-drop iteration columns are independent and
 identically distributed replicates, the whole convergence picture is
@@ -176,10 +174,10 @@ compared. A run is judged **reproducible at `N`** when both
   `rhoMin` (they come out in the same order).
 
 The recommended iteration count is the smallest `N` in `grid` at which
-both criteria hold. The issue \#76 de-inflated `gu = 0` "Undetermined"
-set (both parents unknown, no recorded origin) is a policy constant with
-rank `NA`; it is excluded from the order the criteria are computed on
-and reported separately as `nUndetermined`.
+both criteria hold. The de-inflated `gu = 0` "Undetermined" set (both
+parents unknown, no recorded origin) is a policy constant with rank
+`NA`; it is excluded from the order the criteria are computed on and
+reported separately as `nUndetermined`.
 
 Because the half-split compares two `N`-column runs to *each other*
 (never to their pooled mean), it is a conservative, self-validating

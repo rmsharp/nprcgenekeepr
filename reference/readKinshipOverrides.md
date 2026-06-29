@@ -1,7 +1,7 @@
 # Read a kinship overrides table from a file
 
-Reads an outside-information kinship override table (issue \#13) from a
-user-supplied file into a data frame for
+Reads an outside-information kinship override table from a user-supplied
+file into a data frame for
 [`checkKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/checkKinshipOverrides.md)
 and
 [`reportGV`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md).

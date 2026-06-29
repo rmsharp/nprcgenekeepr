@@ -5,19 +5,18 @@ across the package. It keys the gestation window in
 [`getPotentialParents`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
 through
 [`getSpeciesGestation`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesGestation.md)
-(issue \#46 item 2) and the minimum breeding ages in the Genetic Value
-Analysis unknown-parent mean-kinship correction through
-[`getSpeciesMinBreedingAge`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesMinBreedingAge.md)
-(issue \#9 Slice 2). Species names are matched case- and
-whitespace-insensitively; any species not present falls back to 210 days
-for gestation and 2 years for the breeding ages. Rhesus gestation is 210
-days (the historical conservative bound; typical rhesus gestation is
-about 165 days, per Vinson & Raboin 2015), and rhesus minimum breeding
-ages are male = 4, female = 2.5. The table is populated for the common
-colony NHP species (issue \#73), with gestation values as conservative
-upper bounds; making the values user-configurable is the remaining part
-of that issue. Extend or adjust it by editing
-`data-raw/speciesGestation.R` and re-running that script.
+and the minimum breeding ages in the Genetic Value Analysis
+unknown-parent mean-kinship correction through
+[`getSpeciesMinBreedingAge`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesMinBreedingAge.md).
+Species names are matched case- and whitespace-insensitively; any
+species not present falls back to 210 days for gestation and 2 years for
+the breeding ages. Rhesus gestation is 210 days (the historical
+conservative bound; typical rhesus gestation is about 165 days, per
+Vinson & Raboin 2015), and rhesus minimum breeding ages are male = 4,
+female = 2.5. The table is populated for the common colony NHP species,
+with gestation values as conservative upper bounds; making the values
+user-configurable is a separate planned enhancement. Extend or adjust it
+by editing `data-raw/speciesGestation.R` and re-running that script.
 
 - species:
 

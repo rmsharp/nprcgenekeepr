@@ -28,7 +28,7 @@ This replaces a former `read.table(sep = "=")` call in the application
 server that assumed a strict two-column table, could not parse the
 documented format, and crashed
 [`runModularApp`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
-at startup (issue \#50).
+at startup.
 
 ## See also
 

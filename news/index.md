@@ -11,8 +11,8 @@
     mean kinship and the unknown-parent correction, so molecular/genomic
     estimates or known-but-unrecorded relationships drive the
     genetic-value rankings (issue
-    [\#13](https://github.com/rmsharp/nprcgenekeepr/issues/13), slice
-    1). Two new exported helpers support it:
+    [\#13](https://github.com/rmsharp/nprcgenekeepr/issues/13)). Two new
+    exported helpers support it:
     [`applyKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md)
     (writes the symmetric overrides into a kinship matrix) and
     [`checkKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkKinshipOverrides.md)
@@ -31,22 +31,19 @@
     [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md),
     so outside-information kinship drives the in-app genetic-value
     rankings (issue
-    [\#13](https://github.com/rmsharp/nprcgenekeepr/issues/13), slice
-    2). A malformed file is reported and ignored without aborting the
-    run; leaving the upload empty reproduces the previous rankings
-    exactly. (As of slice 3 the breeding-group and summary-statistics
-    tabs apply the override when they recompute kinship from the
-    pedigree, so this no longer requires running the Genetic Value
-    Analysis tab first.)
+    [\#13](https://github.com/rmsharp/nprcgenekeepr/issues/13)). A
+    malformed file is reported and ignored without aborting the run;
+    leaving the upload empty reproduces the previous rankings exactly.
+    (The breeding-group and summary-statistics tabs apply the override
+    when they recompute kinship from the pedigree, so this no longer
+    requires running the Genetic Value Analysis tab first.)
   - The breeding-group formation and summary-statistics tabs now apply
     an uploaded kinship override when they recompute kinship from the
     pedigree, so outside-information kinship affects group formation,
     the relationship table, and the kinship-matrix CSV export regardless
-    of whether the Genetic Value Analysis tab was run first (issue
-    [\#13](https://github.com/rmsharp/nprcgenekeepr/issues/13), slice 3,
-    which closes issue
-    [\#13](https://github.com/rmsharp/nprcgenekeepr/issues/13)). The
-    override moves the kinship *value*; relationship-class *labels*
+    of whether the Genetic Value Analysis tab was run first (completes
+    issue [\#13](https://github.com/rmsharp/nprcgenekeepr/issues/13)).
+    The override moves the kinship *value*; relationship-class *labels*
     remain pedigree-derived (they are computed from pedigree structure,
     not from the kinship value), so an overridden pair shows the
     supplied coefficient next to its pedigree-based relationship label.

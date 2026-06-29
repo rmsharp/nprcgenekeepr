@@ -103,15 +103,14 @@ on the Summary Statistics tab (monolith parity). If NULL, it is omitted.</p></dd
 <dt id="arg-kinshipoverrides">kinshipOverrides<a class="anchor" aria-label="anchor" href="#arg-kinshipoverrides"></a></dt>
 <dd><p>optional reactive returning a validated
 outside-information kinship-override data frame (<code>id1</code>, <code>id2</code>,
-<code>kinship</code>); see <code><a href="applyKinshipOverrides.html">applyKinshipOverrides</a></code> (issue #13).
+<code>kinship</code>); see <code><a href="applyKinshipOverrides.html">applyKinshipOverrides</a></code>.
 When the module recomputes kinship from the pedigree (the usual path), the
 overrides are applied to that matrix, so the relationship table and the
 kinship CSV export reflect the supplied values regardless of tab order.
 The override moves the kinship <em>value</em> only; the <code>relation</code>
 <em>label</em> stays pedigree-derived (it is computed from pedigree
 structure, not from the kinship value). Overridden pairs are flagged
-with a logical <code>overridden</code> column in the relationship table
-(issue #13 item-3).
+with a logical <code>overridden</code> column in the relationship table.
 <code>NULL</code> (the default) is a no-op.</p></dd>
 
 </dl></div>
@@ -121,7 +120,7 @@ with a logical <code>overridden</code> column in the relationship table
 <li><p><code>relationships</code> - Pairwise relationship designations from
 <code><a href="convertRelationships.html">convertRelationships()</a></code>. When <code>kinshipOverrides</code> are supplied,
 a logical <code>overridden</code> column flags the pairs whose kinship value
-came from an override (issue #13 item-3).</p></li>
+came from an override.</p></li>
 <li><p><code>relationClasses</code> - Relationship class frequency table from
 <code><a href="makeRelationClassesTable.html">makeRelationClassesTable()</a></code></p></li>
 <li><p><code>firstOrderCounts</code> - First-order relative counts per animal from

@@ -50,15 +50,15 @@ modSummaryStatsServer(
 
   optional reactive returning a validated outside-information
   kinship-override data frame (`id1`, `id2`, `kinship`); see
-  [`applyKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md)
-  (issue \#13). When the module recomputes kinship from the pedigree
-  (the usual path), the overrides are applied to that matrix, so the
-  relationship table and the kinship CSV export reflect the supplied
-  values regardless of tab order. The override moves the kinship *value*
-  only; the `relation` *label* stays pedigree-derived (it is computed
-  from pedigree structure, not from the kinship value). Overridden pairs
-  are flagged with a logical `overridden` column in the relationship
-  table (issue \#13 item-3). `NULL` (the default) is a no-op.
+  [`applyKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md).
+  When the module recomputes kinship from the pedigree (the usual path),
+  the overrides are applied to that matrix, so the relationship table
+  and the kinship CSV export reflect the supplied values regardless of
+  tab order. The override moves the kinship *value* only; the `relation`
+  *label* stays pedigree-derived (it is computed from pedigree
+  structure, not from the kinship value). Overridden pairs are flagged
+  with a logical `overridden` column in the relationship table. `NULL`
+  (the default) is a no-op.
 
 ## Value
 
@@ -69,8 +69,7 @@ A list with reactive components:
 - `relationships` - Pairwise relationship designations from
   [`convertRelationships()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertRelationships.md).
   When `kinshipOverrides` are supplied, a logical `overridden` column
-  flags the pairs whose kinship value came from an override (issue \#13
-  item-3).
+  flags the pairs whose kinship value came from an override.
 
 - `relationClasses` - Relationship class frequency table from
   [`makeRelationClassesTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeRelationClassesTable.md)

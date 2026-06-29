@@ -97,16 +97,15 @@ parent. Defaults to 2 (the QC default).</p></dd>
 <dd><p>optional species-to-gestation lookup passed to
 <code><a href="getSpeciesGestation.html">getSpeciesGestation</a></code> when defaulting the gestation window;
 <code>NULL</code> (the default) uses the bundled <code><a href="speciesGestation.html">speciesGestation</a></code>
-table. Supplied at boot from the user-configurable species overrides
-(issue #73 Part 2), so a colony's CSV values drive the prefill default.</p></dd>
+table. Supplied at boot from the user-configurable species overrides,
+so a colony's CSV values drive the prefill default.</p></dd>
 
 
 <dt id="arg-gestationdefault">gestationDefault<a class="anchor" aria-label="anchor" href="#arg-gestationdefault"></a></dt>
 <dd><p>optional integer fallback (days) for a pedigree whose
 species is absent from <code>gestationTable</code>, passed through to the
 gestation prefill; <code>NULL</code> (the default) keeps the built-in 210.
-Supplied at boot from the user-configurable species overrides (issue #73
-Part 2).</p></dd>
+Supplied at boot from the user-configurable species overrides.</p></dd>
 
 </dl></div>
     <div class="section level2">
