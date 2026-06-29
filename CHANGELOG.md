@@ -15,6 +15,50 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-28 — Grill: rule (ii) / partial-residual → REVERT option C to keep-all (issue \#95, Session 234)
+
+- **Deliverable (owner pick — live-thread \#2 → rule (ii)):** a
+  `/grill-me` decision session for \#95 follow-up **rule (ii)
+  (partial-residual / scaled add-back)**, bundled with the **C1.2
+  `"both"` / two-rows-per-pair** encoding. Output = a ratified decisions
+  list + Phase-3 revert design written to
+  `docs/planning/issue95-optionC-targeted-suppression-plan.md` **§9** (+
+  a superseded-in-part pointer at D11 in
+  `issue13-kinship-overrides-plan.md`). **Decision/design session — TDD
+  code-phases N/A** (no `R/`/tests/`man`/`NAMESPACE`/`data` change).
+- **Grounding (workflow `wf_1a1f64ba-976`, 4 read-only agents +
+  firsthand verification):** re-ran §8B on current `qcPed` (280
+  probands, 43 one-unknown; prior median ≈1.34 SD) and **verified
+  firsthand** the load-bearing pipeline ordering — overrides are written
+  into `kmat` (`prepareKinshipOverrides.R:49`) *before* `meanKinship`
+  (`reportGV.R:148`) and *before* the `+ sexMean / 2` correction
+  (`:157`).
+- **The reframing (firsthand-verified):** a missing-side override pins
+  **one of N** colony relationships and that value is **already in
+  `original`**, so the prior should shrink by only ~1/N per override
+  (~0.0048 SD), not be dropped wholesale (~1.33 SD). Shipped rule (i) —
+  and its parent, D11 blanket supersession — **over-correct by ~N
+  (≈280×)**, moving an affected animal’s GV rank a median of ~86/280 in
+  the *wrong* direction. No conservation-genetics literature supports a
+  partial-residual estimator; the `+ sexMean / 2` prior is itself a
+  package-only addition (not in Vinson & Raboin 2015).
+- **Ratified decisions (0 corrections / 0 overrides):** **D1** accept
+  the over-correction reframing; **D2** revert prior-suppression to
+  **keep-all** (every one-unknown animal keeps `+ sexMean / 2`;
+  issue-#13 override-the-cell stays) **with good user documentation**;
+  **D3** moot (no graded `w`); **D4** **remove** the option-C machinery
+  cleanly (`missingSideFor` column, `classifyOverrideMissingSide()`, the
+  suppress path — **drops C1.2 / won’t-build**); **D5** document the PMx
+  pair-level model as **considered-and-not-needed** (#13 already does
+  replace-cell+recompute for observed pairs).
+- **Result:** rule (ii) and C1.2 **resolved (won’t-build → revert)**;
+  **\#95 stays OPEN** for follow-ups **2** (both-unknown→one-unknown)
+  and **3** (sib-pair coupling) only. The revert is a separate
+  strict-TDD implementation session (plan §9C: evidence-based inventory,
+  behavior invariant = keep-all, one atomic session, Phase-3E required).
+  Option C (Slices 1–2, S229–S233) is thus superseded before any tagged
+  release.
+
 ### 2026-06-28 — Branch hygiene: deleted merged branch `issue95-optionC-slice2` (issue \#95, Session 233)
 
 - **Deliverable (owner pick):** the deferred branch-hygiene step from
