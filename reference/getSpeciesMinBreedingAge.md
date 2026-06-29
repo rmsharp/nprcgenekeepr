@@ -1,4 +1,4 @@
-# Copyright(c) 2017-2026 R. Mark Sharp This file is part of nprcgenekeepr Look up the minimum breeding age (years) for one or more species and sexes
+# Look up the minimum breeding age (years) for one or more species and sexes
 
 Maps each supplied (species, sex) pair to the minimum age in years at
 which an animal of that species and sex can produce offspring, using the

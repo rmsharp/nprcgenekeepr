@@ -1,6 +1,8 @@
 # Log Module Events
 
-Copyright(c) 2017-2025 R. Mark Sharp This file is part of nprcgenekeepr
+Centralized logging function for Shiny module events. Provides
+consistent logging format across all modules with configurable log
+levels.
 
 ## Usage
 
@@ -31,12 +33,6 @@ logModuleEvent(module, message, level = "INFO", ...)
 ## Value
 
 Invisible NULL. Called for side effect of logging.
-
-## Details
-
-Centralized logging function for Shiny module events. Provides
-consistent logging format across all modules with configurable log
-levels.
 
 ## See also
 

@@ -1,6 +1,10 @@
 # Potential Parents Module - UI Function
 
-Copyright(c) 2017-2025 R. Mark Sharp This file is part of nprcgenekeepr
+Creates the user interface for identifying potential parents of
+in-colony animals that have at least one unknown parent. The user sets a
+maximum gestational period, presses a button to compute candidate sires
+and dams on the current pedigree, views a sortable results table, and
+downloads the results as CSV.
 
 ## Usage
 
@@ -17,14 +21,6 @@ modPotentialParentsUI(id)
 ## Value
 
 A `div` object containing the Potential Parents UI.
-
-## Details
-
-Creates the user interface for identifying potential parents of
-in-colony animals that have at least one unknown parent. The user sets a
-maximum gestational period, presses a button to compute candidate sires
-and dams on the current pedigree, views a sortable results table, and
-downloads the results as CSV.
 
 ## See also
 

@@ -1,4 +1,4 @@
-# Copyright(c) 2017-2026 R. Mark Sharp This file is part of nprcgenekeepr Look up the maximum gestation period (days) for one or more species
+# Look up the maximum gestation period (days) for one or more species
 
 Maps each supplied species name to a conservative upper bound on the
 number of days from conception to birth, using the

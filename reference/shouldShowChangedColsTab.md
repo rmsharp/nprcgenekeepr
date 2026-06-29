@@ -1,6 +1,8 @@
 # Determine if Changed Columns tab should be displayed
 
-Copyright(c) 2017-2025 R. Mark Sharp This file is part of nprcgenekeepr
+Checks the changedCols list to determine if the Changed Columns tab
+should be inserted into the application navigation. The tab is shown
+when column names were modified during QC processing.
 
 ## Usage
 
@@ -22,12 +24,6 @@ shouldShowChangedColsTab(changedCols)
 
 Logical. TRUE if columns were changed and tab should be shown, FALSE
 otherwise.
-
-## Details
-
-Checks the changedCols list to determine if the Changed Columns tab
-should be inserted into the application navigation. The tab is shown
-when column names were modified during QC processing.
 
 ## See also
 

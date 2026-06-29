@@ -1,6 +1,9 @@
 # Run Quality Control on Studbook with UI-Friendly Results
 
-Copyright(c) 2017-2025 R. Mark Sharp This file is part of nprcgenekeepr
+Wrapper function that runs `qcStudbook` and processes results into a
+format suitable for Shiny UI display. This function performs two passes:
+first to check for errors, then to get the cleaned data if no errors
+exist.
 
 ## Usage
 
@@ -35,13 +38,6 @@ A list with the following components:
 
 - `qcResult` - Result from `processQcStudbookResult` containing errors,
   warnings, changedCols, hasErrors, and hasChangedCols.
-
-## Details
-
-Wrapper function that runs `qcStudbook` and processes results into a
-format suitable for Shiny UI display. This function performs two passes:
-first to check for errors, then to get the cleaned data if no errors
-exist.
 
 ## See also
 

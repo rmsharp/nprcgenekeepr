@@ -1,6 +1,7 @@
 # Process qcStudbook Result into UI-Friendly Format
 
-Copyright(c) 2017-2025 R. Mark Sharp This file is part of nprcgenekeepr
+Converts the errorLst object returned by qcStudbook (when
+reportErrors=TRUE) into a format suitable for display in the Shiny UI.
 
 ## Usage
 
@@ -31,11 +32,6 @@ A list with the following components:
 - `hasErrors` - logical indicating if any errors were found
 
 - `hasChangedCols` - logical indicating if columns were renamed
-
-## Details
-
-Converts the errorLst object returned by qcStudbook (when
-reportErrors=TRUE) into a format suitable for display in the Shiny UI.
 
 ## See also
 

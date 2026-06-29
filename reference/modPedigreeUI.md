@@ -1,6 +1,7 @@
 # Pedigree Browser Module - UI Function
 
-Copyright(c) 2017-2025 R. Mark Sharp This file is part of nprcgenekeepr
+Creates user interface for browsing and filtering pedigree data,
+including focal animal selection, trimming options, and export.
 
 ## Usage
 
@@ -17,11 +18,6 @@ modPedigreeUI(id)
 ## Value
 
 A `div` object containing pedigree browser UI.
-
-## Details
-
-Creates user interface for browsing and filtering pedigree data,
-including focal animal selection, trimming options, and export.
 
 ## See also
 

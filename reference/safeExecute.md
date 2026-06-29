@@ -1,6 +1,9 @@
 # Safe Execution Wrapper with Error Handling
 
-Copyright(c) 2017-2025 R. Mark Sharp This file is part of nprcgenekeepr
+Executes an expression with comprehensive error handling. On error, logs
+the error and returns a default value instead of stopping execution.
+This is particularly useful in Shiny reactive contexts where errors
+should be handled gracefully.
 
 ## Usage
 
@@ -41,13 +44,6 @@ safeExecute(
 ## Value
 
 The result of evaluating `expr`, or `default` if an error occurs.
-
-## Details
-
-Executes an expression with comprehensive error handling. On error, logs
-the error and returns a default value instead of stopping execution.
-This is particularly useful in Shiny reactive contexts where errors
-should be handled gracefully.
 
 ## See also
 

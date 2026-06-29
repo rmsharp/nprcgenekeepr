@@ -1,6 +1,8 @@
 # Save Plot to File
 
-Copyright(c) 2017-2025 R. Mark Sharp This file is part of nprcgenekeepr
+Helper function to save ggplot2 plots to files with consistent settings
+and error handling. Supports PNG, PDF, and SVG formats with configurable
+dimensions and resolution.
 
 ## Usage
 
@@ -56,12 +58,6 @@ savePlotToFile(
 ## Value
 
 Logical. TRUE if the file was saved successfully, FALSE otherwise.
-
-## Details
-
-Helper function to save ggplot2 plots to files with consistent settings
-and error handling. Supports PNG, PDF, and SVG formats with configurable
-dimensions and resolution.
 
 ## See also
 

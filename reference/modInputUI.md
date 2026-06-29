@@ -1,6 +1,8 @@
 # Data Input and Quality Control Module - UI Function
 
-Copyright(c) 2017-2025 R. Mark Sharp This file is part of nprcgenekeepr
+Creates user interface for data input including file uploads for
+pedigree and genotype data with various format options, followed by
+quality control validation.
 
 ## Usage
 
@@ -17,12 +19,6 @@ modInputUI(id)
 ## Value
 
 A `div` object containing the data input UI.
-
-## Details
-
-Creates user interface for data input including file uploads for
-pedigree and genotype data with various format options, followed by
-quality control validation.
 
 ## See also
 

@@ -1,6 +1,8 @@
 # Create Founder Statistics HTML Table
 
-Copyright(c) 2017-2025 R. Mark Sharp This file is part of nprcgenekeepr
+Generates an HTML table displaying founder statistics including counts
+of known founders, male founders, female founders, founder equivalents
+(FE), and founder genome equivalents (FG).
 
 ## Usage
 
@@ -30,12 +32,6 @@ makeFounderStatsTable(founderStats)
 ## Value
 
 Character string containing HTML table markup.
-
-## Details
-
-Generates an HTML table displaying founder statistics including counts
-of known founders, male founders, female founders, founder equivalents
-(FE), and founder genome equivalents (FG).
 
 ## See also
 
