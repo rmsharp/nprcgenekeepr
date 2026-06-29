@@ -19,7 +19,7 @@
 #'   library(nprcgenekeepr)
 #'   runGeneKeepR()
 #' }
-## Copyright(c) 2017-2025 R. Mark Sharp
+## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 runGeneKeepR <- function(port = 6013L, launch.browser = TRUE) { # nolint: object_name_linter
   lifecycle::deprecate_soft(

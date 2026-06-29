@@ -1,7 +1,7 @@
 #' Run the Modular Version of GeneKeepR
 #'
-#' Copyright(c) 2017-2025 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #'
 #' Launches the modularized Shiny application for testing purposes.
 #' This version uses the new module-based architecture with a Home tab

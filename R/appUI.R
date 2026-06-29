@@ -1,3 +1,6 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
 #' Main Application UI for nprcgenekeepr
 #'
 #' @param siteInfo Named list of site configuration as returned by

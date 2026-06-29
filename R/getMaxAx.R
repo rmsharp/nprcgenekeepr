@@ -3,7 +3,7 @@
 #' Get the maximum of the absolute values of the negative (males) and positive
 #' (female) animal counts and then round that up to the nearest multiple of the
 #' modulus greater than or equal to the maximum value.
-## Copyright(c) 2017-2024 R. Mark Sharp
+## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' @return Integer value equal to the nearest multiple of \code{axModulus} that

@@ -1,7 +1,7 @@
 #' Create Founder Statistics HTML Table
 #'
-#' Copyright(c) 2017-2025 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #'
 #' Generates an HTML table displaying founder statistics including counts
 #' of known founders, male founders, female founders, founder equivalents (FE),

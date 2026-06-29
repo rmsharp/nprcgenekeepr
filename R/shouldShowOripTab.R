@@ -1,7 +1,7 @@
 #' Determine if the ORIP Reporting tab should be displayed
 #'
-#' Copyright(c) 2017-2025 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #'
 #' Determines whether the Oregon (ONPRC)-specific ORIP Reporting tab should be
 #' shown in the application navigation. ORIP (Office of Research Infrastructure

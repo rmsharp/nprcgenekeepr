@@ -1,3 +1,6 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
 #' Remove automatically generated IDs from pedigree
 #'
 #' Identifies automatically generated IDs via \code{isGeneratedUnknownId()},

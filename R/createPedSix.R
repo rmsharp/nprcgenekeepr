@@ -1,6 +1,6 @@
 #' createPedSix makes the pedSix data object
 #'
-## Copyright(c) 2017-2024 R. Mark Sharp
+## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' @return A specific pedigree object used for testing and examples.
 #'

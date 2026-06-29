@@ -2,9 +2,7 @@
 % Please edit documentation in R/getSpeciesGestation.R
 \name{getSpeciesGestation}
 \alias{getSpeciesGestation}
-\title{Copyright(c) 2017-2026 R. Mark Sharp
-This file is part of nprcgenekeepr
-Look up the maximum gestation period (days) for one or more species}
+\title{Look up the maximum gestation period (days) for one or more species}
 \usage{
 getSpeciesGestation(species, gestationTable = NULL, default = 210L)
 }

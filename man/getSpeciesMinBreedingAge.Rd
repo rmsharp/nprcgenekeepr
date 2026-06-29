@@ -2,9 +2,7 @@
 % Please edit documentation in R/getSpeciesMinBreedingAge.R
 \name{getSpeciesMinBreedingAge}
 \alias{getSpeciesMinBreedingAge}
-\title{Copyright(c) 2017-2026 R. Mark Sharp
-This file is part of nprcgenekeepr
-Look up the minimum breeding age (years) for one or more species and sexes}
+\title{Look up the minimum breeding age (years) for one or more species and sexes}
 \usage{
 getSpeciesMinBreedingAge(species, sex, breedingTable = NULL, default = 2)
 }

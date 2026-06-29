@@ -1,3 +1,6 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
 #' Get integer within a range
 #'
 #' Assures that what is returned is an integer within the specified range.

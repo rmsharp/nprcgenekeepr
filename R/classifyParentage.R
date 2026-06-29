@@ -1,5 +1,5 @@
-#' Copyright(c) 2026 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 
 #' Classify how much of each animal's parentage is known
 #'

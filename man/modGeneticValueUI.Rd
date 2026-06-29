@@ -13,8 +13,7 @@ modGeneticValueUI(id)
 A \code{div} containing genetic value analysis UI.
 }
 \description{
-Copyright(c) 2017-2025 R. Mark Sharp
-This file is part of nprcgenekeepr
+Genetic Value Analysis Module - UI Function
 }
 \references{
 Vinson, A. and Raboin, M.J. (2015)

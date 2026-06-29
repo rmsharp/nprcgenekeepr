@@ -27,10 +27,6 @@ containing errors, warnings, changedCols, hasErrors, and hasChangedCols.
 }
 }
 \description{
-Copyright(c) 2017-2025 R. Mark Sharp
-This file is part of nprcgenekeepr
-}
-\details{
 Wrapper function that runs \code{qcStudbook} and processes results into a
 format suitable for Shiny UI display. This function performs two passes:
 first to check for errors, then to get the cleaned data if no errors exist.

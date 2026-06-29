@@ -22,10 +22,6 @@ when finite it is shown inline as \code{FG +/- SE}
 Character string containing HTML table markup.
 }
 \description{
-Copyright(c) 2017-2025 R. Mark Sharp
-This file is part of nprcgenekeepr
-}
-\details{
 Generates an HTML table displaying founder statistics including counts
 of known founders, male founders, female founders, founder equivalents (FE),
 and founder genome equivalents (FG).

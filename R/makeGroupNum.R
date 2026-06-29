@@ -1,6 +1,6 @@
 #' Convenience function to make the initial grpNum list
 #'
-## Copyright(c) 2017-2024 R. Mark Sharp
+## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' @return Initial grpNum list
@@ -16,7 +16,7 @@ makeGroupNum <- function(numGp) {
 
 #' Deprecated alias for makeGroupNum
 #'
-## Copyright(c) 2017-2024 R. Mark Sharp
+## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' \code{makeGrpNum} has been renamed to \code{\link{makeGroupNum}} for

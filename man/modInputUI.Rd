@@ -13,10 +13,6 @@ modInputUI(id)
 A \code{div} object containing the data input UI.
 }
 \description{
-Copyright(c) 2017-2025 R. Mark Sharp
-This file is part of nprcgenekeepr
-}
-\details{
 Creates user interface for data input including file uploads for
 pedigree and genotype data with various format options, followed by
 quality control validation.

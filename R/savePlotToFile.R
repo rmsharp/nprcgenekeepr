@@ -1,7 +1,7 @@
 #' Save Plot to File
 #'
-#' Copyright(c) 2017-2025 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #'
 #' Helper function to save ggplot2 plots to files with consistent settings
 #' and error handling. Supports PNG, PDF, and SVG formats with configurable

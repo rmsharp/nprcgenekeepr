@@ -1,3 +1,6 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
 #' Makes a list object containing kinship summary statistics using the list
 #' object from __createSimKinships__
 #'

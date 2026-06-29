@@ -13,10 +13,6 @@ modGvAndBgDescUI(id)
 A \code{div} object containing the description HTML.
 }
 \description{
-Copyright(c) 2017-2025 R. Mark Sharp
-This file is part of nprcgenekeepr
-}
-\details{
 Creates user interface displaying detailed documentation about
 genetic value analysis and breeding group formation algorithms.
 }

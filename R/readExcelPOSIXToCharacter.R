@@ -1,6 +1,6 @@
 #' Read in Excel file and convert POSIX dates to character
 #'
-## Copyright(c) 2017-2024 R. Mark Sharp
+## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' @return A pedigree file compatible with others in this package.

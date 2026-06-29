@@ -13,14 +13,11 @@ modORIPReportingUI(id)
 A \code{div} object containing the ORIP reporting UI.
 }
 \description{
-Copyright(c) 2017-2025 R. Mark Sharp
-This file is part of nprcgenekeepr
-}
-\details{
 Creates user interface for ORIP (Office of Research Infrastructure Programs)
 reporting. This module will contain formatted reports suitable for submission
 to ORIP as part of primate center grant reporting requirements.
-
+}
+\details{
 The ORIP Reporting tab provides summary statistics and formatted reports
 for submission to the Office of Research Infrastructure Programs. This
 includes:

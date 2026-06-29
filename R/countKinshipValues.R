@@ -1,3 +1,6 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
 #' Counts the number of occurrences of each kinship value seen for a pair of
 #' individuals in a series of simulated pedigrees
 #'

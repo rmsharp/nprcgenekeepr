@@ -1,3 +1,6 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
 #' Summary statistics for imputed kinship values
 #'
 #' Makes a data.frame object containing simulated kinship summary statistics

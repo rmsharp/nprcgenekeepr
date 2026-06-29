@@ -1,6 +1,6 @@
 #' Identifies the founders in a pedigree
 #'
-## Copyright(c) 2017-2024 R. Mark Sharp
+## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Part of Pedigree Curation
 #'
