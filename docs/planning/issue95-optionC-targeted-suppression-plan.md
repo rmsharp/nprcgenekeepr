@@ -394,3 +394,60 @@ Rule (ii) / partial-residual and C1.2 are **resolved here as won't-build** (reve
 ---
 
 *§9 authored Session 234 (2026-06-28), `/grill-me` decision session. The reframing's load-bearing pipeline-ordering claim was verified firsthand (`prepareKinshipOverrides.R:49` precedes `reportGV.R:148`); the numeric evidence re-runs §8B on current master. **This session's deliverable is the decision record + revert plan only — no `R/`, `tests/`, `man/`, `NAMESPACE`, or `data/` content is changed (TDD code-phases N/A).** Implementation (9C) is unblocked as a separate later session.*
+
+---
+
+## 10. Follow-ups 2 & 3 — disposition (Session 236 `/grill-me`)
+
+> **STATUS: RATIFIED — Session 236 (2026-06-28), via `/grill-me`.** The two remaining #95 follow-ups — **2** (both-unknown → one-unknown promotion) and **3** (shared-unknown-parent sib-pair coupling) — are settled. **FU2 = won't-build (not derivable); FU3 = accept (keep the independent per-focal correction) + document the limitation in the maintainer docstring.** Grounded by a read-only workflow (`wf_964f8ea1-4bb`, 6 agents) re-verified firsthand against current `master`. **0 stakeholder corrections / 0 owner overrides.** Decision/design session — no `R/`, `tests/`, `man/`, `NAMESPACE`, or `data/` change (TDD code-phases N/A); the FU3 docstring note is a separate small implementation session (§10C).
+
+### 10A. Firsthand-verified grounding (current `master`, post-S235 revert)
+
+**Code dataflow (re-read firsthand):**
+- Both-unknown animals are excluded from the correction: `oneU <- xor(sireMiss, damMiss)` (`R/correctUnknownParentMeanKinship.R:145`) — `xor(TRUE, TRUE) = FALSE`. Both-unknown get **no** `+ sexMean / 2`.
+- Each one-unknown animal is corrected **independently** in `for (i in which(oneU))` (`:155`): `corrected[focalId] <- min(original[focalId] + sexMean * 0.5, 1)` (`:175`). No coupling across focals.
+- Pipeline ordering (the S234 reframing, still holds post-revert): the override is written into the matrix (`reportGV.R:140` `prepareKinshipOverrides`) **before** `meanKinship` (`:144`) **before** the correction (`:154`); `gvaConvergence.R` is in lockstep (`:148`→`:150`→`:151`). The override value is therefore already counted in the focal's mean kinship before the prior is added.
+- Schema is path-agnostic `id1/id2/kinship`; all option-C side machinery removed (`grep -rn 'suppressIds|overriddenIds|classifyOverrideMissingSide|missingSideFor' R/` → 0 hits; `classifyOverrideMissingSide.R` deleted).
+
+**Numeric reality (firsthand on `qcPed`, 280 probands — reproduces §8A):**
+- 43 one-unknown (**all sire-missing**, 0 dam-missing), 124 both-unknown, 113 both-known.
+- `+ sexMean / 2` prior: median 0.004430 (≈1.34 SD), max 0.005025 (≈1.52 SD), n=43; `SD(original)=0.003309`.
+- FU3 candidate sib-pairs: **2 pairs (4 animals)** — `KY0D3C`/`HN5YTI` (known dam `6OL4PZ`); `JPKPJC`/`PUS6EL` (known dam `OOJ8A6`). **Each shares a known *dam* and both miss the *sire*** — so whether they share the *same* unknown sire is **unknowable** (two offspring of one dam can have different unknown sires). The "shared unknown parent" premise is itself undetectable.
+
+### 10B. Ratified decisions
+
+**D1 (FU2 — both-unknown → one-unknown promotion): WON'T-BUILD (not derivable).**
+- *Rationale:* an override is path-agnostic (`id1/id2/kinship`) — a kinship value cannot identify which of the two missing parents it informs; the side-carrying column (`missingSideFor`) was removed in the S235 revert (the same blocker that killed follow-up 1). Promotion conflates "I have one relatedness observation" with "I now know a parent's identity" — a category error. Under the reframing the override is already in the matrix, so layering a whole ~1.34 SD prior on a "promoted" side over-credits. No conservation-genetics standard reclassifies parentage from a kinship value (PMx keeps parentage pedigree-only).
+- *Disposition:* not built. A genuine promotion feature would be a **separate dedicated parentage-reclassification issue** (a side-identifying mechanism or molecular parentage + a two-missing-sides joint model + studbook-authority rules), out of scope for #95. Documented as considered-and-not-built in the maintainer docstring (§10C).
+
+**D2 (FU3 — shared-unknown-parent sib coupling): ACCEPT (keep the independent per-focal loop) + DOCUMENT.**
+- *Rationale:* the premise is undetectable (the unrecorded parent has no id; sharing a known dam does not establish a shared unknown sire — see 10A) and the effect is negligible (~9% of one-unknown animals in candidate pairs; over-count small vs. the prior's own magnitude and below the genome-uniqueness sampling-noise floor `guSE`; residual ~1/N under the reframing). No conservation-genetics standard couples sib priors; per-individual is the norm. Coupling would require turning scalar `sexMean` into a pair-decomposable model — the machinery S234 found moot for rule (ii).
+- *Disposition:* behavior unchanged; document the limitation in the maintainer docstring (§10C).
+
+**D3 (documentation surface): DOCSTRING ONLY (maintainer-facing).** Add the note to the `@noRd` docstring of `correctUnknownParentMeanKinship.R`; leave the user-facing helpText / `genetic_value.html` as-is (existing copy already states that one-unknown mean kinship is an estimate that tends to underestimate relatedness — Vinson & Raboin 2015). Avoids touching the pinned `test_kinshipOverrideDocs.R`. A user-facing note about a negligible, unactionable over-estimate would add noise, not clarity.
+
+**D4 (issue #95 disposition): CLOSE after the FU3 docstring note lands.** This session records the decisions and posts a keyword-safe #95 comment (verify #95 OPEN after). The FU3 docstring session (§10C) adds the note and then **deliberately** closes #95 as its last step (authored keyword-safe, posted via `gh api`, state verified — Learning 215/217/218). A future molecular-parentage feature would be a fresh issue, not this one.
+
+### 10C. FU3 docstring note — implementation plan (separate small session)
+
+**Scope:** maintainer docstring only. One file: `R/correctUnknownParentMeanKinship.R`. No behavior change.
+
+**What to add and where:** insert a short paragraph after the existing second prose paragraph (currently ending "… that is what `sexMean` averages." at `:102`), before the `@param` block. Recommended text (covers both FU2 and FU3 as considered-and-not-built):
+
+> Each one-unknown animal is corrected independently. Two such animals that share the same unrecorded parent (for example two offspring of one known dam, each with an unknown sire) therefore each receive the full `sexMean / 2` prior, a small over-estimate of their joint relatedness. This shared-unknown-parent coupling is deliberately not modelled: the unrecorded parent has no id, so whether two animals share it cannot be determined from the pedigree, and the effect is negligible at colony scale (issue #95 follow-up 3 — considered, not built). For the same path-agnostic reason an outside kinship override never reclassifies a both-unknown animal to one-unknown: a kinship value cannot identify which parent it informs (issue #95 follow-up 2 — not derivable from the `id1`/`id2`/`kinship` schema).
+
+**DONE looks like:** the docstring carries the note; no behavior change; the package still loads and documents.
+
+**Verify:** `devtools::document()` is a no-op for `@noRd` (no `.Rd` generated — nothing to regenerate); `spell_check_package(".")` = 0 (hand-add any new technical word to the wordlist — do **not** run `update_wordlist`, per [[avoid-reconcile-tools-on-curated-files]]); a clean regression read (no test pins this `@noRd` docstring — confirm `test_kinshipOverrideDocs.R` does not reach into this file); `devtools::check(vignettes=FALSE)` → 0/0/0.
+
+**TDD:** likely **N/A** (a `@noRd` docstring has no generated `.Rd` and no test pins it). If the implementer wants a RED, the only available pin is a `grep`-style content assertion — optional. **Phase-3E:** N/A (no runtime behavior change). **Then deliberately close #95** (keyword-safe `gh api` comment + close; verify state).
+
+**Dragon:** do **not** touch the user-facing helpText / `genetic_value.html` — that trips `test_kinshipOverrideDocs.R` and pulls in a larger lockstep change. D3 scoped this to the docstring on purpose.
+
+### 10D. Issue #95 disposition (summary)
+
+All #95 follow-ups are now dispositioned: FU1 / rule (ii) / C1.2 = won't-build (§9, S234); **FU2 = won't-build (D1); FU3 = accept + document (D2).** #95 has no remaining design questions — only the FU3 docstring note (§10C). #95 **closes when that note lands** (D4). #9 and #13 stay closed.
+
+---
+
+*§10 authored Session 236 (2026-06-28), `/grill-me` decision session. Grounded by read-only workflow `wf_964f8ea1-4bb` (6 agents; the synthesis step degenerated to placeholder output and was recovered from the agent transcripts) and re-verified firsthand against current `master` (code dataflow + `qcPed` numerics). **Deliverable is the decision record only — no `R/`, `tests/`, `man/`, `NAMESPACE`, or `data/` change (TDD code-phases N/A).** The FU3 docstring note (§10C) is a separate small implementation session.*
