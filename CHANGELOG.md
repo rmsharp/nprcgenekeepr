@@ -15,6 +15,34 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-29 — Re-establish the local CRAN `--as-cran` gate on current master (Session 240)
+
+- **Deliverable (owner pick — “walk through the steps that remain” for
+  CRAN → “run the local re-gate now”):** re-ran `R CMD build` +
+  `R CMD check --as-cran --timings` on current `master` (2.0.0) because
+  the documented S134 `0/0/2` gate certified a tree ~74 commits stale
+  (kinship-overrides + FG-SE validation + S238 lint + S239 doc-tag strip
+  all landed after it, touching most of `R/`, all `man/`, NEWS, `data/`,
+  ~50 test files, and the vignettes). **VERIFICATION session — TDD
+  code-phases N/A. 0 corrections / 0 overrides.**
+- **Result: GREEN.** `Status: 2 NOTEs` = 0 ERROR / 0 WARNING / 2 NOTE,
+  both the documented false-positives (CRAN incoming-feasibility
+  “archived / new submission”; local HTML-tidy+V8 manual note). No new
+  notes — the S134 gate still holds on current master.
+- **Timing (the archival cause) intact but grew with the suite:**
+  examples 19→22s, donttest 19→22s, tests 43→74s (suite 1853→3173
+  assertions), vignette rebuild 16→24s. Still inside CRAN limits; Phase
+  5b (win-builder/R-hub on slower hardware) remains the true
+  timing-retirement step.
+- **Surfaced (separate deliverable, not fixed) — 3 README badge
+  defects** (CRAN-relevant since `README.md` ships): `README.Rmd:18`
+  CRAN grand-total downloads points to the wrong package (`kableExtra`);
+  `:19` malformed markdown (stray leading `[`); `:20` bogus prefix-only
+  DOI (`10.32614`). Fixes + the owner’s DOI decision documented in
+  `SESSION_NOTES.md`.
+- **No package change** (verification only); build artifacts removed;
+  close-out docs to master. See `PROJECT_LEARNINGS.md` Learning 226.
+
 ### 2026-06-29 — Remove development-process tags from published documentation (Session 239)
 
 - **Deliverable (owner request):** the owner observed that user-facing

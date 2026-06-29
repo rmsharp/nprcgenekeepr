@@ -55,6 +55,20 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-06-29--re-establish-the-local-cran---as-cran-gate-on-current-master-session-240">2026-06-29 — Re-establish the local CRAN <code>--as-cran</code> gate on current master (Session 240)<a class="anchor" aria-label="anchor" href="#id_2026-06-29--re-establish-the-local-cran---as-cran-gate-on-current-master-session-240"></a></h3>
+<ul><li>
+<strong>Deliverable (owner pick — “walk through the steps that remain” for CRAN → “run the local re-gate now”):</strong> re-ran <code>R CMD build</code> + <code>R CMD check --as-cran --timings</code> on current <code>master</code> (2.0.0) because the documented S134 <code>0/0/2</code> gate certified a tree ~74 commits stale (kinship-overrides + FG-SE validation + S238 lint + S239 doc-tag strip all landed after it, touching most of <code>R/</code>, all <code>man/</code>, NEWS, <code>data/</code>, ~50 test files, and the vignettes). <strong>VERIFICATION session — TDD code-phases N/A. 0 corrections / 0 overrides.</strong>
+</li>
+<li>
+<strong>Result: GREEN.</strong> <code>Status: 2 NOTEs</code> = 0 ERROR / 0 WARNING / 2 NOTE, both the documented false-positives (CRAN incoming-feasibility “archived / new submission”; local HTML-tidy+V8 manual note). No new notes — the S134 gate still holds on current master.</li>
+<li>
+<strong>Timing (the archival cause) intact but grew with the suite:</strong> examples 19→22s, donttest 19→22s, tests 43→74s (suite 1853→3173 assertions), vignette rebuild 16→24s. Still inside CRAN limits; Phase 5b (win-builder/R-hub on slower hardware) remains the true timing-retirement step.</li>
+<li>
+<strong>Surfaced (separate deliverable, not fixed) — 3 README badge defects</strong> (CRAN-relevant since <code>README.md</code> ships): <code>README.Rmd:18</code> CRAN grand-total downloads points to the wrong package (<code>kableExtra</code>); <code>:19</code> malformed markdown (stray leading <code>[</code>); <code>:20</code> bogus prefix-only DOI (<code>10.32614</code>). Fixes + the owner’s DOI decision documented in <code>SESSION_NOTES.md</code>.</li>
+<li>
+<strong>No package change</strong> (verification only); build artifacts removed; close-out docs to master. See <code>PROJECT_LEARNINGS.md</code> Learning 226.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-06-29--remove-development-process-tags-from-published-documentation-session-239">2026-06-29 — Remove development-process tags from published documentation (Session 239)<a class="anchor" aria-label="anchor" href="#id_2026-06-29--remove-development-process-tags-from-published-documentation-session-239"></a></h3>
 <ul><li>
 <strong>Deliverable (owner request):</strong> the owner observed that user-facing documentation leaked references to <em>how the code was developed</em> — GitHub issue numbers and “Slice N” vertical-slice jargon (e.g. “issue #82, Slice 1”) — and asked whether their inclusion could be defended. Treated as a question, not an instruction ([[observation-vs-decision]], FM #23): inventoried every reference firsthand, gave an honest defend/concede analysis, then ratified scope via <code>AskUserQuestion</code> = <strong>“Published surfaces only.”</strong> <strong>REFACTOR-class docs-only — no behavior change; TDD RED/GREEN N/A.</strong> <strong>0 corrections / 0 overrides</strong> (1 audit-surfaced reword refinement, self-fixed).</li>
