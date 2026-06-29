@@ -56,8 +56,15 @@ here.
   supersession are reverted before any tagged release. **\#95 stays
   OPEN** for follow-ups **2** (both-unknown→one-unknown) and **3**
   (sib-pair coupling). Branch pushed and **PR \#98** (“Relates to \#95”,
-  base `master`) opened (body keyword-free; \#95 verified OPEN). Next
-  (owner-gated): the S232→S233 arc (watch CI → merge → branch hygiene).
+  base `master`) opened, then **merged** (merge commit `89d6bddd`) after
+  the full R-CMD-check matrix went green — the lone `lint` red was
+  proven pre-existing whole-package noise via the check-run annotations
+  API (none in this PR’s changed files); `#95` verified OPEN post-merge.
+  `master == origin/master`. Branch `issue95-revert-keepall` then
+  **deleted** (local + remote; verify-merged-firsthand against both
+  refs, safe `git branch -d`, `git ls-remote` empty). The revert arc is
+  closed end-to-end: RED → GREEN → PR \#98 → merge `89d6bddd` → branch
+  deleted. **\#95 stays OPEN** (follow-ups 2/3).
 - **Learnings:** Learning 221 (PROJECT_LEARNINGS.md).
 
 ### 2026-06-28 — Grill: rule (ii) / partial-residual → REVERT option C to keep-all (issue \#95, Session 234)

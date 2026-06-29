@@ -14,21 +14,22 @@ revert implementation** ratified by S234 (plan
 `docs/planning/issue95-optionC-targeted-suppression-plan.md` §9C). An
 outside kinship override no longer drops a one-unknown animal’s
 `+ sexMean / 2` unknown-parent prior; it only refines the named kinship
-cell (issue \#13). The option-C suppression machinery is removed.
-**DONE** (implemented, verified, pushed; **PR \#98** opened, OPEN).
-**Strict-TDD DEVELOPMENT session:** RED `034de14b` -\> GREEN `cae27e94`
--\> REFACTOR (none needed) -\> close-out; **all phase gates + the
-pre-RED scope decision via `AskUserQuestion`**; **0 stakeholder
-corrections / 0 owner overrides.** On branch
-**`issue95-revert-keepall`** (off `master` @ `e6930906`). **Started /
-Completed:** 2026-06-28 / 2026-06-28 **Status:** **DONE.** Grounded with
-a 19-agent read-only workflow (`wf_9298eddb-3a4`) that re-verified the
-§9C grep inventory firsthand against current master (complete +
-accurate; empty `planRefsNotFound`) and surfaced the under-specified
-mechanical details + two author’s-call forks; settled the forks via a
-pre-RED `AskUserQuestion` (drop the now-unused `ped`/`candidateIds`;
-ignore – not reject – a stray `missingSideFor`); then RED (8 test files)
--\> GREEN (7 R files + docs + man/NEWS regen). - **Behavior reverted:**
+cell (issue \#13). The option-C suppression machinery is removed. **DONE
+and MERGED to `master`** (PR **\#98**, merge commit `89d6bddd`;
+`master == origin/master == 89d6bddd`). **Strict-TDD DEVELOPMENT
+session:** RED `034de14b` -\> GREEN `cae27e94` -\> REFACTOR (none
+needed) -\> close-out; **all phase gates + the pre-RED scope decision
+via `AskUserQuestion`**; **0 stakeholder corrections / 0 owner
+overrides.** On branch **`issue95-revert-keepall`** (off `master` @
+`e6930906`). **Started / Completed:** 2026-06-28 / 2026-06-28
+**Status:** **DONE.** Grounded with a 19-agent read-only workflow
+(`wf_9298eddb-3a4`) that re-verified the §9C grep inventory firsthand
+against current master (complete + accurate; empty `planRefsNotFound`)
+and surfaced the under-specified mechanical details + two author’s-call
+forks; settled the forks via a pre-RED `AskUserQuestion` (drop the
+now-unused `ped`/`candidateIds`; ignore – not reject – a stray
+`missingSideFor`); then RED (8 test files) -\> GREEN (7 R files + docs +
+man/NEWS regen). - **Behavior reverted:**
 `correctUnknownParentMeanKinship` drops the `overriddenIds` param + the
 suppress guard and corrects EVERY one-unknown animal;
 `prepareKinshipOverrides` drops the
@@ -121,23 +122,18 @@ from NEWS.Rmd (watch pandoc reflow). Carried:
 \[\[push-close-out-docs-to-origin\]\]. **This was a strict-TDD
 DEVELOPMENT session.**
 
-**=\> SUGGESTED NEXT = watch PR \#98 CI to green -\> merge -\> branch
-hygiene (the S232-\>S233 arc).** Branch `issue95-revert-keepall` is
-PUSHED and **PR \#98 (“Relates to \#95”, base `master`) is OPEN** (not
-merged). The S235 push step opened it; its body + \#95-stays-OPEN were
-verified at creation. Next (owner-gated): watch the full R-CMD-check
-matrix to green -\> merge with a merge commit -\> delete the merged
-branch (verify-merged-firsthand against BOTH refs). **Closing-keyword
-discipline (Learning 215/217/218):** the PR body is already
-keyword-free; author any merge-commit message so a plain
-`grep -iE 'clos|fix|resolv'` is EMPTY, keep any such token away from a
-`#N`, and run `gh api repos/O/R/issues/95 --jq .state` at the very end
-(expect OPEN). The lone `lint` CI red is pre-existing whole-package
-noise (prove via the check-run annotations API; none in this PR’s
-changed files). Other live threads (carried): - **\#95 follow-ups 2**
-(both-unknown-\>one-unknown promotion) **/ 3** (sib-pair coupling) – the
-only remaining \#95 genetics work; each a `/grill-me`. - **Other stale
-branches** (`dev`, `module`, `rlabkey-version-floor` local+remote;
+**=\> SUGGESTED NEXT = owner’s pick.** The issue-#95 revert arc is now
+CLOSED end-to-end in S235: RED `034de14b` -\> GREEN `cae27e94` -\>
+close-out -\> push -\> PR **\#98** -\> CI green (lone `lint` red proven
+pre-existing noise via the annotations API) -\> merge `89d6bddd` -\>
+branch deleted (local + remote, verify-merged-firsthand against both
+refs, safe `-d`). `master == origin/master`; the revert is live
+(`classifyOverrideMissingSide.R` gone, `prepareKinshipOverrides` 2-arg,
+zero option-C symbols in `R/`); **\#95 OPEN** (follow-ups 2/3 only); no
+`issue95-*` branches remain. Live threads (carried): - **\#95 follow-ups
+2** (both-unknown-\>one-unknown promotion) **/ 3** (sib-pair coupling) –
+the only remaining \#95 genetics work; each a `/grill-me`. - **Other
+stale branches** (`dev`, `module`, `rlabkey-version-floor` local+remote;
 remote-only `issue8*`/`nprcmanager-master`/`or-replacement`) – a broader
 branch cleanup is a SEPARATE owner-gated session (some may be unmerged
 WIP). - **Systematic whole-package lint pass** (clears the standing
@@ -170,12 +166,13 @@ deleted `test_classifyOverrideMissingSide.R`; edited
 `wf_9298eddb-3a4` (grounding). **NOT committed (standing keep):**
 `PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
 
-**Gotchas:** (1) **The revert is on branch `issue95-revert-keepall` / PR
-\#98 (OPEN), NOT yet on `master`.** Until PR \#98 merges, `master` still
-contains the over-correcting suppression (an override on a one-unknown
-animal STILL wrongly drops its `+ sexMean / 2` prior on `master`). (2)
-**\#95 must STAY OPEN** – the PR is **“Relates to \#95”**, not “Closes”;
-follow-ups 2/3 remain; \#9/#13 stay CLOSED. (3)
+**Gotchas:** (1) **The revert is NOW ON `master`** (PR \#98 merged,
+`master == origin/master == 89d6bddd`): an override no longer drops a
+one-unknown animal’s `+ sexMean / 2` prior. The branch
+`issue95-revert-keepall` is merged **AND deleted** (local + remote;
+`git ls-remote` empty, tracking ref pruned) – the revert arc is closed
+end-to-end. (2) **\#95 must STAY OPEN** – the PR is **“Relates to
+\#95”**, not “Closes”; follow-ups 2/3 remain; \#9/#13 stay CLOSED. (3)
 **`reportGV`/`gvaConvergence` share `prepareKinshipOverrides()`** (now
 2-arg, returns `list(kmat)`) – change the HELPER, never re-inline. The
 module fallback paths (`modBreedingGroups`/`modSummaryStats`) still use
