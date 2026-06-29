@@ -23,11 +23,12 @@ The list containing the founder equivalents,
 mean contributions to the current descendants and \code{r} is the mean
 number of founder alleles retained in the gene dropping experiment.
 
-\code{FE} is deterministic and always returned. \code{FG} is \code{NA} (with a
-warning) when a contributing founder (\code{p > 0}) is retained in zero of the
-gene-drop iterations (\code{r == 0}), which would otherwise collapse \code{FG}
-silently to 0; raise the number of iterations. See \code{\link{calcFGSE}} for
-the sampling standard error of \code{FG}.
+\code{FE} is deterministic and always returned. \code{FG} is \code{NA}
+(with a warning) when a contributing founder (\code{p > 0}) is retained
+in zero of the gene-drop iterations (\code{r == 0}), which would
+otherwise collapse \code{FG} silently to 0; raise the number of
+iterations. See \code{\link{calcFGSE}} for the sampling standard error
+of \code{FG}.
 }
 \description{
 Part of the Genetic Value Analysis

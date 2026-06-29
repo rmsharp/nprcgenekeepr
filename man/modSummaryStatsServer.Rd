@@ -39,9 +39,10 @@ When the module recomputes kinship from the pedigree (the usual path), the
 overrides are applied to that matrix, so the relationship table and the
 kinship CSV export reflect the supplied values regardless of tab order.
 The override moves the kinship \emph{value} only; the \code{relation}
-\emph{label} stays pedigree-derived (it is computed from pedigree structure,
-not from the kinship value). Overridden pairs are flagged with a logical
-\code{overridden} column in the relationship table (issue #13 item-3).
+\emph{label} stays pedigree-derived (it is computed from pedigree
+structure, not from the kinship value). Overridden pairs are flagged
+with a logical \code{overridden} column in the relationship table
+(issue #13 item-3).
 \code{NULL} (the default) is a no-op.}
 }
 \value{
