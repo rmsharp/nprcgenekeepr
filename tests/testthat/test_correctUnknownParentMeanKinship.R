@@ -263,30 +263,28 @@ test_that("correctUnknownParentMeanKinship honors a configurable gestationDefaul
 })
 
 # ---------------------------------------------------------------------------
-# Issue #95 option C, Slice 1 (RATIFIED S227): C3 redefines the `overriddenIds`
-# contract from "ids carrying an override" to "the set whose +sexMean/2 to
-# suppress". The function's guard is UNCHANGED -- this characterizes that a
-# STRICT SUBSET suppresses only those ids while excluded one-unknown animals
-# keep their prior (so reportGV can pass the missing-side subset for option C),
-# and the FULL set still reproduces blanket-A (D10).
+# Issue #95 revert (RATIFIED S234, implemented S235): the option-C / D11 blanket
+# supersession is reverted to KEEP-ALL. correctUnknownParentMeanKinship no longer
+# takes an `overriddenIds` argument and corrects EVERY one-unknown animal -- an
+# override refines a kinship cell (issue #13) but never drops a focal's
+# +sexMean/2 prior. See docs/planning/issue95-optionC-targeted-suppression-plan
+# .md section 9.
 # ---------------------------------------------------------------------------
 
-test_that("correctUnknownParentMeanKinship suppresses exactly the ids passed as overriddenIds (option C, C3)", {
-  ## strict subset: only foc_sire suppressed; foc_dam keeps its +sexMean/2
-  res <- nprcgenekeepr:::correctUnknownParentMeanKinship(
-    orchImk, orchPed,
-    overriddenIds = "foc_sire"
+test_that("correctUnknownParentMeanKinship no longer accepts an overriddenIds argument", {
+  expect_error(
+    nprcgenekeepr:::correctUnknownParentMeanKinship(
+      orchImk, orchPed,
+      overriddenIds = "foc_sire"
+    ),
+    "unused argument"
   )
-  expect_equal(res$indivMeanKin[["foc_sire"]], 0.05) # suppressed -> unchanged
-  expect_equal(res$indivMeanKin[["foc_dam"]], 0.30) # excluded -> keeps prior
 })
 
-test_that("correctUnknownParentMeanKinship with the full one-unknown set reproduces blanket-A (D10)", {
-  res <- nprcgenekeepr:::correctUnknownParentMeanKinship(
-    orchImk, orchPed,
-    overriddenIds = c("foc_sire", "foc_uid", "foc_dam")
-  )
-  expect_equal(res$indivMeanKin[["foc_sire"]], 0.05)
-  expect_equal(res$indivMeanKin[["foc_uid"]], 0.05)
-  expect_equal(res$indivMeanKin[["foc_dam"]], 0.05)
+test_that("correctUnknownParentMeanKinship corrects every one-unknown animal (keep-all)", {
+  res <- nprcgenekeepr:::correctUnknownParentMeanKinship(orchImk, orchPed)
+  ## every one-unknown animal keeps its +sexMean/2 prior; none is suppressed
+  expect_gt(res$indivMeanKin[["foc_sire"]], orchImk[["foc_sire"]])
+  expect_gt(res$indivMeanKin[["foc_uid"]], orchImk[["foc_uid"]])
+  expect_gt(res$indivMeanKin[["foc_dam"]], orchImk[["foc_dam"]])
 })
