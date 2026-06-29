@@ -492,8 +492,8 @@ test_that("reportGV carries a scalar fgSE alongside fg (issue #82 Slice 3)", {
 #  - D10: the no-override path is byte-identical to today.
 #  - D5: a non-proband override id is warn-dropped, never aborting the run.
 #  - Keep-all (RATIFIED S234, revert of D11): an override REFINES a kinship cell
-#    but NEVER drops a focal's +sexMean/2 prior -- every one-unknown animal keeps
-#    its correction, and an overridden animal stays a valid cohort peer.
+#    but NEVER drops a focal's +sexMean/2 prior -- every one-unknown animal
+#    keeps its correction, and an overridden animal stays a valid cohort peer.
 # Expected values are recomputed independently in base R from the *overridden*
 # matrix so the assertions do not depend on the implementation. qcPed has no
 # species column (default cutoff 2 years, gestation 210 days) and all 43

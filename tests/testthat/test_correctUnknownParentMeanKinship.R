@@ -263,12 +263,11 @@ test_that("correctUnknownParentMeanKinship honors a configurable gestationDefaul
 })
 
 # ---------------------------------------------------------------------------
-# Issue #95 revert (RATIFIED S234, implemented S235): the option-C / D11 blanket
-# supersession is reverted to KEEP-ALL. correctUnknownParentMeanKinship no longer
-# takes an `overriddenIds` argument and corrects EVERY one-unknown animal -- an
-# override refines a kinship cell (issue #13) but never drops a focal's
-# +sexMean/2 prior. See docs/planning/issue95-optionC-targeted-suppression-plan
-# .md section 9.
+# Issue #95 revert (RATIFIED S234, implemented S235): the option-C / D11
+# blanket supersession is reverted to KEEP-ALL. correctUnknownParentMeanKinship
+# no longer takes an `overriddenIds` argument and corrects EVERY one-unknown
+# animal -- an override refines a kinship cell (issue #13) but never drops a
+# focal's +sexMean/2 prior. See the issue95 targeted-suppression plan section 9.
 # ---------------------------------------------------------------------------
 
 test_that("correctUnknownParentMeanKinship no longer accepts an overriddenIds argument", {

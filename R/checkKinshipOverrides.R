@@ -20,14 +20,10 @@
 #' \code{\link{applyKinshipOverrides}} once the matrix diagonal is known.
 #'
 #' @param overrides data.frame with id columns \code{id1} and \code{id2} and a
-#' numeric \code{kinship} column; each row is one off-diagonal pair. An optional
-#' \code{missingSideFor} column (issue #95 option C) may name, per row, which of
-#' \code{id1} / \code{id2} is the one-unknown focal whose MISSING-side
-#' relatedness the override stands in for (blank / NA = known-side); each
-#' non-blank value must equal that row's \code{id1} or \code{id2}.
+#' numeric \code{kinship} column; each row is one off-diagonal pair. Any extra
+#' columns are ignored.
 #' @return The validated \code{overrides} data.frame with \code{id1} and
-#' \code{id2} coerced to character, and an optional \code{missingSideFor}
-#' column normalized (NA -> "") when present.
+#' \code{id2} coerced to character.
 #' @export
 #' @examples
 #' overrides <- data.frame(
@@ -66,23 +62,6 @@ checkKinshipOverrides <- function(overrides) {
     dup <- unique(key[duplicated(key)])
     stop("Kinship overrides contain duplicated (unordered) pair(s): ",
       paste(gsub("\r", "-", dup), collapse = ", "), ".")
-  }
-  ## issue #95 option C: an optional missingSideFor column names which of the
-  ## row's two ids is the one-unknown focal whose MISSING side this override
-  ## stands in for (blank / NA = known-side). Structural check only -- the
-  ## semantic "is it really one-unknown" test is the caller's job. The
-  ## unordered-pair dedup key is unchanged (C1.2: no two-sides-per-pair).
-  if ("missingSideFor" %in% names(overrides)) {
-    side <- as.character(overrides$missingSideFor)
-    side[is.na(side)] <- ""
-    named <- nzchar(side)
-    bad <- named & side != overrides$id1 & side != overrides$id2
-    if (any(bad)) {
-      stop("Kinship overrides 'missingSideFor' must name id1 or id2 of the ",
-        "same row (or be blank); offending value(s): ",
-        toString(unique(side[bad])), ".")
-    }
-    overrides$missingSideFor <- side
   }
   ## off-diagonal kinship for a non-inbred pair cannot exceed 0.5 (warn here;
   ## the exact per-pair bound is enforced in applyKinshipOverrides, D6)
