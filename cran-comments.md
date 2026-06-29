@@ -35,7 +35,8 @@ Local `R CMD check --as-cran` (macOS, R 4.6.0) on the built 2.0.0 tarball:
   as issues were not corrected in time." This is expected for the resubmission;
   the timing cause is addressed above. This note also reports possibly-misspelled
   words in DESCRIPTION (for example "Raboin" -- an author surname -- "EHR",
-  "LabKey", "studbooks", and "kinships") and the reference URL
+  "LabKey", "kinships", and the rhesus-macaque scientific name "Macaca mulatta")
+  and the reference URL
   <https://pmc.ncbi.nlm.nih.gov/articles/PMC4671785/>: the words are all spelled
   correctly, and the URL returns 403 to automated checkers but is reachable in a
   browser.
