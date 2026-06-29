@@ -491,10 +491,9 @@ test_that("reportGV carries a scalar fgSE alongside fg (issue #82 Slice 3)", {
 # GV mean-kinship rankings from a script. Properties pinned:
 #  - D10: the no-override path is byte-identical to today.
 #  - D5: a non-proband override id is warn-dropped, never aborting the run.
-#  - D11 (RATIFIED S214, blanket supersession): the issue-#9 +sexMean/2 add is
-#    suppressed for any overridden one-unknown animal (corrected == original),
-#    while non-overridden one-unknown animals keep their correction and the
-#    overridden animal stays a valid cohort peer (no cascade).
+#  - Keep-all (RATIFIED S234, revert of D11): an override REFINES a kinship cell
+#    but NEVER drops a focal's +sexMean/2 prior -- every one-unknown animal
+#    keeps its correction, and an overridden animal stays a valid cohort peer.
 # Expected values are recomputed independently in base R from the *overridden*
 # matrix so the assertions do not depend on the implementation. qcPed has no
 # species column (default cutoff 2 years, gestation 210 days) and all 43
@@ -502,15 +501,15 @@ test_that("reportGV carries a scalar fgSE alongside fg (issue #82 Slice 3)", {
 # ---------------------------------------------------------------------------
 
 # Independent base-R one-unknown correction on a given (possibly overridden)
-# mean-kinship vector, applying D11 blanket-A suppression for ids in `overridden`.
-i13_correctBlanketA <- function(ped, original, probands, overridden) {
+# mean-kinship vector. Keep-all (issue #95 revert, S234): EVERY one-unknown
+# animal is corrected -- no override ever suppresses the +sexMean/2 add.
+i13_correctKeepAll <- function(ped, original, probands) {
   isU <- function(x) is.na(x) | nprcgenekeepr:::isGeneratedUnknownId(x)
   sireMiss <- isU(ped$sire)
   oneU <- xor(sireMiss, isU(ped$dam))
   corrected <- original
   for (i in which(oneU)) {
     id <- as.character(ped$id[i])
-    if (id %in% overridden) next # D11 blanket-A: skip the +sexMean/2 add
     bf <- ped$birth[i]
     cand <- ped$sex == "M" & !is.na(ped$birth) &
       ped$birth <= (bf - 365L * 2L) &
@@ -522,31 +521,6 @@ i13_correctBlanketA <- function(ped, original, probands, overridden) {
     corrected[id] <- min(original[id] + mean(original[cohort]) / 2, 1)
   }
   corrected
-}
-
-# Issue #95 option C (RATIFIED S227): the independent option-C expectation is
-# i13_correctBlanketA applied to the OPTION-C suppress set -- the one-unknown
-# focals named by a non-blank `missingSideFor` (case a). This is computed here
-# independently of the package helper (classifyOverrideMissingSide) so the
-# assertions do not depend on the implementation.
-i13_optionCsuppress <- function(ped, probands, overrides) {
-  if (is.null(overrides) || nrow(overrides) == 0L ||
-    !"missingSideFor" %in% names(overrides)) {
-    return(character(0L))
-  }
-  isU <- function(x) is.na(x) | nprcgenekeepr:::isGeneratedUnknownId(x)
-  oneU <- xor(isU(ped$sire), isU(ped$dam))
-  oneUids <- as.character(ped$id[oneU])
-  side <- as.character(overrides$missingSideFor)
-  side[is.na(side)] <- ""
-  claimed <- unique(side[nzchar(side)])
-  intersect(claimed, intersect(oneUids, as.character(probands)))
-}
-i13_correctOptionC <- function(ped, original, probands, overrides) {
-  i13_correctBlanketA(
-    ped, original, probands,
-    i13_optionCsuppress(ped, probands, overrides)
-  )
 }
 
 test_that("reportGV no-override path is byte-identical to today (issue #13 D10)", {
@@ -561,7 +535,7 @@ test_that("reportGV no-override path is byte-identical to today (issue #13 D10)"
   expect_equal(b$kinship, a$kinship)
 })
 
-test_that("reportGV applies an outside kinship override and suppresses the #9 add for the overridden one-unknown animal (issue #13 Slice 1, D11)", {
+test_that("reportGV applies an outside kinship override and KEEPS the #9 add for the overridden one-unknown animal (issue #95 keep-all revert)", {
   ped <- nprcgenekeepr::qcPed
   probands <- as.character(ped$id)
   isU <- function(x) is.na(x) | nprcgenekeepr:::isGeneratedUnknownId(x)
@@ -580,13 +554,13 @@ test_that("reportGV applies an outside kinship override and suppresses the #9 ad
   ov <- data.frame(id1 = X, id2 = Y, kinship = 0.25, stringsAsFactors = FALSE)
 
   ## independent expectation: apply (X, Y) = 0.25, recompute mean kinship, then
-  ## the blanket-A #9 correction (X suppressed).
+  ## the keep-all #9 correction (every one-unknown animal keeps +sexMean/2).
   kmat <- nprcgenekeepr:::filterKinMatrix(
     probands, kinship(ped$id, ped$sire, ped$dam, ped$gen)
   )
   kmat[X, Y] <- kmat[Y, X] <- 0.25
   original <- meanKinship(kmat)[probands]
-  expected <- i13_correctBlanketA(ped, original, probands, c(X, Y))
+  expected <- i13_correctKeepAll(ped, original, probands)
 
   gvr <- suppressMessages(
     reportGV(ped, guIter = 100L, kinshipOverrides = ov)
@@ -602,17 +576,14 @@ test_that("reportGV applies an outside kinship override and suppresses the #9 ad
   expect_equal(gvr$kinship[X, Y], 0.25)
   expect_equal(gvr$kinship[Y, X], 0.25)
 
-  ## (D11 part 1) the overridden one-unknown animal omits +sexMean/2
-  expect_equal(imk[[X]], original[[X]])
-  ## (D11 part 2) a non-overridden one-unknown animal still gets its correction
+  ## the overridden one-unknown animal KEEPS its +sexMean/2 prior (the opposite
+  ## of the reverted rule (i); the override refines `original`, not the prior)
+  expect_gt(imk[[X]], original[[X]])
+  ## a non-overridden one-unknown animal still gets its correction
   expect_gt(imk[[Z]], original[[Z]])
-  ## (D11 part 4) no-cascade: vs the not-suppressed model, only X differs
-  expNo <- i13_correctBlanketA(ped, original, probands, character(0L))
-  differ <- probands[abs(expected[probands] - expNo[probands]) > 1e-12]
-  expect_identical(differ, X)
 })
 
-test_that("reportGV keeps an overridden animal as a valid cohort peer (issue #13 D11 part 3)", {
+test_that("reportGV keeps an overridden animal as a valid cohort peer (issue #95 keep-all)", {
   ped <- nprcgenekeepr::qcPed
   probands <- as.character(ped$id)
   X <- "0K7VJN" # male one-unknown, a peer in Z's male cohort
@@ -629,74 +600,9 @@ test_that("reportGV keeps an overridden animal as a valid cohort peer (issue #13
     base$report$indivMeanKin, as.character(base$report$id)
   )
   ## Z's correction rises because peer X's override-raised value flows through
-  ## its sexMean cohort (legit raw information only -- the spurious +sexMean/2 is
-  ## NOT propagated, D11 no-cascade).
+  ## its sexMean cohort (the cell-write refines `original`, which the cohort
+  ## averages over).
   expect_gt(imkOver[[Z]], imkBase[[Z]])
-})
-
-# ---------------------------------------------------------------------------
-# Issue #95 option C, Slice 1 (RATIFIED S227): targeted suppression. With a
-# `missingSideFor` column, reportGV suppresses the +sexMean/2 prior ONLY for a
-# one-unknown animal whose override stands in for its MISSING side (case a);
-# a known-side override (blank missingSideFor, case b) now KEEPS the prior --
-# the case blanket-A (D11) wrongly discarded. No side column => blanket-A (D10).
-# Fixture (X, Y): X = 0K7VJN is sire-missing (one-unknown), Y = N2XF08 is known.
-# ---------------------------------------------------------------------------
-
-test_that("reportGV with a known-side override (blank missingSideFor) KEEPS the +sexMean/2 prior (issue #95 option C, case b)", {
-  ped <- nprcgenekeepr::qcPed
-  probands <- as.character(ped$id)
-  X <- "0K7VJN" # male, one-unknown (sire missing)
-  Y <- "N2XF08" # known parentage
-  ## case (b): the override informs a KNOWN-side pair -> missingSideFor blank
-  ov <- data.frame(
-    id1 = X, id2 = Y, kinship = 0.25, missingSideFor = "",
-    stringsAsFactors = FALSE
-  )
-  kmat <- nprcgenekeepr:::filterKinMatrix(
-    probands, kinship(ped$id, ped$sire, ped$dam, ped$gen)
-  )
-  kmat[X, Y] <- kmat[Y, X] <- 0.25
-  original <- meanKinship(kmat)[probands]
-  ## independent option-C expectation: X is NOT in the suppress set -> corrected
-  expected <- i13_correctOptionC(ped, original, probands, ov)
-  gvr <- suppressMessages(
-    reportGV(ped, guIter = 100L, kinshipOverrides = ov)
-  )
-  imk <- stats::setNames(
-    gvr$report$indivMeanKin, as.character(gvr$report$id)
-  )[probands]
-  expect_equal(unname(imk[probands]), unname(expected[probands]))
-  ## the discriminating assertion: X KEEPS its prior (blanket-A today drops it)
-  expect_gt(imk[[X]], original[[X]])
-  expect_equal(imk[[X]], expected[[X]])
-})
-
-test_that("reportGV with a missing-side override (missingSideFor = focal) suppresses the prior (issue #95 option C, case a)", {
-  ped <- nprcgenekeepr::qcPed
-  probands <- as.character(ped$id)
-  X <- "0K7VJN"
-  Y <- "N2XF08"
-  ## case (a): the override stands in for X's MISSING side -> missingSideFor = X
-  ov <- data.frame(
-    id1 = X, id2 = Y, kinship = 0.25, missingSideFor = X,
-    stringsAsFactors = FALSE
-  )
-  kmat <- nprcgenekeepr:::filterKinMatrix(
-    probands, kinship(ped$id, ped$sire, ped$dam, ped$gen)
-  )
-  kmat[X, Y] <- kmat[Y, X] <- 0.25
-  original <- meanKinship(kmat)[probands]
-  expected <- i13_correctOptionC(ped, original, probands, ov)
-  gvr <- suppressMessages(
-    reportGV(ped, guIter = 100L, kinshipOverrides = ov)
-  )
-  imk <- stats::setNames(
-    gvr$report$indivMeanKin, as.character(gvr$report$id)
-  )[probands]
-  expect_equal(unname(imk[probands]), unname(expected[probands]))
-  ## X is suppressed (case a == blanket-A for X)
-  expect_equal(imk[[X]], original[[X]])
 })
 
 test_that("reportGV warn-drops a non-proband override id rather than aborting the run (issue #13 D5)", {

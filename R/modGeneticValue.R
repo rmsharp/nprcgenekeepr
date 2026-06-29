@@ -71,13 +71,13 @@ modGeneticValueUI <- function(id) {
                  paste("The gene-drop convergence diagnostic gvaConvergence()",
                        "applies these overrides as well, ranking on the",
                        "overridden kinship."),
-                 paste("For an animal missing one parent, add an optional",
-                       "missingSideFor column naming that animal when the",
-                       "override stands in for its missing parent's side, so",
-                       "its unknown-parent kinship correction is dropped only",
-                       "then; leave it blank for a known-side override. A few",
-                       "edge cases (both parents unknown, or siblings sharing",
-                       "an unknown parent) remain a current limitation.")
+                 paste("For an animal missing one parent, an override only",
+                       "refines that pair's kinship value; the unknown-parent",
+                       "correction is kept for every such animal. Mean kinship",
+                       "for a one-parent-unknown animal is an estimate that",
+                       "tends to underestimate relatedness, since the unknown",
+                       "parent's relatives are unrecorded (Vinson & Raboin",
+                       "2015).")
                )
              ),
              wellPanel(

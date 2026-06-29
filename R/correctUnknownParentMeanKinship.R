@@ -114,16 +114,6 @@ getBreedingPeerCohort <- function(focalBirth, focalSpecies, missingSex,
 #' @param gestationDefault optional integer fallback gestation window (days)
 #' passed through to the cohort selection; \code{NULL} uses the built-in 210
 #' days (issue #73 Part 2).
-#' @param overriddenIds character vector of animal ids whose
-#' \code{+ sexMean / 2} correction is to be SUPPRESSED (issue #13 D11; contract
-#' redefined for issue #95 option C, S227, from "ids carrying an override" to
-#' "the set to suppress"). A one-unknown animal in this set keeps its (override-
-#' influenced) mean kinship -- the correction is skipped because a known outside
-#' value supersedes the random-mating prior. Callers pass the full overridden
-#' set for blanket supersession (D11), or, under option C, only the subset whose
-#' override informs the missing parent side (see classifyOverrideMissingSide).
-#' Suppressed animals still serve as peers in other animals' cohorts (membership
-#' is unaffected, so the suppression does not cascade).
 #' @return a list with \code{indivMeanKin} (the corrected vector, names and
 #' order preserved) and \code{flagged} (character vector of ids left
 #' uncorrected for lack of a peer cohort).
@@ -132,8 +122,7 @@ correctUnknownParentMeanKinship <- function(indivMeanKin, ped,
                                             gestationTable = NULL,
                                             breedingTable = NULL,
                                             breedingAgeDefault = NULL,
-                                            gestationDefault = NULL,
-                                            overriddenIds = character(0L)) {
+                                            gestationDefault = NULL) {
   flagged <- character(0L)
   ## Cohort formation needs id/parentage/sex/birth; without them, no correction.
   if (!all(c("id", "sire", "dam", "sex", "birth") %in% names(ped))) {
@@ -165,14 +154,6 @@ correctUnknownParentMeanKinship <- function(indivMeanKin, ped,
   corrected <- indivMeanKin
   for (i in which(oneU)) {
     focalId <- candidateIds[i]
-    if (focalId %in% overriddenIds) {
-      ## Issue #13 D11 (blanket supersession): a known outside kinship value
-      ## supersedes the random-mating +sexMean/2 prior for this one-unknown
-      ## animal, so leave its (override-influenced) mean kinship unchanged. It is
-      ## NOT flagged (it is deliberately uncorrected, not lacking a cohort) and
-      ## still serves as a peer in other animals' cohorts below.
-      next
-    }
     missingSex <- if (sireMiss[i]) "M" else "F"
     cohort <- getBreedingPeerCohort(
       focalBirth = candPed$birth[i],

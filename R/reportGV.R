@@ -63,12 +63,10 @@
 #' not relatedness \emph{r}) applied to the kinship matrix before mean kinship
 #' and the unknown-parent correction (issue #13). \code{NULL} (the default)
 #' leaves the pedigree-derived matrix unchanged. Ids outside the analysis set are
-#' warn-dropped (the run is not aborted); an override on a one-unknown animal
-#' supersedes its \code{+ sexMean / 2} correction. An optional
-#' \code{missingSideFor} column (issue #95 option C) may name, per row, the
-#' one-unknown focal whose MISSING parent side the override stands in for; only
-#' those focals lose the correction (a blank cell, or no column, keeps it --
-#' byte-identical to a 3-column file). See \code{\link{applyKinshipOverrides}}.
+#' warn-dropped (the run is not aborted). An override REFINES the named kinship
+#' cell; it does not suppress the \code{+ sexMean / 2} unknown-parent
+#' correction, which is kept for every animal missing one parent (issue #95
+#' keep-all revert). See \code{\link{applyKinshipOverrides}}.
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
@@ -132,17 +130,15 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
     ped$gen
   ))
 
-  # Issue 13 and issue 95 option C: validate the outside-information overrides,
-  # warn-drop rows naming ids outside the proband matrix (D5), apply survivors
-  # to the matrix BEFORE mean kinship and the issue-9 correction, and compute
-  # the set of one-unknown ids whose +sexMean/2 prior to suppress: the missing-
-  # side focals when a missingSideFor column is present (option C, case a), else
-  # the full overridden set (blanket supersession, D11; byte-identical with no
-  # column, D10). Shared with gvaConvergence via prepareKinshipOverrides so the
-  # report and the convergence diagnostic cannot drift. kinship is untouched.
-  prepared <- prepareKinshipOverrides(kmat, kinshipOverrides, ped, probands)
+  # Issue 13 / issue 95 keep-all revert: validate the outside-information
+  # overrides, warn-drop rows naming ids outside the proband matrix (D5), and
+  # apply the survivors to the matrix BEFORE mean kinship and the issue-9
+  # correction. The override REFINES the named kinship cell; it never suppresses
+  # the +sexMean/2 unknown-parent prior, which is kept for every one-unknown
+  # animal. Shared with gvaConvergence via prepareKinshipOverrides so the report
+  # and the convergence diagnostic cannot drift. kinship is untouched.
+  prepared <- prepareKinshipOverrides(kmat, kinshipOverrides)
   kmat <- prepared$kmat
-  suppressIds <- prepared$suppressIds
 
   # Calculate the mean kinship, and convert to z-scores
   indivMeanKin <- meanKinship(kmat)
@@ -159,8 +155,7 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
       gestationTable = gestationTable,
       breedingTable = breedingTable,
       breedingAgeDefault = breedingAgeDefault,
-      gestationDefault = gestationDefault,
-      overriddenIds = suppressIds
+      gestationDefault = gestationDefault
     )$indivMeanKin
 
   zScores <- scale(indivMeanKin)

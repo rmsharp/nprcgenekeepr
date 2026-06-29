@@ -37,14 +37,14 @@ test_that(paste(
   expect_true(grepl("gvaConvergence", ui, fixed = TRUE))
   expect_true(grepl("applies these overrides", ui, fixed = TRUE))
 
-  ## Item 3c: overrides on an animal missing a parent have edge cases that
-  ## are a current limitation.
-  expect_true(grepl("current limitation", ui, ignore.case = TRUE))
+  ## Issue #95 keep-all revert (S234): an override refines a kinship cell, but
+  ## the unknown-parent correction is KEPT for every animal missing one parent.
+  expect_true(grepl("missing one parent", ui, ignore.case = TRUE))
+  expect_true(grepl("kept", ui, ignore.case = TRUE))
 
-  ## Issue #95 option C (Slice 2): the optional missingSideFor column lets an
-  ## override say which animal's MISSING parent side it informs, so a known-side
-  ## override no longer drops that animal's unknown-parent correction.
-  expect_true(grepl("missingSideFor", ui, fixed = TRUE))
+  ## The honest limitation: mean kinship for a one-unknown animal is an estimate
+  ## that tends to underestimate relatedness (Vinson & Raboin 2015).
+  expect_true(grepl("underestimate", ui, ignore.case = TRUE))
 })
 
 test_that(paste(
@@ -59,10 +59,11 @@ test_that(paste(
   expect_true(grepl("regardless of tab order", txt, fixed = TRUE))
   ## Item 3a: the convergence diagnostic now applies the overrides (S220).
   expect_true(grepl("applies these overrides", txt, ignore.case = TRUE))
-  ## Item 3c: edge cases are a current limitation.
-  expect_true(grepl("limitation", txt, ignore.case = TRUE))
-  ## Issue #95 option C (Slice 2): the optional missingSideFor column.
-  expect_true(grepl("missingSideFor", txt, fixed = TRUE))
+  ## Issue #95 keep-all revert (S234): the correction is kept for every animal
+  ## missing one parent; the honest limitation is the underestimate.
+  expect_true(grepl("missing one parent", txt, ignore.case = TRUE))
+  expect_true(grepl("kept", txt, ignore.case = TRUE))
+  expect_true(grepl("underestimate", txt, ignore.case = TRUE))
 })
 
 test_that(paste(

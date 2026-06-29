@@ -8,16 +8,12 @@ checkKinshipOverrides(overrides)
 }
 \arguments{
 \item{overrides}{data.frame with id columns \code{id1} and \code{id2} and a
-numeric \code{kinship} column; each row is one off-diagonal pair. An optional
-\code{missingSideFor} column (issue #95 option C) may name, per row, which of
-\code{id1} / \code{id2} is the one-unknown focal whose MISSING-side
-relatedness the override stands in for (blank / NA = known-side); each
-non-blank value must equal that row's \code{id1} or \code{id2}.}
+numeric \code{kinship} column; each row is one off-diagonal pair. Any extra
+columns are ignored.}
 }
 \value{
 The validated \code{overrides} data.frame with \code{id1} and
-\code{id2} coerced to character, and an optional \code{missingSideFor}
-column normalized (NA -> "") when present.
+\code{id2} coerced to character.
 }
 \description{
 Checks the structure and domain of an outside-information kinship override

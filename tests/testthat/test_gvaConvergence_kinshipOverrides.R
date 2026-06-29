@@ -2,14 +2,15 @@
 #' This file is part of nprcgenekeepr
 library(testthat)
 
-# Issue #13 item-3 follow-up (S220): gvaConvergence() must honor outside-
-# information kinship overrides the SAME way reportGV() does -- apply them to the
-# (proband-filtered) kinship matrix before mean kinship, AND thread the
-# overridden ids into the issue-#9 one-unknown-parent correction so the
-# +sexMean/2 add is suppressed for an overridden one-unknown animal (D11 blanket
-# supersession). gvaConvergence ranks on the same mean-kinship z-scores reportGV
-# uses; an override that did not reach this pipeline would make the convergence
-# diagnostic disagree with the report it is meant to characterize.
+# Issue #13 item-3 follow-up (S220), revised for the issue #95 keep-all revert
+# (S234): gvaConvergence() must honor outside-information kinship overrides the
+# SAME way reportGV() does -- apply them to the (proband-filtered) kinship matrix
+# before mean kinship via the shared prepareKinshipOverrides() helper. The
+# override REFINES a kinship cell (issue #13); it never suppresses a focal's
+# +sexMean/2 unknown-parent prior -- every one-unknown animal keeps its
+# correction (keep-all). gvaConvergence ranks on the same mean-kinship z-scores
+# reportGV uses; an override that did not reach this pipeline would make the
+# convergence diagnostic disagree with the report it is meant to characterize.
 #
 # Testability note: the override's effect on gvaConvergence's OUTPUT (the
 # convergence curve) is visible only through gene-drop "churn" near the top-k
@@ -19,8 +20,8 @@ library(testthat)
 # uses the gu-bearing convergence fixture; the one-unknown #9 interaction (no
 # per-animal mean kinship is returned by gvaConvergence) is exercised on qcPed,
 # and its NUMERIC correctness is covered by construction-parity with reportGV
-# plus the reportGV D10/D5/D11 tests in test_reportGV.R, because gvaConvergence
-# reuses the identical correctUnknownParentMeanKinship(overriddenIds=) call.
+# plus the reportGV D10/D5/keep-all tests in test_reportGV.R, because
+# gvaConvergence reuses the identical correctUnknownParentMeanKinship() call.
 
 # Exact copy of the convergence fixture (see test_gvaConvergence.R), renamed to
 # avoid a cross-file clash, so this file also runs in isolation. A deterministic
@@ -162,14 +163,14 @@ test_that("gvaConvergence errors on an override above the PSD bound", {
 })
 
 # --------------------------------------------------------------------------
-# (5) reportGV fidelity -- the overriddenIds / issue-#9 path: an override on a
-# real one-unknown-parent rankable animal runs clean and is honored (the
+# (5) reportGV fidelity -- the keep-all / issue-#9 path: an override on a real
+# one-unknown-parent rankable animal runs clean and is honored (the
 # "N kinship override(s) applied." message fires). On qcPed the convergence
 # metrics are gu-free (always 1.0), so the override cannot change the OUTPUT
-# curve there; the #9-suppression NUMERIC is covered by reportGV's D11 tests
-# (test_reportGV.R), since gvaConvergence reuses the identical
-# correctUnknownParentMeanKinship(overriddenIds=) call and returns no per-animal
-# mean kinship of its own.
+# curve there; the keep-all NUMERIC is covered by reportGV's tests
+# (test_reportGV.R) and test_correctUnknownParentMeanKinship.R, since
+# gvaConvergence reuses the identical correctUnknownParentMeanKinship() call and
+# returns no per-animal mean kinship of its own.
 # --------------------------------------------------------------------------
 test_that("gvaConvergence honors an override on a one-unknown-parent animal", {
   ped <- nprcgenekeepr::qcPed
@@ -194,51 +195,4 @@ test_that("gvaConvergence honors an override on a one-unknown-parent animal", {
   # must still converge at the grid floor exactly as the no-override run does
   base <- gvaConvergence(ped, nMax = 200L, grid = c(25L, 50L, 100L), seed = 1L)
   expect_equal(res$convergence, base$convergence)
-})
-
-# --------------------------------------------------------------------------
-# (6) Issue #95 option C, Slice 2 lockstep: gvaConvergence must honor the
-# optional missingSideFor column the SAME way reportGV does -- it now routes
-# overrides through the shared prepareKinshipOverrides() helper, so a known-side
-# (blank) override keeps the focal's +sexMean/2 prior on the convergence path
-# while a missing-side override suppresses it. gvaConvergence returns no
-# per-animal mean kinship, and on qcPed the convergence curve is gu-free
-# (always 1.0), so the numeric keep-vs-suppress is covered by the helper's unit
-# tests (test_prepareKinshipOverrides.R) plus reportGV's option-C tests
-# (test_reportGV.R) -- gvaConvergence and reportGV call the identical helper.
-# This case asserts the convergence path ACCEPTS and runs clean on a
-# missingSideFor-annotated frame (both case a and case b) without aborting.
-# --------------------------------------------------------------------------
-test_that("gvaConvergence accepts a missingSideFor-annotated override (option C lockstep)", {
-  ped <- nprcgenekeepr::qcPed
-  X <- "0K7VJN" # male, one-unknown (sire missing)
-  Y <- "N2XF08" # known parentage
-  isU <- function(x) is.na(x) | nprcgenekeepr:::isGeneratedUnknownId(x)
-  expect_true(all(c(X, Y) %in% as.character(ped$id)))
-  expect_true(xor(isU(ped$sire[ped$id == X]), isU(ped$dam[ped$id == X])))
-
-  grid <- c(25L, 50L, 100L)
-  base <- gvaConvergence(ped, nMax = 200L, grid = grid, seed = 1L)
-
-  # case (b) known-side: blank missingSideFor -> option C KEEPS X's prior
-  ovK <- data.frame(
-    id1 = X, id2 = Y, kinship = 0.25, missingSideFor = "",
-    stringsAsFactors = FALSE
-  )
-  resK <- suppressMessages(gvaConvergence(
-    ped, nMax = 200L, grid = grid, seed = 1L, kinshipOverrides = ovK
-  ))
-  expect_s3_class(resK, "nprcgenekeeprGVConv")
-  expect_equal(resK$convergence, base$convergence) # qcPed gu-free
-
-  # case (a) missing-side: missingSideFor = X -> option C suppresses (= blanket-A)
-  ovM <- data.frame(
-    id1 = X, id2 = Y, kinship = 0.25, missingSideFor = X,
-    stringsAsFactors = FALSE
-  )
-  resM <- suppressMessages(gvaConvergence(
-    ped, nMax = 200L, grid = grid, seed = 1L, kinshipOverrides = ovM
-  ))
-  expect_s3_class(resM, "nprcgenekeeprGVConv")
-  expect_equal(resM$convergence, base$convergence)
 })
