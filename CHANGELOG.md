@@ -48,6 +48,10 @@ here.
 - **Recommendation incorporates owner CRAN guidance:** standardize on
   `@importFrom` over `@import` (8 of 10 holdouts convert mechanically;
   `shiny`/`Matrix` are a verified judgment call).
+- **Tracker (owner-directed):** posted the assessment as a comment on
+  \#102; **closed \#102** (analysis-only deliverable complete) and
+  opened **\#103** to track the staged, defects-first implementation
+  (deferred until after CRAN resubmission).
 
 ### 2026-06-29 — Normalize copyright headers + fix roxygen man-page leak (Session 243)
 

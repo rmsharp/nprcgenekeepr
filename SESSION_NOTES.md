@@ -134,27 +134,33 @@ calibrate severity by rendered impact not volume. Carried as applied:
 \[\[push-close-out-docs-to-origin\]\]. **This was an AUDIT-class
 analysis session – TDD code-phases N/A.**
 
+**Tracker actions (owner-directed, end of S244):** posted the assessment
+as a comment on \#102; **CLOSED \#102** (analysis-only deliverable
+complete) and **OPENED \#103** (“Implement roxygen2 documentation
+harmonization (per S244 audit)”) to track the staged implementation.
+Close comment is keyword-safe (no `closes/fixes/resolves` adjacent to a
+`#N`).
+
 **=\> SUGGESTED NEXT (owner’s pick).** The analysis is delivered; the
-natural next is the **implementation follow-on** for issue \#102 – but
-the owner should first (a) **review the recommendation** in
+natural next is the **implementation follow-on now tracked in issue
+\#103** – but the owner should first **review the recommendation** in
 `docs/audits/ROXYGEN_HARMONIZATION_AUDIT_2026-06-29.md` (esp. the markup
 direction = raw-Rd, the `@param`-before-`@return` reorder, and the §7
-examples carve-out) and (b) decide whether \#102 stays open to track
-implementation or is closed + a new implementation issue opened. When
-implementing, follow the §6 roadmap **mechanical-first and one stage per
-session** (“1 and done”): **Stage 1 (defects D1-D8) is the
-highest-value, mostly-mechanical first slice** – REFACTOR-class for
-pure-doc fixes, but D4/D5 (wrong `@param`/`@return`) and any title-typo
-that changes a `man` title are doc-correctness fixes; none change
-behavior, so likely all REFACTOR (confirm per file). **`R/`+`man/` SHIP
--\> any implementation edit re-stales the `--as-cran` gate (Learning
-226/227) -\> re-gate after each stage.** A roxygen-typo fix changes
-prose -\> re-run `spell_check_package` (hand-add wordlist terms, never
-`update_wordlist`). Carried CRAN thread (owner-run, outward): **Phase
-5b** per `docs/planning/cran-2.0.0-phase5-runbook.md` – prereqs verified
-GREEN through S243 (PAT satisfied; only the owner-confirmable unfiltered
-`rmsharp@me.com` remains); if the owner runs the \#102 implementation
-first, re-gate before Phase 5b since R//man/ will have changed.
+examples carve-out). When implementing \#103, follow the §6 roadmap
+**mechanical-first and one stage per session** (“1 and done”): **Stage 1
+(defects D1-D8) is the highest-value, mostly-mechanical first slice** –
+REFACTOR-class for pure-doc fixes, but D4/D5 (wrong `@param`/`@return`)
+and any title-typo that changes a `man` title are doc-correctness fixes;
+none change behavior, so likely all REFACTOR (confirm per file).
+**`R/`+`man/` SHIP -\> any implementation edit re-stales the `--as-cran`
+gate (Learning 226/227) -\> re-gate after each stage.** A roxygen-typo
+fix changes prose -\> re-run `spell_check_package` (hand-add wordlist
+terms, never `update_wordlist`). Carried CRAN thread (owner-run,
+outward): **Phase 5b** per `docs/planning/cran-2.0.0-phase5-runbook.md`
+– prereqs verified GREEN through S243 (PAT satisfied; only the
+owner-confirmable unfiltered `rmsharp@me.com` remains); if the owner
+runs the \#102 implementation first, re-gate before Phase 5b since
+R//man/ will have changed.
 
 **Key files (this session):** **Created (docs-to-master,
 `.Rbuildignore`d):**
