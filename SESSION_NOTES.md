@@ -7,6 +7,199 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 244 Did
+
+**Deliverable (owner pick = issue \#102):** A written **assessment** of
+roxygen2 documentation-block consistency across all 226 `R/` files,
+recommending a single harmonized convention specific enough for a
+follow-on implementation session. **ANALYSIS ONLY – NOT the edits** (the
+issue scopes implementation as a separate session). **AUDIT-class – TDD
+code-phases N/A** (output is an assessment doc, no production logic).
+**DONE + VERIFIED on `master` (docs-to-master, pushed); 0 stakeholder
+corrections / 0 owner overrides** (1 owner mid-session input: “CRAN
+prefers importFrom over import” – folded into Finding 7). **Started /
+Completed:** 2026-06-29 / 2026-06-29 **Status:** **DONE.** Deliverable =
+`docs/audits/ROXYGEN_HARMONIZATION_AUDIT_2026-06-29.md`. - **Method
+(grounded + fanned-out + adversarially verified +
+firsthand-corrected):** authoritative grep counts over all 226 files -\>
+a 15-agent parallel deep-read (`wf_19a4e4d2-2c5`, one structured record
+per file, 225/226) -\> synthesis -\> an **independent adversarial
+verify** pass -\> firsthand re-verification of every headline claim
+(read the actual `man/*.Rd`, not the agents’ word). - **Headline:** the
+package is **well-documented**; the problem is style **consistency**,
+framed as a two-era CONVERGENCE – legacy files embed copyright
+mid-block + order `@return` before `@param`; the newest files
+(`getSpeciesGestation.R`, `applyKinshipOverrides.R`,
+`hasInvalidIdChar.R`) already follow the cleaner convention. **8
+dimensions** (1 already-consistent, 5 moderate, 2 low) + **8 classes of
+genuine rendered-doc DEFECT** (fix regardless of harmonization). - **The
+recommended convention** (raw-Rd inline markup since it dominates
+1270-to-48; `@param`-before-`@return`; implicit title/description;
+copyright `##` ABOVE the block; `@noRd`-only internals +
+`@keywords internal` only on the pkg doc; **`@importFrom` over
+`@import`** – owner-confirmed CRAN preference, 8/10 holdouts convert
+mechanically, `shiny`/`Matrix` a verified judgment call) + reference
+exemplars + an 8-step mechanical-first implementation roadmap. - **The
+genuine DEFECTS (firsthand-verified, several CRAN-facing):** D1
+`calcGU.R:42` malformed explicit `@description` overrides ~34 lines
+(`man/calcGU.Rd` renders only `\{Genome Uniqueness Functions\}\{\}`); D2
+duplicate `_PACKAGE` (`nprcgenekeepr-package.R:5` +
+`nprcgenekeeper.R:107`); D3 escaped-brace pseudo-Rd lists render
+literally (`convertSexCodes.R:9-15` -\> `man/convertSexCodes.Rd:26-30`,
+also `checkParentAge`, `qcStudbook`, …); D4 `@param` for a nonexistent
+`candidates` arg (`addParents.R:28`, `addSexAndAgeToGroup.R:15`,
+`getAnimalsWithHighKinship.R:13`); D5 wrong-function `@return` text
+(`findPedigreeNumber.R:7`, `getOffspring.R:6`); D6 title typos
+(`obfucateDate`, `obfucateId`, “portential”, “an file name”, “a empty”,
+“and into”); D7 dead imports (`makeGeneticDiversityDashboard.R:8-10`);
+D8 bare-blank-line block breaks (`geneDrop.R:40`,
+`kinshipMatrixToKValues.R:34`, `makeCEPH.R:13`).
+
+**Phase-3E (runtime smoke): N/A (stated, not skipped).** AUDIT-class
+analysis doc – no `R/`, runtime, Shiny, startup, dispatch, or config
+change; the deliverable is `.Rbuildignore`d (`^docs$`) and does not
+ship, so the `--as-cran` gate (GREEN 0/0/2, now on `master` via the PR
+\#101 merge) is untouched – no re-gate needed. FM \#24 does not apply.
+
+**Session 243 Handoff Evaluation (by Session 244): Score 8/10.** S243’s
+deliverable (copyright `#'`-\>`##` normalization) was ORTHOGONAL to mine
+and its SUGGESTED-NEXT (owner landing of the
+`normalize-copyright-headers` branch, then CRAN Phase 5b) could NOT name
+issue \#102 – the owner opened \#102 (2026-06-29T17:39) AFTER S243
+closed. So S243’s value to me was the CARRIED context, which held
+firsthand. **What helped:** (1) **Learning 229 was directly
+load-bearing** – it told me the copyright is now uniform `##` (roxygen
+ignores `##` regardless of position), which let me correctly classify
+Finding 8 (copyright PLACEMENT) as low rendered-impact rather than a
+defect, and its `#'`-leaks-into-`.Rd` mechanism is the same one behind
+my D1/D3 rendered-doc defects; (2) the standing keeps held – the
+`--as-cran` gate GREEN on `master` (the PR \#101 merge landed S243’s
+branch, S243’s option (b)), the `PED_GV_AUDIT*.html` untracked keep,
+package ARCHIVED on CRAN, docs-to-master + push discipline; (3)
+ghost-check clean (the one commit since S243’s close-out `edbca562` is
+the PR \#101 merge `a4de6a84` = the owner’s anticipated landing, NOT a
+ghost session). **What was missing (the -2):** nothing task-specific was
+anticipatable (un-foreseeable owner-opened issue) – the -2 is the
+structural cap for an orthogonal deliverable (cf. S240-\>S239 8/10), not
+a defect in S243’s notes, which were accurate. **What was wrong:**
+nothing. **ROI:** high.
+
+**Self-assessment (Session 244): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean), reported, STOPPED for the owner; wrote
+the 1B stub before technical work; declared AUDIT-class / TDD-N/A up
+front and held it. **Strengths:** (1) **grounded in authoritative
+mechanical counts FIRST, then fanned out 15 parallel deep-readers** –
+neither alone; (2) **designed an independent adversarial verify stage
+that CAUGHT a material error in my OWN ground-truth count** (the
+“166/167 examples = strength” was false) and **corrected it firsthand**
+(re-swept -\> 22 gaps / 145-167 -\> reframed as a moderate finding with
+a defensible Shiny/app carve-out) – the audit anti-pattern (severity
+deflation) caught before it reached the deliverable; (3)
+**firsthand-verified every headline defect against the rendered `.Rd`**
+(calcGU description override, duplicate `_PACKAGE`, escaped-brace list)
+– read reality, not the agents’ word (and corrected the agents’ false
+“markdown not enabled” premise from DESCRIPTION:81); (4) **calibrated
+severity honestly** – did NOT inflate the highest-VOLUME issue
+(copyright placement) to “high” since `##` renders fine, and broke out
+the genuinely rendered-impacting bare-blank-line breaks as their own
+defect; (5) **folded the owner’s mid-flight CRAN `@importFrom`
+guidance** into Finding 7 with the full 10-file holdout breakdown
+(mechanical vs judgment); (6) **stayed strictly in scope** – ZERO `R/`
+edits (analysis only), doc `.Rbuildignore`d so no gate impact.
+**Weakness (the -1):** my FIRST mechanical examples-coverage count had a
+bug and I propagated it into the workflow’s ground-truth COUNTS, so the
+synthesis built a false “strength” on it; only the adversarial stage
+caught it. The recovery was clean and the error never reached the
+deliverable (the verify stage is exactly why it exists), but a stricter
+first pass would have cross-footed “146 `@examples` files vs 167
+`@export` can’t leave 1 missing” before passing the number along. Capped
+at 9: clean, adversarially-verified, firsthand-corrected delivery of a
+well-scoped comprehensive audit; a 10 ships a correct ground-truth count
+from the start.
+
+**Learnings:** **Learning 230** added to `PROJECT_LEARNINGS.md` – a
+doc-audit’s “authoritative” grep counts can themselves be wrong, so an
+independent adversarial stage that re-derives the load-bearing numbers
+firsthand is what keeps bad ground truth out of the deliverable
+(cross-foot your totals); deep-read agents assert false PREMISES
+(markdown-not-enabled) so pass authoritative ground truth into
+synthesis + confirm rendered defects against the actual `.Rd`; roxygen
+consistency here is a two-era convergence (8 dims + 8 defect classes);
+calibrate severity by rendered impact not volume. Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[observation-vs-decision\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was an AUDIT-class
+analysis session – TDD code-phases N/A.**
+
+**=\> SUGGESTED NEXT (owner’s pick).** The analysis is delivered; the
+natural next is the **implementation follow-on** for issue \#102 – but
+the owner should first (a) **review the recommendation** in
+`docs/audits/ROXYGEN_HARMONIZATION_AUDIT_2026-06-29.md` (esp. the markup
+direction = raw-Rd, the `@param`-before-`@return` reorder, and the §7
+examples carve-out) and (b) decide whether \#102 stays open to track
+implementation or is closed + a new implementation issue opened. When
+implementing, follow the §6 roadmap **mechanical-first and one stage per
+session** (“1 and done”): **Stage 1 (defects D1-D8) is the
+highest-value, mostly-mechanical first slice** – REFACTOR-class for
+pure-doc fixes, but D4/D5 (wrong `@param`/`@return`) and any title-typo
+that changes a `man` title are doc-correctness fixes; none change
+behavior, so likely all REFACTOR (confirm per file). **`R/`+`man/` SHIP
+-\> any implementation edit re-stales the `--as-cran` gate (Learning
+226/227) -\> re-gate after each stage.** A roxygen-typo fix changes
+prose -\> re-run `spell_check_package` (hand-add wordlist terms, never
+`update_wordlist`). Carried CRAN thread (owner-run, outward): **Phase
+5b** per `docs/planning/cran-2.0.0-phase5-runbook.md` – prereqs verified
+GREEN through S243 (PAT satisfied; only the owner-confirmable unfiltered
+`rmsharp@me.com` remains); if the owner runs the \#102 implementation
+first, re-gate before Phase 5b since R//man/ will have changed.
+
+**Key files (this session):** **Created (docs-to-master,
+`.Rbuildignore`d):**
+`docs/audits/ROXYGEN_HARMONIZATION_AUDIT_2026-06-29.md` (the
+deliverable). **Process docs (docs-to-master):** `CHANGELOG.md` (S244
+entry), `PROJECT_LEARNINGS.md` (Learning 230), `SESSION_NOTES.md` (this
+handoff). **Workflow:** `wf_19a4e4d2-2c5` (15 inventory + synthesis +
+adversarial verify; output at scratchpad `synthesis.json` /
+`verdict.json` / `records.json` – NOT committed, transient). **NOT
+committed (standing keep):** `PED_GV_AUDIT_2026-05-30.html` (untracked,
+`.Rbuildignore`d); `.DS_Store`. **No
+`R/`/tests/`man/`/`DESCRIPTION`/`NAMESPACE`/`data`/`NEWS`/vignette
+change** (analysis only).
+
+**Gotchas:** (1) **This is ANALYSIS ONLY – zero `R/` was touched.** The
+deliverable is a recommendation; implementation is a separate,
+owner-gated follow-on. (2) **The examples-coverage number is 145/167,
+NOT 166/167** – an early mechanical count was wrong; the audit doc §7
+has the firsthand-corrected figure + the 22-file list + the proposed
+Shiny/app carve-out. Do not trust the superseded “166/167”. (3)
+**roxygen `markdown = TRUE` IS enabled** (`DESCRIPTION:81`) – several
+deep-read agents wrongly said it was off; the backticks DO render, the
+issue is style mixing (raw-Rd dominates 1270-to-48, harmonize toward raw
+Rd). (4) **`docs/` is `.Rbuildignore`d (`^docs$`)** -\> the audit doc
+does NOT ship -\> the `--as-cran` gate is untouched this session (no
+re-gate); but the IMPLEMENTATION session edits `R/`+`man/` which DO ship
+-\> it must re-gate (Learning 226/227). (5) Carried standing keeps
+(unchanged): package **ARCHIVED on CRAN 2025-07-29**; CRAN resubmission
+owner-gated; win-builder/R-hub/`submit_cran()` are OWNER-run outward +
+HARD STOP; the `--as-cran` gate certifies the CURRENT tree only;
+`NEWS.md`/`README.md` are GENERATED (from `NEWS.Rmd`/`README.Rmd`);
+module/E2E tests need `NOT_CRAN=true` BUT `--as-cran` SKIPS them via
+`skip_on_cran`; a 0/0/0 check does NOT imply spelling-clean -\>
+`spell_check_package` (hand-add wordlist terms, never `update_wordlist`
+– \[\[avoid-reconcile-tools-on-curated-files\]\]);
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without LabKey config; `git pull` is rebase + chokes on
+`.DS_Store`; re-check `git status` before ANY `reset --hard`
+(\[\[check-status-before-destructive-git\]\]); **zsh `status` is a
+read-only special variable**; `gh pr edit`/`gh issue view <n>` 401 on
+the Projects-classic deprecation -\> use `gh api`/`--json`;
+closing-keyword discipline for any PR/issue body.
+(\[\[push-close-out-docs-to-origin\]\]: this close-out is pushed so
+local==origin.)
+
 ### What Session 243 Did
 
 **Deliverable (PIVOTED mid-session, owner-ratified “Full

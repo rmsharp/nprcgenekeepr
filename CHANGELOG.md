@@ -15,6 +15,40 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-29 — roxygen2 documentation harmonization: analysis + recommendation (Session 244)
+
+- **Deliverable (issue \#102, owner pick):** a written **assessment** of
+  roxygen2 documentation-block consistency across all 226 `R/` files,
+  with a single recommended harmonized convention — **analysis only; the
+  edits are a separate follow-on session**, per the issue’s own scoping.
+  Output: `docs/audits/ROXYGEN_HARMONIZATION_AUDIT_2026-06-29.md`
+  (`.Rbuildignore`d `^docs$`, does not ship → `--as-cran` gate
+  untouched). **AUDIT-class — TDD code-phases N/A; 0 corrections / 0
+  overrides.**
+- **Method:** authoritative grep counts over all 226 files → a 15-agent
+  parallel deep-read (one structured record per file) → synthesis → an
+  **independent adversarial verification** pass → firsthand
+  re-verification of every headline claim. The adversarial pass caught a
+  material error in my own ground-truth count (examples coverage) which
+  was corrected firsthand before the report was written.
+- **Headline:** the package is **well-documented**; the problem is style
+  **consistency**, framed as a two-era convergence (legacy vs. an
+  already-emerging modern house style). 8 harmonization dimensions (1
+  already-consistent, 5 moderate, 2 low) + **8 classes of genuine
+  rendered-doc DEFECT** worth fixing regardless (e.g. `calcGU.R:42` a
+  malformed explicit `@description` that overrides ~34 lines of real
+  description in `man/calcGU.Rd`; a duplicate `_PACKAGE` block;
+  escaped-brace pseudo-Rd lists; `@param` documenting a nonexistent
+  `candidates` arg; title typos).
+- **Corrected finding:** examples coverage is **145/167** exported
+  (~87%), not the initially-miscounted 166/167 — the 22 gaps cluster in
+  Shiny `mod*` modules + app entry points (a defensible exemption) plus
+  ~7 callable utilities (a real gap). Reframed as a moderate finding
+  with a stated carve-out.
+- **Recommendation incorporates owner CRAN guidance:** standardize on
+  `@importFrom` over `@import` (8 of 10 holdouts convert mechanically;
+  `shiny`/`Matrix` are a verified judgment call).
+
 ### 2026-06-29 — Normalize copyright headers + fix roxygen man-page leak (Session 243)
 
 - **Deliverable (PIVOTED mid-session; owner-ratified “Full
