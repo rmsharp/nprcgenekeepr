@@ -7,6 +7,218 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 242 Did
+
+**Deliverable (owner pick = option A “Refresh runbook +
+cran-comments”):** Docs-only Phase 5b readiness prep so the owner’s
+outward CRAN run is frictionless – (1) refresh the STALE
+`docs/planning/cran-2.0.0-phase5-runbook.md` to current reality, and (2)
+reconcile the NOTE 1 “possibly-misspelled words” list in
+`cran-comments.md` against the actual local incoming-feasibility spell
+output. The outward checks (win-builder x3, R-hub v2) + `submit_cran()`
+remain **OWNER-run** (outward-facing; HARD STOP) – this session
+corrected the local artifacts they depend on. **Docs-only REFACTOR-class
+– no behavior change; TDD RED/GREEN N/A.** **DONE + VERIFIED on `master`
+(working tree, ready to commit); 0 stakeholder corrections / 0 owner
+overrides** (1 owner action mid-session: installed command-line
+`hunspell` so the local spell reproduction could run). **Started /
+Completed:** 2026-06-29 / 2026-06-29 **Status:** **DONE.** Owner posed
+the Phase 5b scope as an `AskUserQuestion`
+(\[\[observation-vs-decision\]\]) after I SURFACED both that the core
+steps are owner-run/outward AND that the runbook was materially stale;
+owner chose **option A (refresh docs)**. - **The runbook was stale on
+three load-bearing premises – ALL re-verified firsthand and corrected**
+(do NOT trust a runbook’s own “verified (Session NNN)” lines – Learning
+228): (a) `devtools`/`rhub`/`gitcreds` “**absent**” -\> now
+**installed** (`requireNamespace` all TRUE); (b) the 2.0.0 code lived on
+an `add-methodology` working branch -\> that branch is **merged +
+deleted** and the code is on **`master`**; (c) `origin/master` “still at
+**1.1.0.9000**, must open a new PR to master / PR \#53” -\>
+**`master==origin/master`@2.0.0**, in sync
+(`git rev-list --left-right --count origin/master...master` = `0 0`;
+empty `git diff --name-only origin/master..master`;
+`origin/HEAD`-\>master). 10 surgical edits replaced every stale spot;
+old wording explicitly flagged “obsolete – ignore” so it is not mistaken
+for live instruction. Also refreshed: §1 “unchanged since S134” gate
+note -\> the current **S240/S241 GREEN gate**; §4.2 now names **GNU
+`aspell`** as CRAN’s checker. - **cran-comments.md NOTE 1 reconciled**
+to the firsthand-verified flagged set
+`Raboin, EHR, LabKey, kinships, Macaca, mulatta` – exactly what
+`utils::aspell(<DESCRIPTION>, filter="dcf", program="hunspell")` reports
+(the same machinery `R CMD check`’s incoming-feasibility uses; the
+`<...>` reference URL is correctly filtered out). Dropped the unverified
+`"studbooks"` (in the Description but NOT flagged by the speller -\>
+asserting it was flagged is unverified) and added the prominent flagged
+species name `"Macaca mulatta"`. Kept the “for example” hedge; the
+AUTHORITATIVE list still comes from win-builder (hunspell != GNU aspell
+– §4.2 says so). The owner confirmed `Raboin`+`EHR` are “always
+detected.” - **NO re-gate needed** (key call): `cran-comments.md`
+(`^cran-comments\.md$`, line 10) and `docs/` (`^docs$`, line 15) are
+**`.Rbuildignore`d** -\> they do NOT ship in the tarball -\> the S241
+`--as-cran` gate (0/0/2) is untouched. Clean contrast to S241, where
+`README.md` SHIPS and a badge edit DID re-stale the gate (Learning
+227). - **Method note:** the literal task (“reconcile against the local
+`--as-cran` log”) was NOT executable as phrased – no command-line
+speller existed, so a local `--as-cran` emits no word list. I surfaced
+that; the owner installed `hunspell` (Homebrew ships it WITHOUT
+dictionaries -\> the `en_US` “can’t open affix/dictionary” error;
+pointed it at the R `hunspell` pkg’s bundled dict via
+`DICPATH=system.file("dict",package="hunspell")`). Used the
+[`utils::aspell`](https://rdrr.io/r/utils/aspell.html) dcf call directly
+(faster + more faithful than wrapping a 5-min full check, which CRAN
+doesn’t run anyway). - **Independent adversarial audit** (`Agent`
+a8bd72889b5ec8000, blind to my reasoning): re-reproduced the 6-word
+spell set, the branch sync (`0 0`), the tooling presence, and
+`rhub.yaml` existence against the live repo = **PASS on all 6 checks
+(A-F), no misdirecting defects.** Applied its 2 minor polish items:
+imprecise “~74 commits” -\> “dozens”; Quick-sequence “no push” vs §3
+“push anyway” tension -\> clarified §3’s push as optional housekeeping.
+
+**Phase-3E (runtime smoke): N/A (stated, not skipped).** Docs-only
+(`docs/planning/*` runbook + `cran-comments.md` – both `.Rbuildignore`d)
+– no `R/` logic, Shiny, startup, dispatch, or config change. FM \#24
+does not apply. No build-equivalent re-run was required precisely
+because the edited files do not ship (see “NO re-gate needed” above);
+the S241 `--as-cran` gate remains the authoritative GREEN certification
+of the current tree.
+
+**Session 241 Handoff Evaluation (by Session 242): Score 8/10.** S241’s
+SUGGESTED-NEXT named **CRAN Phase 5b** as the first candidate (the owner
+picked it), with the runbook path and a prereqs list – a correct,
+actionable pointer. **What helped:** (1) it pointed me straight at
+`docs/planning/cran-2.0.0-phase5-runbook.md` as the workstream doc; (2)
+the carried standing keeps held firsthand – the S240/S241 `--as-cran`
+gate GREEN on master (load-bearing; I cited it in the runbook refresh),
+the `PED_GV_AUDIT*.html` untracked keep, package ARCHIVED on CRAN, the
+docs-to-master + push-close-out discipline; (3) ghost-check clean (HEAD
+`7b02573c` == documented S241). **What was missing / stale (the -2):**
+the handoff (and the S240 suggested-next it echoed) propagated the
+runbook’s **stale prereq “install `devtools`/`rhub`/`gitcreds`”** as if
+current – they are in fact already installed; and it pointed at the
+runbook as ready-to-run without flagging that the runbook itself was
+materially stale (tooling, branch state). Fair caveat: S241’s
+deliverable was the README badge fix (orthogonal), so auditing the
+runbook would have been scope creep – the staleness is upstream of S241.
+**What was wrong:** nothing in S241’s own-deliverable claims. **ROI:**
+high – named the right area and the keeps held; -2 only for echoing a
+stale upstream prereq I had to correct firsthand.
+
+**Self-assessment (Session 242): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean), reported, STOPPED for the owner; wrote
+the 1B stub before technical work; declared docs-only REFACTOR / TDD-N/A
+up front and held it. **Strengths:** (1) **SURFACED the
+deliverable-boundary decision via `AskUserQuestion`** (core Phase 5b is
+owner-run/outward + the runbook is stale) instead of assuming a scope
+(\[\[observation-vs-decision\]\]); (2) **grounded every premise
+firsthand BEFORE proposing or editing** – tooling presence, branch sync,
+default branch, `rhub.yaml`, `.Rbuildignore` coverage, the aspell word
+list – did NOT trust the runbook’s “verified (S136)” lines (this is the
+session’s core learning); (3) **correctly determined NO re-gate was
+needed** from `.Rbuildignore`, and made the S241 contrast explicit
+rather than reflexively re-running a heavyweight check; (4) **recognized
+the literal task was not executable** (no command-line speller) and
+surfaced it, then used the faithful
+[`utils::aspell`](https://rdrr.io/r/utils/aspell.html) dcf reproduction
+once the owner installed hunspell – the same machinery the check uses,
+no guesswork; (5) **evidence-based reconciliation** – dropped the
+unverified “studbooks”, kept the “for example” hedge, documented
+win-builder as authoritative; (6) **ran an independent adversarial
+audit** (PASS) and applied its 2 polish items; (7) clean scope – only
+the 2 target docs + process docs, no creep. **Weakness (the -1):** the 2
+polish items the audit surfaced (the imprecise “~74” figure I carried
+over from S240’s notes; the push-guidance tension) should have been
+caught in my own first pass rather than relying on the audit – a
+stricter first draft would have pre-empted both. Capped at 9: clean,
+fully firsthand-verified delivery of a well-scoped refresh with an
+independent audit; a 10 ships the polish clean without the audit needing
+to surface it.
+
+**Learnings:** **Learning 228** added to `PROJECT_LEARNINGS.md` – a
+curated owner-facing RUNBOOK certifies a SNAPSHOT of the
+environment+repo state (like a gate certifies code) and goes stale;
+re-verify its premises firsthand before an owner runs an
+outward/expensive/async step. Also: `.Rbuildignore` decides whether a
+doc edit re-stales the gate; CRAN’s DESCRIPTION misspelled-words come
+from GNU `aspell` (not WORDLIST / not
+[`spelling::spell_check_package`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)),
+reproduced locally via
+`utils::aspell(filter="dcf", program="hunspell")` + `DICPATH` (Homebrew
+hunspell ships no dict; hunspell is a PROXY for aspell); when the env
+can’t run the literal task, surface it and do the faithful reproduction;
+an independent adversarial audit earns its cost on owner-facing prep.
+Carried as applied: \[\[observation-vs-decision\]\],
+\[\[consult-project-source-of-truth\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[edit-files-in-reverse-line-order\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a docs-only
+REFACTOR-class session – TDD RED/GREEN N/A.**
+
+**=\> SUGGESTED NEXT (owner’s pick).** The Phase 5b runbook is now
+CURRENT and `cran-comments.md` NOTE 1 is pre-reconciled, so the natural
+next is the **actual owner-run Phase 5b execution** (outward-facing):
+with tooling now present, run win-builder x3 + R-hub v2 per the
+refreshed `docs/planning/cran-2.0.0-phase5-runbook.md` (R-hub checks
+`master`, in sync – no push), fold the real results into
+`cran-comments.md` (replace the two “– to be run before submission”
+markers at `:52-53`; **re-confirm the misspelled-words list against
+win-builder’s actual GNU-aspell output** – the local hunspell set is a
+proxy), then `submit_cran()` (HARD STOP – owner only) + click the
+maintainer-email confirmation link. Prereqs still needed: a GitHub PAT
+(`gitcreds::gitcreds_set()`) + unfiltered `rmsharp@me.com`. Other
+carried threads (owner’s call; open GitHub issues deferred until after
+CRAN resubmission per the S238 directive): optional badge hardening
+(`usethis::use_*_badge()` regen); stale-branch cleanup (`dev`, `module`,
+`rlabkey-version-floor`; remote-only
+`issue8*`/`nprcmanager-master`/`or-replacement`); the config-template
+“(issue \#73 Part 2)” comment scrub (S239 surfaced); a pre-existing
+“systems..” double-period typo in NEWS.
+
+**Key files (this session):** **Edited (docs, both `.Rbuildignore`d):**
+`docs/planning/cran-2.0.0-phase5-runbook.md` (10 edits – header
+attribution, “absent”-\>“installed”, Quick-sequence install/R-hub lines,
+§0 prereqs, §1 gate note, §3 BRANCH STATE rewrite + header, §4.2
+reconcile note, the 2 audit polish items); `cran-comments.md` (NOTE 1
+word list, lines ~37-38). **Process docs (docs-to-master):**
+`CHANGELOG.md` (S242 entry), `PROJECT_LEARNINGS.md` (Learning 228),
+`SESSION_NOTES.md` (this handoff). **Audit:** `Agent` a8bd72889b5ec8000
+(adversarial doc audit, PASS A-F). **NOT committed (standing keep):**
+`PED_GV_AUDIT_2026-05-30.html` (untracked, `.Rbuildignore`d);
+`.DS_Store`. **No `R/`/tests/`man/`/`DESCRIPTION`/`data`/`NEWS`
+change.**
+
+**Gotchas:** (1) **`.Rbuildignore` decides whether a doc edit re-stales
+the `--as-cran` gate** – `cran-comments.md` + `docs/` are build-ignored
+(don’t ship) so editing them does NOT re-stale it; `README.md` SHIPS so
+it does (Learning 227). Grep `.Rbuildignore` before deciding to re-gate.
+(2) **CRAN’s “possibly misspelled words in DESCRIPTION” = GNU `aspell`
+on Title+Description**, NOT `inst/WORDLIST` and NOT
+[`spelling::spell_check_package`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+(hunspell+WORDLIST). Reproduce locally with
+`utils::aspell(<DESCRIPTION>, filter="dcf", program="hunspell")` +
+`Sys.setenv(DICPATH=system.file("dict",package="hunspell"))` (Homebrew
+`hunspell` ships NO dictionary -\> the `en_US` “can’t open
+affix/dictionary” error). hunspell’s dict != aspell’s, so the local list
+is a PROXY – the authoritative list is win-builder’s. (3) **The Phase 5b
+runbook is CURRENT as of S242** but certifies a SNAPSHOT – re-verify its
+premises (tooling present, `master==origin/master`@2.0.0) before the
+owner runs (Learning 228). (4) Carried standing keeps (unchanged):
+package **ARCHIVED on CRAN 2025-07-29**; CRAN resubmission owner-gated;
+win-builder/R-hub/`submit_cran()` are OWNER-run outward + HARD STOP; the
+`--as-cran` gate certifies the CURRENT tree only; `NEWS.md`/`README.md`
+are GENERATED (from `NEWS.Rmd`/`README.Rmd`); module/E2E tests need
+`NOT_CRAN=true` BUT `--as-cran` SKIPS them via `skip_on_cran` (do NOT
+set NOT_CRAN for the gate);
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without LabKey config; `git pull` is rebase + chokes on
+`.DS_Store`; re-check `git status` before ANY `reset --hard`
+(\[\[check-status-before-destructive-git\]\]); **zsh `status` is a
+read-only special variable**; `gh pr edit`/`gh issue view <n>` 401 on
+the Projects-classic deprecation -\> use `gh api`/`--json`;
+closing-keyword discipline for any PR/issue body.
+(\[\[push-close-out-docs-to-origin\]\]: push this close-out to
+origin/master so local==origin.)
+
 ### What Session 241 Did
 
 **Deliverable (owner pick):** Fix the 3 README badge defects S240’s

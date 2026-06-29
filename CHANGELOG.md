@@ -15,6 +15,48 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-29 — Refresh the stale CRAN Phase 5b runbook + reconcile cran-comments NOTE 1 (Session 242)
+
+- **Deliverable (owner pick — option A “Refresh runbook +
+  cran-comments”):** docs-only Phase 5b readiness prep so the owner’s
+  outward CRAN run is frictionless. The core Phase 5b steps (win-builder
+  ×3, R-hub v2, `submit_cran()`) remain **owner-run** (outward-facing;
+  HARD STOP) — this session corrected the local artifacts they depend
+  on. **Docs-only REFACTOR-class — no behavior change; TDD RED/GREEN
+  N/A. 0 corrections / 0 overrides.**
+- **`docs/planning/cran-2.0.0-phase5-runbook.md` was materially stale
+  and is now refreshed** (10 surgical edits): submission tooling
+  **“absent” → “installed”** (verified `devtools`/`rhub`/`gitcreds` all
+  load; install lines commented out as fresh-clone-only); the obsolete
+  R-hub branch caveat — the long-gone `add-methodology` branch,
+  `origin/master@1.1.0.9000`, “PR \#53”, “open a new PR to master” —
+  replaced with verified current reality: R-hub checks **`master`** (the
+  2.0.0 default branch, `0 0` ahead/behind `origin/master`), no push or
+  branch gymnastics; §1’s stale “unchanged since S134” gate note → the
+  current S240/S241 GREEN gate; §4.2 now names **GNU `aspell`** as
+  CRAN’s checker. Old wording explicitly flagged as obsolete so it is
+  not mistaken for live instruction.
+- **`cran-comments.md` NOTE 1 reconciled** against the actual local
+  incoming-feasibility spell output: dropped the unverified
+  `"studbooks"` (in DESCRIPTION but not flagged by the speller), added
+  the prominent flagged species name `"Macaca mulatta"`. Final example
+  set = the firsthand-verified flagged words
+  `Raboin, EHR, LabKey, kinships, Macaca, mulatta` — exactly what
+  `utils::aspell(filter="dcf", program="hunspell")` reports (the same
+  call `R CMD check` makes; the `<URL>` is correctly filtered out). Kept
+  the “for example” hedge; the authoritative list still comes from
+  win-builder.
+- **No re-gate needed:** both files are `.Rbuildignore`d
+  (`cran-comments.md` line 10, `docs` line 15), so they do not ship in
+  the tarball and the S241 `--as-cran` gate (0/0/2) is untouched — a
+  clean contrast to S241, where `README.md` *does* ship.
+- **Independently audited:** a fresh adversarial agent re-verified every
+  factual claim (tooling presence, branch sync `0 0`, `rhub.yaml`
+  exists, the 6-word spell set, internal consistency) against the live
+  repo — **PASS on all six checks, no misdirecting defects.** Two minor
+  polish items from the audit applied (`~74` → `dozens`; §3 push
+  clarified as optional housekeeping).
+
 ### 2026-06-29 — Fix the 3 README badge defects surfaced by the S240 audit (Session 241)
 
 - **Deliverable (owner pick):** fix the three `README.Rmd` badge defects
