@@ -15,6 +15,65 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-29 — Systematic whole-package lint pass: clear the standing lint-CI red (Session 238)
+
+- **Deliverable (owner pick):** a systematic whole-package lint pass
+  clearing the standing `lint`-CI red (the `lint.yaml` job, red for many
+  sessions; it errors because `LINTR_ERROR_ON_LINT: true` turns any lint
+  into a non-zero exit). **REFACTOR-class cleanup — style / readability
+  only, no behavior change**; the existing test suite + the `lintr` gate
+  are the safety net (no new RED). Remaining open GitHub issues are
+  explicitly deferred until after CRAN resubmission (owner directive).
+  **Strict-TDD: REFACTOR-class, code-phases RED/GREEN N/A.** **0
+  corrections / 0 overrides.**
+- **Artifact vs. real (the load-bearing distinction):** `lint_package()`
+  reports **74** lints locally, but **31** are `object_usage_linter` “no
+  visible global function definition for ” artifacts that vanish when
+  the package namespace resolves
+  ([`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  → object_usage 0) and never appear in CI (which installs the package
+  via `local::.`). Confirmed against the actual `lint.yaml` CI log: it
+  lists exactly the **43 real** lints and zero object_usage. The 43 are
+  what was fixed; the 31 artifacts were left untouched (memory:
+  avoid-new-lints-r-package).
+- **The 43 fixes (all behavior-preserving), 10 files, 3 lint-batch
+  commits + 1 man regen:** line_length (22) reflowed (long `sprintf`
+  format strings split via `paste0` or bound to a variable, printed
+  output unchanged); `paste(., collapse = ", ")` → `toString(.)` (5);
+  `any(is.na(x))` → `anyNA(x)` (1); implicit `0`/`2` → `0L`/`2L` (5);
+  `any(!x)` → `!all(x)` (1); `gsub("\r", …)` → `fixed = TRUE` (1);
+  `nonportable_path` →
+  [`file.path()`](https://rdrr.io/r/base/file.path.html) (3);
+  commented-code prose (1); `data-raw/fgSEValidation.R`
+  [`source()`](https://rdrr.io/r/base/source.html)-test-helpers +
+  `system.time(x <- …)` timing idioms wrapped in justified `# nolint`
+  ranges (owner-confirmed — splitting either would be wrong: sourcing
+  test helpers is correct, and `system.time(x <- …)` both times and
+  captures an ~11-min study).
+- **Files:** `R/{calcFEFG,calcFG,calcFGSE,reportGV,modSummaryStats}.R`
+  (batch 1 `23160dc5`: wraps + one `0L`);
+  `R/{checkKinshipOverrides,checkFgDegeneracy,applyKinshipOverrides,applyKinshipOverridesToMatrix}.R`
+  (batch 2 `bec858e9`: style swaps); `data-raw/fgSEValidation.R` (batch
+  3 `17b92321`); regenerated
+  `man/{applyKinshipOverrides,calcFEFG,calcFG,calcFGSE,modSummaryStatsServer,reportGV}.Rd`
+  (`7e30a01f`; whitespace-only reflow of exported-function roxygen;
+  rendered help unchanged).
+- **Verify:** whole-package `lint_package()` (package loaded) **0 total
+  lints**; targeted tests green (calcFEFG 15 / calcFG 9 / calcFGSE 20 /
+  applyKinshipOverrides 12 / checkKinshipOverrides 11); full suite
+  **3173 pass / 0 fail / 0 error** (7 warnings = documented baseline
+  noise: 5 `test_modPyramid`, 2 `test_gvaConvergence_kinshipOverrides`
+  PSD-bound); `data-raw` script parses;
+  `devtools::check(vignettes=FALSE)` **0/0/0**. **Phase-3E:** N/A — no
+  runtime behavior change.
+- **Result:** branch `lint-whole-package` → **PR \#99** → **all CI green
+  incl. the `lint` job (4m7s)** and the full R-CMD-check matrix (macOS /
+  Ubuntu devel-oldrel-release / Windows) + pkgdown + coverage →
+  **merged** (merge commit `8deeecf`) → branch deleted (local + remote;
+  verify-merged-firsthand). **The standing `lint`-CI red is cleared on
+  `master`.** `master == origin/master`.
+- **Learnings:** Learning 224 (PROJECT_LEARNINGS.md).
+
 ### 2026-06-28 — FU3 maintainer docstring note landed; issue \#95 dispositioned end-to-end (issue \#95, Session 237)
 
 - **Deliverable (owner pick — “§10C docstring + close \#95”):** the
