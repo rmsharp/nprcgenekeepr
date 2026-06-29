@@ -15,6 +15,40 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-29 — Fix the 3 README badge defects surfaced by the S240 audit (Session 241)
+
+- **Deliverable (owner pick):** fix the three `README.Rmd` badge defects
+  S240 surfaced and deliberately left as a separate deliverable — `:18`
+  CRAN grand-total downloads pointed at the wrong package
+  (`grand-total/kableExtra` → `grand-total/nprcgenekeepr`); `:19`
+  malformed markdown (stray leading `[`) removed; `:20` bogus
+  prefix-only DOI (`doi-10.32614` / `doi.org/10.32614`) → the canonical
+  CRAN package DOI. Then `devtools::build_readme()` to regenerate
+  `README.md`. **Docs-only REFACTOR-class — no behavior change; TDD
+  RED/GREEN N/A. 0 corrections / 0 overrides.**
+- **DOI = owner decision.** The DOI target was the one genuine fork
+  (CRAN-package-DOI / cited-paper-DOI / drop-the-badge), posed as an
+  `AskUserQuestion` (\[\[observation-vs-decision\]\]); owner chose the
+  canonical CRAN package DOI `10.32614/CRAN.package.nprcgenekeepr`. The
+  badge image encodes the slash as `%2F` (shields.io static-badge
+  requirement); the link target uses the plain DOI and resolves HTTP 200
+  → the CRAN package page.
+- **Verify (firsthand — the fix-side of S240’s audit method):** fetched
+  each changed badge SVG and read its `aria-label` — grand-total now
+  renders “CRAN downloads 13K” (not kableExtra’s 8.7M); the DOI badge
+  renders “doi: 10.32614/CRAN.package.nprcgenekeepr”; the DOI link
+  resolves 200 → CRAN page. `README.md` regenerated from source; the
+  diff is exactly the 3 badges + the expected `build_readme()`
+  version-date re-stamp (`(2026-06-19)` → `(2026-06-29)`); the YAML
+  front-matter `date:` was left untouched.
+- **Re-cleared the CRAN gate** (README.md ships in the tarball, so a
+  badge change re-stales the S240 gate — Learning 226):
+  `R CMD build .` + `R CMD check --as-cran --timings` =
+  `Status: 2 NOTEs` = **0/0/2**, both documented false-positives; no URL
+  NOTE (`grep URL|doi|cranlogs|shields|kableExtra 00check.log` empty).
+  Build artifacts removed; close-out docs to master. See
+  `PROJECT_LEARNINGS.md` Learning 227.
+
 ### 2026-06-29 — Re-establish the local CRAN `--as-cran` gate on current master (Session 240)
 
 - **Deliverable (owner pick — “walk through the steps that remain” for
