@@ -62,11 +62,11 @@
 #' overrides (\code{id1}, \code{id2}, \code{kinship}; the coefficient \emph{f},
 #' not relatedness \emph{r}) applied to the kinship matrix before mean kinship
 #' and the unknown-parent correction (issue #13). \code{NULL} (the default)
-#' leaves the pedigree-derived matrix unchanged. Ids outside the analysis set are
-#' warn-dropped (the run is not aborted). An override REFINES the named kinship
-#' cell; it does not suppress the \code{+ sexMean / 2} unknown-parent
-#' correction, which is kept for every animal missing one parent (issue #95
-#' keep-all revert). See \code{\link{applyKinshipOverrides}}.
+#' leaves the pedigree-derived matrix unchanged. Ids outside the analysis
+#' set are warn-dropped (the run is not aborted). An override REFINES the
+#' named kinship cell; it does not suppress the \code{+ sexMean / 2}
+#' unknown-parent correction, which is kept for every animal missing one
+#' parent (issue #95 keep-all revert). See \code{\link{applyKinshipOverrides}}.
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

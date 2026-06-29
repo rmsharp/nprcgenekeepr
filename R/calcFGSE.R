@@ -23,17 +23,19 @@
 #' founder-by-founder covariance matrix.
 #'
 #' Founders are matched between \code{p} and \code{r} by name (not position), so
-#' the result is correct even when the founders are not in sorted pedigree order.
+#' the result is correct even when the founders are not in sorted pedigree
+#' order.
 #'
 #' A contributing founder (\code{p > 0}) that is retained in zero of the
-#' iterations (\code{r == 0}) makes \code{FG} undefined (the same degeneracy that
-#' \code{\link{calcFG}} now reports as \code{NA}); in that case this function
-#' returns \code{NA} with a warning advising more iterations. Founders that do
-#' not contribute to the current population (\code{p == 0}) are dropped, so the
-#' standard error refers to exactly the founder set \code{FG} is computed from.
+#' iterations (\code{r == 0}) makes \code{FG} undefined (the same
+#' degeneracy that \code{\link{calcFG}} now reports as \code{NA}); in that
+#' case this function returns \code{NA} with a warning advising more
+#' iterations. Founders that do not contribute to the current population
+#' (\code{p == 0}) are dropped, so the standard error refers to exactly the
+#' founder set \code{FG} is computed from.
 #'
-#' @return A single numeric value: the Monte Carlo sampling standard error of the
-#' colony founder-genome-equivalent estimate, on the same scale as
+#' @return A single numeric value: the Monte Carlo sampling standard error
+#' of the colony founder-genome-equivalent estimate, on the same scale as
 #' \code{\link{calcFG}}. \code{NA} (with a warning) when a contributing founder
 #' has zero retention.
 #'
@@ -78,15 +80,16 @@ calcFGSE <- function(ped, alleles) {
   p <- fc$p[names(rhat)] # align contributions to retention rows by NAME
   k <- ncol(retentionMatrix)
 
-  ## Hard-fail: a contributing founder retained in zero drops leaves FG (and its
-  ## gradient) undefined -- return NA rather than a finite SE for a collapsed FG.
+  ## Hard-fail: a contributing founder retained in zero drops leaves FG
+  ## (and its gradient) undefined -- return NA rather than a finite SE for
+  ## a collapsed FG.
   if (checkFgDegeneracy(p, rhat)) {
     return(NA_real_)
   }
 
   ## Drop non-contributing (p == 0 -> 0/0) and any missing-retention founders so
   ## the SE refers to the same founder set as FG.
-  keep <- !is.na(rhat) & rhat > 0 & !is.na(p)
+  keep <- !is.na(rhat) & rhat > 0L & !is.na(p)
   fg <- 1L / sum((p[keep]^2L) / rhat[keep])
   gradient <- numeric(length(rhat))
   gradient[keep] <- fg^2L * (p[keep]^2L) / (rhat[keep]^2L)

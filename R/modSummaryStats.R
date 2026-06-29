@@ -282,9 +282,10 @@ modSummaryStatsUI <- function(id) {
 #'   overrides are applied to that matrix, so the relationship table and the
 #'   kinship CSV export reflect the supplied values regardless of tab order.
 #'   The override moves the kinship \emph{value} only; the \code{relation}
-#'   \emph{label} stays pedigree-derived (it is computed from pedigree structure,
-#'   not from the kinship value). Overridden pairs are flagged with a logical
-#'   \code{overridden} column in the relationship table (issue #13 item-3).
+#'   \emph{label} stays pedigree-derived (it is computed from pedigree
+#'   structure, not from the kinship value). Overridden pairs are flagged
+#'   with a logical \code{overridden} column in the relationship table
+#'   (issue #13 item-3).
 #'   \code{NULL} (the default) is a no-op.
 #'
 #' @seealso \code{\link{modSummaryStatsUI}} for the user interface
@@ -364,14 +365,16 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
         }
       }
 
-      # Calculate kinship from pedigree if not provided (the fallback recompute,
-      # the path the app always takes since appServer passes kinshipMatrix=NULL).
+      # Calculate kinship from pedigree if not provided (the fallback
+      # recompute, the path the app always takes since appServer passes
+      # kinshipMatrix=NULL).
       # Issue #13 Slice 3: apply outside-information kinship overrides to this
       # matrix so the relationship table and the kinship CSV export reflect them
       # regardless of tab order. The passed-kinshipMatrix branch above already
       # carries overrides. Ids absent from the matrix are warn-dropped, never
       # aborting the module (D5). The override moves the kinship VALUE; the
-      # relation LABEL stays pedigree-derived (convertRelationships is structural).
+      # relation LABEL stays pedigree-derived (convertRelationships is
+      # structural).
       if (!"gen" %in% names(ped)) {
         ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
       }

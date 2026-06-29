@@ -36,8 +36,8 @@ checkKinshipOverrides <- function(overrides) {
   missingCols <- setdiff(required, names(overrides))
   if (length(missingCols) > 0L) {
     stop("Kinship overrides must have columns ",
-      paste(required, collapse = ", "), "; missing: ",
-      paste(missingCols, collapse = ", "), ".")
+      toString(required), "; missing: ",
+      toString(missingCols), ".")
   }
   overrides$id1 <- as.character(overrides$id1)
   overrides$id2 <- as.character(overrides$id2)
@@ -45,10 +45,10 @@ checkKinshipOverrides <- function(overrides) {
   if (!is.numeric(overrides$kinship)) {
     stop("Kinship overrides 'kinship' column must be numeric.")
   }
-  if (any(is.na(overrides$kinship))) {
+  if (anyNA(overrides$kinship)) {
     stop("Kinship overrides 'kinship' column must not contain NA.")
   }
-  if (any(overrides$kinship < 0)) {
+  if (any(overrides$kinship < 0L)) {
     stop("Kinship overrides 'kinship' values must not be negative.")
   }
   if (any(overrides$id1 == overrides$id2)) {
@@ -61,7 +61,7 @@ checkKinshipOverrides <- function(overrides) {
   if (anyDuplicated(key) > 0L) {
     dup <- unique(key[duplicated(key)])
     stop("Kinship overrides contain duplicated (unordered) pair(s): ",
-      paste(gsub("\r", "-", dup), collapse = ", "), ".")
+      toString(gsub("\r", "-", dup, fixed = TRUE)), ".")
   }
   ## off-diagonal kinship for a non-inbred pair cannot exceed 0.5 (warn here;
   ## the exact per-pair bound is enforced in applyKinshipOverrides, D6)
