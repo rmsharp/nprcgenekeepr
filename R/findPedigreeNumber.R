@@ -4,8 +4,9 @@
 ## This file is part of nprcgenekeepr
 #' One of Pedigree Curation functions
 #'
-#' @return Integer vector indicating generation numbers for each id,
-#' starting at 0 for individuals lacking IDs for both parents.
+#' @return Integer vector indicating the pedigree (family group) number for
+#' each id. Ids that are connected through parent-offspring links share the
+#' same number; numbering starts at 1.
 #'
 #' @param id character vector with unique identifier for an individual
 #' @param sire character vector with unique identifier for an

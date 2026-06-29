@@ -39,8 +39,6 @@
 #' that reports genome uniqueness as 0 for unknown-origin both-unknown
 #' ("Undetermined") animals.
 #'
-#' @description \{Genome Uniqueness Functions\}\{\}
-#'
 #' @references Ballou JD, Lacy RC.  1995. Identifying genetically important
 #' individuals for management of genetic variation in pedigreed populations,
 #' p 77-111. In: Ballou JD, Gilpin M, Foose TJ, editors.
@@ -57,12 +55,12 @@
 #' An AlleleTable contains information about alleles an ego has inherited.
 #' It contains the following columns:
 #' \itemize{
-#'  \item \{id\} \{--- A character vector of IDs for a set of animals.\}
-#'  \item \{parent\} \{--- A factor with levels of sire and dam.\}
-#'  \item \{V1\} \{--- Unnamed integer column representing allele 1.\}
-#'  \item \{V2\} \{--- Unnamed integer column representing allele 2.\}
-#'  \item \{...\} \{--- Unnamed integer columns representing alleles.\}
-#'  \item \{Vn\} \{--- Unnamed integer column representing the nth column.\}
+#'  \item \code{id} --- A character vector of IDs for a set of animals.
+#'  \item \code{parent} --- A factor with levels of sire and dam.
+#'  \item \code{V1} --- Unnamed integer column representing allele 1.
+#'  \item \code{V2} --- Unnamed integer column representing allele 2.
+#'  \item \code{...} --- Unnamed integer columns representing alleles.
+#'  \item \code{Vn} --- Unnamed integer column representing the nth column.
 #'  }
 #'
 #' @param threshold an integer indicating the maximum number of copies of an

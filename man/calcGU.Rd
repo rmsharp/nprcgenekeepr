@@ -12,12 +12,12 @@ table of allele information produced by \code{geneDrop()}.
 An AlleleTable contains information about alleles an ego has inherited.
 It contains the following columns:
 \itemize{
-\item \{id\} \{--- A character vector of IDs for a set of animals.\}
-\item \{parent\} \{--- A factor with levels of sire and dam.\}
-\item \{V1\} \{--- Unnamed integer column representing allele 1.\}
-\item \{V2\} \{--- Unnamed integer column representing allele 2.\}
-\item \{...\} \{--- Unnamed integer columns representing alleles.\}
-\item \{Vn\} \{--- Unnamed integer column representing the nth column.\}
+\item \code{id} --- A character vector of IDs for a set of animals.
+\item \code{parent} --- A factor with levels of sire and dam.
+\item \code{V1} --- Unnamed integer column representing allele 1.
+\item \code{V2} --- Unnamed integer column representing allele 2.
+\item \code{...} --- Unnamed integer columns representing alleles.
+\item \code{Vn} --- Unnamed integer column representing the nth column.
 }}
 
 \item{threshold}{an integer indicating the maximum number of copies of an
@@ -39,11 +39,9 @@ A single-column table of genome uniqueness values as percentages.
 Rownames are set to 'id' values that are part of the population.
 }
 \description{
-\{Genome Uniqueness Functions\}\{\}
+Part of Genetic Value Analysis
 }
 \details{
-Part of Genetic Value Analysis
-
 The following functions calculate genome uniqueness according to the equation
 described in Ballou & Lacy.
 

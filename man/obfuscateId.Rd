@@ -2,7 +2,7 @@
 % Please edit documentation in R/obfuscateId.R
 \name{obfuscateId}
 \alias{obfuscateId}
-\title{obfucateId creates a vector of ID aliases of specified length}
+\title{obfuscateId creates a vector of ID aliases of specified length}
 \usage{
 obfuscateId(id, size = 10L, existingIds = character(0L))
 }

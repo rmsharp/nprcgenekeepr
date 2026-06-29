@@ -25,7 +25,7 @@
 #' newPed
 #'
 #' @param ped datatable that is the `Pedigree`. It contains pedigree
-#' information including the IDs listed in \code{candidates}.
+#' information.
 #' @export
 addParents <- function(ped) {
   sires <- ped$sire

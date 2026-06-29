@@ -8,11 +8,12 @@
 #' parent was less than \code{minParentAge}. It contains all of the columns
 #' in the original \code{sb} dataframe with the following added columns:
 #' \enumerate{
-#' \item \{sireBirth\} \{sire's birth date\}
-#' \item\{sireAge\} \{age of sire in years on the date indicated by
-#'  \code{birth}.\}
-#' \item\{damBirth\} \{dam's birth date\}
-#' \code{damAge} \{age of dam in years on the date indicated by \code{birth}.\}
+#' \item \code{sireBirth} -- sire's birth date
+#' \item \code{sireAge} -- age of sire in years on the date indicated by
+#'  \code{birth}.
+#' \item \code{damBirth} -- dam's birth date
+#' \item \code{damAge} -- age of dam in years on the date indicated by
+#'  \code{birth}.
 #' }
 #'
 #' @param sb A dataframe containing a table of pedigree and demographic

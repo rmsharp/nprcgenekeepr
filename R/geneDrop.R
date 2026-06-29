@@ -37,7 +37,7 @@
 #' ids are rejected with an error. This invariant is established upstream by
 #' \code{\link{qcStudbook}} (via \code{\link{removeDuplicates}}) and by
 #' \code{\link{kinship}}, both of which require unique ids.
-
+#'
 #' @return A data.frame \code{id, parent, V1 ... Vn}
 #' A data.frame providing the maternal and paternal alleles for an animal
 #' for each iteration. The first two columns provide the animal's ID and
