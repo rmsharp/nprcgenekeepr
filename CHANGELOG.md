@@ -15,6 +15,50 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-28 — Grill: \#95 follow-ups 2 & 3 dispositioned (FU2 won’t-build, FU3 accept+document) (issue \#95, Session 236)
+
+- **Deliverable (owner pick — “#95 follow-ups 2 / 3”):** a `/grill-me`
+  decision session settling the two remaining \#95 follow-ups, bundled
+  (owner scope call): **2** (both-unknown → one-unknown promotion) and
+  **3** (shared-unknown-parent sib-pair coupling). Output = a ratified
+  decisions list written to
+  `docs/planning/issue95-optionC-targeted-suppression-plan.md` **§10**
+  (+ a follow-up-resolution pointer at D11 in
+  `issue13-kinship-overrides-plan.md`). **Decision/design session — TDD
+  code-phases N/A** (no `R/`/tests/`man`/`NAMESPACE`/`data` change).
+- **Grounding (read-only workflow `wf_964f8ea1-4bb`, 6 agents +
+  firsthand re-verification):** the workflow’s synthesis step
+  degenerated to placeholder output and was recovered from the agent
+  transcripts; the load-bearing claims were then re-verified firsthand
+  against current `master` — code dataflow (both-unknown excluded via
+  `xor` at `correctUnknownParentMeanKinship.R:145`; independent
+  per-focal loop `:155`; pipeline order override→meanKinship→correction
+  in `reportGV`/`gvaConvergence`; option-C symbols all removed) and
+  `qcPed` numerics (280 probands: 43 one-unknown all sire-missing, 124
+  both-unknown, 113 both-known; prior median ≈1.34 SD).
+- **The decisive FU3 finding (firsthand on `qcPed`):** the 2 candidate
+  sib-pairs (`KY0D3C`/`HN5YTI`; `JPKPJC`/`PUS6EL`) each share a known
+  *dam* and both miss the *sire* — so whether they share the *same*
+  unknown sire is **unknowable**. The “shared unknown parent” premise is
+  itself undetectable.
+- **Ratified decisions (0 corrections / 0 overrides):** **D1** FU2 =
+  **won’t-build** (a path-agnostic `id1`/`id2`/`kinship` override cannot
+  identify which parent it informs; promotion conflates a relatedness
+  observation with knowing a parent — a category error; no methodology
+  supports it); **D2** FU3 = **accept** (keep the independent per-focal
+  loop) **+ document** (premise undetectable, effect negligible / below
+  `guSE`, residual ~1/N); **D3** documentation surface = **maintainer
+  docstring only** (avoids the pinned `test_kinshipOverrideDocs.R`);
+  **D4** = **close \#95 after the FU3 docstring note lands**
+  (deliberate, keyword-safe).
+- **Result:** all \#95 follow-ups are now dispositioned (FU1 / rule (ii)
+  / C1.2 won’t-build at S234; FU2 won’t-build, FU3 accept+document at
+  S236). The only remaining action is the FU3 maintainer-docstring note
+  (§10C — a separate small implementation session), after which \#95
+  closes. **\#95 stays OPEN** this session (keyword-safe comment posted,
+  state verified). \#9/#13 stay closed.
+- **Learnings:** Learning 222 (PROJECT_LEARNINGS.md).
+
 ### 2026-06-28 — Revert option C kinship-override suppression to keep-all (issue \#95, Session 235)
 
 - **Deliverable (owner pick — “S234’s suggested next”):** the strict-TDD
