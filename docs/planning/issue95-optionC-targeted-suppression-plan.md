@@ -1,5 +1,7 @@
 # Issue #95 Plan — Option C: targeted suppression of the kinship-override / unknown-parent (#9) correction
 
+> **⚠ SUPERSEDED — Session 234 (2026-06-28), via `/grill-me`.** A firsthand-verified reframing found that the targeted-suppression premise — and its parent, D11 blanket supersession — **over-corrects by ~N (≈280×)**. An override's value is already in `original` *before* the `+ sexMean / 2` correction runs (verified: `prepareKinshipOverrides.R:49` → `reportGV.R:148` → `:157`), so the prior should shrink by only ~1/N per override (~0.0048 SD), not be dropped (~1.33 SD). **Ratified disposition: revert the prior-suppression to keep-all and REMOVE the option-C machinery** (the `missingSideFor` column, `classifyOverrideMissingSide()`, the `suppressIds` path). **Rule (ii) / partial-residual and C1.2 are resolved here as won't-build**; issue #95 stays open for follow-ups 2/3 only. Sections §1–§8 below are retained as the historical record of option C *as it was built and shipped (Slices 1–2, S229–S233)*. **The current decision, evidence, and the revert plan are in §9 — read it first.**
+
 **Tracks:** GitHub issue **#95** ("Refine kinship-override / unknown-parent (#9) correction interaction beyond v1 blanket supersession (D11 follow-ups)"), **follow-up 1 (option C)**. Filed Session 225 (2026-06-28). Issue #95 also tracks two genetics-methodology follow-ups (both-unknown→one-unknown promotion; shared-unknown-parent sib-pair coupling) that are **out of scope for this plan** (see §1, "What this plan does NOT cover").
 
 **Tracks (parent):** issue **#13** (kinship overrides) decision **D11**, ratified Session 214. This plan extends `docs/planning/issue13-kinship-overrides-plan.md` (the D1–D11 decision record). Option C was explicitly deferred at D11 ratification with the note *"track targeted option C as a follow-up — needs override-side metadata the `id1/id2/kinship` schema does not carry"* (`issue13-kinship-overrides-plan.md:153,212`).
@@ -298,6 +300,97 @@ Upstream "mix" judgment ⇒ build option C. **C1=(a) `missingSideFor`** (+ C1.1 
 - **#95 follow-up 2** (both-unknown → one-unknown promotion) and **follow-up 3** (shared-unknown-parent sib-pair coupling) — unchanged, still separate genetics calls.
 - **C1.2 `"both"` / two-rows-per-pair** encoding (with the validator dedup-key fold) — deferred enhancement, naturally bundled with rule (ii).
 
+> **RESOLVED — Session 234 (2026-06-28), via `/grill-me` (see §9).** Rule (ii) was grilled and found **moot**: at realistic override counts (1–4) the only principled "scaled add-back" collapses onto keep-all (gap ~0.0048 SD), so there is no reachable mid-keep fraction — the deeper finding is that the *whole* suppression (rule i + D11) over-corrects (§9A). **Disposition: revert to keep-all and remove the machinery; C1.2 and rule (ii) are won't-build; the PMx pair-level model is documented as considered-and-not-needed (§9B, D5).** Only #95 follow-ups 2 and 3 remain open.
+
 ---
 
 *Authored Session 226 (2026-06-28), planning/architecture session; **ratified Session 227 (2026-06-28), Phase 0 `/grill-me`** (§7 checklist + §8 record). Firsthand inventory via a 9-agent read-only workflow (`wf_4012d83a-551`) + completeness grep + a firsthand read of `correctUnknownParentMeanKinship.R`; ratification grounded in a firsthand `qcPed` numeric check (§8). Extends `issue13-kinship-overrides-plan.md` (D11) and issue #95 follow-up 1. **Slice-1 RED is unblocked as a separate later session.***
+
+---
+
+## 9. Rule (ii) / partial-residual grill — RATIFIED Session 234 (2026-06-28); SUPERSEDES the suppression design (§1–§8)
+
+Settled via `/grill-me` (the D11 / Phase-0 mechanism), grounded in a firsthand numeric re-check on real `qcPed` and a firsthand read of the live pipeline. **0 stakeholder corrections / 0 owner overrides** — every ratified value is the owner's call as recorded below. This section **supersedes the option-C suppression behavior** designed in §1–§8 and shipped in Slices 1–2 (S229–S233); §1–§8 are retained as the record of what was built. Grounding evidence: workflow `wf_1a1f64ba-976` (4 read-only agents: numeric on `qcPed`, code/math mechanics, C1.2 encoding scope, conservation-genetics methodology) + a firsthand verification of the load-bearing pipeline-ordering claim (this session).
+
+### 9A. The reframing (firsthand-verified)
+
+**The pipeline ordering (verified this session, not from a description):**
+- `reportGV.R:130-133` builds `kmat` from `kinship()`.
+- `reportGV.R:143` → `prepareKinshipOverrides.R:49` writes the override **values into `kmat`** via `applyKinshipOverrides(kmat, overrides)`.
+- `reportGV.R:148` computes `meanKinship(kmat)` — **after** the overrides are in the matrix.
+- `reportGV.R:157-164` applies `correctUnknownParentMeanKinship(..., overriddenIds = suppressIds)` — the `+ sexMean / 2` add/suppress — **after** that. (`gvaConvergence.R:151-161` is the identical sequence.)
+
+**The math.** Mean kinship is `mean_i = (1/N) Σ_j f(i,j)` with N = 280 probands. For a one-unknown animal each missing-side pair is otherwise 0 (an unknown parent is an unrelated founder), and the flat scalar `+ sexMean / 2` estimates the *aggregate* of all N missing-side relationships (`(1/N) Σ_j (1/2) f(U,j) ≈ sexMean/2`). A **missing-side override** pins **one** of those N pairs to a real value — and because that value is written to `kmat` *before* `meanKinship`, it is **already inside `original`**. So observing one pair should remove only the prior's estimate *for that one pair*, `(1/N)(sexMean/2)`, i.e. shrink the prior by **~1/N**. Shipped rule (i) drops the **entire** `sexMean/2`, over-removing by a factor of ~N.
+
+**The numbers (firsthand on `qcPed`, re-verified on current master; reproduces §8A):** 280 probands, 43 one-unknown animals; `SD(original)=0.00330929`; the prior `term` median `0.00442969` (≈1.34 SD), max `0.00502511` (≈1.52 SD). Worked animal `O4Z4IB`: one half-sib (0.125) missing-side override gives direct Δmean-kinship `0.0004464` (⇒ N≈280); the amount the prior actually double-estimates for that one pair is `(sexMean/2)/N = 1.58e-05` — **3.5%** of the override's own effect, **1/280** of the prior. Gaps: rule (i) vs the principled add-back ≈ **1.33 SD**; keep-all vs principled ≈ **0.0048 SD**. To shrink the prior even 10% would need **28** missing-side overrides on *one* focal (impossible — one animal has one missing parent; realistic counts are 1–4). Rank impact of the over-correction: dropping one animal's prior swings its GV rank by a median of **86 / 280**, in the **wrong direction** (override animals look *more* genetically valuable → *more* likely bred).
+
+**Methodology bottom line (cited research, medium confidence — some primary texts paywalled).** The conservation-genetics literature offers **no** citable "rule (ii)" partial-residual estimator. PMx (Hauser et al. 2024, *J. Heredity* 115(1):19) keeps two separate mechanisms and never lumps the unknown-side prior into a scalar: a known pairwise value **replaces one cell** and recomputes (weight 1.0); unknown ancestry is weight-down / unique-founder. The `+ sexMean / 2` prior is itself a **package-only** addition — *not* in Vinson & Raboin 2015, which treats an unknown parent as an unrelated founder and accepts the resulting mean-kinship **underestimate** as a documented limitation. Full-drop amplifies exactly that underestimate. The literature supports two defensible postures: **document the bias**, or the **structural pair-level fix** — and the package *already does the pair-level fix for observed pairs* via issue-#13 override-the-cell (see D5).
+
+### 9B. Decisions (ratified Session 234)
+
+| # | Decision | Ratified value |
+|---|----------|----------------|
+| **D1** | Is full-drop directionally wrong? | **Accept the over-correction reframing.** A missing-side override pins 1 of N relationships, already in `original`; the prior should shrink by ~1/N per override, not be dropped. D11's "a known outside pair supersedes the prior" was a category error. |
+| **D2** | Defensible v1 treatment of the prior | **(b) Revert the prior-suppression to keep-all, with good user documentation.** Every one-unknown animal keeps `+ sexMean / 2`; issue-#13 override-the-cell stays (the override value still refines `original`). Only the override-triggered *suppression* of the prior is removed. |
+| **D3** | The `w` (keep-fraction) model | **Moot — resolved by D2.** No graded add-back is built, so there is no `w` to define. (The principled `w = n_obs/N` collapses onto keep-all at realistic counts.) |
+| **D4** | The now-inert option-C machinery | **Remove it cleanly.** Delete the `missingSideFor` column, `classifyOverrideMissingSide()`, and the `suppressIds` path. This also **drops C1.2** (`"both"` / two-rows-per-pair) as won't-build — it only widened *which* focals were suppressed, and now none are. |
+| **D5** | The PMx pair-level model + roadmap | **Document PMx as considered-and-not-needed.** Issue-#13 override-the-cell already does the PMx "replace observed cell + recompute" for observed pairs; keep-all covers the unobserved remainder; the residual is ~1/N (negligible). No new follow-up. **#95 stays open for follow-ups 2 and 3 only.** |
+
+### 9C. Phase-3 revert design — implementation is a SEPARATE later session
+
+**This document is the deliverable; do not implement it in the same session it was written (FM #18).** The implementation is a strict-TDD revert. Because it deletes/renames/reverts code, the evidence-based inventory below is **mandatory** and was produced firsthand (grep over `R/ tests/ man/ inst/`, Session 234).
+
+#### Evidence-based inventory (firsthand grep, S234)
+
+**Behavior-bearing R sources:**
+- `R/correctUnknownParentMeanKinship.R` — **remove** the `overriddenIds` param (`:136`), its contract docstring (`:117-126`), and the suppress guard `if (focalId %in% overriddenIds) next` (`:166-175`). **Keep** the `+ sexMean / 2` add (`:193-194`) and all cohort logic — the function reverts to correcting *every* one-unknown animal (its pre-D11 issue-#9 form).
+- `R/prepareKinshipOverrides.R` — **keep** the validate → warn-drop-absent-ids (D5) → `applyKinshipOverrides` cell-write (`:33-49`, issue #13). **Remove** the `suppressIds` computation and the `classifyOverrideMissingSide` branch (`:50-55`); simplify the return (no `suppressIds`).
+- `R/reportGV.R` — remove `suppressIds <- prepared$suppressIds` (`:145`) and the `overriddenIds = suppressIds` arg (`:163`); rewrite the comment block (`:135-142`). **Keep** the `prepareKinshipOverrides` call (the cell-write).
+- `R/gvaConvergence.R` — the identical edit (`:153`, `:160`; comment `:144-150`); **lockstep with `reportGV`** is mandatory (the shared helper exists for this reason).
+- `R/classifyOverrideMissingSide.R` — **delete the whole file** (`@noRd`, so no exported `.Rd`; confirm it is not in `NAMESPACE`).
+- `R/checkKinshipOverrides.R` — **remove** the `missingSideFor` accept/domain/validation (7 refs). **Keep** `id1`/`id2`/`kinship` validation + the unordered-pair dedup.
+- `R/modGeneticValue.R` — remove the `missingSideFor` helpText mention (1 ref); **rewrite the limitation/upload helpText** to the D2 story (see "Documentation" below).
+
+**Tests (`tests/testthat/`):**
+- `test_classifyOverrideMissingSide.R` — **delete** (helper gone).
+- `test_correctUnknownParentMeanKinship.R` — remove the `overriddenIds`-suppress tests; **add keep-all assertions** (every one-unknown animal corrected regardless of overrides).
+- `test_reportGV.R` (11 refs), `test_gvaConvergence_kinshipOverrides.R` (7) — remove the case-a/case-b suppress oracles; re-pin the `i13_correct*` oracles to **keep-all** (the override refines `original`; all one-unknown animals keep `+ sexMean / 2`); lockstep.
+- `test_prepareKinshipOverrides.R` (7) — drop suppress/side tests; keep cell-write + warn-drop.
+- `test_modGeneticValue_kinshipOverrides.R` (3) — drop `missingSideFor` upload/parse; keep the override upload path.
+- `test_checkKinshipOverrides.R` (10) — drop `missingSideFor` accept/domain tests; keep `id1`/`id2`/`kinship`.
+- `test_kinshipOverrideDocs.R` (4) — **update the pinned phrases in lockstep** with the helpText/HTML (OC-R13 still applies in reverse).
+
+**Generated / doc / man:**
+- `man/checkKinshipOverrides.Rd`, `man/gvaConvergence.Rd`, `man/reportGV.Rd` — regenerate via `devtools::document()` (never hand-edit `.Rd`).
+- `inst/extdata/ui_guidance/genetic_value.html` (1 ref) — rewrite the option-C copy; check `summary_stats.html` for stale wording.
+- `NEWS.Rmd` → regenerate `NEWS.md` — remove/rewrite the option-C (Slices 1–2) entries (the feature never reached a release) and add the revert entry. **Edit `NEWS.Rmd`, not `NEWS.md` (generated).**
+
+#### Behavior invariant (the new acceptance test, replaces D10)
+- **No overrides ⇒ byte-identical to today** (the correction already runs for every one-unknown animal; unchanged).
+- **With an override ⇒** the override cell is applied (#13) **and** every one-unknown animal **keeps** `+ sexMean / 2` (keep-all). Pin: an overridden one-unknown animal's final value **includes** `+ sexMean / 2` (the opposite of the shipped rule-(i) drop), and `reportGV`/`gvaConvergence` agree (lockstep).
+
+#### Documentation (D2 "good user documentation")
+The rewritten helpText (`modGeneticValue.R`) and `genetic_value.html` must say, in plain language: (1) a kinship override **refines** the focal's kinship to the named animal(s) directly; (2) the unknown-parent correction (`+ sexMean / 2`) is **kept for every animal missing one parent** — an override of one relationship does not remove it, because it informs only one of the animal's many colony relationships; (3) the honest limitation: mean kinship for a one-unknown animal is an **estimate** (the unknown parent's true relatives are unrecorded), tending to **underestimate** relatedness — consistent with Vinson & Raboin 2015.
+
+#### Sequencing, completion criteria, session boundary
+- **One implementation session (atomic revert).** Recommended over a script/app split because the doc-consistency test (`test_kinshipOverrideDocs.R`) couples the validator/helpText to the pinned doc phrases — a partial revert leaves the helpText advertising a column the validator rejects. If it proves too large, the only clean split is script-core vs app-docs, but `checkKinshipOverrides`/helpText/`test_kinshipOverrideDocs.R` must move **together**.
+- **RED:** keep-all assertions in `test_correctUnknownParentMeanKinship.R`/`test_reportGV.R`/`test_gvaConvergence_kinshipOverrides.R`; `checkKinshipOverrides` rejects/ignores `missingSideFor`; doc phrases updated.
+- **GREEN:** perform the removals/reverts above minimally.
+- **DONE looks like:** an override no longer drops any one-unknown animal's `+ sexMean / 2`; the `missingSideFor` column and `classifyOverrideMissingSide` are gone; no-override runs are byte-identical.
+- **Verify:** targeted `test_file` per touched test; clean regression read (`as.data.frame(testthat::test_dir(...))`, `sum(failed)+sum(error)`, isolate `!grepl("test-app-|test-e2e-", file)`, `NOT_CRAN=true`); `devtools::check(vignettes=FALSE)` → 0/0/0; `spell_check_package(".")` = 0; **Phase-3E runtime smoke REQUIRED** (Shiny helpText change, FM #24) — `runModularApp()`, upload an override, confirm keep-all ranking and an unaffected no-upload launch.
+- **PR "Relates to #95"** (NOT "Closes" — follow-ups 2/3 keep it open).
+
+#### Dragons
+- **R1 — reportGV/gvaConvergence lockstep.** Revert both identically or the report and the convergence diagnostic disagree.
+- **R2 — keep the issue-#13 cell-write.** `applyKinshipOverrides` in `prepareKinshipOverrides.R:49` STAYS; only the suppress computation goes. Removing the cell-write would discard the override's legitimate effect.
+- **R3 — doc-consistency test couples code+docs (OC-R13, in reverse).** Update `test_kinshipOverrideDocs.R` with the helpText/HTML, not after.
+- **R4 — `.Rd` are generated** — `devtools::document()`, never hand-edit.
+- **R5 — NEWS.md is generated from NEWS.Rmd.**
+
+### 9D. Issue #95 disposition
+
+Rule (ii) / partial-residual and C1.2 are **resolved here as won't-build** (revert + remove). PMx is **documented as not-needed** (D5). **#95 stays OPEN** for the two untouched genetics-methodology follow-ups: **2** (both-unknown → one-unknown promotion) and **3** (shared-unknown-parent sib-pair coupling). The revert implementation is a separate later session (9C).
+
+---
+
+*§9 authored Session 234 (2026-06-28), `/grill-me` decision session. The reframing's load-bearing pipeline-ordering claim was verified firsthand (`prepareKinshipOverrides.R:49` precedes `reportGV.R:148`); the numeric evidence re-runs §8B on current master. **This session's deliverable is the decision record + revert plan only — no `R/`, `tests/`, `man/`, `NAMESPACE`, or `data/` content is changed (TDD code-phases N/A).** Implementation (9C) is unblocked as a separate later session.*
