@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 
 test_that("getPedigree recognizes no file and wrong file arguments", {
   expect_error(getPedigree(), "\"fileName\" is missing, with no default")

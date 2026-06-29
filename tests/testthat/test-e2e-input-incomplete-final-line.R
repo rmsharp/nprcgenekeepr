@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2025 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #' Full-stack E2E for GitHub issue #4 -- a pedigree file whose final line lacks
 #' a trailing newline must upload and process correctly through the real
 #' browser, with every record preserved.

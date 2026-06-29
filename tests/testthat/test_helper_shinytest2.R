@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2025 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #'
 #' Unit tests for the shinytest2 E2E driver helpers (defined in
 #' helper-shinytest2.R): create_app_driver(), navigate_to_tab(),

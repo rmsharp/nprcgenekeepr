@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2026 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 ##
 ## Tests for getSpeciesMinBreedingAge() and the minMaleBreedingAge /
 ## minFemaleBreedingAge columns of the speciesGestation lookup table (issue #9

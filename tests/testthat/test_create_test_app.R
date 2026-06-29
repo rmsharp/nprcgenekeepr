@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2025 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #'
 #' Unit tests for the create_test_app() E2E test helper (defined in
 #' helper-shinytest2.R). These tests are deliberately browser-free: they

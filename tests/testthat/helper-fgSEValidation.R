@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #
 # Validation harness for the founder-genome-equivalent sampling SE (issue #82,
 # Slice 2 -- the "validate before expose" gate). These functions live only in the

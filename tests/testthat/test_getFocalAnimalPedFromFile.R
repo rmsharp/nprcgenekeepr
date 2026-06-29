@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2026 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 
 # Tests for getFocalAnimalPedFromFile(), the file-sourced sibling of
 # getFocalAnimalPed(): it reads a list of focal animal IDs from a file (first

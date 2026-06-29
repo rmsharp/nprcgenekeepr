@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2025 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #' In-process regression test for GitHub issue #4 at the Shiny UPLOAD layer.
 #'
 #' S89 wrapped modInput's two upload readers (read.table / read.csv) in

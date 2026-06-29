@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 
 # Tests for setLabKeyDefaults(): explicit optional API-key authentication with
 # a .netrc fallback and a clear "no credential found" error. All tests are

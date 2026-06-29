@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2026 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #'
 #' Issue #73 Part 2 Slice 1 (GVA tab): the user-configurable species
 #' reproductive-parameter override path. A colony points an optional config-file

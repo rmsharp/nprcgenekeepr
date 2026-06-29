@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2026 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 
 # Tests for getFileDirectRelatives(), the file-sourced sibling of
 # getLkDirectRelatives(): it reads a pedigree file through the internal

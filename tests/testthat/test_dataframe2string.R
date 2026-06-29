@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 library(stringi)
 ## See change in calendar result for sire age; changed 20200412
 pedOne <- nprcgenekeepr::pedOne

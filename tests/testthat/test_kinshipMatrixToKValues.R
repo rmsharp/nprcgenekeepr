@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2026 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #'
 #' Dedicated unit tests for kinshipMatrixToKValues(), which had no direct
 #' test coverage. A kValue table has one row per unordered ID pair including

@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #
 # Test fixtures and an INDEPENDENT reference recompute for the founder-genome-
 # equivalent sampling SE (issue #82, Slice 1). These live only in the test

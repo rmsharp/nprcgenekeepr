@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #' Unit test: the About tab version string tracks the package DESCRIPTION
 #' version rather than a stale hardcoded literal. The app also shows a
 #' dynamic version in its title bar (appUI.R:47), so the assertions are

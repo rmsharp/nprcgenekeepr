@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #'
 #' Regression coverage for issue #50: the modular app crashed on boot when a
 #' config file in the documented format (inst/extdata/example_nprcgenekeepr_config

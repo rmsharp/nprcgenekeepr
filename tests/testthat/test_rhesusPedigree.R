@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2026 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #'
 #' Structure/type contract for the bundled `rhesusPedigree` data object.
 #' `rhesusPedigree` is an obfuscated 375-animal rhesus studbook re-exported

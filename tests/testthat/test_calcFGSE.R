@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #
 # Issue #82 Slice 1: calcFGSE() returns the Monte Carlo sampling standard error
 # of the founder-genome-equivalent statistic FG = 1 / sum(p^2 / r). FG is a

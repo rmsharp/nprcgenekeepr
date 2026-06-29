@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2026 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 ##
 ## Tests for the issue #9 Slice 2 mean-kinship correction (plan section 8-C/E):
 ## animals missing exactly one parent (the other parent known) have their
