@@ -77,11 +77,12 @@ table of allele information produced by <code><a href="geneDrop.html">geneDrop()
 <code>FG = 1 / sum( (p ^ 2) / r)</code> where <code>p</code> is the vector of founder
 mean contributions to the current descendants and <code>r</code> is the mean
 number of founder alleles retained in the gene dropping experiment.</p>
-<p>Returns <code>NA</code> with a warning when a contributing founder (<code>p &gt; 0</code>) is
-retained in zero of the gene-drop iterations (<code>r == 0</code>): that term is
-<code>p^2 / 0 = Inf</code>, which would otherwise collapse <code>FG</code> silently to 0.
-Raise the number of iterations. See <code><a href="calcFGSE.html">calcFGSE</a></code> for the sampling
-standard error of <code>FG</code>.</p>
+<p>Returns <code>NA</code> with a warning when a contributing founder
+(<code>p &gt; 0</code>) is retained in zero of the gene-drop iterations
+(<code>r == 0</code>): that term is <code>p^2 / 0 = Inf</code>, which would
+otherwise collapse <code>FG</code> silently to 0. Raise the number of
+iterations. See <code><a href="calcFGSE.html">calcFGSE</a></code> for the sampling standard error
+of <code>FG</code>.</p>
     </div>
 
     <div class="section level2">

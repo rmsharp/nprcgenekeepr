@@ -74,8 +74,8 @@ Produced by <code><a href="geneDrop.html">geneDrop()</a></code>; the same input 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A single numeric value: the Monte Carlo sampling standard error of the
-colony founder-genome-equivalent estimate, on the same scale as
+    <p>A single numeric value: the Monte Carlo sampling standard error
+of the colony founder-genome-equivalent estimate, on the same scale as
 <code><a href="calcFG.html">calcFG</a></code>. <code>NA</code> (with a warning) when a contributing founder
 has zero retention.</p>
     </div>
@@ -98,13 +98,15 @@ including the within-iteration covariance among founders. This influence form
 is used because it folds in that covariance automatically and never forms the
 founder-by-founder covariance matrix.</p>
 <p>Founders are matched between <code>p</code> and <code>r</code> by name (not position), so
-the result is correct even when the founders are not in sorted pedigree order.</p>
+the result is correct even when the founders are not in sorted pedigree
+order.</p>
 <p>A contributing founder (<code>p &gt; 0</code>) that is retained in zero of the
-iterations (<code>r == 0</code>) makes <code>FG</code> undefined (the same degeneracy that
-<code><a href="calcFG.html">calcFG</a></code> now reports as <code>NA</code>); in that case this function
-returns <code>NA</code> with a warning advising more iterations. Founders that do
-not contribute to the current population (<code>p == 0</code>) are dropped, so the
-standard error refers to exactly the founder set <code>FG</code> is computed from.</p>
+iterations (<code>r == 0</code>) makes <code>FG</code> undefined (the same
+degeneracy that <code><a href="calcFG.html">calcFG</a></code> now reports as <code>NA</code>); in that
+case this function returns <code>NA</code> with a warning advising more
+iterations. Founders that do not contribute to the current population
+(<code>p == 0</code>) are dropped, so the standard error refers to exactly the
+founder set <code>FG</code> is computed from.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
