@@ -119,8 +119,8 @@ prefillGuardAllows <- function(current, lastAuto) {
 
 #' Potential Parents Module - UI Function
 #'
-#' Copyright(c) 2017-2025 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #'
 #' Creates the user interface for identifying potential parents of in-colony
 #' animals that have at least one unknown parent. The user sets a maximum

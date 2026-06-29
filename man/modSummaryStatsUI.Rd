@@ -13,10 +13,6 @@ modSummaryStatsUI(id)
 A \code{div} object containing summary statistics UI.
 }
 \description{
-Copyright(c) 2017-2025 R. Mark Sharp
-This file is part of nprcgenekeepr
-}
-\details{
 Creates user interface for summary statistics display including
 histograms and box plots for mean kinship, z-scores, and genome uniqueness.
 }

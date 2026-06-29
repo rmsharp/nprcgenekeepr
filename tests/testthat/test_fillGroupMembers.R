@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 
 test_that("fillGroupMembers adds animals in the specified sex ratio", {
   skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")

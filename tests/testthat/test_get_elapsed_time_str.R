@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 skip_if_not_installed("mockery")
 loadNamespace("mockery")
 start_time <- structure(

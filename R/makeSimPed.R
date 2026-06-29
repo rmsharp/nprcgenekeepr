@@ -1,3 +1,6 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
 #' Makes a simulated pedigree using representative sires and dams
 #'
 #' For each \code{id} in \code{allSimParents} with one or more unknown parents

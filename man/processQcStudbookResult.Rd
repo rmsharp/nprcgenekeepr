@@ -25,10 +25,6 @@ A list with the following components:
 }
 }
 \description{
-Copyright(c) 2017-2025 R. Mark Sharp
-This file is part of nprcgenekeepr
-}
-\details{
 Converts the errorLst object returned by qcStudbook (when reportErrors=TRUE)
 into a format suitable for display in the Shiny UI.
 }

@@ -1,6 +1,6 @@
 #' Default (no-config) site parameters
 #'
-## Copyright(c) 2017-2024 R. Mark Sharp
+## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' The single source of truth for the LabKey/site parameters returned by

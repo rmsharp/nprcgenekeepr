@@ -2,8 +2,8 @@
 
 #' Genetic Value and Breeding Group Description Module - UI Function
 #'
-#' Copyright(c) 2017-2025 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #'
 #' Creates user interface displaying detailed documentation about
 #' genetic value analysis and breeding group formation algorithms.

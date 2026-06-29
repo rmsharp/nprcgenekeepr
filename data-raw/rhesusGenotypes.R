@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2026 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #'
 #' Re-export of the bundled `rhesusGenotypes` data object (Session 124, owner
 #' pick A7: correct the degraded column types).

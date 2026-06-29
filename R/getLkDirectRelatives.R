@@ -1,6 +1,6 @@
 #' Get the direct relatives of selected animals from the LabKey EHR
 #'
-## Copyright(c) 2017-2024 R. Mark Sharp
+## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Builds the pedigree of relatives for the provided focal animals from the
 #' LabKey \code{study} schema \code{demographics} table, obtained through the

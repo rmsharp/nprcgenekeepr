@@ -1,6 +1,6 @@
 #' Get parameter definitions from tokens found in configuration file.
 #'
-## Copyright(c) 2017-2024 R. Mark Sharp
+## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' @return A character vector of length one with the value (definition) provided
 #' in \code{tokenList} for the 'param' parameter represented by \code{param}.

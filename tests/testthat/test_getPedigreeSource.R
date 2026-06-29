@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2026 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 
 # Tests for the internal data-source adapter getPedigreeSource(), which
 # formalizes the fetch boundary used by getLkDirectRelatives(): a pluggable

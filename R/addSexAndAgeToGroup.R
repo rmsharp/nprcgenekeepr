@@ -1,6 +1,6 @@
 #' Forms a dataframe with Id, Sex, and current Age given a list of Ids and a
 #' pedigree
-## Copyright(c) 2017-2024 R. Mark Sharp
+## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' @details An empty \code{ids} vector yields a zero-row data frame that still

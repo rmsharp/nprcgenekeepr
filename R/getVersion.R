@@ -1,6 +1,6 @@
 #' getVersion Get the version number of nprcgenekeepr
 #'
-## Copyright(c) 2017-2021 R. Mark Sharp
+## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' @return Current Version
 #' @param date A logical value when TRUE (default) a date in YYYYMMDD format

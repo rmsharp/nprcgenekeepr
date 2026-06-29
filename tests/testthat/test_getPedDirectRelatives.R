@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2023 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 
 test_that("getPedDirectRelatives throws an error with no pedigree", {
   expect_error(

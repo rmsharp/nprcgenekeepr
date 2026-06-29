@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2026 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 
 #' Prepare outside-information kinship overrides for a genetic-value path
 #'

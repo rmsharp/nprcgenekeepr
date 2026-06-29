@@ -1,3 +1,6 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
 #' Main Application Server for nprcgenekeepr
 #'
 #' Server function for the main GeneKeepR Shiny application. Initializes

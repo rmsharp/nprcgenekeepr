@@ -1,3 +1,6 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
 #' Extracts a dataframe with a row for each kinship coeficient in the kinship
 #' matrix
 #'

@@ -1,6 +1,6 @@
 #' Gets pedigree with descendants of provided group
 #'
-## Copyright(c) 2017-2024 R. Mark Sharp
+## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Filters a pedigree down to only the descendants of the provided group,
 #' building the pedigree forward in time starting from a group of probands.

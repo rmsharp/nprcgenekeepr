@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2026 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 library(testthat)
 
 # Issue #13 Slice 1: applyKinshipOverrides(kmat, overrides) patches a computed

@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2026 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #'
 #' Structure/type contract for the bundled `rhesusGenotypes` data object.
 #' `rhesusGenotypes` is a 31-animal, two-haplotype-per-animal MHC genotype

@@ -1,7 +1,7 @@
 #' Process qcStudbook Result into UI-Friendly Format
 #'
-#' Copyright(c) 2017-2025 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #'
 #' Converts the errorLst object returned by qcStudbook (when reportErrors=TRUE)
 #' into a format suitable for display in the Shiny UI.

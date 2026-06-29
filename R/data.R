@@ -121,7 +121,7 @@
 #' \code{dam} alternating.
 #' }
 "lacy1989PedAlleles"
-## Copyright(c) 2017-2024 R. Mark Sharp
+## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Gene-drop alleles example (baboon pedigree)
 #'

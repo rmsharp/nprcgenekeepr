@@ -1,3 +1,6 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
 #' Makes a list object of kinship matrices from simulated pedigrees of possible
 #' parents for animals with unknown parents
 #'

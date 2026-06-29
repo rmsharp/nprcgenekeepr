@@ -16,14 +16,11 @@ Returns the error condition of the Shiny application when it
 terminates.
 }
 \description{
-Copyright(c) 2017-2025 R. Mark Sharp
-This file is part of nprcgenekeepr
-}
-\details{
 Launches the modularized Shiny application for testing purposes.
 This version uses the new module-based architecture with a Home tab
 and improved UI components.
-
+}
+\details{
 This function runs the modular version of the application which includes:
 \itemize{
 \item Home tab with navigation buttons

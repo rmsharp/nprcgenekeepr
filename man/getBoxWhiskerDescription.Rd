@@ -11,10 +11,6 @@ Character string containing the box and whisker plot description
 explaining whiskers, IQR (inter-quartile range), and outliers.
 }
 \description{
-Copyright(c) 2017-2025 R. Mark Sharp
-This file is part of nprcgenekeepr
-}
-\details{
 Returns a description of how box and whisker plots work, suitable for
 use in popovers and tooltips in the Shiny application.
 }

@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 library(testthat)
 
 test_that("allTrueNoNA judges all vectors with one or more NA value as FALSE", {

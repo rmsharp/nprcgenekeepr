@@ -30,10 +30,6 @@ The result of evaluating \code{expr}, or \code{default} if an
 error occurs.
 }
 \description{
-Copyright(c) 2017-2025 R. Mark Sharp
-This file is part of nprcgenekeepr
-}
-\details{
 Executes an expression with comprehensive error handling. On error,
 logs the error and returns a default value instead of stopping execution.
 This is particularly useful in Shiny reactive contexts where errors

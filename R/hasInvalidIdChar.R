@@ -1,6 +1,6 @@
 #' Detect IDs containing a disallowed character
 #'
-## Copyright(c) 2017-2024 R. Mark Sharp
+## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' Animal IDs (\code{id}, \code{sire}, \code{dam}) must be alphanumeric with no

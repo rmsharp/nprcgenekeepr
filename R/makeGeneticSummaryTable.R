@@ -1,7 +1,7 @@
 #' Create Genetic Summary Statistics HTML Table
 #'
-#' Copyright(c) 2017-2025 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #'
 #' Generates an HTML table displaying summary statistics (Min, Q1, Mean,
 #' Median, Q3, Max) for mean kinship and genome uniqueness values.

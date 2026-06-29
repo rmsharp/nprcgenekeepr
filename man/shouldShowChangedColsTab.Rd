@@ -19,10 +19,6 @@ Logical. TRUE if columns were changed and tab should be shown,
 FALSE otherwise.
 }
 \description{
-Copyright(c) 2017-2025 R. Mark Sharp
-This file is part of nprcgenekeepr
-}
-\details{
 Checks the changedCols list to determine if the Changed Columns tab should
 be inserted into the application navigation. The tab is shown when column
 names were modified during QC processing.

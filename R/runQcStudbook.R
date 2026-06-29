@@ -1,7 +1,7 @@
 #' Run Quality Control on Studbook with UI-Friendly Results
 #'
-#' Copyright(c) 2017-2025 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #'
 #' Wrapper function that runs \code{qcStudbook} and processes results into a
 #' format suitable for Shiny UI display. This function performs two passes:

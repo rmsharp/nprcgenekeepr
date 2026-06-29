@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2026 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 ##
 ## Tests for getSpeciesGestation() and the speciesGestation lookup table
 ## (issue #46 item 2): a per-species maximum-gestation lookup with a

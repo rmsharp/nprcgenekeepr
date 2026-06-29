@@ -1,6 +1,6 @@
 #' Get the auto-generated unknown-ID format
 #'
-## Copyright(c) 2017-2024 R. Mark Sharp
+## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' Returns the \code{sprintf} template used to mint placeholder IDs for unknown
@@ -23,7 +23,7 @@ getAutoIdFormat <- function() {
 
 #' Set the auto-generated unknown-ID format
 #'
-## Copyright(c) 2017-2024 R. Mark Sharp
+## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
 #' Sets the \code{sprintf} template used to mint and detect placeholder IDs for

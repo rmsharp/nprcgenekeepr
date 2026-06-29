@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #' E2E Tests for Boundary Conditions
 #' Non-golden-path testing - edge cases and limits
 library(testthat)

@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2025 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #' E2E Tests for the Potential Parents Module (GitHub issue #48)
 #'
 #' Opt-in, browser-driven regression tests for the "Potential Parents" tab

@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2026 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #'
 #' A documented @examples block should demonstrate the function it documents.
 #' These tests read the generated man/*.Rd via tools::Rd2ex (source/dev

@@ -13,10 +13,6 @@ modPedigreeUI(id)
 A \code{div} object containing pedigree browser UI.
 }
 \description{
-Copyright(c) 2017-2025 R. Mark Sharp
-This file is part of nprcgenekeepr
-}
-\details{
 Creates user interface for browsing and filtering pedigree data,
 including focal animal selection, trimming options, and export.
 }

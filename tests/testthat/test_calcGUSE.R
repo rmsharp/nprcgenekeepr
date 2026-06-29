@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #
 # Issue #2 Slice 1: calcGUSE() returns the per-animal Monte Carlo sampling
 # standard error of the genome-uniqueness (gu) estimate, computed from the same

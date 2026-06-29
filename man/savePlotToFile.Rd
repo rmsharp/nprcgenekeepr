@@ -40,10 +40,6 @@ Defaults to 150 for good quality web/screen use. Use 300 for print.}
 Logical. TRUE if the file was saved successfully, FALSE otherwise.
 }
 \description{
-Copyright(c) 2017-2025 R. Mark Sharp
-This file is part of nprcgenekeepr
-}
-\details{
 Helper function to save ggplot2 plots to files with consistent settings
 and error handling. Supports PNG, PDF, and SVG formats with configurable
 dimensions and resolution.

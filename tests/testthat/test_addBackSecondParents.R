@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2021 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 uPedOne <- data.frame(
   id = c(NA, "d1", "s2", "d2", "o1", "o2", "o3", "o4"),
   sire = c(NA, "s0", "s4", NA, "s1", "s1", "s2", "s2"),

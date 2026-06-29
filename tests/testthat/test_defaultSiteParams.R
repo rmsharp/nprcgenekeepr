@@ -1,5 +1,5 @@
-#' Copyright(c) 2017-2024 R. Mark Sharp
-#' This file is part of nprcgenekeepr
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
 #
 # Tests for defaultSiteParams(): the single internal source of truth for the
 # no-config (ONPRC) fallback returned by getSiteInfo(). LabKey research Rec #2

@@ -13,8 +13,7 @@ modPyramidUI(id)
 A \code{div} containing age-sex pyramid UI.
 }
 \description{
-Copyright(c) 2017-2025 R. Mark Sharp
-This file is part of nprcgenekeepr
+Age-Sex Pyramid Module - UI Function
 }
 \seealso{
 \code{\link{modPyramidServer}}

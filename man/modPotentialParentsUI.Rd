@@ -13,10 +13,6 @@ modPotentialParentsUI(id)
 A \code{div} object containing the Potential Parents UI.
 }
 \description{
-Copyright(c) 2017-2025 R. Mark Sharp
-This file is part of nprcgenekeepr
-}
-\details{
 Creates the user interface for identifying potential parents of in-colony
 animals that have at least one unknown parent. The user sets a maximum
 gestational period, presses a button to compute candidate sires and dams

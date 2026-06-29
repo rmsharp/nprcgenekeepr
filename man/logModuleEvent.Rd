@@ -21,10 +21,6 @@ formatting).}
 Invisible NULL. Called for side effect of logging.
 }
 \description{
-Copyright(c) 2017-2025 R. Mark Sharp
-This file is part of nprcgenekeepr
-}
-\details{
 Centralized logging function for Shiny module events. Provides consistent
 logging format across all modules with configurable log levels.
 }

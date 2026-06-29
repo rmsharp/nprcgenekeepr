@@ -21,10 +21,6 @@ Logical. TRUE if a real ONPRC configuration is active and the tab
 should be shown, FALSE otherwise.
 }
 \description{
-Copyright(c) 2017-2025 R. Mark Sharp
-This file is part of nprcgenekeepr
-}
-\details{
 Determines whether the Oregon (ONPRC)-specific ORIP Reporting tab should be
 shown in the application navigation. ORIP (Office of Research Infrastructure
 Programs) grant reporting is specific to ONPRC, so the tab is shown only when

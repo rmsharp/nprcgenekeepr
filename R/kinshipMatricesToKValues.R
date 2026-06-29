@@ -1,3 +1,6 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
 #' Forms kValue matrix from list of kinship matrices
 #'
 #' A `kValue` matrix has one row for each pair of individuals in the kinship
