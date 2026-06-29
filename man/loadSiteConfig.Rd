@@ -25,7 +25,7 @@ crash the application on boot: in that case a warning is logged and
 \details{
 This replaces a former \code{read.table(sep = "=")} call in the application
 server that assumed a strict two-column table, could not parse the documented
-format, and crashed \code{\link{runModularApp}} at startup (issue #50).
+format, and crashed \code{\link{runModularApp}} at startup.
 }
 \seealso{
 \code{\link{getSiteInfo}}, \code{\link{getConfigFileName}},

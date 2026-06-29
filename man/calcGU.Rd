@@ -77,7 +77,7 @@ Note that \code{calcGU} computes this statistic for every animal and still
 includes living founders' alleles; it is unchanged. The genetic value report
 (\code{\link{reportGV}}) separately applies a colony decline-to-credit policy
 that reports genome uniqueness as 0 for unknown-origin both-unknown
-("Undetermined") animals (issue #76).
+("Undetermined") animals.
 }
 \examples{
 library(nprcgenekeepr)

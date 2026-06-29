@@ -30,8 +30,7 @@ lookup table (or a supplied \code{gestationTable}). Matching is case- and
 whitespace-insensitive. Any species that is missing, \code{NA}, an empty
 string, or not present in the table falls back to \code{default} (210 days,
 the conservative rhesus bound). Used by \code{\link{getPotentialParents}} to
-key its gestation window on the first-class \code{species} pedigree column
-(issue #46 item 2).
+key its gestation window on the first-class \code{species} pedigree column.
 }
 \examples{
 getSpeciesGestation("RHESUS")

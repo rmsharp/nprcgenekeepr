@@ -17,7 +17,7 @@ The validated \code{overrides} data.frame with \code{id1} and
 }
 \description{
 Checks the structure and domain of an outside-information kinship override
-table (issue #13). The table supplies pairwise kinship coefficients
+table. The table supplies pairwise kinship coefficients
 (\code{id1}, \code{id2}, \code{kinship}) that
 \code{\link{applyKinshipOverrides}} writes into a computed kinship matrix,
 replacing the pedigree-derived value for those pairs. It mirrors

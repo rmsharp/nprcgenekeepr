@@ -15,7 +15,7 @@ makeFounderStatsTable(founderStats)
 \item \code{fe} - Founder equivalents
 \item \code{fg} - Founder genome equivalents
 \item \code{fgSE} - (optional) sampling standard error of \code{fg};
-when finite it is shown inline as \code{FG +/- SE} (issue #82)
+when finite it is shown inline as \code{FG +/- SE}
 }}
 }
 \value{
