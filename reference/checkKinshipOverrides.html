@@ -79,18 +79,14 @@ errors and returns the (id-coerced) table when the input is acceptable.</p>
 
 <dl><dt id="arg-overrides">overrides<a class="anchor" aria-label="anchor" href="#arg-overrides"></a></dt>
 <dd><p>data.frame with id columns <code>id1</code> and <code>id2</code> and a
-numeric <code>kinship</code> column; each row is one off-diagonal pair. An optional
-<code>missingSideFor</code> column (issue #95 option C) may name, per row, which of
-<code>id1</code> / <code>id2</code> is the one-unknown focal whose MISSING-side
-relatedness the override stands in for (blank / NA = known-side); each
-non-blank value must equal that row's <code>id1</code> or <code>id2</code>.</p></dd>
+numeric <code>kinship</code> column; each row is one off-diagonal pair. Any extra
+columns are ignored.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>The validated <code>overrides</code> data.frame with <code>id1</code> and
-<code>id2</code> coerced to character, and an optional <code>missingSideFor</code>
-column normalized (NA -&gt; "") when present.</p>
+<code>id2</code> coerced to character.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

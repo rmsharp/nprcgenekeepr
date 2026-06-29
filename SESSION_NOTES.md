@@ -7,6 +7,203 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 235 Did
+
+**Deliverable (owner pick – “S234’s suggested next”):** the **strict-TDD
+revert implementation** ratified by S234 (plan
+`docs/planning/issue95-optionC-targeted-suppression-plan.md` §9C). An
+outside kinship override no longer drops a one-unknown animal’s
+`+ sexMean / 2` unknown-parent prior; it only refines the named kinship
+cell (issue \#13). The option-C suppression machinery is removed.
+**DONE** (implemented, verified, pushed; **PR \#98** opened, OPEN).
+**Strict-TDD DEVELOPMENT session:** RED `034de14b` -\> GREEN `cae27e94`
+-\> REFACTOR (none needed) -\> close-out; **all phase gates + the
+pre-RED scope decision via `AskUserQuestion`**; **0 stakeholder
+corrections / 0 owner overrides.** On branch
+**`issue95-revert-keepall`** (off `master` @ `e6930906`). **Started /
+Completed:** 2026-06-28 / 2026-06-28 **Status:** **DONE.** Grounded with
+a 19-agent read-only workflow (`wf_9298eddb-3a4`) that re-verified the
+§9C grep inventory firsthand against current master (complete +
+accurate; empty `planRefsNotFound`) and surfaced the under-specified
+mechanical details + two author’s-call forks; settled the forks via a
+pre-RED `AskUserQuestion` (drop the now-unused `ped`/`candidateIds`;
+ignore – not reject – a stray `missingSideFor`); then RED (8 test files)
+-\> GREEN (7 R files + docs + man/NEWS regen). - **Behavior reverted:**
+`correctUnknownParentMeanKinship` drops the `overriddenIds` param + the
+suppress guard and corrects EVERY one-unknown animal;
+`prepareKinshipOverrides` drops the
+`suppressIds`/`classifyOverrideMissingSide` machinery + the
+`ped`/`candidateIds` params and returns `list(kmat)`;
+`reportGV`/`gvaConvergence` drop the suppress read + `overriddenIds` arg
+**in lockstep** (the issue-#13 `applyKinshipOverrides` cell-write
+STAYS); `R/classifyOverrideMissingSide.R` deleted;
+`checkKinshipOverrides` no longer knows `missingSideFor` (an extra
+column rides through harmlessly). Docs rewritten to keep-all (helpText,
+`genetic_value.html`, NEWS) with the honest underestimate limitation
+(Vinson & Raboin 2015). - **Verify:** affected tests GREEN (198
+assertions); full suite **3173 pass / 0 fail / 0 error** (no true
+offenders; the 7 warnings are pre-existing baseline noise – 5
+`test_modPyramid`, 2 a *kept* gvaConvergence PSD-bound test);
+`spell_check_package(".")` clean; `devtools::check(vignettes=FALSE)`
+**0/0/0**.
+
+**Phase-3E (runtime smoke): DONE (FM \#24 – Shiny helpText changed).**
+Headless: (a) app boots – `shiny::shinyApp(appUI(), appServer)` is a
+`shiny.appobj`; (b) the LIVE app UI (`as.character(appUI())`) shows the
+keep-all copy (“kept”/“underestimate”/“missing one parent”) and NO
+`missingSideFor`; (c) `reportGV` with an override on one-unknown
+`0K7VJN` KEEPS its prior (imk 0.009198 \> original 0.006027) and applies
+the cell-write (`kinship[X,Y]==0.25`). The opposite of the reverted
+rule-(i) suppression, confirmed live.
+
+**Session 234 Handoff Evaluation (by Session 235): Score 9/10.** S234’s
+§9C set this implementation up almost perfectly. **What helped:** (1)
+§9C was a near-complete implementation map – per-file keep/remove with
+line numbers, the behavior invariant (keep-all), the lockstep mandate,
+and dragons R1-R5 (keep the cell-write; reportGV/gvaConvergence
+lockstep; doc-consistency couples code+docs; `.Rd`/`NEWS.md` are
+generated) – I executed it almost verbatim; (2) the gotchas (#95 stays
+OPEN; PR “Relates to”, not “Closes”; the closing-keyword discipline)
+carried cleanly; (3) the firsthand-verified pipeline-ordering reframing
+in §9A made the keep-all RED oracle obvious. **What was missing (the
+-1):** §9C’s line-ranges **under-specified the mechanical SHAPE** – the
+suppress guard is a braced 8-line block (not the one-liner the plan text
+showed), removing a last arg needs trailing-comma cleanups, the `@noRd`
+docstrings have no generated `.Rd` to catch staleness, and it never
+flagged that `ped`/`candidateIds` fall unused or resolved the
+“rejects/ignores” fork. All were caught by the grounding workflow, but a
+sharper plan would have named them (Learning 221(1)/(2)). **What was
+wrong:** nothing – every §9C claim verified firsthand. **ROI:** very
+high. (A planning-session deliverable cannot fully anticipate revert
+mechanics; re-grounding is the right complement, so 9, not lower.)
+
+**Self-assessment (Session 235): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+ghost-check clean), reported, STOPPED for the owner; wrote the **1B stub
+before technical work**; declared the TDD phase at the top of every
+response; gated PRE-RED-\>RED and RED-\>GREEN via `AskUserQuestion` and
+posed the two pre-RED author’s-call forks separately. **Strengths:** (1)
+**re-verified the plan’s grep inventory firsthand** via a read-only
+workflow before touching code – caught the under-specified mechanics +
+the unused-params decision the plan glossed; (2) **real discriminating
+REDs** for each kind of removal (oracle flip, signature guard,
+return-shape, ignore-stray-column, doc phrases), each confirmed to fail
+against the unreverted code with zero collateral; (3) **lockstep via the
+shared helper** (reverted once, identical 2-line edit at each call site
+– did not re-inline); (4) **committed to exact doc phrases in RED and
+honored them in GREEN** (the doc-consistency couple); (5) **Phase-3E
+done live** (app boot + UI + behavior), not just “tests pass”; (6) full
+verification (198 affected + 3173 suite + spell + check 0/0/0); 0
+corrections / 0 overrides. **Weakness (the -1):** the deliverable is
+implemented + verified **locally on a branch but not pushed/PR’d** (the
+outward-facing step is owner-gated, the next session per the S230-\>S231
+pattern), so the loop is not closed to master until merge; and I folded
+the doc/man/NEWS regen into GREEN (defensible – needed for the doc
+tests + check-clean – but a purist could split it from REFACTOR). Capped
+at 9 (a 10 closes the loop to master).
+
+**Learnings:** **Learning 221** added to `PROJECT_LEARNINGS.md` – when
+implementing a revert, ground it with a read-only workflow that
+re-verifies the plan’s grep inventory firsthand (revert plans
+under-specify the mechanical SHAPE: braced guards, trailing commas,
+`@noRd` docstrings, newly-unused params); surface the author’s-call
+forks a revert leaves open as a pre-RED `AskUserQuestion`; the
+discriminating RED per removal kind (oracle flip / signature guard /
+return-shape / ignore-stray / doc phrases); commit to exact doc phrases
+in RED and honor them in GREEN (the doc-consistency couple); lockstep
+via the shared helper, not parallel edits; Phase-3E headless (app-boot +
+live-UI + behavior); NEWS.md is
+[`rmarkdown::render`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)ed
+from NEWS.Rmd (watch pandoc reflow). Carried:
+\[\[observation-vs-decision\]\],
+\[\[consult-project-source-of-truth\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a strict-TDD
+DEVELOPMENT session.**
+
+**=\> SUGGESTED NEXT = watch PR \#98 CI to green -\> merge -\> branch
+hygiene (the S232-\>S233 arc).** Branch `issue95-revert-keepall` is
+PUSHED and **PR \#98 (“Relates to \#95”, base `master`) is OPEN** (not
+merged). The S235 push step opened it; its body + \#95-stays-OPEN were
+verified at creation. Next (owner-gated): watch the full R-CMD-check
+matrix to green -\> merge with a merge commit -\> delete the merged
+branch (verify-merged-firsthand against BOTH refs). **Closing-keyword
+discipline (Learning 215/217/218):** the PR body is already
+keyword-free; author any merge-commit message so a plain
+`grep -iE 'clos|fix|resolv'` is EMPTY, keep any such token away from a
+`#N`, and run `gh api repos/O/R/issues/95 --jq .state` at the very end
+(expect OPEN). The lone `lint` CI red is pre-existing whole-package
+noise (prove via the check-run annotations API; none in this PR’s
+changed files). Other live threads (carried): - **\#95 follow-ups 2**
+(both-unknown-\>one-unknown promotion) **/ 3** (sib-pair coupling) – the
+only remaining \#95 genetics work; each a `/grill-me`. - **Other stale
+branches** (`dev`, `module`, `rlabkey-version-floor` local+remote;
+remote-only `issue8*`/`nprcmanager-master`/`or-replacement`) – a broader
+branch cleanup is a SEPARATE owner-gated session (some may be unmerged
+WIP). - **Systematic whole-package lint pass** (clears the standing
+`lint`-CI red; includes the `data-raw/fgSEValidation.R` cleanup). The
+pervasive long `test_that` titles are accepted in-file style; a lint
+pass would address the line-length category project-wide. - **Possible
+2.0.0 release** (owner-gated, carried S209-S235); **\#37 disposition**
+(carried S212-S235); other open issues (#36, \#28, \#12/#11/#10/#5).
+
+**Key files (this session, on branch `issue95-revert-keepall`):** **R
+(7):** `R/correctUnknownParentMeanKinship.R` (dropped `overriddenIds`
+param + suppress guard), `R/prepareKinshipOverrides.R` (dropped suppress
+machinery + `ped`/`candidateIds`; returns `list(kmat)`),
+`R/reportGV.R` + `R/gvaConvergence.R` (lockstep: dropped suppress read +
+`overriddenIds` arg; 2-arg helper call), `R/checkKinshipOverrides.R`
+(removed `missingSideFor` validation), `R/modGeneticValue.R` (keep-all
+helpText), **deleted** `R/classifyOverrideMissingSide.R`. **Tests (8):**
+deleted `test_classifyOverrideMissingSide.R`; edited
+`test_correctUnknownParentMeanKinship.R`,
+`test_prepareKinshipOverrides.R`, `test_checkKinshipOverrides.R`,
+`test_kinshipOverrideDocs.R`, `test_reportGV.R`,
+`test_gvaConvergence_kinshipOverrides.R`,
+`test_modGeneticValue_kinshipOverrides.R`. **Docs/generated:**
+`inst/extdata/ui_guidance/genetic_value.html`, `NEWS.Rmd` + regenerated
+`NEWS.md`, regenerated
+`man/{checkKinshipOverrides,gvaConvergence,reportGV}.Rd`. **Process docs
+(on branch):** `CHANGELOG.md` (S235 entry), `PROJECT_LEARNINGS.md`
+(Learning 221), `SESSION_NOTES.md` (this handoff). **Commits:** RED
+`034de14b`, GREEN `cae27e94`, + this close-out. **Workflow:**
+`wf_9298eddb-3a4` (grounding). **NOT committed (standing keep):**
+`PED_GV_AUDIT_2026-05-30.html` (untracked); `.DS_Store`.
+
+**Gotchas:** (1) **The revert is on branch `issue95-revert-keepall` / PR
+\#98 (OPEN), NOT yet on `master`.** Until PR \#98 merges, `master` still
+contains the over-correcting suppression (an override on a one-unknown
+animal STILL wrongly drops its `+ sexMean / 2` prior on `master`). (2)
+**\#95 must STAY OPEN** – the PR is **“Relates to \#95”**, not “Closes”;
+follow-ups 2/3 remain; \#9/#13 stay CLOSED. (3)
+**`reportGV`/`gvaConvergence` share `prepareKinshipOverrides()`** (now
+2-arg, returns `list(kmat)`) – change the HELPER, never re-inline. The
+module fallback paths (`modBreedingGroups`/`modSummaryStats`) still use
+`applyKinshipOverridesToMatrix` (the deferred 3-way de-dup – out of
+scope, untouched). (4) **The issue-#13 cell-write
+(`applyKinshipOverrides` at `prepareKinshipOverrides.R:49`) STAYS** –
+the override still refines `original`; only the suppress computation was
+removed. (5) **`NEWS.md` is generated** from `NEWS.Rmd` via
+[`rmarkdown::render`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)
+(github_document) – edit the `.Rmd`, render, inspect the diff for pandoc
+reflow. **`man/*.Rd` are generated** via `devtools::document()`. (6)
+**Pre-existing test warnings** (not from this revert): 5 in
+`test_modPyramid.R`, 2 in the kept
+`test_gvaConvergence_kinshipOverrides.R` PSD-bound test (a `>0.5`
+warning leaking through `suppressMessages`). (7) Carried standing keeps
+(unchanged): closing-keyword discipline for any PR/merge/issue body
+(Learning 215/217/218); **`gh pr edit`/`gh issue view <n>` 401 on the
+Projects-classic deprecation -\> use `gh api`/`--json`**; `git pull` is
+rebase + chokes on `.DS_Store` -\> use the stash-the-stub sync; re-check
+`git status` before ANY `reset --hard` (Learning 215); **zsh `status` is
+a read-only special variable** (Learning 218); package **ARCHIVED on
+CRAN 2025-07-29**; build-equivalent is
+`devtools::check(vignettes=FALSE)`=0/0/0; a 0/0/0 check does NOT imply
+spelling-clean -\> `spell_check_package`; module/E2E tests need
+`NOT_CRAN=true`;
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without LabKey config.
+
 ### What Session 234 Did
 
 **Deliverable (owner pick – live-thread \#2 -\> rule (ii)):** a

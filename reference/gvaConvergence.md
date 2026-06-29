@@ -114,11 +114,10 @@ gvaConvergence(
   applies them, so the convergence diagnostic ranks on the same mean
   kinship the report uses (issue \#13). `NULL` (the default) leaves the
   pedigree-derived matrix unchanged. Ids outside the analysis set are
-  warn-dropped (the run is not aborted); an override on a one-unknown
-  animal supersedes its `+ sexMean / 2` correction. An optional
-  `missingSideFor` column (issue \#95 option C) may name the one-unknown
-  focal whose MISSING parent side the override stands in for; only those
-  focals lose the correction (a blank cell, or no column, keeps it). See
+  warn-dropped (the run is not aborted). An override REFINES the named
+  kinship cell; it does not suppress the `+ sexMean / 2` unknown-parent
+  correction, which is kept for every animal missing one parent (issue
+  \#95 keep-all revert). See
   [`applyKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md).
 
 ## Value

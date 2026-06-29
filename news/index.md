@@ -16,9 +16,9 @@
     [`applyKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md)
     (writes the symmetric overrides into a kinship matrix) and
     [`checkKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkKinshipOverrides.md)
-    (validates the override table). An override on an animal missing one
-    parent supersedes that animal’s unknown-parent mean-kinship
-    correction rather than stacking with it. The default (`NULL`) leaves
+    (validates the override table). An override refines the named pair’s
+    kinship value; the unknown-parent mean-kinship correction is kept
+    for every animal missing one parent. The default (`NULL`) leaves
     results identical to before.
   - The Genetic Value Analysis tab now accepts an optional
     kinship-override upload: a CSV or Excel file with `id1`, `id2`, and
@@ -59,18 +59,17 @@
     guidance panels: overrides change the kinship *value* only and apply
     to the rankings, breeding groups, and summary statistics regardless
     of tab order; the relationship-table label stays pedigree-derived
-    (so a label and its overridden value can disagree); and overrides on
-    an animal missing a parent are supported, with a few edge cases
-    (both parents unknown, or siblings sharing an unknown parent) noted
-    as current limitations (issue
-    [\#13](https://github.com/rmsharp/nprcgenekeepr/issues/13)
+    (so a label and its overridden value can disagree); and an override
+    on an animal missing a parent only refines that pair’s value while
+    the unknown-parent correction is kept, so mean kinship for such an
+    animal remains an estimate that tends to underestimate relatedness
+    (issue [\#13](https://github.com/rmsharp/nprcgenekeepr/issues/13)
     follow-up).
   - [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
     gains an optional `kinshipOverrides` argument and now applies
     outside-information kinship overrides the same way
     [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-    does – writing them into the kinship matrix before mean kinship and
-    threading the overridden ids into the unknown-parent correction – so
+    does – writing them into the kinship matrix before mean kinship – so
     the gene-drop convergence diagnostic ranks on the same kinship the
     genetic-value report uses. Override ids outside the analysis set are
     warn-dropped without aborting, and the default (`NULL`) leaves the
@@ -87,36 +86,18 @@
     table is unchanged (issue
     [\#13](https://github.com/rmsharp/nprcgenekeepr/issues/13) item-3
     follow-up, R13).
-  - [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-    now supports *targeted* suppression of the unknown-parent
-    mean-kinship correction via an optional `missingSideFor` column on
-    the kinship-override table. A one-missing-parent animal keeps its
-    `+ sexMean / 2` correction when an override only informs a
-    *known*-side relationship, and has it suppressed only when an
-    override stands in for its *missing*-parent side (the column names
-    which of `id1` / `id2` is that focal; blank means known-side).
-    Previously any override on such an animal suppressed the correction
-    (blanket supersession, issue
-    [\#13](https://github.com/rmsharp/nprcgenekeepr/issues/13) D11). An
-    override table with no `missingSideFor` column reproduces the
-    previous (blanket) behavior exactly (issue
-    [\#95](https://github.com/rmsharp/nprcgenekeepr/issues/95), option
-    C, slice 1). The in-app upload and the gene-drop convergence
-    diagnostic gain this in a later slice.
-  - The gene-drop convergence diagnostic
-    ([`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md))
-    and the in-app Genetic Value upload now honor the `missingSideFor`
-    targeted suppression in lockstep with
-    [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md):
-    a known-side override keeps a one-missing-parent animal’s
-    `+ sexMean / 2` correction on the convergence ranking too, and only
-    a missing-side override suppresses it. The report and the
-    convergence diagnostic share one override-preparation path, so they
-    cannot disagree on an overridden one-missing-parent animal. An
-    override table with no `missingSideFor` column (or no upload)
-    reproduces the previous behavior exactly (issue
-    [\#95](https://github.com/rmsharp/nprcgenekeepr/issues/95), option
-    C, slice 2).
+  - The unknown-parent mean-kinship correction is now *kept* for every
+    animal missing one parent even when a kinship override is supplied
+    (issue [\#95](https://github.com/rmsharp/nprcgenekeepr/issues/95)).
+    A kinship override refines the named pair’s value (issue
+    [\#13](https://github.com/rmsharp/nprcgenekeepr/issues/13)); it no
+    longer suppresses the `+ sexMean / 2` correction, because an
+    override informs only one of the animal’s many colony relationships,
+    so dropping the whole prior over-corrects. Mean kinship for an
+    animal missing a parent is an estimate that tends to underestimate
+    relatedness, consistent with Vinson and Raboin (2015). This reverts
+    the never-released `missingSideFor` targeted suppression and
+    blanket-supersession behavior.
   - File-based pedigree ingestion now treats `species` as a first-class
     column:
     [`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md)

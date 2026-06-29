@@ -21,17 +21,13 @@ checkKinshipOverrides(overrides)
 - overrides:
 
   data.frame with id columns `id1` and `id2` and a numeric `kinship`
-  column; each row is one off-diagonal pair. An optional
-  `missingSideFor` column (issue \#95 option C) may name, per row, which
-  of `id1` / `id2` is the one-unknown focal whose MISSING-side
-  relatedness the override stands in for (blank / NA = known-side); each
-  non-blank value must equal that row's `id1` or `id2`.
+  column; each row is one off-diagonal pair. Any extra columns are
+  ignored.
 
 ## Value
 
 The validated `overrides` data.frame with `id1` and `id2` coerced to
-character, and an optional `missingSideFor` column normalized (NA -\>
-"") when present.
+character.
 
 ## Details
 
