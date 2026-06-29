@@ -20,7 +20,7 @@
 #' @noRd
 checkFgDegeneracy <- function(p, r) {
   r <- r[names(p)] # align retention to contributions by NAME (Dragon D-3)
-  if (any(!is.na(p) & p > 0 & !is.na(r) & r == 0)) {
+  if (any(!is.na(p) & p > 0L & !is.na(r) & r == 0L)) {
     warning(
       "Founder genome equivalents undefined: founder(s) with positive ",
       "contribution were retained in 0 of the gene-drop iterations; ",

@@ -25,7 +25,7 @@ applyKinshipOverridesToMatrix <- function(kmat, overrides) {
   }
   inMatrix <- overrides$id1 %in% rownames(kmat) &
     overrides$id2 %in% rownames(kmat)
-  if (any(!inMatrix)) {
+  if (!all(inMatrix)) {
     dropped <- setdiff(
       unique(c(overrides$id1[!inMatrix], overrides$id2[!inMatrix])),
       rownames(kmat)
@@ -33,7 +33,7 @@ applyKinshipOverridesToMatrix <- function(kmat, overrides) {
     warning(sprintf(
       paste0("Dropping %d kinship override row(s) referencing id(s) not in ",
         "the analysis set: %s."),
-      sum(!inMatrix), paste(dropped, collapse = ", ")
+      sum(!inMatrix), toString(dropped)
     ))
     overrides <- overrides[inMatrix, , drop = FALSE]
   }
