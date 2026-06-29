@@ -101,6 +101,19 @@ getBreedingPeerCohort <- function(focalBirth, focalSpecies, missingSex,
 #' mean kinship (the analysis probands), since that is what \code{sexMean}
 #' averages.
 #'
+#' Each one-unknown animal is corrected independently. Two such animals
+#' that share the same unrecorded parent (for example two offspring of one
+#' known dam, each with an unknown sire) therefore each receive the full
+#' \code{sexMean / 2} prior, a small over-estimate of their joint
+#' relatedness. This shared-unknown-parent coupling is deliberately not
+#' modeled: the unrecorded parent has no id, so whether two animals share
+#' it cannot be determined from the pedigree, and the effect is negligible
+#' at colony scale (issue #95 follow-up 3 -- considered, not built). For
+#' the same path-agnostic reason an outside kinship override never
+#' reclassifies a both-unknown animal to one-unknown: a kinship value
+#' cannot identify which parent it informs (issue #95 follow-up 2 -- not
+#' derivable from the \code{id1}/\code{id2}/\code{kinship} schema).
+#'
 #' @param indivMeanKin named numeric vector of individual mean kinships, named
 #' by animal id (the analysis probands).
 #' @param ped pedigree data.frame with at least \code{id}, \code{sire},
