@@ -41,12 +41,12 @@ methods for identifying potential parents.
 
 <!-- RMS TODO: Add a link to a tutorial on this topic. -->
 
-Capabilities to be address with resolution of Issue #28[^issue28] will provide
-users the ability to fully automate the identification of potential parents. 
+Planned capabilities[^location] will provide
+users the ability to fully automate the identification of potential parents.
 However, prior to that capability being available, users can use other methods
 to identify potential parents.
 
-[^issue28]: Add ability to use timestamped transactional location data to identify potential parents for animals with a missing parent.
+[^location]: A planned capability will use timestamped transactional location data to identify potential parents for animals with a missing parent.
 
 ### Creation of example pedigree[^not-realistic]
 

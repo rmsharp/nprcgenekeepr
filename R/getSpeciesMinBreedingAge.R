@@ -11,10 +11,9 @@
 #' not present in the table -- and any sex that is not \code{"M"} or \code{"F"}
 #' -- falls back to \code{default} (2 years, the legacy package-wide minimum
 #' parent age). Used by the Genetic Value Analysis unknown-parent mean-kinship
-#' correction to form a focal animal's contemporaneous breeding-age peer cohort
-#' (issue #9 Slice 2). The bundled table is populated for the common colony
-#' NHP species (issue #73); the user-configurable override path is a separate
-#' slice.
+#' correction to form a focal animal's contemporaneous breeding-age peer
+#' cohort. The bundled table is populated for the common colony NHP species;
+#' the user-configurable override path is a separate feature.
 #'
 #' @param species character vector of species names (may contain \code{NA}).
 #' @param sex character vector of sexes (\code{"M"} or \code{"F"}); recycled to

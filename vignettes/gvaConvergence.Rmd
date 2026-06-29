@@ -52,7 +52,7 @@ the report uses, and compares the two orderings on two criteria:
   (threshold `rhoMin = 0.95`)
 
 The run is **reproducible at `N`** when both hold, and the recommended iteration
-count is the smallest `N` meeting both. The issue #76 "Undetermined" animals (both
+count is the smallest `N` meeting both. The "Undetermined" animals (both
 parents unknown, no recorded origin) are a policy constant with rank `NA`; they are
 excluded from the order and reported separately as `nUndetermined`.
 
@@ -63,7 +63,7 @@ fresh, independent run lead to the same animals being chosen, in the same order?
 
 ## A pedigree where the iteration count matters
 
-No bundled pedigree exercises the diagnostic well -- after the issue #76
+No bundled pedigree exercises the diagnostic well -- after the `gu = 0`
 de-inflation the shipped pedigrees have no `gu` signal left to rank on, so their selection
 order is settled at the smallest iteration count. To show a pedigree where the
 count *does* matter, we build a small half-sib web in which the founders (the
@@ -148,7 +148,7 @@ range, and `gvaConvergence()` is how you would confirm that rather than guess it
 
 ## A pedigree that converges immediately
 
-Contrast the bundled `qcPed`. After the issue #76 de-inflation none of its
+Contrast the bundled `qcPed`. After the `gu = 0` de-inflation none of its
 ranked animals carry a non-zero genome uniqueness, so the selection order is
 driven by deterministic mean kinship and does not move with the iteration count.
 
@@ -168,7 +168,7 @@ kable(
 
 convQc$recommendedIter   # converges at the grid floor
 convQc$nRankable
-convQc$nUndetermined     # the excluded issue #76 set
+convQc$nUndetermined     # the excluded Undetermined set
 ```
 
 Overlap and agreement are at their maximum from the smallest count, so the

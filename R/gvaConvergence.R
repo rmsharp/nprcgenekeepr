@@ -7,8 +7,8 @@
 #' Genome uniqueness (\code{\link{calcGU}}) is the only ranked Genetic Value
 #' Analysis output that carries Monte Carlo (gene-drop) sampling noise, so the
 #' number of iterations a colony actually needs is pedigree-dependent: there is
-#' no single universal "right" count. \code{gvaConvergence} answers issue #2's
-#' literal ask -- "define reproducible and automate finding the needed number of
+#' no single universal "right" count. \code{gvaConvergence} answers the literal
+#' request -- "define reproducible and automate finding the needed number of
 #' iterations" -- on the ratified definition that the decision-relevant quantity
 #' is the \emph{selection order} (which animals are chosen, and in what order),
 #' not the precision of the \code{gu} number itself.
@@ -30,7 +30,7 @@
 #'    \code{rhoMin} (they come out in the same order).
 #' }
 #' The recommended iteration count is the smallest \code{N} in \code{grid} at
-#' which both criteria hold. The issue #76 de-inflated \code{gu = 0}
+#' which both criteria hold. The de-inflated \code{gu = 0}
 #' "Undetermined" set (both parents unknown, no recorded origin) is a policy
 #' constant with rank \code{NA}; it is excluded from the order the criteria are
 #' computed on and reported separately as \code{nUndetermined}.
@@ -55,8 +55,8 @@
 #'  \item \code{criteria} -- the \code{k}, \code{oMin}, and \code{rhoMin} used.
 #'  \item \code{nRankable} -- the number of probands carrying a (non-\code{NA})
 #'    rank that the order metrics are computed on.
-#'  \item \code{nUndetermined} -- the count of the excluded issue #76
-#'    Undetermined set (2C).
+#'  \item \code{nUndetermined} -- the count of the excluded
+#'    Undetermined set.
 #'  \item \code{nMax} -- the gene-drop budget actually simulated.
 #' }
 #'
@@ -89,19 +89,19 @@
 #' @param breedingTable,gestationTable,breedingAgeDefault,gestationDefault
 #' Optional overrides for the unknown-parent mean-kinship correction, passed
 #' through to \code{correctUnknownParentMeanKinship()} exactly as
-#' \code{\link{reportGV}} passes them (issue #73 Part 2). NULL uses the bundled
+#' \code{\link{reportGV}} passes them. NULL uses the bundled
 #' defaults.
 #' @param kinshipOverrides Optional data.frame of outside-information kinship
 #' overrides (\code{id1}, \code{id2}, \code{kinship}; the coefficient \emph{f},
 #' not relatedness \emph{r}) applied to the kinship matrix before mean kinship
 #' and the unknown-parent correction, exactly as \code{\link{reportGV}} applies
 #' them, so the convergence diagnostic ranks on the same mean kinship the
-#' report uses (issue #13). \code{NULL} (the default) leaves the
+#' report uses. \code{NULL} (the default) leaves the
 #' pedigree-derived matrix unchanged. Ids outside the analysis set are
 #' warn-dropped (the run is not aborted). An override REFINES the named kinship
 #' cell; it does not suppress the \code{+ sexMean / 2} unknown-parent
-#' correction, which is kept for every animal missing one parent (issue #95
-#' keep-all revert). See \code{\link{applyKinshipOverrides}}.
+#' correction, which is kept for every animal missing one parent. See
+#' \code{\link{applyKinshipOverrides}}.
 #' @seealso \code{\link{reportGV}}, \code{\link{calcGU}}, \code{\link{calcGUSE}}
 #' @export
 #' @examples

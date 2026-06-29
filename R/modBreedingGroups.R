@@ -143,7 +143,7 @@ modBreedingGroupsUI <- function(id) {
 #'   kinship matrix, it will be used instead of calculating one.
 #' @param kinshipOverrides optional reactive returning a validated
 #'   outside-information kinship-override data frame (\code{id1}, \code{id2},
-#'   \code{kinship}); see \code{\link{applyKinshipOverrides}} (issue #13).
+#'   \code{kinship}); see \code{\link{applyKinshipOverrides}}.
 #'   When the module recomputes kinship from the pedigree (no genetic value
 #'   output), the overrides are applied to that matrix so group formation
 #'   reflects them regardless of tab order. \code{NULL} (the default) is a

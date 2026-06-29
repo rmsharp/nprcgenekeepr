@@ -15,7 +15,7 @@ modGeneticValueServer(id, pedigree, speciesOverrides = reactive(NULL))
 overrides loaded at boot by \code{\link{loadSpeciesOverrides}} (a list with
 \code{breedingTable}, \code{gestationTable}, \code{breedingAgeDefault},
 \code{gestationDefault}), or \code{NULL}. Threaded into
-\code{\link{reportGV}} (issue #73 Part 2). Defaults to \code{reactive(NULL)}
+\code{\link{reportGV}}. Defaults to \code{reactive(NULL)}
 so no config file means bundled behavior.}
 }
 \value{

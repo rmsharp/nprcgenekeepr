@@ -15,7 +15,7 @@
 #'
 #' This replaces a former \code{read.table(sep = "=")} call in the application
 #' server that assumed a strict two-column table, could not parse the documented
-#' format, and crashed \code{\link{runModularApp}} at startup (issue #50).
+#' format, and crashed \code{\link{runModularApp}} at startup.
 #'
 #' @return A named list of site information (as returned by
 #' \code{\link{getSiteInfo}}) when a configuration file is present and
