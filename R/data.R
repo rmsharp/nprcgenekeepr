@@ -382,17 +382,17 @@
 #' A lookup table mapping a species name to reproductive parameters used across
 #' the package. It keys the gestation window in
 #' \code{\link{getPotentialParents}} through \code{\link{getSpeciesGestation}}
-#' (issue #46 item 2) and the minimum
+#' and the minimum
 #' breeding ages in the Genetic Value Analysis unknown-parent mean-kinship
-#' correction through \code{\link{getSpeciesMinBreedingAge}} (issue #9 Slice 2).
+#' correction through \code{\link{getSpeciesMinBreedingAge}}.
 #' Species names are matched case- and whitespace-insensitively; any species not
 #' present falls back to 210 days for gestation and 2 years for the breeding
 #' ages. Rhesus gestation is 210 days (the historical conservative bound;
 #' typical rhesus gestation is about 165 days, per Vinson & Raboin 2015), and
 #' rhesus minimum breeding ages are male = 4, female = 2.5. The table is
-#' populated for the common colony NHP species (issue #73), with gestation
+#' populated for the common colony NHP species, with gestation
 #' values as conservative upper bounds; making the values user-configurable is
-#' the remaining part of that issue. Extend or adjust it by editing
+#' a separate planned enhancement. Extend or adjust it by editing
 #' \code{data-raw/speciesGestation.R} and re-running that script.
 #' \describe{
 #' \item{species}{-- character species name (e.g. "RHESUS").}

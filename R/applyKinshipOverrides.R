@@ -3,7 +3,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #' Writes pairwise kinship coefficients from outside information
-#' (issue #13) into a computed kinship matrix, replacing the
+#' into a computed kinship matrix, replacing the
 #' pedigree-derived value for the named pairs. Each
 #' \code{(id1, id2, kinship)} row sets both \code{kmat[id1, id2]} and its
 #' symmetric twin \code{kmat[id2, id1]}; all other cells are unchanged.

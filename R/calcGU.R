@@ -37,7 +37,7 @@
 #' includes living founders' alleles; it is unchanged. The genetic value report
 #' (\code{\link{reportGV}}) separately applies a colony decline-to-credit policy
 #' that reports genome uniqueness as 0 for unknown-origin both-unknown
-#' ("Undetermined") animals (issue #76).
+#' ("Undetermined") animals.
 #'
 #' @description \{Genome Uniqueness Functions\}\{\}
 #'

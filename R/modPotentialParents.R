@@ -208,13 +208,12 @@ modPotentialParentsUI <- function(id) {
 #' @param gestationTable optional species-to-gestation lookup passed to
 #'   \code{\link{getSpeciesGestation}} when defaulting the gestation window;
 #'   \code{NULL} (the default) uses the bundled \code{\link{speciesGestation}}
-#'   table. Supplied at boot from the user-configurable species overrides
-#'   (issue #73 Part 2), so a colony's CSV values drive the prefill default.
+#'   table. Supplied at boot from the user-configurable species overrides,
+#'   so a colony's CSV values drive the prefill default.
 #' @param gestationDefault optional integer fallback (days) for a pedigree whose
 #'   species is absent from \code{gestationTable}, passed through to the
 #'   gestation prefill; \code{NULL} (the default) keeps the built-in 210.
-#'   Supplied at boot from the user-configurable species overrides (issue #73
-#'   Part 2).
+#'   Supplied at boot from the user-configurable species overrides.
 #'
 #' @seealso \code{\link{modPotentialParentsUI}} for the user interface.
 #' @seealso \code{\link{getPotentialParents}} for the underlying computation.

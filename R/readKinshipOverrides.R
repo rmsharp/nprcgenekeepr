@@ -2,7 +2,7 @@
 #'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
-#' Reads an outside-information kinship override table (issue #13) from a
+#' Reads an outside-information kinship override table from a
 #' user-supplied file into a data frame for \code{\link{checkKinshipOverrides}}
 #' and \code{\link{reportGV}}. The expected long form is the output of
 #' \code{\link{kinMatrix2LongForm}}: columns \code{id1}, \code{id2}, and

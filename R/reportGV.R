@@ -7,7 +7,7 @@
 #' Reported genome uniqueness (\code{gu}) is set to 0 for "Undetermined"
 #' animals -- those with both parents unknown (U-id aware) and no recorded
 #' origin -- because their apparent uniqueness is an artifact of unknown
-#' parentage (decline-to-credit policy, issue #76). Imports (both parents
+#' parentage (decline-to-credit policy). Imports (both parents
 #' unknown but with a recorded origin) and all other animals are unaffected,
 #' and \code{\link{calcGU}} itself is unchanged.
 #'
@@ -19,8 +19,8 @@
 #' matrix), \code{gu} (a dataframe with a \code{gu} column of genome uniqueness
 #' values and a \code{guSE} column of their standard errors; \code{gu} and
 #' \code{guSE} are reported as 0 for unknown-origin both-unknown "Undetermined"
-#' animals, whose apparent uniqueness is an artifact of unknown parentage
-#' (issue #76)), \code{fe} (founder equivalents),
+#' animals, whose apparent uniqueness is an artifact of unknown parentage),
+#' \code{fe} (founder equivalents),
 #' \code{fg} (founder genome equivalents), \code{fgSE} (the Monte Carlo sampling
 #' standard error of \code{fg}, computed from the same gene drop; a single
 #' colony-level number, \code{NA} when a contributing founder is retained in
@@ -47,8 +47,8 @@
 #' will be called during each iteration to update a
 #' \code{shiny::Progress} object.
 #' @param breedingTable Optional data.frame overriding the bundled per-species
-#' minimum breeding ages used by the unknown-parent mean-kinship correction
-#' (issue #73 Part 2). \code{NULL} (the default) uses the bundled
+#' minimum breeding ages used by the unknown-parent mean-kinship correction.
+#' \code{NULL} (the default) uses the bundled
 #' \code{\link{speciesGestation}} table.
 #' @param gestationTable Optional data.frame overriding the bundled per-species
 #' gestation windows used by the correction's conception window. \code{NULL}
@@ -61,12 +61,12 @@
 #' @param kinshipOverrides Optional data.frame of outside-information kinship
 #' overrides (\code{id1}, \code{id2}, \code{kinship}; the coefficient \emph{f},
 #' not relatedness \emph{r}) applied to the kinship matrix before mean kinship
-#' and the unknown-parent correction (issue #13). \code{NULL} (the default)
+#' and the unknown-parent correction. \code{NULL} (the default)
 #' leaves the pedigree-derived matrix unchanged. Ids outside the analysis
 #' set are warn-dropped (the run is not aborted). An override REFINES the
 #' named kinship cell; it does not suppress the \code{+ sexMean / 2}
 #' unknown-parent correction, which is kept for every animal missing one
-#' parent (issue #95 keep-all revert). See \code{\link{applyKinshipOverrides}}.
+#' parent. See \code{\link{applyKinshipOverrides}}.
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
