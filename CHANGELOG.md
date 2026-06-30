@@ -15,6 +15,54 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-30 — issue \#103 Stage 4 (roxygen markup unification, Finding 4) (Session 251)
+
+- **Deliverable (owner pick = “stage 4”; sweep approved via
+  `AskUserQuestion`):** issue \#103 **Stage 4 — markup unification
+  (audit Finding 4)**: convert stray roxygen markup backticks to
+  `\code{}`. **REFACTOR-class doc-markup — no R logic / NAMESPACE /
+  behavior change; rendered docs unchanged; TDD RED/GREEN N/A; 0
+  corrections / 0 overrides** (2 owner gates via `AskUserQuestion`:
+  apply-the-sweep, and defer the newly-found `get_and_or_list` defect).
+  **DONE + VERIFIED on branch `issue103-stage4-markup` (code commit
+  `002b77c9` + this close-out commit); landing is the owner’s next
+  decision.**
+- **The change:** 45 backtick spans → `\code{}` across **30 R/ files**
+  (`` `Pedigree` `` ×25 in `@param ped`; `` `kValue` `` ×10; the 4
+  status codes in `convertStatusCodes`; `` `set.seed` ``; `` `"F"` ``
+  beside `\code{"M"}`; and 4 in the `gatedSeed` `@noRd` block).
+  **Rendered-doc-neutral:** `markdown = TRUE` (DESCRIPTION:81, no
+  `@noMd`) already expands `` `x` `` → `\code{x}` in the `.Rd`, so
+  re-`document()` left **26 of 30** `.Rd` byte-identical; the **4**
+  files whose source lines crossed 80 chars after the +5-char `\code{}`
+  expansion were reflowed (minimal non-cascading word-moves) and their
+  `.Rd` differ **only by intra-paragraph line breaks** (Rd fills
+  paragraphs → rendered text identical, proven by whitespace-normalized
+  comparison).
+- **Excluded (6 occurrences, left untouched):** backtick-quoted
+  non-syntactic R names *inside* `@examples` (`checkChangedColsLst`
+  `` `si re` ``, `makeRelationClassesTable` `` `Relationship Class` ``,
+  `geneDrop`/`getGVGenotype` `` `n` `` in `##` example comments); the
+  inline-R lifecycle badge `getPotentialParents`
+  `` `r lifecycle::badge('experimental')` `` (converting would break
+  it); and the broken `` `word' `` typographic quotes in
+  `get_and_or_list` (render garbled as `\verb{and' or }…` — a
+  newly-found rendered defect, **deferred per owner** to a separate
+  fix).
+- **Verify (deterministic, firsthand):** backtick count **105 → 15**
+  (exactly the 6 exclusions); **word-sequence projection = 0 drift**
+  across all 30 files (canonicalize `` `x` ``/`\code{x}` + collapse
+  whitespace, HEAD == working — no word dropped/added/reordered);
+  **`man/` drift** = 26 byte-identical + 4 whitespace-only (normalized
+  comparison identical); `lintr::lint_package()` = **0**;
+  `spell_check_package` = **CLEAN**; **`R CMD check --as-cran` =
+  `Status: 2 NOTEs` (0/0/2)** with Rd files / Rd metadata / Rd line
+  widths / Rd cross-references / code-documentation mismatches / Rd /
+  examples / tests all **OK**.
+- Learning 237 added to `PROJECT_LEARNINGS.md`. Stages 1–4 of \#103 are
+  now complete (1–3 landed on `master`; Stage 4 on branch, landing
+  owner-gated).
+
 ### 2026-06-30 — merge PR \#105 + issue \#103 Stage 3 (roxygen block-order normalization) (Session 250)
 
 - **Deliverable (owner: “merge PR \#105; work on \#103 this
