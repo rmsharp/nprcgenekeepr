@@ -16,7 +16,6 @@
 #'   \code{NULL}.
 #' @return a data.frame with columns \code{id}, \code{nSires}, \code{nDams},
 #'   \code{sires}, \code{dams}.
-#' @keywords internal
 #' @noRd
 flattenPotentialParents <- function(potentialParents) {
   emptyDf <- data.frame(
@@ -56,7 +55,6 @@ flattenPotentialParents <- function(potentialParents) {
 #' @param ped a pedigree data.frame (or \code{NULL}).
 #' @return a length-1 character vector: the first usable species, or
 #'   \code{NA_character_}.
-#' @keywords internal
 #' @noRd
 firstPedigreeSpecies <- function(ped) {
   if (is.null(ped) || !is.data.frame(ped) || !"species" %in% names(ped)) {
@@ -87,7 +85,6 @@ firstPedigreeSpecies <- function(ped) {
 #'   threaded into \code{default} (the accessor does not handle it -- issue #73
 #'   Part 2 R2); the argument is omitted instead.
 #' @return a length-1 integer: the gestation default in days.
-#' @keywords internal
 #' @noRd
 pedigreeGestationDefault <- function(ped, gestationTable = NULL,
                                      gestationDefault = NULL) {
@@ -111,7 +108,6 @@ pedigreeGestationDefault <- function(ped, gestationTable = NULL,
 #' @param lastAuto the last value the module wrote into the input.
 #' @return \code{TRUE} when prefill is allowed, \code{FALSE} when the user has
 #'   edited the value.
-#' @keywords internal
 #' @noRd
 prefillGuardAllows <- function(current, lastAuto) {
   if (is.null(current) || length(current) == 0L || is.na(current)) {
