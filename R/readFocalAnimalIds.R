@@ -13,7 +13,6 @@
 #' @return character vector of focal animal Ids (the file's first column).
 #' @importFrom readxl excel_format
 #' @importFrom utils read.csv
-#' @keywords internal
 #' @noRd
 readFocalAnimalIds <- function(fileName, sep = ",") {
   if (excel_format(fileName) %in% c("xls", "xlsx")) {
