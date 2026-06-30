@@ -43,24 +43,6 @@
 #' reproducibility of the \emph{process}, whereas this function reports the
 #' sampling reproducibility of the \emph{estimate}.
 #'
-#' @return An object of class \code{nprcgenekeeprGVConv}: a list with
-#' \itemize{
-#'  \item \code{convergence} -- a data.frame with one row per assessed iteration
-#'    count: \code{iterations}, \code{topOverlap} (top-\code{k} selected-set
-#'    overlap, from 0 to 1), and \code{rankAgreement} (Kendall rank agreement
-#'    of the commonly-ranked animals, from -1 to 1).
-#'  \item \code{recommendedIter} -- the smallest assessed iteration count
-#'    meeting both criteria, or \code{NA} if none did within \code{grid}.
-#'  \item \code{converged} -- \code{TRUE} if any assessed count met both
-#'    criteria.
-#'  \item \code{criteria} -- the \code{k}, \code{oMin}, and \code{rhoMin} used.
-#'  \item \code{nRankable} -- the number of probands carrying a (non-\code{NA})
-#'    rank that the order metrics are computed on.
-#'  \item \code{nUndetermined} -- the count of the excluded
-#'    Undetermined set.
-#'  \item \code{nMax} -- the gene-drop budget actually simulated.
-#' }
-#'
 #' @param ped The pedigree information in data.frame format (the same input
 #' \code{\link{reportGV}} takes).
 #' @param pop Character vector with animal IDs to consider as the population of
@@ -103,6 +85,24 @@
 #' cell; it does not suppress the \code{+ sexMean / 2} unknown-parent
 #' correction, which is kept for every animal missing one parent. See
 #' \code{\link{applyKinshipOverrides}}.
+#' @return An object of class \code{nprcgenekeeprGVConv}: a list with
+#' \itemize{
+#'  \item \code{convergence} -- a data.frame with one row per assessed iteration
+#'    count: \code{iterations}, \code{topOverlap} (top-\code{k} selected-set
+#'    overlap, from 0 to 1), and \code{rankAgreement} (Kendall rank agreement
+#'    of the commonly-ranked animals, from -1 to 1).
+#'  \item \code{recommendedIter} -- the smallest assessed iteration count
+#'    meeting both criteria, or \code{NA} if none did within \code{grid}.
+#'  \item \code{converged} -- \code{TRUE} if any assessed count met both
+#'    criteria.
+#'  \item \code{criteria} -- the \code{k}, \code{oMin}, and \code{rhoMin} used.
+#'  \item \code{nRankable} -- the number of probands carrying a (non-\code{NA})
+#'    rank that the order metrics are computed on.
+#'  \item \code{nUndetermined} -- the count of the excluded
+#'    Undetermined set.
+#'  \item \code{nMax} -- the gene-drop budget actually simulated.
+#' }
+#'
 #' @seealso \code{\link{reportGV}}, \code{\link{calcGU}}, \code{\link{calcGUSE}}
 #' @export
 #' @examples

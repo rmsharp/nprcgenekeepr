@@ -5,6 +5,13 @@
 #'
 #' Part of the Genetic Value Analysis
 #'
+#' @param ped the pedigree information in datatable format.  Pedigree
+#' (req. fields: id, sire, dam, gen, population).
+#'
+#' The pedigree must have no partial parentage (every animal has both parents
+#' known or both unknown); \code{calcFEFG} stops with an error otherwise.
+#' @param alleles dataframe contains an \code{AlleleTable}. This is a
+#' table of allele information produced by \code{geneDrop()}.
 #' @return The list containing the founder equivalents,
 #' \code{FE = 1 / sum(p ^ 2)}, and the founder genome equivalents,
 #' \code{FG = 1 / sum( (p ^ 2) / r)} where \code{p} is the vector of founder
@@ -18,13 +25,6 @@
 #' iterations. See \code{\link{calcFGSE}} for the sampling standard error
 #' of \code{FG}.
 #'
-#' @param ped the pedigree information in datatable format.  Pedigree
-#' (req. fields: id, sire, dam, gen, population).
-#'
-#' The pedigree must have no partial parentage (every animal has both parents
-#' known or both unknown); \code{calcFEFG} stops with an error otherwise.
-#' @param alleles dataframe contains an \code{AlleleTable}. This is a
-#' table of allele information produced by \code{geneDrop()}.
 #' @export
 #' @examples
 #' data(lacy1989Ped)

@@ -7,15 +7,15 @@
 #' be inserted into the application navigation. The tab is shown when column
 #' names were modified during QC processing.
 #'
-#' @return Logical. TRUE if columns were changed and tab should be shown,
-#'   FALSE otherwise.
-#'
 #' @param changedCols list containing information about changed column names.
 #'   Expected fields include: \code{caseChange}, \code{spaceRemoved},
 #'   \code{periodRemoved}, \code{underScoreRemoved}, \code{egoToId},
 #'   \code{egoidToId}, \code{sireIdToSire}, \code{damIdToDam},
 #'   \code{birthdateToBirth}, \code{deathdateToDeath},
 #'   \code{recordstatusToRecordStatus}, \code{fromcenterToFromCenter}.
+#'
+#' @return Logical. TRUE if columns were changed and tab should be shown,
+#'   FALSE otherwise.
 #'
 #' @seealso \code{\link{checkChangedColsLst}} for the original implementation
 #' @export

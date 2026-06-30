@@ -6,9 +6,6 @@
 #' Main pedigree curation function that performs basic quality control on
 #' pedigree information
 #'
-#' @return A data.frame with standardized and quality controlled pedigree
-#' information.
-#'
 #' @param sb A dataframe containing a table of pedigree and demographic
 #' information.
 #'
@@ -162,6 +159,9 @@
 #'
 #' Finally the columns \code{id} \code{sire}, and \code{dam} are coerce to
 #' character.
+#'
+#' @return A data.frame with standardized and quality controlled pedigree
+#' information.
 #'
 #' @importFrom lubridate is.Date
 #' @importFrom utils write.csv

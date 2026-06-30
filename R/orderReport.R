@@ -8,6 +8,15 @@
 #' Takes in the results from a genetic value analysis and orders the report
 #' according to the ranking scheme we have developed.
 #'
+#' @param rpt a dataframe with required colnames \code{id}, \code{gu},
+#' \code{zScores}, and optionally \code{origin} and \code{parentage}, which is
+#' a data.frame of results from a genetic value analysis. When \code{parentage}
+#' is absent the both-unknown founders are taken from \code{getFounders(ped)};
+#' when \code{origin} is absent every both-unknown founder is treated as
+#' ONPRC-born (no recorded origin).
+#' @param ped the pedigree information in datatable format with required
+#' colnames \code{id}, \code{sire}, \code{dam}, \code{gen}, \code{population}).
+#' This requires complete pedigree information..
 #' @return A dataframe, which is \code{rpt} sorted according to the ranking
 #' scheme:
 #' \itemize{
@@ -18,15 +27,6 @@
 #'  \item all remaining animals, ranked by ascending zScores
 #' }
 #'
-#' @param rpt a dataframe with required colnames \code{id}, \code{gu},
-#' \code{zScores}, and optionally \code{origin} and \code{parentage}, which is
-#' a data.frame of results from a genetic value analysis. When \code{parentage}
-#' is absent the both-unknown founders are taken from \code{getFounders(ped)};
-#' when \code{origin} is absent every both-unknown founder is treated as
-#' ONPRC-born (no recorded origin).
-#' @param ped the pedigree information in datatable format with required
-#' colnames \code{id}, \code{sire}, \code{dam}, \code{gen}, \code{population}).
-#' This requires complete pedigree information..
 #' @noRd
 orderReport <- function(rpt, ped) {
   finalRpt <- list()

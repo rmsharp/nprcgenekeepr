@@ -9,9 +9,9 @@
 #' pedigree and genotype data with various format options, followed by
 #' quality control validation.
 #'
-#' @return A \code{div} object containing the data input UI.
-#'
 #' @param id character vector of length 1. Module namespace identifier.
+#'
+#' @return A \code{div} object containing the data input UI.
 #'
 #' @seealso \code{\link{modInputServer}} for server logic.
 #' @seealso \code{\link{modPedigreeUI}} for pedigree browsing after QC.
@@ -211,6 +211,9 @@ modInputUI <- function(id) {
 #' Server logic for data input module handling file uploads, parsing
 #' of pedigree and genotype data files, and quality control validation.
 #'
+#' @param id character vector of length 1. Module namespace identifier.
+#' @param config optional reactive expression returning configuration data.
+#'
 #' @return A list with reactive components:
 #' \itemize{
 #'   \item \code{cleanedStudbook} - The QC-cleaned studbook data
@@ -219,9 +222,6 @@ modInputUI <- function(id) {
 #'   \item \code{minParentAge} - The minimum parent age value
 #'   \item \code{isReady} - Logical indicating if data is ready for next step
 #' }
-#'
-#' @param id character vector of length 1. Module namespace identifier.
-#' @param config optional reactive expression returning configuration data.
 #'
 #' @seealso \code{\link{modInputUI}} for the user interface.
 #' @seealso \code{\link{modPedigreeServer}} for using the cleaned data.

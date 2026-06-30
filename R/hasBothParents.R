@@ -3,10 +3,10 @@
 
 #' hasBothParents checks to see if both parents are identified
 #'
-#' @return TRUE if ID has both sire and dam identified in \code{ped}.
-#'
 #' @param id character vector of IDs to examine for parents
 #' @param ped a pedigree
+#' @return TRUE if ID has both sire and dam identified in \code{ped}.
+#'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

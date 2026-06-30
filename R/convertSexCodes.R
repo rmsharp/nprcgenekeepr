@@ -15,13 +15,13 @@
 #' \item \code{U} -- replacing "UNKNOWN" or "3"
 #' }
 #'
-#' @return A vector of factors representing standardized sex codes after
-#' transformation from non-standard codes.
-#'
 #' @param sex factor with levels: "M", "F", "U". Sex specifier for an
 #' individual.
 #' @param ignoreHerm logical flag indicating if hermaphrodites should be
 #' treated as unknown sex ("U"), default is \code{TRUE}.
+#' @return A vector of factors representing standardized sex codes after
+#' transformation from non-standard codes.
+#'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

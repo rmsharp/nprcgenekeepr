@@ -3,8 +3,15 @@
 
 #' addIdRecords Adds Ego records added having NAs for parent IDs
 #'
+#' @param ids character vector of IDs to be added as Ego records having
+#' NAs for parent IDs
+#' @param fullPed a trimmed pedigree
+#' @param partialPed a trimmed pedigree dataframe with uninformative founders
+#' removed.
 #' @return Pedigree with Ego records added having NAs for parent IDs
 #'
+#' @importFrom data.table rbindlist
+#' @export
 #' @examples
 #' uPedOne <- data.frame(
 #'   id = c("d1", "s2", "d2", "o1", "o2", "o3", "o4"),
@@ -25,13 +32,6 @@
 #' pedOne[!pedOne$id %in% newPed$id, ]
 #' newPed[newPed$id == "s1", ]
 #'
-#' @param ids character vector of IDs to be added as Ego records having
-#' NAs for parent IDs
-#' @param fullPed a trimmed pedigree
-#' @param partialPed a trimmed pedigree dataframe with uninformative founders
-#' removed.
-#' @importFrom data.table rbindlist
-#' @export
 addIdRecords <- function(ids, fullPed, partialPed) {
   if (length(ids[!all(is.na(ids))]) > 0L) {
     addToPed <- fullPed[is.element(fullPed$id, ids), ]

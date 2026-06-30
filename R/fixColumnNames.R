@@ -3,13 +3,13 @@
 
 #' fixColumnNames changes original column names into standardized names
 #'
-#' @return A list object with \code{newColNames} and \code{errorLst} with
-#' a record of all changes made.
-#'
 #' @param orgCols character vector with ordered list of column names
 #' found in a pedigree file.
 #' @param errorLst list object with places to store the various column
 #' name changes.
+#' @return A list object with \code{newColNames} and \code{errorLst} with
+#' a record of all changes made.
+#'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

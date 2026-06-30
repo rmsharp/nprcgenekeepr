@@ -4,10 +4,10 @@
 #' Returns \code{TRUE} if every member of the vector is \code{TRUE}.
 #'
 #' Part of Relations
+#' @param v logical vector
 #' @return \code{TRUE} if every member of the vector is \code{TRUE} else it
 #' returns \code{FALSE}.
 #' Considers NA values the same as false
-#' @param v logical vector
 #' @noRd
 allTrueNoNA <- function(v) {
   # nolint start: commented_code_linter.

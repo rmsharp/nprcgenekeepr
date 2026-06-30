@@ -16,14 +16,14 @@
 #' SIMWALK2 or similar programs.
 #'
 #'
+#' @param id character vector of length 1 having the ID of interest
+#' @param ptree a list of lists forming a pedigree tree as constructed by
+#' \code{createPedTree(ped)} where \code{ped} is a standard pedigree dataframe.
 #' @return TRUE if there is one or more common ancestors for the sire and dam.
 #'
 #' Tests to see if sires and dams for an individual in a ptree have a common
 #' ancestor.
 #'
-#' @param id character vector of length 1 having the ID of interest
-#' @param ptree a list of lists forming a pedigree tree as constructed by
-#' \code{createPedTree(ped)} where \code{ped} is a standard pedigree dataframe.
 #' @noRd
 makesLoop <- function(id, ptree) {
   sAnc <- getAncestors(ptree[[id]]$sire, ptree)

@@ -13,7 +13,10 @@
 #' Parents must be processed before their children, and then a child's
 #'    kinship is just a sum of the kinship's for his or her parents.
 #'
-#' @return A kinship square matrix
+#' @details The code for the kinship function was written by Terry Therneau
+#' at the Mayo clinic and taken from his website. This function is part of a
+#' package written in S (and later ported to R) for calculating kinship and
+#' other statistics.
 #'
 #' @param id character vector of IDs for a set of animals.
 #' @param father.id character vector or NA for the IDs of the sires for the set
@@ -26,10 +29,7 @@
 #' used to make a unit diagonal matrix. If \code{FALSE}, \code{base::diag()} is
 #' used to make a unit square matrix.
 #'
-#' @details The code for the kinship function was written by Terry Therneau
-#' at the Mayo clinic and taken from his website. This function is part of a
-#' package written in S (and later ported to R) for calculating kinship and
-#' other statistics.
+#' @return A kinship square matrix
 #'
 #' @author Terry M. Therneau, Mayo Clinic (mayo.edu), original version
 #'

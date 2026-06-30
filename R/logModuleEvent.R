@@ -6,8 +6,6 @@
 #' Centralized logging function for Shiny module events. Provides consistent
 #' logging format across all modules with configurable log levels.
 #'
-#' @return Invisible NULL. Called for side effect of logging.
-#'
 #' @param module character. Name of the module generating the log message.
 #' @param message character. The log message to record.
 #' @param level character. Log level: "DEBUG", "INFO", "WARN", or "ERROR".
@@ -15,6 +13,10 @@
 #' @param ... Additional arguments passed to the log message (for sprintf-style
 #'   formatting).
 #'
+#' @return Invisible NULL. Called for side effect of logging.
+#'
+#' @seealso \code{\link{safeExecute}} for error-safe execution with logging
+#' @export
 #' @examples
 #' \dontrun{
 #' logModuleEvent("modInput", "File uploaded successfully")
@@ -22,8 +24,6 @@
 #' logModuleEvent("modGeneticValue", "Calculation failed", level = "ERROR")
 #' }
 #'
-#' @seealso \code{\link{safeExecute}} for error-safe execution with logging
-#' @export
 logModuleEvent <- function(module, message, level = "INFO", ...) {
   # Validate log level
   valid_levels <- c("DEBUG", "INFO", "WARN", "ERROR")

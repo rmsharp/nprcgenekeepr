@@ -5,9 +5,6 @@
 #'
 #' @description The sex ratio is the ratio of females to males.
 #'
-#' @return A list containing one character vector of animal IDs such that the
-#'         sex ratio of the group is as close as possible to the ratio
-#'         specified by \code{sexRatio}.
 #' @param candidates character vector of IDs of the animals available for
 #' use in the group.
 #' @param groupMembers list initialized and ready to receive groups with the
@@ -25,6 +22,9 @@
 #' formed from the list of IDs. Default is 1.
 #' @param sexRatio numeric value indicating the ratio of females to males x
 #' from 0.5 to 20 by increments of 0.5.
+#' @return A list containing one character vector of animal IDs such that the
+#'         sex ratio of the group is as close as possible to the ratio
+#'         specified by \code{sexRatio}.
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

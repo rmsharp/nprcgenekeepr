@@ -7,8 +7,6 @@
 #' of known founders, male founders, female founders, founder equivalents (FE),
 #' and founder genome equivalents (FG).
 #'
-#' @return Character string containing HTML table markup.
-#'
 #' @param founderStats list containing founder statistics with elements:
 #'   \itemize{
 #'     \item \code{total} - Total number of known founders
@@ -20,6 +18,12 @@
 #'       when finite it is shown inline as \code{FG +/- SE}
 #'   }
 #'
+#' @return Character string containing HTML table markup.
+#'
+#' @seealso \code{\link{makeGeneticSummaryTable}} for genetic value summary
+#' @seealso \code{\link{calcFE}} for founder equivalents calculation
+#' @seealso \code{\link{calcFG}} for founder genome equivalents
+#' @export
 #' @examples
 #' \dontrun{
 #' stats <- list(
@@ -32,10 +36,6 @@
 #' html <- makeFounderStatsTable(stats)
 #' }
 #'
-#' @seealso \code{\link{makeGeneticSummaryTable}} for genetic value summary
-#' @seealso \code{\link{calcFE}} for founder equivalents calculation
-#' @seealso \code{\link{calcFG}} for founder genome equivalents
-#' @export
 makeFounderStatsTable <- function(founderStats) {
   # Handle NULL input
   if (is.null(founderStats)) {

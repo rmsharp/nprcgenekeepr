@@ -15,11 +15,11 @@
 #' amount of time required to perform calculations with
 #' SIMWALK2 or similar programs.
 #'
-#' @return A character vector of ancestors for an individual ID.
-#'
 #' @param id character vector of length 1 having the ID of interest
 #' @param ptree a list of lists forming a pedigree tree as constructed by
 #' \code{createPedTree(ped)} where \code{ped} is a standard pedigree dataframe.
+#'
+#' @return A character vector of ancestors for an individual ID.
 #'
 #' @export
 #' @examples

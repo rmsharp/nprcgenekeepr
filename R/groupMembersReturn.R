@@ -3,12 +3,6 @@
 
 #' Forms return list of groupAddAssign function
 #'
-#' @return A list with two or three elements \code{group}, \code{score}, and
-#' optionally \code{groupKin} where
-#' \code{group} is set to \code{savedGroupMembers}, \code{score} is set to
-#' \code{savedScore}, and if \code{withKin == TRUE} \code{groupKin} is set to
-#' a list of kinship matrices for each individual in \code{savedGroupMembers}.
-#'
 #' @param savedGroupMembers selected animal group
 #' @param savedScore score of selected group, which is the group having the
 #'  largest minimum group size
@@ -16,6 +10,12 @@
 #' when \code{TRUE}.
 #' @param kmat numeric matrix of pairwise kinship values. Rows and columns
 #' are named with animal IDs.
+#' @return A list with two or three elements \code{group}, \code{score}, and
+#' optionally \code{groupKin} where
+#' \code{group} is set to \code{savedGroupMembers}, \code{score} is set to
+#' \code{savedScore}, and if \code{withKin == TRUE} \code{groupKin} is set to
+#' a list of kinship matrices for each individual in \code{savedGroupMembers}.
+#'
 #' @noRd
 groupMembersReturn <- function(savedGroupMembers, savedScore, withKin, kmat) {
   if (withKin) {

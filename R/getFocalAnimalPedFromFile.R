@@ -17,6 +17,13 @@
 #' other file inputs behave -- a \code{NULL} surfaces a "File Read Error" -- and
 #' is distinct from the LabKey path, which returns an \code{nprcgenekeeprErr}.)
 #'
+#' @param fileName character path to a file (CSV, delimited text, or Excel)
+#' whose first column is the list of focal animal Ids.
+#' @param pedigreeFileName character path to the pedigree file (CSV, delimited
+#' text, or Excel) read via \code{\link{getPedigree}}; it must provide at least
+#' \code{id}, \code{sire}, and \code{dam} columns.
+#' @param sep column separator passed to the file readers for delimited text
+#' files (default \code{","}); ignored for Excel files.
 #' @return On success, a data.frame with the focal animals' full connected
 #' pedigree component (ancestors, descendants, and collaterals), as returned by
 #' \code{\link{getFileDirectRelatives}}. On any failure this function does NOT
@@ -27,13 +34,6 @@
 #' \code{message} as the "File Read Error" detail (distinct from the LabKey
 #' path, which returns an \code{nprcgenekeeprErr}).
 #'
-#' @param fileName character path to a file (CSV, delimited text, or Excel)
-#' whose first column is the list of focal animal Ids.
-#' @param pedigreeFileName character path to the pedigree file (CSV, delimited
-#' text, or Excel) read via \code{\link{getPedigree}}; it must provide at least
-#' \code{id}, \code{sire}, and \code{dam} columns.
-#' @param sep column separator passed to the file readers for delimited text
-#' files (default \code{","}); ignored for Excel files.
 #' @import futile.logger
 #' @export
 #' @examples

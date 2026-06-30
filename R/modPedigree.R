@@ -8,9 +8,9 @@
 #' Creates user interface for browsing and filtering pedigree data,
 #' including focal animal selection, trimming options, and export.
 #'
-#' @return A \code{div} object containing pedigree browser UI.
-#'
 #' @param id character vector of length 1. Module namespace identifier.
+#'
+#' @return A \code{div} object containing pedigree browser UI.
 #'
 #' @seealso \code{\link{modPedigreeServer}} for server logic.
 #' @importFrom shiny NS div h3 h4 fluidRow column wellPanel helpText tags
@@ -165,6 +165,10 @@ modPedigreeUI <- function(id) {
 #'     animals via \code{trimPedigree()} and \code{getDescendantPedigree()}
 #' }
 #'
+#' @param id character vector of length 1. Module namespace identifier.
+#' @param studbook reactive returning the cleaned studbook data from modInput.
+#' @param config optional reactive returning configuration.
+#'
 #' @return A list of reactive values:
 #' \itemize{
 #'   \item \code{pedigree} - Filtered pedigree for display (respects
@@ -176,10 +180,6 @@ modPedigreeUI <- function(id) {
 #'   \item \code{populationCount} - Count of animals marked as population
 #'   \item \code{isReady} - Logical indicating if pedigree data is ready
 #' }
-#'
-#' @param id character vector of length 1. Module namespace identifier.
-#' @param studbook reactive returning the cleaned studbook data from modInput.
-#' @param config optional reactive returning configuration.
 #'
 #' @seealso \code{\link{modPedigreeUI}} for the UI component
 #' @seealso \code{\link{setPopulation}} for population marking

@@ -10,10 +10,13 @@
 #' This must be run after to \code{addUIds} since the IDs made there are
 #' used by \code{addParents}
 #'
+#' @param ped datatable that is the `Pedigree`. It contains pedigree
+#' information.
 #' @return An updated pedigree with entries added as necessary.
 #' Entries have the id and sex specified; all remaining columns are filled
 #' with \code{NA}.
 #'
+#' @export
 #' @examples
 #' pedTwo <- data.frame(
 #'   id = c("d1", "s2", "d2", "o1", "o2", "o3", "o4"),
@@ -25,9 +28,6 @@
 #' newPed <- addParents(pedTwo)
 #' newPed
 #'
-#' @param ped datatable that is the `Pedigree`. It contains pedigree
-#' information.
-#' @export
 addParents <- function(ped) {
   sires <- ped$sire
   dams <- ped$dam

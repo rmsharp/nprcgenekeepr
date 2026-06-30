@@ -7,8 +7,6 @@
 #' and error handling. Supports PNG, PDF, and SVG formats with configurable
 #' dimensions and resolution.
 #'
-#' @return Logical. TRUE if the file was saved successfully, FALSE otherwise.
-#'
 #' @param plot A ggplot2 plot object to save. If NULL, returns FALSE.
 #' @param file character. The file path to save the plot to.
 #' @param format character. Output format: "png", "pdf", or "svg".
@@ -22,6 +20,11 @@
 #'   (inches).
 #' @param bg character. Background color. Defaults to "white".
 #'
+#' @return Logical. TRUE if the file was saved successfully, FALSE otherwise.
+#'
+#' @seealso \code{\link[ggplot2]{ggsave}} for the underlying save function
+#' @importFrom ggplot2 ggsave
+#' @export
 #' @examples
 #' \dontrun{
 #' library(ggplot2)
@@ -31,9 +34,6 @@
 #' savePlotToFile(p, "high_res.png", dpi = 300)
 #' }
 #'
-#' @seealso \code{\link[ggplot2]{ggsave}} for the underlying save function
-#' @importFrom ggplot2 ggsave
-#' @export
 savePlotToFile <- function(plot, file, format = NULL,
                             width = 8L, height = 6L, dpi = 150L,
                             units = "in", bg = "white") {

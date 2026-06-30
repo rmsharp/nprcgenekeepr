@@ -9,10 +9,6 @@
 #' reporting. This module will contain formatted reports suitable for submission
 #' to ORIP as part of primate center grant reporting requirements.
 #'
-#' @return A \code{div} object containing the ORIP reporting UI.
-#'
-#' @param id character vector of length 1. Module namespace identifier.
-#'
 #' @details
 #' The ORIP Reporting tab provides summary statistics and formatted reports
 #' for submission to the Office of Research Infrastructure Programs. This
@@ -23,6 +19,10 @@
 #'   \item Breeding program statistics
 #'   \item Founder representation analysis
 #' }
+#'
+#' @param id character vector of length 1. Module namespace identifier.
+#'
+#' @return A \code{div} object containing the ORIP reporting UI.
 #'
 #' @seealso \code{\link{modORIPReportingServer}} for server logic.
 #' @importFrom shiny NS div h3 h4 p br fluidRow column helpText hr
@@ -120,12 +120,12 @@ modORIPReportingUI <- function(id) {
 #' and formatted reports for Office of Research Infrastructure Programs
 #' submissions.
 #'
-#' @return A list with reactive components for ORIP reporting.
-#'
 #' @param id character vector of length 1. Module namespace identifier.
 #' @param pedigree reactive returning pedigree data frame.
 #' @param geneticValues reactive returning genetic value analysis results.
 #' @param siteConfig reactive returning site configuration from getSiteInfo().
+#'
+#' @return A list with reactive components for ORIP reporting.
 #'
 #' @seealso \code{\link{modORIPReportingUI}} for the user interface
 #' @seealso \code{\link{getSiteInfo}} for site configuration

@@ -8,11 +8,11 @@
 #' The pedigree must have no partial parentage (every animal has both parents
 #' known or both unknown); \code{calcFE} stops with an error otherwise.
 #'
+#' @param ped the pedigree information in datatable format.  Pedigree
+#' (req. fields: id, sire, dam, gen, population).
 #' @return The founder equivalents \code{FE = 1 / sum(p ^ 2)}, where \code{p}
 #' is the vector of founder mean contributions to the current descendants.
 #'
-#' @param ped the pedigree information in datatable format.  Pedigree
-#' (req. fields: id, sire, dam, gen, population).
 #' @export
 #' @examples
 #' ## Example from Analysis of Founder Representation in Pedigrees: Founder

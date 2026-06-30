@@ -9,12 +9,12 @@
 #' @return Character string containing the box and whisker plot description
 #'   explaining whiskers, IQR (inter-quartile range), and outliers.
 #'
+#' @seealso \code{\link{modSummaryStatsServer}} which uses this for popovers
+#' @export
 #' @examples
 #' desc <- getBoxWhiskerDescription()
 #' cat(desc)
 #'
-#' @seealso \code{\link{modSummaryStatsServer}} which uses this for popovers
-#' @export
 getBoxWhiskerDescription <- function() {
   paste0(
     "The upper whisker extends from the hinge to ",

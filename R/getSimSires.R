@@ -3,14 +3,14 @@
 
 #' Provides list of potential sires
 #'
-#' @return A character vector of potential sire Ids
-#'
 #' @param ids character vector of IDs of the animals
 #' @param ped dataframe that is the `Pedigree`. It contains pedigree
 #' information including the IDs listed in \code{candidates}.
 #' @param minAge integer value indicating the minimum age to consider in group
 #' formation. Pairwise kinships involving an animal of this age or younger will
 #' be ignored. Default is 1 year.
+#' @return A character vector of potential sire Ids
+#'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

@@ -6,11 +6,11 @@
 #' Part of Pedigree Curation
 #'
 #'
+#' @param fromCenter character or logical vector or NA indicating whether or
+#' not the animal is from the center.
 #' @return A logical vector specifying TRUE if an animal
 #' is from the center otherwise FALSE.
 #'
-#' @param fromCenter character or logical vector or NA indicating whether or
-#' not the animal is from the center.
 #' @importFrom stringi stri_c stri_detect_fixed
 #' @export
 #' @examples

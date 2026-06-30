@@ -3,13 +3,13 @@
 
 #' Get offspring to corresponding animal IDs provided
 #'
+#' @param pedSourceDf dataframe with pedigree structure having at least the
+#' columns id, sire, and dam.
+#' @param ids character vector of animal IDs
 #' @return A character vector containing all of the offspring IDs for all of the
 #' IDs provided in the second argument \code{ids}. All offspring are combined
 #' and duplicates are removed.
 #'
-#' @param pedSourceDf dataframe with pedigree structure having at least the
-#' columns id, sire, and dam.
-#' @param ids character vector of animal IDs
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

@@ -8,11 +8,11 @@
 #' Given vectors of birth and exit dates, calculate an individuals age. If no
 #' exit date is provided, the calculation is based on the current date.
 #'
-#' @return A numeric vector (\code{NA} allowed) indicating age in decimal years
-#' from "birth" to "exit" or the current date if "exit" is NA.
-#'
 #' @param birth Date vector of birth dates
 #' @param exit Date vector of exit dates.
+#'
+#' @return A numeric vector (\code{NA} allowed) indicating age in decimal years
+#' from "birth" to "exit" or the current date if "exit" is NA.
 #'
 #' @export
 #' @examples

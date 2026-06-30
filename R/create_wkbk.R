@@ -3,14 +3,14 @@
 
 #' Creates an Excel workbook with worksheets
 #'
-#' @return TRUE if the Excel file was successfully created. FALSE if any errors
-#' occurred.
-#'
 #' @param file filename of workbook to be created
 #' @param df_list list of data frames to be added as worksheets to workbook
 #' @param sheetnames character vector of worksheet names
 #' @param replace Specifies if the file should be replaced if it
 #' already exist (default is FALSE).
+#' @return TRUE if the Excel file was successfully created. FALSE if any errors
+#' occurred.
+#'
 #' @importFrom WriteXLS WriteXLS
 #' @export
 #' @examples

@@ -7,12 +7,6 @@
 #' This version uses the new module-based architecture with a Home tab
 #' and improved UI components.
 #'
-#' @param port Integer port number for the Shiny server (default 6013)
-#' @param launch.browser Logical; whether to launch browser (default TRUE)
-#'
-#' @return Returns the error condition of the Shiny application when it
-#'   terminates.
-#'
 #' @details
 #' This function runs the modular version of the application which includes:
 #' \itemize{
@@ -27,6 +21,12 @@
 #' }
 #'
 #' Use \code{\link{runGeneKeepR}} to run the original monolithic version.
+#'
+#' @param port Integer port number for the Shiny server (default 6013)
+#' @param launch.browser Logical; whether to launch browser (default TRUE)
+#'
+#' @return Returns the error condition of the Shiny application when it
+#'   terminates.
 #'
 #' @importFrom shiny shinyApp runApp
 #' @export

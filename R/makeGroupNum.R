@@ -3,10 +3,10 @@
 
 #' Convenience function to make the initial grpNum list
 #'
-#' @return Initial grpNum list
-#'
 #' @param numGp integer value indicating the number of groups that should be
 #' formed from the list of IDs. Default is 1.
+#' @return Initial grpNum list
+#'
 #' @export
 makeGroupNum <- function(numGp) {
   grpNum <- list()
@@ -20,10 +20,10 @@ makeGroupNum <- function(numGp) {
 #' consistency with \code{\link{makeGroupMembers}}. It remains as a deprecated
 #' wrapper that issues a warning and then calls \code{makeGroupNum}.
 #'
-#' @return Initial grpNum list
-#'
 #' @param numGp integer value indicating the number of groups that should be
 #' formed from the list of IDs. Default is 1.
+#' @return Initial grpNum list
+#'
 #' @seealso \code{\link{makeGroupNum}}
 #' @export
 makeGrpNum <- function(numGp) {

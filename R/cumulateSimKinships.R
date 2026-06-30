@@ -10,12 +10,6 @@
 #' simulated kinships the third element is the minimum value of the kinships,
 #' and the forth element is the maximum value of the kinships.
 #'
-#' @return List object containing the meanKinship, sdKinship, minKinship, and
-#'         maxKinship. \code{sdKinship} is the sample standard deviation across
-#'         the \code{n} simulations; it is undefined for a single simulation, so
-#'         when \code{n < 2} it is returned as \code{NA} (with a warning), as
-#'         base R \code{sd()} does for a length-one vector.
-#'
 #' @param ped The pedigree information in data.frame format
 #' @param allSimParents list made up of lists where the internal list
 #'        has the offspring ID \code{id}, a vector of representative sires
@@ -25,6 +19,12 @@
 #' @param n integer value of the number of simulated pedigrees to generate.
 #'        Must be at least 1 (\code{n < 1} is an error); the standard deviation
 #'        requires \code{n >= 2}.
+#' @return List object containing the meanKinship, sdKinship, minKinship, and
+#'         maxKinship. \code{sdKinship} is the sample standard deviation across
+#'         the \code{n} simulations; it is undefined for a single simulation, so
+#'         when \code{n < 2} it is returned as \code{NA} (with a warning), as
+#'         base R \code{sd()} does for a length-one vector.
+#'
 #' @export
 #' @examples
 #' ped <- nprcgenekeepr::smallPed

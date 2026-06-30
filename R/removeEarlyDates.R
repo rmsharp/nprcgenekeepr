@@ -9,12 +9,12 @@
 #'
 #' NA values are ignored and not changed.
 #'
-#' @return A vector of dates after the year indicated by the numeric value of
-#' \code{firstYear}.
-#'
 #' @param dates vector of dates
 #' @param firstYear integer value of first (earliest) year in the allowed
 #' date range.
+#' @return A vector of dates after the year indicated by the numeric value of
+#' \code{firstYear}.
+#'
 #' @importFrom lubridate year
 #' @export
 #' @examples

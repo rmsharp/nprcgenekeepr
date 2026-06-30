@@ -9,8 +9,11 @@
 #' known. The parents are added back to the pedigree as an ID record with
 #' NA for both sire and dam of the added back ID.
 #'
+#' @param uPed a trimmed pedigree dataframe with uninformative founders removed.
+#' @param ped a trimmed pedigree
 #' @return A dataframe with pedigree with single parents added.
 #'
+#' @export
 #' @examples
 #' examplePedigree <- nprcgenekeepr::examplePedigree
 #' breederPed <- qcStudbook(examplePedigree,
@@ -28,9 +31,6 @@
 #' p <- addBackSecondParents(p, ped)
 #' nrow(p)
 #'
-#' @param uPed a trimmed pedigree dataframe with uninformative founders removed.
-#' @param ped a trimmed pedigree
-#' @export
 addBackSecondParents <- function(uPed, ped) {
   # Adding back second parents where one is known
   idsWithOneParent <- getIdsWithOneParent(uPed)

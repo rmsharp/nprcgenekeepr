@@ -3,13 +3,13 @@
 
 #' Get proportion of Low genetic value animals
 #'
-#' @return List of the proportion of Low genetic value animals and the
-#' dashboard color to be assigned base on that proportion.
-#'
 #' @param geneticValues character vector of the genetic values. This vector
 #' is to have already been filtered to remove animals that should not be
 #' included in the calculation. Must contain at least one value; an empty
 #' vector is rejected with an error.
+#' @return List of the proportion of Low genetic value animals and the
+#' dashboard color to be assigned base on that proportion.
+#'
 #' @importFrom stringi stri_detect_fixed
 #' @noRd
 getProportionLow <- function(geneticValues) {

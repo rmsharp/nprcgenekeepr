@@ -5,15 +5,15 @@
 #'
 #' Adapted from print.data.frame
 #'
-#' @return A character vector representation of the data.frame provided to the
-#' function.
-#'
 #' @param object dataframe
 #' @param ... optional arguments to print or plot methods.
 #' @param digits the minimum number of significant digits to be used:
 #' see print.default.
 #' @param addRowNames	logical (or character vector), indicating whether
 #'  (or what) row names should be printed.
+#' @return A character vector representation of the data.frame provided to the
+#' function.
+#'
 #' @importFrom stringi stri_length
 #' @importFrom stringi stri_pad_both
 #' @export

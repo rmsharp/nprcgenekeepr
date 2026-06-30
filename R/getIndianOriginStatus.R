@@ -3,6 +3,9 @@
 
 #' Get Indian-origin status of group
 #'
+#' @param origin character vector of the animal origins. This vector
+#' is to have already been filtered to remove animals that should not be
+#' included in the calculation.
 #' @return A list with a list named \code{ancestry} having named integer values
 #'         corresponding to the origin types and the count of each type
 #'         found in the function argument \code{origin}, the \code{color}
@@ -10,9 +13,6 @@
 #'         origin, "yellow" indicates "Borderline", and "green" otherwise; and
 #'         the \code{color_index) values are \code{1}, \code{2}, or \code{3}
 #'         corresponding to "red", "yellow", and "green".
-#' @param origin character vector of the animal origins. This vector
-#' is to have already been filtered to remove animals that should not be
-#' included in the calculation.
 #' @importFrom stringi stri_startswith_fixed stri_detect_fixed
 #' @noRd
 getIndianOriginStatus <- function(origin) {

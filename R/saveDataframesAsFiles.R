@@ -6,13 +6,13 @@
 #' Takes a list of dataframes and creates a file based on the list name of
 #' the dataframe and the extension for the file type.
 #'
-#' @return Full path name of files saved.
-#'
 #' @param dfList list of dataframes to be stored as files.
 #' \code{"txt"}, \code{"csv"}, or \code{"xlsx"}. Default value is \code{"csv"}.
 #' @param baseDir character vector of length on with the directory path.
 #' @param fileType character vector of length one with possible values of
 #' \code{"txt"}, \code{"csv"}, or \code{"xlsx"}. Default value is \code{"csv"}.
+#'
+#' @return Full path name of files saved.
 #'
 #' @importFrom utils write.table write.csv
 ## ## rmsutilityr create_wkbk

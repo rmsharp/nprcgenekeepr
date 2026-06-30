@@ -6,9 +6,9 @@
 #' Converts the column names of a Pedigree or Genetic value Report to
 #' something more descriptive.
 #'
+#' @param headers a character vector of column (header) names
 #' @return Updated list of column names
 #'
-#' @param headers a character vector of column (header) names
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

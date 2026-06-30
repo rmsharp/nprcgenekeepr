@@ -20,10 +20,10 @@
 #' \code{NA}, empty, or not found in the table. Defaults to \code{210L}.
 #' @return an integer vector of gestation-period day bounds, the same length and
 #' order as \code{species}.
+#' @export
 #' @examples
 #' getSpeciesGestation("RHESUS")
 #' getSpeciesGestation(c("RHESUS", "UNICORN", NA))
-#' @export
 getSpeciesGestation <- function(species, gestationTable = NULL,
                                 default = 210L) {
   if (is.null(gestationTable)) {

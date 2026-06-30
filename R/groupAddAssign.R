@@ -20,14 +20,6 @@
 #' of iterations.
 #' }
 #'
-#' @return A list with list items \code{group}, \code{score} and optionally
-#' \code{groupKin}.
-#' The list item \code{group} contains a list of the best group(s) produced
-#' during the simulation.
-#' The list item \code{score} provides the score associated with the group(s).
-#' The list item \code{groupKin} contains the subset of the kinship matrix
-#' that is specific for each group formed.
-#'
 #' @param candidates Character vector of IDs of the animals available for
 #' use in forming the groups. The animals that may be present in
 #' \code{currentGroups} are not included within \code{candidates}.
@@ -64,6 +56,14 @@
 #' @param updateProgress Function or NULL. If this function is defined, it
 #' will be called during each iteration to update a
 #' \code{shiny::Progress} object.
+#'
+#' @return A list with list items \code{group}, \code{score} and optionally
+#' \code{groupKin}.
+#' The list item \code{group} contains a list of the best group(s) produced
+#' during the simulation.
+#' The list item \code{score} provides the score associated with the group(s).
+#' The list item \code{groupKin} contains the subset of the kinship matrix
+#' that is specific for each group formed.
 #'
 #' @export
 #' @examples

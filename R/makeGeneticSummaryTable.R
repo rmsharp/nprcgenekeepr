@@ -6,14 +6,16 @@
 #' Generates an HTML table displaying summary statistics (Min, Q1, Mean,
 #' Median, Q3, Max) for mean kinship and genome uniqueness values.
 #'
-#' @return Character string containing HTML table markup.
-#'
 #' @param geneticValues data.frame containing genetic value columns:
 #'   \itemize{
 #'     \item \code{meanKinship} - Mean kinship coefficients
 #'     \item \code{genomeUniqueness} - Genome uniqueness values
 #'   }
 #'
+#' @return Character string containing HTML table markup.
+#'
+#' @seealso \code{\link{makeFounderStatsTable}} for founder statistics
+#' @export
 #' @examples
 #' \dontrun{
 #' gv <- data.frame(
@@ -23,8 +25,6 @@
 #' html <- makeGeneticSummaryTable(gv)
 #' }
 #'
-#' @seealso \code{\link{makeFounderStatsTable}} for founder statistics
-#' @export
 makeGeneticSummaryTable <- function(geneticValues) {
   # Handle NULL or empty input
   if (is.null(geneticValues) || nrow(geneticValues) == 0L) {

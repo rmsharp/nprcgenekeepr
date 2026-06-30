@@ -5,15 +5,15 @@
 #'
 #' Part of Genetic Value Analysis
 #'
-#' @return A vector of the mean number of founder alleles retained in the
-#' gene dropping simulation.
-#'
 #' @param ped the pedigree information in datatable format.  Pedigree
 #' (req. fields: id, sire, dam, gen, population).
 #'
 #' It is assumed that the pedigree has no partial parentage
 #' @param alleles dataframe of containing an \code{AlleleTable}. This is a
 #' table of allele information produced by \code{geneDrop()}.
+#' @return A vector of the mean number of founder alleles retained in the
+#' gene dropping simulation.
+#'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

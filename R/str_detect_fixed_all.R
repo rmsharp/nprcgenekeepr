@@ -5,8 +5,6 @@
 #' second parameters character vector.
 #'
 #' @usage str_detect_fixed_all(strings, patterns, ignore_na, ...)
-#' @return logical vector with results of stri_detect() for each pattern in
-#' the character vector in the parameter \code{patterns}.
 #' @param strings input vector. This must be an atomic vector and will be
 #' coerced to a character vector.
 #' @param patterns patterns to look for, as defined by a POSIX regular
@@ -16,6 +14,8 @@
 #' @param ignore_na if TRUE NA values are trimmed out of \code{strings} and
 #' \code{patterns} before comparison
 #' @param ... further arguments for stri_detect_fixed
+#' @return logical vector with results of stri_detect() for each pattern in
+#' the character vector in the parameter \code{patterns}.
 #' @importFrom stringi stri_detect_fixed
 #' @noRd
 str_detect_fixed_all <- function(strings, patterns, ignore_na = FALSE, ...) {

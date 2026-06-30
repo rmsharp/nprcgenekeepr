@@ -8,9 +8,9 @@
 #' Creates user interface displaying detailed documentation about
 #' genetic value analysis and breeding group formation algorithms.
 #'
-#' @return A \code{div} object containing the description HTML.
-#'
 #' @param id character vector of length 1. Module namespace identifier.
+#'
+#' @return A \code{div} object containing the description HTML.
 #'
 #' @seealso \code{\link{modGvAndBgDescServer}} for server logic.
 #' @seealso \code{\link{modGeneticValueUI}} for genetic value analysis.
@@ -39,9 +39,9 @@ modGvAndBgDescUI <- function(id) {
 #' Server logic for genetic value and breeding group description module.
 #' This module is primarily informational and does not require reactive logic.
 #'
-#' @return NULL (no reactive outputs).
-#'
 #' @param id character vector of length 1. Module namespace identifier.
+#'
+#' @return NULL (no reactive outputs).
 #'
 #' @seealso \code{\link{modGvAndBgDescUI}} for the user interface.
 #' @importFrom shiny moduleServer

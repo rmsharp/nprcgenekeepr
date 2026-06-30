@@ -5,14 +5,14 @@
 #'
 #' Part of Group Formation
 #'
-#' @return A dataframe with columns \code{id1}, \code{id2}, and \code{kinship}.
-#' This is the kinship data reformatted from a matrix, to a long-format table.
-#'
 #' @param kinMatrix numerical matrix of pairwise kinship values. The row and
 #' column names correspond to animal IDs.
 #' @param removeDups logical value indication whether or not reverse-order ID
 #' pairs be filtered out? (i.e., "ID1 ID2 kin_val" and "ID2 ID1 kin_val" will
 #' be collapsed into a single entry if removeDups = TRUE)
+#'
+#' @return A dataframe with columns \code{id1}, \code{id2}, and \code{kinship}.
+#' This is the kinship data reformatted from a matrix, to a long-format table.
 #'
 #' @importFrom utils stack
 #' @export

@@ -6,9 +6,9 @@
 #' Unlike \code{getParamDef}, which stops when a parameter is absent, this
 #' performs a soft lookup of the optional \code{apiKey} entry.
 #'
+#' @param configFile path to the nprcgenekeepr configuration file.
 #' @return Character scalar with the configured apiKey, or \code{""} when the
 #' configuration file is missing or has no \code{apiKey} entry.
-#' @param configFile path to the nprcgenekeepr configuration file.
 #' @noRd
 getConfigApiKey <- function(configFile) {
   if (is.null(configFile) || !file.exists(configFile)) {

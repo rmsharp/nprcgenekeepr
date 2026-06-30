@@ -3,11 +3,11 @@
 
 #' checkErrorLst examines list for non-empty fields
 #'
+#' @param errorLst list with fields for each type of error detectable by
+#' \code{qcStudbook}.
 #' @return Returns FALSE if all fields are empty or the list is NULL
 #' else the entire list is returned.
 #'
-#' @param errorLst list with fields for each type of error detectable by
-#' \code{qcStudbook}.
 #' @export
 #' @examples
 #' errorLst <- qcStudbook(nprcgenekeepr::pedFemaleSireMaleDam,

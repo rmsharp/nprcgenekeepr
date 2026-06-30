@@ -3,11 +3,11 @@
 
 #' colChange internal function to describe column names transformation
 #'
-#' @return Description of column name changes
-#'
 #' @param orgCols character vector with column names to be transformed if
 #' needed.
 #' @param cols character vector with transformed column names
+#' @return Description of column name changes
+#'
 ## ##  get_and_or_list
 #' @importFrom stringi stri_c
 #' @noRd

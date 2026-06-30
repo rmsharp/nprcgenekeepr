@@ -7,13 +7,13 @@
 #' distribution bounded by -max_delta and max_delta.
 #' Insure the resulting date is as least as large as the min_date.
 #'
-#' @return A vector of dates that have be obfuscated.
-#'
 #' @param baseDate list of Date objects with dates to be obfuscated
 #' @param minDate list object of Date objects that has the lower bound of
 #' resulting obfuscated dates
 #' @param maxDelta integer vector that is used to create min and max arguments
 #' to \code{runif} (\code{runif(n, min = 0, max = 1)})
+#' @return A vector of dates that have be obfuscated.
+#'
 #' @importFrom lubridate ddays
 #' @importFrom stats runif
 #' @export

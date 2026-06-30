@@ -10,13 +10,13 @@
 #' offspring and returns the probands together with all of their descendants.
 #' It does not include collateral relatives (siblings, cousins, or mates).
 #'
-#' @return A reduced pedigree containing the probands and all of their
-#' descendants.
-#'
 #' @param probands a character vector with the list of animals whose
 #' descendants should be included in the final pedigree.
 #' @param ped datatable that is the `Pedigree`. It contains pedigree
 #' information. The fields \code{id}, \code{sire} and \code{dam} are required.
+#' @return A reduced pedigree containing the probands and all of their
+#' descendants.
+#'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

@@ -3,8 +3,6 @@
 
 #' Make the initial groupMembers animal list
 #'
-#' @return Initial groupMembers list
-#'
 #' @param numGp integer value indicating the number of groups that should be
 #' formed from the list of IDs. Default is 1.
 #' @param currentGroups list of character vectors of IDs of animals currently
@@ -17,6 +15,8 @@
 #' @param minAge integer value indicating the minimum age to consider in group
 #' formation. Pairwise kinships involving an animal of this age or younger will
 #'  be ignored. Default is 1 year.
+#' @return Initial groupMembers list
+#'
 #' @noRd
 initializeHaremGroups <- function(numGp, currentGroups, candidates, ped,
                                   minAge) {

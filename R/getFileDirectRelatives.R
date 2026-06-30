@@ -16,10 +16,6 @@
 #' \code{fileName}, a file that does not exist, or a file lacking the
 #' \code{id}, \code{sire}, and \code{dam} columns each raises an error.
 #'
-#' @return A data.frame with pedigree structure containing all direct relatives
-#' -- the full connected pedigree component (ancestors, descendants, and
-#' collaterals) -- for the Ids provided.
-#'
 #' @param ids character vector with Ids.
 #' @param fileName path to a pedigree file (CSV or Excel) read via
 #' \code{\link{getPedigree}}; the file must provide at least \code{id},
@@ -30,6 +26,10 @@
 #' parents of offspring do not get a record as an ego; when \code{TRUE}
 #' a place holder record where parent (\code{sire},
 #' \code{dam}) IDs are set to \code{NA}.
+#'
+#' @return A data.frame with pedigree structure containing all direct relatives
+#' -- the full connected pedigree component (ancestors, descendants, and
+#' collaterals) -- for the Ids provided.
 #'
 #' @export
 #' @examples

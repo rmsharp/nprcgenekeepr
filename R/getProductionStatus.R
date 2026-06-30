@@ -3,9 +3,6 @@
 
 #' Get production status of group
 #'
-#' @return \code{production} -- Ratio of the number of births that live >30
-#' days to the number of females >= 3 years of age.
-#'
 #' @details Description of how Production and Production Status (color) is
 #' calculated.
 #' \enumerate{
@@ -49,6 +46,9 @@
 #' is either \emph{"shelter_pens"} or \emph{"corral"}.
 #' @param currentDate Date to be used for calculating age. Defaults to
 #'        \code{Sys.Date()}.
+#' @return \code{production} -- Ratio of the number of births that live >30
+#' days to the number of females >= 3 years of age.
+#'
 #' @importFrom lubridate as.duration ddays interval mdy year
 #' @noRd
 getProductionStatus <- function(ped, minParentAge = 3L, maxOffspringAge = NULL,

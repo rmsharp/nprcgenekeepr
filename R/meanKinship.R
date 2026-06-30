@@ -9,11 +9,11 @@
 #' in which the summation is over all animals, \emph{j}, including the kinship
 #' of animal \emph{i} to itself.
 #'
+#' @param kmat a numeric matrix of pairwise kinship coefficients.
+#' Animal IDs are the row and column names.
 #' @return A named numeric vector of average kinship coefficients for each
 #' animal ID. Elements are named with the IDs from the columns of kmat.
 #'
-#' @param kmat a numeric matrix of pairwise kinship coefficients.
-#' Animal IDs are the row and column names.
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

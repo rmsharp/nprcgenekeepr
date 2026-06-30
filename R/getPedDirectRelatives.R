@@ -6,9 +6,6 @@
 #' Gets direct ancestors from labkey \code{study} schema and \code{demographics}
 #' table.
 #'
-#' @return A data.frame with pedigree structure having all of the direct
-#' ancestors for the Ids provided.
-#'
 #' @param ids character vector with Ids.
 #' @param ped pedigree dataframe object that is used as the source of
 #' pedigree information.
@@ -16,6 +13,9 @@
 #' parents of offspring do not get a record as an ego; when \code{TRUE}
 #' a place holder record where parent (\code{sire},
 #' \code{dam}) IDs are set to \code{NA}.
+#'
+#' @return A data.frame with pedigree structure having all of the direct
+#' ancestors for the Ids provided.
 #'
 #' @import futile.logger
 #' @importFrom data.table rbindlist

@@ -3,10 +3,10 @@
 
 #' getErrorTab skeleton of list of errors
 #'
-#' @return HTML formatted error list
-#'
 #' @param errorLst list of errors and changes made by \code{qcStudbook}
 #' @param pedigreeFileName name of file provided by user on Input tab
+#' @return HTML formatted error list
+#'
 #' @export
 getErrorTab <- function(errorLst, pedigreeFileName) {
   tabPanel(

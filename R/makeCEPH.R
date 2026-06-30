@@ -38,17 +38,17 @@
 #'     Designate the relationships as \code{no relation.}
 #' }
 #'
+#' @param id character vector with unique identifier for an individual
+#' @param sire character vector with unique identifier for an
+#' individual's father (\code{NA} if unknown).
+#' @param dam character vector with unique identifier for an
+#' individual's mother (\code{NA} if unknown).
 #' @return List of lists: fields: id, subfields: parents, pgp, mgp.
 #' Pedigree information converted into a CEPH-style list. The top level
 #' list elements are the IDs from id. Below each ID is a list of three
 #' elements: parents (sire, dam), paternal grandparents (pgp: sire, dam),
 #' and maternal grandparents (mgp: sire, dam).
 #'
-#' @param id character vector with unique identifier for an individual
-#' @param sire character vector with unique identifier for an
-#' individual's father (\code{NA} if unknown).
-#' @param dam character vector with unique identifier for an
-#' individual's mother (\code{NA} if unknown).
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

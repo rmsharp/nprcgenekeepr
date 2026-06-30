@@ -4,14 +4,14 @@
 #' Concatenates any errors from nprcgenekeeprErr into narrative form
 #'
 
-#' @return Error from nprcgenekeepr
-#'
 #' @param txt character string with initial error description value
 #' @param err ve from errorLst
 #' @param singularTxt character string with text used when the
 #' length of err is 1
 #' @param pluralTxt character string with text used when the
 #' length of err is greater than 1.
+#' @return Error from nprcgenekeepr
+#'
 #' @importFrom stringi stri_c stri_detect_fixed
 #' @noRd
 addErrTxt <- function(txt, err, singularTxt, pluralTxt) {

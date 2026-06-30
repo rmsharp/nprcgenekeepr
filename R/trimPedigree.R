@@ -9,9 +9,6 @@
 #' the pedigree back in time starting from a group of probands, then moves
 #' back down the tree trimming off uninformative ancestors.
 #'
-#' @return A pedigree that has been trimmed, had uninformative founders
-#' removed and single parents added back.
-#'
 #' @param probands a character vector with the list of animals whose ancestors
 #' should be included in the final pedigree.
 #' @param ped datatable that is the `Pedigree`. It contains pedigree
@@ -29,6 +26,9 @@
 #' which has full complement of parents and the
 #' \code{p} dataframe, which has all uninformative parents removed to add
 #' back single parents to the \code{p} dataframe.
+#' @return A pedigree that has been trimmed, had uninformative founders
+#' removed and single parents added back.
+#'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

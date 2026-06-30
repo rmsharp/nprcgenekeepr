@@ -39,12 +39,6 @@
 #' \code{\link{qcStudbook}} (via \code{\link{removeDuplicates}}) and by
 #' \code{\link{kinship}}, both of which require unique ids.
 #'
-#' @return A data.frame \code{id, parent, V1 ... Vn}
-#' A data.frame providing the maternal and paternal alleles for an animal
-#' for each iteration. The first two columns provide the animal's ID and
-#' whether the allele came from the sire or dam. These are followed by
-#' \code{n} columns indicating the allele for that iteration.
-#'
 #' @param ids A character vector of unique IDs for a set of animals.
 #' @param sires A character vector with IDS of the sires for the set of
 #'  animals. \code{NA} is used for missing sires.
@@ -61,6 +55,12 @@
 #' @param updateProgress function or NULL. If this function is defined, it
 #' will be called during each iteration to update a
 #' \code{shiny::Progress} object.
+#'
+#' @return A data.frame \code{id, parent, V1 ... Vn}
+#' A data.frame providing the maternal and paternal alleles for an animal
+#' for each iteration. The first two columns provide the animal's ID and
+#' whether the allele came from the sire or dam. These are followed by
+#' \code{n} columns indicating the allele for that iteration.
 #'
 #' @export
 #' @examples

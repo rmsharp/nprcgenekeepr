@@ -6,9 +6,6 @@
 #'
 #' Part of Genetic Value Analysis
 #'
-#' @return A matrix with named rows indicating the number of unique alleles
-#'   an animal had during each round of simulation (indicated in columns).
-#'
 #' @param alleles a matrix with \{id, parent, V1 ... Vn\} providing the alleles
 #' an animal received during each simulation.
 #' The first 2 columns provide the animal ID and the parent the allele came
@@ -21,6 +18,9 @@
 #'  allele in the provided vector. If \code{byID} is TRUE and ids are provided,
 #'  the function will only count the unique alleles for an individual
 #'   (homozygous alleles will be counted as 1).
+#' @return A matrix with named rows indicating the number of unique alleles
+#'   an animal had during each round of simulation (indicated in columns).
+#'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
