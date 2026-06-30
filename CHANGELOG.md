@@ -14,6 +14,12 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-06-29 — copyright-placement sweep: issue #103 Stage 2 (Session 248)
+- **Deliverable (owner pick = "stage 2"; full-sweep approved via `AskUserQuestion`):** the copyright-placement sweep from the S244 audit (Finding 8) — move the `## Copyright(c) 2017-2026 R. Mark Sharp` / `## This file is part of nprcgenekeepr` pair from inside each roxygen block to the top of the file, above the first `#'` line with one blank separator (the `getSpeciesGestation.R` exemplar). **REFACTOR-class doc-structure — no behavior change, no rendered-doc change; TDD RED/GREEN N/A; 0 corrections / 0 overrides** (1 owner gate: full-sweep vs sample-first).
+- **Scope:** 203 of 225 R files moved (22 already correct, skipped); the 2 double-pair files (`autoIdFormat.R`, `makeGroupNum.R`) de-duplicated to one pair at top; 9 `mod*.R` get the pair above their `#` section banner; `flagOverriddenRelationships.R` gains the previously-missing separator blank. All 225 R files now place the copyright above the block.
+- **Verified (deterministic, whole-corpus):** `devtools::document()` → **ZERO `man/` drift** (rendered docs byte-identical — roxygen ignores `##`); **zero R-code-line changes** across all 204 files (comment-stripped projection diff); `lintr::lint_package()` = **0**; `spell_check_package` **clean**; `R CMD check --as-cran` = **0 errors / 0 warnings / 2 documented-false-positive NOTEs**; NAMESPACE/DESCRIPTION unchanged.
+- **Branch `issue103-stage2-copyright-placement`** (code commit `af08b5bf`), **UNPUSHED** — landing (PR / merge) owner-gated, matching the Stage 1 precedent. Learning 234 added.
+
 ### 2026-06-29 — merge PR #104: land Stage 1 of issue #103 onto `master` (Session 247)
 - **Deliverable (owner pick = "merge PR #104"):** merge the CI-validated PR #104 (issue #103 Stage 1 — defects D1–D8 plus the `.lintr` whole-file-exclusion fix) into `master`, sync local `master` to origin, and delete the merged branch `issue103-stage1-defects`. **Landing/process action on already-CI-green doc work — no R-logic change; TDD RED/GREEN N/A; 0 corrections / 0 overrides.**
 - **Merge strategy = merge commit**, matching the repo's precedent for landing `R/`+`man/` work via PR (`a4de6a84 Merge pull request #101`); preserves the well-formed S245/S246 commits. Result: merge commit `9b512b1e` (parents `170324d5` master + `3beaf2bc` branch tip); `gh pr view 104` → **MERGED**.
