@@ -21,21 +21,21 @@ A list of site specific information used by the application.
 
 Currently this returns the following character strings in a named list.
 
-1.  {center}{One of "SNPRC" or "ONPRC"}
+1.  `center` – One of "SNPRC" or "ONPRC"
 
-2.  {baseUrl}{If `center` is "SNPRC", baseUrl is one of
+2.  `baseUrl` – If `center` is "SNPRC", baseUrl is one of
     "https://boomer.txbiomed.local:8080/labkey" or
     "https://vger.txbiomed.local:8080/labkey". To allow testing, if
     `center` is "ONPRC" baseUrl is
-    "https://boomer.txbiomed.local:8080/labkey".}
+    "https://boomer.txbiomed.local:8080/labkey".
 
-3.  {schemaName}{If `center` is "SNPRC", schemaName is "study". If
-    `center` is "ONPRC", schemaName is "study"}
+3.  `schemaName` – If `center` is "SNPRC", schemaName is "study". If
+    `center` is "ONPRC", schemaName is "study"
 
-4.  {folderPath} {If `center` is "SNPRC", folderPath is "/SNPRC". If
-    `center` is "ONPRC", folderPath is "/ONPRC"}
+4.  `folderPath` – If `center` is "SNPRC", folderPath is "/SNPRC". If
+    `center` is "ONPRC", folderPath is "/ONPRC"
 
-5.  {queryName} {is "demographics"}
+5.  `queryName` – is "demographics"
 
 ## Examples
 

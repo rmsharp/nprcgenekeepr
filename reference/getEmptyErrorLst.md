@@ -1,6 +1,6 @@
-# Creates a empty errorLst object
+# Creates an empty errorLst object
 
-Creates a empty errorLst object
+Creates an empty errorLst object
 
 ## Usage
 

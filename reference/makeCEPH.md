@@ -26,7 +26,7 @@ makeCEPH(id, sire, dam)
 
 ## Value
 
-List of lists: {fields: id, {subfields: parents, pgp, mgp}}. Pedigree
+List of lists: fields: id, subfields: parents, pgp, mgp. Pedigree
 information converted into a CEPH-style list. The top level list
 elements are the IDs from id. Below each ID is a list of three elements:
 parents (sire, dam), paternal grandparents (pgp: sire, dam), and
@@ -40,37 +40,38 @@ unknown pedigree members.
 
 Calculates the first-order relationships in a pedigree, and to convert
 pairwise kinships to the appropriate relationship category.
+
 Relationships categories: For each ID in the pair, find a CEPH-style
 pedigree and compare them
 
-- {If one is the parent of the other} {— Designate the relationship as
-  `parent-offspring`}
+- If one is the parent of the other — Designate the relationship as
+  `parent-offspring`
 
-- {Else if both parents are shared} {— Designate the relationship as
-  `full-siblings`}
+- Else if both parents are shared — Designate the relationship as
+  `full-siblings`
 
-- {Else if one parent is shared} {— Designate the relationship as
-  `half-siblings`}
+- Else if one parent is shared — Designate the relationship as
+  `half-siblings`
 
-- {Else if one is the grandparent of the other} {— Designate the
-  relationship as `grandparent-grandchild`}
+- Else if one is the grandparent of the other — Designate the
+  relationship as `grandparent-grandchild`
 
-- {Else if both grand parents are shared} {— Designate the relationship
-  as `cousin`}
+- Else if both grand parents are shared — Designate the relationship as
+  `cousin`
 
-- {Else if at least one grand parent is shared} {— Designate the
-  relationship as `cousin - other`}
+- Else if at least one grand parent is shared — Designate the
+  relationship as `cousin - other`
 
-- {Else if the parents of one are the grandparents of the other} {—
-  Designate the relationship as `full-avuncular`}
+- Else if the parents of one are the grandparents of the other —
+  Designate the relationship as `full-avuncular`
 
-- {Else if a single parent of one is the grandparent of the other} {—
-  Designate the relationship as `avuncular - other`}
+- Else if a single parent of one is the grandparent of the other —
+  Designate the relationship as `avuncular - other`
 
-- {Else if the kinship is greater than 0, but the pair don't fall into
-  the above categories} {— Designate the relationship as `other`}
+- Else if the kinship is greater than 0, but the pair don't fall into
+  the above categories — Designate the relationship as `other`
 
-- {Else} {— Designate the relationships as `no relation.`}
+- Else — Designate the relationships as `no relation.`
 
 ## Examples
 

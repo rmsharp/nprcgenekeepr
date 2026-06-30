@@ -33,12 +33,13 @@ A dataframe containing rows for each animal where one or more parent was
 less than `minParentAge`. It contains all of the columns in the original
 `sb` dataframe with the following added columns:
 
-1.  {sireBirth} {sire's birth date}
+1.  `sireBirth` – sire's birth date
 
-2.  {sireAge} {age of sire in years on the date indicated by `birth`.}
+2.  `sireAge` – age of sire in years on the date indicated by `birth`.
 
-3.  {damBirth} {dam's birth date} `damAge` {age of dam in years on the
-    date indicated by `birth`.}
+3.  `damBirth` – dam's birth date
+
+4.  `damAge` – age of dam in years on the date indicated by `birth`.
 
 ## Examples
 

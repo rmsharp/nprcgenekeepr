@@ -1,6 +1,6 @@
 # Calculates genome uniqueness for each ID that is part of the population
 
-{Genome Uniqueness Functions}{}
+Part of Genetic Value Analysis
 
 ## Usage
 
@@ -18,17 +18,17 @@ calcGU(alleles, threshold = 1L, byID = FALSE, pop = NULL)
   An AlleleTable contains information about alleles an ego has
   inherited. It contains the following columns:
 
-  - {id} {— A character vector of IDs for a set of animals.}
+  - `id` — A character vector of IDs for a set of animals.
 
-  - {parent} {— A factor with levels of sire and dam.}
+  - `parent` — A factor with levels of sire and dam.
 
-  - {V1} {— Unnamed integer column representing allele 1.}
+  - `V1` — Unnamed integer column representing allele 1.
 
-  - {V2} {— Unnamed integer column representing allele 2.}
+  - `V2` — Unnamed integer column representing allele 2.
 
-  - {...} {— Unnamed integer columns representing alleles.}
+  - `...` — Unnamed integer columns representing alleles.
 
-  - {Vn} {— Unnamed integer column representing the nth column.}
+  - `Vn` — Unnamed integer column representing the nth column.
 
 - threshold:
 
@@ -59,8 +59,6 @@ values as percentages. Rownames are set to 'id' values that are part of
 the population.
 
 ## Details
-
-Part of Genetic Value Analysis
 
 The following functions calculate genome uniqueness according to the
 equation described in Ballou & Lacy.

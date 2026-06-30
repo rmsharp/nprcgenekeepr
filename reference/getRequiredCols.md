@@ -13,18 +13,17 @@ getRequiredCols()
 A character vector of the required columns that can be in a studbook.
 The required columns are as follows:
 
-- {id} {– character vector with unique identifier for an individual}
+- `id` – character vector with unique identifier for an individual
 
-- {sire} {– character vector with unique identifier for an individual's
-  father (`NA` if unknown).}
+- `sire` – character vector with unique identifier for an individual's
+  father (`NA` if unknown).
 
-- {dam} {– character vector with unique identifier for an individual's
-  mother (`NA` if unknown).}
+- `dam` – character vector with unique identifier for an individual's
+  mother (`NA` if unknown).
 
-- {sex} {– factor {levels: "M", "F", "U"} Sex specifier for an
-  individual}
+- `sex` – factor (levels: "M", "F", "U") Sex specifier for an individual
 
-- {birth} {– Date or `NA` (optional) with the individual's birth date}
+- `birth` – Date or `NA` (optional) with the individual's birth date
 
 ## Examples
 

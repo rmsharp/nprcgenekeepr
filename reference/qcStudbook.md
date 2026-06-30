@@ -19,43 +19,43 @@ qcStudbook(sb, minParentAge = 2, reportChanges = FALSE, reportErrors = FALSE)
   The function recognizes the following columns (optional columns will
   be used if present, but are not required):
 
-  - {id} {— Character vector with Unique identifier for all individuals}
+  - `id` — Character vector with Unique identifier for all individuals
 
-  - {sire} {— Character vector with unique identifier for the father of
-    the current id}
+  - `sire` — Character vector with unique identifier for the father of
+    the current id
 
-  - {dam} {— Character vector with unique identifier for the mother of
-    the current id}
+  - `dam` — Character vector with unique identifier for the mother of
+    the current id
 
-  - {sex} {— Factor {levels: "M", "F", "U"} Sex specifier for an
-    individual}
+  - `sex` — Factor (levels: "M", "F", "U") Sex specifier for an
+    individual
 
-  - {birth} {— Date or `NA` (optional) with the individual's birth date}
+  - `birth` — Date or `NA` (optional) with the individual's birth date
 
-  - {departure} {— Date or `NA` (optional) an individual was sold or
-    shipped from the colony}
+  - `departure` — Date or `NA` (optional) an individual was sold or
+    shipped from the colony
 
-  - {death} {— date or `NA` (optional) Date of death, if applicable}
+  - `death` — date or `NA` (optional) Date of death, if applicable
 
-  - {status} {— Factor {levels: ALIVE, DEAD, SHIPPED} (optional) Status
-    of an individual}
+  - `status` — Factor (levels: ALIVE, DEAD, SHIPPED) (optional) Status
+    of an individual
 
-  - {origin} {— Character or `NA` (optional) Facility an individual
-    originated from, if other than ONPRC}
+  - `origin` — Character or `NA` (optional) Facility an individual
+    originated from, if other than ONPRC
 
-  - {ancestry} {— Character or `NA` (optional) Geographic population to
-    which the individual belongs}
+  - `ancestry` — Character or `NA` (optional) Geographic population to
+    which the individual belongs
 
-  - {spf} {— Character or `NA` (optional) Specific pathogen-free status
-    of an individual}
+  - `spf` — Character or `NA` (optional) Specific pathogen-free status
+    of an individual
 
-  - {vasxOvx} {— Character or `NA` (optional) Indicator of the
+  - `vasxOvx` — Character or `NA` (optional) Indicator of the
     vasectomy/ovariectomy status of an animal; `NA` if animal is intact,
-    assume all other values indicate surgical alteration}
+    assume all other values indicate surgical alteration
 
-  - {condition} {— Character or `NA` (optional) Indicator of the
+  - `condition` — Character or `NA` (optional) Indicator of the
     restricted status of an animal. "Nonrestricted" animals are
-    generally assumed to be naive.}
+    generally assumed to be naive.
 
 - minParentAge:
 
@@ -79,15 +79,15 @@ qcStudbook(sb, minParentAge = 2, reportChanges = FALSE, reportErrors = FALSE)
 
   The following changes are made to the cols.
 
-  - {Column cols are converted to all lower case}
+  - Column cols are converted to all lower case
 
-  - {Periods (".") within column cols are collapsed to no space ""}
+  - Periods (".") within column cols are collapsed to no space ""
 
-  - {`egoid` is converted to `id`}
+  - `egoid` is converted to `id`
 
-  - {`sireid` is convert to `sire`}
+  - `sireid` is convert to `sire`
 
-  - {`damid` is converted to `dam`}
+  - `damid` is converted to `dam`
 
   If the dataframe (`sb` does not contain the five required columns
   (`id`, `sire`, `dam`, `sex`), and `birth` the function throws an error
@@ -118,15 +118,15 @@ qcStudbook(sb, minParentAge = 2, reportChanges = FALSE, reportErrors = FALSE)
   convert sex codes according to the following factors of standardized
   codes:
 
-  - {F} {– replacing "FEMALE" or "2"}
+  - `F` – replacing "FEMALE" or "2"
 
-  - {M} {– replacing "MALE" or "1"}
+  - `M` – replacing "MALE" or "1"
 
-  - {H} {– replacing "HERMAPHRODITE" or "4", if ignore.herm == FALSE}
+  - `H` – replacing "HERMAPHRODITE" or "4", if ignore.herm == FALSE
 
-  - {U} {– replacing "HERMAPHRODITE" or "4", if ignore.herm == TRUE}
+  - `U` – replacing "HERMAPHRODITE" or "4", if ignore.herm == TRUE
 
-  - {U} {– replacing "UNKNOWN" or "3"}
+  - `U` – replacing "UNKNOWN" or "3"
 
   The function `correctParentSex` is used to ensure no parent is both a
   sire and a dam. If this error is detected, the function throws an
@@ -136,32 +136,32 @@ qcStudbook(sb, minParentAge = 2, reportChanges = FALSE, reportErrors = FALSE)
   following factors of standardized codes. Case of the original status
   value is ignored.
 
-  - {"ALIVE"} {— replacing "alive", "A" and "1"}
+  - `"ALIVE"` — replacing "alive", "A" and "1"
 
-  - {"DECEASED"} {— replacing "deceased", "DEAD", "D", "2"}
+  - `"DECEASED"` — replacing "deceased", "DEAD", "D", "2"
 
-  - {"SHIPPED"} {— replacing "shipped", "sold", "sale", "s", "3"}
+  - `"SHIPPED"` — replacing "shipped", "sold", "sale", "s", "3"
 
-  - {"UNKNOWN"} {— replacing is.na(status)}
+  - `"UNKNOWN"` — replacing is.na(status)
 
-  - {"UNKNOWN"} {— replacing "unknown", "U", "4"}
+  - `"UNKNOWN"` — replacing "unknown", "U", "4"
 
   The function `convertAncestry` coverts ancestry indicators using
   regular expressions such that the following conversions are made from
   character strings that match selected substrings to the following
   factors.
 
-  - {"INDIAN"} {— replacing "ind" and not "chin"}
+  - `"INDIAN"` — replacing "ind" and not "chin"
 
-  - {"CHINESE"} {— replacing "chin" and not "ind"}
+  - `"CHINESE"` — replacing "chin" and not "ind"
 
-  - {"HYBRID"} {— replacing "hyb" or "chin" and "ind"}
+  - `"HYBRID"` — replacing "hyb" or "chin" and "ind"
 
-  - {"JAPANESE"} {— replacing "jap"}
+  - `"JAPANESE"` — replacing "jap"
 
-  - {"UNKNOWN"} {— replacing `NA`}
+  - `"UNKNOWN"` — replacing `NA`
 
-  - {"OTHER"} {— replacing not matching any of the above}
+  - `"OTHER"` — replacing not matching any of the above
 
   The function `convertDate` converts character representations of dates
   in the columns `birth`, `death`, `departure`, and `exit` to dates

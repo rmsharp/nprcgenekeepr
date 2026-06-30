@@ -203,8 +203,7 @@
   : Determines the pedigree number for each id
 
 - [`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)
-  : fixColumnNames changes original column names and into standardized
-  names
+  : fixColumnNames changes original column names into standardized names
 
 - [`focalAnimals`](https://github.com/rmsharp/nprcgenekeepr/reference/focalAnimals.md)
   : Focal animal IDs from examplePedigree
@@ -241,7 +240,7 @@
   Converts columns of dates in text form to `Date` object columns
 
 - [`getDatedFilename()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDatedFilename.md)
-  : Returns a character vector with an file name having the date
+  : Returns a character vector with a file name having the date
   prepended
 
 - [`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
@@ -251,7 +250,7 @@
   : Gets pedigree with descendants of provided group
 
 - [`getEmptyErrorLst()`](https://github.com/rmsharp/nprcgenekeepr/reference/getEmptyErrorLst.md)
-  : Creates a empty errorLst object
+  : Creates an empty errorLst object
 
 - [`getErrorTab()`](https://github.com/rmsharp/nprcgenekeepr/reference/getErrorTab.md)
   : getErrorTab skeleton of list of errors
@@ -310,7 +309,7 @@
   : Get possible column names for a studbook
 
 - [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
-  **\[experimental\]** : Get the lists of portential parents for all
+  **\[experimental\]** : Get the lists of potential parents for all
   individuals born in the colony with one or two unknown parents
 
 - [`getPotentialSires()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialSires.md)
@@ -492,15 +491,12 @@
 - [`modSummaryStatsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modSummaryStatsUI.md)
   : Summary Statistics Module - UI Function
 
-- [`nprcgenekeepr`](https://github.com/rmsharp/nprcgenekeepr/reference/nprcgenekeepr.md)
-  : Genetic Tools for Colony Management
-
 - [`obfuscateDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateDate.md)
-  : obfucateDate adds a random number of days bounded by plus and minus
-  max delta
+  : obfuscateDate adds a random number of days bounded by plus/minus max
+  delta
 
 - [`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
-  : obfucateId creates a vector of ID aliases of specified length
+  : obfuscateId creates a vector of ID aliases of specified length
 
 - [`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
   : obfuscatePed takes a pedigree object and creates aliases for all IDs

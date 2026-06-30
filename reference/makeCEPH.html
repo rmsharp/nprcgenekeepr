@@ -75,7 +75,7 @@ individual's mother (<code>NA</code> if unknown).</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>List of lists: {fields: id, {subfields: parents, pgp, mgp}}.
+    <p>List of lists: fields: id, subfields: parents, pgp, mgp.
 Pedigree information converted into a CEPH-style list. The top level
 list elements are the IDs from id. Below each ID is a list of three
 elements: parents (sire, dam), paternal grandparents (pgp: sire, dam),
@@ -87,29 +87,29 @@ and maternal grandparents (mgp: sire, dam).</p>
 the id, the parents, and the grandparents. Inserts NA for unknown pedigree
 members.</p>
 <p>Calculates the first-order relationships in a pedigree,
-and to convert pairwise kinships to the appropriate relationship category.
-Relationships categories:
-For each ID in the pair, find a CEPH-style pedigree and compare them</p><ul><li><p>{If one is the parent of the other}
-{— Designate the relationship as <code>parent-offspring</code>}</p></li>
-<li><p>{Else if both parents are shared}
-{— Designate the relationship as <code>full-siblings</code>}</p></li>
-<li><p>{Else if one parent is shared}
-{— Designate the relationship as <code>half-siblings</code>}</p></li>
-<li><p>{Else if one is the grandparent of the other}
-{— Designate the relationship as <code>grandparent-grandchild</code>}</p></li>
-<li><p>{Else if both grand parents are shared}
-{— Designate the relationship as <code>cousin</code>}</p></li>
-<li><p>{Else if at least one grand parent is shared}
-{— Designate the relationship as <code>cousin - other</code>}</p></li>
-<li><p>{Else if the parents of one are the grandparents of the other}
-{— Designate the relationship as <code>full-avuncular</code>}</p></li>
-<li><p>{Else if a single parent of one is the grandparent of the other}
-{— Designate the relationship as <code>avuncular - other</code>}</p></li>
-<li><p>{Else if the kinship is greater than 0, but the pair don't fall into
-the above categories}
-{— Designate the relationship as <code>other</code>}</p></li>
-<li><p>{Else}
-{— Designate the relationships as <code>no relation.</code>}</p></li>
+and to convert pairwise kinships to the appropriate relationship category.</p>
+<p>Relationships categories:
+For each ID in the pair, find a CEPH-style pedigree and compare them</p><ul><li><p>If one is the parent of the other —
+Designate the relationship as <code>parent-offspring</code></p></li>
+<li><p>Else if both parents are shared —
+Designate the relationship as <code>full-siblings</code></p></li>
+<li><p>Else if one parent is shared —
+Designate the relationship as <code>half-siblings</code></p></li>
+<li><p>Else if one is the grandparent of the other —
+Designate the relationship as <code>grandparent-grandchild</code></p></li>
+<li><p>Else if both grand parents are shared —
+Designate the relationship as <code>cousin</code></p></li>
+<li><p>Else if at least one grand parent is shared —
+Designate the relationship as <code>cousin - other</code></p></li>
+<li><p>Else if the parents of one are the grandparents of the other —
+Designate the relationship as <code>full-avuncular</code></p></li>
+<li><p>Else if a single parent of one is the grandparent of the other —
+Designate the relationship as <code>avuncular - other</code></p></li>
+<li><p>Else if the kinship is greater than 0, but the pair don't fall into
+the above categories —
+Designate the relationship as <code>other</code></p></li>
+<li><p>Else —
+Designate the relationships as <code>no relation.</code></p></li>
 </ul></div>
 
     <div class="section level2">

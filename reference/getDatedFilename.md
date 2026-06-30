@@ -1,6 +1,6 @@
-# Returns a character vector with an file name having the date prepended
+# Returns a character vector with a file name having the date prepended
 
-Returns a character vector with an file name having the date prepended
+Returns a character vector with a file name having the date prepended
 
 ## Usage
 
@@ -24,5 +24,5 @@ YYYY-MM-DD_hh_mm_ss_basename format.
 ``` r
 library(nprcgenekeepr)
 getDatedFilename("testName")
-#> [1] "2026-06-29_18_53_34.402333_testName"
+#> [1] "2026-06-30_02_13_30.651129_testName"
 ```

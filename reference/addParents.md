@@ -13,8 +13,7 @@ addParents(ped)
 
 - ped:
 
-  datatable that is the `Pedigree`. It contains pedigree information
-  including the IDs listed in `candidates`.
+  datatable that is the `Pedigree`. It contains pedigree information.
 
 ## Value
 

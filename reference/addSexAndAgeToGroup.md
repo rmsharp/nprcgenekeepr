@@ -17,8 +17,7 @@ addSexAndAgeToGroup(ids, ped)
 
 - ped:
 
-  datatable that is the `Pedigree`. It contains pedigree information
-  including the IDs listed in `candidates`.
+  datatable that is the `Pedigree`. It contains pedigree information.
 
 ## Value
 
@@ -39,10 +38,10 @@ data("qcPed")
 df <- addSexAndAgeToGroup(ids = qcBreeders, ped = qcPed)
 head(df)
 #>           ids sex      age
-#> Q0RGP7 Q0RGP7   F 21.37440
-#> C1ICXL C1ICXL   F 10.35181
-#> J3D3N5 J3D3N5   M 25.42368
-#> VFS0XB VFS0XB   M 20.41889
-#> HP3E04 HP3E04   M 19.26626
-#> 2KULR3 2KULR3   F 13.02943
+#> Q0RGP7 Q0RGP7   F 21.37714
+#> C1ICXL C1ICXL   F 10.35455
+#> J3D3N5 J3D3N5   M 25.42642
+#> VFS0XB VFS0XB   M 20.42163
+#> HP3E04 HP3E04   M 19.26899
+#> 2KULR3 2KULR3   F 13.03217
 ```

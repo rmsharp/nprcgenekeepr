@@ -21,9 +21,9 @@ getOffspring(pedSourceDf, ids)
 
 ## Value
 
-A character vector containing all of the ancestor IDs for all of the IDs
-provided in the second argument `ids`. All ancestors are combined and
-duplicates are removed.
+A character vector containing all of the offspring IDs for all of the
+IDs provided in the second argument `ids`. All offspring are combined
+and duplicates are removed.
 
 ## Examples
 

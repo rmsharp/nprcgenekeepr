@@ -28,15 +28,15 @@ transformation from non-standard codes.
 
 Standard sex codes are
 
-- {F} {– replacing "FEMALE" or "2"}
+- `F` – replacing "FEMALE" or "2"
 
-- {M} {– replacing "MALE" or "1"}
+- `M` – replacing "MALE" or "1"
 
-- {H} {– replacing "HERMAPHRODITE" or "4", if ignore.herm == FALSE}
+- `H` – replacing "HERMAPHRODITE" or "4", if ignore.herm == FALSE
 
-- {U} {– replacing "HERMAPHRODITE" or "4", if ignore.herm == TRUE}
+- `U` – replacing "HERMAPHRODITE" or "4", if ignore.herm == TRUE
 
-- {U} {– replacing "UNKNOWN" or "3"}
+- `U` – replacing "UNKNOWN" or "3"
 
 ## Examples
 

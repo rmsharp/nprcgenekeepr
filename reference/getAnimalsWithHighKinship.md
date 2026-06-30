@@ -17,8 +17,7 @@ getAnimalsWithHighKinship(kmat, ped, threshold, currentGroups, ignore, minAge)
 
 - ped:
 
-  dataframe that is the `Pedigree`. It contains pedigree information
-  including the IDs listed in `candidates`.
+  dataframe that is the `Pedigree`. It contains pedigree information.
 
 - threshold:
 

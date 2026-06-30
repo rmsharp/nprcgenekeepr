@@ -1,4 +1,4 @@
-# obfucateId creates a vector of ID aliases of specified length
+# obfuscateId creates a vector of ID aliases of specified length
 
 ID aliases are pseudorandom sequences of alphanumeric upper case
 characters where the letter "O" is not included for readability.. User
