@@ -34,7 +34,7 @@
 #' \code{message} as the "File Read Error" detail (distinct from the LabKey
 #' path, which returns an \code{nprcgenekeeprErr}).
 #'
-#' @import futile.logger
+#' @importFrom futile.logger flog.debug
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
