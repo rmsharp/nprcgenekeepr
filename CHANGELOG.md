@@ -15,6 +15,47 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-30 — merge PR \#105 + issue \#103 Stage 3 (roxygen block-order normalization) (Session 250)
+
+- **Deliverable (owner: “merge PR \#105; work on \#103 this
+  session”):** (1) merged **PR \#105** to land issue \#103 **Stage 2**
+  (copyright-placement sweep) on `master` (merge commit `12c7c353`),
+  synced local `master`, deleted the merged Stage 2 branch; (2) issue
+  \#103 **Stage 3 — block-order normalization (audit Finding 2)**: a
+  deterministic R transform reordered roxygen tags to the standard block
+  order across **194 files / 206 blocks**. **REFACTOR-class
+  doc-structure — no behavior change, no rendered-doc change; TDD
+  RED/GREEN N/A; 0 corrections / 0 overrides** (1 owner gate via
+  `AskUserQuestion`: the `@examples`/`@export` order — audit was
+  self-contradictory; owner chose `@examples` LAST).
+- **The transform:** per block, keep the preamble (title + description
+  prose) verbatim, split the tag region into tag-chunks (a `@tag` line +
+  its continuation `#'` lines), and stable-sort the chunks by a
+  canonical key — `@details`/`@usage` → `@param` (signature order) →
+  `@return` → `@seealso`/`@references`/`@author` (last three keep source
+  order) → `@importFrom` (grouped) →
+  `@export`/`@noRd`/`@keywords`/`@rdname`/`@method` → `@examples`
+  (LAST). The headline change is moving `@return` after `@param` (199
+  blocks).
+- **Edge cases handled:** `@description`/`@usage` kept early; `data.R`
+  dataset docs unchanged (already ordered); kinship.R
+  `@author`/`@references` (interleaved across `# nolint` comment splits)
+  preserved in source order via equal sort keys — the one file that
+  drifted on the first pass, fixed before commit.
+- **Verified (deterministic + adversarial):** zero `man/` drift after
+  `devtools::document()` (rendered docs byte-identical); zero
+  code/plain-comment change (projection diff); `lintr::lint_package()` =
+  0; `spell_check_package` clean; re-characterization shows 0 residual
+  block-order deviations; **`R CMD check --as-cran` = `Status: 2 NOTEs`
+  (0/0/2)** with Rd files / cross-references / code-documentation
+  mismatches / Rd all OK; a 9-agent adversarial review of the 45 changed
+  `@noRd` diffs (no `.Rd` to verify) found 0 defects.
+- **Keyword-safe** (“Part of \#103. Stage 3 of 8”) so the landing did
+  not auto-close the multi-stage tracker. Stage 3 transform `fb9a92ab`;
+  landing method owner-gated (`AskUserQuestion`) -\> owner chose
+  **direct-merge** -\> landed on `master` via merge commit `72f5391e`,
+  Stage 3 branch deleted. Stages 1-3 of 8 now on `master`.
+
 ### 2026-06-29 — open PR \#105 for CI validation: issue \#103 Stage 2 landing (Session 249)
 
 - **Deliverable (owner pick = “1” = Land Stage 2; landing method = “open
