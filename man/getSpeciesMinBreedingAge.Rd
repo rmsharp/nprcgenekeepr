@@ -19,8 +19,8 @@ the length of \code{species} (or vice versa).}
 bundled table.}
 
 \item{default}{numeric fallback returned for species that are missing,
-\code{NA}, empty, or not found, and for a sex that is not \code{"M"}/\code{"F"}.
-Defaults to \code{2}.}
+\code{NA}, empty, or not found, and for a sex that is not
+\code{"M"}/\code{"F"}. Defaults to \code{2}.}
 }
 \value{
 a numeric vector of minimum breeding ages in years, the same length

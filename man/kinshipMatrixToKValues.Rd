@@ -20,14 +20,14 @@ In contrast to the kinship matrix. Each possible pairing of IDs appears
 once.
 }
 \description{
-A \code{kValue} matrix has one row for each pair of individuals in the kinship
-matrix and one column for each kinship matrix.
-A \code{kValue} matrix has one row for each pair of individuals in the kinship
+A \code{kValue} matrix has one row for each pair of individuals in the
+kinship matrix and one column for each kinship matrix. A
+\code{kValue} matrix has one row for each pair of individuals in the kinship
 matrix and one column for each kinship matrix. Thus, in a kinship matrix with
 20 individuals the kinship matrix will have 20 rows by 20 columns but only
 the upper or lower triangle has unique information as the diagonal values are
-by definition all 1.0 and the upper triangle has the same values as the
-lower triangle. The \code{kValue} table will have 210 rows. The calculation for
+by definition all 1.0 and the upper triangle has the same values as the lower
+triangle. The \code{kValue} table will have 210 rows. The calculation for
 the number or row in the \code{kValue} table is  \eqn{20 + (20 * 19) / 2}
 rows with the 20 values from the kinship coeficient matrix diagonal and
 \eqn{(20 * 19) / 2} elements from one of either of the two triangles.

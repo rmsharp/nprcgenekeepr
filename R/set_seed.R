@@ -3,8 +3,8 @@
 
 #' Work around for unit tests using sample() among various versions of R
 #'
-#' The change in how `set.seed` works in R 3.6 prompted the creation of this
-#' R version agnostic replacement to get unit test code to work on multiple
+#' The change in how \code{set.seed} works in R 3.6 prompted the creation of
+#' this R version agnostic replacement to get unit test code to work on multiple
 #' versions of R in a CICD test build.
 #'
 #' It seems \code{RNGkind(sample.kind="Rounding")} does not work prior to
@@ -29,12 +29,13 @@ set_seed <- function(seed = 1L) {
 }
 #' Apply a gated RNG seed for reproducible E2E testing
 #'
-#' Reads `optionName` (env-var `envName` as fallback). When set, pins the RNG
-#' via [set_seed()] so the genetic-value / breeding-group module servers give
-#' reproducible stochastic output under shinytest2; a no-op otherwise (=> NA).
+#' Reads \code{optionName} (env-var \code{envName} as fallback). When set,
+#' pins the RNG via [set_seed()] so the genetic-value / breeding-group module
+#' servers give reproducible stochastic output under shinytest2; a no-op
+#' otherwise (=> NA).
 #'
-#' @param optionName Option name, e.g. `"nprcgenekeepr.gva_seed"`.
-#' @param envName Environment-variable fallback, e.g. `"NPRC_GVA_SEED"`.
+#' @param optionName Option name, e.g. \code{"nprcgenekeepr.gva_seed"}.
+#' @param envName Environment-variable fallback, e.g. \code{"NPRC_GVA_SEED"}.
 #' @return NULL, invisibly.
 #' @noRd
 gatedSeed <- function(optionName, envName) {

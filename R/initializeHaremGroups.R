@@ -10,7 +10,7 @@
 #' existent.
 #' @param candidates character vector of IDs of the animals available for
 #' use in the group.
-#' @param ped dataframe that is the `Pedigree`. It contains pedigree
+#' @param ped dataframe that is the \code{Pedigree}. It contains pedigree
 #' information including the IDs listed in \code{candidates}.
 #' @param minAge integer value indicating the minimum age to consider in group
 #' formation. Pairwise kinships involving an animal of this age or younger will

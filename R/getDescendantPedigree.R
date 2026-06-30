@@ -12,7 +12,7 @@
 #'
 #' @param probands a character vector with the list of animals whose
 #' descendants should be included in the final pedigree.
-#' @param ped datatable that is the `Pedigree`. It contains pedigree
+#' @param ped datatable that is the \code{Pedigree}. It contains pedigree
 #' information. The fields \code{id}, \code{sire} and \code{dam} are required.
 #' @return A reduced pedigree containing the probands and all of their
 #' descendants.

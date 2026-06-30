@@ -8,7 +8,7 @@
 #' (see \code{\link{getAutoIdFormat}}; default a leading "U"). Routing detection
 #' through that single predicate is the "function call" the former inline
 #' leading-"U" check was flagged to become.
-#' @param ped datatable that is the `Pedigree`. It contains pedigree
+#' @param ped datatable that is the \code{Pedigree}. It contains pedigree
 #' information. The \code{id}, \code{sire}, and \code{dame} columns are
 #' required.
 #'
