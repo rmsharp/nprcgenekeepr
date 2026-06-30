@@ -15,6 +15,63 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-29 — open PR \#105 for CI validation: issue \#103 Stage 2 landing (Session 249)
+
+- **Deliverable (owner pick = “1” = Land Stage 2; landing method = “open
+  a PR for CI” via `AskUserQuestion`):** land the S248 Stage-2
+  copyright-placement sweep by pushing branch
+  `issue103-stage2-copyright-placement` to origin and opening **PR
+  \#105** against `master` for full CI validation. **Landing/process
+  action on already-locally-verified doc-structure work — no R-logic
+  change; TDD RED/GREEN N/A; 0 corrections / 0 overrides** (1 owner gate
+  via `AskUserQuestion`: the landing method — PR vs direct-merge vs
+  review-first).
+- **CI GREEN 10/10 on the FIRST run** — `lint` PASS (3m44s), the full
+  5-platform R-CMD-check matrix (macOS / Windows / Ubuntu
+  release+devel+oldrel-1) PASS, pkgdown / test-coverage /
+  codecov{patch,project} PASS. `gh pr view 105`: state OPEN, mergeable
+  MERGEABLE, mergeStateStatus CLEAN. No Stage-1-style lint regression —
+  S248’s post-sweep `lintr::lint_package()` = 0 held end-to-end
+  (Learning 235), so the line-shifting sweep did not trip a `.lintr`
+  line-keyed exclusion.
+- **Keyword-safe PR body** (“Part of \#103. Stage 2 of 8 — does **not**
+  close the tracking issue”) so the eventual merge will not auto-close
+  the multi-stage harmonization tracker.
+- **Merge is owner-gated** (a future session, matching the S246→S247
+  Stage-1 split). After merge, the next \#103 stage per the audit §6
+  roadmap is Stage 3 (block-order normalization, Finding 2).
+- Branch pushed; `master` untouched (== origin/master, no local-ahead
+  drift). Process docs (this entry, Learning 235, the S249 handoff) are
+  committed on the branch and ride the PR.
+
+### 2026-06-29 — copyright-placement sweep: issue \#103 Stage 2 (Session 248)
+
+- **Deliverable (owner pick = “stage 2”; full-sweep approved via
+  `AskUserQuestion`):** the copyright-placement sweep from the S244
+  audit (Finding 8) — move the `## Copyright(c) 2017-2026 R. Mark Sharp`
+  / `## This file is part of nprcgenekeepr` pair from inside each
+  roxygen block to the top of the file, above the first `#'` line with
+  one blank separator (the `getSpeciesGestation.R` exemplar).
+  **REFACTOR-class doc-structure — no behavior change, no rendered-doc
+  change; TDD RED/GREEN N/A; 0 corrections / 0 overrides** (1 owner
+  gate: full-sweep vs sample-first).
+- **Scope:** 203 of 225 R files moved (22 already correct, skipped); the
+  2 double-pair files (`autoIdFormat.R`, `makeGroupNum.R`) de-duplicated
+  to one pair at top; 9 `mod*.R` get the pair above their `#` section
+  banner; `flagOverriddenRelationships.R` gains the previously-missing
+  separator blank. All 225 R files now place the copyright above the
+  block.
+- **Verified (deterministic, whole-corpus):** `devtools::document()` →
+  **ZERO `man/` drift** (rendered docs byte-identical — roxygen ignores
+  `##`); **zero R-code-line changes** across all 204 files
+  (comment-stripped projection diff); `lintr::lint_package()` = **0**;
+  `spell_check_package` **clean**; `R CMD check --as-cran` = **0 errors
+  / 0 warnings / 2 documented-false-positive NOTEs**;
+  NAMESPACE/DESCRIPTION unchanged.
+- **Branch `issue103-stage2-copyright-placement`** (code commit
+  `af08b5bf`), **UNPUSHED** — landing (PR / merge) owner-gated, matching
+  the Stage 1 precedent. Learning 234 added.
+
 ### 2026-06-29 — merge PR \#104: land Stage 1 of issue \#103 onto `master` (Session 247)
 
 - **Deliverable (owner pick = “merge PR \#104”):** merge the

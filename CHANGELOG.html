@@ -55,6 +55,29 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-06-29--open-pr-105-for-ci-validation-issue-103-stage-2-landing-session-249">2026-06-29 — open PR #105 for CI validation: issue #103 Stage 2 landing (Session 249)<a class="anchor" aria-label="anchor" href="#id_2026-06-29--open-pr-105-for-ci-validation-issue-103-stage-2-landing-session-249"></a></h3>
+<ul><li>
+<strong>Deliverable (owner pick = “1” = Land Stage 2; landing method = “open a PR for CI” via <code>AskUserQuestion</code>):</strong> land the S248 Stage-2 copyright-placement sweep by pushing branch <code>issue103-stage2-copyright-placement</code> to origin and opening <strong>PR #105</strong> against <code>master</code> for full CI validation. <strong>Landing/process action on already-locally-verified doc-structure work — no R-logic change; TDD RED/GREEN N/A; 0 corrections / 0 overrides</strong> (1 owner gate via <code>AskUserQuestion</code>: the landing method — PR vs direct-merge vs review-first).</li>
+<li>
+<strong>CI GREEN 10/10 on the FIRST run</strong> — <code>lint</code> PASS (3m44s), the full 5-platform R-CMD-check matrix (macOS / Windows / Ubuntu release+devel+oldrel-1) PASS, pkgdown / test-coverage / codecov{patch,project} PASS. <code>gh pr view 105</code>: state OPEN, mergeable MERGEABLE, mergeStateStatus CLEAN. No Stage-1-style lint regression — S248’s post-sweep <code>lintr::lint_package()</code> = 0 held end-to-end (Learning 235), so the line-shifting sweep did not trip a <code>.lintr</code> line-keyed exclusion.</li>
+<li>
+<strong>Keyword-safe PR body</strong> (“Part of #103. Stage 2 of 8 — does <strong>not</strong> close the tracking issue”) so the eventual merge will not auto-close the multi-stage harmonization tracker.</li>
+<li>
+<strong>Merge is owner-gated</strong> (a future session, matching the S246→S247 Stage-1 split). After merge, the next #103 stage per the audit §6 roadmap is Stage 3 (block-order normalization, Finding 2).</li>
+<li>Branch pushed; <code>master</code> untouched (== origin/master, no local-ahead drift). Process docs (this entry, Learning 235, the S249 handoff) are committed on the branch and ride the PR.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-06-29--copyright-placement-sweep-issue-103-stage-2-session-248">2026-06-29 — copyright-placement sweep: issue #103 Stage 2 (Session 248)<a class="anchor" aria-label="anchor" href="#id_2026-06-29--copyright-placement-sweep-issue-103-stage-2-session-248"></a></h3>
+<ul><li>
+<strong>Deliverable (owner pick = “stage 2”; full-sweep approved via <code>AskUserQuestion</code>):</strong> the copyright-placement sweep from the S244 audit (Finding 8) — move the <code>## Copyright(c) 2017-2026 R. Mark Sharp</code> / <code>## This file is part of nprcgenekeepr</code> pair from inside each roxygen block to the top of the file, above the first <code>#'</code> line with one blank separator (the <code>getSpeciesGestation.R</code> exemplar). <strong>REFACTOR-class doc-structure — no behavior change, no rendered-doc change; TDD RED/GREEN N/A; 0 corrections / 0 overrides</strong> (1 owner gate: full-sweep vs sample-first).</li>
+<li>
+<strong>Scope:</strong> 203 of 225 R files moved (22 already correct, skipped); the 2 double-pair files (<code>autoIdFormat.R</code>, <code>makeGroupNum.R</code>) de-duplicated to one pair at top; 9 <code>mod*.R</code> get the pair above their <code>#</code> section banner; <code>flagOverriddenRelationships.R</code> gains the previously-missing separator blank. All 225 R files now place the copyright above the block.</li>
+<li>
+<strong>Verified (deterministic, whole-corpus):</strong> <code>devtools::document()</code> → <strong>ZERO <code>man/</code> drift</strong> (rendered docs byte-identical — roxygen ignores <code>##</code>); <strong>zero R-code-line changes</strong> across all 204 files (comment-stripped projection diff); <code>lintr::lint_package()</code> = <strong>0</strong>; <code>spell_check_package</code> <strong>clean</strong>; <code>R CMD check --as-cran</code> = <strong>0 errors / 0 warnings / 2 documented-false-positive NOTEs</strong>; NAMESPACE/DESCRIPTION unchanged.</li>
+<li>
+<strong>Branch <code>issue103-stage2-copyright-placement</code></strong> (code commit <code>af08b5bf</code>), <strong>UNPUSHED</strong> — landing (PR / merge) owner-gated, matching the Stage 1 precedent. Learning 234 added.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-06-29--merge-pr-104-land-stage-1-of-issue-103-onto-master-session-247">2026-06-29 — merge PR #104: land Stage 1 of issue #103 onto <code>master</code> (Session 247)<a class="anchor" aria-label="anchor" href="#id_2026-06-29--merge-pr-104-land-stage-1-of-issue-103-onto-master-session-247"></a></h3>
 <ul><li>
 <strong>Deliverable (owner pick = “merge PR #104”):</strong> merge the CI-validated PR #104 (issue #103 Stage 1 — defects D1–D8 plus the <code>.lintr</code> whole-file-exclusion fix) into <code>master</code>, sync local <code>master</code> to origin, and delete the merged branch <code>issue103-stage1-defects</code>. <strong>Landing/process action on already-CI-green doc work — no R-logic change; TDD RED/GREEN N/A; 0 corrections / 0 overrides.</strong>
