@@ -7,6 +7,257 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 253 Did
+
+**Deliverable (owner pick = “stage 5”; via `AskUserQuestion`: scope =
+futile.logger only \[defer shiny/Matrix\], landing METHOD =
+PR-for-CI):** issue \#103 **Stage 5 – import conversion (audit Finding
+7)** – convert the whole-package `@import futile.logger` holdouts to
+explicit `@importFrom`. **REFACTOR-class import-declaration refactoring
+– no new behavior / no logic change; TDD RED/GREEN N/A. DONE + VERIFIED
+on branch `issue103-stage5-imports` (code commit `9811a945` + this
+close-out commit); PR \#106 OPEN, CI GREEN 10/10, MERGEABLE/CLEAN – the
+merge is the OWNER’s next decision. 0 stakeholder corrections / 0 owner
+overrides** (2 owner gates via `AskUserQuestion`: (a) scope –
+futile.logger only vs also shiny/Matrix; (b) landing method – PR-for-CI
+vs direct-merge vs review-first). **Started / Completed:** 2026-06-30 /
+2026-06-30 **Status:** **DONE (branch + PR \#106, CI green; awaiting
+owner merge).** - **The change (6 conversions + 1 dead-import removal
+across 7 R/ files; commit `9811a945`):** 6 files (`getFocalAnimalPed`,
+`getFocalAnimalPedFromFile`, `getGenotypes`, `getLkDirectAncestors`,
+`getPedigree`, `getPedigreeSource`) call ONLY bare `flog.debug` -\>
+`@importFrom futile.logger flog.debug`; `getPedDirectRelatives.R`
+carried a **DEAD** `@import futile.logger` (calls no futile.logger fn)
+-\> **removed** (nothing to convert it to; a whole-pkg import survives
+in NAMESPACE if ANY file keeps `@import`, so all 7 must go to drop
+it). - **NAMESPACE delta = EXACTLY one line removed,
+`import(futile.logger)`** (predicted from a bare-name census BEFORE
+`document()`, then confirmed byte-for-byte). `flog.debug` – the SOLE
+bare-name dependency – stays imported via existing `@importFrom`
+(appServer/modInput); every other futile.logger ref is
+`futile.logger::`-qualified (needs no import). **Zero `man/` drift**
+(import tags are NAMESPACE-only, never in `.Rd` – unlike the Stage 1-4
+rendered-doc proofs). - **Scope corrected from EVIDENCE (not the audit’s
+count):** the audit’s “8 easy = 7 futile.logger + 1 RColorBrewer” was
+STALE – RColorBrewer’s dead `@import` was already removed by an earlier
+D7 cleanup (no `@import`, not in DESCRIPTION/NAMESPACE; only
+[`grDevices::colorRampPalette`](https://rdrr.io/r/grDevices/colorRamp.html)
+survives in the commented-out `makeGeneticDiversityDashboard.R` body).
+Real scope = 7 futile.logger (one dead). `shiny`
+(`nprcgenekeepr-package.R:8`) + `Matrix` (`kinship.R:58`) DEFERRED as
+the audit’s verified judgment calls (still `@import`, still in
+DESCRIPTION). - **Verify (deterministic + runtime, firsthand):**
+NAMESPACE diff = the single predicted line; `man/` drift = 0;
+`lintr::lint_package()` (changed files, pkg loaded) = **0**;
+`spell_check_package` = **CLEAN**; **`R CMD check --as-cran` GREEN
+`Status: 2 NOTEs` = 0/0/2** (the 2 documented false-positives:
+CRAN-incoming archived-maintainer + HTML-Tidy-too-old/V8-unavailable)
+with **`checking dependencies in R code` OK** +
+**`checking R code for possible problems` OK** (catches “no visible
+global function for flog.debug”) + examples / `--run-donttest` / tests
+all **OK**; full **`NOT_CRAN` suite = 0 failed / 0 error** (225 files; 7
+warn / 167 skip = baseline); **runtime smoke on the freshly-INSTALLED
+`.Rcheck` namespace** (NOT `load_all`, which hides missing imports):
+`import(futile.logger)` absent, bare `flog.debug` resolves,
+[`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md)
+-\> 280-row data.frame. **CI on PR \#106 = 10/10 GREEN first run** (lint
+3m54s + macOS/Windows/Ubuntu release+devel+oldrel-1 + pkgdown +
+test-coverage + codecov{patch,project}); MERGEABLE/CLEAN.
+
+**Phase-3E (runtime smoke): DONE (not N/A this time – NAMESPACE
+changed).** Per the S251/S252 warning I ran an explicit runtime check
+beyond the gate: loaded the freshly-installed (`.Rcheck`) namespace –
+imports ENFORCED, unlike `load_all()` – confirmed
+`import(futile.logger)` is gone and bare `flog.debug` resolves by
+calling
+[`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md)
+on `testdata/qcPed.csv` (fired `DEBUG ... in getPedigree`, returned 280
+rows). The `--as-cran` examples/tests also exercised the converted paths
+against the installed namespace. “Method dispatch” (the generic Stage-5
+warning) targets S4 (Matrix, deferred); `flog.debug` is a plain function
+– no dispatch surface. FM \#24 does not apply.
+
+**Session 252 Handoff Evaluation (by Session 253): Score 9/10.** S252’s
+SUGGESTED-NEXT named THIS deliverable verbatim – “Stage 5 (import
+conversion, Finding 7 – 8 easy `@import` -\> `@importFrom` \[7x
+`futile.logger` + 1x `RColorBrewer` …\]; `shiny`/`Matrix` are a verified
+judgment call)” – with the load-bearing **WARNING** that Stage 5 is NOT
+rendered-neutral / changes NAMESPACE -\> “verify method dispatch + a
+FULL `--as-cran` + tests”, “re-`document()`, diff NAMESPACE, run the
+regression +
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+smoke” (`[deletion-namespace-fallout]`, Learning 235). **What helped:**
+(1) the Stage-5 pointer + scope were turnkey – owner said “stage 5” and
+the holdout list + judgment-call flag were already cited; (2) the
+NOT-rendered-neutral WARNING set my ENTIRE verification plan correctly
+(diff NAMESPACE + full `--as-cran` + tests + runtime smoke against the
+INSTALLED namespace) – I did not have to discover that a NAMESPACE stage
+needs a different proof than Stages 1-4; (3) the triple post-edit
+checklist (re-gate + `lint_package` + `spell`) – ran all three; (4) the
+landing-owner-gated rule with both precedents (PR-for-CI S249,
+direct-merge S250/S252) – I gated and the owner chose PR; (5)
+ghost-check clean (HEAD `3b24bf03` == documented S252 close-out); (6)
+every standing keep held firsthand (package ARCHIVED, version 2.0.0,
+`.DS_Store` tracked-modified keep, `PED_GV_AUDIT*.html` untracked keep,
+`get_and_or_list` deferred defect, `--as-cran` from the project root
+WITH vignettes, the 2-NOTE false-positives). **What was missing (the
+thin -1):** S252 (relaying the S244 audit) carried the audit’s STALE
+count – “8 easy incl. 1x RColorBrewer” – but RColorBrewer was already
+gone, and neither S252 nor the audit flagged that one of the 7
+futile.logger holdouts (`getPedDirectRelatives.R`) is a DEAD import
+(remove, not convert). Both surfaced from my own `grep "@import " R/*.R`
+at zero cost (-\> Learning 239); it is the audit’s staleness inherited
+by S252’s relay, not a wrong claim by S252 -\> a thin -1. **What was
+wrong:** nothing – the NAMESPACE-risk framing, the verification recipe,
+the version, and every standing keep were accurate and
+firsthand-reconfirmed. **ROI:** very high – the handoff’s “NOT
+rendered-neutral -\> diff NAMESPACE + full `--as-cran` + tests + runtime
+smoke” warning IS exactly the plan I executed; near-zero rediscovery.
+
+**Self-assessment (Session 253): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues + audit Finding 7;
+dashboard 98/100; git status; ghost-check clean), reported, STOPPED for
+the owner; wrote the 1B stub before technical work; declared
+REFACTOR-class / TDD-N/A up front and held it; gated BOTH the scope AND
+the landing via `AskUserQuestion`. **Strengths:** (1) **re-grepped the
+LIVE `@import` tags instead of trusting the audit** -\> caught
+RColorBrewer already-gone + the `getPedDirectRelatives` dead import,
+corrected the scope from evidence (Learning 231 applied); (2)
+**PREDICTED the exact NAMESPACE delta (`import(futile.logger)` removed)
+BEFORE `document()`** via a bare-name census (all bare calls =
+`flog.debug`, already imported; everything else `::`-qualified) – then
+confirmed it byte-for-byte, rather than running blind and eyeballing;
+(3) **classified the dead import correctly** (remove, not convert; a
+whole-pkg import survives if ANY `@import` remains); (4) **full
+gauntlet** (NAMESPACE diff + 0 `man/` drift + lint 0 + spell clean +
+`--as-cran` 0/0/2 with the import-resolution checks OK + full `NOT_CRAN`
+0/0 + runtime smoke + CI 10/10); (5) **caught my own runtime-smoke bug**
+– the first smoke’s `GATE` env var was unexported so it loaded the OLD
+renv namespace (tell: “loaded from: renv/library” +
+`flog.debug in imports? FALSE`); recognized `load_all()` would HIDE a
+missing import, so redid it against the `.Rcheck` install with the path
+asserted; (6) **owned the RESULT (FM \#13)** – monitored CI to 10/10 +
+MERGEABLE/CLEAN, did NOT report “PR opened” and stop, did NOT merge
+unilaterally; (7) clean scope – deferred shiny/Matrix, did NOT touch the
+`get_and_or_list` defect. **Weakness (the -1):** the first runtime smoke
+silently exercised the OLD namespace (unexported env var) – caught and
+redone within the session at ~one round-trip cost, but a 10
+exports/hardcodes the path first try. Minor: the close-out-docs commit
+re-triggers the full ~18-min CI matrix (Learning 235 (2)) – accepted for
+an accurate handoff (the CI result must be known before the close-out
+commit) over the 1-run alternative (predicted-green notes); the real fix
+(`paths-ignore`) is a separate gated decision. Capped at 9: clean,
+deterministically + runtime + CI verified, evidence-corrected-scope
+delivery; a 10 gets the smoke right first try.
+
+**Learnings:** **Learning 239** added to `PROJECT_LEARNINGS.md` – an
+`@import`-\>`@importFrom` conversion is NAMESPACE-only (proof = the
+predicted NAMESPACE delta, NOT `man/` drift); predict the delta from a
+bare-name census first; a whole-pkg `import()` survives if ANY `@import`
+remains (so a dead `@import` is REMOVED, not converted); runtime-verify
+against the INSTALLED `.Rcheck` namespace (imports enforced), not
+`load_all()` (hides missing imports); the audit’s enumeration was stale
+(re-grep the live tree, Learning 231); a shell var unexported to an
+`Rscript` child reads empty (assert the load path); landing = PR-for-CI
+10/10 first run, merge stays owner’s. Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\], \[\[avoid-new-lints-r-package\]\],
+\[\[avoid-reconcile-tools-on-curated-files\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a REFACTOR-class
+import-declaration session – TDD RED/GREEN N/A.**
+
+**=\> SUGGESTED NEXT = the owner’s MERGE decision for PR \#106** (Stage
+5), then the next \#103 stage (or the deferred judgment calls / CRAN
+thread). PR \#106 (code `9811a945` + this close-out commit) is CI-GREEN
+10/10 / MERGEABLE / CLEAN – the owner merges (matching the S246-\>S247 /
+S249 split; do NOT merge unilaterally). **If direct-merging a branch you
+are standing on, stash the 1B stub first** (Learning 233). After the
+merge + `master` sync (\[\[push-close-out-docs-to-origin\]\]): the
+remaining \#103 stages per the audit S6 roadmap are **Stage 6 (drop
+redundant `@keywords internal` from
+`modPotentialParents.R`/`readFocalAnimalIds.R`)**, Stage 7 (examples
+policy / the ~7 callable utilities + the Shiny `mod*`/app-entry
+exemption, S7), Stage 8 (title voice + `@inheritParams`/`@family` de-dup
+– judgment-heavy, last). **NEW deferred sub-work (this session):** the
+**shiny + Matrix `@import` conversions** – each its OWN judgment call
+(Matrix = S4 method/operator dispatch -\> enumerate every generic used +
+verify dispatch + full `--as-cran` + kinship regression; shiny = large
+API surface, 52 files already use `@importFrom shiny` -\> enumerate
+every shiny fn used package-wide not already imported). Could be a
+“Stage 5b” or folded where the owner prefers; both still in DESCRIPTION
+Imports. **Each stage edits `R/`(+`man/`/`NAMESPACE`) which SHIP -\>
+after each: re-gate AND `lintr::lint_package()` AND
+`spell_check_package` (hand-add wordlist terms, never `update_wordlist`
+– \[\[avoid-reconcile-tools-on-curated-files\]\]); for any
+NAMESPACE-touching stage, ALSO diff NAMESPACE + runtime-smoke the
+INSTALLED namespace (Learning 239).** **Landing method is owner-gated
+each time** (`AskUserQuestion`): PR-for-CI (S249/S253 – 5-platform cert)
+vs direct-merge (S250/S252 – faster, no CI -\> cheap sanity check on the
+landed tree). **Carried deferred defect (still open):**
+`get_and_or_list.R:10` – garbled `` `and' ``/`` `or' `` typographic
+quotes (`man/get_and_or_list.Rd:15`); a small standalone fix
+(`\sQuote{...}`) that CHANGES rendered output -\> keep OUT of any
+zero-drift stage. **Carried CRAN thread (owner-run, outward):** Phase 5b
+per `docs/planning/cran-2.0.0-phase5-runbook.md` – re-gate + re-lint
+before Phase 5b if more \#103 stages run first. **Owner-directed tracker
+action available but NOT taken unasked:** posting a Stage-5-open note to
+issue \#103 (keep it keyword-safe so it does not auto-close the
+multi-stage tracker).
+
+**Key files (this session):** **Edited (code commit `9811a945`, branch
+`issue103-stage5-imports`):** 7 `R/*.R` roxygen import tags
+(`getFocalAnimalPed`, `getFocalAnimalPedFromFile`, `getGenotypes`,
+`getLkDirectAncestors`, `getPedDirectRelatives` \[dead-import removal\],
+`getPedigree`, `getPedigreeSource`) + **`NAMESPACE`** (one line removed:
+`import(futile.logger)`). **No `man/` change (zero drift) / no
+`DESCRIPTION` / `data` / `NEWS` / `vignettes` / `tests` change.**
+**Process docs (this close-out commit, on the branch):** `CHANGELOG.md`
+(S253 entry), `PROJECT_LEARNINGS.md` (Learning 239), `SESSION_NOTES.md`
+(this handoff). **Gate evidence (NOT committed, scratchpad
+`s253gate/`):** `build.log`, `check.log`,
+`nprcgenekeepr.Rcheck/00check.log` (Status: 2 NOTEs). **NOT committed
+(standing keep / not mine):** `PED_GV_AUDIT_2026-05-30.html` (untracked,
+`.Rbuildignore`d); `.DS_Store` (TRACKED + modified – pre-existing repo
+state, left untouched); `dashboard.html` (generated).
+
+**Gotchas:** (1) **Stage 5 (import conversion, Finding 7) is DONE on PR
+\#106** – CI green 10/10, MERGEABLE/CLEAN; branch
+`issue103-stage5-imports` (code `9811a945` + close-out commit). **Stages
+1-4 of \#103 are on `master`; Stage 5 awaits the owner’s merge.** (2)
+**The merge is owner-gated – do NOT merge unilaterally** (S246-\>S247 /
+S249 split). The close-out-docs commit pushed to the branch re-triggers
+the full CI matrix (Learning 235 (2), no `paths-ignore`) – it stays
+green (markdown cannot break R CMD check/lint) and keeps the merge tip
+CI-validated; EXPECT a brief `mergeStateStatus UNSTABLE` before it
+resolves to CLEAN. (3) **The NAMESPACE change is import-only** –
+`import(futile.logger)` removed, `flog.debug` retained; no
+`man/`/rendered change; do NOT expect doc output to differ. (4)
+**shiny + Matrix `@import` are DEFERRED** (still `@import`, still in
+DESCRIPTION) – each its own judgment call (Matrix S4 dispatch / shiny
+large surface); a future stage. (5) **`getPedDirectRelatives.R` had a
+DEAD `@import futile.logger`** (now removed) – if a future stage
+re-audits imports, it is intentionally importless for futile.logger
+(uses none). (6) **For any NAMESPACE-touching stage, runtime-verify the
+INSTALLED namespace** (`.Rcheck` lib), NOT `load_all()` (hides missing
+imports) – Learning 239. (7) **`get_and_or_list.R:10` is a known,
+deferred rendered defect** – do not fold into a zero-drift stage. (8)
+Carried standing keeps (unchanged): package **ARCHIVED on CRAN
+2025-07-29**; CRAN resubmission owner-gated;
+win-builder/R-hub/`submit_cran()` are OWNER-run outward + HARD STOP; the
+`--as-cran` gate certifies the CURRENT tree only; `NEWS.md`/`README.md`
+are GENERATED (from `NEWS.Rmd`/`README.Rmd`); module/E2E tests need
+`NOT_CRAN=true` BUT `--as-cran` SKIPS them via `skip_on_cran`; a 0/0/2
+check does NOT imply spelling-clean -\> `spell_check_package` (hand-add
+wordlist terms, never `update_wordlist`);
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without LabKey config; `git pull` is rebase + chokes on
+unstaged tracked changes (stash `.DS_Store` if it blocks a checkout);
+re-check `git status` before ANY `reset --hard`
+(\[\[check-status-before-destructive-git\]\]); **zsh `status` is a
+read-only special variable**; closing-keyword discipline for any
+PR/issue body; **the version is 2.0.0** (DESCRIPTION authoritative;
+CLAUDE.md’s “1.1.0.9000” header is stale prose).
+
 ### What Session 252 Did
 
 **Deliverable (owner: “land stage 4”; landing METHOD = “direct-merge”
