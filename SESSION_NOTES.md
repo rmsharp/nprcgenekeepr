@@ -7,6 +7,229 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 252 Did
+
+**Deliverable (owner: “land stage 4”; landing METHOD = “direct-merge”
+via `AskUserQuestion`):** Land issue \#103 **Stage 4 – markup
+unification** from branch `issue103-stage4-markup` onto `master`.
+**Landing/process action on already-locally-verified doc-markup work –
+no R-logic / NAMESPACE / behavior change; TDD RED/GREEN N/A. DONE +
+LANDED + PUSHED; `master` == origin/master == `ff0ca8fd`; 0 stakeholder
+corrections / 0 owner overrides** (1 owner gate via `AskUserQuestion`:
+the landing method – direct-merge vs PR-for-CI vs review-first -\> owner
+chose direct-merge, the Stage-3 precedent). **Started / Completed:**
+2026-06-30 / 2026-06-30 **Status:** **DONE + LANDED on `master`.** -
+**The landing (direct-merge, Stage-3 precedent):** wrote the 1B stub;
+pre-flight (clean tree but the stub + the two standing keeps; branch 2
+commits ahead of `master` \[`002b77c9` code + `3f8c1865` S251
+close-out\], UNPUSHED; `master` == origin/master); gated the METHOD via
+`AskUserQuestion` (\[\[observation-vs-decision\]\]) -\> owner chose
+direct-merge; **stashed the 1B stub + `.DS_Store`** (Learning 233 – the
+stub is an uncommitted edit to `SESSION_NOTES.md`, which DIFFERS
+branch-vs-master, so it would block the `checkout master`);
+`git checkout master`; `git merge --no-ff issue103-stage4-markup` -\>
+merge commit **`ff0ca8fd`**; `git push origin master`
+(`87abc0fc..ff0ca8fd`); `git stash pop` (restored the stub cleanly – the
+post-merge `master` SESSION_NOTES base == the branch base the stash
+recorded against); `git branch -d issue103-stage4-markup` (local-only
+branch, never pushed -\> no remote ref to prune). - **No local re-gate
+(proven, not assumed):** the merged tree is byte-identical to S251’s
+certified commits – `master` never moved since the branch forked, so
+`git diff 87abc0fc..ff0ca8fd` is exactly S251’s two commits, and S251’s
+local `--as-cran` GREEN 0/0/2 (+ `lint_package()` = 0 + zero `man/`
+drift) on `002b77c9` certifies the exact landed tree. Re-running the
+gate would only re-certify an identical tree (Learning 233 (2)). -
+**Direct-merge has NO CI safety net (unlike the PR path) -\> cheap
+deterministic sanity check on the LANDED `master` tree** (firsthand):
+backtick chars on `#'` lines = **15** (== the 6 intended exclusions, ==
+S251’s 105-\>15); `\code{Pedigree}` = **25**; `\code{kValue}` = **10**;
+the deferred `get_and_or_list.R:10` `` `and' ``/`` `or' `` defect still
+PRESENT (correctly NOT folded into the landing). Confirms the merge
+brought the CONVERTED content, in seconds, without re-running ~15 min of
+`--as-cran`.
+
+**Phase-3E (runtime smoke): N/A (stated, not skipped).** Landing/process
+– no `R/` logic / runtime / Shiny / startup / dispatch / config change;
+this is a `--no-ff` merge of already-locally-verified doc-markup
+commits. NAMESPACE/exports unchanged. The build-equivalent (`--as-cran`
+gate) was run by S251 on the EXACT merged commits = GREEN 0/0/2 and
+tests ran inside it (`checking tests ... OK`). FM \#24 does not apply.
+
+**Session 251 Handoff Evaluation (by Session 252): Score 9/10.** S251’s
+SUGGESTED-NEXT named THIS deliverable verbatim – “the owner’s LANDING
+decision for THIS deliverable” – with the three method options ((a) open
+a PR for CI, (b) direct-merge \[Stage-3 precedent `72f5391e`\], (c)
+review the diff first), the exact post-landing roadmap (Stage 5 import
+conversion, with the explicit “Stage 5 changes NAMESPACE/imports -\> NOT
+rendered-neutral, CAN change behavior \[masking\] -\> verify dispatch +
+full `--as-cran` + tests” warning), and the “if merging the branch you
+are standing on, stash the 1B stub first” gotcha. **What helped:** (1)
+the three landing options were turnkey – the owner picked direct-merge
+and I executed it with zero rediscovery; (2) the
+**stash-the-stub-first** gotcha was load-bearing and exactly right – I
+hit precisely that collision and stashed proactively; (3) the Stage-3
+direct-merge precedent (`72f5391e`, `--no-ff` merge commit) gave the
+exact mechanics + message format; (4) the recorded S251 certification
+(`--as-cran` 0/0/2 on `002b77c9` + zero `man/` drift) let me prove “no
+re-gate needed” from a `git diff` IDENTITY rather than re-running the
+gate; (5) ghost-check clean (HEAD `3f8c1865` == documented S251
+close-out); (6) every standing keep held firsthand (package ARCHIVED;
+version 2.0.0; `.DS_Store` tracked-modified keep; `PED_GV_AUDIT*.html`
+untracked keep; the deferred `get_and_or_list` defect). **What was
+missing (the thin -1):** S251 listed both landing methods with their
+precedents but did not spell out the one consideration that
+OPERATIONALLY distinguishes them – a direct-merge gives NO CI
+re-validation (unlike the PR path), so the local `--as-cran` cert of the
+exact merged commits is the SOLE certification and a cheap sanity check
+on the landed tree is warranted. I reasoned it through immediately (it
+became Learning 238) at zero time cost, and it is arguably implicit in
+“direct-merge vs PR-for-CI” – so it is a thin -1, not a gap that cost me
+anything. **What was wrong:** nothing – every fact (2 commits, branch
+UNPUSHED, `master` == origin/master, the certification, the deferred
+defect) was accurate and firsthand-reconfirmed. **ROI:** very high – a
+near-zero-rediscovery landing of a precisely-pointed slice; capped at 9
+only by that single unspelled operational implication.
+
+**Self-assessment (Session 252): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues + issue \#103 body;
+dashboard 98/100; git status; ghost-check clean), reported, STOPPED for
+the owner; wrote the 1B stub before technical work; declared
+landing/process + TDD-N/A up front and held it; gated the landing METHOD
+via `AskUserQuestion`. **Strengths:** (1) **gated the METHOD, did not
+assume the precedent** (\[\[observation-vs-decision\]\]) – the owner
+alternated PR (S249) vs direct-merge (S250), so I posed the three
+options rather than guessing; (2) **pre-flight before the destructive
+step** – confirmed the exact 2 commits to land, branch-vs-master state,
+and `master` == origin/master BEFORE the stash/checkout/merge; (3)
+**stashed the stub proactively** per Learning 233 (and stashed ONLY the
+two tracked-modified files so the untracked standing-keep HTML was
+undisturbed) – the checkout did not block; (4) **proved “no re-gate” by
+`git diff` identity** rather than either blindly trusting OR wastefully
+re-running the ~15-min gate; (5) **owned the RESULT (FM \#13), not just
+the act** – direct-merge has no CI, so I ran a cheap deterministic
+sanity check on the LANDED `master` tree (backtick/`\code{}` counts +
+the deferred-defect-still-present check) to confirm the merge brought
+the converted content; (6) **pushed immediately** so `master` ==
+origin/master with no local-ahead drift
+(\[\[push-close-out-docs-to-origin\]\]); (7) clean scope – landed Stage
+4 only, did NOT start Stage 5 or touch the deferred defect. **Weakness
+(the -1):** the deliverable was inherently low-novelty (a turnkey
+direct-merge fully pre-scripted by S251 + Learning 233), so the
+session’s value was disciplined execution, not new problem-solving; a 10
+would be a landing that ALSO surfaced something the handoff missed –
+there was nothing material to surface. Capped at 9: clean,
+firsthand-verified, owner-gated landing with a real (not assumed) no-CI
+sanity check; honest low-novelty.
+
+**Learnings:** **Learning 238** added to `PROJECT_LEARNINGS.md` – a
+direct-merge landing of an already-`--as-cran`-certified branch needs NO
+local re-gate and gets NO CI, so the local cert of the EXACT merged
+commits is the sole certification -\> confirm the merge brought the
+right content with a CHEAP deterministic sanity check on `master` (here:
+backtick/`\code{}` counts + deferred-defect-still-present), not a gate
+re-run; prove “no re-gate” by `git diff <merge>..<base>` identity
+(Learning 233 (2)); the stash-stub-\>checkout-\>merge
+–no-ff-\>push-\>pop-\>`branch -d` sequence (Learning 233) reapplies the
+stub cleanly (post-merge base == branch base); a LOCAL-ONLY branch needs
+only `git branch -d` (no remote prune, unlike the PR-landed Learning 233
+(3)). Carried as applied: \[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a landing/process
+session – TDD RED/GREEN N/A.**
+
+**=\> SUGGESTED NEXT = the next issue \#103 stage** (owner’s pick), or
+the CRAN thread. Stages 1-4 of 8 are now ALL on `master` (`ff0ca8fd`).
+Per the audit S6 roadmap
+(`docs/audits/ROXYGEN_HARMONIZATION_AUDIT_2026-06-29.md`) the remaining
+stages are: **Stage 5 (import conversion, Finding 7 – 8 easy `@import`
+-\> `@importFrom` \[7x `futile.logger` + 1x `RColorBrewer` on the
+commented-out `makeGeneticDiversityDashboard.R`\]; `shiny`/`Matrix` are
+a verified judgment call)**, Stage 6 (drop redundant
+`@keywords internal` from
+`modPotentialParents.R`/`readFocalAnimalIds.R`), Stage 7 (examples
+policy / the ~7 callable utilities + the Shiny `mod*`/app-entry-point
+exemption, S7), Stage 8 (title voice + `@inheritParams`/`@family` de-dup
+– judgment-heavy, last). **WARNING: Stage 5 is NOT rendered-neutral and
+CAN change behavior:** it edits NAMESPACE/imports -\> verify method
+dispatch + a FULL `--as-cran` + tests (not just `man/` drift);
+`[deletion-namespace-fallout]` (Learning 235, glossary) shows how an
+`@import`/`@importFrom` change can silently drop a package-wide import
+and break the runtime UI -\> re-`document()`, diff NAMESPACE, run the
+regression +
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+smoke. **Each stage edits `R/`(+`man/`) which SHIP -\> after each:
+re-gate AND `lintr::lint_package()` AND `spell_check_package` (hand-add
+wordlist terms, never `update_wordlist` –
+\[\[avoid-reconcile-tools-on-curated-files\]\]).** **Landing method is
+owner-gated each time** (`AskUserQuestion`): PR-for-CI (S249 – stronger
+5-platform cert) vs direct-merge (S250/S252 – faster, no CI -\> cheap
+sanity check on the landed tree). **NEWLY-FOUND DEFECT (deferred,
+owner-logged, still open):** `get_and_or_list.R:10` – the
+`` `and' ``/`` `or' `` typographic quotes render garbled
+(`man/get_and_or_list.Rd:15`); a small standalone fix
+(e.g. `\sQuote{and}`/`\sQuote{or}`) that CHANGES rendered output, so
+keep it OUT of any zero-drift stage. Carried CRAN thread (owner-run,
+outward): **Phase 5b** per `docs/planning/cran-2.0.0-phase5-runbook.md`
+– re-gate + re-lint before Phase 5b if more \#103 stages run first.
+**Owner-directed tracker action available but NOT taken unasked:**
+posting a Stage-4-landed note to issue \#103 (keep it keyword-safe so it
+does not auto-close the multi-stage tracker).
+
+**Key files (this session):** **No `R/` / `man/` / `DESCRIPTION` /
+`NAMESPACE` / `data` / `NEWS` / `vignettes` / `tests` change** – this
+session merged S251’s already-committed Stage-4 work (`002b77c9` +
+`3f8c1865`) onto `master`; no new package content. **Landed onto
+`master`:** merge commit **`ff0ca8fd`** (“Merge issue \#103 Stage 4
+(roxygen markup unification) into master”) bringing 30 `R/*.R`
+(markup) + 4 `man/*.Rd` (whitespace reflow:
+`getSpeciesMinBreedingAge.Rd`, `kinshipMatricesToKValues.Rd`,
+`kinshipMatrixToKValues.Rd`, `set_seed.Rd`) + S251’s
+CHANGELOG/PROJECT_LEARNINGS/SESSION_NOTES close-out docs. **Process docs
+(this S252 close-out commit, on `master`):** `CHANGELOG.md` (S252
+entry), `PROJECT_LEARNINGS.md` (Learning 238), `SESSION_NOTES.md` (this
+handoff). **NOT committed (standing keep / not mine):**
+`PED_GV_AUDIT_2026-05-30.html` (untracked, `.Rbuildignore`d);
+`.DS_Store` (TRACKED + modified – pre-existing repo state, left
+untouched); `dashboard.html` (generated).
+
+**Gotchas:** (1) **Stage 4 (markup, Finding 4) is LANDED on `master`**
+(`ff0ca8fd`, direct-merge per owner gate); the Stage-4 branch is deleted
+(local-only, never pushed). **Stages 1-4 of \#103 are all on `master`.**
+(2) **`master` == origin/master == `ff0ca8fd`** – no local-ahead drift
+(this close-out commit + push keeps it synced,
+\[\[push-close-out-docs-to-origin\]\]). (3) **The landed change is
+rendered-doc-NEUTRAL** (`markdown = TRUE` already expands backticks) –
+26 `.Rd` byte-identical, 4 whitespace-only reflow; do NOT expect `man/`
+to “improve”. (4) **Direct-merge has no CI** – the certification is
+S251’s local `--as-cran` 0/0/2 on the exact merged commits; if a FUTURE
+direct-merge lands NEW (not-yet-certified) edits, re-gate LOCALLY first
+(here the commits were already certified, proven by `git diff`
+identity). (5) **`get_and_or_list.R:10` is a known, deferred rendered
+defect** (garbled `` `word' `` quotes) – do not fold it into a
+zero-drift stage; it is its own small fix. (6) **Stage 5 (next) is NOT
+rendered-neutral** – it changes NAMESPACE/imports and CAN affect
+masking/dispatch; verify with a FULL `--as-cran` + tests +
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+smoke, not just `man/` drift (`[deletion-namespace-fallout]`). (7)
+Carried standing keeps (unchanged): package **ARCHIVED on CRAN
+2025-07-29**; CRAN resubmission owner-gated;
+win-builder/R-hub/`submit_cran()` are OWNER-run outward + HARD STOP; the
+`--as-cran` gate certifies the CURRENT tree only; `NEWS.md`/`README.md`
+are GENERATED (from `NEWS.Rmd`/`README.Rmd`); module/E2E tests need
+`NOT_CRAN=true` BUT `--as-cran` SKIPS them via `skip_on_cran`; a 0/0/0
+(here 0/0/2) check does NOT imply spelling-clean -\>
+`spell_check_package` (hand-add wordlist terms, never
+`update_wordlist`);
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without LabKey config; `git pull` is rebase + chokes on
+unstaged tracked changes (stash `.DS_Store` if it blocks a checkout);
+re-check `git status` before ANY `reset --hard`
+(\[\[check-status-before-destructive-git\]\]); **zsh `status` is a
+read-only special variable**; closing-keyword discipline for any
+PR/issue body; **the version is 2.0.0** (DESCRIPTION authoritative;
+CLAUDE.md’s “1.1.0.9000” header is stale prose).
+
 ### What Session 251 Did
 
 **Deliverable (owner pick = “stage 4”; sweep approved via

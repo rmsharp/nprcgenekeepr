@@ -15,6 +15,37 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-30 — issue \#103 Stage 4 landed on `master` (direct-merge) (Session 252)
+
+- **Deliverable (owner: “land stage 4”; landing method “direct-merge”
+  via `AskUserQuestion`):** land issue \#103 **Stage 4** (roxygen markup
+  unification) from branch `issue103-stage4-markup` onto `master`.
+  **Landing/process — no R-logic / NAMESPACE / behavior change; TDD
+  RED/GREEN N/A; 0 corrections / 0 overrides** (1 owner gate via
+  `AskUserQuestion`: the landing method — direct-merge vs PR-for-CI vs
+  review-first → owner chose direct-merge, the Stage-3 precedent).
+- **Landed:** stashed the 1B stub (+ `.DS_Store`), checked out `master`,
+  merged `--no-ff` (merge commit **`ff0ca8fd`**, “Merge issue \#103
+  Stage 4 (roxygen markup unification) into master”), pushed `master` to
+  origin (`87abc0fc..ff0ca8fd`), popped the stub, deleted the merged
+  local-only branch. `master` == `origin/master`.
+- **No re-gate (proven, not assumed):** the merged tree is exactly
+  S251’s two commits (`002b77c9` + `3f8c1865`) — `master` never moved
+  since the branch forked, so S251’s local `--as-cran` 0/0/2
+  certification covers the exact landed commits (Learning 233 §2).
+  Direct-merge has no CI, so confirmed the merge brought the converted
+  content with a cheap deterministic sanity check on `master`: backtick
+  chars on `#'` lines = 15 (the 6 intended exclusions, == S251’s
+  105→15), `\code{Pedigree}` = 25, `\code{kValue}` = 10, and the
+  deferred `get_and_or_list.R:10` defect still present (correctly not
+  folded in).
+- **Stages 1–4 of issue \#103 are now all on `master`.** Learning 238
+  added to `PROJECT_LEARNINGS.md`. Next stage (owner’s pick): Stage 5
+  (import conversion, Finding 7) — NOT rendered-neutral, can affect
+  masking/dispatch → needs a full `--as-cran` + tests +
+  [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+  smoke.
+
 ### 2026-06-30 — issue \#103 Stage 4 (roxygen markup unification, Finding 4) (Session 251)
 
 - **Deliverable (owner pick = “stage 4”; sweep approved via
