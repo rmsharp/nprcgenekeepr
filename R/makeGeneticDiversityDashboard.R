@@ -5,9 +5,6 @@
 #' @param geneticDiversityStats named vector of genetic diversity statistics
 #' @param file filename to store image in. Defaults to
 #'  \emph{images/geneticDiversity.png}
-#' @importFrom gplots heatmap.2
-#' @import RColorBrewer
-#' @importFrom grDevices colorRampPalette dev.off png
 #' @noRd
 ## makeGeneticDiversityDashboard <- function(geneticDiversityStats,
 ##                                      file = "images/geneticDiversity.png") {

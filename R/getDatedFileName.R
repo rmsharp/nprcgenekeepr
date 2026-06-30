@@ -1,4 +1,4 @@
-#' Returns a character vector with an file name having the date prepended
+#' Returns a character vector with a file name having the date prepended
 #'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr

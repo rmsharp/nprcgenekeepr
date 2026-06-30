@@ -1,4 +1,4 @@
-#' obfucateDate adds a random number of days bounded by plus and minus max delta
+#' obfuscateDate adds a random number of days bounded by plus/minus max delta
 #'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr

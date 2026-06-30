@@ -11,7 +11,7 @@ addSexAndAgeToGroup(ids, ped)
 \item{ids}{character vector of animal Ids}
 
 \item{ped}{datatable that is the \code{Pedigree}. It contains pedigree
-information including the IDs listed in \code{candidates}.}
+information.}
 }
 \value{
 Dataframe with Id, Sex, and Current Age

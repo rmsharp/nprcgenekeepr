@@ -23,7 +23,7 @@
 #' Thus, the number of rows in the kValues matrix will
 #'  be \eqn{n + n(n-1) / 2} and the number of columns will be 2 plus one
 #'  additional column for each kinship matrix (\eqn{2 + n}).
-#
+#'
 #' @return Dataframe object with columns \code{id_1}, \code{id_2}, and one
 #' \code{kinship} column for each kinship matrix in \code{kinshipMatricies}
 #' where the first two columns contain the IDs of the

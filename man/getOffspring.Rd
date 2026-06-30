@@ -13,8 +13,8 @@ columns id, sire, and dam.}
 \item{ids}{character vector of animal IDs}
 }
 \value{
-A character vector containing all of the ancestor IDs for all of the
-IDs provided in the second argument \code{ids}. All ancestors are combined
+A character vector containing all of the offspring IDs for all of the
+IDs provided in the second argument \code{ids}. All offspring are combined
 and duplicates are removed.
 }
 \description{

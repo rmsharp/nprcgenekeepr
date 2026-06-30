@@ -2,7 +2,7 @@
 % Please edit documentation in R/fixColumnNames.R
 \name{fixColumnNames}
 \alias{fixColumnNames}
-\title{fixColumnNames changes original column names and into standardized names}
+\title{fixColumnNames changes original column names into standardized names}
 \usage{
 fixColumnNames(orgCols, errorLst)
 }
@@ -18,7 +18,7 @@ A list object with \code{newColNames} and \code{errorLst} with
 a record of all changes made.
 }
 \description{
-fixColumnNames changes original column names and into standardized names
+fixColumnNames changes original column names into standardized names
 }
 \examples{
 library(nprcgenekeepr)

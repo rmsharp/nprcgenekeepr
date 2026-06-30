@@ -243,8 +243,8 @@ nprcmanagGV
 nprcmanager
 nrow
 numGp
-obfucateDate
-obfucateId
+obfuscateDate
+obfuscateId
 obfuscatePed
 outputing
 ovariectomy
@@ -268,7 +268,6 @@ pgp
 pkgdown
 pluggable
 png
-portential
 pre
 prefill
 prepopulated

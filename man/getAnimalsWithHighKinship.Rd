@@ -11,7 +11,7 @@ getAnimalsWithHighKinship(kmat, ped, threshold, currentGroups, ignore, minAge)
 are named with animal IDs.}
 
 \item{ped}{dataframe that is the \code{Pedigree}. It contains pedigree
-information including the IDs listed in \code{candidates}.}
+information.}
 
 \item{threshold}{numeric value indicating the minimum kinship level to be
 considered in group formation. Pairwise kinship below this level will be

@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Get the lists of portential parents for all individuals born in the colony
+#' Get the lists of potential parents for all individuals born in the colony
 #' with one or two unknown parents
 #'
 #' `r lifecycle::badge('experimental')`

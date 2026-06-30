@@ -3,8 +3,8 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 #'
-#' @return A character vector containing all of the ancestor IDs for all of the
-#' IDs provided in the second argument \code{ids}. All ancestors are combined
+#' @return A character vector containing all of the offspring IDs for all of the
+#' IDs provided in the second argument \code{ids}. All offspring are combined
 #' and duplicates are removed.
 #'
 #' @param pedSourceDf dataframe with pedigree structure having at least the

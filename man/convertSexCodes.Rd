@@ -23,11 +23,12 @@ Part of Pedigree Curation
 \details{
 Standard sex codes are
 \itemize{
-\item\{F\} \{-- replacing "FEMALE" or "2"\}
-\item\{M\} \{-- replacing "MALE" or "1"\}
-\item\{H\} \{-- replacing "HERMAPHRODITE" or "4", if ignore.herm == FALSE\}
-\item\{U\} \{-- replacing "HERMAPHRODITE" or "4", if ignore.herm == TRUE\}
-\item\{U\} \{-- replacing "UNKNOWN" or "3"\}}
+\item \code{F} -- replacing "FEMALE" or "2"
+\item \code{M} -- replacing "MALE" or "1"
+\item \code{H} -- replacing "HERMAPHRODITE" or "4", if ignore.herm == FALSE
+\item \code{U} -- replacing "HERMAPHRODITE" or "4", if ignore.herm == TRUE
+\item \code{U} -- replacing "UNKNOWN" or "3"
+}
 }
 \examples{
 library(nprcgenekeepr)
