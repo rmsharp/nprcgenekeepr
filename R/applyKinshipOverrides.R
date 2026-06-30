@@ -1,7 +1,8 @@
-#' Apply outside-information kinship overrides to a kinship matrix
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Apply outside-information kinship overrides to a kinship matrix
+#'
 #' Writes pairwise kinship coefficients from outside information
 #' into a computed kinship matrix, replacing the
 #' pedigree-derived value for the named pairs. Each

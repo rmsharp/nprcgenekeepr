@@ -1,8 +1,9 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
 #' Removes animal pairs and their kinship values from a dataframe where an
 #' animal is less than the minAge
 #'
-## Copyright(c) 2017-2026 R. Mark Sharp
-## This file is part of nprcgenekeepr
 #' Part of Group Formation
 #' @return a dataframe with columns \code{id1}, \code{id2}, and \code{kinship}
 #' with all animals greater than or equal to the minimum age.

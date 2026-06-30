@@ -1,7 +1,8 @@
-#' \code{makesLoop} tests for a common ancestor.
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' \code{makesLoop} tests for a common ancestor.
+#'
 #' Part of Pedigree Sampling
 #' From PedigreeSampling.R
 #' 2016-01-28

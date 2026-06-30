@@ -1,7 +1,8 @@
-#' Calculates Allelic Retention
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Calculates Allelic Retention
+#'
 #' Part of Genetic Value Analysis
 #'
 #' @return A vector of the mean number of founder alleles retained in the

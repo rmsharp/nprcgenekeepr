@@ -1,7 +1,7 @@
-#' Remove group numbers when all available animals have been used
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Remove group numbers when all available animals have been used
 #'
 #' @return The \code{grpNum} list after removing any list element corresponding
 #' to a group with no available animals left using in filling a group.

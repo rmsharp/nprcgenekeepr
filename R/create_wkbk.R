@@ -1,7 +1,7 @@
-#' Creates an Excel workbook with worksheets
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Creates an Excel workbook with worksheets
 #'
 #' @return TRUE if the Excel file was successfully created. FALSE if any errors
 #' occurred.

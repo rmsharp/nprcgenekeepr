@@ -1,7 +1,7 @@
-#' Get the maximum age of live animals in the pedigree
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Get the maximum age of live animals in the pedigree
 #'
 #' @return Numeric value representing the maximum age of animals in the
 #' pedigree.

@@ -1,9 +1,9 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
 # Data Input and Quality Control Shiny Module
 
 #' Data Input and Quality Control Module - UI Function
-#'
-## Copyright(c) 2017-2026 R. Mark Sharp
-## This file is part of nprcgenekeepr
 #'
 #' Creates user interface for data input including file uploads for
 #' pedigree and genotype data with various format options, followed by

@@ -1,7 +1,8 @@
-#' getIdsWithOneParent extracts IDs of animals pedigree without either a
-#' sire or a dam
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' getIdsWithOneParent extracts IDs of animals pedigree without either a
+#' sire or a dam
 #'
 #' @return Character vector of all single parents
 #'

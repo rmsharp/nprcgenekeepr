@@ -1,7 +1,8 @@
-#' Converts date columns formatted as characters to be of type datetime
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Converts date columns formatted as characters to be of type datetime
+#'
 #' Part of Pedigree Curation
 #'
 ## ##  rmsutilityr get_and_or_list

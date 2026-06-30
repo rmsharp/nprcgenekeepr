@@ -1,7 +1,7 @@
-#' Get offspring to corresponding animal IDs provided
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Get offspring to corresponding animal IDs provided
 #'
 #' @return A character vector containing all of the offspring IDs for all of the
 #' IDs provided in the second argument \code{ids}. All offspring are combined

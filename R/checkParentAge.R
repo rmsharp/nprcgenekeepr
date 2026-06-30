@@ -1,7 +1,8 @@
-#' Check parent ages to be at least \code{minParentAge}
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Check parent ages to be at least \code{minParentAge}
+#'
 #' Ensure parents are sufficiently older than offspring
 #'
 #' @return A dataframe containing rows for each animal where one or more

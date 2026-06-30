@@ -1,7 +1,7 @@
-#' createPedOne makes the pedOne data object
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' createPedOne makes the pedOne data object
 #'
 #' @return A specific pedigree object used for testing and examples.
 #'

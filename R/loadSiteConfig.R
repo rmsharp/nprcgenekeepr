@@ -1,7 +1,7 @@
-#' Load the site configuration for the modular Shiny application
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Load the site configuration for the modular Shiny application
 #'
 #' Reads the user's site-configuration file (\code{~/.nprcgenekeepr_config}, or
 #' \code{~/_nprcgenekeepr_config} on Windows) using the tolerant

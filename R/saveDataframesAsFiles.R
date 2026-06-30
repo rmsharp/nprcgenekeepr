@@ -1,7 +1,7 @@
-#' Write copy of dataframes to either CSV, TXT, or Excel file
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Write copy of dataframes to either CSV, TXT, or Excel file
 #'
 #' Takes a list of dataframes and creates a file based on the list name of
 #' the dataframe and the extension for the file type.

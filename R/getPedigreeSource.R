@@ -1,7 +1,7 @@
-#' Get a normalized pedigree from a pluggable data source
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Get a normalized pedigree from a pluggable data source
 #'
 #' Internal data-source adapter for the pedigree fetch boundary used by
 #' \code{getLkDirectRelatives()}. It isolates the brittle LabKey pull behind a

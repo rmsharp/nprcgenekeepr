@@ -1,7 +1,8 @@
-#' Gets pedigree to ancestors of provided group leaving uninformative ancestors
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Gets pedigree to ancestors of provided group leaving uninformative ancestors
+#'
 #' Filters a pedigree down to only the ancestors of the provided group,
 #' removing unnecessary individuals from the studbook. This version builds
 #' the pedigree back in time starting from a group of probands. This will

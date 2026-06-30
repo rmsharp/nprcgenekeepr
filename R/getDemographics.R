@@ -1,7 +1,8 @@
-#' Get demographic data
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Get demographic data
+#'
 #' This is a thin wrapper around \code{labkey.selectRows()}.
 #'
 #' @return A data.frame containing LabKey demographic data with the columns

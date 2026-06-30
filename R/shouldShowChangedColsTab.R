@@ -1,7 +1,7 @@
-#' Determine if Changed Columns tab should be displayed
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Determine if Changed Columns tab should be displayed
 #'
 #' Checks the changedCols list to determine if the Changed Columns tab should
 #' be inserted into the application navigation. The tab is shown when column

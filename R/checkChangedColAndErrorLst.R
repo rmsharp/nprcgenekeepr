@@ -1,7 +1,8 @@
-#' checkChangedColAndErrorLst examines errorLst for errors and
-#' errorLst$changeCols non-empty fields
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' checkChangedColAndErrorLst examines errorLst for errors and
+#' errorLst$changeCols non-empty fields
 #'
 #' @return Returns \code{NULL} is all fields are empty
 #' else the entire list is returned.

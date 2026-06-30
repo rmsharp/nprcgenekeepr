@@ -1,5 +1,6 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
 #' Flag overridden pairs in a relationship table
 #'
 #' Marks the pairwise rows whose kinship coefficient came from an

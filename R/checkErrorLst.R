@@ -1,7 +1,7 @@
-#' checkErrorLst examines list for non-empty fields
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' checkErrorLst examines list for non-empty fields
 #'
 #' @return Returns FALSE if all fields are empty or the list is NULL
 #' else the entire list is returned.

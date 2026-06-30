@@ -1,7 +1,8 @@
-#' Add parents
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Add parents
+#'
 #' Pedigree curation function
 #' Given a pedigree, find any IDs listed in the "sire" or "dam" columns
 #' that lack their own line entry and generate one.

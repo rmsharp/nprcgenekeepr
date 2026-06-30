@@ -1,7 +1,8 @@
-#' Get the direct ancestors of selected animals
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Get the direct ancestors of selected animals
+#'
 #' Gets direct ancestors from labkey \code{study} schema and \code{demographics}
 #' table.
 #'

@@ -1,7 +1,7 @@
-#' addIdRecords Adds Ego records added having NAs for parent IDs
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' addIdRecords Adds Ego records added having NAs for parent IDs
 #'
 #' @return Pedigree with Ego records added having NAs for parent IDs
 #'

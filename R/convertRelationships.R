@@ -1,7 +1,8 @@
-#' Converts pairwise kinship values to a relationship category descriptor
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Converts pairwise kinship values to a relationship category descriptor
+#'
 #' Part of Relations
 #'
 #' @return A dataframe with columns \code{id1}, \code{id2}, \code{kinship},

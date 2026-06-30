@@ -1,7 +1,7 @@
-#' Apply kinship overrides to a recomputed matrix, soft-dropping absent ids
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Apply kinship overrides to a recomputed matrix, soft-dropping absent ids
 #'
 #' Internal helper for the Shiny module fallback recompute paths (issue #13
 #' Slice 3). The breeding-group and summary-stats modules recompute a fresh

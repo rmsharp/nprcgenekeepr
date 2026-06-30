@@ -1,7 +1,8 @@
-#' Gene drop simulation based on the provided pedigree information
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Gene drop simulation based on the provided pedigree information
+#'
 #' Part of Genetic Value Analysis
 #'
 #' The gene dropping method from \emph{Pedigree analysis by computer simulation}

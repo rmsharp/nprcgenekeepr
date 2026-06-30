@@ -1,7 +1,7 @@
-#' Provides list of potential sires
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Provides list of potential sires
 #'
 #' @return A character vector of potential sire Ids
 #'

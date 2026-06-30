@@ -1,7 +1,8 @@
-#' Population designation function
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Population designation function
+#'
 #' Part of the pedigree filtering toolset.
 #'
 #' @return An updated pedigree with the \code{population} column added or

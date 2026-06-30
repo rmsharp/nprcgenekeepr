@@ -1,7 +1,8 @@
-#' Returns the elapsed time since start_time
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Returns the elapsed time since start_time
+#'
 #' Taken from github.com/rmsharp/rmsutilityr
 #'
 #' @return A character vector describing the passage of time in hours, minutes,

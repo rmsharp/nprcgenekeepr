@@ -1,7 +1,8 @@
-#' Get the population of interest for the Genetic Value analysis
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Get the population of interest for the Genetic Value analysis
+#'
 #' If user has limited the population of interest by defining \code{pop},
 #' that information is incorporated via the \code{ped$population} column.
 #'

@@ -1,7 +1,8 @@
-#' Calculates the sampling standard error of genome uniqueness for each ID
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Calculates the sampling standard error of genome uniqueness for each ID
+#'
 #' Part of Genetic Value Analysis
 #'
 #' Genome uniqueness (\code{\link{calcGU}}) is a Monte Carlo estimate: it is the

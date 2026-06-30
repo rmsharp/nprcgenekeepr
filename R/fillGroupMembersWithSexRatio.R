@@ -1,7 +1,8 @@
-#' Forms breeding group(s) with an effort to match a specified sex ratio
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Forms breeding group(s) with an effort to match a specified sex ratio
+#'
 #' @description The sex ratio is the ratio of females to males.
 #'
 #' @return A list containing one character vector of animal IDs such that the

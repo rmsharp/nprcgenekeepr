@@ -1,7 +1,8 @@
-#' Sets sex for animals listed as either a sire or dam
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Sets sex for animals listed as either a sire or dam
+#'
 #' Part of Pedigree Curation
 #'
 #' @details Only true female-sires (\code{"F"}) and male-dams (\code{"M"}) are

@@ -1,7 +1,7 @@
-#' Get genotypes from file
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Get genotypes from file
 #'
 #' @return A genotype file compatible with others in this package.
 #'

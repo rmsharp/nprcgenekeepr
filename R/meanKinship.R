@@ -1,7 +1,8 @@
-#' Calculates the mean kinship for each animal in a kinship matrix
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Calculates the mean kinship for each animal in a kinship matrix
+#'
 #' Part of Genetic Value Analysis
 #'
 #' The mean kinship of animal \emph{i} is \deqn{MK_i = \Sigma f_ij / N},

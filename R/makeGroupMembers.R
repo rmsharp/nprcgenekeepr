@@ -1,7 +1,7 @@
-#' Convenience function to make the initial groupMembers animal list
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Convenience function to make the initial groupMembers animal list
 #'
 #' @return Initial groupMembers list
 #'

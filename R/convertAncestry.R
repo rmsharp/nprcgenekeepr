@@ -1,7 +1,8 @@
-#' Converts the ancestry information to a standardized code
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Converts the ancestry information to a standardized code
+#'
 #' Part of Pedigree Curation
 #'
 #'

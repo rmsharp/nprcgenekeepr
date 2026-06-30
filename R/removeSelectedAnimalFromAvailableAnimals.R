@@ -1,7 +1,7 @@
-#' Updates list of available animals by removing the selected animal
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Updates list of available animals by removing the selected animal
 #'
 #' @return list of available animals
 #'

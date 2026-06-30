@@ -1,7 +1,8 @@
-#' Read an optional apiKey from the nprcgenekeepr configuration file
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Read an optional apiKey from the nprcgenekeepr configuration file
+#'
 #' Unlike \code{getParamDef}, which stops when a parameter is absent, this
 #' performs a soft lookup of the optional \code{apiKey} entry.
 #'

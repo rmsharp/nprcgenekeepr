@@ -1,7 +1,7 @@
-#' Get pedigree based on list of focal animals
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Get pedigree based on list of focal animals
 #'
 #' @return A pedigree file compatible with others in this package.
 #'

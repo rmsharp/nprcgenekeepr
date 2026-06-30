@@ -1,7 +1,8 @@
-#' Calculates \code{a}, the number of an individual's alleles that are rare in
-#' each simulation
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Calculates \code{a}, the number of an individual's alleles that are rare in
+#' each simulation
 #'
 #' Part of Genetic Value Analysis
 #'

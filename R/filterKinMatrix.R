@@ -1,7 +1,7 @@
-#' Filters a kinship matrix to include only the egos listed in 'ids'
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Filters a kinship matrix to include only the egos listed in 'ids'
 #'
 #' @return A numeric matrix that is the reduced kinship matrix with named
 #' rows and columns (row and col names are 'ids').

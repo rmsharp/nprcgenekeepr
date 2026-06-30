@@ -1,7 +1,8 @@
-#' Get site information
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Get site information
+#'
 #' @return A list of site specific information used by the application.
 #'
 #' Currently this returns the following character strings in a named list.

@@ -1,7 +1,7 @@
-#' hasBothParents checks to see if both parents are identified
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' hasBothParents checks to see if both parents are identified
 #'
 #' @return TRUE if ID has both sire and dam identified in \code{ped}.
 #'

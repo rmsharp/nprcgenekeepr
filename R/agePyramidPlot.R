@@ -1,7 +1,7 @@
-#' Form age pyramid plot
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Form age pyramid plot
 #'
 #' @return The return value of par("mar") when the function was called.
 #'

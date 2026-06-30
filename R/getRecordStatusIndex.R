@@ -1,7 +1,7 @@
-#' Returns record numbers with selected \code{recordStatus}.
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Returns record numbers with selected \code{recordStatus}.
 #'
 #' @return An integer vector of records with \code{recordStatus} ==
 #' \code{status}.

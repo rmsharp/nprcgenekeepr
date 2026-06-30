@@ -1,7 +1,8 @@
-#' Configure Rlabkey authentication for the current session
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Configure Rlabkey authentication for the current session
+#'
 #' Sets up the credentials that \code{\link{getDemographics}} (and any other
 #' \code{Rlabkey} call) uses to authenticate against the LabKey EHR server. An
 #' API key, when available, is preferred; otherwise the function falls back to

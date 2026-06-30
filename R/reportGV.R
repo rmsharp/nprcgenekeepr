@@ -1,7 +1,8 @@
-#' Generates a genetic value report for a provided pedigree
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Generates a genetic value report for a provided pedigree
+#'
 #' This is the main function for the Genetic Value Analysis.
 #'
 #' Reported genome uniqueness (\code{gu}) is set to 0 for "Undetermined"

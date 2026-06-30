@@ -1,7 +1,7 @@
-#' fixColumnNames changes original column names into standardized names
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' fixColumnNames changes original column names into standardized names
 #'
 #' @return A list object with \code{newColNames} and \code{errorLst} with
 #' a record of all changes made.

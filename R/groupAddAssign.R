@@ -1,7 +1,8 @@
-#' Add animals to an existing breeding group or forms groups:
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Add animals to an existing breeding group or forms groups:
+#'
 #' Part of Group Formation
 #'
 #' @description{

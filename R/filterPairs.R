@@ -1,7 +1,8 @@
-#' Filters kinship values from a long-format kinship table based on the sexes
-#'  of the two animals involved
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Filters kinship values from a long-format kinship table based on the sexes
+#'  of the two animals involved
 #'
 #' Part of Group Formation
 #'

@@ -1,7 +1,8 @@
-#' Founder-genome-equivalent degeneracy guard
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Founder-genome-equivalent degeneracy guard
+#'
 #' Part of the Genetic Value Analysis
 #'
 #' Shared check (issue #82) for the silent-collapse degeneracy in
