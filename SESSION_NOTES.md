@@ -7,6 +7,185 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 247 Did
+
+**Deliverable (owner pick = “merge PR \#104”):** Merge the CI-validated
+PR \#104 (issue \#103 Stage 1 – defects D1-D8 + the `.lintr`
+whole-file-exclusion fix) onto `master`, sync local `master` to origin,
+and delete the merged branch `issue103-stage1-defects`.
+**Landing/process action on already-CI-green doc work – no R logic
+change; TDD RED/GREEN N/A. DONE + VERIFIED; 0 stakeholder corrections /
+0 owner overrides** (merge strategy = merge-commit, chosen to match the
+PR-101 precedent; squash offered as alternative, owner did not object).
+**Started / Completed:** 2026-06-29 / 2026-06-29 **Status:** **DONE.**
+PR **\#104 MERGED** (`gh pr view 104` -\> state MERGED, mergedAt
+2026-06-30T02:10Z UTC). Stage 1 of \#103 is landed on `master`. - **What
+I did:** (1) wrote the 1B stub; (2) pre-flight (clean tree, no
+`.DS_Store`, `PED_GV_AUDIT` untracked won’t block, 4 commits to land, PR
+`MERGEABLE`/`CLEAN`); (3) **stashed the 1B stub** (it edits
+`SESSION_NOTES.md`, which differs branch-vs-master, so it would block
+the post-merge checkout – Learning 233); (4)
+`gh pr merge 104 --merge --delete-branch` -\> merge commit `9b512b1e`
+(parents `170324d5` master + `3beaf2bc` branch tip), remote+local branch
+deleted, local FF’d to master; (5) confirmed remote branch gone
+(`gh api .../branches/issue103-stage1-defects` = 404) +
+`git fetch --prune` (also pruned the dead
+`normalize-copyright-headers`); (6) `git stash pop` -\> stub restored
+onto master cleanly; (7) close-out docs + push. - **No local re-gate –
+proven, not assumed.** `git diff 9b512b1e 3beaf2bc` is **EMPTY**: master
+never moved after the branch forked, so the merged tree is
+byte-identical to the tip CI validated **10/10** (5-platform R-CMD-check
+matrix + lint + pkgdown + coverage). That CI run satisfies the
+“`R/`+`man/` ship -\> re-gate” rule (Learning 226/227); re-running
+`--as-cran` would only re-certify an identical tree. **`master` is
+CI-certified.** - **Verify (firsthand):** on `master`;
+`git rev-parse HEAD` == `git rev-parse origin/master` == `9b512b1e`;
+`git log -1` = the 2-parent merge commit; `git branch` no longer lists
+`issue103-stage1-defects`; `git branch -r` (post-prune) has no
+`issue103` ref; `gh pr view 104` = MERGED.
+
+**Phase-3E (runtime smoke): N/A (stated, not skipped).** No `R/` logic /
+runtime / Shiny / startup / dispatch / config change – this is a PR
+MERGE of already-CI-validated commits; the build-equivalent here is CI
+itself (GREEN 10/10 on the byte-identical tree), stronger than the local
+gate. NAMESPACE/exports unchanged. FM \#24 does not apply.
+
+**Session 246 Handoff Evaluation (by Session 247): Score 9/10.** S246’s
+SUGGESTED-NEXT named THIS deliverable verbatim – “the owner’s MERGE
+decision for PR \#104” with the three options (merge / review / hold),
+the post-merge steps (checkout master, pull, delete branch), and the
+keyword-safe-body note. **What helped:** (1) the merge guidance was
+turnkey – the owner said “merge PR \#104” and S246’s notes already had
+the precedent (`a4de6a84`/PR \#101 = merge commit) so the strategy was
+decided; (2) the gotchas were load-bearing – the `.DS_Store`/rebase-pull
+warning told me to pre-check for it (absent, good), and the
+`PED_GV_AUDIT*.html` untracked-keep note told me it wouldn’t block the
+checkout; (3) ghost-check clean (HEAD `3beaf2bc` == documented S246
+close-out); (4) the PR-state facts (MERGEABLE/CLEAN, 10/10 green,
+keyword-safe body) were accurate and I re-confirmed each firsthand; (5)
+the standing keeps held (package ARCHIVED; `R/`+`man/` ship -\> re-gate;
+`git pull` is rebase). **What was missing (the -1):** S246’s post-merge
+recipe assumed a manual `git checkout master && git pull` while still on
+the branch, but it did NOT flag that the Phase-1B stub (written to
+`SESSION_NOTES.md` on the branch) would BLOCK that checkout – a
+structural consequence of the 1B protocol when the deliverable is “merge
+the branch you’re on.” Mitigated: I foresaw it at pre-flight and
+stashed; and `gh --delete-branch` handled the switch+pull anyway, making
+the manual steps partly moot. Minor/arguably un-foreseeable. **What was
+wrong:** nothing. **ROI:** very high – near-turnkey landing of a
+pre-validated PR.
+
+**Self-assessment (Session 247): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean), reported, STOPPED for the owner; wrote
+the 1B stub before the outward action; declared landing/process +
+TDD-N/A up front and held it. **Strengths:** (1) **pre-flight before the
+irreversible action** – checked for blocking files, confirmed PR still
+mergeable, listed the exact commits to land BEFORE merging; (2)
+**foresaw the 1B-stub/checkout collision and stashed proactively**
+rather than hitting the “local changes would be overwritten” error
+mid-merge (\[\[check-status-before-destructive-git\]\] mindset applied
+to a merge); (3) **proved “no re-gate needed” rather than asserting it**
+– `git diff <merge> <tip>` = empty shows the landed tree is
+byte-identical to what CI validated, so the standing re-gate rule is
+satisfied by CI (didn’t blindly skip, didn’t redundantly re-run); (4)
+**verified branch deletion authoritatively** (`gh api` 404, not just the
+lingering `git branch -r` ref) and pruned the stale ref; (5) **matched
+the repo’s merge-strategy precedent** and offered squash as an
+alternative instead of silently picking; (6) **clean scope, one
+deliverable** – did NOT post to \#103 unasked, did NOT start Stage 2,
+did NOT delete the dead `makeGeneticDiversityDashboard.R` (all noted for
+the owner/future, none done). **Weakness (the -1):** I flagged the
+stub/checkout collision only at merge time, not at the moment I wrote
+the stub – a stricter read of “I’m about to merge the branch I’m
+standing on” would have anticipated it one step earlier (and an
+even-cleaner alternative was to commit the stub on the branch so the
+merge carried it, though stash-\>pop keeps the stub overwriteable by
+this full handoff, which is the protocol’s intent). Capped at 9: clean,
+fully firsthand-verified, precedent-matching landing with the re-gate
+decision proven by diff; a 10 anticipates the stub collision at
+stub-write time.
+
+**Learnings:** **Learning 233** added to `PROJECT_LEARNINGS.md` –
+merging the feature branch you are CURRENTLY ON: stash the Phase-1B
+`SESSION_NOTES.md` stub first (it differs branch-vs-master and blocks
+the post-merge checkout), then pop it onto the merged `master`; a
+`--merge` PR merge of an already-CI-green branch needs NO local re-gate
+when `git diff <merge-commit> <branch-tip>` is empty (the landed tree is
+byte-identical to what CI validated); `--delete-branch` leaves a stale
+remote-tracking ref – confirm deletion via `gh api .../branches/<name>`
+(404) and `git fetch --prune`, don’t trust `git branch -r`; match the
+repo’s merge-strategy precedent (`a4de6a84`/PR \#101 = merge commit)
+unless told otherwise. Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a landing/process
+session – TDD RED/GREEN N/A.**
+
+**=\> SUGGESTED NEXT = the next \#103 stage (owner’s pick), or the CRAN
+thread.** Stage 1 is now landed on `master`; per the audit §6 roadmap
+(`docs/audits/ROXYGEN_HARMONIZATION_AUDIT_2026-06-29.md`) the next slice
+is **Stage 2 (copyright-PLACEMENT sweep, Finding 8 – scriptable,
+highest-volume / low rendered-impact since `##` renders fine)**, then
+Stages 3-8 (3: block-order `@return`-after-`@param`; 4: 48 stray
+backticks -\> `\code{}`; 5: `@import`-\>`@importFrom`; 6: redundant
+`@keywords internal`; 7: examples policy / the 22-file gap; 8: title
+voice + de-dup). **Each stage edits `R/`+`man/` which SHIP -\> after
+each: re-gate (Learning 226/227) AND `lintr::lint_package()` (Learning
+232) AND `spell_check_package` (hand-add wordlist terms, never
+`update_wordlist`).** “1 and done” – one stage per session. Carried CRAN
+thread (owner-run, outward): **Phase 5b** per
+`docs/planning/cran-2.0.0-phase5-runbook.md` – if more \#103 stages run
+first, re-gate + re-lint before Phase 5b since `R/`+`man/` will have
+changed again. **Owner-directed tracker action available but NOT taken
+unasked:** posting a “Stage 1 landed on master via PR \#104” note to
+issue \#103 (keep it keyword-safe so it does not auto-close the
+multi-stage tracker).
+
+**Key files (this session):** **No `R/` / `man/` / `DESCRIPTION` /
+`NAMESPACE` / `data` / `NEWS` / `vignettes` / `tests` change** – this
+session landed S245/S246’s already-committed work via the PR merge
+(merge commit `9b512b1e`, no new content). **Process docs (this
+close-out commit, on `master`):** `CHANGELOG.md` (S247 entry),
+`PROJECT_LEARNINGS.md` (Learning 233), `SESSION_NOTES.md` (this
+handoff). **NOT committed (standing keep):**
+`PED_GV_AUDIT_2026-05-30.html` (untracked, `.Rbuildignore`d);
+`dashboard.html` (generated); `.DS_Store` (if it reappears). **PR:**
+\#104 (MERGED this session).
+
+**Gotchas:** (1) **Stage 1 is LANDED on `master`** – `9b512b1e` is the
+merge commit; the branch `issue103-stage1-defects` is GONE (local +
+remote, by design). Future \#103 stages branch fresh from `master`. (2)
+**When a future session’s deliverable is “merge the branch you’re on,”
+stash the 1B stub first** (Learning 233) – the `SESSION_NOTES.md` stub
+blocks the post-merge checkout. (3) **`master` is CI-certified (10/10),
+not just locally gated** – the merged tree == the CI-validated tip
+(proven by empty `git diff`); a NEW `R/`/`man/` edit re-stales both the
+`--as-cran` gate AND lint (separate CI workflow, Learning 232) -\>
+re-gate + `lint_package()` + `spell_check_package` after each future
+stage. (4) **`.lintr` now whole-file-excludes
+`R/makeGeneticDiversityDashboard.R`** (robust); other `.lintr` entries
+are directory/whole-file – but if a future edit shifts lines in any file
+with an `NNN:MMM` exclusion, re-align it (Learning 232). (5) Carried
+standing keeps (unchanged): package **ARCHIVED on CRAN 2025-07-29**;
+CRAN resubmission owner-gated; win-builder/R-hub/`submit_cran()` are
+OWNER-run outward + HARD STOP; the `--as-cran` gate certifies the
+CURRENT tree only; `NEWS.md`/`README.md` are GENERATED (from
+`NEWS.Rmd`/`README.Rmd`); module/E2E tests need `NOT_CRAN=true` BUT
+`--as-cran` SKIPS them via `skip_on_cran`; a 0/0/0 check does NOT imply
+spelling-clean -\> `spell_check_package` (hand-add wordlist terms, never
+`update_wordlist` – \[\[avoid-reconcile-tools-on-curated-files\]\]);
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)/[`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
+FAIL SOFT without LabKey config; `git pull` is rebase + chokes on
+unstaged tracked changes (`.DS_Store` is untracked so it does not block,
+but remove it if it reappears); re-check `git status` before ANY
+`reset --hard` (\[\[check-status-before-destructive-git\]\]); **zsh
+`status` is a read-only special variable**;
+`gh pr edit`/`gh issue view <n>` 401 on the Projects-classic deprecation
+-\> use `gh api`/`--json` (note:
+`gh pr merge`/`gh pr view --json`/`gh api .../branches` all worked fine
+this session); closing-keyword discipline for any PR/issue body.
+
 ### What Session 246 Did
 
 **Deliverable (owner pick = option 1, “Open a PR for CI validation”):**

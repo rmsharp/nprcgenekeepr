@@ -55,6 +55,20 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-06-29--merge-pr-104-land-stage-1-of-issue-103-onto-master-session-247">2026-06-29 — merge PR #104: land Stage 1 of issue #103 onto <code>master</code> (Session 247)<a class="anchor" aria-label="anchor" href="#id_2026-06-29--merge-pr-104-land-stage-1-of-issue-103-onto-master-session-247"></a></h3>
+<ul><li>
+<strong>Deliverable (owner pick = “merge PR #104”):</strong> merge the CI-validated PR #104 (issue #103 Stage 1 — defects D1–D8 plus the <code>.lintr</code> whole-file-exclusion fix) into <code>master</code>, sync local <code>master</code> to origin, and delete the merged branch <code>issue103-stage1-defects</code>. <strong>Landing/process action on already-CI-green doc work — no R-logic change; TDD RED/GREEN N/A; 0 corrections / 0 overrides.</strong>
+</li>
+<li>
+<strong>Merge strategy = merge commit</strong>, matching the repo’s precedent for landing <code>R/</code>+<code>man/</code> work via PR (<code>a4de6a84 Merge pull request #101</code>); preserves the well-formed S245/S246 commits. Result: merge commit <code>9b512b1e</code> (parents <code>170324d5</code> master + <code>3beaf2bc</code> branch tip); <code>gh pr view 104</code> → <strong>MERGED</strong>.</li>
+<li>
+<strong>No local re-gate needed:</strong> <code>git diff 9b512b1e 3beaf2bc</code> is <strong>empty</strong> — master never moved after the branch forked, so the merged tree is byte-identical to the tip CI validated <strong>10/10</strong> green (full 5-platform R-CMD-check matrix + lint + pkgdown + coverage). That CI run satisfies the “<code>R/</code>+<code>man/</code> ship → re-gate” rule; re-running the local <code>--as-cran</code> gate would only re-certify an identical tree.</li>
+<li>
+<strong>Branch cleanup:</strong> <code>gh pr merge --merge --delete-branch</code> deleted both the local and remote branch; confirmed the remote branch is gone (<code>gh api .../branches/issue103-stage1-defects</code> → 404) and pruned the stale remote-tracking ref with <code>git fetch --prune</code>. Local <code>master</code> == origin/master == <code>9b512b1e</code>.</li>
+<li>
+<strong>Procedure note:</strong> the mandatory Phase-1B stub written to <code>SESSION_NOTES.md</code> was an uncommitted edit on the branch being merged; since that file differs between branch and <code>master</code>, it was stashed before the merge and popped back onto <code>master</code> afterward (clean apply). See <code>PROJECT_LEARNINGS.md</code> Learning 233.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-06-29--open-pr-104-for-ci-validation-of-stage-1--fix-a-ci-surfaced-lint-regression-session-246">2026-06-29 — open PR #104 for CI validation of Stage 1 + fix a CI-surfaced lint regression (Session 246)<a class="anchor" aria-label="anchor" href="#id_2026-06-29--open-pr-104-for-ci-validation-of-stage-1--fix-a-ci-surfaced-lint-regression-session-246"></a></h3>
 <ul><li>
 <strong>Deliverable (issue #103, Stage 1, owner pick = “open a PR for CI validation”):</strong> push branch <code>issue103-stage1-defects</code> and open <strong>PR #104</strong> against <code>master</code> so the full CI suite validates the S245 D1–D8 <code>R/</code>+<code>man/</code> edits. <strong>Landing/process action + a 1-line <code>.lintr</code> fix — no R-logic change; TDD RED/GREEN N/A; 0 corrections / 0 overrides</strong> (1 owner gate: the lint-fix approach). PR body is keyword-safe (“Part of #103”) so the merge will not auto-close the multi-stage tracking issue.</li>

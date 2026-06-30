@@ -15,6 +15,36 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-29 — merge PR \#104: land Stage 1 of issue \#103 onto `master` (Session 247)
+
+- **Deliverable (owner pick = “merge PR \#104”):** merge the
+  CI-validated PR \#104 (issue \#103 Stage 1 — defects D1–D8 plus the
+  `.lintr` whole-file-exclusion fix) into `master`, sync local `master`
+  to origin, and delete the merged branch `issue103-stage1-defects`.
+  **Landing/process action on already-CI-green doc work — no R-logic
+  change; TDD RED/GREEN N/A; 0 corrections / 0 overrides.**
+- **Merge strategy = merge commit**, matching the repo’s precedent for
+  landing `R/`+`man/` work via PR (`a4de6a84 Merge pull request #101`);
+  preserves the well-formed S245/S246 commits. Result: merge commit
+  `9b512b1e` (parents `170324d5` master + `3beaf2bc` branch tip);
+  `gh pr view 104` → **MERGED**.
+- **No local re-gate needed:** `git diff 9b512b1e 3beaf2bc` is **empty**
+  — master never moved after the branch forked, so the merged tree is
+  byte-identical to the tip CI validated **10/10** green (full
+  5-platform R-CMD-check matrix + lint + pkgdown + coverage). That CI
+  run satisfies the “`R/`+`man/` ship → re-gate” rule; re-running the
+  local `--as-cran` gate would only re-certify an identical tree.
+- **Branch cleanup:** `gh pr merge --merge --delete-branch` deleted both
+  the local and remote branch; confirmed the remote branch is gone
+  (`gh api .../branches/issue103-stage1-defects` → 404) and pruned the
+  stale remote-tracking ref with `git fetch --prune`. Local `master` ==
+  origin/master == `9b512b1e`.
+- **Procedure note:** the mandatory Phase-1B stub written to
+  `SESSION_NOTES.md` was an uncommitted edit on the branch being merged;
+  since that file differs between branch and `master`, it was stashed
+  before the merge and popped back onto `master` afterward (clean
+  apply). See `PROJECT_LEARNINGS.md` Learning 233.
+
 ### 2026-06-29 — open PR \#104 for CI validation of Stage 1 + fix a CI-surfaced lint regression (Session 246)
 
 - **Deliverable (issue \#103, Stage 1, owner pick = “open a PR for CI
