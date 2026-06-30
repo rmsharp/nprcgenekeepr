@@ -3,13 +3,13 @@
 
 #' summary.nprcgenekeeprErr Summary function for class nprcgenekeeprErr
 #'
-#' @return Object of class summary.nprcgenekeeprErr
-#'
-#' @rdname summary
-#' @method summary nprcgenekeeprErr
 #' @param object object of class nprcgenekeeprErr and class list
 #' @param ... additional arguments for the \code{summary.default} statement
+#' @return Object of class summary.nprcgenekeeprErr
+#'
 #' @importFrom stringi stri_c stri_length
+#' @rdname summary
+#' @method summary nprcgenekeeprErr
 ## ##  rmsutilityr get_and_or_list
 #' @export
 #' @examples
@@ -163,10 +163,10 @@ summary.nprcgenekeeprErr <- function(object, ...) {
   class(txt) <- "summary.nprcgenekeeprErr"
   txt
 }
-#' @rdname summary
 #' @return object of class summary.nprcgenekeeprGV
-#' @method summary nprcgenekeeprGV
 #' @importFrom stringi stri_c
+#' @rdname summary
+#' @method summary nprcgenekeeprGV
 #' @export
 #' @examples
 #' examplePedigree <- nprcgenekeepr::examplePedigree

@@ -5,9 +5,9 @@
 
 #' Breeding Groups Module - UI Function
 #'
-#' @return A \code{div} containing breeding group formation UI.
-#'
 #' @param id character vector of length 1. Module namespace identifier.
+#'
+#' @return A \code{div} containing breeding group formation UI.
 #'
 #' @seealso \code{\link{modBreedingGroupsServer}}
 #' @seealso \code{\link{groupAddAssign}} for group formation algorithm.
@@ -123,18 +123,6 @@ modBreedingGroupsUI <- function(id) {
 #'   \item \strong{Sex ratio}: Target female-to-male ratio in groups
 #' }
 #'
-#' @return List with reactive components:
-#' \itemize{
-#'   \item \code{groups} - List of character vectors with animal IDs per group
-#'   \item \code{nGroups} - Number of groups formed
-#'   \item \code{score} - Optimization score from groupAddAssign
-#'     (minimum group size)
-#'   \item \code{unassigned} - Character vector of candidate IDs not placed
-#'     in groups
-#'   \item \code{groupKinship} - List of kinship matrices per group
-#'     (if withKin=TRUE)
-#' }
-#'
 #' @param id character vector of length 1. Module namespace identifier.
 #' @param pedigree reactive returning pedigree data frame with columns:
 #'   id, sire, dam, sex, and optionally birth, exit, gen.
@@ -148,6 +136,18 @@ modBreedingGroupsUI <- function(id) {
 #'   output), the overrides are applied to that matrix so group formation
 #'   reflects them regardless of tab order. \code{NULL} (the default) is a
 #'   no-op. The genetic-value-output path already carries overrides.
+#'
+#' @return List with reactive components:
+#' \itemize{
+#'   \item \code{groups} - List of character vectors with animal IDs per group
+#'   \item \code{nGroups} - Number of groups formed
+#'   \item \code{score} - Optimization score from groupAddAssign
+#'     (minimum group size)
+#'   \item \code{unassigned} - Character vector of candidate IDs not placed
+#'     in groups
+#'   \item \code{groupKinship} - List of kinship matrices per group
+#'     (if withKin=TRUE)
+#' }
 #'
 #' @seealso \code{\link{modBreedingGroupsUI}} for the UI component
 #' @seealso \code{\link{groupAddAssign}} for the underlying MIS algorithm

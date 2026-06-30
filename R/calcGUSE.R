@@ -25,10 +25,6 @@
 #' An animal whose rare-allele count does not vary across iterations has a
 #' standard error of 0.
 #'
-#' @return Dataframe \code{rows: id, col: guSE}
-#'  A single-column table of genome-uniqueness standard errors as percentages.
-#'  Rownames are set to 'id' values that are part of the population.
-#'
 #' @param alleles dataframe containing an \code{AlleleTable} (the same input
 #' \code{\link{calcGU}} takes): an \code{id} column, a \code{parent} column, and
 #' one integer column per gene-drop iteration. Produced by \code{geneDrop()}.
@@ -42,6 +38,10 @@
 #' (homozygous alleles will be counted as 1).
 #' @param pop character vector with animal IDs to consider as the population of
 #' interest, otherwise all animals will be considered. The default is NULL.
+#' @return Dataframe \code{rows: id, col: guSE}
+#'  A single-column table of genome-uniqueness standard errors as percentages.
+#'  Rownames are set to 'id' values that are part of the population.
+#'
 #' @seealso \code{\link{calcGU}}, \code{\link{calcA}}, \code{\link{reportGV}}
 #' @export
 #' @examples

@@ -8,9 +8,6 @@
 #' This is particularly useful in Shiny reactive contexts where errors
 #' should be handled gracefully.
 #'
-#' @return The result of evaluating \code{expr}, or \code{default} if an
-#'   error occurs.
-#'
 #' @param expr An expression to evaluate.
 #' @param module character. Name of the calling module for logging purposes.
 #' @param default The value to return if an error occurs. Defaults to NULL.
@@ -19,6 +16,12 @@
 #' @param notify logical. If TRUE and in a Shiny context, shows a notification
 #'   to the user. Defaults to FALSE.
 #'
+#' @return The result of evaluating \code{expr}, or \code{default} if an
+#'   error occurs.
+#'
+#' @seealso \code{\link{logModuleEvent}} for logging
+#' @importFrom shiny showNotification getDefaultReactiveDomain
+#' @export
 #' @examples
 #' \dontrun{
 #' # Returns 4
@@ -31,9 +34,6 @@
 #' safeExecute({ stop("Error!") }, module = "test", default = data.frame())
 #' }
 #'
-#' @seealso \code{\link{logModuleEvent}} for logging
-#' @importFrom shiny showNotification getDefaultReactiveDomain
-#' @export
 safeExecute <- function(expr, module = "unknown", default = NULL,
                         silent = FALSE, notify = FALSE) {
   tryCatch(

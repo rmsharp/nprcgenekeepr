@@ -9,13 +9,13 @@
 #' If there are no errors that prevent the calculation of exit dates, they are
 #' calculated and added to the pedigree otherwise the pedigree is not updated.
 #'
-#' @return A list with the pedigree, \code{sb}, and the \code{errorLst} with
-#' invalid date rows (\code{errorLst$invalidDateRows})
-#'
 #' @param sb A dataframe containing a table of pedigree and demographic
 #' information.
 #' @param errorLst object with placeholders for error types found in a pedigree
 #' file by \code{qcStudbook} through the functions it calls.
+#' @return A list with the pedigree, \code{sb}, and the \code{errorLst} with
+#' invalid date rows (\code{errorLst$invalidDateRows})
+#'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

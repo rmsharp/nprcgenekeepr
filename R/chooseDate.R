@@ -9,14 +9,14 @@
 #' it occurred earlier or later than the other. \code{NAs} are ignored if
 #' possible.
 #'
-#' @return \code{Date} vector of chosen dates or \code{NA} where neither
-#' is provided
-#'
 #' @param d1 \code{Date} vector with the first of two dates to compare.
 #' @param d2 \code{Date} vector with the second of two dates to compare.
 #' @param earlier logical variable with \code{TRUE} if the earlier of the two
 #' dates is to be returned, otherwise the later is returned. Default is
 #' \code{TRUE}.
+#' @return \code{Date} vector of chosen dates or \code{NA} where neither
+#' is provided
+#'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

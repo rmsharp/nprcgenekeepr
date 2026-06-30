@@ -40,17 +40,6 @@
 #' that reports genome uniqueness as 0 for unknown-origin both-unknown
 #' ("Undetermined") animals.
 #'
-#' @references Ballou JD, Lacy RC.  1995. Identifying genetically important
-#' individuals for management of genetic variation in pedigreed populations,
-#' p 77-111. In: Ballou JD, Gilpin M, Foose TJ, editors.
-#' Population management for survival and recovery. New York (NY):
-#' Columbia University Press.
-#'
-#'
-#' @return Dataframe \code{rows: id, col: gu}
-#'  A single-column table of genome uniqueness values as percentages.
-#'  Rownames are set to 'id' values that are part of the population.
-#'
 #' @param alleles dataframe of containing an \code{AlleleTable}. This is a
 #' table of allele information produced by \code{geneDrop()}.
 #' An AlleleTable contains information about alleles an ego has inherited.
@@ -74,6 +63,17 @@
 #' (homozygous alleles will be counted as 1).
 #' @param pop character vector with animal IDs to consider as the population of
 #' interest, otherwise all animals will be considered. The default is NULL.
+#' @return Dataframe \code{rows: id, col: gu}
+#'  A single-column table of genome uniqueness values as percentages.
+#'  Rownames are set to 'id' values that are part of the population.
+#'
+#' @references Ballou JD, Lacy RC.  1995. Identifying genetically important
+#' individuals for management of genetic variation in pedigreed populations,
+#' p 77-111. In: Ballou JD, Gilpin M, Foose TJ, editors.
+#' Population management for survival and recovery. New York (NY):
+#' Columbia University Press.
+#'
+#'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

@@ -4,9 +4,9 @@
 #' getConfigFileName returns the configuration file name appropriate for
 #' the system
 #'
+#' @param sysInfo object returned by Sys.info()
 #' @return Character vector with expected configuration file
 #'
-#' @param sysInfo object returned by Sys.info()
 #' @importFrom stringi stri_detect_fixed
 #' @export
 #' @examples

@@ -10,9 +10,6 @@
 #' hermaphrodite (\code{"H"}) or unknown (\code{"U"}) sex are left unchanged,
 #' consistent with \code{reportErrors = TRUE} mode, which does not flag them.
 #'
-#' @return A factor with levels: "M", "F", "H", and "U"
-#' representing the sex codes for the ids provided
-#'
 #' @param id character vector with unique identifier for an individual
 #' @param sire character vector with unique identifier for an
 #' individual's father (\code{NA} if unknown).
@@ -26,6 +23,9 @@
 #' @param recordStatus character vector with value of \code{"added"} or
 #' \code{"original"}, which indicates whether an animal was added or an
 #' original animal.
+#' @return A factor with levels: "M", "F", "H", and "U"
+#' representing the sex codes for the ids provided
+#'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

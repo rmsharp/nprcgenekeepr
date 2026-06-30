@@ -5,9 +5,9 @@
 
 #' Genetic Value Analysis Module - UI Function
 #'
-#' @return A \code{div} containing genetic value analysis UI.
-#'
 #' @param id character vector of length 1. Module namespace identifier.
+#'
+#' @return A \code{div} containing genetic value analysis UI.
 #'
 #' @seealso \code{\link{modGeneticValueServer}}
 #' @seealso \code{\link{geneDrop}} for gene dropping simulation.
@@ -134,10 +134,6 @@ modGeneticValueUI <- function(id) {
 
 #' Genetic Value Analysis Module - Server Function
 #'
-#' @return List with \code{geneticValues}, \code{topAnimals},
-#' \code{nAnalyzed}, \code{kinshipMatrix}, \code{founderStats},
-#' \code{maleFounders}, and \code{femaleFounders}.
-#'
 #' @param id character vector of length 1. Module namespace identifier.
 #' @param pedigree reactive returning pedigree data frame.
 #' @param speciesOverrides reactive returning the user-configurable species
@@ -146,6 +142,10 @@ modGeneticValueUI <- function(id) {
 #' \code{gestationDefault}), or \code{NULL}. Threaded into
 #' \code{\link{reportGV}}. Defaults to \code{reactive(NULL)}
 #' so no config file means bundled behavior.
+#'
+#' @return List with \code{geneticValues}, \code{topAnimals},
+#' \code{nAnalyzed}, \code{kinshipMatrix}, \code{founderStats},
+#' \code{maleFounders}, and \code{femaleFounders}.
 #'
 #' @seealso \code{\link{modGeneticValueUI}}
 #' @seealso \code{\link{modBreedingGroupsServer}} for using results.

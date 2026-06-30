@@ -24,6 +24,8 @@
 #'  be \eqn{n + n(n-1) / 2} and the number of columns will be 2 plus one
 #'  additional column for each kinship matrix (\eqn{2 + n}).
 #'
+#' @param kinshipMatrices list of square matrices of kinship values. May or
+#' may not have named rows and columns.
 #' @return Dataframe object with columns \code{id_1}, \code{id_2}, and one
 #' \code{kinship} column for each kinship matrix in \code{kinshipMatricies}
 #' where the first two columns contain the IDs of the
@@ -32,8 +34,6 @@
 #' In contrast to the kinship matrix. Each possible pairing of IDs appears
 #' once.
 #'
-#' @param kinshipMatrices list of square matrices of kinship values. May or
-#' may not have named rows and columns.
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

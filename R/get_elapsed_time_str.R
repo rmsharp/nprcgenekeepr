@@ -5,10 +5,10 @@
 #'
 #' Taken from github.com/rmsharp/rmsutilityr
 #'
+#' @param start_time a POSIXct time object
 #' @return A character vector describing the passage of time in hours, minutes,
 #' and seconds.
 #'
-#' @param start_time a POSIXct time object
 #' @importFrom stringi stri_c
 #' @export
 #' @examples

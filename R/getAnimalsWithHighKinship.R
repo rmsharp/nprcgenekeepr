@@ -3,10 +3,6 @@
 
 #' Forms a list of animal Ids and animals related to them
 #'
-#' @return A list of named character vectors where each name is an animal Id
-#' and the character vectors are made up of animals sharing a kinship value
-#' greater than our equal to the \code{threshold} value.
-#'
 #' @param kmat numeric matrix of pairwise kinship values. Rows and columns
 #' are named with animal IDs.
 #' @param ped dataframe that is the `Pedigree`. It contains pedigree
@@ -24,6 +20,10 @@
 #' @param minAge integer value indicating the minimum age to consider in group
 #' formation. Pairwise kinships involving an animal of this age or younger will
 #'  be ignored. Default is 1 year.
+#'
+#' @return A list of named character vectors where each name is an animal Id
+#' and the character vectors are made up of animals sharing a kinship value
+#' greater than our equal to the \code{threshold} value.
 #'
 #' @export
 #' @examples

@@ -5,13 +5,13 @@
 #'
 #' Extracts genotype data if available otherwise NULL is returned.
 #'
+#' @param ped the pedigree information in datatable format
 #' @return A data.frame with the columns \code{id}, \code{first}, and
 #' \code{second} extracted from a pedigree object (a data.frame) containing
 #' genotypic data.
 #' If the pedigree object does not contain genotypic data the \code{NULL} is
 #' returned.
 #'
-#' @param ped the pedigree information in datatable format
 #' @export
 #' @examples
 #' ## We usually define `n` to be >= 1000

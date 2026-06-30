@@ -9,9 +9,9 @@
 #' This function is not exported because it is not general purpose and
 #' is missing several defensive programming measures.
 #'
-#' @return A character vector of potential dates in \%Y-\%m-\%d format.
-#'
 #' @param dates character vector of potential dates
+#'
+#' @return A character vector of potential dates in \%Y-\%m-\%d format.
 #'
 #' @importFrom stringi stri_detect_regex stri_sub stri_c
 #'

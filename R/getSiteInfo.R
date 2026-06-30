@@ -3,6 +3,8 @@
 
 #' Get site information
 #'
+#' @param expectConfigFile logical parameter when set to \code{FALSE}, no
+#' configuration is looked for. Default value is \code{TRUE}.
 #' @return A list of site specific information used by the application.
 #'
 #' Currently this returns the following character strings in a named list.
@@ -20,8 +22,6 @@
 #'   \item \code{queryName} -- is "demographics"
 #' }
 #'
-#' @param expectConfigFile logical parameter when set to \code{FALSE}, no
-#' configuration is looked for. Default value is \code{TRUE}.
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

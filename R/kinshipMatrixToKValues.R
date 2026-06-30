@@ -25,6 +25,8 @@
 #'  be \eqn{n + n(n-1) / 2} and the number of columns will be 3.
 #'
 #'
+#' @param kinshipMatrix square kinship matrix. May or may not have named
+#' rows and columns.
 #' @return data.frame object with columns \code{id_1}, \code{id_2}, and
 #' \code{kinship} where the first two columns contain the IDs of the
 #' individuals in the kinship matrix provided to the function and the
@@ -32,8 +34,6 @@
 #' In contrast to the kinship matrix. Each possible pairing of IDs appears
 #' once.
 #'
-#' @param kinshipMatrix square kinship matrix. May or may not have named
-#' rows and columns.
 #' @importFrom data.table as.data.table
 #' @export
 #' @examples

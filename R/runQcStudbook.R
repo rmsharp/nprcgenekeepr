@@ -27,6 +27,8 @@
 #' @seealso \code{\link{processQcStudbookResult}} for result processing
 #' @seealso \code{\link{modInputServer}} for Shiny module integration
 #'
+#' @importFrom futile.logger flog.debug
+#' @export
 #' @examples
 #' \dontrun{
 #' data("pedGood", package = "nprcgenekeepr")
@@ -36,8 +38,6 @@
 #' }
 #' }
 #'
-#' @importFrom futile.logger flog.debug
-#' @export
 runQcStudbook <- function(ped,
                           minParentAge = 2.0,
                           reportChanges = FALSE) {

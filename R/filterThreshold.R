@@ -8,15 +8,15 @@
 #' Filters kinship values less than the specified threshold from a long-format
 #' table of kinship values.
 #'
-#' @return The kinship matrix with all kinship relationships below the
-#' threshold value removed.
-#'
 #' @param kin a dataframe with columns \code{id1}, \code{id2}, and
 #' \code{kinship}. This is the kinship data reformatted from a matrix,
 #' to a long-format table.
 #' @param threshold numeric value representing the minimum kinship level to be
 #' considered in group formation. Pairwise kinship below this level will be
 #' ignored.
+#' @return The kinship matrix with all kinship relationships below the
+#' threshold value removed.
+#'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

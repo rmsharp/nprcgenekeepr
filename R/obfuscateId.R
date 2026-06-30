@@ -10,12 +10,12 @@
 #' Because aliases are alphanumeric, they never contain a period ("."),
 #' honoring the ID rule enforced at data input by \code{qcStudbook}.
 #'
-#' @return A named character vector of aliases where the name is the original
-#' ID value.
-#'
 #' @param id character vector of IDs to be obfuscated (alias creation).
 #' @param size character length of each alias
 #' @param existingIds character vector of existing aliases to avoid duplication.
+#' @return A named character vector of aliases where the name is the original
+#' ID value.
+#'
 #' @importFrom stringi stri_c
 #' @export
 #' @examples

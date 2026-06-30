@@ -9,11 +9,11 @@
 #' \code{sex} an empty factor, so the returned schema does not depend on the
 #' number of ids supplied.
 #'
-#' @return Dataframe with Id, Sex, and Current Age
-#'
 #' @param ids character vector of animal Ids
 #' @param ped datatable that is the `Pedigree`. It contains pedigree
 #' information.
+#' @return Dataframe with Id, Sex, and Current Age
+#'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

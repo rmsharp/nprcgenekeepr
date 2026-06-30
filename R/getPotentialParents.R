@@ -6,11 +6,6 @@
 #'
 #' `r lifecycle::badge('experimental')`
 #'
-#' @return a list of list with each internal list being made up of an animal
-#' id (\code{id}), a vector of possible sires (\code{sire}) and a vector of
-#' possible dams (\code{dam}). The \code{id} must be defined while the
-#' vectors \code{sire} and \code{dam} can be empty.
-#'
 #' @param ped the pedigree information in data.frame format. Pedigree
 #' (req. fields: id, sire, dam, gen, population).
 #' This requires complete pedigree information.
@@ -36,6 +31,11 @@
 #' \code{gestation}) passed to \code{\link{getSpeciesGestation}} for the
 #' per-animal lookup when \code{maxGestationalPeriod} is \code{NULL}. Defaults
 #' to \code{NULL}, which uses the bundled \code{\link{speciesGestation}} table.
+#' @return a list of list with each internal list being made up of an animal
+#' id (\code{id}), a vector of possible sires (\code{sire}) and a vector of
+#' possible dams (\code{dam}). The \code{id} must be defined while the
+#' vectors \code{sire} and \code{dam} can be empty.
+#'
 #' @importFrom data.table as.data.table
 #' @importFrom stringi stri_sub
 #' @export

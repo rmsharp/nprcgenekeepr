@@ -10,13 +10,6 @@
 #' offline, deterministic testing via the \code{"dataframe"} and \code{"file"}
 #' sources.
 #'
-#' @return A normalized pedigree data.frame with columns \code{id}, \code{sex},
-#' \code{birth}, \code{death}, \code{exit}, \code{dam}, and \code{sire}. The
-#' \code{"labkey"} source returns \code{NULL} when its fetch fails (warning or
-#' error), preserving the fail-soft contract \code{getLkDirectRelatives()}
-#' relies on; the \code{"dataframe"} and \code{"file"} sources return the
-#' supplied or read pedigree and error on invalid input.
-#'
 #' @param sourceType one of \code{"labkey"} (pull demographics via
 #' \code{getDemographics()} and rename to the package's internal column names),
 #' \code{"dataframe"} (use a caller-supplied, already-normalized pedigree -- the
@@ -32,6 +25,13 @@
 #' \code{sire}, and \code{dam} columns.
 #' @param sep (\code{"file"} only) column separator passed to
 #' \code{getPedigree()} for delimited text files (default \code{","}).
+#' @return A normalized pedigree data.frame with columns \code{id}, \code{sex},
+#' \code{birth}, \code{death}, \code{exit}, \code{dam}, and \code{sire}. The
+#' \code{"labkey"} source returns \code{NULL} when its fetch fails (warning or
+#' error), preserving the fail-soft contract \code{getLkDirectRelatives()}
+#' relies on; the \code{"dataframe"} and \code{"file"} sources return the
+#' supplied or read pedigree and error on invalid input.
+#'
 #' @import futile.logger
 #' @importFrom stringi stri_c
 #' @noRd

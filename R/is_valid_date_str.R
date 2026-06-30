@@ -5,14 +5,14 @@
 #'
 #' Taken from github.com/rmsharp/rmsutilityr
 #'
-#' @return A logical value or \code{NA} indicating whether or not the provided
-#' character vector represented a valid date string.
-#'
 #' @param date_str character vector with 0 or more dates
 #' @param format character vector of length one having the date format
 #' @param optional parameter to \code{as.Date}. Logical value indicating
 #' to return NA (instead of signaling an error) if the format guessing does not
 #' succeed. Defaults to FALSE.
+#' @return A logical value or \code{NA} indicating whether or not the provided
+#' character vector represented a valid date string.
+#'
 #' @importFrom anytime anytime
 #' @export
 #' @examples

@@ -5,6 +5,14 @@
 #'
 #' Ensure parents are sufficiently older than offspring
 #'
+#' @param sb A dataframe containing a table of pedigree and demographic
+#' information.
+#' @param minParentAge numeric values to set the minimum age in years for
+#' an animal to have an offspring. Defaults to 2 years. The check is not
+#' performed for animals with missing birth dates.
+#' @param reportErrors logical value if TRUE will scan the entire file and
+#' make a list of all errors found. The errors will be returned in a
+#' list of list where each sublist is a type of error found.
 #' @return A dataframe containing rows for each animal where one or more
 #' parent was less than \code{minParentAge}. It contains all of the columns
 #' in the original \code{sb} dataframe with the following added columns:
@@ -17,14 +25,6 @@
 #'  \code{birth}.
 #' }
 #'
-#' @param sb A dataframe containing a table of pedigree and demographic
-#' information.
-#' @param minParentAge numeric values to set the minimum age in years for
-#' an animal to have an offspring. Defaults to 2 years. The check is not
-#' performed for animals with missing birth dates.
-#' @param reportErrors logical value if TRUE will scan the entire file and
-#' make a list of all errors found. The errors will be returned in a
-#' list of list where each sublist is a type of error found.
 #' @importFrom anytime anytime
 #' @importFrom lubridate dyears
 #' @export

@@ -6,10 +6,10 @@
 #' Gets direct ancestors from labkey \code{study} schema and \code{demographics}
 #' table.
 #'
+#' @param ids character vector with Ids.
 #' @return data.frame with pedigree structure having all of the direct ancestors
 #' for the Ids provided.
 #'
-#' @param ids character vector with Ids.
 #' @import futile.logger
 #' @importFrom stringi stri_c
 #' @export

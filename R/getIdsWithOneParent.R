@@ -4,9 +4,9 @@
 #' getIdsWithOneParent extracts IDs of animals pedigree without either a
 #' sire or a dam
 #'
+#' @param uPed a trimmed pedigree dataframe with uninformative founders removed.
 #' @return Character vector of all single parents
 #'
-#' @param uPed a trimmed pedigree dataframe with uninformative founders removed.
 #' @export
 #' @examples
 #' examplePedigree <- nprcgenekeepr::examplePedigree

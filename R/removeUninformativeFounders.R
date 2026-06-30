@@ -7,10 +7,10 @@
 #' pedigree are uninformative and can be removed from a pedigree without loss
 #' of information.
 #'
-#' @return A reduced pedigree.
-#'
 #' @param ped datatable that is the `Pedigree`. It contains pedigree
 #' information. The fields \code{sire} and \code{dam} are required.
+#' @return A reduced pedigree.
+#'
 #' @export
 #' @examples
 #' examplePedigree <- nprcgenekeepr::examplePedigree

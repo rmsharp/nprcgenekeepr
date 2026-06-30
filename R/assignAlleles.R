@@ -3,9 +3,6 @@
 
 #' Assign parent alleles randomly
 #'
-#' @return The original list \code{alleles} passed into the function with newly
-#' randomly assigned alleles to each \code{id} based on dam and sire genotypes.
-#'
 #' @param alleles a list with a list \code{alleles$alleles}, which is a list
 #' of list containing the alleles for each individual's sire and dam that have
 #' been assigned thus far and \code{alleles$counter} that is the counter used
@@ -16,6 +13,9 @@
 #' @param id character vector of length one containing the animal ID
 #' @param n integer indicating the number of iterations to simulate.
 #' Default is 5000.
+#' @return The original list \code{alleles} passed into the function with newly
+#' randomly assigned alleles to each \code{id} based on dam and sire genotypes.
+#'
 #' @export
 #' @examples
 #' alleles <- list(alleles = list(), counter = 1)

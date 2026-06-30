@@ -8,10 +8,6 @@
 #' and the \code{allSimParents} object to create a set of kinship matrices to
 #' be used in forming the \emph{Monte Carlo} estimates for the kinship values.
 #'
-#' @return A list of \code{n} lists with each internal list containing a
-#'         kinship matrix from simulated pedigrees of possible
-#'         parents for animals with unknown parents.
-#'
 #' @param ped The pedigree information in data.frame format
 #' @param allSimParents list made up of lists where the internal list
 #'        has the offspring ID, \code{id}, a vector of representative sires
@@ -23,6 +19,10 @@
 #' @param n integer value of the number of simulated pedigrees to generate.
 #' @param verbose logical vector of length one that indicates whether or not
 #'        to print out when an animal is missing a sire or a dam.
+#' @return A list of \code{n} lists with each internal list containing a
+#'         kinship matrix from simulated pedigrees of possible
+#'         parents for animals with unknown parents.
+#'
 #' @importFrom data.table as.data.table
 #' @export
 #' @examples

@@ -9,11 +9,11 @@
 #' and \code{second}. These checks are simply based on expected columns
 #' and legal domains.
 #'
+#' @param genotype dataframe with genotype data
 #' @return A logical value representing whether or not the data.frame passed in
 #' contains genotypic data that can be used. Non-standard column names are
 #' accepted for this assessment.
 #'
-#' @param genotype dataframe with genotype data
 #' @importFrom stringi stri_detect_fixed
 #' @export
 #' @examples

@@ -3,11 +3,11 @@
 
 #' checkChangedColsLst examines list for non-empty fields
 #'
+#' @param changedCols list with fields for each type of column change
+#' \code{qcStudbook}.
 #' @return Returns \code{NULL} if all fields are empty
 #' else the entire list is returned.
 #'
-#' @param changedCols list with fields for each type of column change
-#' \code{qcStudbook}.
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

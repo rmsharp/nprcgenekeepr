@@ -5,11 +5,11 @@
 #'
 #' Uses \code{examplePedigree} data structure to create an example data file
 #'
-#' @return Full path name of file saved.
-#'
 #' @param file character vector of length one providing the file name
 #' @param fileType character vector of length one with possible values of
 #' \code{"txt"}, \code{"csv"}, or \code{"xlsx"}. Default value is \code{"csv"}.
+#'
+#' @return Full path name of file saved.
 #'
 #' @importFrom utils write.table write.csv
 ## ## rmsutilityr create_wkbk

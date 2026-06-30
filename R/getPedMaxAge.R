@@ -3,10 +3,10 @@
 
 #' Get the maximum age of live animals in the pedigree
 #'
+#' @param ped dataframe with pedigree
 #' @return Numeric value representing the maximum age of animals in the
 #' pedigree.
 #'
-#' @param ped dataframe with pedigree
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

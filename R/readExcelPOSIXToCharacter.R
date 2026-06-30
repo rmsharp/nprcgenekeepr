@@ -3,9 +3,9 @@
 
 #' Read in Excel file and convert POSIX dates to character
 #'
+#' @param fileName character vector of temporary file path.
 #' @return A pedigree file compatible with others in this package.
 #'
-#' @param fileName character vector of temporary file path.
 #' @importFrom stringi stri_detect_fixed
 #' @importFrom readxl read_excel
 #' @noRd

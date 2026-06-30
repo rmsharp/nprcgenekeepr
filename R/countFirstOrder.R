@@ -9,11 +9,6 @@
 #' pedigree. If 'ids' is provided, the analysis is restricted to only the
 #' specified subset.
 #'
-#' @return A dataframe with column \code{id}, \code{parents}, \code{offspring},
-#' \code{siblings}, and \code{total}. A table of first-order relationship
-#' counts, broken down to indicate the number of parents, offspring, and
-#' siblings that are part of the subset under consideration.
-#'
 #' @param ped : `Pedigree`
 #'   Standardized pedigree information in a table.
 #' @param ids character vector of IDs or NULL
@@ -21,6 +16,11 @@
 #'   relationships will only be tallied for the listed IDs and will only
 #'   consider relationships within the subset. If NULL, the analysis will
 #'   include all IDs in the pedigree.
+#' @return A dataframe with column \code{id}, \code{parents}, \code{offspring},
+#' \code{siblings}, and \code{total}. A table of first-order relationship
+#' counts, broken down to indicate the number of parents, offspring, and
+#' siblings that are part of the subset under consideration.
+#'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

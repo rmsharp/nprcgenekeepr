@@ -5,9 +5,9 @@
 #'
 #' Assumes current date for calculating age.
 #'
+#' @param birth birth date(s)
 #' @return Age in years using the provided birthdate.
 #'
-#' @param birth birth date(s)
 #' @importFrom lubridate duration interval today
 #' @export
 #' @examples

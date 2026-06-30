@@ -3,13 +3,13 @@
 
 #' print.summary.nprcgenekeepr print.summary.nprcgenekeeprGV
 #'
-#' @return An object to send to the generic print function
-#'
-#' @rdname print
-#' @method print summary.nprcgenekeeprErr
 #' @param x object of class summary.nprcgenekeeprErr and class list
 #' @param ... additional arguments for the \code{summary.default} statement
+#' @return An object to send to the generic print function
+#'
 #' @importFrom stringi stri_c
+#' @rdname print
+#' @method print summary.nprcgenekeeprErr
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
@@ -36,8 +36,8 @@ print.summary.nprcgenekeeprErr <- function(x, ...) {
   # output and returns the reclassified object invisibly.
   invisible(txt)
 }
-#' @rdname print
 #' @return object to send to generic print function
+#' @rdname print
 #' @method print summary.nprcgenekeeprGV
 #' @export
 #' @examples

@@ -35,11 +35,6 @@
 #' (\code{p == 0}) are dropped, so the standard error refers to exactly the
 #' founder set \code{FG} is computed from.
 #'
-#' @return A single numeric value: the Monte Carlo sampling standard error
-#' of the colony founder-genome-equivalent estimate, on the same scale as
-#' \code{\link{calcFG}}. \code{NA} (with a warning) when a contributing founder
-#' has zero retention.
-#'
 #' @param ped the pedigree information in datatable format.  Pedigree
 #' (req. fields: id, sire, dam, gen, population).
 #' The pedigree must have no partial parentage (every animal has both parents
@@ -47,6 +42,11 @@
 #' @param alleles dataframe containing an \code{AlleleTable}: an \code{id}
 #' column, a \code{parent} column, and one column per gene-drop iteration.
 #' Produced by \code{geneDrop()}; the same input \code{\link{calcFG}} takes.
+#' @return A single numeric value: the Monte Carlo sampling standard error
+#' of the colony founder-genome-equivalent estimate, on the same scale as
+#' \code{\link{calcFG}}. \code{NA} (with a warning) when a contributing founder
+#' has zero retention.
+#'
 #' @seealso \code{\link{calcFG}}, \code{\link{calcFEFG}},
 #' \code{\link{calcRetention}}, \code{\link{calcGUSE}}, \code{\link{reportGV}}
 #' @export

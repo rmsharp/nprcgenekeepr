@@ -5,10 +5,6 @@
 #'
 #' Part of Relations
 #'
-#' @return A dataframe with columns \code{id1}, \code{id2}, \code{kinship},
-#' \code{relation}. It is a long-form table of pairwise kinships, with
-#' relationship categories included for each pair.
-#'
 #' @param kmat a numeric matrix of pairwise kinship coefficients.
 #' Rows and columns should be named with IDs.
 #' @param ped the pedigree information in datatable format with required
@@ -19,6 +15,10 @@
 #' @param updateProgress function or NULL. If this function is defined, it
 #' will be called during each iteration to update a
 #' \code{shiny::Progress} object.
+#' @return A dataframe with columns \code{id1}, \code{id2}, \code{kinship},
+#' \code{relation}. It is a long-form table of pairwise kinships, with
+#' relationship categories included for each pair.
+#'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

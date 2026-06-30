@@ -7,14 +7,14 @@
 #' Real values are truncated. Non-numerics are forced to minimum without
 #' warning.
 #'
-#' @return A vector of integers forced to be within the specified range.
-#'
 #' @param int value to be forced within a range
 #' @param minimum minimum integer value.
 #' @param maximum maximum integer value
 #' @param na if "min" then non-numerics are forced to the minimum in the range
 #' If "max" then non-numerics are forced to the maximum in the range.
 #' If not either "min" or "max" it is forced to "min".
+#' @return A vector of integers forced to be within the specified range.
+#'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

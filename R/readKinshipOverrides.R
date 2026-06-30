@@ -17,13 +17,13 @@
 #' coefficient \emph{f}, \strong{not} the coefficient of relatedness \emph{r}
 #' (= 2\emph{f} for non-inbred animals).
 #'
+#' @param fileName character vector of length one; path to the override file
+#' (typically the temporary \code{datapath} from a Shiny file upload).
+#' @param sep column separator for delimited text files (default \code{","}).
 #' @return A data frame of the rows read from \code{fileName} (typically with
 #' columns \code{id1}, \code{id2}, and \code{kinship}). Validate it with
 #' \code{\link{checkKinshipOverrides}} before use.
 #'
-#' @param fileName character vector of length one; path to the override file
-#' (typically the temporary \code{datapath} from a Shiny file upload).
-#' @param sep column separator for delimited text files (default \code{","}).
 #' @importFrom readxl excel_format
 #' @importFrom utils read.table
 #' @export

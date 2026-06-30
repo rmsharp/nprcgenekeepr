@@ -12,14 +12,14 @@
 #' the same breeding period. While this is probably not introducing a large
 #' error, it is not ideal.
 #'
-#' @return simulated pedigree in data.frame format with the id, sire, and dam.
-#'
 #' @param ped pedigree information in data.frame format
 #' @param allSimParents list made up of lists where the internal list
 #'        has the offspring ID \code{id}, a vector of representative sires
 #'        (\code{sires}), and a vector of representative dams (\code{dams}).
 #' @param verbose logical vector of length one that indicates whether or not
 #'        to print out when an animal is missing a sire or a dam.
+#' @return simulated pedigree in data.frame format with the id, sire, and dam.
+#'
 #' @importFrom data.table as.data.table
 #' @export
 makeSimPed <- function(ped, allSimParents, verbose = FALSE) {

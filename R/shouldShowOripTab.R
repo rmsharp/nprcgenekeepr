@@ -11,9 +11,6 @@
 #' (\code{center = "ONPRC"} when no configuration file exists) does NOT show the
 #' tab.
 #'
-#' @return Logical. TRUE if a real ONPRC configuration is active and the tab
-#'   should be shown, FALSE otherwise.
-#'
 #' @param center Character scalar naming the colony center, as returned by
 #'   \code{getSiteInfo()$center} (e.g. "ONPRC" or "SNPRC"). \code{NULL}, missing
 #'   values, or any value other than "ONPRC" yield FALSE.
@@ -21,6 +18,9 @@
 #'   configuration file is present (e.g.
 #'   \code{file.exists(getSiteInfo()$configFile)}). When FALSE the colony center
 #'   is the default fallback and the tab is not shown.
+#'
+#' @return Logical. TRUE if a real ONPRC configuration is active and the tab
+#'   should be shown, FALSE otherwise.
 #'
 #' @seealso \code{\link{getSiteInfo}} for the site configuration source and
 #'   \code{\link{shouldShowChangedColsTab}} for the sibling tab-visibility

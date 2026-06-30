@@ -3,10 +3,10 @@
 
 #' Get pedigree based on list of focal animals
 #'
-#' @return A pedigree file compatible with others in this package.
-#'
 #' @param fileName character vector of temporary file path.
 #' @param sep column separator in CSV file
+#' @return A pedigree file compatible with others in this package.
+#'
 #' @import futile.logger
 #' @importFrom readxl excel_format
 #' @importFrom utils read.table

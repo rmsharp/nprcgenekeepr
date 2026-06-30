@@ -3,10 +3,10 @@
 
 #' createPedSix makes the pedSix data object
 #'
-#' @return A specific pedigree object used for testing and examples.
-#'
 #' @param savePed logical value if TRUE the pedigree is saved into the
 #' packages \code{data} directory
+#' @return A specific pedigree object used for testing and examples.
+#'
 #' @importFrom lubridate mdy dyears ymd
 #' @importFrom stringi stri_c
 #' @noRd

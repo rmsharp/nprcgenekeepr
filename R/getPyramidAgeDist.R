@@ -13,12 +13,12 @@
 #' usage meaning that a person’s age should always be an integer that
 #' increases exactly on a birthday.
 #'
+#' @param ped dataframe with pedigree
 #' @return A pedigree with \code{status} column added, which describes the
 #' animal as \code{ALIVE} or \code{DECEASED} and a \code{age} column added,
 #' which has the animal's age in years or \code{NA} if it cannot be calculated.
 #' The \code{exit} column values have been remapped to valid dates or \code{NA}.
 #'
-#' @param ped dataframe with pedigree
 #' @importFrom anytime anytime
 #' @importFrom lubridate interval duration
 #' @importFrom utils read.csv

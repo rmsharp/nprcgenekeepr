@@ -8,8 +8,6 @@
 #' used for alias IDs (\code{size}), and the maximum number of days that the
 #' birthdate can be shifted (\code{maxDelta}).
 #'
-#' @return An obfuscated pedigree
-#'
 #' @param ped pedigree object
 #' @param size integer value indicating number of characters in alias IDs
 #' @param maxDelta integer value indicating maximum number of days that
@@ -18,6 +16,8 @@
 #' @param map logical if \code{TRUE} a list object is returned with the new
 #' pedigree and a named character vector with the names being the original IDs
 #' and the values being the new alias values. Defaults to \code{FALSE}.
+#' @return An obfuscated pedigree
+#'
 #' @importFrom lubridate is.Date
 #' @export
 #' @examples

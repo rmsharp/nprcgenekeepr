@@ -128,9 +128,9 @@ prefillGuardAllows <- function(current, lastAuto) {
 #' on the current pedigree, views a sortable results table, and downloads the
 #' results as CSV.
 #'
-#' @return A \code{div} object containing the Potential Parents UI.
-#'
 #' @param id character vector of length 1. Module namespace identifier.
+#'
+#' @return A \code{div} object containing the Potential Parents UI.
 #'
 #' @seealso \code{\link{modPotentialParentsServer}} for server logic.
 #' @seealso \code{\link{getPotentialParents}} for the underlying computation.
@@ -192,15 +192,6 @@ modPotentialParentsUI <- function(id) {
 #' \code{fromCenter} colony-origin field, or when no in-colony animal has an
 #' unknown parent.
 #'
-#' @return A list of reactive expressions:
-#' \itemize{
-#'   \item \code{potentialParents} - the raw \code{getPotentialParents} result
-#'     (or \code{NULL}).
-#'   \item \code{tableData} - the flattened results data.frame.
-#'   \item \code{gestationDefault} - the species-keyed default gestation window
-#'     (days) used to prefill the maximum-gestational-period input.
-#' }
-#'
 #' @param id character vector of length 1. Module namespace identifier.
 #' @param pedigree reactive returning the current pedigree data.frame.
 #' @param minParentAge numeric minimum age in years for an animal to be a
@@ -214,6 +205,15 @@ modPotentialParentsUI <- function(id) {
 #'   species is absent from \code{gestationTable}, passed through to the
 #'   gestation prefill; \code{NULL} (the default) keeps the built-in 210.
 #'   Supplied at boot from the user-configurable species overrides.
+#'
+#' @return A list of reactive expressions:
+#' \itemize{
+#'   \item \code{potentialParents} - the raw \code{getPotentialParents} result
+#'     (or \code{NULL}).
+#'   \item \code{tableData} - the flattened results data.frame.
+#'   \item \code{gestationDefault} - the species-keyed default gestation window
+#'     (days) used to prefill the maximum-gestational-period input.
+#' }
 #'
 #' @seealso \code{\link{modPotentialParentsUI}} for the user interface.
 #' @seealso \code{\link{getPotentialParents}} for the underlying computation.

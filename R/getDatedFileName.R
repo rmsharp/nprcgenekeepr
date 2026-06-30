@@ -3,10 +3,10 @@
 
 #' Returns a character vector with a file name having the date prepended
 #'
+#' @param filename character vector with name to use in file name
 #' @return A character string with a file name prepended with the date and time
 #' in YYYY-MM-DD_hh_mm_ss_basename format.
 #'
-#' @param filename character vector with name to use in file name
 #' @importFrom lubridate now
 #' @importFrom stringi stri_c stri_replace_all_fixed
 #' @export

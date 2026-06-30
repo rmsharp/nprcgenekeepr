@@ -12,25 +12,6 @@
 #' unknown but with a recorded origin) and all other animals are unaffected,
 #' and \code{\link{calcGU}} itself is unchanged.
 #'
-#' @return An object of class \code{nprcgenekeeprGV}: a list with elements
-#' \code{report} (a dataframe with the genetic value report, with animals
-#' ranked in order of descending value; it carries both a \code{gu} column and a
-#' \code{guSE} column -- the Monte Carlo sampling standard error of each genome
-#' uniqueness estimate, see \code{\link{calcGUSE}}), \code{kinship} (the kinship
-#' matrix), \code{gu} (a dataframe with a \code{gu} column of genome uniqueness
-#' values and a \code{guSE} column of their standard errors; \code{gu} and
-#' \code{guSE} are reported as 0 for unknown-origin both-unknown "Undetermined"
-#' animals, whose apparent uniqueness is an artifact of unknown parentage),
-#' \code{fe} (founder equivalents),
-#' \code{fg} (founder genome equivalents), \code{fgSE} (the Monte Carlo sampling
-#' standard error of \code{fg}, computed from the same gene drop; a single
-#' colony-level number, \code{NA} when a contributing founder is retained in
-#' zero gene-drop iterations -- see \code{\link{calcFGSE}}), \code{maleFounders}
-#' and
-#' \code{femaleFounders} (dataframes of the known male and female founder
-#' records), \code{nMaleFounders} and \code{nFemaleFounders} (the counts of
-#' those founders), and \code{total} (the total number of known founders).
-#'
 #' @param ped The pedigree information in data.frame format
 #' @param guIter Integer indicating the number of iterations for the gene-drop
 #'  analysis. Default is 1000 iterations
@@ -68,6 +49,25 @@
 #' named kinship cell; it does not suppress the \code{+ sexMean / 2}
 #' unknown-parent correction, which is kept for every animal missing one
 #' parent. See \code{\link{applyKinshipOverrides}}.
+#' @return An object of class \code{nprcgenekeeprGV}: a list with elements
+#' \code{report} (a dataframe with the genetic value report, with animals
+#' ranked in order of descending value; it carries both a \code{gu} column and a
+#' \code{guSE} column -- the Monte Carlo sampling standard error of each genome
+#' uniqueness estimate, see \code{\link{calcGUSE}}), \code{kinship} (the kinship
+#' matrix), \code{gu} (a dataframe with a \code{gu} column of genome uniqueness
+#' values and a \code{guSE} column of their standard errors; \code{gu} and
+#' \code{guSE} are reported as 0 for unknown-origin both-unknown "Undetermined"
+#' animals, whose apparent uniqueness is an artifact of unknown parentage),
+#' \code{fe} (founder equivalents),
+#' \code{fg} (founder genome equivalents), \code{fgSE} (the Monte Carlo sampling
+#' standard error of \code{fg}, computed from the same gene drop; a single
+#' colony-level number, \code{NA} when a contributing founder is retained in
+#' zero gene-drop iterations -- see \code{\link{calcFGSE}}), \code{maleFounders}
+#' and
+#' \code{femaleFounders} (dataframes of the known male and female founder
+#' records), \code{nMaleFounders} and \code{nFemaleFounders} (the counts of
+#' those founders), and \code{total} (the total number of known founders).
+#'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

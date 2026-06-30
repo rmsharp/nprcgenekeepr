@@ -5,9 +5,9 @@
 
 #' Age-Sex Pyramid Module - UI Function
 #'
-#' @return A \code{div} containing age-sex pyramid UI.
-#'
 #' @param id character vector of length 1. Module namespace identifier.
+#'
+#' @return A \code{div} containing age-sex pyramid UI.
 #'
 #' @seealso \code{\link{modPyramidServer}}
 #' @importFrom shiny NS div h3 fluidRow column wellPanel selectInput
@@ -73,10 +73,10 @@ modPyramidUI <- function(id) {
 
 #' Age-Sex Pyramid Module - Server Function
 #'
-#' @return List with \code{data}, \code{plot}, and \code{livingCount}.
-#'
 #' @param id character vector of length 1. Module namespace identifier.
 #' @param pedigreeData reactive returning pedigree data frame.
+#'
+#' @return List with \code{data}, \code{plot}, and \code{livingCount}.
 #'
 #' @seealso \code{\link{modPyramidUI}}
 #' @importFrom grDevices dev.off png

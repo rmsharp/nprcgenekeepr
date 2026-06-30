@@ -3,9 +3,9 @@
 
 #' Is vector empty or all NA values.
 #'
+#' @param x vector of any type.
 #' @return \code{TRUE} if x is a zero-length vector else \code{FALSE}.
 #'
-#' @param x vector of any type.
 #' @noRd
 isEmpty <- function(x) {
   x <- x[!is.na(x)]

@@ -10,10 +10,10 @@
 #' Every row, including the last, is still read correctly, so the warning is
 #' noise; all other warnings are left to propagate to the caller.
 #'
-#' @return The value of \code{expr}.
-#'
 #' @param expr expression to evaluate, typically a \code{read.table} or
 #' \code{read.csv} call.
+#' @return The value of \code{expr}.
+#'
 #' @noRd
 muffleIncompleteFinalLine <- function(expr) {
   withCallingHandlers(

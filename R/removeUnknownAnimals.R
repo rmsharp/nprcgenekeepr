@@ -4,9 +4,9 @@
 #' removeUnknownAnimals Removes unknown animals added to pedigree that serve as
 #' placeholders for unknown parents
 #'
+#' @param ped pedigree dataframe
 #' @return Pedigree with unknown animals removed
 #'
-#' @param ped pedigree dataframe
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

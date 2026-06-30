@@ -6,10 +6,10 @@
 #' Checks the \code{NETRC} environment variable first, then the home directory
 #' (\code{.netrc} on non-Windows, \code{_netrc} on Windows).
 #'
-#' @return Logical; \code{TRUE} when a netrc file is found.
 #' @param homeDir home directory to search for a netrc file.
 #' @param sysname operating-system name as from
 #' \code{Sys.info()[["sysname"]]}.
+#' @return Logical; \code{TRUE} when a netrc file is found.
 #' @importFrom stringi stri_detect_fixed
 #' @noRd
 hasNetrc <- function(homeDir = Sys.getenv("HOME"),

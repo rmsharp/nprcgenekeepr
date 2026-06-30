@@ -8,11 +8,11 @@
 #' Appends the rows of df2 to df1, can handle cases where df2
 #' has a subset of the columns of df1
 #'
+#' @param df1 the target dataframe to append to.
+#' @param df2 the the donor dataframe information should be appended from
 #' @return The appended dataframe with \code{NA} inserted into columns as
 #' needed.
 #'
-#' @param df1 the target dataframe to append to.
-#' @param df2 the the donor dataframe information should be appended from
 #' @noRd
 rbindFill <- function(df1, df2) {
   # Find columns in df1 not in df2

@@ -28,11 +28,11 @@
 #' Defaults to \code{2}.
 #' @return a numeric vector of minimum breeding ages in years, the same length
 #' as the longer of \code{species} and \code{sex}.
+#' @export
 #' @examples
 #' getSpeciesMinBreedingAge("RHESUS", "M")
 #' getSpeciesMinBreedingAge("RHESUS", "F")
 #' getSpeciesMinBreedingAge(c("RHESUS", "UNICORN"), c("M", "F"))
-#' @export
 getSpeciesMinBreedingAge <- function(species, sex, breedingTable = NULL,
                                      default = 2.0) {
   if (is.null(breedingTable)) {

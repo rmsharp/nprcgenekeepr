@@ -9,13 +9,13 @@
 #'
 #' Returns an error if the table has duplicate IDs with differing data.
 #'
-#' @return Pedigree object with all duplicates removed.
-#'
 #' @param ped dataframe that is the `Pedigree`. It contains pedigree
 #' information. The \code{id} column is required.
 #' @param reportErrors logical value if TRUE will scan the entire file and
 #' make a list of all errors found. The errors will be returned in a
 #' list of list where each sublist is a type of error found.
+#' @return Pedigree object with all duplicates removed.
+#'
 #' @export
 #' @examples
 #' ped <- nprcgenekeepr::smallPed

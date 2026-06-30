@@ -5,9 +5,13 @@
 #'
 #' This is a thin wrapper around \code{labkey.selectRows()}.
 #'
+#' @param colSelect (optional) a vector of comma separated strings specifying
+#' which columns of a dataset or view to import
 #' @return A data.frame containing LabKey demographic data with the columns
 #' specified in the single parameter provided.
 #'
+#' @importFrom Rlabkey labkey.selectRows
+#' @export
 #' @examples
 #' \donttest{
 #' ## Needs a connection to a LabKey server
@@ -31,10 +35,6 @@
 #' )
 #' }
 #'
-#' @param colSelect (optional) a vector of comma separated strings specifying
-#' which columns of a dataset or view to import
-#' @importFrom Rlabkey labkey.selectRows
-#' @export
 getDemographics <- function(colSelect = NULL) {
   siteInfo <- getSiteInfo()
   setLabKeyDefaults(siteInfo)

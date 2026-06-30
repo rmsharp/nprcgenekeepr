@@ -20,17 +20,17 @@
 #'
 #' This does not work if the pedigree does not have all parent IDs as ego IDs.
 #' }
+#' @param id character vector with unique identifier for an individual
+#' @param sire character vector with unique identifier for an
+#' individual's father (\code{NA} if unknown).
+#' @param dam character vector with unique identifier for an
+#' individual's mother (\code{NA} if unknown).
 #' @return An integer vector indication the generation numbers for each id,
 #' starting at 0 for individuals lacking IDs for both parents. Any id that
 #' cannot be placed --- e.g. when the pedigree contains a cycle or references
 #' a parent ID that is not itself present as an ego ID --- is returned as
 #' \code{NA} and triggers a \code{warning} naming the affected ids.
 #'
-#' @param id character vector with unique identifier for an individual
-#' @param sire character vector with unique identifier for an
-#' individual's father (\code{NA} if unknown).
-#' @param dam character vector with unique identifier for an
-#' individual's mother (\code{NA} if unknown).
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

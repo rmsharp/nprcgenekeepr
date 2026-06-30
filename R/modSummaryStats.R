@@ -11,9 +11,9 @@ utils::globalVariables(c("x", "y"))
 #' Creates user interface for summary statistics display including
 #' histograms and box plots for mean kinship, z-scores, and genome uniqueness.
 #'
-#' @return A \code{div} object containing summary statistics UI.
-#'
 #' @param id character vector of length 1. Module namespace identifier.
+#'
+#' @return A \code{div} object containing summary statistics UI.
 #'
 #' @seealso \code{\link{modSummaryStatsServer}} for server logic.
 #' @importFrom shiny NS div h3 fluidRow column br downloadButton plotOutput
@@ -247,21 +247,6 @@ modSummaryStatsUI <- function(id) {
 #'   \item Export functionality for kinship matrix, founders, and relationships
 #' }
 #'
-#' @return A list with reactive components:
-#' \itemize{
-#'   \item \code{summaryData} - Summary statistics (nAnimals, meanMK, meanGU)
-#'   \item \code{relationships} - Pairwise relationship designations from
-#'     \code{convertRelationships()}. When \code{kinshipOverrides} are supplied,
-#'     a logical \code{overridden} column flags the pairs whose kinship value
-#'     came from an override.
-#'   \item \code{relationClasses} - Relationship class frequency table from
-#'     \code{makeRelationClassesTable()}
-#'   \item \code{firstOrderCounts} - First-order relative counts per animal from
-#'     \code{countFirstOrder()}
-#'   \item \code{mkSummary} - Six-number summary of mean kinship
-#'   \item \code{guSummary} - Six-number summary of genome uniqueness
-#' }
-#'
 #' @param id character vector of length 1. Module namespace identifier.
 #' @param geneticValues reactive returning genetic value analysis results.
 #'   Must be a data frame with columns \code{id}, \code{meanKinship}, and
@@ -286,6 +271,21 @@ modSummaryStatsUI <- function(id) {
 #'   structure, not from the kinship value). Overridden pairs are flagged
 #'   with a logical \code{overridden} column in the relationship table.
 #'   \code{NULL} (the default) is a no-op.
+#'
+#' @return A list with reactive components:
+#' \itemize{
+#'   \item \code{summaryData} - Summary statistics (nAnimals, meanMK, meanGU)
+#'   \item \code{relationships} - Pairwise relationship designations from
+#'     \code{convertRelationships()}. When \code{kinshipOverrides} are supplied,
+#'     a logical \code{overridden} column flags the pairs whose kinship value
+#'     came from an override.
+#'   \item \code{relationClasses} - Relationship class frequency table from
+#'     \code{makeRelationClassesTable()}
+#'   \item \code{firstOrderCounts} - First-order relative counts per animal from
+#'     \code{countFirstOrder()}
+#'   \item \code{mkSummary} - Six-number summary of mean kinship
+#'   \item \code{guSummary} - Six-number summary of genome uniqueness
+#' }
 #'
 #' @seealso \code{\link{modSummaryStatsUI}} for the user interface
 #' @seealso \code{\link{convertRelationships}} for relationship classification

@@ -11,8 +11,13 @@
 #' integer encoding consistent even when the allele columns are supplied as
 #' factors (a factor would otherwise be indexed by its integer codes).
 #'
+#' @param ped pedigree dataframe. \code{ped} is to be provided by
+#' \code{qcStudbook} so it is not checked.
+#' @param genotype genotype dataframe. \code{genotype} is to be provided by
+#' \code{checkGenotypeFile} so it is not checked.
 #' @return A pedigree object with genotype data added.
 #'
+#' @export
 #' @examples
 #' library(nprcgenekeepr)
 #' rhesusPedigree <- nprcgenekeepr::rhesusPedigree
@@ -22,11 +27,6 @@
 #'   genotype = rhesusGenotypes
 #' )
 #'
-#' @param ped pedigree dataframe. \code{ped} is to be provided by
-#' \code{qcStudbook} so it is not checked.
-#' @param genotype genotype dataframe. \code{genotype} is to be provided by
-#' \code{checkGenotypeFile} so it is not checked.
-#' @export
 addGenotype <- function(ped, genotype) {
   genotypeNames <- names(genotype)[2L:3L]
   # Coerce the two allele columns to character so the name-keyed genoDict is

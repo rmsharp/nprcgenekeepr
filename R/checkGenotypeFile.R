@@ -6,11 +6,11 @@
 #' Checks to ensure the content and structure are appropriate for a genotype
 #' file. These checks are simply based on expected columns and legal domains.
 #'
+#' @param genotype dataframe with genotype data
 #' @return A genotype file that has been checked to ensure the column types and
 #' number required are present. The returned genotype file has the first column
 #' name forced to "id".
 #'
-#' @param genotype dataframe with genotype data
 #' @importFrom stringi stri_c stri_detect_fixed stri_detect_regex
 #' @export
 #' @examples

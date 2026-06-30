@@ -23,13 +23,13 @@
 #' never read from or written to the package sources; keep it in the
 #' environment, the configuration file, or the netrc file only.
 #'
+#' @param siteInfo list of site information as returned by
+#' \code{\link{getSiteInfo}}. The elements used are \code{baseUrl},
+#' \code{configFile}, \code{homeDir}, and \code{sysname}.
 #' @return Invisibly, a list with elements \code{method} (one of
 #' \code{"apiKey"} or \code{"netrc"}) and \code{baseUrl}. Stops with an error
 #' when no credential can be found.
 #'
-#' @param siteInfo list of site information as returned by
-#' \code{\link{getSiteInfo}}. The elements used are \code{baseUrl},
-#' \code{configFile}, \code{homeDir}, and \code{sysname}.
 #' @importFrom Rlabkey labkey.setDefaults
 #' @export
 #' @examples

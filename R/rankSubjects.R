@@ -7,12 +7,12 @@
 #' Adds a column to \code{rpt} containing integers from 1 to nrow, and provides
 #' a value designation for each animal of "high value" or "low value"
 #'
-#' @return A list of dataframes with value and ranking information added.
-#'
 #' @param rpt a list of data.frame (req. colnames: value) containing genetic
 #' value data for the population. Dataframes separate out those animals that
 #' are imports, those that have high genome uniqueness (gu > 10%), those that
 #' have low mean kinship (mk < 0.25), and the remainder.
+#'
+#' @return A list of dataframes with value and ranking information added.
 #'
 #' @export
 #' @examples

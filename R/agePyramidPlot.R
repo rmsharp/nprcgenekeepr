@@ -3,8 +3,6 @@
 
 #' Form age pyramid plot
 #'
-#' @return The return value of par("mar") when the function was called.
-#'
 #' @param males integer vector with the number of males in age groups
 #' corresponding to the position in the vector
 #' @param females integer vector with the number of females in age groups
@@ -21,6 +19,8 @@
 #' of bars for the \code{ageLabels} in user units
 #' @param currentDate POSIXct date object indicating the date corresponding to
 #' the date the pedigree census occurred.
+#' @return The return value of par("mar") when the function was called.
+#'
 #' @importFrom lubridate year month day
 #' @importFrom stringi stri_c
 #' @importFrom plotrix pyramid.plot

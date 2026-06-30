@@ -7,8 +7,6 @@
 #' \code{age}. This needs to be augmented to allow pedigrees structures that
 #' are provided by the nprcgenekeepr package.
 #'
-#' @return The return value of par("mar") when the function was called.
-#'
 #' @param ped dataframe with pedigree data.
 #' @param binWidth numeric bin width for age groups (default 2).
 #' @param ageUnit character either "years" (default) or "months".
@@ -17,6 +15,8 @@
 #' @param showCounts logical whether to show count values on bars
 #'   (default TRUE).
 #' @param ageLabelCex numeric expansion factor for age labels (default 1.0).
+#' @return The return value of par("mar") when the function was called.
+#'
 #' @importFrom lubridate now
 #' @importFrom plotrix color.gradient pyramid.plot
 #' @importFrom stringi stri_c

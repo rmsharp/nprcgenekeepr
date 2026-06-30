@@ -5,9 +5,6 @@
 #'
 #' Optionally find the number that are part of the population of interest.
 #'
-#' @return A dataframe with at least \code{id} and \code{totalOffspring}
-#' required and \code{livingOffspring} optional.
-#'
 #' @param probands character vector of egos for which offspring should be
 #' counted.
 #' @param ped the pedigree information in datatable format.  Pedigree
@@ -16,6 +13,9 @@
 #' @param considerPop logical value indication whether or not the number of
 #' offspring that are part of the focal population are to be counted?
 #' Default is \code{FALSE}.
+#' @return A dataframe with at least \code{id} and \code{totalOffspring}
+#' required and \code{livingOffspring} optional.
+#'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

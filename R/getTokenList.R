@@ -3,10 +3,10 @@
 
 #' Gets tokens from character vector of lines
 #'
+#' @param lines character vector with text from configuration file
 #' @return First right and left space trimmed token from first character vector
 #' element.
 #'
-#' @param lines character vector with text from configuration file
 #' @importFrom stringi stri_replace_all_fixed stri_replace_all_regex
 #' @importFrom stringi stri_trim_both stri_split_regex
 #' @export

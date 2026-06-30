@@ -10,12 +10,12 @@
 #'
 #'     \code{available[[i]] <- setdiff(available[[i]], kin[[id]])}
 #'
-#' @return A dataframe with kinships in long form after adding a row for each
-#' animal without a relative.
-#'
 #' @param kin dataframe with kinship values
 #' @param candidates character vector of IDs of the animals available for
 #' use in the group.
+#' @return A dataframe with kinships in long form after adding a row for each
+#' animal without a relative.
+#'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
