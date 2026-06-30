@@ -32,7 +32,7 @@
 #' relies on; the \code{"dataframe"} and \code{"file"} sources return the
 #' supplied or read pedigree and error on invalid input.
 #'
-#' @import futile.logger
+#' @importFrom futile.logger flog.debug
 #' @importFrom stringi stri_c
 #' @noRd
 getPedigreeSource <- function(sourceType = c("labkey", "dataframe", "file"),

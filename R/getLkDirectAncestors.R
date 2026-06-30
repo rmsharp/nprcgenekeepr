@@ -10,7 +10,7 @@
 #' @return data.frame with pedigree structure having all of the direct ancestors
 #' for the Ids provided.
 #'
-#' @import futile.logger
+#' @importFrom futile.logger flog.debug
 #' @importFrom stringi stri_c
 #' @export
 #' @examples
