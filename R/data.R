@@ -1,3 +1,6 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
 #' Example nprcgenekeepr configuration file (loadable)
 #'
 #' A loadable version of the example
@@ -121,8 +124,6 @@
 #' \code{dam} alternating.
 #' }
 "lacy1989PedAlleles"
-## Copyright(c) 2017-2026 R. Mark Sharp
-## This file is part of nprcgenekeepr
 #' Gene-drop alleles example (baboon pedigree)
 #'
 #' A dataframe created by the \code{geneDrop} function.

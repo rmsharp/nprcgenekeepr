@@ -1,7 +1,8 @@
-#' Force dataframe columns to character
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Force dataframe columns to character
+#'
 #' Converts designated columns of a dataframe to character. Defaults to
 #' converting columns \code{id}, \code{sire}, and \code{dam}.
 #'

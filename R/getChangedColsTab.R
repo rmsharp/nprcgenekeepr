@@ -1,7 +1,7 @@
-#' getChangedColsTab skeleton of list of errors
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' getChangedColsTab skeleton of list of errors
 #'
 #' @return HTML formatted error list
 #'

@@ -1,7 +1,7 @@
-#' Load user-configurable species reproductive-parameter overrides
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Load user-configurable species reproductive-parameter overrides
 #'
 #' Reads the optional species-override settings from the user's site
 #' configuration file (\code{~/.nprcgenekeepr_config}, or

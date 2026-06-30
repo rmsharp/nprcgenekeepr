@@ -1,7 +1,8 @@
-#' Reformat names of observed genotype columns
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Reformat names of observed genotype columns
+#'
 ##
 #' This is not a good fix. A better solution is to avoid the problem.
 #' Currently qcStudbook() blindly changes all of the column names by removing

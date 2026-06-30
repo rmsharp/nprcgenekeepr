@@ -1,7 +1,8 @@
-#' Determine whether an Rlabkey-usable netrc file is present
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Determine whether an Rlabkey-usable netrc file is present
+#'
 #' Checks the \code{NETRC} environment variable first, then the home directory
 #' (\code{.netrc} on non-Windows, \code{_netrc} on Windows).
 #'

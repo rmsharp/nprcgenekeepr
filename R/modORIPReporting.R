@@ -1,9 +1,9 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
 # ORIP Reporting Shiny Module
 
 #' ORIP Reporting Module - UI Function
-#'
-## Copyright(c) 2017-2026 R. Mark Sharp
-## This file is part of nprcgenekeepr
 #'
 #' Creates user interface for ORIP (Office of Research Infrastructure Programs)
 #' reporting. This module will contain formatted reports suitable for submission

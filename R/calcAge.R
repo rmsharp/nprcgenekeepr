@@ -1,7 +1,8 @@
-#' Calculate animal ages
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Calculate animal ages
+#'
 #' Part of Pedigree Curation
 #'
 #' Given vectors of birth and exit dates, calculate an individuals age. If no

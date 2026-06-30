@@ -1,7 +1,8 @@
-#' Shared founder-contribution computation for calcFE/calcFG/calcFEFG
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Shared founder-contribution computation for calcFE/calcFG/calcFEFG
+#'
 #' Part of the Genetic Value Analysis
 #'
 #' Computes the founder mean-contribution vector \code{p} used by

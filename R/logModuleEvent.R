@@ -1,7 +1,7 @@
-#' Log Module Events
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Log Module Events
 #'
 #' Centralized logging function for Shiny module events. Provides consistent
 #' logging format across all modules with configurable log levels.

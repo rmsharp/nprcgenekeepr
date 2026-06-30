@@ -1,7 +1,8 @@
-#' Add back single parents trimmed pedigree
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Add back single parents trimmed pedigree
+#'
 #' Uses the \code{ped} dataframe, which has full complement of parents and the
 #' \code{uPed} dataframe, which has all uninformative parents removed to
 #' add back single parents to the \code{uPed} dataframe where one parent is

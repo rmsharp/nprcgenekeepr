@@ -1,7 +1,8 @@
-#' obfuscateDate adds a random number of days bounded by plus/minus max delta
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' obfuscateDate adds a random number of days bounded by plus/minus max delta
+#'
 #' Get the base_date add a random number of days taken from a uniform
 #' distribution bounded by -max_delta and max_delta.
 #' Insure the resulting date is as least as large as the min_date.

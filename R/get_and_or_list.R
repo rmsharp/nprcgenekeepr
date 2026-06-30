@@ -1,8 +1,8 @@
-#' Returns a one element character string with correct punctuation for
-#' a list made up of the elements of the character vector argument
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Returns a one element character string with correct punctuation for
+#' a list made up of the elements of the character vector argument
 #'
 #' @return A character vector of length one containing the a single correctly
 #' punctuated character string that list each element in the first arguments

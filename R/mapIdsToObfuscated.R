@@ -1,7 +1,8 @@
-#' Map IDs to Obfuscated IDs
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Map IDs to Obfuscated IDs
+#'
 #' This is not robust as it fails if all IDs are found not within \code{map}.
 #'
 #' @return A dataframe or vector with original IDs replaced by their obfuscated

@@ -1,7 +1,8 @@
-#' Validate a kinship overrides table
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Validate a kinship overrides table
+#'
 #' Checks the structure and domain of an outside-information kinship override
 #' table. The table supplies pairwise kinship coefficients
 #' (\code{id1}, \code{id2}, \code{kinship}) that

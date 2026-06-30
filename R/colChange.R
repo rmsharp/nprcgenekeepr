@@ -1,7 +1,7 @@
-#' colChange internal function to describe column names transformation
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' colChange internal function to describe column names transformation
 #'
 #' @return Description of column name changes
 #'

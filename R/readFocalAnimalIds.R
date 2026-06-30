@@ -1,7 +1,7 @@
-#' Read a list of focal animal Ids from a file
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Read a list of focal animal Ids from a file
 #'
 #' Internal helper shared by \code{getFocalAnimalPed} and
 #' \code{getFocalAnimalPedFromFile}: reads the first column of a file (CSV,

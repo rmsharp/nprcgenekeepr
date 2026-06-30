@@ -1,7 +1,8 @@
-#' Calculates genome uniqueness for each ID that is part of the population
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Calculates genome uniqueness for each ID that is part of the population
+#'
 #' Part of Genetic Value Analysis
 #'
 #' The following functions calculate genome uniqueness according to the equation

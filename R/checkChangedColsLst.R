@@ -1,7 +1,7 @@
-#' checkChangedColsLst examines list for non-empty fields
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' checkChangedColsLst examines list for non-empty fields
 #'
 #' @return Returns \code{NULL} if all fields are empty
 #' else the entire list is returned.

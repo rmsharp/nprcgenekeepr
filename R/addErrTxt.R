@@ -1,7 +1,8 @@
-#' Concatenates any errors from nprcgenekeeprErr into narrative form
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Concatenates any errors from nprcgenekeeprErr into narrative form
+#'
 
 #' @return Error from nprcgenekeepr
 #'

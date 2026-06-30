@@ -1,7 +1,7 @@
-#' summary.nprcgenekeeprErr Summary function for class nprcgenekeeprErr
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' summary.nprcgenekeeprErr Summary function for class nprcgenekeeprErr
 #'
 #' @return Object of class summary.nprcgenekeeprErr
 #'

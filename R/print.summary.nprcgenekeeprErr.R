@@ -1,7 +1,7 @@
-#' print.summary.nprcgenekeepr print.summary.nprcgenekeeprGV
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' print.summary.nprcgenekeepr print.summary.nprcgenekeeprGV
 #'
 #' @return An object to send to the generic print function
 #'

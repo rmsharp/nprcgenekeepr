@@ -1,7 +1,7 @@
-#' Get the direct relatives of selected animals from a pedigree file
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Get the direct relatives of selected animals from a pedigree file
 #'
 #' File-sourced sibling of \code{\link{getLkDirectRelatives}}: reads a pedigree
 #' file through the internal \code{getPedigreeSource()} \code{"file"} provider

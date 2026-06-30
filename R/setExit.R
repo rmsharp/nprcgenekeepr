@@ -1,7 +1,7 @@
-#' Sets the exit date, if there is no exit column in the table
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Sets the exit date, if there is no exit column in the table
 #'
 #' Part of Pedigree Curation
 #'

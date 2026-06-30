@@ -1,7 +1,8 @@
-#' Evidence-based advice on the number of gene-drop iterations a pedigree needs
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Evidence-based advice on the number of gene-drop iterations a pedigree needs
+#'
 #' Part of Genetic Value Analysis
 #'
 #' Genome uniqueness (\code{\link{calcGU}}) is the only ranked Genetic Value

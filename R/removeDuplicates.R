@@ -1,7 +1,8 @@
-#' Remove duplicate records from pedigree
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Remove duplicate records from pedigree
+#'
 #' Part of Pedigree Curation
 #'
 #' Returns an updated dataframe with duplicate rows removed.

@@ -1,7 +1,8 @@
-#' Returns \code{TRUE} if every member of the vector is \code{TRUE}.
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Returns \code{TRUE} if every member of the vector is \code{TRUE}.
+#'
 #' Part of Relations
 #' @return \code{TRUE} if every member of the vector is \code{TRUE} else it
 #' returns \code{FALSE}.

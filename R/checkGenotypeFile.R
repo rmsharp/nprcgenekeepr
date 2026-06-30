@@ -1,7 +1,8 @@
-#' Check genotype file
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Check genotype file
+#'
 #' Checks to ensure the content and structure are appropriate for a genotype
 #' file. These checks are simply based on expected columns and legal domains.
 #'

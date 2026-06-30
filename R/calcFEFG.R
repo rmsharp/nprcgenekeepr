@@ -1,7 +1,8 @@
-#' Calculates Founder Equivalents and Founder Genome Equivalents
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Calculates Founder Equivalents and Founder Genome Equivalents
+#'
 #' Part of the Genetic Value Analysis
 #'
 #' @return The list containing the founder equivalents,

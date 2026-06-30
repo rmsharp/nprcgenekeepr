@@ -1,7 +1,7 @@
-#' Filters a genetic value report down to only the specified animals
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Filters a genetic value report down to only the specified animals
 #'
 #' @return A copy of report specific to the specified animals.
 #'

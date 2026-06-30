@@ -1,7 +1,8 @@
-#' Count first-order relatives
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Count first-order relatives
+#'
 #' Part of Relations
 #'
 #' Tallies the number of first-order relatives for each member of the provided

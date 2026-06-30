@@ -1,9 +1,9 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
 # Breeding Group Formation Shiny Module
 
 #' Breeding Groups Module - UI Function
-#'
-## Copyright(c) 2017-2026 R. Mark Sharp
-## This file is part of nprcgenekeepr
 #'
 #' @return A \code{div} containing breeding group formation UI.
 #'

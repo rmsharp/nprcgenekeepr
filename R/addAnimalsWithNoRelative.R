@@ -1,7 +1,7 @@
-#' Adds an NA value for all animals without a relative
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Adds an NA value for all animals without a relative
 #'
 #' This allows \code{kin} to be used with \code{setdiff} when there are no
 #' relatives otherwise an error would occur because

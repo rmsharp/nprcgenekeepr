@@ -1,7 +1,7 @@
-#' Get pedigree from file
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Get pedigree from file
 #'
 #' @return A pedigree file compatible with others in this package.
 #'

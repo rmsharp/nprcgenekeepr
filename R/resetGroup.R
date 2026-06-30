@@ -1,7 +1,8 @@
-#' Update or add the "group" field of a Pedigree.
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Update or add the "group" field of a Pedigree.
+#'
 #' Part of the pedigree filtering toolset
 #'
 #' @return An updated pedigree with the \code{group} column added or updated

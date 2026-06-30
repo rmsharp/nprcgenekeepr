@@ -1,7 +1,8 @@
-#' Read an optional scalar token from the nprcgenekeepr configuration file
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Read an optional scalar token from the nprcgenekeepr configuration file
+#'
 #' Unlike \code{getParamDef}, which stops when a parameter is absent, this
 #' performs a soft lookup of an optional configuration entry (the
 #' \code{getConfigApiKey} pattern). Used for the optional species-override keys

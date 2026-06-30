@@ -1,7 +1,8 @@
-#' Write copy of nprcgenekeepr::examplePedigree into a file
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Write copy of nprcgenekeepr::examplePedigree into a file
+#'
 #' Uses \code{examplePedigree} data structure to create an example data file
 #'
 #' @return Full path name of file saved.

@@ -1,7 +1,8 @@
-#' Determines the generation number for each id
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Determines the generation number for each id
+#'
 #' @description{This loops through the entire pedigree one generation at a
 #' time. It finds the zeroth generation during first loop.
 #' The first time through this loop no sire or dam is in parents.

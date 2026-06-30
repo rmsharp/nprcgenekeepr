@@ -1,7 +1,8 @@
-#' Create a pedigree tree (PedTree)
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Create a pedigree tree (PedTree)
+#'
 #' The PedTree is a list containing sire and dam information for an individual.
 #'
 #' Part of Pedigree Sampling

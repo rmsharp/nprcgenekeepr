@@ -1,7 +1,7 @@
-#' Gets tokens from character vector of lines
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Gets tokens from character vector of lines
 #'
 #' @return First right and left space trimmed token from first character vector
 #' element.

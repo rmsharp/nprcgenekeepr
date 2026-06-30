@@ -1,7 +1,8 @@
-#' Reformats a kinship matrix into a long-format table
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Reformats a kinship matrix into a long-format table
+#'
 #' Part of Group Formation
 #'
 #' @return A dataframe with columns \code{id1}, \code{id2}, and \code{kinship}.

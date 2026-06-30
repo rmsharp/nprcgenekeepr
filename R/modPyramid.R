@@ -1,9 +1,9 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
 # Age-Sex Pyramid Shiny Module
 
 #' Age-Sex Pyramid Module - UI Function
-#'
-## Copyright(c) 2017-2026 R. Mark Sharp
-## This file is part of nprcgenekeepr
 #'
 #' @return A \code{div} containing age-sex pyramid UI.
 #'

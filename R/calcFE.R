@@ -1,7 +1,8 @@
-#' Calculates founder Equivalents
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Calculates founder Equivalents
+#'
 #' Part of the Genetic Value Analysis
 #'
 #' The pedigree must have no partial parentage (every animal has both parents

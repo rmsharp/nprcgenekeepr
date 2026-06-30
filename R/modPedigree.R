@@ -1,9 +1,9 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
 # Pedigree Browser Shiny Module
 
 #' Pedigree Browser Module - UI Function
-#'
-## Copyright(c) 2017-2026 R. Mark Sharp
-## This file is part of nprcgenekeepr
 #'
 #' Creates user interface for browsing and filtering pedigree data,
 #' including focal animal selection, trimming options, and export.

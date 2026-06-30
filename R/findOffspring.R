@@ -1,7 +1,8 @@
-#' Finds the number of total offspring for each animal in the provided pedigree
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Finds the number of total offspring for each animal in the provided pedigree
+#'
 #' Part of Genetic Value Analysis
 #'
 #' @return A named vector containing the offspring counts for each animal in

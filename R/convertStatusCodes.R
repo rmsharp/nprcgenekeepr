@@ -1,7 +1,8 @@
-#' Converts status indicators to a Standardized code
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Converts status indicators to a Standardized code
+#'
 #' Part of Pedigree Curation
 #'
 #' @return A factor vector of the standardized status codes with levels:

@@ -1,7 +1,8 @@
-#' dataframe2string converts a data.frame object to a character vector
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' dataframe2string converts a data.frame object to a character vector
+#'
 #' Adapted from print.data.frame
 #'
 #' @return A character vector representation of the data.frame provided to the

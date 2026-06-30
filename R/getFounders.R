@@ -1,7 +1,8 @@
-#' Gets the founder ids from a pedigree
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Gets the founder ids from a pedigree
+#'
 #' Part of Pedigree Curation
 #'
 #' A founder is an animal whose sire and dam are both unknown (\code{NA}).

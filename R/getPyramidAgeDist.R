@@ -1,7 +1,8 @@
-#' Get the age distribution for the pedigree
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Get the age distribution for the pedigree
+#'
 #' Forms a dataframe with columns \code{id}, \code{birth}, \code{sex},
 #' and \code{age} for those animals with a status of \code{Alive} in the
 #' pedigree.

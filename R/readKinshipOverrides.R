@@ -1,7 +1,8 @@
-#' Read a kinship overrides table from a file
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Read a kinship overrides table from a file
+#'
 #' Reads an outside-information kinship override table from a
 #' user-supplied file into a data frame for \code{\link{checkKinshipOverrides}}
 #' and \code{\link{reportGV}}. The expected long form is the output of

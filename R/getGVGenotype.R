@@ -1,7 +1,8 @@
-#' Get Genetic Value Genotype data structure for reportGV function
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Get Genetic Value Genotype data structure for reportGV function
+#'
 #' Extracts genotype data if available otherwise NULL is returned.
 #'
 #' @return A data.frame with the columns \code{id}, \code{first}, and

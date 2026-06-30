@@ -1,7 +1,8 @@
-#' Determines the pedigree number for each id
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Determines the pedigree number for each id
+#'
 #' One of Pedigree Curation functions
 #'
 #' @return Integer vector indicating the pedigree (family group) number for

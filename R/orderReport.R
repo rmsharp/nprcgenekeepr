@@ -1,7 +1,8 @@
-#' Order the results of the genetic value analysis for use in a report.
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Order the results of the genetic value analysis for use in a report.
+#'
 #' Part of Genetic Value Analysis
 #'
 #' Takes in the results from a genetic value analysis and orders the report

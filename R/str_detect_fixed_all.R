@@ -1,7 +1,8 @@
-#' Returns a logical vector with results of stri_detect() for each pattern in
-#' second parameters character vector.
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Returns a logical vector with results of stri_detect() for each pattern in
+#' second parameters character vector.
 #'
 #' @usage str_detect_fixed_all(strings, patterns, ignore_na, ...)
 #' @return logical vector with results of stri_detect() for each pattern in

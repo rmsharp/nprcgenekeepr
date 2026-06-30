@@ -1,7 +1,8 @@
-#' Returns TRUE if the string is a valid date
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Returns TRUE if the string is a valid date
+#'
 #' Taken from github.com/rmsharp/rmsutilityr
 #'
 #' @return A logical value or \code{NA} indicating whether or not the provided

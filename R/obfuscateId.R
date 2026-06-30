@@ -1,7 +1,8 @@
-#' obfuscateId creates a vector of ID aliases of specified length
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' obfuscateId creates a vector of ID aliases of specified length
+#'
 #' ID aliases are pseudorandom sequences of alphanumeric upper case characters
 #' where the letter "O" is not included for readability..
 #' User has the option of providing a character vector of aliases to avoid

@@ -1,12 +1,12 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
 # Summary Statistics Shiny Module
 
 # Global variables used in ggplot2 aes() calls
 utils::globalVariables(c("x", "y"))
 
 #' Summary Statistics Module - UI Function
-#'
-## Copyright(c) 2017-2026 R. Mark Sharp
-## This file is part of nprcgenekeepr
 #'
 #' Creates user interface for summary statistics display including
 #' histograms and box plots for mean kinship, z-scores, and genome uniqueness.

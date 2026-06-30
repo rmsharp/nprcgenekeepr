@@ -1,7 +1,8 @@
-#' Choose date based on \code{earlier} flag
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' Choose date based on \code{earlier} flag
+#'
 #' Part of Pedigree Curation
 #'
 #' Given two dates, one is selected to be returned based on whether

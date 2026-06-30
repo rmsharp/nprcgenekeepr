@@ -1,7 +1,8 @@
-#' getSexRatioWithAdditions returns the sex ratio of a group.
-#'
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
+
+#' getSexRatioWithAdditions returns the sex ratio of a group.
+#'
 #' Adding males and females to the ratio calculation is possible, but the
 #' default behavior is to simply return the sex ratio of the group.
 #' This is a helper routine for the main one \code{calculateSexRatio}.
