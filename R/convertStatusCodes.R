@@ -8,7 +8,7 @@
 #' @param status character vector or NA. Flag indicating an individual's
 #' status as alive, dead, sold, etc.
 #' @return A factor vector of the standardized status codes with levels:
-#' `ALIVE`, `DECEASED`, `SHIPPED`, and `UNKNOWN`.
+#' \code{ALIVE}, \code{DECEASED}, \code{SHIPPED}, and \code{UNKNOWN}.
 #'
 #' @export
 #' @examples

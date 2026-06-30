@@ -24,8 +24,8 @@
 #' \code{\link{speciesGestation}} table. Defaults to \code{NULL}, which uses the
 #' bundled table.
 #' @param default numeric fallback returned for species that are missing,
-#' \code{NA}, empty, or not found, and for a sex that is not \code{"M"}/`"F"`.
-#' Defaults to \code{2}.
+#' \code{NA}, empty, or not found, and for a sex that is not
+#' \code{"M"}/\code{"F"}. Defaults to \code{2}.
 #' @return a numeric vector of minimum breeding ages in years, the same length
 #' as the longer of \code{species} and \code{sex}.
 #' @export

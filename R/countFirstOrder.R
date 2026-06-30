@@ -9,7 +9,7 @@
 #' pedigree. If 'ids' is provided, the analysis is restricted to only the
 #' specified subset.
 #'
-#' @param ped : `Pedigree`
+#' @param ped : \code{Pedigree}
 #'   Standardized pedigree information in a table.
 #' @param ids character vector of IDs or NULL
 #'   These are the IDs to which the analysis should be restricted. First-order

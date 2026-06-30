@@ -33,7 +33,7 @@
 #' of IDs to include as group members. Currently each animal in the
 #' provided pedigree (\code{ped}) is considered to be a member of the
 #' group.
-#' @param ped Dataframe that is the `Pedigree`. It contains pedigree
+#' @param ped Dataframe that is the \code{Pedigree}. It contains pedigree
 #' information. The \code{id}, \code{dam}, \code{sex} and \code{age}
 #' (in years) columns are required.
 #' @param minParentAge Numeric values to set the minimum age in years for

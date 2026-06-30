@@ -5,7 +5,7 @@
 #'
 #' @param kmat numeric matrix of pairwise kinship values. Rows and columns
 #' are named with animal IDs.
-#' @param ped dataframe that is the `Pedigree`. It contains pedigree
+#' @param ped dataframe that is the \code{Pedigree}. It contains pedigree
 #' information.
 #' @param threshold numeric value indicating the minimum kinship level to be
 #' considered in group formation. Pairwise kinship below this level will be

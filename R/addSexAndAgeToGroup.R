@@ -10,7 +10,7 @@
 #' number of ids supplied.
 #'
 #' @param ids character vector of animal Ids
-#' @param ped datatable that is the `Pedigree`. It contains pedigree
+#' @param ped datatable that is the \code{Pedigree}. It contains pedigree
 #' information.
 #' @return Dataframe with Id, Sex, and Current Age
 #'
