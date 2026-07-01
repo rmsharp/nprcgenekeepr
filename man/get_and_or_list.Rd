@@ -12,7 +12,8 @@ get_and_or_list(c_vector, conjunction = "and")
 to be put in a list.}
 
 \item{conjunction}{The conjunction to be used as the connector.
-This is usually \verb{and' or }or' with `and' being the default.}
+This is usually \sQuote{and} or \sQuote{or} with \sQuote{and} being
+the default.}
 }
 \value{
 A character vector of length one containing the a single correctly
