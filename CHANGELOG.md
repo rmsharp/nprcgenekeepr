@@ -15,6 +15,63 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-30 — issue \#103: merge PR \#106 (Stage 5) + Stage 6 (internal-marker cleanup, Finding 5) landed on `master` (Session 254)
+
+- **Deliverable (owner-directed, two items: “merge pr \#106” then “then
+  stage 6”):** (1) merge **PR \#106** (issue \#103 Stage 5 — import
+  conversion) into `master`; (2) issue \#103 **Stage 6 — internal-marker
+  cleanup (audit Finding 5)**: drop the redundant `@keywords internal`
+  from the two files carrying both `@noRd` AND `@keywords internal`.
+  **(1) landing/process; (2) REFACTOR-class doc-metadata — no R-logic /
+  NAMESPACE / behavior / rendered-doc change; TDD RED/GREEN N/A; 0
+  corrections / 0 overrides** (1 owner gate via `AskUserQuestion`: the
+  Stage-6 landing method → owner chose **direct-merge**). The owner
+  directed both items (owner-set session scope), handled as two
+  sequential deliverables with full verification each and one combined
+  close-out.
+- **(1) PR \#106 merged:** waited for CI **10/10 green +
+  mergeStateStatus CLEAN** (the re-run on close-out commit `e8574fa6`
+  finished green — did not merge while UNSTABLE, honoring S253’s
+  PR-for-CI cert), then `gh pr merge 106 --merge --delete-branch` →
+  merge commit **`fc0b2b72`** (“Merge pull request \#106 …”); local
+  `master` fast-forwarded, remote+local branch deleted. Stage 5’s
+  NAMESPACE delta (`import(futile.logger)` removed) confirmed present on
+  `master`.
+- **(2) Stage 6:** removed **5** `@keywords internal` lines — **4** in
+  `modPotentialParents.R` (helpers `flattenPotentialParents`,
+  `firstPedigreeSpecies`, `pedigreeGestationDefault`,
+  `prefillGuardAllows`) + **1** in `readFocalAnimalIds.R` — each on an
+  `@noRd` block; **kept** `nprcgenekeepr-package.R:4` (policy: reserve
+  `@keywords internal` for the package-level doc). Code commit
+  `b3a3fbe0`, direct-merged via merge commit **`318ed491`** (“Merge
+  issue \#103 Stage 6 … into master”, `--no-ff`).
+- **Zero-impact, proven:** `@keywords` on an `@noRd` block is inert
+  (roxygen generates no `.Rd` for it; the tag never reaches NAMESPACE),
+  so `devtools::document()` left `man/` and `NAMESPACE` untouched and
+  `git diff fc0b2b72..318ed491 -- NAMESPACE man/` is empty.
+- **Scope corrected from the live tree (Learning 231):** the audit’s
+  Finding 5 “4 files” included `nprcgenekeeper.R` (the duplicate legacy
+  package doc, Finding D2) which no longer exists, and implied ~1
+  occurrence in `modPotentialParents.R` (since grown to 4 helpers) →
+  real scope = 5 removals across 2 files, not the audit’s implied ~2.
+- **Verified:** `document()` zero `man/`/`NAMESPACE` diff; `lintr` 0 on
+  both changed files; `spell_check_package` clean;
+  **`R CMD check --as-cran` = `Status: 2 NOTEs` (0/0/2)** with
+  R-code-problems / dependencies-in-R-code / S3 method consistency / all
+  Rd checks / code-documentation mismatches / examples /
+  `--run-donttest` / tests all OK. Direct-merge has no CI → confirmed on
+  the landed tree with a deterministic sanity check
+  (`@keywords internal` census = only the package doc; merge touched
+  only the 2 R/ files; empty NAMESPACE/man diff). Learning 240 added to
+  `PROJECT_LEARNINGS.md`.
+- **Stages 1–6 of issue \#103 are now all on `master`.** Remaining:
+  Stage 7 (examples policy — Finding 1 / §7), Stage 8 (title voice +
+  `@inheritParams`/`@family` de-dup — Findings 3, 6, judgment-heavy).
+  Deferred sub-work: the shiny/Matrix `@import` → `@importFrom`
+  conversions (each a judgment call). Carried defect:
+  `get_and_or_list.R:10` garbled typographic quotes (keep out of any
+  zero-drift stage).
+
 ### 2026-06-30 — issue \#103 Stage 5 (import conversion, Finding 7) — PR \#106 open, CI green (Session 253)
 
 - **Deliverable (owner pick = “stage 5”; via `AskUserQuestion`: scope =
