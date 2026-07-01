@@ -13,7 +13,7 @@
 #' @importFrom Rlabkey labkey.selectRows
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' ## Needs a connection to a LabKey server
 #' library(nprcgenekeepr)
 #' siteInfo <- getSiteInfo()

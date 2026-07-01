@@ -32,12 +32,10 @@ format suitable for Shiny UI display. This function performs two passes:
 first to check for errors, then to get the cleaned data if no errors exist.
 }
 \examples{
-\dontrun{
 data("pedGood", package = "nprcgenekeepr")
 result <- runQcStudbook(pedGood, minParentAge = 2.0)
 if (!result$qcResult$hasErrors) {
   cleanedPed <- result$cleaned
-}
 }
 
 }

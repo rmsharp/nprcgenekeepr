@@ -18,9 +18,9 @@
 #'   now launches.
 #' @export
 #' @examples
-#' if (interactive()) {
-#'   library(nprcgenekeepr)
-#'   runGeneKeepR()
+#' \dontrun{
+#' library(nprcgenekeepr)
+#' runGeneKeepR()
 #' }
 runGeneKeepR <- function(port = 6013L, launch.browser = TRUE) { # nolint: object_name_linter
   lifecycle::deprecate_soft(

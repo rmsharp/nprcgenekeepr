@@ -31,9 +31,9 @@
 #' @importFrom shiny shinyApp runApp
 #' @export
 #' @examples
-#' if (interactive()) {
-#'   library(nprcgenekeepr)
-#'   runModularApp()
+#' \dontrun{
+#' library(nprcgenekeepr)
+#' runModularApp()
 #' }
 runModularApp <- function(port = 6013L, launch.browser = TRUE) { # nolint: object_name_linter
   app <- shiny::shinyApp(

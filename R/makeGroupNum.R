@@ -8,6 +8,11 @@
 #' @return Initial grpNum list
 #'
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ## Create the initial grpNum list for three groups
+#' grpNum <- makeGroupNum(numGp = 3L)
+#' grpNum
 makeGroupNum <- function(numGp) {
   grpNum <- list()
   grpNum[1L:numGp] <- 1L:numGp

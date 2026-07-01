@@ -25,11 +25,9 @@ Centralized logging function for Shiny module events. Provides consistent
 logging format across all modules with configurable log levels.
 }
 \examples{
-\dontrun{
 logModuleEvent("modInput", "File uploaded successfully")
 logModuleEvent("modPedigree", "Processing \%d animals", level = "DEBUG", 100)
 logModuleEvent("modGeneticValue", "Calculation failed", level = "ERROR")
-}
 
 }
 \seealso{

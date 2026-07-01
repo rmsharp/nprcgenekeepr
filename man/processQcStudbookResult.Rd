@@ -28,6 +28,16 @@ A list with the following components:
 Converts the errorLst object returned by qcStudbook (when reportErrors=TRUE)
 into a format suitable for display in the Shiny UI.
 }
+\examples{
+library(nprcgenekeepr)
+## Turn a qcStudbook error list into UI-friendly data frames.
+errorLst <- qcStudbook(nprcgenekeepr::pedFemaleSireMaleDam,
+  reportErrors = TRUE
+)
+result <- processQcStudbookResult(errorLst)
+result$hasErrors
+result$errors
+}
 \seealso{
 \code{\link{qcStudbook}} for generating the errorLst input
 

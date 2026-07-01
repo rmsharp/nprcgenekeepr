@@ -36,8 +36,8 @@ This function runs the modular version of the application which includes:
 Use \code{\link{runGeneKeepR}} to run the original monolithic version.
 }
 \examples{
-if (interactive()) {
-  library(nprcgenekeepr)
-  runModularApp()
+\dontrun{
+library(nprcgenekeepr)
+runModularApp()
 }
 }

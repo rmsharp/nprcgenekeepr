@@ -36,7 +36,6 @@ This is particularly useful in Shiny reactive contexts where errors
 should be handled gracefully.
 }
 \examples{
-\dontrun{
 # Returns 4
 safeExecute({ 2 + 2 }, module = "test")
 
@@ -45,7 +44,6 @@ safeExecute({ stop("Error!") }, module = "test")
 
 # Returns custom default on error
 safeExecute({ stop("Error!") }, module = "test", default = data.frame())
-}
 
 }
 \seealso{

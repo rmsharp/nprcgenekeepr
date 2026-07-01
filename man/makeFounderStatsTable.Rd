@@ -27,7 +27,6 @@ of known founders, male founders, female founders, founder equivalents (FE),
 and founder genome equivalents (FG).
 }
 \examples{
-\dontrun{
 stats <- list(
   total = 50,
   nMaleFounders = 20,
@@ -36,7 +35,6 @@ stats <- list(
   fg = 22.3
 )
 html <- makeFounderStatsTable(stats)
-}
 
 }
 \seealso{

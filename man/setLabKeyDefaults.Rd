@@ -39,7 +39,7 @@ never read from or written to the package sources; keep it in the
 environment, the configuration file, or the netrc file only.
 }
 \examples{
-\donttest{
+\dontrun{
 ## Requires an apiKey (env var or config) or a .netrc file to succeed.
 library(nprcgenekeepr)
 result <- tryCatch(

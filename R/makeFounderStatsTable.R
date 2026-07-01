@@ -25,7 +25,6 @@
 #' @seealso \code{\link{calcFG}} for founder genome equivalents
 #' @export
 #' @examples
-#' \dontrun{
 #' stats <- list(
 #'   total = 50,
 #'   nMaleFounders = 20,
@@ -34,7 +33,6 @@
 #'   fg = 22.3
 #' )
 #' html <- makeFounderStatsTable(stats)
-#' }
 #'
 makeFounderStatsTable <- function(founderStats) {
   # Handle NULL input

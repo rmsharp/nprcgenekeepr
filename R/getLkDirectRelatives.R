@@ -22,7 +22,7 @@
 #'
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # Requires LabKey connection
 #' library(nprcgenekeepr)
 #' ## Have to a vector of focal animals

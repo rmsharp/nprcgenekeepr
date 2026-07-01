@@ -23,7 +23,6 @@
 #' @importFrom shiny showNotification getDefaultReactiveDomain
 #' @export
 #' @examples
-#' \dontrun{
 #' # Returns 4
 #' safeExecute({ 2 + 2 }, module = "test")
 #'
@@ -32,7 +31,6 @@
 #'
 #' # Returns custom default on error
 #' safeExecute({ stop("Error!") }, module = "test", default = data.frame())
-#' }
 #'
 safeExecute <- function(expr, module = "unknown", default = NULL,
                         silent = FALSE, notify = FALSE) {

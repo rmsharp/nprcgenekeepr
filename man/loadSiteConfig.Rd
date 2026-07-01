@@ -27,6 +27,14 @@ This replaces a former \code{read.table(sep = "=")} call in the application
 server that assumed a strict two-column table, could not parse the documented
 format, and crashed \code{\link{runModularApp}} at startup.
 }
+\examples{
+library(nprcgenekeepr)
+## Reads ~/.nprcgenekeepr_config (or ~/_nprcgenekeepr_config on
+## Windows) if it exists; returns NULL when no config file is
+## present, so this is safe to run on any machine.
+config <- loadSiteConfig()
+config
+}
 \seealso{
 \code{\link{getSiteInfo}}, \code{\link{getConfigFileName}},
 \code{\link{appServer}}

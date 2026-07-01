@@ -33,7 +33,7 @@
 #' @importFrom Rlabkey labkey.setDefaults
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' ## Requires an apiKey (env var or config) or a .netrc file to succeed.
 #' library(nprcgenekeepr)
 #' result <- tryCatch(
