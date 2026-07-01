@@ -2,7 +2,7 @@
 % Please edit documentation in R/addIdRecords.R
 \name{addIdRecords}
 \alias{addIdRecords}
-\title{addIdRecords Adds Ego records added having NAs for parent IDs}
+\title{Add ego records with NA parent IDs}
 \usage{
 addIdRecords(ids, fullPed, partialPed)
 }
@@ -19,7 +19,7 @@ removed.}
 Pedigree with Ego records added having NAs for parent IDs
 }
 \description{
-addIdRecords Adds Ego records added having NAs for parent IDs
+Add ego records with NA parent IDs
 }
 \examples{
 uPedOne <- data.frame(

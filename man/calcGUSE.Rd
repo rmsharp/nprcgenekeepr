@@ -2,7 +2,7 @@
 % Please edit documentation in R/calcGUSE.R
 \name{calcGUSE}
 \alias{calcGUSE}
-\title{Calculates the sampling standard error of genome uniqueness for each ID}
+\title{Calculate the standard error of genome uniqueness}
 \usage{
 calcGUSE(alleles, threshold = 1L, byID = FALSE, pop = NULL)
 }

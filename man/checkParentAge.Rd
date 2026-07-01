@@ -2,7 +2,7 @@
 % Please edit documentation in R/checkParentAge.R
 \name{checkParentAge}
 \alias{checkParentAge}
-\title{Check parent ages to be at least \code{minParentAge}}
+\title{Check parent ages against a minimum age}
 \usage{
 checkParentAge(sb, minParentAge = 2L, reportErrors = FALSE)
 }

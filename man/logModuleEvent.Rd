@@ -2,7 +2,7 @@
 % Please edit documentation in R/logModuleEvent.R
 \name{logModuleEvent}
 \alias{logModuleEvent}
-\title{Log Module Events}
+\title{Log module events}
 \usage{
 logModuleEvent(module, message, level = "INFO", ...)
 }

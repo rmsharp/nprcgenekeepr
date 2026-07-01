@@ -1,8 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Forms a dataframe with Id, Sex, and current Age given a list of Ids and a
-#' pedigree
+#' Build a group data frame with ID, sex, and age
 #'
 #' @details An empty \code{ids} vector yields a zero-row data frame that still
 #' contains all three columns (\code{ids}, \code{sex}, \code{age}), with

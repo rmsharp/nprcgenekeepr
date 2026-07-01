@@ -2,7 +2,7 @@
 % Please edit documentation in R/geneDrop.R
 \name{geneDrop}
 \alias{geneDrop}
-\title{Gene drop simulation based on the provided pedigree information}
+\title{Simulate gene dropping through a pedigree}
 \usage{
 geneDrop(
   ids,

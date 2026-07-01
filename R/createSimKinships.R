@@ -1,8 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Makes a list object of kinship matrices from simulated pedigrees of possible
-#' parents for animals with unknown parents
+#' Build kinship matrices from simulated pedigrees
 #'
 #' \code{createSimKinships} uses \code{makeSimPed} with the \code{ped} object
 #' and the \code{allSimParents} object to create a set of kinship matrices to

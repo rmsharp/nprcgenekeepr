@@ -2,7 +2,7 @@
 % Please edit documentation in R/getPyramidPlot.R
 \name{getPyramidPlot}
 \alias{getPyramidPlot}
-\title{Creates a pyramid plot of the pedigree provided}
+\title{Create an age-sex pyramid plot of a pedigree}
 \usage{
 getPyramidPlot(
   ped = NULL,

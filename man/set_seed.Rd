@@ -2,7 +2,7 @@
 % Please edit documentation in R/set_seed.R
 \name{set_seed}
 \alias{set_seed}
-\title{Work around for unit tests using sample() among various versions of R}
+\title{Set a reproducible RNG seed across R versions}
 \usage{
 set_seed(seed = 1L)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/calcFE.R
 \name{calcFE}
 \alias{calcFE}
-\title{Calculates founder Equivalents}
+\title{Calculate founder equivalents}
 \usage{
 calcFE(ped)
 }

@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Converts status indicators to a Standardized code
+#' Convert status indicators to a standardized code
 #'
 #' Part of Pedigree Curation
 #'

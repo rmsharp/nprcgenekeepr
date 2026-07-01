@@ -2,7 +2,7 @@
 % Please edit documentation in R/kinshipMatricesToKValues.R
 \name{kinshipMatricesToKValues}
 \alias{kinshipMatricesToKValues}
-\title{Forms kValue matrix from list of kinship matrices}
+\title{Build a kValue table from a list of kinship matrices}
 \usage{
 kinshipMatricesToKValues(kinshipMatrices)
 }

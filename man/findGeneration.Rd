@@ -2,7 +2,7 @@
 % Please edit documentation in R/findGeneration.R
 \name{findGeneration}
 \alias{findGeneration}
-\title{Determines the generation number for each id}
+\title{Determine the generation number for each ID}
 \usage{
 findGeneration(id, sire, dam)
 }
@@ -23,7 +23,7 @@ a parent ID that is not itself present as an ego ID --- is returned as
 \code{NA} and triggers a \code{warning} naming the affected ids.
 }
 \description{
-{This loops through the entire pedigree one generation at a
+This loops through the entire pedigree one generation at a
 time. It finds the zeroth generation during first loop.
 The first time through this loop no sire or dam is in parents.
 This means that the animals without a sire and without a dam are
@@ -33,13 +33,13 @@ not have a sire or do not have a dam and at least one parent
 is in the vector of parents defined the first time through.
 The ids that were not assigned as parents in the previous loop
 are given the incremented generation number.
-
+}
+\details{
 Subsequent trips in the loop repeat what was done the second time
 through until no further animals can be added to the \code{nextGen}
 vector.
 
 This does not work if the pedigree does not have all parent IDs as ego IDs.
-}
 }
 \examples{
 library(nprcgenekeepr)

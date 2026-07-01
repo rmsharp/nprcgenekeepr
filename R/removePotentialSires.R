@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Removes potential sires from list of Ids
+#' Remove potential sires from a list of IDs
 #'
 #' @param ids character vector of IDs of the animals
 #' @param minAge integer value indicating the minimum age to consider in group

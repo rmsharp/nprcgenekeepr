@@ -2,7 +2,7 @@
 % Please edit documentation in R/offspringCounts.R
 \name{offspringCounts}
 \alias{offspringCounts}
-\title{Finds the total number of offspring for each animal in the pedigree}
+\title{Tabulate offspring counts, optionally by population}
 \usage{
 offspringCounts(probands, ped, considerPop = FALSE)
 }

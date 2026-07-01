@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' summary.nprcgenekeeprErr Summary function for class nprcgenekeeprErr
+#' Summarize a studbook quality-control error list
 #'
 #' @param object object of class nprcgenekeeprErr and class list
 #' @param ... additional arguments for the \code{summary.default} statement

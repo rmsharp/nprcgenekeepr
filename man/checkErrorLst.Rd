@@ -2,7 +2,7 @@
 % Please edit documentation in R/checkErrorLst.R
 \name{checkErrorLst}
 \alias{checkErrorLst}
-\title{checkErrorLst examines list for non-empty fields}
+\title{Check an error list for non-empty fields}
 \usage{
 checkErrorLst(errorLst)
 }
@@ -15,7 +15,7 @@ Returns FALSE if all fields are empty or the list is NULL
 else the entire list is returned.
 }
 \description{
-checkErrorLst examines list for non-empty fields
+Check an error list for non-empty fields
 }
 \examples{
 errorLst <- qcStudbook(nprcgenekeepr::pedFemaleSireMaleDam,

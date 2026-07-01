@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Identifies the founders in a pedigree
+#' Identify the founders in a pedigree
 #'
 #' Part of Pedigree Curation
 #'

@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' fixColumnNames changes original column names into standardized names
+#' Standardize pedigree column names
 #'
 #' @param orgCols character vector with ordered list of column names
 #' found in a pedigree file.

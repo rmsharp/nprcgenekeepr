@@ -2,8 +2,7 @@
 % Please edit documentation in R/cumulateSimKinships.R
 \name{cumulateSimKinships}
 \alias{cumulateSimKinships}
-\title{Makes a list object containing kinship summary statistics using the list
-object from \strong{createSimKinships}}
+\title{Compute kinship summary statistics across simulations}
 \usage{
 cumulateSimKinships(ped, allSimParents, pop = NULL, n = 10L)
 }

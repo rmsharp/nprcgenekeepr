@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeRelationClassesTable.R
 \name{makeRelationClassesTable}
 \alias{makeRelationClassesTable}
-\title{Make relation classes table from \code{kin} dataframe}
+\title{Make a relation classes table from kinship pairs}
 \usage{
 makeRelationClassesTable(kin)
 }

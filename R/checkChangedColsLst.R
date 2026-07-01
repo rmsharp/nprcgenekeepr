@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' checkChangedColsLst examines list for non-empty fields
+#' Check a changed-columns list for non-empty fields
 #'
 #' @param changedCols list with fields for each type of column change
 #' \code{qcStudbook}.

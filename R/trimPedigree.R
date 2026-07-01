@@ -1,8 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Trim pedigree to ancestors of provided group by removing uninformative
-#' individuals
+#' Trim a pedigree to a group's ancestors
 #'
 #' Filters a pedigree down to only the ancestors of the provided group,
 #' removing unnecessary individuals from the studbook. This version builds

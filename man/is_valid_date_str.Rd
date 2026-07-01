@@ -2,7 +2,7 @@
 % Please edit documentation in R/is_valid_date_str.R
 \name{is_valid_date_str}
 \alias{is_valid_date_str}
-\title{Returns TRUE if the string is a valid date}
+\title{Test whether a string is a valid date}
 \usage{
 is_valid_date_str(
   date_str,

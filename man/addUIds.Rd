@@ -2,8 +2,7 @@
 % Please edit documentation in R/addUIds.R
 \name{addUIds}
 \alias{addUIds}
-\title{Eliminates partial parentage situations by adding unique placeholder
-IDs for the unknown parent}
+\title{Add placeholder IDs for unknown parents}
 \usage{
 addUIds(ped, format = getAutoIdFormat())
 }

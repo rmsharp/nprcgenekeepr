@@ -2,7 +2,7 @@
 % Please edit documentation in R/convertAncestry.R
 \name{convertAncestry}
 \alias{convertAncestry}
-\title{Converts the ancestry information to a standardized code}
+\title{Convert ancestry information to a standard code}
 \usage{
 convertAncestry(ancestry)
 }

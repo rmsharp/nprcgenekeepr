@@ -1,11 +1,10 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Add animals to an existing breeding group or forms groups:
+#' Add animals to a breeding group or form new groups
 #'
 #' Part of Group Formation
 #'
-#' @description{
 #' \code{groupAddAssign} finds the largest group that can be formed by adding
 #' unrelated animals from a set of candidate IDs to an existing group, to a new
 #' group it has formed from a set of candidate IDs or if more than 1 group
@@ -18,7 +17,6 @@
 #' algorithm produces a random sample of the possible MISs, and selects from
 #' these. The size of the random sample is determined by the specified number
 #' of iterations.
-#' }
 #'
 #' @param candidates Character vector of IDs of the animals available for
 #' use in forming the groups. The animals that may be present in

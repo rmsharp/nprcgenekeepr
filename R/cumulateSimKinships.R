@@ -1,8 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Makes a list object containing kinship summary statistics using the list
-#' object from __createSimKinships__
+#' Compute kinship summary statistics across simulations
 #'
 #' \code{cumulateSimKinships} creates a named
 #' list of length 4 is generated where the first element is the mean of the

@@ -2,8 +2,7 @@
 % Please edit documentation in R/calculateSexRatio.R
 \name{calculateSexRatio}
 \alias{calculateSexRatio}
-\title{Calculates the sex ratio (number of non-males / number of males) given
-animal Ids and their pedigree}
+\title{Calculate the sex ratio of a set of animals}
 \usage{
 calculateSexRatio(ids, ped, additionalMales = 0L, additionalFemales = 0L)
 }

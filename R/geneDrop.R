@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Gene drop simulation based on the provided pedigree information
+#' Simulate gene dropping through a pedigree
 #'
 #' Part of Genetic Value Analysis
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/alleleFreq.R
 \name{alleleFreq}
 \alias{alleleFreq}
-\title{Calculates the count of each allele in the provided vector}
+\title{Count each allele in a vector}
 \usage{
 alleleFreq(alleles, ids = NULL)
 }

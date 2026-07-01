@@ -2,7 +2,7 @@
 % Please edit documentation in R/removeEarlyDates.R
 \name{removeEarlyDates}
 \alias{removeEarlyDates}
-\title{removeEarlyDates removes dates before a specified year}
+\title{Remove dates before a specified year}
 \usage{
 removeEarlyDates(dates, firstYear)
 }

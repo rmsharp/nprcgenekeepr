@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Converts columns of dates in text form to \code{Date} object columns
+#' Find date errors and convert dates in a pedigree
 #'
 #' Finds date errors in columns defined in
 #' \code{convertDate} as dates and converts date strings to \code{Date} objects.

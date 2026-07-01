@@ -2,7 +2,7 @@
 % Please edit documentation in R/rankSubjects.R
 \name{rankSubjects}
 \alias{rankSubjects}
-\title{Ranks animals based on genetic value}
+\title{Rank animals by genetic value}
 \usage{
 rankSubjects(rpt)
 }

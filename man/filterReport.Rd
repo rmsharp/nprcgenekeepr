@@ -2,7 +2,7 @@
 % Please edit documentation in R/filterReport.R
 \name{filterReport}
 \alias{filterReport}
-\title{Filters a genetic value report down to only the specified animals}
+\title{Filter a genetic value report to selected animals}
 \usage{
 filterReport(ids, rpt)
 }
@@ -17,7 +17,7 @@ a data.frame of results from a genetic value analysis.}
 A copy of report specific to the specified animals.
 }
 \description{
-Filters a genetic value report down to only the specified animals
+Filter a genetic value report to selected animals
 }
 \examples{
 library(nprcgenekeepr)

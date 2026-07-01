@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Ranks animals based on genetic value
+#' Rank animals by genetic value
 #'
 #' Part of Genetic Value Analysis
 #' Adds a column to \code{rpt} containing integers from 1 to nrow, and provides

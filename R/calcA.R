@@ -1,8 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Calculates \code{a}, the number of an individual's alleles that are rare in
-#' each simulation
+#' Count each individual's rare alleles per simulation
 #'
 #' Part of Genetic Value Analysis
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_elapsed_time_str.R
 \name{get_elapsed_time_str}
 \alias{get_elapsed_time_str}
-\title{Returns the elapsed time since start_time}
+\title{Format the elapsed time since a start time}
 \usage{
 get_elapsed_time_str(start_time)
 }

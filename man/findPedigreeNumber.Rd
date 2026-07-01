@@ -2,7 +2,7 @@
 % Please edit documentation in R/findPedigreeNumber.R
 \name{findPedigreeNumber}
 \alias{findPedigreeNumber}
-\title{Determines the pedigree number for each id}
+\title{Determine the pedigree number for each ID}
 \usage{
 findPedigreeNumber(id, sire, dam)
 }

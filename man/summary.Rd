@@ -3,7 +3,7 @@
 \name{summary.nprcgenekeeprErr}
 \alias{summary.nprcgenekeeprErr}
 \alias{summary.nprcgenekeeprGV}
-\title{summary.nprcgenekeeprErr Summary function for class nprcgenekeeprErr}
+\title{Summarize a studbook quality-control error list}
 \usage{
 \method{summary}{nprcgenekeeprErr}(object, ...)
 
@@ -20,7 +20,7 @@ Object of class summary.nprcgenekeeprErr
 object of class summary.nprcgenekeeprGV
 }
 \description{
-summary.nprcgenekeeprErr Summary function for class nprcgenekeeprErr
+Summarize a studbook quality-control error list
 }
 \examples{
 errorList <- qcStudbook(nprcgenekeepr::pedOne,

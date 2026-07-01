@@ -2,8 +2,7 @@
 % Please edit documentation in R/kinshipMatrixToKValues.R
 \name{kinshipMatrixToKValues}
 \alias{kinshipMatrixToKValues}
-\title{Extracts a dataframe with a row for each kinship coeficient in the kinship
-matrix}
+\title{Extract a kValue table from a kinship matrix}
 \usage{
 kinshipMatrixToKValues(kinshipMatrix)
 }

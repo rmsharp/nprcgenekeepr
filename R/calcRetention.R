@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Calculates Allelic Retention
+#' Calculate allelic retention
 #'
 #' Part of Genetic Value Analysis
 #'

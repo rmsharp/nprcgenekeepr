@@ -2,8 +2,7 @@
 % Please edit documentation in R/getPotentialParents.R
 \name{getPotentialParents}
 \alias{getPotentialParents}
-\title{Get the lists of potential parents for all individuals born in the colony
-with one or two unknown parents}
+\title{Get potential parents for animals with unknown parents}
 \usage{
 getPotentialParents(
   ped,

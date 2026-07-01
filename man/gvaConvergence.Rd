@@ -2,7 +2,7 @@
 % Please edit documentation in R/gvaConvergence.R
 \name{gvaConvergence}
 \alias{gvaConvergence}
-\title{Evidence-based advice on the number of gene-drop iterations a pedigree needs}
+\title{Recommend gene-drop iterations for a pedigree}
 \usage{
 gvaConvergence(
   ped,

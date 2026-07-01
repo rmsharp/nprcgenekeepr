@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Make relation classes table from \code{kin} dataframe
+#' Make a relation classes table from kinship pairs
 #'
 #' From Relations
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/convertDate.R
 \name{convertDate}
 \alias{convertDate}
-\title{Converts date columns formatted as characters to be of type datetime}
+\title{Convert character date columns to Date type}
 \usage{
 convertDate(ped, timeOrigin = as.Date("1970-01-01"), reportErrors = FALSE)
 }

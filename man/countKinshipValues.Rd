@@ -2,8 +2,7 @@
 % Please edit documentation in R/countKinshipValues.R
 \name{countKinshipValues}
 \alias{countKinshipValues}
-\title{Counts the number of occurrences of each kinship value seen for a pair of
-individuals in a series of simulated pedigrees}
+\title{Count kinship-value occurrences across simulated pedigrees}
 \usage{
 countKinshipValues(kinshipValues, accummulatedKValueCounts = NULL)
 }
@@ -21,8 +20,7 @@ A list of three lists named \code{kIds} (kinship IDs), \code{kValues}
 (kinship values), and \code{kCounts} (kinship counts).
 }
 \description{
-Counts the number of occurrences of each kinship value seen for a pair of
-individuals in a series of simulated pedigrees
+Count kinship-value occurrences across simulated pedigrees
 }
 \examples{
 library(nprcgenekeepr)

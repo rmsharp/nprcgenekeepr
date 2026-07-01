@@ -2,7 +2,7 @@
 % Please edit documentation in R/convertRelationships.R
 \name{convertRelationships}
 \alias{convertRelationships}
-\title{Converts pairwise kinship values to a relationship category descriptor}
+\title{Convert pairwise kinship values to relationship categories}
 \usage{
 convertRelationships(kmat, ped, ids = NULL, updateProgress = NULL)
 }

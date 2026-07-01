@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Get a focal-animal pedigree from a pedigree file (offline, no database)
+#' Get a focal-animal pedigree from a pedigree file
 #'
 #' File-sourced sibling of \code{\link{getFocalAnimalPed}}: reads a list of
 #' focal animal Ids from \code{fileName} (the first column, exactly as

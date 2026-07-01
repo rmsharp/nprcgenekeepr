@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Age in years using the provided birthdate
+#' Calculate current age in years from a birth date
 #'
 #' Assumes current date for calculating age.
 #'

@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Get the direct ancestors of selected animals from supplied pedigree
+#' Get the direct relatives of selected animals from a pedigree
 #'
 #' Gets direct ancestors from labkey \code{study} schema and \code{demographics}
 #' table.

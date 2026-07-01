@@ -2,7 +2,7 @@
 % Please edit documentation in R/isFounder.R
 \name{isFounder}
 \alias{isFounder}
-\title{Identifies the founders in a pedigree}
+\title{Identify the founders in a pedigree}
 \usage{
 isFounder(ped)
 }

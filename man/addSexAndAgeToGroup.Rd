@@ -2,8 +2,7 @@
 % Please edit documentation in R/addSexAndAgeToGroup.R
 \name{addSexAndAgeToGroup}
 \alias{addSexAndAgeToGroup}
-\title{Forms a dataframe with Id, Sex, and current Age given a list of Ids and a
-pedigree}
+\title{Build a group data frame with ID, sex, and age}
 \usage{
 addSexAndAgeToGroup(ids, ped)
 }
@@ -17,8 +16,7 @@ information.}
 Dataframe with Id, Sex, and Current Age
 }
 \description{
-Forms a dataframe with Id, Sex, and current Age given a list of Ids and a
-pedigree
+Build a group data frame with ID, sex, and age
 }
 \details{
 An empty \code{ids} vector yields a zero-row data frame that still

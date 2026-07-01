@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Filters a genetic value report down to only the specified animals
+#' Filter a genetic value report to selected animals
 #'
 #' @param ids character vector of animal IDs
 #' @param rpt a dataframe with required colnames \code{id}, \code{gu},

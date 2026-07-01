@@ -2,7 +2,7 @@
 % Please edit documentation in R/kinMatrix2LongForm.R
 \name{kinMatrix2LongForm}
 \alias{kinMatrix2LongForm}
-\title{Reformats a kinship matrix into a long-format table}
+\title{Reformat a kinship matrix into long form}
 \usage{
 kinMatrix2LongForm(kinMatrix, removeDups = FALSE)
 }

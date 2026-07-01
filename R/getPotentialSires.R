@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Provides list of potential sires
+#' List potential sires
 #'
 #' @param ids character vector of IDs of the animals
 #' @param ped dataframe that is the \code{Pedigree}. It contains pedigree

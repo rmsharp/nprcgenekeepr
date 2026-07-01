@@ -2,7 +2,7 @@
 % Please edit documentation in R/safeExecute.R
 \name{safeExecute}
 \alias{safeExecute}
-\title{Safe Execution Wrapper with Error Handling}
+\title{Execute an expression with error handling}
 \usage{
 safeExecute(
   expr,

@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Converts date columns formatted as characters to be of type datetime
+#' Convert character date columns to Date type
 #'
 #' Part of Pedigree Curation
 #'

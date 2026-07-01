@@ -2,7 +2,7 @@
 % Please edit documentation in R/getPedDirectRelatives.R
 \name{getPedDirectRelatives}
 \alias{getPedDirectRelatives}
-\title{Get the direct ancestors of selected animals from supplied pedigree}
+\title{Get the direct relatives of selected animals from a pedigree}
 \usage{
 getPedDirectRelatives(ids, ped, unrelatedParents = FALSE)
 }

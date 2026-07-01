@@ -2,7 +2,7 @@
 % Please edit documentation in R/summarizeKinshipValues.R
 \name{summarizeKinshipValues}
 \alias{summarizeKinshipValues}
-\title{Summary statistics for imputed kinship values}
+\title{Summarize imputed kinship values}
 \usage{
 summarizeKinshipValues(countedKValues)
 }

@@ -2,8 +2,7 @@
 % Please edit documentation in R/calcA.R
 \name{calcA}
 \alias{calcA}
-\title{Calculates \code{a}, the number of an individual's alleles that are rare in
-each simulation}
+\title{Count each individual's rare alleles per simulation}
 \usage{
 calcA(alleles, threshold = 1L, byID = FALSE)
 }

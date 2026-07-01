@@ -1,8 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Filters kinship to remove rows with kinship values less than the specified
-#' threshold
+#' Filter out kinship pairs below a threshold
 #'
 #' Part of Group Formation
 #' Filters kinship values less than the specified threshold from a long-format
