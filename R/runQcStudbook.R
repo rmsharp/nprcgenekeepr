@@ -30,12 +30,10 @@
 #' @importFrom futile.logger flog.debug
 #' @export
 #' @examples
-#' \dontrun{
 #' data("pedGood", package = "nprcgenekeepr")
 #' result <- runQcStudbook(pedGood, minParentAge = 2.0)
 #' if (!result$qcResult$hasErrors) {
 #'   cleanedPed <- result$cleaned
-#' }
 #' }
 #'
 runQcStudbook <- function(ped,

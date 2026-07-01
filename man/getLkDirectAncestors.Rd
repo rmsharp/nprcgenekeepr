@@ -18,7 +18,7 @@ Gets direct ancestors from labkey \code{study} schema and \code{demographics}
 table.
 }
 \examples{
-\donttest{
+\dontrun{
 # Requires LabKey connection
 library(nprcgenekeepr)
 ## Have to a vector of focal animals

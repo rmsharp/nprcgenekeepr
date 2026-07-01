@@ -22,6 +22,31 @@
 #'
 #' @importFrom data.table as.data.table
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ped <- nprcgenekeepr::lacy1989Ped
+#' ## For each id below, any unknown sire/dam is replaced by a random
+#' ## draw from the supplied representative sires and dams.
+#' allSimParents <- list(
+#'   list(
+#'     id = "A",
+#'     sires = c("s1_1", "s1_2", "s1_3"),
+#'     dams = c("d1_1", "d1_2", "d1_3", "d1_4")
+#'   ),
+#'   list(
+#'     id = "B",
+#'     sires = c("s2_1", "s2_2", "s2_3"),
+#'     dams = c("d2_1", "d2_2", "d2_3", "d2_4")
+#'   ),
+#'   list(
+#'     id = "E",
+#'     sires = c("s3_1", "s3_2", "s3_3"),
+#'     dams = c("d3_1", "d3_2", "d3_3", "d3_4")
+#'   )
+#' )
+#' set.seed(1)
+#' simPed <- makeSimPed(ped, allSimParents)
+#' simPed
 makeSimPed <- function(ped, allSimParents, verbose = FALSE) {
   nIds <- length(allSimParents)
   if (!inherits(ped, "data.table")) {

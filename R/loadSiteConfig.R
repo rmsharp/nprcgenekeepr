@@ -25,6 +25,13 @@
 #'  \code{\link{appServer}}
 #' @importFrom futile.logger flog.warn
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ## Reads ~/.nprcgenekeepr_config (or ~/_nprcgenekeepr_config on
+#' ## Windows) if it exists; returns NULL when no config file is
+#' ## present, so this is safe to run on any machine.
+#' config <- loadSiteConfig()
+#' config
 loadSiteConfig <- function() {
   configFile <- getConfigFileName(Sys.info())[["configFile"]]
   if (is.null(configFile) || !file.exists(configFile)) {

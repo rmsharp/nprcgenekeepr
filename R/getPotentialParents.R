@@ -39,6 +39,17 @@
 #' @importFrom data.table as.data.table
 #' @importFrom stringi stri_sub
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ped <- nprcgenekeepr::rhesusPedigree
+#' ## getPotentialParents needs a logical fromCenter column flagging
+#' ## colony-born animals; add one if your pedigree lacks it.
+#' ped$fromCenter <- TRUE
+#' potentialParents <- getPotentialParents(
+#'   ped = ped, minParentAge = 2.0, maxGestationalPeriod = 210L
+#' )
+#' ## Each element pairs a focal id with candidate sires and dams.
+#' potentialParents[[1L]]
 getPotentialParents <- function(ped, minParentAge, maxGestationalPeriod = NULL,
                                 gestationTable = NULL) {
   birth <- exit <- fromCenter <- id <- sex <- NULL

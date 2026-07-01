@@ -16,3 +16,9 @@ Initial grpNum list
 \description{
 Convenience function to make the initial grpNum list
 }
+\examples{
+library(nprcgenekeepr)
+## Create the initial grpNum list for three groups
+grpNum <- makeGroupNum(numGp = 3L)
+grpNum
+}

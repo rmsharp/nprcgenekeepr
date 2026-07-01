@@ -18,11 +18,9 @@
 #' @seealso \code{\link{safeExecute}} for error-safe execution with logging
 #' @export
 #' @examples
-#' \dontrun{
 #' logModuleEvent("modInput", "File uploaded successfully")
 #' logModuleEvent("modPedigree", "Processing %d animals", level = "DEBUG", 100)
 #' logModuleEvent("modGeneticValue", "Calculation failed", level = "ERROR")
-#' }
 #'
 logModuleEvent <- function(module, message, level = "INFO", ...) {
   # Validate log level

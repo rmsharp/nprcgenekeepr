@@ -22,9 +22,9 @@ modular application via \code{\link{runModularApp}}. Existing
 zero-argument callers continue to work.
 }
 \examples{
-if (interactive()) {
-  library(nprcgenekeepr)
-  runGeneKeepR()
+\dontrun{
+library(nprcgenekeepr)
+runGeneKeepR()
 }
 }
 \seealso{

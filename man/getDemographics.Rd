@@ -18,7 +18,7 @@ specified in the single parameter provided.
 This is a thin wrapper around \code{labkey.selectRows()}.
 }
 \examples{
-\donttest{
+\dontrun{
 ## Needs a connection to a LabKey server
 library(nprcgenekeepr)
 siteInfo <- getSiteInfo()

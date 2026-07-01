@@ -28,6 +28,15 @@
 #' @seealso \code{\link{checkChangedColsLst}} for checking column changes
 #'
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ## Turn a qcStudbook error list into UI-friendly data frames.
+#' errorLst <- qcStudbook(nprcgenekeepr::pedFemaleSireMaleDam,
+#'   reportErrors = TRUE
+#' )
+#' result <- processQcStudbookResult(errorLst)
+#' result$hasErrors
+#' result$errors
 processQcStudbookResult <- function(errorLst) {
   # Helper function to create an error row
   makeErrorRow <- function(error, details) {

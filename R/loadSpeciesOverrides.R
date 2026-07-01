@@ -39,6 +39,13 @@
 #'  \code{\link{getSpeciesMinBreedingAge}},
 #'  \code{\link{getSpeciesGestation}}, \code{\link{reportGV}}
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ## Reads optional species overrides from the user's site config
+#' ## file; with no config file every element is NULL, meaning "use
+#' ## the bundled speciesGestation values / built-in defaults".
+#' overrides <- loadSpeciesOverrides()
+#' str(overrides)
 loadSpeciesOverrides <- function() {
   empty <- list(
     breedingTable = NULL, gestationTable = NULL,

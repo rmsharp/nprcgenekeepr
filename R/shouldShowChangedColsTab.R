@@ -19,6 +19,12 @@
 #'
 #' @seealso \code{\link{checkChangedColsLst}} for the original implementation
 #' @export
+#' @examples
+#' library(nprcgenekeepr)
+#' ## No column changes recorded: the tab stays hidden.
+#' shouldShowChangedColsTab(list())
+#' ## A recorded case change: the tab should be shown.
+#' shouldShowChangedColsTab(list(caseChange = c(Id = "id")))
 shouldShowChangedColsTab <- function(changedCols) {
   if (is.null(changedCols)) {
     return(FALSE)

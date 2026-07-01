@@ -40,6 +40,8 @@ docs/*
 !docs/research/**
 !docs/setup/
 !docs/setup/**
+!docs/conventions/
+!docs/conventions/**
 pkgdown_site/
 .quarto/
 dashboard.html

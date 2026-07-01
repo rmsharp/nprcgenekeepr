@@ -23,6 +23,13 @@ Checks the changedCols list to determine if the Changed Columns tab should
 be inserted into the application navigation. The tab is shown when column
 names were modified during QC processing.
 }
+\examples{
+library(nprcgenekeepr)
+## No column changes recorded: the tab stays hidden.
+shouldShowChangedColsTab(list())
+## A recorded case change: the tab should be shown.
+shouldShowChangedColsTab(list(caseChange = c(Id = "id")))
+}
 \seealso{
 \code{\link{checkChangedColsLst}} for the original implementation
 }

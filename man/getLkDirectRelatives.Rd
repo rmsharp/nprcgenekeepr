@@ -28,7 +28,7 @@ pedigree component (ancestors, descendants, and collaterals such as siblings
 and mates) reachable from the focal animals.
 }
 \examples{
-\donttest{
+\dontrun{
 # Requires LabKey connection
 library(nprcgenekeepr)
 ## Have to a vector of focal animals

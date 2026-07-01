@@ -41,6 +41,14 @@ boot: a missing configuration file, a missing override key, or a
 missing/malformed CSV all fall back to the bundled values (a warning is
 raised for an unreadable CSV).
 }
+\examples{
+library(nprcgenekeepr)
+## Reads optional species overrides from the user's site config
+## file; with no config file every element is NULL, meaning "use
+## the bundled speciesGestation values / built-in defaults".
+overrides <- loadSpeciesOverrides()
+str(overrides)
+}
 \seealso{
 \code{\link{loadSiteConfig}},
 \code{\link{getSpeciesMinBreedingAge}},
