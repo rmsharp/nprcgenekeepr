@@ -15,6 +15,42 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-30 — `get_and_or_list` rendered-doc defect fixed (`\sQuote{}`) landed on `master` (Session 255)
+
+- **Deliverable (owner pick = “get_and_or_list”):** fix the carried-open
+  rendered-doc defect in `R/get_and_or_list.R:10` — the troff/LaTeX
+  single-quote idiom `` `and' ``/`` `or' `` (open-backtick,
+  close-apostrophe) that roxygen markdown mode (`DESCRIPTION`
+  `markdown = TRUE`, each backtick = an inline-code delimiter)
+  mis-parsed into the garbled
+  `\verb{and' or }or' with`and’`at`man/get_and_or_list.Rd:15`. **REFACTOR-class documentation fix — no logic / NAMESPACE / behavior change; TDD RED/GREEN N/A; NOT zero-drift (it intentionally changes the rendered`.Rd`); 0 corrections / 0 overrides** (2 owner gates via`AskUserQuestion`: fix approach →`\`;
+  landing method → direct-merge).
+- **The change (3 spans, 1 R file + regenerated `.Rd`; code commit
+  `b0d8e3e8`):** replaced `` `and' or `or' with `and' `` with
+  `\sQuote{and} or \sQuote{or} with \sQuote{and}` (wrapped across two
+  `#'` lines to stay ≤80 cols, \[\[avoid-new-lints-r-package\]\]).
+  `\sQuote{}` is the canonical Rd macro for typographic single quotes:
+  it survives markdown mode and renders ‘and’/‘or’/‘and’ in both HTML
+  and PDF.
+- **Verify (deterministic + build-equivalent, firsthand):**
+  `devtools::document()` → only `man/get_and_or_list.Rd` drifted
+  (NAMESPACE diff empty);
+  [`tools::Rd2txt`](https://rdrr.io/r/tools/Rd2HTML.html) renders ‘and’
+  or ‘or’ with ‘and’ (was garbled `\verb{...}`);
+  `lintr::lint("R/get_and_or_list.R")` (pkg loaded) = 0;
+  `spell_check_package` = clean; **`R CMD check --as-cran` GREEN
+  `Status: 2 NOTEs` = 0/0/2** (the 2 documented false-positives:
+  CRAN-incoming archived-maintainer + HTML-Tidy-too-old/V8-unavailable)
+  with Rd files / Rd metadata / Rd line widths / Rd cross-references /
+  code-documentation mismatches / R code / examples / `--run-donttest`
+  all OK.
+- **Landed (direct-merge, owner-gated):** branch
+  `fix-get-and-or-list-squote` (code `b0d8e3e8`) direct-merged onto
+  `master` via merge commit `a23e4eb9` (`--no-ff`). Direct-merge has no
+  CI → landed-tree sanity check: rendered `.Rd` on `master` shows
+  ‘and’/‘or’/‘and’; `git diff be9280b6..a23e4eb9 -- NAMESPACE` empty;
+  only the 2 files touched; no `` `word' `` defect remains in `R/`.
+
 ### 2026-06-30 — issue \#103: merge PR \#106 (Stage 5) + Stage 6 (internal-marker cleanup, Finding 5) landed on `master` (Session 254)
 
 - **Deliverable (owner-directed, two items: “merge pr \#106” then “then

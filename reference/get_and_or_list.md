@@ -17,8 +17,8 @@ get_and_or_list(c_vector, conjunction = "and")
 
 - conjunction:
 
-  The conjunction to be used as the connector. This is usually
-  `and' or `or' with \`and' being the default.
+  The conjunction to be used as the connector. This is usually ‘and’ or
+  ‘or’ with ‘and’ being the default.
 
 ## Value
 
