@@ -1,6 +1,6 @@
-# Examines column names, `cols` for required column names
+# Check column names for required columns
 
-Examines column names, `cols` for required column names
+Check column names for required columns
 
 ## Usage
 

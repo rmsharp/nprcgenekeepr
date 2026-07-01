@@ -1,4 +1,4 @@
-# Population designation function
+# Flag animals as the population of interest
 
 Part of the pedigree filtering toolset.
 

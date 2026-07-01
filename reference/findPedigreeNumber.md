@@ -1,4 +1,4 @@
-# Determines the pedigree number for each id
+# Determine the pedigree number for each ID
 
 One of Pedigree Curation functions
 

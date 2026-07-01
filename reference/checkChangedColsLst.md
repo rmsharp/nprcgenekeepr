@@ -1,6 +1,6 @@
-# checkChangedColsLst examines list for non-empty fields
+# Check a changed-columns list for non-empty fields
 
-checkChangedColsLst examines list for non-empty fields
+Check a changed-columns list for non-empty fields
 
 ## Usage
 

@@ -1,6 +1,6 @@
-# Removes potential sires from list of Ids
+# Remove potential sires from a list of IDs
 
-Removes potential sires from list of Ids
+Remove potential sires from a list of IDs
 
 ## Usage
 

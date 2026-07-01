@@ -1,4 +1,4 @@
-# dataframe2string converts a data.frame object to a character vector
+# Convert a data frame to a character vector
 
 Adapted from print.data.frame
 

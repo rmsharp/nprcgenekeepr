@@ -1,6 +1,6 @@
-# addIdRecords Adds Ego records added having NAs for parent IDs
+# Add ego records with NA parent IDs
 
-addIdRecords Adds Ego records added having NAs for parent IDs
+Add ego records with NA parent IDs
 
 ## Usage
 

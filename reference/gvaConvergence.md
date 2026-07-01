@@ -1,4 +1,4 @@
-# Evidence-based advice on the number of gene-drop iterations a pedigree needs
+# Recommend gene-drop iterations for a pedigree
 
 Part of Genetic Value Analysis
 

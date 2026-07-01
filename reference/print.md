@@ -1,6 +1,6 @@
-# print.summary.nprcgenekeepr print.summary.nprcgenekeeprGV
+# Print an nprcgenekeepr summary object
 
-print.summary.nprcgenekeepr print.summary.nprcgenekeeprGV
+Print an nprcgenekeepr summary object
 
 ## Usage
 

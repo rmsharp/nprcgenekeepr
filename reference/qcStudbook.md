@@ -1,4 +1,4 @@
-# Quality Control for the Studbook or pedigree
+# Run quality control on a studbook or pedigree
 
 Main pedigree curation function that performs basic quality control on
 pedigree information

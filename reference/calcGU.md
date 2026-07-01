@@ -1,4 +1,4 @@
-# Calculates genome uniqueness for each ID that is part of the population
+# Calculate genome uniqueness for each population ID
 
 Part of Genetic Value Analysis
 

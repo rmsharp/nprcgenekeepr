@@ -1,6 +1,6 @@
-# Filters a kinship matrix to include only the egos listed in 'ids'
+# Filter a kinship matrix to selected IDs
 
-Filters a kinship matrix to include only the egos listed in 'ids'
+Filter a kinship matrix to selected IDs
 
 ## Usage
 

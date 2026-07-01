@@ -1,4 +1,4 @@
-# Make relation classes table from `kin` dataframe
+# Make a relation classes table from kinship pairs
 
 From Relations
 

@@ -1,7 +1,6 @@
-# getConfigFileName returns the configuration file name appropriate for the system
+# Get the configuration file name for the system
 
-getConfigFileName returns the configuration file name appropriate for
-the system
+Get the configuration file name for the system
 
 ## Usage
 

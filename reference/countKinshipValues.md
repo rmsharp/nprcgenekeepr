@@ -1,7 +1,6 @@
-# Counts the number of occurrences of each kinship value seen for a pair of individuals in a series of simulated pedigrees
+# Count kinship-value occurrences across simulated pedigrees
 
-Counts the number of occurrences of each kinship value seen for a pair
-of individuals in a series of simulated pedigrees
+Count kinship-value occurrences across simulated pedigrees
 
 ## Usage
 

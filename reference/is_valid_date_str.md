@@ -1,4 +1,4 @@
-# Returns TRUE if the string is a valid date
+# Test whether a string is a valid date
 
 Taken from github.com/rmsharp/rmsutilityr
 

@@ -1,4 +1,4 @@
-# Finds the total number of offspring for each animal in the pedigree
+# Tabulate offspring counts, optionally by population
 
 Optionally find the number that are part of the population of interest.
 

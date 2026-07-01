@@ -1,6 +1,6 @@
-# Forms a list of animal Ids and animals related to them
+# List each animal's high-kinship relatives
 
-Forms a list of animal Ids and animals related to them
+List each animal's high-kinship relatives
 
 ## Usage
 

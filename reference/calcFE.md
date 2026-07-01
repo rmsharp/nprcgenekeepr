@@ -1,4 +1,4 @@
-# Calculates founder Equivalents
+# Calculate founder equivalents
 
 Part of the Genetic Value Analysis
 

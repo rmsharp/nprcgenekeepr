@@ -1,4 +1,4 @@
-# Converts the fromCenter information to a standardized code
+# Convert from-center information to a logical value
 
 Part of Pedigree Curation
 

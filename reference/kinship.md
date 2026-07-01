@@ -1,4 +1,4 @@
-# Generates a kinship matrix
+# Generate a kinship matrix
 
 The function previously had an internal call to the kindepth function in
 order to provide the parameter pdepth (the generation number). This

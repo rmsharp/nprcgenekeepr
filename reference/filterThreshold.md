@@ -1,4 +1,4 @@
-# Filters kinship to remove rows with kinship values less than the specified threshold
+# Filter out kinship pairs below a threshold
 
 Part of Group Formation Filters kinship values less than the specified
 threshold from a long-format table of kinship values.

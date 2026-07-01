@@ -1,6 +1,6 @@
-# Convenience function to make the initial groupMembers animal list
+# Make the initial groupMembers animal list
 
-Convenience function to make the initial groupMembers animal list
+Make the initial groupMembers animal list
 
 ## Usage
 

@@ -1,6 +1,6 @@
-# Filters a genetic value report down to only the specified animals
+# Filter a genetic value report to selected animals
 
-Filters a genetic value report down to only the specified animals
+Filter a genetic value report to selected animals
 
 ## Usage
 

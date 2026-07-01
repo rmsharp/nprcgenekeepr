@@ -1,7 +1,6 @@
-# Combines two vectors of alleles by randomly selecting one allele or the other at each position
+# Combine two allele vectors by Mendelian sampling
 
-Combines two vectors of alleles by randomly selecting one allele or the
-other at each position
+Combine two allele vectors by Mendelian sampling
 
 ## Usage
 

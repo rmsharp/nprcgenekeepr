@@ -1,4 +1,4 @@
-# Calculates the sex ratio (number of non-males / number of males) given animal Ids and their pedigree
+# Calculate the sex ratio of a set of animals
 
 The Males are counted when the `ped$sex` value is `"M"`. Females are
 counted when the `ped$sex` value is not `"M"`. This means animals with

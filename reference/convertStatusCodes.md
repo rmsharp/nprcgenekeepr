@@ -1,4 +1,4 @@
-# Converts status indicators to a Standardized code
+# Convert status indicators to a standardized code
 
 Part of Pedigree Curation
 

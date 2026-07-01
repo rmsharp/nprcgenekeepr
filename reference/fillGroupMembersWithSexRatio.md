@@ -1,4 +1,4 @@
-# Forms breeding group(s) with an effort to match a specified sex ratio
+# Form breeding groups to match a target sex ratio
 
 The sex ratio is the ratio of females to males.
 

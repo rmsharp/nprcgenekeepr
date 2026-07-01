@@ -1,6 +1,6 @@
-# getChangedColsTab skeleton of list of errors
+# Build the changed-columns tab panel
 
-getChangedColsTab skeleton of list of errors
+Build the changed-columns tab panel
 
 ## Usage
 

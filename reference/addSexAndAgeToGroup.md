@@ -1,7 +1,6 @@
-# Forms a dataframe with Id, Sex, and current Age given a list of Ids and a pedigree
+# Build a group data frame with ID, sex, and age
 
-Forms a dataframe with Id, Sex, and current Age given a list of Ids and
-a pedigree
+Build a group data frame with ID, sex, and age
 
 ## Usage
 

@@ -1,4 +1,4 @@
-# Ranks animals based on genetic value
+# Rank animals by genetic value
 
 Part of Genetic Value Analysis Adds a column to `rpt` containing
 integers from 1 to nrow, and provides a value designation for each

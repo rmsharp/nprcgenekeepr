@@ -1,4 +1,4 @@
-# Calculates the mean kinship for each animal in a kinship matrix
+# Calculate mean kinship for each animal in a kinship matrix
 
 Part of Genetic Value Analysis
 

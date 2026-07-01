@@ -1,6 +1,6 @@
-# checkErrorLst examines list for non-empty fields
+# Check an error list for non-empty fields
 
-checkErrorLst examines list for non-empty fields
+Check an error list for non-empty fields
 
 ## Usage
 

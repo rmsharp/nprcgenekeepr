@@ -1,4 +1,4 @@
-# Creates a pyramid plot of the pedigree provided
+# Create an age-sex pyramid plot of a pedigree
 
 The pedigree provided must have the following columns: `sex` and `age`.
 This needs to be augmented to allow pedigrees structures that are

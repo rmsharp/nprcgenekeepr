@@ -1,6 +1,6 @@
-# fixColumnNames changes original column names into standardized names
+# Standardize pedigree column names
 
-fixColumnNames changes original column names into standardized names
+Standardize pedigree column names
 
 ## Usage
 

@@ -1,6 +1,6 @@
-# Gets tokens from character vector of lines
+# Get tokens from a character vector of lines
 
-Gets tokens from character vector of lines
+Get tokens from a character vector of lines
 
 ## Usage
 

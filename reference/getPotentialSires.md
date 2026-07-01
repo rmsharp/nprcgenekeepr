@@ -1,8 +1,8 @@
-# Provides list of potential sires
+# List potential sires
 
-Provides list of potential sires
+List potential sires
 
-Provides list of potential sires
+List potential sires
 
 ## Usage
 

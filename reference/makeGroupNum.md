@@ -1,6 +1,6 @@
-# Convenience function to make the initial grpNum list
+# Make the initial grpNum list
 
-Convenience function to make the initial grpNum list
+Make the initial grpNum list
 
 ## Usage
 

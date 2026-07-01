@@ -1,16 +1,6 @@
-# Add animals to an existing breeding group or forms groups:
+# Add animals to a breeding group or form new groups
 
-`groupAddAssign` finds the largest group that can be formed by adding
-unrelated animals from a set of candidate IDs to an existing group, to a
-new group it has formed from a set of candidate IDs or if more than 1
-group is desired, it finds the set of groups with the largest average
-size.The function implements a maximal independent set (MIS) algorithm
-to find groups of unrelated animals. A set of animals may have many
-different MISs of varying sizes, and finding the largest would require
-traversing all possible combinations of animals. Since this could be
-very time consuming, this algorithm produces a random sample of the
-possible MISs, and selects from these. The size of the random sample is
-determined by the specified number of iterations.
+Part of Group Formation
 
 ## Usage
 
@@ -118,7 +108,19 @@ kinship matrix that is specific for each group formed.
 
 ## Details
 
-Part of Group Formation
+`groupAddAssign` finds the largest group that can be formed by adding
+unrelated animals from a set of candidate IDs to an existing group, to a
+new group it has formed from a set of candidate IDs or if more than 1
+group is desired, it finds the set of groups with the largest average
+size.
+
+The function implements a maximal independent set (MIS) algorithm to
+find groups of unrelated animals. A set of animals may have many
+different MISs of varying sizes, and finding the largest would require
+traversing all possible combinations of animals. Since this could be
+very time consuming, this algorithm produces a random sample of the
+possible MISs, and selects from these. The size of the random sample is
+determined by the specified number of iterations.
 
 ## Examples
 

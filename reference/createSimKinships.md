@@ -1,4 +1,4 @@
-# Makes a list object of kinship matrices from simulated pedigrees of possible parents for animals with unknown parents
+# Build kinship matrices from simulated pedigrees
 
 `createSimKinships` uses `makeSimPed` with the `ped` object and the
 `allSimParents` object to create a set of kinship matrices to be used in

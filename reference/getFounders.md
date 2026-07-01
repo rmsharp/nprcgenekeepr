@@ -1,4 +1,4 @@
-# Gets the founder ids from a pedigree
+# Get the founder ids from a pedigree
 
 Part of Pedigree Curation
 

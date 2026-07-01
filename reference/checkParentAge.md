@@ -1,4 +1,4 @@
-# Check parent ages to be at least `minParentAge`
+# Check parent ages against a minimum age
 
 Ensure parents are sufficiently older than offspring
 

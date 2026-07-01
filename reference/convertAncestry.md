@@ -1,4 +1,4 @@
-# Converts the ancestry information to a standardized code
+# Convert ancestry information to a standard code
 
 Part of Pedigree Curation
 

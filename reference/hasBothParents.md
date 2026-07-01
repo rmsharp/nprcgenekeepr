@@ -1,6 +1,6 @@
-# hasBothParents checks to see if both parents are identified
+# Check whether an animal has both parents
 
-hasBothParents checks to see if both parents are identified
+Check whether an animal has both parents
 
 ## Usage
 

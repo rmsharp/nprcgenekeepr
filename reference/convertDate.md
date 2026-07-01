@@ -1,4 +1,4 @@
-# Converts date columns formatted as characters to be of type datetime
+# Convert character date columns to Date type
 
 Part of Pedigree Curation
 

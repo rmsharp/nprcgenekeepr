@@ -1,7 +1,6 @@
-# getIdsWithOneParent extracts IDs of animals pedigree without either a sire or a dam
+# Get ids of animals with only one parent
 
-getIdsWithOneParent extracts IDs of animals pedigree without either a
-sire or a dam
+Get ids of animals with only one parent
 
 ## Usage
 

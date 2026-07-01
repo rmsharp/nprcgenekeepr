@@ -1,4 +1,4 @@
-# Get the lists of potential parents for all individuals born in the colony with one or two unknown parents
+# Get potential parents for animals with unknown parents
 
 **\[experimental\]**
 

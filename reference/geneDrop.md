@@ -1,4 +1,4 @@
-# Gene drop simulation based on the provided pedigree information
+# Simulate gene dropping through a pedigree
 
 Part of Genetic Value Analysis
 

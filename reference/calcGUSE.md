@@ -1,4 +1,4 @@
-# Calculates the sampling standard error of genome uniqueness for each ID
+# Calculate the standard error of genome uniqueness
 
 Part of Genetic Value Analysis
 

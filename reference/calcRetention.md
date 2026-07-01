@@ -1,4 +1,4 @@
-# Calculates Allelic Retention
+# Calculate allelic retention
 
 Part of Genetic Value Analysis
 

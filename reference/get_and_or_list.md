@@ -1,7 +1,6 @@
-# Returns a one element character string with correct punctuation for a list made up of the elements of the character vector argument
+# Join a character vector into an and/or list
 
-Returns a one element character string with correct punctuation for a
-list made up of the elements of the character vector argument
+Join a character vector into an and/or list
 
 ## Usage
 

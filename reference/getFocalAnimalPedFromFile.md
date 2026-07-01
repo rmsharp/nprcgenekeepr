@@ -1,4 +1,4 @@
-# Get a focal-animal pedigree from a pedigree file (offline, no database)
+# Get a focal-animal pedigree from a pedigree file
 
 File-sourced sibling of
 [`getFocalAnimalPed`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md):

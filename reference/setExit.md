@@ -1,4 +1,4 @@
-# Sets the exit date, if there is no exit column in the table
+# Set the exit date when no exit column exists
 
 Part of Pedigree Curation
 

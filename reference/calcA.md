@@ -1,4 +1,4 @@
-# Calculates `a`, the number of an individual's alleles that are rare in each simulation
+# Count each individual's rare alleles per simulation
 
 Part of Genetic Value Analysis
 

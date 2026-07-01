@@ -1,4 +1,4 @@
-# Adds an NA value for all animals without a relative
+# Add an NA value for animals with no relative
 
 This allows `kin` to be used with `setdiff` when there are no relatives
 otherwise an error would occur because

@@ -1,4 +1,4 @@
-# obfuscatePed takes a pedigree object and creates aliases for all IDs and adjusts all date within a specified amount
+# Obfuscate a pedigree by aliasing IDs and shifting dates
 
 User provides a pedigree object (`ped`), the number of characters to be
 used for alias IDs (`size`), and the maximum number of days that the

@@ -1,4 +1,4 @@
-# Get the direct ancestors of selected animals from supplied pedigree
+# Get the direct relatives of selected animals from a pedigree
 
 Gets direct ancestors from labkey `study` schema and `demographics`
 table.

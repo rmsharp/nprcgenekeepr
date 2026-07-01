@@ -7,6 +7,229 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 257 Did
+
+**Deliverable (owner scope-gate via `AskUserQuestion` = slice “Finding
+3: title voice”):** issue \#103 **Stage 8a – title/description voice
+normalization (audit Finding 3), EXPORTED functions only** – normalized
+**100 exported man-page titles** onto one imperative-voice convention
+(3rd-person -\> imperative; strip 18 function-name prefixes; drop Rd
+markup from titles; shorten run-on titles; correct a few
+inaccurate/copy-pasted titles) and **reverted 4 explicit `@description`
+to implicit**. **REFACTOR-class doc work, INTENTIONALLY rendered-drift
+(changes `man/` titles) – success test = “titles harmonized + gate
+green”, NOT zero-drift; TDD RED/GREEN N/A. DONE + VERIFIED on branch
+`issue103-stage8a-title-voice` (code commit `8e76e49a` + this close-out
+commit); PR \#108 OPEN – the merge is the OWNER’s next decision. 0
+stakeholder corrections / 0 owner overrides** (4 owner gates via
+`AskUserQuestion`: (a) slice -\> Finding 3 title voice; (b) Shiny
+handling -\> exempt; (c) approve-table -\> approve-all-as-shown; (d)
+landing -\> PR-for-CI). **Finding 6 (`@inheritParams`/`@family` de-dup,
+66-file `ped` drift) and internal-`@noRd` titles DEFERRED to later
+sessions.** **Started / Completed:** 2026-06-30 / 2026-06-30 **Status:**
+**DONE + on PR \#108 (CI running at close-out).** Branch pushed;
+`origin/issue103-stage8a-title-voice` == local. **Do NOT merge
+unilaterally** – the merge is the owner’s call (FM \#13 / S246-\>S247
+split; precedent PR-for-CI = S249/S253/S256). When CI goes 10/10 GREEN +
+`mergeStateStatus CLEAN`, the owner merges via
+`gh pr merge 108 --merge --delete-branch`; expect a brief `UNSTABLE`
+after the close-out-docs commit re-triggers the matrix (Learning 235
+(2)). - **The change (100 R/ + 99 regenerated `.Rd`; code commit
+`8e76e49a`):** 61 3rd-person -\> imperative, 18 function-name prefixes
+stripped, 10 noun-phrase -\> imperative, 10 imperative-but-flawed
+tightened (Rd markup removed / run-on shortened / inaccurate corrected –
+e.g. `getPedDirectRelatives` “direct ancestors” -\> “direct relatives”,
+which the body’s parents+offspring union proves correct), 1 mixed-voice
+(`groupAddAssign`). **4 explicit `@description` reverted to implicit**
+(`calculateSexRatio`, `fillGroupMembersWithSexRatio` inline;
+`findGeneration`, `groupAddAssign` malformed braced `@description{...}`
+-\> later paragraphs moved cleanly into `\details`, all text preserved,
+no literal braces). **`getSimSires`/`getPotentialSires` duplicate
+synced** to one title so the rendered `.Rd` is deterministic. - **Method
+(evidence before edits):** deterministic Python census (classify voice;
+size Finding 6’s `ped` drift) sized BOTH findings -\> proved Stage 8 is
+multi-session -\> owner scope-gate picked Finding 3. Then a **16-agent
+read-only Workflow** (14 per-batch drafts reading each file + a 2-lens
+adversarial review: convention + accuracy/consistency) built the
+old-\>new table; review adjusted 5 titles and surfaced 2 out-of-scope
+CODE defects. Applied 96 via a GUARDED bulk script (title-paragraph
+replace, guarded by “file first-line is a prefix of recorded
+old_title” + “\<=4 lines”; 0 skips) + 4 hand-edits for the
+`@description` reverts. - **Verify (firsthand):** re-extracted every
+title, asserted == approved target (**0 mismatches**), all title lines
+**\<=80 chars**; `devtools::document()` -\> **NAMESPACE diff EMPTY**
+(predicted – title-only), 99 `.Rd`; braced reverts rendered (`Rd2txt`)
+with no literal braces + text intact in `\details`; `lintr::lint` =
+**0** across all 100 files (pkg loaded); `spell_check_package` =
+**CLEAN**; **`R CMD check --as-cran --run-donttest` GREEN
+`Status: 2 NOTEs` = 0/0/2** (documented false-positives: CRAN-incoming
+archived-maintainer “New submission” + HTML-Tidy-too-old/V8-unavailable)
+with **`checking examples ... OK`** and all Rd checks
+(files/metadata/line-widths/cross-references) OK.
+
+**Phase-3E (runtime smoke): N/A (stated, not skipped).** REFACTOR-class
+doc-only – no `R/` logic / runtime / Shiny / NAMESPACE change (empty
+diff proven). The meaningful verification (every title == target +
+rendered `.Rd` + `--as-cran` examples OK) is done. FM \#24 does not
+apply.
+
+**Session 256 Handoff Evaluation (by Session 257): Score 9/10.** S256’s
+SUGGESTED-NEXT named THIS deliverable: “Stage 8 (title voice +
+`@inheritParams`/`@family` de-dup – audit Findings 3, 6; judgment-heavy,
+per-file human review, LAST of the 8 stages).” **What helped:** (1) the
+pointer named Stage 8 with the audit ref
+(`docs/audits/ROXYGEN_HARMONIZATION_AUDIT_2026-06-29.md` roadmap item 8)
+and the LOAD-BEARING “judgment-heavy / per-file human review / not
+bulk-scriptable” framing – which correctly told me to census +
+scope-gate rather than bulk-regex; (2) the standing post-edit checklist
+(re-gate + `lint_package` + `spell` hand-add-not-`update_wordlist`; for
+NAMESPACE-touching stages diff NAMESPACE) held exactly (here NAMESPACE
+was untouched, proven); (3) landing-owner-gated with both precedents
+(PR-for-CI vs direct-merge) made the landing gate turnkey; (4)
+ghost-check clean (HEAD `c623cbfa` == documented S256 close-out); (5)
+every standing keep held firsthand (version 2.0.0, package ARCHIVED,
+`.DS_Store` tracked-modified keep, `PED_GV_AUDIT*.html` untracked keep,
+the 2-NOTE false-positives, Shiny/app exemption from Stage 7). **What
+was missing (the thin -1):** S256 relayed the audit’s “Stage 8” as one
+unit without flagging it is really TWO judgment-heavy findings summing
+to multi-session work (~100 titles + a 66-file dedup) – but the audit
+ITSELF said “consider splitting across sessions,” so this is the audit’s
+framing inherited by S256, surfaced at zero cost by my own census; a
+very thin -1. It also could not have known the census undercounts
+multi-export files’ 2nd titles (a census-method gap I found). **What was
+wrong:** nothing – every fact firsthand-reconfirmed. **ROI:** very high.
+
+**Self-assessment (Session 257): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean), reported, STOPPED for the owner; wrote
+the 1B stub BEFORE technical work; declared REFACTOR-class / TDD-N/A up
+front and held it; gated scope + Shiny + approve-table + landing (4
+`AskUserQuestion` gates). **Strengths:** (1) ran a **cheap deterministic
+census BEFORE the discovery workflow** to size both findings and drive
+the scope gate – directly addressing S256’s “over-heavy workflow”
+weakness; (2) **caught the census undercount** (multi-export `mod*`
+files hide a 2nd Server title; `autoIdFormat` Get+Set) by re-scanning
+`>=2 @export` files – a first-title census would have silently missed
+them; (3) **caught the `getSimSires.R` duplicate** (defines/exports
+`getPotentialSires`) and handled it safely by syncing BOTH titles so the
+render is deterministic, surfacing the file-dup as a separate code
+defect; (4) **guarded bulk script + full re-verification** (0
+mismatches, all \<=80) applied 96 deterministically with a
+leftover-fragment/over-length safety net, reserving hand-edits for the 4
+`@description` reverts; (5) **rendered the 2 braced reverts** to prove
+no literal braces + no lost text (moved to `\details`); (6)
+**predicted + PROVED empty NAMESPACE diff**; full gauntlet (lint 0 /
+spell clean / `--as-cran` 0/0/2 `examples ... OK`); (7) **owned the
+RESULT (FM \#13)** – opened PR \#108, left the merge to the owner.
+**Weakness (the -1):** the discovery workflow (~547k tokens / 16 agents)
+is still heavy for a title task (lighter than S256’s 644k/18, but a
+leaner design – e.g. bigger batches or a single reviewer – would do);
+and Finding 3 is not 100% complete even at the “titles” granularity –
+internal-`@noRd` titles and the 9 Shiny Server titles remain (correctly
+deferred / exempt, but the deliverable is exported-non-Shiny titles, not
+“all titles”). Capped at 9.
+
+**Learnings:** **Learning 243** added to `PROJECT_LEARNINGS.md` – a
+roadmap “stage” bundling two judgment-heavy findings is multi-session
+-\> split by Finding at an owner scope-gate; a first-title-per-file
+census UNDERCOUNTS multi-export files’ 2nd titles (re-scan
+`>=2 @export`); title voice is rendered-drift but NAMESPACE-neutral
+(proof = every title == target + empty NAMESPACE + `--as-cran`
+Rd/examples OK); a guarded bulk script + full re-census safely applies
+~100 deterministic edits; reverting a malformed braced
+`@description{...}` fixes a defect AND moves later paragraphs to
+`\details` (render to confirm); a duplicate SOURCE file needs both
+blocks synced; Shiny titles exempt (parallel to Stage-7); landing
+PR-for-CI for large `man/` churn. Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[avoid-reconcile-tools-on-curated-files\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a REFACTOR-class
+documentation session – TDD RED/GREEN N/A.**
+
+**=\> SUGGESTED NEXT = Stage 8b (the other half of Stage 8), or the
+Finding-3 tails / surfaced code defects.** Stage 8a is on PR \#108
+(owner merges). **Remaining for issue \#103:** - **Stage 8b – Finding 6
+(`@inheritParams`/`@family` de-dup), the LAST substantive \#103 piece.**
+BIG + judgment-heavy: `@param ped` in **66 files with ~20 distinct
+descriptions** (drift), `ids` x24, `kmat` x9, `threshold` x6. Plan: pick
+a CANONICAL donor per formal, verify its text fits EACH callee (some
+`ped` args genuinely need “with required columns” / demographic variants
+-\> do NOT blind-`@inheritParams` those), replace `@param` with
+`@inheritParams`; add `@family` clusters (`calc*`, `getLkDirect*`,
+`mod*`, `obfuscate*`). Rendered-drift (changes up to 66 `.Rd`
+`\arguments`), per-callee verification, own scope-gate advisable. -
+**Finding-3 tails (optional):** internal-`@noRd` titles (no rendered
+impact -\> low priority) and, IF the owner later wants Shiny converted,
+the 20 `mod*`/app titles (do BOTH UI+Server for consistency; decide the
+“GeneKeepR” naming). - **Surfaced CODE defects (own sessions, out of
+doc-harmonization scope):** `getSimSires.R` is a DUPLICATE file
+defining/exporting `getPotentialSires` -\> likely DELETE it (verify no
+test/collate/`@rdname` references first; a code change needing its own
+gate). - **Older deferred:** shiny + Matrix `@import` -\> `@importFrom`
+(each its own judgment call; Matrix S4 dispatch); the CRAN thread (Phase
+5b, `docs/planning/cran-2.0.0-phase5-runbook.md`, owner-run outward).
+**Each stage edits `R/`(+`man/`/`NAMESPACE`) which SHIP -\> after each:
+re-gate AND `lintr::lint_package()` AND `spell_check_package` (hand-add
+wordlist terms, never `update_wordlist` –
+\[\[avoid-reconcile-tools-on-curated-files\]\]); for any
+NAMESPACE-touching stage ALSO diff NAMESPACE + runtime-smoke the
+INSTALLED namespace (Learning 239).** **Landing owner-gated each time**
+(`AskUserQuestion`).
+
+**Key files (this session):** **Edited (Stage 8a code commit `8e76e49a`,
+branch `issue103-stage8a-title-voice`, PR \#108):** 100 `R/*.R` (roxygen
+title lines; the 4 `@description`-revert files also drop the tag) + 99
+regenerated `man/*.Rd`. **No `NAMESPACE` / `DESCRIPTION` / `data` /
+`NEWS` / `vignettes` / `tests` change (NAMESPACE empty diff, proven).**
+**Process docs (this close-out commit, on the branch):** `CHANGELOG.md`
+(S257 entry), `PROJECT_LEARNINGS.md` (Learning 243), `SESSION_NOTES.md`
+(this handoff). **Gate/workflow evidence (NOT committed, scratchpad):**
+`s257gate/build.log`+`check.log` (Status: 2 NOTEs); the census scripts
+(`census_titles.py`, `apply_titles.py`), `final_assembly.json`, and the
+workflow output (`tasks/w10ahih16.output`). **NOT committed (standing
+keep / not mine):** `PED_GV_AUDIT_2026-05-30.html` (untracked,
+`.Rbuildignore`d); `.DS_Store` (TRACKED + modified – pre-existing, left
+untouched); `dashboard.html` (generated).
+
+**Gotchas:** (1) **Stage 8a is on PR \#108, NOT merged** – the merge is
+the owner’s call; branch `issue103-stage8a-title-voice`. (2) **This
+CHANGED 99 `man/` titles + moved 2 braced-`@description` bodies into
+`\details`** – INTENDED rendered-drift, not drift-to-fix; the success
+test was “every title == target + gate green”, not zero drift. (3)
+**`getSimSires.R` is a DUPLICATE file** – it defines and `@export`s
+`getPotentialSires` (same fn as `getPotentialSires.R`); only
+`man/getPotentialSires.Rd` exists. Both titles are now “List potential
+sires” so the render is deterministic; the file-dup is a latent CODE
+defect for a future dedup session (likely delete `getSimSires.R` after
+verifying no references). (4) **Multi-export files hide 2nd titles** –
+each `mod*` file has a UI AND a Server title; `autoIdFormat` has
+Get+Set. A first-`#'`-title census undercounts; re-scan `>=2 @export`.
+The 9 `mod*` Server titles remain (Shiny-exempt). (5) **Shiny `mod*`/app
+20 titles are EXEMPT** (kept noun-phrase, parallel to Stage-7
+`@examples` exemption). If a future session converts them, do BOTH
+UI+Server and decide the informal “GeneKeepR” app name. (6) **Stage 8b
+(Finding 6) is the big remaining piece** – see SUGGESTED NEXT; some
+`ped` args need a specific (not inherited) description. (7) Carried
+standing keeps (unchanged): package **ARCHIVED on CRAN 2025-07-29**;
+CRAN resubmission owner-gated; win-builder/R-hub/`submit_cran()`
+OWNER-run outward + HARD STOP; the `--as-cran` gate certifies the
+CURRENT tree only; `NEWS.md`/`README.md` are GENERATED (from
+`NEWS.Rmd`/`README.Rmd`); module/E2E tests need `NOT_CRAN=true` BUT
+`--as-cran` SKIPS them via `skip_on_cran`; a 0/0/2 check does NOT imply
+spelling-clean -\> `spell_check_package` (hand-add wordlist terms, never
+`update_wordlist`); `git pull` is rebase + chokes on unstaged tracked
+changes (stash `.DS_Store` if it blocks a checkout, Learning 233);
+re-check `git status` before ANY `reset --hard`
+(\[\[check-status-before-destructive-git\]\]); **zsh `status` is a
+read-only special variable**; closing-keyword discipline for any
+PR/issue body (PR \#108 body is keyword-safe – references \#103, does
+not close it); **the version is 2.0.0** (DESCRIPTION authoritative;
+CLAUDE.md’s “1.1.0.9000” header is stale prose).
+
 ### What Session 256 Did
 
 **Deliverable (owner pick = “Stage 7 – examples policy”; via

@@ -1,4 +1,4 @@
-# Gets pedigree with descendants of provided group
+# Reduce a pedigree to a group and its descendants
 
 Filters a pedigree down to only the descendants of the provided group,
 building the pedigree forward in time starting from a group of probands.

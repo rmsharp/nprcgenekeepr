@@ -1,4 +1,4 @@
-# Filters kinship values from a long-format kinship table based on the sexes of the two animals involved
+# Filter kinship pairs by the animals' sexes
 
 Part of Group Formation
 

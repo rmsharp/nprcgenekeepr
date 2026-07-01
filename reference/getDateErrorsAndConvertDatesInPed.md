@@ -1,4 +1,4 @@
-# Converts columns of dates in text form to `Date` object columns
+# Find date errors and convert dates in a pedigree
 
 Finds date errors in columns defined in `convertDate` as dates and
 converts date strings to `Date` objects.

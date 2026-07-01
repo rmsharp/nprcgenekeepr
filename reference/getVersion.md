@@ -1,6 +1,6 @@
-# getVersion Get the version number of nprcgenekeepr
+# Get the version number of nprcgenekeepr
 
-getVersion Get the version number of nprcgenekeepr
+Get the version number of nprcgenekeepr
 
 ## Usage
 

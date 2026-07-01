@@ -1,4 +1,4 @@
-# Work around for unit tests using sample() among various versions of R
+# Set a reproducible RNG seed across R versions
 
 The change in how `set.seed` works in R 3.6 prompted the creation of
 this R version agnostic replacement to get unit test code to work on

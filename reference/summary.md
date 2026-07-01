@@ -1,6 +1,6 @@
-# summary.nprcgenekeeprErr Summary function for class nprcgenekeeprErr
+# Summarize a studbook quality-control error list
 
-summary.nprcgenekeeprErr Summary function for class nprcgenekeeprErr
+Summarize a studbook quality-control error list
 
 ## Usage
 

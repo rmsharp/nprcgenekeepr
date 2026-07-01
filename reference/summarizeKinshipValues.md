@@ -1,4 +1,4 @@
-# Summary statistics for imputed kinship values
+# Summarize imputed kinship values
 
 Makes a data.frame object containing simulated kinship summary
 statistics using the counts of kinship values list from

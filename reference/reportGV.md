@@ -1,4 +1,4 @@
-# Generates a genetic value report for a provided pedigree
+# Generate a genetic value report for a pedigree
 
 This is the main function for the Genetic Value Analysis.
 

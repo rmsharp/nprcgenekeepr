@@ -1,4 +1,4 @@
-# removeEarlyDates removes dates before a specified year
+# Remove dates before a specified year
 
 Dates before a specified year are set to NA. This is often used for
 dates formed from malformed character representations such as a date in

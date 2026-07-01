@@ -1,4 +1,4 @@
-# Identifies the founders in a pedigree
+# Identify the founders in a pedigree
 
 Part of Pedigree Curation
 

@@ -1,4 +1,4 @@
-# Sets sex for animals listed as either a sire or dam
+# Correct the sex of animals listed as a sire or dam
 
 Part of Pedigree Curation
 

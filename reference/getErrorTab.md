@@ -1,6 +1,6 @@
-# getErrorTab skeleton of list of errors
+# Build the error-list tab panel
 
-getErrorTab skeleton of list of errors
+Build the error-list tab panel
 
 ## Usage
 

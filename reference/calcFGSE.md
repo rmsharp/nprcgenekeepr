@@ -1,4 +1,4 @@
-# Calculates the sampling standard error of founder genome equivalents
+# Calculate the standard error of founder genome equivalents
 
 Part of the Genetic Value Analysis
 
