@@ -2,7 +2,7 @@
 % Please edit documentation in R/getDateErrorsAndConvertDatesInPed.R
 \name{getDateErrorsAndConvertDatesInPed}
 \alias{getDateErrorsAndConvertDatesInPed}
-\title{Converts columns of dates in text form to \code{Date} object columns}
+\title{Find date errors and convert dates in a pedigree}
 \usage{
 getDateErrorsAndConvertDatesInPed(sb, errorLst)
 }

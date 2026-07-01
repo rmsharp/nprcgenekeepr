@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeGroupMembers.R
 \name{makeGroupMembers}
 \alias{makeGroupMembers}
-\title{Convenience function to make the initial groupMembers animal list}
+\title{Make the initial groupMembers animal list}
 \usage{
 makeGroupMembers(numGp, currentGroups, candidates, ped, harem, minAge)
 }
@@ -31,7 +31,7 @@ be ignored. Default is 1 year.}
 Initial groupMembers list
 }
 \description{
-Convenience function to make the initial groupMembers animal list
+Make the initial groupMembers animal list
 }
 \examples{
 library(nprcgenekeepr)

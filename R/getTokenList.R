@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Gets tokens from character vector of lines
+#' Get tokens from a character vector of lines
 #'
 #' @param lines character vector with text from configuration file
 #' @return First right and left space trimmed token from first character vector

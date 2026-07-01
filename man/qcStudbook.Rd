@@ -2,7 +2,7 @@
 % Please edit documentation in R/qcStudbook.R
 \name{qcStudbook}
 \alias{qcStudbook}
-\title{Quality Control for the Studbook or pedigree}
+\title{Run quality control on a studbook or pedigree}
 \usage{
 qcStudbook(sb, minParentAge = 2, reportChanges = FALSE, reportErrors = FALSE)
 }

@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Finds the number of total offspring for each animal in the provided pedigree
+#' Count total offspring for each animal
 #'
 #' Part of Genetic Value Analysis
 #'

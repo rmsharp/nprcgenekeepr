@@ -1,8 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Combines two vectors of alleles by randomly selecting one allele
-#' or the other at each position
+#' Combine two allele vectors by Mendelian sampling
 #'
 #' @param a1 integer vector with first allele for each individual
 #' @param a2 integer vector with second allele for each individual

@@ -2,7 +2,7 @@
 % Please edit documentation in R/calcFGSE.R
 \name{calcFGSE}
 \alias{calcFGSE}
-\title{Calculates the sampling standard error of founder genome equivalents}
+\title{Calculate the standard error of founder genome equivalents}
 \usage{
 calcFGSE(ped, alleles)
 }

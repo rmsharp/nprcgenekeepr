@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Creates an Excel workbook with worksheets
+#' Create an Excel workbook with worksheets
 #'
 #' @param file filename of workbook to be created
 #' @param df_list list of data frames to be added as worksheets to workbook

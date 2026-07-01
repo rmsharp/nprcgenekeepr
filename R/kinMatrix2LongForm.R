@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Reformats a kinship matrix into a long-format table
+#' Reformat a kinship matrix into long form
 #'
 #' Part of Group Formation
 #'

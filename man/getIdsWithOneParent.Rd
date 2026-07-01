@@ -2,8 +2,7 @@
 % Please edit documentation in R/getIdsWithOneParent.R
 \name{getIdsWithOneParent}
 \alias{getIdsWithOneParent}
-\title{getIdsWithOneParent extracts IDs of animals pedigree without either a
-sire or a dam}
+\title{Get ids of animals with only one parent}
 \usage{
 getIdsWithOneParent(uPed)
 }
@@ -14,8 +13,7 @@ getIdsWithOneParent(uPed)
 Character vector of all single parents
 }
 \description{
-getIdsWithOneParent extracts IDs of animals pedigree without either a
-sire or a dam
+Get ids of animals with only one parent
 }
 \examples{
 examplePedigree <- nprcgenekeepr::examplePedigree

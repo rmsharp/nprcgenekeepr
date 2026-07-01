@@ -2,8 +2,7 @@
 % Please edit documentation in R/createExampleFiles.R
 \name{createExampleFiles}
 \alias{createExampleFiles}
-\title{Creates a folder with CSV files containing example pedigrees and ID lists
-used to demonstrate the package}
+\title{Create example pedigree and ID-list CSV files}
 \usage{
 createExampleFiles()
 }

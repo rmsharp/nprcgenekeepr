@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Forms a list of animal Ids and animals related to them
+#' List each animal's high-kinship relatives
 #'
 #' @param kmat numeric matrix of pairwise kinship values. Rows and columns
 #' are named with animal IDs.

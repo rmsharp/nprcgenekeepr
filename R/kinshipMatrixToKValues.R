@@ -1,8 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Extracts a dataframe with a row for each kinship coeficient in the kinship
-#' matrix
+#' Extract a kValue table from a kinship matrix
 #'
 #' A \code{kValue} matrix has one row for each pair of individuals in the
 #' kinship matrix and one column for each kinship matrix. A

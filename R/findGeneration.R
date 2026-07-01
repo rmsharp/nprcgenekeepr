@@ -1,9 +1,9 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Determines the generation number for each id
+#' Determine the generation number for each ID
 #'
-#' @description{This loops through the entire pedigree one generation at a
+#' This loops through the entire pedigree one generation at a
 #' time. It finds the zeroth generation during first loop.
 #' The first time through this loop no sire or dam is in parents.
 #' This means that the animals without a sire and without a dam are
@@ -19,7 +19,7 @@
 #' vector.
 #'
 #' This does not work if the pedigree does not have all parent IDs as ego IDs.
-#' }
+#'
 #' @param id character vector with unique identifier for an individual
 #' @param sire character vector with unique identifier for an
 #' individual's father (\code{NA} if unknown).

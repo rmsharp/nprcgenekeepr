@@ -2,7 +2,7 @@
 % Please edit documentation in R/convertFromCenter.R
 \name{convertFromCenter}
 \alias{convertFromCenter}
-\title{Converts the fromCenter information to a standardized code}
+\title{Convert from-center information to a logical value}
 \usage{
 convertFromCenter(fromCenter)
 }

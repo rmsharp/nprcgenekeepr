@@ -2,8 +2,7 @@
 % Please edit documentation in R/filterPairs.R
 \name{filterPairs}
 \alias{filterPairs}
-\title{Filters kinship values from a long-format kinship table based on the sexes
-of the two animals involved}
+\title{Filter kinship pairs by the animals' sexes}
 \usage{
 filterPairs(kin, ped, ignore = list(c("F", "F")))
 }

@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Determines the pedigree number for each id
+#' Determine the pedigree number for each ID
 #'
 #' One of Pedigree Curation functions
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/getCurrentAge.R
 \name{getCurrentAge}
 \alias{getCurrentAge}
-\title{Age in years using the provided birthdate}
+\title{Calculate current age in years from a birth date}
 \usage{
 getCurrentAge(birth)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeGroupNum.R
 \name{makeGroupNum}
 \alias{makeGroupNum}
-\title{Convenience function to make the initial grpNum list}
+\title{Make the initial grpNum list}
 \usage{
 makeGroupNum(numGp)
 }
@@ -14,7 +14,7 @@ formed from the list of IDs. Default is 1.}
 Initial grpNum list
 }
 \description{
-Convenience function to make the initial grpNum list
+Make the initial grpNum list
 }
 \examples{
 library(nprcgenekeepr)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/getPotentialSires.R, R/getSimSires.R
 \name{getPotentialSires}
 \alias{getPotentialSires}
-\title{Provides list of potential sires}
+\title{List potential sires}
 \usage{
 getPotentialSires(ids, ped, minAge = 1L)
 
@@ -24,9 +24,9 @@ A character vector of potential sire Ids
 A character vector of potential sire Ids
 }
 \description{
-Provides list of potential sires
+List potential sires
 
-Provides list of potential sires
+List potential sires
 }
 \examples{
 library(nprcgenekeepr)

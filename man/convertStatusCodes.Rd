@@ -2,7 +2,7 @@
 % Please edit documentation in R/convertStatusCodes.R
 \name{convertStatusCodes}
 \alias{convertStatusCodes}
-\title{Converts status indicators to a Standardized code}
+\title{Convert status indicators to a standardized code}
 \usage{
 convertStatusCodes(status)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/calcFEFG.R
 \name{calcFEFG}
 \alias{calcFEFG}
-\title{Calculates Founder Equivalents and Founder Genome Equivalents}
+\title{Calculate founder equivalents and founder genome equivalents}
 \usage{
 calcFEFG(ped, alleles)
 }

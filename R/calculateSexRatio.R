@@ -1,10 +1,9 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Calculates the sex ratio (number of non-males / number of males) given
-#' animal Ids and their pedigree
+#' Calculate the sex ratio of a set of animals
 #'
-#' @description The Males are counted when the \code{ped$sex} value is
+#' The Males are counted when the \code{ped$sex} value is
 #' \code{"M"}.
 #' Females are counted when the \code{ped$sex} value is not
 #' \code{"M"}. This means animals with ambiguous sex are counted with the

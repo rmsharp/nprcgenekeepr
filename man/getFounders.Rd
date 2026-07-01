@@ -2,7 +2,7 @@
 % Please edit documentation in R/getFounders.R
 \name{getFounders}
 \alias{getFounders}
-\title{Gets the founder ids from a pedigree}
+\title{Get the founder ids from a pedigree}
 \usage{
 getFounders(ped)
 }

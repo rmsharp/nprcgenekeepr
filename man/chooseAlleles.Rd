@@ -2,8 +2,7 @@
 % Please edit documentation in R/chooseAlleles.R
 \name{chooseAlleles}
 \alias{chooseAlleles}
-\title{Combines two vectors of alleles by randomly selecting one allele
-or the other at each position}
+\title{Combine two allele vectors by Mendelian sampling}
 \usage{
 chooseAlleles(a1, a2)
 }
@@ -19,8 +18,7 @@ An integer vector with the result of sampling from \code{a1}
 and \code{a2} according to Mendelian inheritance.
 }
 \description{
-Combines two vectors of alleles by randomly selecting one allele
-or the other at each position
+Combine two allele vectors by Mendelian sampling
 }
 \examples{
 chooseAlleles(0L:4L, 5L:9L)

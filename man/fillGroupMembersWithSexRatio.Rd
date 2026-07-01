@@ -2,7 +2,7 @@
 % Please edit documentation in R/fillGroupMembersWithSexRatio.R
 \name{fillGroupMembersWithSexRatio}
 \alias{fillGroupMembersWithSexRatio}
-\title{Forms breeding group(s) with an effort to match a specified sex ratio}
+\title{Form breeding groups to match a target sex ratio}
 \usage{
 fillGroupMembersWithSexRatio(
   candidates,

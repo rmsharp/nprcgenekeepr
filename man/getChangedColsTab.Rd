@@ -2,7 +2,7 @@
 % Please edit documentation in R/getChangedColsTab.R
 \name{getChangedColsTab}
 \alias{getChangedColsTab}
-\title{getChangedColsTab skeleton of list of errors}
+\title{Build the changed-columns tab panel}
 \usage{
 getChangedColsTab(errorLst, pedigreeFileName)
 }
@@ -15,5 +15,5 @@ getChangedColsTab(errorLst, pedigreeFileName)
 HTML formatted error list
 }
 \description{
-getChangedColsTab skeleton of list of errors
+Build the changed-columns tab panel
 }

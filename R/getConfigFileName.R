@@ -1,8 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' getConfigFileName returns the configuration file name appropriate for
-#' the system
+#' Get the configuration file name for the system
 #'
 #' @param sysInfo object returned by Sys.info()
 #' @return Character vector with expected configuration file

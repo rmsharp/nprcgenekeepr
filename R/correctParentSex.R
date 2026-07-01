@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Sets sex for animals listed as either a sire or dam
+#' Correct the sex of animals listed as a sire or dam
 #'
 #' Part of Pedigree Curation
 #'

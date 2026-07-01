@@ -2,7 +2,7 @@
 % Please edit documentation in R/reportGV.R
 \name{reportGV}
 \alias{reportGV}
-\title{Generates a genetic value report for a provided pedigree}
+\title{Generate a genetic value report for a pedigree}
 \usage{
 reportGV(
   ped,

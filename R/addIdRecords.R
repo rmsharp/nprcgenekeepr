@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' addIdRecords Adds Ego records added having NAs for parent IDs
+#' Add ego records with NA parent IDs
 #'
 #' @param ids character vector of IDs to be added as Ego records having
 #' NAs for parent IDs

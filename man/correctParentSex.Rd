@@ -2,7 +2,7 @@
 % Please edit documentation in R/correctParentSex.R
 \name{correctParentSex}
 \alias{correctParentSex}
-\title{Sets sex for animals listed as either a sire or dam}
+\title{Correct the sex of animals listed as a sire or dam}
 \usage{
 correctParentSex(id, sire, dam, sex, recordStatus, reportErrors = FALSE)
 }

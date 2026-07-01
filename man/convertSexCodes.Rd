@@ -2,7 +2,7 @@
 % Please edit documentation in R/convertSexCodes.R
 \name{convertSexCodes}
 \alias{convertSexCodes}
-\title{Converts a sex indicator for an individual to a standardized code}
+\title{Convert a sex indicator to a standardized code}
 \usage{
 convertSexCodes(sex, ignoreHerm = TRUE)
 }

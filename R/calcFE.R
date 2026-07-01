@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Calculates founder Equivalents
+#' Calculate founder equivalents
 #'
 #' Part of the Genetic Value Analysis
 #'

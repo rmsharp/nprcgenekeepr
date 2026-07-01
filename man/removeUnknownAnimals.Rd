@@ -2,8 +2,7 @@
 % Please edit documentation in R/removeUnknownAnimals.R
 \name{removeUnknownAnimals}
 \alias{removeUnknownAnimals}
-\title{removeUnknownAnimals Removes unknown animals added to pedigree that serve as
-placeholders for unknown parents}
+\title{Remove placeholder animals added for unknown parents}
 \usage{
 removeUnknownAnimals(ped)
 }
@@ -14,8 +13,7 @@ removeUnknownAnimals(ped)
 Pedigree with unknown animals removed
 }
 \description{
-removeUnknownAnimals Removes unknown animals added to pedigree that serve as
-placeholders for unknown parents
+Remove placeholder animals added for unknown parents
 }
 \examples{
 library(nprcgenekeepr)

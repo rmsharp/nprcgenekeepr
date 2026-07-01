@@ -2,7 +2,7 @@
 % Please edit documentation in R/checkRequiredCols.R
 \name{checkRequiredCols}
 \alias{checkRequiredCols}
-\title{Examines column names, \code{cols} for required column names}
+\title{Check column names for required columns}
 \usage{
 checkRequiredCols(cols, reportErrors)
 }
@@ -20,7 +20,7 @@ NULL is returned if all required columns are present. See description
 of \code{reportErrors} for return values when required columns are missing.
 }
 \description{
-Examines column names, \code{cols} for required column names
+Check column names for required columns
 }
 \details{
 When \code{reportErrors = TRUE}, \code{NA} entries in \code{cols}

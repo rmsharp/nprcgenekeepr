@@ -2,7 +2,7 @@
 % Please edit documentation in R/setPopulation.R
 \name{setPopulation}
 \alias{setPopulation}
-\title{Population designation function}
+\title{Flag animals as the population of interest}
 \usage{
 setPopulation(ped, ids)
 }

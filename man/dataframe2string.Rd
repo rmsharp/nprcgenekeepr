@@ -2,7 +2,7 @@
 % Please edit documentation in R/dataframe2string.R
 \name{dataframe2string}
 \alias{dataframe2string}
-\title{dataframe2string converts a data.frame object to a character vector}
+\title{Convert a data frame to a character vector}
 \usage{
 dataframe2string(object, ..., digits = NULL, addRowNames = TRUE)
 }

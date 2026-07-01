@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Returns TRUE if the string is a valid date
+#' Test whether a string is a valid date
 #'
 #' Taken from github.com/rmsharp/rmsutilityr
 #'

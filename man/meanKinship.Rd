@@ -2,7 +2,7 @@
 % Please edit documentation in R/meanKinship.R
 \name{meanKinship}
 \alias{meanKinship}
-\title{Calculates the mean kinship for each animal in a kinship matrix}
+\title{Calculate mean kinship for each animal in a kinship matrix}
 \usage{
 meanKinship(kmat)
 }

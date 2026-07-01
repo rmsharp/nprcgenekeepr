@@ -2,7 +2,7 @@
 % Please edit documentation in R/findOffspring.R
 \name{findOffspring}
 \alias{findOffspring}
-\title{Finds the number of total offspring for each animal in the provided pedigree}
+\title{Count total offspring for each animal}
 \usage{
 findOffspring(probands, ped)
 }

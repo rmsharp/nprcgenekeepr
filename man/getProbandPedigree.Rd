@@ -2,7 +2,7 @@
 % Please edit documentation in R/getProbandPedigree.R
 \name{getProbandPedigree}
 \alias{getProbandPedigree}
-\title{Gets pedigree to ancestors of provided group leaving uninformative ancestors}
+\title{Reduce a pedigree to probands and their ancestors}
 \usage{
 getProbandPedigree(probands, ped)
 }

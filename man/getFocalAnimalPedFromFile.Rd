@@ -2,7 +2,7 @@
 % Please edit documentation in R/getFocalAnimalPedFromFile.R
 \name{getFocalAnimalPedFromFile}
 \alias{getFocalAnimalPedFromFile}
-\title{Get a focal-animal pedigree from a pedigree file (offline, no database)}
+\title{Get a focal-animal pedigree from a pedigree file}
 \usage{
 getFocalAnimalPedFromFile(fileName, pedigreeFileName = NULL, sep = ",")
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeSimPed.R
 \name{makeSimPed}
 \alias{makeSimPed}
-\title{Makes a simulated pedigree using representative sires and dams}
+\title{Make a simulated pedigree from representative sires and dams}
 \usage{
 makeSimPed(ped, allSimParents, verbose = FALSE)
 }

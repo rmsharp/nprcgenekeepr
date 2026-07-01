@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Safe Execution Wrapper with Error Handling
+#' Execute an expression with error handling
 #'
 #' Executes an expression with comprehensive error handling. On error,
 #' logs the error and returns a default value instead of stopping execution.

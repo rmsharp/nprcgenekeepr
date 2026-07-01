@@ -2,7 +2,7 @@
 % Please edit documentation in R/removePotentialSires.R
 \name{removePotentialSires}
 \alias{removePotentialSires}
-\title{Removes potential sires from list of Ids}
+\title{Remove potential sires from a list of IDs}
 \usage{
 removePotentialSires(ids, minAge, ped)
 }
@@ -20,7 +20,7 @@ information including the IDs listed in \code{candidates}.}
 character vector of Ids with any potential sire Ids removed.
 }
 \description{
-Removes potential sires from list of Ids
+Remove potential sires from a list of IDs
 }
 \examples{
 library(nprcgenekeepr)

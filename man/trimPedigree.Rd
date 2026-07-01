@@ -2,8 +2,7 @@
 % Please edit documentation in R/trimPedigree.R
 \name{trimPedigree}
 \alias{trimPedigree}
-\title{Trim pedigree to ancestors of provided group by removing uninformative
-individuals}
+\title{Trim a pedigree to a group's ancestors}
 \usage{
 trimPedigree(
   probands,

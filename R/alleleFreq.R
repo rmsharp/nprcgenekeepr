@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Calculates the count of each allele in the provided vector
+#' Count each allele in a vector
 #'
 #' Part of Genetic Value Analysis
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/getAncestors.R
 \name{getAncestors}
 \alias{getAncestors}
-\title{Recursively create a character vector of ancestors for an individual ID}
+\title{Recursively collect an individual's ancestors}
 \usage{
 getAncestors(id, ptree)
 }

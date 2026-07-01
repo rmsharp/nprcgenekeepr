@@ -2,7 +2,7 @@
 % Please edit documentation in R/getErrorTab.R
 \name{getErrorTab}
 \alias{getErrorTab}
-\title{getErrorTab skeleton of list of errors}
+\title{Build the error-list tab panel}
 \usage{
 getErrorTab(errorLst, pedigreeFileName)
 }
@@ -15,5 +15,5 @@ getErrorTab(errorLst, pedigreeFileName)
 HTML formatted error list
 }
 \description{
-getErrorTab skeleton of list of errors
+Build the error-list tab panel
 }

@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' hasBothParents checks to see if both parents are identified
+#' Check whether an animal has both parents
 #'
 #' @param id character vector of IDs to examine for parents
 #' @param ped a pedigree

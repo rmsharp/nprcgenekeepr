@@ -2,7 +2,7 @@
 % Please edit documentation in R/getAnimalsWithHighKinship.R
 \name{getAnimalsWithHighKinship}
 \alias{getAnimalsWithHighKinship}
-\title{Forms a list of animal Ids and animals related to them}
+\title{List each animal's high-kinship relatives}
 \usage{
 getAnimalsWithHighKinship(kmat, ped, threshold, currentGroups, ignore, minAge)
 }
@@ -36,7 +36,7 @@ and the character vectors are made up of animals sharing a kinship value
 greater than our equal to the \code{threshold} value.
 }
 \description{
-Forms a list of animal Ids and animals related to them
+List each animal's high-kinship relatives
 }
 \examples{
 qcPed <- nprcgenekeepr::qcPed

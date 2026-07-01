@@ -2,7 +2,7 @@
 % Please edit documentation in R/groupAddAssign.R
 \name{groupAddAssign}
 \alias{groupAddAssign}
-\title{Add animals to an existing breeding group or forms groups:}
+\title{Add animals to a breeding group or form new groups}
 \usage{
 groupAddAssign(
   candidates,
@@ -80,7 +80,9 @@ The list item \code{groupKin} contains the subset of the kinship matrix
 that is specific for each group formed.
 }
 \description{
-{
+Part of Group Formation
+}
+\details{
 \code{groupAddAssign} finds the largest group that can be formed by adding
 unrelated animals from a set of candidate IDs to an existing group, to a new
 group it has formed from a set of candidate IDs or if more than 1 group
@@ -93,10 +95,6 @@ combinations of animals. Since this could be very time consuming, this
 algorithm produces a random sample of the possible MISs, and selects from
 these. The size of the random sample is determined by the specified number
 of iterations.
-}
-}
-\details{
-Part of Group Formation
 }
 \examples{
 library(nprcgenekeepr)

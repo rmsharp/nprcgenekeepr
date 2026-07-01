@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' print.summary.nprcgenekeepr print.summary.nprcgenekeeprGV
+#' Print an nprcgenekeepr summary object
 #'
 #' @param x object of class summary.nprcgenekeeprErr and class list
 #' @param ... additional arguments for the \code{summary.default} statement

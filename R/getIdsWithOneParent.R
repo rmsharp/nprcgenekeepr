@@ -1,8 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' getIdsWithOneParent extracts IDs of animals pedigree without either a
-#' sire or a dam
+#' Get ids of animals with only one parent
 #'
 #' @param uPed a trimmed pedigree dataframe with uninformative founders removed.
 #' @return Character vector of all single parents

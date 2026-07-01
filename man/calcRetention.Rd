@@ -2,7 +2,7 @@
 % Please edit documentation in R/calcRetention.R
 \name{calcRetention}
 \alias{calcRetention}
-\title{Calculates Allelic Retention}
+\title{Calculate allelic retention}
 \usage{
 calcRetention(ped, alleles)
 }

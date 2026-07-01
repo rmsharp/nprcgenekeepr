@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Returns the elapsed time since start_time
+#' Format the elapsed time since a start time
 #'
 #' Taken from github.com/rmsharp/rmsutilityr
 #'

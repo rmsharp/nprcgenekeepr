@@ -2,7 +2,7 @@
 % Please edit documentation in R/obfuscateDate.R
 \name{obfuscateDate}
 \alias{obfuscateDate}
-\title{obfuscateDate adds a random number of days bounded by plus/minus max delta}
+\title{Obfuscate dates with a random day offset}
 \usage{
 obfuscateDate(baseDate, minDate, maxDelta = 30L)
 }

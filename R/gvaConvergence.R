@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Evidence-based advice on the number of gene-drop iterations a pedigree needs
+#' Recommend gene-drop iterations for a pedigree
 #'
 #' Part of Genetic Value Analysis
 #'

@@ -2,8 +2,7 @@
 % Please edit documentation in R/createSimKinships.R
 \name{createSimKinships}
 \alias{createSimKinships}
-\title{Makes a list object of kinship matrices from simulated pedigrees of possible
-parents for animals with unknown parents}
+\title{Build kinship matrices from simulated pedigrees}
 \usage{
 createSimKinships(ped, allSimParents, pop = NULL, n = 10L, verbose = FALSE)
 }

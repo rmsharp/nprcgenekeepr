@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Population designation function
+#' Flag animals as the population of interest
 #'
 #' Part of the pedigree filtering toolset.
 #'

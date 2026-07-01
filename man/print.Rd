@@ -3,7 +3,7 @@
 \name{print.summary.nprcgenekeeprErr}
 \alias{print.summary.nprcgenekeeprErr}
 \alias{print.summary.nprcgenekeeprGV}
-\title{print.summary.nprcgenekeepr print.summary.nprcgenekeeprGV}
+\title{Print an nprcgenekeepr summary object}
 \usage{
 \method{print}{summary.nprcgenekeeprErr}(x, ...)
 
@@ -20,7 +20,7 @@ An object to send to the generic print function
 object to send to generic print function
 }
 \description{
-print.summary.nprcgenekeepr print.summary.nprcgenekeeprGV
+Print an nprcgenekeepr summary object
 }
 \examples{
 library(nprcgenekeepr)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/setExit.R
 \name{setExit}
 \alias{setExit}
-\title{Sets the exit date, if there is no exit column in the table}
+\title{Set the exit date when no exit column exists}
 \usage{
 setExit(ped, timeOrigin = as.Date("1970-01-01"))
 }

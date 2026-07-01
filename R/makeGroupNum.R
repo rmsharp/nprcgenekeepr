@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Convenience function to make the initial grpNum list
+#' Make the initial grpNum list
 #'
 #' @param numGp integer value indicating the number of groups that should be
 #' formed from the list of IDs. Default is 1.

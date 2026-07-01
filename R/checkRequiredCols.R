@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Examines column names, \code{cols} for required column names
+#' Check column names for required columns
 #'
 #' @details When \code{reportErrors = TRUE}, \code{NA} entries in \code{cols}
 #' are treated as ordinary non-matching column names when building the list of

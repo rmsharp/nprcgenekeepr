@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Forms kValue matrix from list of kinship matrices
+#' Build a kValue table from a list of kinship matrices
 #'
 #' A \code{kValue} matrix has one row for each pair of individuals in the
 #' kinship matrix and one column for each kinship matrix. A

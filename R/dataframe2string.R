@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' dataframe2string converts a data.frame object to a character vector
+#' Convert a data frame to a character vector
 #'
 #' Adapted from print.data.frame
 #'
