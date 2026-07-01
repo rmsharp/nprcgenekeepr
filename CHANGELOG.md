@@ -15,7 +15,7 @@ here.
 
 ## \[Unreleased\]
 
-### 2026-06-30 — issue \#103 Stage 7 (examples policy, Finding 1 / §7) — PR \#107 open (Session 256)
+### 2026-06-30 — issue \#103 Stage 7 (examples policy, Finding 1 / §7) landed on `master` (Session 256)
 
 - **Deliverable (owner pick = “Stage 7 — examples policy”; via
   `AskUserQuestion`: scope = complete Stage 7, policy-doc home = new
@@ -26,9 +26,10 @@ here.
   **REFACTOR-class documentation work — no R-logic / NAMESPACE /
   behavior change; TDD RED/GREEN N/A; 0 corrections / 0 overrides** (3
   owner gates via `AskUserQuestion`: scope, policy-doc location, landing
-  method). **DONE + VERIFIED on branch `issue103-stage7-examples` (code
-  commit `d6e6b8dc` + this close-out commit); PR \#107 open — the merge
-  is the owner’s call.**
+  method). **DONE + LANDED on `master`** — branch
+  `issue103-stage7-examples` (code commit `d6e6b8dc` + close-out
+  `035bd755`); PR \#107 merged after CI 10/10 green + CLEAN via merge
+  commit **`84923846`**; local `master` == origin/master.
 - **The change (20 R/ files + 20 regenerated `.Rd`):** (a) **added
   `@examples`** to **9** callable utilities — `loadSiteConfig`,
   `loadSpeciesOverrides`, `saveDataframesAsFiles` (writes to
@@ -68,9 +69,10 @@ here.
   code-documentation mismatches / S3 method consistency / tests all OK.
 - **Keyword-safe** PR body (“Part of \#103. Stage 7 of 8 — does **not**
   close the tracking issue”). Learning 242 added to
-  `PROJECT_LEARNINGS.md`. **Stages 1–6 of \#103 are on `master`; Stage 7
-  is on PR \#107 awaiting the owner’s merge.** Remaining: Stage 8 (title
-  voice + `@inheritParams`/`@family` de-dup — judgment-heavy, last).
+  `PROJECT_LEARNINGS.md`. **Stages 1–7 of \#103 are now all on
+  `master`** (Stage 7 via merge commit `84923846`). Remaining: Stage 8
+  (title voice + `@inheritParams`/`@family` de-dup — judgment-heavy,
+  last).
 
 ### 2026-06-30 — `get_and_or_list` rendered-doc defect fixed (`\sQuote{}`) landed on `master` (Session 255)
 

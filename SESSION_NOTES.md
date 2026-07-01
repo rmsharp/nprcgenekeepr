@@ -22,16 +22,24 @@ commit); PR \#107 OPEN – the merge is the OWNER’s next decision. 0
 stakeholder corrections / 0 owner overrides** (3 owner gates via
 `AskUserQuestion`: (a) scope -\> complete Stage 7; (b) policy-doc
 location -\> new `docs/` file; (c) landing method -\> PR-for-CI).
-**Started / Completed:** 2026-06-30 / 2026-06-30 **Status:** **DONE
-(branch + PR \#107, awaiting owner merge).** Local
-`R CMD check --as-cran --run-donttest` GREEN 0/0/2 with
-`checking examples ... OK` on the code commit; PR \#107 CI: the
-close-out-docs commit re-triggers the full matrix – EXPECT green
-(doc-only; the local gate already ran the examples). **Confirm PR \#107
-CI green before merging; do NOT merge unilaterally.** - **The change (20
-R/ files + 20 regenerated `.Rd`; code commit `d6e6b8dc`):** (a) **added
-`@examples`** to **9** callable utilities – `loadSiteConfig`,
-`loadSpeciesOverrides`, `saveDataframesAsFiles` (writes to
+**Started / Completed:** 2026-06-30 / 2026-06-30 **Status:** **DONE +
+LANDED on `master`.** Owner directed the merge; PR \#107 CI went **10/10
+GREEN + `mergeStateStatus CLEAN`** (R CMD check passed on Windows /
+macOS / Ubuntu release+devel+oldrel-1, plus lint / pkgdown /
+test-coverage / codecov) – so the newly-runnable examples are verified
+CROSS-PLATFORM, not just on the macOS local gate. Merged via
+`gh pr merge 107 --merge --delete-branch` -\> merge commit
+**`84923846`** (“Merge pull request \#107 …”); local `master` ==
+origin/master, remote+local feature branch deleted, the `.DS_Store`
+stash popped cleanly (Learning 233). **Landed-tree sanity check:**
+NAMESPACE diff empty across `47c7d401..84923846`; the merge touched
+exactly 20 `R/` + 20 `man/` + `.gitignore` + the policy doc (+ 3 process
+docs); `if(interactive())` gone from the 2 launchers;
+`getDemographics.Rd` now `\dontrun`. **Stages 1-7 of issue \#103 are now
+all on `master`.** - **The change (20 R/ files + 20 regenerated `.Rd`;
+code commit `d6e6b8dc`):** (a) **added `@examples`** to **9** callable
+utilities – `loadSiteConfig`, `loadSpeciesOverrides`,
+`saveDataframesAsFiles` (writes to
 [`tempdir()`](https://rdrr.io/r/base/tempfile.html)),
 `getPotentialParents`, `makeGroupMembers`, `makeGroupNum`, `makeSimPed`,
 plus `shouldShowChangedColsTab` + `processQcStudbookResult`; (b)
@@ -153,20 +161,15 @@ Carried as applied: \[\[consult-project-source-of-truth\]\],
 \[\[push-close-out-docs-to-origin\]\]. **This was a REFACTOR-class
 documentation session – TDD RED/GREEN N/A.**
 
-**=\> SUGGESTED NEXT = the owner’s MERGE decision for PR \#107** (Stage
-7), then **Stage 8** (the LAST \#103 stage) or the deferred judgment
-calls / CRAN thread. **PR \#107 is owner-gated – do NOT merge
-unilaterally** (S246-\>S247 / S249 / S253 split). Confirm CI 10/10
-GREEN + `mergeStateStatus CLEAN` first; **EXPECT a brief `UNSTABLE`
-while the close-out-docs commit re-runs the matrix** (Learning 235 (2))
-before it resolves CLEAN. After the merge + `master` sync
-(\[\[push-close-out-docs-to-origin\]\]): **Stage 8 (title voice +
-`@inheritParams`/`@family` de-dup – audit Findings 3, 6; judgment-heavy,
-per-file human review, LAST of the 8 stages).** **Deferred sub-work
-(still open):** the **shiny + Matrix `@import` -\> `@importFrom`
-conversions** – each its OWN judgment call (Matrix = S4 method/operator
-dispatch -\> enumerate every generic + verify dispatch + full
-`--as-cran` + kinship regression + runtime smoke; shiny = large API
+**=\> SUGGESTED NEXT = Stage 8** (the LAST of the 8 \#103 stages), or
+the deferred judgment calls / CRAN thread. Stage 7 is LANDED via merge
+`84923846` – **Stages 1-7 of \#103 are now all on `master`.** **Stage 8
+(title voice + `@inheritParams`/`@family` de-dup – audit Findings 3, 6;
+judgment-heavy, per-file human review, LAST of the 8 stages).**
+**Deferred sub-work (still open):** the **shiny + Matrix `@import` -\>
+`@importFrom` conversions** – each its OWN judgment call (Matrix = S4
+method/operator dispatch -\> enumerate every generic + verify dispatch +
+full `--as-cran` + kinship regression + runtime smoke; shiny = large API
 surface, 52 files already use `@importFrom shiny`); both still in
 DESCRIPTION Imports. **Each stage edits `R/`(+`man/`/`NAMESPACE`) which
 SHIP -\> after each: re-gate AND `lintr::lint_package()` AND
@@ -199,14 +202,13 @@ keep / not mine):** `PED_GV_AUDIT_2026-05-30.html` (untracked,
 `.Rbuildignore`d); `.DS_Store` (TRACKED + modified – pre-existing repo
 state, left untouched); `dashboard.html` (generated).
 
-**Gotchas:** (1) **Stage 7 is on PR \#107, NOT yet on `master`** –
-Stages 1-6 are on `master`; Stage 7 awaits the owner’s merge. Confirm CI
-green + CLEAN first; expect a brief `UNSTABLE` while the close-out
-commit re-runs CI. (2) **This stage CHANGED rendered `man/` (20 `.Rd`)
-AND what `--as-cran` executes** (the runnable examples now RUN) – that
-is INTENDED, not drift-to-fix; the success test was
-`checking examples ... OK`, not zero drift. (3) **The add-examples set
-is 9, not the audit’s 7** – `shouldShowChangedColsTab` +
+**Gotchas:** (1) **Stage 7 is LANDED on `master`** (merge `84923846`, PR
+\#107 merged after CI 10/10 GREEN + CLEAN) – Stages 1-7 of \#103 are now
+all on `master`. `master` == origin/master. (2) **This stage CHANGED
+rendered `man/` (20 `.Rd`) AND what `--as-cran` executes** (the runnable
+examples now RUN) – that is INTENDED, not drift-to-fix; the success test
+was `checking examples ... OK`, not zero drift. (3) **The add-examples
+set is 9, not the audit’s 7** – `shouldShowChangedColsTab` +
 `processQcStudbookResult` were mislabeled “tab-UI” but contain no Shiny
 code (Learning 242 (3)). If a future audit re-touches these, they are
 correctly documented callables now. (4) **The examples policy is in
