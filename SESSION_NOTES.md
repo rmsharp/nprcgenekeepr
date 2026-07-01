@@ -7,6 +7,199 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 258 Did
+
+**Deliverable (owner-directed = “1” = “Merge PR \#108” from S257’s
+suggested-next list):** merge **PR \#108** – issue \#103 **Stage 8a –
+title/description voice normalization (audit Finding 3)** – into
+`master`. **Landing/process action for already-verified REFACTOR-class
+documentation content (authored + fully gated by S257); TDD
+RED/GREEN/REFACTOR N/A (no new code). DONE + LANDED on `master`; 0
+stakeholder corrections / 0 owner overrides.** No further gate posed –
+the owner’s “1” WAS the landing decision, and the landing METHOD
+(PR-for-CI) was already chosen by S257; merging a green+clean PR the
+owner directed is not a new judgment call. **Started / Completed:**
+2026-06-30 / 2026-06-30 **Status:** **DONE + LANDED. `master` ==
+origin/master; Stages 1-8a of issue \#103 are all on `master`.** -
+**Merged clean:** re-confirmed PR \#108 = **10/10 checks SUCCESS +
+mergeStateStatus CLEAN** immediately before merging (the CI in-flight at
+S257 close-out finished green cross-platform – R CMD check on
+Windows/macOS/Ubuntu release+devel+oldrel-1, plus
+lint/pkgdown/test-coverage/codecov).
+`gh pr merge 108 --merge --delete-branch` -\> merge commit
+**`0978d405`** (“Merge pull request \#108 from
+rmsharp/issue103-stage8a-title-voice”); local `master` fast-forwarded
+`c623cbfa..0978d405`; remote+local branch `issue103-stage8a-title-voice`
+deleted. - **Stash mechanics (Learning 233 extended to the Phase-1B
+stub):** before the merge I stashed `.DS_Store` (tracked-modified
+standing keep) AND the S258 stub I’d written to `SESSION_NOTES.md`, so
+the post-merge branch switch was clean. Popped after the merge -\>
+applied cleanly onto `master` because master’s `SESSION_NOTES.md`
+post-merge == the branch’s (S257’s close-out was IN the merge, so
+identical base). The pre-existing `stash@{0}: WIP on dev` is NOT mine –
+left untouched (it renumbered as stashes pushed/popped). - **Landed-tree
+sanity check (PR-for-CI already cert’d it, confirmed anyway):**
+`git diff c623cbfa..0978d405 -- NAMESPACE DESCRIPTION` **EMPTY**
+(title-only, exactly as S257 predicted); the merge touched exactly **100
+`R/` + 99 `man/` + 3 process docs** (`CHANGELOG.md`, `SESSION_NOTES.md`,
+`PROJECT_LEARNINGS.md`) = 202 files, matching S257’s claim to the file;
+merge-commit parents = `c623cbfa` (S256 master base) + `d6521165` (S257
+branch tip); local `master` == origin/master (no re-push of master
+needed – the merge already advanced origin).
+
+**Phase-3E (runtime smoke): N/A (stated, not skipped).** Nothing with
+runtime/behavior was merged – REFACTOR-class doc-only content with a
+PROVEN-empty NAMESPACE/DESCRIPTION diff, and the exact merged tip
+(`d6521165`) was already CI-certified 10/10 on 5 platforms. There is no
+new program behavior to smoke. FM \#24 does not apply.
+
+**Session 257 Handoff Evaluation (by Session 258): Score 10/10.** S257’s
+SUGGESTED-NEXT led with exactly this action: “Stage 8a is on PR \#108
+(owner merges)… When CI goes 10/10 GREEN + `mergeStateStatus CLEAN`, the
+owner merges via `gh pr merge 108 --merge --delete-branch`.” **What
+helped:** (1) the merge command was spelled out verbatim and was correct
+as written; (2) the handoff PREDICTED the exact landed-tree shape –
+empty NAMESPACE diff (title-only) and 100 R/ + 99 man/ + 3 docs – which
+let me turn the sanity check into a pass/fail confirmation rather than
+an open-ended audit, and every prediction held to the file; (3) it
+flagged the expected brief `UNSTABLE` after the close-out-docs commit
+re-triggers the matrix (Learning 235 (2)) – so I knew to re-confirm
+CLEAN at merge time (it had settled to CLEAN); (4) the `.DS_Store`/stash
+Learning-233 gotcha was pre-named, so the stash-pop-onto-master was
+turnkey; (5) ghost-check clean (HEAD `d6521165` == documented S257
+close-out); (6) every standing keep held firsthand (version 2.0.0,
+package ARCHIVED, `.DS_Store` tracked-modified keep,
+`PED_GV_AUDIT*.html` untracked keep, the getSimSires duplicate, Shiny
+exemption). **What was missing:** nothing that cost me anything – the
+merge is a bounded turnkey action and the handoff was complete for it.
+**What was wrong:** nothing – every prediction (CI green, empty
+NAMESPACE, 202-file shape, parents) was firsthand-confirmed exactly.
+**ROI:** very high – a turnkey, correctly-predicted landing. A clean 10.
+
+**Self-assessment (Session 258): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; PR \#108 status;
+dashboard 98/100; git status; ghost-check clean), reported, STOPPED for
+the owner; on “1” declared landing/process + TDD-N/A up front; wrote the
+1B stub BEFORE the merge. **Strengths:** (1) **re-confirmed green+CLEAN
+at merge time** (not just at orientation) – the correct discipline given
+S257’s flagged post-commit `UNSTABLE` window; (2) **stashed the
+standing-keep `.DS_Store` AND the Phase-1B stub before the merge** so
+the branch switch was clean, then verified the pop applied with no
+conflict – no lost work, no destructive git; (3) **verified the merge
+against S257’s explicit predictions** (empty NAMESPACE/DESCRIPTION
+diff + exact 202-file 100/99/3 shape + correct merge parents +
+master==origin + branch deleted) rather than trusting “gh said it
+merged”; (4) **did NOT over-gate** – the owner’s “1” was the decision
+and the method was pre-chosen, so I merged rather than posing a
+redundant `AskUserQuestion` (correct read of
+\[\[observation-vs-decision\]\]: this was a decision already made, not
+an observation to analyze); (5) **honest about novelty** – added NO
+padding `PROJECT_LEARNINGS` entry for a pure repeat of the S256 PR-merge
+pattern. **Weakness (the -1):** intrinsically low-novelty – a
+single-command landing of pre-verified work; the session’s value is
+disciplined verification + clean git mechanics + a faithful close-out,
+not new problem-solving. Capped at 9 on that basis, not on any defect.
+
+**Learnings:** **No new `PROJECT_LEARNINGS.md` entry.** A pure PR-for-CI
+merge that followed the established S256 pattern (re-confirm green+CLEAN
+-\> `gh pr merge --merge --delete-branch` -\> stash-pop `.DS_Store`+stub
+-\> landed-tree sanity check) produced no novel learning; forcing one
+would be noise (the guidance is capture what was learned, not
+manufacture a row per session). The one mild refinement – that the
+Phase-1B stub stashes+pops cleanly across the merge because the branch’s
+close-out is IN the merge – is a direct application of the existing
+Learning 233, noted in the gotchas below rather than as a new numbered
+learning. Carried as applied: \[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a landing/process
+session – TDD RED/GREEN/REFACTOR N/A.**
+
+**=\> SUGGESTED NEXT = Stage 8b (the big remaining \#103 piece), or the
+Finding-3 tails / surfaced code defects.** Stage 8a is now LANDED (merge
+`0978d405`); **Stages 1-8a of issue \#103 are all on `master`.**
+**Remaining for issue \#103:** - **Stage 8b – Finding 6
+(`@inheritParams`/`@family` de-dup), the LAST substantive \#103 piece.**
+BIG + judgment-heavy: `@param ped` in **~66 files with ~20 distinct
+descriptions** (drift), `ids` x24, `kmat` x9, `threshold` x6. Plan: pick
+a CANONICAL donor per formal, verify its text fits EACH callee (some
+`ped` args genuinely need “with required columns”/demographic variants
+-\> do NOT blind-`@inheritParams` those), replace `@param` with
+`@inheritParams`; add `@family` clusters (`calc*`, `getLkDirect*`,
+`mod*`, `obfuscate*`). Rendered-drift (changes up to 66 `.Rd`
+`\arguments`), per-callee verification, **own scope-gate advisable.** -
+**Finding-3 tails (optional):** internal-`@noRd` titles (no rendered
+impact -\> low priority) and, IF the owner later wants Shiny converted,
+the 20 `mod*`/app titles (do BOTH UI+Server for consistency; decide the
+informal “GeneKeepR” naming). - **Surfaced CODE defect (own session, out
+of doc-harmonization scope):** `getSimSires.R` is a DUPLICATE file
+defining/exporting `getPotentialSires` -\> likely DELETE it (verify no
+test/collate/`@rdname` references first; a code change needing its own
+gate). Both source blocks now carry the same title so the render is
+deterministic (S257). - **Older deferred:** shiny + Matrix `@import` -\>
+`@importFrom` (each its own judgment call; Matrix S4 dispatch); the CRAN
+thread (Phase 5b, `docs/planning/cran-2.0.0-phase5-runbook.md`,
+owner-run outward). **Each stage edits `R/`(+`man/`/`NAMESPACE`) which
+SHIP -\> after each: re-gate AND `lintr::lint_package()` AND
+`spell_check_package` (hand-add wordlist terms, never `update_wordlist`
+– \[\[avoid-reconcile-tools-on-curated-files\]\]); for any
+NAMESPACE-touching stage ALSO diff NAMESPACE + runtime-smoke the
+INSTALLED namespace (Learning 239).** **Landing owner-gated each time**
+(`AskUserQuestion`): PR-for-CI (S249/S253/S256/S258 – 5-platform cert;
+PREFER when examples/behavior execute or `man/` churn is large) vs
+direct-merge (S250/S252/S254/S255 – faster, no CI -\> cheap landed-tree
+sanity check). **Older backlog:** issues \#37, \#36, \#28, \#12, \#11,
+\#10, \#5.
+
+**Key files (this session):** **No `R/` / `man/` / `NAMESPACE` /
+`DESCRIPTION` edits by S258** – this session only merged S257’s
+already-committed content (100 `R/` + 99 `man/`, code commit `8e76e49a`)
+via merge commit `0978d405`. **Process docs (this close-out commit, on
+`master`):** `CHANGELOG.md` (S258 entry), `SESSION_NOTES.md` (this
+handoff). `PROJECT_LEARNINGS.md` NOT touched (no new learning, by
+design). **NOT committed (standing keep / not mine):**
+`PED_GV_AUDIT_2026-05-30.html` (untracked, `.Rbuildignore`d);
+`.DS_Store` (TRACKED + modified – pre-existing repo state, stashed
+across the merge then restored, left untouched); `dashboard.html`
+(generated). No scratchpad gate artifacts this session (no local
+`--as-cran` run – the PR CI was the cert).
+
+**Gotchas:** (1) **Stage 8a is LANDED on `master`** (merge `0978d405`,
+PR \#108 merged after CI 10/10 GREEN + CLEAN) – Stages 1-8a of \#103 are
+all on `master`; `master` == origin/master. (2) **This merge brought in
+99 CHANGED `man/` titles + 2 braced-`@description` bodies moved into
+`\details`** (S257’s INTENDED rendered-drift) – that is the intended
+state, not drift-to-fix. (3) **`getSimSires.R` is a DUPLICATE file** –
+defines/`@export`s `getPotentialSires` (same fn as
+`getPotentialSires.R`); both source titles now synced to “List potential
+sires” so the render is deterministic; the file-dup is a latent CODE
+defect for a future dedup session (likely delete `getSimSires.R` after
+verifying no references). (4) **Multi-export files hide 2nd titles** –
+each `mod*` file has a UI AND a Server title; a first-`#'`-title census
+undercounts (re-scan `>=2 @export`); the 9 `mod*` Server titles remain
+(Shiny-exempt). (5) **Shiny `mod*`/app 20 titles are EXEMPT** (kept
+noun-phrase, parallel to Stage-7). (6) **Stage 8b (Finding 6) is the big
+remaining piece** – see SUGGESTED NEXT; some `ped` args need a specific
+(not inherited) description. (7) **Stash mechanics:** the Phase-1B
+stub + `.DS_Store` stash-pop cleanly across a PR-merge because the
+branch’s close-out is IN the merge (identical `SESSION_NOTES.md` base) –
+an application of Learning 233, not a new rule. The pre-existing
+`WIP on dev` stash is NOT ours; never drop it. (8) Carried standing
+keeps (unchanged): package **ARCHIVED on CRAN 2025-07-29**; CRAN
+resubmission owner-gated; win-builder/R-hub/`submit_cran()` OWNER-run
+outward + HARD STOP; the `--as-cran` gate certifies the CURRENT tree
+only; `NEWS.md`/`README.md` are GENERATED (from
+`NEWS.Rmd`/`README.Rmd`); module/E2E tests need `NOT_CRAN=true` BUT
+`--as-cran` SKIPS them via `skip_on_cran`; a 0/0/2 check does NOT imply
+spelling-clean -\> `spell_check_package` (hand-add wordlist terms, never
+`update_wordlist`); `git pull` is rebase + chokes on unstaged tracked
+changes (stash `.DS_Store` if it blocks a checkout, Learning 233);
+re-check `git status` before ANY `reset --hard`
+(\[\[check-status-before-destructive-git\]\]); **zsh `status` is a
+read-only special variable**; closing-keyword discipline for any
+PR/issue body; **the version is 2.0.0** (DESCRIPTION authoritative;
+CLAUDE.md’s “1.1.0.9000” header is stale prose).
+
 ### What Session 257 Did
 
 **Deliverable (owner scope-gate via `AskUserQuestion` = slice “Finding

@@ -15,6 +15,47 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-30 — issue \#103 Stage 8a (title/description voice, Finding 3) landed on `master` (Session 258)
+
+- **Deliverable (owner-directed = “merge PR \#108”):** merge **PR
+  \#108** — issue \#103 **Stage 8a — title/description voice
+  normalization (audit Finding 3)** — into `master`. **Landing/process
+  action for already-verified REFACTOR-class documentation content
+  (written + gated by S257); TDD RED/GREEN/REFACTOR N/A; 0 corrections /
+  0 overrides.** The owner selected the merge from S257’s suggested-next
+  list; no further gate needed (PR-for-CI was already S257’s chosen
+  landing method).
+- **Merged clean:** PR \#108 confirmed **10/10 checks SUCCESS +
+  mergeStateStatus CLEAN** immediately before merging (the CI that was
+  in-flight at S257 close-out finished green cross-platform — R CMD
+  check on Windows / macOS / Ubuntu release+devel+oldrel-1, plus lint /
+  pkgdown / test-coverage / codecov).
+  `gh pr merge 108 --merge --delete-branch` → merge commit
+  **`0978d405`** (“Merge pull request \#108 …”); local `master`
+  fast-forwarded `c623cbfa..0978d405`, remote+local feature branch
+  `issue103-stage8a-title-voice` deleted, `.DS_Store` + the Phase-1B
+  stub stashed pre-merge and popped cleanly onto `master` (Learning 233
+  — master’s `SESSION_NOTES.md` post-merge == the branch’s, so no
+  collision).
+- **Landed-tree sanity check (this is a PR-for-CI merge, but confirmed
+  anyway):** `git diff c623cbfa..0978d405 -- NAMESPACE DESCRIPTION`
+  **empty** (title-only, as S257 predicted); the merge touched exactly
+  **100 `R/` + 99 `man/` + 3 process docs** (`CHANGELOG.md`,
+  `SESSION_NOTES.md`, `PROJECT_LEARNINGS.md`) = 202 files, matching
+  S257’s claim; merge commit parents = `c623cbfa` (S256 master base) +
+  `d6521165` (S257 branch tip); local `master` == origin/master.
+- **Phase-3E (runtime smoke): N/A (stated).** No runtime/behavior change
+  merged (empty NAMESPACE diff proven) and the exact tip was already
+  CI-certified 10/10 cross-platform. FM \#24 does not apply.
+- **Stages 1–8a of issue \#103 are now all on `master`.** Remaining for
+  \#103: **Stage 8b — Finding 6** (`@inheritParams`/`@family` de-dup —
+  the ~20-way `@param ped` description drift across ~66 files; big +
+  judgment-heavy, own scope-gate advisable), plus the Finding-3 tails
+  (internal-`@noRd` titles; Shiny `mod*` titles if the owner later
+  converts them) and the surfaced `getSimSires.R` duplicate-file code
+  defect. No new `PROJECT_LEARNINGS` entry — a pure PR-merge following
+  the established S256 pattern produced no novel learning.
+
 ### 2026-06-30 — issue \#103 Stage 8a (title/description voice, Finding 3) on PR \#108 (Session 257)
 
 - **Deliverable (owner scope-gate via `AskUserQuestion` = slice “Finding
