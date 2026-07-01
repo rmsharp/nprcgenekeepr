@@ -35,3 +35,15 @@ at startup.
 [`getSiteInfo`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md),
 [`getConfigFileName`](https://github.com/rmsharp/nprcgenekeepr/reference/getConfigFileName.md),
 [`appServer`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md)
+
+## Examples
+
+``` r
+library(nprcgenekeepr)
+## Reads ~/.nprcgenekeepr_config (or ~/_nprcgenekeepr_config on
+## Windows) if it exists; returns NULL when no config file is
+## present, so this is safe to run on any machine.
+config <- loadSiteConfig()
+config
+#> NULL
+```

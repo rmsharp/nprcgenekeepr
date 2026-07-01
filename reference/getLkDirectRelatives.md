@@ -36,12 +36,11 @@ collaterals) – for the Ids provided.
 ## Examples
 
 ``` r
-# \donttest{
+if (FALSE) { # \dontrun{
 # Requires LabKey connection
 library(nprcgenekeepr)
 ## Have to a vector of focal animals
 focalAnimals <- c("1X2701", "1X0101")
 suppressWarnings(getLkDirectRelatives(ids = focalAnimals))
-#> NULL
-# }
+} # }
 ```

@@ -15,6 +15,63 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-06-30 — issue \#103 Stage 7 (examples policy, Finding 1 / §7) — PR \#107 open (Session 256)
+
+- **Deliverable (owner pick = “Stage 7 — examples policy”; via
+  `AskUserQuestion`: scope = complete Stage 7, policy-doc home = new
+  `docs/` file, landing = PR-for-CI):** issue \#103 **Stage 7 — examples
+  policy (audit Finding 1 / §7)**: add `@examples` to the
+  directly-callable exported utilities, document the Shiny/app/tab-UI
+  exemption, choose one guard ladder, retire `if(interactive())` guards.
+  **REFACTOR-class documentation work — no R-logic / NAMESPACE /
+  behavior change; TDD RED/GREEN N/A; 0 corrections / 0 overrides** (3
+  owner gates via `AskUserQuestion`: scope, policy-doc location, landing
+  method). **DONE + VERIFIED on branch `issue103-stage7-examples` (code
+  commit `d6e6b8dc` + this close-out commit); PR \#107 open — the merge
+  is the owner’s call.**
+- **The change (20 R/ files + 20 regenerated `.Rd`):** (a) **added
+  `@examples`** to **9** callable utilities — `loadSiteConfig`,
+  `loadSpeciesOverrides`, `saveDataframesAsFiles` (writes to
+  [`tempdir()`](https://rdrr.io/r/base/tempfile.html)),
+  `getPotentialParents`, `makeGroupMembers`, `makeGroupNum`,
+  `makeSimPed`, plus `shouldShowChangedColsTab` and
+  `processQcStudbookResult` (the audit mislabeled these two “tab-UI” but
+  their bodies contain no Shiny code — one returns a logical, the other
+  a list of data.frames — so they are plain callable functions); (b)
+  **retired 2 `if(interactive())`** launcher guards → `\dontrun`
+  (`runModularApp`, `runGeneKeepR`); (c) **harmonized existing guards**
+  onto one ladder — 5 `\dontrun` → bare-runnable
+  (`makeFounderStatsTable`, `makeGeneticSummaryTable`, `logModuleEvent`,
+  `safeExecute`, `runQcStudbook`), 4 LabKey `\donttest` → `\dontrun`
+  (`getDemographics`, `getLkDirectAncestors`, `getLkDirectRelatives`,
+  `setLabKeyDefaults`).
+- **Policy ratified** in `docs/conventions/ROXYGEN_EXAMPLES_POLICY.md`
+  (developer-facing; `docs/` is `.Rbuildignore`d so it ships nowhere).
+  The `docs/conventions/` path was git-ignored (`.gitignore` `docs/*` +
+  per-subdir whitelists), so a `!docs/conventions/` +
+  `!docs/conventions/**` whitelist entry was added to make the file
+  trackable.
+- **Live-tree census confirmed the audit with ZERO drift** (180 exported
+  functions, 148 with `@examples`, 32 without; the audit’s 7 utilities
+  all still example-less), EXCEPT the 2 mislabeled tab-UI functions →
+  add-examples set of 9, not 7. Correctly-exempt (unchanged): 18
+  `mod*UI/Server`, `appUI`/`appServer`, the genuine `tabPanel()`
+  builders `getChangedColsTab`/`getErrorTab`, the deprecated alias
+  `makeGrpNum`.
+- **Verified (empirical + build-equivalent):** every runnable example (9
+  new + 5 newly-un-guarded) empirically run clean via `load_all` BEFORE
+  placement; `devtools::document()` → **NAMESPACE diff empty**
+  (predicted — no `@export`/`@importFrom` change); `lintr` = 0 across
+  all 20 changed files; `spell_check_package` clean;
+  **`R CMD check --as-cran --run-donttest` = `Status: 2 NOTEs` (0/0/2)**
+  with **`checking examples ... OK`** + all Rd checks /
+  code-documentation mismatches / S3 method consistency / tests all OK.
+- **Keyword-safe** PR body (“Part of \#103. Stage 7 of 8 — does **not**
+  close the tracking issue”). Learning 242 added to
+  `PROJECT_LEARNINGS.md`. **Stages 1–6 of \#103 are on `master`; Stage 7
+  is on PR \#107 awaiting the owner’s merge.** Remaining: Stage 8 (title
+  voice + `@inheritParams`/`@family` de-dup — judgment-heavy, last).
+
 ### 2026-06-30 — `get_and_or_list` rendered-doc defect fixed (`\sQuote{}`) landed on `master` (Session 255)
 
 - **Deliverable (owner pick = “get_and_or_list”):** fix the carried-open

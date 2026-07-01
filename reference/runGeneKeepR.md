@@ -36,8 +36,8 @@ for the modular application this now launches.
 ## Examples
 
 ``` r
-if (interactive()) {
-  library(nprcgenekeepr)
-  runGeneKeepR()
-}
+if (FALSE) { # \dontrun{
+library(nprcgenekeepr)
+runGeneKeepR()
+} # }
 ```

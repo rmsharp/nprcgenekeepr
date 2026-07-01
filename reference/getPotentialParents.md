@@ -62,3 +62,33 @@ a list of list with each internal list being made up of an animal id
 (`id`), a vector of possible sires (`sire`) and a vector of possible
 dams (`dam`). The `id` must be defined while the vectors `sire` and
 `dam` can be empty.
+
+## Examples
+
+``` r
+library(nprcgenekeepr)
+ped <- nprcgenekeepr::rhesusPedigree
+## getPotentialParents needs a logical fromCenter column flagging
+## colony-born animals; add one if your pedigree lacks it.
+ped$fromCenter <- TRUE
+potentialParents <- getPotentialParents(
+  ped = ped, minParentAge = 2.0, maxGestationalPeriod = 210L
+)
+## Each element pairs a focal id with candidate sires and dams.
+potentialParents[[1L]]
+#> $id
+#> [1] "BRI2MW"
+#> 
+#> $sires
+#>  [1] "HKTQ40" "MY1AEU" "QWUKUY" "1X40V5" "WDBGPF" "6MGJYG" "8LWCAD" "SLN0TF"
+#>  [9] "Q7F87W" "IQLWH8" "M0YNUR" "RYP77M" "8LKBV9" "D0Z114" "1W4GNT" "D1WP48"
+#> [17] "CAN12C" "KUENM8" "QP1WMJ" "WCPXHD" "DKMJ2Z" "1Y8P15" "4F3ASD" "DKDP5B"
+#> [25] "XL7AVE" "YPHFHF" "A3UZAN" "7U5NJD" "ELGVC6" "L07M06" "4U7JTW" "270UK6"
+#> [33] "LUPGF8" "S0ZHJP" "WWZRCW" "H16EC4" "81MJXH" "K9TMQP" "GA204Z" "V1X2X3"
+#> [41] "P49ZD1" "KY4G8M" "9JC6RF" "M5DJVP" "HJLX2B" "SPHGC9" "62PLX3" "QQ24T8"
+#> [49] "9LZVTE" "VTZFWZ"
+#> 
+#> $dams
+#> [1] "HR70BU" "I2G9D6" "J8XZ81" "HV7LZ3" "IMF6BL"
+#> 
+```

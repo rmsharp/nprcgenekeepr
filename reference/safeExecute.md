@@ -53,14 +53,17 @@ for logging
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
 # Returns 4
 safeExecute({ 2 + 2 }, module = "test")
+#> [1] 4
 
 # Returns NULL and logs error
 safeExecute({ stop("Error!") }, module = "test")
+#> [2026-07-01 01:55:20] [ERROR] [test] Error: Error!
+#> NULL
 
 # Returns custom default on error
 safeExecute({ stop("Error!") }, module = "test", default = data.frame())
-} # }
+#> [2026-07-01 01:55:20] [ERROR] [test] Error: Error!
+#> data frame with 0 columns and 0 rows
 ```

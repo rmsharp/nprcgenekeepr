@@ -29,3 +29,15 @@ otherwise.
 
 [`checkChangedColsLst`](https://github.com/rmsharp/nprcgenekeepr/reference/checkChangedColsLst.md)
 for the original implementation
+
+## Examples
+
+``` r
+library(nprcgenekeepr)
+## No column changes recorded: the tab stays hidden.
+shouldShowChangedColsTab(list())
+#> [1] FALSE
+## A recorded case change: the tab should be shown.
+shouldShowChangedColsTab(list(caseChange = c(Id = "id")))
+#> [1] TRUE
+```

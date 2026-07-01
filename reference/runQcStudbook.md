@@ -53,11 +53,9 @@ for Shiny module integration
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
 data("pedGood", package = "nprcgenekeepr")
 result <- runQcStudbook(pedGood, minParentAge = 2.0)
 if (!result$qcResult$hasErrors) {
   cleanedPed <- result$cleaned
 }
-} # }
 ```

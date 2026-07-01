@@ -49,12 +49,12 @@ environment, the configuration file, or the netrc file only.
 ## Examples
 
 ``` r
-# \donttest{
+if (FALSE) { # \dontrun{
 ## Requires an apiKey (env var or config) or a .netrc file to succeed.
 library(nprcgenekeepr)
 result <- tryCatch(
   setLabKeyDefaults(getSiteInfo(expectConfigFile = FALSE)),
   error = function(e) conditionMessage(e)
 )
-# }
+} # }
 ```

@@ -52,8 +52,8 @@ to run the original monolithic version.
 ## Examples
 
 ``` r
-if (interactive()) {
-  library(nprcgenekeepr)
-  runModularApp()
-}
+if (FALSE) { # \dontrun{
+library(nprcgenekeepr)
+runModularApp()
+} # }
 ```

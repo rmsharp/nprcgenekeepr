@@ -47,7 +47,6 @@ for founder genome equivalents
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
 stats <- list(
   total = 50,
   nMaleFounders = 20,
@@ -56,5 +55,4 @@ stats <- list(
   fg = 22.3
 )
 html <- makeFounderStatsTable(stats)
-} # }
 ```

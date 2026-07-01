@@ -53,3 +53,19 @@ to the bundled values (a warning is raised for an unreadable CSV).
 [`getSpeciesMinBreedingAge`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesMinBreedingAge.md),
 [`getSpeciesGestation`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesGestation.md),
 [`reportGV`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+
+## Examples
+
+``` r
+library(nprcgenekeepr)
+## Reads optional species overrides from the user's site config
+## file; with no config file every element is NULL, meaning "use
+## the bundled speciesGestation values / built-in defaults".
+overrides <- loadSpeciesOverrides()
+str(overrides)
+#> List of 4
+#>  $ breedingTable     : NULL
+#>  $ gestationTable    : NULL
+#>  $ breedingAgeDefault: NULL
+#>  $ gestationDefault  : NULL
+```

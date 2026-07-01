@@ -87,6 +87,22 @@ changedCols.</p></dd>
 <p><code><a href="checkChangedColsLst.html">checkChangedColsLst</a></code> for checking column changes</p></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">## Turn a qcStudbook error list into UI-friendly data frames.</span></span></span>
+<span class="r-in"><span><span class="va">errorLst</span> <span class="op">&lt;-</span> <span class="fu"><a href="qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="pedFemaleSireMaleDam.html">pedFemaleSireMaleDam</a></span>,</span></span>
+<span class="r-in"><span>  reportErrors <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">processQcStudbookResult</span><span class="op">(</span><span class="va">errorLst</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">result</span><span class="op">$</span><span class="va">hasErrors</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-in"><span><span class="va">result</span><span class="op">$</span><span class="va">errors</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Row                 Error                                  Details</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  NA Female listed as sire Animal s1 is female but listed as a sire</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  NA    Male listed as dam    Animal d1 is male but listed as a dam</span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

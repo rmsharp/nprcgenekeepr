@@ -96,6 +96,40 @@ be ignored. Default is 1 year.</p></dd>
     <p>Initial groupMembers list</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="qcPed.html">qcPed</a></span></span></span>
+<span class="r-in"><span><span class="va">candidates</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="qcBreeders.html">qcBreeders</a></span></span></span>
+<span class="r-in"><span><span class="co">## Non-harem: pre-seed group 1 with animals already assigned; a</span></span></span>
+<span class="r-in"><span><span class="co">## second, empty group is initialized ready to be filled.</span></span></span>
+<span class="r-in"><span><span class="va">currentGroups</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">candidates</span><span class="op">[</span><span class="fl">1L</span><span class="op">:</span><span class="fl">3L</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">groupMembers</span> <span class="op">&lt;-</span> <span class="fu">makeGroupMembers</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  numGp <span class="op">=</span> <span class="fl">2L</span>, currentGroups <span class="op">=</span> <span class="va">currentGroups</span>, candidates <span class="op">=</span> <span class="va">candidates</span>,</span></span>
+<span class="r-in"><span>  ped <span class="op">=</span> <span class="va">ped</span>, harem <span class="op">=</span> <span class="cn">FALSE</span>, minAge <span class="op">=</span> <span class="fl">1L</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">groupMembers</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Q0RGP7" "C1ICXL" "J3D3N5"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> logical(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span><span class="co">## Harem: each group is seeded with one available male (uses sample()).</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1L</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">haremMembers</span> <span class="op">&lt;-</span> <span class="fu">makeGroupMembers</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  numGp <span class="op">=</span> <span class="fl">2L</span>, currentGroups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, candidates <span class="op">=</span> <span class="va">candidates</span>,</span></span>
+<span class="r-in"><span>  ped <span class="op">=</span> <span class="va">ped</span>, harem <span class="op">=</span> <span class="cn">TRUE</span>, minAge <span class="op">=</span> <span class="fl">1L</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">haremMembers</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "J3D3N5"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "HP3E04"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

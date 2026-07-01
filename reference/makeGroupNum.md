@@ -18,3 +18,21 @@ makeGroupNum(numGp)
 ## Value
 
 Initial grpNum list
+
+## Examples
+
+``` r
+library(nprcgenekeepr)
+## Create the initial grpNum list for three groups
+grpNum <- makeGroupNum(numGp = 3L)
+grpNum
+#> [[1]]
+#> [1] 1
+#> 
+#> [[2]]
+#> [1] 2
+#> 
+#> [[3]]
+#> [1] 3
+#> 
+```
