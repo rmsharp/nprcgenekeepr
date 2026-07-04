@@ -18,12 +18,12 @@ a place holder record where parent (\code{sire},
 \code{dam}) IDs are set to \code{NA}.}
 }
 \value{
-A data.frame with pedigree structure having all of the direct
-ancestors for the Ids provided.
+A data.frame of pedigree records for the selected animals and
+their direct relatives (ancestors and descendants) in \code{ped}.
 }
 \description{
-Gets direct ancestors from labkey \code{study} schema and \code{demographics}
-table.
+Gets the direct relatives (ancestors and descendants) of the selected
+animals from the supplied pedigree (\code{ped}).
 }
 \examples{
 library(nprcgenekeepr)

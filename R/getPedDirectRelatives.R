@@ -3,8 +3,8 @@
 
 #' Get the direct relatives of selected animals from a pedigree
 #'
-#' Gets direct ancestors from labkey \code{study} schema and \code{demographics}
-#' table.
+#' Gets the direct relatives (ancestors and descendants) of the selected
+#' animals from the supplied pedigree (\code{ped}).
 #'
 #' @inheritParams getParents
 #' @param ped pedigree dataframe object that is used as the source of
@@ -14,8 +14,8 @@
 #' a place holder record where parent (\code{sire},
 #' \code{dam}) IDs are set to \code{NA}.
 #'
-#' @return A data.frame with pedigree structure having all of the direct
-#' ancestors for the Ids provided.
+#' @return A data.frame of pedigree records for the selected animals and
+#' their direct relatives (ancestors and descendants) in \code{ped}.
 #'
 #' @importFrom data.table rbindlist
 #' @importFrom stringi stri_c
