@@ -59,13 +59,18 @@ getPedDirectRelatives <- function(ids, ped, unrelatedParents = FALSE) {
     ids <- ids[!is.na(ids)]
   }
 
+  relatives <- ped[ped$id %in% ids, ]
   if (unrelatedParents) {
     unrelated <- unique(ids[!ids %in% ped$id])
     unrelated <- unrelated[!is.na(unrelated)]
-    addIdRecords(
-      ids = unrelated, fullPed = ped,
-      partialPed = ped[ped$id %in% ids, ]
-    )
+    if (length(unrelated) > 0L) {
+      placeholders <- relatives[rep(NA_integer_, length(unrelated)), ]
+      placeholders$id <- unrelated
+      placeholders$sire <- NA
+      placeholders$dam <- NA
+      relatives <- rbind(relatives, placeholders)
+      rownames(relatives) <- NULL
+    }
   }
-  ped[ped$id %in% ids, ]
+  relatives
 }
