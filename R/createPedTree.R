@@ -20,10 +20,7 @@
 #'
 #' This function uses only \code{id}, \code{sire}, and \code{dam} columns.
 #'
-#' @param ped dataframe of pedigree and demographic information potentially
-#' containing columns indicating the birth and death dates of an individual.
-#' The table may also contain dates of sale (departure). Optional columns
-#' are \code{birth}, \code{death}, \code{departure}.
+#' @inheritParams getDescendantPedigree
 #' @return A list of named lists forming a pedigree tree (PedTree or ptree).
 #' Each sublist represents an ID in the pedigree and contains the sire ID and
 #' the dam ID as named elements.
