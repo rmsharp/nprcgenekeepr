@@ -6,7 +6,7 @@
 #' If user has limited the population of interest by defining \code{pop},
 #' that information is incorporated via the \code{ped$population} column.
 #'
-#' @param ped the pedigree information in datatable format
+#' @inheritParams reportGV
 #' @param pop character vector with animal IDs to consider as the population of
 #' interest. The default is NULL.
 #' @return A logical vector corresponding to the IDs in the vector of

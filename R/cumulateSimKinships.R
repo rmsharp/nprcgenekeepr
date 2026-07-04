@@ -9,7 +9,7 @@
 #' simulated kinships the third element is the minimum value of the kinships,
 #' and the forth element is the maximum value of the kinships.
 #'
-#' @param ped The pedigree information in data.frame format
+#' @inheritParams reportGV
 #' @param allSimParents list made up of lists where the internal list
 #'        has the offspring ID \code{id}, a vector of representative sires
 #'        (\code{sires}), and a vector of representative dams(\code{dams}).

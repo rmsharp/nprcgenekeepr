@@ -9,8 +9,7 @@ addSexAndAgeToGroup(ids, ped)
 \arguments{
 \item{ids}{character vector of animal IDs}
 
-\item{ped}{datatable that is the \code{Pedigree}. It contains pedigree
-information.}
+\item{ped}{The pedigree information in data.frame format}
 }
 \value{
 Dataframe with Id, Sex, and Current Age

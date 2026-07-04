@@ -8,8 +8,7 @@
 #' @param kin a dataframe with columns \code{id1}, \code{id2}, and
 #' \code{kinship}. This is the kinship data reformatted from a matrix,
 #' to a long-format table.
-#' @param ped dataframe of pedigree information including the IDs listed
-#' in "candidates".
+#' @inheritParams getPotentialSires
 #' @param minAge numeric value representing minimum years of age of
 #' animals to retain.
 #' @return a dataframe with columns \code{id1}, \code{id2}, and \code{kinship}

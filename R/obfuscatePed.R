@@ -7,7 +7,7 @@
 #' used for alias IDs (\code{size}), and the maximum number of days that the
 #' birthdate can be shifted (\code{maxDelta}).
 #'
-#' @param ped pedigree object
+#' @inheritParams reportGV
 #' @param size integer value indicating number of characters in alias IDs
 #' @param maxDelta integer value indicating maximum number of days that
 #' the birthdate can be shifted

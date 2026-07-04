@@ -7,7 +7,7 @@
 removeUnknownAnimals(ped)
 }
 \arguments{
-\item{ped}{pedigree dataframe}
+\item{ped}{The pedigree information in data.frame format}
 }
 \value{
 Pedigree with unknown animals removed

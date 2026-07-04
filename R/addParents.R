@@ -10,8 +10,7 @@
 #' This must be run after to \code{addUIds} since the IDs made there are
 #' used by \code{addParents}
 #'
-#' @param ped datatable that is the \code{Pedigree}. It contains pedigree
-#' information.
+#' @inheritParams reportGV
 #' @return An updated pedigree with entries added as necessary.
 #' Entries have the id and sex specified; all remaining columns are filled
 #' with \code{NA}.

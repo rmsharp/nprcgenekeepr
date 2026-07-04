@@ -9,8 +9,7 @@
 #' number of ids supplied.
 #'
 #' @inheritParams getParents
-#' @param ped datatable that is the \code{Pedigree}. It contains pedigree
-#' information.
+#' @inheritParams reportGV
 #' @return Dataframe with Id, Sex, and Current Age
 #'
 #' @export

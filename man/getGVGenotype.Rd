@@ -7,7 +7,7 @@
 getGVGenotype(ped)
 }
 \arguments{
-\item{ped}{the pedigree information in datatable format}
+\item{ped}{The pedigree information in data.frame format}
 }
 \value{
 A data.frame with the columns \code{id}, \code{first}, and

@@ -7,7 +7,7 @@
 #' \code{age}. This needs to be augmented to allow pedigrees structures that
 #' are provided by the nprcgenekeepr package.
 #'
-#' @param ped dataframe with pedigree data.
+#' @inheritParams reportGV
 #' @param binWidth numeric bin width for age groups (default 2).
 #' @param ageUnit character either "years" (default) or "months".
 #' @param colorScheme character color scheme: "default" (blue/pink) or

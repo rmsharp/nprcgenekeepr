@@ -4,8 +4,7 @@
 #' List each animal's high-kinship relatives
 #'
 #' @inheritParams meanKinship
-#' @param ped dataframe that is the \code{Pedigree}. It contains pedigree
-#' information.
+#' @inheritParams reportGV
 #' @inheritParams filterThreshold
 #' @param currentGroups list of character vectors of IDs of animals currently
 #' assigned

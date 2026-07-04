@@ -7,7 +7,7 @@
 #' This is not a good fix. A better solution is to avoid the problem.
 #' Currently qcStudbook() blindly changes all of the column names by removing
 #' the underscores.
-#' @param ped the pedigree information in datatable format
+#' @inheritParams reportGV
 #' @return A pedigree object where column names of "firstname" and "secondname"
 #' are changed to "first_name" and "second_name" respectively.
 #' @noRd

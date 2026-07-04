@@ -12,7 +12,7 @@
 #' the same breeding period. While this is probably not introducing a large
 #' error, it is not ideal.
 #'
-#' @param ped pedigree information in data.frame format
+#' @inheritParams reportGV
 #' @param allSimParents list made up of lists where the internal list
 #'        has the offspring ID \code{id}, a vector of representative sires
 #'        (\code{sires}), and a vector of representative dams (\code{dams}).

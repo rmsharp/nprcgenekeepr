@@ -7,7 +7,7 @@
 getPedMaxAge(ped)
 }
 \arguments{
-\item{ped}{dataframe with pedigree}
+\item{ped}{The pedigree information in data.frame format}
 }
 \value{
 Numeric value representing the maximum age of animals in the

@@ -7,8 +7,7 @@
 addParents(ped)
 }
 \arguments{
-\item{ped}{datatable that is the \code{Pedigree}. It contains pedigree
-information.}
+\item{ped}{The pedigree information in data.frame format}
 }
 \value{
 An updated pedigree with entries added as necessary.

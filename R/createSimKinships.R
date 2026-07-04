@@ -7,7 +7,7 @@
 #' and the \code{allSimParents} object to create a set of kinship matrices to
 #' be used in forming the \emph{Monte Carlo} estimates for the kinship values.
 #'
-#' @param ped The pedigree information in data.frame format
+#' @inheritParams reportGV
 #' @param allSimParents list made up of lists where the internal list
 #'        has the offspring ID, \code{id}, a vector of representative sires
 #'        (\code{sires}), and a vector of representative dams (\code{dams}).

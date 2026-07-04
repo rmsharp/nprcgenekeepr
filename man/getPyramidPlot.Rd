@@ -14,7 +14,7 @@ getPyramidPlot(
 )
 }
 \arguments{
-\item{ped}{dataframe with pedigree data.}
+\item{ped}{The pedigree information in data.frame format}
 
 \item{binWidth}{numeric bin width for age groups (default 2).}
 

@@ -3,7 +3,7 @@
 
 #' Returns record numbers with selected \code{recordStatus}.
 #'
-#' @param ped pedigree dataframe
+#' @inheritParams reportGV
 #' @param status character vector with value of \code{"added"} or
 #' \code{"original"}.
 #' @return An integer vector of records with \code{recordStatus} ==

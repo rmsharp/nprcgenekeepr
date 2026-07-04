@@ -10,8 +10,7 @@
 #' to the group. Defaults to character(0) assuming no groups are existent.
 #' @param kin list of animals and those animals who are related above a
 #' threshold value.
-#' @param ped dataframe that is the \code{Pedigree}. It contains pedigree
-#' information including the IDs listed in \code{candidates}.
+#' @inheritParams getPotentialSires
 #' @param harem logical variable when set to \code{TRUE}, the formed groups
 #' have a single male at least \code{minAge} old.
 #' @param minAge integer value indicating the minimum age to consider in group

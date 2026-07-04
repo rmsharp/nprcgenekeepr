@@ -4,7 +4,7 @@
 #' Check whether an animal has both parents
 #'
 #' @param id character vector of IDs to examine for parents
-#' @param ped a pedigree
+#' @inheritParams reportGV
 #' @return TRUE if ID has both sire and dam identified in \code{ped}.
 #'
 #' @export

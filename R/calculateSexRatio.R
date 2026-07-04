@@ -10,8 +10,7 @@
 #' females.
 #'
 #' @inheritParams getParents
-#' @param ped datatable that is the \code{Pedigree}. It contains pedigree
-#' information including the IDs listed in \code{candidates}.
+#' @inheritParams getPotentialSires
 #' @param additionalMales Integer value of males to add to those within the
 #' group when calculating the ratio. Ignored if calculated ratio is 0 or Inf.
 #' Default is 0.
