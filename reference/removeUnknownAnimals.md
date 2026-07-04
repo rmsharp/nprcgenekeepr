@@ -12,7 +12,7 @@ removeUnknownAnimals(ped)
 
 - ped:
 
-  pedigree dataframe
+  The pedigree information in data.frame format
 
 ## Value
 

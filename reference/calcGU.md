@@ -105,6 +105,17 @@ for management of genetic variation in pedigreed populations, p 77-111.
 In: Ballou JD, Gilpin M, Foose TJ, editors. Population management for
 survival and recovery. New York (NY): Columbia University Press.
 
+## See also
+
+Other genetic value analysis:
+[`calcA()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcA.md),
+[`calcFE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFE.md),
+[`calcFEFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFEFG.md),
+[`calcFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFG.md),
+[`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md),
+[`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md),
+[`calcRetention()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcRetention.md)
+
 ## Examples
 
 ``` r

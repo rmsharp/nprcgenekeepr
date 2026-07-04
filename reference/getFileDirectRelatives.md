@@ -26,7 +26,7 @@ getFileDirectRelatives(
 
 - ids:
 
-  character vector with Ids.
+  character vector of animal IDs
 
 - fileName:
 
@@ -57,6 +57,13 @@ Unlike the LabKey source, which fails soft (returns `NULL`) when its
 fetch fails, the file source errors loudly: a `NULL` or missing
 `fileName`, a file that does not exist, or a file lacking the `id`,
 `sire`, and `dam` columns each raises an error.
+
+## See also
+
+Other direct relatives:
+[`getLkDirectAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectAncestors.md),
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md),
+[`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
 
 ## Examples
 

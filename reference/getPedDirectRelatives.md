@@ -13,7 +13,7 @@ getPedDirectRelatives(ids, ped, unrelatedParents = FALSE)
 
 - ids:
 
-  character vector with Ids.
+  character vector of animal IDs
 
 - ped:
 
@@ -30,6 +30,13 @@ getPedDirectRelatives(ids, ped, unrelatedParents = FALSE)
 
 A data.frame with pedigree structure having all of the direct ancestors
 for the Ids provided.
+
+## See also
+
+Other direct relatives:
+[`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md),
+[`getLkDirectAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectAncestors.md),
+[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
 
 ## Examples
 

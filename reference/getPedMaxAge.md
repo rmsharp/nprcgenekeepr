@@ -12,7 +12,7 @@ getPedMaxAge(ped)
 
 - ped:
 
-  dataframe with pedigree
+  The pedigree information in data.frame format
 
 ## Value
 

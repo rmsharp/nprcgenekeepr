@@ -25,6 +25,17 @@ of founder mean contributions to the current descendants.
 The pedigree must have no partial parentage (every animal has both
 parents known or both unknown); `calcFE` stops with an error otherwise.
 
+## See also
+
+Other genetic value analysis:
+[`calcA()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcA.md),
+[`calcFEFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFEFG.md),
+[`calcFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFG.md),
+[`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md),
+[`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md),
+[`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md),
+[`calcRetention()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcRetention.md)
+
 ## Examples
 
 ``` r

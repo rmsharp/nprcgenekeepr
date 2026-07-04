@@ -12,7 +12,7 @@ getGVGenotype(ped)
 
 - ped:
 
-  the pedigree information in datatable format
+  The pedigree information in data.frame format
 
 ## Value
 

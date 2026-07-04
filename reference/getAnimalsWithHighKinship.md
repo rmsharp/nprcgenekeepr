@@ -12,17 +12,17 @@ getAnimalsWithHighKinship(kmat, ped, threshold, currentGroups, ignore, minAge)
 
 - kmat:
 
-  numeric matrix of pairwise kinship values. Rows and columns are named
-  with animal IDs.
+  a numeric matrix of pairwise kinship coefficients. Animal IDs are the
+  row and column names.
 
 - ped:
 
-  dataframe that is the `Pedigree`. It contains pedigree information.
+  The pedigree information in data.frame format
 
 - threshold:
 
-  numeric value indicating the minimum kinship level to be considered in
-  group formation. Pairwise kinship below this level will be ignored.
+  numeric value representing the minimum kinship level to be considered
+  in group formation. Pairwise kinship below this level will be ignored.
 
 - currentGroups:
 

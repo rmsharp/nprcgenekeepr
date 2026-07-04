@@ -14,7 +14,7 @@ makeSimPed(ped, allSimParents, verbose = FALSE)
 
 - ped:
 
-  pedigree information in data.frame format
+  The pedigree information in data.frame format
 
 - allSimParents:
 

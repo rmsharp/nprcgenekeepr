@@ -15,6 +15,135 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-04 — issue \#103 Stage 8b-`ped` (`@param ped` de-dup, Finding 6, C1+C2) (Session 260)
+
+- **Deliverable (owner scope-gate via `AskUserQuestion` = “Two wording
+  groups”):** issue \#103 **Stage 8b-`ped`** — collapse the two large
+  *pure-phrasing-drift* `@param ped` clusters to `@inheritParams` across
+  **27 exported functions**, each verified per-callee by a read-only
+  workflow (donor-accuracy + no meaning loss). The requirement-bearing
+  `ped` clusters (required-fields, complete-pedigree, demographic,
+  one-off) are intentionally deferred. **REFACTOR-class documentation
+  work — no R-logic / NAMESPACE / behavior change (NAMESPACE diff
+  empty); TDD RED/GREEN N/A; 0 corrections / 0 overrides** (1 owner
+  scope-gate; landing deferred to the owner).
+- **The change (27 `R/` + 15 regenerated `.Rd`; code commit `5952d0b4`,
+  branch `issue103-stage8b-dedup`):**
+  - **C1 generic → `@inheritParams reportGV`** (17 fns):
+    `createSimKinships`, `cumulateSimKinships`, `fixGenotypeCols`,
+    `getGVGenotype`, `getGVPopulation`, `addParents`,
+    `addSexAndAgeToGroup`, `getPedMaxAge`, `getPyramidAgeDist`,
+    `getRecordStatusIndex`, `removeUnknownAnimals`,
+    `getAnimalsWithHighKinship`, `getPyramidPlot`, `hasBothParents`,
+    `makeSimPed`, `obfuscatePed`, `countFirstOrder` (the last also fixes
+    a malformed `: \code{Pedigree}` leading-colon `@param`).
+  - **C2 candidates → `@inheritParams getPotentialSires`** (10 fns):
+    `addGroupOfUnusedAnimals`, `fillGroupMembers`,
+    `fillGroupMembersWithSexRatio`, `initializeHaremGroups`,
+    `makeGroupMembers`, `removePotentialSires`, `calculateSexRatio`,
+    `getSexRatioWithAdditions`, `filterAge`, `groupAddAssign`.
+  - **`filterPairs` kept bespoke** — the 28th candidate: it has no
+    `candidates` formal/linkage, so the candidates donor text would be
+    factually inaccurate (adversarial-verify catch). Surfaced as a
+    candidate for C1 reclassification / accuracy fix in a later session.
+- **Method (evidence + adversarial verify):** firsthand deterministic
+  census sized the drift (67 `@param ped` / 66 files / 46 distinct) and
+  drove the scope gate; a **28-agent read-only Workflow** verified every
+  proposed inherit (reads callee body + donor; judges donor-accuracy AND
+  meaning-loss → 27 CONFIRM / 1 KEEP_BESPOKE); a **guarded apply
+  script** deleted only each target `@param ped` block and added one
+  `@inheritParams` line (collision-proof — local params always win; the
+  3 files that also `@inheritParams getParents` keep `ids` from
+  `getParents` by order).
+- **Verify (firsthand):** `devtools::document()` clean (every donor
+  resolved); **NAMESPACE diff empty**; each changed `.Rd` changes
+  **only** `\item{ped}` (verified `\item{ids}` unchanged in the 3
+  collision files); re-census proved collapse (`@param ped` 67→40
+  occurrences / 46→33 distinct, exactly 27 removed); `lintr` = 0 across
+  all 27 changed files; `spell_check_package` clean;
+  **`R CMD check --as-cran` `Status: 1 NOTE`** (archived-maintainer “New
+  submission” false positive) with
+  `code/documentation mismatches ... OK`, examples/tests/Rd/vignettes
+  all OK.
+
+### 2026-07-04 — issue \#103 Stage 8b (`@inheritParams`/`@family` de-dup, Finding 6) on PR (Session 259)
+
+- **Deliverable (owner scope-gate via `AskUserQuestion` = slice “Safe
+  formals + @family”):** issue \#103 **Stage 8b — Finding 6
+  (`@inheritParams`/`@family` de-duplication)** — kill the copy-paste
+  `@param` drift for the *safe* formals via `@inheritParams`, and add
+  `@family` cross-links; the big `@param ped` drift (66 files, ~46
+  genuine-variant meanings) intentionally deferred to its own session.
+  **REFACTOR-class documentation work — no R-logic / NAMESPACE /
+  behavior change (NAMESPACE diff empty); TDD RED/GREEN N/A; 0
+  corrections / 0 overrides** (2 owner gates via `AskUserQuestion`:
+  scope = safe formals + `@family`; landing = PR-for-CI).
+- **The change (38 `R/` + 42 regenerated `.Rd`; code commit `bafaa1e8`,
+  branch `issue103-stage8b-dedup`):**
+  - **`@inheritParams` (20 conversions / 19 files):** `ids` →
+    `@inheritParams getParents` (12 generic callees; the 12 genuine
+    variants — “or NULL to restrict”, “to be flagged as part of the
+    group”, “original IDs”, … — kept bespoke); `kmat` →
+    `@inheritParams meanKinship` (5 callees; 3 “dense, symmetric,
+    id-named”/“proband” variants kept bespoke); `threshold` →
+    `@inheritParams calcGU` for the **allele-rarity** meaning (`calcA`,
+    `calcGUSE`) and `@inheritParams filterThreshold` for the
+    **min-kinship** meaning (`getAnimalsWithHighKinship`) — the two
+    distinct meanings of one formal deliberately kept on *separate*
+    donors.
+  - **`@family` (25 exported functions, the package’s first `@family`
+    tags):** `direct relatives` (4), `obfuscation` (4),
+    `genetic value analysis` (8 exported `calc*`; the `@noRd`
+    `calcFounderContributions` excluded as inert), `Shiny modules` (18
+    UI+Server exports across 9 `mod*` files — the tag added to BOTH
+    blocks per file, not the `@noRd` helpers).
+- **Method (evidence + adversarial verification):** a deterministic
+  Python census sized the drift firsthand (`@param ids` 24 occ/15
+  distinct, `kmat` 9/6, `threshold` 6/4-but-**two-meanings**, `ped`
+  66/46 → deferred). A **24-agent read-only Workflow** then verified
+  every proposed change: one agent per `@inheritParams` (reads callee
+  body + donor; confirms donor text accurate AND no callee-specific
+  meaning lost) → **20/20 CONFIRM**; one agent per family (membership +
+  export structure). Edits applied by a **guarded script** (each
+  `@param` formal must occur exactly once; each `@family` anchored on
+  the function definition; 38 files, 0 guard failures).
+- **Key `@inheritParams` insight:** because the edit deletes *only* the
+  target `@param` line, inheritance can pull in *only* that one shared
+  param (roxygen skips locally-documented params) — so donor choice
+  carries **zero collision risk** regardless of the donor’s other
+  formals.
+- **Verify (firsthand):** `devtools::document()` clean — every donor
+  resolved (an unresolved `@inheritParams` would warn); **NAMESPACE diff
+  empty** (predicted — no `@export`/import change); rendered `.Rd`
+  confirmed (inherited donor text + `\seealso{Other …}` family lists);
+  the duplicate `getPotentialSires`/`getSimSires` pair converted
+  identically so `man/getPotentialSires.Rd` stays deterministic; `lintr`
+  = **0** across all 38 changed files (pkg loaded);
+  `spell_check_package` = **CLEAN**; **`R CMD check --as-cran` GREEN
+  `Status: 1 NOTE`** (the documented archived-maintainer “New
+  submission” false-positive) with `checking examples ... OK`,
+  `checking tests ... OK`, `code/documentation mismatches ... OK`, all
+  Rd checks OK, and `re-building of vignette outputs ... OK`.
+- **Phase-3E (runtime smoke): N/A (stated).** REFACTOR-class doc-only —
+  no R-logic / runtime / Shiny / NAMESPACE change (empty diff proven).
+  FM \#24 does not apply.
+- **Surfaced (out of scope, deferred):** (1) `getPedDirectRelatives.R`’s
+  **description body + `@return` still say “Gets direct ancestors from
+  labkey `study` schema …”** — a wrong copy-paste description for this
+  source-agnostic pedigree function (its *title* was fixed in Stage 8a);
+  a Finding-3-adjacent description-accuracy defect for a future
+  session. (2) Optional: adding `reportGV` (and possibly
+  `meanKinship`/`geneDrop`) to the `genetic value analysis` family as
+  its aggregator anchor. (3) Stage 8b’s **big remaining half —
+  `@param ped`** (66 files, ~46 meanings) needs its own session with
+  multiple donors + per-callee verification (blind inheritance would
+  corrupt docs). (4) The older `getSimSires.R` duplicate-*file* code
+  defect.
+- **Landing = PR-for-CI (owner gate):** large `man/` churn (42 pages) +
+  the package’s first `@family` tags benefit from cross-platform Rd
+  checks; local `--as-cran` is macOS-only. Merge left to the owner (FM
+  \#13).
+
 ### 2026-06-30 — issue \#103 Stage 8a (title/description voice, Finding 3) landed on `master` (Session 258)
 
 - **Deliverable (owner-directed = “merge PR \#108”):** merge **PR

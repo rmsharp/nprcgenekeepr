@@ -16,7 +16,7 @@ getPotentialSires(ids, ped, minAge = 1L)
 
 - ids:
 
-  character vector of IDs of the animals
+  character vector of animal IDs
 
 - ped:
 

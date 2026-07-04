@@ -24,6 +24,13 @@ mapIdsToObfuscated(ids, map)
 A dataframe or vector with original IDs replaced by their obfuscated
 counterparts.
 
+## See also
+
+Other obfuscation:
+[`obfuscateDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateDate.md),
+[`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md),
+[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+
 ## Examples
 
 ``` r

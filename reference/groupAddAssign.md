@@ -32,12 +32,12 @@ groupAddAssign(
 
 - kmat:
 
-  Numeric matrix of pairwise kinship values. Rows and columns are named
-  with animal IDs.
+  a numeric matrix of pairwise kinship coefficients. Animal IDs are the
+  row and column names.
 
 - ped:
 
-  Dataframe that is the `Pedigree`. It contains pedigree information
+  dataframe that is the `Pedigree`. It contains pedigree information
   including the IDs listed in `candidates`.
 
 - currentGroups:

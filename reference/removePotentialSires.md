@@ -12,7 +12,7 @@ removePotentialSires(ids, minAge, ped)
 
 - ids:
 
-  character vector of IDs of the animals
+  character vector of animal IDs
 
 - minAge:
 

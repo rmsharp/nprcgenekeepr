@@ -12,7 +12,7 @@ countFirstOrder(ped, ids = NULL)
 
 - ped:
 
-  : `Pedigree` Standardized pedigree information in a table.
+  The pedigree information in data.frame format
 
 - ids:
 

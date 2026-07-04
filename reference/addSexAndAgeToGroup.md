@@ -12,11 +12,11 @@ addSexAndAgeToGroup(ids, ped)
 
 - ids:
 
-  character vector of animal Ids
+  character vector of animal IDs
 
 - ped:
 
-  datatable that is the `Pedigree`. It contains pedigree information.
+  The pedigree information in data.frame format
 
 ## Value
 
@@ -37,10 +37,10 @@ data("qcPed")
 df <- addSexAndAgeToGroup(ids = qcBreeders, ped = qcPed)
 head(df)
 #>           ids sex      age
-#> Q0RGP7 Q0RGP7   F 21.37988
-#> C1ICXL C1ICXL   F 10.35729
-#> J3D3N5 J3D3N5   M 25.42916
-#> VFS0XB VFS0XB   M 20.42437
-#> HP3E04 HP3E04   M 19.27173
-#> 2KULR3 2KULR3   F 13.03491
+#> Q0RGP7 Q0RGP7   F 21.38809
+#> C1ICXL C1ICXL   F 10.36550
+#> J3D3N5 J3D3N5   M 25.43737
+#> VFS0XB VFS0XB   M 20.43258
+#> HP3E04 HP3E04   M 19.27995
+#> 2KULR3 2KULR3   F 13.04312
 ```

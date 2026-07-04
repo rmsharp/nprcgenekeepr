@@ -19,7 +19,7 @@ getLkDirectRelatives(ids, unrelatedParents = FALSE)
 
 - ids:
 
-  character vector with Ids.
+  character vector of animal IDs
 
 - unrelatedParents:
 
@@ -32,6 +32,13 @@ getLkDirectRelatives(ids, unrelatedParents = FALSE)
 A data.frame with pedigree structure containing all direct relatives –
 the full connected pedigree component (ancestors, descendants, and
 collaterals) – for the Ids provided.
+
+## See also
+
+Other direct relatives:
+[`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md),
+[`getLkDirectAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectAncestors.md),
+[`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
 
 ## Examples
 

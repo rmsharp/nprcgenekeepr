@@ -38,6 +38,17 @@ calcA(alleles, threshold = 1L, byID = FALSE)
 A matrix with named rows indicating the number of unique alleles an
 animal had during each round of simulation (indicated in columns).
 
+## See also
+
+Other genetic value analysis:
+[`calcFE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFE.md),
+[`calcFEFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFEFG.md),
+[`calcFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFG.md),
+[`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md),
+[`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md),
+[`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md),
+[`calcRetention()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcRetention.md)
+
 ## Examples
 
 ``` r

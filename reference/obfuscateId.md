@@ -31,6 +31,13 @@ obfuscateId(id, size = 10L, existingIds = character(0L))
 A named character vector of aliases where the name is the original ID
 value.
 
+## See also
+
+Other obfuscation:
+[`mapIdsToObfuscated()`](https://github.com/rmsharp/nprcgenekeepr/reference/mapIdsToObfuscated.md),
+[`obfuscateDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateDate.md),
+[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+
 ## Examples
 
 ``` r

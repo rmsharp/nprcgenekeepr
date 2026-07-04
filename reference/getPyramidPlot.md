@@ -21,7 +21,7 @@ getPyramidPlot(
 
 - ped:
 
-  dataframe with pedigree data.
+  The pedigree information in data.frame format
 
 - binWidth:
 

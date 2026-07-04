@@ -76,6 +76,15 @@ to exactly the founder set `FG` is computed from.
 [`calcGUSE`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md),
 [`reportGV`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
 
+Other genetic value analysis:
+[`calcA()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcA.md),
+[`calcFE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFE.md),
+[`calcFEFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFEFG.md),
+[`calcFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFG.md),
+[`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md),
+[`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md),
+[`calcRetention()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcRetention.md)
+
 ## Examples
 
 ``` r

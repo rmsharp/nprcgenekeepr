@@ -40,6 +40,17 @@ silently to 0; raise the number of iterations. See
 [`calcFGSE`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)
 for the sampling standard error of `FG`.
 
+## See also
+
+Other genetic value analysis:
+[`calcA()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcA.md),
+[`calcFE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFE.md),
+[`calcFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFG.md),
+[`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md),
+[`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md),
+[`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md),
+[`calcRetention()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcRetention.md)
+
 ## Examples
 
 ``` r

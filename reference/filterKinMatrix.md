@@ -17,8 +17,8 @@ filterKinMatrix(ids, kmat)
 
 - kmat:
 
-  a numeric matrix of pairwise kinship coefficients. Rows and columns
-  should be named with IDs.
+  a numeric matrix of pairwise kinship coefficients. Animal IDs are the
+  row and column names.
 
 ## Value
 

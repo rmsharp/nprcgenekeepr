@@ -13,7 +13,7 @@ addParents(ped)
 
 - ped:
 
-  datatable that is the `Pedigree`. It contains pedigree information.
+  The pedigree information in data.frame format
 
 ## Value
 

@@ -7,6 +7,473 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 260 Did
+
+**Deliverable (owner scope-gate via `AskUserQuestion` = “Two wording
+groups”):** issue \#103 **Stage 8b-`ped`** – collapse the two large
+*pure-phrasing-drift* `@param ped` clusters to `@inheritParams` across
+**27 exported functions**, each verified per-callee by a read-only
+workflow (donor-accuracy + no meaning-loss). The requirement-bearing
+`ped` clusters (required-fields, complete-pedigree, demographic,
+one-off) INTENTIONALLY deferred. **REFACTOR-class documentation de-dup –
+no R-logic / NAMESPACE / behavior change (NAMESPACE diff EMPTY); TDD
+RED/GREEN N/A. DONE + VERIFIED on branch `issue103-stage8b-dedup` (code
+commit `5952d0b4` + this close-out commit); NOT pushed – landing is the
+OWNER’s next decision (this EXTENDS PR \#113). 0 stakeholder corrections
+/ 0 owner overrides** (1 owner scope-gate). **Started / Completed:**
+2026-07-04 / 2026-07-04 **Status:** **DONE + gate GREEN, committed
+locally on `issue103-stage8b-dedup`.** `origin` is 1 behind (not
+pushed). **This branch is PR \#113** – the ped C1+C2 work is stacked on
+S259’s safe-formals+`@family` half, so pushing EXTENDS PR \#113 to cover
+BOTH halves of Stage 8b. **Do NOT merge/push unilaterally** – landing
+(and whether to update the PR \#113 title/body from “safe formals” to
+“safe formals + ped C1/C2”) is the owner’s call (FM \#13; PR-for-CI
+precedent S249/S253/S256/S257/S259). - **The change (27 `R/` + 15
+regenerated `.Rd`; code commit `5952d0b4`):** **C1 generic -\>
+`@inheritParams reportGV`** (17 fns): createSimKinships,
+cumulateSimKinships, fixGenotypeCols, getGVGenotype, getGVPopulation,
+addParents, addSexAndAgeToGroup, getPedMaxAge, getPyramidAgeDist,
+getRecordStatusIndex, removeUnknownAnimals, getAnimalsWithHighKinship,
+getPyramidPlot, hasBothParents, makeSimPed, obfuscatePed,
+countFirstOrder (also fixes countFirstOrder’s malformed
+`: \code{Pedigree}` leading-colon `@param`). **C2 candidates -\>
+`@inheritParams getPotentialSires`** (10 fns): addGroupOfUnusedAnimals,
+fillGroupMembers, fillGroupMembersWithSexRatio, initializeHaremGroups,
+makeGroupMembers, removePotentialSires, calculateSexRatio,
+getSexRatioWithAdditions, filterAge, groupAddAssign. **`filterPairs`
+KEPT BESPOKE** (28th candidate: no `candidates` formal/linkage -\>
+candidates donor text would be factually WRONG; adversarial-verify
+catch). - **Method (evidence + adversarial verify):** firsthand
+deterministic census sized the drift (67 `@param ped` / 66 files / 46
+distinct) and drove the scope gate; a **28-agent read-only Workflow**
+verified every proposed inherit (reads callee BODY + donor; judges
+donor-accuracy AND meaning-loss -\> **27 CONFIRM / 1 KEEP_BESPOKE**); a
+**guarded apply script** deleted ONLY each target `@param ped` block +
+added one `@inheritParams` line (0 guard failures). - **Verify
+(firsthand):** `devtools::document()` clean (every donor resolved);
+**NAMESPACE diff EMPTY**; every changed `.Rd` changes **only**
+`\item{ped}` (verified `\item{ids}` UNCHANGED in the 3 files that also
+`@inheritParams getParents`); re-census PROVED collapse (`@param ped`
+67-\>40 occurrences / 46-\>33 distinct, exactly 27 removed); `lintr` =
+**0** across all 27 changed files; `spell_check_package` CLEAN;
+**`R CMD check --as-cran` GREEN `Status: 1 NOTE`** (archived-maintainer
+“New submission” false positive) with
+`code/documentation mismatches ... OK`, `checking examples ... OK`,
+`checking tests ... OK`, all Rd checks OK,
+`re-building of vignette outputs ... OK`.
+
+**Phase-3E (runtime smoke): N/A (stated, not skipped).** REFACTOR-class
+doc-only – no `R/` logic / runtime / Shiny / NAMESPACE change (empty
+diff PROVEN). The meaningful verification (document clean +
+`code/documentation mismatches OK` + `--as-cran` examples/tests OK +
+per-`.Rd` diff) is done. FM \#24 does not apply.
+
+**Session 259 Handoff Evaluation (by Session 260): Score 9/10.** S259’s
+SUGGESTED-NEXT led with exactly this deliverable (“Stage 8b-`ped`, the
+deferred big half of Finding 6”) and was turnkey: it gave the firsthand
+numbers (66 files / 46 distinct), NAMED the meaning-clusters (minimal,
+full req-fields, demographic-augmented, candidates-linked,
+data.frame-vs-datatable), prescribed the method (“pick 2-4 CANONICAL
+donors; classify each of 66 callees to a donor OR keep-bespoke via a
+per-callee verification workflow, same shape as S259’s 24-agent verify;
+apply with the guarded script”), advised “own scope-gate (it may itself
+split by cluster)”, and warned “Blind single-donor `@inheritParams`
+would CORRUPT docs”. **What helped:** (1) the census numbers reconfirmed
+to the digit (67/66/46), so my census was a confirm-not-discover; (2)
+the named clusters mapped straight onto my C1-C7 split; (3) the “blind
+single-donor corrupts” warning was LOAD-BEARING – it kept me
+cluster-aware and justified deferring the requirement-bearing clusters;
+(4) “own scope-gate advisable” was right – the gate let the owner pick
+the safe C1+C2 slice; (5) the standing post-edit checklist (re-gate +
+lint + spell; diff NAMESPACE) held exactly; (6) ghost-check clean (HEAD
+`be25d97b` == documented S259 close-out); (7) every standing keep held
+firsthand. **What was missing / thin -1:** S259 gave the raw clusters
+but did NOT pre-split them into “safe phrasing drift” vs
+“requirement-bearing” – I censused that firsthand (a refine, not a
+discovery, and cheap). **What was wrong:** nothing material. **ROI:**
+very high – a turnkey, correctly-scoped deliverable pointer.
+
+**Self-assessment (Session 260): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean), reported, STOPPED for the owner; wrote
+the 1B stub BEFORE technical work; declared REFACTOR-class / TDD-N/A up
+front and held it; gated scope (1 `AskUserQuestion`). **Strengths:** (1)
+**firsthand deterministic census BEFORE the workflow** sized
+safe-vs-risky per cluster and drove the scope gate (Learning 243 (1)/244
+applied); (2) **28-agent adversarial verify caught the `filterPairs`
+mis-cluster** – it copy-pasted the candidates text but has no candidates
+linkage, so the donor would assert something false (KEEP_BESPOKE); (3)
+**collision analysis + per-`.Rd` diff proof** – flagged the 3
+`ids`-formal files, then PROVED via the man/ diff that `\item{ids}` is
+unchanged and only `\item{ped}` changed (empirical no-over-inheritance,
+Learning 245 (2)); (4) **guarded apply (0 skips) + full re-census**
+proving the 67-\>40 collapse; (5) **full gate GREEN** (document clean /
+NAMESPACE empty / `code/documentation mismatches OK` / lint 0 / spell
+clean / `--as-cran` 1 NOTE with examples+tests+vignettes OK); (6)
+**scope discipline (FM \#8)** – kept the requirement-bearing clusters,
+filterPairs, and the S259-surfaced defects OUT, deferred cleanly.
+**Weaknesses (the -1):** the deliverable is a SLICE (C1+C2; C3-C7 ped
+clusters deferred); the verify Workflow spent ~674k tokens on 28 small
+judgments (heavier than strictly needed – batchable); and a shell bug
+(env var passed as a positional arg -\> a FALSE-clean lint of 0 files)
+slipped through once before I caught it and re-ran the real lint. Capped
+at 9.
+
+**Learnings:** **Learning 245** added to `PROJECT_LEARNINGS.md` –
+`@param ped` de-dup is CLUSTER-aware (pure-drift clusters collapse to
+one donor; requirement-bearing clusters stay bespoke); adversarial
+per-callee verify catches mis-clustered files (filterPairs) that the
+census text alone waves through; the over-inheritance proof for a
+multi-param donor is the per-`.Rd` diff (only `\item{ped}`, `\item{ids}`
+unchanged) + first-match `@inheritParams` order; a source de-dup can
+render byte-identically (12/27) so the SOURCE re-census is the collapse
+proof; `code/documentation mismatches OK` is the `@inheritParams`
+correctness gate. Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\], \[\[avoid-new-lints-r-package\]\],
+\[\[avoid-reconcile-tools-on-curated-files\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a REFACTOR-class
+documentation session – TDD RED/GREEN N/A.**
+
+**=\> SUGGESTED NEXT = Stage 8b-`ped` continued (the requirement-bearing
+clusters), or the surfaced defects.** Stage 8b-ped C1+C2 is committed
+locally on `issue103-stage8b-dedup` (owner lands/pushes). **Remaining
+for issue \#103:** - **Stage 8b-`ped` continued – the
+requirement-bearing `ped` clusters (39 files still `@param ped` / 33
+distinct).** Same shape (cluster-specific donors + per-callee verify),
+but these carry REAL per-function info – keep function-specific caveats
+bespoke: **C3 required-fields** (sire/dam, id/sire/dam ~10: addUIds,
+getProbandPedigree, removeUninformativeFounders, trimPedigree,
+isFounder, convertRelationships, getFounders, getPedigreeSource,
+removeAutoGenIds, getDescendantPedigree); **C4 id-only** (~4:
+resetGroup, setPopulation, removeDuplicates, unknown2NA); **C5
+complete-GVA req.fields** (~10: calcFE, calcFounderContributions,
+calcFEFG/calcFG/calcFGSE + “stops with an error”, calcRetention,
+findOffspring, getPotentialParents “complete pedigree”, offspringCounts,
+orderReport – KEEP the caveat-bearing ones bespoke, `@inheritParams`
+can’t inherit-plus-append); **C6 demographic** (~6: convertDate,
+createPedTree, runQcStudbook, setExit, correctUnknownParentMeanKinship,
+getProductionStatus); **C7 bespoke KEEP** (modPotentialParents nullable
+x2, addBackSecondParents, addGenotype “not checked”,
+getPedDirectRelatives, gvaConvergence cross-ref). Own scope-gate
+advisable; may split by cluster again. **Blind single-donor would
+CORRUPT these – do not.** - **`filterPairs.R` (surfaced this session):**
+its `@param ped` inaccurately claims “including the IDs listed in
+`candidates`” but it has NO candidates linkage -\> reclassify to generic
+(`@inheritParams reportGV`) OR fix the description; small own session. -
+**`getPedDirectRelatives.R` description defect (S259-flagged, own
+session):** body + `@return` still say “direct ancestors from labkey
+`study` schema and `demographics` table” – WRONG for this
+source-agnostic pedigree fn. - **`getSimSires.R` duplicate file
+(S259-flagged):** still DEFINES/exports `getPotentialSires` with bespoke
+candidates text matching the donor – left UNTOUCHED this session to keep
+`man/getPotentialSires.Rd` deterministic; likely DELETE after a
+ref-check (own gate). - **Optional `@family` tail** (`reportGV` as GVA
+aggregator anchor); older shiny + Matrix `@import` -\> `@importFrom`
+(each own judgment call); the CRAN thread (Phase 5b, owner-run outward).
+**Older backlog:** issues \#37, \#36, \#28, \#12, \#11, \#10, \#5.
+**Each stage edits `R/`(+`man/`/`NAMESPACE`) which SHIP -\> after each:
+re-gate AND `lintr::lint_package()` AND `spell_check_package` (hand-add
+wordlist terms, never `update_wordlist` –
+\[\[avoid-reconcile-tools-on-curated-files\]\]); for any
+NAMESPACE-touching stage ALSO diff NAMESPACE + runtime-smoke the
+INSTALLED namespace (Learning 239).** **Landing owner-gated each time**
+(`AskUserQuestion`): PR-for-CI (S249/S253/S256/S257/S259 – 5-platform
+cert; PREFER for large `man/` churn or executing examples) vs
+direct-merge (S250/S252/S254/S255 – faster, cheap landed-tree sanity
+check).
+
+**Key files (this session):** **Edited (Stage 8b-ped code commit
+`5952d0b4`, branch `issue103-stage8b-dedup`):** 27 `R/*.R` (17
+`@inheritParams reportGV` + 10 `@inheritParams getPotentialSires`) + 15
+regenerated `man/*.Rd`. **No `NAMESPACE` / `DESCRIPTION` / `data` /
+`NEWS` / `vignettes` / `tests` change (NAMESPACE empty diff, proven).**
+**Process docs (this close-out commit, on the branch):** `CHANGELOG.md`
+(S260 entry), `PROJECT_LEARNINGS.md` (Learning 245), `SESSION_NOTES.md`
+(this handoff). **Gate/workflow evidence (NOT committed, scratchpad):**
+`s260gate/build.log`+`check.log` (`Status: 1 NOTE`); the
+census/enrich/apply scripts (`census_ped.py`, `enrich.py`+`enrich.json`,
+`apply_ped.py`, `confirm.json`); the verify-Workflow output
+(`tasks/we4qp9ayk.output` +
+`subagents/workflows/wf_38630613-696/journal.jsonl` – 27 CONFIRM / 1
+KEEP_BESPOKE). **NOT committed (standing keep / not mine):**
+`PED_GV_AUDIT_2026-05-30.html` (untracked, `.Rbuildignore`d);
+`.DS_Store` (TRACKED + modified – pre-existing, left untouched);
+`dashboard.html` (generated).
+
+**Gotchas:** (1) **Stage 8b-ped C1+C2 is committed locally (code
+`5952d0b4`) but NOT pushed** – and the branch `issue103-stage8b-dedup`
+IS PR \#113, so pushing EXTENDS PR \#113 (previously S259’s “safe
+formals + `@family`”) to cover BOTH Stage 8b halves; the PR title/body
+still says “safe formals” -\> update it or note at landing; the merge is
+the owner’s call. (2) **`filterPairs` kept bespoke** – its `@param ped`
+mentions `candidates` but the fn has none; do NOT force it into the
+candidates donor. (3) **12 of 27 collapses rendered byte-identically**
+(old text already matched the donor) -\> only 15 `man/.Rd` changed; the
+SOURCE-level re-census (67-\>40) is the collapse proof, NOT the man/
+diff count. (4) **The 3 `ids`-collision files** (removePotentialSires,
+calculateSexRatio, getSexRatioWithAdditions) keep `ids` from
+`@inheritParams getParents` (FIRST-match wins; the new
+`getPotentialSires` inherit is appended after) – PROVEN `\item{ids}`
+unchanged. (5) **Requirement-bearing ped clusters (C3-C7, 39 files / 33
+distinct) still bespoke** – deferred; keep function-specific caveats
+(see SUGGESTED NEXT). (6) **`@inheritParams` cannot
+inherit-plus-append** – a C5 fn that shares the req-fields but adds
+“stops with an error” must stay bespoke (or lose the caveat); don’t
+collapse those. (7) Carried standing keeps (unchanged): package
+**ARCHIVED on CRAN 2025-07-29**; CRAN resubmission owner-gated;
+win-builder/R-hub/`submit_cran()` OWNER-run outward + HARD STOP; the
+`--as-cran` gate certifies the CURRENT tree only; `NEWS.md`/`README.md`
+are GENERATED (from `NEWS.Rmd`/`README.Rmd`); module/E2E tests need
+`NOT_CRAN=true` BUT `--as-cran` SKIPS them via `skip_on_cran`; a 0/0/N
+check does NOT imply spelling-clean -\> `spell_check_package` (hand-add
+wordlist terms, never `update_wordlist`); `git pull` is rebase + chokes
+on unstaged tracked changes (stash `.DS_Store` if it blocks a checkout,
+Learning 233); re-check `git status` before ANY `reset --hard`
+(\[\[check-status-before-destructive-git\]\]); **zsh `status` is a
+read-only special variable**; **the version is 2.0.0** (DESCRIPTION
+authoritative; CLAUDE.md’s “1.1.0.9000” header is stale prose).
+
+### What Session 259 Did
+
+**Deliverable (owner scope-gate via `AskUserQuestion` = slice “Safe
+formals + @family”):** issue \#103 **Stage 8b – Finding 6
+(`@inheritParams`/`@family` de-duplication)** – kill the copy-paste
+`@param` drift for the SAFE formals (`ids`, `kmat`, `threshold`) via
+`@inheritParams`, and add the package’s FIRST `@family` cross-links; the
+big `@param ped` drift (66 files, ~46 genuine-variant meanings)
+INTENTIONALLY deferred to its own session. **REFACTOR-class
+documentation work – no R-logic / NAMESPACE / behavior change (NAMESPACE
+diff EMPTY); TDD RED/GREEN N/A. DONE + VERIFIED on branch
+`issue103-stage8b-dedup` (code commit `bafaa1e8` + this close-out
+commit); PR OPEN for CI – the merge is the OWNER’s next decision. 0
+stakeholder corrections / 0 owner overrides** (2 owner gates via
+`AskUserQuestion`: (a) scope = safe formals + `@family`; (b) landing =
+PR-for-CI). **Started / Completed:** 2026-06-30 / 2026-07-04 **Status:**
+**DONE + on a PR (CI running at close-out).** Branch
+`issue103-stage8b-dedup` pushed; `origin` == local. **Do NOT merge
+unilaterally** – the merge is the owner’s call (FM \#13; PR-for-CI
+precedent S249/S253/S256/S257). When CI goes GREEN +
+`mergeStateStatus CLEAN`, the owner merges via
+`gh pr merge <N> --merge --delete-branch`; expect a brief `UNSTABLE`
+after the close-out-docs commit re-triggers the matrix (Learning 235
+(2)). - **The change (38 `R/` + 42 regenerated `.Rd`; code commit
+`bafaa1e8`):** **`@inheritParams` (20 conversions / 19 files):** `ids`
+-\> `@inheritParams getParents` (12 generic callees; 12 genuine variants
+kept bespoke), `kmat` -\> `@inheritParams meanKinship` (5 callees; 3
+“dense/proband” variants kept), `threshold` -\> `@inheritParams calcGU`
+(allele-rarity: `calcA`, `calcGUSE`) AND
+`@inheritParams filterThreshold` (min-kinship:
+`getAnimalsWithHighKinship`) – the two meanings of one formal on
+SEPARATE donors. **`@family` (25 exported fns):** `direct relatives`
+(4), `obfuscation` (4), `genetic value analysis` (8 exported `calc*`;
+`@noRd` `calcFounderContributions` excluded as inert), `Shiny modules`
+(18 UI+Server exports / 9 `mod*` files). - **Method (evidence +
+adversarial verify):** a deterministic Python census sized the drift
+firsthand (`ids` 24/15, `kmat` 9/6, `threshold` 6/4-**two-meanings**,
+`ped` 66/46 -\> deferred) and drove the scope gate. Then a **24-agent
+read-only Workflow** verified every proposed change (one
+agent/`@inheritParams`: reads callee body + donor, judges donor-accuracy
+AND meaning-loss -\> **20/20 CONFIRM**; one agent/family: membership +
+export structure). Applied via a **guarded script** (each `@param`
+formal exactly once; each `@family` anchored on the `name <- function`
+def; 38 files, 0 guard failures). - **Verify (firsthand):**
+`devtools::document()` clean (every donor resolved – an unresolved
+`@inheritParams` warns); **NAMESPACE diff EMPTY** (predicted); rendered
+`.Rd` confirmed (inherited text + `\seealso{Other ...}` family lists);
+the duplicate `getPotentialSires`/`getSimSires` pair converted
+identically -\> `man/getPotentialSires.Rd` deterministic; census re-run
+PROVED collapse (`@param ids` 24-\>12, `kmat`/`threshold` below the \>=5
+threshold, `ped` untouched at 66); `lintr` = **0** across all 38 changed
+files (pkg loaded); `spell_check_package` = **CLEAN**;
+**`R CMD check --as-cran` GREEN `Status: 1 NOTE`** (the documented
+archived-maintainer “New submission” false-positive) with
+`checking examples ... OK`, `checking tests ... OK`,
+`code/documentation mismatches ... OK`, all Rd checks OK,
+`re-building of vignette outputs ... OK`.
+
+**Phase-3E (runtime smoke): N/A (stated, not skipped).** REFACTOR-class
+doc-only – no `R/` logic / runtime / Shiny / NAMESPACE change (empty
+diff PROVEN). The meaningful verification (document clean + rendered
+`.Rd` + `--as-cran` examples/tests OK + code/doc-mismatch OK) is done.
+FM \#24 does not apply.
+
+**Session 258 Handoff Evaluation (by Session 259): Score 9/10.** S258’s
+SUGGESTED-NEXT led with exactly this deliverable: “Stage 8b – Finding 6
+(`@inheritParams`/`@family` de-dup), the LAST substantive \#103 piece…
+`@param ped` in ~66 files with ~20 distinct descriptions (drift), `ids`
+x24, `kmat` x9, `threshold` x6… pick a CANONICAL donor per formal,
+verify its text fits EACH callee (some `ped` args genuinely need ‘with
+required columns’/demographic variants -\> do NOT blind-`@inheritParams`
+those)… add `@family` clusters (`calc*`, `getLkDirect*`, `mod*`,
+`obfuscate*`)… own scope-gate advisable.” **What helped:** (1) the four
+census-target formals were NAMED (`ped/ids/kmat/threshold`) with
+per-formal counts, so my firsthand census was a confirm-and-refine, not
+a discovery from scratch; (2) the load-bearing “do NOT
+blind-`@inheritParams` some `ped` args” warning was CORRECT and directly
+justified deferring `ped` (my census found 46 genuine-variant meanings);
+(3) “own scope-gate advisable” was the right call – the scope gate is
+what let the owner quarantine `ped`; (4) the four `@family` cluster
+names were all validated by the workflow; (5) the standing post-edit
+checklist (re-gate + `lint_package` + `spell`
+hand-add-not-`update_wordlist`; diff NAMESPACE) held exactly; (6)
+landing-owner-gated with both precedents made the landing gate turnkey;
+(7) ghost-check clean (HEAD `54adb19a` == documented S258 close-out);
+(8) every standing keep held firsthand. **What was missing / thin -1:**
+S258’s headline “~20 distinct” for `ped` UNDERCOUNTS the real 46
+distinct (a headline estimate, not a firsthand census – expected, and it
+flagged the scope-gate that surfaced the true number at low cost); it
+also did not pre-distinguish which formals are SAFE vs risky (I censused
+that firsthand). **What was wrong:** nothing material – direction (defer
+`ped`, scope-gate, per-callee verify, `@family` clusters) was all
+correct. **ROI:** high – the handoff set up the scope gate and the
+safe-vs-risky split precisely enough to go straight to census + verify.
+
+**Self-assessment (Session 259): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean), reported, STOPPED for the owner; wrote
+the 1B stub BEFORE technical work; declared REFACTOR-class / TDD-N/A up
+front and held it; gated scope + landing (2 `AskUserQuestion`).
+**Strengths:** (1) **firsthand deterministic census BEFORE the
+workflow** sized safe-vs-risky per formal and drove the scope gate
+(Learning 243 (1) applied); (2) **the collision-proof insight** –
+deleting ONLY the target `@param` line means `@inheritParams` can
+inherit only that one shared formal, so donor choice is risk-free
+(Learning 244 (1)); (3) **caught the two-meaning `threshold`** and kept
+allele-rarity vs min-kinship on SEPARATE donors; (4) **24-agent
+adversarial verification** (donor-accuracy + meaning-loss per callee -\>
+20/20 CONFIRM) caught the `@noRd`-`@family`-inert point (excluded
+`calcFounderContributions`), the ancestors-vs-relatives naming nuance,
+and 2 out-of-scope defects; (5) **guarded apply script** (0 failures) +
+full re-census proving collapse; (6) **caught the vignette-WARNING
+artifact** (`--no-build-vignettes` -\> spurious “no files in inst/doc”
+WARNINGs) and re-ran WITH vignettes for a clean apples-to-apples
+`1 NOTE` cert; (7) **scope discipline (FM \#8)** – deferred `ped` +
+surfaced the `getPedDirectRelatives` description defect + `reportGV`
+anchor WITHOUT fixing them mid-de-dup; (8) **owned the result** –
+PR-for-CI, merge left to the owner. **Weakness (the -1):** the discovery
+Workflow’s FIRST launch FAILED (`args.inherit` undefined – nested `args`
+object arrived unset; fixed by inlining the data as `const`) – a wasted
+launch caught immediately but a real process ding; and the deliverable
+is a SLICE (the `ped` half deferred, correctly). Capped at 9.
+
+**Learnings:** **Learning 244** added to `PROJECT_LEARNINGS.md` – de-dup
+by DELETING ONLY the target `@param` line makes donor choice
+collision-proof; a formal sharing a NAME but not a MEANING needs
+SEPARATE donors (`threshold`); `@family` on a `@noRd` fn is inert
+(exclude); a multi-export file needs the tag on EVERY block, anchored on
+the funcdef; `document()` + empty-NAMESPACE + `code/doc-mismatches OK`
+is the `@inheritParams` correctness gate; adversarial per-callee verify
+pays off; pass Workflow candidate data INLINE not via `args`; landing
+PR-for-CI for large `man/` churn. Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\], \[\[avoid-new-lints-r-package\]\],
+\[\[avoid-reconcile-tools-on-curated-files\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a REFACTOR-class
+documentation session – TDD RED/GREEN N/A.**
+
+**=\> SUGGESTED NEXT = Stage 8b-`ped` (the deferred big half of Finding
+6), or the surfaced description/code defects.** Stage 8b (safe formals +
+`@family`) is on a PR (owner merges). **Remaining for issue \#103:** -
+**Stage 8b-`ped` – the LAST substantive \#103 piece.** `@param ped` = 66
+files / **46 distinct descriptions** (firsthand census, richer than
+S258’s “~20” estimate). NOT a single-donor job: the meanings genuinely
+CLUSTER – minimal (`id`/`sire`/`dam` only), full
+(`req. fields: id, sire, dam, gen, population`), demographic-augmented
+(`birth`/`death`/`exit` dates), candidates-linked (“including the IDs
+listed in `candidates`”), and `data.frame`-vs-`datatable` phrasings.
+Plan: pick 2-4 CANONICAL donors (one per meaning cluster), classify each
+of 66 callees to a donor OR keep-bespoke via a per-callee verification
+workflow (same shape as S259’s 24-agent verify), then apply with the
+guarded script. Own scope-gate advisable (it may itself split by
+cluster). **Blind single-donor `@inheritParams` would CORRUPT docs – do
+not.** - **Surfaced DESCRIPTION defect (Finding-3-adjacent, own
+session):** `getPedDirectRelatives.R` description body + `@return` still
+say “Gets direct ancestors from labkey `study` schema and `demographics`
+table” – WRONG for this source-agnostic pedigree fn (its TITLE was fixed
+in Stage 8a). A description-accuracy fix, not de-dup. - **Optional
+`@family` tail:** add `reportGV` (and maybe `meanKinship`/`geneDrop`) to
+the `genetic value analysis` family as its aggregator anchor. -
+**Surfaced CODE defect (own session):** `getSimSires.R` is a DUPLICATE
+file defining/exporting `getPotentialSires` -\> likely DELETE it (verify
+no test/collate/`@rdname` refs first). Both `@param ids` are now synced
+to `@inheritParams getParents` so the render stays deterministic. -
+**Older deferred:** shiny + Matrix `@import` -\> `@importFrom` (each its
+own judgment call); the CRAN thread (Phase 5b,
+`docs/planning/cran-2.0.0-phase5-runbook.md`, owner-run outward).
+**Older backlog:** issues \#37, \#36, \#28, \#12, \#11, \#10, \#5.
+**Each stage edits `R/`(+`man/`/`NAMESPACE`) which SHIP -\> after each:
+re-gate AND `lintr::lint_package()` AND `spell_check_package` (hand-add
+wordlist terms, never `update_wordlist` –
+\[\[avoid-reconcile-tools-on-curated-files\]\]); for any
+NAMESPACE-touching stage ALSO diff NAMESPACE + runtime-smoke the
+INSTALLED namespace (Learning 239).** **Landing owner-gated each time**
+(`AskUserQuestion`): PR-for-CI (S249/S253/S256/S257/S259 – 5-platform
+cert; PREFER for large `man/` churn or executing examples) vs
+direct-merge (S250/S252/S254/S255 – faster, cheap landed-tree sanity
+check).
+
+**Key files (this session):** **Edited (Stage 8b code commit `bafaa1e8`,
+branch `issue103-stage8b-dedup`, PR open):** 38 `R/*.R` (20
+`@inheritParams` conversions across 19 files: the 12 `ids`, 5 `kmat`,
+`calcA`+`calcGUSE`+`getAnimalsWithHighKinship` threshold; 25 `@family`
+tags across
+`direct relatives`/`obfuscation`/`genetic value analysis`/`Shiny modules`) +
+42 regenerated `man/*.Rd`. **No `NAMESPACE` / `DESCRIPTION` / `data` /
+`NEWS` / `vignettes` / `tests` change (NAMESPACE empty diff, proven).**
+**Process docs (this close-out commit, on the branch):** `CHANGELOG.md`
+(S259 entry), `PROJECT_LEARNINGS.md` (Learning 244), `SESSION_NOTES.md`
+(this handoff). **Gate/workflow evidence (NOT committed, scratchpad):**
+`s259gate/build2.log`+`check2.log` (`Status: 1 NOTE`); the census/apply
+scripts (`census_params.py`, `census_detail.py`, `apply_8b.py`); the
+verify-Workflow output (`tasks/wikujcvul.output` – 20/20 CONFIRM + 4
+family verdicts). **NOT committed (standing keep / not mine):**
+`PED_GV_AUDIT_2026-05-30.html` (untracked, `.Rbuildignore`d);
+`.DS_Store` (TRACKED + modified – pre-existing, left untouched);
+`dashboard.html` (generated).
+
+**Gotchas:** (1) **Stage 8b (safe formals + `@family`) is on a PR, NOT
+merged** – the merge is the owner’s call; branch
+`issue103-stage8b-dedup`; PR body says `Refs #103` (does NOT close \#103
+– keyword-safe). (2) **This is the package’s FIRST `@family` usage** (0
+existed before) – it adds `\seealso{Other <family>: ...}` to 25 exported
+man pages (18 of them the `mod*` UI+Server pages); intended, not drift.
+(3) **`@inheritParams` collision-proof rule:** delete ONLY the one
+target `@param` line – roxygen then inherits ONLY that one
+now-undocumented shared formal (locally-documented params always win),
+so donor choice never over-inherits. (4) **`threshold` has TWO
+meanings** (allele-rarity integer via `calcGU`; min-kinship numeric via
+`filterThreshold`) – kept on SEPARATE donors; never merge. (5)
+**`@family` on a `@noRd` fn is INERT** – `calcFounderContributions`
+excluded; only the 8 exported `calc*` tagged. (6) **The deferred
+`@param ped` half (66 files / 46 meanings) is the big remaining
+Finding-6 piece** – multi-donor + per-callee, see SUGGESTED NEXT. (7)
+**`getPedDirectRelatives.R` has a WRONG description body** (“direct
+ancestors from labkey…”) – deferred description-accuracy defect. (8)
+**`getSimSires.R` duplicate file** unchanged (both `@param ids` synced
+to `@inheritParams getParents`); latent code defect for a dedup session.
+(9) **`--as-cran` gate mechanics:** building with `--no-build-vignettes`
+produces spurious `vignettes`/`inst/doc` WARNINGs (2 WARNINGs) – build
+WITH vignettes (`R CMD build . --no-manual`) for the clean
+`Status: 1 NOTE` result; the sole NOTE is the archived-maintainer “New
+submission” false-positive. (10) **Pass Workflow candidate data INLINE**
+(`const` in the script), not via nested `args` – a nested `args` object
+arrived `undefined`. (11) Carried standing keeps (unchanged): package
+**ARCHIVED on CRAN 2025-07-29**; CRAN resubmission owner-gated;
+win-builder/R-hub/`submit_cran()` OWNER-run outward + HARD STOP; the
+`--as-cran` gate certifies the CURRENT tree only; `NEWS.md`/`README.md`
+are GENERATED (from `NEWS.Rmd`/`README.Rmd`); module/E2E tests need
+`NOT_CRAN=true` BUT `--as-cran` SKIPS them via `skip_on_cran`; a 0/0/N
+check does NOT imply spelling-clean -\> `spell_check_package` (hand-add
+wordlist terms, never `update_wordlist`); `git pull` is rebase + chokes
+on unstaged tracked changes (stash `.DS_Store` if it blocks a checkout,
+Learning 233); re-check `git status` before ANY `reset --hard`
+(\[\[check-status-before-destructive-git\]\]); **zsh `status` is a
+read-only special variable**; **the version is 2.0.0** (DESCRIPTION
+authoritative; CLAUDE.md’s “1.1.0.9000” header is stale prose).
+
 ### What Session 258 Did
 
 **Deliverable (owner-directed = “1” = “Merge PR \#108” from S257’s

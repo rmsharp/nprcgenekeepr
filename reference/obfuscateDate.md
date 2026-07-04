@@ -30,6 +30,13 @@ obfuscateDate(baseDate, minDate, maxDelta = 30L)
 
 A vector of dates that have be obfuscated.
 
+## See also
+
+Other obfuscation:
+[`mapIdsToObfuscated()`](https://github.com/rmsharp/nprcgenekeepr/reference/mapIdsToObfuscated.md),
+[`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md),
+[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+
 ## Examples
 
 ``` r

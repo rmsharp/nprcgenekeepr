@@ -28,6 +28,17 @@ calcRetention(ped, alleles)
 A vector of the mean number of founder alleles retained in the gene
 dropping simulation.
 
+## See also
+
+Other genetic value analysis:
+[`calcA()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcA.md),
+[`calcFE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFE.md),
+[`calcFEFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFEFG.md),
+[`calcFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFG.md),
+[`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md),
+[`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md),
+[`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md)
+
 ## Examples
 
 ``` r

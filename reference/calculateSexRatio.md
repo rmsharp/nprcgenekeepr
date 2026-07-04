@@ -14,11 +14,11 @@ calculateSexRatio(ids, ped, additionalMales = 0L, additionalFemales = 0L)
 
 - ids:
 
-  character vector of animal Ids
+  character vector of animal IDs
 
 - ped:
 
-  datatable that is the `Pedigree`. It contains pedigree information
+  dataframe that is the `Pedigree`. It contains pedigree information
   including the IDs listed in `candidates`.
 
 - additionalMales:

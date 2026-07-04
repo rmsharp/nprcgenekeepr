@@ -16,7 +16,7 @@ hasBothParents(id, ped)
 
 - ped:
 
-  a pedigree
+  The pedigree information in data.frame format
 
 ## Value
 

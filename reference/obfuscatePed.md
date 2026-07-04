@@ -20,7 +20,7 @@ obfuscatePed(
 
 - ped:
 
-  pedigree object
+  The pedigree information in data.frame format
 
 - size:
 
@@ -44,6 +44,13 @@ obfuscatePed(
 ## Value
 
 An obfuscated pedigree
+
+## See also
+
+Other obfuscation:
+[`mapIdsToObfuscated()`](https://github.com/rmsharp/nprcgenekeepr/reference/mapIdsToObfuscated.md),
+[`obfuscateDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateDate.md),
+[`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
 
 ## Examples
 
