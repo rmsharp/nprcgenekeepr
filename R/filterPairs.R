@@ -8,8 +8,9 @@
 #' @param kin a dataframe with columns \code{id1}, \code{id2}, and
 #' \code{kinship}. This is the kinship data reformatted from a matrix,
 #' to a long-format table.
-#' @param ped Dataframe of pedigree information including the IDs listed in
-#' \code{candidates}.
+#' @param ped Dataframe of pedigree information that must contain an
+#' \code{id} column and a \code{sex} column. The \code{id} values should
+#' include the animals referenced in \code{kin}.
 #' @param ignore a list containing zero or more character vectors of length 2
 #' indicating which sex pairs should be ignored with regard to kinship.
 #' Defaults to \code{list(c("F", "F"))}.
