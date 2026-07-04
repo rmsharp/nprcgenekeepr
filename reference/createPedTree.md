@@ -13,10 +13,8 @@ createPedTree(ped)
 
 - ped:
 
-  dataframe of pedigree and demographic information potentially
-  containing columns indicating the birth and death dates of an
-  individual. The table may also contain dates of sale (departure).
-  Optional columns are `birth`, `death`, `departure`.
+  datatable that is the `Pedigree`. It contains pedigree information.
+  The fields `id`, `sire` and `dam` are required.
 
 ## Value
 

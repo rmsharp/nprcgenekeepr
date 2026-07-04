@@ -7,6 +7,211 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 264 Did
+
+**Deliverable (owner approach-gate + landing-gate via
+`AskUserQuestion`):** issue \#103 – fix the `createPedTree.R`
+`@param ped` accuracy defect S263 surfaced. Its `@param ped` claimed
+demographic columns (`birth`/`death`/`departure`) the function never
+uses; the body uses only id/sire/dam. **REFACTOR-class documentation
+accuracy fix – no R-logic / NAMESPACE / behavior change (NAMESPACE diff
+EMPTY); TDD RED/GREEN N/A. DONE + VERIFIED + LANDED on `master` (code +
+close-out in one direct-merge commit). 0 stakeholder corrections / 0
+owner overrides** (2 owner gates via `AskUserQuestion`: (a) approach =
+`@inheritParams` donor; (b) landing = direct-merge). **Started /
+Completed:** 2026-07-04 / 2026-07-04 **Status:** **DONE + gate GREEN +
+committed to `master`; pushed to origin (local == origin/master).** -
+**The change (1 `R/` + 1 regenerated `.Rd`; direct-merge to `master`):**
+`createPedTree`’s 4-line demographic `@param ped` block -\>
+`@inheritParams getDescendantPedigree` (the same exported id/sire/dam
+house-style donor S263 landed for
+`convertRelationships`/`getFounders`/`removeAutoGenIds`). This both
+**corrects** (rendered `\item{ped}` now reads “datatable that is the
+`Pedigree`. It contains pedigree information. The fields `id`, `sire`
+and `dam` are required.”) **and de-dups**. The function’s own line-21
+description prose (“This function uses only `id`, `sire`, and `dam`
+columns”) is RETAINED, so no information is lost. Donor
+`getDescendantPedigree` UNTOUCHED. - **Evidence (firsthand, per S263’s
+own read-before-edit lesson):** re-read `createPedTree` BEFORE editing –
+body (lines 36-45) uses only `ped$id`/`ped$sire`/`ped$dam`, ZERO
+demographic references -\> the old `@param ped` was copy-paste drift
+(S263’s surfacing CONFIRMED, not trusted). Pre-apply checks: donor
+`getDescendantPedigree` is EXPORTED (has `.Rd`) and accurate;
+`createPedTree` has NO `probands` formal, so `@inheritParams` supplies
+ONLY `ped` (no first-match collision, no over-inheritance) – identical
+to S263’s `convertRelationships` handling. - **Method:** single guarded
+`Edit` (4-line `@param ped` block -\> 1 `@inheritParams` line) +
+`devtools::document()`. Right-sized: a single owner-confirmed,
+firsthand-verified collapse does not need an agent workflow; the
+deterministic build gate IS the verification. - **Verify (firsthand):**
+`devtools::document()` clean (donor resolved, no warning); **NAMESPACE
+diff EMPTY** (sha `3ba035c3...` identical before/after);
+`man/createPedTree.Rd` diff changes **ONLY** `\item{ped}` (NO
+`\item{probands}` leaked -\> over-inheritance PROVEN ruled out); source
+`@param ped` census 32 -\> 31; `lintr` = **0** on the changed file;
+`spell_check_package` CLEAN; **`R CMD check --as-cran` GREEN 0 errors /
+0 warnings / `Status: 2 NOTEs`** with
+`code/documentation mismatches ... OK` (the `@inheritParams` correctness
+gate), `checking examples ... OK` (22s), `checking tests ... OK`
+(testthat 70s), all Rd checks OK,
+`re-building of vignette outputs ... OK`, PDF manual OK.
+
+**The 2 NOTEs (both benign – neither from this change):** (1) CRAN
+incoming feasibility = the archived-maintainer false positive (“New
+submission” / “Package was archived on CRAN … 2025-07-29”) – S263’s “1
+NOTE”; (2) “checking HTML version of manual” = an **environmental**
+local-toolchain note (“‘tidy’ doesn’t look like recent enough HTML
+Tidy” + “package ‘V8’ unavailable”). NOTE (2) is impossible for a
+`@param` edit to cause and is absent on CI (which has these tools). Not
+a regression.
+
+**Phase-3E (runtime smoke): N/A (stated, not skipped).** REFACTOR-class
+doc-only – no `R/` logic / runtime / Shiny / NAMESPACE change (empty
+diff PROVEN). The meaningful verification (document clean +
+`code/documentation mismatches OK` + `--as-cran` examples/tests OK +
+per-`.Rd` diff) is done. FM \#24 does not apply.
+
+**Session 263 Handoff Evaluation (by Session 264): Score 9/10.** S263’s
+SUGGESTED-NEXT listed exactly this deliverable as its FIRST item and it
+was turnkey: it named the file (`createPedTree.R`), the exact defect
+(demographic `@param ped` on a function whose body uses only
+id/sire/dam), the corroborating line-21 comment, the donor
+(`getDescendantPedigree`), BOTH approach options (“could
+`@inheritParams getDescendantPedigree`, which both de-dups and corrects,
+OR rewrite bespoke”), and correctly scoped it as “own small session … a
+description-ACCURACY fix, not pure de-dup”. **What helped:** (1) every
+claim held firsthand – body reads matched the surfacing exactly; the
+donor was accurate + exported as implied; (2) S263’s C6-mirage GOTCHA
+was load-bearing in the RIGHT direction – it explicitly warned NOT to
+collapse `createPedTree` \<-\> `setExit` (which would cement the wrong
+demographic text) and instead fix `createPedTree`’s `@param ped` TO an
+id/sire/dam description, which is exactly the correct move; (3)
+ghost-check clean (HEAD `68f86dc6` == documented S263 close-out); (4)
+every standing keep held (version 2.0.0, package ARCHIVED, `.DS_Store`
+tracked-modified keep, `PED_GV_AUDIT*.html` untracked keep, the other
+surfaced defects). **What was missing / thin (the -1):** S263 asserted
+the collapse “both de-dups and corrects” but did not spell out the
+no-`probands`-collision detail – I verified it firsthand in seconds
+(trivial, and it mirrors S263’s own `convertRelationships` case). **What
+was wrong:** nothing. **ROI:** very high – turnkey, accurate, correctly
+scoped.
+
+**Self-assessment (Session 264): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean), reported, STOPPED for the owner; wrote
+the 1B stub BEFORE any edit; declared REFACTOR-class / TDD-N/A up front
+and held it; gated approach + landing (2 `AskUserQuestion`).
+**Strengths:** (1) **re-read the body firsthand before editing** –
+didn’t trust S263’s surfacing blindly; the exact read-before-edit
+discipline that caught S263’s C6 mirage, here it CONFIRMED the defect;
+(2) **ruled out over-inheritance BEFORE the edit** (donor exported + no
+`probands` formal) and then PROVED it via the per-`.Rd` diff (only
+`\item{ped}`, no `\item{probands}`); (3) **right-sized the verify** – no
+agent workflow for a single owner-confirmed collapse; the deterministic
+gate (document + NAMESPACE/`.Rd` diff + lint + spell + `--as-cran`) is
+the proof; (4) **investigated the unexpected 2nd NOTE** rather than
+hand-waving “2 NOTEs” – traced it to an environmental HTML-Tidy/V8
+artifact, proved it can’t come from a `@param` edit and is absent on CI;
+(5) **scope discipline (FM \#8)** – fixed ONLY `createPedTree`; left
+`removeDuplicates`/`filterPairs`/`getPedDirectRelatives`/`getSimSires`
+for their own sessions. **Weakness (the -1):** intrinsically tiny (1
+`R` + 1 `.Rd`) and low-novelty – a routine application of S263’s
+just-landed donor + pattern to one surfaced defect. The value is
+disciplined execution + honest NOTE investigation, not new
+problem-solving. Correct-but-modest; capped at 9.
+
+**Learnings:** **No new `PROJECT_LEARNINGS.md` entry.** This is a
+routine application of S263’s established pattern (same donor, single
+collapse) to a surfaced accuracy defect – it REINFORCES **Learning 247**
+(“a phrasing-variant `@inheritParams` collapse can double as an
+accuracy/bug fix”) rather than adding anything novel; forcing a learning
+would be noise (per S261’s judgment). Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\], \[\[avoid-new-lints-r-package\]\],
+\[\[avoid-reconcile-tools-on-curated-files\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a REFACTOR-class
+documentation session – TDD RED/GREEN N/A.**
+
+**=\> SUGGESTED NEXT = the remaining surfaced `@param ped` accuracy
+defects, each its own small session.** `createPedTree` is now fixed on
+`master`. **Remaining for issue \#103** (`@param ped` now 31 occ): -
+**`removeDuplicates.R` `@param ped` understatement (surfaced S263):**
+says “The `id` column is required.” but the body also requires
+`recordStatus`
+(`if (!all(c("id", "recordStatus") %in% names(ped))) stop(...)`). Fix
+the description to name `recordStatus`. Small; bespoke rewrite (no
+existing id+recordStatus donor). - **`filterPairs.R` `@param ped` (older
+surfaced):** falsely claims “including the IDs listed in `candidates`”
+but has NO candidates formal -\> reclassify to generic or fix. -
+**`getPedDirectRelatives.R` (older surfaced):** description body +
+`@return` still say “labkey `study` schema/`demographics`” – WRONG for
+the source-agnostic pedigree fn. - **`getSimSires.R` (older surfaced):**
+duplicate file defining/exporting `getPotentialSires` -\> likely DELETE
+after a ref-check (own gate). - **Finding 6 `@param ped` de-dup is now
+effectively COMPLETE** – what remains above is accuracy fixes;
+everything else is bespoke-by-design (see S263’s KEEP-BESPOKE list:
+`getPedigreeSource`, `isFounder`, the 6 demographic fns, the C5-caveat
+GVA set, the C7 bespoke set). - **Older backlog:** issues \#112
+(heatmap/dashboard), \#111 (code coverage), \#110 (runGeneKeepR
+deprecation Q), \#109 (roxygen2 errors), \#37, \#36, \#28, \#12, \#11,
+\#10, \#5; the CRAN thread (Phase 5b, owner-run outward). **Each stage
+edits `R/`(+`man/`) which SHIP -\> after each: re-gate (`--as-cran`) AND
+`lintr::lint_package()` AND `spell_check_package` (hand-add wordlist
+terms, never `update_wordlist` –
+\[\[avoid-reconcile-tools-on-curated-files\]\]); for any
+NAMESPACE-touching stage ALSO diff NAMESPACE + runtime-smoke the
+INSTALLED namespace (Learning 239).** **Landing owner-gated each time**
+(`AskUserQuestion`): direct-merge (S250/S252/S254/S255/S262/S263/S264 –
+fast, for zero/low `man/` churn) vs PR-for-CI
+(S249/S253/S256/S257/S259/S261 – 5-platform cert, for large `man/` churn
+or executing examples).
+
+**Key files (this session):** **Edited (S264 direct-merge commit, on
+`master`):** `R/createPedTree.R` (`@param ped` block -\>
+`@inheritParams getDescendantPedigree`) + regenerated
+`man/createPedTree.Rd` (only `\item{ped}`). **No `NAMESPACE` /
+`DESCRIPTION` / `data` / `NEWS` / `vignettes` / `tests` change
+(NAMESPACE empty diff, PROVEN).** Donor `getDescendantPedigree.R`
+UNTOUCHED. **Process docs (same commit):** `CHANGELOG.md` (S264 entry),
+`SESSION_NOTES.md` (this handoff). `PROJECT_LEARNINGS.md` NOT touched
+(no new learning, by design). **Gate evidence (NOT committed,
+scratchpad):** `s264gate/build.log` + `s264gate/check.log`
+(`Status: 2 NOTEs`); `namespace_before.sha`. **NOT committed (standing
+keep / not mine):** `PED_GV_AUDIT_2026-05-30.html` (untracked,
+`.Rbuildignore`d); `.DS_Store` (TRACKED + modified – pre-existing, left
+untouched); `dashboard.html` (generated); `nprcgenekeepr_2.0.0.tar.gz`
+(build artifact – delete or ignore).
+
+**Gotchas:** (1) **The local `--as-cran` now emits a 2nd, environmental
+NOTE** (“checking HTML version of manual”: ‘tidy’ not recent enough +
+package ‘V8’ unavailable) – this is a LOCAL-TOOLCHAIN artifact, NOT a
+code regression, and is absent on CI. Do NOT mistake `Status: 2 NOTEs`
+for a new defect; the code-relevant checks
+(`code/documentation mismatches OK`, examples/tests/vignettes OK) are
+all clean. (2) **`createPedTree`’s line-21 description prose still says
+“This function uses only id, sire, and dam columns”** – that is CORRECT
+and was deliberately retained; the `@param ped` now matches it. (3)
+**Finding 6 `@param ped` de-dup is effectively COMPLETE** – the
+remaining `@param ped` occurrences are the 4 surfaced accuracy defects
+above plus bespoke-by-design blocks; there is no pure phrasing-drift
+left to collapse. (4) Carried standing keeps (unchanged): package
+**ARCHIVED on CRAN 2025-07-29**; CRAN resubmission owner-gated;
+win-builder/R-hub/`submit_cran()` OWNER-run outward + HARD STOP; the
+`--as-cran` gate certifies the CURRENT tree only (macOS-only locally);
+`NEWS.md`/`README.md` are GENERATED (from `NEWS.Rmd`/`README.Rmd`);
+module/E2E tests need `NOT_CRAN=true` BUT `--as-cran` SKIPS them via
+`skip_on_cran`; a 0/0/N check does NOT imply spelling-clean -\>
+`spell_check_package` (hand-add wordlist terms, never
+`update_wordlist`); `git pull` is rebase + chokes on unstaged tracked
+changes (stash `.DS_Store` if it blocks a checkout, Learning 233);
+re-check `git status` before ANY `reset --hard`
+(\[\[check-status-before-destructive-git\]\]); `gh pr edit` exits 1 on
+this repo -\> `gh api PATCH`
+(\[\[gh-pr-edit-projectcards-workaround\]\]); **zsh `status` is a
+read-only special variable**; **the version is 2.0.0** (DESCRIPTION
+authoritative; CLAUDE.md’s “1.1.0.9000” header is stale prose).
+
 ### What Session 263 Did
 
 **Deliverable (owner scope-gate via `AskUserQuestion` = “id/sire/dam

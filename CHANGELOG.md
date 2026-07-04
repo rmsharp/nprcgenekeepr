@@ -15,6 +15,53 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-04 — issue \#103 — `createPedTree` `@param ped` accuracy fix (Session 264)
+
+- **Deliverable (owner approach-gate + landing-gate via
+  `AskUserQuestion`):** fix the `createPedTree.R` `@param ped` accuracy
+  defect S263 surfaced — its description claimed demographic columns
+  (`birth`/`death`/`departure`) the function never uses.
+  **REFACTOR-class documentation accuracy fix — no R-logic / NAMESPACE /
+  behavior change (NAMESPACE diff empty); TDD RED/GREEN N/A; 0
+  corrections / 0 overrides** (2 owner gates: approach =
+  `@inheritParams`; landing = direct-merge).
+- **The change (1 `R/` + 1 regenerated `.Rd`, direct-merge to
+  `master`):** `createPedTree`’s 4-line demographic `@param ped` block →
+  `@inheritParams getDescendantPedigree` (the same exported id/sire/dam
+  house-style donor S263 landed). This both **corrects** (the rendered
+  `\item{ped}` now reads “datatable that is the `Pedigree` … `id`,
+  `sire` and `dam` are required”) **and de-dups**. The function’s own
+  line-21 description prose (“This function uses only `id`, `sire`, and
+  `dam` columns”) is retained, so no information is lost. Donor
+  `getDescendantPedigree` untouched.
+- **Evidence (firsthand, per S263’s own lesson):** re-read
+  `createPedTree` before editing — body (lines 36–45) uses only
+  `ped$id`/`ped$sire`/`ped$dam`, zero demographic references, confirming
+  the `@param` was copy-paste drift. Confirmed the donor is exported
+  (has an `.Rd`), accurate, and that `createPedTree` has no `probands`
+  formal (so `@inheritParams` supplies only `ped`, no collision / no
+  over-inheritance).
+- **Verify (firsthand):** `devtools::document()` clean (donor resolved,
+  no warning); **NAMESPACE diff empty** (sha identical);
+  `man/createPedTree.Rd` diff changes **only** `\item{ped}` (no
+  `\item{probands}` leaked → over-inheritance ruled out); `lintr` = 0 on
+  the changed file; `spell_check_package` clean;
+  **`R CMD check --as-cran` GREEN 0 errors / 0 warnings / 2 NOTEs** with
+  `code/documentation mismatches … OK`, examples/tests (testthat
+  70s)/Rd/vignettes all OK. The 2 NOTEs are both benign: the
+  archived-maintainer false positive, plus an environmental
+  HTML-Tidy/V8-unavailable note (local toolchain, not caused by the
+  edit, absent on CI).
+- **Remaining \#103 surfaced defects (each its own small session):**
+  `removeDuplicates.R` `@param ped` says “id column is required” but the
+  body also requires `recordStatus`; `filterPairs.R` `@param ped`
+  falsely claims a `candidates` linkage it has no formal for;
+  `getPedDirectRelatives.R` description + `@return` still say “labkey
+  `study` schema/`demographics`” (wrong for the source-agnostic fn);
+  `getSimSires.R` duplicate `getPotentialSires` (likely delete after a
+  ref-check). Finding 6 `@param ped` de-dup itself is now effectively
+  complete — the rest is bespoke-by-design.
+
 ### 2026-07-04 — issue \#103 Stage 8b-`ped` continued — id/sire/dam phrasing cluster de-duped; C6 “demographic pair” refuted (Session 263)
 
 - **Deliverable (owner scope-gate via `AskUserQuestion` = “id/sire/dam
