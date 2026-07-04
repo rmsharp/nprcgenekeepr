@@ -15,6 +15,61 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-04 — issue \#103 — `getPedDirectRelatives` description + `@return` source-agnostic + ancestors→relatives fix (Session 267)
+
+- **Deliverable (owner scope-gate + landing-gate via
+  `AskUserQuestion`):** fix the `getPedDirectRelatives.R` documentation
+  defects the S265/S266 handoffs surfaced — its `@description` claimed
+  the function “Gets direct ancestors from labkey `study` schema and
+  `demographics` table” (it never queries LabKey; it walks the supplied
+  `ped` dataframe), and **both** the `@description` and `@return` said
+  “direct **ancestors**” when the body returns relatives in **both**
+  directions. **REFACTOR-class documentation accuracy fix — no R-logic /
+  NAMESPACE / behavior change (NAMESPACE diff empty); TDD RED/GREEN N/A;
+  0 corrections / 0 overrides** (2 owner gates: scope = full accuracy
+  fix; landing = direct-merge).
+- **The change (1 `R/` + 1 regenerated `.Rd`, direct-merge to
+  `master`):** `@description` → “Gets the direct relatives (ancestors
+  and descendants) of the selected animals from the supplied pedigree
+  (`ped`).”; `@return` → “A data.frame of pedigree records for the
+  selected animals and their direct relatives (ancestors and
+  descendants) in `ped`.” A **bespoke** rewrite. The `@param ped`
+  (“pedigree dataframe object … source of pedigree information”) and the
+  title (“Get the direct relatives of selected animals from a pedigree”)
+  were already accurate and source-agnostic, so both were left untouched
+  (scope discipline).
+- **Evidence (firsthand, read-before-edit):** re-read the body first —
+  the closure loop (lines 50–52) unions `getParents(ped, ids)` (parents
+  / ancestors) **and** `getOffspring(ped, ids)` (offspring /
+  descendants) transitively until no new IDs, then returns
+  `ped[ped$id %in% ids, ]` (line 70). Zero LabKey/schema/`demographics`
+  references anywhere in the body, so the source claim was copy-paste
+  drift. Confirmed the two helpers’ directions firsthand from their own
+  roxygen (`getParents` → “the IDs of the parents”; `getOffspring` →
+  “all of the offspring IDs”), so “ancestors and descendants” is
+  accurate and “ancestors” alone understated it — matching the function
+  name and its `@family direct relatives`.
+- **Verify (firsthand):** `devtools::document()` clean, no collateral
+  roxygen drift (only `getPedDirectRelatives.Rd` regenerated);
+  **NAMESPACE diff empty** (sha `2560cecd…` identical);
+  `man/getPedDirectRelatives.Rd` diff changes **only** `\value` and
+  `\description`; new source lines 72/51/72/68 chars (all ≤80), `lintr`
+  = 0 on the changed file; `spell_check_package` clean;
+  **`R CMD check --as-cran` GREEN 0 errors / 0 warnings / 2 NOTEs** with
+  `code/documentation mismatches … OK`, examples (21s)/tests (testthat
+  67s)/Rd/vignettes/PDF all OK. The 2 NOTEs are both benign
+  (archived-maintainer false positive + environmental HTML-Tidy/V8 note
+  — not caused by the edit, absent on CI).
+- **Remaining \#103 surfaced defects (each its own small session):**
+  `getSimSires.R` duplicate `getPotentialSires` (likely delete after a
+  ref-check — **not** doc-only, so runtime-smoke the installed
+  namespace + diff NAMESPACE). Surfaced-but-deferred this session:
+  `getPedDirectRelatives`’s `@param unrelatedParents` prose is a
+  grammatically incomplete sentence fragment (not
+  source/accuracy-related — left untouched). The `@param ped`
+  accuracy/de-dup work for \#103 is otherwise complete except those
+  items — the rest is bespoke-by-design.
+
 ### 2026-07-04 — issue \#103 — `filterPairs` `@param ped` accuracy fix (Session 266)
 
 - **Deliverable (owner approach-gate + landing-gate via

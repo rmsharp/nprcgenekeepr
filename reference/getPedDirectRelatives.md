@@ -1,7 +1,7 @@
 # Get the direct relatives of selected animals from a pedigree
 
-Gets direct ancestors from labkey `study` schema and `demographics`
-table.
+Gets the direct relatives (ancestors and descendants) of the selected
+animals from the supplied pedigree (`ped`).
 
 ## Usage
 
@@ -28,8 +28,8 @@ getPedDirectRelatives(ids, ped, unrelatedParents = FALSE)
 
 ## Value
 
-A data.frame with pedigree structure having all of the direct ancestors
-for the Ids provided.
+A data.frame of pedigree records for the selected animals and their
+direct relatives (ancestors and descendants) in `ped`.
 
 ## See also
 
