@@ -15,6 +15,48 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-04 — issue \#103 Stage 8b-`ped` continued — byte-identical `@param ped` clusters de-duped (Session 262)
+
+- **Deliverable (owner scope-gate = “byte-identical clusters only”):**
+  collapse the SHA1-identical `@param ped` clusters among the
+  requirement-bearing `ped` functions S259/S260 deferred.
+  **REFACTOR-class documentation de-dup — no R-logic / NAMESPACE /
+  behavior change (NAMESPACE diff empty, 0 `man/` changes); TDD
+  RED/GREEN N/A; 0 corrections / 0 overrides** (2 owner gates: scope;
+  landing = direct-merge).
+- **The change (5 `R/`, direct-merge to `master`):** 5 `@param ped`
+  blocks → `@inheritParams` across 3 byte-identical clusters — **C3a**
+  sire+dam-required → `@inheritParams trimPedigree` (addUIds,
+  getProbandPedigree, removeUninformativeFounders); **C5-base** GVA
+  req-fields → `@inheritParams calcFE` (calcFounderContributions,
+  `@noRd`); **C4** id-only → `@inheritParams setPopulation` (resetGroup,
+  `@noRd`). Donors (trimPedigree, calcFE, setPopulation) untouched.
+- **Census-bug catch (Learning 246):** the first census extractor
+  stopped a `@param ped` block at the first blank `#'` line, hiding the
+  caveat paragraphs on **calcFEFG** (“must have no partial parentage;
+  stops with an error”) and **calcRetention** (“assumed … no partial
+  parentage”) — so they mis-clustered as byte-identical with `calcFE`.
+  Reading the files before editing caught it; a blind collapse would
+  have ERASED both caveats. Corrected extractor + direct reads → those
+  two correctly EXCLUDED (they stay bespoke).
+- **Verify (firsthand):** `devtools::document()` clean (donors resolved,
+  no warning, incl. `@inheritParams`-into-`@noRd`); **NAMESPACE + `man/`
+  diff EMPTY** (byte-identical collapses render identically; inherited
+  `\item{ped}` confirmed present in the 3 rendering inheritors; no
+  orphan `.Rd` for the 2 `@noRd`); source re-census `@param ped` 40 →
+  35; `lintr` = 0 on all 5 files; `spell_check_package` CLEAN;
+  **`R CMD check --as-cran` GREEN `Status: 1 NOTE`**
+  (archived-maintainer false positive) with
+  `code/documentation mismatches … OK`, examples/tests/Rd/vignettes all
+  OK.
+- **Remaining \#103 `ped` clusters (deferred):** C3b id/sire/dam
+  phrasing variants (6, incl. removeAutoGenIds “dame” typo), C4-variant
+  (removeDuplicates, unknown2NA), C6 demographic (createPedTree+setExit
+  pair + 4 distinct), the 6 caveat-bearing GVA fns
+  (calcFG/calcFGSE/findOffspring/offspringCounts/getPotentialParents/orderReport
+  — `@inheritParams` can’t inherit-plus-append), the C7 bespoke set, and
+  the 2 surfaced defects (filterPairs, getPedDirectRelatives).
+
 ### 2026-07-04 — issue \#103 Stage 8b LANDED on `master` (PR \#113 merged, both slices) (Session 261)
 
 - **Deliverable (owner-directed = “merge it when green”):** merge **PR

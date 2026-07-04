@@ -7,6 +7,235 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 262 Did
+
+**Deliverable (owner scope-gate via `AskUserQuestion` = “Byte-identical
+clusters only”):** issue \#103 **Stage 8b-`ped` continued** – collapse
+ONLY the SHA1-identical `@param ped` clusters among the
+requirement-bearing `ped` functions S259/S260 deferred. **REFACTOR-class
+documentation de-dup – no R-logic / NAMESPACE / behavior change
+(NAMESPACE diff EMPTY; 0 `man/` changes); TDD RED/GREEN N/A. DONE +
+VERIFIED + LANDED on `master` (code + close-out in one direct-merge
+commit). 0 stakeholder corrections / 0 owner overrides** (2 owner gates
+via `AskUserQuestion`: (a) scope = byte-identical only; (b) landing =
+direct-merge). **Started / Completed:** 2026-07-04 / 2026-07-04
+**Status:** **DONE + gate GREEN + committed to `master`; pushed to
+origin (local == origin/master).** - **The change (5 `R/`; direct-merge
+to `master`):** 5 `@param ped` blocks -\> `@inheritParams` across 3
+byte-identical clusters. **C3a sire+dam-required -\>
+`@inheritParams trimPedigree`** (3 rendering fns): addUIds,
+getProbandPedigree, removeUninformativeFounders. **C5-base GVA
+req-fields -\> `@inheritParams calcFE`** (1 fn):
+calcFounderContributions (`@noRd`, source-only). **C4 id-only -\>
+`@inheritParams setPopulation`** (1 fn): resetGroup (`@noRd`,
+source-only). Donors (trimPedigree, calcFE, setPopulation) UNTOUCHED. -
+**Census-bug catch (the session’s real value; Learning 246):** the
+first-pass census extractor broke a `@param ped` block at the first
+blank `#'` line, hiding the caveat paragraphs on **calcFEFG** (“must
+have no partial parentage; `calcFEFG` stops with an error otherwise”)
+and **calcRetention** (“It is assumed that the pedigree has no partial
+parentage”) – so they normalized IDENTICAL to the caveat-free base
+(calcFE) and MIS-clustered as byte-identical. A blind
+`@inheritParams calcFE` would have ERASED both caveats (the exact
+corruption the handoff warned of). READING the files before editing
+caught it; fixed the extractor to continue through blank `#'` lines
+(corrected census: 40 occ / 33 distinct, was 31) and EXCLUDED both (they
+stay bespoke). This reduced C5-base/C4 to 1 inheritor each (not the
+gate’s stated 3+1) – a FACTUAL correction required by the owner’s own
+“byte-identical only” criterion, so proceeded without a redundant
+re-gate. - **Method (evidence):** corrected deterministic Python census
+-\> SHA1 byte-comparison PROVED the 3 chosen clusters identical (C3a
+`2e038b937321` x4, C5-base `522616e09cb9` x2, C4 `7c3f71c2d40f` x2);
+per-inheritor over-inheritance analysis (calcFE documents ONLY `ped`;
+trimPedigree/setPopulation multi-param but the S259
+delete-only-target-line rule + locally-documented-wins keeps inheritance
+to `ped`); guarded 5 edits (delete each 2-line `@param ped` block + one
+`@inheritParams` line). - **Verify (firsthand):** `devtools::document()`
+clean (every donor resolved, NO warning – incl. the 2
+`@inheritParams`-into-`@noRd` cases); **NAMESPACE diff EMPTY**; **`man/`
+diff EMPTY** (byte-identical collapses render identically – confirmed
+`\item{ped}` present + correct in the 3 rendering inheritors’ unchanged
+`.Rd`, and NO orphan `.Rd` for the 2 `@noRd`); source re-census
+`@param ped` 40 -\> 35 (exactly 5 removed); `lintr` = **0** on all 5
+files; `spell_check_package` CLEAN; **`R CMD check --as-cran` GREEN
+`Status: 1 NOTE`** (archived-maintainer “New submission” false positive)
+with `code/documentation mismatches ... OK`, `checking examples ... OK`,
+`checking tests ... OK` (testthat 66s), all Rd checks OK,
+`re-building of vignette outputs ... OK`.
+
+**Phase-3E (runtime smoke): N/A (stated, not skipped).** REFACTOR-class
+doc-only – no `R/` logic / runtime / Shiny / NAMESPACE change (empty
+diff PROVEN) and 0 `man/` changes. The meaningful verification (document
+clean + `code/documentation mismatches OK` + `--as-cran` examples/tests
+OK + empty `man/` diff) is done. FM \#24 does not apply.
+
+**Session 261 Handoff Evaluation (by Session 262): Score 9/10.** S261’s
+SUGGESTED-NEXT led with exactly this deliverable (“Stage 8b-`ped`
+continued – the requirement-bearing clusters”) and enumerated the C3-C7
+clusters with their member functions and the load-bearing warning “Blind
+single-donor would CORRUPT these”. **What helped:** (1) the cluster
+enumeration (C3 required-fields, C4 id-only, C5 complete-GVA req.fields
+KEEP-caveat-bearing, C6 demographic, C7 bespoke-KEEP) mapped straight
+onto my census clusters and correctly flagged that C5 caveat-bearers
+must stay bespoke – which is precisely what my census-bug catch
+confirmed; (2) “own scope-gate advisable” was right – the gate let the
+owner pick the provably-safe byte-identical slice; (3) the standing
+post-edit checklist (re-gate + lint + spell; diff NAMESPACE) held
+exactly; (4) every standing keep held firsthand (version 2.0.0, package
+ARCHIVED, `.DS_Store` tracked-modified keep, `PED_GV_AUDIT*.html`
+untracked keep, getSimSires duplicate, the surfaced defects); (5)
+ghost-check clean (HEAD `c3abb535` == documented S261 close-out). **What
+was missing / thin -1:** S261 (inheriting S260’s list) said C5 was “~10”
+and grouped calcFE/calcFEFG/calcRetention loosely – it did NOT flag that
+calcFEFG/calcRetention put their caveat in `@param ped` (after a blank
+line) while calcFE puts it in the `@description`; that distinction is
+what makes them non-collapsible and is exactly what my census bug
+initially missed. A firsthand nuance, not a handoff defect (the “keep
+caveat-bearing bespoke” warning was there; the blank-line mechanism was
+mine to find). **What was wrong:** nothing material. **ROI:** high – a
+turnkey, correctly-scoped deliverable pointer with the right safety
+warning.
+
+**Self-assessment (Session 262): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean), reported, STOPPED for the owner; wrote
+the 1B stub BEFORE technical work; declared REFACTOR-class / TDD-N/A up
+front and held it; gated scope + landing (2 `AskUserQuestion`).
+**Strengths:** (1) **caught my own census bug BEFORE it corrupted
+anything** – reading the actual files (per “read before edit”) exposed
+that calcFEFG/calcRetention carry blank-line-separated partial-parentage
+caveats my extractor had silently merged into the base cluster; a blind
+collapse would have deleted them; (2) **SHA1 byte-comparison as the
+collapse proof** – proved the 3 chosen clusters identical rather than
+trusting a lowercased-normalized census; (3) **empty `man/` diff =
+zero-over-inheritance proof** – since NO `.Rd` changed, no unintended
+`\item{}` could have leaked in, the strongest possible verification; (4)
+**handled the `@noRd`-donor problem** – recognized an `@noRd` fn is a
+poor donor and flipped C4’s direction (setPopulation donor, resetGroup
+inherits); (5) **full gate GREEN** (document clean / NAMESPACE empty /
+`man/` empty / `code/documentation mismatches OK` / lint 0 / spell clean
+/ `--as-cran` 1 NOTE examples+tests+vignettes OK); (6) **scope
+discipline (FM \#8)** – kept calcFEFG/calcRetention, the caveat-bearing
+GVA set, C7 bespoke, and the surfaced defects OUT; treated the scope
+reduction as a factual correction, not an excuse to expand. **Weaknesses
+(the -1):** the deliverable is INTRINSICALLY SMALL (5 collapses, 2 of
+them `@noRd`/rendered-invisible) – and it shrank further mid-session
+from my own census bug; the gate’s stated 10-file/7-inheritor shape was
+wrong when I posed it (I had run the buggy census first).
+Correct-but-modest; capped at 9.
+
+**Learnings:** **Learning 246** added to `PROJECT_LEARNINGS.md` – a
+roxygen `@param` description continues across blank `#'` lines until the
+next `@tag`, so a census that stops at the first blank line silently
+merges caveat-bearing descriptions into the base cluster (nearly
+corrupted calcFEFG/calcRetention); SHA1-equal clusters are the safest
+collapse (zero `man/` delta); `@inheritParams` works INTO an `@noRd` fn
+(source-only) but an `@noRd` fn is a poor DONOR -\> flip the direction;
+a donor documenting only the shared formal is over-inheritance-proof,
+and the empty `man/` diff is the over-inheritance proof; a factual scope
+correction is not a re-gate. Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\], \[\[avoid-new-lints-r-package\]\],
+\[\[avoid-reconcile-tools-on-curated-files\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a REFACTOR-class
+documentation session – TDD RED/GREEN N/A.**
+
+**=\> SUGGESTED NEXT = Stage 8b-`ped` continued (the phrasing-variant +
+demographic clusters), or the surfaced defects.** Byte-identical
+clusters are now collapsed on `master`. **Remaining for issue \#103**
+(`@param ped` now 35 occ / ~32 distinct across ~34 files): - **C3b
+id/sire/dam phrasing variants (6 fns):** convertRelationships,
+getDescendantPedigree, getFounders, getPedigreeSource (“dataframe only”
+qualifier), removeAutoGenIds (**“dame” TYPO -\> fix**), isFounder
+(sire+dam only). Normalize to a canonical “id, sire, dam” donor, but
+datatable-vs-`data.frame` and the qualifier are REAL differences -\>
+per-callee adversarial verify (S260 workflow shape). Own scope-gate. -
+**C4-variant id-only (2):** removeDuplicates (dataframe vs datatable),
+unknown2NA (typo “and”-\>“an”, different phrasing). Small. - **C6
+demographic:** createPedTree+setExit are a near-identical pair (1-word
+Oxford-comma diff -\> collapsible with trivial normalization);
+convertDate, correctUnknownParentMeanKinship, getProductionStatus,
+runQcStudbook are each genuinely distinct (different optional-column
+sets) -\> mostly keep bespoke. - **C5-caveat GVA (6) – KEEP BESPOKE:**
+calcFG, calcFGSE, findOffspring, offspringCounts, getPotentialParents,
+orderReport. Each = req-fields base + an appended caveat (“no partial
+parentage” / “stops with an error” / “This requires complete pedigree
+information” / “This is the complete pedigree”). `@inheritParams` CANNOT
+inherit-plus-append -\> collapsing would delete the caveat. Do NOT. -
+**C7 bespoke KEEP:** modPotentialParents (x2, nullable “or NULL”),
+addBackSecondParents (“a trimmed pedigree”), addGenotype (“not checked”
+caveat), gvaConvergence (cross-ref to reportGV). - **Surfaced defects
+(each own session):** `filterPairs.R` `@param ped` falsely claims
+“including the IDs listed in `candidates`” but has NO candidates formal
+-\> reclassify to generic or fix. `getPedDirectRelatives.R` description
+body + `@return` still say “labkey `study` schema/`demographics`” –
+WRONG for the source-agnostic pedigree fn. `getSimSires.R` duplicate
+file defining/exporting `getPotentialSires` -\> likely DELETE after a
+ref-check. - **Older backlog:** issues \#37, \#36, \#28, \#12, \#11,
+\#10, \#5; the CRAN thread (Phase 5b, owner-run outward). **Each stage
+edits `R/`(+`man/`) which SHIP -\> after each: re-gate (`--as-cran`) AND
+`lintr::lint_package()` AND `spell_check_package` (hand-add wordlist
+terms, never `update_wordlist` –
+\[\[avoid-reconcile-tools-on-curated-files\]\]); for any
+NAMESPACE-touching stage ALSO diff NAMESPACE + runtime-smoke the
+INSTALLED namespace (Learning 239).** **Landing owner-gated each time**
+(`AskUserQuestion`): direct-merge (S250/S252/S254/S255/S262 – fast, for
+zero/low `man/` churn) vs PR-for-CI (S249/S253/S256/S257/S259/S261 –
+5-platform cert, for large `man/` churn or executing examples).
+
+**Key files (this session):** **Edited (S262 direct-merge commit, on
+`master`):** 5 `R/*.R` – addUIds.R, getProbandPedigree.R,
+removeUninformativeFounders.R (`@inheritParams trimPedigree`),
+calcFounderContributions.R (`@inheritParams calcFE`, `@noRd`),
+resetGroup.R (`@inheritParams setPopulation`, `@noRd`). **No `man/` /
+`NAMESPACE` / `DESCRIPTION` / `data` / `NEWS` / `vignettes` / `tests`
+change (man/ + NAMESPACE empty diff, PROVEN).** Donors trimPedigree.R /
+calcFE.R / setPopulation.R UNTOUCHED. **Process docs (same commit):**
+`CHANGELOG.md` (S262 entry), `PROJECT_LEARNINGS.md` (Learning 246),
+`SESSION_NOTES.md` (this handoff). **Gate/census evidence (NOT
+committed, scratchpad):** `census_ped.py` (corrected extractor),
+`ped_census.json`, `s262gate/build.log`+`check.log` (`Status: 1 NOTE`).
+**NOT committed (standing keep / not mine):**
+`PED_GV_AUDIT_2026-05-30.html` (untracked, `.Rbuildignore`d);
+`.DS_Store` (TRACKED + modified – pre-existing, left untouched);
+`dashboard.html` (generated).
+
+**Gotchas:** (1) **CENSUS-BUG WARNING for the next `ped` session:** a
+`@param` description CONTINUES across blank `#'` lines until the next
+`@tag` – use the CORRECTED `census_ped.py` (scratchpad) or read the
+actual block; a census that stops at the first blank line will silently
+merge caveat-bearing descriptions
+(calcFEFG/calcRetention/calcFG/calcFGSE etc.) into the base cluster and
+tempt a corrupting collapse. (2) **The 5 collapses are byte-identical
+(SHA1-proven) -\> 0 `man/` changes** – 2 of them
+(calcFounderContributions, resetGroup) are `@noRd` so they never
+rendered anyway (source-only de-dup); the SOURCE re-census (40-\>35) is
+the collapse proof, NOT a man-page diff. (3) **`@noRd` fns are poor
+`@inheritParams` DONORS** (no `.Rd` to inherit from) – always point
+`@noRd` inheritors at an EXPORTED sibling (why C4’s donor is
+setPopulation, not resetGroup). (4) **calcFE keeps its partial-parentage
+caveat in its `@description` body, not in `@param ped`** – that’s WHY
+calcFE’s `@param ped` is clean base text and a valid donor; do not “fix”
+that. (5) **C5-caveat (6 fns) and C7 bespoke stay bespoke** –
+`@inheritParams` can’t inherit-plus-append; see SUGGESTED NEXT. (6)
+Carried standing keeps (unchanged): package **ARCHIVED on CRAN
+2025-07-29**; CRAN resubmission owner-gated;
+win-builder/R-hub/`submit_cran()` OWNER-run outward + HARD STOP; the
+`--as-cran` gate certifies the CURRENT tree only (macOS-only locally);
+`NEWS.md`/`README.md` are GENERATED (from `NEWS.Rmd`/`README.Rmd`);
+module/E2E tests need `NOT_CRAN=true` BUT `--as-cran` SKIPS them via
+`skip_on_cran`; a 0/0/N check does NOT imply spelling-clean -\>
+`spell_check_package` (hand-add wordlist terms, never
+`update_wordlist`); `git pull` is rebase + chokes on unstaged tracked
+changes (stash `.DS_Store` if it blocks a checkout, Learning 233);
+re-check `git status` before ANY `reset --hard`
+(\[\[check-status-before-destructive-git\]\]); `gh pr edit` exits 1 on
+this repo -\> `gh api PATCH`
+(\[\[gh-pr-edit-projectcards-workaround\]\]); **zsh `status` is a
+read-only special variable**; **the version is 2.0.0** (DESCRIPTION
+authoritative; CLAUDE.md’s “1.1.0.9000” header is stale prose).
+
 ### What Session 261 Did
 
 **Deliverable (owner-directed = “merge it when green”):** merge **PR
