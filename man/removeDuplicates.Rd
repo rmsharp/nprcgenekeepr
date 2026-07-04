@@ -8,7 +8,7 @@ removeDuplicates(ped, reportErrors = FALSE)
 }
 \arguments{
 \item{ped}{dataframe that is the \code{Pedigree}. It contains pedigree
-information. The \code{id} column is required.}
+information. The \code{id} and \code{recordStatus} columns are required.}
 
 \item{reportErrors}{logical value if TRUE will scan the entire file and
 make a list of all errors found. The errors will be returned in a
