@@ -23,8 +23,8 @@ getPedDirectRelatives(ids, ped, unrelatedParents = FALSE)
 - unrelatedParents:
 
   logical vector when `FALSE` the unrelated parents of offspring do not
-  get a record as an ego; when `TRUE` a place holder record where parent
-  (`sire`, `dam`) IDs are set to `NA`.
+  get a record as an ego; when `TRUE` they get a place holder record as
+  an ego in which the parent (`sire`, `dam`) IDs are set to `NA`.
 
 ## Value
 
