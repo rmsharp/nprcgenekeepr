@@ -13,8 +13,8 @@ getPedDirectRelatives(ids, ped, unrelatedParents = FALSE)
 pedigree information.}
 
 \item{unrelatedParents}{logical vector when \code{FALSE} the unrelated
-parents of offspring do not get a record as an ego; when \code{TRUE}
-a place holder record where parent (\code{sire},
+parents of offspring do not get a record as an ego; when \code{TRUE} they
+get a place holder record as an ego in which the parent (\code{sire},
 \code{dam}) IDs are set to \code{NA}.}
 }
 \value{

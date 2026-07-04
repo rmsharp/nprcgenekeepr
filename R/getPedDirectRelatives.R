@@ -10,8 +10,8 @@
 #' @param ped pedigree dataframe object that is used as the source of
 #' pedigree information.
 #' @param unrelatedParents logical vector when \code{FALSE} the unrelated
-#' parents of offspring do not get a record as an ego; when \code{TRUE}
-#' a place holder record where parent (\code{sire},
+#' parents of offspring do not get a record as an ego; when \code{TRUE} they
+#' get a place holder record as an ego in which the parent (\code{sire},
 #' \code{dam}) IDs are set to \code{NA}.
 #'
 #' @return A data.frame of pedigree records for the selected animals and
