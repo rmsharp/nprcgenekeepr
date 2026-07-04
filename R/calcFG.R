@@ -23,6 +23,7 @@
 #' iterations. See \code{\link{calcFGSE}} for the sampling standard error
 #' of \code{FG}.
 #'
+#' @family genetic value analysis
 #' @export
 #' @examples
 #' ## Example from Analysis of Founder Representation in Pedigrees: Founder

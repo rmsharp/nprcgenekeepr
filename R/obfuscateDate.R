@@ -16,6 +16,7 @@
 #'
 #' @importFrom lubridate ddays
 #' @importFrom stats runif
+#' @family obfuscation
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

@@ -9,7 +9,7 @@ hasBothParents(id, ped)
 \arguments{
 \item{id}{character vector of IDs to examine for parents}
 
-\item{ped}{a pedigree}
+\item{ped}{The pedigree information in data.frame format}
 }
 \value{
 TRUE if ID has both sire and dam identified in \code{ped}.

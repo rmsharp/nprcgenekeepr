@@ -8,7 +8,7 @@ convertRelationships(kmat, ped, ids = NULL, updateProgress = NULL)
 }
 \arguments{
 \item{kmat}{a numeric matrix of pairwise kinship coefficients.
-Rows and columns should be named with IDs.}
+Animal IDs are the row and column names.}
 
 \item{ped}{the pedigree information in datatable format with required
 colnames \code{id}, \code{sire}, and \code{dam}.}

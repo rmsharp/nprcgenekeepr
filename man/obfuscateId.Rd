@@ -32,3 +32,10 @@ obfuscateId(integerIds, size = 4L)
 characterIds <- paste0(paste0(sample(LETTERS, 1L, replace = FALSE)), 1L:10L)
 obfuscateId(characterIds, size = 4L)
 }
+\seealso{
+Other obfuscation:
+\code{\link[=mapIdsToObfuscated]{mapIdsToObfuscated()}},
+\code{\link[=obfuscateDate]{obfuscateDate()}},
+\code{\link[=obfuscatePed]{obfuscatePed()}}
+}
+\concept{obfuscation}

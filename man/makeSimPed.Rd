@@ -7,7 +7,7 @@
 makeSimPed(ped, allSimParents, verbose = FALSE)
 }
 \arguments{
-\item{ped}{pedigree information in data.frame format}
+\item{ped}{The pedigree information in data.frame format}
 
 \item{allSimParents}{list made up of lists where the internal list
 has the offspring ID \code{id}, a vector of representative sires

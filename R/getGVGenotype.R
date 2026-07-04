@@ -5,7 +5,7 @@
 #'
 #' Extracts genotype data if available otherwise NULL is returned.
 #'
-#' @param ped the pedigree information in datatable format
+#' @inheritParams reportGV
 #' @return A data.frame with the columns \code{id}, \code{first}, and
 #' \code{second} extracted from a pedigree object (a data.frame) containing
 #' genotypic data.

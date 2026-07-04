@@ -17,6 +17,7 @@
 #' @importFrom shiny fileInput actionButton checkboxInput downloadButton
 #' @importFrom shiny includeHTML br uiOutput
 #' @importFrom DT DTOutput
+#' @family Shiny modules
 #' @export
 modPedigreeUI <- function(id) {
 
@@ -192,6 +193,7 @@ modPedigreeUI <- function(id) {
 #' @importFrom shiny fileInput updateTextAreaInput
 #' @importFrom DT renderDT
 #' @importFrom utils read.csv write.csv
+#' @family Shiny modules
 #' @export
 modPedigreeServer <- function(id, studbook, config = NULL) {
   moduleServer(id, function(input, output, session) {

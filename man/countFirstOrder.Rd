@@ -7,8 +7,7 @@
 countFirstOrder(ped, ids = NULL)
 }
 \arguments{
-\item{ped}{: \code{Pedigree}
-Standardized pedigree information in a table.}
+\item{ped}{The pedigree information in data.frame format}
 
 \item{ids}{character vector of IDs or NULL
 These are the IDs to which the analysis should be restricted. First-order

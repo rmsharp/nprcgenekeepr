@@ -8,9 +8,8 @@
 #' \code{sex} an empty factor, so the returned schema does not depend on the
 #' number of ids supplied.
 #'
-#' @param ids character vector of animal Ids
-#' @param ped datatable that is the \code{Pedigree}. It contains pedigree
-#' information.
+#' @inheritParams getParents
+#' @inheritParams reportGV
 #' @return Dataframe with Id, Sex, and Current Age
 #'
 #' @export

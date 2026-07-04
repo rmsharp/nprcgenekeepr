@@ -7,7 +7,7 @@
 removePotentialSires(ids, minAge, ped)
 }
 \arguments{
-\item{ids}{character vector of IDs of the animals}
+\item{ids}{character vector of animal IDs}
 
 \item{minAge}{integer value indicating the minimum age to consider in group
 formation. Pairwise kinships involving an animal of this age or younger will

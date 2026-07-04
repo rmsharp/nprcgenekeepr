@@ -11,7 +11,7 @@ filterKinMatrix(ids, kmat)
 The kinship matrix should be reduced to only include these rows and columns.}
 
 \item{kmat}{a numeric matrix of pairwise kinship coefficients.
-Rows and columns should be named with IDs.}
+Animal IDs are the row and column names.}
 }
 \value{
 A numeric matrix that is the reduced kinship matrix with named

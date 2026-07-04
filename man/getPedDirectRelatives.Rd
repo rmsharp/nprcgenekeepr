@@ -7,7 +7,7 @@
 getPedDirectRelatives(ids, ped, unrelatedParents = FALSE)
 }
 \arguments{
-\item{ids}{character vector with Ids.}
+\item{ids}{character vector of animal IDs}
 
 \item{ped}{pedigree dataframe object that is used as the source of
 pedigree information.}
@@ -31,3 +31,10 @@ library(nprcgenekeepr)
 ped <- nprcgenekeepr::lacy1989Ped
 getPedDirectRelatives(ids = "E", ped = ped)
 }
+\seealso{
+Other direct relatives:
+\code{\link[=getFileDirectRelatives]{getFileDirectRelatives()}},
+\code{\link[=getLkDirectAncestors]{getLkDirectAncestors()}},
+\code{\link[=getLkDirectRelatives]{getLkDirectRelatives()}}
+}
+\concept{direct relatives}

@@ -60,4 +60,14 @@ guSE <- calcGUSE(ped1Alleles, threshold = 3, byID = FALSE, pop = NULL)
 }
 \seealso{
 \code{\link{calcGU}}, \code{\link{calcA}}, \code{\link{reportGV}}
+
+Other genetic value analysis:
+\code{\link[=calcA]{calcA()}},
+\code{\link[=calcFE]{calcFE()}},
+\code{\link[=calcFEFG]{calcFEFG()}},
+\code{\link[=calcFG]{calcFG()}},
+\code{\link[=calcFGSE]{calcFGSE()}},
+\code{\link[=calcGU]{calcGU()}},
+\code{\link[=calcRetention]{calcRetention()}}
 }
+\concept{genetic value analysis}

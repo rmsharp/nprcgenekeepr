@@ -12,7 +12,7 @@ getFileDirectRelatives(
 )
 }
 \arguments{
-\item{ids}{character vector with Ids.}
+\item{ids}{character vector of animal IDs}
 
 \item{fileName}{path to a pedigree file (CSV or Excel) read via
 \code{\link{getPedigree}}; the file must provide at least \code{id},
@@ -58,3 +58,10 @@ write.csv(ped, pedFile, row.names = FALSE)
 getFileDirectRelatives(ids = "C", fileName = pedFile)
 unlink(pedFile)
 }
+\seealso{
+Other direct relatives:
+\code{\link[=getLkDirectAncestors]{getLkDirectAncestors()}},
+\code{\link[=getLkDirectRelatives]{getLkDirectRelatives()}},
+\code{\link[=getPedDirectRelatives]{getPedDirectRelatives()}}
+}
+\concept{direct relatives}

@@ -7,7 +7,7 @@
 getGVPopulation(ped, pop)
 }
 \arguments{
-\item{ped}{the pedigree information in datatable format}
+\item{ped}{The pedigree information in data.frame format}
 
 \item{pop}{character vector with animal IDs to consider as the population of
 interest. The default is NULL.}

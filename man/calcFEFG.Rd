@@ -58,3 +58,14 @@ allelesFactors <- geneDrop(pedFactors$id, pedFactors$sire, pedFactors$dam,
 feFg <- calcFEFG(ped, alleles)
 feFgFactors <- calcFEFG(pedFactors, allelesFactors)
 }
+\seealso{
+Other genetic value analysis:
+\code{\link[=calcA]{calcA()}},
+\code{\link[=calcFE]{calcFE()}},
+\code{\link[=calcFG]{calcFG()}},
+\code{\link[=calcFGSE]{calcFGSE()}},
+\code{\link[=calcGU]{calcGU()}},
+\code{\link[=calcGUSE]{calcGUSE()}},
+\code{\link[=calcRetention]{calcRetention()}}
+}
+\concept{genetic value analysis}

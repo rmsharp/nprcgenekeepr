@@ -65,4 +65,14 @@ calcFGSE(lacy1989Ped, lacy1989PedAlleles)
 \seealso{
 \code{\link{calcFG}}, \code{\link{calcFEFG}},
 \code{\link{calcRetention}}, \code{\link{calcGUSE}}, \code{\link{reportGV}}
+
+Other genetic value analysis:
+\code{\link[=calcA]{calcA()}},
+\code{\link[=calcFE]{calcFE()}},
+\code{\link[=calcFEFG]{calcFEFG()}},
+\code{\link[=calcFG]{calcFG()}},
+\code{\link[=calcGU]{calcGU()}},
+\code{\link[=calcGUSE]{calcGUSE()}},
+\code{\link[=calcRetention]{calcRetention()}}
 }
+\concept{genetic value analysis}

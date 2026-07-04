@@ -29,4 +29,24 @@ of pedigree and genotype data files, and quality control validation.
 \code{\link{modInputUI}} for the user interface.
 
 \code{\link{modPedigreeServer}} for using the cleaned data.
+
+Other Shiny modules:
+\code{\link[=modBreedingGroupsServer]{modBreedingGroupsServer()}},
+\code{\link[=modBreedingGroupsUI]{modBreedingGroupsUI()}},
+\code{\link[=modGeneticValueServer]{modGeneticValueServer()}},
+\code{\link[=modGeneticValueUI]{modGeneticValueUI()}},
+\code{\link[=modGvAndBgDescServer]{modGvAndBgDescServer()}},
+\code{\link[=modGvAndBgDescUI]{modGvAndBgDescUI()}},
+\code{\link[=modInputUI]{modInputUI()}},
+\code{\link[=modORIPReportingServer]{modORIPReportingServer()}},
+\code{\link[=modORIPReportingUI]{modORIPReportingUI()}},
+\code{\link[=modPedigreeServer]{modPedigreeServer()}},
+\code{\link[=modPedigreeUI]{modPedigreeUI()}},
+\code{\link[=modPotentialParentsServer]{modPotentialParentsServer()}},
+\code{\link[=modPotentialParentsUI]{modPotentialParentsUI()}},
+\code{\link[=modPyramidServer]{modPyramidServer()}},
+\code{\link[=modPyramidUI]{modPyramidUI()}},
+\code{\link[=modSummaryStatsServer]{modSummaryStatsServer()}},
+\code{\link[=modSummaryStatsUI]{modSummaryStatsUI()}}
 }
+\concept{Shiny modules}

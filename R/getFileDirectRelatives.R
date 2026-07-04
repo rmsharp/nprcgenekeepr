@@ -16,7 +16,7 @@
 #' \code{fileName}, a file that does not exist, or a file lacking the
 #' \code{id}, \code{sire}, and \code{dam} columns each raises an error.
 #'
-#' @param ids character vector with Ids.
+#' @inheritParams getParents
 #' @param fileName path to a pedigree file (CSV or Excel) read via
 #' \code{\link{getPedigree}}; the file must provide at least \code{id},
 #' \code{sire}, and \code{dam} columns.
@@ -31,6 +31,7 @@
 #' -- the full connected pedigree component (ancestors, descendants, and
 #' collaterals) -- for the Ids provided.
 #'
+#' @family direct relatives
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

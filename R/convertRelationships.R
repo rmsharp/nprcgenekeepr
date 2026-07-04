@@ -5,8 +5,7 @@
 #'
 #' Part of Relations
 #'
-#' @param kmat a numeric matrix of pairwise kinship coefficients.
-#' Rows and columns should be named with IDs.
+#' @inheritParams meanKinship
 #' @param ped the pedigree information in datatable format with required
 #' colnames \code{id}, \code{sire}, and \code{dam}.
 #' @param ids character vector of IDs or NULL to which the analysis should be

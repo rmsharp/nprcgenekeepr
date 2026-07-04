@@ -74,6 +74,7 @@
 #' Columbia University Press.
 #'
 #'
+#' @family genetic value analysis
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

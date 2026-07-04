@@ -25,6 +25,7 @@
 #' iterations. See \code{\link{calcFGSE}} for the sampling standard error
 #' of \code{FG}.
 #'
+#' @family genetic value analysis
 #' @export
 #' @examples
 #' data(lacy1989Ped)

@@ -17,6 +17,7 @@
 #' ID value.
 #'
 #' @importFrom stringi stri_c
+#' @family obfuscation
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

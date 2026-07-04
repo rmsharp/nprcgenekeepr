@@ -7,7 +7,7 @@
 getPyramidAgeDist(ped = NULL)
 }
 \arguments{
-\item{ped}{dataframe with pedigree}
+\item{ped}{The pedigree information in data.frame format}
 }
 \value{
 A pedigree with \code{status} column added, which describes the

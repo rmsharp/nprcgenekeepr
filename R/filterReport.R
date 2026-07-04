@@ -3,7 +3,7 @@
 
 #' Filter a genetic value report to selected animals
 #'
-#' @param ids character vector of animal IDs
+#' @inheritParams getParents
 #' @param rpt a dataframe with required colnames \code{id}, \code{gu},
 #' \code{zScores}, \code{import}, \code{totalOffspring}, which is
 #' a data.frame of results from a genetic value analysis.

@@ -26,3 +26,10 @@ obfuscated <- obfuscatePed(ped, map = TRUE)
 someIds <- c("s1", "s2", "d1", "d1")
 mapIdsToObfuscated(someIds, obfuscated$map)
 }
+\seealso{
+Other obfuscation:
+\code{\link[=obfuscateDate]{obfuscateDate()}},
+\code{\link[=obfuscateId]{obfuscateId()}},
+\code{\link[=obfuscatePed]{obfuscatePed()}}
+}
+\concept{obfuscation}

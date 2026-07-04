@@ -30,3 +30,14 @@ ped <- lacy1989Ped
 alleles <- lacy1989PedAlleles
 retention <- calcRetention(ped, alleles)
 }
+\seealso{
+Other genetic value analysis:
+\code{\link[=calcA]{calcA()}},
+\code{\link[=calcFE]{calcFE()}},
+\code{\link[=calcFEFG]{calcFEFG()}},
+\code{\link[=calcFG]{calcFG()}},
+\code{\link[=calcFGSE]{calcFGSE()}},
+\code{\link[=calcGU]{calcGU()}},
+\code{\link[=calcGUSE]{calcGUSE()}}
+}
+\concept{genetic value analysis}

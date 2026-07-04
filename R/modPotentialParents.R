@@ -132,6 +132,7 @@ prefillGuardAllows <- function(current, lastAuto) {
 #' @seealso \code{\link{getPotentialParents}} for the underlying computation.
 #' @importFrom shiny NS div h3 p fluidRow column numericInput helpText br
 #' @importFrom shiny actionButton downloadButton uiOutput hr icon
+#' @family Shiny modules
 #' @export
 modPotentialParentsUI <- function(id) {
   ns <- NS(id)
@@ -217,6 +218,7 @@ modPotentialParentsUI <- function(id) {
 #' @importFrom shiny downloadHandler div helpText
 #' @importFrom shiny observeEvent reactiveVal updateNumericInput
 #' @importFrom utils write.csv
+#' @family Shiny modules
 #' @export
 modPotentialParentsServer <- function(id, pedigree = NULL, minParentAge = 2.0,
                                       gestationTable = NULL,

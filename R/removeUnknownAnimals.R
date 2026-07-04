@@ -3,7 +3,7 @@
 
 #' Remove placeholder animals added for unknown parents
 #'
-#' @param ped pedigree dataframe
+#' @inheritParams reportGV
 #' @return Pedigree with unknown animals removed
 #'
 #' @export

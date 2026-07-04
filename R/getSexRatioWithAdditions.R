@@ -6,9 +6,8 @@
 #' Adding males and females to the ratio calculation is possible, but the
 #' default behavior is to simply return the sex ratio of the group.
 #' This is a helper routine for the main one \code{calculateSexRatio}.
-#' @param ids character vector of animal Ids
-#' @param ped datatable that is the \code{Pedigree}. It contains pedigree
-#' information including the IDs listed in \code{candidates}.
+#' @inheritParams getParents
+#' @inheritParams getPotentialSires
 #' @param additionalMales Integer value of males to add to those within the
 #' group when calculating the ratio. Ignored if calculated ratio is 0 or Inf.
 #' Default is 0.

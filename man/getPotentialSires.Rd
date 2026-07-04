@@ -9,7 +9,7 @@ getPotentialSires(ids, ped, minAge = 1L)
 getPotentialSires(ids, ped, minAge = 1L)
 }
 \arguments{
-\item{ids}{character vector of IDs of the animals}
+\item{ids}{character vector of animal IDs}
 
 \item{ped}{dataframe that is the \code{Pedigree}. It contains pedigree
 information including the IDs listed in \code{candidates}.}

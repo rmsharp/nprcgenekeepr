@@ -20,6 +20,7 @@
 #' @importFrom shiny NS div h3 fluidRow column wellPanel h4 icon numericInput
 #' @importFrom shiny checkboxInput sliderInput actionButton tabsetPanel tabPanel
 #' @importFrom shiny br downloadButton plotOutput tableOutput includeHTML
+#' @family Shiny modules
 #' @export
 modGeneticValueUI <- function(id) {
   ns <- NS(id)
@@ -155,6 +156,7 @@ modGeneticValueUI <- function(id) {
 #'
 #' @importFrom shiny moduleServer reactive eventReactive withProgress
 #' @importFrom shiny incProgress
+#' @family Shiny modules
 #' @export
 modGeneticValueServer <- function(id, pedigree,
                                   speciesOverrides = reactive(NULL)) {

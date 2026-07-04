@@ -13,7 +13,7 @@ obfuscatePed(
 )
 }
 \arguments{
-\item{ped}{pedigree object}
+\item{ped}{The pedigree information in data.frame format}
 
 \item{size}{integer value indicating number of characters in alias IDs}
 
@@ -41,3 +41,10 @@ obfuscatedPed <- obfuscatePed(ped)
 ped
 obfuscatedPed
 }
+\seealso{
+Other obfuscation:
+\code{\link[=mapIdsToObfuscated]{mapIdsToObfuscated()}},
+\code{\link[=obfuscateDate]{obfuscateDate()}},
+\code{\link[=obfuscateId]{obfuscateId()}}
+}
+\concept{obfuscation}
