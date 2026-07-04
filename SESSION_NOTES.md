@@ -7,6 +7,155 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 261 Did
+
+**Deliverable (owner-directed = “merge it when green”):** merge **PR
+\#113** – issue \#103 **Stage 8b**, BOTH slices (Session 259 “safe
+formals + `@family`” code `bafaa1e8` + Session 260 “`@param ped` de-dup
+C1/C2” code `5952d0b4`) – into `master`. **Landing/process action for
+already-CI-certified REFACTOR-class documentation content; TDD
+RED/GREEN/REFACTOR N/A (no new code). DONE + LANDED on `master`; 0
+stakeholder corrections / 0 owner overrides.** No gate posed – the
+owner’s “merge it when green” WAS the landing decision and the method
+(`--merge --delete-branch`) was pre-specified. **Started / Completed:**
+2026-07-04 / 2026-07-04 **Status:** **DONE + LANDED. `master` ==
+origin/master; issue \#103 Stages 1-8b (through safe formals +
+`@family` + `ped` C1/C2) are all on `master`.** - **Merged clean:**
+watched CI to completion then re-confirmed PR \#113 = **10 checks pass
+(8 CI jobs + 2 codecov) + `mergeStateStatus CLEAN` +
+`mergeable MERGEABLE`** immediately before merging (cross-platform R CMD
+check Windows/macOS/Ubuntu release+devel+oldrel-1, plus
+lint/pkgdown/test-coverage/codecov).
+`gh pr merge 113 --merge --delete-branch` -\> merge commit
+**`b9e39ddb`** (parents `b8d7f6ce` master + `0fc3e536` branch tip);
+local `master` advanced `b8d7f6ce..b9e39ddb`; remote+local branch
+`issue103-stage8b-dedup` deleted. - **Stash mechanics (Learning 233 /
+S258):** stashed the tracked-modified `.DS_Store` standing keep before
+the merge (`git stash push -- .DS_Store`) so the post-merge branch
+switch to `master` was clean; popped after -\> `.DS_Store` restored, the
+pre-existing `WIP on dev` stash (NOT mine) left untouched. -
+**Landed-tree sanity check (CI already cert’d; confirmed anyway):**
+`git diff b9e39ddb^1 b9e39ddb -- NAMESPACE DESCRIPTION` **EMPTY**
+(doc-only, both slices NAMESPACE-neutral as predicted); the merge
+touched exactly **58 `R/` + 52 `man/` + 3 process docs**
+(`CHANGELOG.md`, `PROJECT_LEARNINGS.md`, `SESSION_NOTES.md`) = 113 files
+(both slices combined, with file overlap where a file got both an S259
+formal-inherit AND an S260 `ped`-inherit); `master` == origin/master
+(the merge advanced origin).
+
+**Phase-3E (runtime smoke): N/A (stated, not skipped).** Nothing with
+runtime/behavior was merged – REFACTOR-class doc-only content with a
+PROVEN-empty NAMESPACE/DESCRIPTION diff, and the exact merged tip
+(`0fc3e536`) was CI-certified 10/10 on 5 platforms. No new program
+behavior to smoke. FM \#24 does not apply.
+
+**Session 260 Handoff Evaluation (by Session 261): Score 10/10.** S260’s
+SUGGESTED-NEXT + gotchas set up this merge turnkey: it gave the exact
+command (`gh pr merge 113 --merge --delete-branch`), the green+CLEAN
+condition, the expected brief post-push `UNSTABLE`, and – critically –
+it had ALREADY pushed the branch and updated PR \#113’s title/body to
+honestly cover both slices, so the merge target was correct before I
+arrived. **What helped:** (1) the merge command was verbatim-correct;
+(2) the `.DS_Store` stash/pop gotcha was pre-named (Learning 233), so
+the branch switch was clean; (3) the
+\[\[gh-pr-edit-projectcards-workaround\]\] memory S260 wrote meant I did
+not re-hit the `gh pr edit` failure; (4) S260’s landed-shape prediction
+(NAMESPACE/DESCRIPTION empty, doc-only) held exactly; (5) ghost-check
+clean (HEAD `0fc3e536` == documented S260 close-out before the merge).
+**What was missing / wrong:** nothing – a turnkey, correctly-predicted
+landing. A clean 10.
+
+**Self-assessment (Session 261): 9/10.** Watched CI to green rather than
+merging prematurely; on “merge it when green” declared landing/process +
+TDD-N/A; did NOT over-gate (owner’s directive WAS the decision, method
+pre-chosen – correct read of \[\[observation-vs-decision\]\]).
+**Strengths:** (1) **re-confirmed 10-checks-pass + CLEAN at merge time**
+(not just at the watcher’s exit) – correct discipline; (2) **stashed the
+standing-keep `.DS_Store` before the merge and verified the pop restored
+it with the WIP stash untouched** – no lost work, no destructive git;
+(3) **verified the merge against S260’s predictions** (empty
+NAMESPACE/DESCRIPTION, 113-file both-slices shape, correct parents,
+master==origin, branch deleted) rather than trusting “gh said it
+merged”. **Weakness (the -1):** intrinsically low-novelty – a
+single-command landing of pre-verified work; the value is disciplined
+verification + clean git mechanics + a faithful close-out, not new
+problem-solving. Capped at 9 on that basis, not any defect.
+
+**Learnings:** **No new `PROJECT_LEARNINGS.md` entry.** A PR-for-CI
+merge following the established S258 pattern (watch CI -\> re-confirm
+green+CLEAN -\> `gh pr merge --merge --delete-branch` -\> stash-pop
+`.DS_Store` -\> landed-tree sanity check) produced no novel learning;
+forcing one would be noise. Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\],
+\[\[gh-pr-edit-projectcards-workaround\]\]. **This was a landing/process
+session – TDD RED/GREEN/REFACTOR N/A.**
+
+**=\> SUGGESTED NEXT = Stage 8b-`ped` continued (the requirement-bearing
+clusters), or the surfaced defects.** Stage 8b (safe formals +
+`@family` + `ped` C1/C2) is now all LANDED on `master` (merge
+`b9e39ddb`). **Remaining for issue \#103** (unchanged from S260’s
+handoff below – see “What Session 260 Did”): - **Stage 8b-`ped`
+continued – the requirement-bearing `ped` clusters** (39 files still
+`@param ped` / 33 distinct): C3 required-fields (~10), C4 id-only (~4),
+C5 complete-GVA req.fields (~10, KEEP caveat-bearing bespoke –
+`@inheritParams` can’t inherit-plus-append), C6 demographic (~6), C7
+bespoke-KEEP (~5). Cluster-specific donors + per-callee verify; own
+scope-gate advisable. **Blind single-donor would CORRUPT these.** -
+**`filterPairs.R`** (surfaced S260): `@param ped` inaccurately claims
+candidates linkage it does not have -\> reclassify to generic or fix the
+description (own small session). - **`getPedDirectRelatives.R`**
+(S259-flagged): description body + `@return` still say “labkey `study`
+schema/`demographics`” – WRONG for the source-agnostic pedigree fn. -
+**`getSimSires.R` duplicate file** (S259-flagged): still defines/exports
+`getPotentialSires` with bespoke candidates text – likely DELETE after a
+ref-check (own gate). - **Optional `@family` tail** (`reportGV`); older
+shiny + Matrix `@import`-\>`@importFrom` (each own judgment call); the
+CRAN thread (Phase 5b, owner-run outward). **Older backlog:** issues
+\#37, \#36, \#28, \#12, \#11, \#10, \#5. **Each stage edits
+`R/`(+`man/`/`NAMESPACE`) which SHIP -\> after each: re-gate AND
+`lintr::lint_package()` AND `spell_check_package` (hand-add wordlist
+terms, never `update_wordlist`); for any NAMESPACE-touching stage ALSO
+diff NAMESPACE + runtime-smoke the INSTALLED namespace (Learning 239).**
+**Landing owner-gated each time** (`AskUserQuestion`): PR-for-CI
+(S249/S253/S256/S257/S259/S261) vs direct-merge (S250/S252/S254/S255).
+
+**Key files (this session):** **No `R/` / `man/` / `NAMESPACE` /
+`DESCRIPTION` edits by S261** – this session only merged S259+S260’s
+already-committed content via merge commit `b9e39ddb`. **Process docs
+(this close-out commit, on `master`):** `CHANGELOG.md` (S261 entry),
+`SESSION_NOTES.md` (this handoff). `PROJECT_LEARNINGS.md` NOT touched
+(no new learning, by design). **NOT committed (standing keep / not
+mine):** `PED_GV_AUDIT_2026-05-30.html` (untracked, `.Rbuildignore`d);
+`.DS_Store` (TRACKED + modified – pre-existing, stashed across the merge
+then restored, left untouched); `dashboard.html` (generated).
+
+**Gotchas:** (1) **Stage 8b is fully LANDED on `master`** (merge
+`b9e39ddb`, PR \#113 merged after 10 checks pass + CLEAN) – issue \#103
+Stages 1-8b are all on `master`; `master` == origin/master. (2)
+**`gh pr edit` exits 1 on this repo** (deprecated `projectCards` GraphQL
+field) – edit PR title/body via
+`gh api --method PATCH repos/.../pulls/<N> --input -` instead
+(\[\[gh-pr-edit-projectcards-workaround\]\]). (3) **`filterPairs` kept
+bespoke + the S259/S260-surfaced defects** (getPedDirectRelatives
+description, getSimSires duplicate, requirement-bearing ped clusters)
+remain OPEN – see SUGGESTED NEXT. (4) **The pre-existing `WIP on dev`
+stash is NOT ours** – never drop it. (5) Carried standing keeps
+(unchanged): package **ARCHIVED on CRAN 2025-07-29**; CRAN resubmission
+owner-gated; win-builder/R-hub/`submit_cran()` OWNER-run outward + HARD
+STOP; the `--as-cran` gate certifies the CURRENT tree only;
+`NEWS.md`/`README.md` are GENERATED (from `NEWS.Rmd`/`README.Rmd`);
+module/E2E tests need `NOT_CRAN=true` BUT `--as-cran` SKIPS them via
+`skip_on_cran`; a 0/0/N check does NOT imply spelling-clean -\>
+`spell_check_package` (hand-add wordlist terms); `git pull` is rebase +
+chokes on unstaged tracked changes (stash `.DS_Store`); re-check
+`git status` before ANY `reset --hard`
+(\[\[check-status-before-destructive-git\]\]); **zsh `status` is a
+read-only special variable**; **the version is 2.0.0** (DESCRIPTION
+authoritative; CLAUDE.md’s “1.1.0.9000” header is stale prose).
+
 ### What Session 260 Did
 
 **Deliverable (owner scope-gate via `AskUserQuestion` = “Two wording

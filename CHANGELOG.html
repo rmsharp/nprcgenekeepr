@@ -55,6 +55,17 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-04--issue-103-stage-8b-landed-on-master-pr-113-merged-both-slices-session-261">2026-07-04 — issue #103 Stage 8b LANDED on <code>master</code> (PR #113 merged, both slices) (Session 261)<a class="anchor" aria-label="anchor" href="#id_2026-07-04--issue-103-stage-8b-landed-on-master-pr-113-merged-both-slices-session-261"></a></h3>
+<ul><li>
+<strong>Deliverable (owner-directed = “merge it when green”):</strong> merge <strong>PR #113</strong> — issue #103 <strong>Stage 8b</strong>, both slices (Session 259 “safe formals + <code>@family</code>” <code>bafaa1e8</code> + Session 260 “<code>@param ped</code> de-dup C1/C2” <code>5952d0b4</code>) — into <code>master</code>. Landing/process action for already-CI-certified REFACTOR-class documentation content; TDD N/A; 0 corrections / 0 overrides.</li>
+<li>
+<strong>Merged clean:</strong> re-confirmed <strong>10 checks pass</strong> (R CMD check on Windows/macOS/Ubuntu release+devel+oldrel-1, plus lint/pkgdown/test-coverage/codecov) + <code>mergeStateStatus CLEAN</code> immediately before merging. <code>gh pr merge 113 --merge --delete-branch</code> → merge commit <strong><code>b9e39ddb</code></strong> (parents <code>b8d7f6ce</code> + <code>0fc3e536</code>); <code>master</code> == origin/master; feature branch deleted.</li>
+<li>
+<strong>Landed-tree sanity check:</strong> NAMESPACE + DESCRIPTION diff across the merge <strong>empty</strong> (doc-only, both slices NAMESPACE-neutral); merge touched exactly <strong>58 <code>R/</code> + 52 <code>man/</code> + 3 process docs</strong> (both slices combined, with file overlap). Issue #103 Stages 1–8b are now all on <code>master</code>.</li>
+<li>
+<strong>Note:</strong> <code>gh pr edit</code> exits 1 on this repo (deprecated <code>projectCards</code> GraphQL field) — PR #113’s title/body were updated via <code>gh api --method PATCH</code> instead.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-04--issue-103-stage-8b-ped-param-ped-de-dup-finding-6-c1c2-session-260">2026-07-04 — issue #103 Stage 8b-<code>ped</code> (<code>@param ped</code> de-dup, Finding 6, C1+C2) (Session 260)<a class="anchor" aria-label="anchor" href="#id_2026-07-04--issue-103-stage-8b-ped-param-ped-de-dup-finding-6-c1c2-session-260"></a></h3>
 <ul><li>
 <strong>Deliverable (owner scope-gate via <code>AskUserQuestion</code> = “Two wording groups”):</strong> issue #103 <strong>Stage 8b-<code>ped</code></strong> — collapse the two large <em>pure-phrasing-drift</em> <code>@param ped</code> clusters to <code>@inheritParams</code> across <strong>27 exported functions</strong>, each verified per-callee by a read-only workflow (donor-accuracy + no meaning loss). The requirement-bearing <code>ped</code> clusters (required-fields, complete-pedigree, demographic, one-off) are intentionally deferred. <strong>REFACTOR-class documentation work — no R-logic / NAMESPACE / behavior change (NAMESPACE diff empty); TDD RED/GREEN N/A; 0 corrections / 0 overrides</strong> (1 owner scope-gate; landing deferred to the owner).</li>
