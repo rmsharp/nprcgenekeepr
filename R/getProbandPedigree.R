@@ -11,8 +11,7 @@
 #'
 #' @param probands a character vector with the list of animals whose ancestors
 #' should be included in the final pedigree.
-#' @param ped datatable that is the \code{Pedigree}. It contains pedigree
-#' information. The fields \code{sire} and \code{dam} are required.
+#' @inheritParams trimPedigree
 #' @return A reduced pedigree.
 #'
 #' @export

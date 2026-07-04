@@ -15,8 +15,7 @@
 #' known or both unknown); the calling function's name (\code{caller}) is
 #' interpolated into the error so each public function keeps its own message.
 #'
-#' @param ped the pedigree information in datatable format.  Pedigree
-#' (req. fields: id, sire, dam, gen, population).
+#' @inheritParams calcFE
 #' @param caller name of the public function on whose behalf the contributions
 #' are computed; used only to phrase the partial-parentage error.
 #' @return A list with \code{p} (named numeric vector of founder mean

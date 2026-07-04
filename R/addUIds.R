@@ -12,8 +12,7 @@
 #' \code{\link{qcStudbook}}. The format is configurable via
 #' \code{\link{setAutoIdFormat}} (default \code{"U\%04d"}).
 #'
-#' @param ped datatable that is the \code{Pedigree}. It contains pedigree
-#' information. The fields \code{sire} and \code{dam} are required.
+#' @inheritParams trimPedigree
 #' @param format \code{sprintf} template for the generated placeholder IDs;
 #' defaults to \code{\link{getAutoIdFormat}()} (\code{"U\%04d"}).
 #' @return The updated pedigree with partial parentage removed.

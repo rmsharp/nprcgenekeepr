@@ -7,8 +7,7 @@
 #' pedigree are uninformative and can be removed from a pedigree without loss
 #' of information.
 #'
-#' @param ped datatable that is the \code{Pedigree}. It contains pedigree
-#' information. The fields \code{sire} and \code{dam} are required.
+#' @inheritParams trimPedigree
 #' @return A reduced pedigree.
 #'
 #' @export
