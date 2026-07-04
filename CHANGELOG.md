@@ -14,6 +14,12 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-04 — issue #103 Stage 8b LANDED on `master` (PR #113 merged, both slices) (Session 261)
+- **Deliverable (owner-directed = "merge it when green"):** merge **PR #113** — issue #103 **Stage 8b**, both slices (Session 259 "safe formals + `@family`" `bafaa1e8` + Session 260 "`@param ped` de-dup C1/C2" `5952d0b4`) — into `master`. Landing/process action for already-CI-certified REFACTOR-class documentation content; TDD N/A; 0 corrections / 0 overrides.
+- **Merged clean:** re-confirmed **10 checks pass** (R CMD check on Windows/macOS/Ubuntu release+devel+oldrel-1, plus lint/pkgdown/test-coverage/codecov) + `mergeStateStatus CLEAN` immediately before merging. `gh pr merge 113 --merge --delete-branch` → merge commit **`b9e39ddb`** (parents `b8d7f6ce` + `0fc3e536`); `master` == origin/master; feature branch deleted.
+- **Landed-tree sanity check:** NAMESPACE + DESCRIPTION diff across the merge **empty** (doc-only, both slices NAMESPACE-neutral); merge touched exactly **58 `R/` + 52 `man/` + 3 process docs** (both slices combined, with file overlap). Issue #103 Stages 1–8b are now all on `master`.
+- **Note:** `gh pr edit` exits 1 on this repo (deprecated `projectCards` GraphQL field) — PR #113's title/body were updated via `gh api --method PATCH` instead.
+
 ### 2026-07-04 — issue #103 Stage 8b-`ped` (`@param ped` de-dup, Finding 6, C1+C2) (Session 260)
 - **Deliverable (owner scope-gate via `AskUserQuestion` = "Two wording groups"):** issue #103 **Stage 8b-`ped`** — collapse the two large *pure-phrasing-drift* `@param ped` clusters to `@inheritParams` across **27 exported functions**, each verified per-callee by a read-only workflow (donor-accuracy + no meaning loss). The requirement-bearing `ped` clusters (required-fields, complete-pedigree, demographic, one-off) are intentionally deferred. **REFACTOR-class documentation work — no R-logic / NAMESPACE / behavior change (NAMESPACE diff empty); TDD RED/GREEN N/A; 0 corrections / 0 overrides** (1 owner scope-gate; landing deferred to the owner).
 - **The change (27 `R/` + 15 regenerated `.Rd`; code commit `5952d0b4`, branch `issue103-stage8b-dedup`):**
