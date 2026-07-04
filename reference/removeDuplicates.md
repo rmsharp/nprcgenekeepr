@@ -13,7 +13,7 @@ removeDuplicates(ped, reportErrors = FALSE)
 - ped:
 
   dataframe that is the `Pedigree`. It contains pedigree information.
-  The `id` column is required.
+  The `id` and `recordStatus` columns are required.
 
 - reportErrors:
 
