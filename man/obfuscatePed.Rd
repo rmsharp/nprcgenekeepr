@@ -41,3 +41,10 @@ obfuscatedPed <- obfuscatePed(ped)
 ped
 obfuscatedPed
 }
+\seealso{
+Other obfuscation:
+\code{\link[=mapIdsToObfuscated]{mapIdsToObfuscated()}},
+\code{\link[=obfuscateDate]{obfuscateDate()}},
+\code{\link[=obfuscateId]{obfuscateId()}}
+}
+\concept{obfuscation}

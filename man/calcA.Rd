@@ -33,3 +33,14 @@ Part of Genetic Value Analysis
 library(nprcgenekeepr)
 rare <- calcA(nprcgenekeepr::ped1Alleles, threshold = 3, byID = FALSE)
 }
+\seealso{
+Other genetic value analysis:
+\code{\link[=calcFE]{calcFE()}},
+\code{\link[=calcFEFG]{calcFEFG()}},
+\code{\link[=calcFG]{calcFG()}},
+\code{\link[=calcFGSE]{calcFGSE()}},
+\code{\link[=calcGU]{calcGU()}},
+\code{\link[=calcGUSE]{calcGUSE()}},
+\code{\link[=calcRetention]{calcRetention()}}
+}
+\concept{genetic value analysis}

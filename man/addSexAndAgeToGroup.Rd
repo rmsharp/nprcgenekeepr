@@ -7,7 +7,7 @@
 addSexAndAgeToGroup(ids, ped)
 }
 \arguments{
-\item{ids}{character vector of animal Ids}
+\item{ids}{character vector of animal IDs}
 
 \item{ped}{datatable that is the \code{Pedigree}. It contains pedigree
 information.}

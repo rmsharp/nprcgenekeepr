@@ -7,13 +7,13 @@
 getAnimalsWithHighKinship(kmat, ped, threshold, currentGroups, ignore, minAge)
 }
 \arguments{
-\item{kmat}{numeric matrix of pairwise kinship values. Rows and columns
-are named with animal IDs.}
+\item{kmat}{a numeric matrix of pairwise kinship coefficients.
+Animal IDs are the row and column names.}
 
 \item{ped}{dataframe that is the \code{Pedigree}. It contains pedigree
 information.}
 
-\item{threshold}{numeric value indicating the minimum kinship level to be
+\item{threshold}{numeric value representing the minimum kinship level to be
 considered in group formation. Pairwise kinship below this level will be
 ignored.}
 

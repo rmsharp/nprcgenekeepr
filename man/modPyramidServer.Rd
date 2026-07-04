@@ -19,4 +19,24 @@ Age-Sex Pyramid Module - Server Function
 }
 \seealso{
 \code{\link{modPyramidUI}}
+
+Other Shiny modules:
+\code{\link[=modBreedingGroupsServer]{modBreedingGroupsServer()}},
+\code{\link[=modBreedingGroupsUI]{modBreedingGroupsUI()}},
+\code{\link[=modGeneticValueServer]{modGeneticValueServer()}},
+\code{\link[=modGeneticValueUI]{modGeneticValueUI()}},
+\code{\link[=modGvAndBgDescServer]{modGvAndBgDescServer()}},
+\code{\link[=modGvAndBgDescUI]{modGvAndBgDescUI()}},
+\code{\link[=modInputServer]{modInputServer()}},
+\code{\link[=modInputUI]{modInputUI()}},
+\code{\link[=modORIPReportingServer]{modORIPReportingServer()}},
+\code{\link[=modORIPReportingUI]{modORIPReportingUI()}},
+\code{\link[=modPedigreeServer]{modPedigreeServer()}},
+\code{\link[=modPedigreeUI]{modPedigreeUI()}},
+\code{\link[=modPotentialParentsServer]{modPotentialParentsServer()}},
+\code{\link[=modPotentialParentsUI]{modPotentialParentsUI()}},
+\code{\link[=modPyramidUI]{modPyramidUI()}},
+\code{\link[=modSummaryStatsServer]{modSummaryStatsServer()}},
+\code{\link[=modSummaryStatsUI]{modSummaryStatsUI()}}
 }
+\concept{Shiny modules}

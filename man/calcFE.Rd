@@ -48,3 +48,14 @@ pedFactors$population <- getGVPopulation(pedFactors, NULL)
 fe <- calcFE(ped)
 feFactors <- calcFE(pedFactors)
 }
+\seealso{
+Other genetic value analysis:
+\code{\link[=calcA]{calcA()}},
+\code{\link[=calcFEFG]{calcFEFG()}},
+\code{\link[=calcFG]{calcFG()}},
+\code{\link[=calcFGSE]{calcFGSE()}},
+\code{\link[=calcGU]{calcGU()}},
+\code{\link[=calcGUSE]{calcGUSE()}},
+\code{\link[=calcRetention]{calcRetention()}}
+}
+\concept{genetic value analysis}

@@ -25,8 +25,7 @@
 #' assigned to groups.
 #' Defaults to a list with character(0) in each sublist element (one for each
 #' group being formed) assuming no groups are prepopulated.
-#' @param kmat Numeric matrix of pairwise kinship values. Rows and columns
-#' are named with animal IDs.
+#' @inheritParams meanKinship
 #' @param ped Dataframe that is the \code{Pedigree}. It contains pedigree
 #' information including the IDs listed in \code{candidates}.
 #' @param threshold Numeric value indicating the minimum kinship level to be

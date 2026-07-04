@@ -18,6 +18,7 @@ utils::globalVariables(c("x", "y"))
 #' @seealso \code{\link{modSummaryStatsServer}} for server logic.
 #' @importFrom shiny NS div h3 fluidRow column br downloadButton plotOutput
 #' @importFrom shiny htmlOutput withMathJax includeHTML
+#' @family Shiny modules
 #' @export
 modSummaryStatsUI <- function(id) {
   ns <- NS(id)
@@ -302,6 +303,7 @@ modSummaryStatsUI <- function(id) {
 #' @importFrom ggplot2 ggplot aes geom_histogram geom_boxplot geom_jitter
 #' @importFrom ggplot2 geom_vline theme_classic xlab ylab ggtitle coord_flip
 #' @importFrom ggplot2 ggsave
+#' @family Shiny modules
 #' @export
 modSummaryStatsServer <- function(id, geneticValues, pedigree,
                                    kinshipMatrix = NULL, founderStats = NULL,

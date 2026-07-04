@@ -25,8 +25,8 @@ groupAddAssign(
 use in forming the groups. The animals that may be present in
 \code{currentGroups} are not included within \code{candidates}.}
 
-\item{kmat}{Numeric matrix of pairwise kinship values. Rows and columns
-are named with animal IDs.}
+\item{kmat}{a numeric matrix of pairwise kinship coefficients.
+Animal IDs are the row and column names.}
 
 \item{ped}{Dataframe that is the \code{Pedigree}. It contains pedigree
 information including the IDs listed in \code{candidates}.}

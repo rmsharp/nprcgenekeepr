@@ -22,6 +22,7 @@
 #' @importFrom shiny uiOutput downloadButton updateTabsetPanel observeEvent
 #' @importFrom DT DTOutput
 #' @importFrom futile.logger flog.debug flog.threshold DEBUG INFO
+#' @family Shiny modules
 #' @export
 modInputUI <- function(id) {
   ns <- NS(id)
@@ -228,6 +229,7 @@ modInputUI <- function(id) {
 #' @importFrom shiny moduleServer reactive eventReactive req showNotification
 #' @importFrom shiny renderUI withProgress incProgress
 #' @importFrom DT renderDT
+#' @family Shiny modules
 #' @export
 modInputServer <- function(id, config = NULL) {
 

@@ -3,13 +3,10 @@
 
 #' List each animal's high-kinship relatives
 #'
-#' @param kmat numeric matrix of pairwise kinship values. Rows and columns
-#' are named with animal IDs.
+#' @inheritParams meanKinship
 #' @param ped dataframe that is the \code{Pedigree}. It contains pedigree
 #' information.
-#' @param threshold numeric value indicating the minimum kinship level to be
-#' considered in group formation. Pairwise kinship below this level will be
-#' ignored.
+#' @inheritParams filterThreshold
 #' @param currentGroups list of character vectors of IDs of animals currently
 #' assigned
 #' to the group. Defaults to character(0) assuming no groups are existent.

@@ -7,7 +7,7 @@
 getLkDirectRelatives(ids, unrelatedParents = FALSE)
 }
 \arguments{
-\item{ids}{character vector with Ids.}
+\item{ids}{character vector of animal IDs}
 
 \item{unrelatedParents}{logical vector when \code{FALSE} the unrelated
 parents of offspring do not get a record as an ego; when \code{TRUE}
@@ -36,3 +36,10 @@ focalAnimals <- c("1X2701", "1X0101")
 suppressWarnings(getLkDirectRelatives(ids = focalAnimals))
 }
 }
+\seealso{
+Other direct relatives:
+\code{\link[=getFileDirectRelatives]{getFileDirectRelatives()}},
+\code{\link[=getLkDirectAncestors]{getLkDirectAncestors()}},
+\code{\link[=getPedDirectRelatives]{getPedDirectRelatives()}}
+}
+\concept{direct relatives}

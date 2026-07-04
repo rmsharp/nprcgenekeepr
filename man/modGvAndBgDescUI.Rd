@@ -22,4 +22,24 @@ genetic value analysis and breeding group formation algorithms.
 \code{\link{modGeneticValueUI}} for genetic value analysis.
 
 \code{\link{modBreedingGroupsUI}} for breeding group formation.
+
+Other Shiny modules:
+\code{\link[=modBreedingGroupsServer]{modBreedingGroupsServer()}},
+\code{\link[=modBreedingGroupsUI]{modBreedingGroupsUI()}},
+\code{\link[=modGeneticValueServer]{modGeneticValueServer()}},
+\code{\link[=modGeneticValueUI]{modGeneticValueUI()}},
+\code{\link[=modGvAndBgDescServer]{modGvAndBgDescServer()}},
+\code{\link[=modInputServer]{modInputServer()}},
+\code{\link[=modInputUI]{modInputUI()}},
+\code{\link[=modORIPReportingServer]{modORIPReportingServer()}},
+\code{\link[=modORIPReportingUI]{modORIPReportingUI()}},
+\code{\link[=modPedigreeServer]{modPedigreeServer()}},
+\code{\link[=modPedigreeUI]{modPedigreeUI()}},
+\code{\link[=modPotentialParentsServer]{modPotentialParentsServer()}},
+\code{\link[=modPotentialParentsUI]{modPotentialParentsUI()}},
+\code{\link[=modPyramidServer]{modPyramidServer()}},
+\code{\link[=modPyramidUI]{modPyramidUI()}},
+\code{\link[=modSummaryStatsServer]{modSummaryStatsServer()}},
+\code{\link[=modSummaryStatsUI]{modSummaryStatsUI()}}
 }
+\concept{Shiny modules}

@@ -49,6 +49,7 @@
 #'
 #' @seealso \code{\link{calcFG}}, \code{\link{calcFEFG}},
 #' \code{\link{calcRetention}}, \code{\link{calcGUSE}}, \code{\link{reportGV}}
+#' @family genetic value analysis
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

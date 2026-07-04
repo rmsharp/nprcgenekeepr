@@ -9,7 +9,7 @@
 #' \code{"M"}. This means animals with ambiguous sex are counted with the
 #' females.
 #'
-#' @param ids character vector of animal Ids
+#' @inheritParams getParents
 #' @param ped datatable that is the \code{Pedigree}. It contains pedigree
 #' information including the IDs listed in \code{candidates}.
 #' @param additionalMales Integer value of males to add to those within the

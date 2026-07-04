@@ -11,6 +11,7 @@
 #' @return A dataframe or vector with original IDs replaced by their obfuscated
 #' counterparts.
 #'
+#' @family obfuscation
 #' @export
 #' @examples
 #' set_seed(1)

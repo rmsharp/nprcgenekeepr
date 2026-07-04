@@ -94,3 +94,14 @@ p 77-111. In: Ballou JD, Gilpin M, Foose TJ, editors.
 Population management for survival and recovery. New York (NY):
 Columbia University Press.
 }
+\seealso{
+Other genetic value analysis:
+\code{\link[=calcA]{calcA()}},
+\code{\link[=calcFE]{calcFE()}},
+\code{\link[=calcFEFG]{calcFEFG()}},
+\code{\link[=calcFG]{calcFG()}},
+\code{\link[=calcFGSE]{calcFGSE()}},
+\code{\link[=calcGUSE]{calcGUSE()}},
+\code{\link[=calcRetention]{calcRetention()}}
+}
+\concept{genetic value analysis}

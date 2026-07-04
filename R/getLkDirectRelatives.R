@@ -10,7 +10,7 @@
 #' pedigree component (ancestors, descendants, and collaterals such as siblings
 #' and mates) reachable from the focal animals.
 #'
-#' @param ids character vector with Ids.
+#' @inheritParams getParents
 #' @param unrelatedParents logical vector when \code{FALSE} the unrelated
 #' parents of offspring do not get a record as an ego; when \code{TRUE}
 #' a place holder record where parent (\code{sire},
@@ -20,6 +20,7 @@
 #' -- the full connected pedigree component (ancestors, descendants, and
 #' collaterals) -- for the Ids provided.
 #'
+#' @family direct relatives
 #' @export
 #' @examples
 #' \dontrun{

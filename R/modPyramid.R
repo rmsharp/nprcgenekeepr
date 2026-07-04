@@ -14,6 +14,7 @@
 #' @importFrom shiny numericInput hr checkboxInput downloadButton tabsetPanel
 #' @importFrom shiny tabPanel plotOutput tableOutput includeHTML sliderInput
 #' @importFrom shiny uiOutput helpText
+#' @family Shiny modules
 #' @export
 modPyramidUI <- function(id) {
   ns <- NS(id)
@@ -83,6 +84,7 @@ modPyramidUI <- function(id) {
 #' @importFrom shiny moduleServer reactive eventReactive renderPlot renderTable
 #' @importFrom shiny downloadHandler req isolate tagList renderUI
 #' @importFrom graphics text
+#' @family Shiny modules
 #' @export
 modPyramidServer <- function(id, pedigreeData) {
   moduleServer(id, function(input, output, session) {

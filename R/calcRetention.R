@@ -14,6 +14,7 @@
 #' @return A vector of the mean number of founder alleles retained in the
 #' gene dropping simulation.
 #'
+#' @family genetic value analysis
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

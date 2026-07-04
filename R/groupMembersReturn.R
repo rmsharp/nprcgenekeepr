@@ -8,8 +8,7 @@
 #'  largest minimum group size
 #' @param withKin logical variable indicating to return kinship coefficients
 #' when \code{TRUE}.
-#' @param kmat numeric matrix of pairwise kinship values. Rows and columns
-#' are named with animal IDs.
+#' @inheritParams meanKinship
 #' @return A list with two or three elements \code{group}, \code{score}, and
 #' optionally \code{groupKin} where
 #' \code{group} is set to \code{savedGroupMembers}, \code{score} is set to

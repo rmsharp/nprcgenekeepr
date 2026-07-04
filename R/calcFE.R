@@ -13,6 +13,7 @@
 #' @return The founder equivalents \code{FE = 1 / sum(p ^ 2)}, where \code{p}
 #' is the vector of founder mean contributions to the current descendants.
 #'
+#' @family genetic value analysis
 #' @export
 #' @examples
 #' ## Example from Analysis of Founder Representation in Pedigrees: Founder

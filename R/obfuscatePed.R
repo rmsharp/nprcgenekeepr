@@ -18,6 +18,7 @@
 #' @return An obfuscated pedigree
 #'
 #' @importFrom lubridate is.Date
+#' @family obfuscation
 #' @export
 #' @examples
 #' library(nprcgenekeepr)

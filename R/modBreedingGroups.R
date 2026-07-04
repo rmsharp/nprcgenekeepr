@@ -18,6 +18,7 @@
 #' @importFrom shiny NS div h3 fluidRow column wellPanel radioButtons
 #' @importFrom shiny conditionalPanel numericInput actionButton tabsetPanel
 #' @importFrom shiny tabPanel uiOutput tableOutput icon includeHTML
+#' @family Shiny modules
 #' @export
 modBreedingGroupsUI <- function(id) {
   ns <- NS(id)
@@ -156,6 +157,7 @@ modBreedingGroupsUI <- function(id) {
 #'
 #' @importFrom shiny moduleServer reactive eventReactive reactiveVal
 #' @importFrom shiny withProgress incProgress req showNotification
+#' @family Shiny modules
 #' @export
 modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
                                     kinshipOverrides = NULL) {

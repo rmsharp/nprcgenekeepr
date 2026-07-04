@@ -53,4 +53,24 @@ unknown parent.
 \code{\link{modPotentialParentsUI}} for the user interface.
 
 \code{\link{getPotentialParents}} for the underlying computation.
+
+Other Shiny modules:
+\code{\link[=modBreedingGroupsServer]{modBreedingGroupsServer()}},
+\code{\link[=modBreedingGroupsUI]{modBreedingGroupsUI()}},
+\code{\link[=modGeneticValueServer]{modGeneticValueServer()}},
+\code{\link[=modGeneticValueUI]{modGeneticValueUI()}},
+\code{\link[=modGvAndBgDescServer]{modGvAndBgDescServer()}},
+\code{\link[=modGvAndBgDescUI]{modGvAndBgDescUI()}},
+\code{\link[=modInputServer]{modInputServer()}},
+\code{\link[=modInputUI]{modInputUI()}},
+\code{\link[=modORIPReportingServer]{modORIPReportingServer()}},
+\code{\link[=modORIPReportingUI]{modORIPReportingUI()}},
+\code{\link[=modPedigreeServer]{modPedigreeServer()}},
+\code{\link[=modPedigreeUI]{modPedigreeUI()}},
+\code{\link[=modPotentialParentsUI]{modPotentialParentsUI()}},
+\code{\link[=modPyramidServer]{modPyramidServer()}},
+\code{\link[=modPyramidUI]{modPyramidUI()}},
+\code{\link[=modSummaryStatsServer]{modSummaryStatsServer()}},
+\code{\link[=modSummaryStatsUI]{modSummaryStatsUI()}}
 }
+\concept{Shiny modules}

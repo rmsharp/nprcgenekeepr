@@ -16,6 +16,7 @@
 #' @seealso \code{\link{modGeneticValueUI}} for genetic value analysis.
 #' @seealso \code{\link{modBreedingGroupsUI}} for breeding group formation.
 #' @importFrom shiny NS div h3 includeHTML
+#' @family Shiny modules
 #' @export
 modGvAndBgDescUI <- function(id) {
   div(
@@ -45,6 +46,7 @@ modGvAndBgDescUI <- function(id) {
 #'
 #' @seealso \code{\link{modGvAndBgDescUI}} for the user interface.
 #' @importFrom shiny moduleServer
+#' @family Shiny modules
 #' @export
 modGvAndBgDescServer <- function(id) {
   moduleServer(id, function(input, output, session) {

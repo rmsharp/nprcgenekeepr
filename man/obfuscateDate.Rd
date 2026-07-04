@@ -32,3 +32,10 @@ someDates <- rep(
 minBirthDate <- rep(as.Date("2009-2-16", format = "\%Y-\%m-\%d"), 20)
 obfuscateDate(someDates, minBirthDate, 30L)
 }
+\seealso{
+Other obfuscation:
+\code{\link[=mapIdsToObfuscated]{mapIdsToObfuscated()}},
+\code{\link[=obfuscateId]{obfuscateId()}},
+\code{\link[=obfuscatePed]{obfuscatePed()}}
+}
+\concept{obfuscation}

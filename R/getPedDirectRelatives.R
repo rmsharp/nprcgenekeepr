@@ -6,7 +6,7 @@
 #' Gets direct ancestors from labkey \code{study} schema and \code{demographics}
 #' table.
 #'
-#' @param ids character vector with Ids.
+#' @inheritParams getParents
 #' @param ped pedigree dataframe object that is used as the source of
 #' pedigree information.
 #' @param unrelatedParents logical vector when \code{FALSE} the unrelated
@@ -19,6 +19,7 @@
 #'
 #' @importFrom data.table rbindlist
 #' @importFrom stringi stri_c
+#' @family direct relatives
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
