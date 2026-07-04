@@ -17,8 +17,9 @@ filterPairs(kin, ped, ignore = list(c("F", "F")))
 
 - ped:
 
-  Dataframe of pedigree information including the IDs listed in
-  `candidates`.
+  Dataframe of pedigree information that must contain an `id` column and
+  a `sex` column. The `id` values should include the animals referenced
+  in `kin`.
 
 - ignore:
 
