@@ -6,8 +6,7 @@
 #' Part of Relations
 #'
 #' @inheritParams meanKinship
-#' @param ped the pedigree information in datatable format with required
-#' colnames \code{id}, \code{sire}, and \code{dam}.
+#' @inheritParams getDescendantPedigree
 #' @param ids character vector of IDs or NULL to which the analysis should be
 #' restricted. If provided, only relationships between these IDs will be
 #' converted to relationships.

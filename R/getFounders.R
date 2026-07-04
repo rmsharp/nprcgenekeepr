@@ -9,8 +9,7 @@
 #' Animals with exactly one known parent (partial parentage) are
 #' \strong{not} founders.
 #'
-#' @param ped a pedigree \code{data.frame} with (at least) the columns
-#' \code{id}, \code{sire}, and \code{dam}.
+#' @inheritParams getDescendantPedigree
 #' @return A vector of the \code{id} values of the founders, in pedigree
 #' order. It has the same type as \code{ped$id} and is empty when there are
 #' no founders.

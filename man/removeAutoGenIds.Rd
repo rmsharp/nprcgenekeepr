@@ -8,8 +8,7 @@ removeAutoGenIds(ped)
 }
 \arguments{
 \item{ped}{datatable that is the \code{Pedigree}. It contains pedigree
-information. The \code{id}, \code{sire}, and \code{dame} columns are
-required.}
+information. The fields \code{id}, \code{sire} and \code{dam} are required.}
 }
 \value{
 A pedigree with automatically generated IDs removed.

@@ -7,8 +7,8 @@
 getFounders(ped)
 }
 \arguments{
-\item{ped}{a pedigree \code{data.frame} with (at least) the columns
-\code{id}, \code{sire}, and \code{dam}.}
+\item{ped}{datatable that is the \code{Pedigree}. It contains pedigree
+information. The fields \code{id}, \code{sire} and \code{dam} are required.}
 }
 \value{
 A vector of the \code{id} values of the founders, in pedigree

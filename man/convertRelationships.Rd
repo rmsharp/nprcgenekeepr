@@ -10,8 +10,8 @@ convertRelationships(kmat, ped, ids = NULL, updateProgress = NULL)
 \item{kmat}{a numeric matrix of pairwise kinship coefficients.
 Animal IDs are the row and column names.}
 
-\item{ped}{the pedigree information in datatable format with required
-colnames \code{id}, \code{sire}, and \code{dam}.}
+\item{ped}{datatable that is the \code{Pedigree}. It contains pedigree
+information. The fields \code{id}, \code{sire} and \code{dam} are required.}
 
 \item{ids}{character vector of IDs or NULL to which the analysis should be
 restricted. If provided, only relationships between these IDs will be
