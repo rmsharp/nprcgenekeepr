@@ -12,8 +12,8 @@ getFounders(ped)
 
 - ped:
 
-  a pedigree `data.frame` with (at least) the columns `id`, `sire`, and
-  `dam`.
+  datatable that is the `Pedigree`. It contains pedigree information.
+  The fields `id`, `sire` and `dam` are required.
 
 ## Value
 

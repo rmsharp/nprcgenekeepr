@@ -17,8 +17,8 @@ convertRelationships(kmat, ped, ids = NULL, updateProgress = NULL)
 
 - ped:
 
-  the pedigree information in datatable format with required colnames
-  `id`, `sire`, and `dam`.
+  datatable that is the `Pedigree`. It contains pedigree information.
+  The fields `id`, `sire` and `dam` are required.
 
 - ids:
 

@@ -19,7 +19,7 @@ removeAutoGenIds(ped)
 - ped:
 
   datatable that is the `Pedigree`. It contains pedigree information.
-  The `id`, `sire`, and `dame` columns are required.
+  The fields `id`, `sire` and `dam` are required.
 
 ## Value
 
