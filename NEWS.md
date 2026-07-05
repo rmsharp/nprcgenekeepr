@@ -6,6 +6,11 @@ R. Mark Sharp, Ph.D.
 # nprcgenekeepr (development version)
 
 - Changes
+  - `runGeneKeepR()` is again the primary Shiny entry point; its name
+    says what it does. `runModularApp()` is now the soft-deprecated
+    alias that forwards to `runGeneKeepR()`, so existing
+    `runModularApp()` calls still work. This reverses the deprecation
+    direction introduced in 2.0.0. (#110)
   - `reportGV()` gains an optional `kinshipOverrides` argument: a data
     frame of outside-information kinship coefficients (`id1`, `id2`,
     `kinship`; the coefficient *f*, not relatedness *r*) that replace

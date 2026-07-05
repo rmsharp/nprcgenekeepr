@@ -23,7 +23,7 @@ can be formed three ways:
 
 This article walks the whole pipeline -- from a raw studbook to formed groups --
 entirely from R, using the `examplePedigree` data set that ships with the
-package. The Shiny app (`runModularApp()`) drives the same functions through a
+package. The Shiny app (`runGeneKeepR()`) drives the same functions through a
 point-and-click interface; here we script them directly.
 
 ## Setup {#sec-setup}
@@ -185,7 +185,7 @@ harem case; raising `iter` lets the search place more of them.
   structure with `getPyramidPlot()`.
 - `rankSubjects()` -- the ranking scheme applied to a genetic value report.
 - `kinship()` -- pairwise kinship coefficients from a pedigree.
-- `runModularApp()` -- the Shiny app that performs this workflow interactively.
+- `runGeneKeepR()` -- the Shiny app that performs this workflow interactively.
 
 **Reference.** Vinson A, Raboin MJ (2015). "A Practical Approach for Designing
 Breeding Groups to Maximize Genetic Diversity in a Large Colony of Captive

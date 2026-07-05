@@ -226,7 +226,7 @@ clean pedigree the analyses consume.
 - The **Age-Sex Pyramid Plots** article -- picture the colony's age and sex
   structure with `getPyramidPlot()`.
 - `qcStudbook()` -- the function documented here.
-- `runModularApp()` -- the Shiny app, whose Quality Control tab drives this same
+- `runGeneKeepR()` -- the Shiny app, whose Quality Control tab drives this same
   function interactively.
 
 **Reference.**

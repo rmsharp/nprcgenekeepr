@@ -21,8 +21,8 @@ that can be started with:
 
 ```{r running-shiny-application, echo = TRUE, eval = FALSE}
 library(nprcgenekeepr) # nolint: undesirable_function_linter
-runModularApp()
+runGeneKeepR()
 ```
 
-(`runGeneKeepR()` also still launches the application but is deprecated in
-favor of `runModularApp()`.)
+(`runModularApp()` also still launches the application but is deprecated in
+favor of `runGeneKeepR()`.)

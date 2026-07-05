@@ -1,7 +1,7 @@
 README
 ================
 R. Mark Sharp, Ph.D.
-2026-06-30
+2026-07-05
 
 # nprcgenekeepr <a href="https://github.com/rmsharp/nprcgenekeepr"><img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
 
@@ -36,9 +36,7 @@ Southwest National Primate Research Center and P51 OD011092 to the
 Oregon National Primate Research Center.
 
 <!--It is now managed and maintained as a joint effort between ONPRC-->
-
 <!--and Southwest National Primate Research Center (SNPRC) with the -->
-
 <!--coding being done by R. Mark Sharp, Ph.D.-->
 
 At present, the application supports 5 functions:
@@ -106,11 +104,11 @@ application that can be started with:
 
 ``` r
 library(nprcgenekeepr) # nolint: undesirable_function_linter
-runModularApp()
+runGeneKeepR()
 ```
 
-(`runGeneKeepR()` also still launches the application but is deprecated
-in favor of `runModularApp()`.)
+(`runModularApp()` also still launches the application but is deprecated
+in favor of `runGeneKeepR()`.)
 
 ## Summary of Major Functions
 

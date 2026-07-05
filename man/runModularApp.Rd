@@ -2,7 +2,7 @@
 % Please edit documentation in R/runModularApp.R
 \name{runModularApp}
 \alias{runModularApp}
-\title{Run the Modular Version of GeneKeepR}
+\title{Run the Modular Version of GeneKeepR (Deprecated)}
 \usage{
 runModularApp(port = 6013L, launch.browser = TRUE)
 }
@@ -13,31 +13,20 @@ runModularApp(port = 6013L, launch.browser = TRUE)
 }
 \value{
 Returns the error condition of the Shiny application when it
-terminates.
+terminates (from \code{\link{runGeneKeepR}}).
 }
 \description{
-Launches the modularized Shiny application for testing purposes.
-This version uses the new module-based architecture with a Home tab
-and improved UI components.
-}
-\details{
-This function runs the modular version of the application which includes:
-\itemize{
-\item Home tab with navigation buttons
-\item Modular Input tab with enhanced QC display
-\item Dynamic error and changed columns tabs
-\item Enhanced Pedigree Browser with focal animal support
-\item Genetic Value Analysis with visualizations
-\item Summary Statistics with popovers
-\item Breeding Groups with group panels
-\item Age-Sex Pyramid with enhanced controls
-}
-
-\code{\link{runGeneKeepR}} is a soft-deprecated alias for this function.
+\code{runModularApp()} has been renamed to \code{\link{runGeneKeepR}}, a
+name that says what the function does. \code{runModularApp()} is now a
+soft-deprecated alias that launches the application via
+\code{\link{runGeneKeepR}}. Existing callers continue to work.
 }
 \examples{
 \dontrun{
 library(nprcgenekeepr)
 runModularApp()
 }
+}
+\seealso{
+\code{\link{runGeneKeepR}}, the function this now launches.
 }

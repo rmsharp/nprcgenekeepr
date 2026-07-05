@@ -1,21 +1,35 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Run the GeneKeepR Shiny Application (Deprecated)
+#' Run the GeneKeepR Shiny Application
 #'
-#' The original monolithic Shiny application has been retired.
-#' \code{runGeneKeepR()} is now a soft-deprecated alias that launches the
-#' modular application via \code{\link{runModularApp}}. Existing
-#' zero-argument callers continue to work.
+#' Launches the GeneKeepR Shiny application. It uses a module-based
+#' architecture with a Home tab and improved UI components.
 #'
-#' @param port Integer port number for the Shiny server (default 6013).
-#' @param launch.browser Logical; whether to launch a browser (default TRUE).
+#' @details
+#' The application includes:
+#' \itemize{
+#'   \item Home tab with navigation buttons
+#'   \item Input tab with enhanced QC display
+#'   \item Dynamic error and changed columns tabs
+#'   \item Enhanced Pedigree Browser with focal animal support
+#'   \item Genetic Value Analysis with visualizations
+#'   \item Summary Statistics with popovers
+#'   \item Breeding Groups with group panels
+#'   \item Age-Sex Pyramid with enhanced controls
+#' }
+#'
+#' \code{\link{runModularApp}} is a soft-deprecated alias for this function.
+#'
+#' @param port Integer port number for the Shiny server (default 6013)
+#' @param launch.browser Logical; whether to launch browser (default TRUE)
 #'
 #' @return Returns the error condition of the Shiny application when it
-#'   terminates (from \code{\link{runModularApp}}).
+#'   terminates.
 #'
-#' @seealso \code{\link{runModularApp}} for the modular application this
-#'   now launches.
+#' @seealso \code{\link{runModularApp}}, a soft-deprecated alias for this
+#'   function.
+#' @importFrom shiny shinyApp runApp
 #' @export
 #' @examples
 #' \dontrun{
@@ -23,14 +37,9 @@
 #' runGeneKeepR()
 #' }
 runGeneKeepR <- function(port = 6013L, launch.browser = TRUE) { # nolint: object_name_linter
-  lifecycle::deprecate_soft(
-    when = "1.1.0",
-    what = "runGeneKeepR()",
-    with = "runModularApp()",
-    details = paste(
-      "The monolithic Shiny application has been retired;",
-      "runGeneKeepR() now launches the modular application."
-    )
+  app <- shiny::shinyApp(
+    ui = appUI(),
+    server = appServer
   )
-  runModularApp(port = port, launch.browser = launch.browser)
+  shiny::runApp(app, port = port, launch.browser = launch.browser)
 }

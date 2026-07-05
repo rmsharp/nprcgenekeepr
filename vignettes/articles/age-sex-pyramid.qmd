@@ -129,7 +129,7 @@ for a cleaner figure.
 - The **Forming Breeding Groups** article -- assemble genetically diverse breeding
   groups with `groupAddAssign()`.
 - `getPyramidPlot()` -- the function documented here.
-- `runModularApp()` -- the Shiny app, whose Age-Sex Pyramid tab draws this plot
+- `runGeneKeepR()` -- the Shiny app, whose Age-Sex Pyramid tab draws this plot
   interactively.
 
 **Reference.**

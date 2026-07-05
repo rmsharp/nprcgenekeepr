@@ -28,7 +28,7 @@ The two functions are siblings by design: `getFocalAnimalPedFromFile()` reads th
 focal IDs exactly as `getFocalAnimalPed()` does, then builds the same connected
 pedigree component from your file instead of from the database.
 
-The Shiny app (`runModularApp()`) drives this same offline path from its Input
+The Shiny app (`runGeneKeepR()`) drives this same offline path from its Input
 tab (see the *In the Shiny app* section below); here we script it directly.
 
 ## Setup {#sec-setup}
@@ -168,7 +168,7 @@ Errors tab, with its `message` as the detail.
 
 ## In the Shiny app {#sec-app}
 
-To do the same thing interactively, launch `runModularApp()` and, on the
+To do the same thing interactively, launch `runGeneKeepR()` and, on the
 **Input** tab:
 
 1. under **File Content**, choose *"Focal animals only; pedigree built from
@@ -211,7 +211,7 @@ unlink(c(pedFile, focalFile, strangers))
 - `getFileDirectRelatives()` -- the lower-level function that walks the pedigree
   file to build the connected component (and exposes the `unrelatedParents`
   option, which `getFocalAnimalPedFromFile()` leaves at its default).
-- `runModularApp()` -- the Shiny app, whose Input tab drives this same offline
+- `runGeneKeepR()` -- the Shiny app, whose Input tab drives this same offline
   workflow interactively.
 
 **Reference.**

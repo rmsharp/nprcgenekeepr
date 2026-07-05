@@ -29,7 +29,7 @@ complementary metrics:
 `reportGV()` computes both, ranks the population, and also returns colony-level
 diversity summaries. This article runs the whole analysis from R, using the
 `examplePedigree` data set that ships with the package. The Shiny app
-(`runModularApp()`) drives the same `reportGV()` through its Genetic Value
+(`runGeneKeepR()`) drives the same `reportGV()` through its Genetic Value
 Analysis tab; here we script it directly.
 
 ## Setup {#sec-setup}
@@ -213,7 +213,7 @@ ideal founders" -- a smaller number signals a narrower gene pool.
   structure with `getPyramidPlot()`.
 - `rankSubjects()` -- the ranking scheme applied to a report.
 - `kinship()` -- pairwise kinship coefficients from a pedigree.
-- `runModularApp()` -- the Shiny app that performs this workflow interactively.
+- `runGeneKeepR()` -- the Shiny app that performs this workflow interactively.
 
 **References.**
 
