@@ -45,9 +45,8 @@ includes:
 
 - Age-Sex Pyramid with enhanced controls
 
-Use
 [`runGeneKeepR`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
-to run the original monolithic version.
+is a soft-deprecated alias for this function.
 
 ## Examples
 

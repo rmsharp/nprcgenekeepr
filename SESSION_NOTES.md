@@ -7,6 +7,220 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 275 Did
+
+**Deliverable (owner scope-gate via one `AskUserQuestion`):** finish
+issue \#109 — fix the ONE remaining audit finding (**\#9
+`runModularApp`**, deferred by S274 to \#110) and **CLOSE \#109**. Owner
+chose **“Fix \#9 now + close \#109”** over close-only (defer \#9 to
+\#110) / fix-without-closing. **REFACTOR-class, doc-only; NAMESPACE diff
+EMPTY; no signature/logic/behavior change; TDD RED/GREEN N/A. DONE +
+VERIFIED + committed to `master` + pushed; issue \#109 CLOSED. 0
+stakeholder corrections / 0 owner overrides** (1 owner gate: the scope
+`AskUserQuestion`; landing = direct-merge was part of the chosen
+option). **Started / Completed:** 2026-07-05 / 2026-07-05 **Status:**
+**DONE. 1 `R/` line edited → 1 `man/*.Rd` regenerated; committed to
+`master`; pushed to origin (local == origin/master). issue \#109 CLOSED.
+`--as-cran` GREEN 0/0/2.** - **The fix (finding \#9):**
+`R/runModularApp.R:23` `@details` read *“Use
+`\code{\link{runGeneKeepR}}` to run the original monolithic version.”* —
+**false today**:
+[`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+(`R/runGenekeepr.R:25-36`) is a
+[`lifecycle::deprecate_soft`](https://lifecycle.r-lib.org/reference/deprecate_soft.html)
+alias whose body is just `runModularApp(port, launch.browser)`, and its
+OWN doc says the monolithic app was retired. Replaced with
+*“`\code{\link{runGeneKeepR}}` is a soft-deprecated alias for this
+function.”* (75 chars) — the audit’s recommended fix (report §4 \#9:
+“note that runGeneKeepR() is a soft-deprecated alias, or drop the
+sentence”), factually true now, and mirrors `runGeneKeepR`’s reciprocal
+`@seealso`. - **Why \#9 was safe to finish despite the \#110 defer:**
+S274/the audit deferred \#9 because a full *replacement wording* could
+depend on \#110’s rename decision (rename
+`runModularApp`→`runGeneKeepR`?). But the stale sentence is wrong
+**regardless** of \#110, and stating the current alias relationship
+neither presumes the deprecation persists nor blocks a future rename (a
+rename would rewrite this doc as part of \#110). The defer-reason
+(“ideal final wording is uncertain”) did **not** block the *minimal
+correct* fix (“state today’s reality”). So finishing \#9 completes all
+38 audit findings without touching \#110’s design question. (Learning
+254 (2).) - **Verify (firsthand):** `devtools::document()` touched ONLY
+`R/runModularApp.R` + `man/runModularApp.Rd`; **NAMESPACE diff EMPTY**
+(captured before/after); the `.Rd` diff is exactly the one-line change;
+`lintr` = 0 on the changed file (new line 75 ≤80); `spell_check_package`
+CLEAN (no WORDLIST churn — “alias”/“soft-deprecated” already valid;
+`runGenekeepr.R` already uses the same words); **`R CMD check --as-cran`
+GREEN — 0 errors / 0 warnings / 2 NOTEs** with
+`code/documentation mismatches … OK`, `Rd cross-references … OK` (proves
+`\link{runGeneKeepR}` still resolves), `Rd line widths … OK`, examples
+\[21s\] / `testthat.R [67s/67s] OK` / vignettes all OK.
+
+**The 2 NOTEs (both benign, standing pair):** (1) CRAN incoming
+feasibility archived-maintainer false positive
+(`Package was archived on CRAN 2025-07-29`); (2) environmental
+HTML-Tidy/V8 note (`'tidy' … not recent enough` +
+`package 'V8' unavailable`). Both are impossible for a doc edit to cause
+and absent on CI. (S274 saw only NOTE \#1 that run; the HTML-Tidy one is
+intermittent by environment.)
+
+**Phase-3E (runtime smoke): N/A (stated, not skipped).** Doc-only
+REFACTOR; the `runModularApp` function BODY is unchanged (only the
+roxygen `@details` comment changed); empty NAMESPACE diff PROVEN; no
+runtime/Shiny/behavior surface. The meaningful verification is
+`code/documentation mismatches … OK` + `Rd cross-references … OK`. FM
+\#24 does not apply.
+
+**Session 274 Handoff Evaluation (by Session 275): Score 9/10.** S274’s
+SUGGESTED NEXT named BOTH candidate \#1 “Close issue \#109” AND “#9
+`runModularApp` — fix its stale … line once \#110 … is decided,” and
+pointed at the audit report + the exact finding. **What helped:** (1)
+the explicit **\#9↔︎#110 entanglement flag** was the crux of my scope
+gate — S274 correctly surfaced it and left the call to the owner rather
+than pre-deciding; (2) the audit report §4 \#9 gave the exact fix form
+(“note that runGeneKeepR() is a soft-deprecated alias, or drop the
+sentence”), so the GREEN edit was turnkey; (3) every standing gotcha
+held (version 2.0.0, package ARCHIVED, the benign NOTE(s), `gh`
+projectCards→`gh api`, `spell_check` hand-add-never-`update_wordlist`,
+`--as-cran` background); (4) **ghost-check clean AND predicted** — S274
+flagged “commit the owner’s two pending edits (`.gitignore`+`errored`
+WORDLIST)” as an owner item, and HEAD `6d445e0d` is exactly the owner
+having committed them, so the one post-S274 commit was immediately
+explained (not a ghost). **What was slightly off (the −1):** S274
+(echoing the audit) framed \#9 as “fix once \#110 is decided” — which
+over-constrains it. The minimal correct fix is \#110-**independent**;
+\#9 did NOT need to wait on an unrelated open design decision. That
+framing, taken literally, would have kept \#9 blocked indefinitely.
+Minor — S274 correctly listed it as a live candidate and deferred to the
+owner, and the owner chose to finish it now. **ROI:** very high — the
+handoff turned “finish \#109” into a single scope gate + a one-line
+turnkey fix.
+
+**Self-assessment (Session 275): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read; ACTIVE TASK; GH issues; dashboard 98/100; git
+status; ghost-check clean+explained), reported, STOPPED for the owner;
+wrote the 1B stub before technical work; **read the actual issues
+\#109/#110 + audit finding \#9 + BOTH R sources** (`runModularApp.R`,
+`runGenekeepr.R`) before scoping; gated scope via `AskUserQuestion`;
+declared REFACTOR/TDD-N/A up front. **Strengths:** (1) **challenged the
+inherited defer-reason** — recognized \#9 was NOT actually blocked by
+\#110 and offered a \#110-neutral fix, rather than reflexively
+re-deferring (the key judgment this session); (2) **minimal, in-scope
+fix** — 1 line, matching the audit’s recommended form and mirroring
+`runGeneKeepR`’s reciprocal `@seealso`; did NOT also “fix” the
+arguably-stale “for testing purposes” phrasing in the same doc (out of
+finding \#9’s scope — surfaced as an observation instead, FM \#8/#23);
+(3) **diagnosed the renv-cwd gate failure** (my first gate run from the
+scratchpad died on missing deps because `.Rprofile`/renv only activate
+in the repo root) and re-ran correctly from the repo root, rather than
+mistaking it for a package defect; (4) **verified the two most-relevant
+checks** (`code/documentation mismatches OK` + `Rd cross-references OK`
+— the latter proves the `\link` target still resolves); (5) FM \#22 held
+— committed only my files by explicit path, left nothing of the owner’s
+untouched. **Weakness (the −1):** the first gate launch from the
+scratchpad wasted ~1 min before I diagnosed the renv-cwd issue —
+avoidable had I recalled prior sessions run the gate from the repo root
+(now captured as Learning 254 (1) so no future session repeats it).
+Correct + disciplined; capped at 9.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 254** — (1) **run
+the `R CMD build`/`check --as-cran` gate from the PACKAGE ROOT, not the
+scratchpad**: this repo uses renv and `.Rprofile` (which activates the
+dep-carrying project library) is only sourced when R starts in the repo
+root; from elsewhere the build’s vignette-install fails on missing deps;
+`.Rbuildignore` excludes renv/`.Rprofile` so the tarball stays clean,
+and the tarball/`.Rcheck` are now gitignored (owner `6d445e0d`); (2) **a
+deferred finding can often be FINISHED without resolving what it was
+deferred to** — check whether the defer-reason actually blocks the
+*minimal correct* fix (it didn’t for \#9↔︎#110); distinguish “ideal final
+wording is blocked” from “any correct fix is blocked”; (3) close-out
+completeness for a batch issue — verify ALL clauses/findings are
+addressed before closing. Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[avoid-reconcile-tools-on-curated-files\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\],
+\[\[gh-pr-edit-projectcards-workaround\]\]. **This was a REFACTOR-class
+doc-fix session — TDD RED/GREEN N/A.**
+
+**=\> SUGGESTED NEXT.** **issue \#109 is CLOSED** — all three clauses
+resolved (reported bug S272 / audit S273 / all 38 findings fixed
+S274+S275). `master` == `origin/master`. No open \#109 work. Candidate
+deliverables (owner picks): - **\#110 `runGeneKeepR` deprecation
+question** — the live design decision: keep the current
+soft-deprecation, OR rename `runModularApp`→`runGeneKeepR` (repurpose
+the informative name). If a rename is chosen it is a
+STRICT-TDD/behavior-adjacent change (exported-name churn, deprecation
+shims, doc rewrites incl. the line I just fixed, NAMESPACE change) — NOT
+doc-only. **Note:** while in `runModularApp.R`, the `@title`/description
+still say the modular app is *“for testing purposes”* — arguably stale
+now that it IS the production app (`runGeneKeepR` just calls it). The
+S273 audit (all 203 pages) did not flag it; I left it untouched (scope).
+Worth folding into \#110’s doc pass if the owner agrees. - **The
+doc-fixed *code-fix* candidates (each a SEPARATE STRICT-TDD session)** —
+S274 doc-fixed these per the owner’s choice, but each may deserve a
+*behavior* change: **`makeSimPed` \#31** (overwrites KNOWN parents
+unconditionally — likely a real bug);
+**`saveDataframesAsFiles`/`makeExamplePedigreeFile` \#2/#14** (accept
+`"xlsx"` as an alias for `"excel"`); **`geneDrop` \#20** (reorder output
+cols to documented order); **`getPedMaxAge`/`getPyramidAgeDist`
+\#5/#29** (actually filter to living animals if intended);
+**`assignAlleles` \#10** (add `n = 5000` default); **`is_valid_date_str`
+\#13** (implement or drop the unused `format` arg). Report §6 / S274
+handoff enumerates them. - **\#112** genetic diversity heatmap/dashboard
+(enhancement); **\#111** code coverage; **\#103** remaining
+harmonization; **\#37, \#36, \#28, \#12, \#11, \#10, \#5**; the CRAN
+thread (Phase 5b, owner-run outward — package ARCHIVED, resubmission
+owner-gated + HARD STOP). **Each stage editing `R/` re-stales
+`--as-cran` (run from the REPO ROOT, background ~3 min, Learning 254) +
+`lintr` + `spell_check_package` (hand-add wordlist, never
+`update_wordlist`); for any behavior/NAMESPACE change ALSO STRICT TDD +
+NAMESPACE diff + Phase-3E installed-namespace smoke. Landing
+owner-gated** (`AskUserQuestion`): direct-merge (doc-only, low churn) vs
+PR-for-CI (behavior/large churn; if PR, merge from a CLEAN tree,
+Learning 250).
+
+**Key files (this session):** **Edited + committed (S275, on `master`,
+pushed):** `R/runModularApp.R` (line 23: false “monolithic version” →
+accurate alias note) + regenerated `man/runModularApp.Rd` (only the
+`@details` `\preformatted`-adjacent line). **No
+`NAMESPACE`/`DESCRIPTION`/`data`/`NEWS`/`vignettes`/`tests` change
+(NAMESPACE diff EMPTY, PROVEN).** Process docs (same commit):
+`CHANGELOG.md` (S275 entry), `PROJECT_LEARNINGS.md` (Learning 254),
+`SESSION_NOTES.md` (this handoff). Reference: `R/runGenekeepr.R` (the
+alias — read, not edited);
+`docs/audits/ISSUE_109_DOC_ERROR_AUDIT_2026-07-04.md` §4 \#9 (the fix
+spec). **NOT committed (standing keep):** `.DS_Store`
+(tracked+modified), `PED_GV_AUDIT_2026-05-30.html` (untracked,
+`.Rbuildignore`d). **Scratchpad (NOT committed):** `s275gate/`
+(build.log, check.log `Status: 2 NOTEs`, gate2.done).
+
+**Gotchas:** (1) **Run the `--as-cran` gate from the REPO ROOT, not the
+scratchpad** — renv activates via the repo-root `.Rprofile`; from
+elsewhere the build fails on missing deps (Learning 254 (1)). Tarball +
+`.Rcheck` land in the repo root but are now gitignored (owner
+`6d445e0d`). (2) **A deferred finding may not truly be blocked** —
+before re-deferring, check whether the defer-reason blocks the *minimal
+correct* fix (Learning 254 (2)). (3) **`runModularApp`’s “for testing
+purposes” phrasing is arguably stale** (it’s the production app now) —
+left untouched (S273 audit didn’t flag it; out of \#9’s scope); a
+candidate for \#110’s doc pass. (4) Carried standing keeps (unchanged):
+package **ARCHIVED on CRAN 2025-07-29**, resubmission owner-gated + HARD
+STOP; `NEWS.md`/`README.md` are GENERATED (edit `.Rmd` + render); a doc
+`R/`+`man/` edit re-stales `--as-cran` (~3 min background from the repo
+root; re-grep check.log for `testthat … OK` + 0 ERROR/WARNING — the
+compact `Status:` grep can truncate the tests line);
+`spell_check_package` hand-add wordlist, never `update_wordlist`;
+`gh issue view`/`gh pr edit` exit 1 →
+`gh api repos/rmsharp/nprcgenekeepr/...`; re-check `git status` before
+ANY destructive git (\[\[check-status-before-destructive-git\]\]); **zsh
+`status` is a read-only special variable**; **version is 2.0.0**
+(DESCRIPTION authoritative; CLAUDE.md header “1.1.0.9000” is stale
+prose).
+
 ### What Session 274 Did
 
 **Deliverable (owner scope-gate via one `AskUserQuestion`, 4
