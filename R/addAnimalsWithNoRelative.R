@@ -8,7 +8,7 @@
 #' \code{kin[['animal_with_no_relative']]} would not be found. See the
 #' following: in \strong{groupAddAssign}
 #'
-#'     \code{available[[i]] <- setdiff(available[[i]], kin[[id]])}
+#'     available[[i]] <- setdiff(available[[i]], kin[[id]])
 #'
 #' @param kin dataframe with kinship values
 #' @param candidates character vector of IDs of the animals available for
