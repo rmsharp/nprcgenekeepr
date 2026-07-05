@@ -19,8 +19,9 @@ calcFGSE(ped, alleles)
 
 - alleles:
 
-  dataframe containing an `AlleleTable`: an `id` column, a `parent`
-  column, and one column per gene-drop iteration. Produced by
+  dataframe containing an `AlleleTable`: one column per gene-drop
+  iteration, followed by an `id` column and a `parent` column. Produced
+  by
   [`geneDrop()`](https://github.com/rmsharp/nprcgenekeepr/reference/geneDrop.md);
   the same input
   [`calcFG`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFG.md)

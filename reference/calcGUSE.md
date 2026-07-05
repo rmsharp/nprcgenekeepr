@@ -14,8 +14,8 @@ calcGUSE(alleles, threshold = 1L, byID = FALSE, pop = NULL)
 
   dataframe containing an `AlleleTable` (the same input
   [`calcGU`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md)
-  takes): an `id` column, a `parent` column, and one integer column per
-  gene-drop iteration. Produced by
+  takes): one integer column per gene-drop iteration, followed by an
+  `id` column and a `parent` column. Produced by
   [`geneDrop()`](https://github.com/rmsharp/nprcgenekeepr/reference/geneDrop.md).
 
 - threshold:

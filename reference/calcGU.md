@@ -18,10 +18,6 @@ calcGU(alleles, threshold = 1L, byID = FALSE, pop = NULL)
   An AlleleTable contains information about alleles an ego has
   inherited. It contains the following columns:
 
-  - `id` — A character vector of IDs for a set of animals.
-
-  - `parent` — A factor with levels of sire and dam.
-
   - `V1` — Unnamed integer column representing allele 1.
 
   - `V2` — Unnamed integer column representing allele 2.
@@ -29,6 +25,10 @@ calcGU(alleles, threshold = 1L, byID = FALSE, pop = NULL)
   - `...` — Unnamed integer columns representing alleles.
 
   - `Vn` — Unnamed integer column representing the nth column.
+
+  - `id` — A character vector of IDs for a set of animals.
+
+  - `parent` — A factor with levels of sire and dam.
 
 - threshold:
 

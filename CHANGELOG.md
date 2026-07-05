@@ -15,6 +15,69 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-05 — \#109 follow-up — AlleleTable column-order docs reconciled to `geneDrop()`’s V-first output; the 5 remaining “code-fix candidates” investigated and declined with evidence (Session 278)
+
+- **Deliverable (owner scope-gate via one `AskUserQuestion`):** the
+  owner asked to take on the “remaining \#109-audit doc-fixed *code-fix*
+  candidates” (the 5 findings S276/S277 listed where the audit offered a
+  code-change alternative to S274’s doc fix: **A**
+  `saveDataframesAsFiles`/`makeExamplePedigreeFile` `"xlsx"` alias,
+  **B** `geneDrop` column reorder, **C**
+  `getPedMaxAge`/`getPyramidAgeDist` living-filter, **D**
+  `assignAlleles` `n = 5000` default, **E** `is_valid_date_str`
+  `format`). A pre-RED **ultracode read-only investigation** (10 agents:
+  5 investigate + 5 adversarial verify, 0 errors; no code/tests written)
+  found **all 5 are `no-docfix-correct`** — S274’s doc fix was the right
+  resolution in every case, matching the audit’s own §6 (“every
+  remaining fix is a pure-doc REFACTOR-class edit”). Adversarially
+  confirmed with concrete reproductions (B’s reorder breaks a positional
+  test and diverges from the frozen V-first `.rda` data; C’s filter is
+  self-defeating and duplicates `fillBins`’s existing `is.na(exit)`; D’s
+  `5000` is the value the owner deliberately abandoned in S201/#2). **Do
+  not re-litigate the 5 candidates — they were investigated and declined
+  with evidence.**
+- **What the investigation surfaced as genuinely real (the
+  deliverable):** S274 corrected
+  [`geneDrop()`](https://github.com/rmsharp/nprcgenekeepr/reference/geneDrop.md)’s
+  `@return` to the actual V-first order (`V1..Vn, id, parent`) but left
+  the CONSUMER docs describing the same allele table as
+  `id, parent, V1..Vn` — an internal doc contradiction. Owner chose
+  **“Fix AlleleTable doc mismatch.”** **REFACTOR-class, doc-only;
+  NAMESPACE diff EMPTY; no signature/logic/behavior change; TDD
+  RED/GREEN N/A; 0 stakeholder corrections / 0 owner overrides.**
+- **The fix (4 `R/` roxygen blocks → 4 regenerated `man/*.Rd`):** an
+  evidence-based grep of the whole allele-table doc surface (broader
+  than the 2 files the investigation named) found four exported
+  consumers describing the order id/parent-first — `calcGU.R`
+  (@itemize), `calcA.R` (“The first 2 columns provide the animal ID…”),
+  `calcFGSE.R`, `calcGUSE.R`. All reordered to
+  [`geneDrop()`](https://github.com/rmsharp/nprcgenekeepr/reference/geneDrop.md)’s
+  canonical `V1..Vn, id, parent`. Left unchanged, with reasons:
+  `calcFG.R`/`calcFEFG.R`/`calcRetention.R` reference “AlleleTable”
+  abstractly with no column order stated; `R/data.R` already describes
+  the example objects V-first (id/parent as the last columns);
+  `geneDrop.R` is the corrected source of truth.
+- **Flagged for a future session (NOT fixed here):**
+  `getGenoDefinedParentGenotypes.R` (`@noRd`, internal) has
+  `@param`/`@return` that mis-describe the *intermediate list* object
+  (`$alleles`/`$counter`) as “data.frame `id, parent, V1 ... Vn`” —
+  wrong at a deeper level than column order, so half-fixing the order
+  alone would still mislead; deserves its own doc-correctness pass.
+- **Verify (firsthand):** `devtools::document()` touched only the 4
+  intended `R/`+`man/` pairs; **NAMESPACE diff EMPTY**; `lintr` **0** on
+  all 4 changed R files; `spell_check_package` **clean** (no WORDLIST
+  churn); **`R CMD check --as-cran` (clean tree) GREEN — 0 errors / 0
+  warnings / 2 NOTEs** (standing benign pair: archived-maintainer CRAN
+  false positive + environmental HTML-Tidy) with
+  `code/documentation mismatches … OK`, `Rd cross-references … OK` (the
+  reworded `\link{calcFG}`/`\link{calcGU}` lines still resolve),
+  `Rd line widths … OK`, examples \[21s\] / `testthat.R [68s] OK` /
+  vignettes rebuilt.
+- **Phase-3E (runtime smoke): N/A (stated, not skipped)** — doc-only
+  REFACTOR; all four function bodies unchanged; empty NAMESPACE diff
+  proven; no runtime/behavior surface. `PROJECT_LEARNINGS.md` Learning
+  257.
+
 ### 2026-07-05 — makeSimPed \#31 — `makeSimPed()` now preserves known parents instead of overwriting them (Session 277)
 
 - **Deliverable (owner scope-gate + 3 TDD phase-gates + landing-gate,
