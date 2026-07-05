@@ -15,6 +15,62 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-04 — issue \#109 — fix roxygen `\code{}` rendered literally inside a `\preformatted{}` code block (`addAnimalsWithNoRelative`) (Session 272)
+
+- **Deliverable (owner scope-gate + fix-form-gate + landing-gate via
+  `AskUserQuestion`):** fix the roxygen2 rendering error issue \#109
+  reports — in `R/addAnimalsWithNoRelative.R:11` a blank-line-preceded,
+  4-space-indented `@details` line becomes a markdown **code block**
+  (`\preformatted{}`) in this markdown-mode package, and the author had
+  *also* wrapped it in `\code{}`; inside `\preformatted{}` the `\code{}`
+  is verbatim, so `man/addAnimalsWithNoRelative.Rd` rendered the literal
+  text `\code{available[[i]] <- setdiff(available[[i]], kin[[id]])}`
+  instead of the code. **REFACTOR-class documentation rendering fix — no
+  R-logic / NAMESPACE / behavior change (NAMESPACE diff empty); TDD
+  RED/GREEN N/A; 0 corrections / 0 overrides** (3 owner gates: audit
+  scope = confirmed-class-only; fix form = drop the `\code{}` wrapper;
+  landing = direct-merge).
+- **Audit for “similar errors” (deterministic, all 203 man pages):** the
+  reported class has **exactly 1 instance** repo-wide. Three independent
+  cross-checks: (a) a brace-matched detector for Rd markup (`\code`,
+  `\link`, `\strong`, …) rendered literally inside a `\preformatted{}`
+  block → **1 hit** (`addAnimalsWithNoRelative.Rd`); (b)
+  [`tools::checkRd()`](https://rdrr.io/r/tools/checkRd.html) over all
+  203 `.Rd` → only a non-ASCII note in `getPyramidAgeDist.Rd`, a **false
+  positive** (`Encoding: UTF-8` is declared, so `--as-cran` accepts it —
+  clean per S270); (c) an R/-source scan of the *cause* pattern (~40
+  indented `\code{}` lines) → **all false positives** (list items and
+  wrapped `@param`/`@return` prose that render correctly — proven
+  because the `.Rd` detector flags none of them; they are not
+  blank-line-preceded code blocks).
+- **The change (1 `R/` line + 1 regenerated `.Rd`, direct-merge to
+  `master`):** removed the `\code{` … `}` wrapper on
+  `R/addAnimalsWithNoRelative.R:11`, leaving the indented line as a
+  plain code block. `man/addAnimalsWithNoRelative.Rd` now renders
+  `\preformatted{available[[i]] <- setdiff(available[[i]], kin[[id]])}`
+  (the code, not its markup). The `@description`’s inline
+  `\code{}`/`\strong{}` uses render correctly and were left untouched
+  (raw-Rd-vs-markdown style, not rendering errors — scope discipline).
+- **Verify (firsthand):** `devtools::document()` touched **only** the
+  two intended files; **NAMESPACE diff empty**; the `.Rd` diff is
+  exactly the one-line de-wrapping; the \#109 detector re-run reports
+  **0** occurrences across all 203 man pages; new source line 59 chars
+  (≤80), `lintr` = 0 on the changed file; `spell_check_package` — the
+  changed file’s flagged words (`groupAddAssign`, `kinships`) are
+  already in `inst/WORDLIST`, so no new spelling;
+  **`R CMD check --as-cran` GREEN 0 errors / 0 warnings / 2 NOTEs** with
+  `Rd files … OK`, `Rd cross-references … OK`,
+  `code/documentation mismatches … OK`, examples (21s)/tests
+  (`testthat.R [68s/68s] OK`)/Rd/vignettes/PDF all OK. The 2 NOTEs are
+  the same benign pair as S264–S270 (archived-maintainer false
+  positive + environmental HTML-Tidy/V8 note — not caused by the edit,
+  absent on CI).
+- **Surfaced-not-acted (out of scope):** `spell_check_package()` also
+  flags `errored` in `NEWS.md`/`NEWS.Rmd` (entered at S270’s `ce9edad0`)
+  — a valid tech-English word missing from `inst/WORDLIST`; a WORDLIST
+  add, unrelated to this markup fix. Flagged, not touched. issue \#109’s
+  reported error class is now fully clean.
+
 ### 2026-07-04 — issue \#114 — land PR \#115 (rebase-merge to `master`) + branch cleanup (Session 271)
 
 - **Deliverable (owner-directed; merge method owner-gated via

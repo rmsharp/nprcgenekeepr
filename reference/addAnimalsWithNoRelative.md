@@ -28,7 +28,7 @@ animal without a relative.
 
 ## Details
 
-    \code{available[[i]] <- setdiff(available[[i]], kin[[id]])}
+    available[[i]] <- setdiff(available[[i]], kin[[id]])
 
 ## Examples
 
