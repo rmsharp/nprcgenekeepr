@@ -77,7 +77,8 @@ test_that("countKinshipValues makes correct structure", {
 })
 
 test_that("countKinshipValues counts kinship values correctly", {
-  expect_equal(counts$kCounts[[10L]], c(6L, 4L))
+  ## Re-baselined S277: makeSimPed now preserves A's known sire Q (#31).
+  expect_equal(counts$kCounts[[10L]], 10L)
   expect_equal(counts$kValues[[7L]], c(0.125, 0.25))
   expect_identical(as.character(counts$kIds[[3L]]), c("A", "C"))
 })

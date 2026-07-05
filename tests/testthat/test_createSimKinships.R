@@ -65,7 +65,9 @@ test_that("createSimKinships creates the correct kinship matrices structure", {
   expect_equal(length(simKinships), n)
   expect_equal(length(simKinships[[1L]]), 17L * 17L)
   expect_equal(nrow(simKinships[[1L]]), 17L)
-  expect_equal(test_EN, c(0.125, 0.0, 0.0, 0.0, 0.125, 0.125, 0.0, 0.0, 0.0,
+  ## Re-baselined S277: makeSimPed now preserves A's known sire Q (#31),
+  ## shifting this characterization vector.
+  expect_equal(test_EN, c(0.0, 0.0, 0.125, 0.0, 0.0, 0.125, 0.0, 0.0, 0.125,
                           0.125))
 })
 

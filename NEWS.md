@@ -6,6 +6,14 @@ R. Mark Sharp, Ph.D.
 # nprcgenekeepr (development version)
 
 - Changes
+  - `makeSimPed()` now preserves a known parent instead of overwriting
+    it. Previously it drew a random sire and dam for every listed
+    animal, so an animal with one known and one unknown parent had its
+    known parent replaced by a random candidate (or set to `NA` when the
+    candidate vector was empty), silently biasing the simulated-kinship
+    estimate. It now imputes only an unknown (`NA`) parent and leaves a
+    known one unchanged, which also corrects `createSimKinships()` and
+    `cumulateSimKinships()` for such animals.
   - `runGeneKeepR()` is again the primary Shiny entry point; its name
     says what it does. `runModularApp()` is now the soft-deprecated
     alias that forwards to `runGeneKeepR()`, so existing

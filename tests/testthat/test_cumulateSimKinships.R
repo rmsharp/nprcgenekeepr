@@ -59,7 +59,8 @@ testEN <- simKinships$meanKinship[
 ]
 
 test_that("cumulateSimKinships creates the correct kinship summary structure", {
-  expect_equal(testEN, 0.041250, tolerance = 0.000001)
+  ## Re-baselined S277: makeSimPed now preserves A's known sire Q (#31).
+  expect_equal(testEN, 0.060000, tolerance = 0.000001)
   expect_length(simKinships, 4L)
   expect_equal(names(simKinships), c(
     "meanKinship", "sdKinship", "minKinship",

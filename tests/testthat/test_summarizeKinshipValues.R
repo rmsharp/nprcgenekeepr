@@ -71,13 +71,15 @@ test_that("summarizeKinshipValues makes correct structure", {
 test_that("summarizeKinshipValues summarizes kinship values correctly", {
   expect_identical(stats$id_1[10L], "A")
   expect_identical(stats$id_2[10L], "J")
+  ## Re-baselined S277: makeSimPed now preserves A's known sire Q (#31); pair
+  ## (A, J) is unrelated in every sim under this seed, so its stats are all 0.
   expect_equal(stats$min[10L], 0L)
   expect_equal(stats$secondQuartile[10L], 0L)
-  expect_equal(stats$mean[10L], 0.1, tolerance = 0.01)
+  expect_equal(stats$mean[10L], 0, tolerance = 0.01)
   expect_equal(stats$median[10L], 0L)
-  expect_equal(stats$thirdQuartile[10L], 0.25)
-  expect_equal(stats$max[10L], 0.25)
-  expect_equal(stats$sd[10L], 0.1290994, tolerance = 0.00001)
+  expect_equal(stats$thirdQuartile[10L], 0)
+  expect_equal(stats$max[10L], 0)
+  expect_equal(stats$sd[10L], 0, tolerance = 0.00001)
 })
 
 test_that("summarizeKinshipValues second quartile is the lower hinge, not the minimum (NEW-16)", {

@@ -3,10 +3,11 @@
 
 #' Make a simulated pedigree from representative sires and dams
 #'
-#' For each \code{id} in \code{allSimParents}, the sire and dam are
-#' (re)assigned by a random draw from the supplied representative vectors
-#' (\code{sires} and \code{dams}). An empty vector yields an \code{NA}
-#' parent. Existing known parents are overwritten.
+#' For each \code{id} in \code{allSimParents}, an \emph{unknown} (\code{NA})
+#' sire or dam is imputed by a random draw from the supplied representative
+#' vectors (\code{sires} and \code{dams}); a \emph{known} sire or dam is
+#' preserved unchanged. When a parent is unknown and its representative
+#' vector is empty, that parent remains \code{NA}.
 #'
 #' The algorithm assigns parents randomly from the lists of possible sires and
 #' dams and does not prevent a dam from being selected more than once within
@@ -55,26 +56,32 @@ makeSimPed <- function(ped, allSimParents, verbose = FALSE) {
   }
 
   for (i in seq_len(nIds)) {
-    if (length(allSimParents[[i]]$sires) == 0L) {
-      ped$sire[ped$id == allSimParents[[i]]$id] <- NA
-      if (verbose) {
-        message("id #", i, " is ", allSimParents[[i]]$id, " and has no sire\n")
+    id_i <- allSimParents[[i]]$id
+    sireNow <- ped$sire[ped$id == id_i]
+    damNow <- ped$dam[ped$id == id_i]
+    ## Impute ONLY an unknown (NA) sire; a known sire is preserved.
+    if (length(sireNow) == 1L && is.na(sireNow)) {
+      if (length(allSimParents[[i]]$sires) == 0L) {
+        ped$sire[ped$id == id_i] <- NA
+        if (verbose) {
+          message("id #", i, " is ", id_i, " and has no sire\n")
+        }
+      } else {
+        ped$sire[ped$id == id_i] <-
+          sample(allSimParents[[i]]$sires, size = 1L)
       }
-    } else {
-      ped$sire[ped$id == allSimParents[[i]]$id] <-
-        sample(allSimParents[[i]]$sires, size = 1L)
     }
-    if (length(allSimParents[[i]]$dams) == 0L) {
-      ped$dam[ped$id == allSimParents[[i]]$id] <- NA
-      if (verbose) {
-        message(
-          "id #", i, " is ", allSimParents[[i]]$id,
-          " and has no dam\n"
-        )
+    ## Impute ONLY an unknown (NA) dam; a known dam is preserved.
+    if (length(damNow) == 1L && is.na(damNow)) {
+      if (length(allSimParents[[i]]$dams) == 0L) {
+        ped$dam[ped$id == id_i] <- NA
+        if (verbose) {
+          message("id #", i, " is ", id_i, " and has no dam\n")
+        }
+      } else {
+        ped$dam[ped$id == id_i] <-
+          sample(allSimParents[[i]]$dams, size = 1L)
       }
-    } else {
-      ped$dam[ped$id == allSimParents[[i]]$id] <-
-        sample(allSimParents[[i]]$dams, size = 1L)
     }
   }
   ped

@@ -20,10 +20,11 @@ to print out when an animal is missing a sire or a dam.}
 simulated pedigree in data.frame format with the id, sire, and dam.
 }
 \description{
-For each \code{id} in \code{allSimParents}, the sire and dam are
-(re)assigned by a random draw from the supplied representative vectors
-(\code{sires} and \code{dams}). An empty vector yields an \code{NA}
-parent. Existing known parents are overwritten.
+For each \code{id} in \code{allSimParents}, an \emph{unknown} (\code{NA})
+sire or dam is imputed by a random draw from the supplied representative
+vectors (\code{sires} and \code{dams}); a \emph{known} sire or dam is
+preserved unchanged. When a parent is unknown and its representative
+vector is empty, that parent remains \code{NA}.
 }
 \details{
 The algorithm assigns parents randomly from the lists of possible sires and

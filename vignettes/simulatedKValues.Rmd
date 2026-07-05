@@ -224,20 +224,21 @@ Comparing the values and variation found for the various kinship values:
 stats_short <- stats_10[stats_10$sd > 0.0, ]
 stats_long <- stats_1000[stats_1000$sd > 0.0, ]
 
-if (any(stats_short$id_1 != stats_long$id_1) ||
-  any(stats_short$id_2 != stats_long$id_2)) {
-  cat("At least one row represents a different animal pair")
-}
+## Align the short and long summaries by animal pair: the sd > 0 sets can
+## differ in size between simulation lengths, so join on the ID pair rather
+## than by row position.
+merged <- merge(stats_short, stats_long, by = c("id_1", "id_2"),
+                suffixes = c("_short", "_long"))
 
 comprison <- data.frame(
-  id_1 = stats_short$id_1,
-  id_2 = stats_short$id_2,
-  meanKin_short = stats_short$mean,
-  meanKin_long = stats_long$mean,
-  meanKinDelta = abs(stats_short$mean - stats_long$mean),
-  sdKin_short = stats_short$sd,
-  sdKin_long = stats_long$sd,
-  sdKinDelta = abs(stats_short$sd - stats_long$sd)
+  id_1 = merged$id_1,
+  id_2 = merged$id_2,
+  meanKin_short = merged$mean_short,
+  meanKin_long = merged$mean_long,
+  meanKinDelta = abs(merged$mean_short - merged$mean_long),
+  sdKin_short = merged$sd_short,
+  sdKin_long = merged$sd_long,
+  sdKinDelta = abs(merged$sd_short - merged$sd_long)
 )
 
 kable(comprison,
@@ -260,20 +261,21 @@ kable(comprison,
 stats_short <- stats_100[stats_100$sd > 0.0, ]
 stats_long <- stats_1000[stats_1000$sd > 0.0, ]
 
-if (any(stats_short$id_1 != stats_long$id_1) ||
-  any(stats_short$id_2 != stats_long$id_2)) {
-  cat("At least one row represents a different animal pair")
-}
+## Align the short and long summaries by animal pair: the sd > 0 sets can
+## differ in size between simulation lengths, so join on the ID pair rather
+## than by row position.
+merged <- merge(stats_short, stats_long, by = c("id_1", "id_2"),
+                suffixes = c("_short", "_long"))
 
 comprison <- data.frame(
-  id_1 = stats_short$id_1,
-  id_2 = stats_short$id_2,
-  meanKin_short = stats_short$mean,
-  meanKin_long = stats_long$mean,
-  meanKinDelta = abs(stats_short$mean - stats_long$mean),
-  sdKin_short = stats_short$sd,
-  sdKin_long = stats_long$sd,
-  sdKinDelta = abs(stats_short$sd - stats_long$sd)
+  id_1 = merged$id_1,
+  id_2 = merged$id_2,
+  meanKin_short = merged$mean_short,
+  meanKin_long = merged$mean_long,
+  meanKinDelta = abs(merged$mean_short - merged$mean_long),
+  sdKin_short = merged$sd_short,
+  sdKin_long = merged$sd_long,
+  sdKinDelta = abs(merged$sd_short - merged$sd_long)
 )
 
 kable(comprison,

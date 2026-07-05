@@ -137,3 +137,71 @@ test_that("makeSimPed does not mutate the caller's pedigree (NEW-53)", {
   expect_identical(class(pedDF), "data.frame")
   expect_identical(paste0(pedDF$sire, collapse = "\r"), sireSnapshot)
 })
+
+## Guard-known-parents contract (issue #109 finding #31, S277).
+## makeSimPed must impute ONLY unknown (NA) parents and preserve known ones:
+## a known sire/dam is left untouched regardless of the candidate vector, and
+## only an unknown (NA) parent is (re)drawn from the representative pool.
+
+test_that("makeSimPed preserves a known sire while imputing the unknown dam", {
+  ped <- data.frame(
+    id = c("KS", "X"),
+    sire = c(NA_character_, "KS"),
+    dam = c(NA_character_, NA_character_),
+    stringsAsFactors = FALSE
+  )
+  set_seed(seed = 1L)
+  simPed <- makeSimPed(
+    ped,
+    list(list(id = "X", sires = c("s1", "s2", "s3"), dams = c("d1", "d2")))
+  )
+  expect_identical(simPed$sire[simPed$id == "X"], "KS")
+  expect_true(simPed$dam[simPed$id == "X"] %in% c("d1", "d2"))
+})
+
+test_that("makeSimPed does not erase a known sire given an empty vector", {
+  ped <- data.frame(
+    id = c("KS", "X"),
+    sire = c(NA_character_, "KS"),
+    dam = c(NA_character_, NA_character_),
+    stringsAsFactors = FALSE
+  )
+  set_seed(seed = 1L)
+  simPed <- makeSimPed(
+    ped,
+    list(list(id = "X", sires = NULL, dams = c("d1", "d2")))
+  )
+  expect_identical(simPed$sire[simPed$id == "X"], "KS")
+})
+
+test_that("makeSimPed preserves both parents when both are known", {
+  ped <- data.frame(
+    id = c("KS", "KD", "Y"),
+    sire = c(NA_character_, NA_character_, "KS"),
+    dam = c(NA_character_, NA_character_, "KD"),
+    stringsAsFactors = FALSE
+  )
+  set_seed(seed = 1L)
+  simPed <- makeSimPed(
+    ped,
+    list(list(id = "Y", sires = c("s1", "s2"), dams = c("d1", "d2")))
+  )
+  expect_identical(simPed$sire[simPed$id == "Y"], "KS")
+  expect_identical(simPed$dam[simPed$id == "Y"], "KD")
+})
+
+test_that("makeSimPed still imputes an unknown parent from the pool", {
+  ped <- data.frame(
+    id = "Z",
+    sire = NA_character_,
+    dam = NA_character_,
+    stringsAsFactors = FALSE
+  )
+  set_seed(seed = 1L)
+  simPed <- makeSimPed(
+    ped,
+    list(list(id = "Z", sires = c("s1", "s2", "s3"), dams = c("d1", "d2")))
+  )
+  expect_true(simPed$sire[simPed$id == "Z"] %in% c("s1", "s2", "s3"))
+  expect_true(simPed$dam[simPed$id == "Z"] %in% c("d1", "d2"))
+})
