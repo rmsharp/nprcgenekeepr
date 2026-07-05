@@ -15,6 +15,42 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-04 — issue \#114 — land PR \#115 (rebase-merge to `master`) + branch cleanup (Session 271)
+
+- **Deliverable (owner-directed; merge method owner-gated via
+  `AskUserQuestion`):** merge **PR \#115** — the S270
+  `getPedDirectRelatives(unrelatedParents = TRUE)` fix — into `master`.
+  A landing/merge of already-complete, CI-certified code (no new `R/`
+  change), so **no local re-gate**: the PR’s **10/10 green CI checks**
+  plus a proven byte-identical branch tree are the certification. **0
+  corrections / 0 overrides** (1 owner gate: merge method = **Rebase**,
+  deleting the branch).
+- **What landed:** re-verified the PR green (`MERGEABLE / CLEAN`, all
+  checks pass, body “Fixes \#114”) before merging; owner-gated the
+  method (all 3 enabled, master history strictly linear) → **Rebase**.
+  Result: **PR \#115 MERGED** (`mergeCommit 79125a0b`), **issue \#114
+  auto-CLOSED**, `master` == `origin/master` at `79125a0b` (fix commit
+  `ce9edad0` + close-out docs), feature branch deleted **local +
+  remote**.
+- **Snag + clean recovery (self-inflicted, nothing lost):**
+  `gh pr merge --rebase --delete-branch` was run from the PR branch with
+  an uncommitted S271 stub in `SESSION_NOTES.md`; the **remote merge ran
+  first and succeeded** (issue closed), then the **local** branch-delete
+  checkout aborted on the dirty file. Recovery: confirmed the merge via
+  `gh pr view` before any git surgery, stashed/popped carefully
+  (preserving an unrelated `dev` stash), proved
+  `git diff <branch> 79125a0b` **empty**, then completed the delete
+  manually (`git push origin --delete` + `git branch -D` — force, since
+  rebase gives non-ancestor SHAs). `delete_branch_on_merge` is off at
+  repo level, so the branch never auto-deletes.
+- **Verify (firsthand):** PR MERGED + issue CLOSED (`gh`); `master`
+  local == origin; both fix commits on master; branch absent local +
+  remote; **Phase-3E runtime smoke on the merged master tree** —
+  `test_getPedDirectRelatives.R` all pass.
+- **Learning 250** (`gh pr merge --delete-branch` needs a fully clean
+  tree; complete cleanup manually if it aborts) + memory pointer added.
+  **No open landing remains** — issue \#114 closed.
+
 ### 2026-07-04 — issue \#114 — fix `getPedDirectRelatives(unrelatedParents = TRUE)` crash (Session 270)
 
 - **Deliverable (owner-gated throughout via `AskUserQuestion`):** fix
