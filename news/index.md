@@ -286,6 +286,15 @@
     the new
     [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
     to choose an evidence-based count for a particular pedigree.
+  - `getPedDirectRelatives(unrelatedParents = TRUE)` now returns a
+    placeholder ego record (with `sire` and `dam` set to `NA`) for each
+    parent referenced in the pedigree that has no record of its own,
+    rather than failing. Previously the `TRUE` branch errored
+    (`replacement has 1 row, data has 0`) when such a parent was
+    present, and was a silent no-op equal to the `FALSE` result when
+    none was; no caller exercised it, so the defect was dormant. The
+    `unrelatedParents = FALSE` result is unchanged (issue
+    [\#114](https://github.com/rmsharp/nprcgenekeepr/issues/114)).
 - New features
   - Added the exported
     [`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md),

@@ -7,6 +7,207 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 270 Did
+
+**Deliverable (owner-gated throughout via `AskUserQuestion`):** issue
+\#114 – fix the `getPedDirectRelatives(unrelatedParents = TRUE)`
+behavior bug S269 surfaced. **Behavior fix to an exported function –
+STRICT TDD (RED -\> GREEN; REFACTOR = none needed). DONE + VERIFIED;
+landed via PR \#115 (awaiting CI + owner merge). 0 stakeholder
+corrections / 0 owner overrides** (6 owner gates via `AskUserQuestion`:
+(a) open issue \#114 first; (b) approach = implement the documented
+placeholder behavior; (c) PRE-RED-\>RED; (d) RED-\>GREEN; (e)
+GREEN-\>REFACTOR = no refactor; (f) NEWS = yes + landing = PR-for-CI).
+**Started / Completed:** 2026-07-04 / 2026-07-04 **Status:** **DONE +
+gate GREEN + on branch `fix/issue-114-unrelated-parents`; PR \#115 open
+for CI; NOT yet merged (owner merges after CI green).** - **The bug
+(proven by RUNNING it, not the handoff’s characterization):** with a
+referenced-but-absent parent present, `unrelatedParents = TRUE`
+**threw** `replacement has 1 row, data has 0`; with none present it was
+a silent no-op equal to `FALSE`. S269 characterized it as “no effect
+(same as `FALSE`)” and suggested GREEN = “assign the discarded
+[`addIdRecords()`](https://github.com/rmsharp/nprcgenekeepr/reference/addIdRecords.md)
+return” – BOTH incomplete: it crashes, and assigning the return errors
+at the same line (root cause below). - **Root cause:**
+[`addIdRecords()`](https://github.com/rmsharp/nprcgenekeepr/reference/addIdRecords.md)
+retrieves rows FROM `fullPed` (`fullPed[fullPed$id %in% ids, ]`). In
+`getPedDirectRelatives` `fullPed == ped` and the `unrelated` ids are by
+construction NOT in `ped$id`, so the retrieval is always 0 rows and
+`addToPed$sire <- NA` fails on a 0-row frame.
+[`addIdRecords()`](https://github.com/rmsharp/nprcgenekeepr/reference/addIdRecords.md)
+is the WRONG tool here; it is correct for its other caller
+`addBackSecondParents.R:51` (ids present in `fullPed`) and was left
+UNTOUCHED. - **The fix (`R/getPedDirectRelatives.R`, body-only):**
+capture `relatives <- ped[ped$id %in% ids, ]`; when `unrelatedParents`
+and there ARE unrelated parents, synthesize one all-NA row per absent id
+(`relatives[rep(NA_integer_, length(unrelated)), ]`, then
+`$id <- unrelated`, `$sire <- NA`, `$dam <- NA`), `rbind`, reset
+rownames, return. The `FALSE` result is unchanged. No roxygen /
+signature / NAMESPACE change. - **TDD:** RED – 2 `test_that` added to
+`tests/testthat/test_getPedDirectRelatives.R`: a referenced-but-absent
+parent `Z` -\> asserts `TRUE` returns the `Z` placeholder with
+`sire`/`dam` NA and is a superset of `FALSE` (FAILED with the documented
+error); a guard that with no unrelated parents `TRUE` == `FALSE` (passed
+then + now). GREEN – the synthesize fix; both pass. - **Verify
+(firsthand):** target file all pass; **full suite 0 real failed / 0 real
+errors** (1166 real contexts, `NOT_CRAN=true`; baseline
+`test-app-`/`test-e2e-` also 0/0 this run); `lintr` = 0 on the changed
+file; `spell_check_package` clean; **NAMESPACE diff empty**;
+**`R CMD check --as-cran` 0 errors / 0 warnings / `Status: 2 NOTEs`**
+with `code/documentation mismatches ... OK`, examples (20s) /
+`testthat.R [66s/66s] OK` (re-grepped, per Gotcha) / vignettes / PDF OK;
+**Phase-3E installed-namespace smoke** against the `.Rcheck` build
+(imports enforced, not `load_all`) -\> `TRUE` returns the `Z`
+placeholder row with NA parents.
+
+**The 2 NOTEs (both benign):** same pair as S264-S269 (CRAN incoming
+feasibility archived-maintainer false positive + environmental
+HTML-Tidy/V8) – not caused by this change, absent on CI.
+
+**Phase-3E (runtime smoke): DONE (not N/A – this is a behavior change to
+an exported fn).** Installed-namespace smoke PASS (above). FM \#24
+addressed.
+
+**Session 269 Handoff Evaluation (by Session 270): Score 8/10.** S269
+SURFACED this exact bug, flagged it as the top SUGGESTED-NEXT with a
+precise location
+(`lines 65-68 discard addIdRecords's return; line 70 returns ped[ped$id %in% ids, ]`),
+prescribed STRICT TDD, gave the RED test shape almost verbatim (“a test
+that … `unrelatedParents = TRUE` returns the ego rows with NA parents”),
+and correctly deferred the issue-open decision to the owner. **What
+helped:** the surfacing + reproducer location + “STRICT TDD, its own
+session” framing were turnkey; every standing keep held (version 2.0.0,
+package ARCHIVED, `.DS_Store`/`PED_GV_AUDIT` keeps, the 2 benign NOTEs,
+the build-artifact-not-gitignored trap, the `--as-cran` ~3-min
+background gotcha). Ghost-check clean (HEAD `e7c4e6a9` == documented
+S269 close-out). **What was WRONG (the -2):** (1) it characterized the
+bug as “NO effect (same as `FALSE`)” – true ONLY when there are zero
+unrelated parents; with a genuine unrelated parent it CRASHES (S269
+tested only the clean `lacy1989Ped`, which has none); (2) its suggested
+GREEN (“assign the `addIdRecords` result and return it”) does NOT work –
+it errors at the same line, because `addIdRecords` retrieves from
+`fullPed = ped` for ids absent from `ped`. A less careful executor who
+coded S269’s GREEN literally would have shipped a still-broken fix.
+**What SAVED it:** S269 explicitly prescribed STRICT TDD, and RED (write
+the failing test first) is exactly what exposed the crash + falsified
+the naive GREEN – so the process it prescribed self-corrected its own
+wrong fix. Net: excellent surfacing + TDD framing, docked for the wrong
+GREEN + incomplete behavior characterization -\> 8. **ROI:** high (the
+bug would not have been on the radar without S269’s read-the-body
+diligence).
+
+**Self-assessment (Session 270): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean), reported, STOPPED for the owner; wrote
+the 1B stub BEFORE any technical work; declared the TDD phase at the top
+of every working response and gated all three transitions
+(PRE-RED-\>RED, RED-\>GREEN, GREEN-\>REFACTOR) plus the pre-RED
+approach + issue + landing decisions via `AskUserQuestion`.
+**Strengths:** (1) **ran the actual function before trusting the
+handoff** – discovered the bug CRASHES (not “no effect”) AND that S269’s
+suggested GREEN does not work, BEFORE writing a line of implementation;
+(2) **RED-first caught the wrong fix** – the failing test surfaced the
+crash and falsified the naive GREEN, the textbook payoff of tests-first
+on a never-executed branch; (3) **root-caused precisely** (addIdRecords
+retrieves from fullPed for ids absent-by-construction) and chose the
+correct fix shape (synthesize rows) while leaving addIdRecords correct
+for its real caller (scope discipline, FM \#8); (4) **full non-doc
+gate + Phase-3E installed-namespace smoke** for a behavior change (not
+the doc-only direct-merge shortcut); (5) **right-sized** – a
+deterministic REPL probe proved the crash; no adversarial Workflow
+needed (cf. Learning 248 (5)); (6) **caught the build-artifact trap**
+(removed tarball + `.Rcheck/`, added files by path, never `git add -A`)
+and left the `.DS_Store`/`PED_GV_AUDIT` standing keeps untouched; (7)
+**opened issue \#114 + PR \#115 as owner-approved outward actions**, not
+unilaterally; recorded a genuinely novel **Learning 249**. **Weakness
+(the -1):** the fix is small (a ~10-line branch) and the RED test could
+additionally assert the placeholder’s non-id/sire/dam columns are NA and
+an exact row count – I asserted presence + NA parents + superset, which
+is sufficient but not maximal. Correct + disciplined; capped at 9.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 249** – “a
+dormant, never-exercised parameter branch may CRASH, not just no-op; a
+predecessor’s one-line suggested fix for dead code is an unverified
+hypothesis that RED falsifies; the correct fix synthesizes rows rather
+than reusing a helper built for a different shape.” Genuinely novel
+(first STRICT-TDD behavior fix since the long \#103 doc stretch; lifts
+Learning 247 from doc-cluster claims to behavior-fix suggestions).
+Carried as applied: \[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[avoid-reconcile-tools-on-curated-files\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a STRICT-TDD
+behavior-fix session – RED -\> GREEN executed; REFACTOR = none.**
+
+**=\> SUGGESTED NEXT.** issue \#114 is fixed on branch
+`fix/issue-114-unrelated-parents` (PR \#115). **First: watch PR \#115 CI
+and merge when green** (owner’s call; do NOT merge unilaterally, FM
+\#13). Then candidate deliverables (owner picks): - **issue \#109
+(roxygen2 errors):** use the S268 Learning 248 doubled-`.Rd` detector
+(`grep` `man/*.Rd` line-2 `% Please edit ...` comments for entries
+citing TWO source files) + a general roxygen-warning sweep. - **Older
+backlog:** \#112 (heatmap/dashboard), \#111 (code coverage), \#110
+(runGeneKeepR deprecation Q), \#37 (exported fns unused by app – the
+now-fixed `unrelatedParents` was adjacent), \#36, \#28, \#12, \#11,
+\#10, \#5; the CRAN thread (Phase 5b, owner-run outward). Standing
+non-doc item: the **build-artifacts-not-gitignored** fix (Gotcha 2) is
+still open. **Each stage editing `R/` SHIPS -\> after each: re-gate
+(`--as-cran`, BACKGROUNDED) AND `lintr` AND `spell_check_package`
+(hand-add wordlist terms, never `update_wordlist`); for any
+behavior/NAMESPACE-changing stage ALSO STRICT TDD + NAMESPACE diff +
+Phase-3E installed-namespace smoke.** **Landing owner-gated each time**
+(`AskUserQuestion`): direct-merge (doc-only, low `man/` churn) vs
+PR-for-CI (behavior/executing changes or large churn).
+
+**Key files (this session):** **On branch
+`fix/issue-114-unrelated-parents` (fix commit `4bbfb32a`):**
+`R/getPedDirectRelatives.R` (synthesize placeholders),
+`tests/testthat/test_getPedDirectRelatives.R` (2 new `test_that`),
+`NEWS.Rmd` (dev-version Changes bullet) + `NEWS.md` (regenerated).
+**Read-for-evidence (unchanged):** `R/addIdRecords.R` (root cause:
+retrieves from `fullPed`), `R/addBackSecondParents.R:51` (addIdRecords’s
+correct two-tier caller), `R/getFileDirectRelatives.R` /
+`R/getLkDirectRelatives.R` (siblings thread `unrelatedParents` through,
+default FALSE). **Close-out docs (docs commit on the same branch):**
+`CHANGELOG.md` (S270 entry), `PROJECT_LEARNINGS.md` (Learning 249),
+`SESSION_NOTES.md` (this handoff). **NOT committed (standing keep / not
+mine / regenerable):** `.DS_Store` (TRACKED + modified – pre-existing,
+untouched), `PED_GV_AUDIT_2026-05-30.html` (untracked,
+`.Rbuildignore`d), `dashboard.html` (generated),
+`nprcgenekeepr_2.0.0.tar.gz` + `nprcgenekeepr.Rcheck/` (build artifacts
+created + deleted at close-out; NOT gitignored – Gotcha 2).
+
+**Gotchas:** (1) **PR \#115 is NOT merged** – watch CI
+(`gh pr checks 115`) and merge when green; do NOT merge unilaterally (FM
+\#13, owner’s call). Two commits on the branch: `4bbfb32a` (fix +
+tests + NEWS) and the close-out-docs commit. (2) **The local `--as-cran`
+emits 2 benign NOTEs** (archived-maintainer + HTML-Tidy/V8) – do NOT
+read `Status: 2 NOTEs` as a defect; re-grep the check.log for
+`testthat ... OK` + a 0 ERROR/WARNING count (the compact `Status:` grep
+can truncate the tests result). (3) **Build artifacts (tarball +
+`.Rcheck/`) are NOT gitignored** – add files by path, never
+`git add -A`, and delete artifacts at close-out. (4) **The `--as-cran`
+run takes ~3 min** -\> BACKGROUND it. (5) Carried standing keeps
+(unchanged): package **ARCHIVED on CRAN 2025-07-29**, CRAN resubmission
+owner-gated (win-builder / R-hub / `submit_cran()` OWNER-run outward +
+HARD STOP); `NEWS.md`/`README.md` are GENERATED (edit
+`NEWS.Rmd`/`README.Rmd` +
+[`rmarkdown::render`](https://pkgs.rstudio.com/rmarkdown/reference/render.html));
+module/E2E tests need `NOT_CRAN=true` but `--as-cran` SKIPS them via
+`skip_on_cran`; a 0/0/N check does NOT imply spelling-clean -\>
+`spell_check_package` (hand-add wordlist, never `update_wordlist`);
+`git pull` is rebase + chokes on unstaged tracked changes (stash
+`.DS_Store` if it blocks a checkout); re-check `git status` before ANY
+`reset --hard` (\[\[check-status-before-destructive-git\]\]);
+**`gh pr edit` exits 1 on this repo -\> `gh api PATCH`
+(\[\[gh-pr-edit-projectcards-workaround\]\])** (note: `gh pr create`
+worked fine this session); **zsh `status` is a read-only special
+variable**; **the version is 2.0.0** (DESCRIPTION authoritative;
+CLAUDE.md header “1.1.0.9000” is stale prose).
+
 ### What Session 269 Did
 
 **Deliverable (owner approach-gate + landing-gate via

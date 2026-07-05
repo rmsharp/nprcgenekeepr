@@ -15,6 +15,64 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-04 — issue \#114 — fix `getPedDirectRelatives(unrelatedParents = TRUE)` crash (Session 270)
+
+- **Deliverable (owner-gated throughout via `AskUserQuestion`):** fix
+  the behavior bug S269 surfaced —
+  `getPedDirectRelatives(unrelatedParents = TRUE)` errored
+  (`replacement has 1 row, data has 0`) whenever a referenced parent had
+  no ego record, and was a silent no-op equal to the `FALSE` result
+  otherwise. **Behavior fix to an exported function — STRICT TDD (RED →
+  GREEN; REFACTOR = none needed); 0 stakeholder corrections / 0
+  overrides** (owner gates: open issue \#114 first; approach = implement
+  the documented placeholder behavior; PRE-RED→RED, RED→GREEN,
+  GREEN→REFACTOR gates; NEWS entry = yes; landing = PR-for-CI).
+- **The change (`R/getPedDirectRelatives.R` body; PR \#115):** the
+  `unrelatedParents = TRUE` branch now synthesizes one all-`NA` row per
+  referenced-but-absent parent (`id` set, `sire`/`dam` = `NA`) and
+  `rbind`s them, returning a data.frame — instead of discarding a
+  misapplied
+  [`addIdRecords()`](https://github.com/rmsharp/nprcgenekeepr/reference/addIdRecords.md)
+  call.
+  [`addIdRecords()`](https://github.com/rmsharp/nprcgenekeepr/reference/addIdRecords.md)
+  is untouched (it is correct for its other caller
+  `addBackSecondParents.R:51`, which passes ids that exist in `fullPed`;
+  it is simply the wrong tool here). The `FALSE` result is unchanged. No
+  roxygen / signature / NAMESPACE change.
+- **Root cause (firsthand, proven by running it):**
+  [`addIdRecords()`](https://github.com/rmsharp/nprcgenekeepr/reference/addIdRecords.md)
+  retrieves rows *from* `fullPed` (`fullPed[fullPed$id %in% ids, ]`);
+  with `fullPed == ped` and `ids == unrelated` (ids **not** in `ped$id`
+  by construction), that is always 0 rows, and `addToPed$sire <- NA`
+  then errors on a 0-row frame. So S269’s suggested “just assign the
+  return” fix would **not** have worked — it errors at the same spot.
+  RED (the failing test) exposed this before any implementation.
+- **TDD:** RED — two `test_that` blocks added to
+  `tests/testthat/test_getPedDirectRelatives.R`: (1) a ped where `Z` is
+  referenced as a dam with no ego record → asserts `TRUE` returns the
+  `Z` placeholder with `sire`/`dam` = `NA` and is a superset of the
+  `FALSE` result (failed with the documented error); (2) a guard that
+  with no unrelated parents `TRUE` == `FALSE` (passed then and now).
+  GREEN — the synthesize fix; both new tests pass.
+- **Verify (firsthand):** target test file all pass; **full suite 0 real
+  failed / 0 real errors** (1166 real contexts, `NOT_CRAN=true`);
+  `lintr` = 0 on the changed file; `spell_check_package` clean;
+  **NAMESPACE diff empty** (signature unchanged);
+  **`R CMD check --as-cran` GREEN 0 errors / 0 warnings / 2 NOTEs** with
+  `code/documentation mismatches … OK`, examples (20s) /
+  `testthat.R [66s/66s] OK` / vignettes / PDF all OK; **Phase-3E
+  installed-namespace smoke** (against the `.Rcheck` build, imports
+  enforced) — `getPedDirectRelatives(unrelatedParents = TRUE)` returns
+  the `Z` placeholder row with NA parents. The 2 NOTEs are the same
+  benign pair as S264–S269 (archived-maintainer false positive +
+  environmental HTML-Tidy/V8 note — not caused by the fix, absent on
+  CI).
+- **NEWS + landing:** added a development-version “Changes” bullet in
+  `NEWS.Rmd` and regenerated `NEWS.md` (clean 8-line diff). Landed via
+  **PR \#115** (`fix/issue-114-unrelated-parents`, fix commit
+  `4bbfb32a`) for cross-platform CI — awaiting CI + owner merge
+  (behavior change → PR-for-CI per the project rubric).
+
 ### 2026-07-04 — issue \#103 — `getPedDirectRelatives` `@param unrelatedParents` grammar fix (Session 269)
 
 - **Deliverable (owner approach-gate + landing-gate via
