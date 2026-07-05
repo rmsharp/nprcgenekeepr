@@ -20,7 +20,7 @@ makeExamplePedigreeFile(
 - fileType:
 
   character vector of length one with possible values of `"txt"`,
-  `"csv"`, or `"xlsx"`. Default value is `"csv"`.
+  `"csv"`, or `"excel"`. Default value is `"csv"`.
 
 ## Value
 

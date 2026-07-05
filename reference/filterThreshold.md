@@ -23,8 +23,8 @@ filterThreshold(kin, threshold = 0.015625)
 
 ## Value
 
-The kinship matrix with all kinship relationships below the threshold
-value removed.
+The filtered long-format kinship table (a data.frame) with all kinship
+relationships below the threshold value removed.
 
 ## Examples
 

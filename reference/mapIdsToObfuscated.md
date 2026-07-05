@@ -21,7 +21,7 @@ mapIdsToObfuscated(ids, map)
 
 ## Value
 
-A dataframe or vector with original IDs replaced by their obfuscated
+A character vector with original IDs replaced by their obfuscated
 counterparts.
 
 ## See also

@@ -20,7 +20,9 @@ print(x, ...)
 
 - ...:
 
-  additional arguments for the `summary.default` statement
+  further arguments passed to the
+  [`print()`](https://rdrr.io/r/base/print.html) call for the
+  suspicious-parents table (and ignored by the GV method)
 
 ## Value
 

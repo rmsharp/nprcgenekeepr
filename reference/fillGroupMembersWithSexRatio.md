@@ -41,7 +41,7 @@ fillGroupMembersWithSexRatio(
 - ped:
 
   dataframe that is the `Pedigree`. It contains pedigree information
-  including the IDs listed in `candidates`.
+  including the IDs listed in `ids`.
 
 - minAge:
 

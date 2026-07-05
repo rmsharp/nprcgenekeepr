@@ -43,7 +43,7 @@ The possible columns are as follows:
 
 - birth:
 
-  – Date or `N` (optional) with the individual's birth date
+  – Date or `NA` (optional) with the individual's birth date
 
 - exit:
 

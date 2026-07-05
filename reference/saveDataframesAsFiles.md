@@ -13,8 +13,7 @@ saveDataframesAsFiles(dfList, baseDir, fileType = "csv")
 
 - dfList:
 
-  list of dataframes to be stored as files. `"txt"`, `"csv"`, or
-  `"xlsx"`. Default value is `"csv"`.
+  list of dataframes to be stored as files.
 
 - baseDir:
 
@@ -23,7 +22,7 @@ saveDataframesAsFiles(dfList, baseDir, fileType = "csv")
 - fileType:
 
   character vector of length one with possible values of `"txt"`,
-  `"csv"`, or `"xlsx"`. Default value is `"csv"`.
+  `"csv"`, or `"excel"`. Default value is `"csv"`.
 
 ## Value
 

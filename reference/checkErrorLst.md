@@ -16,8 +16,8 @@ checkErrorLst(errorLst)
 
 ## Value
 
-Returns FALSE if all fields are empty or the list is NULL else the
-entire list is returned.
+Returns FALSE if all fields are empty or the list is NULL otherwise
+TRUE.
 
 ## Examples
 

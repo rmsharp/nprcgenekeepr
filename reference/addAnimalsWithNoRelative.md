@@ -15,7 +15,10 @@ addAnimalsWithNoRelative(kin, candidates)
 
 - kin:
 
-  dataframe with kinship values
+  named list of high-kinship relatives, as produced by
+  `getAnimalsWithHighKinship`, where each name is an animal Id and each
+  value is a character vector of the Ids sharing a kinship value at or
+  above the threshold.
 
 - candidates:
 
@@ -23,8 +26,9 @@ addAnimalsWithNoRelative(kin, candidates)
 
 ## Value
 
-A dataframe with kinships in long form after adding a row for each
-animal without a relative.
+The named list of high-kinship relatives (one element per animal Id,
+each value a character vector of that Id's high-kinship relatives) with
+an added element set to `NA` for each candidate that has no relative.
 
 ## Details
 

@@ -68,13 +68,15 @@
 
 
 <dt id="arg-format">format<a class="anchor" aria-label="anchor" href="#arg-format"></a></dt>
-<dd><p>character vector of length one having the date format</p></dd>
+<dd><p>character vector of length one. Retained for backward
+compatibility; the current implementation validates dates with
+<code>anytime()</code> and does not use <code>format</code>.</p></dd>
 
 
 <dt id="arg-optional">optional<a class="anchor" aria-label="anchor" href="#arg-optional"></a></dt>
-<dd><p>parameter to <code>as.Date</code>. Logical value indicating
-to return NA (instead of signaling an error) if the format guessing does not
-succeed. Defaults to FALSE.</p></dd>
+<dd><p>logical value indicating that NA should be returned
+instead of <code>FALSE</code> for strings that are not valid dates.
+Defaults to FALSE.</p></dd>
 
 </dl></div>
     <div class="section level2">

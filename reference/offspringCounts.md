@@ -27,8 +27,9 @@ offspringCounts(probands, ped, considerPop = FALSE)
 
 ## Value
 
-A dataframe with at least `id` and `totalOffspring` required and
-`livingOffspring` optional.
+A dataframe containing the column `totalOffspring` (and
+`livingOffspring` when `considerPop` is `TRUE`), with the animal ids as
+the data frame row names.
 
 ## Examples
 

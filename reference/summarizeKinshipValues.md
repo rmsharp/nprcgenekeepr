@@ -15,7 +15,7 @@ summarizeKinshipValues(countedKValues)
 - countedKValues:
 
   list object from countKinshipValues function that containes the lists
-  `kinshipIds`, `kinshipValues`, and `kinshipCounts`.
+  `kIds`, `kValues`, and `kCounts`.
 
 ## Value
 

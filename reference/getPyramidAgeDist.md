@@ -1,7 +1,9 @@
 # Get the age distribution for the pedigree
 
-Forms a dataframe with columns `id`, `birth`, `sex`, and `age` for those
-animals with a status of `Alive` in the pedigree.
+Returns the pedigree with all animals, adding a `status` column
+describing each animal as `ALIVE` or `DECEASED` and a computed `age`
+column (age at exit for deceased animals). All animals are returned, not
+only living ones.
 
 ## Usage
 

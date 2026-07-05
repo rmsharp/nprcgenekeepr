@@ -20,13 +20,14 @@ is_valid_date_str(
 
 - format:
 
-  character vector of length one having the date format
+  character vector of length one. Retained for backward compatibility;
+  the current implementation validates dates with `anytime()` and does
+  not use `format`.
 
 - optional:
 
-  parameter to `as.Date`. Logical value indicating to return NA (instead
-  of signaling an error) if the format guessing does not succeed.
-  Defaults to FALSE.
+  logical value indicating that NA should be returned instead of `FALSE`
+  for strings that are not valid dates. Defaults to FALSE.
 
 ## Value
 

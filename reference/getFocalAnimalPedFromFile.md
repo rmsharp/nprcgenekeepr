@@ -52,11 +52,13 @@ Read Error" detail (distinct from the LabKey path, which returns an
 ## Details
 
 The underlying file source errors loudly on a bad pedigree file, but
-this function is the application boundary, so it is fail-soft: it
-returns `NULL` when the pedigree file is missing, does not exist, or
-lacks the `id`, `sire`, and `dam` columns. (This mirrors how the app's
-other file inputs behave – a `NULL` surfaces a "File Read Error" – and
-is distinct from the LabKey path, which returns an `nprcgenekeeprErr`.)
+this function is the application boundary, so it is fail-soft: it does
+NOT throw. On failure it returns a classed `nprcgenekeeprFileErr` object
+whose `message` names the reason – a missing, not-found, or unreadable
+pedigree file, or one lacking the `id`, `sire`, and `dam` columns. (This
+mirrors how the app's other file inputs behave – the `message` surfaces
+as a "File Read Error" – and is distinct from the LabKey path, which
+returns an `nprcgenekeeprErr`.)
 
 ## Examples
 

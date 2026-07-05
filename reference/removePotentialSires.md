@@ -16,14 +16,13 @@ removePotentialSires(ids, minAge, ped)
 
 - minAge:
 
-  integer value indicating the minimum age to consider in group
-  formation. Pairwise kinships involving an animal of this age or
-  younger will be ignored. Default is 1 year.
+  integer value giving the inclusive minimum current age (in years) a
+  male must have to be listed as a potential sire. Default is 1 year.
 
 - ped:
 
   dataframe that is the `Pedigree`. It contains pedigree information
-  including the IDs listed in `candidates`.
+  including the IDs listed in `ids`.
 
 ## Value
 

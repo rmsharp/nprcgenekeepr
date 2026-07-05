@@ -16,7 +16,8 @@ checkChangedColsLst(changedCols)
 
 ## Value
 
-Returns `NULL` if all fields are empty else the entire list is returned.
+Returns `TRUE` if any changed-columns field is non-empty, otherwise
+`FALSE`.
 
 ## Examples
 

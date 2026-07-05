@@ -12,7 +12,8 @@ get_elapsed_time_str(start_time)
 
 - start_time:
 
-  a POSIXct time object
+  a `proc_time` object as returned by
+  [`proc.time()`](https://rdrr.io/r/base/proc.time.html)
 
 ## Value
 

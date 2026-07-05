@@ -20,7 +20,9 @@ modPyramidServer(id, pedigreeData)
 
 ## Value
 
-List with `data`, `plot`, and `livingCount`.
+A list with two elements: `pedigree`, a reactive returning the pedigree
+data frame, and `animalCount`, a reactive returning the number of animal
+rows.
 
 ## See also
 

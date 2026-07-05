@@ -59,9 +59,9 @@ getPotentialParents(
 ## Value
 
 a list of list with each internal list being made up of an animal id
-(`id`), a vector of possible sires (`sire`) and a vector of possible
-dams (`dam`). The `id` must be defined while the vectors `sire` and
-`dam` can be empty.
+(`id`), a vector of possible sires (`sires`) and a vector of possible
+dams (`dams`). The `id` must be defined while the vectors `sires` and
+`dams` can be empty.
 
 ## Examples
 

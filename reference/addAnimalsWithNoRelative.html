@@ -69,7 +69,10 @@ following: in <strong>groupAddAssign</strong></p>
 
 
 <dl><dt id="arg-kin">kin<a class="anchor" aria-label="anchor" href="#arg-kin"></a></dt>
-<dd><p>dataframe with kinship values</p></dd>
+<dd><p>named list of high-kinship relatives, as produced by
+<code>getAnimalsWithHighKinship</code>, where each name is an animal Id and
+each value is a character vector of the Ids sharing a kinship value at
+or above the threshold.</p></dd>
 
 
 <dt id="arg-candidates">candidates<a class="anchor" aria-label="anchor" href="#arg-candidates"></a></dt>
@@ -79,8 +82,10 @@ use in the group.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A dataframe with kinships in long form after adding a row for each
-animal without a relative.</p>
+    <p>The named list of high-kinship relatives (one element per
+animal Id, each value a character vector of that Id's high-kinship
+relatives) with an added element set to <code>NA</code> for each candidate
+that has no relative.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

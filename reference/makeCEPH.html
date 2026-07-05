@@ -86,31 +86,7 @@ and maternal grandparents (mgp: sire, dam).</p>
     <p>Creates a CEPH-style pedigree for each id, consisting of three generations:
 the id, the parents, and the grandparents. Inserts NA for unknown pedigree
 members.</p>
-<p>Calculates the first-order relationships in a pedigree,
-and to convert pairwise kinships to the appropriate relationship category.</p>
-<p>Relationships categories:
-For each ID in the pair, find a CEPH-style pedigree and compare them</p><ul><li><p>If one is the parent of the other —
-Designate the relationship as <code>parent-offspring</code></p></li>
-<li><p>Else if both parents are shared —
-Designate the relationship as <code>full-siblings</code></p></li>
-<li><p>Else if one parent is shared —
-Designate the relationship as <code>half-siblings</code></p></li>
-<li><p>Else if one is the grandparent of the other —
-Designate the relationship as <code>grandparent-grandchild</code></p></li>
-<li><p>Else if both grand parents are shared —
-Designate the relationship as <code>cousin</code></p></li>
-<li><p>Else if at least one grand parent is shared —
-Designate the relationship as <code>cousin - other</code></p></li>
-<li><p>Else if the parents of one are the grandparents of the other —
-Designate the relationship as <code>full-avuncular</code></p></li>
-<li><p>Else if a single parent of one is the grandparent of the other —
-Designate the relationship as <code>avuncular - other</code></p></li>
-<li><p>Else if the kinship is greater than 0, but the pair don't fall into
-the above categories —
-Designate the relationship as <code>other</code></p></li>
-<li><p>Else —
-Designate the relationships as <code>no relation.</code></p></li>
-</ul></div>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>

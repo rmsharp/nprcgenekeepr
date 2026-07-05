@@ -17,13 +17,15 @@ removeDuplicates(ped, reportErrors = FALSE)
 
 - reportErrors:
 
-  logical value if TRUE will scan the entire file and make a list of all
-  errors found. The errors will be returned in a list of list where each
-  sublist is a type of error found.
+  logical value if TRUE the function returns a character vector of
+  duplicate `id` values found among original records (or `NULL` when
+  none are found) instead of the de-duplicated pedigree.
 
 ## Value
 
-Pedigree object with all duplicates removed.
+When `reportErrors` is `FALSE`, a `Pedigree` object with duplicate rows
+removed; when `reportErrors` is `TRUE`, a character vector of duplicate
+`id` values (or `NULL` when none are found).
 
 ## Details
 

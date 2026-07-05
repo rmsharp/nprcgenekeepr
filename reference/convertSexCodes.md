@@ -32,9 +32,9 @@ Standard sex codes are
 
 - `M` – replacing "MALE" or "1"
 
-- `H` – replacing "HERMAPHRODITE" or "4", if ignore.herm == FALSE
+- `H` – replacing "HERMAPHRODITE" or "4", if `ignoreHerm` == FALSE
 
-- `U` – replacing "HERMAPHRODITE" or "4", if ignore.herm == TRUE
+- `U` – replacing "HERMAPHRODITE" or "4", if `ignoreHerm` == TRUE
 
 - `U` – replacing "UNKNOWN" or "3"
 

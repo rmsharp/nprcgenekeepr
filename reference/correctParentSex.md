@@ -41,8 +41,11 @@ correctParentSex(id, sire, dam, sex, recordStatus, reportErrors = FALSE)
 
 ## Value
 
-A factor with levels: "M", "F", "H", and "U" representing the sex codes
-for the ids provided
+When `reportErrors = FALSE`, a factor (or character vector) of corrected
+sex codes with levels `"M"`, `"F"`, `"H"`, and `"U"` for the ids
+provided. When `reportErrors = TRUE`, a named list of error vectors with
+elements `sireAndDam`, `femaleSires`, and `maleDams` (each `NULL` when
+no such errors are found).
 
 ## Details
 

@@ -16,8 +16,9 @@ getTokenList(lines)
 
 ## Value
 
-First right and left space trimmed token from first character vector
-element.
+A list with two elements: `param`, a character vector of parameter
+names, and `tokenVec`, a list of the token vectors parsed for each
+parameter.
 
 ## Examples
 

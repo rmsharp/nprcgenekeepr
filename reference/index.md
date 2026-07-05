@@ -179,7 +179,7 @@
 - [`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
   : Get the direct relatives of selected animals from a pedigree
 - [`getPedMaxAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedMaxAge.md)
-  : Get the maximum age of live animals in the pedigree
+  : Get the maximum age of any animal in the pedigree
 - [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md)
   : Get pedigree from file
 - [`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md)

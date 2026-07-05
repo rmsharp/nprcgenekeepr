@@ -31,8 +31,7 @@ assignAlleles(alleles, parentType, parent, id, n)
 
 - n:
 
-  integer indicating the number of iterations to simulate. Default is
-  5000.
+  integer indicating the number of iterations to simulate.
 
 ## Value
 

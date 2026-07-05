@@ -56,11 +56,11 @@ geneDrop(
 
 ## Value
 
-A data.frame `id, parent, V1 ... Vn` A data.frame providing the maternal
-and paternal alleles for an animal for each iteration. The first two
-columns provide the animal's ID and whether the allele came from the
-sire or dam. These are followed by `n` columns indicating the allele for
-that iteration.
+A data.frame `V1 ... Vn, id, parent` A data.frame providing the maternal
+and paternal alleles for an animal for each iteration. The first `n`
+columns indicate the allele for each iteration. These are followed by
+two columns: `id`, the animal's ID, and `parent`, whether the allele
+came from the sire or dam.
 
 ## Details
 

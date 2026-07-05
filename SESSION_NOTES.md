@@ -7,6 +7,243 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 274 Did
+
+**Deliverable (owner scope-gate via one `AskUserQuestion`, 4
+questions):** apply the fixes for the S273-audited 38 doc-vs-code errors
+(`docs/audits/ISSUE_109_DOC_ERROR_AUDIT_2026-07-04.md`). Owner chose:
+**all in one session** / **doc-fix direction** (correct docs to match
+code — doc-only) / **defer \#9 `runModularApp`** to issue \#110 /
+**direct-merge** to `master`. So **37 findings fixed** (all but \#9) **+
+a 39th instance the audit missed** (`removePotentialSires` local
+`@param minAge`). **REFACTOR-class, doc-only; NAMESPACE diff EMPTY; no
+signatures/logic/behavior changed; TDD RED/GREEN N/A. DONE + VERIFIED +
+committed to `master`. 0 stakeholder corrections / 0 owner overrides**
+(1 owner gate: the 4-question scope/direction/#9/landing
+`AskUserQuestion`). **Started / Completed:** 2026-07-05 / 2026-07-05
+**Status:** **DONE. 34 `R/` files edited → 38 `man/*.Rd` regenerated;
+committed to `master`. issue \#109 STILL OPEN (closing is the owner’s
+outward call). `--as-cran` GREEN.** - **Result:** 37 of the 38 findings
+fixed (#9 deferred to \#110). The 3 Critical done: `checkChangedColsLst`
+`@return` (NULL/list→`TRUE`/`FALSE`); `getFocalAnimalPedFromFile`
+`@details` (returns-NULL→classed `nprcgenekeeprFileErr`, consistent with
+its own `@return`); `saveDataframesAsFiles` `@param fileType`
+(`"xlsx"`→`"excel"`). All 22 Moderate (minus \#9) + all 13 Minor done. -
+**Donor cascade (why 38 man pages from 34 R edits):** fixing
+`getPotentialSires` `@param ped` (`\code{candidates}`→`\code{ids}`,
+\#34) propagated via `@inheritParams` to SIX pages — `calculateSexRatio`
+(#26), `removePotentialSires` (#32), **and three the audit never
+flagged** (`groupAddAssign`, `fillGroupMembersWithSexRatio`,
+`makeGroupMembers`). One donor edit, six corrected pages. - **The
+audit-missed 39th fix (novel — Learning 253):** the audit’s §4 said “the
+`@inheritParams` callees fix themselves” — but `removePotentialSires`
+had a **LOCAL** `@param minAge` (lines 7-9) with the same stale “group
+formation / kinships ignored” text as \#11; a local `@param` overrides
+the inherited one, so the donor fix could NOT reach it. Deleted the
+local dup → `minAge` now inherits the corrected donor text. A
+**completeness grep** confirmed the other multi-hit patterns (7 genuine
+group-formation `minAge` pages, `xlsx` in file-readers, “live animals”
+in `calcGU`, `POSIXct`/`YYYYMMDD` in date functions) are legitimately
+correct — audit scoped them out correctly; left untouched. - **Method
+(find → apply → verify):** (a) a 35-agent read-only `Workflow` produced
+byte-exact edit specs, each verified against the function body
+(`scratchpad/doc_fix_specs.js`); (b) a strict exact-match apply script
+(`scratchpad/apply_edits.py`; `content.count(anchor)==1` or ABORT)
+landed 36 edits (35 specs + the `removePotentialSires` completion) with
+zero mismatches; (c) `devtools::document()` = **0 warnings, empty
+NAMESPACE diff**; (d) a 37-agent adversarial verification `Workflow`
+(`scratchpad/doc_fix_verify.js`) read every regenerated `.Rd` vs the
+code → **37/37 CONFIRMED_FIXED, 0 problems**, and correctly left
+pre-existing \#103-class typos (`kinshipMatricies`, `columms`, “length
+on”) untouched. - **Verify (firsthand):** `lintr` = 0 real lints on the
+34 files; all changed roxygen lines ≤80; `spell_check_package` clean;
+**NAMESPACE diff empty**; **`R CMD check --as-cran` GREEN — 0 errors / 0
+warnings / 1 NOTE** with `code/documentation mismatches … OK`,
+`Rd files … OK`, `Rd cross-references … OK`, `Rd line widths … OK`,
+examples (21s) / `testthat.R [67s/67s]` / vignettes (20s) all OK.
+
+**The 1 NOTE (benign):** the CRAN incoming-feasibility
+archived-maintainer false positive
+(`Package was archived on CRAN 2025-07-29`) — impossible for a doc edit
+to cause, absent on CI. (Only 1 NOTE this run; the S264-S273
+environmental HTML-Tidy/V8 NOTE didn’t appear.)
+
+**Spelling handled WITHOUT WORDLIST churn:** `spell_check_package()`
+flagged only `ignoreHerm` and `proc` (identifiers I put in prose);
+wrapped them in `\code{}` (proper style — `spelling` skips
+`\code{}`/`\item{name}`), which cleared both and **avoided touching
+`inst/WORDLIST`** — which carries the owner’s uncommitted `errored`
+addition (FM \#22). A WORDLIST edit would have forced a bundle-or-ask;
+the `\code{}` fix sidestepped it.
+
+**Phase-3E (runtime smoke): N/A (stated, not skipped).** Doc-only
+REFACTOR; empty NAMESPACE diff PROVEN; no `R/` logic / runtime / Shiny /
+behavior surface. The meaningful verification is
+`code/documentation mismatches … OK` + the 37/37 adversarial doc-vs-code
+re-verification. FM \#24 does not apply.
+
+**Session 273 Handoff Evaluation (by Session 274): Score 9/10.** S273’s
+SUGGESTED NEXT named “Fix the 38 findings” as candidate \#1 and the
+audit report (`docs/audits/ISSUE_109_DOC_ERROR_AUDIT_2026-07-04.md`) was
+a turnkey, per-finding spec with §6 fix order and §4 structural
+clusters. **What helped:** (1) the report’s per-finding “Doc says / Code
+does / Fix” was a near-complete spec — I could fan out edit-spec agents
+directly from it; (2) the `getPotentialSires` **donor cascade** was
+correctly identified in §4 (fix one, resolve \#11/#26/#32/#34), which
+shaped the whole apply strategy; (3) the **\#9→#110 entanglement flag**
+drove my defer decision cleanly (owner-gated); (4) every standing gotcha
+held (version 2.0.0, package ARCHIVED, the benign NOTE(s),
+build-artifacts-not-gitignored — now covered by the owner’s `.gitignore`
+edit, `--as-cran` ~3-min-background, `spell_check`
+hand-add-never-`update_wordlist`, FM \#22 on the owner’s
+`.gitignore`/WORDLIST); (5) ghost-check clean (HEAD `2146341c` ==
+documented S273 close-out). **What was WRONG/incomplete (the -1):** §4’s
+claim that “the `@inheritParams` callees fix themselves” was INCOMPLETE
+— it missed that `removePotentialSires` shadows the donor with a
+**local** `@param minAge`, so the donor fix leaves that page
+half-corrected; and finding \#32 was framed as a “LOCAL copy” of the ped
+param when ped is actually **inherited** (the fix is the same donor
+edit, so harmless, but the premise was inverted). Both are minor and
+both were caught by my firsthand reads + completeness grep, but a less
+careful executor could have shipped `removePotentialSires` with a
+still-stale `minAge`. **ROI:** very high — the report turned a 37-fix
+batch into a mechanical find→apply→verify.
+
+**Self-assessment (Session 274): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean), reported, STOPPED for the owner; wrote
+the 1B stub before technical work; declared REFACTOR-class / TDD-N/A up
+front; **read the actual audit report before touching anything** and
+gated scope/direction/#9/landing via one `AskUserQuestion`.
+**Strengths:** (1) **caught the audit’s cascade-assumption gap** —
+firsthand reads of `removePotentialSires`/`calculateSexRatio` + a
+completeness grep of ALL pattern classes found + fixed the 39th instance
+the audit missed, and distinguished it from the 7 group-formation pages
+where the same phrase is CORRECT (did not blanket-fix a matched string);
+(2) **right-sized orchestration** — parallel read-only spec-gen +
+controlled single-writer exact-match apply + parallel adversarial
+re-verify, keeping tree ownership while parallelizing the reads
+(Learning 253); (3) **verified twice** — `--as-cran`
+`code/documentation mismatches OK` AND a 37/37 doc-vs-code adversarial
+re-read (the `--as-cran` check is necessary but weak for
+prose-vs-behavior); (4) **avoided WORDLIST churn AND the owner-edit
+collision** by `\code{}`-wrapping identifiers (FM \#22 held — committed
+only my files by path); (5) **scope discipline** — deferred \#9, kept
+the code-fix candidates as doc-fixes per the owner, left \#103-class
+typos untouched. **Weakness (the -1):** the `removePotentialSires`
+minAge fix is technically beyond “the 38” — I judged it in-scope
+(completing \#11’s pattern in a directly-coupled sibling, zero-risk) and
+disclosed it prominently rather than silently, but a stricter reading
+would have surfaced it as its own micro-gate first; also the first
+`Workflow` launch needed a retry (a `#'` apostrophe closed a
+single-quoted string — one round-trip, no harm). Correct + disciplined;
+capped at 9.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 253** — an
+`@inheritParams` donor fix corrects INHERITED params but NOT a callee’s
+LOCAL duplicate, so grep for local shadows after a donor edit;
+distinguish genuine pattern-instances from legitimate uses in that grep;
+the find→apply→verify Workflow shape for a batch of mechanical fixes
+(parallel spec-gen → single-writer exact-match apply → parallel
+adversarial re-verify); clear a `spell_check` flag by `\code{}`-wrapping
+the identifier (not a WORDLIST edit); `--as-cran`’s
+`code/documentation mismatches OK` is necessary but weak for
+prose-vs-behavior. Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[avoid-reconcile-tools-on-curated-files\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[edit-files-in-reverse-line-order\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[workflow-args-arrive-as-json-string\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a REFACTOR-class
+doc-fix session — TDD RED/GREEN N/A.**
+
+**=\> SUGGESTED NEXT.** 37 of the 38 audited doc errors are fixed on
+`master` (+ the 39th sibling); `--as-cran` GREEN. **issue \#109 is STILL
+OPEN** — closing is the owner’s outward call. Candidate deliverables
+(owner picks): - **Close issue \#109** — the reported bug (fixed S272),
+the broad audit (S273), and 37/38 fixes (this session) leave only \#9
+(deferred to \#110) outstanding; the owner may consider \#109 done and
+track the rest under \#110/#112. - **\#9 `runModularApp`** — fix its
+stale “run the monolithic version via `runGeneKeepR`” line once
+**\#110** (the `runGeneKeepR` deprecation question) is decided; the
+correct wording depends on that outcome. - **The doc-fixed code-fix
+candidates** — the owner chose doc-fix, but these may deserve a
+*behavior* change later (each a SEPARATE STRICT-TDD session):
+**`makeSimPed` \#31** (overwrites KNOWN parents unconditionally — likely
+a real bug, not just a stale doc);
+**`saveDataframesAsFiles`/`makeExamplePedigreeFile` \#2/#14** (accept
+`"xlsx"` as an alias for `"excel"`); **`geneDrop` \#20** (reorder output
+columns to the documented `id, parent, V1..Vn`);
+**`getPedMaxAge`/`getPyramidAgeDist` \#5/#29** (actually filter to
+living animals if that was the intent); **`assignAlleles` \#10** (add
+`n = 5000` default); **`is_valid_date_str` \#13** (implement or drop the
+unused `format` arg). - **Spot-check the 7 group-formation `minAge`
+pages** (`fillGroupMembers`, `groupAddAssign`,
+`addGroupOfUnusedAnimals`, `fillGroupMembersWithSexRatio`,
+`initializeHaremGroups`, `makeGroupMembers`,
+`getAnimalsWithHighKinship`) — the audit read them and did not flag them
+(their “group formation” wording is accurate); a quick confirmatory read
+is optional, not required. - **NEWS.md line (optional)** — a user-facing
+entry like “Corrected documentation errors across ~35 function help
+pages” if desired; NEWS is GENERATED (edit `NEWS.Rmd` +
+[`rmarkdown::render`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)),
+its own small change. - **Commit the owner’s two pending edits**
+(`.gitignore` build-artifact rules + `errored` WORDLIST) — LEFT
+UNCOMMITTED (owner’s, FM \#22); their own small commit when the owner is
+ready. - **Older backlog:** \#112, \#111 (code coverage), \#110, \#37,
+\#36, \#28, \#12, \#11, \#10, \#5; the CRAN thread (Phase 5b, owner-run
+outward). **Each stage editing `R/` re-stales `--as-cran` (background it
+~3 min) + `lintr` + `spell_check_package` (hand-add wordlist, never
+`update_wordlist`); for any behavior/NAMESPACE change ALSO STRICT TDD +
+NAMESPACE diff + Phase-3E installed-namespace smoke. Landing
+owner-gated** (`AskUserQuestion`): direct-merge (doc-only, low churn) vs
+PR-for-CI (behavior/large churn; if PR, merge from a CLEAN tree,
+Learning 250).
+
+**Key files (this session):** **Edited + committed (S274, on
+`master`):** 34 `R/*.R` roxygen sources + their 38 regenerated
+`man/*.Rd` (see `git show --stat HEAD`); process docs `CHANGELOG.md`
+(S274 entry), `PROJECT_LEARNINGS.md` (Learning 253), `SESSION_NOTES.md`
+(this handoff). Donor file `R/getPotentialSires.R` (#11 minAge + \#34
+ped); `R/removePotentialSires.R` (my local-minAge deletion). **No
+`NAMESPACE` / `DESCRIPTION` / `data` / `NEWS` / `vignettes` / `tests`
+change (NAMESPACE diff EMPTY, PROVEN).** **NOT committed — OWNER’s
+uncommitted edits (FM \#22, preserved):** `.gitignore`
+(+`nprcgenekeepr_*.tar.gz`, `.Rcheck/`), `inst/WORDLIST` (+`errored`).
+**NOT committed (standing keep):** `.DS_Store` (tracked+modified),
+`PED_GV_AUDIT_2026-05-30.html` (untracked, `.Rbuildignore`d).
+**Scratchpad (NOT committed):** `doc_fix_specs.js` (spec-gen Workflow),
+`apply_edits.py` (exact-match apply), `doc_fix_verify.js` (adversarial
+verify Workflow), `s274gate/` (build+check logs, `Status: 1 NOTE`).
+
+**Gotchas:** (1) **A donor `@inheritParams` fix does NOT reach a
+callee’s LOCAL duplicate of the same param** (Learning 253) — after a
+donor edit, grep for local shadows; `removePotentialSires` had a local
+`@param minAge` the audit’s cascade analysis missed. (2) **The
+build-artifact tarball/`.Rcheck` are now gitignored by the owner’s
+uncommitted `.gitignore` edit** — so `R CMD build/check` no longer drops
+untracked artifacts in the repo root (I still `rm`’d the tarball at
+close-out). (3) **`inst/WORDLIST` + `.gitignore` are the OWNER’s
+uncommitted edits** — do NOT fold into an unrelated commit (FM \#22); I
+clear spell flags by `\code{}`-wrapping rather than editing WORDLIST.
+(4) Carried standing keeps (unchanged): package **ARCHIVED on CRAN
+2025-07-29**, resubmission owner-gated + HARD STOP;
+`NEWS.md`/`README.md` are GENERATED (edit `.Rmd` + render); a doc
+`R/`+`man/` edit re-stales `--as-cran` (background ~3 min; re-grep
+check.log for `testthat … OK` + 0 ERROR/WARNING — the compact `Status:`
+grep can truncate the tests line); `spell_check_package` hand-add
+wordlist, never `update_wordlist`; `gh issue view`/`gh pr edit` exit 1 →
+`gh api repos/rmsharp/nprcgenekeepr/...`; re-check `git status` before
+ANY destructive git (\[\[check-status-before-destructive-git\]\]); **zsh
+`status` is a read-only special variable**; **version is 2.0.0**
+(DESCRIPTION authoritative; CLAUDE.md header “1.1.0.9000” is stale
+prose).
+
 ### What Session 273 Did
 
 **Deliverable (owner scope-gate via `AskUserQuestion` = “Broad

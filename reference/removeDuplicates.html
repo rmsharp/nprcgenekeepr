@@ -65,14 +65,18 @@ information. The <code>id</code> and <code>recordStatus</code> columns are requi
 
 
 <dt id="arg-reporterrors">reportErrors<a class="anchor" aria-label="anchor" href="#arg-reporterrors"></a></dt>
-<dd><p>logical value if TRUE will scan the entire file and
-make a list of all errors found. The errors will be returned in a
-list of list where each sublist is a type of error found.</p></dd>
+<dd><p>logical value if TRUE the function returns a
+character vector of duplicate <code>id</code> values found among
+original records (or <code>NULL</code> when none are found) instead of
+the de-duplicated pedigree.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Pedigree object with all duplicates removed.</p>
+    <p>When <code>reportErrors</code> is <code>FALSE</code>, a <code>Pedigree</code>
+object with duplicate rows removed; when <code>reportErrors</code> is
+<code>TRUE</code>, a character vector of duplicate <code>id</code> values (or
+<code>NULL</code> when none are found).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
