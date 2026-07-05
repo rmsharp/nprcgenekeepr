@@ -20,7 +20,7 @@
 #'   \item Age-Sex Pyramid with enhanced controls
 #' }
 #'
-#' Use \code{\link{runGeneKeepR}} to run the original monolithic version.
+#' \code{\link{runGeneKeepR}} is a soft-deprecated alias for this function.
 #'
 #' @param port Integer port number for the Shiny server (default 6013)
 #' @param launch.browser Logical; whether to launch browser (default TRUE)

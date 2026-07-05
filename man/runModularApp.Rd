@@ -33,7 +33,7 @@ This function runs the modular version of the application which includes:
 \item Age-Sex Pyramid with enhanced controls
 }
 
-Use \code{\link{runGeneKeepR}} to run the original monolithic version.
+\code{\link{runGeneKeepR}} is a soft-deprecated alias for this function.
 }
 \examples{
 \dontrun{
