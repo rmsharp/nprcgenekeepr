@@ -27,7 +27,7 @@ when a configuration file is present and parseable; otherwise `NULL`.
 This replaces a former `read.table(sep = "=")` call in the application
 server that assumed a strict two-column table, could not parse the
 documented format, and crashed
-[`runModularApp`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+[`runGeneKeepR`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
 at startup.
 
 ## See also

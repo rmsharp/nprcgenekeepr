@@ -135,7 +135,7 @@ the per-bar counts for a cleaner figure.
   [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md).
 - [`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md)
   – the function documented here.
-- [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+- [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
   – the Shiny app, whose Age-Sex Pyramid tab draws this plot
   interactively.
 

@@ -1,6 +1,6 @@
 # README
 
-R. Mark Sharp, Ph.D. 2026-06-30
+R. Mark Sharp, Ph.D. 2026-07-05
 
 # nprcgenekeepr
 
@@ -87,12 +87,12 @@ application that can be started with:
 ``` r
 
 library(nprcgenekeepr) # nolint: undesirable_function_linter
-runModularApp()
+runGeneKeepR()
 ```
 
-([`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+([`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
 also still launches the application but is deprecated in favor of
-[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md).)
+[`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md).)
 
 ## Summary of Major Functions
 
@@ -576,9 +576,9 @@ groups and restricts the number of males to one per group.
 - [`rhesusPedigree`](https://github.com/rmsharp/nprcgenekeepr/reference/rhesusPedigree.md)
   : Obfuscated rhesus pedigree object
 - [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
-  : Run the GeneKeepR Shiny Application (Deprecated)
+  : Run the GeneKeepR Shiny Application
 - [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
-  : Run the Modular Version of GeneKeepR
+  : Run the Modular Version of GeneKeepR (Deprecated)
 - [`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md)
   : Run Quality Control on Studbook with UI-Friendly Results
 - [`safeExecute()`](https://github.com/rmsharp/nprcgenekeepr/reference/safeExecute.md)

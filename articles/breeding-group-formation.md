@@ -17,7 +17,7 @@ and Raboin (2015). Groups can be formed three ways:
 This article walks the whole pipeline – from a raw studbook to formed
 groups – entirely from R, using the `examplePedigree` data set that
 ships with the package. The Shiny app
-([`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md))
+([`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md))
 drives the same functions through a point-and-click interface; here we
 script them directly.
 
@@ -211,7 +211,7 @@ place more of them.
   – the ranking scheme applied to a genetic value report.
 - [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
   – pairwise kinship coefficients from a pedigree.
-- [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+- [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
   – the Shiny app that performs this workflow interactively.
 
 **Reference.** Vinson A, Raboin MJ (2015). “A Practical Approach for

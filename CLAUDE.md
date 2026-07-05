@@ -71,7 +71,7 @@ Oregon National Primate Research Center.
 - `R/` - Package functions and Shiny modules (`appUI.R` +
   `appServer.R` + `mod*.R` are the canonical modular Shiny application,
   launched by
-  [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md))
+  [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md))
 - `inst/extdata/` - Example data and configuration files
 - `tests/testthat/` - Unit tests
 
@@ -80,7 +80,7 @@ Oregon National Primate Research Center.
 ``` r
 
 library(nprcgenekeepr)
-runModularApp()   # runGeneKeepR() is a deprecated alias that calls this
+runGeneKeepR()   # runModularApp() is a deprecated alias that calls this
 ```
 
 ### Key References

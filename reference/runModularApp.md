@@ -1,8 +1,11 @@
-# Run the Modular Version of GeneKeepR
+# Run the Modular Version of GeneKeepR (Deprecated)
 
-Launches the modularized Shiny application for testing purposes. This
-version uses the new module-based architecture with a Home tab and
-improved UI components.
+`runModularApp()` has been renamed to
+[`runGeneKeepR`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md),
+a name that says what the function does. `runModularApp()` is now a
+soft-deprecated alias that launches the application via
+[`runGeneKeepR`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md).
+Existing callers continue to work.
 
 ## Usage
 
@@ -22,31 +25,14 @@ runModularApp(port = 6013L, launch.browser = TRUE)
 
 ## Value
 
-Returns the error condition of the Shiny application when it terminates.
+Returns the error condition of the Shiny application when it terminates
+(from
+[`runGeneKeepR`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)).
 
-## Details
+## See also
 
-This function runs the modular version of the application which
-includes:
-
-- Home tab with navigation buttons
-
-- Modular Input tab with enhanced QC display
-
-- Dynamic error and changed columns tabs
-
-- Enhanced Pedigree Browser with focal animal support
-
-- Genetic Value Analysis with visualizations
-
-- Summary Statistics with popovers
-
-- Breeding Groups with group panels
-
-- Age-Sex Pyramid with enhanced controls
-
-[`runGeneKeepR`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
-is a soft-deprecated alias for this function.
+[`runGeneKeepR`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md),
+the function this now launches.
 
 ## Examples
 

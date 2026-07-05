@@ -3,6 +3,16 @@
 ## nprcgenekeepr (development version)
 
 - Changes
+  - [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+    is again the primary Shiny entry point; its name says what it does.
+    [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+    is now the soft-deprecated alias that forwards to
+    [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md),
+    so existing
+    [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+    calls still work. This reverses the deprecation direction introduced
+    in 2.0.0.
+    ([\#110](https://github.com/rmsharp/nprcgenekeepr/issues/110))
   - [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
     gains an optional `kinshipOverrides` argument: a data frame of
     outside-information kinship coefficients (`id1`, `id2`, `kinship`;

@@ -1,6 +1,6 @@
 # README
 
-R. Mark Sharp, Ph.D. 2026-06-30
+R. Mark Sharp, Ph.D. 2026-07-05
 
 # nprcgenekeepr
 
@@ -87,12 +87,12 @@ application that can be started with:
 ``` r
 
 library(nprcgenekeepr) # nolint: undesirable_function_linter
-runModularApp()
+runGeneKeepR()
 ```
 
-([`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+([`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
 also still launches the application but is deprecated in favor of
-[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md).)
+[`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md).)
 
 ## Summary of Major Functions
 

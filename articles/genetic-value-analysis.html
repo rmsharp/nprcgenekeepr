@@ -88,7 +88,7 @@
 <li>
 <strong>genome uniqueness</strong> – the percentage of an animal’s alleles that are <em>rare</em> in the population (carried by no more than a few animals), estimated by a gene-drop simulation. A <em>high</em> genome uniqueness is good: it means the animal carries alleles that would be lost if it were not bred.</li>
 </ul>
-<p><code><a href="../reference/reportGV.html">reportGV()</a></code> computes both, ranks the population, and also returns colony-level diversity summaries. This article runs the whole analysis from R, using the <code>examplePedigree</code> data set that ships with the package. The Shiny app (<code><a href="../reference/runModularApp.html">runModularApp()</a></code>) drives the same <code><a href="../reference/reportGV.html">reportGV()</a></code> through its Genetic Value Analysis tab; here we script it directly.</p>
+<p><code><a href="../reference/reportGV.html">reportGV()</a></code> computes both, ranks the population, and also returns colony-level diversity summaries. This article runs the whole analysis from R, using the <code>examplePedigree</code> data set that ships with the package. The Shiny app (<code><a href="../reference/runGeneKeepR.html">runGeneKeepR()</a></code>) drives the same <code><a href="../reference/reportGV.html">reportGV()</a></code> through its Genetic Value Analysis tab; here we script it directly.</p>
 </section><section class="level2"><h2 id="sec-setup">Setup<a class="anchor" aria-label="anchor" href="#sec-setup"></a>
 </h2>
 <div class="cell">
@@ -302,7 +302,7 @@
 <li>
 <code><a href="../reference/kinship.html">kinship()</a></code> – pairwise kinship coefficients from a pedigree.</li>
 <li>
-<code><a href="../reference/runModularApp.html">runModularApp()</a></code> – the Shiny app that performs this workflow interactively.</li>
+<code><a href="../reference/runGeneKeepR.html">runGeneKeepR()</a></code> – the Shiny app that performs this workflow interactively.</li>
 </ul>
 <p><strong>References.</strong></p>
 <p>Lacy RC (1989). “Analysis of Founder Representation in Pedigrees: Founder Equivalents and Founder Genome Equivalents.” <em>Zoo Biology</em> 8(2):111-123.</p>

@@ -24,7 +24,7 @@ computes both, ranks the population, and also returns colony-level
 diversity summaries. This article runs the whole analysis from R, using
 the `examplePedigree` data set that ships with the package. The Shiny
 app
-([`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md))
+([`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md))
 drives the same
 [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
 through its Genetic Value Analysis tab; here we script it directly.
@@ -268,7 +268,7 @@ pool.
   – the ranking scheme applied to a report.
 - [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
   – pairwise kinship coefficients from a pedigree.
-- [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+- [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
   – the Shiny app that performs this workflow interactively.
 
 **References.**

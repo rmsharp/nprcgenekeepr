@@ -369,9 +369,9 @@
 - [`rhesusPedigree`](https://github.com/rmsharp/nprcgenekeepr/reference/rhesusPedigree.md)
   : Obfuscated rhesus pedigree object
 - [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
-  : Run the GeneKeepR Shiny Application (Deprecated)
+  : Run the GeneKeepR Shiny Application
 - [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
-  : Run the Modular Version of GeneKeepR
+  : Run the Modular Version of GeneKeepR (Deprecated)
 - [`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md)
   : Run Quality Control on Studbook with UI-Friendly Results
 - [`safeExecute()`](https://github.com/rmsharp/nprcgenekeepr/reference/safeExecute.md)

@@ -29,7 +29,7 @@ does, then builds the same connected pedigree component from your file
 instead of from the database.
 
 The Shiny app
-([`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md))
+([`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md))
 drives this same offline path from its Input tab (see the *In the Shiny
 app* section below); here we script it directly.
 
@@ -200,7 +200,7 @@ Errors tab, with its `message` as the detail.
 ## In the Shiny app
 
 To do the same thing interactively, launch
-[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+[`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
 and, on the **Input** tab:
 
 1.  under **File Content**, choose *“Focal animals only; pedigree built
@@ -248,7 +248,7 @@ for you and routes any `nprcgenekeeprFileErr` to the Errors tab.
   connected component (and exposes the `unrelatedParents` option, which
   [`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md)
   leaves at its default).
-- [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+- [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
   – the Shiny app, whose Input tab drives this same offline workflow
   interactively.
 

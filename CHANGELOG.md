@@ -15,6 +15,83 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-05 — issue \#110 — make `runGeneKeepR()` the canonical Shiny entry point again; `runModularApp()` becomes the soft-deprecated alias (Session 276)
+
+- **Deliverable (owner design-gate + 3 TDD phase-gates + landing-gate,
+  all via `AskUserQuestion`):** issue \#110 questioned the 2.0.0
+  decision to deprecate the informative name
+  [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+  in favor of the low-information
+  [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md).
+  Owner chose **“Reverse, keep both names”** (over
+  reverse-and-remove-`runModularApp` / keep-as-is):
+  [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+  becomes the canonical, undeprecated function holding the Shiny app
+  body;
+  [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+  becomes a `lifecycle::deprecate_soft(with = "runGeneKeepR()")` alias
+  forwarding to it. Both stay exported, so existing
+  [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+  callers keep working (soft warning, no hard break). **BEHAVIOR/API
+  change (deprecation direction reversed) → STRICT TDD
+  (RED→GREEN→REFACTOR); direct-merge landing; 0 stakeholder corrections
+  / 0 owner overrides.**
+- **RED:** renamed `tests/testthat/test_runGeneKeepR_alias.R` →
+  `test_runModularApp_alias.R` (runModularApp is the alias now) and
+  rewrote it to pin the reversed contract (6 tests, all Shiny launches
+  mocked):
+  [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+  does NOT deprecate (forced `lifecycle_verbosity="warning"` +
+  `expect_no_warning`), launches via
+  [`shiny::runApp`](https://rdrr.io/pkg/shiny/man/runApp.html), forwards
+  `port`/`launch.browser`;
+  [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+  DOES `expect_deprecated`, delegates to
+  [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md),
+  forwards args. The 4 flipped-contract blocks failed as designed; the 2
+  regression guards passed.
+- **GREEN:** swapped the two bodies — `R/runGenekeepr.R` now holds
+  `shiny::shinyApp(appUI(), appServer)` +
+  [`shiny::runApp`](https://rdrr.io/pkg/shiny/man/runApp.html) (no
+  deprecation; `@importFrom shiny` moved here; roxygen rewritten as the
+  production entry point); `R/runModularApp.R` now
+  `deprecate_soft(when="2.0.0", what="runModularApp()", with="runGeneKeepR()")`
+  then `runGeneKeepR(...)`. `devtools::document()` regenerated both
+  `.Rd`; **NAMESPACE diff EMPTY** (both stay `export()`ed). All 6 tests
+  pass.
+- **REFACTOR (doc consistency, no behavior change):** flipped the shared
+  `_running_shiny_application.Rmd` (child chunk of README + 2 vignettes)
+  to recommend
+  [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md);
+  updated 9
+  [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+  mentions across 5 `vignettes/articles/*.qmd`; added a
+  development-version `NEWS.Rmd` bullet (`(#110)` issue-ref);
+  `R/loadSiteConfig.R` doc `\link` → `runGeneKeepR`; CLAUDE.md 2 lines;
+  re-rendered `README.md` + `NEWS.md`.
+- **Verify (firsthand):** full test suite 0 fail / 0 error / 0 true
+  offenders; `lintr` 0 on the 3 changed R files; `spell_check_package`
+  clean; **NAMESPACE diff empty**; **`R CMD check --as-cran` (clean
+  tree) GREEN — 0 errors / 0 warnings / 2 NOTEs** (standing benign pair:
+  archived-maintainer CRAN false positive + HTML-Tidy/V8 environmental)
+  with `code/documentation mismatches … OK`, `Rd cross-references … OK`
+  (both `\link` targets resolve), examples / `testthat.R [68s/68s]` /
+  vignettes OK. (A first `--as-cran` run showed a transient 3rd NOTE — a
+  stray `README.html` render byproduct left in the tree when
+  `R CMD build` snapshotted; removed it and re-ran clean. See
+  PROJECT_LEARNINGS Learning 255.)
+- **Phase-3E (installed-namespace runtime smoke): DONE** (behavior
+  change, not N/A). The reversed contract runs against the
+  built+installed package via `testthat.R` inside `--as-cran`; a direct
+  `load_all` behavioral smoke additionally confirmed
+  [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+  emits no deprecation while
+  [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+  emits one whose message names
+  [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md).
+- **issue \#110 CLOSED** — resolved by the owner-chosen reversal;
+  direct-merged to `master` and pushed.
+
 ### 2026-07-05 — issue \#109 — fix the last audit finding (#9 `runModularApp`) and CLOSE the issue (Session 275)
 
 - **Deliverable (owner scope-gate via one `AskUserQuestion`):** finish

@@ -61,12 +61,12 @@ application that can be started with:
 ``` r
 
 library(nprcgenekeepr) # nolint: undesirable_function_linter
-runModularApp()
+runGeneKeepR()
 ```
 
-([`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+([`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
 also still launches the application but is deprecated in favor of
-[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md).)
+[`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md).)
 
 This will result in the opening screen where you tell the application
 how to find the pedigree you will be using.

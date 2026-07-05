@@ -89,7 +89,7 @@
 <strong>offline</strong> – <code><a href="../reference/getFocalAnimalPedFromFile.html">getFocalAnimalPedFromFile()</a></code> does the same thing from a <strong>second file</strong> you supply, so the workflow needs <strong>no database connection</strong> at all.</li>
 </ul>
 <p>This article covers the offline path. Use it when you have a focal-animal ID list and a pedigree file on disk and either no LabKey access or no need for it – on a laptop, behind a firewall, or with a studbook exported from another system. The two functions are siblings by design: <code><a href="../reference/getFocalAnimalPedFromFile.html">getFocalAnimalPedFromFile()</a></code> reads the focal IDs exactly as <code><a href="../reference/getFocalAnimalPed.html">getFocalAnimalPed()</a></code> does, then builds the same connected pedigree component from your file instead of from the database.</p>
-<p>The Shiny app (<code><a href="../reference/runModularApp.html">runModularApp()</a></code>) drives this same offline path from its Input tab (see the <em>In the Shiny app</em> section below); here we script it directly.</p>
+<p>The Shiny app (<code><a href="../reference/runGeneKeepR.html">runGeneKeepR()</a></code>) drives this same offline path from its Input tab (see the <em>In the Shiny app</em> section below); here we script it directly.</p>
 </section><section class="level2"><h2 id="sec-setup">Setup<a class="anchor" aria-label="anchor" href="#sec-setup"></a>
 </h2>
 <div class="cell">
@@ -224,7 +224,7 @@
 <p>This fail-soft contract is specific to the offline file path. The online <code><a href="../reference/getFocalAnimalPed.html">getFocalAnimalPed()</a></code> instead returns an <code>nprcgenekeeprErr</code> on a database failure, so code that handles both paths should check for each class. In the Shiny app, an <code>nprcgenekeeprFileErr</code> surfaces as a <strong>File Read Error</strong> row on the Errors tab, with its <code>message</code> as the detail.</p>
 </section><section class="level2"><h2 id="sec-app">In the Shiny app<a class="anchor" aria-label="anchor" href="#sec-app"></a>
 </h2>
-<p>To do the same thing interactively, launch <code><a href="../reference/runModularApp.html">runModularApp()</a></code> and, on the <strong>Input</strong> tab:</p>
+<p>To do the same thing interactively, launch <code><a href="../reference/runGeneKeepR.html">runGeneKeepR()</a></code> and, on the <strong>Input</strong> tab:</p>
 <ol type="1">
 <li>under <strong>File Content</strong>, choose <em>“Focal animals only; pedigree built from database”</em>;</li>
 <li>upload your focal-animal ID file under <strong>Select Focal Animals File</strong>;</li>
@@ -274,7 +274,7 @@
 <li>
 <code><a href="../reference/getFileDirectRelatives.html">getFileDirectRelatives()</a></code> – the lower-level function that walks the pedigree file to build the connected component (and exposes the <code>unrelatedParents</code> option, which <code><a href="../reference/getFocalAnimalPedFromFile.html">getFocalAnimalPedFromFile()</a></code> leaves at its default).</li>
 <li>
-<code><a href="../reference/runModularApp.html">runModularApp()</a></code> – the Shiny app, whose Input tab drives this same offline workflow interactively.</li>
+<code><a href="../reference/runGeneKeepR.html">runGeneKeepR()</a></code> – the Shiny app, whose Input tab drives this same offline workflow interactively.</li>
 </ul>
 <p><strong>Reference.</strong></p>
 <p>Vinson A, Raboin MJ (2015). “A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity in a Large Colony of Captive Rhesus Macaques (<em>Macaca mulatta</em>).” <em>Journal of the American Association for Laboratory Animal Science</em> 54(6):700-707.</p>
