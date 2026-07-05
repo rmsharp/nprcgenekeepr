@@ -10,11 +10,16 @@
 #'
 #'     available[[i]] <- setdiff(available[[i]], kin[[id]])
 #'
-#' @param kin dataframe with kinship values
+#' @param kin named list of high-kinship relatives, as produced by
+#' \code{getAnimalsWithHighKinship}, where each name is an animal Id and
+#' each value is a character vector of the Ids sharing a kinship value at
+#' or above the threshold.
 #' @param candidates character vector of IDs of the animals available for
 #' use in the group.
-#' @return A dataframe with kinships in long form after adding a row for each
-#' animal without a relative.
+#' @return The named list of high-kinship relatives (one element per
+#' animal Id, each value a character vector of that Id's high-kinship
+#' relatives) with an added element set to \code{NA} for each candidate
+#' that has no relative.
 #'
 #' @export
 #' @examples

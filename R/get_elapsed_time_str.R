@@ -5,7 +5,8 @@
 #'
 #' Taken from github.com/rmsharp/rmsutilityr
 #'
-#' @param start_time a POSIXct time object
+#' @param start_time a \code{proc_time} object as returned by
+#' \code{proc.time()}
 #' @return A character vector describing the passage of time in hours, minutes,
 #' and seconds.
 #'

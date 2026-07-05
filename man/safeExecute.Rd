@@ -19,8 +19,8 @@ safeExecute(
 
 \item{default}{The value to return if an error occurs. Defaults to NULL.}
 
-\item{silent}{logical. If TRUE, suppresses the error notification.
-Defaults to FALSE.}
+\item{silent}{logical. If TRUE, suppresses the error and warning
+logging. Defaults to FALSE.}
 
 \item{notify}{logical. If TRUE and in a Shiny context, shows a notification
 to the user. Defaults to FALSE.}

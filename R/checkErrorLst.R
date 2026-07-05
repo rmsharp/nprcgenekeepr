@@ -6,7 +6,7 @@
 #' @param errorLst list with fields for each type of error detectable by
 #' \code{qcStudbook}.
 #' @return Returns FALSE if all fields are empty or the list is NULL
-#' else the entire list is returned.
+#' otherwise TRUE.
 #'
 #' @export
 #' @examples

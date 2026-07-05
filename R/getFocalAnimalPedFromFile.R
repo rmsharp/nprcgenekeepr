@@ -11,11 +11,13 @@
 #' entirely offline -- no LabKey / EHR connection is required.
 #'
 #' The underlying file source errors loudly on a bad pedigree file, but this
-#' function is the application boundary, so it is fail-soft: it returns
-#' \code{NULL} when the pedigree file is missing, does not exist, or lacks the
-#' \code{id}, \code{sire}, and \code{dam} columns. (This mirrors how the app's
-#' other file inputs behave -- a \code{NULL} surfaces a "File Read Error" -- and
-#' is distinct from the LabKey path, which returns an \code{nprcgenekeeprErr}.)
+#' function is the application boundary, so it is fail-soft: it does NOT throw.
+#' On failure it returns a classed \code{nprcgenekeeprFileErr} object whose
+#' \code{message} names the reason -- a missing, not-found, or unreadable
+#' pedigree file, or one lacking the \code{id}, \code{sire}, and \code{dam}
+#' columns. (This mirrors how the app's other file inputs behave -- the
+#' \code{message} surfaces as a "File Read Error" -- and is distinct from the
+#' LabKey path, which returns an \code{nprcgenekeeprErr}.)
 #'
 #' @param fileName character path to a file (CSV, delimited text, or Excel)
 #' whose first column is the list of focal animal Ids.

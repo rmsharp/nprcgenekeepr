@@ -28,7 +28,7 @@ errors and returns the (id-coerced) table when the input is acceptable.
 \code{kinship} is the kinship coefficient \emph{f} (the probability that an
 allele drawn at random from each of the two animals is identical by descent),
 \strong{not} the coefficient of relatedness \emph{r} (= 2\emph{f} for
-non-inbred animals). Supplying \emph{r} -- e.g. 0.5 for half-sibs whose true
+non-inbred animals). Supplying \emph{r} -- e.g. 0.25 for half-sibs whose true
 \emph{f} is 0.125 -- silently corrupts the matrix, so an off-diagonal value
 above 0.5 (the maximum for a non-inbred pair) draws a warning here. The exact
 positive-semi-definiteness bound is enforced by

@@ -8,8 +8,8 @@ summarizeKinshipValues(countedKValues)
 }
 \arguments{
 \item{countedKValues}{list object from countKinshipValues function that
-containes the lists \code{kinshipIds}, \code{kinshipValues},
-and \code{kinshipCounts}.}
+containes the lists \code{kIds}, \code{kValues},
+and \code{kCounts}.}
 }
 \value{
 a data.frame with one row of summary statistics for each imputed

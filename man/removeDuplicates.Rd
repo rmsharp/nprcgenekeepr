@@ -10,12 +10,16 @@ removeDuplicates(ped, reportErrors = FALSE)
 \item{ped}{dataframe that is the \code{Pedigree}. It contains pedigree
 information. The \code{id} and \code{recordStatus} columns are required.}
 
-\item{reportErrors}{logical value if TRUE will scan the entire file and
-make a list of all errors found. The errors will be returned in a
-list of list where each sublist is a type of error found.}
+\item{reportErrors}{logical value if TRUE the function returns a
+character vector of duplicate \code{id} values found among
+original records (or \code{NULL} when none are found) instead of
+the de-duplicated pedigree.}
 }
 \value{
-Pedigree object with all duplicates removed.
+When \code{reportErrors} is \code{FALSE}, a \code{Pedigree}
+object with duplicate rows removed; when \code{reportErrors} is
+\code{TRUE}, a character vector of duplicate \code{id} values (or
+\code{NULL} when none are found).
 }
 \description{
 Part of Pedigree Curation

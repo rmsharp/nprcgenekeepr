@@ -16,8 +16,8 @@ considered in group formation. Pairwise kinship below this level will be
 ignored.}
 }
 \value{
-The kinship matrix with all kinship relationships below the
-threshold value removed.
+The filtered long-format kinship table (a data.frame) with all
+kinship relationships below the threshold value removed.
 }
 \description{
 Part of Group Formation

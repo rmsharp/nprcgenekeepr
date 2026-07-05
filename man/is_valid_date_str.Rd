@@ -13,11 +13,13 @@ is_valid_date_str(
 \arguments{
 \item{date_str}{character vector with 0 or more dates}
 
-\item{format}{character vector of length one having the date format}
+\item{format}{character vector of length one. Retained for backward
+compatibility; the current implementation validates dates with
+\code{anytime()} and does not use \code{format}.}
 
-\item{optional}{parameter to \code{as.Date}. Logical value indicating
-to return NA (instead of signaling an error) if the format guessing does not
-succeed. Defaults to FALSE.}
+\item{optional}{logical value indicating that NA should be returned
+instead of \code{FALSE} for strings that are not valid dates.
+Defaults to FALSE.}
 }
 \value{
 A logical value or \code{NA} indicating whether or not the provided

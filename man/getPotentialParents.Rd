@@ -43,9 +43,9 @@ to \code{NULL}, which uses the bundled \code{\link{speciesGestation}} table.}
 }
 \value{
 a list of list with each internal list being made up of an animal
-id (\code{id}), a vector of possible sires (\code{sire}) and a vector of
-possible dams (\code{dam}). The \code{id} must be defined while the
-vectors \code{sire} and \code{dam} can be empty.
+id (\code{id}), a vector of possible sires (\code{sires}) and a vector of
+possible dams (\code{dams}). The \code{id} must be defined while the
+vectors \code{sires} and \code{dams} can be empty.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

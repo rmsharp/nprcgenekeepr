@@ -8,7 +8,7 @@
 #' @param ids character vector with original IDs
 #' @param map named character vector where the values are the obfuscated IDs
 #' and the vector of names (\code{names(map)}) is the vector of original names.
-#' @return A dataframe or vector with original IDs replaced by their obfuscated
+#' @return A character vector with original IDs replaced by their obfuscated
 #' counterparts.
 #'
 #' @family obfuscation

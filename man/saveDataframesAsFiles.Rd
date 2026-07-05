@@ -7,13 +7,12 @@
 saveDataframesAsFiles(dfList, baseDir, fileType = "csv")
 }
 \arguments{
-\item{dfList}{list of dataframes to be stored as files.
-\code{"txt"}, \code{"csv"}, or \code{"xlsx"}. Default value is \code{"csv"}.}
+\item{dfList}{list of dataframes to be stored as files.}
 
 \item{baseDir}{character vector of length on with the directory path.}
 
 \item{fileType}{character vector of length one with possible values of
-\code{"txt"}, \code{"csv"}, or \code{"xlsx"}. Default value is \code{"csv"}.}
+\code{"txt"}, \code{"csv"}, or \code{"excel"}. Default value is \code{"csv"}.}
 }
 \value{
 Full path name of files saved.

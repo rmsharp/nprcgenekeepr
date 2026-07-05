@@ -3,8 +3,8 @@
 
 #' Get the version number of nprcgenekeepr
 #'
-#' @param date A logical value when TRUE (default) a date in YYYYMMDD format
-#' within parentheses is appended.
+#' @param date A logical value when TRUE (default) a date in YYYY-MM-DD
+#' (ISO) format within parentheses is appended.
 #' @return Current Version
 #' @importFrom utils packageVersion
 #' @importFrom sessioninfo package_info

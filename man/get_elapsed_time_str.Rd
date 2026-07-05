@@ -7,7 +7,8 @@
 get_elapsed_time_str(start_time)
 }
 \arguments{
-\item{start_time}{a POSIXct time object}
+\item{start_time}{a \code{proc_time} object as returned by
+\code{proc.time()}}
 }
 \value{
 A character vector describing the passage of time in hours, minutes,

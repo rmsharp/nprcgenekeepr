@@ -13,8 +13,8 @@
 #' @param threshold numeric value representing the minimum kinship level to be
 #' considered in group formation. Pairwise kinship below this level will be
 #' ignored.
-#' @return The kinship matrix with all kinship relationships below the
-#' threshold value removed.
+#' @return The filtered long-format kinship table (a data.frame) with all
+#' kinship relationships below the threshold value removed.
 #'
 #' @export
 #' @examples

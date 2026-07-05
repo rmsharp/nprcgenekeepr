@@ -10,8 +10,9 @@ getTokenList(lines)
 \item{lines}{character vector with text from configuration file}
 }
 \value{
-First right and left space trimmed token from first character vector
-element.
+A list with two elements: \code{param}, a character vector of
+parameter names, and \code{tokenVec}, a list of the token vectors parsed
+for each parameter.
 }
 \description{
 Get tokens from a character vector of lines

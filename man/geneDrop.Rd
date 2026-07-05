@@ -38,11 +38,12 @@ will be called during each iteration to update a
 \code{shiny::Progress} object.}
 }
 \value{
-A data.frame \code{id, parent, V1 ... Vn}
+A data.frame \code{V1 ... Vn, id, parent}
 A data.frame providing the maternal and paternal alleles for an animal
-for each iteration. The first two columns provide the animal's ID and
-whether the allele came from the sire or dam. These are followed by
-\code{n} columns indicating the allele for that iteration.
+for each iteration. The first \code{n} columns indicate the allele for
+each iteration. These are followed by two columns: \code{id}, the
+animal's ID, and \code{parent}, whether the allele came from the sire
+or dam.
 }
 \description{
 Part of Genetic Value Analysis

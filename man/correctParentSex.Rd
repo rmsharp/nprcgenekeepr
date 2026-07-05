@@ -27,8 +27,12 @@ make a list of all errors found. The errors will be returned in a
 list of list where each sublist is a type of error found.}
 }
 \value{
-A factor with levels: "M", "F", "H", and "U"
-representing the sex codes for the ids provided
+When \code{reportErrors = FALSE}, a factor (or character
+vector) of corrected sex codes with levels \code{"M"}, \code{"F"},
+\code{"H"}, and \code{"U"} for the ids provided. When
+\code{reportErrors = TRUE}, a named list of error vectors with
+elements \code{sireAndDam}, \code{femaleSires}, and \code{maleDams}
+(each \code{NULL} when no such errors are found).
 }
 \description{
 Part of Pedigree Curation

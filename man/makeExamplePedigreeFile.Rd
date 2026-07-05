@@ -13,7 +13,7 @@ makeExamplePedigreeFile(
 \item{file}{character vector of length one providing the file name}
 
 \item{fileType}{character vector of length one with possible values of
-\code{"txt"}, \code{"csv"}, or \code{"xlsx"}. Default value is \code{"csv"}.}
+\code{"txt"}, \code{"csv"}, or \code{"excel"}. Default value is \code{"csv"}.}
 }
 \value{
 Full path name of file saved.

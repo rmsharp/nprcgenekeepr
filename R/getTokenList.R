@@ -4,8 +4,9 @@
 #' Get tokens from a character vector of lines
 #'
 #' @param lines character vector with text from configuration file
-#' @return First right and left space trimmed token from first character vector
-#' element.
+#' @return A list with two elements: \code{param}, a character vector of
+#' parameter names, and \code{tokenVec}, a list of the token vectors parsed
+#' for each parameter.
 #'
 #' @importFrom stringi stri_replace_all_fixed stri_replace_all_regex
 #' @importFrom stringi stri_trim_both stri_split_regex

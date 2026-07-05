@@ -3,9 +3,10 @@
 
 #' Create example pedigree and ID-list CSV files
 #'
-#' Creates a folder named \code{~/tmp/ExamplePedigrees} if it does not already
-#' exist. It then proceeds to write each example pedigree into a CSV file named
-#' based on the name of the example pedigree.
+#' Creates a folder named \code{ExamplePedigrees} under the R session temporary
+#' directory (as returned by \code{tempdir()}) if it does not already exist. It
+#' then proceeds to write each example pedigree into a CSV file named based on
+#' the name of the example pedigree.
 #'
 #' @return A vector of the names of the files written.
 #'

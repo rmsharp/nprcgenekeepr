@@ -13,7 +13,7 @@ mapIdsToObfuscated(ids, map)
 and the vector of names (\code{names(map)}) is the vector of original names.}
 }
 \value{
-A dataframe or vector with original IDs replaced by their obfuscated
+A character vector with original IDs replaced by their obfuscated
 counterparts.
 }
 \description{

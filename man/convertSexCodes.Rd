@@ -25,8 +25,10 @@ Standard sex codes are
 \itemize{
 \item \code{F} -- replacing "FEMALE" or "2"
 \item \code{M} -- replacing "MALE" or "1"
-\item \code{H} -- replacing "HERMAPHRODITE" or "4", if ignore.herm == FALSE
-\item \code{U} -- replacing "HERMAPHRODITE" or "4", if ignore.herm == TRUE
+\item \code{H} -- replacing "HERMAPHRODITE" or "4", if
+\code{ignoreHerm} == FALSE
+\item \code{U} -- replacing "HERMAPHRODITE" or "4", if
+\code{ignoreHerm} == TRUE
 \item \code{U} -- replacing "UNKNOWN" or "3"
 }
 }

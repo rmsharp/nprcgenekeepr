@@ -77,7 +77,9 @@ modPyramidUI <- function(id) {
 #' @param id character vector of length 1. Module namespace identifier.
 #' @param pedigreeData reactive returning pedigree data frame.
 #'
-#' @return List with \code{data}, \code{plot}, and \code{livingCount}.
+#' @return A list with two elements: \code{pedigree}, a reactive
+#'   returning the pedigree data frame, and \code{animalCount}, a
+#'   reactive returning the number of animal rows.
 #'
 #' @seealso \code{\link{modPyramidUI}}
 #' @importFrom grDevices dev.off png

@@ -18,7 +18,7 @@ existent.}
 use in the group.}
 
 \item{ped}{dataframe that is the \code{Pedigree}. It contains pedigree
-information including the IDs listed in \code{candidates}.}
+information including the IDs listed in \code{ids}.}
 
 \item{harem}{logical variable when set to \code{TRUE}, the formed groups
 have a single male at least \code{minAge} old.}

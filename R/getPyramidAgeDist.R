@@ -3,9 +3,10 @@
 
 #' Get the age distribution for the pedigree
 #'
-#' Forms a dataframe with columns \code{id}, \code{birth}, \code{sex},
-#' and \code{age} for those animals with a status of \code{Alive} in the
-#' pedigree.
+#' Returns the pedigree with all animals, adding a \code{status} column
+#' describing each animal as \code{ALIVE} or \code{DECEASED} and a
+#' computed \code{age} column (age at exit for deceased animals). All
+#' animals are returned, not only living ones.
 #'
 #' The lubridate package is used here because of the way the modern Gregorian
 #' calendar is constructed, there is no straightforward arithmetic method

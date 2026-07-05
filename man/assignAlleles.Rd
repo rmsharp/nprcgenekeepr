@@ -19,8 +19,7 @@ to track the lists of\code{alleles$alleles}.}
 
 \item{id}{character vector of length one containing the animal ID}
 
-\item{n}{integer indicating the number of iterations to simulate.
-Default is 5000.}
+\item{n}{integer indicating the number of iterations to simulate.}
 }
 \value{
 The original list \code{alleles} passed into the function with newly

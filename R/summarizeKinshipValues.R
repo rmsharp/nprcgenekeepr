@@ -7,8 +7,8 @@
 #' using the counts of kinship values list from \code{countKinshipValues}.
 #'
 #' @param countedKValues list object from countKinshipValues function that
-#' containes the lists \code{kinshipIds}, \code{kinshipValues},
-#' and \code{kinshipCounts}.
+#' containes the lists \code{kIds}, \code{kValues},
+#' and \code{kCounts}.
 #' @return a data.frame with one row of summary statistics for each imputed
 #' kinship value. The columns are as follows:
 #'  \code{id_1},

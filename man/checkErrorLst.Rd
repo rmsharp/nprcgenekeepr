@@ -12,7 +12,7 @@ checkErrorLst(errorLst)
 }
 \value{
 Returns FALSE if all fields are empty or the list is NULL
-else the entire list is returned.
+otherwise TRUE.
 }
 \description{
 Check an error list for non-empty fields

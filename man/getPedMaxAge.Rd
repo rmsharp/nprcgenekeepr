@@ -2,7 +2,7 @@
 % Please edit documentation in R/getPedMaxAge.R
 \name{getPedMaxAge}
 \alias{getPedMaxAge}
-\title{Get the maximum age of live animals in the pedigree}
+\title{Get the maximum age of any animal in the pedigree}
 \usage{
 getPedMaxAge(ped)
 }
@@ -14,7 +14,9 @@ Numeric value representing the maximum age of animals in the
 pedigree.
 }
 \description{
-Get the maximum age of live animals in the pedigree
+Returns the maximum age among all animals in the pedigree that
+have a non-NA age. Because ages are computed for deceased animals
+(age at exit) as well, the maximum can reflect a deceased animal.
 }
 \examples{
 library(nprcgenekeepr)

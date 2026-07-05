@@ -23,8 +23,12 @@
 #' @param recordStatus character vector with value of \code{"added"} or
 #' \code{"original"}, which indicates whether an animal was added or an
 #' original animal.
-#' @return A factor with levels: "M", "F", "H", and "U"
-#' representing the sex codes for the ids provided
+#' @return When \code{reportErrors = FALSE}, a factor (or character
+#' vector) of corrected sex codes with levels \code{"M"}, \code{"F"},
+#' \code{"H"}, and \code{"U"} for the ids provided. When
+#' \code{reportErrors = TRUE}, a named list of error vectors with
+#' elements \code{sireAndDam}, \code{femaleSires}, and \code{maleDams}
+#' (each \code{NULL} when no such errors are found).
 #'
 #' @export
 #' @examples

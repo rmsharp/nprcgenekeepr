@@ -12,7 +12,6 @@
 #' @param parent either \code{ped[id, "sire"]} or \code{ped[id, "dam"]}.
 #' @param id character vector of length one containing the animal ID
 #' @param n integer indicating the number of iterations to simulate.
-#' Default is 5000.
 #' @return The original list \code{alleles} passed into the function with newly
 #' randomly assigned alleles to each \code{id} based on dam and sire genotypes.
 #'

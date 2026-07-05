@@ -19,8 +19,9 @@ offspring that are part of the focal population are to be counted?
 Default is \code{FALSE}.}
 }
 \value{
-A dataframe with at least \code{id} and \code{totalOffspring}
-required and \code{livingOffspring} optional.
+A dataframe containing the column \code{totalOffspring} (and
+\code{livingOffspring} when \code{considerPop} is \code{TRUE}), with the
+animal ids as the data frame row names.
 }
 \description{
 Optionally find the number that are part of the population of interest.

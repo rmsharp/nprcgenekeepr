@@ -29,7 +29,7 @@ vector of \code{1:numGp}.}
 threshold value.}
 
 \item{ped}{dataframe that is the \code{Pedigree}. It contains pedigree
-information including the IDs listed in \code{candidates}.}
+information including the IDs listed in \code{ids}.}
 
 \item{minAge}{integer value indicating the minimum age to consider in group
 formation. Pairwise kinships involving an animal of this age or younger will

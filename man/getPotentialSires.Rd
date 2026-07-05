@@ -10,11 +10,11 @@ getPotentialSires(ids, ped, minAge = 1L)
 \item{ids}{character vector of animal IDs}
 
 \item{ped}{dataframe that is the \code{Pedigree}. It contains pedigree
-information including the IDs listed in \code{candidates}.}
+information including the IDs listed in \code{ids}.}
 
-\item{minAge}{integer value indicating the minimum age to consider in group
-formation. Pairwise kinships involving an animal of this age or younger will
-be ignored. Default is 1 year.}
+\item{minAge}{integer value giving the inclusive minimum current age (in
+years) a male must have to be listed as a potential sire. Default is 1
+year.}
 }
 \value{
 A character vector of potential sire Ids

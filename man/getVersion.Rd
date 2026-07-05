@@ -7,8 +7,8 @@
 getVersion(date = TRUE)
 }
 \arguments{
-\item{date}{A logical value when TRUE (default) a date in YYYYMMDD format
-within parentheses is appended.}
+\item{date}{A logical value when TRUE (default) a date in YYYY-MM-DD
+(ISO) format within parentheses is appended.}
 }
 \value{
 Current Version

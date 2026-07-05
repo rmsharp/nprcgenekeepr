@@ -4,9 +4,6 @@
 #' Remove potential sires from a list of IDs
 #'
 #' @inheritParams getParents
-#' @param minAge integer value indicating the minimum age to consider in group
-#' formation. Pairwise kinships involving an animal of this age or younger will
-#'  be ignored. Default is 1 year.
 #' @inheritParams getPotentialSires
 #' @return character vector of Ids with any potential sire Ids removed.
 #'

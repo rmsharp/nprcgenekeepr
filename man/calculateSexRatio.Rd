@@ -10,7 +10,7 @@ calculateSexRatio(ids, ped, additionalMales = 0L, additionalFemales = 0L)
 \item{ids}{character vector of animal IDs}
 
 \item{ped}{dataframe that is the \code{Pedigree}. It contains pedigree
-information including the IDs listed in \code{candidates}.}
+information including the IDs listed in \code{ids}.}
 
 \item{additionalMales}{Integer value of males to add to those within the
 group when calculating the ratio. Ignored if calculated ratio is 0 or Inf.

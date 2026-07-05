@@ -11,8 +11,8 @@
 #' @param expr An expression to evaluate.
 #' @param module character. Name of the calling module for logging purposes.
 #' @param default The value to return if an error occurs. Defaults to NULL.
-#' @param silent logical. If TRUE, suppresses the error notification.
-#'   Defaults to FALSE.
+#' @param silent logical. If TRUE, suppresses the error and warning
+#'   logging. Defaults to FALSE.
 #' @param notify logical. If TRUE and in a Shiny context, shows a notification
 #'   to the user. Defaults to FALSE.
 #'

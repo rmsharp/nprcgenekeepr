@@ -12,7 +12,8 @@
 \arguments{
 \item{x}{object of class summary.nprcgenekeeprErr and class list}
 
-\item{...}{additional arguments for the \code{summary.default} statement}
+\item{...}{further arguments passed to the \code{print()} call for the
+suspicious-parents table (and ignored by the GV method)}
 }
 \value{
 An object to send to the generic print function

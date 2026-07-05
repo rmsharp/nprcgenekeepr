@@ -11,10 +11,14 @@
 #'
 #' @param ped dataframe that is the \code{Pedigree}. It contains pedigree
 #' information. The \code{id} and \code{recordStatus} columns are required.
-#' @param reportErrors logical value if TRUE will scan the entire file and
-#' make a list of all errors found. The errors will be returned in a
-#' list of list where each sublist is a type of error found.
-#' @return Pedigree object with all duplicates removed.
+#' @param reportErrors logical value if TRUE the function returns a
+#' character vector of duplicate \code{id} values found among
+#' original records (or \code{NULL} when none are found) instead of
+#' the de-duplicated pedigree.
+#' @return When \code{reportErrors} is \code{FALSE}, a \code{Pedigree}
+#' object with duplicate rows removed; when \code{reportErrors} is
+#' \code{TRUE}, a character vector of duplicate \code{id} values (or
+#' \code{NULL} when none are found).
 #'
 #' @export
 #' @examples

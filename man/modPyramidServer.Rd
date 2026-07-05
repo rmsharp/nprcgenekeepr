@@ -12,7 +12,9 @@ modPyramidServer(id, pedigreeData)
 \item{pedigreeData}{reactive returning pedigree data frame.}
 }
 \value{
-List with \code{data}, \code{plot}, and \code{livingCount}.
+A list with two elements: \code{pedigree}, a reactive
+returning the pedigree data frame, and \code{animalCount}, a
+reactive returning the number of animal rows.
 }
 \description{
 Age-Sex Pyramid Module - Server Function

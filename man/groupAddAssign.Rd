@@ -29,7 +29,7 @@ use in forming the groups. The animals that may be present in
 Animal IDs are the row and column names.}
 
 \item{ped}{dataframe that is the \code{Pedigree}. It contains pedigree
-information including the IDs listed in \code{candidates}.}
+information including the IDs listed in \code{ids}.}
 
 \item{currentGroups}{List of character vectors of IDs of animals currently
 assigned to groups.

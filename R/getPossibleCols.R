@@ -19,7 +19,7 @@
 #' column rather than retained as an unrecognized novel column.}
 #' \item{gen}{ -- integer vector with the generation number of the
 #' individual}
-#' \item{birth}{ -- Date or \code{N} (optional) with the individual's birth
+#' \item{birth}{ -- Date or \code{NA} (optional) with the individual's birth
 #' date}
 #' \item{exit}{ -- Date or \code{NA} (optional) with the individual's exit
 #'  date

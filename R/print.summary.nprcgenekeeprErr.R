@@ -4,7 +4,8 @@
 #' Print an nprcgenekeepr summary object
 #'
 #' @param x object of class summary.nprcgenekeeprErr and class list
-#' @param ... additional arguments for the \code{summary.default} statement
+#' @param ... further arguments passed to the \code{print()} call for the
+#'   suspicious-parents table (and ignored by the GV method)
 #' @return An object to send to the generic print function
 #'
 #' @importFrom stringi stri_c

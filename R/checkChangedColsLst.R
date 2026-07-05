@@ -5,8 +5,8 @@
 #'
 #' @param changedCols list with fields for each type of column change
 #' \code{qcStudbook}.
-#' @return Returns \code{NULL} if all fields are empty
-#' else the entire list is returned.
+#' @return Returns \code{TRUE} if any changed-columns field is
+#' non-empty, otherwise \code{FALSE}.
 #'
 #' @export
 #' @examples

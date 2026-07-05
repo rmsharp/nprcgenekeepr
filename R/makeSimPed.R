@@ -3,9 +3,10 @@
 
 #' Make a simulated pedigree from representative sires and dams
 #'
-#' For each \code{id} in \code{allSimParents} with one or more unknown parents
-#' each unknown parent is replaced with a random sire or dam as needed from
-#' the corresponding parent vector (\code{sires} or \code{dams}).
+#' For each \code{id} in \code{allSimParents}, the sire and dam are
+#' (re)assigned by a random draw from the supplied representative vectors
+#' (\code{sires} and \code{dams}). An empty vector yields an \code{NA}
+#' parent. Existing known parents are overwritten.
 #'
 #' The algorithm assigns parents randomly from the lists of possible sires and
 #' dams and does not prevent a dam from being selected more than once within
