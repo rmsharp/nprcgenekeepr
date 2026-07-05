@@ -11,6 +11,8 @@ inst/extdata/Notes.txt
 inst/extdata/PSCPO*.*
 inst/extdata/notes.*
 !inst/extdata/notes.Rmd
+nprcgenekeepr_*.tar.gz
+nprcgenekeepr.Rcheck/
 R/groupAssign.R
 R/groupAddition.R
 R/depricated_groupAssign.R
