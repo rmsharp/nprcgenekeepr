@@ -15,6 +15,54 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-04 — issue \#109 — broad documentation-error audit (all 203 man pages): 38 confirmed doc-vs-code errors (Session 273)
+
+- **Deliverable (owner scope-gate via `AskUserQuestion` = “Broad
+  audit”):** issue \#109’s second clause, *“Audit the code for similar
+  documentation errors.”* S272 fixed the reported instance and
+  deterministically swept its *rendering* class (0 remaining); this
+  session audits the broader, judgment-heavy class the automated gate
+  cannot see — **documentation that is factually wrong about what the
+  code does** (valid Rd that passes `R CMD check`/`checkRd`/`document()`
+  yet misleads). **Analysis-only, REFACTOR-class; no `R/` modified; the
+  fixes are a separate owner-gated session; TDD RED/GREEN N/A; 0
+  corrections / 0 overrides.**
+- **Deliverable artifact:**
+  `docs/audits/ISSUE_109_DOC_ERROR_AUDIT_2026-07-04.md`
+  (developer-facing, `.Rbuildignore`d — like the S244
+  `ROXYGEN_HARMONIZATION_AUDIT`).
+- **Result: 38 confirmed documentation errors — 3 Critical, 22 Moderate,
+  13 Minor** (15 factual-mismatch, 12 wrong-return, 10 wrong-param, 1
+  misleading-render; 0 broken-example, 0 broken-xref). The 3 Critical
+  break a caller who follows the docs: `checkChangedColsLst` (`@return`
+  says “NULL / the list” but returns `TRUE`/`FALSE`),
+  `getFocalAnimalPedFromFile` (`@details` says returns `NULL` but
+  returns a classed `nprcgenekeeprFileErr`, contradicting its own
+  `@return`), `saveDataframesAsFiles` (documents `fileType="xlsx"` but
+  the code’s `stopifnot` accepts only `"excel"`).
+- **Dominant root cause = copy-paste drift between sibling functions**
+  (and code that evolved past its doc). Clusters: a `getPotentialSires`
+  `@param ped`/`minAge` donor bug that cascades via `@inheritParams` (4
+  findings, 1 fix); logical-scalar checkers documented as NULL/list;
+  `reportErrors=TRUE` alternate returns undocumented; `@return`
+  list-element names not matching the code; return-type mislabels;
+  `"xlsx"` vs `"excel"`; a “live animals only” filter the code never
+  applies;
+  [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+  self-kinship is 0.5 documented as 1.0.
+- **Method:** deterministic pre-pass (confirmed all 8 S244 defects D1–D8
+  fixed; `\link` xrefs 100% resolve; doubled-`.Rd`/empty-`\code{}` = 0;
+  data-doc columns match; `document()` zero warnings/drift) → a 17-batch
+  multi-agent semantic sweep (doc read against source + running
+  function) → adversarial per-finding verification (default-refute) →
+  session-author firsthand re-verification of all 3 Critical + a
+  cross-class sample + the 1 refuted candidate (`getRequiredCols`,
+  correctly refuted — “(optional)” qualifies the value, not the column).
+  56 agents, 0 errors; 39 candidates → 38 confirmed, 1 refuted.
+- **This is the delta, not a re-run** of the S244 harmonization audit
+  (voice/de-dup/ordering, largely implemented): \#109’s lens is
+  *errors*, distinct from \#103’s *harmonization*.
+
 ### 2026-07-04 — issue \#109 — fix roxygen `\code{}` rendered literally inside a `\preformatted{}` code block (`addAnimalsWithNoRelative`) (Session 272)
 
 - **Deliverable (owner scope-gate + fix-form-gate + landing-gate via
