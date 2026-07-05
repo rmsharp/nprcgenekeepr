@@ -26,8 +26,9 @@
 #' standard error of 0.
 #'
 #' @param alleles dataframe containing an \code{AlleleTable} (the same input
-#' \code{\link{calcGU}} takes): an \code{id} column, a \code{parent} column, and
-#' one integer column per gene-drop iteration. Produced by \code{geneDrop()}.
+#' \code{\link{calcGU}} takes): one integer column per gene-drop iteration,
+#' followed by an \code{id} column and a \code{parent} column. Produced by
+#' \code{geneDrop()}.
 #' @inheritParams calcGU
 #' @param byID logical variable of length 1 that is passed through to
 #' eventually be used by \code{alleleFreq()}, which calculates the count of each

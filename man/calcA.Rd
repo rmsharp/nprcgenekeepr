@@ -7,10 +7,10 @@
 calcA(alleles, threshold = 1L, byID = FALSE)
 }
 \arguments{
-\item{alleles}{a matrix with \{id, parent, V1 ... Vn\} providing the alleles
+\item{alleles}{a matrix with \{V1 ... Vn, id, parent\} providing the alleles
 an animal received during each simulation.
-The first 2 columns provide the animal ID and the parent the allele came
-from. Remaining columns provide alleles.}
+The first n columns provide the alleles; the final two columns provide the
+animal ID and the parent the allele came from.}
 
 \item{threshold}{an integer indicating the maximum number of copies of an
 allele that can be present in the population for it to be considered rare.

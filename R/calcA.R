@@ -5,10 +5,10 @@
 #'
 #' Part of Genetic Value Analysis
 #'
-#' @param alleles a matrix with \{id, parent, V1 ... Vn\} providing the alleles
+#' @param alleles a matrix with \{V1 ... Vn, id, parent\} providing the alleles
 #' an animal received during each simulation.
-#' The first 2 columns provide the animal ID and the parent the allele came
-#' from. Remaining columns provide alleles.
+#' The first n columns provide the alleles; the final two columns provide the
+#' animal ID and the parent the allele came from.
 #' @inheritParams calcGU
 #' @param byID logical variable of length 1 that is passed through to
 #' eventually be used by \code{alleleFreq()}, which calculates the count of each

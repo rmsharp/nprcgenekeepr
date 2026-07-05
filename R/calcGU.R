@@ -45,12 +45,12 @@
 #' An AlleleTable contains information about alleles an ego has inherited.
 #' It contains the following columns:
 #' \itemize{
-#'  \item \code{id} --- A character vector of IDs for a set of animals.
-#'  \item \code{parent} --- A factor with levels of sire and dam.
 #'  \item \code{V1} --- Unnamed integer column representing allele 1.
 #'  \item \code{V2} --- Unnamed integer column representing allele 2.
 #'  \item \code{...} --- Unnamed integer columns representing alleles.
 #'  \item \code{Vn} --- Unnamed integer column representing the nth column.
+#'  \item \code{id} --- A character vector of IDs for a set of animals.
+#'  \item \code{parent} --- A factor with levels of sire and dam.
 #'  }
 #'
 #' @param threshold an integer indicating the maximum number of copies of an

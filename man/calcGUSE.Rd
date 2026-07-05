@@ -8,8 +8,9 @@ calcGUSE(alleles, threshold = 1L, byID = FALSE, pop = NULL)
 }
 \arguments{
 \item{alleles}{dataframe containing an \code{AlleleTable} (the same input
-\code{\link{calcGU}} takes): an \code{id} column, a \code{parent} column, and
-one integer column per gene-drop iteration. Produced by \code{geneDrop()}.}
+\code{\link{calcGU}} takes): one integer column per gene-drop iteration,
+followed by an \code{id} column and a \code{parent} column. Produced by
+\code{geneDrop()}.}
 
 \item{threshold}{an integer indicating the maximum number of copies of an
 allele that can be present in the population for it to be considered rare.

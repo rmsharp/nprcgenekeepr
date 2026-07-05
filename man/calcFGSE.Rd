@@ -12,9 +12,10 @@ calcFGSE(ped, alleles)
 The pedigree must have no partial parentage (every animal has both parents
 known or both unknown); \code{calcFGSE} stops with an error otherwise.}
 
-\item{alleles}{dataframe containing an \code{AlleleTable}: an \code{id}
-column, a \code{parent} column, and one column per gene-drop iteration.
-Produced by \code{geneDrop()}; the same input \code{\link{calcFG}} takes.}
+\item{alleles}{dataframe containing an \code{AlleleTable}: one column per
+gene-drop iteration, followed by an \code{id} column and a \code{parent}
+column. Produced by \code{geneDrop()}; the same input
+\code{\link{calcFG}} takes.}
 }
 \value{
 A single numeric value: the Monte Carlo sampling standard error
