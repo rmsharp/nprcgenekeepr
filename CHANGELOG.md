@@ -15,6 +15,67 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-05 — makeSimPed \#31 — `makeSimPed()` now preserves known parents instead of overwriting them (Session 277)
+
+- **Deliverable (owner scope-gate + 3 TDD phase-gates + landing-gate,
+  all via `AskUserQuestion`; ultracode read-only investigation Workflow
+  at pre-RED):** the issue \#109 audit’s finding \#31 flagged
+  [`makeSimPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeSimPed.md)’s
+  `@description` as a doc-vs-code mismatch; S274 (doc-only) had
+  reconciled the DOC to the buggy code (“Existing known parents are
+  overwritten”). This session determined the CODE was the defect and
+  fixed it.
+  [`makeSimPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeSimPed.md)’s
+  loop assigned every listed id’s sire/dam unconditionally
+  (`sample(vec, 1L)`, or `NA` for an empty vector), never checking
+  whether the existing parent was already known — so an animal with one
+  KNOWN and one unknown parent had its known parent silently overwritten
+  (or erased to `NA`) in the simulated-kinship pipeline, biasing the
+  estimate. The production builder
+  [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+  selects `is.na(sire) | is.na(dam)` (an OR → mixed known/unknown
+  animals ARE listed) and emits full candidate pools, so the corruption
+  bit end-to-end (reproduced: a known sire lost in 661/1000 sims). The
+  intended “impute only UNKNOWN parents” contract is stated by the
+  original doc, the `@examples` comment, `createSimKinships`’s
+  `@return`, and `getPotentialParents`’s title. Owner scope-gate =
+  **“Guard makeSimPed”** (over fix-`getPotentialParents` / doc-only).
+  **BEHAVIOR change → STRICT TDD (RED→GREEN→REFACTOR); direct-merge
+  landing; 0 stakeholder corrections / 0 owner overrides.**
+- **The fix:** `R/makeSimPed.R`’s loop now imputes a parent ONLY when
+  the existing value is `NA` (unknown); a known sire/dam is preserved
+  unchanged; robust to an id absent from `ped`. `@description` rewritten
+  (reversing S274’s now-false line); `man/makeSimPed.Rd` regenerated.
+  NAMESPACE diff EMPTY (no signature/export change).
+- **Tests:** 4 new preserve-known tests in `test_makeSimPed.R` (RED
+  against the overwrite code). 7 downstream characterization goldens
+  re-baselined across `test_createSimKinships.R`,
+  `test_cumulateSimKinships.R`, `test_countKinshipValues.R`,
+  `test_summarizeKinshipValues.R` — they shift because `smallPed`’s `A`
+  (known sire `Q`) is now correctly preserved; the audit predicted 2,
+  the full suite found all 7; each recomputed from the corrected code
+  and verified (A’s sire == `Q`; raw kinship(A,J)==0 across sims).
+- **Vignette:** `--as-cran` caught that `simulatedKValues.Rmd` joined
+  two `sd>0`-filtered summary frames by ROW POSITION (a latent bug the
+  behavior change exposed → `data.frame` “differing number of rows”);
+  both comparison chunks fixed with
+  [`merge()`](https://rdrr.io/r/base/merge.html) by `(id_1, id_2)`.
+- **NEWS:** dev-version bug-fix bullet (edited `NEWS.Rmd`, re-rendered
+  `NEWS.md`).
+- **Ultracode investigation (pre-RED, read-only):** a 9-agent Workflow
+  (5 investigate + 4 adversarial verify incl. firsthand R reproduction)
+  confirmed the hazard, showed the primitive is defensible under the
+  vignette’s singleton convention, and located the root cause at the
+  `getPotentialParents → makeSimPed` boundary before any edit.
+- **Verify:** full suite 0 fail / 0 error / 0 true offenders; `lintr` 0
+  on the changed R file; `spell_check_package` clean; NAMESPACE diff
+  empty; **`R CMD check --as-cran` (clean tree) GREEN — 0 errors / 0
+  warnings / 2 benign NOTEs** (archived-maintainer + HTML-Tidy),
+  `code/documentation mismatches … OK`, `testthat.R [67s] OK`, vignettes
+  rebuilt. Phase-3E done (behavior change; installed-namespace
+  testthat + example + direct smoke). `PROJECT_LEARNINGS.md` Learning
+  256.
+
 ### 2026-07-05 — issue \#110 — make `runGeneKeepR()` the canonical Shiny entry point again; `runModularApp()` becomes the soft-deprecated alias (Session 276)
 
 - **Deliverable (owner design-gate + 3 TDD phase-gates + landing-gate,

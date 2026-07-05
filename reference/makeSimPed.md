@@ -1,9 +1,10 @@
 # Make a simulated pedigree from representative sires and dams
 
-For each `id` in `allSimParents`, the sire and dam are (re)assigned by a
-random draw from the supplied representative vectors (`sires` and
-`dams`). An empty vector yields an `NA` parent. Existing known parents
-are overwritten.
+For each `id` in `allSimParents`, an *unknown* (`NA`) sire or dam is
+imputed by a random draw from the supplied representative vectors
+(`sires` and `dams`); a *known* sire or dam is preserved unchanged. When
+a parent is unknown and its representative vector is empty, that parent
+remains `NA`.
 
 ## Usage
 

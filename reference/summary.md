@@ -93,10 +93,10 @@ summary(geneticValue)
 #> Female Founders: 17
 #> Total Founders: 20 
 #> Founder Equivalents: 109.67 
-#> Founder Genome Equivalents: 47.01 +/- 0.31 
+#> Founder Genome Equivalents: 47.22 +/- 0.28 
 #> Live Offspring: 321 
-#> High Value Individuals: 238 
-#> Low Value Individuals: 89 
+#> High Value Individuals: 240 
+#> Low Value Individuals: 87 
 summary(trimmedGeneticValue)
 #> The genetic value report 
 #> Individuals in Pedigree: 704 
@@ -104,8 +104,8 @@ summary(trimmedGeneticValue)
 #> Female Founders: 17
 #> Total Founders: 20 
 #> Founder Equivalents: 116.8 
-#> Founder Genome Equivalents: 65.85 +/- 0.19 
+#> Founder Genome Equivalents: 65.90 +/- 0.19 
 #> Live Offspring: 1004 
-#> High Value Individuals: 288 
-#> Low Value Individuals: 234 
+#> High Value Individuals: 285 
+#> Low Value Individuals: 237 
 ```

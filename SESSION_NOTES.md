@@ -7,6 +7,231 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 277 Did
+
+**Deliverable (owner scope-gate + 3 TDD phase-gates + landing-gate, all
+via `AskUserQuestion`; ultracode read-only investigation Workflow at
+pre-RED):** fix the issue \#109 audit’s finding \#31 –
+[`makeSimPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeSimPed.md)
+overwrites KNOWN parents unconditionally. S274 (doc-only) had reconciled
+the DOC to the buggy code (“Existing known parents are overwritten”);
+this session determined the CODE was the defect and fixed it. Owner
+scope-gate chose **“Guard makeSimPed”** (over fix-`getPotentialParents`
+/ doc-only). **BEHAVIOR change -\> STRICT TDD (RED-\>GREEN-\>REFACTOR,
+each gated); direct-merge landing owner-gated; 0 stakeholder corrections
+/ 0 owner overrides.** **Started / Completed:** 2026-07-05 / 2026-07-05
+**Status:** **DONE + VERIFIED. Committed to `master` + pushed (local ==
+origin/master). `--as-cran` (clean tree) GREEN 0/0/2.** - **The bug:**
+`R/makeSimPed.R`’s loop assigned every listed id’s sire/dam
+UNCONDITIONALLY – `sample(vec, 1L)`, or `NA` for an empty vector – never
+checking whether the existing parent was already known. So an animal
+with one KNOWN and one unknown parent had its known parent silently
+OVERWRITTEN (non-empty candidate vector) or ERASED to `NA` (empty
+vector). The production builder `getPotentialParents` selects
+`is.na(sire) | is.na(dam)` (an OR -\> mixed known/unknown animals ARE
+listed) and emits full candidate pools for both parents, so the
+corruption bites end-to-end (reproduced: known sire lost in 661/1000
+sims). Intended contract (“impute only UNKNOWN parents”): the original
+19-month doc, the still-present `@examples` comment,
+`createSimKinships`’s `@return` (“for animals with unknown parents”),
+and `getPotentialParents`’s title. - **RED:** 4 new tests in
+`test_makeSimPed.R` – 3 assert a KNOWN parent is preserved
+(multi-element-pool overwrite; empty-vector erase; both-known) -\> FAIL
+against the overwrite code; 1 guards that an UNKNOWN parent is still
+imputed -\> passes. Existing lacy1989Ped tests unaffected (A/B/E are
+NA/NA founders, same RNG order). - **GREEN:** guarded the loop to impute
+a parent ONLY when the existing value is `NA` (known parents preserved;
+robust to an id absent from `ped`); no signature/export change
+(NAMESPACE diff EMPTY). Full-suite run then revealed **7 downstream
+characterization goldens** across 4 files (createSimKinships,
+cumulateSimKinships, countKinshipValues, summarizeKinshipValues) shift
+because `smallPed`’s `A` (known sire `Q`) is now correctly preserved –
+the audit predicted only 2; the FULL SUITE found all 7. Verified the
+shift is the correct mechanism (A’s sire == Q; raw kinship(A,J)==0
+across sims) and recomputed each value from the corrected code (not from
+a predicted number). - **REFACTOR (doc consistency, no behavior
+change):** rewrote `makeSimPed` `@description` (reverse S274’s
+“overwritten” line -\> “impute only unknown; preserve known”);
+regenerated `man/makeSimPed.Rd`; added a `NEWS.Rmd` dev bug-fix bullet +
+re-rendered `NEWS.md`; **fixed `simulatedKValues.Rmd`** – `--as-cran`
+caught its two comparison chunks joining `sd>0`-filtered frames by ROW
+POSITION (latent bug the behavior change exposed -\> `data.frame`
+“differing number of rows” -\> build FAILS); replaced with
+[`merge()`](https://rdrr.io/r/base/merge.html) by `(id_1, id_2)`. -
+**Verify (firsthand):** 4 new tests pass; full suite **0 fail / 0 error
+/ 0 true offenders**; `lintr` **0** on `R/makeSimPed.R`;
+`spell_check_package` clean; **NAMESPACE diff EMPTY**;
+**`R CMD check --as-cran` (clean tree) GREEN – 0 err / 0 warn / 2
+NOTEs** with `code/documentation mismatches … OK`,
+`Rd cross-references … OK`, `checking examples [21s] OK`,
+`testthat.R [67s] OK`, vignettes rebuilt.
+
+**The 2 NOTEs (standing benign pair):** (1) CRAN incoming-feasibility
+archived-maintainer false positive (“New submission” / package archived
+2025-07-29); (2) environmental HTML-Tidy note. Both impossible for this
+change to cause; identical to the S276 baseline.
+
+**Phase-3E (installed-namespace runtime smoke): DONE – NOT N/A (behavior
+change, FM \#24).** The guarded contract runs against the
+built+installed package via `testthat.R` inside `--as-cran` (67s OK)
+plus the `@example`; a direct
+[`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html)
+smoke confirmed A’s known sire Q is preserved while NA founders are
+still imputed.
+
+**Session 276 Handoff Evaluation (by Session 277): Score 9/10.** S276’s
+SUGGESTED NEXT listed **`makeSimPed` \#31 (“overwrites KNOWN parents
+unconditionally – likely a real bug”)** as the FIRST candidate under
+“the \#109-audit doc-fixed *code-fix* candidates,” explicitly framed as
+“each may deserve a *behavior* change (SEPARATE STRICT-TDD session).”
+**What helped:** (1) that framing set expectations exactly – I treated
+it as a behavior change and ran STRICT TDD from the pre-RED scope gate,
+not doc-only; (2) it pointed at “Audit report §6 / S274 handoff
+enumerates them,” and audit finding \#31’s precise doc-vs-code write-up
+seeded the investigation; (3) every standing gotcha held – `--as-cran`
+from the repo root (Learning 254; worked), version 2.0.0, package
+ARCHIVED (didn’t touch CRAN), NEWS/README GENERATED (edited `.Rmd` +
+re-rendered `NEWS.md`), `spell_check` clean (no WORDLIST churn), the
+benign 2-NOTE baseline; (4) ghost-check clean AND explained (HEAD
+`1e64dd5d` == documented S276 close-out). **What was slightly off (the
+-1):** S276 (echoing the audit) framed \#31 as a straightforward guard,
+but the reality had a genuine 3-way design fork (the vignette’s
+singleton convention makes `makeSimPed` defensible; the true root cause
+is the `getPotentialParents` boundary) that needed surfacing to the
+owner, and the fix’s blast radius (7 goldens across 4 files + a vignette
+build break) was larger than “add a guard.” Minor – S276 correctly
+scoped it as its own STRICT-TDD session and deferred the decision to the
+owner. **What was missing (not S276’s fault):** the vignette-build
+fragility and the true count of shifted goldens were undiscoverable
+without doing the work. **ROI:** very high – “candidate \#1: makeSimPed
+\#31, likely a real bug, separate STRICT-TDD session” turned orientation
+into a clean scope gate + correct TDD framing.
+
+**Self-assessment (Session 277): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean+explained), reported, STOPPED for the
+owner; wrote the 1B stub before technical work; **read the audit
+finding + `makeSimPed` + all callers + tests before scoping**; gated the
+scope decision, then ran STRICT TDD with all three phase gates + the
+landing gate, each via `AskUserQuestion`, declaring the phase at the top
+of each response. **Strengths:** (1) **used ultracode correctly** – a
+READ-ONLY investigation Workflow at pre-RED (no code/tests written -\>
+TDD-safe) to determine whether it was a real bug and WHERE the defect
+lives, with adversarial verification incl. a firsthand R reproduction,
+rather than trusting the audit’s “likely a real bug”; correctly
+synthesized the adversarial split (2 CONFIRMED / 1 REFUTED / 1 DEPENDS)
+into “real hazard, defensible primitive, root cause at the builder
+boundary, guard fixes it for free”; (2) **surfaced the genuine 3-way
+design fork to the owner** instead of assuming the guard (FM \#23); (3)
+**designed RED tests that genuinely flip** + a guard against an
+over-aggressive GREEN; (4) **ran the FULL suite to find ALL 7 shifted
+goldens** (not the audit’s predicted 2), verified the mechanism before
+re-baselining, and recomputed each from the corrected code; (5) **the
+build-equivalent caught the vignette break** my “no vignette change”
+judgment missed – I fixed it (merge by key) rather than shipping a
+broken build (FM \#24 avoided). **Weakness (the -1):** I initially
+judged “no vignette change needed” and was wrong – only `--as-cran`
+caught the positional-join break; a closer read of the vignette’s
+comparison chunks at REFACTOR-scoping (they consume the sim output I
+changed) would have predicted it and saved one build cycle. No harm to
+the deliverable (caught before commit). Correct + disciplined; capped at
+9.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 256** – a
+doc-audit “candidate code-fix” can be a real behavior bug hiding behind
+a doc reconciled to buggy code (decide doc-vs-code authority from
+surrounding intent); ultracode read-only investigation Workflow at
+pre-RED (TDD-safe); RED design for a “preserve” contract; a behavior
+change to a SEEDED Monte-Carlo function re-baselines downstream goldens
+(run the FULL suite to find them ALL, verify the mechanism, recompute
+from corrected code); the build-equivalent (`--as-cran`) catches
+vignette breaks unit tests miss (FM \#24). Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[edit-files-in-reverse-line-order\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a BEHAVIOR-change
+STRICT-TDD session – RED-\>GREEN-\>REFACTOR, each gated, with an
+ultracode pre-RED investigation.**
+
+**=\> SUGGESTED NEXT.** **makeSimPed \#31 is FIXED** (guard preserves
+known parents), direct-merged to `master` + pushed. Candidate
+deliverables (owner picks): - **The remaining \#109-audit doc-fixed
+*code-fix* candidates** (each a SEPARATE STRICT-TDD session):
+**`saveDataframesAsFiles`/`makeExamplePedigreeFile` \#2/#14** (accept
+`"xlsx"` alias for `"excel"`); **`geneDrop` \#20** (reorder output cols
+to documented order); **`getPedMaxAge`/`getPyramidAgeDist` \#5/#29**
+(actually filter to living animals if intended); **`assignAlleles`
+\#10** (add `n = 5000` default); **`is_valid_date_str` \#13** (implement
+or drop the unused `format` arg). Report §6 / S274 handoff enumerate
+them. - **NOTED sibling (optional cleanup):** `getPotentialParents`
+still emits FULL candidate pools for a KNOWN parent (violating the
+vignette’s singleton convention). This is now HARMLESS because
+`makeSimPed` guards, but it is a latent inconsistency if a future caller
+relies on the raw pools; a small doc note or a singleton-emit fix could
+close it. Not required. - **Backlog:** **\#112** genetic diversity
+heatmap/dashboard; **\#111** code coverage; **\#103** remaining roxygen
+harmonization; **\#37, \#36, \#28, \#12, \#11, \#10, \#5**; the CRAN
+thread (Phase 5b, owner-run outward – package ARCHIVED, resubmission
+owner-gated + HARD STOP). **Each stage editing `R/` re-stales
+`--as-cran` (run from the REPO ROOT, background ~3-4 min, Learning
+254) + `lintr` + `spell_check_package` (hand-add wordlist, never
+`update_wordlist`); for any behavior/NAMESPACE change ALSO STRICT TDD +
+NAMESPACE diff + Phase-3E installed-namespace smoke + a FULL-suite run
+to catch seeded-golden shifts. If you re-render README/NEWS: render the
+`.Rmd` directly via
+`load_all`+[`rmarkdown::render`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)
+(NOT `build_readme`) and remove the stray `README.html` byproduct before
+building (Learning 255). Landing owner-gated** (`AskUserQuestion`):
+direct-merge (fully local-gated) vs PR-for-CI (if PR, merge from a CLEAN
+tree, Learning 250).
+
+**Key files (this session):** **Edited + committed (S277, on `master`,
+pushed):** `R/makeSimPed.R` (guard + `@description`) -\> regenerated
+`man/makeSimPed.Rd`; `tests/testthat/test_makeSimPed.R` (+4
+preserve-known tests), `test_createSimKinships.R`,
+`test_cumulateSimKinships.R`, `test_countKinshipValues.R`,
+`test_summarizeKinshipValues.R` (7 re-baselined goldens);
+`vignettes/simulatedKValues.Rmd` (two comparison chunks -\>
+[`merge()`](https://rdrr.io/r/base/merge.html) by id pair); `NEWS.Rmd` +
+regenerated `NEWS.md`. **No `NAMESPACE`/`DESCRIPTION`/`data` change
+(NAMESPACE diff EMPTY, PROVEN).** Process docs (same commit):
+`CHANGELOG.md` (S277 entry), `PROJECT_LEARNINGS.md` (Learning 256),
+`SESSION_NOTES.md` (this handoff). **NOT committed (standing keep):**
+`.DS_Store` (tracked+modified), `PED_GV_AUDIT_2026-05-30.html`
+(untracked, `.Rbuildignore`d). **Scratchpad (NOT committed):**
+`s277gate/` (build+check logs), the pre-RED investigation Workflow
+output.
+
+**Gotchas:** (1) **`makeSimPed` now PRESERVES known parents** – a caller
+relying on the OLD overwrite-all behavior would see different results;
+no in-package caller does (verified). (2) **The 7 re-baselined sim
+goldens are seed-deterministic** (exact fractions); if R’s `sample` RNG
+ever changes they shift (as would the pre-existing ones). (3)
+**`getPotentialParents` still emits full pools for a known parent** –
+now safe through the guarded `makeSimPed`, but doesn’t follow the
+vignette’s singleton convention (see NOTED sibling above). (4)
+**`simulatedKValues.Rmd` comparison chunks now
+[`merge()`](https://rdrr.io/r/base/merge.html) by id pair** – do NOT
+revert to positional joins (they break when the two `sd>0` sets differ
+in size). (5) Carried standing keeps (unchanged): **`--as-cran` from the
+REPO ROOT** (renv via repo-root `.Rprofile`; Learning 254); package
+**ARCHIVED on CRAN 2025-07-29**, resubmission owner-gated + HARD STOP;
+`NEWS.md`/`README.md` are GENERATED (edit `.Rmd` + render; remove stray
+`README.html` byproduct before building – Learning 255); a doc/code
+`R/`+`man/` edit re-stales `--as-cran` (~3-4 min background);
+`spell_check_package` hand-add wordlist, never `update_wordlist`;
+`gh issue view`/`gh pr edit` exit 1 -\>
+`gh api repos/rmsharp/nprcgenekeepr/...`; re-check `git status` before
+ANY destructive git (\[\[check-status-before-destructive-git\]\]); **zsh
+`status` is a read-only special variable**; **version is 2.0.0**
+(DESCRIPTION authoritative; CLAUDE.md header “1.1.0.9000” is stale
+prose).
+
 ### What Session 276 Did
 
 **Deliverable (owner design-gate + 3 TDD phase-gates + landing-gate, all
