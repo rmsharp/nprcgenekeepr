@@ -45,6 +45,10 @@ integration testing and CRAN-submission preparation.
   scheme favoring low mean kinship / high genome uniqueness.
 - **Breeding group formation** that avoids mating close relatives, supports sex-ratio and
   harem configurations, and maximizes genetic diversity.
+- **Genetic diversity dashboard** — a red/yellow/green stoplight heat map with breeding
+  groups as rows and diversity metrics as columns (Value, Origin, Production, Inbreeding),
+  surfaced as the **"Genetic Diversity"** tab; flags breeding-group problems proactively
+  for colony managers.
 - **Shiny application** (`runGeneKeepR()`), now organized as Shiny modules.
 
 ## Completed Milestones
