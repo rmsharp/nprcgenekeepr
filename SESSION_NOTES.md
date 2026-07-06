@@ -22,9 +22,9 @@ suite. **Test-only (no production code changed); PRE-RED→RED gate via
 uncovered lines); **overall coverage 99.53% → 99.71%**
 (`NOT_CRAN=true`). **This closes the residual-Shiny-module tier of \#111
 — all seven modules now at 100%.** **Landed: owner chose direct-commit —
-committed to `master` tagged `(S292)`; close-out hash recorded in the
-follow-up docs commit (local == origin after push).** - **Gap SHAPE
-(from an exact uncovered-line dump, not the %):**
+committed + pushed to `origin/master` as `837b12d1` (tagged `(S292)`;
+local == origin).** - **Gap SHAPE (from an exact uncovered-line dump,
+not the %):**
 [`covr::zero_coverage()`](http://covr.r-lib.org/reference/zero_coverage.md)
 (`NOT_CRAN=true`) gave a precise 13-line gap, all in
 `modGeneticValueServer`, in FIVE groups: (1) the `kinshipOverrideData`
@@ -242,9 +242,8 @@ assume a heavily-tested module has no residual; dump the uncovered lines
 first (Learning 271a). (4) **All residual Shiny modules are now 100%** —
 the remaining \#111 gaps are single-file helpers, a DIFFERENT
 (non-`testServer`) slice shape (Learning 271). (5) **\#111 is a
-campaign, still OPEN.** (6) **Landed on `master`** (owner chose
-direct-commit); close-out hash recorded in the follow-up docs commit;
-pushed → local == origin.
+campaign, still OPEN.** (6) **Landed as `837b12d1` on `master`, pushed**
+(owner chose direct-commit; local == origin).
 
 ### What Session 291 Did
 
