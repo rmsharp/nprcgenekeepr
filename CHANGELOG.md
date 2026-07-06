@@ -15,6 +15,60 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-06 — \#111 code-coverage campaign, slice 2 — `modORIPReportingServer` backfilled to 100% via a headless `testServer` suite (Session 286)
+
+- **Deliverable (owner picked \#111; owner chose this session’s slice
+  via `AskUserQuestion` over {modORIPReporting / appServer / small
+  residuals}: the `modORIPReporting` server body — the biggest genuine
+  gap at 31.7%):** add a headless
+  [`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html)
+  suite exercising the entire `modORIPReportingServer` body. **Test-only
+  (no production code changed); PRE-RED→RED gate via `AskUserQuestion`;
+  0 stakeholder corrections.**
+- **Gap characterized firsthand (verified S285’s claim before acting):**
+  the existing tests never drove the server through `testServer` —
+  `test_modORIPReporting.R` covers only UI tab-gating (`#47`/`#49`) plus
+  a `deparse(appServer)` structural grep, and `test_modSiteConfig.R`
+  only checks the module functions exist with the right formals. The
+  whole server body — the three output renderers (`siteInfo`,
+  `colonySummary`, `geneticDiversity`), both `downloadHandler`s, and the
+  returned `colonySummary` reactive — ran only under the opt-in browser
+  e2e (`test-e2e-orip-module.R`), which skips without shinytest2 +
+  chromote. That is why the file read 31.7% while looking “tested”.
+- **New file `tests/testthat/test_modORIPReporting_server.R` — 12
+  `testServer` tests:** siteInfo (populated config table / `getSiteInfo`
+  NULL-fallback / `tryCatch`→“not available” on error); colonySummary
+  (populated counts / empty “No data”); geneticDiversity (populated
+  metrics / empty “Run genetic value analysis” prompt);
+  `downloadORIPReport` (full site+colony+diversity CSV / NULL-ped+gv,
+  which also hits the `getSiteInfo` else-branch); `downloadDemographics`
+  (pedigree CSV / placeholder); returned `colonySummary()` reactive.
+  renderUI/renderTable read via
+  `any(grepl(..., as.character(output$x)))` (note `as.character` of a
+  rendered UI yields a length-2 vector — html + `"list()"` deps),
+  downloadHandlers via `path <- output$downloadX; read.csv(path)`.
+  Fixtures validated with a throwaway `load_all`/`testServer` probe
+  before the file was written.
+- **Result:** `R/modORIPReporting.R` **31.7% → 100%** (zero uncovered
+  lines); overall coverage **92.96% → 95.03%** (`NOT_CRAN=true`).
+- **Verify (firsthand):** new file **12/12** green; `covr` re-measure
+  confirms `modORIPReporting.R` at 100% under the full suite; **full
+  suite (`NOT_CRAN=true`) 1449 tests, 0 failed / 0 error, 0 true
+  offenders**; **lint** new file 0 (`.lintr` excludes `tests/`, and no
+  `R/` source changed → non-regressing); `spell_check_package`
+  **clean**; **`R CMD check --as-cran` (repo root, WITH vignettes)
+  Status: OK — 0 errors / 0 warnings / 0 notes** (cleaner than the
+  documented 0/0/2 baseline; the CRAN-incoming “archived/New
+  submission” + HTML-Tidy NOTEs do not fire under `devtools::check`).
+  **Phase-3E N/A:** test-only, no `R/` source changed, no runtime
+  behavior — no runtime surface to smoke-test (not a skipped check).
+- **Campaign status:** \#111 stays OPEN. Slices done: S1 helper tier
+  (S285), **S2 `modORIPReporting` server (this session)**. Remaining
+  genuine gaps for future slices: `appServer` (0% local — needs a
+  full-app `testServer` harness) and small residuals (`modInput` 87.3%,
+  `modPyramid` 89.7%, `modSummaryStats` 94.3%, `modPotentialParents`
+  94.7%, `modGeneticValue` 96.3%).
+
 ### 2026-07-06 — \#111 code-coverage campaign, slice 1 — deterministic helper tier backfilled to 100% + dead-code removal (Session 285)
 
 - **Deliverable (owner picked \#111, then clarified scope = increase
