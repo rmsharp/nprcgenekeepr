@@ -14,7 +14,6 @@ linters: linters_with_tags(
 exclusions: list(
     "inst/application",
     "inst/extdata",
-    "R/makeGeneticDiversityDashboard.R",
     "tests",
     "vignettes"
   )

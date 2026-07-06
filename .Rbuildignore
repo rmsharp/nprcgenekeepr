@@ -18,7 +18,6 @@ inst/extdata/meeting_notes\.html$
 ^tests/testthat/test_basic\.R$
 ^R/testingScript\.R$
 ^R/depricated_gene\.drop\.R$
-^R/makeGeneticDiversityDashboard\.R$
 ^vignettes/.*\.log$
 ^vignettes/.*\.aux$
 ^vignettes/.*\.out$
