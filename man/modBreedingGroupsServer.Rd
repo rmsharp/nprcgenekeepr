@@ -68,6 +68,8 @@ The module supports multiple configuration options:
 
 Other Shiny modules:
 \code{\link[=modBreedingGroupsUI]{modBreedingGroupsUI()}},
+\code{\link[=modGeneticDiversityServer]{modGeneticDiversityServer()}},
+\code{\link[=modGeneticDiversityUI]{modGeneticDiversityUI()}},
 \code{\link[=modGeneticValueServer]{modGeneticValueServer()}},
 \code{\link[=modGeneticValueUI]{modGeneticValueUI()}},
 \code{\link[=modGvAndBgDescServer]{modGvAndBgDescServer()}},

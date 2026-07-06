@@ -59,7 +59,8 @@ appServer <- function(input, output, session) {
     currentStudbook = NULL,
     currentPedigree = NULL,
     qcResults = NULL,
-    geneticValues = NULL
+    geneticValues = NULL,
+    breedingGroups = NULL
   )
 
   # ========================================
@@ -312,11 +313,29 @@ appServer <- function(input, output, session) {
   # Breeding Groups Module -- thread the GV-tab kinship overrides (issue #13
   # Slice 3) so group formation reflects them on the fallback recompute path
   # (used when no GV output is available), regardless of tab order.
-  modBreedingGroupsServer(
+  bgResults <- modBreedingGroupsServer(
     "breedingGroups",
     pedigree = reactive(shared$currentPedigree),
     geneticValues = reactive(shared$geneticValues),
     kinshipOverrides = gvResults$kinshipOverrides
+  )
+
+  # Capture the formed breeding groups into shared state (issue #112 Slice S4)
+  # so the Genetic Diversity dashboard can read them. Stays NULL until the user
+  # forms groups, which drives the dashboard's graceful degradation.
+  observe({
+    shared$breedingGroups <- bgResults$groups()
+  })
+
+  # Genetic Diversity Module (issue #112 Slice S4) -- assembles the formed
+  # groups, the qc'd pedigree, the genetic value report, and the full kinship
+  # matrix into the red/yellow/green heat map.
+  modGeneticDiversityServer(
+    "geneticDiversity",
+    groups = reactive(shared$breedingGroups),
+    pedigree = reactive(shared$currentPedigree),
+    geneticValues = reactive(shared$geneticValues),
+    kinshipMatrix = gvResults$kinshipMatrix
   )
 
   # Potential Parents Module -- pass the user-configurable species gestation

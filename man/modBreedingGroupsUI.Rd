@@ -25,6 +25,8 @@ Vinson, A. and Raboin, M.J. (2015)
 
 Other Shiny modules:
 \code{\link[=modBreedingGroupsServer]{modBreedingGroupsServer()}},
+\code{\link[=modGeneticDiversityServer]{modGeneticDiversityServer()}},
+\code{\link[=modGeneticDiversityUI]{modGeneticDiversityUI()}},
 \code{\link[=modGeneticValueServer]{modGeneticValueServer()}},
 \code{\link[=modGeneticValueUI]{modGeneticValueUI()}},
 \code{\link[=modGvAndBgDescServer]{modGvAndBgDescServer()}},

@@ -199,6 +199,15 @@ appUI <- function(siteInfo = getSiteInfo(expectConfigFile = FALSE)) {
     ),
 
     # ====================
+    # Genetic Diversity Tab
+    # ====================
+    tabPanel(
+      "Genetic Diversity",
+      icon = icon("th"),
+      modGeneticDiversityUI("geneticDiversity")
+    ),
+
+    # ====================
     # Potential Parents Tab
     # ====================
     tabPanel(

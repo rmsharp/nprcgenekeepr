@@ -34,6 +34,8 @@ includes:
 Other Shiny modules:
 \code{\link[=modBreedingGroupsServer]{modBreedingGroupsServer()}},
 \code{\link[=modBreedingGroupsUI]{modBreedingGroupsUI()}},
+\code{\link[=modGeneticDiversityServer]{modGeneticDiversityServer()}},
+\code{\link[=modGeneticDiversityUI]{modGeneticDiversityUI()}},
 \code{\link[=modGeneticValueServer]{modGeneticValueServer()}},
 \code{\link[=modGeneticValueUI]{modGeneticValueUI()}},
 \code{\link[=modGvAndBgDescServer]{modGvAndBgDescServer()}},
