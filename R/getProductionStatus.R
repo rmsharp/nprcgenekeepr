@@ -6,11 +6,12 @@
 #' @details Description of how Production and Production Status (color) is
 #' calculated.
 #' \enumerate{
-#' \item  The Production Status is calculated on September 09, 2019,
-#'        Births = count of all animals in group born since January 1,
-#'        2017 through December 31, 2018, that lived at least 30 days.
-#' \item  Dams = count of all females in group that have a birth date on or
-#'        prior to September 09, 2016.
+#' \item  Births = count of all animals in the group born in the two calendar
+#'        years ending the year before \code{currentDate} (January 1 of
+#'        \code{currentYear - 2} through December 31 of
+#'        \code{currentYear - 1}) that lived at least 30 days.
+#' \item  Dams = count of all females in the group at least
+#'        \code{minParentAge} years old (default 3).
 #' \item  Production = Births / Dams
 #' \item  Production Status (color)
 #'     \enumerate{
@@ -37,7 +38,7 @@
 #' information. The \code{id}, \code{dam}, \code{sex} and \code{age}
 #' (in years) columns are required.
 #' @param minParentAge Numeric values to set the minimum age in years for
-#' an animal to have an offspring. Defaults to 2 years. The check is not
+#' an animal to have an offspring. Defaults to 3 years. The check is not
 #' performed for animals with missing birth dates.
 #' @param maxOffspringAge Numeric values to set the maximum age in years for
 #' an animal to be counted as birth in calculation of production status
@@ -46,8 +47,8 @@
 #' is either \emph{"shelter_pens"} or \emph{"corral"}.
 #' @param currentDate Date to be used for calculating age. Defaults to
 #'        \code{Sys.Date()}.
-#' @return \code{production} -- Ratio of the number of births that live >30
-#' days to the number of females >= 3 years of age.
+#' @return \code{production} -- Ratio of the number of births that lived at
+#' least 30 days to the number of females >= \code{minParentAge} years of age.
 #'
 #' @importFrom lubridate as.duration ddays interval mdy year
 #' @noRd
