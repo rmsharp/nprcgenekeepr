@@ -15,6 +15,72 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-05 — \#112 Slice S2 — inbreeding data provider `getKinshipWithMaleStatus()` (strict TDD) (Session 281)
+
+- **Deliverable (3 pre-RED `[RATIFY]` points + 3 TDD phase-gates, all
+  via `AskUserQuestion`):** implement Slice S2 of the issue \#112 plan —
+  a new **internal** (`@noRd`, unexported)
+  `getKinshipWithMaleStatus(group, kmat, minFemaleAge = 3L, minMaleAge = 5L, threshold = 0.015625)`
+  that reports, among the group’s breeding-age females (sex `"F"`, age ≥
+  `minFemaleAge`), the fraction essentially unrelated (kinship ≤
+  `threshold`) to at least one breeding-age male (sex `"M"`, age ≥
+  `minMaleAge`), and maps it to a heat-map color: red (\< 0.6), yellow
+  (\[0.6, 0.9\]), green (\> 0.9). Returns
+  `list(fraction, color, colorIndex)` — a pure peer to the 3 existing
+  orphaned providers. **NEW INTERNAL PROVIDER → STRICT TDD
+  (RED→GREEN→REFACTOR, each gated); 0 stakeholder corrections / 0 owner
+  overrides.**
+- **Ratified (pre-RED, 3 owner gates):** (1) name/signature
+  `getKinshipWithMaleStatus(group, kmat, ...)` — a **pure** provider
+  that consumes a ready-made per-group kinship matrix (`kmat`, dimnames
+  = ids; e.g. one element of `modBreedingGroups`’ `groupKinship`, or
+  [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+  output), leaving the in-app-vs-out-of-app source choice to the S3
+  assembler; (2) **empty-denominator behavior** — a group with no
+  breeding-age females returns `fraction`/`color`/`colorIndex` all `NA`
+  (deliberately **not** green, avoiding `getProductionStatus`’s NA→green
+  trap flagged in plan §8.2); (3) inclusive-yellow boundaries (endpoints
+  0.6 and 0.9 are yellow, matching `getProportionLow`’s convention).
+- **RED:** new `tests/testthat/test_getKinshipWithMaleStatus.R` — 12
+  tests / 26 expectations using hand-built named kinship matrices +
+  id/sex/age group frames for full determinism: green (fraction 1.0) +
+  return names/types; red all-related (fraction 0); red because the only
+  male is \< `minMaleAge` (male-age filter); yellow at exactly 0.6 (3
+  of 5) and exactly 0.9 (9 of 10); the 0.015625 threshold edge (kinship
+  == threshold counts; just-above does not); a female \< `minFemaleAge`
+  excluded from the denominator; a `sex == "U"` member counted as
+  neither female nor eligible male; the empty-denominator NA case; and
+  two error guards (missing id/sex/age column; a group id absent from
+  `kmat` dimnames). All 12 failed against the missing function (correct
+  RED).
+- **GREEN:** `R/getKinshipWithMaleStatus.R` — base-R only (no new
+  import); validates columns + `kmat` coverage, selects the two eligible
+  pools, short-circuits the empty denominator to NA, else computes the
+  fraction via `vapply` over females
+  (`any(kmat[f, males] <= threshold)`) and maps to the 1/2/3 color
+  index. All 12 tests pass.
+- **REFACTOR (no behavior change):** fixed the 2 enforced style lints on
+  the new file (`paste(..., collapse=", ")` →
+  [`toString()`](https://rdrr.io/r/base/toString.html); `0` → `0.0`) —
+  confirmed both are `.lintr`-enabled and the sibling code is clean of
+  them; roxygen `@param`/`@return`/`@details` header matching the
+  sibling providers.
+- **Verify (firsthand):** single-file 12/12; `lintr::lint()` **0** on
+  the new file + `lint_package()` **0** on changed files;
+  `spell_check_package` **clean** (no WORDLIST churn); **NAMESPACE diff
+  EMPTY** (proven via `document()` — `@noRd`, no new `man/*.Rd`);
+  full-suite clean read **0 fail / 0 error, no true offenders**;
+  **`R CMD check --as-cran` (repo root) GREEN — 0 err / 0 warn / 2
+  benign NOTEs** (archived-maintainer + HTML-Tidy) with
+  `testthat.R [70s] OK`, examples OK, vignettes rebuilt. **Phase-3E
+  (stated, not skipped):** a pure `@noRd` provider has no app/runtime
+  surface until its first caller S3 — its runtime exercise is the 12
+  tests running against the built + installed package inside
+  `--as-cran`’s `testthat.R`. Direct-merged to `master` + pushed.
+  `PROJECT_LEARNINGS.md` Learning 260.
+- Issue \#112 stays OPEN (S1 + S2 of 4 slices done; S3 assembler
+  \[blocked on §6 Q1–Q3\], S4 module + wiring, + deferred Flags remain).
+
 ### 2026-07-05 — \#112 Slice S1 — genetic diversity heatmap renderer `makeGeneticDiversityHeatmap()` (strict TDD); dead dashboard scaffolding deleted (Session 280)
 
 - **Deliverable (S1 `[RATIFY]` points + 3 TDD phase-gates + a naming

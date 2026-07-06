@@ -7,6 +7,237 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 281 Did
+
+**Deliverable (3 pre-RED `[RATIFY]` points + 3 TDD phase-gates, all via
+`AskUserQuestion`):** issue \#112 **Slice S2** — a new **internal**
+(`@noRd`, unexported) inbreeding data provider
+`getKinshipWithMaleStatus(group, kmat, minFemaleAge = 3L, minMaleAge = 5L, threshold = 0.015625)`
+→ `list(fraction, color, colorIndex)`: among the group’s breeding-age
+females (sex `"F"`, age ≥ `minFemaleAge`), the fraction essentially
+unrelated (kinship ≤ `threshold`) to ≥ 1 breeding-age male (sex `"M"`,
+age ≥ `minMaleAge`); heat-map color red (\< 0.6) / yellow (\[0.6, 0.9\])
+/ green (\> 0.9). A pure peer to the 3 existing orphaned providers.
+**NEW INTERNAL PROVIDER → STRICT TDD (RED→GREEN→REFACTOR, each gated); 0
+stakeholder corrections / 0 owner overrides.** **Started / Completed:**
+2026-07-05 / 2026-07-05 **Status:** **DONE + VERIFIED. Direct-merged to
+`master` + pushed (local == origin/master).** New
+`R/getKinshipWithMaleStatus.R` +
+`tests/testthat/test_getKinshipWithMaleStatus.R` (12 tests / 26
+expectations). **No export / no NAMESPACE change / no `man/*.Rd`**
+(`@noRd`). Issue \#112 stays OPEN (S1 + S2 of 4 slices done). -
+**Ratified (pre-RED, 3 owner gates — all recommended options):** (1)
+**name/signature** `getKinshipWithMaleStatus(group, kmat, ...)` — a
+**pure** provider consuming a ready-made per-group kinship matrix
+(`kmat`, dimnames = ids; e.g. one element of `modBreedingGroups`’
+`groupKinship`, or
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+output). `group` = data frame with `id`/`sex`/`age`. The
+in-app-vs-out-of-app `kmat` source choice belongs to the S3 assembler,
+not this provider. (2) **empty-denominator (no females ≥ 3)** →
+`fraction`/`color`/`colorIndex` all `NA` — deliberately **not** green,
+avoiding `getProductionStatus`’s NA→green trap (plan §8.2). (3)
+**inclusive-yellow boundaries** — endpoints 0.6 and 0.9 are yellow
+(matches `getProportionLow`). - **RED → GREEN → REFACTOR (each
+`AskUserQuestion`-gated):** RED = 12 tests / 26 expectations using
+**hand-built named kinship matrices** (off-diagonal 0.25 “related”,
+diagonal 0.5, chosen female-male pairs set to 0 “unrelated”) + tiny
+id/sex/age frames for full determinism — green (fraction 1.0) + return
+names/types; red all-related (0); red because the only male is \<
+`minMaleAge`; yellow at exactly 0.6 (3 of 5) and exactly 0.9 (9 of 10);
+the 0.015625 threshold edge (== counts via `<=`; just-above does not); a
+female \< `minFemaleAge` dropped from the denominator; a `sex == "U"`
+member counted as neither female nor eligible male; the
+empty-denominator NA case; 2 error guards (missing id/sex/age column; a
+group id absent from `kmat` dimnames). All 12 failed against the missing
+function (correct RED). GREEN = base-R-only builder (`vapply` over
+females, `any(kmat[f, males] <= threshold)`), NA short-circuit, 1/2/3
+mapping. REFACTOR = fixed the 2 enforced style lints on the new file
+(`paste(...collapse=", ")`→[`toString()`](https://rdrr.io/r/base/toString.html);
+`0`→`0.0`) + sibling-style roxygen `@param`/`@return`/`@details`. -
+**Verify (firsthand):** single-file 12/12; `lintr::lint()` **0** on the
+new file + `lint_package()` **0** on changed files;
+`spell_check_package` **clean** (no WORDLIST churn); **NAMESPACE diff
+EMPTY** (proven via `document()` — `@noRd`, no new `man/`); full-suite
+clean read **0 fail / 0 error, no true offenders**;
+**`R CMD check --as-cran` (repo root) GREEN — 0/0/2** benign NOTEs
+(archived-maintainer + HTML-Tidy) with `testthat.R [70s] OK`, examples
+OK, vignettes rebuilt. **Phase-3E (stated, not skipped):** a pure
+`@noRd` provider has no app/runtime surface until its first caller S3 —
+its runtime exercise is the 12 tests running against the built +
+installed package inside `--as-cran`’s `testthat.R`; a full app launch
+is an S4 concern.
+
+**Session 280 Handoff Evaluation (by Session 281): Score 9/10.** S280’s
+SUGGESTED NEXT made S2 near-turnkey: it gave the **exact** ratified name
+(`getKinshipWithMaleStatus`), the `(group, kmat, ...)` signature shape,
+the `list(fraction, color, colorIndex)` return, the metric definition
+(females ≥ 3 with kinship ≤ 0.015625 to ≥ 1 male ≥ 5), the §2 color
+thresholds, the “reuse `groupKinship` in-app, fall back to
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+outside” source note, **the explicit “decide NA/empty-denominator
+deliberately — do NOT copy `getProductionStatus`’s NA→green trap”
+warning**, and “confirm the pedigree’s age/sex column names before RED.”
+**What helped:** the NA-trap warning pointed me straight at the single
+most load-bearing ratification (the empty-denominator policy); “confirm
+age/sex before RED” prompted the firsthand schema check that surfaced
+`sex ∈ {F,M,U}` (the third value that needed its own test); every
+standing gotcha held EXACTLY — `--as-cran` from repo root, version
+2.0.0, package ARCHIVED, `spell_check` hand-add, the benign 2-NOTE
+baseline reproduced identically, the git-status standing keeps
+(`.DS_Store`, `PED_GV_AUDIT`) documented so I left them (FM \#22);
+ghost-check clean + pre-explained (HEAD `5667f9c8` == the documented
+S280 close-out). **What was missing (the −1):** the color-boundary
+convention at exactly 0.6/0.9 wasn’t pre-specified — I derived
+inclusive-yellow from `getProportionLow` and ratified it — and the
+handoff didn’t note that `sex` carries a third value `"U"` (found
+firsthand). Both minor and arguably beyond S280’s scope. **What was
+wrong:** nothing; all standing facts verified true. **ROI:** very high —
+S2 execution was near-turnkey; the only owner-facing work was the 3
+genuine policy ratifications, which are decisions, not gaps.
+
+**Self-assessment (Session 281): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean+explained), reported, STOPPED for the
+owner; wrote the 1B stub before technical work; ran strict TDD with 3
+pre-RED ratifications + all 3 phase-gates, each via `AskUserQuestion`,
+declaring the phase at the top of each response. **Strengths:** (1)
+**posed the empty-denominator as an explicit owner policy decision**
+(three options: NA / red / error) rather than silently copying the
+sibling NA→green trap — and separated the truly-undefined 0/0 case (no
+females → NA) from the well-defined 0.0 case (females but no eligible
+males → red); (2) **confirmed the pedigree schema firsthand before RED**
+(`sex ∈ {F,M,U}`, `age` numeric) and wrote a dedicated `"U"`-member test
+that would flip the result if miscounted; (3) **hand-built deterministic
+kinship matrices** for exact boundary control (0.6, 0.9, kinship ==
+threshold) instead of leaning on a real pedigree’s incidental values;
+(4) RED covered happy + both boundaries + both threshold edges +
+age-filter edges + the `"U"` filter + the NA case + 2 error guards (26
+expectations); (5) **kept the provider pure** (`kmat` supplied),
+matching the 3 siblings, so the app/non-app source choice stays in S3;
+(6) verified firsthand across the whole battery (empty NAMESPACE diff
+proven, lint 0, spell clean, full suite, `--as-cran` 0/0/2); (7)
+classified the 2 GREEN lints as REAL (both `.lintr`-enforced, sibling
+code clean of them) and fixed them (\[\[avoid-new-lints-r-package\]\]).
+**Judgment call (not a defect):** I did **not** launch an investigation
+Workflow this session despite ultracode — the evidence base
+(kinship-matrix contract, group/groupKinship structure, sibling
+patterns, the sex/age schema, the 0.015625 constant) was small and
+already firsthand-verified, and the open items were owner decisions a
+workflow can’t make; a fan-out would have added tokens without adding
+certainty. **Weakness (the −1):** GREEN drew two enforced lints
+(`paste(collapse=", ")`, implicit-integer `0`) caught only at
+REFACTOR-lint — a closer pre-write recall of Learning 259(c)’s
+enforced-linter set would have avoided the two fixes. No harm (caught +
+fixed before commit). Correct + disciplined; capped at 9.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 260** — for a
+stoplight-metric provider the load-bearing pre-RED decision is the
+EMPTY-denominator return (decide with the owner; NA-over-a-color, not
+the sibling’s silent NA→“healthy”); distinguish undefined 0/0 (NA) from
+a well-defined 0.0 (red); keep a data provider PURE (caller owns the
+app-vs-non-app `kmat` source) — which also makes RED deterministic via
+hand-built named matrices; a 3-valued `sex` column (`F`/`M`/`U`) needs
+its own test; `.lintr` excludes `tests/` so mirror the newest sibling
+test style and expect only `R/` lints; Phase-3E for a caller-less
+`@noRd` provider is the tests-against-installed-package run, stated not
+skipped. Carried as applied: \[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[edit-files-in-reverse-line-order\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a
+NEW-INTERNAL-PROVIDER STRICT-TDD session — RED→GREEN→REFACTOR, each
+gated.**
+
+**=\> SUGGESTED NEXT.** **Slice S2 is DONE** (internal
+`getKinshipWithMaleStatus` + 12 tests; no export/NAMESPACE change),
+direct-merged + pushed; **issue \#112 stays OPEN** (S1 + S2 of 4 slices
+done). Per `docs/planning/issue112-genetic-diversity-dashboard-plan.md`
+§7, the hard order is **S2 → S3 → S4**: - **S3 — Per-group assembler
+`getGeneticDiversityStats(ped, groups, geneticValues, housing, ...)`
+(signature `[RATIFY]`): BLOCKED — do NOT start until the owner answers
+plan §6 Q1–Q3.** For each group it calls all 4 providers
+(`getProportionLow`, `getIndianOriginStatus`, `getProductionStatus`,
+**`getKinshipWithMaleStatus`** ← S2) and returns the group × 4-metric
+`colorIndex` data frame that
+[`makeGeneticDiversityHeatmap()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticDiversityHeatmap.md)
+(S1) consumes. The 3 blocking questions: **Q1** Production definition
+(20190810 thresholds — which the code already implements — vs the
+20190916 redefinition; rolling vs fixed birth window); **Q2** housing
+type per group (`"shelter_pens"`/`"corral"` — from a group column, a UI
+selection, or a config lookup?); **Q3** genetic-value “Low” label source
+(where `getProportionLow`’s `"Low"` labels are produced). S3 also
+applies the **D7** `getProductionStatus` doc fixes (two mismatches:
+`@details` fixed-2019 prose vs the rolling `currentDate` code;
+`@param minParentAge` “2 years” vs the `3L` default).
+Highest-uncertainty slice; STRICT TDD. - **S4 — Shiny module
+`modGeneticDiversity` + new tab + `shared$breedingGroups` one-line
+capture (`appServer.R:315`).** `[RATIFY]` D3 (tab name) + D4. **Phase-3E
+runtime smoke MANDATORY** (runtime/registration change — FM \#24).
+Depends on S3. - **Deferred: Flags column (S5)** — blocked on §6 Q4 (no
+genotype/phenotype data source). - **Other backlog:** \#111 code
+coverage; \#103 roxygen harmonization; \#37, \#36, \#28, \#12, \#11,
+\#10, \#5; the CRAN thread (Phase 5b, owner-run outward — package
+ARCHIVED, resubmission owner-gated + HARD STOP). **Standing gotchas
+(unchanged):** `--as-cran` from the REPO ROOT (renv; background ~3-4
+min) + `lintr::lint()`/`lint_package()` + `spell_check_package`
+(hand-add wordlist, never `update_wordlist`) after ANY `R/`+`man/` edit;
+for behavior/NAMESPACE changes ALSO STRICT TDD + NAMESPACE diff +
+Phase-3E + a FULL-suite run for seeded-golden shifts; the local
+`--as-cran` does NOT run lintr (Learning 232) → run `lint_package()`
+too; NEWS/README GENERATED (edit `.Rmd`, render via
+`load_all`+[`rmarkdown::render`](https://pkgs.rstudio.com/rmarkdown/reference/render.html),
+remove stray `README.html` — Learning 255); version **2.0.0**; package
+**ARCHIVED on CRAN 2025-07-29**; `gh issue view`/`gh pr edit` exit 1 →
+`gh api`; re-check `git status` before ANY destructive git
+(\[\[check-status-before-destructive-git\]\]); before any delete/rename,
+`grep -rn <target> .` across the WHOLE tree for prior keep-decisions
+BEFORE the `git rm` (Learning 259); landing owner-gated (direct-merge vs
+PR).
+
+**Key files (this session):** **Created + committed (S281, on `master`,
+pushed):** `R/getKinshipWithMaleStatus.R` (the internal provider),
+`tests/testthat/test_getKinshipWithMaleStatus.R` (12 tests / 26
+expectations). **No
+`NAMESPACE`/`man/`/`DESCRIPTION`/`data`/`NEWS`/`README` change**
+(`@noRd`, base-R only, NAMESPACE diff EMPTY — proven). Process docs
+(same commit): `CHANGELOG.md` (S281 entry), `PROJECT_LEARNINGS.md`
+(Learning 260), `SESSION_NOTES.md` (this handoff). Reference (read, not
+edited): `docs/planning/issue112-genetic-diversity-dashboard-plan.md`,
+`R/getProductionStatus.R`, `R/getProportionLow.R`,
+`R/getIndianOriginStatus.R`, `R/kinship.R`, `R/modBreedingGroups.R`,
+`tests/testthat/test_getProductionStatus.R`, `.lintr`. **NOT committed
+(standing keep):** `.DS_Store` (tracked+modified),
+`PED_GV_AUDIT_2026-05-30.html` (untracked, `.Rbuildignore`d).
+**Scratchpad (NOT committed):** `s281_build.log`, `s281_check.log`.
+
+**Gotchas:** (1) **`getKinshipWithMaleStatus` is a PURE provider** — it
+takes a ready-made `kmat` (dimnames = ids) + a `group` frame
+(`id`/`sex`/`age`); it does NOT compute kinship or know about
+pedigrees/group formation. The S3 assembler supplies `kmat` (reuse
+`modBreedingGroups`’ `groupKinship` in-app, else
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md))
+and subsets the pedigree to each group’s members. Do not bolt kinship
+computation onto the provider. (2) **Empty denominator (no females ≥ 3)
+returns `colorIndex = NA_integer_`** — but the shipped S1 renderer
+[`makeGeneticDiversityHeatmap()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticDiversityHeatmap.md)
+accepts only `colorIndex ∈ {1,2,3}` (errors on `NA`). So **S3/S4 must
+decide how to render the NA state** (map it to a defined index, or
+extend the renderer with a grey/“insufficient data” state) before
+feeding assembler output to S1. This is the deliberate S3/S4 decision,
+not a provider change. (3) **No eligible males (but females exist) →
+well-defined `fraction = 0` → red (colorIndex 1)**, NOT NA — only the
+no-females case is NA. (4) **Boundaries are inclusive-yellow:** `< 0.6`
+red, `[0.6, 0.9]` yellow, `> 0.9` green. (5) **`sex ∈ {F, M, U}`** —
+`"U"` animals are counted as neither females nor eligible males (a test
+locks this in). (6) **S3 is BLOCKED on §6 Q1–Q3** — do not start it
+until the owner answers, or it will encode guesses. (7) Carried standing
+keeps as in SUGGESTED NEXT.
+
 ### What Session 280 Did
 
 **Deliverable (S1 `[RATIFY]` points + 3 TDD phase-gates + a naming
