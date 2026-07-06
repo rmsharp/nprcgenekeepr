@@ -20,10 +20,11 @@ corrections.** **Started / Completed:** 2026-07-06 / 2026-07-06
 **Status:** **DONE + VERIFIED.** New
 `tests/testthat/test_appServer_server.R` (6 `testServer` tests / 20
 expectations). **`R/appServer.R` 0% → 100%** (zero uncovered lines);
-**overall coverage 95.03% → 97.91%** (`NOT_CRAN=true`). Landing
-(direct-commit vs PR) owner-gated — handoff written pre-commit. - **Gap
-SHAPE (diagnosed firsthand, Learning 265 at the app level):** the
-existing `test_appServer_dynamicTabs.R` covers only the tab helpers
+**overall coverage 95.03% → 97.91%** (`NOT_CRAN=true`). **Landed: owner
+chose direct-commit — committed + pushed to `origin/master` as
+`747dc9e5` (tagged `(S287)`; local == origin).** - **Gap SHAPE
+(diagnosed firsthand, Learning 265 at the app level):** the existing
+`test_appServer_dynamicTabs.R` covers only the tab helpers
 (`shouldShowChangedColsTab`/`getErrorTab`/`getChangedColsTab`), a
 `deparse(appServer)` structural grep, and
 [`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
@@ -252,8 +253,8 @@ muffles ONLY the “configuration file is missing” warning (targeted
 no-ops the non-read downstream modules to avoid empty-data ggplot
 warnings in the wiring test. (5) **\#111 is a campaign, still OPEN** —
 next slices are the residual modules (`modInput` 87.9% is the lowest) +
-small single-file residuals. (6) **Landing owner-gated** (direct-commit
-vs PR) — this handoff is pre-commit.
+small single-file residuals. (6) **Landed as `747dc9e5` on `master`,
+pushed** (owner chose direct-commit; local == origin).
 
 ### What Session 286 Did
 

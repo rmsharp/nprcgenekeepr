@@ -21,5 +21,5 @@ A vector of the names of the files written.
 ``` r
 library(nprcgenekeepr)
 files <- createExampleFiles()
-#> Example pedigree files examplePedigree, focalAnimals, lacy1989Ped, pedDuplicateIds, pedFemaleSireMaleDam, pedGood, pedInvalidDates, pedMissingBirth, pedOne, pedSameMaleIsSireAndDam, pedSix, pedWithGenotype, qcBreeders, qcPed, and smallPed will be created in /tmp/RtmpV0YdXS/ExamplePedigrees.
+#> Example pedigree files examplePedigree, focalAnimals, lacy1989Ped, pedDuplicateIds, pedFemaleSireMaleDam, pedGood, pedInvalidDates, pedMissingBirth, pedOne, pedSameMaleIsSireAndDam, pedSix, pedWithGenotype, qcBreeders, qcPed, and smallPed will be created in /tmp/Rtmp3xKFlR/ExamplePedigrees.
 ```
