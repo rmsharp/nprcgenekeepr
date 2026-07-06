@@ -15,6 +15,33 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-06 — \#112 disposition — closed as complete (S1–S4 dashboard shipped) + opened \#116 for the deferred S5 Flags column (Session 284)
+
+- **Deliverable (issue hygiene; owner-directed via `AskUserQuestion`:
+  “Close \#112, open S5 issue”):** dispose of issue \#112 now that all
+  four implementation slices (S1–S4) have shipped and the genetic
+  diversity dashboard is live in the app. **No package code changed; no
+  TDD phase; Phase-3E N/A (no runtime surface touched).**
+- **Closed \#112** (“finish development of the genetic diversity heatmap
+  or dashboard”) as *completed*, with a summary comment listing the four
+  shipped slices: S1
+  [`makeGeneticDiversityHeatmap()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticDiversityHeatmap.md)
+  (`5667f9c8`), S2 `getKinshipWithMaleStatus()` (`2b11f112`), S3
+  [`getGeneticDiversityStats()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGeneticDiversityStats.md)
+  4-column assembler (`cb7eb1a6`), S4 `modGeneticDiversity` module +
+  “Genetic Diversity” tab (`7d410468`).
+- **Opened \#116** (`enhancement`) to track the one deferred piece — the
+  5th **Flags (genotype/phenotype)** column (plan Slice S5). It is
+  blocked because no genotype/phenotype flagged-animal data source
+  exists in the package (plan decision D5 / §6 Q4); the new issue scopes
+  the work for when a data source is identified.
+- Updated `ROADMAP.md` “What’s Built” to record the shipped genetic
+  diversity dashboard feature.
+- **Process fact confirmed:** on this repo `gh issue create` /
+  `gh issue comment` / `gh issue close` all work; only `gh issue view`
+  and `gh pr edit` hit the deprecated-projectCards exit-1 bug (use
+  `gh api` for those).
+
 ### 2026-07-06 — \#112 Slice S4 — Shiny module `modGeneticDiversity` + new tab + `shared$breedingGroups` wiring (strict TDD) (Session 283)
 
 - **Deliverable (3 pre-RED scope decisions + 3 TDD phase-gates, all via

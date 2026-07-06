@@ -58,7 +58,12 @@ analysis of living animals. - **Genetic value analysis** reports — mean
 kinship and genome uniqueness, with a ranking scheme favoring low mean
 kinship / high genome uniqueness. - **Breeding group formation** that
 avoids mating close relatives, supports sex-ratio and harem
-configurations, and maximizes genetic diversity. - **Shiny application**
+configurations, and maximizes genetic diversity. - **Genetic diversity
+dashboard** — a red/yellow/green stoplight heat map with breeding groups
+as rows and diversity metrics as columns (Value, Origin, Production,
+Inbreeding), surfaced as the **“Genetic Diversity”** tab; flags
+breeding-group problems proactively for colony managers. - **Shiny
+application**
 ([`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)),
 now organized as Shiny modules.
 

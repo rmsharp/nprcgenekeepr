@@ -7,6 +7,181 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 284 Did
+
+**Deliverable (issue hygiene; owner-directed via `AskUserQuestion`:
+“Close \#112, open S5 issue”):** dispose of issue \#112 now that all
+four implementation slices (S1-S4) have shipped and the genetic
+diversity dashboard is live in the app — **closed \#112 as *completed***
+with a per-slice summary comment, and **opened \#116** (`enhancement`)
+to track the one deferred piece, the 5th **Flags (genotype/phenotype)**
+column (plan Slice S5), which is blocked because no genotype/phenotype
+flagged-animal data source exists in the package. **No package code
+changed; no TDD phase; Phase-3E N/A (no runtime surface touched).**
+**Started / Completed:** 2026-07-06 / 2026-07-06 **Status:** **DONE +
+VERIFIED.** \#112 confirmed `closed`; \#116 confirmed `open` with the
+`enhancement` label; open-issue list no longer shows \#112. Process docs
+updated + committed + pushed (local == origin/master). No `R/`, `man/`,
+`tests/`, `NAMESPACE`, or `DESCRIPTION` change — so no `--as-cran` /
+lint / spell / full-suite run was warranted (no package artifact was
+touched). - **What was done (GitHub, server-side — not in git):** (1)
+created **\#116** “Add Flags (genotype/phenotype) column to the Genetic
+Diversity dashboard (deferred slice S5 from \#112)” (`enhancement`) —
+body scopes the column spec (red ≥3 / yellow 1-2 / green 0), the blocker
+(no data source; plan §6 Q4 / D5; grep confirms only unrelated QC code),
+the “work when unblocked” steps (`getGenotypeFlagStatus` provider → 5th
+`getGeneticDiversityStats` column → column-agnostic renderer needs no
+change), and the four delivered slices with commit hashes; (2) posted a
+closing comment on **\#112** summarizing the shipped dashboard (S1
+`5667f9c8` / S2 `2b11f112` / S3 `cb7eb1a6` / S4 `7d410468`; plan
+`6303b3e6`) and pointing the deferred Flags column at \#116; (3) closed
+\#112 with `--reason completed`. - **What was done (git, this commit):**
+`CHANGELOG.md` (S284 entry under \[Unreleased\]); `ROADMAP.md` “What’s
+Built” (+ genetic diversity dashboard bullet); `PROJECT_LEARNINGS.md`
+(Learning 263); `SESSION_NOTES.md` (this handoff). - **Verify
+(firsthand):** `gh api .../issues/112` → `state: closed`;
+`gh api .../issues/116` → `state: open`, label `enhancement`;
+`gh issue list` → \#112 absent, \#116 present. Order was create-#116 →
+comment-#112 → close-#112 so the closing comment could reference the
+real \#116 number.
+
+**Session 283 Handoff Evaluation (by Session 284): Score 9/10.** S283’s
+SUGGESTED NEXT item 1 was *exactly* this session’s decision — “**Close
+\#112?** … consider whether to close \#112 (dashboard shipped) and open
+a separate issue for the Flags column, OR leave \#112 open … Owner call”
+— so the disposition was pre-framed and I only had to surface the fork
+to the owner. **What helped:** (i) the per-slice deliverable list with
+commit hashes let me cite exact hashes in BOTH the closing comment and
+the new issue with zero re-derivation; (ii) the precise blocker
+statement (“S5 … blocked on §6 Q4, no genotype/phenotype data source
+exists”) made the \#116 body accurate and let me confirm it with a
+single grep rather than re-investigating; (iii) “S5 is the only thing
+keeping \#112 open” framed the close-vs-leave-open choice cleanly.
+**What was missing (the −1):** the handoff carried the standing
+“`gh issue view`/`gh pr edit` exit 1 → `gh api`” note but did not
+clarify that `gh issue create`/`comment`/`close` work fine — I confirmed
+that this session (now Learning 263b); and neither S283 nor its
+predecessors recorded the shipped dashboard in `ROADMAP.md` “What’s
+Built” (a small pre-existing feature-inventory gap I closed here). Both
+minor. **What was wrong:** nothing — \#112/#116 states, the blocker, and
+every commit hash verified true. **ROI:** very high — the handoff
+pre-scoped the exact decision and supplied every fact needed to execute
+it without re-discovery.
+
+**Self-assessment (Session 284): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean — HEAD `7d410468` == documented S283
+close-out), reported, STOPPED for the owner; wrote the 1B stub before
+any technical work; used `AskUserQuestion` for the genuine owner
+disposition fork rather than assuming. **Strengths:** (1) grounded the
+decision in the actual issue text + planning-doc §3.4/D5/§6 Q4 before
+framing it, and confirmed the blocker with a grep rather than trusting
+the handoff blindly; (2) made the closed \#112 self-documenting
+(per-slice commit hashes) and the new \#116 actionable (spec + blocker +
+unblock steps), per the methodology’s “actionable \> vague” review-ROI
+principle; (3) recognized the `ROADMAP.md` “What’s Built” omission as
+part of “the complete job” (FM \#13) and closed it with one coupled
+line, while explicitly declining the unrelated stale audit entry
+(NEW-20) as out-of-scope creep (SAFEGUARDS mode-switch discipline); (4)
+correctly classified this as a no-code / no-runtime task — did NOT run
+`--as-cran`/lint/spell/full-suite theater on an unchanged package, and
+stated Phase-3E N/A honestly (no runtime surface, so FM \#24 has no
+target); (5) verified the end state firsthand (both issue states +
+label + list). **Weakness (the −1):** I briefly over-deliberated the
+ROADMAP in-scope/out-of-scope call before deciding — a sharper first
+read of FM \#13 vs the mode-switch rule would have settled it faster (no
+wrong action taken, only a little churn). Correct + disciplined; capped
+at 9.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 263** — closing
+the LAST slice of a multi-slice feature = close the broad feature issue
+as *completed* (with a per-slice commit-hash summary) + open a NEW
+focused `enhancement` issue scoping ONLY the deferred/blocked remainder
+(spec + exact blocker + unblock steps), rather than leaving the broad
+issue open indefinitely; also record the shipped feature in `ROADMAP.md`
+“What’s Built” (FM \#13). Process fact confirmed:
+`gh issue create`/`comment`/`close` all work on this repo — only
+`gh issue view`/`gh pr edit` hit the projectCards exit-1 bug (`gh api`
+for those); create the new issue FIRST, then reference it in the closing
+comment, then close. Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was an ISSUE-HYGIENE
+close-out session — no code, no TDD phase, Phase-3E N/A.**
+
+**=\> SUGGESTED NEXT.** **Issue \#112 is closed (dashboard complete);
+the deferred Flags column lives in \#116 (blocked, not scheduled).** No
+work is in flight. Candidate next deliverables from the open backlog
+(owner picks one — each is a fresh session): - **\#116 — Flags column
+(S5):** still blocked on a genotype/phenotype flagged-animal data
+source. Do NOT start until such a source is identified (LabKey field or
+upload column). If/when it exists: `getGenotypeFlagStatus` provider (red
+≥3 / yellow 1-2 / green 0) → 5th `getGeneticDiversityStats` column →
+renderer needs no change (column-agnostic). STRICT TDD + NAMESPACE
+diff + Phase-3E (it wires into the live dashboard). - **Optional
+dashboard follow-ups (small, deferred by S283, not ticketed):** a
+Home-page “Genetic Diversity” card + `goto_geneticDiversity` handler
+(needs a new `fluidRow` — Home is a full 3×4 grid); a per-group housing
+control (the assembler already accepts a per-group housing vector). -
+**\#111** code coverage; **\#103** roxygen harmonization; then **\#37,
+\#36, \#28, \#12, \#11, \#10, \#5**; the CRAN thread (Phase 5b,
+owner-run outward — package ARCHIVED 2025-07-29, resubmission
+owner-gated + HARD STOP). - **Housekeeping (optional, out of scope this
+session):** `ROADMAP.md` line 33 still lists NEW-20 “(delete dead
+`makeGeneticDiversityDashboard.R`)” as an open audit follow-up, but that
+deletion already landed in S280 (`5667f9c8`) — a stale audit-tracking
+entry a future session could prune (verify against `BACKLOG.md` first).
+**Standing gotchas (unchanged):** for ANY package-code change —
+`--as-cran` from the REPO ROOT (renv; background ~3-4 min; **beware zsh
+`rm <glob>` aborting with “no matches found”**) +
+`lintr::lint()`/`lint_package()` + `spell_check_package` (hand-add
+wordlist, never `update_wordlist`) after ANY `R/`+`man/` edit;
+behavior/NAMESPACE changes ALSO need STRICT TDD + NAMESPACE diff +
+Phase-3E + a FULL-suite run for seeded-golden shifts; the local
+`--as-cran` does NOT run lintr (Learning 232) → run `lint_package()`
+too; NEWS/README GENERATED (edit `.Rmd`, render via
+`load_all`+[`rmarkdown::render`](https://pkgs.rstudio.com/rmarkdown/reference/render.html),
+remove stray `README.html` — Learning 255); version **2.0.0**; package
+**ARCHIVED on CRAN 2025-07-29**; **e2e/shinytest2 SKIPS here (no
+chromote) → for app runtime changes use
+`shiny::testServer(shinyApp(appUI(), appServer), {...})` as headless
+Phase-3E**; `gh issue view`/`gh pr edit` exit 1 → `gh api` (but
+`gh issue create`/`comment`/`close` work — Learning 263); re-check
+`git status` before ANY destructive git
+(\[\[check-status-before-destructive-git\]\]); before any delete/rename,
+`grep -rn <target> .` across the WHOLE tree for prior keep-decisions
+BEFORE the `git rm` (Learning 259); landing owner-gated (direct-merge vs
+PR).
+
+**Key files (this session):** **Edited + committed (S284, on `master`,
+pushed):** `CHANGELOG.md` (S284 \[Unreleased\] entry), `ROADMAP.md`
+(“What’s Built” + dashboard bullet), `PROJECT_LEARNINGS.md` (Learning
+263), `SESSION_NOTES.md` (this handoff + the 1B stub it replaced).
+**GitHub (server-side, not git):** closed \#112 (comment +
+`--reason completed`); created \#116 (`enhancement`). Reference (read,
+not edited):
+`docs/planning/issue112-genetic-diversity-dashboard-plan.md` (§3.4, D5,
+§6 Q4, §7 Slice 5). **NOT committed (standing keep — FM \#22):**
+`.DS_Store` (tracked+modified), `PED_GV_AUDIT_2026-05-30.html`
+(untracked, `.Rbuildignore`d). **Scratchpad (NOT committed):**
+`s5_issue_body.md`, `issue112_close_comment.md`.
+
+**Gotchas:** (1) **This session changed NO package code** — issue
+hygiene + process docs only; that is why there was no
+`--as-cran`/lint/spell/full-suite run (nothing to build) and Phase-3E
+was N/A (no runtime surface). Do not read this as skipped verification
+(FM \#24 has no target here). (2) **\#112 is closed as complete; \#116
+carries the deferred S5 Flags column** — do not reopen \#112 for the
+Flags work; it belongs in \#116. (3) **\#116 is BLOCKED, not scheduled**
+— no genotype/phenotype flagged-animal data source exists; do not start
+it speculatively. (4) `gh issue create`/`comment`/`close` work on this
+repo; only `gh issue view`/`gh pr edit` fail on projectCards → `gh api`.
+(5) Carried standing keeps as in SUGGESTED NEXT.
+
 ### What Session 283 Did
 
 **Deliverable (3 pre-RED scope decisions + 3 TDD phase-gates, all via
