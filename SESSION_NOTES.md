@@ -7,6 +7,206 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 285 Did
+
+**Deliverable (issue \#111 code-coverage campaign, slice 1 — the
+“deterministic helper tier”, chosen by owner via `AskUserQuestion`):**
+test-backfill for the genuinely-untested helper functions to 100% + one
+dead-code deletion. Owner picked \#111, then clarified the scope is ALL
+R code lacking quality coverage (the three named examples are
+illustrative and now already 97-98% covered — the issue is stale).
+**Test-only (no production logic changed) + one dead-code deletion;
+PRE-RED→RED gated via `AskUserQuestion`; 0 stakeholder corrections.**
+**Started / Completed:** 2026-07-06 / 2026-07-06 **Status:** **DONE +
+VERIFIED. NOT yet committed** (working tree holds the changes; commit is
+the last close-out step). **Coverage 91.23% → 92.96%**
+(`NOT_CRAN=true`); **all 16 target helper files at 100%**. Full suite
+**1437 tests, 0 fail / 0 error, 0 true offenders**; lint non-regressing;
+spell clean; **`R CMD check --as-cran` GREEN 0/0/2** (benign NOTEs).
+Landing (direct-commit vs PR) is owner-gated — this handoff is written
+pre-commit. - **Measurement-validity correction (the load-bearing
+insight):** a first
+[`covr::package_coverage()`](http://covr.r-lib.org/reference/package_coverage.md)
+read **83.54%**, but that UNDERCOUNTS — 39 test files carry
+[`testthat::skip_on_cran()`](https://testthat.r-lib.org/reference/skip.html)
+and covr does not set `NOT_CRAN`, so the module `testServer` suites were
+skipped. Re-measured with `NOT_CRAN=true` → **true baseline 91.23%**.
+This dropped `set_seed.R` and `applyKinshipOverridesToMatrix.R` from
+scope (already 100% under `NOT_CRAN=true`) and reclassified the “low”
+Shiny modules as mostly the same artifact (`modBreedingGroups` 98.6%,
+`modGeneticValue` 96.3%, `modInput` 87.3%), NOT genuine gaps. **Always
+measure the coverage baseline with `NOT_CRAN=true` on this package.** -
+**16 helper files → 100%** (each targeting its exact uncovered lines —
+error/guard/format/fallback branches): `logModuleEvent`, `safeExecute`,
+`savePlotToFile`, `summarizeKinshipValues`, `makeGeneticSummaryTable`,
+`shouldShowChangedColsTab`, `fixColumnNames`, `getConfigApiKey`,
+`hasNetrc`, `readKinshipOverrides`, `getGenoDefinedParentGenotypes`,
+`saveDataframesAsFiles`, `makeExamplePedigreeFile`, `gvaConvergence`,
+`runQcStudbook`, `getLkDirectAncestors`. 6 new `test_*.R` files + 9
+appended. - **Dead-code deletion:** removed `R/agePyramidPlot.R`
+(unexported `@noRd`, zero callers, superseded by live
+[`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md)) +
+its 2 stale `inst/_pkgdown.yml` reference lines. No `NAMESPACE` change
+(internal fn). - **Bug found → filed \#117, NOT fixed:**
+`fixColumnNames`’s “overreach cleanup” (lines 30-36) is ineffective — it
+restores `first_name`/`second_name` into `cols`, which line 39
+(`cols <- newCols`) overwrites, and the fn returns `newCols`, so the
+restoration never reaches `newColNames` (both `"First Name"` and
+`"first_name"` → `firstname`). The coverage test **characterizes the
+current (defective) behavior** (commented, pointing at \#117) rather
+than fixing it in a coverage slice. - **Verify (firsthand):** each
+new/changed file green individually; full suite (`NOT_CRAN=true`) **1437
+/ 0 / 0**; `covr` re-measure confirms every target 100% + overall
+92.96%; `.lintr` excludes `tests/` and no `R/` source was added/modified
+(only a deletion) → lint non-regressing (new files `lintr::lint()` = 0);
+`spell_check_package` clean; **`R CMD check --as-cran` (repo root, WITH
+vignettes) 0 err / 0 warn / 2 benign NOTEs** (archived “New
+submission” + HTML-Tidy), `testthat.R OK`. **Phase-3E N/A** — no runtime
+behavior changed (deletion is a zero-caller fn; rest is test-only), so
+no runtime surface to smoke-test (not a skipped check; FM \#24 has no
+target).
+
+**Session 284 Handoff Evaluation (by Session 285): Score 8/10.** S284
+was an issue-hygiene session, so its handoff had little to say about
+\#111 specifically — but what it carried was accurate and its
+standing-gotcha block was the backbone of my verification. **What
+helped:** (i) the standing gotchas listed `--as-cran` from repo root +
+`lint_package` + `spell_check` + “e2e/shinytest2 SKIPS here (no
+chromote)” — all held EXACTLY and told me my verification battery up
+front; (ii) the ghost-check breadcrumb (HEAD `cd621767` == documented
+S284 close-out) let me confirm no ghost session in seconds; (iii) the
+`gh` capability note (create/comment/close work; view/edit exit 1) let
+me file bug \#117 without fumbling; (iv) the git-status standing keeps
+(`.DS_Store`, `PED_GV_AUDIT`) were documented so I left them (FM \#22).
+**What was missing (the −2):** the SUGGESTED-NEXT listed “#111 code
+coverage” as a one-liner with **no scoping** — no baseline, no hint that
+the issue’s named example lines were stale, and (understandably) no
+warning about the `skip_on_cran`/`NOT_CRAN` measurement artifact that
+dominates coverage on this package. That artifact cost me one wasted
+full covr run (83.54%) before I re-measured correctly (91.23%). A single
+line — “coverage is measured with `NOT_CRAN=true`; the default read
+undercounts by ~8 pts” — would have saved it. This is a
+*campaign-scoping* gap, not an S284 fault (S284’s deliverable was \#112
+hygiene, not \#111), hence 8 not lower. **What was wrong:** nothing —
+every standing fact verified true. **ROI:** high — the standing gotchas
+were the load-bearing content and were all correct.
+
+**Self-assessment (Session 285): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean + explained), reported, STOPPED for the
+owner; wrote the 1B stub before technical work; posed the scope decision
+AND the PRE-RED→RED gate via `AskUserQuestion`, declaring the TDD phase
+at the top of each phase-response. **Strengths:** (1) **caught the
+measurement artifact** — re-measured with `NOT_CRAN=true` rather than
+trusting the first covr read, which corrected the baseline, the target
+list (dropped 2 already-100% helpers), and the whole “which files are
+actually low” picture; (2) **verified every workflow-supplied sketch
+against the source before writing a test** — that discipline caught the
+`fixColumnNames` sketch being wrong and surfaced a real latent bug,
+which I characterized + filed (#117) rather than silently enshrining or
+scope-creeping into a fix (SAFEGUARDS mode-switch); (3) empirically
+validated the pipeline-threading fixtures (gvaConvergence
+origin/all-founder, getGeno NA-first-allele, the LabKey
+`getDemographics` mock column order) with throwaway `load_all` runs
+before committing tests; (4) recognized 0%-coverage `agePyramidPlot.R`
+as dead code (grep-verified zero callers) → deletion not a test, and
+cleaned its stale pkgdown refs; (5) ran the full verification battery
+firsthand (full suite 1437/0/0, covr re-measure, lint, spell,
+`--as-cran` 0/0/2) and re-ran `--as-cran` WITH vignettes when the first
+`--no-build-vignettes` run produced 2 vignette-packaging WARNINGs, to
+report the true 0/0/2 rather than a flag-artifact number. **Weaknesses
+(the −1):** (i) the first covr run at the default (no `NOT_CRAN`) was a
+wasted ~4-min build before I recognized the artifact — a quicker check
+of the module tests’ `skip_on_cran` up front would have avoided it; (ii)
+the first `--as-cran` used `--no-build-vignettes` (faster) and produced
+misleading WARNINGs, forcing a second full build — I should have built
+with vignettes the first time given the baseline is documented as 0/0/2.
+Both cost time, not correctness. Correct + disciplined; capped at 9.
+
+**=\> SUGGESTED NEXT.** **Issue \#111 is a MULTI-SESSION campaign and
+stays OPEN.** Slice 1 (this session) = the deterministic-helper tier,
+done (16 files → 100%, overall 91.23% → 92.96%). Remaining GENUINE
+coverage gaps (verified under `NOT_CRAN=true`), each a candidate future
+slice / fresh session: - **`modORIPReporting` (31.7%, genuinely
+uncovered — the biggest real gap):** it has NO `testServer` tests
+(unlike the other modules); the entire server body (renderers + both
+downloadHandlers) runs only under the browser e2e that skips here. Add a
+`testServer` suite modeled on `test_modSummaryStats.R` — args
+`list(pedigree=reactive(...), geneticValues=reactive(...), siteConfig=reactive(list(center=..., nodename=..., user=..., sysname=..., release=...)))`,
+force each output + read the two download CSVs, then re-run with
+NULL/0-row inputs for the graceful-degradation branches. One module =
+one session; ~M effort. - **`appServer` (0% local — needs a full-app
+`testServer`):** covered only by the skipped e2e; add
+`shiny::testServer(appServer, {...})` (session init covers the module
+mounts L46-353; `session$setInputs(goto_*=1)` covers the nav
+observeEvents). ~L effort. - **Small residual single-line gaps** in
+otherwise-high files if you want to push overall higher: `modInput`
+(87.3%, error branches — `local_mocked_bindings`/tempfile fixtures),
+`modPyramid` (89.7%), `modSummaryStats` (94.3%), `modPotentialParents`
+(94.7%), `modGeneticValue` (96.3% — a few defensive branches). - **Also
+open:** **\#117** (the `fixColumnNames` overreach-cleanup bug — a
+genuine correctness fix, strict TDD: RED test asserting
+`first_name`/`second_name` restored, then fix line 32/35 to write
+`newCols`; **when fixed, update `test_fixColumnNames.R`’s
+characterization assertions**). **\#116** Flags column (still BLOCKED —
+no data source); **\#103** roxygen; **\#37, \#36, \#28, \#12, \#11,
+\#10, \#5**; the CRAN thread (Phase 5b, owner-run outward — package
+ARCHIVED, resubmission owner-gated + HARD STOP). **Standing gotchas
+(unchanged + one NEW):** **NEW — measure coverage with `NOT_CRAN=true`**
+([`covr::package_coverage()`](http://covr.r-lib.org/reference/package_coverage.md)
+at the default undercounts by ~8 pts because 39 test files
+`skip_on_cran`; `Sys.setenv(NOT_CRAN="true")` or launch
+`NOT_CRAN=true Rscript`). For ANY package-code change — `--as-cran` from
+the REPO ROOT (renv; background ~3-4 min; **build WITH vignettes —
+`--no-build-vignettes` yields 2 misleading vignette-packaging
+WARNINGs**; **beware zsh `rm <glob>` aborting with “no matches
+found”**) + `lintr::lint()`/`lint_package()` (`.lintr` EXCLUDES
+`tests/`, `inst/extdata`, `vignettes`, `inst/application`) +
+`spell_check_package` (hand-add wordlist, never `update_wordlist`) after
+ANY `R/`+`man/` edit; behavior/NAMESPACE changes ALSO need STRICT TDD +
+NAMESPACE diff + Phase-3E + FULL-suite (`NOT_CRAN=true`); the local
+`--as-cran` does NOT run lintr (Learning 232); NEWS/README GENERATED
+(edit `.Rmd`); version **2.0.0**; package **ARCHIVED on CRAN
+2025-07-29**; **e2e/shinytest2 SKIPS here (no chromote) →
+`shiny::testServer(shinyApp(appUI(), appServer), {...})` for app runtime
+changes**; `gh issue view`/`gh pr edit` exit 1 → `gh api` (but
+`gh issue create`/`comment`/`close` work); re-check `git status` before
+ANY destructive git (\[\[check-status-before-destructive-git\]\]);
+before any delete/rename, `grep -rn <target> .` across the WHOLE tree
+BEFORE the `git rm` (Learning 259); landing owner-gated (direct-commit
+vs PR).
+
+**Key files (this session):** **New test files (uncommitted):**
+`tests/testthat/test_getConfigApiKey.R`, `test_hasNetrc.R`,
+`test_shouldShowChangedColsTab.R`, `test_fixColumnNames.R`,
+`test_makeGeneticSummaryTable.R`, `test_runQcStudbook.R`. **Appended
+test files (uncommitted):** `test_modErrorHandling.R` (logModuleEvent +
+safeExecute), `test_modPlotDownload.R` (savePlotToFile),
+`test_summarizeKinshipValues.R`, `test_readKinshipOverrides.R`,
+`test_saveDataframesAsFiles.R`, `test_makeExamplePedigreeFile.R`,
+`test_geneDrop.R` (getGenoDefinedParentGenotypes),
+`test_gvaConvergence.R`, `test_getLkDirectAncestors.R`. **Deleted:**
+`R/agePyramidPlot.R`. **Edited:** `inst/_pkgdown.yml` (-2 lines),
+`CHANGELOG.md` (S285 entry), `PROJECT_LEARNINGS.md` (Learning 264),
+`SESSION_NOTES.md` (this handoff). **GitHub:** filed **\#117** (`bug`,
+the fixColumnNames defect). **NOT committed (standing keep — FM \#22):**
+`.DS_Store` (tracked+modified), `PED_GV_AUDIT_2026-05-30.html`
+(untracked, `.Rbuildignore`d). **Scratchpad (NOT committed):** coverage
+scripts + logs, `classifications.md`, the classification Workflow
+output.
+
+**Gotchas:** (1) **`covr` at the default UNDERCOUNTS** — always
+`NOT_CRAN=true` (see NEW standing gotcha). (2) **`fixColumnNames` has a
+real bug (#117)** — its test characterizes the CURRENT (wrong) output;
+when \#117 is fixed, those assertions must be updated. (3) **This slice
+is test-only + a dead-code deletion** — no `R/` source added/modified,
+no `NAMESPACE` change; that is why lint is non-regressing and Phase-3E
+is N/A (no runtime surface). (4) **\#111 is a campaign, still OPEN** —
+future slices are `modORIPReporting`, `appServer`, and small residuals
+(see SUGGESTED NEXT). (5) The changes are **uncommitted** pending owner
+landing preference (direct-commit vs PR). (6) Carried standing keeps as
+in SUGGESTED NEXT.
+
 ### What Session 284 Did
 
 **Deliverable (issue hygiene; owner-directed via `AskUserQuestion`:

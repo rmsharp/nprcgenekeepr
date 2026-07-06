@@ -15,6 +15,79 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-06 — \#111 code-coverage campaign, slice 1 — deterministic helper tier backfilled to 100% + dead-code removal (Session 285)
+
+- **Deliverable (owner picked \#111, then clarified scope = increase
+  coverage across *all* R code lacking quality coverage, the three named
+  examples being illustrative; owner then chose this session’s slice via
+  `AskUserQuestion`: the “deterministic helper tier”):** add
+  test-backfill for the genuinely-untested helper functions and remove
+  one dead file. **Test-only (no production logic changed) + one
+  dead-code deletion; PRE-RED→RED gate via `AskUserQuestion`; 0
+  stakeholder corrections.**
+- **Measurement correction (load-bearing):** an initial
+  [`covr::package_coverage()`](http://covr.r-lib.org/reference/package_coverage.md)
+  read 83.54%, but that *undercounts* — 39 test files carry
+  [`testthat::skip_on_cran()`](https://testthat.r-lib.org/reference/skip.html)
+  (the module `testServer` suites) and covr does not set `NOT_CRAN`, so
+  those tests were skipped. Re-measured with `NOT_CRAN=true`: **true
+  baseline 91.23%**. This corrected the target list: `set_seed.R` and
+  `applyKinshipOverridesToMatrix.R` (flagged low by the artifact read)
+  are actually already 100% under `NOT_CRAN=true` and were dropped from
+  scope, and the “low” Shiny modules (`modBreedingGroups` 98.6%,
+  `modGeneticValue` 96.3%, `modInput` 87.3%) are mostly the same
+  artifact, not genuine gaps.
+- **16 helper files backfilled to 100%** (each targeting its exact
+  uncovered lines — mostly error/guard/format/fallback branches no prior
+  fixture reached): `logModuleEvent`, `safeExecute`, `savePlotToFile`,
+  `summarizeKinshipValues`, `makeGeneticSummaryTable`,
+  `shouldShowChangedColsTab`, `fixColumnNames`, `getConfigApiKey`,
+  `hasNetrc`, `readKinshipOverrides`, `getGenoDefinedParentGenotypes`,
+  `saveDataframesAsFiles`, `makeExamplePedigreeFile`, `gvaConvergence`,
+  `runQcStudbook`, `getLkDirectAncestors`. Six new `test_*.R` files,
+  nine appended. Mocking used where a branch needs it:
+  [`testthat::local_mocked_bindings`](https://testthat.r-lib.org/reference/local_mocked_bindings.html)
+  (mock
+  `qcStudbook`/`create_wkbk`/[`shiny::showNotification`](https://rdrr.io/pkg/shiny/man/showNotification.html)),
+  [`mockery::stub`](https://rdrr.io/pkg/mockery/man/stub.html) (mock
+  `getDemographics` for the LabKey walk), `withr` for
+  option/env/tempfile isolation, and a null plot device.
+- **Dead-code removal:** deleted `R/agePyramidPlot.R` — an unexported
+  (`@noRd`), **zero-caller** duplicate of the live
+  [`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md)
+  (verified no references in `R/`, `tests/`, `NAMESPACE`, or `man/`;
+  committed since `fb9a92ab`); removed its two stale `inst/_pkgdown.yml`
+  reference-index entries (it has no man page, so pkgdown referenced a
+  non-existent topic). No `NAMESPACE` change (it was internal).
+- **Bug found, filed, not fixed (scope discipline):** while writing the
+  `fixColumnNames` test, found that its “clean up possible overreach”
+  block (lines 30–36) is **ineffective** — it restores
+  `first_name`/`second_name` into the local `cols`, but line 39
+  (`cols <- newCols`) overwrites it and the function returns `newCols`,
+  so the restoration never reaches `newColNames` (both `"First Name"`
+  and `"first_name"` inputs collapse to `"firstname"`). Filed as
+  **\#117** (`bug`); the coverage test **characterizes the current
+  (defective) behavior** (clearly commented, pointing at \#117) rather
+  than fixing it in a coverage slice.
+- **Result:** overall coverage **91.23% → 92.96%** (`NOT_CRAN=true`);
+  all 16 target files at 100%.
+- **Verify (firsthand):** each new/changed test file run green
+  individually; **full suite (`NOT_CRAN=true`) 1437 tests, 0 failed / 0
+  error, 0 true offenders** (the `test-app-*`/`test-e2e-*` baseline
+  excluded); `covr` re-measure confirms every target file at 100%;
+  **lint non-regressing** (`.lintr` excludes `tests/`; no `R/` source
+  was added or modified — only a deletion; new files lint 0);
+  `spell_check_package` **clean**; **`R CMD check --as-cran` (repo root)
+  GREEN — 0 errors / 0 warnings / 2 benign NOTEs** (archived “New
+  submission” + HTML-Tidy) with `testthat.R OK`. **Phase-3E N/A:** no
+  runtime behavior changed — the deletion removes a zero-caller function
+  (verified) and the rest is test-only, so there is no runtime surface
+  to smoke-test (not a skipped check).
+- **Campaign status:** \#111 stays OPEN. This is slice 1 (helper tier).
+  Remaining genuine gaps for future slices: `modORIPReporting` (31.7%,
+  genuinely uncovered — no `testServer` tests) and `appServer` (0% local
+  — needs a full-app `testServer` harness).
+
 ### 2026-07-06 — \#112 disposition — closed as complete (S1–S4 dashboard shipped) + opened \#116 for the deferred S5 Flags column (Session 284)
 
 - **Deliverable (issue hygiene; owner-directed via `AskUserQuestion`:
