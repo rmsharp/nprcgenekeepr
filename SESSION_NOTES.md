@@ -7,6 +7,210 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 293 Did
+
+**Deliverable (issue \#111 code-coverage campaign, slice 9 — the first
+post-Shiny-module tier; owner said “continue \#111 with
+checkKinshipOverrides”, then approved BATCHING the remaining trivial
+single-file residuals into one session):** test-backfill SIX
+plain-function helper files to 100% line coverage via ordinary
+`test_that` tests. **Test-only (no production code changed); THREE
+`AskUserQuestion` gates — a PRE-RED→RED for `checkKinshipOverrides`, a
+batch-SCOPE decision, then a combined PRE-RED→RED for the other five; 0
+stakeholder corrections.** **Started / Completed:** 2026-07-06 /
+2026-07-06 **Status:** **DONE + VERIFIED.** Six files driven
+96.43–98.36% → **100%**; overall coverage 99.71% → **99.83%**
+(`NOT_CRAN=true`). **Landed: owner chose commit + push to master — six
+test files committed as `be3c494d` (tagged `(S293)`); this docs
+close-out (CHANGELOG + PROJECT_LEARNINGS 272 + this handoff) records
+that hash and is pushed to `origin/master` (fast-forward; local ==
+origin).** - **The six files + the exact branch each new test reached**
+(each pinpointed by
+[`covr::zero_coverage`](http://covr.r-lib.org/reference/zero_coverage.md),
+`NOT_CRAN=true`, BEFORE writing): - `R/checkKinshipOverrides.R` 96.43% →
+100% — **L47**, the non-numeric `kinship`-column
+[`stop()`](https://rdrr.io/r/base/stop.html). Existing 9-test suite
+passes only numeric / `NA_real_` / negative kinship, never a
+character/factor column. New test in
+`tests/testthat/test_checkKinshipOverrides.R`: character + factor
+kinship → `expect_error(..., "must be numeric")`. -
+`R/correctUnknownParentMeanKinship.R` 97.30% → 100% — **L146** (unnamed
+`indivMeanKin` → early return) and **L152** (ped with no `exit` column →
+`candPed$exit <- as.Date(NA)`). TWO `test_that` cases (separate branches
+— one call cannot hit both). In `test_correctUnknownParentMeanKinship.R`
+(reuses the file’s `d()` date helper; case (b) mirrors the existing
+`clampPed` foc/mp/dk fixture → foc 0.05 + .40/2 = 0.25). -
+`R/loadSpeciesOverrides.R` 96.72% → 100% — **L139–140**, the internal
+`mergeSpeciesOverrides` append branch (`is.na(pos)` TRUE) for a species
+absent from the bundled 14-row `speciesGestation` table. Every existing
+test overrides “RHESUS” (present → only the else/match branch). New test
+appends a novel “GORILLA” row
+(`nprcgenekeepr:::mergeSpeciesOverrides`). - `R/orderReport.R` 97.73% →
+100% — **L42**, the `rpt$id %in% getFounders(ped)` fallback when the
+report has NO `parentage` column. New test in `test_orderReport.R`. -
+`R/getPyramidPlot.R` 98.36% → 100% — **L40**, the `ageUnit == "months"`
+age×12 branch. New test reuses the file’s `recPlot()` null-pdf helper +
+`qcPed`. - `R/getPotentialParents.R` 96.88% → 100% — **L151–152**, the
+empty-`potentialDams` fallback to all old-enough females (a candidate
+dam with NO offspring is dropped by the proven-breeder
+`births_plus_minus_one` filter → empties the set → fallback re-admits
+her). New 3-row-ped test in `test_getPotentialParents.R`. -
+**`R/dataframe2string.R` L49 — PROVEN UNREACHABLE, dropped, production
+LEFT UNTOUCHED.**
+`dimnames.data.frame(x) == list(row.names(x), names(x))`, so
+`dimnames(object)[[1L]]` mirrors
+[`row.names()`](https://rdrr.io/r/base/row.names.html) and is NULL only
+when `nRows==0`, already intercepted upstream at L36–37; a matrix can’t
+reach it either. Inherited defensive code from `print.data.frame`. A
+`# nocov` / waiver is a SEPARATE production decision, out of scope for a
+test-only session. File stays 96.88%. - **Method (probe-first,
+parallelized):** the six single-file investigations were fanned out to 6
+parallel probe agents (a `Workflow`), each of which PROVED its fixture
+reaches the target line with `covr::function_coverage(fn, code)`
+(throwaway scratchpad probes only, no repo file touched) before the RED
+gate. That proof step is what caught `dataframe2string` L49 as
+unreachable and dropped it. - **Verify (firsthand):** all 6 modified
+test files run **0 failed / 0 error / 0 warning**; `covr` (full suite,
+`NOT_CRAN=true`, saved `cov293b_after.rds`) confirms all six at **100%**
+and overall **99.83%**; full-suite regression read **0 failed / 0 error
+/ 0 true offenders** (7 baseline warnings — 2
+`test_gvaConvergence_kinshipOverrides.R` + 5 `test_modPyramid.R`, none
+from the changed files); `lintr::lint()` on all six changed files =
+**0**; **`R CMD check --as-cran` (repo root, WITH vignettes, via
+`devtools::check`) Status: OK — 0 errors / 0 warnings / 0 notes**
+(spelling comparison OK). **Phase-3E N/A** — test-only, no `R/` source
+or runtime change (FM \#24 has no target).
+
+**Session 292 Handoff Evaluation (by Session 293): Score 9/10.** S292’s
+SUGGESTED NEXT named the single-file residuals with accurate percentages
+from `cov292_after.rds` (checkKinshipOverrides 96.43%,
+loadSpeciesOverrides 96.72%, dataframe2string 96.88%,
+getPotentialParents 96.88%, correctUnknownParentMeanKinship 97.30%, …)
+and made the load-bearing call that “these are called directly, so the
+tests are ordinary `test_that` calls … no `testServer` needed.” **What
+helped:** (i) every percentage matched my fresh covr triage to the
+decimal — no phantom chase, because the “measure with `NOT_CRAN=true`”
+gotcha was carried and applied; (ii) the vehicle-difference flag was
+EXACTLY right and saved me from over-engineering `testServer` harnesses
+for pure functions; (iii) the saved `cov292_after.rds` was directly
+reusable — I read `checkKinshipOverrides`’s sole uncovered line (L47)
+out of it with
+[`covr::zero_coverage()`](http://covr.r-lib.org/reference/zero_coverage.md)
+and never re-ran covr to scope that gap; (iv) the standing gotchas
+(`--as-cran` repo-root-with-vignettes via `devtools::check` = 0/0/0;
+happy-path fixtures miss internal guards; git-status keep
+`.DS_Store`/`PED_GV_AUDIT` untouched) all held. **What was missing (the
+−1):** the residual list gave file %s but not the exact uncovered LINE
+shapes — the per-file `zero_coverage` dump (and the probe workflow) had
+to discover that `dataframe2string` L49 is unreachable dead code and
+that `correctUnknownParentMeanKinship` has TWO distinct guards; inherent
+(S292 could not know without doing the slice), minor. **What was
+wrong:** nothing — every % accurate, the vehicle call correct. **ROI:**
+very high — turnkey scoping + a reusable covr artifact.
+
+**Self-assessment (Session 293): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean), reported, STOPPED for the owner; wrote
+the 1B stub before technical work; declared the TDD phase at the top of
+every phase-response and posed all three `AskUserQuestion` gates.
+**Strengths:** (1) **reused S292’s covr artifact** to pinpoint
+`checkKinshipOverrides` L47 instantly — no wasted covr run; (2)
+**treated the owner’s “can we batch?” as a QUESTION, not an
+instruction** (FM \#23 / \[\[observation-vs-decision\]\]) — answered
+with a data-grounded triage (dumped EVERY remaining file’s exact
+uncovered lines and classified them) + a recommendation + a
+“probe-first, drop-if-it-resists” safeguard, then posed a scope gate;
+(3) **the probe workflow proved reachability per line and caught the one
+genuinely-unreachable line** (`dataframe2string` L49) with a structural
+proof — and I honored the safeguard by NOT touching production to force
+it, documenting it instead; (4) **confirmed the two least-certain
+assertions by actually running the tests** (function_coverage proves
+execution, not assertions); (5) ran the full battery firsthand (covr
+all-six-100% + overall 99.83%, full suite 0/0/0, lint 0 ×6, `--as-cran`
+0/0/0); (6) efficient — parallelized the 6 investigations (~163s) and
+ran the two heavy verifications in the background. **Weakness (the
+−1):** two throwaway covr helper scripts had bugs (a stray `tapply`
+no-op; a `\\.R$` regex escape in a shelled `-e` string) that errored
+mid-run — harmless (recovered from the saved rds / reran), but sloppy; a
+minor efficiency cost, no correctness impact.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 272** — after the
+Shiny-module tier, \#111 residuals are tiny single-file gaps (often 1
+line) whose vehicle is an ordinary `test_that`, not `testServer`; reuse
+the prior slice’s saved covr object to scope a gap without re-running;
+several trivial single-file gaps BATCH safely in one owner-scoped
+session (test-only, near-zero blast radius, ONE shared verification) IF
+each is probed-first and any that resists is dropped;
+`covr::function_coverage(fn, code)` proves per-line reachability fast
+(handles intra-package deps, unlike `file_coverage`) but does NOT check
+assertions — run the test to confirm those; a genuinely-unreachable
+defensive line is documented-and-left, never forced with a
+malformed-object test; and the batch decision is the OWNER’s (triage +
+options, don’t unilaterally expand scope). Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a TEST-BACKFILL
+coverage session (slice 9 of \#111) — three-gated; test-only; no bug
+found (all six lines correct, one unreachable); Phase-3E N/A.**
+
+**=\> SUGGESTED NEXT.** **Issue \#111 stays OPEN — multi-session
+campaign.** Slices done: **S1** helper tier (S285), **S2**
+`modORIPReporting` (S286), **S3** `appServer` (S287), **S4** `modInput`
+(S288), **S5** `modPyramid` (S289), **S6** `modSummaryStats` (S290),
+**S7** `modPotentialParents` (S291), **S8** `modGeneticValue` (S292),
+**S9** six single-file helpers (this session). **After S9, only THREE
+files remain sub-100%** (from this session’s covr run
+`cov293b_after.rds` — accurate, not stale): - **`R/modPedigree.R`
+(97.72%, uncovered L274–277, 371, 374)** and **`R/modBreedingGroups.R`
+(98.56%, uncovered L175, 269, 505, 510, 515)** — both Shiny modules →
+**back to the `testServer` slice shape** (model on S289–292: dump exact
+lines with
+[`covr::zero_coverage()`](http://covr.r-lib.org/reference/zero_coverage.md)
+first; happy-path fixtures miss the eventReactive/render INTERNAL
+guards + never-invoked download handlers; probe-first with a throwaway
+`load_all`/`testServer`; one NULL/NA input state often covers several
+guards; the `flog.debug` lazy-message trap; the length-2 renderUI
+`as.character` quirk). These are the last two coverage slices for \#111
+(one each, or one session if the owner batches — but they are heavier
+`testServer` work, so lean to one module per session unless the gaps are
+trivially small on inspection). - **`R/dataframe2string.R` L49 — a WAIVE
+decision, not a test.** Confirmed unreachable dead defensive code (see
+above). Options for the owner: (a) leave the file at 96.88% permanently;
+(b) add a `# nocov start`/`# nocov end` around L47–50 (a one-line
+PRODUCTION change → its own PRE-RED→RED-style gate is unnecessary since
+it is a coverage pragma, but it IS a source edit so gate it). Do NOT
+write a test that feeds a malformed object. - **Also open (unchanged):**
+**\#117** (the `fixColumnNames` overreach-cleanup bug — a genuine
+correctness fix, strict TDD: RED test asserting
+`first_name`/`second_name` restored, then fix; when fixed, update
+`test_fixColumnNames.R`’s characterization assertions); **\#116** Flags
+column (BLOCKED — no genotype/phenotype data source); **\#103** roxygen;
+**\#37, \#36, \#28, \#12, \#11, \#10, \#5**; the CRAN thread (Phase 5b,
+owner-run outward — package ARCHIVED 2025-07-29, resubmission
+owner-gated + HARD STOP). **Standing gotchas (unchanged):** **measure
+coverage with `NOT_CRAN=true`** (default undercounts ~8 pts — 39
+`skip_on_cran` files); **reuse the prior slice’s saved
+`covXXX_after.rds`** to read a file’s exact uncovered lines with
+[`covr::zero_coverage()`](http://covr.r-lib.org/reference/zero_coverage.md)
+(columns `filename/functions/line/value`; select `line`) without
+re-running covr; **`covr::function_coverage(fn, code)`** proves per-line
+reachability fast for a SINGLE function (loads deps, unlike
+`file_coverage`) — but it does NOT check `expect_*`, so run the test
+file to confirm assertions; **happy-path fixtures miss INTERNAL guards**
+(NULL/NA, alternate handlers, defensive shape-guards) — drive them
+explicitly; a **batch of trivial single-file backfills is safe in one
+OWNER-SCOPED session** (probe-first, drop-if-it-resists); for ANY
+package-code change — `--as-cran` from the REPO ROOT (renv; background
+~3–4 min; **build WITH vignettes**;
+**`devtools::check(args="--as-cran")` returns 0/0/0 here,
+`--no-build-vignettes` yields 2 misleading vignette WARNINGs**; **beware
+zsh `rm <glob>` “no matches found”**).
+
 ### What Session 292 Did
 
 **Deliverable (issue \#111 code-coverage campaign, slice 8 — the LAST

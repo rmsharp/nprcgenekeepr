@@ -15,6 +15,75 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-06 — \#111 code-coverage campaign, slice 9 — six single-file helpers backfilled to 100% in one batched session (Session 293)
+
+- **Deliverable (owner said “continue \#111 with checkKinshipOverrides”,
+  then approved batching the remaining trivial single-file residuals
+  into one session):** the first post-Shiny-module tier — six
+  plain-function helper files driven to 100% line coverage via ordinary
+  `test_that` backfill tests. **Test-only (no production code changed);
+  three `AskUserQuestion` gates — a PRE-RED→RED for
+  `checkKinshipOverrides`, then a batch-scope decision, then a combined
+  PRE-RED→RED for the other five; 0 stakeholder corrections.**
+- **Files and the exact branch each test reached** (uncovered lines
+  dumped with
+  [`covr::zero_coverage`](http://covr.r-lib.org/reference/zero_coverage.md),
+  `NOT_CRAN=true`, before writing):
+  - `checkKinshipOverrides.R` 96.43% → **100%** — L47, the non-numeric
+    `kinship`-column [`stop()`](https://rdrr.io/r/base/stop.html)
+    (existing tests only pass numeric / NA / negative kinship). New
+    test: a character and a factor kinship column →
+    `expect_error(..., "must be numeric")`.
+  - `correctUnknownParentMeanKinship.R` 97.30% → **100%** — L146
+    (unnamed `indivMeanKin` → early return) and L152 (a ped with no
+    `exit` column → `exit` defaulted to `as.Date(NA)`). Two `test_that`
+    cases on separate branches.
+  - `loadSpeciesOverrides.R` 96.72% → **100%** — L139–140, the internal
+    `mergeSpeciesOverrides` append branch for a species absent from the
+    bundled table (every existing test overrides “RHESUS”, already
+    present). New test: append a novel “GORILLA” row.
+  - `orderReport.R` 97.73% → **100%** — L42, the `getFounders(ped)`
+    fallback taken when the report has no `parentage` column.
+  - `getPyramidPlot.R` 98.36% → **100%** — L40, the
+    `ageUnit == "months"` age-conversion branch.
+  - `getPotentialParents.R` 96.88% → **100%** — L151–152, the
+    empty-`potentialDams` fallback to all old-enough females (a
+    candidate dam with no offspring is dropped by the proven-breeder
+    filter, emptying the set and forcing the fallback, which re-admits
+    her).
+- **`dataframe2string.R` L49 was investigated and PROVEN unreachable for
+  the documented input type, and left untouched** (this was NOT a
+  production change): `dimnames.data.frame(x)` is
+  `list(row.names(x), names(x))`, so `dimnames(object)[[1L]]` mirrors
+  [`row.names()`](https://rdrr.io/r/base/row.names.html) and is NULL
+  only when `nRows == 0`, which is already intercepted upstream at
+  L36–37; a matrix cannot reach it either. It is inherited defensive
+  code from `print.data.frame`. Waiving it (or a `# nocov`) is a
+  separate future decision, not a coverage-backfill task. The file stays
+  at 96.88%.
+- **Method:** the six single-file investigations were fanned out to
+  parallel probe agents (a `Workflow`), each of which PROVED its fixture
+  reaches the target line with `covr::function_coverage(fn, code)`
+  before any repo file was touched; the one unreachable line was caught
+  and dropped by that proof step.
+- **Result:** all six target files at **100%**; overall coverage 99.71%
+  → **99.83%** (`NOT_CRAN=true`). Only three files remain sub-100%:
+  `dataframe2string` (the unreachable defensive line) and the two
+  deferred Shiny modules `modPedigree` (97.72%) and `modBreedingGroups`
+  (98.56%), which need `testServer` slices.
+- **Verified:** the 6 modified test files run 0 failed / 0 error / 0
+  warning; `covr` (full suite, `NOT_CRAN=true`) confirms all six at 100%
+  and overall 99.83%; full-suite regression read 0 failed / 0 error / 0
+  true offenders (7 baseline warnings, none from the changed files);
+  `lintr::lint()` on all six changed files = 0; `R CMD check --as-cran`
+  (repo root, WITH vignettes, via `devtools::check`) Status: OK — 0
+  errors / 0 warnings / 0 notes. Phase-3E N/A (test-only, no runtime
+  surface).
+- **Campaign status:** \#111 stays OPEN. Slices done: S1–S8 (helper
+  tier + all seven Shiny modules), **S9 six single-file helpers (this
+  session)**. Remaining: `modPedigree` and `modBreedingGroups`
+  (`testServer` slices), and the `dataframe2string` L49 waive decision.
+
 ### 2026-07-06 — \#111 code-coverage campaign, slice 8 — `modGeneticValue` backfilled 96.26% → 100%, closing the last residual Shiny module (Session 292)
 
 - **Deliverable (owner said “continue \#111” → `modGeneticValue`, the

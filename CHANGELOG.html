@@ -55,6 +55,37 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-06--111-code-coverage-campaign-slice-9--six-single-file-helpers-backfilled-to-100-in-one-batched-session-session-293">2026-07-06 — #111 code-coverage campaign, slice 9 — six single-file helpers backfilled to 100% in one batched session (Session 293)<a class="anchor" aria-label="anchor" href="#id_2026-07-06--111-code-coverage-campaign-slice-9--six-single-file-helpers-backfilled-to-100-in-one-batched-session-session-293"></a></h3>
+<ul><li>
+<strong>Deliverable (owner said “continue #111 with checkKinshipOverrides”, then approved batching the remaining trivial single-file residuals into one session):</strong> the first post-Shiny-module tier — six plain-function helper files driven to 100% line coverage via ordinary <code>test_that</code> backfill tests. <strong>Test-only (no production code changed); three <code>AskUserQuestion</code> gates — a PRE-RED→RED for <code>checkKinshipOverrides</code>, then a batch-scope decision, then a combined PRE-RED→RED for the other five; 0 stakeholder corrections.</strong>
+</li>
+<li>
+<strong>Files and the exact branch each test reached</strong> (uncovered lines dumped with <code><a href="http://covr.r-lib.org/reference/zero_coverage.html" class="external-link">covr::zero_coverage</a></code>, <code>NOT_CRAN=true</code>, before writing):
+<ul><li>
+<code>checkKinshipOverrides.R</code> 96.43% → <strong>100%</strong> — L47, the non-numeric <code>kinship</code>-column <code><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop()</a></code> (existing tests only pass numeric / NA / negative kinship). New test: a character and a factor kinship column → <code>expect_error(..., "must be numeric")</code>.</li>
+<li>
+<code>correctUnknownParentMeanKinship.R</code> 97.30% → <strong>100%</strong> — L146 (unnamed <code>indivMeanKin</code> → early return) and L152 (a ped with no <code>exit</code> column → <code>exit</code> defaulted to <code>as.Date(NA)</code>). Two <code>test_that</code> cases on separate branches.</li>
+<li>
+<code>loadSpeciesOverrides.R</code> 96.72% → <strong>100%</strong> — L139–140, the internal <code>mergeSpeciesOverrides</code> append branch for a species absent from the bundled table (every existing test overrides “RHESUS”, already present). New test: append a novel “GORILLA” row.</li>
+<li>
+<code>orderReport.R</code> 97.73% → <strong>100%</strong> — L42, the <code>getFounders(ped)</code> fallback taken when the report has no <code>parentage</code> column.</li>
+<li>
+<code>getPyramidPlot.R</code> 98.36% → <strong>100%</strong> — L40, the <code>ageUnit == "months"</code> age-conversion branch.</li>
+<li>
+<code>getPotentialParents.R</code> 96.88% → <strong>100%</strong> — L151–152, the empty-<code>potentialDams</code> fallback to all old-enough females (a candidate dam with no offspring is dropped by the proven-breeder filter, emptying the set and forcing the fallback, which re-admits her).</li>
+</ul></li>
+<li>
+<strong><code>dataframe2string.R</code> L49 was investigated and PROVEN unreachable for the documented input type, and left untouched</strong> (this was NOT a production change): <code>dimnames.data.frame(x)</code> is <code>list(row.names(x), names(x))</code>, so <code>dimnames(object)[[1L]]</code> mirrors <code><a href="https://rdrr.io/r/base/row.names.html" class="external-link">row.names()</a></code> and is NULL only when <code>nRows == 0</code>, which is already intercepted upstream at L36–37; a matrix cannot reach it either. It is inherited defensive code from <code>print.data.frame</code>. Waiving it (or a <code># nocov</code>) is a separate future decision, not a coverage-backfill task. The file stays at 96.88%.</li>
+<li>
+<strong>Method:</strong> the six single-file investigations were fanned out to parallel probe agents (a <code>Workflow</code>), each of which PROVED its fixture reaches the target line with <code>covr::function_coverage(fn, code)</code> before any repo file was touched; the one unreachable line was caught and dropped by that proof step.</li>
+<li>
+<strong>Result:</strong> all six target files at <strong>100%</strong>; overall coverage 99.71% → <strong>99.83%</strong> (<code>NOT_CRAN=true</code>). Only three files remain sub-100%: <code>dataframe2string</code> (the unreachable defensive line) and the two deferred Shiny modules <code>modPedigree</code> (97.72%) and <code>modBreedingGroups</code> (98.56%), which need <code>testServer</code> slices.</li>
+<li>
+<strong>Verified:</strong> the 6 modified test files run 0 failed / 0 error / 0 warning; <code>covr</code> (full suite, <code>NOT_CRAN=true</code>) confirms all six at 100% and overall 99.83%; full-suite regression read 0 failed / 0 error / 0 true offenders (7 baseline warnings, none from the changed files); <code>lintr::lint()</code> on all six changed files = 0; <code>R CMD check --as-cran</code> (repo root, WITH vignettes, via <code>devtools::check</code>) Status: OK — 0 errors / 0 warnings / 0 notes. Phase-3E N/A (test-only, no runtime surface).</li>
+<li>
+<strong>Campaign status:</strong> #111 stays OPEN. Slices done: S1–S8 (helper tier + all seven Shiny modules), <strong>S9 six single-file helpers (this session)</strong>. Remaining: <code>modPedigree</code> and <code>modBreedingGroups</code> (<code>testServer</code> slices), and the <code>dataframe2string</code> L49 waive decision.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-06--111-code-coverage-campaign-slice-8--modgeneticvalue-backfilled-9626--100-closing-the-last-residual-shiny-module-session-292">2026-07-06 — #111 code-coverage campaign, slice 8 — <code>modGeneticValue</code> backfilled 96.26% → 100%, closing the last residual Shiny module (Session 292)<a class="anchor" aria-label="anchor" href="#id_2026-07-06--111-code-coverage-campaign-slice-8--modgeneticvalue-backfilled-9626--100-closing-the-last-residual-shiny-module-session-292"></a></h3>
 <ul><li>
 <strong>Deliverable (owner said “continue #111” → <code>modGeneticValue</code>, the last residual Shiny module at 96.26%):</strong> add a headless <code><a href="https://rdrr.io/pkg/shiny/man/testServer.html" class="external-link">shiny::testServer</a></code> suite covering the residual branches the two existing modGeneticValue suites never reached — the kinship-override warning handler, the empty-probands fallback, and several defensive report-shape guards. <strong>Test-only (no production code changed); PRE-RED→RED gate via <code>AskUserQuestion</code>; 0 stakeholder corrections.</strong>
