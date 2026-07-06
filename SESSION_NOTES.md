@@ -21,13 +21,14 @@ corrections.** **Started / Completed:** 2026-07-06 / 2026-07-06
 **Status:** **DONE + VERIFIED.** New
 `tests/testthat/test_modORIPReporting_server.R` (12 `testServer` tests).
 **`R/modORIPReporting.R` 31.7% → 100%** (zero uncovered lines);
-**overall coverage 92.96% → 95.03%** (`NOT_CRAN=true`). Landing
-(direct-commit vs PR) is owner-gated — this handoff is written
-pre-commit. - **Gap SHAPE (diagnosed firsthand, not from the number):**
-the existing tests never drove the server through `testServer` —
-`test_modORIPReporting.R` only checks UI tab-gating (`#47`/`#49`,
-`appUI` HTML `grepl`) + a `deparse(appServer)` structural grep;
-`test_modSiteConfig.R` only asserts the module functions
+**overall coverage 92.96% → 95.03%** (`NOT_CRAN=true`). **Landed: owner
+chose direct-commit — committed + pushed to `origin/master` as
+`fce7646a` (tagged `(S286)`; local == origin).** - **Gap SHAPE
+(diagnosed firsthand, not from the number):** the existing tests never
+drove the server through `testServer` — `test_modORIPReporting.R` only
+checks UI tab-gating (`#47`/`#49`, `appUI` HTML `grepl`) + a
+`deparse(appServer)` structural grep; `test_modSiteConfig.R` only
+asserts the module functions
 [`exists()`](https://rdrr.io/r/base/exists.html)/[`is.function()`](https://rdrr.io/r/base/is.function.html)/have
 the right [`formals()`](https://rdrr.io/r/base/formals.html). So all
 three renderers (`siteInfo`/`colonySummary`/`geneticDiversity`), both
@@ -185,9 +186,9 @@ before any delete/rename, `grep -rn <target> .` across the WHOLE tree
 BEFORE the `git rm` (Learning 259); landing owner-gated (direct-commit
 vs PR).
 
-**Key files (this session):** **New test file (uncommitted):**
+**Key files (this session):** **New test file (committed `fce7646a`):**
 `tests/testthat/test_modORIPReporting_server.R` (12 `testServer` tests).
-**Edited (uncommitted):** `CHANGELOG.md` (S286 entry under
+**Edited (committed `fce7646a`):** `CHANGELOG.md` (S286 entry under
 \[Unreleased\]), `PROJECT_LEARNINGS.md` (Learning 265),
 `SESSION_NOTES.md` (this handoff + the 1B stub it replaced). **Read (not
 edited):** `R/modORIPReporting.R` (server under test),
@@ -209,9 +210,9 @@ don’t be alarmed by the discrepancy. (3) **`testServer` output idiom:**
 `as.character(output$<renderUI>)` returns a **length-2** vector
 (`[html, "list()"]`) → assert with `any(grepl(...))`; `downloadHandler`
 via `path <- output$x; read.csv(path)`. (4) **\#111 is a campaign, still
-OPEN** — next slices `appServer` (0%) + small residuals. (5) The changes
-are **uncommitted** pending owner landing preference (direct-commit vs
-PR). (6) Carried standing keeps as in SUGGESTED NEXT.
+OPEN** — next slices `appServer` (0%) + small residuals. (5) **Landed as
+`fce7646a` on `master`, pushed** (owner chose direct-commit; local ==
+origin). (6) Carried standing keeps as in SUGGESTED NEXT.
 
 ### What Session 285 Did
 
