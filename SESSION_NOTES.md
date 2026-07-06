@@ -21,7 +21,7 @@ suite. **Test-only (no production code changed); PRE-RED→RED gate via
 34 expectations). **`R/modSummaryStats.R` 94.34% → 100%** (zero
 uncovered lines); **overall coverage 98.91% → 99.41%**
 (`NOT_CRAN=true`). **Landed: owner chose direct-commit — committed +
-pushed to `origin/master` as `<HASH>` (tagged `(S290)`; local ==
+pushed to `origin/master` as `0de8c384` (tagged `(S290)`; local ==
 origin).** - **Gap SHAPE (from an exact uncovered-line dump, not the
 %):**
 [`covr::zero_coverage()`](http://covr.r-lib.org/reference/zero_coverage.md)
@@ -239,7 +239,7 @@ dump the uncovered lines first (Learning 269a). (4) **The
 **`test_dir` needs `load_all` first** harness trap (Learning 269f) —
 both caught and corrected this session. (5) **\#111 is a campaign, still
 OPEN** — next slices are `modPotentialParents` (94.67%, the new lowest)
-/ `modGeneticValue` (96.26%). (6) **Landed as `<HASH>` on `master`,
+/ `modGeneticValue` (96.26%). (6) **Landed as `0de8c384` on `master`,
 pushed** (owner chose direct-commit; local == origin).
 
 ### What Session 289 Did
