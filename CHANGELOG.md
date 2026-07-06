@@ -15,6 +15,63 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-06 — \#111 code-coverage campaign, slice 10 — the last two Shiny modules (modPedigree + modBreedingGroups) backfilled to 100% (Session 294)
+
+- **Deliverable (owner said “continue \#111”, then approved batching
+  both remaining modules):** the two remaining sub-100% Shiny modules
+  driven to 100% line coverage via
+  [`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html)
+  backfill tests. **Test-only (no production code changed); one
+  `AskUserQuestion` PRE-RED→RED + scope gate, one landing gate; 0
+  stakeholder corrections.**
+- **Files and the exact branch each test reached** (uncovered lines
+  dumped with
+  [`covr::zero_coverage`](http://covr.r-lib.org/reference/zero_coverage.md),
+  `NOT_CRAN=true`; each proven reachable by a
+  [`covr::function_coverage`](http://covr.r-lib.org/reference/function_coverage.md)
+  probe before writing):
+  - `modPedigree.R` 97.72% → **100%** — L274-277, the focal-file
+    `read.csv` error handler (existing tests only upload valid CSVs);
+    and L371/L374, the export `downloadHandler` filename + content
+    (never invoked). New `test_modPedigree_coverage.R` (2 `testServer`
+    tests): a `focalAnimalFile$datapath` pointing at a nonexistent path
+    makes `read.csv` throw → the `tryCatch` error branch runs, leaving
+    the typed IDs intact; `path <- output$exportPedigree` runs both
+    handler fns → a real 5-row CSV.
+  - `modBreedingGroups.R` 98.56% → **100%** — L175, the
+    `getKinshipMatrix` branch that returns a geneticValues-supplied
+    kinship matrix (every existing test passes `geneticValues=NULL`,
+    forcing the pedigree recompute); L505/510/515, the
+    NULL-`groupResults` guards in the returned
+    `score`/`unassigned`/`groupKinship` reactives (existing tests always
+    form groups first); and L269, the `currentGroups` truncation guard.
+    New `test_modBreedingGroups_coverage.R` (3 `testServer` tests):
+    `geneticValues=reactive(list(id, kinship=kmat))` → L175 (proven via
+    `groupResults()$kmat` identical to the supplied matrix); reading
+    `score()`/`unassigned()`/`groupKinship()` before `formGroups` → the
+    three NULL guards at once; `nGroups=0` → the truncation guard L269.
+- **L269 was TESTED, not waived** (unlike `dataframe2string` L49, which
+  S293 proved unreachable). The guard fires only when `currentGroups`
+  (length 1 when unseeded) exceeds `numGp`, i.e. `numGp < 1`; the sole
+  trigger is `nGroups=0` (below the UI `min=1`). The `function_coverage`
+  probe proved it reachable without an uncaught error. The degenerate
+  input also makes the downstream formation warn (“items to replace”),
+  suppressed at the test since the guard itself is clean.
+- **Verify (firsthand):** both new files 5 tests / 0 failed / 0 error /
+  0 warning; `covr` (full suite, `NOT_CRAN=true`) confirms both files
+  **100%** and overall **99.83% → 99.99%**; full-suite regression read
+  **0 failed / 0 error / 0 true offenders** (7 baseline warnings —
+  `test_gvaConvergence_kinshipOverrides` + `test_modPyramid`, none from
+  the new files); `lintr::lint()` on both new files = **0**;
+  `R CMD check --as-cran` (repo root, WITH vignettes) **Status: OK —
+  0/0/0**. Phase-3E N/A — test-only, no `R/` or runtime change (FM \#24
+  has no target). Landed as `2613af12` on master (owner chose
+  direct-commit).
+- **This closes the last two sub-100% Shiny modules.** The only file now
+  below 100% package-wide is `dataframe2string.R` (96.88%, the
+  proven-unreachable L49 — a `# nocov` waive decision, a separate 1-line
+  production choice).
+
 ### 2026-07-06 — \#111 code-coverage campaign, slice 9 — six single-file helpers backfilled to 100% in one batched session (Session 293)
 
 - **Deliverable (owner said “continue \#111 with checkKinshipOverrides”,

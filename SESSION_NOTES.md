@@ -7,6 +7,257 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 294 Did
+
+**Deliverable (issue \#111 code-coverage campaign, slice 10 — the LAST
+two residual Shiny modules; owner said “continue \#111”, then approved
+BATCHING both):** test-backfill `R/modPedigree.R` (97.72%) and
+`R/modBreedingGroups.R` (98.56%) to 100% line coverage via headless
+[`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html)
+suites. **Test-only (no production code changed); one `AskUserQuestion`
+PRE-RED→RED + scope gate, one landing gate; 0 stakeholder corrections.**
+**Started / Completed:** 2026-07-06 / 2026-07-06 **Status:** **DONE +
+VERIFIED.** Two new files — `tests/testthat/test_modPedigree_coverage.R`
+(2 tests) + `tests/testthat/test_modBreedingGroups_coverage.R` (3
+tests). Both modules **97.72% / 98.56% → 100%**; overall coverage 99.83%
+→ **99.99%** (`NOT_CRAN=true`). **This closes the last two sub-100%
+Shiny modules — only `dataframe2string.R` L49 (a waive decision) remains
+below 100% package-wide.** **Landed: owner chose direct-commit — the two
+test files committed as `2613af12` (tagged `(S294)`); this docs
+close-out (CHANGELOG + PROJECT_LEARNINGS 273 + this handoff) records
+that hash and is pushed to `origin/master` (fast-forward; local ==
+origin).** - **The 11 uncovered lines + the exact branch each new test
+reached** (each dumped by
+[`covr::zero_coverage`](http://covr.r-lib.org/reference/zero_coverage.md),
+`NOT_CRAN=true`, and PROVEN reachable by a
+[`covr::function_coverage`](http://covr.r-lib.org/reference/function_coverage.md)
+probe BEFORE writing): - `modPedigree.R` **L274-277** — the focal-file
+`read.csv` error handler. Existing tests upload only valid CSVs. New
+test: `focalAnimalFile$datapath` = a nonexistent path → `read.csv`
+throws → `tryCatch(error=)` runs; the typed IDs “A”,“B” survive.
+(`read.csv` WARNS “cannot open file” before it throws →
+`suppressWarnings` around the triggering flush.) - `modPedigree.R`
+**L371 + L374** — the export `downloadHandler` filename + content. New
+test: `path <- output$exportPedigree` runs BOTH fns → a real 5-row
+CSV. - `modBreedingGroups.R` **L175** — `getKinshipMatrix` returning a
+geneticValues-SUPPLIED kinship matrix. Every existing test AND the whole
+`_kinshipOverrides.R` suite pass `geneticValues=NULL`, forcing the
+pedigree RECOMPUTE, so this branch never ran. New test:
+`geneticValues=reactive(list(id, kinship=kmat))` → proven via
+`groupResults()$kmat` identical to the supplied matrix (internal
+`reactiveVal` directly readable in the testServer env). -
+`modBreedingGroups.R` **L505/510/515** — the NULL-`groupResults` guards
+in the returned `score`/`unassigned`/`groupKinship` reactives. Existing
+tests always `formGroups` first. New test: read the three reactives
+BEFORE forming groups → 0L / character(0) / NULL (ONE test, three
+lines). - `modBreedingGroups.R` **L269** — the `currentGroups`
+truncation guard. Reachable ONLY via `nGroups=0` (below the UI `min=1`);
+the `function_coverage` probe confirmed it fires with no uncaught error.
+Unlike `dataframe2string` L49 (S293: provably unreachable → waived),
+this is **reachable-out-of-contract → TESTED** (owner-confirmed at the
+gate). The degenerate input warns downstream (“items to replace”) →
+`suppressWarnings`; the guard itself (a `[integer(0)]` subset) is
+clean. - **Method (probe-first):** ONE fresh
+[`covr::package_coverage`](http://covr.r-lib.org/reference/package_coverage.md)
+(NOT_CRAN=true) confirmed the exact gap (matched S293’s
+`cov293b_after.rds` to the decimal), then a single
+`covr::function_coverage(<moduleServerFn>, {all testServer scenarios})`
+per module PROVED every target line reachable (absent from
+`zero_coverage(fc)$line`) BEFORE the RED gate — the same discipline that
+flagged `dataframe2string` L49 in S293 (nothing wrong caught here; all
+11 lines reachable). - **Verify (firsthand):** both new files 5 tests
+**0 failed / 0 error / 0 warning**; `covr` (full suite, `NOT_CRAN=true`,
+saved `cov294_after.rds`) confirms both files **100%** and overall
+**99.99%**; full-suite regression read **0 failed / 0 error / 0 true
+offenders** (7 baseline warnings — 2
+`test_gvaConvergence_kinshipOverrides` + 5 `test_modPyramid`, none from
+the new files); `lintr::lint()` on both new files = **0**;
+**`R CMD check --as-cran` (repo root, WITH vignettes, via
+`devtools::check`) Status: OK — 0 errors / 0 warnings / 0 notes**.
+**Phase-3E N/A** — test-only, no `R/` source or runtime change (FM \#24
+has no target).
+
+**Session 293 Handoff Evaluation (by Session 294): Score 9/10.** S293’s
+SUGGESTED NEXT named
+`modPedigree.R (97.72%, uncovered L274-277, 371, 374)` and
+`modBreedingGroups.R (98.56%, uncovered L175, 269, 505, 510, 515)` from
+`cov293b_after.rds` and called them “the last two coverage slices… back
+to the `testServer` slice shape… one each, or one session if the owner
+batches.” **What helped:** (i) every % AND every uncovered line number
+matched my fresh covr run + `function_coverage` probe to the
+decimal/line — no phantom chase, because the “measure with
+`NOT_CRAN=true`” gotcha was carried; (ii) the “back to the `testServer`
+slice shape” call was exactly right, with a turnkey model (dump exact
+lines first; happy-path fixtures miss internal guards;
+`path <- output$downloadX` runs both fns; probe-first); (iii) the
+`dataframe2string` L49 waive framing set up the reachable-vs-unreachable
+distinction I then applied to L269; (iv) the “one each, or one session
+if the owner batches (but lean to one unless trivially small)” framing
+correctly located the batch as the owner’s call AND gave me the
+trivially-small escape hatch, which the gaps met; (v) all standing
+gotchas held (reuse the saved covr artifact; `--as-cran`
+repo-root-with-vignettes 0/0/0; keep `.DS_Store`/`PED_GV_AUDIT`
+untouched). **What was missing (the −1):** the residual list gave the
+uncovered line NUMBERS but not their SHAPES — that L269 is reachable
+only via `nGroups=0` (out-of-contract) and warns downstream, that L175
+needs a geneticValues list WITH a `kinship` element (the
+`_kinshipOverrides` suite structurally can’t reach it), that one test
+covers all three NULL guards — all inherent to doing the slice; minor.
+**What was wrong:** nothing — every % and line number accurate. **ROI:**
+very high — near-turnkey scoping + a reusable covr artifact reference.
+
+**Self-assessment (Session 294): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status clean-except-standing; ghost-check clean — HEAD `e051f9b4` ==
+S293’s docs close-out); reported, STOPPED for the owner; wrote the 1B
+stub before technical work; declared the TDD phase at the top of each
+phase-response and posed the PRE-RED→RED+scope gate and the landing gate
+via `AskUserQuestion`. **Strengths:** (1) confirmed the gap with a fresh
+covr run (matched S293 to the decimal) AND **proved every one of the 11
+target lines reachable with `function_coverage` BEFORE the gate** — zero
+authoring surprises; (2) made the **reachable-vs-unreachable distinction
+explicit for L269** (reachable-out-of-contract → test, vs
+`dataframe2string` L49 provably-unreachable → waive) and surfaced it AT
+the gate for the owner rather than unilaterally deciding — then honored
+the owner’s test-not-waive choice (\[\[observation-vs-decision\]\]); (3)
+**caught and suppressed the two incidental warnings** (read.csv “cannot
+open” before throw; degenerate `nGroups=0` downstream) at the test level
+and RE-VERIFIED the suite still carries exactly its 7 baseline warnings,
+none new — didn’t ship noise; (4) asserted MEANINGFUL content
+(`groupResults()$kmat` identical to supplied; typed IDs survive the bad
+file; the download CSV / degenerate results), not merely no-crash; (5)
+ran the full battery firsthand (covr both-100% + overall 99.99%, full
+suite 0/0/0, lint 0 ×2, `--as-cran` 0/0/0); (6) efficient — parallelized
+the covr + full-suite reads in the background, ran `--as-cran` after to
+avoid a build conflict. **Weakness (the −1):** the first test-file run
+surfaced two warnings I had not pre-empted (I knew `read.csv` on a bad
+path errors but did not anticipate the PRECEDING warning, nor the
+`nGroups=0` downstream warning) — fixed both immediately with
+`suppressWarnings` and re-verified, but a tighter probe would have
+caught them before the first write; minor, no correctness impact; capped
+at 9.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 273** — the final
+\#111 residuals are the last two Shiny modules (back to the `testServer`
+slice shape); the two classic `testServer`-residual shapes recur
+(never-invoked download handlers + an error handler the happy-path never
+trips; defensive guards the happy-path structurally can’t reach — a
+geneticValues-supplied-matrix branch, NULL-`reactiveVal` guards); one
+test covers three NULL guards by reading the returned reactives BEFORE
+forming groups; the load-bearing NEW distinction is
+reachable-out-of-contract (test it, e.g. L269 via `nGroups=0`) vs
+provably-unreachable (waive, e.g. `dataframe2string` L49); a degenerate
+out-of-contract input that reaches a guard often MISBEHAVES downstream
+(suppress the incidental warning, not the branch);
+`covr::function_coverage(<moduleServerFn>, {testServer scenarios})`
+proves per-line reachability for MODULE code too, before the gate.
+Carried as applied: \[\[consult-project-source-of-truth\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a TEST-BACKFILL
+coverage session (slice 10 of \#111) — PRE-RED→RED gated; test-only; no
+bug found (all lines correct; L269 reachable-and-tested, not waived);
+Phase-3E N/A.**
+
+**=\> SUGGESTED NEXT.** **Issue \#111 line-coverage work is effectively
+COMPLETE.** Slices done: **S1** helper tier (S285), **S2**
+`modORIPReporting` (S286), **S3** `appServer` (S287), **S4** `modInput`
+(S288), **S5** `modPyramid` (S289), **S6** `modSummaryStats` (S290),
+**S7** `modPotentialParents` (S291), **S8** `modGeneticValue` (S292),
+**S9** six single-file helpers (S293), **S10** `modPedigree` +
+`modBreedingGroups` (this session). **After S10 the ONLY file below 100%
+package-wide is `dataframe2string.R` (96.88%).** -
+**`R/dataframe2string.R` L49 — a WAIVE decision, not a test** (S293
+proved it unreachable dead defensive code: `dimnames(object)[[1L]]`
+mirrors [`row.names()`](https://rdrr.io/r/base/row.names.html) and is
+NULL only when `nRows==0`, already intercepted upstream at L36-37; a
+matrix can’t reach it either). Options for the OWNER: (a) leave the file
+at 96.88% permanently and CLOSE \#111; (b) add
+`# nocov start`/`# nocov end` around L47-50 → the file (and package)
+reads 100%. Option (b) IS a source edit so gate it, but it is a coverage
+PRAGMA (no behavior change) — no TDD RED needed; after it, `document()`
+is unaffected and a quick `--as-cran` confirms 0/0/0. **Do NOT write a
+test that feeds a malformed object.** - **Also open (unchanged):**
+**\#117** (the `fixColumnNames` overreach-cleanup bug — a genuine
+correctness fix, strict TDD: RED test asserting
+`first_name`/`second_name` restored, then fix line 32/35 to write
+`newCols`; when fixed, update `test_fixColumnNames.R`’s characterization
+assertions); **\#116** Flags column (BLOCKED — no genotype/phenotype
+data source); **\#103** roxygen; **\#37, \#36, \#28, \#12, \#11, \#10,
+\#5**; the CRAN thread (Phase 5b, owner-run outward — package ARCHIVED
+2025-07-29, resubmission owner-gated + HARD STOP). **Standing gotchas
+(unchanged):** **measure coverage with `NOT_CRAN=true`** (default
+undercounts ~8 pts — 39 `skip_on_cran` files); **reuse the prior slice’s
+saved `covXXX_after.rds`** to read a file’s exact uncovered lines with
+[`covr::zero_coverage()`](http://covr.r-lib.org/reference/zero_coverage.md)
+(columns `filename/functions/line/value`; select `line`) without
+re-running covr; **`covr::function_coverage(fn, code)`** proves per-line
+reachability fast — for a SINGLE plain fn OR a module server fn (run the
+`testServer` scenarios inside `code`; target lines ABSENT from
+`zero_coverage(fc)$line` = reached) — but it does NOT check `expect_*`,
+so run the test file to confirm assertions; **happy-path `testServer`
+fixtures miss INTERNAL guards** (NULL/NA, alternate handlers,
+never-invoked download handlers, defensive shape-guards) — drive them
+explicitly; **an out-of-contract degenerate input that reaches a guard
+often warns downstream** → `suppressWarnings` the incidental warning,
+not the branch; **a defensive line that is reachable-out-of-contract
+gets a TEST; only a provably-unreachable line gets a waive**;
+`testServer` mechanics — `path <- output$downloadX` runs BOTH content +
+filename fns, internal `reactiveVal`s directly readable in the eval env,
+`session$getReturned()` for the module’s return list; for ANY
+package-code change — `--as-cran` from the REPO ROOT (renv; background
+~3-4 min; **build WITH vignettes**;
+**`devtools::check(args="--as-cran")` returns 0/0/0 here,
+`--no-build-vignettes` yields 2 misleading vignette WARNINGs**; **beware
+zsh `rm <glob>` “no matches found”**) + `lintr::lint()` (keep test lines
+≤80) + `spell_check_package` (hand-add wordlist, never
+`update_wordlist`) after any `R/`+`man/` edit; behavior/NAMESPACE
+changes ALSO need STRICT TDD + NAMESPACE diff + Phase-3E + FULL-suite
+(`NOT_CRAN=true`); version **2.0.0**; package **ARCHIVED on CRAN
+2025-07-29**; e2e/shinytest2 SKIPS here (no chromote) →
+`shiny::testServer(<server fn>, {...})`; `gh issue view`/`gh pr edit`
+exit 1 → `gh api`; re-check `git status` before ANY destructive git
+(\[\[check-status-before-destructive-git\]\]); landing owner-gated
+(direct-commit vs PR).
+
+**Key files (this session):** **New test files:**
+`tests/testthat/test_modPedigree_coverage.R` (2 `testServer` tests +
+`covModPed` helper), `tests/testthat/test_modBreedingGroups_coverage.R`
+(3 `testServer` tests + `covBgPed` helper; `skip_on_cran()` at top —
+group formation is slow, still measured under covr’s `NOT_CRAN=true`).
+**Edited:** `CHANGELOG.md` (S294 entry under \[Unreleased\]),
+`PROJECT_LEARNINGS.md` (Learning 273), `SESSION_NOTES.md` (this
+handoff + the 1B stub it replaced). **Read (not edited):**
+`R/modPedigree.R` + `R/modBreedingGroups.R` (modules under test),
+`tests/testthat/test_modPedigree.R` + `test_modBreedingGroups.R` +
+`test_modBreedingGroups_kinshipOverrides.R` (existing coverage — proved
+the happy-path fixtures miss the guards; `_kinshipOverrides` always
+passes `geneticValues=NULL`). **NOT committed (standing keep — FM
+\#22):** `.DS_Store` (tracked+modified), `PED_GV_AUDIT_2026-05-30.html`
+(untracked, `.Rbuildignore`d). **Scratchpad (NOT committed):**
+`cov294.R`/`.log`/`.rds`, `probe294.R`/`.out`,
+`cov294_after.R`/`.log`/`.rds`, `fullsuite294.log`/`.rds`,
+`check294.R`/`.log`.
+
+**Gotchas:** (1) **Test-only slice** — no `R/` source added/modified, no
+`NAMESPACE`/`DESCRIPTION` change; lint is non-regressing and Phase-3E is
+N/A (no runtime surface; FM \#24 has no target). (2) **`--as-cran` here
+returned 0/0/0 (Status: OK)** via `devtools::check`; spell clean. (3)
+**L269 is reachable-out-of-contract (`nGroups=0`) — TESTED, not
+waived**; if the owner later prefers a waive, swap the third
+breeding-groups test for a `# nocov` on L268-270 (a source edit, gate
+it). (4) **The two `suppressWarnings` are load-bearing** for a clean
+suite (read.csv warns-before-throws; `nGroups=0` warns downstream) —
+verified the suite still carries exactly its 7 baseline warnings, none
+new. (5) **\#111 is effectively DONE** pending the `dataframe2string`
+L49 waive decision. (6) **Landed as `2613af12` (tests) + a docs
+close-out commit on `master`, pushed** (owner chose direct-commit; local
+== origin).
+
 ### What Session 293 Did
 
 **Deliverable (issue \#111 code-coverage campaign, slice 9 — the first
