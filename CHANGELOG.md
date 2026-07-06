@@ -15,6 +15,56 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-06 — \#111 code-coverage campaign, slice 3 — `appServer` backfilled 0% → 100% via a full-app `testServer` suite (Session 287)
+
+- **Deliverable (owner picked \#111; owner chose this session’s slice
+  via `AskUserQuestion` over {`appServer` 0% / residual-modules bundle /
+  `modInput` only}: the `appServer` server body — the biggest genuine
+  gap at 0% local):** add a headless
+  `shiny::testServer(appServer, {...})` suite exercising the entire main
+  application server. **Test-only (no production code changed);
+  PRE-RED→RED gate via `AskUserQuestion`; 0 stakeholder corrections.**
+- **Gap characterized firsthand (Learning 265 shape, at the app
+  level):** the existing `test_appServer_dynamicTabs.R` covers only the
+  tab helper functions
+  (`shouldShowChangedColsTab`/`getErrorTab`/`getChangedColsTab`) plus a
+  `deparse(appServer)` structural grep and
+  [`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
+  HTML greps — nothing ever drives `appServer` through `testServer`, so
+  the whole server body (logger/config init, the six navigation
+  `observeEvent`s, every child-module mount, and the wiring observers
+  that manage the dynamic Error List / Changed Columns tabs and
+  propagate child outputs into shared state) ran only under the opt-in
+  browser e2e that skips without shinytest2 + chromote. That is why the
+  file read 0% local.
+- **New `tests/testthat/test_appServer_server.R` (6 `testServer`
+  tests):** (1) a bare boot with all real modules +
+  `session$setInputs(goto_*=1)` for the six nav handlers; (2)
+  child-output → `shared` wiring
+  (studbook/pedigree/genetic-values/breeding-groups) via
+  `with_mocked_bindings` stubs of the four read-from child servers; (3)
+  QC pass/error/warning notifications via a `showNotification`
+  recorder; (4) Error List tab insert/remove; (5) Changed Columns tab in
+  both target positions (after Error List and after Input) + remove; (6)
+  ORIP module mount gating (not mounted by default; mounted when
+  `shouldShowOripTab` is TRUE).
+- **Coverage:** `R/appServer.R` **0% → 100%** (zero uncovered lines);
+  **overall 95.03% → 97.91%** (`NOT_CRAN=true`) — a single 354-line file
+  at 0% was dragging overall down ~3 points.
+- **Verify (firsthand):** new suite 6 tests / 20 expectations green, 0
+  warnings; full suite (`NOT_CRAN=true`) **1455 tests, 0 failed / 0
+  error, 0 true offenders**; `lintr::lint()` on the new file = 0;
+  `spell_check_package` clean; **`R CMD check --as-cran` (repo root,
+  WITH vignettes, via `devtools::check`) Status: OK — 0/0/0**.
+  **Phase-3E N/A** — test-only, no `R/` source or runtime change (no
+  smoke-test target; FM \#24 has no target).
+- **Files:** new `tests/testthat/test_appServer_server.R`;
+  `CHANGELOG.md`, `PROJECT_LEARNINGS.md` (Learning 266),
+  `SESSION_NOTES.md`. Issue **\#111 stays OPEN** (multi-session
+  campaign; remaining slices are the residual modules `modInput` 87.9% /
+  `modPyramid` 89.7% / `modSummaryStats` 94.3% / `modPotentialParents`
+  94.7% / `modGeneticValue` 96.3%).
+
 ### 2026-07-06 — \#111 code-coverage campaign, slice 2 — `modORIPReportingServer` backfilled to 100% via a headless `testServer` suite (Session 286)
 
 - **Deliverable (owner picked \#111; owner chose this session’s slice

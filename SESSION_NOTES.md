@@ -7,6 +7,254 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 287 Did
+
+**Deliverable (issue \#111 code-coverage campaign, slice 3 — one file;
+owner chose the slice via `AskUserQuestion` over {`appServer` 0% /
+residual-modules bundle / `modInput` only}):** test-backfill the
+`appServer` server body (the biggest remaining genuine gap at 0% local)
+via a headless `shiny::testServer(appServer, {...})` suite exercising
+the entire main application server. **Test-only (no production code
+changed); PRE-RED→RED gate via `AskUserQuestion`; 0 stakeholder
+corrections.** **Started / Completed:** 2026-07-06 / 2026-07-06
+**Status:** **DONE + VERIFIED.** New
+`tests/testthat/test_appServer_server.R` (6 `testServer` tests / 20
+expectations). **`R/appServer.R` 0% → 100%** (zero uncovered lines);
+**overall coverage 95.03% → 97.91%** (`NOT_CRAN=true`). Landing
+(direct-commit vs PR) owner-gated — handoff written pre-commit. - **Gap
+SHAPE (diagnosed firsthand, Learning 265 at the app level):** the
+existing `test_appServer_dynamicTabs.R` covers only the tab helpers
+(`shouldShowChangedColsTab`/`getErrorTab`/`getChangedColsTab`), a
+`deparse(appServer)` structural grep, and
+[`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
+HTML greps — nothing DRIVES `appServer`. So the whole server body
+(logger/config init, the 6 nav `observeEvent`s, every module mount, the
+wiring observers) ran only under the skipped browser e2e → 0% local
+while “looking tested”. - **Design crux (the hard 25%):** the
+data-dependent observer branches (QC notifications `L139-170`, dynamic
+Error/Changed-Cols tab insert/remove `L196-252`, ped/gv propagation
+`L265`/`L284`) read the CHILD-module return reactives
+(`inputResults$cleanedStudbook/qcSummary/errorLst/...`,
+`pedigreeResults$pedigree`, `gvResults$geneticValues`) — **NOT
+`shared`** — so they can’t be reached by setting `shared`. I STUBBED the
+four read-from child servers via
+`testthat::with_mocked_bindings(.package="nprcgenekeepr", ...)`, each
+returning `list(<name>=shiny::reactive(ctl$<name>()))` backed by
+`reactiveVal`s stashed in a control env, and drove them inside the
+expr + `session$flushReact()`. `testServer`’s expr runs IN the server
+env, so I assert on `appServer`’s observable effects directly:
+`shared$currentStudbook/currentPedigree/geneticValues/breedingGroups`
+and the `errorTabShown()`/`changedColsTabShown()` reactiveVals. A clean
+unit test of the glue (child modules covered by their own suites). - **6
+tests** (all mechanisms validated by throwaway `load_all`/`testServer`
+probes before writing the file): (1) bare boot with real modules + all
+six `session$setInputs(goto_*=1L)` (init + mounts + nav handlers); (2)
+child→`shared` wiring (studbook/ped/gv/bg); (3) QC pass/error/warning
+notifications via a `showNotification` recorder; (4) Error List tab
+insert/remove; (5) Changed Cols tab in BOTH `targetTab` positions (after
+Error List when errors present via `qcStudbook(pedFemaleSireMaleDam)`;
+after Input via a clean space-renamed-column pedigree with
+`checkErrorLst` FALSE) + remove; (6) ORIP mount gating (FALSE default
+not mounted; `shouldShowOripTab` mocked TRUE → mounted, via a
+recorder). - **Two hygiene traps handled:** (i) booting `appServer`
+calls bare
+[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+(no config) → a benign “configuration file is missing” warning per boot;
+muffled ONLY that message via a
+`withCallingHandlers`/`invokeRestart("muffleWarning")` helper
+(`muffleConfig`), NOT blanket `suppressWarnings`, so real warnings still
+surface. (ii) injecting a minimal `data.frame(id="a")` pedigree in the
+wiring test made the REAL non-read downstream modules
+(`modPyramid`/`modSummaryStats`/`modGeneticDiversity`/`modPotentialParents`)
+emit empty-data ggplot warnings → stubbed those to a `noopServer` no-op
+(their mount lines are covered by the bare-boot test). Result: 0
+warnings, matching the sibling. - **Verify (firsthand):** new file **6
+tests / 20 expectations green, 0 warnings**; `covr` (full suite,
+`NOT_CRAN=true`) confirms `appServer.R` = **100%** and overall
+**97.91%**; **full suite (`NOT_CRAN=true`) 1455 tests, 0 failed / 0
+error, 0 true offenders**; `lintr::lint()` on the new file = **0**
+(`.lintr` excludes `tests/`, no `R/` source changed → lint
+non-regressing); `spell_check_package` **clean**;
+**`R CMD check --as-cran` (repo root, WITH vignettes, via
+`devtools::check`) Status: OK — 0 errors / 0 warnings / 0 notes**,
+`testthat.R [97s] OK`. **Phase-3E N/A** — test-only, no `R/` source or
+runtime change, so no runtime surface to smoke-test (FM \#24 has no
+target).
+
+**Session 286 Handoff Evaluation (by Session 287): Score 9/10.** S286’s
+SUGGESTED NEXT named `appServer` as “the biggest remaining real gap (0%
+local)” with the exact approach —
+`shiny::testServer(shinyApp(appUI(), appServer), {...})` running the
+whole body at session init + `session$setInputs(goto_*=1)` for the nav
+observeEvents — AND the crucial disambiguation that
+“`test_appServer_dynamicTabs.R` already exists but does not lift local
+coverage — it’s structural / e2e-gated”. **What helped:** (i) the slice
+was pre-scoped to the exact file + approach, so PRE-RED went straight to
+grounding; (ii) the “dynamicTabs test exists but is structural” note
+meant I wasn’t surprised to find a sibling test file and knew to add a
+`_server.R` sibling; (iii) the load-bearing “measure coverage with
+`NOT_CRAN=true`” standing gotcha — used from the first covr call, so the
+95.03%→97.91% delta was accurate with no phantom chase; (iv) every other
+standing gotcha held EXACTLY (e2e SKIPS → `testServer`; `--as-cran`
+repo-root-with-vignettes 0/0/0; git-status standing keeps left
+untouched, FM \#22; ghost breadcrumb HEAD `81461ede` == S286 close-out
+confirmed no ghost in seconds). **What was missing (the −1):** S286 said
+the approach is “session init covers the mounts + `setInputs(goto_*)`
+covers nav” but did not flag that the data-dependent observer branches
+read CHILD-module reactives and thus need the child servers
+driven/stubbed — that was the entire hard part (the mocking design) and
+the reason for the “~L effort” estimate. A one-line “the wiring
+observers read `inputResults`/`pedigreeResults`/`gvResults`, so stub the
+child servers to cover their branches” would have pointed me straight at
+the approach. I found it by reading `appServer` myself. **What was
+wrong:** nothing — `appServer` WAS 0% and the whole server body was
+untested, exactly as claimed. **ROI:** very high — the slice was
+near-turnkey to scope; only the branch-coverage mechanism had to be
+discovered.
+
+**Self-assessment (Session 287): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean+explained), reported, STOPPED for the
+owner; wrote the 1B stub before technical work; posed the slice scope
+AND the PRE-RED→RED gate via `AskUserQuestion`, declaring the TDD phase
+at the top of each phase-response. **Strengths:** (1) **grounded the gap
+firsthand** — read `appServer.R` line by line + the existing dynamicTabs
+test + the four child-module return contracts + the tab/ORIP gate
+helpers, mapping EVERY line L46-353 to a test before posing the gate,
+rather than trusting the handoff’s “~L” blindly; (2) **discovered the
+child-reactive-stub design** (the branches read child returns, not
+`shared`) and **de-risked every mechanism with two throwaway
+`testServer` probes BEFORE writing the file** (S285/S286 discipline) —
+`with_mocked_bindings` interception of child/imported/package functions,
+reactiveVal control of the observers, the `checkErrorLst` TRUE/FALSE
+fixtures — for zero authoring surprises; (3) **covered BOTH sides of
+every guard** (all six nav handlers, all three notification branches,
+both tab insert AND remove, both `targetTab` positions, both ORIP gate
+outcomes) → 100% with zero uncovered lines; (4) **kept the suite clean**
+— a targeted `muffleConfig` (not blanket `suppressWarnings`) for the one
+expected warning + `noopServer` stubs for the noisy downstream modules →
+0 warnings matching the sibling; (5) ran the full battery firsthand
+(covr, full suite 1455/0/0, lint, spell, `--as-cran` 0/0/0). **Weakness
+(the −1):** I named the control env `K` initially, which collides by
+name with `test_calcGUSE.R`/`test_reportGV.R` (harmless under testthat
+isolation, but a reviewer false-alarm) and required a mid-verification
+rename to `ctl`; choosing a distinct name up front would have avoided
+the rework. No correctness impact. Correct + disciplined; capped at 9.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 266** —
+`appServer` reads 0% because the only test checks helpers + a
+[`deparse()`](https://rdrr.io/r/base/deparse.html) grep +
+[`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
+greps, never driving it; the fix is a full-app
+`testServer(appServer, {...})`, but the wiring observers read
+CHILD-module reactives (not `shared`), so cover their branches by
+STUBBING the four read-from child servers via
+`with_mocked_bindings(.package="nprcgenekeepr")` and asserting on
+`appServer`’s observable effects (`shared$*`,
+`errorTabShown()`/`changedColsTabShown()`); control the gate helpers for
+both `targetTab` positions and the ORIP mount; muffle ONLY the expected
+config warning (targeted, not blanket) and no-op the noisy non-read
+downstream modules; a single-letter test global collides by name
+(harmless under isolation, rename anyway); a single 0% 354-line file
+lifted overall ~3 points. Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a TEST-BACKFILL
+coverage session (slice 3 of \#111) — PRE-RED→RED gated; test-only; no
+bug found (code correct); Phase-3E N/A.**
+
+**=\> SUGGESTED NEXT.** **Issue \#111 stays OPEN — it is a multi-session
+campaign.** Slices done: **S1** helper tier (S285, 16 files → 100%),
+**S2** `modORIPReporting` server (S286, 31.7% → 100%), **S3**
+`appServer` (this session, 0% → 100%). Overall now **97.91%**
+(`NOT_CRAN=true`). Remaining GENUINE gaps (each a candidate future slice
+/ fresh session; % from this session’s covr run): - **Residual Shiny
+modules (the remaining biggest gaps):** `modInput` (87.89% — error
+branches; `local_mocked_bindings`/tempfile fixtures for the file-upload
+paths), `modPyramid` (89.72%), `modSummaryStats` (94.34%),
+`modPotentialParents` (94.67%), `modGeneticValue` (96.26% — a few
+defensive branches). One module = one clean slice. - **Small single-file
+residuals** to push overall higher: `checkKinshipOverrides` (96.43%),
+`loadSpeciesOverrides` (96.72%), `dataframe2string` (96.88%),
+`getPotentialParents` (96.88%), `correctUnknownParentMeanKinship`
+(97.30%), `modPedigree` (97.72%), `orderReport` (97.73%),
+`getPyramidPlot` (98.36%), `modBreedingGroups` (98.56%). - **Also
+open:** **\#117** (the `fixColumnNames` overreach-cleanup bug — a
+genuine correctness fix, strict TDD: RED test asserting
+`first_name`/`second_name` restored, then fix line 32/35 to write
+`newCols`; **when fixed, update `test_fixColumnNames.R`’s
+characterization assertions**). **\#116** Flags column (still BLOCKED —
+no genotype/phenotype data source); **\#103** roxygen; **\#37, \#36,
+\#28, \#12, \#11, \#10, \#5**; the CRAN thread (Phase 5b, owner-run
+outward — package ARCHIVED 2025-07-29, resubmission owner-gated + HARD
+STOP). **Standing gotchas (unchanged):** **measure coverage with
+`NOT_CRAN=true`**
+([`covr::package_coverage()`](http://covr.r-lib.org/reference/package_coverage.md)
+at the default undercounts by ~8 pts — 39 test files `skip_on_cran`; the
+new module-server suites do NOT skip); for ANY package-code change —
+`--as-cran` from the REPO ROOT (renv; background ~3-4 min; **build WITH
+vignettes**; **`devtools::check(args="--as-cran")` returns 0/0/0 here,
+`--no-build-vignettes` yields 2 misleading vignette WARNINGs**; **beware
+zsh `rm <glob>` “no matches found”**) + `lintr::lint()`/`lint_package()`
+(`.lintr` EXCLUDES `tests/`, `inst/extdata`, `vignettes`,
+`inst/application`) + `spell_check_package` (hand-add wordlist, never
+`update_wordlist`) after ANY `R/`+`man/` edit; behavior/NAMESPACE
+changes ALSO need STRICT TDD + NAMESPACE diff + Phase-3E + FULL-suite
+(`NOT_CRAN=true`); the local `--as-cran` does NOT run lintr (Learning
+232); NEWS/README GENERATED (edit `.Rmd`); version **2.0.0**; package
+**ARCHIVED on CRAN 2025-07-29**; **e2e/shinytest2 SKIPS here (no
+chromote) → `shiny::testServer(appServer, {...})` (bare server fn, no
+`shinyApp()` wrapper needed) for app runtime changes AND as an
+`appServer` coverage vehicle; stub child servers via
+`with_mocked_bindings(.package="nprcgenekeepr", ...)` to drive the
+wiring observers**; `gh issue view`/`gh pr edit` exit 1 → `gh api` (but
+`gh issue create`/`comment`/`close` work); re-check `git status` before
+ANY destructive git (\[\[check-status-before-destructive-git\]\]);
+before any delete/rename, `grep -rn <target> .` across the WHOLE tree
+BEFORE the `git rm` (Learning 259); landing owner-gated (direct-commit
+vs PR).
+
+**Key files (this session):** **New test file:**
+`tests/testthat/test_appServer_server.R` (6 `testServer` tests).
+**Edited:** `CHANGELOG.md` (S287 entry under \[Unreleased\]),
+`PROJECT_LEARNINGS.md` (Learning 266), `SESSION_NOTES.md` (this
+handoff + the 1B stub it replaced). **Read (not edited):**
+`R/appServer.R` (server under test),
+`tests/testthat/test_appServer_dynamicTabs.R` (existing
+helper/structural coverage), `R/modInput.R` + `R/modPedigree.R` +
+`R/modGeneticValue.R` + `R/modBreedingGroups.R` (child return
+contracts), `R/getErrorTab.R` + `R/getChangedColsTab.R` +
+`R/checkErrorLst.R` + `R/shouldShowOripTab.R` (tab/ORIP gate helpers),
+`tests/testthat/test_modORIPReporting_server.R` (sibling `testServer`
+convention). **NOT committed (standing keep — FM \#22):** `.DS_Store`
+(tracked+modified), `PED_GV_AUDIT_2026-05-30.html` (untracked,
+`.Rbuildignore`d). **Scratchpad (NOT committed):** `probe_appserver.R`,
+`probe_appserver2.R`, `cov287.R`/`.rds`/`.log`, `check287.log`.
+
+**Gotchas:** (1) **Test-only slice** — no `R/` source added/modified, no
+`NAMESPACE`/`DESCRIPTION` change; that is why lint is non-regressing and
+Phase-3E is N/A (no runtime surface; FM \#24 has no target). (2)
+**`--as-cran` here returned 0/0/0 (Status: OK)** via `devtools::check`,
+matching S286; both benign 0/0/2-baseline NOTEs don’t fire under
+`devtools::check`. (3) **The wiring observers read CHILD-module
+reactives, not `shared`** — to cover their branches you must stub the
+child servers (`with_mocked_bindings(.package="nprcgenekeepr")`), then
+assert on `appServer`’s observable effects (`shared$*`,
+`errorTabShown()`/`changedColsTabShown()`); `testServer`’s expr runs in
+the server env so those names are reachable. (4) **`muffleConfig`**
+muffles ONLY the “configuration file is missing” warning (targeted
+`withCallingHandlers`, not blanket `suppressWarnings`); **`noopServer`**
+no-ops the non-read downstream modules to avoid empty-data ggplot
+warnings in the wiring test. (5) **\#111 is a campaign, still OPEN** —
+next slices are the residual modules (`modInput` 87.9% is the lowest) +
+small single-file residuals. (6) **Landing owner-gated** (direct-commit
+vs PR) — this handoff is pre-commit.
+
 ### What Session 286 Did
 
 **Deliverable (issue \#111 code-coverage campaign, slice 2 — one module;
