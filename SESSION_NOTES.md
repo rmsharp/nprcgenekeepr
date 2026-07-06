@@ -7,6 +7,215 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 289 Did
+
+**Deliverable (issue \#111 code-coverage campaign, slice 5 — one
+residual Shiny module; owner picked \#111 and named the `modPyramid`
+slice directly):** test-backfill `R/modPyramid.R` (89.72%, the
+lowest-coverage residual module per S288’s covr run) toward 100% via a
+headless
+[`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html)
+suite. **Test-only (no production code changed); PRE-RED→RED gate via
+`AskUserQuestion`; 0 stakeholder corrections.** **Started / Completed:**
+2026-07-06 / 2026-07-06 **Status:** **DONE + VERIFIED.** New
+`tests/testthat/test_modPyramid_coverage.R` (2 `testServer` tests / 6
+expectations). **`R/modPyramid.R` 89.72% → 100%** (zero uncovered
+lines); **overall coverage 98.76% → 98.91%** (`NOT_CRAN=true`).
+**Landed: owner chose direct-commit — committed + pushed to
+`origin/master` as `<S289_HASH>` (tagged `(S289)`; local == origin).** -
+**Gap SHAPE (from an exact uncovered-line dump, not the %):**
+[`covr::zero_coverage()`](http://covr.r-lib.org/reference/zero_coverage.md)
+(`NOT_CRAN=true`) showed the ONLY uncovered lines were the
+`downloadPlot` content function body (`modPyramid.R` L140, L142–151, the
+PNG-writing path). Unlike the prior module slices (S286/S287
+whole-server-body gaps), the plot/stats/UI renderers AND the `observe`
+were ALREADY covered — the existing `test_modPyramid.R` never accesses
+those outputs, but its `setInputs`/reactive-read calls trigger
+`testServer` flush cycles that evaluate the bound outputs anyway; a
+`downloadHandler` runs its content fn ONLY when invoked
+(`path <- output$downloadPlot`), which no existing test did → that one
+path was the whole ~10-point gap. - **2 tests** (mechanics de-risked by
+a throwaway `load_all`/`testServer` probe before writing): (1)
+`downloadPlot` with explicit `plotHeight = 900L` (non-null branch of
+L140); (2) `downloadPlot` with `plotHeight` unset (`else 600L` branch).
+Each sets the other inputs
+(`ageBin`/`ageUnit`/`colorScheme`/`showCounts`/`ageLabelSize` — required
+so `getPyramidPlot` does not error on a NULL `ageUnit`) and asserts the
+written file exists, is non-empty, and carries the PNG file signature
+(`readBin(path,"raw",4L) == 89 50 4E 47`). Fixture: a minimal
+`id`/`sex`/`age` data.frame —
+[`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md)
+requires `sex` and `age`, whereas the existing fixtures carry `birth`
+(and get away with it only because they never render the plot). -
+**Verify (firsthand):** new file **2 tests / 6 expectations green, 0
+warnings**; `covr` (full suite, `NOT_CRAN=true`) confirms `modPyramid.R`
+= **100%** (zero uncovered) and overall **98.91%**; **full suite
+(`NOT_CRAN=true`) 1466 tests, 0 failed / 0 error, 0 true offenders** (7
+baseline warnings, none from this file — isolated run is 0-warning);
+`lintr::lint()` on the new file = **0**; `spell_check_package`
+**clean**; **`R CMD check --as-cran` (repo root, WITH vignettes, via
+`devtools::check`) Status: OK — 0 errors / 0 warnings / 0 notes**.
+**Phase-3E N/A** — test-only, no `R/` source or runtime change (FM \#24
+has no target).
+
+**Session 288 Handoff Evaluation (by Session 289): Score 9/10.** S288’s
+SUGGESTED NEXT named `modPyramid` as the remaining lowest-coverage
+module (“89.72%, the new lowest”), pre-scoped the approach (dump the
+exact uncovered lines first; model on the prior module suites), and
+flagged the `flog.debug` lazy-message trap (Learning 267e) to watch for.
+**What helped:** (i) the 89.72% matched my first covr read to the
+decimal because the load-bearing “measure with `NOT_CRAN=true`” standing
+gotcha was carried and applied from the first call — no phantom chase;
+(ii) the ghost breadcrumb (HEAD `c4866557` == documented S288 docs
+close-out, whose test commit `dfc90b29` was also documented) confirmed
+no ghost in seconds; (iii) every standing gotcha held EXACTLY (e2e SKIPS
+→ `testServer`; `--as-cran` repo-root-with-vignettes 0/0/0 via
+`devtools::check`; the length-2 `as.character` quirk; git-status
+standing keeps `.DS_Store`/`PED_GV_AUDIT` left untouched, FM \#22); (iv)
+the `flog.debug` watch was carried and checked (it did not fire here —
+modPyramid’s download-only gap has no in-message branches). **What was
+missing (the −1):** the SUGGESTED NEXT’s residual-module list carried
+each module’s % but framed the remaining slices implicitly like the
+prior scattered-branch gaps (S286/S288); modPyramid’s gap turned out to
+be a SINGLE path (the download handler). Minor and understandable — and
+the handoff’s own load-bearing instruction (“dump the exact uncovered
+lines first”) is exactly what corrected the framing in one step, so the
+−1 is small. **What was wrong:** nothing — modPyramid WAS 89.72% and the
+covr dump was the authority. **ROI:** very high — near-turnkey slice
+scoping; the whole discovery was one covr dump + one probe.
+
+**Self-assessment (Session 289): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean+explained), reported, STOPPED for the
+owner; wrote the 1B stub before technical work; posed the PRE-RED→RED
+gate AND the landing choice via `AskUserQuestion`, declaring the TDD
+phase at the top of each phase-response. **Strengths:** (1) **grounded
+the gap with an EXACT uncovered-line dump**
+([`covr::zero_coverage`](http://covr.r-lib.org/reference/zero_coverage.md),
+`NOT_CRAN=true`) and let the SHAPE define the scope — correctly
+recognizing this was a SINGLE untested path (the download handler), not
+the scattered-branch gap the prior slices had, so the slice was honestly
+2 tests, not padded; (2) **de-risked all mechanics with a throwaway
+probe BEFORE writing** (S285–S288 discipline) — both height branches,
+the `age`-column fixture requirement, the NULL-`ageUnit` error trap, the
+length-2 `as.character` quirk, and the download-path read — zero
+authoring surprises; (3) **asserted the artifact is a real PNG** (file
+signature), not merely non-empty — a stronger characterization; (4) ran
+the full battery firsthand (covr 100%, full suite 0/0/0, lint 0, spell
+clean, `--as-cran` 0/0/0). **Weakness (the −1):** before running the
+covr dump I expected the render outputs to be the gap and provisionally
+planned tests for them; the dump corrected me to download-only. No
+wasted work (the dump preceded any authoring), but recalling up front
+that `testServer` flush evaluates bound outputs would have sharpened the
+pre-dump expectation. Correct + disciplined; capped at 9.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 268** — a
+residual module gap can be a SINGLE untested path, not scattered
+branches (`modPyramid` was uncovered ONLY in `downloadPlot`); dump the
+exact uncovered lines first and let the shape set the scope (contrast
+Learning 265’s whole-body gaps); the RENDERING helper’s column contract
+(`getPyramidPlot` needs `sex`+`age`, not the existing fixtures’ `birth`)
+and the NULL-`ageUnit` `if (logical(0))` trap; cover both height-guard
+branches and assert the PNG file signature;
+[`plotrix::pyramid.plot`](https://plotrix.github.io/plotrix/reference/pyramid.plot.html)
+prints `par("mar")` “5 5” to stdout (benign). Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a TEST-BACKFILL
+coverage session (slice 5 of \#111) — PRE-RED→RED gated; test-only; no
+bug found (code correct); Phase-3E N/A.**
+
+**=\> SUGGESTED NEXT.** **Issue \#111 stays OPEN — it is a multi-session
+campaign.** Slices done: **S1** helper tier (S285, 16 files → 100%),
+**S2** `modORIPReporting` server (S286, 31.7% → 100%), **S3**
+`appServer` (S287, 0% → 100%), **S4** `modInput` (S288, 87.89% → 100%),
+**S5** `modPyramid` (this session, 89.72% → 100%). Overall now
+**98.91%** (`NOT_CRAN=true`). Remaining GENUINE gaps (each a candidate
+future slice / fresh session; %s from S288’s covr run — re-measure to
+refresh): - **Residual Shiny modules (the remaining biggest gaps):**
+`modSummaryStats` (94.34%), `modPotentialParents` (94.67%),
+`modGeneticValue` (96.26%). One module = one clean slice. **Model the
+slice on this one:** dump the exact uncovered lines FIRST — the gap may
+be a single handler (as here) or scattered branches (as in S286/S288);
+the dump tells you which. **Still watch the `flog.debug` lazy-message
+trap (Learning 267e)** on modules with branchy debug messages, and the
+length-2 `as.character` quirk on renderUI/renderTable reads. - **Small
+single-file residuals** to push overall higher: `checkKinshipOverrides`
+(96.43%), `loadSpeciesOverrides` (96.72%), `dataframe2string` (96.88%),
+`getPotentialParents` (96.88%), `correctUnknownParentMeanKinship`
+(97.30%), `modPedigree` (97.72%), `orderReport` (97.73%),
+`getPyramidPlot` (98.36%), `modBreedingGroups` (98.56%). - **Also
+open:** **\#117** (the `fixColumnNames` overreach-cleanup bug — a
+genuine correctness fix, strict TDD: RED test asserting
+`first_name`/`second_name` restored, then fix line 32/35 to write
+`newCols`; **when fixed, update `test_fixColumnNames.R`’s
+characterization assertions**). **\#116** Flags column (still BLOCKED —
+no genotype/phenotype data source); **\#103** roxygen; **\#37, \#36,
+\#28, \#12, \#11, \#10, \#5**; the CRAN thread (Phase 5b, owner-run
+outward — package ARCHIVED 2025-07-29, resubmission owner-gated + HARD
+STOP). **Standing gotchas (unchanged):** **measure coverage with
+`NOT_CRAN=true`** (default undercounts ~8 pts — 39 `skip_on_cran` files;
+module `testServer` suites do NOT skip); dump exact uncovered lines with
+[`covr::zero_coverage()`](http://covr.r-lib.org/reference/zero_coverage.md)
+and target them; **the `flog.debug` lazy-message trap** (branch lines
+inside
+[`futile.logger::flog.debug()`](https://rdrr.io/pkg/futile.logger/man/flog.logger.html)
+messages stay uncovered above the DEBUG threshold; raise
+`flog.threshold(DEBUG)` to force them); for ANY package-code change —
+`--as-cran` from the REPO ROOT (renv; background ~3-4 min; **build WITH
+vignettes**; **`devtools::check(args="--as-cran")` returns 0/0/0 here,
+`--no-build-vignettes` yields 2 misleading vignette WARNINGs**; **beware
+zsh `rm <glob>` “no matches found”**) + `lintr::lint()`/`lint_package()`
+(`.lintr` EXCLUDES `tests/`, `inst/extdata`, `vignettes`,
+`inst/application`) + `spell_check_package` (hand-add wordlist, never
+`update_wordlist`) after ANY `R/`+`man/` edit; behavior/NAMESPACE
+changes ALSO need STRICT TDD + NAMESPACE diff + Phase-3E + FULL-suite
+(`NOT_CRAN=true`); the local `--as-cran` does NOT run lintr (Learning
+232); NEWS/README GENERATED (edit `.Rmd`); version **2.0.0**; package
+**ARCHIVED on CRAN 2025-07-29**; **e2e/shinytest2 SKIPS here (no
+chromote) → `shiny::testServer(<server fn>, {...})` for module runtime
+changes AND as a coverage vehicle; inner helpers/`reactiveVal`s are
+reachable by name in the expr**; `gh issue view`/`gh pr edit` exit 1 →
+`gh api` (but `gh issue create`/`comment`/`close` work); re-check
+`git status` before ANY destructive git
+(\[\[check-status-before-destructive-git\]\]); before any delete/rename,
+`grep -rn <target> .` across the WHOLE tree BEFORE the `git rm`
+(Learning 259); landing owner-gated (direct-commit vs PR).
+
+**Key files (this session):** **New test file:**
+`tests/testthat/test_modPyramid_coverage.R` (2 `testServer` tests +
+`pyramidTestPed`/`pyramidIsPng` helpers). **Edited:** `CHANGELOG.md`
+(S289 entry under \[Unreleased\]), `PROJECT_LEARNINGS.md` (Learning
+268), `SESSION_NOTES.md` (this handoff + the 1B stub it replaced).
+**Read (not edited):** `R/modPyramid.R` (module under test),
+`R/getPyramidPlot.R` + `R/getPedMaxAge.R` + `R/fillBins.R` (the
+`sex`+`age` column contract), `tests/testthat/test_modPyramid.R` +
+`test_modPlotDownload.R` (existing coverage). **NOT committed (standing
+keep — FM \#22):** `.DS_Store` (tracked+modified),
+`PED_GV_AUDIT_2026-05-30.html` (untracked, `.Rbuildignore`d).
+**Scratchpad (NOT committed):** `probe_modpyramid.R`,
+`cov289_modpyramid.R`/`cov289.log`/`cov289_after.log`,
+`fullsuite289.R`/`.log`, `check289.R`/`.log`.
+
+**Gotchas:** (1) **Test-only slice** — no `R/` source added/modified, no
+`NAMESPACE`/`DESCRIPTION` change; lint is non-regressing and Phase-3E is
+N/A (no runtime surface; FM \#24 has no target). (2) **`--as-cran` here
+returned 0/0/0 (Status: OK)** via `devtools::check`. (3) **The
+modPyramid gap was download-ONLY** — the renderers were already green
+via `testServer` flush; do NOT assume a module’s residual % means
+scattered branches — dump the uncovered lines first (Learning 268a). (4)
+**`getPyramidPlot` needs `sex`+`age`** and all pyramid inputs set (NULL
+`ageUnit` → `if (logical(0))` “argument is of length zero”) — Learning
+268b. (5) **\#111 is a campaign, still OPEN** — next slices are
+`modSummaryStats` (94.34%) / `modPotentialParents` (94.67%) /
+`modGeneticValue` (96.26%). (6) **Landed as `<S289_HASH>` on `master`,
+pushed** (owner chose direct-commit; local == origin).
+
 ### What Session 288 Did
 
 **Deliverable (issue \#111 code-coverage campaign, slice 4 — one

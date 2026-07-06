@@ -15,6 +15,46 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-06 — \#111 code-coverage campaign, slice 5 — `modPyramid` backfilled 89.72% → 100% via a `downloadPlot` `testServer` suite (Session 289)
+
+- **Deliverable (owner picked \#111 and this slice — `modPyramid`, the
+  lowest-coverage residual module at 89.72%):** add a headless
+  [`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html)
+  suite driving the `downloadPlot` handler that the existing suite never
+  invokes. **Test-only (no production code changed); PRE-RED→RED gate
+  via `AskUserQuestion`; 0 stakeholder corrections.**
+- **Gap pinpointed by exact uncovered-line dump
+  ([`covr::zero_coverage`](http://covr.r-lib.org/reference/zero_coverage.md),
+  `NOT_CRAN=true`):** the only uncovered lines were the `downloadPlot`
+  content function body (`R/modPyramid.R` L140, L142–151) — the
+  PNG-writing download path. The plot/stats/UI renderers and the
+  `observe` block were already covered by the existing suite’s
+  `testServer` flush cycles; only the download handler, which runs
+  solely when invoked, was untested.
+- **New `tests/testthat/test_modPyramid_coverage.R` (2 `testServer`
+  tests / 6 expectations):** drive `output$downloadPlot` in both
+  plot-height branches — (A) explicit `plotHeight = 900L` (non-null
+  branch of L140) and (B) `plotHeight` unset (`else 600L` branch) — each
+  asserting the written file exists, is non-empty, and carries the PNG
+  file signature. Fixture: a minimal `id`/`sex`/`age` data.frame
+  ([`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md)
+  requires `sex` and `age`), validated warning-free with a throwaway
+  `load_all`/`testServer` probe before the file was written.
+- **Result:** `R/modPyramid.R` **89.72% → 100%** (zero uncovered lines);
+  **overall coverage 98.76% → 98.91%** (`NOT_CRAN=true`).
+- **Verified (firsthand):** new file green (0 warnings); full suite
+  (`NOT_CRAN=true`) **1466 tests, 0 failed / 0 error, 0 true offenders**
+  (7 baseline warnings unchanged); `lintr::lint` on the new file = 0;
+  `spell_check_package` clean; **`R CMD check --as-cran` (repo root,
+  WITH vignettes, via `devtools::check`) Status: OK — 0 errors / 0
+  warnings / 0 notes**. Phase-3E N/A (test-only; no runtime surface).
+- **Campaign status:** \#111 stays OPEN. Slices done: S1 helper tier
+  (S285), S2 `modORIPReporting` (S286), S3 `appServer` (S287), S4
+  `modInput` (S288), **S5 `modPyramid` (this session)**. Remaining
+  residual modules for future slices: `modSummaryStats` (94.34%),
+  `modPotentialParents` (94.67%), `modGeneticValue` (96.26%) + small
+  single-file residuals.
+
 ### 2026-07-06 — \#111 code-coverage campaign, slice 4 — `modInput` backfilled 87.89% → 100% via a residual-branch `testServer` suite (Session 288)
 
 - **Deliverable (owner picked \#111; owner chose this session’s slice
