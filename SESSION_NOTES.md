@@ -20,10 +20,10 @@ suite. **Test-only (no production code changed); PRE-RED→RED gate via
 2026-07-06 / 2026-07-06 **Status:** **DONE + VERIFIED.** New
 `tests/testthat/test_modInput_coverage.R` (9 `testServer` tests / 22
 expectations). **`R/modInput.R` 87.89% → 100%** (zero uncovered lines);
-**overall coverage 97.91% → 98.76%** (`NOT_CRAN=true`). **Landing
-owner-gated (direct-commit vs PR) — see the close-out question; this
-handoff written pre-commit.** - **Gap SHAPE (from an exact
-uncovered-line dump, not the %):**
+**overall coverage 97.91% → 98.76%** (`NOT_CRAN=true`). **Landed: owner
+chose direct-commit — committed + pushed to `origin/master` as
+`dfc90b29` (tagged `(S288)`; local == origin).** - **Gap SHAPE (from an
+exact uncovered-line dump, not the %):**
 [`covr::zero_coverage()`](http://covr.r-lib.org/reference/zero_coverage.md)
 (`NOT_CRAN=true`) gave the precise 62-line gap — `readDataFile`
 NULL/Excel/read-error paths (L259/272-274/301-310); the getData guards
@@ -241,9 +241,8 @@ rendering; carry this into the next module slices. (4)
 `runQcStudbook` itself mocked to
 [`stop()`](https://rdrr.io/r/base/stop.html), not `qcStudbook`. (5)
 **\#111 is a campaign, still OPEN** — next slices are `modPyramid`
-(89.72%, the new lowest) etc. (6) **Landing owner-gated** — pending the
-close-out direct-commit-vs-PR choice; will record the commit hash + push
-once landed.
+(89.72%, the new lowest) etc. (6) **Landed as `dfc90b29` on `master`,
+pushed** (owner chose direct-commit; local == origin).
 
 ### What Session 287 Did
 
