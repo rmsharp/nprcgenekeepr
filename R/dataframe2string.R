@@ -44,10 +44,6 @@ dataframe2string <- function(object, ..., digits = NULL, addRowNames = TRUE) {
     # define rowNames (if required)
     if (isTRUE(addRowNames)) {
       rowNames <- dimnames(object)[[1L]]
-      if (is.null(rowNames)) {
-        # no row header available -> use row numbers
-        rowNames <- as.character(seq_len(NROW(m)))
-      }
       # add empty header (used with column headers)
       rowNames <- c("", rowNames)
     }
