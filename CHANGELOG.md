@@ -15,6 +15,41 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-06 — \#111 code-coverage campaign, slice 6 — `modSummaryStats` backfilled 94.34% → 100% via a scattered-branch `testServer` suite (Session 290)
+
+- **Deliverable (owner said “proceed with next candidate slice” →
+  `modSummaryStats`, the lowest-coverage residual module at 94.34%):**
+  add a headless
+  [`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html)
+  suite covering the scattered residual lines the six existing
+  modSummaryStats suites never reached. **Test-only (no production code
+  changed); PRE-RED→RED gate via `AskUserQuestion`; 0 stakeholder
+  corrections.**
+- **Gap pinpointed by exact uncovered-line dump
+  ([`covr::zero_coverage`](http://covr.r-lib.org/reference/zero_coverage.md),
+  `NOT_CRAN=true`):** 36 uncovered lines in three groups — (1)
+  `asDataFrame()`’s `data.table` branch (`R/modSummaryStats.R`
+  L350); (2) the two boxplot NULL guards (`meanKinshipBoxPlotGG` L510,
+  `guBoxPlotGG` L570); (3) eleven download-handler content/filename
+  bodies (L748–847). Only `downloadKinship` was driven before (parity
+  suite); the other download handlers were never invoked via
+  `output$downloadX`.
+- **New `tests/testthat/test_modSummaryStats_coverage.R`** (8
+  `testServer` tests / 34 expectations): a `data.table` pedigree
+  exercising `getKinshipMatrix`; each boxplot reactive returning NULL
+  for its missing column; the founder / first-order / relationship CSV
+  exports (asserting real content); and the six histogram / box-plot PNG
+  exports (asserting the PNG file signature).
+- **Result:** `R/modSummaryStats.R` 94.34% → **100%** (zero uncovered
+  lines); overall coverage 98.91% → **99.41%** (`NOT_CRAN=true`).
+- **Verified:** new file 8 tests / 34 expectations green, 0 warnings;
+  `covr` confirms 100% + overall 99.41%; full suite (`NOT_CRAN=true`,
+  package loaded) 0 failed / 0 error / 0 true offenders (7 baseline
+  warnings, none from this file); `lintr::lint()` on the new file = 0;
+  `spell_check_package` clean (no `R/`/`man/` change);
+  `R CMD check --as-cran` Status: OK — 0 errors / 0 warnings / 0 notes.
+  Phase-3E N/A (test-only, no runtime surface).
+
 ### 2026-07-06 — \#111 code-coverage campaign, slice 5 — `modPyramid` backfilled 89.72% → 100% via a `downloadPlot` `testServer` suite (Session 289)
 
 - **Deliverable (owner picked \#111 and this slice — `modPyramid`, the
