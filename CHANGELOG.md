@@ -15,6 +15,56 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-05 — \#112 Genetic Diversity Dashboard — design & implementation plan authored (planning session; no code) (Session 279)
+
+- **Deliverable (owner scope-gate via one `AskUserQuestion`):** the
+  owner picked issue \#112 (“finish development of the genetic diversity
+  heatmap or dashboard”) and at the scope gate chose **“Design/plan doc
+  first”** (over build-the-heatmap-renderer-now /
+  build-the-data-assembler-now). Deliverable = a design document; **no
+  code or tests written** (planning-workstream discipline —
+  implementation happens in the separate per-slice sessions the plan
+  defines; FM \#18/#19 avoided). **0 stakeholder corrections / 0 owner
+  overrides.**
+- **Investigation (ultracode, read-only, TDD-safe at pre-RED — two
+  Workflows):** (1) a 4-agent scope investigation of the reference
+  material + plumbing (meeting notes, GV pipeline, app wiring, dead
+  code/deps — 2 agents returned placeholder junk, load-bearing facts
+  recovered firsthand); (2) a 3-agent adversarial review of the drafted
+  plan (accuracy / completeness / slice-structure lenses, 0 errors)
+  surfacing **10 evidence-backed findings, ALL applied**.
+- **What \#112 is (from `inst/extdata/meeting_notes.qmd`):** a
+  red/yellow/green stoplight heat map, rows = breeding groups, 5 metric
+  columns (Value/High-Low, Origin/Indian, Production/Fecundity,
+  Inbreeding/Kinship-with-male, Flags/Genotype-Phenotype), each cell
+  colored by per-metric thresholds (20190810).
+- **Key evidence:** 3 of 5 columns already have working,
+  individually-tested but **orphaned** `@noRd` providers
+  (`getProportionLow`/`getIndianOriginStatus`/`getProductionStatus`) — a
+  half-built feature, not greenfield; column 4 (Inbreeding) has no
+  provider but is buildable from
+  [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md) +
+  `modBreedingGroups`’ existing `groupKinship`; column 5 (Flags) has no
+  provider **and no data source** → deferred. `ggplot2` is a dependency,
+  `gplots` is not → recommend `geom_tile` (no new dep) over reviving the
+  dead build-ignored `heatmap.2` PNG renderer. `modBreedingGroups`
+  already returns `groups`+`groupKinship` but `appServer.R:315` discards
+  it (one-line capture). Two doc/code mismatches noted in
+  `getProductionStatus`.
+- **The plan**
+  (`docs/planning/issue112-genetic-diversity-dashboard-plan.md`): spec +
+  thresholds, evidence-based inventory (<file:line>), 7 design decisions
+  (all `[RATIFY]`-marked), 6 open spec questions (owner input), and **4
+  vertical implementation slices** (S1 ggplot2 heatmap renderer = tracer
+  bullet; S2 Inbreeding provider; S3 per-group assembler; S4 Shiny
+  module + wiring) + a deferred Flags column, each with concrete DONE
+  criteria, verification commands, and a STOP boundary.
+- **Verify:** plan proofread for internal consistency; all 10 review
+  findings applied; no code/tests/NAMESPACE touched (planning-only;
+  build-equivalent = doc consistency). Phase-3E N/A (no runtime
+  surface). Direct-merge to `master` + pushed. Issue \#112 stays OPEN
+  (plan authored, implementation pending).
+
 ### 2026-07-05 — \#109 follow-up — AlleleTable column-order docs reconciled to `geneDrop()`’s V-first output; the 5 remaining “code-fix candidates” investigated and declined with evidence (Session 278)
 
 - **Deliverable (owner scope-gate via one `AskUserQuestion`):** the

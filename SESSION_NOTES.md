@@ -7,6 +7,220 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 279 Did
+
+**Deliverable (owner scope-gate via one `AskUserQuestion`):** issue
+\#112 “finish development of the genetic diversity heatmap or
+dashboard”. At the scope gate the owner chose **“Design/plan doc
+first”** (over build-the-heatmap-renderer-now /
+build-the-data-assembler-now), so this is a **PLANNING session**: the
+deliverable is a design & implementation plan,
+`docs/planning/issue112-genetic-diversity-dashboard-plan.md`. **NO
+code/tests/NAMESPACE written** (planning-workstream discipline —
+implementation happens in the separate per-slice sessions the plan
+defines; FM \#18/#19 planning-to-implementation bleed avoided). **TDD
+RED/GREEN/REFACTOR N/A this session** (they govern the future slices).
+**0 stakeholder corrections / 0 owner overrides** (1 owner gate: the
+scope `AskUserQuestion`). **Started / Completed:** 2026-07-05 /
+2026-07-05 **Status:** **DONE + VERIFIED. Plan authored, adversarially
+reviewed (10 findings applied), committed to `master` + pushed (local ==
+origin/master). Issue \#112 stays OPEN (plan authored; implementation
+pending).** - **Two ultracode read-only Workflows at pre-RED (TDD-safe —
+no code/tests written):** (1) a **4-agent scope investigation**
+(meeting-notes / GV-pipeline / app-wiring / dead-code-deps) — **2 of the
+4 agents returned placeholder junk** (`{"summary":"test",...}`, a
+StructuredOutput failure mode); the other 2 covered the ground and I
+recovered the missing load-bearing facts (helper existence, deps,
+`.Rbuildignore`) firsthand with a few greps rather than re-running. (2)
+a **3-agent adversarial plan review** (accuracy / completeness /
+slice-structure lenses; 0 errors; the schema said “never emit
+placeholder findings” → 0 junk) that surfaced **10 evidence-backed
+findings, ALL applied** — including 2 majors I got wrong (see
+Gotchas). - **What \#112 is (`inst/extdata/meeting_notes.qmd`
+§20190826/§20190810):** a red/yellow/green stoplight **heat map**, rows
+= breeding groups, **5 metric columns** — Value/High-Low, Origin/Indian,
+Production/Fecundity, Inbreeding/Kinship-with-male,
+Flags/Genotype-Phenotype — each cell colored by per-metric thresholds
+(20190810). - **Key evidence (verified firsthand):** **3 of 5 columns
+already have working, individually-tested but ORPHANED `@noRd`
+providers**
+(`getProportionLow`/`getIndianOriginStatus`/`getProductionStatus`; only
+caller = the commented-out test) — a half-built feature, not greenfield.
+Column 4 (Inbreeding) has no provider but is buildable from
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+(`R/kinship.R:67`, exported) + `modBreedingGroups`’ existing
+`groupKinship`. Column 5 (Flags) has no provider **AND no data source**
+→ **deferred**. `ggplot2` is a dep (`DESCRIPTION:45`), `gplots` is not →
+recommend `geom_tile` over reviving the dead build-ignored
+(`.Rbuildignore:21`) `heatmap.2` PNG renderer. `modBreedingGroupsServer`
+**already returns**
+`list(groups, nGroups, score, unassigned, groupKinship)`
+(`modBreedingGroups.R:500-518`) but `appServer.R:315` discards it
+(one-line capture in S4). Two doc/code mismatches in
+`getProductionStatus` (fixed-2019 prose vs rolling code;
+`@param minParentAge` says 2 but default is `3L`). - **The plan**
+(`docs/planning/issue112-genetic-diversity-dashboard-plan.md`): §2
+spec + thresholds, §3 evidence-based inventory (<file:line>), §5 seven
+design decisions (all `[RATIFY]`-marked), §6 six open spec questions
+(owner input), §7 **4 vertical implementation slices** + deferred Flags,
+§8 risks, §9 grep inventory. - **Verify (firsthand):** plan proofread
+for internal consistency; all 10 review findings applied; **no
+`R/`/`man/`/tests/NAMESPACE/DESCRIPTION touched** (planning-only;
+build-equivalent = doc consistency, not `--as-cran`). **Phase-3E N/A
+(stated, not skipped):** no runtime/behavior surface — the deliverable
+is a Markdown design doc. FM \#24 does not apply.
+
+**Session 278 Handoff Evaluation (by Session 279): Score 8/10.** S278’s
+SUGGESTED NEXT listed **\#112 “genetic diversity heatmap/dashboard” in
+its backlog line** (candidate deliverables), plus two S278-surfaced
+small items (`getGenoDefinedParentGenotypes` @noRd doc fix; pyramid
+age-axis). **What helped:** (1) the backlog surfaced \#112 as an
+available pick; (2) **every standing gotcha held exactly** — version
+2.0.0, package ARCHIVED, `--as-cran` from repo root (I didn’t need it —
+planning-only), `gh issue view`/`edit` → `gh api` (used for the issue
+body), `spell_check` hand-add, the benign 2-NOTE baseline; (3)
+**ghost-check clean AND pre-explained** — HEAD `1be687ae` == the
+documented S278 close-out, all 5 recent commits map to S275–S278 + the
+owner’s `6d445e0d`; (4) the standing-keep git-status items (`.DS_Store`,
+`PED_GV_AUDIT_2026-05-30.html`) were documented so I left them untouched
+(FM \#22). **What was thin (the −2):** \#112 got a **one-line backlog
+mention with zero \#112-specific context** — no pointer to the dead
+code, the meeting notes, the orphaned helpers, or the “half-built not
+greenfield” nature. That’s not really S278’s fault (S278 worked on the
+AlleleTable docs, not \#112, and the issue body itself carried the
+pointers), but a session picking \#112 got no head-start from the
+handoff — the entire evidence base had to be built this session. **What
+was wrong:** nothing; all standing facts verified true. **ROI:** high
+for continuity/ghost-check/standing-gotchas; low for the specific item I
+chose (the issue body compensated).
+
+**Self-assessment (Session 279): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean+explained), reported, STOPPED for the
+owner; wrote the 1B stub before technical work; declared the phase at
+the top of each response (PRE-RED scoping → PLANNING). **Strengths:**
+(1) **recognized \#112 as a PLANNING deliverable, not a code one** — a
+large “finish the X” feature with real design ambiguity + abandoned
+code + unread reference material; gated the scope decision to the owner
+(`AskUserQuestion`) rather than assuming, then held planning discipline
+(NO code/tests; FM \#18/#19); (2) **read the abandoned implementations
+before scoping** (Learning 6) — which collapsed most “open questions”
+(the 3 orphaned-but-tested helpers already decide the Production
+definition + the low-value cutoff); (3) **used ultracode correctly** —
+two read-only pre-RED Workflows (scope investigation + adversarial plan
+review), the review catching 10 real defects in my own draft incl. 2
+majors I’d gotten wrong; (4) **verified the load-bearing majors
+firsthand** before rewriting (the `modBreedingGroups` return contract,
+the two `getProductionStatus` doc mismatches, the HYBRID matcher) rather
+than trusting the critic; (5) **caught the 2 placeholder-junk agents**
+and recovered firsthand instead of shipping on incomplete evidence.
+**Weakness (the −1):** my first-draft plan contained the 2 major errors
+(group-state “not available”; omitted the naming line) — caught only by
+the adversarial review; a closer first read of `modBreedingGroups`’
+documented `@return` would have avoided them. No harm (caught before
+commit), and the review is exactly the mechanism meant to catch it.
+Correct + disciplined; capped at 9.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 258** — a large
+“finish the X” enhancement with design ambiguity is a PLANNING
+deliverable; read the abandoned code first (it often already decides the
+“open questions” — 3 of 5 columns had tested-but-orphaned providers);
+ultracode used as two pre-RED read-only Workflows (scope + adversarial
+self-review, the review catching 2 majors I got wrong); 2 investigation
+agents returned StructuredOutput placeholder junk (recover firsthand,
+add an explicit anti-placeholder schema instruction — the review
+workflow that had it returned 0 junk); vertical slices not horizontal
+layers. Carried as applied: \[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[edit-files-in-reverse-line-order\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a PLANNING session —
+the plan is the deliverable; TDD RED/GREEN/REFACTOR N/A this session.**
+
+**=\> SUGGESTED NEXT.** **The \#112 design & implementation plan is
+authored**
+(`docs/planning/issue112-genetic-diversity-dashboard-plan.md`),
+direct-merged + pushed; **issue \#112 stays OPEN** (implementation
+pending). The plan defines **4 vertical implementation slices, each a
+SEPARATE STRICT-TDD session** — implement them in order (S1/S2 are the
+only reorderable pair; S2 → S3 is a hard order): - **S1 — Heatmap
+renderer (tracer bullet):** exported
+`makeGeneticDiversityHeatmap(stats)` — a
+[`ggplot2::geom_tile`](https://ggplot2.tidyverse.org/reference/geom_tile.html)
+red/yellow/green heat map from a group×metric `colorIndex` matrix; also
+delete the dead `makeGeneticDiversityDashboard.R`+test (D2).
+Lowest-risk, visible output; **START HERE.** - **S2 — Inbreeding
+provider:** new `@noRd` `getKinshipWithMaleStatus(...)` (col 4), built
+from
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)/`groupKinship` +
+0.015625. - **S3 — Per-group assembler:**
+`getGeneticDiversityStats(...)` combining the 4 providers → the matrix
+S1 consumes. **Highest-uncertainty slice — do NOT start until owner
+answers §6 Q1–Q3** (Production definition; housing-per-group;
+genetic-value “Low” label source). Also applies the D7 doc fix. - **S4 —
+Shiny module + wiring:** `modGeneticDiversity` UI/Server, new tab in
+appUI/appServer, one-line capture of `modBreedingGroups`’ return into
+`shared`; **Phase-3E runtime smoke mandatory** (FM \#24). - **Deferred:
+Flags column (S5)** — blocked on §6 Q4 (no genotype/phenotype data
+source). **Owner ratification wanted before S1/S3** on the `[RATIFY]`
+decisions (§5): D1 ggplot2 geom_tile; D3 new-tab + “Genetic Diversity”
+naming; D5 defer Flags; D7 canonical Production definition; and §6
+Q1–Q3. - **Other backlog:** \#111 code coverage; \#103 roxygen
+harmonization; \#37, \#36, \#28, \#12, \#11, \#10, \#5; the CRAN thread
+(Phase 5b, owner-run outward — package ARCHIVED, resubmission
+owner-gated + HARD STOP). **Standing gotchas (unchanged):** `--as-cran`
+from the REPO ROOT (renv; Learning 254; background ~3-4 min) + `lintr` +
+`spell_check_package` (hand-add wordlist, never `update_wordlist`) after
+ANY `R/`+`man/` edit; for behavior/NAMESPACE changes ALSO STRICT TDD +
+NAMESPACE diff + Phase-3E + a FULL-suite run for seeded-golden shifts;
+NEWS/README GENERATED (edit `.Rmd` + render via
+`load_all`+[`rmarkdown::render`](https://pkgs.rstudio.com/rmarkdown/reference/render.html),
+remove stray `README.html` before building — Learning 255); version is
+**2.0.0**; package **ARCHIVED on CRAN 2025-07-29**;
+`gh issue view`/`gh pr edit` exit 1 → `gh api`; re-check `git status`
+before ANY destructive git
+(\[\[check-status-before-destructive-git\]\]); landing owner-gated
+(direct-merge vs PR).
+
+**Key files (this session):** **Created + committed (S279, on `master`,
+pushed):** `docs/planning/issue112-genetic-diversity-dashboard-plan.md`
+(the design & implementation plan). **NO
+`R/`/`man/`/`tests/`/`NAMESPACE`/`DESCRIPTION`/`NEWS`/`README` change
+(planning-only).** Process docs (same commit): `CHANGELOG.md` (S279
+entry), `PROJECT_LEARNINGS.md` (Learning 258), `SESSION_NOTES.md` (this
+handoff). Reference (read, not edited):
+`inst/extdata/meeting_notes.qmd`, `R/makeGeneticDiversityDashboard.R`
+(dead), `R/getProportionLow.R`, `R/getIndianOriginStatus.R`,
+`R/getProductionStatus.R`, `R/kinship.R`, `R/modORIPReporting.R`,
+`R/modBreedingGroups.R`, `R/appUI.R`, `R/appServer.R`,
+`R/modSummaryStats.R`, `DESCRIPTION`, `.Rbuildignore`. **NOT committed
+(standing keep):** `.DS_Store` (tracked+modified),
+`PED_GV_AUDIT_2026-05-30.html` (untracked, `.Rbuildignore`d).
+**Scratchpad (NOT committed):** the two Workflow outputs
+(`wuv7a3hbg`/`wxwlm6orl`).
+
+**Gotchas:** (1) **The plan corrected 2 of my own first-draft major
+errors — trust the plan’s FINAL text, not the earlier framing:**
+`modBreedingGroups` DOES return `groups`+`groupKinship` (appServer.R:315
+discards it → S4 capture is one line; S2’s Inbreeding column should
+REUSE `groupKinship`, not recompute
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md));
+and the meeting notes name the graphic “Genetic Diversity Report”
+(`meeting_notes.qmd:434`) → name the tab/module accordingly (D3). (2)
+**S3 is blocked on owner spec answers (§6 Q1–Q3)** — do not start it
+until they’re answered or it will encode guesses. (3)
+**`getProductionStatus` has TWO doc/code mismatches** to fix in S3 (D7):
+the @details fixed-2019 prose vs the rolling-window code, AND
+`@param minParentAge` “2 years” vs default `3L`. (4)
+**`getProductionStatus` maps NA production (0 dams) → green** — flag to
+the owner in S3 (no-data-reads-as-healthy). (5) **Column 5 (Flags) has
+NO data source** — stays deferred until one exists. (6) Carried standing
+keeps as in SUGGESTED NEXT.
+
 ### What Session 278 Did
 
 **Deliverable (owner scope-gate via one `AskUserQuestion`):** the owner
