@@ -57,3 +57,31 @@ test_that("orderReport flags no-origin both-unknown founders, keeps imports (#9 
   # the flagged stub is ranked below the known animal (sinks to the bottom)
   expect_gt(which(out$id == "STUB1"), which(out$id == "KNOWN1"))
 })
+
+# Issue #111 coverage backfill (S293): the else branch at orderReport.R L42 --
+# a report with NO `parentage` column, so both-unknown founders are derived
+# from getFounders(ped) instead of the parentage column.
+test_that("orderReport uses getFounders when parentage absent", {
+  # No parentage column -> both-unknown founders come from getFounders(ped)
+  # (orderReport.R L42, the else branch).
+  rptNoParentage <- data.frame(
+    id      = c("F1", "K1"),
+    gu      = c(2, 3),
+    zScores = c(1.0, 0.5),
+    stringsAsFactors = FALSE
+  )
+  pedNP <- data.frame(
+    id   = c("F1", "K1", "S1", "D1"),
+    sire = c(NA, "S1", NA, NA),
+    dam  = c(NA, "D1", NA, NA),
+    stringsAsFactors = FALSE
+  )
+  out <- nprcgenekeepr:::orderReport(rptNoParentage, pedNP)
+  # F1 is a both-unknown founder per getFounders(ped): no origin ->
+  # Undetermined, rank NA.
+  expect_identical(out$value[out$id == "F1"], "Undetermined")
+  expect_true(is.na(out$rank[out$id == "F1"]))
+  # K1 has known parents -> not flagged.
+  expect_false(out$value[out$id == "K1"] == "Undetermined")
+  expect_identical(nrow(out), nrow(rptNoParentage))
+})

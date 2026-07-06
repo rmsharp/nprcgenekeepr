@@ -36,6 +36,18 @@ test_that("checkKinshipOverrides stops when a required column is missing", {
   expect_error(checkKinshipOverrides(bad))
 })
 
+test_that("checkKinshipOverrides stops on a non-numeric kinship column", {
+  # A character kinship column (e.g. a stray text value from a CSV read)
+  # trips the is.numeric() guard before the NA / negative / range checks.
+  badChar <- validI13Overrides()
+  badChar$kinship <- as.character(badChar$kinship)
+  expect_error(checkKinshipOverrides(badChar), "must be numeric")
+  # A factor kinship column is likewise non-numeric and hits the same guard.
+  badFactor <- validI13Overrides()
+  badFactor$kinship <- as.factor(badFactor$kinship)
+  expect_error(checkKinshipOverrides(badFactor), "must be numeric")
+})
+
 test_that("checkKinshipOverrides stops on an NA kinship value", {
   bad <- validI13Overrides()
   bad$kinship[1L] <- NA_real_

@@ -255,3 +255,31 @@ test_that("getPotentialParents keys the gestation window per focal animal's spec
   expect_true("DAM2" %in% damsOf("FOCAL_R"))
   expect_true("DAM2" %in% damsOf("FOCAL_T"))
 })
+
+# Issue #111 coverage backfill (S293): the empty-potentialDams fallback at
+# getPotentialParents.R L151-152 -- when the proven-breeder filter removes
+# every candidate dam, fall back to ALL females old enough to be the dam.
+test_that("getPotentialParents falls back to all old-enough females", {
+  ## L151-152: when the proven-breeder filter empties the candidate dams,
+  ## the function falls back to ALL females old enough to be the dam. DAM is
+  ## a breeding-age female present at the focal birth but has no offspring at
+  ## all, so she is not in the +/- 0.5-1.5 y "proven breeder" band and is
+  ## dropped -- emptying potentialDams and forcing the fallback, which then
+  ## re-admits her as an old-enough female.
+  D0 <- as.Date("2010-01-01")
+  ped <- data.frame(
+    id    = c("FOCAL", "DAM", "SIRE"),
+    sire  = c(NA, NA, NA),
+    dam   = c(NA, NA, NA),
+    sex   = c("F", "F", "M"),
+    birth = c(D0, as.Date("2000-01-01"), as.Date("2000-01-01")),
+    exit  = as.Date(NA),
+    fromCenter = c(TRUE, FALSE, FALSE),
+    stringsAsFactors = FALSE
+  )
+  pp <- getPotentialParents(
+    ped = ped, minParentAge = 2L, maxGestationalPeriod = 210L
+  )
+  expect_identical(pp[[1L]]$id, "FOCAL")
+  expect_identical(pp[[1L]]$dams, "DAM")
+})

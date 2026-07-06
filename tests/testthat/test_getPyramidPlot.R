@@ -13,3 +13,12 @@ test_that("getPyramidPlot generates a plot with or without pedigree", {
   expect_s3_class(agePlot, "recordedplot")
   expect_s3_class(recPlot(getPyramidPlot(NULL)), "recordedplot")
 })
+
+# Issue #111 coverage backfill (S293): the ageUnit == "months" age-conversion
+# branch (getPyramidPlot.R L40), never exercised by the default-ageUnit tests.
+test_that("getPyramidPlot converts age to months when ageUnit=months", {
+  monthsPlot <- recPlot(
+    getPyramidPlot(nprcgenekeepr::qcPed, ageUnit = "months")
+  )
+  expect_s3_class(monthsPlot, "recordedplot")
+})

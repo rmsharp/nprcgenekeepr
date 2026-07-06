@@ -287,3 +287,48 @@ test_that("correctUnknownParentMeanKinship corrects every one-unknown animal (ke
   expect_gt(res$indivMeanKin[["foc_uid"]], orchImk[["foc_uid"]])
   expect_gt(res$indivMeanKin[["foc_dam"]], orchImk[["foc_dam"]])
 })
+
+# ---------------------------------------------------------------------------
+# Issue #111 coverage backfill (S293): the two internal input guards that the
+# happy-path fixtures above never reach -- an UNNAMED indivMeanKin (early
+# return, L146) and a ped that carries NO `exit` column (exit defaulted to NA,
+# L151-152).
+# ---------------------------------------------------------------------------
+
+test_that("correctUnknownParentMeanKinship returns early on an unnamed imk", {
+  ## names(indivMeanKin) is NULL -> candidateIds NULL -> early return (L146),
+  ## the input vector is handed back untouched with an empty flagged list.
+  unnamedPed <- data.frame(
+    id = c("a", "b"),
+    sex = c("F", "M"),
+    birth = d(c("2010-01-01", "2005-01-01")),
+    sire = c(NA, NA),
+    dam = c("b", NA),
+    stringsAsFactors = FALSE
+  )
+  unnamedImk <- c(0.05, 0.10) # deliberately unnamed
+  res <- nprcgenekeepr:::correctUnknownParentMeanKinship(
+    unnamedImk, unnamedPed
+  )
+  expect_identical(res$indivMeanKin, unnamedImk)
+  expect_identical(res$flagged, character(0L))
+})
+
+test_that("correctUnknownParentMeanKinship defaults missing exit to NA", {
+  ## ped has id/sire/dam/sex/birth but NO exit column -> candPed$exit is NULL
+  ## and gets set to as.Date(NA) (L151-152); the correction then proceeds as
+  ## if every peer is still present in the colony.
+  noExitPed <- data.frame(
+    id = c("foc", "mp", "dk"),
+    sex = c("F", "M", "F"),
+    birth = d(c("2010-01-01", "2005-01-01", "2004-01-01")),
+    sire = c(NA, NA, NA),
+    dam = c("dk", NA, NA),
+    stringsAsFactors = FALSE
+  )
+  noExitImk <- c(foc = 0.05, mp = 0.40, dk = 0.50)
+  expect_false("exit" %in% names(noExitPed)) # fixture truly lacks exit
+  ## missing sire -> male cohort {mp}, sexMean .40 -> foc 0.05 + .20 = 0.25
+  res <- nprcgenekeepr:::correctUnknownParentMeanKinship(noExitImk, noExitPed)
+  expect_equal(res$indivMeanKin[["foc"]], 0.25)
+})

@@ -217,3 +217,32 @@ test_that("appServer loads species overrides and passes them to the GVA module",
   expect_match(src, "loadSpeciesOverrides", fixed = TRUE)
   expect_match(src, "speciesOverrides", fixed = TRUE)
 })
+
+# ---------------------------------------------------------------------------
+# Issue #111 coverage backfill (S293): the mergeSpeciesOverrides append branch
+# (is.na(pos) TRUE, L139-140) -- every existing test overrides "RHESUS", which
+# is already in the bundled table and so only exercises the merge/else branch.
+# ---------------------------------------------------------------------------
+
+test_that("mergeSpeciesOverrides appends a species absent from the bundled table", {
+  # Lines 139-140: the is.na(pos) TRUE branch. A user row for a species not in
+  # the bundled speciesGestation table (14 rows) is rbind-appended, not merged.
+  userTbl <- data.frame(
+    species = "GORILLA", gestation = 255L,
+    minMaleBreedingAge = 8.0, minFemaleBreedingAge = 7.0,
+    stringsAsFactors = FALSE
+  )
+  merged <- nprcgenekeepr:::mergeSpeciesOverrides(userTbl)
+  ## the novel row was appended (nrow grows by one)
+  expect_equal(nrow(merged), nrow(nprcgenekeepr::speciesGestation) + 1L)
+  expect_true("GORILLA" %in% merged$species)
+  ## every bundled species still present (append, not replace)
+  expect_true(all(
+    nprcgenekeepr::speciesGestation$species %in% merged$species
+  ))
+  ## the appended row carries the user-supplied values
+  new_row <- merged[merged$species == "GORILLA", , drop = FALSE]
+  expect_equal(new_row$gestation, 255L)
+  expect_equal(new_row$minMaleBreedingAge, 8.0)
+  expect_equal(new_row$minFemaleBreedingAge, 7.0)
+})
