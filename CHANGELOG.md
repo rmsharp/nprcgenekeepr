@@ -15,6 +15,73 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-05 — \#112 Slice S1 — genetic diversity heatmap renderer `makeGeneticDiversityHeatmap()` (strict TDD); dead dashboard scaffolding deleted (Session 280)
+
+- **Deliverable (S1 `[RATIFY]` points + 3 TDD phase-gates + a naming
+  reconsideration + a delete-confirmation, all via `AskUserQuestion`):**
+  implement Slice S1 of the issue \#112 plan — the tracer bullet: a new
+  **exported** `makeGeneticDiversityHeatmap(stats)` that turns a group ×
+  metric `colorIndex` data frame (column 1 = group label, remaining
+  columns = color indices 1/2/3) into a
+  [`ggplot2::geom_tile`](https://ggplot2.tidyverse.org/reference/geom_tile.html)
+  red/yellow/green stoplight heat map (metric headers across the top at
+  45°, group labels down the left, discrete `scale_fill_manual`
+  1=red/2=yellow/3=green). **NEW EXPORT → STRICT TDD
+  (RED→GREEN→REFACTOR, each gated); 0 stakeholder corrections / 0 owner
+  overrides.**
+- **Ratified (pre-RED):** name `makeGeneticDiversityHeatmap` — kept
+  after the owner re-raised “is `Dashboard` more descriptive since only
+  part is a heatmap?”; resolved that this function draws *only* the
+  heatmap and returns one `ggplot`, while the composite report/dashboard
+  is the future S4 module `modGeneticDiversity`, so the function name
+  stays literal. D1
+  [`ggplot2::geom_tile`](https://ggplot2.tidyverse.org/reference/geom_tile.html)
+  (no new dependency); D2 delete the dead code; D6 color-only cells for
+  S1 (the S1 input is a `colorIndex`-only matrix, so there are no raw
+  values to overlay yet — deferred to S3).
+- **RED:** new `tests/testthat/test_makeGeneticDiversityHeatmap.R` — 12
+  tests / 21 expectations: happy path, the `GeomTile` layer, tile count,
+  column-count-agnosticism (2×5 → 10 tiles), the discrete
+  1/2/3→red/yellow/green mapping (per-color tile counts + single-value
+  inputs), a discrete (not gradient) fill scale, metric/group axis
+  ordering, a 1×1 edge, and 3 error paths (no metric column /
+  `colorIndex` ∉ {1,2,3} incl. `NA` / non-data-frame). The ggplot2
+  introspection API was validated against the installed **ggplot2
+  4.0.3** (S7) *before* writing RED, so the assertions were provably
+  satisfiable in GREEN.
+- **GREEN:** `R/makeGeneticDiversityHeatmap.R` — validates input, builds
+  a long data frame (group/metric/colorIndex factors, input order
+  preserved), returns the `geom_tile` plot. NAMESPACE gained exactly one
+  export (+ ggplot2 `importFrom`s matching the `modSummaryStats` house
+  style).
+- **REFACTOR (D2 housekeeping, no behavior change):** deleted the dead,
+  fully-commented, build-ignored `R/makeGeneticDiversityDashboard.R` +
+  `tests/testthat/test_makeGeneticDiversityDashboard.R`, and removed
+  their now-stale references in **both** `.Rbuildignore` and `.lintr`
+  (the `.lintr` one found only by a broad grep). **A broad grep surfaced
+  a prior author “do not delete” decision (issue \#30, S53-56); both
+  premises are now void — deletion causes zero NAMESPACE change (proven
+  firsthand; the dead imports were already removed) and S1 IS the
+  replacement — so the owner re-confirmed the deletion with that context
+  (SAFEGUARDS: surface the contradiction before deleting).**
+- **Verify (firsthand):** single-file test 21/21; `lintr::lint()` 0 on
+  the new file (fixed 5 real `implicit_integer` lints — that linter *is*
+  enforced by `.lintr`’s tag set) and `lintr::lint_package()` **0**;
+  `spell_check_package` clean (roxygen reworded to American spelling —
+  no WORDLIST churn); full-suite clean read **0 fail / 0 error, no true
+  offenders**; **`R CMD check --as-cran` (repo root) GREEN — 0 err / 0
+  warn / 2 benign NOTEs** (archived-maintainer + HTML-Tidy) with
+  `code/documentation mismatches … OK`, examples ran,
+  `testthat.R [73s] OK`, vignettes rebuilt. **Phase-3E runtime smoke
+  DONE (plot deliverable):**
+  [`makeGeneticDiversityHeatmap()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticDiversityHeatmap.md)
+  renders a real ~8.5 KB PNG end-to-end (it draws, not just builds — FM
+  \#24). Direct-merged to `master` + pushed. `PROJECT_LEARNINGS.md`
+  Learning 259.
+- Issue \#112 stays OPEN (S1 of 4 slices done; S2 Inbreeding provider,
+  S3 assembler \[blocked on §6 Q1–Q3\], S4 module + wiring, + deferred
+  Flags remain).
+
 ### 2026-07-05 — \#112 Genetic Diversity Dashboard — design & implementation plan authored (planning session; no code) (Session 279)
 
 - **Deliverable (owner scope-gate via one `AskUserQuestion`):** the

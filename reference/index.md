@@ -250,6 +250,8 @@
   : Write copy of nprcgenekeepr::examplePedigree into a file
 - [`makeFounderStatsTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeFounderStatsTable.md)
   : Create Founder Statistics HTML Table
+- [`makeGeneticDiversityHeatmap()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticDiversityHeatmap.md)
+  : Make a genetic diversity heat map
 - [`makeGeneticSummaryTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticSummaryTable.md)
   : Create Genetic Summary Statistics HTML Table
 - [`makeGroupMembers()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGroupMembers.md)

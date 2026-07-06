@@ -7,6 +7,231 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 280 Did
+
+**Deliverable (S1 `[RATIFY]` points + 3 TDD phase-gates + a naming
+reconsideration + a delete-confirmation, all via `AskUserQuestion`):**
+issue \#112 **Slice S1** — the plan’s tracer bullet: a new **exported**
+`makeGeneticDiversityHeatmap(stats)` that turns a group × metric
+`colorIndex` data frame (col 1 = group label, remaining cols = color
+indices 1/2/3) into a
+[`ggplot2::geom_tile`](https://ggplot2.tidyverse.org/reference/geom_tile.html)
+red/yellow/green stoplight heat map (metric headers on top at 45°, group
+labels on the left, discrete `scale_fill_manual`
+1=red/2=yellow/3=green), plus the D2 dead-code deletion. **NEW EXPORT →
+STRICT TDD (RED→GREEN→REFACTOR, each gated); 0 stakeholder corrections /
+0 owner overrides.** **Started / Completed:** 2026-07-05 / 2026-07-05
+**Status:** **DONE + VERIFIED. Direct-merged to `master` + pushed (local
+== origin/master).** New `R/makeGeneticDiversityHeatmap.R` +
+`man/makeGeneticDiversityHeatmap.Rd` + one NAMESPACE export; new
+`tests/testthat/test_makeGeneticDiversityHeatmap.R` (12 tests / 21
+expectations); dead `makeGeneticDiversityDashboard.R`+test deleted with
+their `.Rbuildignore`/`.lintr` refs cleaned. Issue \#112 stays OPEN (S1
+of 4 slices done). - **Ratified (pre-RED, 4 owner gates):** name
+`makeGeneticDiversityHeatmap` (owner re-raised “is `Dashboard` more
+descriptive since only part is a heatmap?” → resolved: THIS function
+draws only the heatmap and returns one `ggplot`; the composite
+report/dashboard is the future S4 module `modGeneticDiversity` → the
+name stays literal, `Dashboard`/`Report` goes on the module); D1
+[`ggplot2::geom_tile`](https://ggplot2.tidyverse.org/reference/geom_tile.html)
+(no new dep); D2 delete dead code; D6 color-only cells (S1’s input is
+`colorIndex`-only, so no raw values to overlay yet — deferred to S3). -
+**RED → GREEN → REFACTOR (each `AskUserQuestion`-gated):** RED = 12
+tests covering happy path, `GeomTile` layer, tile count,
+column-count-agnosticism (2×5→10 tiles), 1/2/3→red/yellow/green discrete
+mapping (single-value inputs + per-color counts), discrete-not-gradient
+scale, axis ordering, 1×1 edge, + 3 error paths (no-metric /
+`colorIndex`∉{1,2,3} incl. `NA` / non-data-frame). GREEN = the validated
+builder (long-format factors, input order preserved). REFACTOR = D2
+deletion (no behavior change) + fixed 5 real `implicit_integer` lints +
+reworded roxygen to American spelling. - **D2 delete — surfaced +
+owner-re-confirmed a prior “do not delete”:** a broad `grep -rn` found
+an explicit prior author keep-decision (issue \#30, S53-56). Both
+premises now void: (a) feared namespace fallout DISPROVEN — the file’s
+dead `@import`s were already removed (Learning 231), so deleting it
+changed NAMESPACE by **0 lines** (verified firsthand via a `document()`
+diff); (b) it was kept as the sole scaffolding for the unbuilt feature —
+S1 IS the replacement. Owner re-confirmed deletion with that context
+(SAFEGUARDS: surface the contradiction before deleting). - **Verify
+(firsthand):** single-file 21/21; `lintr::lint()` **0** on the new
+file + `lintr::lint_package()` **0**; `spell_check_package` **clean**
+(no WORDLIST churn); full-suite clean read **0 fail / 0 error, no true
+offenders**; **`R CMD check --as-cran` (repo root) GREEN — 0/0/2**
+benign NOTEs (archived-maintainer + HTML-Tidy) with
+`code/documentation mismatches … OK`, examples ran,
+`testthat.R [73s] OK`, vignettes rebuilt. **Phase-3E DONE (plot
+deliverable):**
+[`makeGeneticDiversityHeatmap()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticDiversityHeatmap.md)
+renders a real ~8.5 KB PNG end-to-end (draws, not just builds — FM
+\#24).
+
+**Session 279 Handoff Evaluation (by Session 280): Score 9/10.** S279’s
+SUGGESTED NEXT **plus the plan itself** made S1 near-turnkey: the exact
+exported name (`makeGeneticDiversityHeatmap`), the input contract, the
+`ggplot2 geom_tile` approach, the D2 deletion, the “START HERE”
+tracer-bullet framing, AND (plan §7 Slice 1) concrete DONE criteria +
+verification commands + the discrete-scale-not-gradient risk note. The
+`[RATIFY]` points (D1/D2/D6/name) were pre-identified so I knew exactly
+what to gate before RED. **What helped:** every standing gotcha held
+EXACTLY — `--as-cran` from repo root, version 2.0.0, package ARCHIVED,
+`spell_check` hand-add, the benign 2-NOTE baseline reproduced
+identically; the git-status standing keeps (`.DS_Store`, `PED_GV_AUDIT`)
+were documented so I left them (FM \#22); ghost-check clean +
+pre-explained (HEAD `6303b3e6` == the documented S279 close-out); the
+Gotchas even flagged the “Genetic Diversity Report” naming, which fed
+the owner’s naming reconsideration. **What was missing (the −1):**
+neither the handoff nor the plan’s evidence inventory (§3.1) flagged the
+PRIOR author “do not delete” decision on
+`makeGeneticDiversityDashboard.R` (issue \#30, S53-56). The plan
+correctly nudged “verify committed history first” (recoverability) but
+not the *decision* history, so an executor following D2 could have
+reversed an author decision blind — I caught it only via a broad grep.
+Understandable (the decision lived in old notes/#30, not the file), but
+a deletion step ideally cross-references prior keep-decisions about the
+target. **What was wrong:** nothing; all standing facts verified true.
+**ROI:** very high — S1 execution was turnkey; the single gap cost one
+owner checkpoint, caught safely.
+
+**Self-assessment (Session 280): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean+explained), reported, STOPPED for the
+owner; wrote the 1B stub before technical work; ran strict TDD with the
+pre-RED ratification gate + all 3 phase-gates + a naming
+reconsideration + a delete-confirmation, each via `AskUserQuestion`,
+declaring the phase at the top of each response. **Strengths:** (1)
+ratified the `[RATIFY]` points before RED rather than assuming — and
+surfaced the D6 tension the plan hadn’t fully resolved (a
+`colorIndex`-only input can’t display raw numbers → color-only for S1);
+(2) validated the ggplot2 4.0.3/S7 introspection API firsthand BEFORE
+finalizing RED, so the assertions were provably satisfiable in GREEN (no
+wasted RED→GREEN cycle on version-fragile checks); (3) RED covered happy
+path + edges + all 3 non-happy paths (21 expectations); (4) **caught +
+surfaced the prior “do not delete” author decision pre-commit** and got
+informed re-confirmation instead of silently reversing it — after
+firsthand-proving the “namespace fallout” fear void (0-line NAMESPACE
+diff); (5) cleaned ALL stale references to the deleted file
+(`.Rbuildignore` AND the `.lintr` one that only a broad grep found); (6)
+classified the 5 `implicit_integer` lints as REAL (enforced by `.lintr`
+tags) and fixed them, vs. reworded roxygen to American spelling to avoid
+WORDLIST churn (\[\[avoid-reconcile-tools-on-curated-files\]\]); (7)
+runtime smoke = actually rendered the PNG (FM \#24); (8) engaged the
+owner’s naming reconsideration with a substantive function-vs-module
+analysis rather than defensiveness. **Weakness (the −1):** I ran the
+broad decision-history grep AFTER the `git rm`, not before it — so the
+prior “do not delete” surfaced during verification rather than gating
+the delete up front. No harm (recoverable, gated before commit), but the
+correct order is grep-the-whole-tree → gate → delete. Capped at 9.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 259** — a “delete
+dead code” step (even owner-ratified) needs a DECISION-history grep
+across the WHOLE tree (SESSION_NOTES/old plans/audits) BEFORE the
+`git rm`, not just a technical-state check (a provably-dead file can be
+under a standing author “do not delete”; surface + get informed
+re-confirmation, never silently reverse); clean ALL refs to a deleted
+file (`.Rbuildignore` AND `.lintr`); confirm a linter is
+`.lintr`-enforced before “fixing” its lints (`implicit_integer` IS, vs
+object_usage/object_name artifacts); pin ggplot-object test assertions
+to the installed version (4.0.3/S7) at pre-RED; a plot deliverable’s
+runtime smoke is RENDERING it (`ggsave`, FM \#24); name the renderer
+literally (`...Heatmap`) and put `Dashboard`/`Report` on the composite
+module. Carried as applied: \[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[avoid-reconcile-tools-on-curated-files\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[edit-files-in-reverse-line-order\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a NEW-EXPORT
+STRICT-TDD session — RED→GREEN→REFACTOR, each `AskUserQuestion`-gated.**
+
+**=\> SUGGESTED NEXT.** **Slice S1 is DONE** (exported
+`makeGeneticDiversityHeatmap` + tests; dead scaffolding deleted),
+direct-merged + pushed; **issue \#112 stays OPEN**. Remaining \#112
+slices (from
+`docs/planning/issue112-genetic-diversity-dashboard-plan.md` §7; S1/S2
+were the reorderable pair, so **S2 is the natural next**; S2 → S3 is a
+hard order): - **S2 — Inbreeding data provider (recommended next):** new
+internal `@noRd` `getKinshipWithMaleStatus(group, kmat, ...)`
+(name/signature `[RATIFY]`) → `list(fraction, color, colorIndex)`: among
+females ≥ 3 yr in the group, the fraction with kinship ≤ **0.015625** to
+≥ 1 male ≥ 5 yr; color per §2 (red \<0.6 / yellow 0.6–0.9 / green
+\>0.9). Consumes a per-group kinship matrix — reuse `modBreedingGroups`’
+`groupKinship` in-app, fall back to
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+outside it. **Decide NA/empty-denominator behavior deliberately — do NOT
+copy `getProductionStatus`’s NA→green trap.** Confirm the pedigree’s
+age/sex column names before RED. STRICT TDD (it’s new provider code). -
+**S3 — Per-group assembler `getGeneticDiversityStats(...)`: BLOCKED on
+owner answers to plan §6 Q1–Q3** (Production definition
+20190810-vs-20190916; housing type per group; genetic-value “Low” label
+source). Do NOT start until answered. Also applies the D7
+`getProductionStatus` doc fixes (two mismatches: rolling-vs-fixed prose;
+`@param minParentAge` “2 years” vs default `3L`). - **S4 — Shiny module
+`modGeneticDiversity` + tab + `shared$breedingGroups` one-line capture
+(`appServer.R:315`).** `[RATIFY]` D3 (tab name “Genetic
+Diversity”/“Genetic Diversity Report”) + D4. **Phase-3E runtime smoke
+MANDATORY** (runtime/registration change — FM \#24). - **Deferred: Flags
+column (S5)** — blocked on §6 Q4 (no genotype/phenotype data source). -
+**Other backlog:** \#111 code coverage; \#103 roxygen harmonization;
+\#37, \#36, \#28, \#12, \#11, \#10, \#5; the CRAN thread (Phase 5b,
+owner-run outward — package ARCHIVED, resubmission owner-gated + HARD
+STOP). **Standing gotchas (unchanged):** `--as-cran` from the REPO ROOT
+(renv; background ~3-4 min) + `lintr::lint()`/`lint_package()` +
+`spell_check_package` (hand-add wordlist, never `update_wordlist`) after
+ANY `R/`+`man/` edit; for behavior/NAMESPACE changes ALSO STRICT TDD +
+NAMESPACE diff + Phase-3E + a FULL-suite run for seeded-golden shifts;
+the local `--as-cran` does NOT run lintr (Learning 232) → run
+`lint_package()` too; NEWS/README GENERATED (edit `.Rmd`, render via
+`load_all`+[`rmarkdown::render`](https://pkgs.rstudio.com/rmarkdown/reference/render.html),
+remove stray `README.html` — Learning 255); version **2.0.0**; package
+**ARCHIVED on CRAN 2025-07-29**; `gh issue view`/`gh pr edit` exit 1 →
+`gh api`; re-check `git status` before ANY destructive git
+(\[\[check-status-before-destructive-git\]\]); **before any
+delete/rename, `grep -rn <target> .` across the WHOLE tree for prior
+keep-decisions BEFORE the `git rm`** (S280); landing owner-gated
+(direct-merge vs PR).
+
+**Key files (this session):** **Created + committed (S280, on `master`,
+pushed):** `R/makeGeneticDiversityHeatmap.R` (the exported renderer),
+`man/makeGeneticDiversityHeatmap.Rd` (generated),
+`tests/testthat/test_makeGeneticDiversityHeatmap.R` (12 tests / 21
+expectations), NAMESPACE (+1 export + ggplot2 `importFrom`s).
+**Deleted + committed:** `R/makeGeneticDiversityDashboard.R`,
+`tests/testthat/test_makeGeneticDiversityDashboard.R`. **Edited +
+committed:** `.Rbuildignore` (removed the stale line 21), `.lintr`
+(removed the stale line 17 whole-file exclusion). Process docs (same
+commit): `CHANGELOG.md` (S280 entry), `PROJECT_LEARNINGS.md` (Learning
+259), `SESSION_NOTES.md` (this handoff). Reference (read, not edited):
+`docs/planning/issue112-genetic-diversity-dashboard-plan.md`,
+`R/getProportionLow.R`, `R/modSummaryStats.R`,
+`docs/planning/issue30-lintr-exclusion-cleanup-plan.md` (the prior “do
+not delete”). **NOT committed (standing keep):** `.DS_Store`
+(tracked+modified), `PED_GV_AUDIT_2026-05-30.html` (untracked,
+`.Rbuildignore`d). **Scratchpad (NOT committed):** `s280_build.log`,
+`s280_check.log`.
+
+**Gotchas:** (1) **`makeGeneticDiversityHeatmap` is the RENDERER only**
+— it takes a ready-made `colorIndex` matrix and returns a `ggplot`; it
+does NOT compute metrics or know about groups/pedigrees. The data path
+(providers → assembler) is S2/S3; the app wiring is S4. Do not bolt data
+logic onto the renderer. (2) **The input contract is strict: col 1 =
+group label, remaining cols = `colorIndex` ∈ {1,2,3}; anything else
+(incl. `NA`) errors.** If S3 can produce NA/“insufficient data” states,
+decide there whether to map them to a defined index or extend the
+renderer (a deliberate S3/S4 decision, not a silent NA pass-through).
+(3) **`makeGeneticDiversityDashboard.R` is now DELETED** (owner
+re-confirmed over the old \#30 “do not delete”, both premises void) — do
+NOT “restore” it; the live renderer is `makeGeneticDiversityHeatmap`.
+(4) **Imports match house style** (`@importFrom ggplot2 ...` +
+fully-qualified `ggplot2::` calls, like `modSummaryStats`) — redundant
+but intentional; keep it. (5) **ggplot2 is 4.0.3 (S7)** — test
+assertions use
+`layer_data`/`p$data`/`p$scales$get_scales("fill")`/`GeomTile`, all
+verified on that version. (6) Carried standing keeps as in SUGGESTED
+NEXT.
+
 ### What Session 279 Did
 
 **Deliverable (owner scope-gate via one `AskUserQuestion`):** issue
