@@ -15,6 +15,53 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-06 — \#111 code-coverage campaign, slice 7 — `modPotentialParents` backfilled 94.67% → 100% via a mixed-branch `testServer` suite (Session 291)
+
+- **Deliverable (owner said “continue \#111” → `modPotentialParents`,
+  the lowest-coverage residual module at 94.67%):** add a headless
+  [`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html)
+  suite covering the residual eventReactive input guards, the
+  no-pedigree status branch, and the never-invoked download handler.
+  **Test-only (no production code changed); PRE-RED→RED gate via
+  `AskUserQuestion`; 0 stakeholder corrections.**
+- **Gap pinpointed by exact uncovered-line dump
+  ([`covr::zero_coverage`](http://covr.r-lib.org/reference/zero_coverage.md),
+  `NOT_CRAN=true`):** 9 uncovered lines, all in
+  `modPotentialParentsServer`, in three groups — (1) the
+  `potentialParents` eventReactive’s NULL-pedigree `return(NULL)`
+  (`R/modPotentialParents.R` L257) and NULL/NA gestation fallback to 210
+  (L261); (2) the `statusMessage` “No pedigree is loaded” warning branch
+  (L283-287); (3) the `downloadParents` filename + content handlers
+  (L321, L324). The existing `test_modPotentialParents.R` exhaustively
+  covers the four pure helpers and drives
+  `tableData()`/`gestationDefault()`, but its fixtures always pass a
+  valid pedigree + numeric gestation and never invoke the download, so
+  these branches never ran.
+- **New `tests/testthat/test_modPotentialParents_coverage.R`** (3
+  `testServer` tests / 10 expectations): (1) a NULL pedigree + Find
+  click → empty table (L257) AND the no-pedigree warning (L283-287) in
+  one state; (2) a rhesus pedigree with an NA gestation input → the
+  210-day fallback (L261) still yields the full candidate set
+  (incl. `BRI2MW`); (3) invoking `output$downloadParents` → a real
+  50-row CSV with the expected columns (L321, L324).
+- **Result:** `R/modPotentialParents.R` 94.67% → **100%** (zero
+  uncovered lines); overall coverage 99.41% → **99.53%**
+  (`NOT_CRAN=true`).
+- **Verified:** new file 3 tests / 10 expectations green, 0 warnings;
+  `covr` confirms 100% + overall 99.53%; full suite (`NOT_CRAN=true`,
+  package loaded) 0 failed / 0 error / 0 true offenders (7 baseline
+  warnings, none from this file); `lintr::lint()` on the new file = 0;
+  `R CMD check --as-cran` (repo root, WITH vignettes, via
+  `devtools::check`) Status: OK — 0 errors / 0 warnings / 0 notes (its
+  `spelling.Rout` comparison passed → spell clean). Phase-3E N/A
+  (test-only, no runtime surface).
+- **Campaign status:** \#111 stays OPEN. Slices done: S1 helper tier
+  (S285), S2 `modORIPReporting` (S286), S3 `appServer` (S287), S4
+  `modInput` (S288), S5 `modPyramid` (S289), S6 `modSummaryStats`
+  (S290), **S7 `modPotentialParents` (this session)**. Remaining:
+  `modGeneticValue` (96.26%, the new lowest and last residual module) +
+  small single-file residuals.
+
 ### 2026-07-06 — \#111 code-coverage campaign, slice 6 — `modSummaryStats` backfilled 94.34% → 100% via a scattered-branch `testServer` suite (Session 290)
 
 - **Deliverable (owner said “proceed with next candidate slice” →

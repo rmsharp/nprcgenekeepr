@@ -7,6 +7,234 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 291 Did
+
+**Deliverable (issue \#111 code-coverage campaign, slice 7 — one
+residual Shiny module; owner said “continue \#111” →
+`modPotentialParents`, the documented lowest-coverage residual at 94.67%
+per S290’s covr run):** test-backfill `R/modPotentialParents.R` toward
+100% via a headless
+[`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html)
+suite. **Test-only (no production code changed); PRE-RED→RED gate via
+`AskUserQuestion`; 0 stakeholder corrections.** **Started / Completed:**
+2026-07-06 / 2026-07-06 **Status:** **DONE + VERIFIED.** New
+`tests/testthat/test_modPotentialParents_coverage.R` (3 `testServer`
+tests / 10 expectations). **`R/modPotentialParents.R` 94.67% → 100%**
+(zero uncovered lines); **overall coverage 99.41% → 99.53%**
+(`NOT_CRAN=true`). **Landed: committed + pushed to `origin/master` as
+`2e67804c` (owner chose direct-commit; tagged `(S291)`; local ==
+origin).** - **Gap SHAPE (from an exact uncovered-line dump, not the
+%):**
+[`covr::zero_coverage()`](http://covr.r-lib.org/reference/zero_coverage.md)
+(`NOT_CRAN=true`) gave a precise 9-line MIXED gap, all in
+`modPotentialParentsServer`, in three groups: (1) the `potentialParents`
+eventReactive’s NULL-pedigree `return(NULL)` (L257) and the NULL/NA
+gestation fallback `maxGest <- 210L` (L261); (2) the `statusMessage`
+renderUI “No pedigree is loaded” warning branch (L283-287); (3) the
+`downloadParents` filename (L321) + content (L324) handlers. The
+existing `test_modPotentialParents.R` exhaustively covers the four pure
+helpers and drives `tableData()`/`gestationDefault()`, but its server
+fixtures always pass a VALID pedigree + a NUMERIC gestation and never
+invoke the download, so those branches never ran. The statusMessage’s
+OTHER branches (not-yet-clicked, no-fromCenter, 0-row) and
+`resultsTable` were already green via `testServer` flush (Learning
+268). - **3 tests** (all mechanisms de-risked by a throwaway
+`load_all`/`testServer` probe before writing): (1) NULL pedigree +
+`findParents` click → reading `tableData()` covers the eventReactive
+`return(NULL)` (L257) AND reading `output$statusMessage` covers the
+no-pedigree warning (L283-287) — one state, two groups; (2) rhesus
+`fromCenter=TRUE` pedigree + `maxGestationalPeriod = NA` + `findParents`
+→ the `is.na` fallback to 210L (L261) still yields the full candidate
+set (assert `nrow(td) > 0` and `"BRI2MW" %in% td$id`); (3)
+`path <- output$downloadParents` runs the filename (L321) + content
+(L324) handlers → a real 50-row CSV (assert columns
+`id,nSires,nDams,sires,dams` + `BRI2MW` present). - **Verify
+(firsthand):** new file **3 tests / 10 expectations green, 0 warnings**;
+`covr` (full suite, `NOT_CRAN=true`) confirms `modPotentialParents.R` =
+**100%** (zero uncovered) and overall **99.53%**; **full suite
+(`NOT_CRAN=true`, package loaded) 0 failed / 0 error, 0 true offenders**
+(7 baseline warnings — 2 `test_gvaConvergence_kinshipOverrides.R` + 5
+`test_modPyramid.R`, none from this file); `lintr::lint()` on the new
+file = **0**; **`R CMD check --as-cran` (repo root, WITH vignettes, via
+`devtools::check`) Status: OK — 0 errors / 0 warnings / 0 notes** (its
+`spelling.Rout` comparison passed → spell clean). **Phase-3E N/A** —
+test-only, no `R/` source or runtime change (FM \#24 has no target).
+
+**Session 290 Handoff Evaluation (by Session 291): Score 9/10.** S290’s
+SUGGESTED NEXT named `modPotentialParents (94.67% — the new lowest)` as
+the next module slice, with %s “from THIS session’s covr run — accurate,
+not stale”, the load-bearing instruction “dump the exact uncovered lines
+FIRST — the gap may be a single handler, scattered branches, OR a mix;
+the dump tells you which”, the “check whether existing ‘download’/‘test’
+files are [`deparse()`](https://rdrr.io/r/base/deparse.html) structural
+greps” caution, and the `flog.debug` + length-2 `as.character`
+watch-outs. **What helped:** (i) the 94.67% matched my first covr read
+to the decimal because the standing “measure with `NOT_CRAN=true`”
+gotcha was carried and applied from the first call — no phantom chase;
+(ii) the “dump exact uncovered lines first” instruction was exactly
+right — the gap was MIXED (2 eventReactive guards + a statusMessage
+branch + the download handler), and only the dump revealed the precise 9
+lines and their shape; (iii) the ghost breadcrumb (HEAD `9bc65af7` ==
+documented S290 docs close-out, whose test commit `0de8c384` was also
+documented) confirmed no ghost in seconds; (iv) every standing gotcha
+held EXACTLY — e2e SKIPS → `testServer`; the `path <- output$downloadX`
+download idiom transferred directly from S290’s modSummaryStats slice;
+the length-2 `as.character` renderUI quirk held for `statusMessage`;
+git-status standing kept `.DS_Store`/`PED_GV_AUDIT` untouched (FM \#22);
+`--as-cran` repo-root-with-vignettes 0/0/0 via `devtools::check`. **What
+was missing (the −1):** the residual list carried modPotentialParents’s
+% but framed the remaining slices generically; it couldn’t flag that
+this module’s gap includes eventReactive INTERNAL input guards (L257
+NULL-ped, L261 NA-maxGest) that the existing happy-path fixtures
+structurally cannot reach — the dump-first instruction corrected the
+framing in one step, so the miss is minor and understandable (S290 could
+not have known without doing this slice). **What was wrong:** nothing —
+modPotentialParents WAS 94.67% and the covr dump was authoritative.
+**ROI:** very high — near-turnkey slice scoping; the whole discovery was
+one covr dump + one probe.
+
+**Self-assessment (Session 291): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean+explained), reported, STOPPED for the
+owner; wrote the 1B stub before technical work; posed the PRE-RED→RED
+gate via `AskUserQuestion`, declaring the TDD phase at the top of each
+phase-response. **Strengths:** (1) **grounded the gap with an EXACT
+uncovered-line dump**
+([`covr::zero_coverage`](http://covr.r-lib.org/reference/zero_coverage.md),
+`NOT_CRAN=true`) and mapped all 9 lines to branches before posing the
+gate — targeted red lines, not the file %; (2) **recognized the MIXED
+shape** and read the existing test file to prove which branches were
+already green via `testServer` flush (statusMessage’s other branches +
+resultsTable) vs. which needed driving — scoping honestly to 3 tests;
+(3) **de-risked ALL three mechanisms with a throwaway probe BEFORE
+writing** (S285–S290 discipline) — the NULL-ped double-coverage (L257 +
+L283-287 in one state), the NA-maxGest fallback (L261), and the
+`path <- output$downloadParents` idiom (confirming the length-2
+`as.character` quirk and the 50-row CSV) — zero authoring surprises; (4)
+**asserted meaningful content** (the “No pedigree is loaded” warning
+text; the full candidate set incl. `BRI2MW`; the CSV columns + `BRI2MW`
+present), not merely `file.exists`; (5) ran the full battery firsthand
+(covr 100% + overall 99.53%, full suite 0/0/0, lint 0, `--as-cran`
+0/0/0). **Weakness (the −1):** my first `zero_coverage` dump selected
+the wrong columns (`first_line`/`last_line`/`functions`/`value` — but
+`zero_coverage` returns `filename/functions/line/value`), erroring
+“undefined columns selected”; I re-ran a 1-second re-dump from the saved
+rds to get the actual file line numbers (Learning 270g). Caught
+immediately, no re-run of the expensive coverage, no correctness impact;
+capped at 9.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 270** — a
+residual module MIXED gap can be as small as 9 lines and include
+eventReactive INTERNAL input-guard branches the happy-path fixtures
+structurally cannot reach; one NULL-input state can cover two uncovered
+groups at once (the eventReactive `return(NULL)` and the renderUI
+no-pedigree guard both guard the same state); the other renderUI
+branches + the DT table were already green via `testServer` flush
+(Learning 268), leaving only the never-reached warning branch + the
+never-invoked download handler + the two input guards; the NA-gestation
+fallback needs a valid ped to pass the NULL-ped guard, and
+`observeEvent(pedigree())` has `ignoreNULL=TRUE` so a NULL pedigree
+never fires the prefill;
+[`covr::zero_coverage()`](http://covr.r-lib.org/reference/zero_coverage.md)
+returns `filename/functions/line/value` (select `line`, not
+`first_line`/`last_line`). Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a TEST-BACKFILL
+coverage session (slice 7 of \#111) — PRE-RED→RED gated; test-only; no
+bug found (code correct); Phase-3E N/A.**
+
+**=\> SUGGESTED NEXT.** **Issue \#111 stays OPEN — it is a multi-session
+campaign.** Slices done: **S1** helper tier (S285), **S2**
+`modORIPReporting` (S286), **S3** `appServer` (S287), **S4** `modInput`
+(S288), **S5** `modPyramid` (S289), **S6** `modSummaryStats` (S290),
+**S7** `modPotentialParents` (this session, 94.67% → 100%). Overall now
+**99.53%** (`NOT_CRAN=true`). Remaining GENUINE gaps (each a candidate
+future slice / fresh session; %s from THIS session’s covr run
+`cov291_after.rds` — accurate, not stale): - **Residual Shiny module
+(the LAST one):** `modGeneticValue` (96.26% — the new lowest and the
+last residual Shiny module). One module = one clean slice. **Model the
+slice on this one:** dump the exact uncovered lines FIRST; the gap may
+be a single handler, scattered branches, OR a mix; **check whether
+existing tests reach the INTERNAL input guards** (happy-path fixtures
+often miss NULL/NA guards — the key S291 finding); watch the
+`flog.debug` lazy-message trap (Learning 267e) and the length-2
+`as.character` renderUI quirk. - **Small single-file residuals** to push
+overall higher: `checkKinshipOverrides` (96.43%), `loadSpeciesOverrides`
+(96.72%), `dataframe2string` (96.88%), `getPotentialParents` (96.88%),
+`correctUnknownParentMeanKinship` (97.30%), `modPedigree` (97.72%),
+`orderReport` (97.73%), `getPyramidPlot` (98.36%), `modBreedingGroups`
+(98.56%). - **Also open:** **\#117** (the `fixColumnNames`
+overreach-cleanup bug — a genuine correctness fix, strict TDD: RED test
+asserting `first_name`/`second_name` restored, then fix line 32/35 to
+write `newCols`; **when fixed, update `test_fixColumnNames.R`’s
+characterization assertions**). **\#116** Flags column (still BLOCKED —
+no genotype/phenotype data source); **\#103** roxygen; **\#37, \#36,
+\#28, \#12, \#11, \#10, \#5**; the CRAN thread (Phase 5b, owner-run
+outward — package ARCHIVED 2025-07-29, resubmission owner-gated + HARD
+STOP). **Standing gotchas (unchanged + two refinements):** **measure
+coverage with `NOT_CRAN=true`** (default undercounts ~8 pts — module
+`testServer` suites do NOT skip); dump exact uncovered lines with
+[`covr::zero_coverage()`](http://covr.r-lib.org/reference/zero_coverage.md)
+(**NEW — columns are `filename/functions/line/value`; select `line`, not
+`first_line`/`last_line`**) and target them; **NEW — happy-path
+`testServer` fixtures often miss a module’s INTERNAL input guards
+(NULL/NA); drive those inputs explicitly (Learning 270b)**; the
+**`flog.debug` lazy-message trap** (raise `flog.threshold(DEBUG)`); for
+ANY package-code change — `--as-cran` from the REPO ROOT (renv;
+background ~3-4 min; **build WITH vignettes**;
+**`devtools::check(args="--as-cran")` returns 0/0/0 here,
+`--no-build-vignettes` yields 2 misleading vignette WARNINGs**; **beware
+zsh `rm <glob>` “no matches found”**) + `lintr::lint()`/`lint_package()`
+(`.lintr` EXCLUDES `tests/`, `inst/extdata`, `vignettes`,
+`inst/application` — but a direct `lint()` on an explicit tests/ path
+STILL checks, so keep test lines ≤80) + `spell_check_package` (hand-add
+wordlist, never `update_wordlist`) after ANY `R/`+`man/` edit;
+behavior/NAMESPACE changes ALSO need STRICT TDD + NAMESPACE diff +
+Phase-3E + FULL-suite (`NOT_CRAN=true`); the local `--as-cran` does NOT
+run lintr (Learning 232); NEWS/README GENERATED (edit `.Rmd`); version
+**2.0.0**; package **ARCHIVED on CRAN 2025-07-29**; **e2e/shinytest2
+SKIPS here (no chromote) → `shiny::testServer(<server fn>, {...})` for
+module runtime changes AND as a coverage vehicle; inner
+helpers/`reactiveVal`s reachable by name; `path <- output$downloadX`
+runs BOTH content + filename fns**; `gh issue view`/`gh pr edit` exit 1
+→ `gh api` (but `gh issue create`/`comment`/`close` work); re-check
+`git status` before ANY destructive git
+(\[\[check-status-before-destructive-git\]\]); before any delete/rename,
+`grep -rn <target> .` across the WHOLE tree BEFORE the `git rm`
+(Learning 259); landing owner-gated (direct-commit vs PR).
+
+**Key files (this session):** **New test file:**
+`tests/testthat/test_modPotentialParents_coverage.R` (3 `testServer`
+tests + `ppFromCenterPed` helper). **Edited:** `CHANGELOG.md` (S291
+entry under \[Unreleased\]), `PROJECT_LEARNINGS.md` (Learning 270),
+`SESSION_NOTES.md` (this handoff + the 1B stub it replaced). **Read (not
+edited):** `R/modPotentialParents.R` (module under test),
+`tests/testthat/test_modPotentialParents.R` (existing coverage — proved
+the happy-path fixtures miss the internal guards). **NOT committed
+(standing keep — FM \#22):** `.DS_Store` (tracked+modified),
+`PED_GV_AUDIT_2026-05-30.html` (untracked, `.Rbuildignore`d).
+**Scratchpad (NOT committed):** `cov291.R`/`.log`/`.rds`, `zc291.R`,
+`probe_mpp.R`, `cov291_after.R`/`.log`/`.rds`, `fullsuite291.R`/`.log`,
+`check291.R`/`.log`.
+
+**Gotchas:** (1) **Test-only slice** — no `R/` source added/modified, no
+`NAMESPACE`/`DESCRIPTION` change; lint is non-regressing and Phase-3E is
+N/A (no runtime surface; FM \#24 has no target). (2) **`--as-cran` here
+returned 0/0/0 (Status: OK)** via `devtools::check`; its `spelling.Rout`
+comparison passed (spell clean). (3) **The gap was MIXED-shape and SMALL
+(9 lines)** — do NOT assume a module’s residual % means many scattered
+branches; dump the uncovered lines first (Learning 270a). (4)
+**`modGeneticValue` (96.26%) is the LAST residual module** — after it,
+only small single-file residuals remain. (5) **\#111 is a campaign,
+still OPEN.** (6) **Landed as `2e67804c` on `master`, pushed** (owner
+chose direct-commit; local == origin).
+
 ### What Session 290 Did
 
 **Deliverable (issue \#111 code-coverage campaign, slice 6 — one
