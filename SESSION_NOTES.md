@@ -7,6 +7,279 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 283 Did
+
+**Deliverable (3 pre-RED scope decisions + 3 TDD phase-gates, all via
+`AskUserQuestion`; preceded by a read-only ultracode evidence
+Workflow):** issue \#112 **Slice S4** (the LAST implementation slice) —
+new Shiny module `R/modGeneticDiversity.R`
+(`modGeneticDiversityUI`/`modGeneticDiversityServer`, both `@export`ed)
+that assembles the live breeding-group / genetic-value / kinship
+reactives into the S3
+[`getGeneticDiversityStats()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGeneticDiversityStats.md)
+statistics and renders the S1
+[`makeGeneticDiversityHeatmap()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticDiversityHeatmap.md);
+a new **“Genetic Diversity”** tab in `appUI.R` + `appServer.R`; and
+capture of `modBreedingGroupsServer`’s previously-discarded return into
+`shared$breedingGroups`. **NEW MODULE + RUNTIME/REGISTRATION CHANGE →
+STRICT TDD (RED→GREEN→REFACTOR, each gated) + MANDATORY Phase-3E; 0
+stakeholder corrections / 0 owner overrides.** **Started / Completed:**
+2026-07-05 / 2026-07-06 **Status:** **DONE + VERIFIED. Direct-merged to
+`master` + pushed (local == origin/master).** New
+`R/modGeneticDiversity.R` (UI+Server) +
+`man/modGeneticDiversityServer.Rd` + `man/modGeneticDiversityUI.Rd` +
+**2 NAMESPACE exports**; new `tests/testthat/test_modGeneticDiversity.R`
+(15 tests / 34 expectations); `R/appServer.R` (+`shared$breedingGroups`,
+`bgResults` capture + observe, module mount) + `R/appUI.R` (+tabPanel);
+18 sibling `man/mod*.Rd` regenerated (`@family` cross-reference only).
+**Issue \#112: S1+S2+S3+S4 done — the genetic diversity dashboard is now
+LIVE in the app; only the deferred Flags column S5 (blocked on §6 Q4, no
+genotype/phenotype data source) remains.** - **Pre-RED evidence
+(read-only Workflow, TDD-safe — 6 investigators + adversarial verify; 0
+empty investigators; every load-bearing wiring claim CONFIRMED):** (i)
+every existing module exports BOTH UI and Server → S4 adds exactly 2
+exports; (ii) exact module/tab/test idioms
+(`div(id=ns("moduleContainer"), data-ready/data-module)`;
+`shiny::testServer(ServerFn, args=list(...reactive...), {...})` +
+`session$getReturned()`; plots asserted via the returned reactive + a
+`GeomTile` check, NEVER by reading a `renderPlot` output); (iii)
+reactive contracts — `bgResults$groups()` is a **list of char ID
+vectors** (matches the assembler’s `groups`); the FULL kinship matrix is
+`gvResults$kinshipMatrix` (`fullResults()$kinship`, dimnames=ids),
+**NOT** the usually-NULL `groupKinship`, and **NOT in `shared`** (pass
+the reactive directly); the GV report frame (id+value) IS
+`shared$geneticValues`; (iv) `appServer.R:315` DISCARDS the
+breeding-group return (bare call); (v) a new tab breaks no test (e2e
+“all tabs” test is presence-only `grepl`; switch-lists are subset walks;
+`navigate_to_tab` takes any label). - **Owner scope decisions (pre-RED,
+`AskUserQuestion`):** (1) tab title **“Genetic Diversity”**; (2)
+**single housing selector for all groups** (scalar `selectInput`,
+assembler recycles; per-group deferred); (3) **no Home-page card in S4**
+(Home row is a full 3×4 grid; card optional per D3; several tabs already
+have none). Folded in (author discretion, for test determinism): server
+takes plain `currentDate = Sys.Date()` forwarded to the assembler
+(Production’s window is relative to “now”). - **RED → GREEN → REFACTOR
+(each `AskUserQuestion`-gated):** RED = 15 tests reusing the S3
+deterministic fixture (`currentDate=2020-07-01`): UI
+shiny.tag/heading/namespaced ids/container attrs/housing values; server
+returns reactive `stats`+`heatmap`; happy path → colorIndex frame +
+`ggplot` w/ `GeomTile`; unset housing defaults `shelter_pens`; housing
+threads (shelter red vs corral yellow on a boundary group); 4
+degradation paths (no groups / empty list / analysis not run / kinship
+not ready → NULL stats + guidance; guidance hidden when data present).
+All 15 failed against the missing module (correct RED). GREEN =
+`R/modGeneticDiversity.R` (defensive `tryCatch`→NULL reads so it
+degrades to guidance; housing default; returns `list(stats, heatmap)`) +
+the app wiring; `document()` → NAMESPACE +2. REFACTOR = 2 enforced lints
+on the new file (`nonportable_path_linter` from the `"/"` in a housing
+label; `keyword_quote_linter` on `"Corral"`) + reworded
+“reactives”→“reactive inputs” for spell. - **A latent RED-test defect**
+(server blocks read `result` before `session$getReturned()` bound it)
+was MASKED by the missing-function error in RED and surfaced at GREEN;
+fixed by adding the bind line to each block — no assertion changed (the
+RED→GREEN loop working). - **Verify (firsthand):** single-file **15/15
+(34 expectations)**; `lintr::lint()` **0** on all 3 changed `R/` files;
+`spell_check_package` **clean**; NAMESPACE diff = **+2 exports** only;
+full-suite clean read **1170 tests, 0 fail / 0 error, no true
+offenders**; **`R CMD check --as-cran` (repo root) GREEN — 0/0/2 benign
+NOTEs** (archived “New submission” + HTML-Tidy) with
+`testthat.R [85s] OK`. **Phase-3E DONE (MANDATORY — FM \#24):**
+[`appUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)
+renders the tab (title + container + heatmap + housing all present);
+`shinyApp(appUI(), appServer)` constructs; the **entire `appServer` body
+ran at session init via
+[`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html)** —
+every module mounted (incl. `modGeneticDiversityServer` + `bgResults`
+capture + `shared$breedingGroups` observe) with no error, the shared
+field present, and `geneticDiversity-guidance` rendering the “Form
+breeding groups…” message at startup (graceful degradation, live). The
+shinytest2 e2e suite **SKIPS** here (no chromote) → the full-app
+`testServer` is the headless substitute.
+
+**Session 282 Handoff Evaluation (by Session 283): Score 9/10.** S282’s
+SUGGESTED NEXT scoped S4 near-turnkey: it named the module/tab/capture
+precisely, enumerated the wiring — (a) capture `bgResults` at
+`appServer.R:315`, (b) assemble inputs from `groups`/qc’d `ped`/GV
+report frame/**FULL kinship matrix (NOT the usually-NULL
+`groupKinship`)**, (c) housing UI input, (d) degrade gracefully —
+flagged Phase-3E MANDATORY (FM \#24), and carried the 8 S3 assembler
+gotchas (pure assembler; Origin=`ancestry` not `origin`; undefined→red;
+housing caller-supplied; age from `birth`+`currentDate`; full `kmat`).
+**What helped:** the “FULL kinship matrix NOT `groupKinship`” warning
+was the single most load-bearing wiring fact and it was correct and
+prominent; “capture at `:315`” pinned the exact site; the
+assembler-contract gotchas meant I knew exactly what to feed the module
+before writing a line. Every standing gotcha held EXACTLY (`--as-cran`
+from repo root, version 2.0.0, package ARCHIVED, `spell_check` hand-add,
+the 0/0/2 benign-NOTE baseline reproduced identically, the git-status
+keeps `.DS_Store`/`PED_GV_AUDIT` documented so I left them, FM \#22).
+Ghost-check clean + pre-explained (HEAD `cb7eb1a6` == the documented
+S282 close-out). **What was missing (the −1):** the handoff called the
+capture “a one-line assignment” — it is actually a field addition +
+`bgResults <-` + an `observe`; and it named `modGeneticValue`’s
+`kinshipMatrix` but did not flag that it is NOT stored in `shared` (must
+be passed as the reactive directly) or that the module needs a
+`currentDate` arg for deterministic tests — all three surfaced in this
+session’s evidence pass. Minor and arguably beyond S282’s scope. **What
+was wrong:** nothing; all standing facts verified true. **ROI:** very
+high — S4 execution was near-turnkey; the evidence Workflow filled the
+remaining reactive-contract and test-idiom detail.
+
+**Self-assessment (Session 283): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean+explained), reported, STOPPED for the
+owner; wrote the 1B stub before technical work; ran strict TDD with a
+read-only pre-RED evidence Workflow + 3 scope decisions + all 3
+phase-gates, each via `AskUserQuestion`, declaring the phase at the top
+of every response. **Strengths:** (1) a read-only pre-RED Workflow
+mapped the reactive contracts + module/test idioms firsthand and its
+adversarial pass CONFIRMED the load-bearing “FULL matrix not
+`groupKinship`, and it’s not in `shared`” fact before it reached the
+wiring; (2) engaged the owner’s clarification request on the Home-card
+trade-off with a concrete grid-layout analysis grounded in the actual
+`appUI.R` rather than re-posing blindly; (3) chose a defensive-read
+(`tryCatch`→NULL) degradation design so the tab shows guidance instead
+of a blank/erroring pane before groups/analysis exist, and made it
+deterministically testable via a `currentDate` arg + the reused S3
+fixture; (4) when the e2e suite SKIPPED in the sandbox, did NOT record
+“unverified” — ran the entire `appServer` body headlessly via
+`testServer(shinyApp(...))` as a real Phase-3E (FM \#24), confirming
+every module mounts and the guidance renders live; (5) kept the diff on
+the module + wiring (deferred the Home card) per SAFEGUARDS; (6)
+verified firsthand across the whole battery (NAMESPACE +2 proven, lint
+0, spell clean, full suite 1170 clean, `--as-cran` 0/0/2). **Weaknesses
+(the −1):** (i) the RED server blocks referenced `result` before binding
+it via `session$getReturned()` — masked by the missing-function error,
+caught only at GREEN (no harm, fixed without assertion change, but a
+closer read of the sibling `testServer` idiom at RED would have avoided
+it); (ii) the first background `--as-cran` invocation aborted on a zsh
+`rm` glob (`no matches found`) and had to be re-run (cost ~1 wasted
+build, no correctness impact). Correct + disciplined; capped at 9.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 262** — for a
+“wire an existing helper into the running app” slice, the load-bearing
+pre-RED work is mapping the REACTIVE CONTRACTS firsthand (which reactive
+carries the FULL kinship matrix vs the usually-NULL `groupKinship`; that
+it’s not in `shared`; that `groups` is a list of ID vectors; that `:315`
+discards the return); when the shinytest2 e2e suite SKIPS (no chromote),
+Phase-3E is a headless
+`shiny::testServer(shinyApp(appUI(), appServer), {...})` that runs the
+ENTIRE `appServer` body and reads namespaced module outputs — a real FM
+\#24 exercise, not “unverified”; a module consuming `req()`-gated
+upstream reactives must read them defensively (`tryCatch`→NULL) so it
+degrades to guidance rather than blanking; assert plots via the returned
+reactive + a `GeomTile` check, never by reading a `renderPlot` output; a
+date-relative module needs a `currentDate` arg for deterministic tests;
+a latent RED-test defect can be masked by the missing-function error and
+surface at GREEN (loop working); adding a `@family` member regenerates
+every sibling `.Rd` cross-reference (expected, not noise). Carried as
+applied: \[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[edit-files-in-reverse-line-order\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a NEW-MODULE +
+RUNTIME-WIRING STRICT-TDD session — RED→GREEN→REFACTOR, each gated;
+preceded by a read-only ultracode evidence Workflow at pre-RED; Phase-3E
+via headless full-app `testServer`.**
+
+**=\> SUGGESTED NEXT.** **Slice S4 is DONE — the genetic diversity
+dashboard is now live in the app** (module `modGeneticDiversity` +
+“Genetic Diversity” tab + `shared$breedingGroups` capture),
+direct-merged + pushed. **All 4 implementation slices of \#112 are
+complete (S1 renderer, S2 inbreeding provider, S3 assembler, S4
+module+wiring).** What remains on \#112: - **S5 — Flags column
+(DEFERRED, blocked on §6 Q4):** no genotype/phenotype “flagged animal”
+data source exists in the package (data model, LabKey field, or upload).
+When one is identified: a `getGenotypeFlagStatus` provider (red ≥3 /
+yellow 1–2 / green 0) added to `getGeneticDiversityStats` + as a 5th
+heat-map column. Not scheduled. **This is the only thing keeping \#112
+open** — consider whether to close \#112 (dashboard shipped) and open a
+separate issue for the Flags column, OR leave \#112 open pending the
+data source. Owner call. - **Optional S4 follow-ups (small, deferred
+this session):** a Home-page “Genetic Diversity” card +
+`goto_geneticDiversity` handler (needs a new fluidRow — the Home row is
+full 3×4); a per-group housing control (the assembler already accepts a
+per-group housing vector) if colonies mix shelter/corral within one
+dashboard view. - **Other backlog:** \#111 code coverage; \#103 roxygen
+harmonization; \#37, \#36, \#28, \#12, \#11, \#10, \#5; the CRAN thread
+(Phase 5b, owner-run outward — package ARCHIVED, resubmission
+owner-gated + HARD STOP). **Standing gotchas (unchanged):** `--as-cran`
+from the REPO ROOT (renv; background ~3-4 min; **beware zsh `rm <glob>`
+aborting with “no matches found” — don’t pre-`rm` a glob that may not
+exist**) + `lintr::lint()`/`lint_package()` + `spell_check_package`
+(hand-add wordlist, never `update_wordlist`) after ANY `R/`+`man/` edit;
+for behavior/NAMESPACE changes ALSO STRICT TDD + NAMESPACE diff +
+Phase-3E + a FULL-suite run for seeded-golden shifts; the local
+`--as-cran` does NOT run lintr (Learning 232) → run `lint_package()`
+too; NEWS/README GENERATED (edit `.Rmd`, render via
+`load_all`+[`rmarkdown::render`](https://pkgs.rstudio.com/rmarkdown/reference/render.html),
+remove stray `README.html` — Learning 255); version **2.0.0**; package
+**ARCHIVED on CRAN 2025-07-29**; **the shinytest2 e2e suite SKIPS in
+this sandbox (no chromote) → for app runtime changes use
+`shiny::testServer(shinyApp(appUI(), appServer), {...})` as headless
+Phase-3E**; `gh issue view`/`gh pr edit` exit 1 → `gh api`; re-check
+`git status` before ANY destructive git
+(\[\[check-status-before-destructive-git\]\]); before any delete/rename,
+`grep -rn <target> .` across the WHOLE tree for prior keep-decisions
+BEFORE the `git rm` (Learning 259); landing owner-gated (direct-merge vs
+PR).
+
+**Key files (this session):** **Created + committed (S283, on `master`,
+pushed):** `R/modGeneticDiversity.R` (module UI+Server),
+`man/modGeneticDiversityServer.Rd` + `man/modGeneticDiversityUI.Rd`
+(generated), `tests/testthat/test_modGeneticDiversity.R` (15 tests / 34
+expectations). **Edited + committed:** `NAMESPACE` (+2 exports),
+`R/appServer.R` (`shared$breedingGroups=NULL`;
+`bgResults <- modBreedingGroupsServer(...)` + `observe` storing
+`bgResults$groups()`;
+`modGeneticDiversityServer("geneticDiversity", ...)` mount), `R/appUI.R`
+(`tabPanel("Genetic Diversity", icon("th"), modGeneticDiversityUI("geneticDiversity"))`
+after Breeding Groups), 18 sibling `man/mod*.Rd` (`@family`
+cross-reference only). Process docs (same commit): `CHANGELOG.md` (S283
+entry), `PROJECT_LEARNINGS.md` (Learning 262), `SESSION_NOTES.md` (this
+handoff). Reference (read, not edited):
+`docs/planning/issue112-genetic-diversity-dashboard-plan.md`,
+`R/getGeneticDiversityStats.R`, `R/makeGeneticDiversityHeatmap.R`,
+`R/modPyramid.R` (module template), `R/modSummaryStats.R` (module+test
+idiom), `R/modBreedingGroups.R`/`R/modGeneticValue.R` (reactive
+contracts), `tests/testthat/test_getGeneticDiversityStats.R` (fixture),
+`tests/testthat/test_modSummaryStats.R` (testServer idiom). **NOT
+committed (standing keep):** `.DS_Store` (tracked+modified),
+`PED_GV_AUDIT_2026-05-30.html` (untracked, `.Rbuildignore`d).
+**Scratchpad (NOT committed):** `s283_build.log`, `s283_check.log`, the
+evidence Workflow output; `nprcgenekeepr_*.tar.gz` +
+`nprcgenekeepr.Rcheck/` are `.gitignore`d.
+
+**Gotchas:** (1) **The dashboard is now LIVE** — the “Genetic Diversity”
+tab renders the heat map from the formed breeding groups + the genetic
+value analysis. It shows guidance (“Form breeding groups and run the
+genetic value analysis…”) until BOTH the GV Run Analysis has executed
+AND breeding groups have been formed; only then does the heat map
+appear. (2) **`kinshipMatrix` is passed as `gvResults$kinshipMatrix`
+directly, NOT from `shared`** — the full kinship matrix is the ONLY
+assembler input not stored in `shared` (the module reads it from the GV
+module’s return). Do not “simplify” it to a `shared$` field without
+adding the capture. (3) **`groups` flows `bgResults$groups()` →
+`observe` → `shared$breedingGroups` →
+`reactive(shared$breedingGroups)`** into the module; it stays NULL until
+“Form Groups” is pressed (the `eventReactive` short-circuits), which is
+what drives the guidance state. (4) **Origin metric is omitted in the
+live app** — the qc’d pedigree carries `origin` (import facility), not
+`ancestry`, so the assembler drops the Origin column and the heat map
+shows 3 columns (Value/Production/Inbreeding); the renderer is
+column-agnostic so this is correct, not a bug (see S282 gotcha \#2/#3).
+(5) **The module server takes `currentDate = Sys.Date()`** (default) —
+the app uses today’s date; only the tests pin it. (6) **Housing is a
+single scalar selector** applied to all groups (per-group deferred). (7)
+**e2e tests SKIP here (no chromote)** — Phase-3E was done via full-app
+`testServer`; if you have chromote elsewhere, the e2e suite would
+exercise the tab in a real browser. (8) Carried standing keeps as in
+SUGGESTED NEXT.
+
 ### What Session 282 Did
 
 **Deliverable (a read-only ultracode evidence Workflow + 3 pre-RED owner

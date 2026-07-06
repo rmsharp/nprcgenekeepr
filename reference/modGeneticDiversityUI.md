@@ -1,13 +1,11 @@
-# Genetic Value and Breeding Group Description Module - Server Function
+# Genetic Diversity Module - UI Function
 
-Server logic for genetic value and breeding group description module.
-This module is primarily informational and does not require reactive
-logic.
+Genetic Diversity Module - UI Function
 
 ## Usage
 
 ``` r
-modGvAndBgDescServer(id)
+modGeneticDiversityUI(id)
 ```
 
 ## Arguments
@@ -18,20 +16,20 @@ modGvAndBgDescServer(id)
 
 ## Value
 
-NULL (no reactive outputs).
+A `div` containing the genetic diversity heat-map UI: a housing-type
+selector, a guidance area, and the heat-map plot.
 
 ## See also
 
-[`modGvAndBgDescUI`](https://github.com/rmsharp/nprcgenekeepr/reference/modGvAndBgDescUI.md)
-for the user interface.
+[`modGeneticDiversityServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modGeneticDiversityServer.md)
 
 Other Shiny modules:
 [`modBreedingGroupsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsServer.md),
 [`modBreedingGroupsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsUI.md),
 [`modGeneticDiversityServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modGeneticDiversityServer.md),
-[`modGeneticDiversityUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modGeneticDiversityUI.md),
 [`modGeneticValueServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modGeneticValueServer.md),
 [`modGeneticValueUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modGeneticValueUI.md),
+[`modGvAndBgDescServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modGvAndBgDescServer.md),
 [`modGvAndBgDescUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modGvAndBgDescUI.md),
 [`modInputServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modInputServer.md),
 [`modInputUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modInputUI.md),

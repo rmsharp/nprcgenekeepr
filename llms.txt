@@ -481,6 +481,10 @@ groups and restricts the number of males to one per group.
   : Breeding Groups Module - Server Function
 - [`modBreedingGroupsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsUI.md)
   : Breeding Groups Module - UI Function
+- [`modGeneticDiversityServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modGeneticDiversityServer.md)
+  : Genetic Diversity Module - Server Function
+- [`modGeneticDiversityUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modGeneticDiversityUI.md)
+  : Genetic Diversity Module - UI Function
 - [`modGeneticValueServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modGeneticValueServer.md)
   : Genetic Value Analysis Module - Server Function
 - [`modGeneticValueUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modGeneticValueUI.md)
