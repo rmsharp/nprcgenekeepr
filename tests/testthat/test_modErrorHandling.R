@@ -64,6 +64,82 @@ test_that("safeExecute captures error message", {
 })
 
 # =============================================================================
+# Issue #111 coverage backfill: logModuleEvent level/format/output branches
+# =============================================================================
+
+test_that("logModuleEvent falls back to INFO for an unrecognized level", {
+  ## An unknown level is coerced to "INFO"; with verbose on, the default
+  ## switch branch prints the [INFO]-tagged line.
+  withr::local_options(list(nprcgenekeepr.verbose = TRUE))
+  expect_output(
+    logModuleEvent("mod", "hello", level = "BOGUS"),
+    "\\[INFO\\].*hello"
+  )
+})
+
+test_that("logModuleEvent applies sprintf-style formatting with extra args", {
+  withr::local_options(list(nprcgenekeepr.verbose = TRUE))
+  expect_output(
+    logModuleEvent("mod", "Processing %d animals", level = "INFO", 100L),
+    "Processing 100 animals"
+  )
+})
+
+test_that("logModuleEvent prints DEBUG output only when debug is enabled", {
+  withr::local_options(list(nprcgenekeepr.debug = TRUE))
+  expect_output(logModuleEvent("mod", "dbg msg", level = "DEBUG"), "dbg msg")
+})
+
+test_that("logModuleEvent prints INFO output only when verbose is enabled", {
+  withr::local_options(list(nprcgenekeepr.verbose = TRUE))
+  expect_output(logModuleEvent("mod", "info msg", level = "INFO"), "info msg")
+})
+
+# =============================================================================
+# Issue #111 coverage backfill: safeExecute warning-recovery and notify paths
+# =============================================================================
+
+test_that("safeExecute logs a warning and returns the expression result", {
+  ## The warning handler logs then re-evaluates the expression under
+  ## suppressWarnings, so the value survives the warning.
+  result <- suppressMessages(
+    safeExecute({
+      warning("a warning")
+      42L
+    }, module = "test")
+  )
+  expect_equal(result, 42L)
+})
+
+test_that("safeExecute with notify does nothing outside a Shiny session", {
+  ## notify = TRUE but no reactive domain: the is.null(session) guard is taken
+  ## and showNotification is never reached; the default is still returned.
+  result <- suppressMessages(
+    safeExecute(stop("e"), module = "test", notify = TRUE, default = "d")
+  )
+  expect_identical(result, "d")
+})
+
+test_that("safeExecute with notify shows a notification inside a Shiny session", {
+  called <- FALSE
+  testthat::local_mocked_bindings(
+    getDefaultReactiveDomain = function() {
+      structure(list(), class = "ShinySession")
+    },
+    showNotification = function(...) {
+      called <<- TRUE
+      invisible(NULL)
+    },
+    .package = "shiny"
+  )
+  result <- suppressMessages(
+    safeExecute(stop("boom"), module = "test", notify = TRUE, default = "d")
+  )
+  expect_true(called)
+  expect_identical(result, "d")
+})
+
+# =============================================================================
 # Tests for module-specific error handling
 # =============================================================================
 

@@ -157,6 +157,29 @@ test_that("geneDrop rejects duplicate animal IDs (NEW-46)", {
   expect_identical(unique(out$id), c("A", "B", "C"))
 })
 
+## Issue #111 coverage backfill: getGenoDefinedParentGenotypes (geneDrop's
+## known-genotype allele assignment) has an unknown-first-allele branch --
+## is.na(genotype$first) -> assignAlleles for the sire -- that no fixture hit,
+## because rows with a NA first allele in the existing fixture also have a NA
+## second allele and are dropped upstream (both-NA filter). Here one animal
+## keeps a NA first allele but a known second allele, so it survives the filter
+## and drives that branch.
+test_that("geneDrop handles a known genotype with an unknown first allele (#111)", {
+  set_seed(10L)
+  gped <- nprcgenekeepr::lacy1989Ped
+  geno <- data.frame(
+    id = gped$id,
+    first_allele  = c(NA, NA, "A001_B001", "A001_B002", NA, NA, "A001_B001"),
+    second_allele = c(NA, NA, "A010_B001", "A001_B001", NA, "A001_B002", NA),
+    stringsAsFactors = FALSE
+  )
+  pedGeno <- getGVGenotype(addGenotype(gped, geno))
+  out <- geneDrop(gped$id, gped$sire, gped$dam, gped$gen,
+                  genotype = pedGeno, n = 5L, updateProgress = NULL)
+  expect_s3_class(out, "data.frame")
+  expect_true(gped$id[6L] %in% out$id)
+})
+
 test_that("geneDrop defaults n to 1000 iterations (issue #2 Slice 3)", {
   ## Issue #2 D3 (RATIFIED S196): align the gene-drop default 5000 -> 1000.
   expect_identical(eval(formals(geneDrop)[["n"]]), 1000L)

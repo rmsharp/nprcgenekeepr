@@ -101,3 +101,22 @@ test_that("summarizeKinshipValues second quartile is the lower hinge, not the mi
   expect_equal(out$max[1L], 5) # fivenum[5]
   expect_false(isTRUE(all.equal(out$secondQuartile[1L], out$min[1L])))
 })
+
+## Issue #111 coverage backfill: the wrong-object guard (line 95), the NA-skip
+## `next` (line 106), and the all-skipped empty-data.frame() restore (line 126)
+## were never exercised because existing fixtures are well-formed and non-NA.
+test_that("summarizeKinshipValues rejects a wrongly-shaped object", {
+  expect_error(summarizeKinshipValues(list(bad = 1)),
+               "wrong object")
+})
+
+test_that("summarizeKinshipValues returns an empty data.frame when all NA", {
+  counted <- list(
+    kIds = list(c("X", "Y")),
+    kValues = list(NA_real_),
+    kCounts = list(1L)
+  )
+  out <- summarizeKinshipValues(counted)
+  expect_true(is.data.frame(out))
+  expect_identical(nrow(out), 0L)
+})

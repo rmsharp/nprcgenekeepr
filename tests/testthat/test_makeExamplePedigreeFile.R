@@ -1,6 +1,18 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 library(testthat)
+
+## Issue #111 coverage backfill: the Excel write-failure stop (line 38) was
+## never exercised because the real Excel path is user-gated and succeeds.
+test_that("makeExamplePedigreeFile stops when the Excel write fails", {
+  testthat::local_mocked_bindings(create_wkbk = function(...) FALSE)
+  expect_error(
+    makeExamplePedigreeFile(file = tempfile(fileext = ".xlsx"),
+                            fileType = "excel"),
+    "Failed to write"
+  )
+})
+
 test_that("makeExamplePedigreeFile creates file", {
   skip_if_not(Sys.info()[names(Sys.info()) == "user"] == "rmsharp")
   pedigreeFile <- suppressMessages(makeExamplePedigreeFile())

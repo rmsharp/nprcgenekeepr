@@ -229,3 +229,45 @@ test_that("gvaConvergence filters out non-positive iteration counts in grid", {
   expect_identical(resNeg$convergence$iterations, 50L)
 })
 
+# --------------------------------------------------------------------------
+# Issue #111 coverage backfill: three branches that the discrimination/shape
+# fixtures above never reach -- the empty-grid guard, the present-'origin'
+# column path, and the no-rankable-proband NA metrics.
+# --------------------------------------------------------------------------
+test_that("gvaConvergence stops when no grid count fits the budget", {
+  ## The default grid starts at 25 (needs 2 * 25 = 50 columns); nMax = 10 leaves
+  ## no valid N, so the guard (lines 129-131) fires.
+  expect_error(
+    gvaConvergence(nprcgenekeepr::qcPed, nMax = 10L),
+    "no iteration count"
+  )
+})
+
+test_that("gvaConvergence uses a present 'origin' column", {
+  ## An 'origin' column in the pedigree drives the origin branch (line 165)
+  ## instead of the rep(NA_character_) fallback.
+  fx <- makeConvergenceFixture()
+  fx$ped$origin <- NA_character_
+  res <- gvaConvergence(fx$ped, pop = fx$pop, nMax = 100L,
+                        grid = c(25L, 50L), seed = 1L)
+  expect_s3_class(res, "nprcgenekeeprGVConv")
+})
+
+test_that("gvaConvergence returns NA metrics when no proband is rankable", {
+  ## An all-founder pedigree: every proband is both-unknown with no origin, so
+  ## the Undetermined set is everyone and the ranked order is empty -- the
+  ## topOverlap kk == 0 guard (line 204) and the rankAgreement < 3-common guard
+  ## (line 211) both return NA.
+  fped <- data.frame(
+    id = c("A", "B", "C", "D", "E", "F"),
+    sire = rep(NA_character_, 6L), dam = rep(NA_character_, 6L),
+    sex = c("M", "F", "M", "F", "M", "F"),
+    stringsAsFactors = FALSE
+  )
+  fped$gen <- findGeneration(fped$id, fped$sire, fped$dam)
+  res <- gvaConvergence(fped, nMax = 200L, grid = c(25L, 50L), seed = 1L)
+  expect_identical(res$nRankable, 0L)
+  expect_true(all(is.na(res$convergence$topOverlap)))
+  expect_true(all(is.na(res$convergence$rankAgreement)))
+})
+

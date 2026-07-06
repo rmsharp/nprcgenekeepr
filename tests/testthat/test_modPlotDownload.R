@@ -83,6 +83,42 @@ test_that("savePlotToFile uses high DPI by default", {
 })
 
 # =============================================================================
+# Issue #111 coverage backfill: savePlotToFile guard/fallback/error branches
+# =============================================================================
+
+test_that("savePlotToFile returns FALSE for a non-ggplot object", {
+  ## Covers the !inherits(plot, "ggplot") guard.
+  result <- suppressMessages(
+    savePlotToFile("not a plot", tempfile(fileext = ".png"))
+  )
+  expect_false(result)
+})
+
+test_that("savePlotToFile falls back to png for an unrecognized extension", {
+  skip_if_not_installed("ggplot2")
+  ## format = NULL and a ".xyz" extension is not in the recognized list, so the
+  ## format defaults to "png".
+  p <- ggplot2::ggplot(data.frame(x = 1:5, y = 1:5),
+                       ggplot2::aes(x = x, y = y)) + ggplot2::geom_point()
+  out <- tempfile(fileext = ".xyz")
+  on.exit(unlink(out), add = TRUE)
+  result <- suppressMessages(savePlotToFile(p, out))
+  expect_true(result)
+  expect_true(file.exists(out))
+})
+
+test_that("savePlotToFile returns FALSE when ggsave errors", {
+  skip_if_not_installed("ggplot2")
+  ## Writing into a non-existent nested directory makes ggsave error, driving
+  ## the tryCatch error handler.
+  p <- ggplot2::ggplot(data.frame(x = 1:5, y = 1:5),
+                       ggplot2::aes(x = x, y = y)) + ggplot2::geom_point()
+  badPath <- file.path(tempfile(), "no_such_dir", "x.png")
+  result <- suppressMessages(savePlotToFile(p, badPath))
+  expect_false(result)
+})
+
+# =============================================================================
 # Tests for download handler error handling
 # =============================================================================
 
