@@ -22,7 +22,7 @@ suite. **Test-only (no production code changed); PRE-RED→RED gate via
 expectations). **`R/modPyramid.R` 89.72% → 100%** (zero uncovered
 lines); **overall coverage 98.76% → 98.91%** (`NOT_CRAN=true`).
 **Landed: owner chose direct-commit — committed + pushed to
-`origin/master` as `<S289_HASH>` (tagged `(S289)`; local == origin).** -
+`origin/master` as `b44aa734` (tagged `(S289)`; local == origin).** -
 **Gap SHAPE (from an exact uncovered-line dump, not the %):**
 [`covr::zero_coverage()`](http://covr.r-lib.org/reference/zero_coverage.md)
 (`NOT_CRAN=true`) showed the ONLY uncovered lines were the
@@ -213,7 +213,7 @@ scattered branches — dump the uncovered lines first (Learning 268a). (4)
 `ageUnit` → `if (logical(0))` “argument is of length zero”) — Learning
 268b. (5) **\#111 is a campaign, still OPEN** — next slices are
 `modSummaryStats` (94.34%) / `modPotentialParents` (94.67%) /
-`modGeneticValue` (96.26%). (6) **Landed as `<S289_HASH>` on `master`,
+`modGeneticValue` (96.26%). (6) **Landed as `b44aa734` on `master`,
 pushed** (owner chose direct-commit; local == origin).
 
 ### What Session 288 Did
