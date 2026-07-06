@@ -162,6 +162,8 @@
   : Extract genotype data for a genetic value report
 - [`getGVPopulation()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGVPopulation.md)
   : Get the population of interest for the Genetic Value analysis
+- [`getGeneticDiversityStats()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGeneticDiversityStats.md)
+  : Assemble breeding-group genetic diversity heat-map statistics
 - [`getGenotypes()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGenotypes.md)
   : Get genotypes from file
 - [`getIdsWithOneParent()`](https://github.com/rmsharp/nprcgenekeepr/reference/getIdsWithOneParent.md)

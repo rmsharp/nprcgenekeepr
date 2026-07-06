@@ -7,6 +7,270 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 282 Did
+
+**Deliverable (a read-only ultracode evidence Workflow + 3 pre-RED owner
+decisions + 3 TDD phase-gates, all via `AskUserQuestion`):** issue \#112
+**Slice S3** — a new **exported**, PURE
+`getGeneticDiversityStats(groups, ped, geneticValues, kmat, housing = "shelter_pens", currentDate = Sys.Date())`
+that, per breeding group, calls all 4 providers (`getProportionLow`,
+`getIndianOriginStatus`, `getProductionStatus`,
+`getKinshipWithMaleStatus`) and returns the group × 4-metric
+`colorIndex` data frame (`group`, `Value`, `Origin`, `Production`,
+`Inbreeding`) that
+[`makeGeneticDiversityHeatmap()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticDiversityHeatmap.md)
+(S1) renders; plus the **D7** doc-only fix to `getProductionStatus`.
+**NEW EXPORT → STRICT TDD (RED→GREEN→REFACTOR, each gated); 0
+stakeholder corrections / 0 owner overrides.** **Started / Completed:**
+2026-07-05 / 2026-07-05 **Status:** **DONE + VERIFIED. Direct-merged to
+`master` + pushed (local == origin/master).** New
+`R/getGeneticDiversityStats.R` + `man/getGeneticDiversityStats.Rd` + 1
+NAMESPACE export; new `tests/testthat/test_getGeneticDiversityStats.R`
+(16 tests / 29 expectations); `R/getProductionStatus.R` doc-only D7 fix
+(`@noRd`, no man page). Issue \#112 stays OPEN (S1 + S2 + S3 of 4 slices
+done). - **Pre-RED evidence (read-only Workflow, TDD-safe — 8 agents: 4
+investigate + 4 adversarial verify, 0 errors, 0 empty; every
+load-bearing claim CONFIRMED):** resolved the 3 blocking §6 questions
+firsthand and corrected 3 plan assumptions. **Q1** — shipped
+`getProductionStatus` implements the **20190810** thresholds (shelter
+0.6/0.63, corral 0.5/0.53) on a **rolling**
+`currentYear-2..currentYear-1` window (dams = F age≥3). **Q2** — **no
+housing data source exists anywhere** (data model, `modBreedingGroups`
+return, or config) → `housing` must be caller-supplied. **Q3** — the
+“Low” label producer **was located** (the S279 plan couldn’t):
+`rankSubjects.R:37/39/41` emits
+`"Low Value"`/`"High Value"`/`"Undetermined"`, surfaced via
+`reportGV(ped)$report` (the app’s `geneticValues` reactive, keyed by
+`id`); NOT an owner gap. Corrections the evidence forced (applied):
+Origin must be fed **`ped$ancestry`** not `ped$origin` (param name
+misleads; yellow band unreachable from live data since `convertAncestry`
+never emits `BORDERLINE_HYBRID`); the exposed `groupKinship` is **NULL
+unless a UI box is checked** → the assembler takes the FULL `kmat`;
+**only `getKinshipWithMaleStatus` returns an NA `colorIndex`**
+(`getProductionStatus` maps NA→green). - **Owner ratifications (pre-RED,
+3 `AskUserQuestion`):** (1) keep **20190810** (D7 doc-only); (2) an
+undefined metric (group with no breeding-age females → Inbreeding NA) is
+scored **red (1)**, not NA/green, so the map still renders and missing
+data is surfaced (applied uniformly — an empty Value denominator after
+dropping `"Undetermined"` also → red); (3) **exported + pure** (takes
+ready-made group ID lists + pedigree + GV report frame + full kinship
+matrix), `housing` caller-supplied (scalar recycled OR one per group),
+age derived from `birth`+`currentDate`. - **RED → GREEN → REFACTOR (each
+`AskUserQuestion`-gated):** RED = 16 tests / 29 expectations on
+deterministic hand-built fixtures (21-animal `ped`; `gv` id/value frame;
+named `kmat`; `currentDate = 2020-07-01`): happy path (all-green
+3/3/3/3 + all-red 1/1/1/1; shape/names/nrow/integer cols); default
+`"Group N"` labels + honoring list names; `"Undetermined"` excluded from
+Value denominator (→ yellow) + all-`"Undetermined"` → red; undefined
+Inbreeding → red (not NA); housing scalar corral-vs-shelter (production
+0.5 → yellow vs red) + per-group housing vector; Origin column omitted
+when ped lacks `ancestry`; 5 error guards; end-to-end
+`... |> makeGeneticDiversityHeatmap()` → `ggplot`. All 16 failed against
+the missing function (correct RED). GREEN =
+`R/getGeneticDiversityStats.R` (derives age from `birth`+`currentDate`,
+NOT the `today()`-hardwired `getCurrentAge`; per-group provider fan-out;
+undefined→red). REFACTOR = 2 enforced lints fixed
+(`rep(...length.out=)`→`rep_len`; `any(!nzchar())`→`!all(nzchar())`) +
+roxygen “color” spelling + the D7 `getProductionStatus` doc fix
+(rolling-window `@details`; `@param minParentAge` 2→3; `@return` “at
+least 30 days”). - **Verify (firsthand):** single-file **16/16 (29
+expectations)**; `lintr::lint()` **0** on BOTH changed `R/` files;
+`spell_check_package` **clean**; NAMESPACE diff = **+1 export** only
+(`export(getGeneticDiversityStats)`, proven via `document()`);
+full-suite clean read **0 fail / 0 error, no true offenders**;
+**`R CMD check --as-cran` (repo root) GREEN — 0 err / 0 warn / 2 benign
+NOTEs** (archived-maintainer + HTML-Tidy) with
+`code/documentation mismatches … OK`, examples OK,
+`testthat.R [84s] OK`, vignettes rebuilt. **Phase-3E (stated, not
+skipped):** the assembler is an exported *pure* function with no direct
+app/runtime surface until its S4 caller — its runtime exercise is the 16
+tests running against the built+installed package inside `--as-cran`’s
+`testthat.R`, plus the end-to-end test that calls
+[`makeGeneticDiversityHeatmap()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticDiversityHeatmap.md)
+on real assembler output and gets a `ggplot`; a full app launch is an S4
+concern.
+
+**Session 281 Handoff Evaluation (by Session 282): Score 9/10.** S281’s
+SUGGESTED NEXT made S3 near-turnkey despite it being the
+highest-uncertainty slice: it named S3 as the hard-next, gave a
+signature sketch, and — critically — **enumerated the 3 blocking §6
+questions verbatim** (Q1 production def 20190810-vs-20190916; Q2 housing
+per group; Q3 “Low” label source) with the explicit “**BLOCKED — do NOT
+start until owner answers**” flag; listed the D7 doc fixes; and carried
+the NA-render gotcha (#2: the S1 heatmap accepts only {1,2,3}, so S3/S4
+must resolve NA) plus the “no eligible males → 0 → red, only no-females
+→ NA” nuance (#3). **What helped:** the enumerated Q1–Q3 turned the
+“blocked” slice into a precisely-scoped read-only investigation; gotcha
+\#2/#3 let me frame the missing-data decision accurately (undefined→red,
+one provider not two); every standing gotcha held EXACTLY (`--as-cran`
+from repo root, version 2.0.0, package ARCHIVED, `spell_check` hand-add,
+the benign 2-NOTE baseline reproduced identically); the git-status
+standing keeps (`.DS_Store`, `PED_GV_AUDIT`) were documented so I left
+them (FM \#22); ghost-check clean + pre-explained (HEAD `2b11f112` ==
+the documented S281 close-out). **What was missing (the −1):** S281’s
+signature sketch
+(`getGeneticDiversityStats(ped, groups, geneticValues, housing, ...)`)
+**omitted `kmat`**, and neither it nor the plan flagged that Origin must
+be fed **`ped$ancestry`** (the plan said `origin`) or that only
+`getKinshipWithMaleStatus` (not `getProductionStatus`) returns an NA
+index — all three needed this session’s investigation to surface. Minor
+and arguably beyond S281’s scope (they required the S3-specific evidence
+pass). **What was wrong:** nothing; all standing facts verified true.
+**ROI:** very high — the enumerated blockers + NA gotcha + standing
+gotchas scoped the investigation and ratifications precisely.
+
+**Self-assessment (Session 282): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean+explained), reported, STOPPED for the
+owner; wrote the 1B stub before technical work; ran strict TDD with a
+read-only pre-RED evidence Workflow + 3 owner decisions + all 3
+phase-gates, each via `AskUserQuestion`, declaring the phase at the top
+of each response. **Strengths:** (1) **triaged the plan’s 3 “blockers”
+into investigable vs decidable** — a read-only Workflow resolved Q3
+outright (found the producer the plan couldn’t locate) and answered Q2
+(no housing source), leaving only the genuinely-clinical Q1 + two design
+policies for the owner; (2) **the adversarial verify pass refuted the
+plan, not just confirmed it** — caught the `origin`-vs-`ancestry` trap,
+the NULL-`groupKinship` fact, and the “only one provider returns NA”
+correction before they reached the signature; (3) **caught that
+`getCurrentAge` is hardwired to `today()`** and derived age from the
+`currentDate` param instead (deterministic + consistent with the
+production window) rather than reusing the helper the investigation
+suggested; (4) RED covered happy + both housings + undefined-metric +
+column-omission + 5 error guards + end-to-end (29 expectations) on fully
+deterministic fixtures (births far from thresholds so age rounding never
+matters); (5) kept the assembler PURE + made undefined→red a uniform,
+owner-ratified policy; (6) verified firsthand across the whole battery
+(empty-but-one NAMESPACE diff proven, lint 0, spell clean, full suite,
+`--as-cran` 0/0/2). **Weakness (the −1):** GREEN drew two enforced lints
+(`rep_len`, `outer_negation`) caught only at REFACTOR-lint — a closer
+pre-write recall of the `.lintr` enforced set (Learning 260d) would have
+avoided the two fixes. No harm (caught + fixed before commit). Correct +
+disciplined; capped at 9.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 261** — a
+“blocked on owner questions” slice is usually
+read-only-investigate-THEN-ratify (triage §6 questions into
+code-answerable vs clinical; a pre-RED read-only Workflow resolved 2 of
+3); the adversarial verify pass earns its cost by REFUTING the plan (the
+`origin`→`ancestry` trap, NULL-`groupKinship`, one-provider-NA); an
+N-provider assembler must reconcile each provider’s NA against the
+renderer’s strict {1,2,3} domain (owner call: undefined→red); don’t
+blindly reuse a helper the investigation names (`getCurrentAge` is
+`today()`-hardwired → derive age from the `currentDate` param);
+deterministic fan-out fixtures = one all-green + one all-red group with
+births far from age thresholds; a D7-style doc fix describes what the
+code DOES, surgically (`@noRd` → source-roxygen only). Carried as
+applied: \[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[edit-files-in-reverse-line-order\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a NEW-EXPORT
+STRICT-TDD session — RED→GREEN→REFACTOR, each gated; preceded by a
+read-only ultracode evidence Workflow at pre-RED.**
+
+**=\> SUGGESTED NEXT.** **Slice S3 is DONE** (exported
+`getGeneticDiversityStats` + 16 tests; D7 `getProductionStatus` doc
+fix), direct-merged + pushed; **issue \#112 stays OPEN** (S1 + S2 + S3
+of 4 slices done). The last implementation slice is **S4** (per
+`docs/planning/issue112-genetic-diversity-dashboard-plan.md` §7): - **S4
+— Shiny module `modGeneticDiversity` + new tab + `shared$breedingGroups`
+capture.** `R/modGeneticDiversity.R` (`modGeneticDiversityUI`/`Server`)
+renders the heat map via `renderPlot` from live data, registered as a
+new tab in `appUI.R` + `appServer.R`. **The wiring is where the S3
+corrections land:** (a) capture `modBreedingGroupsServer`’s return into
+`shared$breedingGroups` (a one-line assignment — `appServer.R:315`
+currently discards it); (b) the module must assemble the assembler’s
+inputs — `groups` (from `modBreedingGroups`), the qc’d `ped` (with
+`ancestry` when present), the GV report frame (`modGeneticValueServer`’s
+`geneticValues`, for `getGeneticDiversityStats`’s `geneticValues` arg →
+`value` column), and the **full kinship matrix** (`modGeneticValue`’s
+`kinshipMatrix`, NOT the usually-NULL `groupKinship`); (c) surface a
+**housing input** (no data source exists — a UI selectInput, scalar or
+per-group) and thread it through; (d) degrade gracefully (show guidance,
+not an empty/broken plot) when no groups are formed. `[RATIFY]` D3 (tab
+name “Genetic Diversity” vs “Genetic Diversity Report”) + D4. **Phase-3E
+runtime smoke MANDATORY** (runtime/registration change — FM \#24):
+launch
+[`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md),
+confirm the tab mounts and renders, scan startup for errors. STRICT TDD
+(module tests mocking reactives). - **Deferred: Flags column (S5)** —
+blocked on §6 Q4 (no genotype/phenotype data source). - **Other
+backlog:** \#111 code coverage; \#103 roxygen harmonization; \#37, \#36,
+\#28, \#12, \#11, \#10, \#5; the CRAN thread (Phase 5b, owner-run
+outward — package ARCHIVED, resubmission owner-gated + HARD STOP).
+**Standing gotchas (unchanged):** `--as-cran` from the REPO ROOT (renv;
+background ~3-4 min) + `lintr::lint()`/`lint_package()` +
+`spell_check_package` (hand-add wordlist, never `update_wordlist`) after
+ANY `R/`+`man/` edit; for behavior/NAMESPACE changes ALSO STRICT TDD +
+NAMESPACE diff + Phase-3E + a FULL-suite run for seeded-golden shifts;
+the local `--as-cran` does NOT run lintr (Learning 232) → run
+`lint_package()` too; NEWS/README GENERATED (edit `.Rmd`, render via
+`load_all`+[`rmarkdown::render`](https://pkgs.rstudio.com/rmarkdown/reference/render.html),
+remove stray `README.html` — Learning 255); version **2.0.0**; package
+**ARCHIVED on CRAN 2025-07-29**; `gh issue view`/`gh pr edit` exit 1 →
+`gh api`; re-check `git status` before ANY destructive git
+(\[\[check-status-before-destructive-git\]\]); before any delete/rename,
+`grep -rn <target> .` across the WHOLE tree for prior keep-decisions
+BEFORE the `git rm` (Learning 259); landing owner-gated (direct-merge vs
+PR).
+
+**Key files (this session):** **Created + committed (S282, on `master`,
+pushed):** `R/getGeneticDiversityStats.R` (exported assembler),
+`man/getGeneticDiversityStats.Rd` (generated),
+`tests/testthat/test_getGeneticDiversityStats.R` (16 tests / 29
+expectations). **Edited + committed:** `NAMESPACE` (+1 export),
+`R/getProductionStatus.R` (D7 doc-only: `@details` rolling window,
+`@param minParentAge` 2→3, `@return` “at least 30 days”; `@noRd` → no
+man page). Process docs (same commit): `CHANGELOG.md` (S282 entry),
+`PROJECT_LEARNINGS.md` (Learning 261), `SESSION_NOTES.md` (this
+handoff). Reference (read, not edited):
+`docs/planning/issue112-genetic-diversity-dashboard-plan.md`,
+`R/getProportionLow.R`, `R/getIndianOriginStatus.R`,
+`R/getKinshipWithMaleStatus.R`, `R/makeGeneticDiversityHeatmap.R`,
+`R/getCurrentAge.R`, `R/rankSubjects.R`/`orderReport.R`/`reportGV.R` (Q3
+evidence), `R/convertAncestry.R`/`qcStudbook.R` (ancestry evidence),
+`R/modBreedingGroups.R`/`modGeneticValue.R` (S4 input evidence),
+`tests/testthat/test_getProductionStatus.R`,
+`tests/testthat/test_getKinshipWithMaleStatus.R`, `.lintr`. **NOT
+committed (standing keep):** `.DS_Store` (tracked+modified),
+`PED_GV_AUDIT_2026-05-30.html` (untracked, `.Rbuildignore`d).
+**Scratchpad (NOT committed):** `s282_build.log`, `s282_check.log`, the
+evidence Workflow output; `nprcgenekeepr_*.tar.gz` +
+`nprcgenekeepr.Rcheck/` are `.gitignore`d.
+
+**Gotchas:** (1) **`getGeneticDiversityStats` is a PURE assembler** — it
+takes ready-made `groups` (list of ID vectors), `ped` (qc’d pedigree
+with `id`/`dam`/`sex`/`birth`/`exit`, optional `ancestry`),
+`geneticValues` (the `reportGV()$report` frame with `id`+`value`), and
+the FULL `kmat`; it does NOT run `reportGV`/`kinship` or know about
+Shiny. S4 supplies those reactives. (2) **Origin is fed `ped$ancestry`,
+NOT `ped$origin`** — `getIndianOriginStatus`’s param name is misleading;
+feeding `origin` (import facility) would always-green Origin. When `ped`
+has no `ancestry` column the Origin metric column is **omitted** (S1 is
+column-count-agnostic, so the map still renders). (3) **The Origin
+yellow band is unreachable from live data** — `convertAncestry` never
+emits `BORDERLINE_HYBRID`, so real pedigrees only ever hit red or green
+Origin; a data-vocabulary gap, not a bug. (4) **Undefined metric → red
+(1):** a group with no breeding-age females (Inbreeding NA) or no
+assessed genetic value (empty Value denominator after dropping
+`"Undetermined"`) is scored red, never NA/green — this keeps output in
+the S1 renderer’s strict {1,2,3} domain. (5) **`housing` has no data
+source** — it is caller-supplied (scalar recycled to all groups, or one
+value per group; default `"shelter_pens"`). S4 must add a UI input for
+it. (6) **Age is derived from `birth`+`currentDate`** inside the
+assembler (NOT `getCurrentAge`, which is hardwired to `today()`), so the
+age filters and the production window share one reference date. (7)
+**`getKinshipWithMaleStatus` takes the FULL `kmat`** (it indexes the
+needed cells by id name) — no `filterKinMatrix` needed; the exposed
+`modBreedingGroups$groupKinship` is usually NULL, so S4 must pass
+`modGeneticValue`’s full kinship matrix. (8) Carried standing keeps as
+in SUGGESTED NEXT.
+
 ### What Session 281 Did
 
 **Deliverable (3 pre-RED `[RATIFY]` points + 3 TDD phase-gates, all via

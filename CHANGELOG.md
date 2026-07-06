@@ -15,6 +15,94 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-05 — \#112 Slice S3 — genetic diversity per-group assembler `getGeneticDiversityStats()` (strict TDD); D7 `getProductionStatus` doc fix (Session 282)
+
+- **Deliverable (3 pre-RED owner decisions + 3 TDD phase-gates, all via
+  `AskUserQuestion`; preceded by a read-only ultracode evidence
+  Workflow):** implement Slice S3 of the issue \#112 plan — a new
+  **exported**
+  `getGeneticDiversityStats(groups, ped, geneticValues, kmat, housing = "shelter_pens", currentDate = Sys.Date())`
+  that, for each breeding group, calls all 4 providers
+  (`getProportionLow`, `getIndianOriginStatus`, `getProductionStatus`,
+  `getKinshipWithMaleStatus`) and returns the group × 4-metric
+  `colorIndex` data frame (`group`, `Value`, `Origin`, `Production`,
+  `Inbreeding`) that
+  [`makeGeneticDiversityHeatmap()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticDiversityHeatmap.md)
+  (S1) renders. **NEW EXPORT → STRICT TDD (RED→GREEN→REFACTOR, each
+  gated); 0 stakeholder corrections / 0 owner overrides.**
+- **Pre-RED evidence (read-only Workflow, TDD-safe — 8 agents: 4
+  investigate + 4 adversarial verify, 0 errors):** resolved the 3
+  blocking §6 questions firsthand and corrected 3 plan assumptions. (Q1)
+  The shipped `getProductionStatus` implements the **20190810**
+  thresholds on a rolling 2-year birth window; owner kept 20190810 → D7
+  is doc-only. (Q2) **No housing data source exists anywhere** (data
+  model, group result, or config) → `housing` is caller-supplied. (Q3)
+  The “Low” label producer **was located** — `rankSubjects.R:37/39/41`
+  emits `"Low Value"`/`"High Value"`/`"Undetermined"`, surfaced via
+  `reportGV(ped)$report`; not an owner gap. Corrections applied: Origin
+  must be fed `ped$ancestry` (not `ped$origin` — the param name
+  misleads; its yellow band is unreachable from live data because
+  `convertAncestry` never emits `BORDERLINE_HYBRID`); the exposed
+  `groupKinship` is NULL unless a UI box is checked → the assembler
+  takes the full `kmat`; only `getKinshipWithMaleStatus` can return an
+  NA colorIndex (`getProductionStatus` maps NA→green).
+- **Owner ratifications (pre-RED):** (1) keep the 20190810 Production
+  thresholds (D7 doc-only); (2) an undefined metric (a group with no
+  breeding-age females → Inbreeding NA) is scored **red (1)**, not
+  NA/green, so the heat map still renders and missing data is
+  surfaced; (3) the function is **exported + pure** (takes ready-made
+  group ID lists, pedigree, GV report frame, and full kinship matrix),
+  housing caller-supplied (scalar recycled or one per group), age
+  derived from `birth` + `currentDate`.
+- **RED:** new `tests/testthat/test_getGeneticDiversityStats.R` — 16
+  tests / 29 expectations on deterministic hand-built fixtures (a
+  21-animal `ped`; a `gv` id/value report frame; a named `kmat`;
+  `currentDate = 2020-07-01`): happy path (an all-green 3/3/3/3 and an
+  all-red 1/1/1/1 group; frame shape, column names, nrow, integer
+  columns); default `"Group N"` labels + honoring list names;
+  `"Undetermined"` excluded from the Value denominator (→ yellow) and an
+  all-`"Undetermined"` group → red; undefined Inbreeding → red (not NA);
+  housing scalar corral-vs-shelter (production 0.5 → yellow vs red) + a
+  per-group housing vector; Origin column omitted when the pedigree
+  lacks `ancestry`; 5 error guards (empty groups, ped missing column,
+  member absent, invalid housing length, `geneticValues` missing
+  `value`); and end-to-end
+  `getGeneticDiversityStats(...) |> makeGeneticDiversityHeatmap()`
+  returns a `ggplot`. All 16 failed against the missing function
+  (correct RED).
+- **GREEN:** `R/getGeneticDiversityStats.R` — validates inputs, derives
+  age from `birth`+`currentDate` (not the `today()`-hardwired
+  `getCurrentAge`), synthesizes labels, and per group maps each
+  provider’s `colorIndex` (undefined → red) into the output frame;
+  NAMESPACE gained exactly one export + new
+  `man/getGeneticDiversityStats.Rd`. All 16 tests pass (29
+  expectations).
+- **REFACTOR (no behavior change):** fixed 2 enforced lints on the new
+  file (`rep(..., length.out=)` → `rep_len`; `any(!nzchar())` →
+  `!all(nzchar())`) + American “color” spelling in the roxygen; applied
+  the **D7** doc-only fix to `R/getProductionStatus.R` (rewrote the
+  fixed-2019 `@details` prose to the implemented rolling
+  `currentYear-2..currentYear-1` window; `@param minParentAge` “2 years”
+  → “3 years”; aligned the `@return` “at least 30 days” phrasing) —
+  `@noRd`, no man page, no behavior change.
+- **Verify (firsthand):** single-file 16/16 (29 expectations);
+  `lintr::lint()` **0** on both changed `R/` files;
+  `spell_check_package` **clean** (no WORDLIST churn); NAMESPACE diff =
+  **+1 export** only; full-suite clean read **0 fail / 0 error, no true
+  offenders**; **`R CMD check --as-cran` (repo root) GREEN — 0 err / 0
+  warn / 2 benign NOTEs** (archived-maintainer + HTML-Tidy) with
+  `code/documentation mismatches … OK`, examples OK,
+  `testthat.R [84s] OK`, vignettes rebuilt. **Phase-3E (stated, not
+  skipped):** the assembler is an exported *pure* function with no
+  direct app/runtime surface until its S4 caller — its runtime exercise
+  is the 16 tests running against the built+installed package inside
+  `--as-cran`’s `testthat.R`, plus the end-to-end test that calls
+  [`makeGeneticDiversityHeatmap()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGeneticDiversityHeatmap.md)
+  on real assembler output; a full app launch is an S4 concern.
+  `PROJECT_LEARNINGS.md` Learning 261.
+- Issue \#112 stays OPEN (S1 + S2 + S3 of 4 slices done; S4 Shiny
+  module + app wiring, + deferred Flags remain).
+
 ### 2026-07-05 — \#112 Slice S2 — inbreeding data provider `getKinshipWithMaleStatus()` (strict TDD) (Session 281)
 
 - **Deliverable (3 pre-RED `[RATIFY]` points + 3 TDD phase-gates, all
