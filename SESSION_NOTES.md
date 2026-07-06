@@ -7,6 +7,244 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 288 Did
+
+**Deliverable (issue \#111 code-coverage campaign, slice 4 — one
+residual Shiny module; owner chose the module via `AskUserQuestion` over
+{`modInput` 87.89% / `modPyramid` 89.72% / `modSummaryStats` 94.34% /
+`modPotentialParents` 94.67%}):** test-backfill `R/modInput.R` (the
+lowest-coverage residual) toward 100% via a headless
+[`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html)
+suite. **Test-only (no production code changed); PRE-RED→RED gate via
+`AskUserQuestion`; 0 stakeholder corrections.** **Started / Completed:**
+2026-07-06 / 2026-07-06 **Status:** **DONE + VERIFIED.** New
+`tests/testthat/test_modInput_coverage.R` (9 `testServer` tests / 22
+expectations). **`R/modInput.R` 87.89% → 100%** (zero uncovered lines);
+**overall coverage 97.91% → 98.76%** (`NOT_CRAN=true`). **Landing
+owner-gated (direct-commit vs PR) — see the close-out question; this
+handoff written pre-commit.** - **Gap SHAPE (from an exact
+uncovered-line dump, not the %):**
+[`covr::zero_coverage()`](http://covr.r-lib.org/reference/zero_coverage.md)
+(`NOT_CRAN=true`) gave the precise 62-line gap — `readDataFile`
+NULL/Excel/read-error paths (L259/272-274/301-310); the getData guards
+(no-file L320-321, unreadable-file L407-423, blank-minParentAge L453);
+the raw-QC error/warning handlers (L464/466) and the observer’s QC-error
+handler (L474-491); and the output renderers `qcSummaryUI` panel-warning
+(L555) + `qcErrors` debug-string branches (L595/597) + the three
+`downloadHandler`s (L618/625/632) + the `changedCols` reactive body
+(L669). The three existing suites (`test_modInput.R` / `_qcStudbook.R` /
+`_incomplete_final_line.R`) never supply the inputs that reach these. -
+**Two mechanisms were the hard 15% (both diagnosed by probing, not
+assumption):** (i) **double-`tryCatch`:** the observer’s “QC Processing
+Error” handler (L474-491) is reached only if **`runQcStudbook` itself**
+throws — mocking `qcStudbook=stop` is absorbed by `runQcStudbook`’s own
+internal `tryCatch` (`runQcStudbook.R:84-107`), which returns a valid
+`hasErrors` list. So mock **both** `qcStudbook=stop` +
+`runQcStudbook=stop` (covers L464 raw handler AND L474-491), and
+`qcStudbook={warning;getEmptyErrorLst()}` for the raw warning handler
+(L466). (ii) **`flog.debug` lazy-message trap:** L595/597 live inside a
+[`futile.logger::flog.debug()`](https://rdrr.io/pkg/futile.logger/man/flog.logger.html)
+MESSAGE arg; above the DEBUG threshold `flog.debug` never forces the
+message promise, so `output$qcErrors` renders fine (class `json`) but
+the branch strings never run → stayed red at 99.61%. Fix: raise the
+logger to DEBUG (as the app’s “Debug on” does) before rendering,
+appender routed to a temp file, restored via
+[`withr::defer`](https://withr.r-lib.org/reference/defer.html) in a
+`local_debug_logging()` helper. Also probed: `as.numeric("")` is
+silently NA (hits L453) but `as.numeric("NA")` warns (caught by the
+surrounding `tryCatch`, misses L453). - **9 tests** (all mechanisms
+validated by two throwaway `load_all`/`testServer` probes before
+writing): (1) `readDataFile` NULL/Excel(xlsx fixture)/bad-path direct
+calls; (2) `activeFile` switch default; (3) getData no-file guard; (4)
+getData unreadable file → “File Read Error”; (5) getData blank
+minParentAge → default; (6) getData QC-run failure (both mocks) → “QC
+Processing Error”; (7) getData tolerates a `qcStudbook` warning; (8)
+`qcSummaryUI` panel-warning + `qcErrors` zero-error branch +
+`changedCols` reactive (DEBUG logging); (9) populated results render
+`qcErrors` errors-present branch + drive all three downloads (DEBUG
+logging). - **Verify (firsthand):** new file **9 tests / 22 expectations
+green, 0 warnings**; `covr` (full suite, `NOT_CRAN=true`) confirms
+`modInput.R` = **100%** (zero uncovered) and overall **98.76%**; **full
+suite (`NOT_CRAN=true`) 0 failed / 0 error, 0 true offenders** (7
+baseline warnings, none from this file — isolated run is 0-warning);
+`lintr::lint()` on the new file = **0**; `spell_check_package`
+**clean**; **`R CMD check --as-cran` (repo root, WITH vignettes, via
+`devtools::check`) Status: OK — 0 errors / 0 warnings / 0 notes**.
+**Phase-3E N/A** — test-only, no `R/` source or runtime change (FM \#24
+has no target).
+
+**Session 287 Handoff Evaluation (by Session 288): Score 9/10.** S287’s
+SUGGESTED NEXT listed the residual modules with exact per-file %s and
+named
+`modInput (87.89% — error branches; local_mocked_bindings/tempfile fixtures for the file-upload paths)`
+as the lowest. **What helped:** (i) the exact %s let me offer a grounded
+slice choice immediately, and the 87.89% matched my first covr read to
+the decimal (because the load-bearing standing gotcha “measure with
+`NOT_CRAN=true`” was carried and applied from the first call — no
+phantom chase); (ii) the “error branches;
+`local_mocked_bindings`/`tempfile` fixtures” hint pointed me straight at
+the file-upload mocking approach; (iii) every other standing gotcha held
+EXACTLY (`--as-cran` repo-root-with-vignettes 0/0/0; e2e SKIPS →
+`testServer`; git-status standing keeps left untouched, FM \#22); (iv)
+the ghost breadcrumb (HEAD `de2fe2a5` == documented S287 close-out)
+confirmed no ghost in seconds. **What was missing (the −1):** the scope
+said modInput’s gap is “error branches” (true, in part) but did not flag
+that a big chunk is the OUTPUT RENDERERS + download handlers, nor the
+two deep mechanisms that were the whole difficulty — the
+`qcStudbook`/`runQcStudbook` double-`tryCatch` (mock the outer fn) and
+the `flog.debug` lazy-message trap that leaves two renderer lines red
+even after the output renders. I found both by dumping the exact
+uncovered lines + a second probe. This is a refinement S287 could not
+have known without doing the modInput slice (its deliverable was
+`appServer`), so it is a minor, understandable miss. **What was wrong:**
+nothing — modInput WAS 87.89% and the gap shape matched. **ROI:** very
+high — near-turnkey slice scoping; only the two deep mechanisms had to
+be discovered.
+
+**Self-assessment (Session 288): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status; ghost-check clean+explained), reported, STOPPED for the
+owner; wrote the 1B stub before technical work; posed the slice scope
+AND the PRE-RED→RED gate via `AskUserQuestion`, declaring the TDD phase
+at the top of each phase-response. **Strengths:** (1) **grounded the gap
+with an EXACT uncovered-line dump**
+([`covr::zero_coverage`](http://covr.r-lib.org/reference/zero_coverage.md),
+`NOT_CRAN=true`) and mapped all 62 lines to tests before posing the gate
+— targeted red lines, not the file %; (2) **de-risked all 15 mechanisms
+with a throwaway probe BEFORE writing** (S285/S286/S287 discipline) —
+the silent-NA literal, the three direct `readDataFile` calls incl. the
+xlsx fixture, both mock shapes, the `storedResults()` injection +
+output/download reads — zero authoring surprises; (3) **when two lines
+stayed red at 99.61%, diagnosed the `flog.debug` lazy-message trap with
+a SECOND targeted probe** rather than assuming or settling below 100% —
+reached true 100%; (4) **caught the double-`tryCatch` interaction and
+the `as.numeric("")` subtlety by probing, not assumption**; (5) **kept
+the suite clean (0 warnings)** — targeted `suppressWarnings` for the one
+expected file-open warning + an appender redirect for the DEBUG logs,
+restored via
+[`withr::defer`](https://withr.r-lib.org/reference/defer.html) (matching
+the repo’s `withr`/`on.exit` conventions); (6) ran the full battery
+firsthand (covr 100%, full suite 0/0/0, lint 0, spell clean, `--as-cran`
+0/0/0). **Weakness (the −1):** my first covr re-measure left 2 lines red
+(99.61%) because I ASSUMED accessing `output$qcErrors` would execute its
+debug-string branches — I had not accounted for `flog.debug`’s lazy
+message eval. A moment’s thought about `futile.logger`’s threshold
+behavior up front would have built the DEBUG-threshold handling into the
+first draft, saving one ~5-min covr build. Caught and fixed cleanly; no
+correctness impact. Correct + disciplined; capped at 9.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 267** — a
+residual module gap is scattered error/guard/render/download branches →
+dump the exact uncovered lines
+([`covr::zero_coverage`](http://covr.r-lib.org/reference/zero_coverage.md),
+`NOT_CRAN=true`) and target them; `testServer`’s expr runs in the server
+env so reach inner helpers (`readDataFile`) and `reactiveVal`s
+(`storedResults`) by name (call helpers directly + inject
+`storedResults()` to render every output branch in exact states without
+a QC run); a double-`tryCatch` swallows a naive mock (mock the OUTER
+`runQcStudbook`, not just `qcStudbook`); `as.numeric("")` is silently NA
+while `"NA"` warns; and the general **`flog.debug` lazy-message trap** —
+branch lines inside a debug message stay 0% until you raise the logger
+to DEBUG, so raise the threshold rather than just calling the output.
+Carried as applied: \[\[consult-project-source-of-truth\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a TEST-BACKFILL
+coverage session (slice 4 of \#111) — PRE-RED→RED gated; test-only; no
+bug found (code correct); Phase-3E N/A.**
+
+**=\> SUGGESTED NEXT.** **Issue \#111 stays OPEN — it is a multi-session
+campaign.** Slices done: **S1** helper tier (S285, 16 files → 100%),
+**S2** `modORIPReporting` server (S286, 31.7% → 100%), **S3**
+`appServer` (S287, 0% → 100%), **S4** `modInput` (this session, 87.89% →
+100%). Overall now **98.76%** (`NOT_CRAN=true`). Remaining GENUINE gaps
+(each a candidate future slice / fresh session; % from this session’s
+covr run): - **Residual Shiny modules (the remaining biggest gaps):**
+`modPyramid` (89.72%), `modSummaryStats` (94.34%), `modPotentialParents`
+(94.67%), `modGeneticValue` (96.26%). One module = one clean slice.
+**Model the slice on this one:** dump the exact uncovered lines first,
+then inject `storedResults()`-equivalents / drive inputs to each branch.
+**Watch the `flog.debug` lazy-message trap (Learning 267e):** these
+modules likely have branchy `flog.debug` messages too, so if a renderer
+line stays red after the output renders, raise
+`flog.threshold(DEBUG, name="nprcgenekeepr")` before rendering. -
+**Small single-file residuals** to push overall higher:
+`checkKinshipOverrides` (96.43%), `loadSpeciesOverrides` (96.72%),
+`dataframe2string` (96.88%), `getPotentialParents` (96.88%),
+`correctUnknownParentMeanKinship` (97.30%), `modPedigree` (97.72%),
+`orderReport` (97.73%), `getPyramidPlot` (98.36%), `modBreedingGroups`
+(98.56%). - **Also open:** **\#117** (the `fixColumnNames`
+overreach-cleanup bug — a genuine correctness fix, strict TDD: RED test
+asserting `first_name`/`second_name` restored, then fix line 32/35 to
+write `newCols`; **when fixed, update `test_fixColumnNames.R`’s
+characterization assertions**). **\#116** Flags column (still BLOCKED —
+no genotype/phenotype data source); **\#103** roxygen; **\#37, \#36,
+\#28, \#12, \#11, \#10, \#5**; the CRAN thread (Phase 5b, owner-run
+outward — package ARCHIVED 2025-07-29, resubmission owner-gated + HARD
+STOP). **Standing gotchas (unchanged + one new):** **measure coverage
+with `NOT_CRAN=true`** (default undercounts ~8 pts — 39 `skip_on_cran`
+files; module `testServer` suites do NOT skip); dump exact uncovered
+lines with
+[`covr::zero_coverage()`](http://covr.r-lib.org/reference/zero_coverage.md)
+and target them; **NEW — the `flog.debug` lazy-message trap** (branch
+lines inside
+[`futile.logger::flog.debug()`](https://rdrr.io/pkg/futile.logger/man/flog.logger.html)
+messages stay uncovered above the DEBUG threshold; raise
+`flog.threshold(DEBUG)` to force them); for ANY package-code change —
+`--as-cran` from the REPO ROOT (renv; background ~3-4 min; **build WITH
+vignettes**; **`devtools::check(args="--as-cran")` returns 0/0/0 here,
+`--no-build-vignettes` yields 2 misleading vignette WARNINGs**; **beware
+zsh `rm <glob>` “no matches found”**) + `lintr::lint()`/`lint_package()`
+(`.lintr` EXCLUDES `tests/`, `inst/extdata`, `vignettes`,
+`inst/application`) + `spell_check_package` (hand-add wordlist, never
+`update_wordlist`) after ANY `R/`+`man/` edit; behavior/NAMESPACE
+changes ALSO need STRICT TDD + NAMESPACE diff + Phase-3E + FULL-suite
+(`NOT_CRAN=true`); the local `--as-cran` does NOT run lintr (Learning
+232); NEWS/README GENERATED (edit `.Rmd`); version **2.0.0**; package
+**ARCHIVED on CRAN 2025-07-29**; **e2e/shinytest2 SKIPS here (no
+chromote) → `shiny::testServer(<server fn>, {...})` for module runtime
+changes AND as a coverage vehicle; inner helpers/`reactiveVal`s are
+reachable by name in the expr**; `gh issue view`/`gh pr edit` exit 1 →
+`gh api` (but `gh issue create`/`comment`/`close` work); re-check
+`git status` before ANY destructive git
+(\[\[check-status-before-destructive-git\]\]); before any delete/rename,
+`grep -rn <target> .` across the WHOLE tree BEFORE the `git rm`
+(Learning 259); landing owner-gated (direct-commit vs PR).
+
+**Key files (this session):** **New test file:**
+`tests/testthat/test_modInput_coverage.R` (9 `testServer` tests +
+`make_stored`/`local_debug_logging` helpers). **Edited:** `CHANGELOG.md`
+(S288 entry under \[Unreleased\]), `PROJECT_LEARNINGS.md` (Learning
+267), `SESSION_NOTES.md` (this handoff + the 1B stub it replaced).
+**Read (not edited):** `R/modInput.R` (module under test),
+`tests/testthat/test_modInput.R` + `test_modInput_qcStudbook.R` +
+`test_modInput_incomplete_final_line.R` (existing coverage),
+`R/runQcStudbook.R` (the double-`tryCatch`),
+`R/processQcStudbookResult.R` (errors/warnings df shapes). **NOT
+committed (standing keep — FM \#22):** `.DS_Store` (tracked+modified),
+`PED_GV_AUDIT_2026-05-30.html` (untracked, `.Rbuildignore`d).
+**Scratchpad (NOT committed):** `probe_modinput.R`, `probe2_qcerrors.R`,
+`cov288_modinput.R`/`fullsuite288.R`/`check288.log` + logs.
+
+**Gotchas:** (1) **Test-only slice** — no `R/` source added/modified, no
+`NAMESPACE`/`DESCRIPTION` change; lint is non-regressing and Phase-3E is
+N/A (no runtime surface; FM \#24 has no target). (2) **`--as-cran` here
+returned 0/0/0 (Status: OK)** via `devtools::check`. (3) **The
+`flog.debug` lazy-message trap** (Learning 267e) — two renderer lines
+stayed red at 99.61% until the logger was raised to DEBUG before
+rendering; carry this into the next module slices. (4)
+**Double-`tryCatch`** — the observer’s QC-error handler needs
+`runQcStudbook` itself mocked to
+[`stop()`](https://rdrr.io/r/base/stop.html), not `qcStudbook`. (5)
+**\#111 is a campaign, still OPEN** — next slices are `modPyramid`
+(89.72%, the new lowest) etc. (6) **Landing owner-gated** — pending the
+close-out direct-commit-vs-PR choice; will record the commit hash + push
+once landed.
+
 ### What Session 287 Did
 
 **Deliverable (issue \#111 code-coverage campaign, slice 3 — one file;

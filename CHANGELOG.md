@@ -15,6 +15,46 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-06 — \#111 code-coverage campaign, slice 4 — `modInput` backfilled 87.89% → 100% via a residual-branch `testServer` suite (Session 288)
+
+- **Deliverable (owner picked \#111; owner chose this session’s slice
+  via `AskUserQuestion` over the residual Shiny modules {`modInput`
+  87.89% / `modPyramid` / `modSummaryStats` / `modPotentialParents`}:
+  `modInput` — the lowest-coverage residual):** add a headless
+  [`shiny::testServer`](https://rdrr.io/pkg/shiny/man/testServer.html)
+  suite driving the error/guard handlers, output renderers, and download
+  handlers that the three existing `modInput` suites never reach.
+  **Test-only (no production code changed); PRE-RED→RED gate via
+  `AskUserQuestion`; 0 stakeholder corrections.**
+- **Gap pinpointed by exact uncovered-line dump
+  ([`covr::zero_coverage`](http://covr.r-lib.org/reference/zero_coverage.md),
+  `NOT_CRAN=true`):** the 62 uncovered lines were the `readDataFile`
+  NULL/Excel/read-error paths, the getData “no file” / unreadable-file /
+  blank-minParentAge branches, the raw-QC error and warning handlers
+  (`qcStudbook` / `runQcStudbook`), and the `qcSummaryUI` / `qcErrors`
+  renderers + three `downloadHandler`s — all reachable only via inputs
+  the existing suites do not supply.
+- **New `tests/testthat/test_modInput_coverage.R` (9 `testServer` tests
+  / 22 expectations).** `R/modInput.R` **87.89% → 100%** (zero uncovered
+  lines); **overall coverage 97.91% → 98.76%** (`NOT_CRAN=true`).
+- **Two mechanisms were load-bearing:** (i) the observer’s QC-error
+  handler needed `runQcStudbook` itself mocked to
+  [`stop()`](https://rdrr.io/r/base/stop.html) (mocking `qcStudbook`
+  alone is absorbed by `runQcStudbook`’s own internal `tryCatch`); (ii)
+  the `qcErrors` debug-string branches (`modInput.R:595/597`) live
+  inside a lazy
+  [`futile.logger::flog.debug()`](https://rdrr.io/pkg/futile.logger/man/flog.logger.html)
+  message, so covering them required raising the logger to `DEBUG` (as
+  the app’s “Debug on” checkbox does) before rendering, with the
+  appender routed to a temp file and restored via
+  [`withr::defer`](https://withr.r-lib.org/reference/defer.html).
+- **Verified:** new file green (0 warnings); full suite
+  (`NOT_CRAN=true`) 0 failed / 0 error / 0 true offenders; `lintr::lint`
+  on the new file = 0; `spell_check_package` clean;
+  **`R CMD check --as-cran` (repo root, WITH vignettes) 0 errors / 0
+  warnings / 0 notes (Status: OK)**. Phase-3E N/A (test-only; no runtime
+  surface).
+
 ### 2026-07-06 — \#111 code-coverage campaign, slice 3 — `appServer` backfilled 0% → 100% via a full-app `testServer` suite (Session 287)
 
 - **Deliverable (owner picked \#111; owner chose this session’s slice
