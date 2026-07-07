@@ -42,9 +42,17 @@
 #'  Indicator of the restricted status of an animal. "Nonrestricted" animals
 #'  are generally assumed to be naive.
 #' }
-#' @param minParentAge numeric values to set the minimum age in years for
-#' an animal to have an offspring. Defaults to 2 years. The check is not
-#' performed for animals with missing birth dates.
+#' @param minSireAge numeric minimum age in years for a male to have sired an
+#' offspring. \code{NULL} (default) looks up the floor for each sire's species
+#' via \code{\link{getSpeciesMinBreedingAge}} (falling back to 2 years when the
+#' species is missing or unknown); a supplied value overrides that floor.
+#' @param minDamAge numeric minimum age in years for a female to have borne an
+#' offspring. \code{NULL} (default) looks up the floor for each dam's species
+#' via \code{\link{getSpeciesMinBreedingAge}} (falling back to 2 years when the
+#' species is missing or unknown); a supplied value overrides that floor.
+#' @param minParentAge `r lifecycle::badge("deprecated")` Deprecated scalar
+#' minimum parent age. Supplying it sets both \code{minSireAge} and
+#' \code{minDamAge}; use those sex-specific parameters instead.
 #' @param reportChanges logical value that if \code{TRUE}, the \code{errorLst}
 #' contains the list of changes made to the column names. Default is
 #' \code{FALSE}.
@@ -165,17 +173,34 @@
 #'
 #' @importFrom lubridate is.Date
 #' @importFrom utils write.csv
+#' @importFrom lifecycle deprecated is_present deprecate_warn
 ## ##  rmsutilityr str_detect_fixed_all
 #' @export
 #' @examples
 #' examplePedigree <- nprcgenekeepr::examplePedigree
 #' ped <- qcStudbook(examplePedigree,
-#'   minParentAge = 2.0, reportChanges = FALSE,
+#'   minSireAge = 2.0, minDamAge = 2.0, reportChanges = FALSE,
 #'   reportErrors = FALSE
 #' )
 #' names(ped)
-qcStudbook <- function(sb, minParentAge = 2.0, reportChanges = FALSE,
-                       reportErrors = FALSE) {
+qcStudbook <- function(sb, minSireAge = NULL, minDamAge = NULL,
+                       minParentAge = lifecycle::deprecated(),
+                       reportChanges = FALSE, reportErrors = FALSE) {
+  if (lifecycle::is_present(minParentAge)) {
+    lifecycle::deprecate_warn(
+      when = "2.0.0",
+      what = "qcStudbook(minParentAge)",
+      details = "Use minSireAge and minDamAge instead."
+    )
+    if (is.null(minParentAge)) {
+      ## Legacy: minParentAge = NULL disabled the parent-age check entirely.
+      minSireAge <- -Inf
+      minDamAge <- -Inf
+    } else {
+      if (is.null(minSireAge)) minSireAge <- minParentAge
+      if (is.null(minDamAge)) minDamAge <- minParentAge
+    }
+  }
   newColumns <- fixColumnNames(names(sb), getEmptyErrorLst())
   cols <- newColumns$newColNames
   errorLst <- newColumns$errorLst
@@ -248,7 +273,10 @@ qcStudbook <- function(sb, minParentAge = 2.0, reportChanges = FALSE,
   }
 
   # ensure parents are older than offspring
-  suspiciousParents <- checkParentAge(sb, minParentAge, reportErrors)
+  suspiciousParents <- checkParentAge(sb,
+    minSireAge = minSireAge, minDamAge = minDamAge,
+    reportErrors = reportErrors
+  )
   if (reportErrors) {
     if (!is.null(suspiciousParents) && nrow(suspiciousParents) > 0L) {
       errorLst$suspiciousParents <- suspiciousParents

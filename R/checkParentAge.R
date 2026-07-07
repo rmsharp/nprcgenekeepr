@@ -7,9 +7,19 @@
 #'
 #' @param sb A dataframe containing a table of pedigree and demographic
 #' information.
-#' @param minParentAge numeric values to set the minimum age in years for
-#' an animal to have an offspring. Defaults to 2 years. The check is not
-#' performed for animals with missing birth dates.
+#' @param minSireAge numeric minimum age in years for a male to have sired an
+#' offspring. \code{NULL} (default) looks up the floor for each sire's species
+#' via \code{\link{getSpeciesMinBreedingAge}} (falling back to 2 years when the
+#' species is missing or unknown); a supplied value overrides that floor for
+#' all sires. The check is not performed for animals with missing birth dates.
+#' @param minDamAge numeric minimum age in years for a female to have borne an
+#' offspring. \code{NULL} (default) looks up the floor for each dam's species
+#' via \code{\link{getSpeciesMinBreedingAge}} (falling back to 2 years when the
+#' species is missing or unknown); a supplied value overrides that floor for
+#' all dams.
+#' @param minParentAge `r lifecycle::badge("deprecated")` Deprecated scalar
+#' minimum parent age. Supplying it sets both \code{minSireAge} and
+#' \code{minDamAge}; use those sex-specific parameters instead.
 #' @param reportErrors logical value if TRUE will scan the entire file and
 #' make a list of all errors found. The errors will be returned in a
 #' list of list where each sublist is a type of error found.
@@ -28,17 +38,43 @@
 #' @importFrom anytime anytime
 #' @importFrom lubridate dyears
 #' @export
+#' @importFrom lifecycle deprecated is_present deprecate_warn
 #' @examples
 #' library(nprcgenekeepr)
 #' qcPed <- nprcgenekeepr::qcPed
-#' checkParentAge(qcPed, minParentAge = 2L)
-#' checkParentAge(qcPed, minParentAge = 3L)
-#' checkParentAge(qcPed, minParentAge = 5L)
-#' checkParentAge(qcPed, minParentAge = 6L)
-#' head(checkParentAge(qcPed, minParentAge = 10L))
+#' checkParentAge(qcPed, minSireAge = 2L, minDamAge = 2L)
+#' checkParentAge(qcPed, minSireAge = 3L, minDamAge = 3L)
+#' checkParentAge(qcPed, minSireAge = 5L, minDamAge = 5L)
+#' checkParentAge(qcPed, minSireAge = 6L, minDamAge = 6L)
+#' head(checkParentAge(qcPed, minSireAge = 10L, minDamAge = 10L))
 checkParentAge <- function(sb,
-                           minParentAge = 2L,
+                           minSireAge = NULL,
+                           minDamAge = NULL,
+                           minParentAge = lifecycle::deprecated(),
                            reportErrors = FALSE) {
+  if (lifecycle::is_present(minParentAge)) {
+    lifecycle::deprecate_warn(
+      when = "2.0.0",
+      what = "checkParentAge(minParentAge)",
+      details = "Use minSireAge and minDamAge instead."
+    )
+    if (is.null(minParentAge)) {
+      ## Legacy: minParentAge = NULL disabled the age check entirely.
+      minSireAge <- -Inf
+      minDamAge <- -Inf
+    } else {
+      if (is.null(minSireAge)) minSireAge <- minParentAge
+      if (is.null(minDamAge)) minDamAge <- minParentAge
+    }
+  }
+  ## Map each id to its species so the floor can key on the PARENT's species
+  ## (the merges below reorder rows). Absent species column -> fallback floor.
+  if ("species" %in% names(sb)) {
+    speciesById <- as.character(sb$species)
+    names(speciesById) <- as.character(sb$id)
+  } else {
+    speciesById <- character(0L)
+  }
   if (nrow(sb) == 0L ||
     !all(c("id", "sire", "dam") %in% names(sb))) {
     if (reportErrors) {
@@ -91,8 +127,23 @@ checkParentAge <- function(sb,
     (sb$birth[!is.na(sb$damBirth)] -
       sb$damBirth[!is.na(sb$damBirth)]) / dyears(1L)
   sb <- sb[!is.na(sb$birth), ]
-  sb <- sb[(sb$sireAge < minParentAge & !is.na(sb$sireBirth)) |
-    (sb$damAge < minParentAge & !is.na(sb$damBirth)), ]
+  ## Per-parent floors key on the parent's own species and sex (sires are
+  ## male, dams female). Absent species -> resolveBreedingAge fallback (2).
+  if (length(speciesById) > 0L) {
+    sireSpecies <- unname(speciesById[as.character(sb$sire)])
+    damSpecies <- unname(speciesById[as.character(sb$dam)])
+  } else {
+    sireSpecies <- rep(NA_character_, nrow(sb))
+    damSpecies <- rep(NA_character_, nrow(sb))
+  }
+  sireFloor <- resolveBreedingAge(sireSpecies, "M",
+    minSireAge = minSireAge, minDamAge = minDamAge
+  )
+  damFloor <- resolveBreedingAge(damSpecies, "F",
+    minSireAge = minSireAge, minDamAge = minDamAge
+  )
+  sb <- sb[(sb$sireAge < sireFloor & !is.na(sb$sireBirth)) |
+    (sb$damAge < damFloor & !is.na(sb$damBirth)), ]
   sb$exit <- as.character(sb$exit)
   sb$sireAge <- round(sb$sireAge, 2L)
   sb$damAge <- round(sb$damAge, 2L)

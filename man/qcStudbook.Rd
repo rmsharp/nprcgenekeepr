@@ -4,7 +4,14 @@
 \alias{qcStudbook}
 \title{Run quality control on a studbook or pedigree}
 \usage{
-qcStudbook(sb, minParentAge = 2, reportChanges = FALSE, reportErrors = FALSE)
+qcStudbook(
+  sb,
+  minSireAge = NULL,
+  minDamAge = NULL,
+  minParentAge = lifecycle::deprecated(),
+  reportChanges = FALSE,
+  reportErrors = FALSE
+)
 }
 \arguments{
 \item{sb}{A dataframe containing a table of pedigree and demographic
@@ -44,9 +51,19 @@ Indicator of the restricted status of an animal. "Nonrestricted" animals
 are generally assumed to be naive.
 }}
 
-\item{minParentAge}{numeric values to set the minimum age in years for
-an animal to have an offspring. Defaults to 2 years. The check is not
-performed for animals with missing birth dates.}
+\item{minSireAge}{numeric minimum age in years for a male to have sired an
+offspring. \code{NULL} (default) looks up the floor for each sire's species
+via \code{\link{getSpeciesMinBreedingAge}} (falling back to 2 years when the
+species is missing or unknown); a supplied value overrides that floor.}
+
+\item{minDamAge}{numeric minimum age in years for a female to have borne an
+offspring. \code{NULL} (default) looks up the floor for each dam's species
+via \code{\link{getSpeciesMinBreedingAge}} (falling back to 2 years when the
+species is missing or unknown); a supplied value overrides that floor.}
+
+\item{minParentAge}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated scalar
+minimum parent age. Supplying it sets both \code{minSireAge} and
+\code{minDamAge}; use those sex-specific parameters instead.}
 
 \item{reportChanges}{logical value that if \code{TRUE}, the \code{errorLst}
 contains the list of changes made to the column names. Default is
@@ -175,7 +192,7 @@ pedigree information
 \examples{
 examplePedigree <- nprcgenekeepr::examplePedigree
 ped <- qcStudbook(examplePedigree,
-  minParentAge = 2.0, reportChanges = FALSE,
+  minSireAge = 2.0, minDamAge = 2.0, reportChanges = FALSE,
   reportErrors = FALSE
 )
 names(ped)

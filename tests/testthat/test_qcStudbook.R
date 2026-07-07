@@ -372,3 +372,21 @@ test_that(
     }
   }
 )
+
+## Issue #119 Slice 1: qcStudbook threads the new sex-specific breeding-age
+## params through to checkParentAge; minParentAge stays a deprecated alias.
+test_that("qcStudbook accepts minSireAge/minDamAge (issue #119)", {
+  pedNew <- qcStudbook(nprcgenekeepr::examplePedigree,
+    minSireAge = 2.0, minDamAge = 2.0
+  )
+  pedOld <- suppressWarnings(
+    qcStudbook(nprcgenekeepr::examplePedigree, minParentAge = 2.0)
+  )
+  expect_identical(pedNew, pedOld)
+})
+
+test_that("qcStudbook minParentAge alias emits a deprecation warning", {
+  lifecycle::expect_deprecated(
+    qcStudbook(nprcgenekeepr::examplePedigree, minParentAge = 2.0)
+  )
+})

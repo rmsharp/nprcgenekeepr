@@ -456,7 +456,7 @@ modInputServer <- function(id, config = NULL) {
       rawErrorLst <- tryCatch({
         qcStudbook(
           rawData,
-          minParentAge = minAge,
+          minSireAge = minAge, minDamAge = minAge,
           reportChanges = TRUE,
           reportErrors = TRUE
         )
@@ -469,7 +469,11 @@ modInputServer <- function(id, config = NULL) {
 
       # Run QC
       qcResult <- tryCatch({
-        runQcStudbook(rawData, minParentAge = minAge, reportChanges = TRUE)
+        runQcStudbook(
+          rawData,
+          minSireAge = minAge, minDamAge = minAge,
+          reportChanges = TRUE
+        )
       }, error = function(e) {
         list(
           cleaned = NULL,

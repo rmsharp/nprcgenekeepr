@@ -9,8 +9,17 @@
 #'
 #' @param ped data.frame containing pedigree data with columns including
 #'   id, sire, dam, sex, and optionally birth, death, departure, etc.
-#' @param minParentAge numeric minimum age in years for parents (default 2.0).
-#'   Parents younger than this at the time of offspring birth are flagged.
+#' @param minSireAge numeric minimum age in years for a male to have sired an
+#'   offspring. \code{NULL} (default) looks up each sire's species floor via
+#'   \code{\link{getSpeciesMinBreedingAge}} (2 years when species is unknown);
+#'   a supplied value overrides that floor.
+#' @param minDamAge numeric minimum age in years for a female to have borne an
+#'   offspring. \code{NULL} (default) looks up each dam's species floor via
+#'   \code{\link{getSpeciesMinBreedingAge}} (2 years when species is unknown);
+#'   a supplied value overrides that floor.
+#' @param minParentAge `r lifecycle::badge("deprecated")` Deprecated scalar
+#'   minimum parent age. Supplying it sets both \code{minSireAge} and
+#'   \code{minDamAge}; use those sex-specific parameters instead.
 #' @param reportChanges logical whether to report column name changes in the
 #'   result (default FALSE). When TRUE, warnings about renamed columns are
 #'   included in the qcResult.
@@ -28,17 +37,35 @@
 #' @seealso \code{\link{modInputServer}} for Shiny module integration
 #'
 #' @importFrom futile.logger flog.debug
+#' @importFrom lifecycle deprecated is_present deprecate_warn
 #' @export
 #' @examples
 #' data("pedGood", package = "nprcgenekeepr")
-#' result <- runQcStudbook(pedGood, minParentAge = 2.0)
+#' result <- runQcStudbook(pedGood, minSireAge = 2.0, minDamAge = 2.0)
 #' if (!result$qcResult$hasErrors) {
 #'   cleanedPed <- result$cleaned
 #' }
 #'
 runQcStudbook <- function(ped,
-                          minParentAge = 2.0,
+                          minSireAge = NULL,
+                          minDamAge = NULL,
+                          minParentAge = lifecycle::deprecated(),
                           reportChanges = FALSE) {
+  if (lifecycle::is_present(minParentAge)) {
+    lifecycle::deprecate_warn(
+      when = "2.0.0",
+      what = "runQcStudbook(minParentAge)",
+      details = "Use minSireAge and minDamAge instead."
+    )
+    if (is.null(minParentAge)) {
+      ## Legacy: minParentAge = NULL disabled the parent-age check entirely.
+      minSireAge <- -Inf
+      minDamAge <- -Inf
+    } else {
+      if (is.null(minSireAge)) minSireAge <- minParentAge
+      if (is.null(minDamAge)) minDamAge <- minParentAge
+    }
+  }
   # Helper to create empty qcResult structure
   getEmptyQcResult <- function() {
     list(
@@ -84,7 +111,8 @@ runQcStudbook <- function(ped,
   errorLst <- tryCatch(
     qcStudbook(
       ped,
-      minParentAge = minParentAge,
+      minSireAge = minSireAge,
+      minDamAge = minDamAge,
       reportChanges = TRUE,
       reportErrors = TRUE
     ),
@@ -170,7 +198,8 @@ runQcStudbook <- function(ped,
   cleanedPed <- tryCatch(
     qcStudbook(
       ped,
-      minParentAge = minParentAge,
+      minSireAge = minSireAge,
+      minDamAge = minDamAge,
       reportChanges = FALSE,
       reportErrors = FALSE
     ),

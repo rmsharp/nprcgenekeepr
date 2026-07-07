@@ -4,14 +4,31 @@
 \alias{runQcStudbook}
 \title{Run Quality Control on Studbook with UI-Friendly Results}
 \usage{
-runQcStudbook(ped, minParentAge = 2, reportChanges = FALSE)
+runQcStudbook(
+  ped,
+  minSireAge = NULL,
+  minDamAge = NULL,
+  minParentAge = lifecycle::deprecated(),
+  reportChanges = FALSE
+)
 }
 \arguments{
 \item{ped}{data.frame containing pedigree data with columns including
 id, sire, dam, sex, and optionally birth, death, departure, etc.}
 
-\item{minParentAge}{numeric minimum age in years for parents (default 2.0).
-Parents younger than this at the time of offspring birth are flagged.}
+\item{minSireAge}{numeric minimum age in years for a male to have sired an
+offspring. \code{NULL} (default) looks up each sire's species floor via
+\code{\link{getSpeciesMinBreedingAge}} (2 years when species is unknown);
+a supplied value overrides that floor.}
+
+\item{minDamAge}{numeric minimum age in years for a female to have borne an
+offspring. \code{NULL} (default) looks up each dam's species floor via
+\code{\link{getSpeciesMinBreedingAge}} (2 years when species is unknown);
+a supplied value overrides that floor.}
+
+\item{minParentAge}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated scalar
+minimum parent age. Supplying it sets both \code{minSireAge} and
+\code{minDamAge}; use those sex-specific parameters instead.}
 
 \item{reportChanges}{logical whether to report column name changes in the
 result (default FALSE). When TRUE, warnings about renamed columns are
@@ -33,7 +50,7 @@ first to check for errors, then to get the cleaned data if no errors exist.
 }
 \examples{
 data("pedGood", package = "nprcgenekeepr")
-result <- runQcStudbook(pedGood, minParentAge = 2.0)
+result <- runQcStudbook(pedGood, minSireAge = 2.0, minDamAge = 2.0)
 if (!result$qcResult$hasErrors) {
   cleanedPed <- result$cleaned
 }
