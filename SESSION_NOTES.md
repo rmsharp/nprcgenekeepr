@@ -7,6 +7,153 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 303 Did
+
+**Deliverable:** **Slice 1** of the \#119 plan (the QC vertical),
+IMPLEMENTED under strict TDD. Added the internal `resolveBreedingAge()`
+helper + `minSireAge`/`minDamAge` params to `checkParentAge`,
+`qcStudbook`, `runQcStudbook`, with `minParentAge` a deprecated alias
+(`lifecycle::deprecate_warn(when = "2.0.0")`). 4 `AskUserQuestion`
+gates; **0 stakeholder corrections.** ONE slice — Slices 2–5 NOT started
+(FM \#18). **Started / Completed:** 2026-07-07 / 2026-07-07 **Status:**
+**DONE.** Full suite **2929 pass / 0 fail / 0 error**;
+`R CMD check --as-cran` **0 ERROR / 0 WARNING / 1 baseline NOTE**
+(archived-on-CRAN, pre-existing/unfixable); vignettes rebuild OK; lint 0
+on changed files; `man/*.Rd` regenerated; Phase-3E runtime smoke of the
+rewired QC calls PASS. CHANGELOG (S303 under \[Unreleased\]) +
+PROJECT_LEARNINGS 281 + this handoff record it. - **Ratified with the
+owner this session (do NOT re-open):** **(R3)** deprecation
+`when = "2.0.0"` — the plan’s `1.1.0.9000` was STALE; DESCRIPTION is
+`2.0.0` (S131 `e24a53a2`), matching `runModularApp`. **(NULL
+back-compat)** `minParentAge = NULL` STILL disables the check (legacy
+skip, mapped to `-Inf` floors) — decided by the ratified “external
+scripts do not break” principle, NOT re-gated. **(dep hygiene)** owner
+chose a 3-line `tests/testthat/setup.R`
+`options(lifecycle_verbosity="quiet")` over migrating 24 test files or
+per-call `suppressWarnings`. **(no refactor)** owner chose to conclude
+GREEN without extracting the 3x deprecation shim. - **Design realized:**
+`resolveBreedingAge()` (`@noRd`) wraps `getSpeciesMinBreedingAge`;
+`checkParentAge` keys the floor on the PARENT’s species (id→species map
+built before the merges) and sex (sire=M floor, dam=F floor), replacing
+the flat cutoff. Species- less data → floor 2 (every golden unchanged;
+only species-aware assertions ADDED). - **The two non-obvious traps I
+hit (see Learning 281 + Gotchas below):** (1) `modInput` wraps its
+`qcStudbook` call in `tryCatch(warning = ...)` → a self-deprecation
+warning would be SWALLOWED into an empty errorLst (app QC silently
+breaks) → forced a minimal Slice-1 rewire of modInput’s 2 QC call sites
+(NOT the Slice-4 UX). (2) `minParentAge = NULL` disables the check and
+22 `test_qcStudbook.R` tests + external scripts rely on it.
+
+**Session 302 Handoff Evaluation (by Session 303): Score 9/10.** S302’s
+SUGGESTED NEXT named THIS session precisely (“implementation Slice 1 the
+QC vertical … RED first … Confirm RATIFY R3”) and the plan doc
+(`docs/planning/issue119-*-plan.md`) was a turnkey spec — evidence-based
+inventory, per-slice completion criteria, and dragons I executed against
+directly. **What helped most:** the plan’s dragon \#3 (“internal caller
+chain must move together; `deprecate_warn` warns inside
+tests/vignettes”) pre-warned me about the deprecation ripple, and the
+“don’t bundle slices (FM \#18)” kept Slice 1 tight. **What was
+missing/wrong (the −1):** (a) the R3 `when=` version was WRONG in the
+plan (`1.1.0.9000` vs actual `2.0.0`) — a stale read caught by one
+`git grep`; (b) the plan scoped `modInput` entirely to Slice 4 but did
+not anticipate that modInput’s `tryCatch(warning=)` SWALLOWS the
+deprecation warning, forcing a minimal modInput rewire INTO Slice 1; (c)
+the plan did not anticipate `minParentAge = NULL`’s legacy-skip
+semantics (22 tests) or that the suite- wide ripple needed a `setup.R`
+decision. These are inherent planning-vs-implementation edge cases; the
+plan was genuinely excellent. **ROI:** very high.
+
+**Self-assessment (Session 303): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read; ghost-check clean); wrote the 1B stub before code;
+declared the TDD phase atop every response and gated every transition
+via `AskUserQuestion` (R3+PRE-RED→RED, RED→GREEN, dep-hygiene fork,
+GREEN→REFACTOR). **Strengths:** (1) caught the `modInput` warning-
+swallowing — a SILENT app-QC break the tests would not have flagged
+(they exercise `processQcStudbookResult`, not the full server QC path) —
+and fixed it minimally without pulling Slice-4 UX forward; (2) preserved
+the emergent `minParentAge = NULL` skip semantics EXACTLY (verified
+`pedOne` flags 3 at floor 2, so the literal “alias sets both” would have
+[`stop()`](https://rdrr.io/r/base/stop.html)-broken 22 tests + external
+scripts); (3) corrected the stale `when=` version firsthand; (4)
+grounded every RED test in a species-bearing fixture proving M/F +
+species floors, and kept every species-less golden numerically
+identical; (5) verified end to end (suite + `--as-cran` incl. vignette
+rebuild + lint + Phase-3E smoke). **Weakness (the −1):** the session was
+long and I consulted the owner 4×; each was a real TDD gate or a genuine
+fork the plan glossed, but a leaner path might have folded the
+dep-hygiene fork into the GREEN gate rather than surfacing it
+mid-implementation.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 281** —
+deprecating a front-door param with `deprecate_warn` ripples across the
+whole package: the same slice must rewire internal RUNTIME callers (or a
+`tryCatch(warning=)` swallows the warning into a silent break), preserve
+emergent back-compat (`param = NULL` disabling a check → `-Inf` floors),
+and quiet the package’s own suite via `setup.R`
+`lifecycle_verbosity="quiet"` (external users still warned;
+`expect_deprecated` forces “warning” locally) rather than migrating 24
+files or trusting the fragile once-per-8h rate-limit; verify the `when=`
+version against DESCRIPTION firsthand. Carried as applied:
+\[\[observation-vs-decision\]\],
+\[\[consult-project-source-of-truth\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[ascii-only-in-question-options\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[push-close-out-docs-to-origin\]\].
+
+**=\> SUGGESTED NEXT.** \#119 Slice 1 is DONE. The natural successor is
+**Slice 2 — `getPotentialParents`**
+(`docs/planning/issue119-sex-specific-min-breeding-age-plan.md` §3 Slice
+2), independent of Slice 1, under strict TDD, ONE slice: add
+`minSireAge`/ `minDamAge` + deprecated `minParentAge`, move the flat
+cutoff (`getPotentialParents.R:97`) INTO the sire (`:104`) and dam
+(`:112`) selections gated by `resolveBreedingAge` for each candidate’s
+own species+sex; preserve species-less goldens; add species-aware +
+deprecation tests. **Reuse the now-tested `resolveBreedingAge()` — do
+NOT reinvent it.** The `setup.R` `lifecycle_verbosity="quiet"` I added
+already covers Slice 2’s new deprecation warnings suite-wide. Then Slice
+3 (`getProductionStatus` + **RATIFY R1 the 2-vs-3 default with the owner
+FIRST**), Slice 4 (Shiny two-field UX — **Phase-3E interactive smoke
+MANDATORY** — + `modPotentialParents`/`appServer` wiring, building on
+this session’s modInput internal rewire), Slice 5
+(docs/vignettes/screenshot/NEWS/WORDLIST). Do them in order; **do NOT
+bundle slices (FM \#18).** Other open work (owner’s pick): **\#118**
+effective population size (untriaged — a triage session is a good
+bounded deliverable); **\#116** Flags (BLOCKED); **\#103** roxygen
+harmonization; **\#37/#36/#28/#12/#11/#10/#5**; the CRAN thread
+(owner-run, package ARCHIVED 2025-07-29, HARD STOP).
+
+**Key files (this session):** **Created:** `R/resolveBreedingAge.R` (the
+`@noRd` helper), `tests/testthat/test_resolveBreedingAge.R` (15
+assertions), `tests/testthat/setup.R` (`lifecycle_verbosity="quiet"`).
+**Edited (code):** `R/checkParentAge.R` (sig + shim + parent-species map
+at 70-78 + per-parent floors at 131-147), `R/qcStudbook.R` (sig + shim
+189-203; `checkParentAge` call ~257), `R/runQcStudbook.R` (sig + shim
+55-72; both `qcStudbook` calls), `R/modInput.R` (2 QC call sites: the
+`qcStudbook` reportErrors call ~457 and the `runQcStudbook` call ~472 →
+`minSireAge = minAge, minDamAge = minAge`), `NAMESPACE` (+
+`importFrom(lifecycle, is_present/deprecate_warn)`),
+`man/checkParentAge.Rd` / `man/qcStudbook.Rd` / `man/runQcStudbook.Rd`
+(regenerated). **Edited (tests):** `test_checkParentAge.R` (migrated
+goldens + species-aware + alias-warns + NULL-skip), `test_qcStudbook.R`
+(+ new-param + deprecation tests), `test_runQcStudbook.R` (mock sig →
+`function(ped, ..., reportErrors)` + new-param + deprecation tests).
+**Edited (docs):** `CHANGELOG.md`, `PROJECT_LEARNINGS.md` (281), this
+file. **GOTCHAS for the next session:** (1) `modInput`’s
+`tryCatch(warning = function(w) getEmptyErrorLst())` around `qcStudbook`
+(`modInput.R:456-467`) SWALLOWS any deprecation warning into an empty
+errorLst — never let an internal RUNTIME caller pass the deprecated
+`minParentAge`; use the new params. (2) `minParentAge = NULL` =
+disable-the-check (mapped to `-Inf` floors in each shim) — preserved for
+back-compat; do NOT “simplify” it to table lookup. (3)
+`resolveBreedingAge` keys sire floors on `sex="M"`, dam floors on
+`sex="F"`; `checkParentAge` needs the PARENT’s species (built the
+id→species map BEFORE the merges reorder rows). (4) `setup.R`
+`lifecycle_verbosity="quiet"` makes the WHOLE suite quiet about
+deprecations — a genuinely-broken internal caller won’t surface as a
+test warning, so keep exercising new-runtime paths (Phase 3E) rather
+than trusting the suite to shout.
+
 ### What Session 302 Did
 
 **Deliverable:** Implementation **plan** for GitHub issue **\#119** —

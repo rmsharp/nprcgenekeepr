@@ -5,7 +5,13 @@ Ensure parents are sufficiently older than offspring
 ## Usage
 
 ``` r
-checkParentAge(sb, minParentAge = 2L, reportErrors = FALSE)
+checkParentAge(
+  sb,
+  minSireAge = NULL,
+  minDamAge = NULL,
+  minParentAge = lifecycle::deprecated(),
+  reportErrors = FALSE
+)
 ```
 
 ## Arguments
@@ -15,11 +21,28 @@ checkParentAge(sb, minParentAge = 2L, reportErrors = FALSE)
   A dataframe containing a table of pedigree and demographic
   information.
 
+- minSireAge:
+
+  numeric minimum age in years for a male to have sired an offspring.
+  `NULL` (default) looks up the floor for each sire's species via
+  [`getSpeciesMinBreedingAge`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesMinBreedingAge.md)
+  (falling back to 2 years when the species is missing or unknown); a
+  supplied value overrides that floor for all sires. The check is not
+  performed for animals with missing birth dates.
+
+- minDamAge:
+
+  numeric minimum age in years for a female to have borne an offspring.
+  `NULL` (default) looks up the floor for each dam's species via
+  [`getSpeciesMinBreedingAge`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesMinBreedingAge.md)
+  (falling back to 2 years when the species is missing or unknown); a
+  supplied value overrides that floor for all dams.
+
 - minParentAge:
 
-  numeric values to set the minimum age in years for an animal to have
-  an offspring. Defaults to 2 years. The check is not performed for
-  animals with missing birth dates.
+  **\[deprecated\]** Deprecated scalar minimum parent age. Supplying it
+  sets both `minSireAge` and `minDamAge`; use those sex-specific
+  parameters instead.
 
 - reportErrors:
 
@@ -46,20 +69,20 @@ less than `minParentAge`. It contains all of the columns in the original
 ``` r
 library(nprcgenekeepr)
 qcPed <- nprcgenekeepr::qcPed
-checkParentAge(qcPed, minParentAge = 2L)
+checkParentAge(qcPed, minSireAge = 2L, minDamAge = 2L)
 #>  [1] dam       sire      id        sex       gen       birth     exit     
 #>  [8] age       sireBirth damBirth  sireAge   damAge   
 #> <0 rows> (or 0-length row.names)
-checkParentAge(qcPed, minParentAge = 3L)
+checkParentAge(qcPed, minSireAge = 3L, minDamAge = 3L)
 #>  [1] dam       sire      id        sex       gen       birth     exit     
 #>  [8] age       sireBirth damBirth  sireAge   damAge   
 #> <0 rows> (or 0-length row.names)
-checkParentAge(qcPed, minParentAge = 5L)
+checkParentAge(qcPed, minSireAge = 5L, minDamAge = 5L)
 #>       dam   sire     id sex gen      birth       exit  age sireBirth   damBirth
 #> 63 EX98QB UAJJG4 L8Q55X   F   2 1993-09-23 2007-05-16 13.6      <NA> 1989-02-18
 #>    sireAge damAge
 #> 63      NA   4.59
-checkParentAge(qcPed, minParentAge = 6L)
+checkParentAge(qcPed, minSireAge = 6L, minDamAge = 6L)
 #>        dam   sire     id sex gen      birth       exit  age  sireBirth
 #> 63  EX98QB UAJJG4 L8Q55X   F   2 1993-09-23 2007-05-16 13.6       <NA>
 #> 90  L42X7I ULYO4W BA0JYM   F   2 2004-02-29       <NA> 15.3       <NA>
@@ -74,7 +97,7 @@ checkParentAge(qcPed, minParentAge = 6L)
 #> 102 1990-08-29      NA   5.56
 #> 125 2000-02-29     7.2   5.78
 #> 156 1974-12-21      NA   5.67
-head(checkParentAge(qcPed, minParentAge = 10L))
+head(checkParentAge(qcPed, minSireAge = 10L, minDamAge = 10L))
 #>       dam   sire     id sex gen      birth       exit  age  sireBirth
 #> 1  0DXI08 HRQJQR G6P0W4   F   1 1979-02-02 2000-04-15 21.2 1969-12-04
 #> 2  0RV8OM QBLTI6 8IJUQO   F   3 1999-02-03 2017-04-27 18.2 1987-12-27

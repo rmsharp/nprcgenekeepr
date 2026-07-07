@@ -116,6 +116,13 @@ is species specific. I have used a *minParentAge* of 2 years.[^1]
 breederPed <- qcStudbook(breederPedCsv, minParentAge = 2L)
 ```
 
+    ## Warning: The `minParentAge` argument of `qcStudbook()` is deprecated as of nprcgenekeepr
+    ## 2.0.0.
+    ## ℹ Use minSireAge and minDamAge instead.
+    ## This warning is displayed once per session.
+    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+    ## generated.
+
 If **qcStudbook** reports an error, change the call by adding the
 **reportErrors** argument set to **TRUE** and examine the returned
 object. More on this is presented in the **Pedigree Errors** section.
@@ -976,7 +983,7 @@ ped <- qcStudbook(pedOne, minParentAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/Rtmpidnz6v/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/Rtmp6FFOjz/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -1137,7 +1144,7 @@ examplePedigree[unlist(exampleLoops), c("id", "sire", "dam")][1L:10L, ]
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-07-07 06:33:04.628687. The processing
+The current date and time is 2026-07-07 16:58:52.824424. The processing
 time for this document was 20 seconds..
 
 ``` r

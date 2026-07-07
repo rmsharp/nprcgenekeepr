@@ -15,6 +15,52 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-07 — Implement issue \#119 Slice 1 — QC vertical: sex-specific `minSireAge`/`minDamAge` in `checkParentAge`/`qcStudbook`/`runQcStudbook` (Session 303)
+
+- **Deliverable:** Slice 1 of the \#119 plan
+  (`docs/planning/issue119-sex-specific-min-breeding-age-plan.md` §3)
+  under strict TDD (PRE-RED → RED → GREEN → concluded no-refactor). 4
+  `AskUserQuestion` gates; 0 stakeholder corrections. ONE slice — Slices
+  2–5 not started.
+- **Added:** internal `resolveBreedingAge()` (`R/resolveBreedingAge.R`,
+  `@noRd`) wraps the tested
+  [`getSpeciesMinBreedingAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesMinBreedingAge.md)
+  — both overrides `NULL` → per-(species, sex) table floor; an explicit
+  `minSireAge`/`minDamAge` overrides that sex. New
+  `tests/testthat/test_resolveBreedingAge.R` (15 assertions).
+- **Changed:**
+  [`checkParentAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkParentAge.md),
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md),
+  [`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md)
+  gain `minSireAge`/`minDamAge` (default `NULL` → species+sex table
+  lookup, keyed on the **parent’s** species via a sire/dam species map
+  built before the merges). `checkParentAge` now applies per-parent,
+  sex- and species-specific floors instead of one flat cutoff —
+  resolving \#119. `minParentAge` becomes a **deprecated alias**
+  (`lifecycle::deprecate_warn(when = "2.0.0")`) that sets both new
+  params; `minParentAge = NULL` still disables the check (legacy skip
+  preserved exactly, mapped to `-Inf` floors). Internal Shiny caller
+  `modInput.R` (2 QC call sites) rewired to the new params (single UI
+  field feeds both — the two-field UX is Slice 4) so the app never trips
+  its own deprecation warning (which `modInput`’s `tryCatch(warning=)`
+  would swallow into an empty errorLst).
+- **Back-compat:** species-less fixtures (`qcPed`, `pedGood`, …) behave
+  exactly as before (table lookup falls back to floor 2); every existing
+  golden count is unchanged — only species-aware assertions were added.
+  New `tests/testthat/setup.R` sets
+  `options(lifecycle_verbosity = "quiet")` so the package’s own test
+  suite is deterministically clean while external callers still see the
+  deprecation (deprecation-asserting tests force `"warning"` locally).
+- **Verify:** full suite 2929 pass / 0 fail / 0 error;
+  `R CMD check --as-cran` 0 ERROR / 0 WARNING / 1 baseline NOTE
+  (archived-on-CRAN); vignettes rebuild OK; lint 0 on changed files;
+  `man/*.Rd` regenerated; Phase-3E runtime smoke of the rewired QC calls
+  PASS.
+- **Deferred (per plan):** Slice 2 `getPotentialParents`; Slice 3
+  `getProductionStatus` (+ RATIFY R1 2-vs-3); Slice 4 Shiny two-field UX
+  (mandatory interactive smoke) & `modPotentialParents`/`appServer`
+  wiring; Slice 5 docs/vignettes/NEWS/WORDLIST.
+
 ### 2026-07-07 — Plan issue \#119 — replace scalar `minParentAge` with sex-specific `minSireAge`/`minDamAge` (Session 302)
 
 - **Deliverable:** implementation plan

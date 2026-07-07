@@ -55,7 +55,14 @@ pedigree information</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">qcStudbook</span><span class="op">(</span><span class="va">sb</span>, minParentAge <span class="op">=</span> <span class="fl">2</span>, reportChanges <span class="op">=</span> <span class="cn">FALSE</span>, reportErrors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">qcStudbook</span><span class="op">(</span></span>
+<span>  <span class="va">sb</span>,</span>
+<span>  minSireAge <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  minDamAge <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  minParentAge <span class="op">=</span> <span class="fu">lifecycle</span><span class="fu">::</span><span class="fu"><a href="https://lifecycle.r-lib.org/reference/deprecated.html" class="external-link">deprecated</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  reportChanges <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  reportErrors <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -98,10 +105,24 @@ are generally assumed to be naive.</p></li>
 </ul></dd>
 
 
+<dt id="arg-minsireage">minSireAge<a class="anchor" aria-label="anchor" href="#arg-minsireage"></a></dt>
+<dd><p>numeric minimum age in years for a male to have sired an
+offspring. <code>NULL</code> (default) looks up the floor for each sire's species
+via <code><a href="getSpeciesMinBreedingAge.html">getSpeciesMinBreedingAge</a></code> (falling back to 2 years when the
+species is missing or unknown); a supplied value overrides that floor.</p></dd>
+
+
+<dt id="arg-mindamage">minDamAge<a class="anchor" aria-label="anchor" href="#arg-mindamage"></a></dt>
+<dd><p>numeric minimum age in years for a female to have borne an
+offspring. <code>NULL</code> (default) looks up the floor for each dam's species
+via <code><a href="getSpeciesMinBreedingAge.html">getSpeciesMinBreedingAge</a></code> (falling back to 2 years when the
+species is missing or unknown); a supplied value overrides that floor.</p></dd>
+
+
 <dt id="arg-minparentage">minParentAge<a class="anchor" aria-label="anchor" href="#arg-minparentage"></a></dt>
-<dd><p>numeric values to set the minimum age in years for
-an animal to have an offspring. Defaults to 2 years. The check is not
-performed for animals with missing birth dates.</p></dd>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Deprecated scalar
+minimum parent age. Supplying it sets both <code>minSireAge</code> and
+<code>minDamAge</code>; use those sex-specific parameters instead.</p></dd>
 
 
 <dt id="arg-reportchanges">reportChanges<a class="anchor" aria-label="anchor" href="#arg-reportchanges"></a></dt>
@@ -206,7 +227,7 @@ information.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">examplePedigree</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="examplePedigree.html">examplePedigree</a></span></span></span>
 <span class="r-in"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu">qcStudbook</span><span class="op">(</span><span class="va">examplePedigree</span>,</span></span>
-<span class="r-in"><span>  minParentAge <span class="op">=</span> <span class="fl">2.0</span>, reportChanges <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>  minSireAge <span class="op">=</span> <span class="fl">2.0</span>, minDamAge <span class="op">=</span> <span class="fl">2.0</span>, reportChanges <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>  reportErrors <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">ped</span><span class="op">)</span></span></span>

@@ -66,6 +66,9 @@ ped <- qcStudbook(examplePedigree,
   reportChanges = FALSE,
   reportErrors  = FALSE
 )
+#> Warning: The `minParentAge` argument of `qcStudbook()` is deprecated as of nprcgenekeepr
+#> 2.0.0.
+#> ℹ Use minSireAge and minDamAge instead.
 dim(ped)
 #> [1] 3694   12
 names(ped)

@@ -8,7 +8,13 @@ exist.
 ## Usage
 
 ``` r
-runQcStudbook(ped, minParentAge = 2, reportChanges = FALSE)
+runQcStudbook(
+  ped,
+  minSireAge = NULL,
+  minDamAge = NULL,
+  minParentAge = lifecycle::deprecated(),
+  reportChanges = FALSE
+)
 ```
 
 ## Arguments
@@ -18,10 +24,27 @@ runQcStudbook(ped, minParentAge = 2, reportChanges = FALSE)
   data.frame containing pedigree data with columns including id, sire,
   dam, sex, and optionally birth, death, departure, etc.
 
+- minSireAge:
+
+  numeric minimum age in years for a male to have sired an offspring.
+  `NULL` (default) looks up each sire's species floor via
+  [`getSpeciesMinBreedingAge`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesMinBreedingAge.md)
+  (2 years when species is unknown); a supplied value overrides that
+  floor.
+
+- minDamAge:
+
+  numeric minimum age in years for a female to have borne an offspring.
+  `NULL` (default) looks up each dam's species floor via
+  [`getSpeciesMinBreedingAge`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesMinBreedingAge.md)
+  (2 years when species is unknown); a supplied value overrides that
+  floor.
+
 - minParentAge:
 
-  numeric minimum age in years for parents (default 2.0). Parents
-  younger than this at the time of offspring birth are flagged.
+  **\[deprecated\]** Deprecated scalar minimum parent age. Supplying it
+  sets both `minSireAge` and `minDamAge`; use those sex-specific
+  parameters instead.
 
 - reportChanges:
 
@@ -54,7 +77,7 @@ for Shiny module integration
 
 ``` r
 data("pedGood", package = "nprcgenekeepr")
-result <- runQcStudbook(pedGood, minParentAge = 2.0)
+result <- runQcStudbook(pedGood, minSireAge = 2.0, minDamAge = 2.0)
 if (!result$qcResult$hasErrors) {
   cleanedPed <- result$cleaned
 }

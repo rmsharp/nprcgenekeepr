@@ -65,6 +65,9 @@ breederPed <- qcStudbook(examplePedigree,
   reportChanges = FALSE,
   reportErrors  = FALSE
 )
+#> Warning: The `minParentAge` argument of `qcStudbook()` is deprecated as of nprcgenekeepr
+#> 2.0.0.
+#> ℹ Use minSireAge and minDamAge instead.
 ```
 
 [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)

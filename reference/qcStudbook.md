@@ -6,7 +6,14 @@ pedigree information
 ## Usage
 
 ``` r
-qcStudbook(sb, minParentAge = 2, reportChanges = FALSE, reportErrors = FALSE)
+qcStudbook(
+  sb,
+  minSireAge = NULL,
+  minDamAge = NULL,
+  minParentAge = lifecycle::deprecated(),
+  reportChanges = FALSE,
+  reportErrors = FALSE
+)
 ```
 
 ## Arguments
@@ -57,11 +64,27 @@ qcStudbook(sb, minParentAge = 2, reportChanges = FALSE, reportErrors = FALSE)
     restricted status of an animal. "Nonrestricted" animals are
     generally assumed to be naive.
 
+- minSireAge:
+
+  numeric minimum age in years for a male to have sired an offspring.
+  `NULL` (default) looks up the floor for each sire's species via
+  [`getSpeciesMinBreedingAge`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesMinBreedingAge.md)
+  (falling back to 2 years when the species is missing or unknown); a
+  supplied value overrides that floor.
+
+- minDamAge:
+
+  numeric minimum age in years for a female to have borne an offspring.
+  `NULL` (default) looks up the floor for each dam's species via
+  [`getSpeciesMinBreedingAge`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesMinBreedingAge.md)
+  (falling back to 2 years when the species is missing or unknown); a
+  supplied value overrides that floor.
+
 - minParentAge:
 
-  numeric values to set the minimum age in years for an animal to have
-  an offspring. Defaults to 2 years. The check is not performed for
-  animals with missing birth dates.
+  **\[deprecated\]** Deprecated scalar minimum parent age. Supplying it
+  sets both `minSireAge` and `minDamAge`; use those sex-specific
+  parameters instead.
 
 - reportChanges:
 
@@ -198,7 +221,7 @@ information.
 ``` r
 examplePedigree <- nprcgenekeepr::examplePedigree
 ped <- qcStudbook(examplePedigree,
-  minParentAge = 2.0, reportChanges = FALSE,
+  minSireAge = 2.0, minDamAge = 2.0, reportChanges = FALSE,
   reportErrors = FALSE
 )
 names(ped)
