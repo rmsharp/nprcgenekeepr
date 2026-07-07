@@ -7,6 +7,173 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 302 Did
+
+**Deliverable:** Implementation **plan** for GitHub issue **\#119** —
+replace the sex/species-agnostic scalar `minParentAge` with
+sex-specific, table-backed `minSireAge` / `minDamAge`. **Planning only;
+NO code changed** (the plan IS the deliverable — implementation is
+separate one-slice-per-session work; PRE-RED throughout, TDD gates apply
+to the implementation sessions). 2 `AskUserQuestion` ratifications with
+the owner; 0 stakeholder corrections. **Started / Completed:**
+2026-07-07 / 2026-07-07 **Status:** **DONE.** Deliverable =
+`docs/planning/issue119-sex-specific-min-breeding-age-plan.md` (5
+vertical slices, evidence-based inventory, per-slice completion
+criteria + verification, dragons). CHANGELOG (S302 under
+\[Unreleased\]) + PROJECT_LEARNINGS 280 + this handoff record it;
+committed and pushed to `origin/master` (FF; local == origin). -
+**Ratified with the owner (do NOT re-open):** **(D1) table-backed sex
+scalars** — `minSireAge`/`minDamAge` default to `NULL` → look up the
+floor per **parent** species+sex via
+[`getSpeciesMinBreedingAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesMinBreedingAge.md);
+explicit value overrides that sex; absent/unknown species → fallback 2
+(so species-less data behaves as today). Resolves BOTH halves of \#119,
+one source of truth, no third notion of breeding age. **(D2) back-compat
+split by surface** — `minParentAge` stays a **deprecated alias** (sets
+both, warns) in the exported R signatures (external scripts safe), but
+the package-internal **Shiny UI is fully migrated** to the two new
+params now. - **Plan shape:** one shared internal resolver
+`resolveBreedingAge` (wraps the existing, tested
+`getSpeciesMinBreedingAge`) +
+[`lifecycle::deprecate_warn`](https://lifecycle.r-lib.org/reference/deprecate_soft.html)
+(mirror `runModularApp.R:25`). Slices, one session each: **S1** QC
+vertical (`checkParentAge` + `qcStudbook` + `runQcStudbook` + the
+resolver); **S2** `getPotentialParents`; **S3** `getProductionStatus` +
+`getGeneticDiversityStats` caller; **S4** Shiny UI
+(`modInput`/`modPotentialParents`/`appServer` wiring — runtime Phase-3E
+MANDATORY); **S5** docs/vignettes/screenshot/WORDLIST/NEWS. S1 and S2
+are independent; S4 needs S1+S2; S3 independent; S5 last. - **Deferred
+RATIFY points** (settle in the named slice, not now): the 2-vs-3
+`getProductionStatus` default (recommend PRESERVE 3 as an explicit dam
+override — do not silently unify); the two-field Shiny UX; the
+deprecation version string. - **Verify:** N/A for correctness (no code
+changed). Ran the evidence inventory firsthand (`git grep` over
+`R/ tests/ man/ vignettes/ inst/`; read the 3 decision sites +
+`getSpeciesMinBreedingAge` + the Shiny wiring + `appServer.R:345`).
+**Phase-3E N/A** — a plan document changes no runtime behavior
+(documented, not silently skipped). Planning Session Checklist
+(SESSION_RUNNER): plan written with paths+lines ✔; grep inventory for
+all affected symbols ✔; per-phase completion criteria + verification
+commands ✔; each slice marked “separate session” with a STOP ✔.
+
+**Session 301 Handoff Evaluation (by Session 302): Score 10/10.** S301’s
+SUGGESTED NEXT named THIS session precisely — “one PLANNING session …
+that ratifies: which Option, the override-vs-table precedence, the
+unknown-species fallback default, the slice order, whether the 2-vs-3
+default gets unified, then writes `docs/planning/issue119-*-plan.md`
+with an evidence-based inventory (the triage is its seed).” **What
+helped:** the triage report
+(`docs/audits/ISSUE_119_MINPARENTAGE_TRIAGE_2026-07-07.md`) was a
+turnkey seed — it had already mapped decision sites vs. plumbing
+vs. docs, the species+sex table values, the 2-vs-3 discrepancy, the
+absent-species dragon, and four resolution options with a
+recommendation; I spent this session refining/grounding it (firsthand
+reads) and ratifying direction, not re-discovering. The standing gotchas
+(`--as-cran` from repo root, `NOT_CRAN=true` coverage, the `gh`
+projectCards workaround) were on hand. **What was missing:** nothing
+material — the triage even pre-listed the exact RATIFY questions I
+needed to ask. **What was wrong:** nothing — the direction was correctly
+deferred to this session; the owner’s answer (model B) matched the
+triage’s Option 1 recommendation. **ROI:** very high — the
+triage-then-plan split (S301→S302) is the methodology working as
+intended.
+
+**Self-assessment (Session 302): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+ghost-check — latest commit `38a28aa2` == S301 close-out, no gap); wrote
+the 1B stub before technical work; declared PRE-RED atop each response.
+**Strengths:** (1) treated the owner’s “can X be replaced by Y?” as a
+DIRECTION question, not an instruction — answered feasibility, surfaced
+the ONE design fork the literal proposal glossed (pure sex scalars would
+add a THIRD notion of breeding age vs. the existing species+sex table),
+and let the owner choose via `AskUserQuestion` before writing the plan
+(Learning 280; \[\[observation-vs-decision\]\]); (2) grounded every
+option and the plan in FIRSTHAND reads of the 3 decision sites +
+`getSpeciesMinBreedingAge` + the Shiny wiring — surfacing the
+parent-vs-offspring species subtlety in `checkParentAge`, the
+females-only `getProductionStatus`, and the unwired
+`modPotentialParents`/orphan reactive; (3) evidence-based grep inventory
+across `R/ tests/ man/ vignettes/ inst/`; (4) vertical slices cut by
+CONSUMER (each ships a working path), with the deprecation-caller-chain
+reasoning that forces the QC vertical to move together; (5) a second
+orthogonal ratification (back-compat) that caught the owner’s
+UI-migration nuance. **Weakness (the −1):** the plan is large; a leaner
+executor might want S1’s RED test list spelled out to the assertion — I
+described the test *intents* and completion criteria but left exact
+`expect_*` authoring to the RED phase (correct per TDD, but the −1 is
+that Slice 1’s blast radius (checkParentAge + qcStudbook + runQcStudbook
+together) makes it the biggest slice and could still feel heavy).
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 280** — an
+owner’s “can X be replaced by Y?” at the top of a planning session is a
+DIRECTION question: answer feasibility, surface the one design fork the
+proposal glosses, ratify via `AskUserQuestion` before planning; ground
+options in firsthand decision-site reads; `deprecate_warn` forces the
+internal caller chain to migrate together (cut slices by consumer,
+vertically); preserve species-less goldens exactly, only ADD
+species-aware assertions. Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[ascii-only-in-question-options\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[push-close-out-docs-to-origin\]\].
+
+**=\> SUGGESTED NEXT.** \#119 is now PLANNED. The natural successor is
+**implementation Slice 1** (the QC vertical) under strict TDD, ONE slice
+per session:
+`docs/planning/issue119-sex-specific-min-breeding-age-plan.md` §3 Slice
+1 — add the `resolveBreedingAge` helper + `minSireAge`/`minDamAge` to
+`checkParentAge`, `qcStudbook`, `runQcStudbook` with `minParentAge`
+deprecated; RED first (species-aware fixture + back-compat golden +
+deprecation-path tests), then GREEN, then `--as-cran`. **Confirm RATIFY
+R3 (deprecation version string) with the owner at the start of Slice
+1.** Do the slices in order (S1→S2→S3→S4→S5); S4 depends on S1+S2. **Do
+NOT bundle slices** (FM \#18). Other open work (owner’s pick): **\#118**
+`Add the effective population size estimate` (NEW, still untriaged — a
+triage session, same shape as the \#119 triage, is a good bounded
+deliverable); **\#116** Flags column (BLOCKED — no genotype/phenotype
+source); **\#103** roxygen harmonization; **\#37, \#36, \#28, \#12,
+\#11, \#10, \#5**; the CRAN thread (owner-run, package ARCHIVED
+2025-07-29, resubmission owner-gated + HARD STOP).
+
+**Key files (this session):** **Created:**
+`docs/planning/issue119-sex-specific-min-breeding-age-plan.md` (the plan
+deliverable). **Edited (docs only):** `CHANGELOG.md` (S302 entry under
+\[Unreleased\]), `PROJECT_LEARNINGS.md` (Learning 280),
+`SESSION_NOTES.md` (this handoff + the 1B stub it replaced). **Read
+(evidence, unchanged):** `R/checkParentAge.R`,
+`R/getPotentialParents.R`, `R/getProductionStatus.R`,
+`R/getSpeciesMinBreedingAge.R`, `R/modInput.R` (127-136, 440-479,
+650-667), `R/modPotentialParents.R` (185-274), `R/appServer.R`
+(345-350), the S301 triage. **Gotchas for the executor (Slice 1+):** 1.
+**Deprecation warns inside the package** — `deprecate_warn` always
+fires, so migrate the internal callers AND the existing test goldens to
+the new params in the same slice, or the package trips its own warning
+(fails vignette rebuild). Add an explicit test that the alias still
+works AND warns. 2. **Parent-vs-offspring species** — `checkParentAge`
+holds only the offspring row; the floor keys on the PARENT’s species →
+add a sire/dam species merge mirroring `sireBirth`/`damBirth`
+(`checkParentAge.R:63-84`); default NA → fallback 2. 3. **Species-less
+goldens must NOT move** — `qcPed`/`breederPed` have no species column;
+model B degrades to floor 2, so existing golden counts stay identical;
+only ADD species-aware assertions on a species-bearing fixture. 4.
+**`getProductionStatus` is females-only** (default 3) — only a dam floor
+applies; RATIFY R1 before Slice 3 (recommend preserve 3 as an explicit
+`minDamAge` override). 5. **Shiny loose threads (Slice 4):**
+`modPotentialParentsServer` at `appServer.R:345` is invoked WITHOUT
+`minParentAge` (uses hardcoded 2.0, unwired to the Input field); the
+`minParentAge` reactive `modInput.R:659` exposes has NO consumer in
+`appServer.R` — verify across `R/` before deleting; Phase-3E launch is
+MANDATORY. 6. **Standing (unchanged):** `--as-cran` from repo root;
+coverage `NOT_CRAN=true`; clean regression read isolates
+`test-app-`/`test-e2e-` baseline noise; keep R lines ≤80 (avoid new
+lints); `gh issue view` fails (use `gh api`/`gh issue comment`);
+`inst/WORDLIST` is curated — hand-edit, no
+[`spelling::update_wordlist`](https://docs.ropensci.org/spelling//reference/wordlist.html);
+keep issue numbers / “Slice N” out of rendered help & vignettes.
+
 ### What Session 301 Did
 
 **Deliverable:** Triage/scope GitHub issue **\#119** (“Use of

@@ -15,6 +15,57 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-07 — Plan issue \#119 — replace scalar `minParentAge` with sex-specific `minSireAge`/`minDamAge` (Session 302)
+
+- **Deliverable:** implementation plan
+  `docs/planning/issue119-sex-specific-min-breeding-age-plan.md`
+  (multi-slice, strict TDD). **Planning only; no code changed** — the
+  plan is the deliverable, implementation is separate
+  one-slice-per-session work. Two `AskUserQuestion` ratifications with
+  the owner; 0 stakeholder corrections. Seeded by the S301 triage
+  (`docs/audits/ISSUE_119_MINPARENTAGE_TRIAGE_2026-07-07.md`).
+- **Ratified direction (owner, S302):** **(D1) table-backed sex
+  scalars** — `minSireAge`/`minDamAge` default to `NULL`, meaning “look
+  up the floor per *parent* species+sex via
+  [`getSpeciesMinBreedingAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesMinBreedingAge.md)”;
+  an explicit number overrides that sex’s floor; absent/unknown species
+  falls back to `2` (unchanged behavior for species-less data). Resolves
+  BOTH halves of \#119 (sex AND species) with one source of truth — no
+  third parallel notion of breeding age. **(D2) back-compat split by
+  surface** — keep `minParentAge` as a deprecated alias (sets both,
+  warns) in the exported R signatures so external scripts don’t break,
+  but fully migrate the package-internal Shiny UI to
+  `minSireAge`/`minDamAge` now.
+- **Plan shape:** one shared internal resolver (`resolveBreedingAge`,
+  wrapping the existing tested `getSpeciesMinBreedingAge`) +
+  [`lifecycle::deprecate_warn`](https://lifecycle.r-lib.org/reference/deprecate_soft.html)
+  (pattern mirrors `runModularApp.R:25`). Five vertical slices, one
+  session each: **S1** QC vertical (`checkParentAge` + `qcStudbook` +
+  `runQcStudbook` + resolver), **S2** `getPotentialParents`, **S3**
+  `getProductionStatus` + `getGeneticDiversityStats` caller, **S4**
+  Shiny UI migration (`modInput`/`modPotentialParents`/`appServer`
+  wiring — runtime Phase-3E mandatory), **S5**
+  docs/vignettes/screenshot/WORDLIST/NEWS. Each slice preserves
+  species-less goldens exactly and only *adds* species-aware assertions.
+- **Evidence-based inventory (mandatory for signature-change plans):**
+  firsthand `git grep` over `R/ tests/ man/ vignettes/ inst/` — 3
+  decision sites (`checkParentAge.R:94-95`, `getPotentialParents.R:97`,
+  `getProductionStatus.R:64`), the QC plumbing
+  (`qcStudbook`/`runQcStudbook`), the Shiny surface
+  (`modInput.R:127,448-472,659`, `modPotentialParents.R:223,264`,
+  `appServer.R:345`), plus all tests/man/vignette references, tabulated
+  in the plan.
+- **Deferred RATIFY points** (settled during their named slice): the
+  2-vs-3 `getProductionStatus` default (recommend preserve 3 as an
+  explicit dam override — don’t silently unify), the two-field Shiny UX,
+  and the deprecation version string. **Load-bearing finds:**
+  `checkParentAge` floor must key on the *parent’s* species (add a
+  sire/dam species merge, mirroring `sireBirth`/`damBirth`);
+  `modPotentialParentsServer` at `appServer.R:345` is invoked WITHOUT
+  `minParentAge` (unwired to the Input field) and the `minParentAge`
+  reactive `modInput.R:659` exposes has NO consumer in `appServer.R` — a
+  latent loose thread the UI slice resolves.
+
 ### 2026-07-07 — Triage issue \#119 — `minParentAge` vs. sex-specific breeding ages (Session 301)
 
 - **Deliverable:** triage/scope GitHub issue **\#119** (“Use of
