@@ -7,6 +7,220 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 295 Did
+
+**Deliverable (owner directed the removal over a `# nocov` waive, after
+asking me to explain L49):** remove the genuinely-dead defensive branch
+`R/dataframe2string.R` L47-50
+(`if (is.null(rowNames)) rowNames <- as.character(seq_len(NROW(m)))`).
+**REFACTOR-only (dead-code removal, no behavior change); one
+`AskUserQuestion` PRE-RED→REFACTOR gate, one landing gate; 0 stakeholder
+corrections.** **Started / Completed:** 2026-07-06 / 2026-07-06
+**Status:** **DONE + VERIFIED.** The `if (is.null(rowNames)) {...}`
+block deleted (L47-50), keeping L46 `rowNames <- dimnames(object)[[1L]]`
+and the L52 `c("", rowNames)`. **`dataframe2string.R` 96.88% → 100%;
+OVERALL PACKAGE coverage 99.99% → 100.00%** (`NOT_CRAN=true`). **This
+effectively completes issue \#111 — 100% line coverage package-wide.**
+**Landed: owner chose direct-commit — the removal committed as
+`dfedaa90` (tagged `(S295)`); this docs close-out (CHANGELOG +
+PROJECT_LEARNINGS 274 + this handoff) records that hash and is pushed to
+`origin/master` (fast-forward; local == origin).** - **Why L49 is dead
+(S293 first proved it; confirmed here):** for a data frame
+`dimnames(object)[[1L]]` IS `row.names(object)`, never NULL for a frame
+with ≥1 row (R materializes automatic row names); the 0-row case already
+returns at L36-37; a matrix either has 0 rows (`length(row.names(m))==0`
+→ L37) or has row names (`dimnames[[1L]]` non-NULL → the `is.null` guard
+is FALSE). No input the function can process reaches L49. -
+**Behavior-inert proof (firsthand, BEFORE the edit —
+\[identical-proof\]/\[verify-first\]):** defined a guard-removed copy
+and compared `identical(current(x), removed(x))` over 10 inputs —
+`pedOne`, a frame with DEFAULT row names, a frame with CUSTOM
+[`row.names()`](https://rdrr.io/r/base/row.names.html), 1-column, 1-row,
+0-column, 0-row, a matrix WITH row names, a matrix WITHOUT row names,
+`addRowNames=FALSE` — **ALL 10 identical**. Removal changes nothing for
+any processable input. - **Caller grep (whole tree, before the edit —
+\[reachability\]):** only `tests/testthat/test_dataframe2string.R` + the
+roxygen `@examples` line call `dataframe2string`; NO production caller
+in `R/`. Low blast radius. - **Verify (firsthand):** existing
+`test_dataframe2string.R` + full suite **0 failed / 0 error / 0 true
+offenders** (7 baseline warnings — 2
+`test_gvaConvergence_kinshipOverrides` + 5 `test_modPyramid`, none new);
+`covr` (full suite, `NOT_CRAN=true`, saved `cov295.rds`) confirms
+`dataframe2string.R` **100%** and `percent_coverage` == **100.0000%**
+(sub-100 file list EMPTY); `lintr::lint("R/dataframe2string.R")` =
+**0**; `devtools::document()` produced **zero `man/` delta**
+(roxygen-inert); **`R CMD check --as-cran` (repo root, WITH vignettes,
+via `devtools::check(document=FALSE)`) Status: OK — 0/0/0**. **Phase-3E
+N/A** — pure exported function, only caller is the test file, no runtime
+wiring (FM \#24 has no target). - **⚠ Pre-existing NAMESPACE drift
+surfaced by `document()` (NOT fixed here — \[document-zero-delta\] + FM
+\#8 scope-creep guard):** running `document()` as the zero-delta check
+silently rewrote `NAMESPACE`, dropping `importFrom(lubridate, day)` +
+`importFrom(lubridate, month)` — two redundant lines no roxygen
+`@importFrom` declares (`getPyramidPlot.R:99,101` calls
+[`lubridate::month`](https://lubridate.tidyverse.org/reference/month.html)/[`lubridate::day`](https://lubridate.tidyverse.org/reference/day.html)
+via explicit `::`, needing no import). This drift PRE-DATES this session
+and is unrelated to `dataframe2string` (my removal is roxygen-inert). I
+**reverted** `NAMESPACE` (`git checkout NAMESPACE` — safe per
+\[\[check-status-before-destructive-git\]\]: it was MY `document()`
+output, understood, NOT a user edit) to keep the commit surgical, and
+flagged the drift as a separate ~30-second cleanup. It is harmless
+(package checks 0/0/0 with the extra lines) but means `document()` is
+currently non-idempotent for `NAMESPACE`.
+
+**Session 294 Handoff Evaluation (by Session 295): Score 9/10.** S294’s
+SUGGESTED NEXT named
+`R/dataframe2string.R L49 — a WAIVE decision, not a test` with the full
+unreachability proof, the two options ((a) leave at 96.88% and CLOSE
+\#111, (b) `# nocov`), and the explicit “Do NOT write a test that feeds
+a malformed object.” **What helped:** (i) the exact file/line + the
+structural proof were carried verbatim, so when the owner asked me to
+explain L49 I could answer from the handoff + a fresh file read with
+zero re-derivation; (ii) “do NOT feed a malformed object” correctly
+pre-empted the wrong instinct; (iii) the “it IS a source edit so gate
+it” framing applied directly to the removal (a bigger source edit than
+`# nocov`); (iv) all standing gotchas held (`--as-cran`
+repo-root-with-vignettes via `devtools::check` 0/0/0; keep
+`.DS_Store`/`PED_GV_AUDIT` untouched; measure with `NOT_CRAN=true`).
+**What was missing (the −1):** S294 framed the decision as
+leave-or-`# nocov` (two options) and did not enumerate a THIRD — REMOVE
+the dead code — which is what the owner chose; the removal is implied by
+“dead code” but an explicit third option would have been cleaner. It
+also could not foresee the pre-existing NAMESPACE drift `document()`
+would surface (not S294’s to know). Minor. **What was wrong:** nothing —
+the unreachability proof was exactly right, confirmed by 10
+[`identical()`](https://rdrr.io/r/base/identical.html) cases. **ROI:**
+very high — the explanation and the removal were both near-turnkey off
+the handoff.
+
+**Self-assessment (Session 295): 9/10.** **Strengths:** (1) treated the
+owner’s “explain L49 / I don’t know `# nocov`” as a QUESTION, not an
+instruction (FM \#23 / \[\[observation-vs-decision\]\]) — explained the
+dead-code proof, `# nocov`, and “pragma” in plain language and changed
+NOTHING, then acted only on the explicit “let’s remove it”; (2) **proved
+behavior-inert EMPIRICALLY with
+[`identical()`](https://rdrr.io/r/base/identical.html) over a 10-input
+battery BEFORE the edit** (\[identical-proof\]/\[verify-first\]) rather
+than removing on reasoning alone — including the tricky
+matrix-with/without-rownames and custom-rownames cases; (3) grepped the
+whole tree for callers first (\[reachability\]) — confirmed only the
+test file; (4) **caught the unrelated NAMESPACE drift from `document()`,
+diagnosed it as pre-existing + unrelated, reverted it surgically, and
+reported it as a separate finding** instead of bundling it (FM \#8) or
+blowing it away carelessly
+(\[\[check-status-before-destructive-git\]\]); (5) ran the full battery
+firsthand (identical proof, full suite 0/0/0, covr 100.00%, lint 0,
+`document()` zero man/ delta, `--as-cran` 0/0/0); (6) gated both the
+REFACTOR and the landing; claimed the session with a 1B stub before
+technical work. **Weakness (the −1):** running `document()` (a correct
+zero-delta check) surfaced harmless unrelated drift I then had to spend
+a step reverting — not a mistake, but a reminder that on this repo
+`document()` is non-idempotent and a lighter check (compare only `man/`
+via `git status man/`) would have avoided touching NAMESPACE at all.
+Minor; no correctness impact; capped at 9.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 274** — a
+proven-unreachable defensive line has THREE owner dispositions (leave /
+`# nocov` waive / REMOVE); when removal is chosen, prove behavior-inert
+with [`identical()`](https://rdrr.io/r/base/identical.html) over an
+input battery BEFORE the edit and treat it as `[refactor-only]` (no
+synthetic RED, gate PRE-RED→REFACTOR); `document()` as a
+`[document-zero-delta]` check can surface PRE-EXISTING unrelated drift
+(here two redundant `importFrom(lubridate, day/month)` lines) — revert
+it and report separately, do not bundle (FM \#8); removing the single
+last dead line took the whole package to 100%. Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a REFACTOR-only
+dead-code-removal session (issue \#111 tail) — PRE-RED→REFACTOR gated;
+behavior-inert production change (proven); no bug found; Phase-3E N/A.**
+
+**=\> SUGGESTED NEXT.** **Issue \#111 is effectively COMPLETE — the
+package is at 100% line coverage package-wide** (`percent_coverage` ==
+100.0000, `NOT_CRAN=true`). Slices: **S1** helpers (S285) → **S9** six
+single-file helpers (S293) → **S10** `modPedigree` + `modBreedingGroups`
+(S294) → **S295** removed the last dead line in `dataframe2string.R`.
+The owner may now choose to **CLOSE \#111** (or keep it open if any
+future coverage regression should reopen it). - **Tiny cleanup available
+(its own session):** regenerate `NAMESPACE` with `devtools::document()`
+to drop the two redundant `importFrom(lubridate, day)` /
+`importFrom(lubridate, month)` lines (no roxygen declares them;
+`getPyramidPlot.R` uses `lubridate::` explicitly). A ~30-second
+REFACTOR-only change — but gate it and commit it ALONE (it is unrelated
+to any other work; that is exactly why S295 did not fold it in). Verify
+with `document()` idempotency + `--as-cran` 0/0/0. - **Also open
+(unchanged):** **\#117** (the `fixColumnNames` overreach-cleanup bug — a
+genuine correctness fix, strict TDD: RED test asserting
+`first_name`/`second_name` restored, then fix line 32/35 to write
+`newCols`; when fixed, update `test_fixColumnNames.R`’s characterization
+assertions); **\#116** Flags column (BLOCKED — no genotype/phenotype
+data source); **\#103** roxygen; **\#37, \#36, \#28, \#12, \#11, \#10,
+\#5**; the CRAN thread (Phase 5b, owner-run outward — package ARCHIVED
+2025-07-29, resubmission owner-gated + HARD STOP). **Standing gotchas
+(unchanged):** **measure coverage with `NOT_CRAN=true`** (default
+undercounts ~8 pts — 39 `skip_on_cran` files); reuse the prior slice’s
+saved `covXXX.rds` to read exact uncovered lines with
+[`covr::zero_coverage()`](http://covr.r-lib.org/reference/zero_coverage.md)
+(select `line`); `covr::function_coverage(fn, code)` proves per-line
+reachability (plain fn OR module server fn); **a proven-unreachable
+defensive line is an OWNER choice — leave / `# nocov` / remove; if
+removing, prove behavior-inert with
+[`identical()`](https://rdrr.io/r/base/identical.html) over a battery
+first**; `document()` on this repo is currently **non-idempotent for
+`NAMESPACE`** (drops redundant `lubridate` day/month imports) — if you
+see an unexpected NAMESPACE delta from `document()`, it is that
+pre-existing drift, revert unless the cleanup IS your deliverable; for
+ANY package-code change — `--as-cran` from the REPO ROOT (renv;
+background ~3-4 min; **build WITH vignettes**;
+**`devtools::check(args="--as-cran")` returns 0/0/0 here,
+`--no-build-vignettes` yields 2 misleading vignette WARNINGs**; use
+`document=FALSE` in the check call to avoid re-triggering the NAMESPACE
+drift; **beware zsh `rm <glob>` “no matches found”**) + `lintr::lint()`
+(keep test lines ≤80) + `spell_check_package` (hand-add wordlist, never
+`update_wordlist`) after any `R/`+`man/` edit; behavior/NAMESPACE
+changes ALSO need STRICT TDD + NAMESPACE diff + Phase-3E + FULL-suite
+(`NOT_CRAN=true`); version **2.0.0**; package **ARCHIVED on CRAN
+2025-07-29**; e2e/shinytest2 SKIPS here (no chromote) →
+`shiny::testServer(<server fn>, {...})`; `gh issue view`/`gh pr edit`
+exit 1 → `gh api`; re-check `git status` before ANY destructive git
+(\[\[check-status-before-destructive-git\]\]); landing owner-gated
+(direct-commit vs PR).
+
+**Key files (this session):** **Edited (production):**
+`R/dataframe2string.R` (removed the dead L47-50 `is.null(rowNames)`
+branch). **Edited (docs):** `CHANGELOG.md` (S295 entry under
+\[Unreleased\]), `PROJECT_LEARNINGS.md` (Learning 274),
+`SESSION_NOTES.md` (this handoff + the 1B stub it replaced). **Read (not
+edited):** `R/dataframe2string.R` (full), `R/getPyramidPlot.R:99,101`
+(confirmed the
+[`lubridate::day`](https://lubridate.tidyverse.org/reference/day.html)/[`lubridate::month`](https://lubridate.tidyverse.org/reference/month.html)
+explicit-`::` usage behind the NAMESPACE drift),
+`tests/testthat/test_dataframe2string.R` (the only caller; passes
+unchanged). **Reverted (my own `document()` output, NOT committed):**
+`NAMESPACE` (the pre-existing `lubridate` day/month drift). **NOT
+committed (standing keep — FM \#22):** `.DS_Store` (tracked+modified),
+`PED_GV_AUDIT_2026-05-30.html` (untracked, `.Rbuildignore`d).
+**Scratchpad (NOT committed):** `prove295.R`, `cov295.R`/`.log`/`.rds`,
+`fullsuite295.log`, `check295.log` (reused `check294.R`).
+
+**Gotchas:** (1) **Production source change** (a 4-line removal) but
+**behavior-inert** — proven by 10
+[`identical()`](https://rdrr.io/r/base/identical.html) cases; no
+NAMESPACE/DESCRIPTION change; Phase-3E N/A (no runtime wiring). (2)
+**`--as-cran` here returned 0/0/0 (Status: OK)** via
+`devtools::check(document=FALSE)`; spell clean. (3) **The package is now
+at 100% line coverage** — \#111 effectively done. (4) **`document()` is
+non-idempotent for `NAMESPACE`** on this repo (drops redundant
+`lubridate` day/month imports) — a pre-existing drift, reverted here,
+flagged as its own tiny cleanup. (5) **Landed as `dfedaa90` (removal) +
+a docs close-out commit on `master`, pushed** (owner chose
+direct-commit; local == origin).
+
 ### What Session 294 Did
 
 **Deliverable (issue \#111 code-coverage campaign, slice 10 — the LAST
