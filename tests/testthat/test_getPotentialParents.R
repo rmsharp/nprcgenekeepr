@@ -4,7 +4,7 @@ pedOne <- nprcgenekeepr::rhesusPedigree
 pedOne$fromCenter <- TRUE
 potentialParents <-
   getPotentialParents(
-    ped = pedOne, minParentAge = 2.0,
+    ped = pedOne, minSireAge = 2, minDamAge = 2,
     maxGestationalPeriod = 210L
   )
 ids <- c("BRI2MW", "FEEN9W")
@@ -61,7 +61,7 @@ test_that("getPotentialParents forms list with correct lists", {
 test_that("getPotentialParents detects pedigree without fromCenter column", {
   pedOne$fromCenter <- NULL
   expect_null(getPotentialParents(
-    ped = pedOne, minParentAge = 2L,
+    ped = pedOne, minSireAge = 2, minDamAge = 2,
     maxGestationalPeriod = 210L
   ))
 })
@@ -75,7 +75,7 @@ test_that("getPotentialParents works with records with no potential parent", {
   expect_true("BRI2MW" %in% globalIds) # precondition: normally present
   pedOne$birth[1] <- as.Date("1950-01-01")
   ped <- getPotentialParents(
-    ped = pedOne, minParentAge = 2L,
+    ped = pedOne, minSireAge = 2, minDamAge = 2,
     maxGestationalPeriod = 210L
   )
   scenarioIds <- vapply(ped, function(x) x$id, character(1L))
@@ -101,7 +101,7 @@ test_that("getPotentialParents returns NULL when no from-center animal has a mis
     stringsAsFactors = FALSE
   )
   expect_null(getPotentialParents(
-    ped = ped, minParentAge = 2L,
+    ped = ped, minSireAge = 2, minDamAge = 2,
     maxGestationalPeriod = 210L
   ))
 })
@@ -114,7 +114,7 @@ test_that("getPotentialParents does not mutate the caller's pedigree (NEW-53)", 
   expect_identical(class(pedDF), "data.frame") # precondition
   namesSnapshot <- paste0(names(pedDF), collapse = "\r")
   invisible(getPotentialParents(
-    ped = pedDF, minParentAge = 2.0, maxGestationalPeriod = 210L
+    ped = pedDF, minSireAge = 2, minDamAge = 2, maxGestationalPeriod = 210L
   ))
   expect_false(inherits(pedDF, "data.table"))
   expect_identical(class(pedDF), "data.frame")
@@ -148,7 +148,7 @@ test_that("getPotentialParents excludes dams by a gestation-derived window (#31)
   )
   damsAt <- function(g) {
     out <- getPotentialParents(
-      ped = ped, minParentAge = 2L, maxGestationalPeriod = g
+      ped = ped, minSireAge = 2, minDamAge = 2, maxGestationalPeriod = g
     )
     out[[1L]]$dams
   }
@@ -170,7 +170,7 @@ test_that("dam selection responds to maxGestationalPeriod (#31 acceptance crit. 
   ## identical for any maxGestationalPeriod (the parameter affected only sires).
   damsBRI <- function(g) {
     pp <- getPotentialParents(
-      ped = pedOne, minParentAge = 2.0, maxGestationalPeriod = g
+      ped = pedOne, minSireAge = 2, minDamAge = 2, maxGestationalPeriod = g
     )
     pp[[1L]]$dams
   }
@@ -185,9 +185,9 @@ test_that("maxGestationalPeriod = NULL falls back to 210 on a species-less pedig
   ## species lookup resolves to the 210-day default for every focal animal --
   ## identical to the historical explicit-210 behavior. This pins backward
   ## compatibility for species-less pedigrees when the argument is omitted.
-  null_pp <- getPotentialParents(ped = pedOne, minParentAge = 2.0)
+  null_pp <- getPotentialParents(ped = pedOne, minSireAge = 2, minDamAge = 2)
   explicit_pp <- getPotentialParents(
-    ped = pedOne, minParentAge = 2.0, maxGestationalPeriod = 210L
+    ped = pedOne, minSireAge = 2, minDamAge = 2, maxGestationalPeriod = 210L
   )
   expect_identical(null_pp, explicit_pp)
 })
@@ -198,9 +198,11 @@ test_that("maxGestationalPeriod = NULL resolves a rhesus-species pedigree to 210
   ## code path.
   pedSpecies <- pedOne
   pedSpecies$species <- "RHESUS"
-  null_pp <- getPotentialParents(ped = pedSpecies, minParentAge = 2.0)
+  null_pp <- getPotentialParents(
+    ped = pedSpecies, minSireAge = 2, minDamAge = 2
+  )
   explicit_pp <- getPotentialParents(
-    ped = pedSpecies, minParentAge = 2.0, maxGestationalPeriod = 210L
+    ped = pedSpecies, minSireAge = 2, minDamAge = 2, maxGestationalPeriod = 210L
   )
   expect_identical(null_pp, explicit_pp)
 })
@@ -242,7 +244,7 @@ test_that("getPotentialParents keys the gestation window per focal animal's spec
     stringsAsFactors = FALSE
   )
   pp <- getPotentialParents(
-    ped = ped, minParentAge = 2.0,
+    ped = ped, minSireAge = 2, minDamAge = 2,
     maxGestationalPeriod = NULL, gestationTable = tbl
   )
   damsOf <- function(animalId) {
@@ -278,8 +280,95 @@ test_that("getPotentialParents falls back to all old-enough females", {
     stringsAsFactors = FALSE
   )
   pp <- getPotentialParents(
-    ped = ped, minParentAge = 2L, maxGestationalPeriod = 210L
+    ped = ped, minSireAge = 2, minDamAge = 2, maxGestationalPeriod = 210L
   )
   expect_identical(pp[[1L]]$id, "FOCAL")
   expect_identical(pp[[1L]]$dams, "DAM")
+})
+
+## Issue #119 Slice 2 -----------------------------------------------------
+## getPotentialParents now keys the minimum breeding-age floor on each
+## candidate's own species+sex (via resolveBreedingAge), replacing the single
+## flat cutoff. rhesusPedigree carries no species column, so its goldens above
+## stay at the legacy flat-2 floor; the fixtures below add a species column to
+## prove the sex- and species-specific behavior. Rhesus floors: male 4, female
+## 2.5 (from the bundled speciesGestation table).
+
+test_that("getPotentialParents NULL floors reproduce flat-2 on species-less ped", {
+  ## Both overrides omitted -> resolveBreedingAge falls back to 2 for the
+  ## species-less rhesusPedigree, so the result must equal the explicit flat-2
+  ## golden built at the top of this file.
+  defaulted <- getPotentialParents(ped = pedOne, maxGestationalPeriod = 210L)
+  expect_identical(defaulted, potentialParents)
+})
+
+## One from-center focal animal (FOCAL, both parents unknown) plus rhesus
+## candidates of known age. SIRE_YOUNG is 3 yrs old at the focal birth
+## (2010-01-01) -> below the rhesus male floor of 4; SIRE_OLD is 10 -> above it.
+sireFixture <- data.frame(
+  id = c("FOCAL", "SIRE_YOUNG", "SIRE_OLD", "DAM_OLD"),
+  sire = c(NA, NA, NA, NA),
+  dam = c(NA, NA, NA, NA),
+  sex = c("F", "M", "M", "F"),
+  species = rep("RHESUS", 4L),
+  birth = as.Date(c(
+    "2010-01-01", "2007-01-01", "2000-01-01", "2000-01-01"
+  )),
+  exit = as.Date(NA),
+  fromCenter = c(TRUE, FALSE, FALSE, FALSE),
+  stringsAsFactors = FALSE
+)
+
+test_that("getPotentialParents excludes a sire below the species male floor", {
+  pp <- getPotentialParents(ped = sireFixture, maxGestationalPeriod = 210L)
+  expect_identical(pp[[1L]]$id, "FOCAL")
+  sires <- pp[[1L]]$sires
+  expect_false("SIRE_YOUNG" %in% sires) # 3 yr < rhesus male floor 4
+  expect_true("SIRE_OLD" %in% sires) # 10 yr >= 4
+})
+
+test_that("getPotentialParents minSireAge override readmits a young sire", {
+  pp <- getPotentialParents(
+    ped = sireFixture, minSireAge = 2, maxGestationalPeriod = 210L
+  )
+  expect_true("SIRE_YOUNG" %in% pp[[1L]]$sires) # floor lowered to 2
+})
+
+## DAM_YOUNG is ~2.25 yrs old at the focal birth -> below the rhesus female
+## floor of 2.5. She has no offspring, so she reaches the candidate set only
+## through the all-old-enough-females fallback, which the per-candidate floor
+## still gates.
+damFixture <- data.frame(
+  id = c("FOCAL", "DAM_YOUNG", "SIRE"),
+  sire = c(NA, NA, NA),
+  dam = c(NA, NA, NA),
+  sex = c("F", "F", "M"),
+  species = rep("RHESUS", 3L),
+  birth = as.Date(c("2010-01-01", "2007-10-01", "2000-01-01")),
+  exit = as.Date(NA),
+  fromCenter = c(TRUE, FALSE, FALSE),
+  stringsAsFactors = FALSE
+)
+
+test_that("getPotentialParents excludes a dam below the species female floor", {
+  pp <- getPotentialParents(ped = damFixture, maxGestationalPeriod = 210L)
+  expect_identical(pp[[1L]]$id, "FOCAL")
+  expect_false("DAM_YOUNG" %in% pp[[1L]]$dams) # ~2.25 yr < rhesus female 2.5
+})
+
+test_that("getPotentialParents minDamAge override readmits a young dam", {
+  pp <- getPotentialParents(
+    ped = damFixture, minDamAge = 2, maxGestationalPeriod = 210L
+  )
+  expect_true("DAM_YOUNG" %in% pp[[1L]]$dams) # floor lowered to 2
+})
+
+test_that("getPotentialParents minParentAge alias reproduces flat-2 and warns", {
+  ## Back-compat: the deprecated scalar sets both sex floors and still warns.
+  lifecycle::expect_deprecated(
+    aliased <- getPotentialParents(
+      ped = pedOne, minParentAge = 2.0, maxGestationalPeriod = 210L
+    )
+  )
+  expect_identical(aliased, potentialParents)
 })

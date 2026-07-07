@@ -8,9 +8,20 @@
 #' @param ped the pedigree information in data.frame format. Pedigree
 #' (req. fields: id, sire, dam, gen, population).
 #' This requires complete pedigree information.
-#' @param minParentAge numeric values to set the minimum age in years for
-#' an animal to have an offspring. Defaults to 2 years. The check is not
-#' performed for animals with missing birth dates.
+#' @param minSireAge numeric minimum age in years for a male to be proposed
+#' as a potential sire. \code{NULL} (default) looks up the floor for each
+#' candidate's species via \code{\link{getSpeciesMinBreedingAge}} (falling
+#' back to 2 years when the species is missing or unknown); a supplied value
+#' overrides that floor for all male candidates. Candidates with missing
+#' birth dates are not considered.
+#' @param minDamAge numeric minimum age in years for a female to be proposed
+#' as a potential dam. \code{NULL} (default) looks up the floor for each
+#' candidate's species via \code{\link{getSpeciesMinBreedingAge}} (falling
+#' back to 2 years when the species is missing or unknown); a supplied value
+#' overrides that floor for all female candidates.
+#' @param minParentAge `r lifecycle::badge("deprecated")` Deprecated scalar
+#' minimum parent age. Supplying it sets both \code{minSireAge} and
+#' \code{minDamAge}; use those sex-specific parameters instead.
 #' @param maxGestationalPeriod integer maximum number of days between conception
 #' and birth for the species being analyzed (a conservative upper bound, e.g.
 #' 210 for rhesus whose typical gestation is about 165 days). When \code{NULL}
@@ -37,6 +48,7 @@
 #'
 #' @importFrom data.table as.data.table
 #' @importFrom stringi stri_sub
+#' @importFrom lifecycle deprecated is_present deprecate_warn
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
@@ -45,13 +57,30 @@
 #' ## colony-born animals; add one if your pedigree lacks it.
 #' ped$fromCenter <- TRUE
 #' potentialParents <- getPotentialParents(
-#'   ped = ped, minParentAge = 2.0, maxGestationalPeriod = 210L
+#'   ped = ped, minSireAge = 2, minDamAge = 2, maxGestationalPeriod = 210L
 #' )
 #' ## Each element pairs a focal id with candidate sires and dams.
 #' potentialParents[[1L]]
-getPotentialParents <- function(ped, minParentAge, maxGestationalPeriod = NULL,
+getPotentialParents <- function(ped, minSireAge = NULL, minDamAge = NULL,
+                                minParentAge = lifecycle::deprecated(),
+                                maxGestationalPeriod = NULL,
                                 gestationTable = NULL) {
   birth <- exit <- fromCenter <- id <- sex <- NULL
+  if (lifecycle::is_present(minParentAge)) {
+    lifecycle::deprecate_warn(
+      when = "2.0.0",
+      what = "getPotentialParents(minParentAge)",
+      details = "Use minSireAge and minDamAge instead."
+    )
+    if (is.null(minParentAge)) {
+      ## Legacy: minParentAge = NULL disabled the age check entirely.
+      minSireAge <- -Inf
+      minDamAge <- -Inf
+    } else {
+      if (is.null(minSireAge)) minSireAge <- minParentAge
+      if (is.null(minDamAge)) minDamAge <- minParentAge
+    }
+  }
 
   ## No point in looking at animals without a birth record.
   ped <- data.table::as.data.table(ped)
@@ -62,6 +91,20 @@ getPotentialParents <- function(ped, minParentAge, maxGestationalPeriod = NULL,
   }
   ## Remove the records of automatically generated IDs
   ped <- removeAutoGenIds(ped)
+
+  ## Per-candidate minimum breeding-age floor, keyed on each candidate's own
+  ## species (when present) and sex via resolveBreedingAge. Absent species ->
+  ## the fallback (2), so a species-less pedigree behaves exactly as the legacy
+  ## flat minimum parent age did. Computed once here (ped is now final) and
+  ## reused for every focal animal below.
+  candSpecies <- if ("species" %in% names(ped)) {
+    ped$species
+  } else {
+    rep(NA_character_, nrow(ped))
+  }
+  candFloor <- resolveBreedingAge(candSpecies, ped$sex,
+    minSireAge = minSireAge, minDamAge = minDamAge
+  )
 
   ## pUnknown becomes the pedigree records of animals with at least one unknown
   ## parent
@@ -93,8 +136,11 @@ getPotentialParents <- function(ped, minParentAge, maxGestationalPeriod = NULL,
   if (nrow(pUnknown) > 0L) {
     for (i in seq_len(nrow(pUnknown))) {
       mgp <- mgpVec[i] # gestation window for this focal animal (#46 item 2)
-      ## Calculating breeding age potential parents
-      ba <- ped[birth <= (pUnknown$birth[i] - (dYear * minParentAge)), ]
+      ## Calculating breeding age potential parents. Each candidate is judged
+      ## against its OWN species+sex floor (candFloor), so a male below the
+      ## sire floor and a female below the dam floor are each excluded before
+      ## the sex split below.
+      ba <- ped[birth <= (pUnknown$birth[i] - (dYear * candFloor)), ]
       ba <- ba[!is.na(ba$id), ]
       if (nrow(ba) == 0L) {
         next

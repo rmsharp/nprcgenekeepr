@@ -6,7 +6,9 @@
 \usage{
 getPotentialParents(
   ped,
-  minParentAge,
+  minSireAge = NULL,
+  minDamAge = NULL,
+  minParentAge = lifecycle::deprecated(),
   maxGestationalPeriod = NULL,
   gestationTable = NULL
 )
@@ -16,9 +18,22 @@ getPotentialParents(
 (req. fields: id, sire, dam, gen, population).
 This requires complete pedigree information.}
 
-\item{minParentAge}{numeric values to set the minimum age in years for
-an animal to have an offspring. Defaults to 2 years. The check is not
-performed for animals with missing birth dates.}
+\item{minSireAge}{numeric minimum age in years for a male to be proposed
+as a potential sire. \code{NULL} (default) looks up the floor for each
+candidate's species via \code{\link{getSpeciesMinBreedingAge}} (falling
+back to 2 years when the species is missing or unknown); a supplied value
+overrides that floor for all male candidates. Candidates with missing
+birth dates are not considered.}
+
+\item{minDamAge}{numeric minimum age in years for a female to be proposed
+as a potential dam. \code{NULL} (default) looks up the floor for each
+candidate's species via \code{\link{getSpeciesMinBreedingAge}} (falling
+back to 2 years when the species is missing or unknown); a supplied value
+overrides that floor for all female candidates.}
+
+\item{minParentAge}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated scalar
+minimum parent age. Supplying it sets both \code{minSireAge} and
+\code{minDamAge}; use those sex-specific parameters instead.}
 
 \item{maxGestationalPeriod}{integer maximum number of days between conception
 and birth for the species being analyzed (a conservative upper bound, e.g.
@@ -57,7 +72,7 @@ ped <- nprcgenekeepr::rhesusPedigree
 ## colony-born animals; add one if your pedigree lacks it.
 ped$fromCenter <- TRUE
 potentialParents <- getPotentialParents(
-  ped = ped, minParentAge = 2.0, maxGestationalPeriod = 210L
+  ped = ped, minSireAge = 2, minDamAge = 2, maxGestationalPeriod = 210L
 )
 ## Each element pairs a focal id with candidate sires and dams.
 potentialParents[[1L]]

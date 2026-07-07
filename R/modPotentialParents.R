@@ -260,8 +260,12 @@ modPotentialParentsServer <- function(id, pedigree = NULL, minParentAge = 2.0,
       if (is.null(maxGest) || is.na(maxGest)) {
         maxGest <- 210L
       }
+      ## Issue #119 Slice 2: pass the module's minParentAge through the new
+      ## sex-specific parameters so this internal caller does not trip
+      ## getPotentialParents()'s own deprecation warning. The two-field UX
+      ## (separate sire/dam inputs) is Slice 4.
       getPotentialParents(
-        ped = ped, minParentAge = minParentAge,
+        ped = ped, minSireAge = minParentAge, minDamAge = minParentAge,
         maxGestationalPeriod = maxGest
       )
     })
