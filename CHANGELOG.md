@@ -15,6 +15,42 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-06 — NAMESPACE cleanup — drop the two redundant `lubridate` day/month imports (Session 298)
+
+- **Deliverable (owner picked cleanup \#1 from S297’s SUGGESTED NEXT):**
+  regenerate `NAMESPACE` via `devtools::document()` to drop the two
+  redundant lines `importFrom(lubridate, day)` and
+  `importFrom(lubridate, month)`. **REFACTOR-only (generated-file
+  regeneration, no behavior change); one `AskUserQuestion`
+  PRE-RED→REFACTOR gate, one landing gate; 0 stakeholder corrections.**
+- **Why redundant (verified firsthand):** of the 13
+  `importFrom(lubridate, …)` lines, only `day` and `month` had no
+  corresponding roxygen `@importFrom lubridate` tag anywhere in `R/`
+  (the other 11 all do). Both symbols are used only as fully-qualified
+  [`lubridate::month`](https://lubridate.tidyverse.org/reference/month.html)/[`lubridate::day`](https://lubridate.tidyverse.org/reference/day.html)
+  (`getPyramidPlot.R:99,101`) — grep confirms no bare `month()`/`day()`
+  call exists in `R/` — so the two imports were dead weight
+  (behavior-inert to remove).
+- **Change:** `devtools::document()` produced exactly the two deletions
+  with **zero `man/` delta**. A second `document()` run left `NAMESPACE`
+  byte-identical, so **`document()` is now idempotent for `NAMESPACE`**
+  — resolving the standing non-idempotency gotcha carried since S295.
+- **Verify (firsthand):** NAMESPACE diff = exactly the 2 deletions;
+  `man/` zero delta; full-suite regression read (`NOT_CRAN=true`) **0
+  failed / 0 error** (7 baseline warnings —
+  `test_gvaConvergence_kinshipOverrides` + `test_modPyramid`, none new);
+  `spell_check_package` clean; `R CMD check --as-cran` (repo root, WITH
+  vignettes, via `devtools::check(document=FALSE)`) **Status: OK —
+  0/0/0**.
+- **Phase-3E (runtime):** covered — the `--as-cran` run rebuilt
+  vignettes and ran examples + the full test suite, exercising
+  `getPyramidPlot` (the
+  [`lubridate::month`](https://lubridate.tidyverse.org/reference/month.html)/[`lubridate::day`](https://lubridate.tidyverse.org/reference/day.html)
+  caller); the package loads and runs correctly with the two imports
+  removed. Landed as `aff4d262` on master (owner chose direct-commit).
+- **Closes the “Separate finding” flagged in the Session 295 entry
+  below** (the redundant `lubridate` day/month NAMESPACE lines).
+
 ### 2026-07-06 — \#117 — fix `fixColumnNames()` first_name/second_name overreach cleanup so the restoration reaches newColNames (Session 297)
 
 - **Deliverable:** fix the ineffective “clean up possible overreach”
