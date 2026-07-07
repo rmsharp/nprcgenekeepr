@@ -15,6 +15,62 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-06 — \#117 — fix `fixColumnNames()` first_name/second_name overreach cleanup so the restoration reaches newColNames (Session 297)
+
+- **Deliverable:** fix the ineffective “clean up possible overreach”
+  block in `R/fixColumnNames.R` (L31-36). The block restored the
+  genotype-bearing headers `first_name`/`second_name` (which the
+  underscore-strip pass at L28 collapses to `firstname`/`secondname`)
+  but wrote to the local `cols`, which L39 (`cols <- newCols`)
+  immediately overwrote; the function returns `newCols`, so the
+  restoration never reached `newColNames`. Both the space form
+  (`"First Name"`) and the underscore form (`"first_name"`) came back
+  `firstname`/`secondname`. **Strict TDD bug fix; one `AskUserQuestion`
+  PRE-RED→RED gate (with the surgical-scope decision), one RED→GREEN
+  gate, one landing gate; 0 stakeholder corrections.**
+- **Root cause + fix:** retarget the block from `cols` to `newCols` (the
+  returned vector) — `if (any(tolower(newCols) == "firstname"))` /
+  `newCols[...] <- "first_name"` and the `secondname` twin. A minimal
+  in-body change (2 condition + 2 assignment lines retargeted; the
+  inline comment expanded to state the intent + issue). Now every
+  spelling of the two genotype headers — space (`First Name`),
+  underscore (`first_name`), period (`First.Name`), and the
+  already-collapsed form (`firstname`) — normalizes to canonical
+  `first_name`/`second_name` in `newColNames`. The block now mirrors the
+  downstream `fixGenotypeCols()` workaround exactly.
+- **RED → GREEN:** rewrote `tests/testthat/test_fixColumnNames.R` from
+  the 2 characterization tests (which pinned the *defective* output per
+  the \#111 coverage-slice note) to 8 blocks / 10 assertions asserting
+  the *corrected* contract — all four input spellings, only-first,
+  only-second, mixed-with-canonical (`EGO`/`Sire_ID` + genotype), the
+  `underScoreRemoved == character(0)` diagnostic for the underscore form
+  (the previously spurious record is gone), plus a no-genotype invariant
+  guard. RED: 7/8 blocks fail (9 assertion failures), the invariant
+  guard passes. GREEN: all 10 assertions pass, invariant stays green.
+- **Verify (firsthand):** `test_fixColumnNames.R` 8/8 pass; full-suite
+  regression read (`NOT_CRAN=true`) **244 files, 0 failed / 0 error** (7
+  baseline warnings — `test_gvaConvergence_kinshipOverrides` +
+  `test_modPyramid`, none new); `lintr::lint()` on both changed files =
+  **0**; `spell_check_package` clean; `devtools::document()` **zero
+  `man/` delta** (the fix is inside the function body, roxygen-inert) —
+  reverted the known pre-existing `lubridate` day/month NAMESPACE drift
+  `document()` re-surfaced; `R CMD check --as-cran` (repo root, WITH
+  vignettes) **Status: OK — 0/0/0**.
+- **Phase-3E (integration):**
+  [`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)’s
+  only production caller is
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  (`:179`), which also runs the idempotent `fixGenotypeCols()`
+  workaround (`:288`), so the fix leaves `qcStudbook`’s *net* output
+  unchanged — proven by
+  `test_qcStudbook`/`test_species_first_class`/`test_exampleData_columnNames`
+  all passing unchanged, and by a live
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  run on a genotype-bearing pedigree returning
+  `first_name`/`second_name` with no collapsed forms. Scope kept
+  surgical: `fixGenotypeCols` left as a harmless safety net for a
+  separate future evaluation.
+
 ### 2026-07-06 — \#111 — remove the last uncovered line (proven-dead branch in dataframe2string.R) → package 100% coverage (Session 295)
 
 - **Deliverable (owner directed the removal over a `# nocov` waive):**

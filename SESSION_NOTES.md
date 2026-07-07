@@ -7,6 +7,255 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 297 Did
+
+**Deliverable (owner picked \#117 at orientation):** fix issue \#117 —
+the ineffective “clean up possible overreach” block in
+`R/fixColumnNames.R` (L31-36). The block restored the genotype-bearing
+headers `first_name`/`second_name` (which the L28 underscore strip
+collapses to `firstname`/`secondname`) but wrote to the local `cols`,
+which L39 (`cols <- newCols`) immediately overwrote; the function
+returns `newCols`, so the restoration never reached `newColNames` and
+BOTH the space form (`"First Name"`) and the underscore form
+(`"first_name"`) came back collapsed. **Strict TDD bug fix; one
+`AskUserQuestion` PRE-RED→RED gate (with the surgical-scope decision),
+one RED→GREEN gate, one landing gate; 0 stakeholder corrections.**
+**Started / Completed:** 2026-07-06 / 2026-07-06 **Status:** **DONE +
+VERIFIED.** Retargeted the block from `cols` to `newCols` (the returned
+vector): `if (any(tolower(newCols) == "firstname"))` /
+`newCols[...] <- "first_name"` and the `secondname` twin — a 6-line
+in-body change (comment expanded to state the intent + issue \#117). Now
+every spelling of the two genotype headers — space, underscore, period
+(`First.Name`), and the already-collapsed form (`firstname`) —
+normalizes to canonical `first_name`/`second_name` in `newColNames`; the
+block now mirrors the downstream `fixGenotypeCols()` workaround exactly.
+**Landed: owner chose direct-commit — the fix committed as `fdcfc042`
+(tagged `(S297)`); this docs close-out (CHANGELOG + PROJECT_LEARNINGS
+275 + this handoff) records that hash and is pushed to `origin/master`
+(fast-forward; local == origin). Owner chose to CLOSE \#117.** - **Root
+cause (dead-write):** `newCols <- gsub("_","",cols)` (L28) computes the
+collapsed vector; the block wrote the RESTORE to `cols` (the pre-strip
+value) while `newCols` kept the collapsed form; `cols <- newCols` (L39)
+then threw the restore away. The condition ALSO had to move (not just
+the assignment): for the underscore form,
+`any(tolower(cols)=="firstname")` was FALSE because `cols` still held
+the underscore — so retargeting only the assignment (as the S295 hint
+literally read) would have left the underscore form broken. Retargeting
+the WHOLE block (condition + assignment) to `newCols` fixes both
+forms. - **RED → GREEN:** rewrote `tests/testthat/test_fixColumnNames.R`
+from the 2 characterization tests (which pinned the DEFECTIVE output per
+S293’s \#111 coverage-slice note, clearly commented “when fixed, update
+these assertions”) to **8 blocks / 10 assertions** asserting the
+CORRECTED contract — all four input spellings, only-first, only-second,
+mixed-with-canonical (`EGO`/`Sire_ID` + genotype), the
+`underScoreRemoved == character(0)` diagnostic for the underscore form
+(the previously spurious record is gone), plus a **no-genotype invariant
+guard** (reuses `test_qcStudbook.R:123`’s known-correct
+`underScoreRemoved` string). RED: **7/8 blocks fail** (9 assertion
+failures), invariant guard passes. GREEN: **all 10 pass**, invariant
+green. - **Blast radius (mapped before writing tests):**
+[`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)’s
+only production caller is
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+(`:179`), which LATER runs the idempotent `fixGenotypeCols()` workaround
+(`:288`, a `@noRd` “not a good fix … avoid the problem” restore of
+`firstname`→`first_name`). So the app’s OBSERVABLE output was already
+correct (the workaround masked the bug); only DIRECT callers saw the
+collapsed names. **Scope kept surgical (owner-gated): fix
+`fixColumnNames` only; leave `fixGenotypeCols` as a harmless idempotent
+safety net for a separate future evaluation (FM \#8 — did not remove the
+now-redundant workaround in the same session).** - **Verify
+(firsthand):** `test_fixColumnNames.R` **8/8** pass; full-suite
+regression read (`NOT_CRAN=true`) **244 files, 0 failed / 0 error** (7
+baseline warnings — 2 `test_gvaConvergence_kinshipOverrides` + 5
+`test_modPyramid`, none new); `lintr::lint()` on both changed files =
+**0**; `spell_check_package` clean; `devtools::document()` **zero `man/`
+delta** (in-body change is roxygen-inert) — the re-surfaced `lubridate`
+day/month NAMESPACE drift is the known pre-existing S295
+non-idempotency, **reverted** (`git checkout NAMESPACE`, safe per
+\[\[check-status-before-destructive-git\]\] — my own `document()`
+output, not a user edit); **`R CMD check --as-cran` (repo root, WITH
+vignettes, via `devtools::check(document=FALSE)`) Status: OK —
+0/0/0**. - **Phase-3E (integration — DONE, not skipped):** ran a live
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+on a genotype-bearing pedigree → output retains
+`first_name`/`second_name`, no collapsed forms; and
+`test_qcStudbook`/`test_species_first_class`/
+`test_exampleData_columnNames` all pass unchanged, confirming
+`qcStudbook`’s NET output is identical (the workaround already restored
+these). A full app launch would add nothing beyond this in-process
+integration proof.
+
+**Session 295 Handoff Evaluation (by Session 297): Score 9/10.** S295’s
+SUGGESTED NEXT listed \#117 as “a genuine correctness fix, strict TDD:
+RED test asserting `first_name`/`second_name` restored, then fix line
+32/35 to write `newCols`; when fixed, update `test_fixColumnNames.R`’s
+characterization assertions.” **What helped:** (i) it named the exact
+defect, the fix location, the strict-TDD framing, AND the “update the
+characterization assertions” breadcrumb — so RED was a turnkey flip of
+S293’s known-defect tests to the correct contract, not a discovery; (ii)
+S293’s own characterization tests + the filed issue \#117 (root cause +
+the `newCols`-vs-`cols` hint) meant zero re-derivation of the bug; (iii)
+every standing gotcha held and was load-bearing (`NOT_CRAN=true`;
+`--as-cran` repo-root-with- vignettes 0/0/0 via
+`devtools::check(document=FALSE)`; `document()` non-idempotent for
+NAMESPACE → revert; keep `.DS_Store`/`PED_GV_AUDIT` untouched; lint ≤80;
+spell hand-add); (iv) S296’s chromote correction was accurate (e2e not
+needed here anyway). **What was missing (the −1):** the fix hint read
+“fix line 32/35 to write `newCols`” — but the CONDITION (L31/L34) must
+move too, else the underscore form stays broken (its
+`any(tolower(cols)=="firstname")` is FALSE while `cols` still has the
+underscore). I caught it by tracing both input forms; a fully-correct
+hint would have said “retarget the whole block.” Minor. **What was
+wrong:** nothing — the root cause and fix location were accurate.
+**ROI:** very high — near-turnkey scoping off the handoff + the
+predecessor coverage slice’s breadcrumb.
+
+**Self-assessment (Session 297): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status clean-except-standing; ghost-check — confirmed S296 was a
+DOCUMENTED doc micro-fix, not a ghost); reported, STOPPED for the owner;
+wrote the 1B stub before technical work; declared the TDD phase at the
+top of each phase-response and posed all three gates via
+`AskUserQuestion`. **Strengths:** (1) root-caused firsthand by tracing
+BOTH input forms through every transform — which caught the
+condition-must-move-too subtlety the S295 hint under-specified; (2)
+mapped the full blast radius (colChange semantics, ALL callers, the
+`fixGenotypeCols` downstream workaround, every test asserting on this
+output) BEFORE writing tests — enabling surgical scope, a Phase-3E proof
+without a full app launch, and reuse of `test_qcStudbook:123`’s
+known-correct diagnostic string in the invariant guard; (3) wrote
+comprehensive RED (8 blocks/10 assertions incl. an invariant guard) that
+failed exactly as designed (7/8 fail, guard passes) — textbook RED; (4)
+minimal GREEN (6-line retarget), no REFACTOR scope creep, did NOT
+over-engineer the `colChange` diagnostic nor remove the redundant
+workaround (FM \#8); (5) ran the full battery firsthand (suite 0/0/0,
+lint 0, spell clean, `document()` zero man/ delta with the NAMESPACE
+drift correctly reverted, `--as-cran` 0/0/0, live integration run); (6)
+surfaced the surgical-vs- widen scope decision to the owner rather than
+assuming (FM \#23 / \[\[observation-vs-decision\]\]). **Weakness (the
+−1):** no independent defect, but a tighter first pass could have stated
+the condition-vs-assignment subtlety more prominently up front rather
+than deriving it mid-trace; 0 stakeholder corrections, capped at 9 for
+honesty.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 275** — the first
+real bug-fix after the \#111 coverage campaign; a coverage slice that
+CHARACTERIZED a known defect (with an issue number + a “when fixed,
+update these assertions” breadcrumb) makes the fix session’s RED turnkey
+(flip the characterization tests to the corrected contract + add edge
+cases); the root cause was a classic dead-write (restore written to a
+local the next line overwrites) fixed by a one-line retarget; the value
+is in mapping blast radius (an idempotent downstream workaround MASKS
+the bug → Phase-3E satisfied by proving the integration output
+identical, not a full app launch), keeping scope surgical (FM \#8),
+including a before-and-after invariant guard in RED, and NOT
+over-engineering an incidental diagnostic. Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a genuine BUG-FIX
+session (issue \#117) — strict TDD RED→GREEN, no REFACTOR needed;
+production source change (behavior-changing for direct callers,
+net-inert through `qcStudbook`); Phase-3E DONE (integration proof).**
+
+**=\> SUGGESTED NEXT.** \#117 is CLOSED. The remaining open work
+(owner’s pick): - **Tiny cleanup (its own gated session, unchanged from
+S295):** regenerate `NAMESPACE` with `devtools::document()` to drop the
+two redundant `importFrom(lubridate, day)` /
+`importFrom(lubridate, month)` lines (no roxygen declares them;
+`getPyramidPlot.R` uses `lubridate::` explicitly). A ~30-second
+REFACTOR-only change — gate it and commit it ALONE; verify with
+`document()` idempotency + `--as-cran` 0/0/0. - **`fixGenotypeCols`
+redundancy (its own session, NEW):** now that
+[`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)
+restores `first_name`/`second_name` itself, the `fixGenotypeCols(sb)`
+call at `qcStudbook.R:288` is redundant (idempotent, so harmless). A
+future session could evaluate removing it — but that is a
+behavior-adjacent change needing its own RED (assert `qcStudbook` still
+yields `first_name`/`second_name` without the call) + full verification;
+NOT folded in here on purpose (FM \#8). Its `@noRd` note already says “a
+better solution is to avoid the problem” — this fix IS that better
+solution. - **Also open (unchanged):** **\#116** Flags column (BLOCKED —
+no genotype/phenotype data source); **\#103** roxygen; **\#37, \#36,
+\#28, \#12, \#11, \#10, \#5**; the CRAN thread (Phase 5b, owner-run
+outward — package ARCHIVED 2025-07-29, resubmission owner-gated + HARD
+STOP). **\#111 is effectively complete** (100% line coverage
+package-wide; owner may formally close it). **Standing gotchas
+(unchanged):** **measure coverage with `NOT_CRAN=true`** (default
+undercounts ~8 pts — 39 `skip_on_cran` files); reuse the prior slice’s
+saved `covXXX.rds` to read exact uncovered lines with
+[`covr::zero_coverage()`](http://covr.r-lib.org/reference/zero_coverage.md)
+(select `line`); `covr::function_coverage(fn, code)` proves per-line
+reachability (plain fn OR module server fn); **a proven-unreachable
+defensive line is an OWNER choice — leave / `# nocov` / remove; if
+removing, prove behavior-inert with
+[`identical()`](https://rdrr.io/r/base/identical.html) over a battery
+first**; **for a BUG in code a coverage slice characterized, the fix
+session’s RED = flip those characterization assertions to the correct
+contract + add an invariant guard that passes before AND after**;
+`document()` on this repo is **non-idempotent for `NAMESPACE`** (drops
+redundant `lubridate` day/month imports) — if you see an unexpected
+NAMESPACE delta from `document()`, it is that pre-existing drift, revert
+unless the cleanup IS your deliverable; for ANY package-code change —
+`--as-cran` from the REPO ROOT (renv; background ~3-4 min; **build WITH
+vignettes**; **`devtools::check(args="--as-cran")` returns 0/0/0 here,
+`--no-build-vignettes` yields 2 misleading vignette WARNINGs**; use
+`document=FALSE` in the check call to avoid re-triggering the NAMESPACE
+drift; **beware zsh `rm <glob>` “no matches found”**) + `lintr::lint()`
+(keep test lines ≤80) + `spell_check_package` (hand-add wordlist, never
+`update_wordlist`) after any `R/`+`man/` edit; behavior/NAMESPACE
+changes ALSO need STRICT TDD + NAMESPACE diff + Phase-3E + FULL-suite
+(`NOT_CRAN=true`); version **2.0.0**; package **ARCHIVED on CRAN
+2025-07-29**; **e2e/shinytest2 SKIPS here because it is OPT-IN — gated
+on `NPRC_RUN_E2E="true"` via `create_test_app()` (chromote IS installed;
+the “no chromote” note was STALE, S296); the e2e suite drives the app in
+a separate process via
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html),
+contributing 0 to `covr` — use `shiny::testServer(<server fn>, {...})`
+as the in-process substitute**; `gh issue view`/`gh pr edit` exit 1 →
+`gh api` (`gh issue close` works); re-check `git status` before ANY
+destructive git (\[\[check-status-before-destructive-git\]\]); landing
+owner-gated (direct-commit vs PR).
+
+**Key files (this session):** **Edited (production):**
+`R/fixColumnNames.R` (retargeted the L31-36 overreach block from `cols`
+to `newCols`; expanded the comment). **Edited (tests):**
+`tests/testthat/test_fixColumnNames.R` (rewritten 2 → 8 blocks / 10
+assertions: corrected contract + edge cases + invariant guard). **Edited
+(docs):** `CHANGELOG.md` (S297 entry under \[Unreleased\]),
+`PROJECT_LEARNINGS.md` (Learning 275), `SESSION_NOTES.md` (this
+handoff + the 1B stub it replaced). **Read (not edited):**
+`R/colChange.R` (diagnostic-string semantics), `R/fixGenotypeCols.R`
+(the idempotent downstream workaround), `R/qcStudbook.R:179,288` (the
+only production caller + the workaround wiring),
+`tests/testthat/test_qcStudbook.R:123` (the `underScoreRemoved` string
+reused in the invariant guard), `test_species_first_class.R`,
+`test_exampleData_columnNames.R` (adjacent callers — unaffected).
+**Reverted (my own `document()` output, NOT committed):** `NAMESPACE`
+(the pre-existing `lubridate` day/month drift). **NOT committed
+(standing keep — FM \#22):** `.DS_Store` (tracked+modified),
+`PED_GV_AUDIT_2026-05-30.html` (untracked, `.Rbuildignore`d).
+**Scratchpad (NOT committed):** `check297.R`/`.log`, `fullsuite297.R`.
+
+**Gotchas:** (1) **Production source change** (a 6-line retarget) that
+is BEHAVIOR-CHANGING for direct callers of `fixColumnNames` but
+NET-INERT through `qcStudbook` (the `fixGenotypeCols` workaround already
+restored these). (2) The S295 fix hint said “fix line 32/35” but the
+CONDITION (L31/L34) must move too — retarget the WHOLE block, not just
+the assignment. (3) **`--as-cran` here returned 0/0/0 (Status: OK)** via
+`devtools::check(document=FALSE)`; spell clean; `document()` zero man/
+delta (roxygen-inert). (4) **`fixGenotypeCols` at `qcStudbook.R:288` is
+now redundant** — left in on purpose (harmless idempotent safety net);
+its removal is a separate behavior-adjacent session (see SUGGESTED
+NEXT). (5) **Landed as `fdcfc042` (fix) + a docs close-out commit on
+`master`, pushed** (owner chose direct-commit; local == origin); **\#117
+closed.**
+
 ### What Session 295 Did
 
 **Deliverable (owner directed the removal over a `# nocov` waive, after
