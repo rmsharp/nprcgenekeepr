@@ -332,3 +332,43 @@ test_that("qcStudbook accepts period-free IDs (no false positive) (NEW-45)", {
     0L
   )
 })
+
+## Issue #117 spinoff (S299): qcStudbook() must preserve the genotype-bearing
+## headers first_name/second_name through its column-name normalization.
+## fixColumnNames() (the #117 fix) restores every spelling of these headers to
+## canonical first_name/second_name before the point where the downstream
+## fixGenotypeCols() workaround used to run, so that redundant call was removed
+## from qcStudbook(). This guards the invariant end-to-end: a future
+## fixColumnNames() regression is caught even though the fixGenotypeCols() safety
+## net is gone.
+mkGenoPed <- function(fn, sn) {
+  ped <- data.frame(
+    id = c("s1", "d1", "o1", "o2"),
+    sire = c(NA, NA, "s1", "s1"),
+    dam = c(NA, NA, "d1", "d1"),
+    sex = c("M", "F", "F", "M"),
+    birth = as.Date(c("2000-01-01", "2000-01-01",
+                      "2010-01-01", "2010-01-01")),
+    stringsAsFactors = FALSE
+  )
+  ped[[fn]] <- c("A004_B002", "A004_B012b", "A008_B017a", "A004_B048a")
+  ped[[sn]] <- c("A004_B048a", "A008_B017a", "A004_B002", "A004_B012b")
+  ped
+}
+test_that(
+  "qcStudbook keeps genotype first_name/second_name across header spellings",
+  {
+    spellings <- list(
+      c("first_name", "second_name"),
+      c("First Name", "Second Name"),
+      c("first.name", "second.name"),
+      c("firstname", "secondname"),
+      c("FIRSTNAME", "SECONDNAME")
+    )
+    for (sp in spellings) {
+      out <- qcStudbook(mkGenoPed(sp[[1L]], sp[[2L]]), minParentAge = NULL)
+      expect_true(all(c("first_name", "second_name") %in% names(out)))
+      expect_false(any(c("firstname", "secondname") %in% names(out)))
+    }
+  }
+)

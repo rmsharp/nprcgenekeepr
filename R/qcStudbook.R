@@ -285,7 +285,6 @@ qcStudbook <- function(sb, minParentAge = 2.0, reportChanges = FALSE,
     sb <- sb <- removeDuplicates(sb)
   }
 
-  sb <- fixGenotypeCols(sb)
   cols <- intersect(getPossibleCols(), colnames(sb))
   novelCols <- colnames(sb)[!colnames(sb) %in% cols]
   sb <- sb[, c(cols, novelCols)]
