@@ -6,6 +6,158 @@
 
 ## ACTIVE TASK
 
+### What Session 301 Did
+**Deliverable:** Triage/scope GitHub issue **#119** ("Use of `minParentAge` seems to
+conflict with newer sex-specific minimum reproductive ages") — the issue had NO body.
+**Analysis only; no code changed** (scoping session, PRE-RED throughout — TDD phases
+apply to a later implementation session, not to this triage). One `AskUserQuestion`
+(direction + whether to post to GitHub); 0 stakeholder corrections.
+**Started / Completed:** 2026-07-07 / 2026-07-07
+**Status:** **DONE.** Deliverable = `docs/audits/ISSUE_119_MINPARENTAGE_TRIAGE_2026-07-07.md`
+(full triage) + a condensed comment posted to **#119**
+(`https://github.com/rmsharp/nprcgenekeepr/issues/119#issuecomment-4900660602`).
+CHANGELOG + PROJECT_LEARNINGS 279 + this handoff record it; to be committed and pushed
+to `origin/master` (FF; local == origin).
+  - **The finding:** the conflict is REAL, already KNOWN, and was DELIBERATELY
+    DEFERRED. The package holds two independent notions of "minimum age to be a
+    parent": **(A)** the legacy scalar `minParentAge` (sex/species-agnostic; default 2
+    in QC but 3 in `getProductionStatus`) driving QC (`checkParentAge.R:94-95`),
+    candidate-finding (`getPotentialParents.R:97`), production status
+    (`getProductionStatus.R:64`); **(B)** a newer species+sex table
+    (`speciesGestation$minMaleBreedingAge`/`minFemaleBreedingAge` via
+    `getSpeciesMinBreedingAge`, e.g. rhesus male 4.0 / female 2.5, baboon male 6.0,
+    chimp male 12.0) used by ONLY the #9 GVA unknown-parent correction
+    (`correctUnknownParentMeanKinship`). Concrete conflict: a rhesus male sire at age 3
+    passes QC (3 ≥ 2) but is below breeding age for (B) (floor 4). `getPotentialParents`
+    is even internally inconsistent (species-aware gestation at :82, flat-scalar
+    breeding age at :97 before the M/F split at :104/:112).
+  - **Why not a defect:** `docs/planning/issue9-gva-unknown-parent-ranking-plan.md`
+    §8-D (line 229) explicitly fenced it off: *"Do NOT retrofit
+    `getPotentialParents`/`checkParentAge` ... Unifying breeding-age determination
+    package-wide is a follow-up."* **#119 IS that follow-up.** The key reframing came
+    from ONE planning-doc line, not the code (Learning 279).
+  - **Options in the report** (unify-on-table / sex-scalars-only / document-only /
+    won't-fix); recommended DIRECTION = unify on the species/sex table with
+    `minParentAge` as an optional override, delivered as vertical slices. **But the
+    OWNER DEFERRED the direction decision to a dedicated planning session** (S301
+    decision), so the ratified next step is that planning session, NOT implementation.
+  - **Load-bearing dragon for the executor:** the `species` column is often ABSENT
+    (`qcPed` and the `breederPed` fixture carry none) — any retrofit must default
+    gracefully (`getSpeciesMinBreedingAge` returns the scalar/default), never error
+    (issue9 §8-D lines 227-228). High blast radius (both QC sites under `qcStudbook`;
+    `getPotentialParents` feeds breeding-group formation) → vertical slices, strict TDD.
+  - **Verify:** N/A for correctness (no code changed). Ran the code-mapping evidence
+    inventory firsthand (`git grep` over `R/`,`tests/`,`man/`,`inst/`,`vignettes/`;
+    loaded `speciesGestation` and printed the 14-species table; read `checkParentAge`,
+    `getSpeciesMinBreedingAge`, `getPotentialParents`, `getProductionStatus`,
+    `getGeneticDiversityStats`, `modInput`, and the issue9 plan). **Phase-3E N/A** —
+    triage changed no runtime behavior (documented, not silently skipped).
+
+**Session 300 Handoff Evaluation (by Session 301): Score 9/10.** S300's SUGGESTED NEXT
+named this task precisely — "#119 and #118 are NEW and still untriaged; a triage/scoping
+session for either (read the issue, map affected code, decide approach) is a good,
+bounded next deliverable before any implementation" — and its gotcha #5 repeated it.
+**What helped:** the exact task framing (triage, not implement) and the reminder that
+#119/#118 were untriaged saved orientation time; the standing gotchas (measure coverage
+`NOT_CRAN=true`, `--as-cran` from repo root, etc.) were on hand though unneeded for an
+analysis-only session. **What was missing (the −1):** S300 could not have known, but
+the single most valuable fact for this triage — that #119 was pre-deferred in the #9
+plan §8-D — was not linked from the issue or the notes; I found it by grepping
+`docs/planning/`. A one-line pointer ("#119 relates to issue9 plan §8-D deferral")
+would have made this turnkey. **What was wrong:** nothing — the #117 spinoff was indeed
+complete; #119/#118 were indeed untriaged; the `gh` projectCards gotcha held (view
+fails, comment/api work). **ROI:** high.
+
+**Self-assessment (Session 301): 9/10.** Oriented fully (SAFEGUARDS + SESSION_RUNNER
+read in full; ACTIVE TASK; GH issues; dashboard 98/100; ghost-check — latest commit
+`73c22318` == S300 close-out, no gap); reported and STOPPED for the owner before work.
+**Strengths:** (1) consulted the PROJECT SOURCE OF TRUTH — grepped `docs/planning/` and
+found the §8-D deferral that reframed the whole triage from "bug" to "planned
+follow-up" (the session's key value-add; Learning 279); (2) ran a firsthand
+evidence-based code inventory (decision sites vs pass-throughs vs docs/tests), loaded
+the actual `speciesGestation` values rather than describing from memory; (3) caught the
+secondary 2-vs-3 default discrepancy and the internal inconsistency inside
+`getPotentialParents`; (4) presented OPTIONS and let the owner decide the direction
+(observation-vs-decision) rather than picking; (5) wrote the 1B stub before technical
+work; declared PRE-RED atop each response; posed the decision via `AskUserQuestion`
+(ASCII-only, plain language); (6) worked the `gh` projectCards workaround (api to read,
+`gh issue comment` to post) to fully triage a body-less issue. **Weakness (the −1):**
+an analysis-only deliverable with 0 corrections — little to distinguish; and I could
+have offered to add the "#119 ↔ issue9 §8-D" cross-link into the plan doc itself, but
+that edits a historical plan and belongs to the planning session.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 279** — a triage session's
+highest-value move is checking whether the reported conflict is a KNOWN, deliberately
+deferred design decision (the answer is in `docs/planning/`, not the code); a
+scalar-vs-table divergence is a design-unification decision (owner's call), so triage
+recommends options and defers the direction; blast radius decides delivery shape
+(vertical slices); the `gh` projectCards workaround extends — `gh issue view` fails but
+`gh api .../issues/N` reads and `gh issue comment` posts. Carried as applied:
+[[consult-project-source-of-truth]], [[check-process-history-before-rerunning-work]],
+[[observation-vs-decision]], [[avoid-jargon-use-plain-language]],
+[[ascii-only-in-question-options]], [[gh-pr-edit-projectcards-workaround]],
+[[push-close-out-docs-to-origin]].
+
+**=> SUGGESTED NEXT.** #119 is now triaged (verdict: planned unification, direction
+deferred to a planning session by owner). The natural successor for #119 is **one
+PLANNING session** (or a `/grill-me` with the owner) that ratifies: which Option (1-4
+in the triage), the `minParentAge`-override-vs-table precedence, the unknown-species
+fallback default (2? 3? old scalar?), whether to unify the 2-vs-3 default, and the
+slice order (which consumer first) — then writes `docs/planning/issue119-*-plan.md`
+with an evidence-based inventory (the triage report is its seed) and per-slice
+completion criteria. **Do NOT start implementing #119** — it is deferred by the owner
+and is high blast radius. Other open work (owner's pick):
+  - **#118** `Add the effective population size estimate` — NEW, still untriaged; a
+    triage/scoping session (same shape as this one) is a good bounded deliverable.
+  - **Also open (unchanged):** **#116** Flags column (BLOCKED — no genotype/phenotype
+    data source); **#103** roxygen harmonization (per S244 audit); **#37, #36, #28,
+    #12, #11, #10, #5**; the CRAN thread (Phase 5b, owner-run outward — package
+    ARCHIVED 2025-07-29, resubmission owner-gated + HARD STOP).
+
+**Key files (this session):** **Created:**
+`docs/audits/ISSUE_119_MINPARENTAGE_TRIAGE_2026-07-07.md` (the triage deliverable).
+**Edited (docs):** `CHANGELOG.md` (S301 entry under [Unreleased]),
+`PROJECT_LEARNINGS.md` (Learning 279), `SESSION_NOTES.md` (this handoff + the 1B stub
+it replaced). **Posted:** comment on GitHub issue #119. **Read (not edited — the
+triage evidence base):** `R/checkParentAge.R` (:94-95 flat scalar for both sexes),
+`R/getSpeciesMinBreedingAge.R` (the sex-aware accessor, fallback 2),
+`R/getPotentialParents.R` (:82 species gestation, :97 flat breeding age, :104/:112 M/F
+split), `R/getProductionStatus.R` (:64 females ≥ minParentAge, default 3),
+`R/getGeneticDiversityStats.R` (:99 passes 3), `R/data.R` (:402-404 table columns),
+`R/modInput.R` (:127 UI default "2.0", :449-453 coercion), `data/speciesGestation.RData`
+(14-species values), `docs/planning/issue9-gva-unknown-parent-ranking-plan.md` (§8-D
+lines 227-229 — the deferral). **NOT committed (standing keep — FM #22):** `.DS_Store`
+(tracked+modified), `PED_GV_AUDIT_2026-05-30.html` (untracked, `.Rbuildignore`d).
+**Scratchpad (NOT committed):** `issue119_comment.md`.
+
+**Gotchas:** (1) **#119 is triaged but its DIRECTION is deferred by the owner** — the
+next #119 session is PLANNING, not implementation; do not pick an Option unilaterally.
+(2) **High blast radius** — `checkParentAge` is inside `qcStudbook` (the app front
+door); `getPotentialParents` feeds breeding-group formation. Any fix = vertical slices,
+strict TDD, full suite + `--as-cran`. (3) **The `species` column is often ABSENT**
+(`qcPed`/`breederPed`) — retrofits must default gracefully, never error. (4) **Two
+current defaults (2 in QC, 3 in `getProductionStatus`)** must be reconciled
+deliberately. (5) **`gh issue view <N>` FAILS here** (deprecated projectCards) — read
+via `gh api repos/:owner/:repo/issues/<N>`, post via `gh issue comment <N> --body-file`
+(both work). (6) **#118 is NEW and still untriaged.**
+
+**Standing gotchas (unchanged):** measure coverage with `NOT_CRAN=true` (default
+undercounts ~8 pts — 39 `skip_on_cran` files); reuse a prior slice's saved
+`covXXX.rds` with `covr::zero_coverage()`; `covr::function_coverage(fn, code)` proves
+per-line reachability; for ANY package-code change — `--as-cran` from the REPO ROOT
+(renv; background ~3-4 min; **build WITH vignettes**; `devtools::check(args=
+"--as-cran")` returns 0/0/0 here, `--no-build-vignettes` yields 2 misleading vignette
+WARNINGs; `document=FALSE` fine — `document()` idempotent for NAMESPACE; **beware zsh
+`rm <glob>` "no matches found"**) + `lintr::lint()` (keep test lines ≤80) +
+`spell_check_package` (hand-add wordlist, never `update_wordlist`) after any `R/`+
+`man/` edit; behavior changes ALSO need STRICT TDD + Phase-3E + FULL-suite; version
+**2.0.0**; package **ARCHIVED on CRAN 2025-07-29**; **e2e/shinytest2 SKIPS here —
+OPT-IN, gated on `NPRC_RUN_E2E="true"` via `create_test_app()`; contributes 0 to
+`covr` — use `shiny::testServer(<server fn>, {...})` as the in-process substitute**;
+`gh issue view`/`gh pr edit` exit 1 → `gh api` (`gh issue close` works); re-check
+`git status` before ANY destructive git ([[check-status-before-destructive-git]]);
+landing owner-gated (direct-commit vs PR).
+
 ### What Session 300 Did
 **Deliverable (the tail of the S297/S299 #117 spinoff):** delete the now-dead
 `@noRd fixGenotypeCols()` function (`R/fixGenotypeCols.R`) + its test
