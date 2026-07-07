@@ -27,12 +27,14 @@ fixColumnNames <- function(orgCols, errorLst) {
   cols <- newCols
   newCols <- gsub("_", "", cols, fixed = FALSE) # nolint fixed_regex_linter
 
-  ## Clean up possible overreach
-  if (any(tolower(cols) == "firstname")) {
-    cols[tolower(cols) == "firstname"] <- "first_name"
+  ## Clean up possible overreach: the underscore strip collapses the
+  ## genotype-bearing headers first_name/second_name; restore them on newCols
+  ## (the returned vector) so they survive. Issue #117.
+  if (any(tolower(newCols) == "firstname")) {
+    newCols[tolower(newCols) == "firstname"] <- "first_name"
   }
-  if (any(tolower(cols) == "secondname")) {
-    cols[tolower(cols) == "secondname"] <- "second_name"
+  if (any(tolower(newCols) == "secondname")) {
+    newCols[tolower(newCols) == "secondname"] <- "second_name"
   }
 
   errorLst$changedCols$underScoreRemoved <- colChange(cols, newCols)
