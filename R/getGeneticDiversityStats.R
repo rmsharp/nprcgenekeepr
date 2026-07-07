@@ -96,7 +96,7 @@ getGeneticDiversityStats <- function(groups, ped, geneticValues, kmat,
     }
     productionIndex <- getProductionStatus(
       subped[, c("id", "dam", "sex", "age", "birth", "exit")],
-      minParentAge = 3L, housing = housing[[i]], currentDate = currentDate
+      minDamAge = 3L, housing = housing[[i]], currentDate = currentDate
     )$colorIndex
     grp <- data.frame(id = subped$id, sex = subped$sex, age = subped$age,
                       stringsAsFactors = FALSE)

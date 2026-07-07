@@ -4,12 +4,12 @@ library(testthat)
 library(nprcgenekeepr)
 data("examplePedigree")
 ped <- examplePedigree
-minParentAge <- 3.0
+minDamAge <- 3.0
 
 test_that("getProductionStatus calculates correctly", {
   status <- getProductionStatus(
     ped,
-    minParentAge = minParentAge, maxOffspringAge = NULL, housing = "shelter_pens",
+    minDamAge = minDamAge, maxOffspringAge = NULL, housing = "shelter_pens",
     currentDate = as.Date("2010-10-10", format = "%Y-%m-%d")
   )
   expect_equal(status$production, 0.112877583465819)
@@ -18,7 +18,7 @@ test_that("getProductionStatus calculates correctly", {
 test_that("getProductionStatus calculates correctly", {
   status <- getProductionStatus(
     ped,
-    minParentAge = minParentAge, maxOffspringAge = NULL, housing = "corral",
+    minDamAge = minDamAge, maxOffspringAge = NULL, housing = "corral",
     currentDate = as.Date("2010-10-10", format = "%Y-%m-%d")
   )
   expect_equal(status$production, 0.112877583465819)
@@ -43,7 +43,7 @@ removeIDs <- c("Q3J24E", "IC716S", "SJD499", "YJBY17", "5C63F4", "R3R07C")
 test_that("getProductionStatus calculates correctly", {
   status <- getProductionStatus(
     pedWith71,
-    minParentAge = minParentAge, maxOffspringAge = NULL,
+    minDamAge = minDamAge, maxOffspringAge = NULL,
     housing = "shelter_pens",
     currentDate = as.Date("2010-10-10", format = "%Y-%m-%d")
   )
@@ -51,11 +51,11 @@ test_that("getProductionStatus calculates correctly", {
   expect_equal(status$color, "green")
 })
 noDamsPed <- pedWith71[!pedWith71$id %in% ped$id[ped$sex == "F" &
-  ped$age >= minParentAge], ]
+  ped$age >= minDamAge], ]
 test_that("getProductionStatus detects no dams", {
   status <- getProductionStatus(
     noDamsPed,
-    minParentAge = minParentAge, maxOffspringAge = NULL,
+    minDamAge = minDamAge, maxOffspringAge = NULL,
     housing = "shelter_pens",
     currentDate = as.Date("2010-10-10", format = "%Y-%m-%d")
   )
@@ -65,7 +65,7 @@ test_that("getProductionStatus detects no dams", {
 test_that("getProductionStatus detects no dams", {
   status <- getProductionStatus(
     noDamsPed,
-    minParentAge = minParentAge, maxOffspringAge = NULL,
+    minDamAge = minDamAge, maxOffspringAge = NULL,
     housing = "corral",
     currentDate = as.Date("2010-10-10", format = "%Y-%m-%d")
   )
@@ -75,7 +75,7 @@ test_that("getProductionStatus detects no dams", {
 test_that("getProductionStatus calculates correctly", {
   status <- getProductionStatus(
     pedWith71,
-    minParentAge = minParentAge, maxOffspringAge = NULL,
+    minDamAge = minDamAge, maxOffspringAge = NULL,
     housing = "corral",
     currentDate = as.Date("2010-10-10", format = "%Y-%m-%d")
   )
@@ -87,7 +87,7 @@ pedWith71OffspringWithDams <- ped[ped$id %in% c(ids, dams), ]
 test_that("getProductionStatus calculates correctly", {
   status <- getProductionStatus(
     pedWith71OffspringWithDams,
-    minParentAge = minParentAge, maxOffspringAge = NULL,
+    minDamAge = minDamAge, maxOffspringAge = NULL,
     housing = "shelter_pens",
     currentDate = as.Date("2010-10-10", format = "%Y-%m-%d")
   )
@@ -99,7 +99,7 @@ test_that("getProductionStatus detects missing column", {
   expect_error(
     getProductionStatus(
       badPed,
-      minParentAge = minParentAge, maxOffspringAge = NULL,
+      minDamAge = minDamAge, maxOffspringAge = NULL,
       housing = "shelter_pens",
       currentDate = as.Date("2010-10-10", format = "%Y-%m-%d")
     ),
@@ -110,7 +110,7 @@ test_that("getProductionStatus detects wrong housing type", {
   expect_error(
     getProductionStatus(
       pedWith71OffspringWithDams,
-      minParentAge = minParentAge, maxOffspringAge = NULL,
+      minDamAge = minDamAge, maxOffspringAge = NULL,
       housing = "bad housing",
       currentDate = as.Date("2010-10-10", format = "%Y-%m-%d")
     ),
@@ -122,7 +122,7 @@ pedWith71OffspringWithDams$id %in% ids[1:39], ]
 test_that("getProductionStatus calculates correctly", {
   status <- getProductionStatus(
     yellowCorralPed,
-    minParentAge = minParentAge, maxOffspringAge = NULL,
+    minDamAge = minDamAge, maxOffspringAge = NULL,
     housing = "corral",
     currentDate = as.Date("2010-10-10", format = "%Y-%m-%d")
   )
@@ -135,10 +135,35 @@ yellowShelterPedPed <- pedWith71OffspringWithDams[
 test_that("getProductionStatus calculates correctly", {
   status <- getProductionStatus(
     yellowShelterPedPed,
-    minParentAge = minParentAge, maxOffspringAge = NULL,
+    minDamAge = minDamAge, maxOffspringAge = NULL,
     housing = "shelter_pens",
     currentDate = as.Date("2010-10-10", format = "%Y-%m-%d")
   )
   expect_equal(status$production, 0.61290322580652)
   expect_identical(status$color, "yellow")
+})
+test_that("getProductionStatus minDamAge drives the dam filter", {
+  ## A dam floor above every female's age leaves zero dams, so the
+  ## production ratio is undefined (NA) -- proves minDamAge is honored.
+  status <- getProductionStatus(
+    pedWith71,
+    minDamAge = 100, maxOffspringAge = NULL,
+    housing = "shelter_pens",
+    currentDate = as.Date("2010-10-10", format = "%Y-%m-%d")
+  )
+  expect_true(is.na(status$production))
+  expect_equal(status$color, "green")
+})
+test_that("getProductionStatus minParentAge alias warns, keeps result", {
+  ## Back-compat: the deprecated scalar sets the dam floor and still warns.
+  lifecycle::expect_deprecated(
+    res <- getProductionStatus(
+      ped,
+      minParentAge = 3.0, maxOffspringAge = NULL,
+      housing = "shelter_pens",
+      currentDate = as.Date("2010-10-10", format = "%Y-%m-%d")
+    )
+  )
+  expect_equal(res$production, 0.112877583465819)
+  expect_equal(res$color, "red")
 })

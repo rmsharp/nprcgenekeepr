@@ -11,7 +11,7 @@
 #'        \code{currentYear - 2} through December 31 of
 #'        \code{currentYear - 1}) that lived at least 30 days.
 #' \item  Dams = count of all females in the group at least
-#'        \code{minParentAge} years old (default 3).
+#'        \code{minDamAge} years old (default 3).
 #' \item  Production = Births / Dams
 #' \item  Production Status (color)
 #'     \enumerate{
@@ -37,9 +37,12 @@
 #' @param ped Dataframe that is the \code{Pedigree}. It contains pedigree
 #' information. The \code{id}, \code{dam}, \code{sex} and \code{age}
 #' (in years) columns are required.
-#' @param minParentAge Numeric values to set the minimum age in years for
-#' an animal to have an offspring. Defaults to 3 years. The check is not
-#' performed for animals with missing birth dates.
+#' @param minDamAge numeric minimum age in years for a female to be counted
+#' as a breeding-capacity dam in the production ratio. Defaults to 3, a
+#' demographic threshold distinct from the quality-control parent-age floor.
+#' The check is not performed for animals with missing birth dates.
+#' @param minParentAge Deprecated scalar minimum dam age. Supplying it sets
+#' \code{minDamAge}; use \code{minDamAge} instead.
 #' @param maxOffspringAge Numeric values to set the maximum age in years for
 #' an animal to be counted as birth in calculation of production status
 #' ratio.
@@ -48,20 +51,33 @@
 #' @param currentDate Date to be used for calculating age. Defaults to
 #'        \code{Sys.Date()}.
 #' @return \code{production} -- Ratio of the number of births that lived at
-#' least 30 days to the number of females >= \code{minParentAge} years of age.
+#' least 30 days to the number of females >= \code{minDamAge} years of age.
 #'
 #' @importFrom lubridate as.duration ddays interval mdy year
+#' @importFrom lifecycle deprecated is_present deprecate_warn
 #' @noRd
-getProductionStatus <- function(ped, minParentAge = 3L, maxOffspringAge = NULL,
+getProductionStatus <- function(ped, minDamAge = 3L,
+                                minParentAge = lifecycle::deprecated(),
+                                maxOffspringAge = NULL,
                                 housing = "shelter_pens",
                                 currentDate = Sys.Date()) {
+  if (lifecycle::is_present(minParentAge)) {
+    lifecycle::deprecate_warn(
+      when = "2.0.0",
+      what = "getProductionStatus(minParentAge)",
+      details = "Use minDamAge instead."
+    )
+    ## Production status is females-only, so the legacy scalar sets the dam
+    ## floor; a supplied minParentAge overrides the minDamAge default.
+    if (!is.null(minParentAge)) minDamAge <- minParentAge
+  }
   expectedCols <- c("id", "dam", "sex", "age")
   if (!all(expectedCols %in%
     names(ped))) {
     missingCol <- expectedCols[!expectedCols %in% names(ped)]
     stop("ped is missing: ", missingCol)
   }
-  nDam <- nrow(ped[ped$sex == "F" & ped$age >= minParentAge, ])
+  nDam <- nrow(ped[ped$sex == "F" & ped$age >= minDamAge, ])
   if (is.null(maxOffspringAge)) {
     # nolint start: nonportable_path_linter
     maxOffspringAge <- mdy(paste0("1/1/", year(currentDate) - 2L))
