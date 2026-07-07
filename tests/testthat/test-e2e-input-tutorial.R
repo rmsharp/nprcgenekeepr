@@ -4,7 +4,7 @@
 #' Based on ColonyManagerTutorial.Rmd workflow
 library(testthat)
 
-test_that("E2E: Input has minimum parent age control", {
+test_that("E2E: Input has minimum sire age control", {
   skip_if_not_installed("shinytest2")
   skip_if_not_installed("chromote")
   skip_on_cran()
@@ -17,8 +17,8 @@ test_that("E2E: Input has minimum parent age control", {
   if (!success) skip("Could not navigate to Input tab")
 
   expect_true(
-    assert_active_pane(app, "Input", "Minimum Parent Age"),
-    info = "Input pane active with the minimum-parent-age control"
+    assert_active_pane(app, "Input", "Minimum Sire Age"),
+    info = "Input pane active with the minimum-sire-age control"
   )
 })
 

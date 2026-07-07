@@ -122,7 +122,7 @@ test_that("modPotentialParentsServer computes a populated table on button press"
 
   shiny::testServer(
     modPotentialParentsServer,
-    args = list(pedigree = shiny::reactive(pedOne), minParentAge = 2),
+    args = list(pedigree = shiny::reactive(pedOne), minSireAge = 2, minDamAge = 2),
     {
       session$setInputs(maxGestationalPeriod = 210, findParents = 1)
       td <- session$getReturned()$tableData()
@@ -150,7 +150,7 @@ test_that("modPotentialParentsServer degrades to an empty table when fromCenter 
 
   shiny::testServer(
     modPotentialParentsServer,
-    args = list(pedigree = shiny::reactive(ped), minParentAge = 2),
+    args = list(pedigree = shiny::reactive(ped), minSireAge = 2, minDamAge = 2),
     {
       session$setInputs(maxGestationalPeriod = 210, findParents = 1)
       td <- session$getReturned()$tableData()
@@ -179,7 +179,7 @@ test_that("modPotentialParentsServer degrades to an empty table when there are n
 
   shiny::testServer(
     modPotentialParentsServer,
-    args = list(pedigree = shiny::reactive(ped), minParentAge = 2),
+    args = list(pedigree = shiny::reactive(ped), minSireAge = 2, minDamAge = 2),
     {
       session$setInputs(maxGestationalPeriod = 210, findParents = 1)
       td <- session$getReturned()$tableData()
@@ -391,7 +391,7 @@ test_that("modPotentialParentsServer exposes a gestationDefault reactive", {
 
   shiny::testServer(
     modPotentialParentsServer,
-    args = list(pedigree = shiny::reactive(ped), minParentAge = 2),
+    args = list(pedigree = shiny::reactive(ped), minSireAge = 2, minDamAge = 2),
     {
       result <- session$getReturned()
       expect_true("gestationDefault" %in% names(result))
@@ -415,7 +415,7 @@ test_that("modPotentialParentsServer gestationDefault keys on the pedigree speci
   shiny::testServer(
     modPotentialParentsServer,
     args = list(
-      pedigree = shiny::reactive(ped), minParentAge = 2,
+      pedigree = shiny::reactive(ped), minSireAge = 2, minDamAge = 2,
       gestationTable = testGestTable
     ),
     {
@@ -438,7 +438,7 @@ test_that("modPotentialParentsServer gestationDefault falls back to 210 without 
   shiny::testServer(
     modPotentialParentsServer,
     args = list(
-      pedigree = shiny::reactive(ped), minParentAge = 2,
+      pedigree = shiny::reactive(ped), minSireAge = 2, minDamAge = 2,
       gestationTable = testGestTable
     ),
     {
@@ -471,7 +471,7 @@ test_that("modPotentialParentsServer does not clobber a user's manual value on p
   shiny::testServer(
     modPotentialParentsServer,
     args = list(
-      pedigree = pedVal, minParentAge = 2, gestationTable = testGestTable
+      pedigree = pedVal, minSireAge = 2, minDamAge = 2, gestationTable = testGestTable
     ),
     {
       # User manually overrides the prefilled default.
@@ -556,7 +556,7 @@ test_that("modPotentialParentsServer honors a custom gestationDefault for a spec
   shiny::testServer(
     modPotentialParentsServer,
     args = list(
-      pedigree = shiny::reactive(ped), minParentAge = 2,
+      pedigree = shiny::reactive(ped), minSireAge = 2, minDamAge = 2,
       gestationTable = testGestTable, gestationDefault = 300L
     ),
     {
@@ -580,7 +580,7 @@ test_that("modPotentialParentsServer override gestationTable drives the prefill 
   shiny::testServer(
     modPotentialParentsServer,
     args = list(
-      pedigree = shiny::reactive(ped), minParentAge = 2,
+      pedigree = shiny::reactive(ped), minSireAge = 2, minDamAge = 2,
       gestationTable = overGestTable
     ),
     {

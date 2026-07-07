@@ -271,7 +271,8 @@ test_that("modInputServer calls qcStudbook when processing data", {
       session$setInputs(
         fileContent = "pedFile",
         fileType = "fileTypeExcel",
-        minParentAge = "2.0"
+        minSireAge = "2.0",
+        minDamAge = "2.0"
       )
 
       # Mock the file input
@@ -315,7 +316,8 @@ test_that("modInputServer returns errors from qcStudbook", {
       session$setInputs(
         fileContent = "pedFile",
         fileType = "fileTypeExcel",
-        minParentAge = "2.0"
+        minSireAge = "2.0",
+        minDamAge = "2.0"
       )
 
       session$setInputs(
@@ -355,7 +357,8 @@ test_that("modInputServer isReady returns TRUE for valid pedigree", {
       session$setInputs(
         fileContent = "pedFile",
         fileType = "fileTypeExcel",
-        minParentAge = "2.0"
+        minSireAge = "2.0",
+        minDamAge = "2.0"
       )
 
       session$setInputs(
@@ -391,7 +394,8 @@ test_that("modInputServer qcSummary includes error and warning counts", {
       session$setInputs(
         fileContent = "pedFile",
         fileType = "fileTypeExcel",
-        minParentAge = "2.0"
+        minSireAge = "2.0",
+        minDamAge = "2.0"
       )
 
       session$setInputs(
@@ -520,7 +524,8 @@ test_that("modInputServer merges an uploaded genotype file in separate mode", {
         fileContent = "separatePedGenoFile",
         fileType = "fileTypeExcel",
         separator = ",",
-        minParentAge = "2.0"
+        minSireAge = "2.0",
+        minDamAge = "2.0"
       )
       # .csv temp paths route through readDataFile's read.csv branch and
       # getGenotypes' read.table branch (excel_format(.csv) is NA).
@@ -569,7 +574,8 @@ test_that("modInputServer degrades gracefully on a malformed genotype file", {
         fileContent = "separatePedGenoFile",
         fileType = "fileTypeExcel",
         separator = ",",
-        minParentAge = "2.0"
+        minSireAge = "2.0",
+        minDamAge = "2.0"
       )
       session$setInputs(
         pedigreeFileThree = list(name = basename(pedPath), datapath = pedPath),

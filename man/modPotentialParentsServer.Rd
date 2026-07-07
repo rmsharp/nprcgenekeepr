@@ -7,7 +7,8 @@
 modPotentialParentsServer(
   id,
   pedigree = NULL,
-  minParentAge = 2,
+  minSireAge = NULL,
+  minDamAge = NULL,
   gestationTable = NULL,
   gestationDefault = NULL
 )
@@ -17,8 +18,13 @@ modPotentialParentsServer(
 
 \item{pedigree}{reactive returning the current pedigree data.frame.}
 
-\item{minParentAge}{numeric minimum age in years for an animal to be a
-parent. Defaults to 2 (the QC default).}
+\item{minSireAge}{minimum age in years for a male to be proposed as a sire.
+May be a plain numeric, \code{NULL}, or a reactive returning either.
+\code{NULL} (the default) uses the species- and sex-specific breeding-age
+table default via \code{\link{getPotentialParents}}.}
+
+\item{minDamAge}{minimum age in years for a female to be proposed as a dam.
+Same forms and default as \code{minSireAge}, applied to females.}
 
 \item{gestationTable}{optional species-to-gestation lookup passed to
 \code{\link{getSpeciesGestation}} when defaulting the gestation window;

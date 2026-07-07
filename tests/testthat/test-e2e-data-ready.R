@@ -24,12 +24,13 @@ test_that("Input module server initializes correctly", {
     expect_true("pedigreeFileName" %in% names(session$returned))
 
     # Verify initial input values can be set
-    session$setInputs(minParentAge = "2.0")
+    session$setInputs(minSireAge = "2.0", minDamAge = "2.0")
     session$setInputs(fileContent = "pedFile")
     session$setInputs(fileType = "fileTypeExcel")
 
-    # Verify minParentAge reactive works
-    expect_equal(session$returned$minParentAge(), 2.0)
+    # Verify the sire/dam age reactives work
+    expect_equal(session$returned$minSireAge(), 2.0)
+    expect_equal(session$returned$minDamAge(), 2.0)
   })
 })
 

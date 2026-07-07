@@ -17,7 +17,10 @@ A list with reactive components:
 \item \code{cleanedStudbook} - The QC-cleaned studbook data
 \item \code{genotypeData} - Genotype data if provided
 \item \code{qcSummary} - Summary of QC results (error/warning counts)
-\item \code{minParentAge} - The minimum parent age value
+\item \code{minSireAge} - The minimum sire age floor (numeric, or
+\code{NULL} to use the species+sex breeding-age table default)
+\item \code{minDamAge} - The minimum dam age floor (numeric, or
+\code{NULL} to use the species+sex breeding-age table default)
 \item \code{isReady} - Logical indicating if data is ready for next step
 }
 }

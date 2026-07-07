@@ -40,7 +40,8 @@ run_upload <- function(fixture, fileType, separator = ",") {
   out <- list(warned = NA, rows = NA_integer_, errors = NA_integer_)
   testServer(modInputServer, {
     session$setInputs(fileType = fileType, separator = separator,
-                      fileContent = "pedFile", minParentAge = "2.0",
+                      fileContent = "pedFile", minSireAge = "2.0",
+                      minDamAge = "2.0",
                       pedigreeFileOne = fileval)
     captured <- character(0)
     withCallingHandlers(

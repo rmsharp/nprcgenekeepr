@@ -3,6 +3,30 @@
 
 # Data Input and Quality Control Shiny Module
 
+#' Parse an optional age textInput value into a numeric floor or NULL
+#'
+#' Blank, whitespace-only, \code{NA}, or non-numeric input maps to \code{NULL}
+#' (meaning "use the species+sex breeding-age table default"); a valid number
+#' maps to that numeric value. Used by \code{\link{modInputServer}} to turn the
+#' two optional "Minimum Sire Age" / "Minimum Dam Age" fields into the
+#' \code{minSireAge} / \code{minDamAge} arguments threaded to the QC callees.
+#'
+#' @param x a length-1 character or numeric input value, possibly \code{NULL}.
+#' @return a length-1 numeric floor, or \code{NULL} when the input is blank,
+#'   \code{NA}, or not a number.
+#' @noRd
+parseOptionalAge <- function(x) {
+  if (is.null(x) || length(x) == 0L) {
+    return(NULL)
+  }
+  x <- trimws(as.character(x))
+  if (!nzchar(x) || is.na(x)) {
+    return(NULL)
+  }
+  v <- suppressWarnings(as.numeric(x))
+  if (is.na(v)) NULL else v
+}
+
 #' Data Input and Quality Control Module - UI Function
 #'
 #' Creates user interface for data input including file uploads for
@@ -123,15 +147,20 @@ modInputUI <- function(id) {
                     accept = c(".csv", ".txt", ".xlsx", ".xls"))
         ),
 
-        # Minimum parent age
-        textInput(ns("minParentAge"),
-                  label = "Minimum Parent Age (years)",
-                  value = "2.0"),
+        # Minimum sire and dam ages (Issue #119): two optional fields. Blank
+        # means "use the species- and sex-specific breeding-age default".
+        textInput(ns("minSireAge"),
+                  label = "Minimum Sire Age (years)",
+                  value = ""),
+        textInput(ns("minDamAge"),
+                  label = "Minimum Dam Age (years)",
+                  value = ""),
         helpText(
           style = "font-size: 11px; color: #666;",
           paste(
-            "Parents must be at least as old as the minimum parent age",
-            "at the birthdate of an offspring."
+            "Leave blank to use the species-specific default for each sex;",
+            "enter a number to require parents be at least that old at an",
+            "offspring's birth."
           )
         ),
 
@@ -220,7 +249,10 @@ modInputUI <- function(id) {
 #'   \item \code{cleanedStudbook} - The QC-cleaned studbook data
 #'   \item \code{genotypeData} - Genotype data if provided
 #'   \item \code{qcSummary} - Summary of QC results (error/warning counts)
-#'   \item \code{minParentAge} - The minimum parent age value
+#'   \item \code{minSireAge} - The minimum sire age floor (numeric, or
+#'     \code{NULL} to use the species+sex breeding-age table default)
+#'   \item \code{minDamAge} - The minimum dam age floor (numeric, or
+#'     \code{NULL} to use the species+sex breeding-age table default)
 #'   \item \code{isReady} - Logical indicating if data is ready for next step
 #' }
 #'
@@ -444,19 +476,16 @@ modInputServer <- function(id, config = NULL) {
         }
       }
 
-      # Get minimum parent age
-      minAge <- tryCatch(
-        as.numeric(input$minParentAge),
-        error = function(e) 2.0,
-        warning = function(w) 2.0
-      )
-      if (is.na(minAge)) minAge <- 2.0
+      # Parse the optional sire/dam age floors; blank -> NULL -> the
+      # species+sex breeding-age table default in the QC callees.
+      sireAge <- parseOptionalAge(input$minSireAge)
+      damAge <- parseOptionalAge(input$minDamAge)
 
       # Get raw errorLst for dynamic tab display
       rawErrorLst <- tryCatch({
         qcStudbook(
           rawData,
-          minSireAge = minAge, minDamAge = minAge,
+          minSireAge = sireAge, minDamAge = damAge,
           reportChanges = TRUE,
           reportErrors = TRUE
         )
@@ -471,7 +500,7 @@ modInputServer <- function(id, config = NULL) {
       qcResult <- tryCatch({
         runQcStudbook(
           rawData,
-          minSireAge = minAge, minDamAge = minAge,
+          minSireAge = sireAge, minDamAge = damAge,
           reportChanges = TRUE
         )
       }, error = function(e) {
@@ -660,8 +689,11 @@ modInputServer <- function(id, config = NULL) {
           records = nRecords
         )
       }),
-      minParentAge = reactive({
-        as.numeric(input$minParentAge)
+      minSireAge = reactive({
+        parseOptionalAge(input$minSireAge)
+      }),
+      minDamAge = reactive({
+        parseOptionalAge(input$minDamAge)
       }),
       isReady = reactive({
         req(qcResults())

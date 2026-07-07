@@ -8,7 +8,7 @@ library(testthat)
 # Input Validation Boundaries
 # =============================================================================
 
-test_that("E2E: Input validates minimum parent age bounds", {
+test_that("E2E: Input validates minimum sire age bounds", {
   skip_if_not_installed("shinytest2")
   skip_if_not_installed("chromote")
   skip_on_cran()
@@ -20,12 +20,12 @@ test_that("E2E: Input validates minimum parent age bounds", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  # The minimum-parent-age control is present in the active Input pane
-  expect_true(assert_active_pane(app, "Input", "Minimum Parent Age"),
-              info = "Input pane active with its minimum-parent-age control")
+  # The minimum-sire-age control is present in the active Input pane
+  expect_true(assert_active_pane(app, "Input", "Minimum Sire Age"),
+              info = "Input pane active with its minimum-sire-age control")
 })
 
-test_that("E2E: Input handles non-numeric parent age gracefully", {
+test_that("E2E: Input handles non-numeric sire age gracefully", {
   skip_if_not_installed("shinytest2")
   skip_if_not_installed("chromote")
   skip_on_cran()
@@ -37,14 +37,14 @@ test_that("E2E: Input handles non-numeric parent age gracefully", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  # Set a non-numeric parent age; the textInput accepts the string and the app
+  # Set a non-numeric sire age; the textInput accepts the string and the app
   # stays up (a real interaction, not a swallowed no-op).
-  app$set_inputs(`dataInput-minParentAge` = "abc")
+  app$set_inputs(`dataInput-minSireAge` = "abc")
   app$wait_for_idle(timeout = E2E_TIMEOUT)
 
-  expect_equal(app$get_value(input = "dataInput-minParentAge"), "abc",
-               info = "minParentAge accepts a non-numeric string value")
-  expect_true(assert_active_pane(app, "Input", "Minimum Parent Age"),
+  expect_equal(app$get_value(input = "dataInput-minSireAge"), "abc",
+               info = "minSireAge accepts a non-numeric string value")
+  expect_true(assert_active_pane(app, "Input", "Minimum Sire Age"),
               info = "Input pane stays active on invalid input (no crash)")
 })
 

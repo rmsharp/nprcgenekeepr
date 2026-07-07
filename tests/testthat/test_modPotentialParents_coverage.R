@@ -23,7 +23,7 @@ test_that("modPotentialParents: Find with no pedigree warns, empty table", {
 
   shiny::testServer(
     modPotentialParentsServer,
-    args = list(pedigree = shiny::reactive(NULL), minParentAge = 2),
+    args = list(pedigree = shiny::reactive(NULL), minSireAge = 2, minDamAge = 2),
     {
       session$setInputs(maxGestationalPeriod = 210, findParents = 1)
 
@@ -46,7 +46,7 @@ test_that("modPotentialParents: NA gestation input falls back to 210", {
 
   shiny::testServer(
     modPotentialParentsServer,
-    args = list(pedigree = shiny::reactive(ped), minParentAge = 2),
+    args = list(pedigree = shiny::reactive(ped), minSireAge = 2, minDamAge = 2),
     {
       # NA gestation input -> the eventReactive fallback uses 210L (L261)
       # instead of passing NA to getPotentialParents.
@@ -67,7 +67,7 @@ test_that("modPotentialParents: downloadParents writes results CSV", {
 
   shiny::testServer(
     modPotentialParentsServer,
-    args = list(pedigree = shiny::reactive(ped), minParentAge = 2),
+    args = list(pedigree = shiny::reactive(ped), minSireAge = 2, minDamAge = 2),
     {
       session$setInputs(maxGestationalPeriod = 210, findParents = 1)
 

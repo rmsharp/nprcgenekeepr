@@ -191,8 +191,12 @@ modPotentialParentsUI <- function(id) {
 #'
 #' @param id character vector of length 1. Module namespace identifier.
 #' @param pedigree reactive returning the current pedigree data.frame.
-#' @param minParentAge numeric minimum age in years for an animal to be a
-#'   parent. Defaults to 2 (the QC default).
+#' @param minSireAge minimum age in years for a male to be proposed as a sire.
+#'   May be a plain numeric, \code{NULL}, or a reactive returning either.
+#'   \code{NULL} (the default) uses the species- and sex-specific breeding-age
+#'   table default via \code{\link{getPotentialParents}}.
+#' @param minDamAge minimum age in years for a female to be proposed as a dam.
+#'   Same forms and default as \code{minSireAge}, applied to females.
 #' @param gestationTable optional species-to-gestation lookup passed to
 #'   \code{\link{getSpeciesGestation}} when defaulting the gestation window;
 #'   \code{NULL} (the default) uses the bundled \code{\link{speciesGestation}}
@@ -220,7 +224,8 @@ modPotentialParentsUI <- function(id) {
 #' @importFrom utils write.csv
 #' @family Shiny modules
 #' @export
-modPotentialParentsServer <- function(id, pedigree = NULL, minParentAge = 2.0,
+modPotentialParentsServer <- function(id, pedigree = NULL,
+                                      minSireAge = NULL, minDamAge = NULL,
                                       gestationTable = NULL,
                                       gestationDefault = NULL) {
   moduleServer(id, function(input, output, session) {
@@ -260,12 +265,13 @@ modPotentialParentsServer <- function(id, pedigree = NULL, minParentAge = 2.0,
       if (is.null(maxGest) || is.na(maxGest)) {
         maxGest <- 210L
       }
-      ## Issue #119 Slice 2: pass the module's minParentAge through the new
-      ## sex-specific parameters so this internal caller does not trip
-      ## getPotentialParents()'s own deprecation warning. The two-field UX
-      ## (separate sire/dam inputs) is Slice 4.
+      ## The sire and dam floors may be reactives when wired from the Input
+      ## tab, or plain scalars, or NULL. A NULL floor falls back to the species
+      ## and sex breeding-age table default. See issue 119 slice 4.
+      sireFloor <- if (is.function(minSireAge)) minSireAge() else minSireAge
+      damFloor <- if (is.function(minDamAge)) minDamAge() else minDamAge
       getPotentialParents(
-        ped = ped, minSireAge = minParentAge, minDamAge = minParentAge,
+        ped = ped, minSireAge = sireFloor, minDamAge = damFloor,
         maxGestationalPeriod = maxGest
       )
     })

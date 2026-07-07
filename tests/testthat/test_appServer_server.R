@@ -55,7 +55,8 @@ stubInput <- function(id, ...) {
     pedigreeFileName = shiny::reactive(ctl$fname()),
     changedCols = shiny::reactive(ctl$changed()),
     genotypeData = shiny::reactive(NULL),
-    minParentAge = shiny::reactive(2L),
+    minSireAge = shiny::reactive(NULL),
+    minDamAge = shiny::reactive(NULL),
     isReady = shiny::reactive(FALSE),
     debugMode = shiny::reactive(FALSE)
   )

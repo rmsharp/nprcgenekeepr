@@ -122,7 +122,7 @@ test_that("getData surfaces a File Read Error for an unreadable file", {
   skip_if_not_installed("shiny")
   shiny::testServer(modInputServer, args = list(config = NULL), {
     session$setInputs(fileContent = "pedFile", fileType = "fileTypeExcel",
-                      minParentAge = "2.0")
+                      minSireAge = "2.0", minDamAge = "2.0")
     session$setInputs(pedigreeFileOne = list(
       name = "missing.csv", datapath = tempfile(fileext = ".csv")
     ))
@@ -137,20 +137,21 @@ test_that("getData surfaces a File Read Error for an unreadable file", {
   })
 })
 
-# --- getData: blank minParentAge falls back to the default ------------------
+# --- getData: blank sire/dam floors fall back to the table default ----------
 
-test_that("getData coerces a blank minParentAge to the default age", {
+test_that("getData maps blank sire/dam floors to the table default", {
   skip_if_not_installed("shiny")
   path <- write_pedgood_csv()
   on.exit(unlink(path), add = TRUE)
   shiny::testServer(modInputServer, args = list(config = NULL), {
     session$setInputs(fileContent = "pedFile", fileType = "fileTypeExcel",
-                      minParentAge = "")
+                      minSireAge = "", minDamAge = "")
     session$setInputs(pedigreeFileOne = list(name = basename(path),
                                              datapath = path))
     session$setInputs(getData = 1)
-    # as.numeric("") is NA (silently); the observer falls back to 2.0 and
-    # still produces a cleaned studbook.
+    # Blank fields parse to NULL, so the species+sex table default applies
+    # (2 years for this species-less fixture) and QC still produces a cleaned
+    # studbook.
     res <- storedResults()
     expect_false(is.null(res$cleaned))
   })
@@ -172,7 +173,7 @@ test_that("getData surfaces a QC Processing Error when the QC run fails", {
   )
   shiny::testServer(modInputServer, args = list(config = NULL), {
     session$setInputs(fileContent = "pedFile", fileType = "fileTypeExcel",
-                      minParentAge = "2.0")
+                      minSireAge = "2.0", minDamAge = "2.0")
     session$setInputs(pedigreeFileOne = list(name = basename(path),
                                              datapath = path))
     session$setInputs(getData = 1)
@@ -201,7 +202,7 @@ test_that("getData tolerates a qcStudbook warning during raw QC", {
   )
   shiny::testServer(modInputServer, args = list(config = NULL), {
     session$setInputs(fileContent = "pedFile", fileType = "fileTypeExcel",
-                      minParentAge = "2.0")
+                      minSireAge = "2.0", minDamAge = "2.0")
     session$setInputs(pedigreeFileOne = list(name = basename(path),
                                              datapath = path))
     session$setInputs(getData = 1)

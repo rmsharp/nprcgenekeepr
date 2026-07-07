@@ -49,14 +49,6 @@ test_that("modInputUI has separator options for text files", {
   expect_true(grepl("Tab", ui_html))
 })
 
-test_that("modInputUI has minimum parent age input", {
-  ui <- modInputUI("test")
-  ui_html <- as.character(ui)
-
-  expect_true(grepl("minParentAge", ui_html))
-  expect_true(grepl("Minimum Parent Age", ui_html))
-})
-
 test_that("modInputUI has action button", {
   ui <- modInputUI("test")
   ui_html <- as.character(ui)
@@ -116,7 +108,8 @@ test_that("modInputServer returns expected reactive list", {
       expect_true("cleanedStudbook" %in% names(result))
       expect_true("genotypeData" %in% names(result))
       expect_true("qcSummary" %in% names(result))
-      expect_true("minParentAge" %in% names(result))
+      expect_true("minSireAge" %in% names(result))
+      expect_true("minDamAge" %in% names(result))
       expect_true("isReady" %in% names(result))
       expect_true("debugMode" %in% names(result))
 
@@ -124,7 +117,8 @@ test_that("modInputServer returns expected reactive list", {
       expect_true(is.function(result$cleanedStudbook))
       expect_true(is.function(result$genotypeData))
       expect_true(is.function(result$qcSummary))
-      expect_true(is.function(result$minParentAge))
+      expect_true(is.function(result$minSireAge))
+      expect_true(is.function(result$minDamAge))
       expect_true(is.function(result$isReady))
       expect_true(is.function(result$debugMode))
     }
@@ -167,22 +161,6 @@ test_that("modInputServer handles file content selection", {
 
       session$setInputs(fileContent = "focalAnimals")
       expect_equal(input$fileContent, "focalAnimals")
-    }
-  )
-})
-
-test_that("modInputServer handles minParentAge input", {
-  skip_if_not_installed("shiny")
-
-  shiny::testServer(
-    modInputServer,
-    args = list(config = NULL),
-    {
-      session$setInputs(minParentAge = "3.5")
-      result <- session$getReturned()
-
-      # Check minParentAge reactive returns numeric
-      expect_equal(result$minParentAge(), 3.5)
     }
   )
 })
@@ -326,84 +304,6 @@ test_that("modInputServer activeFile reactive returns NULL for focalAnimals with
 })
 
 # ============================================================================
-# Server Tests - minParentAge variations
-# ============================================================================
-
-test_that("modInputServer handles default minParentAge value", {
-  skip_if_not_installed("shiny")
-
-  shiny::testServer(
-    modInputServer,
-    args = list(config = NULL),
-    {
-      session$setInputs(minParentAge = "2.0")
-      result <- session$getReturned()
-      expect_equal(result$minParentAge(), 2.0)
-    }
-  )
-})
-
-test_that("modInputServer handles integer minParentAge", {
-  skip_if_not_installed("shiny")
-
-  shiny::testServer(
-    modInputServer,
-    args = list(config = NULL),
-    {
-      session$setInputs(minParentAge = "5")
-      result <- session$getReturned()
-      expect_equal(result$minParentAge(), 5)
-    }
-  )
-})
-
-test_that("modInputServer handles zero minParentAge", {
-  skip_if_not_installed("shiny")
-
-  shiny::testServer(
-    modInputServer,
-    args = list(config = NULL),
-    {
-      session$setInputs(minParentAge = "0")
-      result <- session$getReturned()
-      expect_equal(result$minParentAge(), 0)
-    }
-  )
-})
-
-test_that("modInputServer handles decimal minParentAge", {
-  skip_if_not_installed("shiny")
-
-  shiny::testServer(
-    modInputServer,
-    args = list(config = NULL),
-    {
-      session$setInputs(minParentAge = "1.75")
-      result <- session$getReturned()
-      expect_equal(result$minParentAge(), 1.75)
-    }
-  )
-})
-
-test_that("modInputServer handles non-numeric minParentAge gracefully", {
-  skip_if_not_installed("shiny")
-
-  shiny::testServer(
-    modInputServer,
-    args = list(config = NULL),
-    {
-      session$setInputs(minParentAge = "invalid")
-      result <- session$getReturned()
-      # as.numeric("invalid") returns NA with a warning
-      expect_warning(
-        expect_true(is.na(result$minParentAge())),
-        "NAs introduced by coercion"
-      )
-    }
-  )
-})
-
-# ============================================================================
 # Server Tests - Return value components
 # ============================================================================
 
@@ -443,10 +343,10 @@ test_that("modInputServer returns all seven expected reactive components", {
     args = list(config = NULL),
     {
       result <- session$getReturned()
-      expect_equal(length(result), 9)
+      expect_equal(length(result), 10)
       expected_names <- c("cleanedStudbook", "genotypeData", "qcSummary",
-                          "minParentAge", "isReady", "debugMode", "changedCols",
-                          "errorLst", "pedigreeFileName")
+                          "minSireAge", "minDamAge", "isReady", "debugMode",
+                          "changedCols", "errorLst", "pedigreeFileName")
       expect_setequal(names(result), expected_names)
     }
   )
@@ -615,130 +515,32 @@ test_that("modInputServer maintains input state across multiple changes", {
       session$setInputs(
         fileType = "fileTypeExcel",
         fileContent = "pedFile",
-        minParentAge = "2.0",
+        minSireAge = "2.0",
+        minDamAge = "2.0",
         debugger = FALSE
       )
 
       expect_equal(input$fileType, "fileTypeExcel")
       expect_equal(input$fileContent, "pedFile")
       result <- session$getReturned()
-      expect_equal(result$minParentAge(), 2.0)
+      expect_equal(result$minSireAge(), 2.0)
+      expect_equal(result$minDamAge(), 2.0)
       expect_false(result$debugMode())
 
       # Change state
       session$setInputs(
         fileType = "fileTypeText",
         fileContent = "commonPedGenoFile",
-        minParentAge = "4.5",
+        minSireAge = "4.5",
+        minDamAge = "3.5",
         debugger = TRUE
       )
 
       expect_equal(input$fileType, "fileTypeText")
       expect_equal(input$fileContent, "commonPedGenoFile")
-      expect_equal(result$minParentAge(), 4.5)
+      expect_equal(result$minSireAge(), 4.5)
+      expect_equal(result$minDamAge(), 3.5)
       expect_true(result$debugMode())
-    }
-  )
-})
-
-test_that("modInputServer handles rapid input changes", {
-  skip_if_not_installed("shiny")
-
-  shiny::testServer(
-    modInputServer,
-    args = list(config = NULL),
-    {
-      result <- session$getReturned()
-
-      # Rapid changes to minParentAge
-      session$setInputs(minParentAge = "1.0")
-      expect_equal(result$minParentAge(), 1.0)
-
-      session$setInputs(minParentAge = "2.0")
-      expect_equal(result$minParentAge(), 2.0)
-
-      session$setInputs(minParentAge = "3.0")
-      expect_equal(result$minParentAge(), 3.0)
-
-      session$setInputs(minParentAge = "0.5")
-      expect_equal(result$minParentAge(), 0.5)
-    }
-  )
-})
-
-# ============================================================================
-# Server Tests - Edge cases for minParentAge
-# ============================================================================
-
-test_that("modInputServer handles very small minParentAge", {
-  skip_if_not_installed("shiny")
-
-  shiny::testServer(
-    modInputServer,
-    args = list(config = NULL),
-    {
-      session$setInputs(minParentAge = "0.001")
-      result <- session$getReturned()
-      expect_equal(result$minParentAge(), 0.001)
-    }
-  )
-})
-
-test_that("modInputServer handles very large minParentAge", {
-  skip_if_not_installed("shiny")
-
-  shiny::testServer(
-    modInputServer,
-    args = list(config = NULL),
-    {
-      session$setInputs(minParentAge = "100")
-      result <- session$getReturned()
-      expect_equal(result$minParentAge(), 100)
-    }
-  )
-})
-
-test_that("modInputServer handles negative minParentAge", {
-  skip_if_not_installed("shiny")
-
-  shiny::testServer(
-    modInputServer,
-    args = list(config = NULL),
-    {
-      session$setInputs(minParentAge = "-1")
-      result <- session$getReturned()
-      # Should convert to -1, validation would happen elsewhere
-      expect_equal(result$minParentAge(), -1)
-    }
-  )
-})
-
-test_that("modInputServer handles empty minParentAge string", {
-  skip_if_not_installed("shiny")
-
-  shiny::testServer(
-    modInputServer,
-    args = list(config = NULL),
-    {
-      session$setInputs(minParentAge = "")
-      result <- session$getReturned()
-      # as.numeric("") returns NA
-      expect_true(is.na(result$minParentAge()))
-    }
-  )
-})
-
-test_that("modInputServer handles whitespace minParentAge", {
-  skip_if_not_installed("shiny")
-
-  shiny::testServer(
-    modInputServer,
-    args = list(config = NULL),
-    {
-      session$setInputs(minParentAge = "  2.5  ")
-      result <- session$getReturned()
-      # as.numeric handles whitespace
-      expect_equal(result$minParentAge(), 2.5)
     }
   )
 })
@@ -800,11 +602,12 @@ test_that("modInputUI has DT table outputs", {
   expect_true(grepl("cleanedDataTable", ui_html))
 })
 
-test_that("modInputUI has help text for minimum parent age", {
+test_that("modInputUI has help text for the sire/dam age fields", {
   ui <- modInputUI("test")
   ui_html <- as.character(ui)
 
-  expect_true(grepl("Parents must be at least as old", ui_html))
+  expect_true(grepl("Leave blank to use the species-specific default",
+                    ui_html))
 })
 
 test_that("modInputUI has file acceptance types", {
@@ -844,9 +647,10 @@ test_that("modInputServer works with different namespaces", {
     modInputServer,
     args = list(config = NULL),
     {
-      session$setInputs(minParentAge = "3.0")
+      session$setInputs(minSireAge = "3.0", minDamAge = "3.0")
       result <- session$getReturned()
-      expect_equal(result$minParentAge(), 3.0)
+      expect_equal(result$minSireAge(), 3.0)
+      expect_equal(result$minDamAge(), 3.0)
     }
   )
 })
@@ -919,7 +723,7 @@ test_that("modInputServer handles NULL config", {
     {
       result <- session$getReturned()
       expect_true(is.list(result))
-      expect_equal(length(result), 9)
+      expect_equal(length(result), 10)
     }
   )
 })
@@ -937,7 +741,7 @@ test_that("modInputServer handles reactive config", {
     {
       result <- session$getReturned()
       expect_true(is.list(result))
-      expect_equal(length(result), 9)
+      expect_equal(length(result), 10)
     }
   )
 })
@@ -984,7 +788,8 @@ test_that("modInputServer focalAnimals path builds pedigree from the EHR (mocked
         fileContent = "focalAnimals",
         fileType = "fileTypeText",
         separator = ",",
-        minParentAge = "2.0"
+        minSireAge = "2.0",
+        minDamAge = "2.0"
       )
       session$setInputs(
         breederFile = list(name = basename(shortlist), datapath = shortlist)
@@ -1023,7 +828,8 @@ test_that("modInputServer focalAnimals path surfaces the EHR-failure errorLst", 
         fileContent = "focalAnimals",
         fileType = "fileTypeText",
         separator = ",",
-        minParentAge = "2.0"
+        minSireAge = "2.0",
+        minDamAge = "2.0"
       )
       session$setInputs(
         breederFile = list(name = basename(shortlist), datapath = shortlist)
@@ -1069,7 +875,8 @@ test_that("modInputServer focalAnimals path builds pedigree from a FILE (offline
         fileContent = "focalAnimals",
         fileType = "fileTypeText",
         separator = ",",
-        minParentAge = "2.0"
+        minSireAge = "2.0",
+        minDamAge = "2.0"
       )
       session$setInputs(
         breederFile = list(name = basename(shortlist), datapath = shortlist),
@@ -1110,7 +917,8 @@ test_that("modInputServer offline focal-file path surfaces a File Read Error on 
         fileContent = "focalAnimals",
         fileType = "fileTypeText",
         separator = ",",
-        minParentAge = "2.0"
+        minSireAge = "2.0",
+        minDamAge = "2.0"
       )
       session$setInputs(
         breederFile = list(name = basename(shortlist), datapath = shortlist),
@@ -1155,7 +963,8 @@ test_that("modInputServer offline focal-file path reports a missing-column pedig
         fileContent = "focalAnimals",
         fileType = "fileTypeText",
         separator = ",",
-        minParentAge = "2.0"
+        minSireAge = "2.0",
+        minDamAge = "2.0"
       )
       session$setInputs(
         breederFile = list(name = basename(shortlist), datapath = shortlist),

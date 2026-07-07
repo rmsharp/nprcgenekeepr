@@ -17,8 +17,9 @@
 library(testthat)
 
 # The fromCenter demo fixture (375 animals; added in Session 81) yields exactly
-# this many in-colony animals with at least one unknown parent at the QC-default
-# minParentAge = 2 and maxGestationalPeriod = 210. Locked as the regression
+# this many in-colony animals with at least one unknown parent at the default
+# sire/dam floors (blank, so the species+sex table default of 2 applies to this
+# species-less fixture) and maxGestationalPeriod = 210. Locked as the regression
 # value (owner-verified live in Session 81: "Found candidate parents for 50
 # animal(s)").
 PP_EXPECTED_CANDIDATES <- 50L

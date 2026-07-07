@@ -338,13 +338,18 @@ appServer <- function(input, output, session) {
     kinshipMatrix = gvResults$kinshipMatrix
   )
 
-  # Potential Parents Module -- pass the user-configurable species gestation
-  # override (loaded at boot into shared$speciesOverrides; issue #73 Part 2
-  # Slice 2). NULL fields (no config, or no override) leave the prefill on the
-  # bundled speciesGestation table and the built-in 210-day fallback.
+  # Potential Parents Module -- follow the Input-tab sire/dam age floors
+  # (issue #119 Slice 4) so candidate screening honors the same minimums as QC;
+  # blank fields resolve to NULL -> the species+sex breeding-age table default.
+  # Also pass the user-configurable species gestation override (loaded at boot
+  # into shared$speciesOverrides; issue #73 Part 2 Slice 2). NULL fields (no
+  # config, or no override) leave the prefill on the bundled speciesGestation
+  # table and the built-in 210-day fallback.
   modPotentialParentsServer(
     "potentialParents",
     pedigree = reactive(shared$currentPedigree),
+    minSireAge = inputResults$minSireAge,
+    minDamAge = inputResults$minDamAge,
     gestationTable = shared$speciesOverrides$gestationTable,
     gestationDefault = shared$speciesOverrides$gestationDefault
   )

@@ -30,7 +30,7 @@ test_that("E2E: Input shows message when no file selected", {
                info = "no-file click surfaces the 'select a file' warning")
 })
 
-test_that("E2E: Input handles zero minimum parent age", {
+test_that("E2E: Input handles zero minimum sire age", {
   skip_if_not_installed("shinytest2")
   skip_if_not_installed("chromote")
   skip_on_cran()
@@ -42,14 +42,14 @@ test_that("E2E: Input handles zero minimum parent age", {
   success <- navigate_to_tab(app, "Input")
   if (!success) skip("Could not navigate to Input tab")
 
-  # Set the minimum parent age to the 0 boundary and confirm the namespaced
+  # Set the minimum sire age to the 0 boundary and confirm the namespaced
   # input reflects it (a real interaction, not a swallowed no-op).
-  app$set_inputs(`dataInput-minParentAge` = "0")
+  app$set_inputs(`dataInput-minSireAge` = "0")
   app$wait_for_idle(timeout = E2E_TIMEOUT)
 
-  expect_equal(app$get_value(input = "dataInput-minParentAge"), "0",
-               info = "minParentAge accepts and reflects the set value")
-  expect_true(assert_active_pane(app, "Input", "Minimum Parent Age"),
+  expect_equal(app$get_value(input = "dataInput-minSireAge"), "0",
+               info = "minSireAge accepts and reflects the set value")
+  expect_true(assert_active_pane(app, "Input", "Minimum Sire Age"),
               info = "Input pane stays active after a boundary value")
 })
 
