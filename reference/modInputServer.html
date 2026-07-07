@@ -75,7 +75,10 @@ of pedigree and genotype data files, and quality control validation.</p>
     <p>A list with reactive components:</p><ul><li><p><code>cleanedStudbook</code> - The QC-cleaned studbook data</p></li>
 <li><p><code>genotypeData</code> - Genotype data if provided</p></li>
 <li><p><code>qcSummary</code> - Summary of QC results (error/warning counts)</p></li>
-<li><p><code>minParentAge</code> - The minimum parent age value</p></li>
+<li><p><code>minSireAge</code> - The minimum sire age floor (numeric, or
+<code>NULL</code> to use the species+sex breeding-age table default)</p></li>
+<li><p><code>minDamAge</code> - The minimum dam age floor (numeric, or
+<code>NULL</code> to use the species+sex breeding-age table default)</p></li>
 <li><p><code>isReady</code> - Logical indicating if data is ready for next step</p></li>
 </ul></div>
     <div class="section level2">

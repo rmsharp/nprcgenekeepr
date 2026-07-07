@@ -70,7 +70,8 @@ unknown parent.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">modPotentialParentsServer</span><span class="op">(</span></span>
 <span>  <span class="va">id</span>,</span>
 <span>  pedigree <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  minParentAge <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  minSireAge <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  minDamAge <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  gestationTable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  gestationDefault <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -88,9 +89,16 @@ unknown parent.</p>
 <dd><p>reactive returning the current pedigree data.frame.</p></dd>
 
 
-<dt id="arg-minparentage">minParentAge<a class="anchor" aria-label="anchor" href="#arg-minparentage"></a></dt>
-<dd><p>numeric minimum age in years for an animal to be a
-parent. Defaults to 2 (the QC default).</p></dd>
+<dt id="arg-minsireage">minSireAge<a class="anchor" aria-label="anchor" href="#arg-minsireage"></a></dt>
+<dd><p>minimum age in years for a male to be proposed as a sire.
+May be a plain numeric, <code>NULL</code>, or a reactive returning either.
+<code>NULL</code> (the default) uses the species- and sex-specific breeding-age
+table default via <code><a href="getPotentialParents.html">getPotentialParents</a></code>.</p></dd>
+
+
+<dt id="arg-mindamage">minDamAge<a class="anchor" aria-label="anchor" href="#arg-mindamage"></a></dt>
+<dd><p>minimum age in years for a female to be proposed as a dam.
+Same forms and default as <code>minSireAge</code>, applied to females.</p></dd>
 
 
 <dt id="arg-gestationtable">gestationTable<a class="anchor" aria-label="anchor" href="#arg-gestationtable"></a></dt>

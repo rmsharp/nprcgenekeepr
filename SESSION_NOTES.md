@@ -7,6 +7,181 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 306 Did
+
+**Deliverable:** **Slice 4** of the \#119 plan (the Shiny UI migration),
+IMPLEMENTED under strict TDD. Replaced the single “Minimum Parent Age”
+`textInput` in `modInput` with two optional blank fields
+(`minSireAge`/`minDamAge`, blank -\> species+sex table default), added
+`parseOptionalAge()`, threaded the parsed floors into `qcStudbook`/
+`runQcStudbook`, replaced the exposed `minParentAge` reactive with
+`minSireAge`/ `minDamAge`; changed `modPotentialParentsServer` to take
+`minSireAge`/`minDamAge` (reactive-or-scalar via `is.function`); wired
+`appServer.R:345` to the Input-tab floors. 4 `AskUserQuestion` gates (R2
+ratification + PRE-RED-\>RED + RED-\>GREEN + GREEN-\>REFACTOR); **0
+stakeholder corrections.** ONE slice – Slice 5 NOT started (FM \#18).
+**Started / Completed:** 2026-07-07 / 2026-07-07 **Status:** **DONE.**
+Full suite **3632 pass / 0 fail / 0 error / 0 true offenders** (the 7
+warnings are the pre-existing `test_gvaConvergence_kinshipOverrides.R` +
+`test_modPyramid.R` baseline, unrelated); `devtools::check(--as-cran)`
+**0 ERROR / 0 WARNING / 0 NOTE**; lint 0 on all 3 changed R files;
+`document()` regenerated `man/modInputServer.Rd` +
+`man/modPotentialParentsServer.Rd` (NAMESPACE unchanged). **Phase 3E
+PASSED (real headless-app smoke, MANDATORY per FM \#24):** installed the
+working tree and drove the REAL app in headless Chrome via the opt-in
+`shinytest2` e2e suite – **44 live-browser assertions across 4 files
+pass** (the “Minimum Sire Age” field renders, `dataInput-minSireAge`
+accepts numeric/non-numeric/zero without crashing, and the full
+appServer-\>modPotentialParents wiring holds the locked 50-candidate
+Potential-Parents regression). CHANGELOG (S306 under \[Unreleased\]) +
+PROJECT_LEARNINGS 284 + this handoff record it. - **R2 RATIFIED (owner,
+this session):** (1) **blank = table default** (the two fields start
+blank -\> `NULL` -\> species+sex table; a typed number overrides that
+sex) – this is what actually resolves \#119 in the app; the old field
+prefilled `2.0`, forcing a flat floor. (2) **Potential Parents follows
+the Input-tab fields** (one source of truth). (3) **Sire/Dam labels.** -
+**Reactive-or-scalar wiring:** `modPotentialParentsServer` normalizes
+each floor with `if (is.function(x)) x() else x`, so `appServer` passes
+`inputResults$minSireAge` (a reactive) directly AND unit tests pass a
+plain `minSireAge = 4` – no `reactive()` wrappers in the tests, no
+wrapper in appServer. - **Build-flag artifact, not a defect:**
+`R CMD build --no-build-vignettes` leaves `inst/doc` empty, so a DIRECT
+`R CMD check --as-cran` emits two “inst/doc missing” WARNINGs that are
+NOT real; `devtools::check(--as-cran)` (builds vignettes, as Slices 1-3
+used) is the authoritative **0/0/0**. Don’t chase those two warnings.
+
+**Session 305 Handoff Evaluation (by Session 306): Score 9/10.** S305’s
+SUGGESTED NEXT named THIS session with near-turnkey precision: it told
+me to RATIFY R2 first and framed the two-field UX, flagged Phase 3E as
+MANDATORY (runtime behavior changes), told me to verify nothing reads
+`inputResults$minParentAge` before retiring the orphan reactive (true –
+no consumer), and pointed at the decision sites
+(`modInput.R:127`/`:448-472`/ `:659-660`,
+`modPotentialParents.R:223`/`:264`, `appServer.R:345` “invoked WITHOUT
+any age arg – hardcoded 2.0, unwired”). **What helped most:** (1) the R2
+framing let me pose a clean 3-part ratification with the “old field
+forced flat-2” consequence spelled out; (2) the “verify no consumer of
+the orphan reactive” tip saved discovery time; (3) the “Phase 3E is
+MANDATORY, build-clean is NOT sufficient” mandate drove me to a REAL
+headless-app smoke instead of a testServer stand-in; (4) the
+“appServer.R:345 unwired” observation was exact and R2 resolved it.
+**What was missing/slightly off:** (a) the biggest undocumented gap –
+the migration’s test blast radius includes the FIVE `test-e2e-*`
+app-driver files (they drive `dataInput-minParentAge` and assert the
+“Minimum Parent Age” label) + the `stubInput` mock in
+`test_appServer_server.R`; neither the handoff nor plan §2 listed the
+e2e coupling, so I discovered it via grep + a full-suite run (one e2e
+error surfaced my change breaking `test-e2e-data-ready.R`). (b) three
+`test_modInput.R` assertions that DON’T contain “minParentAge” (a
+help-text `grepl`, two `length(result)==9` checks) broke only on the
+test run, not on grep. (c) the orphan reactive was at `:663-665`, not
+`:659-660` (minor drift). (d) not flagged that `test_modInput*.R` are
+`skip_on_cran` (a single-file run needs `NOT_CRAN=true` or reports a
+misleading `0/0/0`). **ROI:** very high; turnkey for the core migration,
+the e2e/label/contract-shape stragglers were mine to find.
+
+**Self-assessment (Session 306): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read; ghost-check clean; wrote the 1B stub before any
+code); declared the TDD phase atop every response and gated every
+transition via `AskUserQuestion` (R2 domain ratification posed BEFORE
+declaring RED, separate from the phase gates, per the contract).
+**Strengths:** (1) discovered and migrated the e2e/app-driver coupling
+the handoff+plan missed – did NOT leave a half-done migration (FM \#13
+complete-the-job); (2) caught the 3 no-symbol stragglers by treating a
+green single-file run as the real inventory, not grep; (3) delivered a
+GENUINE Phase 3E – installed the working tree and drove the real app in
+headless Chrome (44 assertions), stronger than prior slices’ testServer
+“smoke”, exactly because Slice 4 changes the UX (FM \#24); (4)
+distinguished the `--no-build-vignettes` WARNING artifact from a real
+defect and re-ran `devtools::check` for the authoritative 0/0/0; (5) the
+reactive-or-scalar normalization kept both appServer and the tests
+clean. **Weakness (the -1):** my initial test migration was
+grep-on-symbol only, so the 3 stragglers + the whole e2e layer surfaced
+during GREEN (via test runs) rather than in RED – a more thorough
+upfront inventory (grep the LABEL + namespaced INPUT ID +
+`length(result)`) would have put them in RED; also I burned ~7 min on a
+busy-wait loop. Net: strong, fully-verified slice.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 284** – a
+UI-rename slice’s test blast radius reaches the e2e/app-driver layer AND
+no-symbol contract-shape assertions, so grep-the-symbol is
+necessary-not-sufficient (also grep the label, the namespaced input id,
+and length/names checks; RUN the migrated tests to flush the rest); a
+real Shiny-UX slice earns a REAL headless-app Phase 3E (install the
+tree + opt-in `shinytest2` + `NPRC_RUN_E2E=true`); the `is.function(x)`
+reactive-or-scalar discriminator; and the `--no-build-vignettes`
+WARNING-vs-defect distinction. Carried as applied:
+\[\[observation-vs-decision\]\],
+\[\[consult-project-source-of-truth\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[ascii-only-in-question-options\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[edit-files-in-reverse-line-order\]\],
+\[\[push-close-out-docs-to-origin\]\].
+
+**=\> SUGGESTED NEXT.** \#119 Slice 4 is DONE. Slices 1-4 complete;
+**Slice 5 – docs, vignettes, screenshot, WORDLIST, NEWS** is the last
+slice (`docs/planning/issue119-sex-specific-min-breeding-age-plan.md` §3
+Slice 5), under strict TDD, ONE slice. **Scope (all still using
+`minParentAge`):** vignette calls -\> `minSireAge=`/`minDamAge=` –
+`vignettes/a2interactive.Rmd` (`:129,:136,:138` the “3.5 errors”
+footnote to re-verify against the new floors,
+`:143,:761,:789,:802,:821`),
+`vignettes/articles/studbook-quality-control.qmd`
+(`:34,:67,:161,:179,:214` param table),
+`vignettes/articles/breeding-group-formation.qmd:53`,
+`vignettes/articles/genetic-value-analysis.qmd:61`,
+`vignettes/ColonyManagerTutorial.Rmd:181-185` (**embeds the screenshot
+`input_minParentAgeSequence.png` – regenerate for the two new fields OR
+re-caption**), `vignettes/manual_components/_input.Rmd:68`;
+`inst/WORDLIST` (add `minSireAge`,`minDamAge` BY HAND – curated, do NOT
+run
+[`spelling::update_wordlist`](https://docs.ropensci.org/spelling//reference/wordlist.html)
+per \[\[avoid-reconcile-tools-on-curated-files\]\]); `NEWS.md`
+(user-facing entry – keep issue \#/“Slice N” OUT of the rendered prose
+per \[\[keep-dev-process-refs-out-of-user-docs\]\]);
+`inst/extdata/trulyUnknownParents.R:23` (archived example script, still
+`minParentAge = 2L`). **Completion:** `devtools::check()` clean
+INCLUDING vignette rebuild with no package-internal deprecation
+warnings; spelling passes. **Other open work (owner’s pick):** **\#118**
+effective population size (untriaged – bounded triage deliverable);
+**\#116** Flags (BLOCKED); **\#103** roxygen harmonization;
+**\#37/#36/#28/#12/#11/#10/#5**; the CRAN thread (owner-run, package
+ARCHIVED 2025-07-29, HARD STOP).
+
+**Key files (this session):** **Edited (R code):** `R/modInput.R` (new
+`@noRd` `parseOptionalAge` ~L6; two `textInput`s
+`minSireAge`/`minDamAge` ~L140; getData read rewrite ~L461; two exposed
+reactives ~L677; `@return` roxygen L251), `R/modPotentialParents.R` (sig
+`minSireAge=NULL,minDamAge=NULL` ~L223; `is.function` normalization +
+forward ~L263; `@param` roxygen ~L194), `R/appServer.R` (~L345 wiring).
+**Edited (tests):** NEW `test_modInput_sexSpecificAge.R` +
+`test_modPotentialParents_sexSpecificAge.R`; migrated `test_modInput.R`,
+`test_modInput_coverage.R`, `test_modInput_qcStudbook.R`,
+`test_modInput_incomplete_final_line.R`, `test_modPotentialParents.R`,
+`test_modPotentialParents_coverage.R`, `test_appServer_server.R`
+(stubInput), and 5 `test-e2e-*` (data-ready, input-tutorial,
+boundary-conditions, error-states, potential-parents-module).
+**Regenerated:** `man/modInputServer.Rd`,
+`man/modPotentialParentsServer.Rd`. **Docs:** `CHANGELOG.md`,
+`PROJECT_LEARNINGS.md` (284), this file. **GOTCHAS for the next
+session:** (1) `test_modInput*.R` are `skip_on_cran` – single-file
+`test_file()` runs need `NOT_CRAN=true` or they report a misleading
+`0/0/0` (all skipped). (2) The opt-in e2e suite needs the working tree
+INSTALLED (`R CMD INSTALL`) + `NPRC_RUN_E2E=true NOT_CRAN=true` – it
+drives
+[`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/)
+(the installed copy), NOT the source; headless Chrome must launch
+(`chromote`). (3) Slice 5 rebuilds vignettes – a vignette still calling
+`minParentAge=` warns on rebuild (build-log only, not a check WARNING,
+per this session’s clean `devtools::check`), but migrate them so the
+package never emits its OWN deprecation on doc build. (4)
+`R CMD build --no-build-vignettes` + direct `R CMD check` gives two
+bogus “inst/doc missing” WARNINGs – use `devtools::check` for the true
+0/0/0. (5) Deprecated-alias `runQcStudbook(minParentAge=)` calls in
+`test_modInput_qcStudbook.R` are INTENTIONALLY kept (R-level alias,
+Slices 1-3 scope).
+
 ### What Session 305 Did
 
 **Deliverable:** **Slice 3** of the \#119 plan (the

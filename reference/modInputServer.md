@@ -29,7 +29,11 @@ A list with reactive components:
 
 - `qcSummary` - Summary of QC results (error/warning counts)
 
-- `minParentAge` - The minimum parent age value
+- `minSireAge` - The minimum sire age floor (numeric, or `NULL` to use
+  the species+sex breeding-age table default)
+
+- `minDamAge` - The minimum dam age floor (numeric, or `NULL` to use the
+  species+sex breeding-age table default)
 
 - `isReady` - Logical indicating if data is ready for next step
 

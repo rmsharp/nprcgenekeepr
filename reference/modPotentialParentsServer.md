@@ -13,7 +13,8 @@ colony-origin field, or when no in-colony animal has an unknown parent.
 modPotentialParentsServer(
   id,
   pedigree = NULL,
-  minParentAge = 2,
+  minSireAge = NULL,
+  minDamAge = NULL,
   gestationTable = NULL,
   gestationDefault = NULL
 )
@@ -29,10 +30,18 @@ modPotentialParentsServer(
 
   reactive returning the current pedigree data.frame.
 
-- minParentAge:
+- minSireAge:
 
-  numeric minimum age in years for an animal to be a parent. Defaults to
-  2 (the QC default).
+  minimum age in years for a male to be proposed as a sire. May be a
+  plain numeric, `NULL`, or a reactive returning either. `NULL` (the
+  default) uses the species- and sex-specific breeding-age table default
+  via
+  [`getPotentialParents`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md).
+
+- minDamAge:
+
+  minimum age in years for a female to be proposed as a dam. Same forms
+  and default as `minSireAge`, applied to females.
 
 - gestationTable:
 

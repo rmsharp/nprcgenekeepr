@@ -15,6 +15,79 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-07 — Implement issue \#119 Slice 4 — Shiny two-field sire/dam age UX + `modPotentialParents`/`appServer` wiring (Session 306)
+
+- **Deliverable:** Slice 4 of the \#119 plan
+  (`docs/planning/issue119-sex-specific-min-breeding-age-plan.md` §3
+  Slice 4) under strict TDD (PRE-RED → RED → GREEN → concluded
+  no-refactor). 4 `AskUserQuestion` gates (R2 ratification +
+  PRE-RED→RED + RED→GREEN + GREEN→REFACTOR); 0 stakeholder corrections.
+  ONE slice — Slice 5 not started.
+- **R2 ratified (owner):** (1) **blank = table default** — the two
+  fields start blank, meaning “use the species+sex breeding-age table
+  default” (a typed number overrides that sex); this is what actually
+  resolves \#119 in the app (the old single field prefilled `2.0`,
+  forcing a flat floor). (2) **Potential Parents follows the Input-tab
+  fields** (one source of truth). (3) **Sire/Dam labels.**
+- **Changed (`R/modInput.R`):** the single `textInput("minParentAge")`
+  (prefilled `"2.0"`) becomes two optional blank fields, `minSireAge`
+  (“Minimum Sire Age (years)”) and `minDamAge` (“Minimum Dam Age
+  (years)”), with help text “Leave blank to use the species-specific
+  default for each sex”. New `@noRd` helper `parseOptionalAge()` turns a
+  field value into a numeric floor or `NULL` (blank / whitespace / `NA`
+  / non-numeric → `NULL`). The `getData` observer now threads
+  `parseOptionalAge(input$minSireAge)`/`parseOptionalAge(input$minDamAge)`
+  into `qcStudbook`/`runQcStudbook` (blank → `NULL` → the species+sex
+  table default). The single exposed `minParentAge` reactive is replaced
+  by `minSireAge`/`minDamAge` reactives (return list grows 9 → 10; the
+  retired reactive had **no consumer** in `appServer.R`).
+- **Changed (`R/modPotentialParents.R`):**
+  [`modPotentialParentsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPotentialParentsServer.md)
+  signature `minParentAge = 2.0` →
+  `minSireAge = NULL, minDamAge = NULL`; each floor is normalized with
+  `if (is.function(x)) x() else x` so it accepts either a reactive
+  (wired from the Input tab) or a plain scalar/`NULL`, then forwarded to
+  `getPotentialParents`. `NULL` → the species+sex table default.
+- **Wired (`R/appServer.R:345`):** `modPotentialParentsServer` is now
+  passed `minSireAge = inputResults$minSireAge`,
+  `minDamAge = inputResults$minDamAge` (previously invoked with no age
+  argument → a hardcoded 2.0, unwired to the Input tab). QC and
+  Potential Parents now honor the same user-set floors.
+- **Tests:** two new files — `test_modInput_sexSpecificAge.R`
+  (parseOptionalAge unit; two-field UI render + old field retired; the
+  two reactives; blank→NULL / typed→numeric / invalid→NULL; getData
+  threads the floors into the QC callees via mock-capture) and
+  `test_modPotentialParents_sexSpecificAge.R` (module forwards scalar
+  AND reactive floors, defaults to NULL, and honors an impossibly-high
+  sire floor end-to-end). Migrated the retired single-field API in
+  `test_modInput.R`, `test_modInput_coverage.R`,
+  `test_modInput_qcStudbook.R`, `test_modInput_incomplete_final_line.R`,
+  `test_modPotentialParents(_coverage).R`, `stubInput` in
+  `test_appServer_server.R`, and **five `test-e2e-*` files** (the
+  app-driver layer referenced the old `dataInput-minParentAge` input id
+  and the “Minimum Parent Age” label). Deprecated-alias
+  `runQcStudbook(minParentAge=)` calls (R-level, Slices 1–3 scope)
+  intentionally kept.
+- **Verify:** full suite 3632 pass / 0 fail / 0 error / 0 true offenders
+  (7 warnings are the pre-existing
+  `test_gvaConvergence`/`test_modPyramid` baseline);
+  `devtools::check(--as-cran)` **0 ERROR / 0 WARNING / 0 NOTE**; lint 0
+  on all 3 changed R files; `man/modInputServer.Rd` +
+  `man/modPotentialParentsServer.Rd` regenerated (NAMESPACE unchanged).
+- **Phase 3E (MANDATORY — runtime behavior changed, FM \#24):**
+  installed the working tree and drove the **real app in headless
+  Chrome** via the opt-in `shinytest2` e2e suite — 44 live-browser
+  assertions across four files pass: the “Minimum Sire Age” field
+  renders, `dataInput-minSireAge` accepts numeric / non-numeric / zero
+  input without crashing, and the full wiring yields the locked
+  50-candidate Potential-Parents regression (the species-less demo
+  fixture resolves the blank floors to the table default of 2, so the
+  count is preserved).
+- **Deferred (per plan):** Slice 5 —
+  docs/vignettes/screenshot/WORDLIST/NEWS (the vignettes and
+  `inst/extdata/trulyUnknownParents.R:23` still use `minParentAge`; they
+  rebuild without tripping the deprecation as build-log warnings only).
+
 ### 2026-07-07 — Implement issue \#119 Slice 3 — `minDamAge` in `getProductionStatus` (Session 305)
 
 - **Deliverable:** Slice 3 of the \#119 plan
