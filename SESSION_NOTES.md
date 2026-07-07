@@ -6,6 +6,180 @@
 
 ## ACTIVE TASK
 
+### What Session 299 Did
+**Deliverable (owner picked the OTHER S297 spinoff):** remove the redundant
+`sb <- fixGenotypeCols(sb)` call at `R/qcStudbook.R:288`. **REFACTOR (behavior-inert
+removal of executed-but-inert code, S295/S298 precedent); one `AskUserQuestion`
+PRE-RED→REFACTOR gate, one landing gate; 0 stakeholder corrections.**
+**Started / Completed:** 2026-07-06 / 2026-07-06
+**Status:** **DONE + VERIFIED.** The code change landed as **`436dc749`** on master
+(tagged `(S299)`; owner chose direct-commit); this docs close-out (CHANGELOG +
+PROJECT_LEARNINGS 277 + this handoff) records that hash and is pushed to
+`origin/master` (fast-forward; local == origin). (#117 already CLOSED per owner.)
+  - **Why the call was redundant (verified firsthand, not trusted):** S297's
+    `fixColumnNames()` fix (`fdcfc042`, #117) now restores EVERY spelling of the
+    genotype headers — `first_name`/`second_name`, space (`First Name`), period
+    (`first.name`), already-collapsed (`firstname`), upper (`FIRSTNAME`) — to
+    canonical `first_name`/`second_name` at `qcStudbook.R:190` (the `names(sb) <-
+    cols` assignment). `fixGenotypeCols` renames ONLY a column literally named
+    `firstname`/`secondname`, and no such column ever reaches line 288, so the call
+    was a provable no-op. (Its `@noRd` note already said "a better solution is to
+    avoid the problem" — S297's fix IS that better solution.)
+  - **This is the S295 `identical()`-battery branch, NOT the S298 grep-only branch**
+    — because the removed line ACTUALLY EXECUTES (unlike S298's unused `importFrom`).
+    Classify a removal by "does anything executed change?": executed → `identical()`
+    battery; nothing executes → grep.
+  - **Behavior-inertness PROVEN before the edit:** `assignInNamespace("fixGenotype
+    Cols", function(ped) ped, ns="nprcgenekeepr")` makes `sb <- fixGenotypeCols(sb)`
+    exactly `sb <- sb` (i.e. the removed line), so `identical(qcStudbook_with(x),
+    qcStudbook_without(x))` over a battery is a complete proof. Battery = 7 header
+    spellings + the shipped 31-row `obfuscated_rhesus_mhc_breeder_genotypes.csv`
+    fixture + `examplePedigree` + `pedGood`, each under `reportErrors=FALSE/TRUE` and
+    `reportChanges=TRUE` → all `identical()==TRUE`. **Non-vacuous:** a trace/counter
+    showed `fixGenotypeCols` saw a bare `firstname`/`secondname` col **0 times** at
+    line 288, and with it forced to identity a `firstname` input STILL emerged as
+    `first_name` (proving `fixColumnNames`, not the removed call, does the work).
+  - **Adversarial verification (ultracode):** a 4-agent refutation workflow — each
+    REFUTE-prompted with a distinct attack surface (exotic spellings; reintroduction
+    paths through `addUIds`/`addParents`/`removeDuplicates` + the `reportErrors=TRUE`
+    and missing-column branches; real shipped fixtures; duplicate/collision/single-
+    genotype inputs), each RUNNING real R — returned **0/4 refutations**.
+  - **Guard test added** to `tests/testthat/test_qcStudbook.R` (`mkGenoPed` helper +
+    a 5-spelling invariant: `qcStudbook()` keeps `first_name`/`second_name`, never
+    `firstname`/`secondname`). Added FIRST, confirmed it passes WITH the call present
+    (locks the invariant), THEN removed the call, confirmed still green. It fills a
+    REAL gap — no end-to-end `qcStudbook` genotype-header test existed (only
+    `test_fixColumnNames.R` at the unit level and `test_modInput_qcStudbook.R`'s
+    SEPARATE-file merge path, which uses integer `first`/`second`) — now that the
+    `fixGenotypeCols` net is gone, `fixColumnNames` is the sole guarantor.
+  - **Scope surgical (FM #8):** the CALL only. The now-only-tested `@noRd
+    fixGenotypeCols()` function + its `test_fixGenotypeCols.R` are LEFT intact for a
+    separate session (see SUGGESTED NEXT).
+  - **Verify (firsthand):** full suite (`NOT_CRAN=true`) **0 failed / 0 error**
+    (3733 tests; 7 baseline warnings — 2 `test_gvaConvergence_kinshipOverrides` + 5
+    `test_modPyramid` — unchanged, none new); `lintr` 0 on both changed files;
+    `spell_check_package` clean; `document()` **zero `man/`/`NAMESPACE` delta**
+    (call removal is roxygen-inert); **`R CMD check --as-cran` Status: OK — 0/0/0**
+    (repo root, WITH vignettes, via `devtools::check(document=FALSE, args="--as-cran")`).
+  - **Phase-3E (runtime — covered, not skipped):** `--as-cran` rebuilt vignettes and
+    ran examples (incl. `qcStudbook(examplePedigree)`) + the full suite with the call
+    removed; Status: OK IS the runtime proof no path broke. Plus the new guard test
+    and `test_modInput_qcStudbook.R`'s genotype-merge integration test cover the
+    genotype paths. No separate app launch (same reasoning as Learning 275c/276d).
+
+**Session 298 Handoff Evaluation (by Session 299): Score 9/10.** S298's SUGGESTED
+NEXT named this task precisely: the exact line (`qcStudbook.R:288`), the exact reason
+(`fixColumnNames()` restores `first_name`/`second_name` via `fdcfc042`), the fix
+(remove the call), the FM #8 scope discipline ("its own session"), the verification
+recipe (`--as-cran` 0/0/0 + full suite + Phase-3E), AND the pointer that the `@noRd`
+"a better solution is to avoid the problem" note means S297's fix makes the workaround
+"provably removable." **What helped:** turnkey scoping — a confirm-then-remove with
+near-zero re-derivation; every standing gotcha held. **What was missing (the −1):**
+(i) it framed the phase as "its OWN strict-TDD RED (assert `qcStudbook` still yields
+first_name/second_name without the call)" — but a no-op removal is a REFACTOR, not a
+RED (you cannot write a red-then-green test for a no-op); I reclassified and the
+"assert ..." became a passing characterization GUARD (the intent was right, the label
+wasn't); (ii) it said "redundant (idempotent, so harmless)" but did not specify the
+PROOF METHOD — I had to determine this is the S295 `identical()`-battery branch
+(executed code), not the S298 grep-branch; (iii) it did not note the missing
+end-to-end `qcStudbook` genotype test that removal makes worth adding. **What was
+wrong:** nothing — the redundancy held exactly (proven + 0/4 adversarial refutations),
+`--as-cran` 0/0/0 as predicted. **ROI:** very high — near-turnkey.
+
+**Self-assessment (Session 299): 9/10.** Oriented fully (SAFEGUARDS + SESSION_RUNNER
+read; ACTIVE TASK; GH issues — noted NEW #118/#119; dashboard 98/100; ghost-check —
+latest commit == S298 close-out, no gap); reported and STOPPED for the owner; wrote
+the 1B stub before technical work; declared the TDD phase at the top of each response
+and posed both the PRE-RED→REFACTOR and landing gates via `AskUserQuestion`.
+**Strengths:** (1) did NOT trust "redundant" — PROVED it firsthand (identity-override
+`identical()` battery + trace fired=0) BEFORE proposing the gate (FM #11); (2)
+correctly classified the proof method as the S295 `identical()`-branch (executed
+code), not the S298 grep-branch; (3) ran ultracode adversarial verification (4 agents,
+0/4 refuted) — justified because a wrong removal silently corrupts genotype data
+(genome-uniqueness/GV reports); (4) added a durable end-to-end guard where the removal
+makes `fixColumnNames` the SOLE guarantor — a real gap, not redundant coverage — in
+safe-refactor order (guard passes with call → remove → still green); (5) kept scope
+surgical (left `fixGenotypeCols` fn + test for its own session, FM #8); (6) ran the
+full battery firsthand (suite 0/0, lint 0, spell clean, document zero delta, --as-cran
+0/0/0); (7) corrected the handoff's RED framing to the honest REFACTOR classification
+and explained why. **Weakness (the −1):** a small, low-risk change with 0 corrections
+(capped at 9 for honesty); the adversarial workflow, while justified, added latency
+for a claim my own battery had already settled.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 277** — removing executed-but-
+inert code is the S295 `identical()`-battery REFACTOR (classify by "does anything
+executed change?", not the S298 grep-branch); simulate the removal by identity-override
+(exactly equivalent); PROVE non-vacuous (trace fires 0×; upstream still does the work);
+a bug-fix handoff's "add a RED" for a no-op removal means a passing characterization
+GUARD, not a failing RED; add the guard where the removal makes an upstream function
+the SOLE guarantor (real gap, not redundant coverage); adversarial fan-out earns its
+cost when the blast radius is a silent data-corruption path. Carried as applied:
+[[consult-project-source-of-truth]], [[check-process-history-before-rerunning-work]],
+[[observation-vs-decision]], [[avoid-jargon-use-plain-language]],
+[[avoid-new-lints-r-package]], [[keep-dev-process-refs-out-of-user-docs]],
+[[check-status-before-destructive-git]], [[push-close-out-docs-to-origin]]. **This was
+a REFACTOR-only redundant-call-removal session (the OTHER S297 spinoff) — PRE-RED→
+REFACTOR gated; production source change (behavior-inert, `identical()`-proven +
+adversarially verified 0/4); no bug found; durable guard added; Phase-3E covered by
+--as-cran.**
+
+**=> SUGGESTED NEXT.** This removal is DONE; #117 CLOSED. Remaining open work
+(owner's pick):
+  - **`fixGenotypeCols` FUNCTION removal (its own session — the tail of this
+    spinoff):** after S299, `@noRd fixGenotypeCols()` (`R/fixGenotypeCols.R`) is
+    called by NOTHING in the package — only by its own `tests/testthat/
+    test_fixGenotypeCols.R` (grep-confirm: `grep -rn fixGenotypeCols R/` shows only
+    the definition). It is now dead-in-package-but-tested. A future session can
+    evaluate removing the function + its test entirely (a REFACTOR-only deletion:
+    confirm no caller, owner-gate keep-vs-remove, then delete both + verify --as-cran
+    0/0/0 / full suite / Phase-3E N/A). NOT folded into S299 on purpose (FM #8).
+  - **NEW + untriaged (appeared since S298):** **#119** minParentAge conflicts with
+    newer sex-specific minimum reproductive ages; **#118** add effective population
+    size estimate. Neither is triaged in these notes yet.
+  - **Also open (unchanged):** **#116** Flags column (BLOCKED — no genotype/phenotype
+    data source); **#103** roxygen harmonization (per S244 audit); **#37, #36, #28,
+    #12, #11, #10, #5**; the CRAN thread (Phase 5b, owner-run outward — package
+    ARCHIVED 2025-07-29, resubmission owner-gated + HARD STOP).
+  **Standing gotchas (unchanged from S298 — the NAMESPACE non-idempotency gotcha
+  stays RESOLVED/REMOVED):** measure coverage with `NOT_CRAN=true` (default
+  undercounts ~8 pts — 39 `skip_on_cran` files); reuse a prior slice's saved
+  `covXXX.rds` with `covr::zero_coverage()`; `covr::function_coverage(fn, code)`
+  proves per-line reachability; for ANY package-code change — `--as-cran` from the
+  REPO ROOT (renv; background ~3-4 min; **build WITH vignettes**; `devtools::check(
+  args="--as-cran")` returns 0/0/0 here, `--no-build-vignettes` yields 2 misleading
+  vignette WARNINGs; `document=FALSE` is fine — `document()` is now idempotent for
+  NAMESPACE; **beware zsh `rm <glob>` "no matches found"**) + `lintr::lint()` (keep
+  test lines ≤80) + `spell_check_package` (hand-add wordlist, never `update_wordlist`)
+  after any `R/`+`man/` edit; behavior changes ALSO need STRICT TDD + Phase-3E +
+  FULL-suite (`NOT_CRAN=true`); version **2.0.0**; package **ARCHIVED on CRAN
+  2025-07-29**; **e2e/shinytest2 SKIPS here — OPT-IN, gated on `NPRC_RUN_E2E="true"`
+  via `create_test_app()` (chromote IS installed; "no chromote" note was STALE, S296);
+  contributes 0 to `covr` — use `shiny::testServer(<server fn>, {...})` as the
+  in-process substitute**; `gh issue view`/`gh pr edit` exit 1 → `gh api` (`gh issue
+  close` works); re-check `git status` before ANY destructive git
+  ([[check-status-before-destructive-git]]); landing owner-gated (direct-commit vs PR).
+
+**Key files (this session):** **Edited (code):** `R/qcStudbook.R` (removed line 288
+`sb <- fixGenotypeCols(sb)`; 302 → 301 lines), `tests/testthat/test_qcStudbook.R`
+(added `mkGenoPed` helper + the 5-spelling genotype invariant guard test at EOF).
+**Edited (docs):** `CHANGELOG.md` (S299 entry under [Unreleased]), `PROJECT_LEARNINGS.md`
+(Learning 277), `SESSION_NOTES.md` (this handoff + the 1B stub it replaced). **Read (not
+edited):** `R/fixGenotypeCols.R` (the `@noRd` function — KEPT, unchanged),
+`R/fixColumnNames.R` (S297's fix), `R/getPossibleCols.R` (has `first_name`/`second_name`
+→ genotype cols survive the final subset), `R/checkRequiredCols.R`,
+`tests/testthat/test_fixGenotypeCols.R`, `tests/testthat/test_modInput_qcStudbook.R`.
+**NOT committed (standing keep — FM #22):** `.DS_Store` (tracked+modified),
+`PED_GV_AUDIT_2026-05-30.html` (untracked, `.Rbuildignore`d). **Scratchpad (NOT
+committed):** `prove_inert.R`, `ascran.log`.
+
+**Gotchas:** (1) **`fixGenotypeCols` function is now dead-in-package** — called only
+by its own test; a follow-up REMOVAL candidate for its own session (see SUGGESTED
+NEXT), do NOT bundle it into another task (FM #8). (2) **The removed line was EXECUTED
+code, not an unused import** — so it needed the S295 `identical()` battery, NOT the
+S298 grep-only proof; classify future removals by "does anything executed change?".
+(3) **`document()` stays idempotent for NAMESPACE** (resolved S298) — do not "revert a
+NAMESPACE drift" that no longer exists.
+
 ### What Session 298 Did
 **Deliverable (owner picked cleanup #1 from S297's SUGGESTED NEXT):** regenerate
 `NAMESPACE` via `devtools::document()` to drop the two redundant
