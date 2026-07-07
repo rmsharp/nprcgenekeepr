@@ -15,6 +15,54 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-07 — Implement issue \#119 Slice 2 — sex-specific `minSireAge`/`minDamAge` in `getPotentialParents` (Session 304)
+
+- **Deliverable:** Slice 2 of the \#119 plan
+  (`docs/planning/issue119-sex-specific-min-breeding-age-plan.md` §3
+  Slice 2) under strict TDD (PRE-RED → RED → GREEN → concluded
+  no-refactor). 3 `AskUserQuestion` gates; 0 stakeholder corrections.
+  ONE slice — Slices 3–5 not started.
+- **Changed:**
+  [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+  gains `minSireAge`/`minDamAge` (default `NULL` → per-candidate
+  species+sex floor via the Slice-1 `resolveBreedingAge()` helper),
+  replacing the single flat age cutoff. Each candidate is now judged
+  against its OWN species+sex floor before the sire/dam split, so a 3-yr
+  rhesus male is not proposed as a sire (floor 4) while species-less
+  pedigrees reproduce the flat-2 behavior exactly. `minParentAge`
+  becomes a **deprecated alias**
+  (`lifecycle::deprecate_warn(when = "2.0.0")`) that sets both new
+  params; `minParentAge = NULL` still disables the age gate (legacy
+  skip, mapped to `-Inf` floors). Gestation logic
+  (`maxGestationalPeriod`, dam-exclusion window) untouched.
+- **Internal caller:** `modPotentialParentsServer`
+  (`R/modPotentialParents.R:263`) rewired to pass its `minParentAge`
+  through the new `minSireAge`/`minDamAge` params so the app never trips
+  `getPotentialParents`’s own deprecation warning (mirrors Slice 1’s
+  `modInput` rewire; the two-field UX stays Slice 4).
+- **Back-compat:** species-less `rhesusPedigree` goldens unchanged — the
+  13 existing `minParentAge=` test calls migrated to explicit
+  `minSireAge = 2, minDamAge = 2` (numerically identical, since an
+  explicit override wins over the table even when species is present);
+  only species-aware assertions were added (sire/dam exclusion + per-sex
+  overrides + deprecation path). The Slice-1 `tests/testthat/setup.R`
+  (`lifecycle_verbosity = "quiet"`) already covers Slice 2’s new
+  deprecation warnings.
+- **Verify:** full suite 2939 pass / 0 fail / 0 error / 0 true
+  offenders; `devtools::check(--as-cran)` 0 ERROR / 0 WARNING / 0 NOTE
+  (vignettes rebuilt, no deprecation tripped); lint 0 on changed files;
+  `man/getPotentialParents.Rd` regenerated. Phase-3E: the module rewire
+  is behavior-preserving and exercised by 87 passing
+  `test_modPotentialParents*` server tests (the interactive app smoke
+  belongs to Slice 4’s actual UX change).
+- **Deferred (per plan):** Slice 3 `getProductionStatus` (+ RATIFY R1
+  the 2-vs-3 default); Slice 4 Shiny two-field UX (mandatory interactive
+  smoke) & `modPotentialParents`/`appServer` wiring; Slice 5
+  docs/vignettes/NEWS/WORDLIST. `inst/extdata/trulyUnknownParents.R:23`
+  still uses `minParentAge = 2L` (archived example script — not package
+  runtime or a vignette, so it never trips the build; left for Slice 5
+  or as archived).
+
 ### 2026-07-07 — Implement issue \#119 Slice 1 — QC vertical: sex-specific `minSireAge`/`minDamAge` in `checkParentAge`/`qcStudbook`/`runQcStudbook` (Session 303)
 
 - **Deliverable:** Slice 1 of the \#119 plan

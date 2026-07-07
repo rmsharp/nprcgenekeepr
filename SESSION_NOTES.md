@@ -7,6 +7,161 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 304 Did
+
+**Deliverable:** **Slice 2** of the \#119 plan (the
+`getPotentialParents` vertical), IMPLEMENTED under strict TDD. Added
+`minSireAge`/`minDamAge` to `getPotentialParents` (default `NULL` →
+per-candidate species+sex floor via the Slice-1 `resolveBreedingAge()`
+helper), replaced the single flat age cutoff with a per-candidate floor
+vector, and made `minParentAge` a deprecated alias
+(`lifecycle::deprecate_warn(when = "2.0.0")`). Minimal rewire of the
+`modPotentialParents` internal caller. 3 `AskUserQuestion` gates; **0
+stakeholder corrections.** ONE slice — Slices 3–5 NOT started (FM \#18).
+**Started / Completed:** 2026-07-07 / 2026-07-07 **Status:** **DONE.**
+Full suite **2939 pass / 0 fail / 0 error / 0 true offenders**;
+`devtools::check(--as-cran)` **0 ERROR / 0 WARNING / 0 NOTE** (vignettes
+rebuilt, no deprecation tripped); lint 0 on changed files;
+`man/getPotentialParents.Rd` regenerated. CHANGELOG (S304 under
+\[Unreleased\]) + PROJECT_LEARNINGS 282 + this handoff record it. -
+**Design realized:** the plan said “move the flat cutoff INTO the
+sire/dam selections,” but because `resolveBreedingAge()` is vectorized
+and keys each row’s floor on that row’s own sex, the faithful minimum
+impl is ONE floor vector for the whole candidate pool —
+`candFloor <- resolveBreedingAge(species-or-NA, ped$sex, minSireAge, minDamAge)`
+computed once after `ped` is final — and a single
+`ba <- ped[birth <= focalBirth - dYear*candFloor]`. The downstream
+`ba[sex=="M"]`/`ba[sex=="F"]` splits, the dam fallback, and the
+gestation blocks (`births`, `births_plus_minus_one` — from the FULL
+`ped`) are untouched. Species keys on the candidate’s OWN row (simpler
+than Slice 1’s parent-of-offspring merge). - **Back-compat verified
+numerically:** 13 existing `minParentAge=2` test calls migrated to
+explicit `minSireAge = 2, minDamAge = 2` — flat-2 preserved EXACTLY (an
+explicit override beats the table even for the `species="RHESUS"`
+tests), so every species-less golden is byte-identical; only
+species-aware assertions were ADDED. - **CRAN NOTE difference (not a
+regression):** `devtools::check(--as-cran)` reported 0 NOTES; S303’s “1
+baseline NOTE (archived-on-CRAN)” only appears when a DIRECT
+`R CMD check --as-cran` pings CRAN over the network. The package is
+still archived; the NOTE is a known pre-existing baseline unrelated to
+this slice.
+
+**Session 303 Handoff Evaluation (by Session 304): Score 10/10.** S303’s
+SUGGESTED NEXT named THIS session with surgical precision — “Slice 2 —
+`getPotentialParents` … reuse the now-tested `resolveBreedingAge()` — do
+NOT reinvent it … move the flat cutoff (`getPotentialParents.R:97`) INTO
+the sire (`:104`) and dam (`:112`) selections … preserve species-less
+goldens; add species-aware + deprecation tests,” and explicitly told me
+the `setup.R` `lifecycle_verbosity="quiet"` already covers Slice 2’s new
+warnings. **What helped most:** (1) the exact line numbers
+(`:97/:104/:112`) took me straight to the decision site; (2) the “reuse
+`resolveBreedingAge`” pointer + Learning 281(e) meant I wrote ZERO new
+resolver code; (3) Gotcha (1) about `modInput`‘s warning-swallowing
+`tryCatch` primed me to CHECK whether `modPotentialParents` had the same
+trap (it doesn’t — its call isn’t warning-wrapped — but I rewired it
+anyway per D2). **What was missing/wrong:** nothing material. The one
+nuance the handoff didn’t call out — that `modPotentialParents`’
+`getPotentialParents` call is NOT `tryCatch(warning=)`-wrapped, so the
+alias there would warn rather than silently break — I verified firsthand
+in ~2 min. **ROI:** very high; this was the smoothest slice yet because
+Slice 1 built the shared helper and the handoff was a turnkey spec.
+
+**Self-assessment (Session 304): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read; ghost-check clean); wrote the 1B stub before code;
+declared the TDD phase atop every response and gated every transition
+via `AskUserQuestion` (PRE-RED→RED, RED→GREEN, GREEN→REFACTOR).
+**Strengths:** (1) verified fixture arithmetic FIRSTHAND before RED
+(computed the floor-4 / floor-2.5 cutoff dates so the 3-yr male and
+2.25-yr female land on the intended side with margin, and confirmed
+`removeAutoGenIds` keeps hand IDs) — no post-GREEN assertion debugging;
+(2) found the one-vector realization that made the change a single
+cutoff line instead of restructured control flow, keeping gestation
+logic provably untouched; (3) preserved every species-less golden
+exactly via explicit `minSireAge=2,minDamAge=2` migration; (4) rewired
+the internal caller for correctness even though it wasn’t a silent-break
+trap; (5) verified end to end (suite + `--as-cran` incl. vignette
+rebuild + lint + man regen). **Weakness (the −1):** my first two
+`R CMD build`/check shell invocations failed on environment friction
+(zsh no-match glob, then an undefined `$SP_LOG` empty-redirect that
+silently no-op’d the first background run) — three wasted attempts
+before landing on `devtools::check()` (the renv-aware path). A faster
+read of “renv project → use devtools::check, not shell `R CMD`” would
+have saved a cycle.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 282** — replacing
+a flat scalar cutoff with a per-row species+sex floor: the faithful
+minimum impl is often ONE vectorized floor computed once (not the plan’s
+literal per-branch move); the species key is simpler when the candidate
+IS the row (no parent merge); explicit overrides preserve goldens
+exactly; a shared-golden signature change gives a coarse-but-valid
+file-level RED; rewire the internal caller even when it isn’t a
+warning-swallowing trap. Carried as applied:
+\[\[observation-vs-decision\]\],
+\[\[consult-project-source-of-truth\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[ascii-only-in-question-options\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[push-close-out-docs-to-origin\]\],
+\[\[edit-files-in-reverse-line-order\]\].
+
+**=\> SUGGESTED NEXT.** \#119 Slice 2 is DONE. Slices 1 and 2 are
+independent and both complete. The natural successor is **Slice 3 —
+`getProductionStatus` + `getGeneticDiversityStats` caller**
+(`docs/planning/issue119-sex-specific-min-breeding-age-plan.md` §3 Slice
+3), independent of 1/2, under strict TDD, ONE slice. **RATIFY R1 FIRST
+with the owner** (the 2-vs-3 default): `getProductionStatus` uses a dam
+floor of **3** (`getProductionStatus.R:64`; its only caller
+`getGeneticDiversityStats.R:99` passes `3L`) where everywhere else the
+default is 2. The plan’s recommendation (do NOT auto-unify) is to
+**preserve 3 as an explicit `minDamAge = 3L` override at the caller** —
+production status counts breeding-capacity females for a demographic
+RATIO, a distinct threshold from the QC parent-age floor; silently
+switching it to the table (2 / 2.5) would move dam counts. Then: rename
+the param to `minDamAge` (+ deprecated `minParentAge`),
+`sex=="F" & age >= minDamAge`, update the caller; `getProductionStatus`
+is `@noRd` (no man page — keep its roxygen `@param` accurate).
+**Dragon:** females-only — do NOT add a `minSireAge` param there. Reuse
+`resolveBreedingAge()` only if a table default is wanted; for
+R1-preserve-3 the caller just passes `minDamAge = 3L`. Then Slice 4
+(Shiny two-field UX — **Phase-3E interactive smoke MANDATORY** — +
+`modInput`/`modPotentialParents`/`appServer` wiring, building on Slices
+1–2’s minimal internal rewires), Slice 5 (docs/vignettes/screenshot/
+NEWS/WORDLIST — includes the still-`minParentAge`
+`inst/extdata/trulyUnknownParents.R:23`). Do them in order; **do NOT
+bundle slices (FM \#18).** Other open work (owner’s pick): **\#118**
+effective population size (untriaged — a good bounded triage
+deliverable); **\#116** Flags (BLOCKED); **\#103** roxygen
+harmonization; **\#37/#36/#28/#12/#11/#10/#5**; the CRAN thread
+(owner-run, package ARCHIVED 2025-07-29, HARD STOP).
+
+**Key files (this session):** **Edited (code):**
+`R/getPotentialParents.R` (sig + deprecation shim 69-83 + per-candidate
+`candFloor` 95-107 + cutoff line ~120; roxygen
+@param/@examples/@importFrom), `R/modPotentialParents.R` (call rewire
+~263 → `minSireAge = minParentAge, minDamAge = minParentAge`),
+`man/getPotentialParents.Rd` (regenerated). **Edited (tests):**
+`tests/testthat/test_getPotentialParents.R` (13 golden migrations to
+`minSireAge=2,minDamAge=2` + 6 new tests: NULL-defaults reproduce
+flat-2, species-aware SIRE exclusion + `minSireAge` override,
+species-aware DAM exclusion + `minDamAge` override, deprecation-path).
+**Edited (docs):** `CHANGELOG.md`, `PROJECT_LEARNINGS.md` (282), this
+file. **GOTCHAS for the next session:** (1) `getPotentialParents`
+computes `candFloor` ONCE after `removeAutoGenIds` (ped is final there)
+and reuses it per focal animal — it aligns to `ped` rows because `ped`
+is never mutated afterward; if you add row filtering to `ped` below that
+point, recompute or realign `candFloor`. (2) `minParentAge = NULL` =
+disable-the- check (mapped to `-Inf` floors) — preserved for
+back-compat; same idiom as Slice 1, do NOT “simplify” it. (3) The
+deprecation shim is now DUPLICATED 4x (`checkParentAge`, `qcStudbook`,
+`runQcStudbook`, `getPotentialParents`); the owner chose at S303 NOT to
+extract it — do not re-open that in a later slice without asking. (4)
+Slice 4 must pass the app’s sire/dam floors into BOTH the QC path
+(Slice-1 `modInput` rewire) and the Potential-Parents path (this
+session’s `modPotentialParents` rewire) — the two-field UX replaces the
+single value both currently receive; `appServer.R:345` invokes
+`modPotentialParentsServer` WITHOUT any age arg (hardcoded 2.0 default)
+so it’s currently unwired to the Input tab — decide the wiring there.
+
 ### What Session 303 Did
 
 **Deliverable:** **Slice 1** of the \#119 plan (the QC vertical),

@@ -54,7 +54,9 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getPotentialParents</span><span class="op">(</span></span>
 <span>  <span class="va">ped</span>,</span>
-<span>  <span class="va">minParentAge</span>,</span>
+<span>  minSireAge <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  minDamAge <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  minParentAge <span class="op">=</span> <span class="fu">lifecycle</span><span class="fu">::</span><span class="fu"><a href="https://lifecycle.r-lib.org/reference/deprecated.html" class="external-link">deprecated</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  maxGestationalPeriod <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  gestationTable <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -70,10 +72,27 @@
 This requires complete pedigree information.</p></dd>
 
 
+<dt id="arg-minsireage">minSireAge<a class="anchor" aria-label="anchor" href="#arg-minsireage"></a></dt>
+<dd><p>numeric minimum age in years for a male to be proposed
+as a potential sire. <code>NULL</code> (default) looks up the floor for each
+candidate's species via <code><a href="getSpeciesMinBreedingAge.html">getSpeciesMinBreedingAge</a></code> (falling
+back to 2 years when the species is missing or unknown); a supplied value
+overrides that floor for all male candidates. Candidates with missing
+birth dates are not considered.</p></dd>
+
+
+<dt id="arg-mindamage">minDamAge<a class="anchor" aria-label="anchor" href="#arg-mindamage"></a></dt>
+<dd><p>numeric minimum age in years for a female to be proposed
+as a potential dam. <code>NULL</code> (default) looks up the floor for each
+candidate's species via <code><a href="getSpeciesMinBreedingAge.html">getSpeciesMinBreedingAge</a></code> (falling
+back to 2 years when the species is missing or unknown); a supplied value
+overrides that floor for all female candidates.</p></dd>
+
+
 <dt id="arg-minparentage">minParentAge<a class="anchor" aria-label="anchor" href="#arg-minparentage"></a></dt>
-<dd><p>numeric values to set the minimum age in years for
-an animal to have an offspring. Defaults to 2 years. The check is not
-performed for animals with missing birth dates.</p></dd>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#deprecated" class="external-link"><img src="figures/lifecycle-deprecated.svg" alt="[Deprecated]"></a> Deprecated scalar
+minimum parent age. Supplying it sets both <code>minSireAge</code> and
+<code>minDamAge</code>; use those sex-specific parameters instead.</p></dd>
 
 
 <dt id="arg-maxgestationalperiod">maxGestationalPeriod<a class="anchor" aria-label="anchor" href="#arg-maxgestationalperiod"></a></dt>
@@ -117,7 +136,7 @@ vectors <code>sires</code> and <code>dams</code> can be empty.</p>
 <span class="r-in"><span><span class="co">## colony-born animals; add one if your pedigree lacks it.</span></span></span>
 <span class="r-in"><span><span class="va">ped</span><span class="op">$</span><span class="va">fromCenter</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="va">potentialParents</span> <span class="op">&lt;-</span> <span class="fu">getPotentialParents</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  ped <span class="op">=</span> <span class="va">ped</span>, minParentAge <span class="op">=</span> <span class="fl">2.0</span>, maxGestationalPeriod <span class="op">=</span> <span class="fl">210L</span></span></span>
+<span class="r-in"><span>  ped <span class="op">=</span> <span class="va">ped</span>, minSireAge <span class="op">=</span> <span class="fl">2</span>, minDamAge <span class="op">=</span> <span class="fl">2</span>, maxGestationalPeriod <span class="op">=</span> <span class="fl">210L</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co">## Each element pairs a focal id with candidate sires and dams.</span></span></span>
 <span class="r-in"><span><span class="va">potentialParents</span><span class="op">[[</span><span class="fl">1L</span><span class="op">]</span><span class="op">]</span></span></span>
