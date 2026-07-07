@@ -15,6 +15,65 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-07 — Remove the now-dead `fixGenotypeCols()` function (Session 300)
+
+- **Deliverable (the tail of the S297/S299 \#117 spinoff):** delete the
+  orphaned `@noRd fixGenotypeCols()` function (`R/fixGenotypeCols.R`) +
+  its test (`tests/testthat/test_fixGenotypeCols.R`) + its two dangling
+  `inst/_pkgdown.yml` reference-index entries. **REFACTOR-only
+  (dead-code deletion, S298 grep-branch: nothing executed in-package
+  changes); one `AskUserQuestion` PRE-RED→REFACTOR gate, one landing
+  gate; 0 stakeholder corrections.** Landed as `374d08c5` on master
+  (owner chose direct-commit); this docs close-out records that hash.
+- **Why removable:** `fixGenotypeCols()` was a self-admitted band-aid —
+  its `@noRd` note said “This is not a good fix. A better solution is to
+  avoid the problem. Currently qcStudbook() blindly changes all of the
+  column names by removing the underscores.” It repaired the genotype
+  headers `first_name`/`second_name` that
+  [`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)’s
+  blanket underscore strip (`R/fixColumnNames.R:28`) collapsed to
+  `firstname`/`secondname` — actively producing the *un-documented*
+  spelling of columns that `data.R`, `getPossibleCols.R`,
+  `checkGenotypeFile.R`, `geneDrop.R`, and `headerDisplayNames.R` all
+  document canonically *with* underscores. S297 (`fdcfc042`, \#117)
+  fixed that at the source (restore on the returned `newCols`), and S299
+  (`436dc749`) removed the redundant `fixGenotypeCols(sb)` call from
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md).
+  After S299 the function had **zero in-package callers**
+  (grep-confirmed across `R/`, `tests/`, `man/`, `NAMESPACE`, `inst/`,
+  `vignettes/`) — only its own test exercised it. Dead code kept alive
+  by its own test.
+- **Evidence-based inventory (mandatory for deletions):**
+  `git grep fixGenotypeCols` over code paths returned only the
+  definition, its own test, and two explanatory comments in
+  `test_qcStudbook.R:340-342` (left intact — they stay accurate and
+  explain the S299 guard). It also surfaced two `inst/_pkgdown.yml`
+  entries (lines 60, 156) that S299’s notes did not mention — dangling
+  references, since a `@noRd` topic has no man page for pkgdown to link;
+  removing the function makes removing them mandatory.
+- **Coverage not lost:** the `first_name`/`second_name` invariant is
+  covered end-to-end by the S299 guard test in `test_qcStudbook.R` (5
+  header spellings through
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)),
+  and
+  [`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)
+  keeps its own `test_fixColumnNames.R`. `test_fixGenotypeCols.R` only
+  exercised the deleted function.
+- **Verify (firsthand):** full suite (`NOT_CRAN=true`) **0 failed / 0
+  error** (7 baseline warnings — 2
+  `test_gvaConvergence_kinshipOverrides` + 5 `test_modPyramid` —
+  unchanged, none new); `document()` **zero `man/`/`NAMESPACE` delta**
+  (the fn was `@noRd`, no man page → deletion is doc-inert);
+  `spell_check_package` clean; **`R CMD check --as-cran` Status: OK —
+  0/0/0** (repo root, WITH vignettes; 3m12s). **Phase-3E covered by
+  `--as-cran`** (it rebuilt vignettes and ran examples
+  incl. [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  with the function gone — Status OK is the runtime proof no path
+  referenced it); no app launch needed (the deletion removed no runtime
+  behavior — the function already had no caller after S299). `lintr`
+  **N/A** — deletions only; no R source lines added or modified (the one
+  edited file, `_pkgdown.yml`, is YAML).
+
 ### 2026-07-06 — Remove the redundant `fixGenotypeCols()` call from `qcStudbook()` (Session 299)
 
 - **Deliverable (owner picked the OTHER S297 spinoff):** remove the

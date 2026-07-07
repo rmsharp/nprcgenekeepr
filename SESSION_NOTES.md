@@ -7,6 +7,196 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 300 Did
+
+**Deliverable (the tail of the S297/S299 \#117 spinoff):** delete the
+now-dead `@noRd fixGenotypeCols()` function (`R/fixGenotypeCols.R`) +
+its test (`tests/testthat/test_fixGenotypeCols.R`) + its two dangling
+`inst/_pkgdown.yml` reference-index entries. **REFACTOR-only (dead-code
+deletion; S298 grep-branch — nothing executed in-package changes); one
+`AskUserQuestion` PRE-RED→REFACTOR gate, one landing gate; 0 stakeholder
+corrections.** **Started / Completed:** 2026-07-07 / 2026-07-07
+**Status:** **DONE + VERIFIED.** Code change landed as **`374d08c5`** on
+master (tagged `(S300)`; owner chose direct-commit); this docs close-out
+(CHANGELOG + PROJECT_LEARNINGS 278 + this handoff) records that hash and
+is pushed to `origin/master` (fast-forward; local == origin). **The
+\#117 spinoff is now FULLY COMPLETE:** source fixed (S297 `fdcfc042`) →
+redundant call removed (S299 `436dc749`) → orphaned function removed
+(S300 `374d08c5`). \#117 already CLOSED. - **The owner first asked me to
+reconstruct/explain WHY the function is removable (flagging
+“inconsistent code documentation about first_name and second_name”) — I
+did that firsthand BEFORE any edit:** the canonical spelling is WITH
+underscores (`first_name`/`second_name`), documented consistently in
+`data.R` (`\item{first_name}`), `getPossibleCols.R:56-57`,
+`checkGenotypeFile.R:22-23`, `geneDrop.R:24`,
+`headerDisplayNames.R:52-53`.
+[`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)’s
+blanket underscore strip (`R/fixColumnNames.R:28`) collapsed them to the
+*un-documented* `firstname`/`secondname`; `fixGenotypeCols()` was the
+downstream band-aid that put them back. Its own `@noRd` note prescribed
+its removal: “This is not a good fix. A better solution is to avoid the
+problem.” S297’s source-fix IS that better solution. So the
+inconsistency the owner sensed was real — two functions doing opposite
+things (one corrupting the documented names, one restoring them). -
+**Why safe to delete now:** after S299 the function had **zero
+in-package callers**.
+`git grep fixGenotypeCols -- 'R/*' 'tests/*' 'man/*' 'NAMESPACE' 'inst/*' 'vignettes/*'`
+returned only the definition, its own test, and two explanatory comments
+in `test_qcStudbook.R:340-342` (LEFT intact — still accurate) — PLUS two
+`inst/_pkgdown.yml` entries (60, 156) that S299’s notes never mentioned
+(a pkgdown `reference:` list naming a `@noRd` topic with no man page —
+dangling cruft; removed with the function). - **Classified as the S298
+grep-branch, NOT the S295
+[`identical()`](https://rdrr.io/r/base/identical.html)-branch** —
+because the function already had NO caller after S299, so nothing
+executed in-package changes; grep is a complete proof (no
+identity-override battery needed). The tell it’s the grep-branch: it’s
+`@noRd` → no man page → `document()` zero delta (doc-inert deletion). -
+**Coverage not lost:** the `first_name`/`second_name` invariant is
+covered end-to-end by the S299 guard in `test_qcStudbook.R` (5 header
+spellings through
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md));
+[`fixColumnNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/fixColumnNames.md)
+keeps its own `test_fixColumnNames.R`. `test_fixGenotypeCols.R` only
+exercised the deleted function. - **Verify (firsthand):** full suite
+(`NOT_CRAN=true`) **0 failed / 0 error** (7 baseline warnings — 2
+`test_gvaConvergence_kinshipOverrides` + 5 `test_modPyramid` —
+unchanged, none new); `document()` **zero `man/`/`NAMESPACE` delta**
+(`@noRd`, no man page); `spell_check_package` clean;
+**`R CMD check --as-cran` Status: OK — 0/0/0** (repo root, WITH
+vignettes; 3m12s). `lintr` **N/A** — deletions only; no R source lines
+added/modified (the one edited file, `_pkgdown.yml`, is YAML). -
+**Phase-3E (runtime — covered, not skipped):** `--as-cran` rebuilt
+vignettes and ran examples (incl. `qcStudbook(examplePedigree)`) with
+the function gone; Status: OK IS the runtime proof no path referenced
+it. No app launch — the deletion removed no runtime behavior (the
+function already had no caller after S299).
+
+**Session 299 Handoff Evaluation (by Session 300): Score 9/10.** S299’s
+SUGGESTED NEXT named this task precisely: the exact target
+(`@noRd fixGenotypeCols()` + `test_fixGenotypeCols.R`), the
+classification (REFACTOR-only deletion), the FM \#8 scope discipline
+(“its own session”), the owner keep-vs-remove gate, and the verification
+recipe (confirm no caller → delete both → `--as-cran` 0/0/0 / full
+suite). **What helped:** near-turnkey — I inherited the exact files and
+the correct “dead-in-package” framing with minimal re-derivation. **What
+was missing (the −1):** (i) its grep-confirm was scoped to `R/`
+(`grep -rn fixGenotypeCols R/` → “only the definition”), but a
+deletion’s inventory must sweep the WHOLE repo — the full-repo
+`git grep` surfaced the two `inst/_pkgdown.yml` dangling entries S299
+never mentioned; a careless executor trusting “only its own test” would
+have left them. (ii) it labeled the function-removal Phase-3E as “N/A” —
+but `--as-cran`’s example/vignette run with the function absent IS
+Phase-3E coverage; “covered by –as-cran,” not “N/A.” **What was wrong:**
+nothing — no in-package caller held exactly; deletion clean; `--as-cran`
+0/0/0 as predicted. **ROI:** very high.
+
+**Self-assessment (Session 300): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues — \#118/#119 still
+untriaged; dashboard 98/100; ghost-check — latest commit `d9071821` ==
+S299 close-out, no gap); reported and STOPPED for the owner.
+**Strengths:** (1) the owner asked me to EXPLAIN first — I reconstructed
+the rationale firsthand (read both functions, git-blamed the S297
+source-fix `fdcfc042`, grepped the documentation) and confirmed the
+owner’s “inconsistent documentation about first_name/second_name” hunch
+was exactly the root cause (FM \#11 — proved, not recited from S299’s
+notes); (2) ran the FULL-repo evidence inventory mandated for deletions
+— caught the `_pkgdown.yml` dangling refs that S299’s `R/`-scoped grep
+missed (the session’s key value-add over naive execution); (3) correctly
+classified as the S298 grep-branch and explained why (`@noRd` + no
+caller → doc-inert); (4) wrote the 1B stub before technical work;
+declared the TDD phase atop each response; posed both the
+PRE-RED→REFACTOR and landing gates via `AskUserQuestion`; (5) verified
+firsthand (suite 0/0, document zero delta, spell clean, –as-cran 0/0/0);
+(6) kept scope surgical (left the accurate `test_qcStudbook.R:340-342`
+comments; touched no unrelated code). **Weakness (the −1):** a small,
+low-risk deletion with 0 corrections (capped at 9 for honesty — little
+to distinguish a clean small change).
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 278** — retiring
+a self-admitted workaround is a MULTI-SESSION staged retirement
+(fix-at-source → remove-redundant-call → remove-orphaned-function), and
+each stage picks a different removal proof (call-still-executes → S295
+[`identical()`](https://rdrr.io/r/base/identical.html) battery; function
+caller-less → S298 grep); a `@noRd` deletion is doc-inert (no man page →
+`document()` zero delta, the grep-branch tell); a deletion’s evidence
+inventory must sweep the WHOLE repo (`inst/`, `vignettes/`, not just
+`R/`+`tests/`) because a pkgdown `reference:` list can name a `@noRd`
+topic with no man page; leave historically-accurate comments that
+reference a removed symbol. Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[observation-vs-decision\]\] (explained before acting),
+\[\[avoid-new-lints-r-package\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\]. **This was a REFACTOR-only
+dead-code deletion (the tail of the \#117 spinoff) — PRE-RED→REFACTOR
+gated; no bug found; grep-branch proof; Phase-3E covered by –as-cran.**
+
+**=\> SUGGESTED NEXT.** The \#117 `fixGenotypeCols` spinoff is now FULLY
+COMPLETE (nothing left of it; \#117 CLOSED). Remaining open work
+(owner’s pick): - **NEW + untriaged (still, since S298):** **\#119**
+`minParentAge` conflicts with newer sex-specific minimum reproductive
+ages; **\#118** add effective population size estimate. Neither is
+triaged in these notes yet — a triage/scoping session for either (read
+the issue, map affected code, decide approach) is a good, bounded next
+deliverable before any implementation. - **Also open (unchanged):**
+**\#116** Flags column (BLOCKED — no genotype/phenotype data source);
+**\#103** roxygen harmonization (per S244 audit); **\#37, \#36, \#28,
+\#12, \#11, \#10, \#5**; the CRAN thread (Phase 5b, owner-run outward —
+package ARCHIVED 2025-07-29, resubmission owner-gated + HARD STOP).
+
+**Key files (this session):** **Deleted:** `R/fixGenotypeCols.R`,
+`tests/testthat/test_fixGenotypeCols.R`. **Edited (code):**
+`inst/_pkgdown.yml` (removed the 2 `fixGenotypeCols` reference-index
+lines, formerly 60 & 156). **Edited (docs):** `CHANGELOG.md` (S300 entry
+under \[Unreleased\]), `PROJECT_LEARNINGS.md` (Learning 278),
+`SESSION_NOTES.md` (this handoff + the 1B stub it replaced). **Read (not
+edited):** `R/fixColumnNames.R` (S297’s source-fix, L28 strip + L30-38
+restore), `R/qcStudbook.R` (L179 `fixColumnNames` call, L190 names
+assignment, L288 former call site — now gone), `R/getPossibleCols.R`,
+`R/data.R`, `R/geneDrop.R`, `R/checkGenotypeFile.R`,
+`R/headerDisplayNames.R` (all document `first_name`/`second_name` WITH
+underscores), `tests/testthat/test_qcStudbook.R` (L336-343 comments +
+the S299 guard — LEFT intact). **NOT committed (standing keep — FM
+\#22):** `.DS_Store` (tracked+modified), `PED_GV_AUDIT_2026-05-30.html`
+(untracked, `.Rbuildignore`d). **Scratchpad (NOT committed):**
+`ascran_S300.log`.
+
+**Gotchas:** (1) **The \#117 fixGenotypeCols spinoff is COMPLETE** (S297
+source + S299 call + S300 function) — do NOT reopen it. (2) **A `@noRd`
+function can be listed in `inst/_pkgdown.yml`’s `reference:` index**
+(dangling — no man page to link); when deleting ANY R symbol, `git grep`
+over `inst/` + `vignettes/`, not just `R/`+`tests/`. (3) **Classify a
+removal by “does anything executed IN-PACKAGE change?”** — executes →
+S295 [`identical()`](https://rdrr.io/r/base/identical.html) battery;
+already caller-less → S298 grep suffices. (4) **`document()` stays
+idempotent for `NAMESPACE`** (resolved S298). (5) **\#119 and \#118 are
+NEW and still untriaged** — need a triage session before implementation.
+
+**Standing gotchas (unchanged):** measure coverage with `NOT_CRAN=true`
+(default undercounts ~8 pts — 39 `skip_on_cran` files); reuse a prior
+slice’s saved `covXXX.rds` with
+[`covr::zero_coverage()`](http://covr.r-lib.org/reference/zero_coverage.md);
+`covr::function_coverage(fn, code)` proves per-line reachability; for
+ANY package-code change — `--as-cran` from the REPO ROOT (renv;
+background ~3-4 min; **build WITH vignettes**;
+`devtools::check(args= "--as-cran")` returns 0/0/0 here,
+`--no-build-vignettes` yields 2 misleading vignette WARNINGs;
+`document=FALSE` fine — `document()` idempotent for NAMESPACE; **beware
+zsh `rm <glob>` “no matches found”**) + `lintr::lint()` (keep test lines
+≤80) + `spell_check_package` (hand-add wordlist, never
+`update_wordlist`) after any `R/`+ `man/` edit; behavior changes ALSO
+need STRICT TDD + Phase-3E + FULL-suite; version **2.0.0**; package
+**ARCHIVED on CRAN 2025-07-29**; **e2e/shinytest2 SKIPS here — OPT-IN,
+gated on `NPRC_RUN_E2E="true"` via `create_test_app()`; contributes 0 to
+`covr` — use `shiny::testServer(<server fn>, {...})` as the in-process
+substitute**; `gh issue view`/`gh pr edit` exit 1 → `gh api`
+(`gh issue close` works); re-check `git status` before ANY destructive
+git (\[\[check-status-before-destructive-git\]\]); landing owner-gated
+(direct-commit vs PR).
+
 ### What Session 299 Did
 
 **Deliverable (owner picked the OTHER S297 spinoff):** remove the
