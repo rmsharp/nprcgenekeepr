@@ -15,6 +15,47 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-07 — Implement issue \#119 Slice 3 — `minDamAge` in `getProductionStatus` (Session 305)
+
+- **Deliverable:** Slice 3 of the \#119 plan
+  (`docs/planning/issue119-sex-specific-min-breeding-age-plan.md` §3
+  Slice 3) under strict TDD (PRE-RED → RED → GREEN → concluded
+  no-refactor). 4 `AskUserQuestion` gates (R1 ratification +
+  PRE-RED→RED + RED→GREEN + GREEN→REFACTOR); 0 stakeholder corrections.
+  ONE slice — Slices 4–5 not started.
+- **R1 ratified (owner): preserve 3.** The production-status dam floor
+  of **3** is kept as a distinct demographic threshold
+  (breeding-capacity females for the Production = Births/Dams ratio) —
+  NOT unified to the species+sex breeding-age table (which would drop it
+  to 2 / 2.5 and change every production ratio). `getProductionStatus`’
+  dam floor keeps `default = 3`; the caller keeps passing `3L`. Every
+  production golden is unchanged.
+- **Changed:** `getProductionStatus()` (internal, `@noRd`) renames its
+  scalar `minParentAge` parameter to `minDamAge` (default `3L`);
+  `minParentAge` becomes a **deprecated alias**
+  (`lifecycle::deprecate_warn(when = "2.0.0")`) that sets `minDamAge`.
+  The dam-count filter is now `sex == "F" & age >= minDamAge`. Its only
+  caller
+  [`getGeneticDiversityStats()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGeneticDiversityStats.md)
+  migrates its internal call from `minParentAge = 3L` to
+  `minDamAge = 3L` (production output identical). No `minSireAge` param
+  — production status is females-only (plan Dragon).
+- **Tests:** `test_getProductionStatus.R` — 11 golden calls migrated to
+  `minDamAge` (counts byte-identical), plus a new override test
+  (`minDamAge = 100` → 0 dams → NA / green, proving the parameter drives
+  the filter) and a deprecation-path test (`minParentAge = 3.0` still
+  reproduces the floor-3 result and warns via
+  [`lifecycle::expect_deprecated`](https://lifecycle.r-lib.org/reference/expect_deprecated.html)).
+- **Verification:** full suite 2944 pass / 0 fail / 0 error / 0 true
+  offenders; `devtools::check(--as-cran)` 0 ERROR / 0 WARNING / 0 NOTE;
+  lint 0 on both changed R files; `document()` produced no man/NAMESPACE
+  diff (`@noRd`; the lifecycle imports already existed). No man page
+  (the function is `@noRd`); no runtime app change — the change is
+  behavior-preserving and its runtime path (`modGeneticDiversity` →
+  `getGeneticDiversityStats` → `getProductionStatus`) is covered by the
+  passing `test_modGeneticDiversity` / `test_getGeneticDiversityStats`
+  tests.
+
 ### 2026-07-07 — Implement issue \#119 Slice 2 — sex-specific `minSireAge`/`minDamAge` in `getPotentialParents` (Session 304)
 
 - **Deliverable:** Slice 2 of the \#119 plan

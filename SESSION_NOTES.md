@@ -7,6 +7,159 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 305 Did
+
+**Deliverable:** **Slice 3** of the \#119 plan (the
+`getProductionStatus` + `getGeneticDiversityStats` caller vertical),
+IMPLEMENTED under strict TDD. Renamed `getProductionStatus`’s scalar
+`minParentAge` to `minDamAge` (default `3L`), made `minParentAge` a
+deprecated alias (`lifecycle::deprecate_warn(when = "2.0.0")`), and
+migrated the sole caller `getGeneticDiversityStats` (`:99`) from
+`minParentAge = 3L` to `minDamAge = 3L`. 4 `AskUserQuestion` gates (R1
+ratification + PRE-RED→RED + RED→GREEN + GREEN→REFACTOR); **0
+stakeholder corrections.** ONE slice — Slices 4–5 NOT started (FM \#18).
+**Started / Completed:** 2026-07-07 / 2026-07-07 **Status:** **DONE.**
+Full suite **2944 pass / 0 fail / 0 error / 0 true offenders** (the 7
+warnings are pre-existing baseline in
+`test_gvaConvergence_kinshipOverrides.R` + `test_modPyramid.R`,
+unrelated to this slice); `devtools::check(--as-cran)` **0 ERROR / 0
+WARNING / 0 NOTE**; lint 0 on both changed R files; `document()`
+produced NO man/NAMESPACE diff. CHANGELOG (S305 under \[Unreleased\]) +
+PROJECT_LEARNINGS 283 + this handoff record it. - **R1 RATIFIED (owner,
+this session): preserve 3.** The production-status dam floor of **3** is
+kept as a distinct demographic threshold — NOT unified to the
+species+sex table (which would drop it to 2 / 2.5 and shift every
+production ratio). So this slice is a “rename-the-scalar +
+deprecation-shim” — the param default stays a concrete `3L`, NOT the
+Slices 1–2 `NULL`→table pattern. Do NOT re-open R1 in a later slice. -
+**No `minSireAge` here (plan Dragon):** production status is
+females-only. The shim is deliberately simpler than the front-door shim
+(Learning 281): `getProductionStatus` never had the
+`minParentAge = NULL` disable idiom (it would have errored on
+`age >= NULL`), so there is NO `-Inf`-disable branch; the shim maps
+`minParentAge`→`minDamAge` unconditionally-when-non-null. -
+**Man-page-free / runtime-untouched slice:** `getProductionStatus` is
+`@noRd` (no man page; `document()` no-op). `getGeneticDiversityStats` is
+`@export` but only its internal body line changed, so its man page is
+unchanged too. Behavior-preserving → no app launch needed; runtime path
+(`modGeneticDiversity`→`getGeneticDiversityStats`→
+`getProductionStatus`) covered by passing `test_modGeneticDiversity` /
+`test_getGeneticDiversityStats` server tests.
+
+**Session 304 Handoff Evaluation (by Session 305): Score 10/10.** S304’s
+SUGGESTED NEXT named THIS session with surgical precision: it told me to
+RATIFY R1 first, gave the exact 2-vs-3 framing AND the recommendation
+(preserve 3 as an explicit `minDamAge` override at the caller, do NOT
+auto-switch to the table), pointed at the decision sites by line
+(`getProductionStatus.R:64`, `getGeneticDiversityStats.R:99`), flagged
+the Dragon (females-only — do NOT add a `minSireAge` param), and told me
+to reuse `resolveBreedingAge` ONLY if a table default were wanted (for
+R1-preserve-3 the caller just passes `minDamAge = 3L`). **What helped
+most:** (1) the R1 framing let me pose a clean 2-option ratification
+with the ratio-shifting consequence spelled out; (2) the “females-only,
+no `minSireAge`” Dragon kept me from over-engineering — I did NOT drag
+the vectorized `resolveBreedingAge` into a scalar females-only function;
+(3) S304 gotcha (3) (“the shim is now duplicated 4x; the owner chose NOT
+to extract it — do not re-open without asking”) meant I gated
+GREEN→REFACTOR as “conclude no-refactor” instead of re-opening the
+extraction. **What was missing/wrong:** nothing material — the pre-edit
+line refs were accurate; the only trivial discrepancy was “13 golden
+migrations” (the actual count of alias-passing calls was 11 + 1
+data-prep line + 1 local var). **ROI:** very high; turnkey spec,
+smoothest slice.
+
+**Self-assessment (Session 305): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read; ghost-check clean; wrote the 1B stub before code);
+declared the TDD phase atop every response and gated every transition
+via `AskUserQuestion`. **Strengths:** (1) posed the R1 domain
+ratification BEFORE declaring RED (separate from the phase gates, per
+the contract); (2) recognized this slice is “rename + shim, preserve the
+default” and resisted the campaign reflex to make the default
+`NULL`/table (which R1 and the Dragon both forbid); (3) matched the shim
+to THIS function’s real history (no `-Inf`-disable branch it never had);
+(4) verified end to end — both affected files, full suite, `--as-cran`,
+lint, and confirmed `document()` is a no-op via `git status`; (5)
+confirmed the 7 suite warnings are unrelated baseline, not my change
+tripping its own deprecation. **Weakness (the −1):** none costly this
+session; the run was smooth largely because the predecessor’s spec was
+turnkey — I reserve the 10 for a session that overcomes a genuinely
+ambiguous handoff.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 283** — not every
+consumer in a unification campaign adopts the unified default; a
+domain-distinct threshold is preserved as an explicit concrete value, so
+its slice is a rename+shim (default stays a number, not `NULL`→table);
+the shim must not cargo-cult front-door legacy branches it never had; a
+man-page-free, runtime-untouched slice is legitimate (verify it — do not
+manufacture ceremony); distinguish FM \#24 “changes runtime behavior”
+(launch) from “behavior-preserving internal edit under test” (suite
+suffices). Carried as applied: \[\[observation-vs-decision\]\],
+\[\[consult-project-source-of-truth\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[ascii-only-in-question-options\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[push-close-out-docs-to-origin\]\],
+\[\[edit-files-in-reverse-line-order\]\].
+
+**=\> SUGGESTED NEXT.** \#119 Slice 3 is DONE. Slices 1, 2, 3 are all
+complete and mutually independent. The natural successor is **Slice 4 —
+the Shiny UI migration**
+(`docs/planning/issue119-sex-specific-min-breeding-age-plan.md` §3 Slice
+4), which depends on BOTH Slice 1 (new `qcStudbook`/`runQcStudbook`
+params) AND Slice 2 (new `getPotentialParents` params), under strict
+TDD, ONE slice. **RATIFY R2 FIRST with the owner** (the two-field UX):
+replace the single “Minimum Parent Age” `textInput` (`modInput.R:127`)
+with two optional fields (“Minimum Sire Age”, “Minimum Dam Age”);
+confirm labels/help text and whether blank-means-table-default is the
+desired UX vs. prefilled numbers. Then: rewrite `modInput.R:448-472` to
+compute `minSireAge`/`minDamAge` (blank/NA → `NULL` → table default) and
+pass the new params; verify nothing reads `inputResults$minParentAge`
+before retiring the orphan reactive (`modInput.R:659-660` — grep found
+no `appServer.R` consumer, confirm across `R/`); take the two floors in
+`modPotentialParents.R` (sig `:223`, call `:264`); and decide the
+`appServer.R:345` wiring (today `modPotentialParentsServer` is invoked
+WITHOUT any age arg — hardcoded 2.0, unwired to the Input tab).
+**Dragon:** Slice 4 CHANGES runtime behavior — **Phase-3E interactive
+smoke is MANDATORY** (launch
+[`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md),
+confirm both age fields render, QC + Potential Parents honor them, no
+console errors); build-clean is necessary but NOT sufficient (FM \#24).
+Then Slice 5 (docs/vignettes/screenshot/NEWS/WORDLIST — includes the
+still-`minParentAge` `inst/extdata/trulyUnknownParents.R:23`). Do them
+in order; **do NOT bundle slices (FM \#18).** Other open work (owner’s
+pick): **\#118** effective population size (untriaged — bounded triage
+deliverable); **\#116** Flags (BLOCKED); **\#103** roxygen
+harmonization; **\#37/#36/#28/#12/#11/#10/#5**; the CRAN thread
+(owner-run, package ARCHIVED 2025-07-29, HARD STOP).
+
+**Key files (this session):** **Edited (code):**
+`R/getProductionStatus.R` (sig + deprecation shim ~59-73 + filter `nDam`
+line ~80; roxygen `@param minDamAge`/deprecated
+`@param minParentAge`/`@details`/`@return`/`@importFrom lifecycle`),
+`R/getGeneticDiversityStats.R` (caller `minParentAge = 3L` →
+`minDamAge = 3L`, ~`:99`). **Edited (tests):**
+`tests/testthat/test_getProductionStatus.R` (renamed local
+`minParentAge <- 3.0` → `minDamAge <- 3.0`; 11 golden calls migrated to
+`minDamAge = minDamAge` + 1 data-prep line; 2 new tests:
+`minDamAge = 100` override → NA/green, deprecation-path via
+[`lifecycle::expect_deprecated`](https://lifecycle.r-lib.org/reference/expect_deprecated.html)).
+**Edited (docs):** `CHANGELOG.md`, `PROJECT_LEARNINGS.md` (283), this
+file. **NO man pages changed** (`getProductionStatus` is `@noRd`;
+`getGeneticDiversityStats` roxygen unchanged). **GOTCHAS for the next
+session:** (1) The deprecation shim is now DUPLICATED 5x
+(`checkParentAge`, `qcStudbook`, `runQcStudbook`, `getPotentialParents`,
+`getProductionStatus`); the owner re-affirmed this session NOT to
+extract it — do NOT re-open that without asking. (2)
+`getProductionStatus`’s `minDamAge` default is a concrete `3L`
+(R1-preserved), NOT `NULL` — do not “harmonize” it to the Slices 1–2
+`NULL`→table pattern; that would silently move production ratios. (3)
+Slice 4 is the runtime-behavior slice — Phase 3E interactive launch is
+MANDATORY, and it must feed the app’s sire/dam floors into BOTH the QC
+path (Slice-1 `modInput` rewire) and the Potential-Parents path (Slice-2
+`modPotentialParents` rewire); `appServer.R:345` currently invokes
+`modPotentialParentsServer` with NO age arg (hardcoded 2.0, unwired) —
+decide that wiring under R2.
+
 ### What Session 304 Did
 
 **Deliverable:** **Slice 2** of the \#119 plan (the
