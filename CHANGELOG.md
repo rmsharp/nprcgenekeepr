@@ -15,6 +15,43 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-07 — Triage issue \#119 — `minParentAge` vs. sex-specific breeding ages (Session 301)
+
+- **Deliverable:** triage/scope GitHub issue **\#119** (“Use of
+  `minParentAge` seems to conflict with newer sex specific minimum
+  reproductive ages”) — the issue had no body. **Analysis only; no code
+  changed.** Produced
+  `docs/audits/ISSUE_119_MINPARENTAGE_TRIAGE_2026-07-07.md` and posted a
+  condensed version as a comment on \#119. One `AskUserQuestion`
+  (direction + whether to post); 0 stakeholder corrections.
+- **Finding:** the conflict is real, already known, and was deliberately
+  deferred. The package holds two independent notions of “minimum age to
+  be a parent”: **(A)** the legacy scalar `minParentAge`
+  (sex/species-agnostic; default 2, but 3 in `getProductionStatus`)
+  driving QC (`checkParentAge.R:94-95`), candidate-finding
+  (`getPotentialParents.R:97`), and production status
+  (`getProductionStatus.R:64`); and **(B)** a newer species+sex table
+  (`speciesGestation$minMaleBreedingAge`/`minFemaleBreedingAge` via
+  `getSpeciesMinBreedingAge`, e.g. rhesus male 4.0 / female 2.5) used by
+  only the \#9 GVA unknown-parent correction. A rhesus male sire at age
+  3 passes QC (3 ≥ 2) but is below breeding age for (B) (floor 4);
+  `getPotentialParents` is even internally inconsistent (species-aware
+  gestation, flat-scalar breeding age).
+- **Not a defect:** the plan that introduced (B) explicitly fenced this
+  off — `docs/planning/issue9-gva-unknown-parent-ranking-plan.md` §8-D
+  (line 229): *“Do NOT retrofit `getPotentialParents`/`checkParentAge` …
+  Unifying breeding-age determination package-wide is a follow-up.”*
+  **\#119 is that follow-up.**
+- **Options laid out** (unify-on-table / sex-scalars-only /
+  document-only / won’t-fix); high blast radius (both QC sites sit under
+  `qcStudbook`, `getPotentialParents` feeds breeding-group formation) →
+  any fix is vertical slices under strict TDD. **Owner decision
+  (S301):** the resolution direction is **deferred to a dedicated
+  planning session**; the triage recommends that planning session
+  (settle Option + override precedence + unknown-species fallback +
+  slice order) as the ratified next step. Not blocked (no missing data
+  source, unlike \#116).
+
 ### 2026-07-07 — Remove the now-dead `fixGenotypeCols()` function (Session 300)
 
 - **Deliverable (the tail of the S297/S299 \#117 spinoff):** delete the
