@@ -185,9 +185,17 @@ drift; **beware zsh `rm <glob>` “no matches found”**) + `lintr::lint()`
 `update_wordlist`) after any `R/`+`man/` edit; behavior/NAMESPACE
 changes ALSO need STRICT TDD + NAMESPACE diff + Phase-3E + FULL-suite
 (`NOT_CRAN=true`); version **2.0.0**; package **ARCHIVED on CRAN
-2025-07-29**; e2e/shinytest2 SKIPS here (no chromote) →
-`shiny::testServer(<server fn>, {...})`; `gh issue view`/`gh pr edit`
-exit 1 → `gh api`; re-check `git status` before ANY destructive git
+2025-07-29**; **e2e/shinytest2 SKIPS here because it is OPT-IN — gated
+on `NPRC_RUN_E2E="true"` via `create_test_app()` (plus
+`skip_on_cran()` + `skip_if_not_installed("chromote"/"shinytest2")`);
+chromote IS installed here, so the earlier “no chromote” note was STALE
+(S296 verified)**; the E2E suite also drives the app in a separate
+process via
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html),
+so it contributes **0** to `covr` line coverage regardless — use
+`shiny::testServer(<server fn>, {...})` as the headless, in-process
+substitute; `gh issue view`/`gh pr edit` exit 1 → `gh api`; re-check
+`git status` before ANY destructive git
 (\[\[check-status-before-destructive-git\]\]); landing owner-gated
 (direct-commit vs PR).
 
