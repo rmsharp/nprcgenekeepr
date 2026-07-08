@@ -156,7 +156,10 @@ animals, whose apparent uniqueness is an artifact of unknown parentage),
 <code>fg</code> (founder genome equivalents), <code>fgSE</code> (the Monte Carlo sampling
 standard error of <code>fg</code>, computed from the same gene drop; a single
 colony-level number, <code>NA</code> when a contributing founder is retained in
-zero gene-drop iterations – see <code><a href="calcFGSE.html">calcFGSE</a></code>), <code>maleFounders</code>
+zero gene-drop iterations – see <code><a href="calcFGSE.html">calcFGSE</a></code>), <code>neGD</code> (gene
+diversity retained in the founding gene pool, <code>1 - 1 / (2 * fg)</code>; a
+colony-level scalar beside <code>fg</code>, <code>NA</code> when <code>fg</code> is <code>NA</code>;
+see <code><a href="calcGeneDiversity.html">calcGeneDiversity</a></code>), <code>maleFounders</code>
 and
 <code>femaleFounders</code> (dataframes of the known male and female founder
 records), <code>nMaleFounders</code> and <code>nFemaleFounders</code> (the counts of

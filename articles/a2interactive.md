@@ -421,8 +421,8 @@ names(trimmedGeneticValue)
 ```
 
     ##  [1] "report"          "kinship"         "gu"              "fe"             
-    ##  [5] "fg"              "fgSE"            "maleFounders"    "femaleFounders" 
-    ##  [9] "nMaleFounders"   "nFemaleFounders" "total"
+    ##  [5] "fg"              "fgSE"            "neGD"            "maleFounders"   
+    ##  [9] "femaleFounders"  "nMaleFounders"   "nFemaleFounders" "total"
 
 The *report* object (an R dataframe) can in-turn be examined.
 
@@ -979,7 +979,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/Rtmpj01plB/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpIrbIw2/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -1140,8 +1140,8 @@ examplePedigree[unlist(exampleLoops), c("id", "sire", "dam")][1L:10L, ]
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-07-08 03:04:27.038667. The processing
-time for this document was 19 seconds..
+The current date and time is 2026-07-08 05:32:52.677712. The processing
+time for this document was 20 seconds..
 
 ``` r
 

@@ -113,6 +113,10 @@ computed from the same gene drop; a single colony-level number, `NA`
 when a contributing founder is retained in zero gene-drop iterations –
 see
 [`calcFGSE`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)),
+`neGD` (gene diversity retained in the founding gene pool,
+`1 - 1 / (2 * fg)`; a colony-level scalar beside `fg`, `NA` when `fg` is
+`NA`; see
+[`calcGeneDiversity`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGeneDiversity.md)),
 `maleFounders` and `femaleFounders` (dataframes of the known male and
 female founder records), `nMaleFounders` and `nFemaleFounders` (the
 counts of those founders), and `total` (the total number of known

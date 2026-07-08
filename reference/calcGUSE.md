@@ -86,6 +86,7 @@ Other genetic value analysis:
 [`calcFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFG.md),
 [`calcFGSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md),
 [`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md),
+[`calcGeneDiversity()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGeneDiversity.md),
 [`calcRetention()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcRetention.md)
 
 ## Examples

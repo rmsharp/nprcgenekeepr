@@ -7,6 +7,147 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 310 Did
+
+**Deliverable:** **Slice 1 (E1 gene diversity) of the \#118
+effective-population-size plan**
+(`docs/planning/issue118-effective-population-size-plan.md` §8) –
+implement exported `calcGeneDiversity(fg) = 1 - 1/(2*FG)` under strict
+TDD; wire `neGD` additively into the `reportGV` bundle and BOTH live GVA
+founder-stats display surfaces, displayed beside FG. **Started /
+Completed:** 2026-07-07 / 2026-07-08 **Status:** **DONE.** Owner
+ratified (via `AskUserQuestion`, this session) **D-a** = GD displays
+*beside FG* (same analysis-set population as FG; the separate “Effective
+Population Size” block is deferred to Slice 2/E2, the first
+living-breeder metric), **D-e** = `calcGeneDiversity(fg)` exported +
+bundle field `neGD`, **D-f** = defer `gdSE`. Full
+RED→GREEN→concluded-no-refactor with 4 `AskUserQuestion` gates (scope +
+PRE-RED→RED + RED→GREEN + GREEN→REFACTOR); **0 stakeholder
+corrections.** Commit `feat: #118 S310` (single commit; hash in
+`git log`).
+
+**Session 309 Handoff Evaluation (by Session 310): Score 9/10.** S309’s
+SUGGESTED NEXT was turnkey: it named the successor as “Slice 1 = E1 (the
+tracer bullet)”, pre-listed D-a/D-e/D-f **with recommendations** (which
+became my scope `AskUserQuestion` almost verbatim), and gave exact
+wiring targets that were all accurate firsthand – the
+`reportGV.R:264-276` bundle, `modGeneticValue.R:467-478` reactive +
+`:394-404` rows, `modSummaryStats.R:623-651` table. **What helped
+most:** the gotcha
+“[`makeFounderStatsTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeFounderStatsTable.md)
+is DEAD – edit the LIVE surface” (saved me from wiring dead code) and
+the “E1 vs E2/E3 use different populations” insight (the exact ground on
+which I refined D-a to GD-beside-FG). **What was missing (the -1):**
+neither the handoff nor the plan flagged that the module test files are
+`skip_on_cran`, so my first naive RED run *silently skipped* the display
+test and reported it “passing” – Learning 284(e) had noted this for
+`test_modInput*.R` but it wasn’t carried forward to the display surfaces
+I’d touch; cost one debug cycle (caught via a direct `testServer`
+probe). **What was wrong:** nothing material – the plan’s D-a headline
+(separate block) was slightly over-general for E1, but the plan’s own §2
+note (“reports GD beside FG”) already held the correct nuance, so no
+contradiction. **ROI:** very high.
+
+**Self-assessment (Session 310): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ghost-check clean – S309 = last commits
+`8c2c57fe`/`8392ddb5`; wrote the 1B stub before any technical work;
+reported and waited for the task). **Strengths:** (1) did NOT follow the
+plan’s D-a headline literally – resolved GD-beside-FG at the
+ratification gate on the firsthand ground that GD shares FG’s
+analysis-set population, deferring the separate block to E2 (Learning
+288a); (2) **caught the `skip_on_cran`/`NOT_CRAN` trap** – my RED
+display test “passed” pre-implementation, but rather than accept it I
+flagged that a passing RED test is invalid, probed directly, proved it
+was *skipped* not passed, and re-ran with `NOT_CRAN=true` (fail=0→fail=1
+for the right reason) (288b) – the exact discipline the RED gate exists
+for; (3) Phase 3E on **real qcPed data** (`neGD=0.990528` → “0.9905”
+rendered beside FG), not just the fixture (288c); (4) additive
+golden-master intact – the bundled-report `fg=52.75` tests still pass;
+(5) every changed R file lint-0, spelling clean, `check` 0/0/0; (6) ONE
+slice – did NOT start E2 (FM \#2/#18); 0 stakeholder corrections.
+**Weaknesses (the -1):** (a) two false starts on the Phase-3E smoke
+*output tooling* (a bad regex, then relying on `testServer`’s return
+value which it doesn’t propagate) cost a few extra Bash cycles – the
+render was correct throughout, so this was verification-tooling
+fumbling, not a defect; (b) the first `devtools::check` background run
+failed (exit 1, empty log) because I redirected to a project-relative
+`scratchpad/` that doesn’t exist (the scratchpad is an absolute path) –
+caught immediately and re-ran correctly.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 288** – (a)
+re-decide an inherited display recommendation against the metric’s OWN
+population at the gate; (b) `NOT_CRAN=true` is mandatory for the
+regression read or a RED test is silently skipped (check `skipped>0`,
+not just `failed==0`); (c) Phase 3E on real bundled data, not the
+fixture; (d) `implicit_integer`/`commented_code` are project-enforced
+(`1L`/`2L`; reword `X = expr` comments); (e) additive golden-master
+mechanics (order-sensitive `expect_named`; scalar-not-column). Carried
+as applied: \[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\], \[\[avoid-new-lints-r-package\]\],
+\[\[avoid-reconcile-tools-on-curated-files\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[push-close-out-docs-to-origin\]\].
+
+**=\> SUGGESTED NEXT.** \#118 Slice 1 (E1) is **done**; Slices 2/3/4
+remain. The natural successor is **Slice 2 = E2 demographic sex-ratio
+Ne** (`4*Nm*Nf/(Nm+Nf)`) over current living breeders – it **builds the
+shared `getLivingBreeders(ped)` helper** that Slice 3 (E3) reuses.
+**Before RED:** pose the Slice-2 `AskUserQuestion` ratifying **D-b**
+(population source: living breeders *within the analyzed pedigree*,
+independent of the proband/`population` selection – recommend yes, label
+the population) and **D-c** (E2 degeneracy when `Nm==0`/`Nf==0` –
+recommend `Ne_sr = 0`, alt `NA`; mirror the `N/A` cell pattern). **Slice
+2 is also where the separate “Effective Population Size” block is
+introduced** (E2 is the first living-breeder metric, so D-a’s
+separate-block recommendation now applies) – GD stays beside FG; E2 (and
+later E3) go in the new labeled block WITH a “current living breeders”
+population label (Dragon D-1). Then: `R/getLivingBreeders.R` (`@noRd`:
+`is.na(exit) & isBreeder & !isGeneratedUnknownId`, sex counted only
+`=="M"`/`=="F"`) + `R/calcNeSexRatio.R` (`@export`) → RED on crafted
+tiny peds (balanced `Nm=Nf=k → 2k`; harem `Nm=1,Nf=9 → 3.6`; one-sex
+`Nf=0 → 0` per D-c; excludes dead / non-breeder / U-id-parent /
+`sex∈{U,H}`) → thread `neSexRatio` into the bundle (additively AFTER
+`neGD`) + the new Ne block. **Other open work (owner’s pick):** \#116
+Flags (BLOCKED); \#103 roxygen harmonization;
+\#37/#36/#28/#12/#11/#10/#5; the CRAN thread (package ARCHIVED
+2025-07-29, owner-run, HARD STOP).
+
+**Key files (this session).** **New:** `R/calcGeneDiversity.R` (the
+exported pure fn), `tests/testthat/test_calcGeneDiversity.R`,
+`man/calcGeneDiversity.Rd`. **Changed:** `R/reportGV.R` (bundle:
+`neGD = calcGeneDiversity(feFg$FG)` after `fgSE`, ~`:270`; + `@return`
+clause ~`:65`), `R/modGeneticValue.R` (`founderStats` reactive
+`neGD = fr$neGD` ~`:474`; `gvSummary` `gdDisplay` + “Gene Diversity
+(GD)” row ~`:394-410`), `R/modSummaryStats.R` (founder table “Gene
+Diversity (GD)” `<th>`+`<td>` ~`:632/:652`), `NAMESPACE`
+(`export(calcGeneDiversity)`), `inst/WORDLIST` (`heterozygosity`,
+sorted), `tests/testthat/test_reportGV.R` (2 `expect_named` + new `neGD`
+test), `tests/testthat/test_modSummaryStats.R` (GD cell test),
+`tests/testthat/test_modGeneticValue.R` (GD row test). **Docs
+(close-out):** `CHANGELOG.md` (\[Unreleased\] S310),
+`PROJECT_LEARNINGS.md` (288), this handoff. **Scratch (not committed):**
+`scratchpad/check_out.log` (the check summary).
+
+**Gotchas for next session.** (1) **Run tests with `NOT_CRAN=true`** –
+the module test files (`test_modGeneticValue.R:6`, `test_modInput*.R`)
+are `skip_on_cran`; a naive `test_file`/`test_dir` under `Rscript`
+silently skips them (`fail=0` = skipped, not passed) – assert
+`skipped==0` on files you touch. (2) `neGD` is now bundle element \#7
+(after `fgSE`, before `maleFounders`); E2/E3 ride additively AFTER
+`neGD` – update BOTH `expect_named` copies in `test_reportGV.R`
+(2-space + 4-space indent, NOT byte-identical). (3) **D-a for E2/E3:**
+the separate “Effective Population Size” block (deferred from Slice 1)
+is introduced in Slice 2 with a “current living breeders” label; GD
+stays beside FG. (4) `sex` is a factor `{F,M,H,U}`, `NA→"U"` – E2 counts
+only `=="M"`/`=="F"`. (5)
+[`makeFounderStatsTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeFounderStatsTable.md)
+is DEAD (no runtime caller) – NOT touched this slice; parity optional
+(Dragon D-5). (6) Pre-existing untracked
+`PED_GV_AUDIT_2026-05-30.html` + modified `.DS_Store` are NOT this
+session’s work (left untouched, as S308/S309 did). (7) `devtools::check`
+background runs: redirect logs to the ABSOLUTE scratchpad path, not
+project-relative `scratchpad/`.
+
 ### What Session 309 Did
 
 **Deliverable:** **Planning document for GitHub issue \#118** (“Add the

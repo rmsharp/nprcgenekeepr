@@ -42,6 +42,8 @@
   : Calculate genome uniqueness for each population ID
 - [`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md)
   : Calculate the standard error of genome uniqueness
+- [`calcGeneDiversity()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGeneDiversity.md)
+  : Calculate gene diversity from founder genome equivalents
 - [`calcRetention()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcRetention.md)
   : Calculate allelic retention
 - [`calculateSexRatio()`](https://github.com/rmsharp/nprcgenekeepr/reference/calculateSexRatio.md)
