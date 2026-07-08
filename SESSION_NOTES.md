@@ -6,6 +6,157 @@
 
 ## ACTIVE TASK
 
+### What Session 315 Did
+**Deliverable:** **Issue #120 -- citation-coverage audit.** AUDIT_WORKSTREAM
+session (TDD N/A -- no implementation code): does every computed quantity/
+statistic/estimator in the package cite its source, consistently, across the
+parallel doc surfaces (roxygen `@references`, the built vignette manual,
+`inst/extdata/ui_guidance/*.html`)? Scope gate (owner, one `AskUserQuestion`):
+**broad** -- classify all 50 candidate files (44 from the issue's named source
+directories + 6 breeding-group/ranking files the issue's scope language implies
+but doesn't name: `groupAddAssign`, `filterThreshold`, `rankSubjects`,
+`getProductionStatus`, `getProportionLow`, `getIndianOriginStatus`), not just
+the issue's 8 named items.
+**Started / Completed:** 2026-07-08 / 2026-07-08
+**Status:** **DONE.** Report written to
+`docs/audits/ISSUE_120_CITATION_COVERAGE_AUDIT_2026-07-08.md`: 50/50 R files +
+8/8 UI guidance HTML pages + 8/8 built/orphan vignette components classified
+(100% coverage); **12 findings** (5 High, 5 Moderate, 2 Minor). **No code or
+docs changed** -- per AUDIT_WORKSTREAM and this project's own precedent (S273's
+#109 doc-error audit), the audit and the fix are separate sessions; this
+session's deliverable is the report only. **1 scope-gate `AskUserQuestion`;
+0 stakeholder corrections.** **#120 left OPEN** (not closed -- the audit found
+real gaps; closing is a fix-session's call, matching the #109 precedent where
+S273's audit session left #109 open for S274 to close after the fix decision).
+
+**Session 314 Handoff Evaluation (by Session 315): Score 9/10.** S314's
+SUGGESTED NEXT named #120 as the adjacent open work and pre-loaded the key
+fact that made scoping fast: "S313's #118 Slice-4 work already added the Crow
+& Kimura 1970 and kept the Lacy 1989 citations in
+`population_genetics_terms.html`, so #120 can start there and do the DELTA,
+not a full re-run" ([[check-process-history-before-rerunning-work]]).
+**What helped most:** (1) that pointer sent me straight to
+`population_genetics_terms.html` first, where reading the glossary panel
+top-to-bottom immediately surfaced the pattern that became this audit's
+headline (Lacy 1989 and Crow & Kimura 1970 cited correctly, Gene Diversity and
+Sex-Ratio Ne sitting uncited between them) -- the "delta, not full re-run"
+framing was exactly right, though the delta turned out to be sizeable (12
+findings) rather than small; (2) every standing gotcha held (`gh issue view`/
+`gh pr edit` fail on this repo's projectCards -> `gh api` workaround used
+immediately with no wasted round-trip; `NEWS.Rmd` not touched this session so
+N/A). **What was slightly off (the -1):** S314's handoff framed #120 purely as
+"citations audit" without flagging that the issue's own scope list
+("non-exhaustive... builds the full list from R/calc*.R, kinship code,
+reportGV.R, demographic helpers, breeding-group formation") would require a
+scope-gate decision before starting -- I had to discover and pose that gate
+myself rather than it being pre-flagged as a likely `AskUserQuestion` moment.
+Minor -- S314 could not have known the issue body's exact wording without
+reading it, and it correctly deferred to "owner's pick" rather than
+pre-deciding scope. **ROI:** high -- the single pointer to
+`population_genetics_terms.html` as the delta starting point was the seed for
+the entire audit's headline finding.
+
+**Self-assessment (Session 315): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues via `gh api` workaround;
+dashboard 98/100; git status clean-except-standing; ghost-check clean -- HEAD
+`54b87c1d` == documented S314 close-out); reported, STOPPED for the user;
+fetched the actual issue #120 body before scoping (not just the title);
+declared AUDIT/analysis-class up front (TDD N/A, per S273 precedent); posed
+one scope-gate `AskUserQuestion` grounded in real numbers (44 files found, 4
+with `@references`) before starting; wrote the 1B stub before technical work.
+**Strengths:** (1) **firsthand read of every candidate file** (50 roxygen
+blocks via `grep "^#'"` + direct `Read` of all 8 HTML guidance pages and 8
+vignette components -- not sampled, not summarized from memory); (2)
+**cross-surface triangulation caught findings a single-surface read would
+miss** -- e.g. F1/F2 (Sex-Ratio Ne / GD uncited) only became a confirmed,
+non-arguable finding by checking THREE surfaces (roxygen, glossary HTML,
+`_summary_statistics.Rmd`) and finding the same absence in all three, while
+F9/F10 (GU's MacCluer co-citation, Lange edition mismatch) were only visible
+by comparing `gvAndBgDesc.html` against `calcGU.R`/`kinship.R` roxygen side by
+side; (3) **verified DESCRIPTION/CITATION.cff hold the FULL Vinson & Raboin
+citation** before recommending it as the fix for the truncated `@references` --
+didn't ask the owner to go find it; (4) **caught and fixed a self-introduced
+line-number error before closing out** -- F6 initially cited
+`R/modBreedingGroups.R` "line ~1949" copied from a concatenated grep-dump
+scratch file's line numbering, not the real source file; re-grepped
+`R/modBreedingGroups.R` directly and corrected it to the real lines 15-16
+before this was reported as final (Learning below); (5) calibrated severity
+honestly -- 5 High only for statistics with ZERO citation on EVERY surface
+checked, not inflated to every roxygen gap; internal/`@noRd`/plumbing
+functions (~34 of 50) classified N/A with a one-line reason each rather than
+padding the finding count; (6) left #120 open and made no code changes,
+correctly treating "the audit" and "the fix" as separate sessions per
+AUDIT_WORKSTREAM and the #109 precedent -- did not start fixing findings after
+finding them (FM #2/#8). **Weaknesses (the -1):** (a) the line-number
+transcription bug (see Learning) cost a self-catch cycle that a fresh
+`grep -n` per finding (instead of reusing dump-file line numbers) would have
+prevented outright; (b) F4 (`rankSubjects` ranking-scheme provenance) is
+framed as an open owner question rather than a firm citation recommendation --
+correct given the evidence (I could not determine from the repo whether the
+z-score scheme is published or ONPRC-original), but it's the one finding that
+doesn't hand the next session a mechanical fix.
+
+**Learnings:** **New pattern -- "dump-file line numbers are not source-file
+line numbers."** When extracting multiple files' content into one scratch
+dump for batch reading (e.g. `grep "^#'" file1 file2 ... >> dump.txt`), the
+`Read` tool's line numbers on that dump describe position IN THE DUMP, not in
+any original file. Citing one of those numbers as a finding's `file:line`
+location is silently wrong -- it looks like a real citation until someone
+checks it. **Rule:** any line number reported in a deliverable must come from
+either (a) a direct `Read`/`grep -n` of the ACTUAL target file, run
+immediately before writing the citation, or (b) be explicitly re-verified
+against the real file before the deliverable is finalized. A concatenated
+scratch dump is fine for browsing/triage; it is never a citable line-number
+source. Caught it firsthand this session (F6) -- worth a memory since batch
+file review (via `grep` dumps or similar) recurs across audit-shaped sessions.
+No other new memory (all other applied memories already exist).
+
+**=> SUGGESTED NEXT.** **#120 stays OPEN** -- the audit report
+(`docs/audits/ISSUE_120_CITATION_COVERAGE_AUDIT_2026-07-08.md`) is the
+turnkey spec for a follow-on fix session: §6 gives a priority order (1: the 5
+High findings, each with an exact `@references` line to add; 2: the mechanical
+`@examples`-buried-citation promotions; 3: the doc-surface syncs; 4: the two
+Minor cosmetic items). All 12 findings include exact file + line/section +
+the precise citation text to add, most copy-pasted from citations that
+already exist elsewhere in-repo (DESCRIPTION, CITATION.cff, or a sibling doc
+surface) -- only F4 (`rankSubjects` provenance) needs an owner decision before
+a fix can be written. **This is a REFACTOR-class doc-only session** (adding
+`@references` lines and HTML citation text changes no behavior) -- no TDD
+RED/GREEN needed, though `devtools::document()` + a diff-nothing-else check
+is the verification step. **Adjacent open work (unchanged from S314):**
+issue **#103** roxygen2 doc harmonization; **#116** Flags column (BLOCKED);
+**#37** exported functions not used by app; **#36/#28/#12/#11/#10/#5** older
+backlog. **E4** (rate-of-coancestry Ne) remains DEFERRED. The CRAN thread
+(package ARCHIVED 2025-07-29, owner-run, **HARD STOP**).
+
+**Key files (this session).** **Created:**
+`docs/audits/ISSUE_120_CITATION_COVERAGE_AUDIT_2026-07-08.md` (the full audit
+report -- 12 findings, 50-file coverage table, structural observations,
+priority-ordered recommendations). **No R/, vignettes/, or inst/ files
+changed** (audit-only deliverable). **Not committed:** pre-existing
+`.DS_Store` (modified) + `PED_GV_AUDIT_2026-05-30.html` (untracked), left
+untouched as S308-S315 all have.
+
+**Gotchas for next session.** (1) **The fix session should re-grep each
+finding's citation location fresh**, not trust this report's line numbers
+blindly for files that have changed since 2026-07-08 -- the report's F1-F12
+locations were correct AT THE TIME OF WRITING (each verified via direct `Read`
+or `grep -n` on the real file, per the Learning above), but a fix session
+edits these same files, so later findings' line numbers will drift as earlier
+ones in the same file are edited
+([[edit-files-in-reverse-line-order]] applies if fixing multiple findings in
+one file, e.g. F1+F9 both touch `population_genetics_terms.html`). (2)
+**F4's `rankSubjects` provenance is genuinely unresolved** -- do not fix it by
+guessing a citation; pose the owner question first (cite Vinson & Raboin 2015
+if that's confirmed as the actual source, or add a "this is an ONPRC-original
+method" note if not). (3) **`gh issue view`/`gh pr edit` fail** on this repo
+(projectCards) -- `gh issue close`/`create`/`comment` and `gh api` work
+(used `gh api repos/.../issues/120` to read the body this session). (4)
+**Owner standing directive (S314):** monitor the `warning` column on every
+test run -- not exercised this session (no tests run; audit-only, no code
+touched), but still standing for the next code session
+([[regression-read-check-warnings]]).
+
 ### What Session 314 Did
 **Deliverable:** **Issue #121 -- make the test suite `WARN 0`** by eliminating
 the 7 unasserted warnings (5 from `test_modPyramid` "handles input changes"; 2
