@@ -6,6 +6,116 @@
 
 ## ACTIVE TASK
 
+### What Session 309 Did
+**Deliverable:** **Planning document for GitHub issue #118** ("Add the effective
+population size estimate") — `docs/planning/issue118-effective-population-size-plan.md`.
+Planning session: the plan IS the deliverable; implementation is separate later
+sessions, one estimator each (FM #18 honored — did NOT implement). Seed = the S308
+triage. Plus one explicitly-owner-requested adjunct: an **E4 future-work comment on
+#118** (the deferred estimator's avenues).
+**Started / Completed:** 2026-07-07 / 2026-07-07
+**Status:** **DONE.** Owner ratified (via `AskUserQuestion`, this session) **E1**
+(gene diversity `GD=1-1/(2·FG)`) + **E2** (sex-ratio `4·Nm·Nf/(Nm+Nf)`) + **E3**
+(variance effective size) over **current living breeders**, displayed in the GVA
+founder-stats surface; **E4 deferred** (avenues posted to #118:
+[comment](https://github.com/rmsharp/nprcgenekeepr/issues/118#issuecomment-4910916406)).
+Plan = 4 slices (E1→E2→E3→publish/docs) with per-slice completion criteria, an
+evidence-based inventory, a worked numeric example, 6 sub-decisions to ratify at the
+Slice-1 gate, and 8 consolidated dragons. TDD phase declared **N/A** (analysis
+deliverable, no production/test code). **0 stakeholder corrections** (owner clarified
+E4 mid-question; folded in). Commit `124f79d6`.
+
+**Session 308 Handoff Evaluation (by Session 309): Score 9/10.** S308's SUGGESTED
+NEXT was turnkey: it named the successor as "ONE planning / `/grill-me` session" and
+pre-listed the exact four owner-decisions to ratify (which estimator / which
+population / display home / E4 handling) — that list became my `AskUserQuestion`
+almost verbatim, and the triage doc it produced seeded the whole inventory. **What
+helped most:** the four-decision list (told me WHAT to ask and HOW-BIG the session
+was) and the firsthand file refs (`reportGV.R`, `calcFG`, `findOffspring`,
+`makeFounderStatsTable`). **What was wrong (the −1):** the triage/handoff named the
+display home as `makeFounderStatsTable()`/`modFounderStats` — but `makeFounderStatsTable()`
+has **no runtime caller** and `modFounderStats.R` does not exist; the live surface is
+`modSummaryStats.R`/`modGeneticValue.R`. Understandable (the symbol exists; only a
+caller-grep reveals it's dead) but load-bearing — a plan trusting it would have told
+the executor to edit a file no user sees. It also assumed `sex` ∈ {M,F} (it's
+{F,M,H,U}). A planning session's job is exactly to catch these, so the cost was
+absorbed, not passed on. **ROI:** very high — near-zero orientation overhead.
+
+**Self-assessment (Session 309): 9/10.** Oriented fully (SAFEGUARDS + SESSION_RUNNER
+read in full; ghost-check clean — S308 = last commit; wrote the 1B stub before any
+technical work); stated the deliverable + workstream back and confirmed "planning,
+close out when done." **Strengths:** (1) did NOT trust the inherited inventory —
+grepped for runtime callers and caught that the triage's display home was dead code,
+then targeted the live surface (Learning 287a); (2) **ran the metric on real data**
+during planning (worked E2=108.6 / E3=33.5 on `examplePedigree`), which surfaced two
+domain corrections a read missed — `sex` is {F,M,H,U} and `kbar≈5.3≠2` (so E3 needs
+the mean-adjusted form, not the bare formula) — and closed the exact −0.5 S308 flagged
+about itself (Learning 287b); (3) handled the owner's mid-question E4 clarification by
+separating its two ingredients and deferring both to a future-work comment rather than
+scope-creeping E4 in ([[observation-vs-decision]]); (4) modeled the plan on the #82
+FG-SE precedent (house style + slice discipline); (5) ONE deliverable — did not start
+implementation (FM #2/#18). **Weaknesses (the −1):** (a) left six sub-decisions
+(D-a..D-f, incl. the load-bearing E3 formula variant) for the Slice-1 gate rather than
+resolving all now — defensible (they're best made with the executor at RED, and D-d is
+a genetics call), but a more aggressive planner might have posed D-a/D-c this session;
+(b) E1's GD worked example used an illustrative `FG=20`, not the example pedigree's
+actual FG (computing the real FG needs a gene drop; GD is a trivial function of the
+already-tested FG, so low value).
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 287** — (a) re-verify a
+predecessor triage's named surfaces are LIVE (grep for runtime callers), not just that
+the symbol exists; (b) run a new metric on real bundled data during planning to catch
+domain bugs a read can't; (c) engage an owner's mid-question design insight but split
+its parts and defer rather than force into scope; (d) `gh api .../comments -F body=@file`
+for issue comments. Carried as applied: [[consult-project-source-of-truth]],
+[[observation-vs-decision]], [[check-process-history-before-rerunning-work]],
+[[keep-dev-process-refs-out-of-user-docs]], [[gh-pr-edit-projectcards-workaround]],
+[[push-close-out-docs-to-origin]].
+
+**=> SUGGESTED NEXT.** #118 is **planned, not implemented.** The natural successor is
+**Slice 1 = E1 gene diversity** (the tracer bullet) under strict TDD, in its own
+session. **Before RED:** pose the Slice-1 `AskUserQuestion` ratifying **D-a** (display
+as a separate labeled "Effective Population Size" block vs. appended founder-table
+cells — recommend separate block, because E1's population differs from E2/E3's),
+**D-e** (function names: `calcGeneDiversity`/`calcNeSexRatio`/`calcNeVariance` +
+`getLivingBreeders` helper), **D-f** (optional `gdSE` from `fgSE` — recommend defer).
+Then: `test_calcGeneDiversity.R` (RED) → `R/calcGeneDiversity.R` (GREEN) → add
+`neGD=calcGeneDiversity(feFg$FG)` to the `reportGV.R:264-276` bundle → thread into
+`modGeneticValue.R:467-478` reactive + `modSummaryStats.R:623-651` display. E2 (Slice
+2) builds the `getLivingBreeders(ped)` helper; E3 (Slice 3) reuses it and needs the
+**ratified E3 formula variant (D-d)** — the load-bearing correctness choice. **Other
+open work (owner's pick):** #116 Flags (BLOCKED); #103 roxygen harmonization;
+#37/#36/#28/#12/#11/#10/#5; the CRAN thread (owner-run, package ARCHIVED 2025-07-29,
+HARD STOP).
+
+**Key files (this session):** **New:**
+`docs/planning/issue118-effective-population-size-plan.md` (the plan; §2 estimator
+definitions, §3 living-breeder filter, §4 worked example, §5 decisions, §6 inventory,
+§8 slices, §10 dragons, §11 E4 deferral). **Read firsthand (the inventory an executor
+reuses):** `R/reportGV.R:217,229-232,264-276` (the bundle + founder-count exclusion of
+U-ids), `R/makeFounderStatsTable.R:37-101` (DEAD helper — no runtime caller),
+`R/modGeneticValue.R:394-404,467-478` (GV-tab rows + `founderStats` reactive — LIVE),
+`R/modSummaryStats.R:623-651` (LIVE founder table + the `FG +/- SE` inline pattern to
+mirror), `R/findOffspring.R:32-43` (breeder detection + E3 Vk), `R/offspringCounts.R`,
+`R/calcFEFG.R:54-74`/`R/calcFG.R:64-82` (FG scalar for E1). **Explore-mapped (not
+re-read):** `R/convertSexCodes.R:37-52` (sex {F,M,H,U}, NA→U), `R/setExit.R:44-66`
+(exit guaranteed; `is.na(exit)`=living), `R/autoIdFormat.R:109-111` (U-id predicate),
+`R/appServer.R:296` (threads founderStats). **Test templates:** `test_reportGV.R:7-22`
+(bundle-name assertion to extend), `test_modSummaryStats.R:286-317` (module render),
+`test_makeFounderStatsTable.R:18-33` (HTML cell), `test_calcFG/FEFG/FGSE.R`
+(calc-family structure). **Docs updated (close-out):** `CHANGELOG.md` ([Unreleased]
+S309), `PROJECT_LEARNINGS.md` (287), this handoff. **Scratch (not committed):**
+`scratchpad/ne_worked_example.R` (the worked-example script). **Gotchas for next
+session:** (1) `makeFounderStatsTable()` is DEAD (no runtime caller) — edit the LIVE
+surface (`modSummaryStats`/`modGeneticValue`); update the helper only for script-user
+parity. (2) `sex` is a factor `{F,M,H,U}` (`NA→"U"`) — count only `=="M"`/`=="F"` for
+Nm/Nf. (3) E1 (over the FG/analysis set) and E2/E3 (over living breeders) use
+DIFFERENT populations — labeling is load-bearing (Dragon D-1). (4) E3's formula
+variant (D-d) must be ratified before Slice 3 — the bare `(4N-4)/(Vk+2)` overstates Ne
+because `kbar≠2`. (5) `gh issue view`/`gh pr edit` fail on this repo (projectCards) —
+use `gh api`. (6) Still-present untracked `PED_GV_AUDIT_2026-05-30.html` + modified
+`.DS_Store` are pre-existing, NOT this session's work (left untouched).
+
 ### What Session 308 Did
 **Deliverable:** **Triage of GitHub issue #118** ("Add the effective population size
 estimate"), analysis only — NO code changed. Produced
