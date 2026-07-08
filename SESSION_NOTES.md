@@ -6,6 +6,111 @@
 
 ## ACTIVE TASK
 
+### What Session 308 Did
+**Deliverable:** **Triage of GitHub issue #118** ("Add the effective population size
+estimate"), analysis only — NO code changed. Produced
+`docs/audits/ISSUE_118_EFFECTIVE_POPULATION_SIZE_TRIAGE_2026-07-07.md` + a condensed
+comment on #118, mirroring the S301 #119-triage deliverable shape. Gates: none —
+triage is an analysis deliverable, no TDD RED/GREEN/REFACTOR (declared N/A atop the
+first response). ONE deliverable (FM #2/#18 honored — did NOT start #118
+implementation or a plan).
+**Started / Completed:** 2026-07-07 / 2026-07-07
+**Status:** **DONE.** Verdict: #118 is a well-motivated **enhancement** (not a bug,
+not blocked), **under-specified two ways** — (1) "effective population size" is a
+FAMILY of estimators (E1 founder-genome-equiv/gene-diversity, E2 demographic
+sex-ratio `4NmNf/(Nm+Nf)`, E3 variance/reproductive-skew, E4 rate-of-coancestry
+`1/(2·dCbar)`); (2) the issue itself says "place to locate output has not been
+determined." Most inputs already exist (`calcFG`/`calcFGSE`, `calcFE`, `findOffspring`,
+`meanKinship`, `geneDrop`, founder counts in `reportGV`); the one gap is generation
+length in years (E4 only). Natural output home: the GVA founder-stats table
+(`makeFounderStatsTable`/`modFounderStats`/`reportGV` bundle), beside FE/FG. The
+estimator + population choice is the OWNER's — deferred to a follow-up planning/grill
+session (per the S301 pattern), NOT decided here.
+
+**Session 307 Handoff Evaluation (by Session 308): Score 10/10.** S307's SUGGESTED
+NEXT explicitly named **#118** as "effective population size (untriaged — a bounded
+triage deliverable, good next)" — that single characterization set this session's
+scope and deliverable *shape* immediately (a bounded triage, not an implementation or
+a plan). It also correctly flagged #119 as COMPLETE (the owner confirmed and closed
+it before this session), pre-listed the other open work with issue numbers, and named
+the CRAN hard-stop — zero re-litigation needed. **What helped most:** the "bounded
+triage deliverable, good next" phrase — it told me both WHAT and HOW-BIG. **What was
+missing/off:** almost nothing for this session — S307 (a #119 slice) had no reason to
+carry #118-specific detail, and didn't. Two general-repo facts I supplied from memory
+rather than the handoff: (a) the untracked `PED_GV_AUDIT_2026-05-30.html` (a stale
+May-30 render, pre-existing, left untouched), and (b) `gh issue view` trips the same
+projectCards deprecation as `gh pr edit` (used `gh api` instead). Neither is an S307
+gap. **ROI:** very high — the SUGGESTED-NEXT pointer meant near-zero orientation
+overhead.
+
+**Self-assessment (Session 308): 9.5/10.** Oriented fully (SAFEGUARDS + SESSION_RUNNER
+read in full; ghost-check clean — S307 = last commit; wrote the 1B stub before any
+technical work); declared the deliverable + workstream back to the user and confirmed
+"triage, close out when done." **Strengths:** (1) reframed a one-line "add *the* Ne"
+request into its real content — a family of 4 estimators with a formula/answers/input
+table — which is the single most useful thing a triage of this issue can do; (2)
+every claim is evidence-based and firsthand (read `reportGV.R`, `makeFounderStatsTable.R`,
+`calcFG/FE`, `findOffspring`, `meanKinship`, `findGeneration`, `speciesGestation`
+build script this session — no memory claims), so the inventory can seed the plan
+directly; (3) precisely bounded the ONE gap (no generation length in years) so E4
+isn't accidentally scoped into an early slice; (4) answered the issue's explicit open
+question ("where does output go") from the existing sibling metrics rather than
+inventing a location; (5) DEFERRED the genetics-management decision to the owner
+([[observation-vs-decision]]) instead of picking an estimator — matching the
+owner-accepted S301 pattern. **Weakness (the -0.5):** I did not numerically compute a
+sample Ne on the example pedigree for any estimator (e.g. E2 from the bundled founder
+counts) — a worked number would have made the "cheap to compute now" claim concrete
+rather than asserted. It would have been a small probe; I judged it out of scope for a
+triage (it edges toward implementation) but note it as a strengthening the planning
+session should do first.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 286** — expose "Ne" as a family
+of estimators (not one number); ground the input inventory + display home in firsthand
+reads of the closest existing metric (FG/founder-stats table); name the one gap
+(generation length) precisely so E4 isn't mis-scoped; defer the estimator/population
+choice to the owner; `gh issue view` hits the projectCards deprecation — use `gh api`.
+Carried as applied: [[consult-project-source-of-truth]], [[observation-vs-decision]],
+[[check-process-history-before-rerunning-work]], [[avoid-jargon-use-plain-language]],
+[[gh-pr-edit-projectcards-workaround]], [[push-close-out-docs-to-origin]].
+
+**=> SUGGESTED NEXT.** #118 is **triaged, not implemented.** The natural successor is
+**ONE planning / `/grill-me` session** (owner in the loop) that ratifies: (1) **which
+estimator(s)** — E1 / E2 / E3 / E4 / a labeled set (triage §6 Options 1–5); (2)
+**which population** the Ne covers (studbook / living / current breeders / per group)
+and the "breeder" definition; (3) **confirm the display home** (GVA founder-stats
+table) or name another; (4) **for E4 only** — whether to add generation-length data
+(and its source) or defer E4. That session writes
+`docs/planning/issue118-effective-population-size-plan.md` with an evidence-based
+inventory (the triage doc is its seed) + per-slice completion criteria; implementation
+then follows one-estimator-per-session under strict TDD, each adding its scalar to the
+`reportGV` bundle and one cell to the founder-stats table. Recommended direction (NOT a
+decision): E2/E3 or a labeled E1+E2+E3 set is the cheapest honest win; E1 is nearly
+free (FG already computed) and worth including; E4 is highest-value but its own later
+effort. **Other open work (owner's pick):** #116 Flags (BLOCKED); #103 roxygen
+harmonization; #37/#36/#28/#12/#11/#10/#5; the CRAN thread (owner-run, package ARCHIVED
+2025-07-29, HARD STOP).
+
+**Key files (this session):** **New:**
+`docs/audits/ISSUE_118_EFFECTIVE_POPULATION_SIZE_TRIAGE_2026-07-07.md` (the triage;
+§2 estimator table, §3 evidence inventory, §4 gap, §6 options, §7 dragons, §8 next
+step). **Read (no edits) — the evidence base a plan/executor will reuse:**
+`R/reportGV.R:61-69,205-245` (colony bundle: fe/fg/fgSE/founder counts),
+`R/makeFounderStatsTable.R:60-108` (the one-row HTML table + N/A-vs-value cell
+pattern), `R/calcFG.R`/`R/calcFE.R`/`R/calcFEFG.R`/`R/calcFGSE.R`/`R/checkFgDegeneracy.R`,
+`R/findOffspring.R` (per-animal offspring counts → E3 Vk), `R/meanKinship.R`,
+`R/findGeneration.R` (integer generation numbers, NOT years),
+`data-raw/speciesGestation.R` (gestation + min breeding ages only — no generation
+interval). **Docs updated (close-out):** `CHANGELOG.md` ([Unreleased] S308 entry),
+`PROJECT_LEARNINGS.md` (286), this handoff. **Gotchas for next session:** (1) `gh
+issue view`/`gh pr edit` fail on this repo (projectCards GraphQL deprecation) — fetch
+issue bodies with `gh api repos/:owner/:repo/issues/<N> --jq ...`. (2) The untracked
+`PED_GV_AUDIT_2026-05-30.html` at repo root is a **stale May-30 render**, NOT this
+session's work — left untouched; the owner may want to delete it or `.gitignore` it.
+(3) "Effective population size" is genuinely ambiguous — do NOT let a future
+implementation session pick an estimator without the owner's ratification (triage
+Dragon #1). (4) E4 (rate-of-coancestry Ne) needs generation length the package does
+not store — do not fake it with an unstated constant.
+
 ### What Session 307 Did
 **Deliverable:** **Slice 5** (final) of the #119 plan (docs / vignettes /
 screenshot / WORDLIST / NEWS), IMPLEMENTED under strict TDD. Migrated every
