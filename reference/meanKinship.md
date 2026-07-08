@@ -26,6 +26,13 @@ The mean kinship of animal *i* is \$\$MK_i = \Sigma f_ij / N\$\$, in
 which the summation is over all animals, *j*, including the kinship of
 animal *i* to itself.
 
+## References
+
+Ballou JD, Lacy RC. 1995. Identifying genetically important individuals
+for management of genetic variation in pedigreed populations, p 77-111.
+In: Ballou JD, Gilpin M, Foose TJ, editors. Population management for
+survival and recovery. New York (NY): Columbia University Press.
+
 ## Examples
 
 ``` r

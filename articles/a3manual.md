@@ -435,17 +435,19 @@ founders, male founders, female founders - Founder equivalents and
 founder genome equivalents (the latter is a gene-drop estimate, shown
 inline with its sampling standard error as `FG +/- SE`) - **Gene
 diversity (GD)** beside FG: the expected heterozygosity still retained
-from the founding gene pool, `GD = 1 - 1 / (2 * FG)`, over the same
-analysis set as the founder statistics
+from the founding gene pool, `GD = 1 - 1 / (2 * FG)`, derived from the
+founder genome equivalents of Lacy (1989), over the same analysis set as
+the founder statistics
 
 A separate **Effective Population Size** block reports two effective
 sizes over the **current living breeders** – the living animals that
 appear as a sire or dam, a different (usually smaller) population than
 the analysis set above:
 
-- **Sex-Ratio Ne**, `4 * Nm * Nf / (Nm + Nf)`, the effective size
-  implied by an unequal breeding sex ratio (it equals the census when
-  the sexes are balanced and is 0 when either breeding sex is absent)
+- **Sex-Ratio Ne**, `4 * Nm * Nf / (Nm + Nf)`, the Crow & Kimura (1970)
+  effective size implied by an unequal breeding sex ratio (it equals the
+  census when the sexes are balanced and is 0 when either breeding sex
+  is absent)
 - **Variance Ne**, the general Crow & Kimura (1970) form
   `(N * k - 1) / (k - 1 + V / k)` where `k` is the mean and `V` the
   variance of lifetime offspring counts, the effective size reduced by
@@ -683,6 +685,12 @@ The algorithm proceeds by the following steps:
 2.  Return the currently saved groups
     1.  This should be the best groups encountered in **I** iterations.
 
+Vinson, A. and Raboin, M.J. (2015) “A Practical Approach for Designing
+Breeding Groups to Maximize Genetic Diversity in a Large Colony of
+Captive Rhesus Macaques (*Macaca mulatta*)” *Journal of the American
+Association for Laboratory Animal Science*, 2015 Nov, Vol.54(6),
+pp.700-707.
+
 ## Algorithm: Genome Uniqueness
 
 Genome uniqueness is calculated through the use of a gene-drop
@@ -779,6 +787,9 @@ transmission vectors (row 2) determine which alleles are passed from the
 parental alleles or haplotypes (row 1) to form complementary vectors
 (row 3) that are combined by adding corresponding elements to form the
 final vector of transmitted alleles (row 4).
+
+Genome uniqueness is calculated according to MacCluer JW, et al. (1986)
+and Ballou JD, Lacy RC. (1995).
 
 ## Software Issues
 

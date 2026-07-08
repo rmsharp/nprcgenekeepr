@@ -7,6 +7,211 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 316 Did
+
+**Deliverable:** **Issue \#120 – fix section 6 of the citation-coverage
+audit report** (11 of 12 findings; F12 + the Process recommendation
+explicitly deferred, owner scope-gate). REFACTOR-class, doc-only
+(`@references` roxygen fields + hand-written HTML/Rmd prose); **TDD
+RED/GREEN N/A** – no implementation code changed, no testable behavior
+change, matching this project’s established precedent for audit-driven
+doc fixes (S273/S274/S275/ S278, all TDD-N/A REFACTOR-class). 2
+`AskUserQuestion` rounds before starting: (1) session-scope (owner
+picked **F1-F11 citation fixes only**, over +F12-delete-orphans /
++Process-note / all-of-the-above) bundled with 3 owner decisions –
+**F4** rankSubjects provenance = **cite Vinson & Raboin (2015)** (not
+document-as-original); **F2** Gene Diversity citation = **derive from
+Lacy (1989) via FG** (not Nei 1973 heterozygosity); **F11** Lange
+edition = **1997** (matches `kinship.R`’s `$Id:` implementation date,
+not `gvAndBgDesc.html`’s stale 2002); (2) mid-turn the owner flagged the
+19-file/ 3-surface-type scope as possibly warranting a planning session
+first – posed a second gate, owner chose **execute directly this
+session** (audit report’s exact file+line+citation-text specs treated as
+the plan, matching the S274 precedent of a direct one-session fix with
+no separate planning session). **Started / Completed:** 2026-07-08 /
+2026-07-08 **Status:** **DONE.** 32 tracked files changed (13 `R/` + 13
+regenerated `man/*.Rd` + `inst/WORDLIST` (1 new word) + 2 HTML + 3 built
+vignette `.Rmd`). **0 stakeholder corrections** (both `AskUserQuestion`
+rounds resolved cleanly on the first ask). Commit hash in `git log`
+(message starts `docs: #120 S316`). **\#120 left OPEN** – F12 (delete 2
+orphan vignette files) and the Process recommendation (a standing
+citation-checklist note) were explicitly scoped OUT this session per the
+owner’s pick; \#120 should not be closed until those are addressed or
+explicitly waived in a future session.
+
+**Session 315 Handoff Evaluation (by Session 316): Score 9/10.** S315’s
+`docs/audits/ISSUE_120_CITATION_COVERAGE_AUDIT_2026-07-08.md` was the
+turnkey spec this session executed almost mechanically. **What helped
+most:** (1) §6’s priority-ordered grouping (F1-F5 High / F6+F8
+mechanical / F7+F9+F10 doc-sync / F11+F12 Minor) mapped directly onto
+this session’s execution order and made the owner-decision points (F2,
+F4, F11) trivial to isolate from the pure copy-paste fixes (F1, F3, F5,
+F6, F8, F9, F10) up front; (2) the claim “most \[citation text\]
+copy-pasted from citations that already exist elsewhere in-repo” held
+for every single finding fixed – Ballou & Lacy 1995 came verbatim from
+`calcGU.R`, Crow & Kimura 1970 verbatim from `calcNeVariance.R`, the
+full Vinson & Raboin form came from CLAUDE.md’s own “Key References”
+section – zero citations were newly researched, only assembled from text
+the package already carried; (3) F4 was correctly pre-flagged as needing
+an owner decision (not a mechanical fix), which this session posed via
+`AskUserQuestion` before touching `rankSubjects.R`, exactly as the audit
+anticipated. **What was slightly off (the -1):** the audit’s
+`gvAndBgDesc.html` line numbers (e.g. “lines 59-86” for F4) were
+accurate in substance but the audit didn’t flag that this specific file
+uses **tab** indentation while the sibling
+`population_genetics_terms.html` uses spaces – two `Edit` calls failed
+on a straight copy-paste of the audit’s quoted region before a
+`sed | cat -tv` / `od -c` raw-byte check surfaced the tab characters
+(see Learning below). Not the audit’s fault (it never claimed to give
+byte-exact old_string text, only line ranges), but worth flagging for
+the next session that edits this file. **ROI:** very high – the audit is
+why this session needed zero net-new research, only assembly + owner
+decisions on the 3 genuinely open questions.
+
+**Self-assessment (Session 316): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ACTIVE TASK; GH issues; dashboard 98/100;
+git status clean-except-standing; ghost-check clean – HEAD `a7e2c2b5` ==
+documented S315 close-out); reported, STOPPED for the user; read the
+full audit report before scoping; declared TDD N/A REFACTOR-class up
+front (not after-the-fact) based on 4-session in-repo precedent
+(S273/274/275/278), all cited by name; posed both `AskUserQuestion`
+gates (scope+3-decisions, then plan-vs-execute) before any edit.
+**Strengths:** (1) **firsthand read of every one of the ~20 target
+files** before editing (13 R sources, 2 HTML, 3 Rmd, plus
+`DESCRIPTION`/`CITATION.cff` for the canonical Vinson & Raboin text) –
+no edit was written from the audit report’s prose alone; (2)
+**re-derived every citation’s exact wording from its actual in-repo
+source** (not retyped from the audit report, which could itself have
+transcription drift) – e.g. copied `calcGU.R`’s Ballou & Lacy paragraph
+byte-for-byte into `meanKinship.R`/`calcA.R`/the new glossary entry,
+rather than re-composing it; (3) **applied multi-edit files
+bottom-to-top** (`population_genetics_terms.html`: 3 edits,
+`gvAndBgDesc.html`: 2 edits, `_summary_statistics.Rmd`: 2 edits) per
+\[\[edit-files-in-reverse-line-order\]\] – zero line-shift corruption;
+(4) **diagnosed the 2 tab-vs-space `Edit` failures from first
+principles** (`od -c` on the raw bytes) instead of guess-and-retry, and
+generalized the fix (matched the file’s actual tab indentation) rather
+than reformatting the file to spaces; (5) **verification went beyond the
+minimum bar**: `document()` (NAMESPACE diff empty) -\>
+[`tools::checkRd`](https://rdrr.io/r/tools/checkRd.html) on all 13
+regenerated `.Rd` (0 warnings) -\>
+[`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+(1 new flag, “JW” from the MacCluer citation; hand-added to
+`inst/WORDLIST` per \[\[avoid-reconcile-tools-on-curated-files\]\], not
+a full WORDLIST regen) -\> `lintr` on all 13 changed R files (0,
+confirms the \<=80-char rule held per \[\[avoid-new-lints-r-package\]\])
+-\> [`tools::Rd2txt`](https://rdrr.io/r/tools/Rd2HTML.html) rendered 4
+representative man pages to actually SEE the citation prose and italics
+render correctly, not just “no error” -\> full `R CMD build` (vignettes
+rebuild OK) -\> `R CMD check --as-cran` (**2 NOTEs = the standing benign
+pair, 0 WARN, 0 ERROR**; `testthat.R` **3112 PASS / 0 FAIL / 0 WARN** –
+the owner’s standing “monitor test warnings in ALL runs” directive from
+S314 explicitly checked and held, per
+\[\[regression-read-check-warnings\]\]); build artifacts cleaned up
+(confirmed gitignored, not tracked). **Weaknesses (the -1):** the 2
+tab-vs-space `Edit` failures on `gvAndBgDesc.html` (see Learning) cost 2
+failed tool calls that a pre-emptive `od -c`/`cat -tv` check on EVERY
+doc-surface file (not just after the first failure) would have prevented
+outright – the same class of “verify before act” discipline as S315’s
+line-number Learning, just for whitespace instead of line numbers.
+
+**Learnings:** **New pattern – “HTML/doc-surface files in this repo mix
+tab and space indentation inconsistently; verify raw bytes before the
+first `Edit`, not after the first failure.”**
+`inst/extdata/ui_guidance/ population_genetics_terms.html` uses space
+indentation throughout (Read-tool copy-paste worked first try, 3/3
+edits). `inst/extdata/ui_guidance/ gvAndBgDesc.html` uses TAB
+indentation throughout (`^I` per `cat -tv`) – copy-pasting the Read
+tool’s space-rendered display as an `Edit` `old_string` silently fails
+with “String to replace not found” because the Read tool’s column
+alignment doesn’t distinguish tabs from spaces visually. **Rule:**
+before the first `Edit` on any HTML/legacy doc-surface file (as opposed
+to R/Rmd source, which this repo keeps consistently space-indented), run
+`sed -n '<range>p' <file> | cat -tv` (or `od -c`) once on the target
+region to confirm tabs vs. spaces, rather than trusting the Read tool’s
+visual rendering and discovering the mismatch via a failed `Edit`. Cheap
+up front (one command), expensive after the fact (silent no-op failures
+that look identical to a genuine text mismatch). Carried as applied (all
+held, no incidents): \[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[avoid-reconcile-tools-on-curated-files\]\],
+\[\[edit-files-in-reverse-line-order\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[regression-read-check-warnings\]\],
+\[\[push-close-out-docs-to-origin\]\].
+
+**=\> SUGGESTED NEXT.** Two ways to finish out \#120, owner’s call:
+**(a)** a small follow-on session doing **F12** (delete the 2 orphan
+vignette files `vignettes/manual_components/_bg_algorithm.Rmd` and
+`_bg_formation.Rmd` – byte-duplicate and stale-2017-draft respectively,
+confirmed via `grep child= vignettes/a3manual.Rmd` neither is built) **+
+the Process recommendation** (a standing-checklist note, candidate
+location `PROJECT_LEARNINGS.md` or a new `CONTRIBUTING.md`, per audit §6
+item 5: “any new slice adding a displayed statistic updates
+`population_genetics_terms.html` and its own `@references` in the same
+session that ships the statistic”) – then close \#120; **(b)** close
+\#120 now with F12/Process explicitly waived as out-of-scope
+housekeeping, if the owner judges the citation-completeness goal (the
+issue’s actual title) fully met by F1-F11. **This session did NOT decide
+between (a)/(b)** – that is the owner’s call, not a mechanical
+next-step. **Adjacent open work (unchanged from S315):** issue **\#116**
+Flags column (BLOCKED); **\#103** roxygen2 doc harmonization; **\#37**
+exported functions not used by app; **\#36/#28/#12/#11/#10/#5** older
+backlog. **E4** (rate-of-coancestry Ne) remains DEFERRED. The CRAN
+thread (package ARCHIVED 2025-07-29, owner-run, **HARD STOP**).
+
+**Key files (this session).** **Modified (32 tracked files):**
+`R/calcA.R`, `R/calcFE.R`, `R/calcFEFG.R`, `R/calcFG.R`, `R/calcGU.R`,
+`R/calcGeneDiversity.R`, `R/calcNeSexRatio.R`, `R/calcRetention.R`,
+`R/groupAddAssign.R`, `R/kinship.R`, `R/meanKinship.R`,
+`R/modBreedingGroups.R`, `R/rankSubjects.R` (13 roxygen `@references`
+additions/fixes) + 13 regenerated `man/*.Rd` (1:1) + `inst/WORDLIST`
+(+1: “JW”) + `inst/extdata/ui_guidance/population_genetics_terms.html`
+(3 edits: GD citation, Sex-Ratio Ne citation, new GU+Mean-Kinship
+glossary entries) + `inst/extdata/ui_guidance/gvAndBgDesc.html` (2
+edits: ranking-scheme citation, Lange 1997 fix) +
+`vignettes/manual_components/ _breeding_group_algorithm.Rmd` (closing
+citation) + `_genome_uniqueness_ algorithm.Rmd` (closing citation) +
+`_summary_statistics.Rmd` (2 edits: GD + Sex-Ratio Ne inline citations).
+**Not touched (deliberately out of scope):**
+`R/calcFGSE.R`/`R/calcGUSE.R` (already N/A per the audit – inherit via
+`@seealso`); `inst/extdata/ui_guidance/genetic_value.html` (its GD
+paragraph delegates to the Terms panel rather than narrating the
+formula, so no independent citation claim needed there – re-verified by
+direct read, audit’s “F2 location” list was broader than its own
+“Recommendation” text actually required); the 2 F12 orphan `.Rmd` files
+(owner scope-gate: deferred). **Not committed (pre-existing,
+untouched):** `.DS_Store` (modified), `PED_GV_AUDIT_2026-05-30.html`
+(untracked) – left alone as S308-S316 all have.
+
+**Gotchas for next session.** (1) **`gvAndBgDesc.html` uses TAB
+indentation; `population_genetics_terms.html` uses SPACE indentation** –
+see Learning above; check raw bytes (`cat -tv`/`od -c`) before editing
+either, don’t assume consistency across
+`inst/extdata/ui_guidance/*.html`. (2) **F12 + Process recommendation
+are the only two items left from the \#120 audit’s §6** – \#120 should
+stay open until an owner decision on (a) vs (b) above. (3)
+**`gh issue view`/`gh pr edit` fail** on this repo (projectCards) –
+`gh issue close`/`create`/`comment` and `gh api` work (unused this
+session – no `gh` write calls were needed since \#120 stays open with no
+comment posted; next session should `gh issue comment 120` with a
+summary before closing, or when doing F12/Process). (4) **Owner standing
+directive (S314):** monitor the `warning` column on every test run –
+checked this session (`testthat.R` **3112 PASS / 0 FAIL / 0 WARN** in
+the `--as-cran` run), still standing. (5) The **MacCluer et al. (1986)**
+citation form used in this session (“MacCluer JW, et al. 1986. Pedigree
+analysis by computer simulation. Zoo Biology 5:147-160.”) follows the
+audit’s own “(or the owner’s preferred exact form)” hedge – co-author
+names (VandeBerg/Read/Ryder, if that’s the correct 1986 paper) were NOT
+fabricated; if the owner has the full author list, a follow-up could
+complete it in the 3 files that now carry it (`R/calcGU.R`, `R/calcA.R`,
+`population_genetics_terms.html`, `_genome_uniqueness_algorithm.Rmd` – 4
+files, not 3).
+
 ### What Session 315 Did
 
 **Deliverable:** **Issue \#120 – citation-coverage audit.**

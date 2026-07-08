@@ -40,6 +40,11 @@ silently to 0; raise the number of iterations. See
 [`calcFGSE`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFGSE.md)
 for the sampling standard error of `FG`.
 
+## References
+
+Lacy RC. 1989. Analysis of founder representation in pedigrees: founder
+equivalents and founder genome equivalents. Zoo Biol 8:111-123.
+
 ## See also
 
 Other genetic value analysis:

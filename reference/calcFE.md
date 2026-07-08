@@ -25,6 +25,11 @@ of founder mean contributions to the current descendants.
 The pedigree must have no partial parentage (every animal has both
 parents known or both unknown); `calcFE` stops with an error otherwise.
 
+## References
+
+Lacy RC. 1989. Analysis of founder representation in pedigrees: founder
+equivalents and founder genome equivalents. Zoo Biol 8:111-123.
+
 ## See also
 
 Other genetic value analysis:

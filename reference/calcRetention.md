@@ -28,6 +28,11 @@ calcRetention(ped, alleles)
 A vector of the mean number of founder alleles retained in the gene
 dropping simulation.
 
+## References
+
+Lacy RC. 1989. Analysis of founder representation in pedigrees: founder
+equivalents and founder genome equivalents. Zoo Biol 8:111-123.
+
 ## See also
 
 Other genetic value analysis:

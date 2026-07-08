@@ -122,6 +122,14 @@ very time consuming, this algorithm produces a random sample of the
 possible MISs, and selects from these. The size of the random sample is
 determined by the specified number of iterations.
 
+## References
+
+Vinson, A. and Raboin, M.J. (2015) "A Practical Approach for Designing
+Breeding Groups to Maximize Genetic Diversity in a Large Colony of
+Captive Rhesus Macaques (*Macaca mulatta*)" *Journal of the American
+Association for Laboratory Animal Science*, 2015 Nov, Vol.54(6),
+pp.700-707.
+
 ## Examples
 
 ``` r

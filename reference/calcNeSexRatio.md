@@ -49,6 +49,11 @@ population (constant size, discrete generations, random union of gametes
 within each sex); a managed colony departs from those assumptions, so
 read the result as a sex-ratio index rather than a literal head count.
 
+## References
+
+Crow, J. F. and Kimura, M. (1970) *An Introduction to Population
+Genetics Theory*. Harper and Row, New York.
+
 ## See also
 
 [`calcGeneDiversity`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGeneDiversity.md)

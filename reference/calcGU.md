@@ -105,6 +105,9 @@ for management of genetic variation in pedigreed populations, p 77-111.
 In: Ballou JD, Gilpin M, Foose TJ, editors. Population management for
 survival and recovery. New York (NY): Columbia University Press.
 
+MacCluer JW, et al. 1986. Pedigree analysis by computer simulation. Zoo
+Biology 5:147-160.
+
 ## See also
 
 Other genetic value analysis:

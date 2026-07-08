@@ -39,6 +39,13 @@ when `FG` is `NA` (the zero-retention degeneracy
 [`calcFG()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFG.md)
 reports), `GD` is `NA`.
 
+## References
+
+Gene diversity is derived here from the founder genome equivalents
+([`calcFG`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFG.md))
+of Lacy RC. 1989. Analysis of founder representation in pedigrees:
+founder equivalents and founder genome equivalents. Zoo Biol 8:111-123.
+
 ## See also
 
 Other genetic value analysis:

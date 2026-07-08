@@ -15,6 +15,59 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-08 — Fix issue \#120 §6 — apply 11/12 citation-coverage audit findings (F1–F11) (Session 316)
+
+- **Deliverable:** REFACTOR-class, doc-only fix of the S315 audit’s §6
+  priority list. TDD RED/GREEN N/A (no implementation code, no testable
+  behavior change — matches the S273/S274/S275/S278 precedent for
+  audit-driven doc fixes). 2 `AskUserQuestion` gates: (1) session scope
+  — owner picked **F1–F11 citation fixes only**, deferring F12 (delete 2
+  orphan vignette files) and the Process recommendation (a standing
+  citation-checklist note); bundled with 3 owner decisions — **F4** cite
+  Vinson & Raboin (2015) for
+  [`rankSubjects()`](https://github.com/rmsharp/nprcgenekeepr/reference/rankSubjects.md)
+  (not document-as-original), **F2** derive Gene Diversity’s citation
+  from Lacy (1989) via FG (not Nei 1973), **F11** standardize on the
+  Lange **1997** edition; (2) mid-session scope-shape check — owner
+  chose to execute directly this session rather than write a separate
+  plan document first. 0 stakeholder corrections.
+- **Fixed:** `calcNeSexRatio.R`, `calcGeneDiversity.R`, `meanKinship.R`,
+  `rankSubjects.R`, `groupAddAssign.R` gained `@references` (F1–F5,
+  previously uncited anywhere); `modBreedingGroups.R`’s truncated Vinson
+  & Raboin citation completed to the full form (F6);
+  `calcFE.R`/`calcFG.R`/`calcFEFG.R`/`calcRetention.R` gained formal
+  `@references` promoting the Lacy (1989) citation out of `@examples`
+  comments (F8); `population_genetics_terms.html` gained citations for
+  Gene Diversity and Sex-Ratio Ne plus two brand-new glossary entries
+  (Genome Uniqueness, Mean Kinship) matching the existing FE/FG/GD/Ne
+  format (F2, F1, F9); `gvAndBgDesc.html` gained a ranking-scheme
+  citation and the Lange 1997 correction (F4, F11); `calcGU.R`/`calcA.R`
+  gained the MacCluer et al. (1986) co-citation (F10);
+  `_breeding_group_algorithm.Rmd` and `_genome_uniqueness_algorithm.Rmd`
+  gained closing citations (F7, F9); `_summary_statistics.Rmd` gained
+  inline citations for Sex-Ratio Ne and GD (F1, F2); `kinship.R`’s
+  self-flagged-stale Mayo Clinic URL was dropped, keeping the durable
+  `kinship2` CRAN pointer (F11).
+- **Verification:** `devtools::document()` (NAMESPACE diff empty) →
+  [`tools::checkRd()`](https://rdrr.io/r/tools/checkRd.html) on all 13
+  regenerated `.Rd` files (0 warnings) →
+  [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+  (1 new word, “JW”, hand-added to `inst/WORDLIST`) → `lintr` on all 13
+  changed `R/` files (0) →
+  [`tools::Rd2txt()`](https://rdrr.io/r/tools/Rd2HTML.html) spot-checks
+  confirming citation prose/italics render correctly → full
+  `R CMD build` (all 3 changed vignettes rebuild clean) →
+  `R CMD check --as-cran` (2 NOTEs = the standing benign pair, 0 WARN/0
+  ERROR; `testthat.R` 3112 PASS/0 FAIL/0 WARN).
+- **\#120 left OPEN** — F12 (delete
+  `_bg_algorithm.Rmd`/`_bg_formation.Rmd` orphans) and the Process
+  recommendation remain; see `SESSION_NOTES.md` “Session 316” for the
+  two ways to finish it out.
+- **Files:** 13 `R/` roxygen edits + 13 regenerated `man/*.Rd` +
+  `inst/WORDLIST` (+1 word) + 2 `inst/extdata/ui_guidance/*.html` + 3
+  `vignettes/manual_components/*.Rmd`. No `R/` logic changed
+  (roxygen-only).
+
 ### 2026-07-08 — Audit issue \#120 — citation coverage across computed quantities (Session 315)
 
 - **Deliverable:** AUDIT_WORKSTREAM report (TDD N/A — no code/docs
