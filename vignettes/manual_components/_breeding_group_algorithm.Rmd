@@ -70,5 +70,10 @@ The algorithm proceeds by the following steps:
     c. Score the groups that were generated  
             i. For our purposes, we calculate the average group size  
     d. If the score of the new groups is higher than groups that were previously generated, save the new groups.  
-2. Return the currently saved groups  
-    a. This should be the best groups encountered in __I__ iterations.  
+2. Return the currently saved groups
+    a. This should be the best groups encountered in __I__ iterations.
+
+Vinson, A. and Raboin, M.J. (2015) "A Practical Approach for Designing
+Breeding Groups to Maximize Genetic Diversity in a Large Colony of Captive
+Rhesus Macaques (*Macaca mulatta*)" *Journal of the American Association for
+Laboratory Animal Science*, 2015 Nov, Vol.54(6), pp.700-707.

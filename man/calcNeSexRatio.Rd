@@ -53,6 +53,10 @@ ped <- data.frame(
 )
 calcNeSexRatio(ped) # 4 * 1 * 2 / (1 + 2) = 2.666667
 }
+\references{
+Crow, J. F. and Kimura, M. (1970) \emph{An Introduction to
+Population Genetics Theory}. Harper and Row, New York.
+}
 \seealso{
 \code{\link{calcGeneDiversity}}
 

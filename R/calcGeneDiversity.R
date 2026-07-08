@@ -20,6 +20,10 @@
 #' or the \code{$FG} element of \code{calcFEFG()}. \code{NA} yields \code{NA}.
 #' @return The gene diversity \code{GD = 1 - 1 / (2 * fg)}: a single number in
 #' \code{[0, 1)}, or \code{NA} when \code{fg} is \code{NA}.
+#' @references Gene diversity is derived here from the founder genome
+#' equivalents (\code{\link{calcFG}}) of Lacy RC. 1989. Analysis of founder
+#' representation in pedigrees: founder equivalents and founder genome
+#' equivalents. Zoo Biol 8:111-123.
 #' @family genetic value analysis
 #' @export
 #' @examples

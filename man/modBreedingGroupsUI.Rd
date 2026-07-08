@@ -16,7 +16,11 @@ A \code{div} containing breeding group formation UI.
 Breeding Groups Module - UI Function
 }
 \references{
-Vinson, A. and Raboin, M.J. (2015)
+Vinson, A. and Raboin, M.J. (2015) "A Practical Approach for Designing
+Breeding Groups to Maximize Genetic Diversity in a Large Colony of
+Captive Rhesus Macaques (\emph{Macaca mulatta})" \emph{Journal of the
+American Association for Laboratory Animal Science}, 2015 Nov, Vol.54(6),
+pp.700-707.
 }
 \seealso{
 \code{\link{modBreedingGroupsServer}}

@@ -34,15 +34,10 @@
 #' @author Terry M. Therneau, Mayo Clinic (mayo.edu), original version
 #'
 #'
-#' @references S-Plus/R Function Page
-# nolint start: line_length_linter
-#' \emph{www.mayo.edu/research/departments-divisions/department-health-sciences-research/division-biomedical-statistics-informatics/software/}
-# nolint end: line_length_linter
-#'  s-plus-r-functions (downloaded 2014-08-26).
-#'  This page address is now (2019-10-03) stale.
-#'
-#' All of the code on the S-Plus page was stated to be released under the
-#' GNU General Public License (version 2 or later).
+#' All of the code on the original S-Plus kinship function (originally
+#' hosted on Terry Therneau's Mayo Clinic software page, offline since at
+#' least 2019) was stated to be released under the GNU General Public
+#' License (version 2 or later).
 #'
 #' The R version became the kinship2 package available on CRAN:
 #' @references \url{https://cran.r-project.org/package=kinship2}

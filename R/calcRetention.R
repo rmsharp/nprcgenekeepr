@@ -14,6 +14,9 @@
 #' @return A vector of the mean number of founder alleles retained in the
 #' gene dropping simulation.
 #'
+#' @references Lacy RC. 1989. Analysis of founder representation in
+#' pedigrees: founder equivalents and founder genome equivalents. Zoo Biol
+#' 8:111-123.
 #' @family genetic value analysis
 #' @export
 #' @examples

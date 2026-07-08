@@ -33,6 +33,8 @@
 #' \code{sex}; \code{exit} is used to identify living animals when present.
 #' @return The sex-ratio effective size, a single non-negative number; \code{0}
 #' when either breeding sex is absent among the living breeders.
+#' @references Crow, J. F. and Kimura, M. (1970) \emph{An Introduction to
+#' Population Genetics Theory}. Harper and Row, New York.
 #' @family genetic value analysis
 #' @seealso \code{\link{calcGeneDiversity}}
 #' @export

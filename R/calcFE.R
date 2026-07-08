@@ -13,6 +13,9 @@
 #' @return The founder equivalents \code{FE = 1 / sum(p ^ 2)}, where \code{p}
 #' is the vector of founder mean contributions to the current descendants.
 #'
+#' @references Lacy RC. 1989. Analysis of founder representation in
+#' pedigrees: founder equivalents and founder genome equivalents. Zoo Biol
+#' 8:111-123.
 #' @family genetic value analysis
 #' @export
 #' @examples

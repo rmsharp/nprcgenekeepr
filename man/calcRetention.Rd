@@ -30,6 +30,11 @@ ped <- lacy1989Ped
 alleles <- lacy1989PedAlleles
 retention <- calcRetention(ped, alleles)
 }
+\references{
+Lacy RC. 1989. Analysis of founder representation in
+pedigrees: founder equivalents and founder genome equivalents. Zoo Biol
+8:111-123.
+}
 \seealso{
 Other genetic value analysis:
 \code{\link[=calcA]{calcA()}},

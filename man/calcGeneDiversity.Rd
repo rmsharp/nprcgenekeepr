@@ -33,6 +33,12 @@ propagates: when \code{FG} is \code{NA} (the zero-retention degeneracy
 calcGeneDiversity(20) # 0.975
 calcGeneDiversity(52.75) # gene diversity at the qcPed FG
 }
+\references{
+Gene diversity is derived here from the founder genome
+equivalents (\code{\link{calcFG}}) of Lacy RC. 1989. Analysis of founder
+representation in pedigrees: founder equivalents and founder genome
+equivalents. Zoo Biol 8:111-123.
+}
 \seealso{
 Other genetic value analysis:
 \code{\link[=calcA]{calcA()}},

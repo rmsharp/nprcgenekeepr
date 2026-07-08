@@ -72,6 +72,8 @@
 #' p 77-111. In: Ballou JD, Gilpin M, Foose TJ, editors.
 #' Population management for survival and recovery. New York (NY):
 #' Columbia University Press.
+#' @references MacCluer JW, et al. 1986. Pedigree analysis by computer
+#' simulation. Zoo Biology 5:147-160.
 #'
 #'
 #' @family genetic value analysis

@@ -59,12 +59,17 @@
     <p style="padding-left: 50px; padding-bottom: 15px">
     GD = 1 &minus; 1 / (2 &times; f<sub>g</sub>)
   </p>
-    <p style="padding-left: 10px; padding-bottom: 25px">
+    <p style="padding-left: 10px; padding-bottom: 15px">
     Where f<sub>g</sub> is the founder genome equivalents above. GD is a
   proportion, not a count of individuals: 0 means none of the founding
   diversity is retained, and it approaches (but never reaches) 1 as
   f<sub>g</sub> grows. It is computed over the same analysis set as the
   founder statistics above.
+  </p>
+    <p style="padding-left: 10px; padding-bottom: 25px">
+    Gene diversity is derived here from the founder genome equivalents above,
+  following Lacy RC. 1989. Analysis of founder representation in pedigrees:
+  founder equivalents and founder genome equivalents. Zoo Biol 8:111-123.
   </p>
     </em>
 
@@ -80,7 +85,7 @@
     N<sub>e</sub> = 4 &times; N<sub>m</sub> &times; N<sub>f</sub> /
   (N<sub>m</sub> + N<sub>f</sub>)
   </p>
-    <p style="padding-left: 10px; padding-bottom: 25px">
+    <p style="padding-left: 10px; padding-bottom: 15px">
     Where N<sub>m</sub> and N<sub>f</sub> are the numbers of current living
   breeders known to be male and female. It equals the census count when the
   sexes are balanced and falls toward four times the rarer sex as the ratio
@@ -88,6 +93,10 @@
   over the current living breeders -- the living animals that appear as a sire
   or dam -- which is a different (usually smaller) population than the analysis
   set summarized by the founder statistics above.
+  </p>
+    <p style="padding-left: 10px; padding-bottom: 25px">
+    Crow JF, Kimura M. 1970. An Introduction to Population Genetics Theory.
+  Harper and Row, New York.
   </p>
     </em>
 
@@ -126,4 +135,53 @@
   </p>
     </em>
 
+    <em>
+    <p style="padding-left: 10px">
+    <b>Genome Uniqueness (GU):</b>
+    <br>
+    Genome uniqueness estimates, for each animal, the proportion of gene-drop
+  simulations in which it carries a copy of a rare founder allele (present in
+  at most a chosen threshold number of other animals, default 1) -- animals
+  with high genome uniqueness are more likely to carry genetic material that
+  would otherwise be lost from the colony.
+  </p>
+    <p style="padding-left: 50px; padding-bottom: 15px">
+    GU<sub>i</sub> = (rare<sub>i</sub> / (2 &times; iterations)) &times; 100
+  </p>
+    <p style="padding-left: 10px; padding-bottom: 15px">
+    Where rare<sub>i</sub> is the number of simulated allele copies for
+  animal i that are rare, summed across all gene-drop iterations, and
+  iterations is the number of gene-drop simulations run. Because it is a
+  Monte Carlo estimate, GU is reported with a sampling standard error (the
+  guSE column) that shrinks roughly in proportion to one over the square
+  root of the number of iterations.
+  </p>
+    <p style="padding-left: 10px; padding-bottom: 25px">
+    Genome uniqueness is calculated using a gene-drop simulation according to
+  MacCluer JW, et al. (1986) and Ballou JD, Lacy RC. (1995).
+  </p>
+    </em>
+
+    <em>
+    <p style="padding-left: 10px">
+    <b>Mean Kinship (MK):</b>
+    <br>
+    Mean kinship summarizes how related an animal is to the rest of the
+  living colony -- animals with low mean kinship carry genetic material that
+  is comparatively underrepresented, making them of higher value for
+  breeding.
+  </p>
+    <p style="padding-left: 50px; padding-bottom: 15px">
+    MK<sub>i</sub> = &Sigma;f<sub>ij</sub> / N
+  </p>
+    <p style="padding-left: 10px; padding-bottom: 25px">
+    Where f<sub>ij</sub> is the pairwise kinship coefficient between animal i
+  and every animal j (including i itself), and N is the number of animals in
+  the kinship matrix. Ballou JD, Lacy RC.  1995. Identifying genetically
+  important individuals for management of genetic variation in pedigreed
+  populations, p 77-111. In: Ballou JD, Gilpin M, Foose TJ, editors.
+  Population management for survival and recovery. New York (NY): Columbia
+  University Press.
+  </p>
+    </em>
 

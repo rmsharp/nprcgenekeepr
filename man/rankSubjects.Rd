@@ -31,3 +31,10 @@ rpt[["lowMk"]][1, "rank"]
 rpt[["lowVal"]][1, "value"]
 rpt[["lowVal"]][1, "rank"]
 }
+\references{
+Vinson, A. and Raboin, M.J. (2015) "A Practical Approach for
+Designing Breeding Groups to Maximize Genetic Diversity in a Large Colony
+of Captive Rhesus Macaques (\emph{Macaca mulatta})" \emph{Journal of the
+American Association for Laboratory Animal Science}, 2015 Nov, Vol.54(6),
+pp.700-707.
+}
