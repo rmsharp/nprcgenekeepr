@@ -15,6 +15,58 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-08 — Implement issue \#118 Slice 4 — publish / user documentation; **closes \#118** (Session 313)
+
+- **Deliverable:** Slice 4 (the final slice) of the \#118 plan
+  (`docs/planning/issue118-effective-population-size-plan.md` §8) under
+  strict TDD (PRE-RED → RED → GREEN → concluded no-refactor). 4
+  `AskUserQuestion` gates (surface scope, PRE-RED→RED, RED→GREEN,
+  GREEN→REFACTOR); 0 stakeholder corrections. Plain-language user
+  documentation for the three effective-population-size metrics (gene
+  diversity, sex-ratio Ne, variance Ne) *where they display*. **This
+  slice closes \#118** (E1–E3 scope; E4 rate-of-coancestry remains
+  deferred to a future effort, plan §11).
+- **RED (strict TDD, docs-as-tests):** new
+  `tests/testthat/test_effectivePopulationSizeDocs.R` — a static
+  source-scanning guard mirroring `test_kinshipOverrideDocs.R` (the S285
+  precedent):
+  [`system.file()`](https://rdrr.io/r/base/system.file.html) +
+  [`readLines()`](https://rdrr.io/r/base/readLines.html) +
+  [`grepl()`](https://rdrr.io/r/base/grep.html) asserting each metric is
+  defined/explained in the surface where it renders. RED = 19
+  phrase-absent failures with the file-found checks passing
+  (structurally sound).
+- **GREEN (documentation, house style):**
+  `inst/extdata/ui_guidance/population_genetics_terms.html` — three new
+  definition blocks (mirroring the Founder Equivalents / Lacy blocks):
+  Gene Diversity (`GD = 1 − 1/(2·FG)`, expected heterozygosity
+  retained), Sex-Ratio effective size (`4·Nm·Nf/(Nm+Nf)`, over current
+  living breeders, balanced-vs-harem, 0 when a sex is absent), Variance
+  effective size (the general Crow & Kimura 1970 form, over living
+  breeders of all sexes, N/A when fewer than two), a shared
+  Wright-Fisher idealization caveat, and a plain-language
+  rate-of-coancestry forward-pointer. `summary_stats.html` — a note on
+  the GD column and the “Effective Population Size” block over *current
+  living breeders* vs the analysis set. `genetic_value.html` — a
+  cross-reference to the definitions panel.
+  `vignettes/manual_components/_summary_statistics.Rmd` — the three
+  metrics listed with their assumptions (rendered via `a3manual.Rmd`).
+- **NEWS (source-of-truth fix):** added the user-facing bullet to
+  `NEWS.Rmd` (the human-authored, build-ignored source) and rendered
+  `NEWS.md` from it. A trial render surfaced a pre-existing divergence —
+  S307 had hand-added the `minSireAge`/`minDamAge` (#119) bullet to
+  `NEWS.md` only — so backfilled \#119 into `NEWS.Rmd` before rendering,
+  leaving `NEWS.md` a faithful render with nothing dropped. (Owner
+  directive: edit `NEWS.Rmd`, not `NEWS.md`.)
+- **Verification:** new guard **23 pass / 0 fail**; full suite **3735
+  pass / 0 fail / 0 error / 167 skip** (0 true offenders excl. app/e2e
+  noise); spelling clean (no WORDLIST change needed — “coancestry” lives
+  only in the non-scanned HTML); `devtools::check()` **0/0/0** (builds
+  the vignettes). Phase 3E: rendered both module UIs and confirmed the
+  guidance HTML is embedded at runtime
+  (`includeHTML(system.file(...))`), so the running app serves the new
+  text.
+
 ### 2026-07-08 — Implement issue \#118 Slice 3 — E3 variance effective size (`calcNeVariance`) (Session 312)
 
 - **Deliverable:** Slice 3 of the \#118 plan

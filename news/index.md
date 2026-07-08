@@ -3,6 +3,22 @@
 ## nprcgenekeepr (development version)
 
 - Changes
+  - The Genetic Value Analysis now reports three additional
+    population-genetic summaries: **gene diversity**
+    (`GD = 1 - 1 / (2 * FG)`, the expected heterozygosity retained from
+    the founding gene pool) beside the founder genome equivalents, and –
+    over the current living breeders – a demographic **sex-ratio
+    effective population size** (`4 * Nm * Nf / (Nm + Nf)`) and a
+    **variance effective population size** (the general Crow &
+    Kimura (1970) form). All three appear on the Summary Statistics and
+    Genetic Value tabs and are defined, with their idealizing
+    assumptions, in the in-app Population Genetics Terms panel. Three
+    exported helpers compute them:
+    [`calcGeneDiversity()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGeneDiversity.md),
+    [`calcNeSexRatio()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeSexRatio.md),
+    and
+    [`calcNeVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeVariance.md).
+    ([\#118](https://github.com/rmsharp/nprcgenekeepr/issues/118))
   - [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md),
     [`checkParentAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkParentAge.md),
     [`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md),

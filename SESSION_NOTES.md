@@ -7,6 +7,152 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 313 Did
+
+**Deliverable:** **Slice 4 (publish / user documentation) of the \#118
+effective-population-size plan**
+(`docs/planning/issue118-effective-population-size-plan.md` §8, Slice 4)
+– plain-language documentation for each of the three metrics (gene
+diversity / GD, demographic sex-ratio Ne, variance Ne) *where they
+display*, each with its idealizing-assumptions one-liner (the \#82 D6
+precedent). **This slice CLOSES \#118** (E1-E3 scope; E4
+rate-of-coancestry stays deferred per plan §11). Strict TDD (S285
+precedent: a static source-scanning `testthat` guard as the RED
+artifact + the docs render as the build-equivalent). **Started /
+Completed:** 2026-07-08 / 2026-07-08 **Status:** **DONE.** 4
+`AskUserQuestion` gates (surface scope = “full reconciliation”;
+PRE-RED-\>RED; RED-\>GREEN; GREEN-\>REFACTOR = concluded no-refactor);
+**0 stakeholder corrections.** Commit `docs: #118 S313` (hash in
+`git log`), pushed to origin/master; **\#118 closed.** Mid-session the
+owner directed “edit NEWS.Rmd, not NEWS.md” – handled (see NEWS note
+below); saved as memory `edit-news-rmd-not-news-md`.
+
+**Session 312 Handoff Evaluation (by Session 313): Score 9/10.** S312’s
+SUGGESTED NEXT was turnkey and every claim held up firsthand. **What
+helped most:** (1) it named the successor precisely (“Slice 4 =
+publish/docs, CLOSES \#118”) and PRE-LISTED the exact parallel doc
+surfaces (`genetic_value.html`, `population_genetics_terms.html`,
+`summary_stats.html`, `manual_components/_summary_statistics.Rmd`, the
+GVA vignette) – I confirmed each is a live surface and documented all of
+them. (2) The single load-bearing warning was exactly right: **“do NOT
+repeat the plan’s Section-4 ‘E3\<\<E2’ narrative – it describes the
+REJECTED bare form”**, with the honest framing to use instead (“Variance
+Ne reflects family-size evenness and can exceed the census”). I wrote
+the docs to that framing and never introduced the E3\<\<E2 story. (3)
+The “Slice 4 is docs-only but still TDD-able: S285’s static
+source-scanning guard + render as build-equivalent” gotcha pointed me
+straight at `test_kinshipOverrideDocs.R` as the RED template. (4)
+`NOT_CRAN=true`, the `.lintr` tests-excluded note, and the `gh`
+projectCards workaround were all accurate and used. **What was missing
+(the -1):** S312 did not flag the `NEWS.md`-vs-`NEWS.Rmd` relationship
+(that `NEWS.Rmd` is the build-ignored source and that S307 had left a
+\#119 entry only in `NEWS.md`); that surfaced during my work and the
+owner then directed the convention. Not really S312’s defect – the
+divergence was S307’s – but a one-line “NEWS source is NEWS.Rmd; render
+it” note would have pre-empted it. **What was wrong:** nothing. **ROI:**
+very high.
+
+**Self-assessment (Session 313): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ghost-check clean, S312 = HEAD `e3983a12`;
+wrote the 1B stub before technical work; reported and waited).
+**Strengths:** (1) **evidence-based inventory before RED** – grepped
+every candidate surface and proved NONE of the three metrics were
+documented yet, verified each `includeHTML(system.file(...))` loader and
+the exact UI labels (“Gene Diversity (GD)”, “Sex-Ratio Ne”, “Variance
+Ne”, “current living breeders”) so the docs match what renders; (2)
+**textbook RED** – 19 phrase-absent failures with the `nzchar(path)`
+file-found checks passing (structurally sound, right reason), 0 errors,
+adjacent doc-guards confirmed green first; (3) **handled the owner’s
+mid-session NEWS directive well** – did NOT blindly re-render (which
+would have silently dropped S307’s \#119 bullet); instead trial-rendered
+to scratch, `diff`ed, found the divergence, backfilled \#119 into
+`NEWS.Rmd`, then rendered – fixing the divergence AND honoring “edit the
+source” (\[\[observation-vs-decision\]\]); (4) carried S312’s warning
+into the prose (ratified Crow-Kimura framing, not E3\<\<E2); (5)
+Phase-3E rendered the REAL module UIs and confirmed the guidance text is
+embedded at runtime, not just that files exist; (6) full suite 3735/0/0,
+`check()` 0/0/0, spelling clean (verified WORDLIST needs nothing rather
+than pre-adding words); (7) ONE slice – closed \#118 and did NOT start
+\#120/#103 (FM \#2/#18). **Weaknesses (the -1):** (a) my first
+`summary_stats.html` Edit had a spurious `<br>` in the anchor and failed
+once (re-read, corrected); (b) I initially hand-patched `NEWS.md`
+directly before establishing the render-from-source flow – ended in the
+right place, but the interim hand-edit is exactly what the owner’s
+directive discourages.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 291** – (a) a
+docs slice’s RED artifact is a static source-scanning `testthat` guard
+(S285); (b) its build-equivalent is `check()` building the vignette PLUS
+a Phase-3E probe that renders the module UI (`includeHTML` embeds the
+guidance); (c) `NEWS.Rmd` is the build-ignored source, `NEWS.md` the
+shipped render – diff before regenerating and backfill what the source
+is missing; (d) carry the predecessor’s formula-narrative warning into
+user prose; (e) verify WORDLIST empirically. **New memory
+`edit-news-rmd-not-news-md`** (owner-directed). Carried as applied:
+\[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\],
+\[\[keep-dev-process-refs-out-of-user-docs\]\],
+\[\[avoid-reconcile-tools-on-curated-files\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[push-close-out-docs-to-origin\]\],
+\[\[edit-news-rmd-not-news-md\]\].
+
+**=\> SUGGESTED NEXT.** **\#118 is CLOSED** – the
+effective-population-size feature (E1 gene diversity + E2 sex-ratio Ne +
+E3 variance Ne) is complete end-to-end: computed, displayed on both
+tabs, and documented. **E4 (rate-of-coancestry Ne, `Ne = 1/(2·dCbar)`)
+remains deferred** and would be its OWN planning+implementation effort
+(plan §11 has the future-work record; needs generation length, which the
+owner noted is hard to define in a controlled colony). **Adjacent open
+work (owner’s pick):** issue **\#120** (the citations audit S312 filed –
+“are there reference citations for each calculation?” – an
+AUDIT_WORKSTREAM session; NOTE: this Slice-4 work already added the Crow
+& Kimura 1970 and kept the Lacy 1989 citations in
+`population_genetics_terms.html`, so \#120 can start there); \#116 Flags
+(BLOCKED); \#103 roxygen harmonization; \#37/#36/#28/#12/#11/#10/#5; the
+CRAN thread (package ARCHIVED 2025-07-29, owner-run, HARD STOP).
+
+**Key files (this session).** **New:**
+`tests/testthat/test_effectivePopulationSizeDocs.R` (the RED guard – 5
+`test_that` blocks over the 3 HTML panels + vignette child + NEWS.Rmd).
+**Changed (docs):**
+`inst/extdata/ui_guidance/population_genetics_terms.html` (three new
+`<em>` definition blocks after the Lacy block: GD, Sex-Ratio Ne,
+Variance Ne + shared Wright-Fisher caveat + coancestry forward-pointer,
+~line 50+), `inst/extdata/ui_guidance/summary_stats.html` (GD +
+Effective-Population-Size / living-breeders note after the fe/fg note),
+`inst/extdata/ui_guidance/genetic_value.html` (cross-ref to the
+definitions panel after the FG paragraph),
+`vignettes/manual_components/_summary_statistics.Rmd` (three metrics +
+assumptions in “Statistical Summaries”). **Changed (NEWS):** `NEWS.Rmd`
+(new \#118 bullet at top of dev-version Changes + backfilled the S307
+\#119 `minSireAge` bullet that was missing from the source), `NEWS.md`
+(re-rendered from `NEWS.Rmd` via
+[`rmarkdown::render`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)).
+**Docs (close-out):** `CHANGELOG.md` (\[Unreleased\] S313),
+`PROJECT_LEARNINGS.md` (291), this handoff. **Not committed:**
+pre-existing `.DS_Store` (modified) + `PED_GV_AUDIT_2026-05-30.html`
+(untracked), left untouched as S308-S312 did.
+
+**Gotchas for next session.** (1) **`NEWS.Rmd` is the source of truth,
+NOT `NEWS.md`** (\[\[edit-news-rmd-not-news-md\]\]): edit `NEWS.Rmd`,
+then
+`Rscript -e 'rmarkdown::render("NEWS.Rmd", output_file="NEWS.md", quiet=TRUE)'`;
+`NEWS.Rmd` is build-ignored (`.Rbuildignore`). Before rendering, confirm
+`NEWS.Rmd` contains every entry currently in `NEWS.md` (diff the dev
+section) so the render doesn’t drop a hand-added bullet. (2) **The
+in-app guidance panels are static HTML** loaded via
+`includeHTML(system.file("extdata","ui_guidance",...))` in the module
+UIs (`modSummaryStats.R:44` top guide, `:224` population-genetics-terms
+panel; `modGeneticValue.R:99`); to smoke-test a help edit, render the UI
+(`as.character(modSummaryStatsUI("x"))`) and grep for the text –
+`spell_check_package` does NOT scan these HTML files. (3) **Run tests
+with `NOT_CRAN=true`** (module tests are `skip_on_cran`). (4) **`.lintr`
+excludes `tests/`** so the new guard test has no line-length constraint;
+only `R/*.R` needs \<=80 cols. (5) **`gh issue view`/`gh pr edit` fail
+on this repo** (projectCards deprecation) –
+`gh issue close`/`create`/`comment` and `gh api` work.
+
 ### What Session 312 Did
 
 **Deliverable:** **Slice 3 (E3 variance effective population size) of
