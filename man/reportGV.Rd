@@ -88,7 +88,11 @@ see \code{\link{calcGeneDiversity}}), \code{neSexRatio} (the demographic
 sex-ratio effective size, \code{4 * nMale * nFemale / (nMale + nFemale)},
 over the current living breeders -- a different population than \code{fg} and
 \code{neGD}; \code{0} when a breeding sex is absent; see
-\code{\link{calcNeSexRatio}}), \code{maleFounders}
+\code{\link{calcNeSexRatio}}), \code{neVariance} (the variance effective
+size, the mean-adjusted Crow-Kimura form
+\code{(N * kbar - 1) / (kbar - 1 + Vk / kbar)} over the same current living
+breeders; \code{NA} when fewer than two living breeders; see
+\code{\link{calcNeVariance}}), \code{maleFounders}
 and
 \code{femaleFounders} (dataframes of the known male and female founder
 records), \code{nMaleFounders} and \code{nFemaleFounders} (the counts of

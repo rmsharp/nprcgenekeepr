@@ -670,16 +670,26 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
       # number, and the two populations must not be conflated.
       neTbl <- if (!is.null(fs) && !is.null(fs$neSexRatio) &&
                      is.finite(fs$neSexRatio)) {
+        # Issue #118 Slice 3 (E3): the variance effective size joins the block
+        # as a second column beside Sex-Ratio Ne, over the same living-breeder
+        # population; N/A when absent or fewer than 2 living breeders.
+        neVarCell <- if (!is.null(fs$neVariance) && is.finite(fs$neVariance)) {
+          sprintf("%.2f", fs$neVariance)
+        } else {
+          "N/A"
+        }
         tags$div(
           h4("Effective Population Size"),
           tags$p(tags$em("Population: current living breeders")),
           tags$table(
             class = "display",
             tags$thead(tags$tr(
-              tags$th("Sex-Ratio Ne")
+              tags$th("Sex-Ratio Ne"),
+              tags$th("Variance Ne")
             )),
             tags$tbody(tags$tr(
-              tags$td(sprintf("%.2f", fs$neSexRatio))
+              tags$td(sprintf("%.2f", fs$neSexRatio)),
+              tags$td(neVarCell)
             ))
           )
         )

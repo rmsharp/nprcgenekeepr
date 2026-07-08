@@ -6,6 +6,141 @@
 
 ## ACTIVE TASK
 
+### What Session 312 Did
+**Deliverable:** **Slice 3 (E3 variance effective population size) of the #118
+effective-population-size plan** (`docs/planning/issue118-effective-population-size-plan.md`
+§8) -- new exported `calcNeVariance(ped)` over the current living-breeder set
+(reusing S311's `getLivingBreeders(ped)`), the RATIFIED E3 formula variant (D-d),
+threaded additively into the `reportGV` bundle (AFTER `neSexRatio`) and into the
+existing "Effective Population Size" display block (a SECOND column in
+`modSummaryStats`, a SECOND row in the `modGeneticValue` GV-tab summary), under
+strict TDD.
+**Started / Completed:** 2026-07-08 / 2026-07-08
+**Status:** **DONE.** Owner ratified (via `AskUserQuestion`, this session) **D-d** =
+the **general Crow-Kimura form** `Ne_v = (N*kbar - 1)/(kbar - 1 + Vk/kbar)` over the
+living breeders (N = count; kbar, Vk from `findOffspring()` lifetime offspring counts,
+all sexes), and **N<2 → NA**. **A load-bearing plan correction was surfaced and
+ratified:** the plan (Dragon D-7 / D-d) recommended the mean-adjusted form *because
+"the bare `(4N-4)/(Vk+2)` overstates Ne"* -- but computing all candidates on the real
+pedigree (N=156, kbar=5.28, Vk=16.54) showed that rationale is **inverted** (bare =
+33.4 LOWEST; general = 110.9; rescale-to-replacement = 141.7); the plan's "skew drags
+E3 far below E2" headline is an artifact of the dimensionally-inconsistent bare form.
+Presented the three candidates + values + the correction; owner chose the general
+form. Full PRE-RED→RED→GREEN→concluded-no-refactor with **5 `AskUserQuestion` gates**
+(scope D-d + N<2 degeneracy, then PRE-RED→RED + RED→GREEN + GREEN→REFACTOR);
+**0 stakeholder corrections.** Commit `feat: #118 S312` (hash in `git log`). Also
+filed issue **#120** (owner-requested mid-session): an AUDIT_WORKSTREAM task for a
+future session -- "are there reference citations for each calculation in the package?"
+
+**Session 311 Handoff Evaluation (by Session 312): Score 10/10.** S311's SUGGESTED
+NEXT was turnkey and, unusually, its single load-bearing warning was exactly right in
+substance and even flagged the risk direction. **What helped most:** (1) it named the
+successor precisely ("Slice 3 = E3 variance effective size"), pre-listed the reuse
+contract (`getLivingBreeders(ped)` returns ids → `N<-length(ids)`, `Vk` from
+`findOffspring(ids, ped)`), and told me the display target (a SECOND row in the
+existing `neTbl` block, NOT a third block) -- all firsthand-accurate. (2) It flagged
+**D-d (the E3 formula variant) as "the single load-bearing correctness choice"** and
+warned "the bare form overstates Ne when kbar != 2" -- which pointed me straight at
+the decision; when I computed the candidates and found the DIRECTION inverted, S311's
+having elevated D-d to a mandatory gate is precisely what made the correction happen
+at the right moment rather than shipping a wrong number. (3) The gotchas were all live
+and load-bearing: `NOT_CRAN=true` (set from the first RED run → skipped=0), "update
+BOTH `expect_named` copies (2-space + 4-space, NOT byte-identical)" (two separate
+edits, exact), "E3 reuses `getLivingBreeders`", "sex is `{F,M,H,U}`; E3's N counts
+ALL living breeders regardless of sex", "`session$flushReact()` before reading a
+renderUI probe" (used it in Phase 3E -- deterministic first try), and "second row in
+the existing block, not a third". **What was missing:** nothing material. **What was
+wrong:** nothing -- even the "bare form overstates" phrasing, though arithmetically
+backwards, correctly identified D-d as the thing to verify, which is what mattered.
+**ROI:** very high -- the handoff made a subtle genetics decision safe to execute.
+
+**Self-assessment (Session 312): 9/10.** Oriented fully (SAFEGUARDS + SESSION_RUNNER
+read in full; ghost-check clean -- S311 = last commit `326ebf3a`; wrote the 1B stub
+before any technical work; reported and waited). **Strengths:** (1) **caught the
+plan's inverted D-d rationale by computing all three candidate formulas on real data
+in PRE-RED** (Learning 290a) and presented the correction with numbers rather than
+implementing the plan's headline -- the highest-value act of the session; (2) the
+**discriminating RED fixture** (`discPed`, kbar=3≠2 → 1.875 vs the bare form's 1.0)
+genuinely pins the ratified variant, and I hand-verified every RED literal
+(1.875/2.5/NA/26.405868) with the existing helpers before writing it (290b); (3)
+caught during RED-design that qcPed gives `Ne_v (26.41) > census (18)` -- avoided
+baking a false "Ne < N" invariant into the test (290c); (4) textbook RED (1 new file
++ 3 extended, all failing for the right reason, 0 skips under `NOT_CRAN=true`,
+golden-master fe/fg/fgSE/neGD/neSexRatio/counts + #9/#73/#76/#2/#86/#82/#13 all
+green); (5) Phase 3E on REAL qcPed with `flushReact()` (26.41 beside 17.78, first
+try); (6) lint 0, spelling clean (Kimura hand-added sorted), `check` 0/0/0; (7)
+handled the owner's mid-session audit request cleanly -- filed #120 and returned to
+the gate without doing the audit (290d); (8) ONE slice -- did NOT start Slice 4
+(FM #2/#18); 0 stakeholder corrections. **Weaknesses (the -1):** (a) I initially
+wrote "SECOND row" in the 1B stub for the `modSummaryStats` display when it is
+actually a second COLUMN there (a second row only in the `modGeneticValue` summary) --
+corrected in the final handoff, but the stub was imprecise; (b) I spent an extra
+computation loop confirming the rescale-to-replacement (Form C) value to present a
+complete option set -- thorough, but the owner only needed the two principal forms.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 290** -- (a) verify a plan's
+formula-choice RATIONALE by computing all candidates on real data before RED; an
+inverted direction surfaces there; (b) a crafted RED fixture pins a variant only if
+the candidate forms DISAGREE on it (use kbar≠2); (c) a deterministic metric can give
+Ne>census -- don't assert "Ne<N"; (d) a mid-session "record X for later" request = file
+a scoped tracker item now, don't start X; (e) the additive-wiring mechanics carried
+from S311. Carried as applied: [[consult-project-source-of-truth]],
+[[observation-vs-decision]], [[avoid-new-lints-r-package]],
+[[avoid-reconcile-tools-on-curated-files]], [[keep-dev-process-refs-out-of-user-docs]],
+[[check-process-history-before-rerunning-work]], [[push-close-out-docs-to-origin]].
+
+**=> SUGGESTED NEXT.** #118 Slice 3 (E3) is **done**; **Slice 4 (publish / user
+documentation) is the last slice and CLOSES #118** (E1-E3 scope). Per plan §8 Slice 4:
+write plain-language notes for each of the three metrics (GD, Sex-Ratio Ne, Variance
+Ne) **where they display** -- the executor confirms the exact parallel doc surfaces
+(candidates named in the plan: `genetic_value.html`, `population_genetics_terms.html`,
+`summary_stats.html`, `manual_components/_summary_statistics.Rmd`, and the GVA
+vignette), each with its idealizing-assumptions one-liner (the #82 D6 precedent). Also:
+a NEWS bullet, the E4 forward-pointer, and migrate any Slice-4-touched fixtures off
+deprecated `minParentAge` (S307). **Note for Slice 4 (important):** the plan's Section-4
+worked numbers (E2=108.6, E3=33.5, "skew drags E3 ~3x below E2") describe the REJECTED
+bare form -- do NOT repeat that narrative in user docs. Under the ratified general
+Crow-Kimura form E3 ≈ E2 on the example (111 vs 109) and on qcPed E3 (26.41) > E2
+(17.78) > census (18); the honest user-facing framing is "Variance Ne reflects family-
+size evenness and can exceed the census when reproduction is more even than random."
+**Adjacent open work (owner's pick):** issue **#120** (the citations audit I just
+filed -- an AUDIT_WORKSTREAM session); #116 Flags (BLOCKED); #103 roxygen harmonization;
+#37/#36/#28/#12/#11/#10/#5; the CRAN thread (package ARCHIVED 2025-07-29, owner-run,
+HARD STOP).
+
+**Key files (this session).** **New:** `R/calcNeVariance.R` (`@export`),
+`tests/testthat/test_calcNeVariance.R`, `man/calcNeVariance.Rd`. **Changed:**
+`R/reportGV.R` (bundle: `neVariance = calcNeVariance(ped)` after `neSexRatio` ~`:289`;
++ `@return` clause ~`:68`), `R/modGeneticValue.R` (`founderStats` reactive
+`neVariance = fr$neVariance` ~`:496`; `gvSummary` `neVarDisplay` + "Variance Ne (living
+breeders)" row ~`:405-433`), `R/modSummaryStats.R` (`neTbl` block: `neVarCell` + a
+second "Variance Ne" `<th>/<td>` column ~`:671-698`), `NAMESPACE`
+(`export(calcNeVariance)`), `inst/WORDLIST` (`Kimura`, sorted),
+`tests/testthat/test_reportGV.R` (2 `expect_named` + new `neVariance` block),
+`tests/testthat/test_modSummaryStats.R` (E3 column test),
+`tests/testthat/test_modGeneticValue.R` (E3 row test), ~10 `man/*.Rd` (the `@family`
+cross-link cascade -- cross-link-only). **Docs (close-out):** `CHANGELOG.md`
+([Unreleased] S312), `PROJECT_LEARNINGS.md` (290), this handoff. **Not committed:**
+pre-existing `.DS_Store` (modified) + `PED_GV_AUDIT_2026-05-30.html` (untracked), left
+untouched as S308-S311 did.
+
+**Gotchas for next session.** (1) **Run tests with `NOT_CRAN=true`** -- the module test
+files are `skip_on_cran`; a naive `test_file`/`test_dir` under `Rscript` silently skips
+them (assert `skipped==0` on touched files). (2) **The `reportGV` bundle is now:**
+`... fgSE, neGD, neSexRatio, neVariance, maleFounders, ...` -- `neVariance` is element
+#9; any further additive field updates BOTH `expect_named` copies in `test_reportGV.R`
+(2-space + 4-space, NOT byte-identical). (3) **`.lintr` = `indentation_linter NULL` +
+`line_length_linter(80)`; `tests/` is lint-EXCLUDED**, so only R/*.R needs ≤80 cols;
+use explicit doubles (`1.0`, not `1`) for `implicit_integer_linter`. (4) **Slice 4 is
+docs-only but still TDD-able:** S285's precedent is a static source-scanning `testthat`
+guard as the RED artifact + the render as the build-equivalent. (5) **Do NOT repeat the
+plan's Section-4 "E3 << E2" narrative in user docs** -- it describes the rejected bare
+form (see SUGGESTED NEXT). (6) `session$flushReact()` before reading a `renderUI` output
+in an ad-hoc testServer Phase-3E probe. (7) `devtools::document()` cascades `@family`
+cross-links to sibling `.Rd` -- expected; verify cross-link-only. (8) `gh issue view`/
+`gh pr edit` fail on this repo (projectCards deprecation) -- use `gh api` (issue #120
+was created with plain `gh issue create`, which works; only view/edit are affected).
+
 ### What Session 311 Did
 **Deliverable:** **Slice 2 (E2 demographic sex-ratio Ne) of the #118
 effective-population-size plan** (`docs/planning/issue118-effective-population-size-plan.md`

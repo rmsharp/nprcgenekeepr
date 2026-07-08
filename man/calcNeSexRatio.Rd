@@ -65,6 +65,7 @@ Other genetic value analysis:
 \code{\link[=calcGU]{calcGU()}},
 \code{\link[=calcGUSE]{calcGUSE()}},
 \code{\link[=calcGeneDiversity]{calcGeneDiversity()}},
+\code{\link[=calcNeVariance]{calcNeVariance()}},
 \code{\link[=calcRetention]{calcRetention()}}
 }
 \concept{genetic value analysis}

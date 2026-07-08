@@ -6,7 +6,7 @@ gvReport <- reportGV(qcPed, guIter = 100L)
 test_that("reportGV forms correct genetic value report", {
   expect_named(gvReport, c(
     "report", "kinship", "gu", "fe", "fg", "fgSE", "neGD", "neSexRatio",
-    "maleFounders", "femaleFounders",
+    "neVariance", "maleFounders", "femaleFounders",
     "nMaleFounders", "nFemaleFounders", "total"
   ))
   expect_named(gvReport$report,
@@ -31,7 +31,7 @@ test_that(
   {
     expect_named(gvReport, c(
       "report", "kinship", "gu", "fe", "fg", "fgSE", "neGD", "neSexRatio",
-      "maleFounders", "femaleFounders",
+      "neVariance", "maleFounders", "femaleFounders",
       "nMaleFounders", "nFemaleFounders", "total"
     ))
     expect_named(gvReport$report,
@@ -104,6 +104,34 @@ test_that("reportGV carries scalar neSexRatio over living breeders (issue #118 S
   ## Ne_sr is a colony-level scalar -- it must NOT be a per-animal column
   expect_false("neSexRatio" %in% names(gv$report))
   expect_false("neSexRatio" %in% names(gv$gu))
+})
+
+# ---------------------------------------------------------------------------
+# Issue #118 Slice 3 (E3): reportGV carries the variance effective size
+# (Ne_v = (N*kbar - 1)/(kbar - 1 + Vk/kbar), the ratified mean-adjusted
+# Crow-Kimura form) as a colony-level SCALAR neVariance, computed over the
+# CURRENT LIVING BREEDERS -- the same living-breeder population as neSexRatio
+# and a DIFFERENT population than fg / neGD (the analysis set). Like the other
+# Ne scalars it is one number riding beside them, NOT a per-animal column, and
+# it must equal the standalone calcNeVariance(ped) on the same pedigree.
+# ---------------------------------------------------------------------------
+test_that("reportGV carries scalar neVariance over living breeders (issue #118 Slice 3 E3)", {
+  gv <- reportGV(qcPed, guIter = 100L)
+
+  expect_true("neVariance" %in% names(gv))
+  expect_length(gv$neVariance, 1L)
+  expect_true(is.numeric(gv$neVariance))
+
+  ## exactly the standalone E3 computed on the same pedigree (living breeders)
+  expect_equal(gv$neVariance, calcNeVariance(qcPed))
+
+  ## a finite, positive effective size on qcPed
+  expect_true(is.finite(gv$neVariance))
+  expect_gt(gv$neVariance, 0)
+
+  ## Ne_v is a colony-level scalar -- it must NOT be a per-animal column
+  expect_false("neVariance" %in% names(gv$report))
+  expect_false("neVariance" %in% names(gv$gu))
 })
 
 # ---------------------------------------------------------------------------

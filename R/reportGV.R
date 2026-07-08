@@ -69,7 +69,11 @@
 #' sex-ratio effective size, \code{4 * nMale * nFemale / (nMale + nFemale)},
 #' over the current living breeders -- a different population than \code{fg} and
 #' \code{neGD}; \code{0} when a breeding sex is absent; see
-#' \code{\link{calcNeSexRatio}}), \code{maleFounders}
+#' \code{\link{calcNeSexRatio}}), \code{neVariance} (the variance effective
+#' size, the mean-adjusted Crow-Kimura form
+#' \code{(N * kbar - 1) / (kbar - 1 + Vk / kbar)} over the same current living
+#' breeders; \code{NA} when fewer than two living breeders; see
+#' \code{\link{calcNeVariance}}), \code{maleFounders}
 #' and
 #' \code{femaleFounders} (dataframes of the known male and female founder
 #' records), \code{nMaleFounders} and \code{nFemaleFounders} (the counts of
@@ -285,6 +289,11 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
     # -- a different population than fg/neGD (the analysis set). Deterministic
     # (no gene drop); 0 when a breeding sex is absent (see calcNeSexRatio).
     neSexRatio = calcNeSexRatio(ped),
+    # Issue #118 Slice 3 (E3): variance effective size, the mean-adjusted
+    # Crow-Kimura form (N*kbar - 1)/(kbar - 1 + Vk/kbar), over the SAME current
+    # living breeders (all sexes). Deterministic; NA when fewer than 2 living
+    # breeders (see calcNeVariance).
+    neVariance = calcNeVariance(ped),
     maleFounders = males,
     femaleFounders = females,
     nMaleFounders = nrow(males),

@@ -40,6 +40,7 @@ Other genetic value analysis:
 \code{\link[=calcGU]{calcGU()}},
 \code{\link[=calcGUSE]{calcGUSE()}},
 \code{\link[=calcGeneDiversity]{calcGeneDiversity()}},
-\code{\link[=calcNeSexRatio]{calcNeSexRatio()}}
+\code{\link[=calcNeSexRatio]{calcNeSexRatio()}},
+\code{\link[=calcNeVariance]{calcNeVariance()}}
 }
 \concept{genetic value analysis}

@@ -413,3 +413,51 @@ test_that("modSummaryStatsServer shows a separate Effective Population Size bloc
     }
   )
 })
+
+# ---------------------------------------------------------------------------
+# Issue #118 Slice 3 (E3): the same Effective Population Size block gains a
+# SECOND metric -- the variance effective size Ne_v -- as a labeled column
+# beside Sex-Ratio Ne, over the same current-living-breeder population (NOT a
+# third block). It renders when founderStats() carries the scalar neVariance
+# threaded through from reportGV(). Ne_v = 5.00 here.
+# ---------------------------------------------------------------------------
+test_that("modSummaryStatsServer shows a Variance Ne column in the Effective Population Size block (issue #118 Slice 3)", {
+  skip_if_not_installed("shiny")
+
+  test_gv <- data.frame(
+    id = c("A", "B", "C"),
+    meanKinship = c(0.1, 0.2, 0.3),
+    genomeUniqueness = c(0.9, 0.8, 0.7),
+    stringsAsFactors = FALSE
+  )
+  test_ped <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+  fstats <- list(
+    total = 124L, nMaleFounders = 60L, nFemaleFounders = 64L,
+    fe = 77.04, fg = 52.76, fgSE = 0.05, neGD = 0.9905,
+    neSexRatio = 3.6, neVariance = 5.0
+  )
+
+  shiny::testServer(
+    modSummaryStatsServer,
+    args = list(
+      geneticValues = shiny::reactive({ test_gv }),
+      pedigree = shiny::reactive({ test_ped }),
+      kinshipMatrix = NULL,
+      founderStats = shiny::reactive({ fstats })
+    ),
+    {
+      html <- as.character(output$summaryStats)
+      ## the variance-Ne metric appears in the same population-labeled block
+      expect_true(any(grepl("Effective Population Size", html)))
+      expect_true(any(grepl("Variance Ne", html)))
+      ## the variance Ne value rendered to two decimals
+      expect_true(any(grepl("5.00", html)))
+    }
+  )
+})

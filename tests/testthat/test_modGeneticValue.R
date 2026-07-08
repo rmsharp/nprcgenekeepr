@@ -406,6 +406,33 @@ test_that("modGeneticValueServer gvSummary shows a sex-ratio Ne row for living b
   )
 })
 
+# ---------------------------------------------------------------------------
+# Issue #118 Slice 3 (E3): the GV-tab summary carries the variance effective
+# size (Ne_v) as a labeled row naming its population -- the living breeders --
+# for parity with the Summary-Statistics "Effective Population Size" block. It
+# is distinct from FE/FG/GD (analysis set) and from Sex-Ratio Ne.
+# ---------------------------------------------------------------------------
+test_that("modGeneticValueServer gvSummary shows a variance Ne row for living breeders (issue #118 Slice 3)", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeValidTestPed(nFounders = 6, nOffspring = 14)
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped })
+    ),
+    {
+      session$setInputs(nIterations = 100)
+      session$setInputs(runAnalysis = 1)
+
+      html <- as.character(output$gvSummary)
+      expect_true(any(grepl("Variance Ne", html)))
+      expect_true(any(grepl("living breeders", html)))
+    }
+  )
+})
+
 test_that("modGeneticValueServer gvScatterPlot renders after analysis", {
   skip_if_not_installed("shiny")
 

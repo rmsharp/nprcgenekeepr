@@ -408,17 +408,28 @@ modGeneticValueServer <- function(id, pedigree,
         } else {
           "N/A"
         }
+        # Issue #118 Slice 3 (E3): the variance effective size, over the same
+        # current living breeders; N/A for older results or fewer than 2
+        # living breeders (where the variance is undefined).
+        neVarDisplay <- if (!is.null(fullRes$neVariance) &&
+                              is.finite(fullRes$neVariance)) {
+          sprintf("%.2f", fullRes$neVariance)
+        } else {
+          "N/A"
+        }
         founderData <- data.frame(
           Metric = c("Total Founders", "Male Founders", "Female Founders",
                      "Founder Equivalents (FE)", "Founder Genome Equiv. (FG)",
-                     "Gene Diversity (GD)", "Sex-Ratio Ne (living breeders)"),
+                     "Gene Diversity (GD)", "Sex-Ratio Ne (living breeders)",
+                     "Variance Ne (living breeders)"),
           Value = c(as.character(fullRes$total),
                     as.character(fullRes$nMaleFounders),
                     as.character(fullRes$nFemaleFounders),
                     sprintf("%.2f", fullRes$fe),
                     fgDisplay,
                     gdDisplay,
-                    neSrDisplay),
+                    neSrDisplay,
+                    neVarDisplay),
           stringsAsFactors = FALSE
         )
         summaryData <- rbind(summaryData, founderData)
@@ -493,6 +504,7 @@ modGeneticValueServer <- function(id, pedigree,
           fgSE = fr$fgSE, # issue #82 Slice 3: scalar FG sampling SE (or NULL)
           neGD = fr$neGD, # issue #118 Slice 1: gene diversity GD (or NULL)
           neSexRatio = fr$neSexRatio, # issue #118 Slice 2: sex-ratio Ne
+          neVariance = fr$neVariance, # issue #118 Slice 3: variance Ne
           total = fr$total,
           nMaleFounders = fr$nMaleFounders,
           nFemaleFounders = fr$nFemaleFounders
