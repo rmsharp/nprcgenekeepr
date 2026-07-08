@@ -26,8 +26,10 @@ performs several families of checks:
   dates;
 - **duplicate detection** – the same ID must not appear in two
   conflicting records;
-- **minimum parent age** – a parent must be at least `minParentAge`
-  years old (default 2.0) at an offspring’s birth.
+- **minimum parent age** – a parent must be at least its minimum
+  breeding age (`minSireAge` for sires, `minDamAge` for dams) at an
+  offspring’s birth; both default to the species- and sex-specific
+  value.
 
 It runs in one of two modes, controlled by `reportErrors`:
 
@@ -62,13 +64,11 @@ in production mode returns a standardized pedigree ready for analysis.
 ``` r
 
 ped <- qcStudbook(examplePedigree,
-  minParentAge  = 2.0,
+  minSireAge    = 2.0,
+  minDamAge     = 2.0,
   reportChanges = FALSE,
   reportErrors  = FALSE
 )
-#> Warning: The `minParentAge` argument of `qcStudbook()` is deprecated as of nprcgenekeepr
-#> 2.0.0.
-#> ℹ Use minSireAge and minDamAge instead.
 dim(ped)
 #> [1] 3694   12
 names(ped)
@@ -206,9 +206,10 @@ qcStudbook(pedSameMaleIsSireAndDam, reportErrors = TRUE)$sireAndDam
 #> [1] "s1"
 ```
 
-Diagnostic mode also reports parents younger than `minParentAge` at an
-offspring’s birth (in `suspiciousParents`) and any ID containing a
-period (in `invalidIdChars`).
+Diagnostic mode also reports parents younger than their minimum breeding
+age (`minSireAge` for sires, `minDamAge` for dams) at an offspring’s
+birth (in `suspiciousParents`) and any ID containing a period (in
+`invalidIdChars`).
 
 ## Production mode vs diagnostic mode
 
@@ -225,7 +226,7 @@ issue at once.
 | Missing required column | **stops** | `missingColumns` |
 | Invalid date | **stops** | `invalidDateRows` |
 | Sire is also a dam | **stops** | `sireAndDam` |
-| Parent below `minParentAge` | **stops** | `suspiciousParents` |
+| Parent below `minSireAge`/`minDamAge` | **stops** | `suspiciousParents` |
 | Period in an ID | **stops** | `invalidIdChars` |
 
 Production mode silently corrects the safe cases. We can confirm it on
@@ -271,7 +272,8 @@ mode to get the clean pedigree the analyses consume.
 | Argument | Default | Meaning |
 |----|----|----|
 | `sb` | – | the studbook data frame to check |
-| `minParentAge` | `2.0` | minimum age (years) a parent must be at an offspring’s birth; skipped when birth dates are missing |
+| `minSireAge` | `NULL` | minimum age (years) a sire must be at an offspring’s birth; `NULL` uses the species- and sex-specific breeding age; skipped when birth dates are missing |
+| `minDamAge` | `NULL` | minimum age (years) a dam must be at an offspring’s birth; `NULL` uses the species- and sex-specific breeding age; skipped when birth dates are missing |
 | `reportChanges` | `FALSE` | record column-name corrections in `changedCols` |
 | `reportErrors` | `FALSE` | diagnostic mode: scan everything and return a list of findings (or `NULL`) instead of a cleaned pedigree |
 

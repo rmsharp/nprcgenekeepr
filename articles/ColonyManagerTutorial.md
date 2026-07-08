@@ -143,16 +143,20 @@ file.](ColonyManagerTutorial_files/figure-html/example-pedigree-1.png)
 
 ------------------------------------------------------------------------
 
-It is important to make sure the minimum parent age is low enough for
-the animals in your pedigree. For our example pedigree, we are changing
-it from 4 years to 2 years of age since these macaques may reproduce as
-early as two years of age.
+It is important to make sure the minimum breeding age is appropriate for
+the animals in your pedigree. The app provides two fields – **Minimum
+Sire Age** and **Minimum Dam Age** – each left blank by default so that
+the species- and sex-specific breeding age is used automatically. Type a
+number in either field to override that sex’s floor; for macaques, which
+may reproduce as early as two years of age, a low value such as 2 is
+appropriate.
 
-This is shown below in three progressive images with the center image
-demonstrating how the hovertext provides an explanation of how this
-value is used.
+The sequence below illustrates how such an age input works, with the
+center image demonstrating how the hovertext explains the value. (It
+shows the earlier single-field layout; the current app splits the input
+into the separate sire and dam fields described above.)
 
-![Input of minimum parent
+![Input of the minimum breeding
 age.](ColonyManagerTutorial_files/figure-html/example-pedigree-minParentAgeSequence-1.png)
 
 ------------------------------------------------------------------------

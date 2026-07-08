@@ -103,13 +103,11 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">breederPed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">examplePedigree</span>,</span>
-<span>  minParentAge  <span class="op">=</span> <span class="fl">2.0</span>,</span>
+<span>  minSireAge    <span class="op">=</span> <span class="fl">2.0</span>,</span>
+<span>  minDamAge     <span class="op">=</span> <span class="fl">2.0</span>,</span>
 <span>  reportChanges <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  reportErrors  <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: The `minParentAge` argument of `qcStudbook()` is deprecated as of nprcgenekeepr</span></span>
-<span><span class="co">#&gt; 2.0.0.</span></span>
-<span><span class="co">#&gt; ℹ Use minSireAge and minDamAge instead.</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <p><code><a href="../reference/qcStudbook.html">qcStudbook()</a></code> validates and standardizes the studbook (checking parentage, sexes, dates, and minimum parent age). Next we choose the population of interest. Here it is the animals that have <strong>at least one known parent</strong> (so they are not founders) and are <strong>still in the colony</strong> (no exit date). We mark them with <code><a href="../reference/setPopulation.html">setPopulation()</a></code> and trim the pedigree to those animals plus the ancestors needed to compute their kinships.</p>
 <div class="cell">

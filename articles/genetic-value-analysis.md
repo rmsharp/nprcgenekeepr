@@ -61,13 +61,11 @@ rank.
 ``` r
 
 breederPed <- qcStudbook(examplePedigree,
-  minParentAge  = 2.0,
+  minSireAge    = 2.0,
+  minDamAge     = 2.0,
   reportChanges = FALSE,
   reportErrors  = FALSE
 )
-#> Warning: The `minParentAge` argument of `qcStudbook()` is deprecated as of nprcgenekeepr
-#> 2.0.0.
-#> ℹ Use minSireAge and minDamAge instead.
 ```
 
 [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)

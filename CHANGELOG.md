@@ -15,6 +15,72 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-07 — Implement issue \#119 Slice 5 — docs/vignettes/screenshot/WORDLIST/NEWS migration to `minSireAge`/`minDamAge` (Session 307)
+
+- **Deliverable:** Slice 5 (final) of the \#119 plan
+  (`docs/planning/issue119-sex-specific-min-breeding-age-plan.md` §3
+  Slice 5) under strict TDD (PRE-RED → RED → GREEN → concluded
+  no-refactor). Gates: one scope `AskUserQuestion` (guard-test
+  approach + screenshot handling + archived-script disposition) +
+  PRE-RED→RED + RED→GREEN; 0 stakeholder corrections. ONE slice —
+  **\#119 is now complete (Slices 1–5 all delivered).**
+- **RED (new guard test
+  `tests/testthat/test_vignettes_no_deprecated_minParentAge.R`):** scans
+  every `.Rmd`/`.qmd` under `vignettes/` and fails if any code chunk
+  still passes the deprecated `minParentAge=` argument (prose/backtick
+  mentions excluded; `inst/extdata` archived scripts out of scope by
+  design). Failed on 8 sites (RED), passes after migration (GREEN) — a
+  durable regression guard for the deprecation window.
+- **GREEN — migrated 8 vignette code calls** `minParentAge = X` →
+  `minSireAge = X, minDamAge = X` (numeric floor preserved verbatim,
+  incl. the `a2interactive.Rmd` `= 0.0` calls that deliberately use a
+  low floor to flag impossible negative-age parents — mapped to `0.0`,
+  NOT `NULL`): `a2interactive.Rmd` (×5: L148/766/794/807/826 post-edit),
+  `articles/studbook-quality-control.qmd`,
+  `articles/breeding-group-formation.qmd`,
+  `articles/genetic-value-analysis.qmd`.
+- **Prose/tables updated:** `a2interactive.Rmd` arg list (four→five
+  args) + the “3.5 causes an error” footnote **empirically re-verified**
+  — the error is triggered by **dams** (two dams ~3.3 yr in
+  `ExamplePedigree.csv`; all sires older), so the footnote now names
+  `minDamAge` and notes that `minSireAge = 3.5` alone does not error,
+  illustrating the new sex-specific control.
+  `studbook-quality-control.qmd` — the “minimum parent age” bullet, the
+  `suspiciousParents` prose, the “stops” table row, and the
+  Key-arguments table (`minParentAge` row split into
+  `minSireAge`/`minDamAge` rows, default `NULL`).
+  `manual_components/_input.Rmd` — the `modInput` return now exposes
+  `minSireAge`/`minDamAge` (Slice 4 renamed the reactive).
+- **Screenshot (owner: re-caption):** `ColonyManagerTutorial.Rmd` prose
+  rewritten to describe the two new blank fields (blank = species+sex
+  default; type a number to override a sex); the old single-field
+  `input_minParentAgeSequence.png` kept with prose noting it depicts the
+  earlier single-field layout (a faithful two-field screenshot cannot be
+  regenerated headlessly).
+- **WORDLIST / NEWS:** `inst/WORDLIST` — `minDamAge`, `minSireAge`
+  hand-added in sorted position (curated file;
+  [`spelling::update_wordlist`](https://docs.ropensci.org/spelling//reference/wordlist.html)
+  NOT run). `NEWS.md` — user-facing entry describing the sex-specific
+  breeding-age change (issue-ref `#119`; no dev-process terms in the
+  prose).
+- **Archived script (owner: leave):**
+  `inst/extdata/trulyUnknownParents.R` kept as-is (historical working
+  notes, not built by check; the deprecated alias still works).
+  `vignettes/*.R`/`.html` are untracked/ignored purl/knit build
+  artifacts — not edited.
+- **Verify:** full suite **3633 pass / 0 fail / 0 error / 0 true
+  offenders** (+1 vs S306 = the new guard; 7 warnings are the
+  pre-existing `test_gvaConvergence`/`test_modPyramid` baseline); guard
+  RED→GREEN confirmed;
+  [`spelling::spell_check_package`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+  **clean**; `devtools::check(document = TRUE, cran = TRUE)` **0 ERROR /
+  0 WARNING / 0 NOTE** with the a2interactive vignette rebuilt and
+  **zero deprecation warnings in the build log**;
+  `studbook-quality-control.qmd` re-rendered via quarto `--no-execute`
+  (the execute path needs the package installed — env limitation,
+  unrelated to the edits) confirming the split table + prose render as
+  valid HTML.
+
 ### 2026-07-07 — Implement issue \#119 Slice 4 — Shiny two-field sire/dam age UX + `modPotentialParents`/`appServer` wiring (Session 306)
 
 - **Deliverable:** Slice 4 of the \#119 plan

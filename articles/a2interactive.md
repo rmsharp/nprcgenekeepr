@@ -104,24 +104,20 @@ returning the empty error list with **getEmptyErrorLst()**. We are not
 showing the output of the function call now because later in this
 tutorial we will explore errors in more depth.
 
-**qcStudbook** can take four arguments *sb*, *minParentAge* (in years),
-*reportChanges*, and *reportErrors*. However, all but *sb* have default
-values and only the *sb* argument is required.
+**qcStudbook** can take five arguments *sb*, *minSireAge* and
+*minDamAge* (in years), *reportChanges*, and *reportErrors*. However,
+all but *sb* have default values and only the *sb* argument is required.
 
 It is prudent to ensure that parents are at least of breeding age, which
-is species specific. I have used a *minParentAge* of 2 years.[^1]
+is species and sex specific. Leaving *minSireAge* and *minDamAge* blank
+(their default, `NULL`) looks up the species-specific breeding age for
+each sex; a number overrides that sex’s floor. I have set both to 2
+years here.[^1]
 
 ``` r
 
-breederPed <- qcStudbook(breederPedCsv, minParentAge = 2L)
+breederPed <- qcStudbook(breederPedCsv, minSireAge = 2L, minDamAge = 2L)
 ```
-
-    ## Warning: The `minParentAge` argument of `qcStudbook()` is deprecated as of nprcgenekeepr
-    ## 2.0.0.
-    ## ℹ Use minSireAge and minDamAge instead.
-    ## This warning is displayed once per session.
-    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-    ## generated.
 
 If **qcStudbook** reports an error, change the call by adding the
 **reportErrors** argument set to **TRUE** and examine the returned
@@ -979,11 +975,11 @@ generated the errors.
 ``` r
 
 pedOne <- nprcgenekeepr::pedOne # put it in the local environment
-ped <- qcStudbook(pedOne, minParentAge = 0.0)
+ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpmGv8FA/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/Rtmpe4gVY7/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -1013,13 +1009,13 @@ respectively.
 
 ``` r
 
-ped <- qcStudbook(pedOne, minParentAge = 0.0)
+ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ped[ped$id %in% c("s2", "d2", "o3", "o4"), ]
 ```
 
     ##   id sire  dam sex gen      birth exit  age recordStatus
     ## 2 d2 <NA> <NA>   F   0 2006-04-13 <NA> 20.2     original
-    ## 4 s2 <NA> <NA>   M   0 2006-06-19 <NA> 20.0     original
+    ## 4 s2 <NA> <NA>   M   0 2006-06-19 <NA> 20.1     original
     ## 7 o3   s2   d2   F   1 2012-04-11 <NA> 14.2     original
     ## 8 o4   s2   d2   M   1 2015-09-16 <NA> 10.8     original
 
@@ -1032,7 +1028,7 @@ aspects inconsistent with the studbook format be identified by setting
 ``` r
 
 errorList <- qcStudbook(pedOne,
-  minParentAge = 0.0, reportChanges = TRUE,
+  minSireAge = 0.0, minDamAge = 0.0, reportChanges = TRUE,
   reportErrors = TRUE
 )
 summary(errorList)
@@ -1063,7 +1059,7 @@ of **pedOne** to see how the suspicious parents are reported by the
 
 pedOne <- nprcgenekeepr::pedOne
 errorList <- qcStudbook(pedOne,
-  minParentAge = 0L, reportChanges = FALSE,
+  minSireAge = 0L, minDamAge = 0L, reportChanges = FALSE,
   reportErrors = TRUE
 )
 options(width = 90L)
@@ -1144,8 +1140,8 @@ examplePedigree[unlist(exampleLoops), c("id", "sire", "dam")][1L:10L, ]
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-07-07 23:21:06.076972. The processing
-time for this document was 21 seconds..
+The current date and time is 2026-07-08 00:33:55.183648. The processing
+time for this document was 19 seconds..
 
 ``` r
 
@@ -1201,9 +1197,12 @@ sessionInfo()
     ## [69] renv_1.2.3           rstudioapi_0.19.0    jsonlite_2.0.0       R6_2.6.1            
     ## [73] systemfonts_1.3.2    fs_2.1.0
 
-[^1]: Setting the *minParentAge* to 3.5 and above will cause an error
-    along with the creation of a file *~/lowParentAge.csv* that will
-    list the parents with low age at the birth of an offspring.
+[^1]: Setting *minDamAge* to 3.5 and above will cause an error along
+    with the creation of a file *~/lowParentAge.csv* that will list the
+    parents with low age at the birth of an offspring: two dams in this
+    pedigree were about 3.3 years old at a birth. The sires are all
+    older, so raising *minSireAge* alone to 3.5 does not trigger the
+    error – exactly the sex-specific control the two floors provide.
 
 [^2]: The *population* column is created and added to the pedigree
     object if it does not already exist.

@@ -247,7 +247,10 @@ downstream modules:
 - `cleanedStudbook`: The QC-cleaned studbook data frame
 - `genotypeData`: Genotype data if provided
 - `qcSummary`: Summary counts of errors, warnings, and records
-- `minParentAge`: The minimum parent age value
+- `minSireAge`: The minimum sire age value (blank uses the species
+  default)
+- `minDamAge`: The minimum dam age value (blank uses the species
+  default)
 - `isReady`: Logical indicating if data passed QC and is ready for
   analysis
 
