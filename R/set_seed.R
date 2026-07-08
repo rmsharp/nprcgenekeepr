@@ -45,7 +45,7 @@ gatedSeed <- function(optionName, envName) {
 }
 #' Wrapper for R.Version
 #'
-#' @returns R.Version() output
+#' @return R.Version() output
 #' @noRd
 R_version <- function() { # nolint: object_name_linter.
   R.Version()
