@@ -58,7 +58,8 @@ interest** -- the animals whose genetic value we want to rank.
 ```{r}
 #| label: qc
 breederPed <- qcStudbook(examplePedigree,
-  minParentAge  = 2.0,
+  minSireAge    = 2.0,
+  minDamAge     = 2.0,
   reportChanges = FALSE,
   reportErrors  = FALSE
 )

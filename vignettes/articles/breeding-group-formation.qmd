@@ -50,7 +50,8 @@ other. Both are derived from a quality-controlled pedigree.
 ```{r}
 #| label: qc
 breederPed <- qcStudbook(examplePedigree,
-  minParentAge  = 2.0,
+  minSireAge    = 2.0,
+  minDamAge     = 2.0,
   reportChanges = FALSE,
   reportErrors  = FALSE
 )

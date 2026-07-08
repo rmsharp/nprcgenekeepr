@@ -126,21 +126,26 @@ empty error list with __getEmptyErrorLst()__.
 We are not showing the output of the function call now 
 because later in this tutorial we will explore errors in more depth.
 
-__qcStudbook__ can take four arguments _sb_, _minParentAge_ (in years), 
-_reportChanges_,
+__qcStudbook__ can take five arguments _sb_, _minSireAge_ and _minDamAge_
+(in years), _reportChanges_,
 and _reportErrors_. However, all but _sb_ have default values and only the
 _sb_ argument is required.
 
 It is prudent to ensure that parents are at least of breeding age, which
-is species specific.
-I have used a _minParentAge_ of 2 years.[^1]
+is species and sex specific.
+Leaving _minSireAge_ and _minDamAge_ blank (their default, `NULL`) looks up the
+species-specific breeding age for each sex; a number overrides that sex's
+floor. I have set both to 2 years here.[^1]
 
-[^1]: Setting the _minParentAge_ to 3.5 and above will cause an error along
+[^1]: Setting _minDamAge_ to 3.5 and above will cause an error along
 with the creation of a file _~/lowParentAge.csv_ that will list the parents
-with low age at the birth of an offspring.
+with low age at the birth of an offspring: two dams in this pedigree were
+about 3.3 years old at a birth. The sires are all older, so raising
+_minSireAge_ alone to 3.5 does not trigger the error -- exactly the
+sex-specific control the two floors provide.
 
 ```{r form-pedigree-object}
-breederPed <- qcStudbook(breederPedCsv, minParentAge = 2L)
+breederPed <- qcStudbook(breederPedCsv, minSireAge = 2L, minDamAge = 2L)
 ```
 
 If __qcStudbook__ reports an error, change the call by adding the 
@@ -758,7 +763,7 @@ that have generated the errors.
 
 ```{r summary-pedOne-no-errors, error = TRUE}
 pedOne <- nprcgenekeepr::pedOne # put it in the local environment
-ped <- qcStudbook(pedOne, minParentAge = 0.0)
+ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
 The contents of _lowParentAge.csv_ is shown below.
@@ -786,7 +791,7 @@ We have chosen to limit the displayed pedigree by selecting the _ego_id_'s and
 _id_'s in __pedOne__ and __ped__ respectively.
 
 ```{r display-corrected-birth-records}
-ped <- qcStudbook(pedOne, minParentAge = 0.0)
+ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ped[ped$id %in% c("s2", "d2", "o3", "o4"), ]
 ```
 
@@ -799,7 +804,7 @@ studbook format be identified by setting _reportChanges_ and _reportErrors_ to
 
 ```{r look-for-errors}
 errorList <- qcStudbook(pedOne,
-  minParentAge = 0.0, reportChanges = TRUE,
+  minSireAge = 0.0, minDamAge = 0.0, reportChanges = TRUE,
   reportErrors = TRUE
 )
 summary(errorList)
@@ -818,7 +823,7 @@ __summary__ function.
 ```{r look-for-errors-only}
 pedOne <- nprcgenekeepr::pedOne
 errorList <- qcStudbook(pedOne,
-  minParentAge = 0L, reportChanges = FALSE,
+  minSireAge = 0L, minDamAge = 0L, reportChanges = FALSE,
   reportErrors = TRUE
 )
 options(width = 90L)

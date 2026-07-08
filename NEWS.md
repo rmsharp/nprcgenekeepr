@@ -6,6 +6,19 @@ R. Mark Sharp, Ph.D.
 # nprcgenekeepr (development version)
 
 - Changes
+  - `qcStudbook()`, `checkParentAge()`, `runQcStudbook()`, and
+    `getPotentialParents()` now accept sex-specific minimum breeding
+    ages, `minSireAge` and `minDamAge`, in place of the single
+    `minParentAge`. Each defaults to `NULL`, which looks up the
+    species- and sex-specific breeding age for the parent; supplying a
+    number overrides that sex's floor. A male below the (typically
+    higher) male breeding age is now flagged in quality control and
+    excluded as a potential sire even when it would have passed the old
+    flat cutoff. `minParentAge` continues to work as a deprecated alias
+    that sets both floors, so existing scripts keep running. In the
+    Shiny app the single "Minimum Parent Age" box is replaced by two
+    optional "Minimum Sire Age" and "Minimum Dam Age" fields; leaving
+    them blank uses the species-specific defaults. (#119)
   - `makeSimPed()` now preserves a known parent instead of overwriting
     it. Previously it drew a random sire and dam for every listed
     animal, so an animal with one known and one unknown parent had its

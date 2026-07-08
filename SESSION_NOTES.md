@@ -6,6 +6,114 @@
 
 ## ACTIVE TASK
 
+### What Session 307 Did
+**Deliverable:** **Slice 5** (final) of the #119 plan (docs / vignettes /
+screenshot / WORDLIST / NEWS), IMPLEMENTED under strict TDD. Migrated every
+user-facing `minParentAge=` reference to `minSireAge=`/`minDamAge=` so the package
+renders without tripping its own `deprecate_warn`. **#119 is now COMPLETE (Slices
+1–5 all delivered).** Gates: one scope `AskUserQuestion` (guard-test approach +
+screenshot + archived-script) + PRE-RED→RED + RED→GREEN; concluded no-refactor.
+**0 stakeholder corrections.** ONE slice (FM #18/#2 honored).
+**Started / Completed:** 2026-07-07 / 2026-07-07
+**Status:** **DONE.** Full suite **3633 pass / 0 fail / 0 error / 0 true offenders**
+(+1 vs S306 = the new guard; the 7 warnings are the pre-existing
+`test_gvaConvergence`/`test_modPyramid` baseline); `devtools::check(cran=TRUE)`
+**0 ERROR / 0 WARNING / 0 NOTE** with the a2interactive vignette rebuilt and **ZERO
+deprecation warnings in the build log**; `spelling::spell_check_package` **clean**;
+the new guard RED (8 sites) → GREEN. CHANGELOG (S307 under [Unreleased]) +
+PROJECT_LEARNINGS 285 + this handoff record it.
+  - **Owner decisions (this session):** (1) **guard test** — a source-scanning
+    `testthat` test is the RED artifact (durable regression guard), NOT
+    render-as-test. (2) **re-caption** the `ColonyManagerTutorial` screenshot —
+    keep the old single-field PNG, rewrite prose to the two new blank fields (a
+    faithful two-field screenshot cannot be regenerated headlessly). (3) **leave**
+    `inst/extdata/trulyUnknownParents.R` archived (historical, not built by check).
+  - **RED artifact:** `tests/testthat/test_vignettes_no_deprecated_minParentAge.R`
+    scans `vignettes/**/*.{Rmd,qmd}` for the CALL regex
+    `minParentAge[[:space:]]*=[^=]` (prose/backtick/underscore mentions + the chunk
+    label + the PNG filename all lack `=`, so excluded) and expects zero.
+  - **The 3.5-error footnote is now MORE accurate:** empirically the error is
+    triggered by DAMS (two ~3.3-yr dams in `ExamplePedigree.csv`; all sires older),
+    so the footnote names `minDamAge` and notes `minSireAge=3.5` alone does not
+    error — a showcase of the new sex-specific control.
+  - **Semantics trap avoided:** the `= 0.0` calls (deliberate low floor flagging
+    impossible negative-age parents) migrate to `0.0`, NOT `NULL` (NULL disables
+    the check entirely).
+
+**Session 306 Handoff Evaluation (by Session 307): Score 10/10.** S306's SUGGESTED
+NEXT was turnkey: it named Slice 5 as the last slice, listed EVERY edit site with
+line numbers (`a2interactive.Rmd:129,136,138,143,761,789,802,821`;
+`studbook-quality-control.qmd:34,67,161,179,214`; `breeding-group-formation.qmd:53`;
+`genetic-value-analysis.qmd:61`; `ColonyManagerTutorial.Rmd:181-185`;
+`_input.Rmd:68`), pre-decided the curated-file handling (`inst/WORDLIST` by hand, no
+`update_wordlist`), flagged the screenshot as regen-or-recaption, called out
+`trulyUnknownParents.R` as archived, and stated the exact completion criterion
+(`devtools::check` clean incl. vignette rebuild + spelling). **What helped most:**
+the line-numbered inventory meant my grep merely CONFIRMED the handoff (all 8
+code-call sites matched exactly) instead of discovering scope; the "curated WORDLIST
+— hand-edit" note steered the curated-file handling; the screenshot + archived-script
+flags became clean owner questions. **What was missing/off:** almost nothing — (a)
+it didn't note that `.qmd` articles are NOT rebuilt by `check` (only the `.Rmd`s),
+which shapes how you verify them (guard + quarto `--no-execute`); (b) it didn't
+mention the 3.5 footnote's error is dam-driven (a data fact only a probe reveals).
+Neither cost real time. **ROI:** very high — near-zero discovery; the slice was
+executing the handoff's own inventory.
+
+**Self-assessment (Session 307): 9.5/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read; ghost-check clean — S306 = last commit; wrote the 1B stub
+before any technical work); declared the TDD phase atop every response and gated
+every transition via `AskUserQuestion` (scope decision posed BEFORE declaring RED,
+separate from the phase gates, per the contract). **Strengths:** (1) turned a "docs
+slice" into a genuine test-first delivery with a durable guard, satisfying strict
+TDD honestly rather than hand-waving RED; (2) caught the `0.0`-vs-`NULL` semantics
+trap and preserved every numeric floor verbatim; (3) EMPIRICALLY re-verified the 3.5
+footnote instead of assuming the flat→sex-specific mapping, converting a stale claim
+into a feature showcase; (4) recognized the check-vs-articles verification asymmetry
+and covered the articles with a quarto `--no-execute` render + the guard; (5) cleaned
+the stray quarto `.gitignore`/`.quarto` side-effects so the committed tree is exactly
+the deliverable. **Weakness (the -0.5):** I could not run the FULL execute-render of
+the `.qmd` articles because the working tree isn't installed in quarto's R library —
+I verified the markdown structurally (`--no-execute`) and relied on `check` + the
+guard + unchanged R code for behavior, but a full article render would have been
+strongest. Net: fully-verified, one-and-done slice.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 285** — a docs-only
+deprecation-migration slice can satisfy strict TDD with a source-scanning guard;
+preserve numeric floors verbatim (0.0 ≠ NULL); empirically re-verify data-dependent
+doc claims; `check` rebuilds `.Rmd` vignettes but not `.qmd` pkgdown articles (verify
+those with the guard + quarto `--no-execute`); remove stray quarto render
+side-effects before commit. Carried as applied: [[consult-project-source-of-truth]],
+[[avoid-reconcile-tools-on-curated-files]], [[keep-dev-process-refs-out-of-user-docs]],
+[[edit-files-in-reverse-line-order]], [[avoid-new-lints-r-package]],
+[[ascii-only-in-question-options]], [[observation-vs-decision]],
+[[push-close-out-docs-to-origin]].
+
+**=> SUGGESTED NEXT.** **#119 is COMPLETE (Slices 1–5).** Close #119 on GitHub (the
+owner may want to post a short "resolved by Slices 1–5" comment first). The
+deprecated `minParentAge` alias remains BY DESIGN for a deprecation cycle (plan §6
+out-of-scope: "Removing the alias entirely — a later release"); do NOT remove it now.
+**Other open work (owner's pick):** **#118** effective population size (untriaged — a
+bounded triage deliverable, good next); **#116** Flags (BLOCKED); **#103** roxygen
+harmonization; **#37/#36/#28/#12/#11/#10/#5**; the CRAN thread (owner-run, package
+ARCHIVED 2025-07-29, HARD STOP).
+
+**Key files (this session):** **New:**
+`tests/testthat/test_vignettes_no_deprecated_minParentAge.R` (the guard).
+**Edited (docs):** `vignettes/a2interactive.Rmd` (5 code calls + arg-list/footnote
+prose), `vignettes/articles/studbook-quality-control.qmd` (1 code call + bullet +
+prose + 2 table rows), `vignettes/articles/breeding-group-formation.qmd:53`,
+`vignettes/articles/genetic-value-analysis.qmd:61`,
+`vignettes/manual_components/_input.Rmd` (modInput return bullet),
+`vignettes/ColonyManagerTutorial.Rmd` (screenshot re-caption), `inst/WORDLIST`
+(+minDamAge/+minSireAge), `NEWS.md` (#119 user-facing entry). **Gotchas for next
+session:** (1) `vignettes/*.R`/`.html` are untracked/ignored purl/knit artifacts —
+never edit them (they regenerate). (2) A quarto render of an article drops
+`vignettes/articles/.gitignore` + `.quarto/` — remove before commit. (3) The
+execute-render of `.qmd` articles needs the package INSTALLED (not just load_all'd) —
+`library(nprcgenekeepr)` fails otherwise. (4) `devtools::check(cran=TRUE)` is
+authoritative (a direct `R CMD check --no-build-vignettes` emits false "inst/doc
+missing" WARNINGs — S306).
+
 ### What Session 306 Did
 **Deliverable:** **Slice 4** of the #119 plan (the Shiny UI migration), IMPLEMENTED
 under strict TDD. Replaced the single "Minimum Parent Age" `textInput` in `modInput`
