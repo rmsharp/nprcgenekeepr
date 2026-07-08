@@ -391,14 +391,24 @@ modGeneticValueServer <- function(id, pedigree,
         } else {
           sprintf("%.2f", fullRes$fg)
         }
+        # Issue #118 Slice 1 (E1): gene diversity retained in the founding gene
+        # pool (GD = 1 - 1/(2*FG)), shown beside FG to four decimals; N/A for
+        # older results predating neGD or a degenerate (NA) FG.
+        gdDisplay <- if (!is.null(fullRes$neGD) && is.finite(fullRes$neGD)) {
+          sprintf("%.4f", fullRes$neGD)
+        } else {
+          "N/A"
+        }
         founderData <- data.frame(
           Metric = c("Total Founders", "Male Founders", "Female Founders",
-                     "Founder Equivalents (FE)", "Founder Genome Equiv. (FG)"),
+                     "Founder Equivalents (FE)", "Founder Genome Equiv. (FG)",
+                     "Gene Diversity (GD)"),
           Value = c(as.character(fullRes$total),
                     as.character(fullRes$nMaleFounders),
                     as.character(fullRes$nFemaleFounders),
                     sprintf("%.2f", fullRes$fe),
-                    fgDisplay),
+                    fgDisplay,
+                    gdDisplay),
           stringsAsFactors = FALSE
         )
         summaryData <- rbind(summaryData, founderData)
@@ -471,6 +481,7 @@ modGeneticValueServer <- function(id, pedigree,
           fe = fr$fe,
           fg = fr$fg,
           fgSE = fr$fgSE, # issue #82 Slice 3: scalar FG sampling SE (or NULL)
+          neGD = fr$neGD, # issue #118 Slice 1: gene diversity GD (or NULL)
           total = fr$total,
           nMaleFounders = fr$nMaleFounders,
           nFemaleFounders = fr$nFemaleFounders

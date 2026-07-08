@@ -353,6 +353,31 @@ test_that("modGeneticValueServer gvSummary renders after analysis", {
   )
 })
 
+# ---------------------------------------------------------------------------
+# Issue #118 Slice 1 (E1): the GV-tab summary table carries a "Gene Diversity
+# (GD)" Metric/Value row beside the Founder Genome Equiv. (FG) row,
+# GD = 1 - 1/(2*FG), for parity with the live Summary-Statistics founder table.
+# ---------------------------------------------------------------------------
+test_that("modGeneticValueServer gvSummary shows a Gene Diversity row (issue #118 Slice 1)", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeValidTestPed(nFounders = 6, nOffspring = 14)
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped })
+    ),
+    {
+      session$setInputs(nIterations = 100)
+      session$setInputs(runAnalysis = 1)
+
+      html <- as.character(output$gvSummary)
+      expect_true(any(grepl("Gene Diversity", html)))
+    }
+  )
+})
+
 test_that("modGeneticValueServer gvScatterPlot renders after analysis", {
   skip_if_not_installed("shiny")
 

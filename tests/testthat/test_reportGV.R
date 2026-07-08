@@ -5,7 +5,7 @@ qcPed <- nprcgenekeepr::qcPed
 gvReport <- reportGV(qcPed, guIter = 100L)
 test_that("reportGV forms correct genetic value report", {
   expect_named(gvReport, c(
-    "report", "kinship", "gu", "fe", "fg", "fgSE",
+    "report", "kinship", "gu", "fe", "fg", "fgSE", "neGD",
     "maleFounders", "femaleFounders",
     "nMaleFounders", "nFemaleFounders", "total"
   ))
@@ -30,7 +30,7 @@ test_that(
   "reportGV forms correct genetic value report with updateProgress defined",
   {
     expect_named(gvReport, c(
-      "report", "kinship", "gu", "fe", "fg", "fgSE",
+      "report", "kinship", "gu", "fe", "fg", "fgSE", "neGD",
       "maleFounders", "femaleFounders",
       "nMaleFounders", "nFemaleFounders", "total"
     ))
@@ -47,6 +47,36 @@ test_that(
     expect_identical(gvReport$nFemaleFounders, 61L)
   }
 )
+
+# ---------------------------------------------------------------------------
+# Issue #118 Slice 1 (E1): reportGV carries gene diversity (GD) as a
+# colony-level SCALAR neGD alongside fg, GD = 1 - 1/(2*FG). Like fgSE it is one
+# number that rides next to fg -- NOT a per-animal column in $report or $gu. GD
+# is over the SAME population as FG (the analysis set), so it is reported beside
+# FG, not in the living-breeder Ne block E2/E3 will add. neGD is a deterministic
+# function of the bundle's own fg, so the relation holds regardless of the
+# gene-drop RNG; fe/fg golden-master values (asserted elsewhere) are unchanged.
+# ---------------------------------------------------------------------------
+test_that("reportGV carries scalar neGD = 1 - 1/(2*fg) beside fg (issue #118 Slice 1 E1)", {
+  gv <- reportGV(qcPed, guIter = 100L)
+
+  expect_true("neGD" %in% names(gv))
+  expect_length(gv$neGD, 1L)
+  expect_true(is.numeric(gv$neGD))
+
+  ## neGD is exactly the closed-form GD of the bundle's own fg
+  expect_equal(gv$neGD, calcGeneDiversity(gv$fg))
+  expect_equal(gv$neGD, 1 - 1 / (2 * gv$fg))
+
+  ## a proper diversity proportion on qcPed: finite, strictly inside (0, 1)
+  expect_true(is.finite(gv$neGD))
+  expect_gt(gv$neGD, 0)
+  expect_lt(gv$neGD, 1)
+
+  ## GD is a colony-level scalar like fg -- it must NOT be a per-animal column
+  expect_false("neGD" %in% names(gv$report))
+  expect_false("neGD" %in% names(gv$gu))
+})
 
 # ---------------------------------------------------------------------------
 # Issue #9 Slice 2: animals missing exactly one parent receive a peer-cohort

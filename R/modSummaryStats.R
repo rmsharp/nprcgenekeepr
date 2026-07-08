@@ -628,7 +628,8 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
             tags$th("Known Female Founders"),
             tags$th("Known Male Founders"),
             tags$th("Founder Equivalents"),
-            tags$th("Founder Genome Equivalents")
+            tags$th("Founder Genome Equivalents"),
+            tags$th("Gene Diversity (GD)")
           )),
           tags$tbody(tags$tr(
             tags$td(as.character(fs$total)),
@@ -645,6 +646,16 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
                 # nolint end: nonportable_path_linter.
               } else {
                 sprintf("%.2f", fs$fg)
+              }
+            ),
+            # Issue #118 Slice 1 (E1): gene diversity (GD), a function of FG,
+            # shown beside FG over the same analysis-set population; four
+            # decimals, N/A when absent (older founderStats) or a degenerate FG.
+            tags$td(
+              if (!is.null(fs$neGD) && is.finite(fs$neGD)) {
+                sprintf("%.4f", fs$neGD)
+              } else {
+                "N/A"
               }
             )
           ))

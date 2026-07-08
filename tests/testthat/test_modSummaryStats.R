@@ -318,3 +318,48 @@ test_that("modSummaryStatsServer founder table shows FG +/- SE when fgSE present
     }
   )
 })
+
+# ---------------------------------------------------------------------------
+# Issue #118 Slice 1 (E1): the Summary-Statistics founder table shows gene
+# diversity (GD = 1 - 1/(2*FG)) as a labeled cell beside FG when founderStats()
+# carries the scalar neGD threaded through from reportGV(). GD is over the same
+# population as FG (the analysis set), so it belongs in the founder table rather
+# than the separate living-breeder Ne block that E2/E3 will add. Displayed to
+# four decimals (a diversity proportion near 1), so 0.9905 renders as "0.9905".
+# ---------------------------------------------------------------------------
+test_that("modSummaryStatsServer founder table shows Gene Diversity (GD) beside FG (issue #118 Slice 1)", {
+  skip_if_not_installed("shiny")
+
+  test_gv <- data.frame(
+    id = c("A", "B", "C"),
+    meanKinship = c(0.1, 0.2, 0.3),
+    genomeUniqueness = c(0.9, 0.8, 0.7),
+    stringsAsFactors = FALSE
+  )
+  test_ped <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+  fstats <- list(
+    total = 124L, nMaleFounders = 60L, nFemaleFounders = 64L,
+    fe = 77.04, fg = 52.76, fgSE = 0.05, neGD = 0.9905
+  )
+
+  shiny::testServer(
+    modSummaryStatsServer,
+    args = list(
+      geneticValues = shiny::reactive({ test_gv }),
+      pedigree = shiny::reactive({ test_ped }),
+      kinshipMatrix = NULL,
+      founderStats = shiny::reactive({ fstats })
+    ),
+    {
+      html <- as.character(output$summaryStats)
+      expect_true(any(grepl("Gene Diversity", html)))
+      expect_true(any(grepl("0.9905", html)))
+    }
+  )
+})

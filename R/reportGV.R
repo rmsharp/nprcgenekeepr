@@ -62,7 +62,10 @@
 #' \code{fg} (founder genome equivalents), \code{fgSE} (the Monte Carlo sampling
 #' standard error of \code{fg}, computed from the same gene drop; a single
 #' colony-level number, \code{NA} when a contributing founder is retained in
-#' zero gene-drop iterations -- see \code{\link{calcFGSE}}), \code{maleFounders}
+#' zero gene-drop iterations -- see \code{\link{calcFGSE}}), \code{neGD} (gene
+#' diversity retained in the founding gene pool, \code{1 - 1 / (2 * fg)}; a
+#' colony-level scalar beside \code{fg}, \code{NA} when \code{fg} is \code{NA};
+#' see \code{\link{calcGeneDiversity}}), \code{maleFounders}
 #' and
 #' \code{femaleFounders} (dataframes of the known male and female founder
 #' records), \code{nMaleFounders} and \code{nFemaleFounders} (the counts of
@@ -268,6 +271,11 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
     fe = feFg$FE,
     fg = feFg$FG,
     fgSE = fgSE,
+    # Issue #118 Slice 1 (E1): gene diversity retained in the founding gene
+    # pool, GD = 1 - 1/(2*FG), a deterministic colony-level scalar riding beside
+    # fg (same analysis-set population as FG). NA propagates from a degenerate
+    # (NA) FG.
+    neGD = calcGeneDiversity(feFg$FG),
     maleFounders = males,
     femaleFounders = females,
     nMaleFounders = nrow(males),
