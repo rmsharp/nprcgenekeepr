@@ -159,7 +159,11 @@ colony-level number, <code>NA</code> when a contributing founder is retained in
 zero gene-drop iterations – see <code><a href="calcFGSE.html">calcFGSE</a></code>), <code>neGD</code> (gene
 diversity retained in the founding gene pool, <code>1 - 1 / (2 * fg)</code>; a
 colony-level scalar beside <code>fg</code>, <code>NA</code> when <code>fg</code> is <code>NA</code>;
-see <code><a href="calcGeneDiversity.html">calcGeneDiversity</a></code>), <code>maleFounders</code>
+see <code><a href="calcGeneDiversity.html">calcGeneDiversity</a></code>), <code>neSexRatio</code> (the demographic
+sex-ratio effective size, <code>4 * nMale * nFemale / (nMale + nFemale)</code>,
+over the current living breeders – a different population than <code>fg</code> and
+<code>neGD</code>; <code>0</code> when a breeding sex is absent; see
+<code><a href="calcNeSexRatio.html">calcNeSexRatio</a></code>), <code>maleFounders</code>
 and
 <code>femaleFounders</code> (dataframes of the known male and female founder
 records), <code>nMaleFounders</code> and <code>nFemaleFounders</code> (the counts of
@@ -226,7 +230,7 @@ and <code><a href="calcGU.html">calcGU</a></code> itself is unchanged.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

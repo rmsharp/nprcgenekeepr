@@ -44,6 +44,8 @@
   : Calculate the standard error of genome uniqueness
 - [`calcGeneDiversity()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGeneDiversity.md)
   : Calculate gene diversity from founder genome equivalents
+- [`calcNeSexRatio()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeSexRatio.md)
+  : Calculate the demographic sex-ratio effective population size
 - [`calcRetention()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcRetention.md)
   : Calculate allelic retention
 - [`calculateSexRatio()`](https://github.com/rmsharp/nprcgenekeepr/reference/calculateSexRatio.md)

@@ -55,6 +55,17 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-08--implement-issue-118-slice-2--e2-demographic-sex-ratio-ne-calcnesexratio-session-311">2026-07-08 — Implement issue #118 Slice 2 — E2 demographic sex-ratio Ne (<code>calcNeSexRatio</code>) (Session 311)<a class="anchor" aria-label="anchor" href="#id_2026-07-08--implement-issue-118-slice-2--e2-demographic-sex-ratio-ne-calcnesexratio-session-311"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Slice 2 of the #118 plan (<code>docs/planning/issue118-effective-population-size-plan.md</code> §8) under strict TDD (PRE-RED → RED → GREEN → concluded no-refactor). 4 <code>AskUserQuestion</code> gates (pre-RED scope D-b/D-c/D-a + PRE-RED→RED + RED→GREEN + GREEN→REFACTOR); 0 stakeholder corrections. ONE slice — E3 (Slice 3) not started.</li>
+<li>
+<strong>Owner scope decisions (this session, via <code>AskUserQuestion</code>):</strong> <strong>D-b — living breeders in the whole pedigree</strong> (living animals appearing as a sire/dam anywhere in <code>ped</code>, U-ids excluded, all-living when no <code>exit</code> column), independent of the proband/population selection. <strong>D-c — <code>Ne_sr = 0</code></strong> when one breeding sex is absent (<code>Nm==0</code> or <code>Nf==0</code>, including no living breeders at all). <strong>D-a (E2) — a separate “Effective Population Size” block</strong> labeled “current living breeders”; Gene Diversity (GD) stays beside FG (the separate block deferred from Slice 1 is introduced here, the first living-breeder metric).</li>
+<li>
+<strong>New functions:</strong> <code>getLivingBreeders(ped)</code> (<code>@noRd</code> shared helper, reused by Slice 3/E3) returns the ids of living breeders; <code>calcNeSexRatio(ped)</code> (<code>@export</code>) = <code>4·Nm·Nf/(Nm+Nf)</code> over living breeders with known sex, <code>0</code> when a breeding sex is absent. <code><a href="reference/reportGV.html">reportGV()</a></code> bundle gains the colony-level scalar <code>neSexRatio</code> (additively, after <code>neGD</code>); threaded through the <code>founderStats</code> reactive into a separate labeled block in <code>modSummaryStats</code> and a <code>Sex-Ratio Ne (living breeders)</code> row in the <code>modGeneticValue</code> GV-tab summary.</li>
+<li>
+<strong>Verification:</strong> full suite pass / 0 fail / 0 error (touched files 0 skipped under <code>NOT_CRAN=true</code>); <code>fe</code>/<code>fg</code>/<code>fgSE</code>/<code>neGD</code>/founder-count golden-master unchanged; lint 0 on changed files; spelling clean; <code>devtools::check()</code> 0/0/0. Phase 3E on real <code>qcPed</code> data: 18 living breeders (Nm=8, Nf=10) → <code>neSexRatio = 17.78</code>, rendered in both live surfaces.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-08--implement-issue-118-slice-1--e1-gene-diversity-calcgenediversity-session-310">2026-07-08 — Implement issue #118 Slice 1 — E1 gene diversity (<code>calcGeneDiversity</code>) (Session 310)<a class="anchor" aria-label="anchor" href="#id_2026-07-08--implement-issue-118-slice-1--e1-gene-diversity-calcgenediversity-session-310"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> Slice 1 (the tracer bullet) of the #118 plan (<code>docs/planning/issue118-effective-population-size-plan.md</code> §8) under strict TDD (PRE-RED → RED → GREEN → concluded no-refactor). 4 <code>AskUserQuestion</code> gates (pre-RED scope D-a/D-e/D-f + PRE-RED→RED + RED→GREEN + GREEN→REFACTOR); 0 stakeholder corrections. ONE slice — E2/E3 (Slices 2/3) not started.</li>
@@ -4710,7 +4721,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

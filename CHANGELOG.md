@@ -15,6 +15,40 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-08 — Implement issue \#118 Slice 2 — E2 demographic sex-ratio Ne (`calcNeSexRatio`) (Session 311)
+
+- **Deliverable:** Slice 2 of the \#118 plan
+  (`docs/planning/issue118-effective-population-size-plan.md` §8) under
+  strict TDD (PRE-RED → RED → GREEN → concluded no-refactor). 4
+  `AskUserQuestion` gates (pre-RED scope D-b/D-c/D-a + PRE-RED→RED +
+  RED→GREEN + GREEN→REFACTOR); 0 stakeholder corrections. ONE slice — E3
+  (Slice 3) not started.
+- **Owner scope decisions (this session, via `AskUserQuestion`):** **D-b
+  — living breeders in the whole pedigree** (living animals appearing as
+  a sire/dam anywhere in `ped`, U-ids excluded, all-living when no
+  `exit` column), independent of the proband/population selection. **D-c
+  — `Ne_sr = 0`** when one breeding sex is absent (`Nm==0` or `Nf==0`,
+  including no living breeders at all). **D-a (E2) — a separate
+  “Effective Population Size” block** labeled “current living breeders”;
+  Gene Diversity (GD) stays beside FG (the separate block deferred from
+  Slice 1 is introduced here, the first living-breeder metric).
+- **New functions:** `getLivingBreeders(ped)` (`@noRd` shared helper,
+  reused by Slice 3/E3) returns the ids of living breeders;
+  `calcNeSexRatio(ped)` (`@export`) = `4·Nm·Nf/(Nm+Nf)` over living
+  breeders with known sex, `0` when a breeding sex is absent.
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+  bundle gains the colony-level scalar `neSexRatio` (additively, after
+  `neGD`); threaded through the `founderStats` reactive into a separate
+  labeled block in `modSummaryStats` and a
+  `Sex-Ratio Ne (living breeders)` row in the `modGeneticValue` GV-tab
+  summary.
+- **Verification:** full suite pass / 0 fail / 0 error (touched files 0
+  skipped under `NOT_CRAN=true`); `fe`/`fg`/`fgSE`/`neGD`/founder-count
+  golden-master unchanged; lint 0 on changed files; spelling clean;
+  `devtools::check()` 0/0/0. Phase 3E on real `qcPed` data: 18 living
+  breeders (Nm=8, Nf=10) → `neSexRatio = 17.78`, rendered in both live
+  surfaces.
+
 ### 2026-07-08 — Implement issue \#118 Slice 1 — E1 gene diversity (`calcGeneDiversity`) (Session 310)
 
 - **Deliverable:** Slice 1 (the tracer bullet) of the \#118 plan

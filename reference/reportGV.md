@@ -117,6 +117,11 @@ see
 `1 - 1 / (2 * fg)`; a colony-level scalar beside `fg`, `NA` when `fg` is
 `NA`; see
 [`calcGeneDiversity`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGeneDiversity.md)),
+`neSexRatio` (the demographic sex-ratio effective size,
+`4 * nMale * nFemale / (nMale + nFemale)`, over the current living
+breeders – a different population than `fg` and `neGD`; `0` when a
+breeding sex is absent; see
+[`calcNeSexRatio`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeSexRatio.md)),
 `maleFounders` and `femaleFounders` (dataframes of the known male and
 female founder records), `nMaleFounders` and `nFemaleFounders` (the
 counts of those founders), and `total` (the total number of known

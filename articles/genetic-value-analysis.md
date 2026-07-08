@@ -103,8 +103,9 @@ gv <- reportGV(trimmedPed,
 )
 names(gv)
 #>  [1] "report"          "kinship"         "gu"              "fe"             
-#>  [5] "fg"              "fgSE"            "neGD"            "maleFounders"   
-#>  [9] "femaleFounders"  "nMaleFounders"   "nFemaleFounders" "total"
+#>  [5] "fg"              "fgSE"            "neGD"            "neSexRatio"     
+#>  [9] "maleFounders"    "femaleFounders"  "nMaleFounders"   "nFemaleFounders"
+#> [13] "total"
 ```
 
 > The small `guIter` above keeps this article quick to render. For real
