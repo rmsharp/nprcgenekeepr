@@ -55,6 +55,18 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-07--triage-issue-118--add-the-effective-population-size-estimate-session-308">2026-07-07 — Triage issue #118 — “Add the effective population size estimate” (Session 308)<a class="anchor" aria-label="anchor" href="#id_2026-07-07--triage-issue-118--add-the-effective-population-size-estimate-session-308"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Triage / scoping of #118 (analysis only — no code changed): <code>docs/audits/ISSUE_118_EFFECTIVE_POPULATION_SIZE_TRIAGE_2026-07-07.md</code> + a condensed comment on #118. Close-out: this CHANGELOG entry + PROJECT_LEARNINGS 286 + handoff.</li>
+<li>
+<strong>Verdict:</strong> A well-motivated <strong>enhancement</strong> (not a bug, not blocked), but <strong>under-specified in two ways</strong>: (1) “effective population size” is a <em>family</em> of estimators (E1 founder-genome-equivalent/gene-diversity, E2 demographic sex-ratio <code>4NmNf/(Nm+Nf)</code>, E3 variance/reproductive-skew, E4 rate-of-coancestry <code>1/(2·dCbar)</code>), each answering a different question and needing different inputs; (2) the issue itself notes “place to locate output has not been determined.”</li>
+<li>
+<strong>Evidence-based inventory:</strong> most inputs already exist — FG + its SE (<code>calcFG</code>/<code>calcFGSE</code>), FE (<code>calcFE</code>), founder sex counts (<code>reportGV</code>), per-animal offspring counts (<code>findOffspring</code>, for E3’s Vk), mean kinship (<code>meanKinship</code>), gene-drop retention (<code>geneDrop</code>/<code>calcRetention</code>), generation <em>numbers</em> (<code>findGeneration</code>). <strong>Gap:</strong> no generation <em>length</em> in years / no longitudinal baseline, so E4 needs new data or a scoped assumption. Natural output home: the GVA founder-stats table (<code>makeFounderStatsTable</code>/<code>modFounderStats</code>/the <code>reportGV</code> bundle), where Ne sits beside FE/FG as another colony-level scalar — directly answering the issue’s open “location” question.</li>
+<li>
+<strong>Recommendation (direction, not decision):</strong> owner picks the estimator(s) and population in a short planning/<code>/grill-me</code> session, then a <code>docs/planning/issue118-*-plan.md</code> with per-slice completion criteria drives one-estimator-per-session TDD slices. The genetics-management choice (which Ne, which population) is the owner’s. <strong>No implementation this session.</strong>
+</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-07--implement-issue-119-slice-5--docsvignettesscreenshotwordlistnews-migration-to-minsireagemindamage-session-307">2026-07-07 — Implement issue #119 Slice 5 — docs/vignettes/screenshot/WORDLIST/NEWS migration to <code>minSireAge</code>/<code>minDamAge</code> (Session 307)<a class="anchor" aria-label="anchor" href="#id_2026-07-07--implement-issue-119-slice-5--docsvignettesscreenshotwordlistnews-migration-to-minsireagemindamage-session-307"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> Slice 5 (final) of the #119 plan (<code>docs/planning/issue119-sex-specific-min-breeding-age-plan.md</code> §3 Slice 5) under strict TDD (PRE-RED → RED → GREEN → concluded no-refactor). Gates: one scope <code>AskUserQuestion</code> (guard-test approach + screenshot handling + archived-script disposition) + PRE-RED→RED + RED→GREEN; 0 stakeholder corrections. ONE slice — <strong>#119 is now complete (Slices 1–5 all delivered).</strong>
