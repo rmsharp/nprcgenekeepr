@@ -55,6 +55,19 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-07--plan-issue-118--effective-population-size-ne-estimates-session-309">2026-07-07 — Plan issue #118 — effective population size (Ne) estimates (Session 309)<a class="anchor" aria-label="anchor" href="#id_2026-07-07--plan-issue-118--effective-population-size-ne-estimates-session-309"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Planning document <code>docs/planning/issue118-effective-population-size-plan.md</code> (planning session — the plan is the deliverable; implementation is separate later sessions, one estimator each, per FM #18). Seed: the S308 triage.</li>
+<li>
+<strong>Owner decisions (gathered this session via <code>AskUserQuestion</code>):</strong> implement <strong>E1</strong> (gene diversity <code>GD = 1 - 1/(2·FG)</code>) + <strong>E2</strong> (demographic sex-ratio <code>4·Nm·Nf/(Nm+Nf)</code>) + <strong>E3</strong> (variance effective size) as a labeled multi-metric set over <strong>current living breeders</strong>, displayed in the GVA founder-stats surface. <strong>E4</strong> (rate-of-coancestry) <strong>deferred</strong>; its future-work avenues (generation length computed-from-data + user slider; cross-generation coancestry-rate estimate) posted as a comment on #118.</li>
+<li>
+<strong>Plan built from firsthand evidence</strong> (read <code>reportGV.R</code>, <code>makeFounderStatsTable.R</code>, <code>findOffspring.R</code>, <code>offspringCounts.R</code>, <code>modGeneticValue.R</code>, <code>modSummaryStats.R</code>; an Explore wiring/test map; and a worked numeric Ne on the bundled example pedigree: living breeders <code>Nm=35</code>, <code>Nf=121</code> → <strong>E2=108.6</strong>; <code>N=156</code>, <code>Vk=16.5</code> → <strong>E3=33.5</strong> — skew drags Ne ~3× below the sex-ratio figure). 4 implementation slices (E1 → E2 → E3 → publish/docs) with per-slice completion criteria + 8 consolidated dragons.</li>
+<li>
+<strong>Corrections to the triage (firsthand):</strong> (1) the triage’s stated display home <code><a href="reference/makeFounderStatsTable.html">makeFounderStatsTable()</a></code>/<code>modFounderStats</code> is a <strong>dead helper</strong> — <code><a href="reference/makeFounderStatsTable.html">makeFounderStatsTable()</a></code> has no runtime caller and <code>modFounderStats.R</code> does not exist; the live surface is <code>modSummaryStats.R:623-651</code> + <code>modGeneticValue.R:394-478</code>, fed from the <code>reportGV.R:264-276</code> bundle. (2) <code>sex</code> is a factor <code>{F,M,H,U}</code> (<code>NA→"U"</code>), so E2 must count only <code>sex=="M"</code>/<code>sex=="F"</code>. (3) <code>kbar≈5.3≠2</code> on the real colony, so E3 needs the mean-adjusted variance form, not the bare <code>(4N-4)/(Vk+2)</code>.</li>
+<li>
+<strong>No code changed</strong> (planning deliverable): Phase-3E runtime smoke N/A; package build/spelling unaffected (<code>docs/</code> is not part of the R-package build). Close-out: this entry + PROJECT_LEARNINGS 287 + handoff.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-07--triage-issue-118--add-the-effective-population-size-estimate-session-308">2026-07-07 — Triage issue #118 — “Add the effective population size estimate” (Session 308)<a class="anchor" aria-label="anchor" href="#id_2026-07-07--triage-issue-118--add-the-effective-population-size-estimate-session-308"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> Triage / scoping of #118 (analysis only — no code changed): <code>docs/audits/ISSUE_118_EFFECTIVE_POPULATION_SIZE_TRIAGE_2026-07-07.md</code> + a condensed comment on #118. Close-out: this CHANGELOG entry + PROJECT_LEARNINGS 286 + handoff.</li>

@@ -15,6 +15,45 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-07 — Plan issue \#118 — effective population size (Ne) estimates (Session 309)
+
+- **Deliverable:** Planning document
+  `docs/planning/issue118-effective-population-size-plan.md` (planning
+  session — the plan is the deliverable; implementation is separate
+  later sessions, one estimator each, per FM \#18). Seed: the S308
+  triage.
+- **Owner decisions (gathered this session via `AskUserQuestion`):**
+  implement **E1** (gene diversity `GD = 1 - 1/(2·FG)`) + **E2**
+  (demographic sex-ratio `4·Nm·Nf/(Nm+Nf)`) + **E3** (variance effective
+  size) as a labeled multi-metric set over **current living breeders**,
+  displayed in the GVA founder-stats surface. **E4**
+  (rate-of-coancestry) **deferred**; its future-work avenues (generation
+  length computed-from-data + user slider; cross-generation
+  coancestry-rate estimate) posted as a comment on \#118.
+- **Plan built from firsthand evidence** (read `reportGV.R`,
+  `makeFounderStatsTable.R`, `findOffspring.R`, `offspringCounts.R`,
+  `modGeneticValue.R`, `modSummaryStats.R`; an Explore wiring/test map;
+  and a worked numeric Ne on the bundled example pedigree: living
+  breeders `Nm=35`, `Nf=121` → **E2=108.6**; `N=156`, `Vk=16.5` →
+  **E3=33.5** — skew drags Ne ~3× below the sex-ratio figure). 4
+  implementation slices (E1 → E2 → E3 → publish/docs) with per-slice
+  completion criteria + 8 consolidated dragons.
+- **Corrections to the triage (firsthand):** (1) the triage’s stated
+  display home
+  [`makeFounderStatsTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeFounderStatsTable.md)/`modFounderStats`
+  is a **dead helper** —
+  [`makeFounderStatsTable()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeFounderStatsTable.md)
+  has no runtime caller and `modFounderStats.R` does not exist; the live
+  surface is `modSummaryStats.R:623-651` + `modGeneticValue.R:394-478`,
+  fed from the `reportGV.R:264-276` bundle. (2) `sex` is a factor
+  `{F,M,H,U}` (`NA→"U"`), so E2 must count only
+  `sex=="M"`/`sex=="F"`. (3) `kbar≈5.3≠2` on the real colony, so E3
+  needs the mean-adjusted variance form, not the bare `(4N-4)/(Vk+2)`.
+- **No code changed** (planning deliverable): Phase-3E runtime smoke
+  N/A; package build/spelling unaffected (`docs/` is not part of the
+  R-package build). Close-out: this entry + PROJECT_LEARNINGS 287 +
+  handoff.
+
 ### 2026-07-07 — Triage issue \#118 — “Add the effective population size estimate” (Session 308)
 
 - **Deliverable:** Triage / scoping of \#118 (analysis only — no code
