@@ -28,7 +28,7 @@ criteria, an evidence-based inventory, a worked numeric example, 6
 sub-decisions to ratify at the Slice-1 gate, and 8 consolidated dragons.
 TDD phase declared **N/A** (analysis deliverable, no production/test
 code). **0 stakeholder corrections** (owner clarified E4 mid-question;
-folded in). Commit `124f79d6`.
+folded in). Commit `8392ddb5` (plan + close-out docs).
 
 **Session 308 Handoff Evaluation (by Session 309): Score 9/10.** S308’s
 SUGGESTED NEXT was turnkey: it named the successor as “ONE planning /
