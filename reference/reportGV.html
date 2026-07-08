@@ -163,7 +163,11 @@ see <code><a href="calcGeneDiversity.html">calcGeneDiversity</a></code>), <code>
 sex-ratio effective size, <code>4 * nMale * nFemale / (nMale + nFemale)</code>,
 over the current living breeders – a different population than <code>fg</code> and
 <code>neGD</code>; <code>0</code> when a breeding sex is absent; see
-<code><a href="calcNeSexRatio.html">calcNeSexRatio</a></code>), <code>maleFounders</code>
+<code><a href="calcNeSexRatio.html">calcNeSexRatio</a></code>), <code>neVariance</code> (the variance effective
+size, the mean-adjusted Crow-Kimura form
+<code>(N * kbar - 1) / (kbar - 1 + Vk / kbar)</code> over the same current living
+breeders; <code>NA</code> when fewer than two living breeders; see
+<code><a href="calcNeVariance.html">calcNeVariance</a></code>), <code>maleFounders</code>
 and
 <code>femaleFounders</code> (dataframes of the known male and female founder
 records), <code>nMaleFounders</code> and <code>nFemaleFounders</code> (the counts of

@@ -122,6 +122,10 @@ see
 breeders – a different population than `fg` and `neGD`; `0` when a
 breeding sex is absent; see
 [`calcNeSexRatio`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeSexRatio.md)),
+`neVariance` (the variance effective size, the mean-adjusted Crow-Kimura
+form `(N * kbar - 1) / (kbar - 1 + Vk / kbar)` over the same current
+living breeders; `NA` when fewer than two living breeders; see
+[`calcNeVariance`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeVariance.md)),
 `maleFounders` and `femaleFounders` (dataframes of the known male and
 female founder records), `nMaleFounders` and `nFemaleFounders` (the
 counts of those founders), and `total` (the total number of known

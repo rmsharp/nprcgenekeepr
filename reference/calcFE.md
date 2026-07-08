@@ -36,6 +36,7 @@ Other genetic value analysis:
 [`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md),
 [`calcGeneDiversity()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGeneDiversity.md),
 [`calcNeSexRatio()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeSexRatio.md),
+[`calcNeVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeVariance.md),
 [`calcRetention()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcRetention.md)
 
 ## Examples

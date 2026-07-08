@@ -15,6 +15,61 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-08 — Implement issue \#118 Slice 3 — E3 variance effective size (`calcNeVariance`) (Session 312)
+
+- **Deliverable:** Slice 3 of the \#118 plan
+  (`docs/planning/issue118-effective-population-size-plan.md` §8) under
+  strict TDD (PRE-RED → RED → GREEN → concluded no-refactor). 5
+  `AskUserQuestion` gates (pre-RED scope D-d formula + N\<2 degeneracy,
+  then PRE-RED→RED, RED→GREEN, GREEN→REFACTOR); 0 stakeholder
+  corrections. ONE slice — Slice 4 (publish/docs) not started.
+- **Load-bearing owner decision (D-d), and a plan correction:** the plan
+  (Dragon D-7 / D-d) recommended the “mean-adjusted Crow-Kimura form”
+  *on the rationale that the bare `(4N-4)/(Vk+2)` “overstates” Ne*.
+  Computing all candidates on the real bundled pedigree (N=156, k̄=5.28,
+  Vk=16.54) showed that rationale is **inverted**: the bare form gives
+  the **lowest** value (33.4), the mean-adjusted general form gives
+  **110.9**, and a rescale-to-replacement variant gives 141.7. The
+  plan’s headline “skew drags E3 far below E2” only holds under the
+  dimensionally-inconsistent bare form (which mixes a k̄=5.28-scale
+  variance into a k̄=2 formula). Presented the three candidates with real
+  values and the correction; **owner ratified the general Crow-Kimura
+  form** `Ne = (N·k̄ − 1)/(k̄ − 1 + Vk/k̄)` (the standard generalization;
+  reduces to the classic `(4N−2)/(Vk+2)` at replacement) and **N\<2 →
+  NA**.
+- **New (`R/calcNeVariance.R`, exported):** `calcNeVariance(ped)` over
+  the current living breeders — reuses the S311 `getLivingBreeders(ped)`
+  helper (N = number of living breeders; k̄, Vk from
+  [`findOffspring()`](https://github.com/rmsharp/nprcgenekeepr/reference/findOffspring.md)
+  lifetime offspring counts, all sexes counted); `NA` when fewer than 2
+  living breeders (variance undefined). Roxygen states the formula, the
+  living-breeder population, the Wright-Fisher idealizing assumptions,
+  and `@references Crow & Kimura (1970)`. `1.0` house-style literals
+  (implicit_integer_linter).
+- **Wired additively:**
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+  bundle gains the colony-level scalar `neVariance` (after
+  `neSexRatio`) + `@return` clause; threaded through the `founderStats`
+  reactive into a SECOND “Variance Ne” column in the existing
+  `modSummaryStats` “Effective Population Size” block (not a third
+  block) and a `Variance Ne (living breeders)` row in the
+  `modGeneticValue` GV-tab summary.
+  `fe`/`fg`/`fgSE`/`neGD`/`neSexRatio`/founder-count golden-master
+  unchanged.
+- **Verification:** full suite **3712 pass / 0 fail / 0 error** (touched
+  files 0 skipped under `NOT_CRAN=true`); lint **0** on all 4 changed R
+  files; spelling clean (`Kimura` hand-added to `inst/WORDLIST` sorted —
+  `update_wordlist` NOT run); `devtools::check()` **0/0/0**;
+  `man/calcNeVariance.Rd` + `NAMESPACE` `export(calcNeVariance)`
+  regenerated. Phase 3E on real `qcPed`: 18 living breeders →
+  `neVariance = 26.41` rendered live beside `neSexRatio = 17.78` in the
+  Effective Population Size block. (Note: on qcPed Ne_v 26.41 \> E2
+  17.78 \> census 18 — families are more even than Poisson, so the
+  variance Ne legitimately exceeds the census.)
+- **Also (unrelated, owner-requested):** filed issue **\#120** — an
+  AUDIT_WORKSTREAM task for a future session: “are there reference
+  citations for each calculation in the package?”
+
 ### 2026-07-08 — Implement issue \#118 Slice 2 — E2 demographic sex-ratio Ne (`calcNeSexRatio`) (Session 311)
 
 - **Deliverable:** Slice 2 of the \#118 plan
