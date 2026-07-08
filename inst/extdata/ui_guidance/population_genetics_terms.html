@@ -48,4 +48,82 @@
     founder equivalents and founder genome equivalents. Zoo Biol 8:111-123.
   </p>
 
+    <em>
+    <p style="padding-left: 10px">
+    <b>Gene Diversity (GD):</b>
+    <br>
+    Gene diversity is the expected heterozygosity retained relative to the
+  founding gene pool -- the fraction of the founders' allelic variation that
+  still survives in the current population.
+  </p>
+    <p style="padding-left: 50px; padding-bottom: 15px">
+    GD = 1 &minus; 1 / (2 &times; f<sub>g</sub>)
+  </p>
+    <p style="padding-left: 10px; padding-bottom: 25px">
+    Where f<sub>g</sub> is the founder genome equivalents above. GD is a
+  proportion, not a count of individuals: 0 means none of the founding
+  diversity is retained, and it approaches (but never reaches) 1 as
+  f<sub>g</sub> grows. It is computed over the same analysis set as the
+  founder statistics above.
+  </p>
+    </em>
+
+    <em>
+    <p style="padding-left: 10px">
+    <b>Sex-Ratio Effective Population Size (Sex-Ratio Ne):</b>
+    <br>
+    The sex-ratio effective size is the effective population size implied by an
+  unequal breeding sex ratio -- the diversity lost when many of one sex are
+  bred to few of the other, as in a harem colony.
+  </p>
+    <p style="padding-left: 50px; padding-bottom: 15px">
+    N<sub>e</sub> = 4 &times; N<sub>m</sub> &times; N<sub>f</sub> /
+  (N<sub>m</sub> + N<sub>f</sub>)
+  </p>
+    <p style="padding-left: 10px; padding-bottom: 25px">
+    Where N<sub>m</sub> and N<sub>f</sub> are the numbers of current living
+  breeders known to be male and female. It equals the census count when the
+  sexes are balanced and falls toward four times the rarer sex as the ratio
+  skews; it is 0 when either breeding sex is absent. This estimate is taken
+  over the current living breeders -- the living animals that appear as a sire
+  or dam -- which is a different (usually smaller) population than the analysis
+  set summarized by the founder statistics above.
+  </p>
+    </em>
+
+    <em>
+    <p style="padding-left: 10px">
+    <b>Variance Effective Population Size (Variance Ne):</b>
+    <br>
+    The variance effective size measures the diversity lost to unequal family
+  sizes -- usually the dominant reducer of effective size in a managed colony,
+  where a few breeders produce most of the offspring.
+  </p>
+    <p style="padding-left: 50px; padding-bottom: 15px">
+    N<sub>e</sub> = (N &times; k &minus; 1) / (k &minus; 1 + V / k)
+  </p>
+    <p style="padding-left: 10px; padding-bottom: 15px">
+    Where N is the number of current living breeders (of every sex), k is their
+  mean number of lifetime offspring, and V is the variance of those offspring
+  counts. This is the general Crow &amp; Kimura (1970) form; it makes no
+  constant-size assumption and reduces to the classic (4N &minus; 2) /
+  (V + 2) when the mean family size is at replacement (k = 2). It is undefined
+  -- shown as N/A -- when fewer than two living breeders are present.
+  </p>
+    <p style="padding-left: 10px; padding-bottom: 25px">
+    Crow JF, Kimura M. 1970. An Introduction to Population Genetics Theory.
+  Harper and Row, New York.
+  </p>
+    </em>
+
+    <em>
+    <p style="padding-left: 10px; padding-bottom: 25px">
+    Both effective-size estimates idealize a Wright-Fisher population
+  (constant size, discrete generations, random union of gametes), so read each
+  as an index of one source of diversity loss rather than a literal head count.
+  They are two of several ways to estimate effective size; an estimate based on
+  the rate of increase in coancestry may be added in a future version.
+  </p>
+    </em>
+
 

@@ -14,6 +14,28 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 # nprcgenekeepr (development version)
 - Changes
+  - The Genetic Value Analysis now reports three additional population-genetic
+    summaries: **gene diversity** (`GD = 1 - 1 / (2 * FG)`, the expected
+    heterozygosity retained from the founding gene pool) beside the founder
+    genome equivalents, and -- over the current living breeders -- a demographic
+    **sex-ratio effective population size** (`4 * Nm * Nf / (Nm + Nf)`) and a
+    **variance effective population size** (the general Crow & Kimura (1970)
+    form). All three appear on the Summary Statistics and Genetic Value tabs and
+    are defined, with their idealizing assumptions, in the in-app Population
+    Genetics Terms panel. Three exported helpers compute them:
+    `calcGeneDiversity()`, `calcNeSexRatio()`, and `calcNeVariance()`. (#118)
+  - `qcStudbook()`, `checkParentAge()`, `runQcStudbook()`, and
+    `getPotentialParents()` now accept sex-specific minimum breeding ages,
+    `minSireAge` and `minDamAge`, in place of the single `minParentAge`. Each
+    defaults to `NULL`, which looks up the species- and sex-specific breeding
+    age for the parent; supplying a number overrides that sex's floor. A male
+    below the (typically higher) male breeding age is now flagged in quality
+    control and excluded as a potential sire even when it would have passed the
+    old flat cutoff. `minParentAge` continues to work as a deprecated alias that
+    sets both floors, so existing scripts keep running. In the Shiny app the
+    single "Minimum Parent Age" box is replaced by two optional "Minimum Sire
+    Age" and "Minimum Dam Age" fields; leaving them blank uses the
+    species-specific defaults. (#119)
   - `makeSimPed()` now preserves a known parent instead of overwriting it.
     Previously it drew a random sire and dam for every listed animal, so an
     animal with one known and one unknown parent had its known parent replaced

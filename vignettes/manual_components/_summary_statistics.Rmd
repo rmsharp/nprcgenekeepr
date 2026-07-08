@@ -58,6 +58,25 @@ The tab reports founder statistics including:
 - Number of known founders, male founders, female founders
 - Founder equivalents and founder genome equivalents (the latter is a gene-drop
   estimate, shown inline with its sampling standard error as `FG +/- SE`)
+- **Gene diversity (GD)** beside FG: the expected heterozygosity still retained
+  from the founding gene pool, `GD = 1 - 1 / (2 * FG)`, over the same analysis
+  set as the founder statistics
+
+A separate **Effective Population Size** block reports two effective sizes over
+the **current living breeders** -- the living animals that appear as a sire or
+dam, a different (usually smaller) population than the analysis set above:
+
+- **Sex-Ratio Ne**, `4 * Nm * Nf / (Nm + Nf)`, the effective size implied by an
+  unequal breeding sex ratio (it equals the census when the sexes are balanced
+  and is 0 when either breeding sex is absent)
+- **Variance Ne**, the general Crow & Kimura (1970) form
+  `(N * k - 1) / (k - 1 + V / k)` where `k` is the mean and `V` the variance of
+  lifetime offspring counts, the effective size reduced by unequal family sizes
+  (N/A when fewer than two living breeders are present)
+
+Both effective sizes idealize a Wright-Fisher population (constant size,
+discrete generations, random union of gametes), so each is best read as an
+index of one source of diversity loss rather than a literal head count.
 
 For Mean Kinship and Genome Uniqueness, displays the Tukey five-number summary:
 minimum, 1^st^ quartile, median, mean, 3^rd^ quartile, and maximum.
