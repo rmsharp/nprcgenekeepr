@@ -227,6 +227,19 @@ BOOTSTRAP “Updating an existing project”).*
 
 (none — but see the Development Process Contract override below.)
 
+### Additional close-out checks
+
+**Citation checklist (issue \#120, 2026-07-08):** any session that adds
+a new displayed statistic/estimator to the package must update
+`inst/extdata/ui_guidance/population_genetics_terms.html` (or the
+relevant UI guidance page) and the statistic’s own roxygen `@references`
+in the same session that ships it, rather than deferring to a later
+audit. (Source:
+`docs/audits/ISSUE_120_CITATION_COVERAGE_AUDIT_2026-07-08.md` Structural
+Observation 1 — citation gaps correlated with recency, not centrality:
+the metrics missing coverage were consistently the ones added without
+their own citation pass.)
+
 ### Development Process Contract override
 
 This project runs **Strict Test-Driven Development** (see the

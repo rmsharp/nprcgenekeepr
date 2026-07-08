@@ -15,6 +15,42 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-08 — Close issue \#120 — delete orphan vignette duplicates (F12) + add citation-checklist process rule (Session 317)
+
+- **Deliverable:** REFACTOR-class, doc/housekeeping-only close-out of
+  the two items the S316 session explicitly scope-gated out of \#120.
+  TDD RED/GREEN N/A (no implementation code, no testable behavior change
+  — same precedent as S316/S273/S274/S275/S278). 1 `AskUserQuestion`
+  gate at session start (owner picked “finish \#120: F12 + Process” over
+  closing now with both waived, or working a different issue). 0
+  stakeholder corrections.
+- **F12:** deleted the two confirmed-orphan vignette source files —
+  `vignettes/manual_components/_bg_algorithm.Rmd` (byte-identical
+  duplicate of the built `_breeding_group_algorithm.Rmd`) and
+  `_bg_formation.Rmd` (a stale 2017 draft of the built, 2025-updated
+  `_breeding_group_formation.Rmd`). Confirmed via
+  `grep child= vignettes/a3manual.Rmd` (neither orphan is referenced)
+  and a repo-wide grep for the two filenames (only prose mentions in
+  audit/session docs, no functional references) before removal.
+- **Process:** added a new “Additional close-out checks” subsection to
+  `CLAUDE.md`’s Project-Specific Methodology Adaptations — any session
+  adding a new displayed statistic/estimator must update
+  `inst/extdata/ui_guidance/population_genetics_terms.html` and the
+  statistic’s own roxygen `@references` in the same session that ships
+  it, per the audit’s Structural Observation 1 (citation gaps correlate
+  with recency, not centrality).
+- **Verification:** `R CMD build` (twice — once `--no-build-vignettes`,
+  once full) both clean, confirming vignette rebuild is unaffected by
+  the deletion; `devtools::check(cran=TRUE)` — **0 errors / 0 warnings /
+  0 notes**, `testthat.R` and `spelling.R` both OK; fast regression read
+  (`test_dir` + offender isolation) — **0 failed / 0 error / 0
+  warning**, 3092 passed, 169 skipped (baseline e2e/app noise), zero
+  non-baseline offenders.
+- **Issue \#120 CLOSED** — all 12 citation-coverage audit findings now
+  addressed (F1–F11 in S316, F12 + Process here).
+- **Files:** 2 vignette source files deleted; `CLAUDE.md` (+4 lines, new
+  subsection); `SESSION_NOTES.md`, `CHANGELOG.md` (this entry).
+
 ### 2026-07-08 — Fix issue \#120 §6 — apply 11/12 citation-coverage audit findings (F1–F11) (Session 316)
 
 - **Deliverable:** REFACTOR-class, doc-only fix of the S315 audit’s §6

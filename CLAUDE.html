@@ -206,6 +206,10 @@
 <p>(none — but see the Development Process Contract override below.)</p>
 </div>
 <div class="section level3">
+<h3 id="additional-close-out-checks">Additional close-out checks<a class="anchor" aria-label="anchor" href="#additional-close-out-checks"></a></h3>
+<p><strong>Citation checklist (issue #120, 2026-07-08):</strong> any session that adds a new displayed statistic/estimator to the package must update <code>inst/extdata/ui_guidance/population_genetics_terms.html</code> (or the relevant UI guidance page) and the statistic’s own roxygen <code>@references</code> in the same session that ships it, rather than deferring to a later audit. (Source: <code>docs/audits/ISSUE_120_CITATION_COVERAGE_AUDIT_2026-07-08.md</code> Structural Observation 1 — citation gaps correlated with recency, not centrality: the metrics missing coverage were consistently the ones added without their own citation pass.)</p>
+</div>
+<div class="section level3">
 <h3 id="development-process-contract-override">Development Process Contract override<a class="anchor" aria-label="anchor" href="#development-process-contract-override"></a></h3>
 <p>This project runs <strong>Strict Test-Driven Development</strong> (see the “Development Process Contract” section above). This is a project-specific override of the base methodology’s general development guidance: tests are written before implementation, every response declares its TDD phase (RED / GREEN / REFACTOR), and phase transitions require permission. It supersedes general coding instincts but operates <em>within</em> the SESSION_RUNNER protocol (orient → one deliverable → close out). Implementation and bug-fix sessions therefore follow the chosen workstream <strong>and</strong> the RED→GREEN→REFACTOR gates.</p>
 </div>

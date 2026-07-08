@@ -7,6 +7,113 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 317 Did
+
+**Deliverable:** **Close issue \#120** – finish the two items S316
+explicitly scope-gated out: **F12** (delete 2 confirmed-orphan vignette
+source files) and the **Process recommendation** (a standing
+citation-checklist rule). REFACTOR-class, doc/housekeeping-only; **TDD
+RED/GREEN N/A** – no implementation code changed, no testable behavior
+change, matching this project’s established precedent for audit-driven
+doc fixes (S273/S274/S275/ S278/S316). 1 `AskUserQuestion` at session
+start (owner picked “finish \#120: F12 + Process” over “close \#120 now,
+waive both” or “work a different issue”). **Started / Completed:**
+2026-07-08 / 2026-07-08 **Status:** **DONE. Issue \#120 CLOSED** (all 12
+citation-coverage audit findings now addressed: F1-F11 in S316, F12 +
+Process here). **0 stakeholder corrections.**
+
+**Session 316 Handoff Evaluation (by Session 317): Score 9/10.** S316’s
+SUGGESTED NEXT gave the exact two remaining items with file paths and
+the grep evidence already run (`grep child= vignettes/a3manual.Rmd`
+showing neither orphan is referenced), so this session needed zero
+re-derivation – only a repo-wide confirmation grep (also clean: only
+prose mentions in audit/session docs, no functional references) and a
+`.Rbuildignore`/ `DESCRIPTION` check before `git rm`. **What helped
+most:** the handoff framed the Process recommendation’s candidate
+locations (`CONTRIBUTING.md` / `PROJECT_LEARNINGS.md`) as the audit’s
+suggestion, not a mandate – leaving room to pick a better-fitting third
+option (`CLAUDE.md`’s own “Project-Specific Methodology Adaptations”
+section, already the designated home for project overrides and well
+under its size budget) without contradicting the handoff. **What was
+slightly off:** none found this session – the gvAndBgDesc.html
+tab-vs-space gotcha (S316 Learning) didn’t recur since this session
+never touched that file. **ROI:** very high – straight execution, no
+scope ambiguity, no rediscovery needed.
+
+**Self-assessment (Session 317): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_NOTES read; GH issues; dashboard 98/100; git status
+clean-except- standing) before asking the owner where to focus.
+**Strengths:** (1) verified the F12 deletion was safe from THREE angles
+before `git rm` – the audit’s own `a3manual.Rmd child=` evidence, a
+fresh repo-wide grep for both filenames (only prose hits), and a
+`.Rbuildignore`/`DESCRIPTION` grep – rather than trusting the audit’s
+claim alone; (2) proved the deletion inert by building the package TWICE
+(`--no-build-vignettes` then full, vignettes-included) and confirming
+both clean, not just assuming “unbuilt orphan = safe”; (3) ran the full
+build-equivalent (`devtools::check(cran=TRUE)`: 0 errors/0 warnings/0
+notes) AND the project’s fast regression read (0 failed/0 error/0
+warning, 3092 passed) per the owner’s S314 standing directive to watch
+the warning column; (4) placed the Process rule in `CLAUDE.md` itself
+(read every session) rather than creating a new `CONTRIBUTING.md` file,
+keeping the addition proportionate (+4 lines, file still 179/~200 lines)
+instead of introducing new doc-surface sprawl; (5) closed the loop –
+CHANGELOG entry, this handoff, `gh issue close` with a summary comment,
+single commit, pushed. **Weaknesses:** (-) only 1 `AskUserQuestion`
+round vs S316’s 2 – reasonable given the handoff had already fully
+specified both remaining items with no open sub-decisions, but worth
+noting as a smaller-than-usual gate count.
+
+**Learnings:** No new pattern this session – straight execution of a
+fully- specified predecessor handoff. Confirms the existing
+\[\[check-process-history-before-rerunning-work\]\] reflex: the audit’s
+own evidence (grep results already run and quoted in the report) was
+sufficient to re-verify in under a minute rather than re-deriving
+reachability from scratch. Carried as applied (all held, no incidents):
+\[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[check-process-history-before-rerunning-work\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[regression-read-check-warnings\]\],
+\[\[push-close-out-docs-to-origin\]\].
+
+**=\> SUGGESTED NEXT.** Issue \#120 is fully closed – no follow-on
+required. Adjacent open work (unchanged from S315/S316): issue **\#116**
+Flags column (BLOCKED); **\#103** roxygen2 doc harmonization; **\#37**
+exported functions not used by app; **\#36/#28/#12/#11/#10/#5** older
+backlog. **E4** (rate-of-coancestry Ne) remains DEFERRED. The new
+`CLAUDE.md` citation- checklist rule applies proactively the next time
+any slice adds a displayed statistic (e.g. if E4 is ever picked up) –
+don’t wait for another audit to catch it. The CRAN thread (package
+ARCHIVED 2025-07-29, owner-run, **HARD STOP**).
+
+**Key files (this session).** **Deleted:**
+`vignettes/manual_components/_bg_algorithm.Rmd`,
+`vignettes/manual_components/_bg_formation.Rmd` (F12). **Modified:**
+`CLAUDE.md` (+4 lines, new “Additional close-out checks” subsection
+under Project-Specific Methodology Adaptations – the Process
+recommendation), `CHANGELOG.md` (this session’s entry),
+`SESSION_NOTES.md` (this handoff). **Not committed (pre-existing,
+untouched):** `.DS_Store` (modified), `PED_GV_AUDIT_2026-05-30.html`
+(untracked) – left alone as S308-S317 all have.
+
+**Gotchas for next session.** (1) **Issue \#120 is CLOSED** – do not
+re-open or re-audit citation coverage without a new trigger (e.g. a new
+displayed statistic shipping without its citation, per the new CLAUDE.md
+checklist). (2) **`gh issue view`/`gh pr edit` fail** on this repo
+(projectCards deprecation) – `gh issue close --comment`, `create`, and
+`gh api` all work; this session used
+`gh issue close 120 --comment "..."`. (3) **Owner standing directive
+(S314):** keep monitoring the `warning` column on every test run –
+checked this session (`devtools::check(cran=TRUE)`: 0 WARN; fast
+regression read: 0 warning), still standing, now clean across S314-S317.
+(4) `CLAUDE.md` is now 179 lines (~9.4 KB) – still comfortably under the
+~200 line/25 KB budget; the next addition to “Project-Specific
+Methodology Adaptations” can follow the same pattern (small,
+cited-source, dated subsection) without triggering another extraction to
+`PROJECT_LEARNINGS.md`.
+
 ### What Session 316 Did
 
 **Deliverable:** **Issue \#120 – fix section 6 of the citation-coverage
