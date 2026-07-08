@@ -6,6 +6,132 @@
 
 ## ACTIVE TASK
 
+### What Session 311 Did
+**Deliverable:** **Slice 2 (E2 demographic sex-ratio Ne) of the #118
+effective-population-size plan** (`docs/planning/issue118-effective-population-size-plan.md`
+§8) -- new `@noRd` `getLivingBreeders(ped)` (shared helper, reused by Slice 3/E3)
++ exported `calcNeSexRatio(ped) = 4*Nm*Nf/(Nm+Nf)` over current living breeders;
+`neSexRatio` threaded additively into the `reportGV` bundle (AFTER `neGD`) and into
+a SEPARATE "Effective Population Size" display block labeled "current living
+breeders" (GD stays beside FG), under strict TDD.
+**Started / Completed:** 2026-07-08 / 2026-07-08
+**Status:** **DONE.** Owner ratified (via `AskUserQuestion`, this session) **D-b** =
+living breeders in the WHOLE pedigree (living animals appearing as a sire/dam
+anywhere in `ped`, U-ids excluded, all-living when no `exit` column), independent
+of the proband/population selection; **D-c** = `Ne_sr = 0` when a breeding sex is
+absent (`Nm==0` or `Nf==0`, incl. no living breeders); **D-a (E2)** = a separate
+"Effective Population Size" block (the block deferred from Slice 1 is introduced
+here, the first living-breeder metric). Full RED→GREEN→concluded-no-refactor with 4
+`AskUserQuestion` gates (scope D-b/D-c/D-a + PRE-RED→RED + RED→GREEN + GREEN→REFACTOR);
+**0 stakeholder corrections.** Commit `feat: #118 S311` (single commit; hash in `git log`).
+
+**Session 310 Handoff Evaluation (by Session 311): Score 9/10.** S310's SUGGESTED
+NEXT was turnkey: it named the successor as "Slice 2 = E2", pre-listed **D-b/D-c
+with recommendations** (which became my scope `AskUserQuestion` almost verbatim, +
+D-a's E2 portion which S310 correctly flagged as deferred-to-here), and gave exact,
+firsthand-accurate wiring targets -- the `reportGV.R` bundle, the `modGeneticValue.R`
+`founderStats` reactive + GV-tab `founderData`, the `modSummaryStats.R` founder
+table. **What helped most:** (1) the `NOT_CRAN=true` gotcha -- I set it from the
+first RED run, so my RED read showed `skipped=0` and every new test failed for the
+right reason (no silent-skip trap); (2) "neGD is bundle element #7; E2/E3 ride
+additively AFTER neGD; update BOTH `expect_named` copies (2-space + 4-space, NOT
+byte-identical)" -- exactly right, two separate edits; (3) "D-a for E2/E3: the
+separate block is introduced in Slice 2 with a living-breeders label" -- told me the
+precise display decision to re-ratify. **What was missing (the -1):** neither S310's
+gotchas nor the plan flagged that `reportGV()` is called in tests on an **exit-less
+ped** (`makeOriginTestPed()` in `test_reportGV.R` has no `exit` column), so the new
+`getLivingBreeders()` had to guard `is.null(ped$exit)` or the moment `neSexRatio`
+joined the bundle it would crash those pre-existing passing tests -- I caught it
+while designing the helper (Learning 289b), but a one-line note would have surfaced
+it earlier. **What was wrong:** nothing material. **ROI:** very high.
+
+**Self-assessment (Session 311): 9/10.** Oriented fully (SAFEGUARDS + SESSION_RUNNER
+read in full; ghost-check clean -- S310 = last commit `4d164a99`; wrote the 1B stub
+before any technical work; reported and waited). **Strengths:** (1) re-ratified the
+DEFERRED display block at the gate rather than building it from the plan's headline
+(Learning 289a) -- posed D-a's E2 portion with D-b/D-c in one scope `AskUserQuestion`;
+(2) caught the exit-less-ped input contract (Learning 289b) -- the guard kept the
+`#76`/`#2` fixtures green; (3) textbook RED -- 2 new test files + 3 extended, all
+failing for the RIGHT reason (function/field/label absent) with `skipped=0` under
+`NOT_CRAN=true`, and every golden-master test (fe/fg/fgSE/neGD/counts, #9/#73/#76/#2/
+#86/#82/#13) still passing; (4) Phase 3E on REAL qcPed data (18 living breeders,
+Nm=8/Nf=10 -> `neSexRatio=17.78`), diagnosed the testServer flush artifact rather
+than accepting a stray FALSE (Learning 289c); (5) shared helper returns ids for
+E3 reuse (289d); (6) lint 0, spelling clean (reworded to reuse listed `probands`,
+no WORDLIST growth), `check` 0/0/0; (7) ONE slice -- did NOT start E3 (FM #2/#18);
+0 stakeholder corrections. **Weaknesses (the -1):** (a) the first Phase-3E smoke
+printed a stray all-FALSE line (the testServer flush artifact) -- correct behavior
+throughout, but it cost one extra verification loop to prove it was a flush timing
+issue, not a render bug; (b) `devtools::document()` re-touched ~10 sibling `.Rd`
+files (the `@family` cross-link cascade) -- benign and verified cross-link-only, but
+a moment to confirm it wasn't version churn.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 289** -- (a) re-ratify a
+prior-slice DEFERRED display element at this slice's gate; (b) a helper wired into a
+widely-called function inherits its FULL input variety (exit-less peds), not just the
+bundled fixture; (c) `session$flushReact()` before reading a `renderUI` output in an
+ad-hoc testServer probe, and distinguish a flush artifact from a real bug by looping;
+(d) shared-helper returns ids for cross-slice reuse; degeneracy sentinel `0.0`/`4.0`
+keeps double type + lint clean; (e) reword to reuse a listed WORDLIST plural; verify
+the `document()` `@family` cascade is cross-link-only. Carried as applied:
+[[consult-project-source-of-truth]], [[observation-vs-decision]],
+[[avoid-new-lints-r-package]], [[avoid-reconcile-tools-on-curated-files]],
+[[keep-dev-process-refs-out-of-user-docs]], [[push-close-out-docs-to-origin]].
+
+**=> SUGGESTED NEXT.** #118 Slice 2 (E2) is **done**; Slice 3 (E3) + Slice 4
+(publish/docs) remain. The natural successor is **Slice 3 = E3 variance effective
+size** (`~ (4N-4)/(Vk+2)` stable-pop form, or the mean-adjusted Crow-Kimura form --
+see below), over the SAME living-breeder population, **reusing
+`getLivingBreeders(ped)`** (returns ids; `N <- length(ids)`, offspring counts via
+`findOffspring(ids, ped)` for `Vk`). **The single load-bearing decision (Dragon
+D-7 / D-d):** ratify the E3 formula VARIANT at the Slice-3 pre-RED gate -- the bare
+`(4N-4)/(Vk+2)` assumes replacement (`kbar~2`), but the colony grows (`kbar=5.28` on
+the example), so it OVERSTATES Ne; the plan recommends the **mean-adjusted
+Crow-Kimura form** (§5.2 D-d). Also ratify the `N<2 -> NA` degeneracy. Then:
+`R/calcNeVariance.R` (`@export`) -> RED on crafted tiny peds with KNOWN `N`, `kbar`,
+`Vk` against the ratified formula (`Vk=0` equal-family -> max Ne; a skewed case ->
+lower Ne; `N<2 -> NA`) -> thread `neVariance` into the bundle (additively AFTER
+`neSexRatio`) and the SAME "Effective Population Size" block (a second row beside
+Sex-Ratio Ne). **Other open work (owner's pick):** #116 Flags (BLOCKED); #103 roxygen
+harmonization; #37/#36/#28/#12/#11/#10/#5; the CRAN thread (package ARCHIVED
+2025-07-29, owner-run, HARD STOP).
+
+**Key files (this session).** **New:** `R/getLivingBreeders.R` (`@noRd` helper),
+`R/calcNeSexRatio.R` (`@export`), `tests/testthat/test_getLivingBreeders.R`,
+`tests/testthat/test_calcNeSexRatio.R`, `man/calcNeSexRatio.Rd`. **Changed:**
+`R/reportGV.R` (bundle: `neSexRatio = calcNeSexRatio(ped)` after `neGD`, ~`:284`; +
+`@return` clause ~`:65-70`), `R/modGeneticValue.R` (`founderStats` reactive
+`neSexRatio = fr$neSexRatio` ~`:495`; `gvSummary` `neSrDisplay` + "Sex-Ratio Ne
+(living breeders)" row ~`:401-420`), `R/modSummaryStats.R` (new `neTbl` "Effective
+Population Size" block ~`:665-684`, inserted into the returned `div` ~`:704`),
+`NAMESPACE` (`export(calcNeSexRatio)`), `tests/testthat/test_reportGV.R` (2
+`expect_named` + new `neSexRatio` test), `tests/testthat/test_modSummaryStats.R` (E2
+block test), `tests/testthat/test_modGeneticValue.R` (E2 row test), ~10 `man/*.Rd`
+(the `@family` cross-link cascade -- cross-link-only). **Docs (close-out):**
+`CHANGELOG.md` ([Unreleased] S311), `PROJECT_LEARNINGS.md` (289), this handoff.
+**Scratch (not committed):** `scratchpad/check_S311.log` (the 0/0/0 check summary).
+
+**Gotchas for next session.** (1) **Run tests with `NOT_CRAN=true`** -- module test
+files (`test_modGeneticValue.R:6`, `test_modInput*.R`) are `skip_on_cran`; a naive
+`test_file`/`test_dir` under `Rscript` silently skips them (assert `skipped==0` on
+touched files). (2) `neSexRatio` is now bundle element #8 (after `neGD`, before
+`maleFounders`); E3's `neVariance` rides additively AFTER `neSexRatio` -- update BOTH
+`expect_named` copies in `test_reportGV.R` (2-space + 4-space, NOT byte-identical).
+(3) **`reportGV()` runs on exit-less peds** (`makeOriginTestPed()`) -- any new
+helper reading `ped$exit` MUST guard `is.null(ped$exit)`; `getLivingBreeders()`
+already does. (4) **E3 reuses `getLivingBreeders(ped)`** (returns ids): `N <-
+length(ids)`, `Vk` from `findOffspring(ids, ped)`. (5) **E3 display = a SECOND row in
+the existing `neTbl` "Effective Population Size" block** (`modSummaryStats.R`), plus
+a parity row in the `modGeneticValue` GV-tab summary -- do NOT add a third block. (6)
+**Ratify the E3 formula variant (D-d) at the pre-RED gate** -- it is the load-bearing
+correctness choice (bare form overstates Ne when `kbar != 2`). (7) `sex` is a factor
+`{F,M,H,U}`, `NA->"U"`; E2 counts only `=="M"`/`=="F"` (E3's `N` counts all living
+breeders regardless of sex). (8) `session$flushReact()` before reading a `renderUI`
+output in an ad-hoc testServer Phase-3E probe, or it reads empty. (9) `devtools::document()`
+cascades `@family` cross-links to sibling `.Rd` -- expected; verify cross-link-only.
+(10) Pre-existing untracked `PED_GV_AUDIT_2026-05-30.html` + modified `.DS_Store` are
+NOT this session's work (left untouched, as S308/S309/S310 did).
+
 ### What Session 310 Did
 **Deliverable:** **Slice 1 (E1 gene diversity) of the #118 effective-population-size
 plan** (`docs/planning/issue118-effective-population-size-plan.md` §8) -- implement

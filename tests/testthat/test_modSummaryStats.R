@@ -363,3 +363,53 @@ test_that("modSummaryStatsServer founder table shows Gene Diversity (GD) beside 
     }
   )
 })
+
+# ---------------------------------------------------------------------------
+# Issue #118 Slice 2 (E2): the Summary-Statistics panel shows the demographic
+# sex-ratio effective size (Ne_sr = 4 * Nm * Nf / (Nm + Nf)) in a SEPARATE
+# "Effective Population Size" block labeled for its population -- the current
+# living breeders -- NOT in the founder table (whose FE/FG/GD are over the
+# analysis set, a different population). The block renders only when
+# founderStats() carries the scalar neSexRatio threaded through from reportGV();
+# older founderStats without it show no such block. Ne_sr = 3.60 here.
+# ---------------------------------------------------------------------------
+test_that("modSummaryStatsServer shows a separate Effective Population Size block for E2 (issue #118 Slice 2)", {
+  skip_if_not_installed("shiny")
+
+  test_gv <- data.frame(
+    id = c("A", "B", "C"),
+    meanKinship = c(0.1, 0.2, 0.3),
+    genomeUniqueness = c(0.9, 0.8, 0.7),
+    stringsAsFactors = FALSE
+  )
+  test_ped <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+  fstats <- list(
+    total = 124L, nMaleFounders = 60L, nFemaleFounders = 64L,
+    fe = 77.04, fg = 52.76, fgSE = 0.05, neGD = 0.9905,
+    neSexRatio = 3.6
+  )
+
+  shiny::testServer(
+    modSummaryStatsServer,
+    args = list(
+      geneticValues = shiny::reactive({ test_gv }),
+      pedigree = shiny::reactive({ test_ped }),
+      kinshipMatrix = NULL,
+      founderStats = shiny::reactive({ fstats })
+    ),
+    {
+      html <- as.character(output$summaryStats)
+      ## a separate, population-labeled Effective Population Size block
+      expect_true(any(grepl("Effective Population Size", html)))
+      expect_true(any(grepl("current living breeders", html)))
+      ## the sex-ratio Ne value rendered to two decimals
+      expect_true(any(grepl("3.60", html)))
+    }
+  )
+})

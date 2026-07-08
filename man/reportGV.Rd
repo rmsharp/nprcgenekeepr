@@ -84,7 +84,11 @@ colony-level number, \code{NA} when a contributing founder is retained in
 zero gene-drop iterations -- see \code{\link{calcFGSE}}), \code{neGD} (gene
 diversity retained in the founding gene pool, \code{1 - 1 / (2 * fg)}; a
 colony-level scalar beside \code{fg}, \code{NA} when \code{fg} is \code{NA};
-see \code{\link{calcGeneDiversity}}), \code{maleFounders}
+see \code{\link{calcGeneDiversity}}), \code{neSexRatio} (the demographic
+sex-ratio effective size, \code{4 * nMale * nFemale / (nMale + nFemale)},
+over the current living breeders -- a different population than \code{fg} and
+\code{neGD}; \code{0} when a breeding sex is absent; see
+\code{\link{calcNeSexRatio}}), \code{maleFounders}
 and
 \code{femaleFounders} (dataframes of the known male and female founder
 records), \code{nMaleFounders} and \code{nFemaleFounders} (the counts of

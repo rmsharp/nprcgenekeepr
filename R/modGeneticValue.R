@@ -399,16 +399,26 @@ modGeneticValueServer <- function(id, pedigree,
         } else {
           "N/A"
         }
+        # Issue #118 Slice 2 (E2): the demographic sex-ratio effective size,
+        # over the current living breeders (a different population than FE/FG/GD
+        # above), so the row names its population; N/A for older results.
+        neSrDisplay <- if (!is.null(fullRes$neSexRatio) &&
+                             is.finite(fullRes$neSexRatio)) {
+          sprintf("%.2f", fullRes$neSexRatio)
+        } else {
+          "N/A"
+        }
         founderData <- data.frame(
           Metric = c("Total Founders", "Male Founders", "Female Founders",
                      "Founder Equivalents (FE)", "Founder Genome Equiv. (FG)",
-                     "Gene Diversity (GD)"),
+                     "Gene Diversity (GD)", "Sex-Ratio Ne (living breeders)"),
           Value = c(as.character(fullRes$total),
                     as.character(fullRes$nMaleFounders),
                     as.character(fullRes$nFemaleFounders),
                     sprintf("%.2f", fullRes$fe),
                     fgDisplay,
-                    gdDisplay),
+                    gdDisplay,
+                    neSrDisplay),
           stringsAsFactors = FALSE
         )
         summaryData <- rbind(summaryData, founderData)
@@ -482,6 +492,7 @@ modGeneticValueServer <- function(id, pedigree,
           fg = fr$fg,
           fgSE = fr$fgSE, # issue #82 Slice 3: scalar FG sampling SE (or NULL)
           neGD = fr$neGD, # issue #118 Slice 1: gene diversity GD (or NULL)
+          neSexRatio = fr$neSexRatio, # issue #118 Slice 2: sex-ratio Ne
           total = fr$total,
           nMaleFounders = fr$nMaleFounders,
           nFemaleFounders = fr$nFemaleFounders

@@ -662,6 +662,29 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
         )
       }
 
+      # Issue #118 Slice 2 (E2): a SEPARATE Effective Population Size block for
+      # the demographic sex-ratio effective size, rendered only when
+      # founderStats() carries the scalar neSexRatio. It names its own
+      # population -- the current living breeders -- because that differs from
+      # the analysis-set population of the founder table above; Ne is not one
+      # number, and the two populations must not be conflated.
+      neTbl <- if (!is.null(fs) && !is.null(fs$neSexRatio) &&
+                     is.finite(fs$neSexRatio)) {
+        tags$div(
+          h4("Effective Population Size"),
+          tags$p(tags$em("Population: current living breeders")),
+          tags$table(
+            class = "display",
+            tags$thead(tags$tr(
+              tags$th("Sex-Ratio Ne")
+            )),
+            tags$tbody(tags$tr(
+              tags$td(sprintf("%.2f", fs$neSexRatio))
+            ))
+          )
+        )
+      }
+
       # Mean-kinship / genome-uniqueness quartile distribution tables.
       distTbl <- tags$table(
         class = "display",
@@ -692,6 +715,7 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
         ),
         founderTbl,
         br(),
+        neTbl,
         distTbl
       )
     })

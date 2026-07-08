@@ -5,7 +5,7 @@ qcPed <- nprcgenekeepr::qcPed
 gvReport <- reportGV(qcPed, guIter = 100L)
 test_that("reportGV forms correct genetic value report", {
   expect_named(gvReport, c(
-    "report", "kinship", "gu", "fe", "fg", "fgSE", "neGD",
+    "report", "kinship", "gu", "fe", "fg", "fgSE", "neGD", "neSexRatio",
     "maleFounders", "femaleFounders",
     "nMaleFounders", "nFemaleFounders", "total"
   ))
@@ -30,7 +30,7 @@ test_that(
   "reportGV forms correct genetic value report with updateProgress defined",
   {
     expect_named(gvReport, c(
-      "report", "kinship", "gu", "fe", "fg", "fgSE", "neGD",
+      "report", "kinship", "gu", "fe", "fg", "fgSE", "neGD", "neSexRatio",
       "maleFounders", "femaleFounders",
       "nMaleFounders", "nFemaleFounders", "total"
     ))
@@ -76,6 +76,34 @@ test_that("reportGV carries scalar neGD = 1 - 1/(2*fg) beside fg (issue #118 Sli
   ## GD is a colony-level scalar like fg -- it must NOT be a per-animal column
   expect_false("neGD" %in% names(gv$report))
   expect_false("neGD" %in% names(gv$gu))
+})
+
+# ---------------------------------------------------------------------------
+# Issue #118 Slice 2 (E2): reportGV carries the demographic sex-ratio effective
+# size (Ne_sr = 4 * Nm * Nf / (Nm + Nf)) as a colony-level SCALAR neSexRatio,
+# computed over the CURRENT LIVING BREEDERS in the pedigree -- a DIFFERENT
+# population than fg / neGD (which are over the analysis set). Like fgSE / neGD
+# it is one number riding beside them, NOT a per-animal column. It is a
+# deterministic function of the pedigree's own demographics (no gene drop), so
+# it must equal the standalone calcNeSexRatio(ped) on the same pedigree.
+# ---------------------------------------------------------------------------
+test_that("reportGV carries scalar neSexRatio over living breeders (issue #118 Slice 2 E2)", {
+  gv <- reportGV(qcPed, guIter = 100L)
+
+  expect_true("neSexRatio" %in% names(gv))
+  expect_length(gv$neSexRatio, 1L)
+  expect_true(is.numeric(gv$neSexRatio))
+
+  ## exactly the standalone E2 computed on the same pedigree (living breeders)
+  expect_equal(gv$neSexRatio, calcNeSexRatio(qcPed))
+
+  ## a finite, non-negative effective size on qcPed
+  expect_true(is.finite(gv$neSexRatio))
+  expect_gte(gv$neSexRatio, 0)
+
+  ## Ne_sr is a colony-level scalar -- it must NOT be a per-animal column
+  expect_false("neSexRatio" %in% names(gv$report))
+  expect_false("neSexRatio" %in% names(gv$gu))
 })
 
 # ---------------------------------------------------------------------------

@@ -65,7 +65,11 @@
 #' zero gene-drop iterations -- see \code{\link{calcFGSE}}), \code{neGD} (gene
 #' diversity retained in the founding gene pool, \code{1 - 1 / (2 * fg)}; a
 #' colony-level scalar beside \code{fg}, \code{NA} when \code{fg} is \code{NA};
-#' see \code{\link{calcGeneDiversity}}), \code{maleFounders}
+#' see \code{\link{calcGeneDiversity}}), \code{neSexRatio} (the demographic
+#' sex-ratio effective size, \code{4 * nMale * nFemale / (nMale + nFemale)},
+#' over the current living breeders -- a different population than \code{fg} and
+#' \code{neGD}; \code{0} when a breeding sex is absent; see
+#' \code{\link{calcNeSexRatio}}), \code{maleFounders}
 #' and
 #' \code{femaleFounders} (dataframes of the known male and female founder
 #' records), \code{nMaleFounders} and \code{nFemaleFounders} (the counts of
@@ -276,6 +280,11 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
     # fg (same analysis-set population as FG). NA propagates from a degenerate
     # (NA) FG.
     neGD = calcGeneDiversity(feFg$FG),
+    # Issue #118 Slice 2 (E2): demographic sex-ratio effective size,
+    # 4*nMale*nFemale/(nMale+nFemale), over the CURRENT LIVING BREEDERS in ped
+    # -- a different population than fg/neGD (the analysis set). Deterministic
+    # (no gene drop); 0 when a breeding sex is absent (see calcNeSexRatio).
+    neSexRatio = calcNeSexRatio(ped),
     maleFounders = males,
     femaleFounders = females,
     nMaleFounders = nrow(males),

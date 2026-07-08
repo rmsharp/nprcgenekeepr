@@ -70,6 +70,7 @@ Other genetic value analysis:
 \code{\link[=calcFGSE]{calcFGSE()}},
 \code{\link[=calcGU]{calcGU()}},
 \code{\link[=calcGeneDiversity]{calcGeneDiversity()}},
+\code{\link[=calcNeSexRatio]{calcNeSexRatio()}},
 \code{\link[=calcRetention]{calcRetention()}}
 }
 \concept{genetic value analysis}

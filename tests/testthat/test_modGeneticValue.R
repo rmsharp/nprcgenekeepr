@@ -378,6 +378,34 @@ test_that("modGeneticValueServer gvSummary shows a Gene Diversity row (issue #11
   )
 })
 
+# ---------------------------------------------------------------------------
+# Issue #118 Slice 2 (E2): the GV-tab summary carries the demographic sex-ratio
+# effective size (Ne_sr) as a labeled row naming its population -- the living
+# breeders -- for parity with the Summary-Statistics "Effective Population Size"
+# block. It is distinct from FE/FG/GD, which are over the analysis set. The
+# analysis on this fixture has both breeding sexes, so a real Ne_sr is shown.
+# ---------------------------------------------------------------------------
+test_that("modGeneticValueServer gvSummary shows a sex-ratio Ne row for living breeders (issue #118 Slice 2)", {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeValidTestPed(nFounders = 6, nOffspring = 14)
+
+  shiny::testServer(
+    modGeneticValueServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped })
+    ),
+    {
+      session$setInputs(nIterations = 100)
+      session$setInputs(runAnalysis = 1)
+
+      html <- as.character(output$gvSummary)
+      expect_true(any(grepl("Sex-Ratio Ne", html)))
+      expect_true(any(grepl("living breeders", html)))
+    }
+  )
+})
+
 test_that("modGeneticValueServer gvScatterPlot renders after analysis", {
   skip_if_not_installed("shiny")
 
