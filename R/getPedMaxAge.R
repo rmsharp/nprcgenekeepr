@@ -9,7 +9,8 @@
 #'
 #' @inheritParams reportGV
 #' @return Numeric value representing the maximum age of animals in the
-#' pedigree.
+#' pedigree, or \code{NA_real_} if no animal has a non-missing age (no
+#' \code{age} column or all ages missing).
 #'
 #' @export
 #' @examples
@@ -22,5 +23,9 @@
 #' )
 #' getPedMaxAge(ped)
 getPedMaxAge <- function(ped) {
-  max(ped$age, na.rm = TRUE)
+  ages <- ped$age
+  if (is.null(ages) || all(is.na(ages))) {
+    return(NA_real_)
+  }
+  max(ages, na.rm = TRUE)
 }

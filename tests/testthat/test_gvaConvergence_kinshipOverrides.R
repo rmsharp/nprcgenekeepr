@@ -154,11 +154,18 @@ test_that("gvaConvergence errors on an override above the PSD bound", {
     id1 = fx$pop[1], id2 = fx$pop[2], kinship = 0.9,
     stringsAsFactors = FALSE
   )
-  expect_error(
-    suppressMessages(gvaConvergence(fx$ped,
-      pop = fx$pop, nMax = 800L, seed = 11L, kinshipOverrides = badVal
-    )),
-    "above the maximum"
+  # Issue #121: this deliberately-invalid path emits the checkKinshipOverrides
+  # ">0.5" diagnostic (once via prepareKinshipOverrides, once via
+  # applyKinshipOverrides) before erroring. Assert both the warning and the
+  # error so neither leaks unasserted into the suite.
+  expect_warning(
+    expect_error(
+      suppressMessages(gvaConvergence(fx$ped,
+        pop = fx$pop, nMax = 800L, seed = 11L, kinshipOverrides = badVal
+      )),
+      "above the maximum"
+    ),
+    "off-diagonal value"
   )
 })
 

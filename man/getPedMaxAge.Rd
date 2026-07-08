@@ -11,7 +11,8 @@ getPedMaxAge(ped)
 }
 \value{
 Numeric value representing the maximum age of animals in the
-pedigree.
+pedigree, or \code{NA_real_} if no animal has a non-missing age (no
+\code{age} column or all ages missing).
 }
 \description{
 Returns the maximum age among all animals in the pedigree that
