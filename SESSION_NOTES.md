@@ -104,13 +104,22 @@ tabs, and documented. **E4 (rate-of-coancestry Ne, `Ne = 1/(2·dCbar)`)
 remains deferred** and would be its OWN planning+implementation effort
 (plan §11 has the future-work record; needs generation length, which the
 owner noted is hard to define in a controlled colony). **Adjacent open
-work (owner’s pick):** issue **\#120** (the citations audit S312 filed –
-“are there reference citations for each calculation?” – an
-AUDIT_WORKSTREAM session; NOTE: this Slice-4 work already added the Crow
-& Kimura 1970 and kept the Lacy 1989 citations in
-`population_genetics_terms.html`, so \#120 can start there); \#116 Flags
-(BLOCKED); \#103 roxygen harmonization; \#37/#36/#28/#12/#11/#10/#5; the
-CRAN thread (package ARCHIVED 2025-07-29, owner-run, HARD STOP).
+work (owner’s pick):** issue **\#121** (filed this session, owner said
+“address in a later session”) – the suite is `FAIL 0` but emits **7
+unasserted warnings**: `test_modPyramid.R` (5,
+[`max()`](https://rdrr.io/r/base/Extremes.html) on an empty/all-NA
+vector -\> `-Inf` during a reactive re-render) and
+`test_gvaConvergence_kinshipOverrides.R` (2, on the deliberately-invalid
+PSD-bound override path); test-hygiene, root-cause the pyramid
+[`max()`](https://rdrr.io/r/base/Extremes.html) if runtime-reachable,
+`expect_warning`/`suppressWarnings` the gvaConvergence case. Issue
+**\#120** (the citations audit S312 filed – “are there reference
+citations for each calculation?” – an AUDIT_WORKSTREAM session; NOTE:
+this Slice-4 work already added the Crow & Kimura 1970 and kept the Lacy
+1989 citations in `population_genetics_terms.html`, so \#120 can start
+there); \#116 Flags (BLOCKED); \#103 roxygen harmonization;
+\#37/#36/#28/#12/#11/#10/#5; the CRAN thread (package ARCHIVED
+2025-07-29, owner-run, HARD STOP).
 
 **Key files (this session).** **New:**
 `tests/testthat/test_effectivePopulationSizeDocs.R` (the RED guard – 5

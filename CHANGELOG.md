@@ -66,6 +66,15 @@ here.
   guidance HTML is embedded at runtime
   (`includeHTML(system.file(...))`), so the running app serves the new
   text.
+- **Also (close-out, owner-directed):** filed issue **\#121** — the
+  suite is `FAIL 0` but emits 7 unasserted warnings (`test_modPyramid.R`
+  ×5: [`max()`](https://rdrr.io/r/base/Extremes.html) on an empty vector
+  → `-Inf` during a reactive re-render;
+  `test_gvaConvergence_kinshipOverrides.R` ×2: the deliberately-invalid
+  PSD-bound override path). Pre-existing test-hygiene, unrelated to this
+  slice; owner deferred it to a later session. Also noted for my own
+  routine: the close-out “clean regression read” should inspect the
+  `warning` column, not just `failed`/`error`/`skipped`.
 
 ### 2026-07-08 — Implement issue \#118 Slice 3 — E3 variance effective size (`calcNeVariance`) (Session 312)
 
