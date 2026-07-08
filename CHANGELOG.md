@@ -15,6 +15,50 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-08 — issue \#103 — verify harmonization completeness; fix overlooked `set_seed.R` `@returns`-\>`@return` (Finding 1) (Session 318)
+
+- **Deliverable (owner scope-gate via `AskUserQuestion` = “fix the
+  one-liner, leave \#103 open for the internal-title sweep”):** the
+  owner asked whether \#103 might be complete. Verified against the S244
+  audit’s 8-stage roadmap
+  (`docs/audits/ROXYGEN_HARMONIZATION_AUDIT_2026-06-29.md` §6) rather
+  than trusting the changelog trail alone. **REFACTOR-class, doc-only;
+  TDD RED/GREEN N/A** (no implementation code, no testable behavior
+  change — matches the established \#103-stage precedent). 0 stakeholder
+  corrections.
+- **Confirmed complete via firsthand spot-checks (not just changelog
+  claims):** all 6 `#103`-tagged PRs (#104, \#105, \#106, \#107, \#108,
+  \#113) show `MERGED`, no open PRs remain; `R/getSimSires.R` confirmed
+  deleted; the only remaining `@keywords internal` is the
+  correctly-exempt `nprcgenekeepr-package.R`; two backtick hits in
+  `geneDrop.R`/`getGVGenotype.R` are inside `@examples` R-comment text
+  (never markdown-processed), not the Finding-4 prose-backtick defect
+  class — false positive, no action needed.
+- **Found genuinely incomplete: two items.** (1) **Finding 1’s
+  `@returns`-\>`@return` one-liner was never applied** —
+  `R/set_seed.R`’s internal `R_version()` helper (`@noRd`) still used
+  `@returns`; `git log --follow` confirmed this tag predates the entire
+  harmonization effort (commit `031ff714`) and was never touched by any
+  \#103-stage commit. **Fixed this session** (1-line change, `@noRd` so
+  zero rendered-doc impact, `man/` diff empty). (2) **Finding 3’s
+  internal-title-voice tail** (Stage 8a scoped to *exported* titles
+  only, per S257/258) was never resumed — **72 `@noRd` markers across 62
+  files** remain un-normalized. Owner chose to leave **\#103 OPEN** for
+  this (not exempt it like the Shiny `mod*` carve-out) — it needs its
+  own dedicated session, comparable in size/judgment to Stage 8a’s
+  original 100-file exported sweep.
+- **Verify:** `devtools::document()` — NAMESPACE + `man/` diff both
+  empty (the fixed tag is on an `@noRd` function);
+  `lintr::lint("R/set_seed.R")` = 0;
+  [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+  clean; **`devtools::check(cran=TRUE)` — `Status: OK`, 0 errors / 0
+  warnings / 0 notes**; fast regression read — 0 failed / 0 error / 0
+  warning, 3092 passed.
+- **\#103 remains OPEN** — the internal-title-voice sweep (Finding 3
+  tail) is the one concretely-scoped remaining item; see
+  `SESSION_NOTES.md` “Session 318” for the file/marker count and
+  precedent-sizing note.
+
 ### 2026-07-08 — Close issue \#120 — delete orphan vignette duplicates (F12) + add citation-checklist process rule (Session 317)
 
 - **Deliverable:** REFACTOR-class, doc/housekeeping-only close-out of

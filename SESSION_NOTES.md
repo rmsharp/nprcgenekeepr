@@ -7,6 +7,130 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 318 Did
+
+**Deliverable:** Owner asked whether issue \#103 (roxygen2
+harmonization, S244 audit) “may be complete.” Verified against the
+audit’s 8-stage roadmap firsthand (not just the changelog trail) and
+fixed the one genuine one-line gap found (`R/set_seed.R`
+`@returns`-\>`@return`, Finding 1). REFACTOR-class, doc-only; **TDD
+RED/GREEN N/A** – no implementation code, no testable behavior change,
+matching the established \#103-stage precedent. 1 `AskUserQuestion`
+(owner picked “fix the one-liner, leave \#103 open for the
+internal-title sweep” over exempting that sweep or attempting it this
+session). **Started / Completed:** 2026-07-08 / 2026-07-08 **Status:**
+**DONE.** Issue \#103 **remains OPEN** – the internal (`@noRd`)
+title-voice sweep (Finding 3 tail, 72 markers / 62 files) is the one
+concretely-scoped remaining item. **0 stakeholder corrections.**
+
+**Session 317 Handoff Evaluation (by Session 318): Score N/A – not
+applicable this session.** S317’s handoff concerned issue \#120
+(citation-coverage audit), fully closed and orthogonal to this session’s
+\#103 verification task; nothing in it bore on this session’s work, so
+there was nothing to evaluate for ROI. Noting this explicitly per FM
+\#10 rather than silently skipping the step: S317’s handoff was read in
+full during Phase 0 orientation (confirmed \#120 CLOSED, no ghost
+sessions, dashboard 98/100) but had zero applicability to the task the
+owner chose this session.
+
+**Self-assessment (Session 318): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_NOTES + GH issues + dashboard + git status) before the owner
+picked \#103. **Strengths:** (1) did NOT trust the changelog’s “Stages
+1-8b all landed” claims at face value – ran firsthand spot-checks
+(`gh pr list` confirmed all 6 \#103 PRs MERGED with none open;
+`ls R/getSimSires.R` confirmed the duplicate-file deletion; grepped for
+redundant `@keywords internal`, remaining stray backticks, and the
+flagged `@returns` instance); (2) caught that my own backtick grep had 2
+false-positive hits (`geneDrop.R`, `getGVGenotype.R`) and read the
+surrounding context far enough to see they were inside `@examples`
+R-comment text (never markdown-processed), not the Finding-4
+prose-backtick class, before reporting them as non-issues; (3) used
+`git log --follow` on `set_seed.R` to prove the `@returns` tag predates
+the entire harmonization effort (commit `031ff714`) rather than assuming
+it was a fresh regression; (4) surfaced the internal-title-voice tail as
+a *sizing* question (72 markers / 62 files, comparable to Stage 8a’s
+100-file exported sweep) rather than either silently fixing it or
+silently ignoring it, letting the owner make an informed scope call via
+`AskUserQuestion`; (5) ran the full build-equivalent
+(`devtools::check(cran=TRUE)`: Status OK, 0/0/0) AND the fast regression
+read (0 failed/error/warning, 3092 passed) despite the change being a
+single `@noRd` tag, per the owner’s S314 standing directive to watch the
+warning column on every run, not just “big” changes. **Weaknesses:** (-)
+did not attempt to size how much of the internal-title tail could be
+done safely-mechanically vs. needing per-file judgment (e.g. titles that
+are already imperative-voice by coincidence) – the “72/62” figure is a
+raw `@noRd` count, not a “titles needing change” count, so the next
+session doing that sweep will need its own census before estimating
+effort (a smaller version of the S257 exported-title census).
+
+**Learnings:** Reinforces
+\[\[check-process-history-before-rerunning-work\]\] with a twist – the
+changelog trail was NOT sufficient on its own this time; a “may be
+complete?” question warrants at least a few minutes of firsthand
+spot-checks (`gh pr list`, targeted greps, `git log --follow` on the one
+suspect file) even when the process history looks thorough, because
+thorough process history can still have a small, genuine gap (the
+`@returns` fix was *recommended* in the audit but never actually landed
+in any of the ~15 follow-on sessions – it fell through a crack between
+“mechanical Stage 1 defects” and “Finding 1,” which technically listed
+it under Finding 1’s *recommendation* text, not the D1-D8 defect table
+Stage 1 executed against). Carried as applied (all held, no incidents):
+\[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\],
+\[\[avoid-jargon-use-plain-language\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[avoid-new-lints-r-package\]\],
+\[\[regression-read-check-warnings\]\].
+
+**=\> SUGGESTED NEXT.** Issue \#103’s one remaining concretely-scoped
+item: the **internal (`@noRd`) title-voice sweep** (Finding 3 tail) –
+~62 `R/` files carry 72 `@noRd` markers whose function titles were never
+run through the Stage 8a imperative-voice normalization (that stage was
+explicitly scoped to *exported* functions only, per S257/258). A future
+session should: (1) run a census (which of the 72 already read as
+imperative-voice vs. need rewriting – likely a smaller true count than
+72, mirroring how Stage 8a’s exported census undercounted until
+multi-export files were re-scanned); (2) decide whether to bulk-script
+it or per-file review (Stage 8a used a 16-agent read-only Workflow for
+exactly this judgment-heavy class); (3) close \#103 after, unless
+another gap surfaces. Adjacent open work (unchanged from S315-317):
+issue **\#116** Flags column (BLOCKED); **\#37** exported functions not
+used by app; **\#36/#28/#12/#11/#10/#5** older backlog. **E4**
+(rate-of-coancestry Ne) remains DEFERRED. The CRAN thread (package
+ARCHIVED 2025-07-29, owner-run, **HARD STOP**).
+
+**Key files (this session).** **Modified:** `R/set_seed.R` (1-line
+`@returns`-\>`@return` fix on the `@noRd` `R_version()` helper),
+`CHANGELOG.md` (this session’s entry), `SESSION_NOTES.md` (this
+handoff). **No `man/` file changed** (the fixed tag is on an `@noRd`,
+non-rendering function – `devtools::document()` confirmed empty `man/`
+diff). **Not committed (pre-existing, untouched):** `.DS_Store`
+(modified), `PED_GV_AUDIT_2026-05-30. html` (untracked) – left alone as
+S308-S318 all have.
+
+**Gotchas for next session.** (1) **Issue \#103 is OPEN, not closed** –
+do not assume it’s done from the changelog’s “Stages 1-8b all landed”
+language alone; the one remaining item is the internal-title-voice sweep
+(see SUGGESTED NEXT). (2) The Finding-4 “stray backtick” count (48
+across 37 files, S244 audit) is genuinely at 0 in prose context – 2 hits
+will show up in a naive backtick-grep (`geneDrop.R:68`,
+`getGVGenotype.R:17`) but both are inside `@examples` R-comment text,
+not markdown-processed prose; do not re-flag these as Finding-4
+regressions. (3) `gh issue view`/`gh pr edit` fail on this repo
+(projectCards deprecation) –
+`gh api repos/rmsharp/nprcgenekeepr/ issues/<N>` and `gh pr list` both
+work fine, used this session to verify \#103 without hitting the known
+failure. (4) Owner standing directive (S314): keep monitoring the
+`warning` column on every test run – checked this session
+(`devtools::check(cran=TRUE)`: 0 WARN; fast regression read: 0 warning),
+still standing, now clean across S314-S318.
+
+### What Session 317 Did
+
+**Deliverable:** **Close issue \#120** – finish the two items S316
+explicitly scope-gated out: **F12** (delete 2 confirmed-orphan vignette
+source files) and
+
 ### What Session 317 Did
 
 **Deliverable:** **Close issue \#120** – finish the two items S316
