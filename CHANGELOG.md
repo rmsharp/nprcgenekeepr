@@ -15,6 +15,45 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-08 — Fix issue \#121 — test suite now WARN 0; guard `getPedMaxAge()` empty/all-NA input (Session 314)
+
+- **Deliverable:** Eliminate the 7 unasserted test warnings so the suite
+  runs `WARN 0` (keeping `FAIL 0`), under strict TDD (PRE-RED → RED →
+  GREEN → concluded no-refactor). 1 scope/approach `AskUserQuestion` + 3
+  phase-gate `AskUserQuestion`s; 0 stakeholder corrections.
+- **Root cause (modPyramid, 5 warnings):**
+  [`getPedMaxAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedMaxAge.md)
+  (`R/getPedMaxAge.R:25`) ran `max(ped$age, na.rm = TRUE)` on a pedigree
+  with no `age` column or all-NA ages, returning `-Inf` and emitting
+  `no non-missing arguments to max; returning -Inf`. The pyramid
+  module’s `renderPlot` re-fired on each `setInputs`, leaking 5 copies.
+  Runtime-reachable (a colony import lacking birth dates), risking a
+  `-Inf` axis bound — so fixed at the source, not the test.
+- **GREEN:**
+  [`getPedMaxAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedMaxAge.md)
+  now returns `NA_real_` when there are no non-missing ages (its sole
+  caller, `getPyramidPlot.R:52`, already maps `NA` → `binWidth`);
+  `@return` roxygen updated and `man/getPedMaxAge.Rd` regenerated.
+- **gvaConvergence (2 warnings):** the deliberately-invalid PSD-bound
+  override path emits the `checkKinshipOverrides` “\>0.5” diagnostic
+  twice (via `prepareKinshipOverrides` + `applyKinshipOverrides`) before
+  erroring; the test asserted the error but leaked the warnings.
+  Tightened `test_gvaConvergence_kinshipOverrides.R:157` to
+  `expect_warning(expect_error(...))`, asserting both (test-only
+  hygiene; no source change).
+- **RED:** new `test_getPedMaxAge.R` block asserting `NA` + no warning
+  on no-age-column and all-NA-age input (4 failures under the old
+  source).
+- **Verification:** full suite `FAIL 0 · ERROR 0 · WARN 0` (3740 passed,
+  167 skipped); `devtools::check()` 0/0/0; lint 0 on `R/getPedMaxAge.R`;
+  Phase-3E runtime probe rendered
+  [`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md)
+  on all-NA / no-age / real-age pedigrees with 0 warnings.
+- **Files:** `R/getPedMaxAge.R`, `man/getPedMaxAge.Rd`,
+  `tests/testthat/test_getPedMaxAge.R`,
+  `tests/testthat/test_gvaConvergence_kinshipOverrides.R`, `NEWS.Rmd`,
+  `NEWS.md`. Closes \#121.
+
 ### 2026-07-08 — Implement issue \#118 Slice 4 — publish / user documentation; **closes \#118** (Session 313)
 
 - **Deliverable:** Slice 4 (the final slice) of the \#118 plan

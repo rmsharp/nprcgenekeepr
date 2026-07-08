@@ -18,7 +18,9 @@ getPedMaxAge(ped)
 
 ## Value
 
-Numeric value representing the maximum age of animals in the pedigree.
+Numeric value representing the maximum age of animals in the pedigree,
+or `NA_real_` if no animal has a non-missing age (no `age` column or all
+ages missing).
 
 ## Examples
 

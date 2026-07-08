@@ -7,6 +7,151 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 314 Did
+
+**Deliverable:** **Issue \#121 – make the test suite `WARN 0`** by
+eliminating the 7 unasserted warnings (5 from `test_modPyramid` “handles
+input changes”; 2 from `test_gvaConvergence_kinshipOverrides` PSD-bound
+test), keeping `FAIL 0`. Strict TDD (development workstream;
+RED-\>GREEN-\>concluded no-refactor). **Started / Completed:**
+2026-07-08 / 2026-07-08 **Status:** **DONE.** 1 scope/approach
+`AskUserQuestion` (root-cause guard location) + 3 phase-gate
+`AskUserQuestion`s (PRE-RED-\>RED, RED-\>GREEN,
+GREEN-\>REFACTOR=concluded no-refactor); **0 stakeholder corrections.**
+Commit `fix: #121 S314` (hash in `git log`), pushed to origin/master;
+**\#121 closed.** Mid-session the owner added a standing directive:
+“monitor test warnings in ALL subsequent runs” – honored (every run
+below inspected the `warning` column).
+
+**Session 313 Handoff Evaluation (by Session 314): Score 9/10.** S313’s
+SUGGESTED NEXT named \#121 precisely and turnkey. **What helped most:**
+(1) it pre-described the exact split – “`test_modPyramid.R` (5,
+[`max()`](https://rdrr.io/r/base/Extremes.html) on an empty/all-NA
+vector -\> `-Inf` during a reactive re-render)” and
+“`test_gvaConvergence...` (2, on the deliberately-invalid PSD-bound
+override path)” – and prescribed the fix shape (“root-cause the pyramid
+[`max()`](https://rdrr.io/r/base/Extremes.html) if runtime-reachable,
+`expect_warning`/ `suppressWarnings` the gvaConvergence case”). Every
+clause held. (2) The issue **\#121 body itself** (S313-filed) was the
+real turnkey artifact: a per-source warning table + explicit acceptance
+criteria (`WARN 0`, guard at `R/` if runtime-reachable, assert the gva
+warning). (3) The `NOT_CRAN=true`, `.lintr` tests-excluded, and `gh`
+projectCards notes were all accurate and used. **What was slightly off
+(the -1):** the triage narrative (both the handoff and the \#121 body)
+attributed the modPyramid
+[`max()`](https://rdrr.io/r/base/Extremes.html) to “an intermediate
+reactive state where the filtered data is momentarily empty” – the
+actual mechanism is simpler and more concrete: the test fixture has **no
+`age` column at all**, so
+[`getPedMaxAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedMaxAge.md)’s
+`max(ped$age, ...)` runs on `NULL` every render (the all-NA column is
+the runtime analog). And neither artifact named the specific culprit
+function (`getPedMaxAge`), which took a 2-min grep to pin. **What was
+wrong:** nothing material. **ROI:** very high – the issue body alone
+saved most of the scoping work.
+
+**Self-assessment (Session 314): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_RUNNER read in full; ghost-check clean = HEAD `879503cc` is
+S313; wrote the 1B stub BEFORE technical work; reported and waited).
+**Strengths:** (1) **evidence-based root cause before RED** –
+empirically pinned `getPedMaxAge` (`R/getPedMaxAge.R:25`) as the SOLE
+`-Inf` source with a `withCallingHandlers` probe (not a guess), grepped
+BOTH “\>0.5” call sites
+(`prepareKinshipOverrides`+`applyKinshipOverrides` -\> why 2 warnings),
+and verified the sole caller (`getPyramidPlot.R:52`) already maps
+`NA`-\>`binWidth` so returning `NA_real_` is safe; (2) **correctly split
+the task into two TDD shapes** – a genuine RED-\>GREEN source fix for
+the real defect (getPedMaxAge) and a test-only assertion-tightening for
+the CORRECT deliberate gva warning (Learning 292); (3) **textbook RED**
+– `expect_warning(..., NA)`+`is.na` gave 4 failures for the right reason
+(warning + `-Inf`), gva tightened and passing immediately as declared;
+(4) **honored the owner’s monitor-warnings directive** – the full-suite
+read summed `failed`+`error`+`warning` and isolated the
+`test-app-`/`test-e2e-` baseline
+(\[\[regression-read-check-warnings\]\]); (5) **Phase 3E** rendered the
+REAL
+[`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md)
+on all-NA / no-age / real-age peds (0 warnings, valid render), not just
+“tests pass”; (6) full suite `FAIL 0 · ERROR 0 · WARN 0` (3740/167),
+`check()` 0/0/0, lint 0; (7) ONE deliverable – closed \#121, did NOT
+start \#120/#103 (FM \#2/#18). **Weaknesses (the -1):** (a) I was
+briefly uncertain whether testthat edition-2 `expect_warning` consumes
+multiple warnings – resolved it empirically (re-ran, counted) rather
+than from knowledge, which is the right move but cost a beat; (b) I
+judged the `getPedMaxAge` edge fix worth a `NEWS.Rmd` bullet –
+defensible (it changes an exported fn’s documented return + fixes a
+user-visible `-Inf` axis bound) and consistent with the makeSimPed
+bugfix bullet, but it is a small change and a reviewer could argue it is
+below NEWS granularity.
+
+**Learnings:** **Added `PROJECT_LEARNINGS.md` Learning 292** – a “make
+the suite WARN 0” task splits into two TDD shapes (genuine RED-\>GREEN
+for a real source defect vs test-only assertion-tightening for a CORRECT
+deliberate warning); distinguish by “should the code emit this
+warning?”; root-cause the `-Inf` at source when runtime-reachable; the
+gva “\>0.5” warning fires twice (two call sites); testthat edition-2
+`expect_warning` consumes all warnings in the expr (verify empirically);
+`expect_warning(expr, NA)` is the “must not warn” RED assertion; monitor
+the `warning` column every run. No new memory (all applied memories
+already exist).
+
+**=\> SUGGESTED NEXT.** **\#121 is CLOSED** – suite is
+`WARN 0`/`FAIL 0`. **Adjacent open work (owner’s pick):** issue
+**\#120** (the citations audit – “are there reference citations for each
+calculation?” – an AUDIT_WORKSTREAM session; NOTE: S313’s \#118 Slice-4
+work already added the **Crow & Kimura 1970** and kept the **Lacy 1989**
+citations in `population_genetics_terms.html`, so \#120 can start there
+and do the DELTA, not a full re-run –
+\[\[check-process-history-before-rerunning-work\]\]); **\#103** roxygen2
+doc harmonization (per S244 audit); **\#116** Flags column on the
+Genetic Diversity dashboard (BLOCKED, deferred slice from \#112);
+**\#37** exported functions not used by the app;
+**\#36/#28/#12/#11/#10/#5** older backlog. **E4** (rate-of- coancestry
+Ne, `Ne = 1/(2*dCbar)`) remains DEFERRED – its own planning+impl effort
+(plan §11; needs generation length, hard to define in a controlled
+colony). The CRAN thread (package ARCHIVED 2025-07-29, owner-run, **HARD
+STOP**).
+
+**Key files (this session).** **Changed (source):** `R/getPedMaxAge.R`
+(guard: returns `NA_real_` when `ped$age` is NULL or all-NA, else
+`max(ages, na.rm=TRUE)`; `@return` roxygen updated),
+`man/getPedMaxAge.Rd` (regenerated via `devtools::document()`).
+**Changed (tests):** `tests/testthat/test_getPedMaxAge.R` (new
+`test_that` block: `expect_warning(...,NA)`+`is.na` on no-`age`-column
+and all-NA cases),
+`tests/testthat/test_gvaConvergence_kinshipOverrides.R` (line ~157:
+`expect_error` now nested inside
+`expect_warning(..., "off-diagonal value")`). **Changed
+(docs/close-out):** `NEWS.Rmd` (new `(#121)` bullet at top of dev
+Changes), `NEWS.md` (re-rendered from `NEWS.Rmd`), `CHANGELOG.md`
+(\[Unreleased\] S314), `PROJECT_LEARNINGS.md` (292), this handoff. **Not
+committed:** pre-existing `.DS_Store` (modified) +
+`PED_GV_AUDIT_2026-05-30.html` (untracked), left untouched as S308-S313
+did.
+
+**Gotchas for next session.** (1)
+**[`getPedMaxAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedMaxAge.md)
+now returns `NA_real_`** (not `-Inf`) when a ped has no non-missing
+ages; its `@return` documents this and `getPyramidPlot.R:52` relies on
+line 55 mapping `NA`-\>`binWidth`. Any NEW caller must handle `NA`. (2)
+**The `checkKinshipOverrides` “\>0.5” warning fires TWICE** on the
+invalid path (once via `prepareKinshipOverrides`, once via
+`applyKinshipOverrides`); a single `expect_warning()` consumes both
+under **testthat edition 2** (DESCRIPTION has no
+`Config/testthat/edition: 3`) – verify empirically if you touch it. (3)
+**`NEWS.Rmd` is the source, NOT `NEWS.md`**
+(\[\[edit-news-rmd-not-news-md\]\]): edit `NEWS.Rmd`, trial-render to
+scratch + `diff` vs `NEWS.md` to catch silent drops, then
+`Rscript -e 'rmarkdown::render("NEWS.Rmd", output_file="NEWS.md", quiet=TRUE)'`.
+(4) **Run tests with `NOT_CRAN=true`** (module tests `skip_on_cran`);
+`.lintr` excludes `tests/` (only `R/*.R` needs \<=80 cols). (5)
+**`gh issue view`/`gh pr edit` fail** on this repo (projectCards) –
+`gh issue close`/`create`/`comment` and `gh api` work. (6) **Owner
+standing directive:** monitor the `warning` column on EVERY test run –
+the clean regression read sums `failed`+`error`+`warning`, isolating
+`test-app-`/`test-e2e-` baseline noise
+(\[\[regression-read-check-warnings\]\]).
+
 ### What Session 313 Did
 
 **Deliverable:** **Slice 4 (publish / user documentation) of the \#118

@@ -3,6 +3,12 @@
 ## nprcgenekeepr (development version)
 
 - Changes
+  - [`getPedMaxAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedMaxAge.md)
+    now returns `NA` instead of `-Inf` when a pedigree has no
+    non-missing ages (no `age` column, or every age missing), so the
+    age-sex pyramid plot renders cleanly on such data instead of
+    deriving a spurious `-Inf` axis bound.
+    ([\#121](https://github.com/rmsharp/nprcgenekeepr/issues/121))
   - The Genetic Value Analysis now reports three additional
     population-genetic summaries: **gene diversity**
     (`GD = 1 - 1 / (2 * FG)`, the expected heterozygosity retained from

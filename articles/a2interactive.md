@@ -980,7 +980,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpcFH1LR/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpizU9F3/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -1141,8 +1141,8 @@ examplePedigree[unlist(exampleLoops), c("id", "sire", "dam")][1L:10L, ]
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-07-08 20:09:30.876366. The processing
-time for this document was 18 seconds..
+The current date and time is 2026-07-08 22:09:43.545226. The processing
+time for this document was 19 seconds..
 
 ``` r
 

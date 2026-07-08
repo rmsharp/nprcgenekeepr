@@ -55,6 +55,23 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-08--fix-issue-121--test-suite-now-warn-0-guard-getpedmaxage-emptyall-na-input-session-314">2026-07-08 — Fix issue #121 — test suite now WARN 0; guard <code>getPedMaxAge()</code> empty/all-NA input (Session 314)<a class="anchor" aria-label="anchor" href="#id_2026-07-08--fix-issue-121--test-suite-now-warn-0-guard-getpedmaxage-emptyall-na-input-session-314"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Eliminate the 7 unasserted test warnings so the suite runs <code>WARN 0</code> (keeping <code>FAIL 0</code>), under strict TDD (PRE-RED → RED → GREEN → concluded no-refactor). 1 scope/approach <code>AskUserQuestion</code> + 3 phase-gate <code>AskUserQuestion</code>s; 0 stakeholder corrections.</li>
+<li>
+<strong>Root cause (modPyramid, 5 warnings):</strong> <code><a href="reference/getPedMaxAge.html">getPedMaxAge()</a></code> (<code>R/getPedMaxAge.R:25</code>) ran <code>max(ped$age, na.rm = TRUE)</code> on a pedigree with no <code>age</code> column or all-NA ages, returning <code>-Inf</code> and emitting <code>no non-missing arguments to max; returning -Inf</code>. The pyramid module’s <code>renderPlot</code> re-fired on each <code>setInputs</code>, leaking 5 copies. Runtime-reachable (a colony import lacking birth dates), risking a <code>-Inf</code> axis bound — so fixed at the source, not the test.</li>
+<li>
+<strong>GREEN:</strong> <code><a href="reference/getPedMaxAge.html">getPedMaxAge()</a></code> now returns <code>NA_real_</code> when there are no non-missing ages (its sole caller, <code>getPyramidPlot.R:52</code>, already maps <code>NA</code> → <code>binWidth</code>); <code>@return</code> roxygen updated and <code>man/getPedMaxAge.Rd</code> regenerated.</li>
+<li>
+<strong>gvaConvergence (2 warnings):</strong> the deliberately-invalid PSD-bound override path emits the <code>checkKinshipOverrides</code> “&gt;0.5” diagnostic twice (via <code>prepareKinshipOverrides</code> + <code>applyKinshipOverrides</code>) before erroring; the test asserted the error but leaked the warnings. Tightened <code>test_gvaConvergence_kinshipOverrides.R:157</code> to <code>expect_warning(expect_error(...))</code>, asserting both (test-only hygiene; no source change).</li>
+<li>
+<strong>RED:</strong> new <code>test_getPedMaxAge.R</code> block asserting <code>NA</code> + no warning on no-age-column and all-NA-age input (4 failures under the old source).</li>
+<li>
+<strong>Verification:</strong> full suite <code>FAIL 0 · ERROR 0 · WARN 0</code> (3740 passed, 167 skipped); <code>devtools::check()</code> 0/0/0; lint 0 on <code>R/getPedMaxAge.R</code>; Phase-3E runtime probe rendered <code><a href="reference/getPyramidPlot.html">getPyramidPlot()</a></code> on all-NA / no-age / real-age pedigrees with 0 warnings.</li>
+<li>
+<strong>Files:</strong> <code>R/getPedMaxAge.R</code>, <code>man/getPedMaxAge.Rd</code>, <code>tests/testthat/test_getPedMaxAge.R</code>, <code>tests/testthat/test_gvaConvergence_kinshipOverrides.R</code>, <code>NEWS.Rmd</code>, <code>NEWS.md</code>. Closes #121.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-08--implement-issue-118-slice-4--publish--user-documentation-closes-118-session-313">2026-07-08 — Implement issue #118 Slice 4 — publish / user documentation; <strong>closes #118</strong> (Session 313)<a class="anchor" aria-label="anchor" href="#id_2026-07-08--implement-issue-118-slice-4--publish--user-documentation-closes-118-session-313"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> Slice 4 (the final slice) of the #118 plan (<code>docs/planning/issue118-effective-population-size-plan.md</code> §8) under strict TDD (PRE-RED → RED → GREEN → concluded no-refactor). 4 <code>AskUserQuestion</code> gates (surface scope, PRE-RED→RED, RED→GREEN, GREEN→REFACTOR); 0 stakeholder corrections. Plain-language user documentation for the three effective-population-size metrics (gene diversity, sex-ratio Ne, variance Ne) <em>where they display</em>. <strong>This slice closes #118</strong> (E1–E3 scope; E4 rate-of-coancestry remains deferred to a future effort, plan §11).</li>
