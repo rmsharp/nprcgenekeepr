@@ -1,495 +1,6 @@
 # Changelog
 
-## nprcgenekeepr (development version)
-
-- Changes
-  - [`getPedMaxAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedMaxAge.md)
-    now returns `NA` instead of `-Inf` when a pedigree has no
-    non-missing ages (no `age` column, or every age missing), so the
-    age-sex pyramid plot renders cleanly on such data instead of
-    deriving a spurious `-Inf` axis bound.
-    ([\#121](https://github.com/rmsharp/nprcgenekeepr/issues/121))
-  - The Genetic Value Analysis now reports three additional
-    population-genetic summaries: **gene diversity**
-    (`GD = 1 - 1 / (2 * FG)`, the expected heterozygosity retained from
-    the founding gene pool) beside the founder genome equivalents, and –
-    over the current living breeders – a demographic **sex-ratio
-    effective population size** (`4 * Nm * Nf / (Nm + Nf)`) and a
-    **variance effective population size** (the general Crow &
-    Kimura (1970) form). All three appear on the Summary Statistics and
-    Genetic Value tabs and are defined, with their idealizing
-    assumptions, in the in-app Population Genetics Terms panel. Three
-    exported helpers compute them:
-    [`calcGeneDiversity()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGeneDiversity.md),
-    [`calcNeSexRatio()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeSexRatio.md),
-    and
-    [`calcNeVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeVariance.md).
-    ([\#118](https://github.com/rmsharp/nprcgenekeepr/issues/118))
-  - [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md),
-    [`checkParentAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkParentAge.md),
-    [`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md),
-    and
-    [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
-    now accept sex-specific minimum breeding ages, `minSireAge` and
-    `minDamAge`, in place of the single `minParentAge`. Each defaults to
-    `NULL`, which looks up the species- and sex-specific breeding age
-    for the parent; supplying a number overrides that sex’s floor. A
-    male below the (typically higher) male breeding age is now flagged
-    in quality control and excluded as a potential sire even when it
-    would have passed the old flat cutoff. `minParentAge` continues to
-    work as a deprecated alias that sets both floors, so existing
-    scripts keep running. In the Shiny app the single “Minimum Parent
-    Age” box is replaced by two optional “Minimum Sire Age” and “Minimum
-    Dam Age” fields; leaving them blank uses the species-specific
-    defaults.
-    ([\#119](https://github.com/rmsharp/nprcgenekeepr/issues/119))
-  - [`makeSimPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeSimPed.md)
-    now preserves a known parent instead of overwriting it. Previously
-    it drew a random sire and dam for every listed animal, so an animal
-    with one known and one unknown parent had its known parent replaced
-    by a random candidate (or set to `NA` when the candidate vector was
-    empty), silently biasing the simulated-kinship estimate. It now
-    imputes only an unknown (`NA`) parent and leaves a known one
-    unchanged, which also corrects
-    [`createSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/createSimKinships.md)
-    and
-    [`cumulateSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/cumulateSimKinships.md)
-    for such animals.
-  - [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
-    is again the primary Shiny entry point; its name says what it does.
-    [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
-    is now the soft-deprecated alias that forwards to
-    [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md),
-    so existing
-    [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
-    calls still work. This reverses the deprecation direction introduced
-    in 2.0.0.
-    ([\#110](https://github.com/rmsharp/nprcgenekeepr/issues/110))
-  - [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-    gains an optional `kinshipOverrides` argument: a data frame of
-    outside-information kinship coefficients (`id1`, `id2`, `kinship`;
-    the coefficient *f*, not relatedness *r*) that replace the
-    pedigree-derived off-diagonal cells of the kinship matrix before
-    mean kinship and the unknown-parent correction, so molecular/genomic
-    estimates or known-but-unrecorded relationships drive the
-    genetic-value rankings (issue
-    [\#13](https://github.com/rmsharp/nprcgenekeepr/issues/13)). Two new
-    exported helpers support it:
-    [`applyKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md)
-    (writes the symmetric overrides into a kinship matrix) and
-    [`checkKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkKinshipOverrides.md)
-    (validates the override table). An override refines the named pair’s
-    kinship value; the unknown-parent mean-kinship correction is kept
-    for every animal missing one parent. The default (`NULL`) leaves
-    results identical to before.
-  - The Genetic Value Analysis tab now accepts an optional
-    kinship-override upload: a CSV or Excel file with `id1`, `id2`, and
-    `kinship` columns (the coefficient *f*, not relatedness *r* = 2*f*)
-    is read by the new exported
-    [`readKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/readKinshipOverrides.md),
-    validated with
-    [`checkKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkKinshipOverrides.md),
-    and threaded into
-    [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md),
-    so outside-information kinship drives the in-app genetic-value
-    rankings (issue
-    [\#13](https://github.com/rmsharp/nprcgenekeepr/issues/13)). A
-    malformed file is reported and ignored without aborting the run;
-    leaving the upload empty reproduces the previous rankings exactly.
-    (The breeding-group and summary-statistics tabs apply the override
-    when they recompute kinship from the pedigree, so this no longer
-    requires running the Genetic Value Analysis tab first.)
-  - The breeding-group formation and summary-statistics tabs now apply
-    an uploaded kinship override when they recompute kinship from the
-    pedigree, so outside-information kinship affects group formation,
-    the relationship table, and the kinship-matrix CSV export regardless
-    of whether the Genetic Value Analysis tab was run first (completes
-    issue [\#13](https://github.com/rmsharp/nprcgenekeepr/issues/13)).
-    The override moves the kinship *value*; relationship-class *labels*
-    remain pedigree-derived (they are computed from pedigree structure,
-    not from the kinship value), so an overridden pair shows the
-    supplied coefficient next to its pedigree-based relationship label.
-    An override id not present in the analysis set is reported and
-    dropped without aborting the run. Leaving the upload empty
-    reproduces the previous results exactly.
-  - The Genetic Value Analysis tab’s kinship-override upload now
-    documents the feature’s behavior and limits where the coefficients
-    are supplied, and in the Genetic Value and Summary Statistics
-    guidance panels: overrides change the kinship *value* only and apply
-    to the rankings, breeding groups, and summary statistics regardless
-    of tab order; the relationship-table label stays pedigree-derived
-    (so a label and its overridden value can disagree); and an override
-    on an animal missing a parent only refines that pair’s value while
-    the unknown-parent correction is kept, so mean kinship for such an
-    animal remains an estimate that tends to underestimate relatedness
-    (issue [\#13](https://github.com/rmsharp/nprcgenekeepr/issues/13)
-    follow-up).
-  - [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
-    gains an optional `kinshipOverrides` argument and now applies
-    outside-information kinship overrides the same way
-    [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-    does – writing them into the kinship matrix before mean kinship – so
-    the gene-drop convergence diagnostic ranks on the same kinship the
-    genetic-value report uses. Override ids outside the analysis set are
-    warn-dropped without aborting, and the default (`NULL`) leaves the
-    convergence curve identical to before (issue
-    [\#13](https://github.com/rmsharp/nprcgenekeepr/issues/13) item-3
-    follow-up).
-  - The Summary Statistics relationship table now flags overridden
-    pairs: when a kinship override is supplied, the exported
-    relationships table gains a logical `overridden` column that is
-    `TRUE` for the pairs whose kinship value came from an override. The
-    relationship *label* stays pedigree-derived, so the flag lets a user
-    see which rows carry an outside-information value even though the
-    label and the value can disagree. With no override supplied the
-    table is unchanged (issue
-    [\#13](https://github.com/rmsharp/nprcgenekeepr/issues/13) item-3
-    follow-up, R13).
-  - The unknown-parent mean-kinship correction is now *kept* for every
-    animal missing one parent even when a kinship override is supplied
-    (issue [\#95](https://github.com/rmsharp/nprcgenekeepr/issues/95)).
-    A kinship override refines the named pair’s value (issue
-    [\#13](https://github.com/rmsharp/nprcgenekeepr/issues/13)); it no
-    longer suppresses the `+ sexMean / 2` correction, because an
-    override informs only one of the animal’s many colony relationships,
-    so dropping the whole prior over-corrects. Mean kinship for an
-    animal missing a parent is an estimate that tends to underestimate
-    relatedness, consistent with Vinson and Raboin (2015). This reverts
-    the never-released `missingSideFor` targeted suppression and
-    blanket-supersession behavior.
-  - File-based pedigree ingestion now treats `species` as a first-class
-    column:
-    [`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md)
-    recognizes it and places it immediately after `sex` in the canonical
-    column order, and
-    [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-    types it as character. Previously a `species` column survived only
-    as a trailing, untyped extra column. Studbooks that include a
-    `species` column now have it consistently ordered and typed.
-  - [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
-    now derives its gestation-based conception window per focal animal
-    from the animal’s `species` rather than from a single fixed value.
-    The `maxGestationalPeriod` argument is now optional (default
-    `NULL`): when it is omitted, the window for each focal animal is
-    looked up by species via the new
-    [`getSpeciesGestation()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesGestation.md);
-    when an explicit value is supplied it is used for all animals,
-    preserving the previous behavior, so existing callers are
-    unaffected. The shipped species table currently defines only rhesus
-    macaque (210 days) and falls back to 210 for other species, so
-    results on existing data are unchanged; adding species rows enables
-    per-species windows.
-  - In the Potential Parents tab, the “Maximum Gestational Period
-    (days)” input now defaults to the value looked up from the loaded
-    pedigree’s species (via
-    [`getSpeciesGestation()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesGestation.md))
-    rather than to a fixed 210, keeping the Shiny application consistent
-    with the species-keyed
-    [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
-    window. The user can still edit the value, and a manual edit is
-    preserved when the pedigree is reloaded. As with
-    [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md),
-    the shipped species table defines only rhesus macaque (210 days) and
-    falls back to 210, so the default is unchanged on existing data
-    until species rows are added.
-  - [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
-    now returns the full connected pedigree component for the focal
-    animals (ancestors, descendants, and collaterals such as siblings,
-    mates, and their lineages) by delegating its pedigree walk to
-    [`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md).
-    Previously it returned only the strict ancestor/descendant lineage
-    and omitted collateral relatives. Pedigrees built from the
-    LabKey/EHR path (via
-    [`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md))
-    are now more complete and consistent with the in-memory
-    [`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md).
-  - The exported convenience function
-    [`makeGrpNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGrpNum.md)
-    has been renamed to
-    [`makeGroupNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGroupNum.md)
-    for naming consistency with the sibling export
-    [`makeGroupMembers()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGroupMembers.md).
-    The old name
-    [`makeGrpNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGrpNum.md)
-    is kept as a deprecated alias: it still works but now emits a
-    deprecation warning and delegates to
-    [`makeGroupNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGroupNum.md).
-    Prefer
-    [`makeGroupNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGroupNum.md)
-    in new code;
-    [`makeGrpNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGrpNum.md)
-    may be removed in a future release.
-  - The Genetic Value Analysis report and both of its CSV exports (the
-    full ranked report and the genetic-value subset) now include `sire`
-    and `dam` columns, so it is visible which animals have an unknown
-    parent (shown by a placeholder parent identifier). The columns are
-    added after the existing demographic columns; no existing column is
-    removed or reordered.
-  - The Genetic Value Analysis now corrects the mean kinship of animals
-    that are missing one parent. Previously such an animal’s mean
-    kinship was computed only from its known relatives, which
-    understated its relatedness to the colony and let it rank as more
-    genetically valuable (lower mean kinship) than it should. The report
-    now adds an estimate of the missing parent’s contribution, derived
-    from a contemporaneous breeding-age peer cohort of the same sex as
-    the missing parent, so these animals no longer falsely rank low on
-    mean kinship. Animals with both parents known, and animals missing
-    both parents, are unchanged.
-  - The Genetic Value Analysis report now labels each animal’s parentage
-    in a new `parentage` column, with the values “known”, “one unknown
-    parent”, or “both unknown”; a missing parent and an unknown-parent
-    placeholder identifier are both treated as unknown. The column
-    appears in the displayed report and in both CSV exports (the full
-    ranked report and the genetic-value subset). In the Shiny Genetic
-    Value display, animals whose parents are both unknown and that have
-    no recorded origin are now marked “Undetermined” and ranked last,
-    rather than appearing among the most genetically valuable animals
-    where their inflated genome uniqueness had falsely ranked them high.
-    Animals recorded as genuine imports (those carrying an `origin`)
-    continue to be ranked normally.
-  - The Genetic Value Analysis now reports a genome uniqueness of 0 for
-    the “Undetermined” animals described above (those whose parents are
-    both unknown and that have no recorded origin). Because both parents
-    are unknown, such an animal enters the genome-uniqueness simulation
-    as a founder whose alleles are all freshly assigned and therefore
-    unique to it, so the genome uniqueness computed for it reflects only
-    that modeling artifact rather than genuinely rare alleles shared
-    sparingly across the colony. Rather than credit that artifact, the
-    report now shows their genome uniqueness as 0 wherever it appears
-    (the displayed report and the genetic-value CSV export). Animals
-    recorded as genuine imports (those carrying an `origin`), and
-    animals with one or both parents known, are unaffected. This
-    complements the ranking change above, which already moves these
-    animals to the bottom of the Genetic Value report.
-  - The bundled `speciesGestation` reproductive-parameter table,
-    previously seeded with only rhesus macaque, is now populated for 14
-    common colony NHP species. Each species has its own maximum
-    gestation period (used by
-    [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
-    via
-    [`getSpeciesGestation()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesGestation.md)
-    to set the conception window) and its own minimum male and female
-    breeding ages (used by the Genetic Value Analysis unknown-parent
-    mean-kinship correction via
-    [`getSpeciesMinBreedingAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesMinBreedingAge.md)).
-    The two breeding-age columns are now numeric rather than integer, so
-    fractional minima such as the rhesus minimum female breeding age of
-    2.5 years are represented exactly. Species not listed in the table
-    continue to fall back to the defaults (a 210-day gestation and a
-    2-year minimum breeding age), so results are unchanged for pedigrees
-    without a `species` column. Making these values user-configurable is
-    the remaining part of issue
-    [\#73](https://github.com/rmsharp/nprcgenekeepr/issues/73).
-  - The minimum male and female breeding ages and the maximum gestation
-    period that the Genetic Value Analysis uses to correct the mean
-    kinship of animals missing one parent, together with the values
-    applied to species not in the bundled table, are now
-    user-configurable through the configuration file. An optional
-    `speciesOverridesPath` entry points to a CSV with the same columns
-    as the bundled `speciesGestation` table; its rows override the
-    bundled values for the species listed, while species not listed keep
-    their bundled values, and optional `minBreedingAgeDefault` and
-    `gestationDefault` entries set the values used for species absent
-    from the table. With no configuration file, or none of these
-    entries, the Genetic Value Analysis is unchanged. This makes the
-    Genetic Value Analysis configurable; making the Potential Parents
-    tab configurable is the remaining part of issue
-    [\#73](https://github.com/rmsharp/nprcgenekeepr/issues/73).
-  - In the Potential Parents tab, the “Maximum Gestational Period
-    (days)” default now reflects the same user-configurable species
-    overrides in the configuration file. The value, previously looked up
-    only from the bundled `speciesGestation` table, now also honors an
-    optional `speciesOverridesPath` CSV (its gestation column overrides
-    the bundled value for the species listed) and an optional
-    `gestationDefault` entry (the value used for species absent from the
-    table), so the suggested conception window for the loaded pedigree’s
-    species matches what the Genetic Value Analysis uses. With no
-    configuration file, or none of these entries, the default is
-    unchanged (the bundled table, or 210 days). This completes issue
-    [\#73](https://github.com/rmsharp/nprcgenekeepr/issues/73): both the
-    Genetic Value Analysis and the Potential Parents tab are now
-    configurable.
-  - In the Pedigree Browser tab, the “Clear Focal Animals” option now
-    also clears a focal-animals list that was uploaded with the file
-    browser, along with the displayed file name, and any focal Ids typed
-    into the text box, so that neither is read again on the next “Update
-    Focal Animals”. Previously the option cleared the in-memory
-    focal-animals list but left an uploaded file and any typed text in
-    place, so the same focal animals silently reappeared on the next
-    update. Choosing a new file or typing new Ids after clearing still
-    loads them as before.
-  - The Genetic Value Analysis now reports the sampling precision of
-    each animal’s genome uniqueness. The report gains a `guSE` column
-    (the Monte Carlo standard error of the gene-drop `gu` estimate)
-    immediately after the `gu` column, and the genome-uniqueness object
-    returned by
-    [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-    now carries `gu` and `guSE` as two columns. The standard error is
-    reported as 0 for the “Undetermined” animals whose genome uniqueness
-    is already reported as 0 (both parents unknown and no recorded
-    origin), since that value is a policy constant rather than a Monte
-    Carlo estimate. The Shiny Genetic Value display gains a “Genome
-    Uniqueness SE (max)” summary row showing the worst-case precision
-    for the run, and the in-app genome-uniqueness guidance now explains
-    that genome uniqueness is a gene-drop estimate whose standard error
-    shrinks with more iterations, and that the precision of the number
-    is distinct from the stability of the selection order used for
-    breeding choices. Existing `gu` values and all
-    [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-    signatures are unchanged.
-  - The
-    [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-    and
-    [`geneDrop()`](https://github.com/rmsharp/nprcgenekeepr/reference/geneDrop.md)
-    functions now default to 1000 gene-drop iterations, down from 5000.
-    This matches the Genetic Value Analysis tab, which already defaulted
-    to 1000, so the function default and the application now agree.
-    Callers that pass an explicit iteration count are unaffected. Use
-    the new
-    [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
-    to choose an evidence-based count for a particular pedigree.
-  - `getPedDirectRelatives(unrelatedParents = TRUE)` now returns a
-    placeholder ego record (with `sire` and `dam` set to `NA`) for each
-    parent referenced in the pedigree that has no record of its own,
-    rather than failing. Previously the `TRUE` branch errored
-    (`replacement has 1 row, data has 0`) when such a parent was
-    present, and was a silent no-op equal to the `FALSE` result when
-    none was; no caller exercised it, so the defect was dormant. The
-    `unrelatedParents = FALSE` result is unchanged (issue
-    [\#114](https://github.com/rmsharp/nprcgenekeepr/issues/114)).
-- New features
-  - Added the exported
-    [`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md),
-    which configures `Rlabkey` authentication for the session: it
-    prefers an API key (from the `NPRCGENEKEEPR_LABKEY_APIKEY`
-    environment variable, then an `apiKey` configuration-file token),
-    falls back to a `.netrc`/`_netrc` file, and otherwise stops with a
-    clear `No LabKey credential found` error.
-    [`getDemographics()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDemographics.md)
-    now configures authentication automatically before querying, so a
-    missing credential fails fast instead of producing an opaque error
-    later.
-  - Added the exported
-    [`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md),
-    a file-sourced sibling of
-    [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md):
-    it reads a pedigree file (CSV or Excel) via
-    [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md)
-    and returns the full connected pedigree component (ancestors,
-    descendants, and collaterals) for the focal animals, reusing the
-    source-agnostic
-    [`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
-    walk. It is fully offline and deterministic, and (unlike the
-    fail-soft LabKey source) errors on a missing or invalid file. This
-    wires the `getPedigreeSource()` `"file"` provider to a first-class
-    caller, giving file pedigrees the same direct-relatives entry point
-    LabKey already has.
-  - Added the exported
-    [`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md),
-    a file-sourced sibling of
-    [`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md):
-    it reads a list of focal animal Ids from one file and builds the
-    full connected pedigree component for those focal animals from a
-    separate pedigree file via
-    [`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md),
-    so the focal-animal workflow can run entirely offline with no
-    LabKey/EHR connection. The Shiny input module (`modInput`) now
-    offers an optional pedigree-file input on the focal animals path;
-    when a pedigree file is supplied the pedigree is built from that
-    file, otherwise the LabKey/EHR path is used as before. Being the
-    application boundary, the function is fail-soft: rather than
-    throwing, it returns a classed error whose message names WHY the
-    read failed (an unreadable focal-id list file; a missing, not-found,
-    unreadable, or wrong-column pedigree file; or no focal IDs found in
-    the pedigree), and the app surfaces that message as the specific
-    File Read Error detail instead of a generic one.
-  - Added the exported
-    [`getSpeciesGestation()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesGestation.md),
-    which returns the maximum gestation period (in days) for one or more
-    species by looking them up in the new `speciesGestation` table.
-    Matching is case- and whitespace-insensitive, and unknown, missing,
-    or empty species fall back to a default (210 days, the rhesus
-    macaque value). This is the per-species lookup that
-    [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
-    uses when `maxGestationalPeriod` is not supplied.
-  - Added the exported `speciesGestation` data set, a
-    species-to-gestation lookup table (in days) seeded with rhesus
-    macaque (210). It is the extensible home for per-species gestation
-    lengths; add a row to support an additional species.
-  - Added the exported
-    [`loadSpeciesOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSpeciesOverrides.md),
-    which reads the optional species-override entries from the
-    configuration file (`speciesOverridesPath` and the
-    `minBreedingAgeDefault` and `gestationDefault` settings) and returns
-    the breeding-age and gestation tables merged onto the bundled
-    `speciesGestation` table (configured species override the bundled
-    values; the rest are kept) for the Genetic Value Analysis to use. It
-    fails soft: a missing or unreadable configuration yields the bundled
-    values with a warning rather than an error.
-  - Added the exported
-    [`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md),
-    which returns the per-animal Monte Carlo sampling standard error of
-    the genome-uniqueness estimate from the gene-drop simulation, on the
-    same percentage scale as
-    [`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md).
-    It is computed from the same per-iteration rare-allele matrix
-    ([`calcA()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcA.md))
-    that
-    [`calcGU()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md)
-    averages, so it is correct for any rare-allele `threshold` and the
-    `byID` option without a closed-form approximation, and it reports 0
-    for an animal whose genome uniqueness does not vary across
-    iterations. The standard error shrinks as the number of gene-drop
-    iterations grows, giving a direct measure of how precise a reported
-    genome-uniqueness value is.
-  - Added the exported
-    [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md),
-    which gives evidence-based advice on how many gene-drop iterations a
-    pedigree needs for a stable Genetic Value Analysis. Because genome
-    uniqueness is the only ranked report value that carries gene-drop
-    sampling noise, the needed iteration count is pedigree-dependent
-    rather than a single universal number. From one gene drop,
-    [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
-    splits the iteration columns into two independent halves and, for
-    each candidate iteration count, ranks each half through the same
-    pipeline
-    [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-    uses and compares the two rankings: the count is judged reproducible
-    when the top selected animals overlap and the full rank order agrees
-    closely. It returns the agreement reached at each count and
-    recommends the smallest iteration count at which the ranking is
-    reproducible, so a colony can choose an iteration count with
-    evidence instead of a guess.
-- Documentation
-  - The example configuration file
-    (`inst/extdata/example_nprcgenekeepr_config`) now documents that
-    `lkPedColumns` is center-specific: SNPRC uses the flat `dam`/`sire`
-    columns (direct columns) while ONPRC uses the `Id/parents/dam`
-    lookup-traversal form (curated parentage).
-- Internal changes
-  - The LabKey pedigree fetch used by
-    [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
-    is now obtained through an internal data-source adapter
-    (`getPedigreeSource()`), isolating the LabKey pull behind a single
-    seam and enabling offline, deterministic tests of the pedigree walk.
-    No change to behavior.
-  - The internal `getPedigreeSource()` adapter gained a `"file"` source
-    that reads a pedigree file (CSV or Excel) via
-    [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md),
-    alongside the existing `"labkey"` and `"dataframe"` sources. This
-    makes LabKey one pluggable provider among several and extends the
-    offline, deterministic test seam.
-  - The offline focal-animal path no longer prints a benign
-    `cannot open file ...` warning when the focal-id list file is
-    missing or unreadable.
-    [`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md)
-    already reported the failure as a classed error; the underlying
-    [`read.csv()`](https://rdrr.io/r/utils/read.table.html) warning that
-    leaked to the console ahead of the caught error is now muffled at
-    the read site, so the fail-soft path is silent. The returned value
-    and the reported error are unchanged.
-
-## nprcgenekeepr 2.0.0 (20260618)
+## nprcgenekeepr 2.0.0 (20260708)
 
 - Major changes
   - **(breaking)**
@@ -499,23 +10,54 @@
     now reject `id`, `sire`, or `dam` values containing a period
     (offenders returned in `errorLst$invalidIdChars`); auto-generated
     IDs remain period-free.
-  - **(breaking)**
-    [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
-    is the new Shiny entry point and the monolithic application was
-    retired;
+  - **(breaking)** Removed the unused exports `getLogo()`,
+    `shouldShowErrorTab()`, `modMinimalTestUI()`, and
+    `modMinimalTestServer()`. The Shiny application was rewritten
+    internally as a modular architecture;
     [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
-    is now a soft-deprecated alias (zero-argument calls still work), and
-    the unused exports `getLogo()`, `shouldShowErrorTab()`,
-    `modMinimalTestUI()`, and `modMinimalTestServer()` were removed.
-    ([\#27](https://github.com/rmsharp/nprcgenekeepr/issues/27))
+    remains the primary entry point
+    ([`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+    works as a deprecated alias).
+    ([\#27](https://github.com/rmsharp/nprcgenekeepr/issues/27),
+    [\#110](https://github.com/rmsharp/nprcgenekeepr/issues/110))
   - New **Potential Parents** tab listing candidate sires and dams for
     in-colony animals with at least one unknown parent, screened by
     estimated conception date (wiring in the exported
     [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md));
-    dam selection now uses a `maxGestationalPeriod`-driven exclusion
-    window (was a fixed +/- 182.5-day window).
+    dam selection uses a gestation-derived exclusion window rather than
+    a fixed +/- 182.5-day window.
     ([\#48](https://github.com/rmsharp/nprcgenekeepr/issues/48),
     [\#31](https://github.com/rmsharp/nprcgenekeepr/issues/31))
+  - Gestation length and minimum breeding ages are now species-aware:
+    the bundled `speciesGestation` table covers 14 common colony NHP
+    species (previously only rhesus macaque), with numeric rather than
+    integer breeding ages so fractional minima are represented exactly.
+    [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+    and the Potential Parents tab derive each animal’s gestation window
+    from its `species` via the new
+    [`getSpeciesGestation()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSpeciesGestation.md);
+    the Genetic Value Analysis missing-parent correction uses
+    per-species minimum breeding ages; and an optional
+    configuration-file entry (`speciesOverridesPath`, plus
+    `minBreedingAgeDefault` and `gestationDefault`) overrides these
+    values via the new
+    [`loadSpeciesOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/loadSpeciesOverrides.md).
+    Species absent from the table keep the previous defaults (a 210-day
+    gestation and a 2-year minimum breeding age), so existing results
+    are unchanged. Completes issue
+    [\#73](https://github.com/rmsharp/nprcgenekeepr/issues/73).
+    ([\#73](https://github.com/rmsharp/nprcgenekeepr/issues/73))
+  - New sex-specific minimum breeding ages:
+    [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md),
+    [`checkParentAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkParentAge.md),
+    [`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md),
+    and
+    [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+    now accept `minSireAge` and `minDamAge` in place of a single
+    `minParentAge` (kept as a deprecated alias that sets both). The
+    Shiny app’s single “Minimum Parent Age” field is replaced by
+    separate “Minimum Sire Age” and “Minimum Dam Age” fields.
+    ([\#119](https://github.com/rmsharp/nprcgenekeepr/issues/119))
   - New **ORIP Reporting** tab with ONPRC colony summaries for the NIH
     Office of Research Infrastructure Programs (site information, a
     colony table with founder counts, genetic-diversity metrics, and CSV
@@ -541,14 +83,81 @@
   - Genetic Value Analysis tab parity: the genome-uniqueness threshold
     is now a user control (default 4), a subset filter and “Export
     Subset” download were added, the default gene-drop iterations
-    changed to 1000, and an inert “Minimum breeding age” slider was
-    removed.
+    changed to 1000 (matched at the function level:
+    [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+    and
+    [`geneDrop()`](https://github.com/rmsharp/nprcgenekeepr/reference/geneDrop.md)
+    now also default to 1000, down from 5000), and an inert “Minimum
+    breeding age” slider was removed.
   - Improved visualizations: educational box-plot popovers
     ([`getBoxWhiskerDescription()`](https://github.com/rmsharp/nprcgenekeepr/reference/getBoxWhiskerDescription.md)),
     plot export to PNG, PDF, and SVG
     ([`savePlotToFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/savePlotToFile.md)),
     and an enhanced age-sex pyramid
     ([`getPyramidPlot()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPyramidPlot.md)).
+  - The Genetic Value Analysis now reports three additional
+    population-genetic summaries: **gene diversity**
+    (`GD = 1 - 1 / (2 * FG)`) and – over the current living breeders – a
+    **sex-ratio effective population size** (`4 * Nm * Nf / (Nm + Nf)`)
+    and a **variance effective population size** (the Crow &
+    Kimura (1970) form), via the new exported
+    [`calcGeneDiversity()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGeneDiversity.md),
+    [`calcNeSexRatio()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeSexRatio.md),
+    and
+    [`calcNeVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeVariance.md);
+    each is defined, with its idealizing assumptions, in the in-app
+    Population Genetics Terms panel.
+    ([\#118](https://github.com/rmsharp/nprcgenekeepr/issues/118))
+  - The Genetic Value Analysis now reports the sampling precision of
+    each animal’s genome uniqueness: a new `guSE` column (the gene-drop
+    Monte Carlo standard error, via the new
+    [`calcGUSE()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGUSE.md))
+    and a “Genome Uniqueness SE (max)” summary row. The new
+    [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+    gives evidence-based advice on how many gene-drop iterations a
+    pedigree needs for a stable ranking, by comparing rankings from
+    split halves of one gene drop; it also accepts a `kinshipOverrides`
+    argument.
+  - The Genetic Value Analysis now corrects the mean kinship of animals
+    missing one parent, which previously understated their relatedness
+    and let them rank as more genetically valuable than they should. A
+    new `parentage` column labels each animal “known”, “one unknown
+    parent”, or “both unknown”; animals with both parents unknown and no
+    recorded origin (“Undetermined”) are now ranked last, with genome
+    uniqueness reported as 0 rather than the inflated gene-drop-founder
+    artifact value. Animals recorded as genuine imports (an `origin`)
+    are unaffected. *(Changes reported rankings and genome-uniqueness
+    numbers for affected animals.)*
+  - [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+    and the Genetic Value Analysis tab now accept an optional
+    `kinshipOverrides` argument (or file upload) of outside-information
+    kinship coefficients (`id1`, `id2`, `kinship`) that replace the
+    pedigree-derived kinship for the named pairs before ranking; applies
+    across the Genetic Value Analysis, breeding-group formation, and
+    summary-statistics tabs, and the summary-statistics relationship
+    table gains an `overridden` flag column. New exported
+    [`applyKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md),
+    [`checkKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkKinshipOverrides.md),
+    and
+    [`readKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/readKinshipOverrides.md);
+    [`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+    also accepts overrides. The unknown-parent mean-kinship correction
+    is kept even when an override is supplied. Leaving no override
+    reproduces previous results exactly.
+    ([\#13](https://github.com/rmsharp/nprcgenekeepr/issues/13),
+    [\#95](https://github.com/rmsharp/nprcgenekeepr/issues/95))
+  - [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
+    now returns the full connected pedigree component (ancestors,
+    descendants, and collaterals such as siblings and mates) instead of
+    only the strict ancestor/descendant lineage; the new file-sourced
+    [`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md)
+    provides the same for file pedigrees. The new
+    [`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md)
+    and
+    [`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md)
+    let the focal-animal workflow run fully offline from files, and the
+    Shiny input module offers an optional pedigree-file input alongside
+    the LabKey/EHR path.
 - Minor changes
   - Fixed a startup crash that occurred when a documented-format site
     configuration file was present, via the new tolerant
@@ -577,6 +186,46 @@
     `shinytest2` (Suggests).
   - Replaced the magrittr pipe (`%>%`) with the base R native pipe
     (`|>`) in vignettes and examples; `magrittr` is no longer used.
+  - [`getPedMaxAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedMaxAge.md)
+    now returns `NA` instead of `-Inf` when a pedigree has no
+    non-missing ages, so the age-sex pyramid plot renders cleanly
+    instead of deriving a spurious `-Inf` axis bound.
+    ([\#121](https://github.com/rmsharp/nprcgenekeepr/issues/121))
+  - [`makeSimPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeSimPed.md)
+    now preserves a known parent instead of overwriting it with a random
+    candidate, correcting
+    [`createSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/createSimKinships.md)
+    and
+    [`cumulateSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/cumulateSimKinships.md)
+    for animals with one known and one unknown parent. *(Changes
+    simulated-kinship values for affected pedigrees.)*
+  - The exported
+    [`makeGrpNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGrpNum.md)
+    has been renamed to
+    [`makeGroupNum()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGroupNum.md)
+    for naming consistency with the sibling export
+    [`makeGroupMembers()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGroupMembers.md);
+    the old name is kept as a deprecated alias.
+  - The Genetic Value Analysis report and both of its CSV exports (the
+    full ranked report and the genetic-value subset) now include `sire`
+    and `dam` columns, showing which animals have an unknown parent.
+  - File-based pedigree ingestion now treats `species` as a first-class
+    column: it is recognized and placed immediately after `sex` in the
+    canonical column order, and typed as character, rather than
+    surviving as an untyped trailing column.
+  - In the Pedigree Browser tab, “Clear Focal Animals” now also clears a
+    focal-animals list uploaded via the file browser (and its displayed
+    file name) and any focal Ids typed into the text box, so neither is
+    silently re-read on the next “Update Focal Animals”.
+  - `getPedDirectRelatives(unrelatedParents = TRUE)` now returns a
+    placeholder ego record for a referenced parent with no record of its
+    own, instead of erroring; previously dormant since no caller
+    exercised the `TRUE` branch.
+    ([\#114](https://github.com/rmsharp/nprcgenekeepr/issues/114))
+  - The offline focal-animal path no longer prints a benign
+    `cannot open file ...` console warning when the focal-id list file
+    is missing or unreadable; the classed error it already reported is
+    unchanged.
   - Documentation: extensive help-page and dataset-documentation
     corrections, including the genetic-value `@return` and parameter
     descriptions, dataset titles and descriptions, and the `@examples`
@@ -585,6 +234,11 @@
     [`cumulateSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/cumulateSimKinships.md),
     and
     [`getIdsWithOneParent()`](https://github.com/rmsharp/nprcgenekeepr/reference/getIdsWithOneParent.md).
+  - Documentation: the example configuration file
+    (`inst/extdata/example_nprcgenekeepr_config`) now documents that
+    `lkPedColumns` is center-specific: SNPRC uses the flat `dam`/`sire`
+    columns (direct columns) while ONPRC uses the `Id/parents/dam`
+    lookup-traversal form (curated parentage).
 
 ## nprcgenekeepr 1.0.8 (20250723)
 

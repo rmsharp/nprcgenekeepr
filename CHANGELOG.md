@@ -15,6 +15,53 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-08 — Execute Phase 3b: reconcile the accumulated NEWS.Rmd dev-version content into the 2.0.0 entry (Session 321)
+
+- **Deliverable:** executed Phase 3b of
+  `docs/planning/cran-2.0.0-submission-plan.md` — merged `NEWS.Rmd`’s
+  40-bullet `(development version)` section
+  (`Changes`/`New features`/`Documentation`/`Internal changes`, ~350
+  lines) into the single `# nprcgenekeepr 2.0.0 (20260708)` entry: 16
+  Major + 19 Minor merged bullets, 2 pure-internal bullets dropped (the
+  `getPedigreeSource()` adapter/`"file"`-source plumbing, plus one
+  redundant in-app-copy bullet). **REFACTOR-class, doc-only; TDD
+  RED/GREEN N/A** (no `R/`, `tests/`, or `DESCRIPTION` content changed —
+  version stays 2.0.0). 1 `AskUserQuestion` scope/approach gate (owner
+  approved the full classification draft, including two numeric-changing
+  flags, before any file was touched). 0 stakeholder corrections.
+- **Dragon \#9 resolved:** the
+  [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)/[`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+  bullet pair (issue \#110’s reversal of 2.0.0’s own headline breaking
+  change) collapsed to one net-end-state Major bullet —
+  [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+  remains the primary entry point, the real breaking change (4 removed
+  exports) preserved — verified by grep showing no contradictory second
+  mention in the rendered `NEWS.md`. A second, smaller instance of the
+  same “never-shipped reversal” pattern was found nested inside one
+  bullet’s own prose (a `missingSideFor` suppression mechanism added and
+  reverted within the same unreleased window) and treated the same way —
+  dropped, not narrated.
+- **Re-rendered:** `NEWS.Rmd` → `NEWS.md`; `README.Rmd` → `README.md`
+  (only date lines moved); `CITATION.cff` regenerated via
+  `cffr::cff_write()` (cffr freshly installed into the renv project
+  library — not a project dependency, a reversible dev-tool add).
+  `DESCRIPTION`/`CITATION.cff` `Version:` confirmed unchanged at 2.0.0.
+- **Verification:** `test_getVersion.R` (7/7) + `test_appUI_version.R`
+  (3/3) green; full clean-regression read via
+  `test_dir(reporter="silent")` — 0 failed / 0 error / 0 warning (169
+  skipped baseline). `cran-comments.md`/`CRAN-SUBMISSION` confirmed
+  untouched (no bundling into this session, per the plan’s own
+  no-bundling rule). Phase 3E runtime smoke test explicitly N/A — no
+  `R/` behavior changed.
+- **Plan updated in place:**
+  `docs/planning/cran-2.0.0-submission-plan.md` Phase 3b STATUS →
+  COMPLETE; Phase 4/5 STATUS blocks noted Phase 3b has landed (both
+  still gated on their own remaining work — Phase 4 re-gate, then Phase
+  5 `cran-comments.md` resync).
+- **Next session:** Phase 4 — full local `R CMD check --as-cran` re-gate
+  (stale since S134/S240/S241; 124 commits + this session’s doc-only
+  changes since).
+
 ### 2026-07-08 — Refresh the CRAN 2.0.0 submission plan for the actual next release (Session 320)
 
 - **Deliverable (owner = “all remaining current issues will not be

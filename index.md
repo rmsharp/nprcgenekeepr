@@ -1,10 +1,10 @@
 # README
 
-R. Mark Sharp, Ph.D. 2026-07-05
+R. Mark Sharp, Ph.D. 2026-07-08
 
 # nprcgenekeepr
 
-Version 2.0.0 (2026-06-29)
+Version 2.0.0 (2026-07-07)
 
 ## Introduction
 

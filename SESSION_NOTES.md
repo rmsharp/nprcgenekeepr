@@ -7,6 +7,163 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 321 Did
+
+**Deliverable:** Execute **Phase 3b** of
+`docs/planning/cran-2.0.0-submission-plan.md` – reconcile `NEWS.Rmd`’s
+`# nprcgenekeepr (development version)` section (`NEWS.Rmd:15-364` as of
+S320, ~350 lines / 40 bullets) into the `# nprcgenekeepr 2.0.0` entry:
+resolve Dragon \#9 (issue \#110’s reversal of 2.0.0’s own headline
+breaking change), classify every dev-section bullet Major/Minor/Drop,
+de-duplicate, re-render. REFACTOR-class, doc-only; **TDD RED/GREEN N/A**
+– no `R/`, `tests/`, or `DESCRIPTION` content changed, version stays
+2.0.0 (matches S318/S319/S320 doc-only precedent). 1 `AskUserQuestion`
+scope/approach gate at session start (owner picked “approve full draft
+as shown, apply now” over revising specific items first or narrowing
+scope to classification-only this session). **Started / Completed:**
+2026-07-08 / 2026-07-08 **Status:** **DONE.**
+`NEWS.Rmd`/`NEWS.md`/`README.md`/`CITATION.cff` all landed; plan’s Phase
+3b STATUS updated to COMPLETE. **0 stakeholder corrections.**
+
+**Session 320 Handoff Evaluation (by Session 321): Score 9/10.** S320’s
+SUGGESTED NEXT gave the exact deliverable (Phase 3b), the exact starting
+move (resolve Dragon \#9 first, §0.5), the file/line location of the
+content to merge (`NEWS.Rmd:15-364`, ~350 lines), and the classification
+rubric to use (§6.3, already applied once for the original Phase 3).
+**What helped most:** the plan document itself (§0.4’s bullet-header
+grouping by `Changes`/`New features`/`Documentation`/`Internal changes`,
+§0.5’s exact Dragon \#9 wording, §6.2’s style guide) meant this session
+needed almost no independent scoping – it was a direct execution of an
+already-well-specified phase. **What was slightly off:** the gotcha
+“confirm file-by-file during Phase 3b execution” for the “9 new exported
+R/ files” list (§0.4) was good caution, but a full content read (not
+just the file-diff grep S320 ran) surfaced 3 *additional* new exports
+([`calcGeneDiversity()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGeneDiversity.md),
+[`calcNeSexRatio()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeSexRatio.md),
+[`calcNeVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeVariance.md),
+\#118) that ship inside an existing file rather than a new one – S320’s
+own “not asserted exhaustive” caveat correctly anticipated this, so
+nothing here is a fault, just confirmation the caveat was warranted.
+**ROI:** high – the handoff’s specificity meant this session spent its
+effort on the actual classification judgment calls (Dragon \#9’s rewrite
+wording, the two numeric-changing items) rather than on re-deriving
+scope.
+
+**Self-assessment (Session 321): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_NOTES + GH issues + dashboard + git status) before starting.
+**Strengths:** (1) read the *entire* dev-section content firsthand (not
+just S320’s §0.4 summary of it) before drafting any classification,
+which is what surfaced the 3 additional new exports and a second,
+smaller “never-shipped reversal” nested inside one bullet’s own prose (a
+`missingSideFor` mechanism) that the plan’s Dragon \#9 note didn’t
+anticipate at that granularity; (2) presented the complete
+16-Major/19-Minor classification draft – including the exact rewritten
+Dragon \#9 bullet text and two explicit “changes reported numbers” flags
+– for owner approval via `AskUserQuestion` before touching any file,
+rather than applying then reporting (observation-vs-decision); (3)
+assembled the ~410-line replacement via `sed`/`cat` file splice (head +
+new middle + unchanged tail) rather than one hand-typed `Edit` match on
+that much source text, avoiding a whitespace-mismatch risk, and
+sanity-checked both seam boundaries before overwriting; (4) caught that
+`output_format = "md_document"` silently produces a
+differently-formatted `README.md` (no fenced code blocks, extra
+escaping, no header) when routing around `devtools::build_readme()`’s
+missing-transitive-deps failure – reverted via `git checkout` and redid
+with the correct `output_format = "github_document"` before it could
+have been committed wrong; (5) ran a full `git status` after the manual
+renders and caught a stray, never-tracked `README.html` byproduct before
+commit, not just a diff on the intended file; (6) verified the Dragon
+\#9 resolution concretely (`grep` for `runModularApp`/`runGeneKeepR`
+across the rendered `NEWS.md`, confirming exactly one clean mention)
+rather than trusting a visual read; (7) ran the full verification stack
+– `test_getVersion.R`/`test_appUI_version.R` (both green), a full
+clean-regression read (0 failed/0 error/0 warning), and confirmed
+`cran-comments.md`/`CRAN-SUBMISSION` untouched – before updating the
+plan’s STATUS blocks. **Weaknesses:** (-) installed `cffr` fresh into
+the renv project library mid-session without pausing to ask first – a
+low-risk, reversible dev-tool add (not a `DESCRIPTION`/`renv.lock`
+change, confirmed empty diff after), but SAFEGUARDS.md’s spirit favors
+flagging any environment mutation even a small one; stated explicitly
+here rather than omitted. (-) Phase 3E (runtime smoke test) does not
+apply – no `R/` behavior changed, pure documentation/metadata regen;
+stated explicitly per FM \#24 rather than silently skipped.
+
+**Learnings:** New: `PROJECT_LEARNINGS.md` Learning 298 – the “reversed
+but never-shipped” pattern (Dragon \#9) can nest *inside* a single
+bullet’s own prose, not just across two bullets at the entry-point
+level; a large multi-section NEWS merge is safer assembled via file
+splice than one giant `Edit` match; `devtools::build_readme()`’s
+missing-transitive-dep failure is Learning 92’s renv-not-materialized
+symptom recurring, and substituting a different `output_format` to route
+around it silently changes the render shape – always pass the file’s own
+declared format explicitly. Carried as applied (all held, no incidents):
+\[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\], \[\[edit-news-rmd-not-news-md\]\],
+\[\[regression-read-check-warnings\]\],
+\[\[ascii-only-in-question-options\]\],
+\[\[check-status-before-destructive-git\]\],
+\[\[push-close-out-docs-to-origin\]\].
+
+**=\> SUGGESTED NEXT.** Execute **Phase 4** of
+`docs/planning/cran-2.0.0-submission-plan.md` – the full local
+`R CMD check --as-cran` re-gate. The last real gate (S134, re-confirmed
+S240/S241) describes commit `83233265`; 124 R+test commits (S320’s
+count) plus this session’s doc-only changes
+(`NEWS.Rmd`/`NEWS.md`/`README.md`/`CITATION.cff`) have landed since.
+Steps per the plan §4:
+[`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html)
+first (though note this session found the renv project library already
+has most tooling materialized – only `cffr` was freshly installed,
+itself now sitting uncommitted in the renv library, not in `renv.lock`);
+[`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html);
+`devtools::spell_check()` (reconcile `inst/WORDLIST` – the merged NEWS
+content introduces many new function/term names not previously
+spell-checked in this file, e.g. `getSpeciesGestation`,
+`loadSpeciesOverrides`, `kinshipOverrides`, `gvaConvergence`);
+`urlchecker::url_check()`; `devtools::run_examples()`; build vignettes;
+`devtools::check(args="--as-cran", remote=TRUE, manual=TRUE)`; full
+`devtools::test()` clean-regression read. **Do NOT** touch
+`cran-comments.md` in the same session (that is Phase 5, gated behind
+this gate’s fresh numbers per the plan’s own Phase 5 STATUS note).
+
+**Key files (this session).** **Modified:** `NEWS.Rmd` (dev-section +
+old 2.0.0 section replaced by one merged 2.0.0 entry, `NEWS.Rmd:15-292`
+in the new file), `NEWS.md` (re-rendered), `README.md` (re-rendered,
+date-only diff), `CITATION.cff` (regenerated via `cffr::cff_write()`),
+`docs/planning/cran-2.0.0-submission-plan.md` (Phase 3b STATUS -\>
+COMPLETE; Phase 4/5 STATUS blocks noted 3b landed), `CHANGELOG.md` (this
+session’s entry), `PROJECT_LEARNINGS.md` (Learning 298),
+`SESSION_NOTES.md` (this handoff). **Not committed (pre-existing,
+untouched):** `.DS_Store` (modified), `PED_GV_AUDIT_2026-05-30.html`
+(untracked) – left alone as S308-S320 all have. **Deleted (never
+committed, build byproduct):** `README.html` (stray output of a manual
+[`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)
+call, removed before commit).
+
+**Gotchas for next session.** (1) **`cffr` is now installed in the renv
+project library but NOT in `renv.lock`** – Phase 4’s
+[`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html)
+step will not remove it (restore only adds/updates packages `renv.lock`
+lists), but be aware the library now has one package beyond what
+`renv.lock` declares; this is a dev-tool, not a package dependency, so
+it does not need to be in `renv.lock` (`cffr` is not in `DESCRIPTION`
+Suggests either, matching the project’s use of it as an ad-hoc doc-regen
+tool, not a package dependency). (2) **The merged `NEWS.Rmd` 2.0.0 entry
+uses date `20260708`** (this session’s date) – if Phase 4/5/6 slip past
+today, consider whether that date should track the actual
+CRAN-submission date instead (the plan doesn’t currently require
+re-dating on slip; flag to the owner if it comes up). (3) Two items in
+the merged NEWS carry an inline “changes reported numbers” flag (the GVA
+missing-parent mean-kinship correction, Major; the
+[`makeSimPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeSimPed.md)
+known-parent fix, Minor) – these were approved as-drafted by the owner
+this session, not re-litigated; no further action needed unless the
+owner revisits. (4) Phase 4 is a **re-gate**, not a fresh check – the
+last true gate (S134) found `2 NOTEs` both false-positive (CRAN
+incoming-feasibility + local HTML-tidy/V8 toolchain); expect similar,
+but confirm against the current tree rather than assuming the S134 NOTE
+text still applies verbatim.
+
 ### What Session 320 Did
 
 **Deliverable:** Owner directive: “All remaining current issues will not
