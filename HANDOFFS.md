@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S331
+date: 2026-07-09
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Phase A of docs/planning/v2-transformation-article-plan.md -- build and freeze the evidence-base data files + extraction script(s) for Document 1, complete the plan's §3 Claim-Evidence Map. Owner ratified proceeding + commit-range framing (4548aa1b..8ca8bb24, 512 commits) via AskUserQuestion.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S330
 date: 2026-07-09
 status: complete

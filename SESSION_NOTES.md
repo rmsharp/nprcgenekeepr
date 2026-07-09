@@ -6,6 +6,21 @@
 
 ## ACTIVE TASK
 
+### What Session 331 Did
+**Deliverable:** Phase A of `docs/planning/v2-transformation-article-plan.md` -- build
+and freeze the evidence-base data files + extraction script(s) for Document 1, and
+complete the plan's §3 Claim-Evidence Map with real dated/sha-anchored rows. (IN
+PROGRESS) **Owner ratified (2026-07-09, via `AskUserQuestion`):** proceed with Phase A;
+commit-range framing = CRAN-submission-to-CRAN-submission (`4548aa1b..8ca8bb24`, 512
+non-merge commits), per plan §2/§9 dragon #4.
+**Started:** 2026-07-09
+**Status:** Session claimed. Work beginning. **Data-extraction/tooling session for
+`vignettes/articles/` support -- no `R/`/`tests/` package code touched. TDD phase: N/A**
+(matches S107-S110 article-session precedent and S330's own planning-session framing;
+declared every response).
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### What Session 330 Did
 **Deliverable:** Planning session for "Document 1" -- a technical description of the
 v1.0.8 -> v2.0.0 transformation (Shiny modules architecture, new features, enhanced
