@@ -12,15 +12,170 @@ assemble/consolidate/verify/publish: draft Abstract, Introduction, Conclusion (N
 grant acknowledgment); Section 5 and F6 both cut (owner-confirmed via
 `AskUserQuestion` at kickoff); full-document claim-source audit (workstream Phase 6)
 across all sections; complete render/CRAN-risk verification chain (`quarto render` +
-`pkgdown::build_article()` + `R CMD build .` + `tar tzf` + spot-check the four
-pre-existing articles).
+`pkgdown::build_article()` + `R CMD build .` + `tar tzf` + spot-check pre-existing
+articles).
 **Documentation/article-drafting session for `vignettes/articles/` support -- no
 `R/`/`tests/` package code touched. TDD phase: N/A** (matches S107-S110/S330-S335
 article-session precedent; declared every response).
-**Started:** 2026-07-09
-**Status:** Session claimed. Work beginning.
+**Started / Completed:** 2026-07-09 / 2026-07-09
+**Status:** **DONE. The v2-transformation-article-plan.md is now fully executed,
+Phase A through Phase F.** Owner confirmed via two `AskUserQuestion`s at kickoff: cut
+Section 5 (Sections 1-4 already each ship their own summary table) and skip F6
+(`vignettes/shiny_app_use/` never touched). Drafted **Abstract** (200 words, written
+last after a full body read-through), **Introduction** (`#sec-introduction`, four-pillar
+overview + explicit "(as of 2026-07-09)" scope stamp), and **Conclusion**
+(`#sec-conclusion`, practical maintainer implications + the verbatim NIH grant
+acknowledgment, diffed against `CLAUDE.md`/`DESCRIPTION` to confirm word-for-word
+match).
+
+**Full-document claim-source audit (workstream Phase 6):** forked two parallel
+adversarial-verification passes covering all 8 sections (Abstract/Introduction/
+Sections 1-2 in one fork, Sections 3-4/Conclusion in the other), each independently
+re-deriving every numeric/dated/sha claim from `git`/`gh`/`grep` rather than trusting
+the plan's own Claim-Evidence Map summary column -- then independently re-verified
+every finding firsthand before touching the article, per SESSION_RUNNER's "apply
+adversarial refutation to your own agents' output" guidance. ~55 distinct claims
+checked; **4 real mismatches found and fixed:**
+1. Section 1 misattributed the `inst/application/` monolith deletion to `3db018d1`
+   (Phase 9 Part 1/3, the `runGeneKeepR()` alias commit, same timestamp as the real
+   deletion commit). The actual deletion -- and the source of the "single `git
+   revert`" reversibility claim, quoted directly from that commit's own message -- is
+   `24992e0b`, Part 2/3. Fixed in both the fig-architecture caption and body prose.
+2. Section 2 overclaimed issue #34's hygiene-close gap as "years later" (`gh issue
+   view 34`: opened 2026-01-20, closed 2026-06-12 -- about five months). Fixed.
+3. Section 4 overcounted "all four sessions that produced Sections 1-3" -- the
+   article file's own commit history (`git log --diff-filter=AM`) shows exactly
+   three: S332 (Section 1), S333 (Section 2), S334 (Section 3). Fixed to "three."
+4. **Section 3's CI-coverage claim was a genuinely new class of defect**: "the
+   23-file `^(app|e2e)-` tier... union = the 23, no overlap, no gap" was TRUE when
+   S334 wrote it (matching `.github/workflows/shinytest2.yaml`'s own header comment,
+   itself accurate as of Phase 8e-7's close, 2026-06-11) -- but by this session, two
+   more E2E files had been added by unrelated later sessions
+   (`test-e2e-potential-parents-module.R`, S82, issue #48;
+   `test-e2e-orip-module.R`, S86, issues #47/#49 -- covering exactly the two new
+   Shiny tabs Section 2 celebrates) that match NONE of the workflow's 13 hardcoded
+   group regexes. Independently confirmed via `git ls-tree` at `8ca8bb24` (26 files
+   total matching `test-(app|e2e)-*.R`) and by hand-checking each of the 13 regexes
+   against both file names (`test-e2e-orip-module` and `test-e2e-potential-parents-module`
+   match zero of the 13). Rewrote the passage to state the current, verified figures
+   (26 files, 24 covered, 2 never executed in CI) instead of the workflow's own
+   stale comment. **This is a real, currently-open CI gap** -- flagged to the owner
+   below, deliberately NOT fixed in this documentation-only session (a
+   `.github/workflows/shinytest2.yaml` change is a different capability needing its
+   own TDD-governed session; SESSION_RUNNER scope discipline, not an oversight).
+
+**Full verification chain:** `quarto render` (zero unresolved refs both before and
+after the audit fixes; Tables 1-5/Figures 1-5 all resolved sequentially) ->
+`pkgdown::build_article("articles/engineering-the-2.0.0-release")` (clean, correct
+`articles/` name prefix per Learning-precedent from S107) -> `R CMD build .` + `tar
+tzf` (confirmed zero `vignettes/articles` matches in the shipping tarball listing --
+zero CRAN risk). **Spot-check of pre-existing articles found the plan's own §1/§10
+inventory itself stale**: six `vignettes/articles/*.qmd` exist, not the plan's stated
+four (`fg-se-validation.qmd` and `offline-focal-animal-workflow.qmd` were added by
+later, unrelated sessions after the plan was written, 2026-07-09 but after S330's
+plan-drafting session) -- rendered all six as the more thorough superset rather than
+just the plan's stale "four," all clean, zero unresolved refs. No search/extraction
+artifacts found in `vignettes/articles/data/` (only the 8 intended frozen CSVs
+present). All render byproducts (`*.html`, `*_files/`, the auto-generated
+`.gitignore`, `pkgdown_site/`) cleaned up before staging. Marked Phase F `DONE` in
+the plan's §7 with a full closure note; ticked all ten §10 Verification Checklist
+items with evidence; resolved all four §12 open owner decisions in place.
 **Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded
 in `CHANGELOG.md` at Phase 3F.
+
+**Session 335 Handoff Evaluation (by Session 336): Score 9/10.** **What helped:** the
+handoff's `next_steps` field named Phase F's exact scope (Abstract, Introduction,
+optional Section 5, Conclusion, full §10 checklist across all four sections) and
+correctly flagged the two owner decisions still open (Section 5, F6) with the exact
+`AskUserQuestion` pattern to use, matching S332's title/slug precedent -- this session
+asked both up front rather than discovering the need for them mid-session. The
+`gotchas` field's live-vs-frozen-data warning did not directly fire this session (Phase
+F drafted new prose, not new frozen-data tables), but it primed the mindset that made
+the CI-coverage staleness catch (finding 4 above) recognizable as the SAME class of
+problem the moment it surfaced, rather than a one-off surprise. **What was missing:**
+did not anticipate that Phase F's own "full-document claim audit" instruction would
+surface real, unfixed defects in Sections 1-4 that S332-S335 each individually
+verified and closed as DONE -- reasonable, since S335 had no way to know what a
+cross-session audit would find, but worth naming explicitly for a future multi-phase
+plan: even a phase marked DONE with its own real verification is not exempt from a
+later full-document re-audit finding something the narrower per-phase check could not
+have. **What was wrong:** nothing found wrong -- every fact in the handoff (scope,
+open decisions, the two `AskUserQuestion` items needed) held on independent
+verification. **ROI:** high -- both `AskUserQuestion`s were asked at the right moment
+with the right framing on the first try, no re-derivation needed.
+
+**Self-assessment (Session 336): 9/10.** **Strengths:** (1) did not treat "Phase F
+closes the plan" as license to rubber-stamp Sections 1-4's already-DONE status --
+ran the full-document claim audit the plan's own §10 checklist actually requires,
+which found and fixed 4 real defects across 3 different prior sessions' work, none
+of which any single prior session could plausibly have caught on its own; (2)
+correctly distinguished "flag and document" from "fix" for the CI-coverage gap
+finding -- a real, currently-open defect discovered as a side effect of documentation
+work, handled by fixing the ARTICLE's claim (in scope) while explicitly declining to
+fix the underlying `.github/workflows/shinytest2.yaml` (out of scope, different
+capability, needs its own TDD session) and flagging it clearly rather than either
+silently fixing it (scope creep) or silently ignoring it (the failure mode the audit
+exists to prevent); (3) independently re-verified all 4 fork-reported mismatches
+firsthand (`git show --stat`, `gh issue view`, `git ls-tree`, hand-checking regexes)
+before touching the article, rather than trusting sub-agent output at face value --
+all 4 held, but the check is what makes that a verified fact rather than an assumed
+one; (4) caught that the plan's own inventory ("the four existing articles") was
+itself stale -- six exist, not four -- and rendered the fuller, more thorough set
+rather than silently matching the plan's stale literal instruction; (5) held scope
+discipline throughout -- did not touch `.github/workflows/shinytest2.yaml`, did not
+draft Section 5 or use F6 once the owner declined both, did not expand the claim
+audit into a general codebase review beyond the article's own claims.
+**Weaknesses:** (-) the two forked audit passes were scoped as a fixed 4-sections/
+4-sections split decided before either fork ran, rather than dynamically -- with
+hindsight, a finer-grained split (e.g. by claim DENSITY rather than section count)
+might have balanced the two forks' runtimes more evenly (~229s vs ~281s wall-clock,
+not a large gap but not perfectly even either); a minor inefficiency, not a
+correctness issue. (-) did not think to grep the ENTIRE repo (beyond the article
+itself and its immediately-cited sources) for other prose that might ALSO repeat the
+now-stale "23-file, no gap" CI claim (e.g. other planning docs, README) -- checked
+only the workflow file's own header comment and the article; a places-this-claim-
+might-also-live sweep would have been more thorough, though no other location was
+identified as plausible during the session.
+**Phase 3E (runtime smoke test) does not apply** -- no `R/` package behavior changed;
+the full verification chain (`quarto render` + `pkgdown::build_article()` + `R CMD
+build .`/`tar tzf` + all 6 pre-existing articles re-rendered) is this deliverable's
+actual build-equivalent verification, performed and confirmed.
+
+**Learnings:** New: `PROJECT_LEARNINGS.md` Learning 312 (a full-document, post-hoc
+claim audit is a structurally different check than N per-section audits -- only it
+re-verifies EARLIER sections' claims against CURRENT state; the CI-coverage gap is
+the concrete example of a claim that was true at draft time and false by publish
+time, purely from unrelated later sessions' changes elsewhere in the repo). Updated
+`CLAUDE.md`'s `PROJECT_LEARNINGS.md` pointer line (311 -> 312 learnings, Sessions
+1-335+ -> 1-336+). Carried as applied (all held, no incidents):
+[[consult-project-source-of-truth]], [[push-close-out-docs-to-origin]].
+
+**=> FLAG FOR THE OWNER (not a suggested next session -- a defect report):** A real,
+currently-open CI coverage gap exists in `.github/workflows/shinytest2.yaml`: the
+13-group per-module E2E partition covers 24 of the 26 files in the opt-in
+`test-(app|e2e)-*.R` tier. Two files never run in the nightly/manual-dispatch CI job:
+`test-e2e-potential-parents-module.R` (issue #48, Session 82) and
+`test-e2e-orip-module.R` (issues #47/#49, Session 86) -- ironically, the E2E coverage
+for exactly the two newest Shiny tabs this article's own Section 2 highlights as new
+capabilities. Fixing this needs a small, TDD-governed session: add 2 more group
+regexes (or generalize the existing pattern) to the `groups=(...)` array in
+`.github/workflows/shinytest2.yaml:127-141`, update the header comment's stale "23...
+no gap" claim to match, and confirm via a live GitHub Actions run (this is CI
+configuration -- SAFEGUARDS' "verified statically ... flag not-statically-verifiable
+bits as live-run watch items" applies; a local `test_dir(filter=...)` dry run can
+confirm the regex additions match the right files, but only an actual triggered
+workflow run confirms the job itself passes).
+
+**=> SUGGESTED NEXT (once the CI-gap defect above is triaged/scheduled).** The
+`v2-transformation-article-plan.md` is now fully executed end to end (Phase A through
+Phase F) -- there is no Phase G. Reasonable next directions, not pre-decided by this
+session: (1) the CI-gap fix above, if the owner wants it prioritized; (2) "Document
+2" (package purpose / how to use it), explicitly out of scope for this plan per its
+own §1, would need its own fresh planning session per the owner's 2026-07-09
+instruction; (3) resume whatever the CRAN 2.0.0 submission's review outcome requires
+once it arrives (still pending as of this session, independent of this plan). None of
+these is started or assumed by this session -- the next session should orient fresh
+and let the owner pick.
 
 ### What Session 335 Did
 **Deliverable:** Phase E of `docs/planning/v2-transformation-article-plan.md` -- draft
