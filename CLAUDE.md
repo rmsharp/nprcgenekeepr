@@ -166,7 +166,7 @@ The build-equivalent for this R package (relocated here from `SAFEGUARDS.md` dur
 
 **Citation checklist (issue #120, 2026-07-08):** any session that adds a new displayed statistic/estimator to the package must update `inst/extdata/ui_guidance/population_genetics_terms.html` (or the relevant UI guidance page) and the statistic's own roxygen `@references` in the same session that ships it, rather than deferring to a later audit. (Source: `docs/audits/ISSUE_120_CITATION_COVERAGE_AUDIT_2026-07-08.md` Structural Observation 1 — citation gaps correlated with recency, not centrality: the metrics missing coverage were consistently the ones added without their own citation pass.)
 
-**CHANGELOG.md ledger-format gap (2026-07-08 methodology sync, tracked, not yet migrated):** canonical v3.1+ defines `CHANGELOG.md` as an "Authoritative Action Ledger" — dated `### YYYY-MM-DD · [issue #N] | [BL-N] | [ad hoc]` entries, one per action, checked by Phase 0's ledger reconcile and required at Phase 3F (FM #27). This project's `CHANGELOG.md` predates that convention (dated subsections with `**Deliverable:**` prose, no source tag) and holds ~30+ sessions of real history, so `bin/status` correctly flags it `present (stale format)` rather than silently rewriting it (SEED disposition — sync never overwrites it). Until a dedicated session reconciles the format (BOOTSTRAP.md "Updating an existing project" — hand-migrate or reseed), keep recording entries in the existing dated-subsection style; do not force single entries into the new tag format mid-file, and do not treat the mismatch as FM #27 in the meantime.
+**CHANGELOG.md ledger-format resolution (2026-07-08, Session 325 — "freeze legacy, go forward"):** canonical v3.1+ defines `CHANGELOG.md` as an "Authoritative Action Ledger" — dated `### YYYY-MM-DD · [issue #N] | [BL-N] | [ad hoc]` entries, one per action. This project's pre-existing ~30+-session history (dated subsections, no source tag) was **not** retroactively migrated — owner chose (via `AskUserQuestion`) to freeze it as-is rather than run a multi-session migration campaign to re-tag 303 already-closed entries. `CHANGELOG.md` now has a `## Legacy history (pre-ledger format, Sessions 1-324)` marker: everything below it is untouched original-format history; everything above it (from Session 325 forward) uses the canonical `[SOURCE]`-tagged format. New entries always go above the marker, never inside it.
 
 ### Development Process Contract override
 
@@ -174,7 +174,7 @@ This project runs **Strict Test-Driven Development** (see the "Development Proce
 
 ### Project-specific Learnings
 
-Project institutional memory (Sessions 1–28+; 33 learnings, ~88k chars) lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) — extracted from this file to keep `CLAUDE.md` within its size budget (Claude Code targets ~200 lines / ~25 KB). **Read it when you need prior-session context; append new learnings there, not here.** Base methodology-level learnings remain in `SESSION_RUNNER.md`.
+Project institutional memory (Sessions 1–325+; 302 learnings, ~1.35 MB) lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) — extracted from this file to keep `CLAUDE.md` within its size budget (Claude Code targets ~200 lines / ~25 KB). **Read it when you need prior-session context; append new learnings there, not here.** Base methodology-level learnings remain in `SESSION_RUNNER.md`.
 
 ### Project-specific Failure Modes
 

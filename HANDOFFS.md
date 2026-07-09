@@ -77,16 +77,16 @@ session need this block to continue the work without re-reading the whole repo?*
 ```handoff
 session: S325
 date: 2026-07-08
-status: pending
-self_score: TBD
-predecessor_score: TBD
-active_task: Resolve CHANGELOG.md ledger-format gap (freeze legacy, go forward) -- in progress.
-what_was_done: pending
-next_steps: pending
-key_files: CHANGELOG.md
-gotchas: pending
-runtime_smoke: n/a — docs-only
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: CHANGELOG.md ledger-format gap resolved (freeze legacy, go forward). CRAN 2.0.0 Phase 5b remains owner-triggered, not started. 8 open GitHub issues untouched, no priority set among them.
+what_was_done: Added an "Authoritative Action Ledger" intro + "How to add an entry" section (source-tag rules: [issue #<N>]/[BL-<N>]/[ad hoc]) to CHANGELOG.md, copied from the real canonical starter-kit/CHANGELOG.md seed (~/Development/methodology). Added a "## Legacy history (pre-ledger format, Sessions 1-324)" boundary marker; the 303 existing entries below it are byte-for-byte unchanged. Wrote this session's own action as the first canonical-format entry above the marker. Updated CLAUDE.md's Adaptations section (CHANGELOG-gap note -> resolution note; corrected a stale "33 learnings" pointer to the actual 302). Backfilled HANDOFFS.md's S324 commit:pending field to 0c3af8b9. Added PROJECT_LEARNINGS.md Learning 302. Commit: pending.
+next_steps: Either (a) resume docs/planning/cran-2.0.0-submission-plan.md Phase 5b (owner-triggered win-builder x3 + R-hub v2), or (b) pick up one of the 8 open GitHub issues (#116, #37, #36, #28, #12, #11, #10, #5) -- owner's call, none more urgent.
+key_files: CHANGELOG.md:1-61 (new intro/how-to-add-an-entry/legacy-marker/S325 entry), CLAUDE.md (Adaptations section), HANDOFFS.md (S324 commit backfill), PROJECT_LEARNINGS.md (Learning 302)
+gotchas: New CHANGELOG.md entries always go above "## Legacy history", never inside it. Every new entry needs exactly one [issue #<N>]/[BL-<N>]/[ad hoc] source tag. Neither CRAN Phase 5b nor any open issue is more urgent than another right now.
+runtime_smoke: n/a — docs-only, no R/ package runtime behavior changed
+changelog_ref: CHANGELOG.md 2026-07-08 "Adopt the canonical Authoritative Action Ledger format going forward (Session 325)"
 commit: pending
 ```
 
@@ -97,12 +97,12 @@ status: complete
 self_score: 8
 predecessor_score: 9
 active_task: Methodology sync to canonical v3.4 — complete. CRAN 2.0.0 Phase 5b (win-builder/R-hub) remains owner-triggered, not started this session.
-what_was_done: Ran bin/sync --source=local --force (full unshallowed clone of KJ5HST/methodology, cross-checked against rmsharp/methodology fork) to update SESSION_RUNNER.md, SAFEGUARDS.md, RECOMMENDED_SKILLS.md, methodology_dashboard.py, docs/methodology/{ITERATIVE_METHODOLOGY,HOW_TO_USE}.md, all 9 docs/methodology/workstreams/*.md; created BOOTSTRAP.md, CLAUDE_TEMPLATE.md, CONTEXT_TEMPLATE.md, HANDOFFS.md. Manually refreshed docs/methodology/README.md (not manifest-tracked). Updated CLAUDE.md (FM count 25->27, new CHANGELOG ledger-gap note) and .gitignore (dashboard_history.jsonl). CHANGELOG.md entry: 2026-07-08 Session 324. Commit: pending.
+what_was_done: Ran bin/sync --source=local --force (full unshallowed clone of KJ5HST/methodology, cross-checked against rmsharp/methodology fork) to update SESSION_RUNNER.md, SAFEGUARDS.md, RECOMMENDED_SKILLS.md, methodology_dashboard.py, docs/methodology/{ITERATIVE_METHODOLOGY,HOW_TO_USE}.md, all 9 docs/methodology/workstreams/*.md; created BOOTSTRAP.md, CLAUDE_TEMPLATE.md, CONTEXT_TEMPLATE.md, HANDOFFS.md. Manually refreshed docs/methodology/README.md (not manifest-tracked). Updated CLAUDE.md (FM count 25->27, new CHANGELOG ledger-gap note) and .gitignore (dashboard_history.jsonl). CHANGELOG.md entry: 2026-07-08 Session 324. Commit: 0c3af8b9.
 next_steps: Either (a) resume docs/planning/cran-2.0.0-submission-plan.md Phase 5b — owner-triggered win-builder x3 + R-hub v2, see SESSION_NOTES.md S323 entry — or (b) run a dedicated CHANGELOG.md ledger-format migration session per CLAUDE.md's new Adaptations note (canonical v3.1+ ledger format vs. this project's ~30+-session dated-subsection history).
 key_files: CLAUDE.md (Adaptations section, FM-count + CHANGELOG-gap edits), CHANGELOG.md:17-28 (this entry), PROJECT_LEARNINGS.md Learning 301 (shallow-clone / force-overwrite-verification findings), .gitignore (dashboard_history.jsonl), SESSION_RUNNER.md + SAFEGUARDS.md (full canonical replace, now v3.4)
 gotchas: CHANGELOG.md is deliberately still old-format (SEED disposition, bin/sync never auto-migrates it) — do not force new-format `[SOURCE]`-tagged entries into it without a dedicated migration pass. Any future methodology sync MUST git fetch --unshallow the canonical clone first, or bin/status falsely reports every TRACKED file as "locally modified" (Learning 301).
 runtime_smoke: n/a — docs/infra-only, no R/ package runtime behavior changed
 changelog_ref: CHANGELOG.md 2026-07-08 "Update methodology to canonical v3.4 (Session 324)"
-commit: pending
+commit: 0c3af8b9
 ```
 Synced this project's methodology tooling from a stale v2.6 to the current canonical v3.4 (8 tagged releases), per the user's literal BOOTSTRAP.md-documented request. Verified before force-overwriting the two flagged files (no real customization lost — traced to a prior session's pre-release wording adoption, not a hand-edit). Deferred the CHANGELOG.md ledger-format migration as its own future task rather than bundling a large history reformat into this sync, per the tool's own documented guidance. Self-score 8/10: +diligent verification before any destructive action (shallow-clone bug caught, fork cross-check, project-term grep before --force), +correct scope boundary (didn't reformat 30+ sessions of CHANGELOG history), +adopted the new HANDOFFS.md receipt immediately rather than waiting for a future reconcile; -did not open a Phase 1B pending stub for this deliverable before starting (the new protocol requiring it wasn't yet synced in when the task began — retroactive rather than upfront), -did not restate "TDD Phase: N/A" inline at the top of each chat response per CLAUDE.md's literal enforcement rule during this task. Predecessor (S323) scored 9/10 on documentation quality/completeness alone — its CRAN-plan handoff was not exercised this session since the user redirected to an unrelated deliverable, which is not a mark against it.
