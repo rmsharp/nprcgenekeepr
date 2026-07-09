@@ -77,16 +77,16 @@ session need this block to continue the work without re-reading the whole repo?*
 ```handoff
 session: S326
 date: 2026-07-08
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: CRAN 2.0.0 Phase 5b readiness verification -- confirm no drift since the S322 local gate / S323 cran-comments.md resync, confirm runbook tool versions/signatures, hand owner the ready-to-run sequence.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: CRAN 2.0.0 Phase 5b readiness re-verified, zero drift found. Still PENDING, owner-triggered (win-builder x3 + R-hub v2 need the owner's GitHub PAT and email). 8 open GitHub issues untouched, no priority set among them.
+what_was_done: Asked the owner via AskUserQuestion how to scope Phase 5b (verify-only vs. live-run vs. attempt-to-trigger); owner chose verify-only. Confirmed zero drift since S322/S323: git log --oneline 2abfc783..HEAD -- R/ tests/ DESCRIPTION empty; origin/master 0/0 vs HEAD; DESCRIPTION Version still 2.0.0; cran-comments.md and the Phase5 runbook re-read clean; Rscript introspection confirmed devtools 2.5.2/rhub 2.0.1/gitcreds 0.1.2 installed with function signatures still matching the runbook's calls. Added a verification-status note to docs/planning/cran-2.0.0-submission-plan.md's Phase 5 status block + Sec9 table row. No R/tests/DESCRIPTION/cran-comments.md/runbook changes needed. Commit: pending (this receipt ships in the same commit).
+next_steps: Either (a) owner runs the Phase 5b runbook (docs/planning/cran-2.0.0-phase5-runbook.md Quick sequence) whenever ready -- folding real results into cran-comments.md and submitting is a separate future session -- or (b) pick up one of the 8 open GitHub issues (#116, #37, #36, #28, #12, #11, #10, #5) -- owner's call, none more urgent.
+key_files: docs/planning/cran-2.0.0-submission-plan.md (Phase 5 status block + Sec9 table Phase 5b row), SESSION_NOTES.md (S326 handoff), HANDOFFS.md (this receipt), CHANGELOG.md (new [ad hoc] entry)
+gotchas: Phase 5b's actual cross-platform runs remain owner-only -- don't trigger devtools::check_win_*()/rhub::rhub_check() without explicit owner request, despite the plan's Phase 5 prose reading as "fine for the agent to run"; the runbook's SAFEGUARDS framing + repeated owner precedent (S135/S242/S320/S323/S325/S326) overrides that. When adding a HANDOFFS.md receipt, insert directly after the "Receipts go below, newest on top" sentinel comment, not under the "Three files..." heading (this session's own near-miss, self-caught before commit).
+runtime_smoke: n/a -- docs/planning-only, no R/ package runtime behavior changed
+changelog_ref: CHANGELOG.md 2026-07-08 "CRAN 2.0.0 Phase 5b readiness re-verified, zero drift (Session 326)"
 commit: pending
 ```
 
