@@ -7,8 +7,11 @@ and its commit-range framing (§2/§9 dragon #4) via `AskUserQuestion`, Session 
 Session 333 (2026-07-09) drafted Section 2 (new features) + T4 — **Phase C is now DONE**
 (§7). Session 334 (2026-07-09) drafted Section 3 (testing at scale) + T5/F3 — **Phase D
 is now DONE** (§7). Session 335 (2026-07-09) drafted Section 4 (AI-assisted development
-process) + T6/F4/F5 — **Phase E is now DONE** (§7). Phase F remains a future, separately
-approved session; no phase is bundled with another (FM #26).
+process) + T6/F4/F5 — **Phase E is now DONE** (§7). Owner confirmed cutting Section 5
+and skipping F6 via `AskUserQuestion`, Session 336 (2026-07-09), which then drafted the
+Abstract, Introduction, and Conclusion, ran the full-document claim-source audit, and
+completed the full §10 Verification Checklist — **Phase F is now DONE (§7); this plan
+is fully executed.** No phase was bundled with another (FM #26).
 
 **Workstream:** Adapted `docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md`
 (Phases 2/3/4/6), substituting this repository's own artifacts (`git log`, `CHANGELOG.md`,
@@ -394,7 +397,7 @@ a standalone `mermaid-cli` PNG render of F4 caught and confirmed the fix for a r
 label-escaping defect; `PROJECT_LEARNINGS.md` re-read per the phase's own bar; render
 artifacts cleaned up before staging.
 
-### Phase F — Assemble, consolidate, verify, publish · risk MEDIUM (irreversible-ish: public visibility)
+### Phase F — Assemble, consolidate, verify, publish · risk MEDIUM (irreversible-ish: public visibility) · ✅ DONE (Session 336)
 **What DONE looks like:** Abstract, Introduction, optional Section 5, Conclusion
 drafted; full-document claim audit (workstream Phase 6 — every numeric/dated claim
 re-checked); complete render verification per the S107-110 pattern: `quarto render` +
@@ -405,6 +408,48 @@ cleanup of any search/extraction artifacts.
 **Verification:** the full Verification Checklist, §10.
 **Session boundary:** this is the publish gate — the article should not be considered
 public-ready until this phase's checklist is green.
+
+**Closed as of Session 336 (2026-07-09):** owner confirmed via `AskUserQuestion` at
+kickoff to cut Section 5 (Sections 1-4 already each ship their own summary table) and
+skip F6 (screenshot reuse — Sections 1-2 already shipped without it; avoids touching a
+possibly hand-curated asset directory for an optional figure). Drafted **Abstract**
+(200 words), **Introduction** (`#sec-introduction`, four-pillar overview + explicit
+"(as of 2026-07-09)" scope stamp), and **Conclusion** (`#sec-conclusion`, practical
+implications for maintainers + the verbatim NIH grant acknowledgment matching
+`CLAUDE.md`/`DESCRIPTION`). **Full-document claim-source audit** (workstream Phase 6):
+forked two parallel adversarial-verification passes covering all 8 sections
+(Abstract/Introduction/Sections 1-2, then Sections 3-4/Conclusion), each independently
+re-deriving numbers/dates/shas from `git`/`gh`/`grep` rather than trusting the plan's
+own Claim-Evidence Map summary column — then independently re-verified every finding
+firsthand before touching the article (not applied uncritically). ~55 distinct claims
+checked; **4 real mismatches found and fixed**: (1) Section 1 misattributed the
+`inst/application/` deletion to `3db018d1` (that commit is Phase 9 Part 1/3, the
+`runGeneKeepR()` alias — the actual deletion, and the source of the "single `git
+revert`" reversibility claim, is `24992e0b`, Part 2/3); (2) Section 2 overclaimed issue
+#34's hygiene-close gap as "years later" (`gh issue view` shows 2026-01-20 →
+2026-06-12, about five months); (3) Section 4 overcounted "all four sessions that
+produced Sections 1-3" (the file's own commit history shows exactly three: S332/S333/
+S334); (4) Section 3's CI-coverage claim ("the 23-file tier... no gap") was accurate
+when 8e-7 closed (2026-06-11) but is now stale — two E2E files added afterward
+(`test-e2e-potential-parents-module.R`, S82; `test-e2e-orip-module.R`, S86) never
+matched any of the 13 CI group regexes; the tier is actually 26 files as of 2026-07-09,
+with 2 never executed in CI. Rewrote that passage to state the current, verified
+26/24/2 figures instead of repeating the workflow file's own stale header comment —
+this is a genuine, currently open CI gap (not just an article staleness issue),
+flagged to the owner for a future session, not fixed here (out of scope for a
+documentation-only session; fixing it is a `.github/workflows/shinytest2.yaml` change
+needing its own TDD-governed session). **Full verification chain:** `quarto render`
+(zero unresolved refs, Tables 1-5/Figures 1-5 all resolved sequentially) →
+`pkgdown::build_article("articles/engineering-the-2.0.0-release")` (clean) → `R CMD
+build .` + `tar tzf` (confirmed `vignettes/articles/` and its `data/` subfolder absent
+from the shipping tarball — zero CRAN risk). **Spot-check of existing articles found
+the plan's own §1 inventory stale:** six pre-existing `vignettes/articles/*.qmd` exist,
+not four (`fg-se-validation.qmd` and `offline-focal-animal-workflow.qmd` were added by
+later sessions after this plan was written) — rendered all six as the more thorough
+superset of the checklist's "four", all clean, zero unresolved refs. No search/
+extraction artifacts found in `vignettes/articles/data/`; all render byproducts
+(`*.html`, `*_files/`, the auto-generated `.gitignore`, `pkgdown_site/`) cleaned up
+before staging.
 
 **Phases B-E may be reordered** (there is no hard dependency among Sections 1-4) but
 Phase A must come first (everything reads its frozen data) and Phase F must come last
@@ -459,22 +504,36 @@ project's actual mechanics:
 
 Before Phase F closes:
 
-- [ ] Every numeric, dated, or attributed claim in the article traces to a row in the
-      Phase A claim-evidence map (commit sha, CHANGELOG date, or frozen data file)
-- [ ] No claim uses present-relative dating ("currently," "as of now") without an
-      explicit "(as of 2026-07-09)"-style stamp (anti-pattern #16)
-- [ ] Every figure/table has stated provenance (frozen data file + generating script, or
-      "original construction" for schematics)
-- [ ] `quarto render` succeeds with no warnings; no unresolved `?@fig-x`/`?@tbl-x`
-- [ ] `pkgdown::build_article()` succeeds
-- [ ] `R CMD build .` + `tar tzf` confirms `vignettes/articles/engineering-the-2.0.0-release.qmd`
-      and its `data/` subfolder do not ship (zero CRAN risk, matching S107-110)
-- [ ] The four existing `vignettes/articles/*.qmd` still render (spot-check, workstream
-      Phase 6 discipline)
-- [ ] No search/extraction artifacts left in `vignettes/articles/data/` or elsewhere
-- [ ] Section 4's tone re-read against `PROJECT_LEARNINGS.md`'s own established voice —
-      candid, not promotional (dragon #2)
-- [ ] Screenshot reuse (F6, if used) confirmed with the owner before any regeneration
+- [x] Every numeric, dated, or attributed claim in the article traces to a row in the
+      Phase A claim-evidence map (commit sha, CHANGELOG date, or frozen data file) —
+      full claim-source audit (Session 336): ~55 claims checked across all 8 sections,
+      4 real mismatches found and fixed (see Phase F closure note above)
+- [x] No claim uses present-relative dating ("currently," "as of now") without an
+      explicit "(as of 2026-07-09)"-style stamp (anti-pattern #16) — Introduction's
+      own Scope paragraph states this explicitly; audit found no violations
+- [x] Every figure/table has stated provenance (frozen data file + generating script, or
+      "original construction" for schematics) — unchanged from Phases B-E, re-confirmed
+- [x] `quarto render` succeeds with no warnings; no unresolved `?@fig-x`/`?@tbl-x` —
+      confirmed after the audit fixes; Tables 1-5/Figures 1-5 all resolved sequentially
+- [x] `pkgdown::build_article()` succeeds — `pkgdown::build_article("articles/engineering-the-2.0.0-release")`, clean
+- [x] `R CMD build .` + `tar tzf` confirms `vignettes/articles/engineering-the-2.0.0-release.qmd`
+      and its `data/` subfolder do not ship (zero CRAN risk, matching S107-110) — confirmed,
+      0 matches for `vignettes/articles` in the tarball listing
+- [x] The four existing `vignettes/articles/*.qmd` still render (spot-check, workstream
+      Phase 6 discipline) — **this plan's own inventory was stale: six pre-existing
+      articles exist, not four** (`fg-se-validation.qmd`,
+      `offline-focal-animal-workflow.qmd` were added by later sessions); rendered all
+      six as the more thorough superset, all clean, zero unresolved refs
+- [x] No search/extraction artifacts left in `vignettes/articles/data/` or elsewhere —
+      confirmed clean, only the 8 intended frozen CSVs present
+- [x] Section 4's tone re-read against `PROJECT_LEARNINGS.md`'s own established voice —
+      candid, not promotional (dragon #2) — re-read this session; the new
+      Abstract/Introduction/Conclusion match the same evidence-first, hedged,
+      mistakes-not-hidden voice (the Section 3 CI-gap correction is itself an instance
+      of that candor, not an exception to it)
+- [x] Screenshot reuse (F6, if used) confirmed with the owner before any regeneration —
+      owner chose to skip F6 entirely via `AskUserQuestion` at this session's kickoff;
+      `vignettes/shiny_app_use/` was not touched
 
 ---
 
@@ -504,11 +563,15 @@ Before Phase F closes:
 
 ## 12. Open decisions for the owner (not blocking plan approval, but not silently assumed either)
 
-1. **Article title/slug** (§1) — proposed, not locked.
-2. **Section 5 ("By the Numbers")** — keep, or cut as redundant with Sections 1-4?
-   Recommendation: draft it in Phase F only if Sections 1-4's individual tables don't
-   already give a reader a quick-scan summary; do not treat it as mandatory.
-3. **F6 (screenshot reuse)** — needs explicit owner confirmation before Phase D/E touch
-   `vignettes/shiny_app_use/` (dragon-adjacent per FM #22).
-4. **Commit-range framing** (dragon #4) — ratify "CRAN-submission-to-CRAN-submission" as
-   the scope boundary, or prefer a different one, at Phase B kickoff.
+1. **Article title/slug** (§1) — **Resolved (Session 332):** owner confirmed the
+   proposed title/slug via `AskUserQuestion`; used unchanged through Phase F.
+2. **Section 5 ("By the Numbers")** — **Resolved (Session 336):** owner chose to cut
+   it via `AskUserQuestion` — Sections 1-4 already each ship their own summary table.
+3. **F6 (screenshot reuse)** — **Resolved (Session 336):** owner chose to skip it
+   entirely via `AskUserQuestion`; `vignettes/shiny_app_use/` was never touched by any
+   phase.
+4. **Commit-range framing** (dragon #4) — **Resolved by consistent use, not a
+   separate ratification round:** every phase (B through F) used
+   "CRAN-submission-to-CRAN-submission" (`4548aa1b`..`8ca8bb24`) without objection or
+   revision across six sessions; treated as settled by the plan's own track record
+   rather than re-litigated at Phase F close.
