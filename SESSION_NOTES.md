@@ -8,10 +8,116 @@
 
 ### What Session 327 Did
 **Deliverable:** Fix a `.Rbuildignore` gap surfaced by an actual win-builder run during Phase
-5b (IN PROGRESS).
-**Started:** 2026-07-09
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in `CHANGELOG.md` at Phase 3F.
+5b -- 4 top-level files were leaking into the built tarball. **Build-hygiene/config fix;
+TDD N/A** -- no `R/`/`tests/` touched, verified via `R CMD build .` + `tar tzf`, matching
+Phase 1's own established classification for this exact class of change. 0
+`AskUserQuestion` gates (owner directly instructed "fix .Rbuildignore" after reviewing the
+finding). 0 stakeholder corrections.
+**Started / Completed:** 2026-07-09 / 2026-07-09
+**Status:** **DONE.** The owner actually ran the S326-handed-off Phase 5b runbook after that
+session closed. All three win-builder results (R-devel, R-release, R-oldrelease) came back
+`0 errors | 0 warnings | 2 NOTEs`. NOTE 1 matched the already-pre-explained content in
+`cran-comments.md` exactly (misspelled-but-correct words, archived-package incoming
+feasibility, the `thoughtco.com` 403) -- no new issue. **NOTE 2 was not the note the plan
+anticipated** (a harmless local-HTML-manual-tidy note that correctly did not reproduce) --
+it was real and new: *"Non-standard files/directories found at top level: 'BOOTSTRAP.md'
+'CONTEXT_TEMPLATE.md' 'HANDOFFS.md' 'dashboard_history.jsonl'"*, identical across all three
+logs (confirmed by fetching each `00check.log` directly). Verified via `grep` that
+`.Rbuildignore` covered none of the four. Root cause: all four were introduced by the S324
+methodology sync (three new root docs, plus a generated dashboard-snapshot file that is
+`.gitignore`d but was never separately `.Rbuildignore`d -- those are two different
+mechanisms; a locally-present, gitignored file still ships in `R CMD build`'s tarball unless
+`.Rbuildignore` excludes it too), landing **after** the S322 local gate the plan's Phase 4
+result rests on -- so that gate never tested against them, and S326's own drift check
+(scoped to `git log` over `R/`/`tests/`/`DESCRIPTION`) does not cover new root-level files
+either. **Fix:** added 4 anchored, paren-free lines to `.Rbuildignore`'s existing
+"Methodology framework files" section (`^BOOTSTRAP.*\.md$`, `^CONTEXT_TEMPLATE.*\.md$`,
+`^HANDOFFS.*\.md$`, `^dashboard_history\.jsonl$`), matching that section's established
+broad-pattern style. **Verified:** `R CMD build .` then `tar tzf nprcgenekeepr_2.0.0.tar.gz`
+-- the 4 files no longer ship; top-level listing is back to the standard
+`DESCRIPTION`/`LICENSE`/`NAMESPACE`/`NEWS.md`/`README.md` set. Build artifact removed, not
+committed (S136 precedent). Updated `docs/planning/cran-2.0.0-submission-plan.md`: a
+correction note in the Phase 5 status block (honestly flagging that S326's "no change
+needed" call was incomplete, not silently superseding it), a new **Dragon #11** in §5
+generalizing the lesson, and the §9 table's Phase 5b row. Added **PROJECT_LEARNINGS.md
+Learning 303** (the generalized "gitignore != Rbuildignore, and a code-scoped drift check
+can't see new root files" rule).
+
+**Session 326 Handoff Evaluation (by Session 327): Score 7/10.** S326's handoff was
+thorough and evidence-based for the checks it ran, and explicitly told the next session to
+paste win-builder/R-hub results back for folding into `cran-comments.md` -- that framing is
+exactly what let this session move fast once real results arrived. **What helped:** the
+handoff's "ready to run whenever the owner executes the runbook" framing meant no
+re-derivation of what Phase 5b even required. **What was missing:** S326's "No code, test,
+or cover-note change was needed -- everything verified accurate as-is" claim was stated more
+absolutely than the evidence supported -- its own drift check was explicitly scoped to
+`R/`/`tests/`/`DESCRIPTION`, which by construction cannot see new root-level files, but the
+handoff's summary language didn't carry that caveat forward into the "no change needed"
+conclusion. This isn't a fabrication (the checks that were run were run correctly and
+reported honestly), but the conclusion generalized past what those checks could prove.
+**What was wrong:** the "no change needed" framing, corrected this session rather than
+silently left standing. **ROI:** still good on net -- the checks S326 did run (drift,
+sync, cran-comments/runbook accuracy, tool-version/signature drift) were all real, correct,
+and saved this session from re-doing them; the gap was narrow (one defect class the check
+wasn't designed to catch) and is now both fixed and documented as a generalizable dragon so
+it doesn't recur.
+
+**Self-assessment (Session 327): 9/10.** **Strengths:** (1) did not accept "Status: 2 NOTEs"
+at face value -- fetched all three actual `00check.log` files via `WebFetch` to read the
+verbatim NOTE text before concluding anything, which is what surfaced that NOTE 2 was NOT
+the plan's anticipated note ([[consult-project-source-of-truth]] applied to a live check
+result instead of assuming the plan's prediction held); (2) before proposing a fix, ran the
+exact evidence-based inventory the project's own planning discipline requires (`grep` to
+confirm none of the 4 files were already covered, `ls`/`git check-ignore` to confirm their
+actual tracked/gitignored status, and located the matching existing `.Rbuildignore` section
++ pattern style to extend rather than inventing a new one); (3) did not silently overwrite
+S326's now-incomplete "no change needed" claim -- added an explicit, dated correction note
+in the plan document and named it honestly in the S326 handoff evaluation above, matching
+this project's own established practice for prior corrections (S320's "RE-SYNC REQUIRED"
+superseding S135/S136); (4) caught and self-corrected a sequencing slip before it reached a
+commit -- edited `.Rbuildignore` before writing the Phase 1B claim stub, but since nothing
+was staged/committed yet, re-sequenced by staging and committing only the claim files first,
+preserving the claim-before-work commit order the protocol calls for; (5) zero stakeholder
+corrections; owner's single instruction ("fix .Rbuildignore") was executed exactly as
+scoped, with the exact real defect verified, not guessed. **Weaknesses:** (-) the sequencing
+near-miss in (4) above happened at all -- should have written the Phase 1B stub before
+touching any file, not recovered it after the fact. (-) Phase 3E (runtime smoke test) does
+not apply -- config-only fix, no `R/` behavior changed; stated explicitly per FM #24.
+
+**Learnings:** New: `PROJECT_LEARNINGS.md` Learning 303 (see What Session 327 Did, above).
+Carried as applied (all held, no incidents): [[consult-project-source-of-truth]],
+[[check-status-before-destructive-git]], [[push-close-out-docs-to-origin]].
+
+**=> SUGGESTED NEXT.** The owner needs to re-run the Phase 5b runbook against the corrected
+tree: (1) re-run the three win-builder uploads (`devtools::check_win_devel/release/
+oldrelease()`) against a freshly built tarball -- should now come back with 0 errors/0
+warnings/1 NOTE (just the expected incoming-feasibility note); (2) re-run `rhub::rhub_check()`
+once this fix is pushed to `origin/master` (the in-flight R-hub run from before this fix was
+checking the pre-fix tree and likely shows the same NOTE 2 -- disregard that result, or wait
+for it to finish and then re-run); (3) once both are clean, fold the results into
+`cran-comments.md`'s "Test environments" section (replacing the two "-- to be run before
+submission" placeholders) and reconcile the misspelled-words list against the real
+win-builder output per the runbook §4; (4) `submit_cran()` is the owner's HARD STOP action
+after that. Alternatively, one of the 8 open GitHub issues (#116, #37, #36, #28, #12, #11,
+#10, #5) remains available -- owner's call, none more urgent.
+
+**Key files (this session).** **Modified:** `.Rbuildignore` (4 new lines, "Methodology
+framework files" section), `docs/planning/cran-2.0.0-submission-plan.md` (Phase 5 status
+correction note, new Dragon #11 in §5, §9 table Phase 5b row),
+`PROJECT_LEARNINGS.md` (Learning 303), `SESSION_NOTES.md` (this handoff), `HANDOFFS.md`
+(S327 receipt).
+**Not committed (pre-existing, untouched):** `.DS_Store` (modified), `PED_GV_AUDIT_2026-05-30.html`
+(untracked) -- left alone as S308-S327 all have.
+
+**Gotchas for next session.** (1) **The three win-builder runs already completed reflect the
+pre-fix tree** -- do not paste those results into `cran-comments.md` as final; they need to
+be re-run against the corrected tarball. (2) **The in-flight R-hub run was dispatched against
+the pre-fix `origin/master`** -- once this session's fix is pushed, re-run
+`rhub::rhub_check()` rather than trusting whatever the stale run returns. (3) Before any
+future cross-platform run, diff the current root-level file listing against `.Rbuildignore`
+coverage directly (Dragon #11) -- a `git log`-scoped drift check over `R/`/`tests/`/
+`DESCRIPTION` cannot see this class of gap. (4) `.gitignore` and `.Rbuildignore` are separate
+mechanisms; a generated file being `.gitignore`d does not mean it won't ship in the tarball.
 
 ### What Session 326 Did
 **Deliverable:** CRAN 2.0.0 Phase 5b readiness verification -- resume the S325 SUGGESTED NEXT

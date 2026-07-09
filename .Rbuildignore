@@ -81,6 +81,10 @@ README\.*\.png$
 ^BACKLOG.*\.md$
 ^ROADMAP.*\.md$
 ^CHANGELOG.*\.md$
+^BOOTSTRAP.*\.md$
+^CONTEXT_TEMPLATE.*\.md$
+^HANDOFFS.*\.md$
+^dashboard_history\.jsonl$
 
 # Methodology tooling, audit reports, and dev notes -- not R package content,
 # so they are build-ignored. Broad <NAME>.* forms also catch macOS sync dupes.
