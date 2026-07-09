@@ -47,6 +47,56 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-09 · \[ad hoc\] Phase B of the Document-1 article plan: drafted Section 1 (Shiny modules) + T2/T3/F1/F2 (Session 332)
+
+- **Deliverable:** Phase B of
+  `docs/planning/v2-transformation-article-plan.md` — drafted Section 1
+  (“From Monolith to Modules: the Shiny Architecture Transformation”)
+  plus tables T2 (module inventory) and T3 (nine-phase migration
+  summary) and figures F1 (commit-activity timeline) and F2
+  (before/after architecture diagram), reading from Session 331’s frozen
+  `vignettes/articles/data/*.csv` files.
+  **Documentation/article-drafting session for `vignettes/articles/`
+  support; TDD N/A** — no `R/`/`tests/` package code touched. 1
+  `AskUserQuestion` gate (title/slug confirmation, the plan’s own
+  flagged Phase-B-kickoff decision). 0 stakeholder corrections.
+- **Change:** Wrote
+  `vignettes/articles/engineering-the-2.0.0-release.qmd`. T2 reads
+  `data/module-inventory.csv` via
+  [`kableExtra::kbl()`](https://rdrr.io/pkg/kableExtra/man/kbl.html);
+  prose flags that 2 of the 10 current modules (`modGeneticDiversity`,
+  `modPotentialParents`) postdate the migration and belong to a later
+  section. T3 reads `data/migration-phases.csv` plus hand-authored
+  highlights sourced from `shiny-module-conversion-plan.md` §9, stating
+  explicitly that Phases 3–7 have no quoted commit sha and that Phase 8
+  was a compound, multi-session DONE. F1 (`ggplot2`) reads
+  `data/commit-activity-timeline.csv`. F2 is a native Quarto Mermaid
+  before/after diagram, no new package dependency. Marked Phase B
+  `✅ DONE` in the plan’s §7 and updated its header status line.
+  Verified via `quarto render`: both `@fig-*`/`@tbl-*` cross-references
+  resolved in the rendered HTML (zero unresolved-ref hits) and the
+  Mermaid runtime assets were correctly wired into the output — not just
+  a zero exit code. Re-verified three “current state” claims live rather
+  than trusting older sources: `4,731` total lines (`wc -l` across
+  `R/mod*.R`/`appUI.R`/`appServer.R`, matching the frozen C1 value
+  exactly), all 10 modules presently mounted in
+  `R/appUI.R`/`R/appServer.R` (correcting a stale “only 6 mounted”
+  snapshot in the Session-21-era planning doc), and the “17 files”
+  `inst/application/` deletion count (cross-checked against
+  `CHANGELOG.md`’s own Phase-9 close-out entry).
+- **Also:** Added `PROJECT_LEARNINGS.md` Learning 308 — `quarto render`
+  inside `vignettes/articles/` leaves generated `.html`/`_files/` output
+  (and can auto-create a `.gitignore` covering only `.quarto/`) that the
+  top-level `.gitignore`’s single-level `vignettes/*.html` glob does not
+  catch; render artifacts must be deleted by hand before staging.
+  Updated `CLAUDE.md`’s learning-count pointer (307 → 308 learnings,
+  Sessions 1–331+ → 1–332+).
+- **Session:** S332 · **Verified:** `quarto render` output HTML
+  inspected directly for resolved cross-references and correctly-wired
+  Mermaid assets; render artifacts cleaned up before staging
+  (`git status --porcelain vignettes/` confirmed clean except the new
+  `.qmd`).
+
 ### 2026-07-09 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit cc0f7798 — S331 HANDOFFS.md receipt commit-sha backfill
 
 - **Deliverable:** Phase 0 ledger reconcile (Session 332) found one

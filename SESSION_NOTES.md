@@ -7,6 +7,198 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 332 Did
+
+**Deliverable:** Phase B of
+`docs/planning/v2-transformation-article-plan.md` – draft Section 1
+(Shiny modules) prose + tables T2/T3 + figures F1/F2, reading from
+Session 331’s frozen `vignettes/articles/data/*.csv` files.
+**Documentation/article-drafting session for `vignettes/articles/`
+support – no `R/`/`tests/` package code touched. TDD phase: N/A**
+(matches S107-S110/S330/S331 article-session precedent; declared every
+response). Also backfilled one undocumented commit (`cc0f7798`, S331’s
+own HANDOFFS.md receipt sha fix) into `CHANGELOG.md` during this
+session’s Phase 0 reconcile, committed separately as `6c0eb75f` before
+this deliverable began. **Started / Completed:** 2026-07-09 / 2026-07-09
+**Status:** **DONE.** Owner confirmed the proposed title/slug (§1’s own
+flagged Phase-B-kickoff decision, `AskUserQuestion`). Wrote
+`vignettes/articles/engineering-the-2.0.0-release.qmd` with Section 1
+(“From Monolith to Modules: the Shiny Architecture Transformation”): the
+two-coexisting-apps problem (issue \#27), the nine-phase vertical-slice
+migration (Session 22 -\> Session 35, 2026-06-03 to 2026-06-06), and the
+Phase 9 irreversible cutover. **T2** (module inventory, `@tbl-modules`)
+reads `data/module-inventory.csv` via
+[`kableExtra::kbl()`](https://rdrr.io/pkg/kableExtra/man/kbl.html);
+prose flags that 2 of the current 10 modules (`modGeneticDiversity`,
+`modPotentialParents`) postdate the migration and belong to Section 2,
+not this one. **T3** (migration-phase summary, `@tbl-phases`) reads
+`data/migration-phases.csv` plus hand-authored highlights sourced from
+`shiny-module-conversion-plan.md` §9; states Phases 3-7 have no quoted
+sha (matching C3) and that Phase 8 was a compound DONE, not a single
+session (matching C5). **F1** (`@fig-commit-pace`, `ggplot2`) reads
+`data/commit-activity-timeline.csv`, captioned to avoid implying the
+June spike is module-migration-only commits. **F2**
+(`@fig-architecture`) is a native Quarto Mermaid before/after diagram –
+no new package dependency. Marked Phase B `DONE` in the plan’s §7
+(mirroring S331’s Phase A completion-callout convention) and updated its
+header status line.
+
+**Verification performed (this deliverable’s build-equivalent):**
+`quarto render vignettes/articles/engineering-the-2.0.0-release.qmd` –
+succeeded; confirmed via the rendered HTML that both `@fig-*`/`@tbl-*`
+cross-references resolved (`Figure 1`, `Figure 2`, `Table 1`, `Table 2`
+all present, zero `class="quarto-unresolved-ref"` hits) and that the
+Mermaid runtime (`mermaid.min.js`/`mermaid-init.js`/`mermaid.css`) was
+correctly wired into the output `<head>` – not just that the render
+command exited 0. Cleaned up the render artifacts (`.html`, `_files/`,
+an auto-generated `.gitignore`) before staging, matching the
+established-but-undocumented S107-S110 precedent (none of the four
+existing articles carry stray render output) – see the new learning
+below. Re-verified `4,731` total lines (`R/mod*.R` + `appUI.R` +
+`appServer.R`) via a live `wc -l`, matching the frozen C1 value exactly
+with zero drift since the v2.0.0 CRAN-submission commit. Re-verified “17
+files” (the `inst/application/` deletion count, cited in prose) against
+`CHANGELOG.md`’s own Phase-9 close-out entry (“all 17 files are
+tracked/revertible”) rather than accepting the plan’s C4 row on trust
+alone. Verified firsthand (grepping `R/appUI.R`/`R/appServer.R`
+directly) that all 10 modules are presently mounted – `modORIPReporting`
+conditionally, per
+[`shouldShowOripTab()`](https://github.com/rmsharp/nprcgenekeepr/reference/shouldShowOripTab.md)
+– correcting what would otherwise have been a stale “only 6 mounted”
+claim carried from the Session-21-era planning doc snapshot.
+
+**Session 331 Handoff Evaluation (by Session 332): Score 9/10.** **What
+helped:** every one of the 5 stated gotchas was directly actionable –
+gotcha \#1 (“Phase B drafts `.qmd` prose for the first time – read plan
+§4/§7 first”) pointed straight at the two sections this session needed
+before writing anything; gotcha \#2 (feature-candidates.csv is RAW,
+Phase C’s job not B’s) correctly kept this session from touching it;
+T2/T3 read directly from the frozen CSVs exactly as promised, with zero
+new extraction needed. The key-files list and full “suggested next”
+paragraph meant zero discovery time was spent re-establishing scope.
+**What was missing:** nothing structural – Phase A’s deliverable was
+thorough and directly usable as drafting input, matching its own stated
+purpose. **What was wrong:** nothing found wrong – all 3 of this
+session’s independent re-verifications (the `4,731`-line total, the
+module-mount status, the “17 files” count) confirmed S331’s frozen data
+and the plan’s earlier claims exactly, with zero drift. **ROI:**
+excellent – the frozen CSVs eliminated what would otherwise have been a
+second, redundant extraction pass, and the gotchas prevented two real
+mistakes (touching `feature-candidates.csv` prematurely; treating the
+Session-21-era “6 modules mounted” snapshot as still current) before
+they could happen.
+
+**Self-assessment (Session 332): 9/10.** **Strengths:** (1) posed the
+one owner decision the plan itself flagged as belonging at “Phase B
+kickoff” (title/slug, §12.1) via `AskUserQuestion` rather than silently
+adopting the proposed default or skipping it as “probably fine”; (2) did
+not draft Section 1 from the frozen CSVs alone – cross-checked every
+“current state” claim against a live grep (`R/appUI.R`/`R/appServer.R`
+module mounts, `wc -l` line totals, `CHANGELOG.md`’s Phase-9 entry for
+the “17 files” count) before writing it into reader-facing prose,
+catching a real drift (`modORIPReporting` is now conditionally wired;
+the old plan’s “only 6 mounted” snapshot is stale) rather than carrying
+it forward uncritically; (3) actually rendered the article
+(`quarto render`) and inspected the output HTML for resolved
+cross-references and correctly-wired Mermaid assets, rather than
+treating “the command exited 0” as sufficient verification; (4) caught a
+real, non-obvious gotcha (render artifacts escaping the top-level
+`.gitignore`’s single-level `vignettes/*.html` glob) before it could
+pollute the commit, and promoted it to a new, generalizable Learning
+(308) rather than silently fixing it in passing; (5) held Phase B’s
+scope boundary strictly – no Abstract/Intro/Conclusion (a Phase F
+deliverable), no Section 2-4 content, no `vignettes/shiny_app_use/`
+screenshot handling; (6) declared TDD N/A up front and held it
+throughout, matching the S107-S110/S330/S331 precedent. **Weaknesses:**
+(-) Phase B’s own completion criterion (“section-level claim-source map
+complete”) is ambiguous between “author a new, explicit per-claim map
+for this section” and “trace every claim to the already-completed §3
+map + its cited primary sources” – this session read it as the latter
+(consistent with §3’s own framing: “the actual drafting input for Phases
+B-E”) and did not build a separate artifact; a stricter reading could
+ask for one. Flagged here rather than silently assumed. (-) did not
+independently re-verify every commit sha in T3 against `git log` this
+session (reused Phase A’s already-verified C3 values for shas
+`596f6bc9`/`ef6a9f4c`/`3db018d1` etc.) – a deliberate reuse of Phase A’s
+frozen evidence (that is Phase A’s whole purpose), but a stricter pass
+could re-confirm each sha resolves before Phase F’s publish gate, which
+is explicitly where the plan’s own §10 checklist places that check
+(“verify each sha still resolves in `git log` before publishing”).
+**Phase 3E (runtime smoke test) does not apply** – no `R/` package
+behavior changed; `quarto render` (above) is this deliverable’s actual
+build-equivalent verification, stated explicitly per FM \#24.
+
+**Learnings:** New: `PROJECT_LEARNINGS.md` Learning 308 (`quarto render`
+in `vignettes/articles/` leaves generated `.html`/`_files/` output the
+top-level `.gitignore`’s single-level glob doesn’t catch – delete render
+artifacts by hand before staging, don’t assume auto-ignore coverage).
+Updated `CLAUDE.md`’s `PROJECT_LEARNINGS.md` pointer line (307 -\> 308
+learnings, Sessions 1-331+ -\> 1-332+) per Learning \#7’s
+cross-reference/count discipline. Carried as applied (all held, no
+incidents): \[\[consult-project-source-of-truth\]\],
+\[\[push-close-out-docs-to-origin\]\],
+\[\[ascii-only-in-question-options\]\] (kept the `AskUserQuestion`
+preview text plain-hyphen, no em-dashes).
+
+**=\> SUGGESTED NEXT.** Phase C of
+`docs/planning/v2-transformation-article-plan.md` (§7) – draft Section 2
+(new features) + table T4, curating (not re-extracting) from
+`vignettes/articles/data/feature-candidates.csv`’s 47 raw closed-issue
+candidates. Phases C-E remain reorderable (no hard dependency among
+Sections 1-4 per §7’s own note) but Phase F must come last. Two of §12’s
+open owner decisions remain untouched and correctly out of this
+session’s scope: optional Section 5 (gates Phase F) and F6 screenshot
+reuse (gates Phase D/E, needs explicit owner confirmation before
+`vignettes/shiny_app_use/` is touched). Independently, the CRAN 2.0.0
+waiting period (from S329) is still open – unchanged, not investigated
+this session. The 8 open GitHub issues (#116, \#37, \#36, \#28, \#12,
+\#11, \#10, \#5) and Document 2 planning remain available if the owner
+prefers either instead.
+
+**Key files (this session).** **Written:**
+`vignettes/articles/engineering-the-2.0.0-release.qmd` (new, Section 1 +
+T2/T3/F1/F2). **Modified:**
+`docs/planning/v2-transformation-article-plan.md` (§1 header status
+line, §7 Phase B marked DONE), `PROJECT_LEARNINGS.md` (Learning 308),
+`CLAUDE.md` (learning-count pointer), `CHANGELOG.md` (this session’s
+ledger entry + the Phase-0 backfill entry for `cc0f7798`),
+`SESSION_NOTES.md` (this handoff), `HANDOFFS.md` (S332 receipt).
+**Referenced, not modified:** `vignettes/articles/data/*.csv` (all 7
+Phase A files, read not edited),
+`docs/planning/shiny-module-conversion-plan.md` §1/§2/§4/§9 (source for
+Section 1 prose and T3 highlights),
+`R/appUI.R`/`R/appServer.R`/`R/mod*.R` (read via `grep`/`wc -l` for
+live-state verification, not modified), `.Rbuildignore` (read to confirm
+existing coverage, not modified), `.gitignore` (read, not modified – the
+auto-generated per-render one was deleted, not committed). **Not
+committed (pre-existing, untouched):** `.DS_Store` (modified),
+`PED_GV_AUDIT_2026-05-30.html` (untracked) – left alone as S308-S332 all
+have.
+
+**Gotchas for next session.** (1)
+**`vignettes/articles/data/feature-candidates.csv` is 47 RAW
+closed-issue candidates, not a curated features table** – Phase C’s
+actual job is hand-selecting genuinely feature-shaped items (not every
+closed issue is article-worthy prose), matching the scope limit S331
+already flagged. (2) **After any `quarto render` used for in-session
+verification, run `git status --porcelain` on `vignettes/articles/` and
+delete the generated `.html`/`_files/`/render-`.gitignore` before
+staging** – the top-level `.gitignore`’s `vignettes/*.html` pattern does
+not reach the `articles/` subdirectory (Learning 308); this will recur
+every time a future phase renders to verify. (3)
+**`vignettes/shiny_app_use/` screenshots (F6) remain untouched** and
+must stay that way without explicit owner confirmation (FM \#22 /
+anti-pattern \#11) – unchanged since S330’s flag. (4) **The
+stakeholder-correction-rate number (C14, `process-metrics.csv`) is a
+mention-count proxy, not a verified audit** – Section 4 prose (Phase E)
+must state that scope limit explicitly. (5) **F5’s self-score-trend data
+covers only S324-S330 (7 sessions)** – a partial window; Phase E should
+not present it as a full-range trend. (6) **Phase F’s own §10 checklist
+item “verify each sha still resolves in `git log`” has not yet been run
+against T3’s shas this session** (see this session’s self-assessment
+weakness above) – worth a final pass before Phase F’s publish gate, not
+urgent before Phase C/D/E.
+
 ### What Session 331 Did
 
 **Deliverable:** Phase A of

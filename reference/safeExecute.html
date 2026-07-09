@@ -29,6 +29,7 @@ should be handled gracefully."><meta property="og:image" content="https://github
     <li><a class="dropdown-item" href="../articles/age-sex-pyramid.html">Age-Sex Pyramid Plots</a></li>
     <li><a class="dropdown-item" href="../articles/breeding-group-formation.html">Forming Breeding Groups</a></li>
     <li><a class="dropdown-item" href="../articles/ColonyManagerTutorial.html">GeneKeepR: A Colony Manager's Tutorial</a></li>
+    <li><a class="dropdown-item" href="../articles/engineering-the-2.0.0-release.html">Engineering nprcgenekeepr 2.0.0: Modular Architecture, Expanded Capability, and an AI-Assisted Development Process</a></li>
     <li><a class="dropdown-item" href="../articles/fg-se-validation.html">Validating the Founder-Genome-Equivalent Standard Error</a></li>
     <li><a class="dropdown-item" href="../articles/genetic-value-analysis.html">Genetic Value Analysis</a></li>
     <li><a class="dropdown-item" href="../articles/gvaConvergence.html">Gene-Drop Iteration Convergence</a></li>
@@ -114,12 +115,12 @@ error occurs.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Returns NULL and logs error</span></span></span>
 <span class="r-in"><span><span class="fu">safeExecute</span><span class="op">(</span><span class="op">{</span> <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"Error!"</span><span class="op">)</span> <span class="op">}</span>, module <span class="op">=</span> <span class="st">"test"</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> [2026-07-09 19:24:42] [ERROR] [test] Error: Error!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [2026-07-09 19:39:10] [ERROR] [test] Error: Error!</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Returns custom default on error</span></span></span>
 <span class="r-in"><span><span class="fu">safeExecute</span><span class="op">(</span><span class="op">{</span> <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"Error!"</span><span class="op">)</span> <span class="op">}</span>, module <span class="op">=</span> <span class="st">"test"</span>, default <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> [2026-07-09 19:24:42] [ERROR] [test] Error: Error!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [2026-07-09 19:39:10] [ERROR] [test] Error: Error!</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> data frame with 0 columns and 0 rows</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
