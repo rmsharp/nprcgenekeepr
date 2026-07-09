@@ -69,6 +69,17 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-09--ad-hoc-fold-phase-5b-cross-platform-results-into-cran-commentsmd-all-clean-session-328">2026-07-09 · [ad hoc] Fold Phase 5b cross-platform results into cran-comments.md, all clean (Session 328)<a class="anchor" aria-label="anchor" href="#id_2026-07-09--ad-hoc-fold-phase-5b-cross-platform-results-into-cran-commentsmd-all-clean-session-328"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Completed Phase 5b’s cross-platform checks and populated <code>cran-comments.md</code> with the real results. <strong>Verification/packaging; TDD N/A</strong> — no <code>R/</code>/<code>tests/</code>/<code>DESCRIPTION</code> touched; <code>cran-comments.md</code> is <code>.Rbuildignore</code>d. 0 <code>AskUserQuestion</code> gates (direct continuation of Phase 5b work already in motion). 0 stakeholder corrections.</li>
+<li>
+<strong>Change:</strong> After the Session 327 <code>.Rbuildignore</code> fix, the owner re-ran the full Phase 5b runbook. win-builder (R-devel/release/oldrelease): all three <code>0 errors | 0 warnings | 1 note</code> — confirmed via each <code>00check.log</code> that the remaining note is exactly the expected CRAN-incoming-feasibility note. R-hub v2 (linux/windows/macos): windows and macos <code>Status: OK</code> on the first run (confirmed via the actual job logs, not just the CI job-success flag); linux initially failed at the <code>setup-deps</code> step (<code>Failed to download Pandoc 3.8.3: Unexpected HTTP response: 504</code> — confirmed transient infra via the failure log, matching the runbook’s documented precedent, not a code defect), then <code>Status: OK</code> on a linux-only re-run. All six platform checks now clean.</li>
+<li>
+<strong>Also:</strong> Updated <code>cran-comments.md</code>’s “Test environments” section (replacing both placeholders with the real results) and reconciled NOTE 1’s misspelled-words list to the exact set win-builder actually flagged (<code>EHR</code>, <code>Raboin</code>, <code>kinships</code>), per the runbook’s own §4.2 reconciliation instruction. Updated <code>docs/planning/cran-2.0.0-submission-plan.md</code>’s Phase 5 status block and §9 table’s Phase 5b row. The only remaining step is the owner’s <code>submit_cran()</code> HARD STOP (outward-facing, maintainer-email-confirmation-only, not delegable).</li>
+<li>
+<strong>Session:</strong> S328 · <strong>Verified:</strong> each win-builder <code>00check.log</code> and R-hub job log fetched and read directly, not inferred from summary status alone.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-09--ad-hoc-fix-rbuildignore-gap-surfaced-by-win-builder-note-2-session-327">2026-07-09 · [ad hoc] Fix .Rbuildignore gap surfaced by win-builder NOTE 2 (Session 327)<a class="anchor" aria-label="anchor" href="#id_2026-07-09--ad-hoc-fix-rbuildignore-gap-surfaced-by-win-builder-note-2-session-327"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> Fixed a real <code>.Rbuildignore</code> gap found when the owner actually ran the Phase 5b runbook. <strong>Build-hygiene/config fix; TDD N/A</strong> — no <code>R/</code>/<code>tests/</code> touched, verified via <code>R CMD build .</code> + <code>tar tzf</code>, matching Phase 1’s own classification for this exact class of change. 0 <code>AskUserQuestion</code> gates (owner directly instructed the fix after reviewing the finding). 0 stakeholder corrections.</li>

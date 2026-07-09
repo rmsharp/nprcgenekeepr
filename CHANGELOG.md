@@ -47,6 +47,40 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-09 · \[ad hoc\] Fold Phase 5b cross-platform results into cran-comments.md, all clean (Session 328)
+
+- **Deliverable:** Completed Phase 5b’s cross-platform checks and
+  populated `cran-comments.md` with the real results.
+  **Verification/packaging; TDD N/A** — no `R/`/`tests/`/`DESCRIPTION`
+  touched; `cran-comments.md` is `.Rbuildignore`d. 0 `AskUserQuestion`
+  gates (direct continuation of Phase 5b work already in motion). 0
+  stakeholder corrections.
+- **Change:** After the Session 327 `.Rbuildignore` fix, the owner
+  re-ran the full Phase 5b runbook. win-builder
+  (R-devel/release/oldrelease): all three
+  `0 errors | 0 warnings | 1 note` — confirmed via each `00check.log`
+  that the remaining note is exactly the expected
+  CRAN-incoming-feasibility note. R-hub v2 (linux/windows/macos):
+  windows and macos `Status: OK` on the first run (confirmed via the
+  actual job logs, not just the CI job-success flag); linux initially
+  failed at the `setup-deps` step
+  (`Failed to download Pandoc 3.8.3: Unexpected HTTP response: 504` —
+  confirmed transient infra via the failure log, matching the runbook’s
+  documented precedent, not a code defect), then `Status: OK` on a
+  linux-only re-run. All six platform checks now clean.
+- **Also:** Updated `cran-comments.md`’s “Test environments” section
+  (replacing both placeholders with the real results) and reconciled
+  NOTE 1’s misspelled-words list to the exact set win-builder actually
+  flagged (`EHR`, `Raboin`, `kinships`), per the runbook’s own §4.2
+  reconciliation instruction. Updated
+  `docs/planning/cran-2.0.0-submission-plan.md`’s Phase 5 status block
+  and §9 table’s Phase 5b row. The only remaining step is the owner’s
+  `submit_cran()` HARD STOP (outward-facing,
+  maintainer-email-confirmation-only, not delegable).
+- **Session:** S328 · **Verified:** each win-builder `00check.log` and
+  R-hub job log fetched and read directly, not inferred from summary
+  status alone.
+
 ### 2026-07-09 · \[ad hoc\] Fix .Rbuildignore gap surfaced by win-builder NOTE 2 (Session 327)
 
 - **Deliverable:** Fixed a real `.Rbuildignore` gap found when the owner
