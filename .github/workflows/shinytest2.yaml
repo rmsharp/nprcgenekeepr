@@ -6,17 +6,25 @@
 # decision (docs/planning/phase8-e2e-harness-subplan.md sec 7), this runs on a
 # nightly schedule + manual dispatch (NOT per-PR) because browser tests are slow
 # and Chrome-flaky; the fast unit CI (R-CMD-check, test-coverage) remains the
-# per-PR gate. It runs the full opt-in E2E tier -- all 23 test-{app,e2e}-* files
+# per-PR gate. It runs the full opt-in E2E tier -- every test-{app,e2e}-* file
 # (Phase-8b boot-smoke + Phase-8c per-module + Phase-8d interaction/menu),
 # matched by the ^(app|e2e)- filter (broadened in 8d once all tiers verified).
 #
-# Phase-8e-7: those 23 files are run in 13 PER-MODULE GROUPS, each in a FRESH
+# Phase-8e-7: those files are run in PER-MODULE GROUPS, each in a FRESH
 # R process (a bash loop spawning one Rscript per group), so no single process
 # accumulates enough Chrome/AppDriver instances to hit the process-count flake
 # (S34: ~1 transient error / 5 full-tier single-process runs). The partition is
-# exact -- each group's regex selects only its module's files; union = the 23,
-# no overlap, no gap. The flake mitigation is ENVIRONMENTAL: only the live
-# GitHub runner can confirm it; the partition itself is statically verified.
+# exact -- each group's regex selects only its module's files; union = every
+# tracked test-{app,e2e}-*.R file, no overlap, no gap. The flake mitigation is
+# ENVIRONMENTAL: only the live GitHub runner can confirm it; the partition
+# itself is statically verified, including in the fast unit-test tier, by
+# tests/testthat/test_shinytest2_workflow_coverage.R (added to catch this
+# drifting silently again -- see PROJECT_LEARNINGS.md Learning 312: two files,
+# test-e2e-orip-module.R (S86) and test-e2e-potential-parents-module.R (S82),
+# were added after this partition was last hand-verified and matched none of
+# its groups, so they silently never ran in this job). Do not hardcode a file
+# or group COUNT in this comment -- that is exactly what went stale last time;
+# the coverage test is the source of truth.
 #
 # NOTE: schedule + workflow_dispatch only fire once this workflow is on the
 # default branch (master). On the feature branch it cannot be GitHub-triggered.
@@ -109,11 +117,13 @@ jobs:
           }
         shell: Rscript {0}
 
-      # Phase-8e-7: run the 23-file E2E tier in 13 PER-MODULE GROUPS, each in a
-      # FRESH R process, to defang the 23-in-one-process Chrome flake (S34). The
-      # group regexes partition the tier EXACTLY (union = the 23 files, no overlap,
-      # no gap); each is applied the same way test_dir(filter=) applies it --
-      # grepl against the file name stripped of "test-" and ".R".
+      # Phase-8e-7: run the E2E tier in PER-MODULE GROUPS, each in a FRESH
+      # R process, to defang the many-in-one-process Chrome flake (S34). The
+      # group regexes partition the tier EXACTLY (union = every tracked
+      # test-{app,e2e}-*.R file, no overlap, no gap -- statically verified by
+      # test_shinytest2_workflow_coverage.R); each is applied the same way
+      # test_dir(filter=) applies it -- grepl against the file name stripped
+      # of "test-" and ".R".
       #
       # Per group (fresh Rscript): stop_on_failure = FALSE so we always reach the
       # guards; passed == 0 => stop() loud (the silent-skip class -- now PER GROUP,
@@ -133,7 +143,9 @@ jobs:
             "^e2e-genetic-value-"
             "^e2e-home-navigation"
             "^e2e-input-"
+            "^e2e-orip-module"
             "^e2e-pedigree-"
+            "^e2e-potential-parents-module"
             "^e2e-pyramid-"
             "^e2e-settings-about"
             "^e2e-summary-statistics"
@@ -171,7 +183,7 @@ jobs:
             echo "One or more E2E module groups failed (see per-group logs above)."
             exit 1
           fi
-          echo "All 13 E2E module groups passed."
+          echo "All ${#groups[@]} E2E module groups passed."
         shell: bash
 
       - name: Upload test artifacts
