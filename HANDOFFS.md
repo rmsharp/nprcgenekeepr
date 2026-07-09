@@ -75,6 +75,23 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S333
+date: 2026-07-09
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Phase C of docs/planning/v2-transformation-article-plan.md -- draft Section 2 (new features) + T4, hand-curating vignettes/articles/data/feature-candidates.csv's 47 raw closed-issue candidates down to genuinely feature-shaped items.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<!-- prose pending until close-out -->
+
+```handoff
 session: S332
 date: 2026-07-09
 status: complete

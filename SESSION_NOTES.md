@@ -6,6 +6,19 @@
 
 ## ACTIVE TASK
 
+### What Session 333 Did
+**Deliverable:** Phase C of `docs/planning/v2-transformation-article-plan.md` -- draft
+Section 2 (new features) + table T4, hand-curating from Session 331's frozen
+`vignettes/articles/data/feature-candidates.csv` (47 raw closed-issue candidates).
+**Documentation/article-drafting session for `vignettes/articles/` support -- no
+`R/`/`tests/` package code touched. TDD phase: N/A** (matches S107-S110/S330-S332
+article-session precedent; declared every response).
+**Started:** 2026-07-09
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### What Session 332 Did
 **Deliverable:** Phase B of `docs/planning/v2-transformation-article-plan.md` -- draft
 Section 1 (Shiny modules) prose + tables T2/T3 + figures F1/F2, reading from Session
