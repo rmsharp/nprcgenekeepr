@@ -6,6 +6,138 @@
 
 ## ACTIVE TASK
 
+### What Session 322 Did
+**Deliverable:** Execute **Phase 4** of `docs/planning/cran-2.0.0-submission-plan.md`
+-- full local `R CMD check --as-cran` re-gate against commit `2abfc783` (S321),
+stale since S134/S240/S241 (124 commits). **Verification phase; TDD N/A** per
+the plan's own classification -- no defect surfaced requiring a code fix, so
+no RED/GREEN/REFACTOR gate was needed. 0 `AskUserQuestion` gates (the plan's
+Phase 4 step list was already fully specified -- no scope decision remained).
+**Started / Completed:** 2026-07-08 / 2026-07-08
+**Status:** **DONE.** `Status: 2 NOTEs` = **0 ERROR / 0 WARNING** -- the same
+two pre-known false-positives as S134 (CRAN incoming feasibility for the
+archived package; local HTML Tidy version -- the V8 sub-check that also
+flagged in S134 is now clean in this environment). **0 stakeholder
+corrections.**
+
+**Session 321 Handoff Evaluation (by Session 322): Score 8/10.** S321's
+SUGGESTED NEXT gave the exact deliverable (Phase 4), the exact step sequence
+letter-for-letter matching the plan (`renv::restore()` ->
+`roxygen2::roxygenise()` -> `devtools::spell_check()` ->
+`urlchecker::url_check()` -> `devtools::run_examples()` -> build vignettes ->
+`devtools::check(args="--as-cran", remote=TRUE, manual=TRUE)` -> full
+regression read), an explicit "do NOT touch `cran-comments.md`" caution (honored),
+and a gotcha framing Phase 4 as a **re-gate** (last true result: S134's `2
+NOTEs` both false-positive) rather than a fresh check with unknown baseline.
+**What helped most:** the exact step order meant zero time spent re-deriving
+scope -- this session went straight to execution. **What was missing:** S321's
+own Key Files section documented hitting a `bit`/`bit64` missing-transitive-dep
+error on `devtools::build_readme()` (Learning 298(e)) but didn't flag forward
+that the SAME gap would also block `devtools::build_vignettes()` (a sibling
+`devtools` wrapper hitting the identical install-check) -- this session
+diagnosed the identical error fresh rather than inheriting "already known,
+fix is X" (now captured as Learning 299(a)/(b) so a third occurrence won't
+recur). **What was wrong:** nothing inaccurate found. **ROI:** high -- the
+step-by-step specificity was the main driver of a clean, fast execution;
+the one gap cost a few extra minutes of diagnosis, not a wrong turn.
+
+**Self-assessment (Session 322): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_NOTES + GH issues + dashboard + git status) before starting.
+**Strengths:** (1) followed the plan's Phase 4 step list exactly, in order,
+with no deviation; (2) verified the one new `urlchecker` flag
+(`thoughtco.com` 403) more rigorously than the existing PMC4671785 precedent
+required -- reproduced the automated checker's own failure mode via `curl`
+with an explicit browser User-Agent (still 403) AND an independent `WebFetch`
+attempt (also blocked), confirming network-layer bot-blocking rather than
+trusting "looks fine in a browser"; (3) caught a stray `Rplots.pdf` byproduct
+from `devtools::run_examples()` via `git status` before it could be committed
+-- a new instance of Learning 298(f)'s stray-render-byproduct pattern, from a
+different devtools entry point; (4) recognized the `bit`/`bit64`
+vignette-build failure as Learning 92's pattern recurring (direct precedent:
+S134's `markdown` install) and fixed it at the root -- `renv::install()` into
+the project library, confirmed `renv.lock`/`DESCRIPTION` diff empty -- rather
+than routing around the one wrapper that hit it, unlike S321's necessary
+narrower workaround for `build_readme()`; (5) added the one new spell-check
+word (`erroring`) to `inst/WORDLIST` surgically (single alphabetically-placed
+line, not a full reconcile-tool run) per
+[[avoid-reconcile-tools-on-curated-files]]; (6) ran the full clean-regression
+read via `test_dir(reporter="silent")` and checked the `warning` column, not
+just `failed`/`error`, per [[regression-read-check-warnings]] -- confirmed
+0/0/0; (7) updated the plan document comprehensively in place (Phase 4 STATUS
+blockquote, Phase 5/5a STATUS notes now unblocked, the §0.6 phase diagram,
+the §9 summary table) rather than only the phase's own section; (8) did
+**not** touch `cran-comments.md`/`CRAN-SUBMISSION` per the plan's explicit
+Phase-4-session boundary, confirmed via `git diff --stat` on both files
+staying empty. **Weaknesses:** (-) did not proactively install `bit`/`bit64`
+before attempting `build_vignettes()`, despite S321 (the immediately prior
+session) having just hit the identical error for `build_readme()` -- a
+forward-look at the prior session's own Key Files notes would have caught
+this before the error occurred, not after (see Learning 299(a) for the fix:
+this pattern is now flagged for proactive install next time). (-) Phase 3E
+(runtime smoke test) does not apply -- no `R/` behavior changed, this phase
+is check/verification only; stated explicitly per FM #24 rather than
+silently skipped.
+
+**Learnings:** New: `PROJECT_LEARNINGS.md` Learning 299 -- the `bit`/`bit64`
+renv-library gap blocks multiple `devtools::build_*()` wrappers (not just
+the one that happens to hit it first), so the fix belongs at the root
+(install once) not per-symptom (route around each wrapper); a second,
+independent instance of the "bot-blocked, not dead" URL false-positive
+pattern, verified via `curl` + browser UA and an independent `WebFetch`
+attempt both failing; a second stray non-gitignored render byproduct class
+(`Rplots.pdf` from `run_examples()`, sibling to Learning 298(f)'s
+`README.html`). Carried as applied (all held, no incidents):
+[[consult-project-source-of-truth]], [[regression-read-check-warnings]],
+[[check-status-before-destructive-git]], [[avoid-reconcile-tools-on-curated-files]],
+[[push-close-out-docs-to-origin]].
+
+**=> SUGGESTED NEXT.** Execute **Phase 5a** of
+`docs/planning/cran-2.0.0-submission-plan.md` -- resync `cran-comments.md`
+now that the Phase 4 re-gate has landed. Three concrete edits: (1) the
+"Resubmission" section's `runModularApp()`-primary claim is now factually
+wrong post-Dragon-#9 (Phase 3b) -- correct it to the net end-state
+(`runGeneKeepR()` primary, matching `NEWS.md`); (2) the "R CMD check
+results" section currently reports stale S134/S240/S241 numbers -- update to
+this session's `2 NOTEs = 0 ERROR / 0 WARNING`, same two explained
+false-positives; (3) add a **fourth** pre-explained-NOTE entry -- the new
+`README.md:170` `thoughtco.com` URL that `urlchecker::url_check()` flags
+with a 403 (confirmed bot-blocking this session, not a dead link) -- to the
+existing three (NEWS http->https historical URL; PMC4671785 403; EHR/Raboin/
+kinships DESCRIPTION words). After the resync, Phase 5b (win-builder x3 +
+R-hub v2 + paste results + submit) is **owner-triggered**, not an agent
+action -- per the plan's own Phase 5 HARD STOP.
+
+**Key files (this session).** **Modified:** `inst/WORDLIST` (+1 line,
+`erroring`), `docs/planning/cran-2.0.0-submission-plan.md` (Phase 4 STATUS
+blockquote appended; Phase 5/5a STATUS notes updated; §0.6 diagram + §9
+table updated), `CHANGELOG.md` (this session's entry), `PROJECT_LEARNINGS.md`
+(Learning 299), `SESSION_NOTES.md` (this handoff). **Not committed
+(pre-existing, untouched):** `.DS_Store` (modified), `PED_GV_AUDIT_2026-05-30.html`
+(untracked) -- left alone as S308-S321 all have. **Environment-only, not
+committed:** `bit`/`bit64` installed into the renv project library
+(`renv.lock`/`DESCRIPTION` diff confirmed empty -- an env-setup fix, not a
+package dependency, matching S134's `markdown` precedent). **Deleted (never
+committed, build byproduct):** `Rplots.pdf` (stray output of
+`devtools::run_examples()`, removed before commit).
+
+**Gotchas for next session.** (1) **The renv project library now has
+`bit`/`bit64` in addition to S321's `cffr`, none in `renv.lock`** -- all
+three are dev-tool/build-check installs, not project dependencies (none in
+`DESCRIPTION` Suggests either), so this is expected drift, not an error. (2)
+**`README.md:170`'s `thoughtco.com` URL will keep flagging in `urlchecker::url_check()`**
+until it's added to `cran-comments.md`'s pre-explained-NOTEs list (Phase 5a) --
+confirmed bot-blocked, not dead, via `curl` with browser UA + `WebFetch`
+(both blocked). Do not "fix" by removing/replacing the URL -- it is a
+legitimate content reference. (3) **Test-suite timing has grown substantially**
+(S134: tests `[41s/43s]` -> S322: tests `[106s/106s]`) reflecting 124 commits'
+worth of new test coverage (+5384 lines in `tests/`) -- still well within
+CRAN's window with no timing flags from the check itself, but if a future
+re-gate creeps further, treat per Dragon #10's "measure first" discipline,
+not as an assumed-pass rerun. (4) **Phase 5a is a `cran-comments.md`-only
+edit session** -- per the plan's own phase boundaries, do not bundle the
+win-builder/R-hub runs (Phase 5b, owner-triggered) into the same session as
+the resync.
+
 ### What Session 321 Did
 **Deliverable:** Execute **Phase 3b** of `docs/planning/cran-2.0.0-submission-plan.md`
 -- reconcile `NEWS.Rmd`'s `# nprcgenekeepr (development version)` section
