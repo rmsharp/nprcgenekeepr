@@ -47,6 +47,45 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-09 · \[ad hoc\] Wrote the Document-1 (v1.0.8-\>2.0.0 technical writeup) planning doc (Session 330)
+
+- **Deliverable:** Planning session for “Document 1” — a public Quarto
+  pkgdown article describing the v1.0.8 → v2.0.0 transformation (Shiny
+  modules, new features, testing, extensive Claude CLI use), per the
+  owner’s instruction to produce two documents (Document 2 — package
+  purpose/usage — is explicitly deferred to its own future planning
+  session). **Planning session; TDD N/A** — no `R/`/`tests/` touched. 1
+  `AskUserQuestion` gate (public vs. internal visibility — the one
+  parameter not derivable from the repo). 0 stakeholder corrections.
+- **Change:** Wrote `docs/planning/v2-transformation-article-plan.md`
+  (352 lines), adapting `RESEARCH_DOCUMENTATION_WORKSTREAM.md`’s
+  claim-source/figure-provenance discipline to this repo’s own evidence
+  (git log, `CHANGELOG.md`, `PROJECT_LEARNINGS.md`, `HANDOFFS.md`)
+  instead of external citations. Verified the exact commit-range
+  boundary via `CRAN-SUBMISSION`’s own git history
+  (`4548aa1b`..`8ca8bb24`, 512 non-merge commits) rather than accepting
+  the owner’s “1.0.8 to 2.0.0” phrasing loosely. Read
+  `docs/planning/shiny-module-conversion-plan.md` in full (primary
+  source for the article’s Shiny-modules section) and discovered the
+  already-owner-adopted Quarto/pkgdown-articles policy (Session 105)
+  before asking a format question, resolving it as settled. Owner
+  confirmed (`AskUserQuestion`): Document 1 will be a **public** pkgdown
+  article, not internal-only — flagged as the plan’s highest-scrutiny
+  section (the Claude-CLI/methodology content). Proposed 7 tables + 6
+  figures (each with purpose/data-source/generation-method/provenance),
+  a 6-phase (A–F) session breakdown with per-phase completion criteria,
+  4 named dragons, and an adapted verification checklist.
+- **Also:** Added `PROJECT_LEARNINGS.md` Learning 305 — (a) mine
+  `docs/planning/` for an already-decided policy before framing a
+  format/toolchain question as open; (b) `CHANGELOG.md`’s own
+  format-template line pollutes a naive `grep -c "^### "` entry count by
+  exactly 1. Updated `CLAUDE.md`’s learning-count pointer (302 → 305
+  learnings, ~1.35MB → ~1.4MB).
+- **Session:** S330 · **Verified:** commit-range boundary confirmed via
+  `git log`/`CRAN-SUBMISSION` history, not accepted from phrasing;
+  format policy confirmed by reading the Session 105 decision doc, not
+  assumed.
+
 ### 2026-07-09 · \[ad hoc\] CRAN 2.0.0 submitted to CRAN submission team (Session 329)
 
 - **Deliverable:** Recorded the CRAN 2.0.0 submission milestone.

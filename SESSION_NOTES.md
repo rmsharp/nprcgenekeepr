@@ -7,6 +7,180 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 330 Did
+
+**Deliverable:** Planning session for “Document 1” – a technical
+description of the v1.0.8 -\> v2.0.0 transformation (Shiny modules
+architecture, new features, enhanced testing, extensive Claude
+CLI/Claude Code use), including proposed tables/graphics to enhance
+information transfer. **Planning session; TDD N/A** – no `R/`/`tests/`
+touched, only `docs/planning/*.md` + `PROJECT_LEARNINGS.md` + this file
+authored. 1 `AskUserQuestion` gate (audience/visibility – the one
+parameter genuinely not derivable from the repo). 0 stakeholder
+corrections. **Document 2** (package-purpose/how-it-works/ how-to-use-it
+document) is explicitly deferred to its own future planning session per
+the owner’s instruction – not in scope this session, and nothing here
+commits its scope. **Started / Completed:** 2026-07-09 / 2026-07-09
+**Status:** **DONE.** Wrote
+`docs/planning/v2-transformation-article-plan.md` (352 lines): context,
+locked scope decisions, an adapted claim-evidence map (substituting this
+repo’s own git history/CHANGELOG/PROJECT_LEARNINGS/HANDOFFS for the
+workstream’s default external-bibliography model), a 9-section proposed
+outline, 7 proposed tables and 6 proposed figures (each with
+purpose/data-source/generation-method/provenance columns), a 6-phase
+(A-F) session breakdown with per-phase completion criteria and
+verification commands, 4 named “dragons,” an adapted Verification
+Checklist, and 4 open decisions flagged for the owner (not blocking, not
+silently assumed). Followed
+`docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md`
+(Phases 2/3/4/6), substituting internal repo evidence for external
+primary sources/bibliography per this plan doc’s own opening note.
+
+**Key research this session actually did (not from memory):** read
+`docs/planning/shiny-module-conversion-plan.md` in full (412 lines,
+9-phase Shiny-module migration, each phase carrying a session + commit
+sha + risk + DONE status) – this is the single richest existing artifact
+for Document 1’s Section 1 and needs no re-derivation, only
+reformatting. Verified the exact commit-range boundary for “v1.0.8 -\>
+v2.0.0” via `CRAN-SUBMISSION`’s own git history (not the owner’s phrase
+taken loosely): `4548aa1b` (v1.0.8, CRAN date 2025-07-26) `..8ca8bb24`
+(v2.0.0, CRAN date 2026-07-09) = **512 non-merge commits**. Counted
+`R/mod*.R` (10 files, 4,731 lines with `appUI.R`/ `appServer.R`),
+`tests/testthat/` (253 files, spot-checked per-module counts),
+`shinytest2` references (33 files), `CHANGELOG.md` (308 real dated
+entries – 309 raw `grep -c "^### "` matches minus the file’s own
+format-template line, a real off-by-one trap named in the new learning
+below), `PROJECT_LEARNINGS.md` (302 learnings before this session’s own
+addition), total commits (1,825). Read
+`docs/planning/quarto-documentation-future-proofing-analysis.md` and
+discovered an **already-owner-adopted policy** (Session 105,
+2026-06-17): new long-form web content goes in
+`vignettes/articles/*.qmd` (Quarto), pkgdown mixed mode, zero CRAN risk,
+already proven on four existing articles (S107-S110). This resolved the
+format/toolchain question before it needed to be asked – see the new
+learning below.
+
+**The one genuinely open question, asked via `AskUserQuestion`:**
+whether Document 1 (which will describe “extensive use of Claude CLI” in
+development) should be a public pkgdown article, an internal-only
+report, or internal-first-public-later. **Owner chose: public pkgdown
+article.** This is now locked into the plan (§2) and is the reason
+Section 4 (the Claude-CLI/methodology section) is flagged as the plan’s
+highest-scrutiny dragon (§9) – it will be read by CRAN reviewers and
+domain-expert researchers, not just internal stakeholders.
+
+**Session 329 Handoff Evaluation (by Session 330): Score 9/10.** S329’s
+handoff correctly stated the CRAN-2.0.0 waiting-period context (Phase 6
+gated on the acceptance email) and, more directly useful to THIS
+session, carried forward Learning 304 (“write the Phase 1B claim stub
+the moment a task is understood, before any exploratory read”) – applied
+directly and successfully this session (the stub was written before
+`docs/` was even `ls`’d, let alone read). **What helped:** the Learning
+304 discipline, applied cold on a completely different kind of task
+(planning, not CRAN mechanics) than the one that produced it – evidence
+the learning generalizes. **What was missing:** nothing material – S329
+could not have anticipated this session’s actual task (a fresh owner
+request for two new documents, unrelated to CRAN submission mechanics),
+which is not a flaw in its handoff. **What was wrong:** nothing found.
+**ROI:** good – the one transferable piece of guidance (Learning 304)
+was exactly the discipline this session needed and used.
+
+**Self-assessment (Session 330): 9/10.** **Strengths:** (1) applied
+Learning 304 cleanly – claim stub written and committed (`d2275494`)
+before any exploratory read, even though this session’s task (planning a
+document) is a completely different shape from the four CRAN-mechanics
+sessions that produced that learning; (2) did not accept “1.0.8 to
+2.0.0” as a loose phrase – verified the exact commit-range boundary via
+`CRAN-SUBMISSION`’s own git history before it became a load-bearing plan
+claim; (3) discovered and cited the already-adopted
+Quarto/pkgdown-articles policy (Session 105) before asking a format
+question, avoiding re-litigating a settled decision and grounding the
+plan in real precedent (S107-110) instead of a fresh, precedent-free
+toolchain choice – promoted to new Learning 305 below; (4) asked exactly
+one `AskUserQuestion`, on the single parameter genuinely not derivable
+from the repo (public visibility), rather than either silently assuming
+it or over-asking on mechanically-already-decided questions; (5) caught
+two of my own drafting defects before commit – a broken/orphaned bullet
+fragment and a CHANGELOG entry-count off-by-one (309 raw grep matches
+vs. 308 real entries) – and verified every FM/anti-pattern
+cross-reference in the plan actually resolves to the number I intended
+(Learning \#7 discipline) before treating the plan as done.
+**Weaknesses:** (-) did not surface the Planning Sessions rule (“set
+your agent’s deepest available reasoning mode at session start”) to the
+owner as an explicit ask – I have no tool to change my own effort level,
+and instead of asking, I only recorded the gap retroactively in the
+plan’s own Planning Session Checklist (§11); a directly-asked “should I
+be running at max reasoning effort for this” would have been the more
+complete response to that rule. (-) This session deliberately did NOT
+extract the deeper Section-4 metrics (self-score trend, TDD phase-gate
+adherence rate, stakeholder-correction counts) or filter
+`CHANGELOG.md`/GitHub issues to the 512-commit range for a real feature
+list – correctly scoped to Phase A/E per the plan itself, but worth
+naming plainly so the next session doesn’t read this planning session as
+more research-complete than it is. **Phase 3E (runtime smoke test) does
+not apply** – no `R/` behavior changed; stated explicitly per FM \#24.
+
+**Learnings:** New: `PROJECT_LEARNINGS.md` Learning 305 – (a) in a
+planning session, grep `docs/planning/` for an already-decided policy
+before framing a format/toolchain question as if it were open (this
+session nearly asked a 3-way Markdown/R-Markdown/Quarto question that a
+Session-105 decision had already settled); (b) `CHANGELOG.md`’s own “How
+to add an entry” section contains a format-template line that pollutes a
+naive `grep -c "^### "` count by exactly 1 – future metrics work should
+grep a real date pattern instead. Also updated `CLAUDE.md`’s
+`PROJECT_LEARNINGS.md` pointer line (302 -\> 305 learnings, ~1.35MB -\>
+~1.4MB) per Learning \#7’s cross-reference/count discipline. Carried as
+applied (all held, no incidents):
+\[\[consult-project-source-of-truth\]\],
+\[\[push-close-out-docs-to-origin\]\].
+
+**=\> SUGGESTED NEXT.** Two independent paths, neither urgent over the
+other: **(1)** Phase A of the newly-written plan
+(`docs/planning/v2-transformation-article-plan.md` §7) – build and
+freeze the evidence-base data files for Document 1, if the owner wants
+to proceed with drafting it now. **(2)** The CRAN 2.0.0 waiting period
+is still open (unchanged from S329) – the owner still needs to click
+CRAN’s maintainer-email confirmation link, and Phase 6 (tag + release +
+dev-version bump) remains strictly gated on CRAN’s acceptance email, not
+yet arrived as of this session. If the owner wants neither, planning
+Document 2 (package purpose/how-it-works/how-to-use-it) or one of the 8
+open GitHub issues (#116, \#37, \#36, \#28, \#12, \#11, \#10, \#5)
+remain available.
+
+**Key files (this session).** **Written:**
+`docs/planning/v2-transformation-article-plan.md` (new, 352 lines – this
+session’s deliverable). **Modified:** `PROJECT_LEARNINGS.md` (Learning
+305), `CLAUDE.md` (learning count/size pointer), `SESSION_NOTES.md`
+(this handoff), `HANDOFFS.md` (S330 receipt). **Referenced, not
+modified:** `docs/planning/shiny-module-conversion-plan.md` (read in
+full – primary source for the plan’s Section 1),
+`docs/planning/quarto-documentation-future-proofing-analysis.md` (read
+§6-7 – source of the already-adopted Quarto/pkgdown-articles policy),
+`docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md`
+(read in full – governing workstream, adapted). **Not committed
+(pre-existing, untouched):** `.DS_Store` (modified),
+`PED_GV_AUDIT_2026-05-30.html` (untracked) – left alone as S308-S330 all
+have.
+
+**Gotchas for next session.** (1) **This plan is a DRAFT, not yet
+approved for implementation** – per the plan’s own header and the
+Planning Sessions rule (“the plan is the deliverable, do not start
+implementing it”), Phase A does not start automatically; confirm with
+the owner first, including the 4 open decisions in the plan’s §12
+(article title/slug, whether to keep the optional “By the Numbers”
+section, screenshot reuse in F6, and ratifying the commit-range
+framing). (2) **`vignettes/shiny_app_use/` screenshots must not be
+touched (regenerated or re-captured) without the owner’s explicit
+confirmation** – flagged in the plan (FM \#22/anti-pattern \#11) as
+possibly hand-curated. (3) **Section 4’s evidentiary metrics (self-score
+trend, TDD phase-gate adherence, stakeholder-correction rate) do not
+exist yet** – Phase A/E must do real extraction, not characterize from
+this plan’s rough counts, which are explicitly marked provisional in the
+plan’s own §3 evidence-base table. (4) The exact first-session-number
+boundary for the 512-commit range is NOT yet established (a same-session
+grep found a plausible-but- unverified `S1`) – resolve this in Phase A
+before it becomes a document claim.
+
 ### What Session 329 Did
 
 **Deliverable:** Record the CRAN 2.0.0 submission milestone – the owner
