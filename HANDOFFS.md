@@ -87,7 +87,7 @@ key_files: vignettes/articles/engineering-the-2.0.0-release.qmd (Section 4 + T6/
 gotchas: T6/F5's source files (CHANGELOG.md/PROJECT_LEARNINGS.md/HANDOFFS.md/SESSION_NOTES.md) are LIVE, still-growing files read at a point in time (Phase A, Session 331) -- unlike T5's git-ls-tree-at-sha data, these numbers will keep drifting further from the article's own numbers every session; any future session citing T6 should say "as extracted at the Phase A freeze," never "current." Mermaid stateDiagram-v2 transition labels do NOT support \n for line breaks (unlike F2's flowchart <br/>) -- keep labels one line, or verify with mermaid-cli before trusting quarto render's exit code (new Learning 311). BACKLOG.md's stale "#40 open" line remains unpruned -- flagged 4 consecutive sessions now (S333-S335, S334 twice) -- prune next time BACKLOG.md is open for any reason.
 runtime_smoke: n/a -- documentation/article-drafting session for vignettes/articles/ support, no R/ package runtime behavior changed; quarto render + a standalone mermaid-cli PNG render (caught and fixed a real Mermaid label defect) is this deliverable's actual build-equivalent verification, performed and confirmed
 changelog_ref: CHANGELOG.md 2026-07-09 "Phase E of the Document-1 article plan: drafted Section 4 (AI-assisted development process) + T6/F4/F5 (Session 335)"
-commit: pending
+commit: 33f943e0
 ```
 <free-text prose, self-score breakdown>
 
