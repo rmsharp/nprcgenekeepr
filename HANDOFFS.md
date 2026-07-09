@@ -90,13 +90,13 @@ status: complete
 self_score: 8
 predecessor_score: 7
 active_task: CHANGELOG.md ledger-format gap resolved (freeze legacy, go forward). CRAN 2.0.0 Phase 5b remains owner-triggered, not started. 8 open GitHub issues untouched, no priority set among them.
-what_was_done: Added an "Authoritative Action Ledger" intro + "How to add an entry" section (source-tag rules: [issue #<N>]/[BL-<N>]/[ad hoc]) to CHANGELOG.md, copied from the real canonical starter-kit/CHANGELOG.md seed (~/Development/methodology). Added a "## Legacy history (pre-ledger format, Sessions 1-324)" boundary marker; the 303 existing entries below it are byte-for-byte unchanged. Wrote this session's own action as the first canonical-format entry above the marker. Updated CLAUDE.md's Adaptations section (CHANGELOG-gap note -> resolution note; corrected a stale "33 learnings" pointer to the actual 302). Backfilled HANDOFFS.md's S324 commit:pending field to 0c3af8b9. Added PROJECT_LEARNINGS.md Learning 302. Commit: pending.
+what_was_done: Added an "Authoritative Action Ledger" intro + "How to add an entry" section (source-tag rules: [issue #<N>]/[BL-<N>]/[ad hoc]) to CHANGELOG.md, copied from the real canonical starter-kit/CHANGELOG.md seed (~/Development/methodology). Added a "## Legacy history (pre-ledger format, Sessions 1-324)" boundary marker; the 303 existing entries below it are byte-for-byte unchanged. Wrote this session's own action as the first canonical-format entry above the marker. Updated CLAUDE.md's Adaptations section (CHANGELOG-gap note -> resolution note; corrected a stale "33 learnings" pointer to the actual 302). Backfilled HANDOFFS.md's S324 commit:pending field to 0c3af8b9. Added PROJECT_LEARNINGS.md Learning 302. Commit: 07ae8aec (claim stub: 68f3117f).
 next_steps: Either (a) resume docs/planning/cran-2.0.0-submission-plan.md Phase 5b (owner-triggered win-builder x3 + R-hub v2), or (b) pick up one of the 8 open GitHub issues (#116, #37, #36, #28, #12, #11, #10, #5) -- owner's call, none more urgent.
 key_files: CHANGELOG.md:1-61 (new intro/how-to-add-an-entry/legacy-marker/S325 entry), CLAUDE.md (Adaptations section), HANDOFFS.md (S324 commit backfill), PROJECT_LEARNINGS.md (Learning 302)
 gotchas: New CHANGELOG.md entries always go above "## Legacy history", never inside it. Every new entry needs exactly one [issue #<N>]/[BL-<N>]/[ad hoc] source tag. Neither CRAN Phase 5b nor any open issue is more urgent than another right now.
 runtime_smoke: n/a — docs-only, no R/ package runtime behavior changed
 changelog_ref: CHANGELOG.md 2026-07-08 "Adopt the canonical Authoritative Action Ledger format going forward (Session 325)"
-commit: pending
+commit: 07ae8aec
 ```
 
 ``` handoff
