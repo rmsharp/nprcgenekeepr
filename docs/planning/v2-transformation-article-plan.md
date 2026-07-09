@@ -1,8 +1,9 @@
 # Plan — Document 1: "Engineering nprcgenekeepr 2.0.0" (public Quarto pkgdown article)
 
-**Status:** DRAFT plan, written Session 330. Not yet approved for implementation —
-approval happens via the Phase 3 vertical-slice contract gate (`SESSION_RUNNER.md`
-§Vertical Slice Sessions) before Phase A below begins.
+**Status:** Plan written Session 330 (DRAFT). Owner ratified proceeding with **Phase A**
+and its commit-range framing (§2/§9 dragon #4) via `AskUserQuestion`, Session 331
+(2026-07-09) — **Phase A is now DONE** (§7). Phases B-F remain future, separately
+approved sessions each; no phase is bundled with another (FM #26).
 
 **Workstream:** Adapted `docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md`
 (Phases 2/3/4/6), substituting this repository's own artifacts (`git log`, `CHANGELOG.md`,
@@ -89,29 +90,66 @@ plan; confirm or rename at Phase B kickoff.
   authoritative scope boundary for every quantitative claim in the document — not
   "since the project began" and not "since some session number," unless a claim is
   explicitly framed as project-lifetime (e.g., total historical session count).
-  **Gotcha for Phase A:** the exact first/last session **numbers** in this range are NOT
-  yet established (a same-session grep for `S<n>` substrings in commit messages found
-  matches as low as `S1`, which is plausible — this project's methodology predates
-  v1.0.8 — but was not cross-checked against `SESSION_NOTES.md`/`PROJECT_LEARNINGS.md`
-  session boundaries). Phase A must establish this precisely before it appears as a
-  claim in the document; do not carry the unverified `S1` forward.
+  **Resolved in Phase A (2026-07-09), correcting the prior session's assumption:** the
+  earlier `S1` grep match was a false lead from an abbreviated-tag search (`S[0-9]+`)
+  that missed the long-form `(Session N)` convention this project used before Session
+  58. Direct verification (`git log --no-merges --reverse` across the range,
+  cross-checked against zero `Session 0` or earlier hits anywhere in the full repo
+  history) establishes: the SESSION_RUNNER methodology's actual **Session 1** begins at
+  commit `6fd87749` (2026-05-30, "add read-only technical-debt audit report (Session
+  1)") — squarely inside this range, **not** predating v1.0.8 as previously assumed.
+  The range's first 10 commits (2025-12-25 through 2026-05-30) are informal,
+  pre-methodology Shiny-module-branch experimentation (e.g. `4790b64f` "1st attempt at
+  adding modules") plus the methodology's own bootstrap commit (`299060c0` "Add
+  iterative session methodology framework", 2026-04-02) — none session-numbered. The
+  range's last session-tagged commit is **S328** (`8ca8bb24` itself, "backfill own
+  HANDOFFS.md receipt commit sha" — the exact v2.0.0 CRAN-submission commit). So:
+  **328 numbered sessions (Session 1 -> S328)** fall within the range, accounting for
+  502 of the range's 512 commits; the other 10 predate the methodology. This is now the
+  authoritative session-count claim for Section 4 — see
+  `vignettes/articles/data/process-metrics.csv`.
 
 ---
 
 ## 3. Evidence base (adapted claim-source map — WHERE the evidence lives)
 
 No external bibliography exists for this document; every "source" below is an artifact
-already produced by this project. This table is the Phase A starting point, not a
-finished claim-source map — Phase A's job is to turn each row into dated,
-sha-anchored, quoted-passage-backed claims (the workstream's actual Claim-Source Map
-discipline, `RESEARCH_DOCUMENTATION_WORKSTREAM.md` §Phase 3).
+already produced by this project. **Phase A status: COMPLETE (2026-07-09).** The frozen
+extraction script (`vignettes/articles/data-raw/build-document1-evidence.R`) and its 7
+output CSVs (`vignettes/articles/data/*.csv`) are checked in and reproducible per the
+Reproducibility Decision (§5-6). The high-level table below is retained for orientation;
+the per-claim Claim-Evidence Map that follows it is the actual drafting input for
+Phases B-E.
 
-| Content pillar | Primary evidence source(s) | What this session verified directly |
+| Content pillar | Primary evidence source(s) | Frozen Phase A data file |
 |---|---|---|
-| Shiny modules architecture | `docs/planning/shiny-module-conversion-plan.md` (412 lines, 9-phase vertical-slice migration, each phase carries a session number + commit sha + risk rating + DONE status) | File exists, read in full this session; Phases 1-9 all marked `DONE`, Phase 9 (canonicalize `runGeneKeepR`, delete monolith) is irreversible-tagged (dragon). `R/mod*.R`: 10 files. `R/appUI.R` + `R/appServer.R` + all `mod*.R`: 4,731 lines total (verified via `wc -l`). |
-| New features | `CHANGELOG.md` (308 dated `### ` entries total, project lifetime, after excluding the format-template line — a subset falls in the 512-commit range), closed GitHub issues, `NEWS.Rmd`/`NEWS.md` | Confirmed `CHANGELOG.md` line/entry counts this session; **not yet filtered to the 1.0.8->2.0.0 range or categorized feature-vs-fix** — Phase A work. |
-| Enhanced testing | `tests/testthat/` (253 test files, verified via `ls`), `shinytest2` referenced in 33 files + `DESCRIPTION`, Phase 8 of the module-conversion plan ("Enable the shinytest2 E2E harness end-to-end") | Per-module test file counts spot-checked this session (e.g. `modSummaryStats`: 7 files, `modInput`: 5, `modBreedingGroups`: 4). Historical (pre-conversion) test counts **not yet established** — Phase A work, via `git log` on `tests/testthat/`. |
-| Claude CLI / methodology | `SESSION_NOTES.md`, `HANDOFFS.md` (per-session receipts with `self_score`/`predecessor_score`), `CHANGELOG.md` (dated ledger, `[issue #]`/`[BL-]`/`[ad hoc]` tagged), `PROJECT_LEARNINGS.md` (302 named learnings), `SESSION_RUNNER.md`/`SAFEGUARDS.md` (the enforced protocol itself), `CLAUDE.md` (strict-TDD contract) | Counts confirmed this session: 1,825 total commits, ~415 session-tagged commits (rough grep, not final), 308 CHANGELOG entries, 302 PROJECT_LEARNINGS entries. **Self-score trend, TDD phase-gate adherence rate, and stakeholder-correction counts are NOT yet extracted** — this is the bulk of Phase A's and Phase E's work, and the section's credibility depends on it being real extraction, not a characterization from memory (anti-pattern #9 / FM #20). |
+| Shiny modules architecture | `docs/planning/shiny-module-conversion-plan.md` (412 lines, 9-phase vertical-slice migration) | `module-inventory.csv`, `migration-phases.csv` |
+| New features | Closed GitHub issues in range, `CHANGELOG.md` | `feature-candidates.csv` (raw candidates — Phase C curates) |
+| Enhanced testing | `tests/testthat/`, `docs/planning/phase8-e2e-harness-subplan.md` | `testing-growth.csv`, `commit-activity-timeline.csv` |
+| Claude CLI / methodology | `SESSION_NOTES.md`, `HANDOFFS.md`, `CHANGELOG.md`, `PROJECT_LEARNINGS.md` | `process-metrics.csv`, `self-score-trend.csv` |
+
+### Claim-Evidence Map (Phase A deliverable — one row per intended claim)
+
+| # | Claim | Verified value | Evidence (sha / file / date) |
+|---|---|---|---|
+| C1 | Module count and total LOC | 10 `R/mod*.R` files; 4,731 lines total incl. `appUI.R`/`appServer.R` | `module-inventory.csv`; `wc -l R/mod*.R R/appUI.R R/appServer.R`, verified 2026-07-09 |
+| C2 | Per-module responsibility + size + test coverage | e.g. `modSummaryStats` 921 LOC / 7 test files; `modInput` 716 LOC / 5 test files; `modGvAndBgDesc` 56 LOC / 1 test file (full table: 10 rows) | `module-inventory.csv` |
+| C3 | 9-phase vertical-slice migration, Session 22 -> Session 35 (2026-06-03 to 2026-06-06) | Phases 1,2,9 shas directly verified (`596f6bc9`, `ef6a9f4c`, `3db018d1`/`24992e0b`/`53a9e5e0`/`a1618c48`) via `git log -1 <sha>`; Phases 3-7 verified by CHANGELOG session-close-out entry only (no sha quoted in the source plan) | `migration-phases.csv`; `docs/planning/shiny-module-conversion-plan.md` §9; verified 2026-07-09 |
+| C4 | Phase 9 (monolith retirement) is the irreversible dragon phase | `runGeneKeepR()` now `lifecycle::deprecate_soft()`-aliases to the modular app; `inst/application/` (17 files) deleted as its own revertible commit | commit `3db018d1`, `24992e0b`; `shiny-module-conversion-plan.md:285` |
+| C5 | Phase 8 (E2E harness) was NOT a single-session DONE — it expanded into a 4-session subplan, then a 7-part hardening pass | 8a-8d: Session 31-34 (2026-06-05 to 2026-06-06), issue #39 CLOSED at S34. 8e-1..8e-7: Session 37-50 (2026-06-07 to 2026-06-10), issue #40 | `CHANGELOG.md` 2026-06-05..2026-06-10 entries; `docs/planning/phase8-e2e-harness-subplan.md`; **corrects S330's characterization** ("Phases 1-9 all marked DONE") — Phase 8's DONE is compound, not atomic |
+| C6 | 47 GitHub issues closed within the v1.0.8->v2.0.0 window (2025-07-26 to 2026-07-09) | 47 rows, labeled (enhancement/bug/unlabeled), raw curation candidates — not every one is feature-worthy prose (Phase C judgment call) | `feature-candidates.csv`; `gh issue list --state closed --search "closed:2025-07-26..2026-07-09"`, run 2026-07-09 |
+| C7 | Test file count grew from v1.0.8 to v2.0.0 | 132 files (v1.0.8, `4548aa1b`) -> 175 (Session 1 start, `6fd87749`, 2026-05-30) -> 257 (v2.0.0, `8ca8bb24`) — a 95% increase over the full range | `testing-growth.csv`; `git ls-tree -r --name-only <sha> -- tests/testthat/`, verified 2026-07-09 |
+| C8 | shinytest2/E2E test files existed early but were non-functional until Phase 8 wired them | 25 files already referenced `shinytest2`/`AppDriver` by Session 1 (2026-05-30) — built on the pre-methodology "module branch" (`7da01afe`) but calling undefined helpers ("unwritten theatre"); 32 files by v2.0.0, after Phase 8a-8e made them executable and behavioral | `testing-growth.csv` `shinytest2_referencing_files` column; `docs/planning/phase8-e2e-harness-subplan.md` §2.3/§2.6 |
+| C9 | Commit-activity pace across the range | 7 commits (2025-12, pre-methodology) / 2 (2026-04) / 30 (2026-05) / 375 (2026-06, the modularization sprint) / 98 (2026-07, testing hardening + CRAN prep) | `commit-activity-timeline.csv`; `git log --format=%ad --date=format:%Y-%m`, verified 2026-07-09 |
+| C10 | 328 SESSION_RUNNER-numbered sessions fall within the range | Session 1 (`6fd87749`, 2026-05-30) through S328 (`8ca8bb24`, 2026-07-09 — the exact v2.0.0 CRAN commit); 502 of the range's 512 commits are session-tagged, 10 predate the methodology | `process-metrics.csv`; direct `git log` verification, this session (also resolves plan §2's flagged gotcha, see above) |
+| C11 | 309 `CHANGELOG.md` ledger entries, all within the range | Earliest entry 2026-05-30 (matches Session 1's own start date — the ledger is retroactive, adopted at Session 325 per the file's own "freeze legacy, go forward" note); latest 2026-07-09; zero entries outside `[2025-07-26, 2026-07-09]` | `process-metrics.csv`; `grep -cE "^### [0-9]{4}-[0-9]{2}-[0-9]{2}" CHANGELOG.md`, verified 2026-07-09 — **corrects S330's count of 308** (that snapshot predated S330's own close-out entry landing as #309) |
+| C12 | 305 `PROJECT_LEARNINGS.md` entries | `#### Learning 1` through `#### Learning 305` | `process-metrics.csv`; `grep -cE "^#### Learning [0-9]+ " PROJECT_LEARNINGS.md` |
+| C13 | Self-score trend — **partial window only, do not overclaim** | 7 complete `HANDOFFS.md` receipts, S324-S330 (2026-07-08/09 only): scores 8,8,8,9,9,9,9 (mean ≈8.57). Receipts began at S324, one session before the CHANGELOG ledger-format resolution (S325) — this covers ~2% of the 328-session range, not a trend across it | `self-score-trend.csv`; F5's own caution in §6 applies directly |
+| C14 | Stakeholder-correction rate — "compounding discipline" evidence for Section 4 | Of 271 explicit self-assessment mentions of "N stakeholder correction(s)" across `SESSION_NOTES.md`, 269 (99.3%) report zero; 2 report exactly one | `process-metrics.csv`; `grep -c "0 stakeholder correction" / "[1-9][0-9]* stakeholder correction" SESSION_NOTES.md` — this is a mention-count proxy, not a per-session-verified audit; state that scope limit in Section 4 prose |
+
+**Do not draft any section from the summary table alone.** Each claim above traces to a
+frozen CSV or a directly re-verifiable git/grep command — that traceability, not the
+one-line summary, is what Phases B-E cite.
 
 **Do not draft any section from the "what this session verified" column alone.** That
 column proves the sources exist and gives a rough shape; it is not a substitute for the
@@ -188,7 +226,27 @@ per-session-vertical-slice discipline `shiny-module-conversion-plan.md` §9 alre
 successfully for this project's largest prior migration. No phase may be bundled with
 another (FM #26) except where explicitly marked mergeable below.
 
-### Phase A — Build and freeze the evidence base · risk MEDIUM (foundational — see dragon flag, §9)
+### Phase A — Build and freeze the evidence base · risk MEDIUM (foundational — see dragon flag, §9) · ✅ DONE (Session 331, commit pending)
+
+> **✅ Implemented in Session 331 (2026-07-09), whole phase, no split.** One checked-in
+> R extraction script (`vignettes/articles/data-raw/build-document1-evidence.R`) shells
+> out to `git`/`gh` and parses `CHANGELOG.md`/`PROJECT_LEARNINGS.md`/`HANDOFFS.md`,
+> writing 7 frozen CSVs to `vignettes/articles/data/`: `module-inventory.csv`,
+> `migration-phases.csv`, `feature-candidates.csv` (47 closed-issue raw candidates),
+> `testing-growth.csv`, `commit-activity-timeline.csv`, `process-metrics.csv`,
+> `self-score-trend.csv`. Completed the §3 Claim-Evidence Map (14 rows, C1-C14) in
+> place. **Resolved the §2 first-session-number gotcha** with hard evidence: Session 1
+> begins at `6fd87749` (2026-05-30), squarely inside the ratified range, correcting the
+> prior session's "methodology predates v1.0.8" assumption. **Two corrections to
+> S330's characterizations surfaced by firsthand verification (not carried forward
+> uncritically):** (1) Phase 8 of the module-conversion plan was NOT a simple
+> session-22-style DONE — it expanded into a 4-session subplan (8a-8d, Session 31-34,
+> issue #39) then a 7-part hardening pass (8e-1..8e-7, Session 37-50, issue #40); (2)
+> the CHANGELOG entry count is 309, not S330's snapshot of 308 (S330's own close-out
+> entry landed as #309 after that count was taken — not an error, a timing artifact).
+> Spot-checked 12 extracted numbers by hand against raw `git log`/`CHANGELOG.md`/
+> `PROJECT_LEARNINGS.md`/`HANDOFFS.md` — all 12 confirmed exactly. **Next: Phase B**
+> (owner confirms scope/order first — Phases B-E are reorderable per §7's own note).
 **What DONE looks like:** one or more checked-in data files (e.g.
 `vignettes/articles/data/{module-inventory,features,testing-growth,process-metrics}.csv`)
 plus the checked-in extraction script(s) that produced them; a completed Claim-Evidence
