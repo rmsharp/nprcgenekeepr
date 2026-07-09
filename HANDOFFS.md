@@ -77,16 +77,16 @@ session need this block to continue the work without re-reading the whole repo?*
 ```handoff
 session: S330
 date: 2026-07-09
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Planning session for Document 1 -- technical description of the v1.0.8 -> v2.0.0 transformation (Shiny modules, new features, enhanced testing, Claude CLI use), with proposed tables/graphics. Document 2 (package-purpose/usage doc) deferred to its own future planning session.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Plan for Document 1 written and DRAFT (not yet approved for implementation). Owner still needs to confirm 4 open decisions (§12 of the plan) before Phase A begins. CRAN 2.0.0 waiting period (from S329) is unchanged and independent of this work.
+what_was_done: Wrote docs/planning/v2-transformation-article-plan.md (352 lines) -- a planning-session deliverable for "Document 1," a public Quarto pkgdown article describing the v1.0.8->v2.0.0 transformation (Shiny modules, new features, testing, Claude CLI use). Adapted RESEARCH_DOCUMENTATION_WORKSTREAM.md's claim-source/figure-provenance discipline to this repo's own evidence (git log, CHANGELOG.md, PROJECT_LEARNINGS.md, HANDOFFS.md) in place of external citations. Verified the exact commit-range boundary via CRAN-SUBMISSION's git history (4548aa1b..8ca8bb24, 512 commits) rather than accepting the owner's phrasing loosely. Read shiny-module-conversion-plan.md in full (primary source for Section 1) and discovered the already-adopted Quarto/pkgdown-articles policy (Session 105) before asking a format question, resolving it as settled rather than open. Asked one AskUserQuestion (public vs internal visibility) -- owner chose public. Proposed 7 tables + 6 figures with purpose/source/generation/provenance each, a 6-phase (A-F) session breakdown, 4 dragons, and an adapted verification checklist. Added PROJECT_LEARNINGS.md Learning 305 (mine docs/planning/ for decided policy before asking format questions; CHANGELOG.md grep off-by-one gotcha) and updated CLAUDE.md's learning-count pointer (302->305). Commit: pending (ships in the same commit as this receipt).
+next_steps: Owner reviews docs/planning/v2-transformation-article-plan.md and resolves the 4 open decisions in its §12 (title/slug, keep-or-cut Section 5, F6 screenshot reuse, commit-range framing ratification). Once approved, Phase A (build and freeze the evidence base) is the next session -- see the plan's §7. Independently, the CRAN 2.0.0 waiting period from S329 continues (owner's email-confirmation click, then CRAN's review outcome) -- unrelated and not blocking.
+key_files: docs/planning/v2-transformation-article-plan.md (new, this session's deliverable), docs/planning/shiny-module-conversion-plan.md (read in full, primary Section-1 source), docs/planning/quarto-documentation-future-proofing-analysis.md:163-237 (Quarto/pkgdown-articles policy), PROJECT_LEARNINGS.md (Learning 305), CLAUDE.md:177 (learning-count pointer), SESSION_NOTES.md (S330 handoff), HANDOFFS.md (this receipt)
+gotchas: The plan is a DRAFT -- do not start Phase A without owner approval of the 4 open §12 decisions. vignettes/shiny_app_use/ screenshots must not be touched without explicit owner confirmation (possibly hand-curated). Section 4's evidentiary metrics (self-score trend, TDD adherence rate, correction counts) do not exist yet -- Phase A/E must do real extraction. The exact first-session-number boundary for the 512-commit range is unverified (a same-session grep found a plausible but uncross-checked S1) -- resolve in Phase A before it becomes a document claim.
+runtime_smoke: n/a -- planning/documentation session, no R/ package runtime behavior changed
+changelog_ref: CHANGELOG.md 2026-07-09 "Wrote the Document-1 (v1.0.8->2.0.0 technical writeup) planning doc (Session 330)"
 commit: pending
 ```
 
