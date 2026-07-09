@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S330
+date: 2026-07-09
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Planning session for Document 1 -- technical description of the v1.0.8 -> v2.0.0 transformation (Shiny modules, new features, enhanced testing, Claude CLI use), with proposed tables/graphics. Document 2 (package-purpose/usage doc) deferred to its own future planning session.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S329
 date: 2026-07-09
 status: complete

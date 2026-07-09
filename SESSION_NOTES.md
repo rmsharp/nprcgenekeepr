@@ -6,6 +6,20 @@
 
 ## ACTIVE TASK
 
+### What Session 330 Did
+**Deliverable:** Planning session for "Document 1" -- a technical description of the
+v1.0.8 -> v2.0.0 transformation (Shiny modules architecture, new features, enhanced
+testing, extensive Claude CLI/Claude Code use), including proposed tables/graphics to
+enhance information transfer. Produces ONE plan document in `docs/planning/`. **Document
+2** (package-purpose/how-it-works/how-to-use-it document) is explicitly deferred to its
+own future planning session per the owner's instruction -- not in scope this session.
+**Started:** 2026-07-09
+**Status:** Session claimed. Scope parameters (audience, output format, doc location)
+being confirmed with the owner before drafting the plan.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### What Session 329 Did
 **Deliverable:** Record the CRAN 2.0.0 submission milestone -- the owner ran
 `devtools::submit_cran()` and the upload succeeded. **Documentation of an owner-taken
