@@ -4,8 +4,9 @@
 and its commit-range framing (§2/§9 dragon #4) via `AskUserQuestion`, Session 331
 (2026-07-09) — **Phase A is now DONE** (§7). Owner confirmed the proposed title/slug
 (§1) via `AskUserQuestion`, Session 332 (2026-07-09) — **Phase B is now DONE** (§7).
-Phases C-F remain future, separately approved sessions each; no phase is bundled with
-another (FM #26).
+Session 333 (2026-07-09) drafted Section 2 (new features) + T4 — **Phase C is now DONE**
+(§7). Phases D-F remain future, separately approved sessions each; no phase is bundled
+with another (FM #26).
 
 **Workstream:** Adapted `docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md`
 (Phases 2/3/4/6), substituting this repository's own artifacts (`git log`, `CHANGELOG.md`,
@@ -292,7 +293,28 @@ this section has a quoted/verified backing per §3's discipline).
 **Verification:** `quarto render` on the article in isolation; all figures/tables
 present; no unresolved claims.
 
-### Phase C — Draft Section 2 (new features) + T4
+### Phase C — Draft Section 2 (new features) + T4 · ✅ DONE (Session 333)
+
+> **✅ Implemented in Session 333 (2026-07-09), whole phase, no split.** Hand-curated
+> `vignettes/articles/data/feature-candidates.csv`'s 47 raw closed-issue candidates down
+> to **13 (28%)** genuinely feature-shaped items, excluding pure bug fixes,
+> issue-hygiene closes of pre-existing functionality (e.g. #34 — "No code changed"),
+> and internal process/tooling items (lint, roxygen harmonization, `codecov` config).
+> Wrote a new frozen data file, `vignettes/articles/data/feature-highlights.csv`
+> (13 curated rows: feature, issue, session range, date, commit sha where a single
+> commit anchors the feature, description), matching T2/T3's
+> read-a-frozen-CSV-via-`kableExtra` generation pattern rather than an inline literal.
+> Added **Section 2** ("New Capabilities in 2.0.0") to
+> `vignettes/articles/engineering-the-2.0.0-release.qmd` with **T4** (`@tbl-features`)
+> and three prose subsections grouping the 13 features into clusters: parent
+> identification/species-awareness (5 features: #31/#48/#46/#73/#119), Genetic Value
+> Analysis uncertainty (4 features: #9/#76/#82/#118), and two new Shiny
+> dashboards/one unlocked module (#112, #47/#49) plus 2 smaller fixes (#35, #44).
+> Verified 3 single-commit citations (`0eeee3f6` #31, `d4320643` #35, `14c8e84d` #44)
+> both resolve (`git log -1`) and are ancestors of `HEAD` (`git merge-base
+> --is-ancestor`); all other multi-slice features cited by session range + `CHANGELOG.md`
+> date (directly grepped, not assumed), matching T3's own precedent for phases without a
+> single quoted sha.
 **What DONE looks like:** section drafted, T4 populated and curated (not every commit —
 genuinely feature-shaped items only), claims sourced to `CHANGELOG.md`/issue numbers.
 **Verification:** same as Phase B.
