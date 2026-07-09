@@ -6,6 +6,13 @@
 
 ## ACTIVE TASK
 
+### What Session 329 Did
+**Deliverable:** Record the CRAN 2.0.0 submission milestone -- owner ran `devtools::submit_cran()`
+and the package uploaded successfully (IN PROGRESS).
+**Started:** 2026-07-09
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in `CHANGELOG.md` at Phase 3F.
+
 ### What Session 328 Did
 **Deliverable:** Fold the real, clean win-builder x3 + R-hub v2 results into
 `cran-comments.md`'s Test environments section, completing Phase 5b's cross-platform

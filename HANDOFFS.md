@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S329
+date: 2026-07-09
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Record the CRAN 2.0.0 submission milestone -- devtools::submit_cran() succeeded.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S328
 date: 2026-07-09
 status: complete
