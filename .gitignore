@@ -47,6 +47,7 @@ docs/*
 pkgdown_site/
 .quarto/
 dashboard.html
+dashboard_history.jsonl
 /doc/
 /Meta/
 revdep/

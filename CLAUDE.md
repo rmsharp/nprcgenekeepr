@@ -166,6 +166,8 @@ The build-equivalent for this R package (relocated here from `SAFEGUARDS.md` dur
 
 **Citation checklist (issue #120, 2026-07-08):** any session that adds a new displayed statistic/estimator to the package must update `inst/extdata/ui_guidance/population_genetics_terms.html` (or the relevant UI guidance page) and the statistic's own roxygen `@references` in the same session that ships it, rather than deferring to a later audit. (Source: `docs/audits/ISSUE_120_CITATION_COVERAGE_AUDIT_2026-07-08.md` Structural Observation 1 — citation gaps correlated with recency, not centrality: the metrics missing coverage were consistently the ones added without their own citation pass.)
 
+**CHANGELOG.md ledger-format gap (2026-07-08 methodology sync, tracked, not yet migrated):** canonical v3.1+ defines `CHANGELOG.md` as an "Authoritative Action Ledger" — dated `### YYYY-MM-DD · [issue #N] | [BL-N] | [ad hoc]` entries, one per action, checked by Phase 0's ledger reconcile and required at Phase 3F (FM #27). This project's `CHANGELOG.md` predates that convention (dated subsections with `**Deliverable:**` prose, no source tag) and holds ~30+ sessions of real history, so `bin/status` correctly flags it `present (stale format)` rather than silently rewriting it (SEED disposition — sync never overwrites it). Until a dedicated session reconciles the format (BOOTSTRAP.md "Updating an existing project" — hand-migrate or reseed), keep recording entries in the existing dated-subsection style; do not force single entries into the new tag format mid-file, and do not treat the mismatch as FM #27 in the meantime.
+
 ### Development Process Contract override
 
 This project runs **Strict Test-Driven Development** (see the "Development Process Contract" section above). This is a project-specific override of the base methodology's general development guidance: tests are written before implementation, every response declares its TDD phase (RED / GREEN / REFACTOR), and phase transitions require permission. It supersedes general coding instincts but operates *within* the SESSION_RUNNER protocol (orient → one deliverable → close out). Implementation and bug-fix sessions therefore follow the chosen workstream **and** the RED→GREEN→REFACTOR gates.
@@ -176,4 +178,6 @@ Project institutional memory (Sessions 1–28+; 33 learnings, ~88k chars) lives 
 
 ### Project-specific Failure Modes
 
-(none — the base failure modes #1–25 in `SESSION_RUNNER.md` apply.)
+(none — the base failure modes #1–27 in `SESSION_RUNNER.md` apply, including #26
+"mega-session masquerading as a vertical slice" and #27 "unrecorded action,"
+added by the 2026-07-08 methodology sync to v3.4.)

@@ -6,6 +6,132 @@
 
 ## ACTIVE TASK
 
+### What Session 324 Did
+**Deliverable:** Update this project's methodology infrastructure using
+`https://github.com/KJ5HST/methodology` (the user's literal request, matching
+BOOTSTRAP.md's own documented "tell your agent" update command). **Infra/docs
+sync; TDD N/A** -- no `R/`/`tests/`/`DESCRIPTION` touched. 0 `AskUserQuestion`
+gates (a documented, bounded operation, not a novel scope decision). 0
+stakeholder corrections.
+**Started / Completed:** 2026-07-08 / 2026-07-08
+**Status:** **DONE.** Local methodology was v2.6 (8 tagged releases stale);
+now synced to canonical v3.4 via `bin/sync --source=local --force` (full,
+unshallowed clone -- a shallow clone's missing git history silently breaks the
+tool's own version-drift detection, see Learning 301 below). Updated 15
+existing TRACKED files (`SESSION_RUNNER.md`, `SAFEGUARDS.md`,
+`RECOMMENDED_SKILLS.md`, `methodology_dashboard.py`,
+`docs/methodology/ITERATIVE_METHODOLOGY.md`, `docs/methodology/HOW_TO_USE.md`,
+all 9 `docs/methodology/workstreams/*.md`); created 3 new TRACKED root files
+(`BOOTSTRAP.md`, `CLAUDE_TEMPLATE.md`, `CONTEXT_TEMPLATE.md`) and 1 new SEED
+file (`HANDOFFS.md`, this session wrote its own first real receipt into it
+rather than leaving it empty). Manually refreshed `docs/methodology/README.md`
+(not `bin/sync`-tracked, but a prior session had mirrored it in as reference
+documentation) from current canonical. `--force` used only for
+`SESSION_RUNNER.md`/`RECOMMENDED_SKILLS.md`, verified beforehand (grep for
+project-specific terms + git-history check in both canonical and the user's
+own `rmsharp/methodology` fork) to hold no real customization -- their
+"modified" flag traced to a prior session's (`ce7d67797`) hand-adoption of
+not-yet-tagged upstream PR wording. **0 stakeholder corrections.**
+
+**Session 323 Handoff Evaluation (by Session 324): Score 9/10.** S323's
+handoff (for the CRAN 2.0.0 plan's Phase 5b) was thorough and well-formed --
+exact commit hash, clear owner-triggered gotcha, specific key files -- but
+this session's actual deliverable diverged entirely: the user redirected to an
+unrelated methodology-sync task rather than continuing the CRAN thread. This
+is not a mark against S323's handoff; it is scored here on documentation
+quality and completeness alone, since it was never exercised this session.
+**What helped:** N/A this session (different task). **What was missing:**
+N/A. **What was wrong:** nothing found. **ROI:** not applicable -- the CRAN
+plan's Phase 5b remains exactly where S323 left it, owner-triggered and
+untouched.
+
+**Self-assessment (Session 324): 8/10.** Oriented fully at the start of this
+conversation (SAFEGUARDS + SESSION_NOTES + GH issues + dashboard + git status)
+before the user gave this task. **Strengths:** (1) caught that a shallow
+(`--depth 1`) clone of the methodology repo makes `bin/status`'s
+version-drift detection non-functional -- it walks full `git log` history to
+match blobs, so a 1-commit clone reports every file as "locally modified"
+instead of "N versions behind"; re-ran after `git fetch --unshallow` before
+trusting any classification; (2) verified the 2 genuinely-flagged files
+(`SESSION_RUNNER.md`, `RECOMMENDED_SKILLS.md`) held no project-specific
+content and traced their drift to a prior session's legitimate pre-release
+wording adoption before passing `--force` -- did not blindly force-overwrite,
+nor blindly refuse; (3) manually refreshed the non-manifest-tracked
+`docs/methodology/README.md` for consistency, a gap `bin/sync` itself would
+never close; (4) updated `CLAUDE.md`'s Adaptations section for genuine deltas
+only (FM count 25->27; new `CHANGELOG.md` ledger-format gap flag) rather than
+leaving stale cross-references, per the project's own
+[[consult-project-source-of-truth]] and Learning #7-style diligence; (5)
+explicitly scoped OUT reformatting `CHANGELOG.md`'s ~30+ sessions of history
+into the new source-tagged ledger convention -- BOOTSTRAP.md's own guidance
+treats this as a deliberate by-hand reconciliation, not something to bundle
+into a "sync the files" session, avoiding a large unscoped content migration;
+(6) re-ran `methodology_dashboard.py` post-sync to confirm health (98/100, 0
+high-risk) held under the new v2.8.0 script; (7) added
+`dashboard_history.jsonl` (a new generated artifact from the updated
+dashboard script) to `.gitignore` alongside the existing `dashboard.html`
+entry; (8) wrote the first real `HANDOFFS.md` receipt this session rather than
+leaving the seed empty for a future reconcile to backfill.
+**Weaknesses:** (-) did not write a Phase 1B pending stub to `SESSION_NOTES.md`
+/`HANDOFFS.md` before starting this deliverable -- the new protocol requiring
+it wasn't yet synced in at the moment the task began, so this is a retroactive
+rather than upfront close-out; harmless here (no crash occurred) but worth
+naming. (-) did not restate "TDD Phase: N/A" inline at the top of each chat
+response this session, per `CLAUDE.md`'s literal "declare the current phase at
+the top of every response" enforcement rule -- noted in writing here and in
+`HANDOFFS.md`, and will resume declaring it going forward. (-) Phase 3E
+(runtime smoke test) does not apply -- no `R/` behavior changed; stated
+explicitly per FM #24 rather than silently skipped.
+
+**Learnings:** New: `PROJECT_LEARNINGS.md` Learning 301 -- a shallow methodology
+clone silently breaks `bin/status`/`bin/sync`'s version-drift detection
+(everything reads "locally modified" instead of "N versions behind"); always
+`git fetch --unshallow` first. Also documents the verification steps for
+deciding whether a "locally modified" TRACKED file is a real customization
+(move to `CLAUDE.md`) or a safe-to-overwrite artifact of a prior ahead-of-release
+wording adoption (grep for project terms + check the file's own commit
+history + cross-check the user's contributor fork). Carried as applied (all
+held, no incidents): [[consult-project-source-of-truth]] (read BOOTSTRAP.md's
+own "Updating an existing project" section before deciding how to handle the
+stale-format `CHANGELOG.md` seed), [[check-status-before-destructive-git]]
+(diff-verified before any `--force`), [[push-close-out-docs-to-origin]].
+
+**=> SUGGESTED NEXT.** Either (a) resume
+`docs/planning/cran-2.0.0-submission-plan.md` Phase 5b -- win-builder x3 +
+R-hub v2 cross-platform runs, **owner-triggered, not an agent action** (see
+S323's entry below for the exact prerequisites), or (b) run a dedicated
+`CHANGELOG.md` ledger-format migration session: reconcile this project's
+~30+-session dated-subsection history against canonical v3.1+'s
+"Authoritative Action Ledger" format (`### YYYY-MM-DD · [issue #N] | [BL-N] |
+[ad hoc]`), per the new note in `CLAUDE.md`'s Adaptations section. Neither is
+more urgent than the other -- (a) is external/owner-paced, (b) is
+self-contained agent work whenever the owner wants it done.
+
+**Key files (this session).** **Modified:** `SESSION_RUNNER.md`, `SAFEGUARDS.md`,
+`RECOMMENDED_SKILLS.md`, `methodology_dashboard.py`,
+`docs/methodology/ITERATIVE_METHODOLOGY.md`, `docs/methodology/HOW_TO_USE.md`,
+`docs/methodology/README.md`, all 9 `docs/methodology/workstreams/*.md`,
+`CLAUDE.md` (Adaptations section), `.gitignore`, `CHANGELOG.md` (this entry),
+`PROJECT_LEARNINGS.md` (Learning 301), `SESSION_NOTES.md` (this handoff).
+**Created:** `BOOTSTRAP.md`, `CLAUDE_TEMPLATE.md`, `CONTEXT_TEMPLATE.md`,
+`HANDOFFS.md`. **Not committed (pre-existing, untouched):** `.DS_Store`
+(modified), `PED_GV_AUDIT_2026-05-30.html` (untracked) -- left alone as
+S308-S323 all have.
+
+**Gotchas for next session.** (1) **`CHANGELOG.md` is deliberately still
+old-format** -- do not force new-format `[SOURCE]`-tagged entries into it
+without a dedicated migration session; `bin/sync` will never auto-touch it
+(SEED disposition). (2) **Any future methodology sync must `git fetch
+--unshallow` the canonical clone first** -- a shallow clone makes
+`bin/status`'s drift detection falsely report every file as "locally
+modified" (Learning 301). (3) **`docs/methodology/README.md` is NOT
+`bin/sync`-tracked** -- it was a prior session's manual addition and needs a
+manual re-copy on future syncs too, or it will silently drift stale again
+(as it had, for 8 releases, before this session). (4) The new canonical
+`SESSION_RUNNER.md` introduces `HANDOFFS.md` (a durable per-session
+close-out receipt) and a Phase 0 ledger-reconcile step -- both now in effect
+starting next session.
+
 ### What Session 323 Did
 **Deliverable:** Execute **Phase 5a** of `docs/planning/cran-2.0.0-submission-plan.md`
 -- resync `cran-comments.md` now that the Phase 4 re-gate (S322) has landed.
