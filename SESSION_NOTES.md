@@ -7,6 +7,192 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 331 Did
+
+**Deliverable:** Phase A of
+`docs/planning/v2-transformation-article-plan.md` – build and freeze the
+evidence-base data files + extraction script(s) for Document 1, and
+complete the plan’s §3 Claim-Evidence Map with real dated/sha-anchored
+rows. **Owner ratified (2026-07-09, via `AskUserQuestion`):** proceed
+with Phase A; commit-range framing = CRAN-submission-to-CRAN-submission
+(`4548aa1b..8ca8bb24`, 512 non-merge commits), per plan §2/§9 dragon
+\#4. **Data-extraction/tooling session for `vignettes/articles/` support
+– no `R/`/`tests/` package code touched. TDD phase: N/A** (matches
+S107-S110 article-session precedent and S330’s own planning-session
+framing; declared every response). **Started / Completed:** 2026-07-09 /
+2026-07-09 **Status:** **DONE.** Wrote
+`vignettes/articles/data-raw/build-document1-evidence.R` (one checked-in
+R script, shells out to `git`/`gh`, parses `CHANGELOG.md`/
+`PROJECT_LEARNINGS.md`/`HANDOFFS.md`/`SESSION_NOTES.md`) producing 7
+frozen CSVs under `vignettes/articles/data/`: `module-inventory.csv`,
+`migration-phases.csv`, `feature-candidates.csv` (47 closed-issue raw
+candidates for Phase C to curate), `testing-growth.csv`,
+`commit-activity-timeline.csv`, `process-metrics.csv`,
+`self-score-trend.csv`. Completed
+`docs/planning/v2-transformation-article-plan.md` §3’s Claim-Evidence
+Map in place (14 rows, C1-C14, each dated/sha-anchored) and marked Phase
+A `✅ DONE (Session 331)` in §7, matching the project’s established
+`shiny-module-conversion-plan.md` completion-callout convention.
+Spot-checked 12 extracted numbers by hand against raw
+`git log`/`CHANGELOG.md`/`PROJECT_LEARNINGS.md`/ `HANDOFFS.md`
+(exceeding the plan’s own “~10” bar) – all 12 confirmed exactly, 0
+discrepancies.
+
+**Two corrections to the predecessor’s (S330’s) characterizations, both
+evidence-based, neither silently carried forward:** (1) **Resolved the
+plan’s §2 first-session-number gotcha** – S330 found `S1` via an
+abbreviated-tag-only grep and hedged “this project’s methodology
+predates v1.0.8.” Re-running the search with BOTH the abbreviated `S<N>`
+tag AND the earlier long-form `(Session N)` convention (used before
+~S58) found the TRUE Session 1 at commit `6fd87749` (2026-05-30,
+“…technical-debt audit report (Session 1)”) – squarely INSIDE the
+ratified range, not predating it. 328 numbered sessions (Session 1 -\>
+S328) fall within the range, covering 502 of its 512 commits; the other
+10 (2025-12-25 to 2026-05-30) are informal pre-methodology
+Shiny-module-branch work plus the methodology’s own bootstrap commit.
+New Learning 306. (2) **Corrected “Phases 1-9 all marked DONE”** – Phase
+8 of `shiny-module-conversion-plan.md` was NOT a simple one-session
+DONE; its body (not its header) says
+`EXPANDED INTO A SUB-PLAN (Session 30)`, decomposing into 8a-8d (Session
+31-34, issue \#39 CLOSED S34) then a further 7-part hardening pass
+8e-1..8e-7 (Session 37-50, issue \#40) visible only in `CHANGELOG.md`,
+not in either plan file’s own phase list. New Learning 307. Also caught
+a smaller drift independently: CHANGELOG entry count is now 309, not
+S330’s snapshot of 308 (S330’s own close-out entry landed as \#309 after
+that count was taken – a timing artifact, not an error, confirmed by
+re-deriving both dates and range boundaries directly).
+
+**Session 330 Handoff Evaluation (by Session 331): Score 8/10.** **What
+helped:** the plan’s §7 Phase A block gave exact, actionable completion
+criteria (frozen data files + extraction script + completed claim map)
+and a verification bar (“spot-check ~10 numbers,” “resolve the
+first-session-number question”) that mapped directly onto this session’s
+task list; the §3 starting-point table correctly scoped which files/CSVs
+each content pillar needed; the gotchas section (plan is DRAFT, don’t
+touch `vignettes/shiny_app_use/` screenshots) prevented two real
+mistakes before they could happen. **What was missing:** nothing
+structural – the plan itself was thorough and directly usable. **What
+was wrong:** the §2 first-session-number claim (“methodology predates
+v1.0.8,” a hedged “plausible” framing built on an incomplete grep)
+turned out to be backwards, and the §3 “Phases 1-9 all marked DONE”
+summary oversimplified Phase 8. Both were stated with appropriate
+hedging (not fabricated as fact), and both were exactly the kind of
+thing Phase A’s own stated verification bar exists to catch – so the
+plan correctly anticipated needing this check even though its own draft
+got the specific answer wrong. Capped at 8, not 9-10, because a plan
+whose own evidence-base table cites a “308 CHANGELOG entries” and an
+“S1… predates v1.0.8” claim as session-verified facts (not clearly
+flagged as provisional) sets a slightly higher bar for the next session
+to catch than one that flags every number as unconfirmed up front.
+**ROI:** good – the flagged gotcha (resolve first-session-number)
+pointed directly at the exact question that needed re-investigation,
+saving discovery time even though the plan’s own tentative answer needed
+correcting.
+
+**Self-assessment (Session 331): 9/10.** **Strengths:** (1) did not
+silently accept Phase A’s implicit go-ahead from “continue with
+suggested next” – posed one `AskUserQuestion` covering both the path
+choice (Phase A vs. CRAN-status-check vs. something else) and the one
+Phase-A-blocking open decision (commit-range framing), rather than
+assuming either; (2) wrote a genuinely reproducible, checked-in
+extraction script rather than hand-computing numbers with no artifact –
+re-ran it twice after catching two real bugs (an `NA` responsibility for
+`modPotentialParents` from a too-narrow `n=40` read window; an
+accidental embedded newline in a CSV field from R source-line wrapping)
+by inspecting actual output before treating it as final, not from
+memory; (3) caught and evidence-corrected two real inaccuracies in the
+predecessor’s plan (the session-boundary claim and the
+Phase-8-completion characterization) rather than carrying them forward
+uncritically – both promoted to new, generalizable Learnings (306, 307);
+(4) spot-checked 12 numbers by hand (exceeding the plan’s own “~10”
+bar), all 12 confirmed exactly; (5) stayed strictly inside Phase A’s
+stated scope – no `.qmd` prose drafted (explicit “Session boundary” in
+the plan’s §7), no touching `vignettes/shiny_app_use/` screenshots, no
+resolving the other 3 open owner decisions (title, optional Section 5,
+screenshot reuse) since none blocks Phase A itself; (6) declared TDD N/A
+up front and held it – no `R/`/`tests/` package code touched, matching
+the S107-S110 article-session precedent exactly. **Weaknesses:** (-) did
+not obtain commit shas for migration Phases 3-7 (only session numbers)
+since the source plan itself doesn’t quote them for those phases –
+defensible under Phase A’s literal verification bar (“verify each sha
+still resolves,” which only applies to shas already quoted, not
+inventing new ones), but a stricter pass could have located and added
+them for completeness; (-) the stakeholder-correction-rate metric (C14)
+is a text-mention-count proxy over `SESSION_NOTES.md`, not a rigorous
+per-session audit – flagged explicitly as a scope limit in the claim map
+itself (not silently presented as precise), and appropriately deferred
+to Phase E per the plan’s own §3 framing (“the bulk of Phase A’s and
+Phase E’s work”). **Phase 3E (runtime smoke test) does not apply** – no
+`R/` package behavior changed; a data-extraction/tooling session for
+`vignettes/articles/` support only; stated explicitly per FM \#24.
+
+**Learnings:** New: `PROJECT_LEARNINGS.md` Learning 306 (grep BOTH the
+abbreviated `S<N>` tag AND the earlier long-form `(Session N)`
+convention when establishing a session-number boundary – a
+single-pattern search silently mis-locates the true first/last session)
+and Learning 307 (a migration plan’s phase-header `DONE` tags are not a
+reliable completion signal alone – a phase can be expanded into its own
+subplan visible only in the phase’s BODY text and `CHANGELOG.md`, not
+the header). Updated `CLAUDE.md`’s `PROJECT_LEARNINGS.md` pointer line
+(305 -\> 307 learnings, Sessions 1-330+ -\> 1-331+) per Learning \#7’s
+cross-reference/count discipline. Carried as applied (all held, no
+incidents): \[\[consult-project-source-of-truth\]\],
+\[\[push-close-out-docs-to-origin\]\],
+\[\[avoid-jargon-use-plain-language\]\].
+
+**=\> SUGGESTED NEXT.** Phase B of
+`docs/planning/v2-transformation-article-plan.md` (§7) – draft Section 1
+(Shiny modules) + tables T2/T3 + figures F1/F2, reading from this
+session’s frozen `vignettes/articles/data/*.csv` files. Phases B-E are
+reorderable (no hard dependency among Sections 1-4 per §7’s own note)
+but Phase A must precede all of them (done) and Phase F must come last.
+Before Phase B starts, the owner may want to resolve the remaining 3
+open §12 decisions that block LATER phases specifically (title/ slug at
+Phase B kickoff itself; optional Section 5 at Phase F; F6 screenshot
+reuse before Phase D/E touches `vignettes/shiny_app_use/`) – none of
+these blocked Phase A, so they were correctly left untouched this
+session. Independently, the CRAN 2.0.0 waiting period (from S329) is
+still open – unchanged, not investigated this session since the owner
+chose Phase A. The 8 open GitHub issues (#116, \#37, \#36, \#28, \#12,
+\#11, \#10, \#5) and Document 2 planning remain available if the owner
+prefers either instead.
+
+**Key files (this session).** **Written:**
+`vignettes/articles/data-raw/build-document1-evidence.R` (new,
+reproducible extraction script), `vignettes/articles/data/*.csv` (7 new
+frozen data files). **Modified:**
+`docs/planning/v2-transformation-article-plan.md` (§2 gotcha resolved,
+§3 Claim-Evidence Map completed with 14 rows, §7 Phase A marked DONE,
+header status line updated), `PROJECT_LEARNINGS.md` (Learnings 306-307),
+`CLAUDE.md` (learning-count pointer), `SESSION_NOTES.md` (this handoff),
+`HANDOFFS.md` (S331 receipt). **Referenced, not modified:**
+`docs/planning/shiny-module-conversion-plan.md` §9 (source for
+T3/migration-phases.csv), `docs/planning/phase8-e2e-harness-subplan.md`
+(source for the Phase-8 completion correction), `CHANGELOG.md`,
+`PROJECT_LEARNINGS.md`, `HANDOFFS.md` (all read for extraction, not
+edited by the script). **Not committed (pre-existing, untouched):**
+`.DS_Store` (modified), `PED_GV_AUDIT_2026-05-30.html` (untracked) –
+left alone as S308-S331 all have.
+
+**Gotchas for next session.** (1) **Phase B is drafting `.qmd` prose for
+the first time** – read the plan’s §4 outline and §7 Phase B completion
+criteria before starting; T2/T3 read directly from this session’s frozen
+CSVs (§8 toolchain reference), no new extraction needed for those two.
+(2) **`feature-candidates.csv` is 47 RAW candidates, not a curated
+features table** – Phase C must hand-select genuinely feature-shaped
+items (not every closed issue is article-worthy prose); T4’s actual
+Phase C job is curation, not re-extraction. (3)
+**`vignettes/shiny_app_use/` screenshots (F6) remain untouched and must
+stay that way** without explicit owner confirmation (FM \#22 /
+anti-pattern \#11) – unchanged since S330’s flag. (4) **The
+stakeholder-correction-rate number (C14, process-metrics.csv) is a
+mention-count proxy, not a verified audit** – Section 4 prose (Phase E)
+must state that scope limit explicitly, not present 269/271 as a
+precisely-audited rate. (5) **F5’s self-score-trend data covers only
+S324-S330 (7 sessions)** – a partial window, not a trend across the
+328-session range; the plan’s own §6 caution already covers this,
+restated here so Phase E doesn’t drop it.
+
 ### What Session 330 Did
 
 **Deliverable:** Planning session for “Document 1” – a technical

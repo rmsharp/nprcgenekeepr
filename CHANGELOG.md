@@ -47,6 +47,49 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-09 · \[ad hoc\] Phase A of the Document-1 article plan: froze the evidence base (Session 331)
+
+- **Deliverable:** Phase A of
+  `docs/planning/v2-transformation-article-plan.md` — built and froze
+  the evidence-base data files + extraction script for Document 1 (the
+  v1.0.8 → v2.0.0 technical writeup), and completed the plan’s §3
+  Claim-Evidence Map. **Data-extraction/tooling session for
+  `vignettes/articles/` support; TDD N/A** — no `R/`/`tests/` package
+  code touched. 2 `AskUserQuestion` gates (path choice +
+  commit-range-framing ratification, both the owner’s call). 0
+  stakeholder corrections.
+- **Change:** Wrote
+  `vignettes/articles/data-raw/build-document1-evidence.R` (checked-in,
+  reproducible — shells out to `git`/`gh`, parses
+  `CHANGELOG.md`/`PROJECT_LEARNINGS.md`/`HANDOFFS.md`/`SESSION_NOTES.md`),
+  producing 7 frozen CSVs under `vignettes/articles/data/`:
+  `module-inventory.csv`, `migration-phases.csv`,
+  `feature-candidates.csv` (47 closed-issue raw candidates),
+  `testing-growth.csv`, `commit-activity-timeline.csv`,
+  `process-metrics.csv`, `self-score-trend.csv`. Completed the plan’s §3
+  Claim-Evidence Map (14 dated/sha-anchored rows) and marked Phase A
+  `✅ DONE` in §7. Spot-checked 12 extracted numbers by hand against raw
+  sources — all 12 confirmed exactly.
+- **Also:** Corrected two inaccuracies in S330’s plan draft with hard
+  evidence: (1) resolved the plan’s §2 first-session-number gotcha — the
+  true Session 1 begins at commit `6fd87749` (2026-05-30), inside the
+  ratified range, not predating v1.0.8 as S330 had hedged; 328 numbered
+  sessions (Session 1 → S328) fall within the range. (2) Corrected
+  “Phases 1-9 all marked DONE” — Phase 8 of
+  `shiny-module-conversion-plan.md` expanded into a 4-session subplan
+  (8a-8d, issue \#39) then a 7-part hardening pass (8e-1..8e-7, issue
+  \#40, Session 37-50), visible only in the phase’s body text and
+  `CHANGELOG.md`. Added `PROJECT_LEARNINGS.md` Learnings 306 (grep both
+  session-tag conventions when establishing a boundary) and 307 (a
+  migration plan’s phase-header DONE tags aren’t a reliable completion
+  signal alone). Updated `CLAUDE.md`’s learning-count pointer (305 → 307
+  learnings).
+- **Session:** S331 · **Verified:** extraction script re-run twice after
+  catching two real bugs (inspected actual CSV output, not assumed
+  correct); 12 numbers hand-spot-checked against raw
+  `git log`/`CHANGELOG.md`/`PROJECT_LEARNINGS.md`/`HANDOFFS.md`, 0
+  discrepancies.
+
 ### 2026-07-09 · \[ad hoc\] Wrote the Document-1 (v1.0.8-\>2.0.0 technical writeup) planning doc (Session 330)
 
 - **Deliverable:** Planning session for “Document 1” — a public Quarto
