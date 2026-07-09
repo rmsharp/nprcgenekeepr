@@ -75,6 +75,23 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S336
+date: 2026-07-09
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Phase F of docs/planning/v2-transformation-article-plan.md -- assemble/consolidate/verify/publish (Abstract, Introduction, Conclusion; Section 5 and F6 cut per owner AskUserQuestion; full claim audit; full render/CRAN-risk verification chain).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<free-text prose: pending>
+
+```handoff
 session: S335
 date: 2026-07-09
 status: complete

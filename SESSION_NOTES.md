@@ -6,6 +6,22 @@
 
 ## ACTIVE TASK
 
+### What Session 336 Did
+**Deliverable:** Phase F of `docs/planning/v2-transformation-article-plan.md` --
+assemble/consolidate/verify/publish: draft Abstract, Introduction, Conclusion (NIH
+grant acknowledgment); Section 5 and F6 both cut (owner-confirmed via
+`AskUserQuestion` at kickoff); full-document claim-source audit (workstream Phase 6)
+across all sections; complete render/CRAN-risk verification chain (`quarto render` +
+`pkgdown::build_article()` + `R CMD build .` + `tar tzf` + spot-check the four
+pre-existing articles).
+**Documentation/article-drafting session for `vignettes/articles/` support -- no
+`R/`/`tests/` package code touched. TDD phase: N/A** (matches S107-S110/S330-S335
+article-session precedent; declared every response).
+**Started:** 2026-07-09
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded
+in `CHANGELOG.md` at Phase 3F.
+
 ### What Session 335 Did
 **Deliverable:** Phase E of `docs/planning/v2-transformation-article-plan.md` -- draft
 Section 4 (An AI-Assisted Development Process) + table T6 + figures F4/F5, reading
