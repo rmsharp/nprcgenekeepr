@@ -75,6 +75,23 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S335
+date: 2026-07-09
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Phase E of docs/planning/v2-transformation-article-plan.md -- draft Section 4 (An AI-Assisted Development Process) + T6 (engineering-process metrics table) + F4 (TDD RED/GREEN/REFACTOR Mermaid diagram) + F5 (optional session self-score trend chart) in vignettes/articles/engineering-the-2.0.0-release.qmd, reading vignettes/articles/data/process-metrics.csv and data/self-score-trend.csv (both frozen by Phase A). Risk HIGH dragon per plan §9 point 2 -- highest-scrutiny section, must match this project's own candid voice, not a promotional gloss. F5's coverage caveat (HANDOFFS.md receipts only cover recent sessions) must be stated in the caption.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<in progress>
+
+```handoff
 session: S334
 date: 2026-07-09
 status: complete

@@ -6,6 +6,25 @@
 
 ## ACTIVE TASK
 
+### What Session 335 Did
+**Deliverable:** Phase E of `docs/planning/v2-transformation-article-plan.md` -- draft
+Section 4 (An AI-Assisted Development Process) + table T6 + figures F4/F5, reading
+Session 331's frozen `vignettes/articles/data/process-metrics.csv` and
+`data/self-score-trend.csv` (IN PROGRESS)
+**Documentation/article-drafting session for `vignettes/articles/` support -- no
+`R/`/`tests/` package code touched. TDD phase: N/A** (matches S107-S110/S330-S334
+article-session precedent; declared every response).
+**Started:** 2026-07-09
+**Status:** Session claimed. Work beginning. Plan's own §9 dragon #2: highest-scrutiny
+section in the document (describes AI-agent-driven development publicly to CRAN
+reviewers/domain experts) -- T6 must be real extraction, tone must match this project's
+own candid voice (self-scores, correction counts, documented mistakes), not a
+promotional gloss. F5's coverage caveat (HANDOFFS.md receipts only cover recent
+sessions) must be stated in the caption, not implied as full-range.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### What Session 334 Did
 **Deliverable:** Phase D of `docs/planning/v2-transformation-article-plan.md` -- draft
 Section 3 (testing at scale) + table T5 + figure F3, reading Session 331's frozen
