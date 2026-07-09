@@ -2,8 +2,10 @@
 
 **Status:** Plan written Session 330 (DRAFT). Owner ratified proceeding with **Phase A**
 and its commit-range framing (§2/§9 dragon #4) via `AskUserQuestion`, Session 331
-(2026-07-09) — **Phase A is now DONE** (§7). Phases B-F remain future, separately
-approved sessions each; no phase is bundled with another (FM #26).
+(2026-07-09) — **Phase A is now DONE** (§7). Owner confirmed the proposed title/slug
+(§1) via `AskUserQuestion`, Session 332 (2026-07-09) — **Phase B is now DONE** (§7).
+Phases C-F remain future, separately approved sessions each; no phase is bundled with
+another (FM #26).
 
 **Workstream:** Adapted `docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md`
 (Phases 2/3/4/6), substituting this repository's own artifacts (`git log`, `CHANGELOG.md`,
@@ -258,7 +260,32 @@ adapted); resolve the exact first-session-number question flagged in §2.
 **Session boundary:** this phase produces data files and the claim map only — no
 `.qmd` prose yet.
 
-### Phase B — Draft Section 1 (Shiny modules) + T2, T3, F1, F2
+### Phase B — Draft Section 1 (Shiny modules) + T2, T3, F1, F2 · ✅ DONE (Session 332)
+
+> **✅ Implemented in Session 332 (2026-07-09), whole phase, no split.** Owner confirmed
+> the proposed title/slug (§1) via `AskUserQuestion` at kickoff — no other §12 decision
+> blocked this phase. Created
+> `vignettes/articles/engineering-the-2.0.0-release.qmd` with Section 1 ("From Monolith
+> to Modules: the Shiny Architecture Transformation"): the two-coexisting-apps problem
+> (issue #27), the nine-phase vertical-slice migration (Session 22 -> Session 35,
+> 2026-06-03 to 2026-06-06), and the Phase 9 irreversible cutover. **T2** (module
+> inventory, `@tbl-modules`) reads `data/module-inventory.csv` directly via
+> `kableExtra::kbl()`; also states in prose that 2 of the 10 current modules
+> (`modGeneticDiversity`, `modPotentialParents`) postdate the migration and belong to
+> Section 2, not this one — avoiding an overclaim the raw CSV alone would invite. **T3**
+> (migration-phase summary, `@tbl-phases`) reads `data/migration-phases.csv` plus
+> hand-authored one-line highlights sourced from `shiny-module-conversion-plan.md` §9;
+> states explicitly (matching C3/C5) that Phases 3-7 have no sha quoted in the source
+> plan and that Phase 8 was a compound DONE, not a single session. **F1**
+> (`@fig-commit-pace`, `ggplot2`) reads `data/commit-activity-timeline.csv`, captioned to
+> avoid implying the June spike is module-migration-only commits. **F2**
+> (`@fig-architecture`) is a native Quarto Mermaid diagram (before/after subgraphs) requiring
+> no new package dependency. Verified firsthand that `runGeneKeepR()` (not
+> `runModularApp()`) is the current canonical launcher and that all 10 modules are
+> presently mounted in `R/appUI.R`/`R/appServer.R` (`modORIPReporting` conditionally, per
+> `shouldShowOripTab()`) — a live grep, not carried from the Session-21-era planning
+> doc's "only 6 mounted" snapshot. **Next: Phase C** (owner confirms scope/order first —
+> Phases C-E are reorderable per this section's own note).
 **What DONE looks like:** `.qmd` section drafted, T2/T3 tables rendering from Phase A
 data, F1/F2 figures rendering, section-level claim-source map complete (every claim in
 this section has a quoted/verified backing per §3's discipline).
