@@ -7,11 +7,98 @@
 ## ACTIVE TASK
 
 ### What Session 329 Did
-**Deliverable:** Record the CRAN 2.0.0 submission milestone -- owner ran `devtools::submit_cran()`
-and the package uploaded successfully (IN PROGRESS).
-**Started:** 2026-07-09
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in `CHANGELOG.md` at Phase 3F.
+**Deliverable:** Record the CRAN 2.0.0 submission milestone -- the owner ran
+`devtools::submit_cran()` and the upload succeeded. **Documentation of an owner-taken
+milestone; TDD N/A** -- no `R/`/`tests/` touched; `CRAN-SUBMISSION` was auto-updated by
+`devtools` itself, not hand-edited. 0 `AskUserQuestion` gates (a factual record of an
+event that already happened, not a scope decision). 0 stakeholder corrections.
+**Started / Completed:** 2026-07-09 / 2026-07-09
+**Status:** **DONE.** Owner reported: *"The package has been uploaded successfully to
+CRAN submission team."* Confirmed firsthand via `git diff CRAN-SUBMISSION` (a file
+`devtools::submit_cran()` writes automatically, not something any session hand-edits per
+the plan's own §3.1 "historical markers" list) rather than taking the report at face
+value alone: it changed from `Version: 1.0.8 / Date: 2025-07-26 02:48:26 UTC / SHA:
+4548aa1b...` to `Version: 2.0.0 / Date: 2026-07-09 17:57:22 UTC / SHA: 8ca8bb2455...` --
+the SHA is the exact commit that was submitted, and it matches `origin/master`'s HEAD at
+submission time (the S327 `.Rbuildignore` fix + S328's `cran-comments.md` results, both
+already pushed before this submission happened). Committed the updated
+`CRAN-SUBMISSION` (a legitimate, expected artifact of a real submission -- this is
+exactly the file Phase 6's `usethis::use_github_release()` will later consume and
+delete, per the plan's own Phase 6 spec). Updated
+`docs/planning/cran-2.0.0-submission-plan.md`'s Phase 5 status block (a new "SUBMITTED
+(S329)" note with the exact version/date/SHA evidence) and the §9 table's Phase 5b row
+(marked `✅◑` -- submitted, but not yet "done done" since CRAN's review outcome is still
+pending). Phase 5's HARD STOP is now crossed.
+
+**Session 328 Handoff Evaluation (by Session 329): Score 9/10.** S328's handoff correctly
+named the exact next action ("Owner runs `devtools::submit_cran()`... and clicks the
+maintainer-email confirmation link") and correctly flagged it as the one thing this
+session couldn't do itself. **What helped:** no ambiguity about what "done" meant for
+Phase 5b vs. what remained -- the handoff drew the line precisely at the HARD STOP.
+**What was missing:** nothing material -- this session's only real addition was
+discovering that `devtools::submit_cran()` writes a durable, checkable artifact
+(`CRAN-SUBMISSION`) that S328 had no way to anticipate needing (it hadn't happened yet).
+**What was wrong:** nothing found. **ROI:** good -- clean handoff to a genuinely
+owner-only action, no rework needed when the owner actually ran it.
+
+**Self-assessment (Session 329): 9/10.** **Strengths:** (1) did not just transcribe the
+owner's verbal report -- ran `git diff CRAN-SUBMISSION` to find the actual machine-written
+evidence of the submission (version, timestamp, and critically the exact commit SHA
+submitted), turning "the owner said it worked" into a verifiable, dated, sha-pinned fact
+([[consult-project-source-of-truth]] applied to a live event, not just a doc); (2)
+recognized `CRAN-SUBMISSION`'s change as a legitimate artifact to commit, not build cruft
+or an accidental diff to discard -- checked the plan's own Phase 6 spec first to confirm
+this file's expected lifecycle (written now, consumed and deleted by
+`use_github_release()` later) before committing it; (3) was precise about what is and
+isn't done -- marked Phase 5b `✅◑` rather than fully `✅`, since the actual CRAN
+acceptance/rejection outcome is still unknown and genuinely gates Phase 6; did not
+overstate progress; (4) zero stakeholder corrections. **Weaknesses:** (-) same
+claim-before-fix-noticed sequencing pattern as prior sessions -- `CRAN-SUBMISSION`'s
+change was discovered mid-claim-commit (via `git status` right after staging), not
+anticipated beforehand; handled cleanly (staged and committed separately, nothing lost),
+but this is now the fourth session in a row (S326-S329) with some version of a
+sequencing near-miss around the claim-first discipline -- per the S328 handoff's own
+flagged threshold ("if a 4th recurrence happens, that's the trigger to write one"), this
+now warrants a `PROJECT_LEARNINGS.md` entry (see Learnings, below). (-) Phase 3E (runtime
+smoke test) does not apply -- no `R/` behavior changed; stated explicitly per FM #24.
+
+**Learnings:** New: `PROJECT_LEARNINGS.md` Learning 304 -- four consecutive sessions
+(S326-S329) each discovered a file needing attention (a misplaced receipt block, an
+.Rbuildignore gap, a stale plan claim, an auto-updated CRAN-SUBMISSION) only *after*
+starting to write the Phase 1B claim stub or mid-edit, rather than before. None caused
+real harm (all self-caught before a commit landed), but the pattern is consistent enough
+across four different kinds of discovery to name: **write the Phase 1B claim stub the
+MOMENT a task is understood, before reading or touching any other file** -- not after a
+first exploratory read, however brief. The temptation is always the same: "let me just
+check X first" feels like reconnaissance, not work, but by the time X turns out to need a
+change, the claim is already retroactive. Carried as applied (all held, no incidents):
+[[consult-project-source-of-truth]], [[push-close-out-docs-to-origin]].
+
+**=> SUGGESTED NEXT.** The owner needs to click the maintainer-email confirmation link
+CRAN sends to `rmsharp@me.com` -- without it the submission never reaches CRAN review.
+After that, **this is a waiting period** -- CRAN's own automated + human review, no
+agent or owner action available until CRAN's acceptance or rejection email arrives
+(historically ranging from about a day to a couple of weeks). Phase 6 (tag + GitHub
+release + dev-version bump to `2.0.0.9000`) is a separate future session, strictly gated
+on that email -- do not start it preemptively. If the owner wants to do something else
+while waiting, one of the 8 open GitHub issues (#116, #37, #36, #28, #12, #11, #10, #5)
+remains available -- none more urgent than another.
+
+**Key files (this session).** **Modified:** `CRAN-SUBMISSION` (auto-updated by
+`devtools::submit_cran()`, committed as-is), `docs/planning/cran-2.0.0-submission-plan.md`
+(Phase 5 status "SUBMITTED" note, §9 table Phase 5b row), `PROJECT_LEARNINGS.md`
+(Learning 304), `SESSION_NOTES.md` (this handoff), `HANDOFFS.md` (S329 receipt).
+**Not committed (pre-existing, untouched):** `.DS_Store` (modified), `PED_GV_AUDIT_2026-05-30.html`
+(untracked) -- left alone as S308-S329 all have.
+
+**Gotchas for next session.** (1) **Do not start Phase 6 until CRAN's acceptance email
+actually arrives** -- the submission succeeding is not the same as CRAN accepting it;
+`CRAN-SUBMISSION` staying present (not yet deleted by `use_github_release()`) is itself
+the signal that Phase 6 hasn't happened yet. (2) **Write the Phase 1B claim stub before
+touching ANY file, including read-only exploration** -- per new Learning 304, this is now
+a confirmed 4-session pattern, not noise. (3) If the CRAN review comes back with required
+changes rather than a clean accept, that reopens Phase 2/4-class work (a fix + re-gate),
+not Phase 6 -- read the actual rejection email content before assuming what's needed.
 
 ### What Session 328 Did
 **Deliverable:** Fold the real, clean win-builder x3 + R-hub v2 results into
