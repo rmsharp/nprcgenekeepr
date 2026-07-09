@@ -6,6 +6,136 @@
 
 ## ACTIVE TASK
 
+### What Session 323 Did
+**Deliverable:** Execute **Phase 5a** of `docs/planning/cran-2.0.0-submission-plan.md`
+-- resync `cran-comments.md` now that the Phase 4 re-gate (S322) has landed.
+**Verification/packaging phase; TDD N/A** per the plan's own Phase 5
+classification -- doc-only, no `R/`/`tests/`/`DESCRIPTION` change (`cran-comments.md`
+is `.Rbuildignore`d, confirmed). 0 `AskUserQuestion` gates (S322's handoff already
+fully specified the three edits; no scope decision remained).
+**Started / Completed:** 2026-07-08 / 2026-07-08
+**Status:** **DONE.** `cran-comments.md` resynced: (1) "Resubmission" section's
+entry-point claim corrected from the stale `runModularApp()`-primary wording to
+the post-Dragon-#9 net end-state (`runGeneKeepR()` remains primary,
+`runModularApp()` a soft-deprecated alias -- verified against `NEWS.md:15-16`);
+(2) NOTE 1 gained the `thoughtco.com` 403 alongside the existing PMC4671785 URL,
+and NOTE 2 dropped the now-stale V8 sub-flag (clean in S322's re-gate
+environment, per S322's own note); (3) the "Resubmission" section's own timing
+NARRATIVE prose (not just the NOTE list) was also stale -- it claimed all
+phases complete "well under a minute," no longer true now that tests take
+~106s (up from ~43s) -- reworded to report S322's actual aggregate numbers
+(examples ~22s, tests ~106s, vignette-rebuild ~21s) with a "comfortable
+headroom, no timing flags" framing instead of the false "under a minute"
+claim. **0 stakeholder corrections.**
+
+**Session 322 Handoff Evaluation (by Session 323): Score 8/10.** S322's
+SUGGESTED NEXT correctly identified the deliverable (Phase 5a) and specified
+three of the four edits this session actually needed, each with enough detail
+(exact wording direction, exact NOTE numbers, exact new URL) to execute
+directly without re-deriving scope. **What helped most:** the three specified
+edits meant this session went straight to `Read`ing the target file and
+applying changes, rather than re-analyzing what Phase 5a required from
+scratch. **What was missing:** S322's SUGGESTED NEXT described the
+pre-explained-NOTEs list as "the existing three (NEWS http->https historical
+URL; PMC4671785 403; EHR/Raboin/kinships DESCRIPTION words)" -- but the actual
+`cran-comments.md` file only ever had two pre-explained items under NOTE 1
+(the misspelled-words group and the PMC4671785 URL); the "NEWS http->https"
+false-positive was dropped from the file back in S135 (confirmed moot, no
+`http://` in `NEWS.md`) and was never re-added. This was a harmless miscount
+(caught immediately on reading the file, cost no time), but more
+significantly: S322 had its own re-gate's exact timing numbers on hand
+(`examples [22s/22s], tests [106s/106s], vignette rebuild [20s/21s]`) and
+noted in its own Gotchas section that "test-suite timing has grown
+substantially" -- but did not connect this to the fact that the
+"Resubmission" section's prose elsewhere in the SAME file asserts "well under
+a minute," which that data had already falsified. This session found and
+fixed that fourth item by reading the full file firsthand rather than only
+the three items named in the handoff. **What was wrong:** the "existing
+three" pre-explained-URL count (should have been "two"). **ROI:** high overall
+-- three of four needed edits were handed over with exact wording, saving
+real time; the one gap (unflagged stale timing prose) was caught by this
+session's own full-file read, not inherited, so no rework resulted, just an
+extra research step.
+
+**Self-assessment (Session 323): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_NOTES + GH issues + dashboard + git status) before starting; read the
+plan's full §0.6/§4-Phase-5/§7 spec before touching any file, not just the
+handoff's summary. **Strengths:** (1) verified the entry-point wording fix
+against `NEWS.md:15-16` firsthand rather than trusting the handoff's
+paraphrase of the net end-state; (2) confirmed `cran-comments.md` is
+`.Rbuildignore`d (line 10) before concluding no build-equivalent check
+applies to this session -- an explicit check, not an assumption; (3) caught
+the stale "well under a minute" timing claim independently by reading the
+full file rather than limiting the session to the three items named in
+S322's SUGGESTED NEXT -- judged this as within Phase 5a's own scope (the
+resync's whole purpose is making the cover note accurate against the landed
+Phase 4 numbers) rather than "while I'm at it" scope creep on unrelated text,
+since it is the same document, same section, same underlying data source (S322's
+own gate run); (4) updated the plan document comprehensively in place (Phase
+5's STATUS blockquote, the §0.6 phase diagram, the §9 summary table) matching
+the S320-S322 precedent of updating all four locations, not just the phase's
+own paragraph; (5) confirmed `git diff --stat` showed only the intended files
+touched (`cran-comments.md`, `SESSION_NOTES.md`, plan doc) plus the
+pre-existing untouched `.DS_Store`/`PED_GV_AUDIT_2026-05-30.html`, per
+[[check-status-before-destructive-git]]. **Weaknesses:** (-) did not
+independently re-verify the "slowest single example runs in about 1.4
+seconds" claim in the Resubmission section's timing prose -- left it
+unchanged since S322's re-gate data didn't contradict it (aggregate examples
+time barely moved, 20s to 22s) and re-verifying would require re-running
+`R CMD check --as-cran --timings`, which is Phase-4-class work, not Phase 5a's
+doc-resync scope; flagged here rather than silently assumed correct. (-)
+Phase 3E (runtime smoke test) does not apply -- no `R/` behavior changed, and
+the one file edited is excluded from the package build entirely; stated
+explicitly per FM #24 rather than silently skipped.
+
+**Learnings:** New: `PROJECT_LEARNINGS.md` Learning 300 -- a `cran-comments.md`
+resync session must check narrative timing/version claims elsewhere in the
+document for staleness, not only the structured NOTE/URL lists the handoff
+names explicitly; a headline NOTE-count staying the same (still "2 NOTEs")
+can coexist with a prose claim elsewhere in the same file going factually
+false as the underlying numbers drift (test time crossing the "a minute"
+threshold the prose asserted). Carried as applied (all held, no incidents):
+[[consult-project-source-of-truth]], [[check-status-before-destructive-git]],
+[[push-close-out-docs-to-origin]].
+
+**=> SUGGESTED NEXT.** Execute **Phase 5b** of
+`docs/planning/cran-2.0.0-submission-plan.md` -- the win-builder x3 +
+R-hub v2 cross-platform runs, paste results into `cran-comments.md`'s "Test
+environments" section, then submit. **This phase is owner-triggered, not an
+agent action** per the plan's own Phase 5 HARD STOP (`devtools::check_win_*()`
+results arrive by email over ~30 min each; `rhub::rhub_check()` needs a GitHub
+PAT via `gitcreds::gitcreds_set()`; the final CRAN web-form upload + email
+confirmation is the owner's outward-facing action). If a future session picks
+this up, read plan §4 Phase 5's own step list and
+`docs/planning/cran-2.0.0-phase5-runbook.md` (referenced from the Phase 5
+STATUS blockquote, S135) for the exact commands/prerequisites before running
+anything.
+
+**Key files (this session).** **Modified:** `cran-comments.md` (3 factual
+corrections: entry-point direction, NOTE 1/2 wording + new URL, timing
+narrative prose), `docs/planning/cran-2.0.0-submission-plan.md` (Phase 5
+STATUS blockquote appended; §0.6 diagram + §9 table rows 5a/5b updated),
+`CHANGELOG.md` (this session's entry), `PROJECT_LEARNINGS.md` (Learning 300),
+`SESSION_NOTES.md` (this handoff). **Not committed (pre-existing, untouched):**
+`.DS_Store` (modified), `PED_GV_AUDIT_2026-05-30.html` (untracked) -- left
+alone as S308-S322 all have.
+
+**Gotchas for next session.** (1) **Phase 5b is owner-triggered** -- do not
+run win-builder/R-hub or attempt the CRAN web-form submission without the
+owner's explicit go-ahead; the plan's own Phase 5 HARD STOP applies. (2)
+**`cran-comments.md`'s "Test environments" section still says win-builder/R-hub
+results are "to be run before submission"** -- this is accurate as of this
+session (nothing has been run yet) but will need real results pasted in once
+Phase 5b executes; do not treat the placeholder wording as itself a defect to
+fix now. (3) **The "slowest single example ~1.4 seconds" claim in the
+Resubmission section was NOT independently re-verified this session** -- if a
+future session re-runs `R CMD check --as-cran --timings` for any reason
+(e.g., another re-gate before submission) and finds a materially different
+per-example max, update this figure too, not just the aggregate phase totals
+this session already corrected.
+
+### What Session 322 Did
+
 ### What Session 322 Did
 **Deliverable:** Execute **Phase 4** of `docs/planning/cran-2.0.0-submission-plan.md`
 -- full local `R CMD check --as-cran` re-gate against commit `2abfc783` (S321),

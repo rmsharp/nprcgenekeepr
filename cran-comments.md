@@ -11,18 +11,19 @@ For 2.0.0, the elapsed times were re-profiled under
 `R CMD check --as-cran --timings`. The timing condition that led to archival no
 longer reproduces on the 2.0.0 codebase: the slowest single example runs in about
 1.4 seconds (no example exceeds 5 seconds) -- roughly 3-5x inside CRAN's soft
-per-example limit -- and the examples (about 20s), tests (about 43s), and
-vignette-rebuild (about 16s) phases each complete in well under a minute. The
-win-builder and R-hub results below re-confirm these times on independent, and
-slower, hardware before submission.
+per-example limit -- and the examples (about 22s), tests (about 106s, reflecting
+substantially expanded test coverage since the original profiling), and
+vignette-rebuild (about 21s) phases all complete with comfortable headroom and no
+timing flags from the check itself. The win-builder and R-hub results below
+re-confirm these times on independent, and slower, hardware before submission.
 
 A previously undeclared test-time dependency (`withr`) was also declared in
 Suggests, which had produced a check WARNING.
 
 2.0.0 is a major release. See `NEWS.md` for the user-facing Major / Minor
 changes, including breaking changes: rejection of a period in `id`, `sire`, or
-`dam` values; removed exports; and the soft-deprecation of `runGeneKeepR()` in
-favour of `runModularApp()`.
+`dam` values; removed exports; and `runGeneKeepR()` remaining the primary Shiny
+entry point, with `runModularApp()` as a soft-deprecated alias.
 
 ## R CMD check results
 
@@ -36,16 +37,17 @@ Local `R CMD check --as-cran` (macOS, R 4.6.0) on the built 2.0.0 tarball:
   the timing cause is addressed above. This note also reports possibly-misspelled
   words in DESCRIPTION (for example "Raboin" -- an author surname -- "EHR",
   "LabKey", "kinships", and the rhesus-macaque scientific name "Macaca mulatta")
-  and the reference URL
-  <https://pmc.ncbi.nlm.nih.gov/articles/PMC4671785/>: the words are all spelled
-  correctly, and the URL returns 403 to automated checkers but is reachable in a
-  browser.
+  and two reference URLs:
+  <https://pmc.ncbi.nlm.nih.gov/articles/PMC4671785/> and
+  <https://www.thoughtco.com/age-sex-pyramids-and-population-pyramids-1435272>.
+  The words are all spelled correctly, and both URLs return 403 to automated
+  checkers (confirmed via `curl` with a browser user agent and an independent
+  fetch, both blocked) but are reachable in a browser.
 
 * NOTE 2 -- checking HTML version of manual:
   This note does not arise on CRAN's check machines. It appears here only because
-  the local machine's HTML Tidy is outdated and the V8 package is not installed,
-  so both sub-checks ("'tidy' not recent enough", "package 'V8' unavailable") are
-  skipped locally. CRAN's machines have both.
+  the local machine's HTML Tidy is outdated, so the "'tidy' not recent enough"
+  sub-check is skipped locally. CRAN's machines have a recent HTML Tidy.
 
 ## Test environments
 
