@@ -276,3 +276,112 @@ trim to include descendants, not just ancestors; and issue \#44 (Session
 70-72) replaced eight scattered literal `"U"`-prefix checks with a
 single configurable auto-generated-ID format, defaulting to the prior
 behavior unconfigured.
+
+## Section 3 – Testing at Scale
+
+Growth in features ([Section 2](#sec-features)) is only as trustworthy
+as the tests behind it. Across the same v1.0.8 -\> v2.0.0 range, the
+test suite grew from 132 to 257 `.R` files under `tests/testthat/` –
+test files plus the shared helpers, fixtures, and setup script that
+support them – a 95% increase against a 512-commit range that itself
+roughly doubled the package’s feature surface. More consequential than
+the raw count, though, is what changed in *kind*: a substantial
+browser-driven, end-to-end test harness went from present-but-inert to
+executable, and then from executable-but-shallow to exercising real
+data-bearing workflows.
+
+| Checkpoint | Date | Commit | Files in tests/testthat/ | shinytest2/AppDriver-referencing |
+|:---|:--:|:---|---:|---:|
+| v1.0.8-CRAN | 2025-07-25 | 4548aa1b | 132 | 0 |
+| Session1-start | 2026-05-30 | 6fd87749 | 175 | 25 |
+| Phase9-monolith-deprecated | 2026-06-06 | 3db018d1 | 181 | 27 |
+| Phase9-close | 2026-06-06 | a1618c48 | 182 | 27 |
+| v2.0.0-CRAN | 2026-07-09 | 8ca8bb24 | 257 | 32 |
+
+Table 4: Test-suite growth at five checkpoints across the v1.0.8 -\>
+v2.0.0 range, as of 2026-07-09. “Files in tests/testthat/” counts every
+`.R` file in the directory (test files plus helpers/fixtures/setup);
+“shinytest2/AppDriver-referencing” is the subset that names the
+browser-testing package or its driver class.
+
+![](engineering-the-2.0.0-release_files/figure-html/fig-testing-growth-1.png)
+
+Figure 3: Test-suite growth over the same five checkpoints as
+[Table 4](#tbl-testing-growth). The shinytest2/AppDriver-referencing
+count is near-zero relative to the total and is plotted against the same
+axis for comparison, not because it is negligible – see prose for what
+that subset represents.
+
+[Table 4](#tbl-testing-growth) and [Figure 3](#fig-testing-growth)
+ground the growth claim in five checkpoints rather than just the two
+endpoints: the v1.0.8 CRAN submission (`4548aa1b`, 2025-07-25, before
+this project adopted the SESSION_RUNNER methodology), the start of
+Session 1 (`6fd87749`, 2026-05-30), the two commits bracketing Phase 9
+of the module migration ([Section 1](#sec-modules)), and the v2.0.0 CRAN
+submission (`8ca8bb24`, 2026-07-09). The
+shinytest2/AppDriver-referencing count is already 25 files at Session
+1’s start – that scaffold predates this project’s methodology entirely;
+it was built on the module branch (commit `7da01afe`) during the same
+pre-Session-1 work that produced the modular app itself, but, as the
+next section describes, it did not run.
+
+### From a dormant scaffold to an executable, hardened harness
+
+A shinytest2 browser end-to-end suite existed in the tree from early in
+the module migration, but it did not work: the driver helper functions
+its 23 test files called – `create_app_driver()`, `navigate_to_tab()`,
+`get_html_safe()`, and four others – were never defined. Every call
+would have thrown “could not find function” if the suite had run;
+instead, an opt-in gate added at Session 19 (`create_test_app()`) made
+it skip cleanly by default, so the gap was invisible rather than failing
+loudly. Issue \#39 tracked closing it.
+
+A Session 30 planning pass found the gap was larger than the parent
+migration plan’s Phase 8 had assumed – 6 undefined helpers plus one
+undefined constant, not the 3 the plan named – and decomposed the work
+into a four-session sub-plan
+(`docs/planning/phase8-e2e-harness-subplan.md`, sub-phases 8a-8d,
+Session 31-34). 8a defined the helpers browser-free; 8b proved Chrome
+and the modular app itself would boot under `shinytest2`, the first-ever
+browser run, and rewired CI to run the suite on a nightly schedule plus
+manual dispatch rather than per pull request (browser tests are slower
+and more flake-prone than the existing fast unit CI, which remained the
+per-PR gate); 8c and 8d brought the remaining 20 files to
+green-or-clean-skip. Issue \#39 closed at the end of Session 34
+(2026-06-06) on the sub-plan’s own explicit completion bar: **executable
+and CI-green opt-in**, not behavioral validation.
+
+That bar was deliberate, not an oversight. The sub-plan documented, in
+the same session that closed \#39, why an executable suite does not by
+itself mean the suite validates behavior: `navbarPage` renders every
+tab’s static markup into the DOM at boot, hidden by CSS, so the suite’s
+dominant pattern – navigate to a tab, then
+[`grepl()`](https://rdrr.io/r/base/grep.html) a keyword against the
+whole page body – passes once the app merely boots, regardless of which
+tab is actually selected. Coverage at the end of 8d was boot-level. A
+follow-on issue, \#40, was filed at that same session to close that
+specific gap.
+
+Closing \#40 took a further seven-slice pass (8e-1 through 8e-7, Session
+37-50, 2026-06-07 to 2026-06-10) that replaced boot-level
+`expect_true(TRUE)` tautologies – 41 of them, suite-wide – with
+assertions tied to the actually-selected pane, fixed a wrong-tab
+navigation defect in the Summary Statistics family (7 of 8 tests
+targeted “Genetic Value Analysis” instead of their own tab), and, in its
+last three slices (8e-6a/b/c), rewired the pedigree-upload, Genetic
+Value Analysis, and breeding-group E2E blocks to drive the package’s
+real analytical pipelines end to end rather than asserting against
+static markup. A final slice, 8e-7 (Session 50), addressed an
+operational flake rather than a behavioral gap: running all 23 files in
+one CI process had produced roughly one transient Chrome/driver error
+per five full-tier runs; partitioning the run into 13 per-module groups,
+each a fresh R process, capped any single process at three files. Issue
+\#40 closed the following day, 2026-06-11.
+
+As of 2026-07-09, both issues are closed and the harness the sub-plan
+describes is the one currently checked in:
+`.github/workflows/shinytest2.yaml` runs nightly (07:00 UTC) and on
+manual dispatch, opts every test in via `NPRC_RUN_E2E`, and executes the
+23-file `^(app|e2e)-` tier as the 13-group partition 8e-7 added –
+distinct from `R-CMD-check.yaml` and `test-coverage.yaml`, which remain
+the fast, per-pull-request gate.

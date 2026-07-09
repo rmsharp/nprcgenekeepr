@@ -47,6 +47,81 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-09 · \[ad hoc\] Phase D of the Document-1 article plan: drafted Section 3 (testing at scale) + T5/F3 (Session 334)
+
+- **Deliverable:** Phase D of
+  `docs/planning/v2-transformation-article-plan.md` — drafted Section 3
+  (“Testing at Scale”) of
+  `vignettes/articles/engineering-the-2.0.0-release.qmd` plus table T5
+  (test-suite growth) and figure F3 (growth chart), reading Session
+  331’s frozen `vignettes/articles/data/testing-growth.csv` unchanged.
+  **Documentation/article-drafting session for `vignettes/articles/`
+  support; TDD N/A** — no `R/`/`tests/` package code touched. 0
+  `AskUserQuestion` gates (direct continuation of an already-ratified
+  plan phase). 0 stakeholder corrections.
+- **Change:** T5/F3 present the 5 frozen checkpoints (132→257 `.R` files
+  under `tests/testthat/`, 0→32 shinytest2/AppDriver-referencing,
+  v1.0.8-CRAN to v2.0.0-CRAN). Cross-checked both endpoint rows against
+  `git ls-tree` at the exact commits (`4548aa1b`/`8ca8bb24`) — exact
+  match, but the check surfaced that the CSV’s `test_file_count` column
+  counts every `.R` file under `tests/testthat/` (test files plus 4
+  helper/setup files), not just `test*.R`-named files; traced to the
+  extraction script’s own line of code
+  (`build-document1-evidence.R:121`) rather than guessed, and the
+  table/prose state precisely what’s counted. Drafted a second
+  subsection narrating the shinytest2 E2E harness’s full arc:
+  built-but-undefined-helpers (module branch, pre-Session-1) →
+  executable via the 4-session 8a-8d sub-plan (Session 31-34, issue
+  \#39, closed 2026-06-06) → hardened via the 7-slice 8e-1..8e-7 pass
+  (Session 37-50, issue \#40, closed 2026-06-11) that replaced 41
+  `expect_true(TRUE)` tautologies, fixed a wrong-tab-navigation defect,
+  wired 3 real data-bearing flows (pedigree/GVA/breeding), and defanged
+  a CI process-count flake via 13 per-module fresh-process groups.
+  Verified via `gh issue view` + `CHANGELOG.md` session headers that
+  **both \#39 and \#40 are CLOSED**, correcting the plan’s own §7 Phase
+  D hedge (“may still show open items”) and confirming `BACKLOG.md`’s
+  “#40 open” line is stale (flagged, not fixed — scope discipline).
+  Marked Phase D `DONE` in the plan’s §7, explicitly noting T5’s “(if
+  extractable) coverage” hedge was not populated (no coverage data in
+  the frozen CSV; no new extraction attempted, per the Reproducibility
+  Decision). Verified via `quarto render`: `@tbl-testing-growth`
+  resolved as “Table 4”, `@fig-testing-growth` resolved as “Figure 3”,
+  zero unresolved-ref hits. The first render caught a real defect — F3’s
+  top data label clipped by the default y-axis range — fixed with
+  `ggplot2::scale_y_continuous(expand = ...)` and re-verified by
+  re-rendering and inspecting the output PNG directly.
+- **Also:** Added `PROJECT_LEARNINGS.md` Learning 310 — a frozen
+  extraction CSV’s column name is not evidence of what its value counts;
+  read the extraction script’s own computation before writing
+  prose/captions around a frozen number, especially when an independent
+  re-derivation disagrees (a sibling to Learning 309’s closedAt-date
+  trap, same “go to the actual computation, not the label” shape).
+  Updated `CLAUDE.md`’s learning-count pointer (309 → 310 learnings,
+  Sessions 1–333+ → 1–334+).
+- **Session:** S334 · **Verified:** `quarto render` output HTML + PNG
+  inspected directly for resolved cross-references, correct row/label
+  data, and a fixed rendering defect; render artifacts cleaned up before
+  staging; `gh issue view 39`/`40` + `CHANGELOG.md` session-header greps
+  for harness-status sourcing.
+
+### 2026-07-09 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit ee690776 — S333 HANDOFFS.md receipt commit-sha backfill
+
+- **Deliverable:** Phase 0 ledger reconcile (this session) found one
+  commit past the `CHANGELOG.md` frontier with no ledger entry:
+  `ee690776` (“docs: S333 – backfill own HANDOFFS.md receipt commit
+  sha”), landed after S333’s own close-out commit (`a01e13ce`) that
+  recorded the entry below.
+- **Change:** `ee690776` replaced the S333 `HANDOFFS.md` receipt’s
+  `commit: pending` placeholder with the real commit sha (`a01e13ce`)
+  and expanded `what_was_done` to list the full commit set — a
+  self-correction of the just-written receipt, not new production work.
+  Same class of action as the `2278b46f`/`cc0f7798` backfills below
+  (S332’s and S331’s equivalent self-fixes).
+- **Session:** this session (backfilling S333’s own commit) ·
+  **Verified:** `git show --stat ee690776` (single-file, 4-line diff to
+  `HANDOFFS.md`); `git log -1 --format=%H -- HANDOFFS.md` now matches
+  `ee690776` with no further gap.
+
 ### 2026-07-09 · \[ad hoc\] Phase C of the Document-1 article plan: drafted Section 2 (new features) + T4 (Session 333)
 
 - **Deliverable:** Phase C of

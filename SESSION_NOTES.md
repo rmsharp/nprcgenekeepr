@@ -7,6 +7,173 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 334 Did
+
+**Deliverable:** Phase D of
+`docs/planning/v2-transformation-article-plan.md` – draft Section 3
+(testing at scale) + table T5 + figure F3, reading Session 331’s frozen
+`vignettes/articles/data/testing-growth.csv` and cross-checking
+e2e/shinytest2 harness status against
+`docs/planning/phase8-e2e-harness-subplan.md` +
+`docs/planning/phase8e-assertion-strengthening-subplan.md` +
+`CHANGELOG.md` directly. **Documentation/article-drafting session for
+`vignettes/articles/` support – no `R/`/`tests/` package code touched.
+TDD phase: N/A** (matches S107-S110/S330-S333 article-session precedent;
+declared every response). **Started / Completed:** 2026-07-09 /
+2026-07-09 **Status:** **DONE.** Added **Section 3** (“Testing at
+Scale”) to `vignettes/articles/engineering-the-2.0.0-release.qmd` with
+**T5** (`@tbl-testing-growth`) and **F3** (`@fig-testing-growth`), plus
+two prose subsections. T5/F3 read Phase A’s frozen
+`data/testing-growth.csv` (5 checkpoints: v1.0.8-CRAN, Session1-start,
+Phase9-monolith-deprecated, Phase9-close, v2.0.0-CRAN) unchanged – no
+new extraction. Cross-checked the CSV’s two endpoint rows against
+`git ls-tree` at the exact commits (`4548aa1b`, `8ca8bb24`): exact match
+on both columns. That check surfaced a real definitional gap (see
+Learnings, new Learning 310): the CSV’s `test_file_count` column counts
+every `.R` file under `tests/testthat/` (via the extraction script’s
+`sum(grepl("\\.R$", files))`, `build-document1-evidence.R:121`) – not
+just `test*.R`-named files – so 257 at `v2.0.0-CRAN` includes 4
+helper/setup files a naive `grep test` re-derivation (253) would
+exclude. Verified both numbers trace to real, disjoint file sets at the
+same commit and wrote the table/figure/prose to state precisely what’s
+counted (“files in tests/testthat/: test files plus
+helpers/fixtures/setup”) rather than either silently using the
+more-impressive number or silently substituting the manual re-count.
+Second subsection (“From a dormant scaffold to an executable, hardened
+harness”) narrates the shinytest2 E2E harness’s full arc:
+built-but-undefined-helpers (module branch, pre-Session-1) -\>
+executable via the 4-session 8a-8d sub-plan (Session 31-34, issue \#39,
+closed 2026-06-06) -\> hardened via the 7-slice 8e-1..8e-7 pass (Session
+37-50, issue \#40, closed 2026-06-11) that replaced 41
+`expect_true(TRUE)` tautologies, fixed a wrong-tab-navigation defect,
+wired 3 real data-bearing flows (pedigree/GVA/breeding), and defanged a
+CI process-count flake via 13 per-module fresh-process groups. Verified
+**both \#39 and \#40 are CLOSED** via `gh issue view` + `CHANGELOG.md`
+session headers (Session 31-50) – directly contradicts `BACKLOG.md`’s
+stale “#40 open” line (flagged by S333, not fixed here – scope
+discipline, same as S333’s own precedent), and supersedes the plan’s own
+§7 Phase D hedge (“may still show open items”). Marked Phase D `DONE` in
+the plan’s §7 (mirroring S331-S333’s completion-callout convention),
+including an explicit note that T5’s “(if extractable) coverage” hedge
+was NOT populated (Phase A’s frozen CSV has no coverage numbers; this
+session did not attempt a new extraction, staying within “read Phase A’s
+frozen data”).
+
+**Verification performed (this deliverable’s build-equivalent):**
+`quarto render vignettes/articles/engineering-the-2.0.0-release.qmd` –
+succeeded both times (once before, once after a mid-session fix);
+confirmed via the rendered HTML that `@tbl-testing-growth` resolved as
+“Table 4” and `@fig-testing-growth` resolved as “Figure 3”, zero
+`class="quarto-unresolved-ref"` hits, all 5 checkpoint rows present
+verbatim in the table. **First render caught a real defect, not just
+exit-code-0:** the F3 chart’s top data label (“257”) was visually
+clipped by the plot’s default y-axis range – caught by rendering the
+actual PNG and looking at it, not by treating the successful render as
+sufficient. Fixed with
+`ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0.05, 0.12)))`
+and re-rendered to confirm the fix. Cleaned up render artifacts
+(`.html`, `_files/`, an auto-generated `.gitignore`) before staging, per
+Learning 308.
+
+**Session 333 Handoff Evaluation (by Session 334): Score 9/10.** **What
+helped:** the “SUGGESTED NEXT” named Phase D’s exact scope (Section 3 +
+T5/F3, `testing-growth.csv`) and its single most load-bearing gotcha –
+“cross-check e2e/shinytest2 harness status against
+`phase8-e2e-harness-subplan.md` directly, NOT against `BACKLOG.md`‘s
+stale’#40 is open’ characterization” – which this session verified
+firsthand (`gh issue view 39`/`40`, both CLOSED) before writing a word
+of harness-status prose. Without that steer, the natural move would have
+been to trust `BACKLOG.md` at face value and either underclaim the
+harness’s completeness or hedge unnecessarily. The key-files list and
+T2/T3’s established frozen-CSV-via-`kableExtra`/`ggplot2` generation
+pattern (already used for F1) transferred directly to T5/F3 with zero
+re-derivation. **What was missing:** S333’s gotcha framed F6 (screenshot
+reuse) as “now directly relevant to Phase D” – true in principle (Phase
+D covers testing, and a shinytest2-harness screenshot would fit), but
+Phase D’s actual pre-declared deliverable (plan §7) is only T5 + F3,
+neither of which needs `vignettes/shiny_app_use/`; F6 did not end up
+gating this session at all. A minor imprecision, not a defect – flagged
+rather than silently noted only here. **What was wrong:** nothing found
+wrong – the frozen `testing-growth.csv`’s existence and shape, and the
+harness’s close-date facts S333 had not itself verified but pointed at
+correctly, all held. **ROI:** excellent – the BACKLOG.md-is-stale
+warning prevented the single most likely mistake (writing “the harness
+has open work” into a public article when it does not).
+
+**Self-assessment (Session 334): 8/10.** **Strengths:** (1) did not
+trust the frozen CSV’s column name at face value – cross-checked both
+endpoint values against `git ls-tree` at the exact commits, found a real
+4-file gap against a naive re-derivation, traced it to the extraction
+script’s actual line of code rather than guessing, and wrote the
+table/prose to state precisely what’s counted (new Learning 310, a
+sibling to S333’s Learning 309: column-name-implies-definition is the
+same trap shape as closedAt-implies-build-date); (2) verified the
+e2e/shinytest2 harness’s full status (#39, \#40 both closed) against
+primary sources (`gh issue view`, `CHANGELOG.md` session headers, both
+Phase-8 subplans) rather than the plan’s own hedge or `BACKLOG.md`’s
+stale claim, and sourced exact session ranges (31-34, 37-50) and
+specific defect counts (41 tautologies, 7/8 wrong-tab tests) from the
+actual subplan documents rather than estimating; (3) rendered the actual
+output twice, and the first render caught a real visual defect (clipped
+data label) that `quarto render`’s exit code alone would have missed –
+fixed and re-verified, not just noted as a limitation; (4) held Phase
+D’s scope boundary strictly – did not touch F6/screenshots (not required
+for T5/F3), did not draft Section 4/5, did not fix `BACKLOG.md`’s stale
+line (scope discipline, consistent with S333); (5) explicitly flagged
+the T5 coverage-percentage hedge as intentionally unpopulated rather
+than silently omitting it. **Weaknesses:** (-) did not re-flag
+`BACKLOG.md`’s stale \#40 line as a candidate cleanup item beyond
+repeating S333’s own flag – a third consecutive session noting the same
+stale line without fixing it starts to look like the kind of drift
+`backlog-vs-changelog-placement` memory warns about; a future session
+(Phase E or a dedicated small session) should just prune it. (-) did not
+verify the 8e-7 CI flake-mitigation claim (“~1 transient error / 5
+full-tier single-process runs”) against anything beyond the subplan’s
+own self-report – stated in the article as sourced-to-the-subplan, not
+as independently re-measured, which is the correct caveat but is also
+the plan’s own “live-runner-only” limitation propagating into the
+article without a reader-facing flag. **Phase 3E (runtime smoke test)
+does not apply** – no `R/` package behavior changed; `quarto render`
+(above) is this deliverable’s actual build-equivalent verification,
+stated explicitly per FM \#24.
+
+**Learnings:** New: `PROJECT_LEARNINGS.md` Learning 310 (a frozen
+extraction CSV’s column NAME is not evidence of what its VALUE counts –
+read the extraction script’s own computation before writing
+prose/captions around a frozen number, especially when an independent
+re-derivation disagrees). Updated `CLAUDE.md`’s `PROJECT_LEARNINGS.md`
+pointer line (309 -\> 310 learnings, Sessions 1-333+ -\> 1-334+).
+Carried as applied (all held, no incidents):
+\[\[consult-project-source-of-truth\]\],
+\[\[push-close-out-docs-to-origin\]\].
+
+**=\> SUGGESTED NEXT.** Phase E of
+`docs/planning/v2-transformation-article-plan.md` (§7) – draft Section 4
+(Claude CLI / methodology) + T6, F4, F5 – **risk HIGH (dragon)** per the
+plan’s own §9: T6 must be populated from real extraction (not
+characterization), and the tone must be factual/quantified, matching
+this project’s own established candor (self-scores,
+stakeholder-correction counts, documented mistakes already appear
+routinely in `CHANGELOG.md`/`HANDOFFS.md`). Read
+`vignettes/articles/data/process-metrics.csv` and
+`data/self-score-trend.csv` (both already frozen by Phase A) rather than
+re-extracting. F5 has a stated coverage caveat in the plan (§6):
+`HANDOFFS.md` receipts only cover recent sessions (Session-325-era
+addition per the “freeze legacy, go forward” CHANGELOG note) – state
+that limitation in the caption rather than implying full-range coverage.
+Re-read `PROJECT_LEARNINGS.md`’s own framing before drafting (plan’s own
+Phase E verification step) to confirm the section doesn’t contradict
+this project’s documented failure modes/corrections. Two of §12’s open
+owner decisions remain untouched: optional Section 5 (gates Phase F) and
+F6 screenshot reuse (still needs explicit owner confirmation before
+`vignettes/shiny_app_use/` is touched – not directly relevant to Phase
+E’s own deliverable T6/F4/F5, same as it turned out not to be for Phase
+D). Separately, `BACKLOG.md`’s stale “#40 open” line (flagged by S333
+and again this session) should be pruned by whichever future session
+next touches `BACKLOG.md` for any reason – three sessions flagging the
+same stale line without fixing it is worth breaking scope discipline
+for, next time `BACKLOG.md` is already open.
+
 ### What Session 333 Did
 
 **Deliverable:** Phase C of
