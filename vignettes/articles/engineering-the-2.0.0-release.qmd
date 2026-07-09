@@ -439,3 +439,191 @@ runs nightly (07:00 UTC) and on manual dispatch, opts every test in via
 `NPRC_RUN_E2E`, and executes the 23-file `^(app|e2e)-` tier as the
 13-group partition 8e-7 added -- distinct from `R-CMD-check.yaml` and
 `test-coverage.yaml`, which remain the fast, per-pull-request gate.
+
+## Section 4 -- An AI-Assisted Development Process {#sec-methodology}
+
+Sections 1 through 3 describe *what* changed between v1.0.8 and v2.0.0. This
+section describes *how*: every session in that work was directed by
+**Claude Code** (Claude CLI) operating under a written protocol --
+`SESSION_RUNNER.md`, `SAFEGUARDS.md`, and this package's own `CLAUDE.md` --
+rather than open-ended prompting. Within the same 512-commit range as
+Sections 1-3, **328 numbered sessions** (Session 1, `6fd87749`, 2026-05-30,
+through Session 328, the exact v2.0.0-submission commit itself, `8ca8bb24`)
+account for 502 of those commits; the other 10 predate the methodology --
+informal module-branch experimentation plus the framework's own bootstrap
+commit (`299060c0`, 2026-04-02).
+
+```{r}
+#| label: tbl-process-metrics
+#| tbl-cap: >
+#|   Engineering-process metrics, as extracted at the Phase A data freeze
+#|   (Session 331, 2026-07-09). `CHANGELOG.md`, `PROJECT_LEARNINGS.md`,
+#|   `HANDOFFS.md`, and `SESSION_NOTES.md` are live, append-only files that
+#|   kept growing in every session after this extraction ran -- including
+#|   the four sessions (331-334) that drafted the rest of this article --
+#|   so these counts are a snapshot, not this article's own present state.
+metrics <- read.csv("data/process-metrics.csv")
+metrics$label <- c(
+  "Sessions in range (Session 1 -> Session 328)",
+  "Pre-methodology commits in range",
+  "Session-1-to-range-end commits",
+  "Total commits in range",
+  "CHANGELOG.md ledger entries",
+  "PROJECT_LEARNINGS.md entries",
+  "Complete HANDOFFS.md receipts",
+  "Self-assessments reporting 0 stakeholder corrections",
+  "Self-assessments reporting >=1 stakeholder correction"
+)
+kableExtra::kbl(
+  metrics[, c("label", "value")],
+  col.names = c("Metric", "Count"),
+  align = c("l", "r")
+) |>
+  kableExtra::kable_styling(full_width = FALSE)
+```
+
+### A written protocol, not open-ended prompting
+
+Each session follows the same three-phase shape. **Orient** reads
+`SAFEGUARDS.md` and `SESSION_NOTES.md`, checks open GitHub issues, runs a
+project health dashboard (`methodology_dashboard.py`), and reconciles
+`CHANGELOG.md`/`HANDOFFS.md` against `git log` for any commit a prior
+session left unrecorded -- then reports what it found and stops for
+direction; no work begins before the owner responds. **Execute** commits to
+exactly **one deliverable** per session ("1 and done") and claims it in
+`SESSION_NOTES.md`/`HANDOFFS.md` before any technical work starts, so a
+session that crashes mid-task still leaves a trace. **Close out** evaluates
+the previous session's handoff, self-assesses against a written score,
+records new learnings, writes the next session's handoff, and appends a
+dated entry to `CHANGELOG.md` before committing. `SESSION_RUNNER.md` names
+the failure to do that last step **"unrecorded action"** -- one of 27 named,
+numbered failure modes the protocol maintains, each added after a session
+was observed failing that specific way.
+
+### Strict TDD, gated by explicit confirmation
+
+For production R code -- not this article's own drafting sessions, see
+below -- `CLAUDE.md`'s Development Process Contract requires **strict
+red-green-refactor TDD**: RED writes only failing tests, no implementation
+code; GREEN writes the minimum implementation that passes them, no new
+functionality; REFACTOR improves structure with no behavior change, all
+tests still passing. @fig-tdd-cycle diagrams the cycle. What makes it more
+than a style guideline is the enforcement mechanism: the assistant must
+declare its current phase at the top of every response, and every phase
+transition (`PRE-RED->RED`, `RED->GREEN`, `GREEN->REFACTOR`) is gated by a
+structured `AskUserQuestion` prompt -- not a prose question -- with a header
+of the exact form `TDD: <FROM>-><TO>`, an option spelling out the concrete
+next-phase actions and verification, and an explicit hold/alternative
+option. Skipping a phase, or writing implementation code during RED, is a
+declared protocol violation the assistant must acknowledge and correct.
+
+::: {#fig-tdd-cycle}
+```{mermaid}
+stateDiagram-v2
+    [*] --> RED: AskUserQuestion gate (PRE-RED -> RED)
+    RED --> GREEN: AskUserQuestion gate (RED -> GREEN)
+    GREEN --> REFACTOR: AskUserQuestion gate (GREEN -> REFACTOR)
+    REFACTOR --> [*]
+
+    note right of RED
+      Write failing tests only.
+      No implementation code.
+    end note
+    note right of GREEN
+      Minimum code to pass.
+      No new functionality, no refactor.
+    end note
+    note right of REFACTOR
+      Improve structure only.
+      No behavior change; tests stay green.
+    end note
+```
+
+The RED -> GREEN -> REFACTOR cycle `CLAUDE.md`'s Development Process
+Contract requires for production R code, with an explicit `AskUserQuestion`
+confirmation gate at every transition. Documentation and article-drafting
+sessions -- including all four sessions that produced Sections 1-3 and the
+session that produced this one -- are an explicitly declared exception (TDD
+phase "N/A", stated at the top of every response) rather than a silent
+omission.
+:::
+
+This article's own drafting sessions illustrate the exception rather than
+the rule: none touched `R/` or `tests/`, so each declared **TDD phase: N/A**
+explicitly in every response instead of running the cycle against prose it
+does not apply to -- a small instance of the same discipline extending to
+correctly scoping *when* a rule applies, not applying it uniformly
+regardless of fit.
+
+### Self-assessment and a durable correction ledger
+
+@fig-self-score-trend plots every complete `HANDOFFS.md` self-assessment
+score against session, for the sessions with one available.
+
+```{r}
+#| label: fig-self-score-trend
+#| fig-cap: >
+#|   Session self-assessed scores (0-10 scale, `HANDOFFS.md`'s `self_score`
+#|   field), the 7 sessions with a complete receipt as of the Phase A data
+#|   freeze. **Partial window, not a trend across the range:** receipts
+#|   began at Session 324, one session before the `CHANGELOG.md`
+#|   ledger-format resolution (Session 325) -- these 7 sessions are roughly
+#|   2% of the 328-session range, and Sessions 329-330 were committed after
+#|   the range's own end commit (`8ca8bb24`), on the same calendar day. Mean
+#|   score across the 7: 8.57.
+#| fig-width: 7
+#| fig-height: 4
+scores <- read.csv("data/self-score-trend.csv")
+scores$session_num <- as.integer(sub("^S", "", scores$session))
+scores <- scores[order(scores$session_num), ]
+scores$session <- factor(scores$session, levels = scores$session)
+ggplot2::ggplot(scores, ggplot2::aes(x = session, y = self_score, group = 1)) +
+  ggplot2::geom_line(linewidth = 0.9, color = "#3B6E8F") +
+  ggplot2::geom_point(size = 2.5, color = "#3B6E8F") +
+  ggplot2::geom_text(ggplot2::aes(label = self_score), vjust = -1.2, size = 3.2) +
+  ggplot2::scale_y_continuous(limits = c(0, 10.5), breaks = seq(0, 10, 2)) +
+  ggplot2::labs(x = NULL, y = "Self-assessed score (0-10)") +
+  ggplot2::theme_minimal(base_size = 11)
+```
+
+The mechanism behind that self-scoring is a durable receipt, not a spoken
+summary: each session writes a `HANDOFFS.md` block recording what it did,
+what is next, key files, gotchas, and its own score, and the *next* session
+scores that handoff in turn before starting its own work -- visible in
+@tbl-process-metrics as 7 complete receipts against 328 sessions in range
+(the receipt requirement itself dates to Session 324). The same
+append-only discipline extends to `CHANGELOG.md`, and this article's own
+drafting sessions are a live, verifiable example of it working: each of the
+four sessions that wrote Sections 1-3 closed out with a `commit: pending`
+placeholder in its own `HANDOFFS.md` receipt (a session cannot know its own
+close-out commit's sha before making that commit), corrected the
+placeholder with one small follow-up commit once the sha existed, and --
+because that follow-up commit landed after the session's own `CHANGELOG.md`
+entry was already written -- the *following* session's Orient step caught
+and logged it in turn: `cc0f7798` (Session 331's fix, logged by
+Session 332), `2278b46f` (Session 332's fix, logged by Session 333),
+`ee690776` (Session 333's fix, logged by Session 334), and `5f0b81d2`
+(Session 334's fix, logged by this article's fifth session). Four
+consecutive sessions produced the same small gap; four consecutive Orient
+steps caught it.
+
+`PROJECT_LEARNINGS.md` -- 305 dated entries as of the same Phase A freeze,
+each naming a concrete finding, file, mechanism, and verdict, plus a
+glossary of named recurring reflexes cited by tag -- is this project's
+running record of what went wrong and what fixed it. `SESSION_RUNNER.md`
+maintains a parallel, numbered catalog of 27 named failure modes at the
+methodology level -- among them "Eager to start" (skipping orientation),
+"Minimal handoff" (a technically-present but functionally useless handoff),
+and "Unrecorded action" (the gap the receipt-sha backfills above
+illustrate) -- each added after a session was observed failing that way.
+Neither catalog is edited to remove an entry once a session outgrows it;
+corrections accumulate rather than get erased.
+
+@tbl-process-metrics's stakeholder-correction figures are the least precise
+numbers in this section, and are presented with that caveat rather than
+smoothed over: across `SESSION_NOTES.md`'s self-assessments, 269 explicit
+mentions report zero stakeholder corrections and 2 report exactly one --
+99.3% zero, by mention count. That is a text-mention proxy, not an
+independently re-verified per-session audit; a session's own self-assessment
+is not an external check on itself. Read it as "the sessions that stated a
+number mostly stated zero," not as an audited defect rate.
