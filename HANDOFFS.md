@@ -87,7 +87,7 @@ key_files: .github/workflows/shinytest2.yaml:8-27,118-186 (groups array + all co
 gotchas: The article passage above is now a KNOWN STALE cross-reference as a direct, mechanical side effect of this fix -- do not treat "24 of 26 covered, 2 orphaned" as current fact anywhere in the repo; grep for "24 of\|24 covered\|13 hardcoded\|13-group" before trusting any prose claim about this workflow's coverage. The coverage test parses the YAML by locating `groups=(` and the next line matching `^\s*\)\s*$` -- if the array's bash formatting ever changes shape (e.g. inline `)`), the parser needs updating too; it will fail loudly (0 group regexes extracted -> explicit expect_true failure), not silently pass. True live-runner confirmation (an actual `workflow_dispatch`/nightly GitHub Actions run with real Chrome) was NOT performed this session -- only local static verification (parse + syntax + the new test); flagged per FM #24, not silently treated as equivalent.
 runtime_smoke: local static verification only (YAML parses via python yaml.safe_load, `bash -n` on the extracted run: block, dynamic ${#groups[@]} sanity-checked standalone, full testthat regression read before/after) -- the actual live GitHub Actions job (real Chrome/runner, workflow_dispatch or nightly schedule) was not triggered in-session; stated explicitly as an open verification gap, not silently skipped (FM #24)
 changelog_ref: CHANGELOG.md 2026-07-09 "Fix CI coverage gap in shinytest2.yaml -- 2 orphaned E2E test files now run (Session 337)"
-commit: pending
+commit: c22b5e22
 ```
 <free-text prose: self-score breakdown>
 
