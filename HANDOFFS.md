@@ -77,19 +77,36 @@ session need this block to continue the work without re-reading the whole repo?*
 ```handoff
 session: S334
 date: 2026-07-09
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Phase D of docs/planning/v2-transformation-article-plan.md -- draft Section 3 (testing at scale) + T5 + F3 in vignettes/articles/engineering-the-2.0.0-release.qmd, reading vignettes/articles/data/testing-growth.csv and cross-checking e2e/shinytest2 harness status against docs/planning/phase8-e2e-harness-subplan.md + CHANGELOG.md directly (not BACKLOG.md, stale on issue #40).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Phase D of docs/planning/v2-transformation-article-plan.md is DONE. Phase E (draft Section 4 -- Claude CLI/methodology, risk HIGH dragon -- + T6/F4/F5, reading process-metrics.csv and self-score-trend.csv) is next. Phase F must come last. 2 open owner decisions from the plan's §12 remain (optional Section 5 at Phase F; F6 screenshot reuse -- did not gate Phase D, likely doesn't gate Phase E either). CRAN 2.0.0 waiting period (from S329) is unchanged and independent.
+what_was_done: Added Section 3 ("Testing at Scale") + T5 (@tbl-testing-growth) + F3 (@fig-testing-growth) to engineering-the-2.0.0-release.qmd, reading Phase A's frozen testing-growth.csv unchanged. Cross-checked both endpoint rows against git ls-tree at the exact commits (4548aa1b/8ca8bb24) -- exact match, but surfaced that the CSV's test_file_count column counts ALL .R files under tests/testthat/ (incl. 4 helper/setup files), not just test*.R -- traced to the extraction script's actual line of code (build-document1-evidence.R:121), not guessed; wrote table/prose to state precisely what's counted (new Learning 310). Verified via gh issue view + CHANGELOG.md session headers that BOTH issue #39 (harness-enable, 8a-8d, closed 2026-06-06) and issue #40 (assertion-hardening, 8e-1..8e-7, closed 2026-06-11) are CLOSED -- contradicts BACKLOG.md's stale "#40 open" line (not fixed, scope discipline). Narrated the harness's full arc (dormant scaffold -> executable -> hardened) sourced to both Phase-8 subplans + CHANGELOG.md session entries, not estimated. quarto render caught a real defect on first render (F3's top data label clipped by the y-axis range) -- fixed with scale_y_continuous(expand=...) and re-rendered to confirm. Marked Phase D DONE in the plan's §7, explicitly flagging that T5's "(if extractable) coverage" hedge was NOT populated (no coverage data in the frozen CSV). Commits: baa5c99d (S334 claim stub), 62339088 (Phase 0 ledger backfill for ee690776, this session's own reconcile-on-read finding), plus this receipt's own commit (see changelog_ref).
+next_steps: Phase E of the article plan -- draft Section 4 (Claude CLI/methodology) + T6/F4/F5, reading process-metrics.csv and self-score-trend.csv (both already frozen by Phase A). F5 has a stated coverage caveat (plan §6): HANDOFFS.md receipts only cover recent (Session-325-era) sessions -- state that limitation in the caption, don't imply full-range coverage. Re-read PROJECT_LEARNINGS.md's own framing before drafting to confirm the section doesn't contradict this project's documented failure modes/corrections (the plan's own Phase E verification step).
+key_files: vignettes/articles/engineering-the-2.0.0-release.qmd (Section 3 + T5/F3 appended), vignettes/articles/data/testing-growth.csv (read, not modified -- Phase A's frozen 5-checkpoint data), vignettes/articles/data-raw/build-document1-evidence.R:108-131 (T5/F3 extraction logic, read to resolve the column-definition question), docs/planning/v2-transformation-article-plan.md (§1/§7 Phase D marked DONE, coverage-hedge flagged), docs/planning/phase8-e2e-harness-subplan.md + docs/planning/phase8e-assertion-strengthening-subplan.md (read for harness-status sourcing), PROJECT_LEARNINGS.md (Learning 310), CLAUDE.md:177 (learning-count pointer), BACKLOG.md (read, confirmed stale on #40 again, not modified -- flagged 3x now across S333/S334)
+gotchas: testing-growth.csv's test_file_count is "all .R files in tests/testthat/", not "test*.R files" -- future sessions citing this column should use the same precise framing, not "test file count" bare. BACKLOG.md's "#40 open" line is stale for the third consecutive flagged session (S333, S334) without a fix -- next session that opens BACKLOG.md for any reason should just prune it. F6 screenshot reuse still needs an owner decision but has not gated either Phase C or Phase D -- likely won't gate Phase E's T6/F4/F5 either (Phase E's dragon is tone/T6-extraction, not screenshots). The 8e-7 CI flake-mitigation number ("~1 error / 5 runs") is sourced to the subplan's own self-report, not independently re-measured -- correctly caveated in the article as subplan-sourced, but note if a future audit wants a stronger source.
+runtime_smoke: n/a -- documentation/article-drafting session for vignettes/articles/ support, no R/ package runtime behavior changed; quarto render (output HTML + PNG inspected directly, one defect caught and fixed) is this deliverable's actual build-equivalent verification, performed and confirmed
+changelog_ref: CHANGELOG.md 2026-07-09 "Phase D of the Document-1 article plan: drafted Section 3 (testing at scale) + T5/F3 (Session 334)"
 commit: pending
 ```
-<in progress>
+<free-text prose, self-score breakdown>
+
+**+ (what went right):** verified the frozen CSV against primary git data before trusting
+it (caught a real column-definition ambiguity, not a bug in the data itself); verified
+harness status against primary sources (gh issue view, CHANGELOG) rather than the
+plan's own hedge or the stale BACKLOG.md line; caught and fixed a real render defect
+(clipped data label) by looking at the actual output image, not just the exit code;
+held scope tightly (no F6, no Section 4/5, no BACKLOG.md fix); produced a new,
+generalizable learning (310) rather than silently fixing the discrepancy and moving on.
+
+**- (what could improve):** flagged BACKLOG.md's staleness a third time without
+fixing it -- should have just fixed it this session once it was clear the pattern was
+repeating (a small, unambiguous, one-line prune, not scope creep); did not independently
+re-verify the 8e-7 flake-rate claim beyond its own subplan source.
+
+**Score: 8/10.** Matches S333's standard: solid verification discipline, one small
+scope-discipline judgment call (BACKLOG.md) flagged rather than silently repeated a
+fourth time.
 
 ```handoff
 session: S333

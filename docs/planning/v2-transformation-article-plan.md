@@ -5,8 +5,9 @@ and its commit-range framing (§2/§9 dragon #4) via `AskUserQuestion`, Session 
 (2026-07-09) — **Phase A is now DONE** (§7). Owner confirmed the proposed title/slug
 (§1) via `AskUserQuestion`, Session 332 (2026-07-09) — **Phase B is now DONE** (§7).
 Session 333 (2026-07-09) drafted Section 2 (new features) + T4 — **Phase C is now DONE**
-(§7). Phases D-F remain future, separately approved sessions each; no phase is bundled
-with another (FM #26).
+(§7). Session 334 (2026-07-09) drafted Section 3 (testing at scale) + T5/F3 — **Phase D
+is now DONE** (§7). Phases E-F remain future, separately approved sessions each; no
+phase is bundled with another (FM #26).
 
 **Workstream:** Adapted `docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md`
 (Phases 2/3/4/6), substituting this repository's own artifacts (`git log`, `CHANGELOG.md`,
@@ -319,11 +320,31 @@ present; no unresolved claims.
 genuinely feature-shaped items only), claims sourced to `CHANGELOG.md`/issue numbers.
 **Verification:** same as Phase B.
 
-### Phase D — Draft Section 3 (testing) + T5, F3
+### Phase D — Draft Section 3 (testing) + T5, F3 · ✅ DONE (Session 334)
 **What DONE looks like:** section drafted, before/after testing claims quantified and
 sourced, e2e/shinytest2 harness status accurately described (cross-check against Phase 8
 of the module-conversion plan, which may still show open items — do not overclaim
 completeness there).
+
+**Closed as of Session 334 (2026-07-09):** drafted Section 3 ("Testing at Scale") in
+`vignettes/articles/engineering-the-2.0.0-release.qmd`, with T5
+(`@tbl-testing-growth`, five checkpoints from `data/testing-growth.csv`) and F3
+(`@fig-testing-growth`, a `ggplot2` line chart of the same data). Cross-checked the
+frozen CSV against `git ls-tree` at both endpoint commits (`4548aa1b`/`8ca8bb24`) —
+exact match: 132→257 `.R` files under `tests/testthat/`, 0→32 shinytest2/AppDriver-referencing.
+Cross-checked e2e/shinytest2 harness status directly against
+`docs/planning/phase8-e2e-harness-subplan.md` + `docs/planning/phase8e-assertion-strengthening-subplan.md`
++ `CHANGELOG.md` session entries + `gh issue view` — **both issue #39 (harness-enable,
+8a-8d, closed 2026-06-06) and issue #40 (assertion-hardening, 8e-1..8e-7, closed
+2026-06-11) are CLOSED**, so the plan's own "may still show open items" hedge does not
+apply; `BACKLOG.md`'s stale "#40 open" line (flagged by S333) does not affect this
+section, which sources status from `CHANGELOG.md`/`gh issue view` directly, not
+`BACKLOG.md`. Verified via `quarto render`: `@tbl-testing-growth` resolved as "Table 4",
+`@fig-testing-growth` resolved as "Figure 3", zero unresolved-ref hits. **Coverage
+percentage (T5's "(if extractable)" hedge, §5) was not included** — Phase A's frozen
+`testing-growth.csv` captures file counts only, no coverage numbers, and this session
+did not attempt a new extraction (stayed within "read Phase A's frozen data," the
+Reproducibility Decision at §5) — flagged explicitly rather than silently omitted.
 **Verification:** same as Phase B.
 
 ### Phase E — Draft Section 4 (Claude CLI / methodology) + T6, F4, F5 · risk HIGH 🐉 (see §9)
