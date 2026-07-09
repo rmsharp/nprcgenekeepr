@@ -208,6 +208,7 @@
 <div class="section level3">
 <h3 id="additional-close-out-checks">Additional close-out checks<a class="anchor" aria-label="anchor" href="#additional-close-out-checks"></a></h3>
 <p><strong>Citation checklist (issue #120, 2026-07-08):</strong> any session that adds a new displayed statistic/estimator to the package must update <code>inst/extdata/ui_guidance/population_genetics_terms.html</code> (or the relevant UI guidance page) and the statistic’s own roxygen <code>@references</code> in the same session that ships it, rather than deferring to a later audit. (Source: <code>docs/audits/ISSUE_120_CITATION_COVERAGE_AUDIT_2026-07-08.md</code> Structural Observation 1 — citation gaps correlated with recency, not centrality: the metrics missing coverage were consistently the ones added without their own citation pass.)</p>
+<p><strong>CHANGELOG.md ledger-format gap (2026-07-08 methodology sync, tracked, not yet migrated):</strong> canonical v3.1+ defines <code>CHANGELOG.md</code> as an “Authoritative Action Ledger” — dated <code>### YYYY-MM-DD · [issue #N] | [BL-N] | [ad hoc]</code> entries, one per action, checked by Phase 0’s ledger reconcile and required at Phase 3F (FM #27). This project’s <code>CHANGELOG.md</code> predates that convention (dated subsections with <code>**Deliverable:**</code> prose, no source tag) and holds ~30+ sessions of real history, so <code>bin/status</code> correctly flags it <code>present (stale format)</code> rather than silently rewriting it (SEED disposition — sync never overwrites it). Until a dedicated session reconciles the format (BOOTSTRAP.md “Updating an existing project” — hand-migrate or reseed), keep recording entries in the existing dated-subsection style; do not force single entries into the new tag format mid-file, and do not treat the mismatch as FM #27 in the meantime.</p>
 </div>
 <div class="section level3">
 <h3 id="development-process-contract-override">Development Process Contract override<a class="anchor" aria-label="anchor" href="#development-process-contract-override"></a></h3>
@@ -219,7 +220,7 @@
 </div>
 <div class="section level3">
 <h3 id="project-specific-failure-modes">Project-specific Failure Modes<a class="anchor" aria-label="anchor" href="#project-specific-failure-modes"></a></h3>
-<p>(none — the base failure modes #1–25 in <code>SESSION_RUNNER.md</code> apply.)</p>
+<p>(none — the base failure modes #1–27 in <code>SESSION_RUNNER.md</code> apply, including #26 “mega-session masquerading as a vertical slice” and #27 “unrecorded action,” added by the 2026-07-08 methodology sync to v3.4.)</p>
 </div>
 </div>
 </div>

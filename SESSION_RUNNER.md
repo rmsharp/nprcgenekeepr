@@ -4,17 +4,22 @@
 improvise.**
 
 Every session has exactly ONE deliverable. When it’s done, you close
-out. You do not start the next thing.
+out. You do not start the next thing. The deliverable MAY be a
+**verified vertical slice** — one capability end to end — but only under
+the gates in §Vertical Slice Sessions below. One capability never means
+a second capability.
 
 ------------------------------------------------------------------------
 
 ## Phase 0: Orient
 
-**Change nothing. Read only.**
+**Change nothing — read only, except the single append-only ledger
+backfill defined in step 6 (it records commits that already exist).**
 
 1.  Read `SAFEGUARDS.md` — **in full, not skimmed. Every section.**
-2.  Read `SESSION_NOTES.md` — focus on the ACTIVE TASK section at the
-    top
+2.  **Confirm `pwd` and which `SESSION_NOTES.md` you are about to
+    read/write** (see the session-notes boundary rule below), then read
+    it — focus on the ACTIVE TASK section at the top
 3.  Check GitHub Issues (`gh issue list`) if the project has a repo —
     understand current priorities. Fall back to `BACKLOG.md` if no repo
     exists. (BACKLOG.md should contain only open work items — for
@@ -23,19 +28,40 @@ out. You do not start the next thing.
 5.  Run: `python3 methodology_dashboard.py` — refresh the project health
     dashboard. Leave `dashboard.html` open in a browser; it
     auto-refreshes every 60 seconds.
-6.  **Check for ghost sessions:** Compare the session number in
-    SESSION_NOTES.md against `git log`. If there are commits between the
-    last documented session and now that don’t correspond to any session
-    notes, report: “Detected \[N\] undocumented session(s) between
-    Session \[X\] and now. Commits: \[list\]. No session notes exist for
-    this work.”
+6.  **Check for ghost sessions, then reconcile the ledger:** Compare the
+    session number in SESSION_NOTES.md against `git log`. If there are
+    commits between the last documented session and now that don’t
+    correspond to any session notes, report: “Detected \[N\]
+    undocumented session(s) between Session \[X\] and now. Commits:
+    \[list\]. No session notes exist for this work.” **Then reconcile
+    `CHANGELOG.md` against `git log`** — the authoritative-ledger
+    backstop for commits a close-out gate never reached (a crash before
+    Phase 3F, an out-of-band commit, a prior in-progress hand-off).
+    Reconcile the ledger of the repo you confirmed in step 2 (one per
+    repo when a session spans several — see the session-notes boundary
+    rule below). Compute the undocumented set (mechanics in the
+    ledger-reconcile note below); any commit in it — or a prior stub
+    still marked `CHANGELOG: pending` (Phase 1B) — is an unrecorded
+    action (failure mode \#27). **Backfill it now, during this step,
+    before the report and the STOP** — the one write Phase 0 permits
+    (see the note below). **Also reconcile `HANDOFFS.md` the same way:**
+    compute its frontier (`git log -1 --format=%H -- HANDOFFS.md`)
+    against the same commit history; the newest receipt missing for a
+    session that left commits, or still marked `status: pending` (an
+    unfinished Phase 1B stub), is the same kind of unrecorded action.
+    Reconstruct a best-effort block from `git log` (plus
+    `SESSION_NOTES.md` if it survived) marked `status: reconciled`, and
+    note the gap in the report — during this step, before the report and
+    STOP (mechanics in the note below).
 7.  **Report findings to the user:**
     - Current branch and clean/dirty state
     - What the last session was doing
     - Current milestone and active task from GitHub Issues (or
       BACKLOG.md if no repo)
     - Any uncommitted changes
-    - Ghost session detection results (step 6)
+    - Ghost session detection **and ledger-reconcile** results (step 6)
+      — any undocumented commits since the `CHANGELOG.md` frontier, and
+      the backfill entry made (or the recorded “no CHANGELOG” opt-out)
     - Dashboard health score and any risk flags
     - Build status if known
 8.  **STOP. Wait for the user to give you a task.**
@@ -54,6 +80,77 @@ confirm the task in Phase 1.
 
 **Steps 1-3 are READS, not skims.** Every step exists because a session
 failed without it.
+
+**⚠ Ledger reconcile — the one write Phase 0 permits.** Phase 0 is
+otherwise read-only, but an authoritative ledger that is *true when you
+read it* needs one exception: backfilling history that already happened.
+This is a repair of the record — append-only documentation of commits
+that already exist — done **during step 6, before the Phase 0 report and
+STOP** (it needs no assigned task; it only records existing commits) and
+surfaced in that report. If step 6 finds undocumented commits:
+
+1.  **Check for a committed ledger first** —
+    `git log -1 --format=%H -- CHANGELOG.md`. If this is **empty**, no
+    commit has ever recorded the ledger: self-provision (step 4) and
+    reconcile from the repo root — do **not** treat an empty result as
+    “current” (that is the original hole). If it returns a commit, that
+    is the **frontier**.
+2.  **List the gap** — commits since the frontier with no entry:
+    `git log --no-merges <frontier>..HEAD` (the same count
+    `git rev-list --count --no-merges <frontier>..HEAD` drives the
+    dashboard’s ledger-lag signal).
+3.  **Backfill** — prepend one entry per undocumented span,
+    **source-tagged so the audit
+    `grep -E '\[(issue #|BL-|ad hoc)' CHANGELOG.md` still enumerates
+    it** (best-recoverable source; default `[ad hoc]`), noting
+    provenance and the commit range:
+    `### YYYY-MM-DD · [ad hoc] Backfilled (reconcile-on-read): undocumented commits <X>..<Y> — <summary>`.
+    Commit it on its own (`docs(changelog): backfill …`), separate from
+    this session’s later deliverable. If a commit’s intent is unclear,
+    report it and ask before summarizing.
+4.  **Self-provision if absent (D3)** — if step 1 found no committed
+    ledger and `CLAUDE.md` records no “no CHANGELOG” opt-out, create
+    `CHANGELOG.md` from the bootstrap seed (or commit an existing
+    uncommitted seed), record pre-ledger history as a single pointer
+    line, and reconcile forward. A missing ledger on a repo with real
+    history is a defect, never a silent skip.
+
+Two no-ops only: a **non-empty** frontier with an empty
+`<frontier>..HEAD` (no undocumented commits — note that non-commit
+actions such as releases, tags, PR opens, issue closes, and access
+grants leave no commit and so are the Phase 3F write-gate’s /
+failure-mode-#27 responsibility, not reconcile’s), or a project that
+records a “no CHANGELOG” decision in `CLAUDE.md`. The backfill records
+what past sessions did; it does not become this session’s deliverable or
+license work beyond the one assigned task (failure mode \#17).
+
+**The same mechanics reconcile `HANDOFFS.md` in parallel — the receipt
+is folded into the one write Phase 0 permits, not a second write.**
+Compute its frontier the same way
+(`git log -1 --format=%H -- HANDOFFS.md`); a frontier block still marked
+`status: pending` (an unfinished Phase 1B crash breadcrumb) or a commit
+in the undocumented set (item 2 above) with no receipt at all is the
+unrecorded counterpart. Reconstruct a best-effort block from `git log`
+(plus `SESSION_NOTES.md` if it is still present), mark it
+`status: reconciled` — never `complete`, since this session did not do
+that work — and note the gap in the report. As with the ledger, this
+only catches sessions that left a commit or a 1B stub; a session with no
+commit and no claim leaves nothing to reconcile.
+
+**⚠ Session-notes boundary — which `SESSION_NOTES.md` do you write?** A
+session writes notes to the `SESSION_NOTES.md` of the directory it runs
+in. **This project’s `SESSION_NOTES.md` records work done in THIS
+project.** A portfolio-oversight / methodology session (run from the
+oversight directory above the project repos) records its work in the
+**portfolio-oversight** dir’s own `SESSION_NOTES.md`, never in a
+project’s — and vice versa: project engineering run from a project
+directory writes that project’s notes, full stop. Before step 2, confirm
+`pwd` and which `SESSION_NOTES.md` you are reading/writing. This
+boundary exists because same-named methodology artifacts
+(`SESSION_NOTES.md`, `methodology_dashboard.py`) are copied per-project
+with no canonical owner; logging project work at the portfolio level (or
+vice versa) is misfiling, and the next session inherits a stale,
+cross-contaminated log.
 
 ------------------------------------------------------------------------
 
@@ -75,7 +172,7 @@ Common task-to-workstream mappings:
 | “Fix \[bug campaign\]” | One fix campaign pass | `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` |
 | “Review \[code/PR\]” | One review document | The review produces a plan; follow DEVELOPMENT_WORKSTREAM for structure |
 | “Write/draft/audit \[paper/section/dimension\]” | One paper section, one audit pass, or one corpus retrieval pass | `docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md` |
-| “Grill me” / “I want to be grilled” / “Decide before designing” | A decisions list with stakeholder answers, then the Phase 3 design | `docs/methodology/ITERATIVE_METHODOLOGY.md` §Phase 2.5 (then continue in the relevant workstream — typically DESIGN or ARCHITECTURE). The grill itself is run via `/grill-me` — see [`RECOMMENDED_SKILLS.md`](https://github.com/rmsharp/nprcgenekeepr/RECOMMENDED_SKILLS.md). |
+| “Grill me” / “I want to be grilled” / “Decide before designing” | A decisions list with stakeholder answers, then the Phase 3 design | `docs/methodology/ITERATIVE_METHODOLOGY.md` §Phase 2B (then continue in the relevant workstream — typically DESIGN or ARCHITECTURE). The grill itself is run via `/grill-me` — see [`RECOMMENDED_SKILLS.md`](https://github.com/rmsharp/nprcgenekeepr/RECOMMENDED_SKILLS.md). |
 | Multi-phase plan appears in prompt (from Plan Mode or user) | Plan document written to `docs/planning/` with evidence-based inventory | Planning workstream |
 
 **⚠ Plan Mode exit trap.** Plan Mode generates “Implement the following
@@ -94,7 +191,7 @@ and follow its planning → execution → consolidation sequence. If none
 exists but the work has that shape, raise it before starting work — a
 planning session may be needed to either adopt an existing campaign or
 draft one. See [`ITERATIVE_METHODOLOGY.md` §Multi-Session
-Campaigns](https://github.com/rmsharp/docs/methodology/ITERATIVE_METHODOLOGY.html#multi-session-campaigns).
+Campaigns](https://github.com/rmsharp/nprcgenekeepr/docs/methodology/ITERATIVE_METHODOLOGY.html#multi-session-campaigns).
 
 **If no workstream document exists for the task type, follow the master
 framework:** `docs/methodology/ITERATIVE_METHODOLOGY.md`, phases 1-6.
@@ -113,14 +210,29 @@ a stub to `SESSION_NOTES.md`:**
 **Deliverable:** [task description] (IN PROGRESS)
 **Started:** [date/time]
 **Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 ```
+
+**Also open the close-out receipt in `HANDOFFS.md`.** Prepend a
+```` ```handoff ```` block with `status: pending` and the fields you can
+fill now (`session`, `date`, `active_task`), and commit it with this
+claim. A committed `status: pending` receipt is a durable crash
+breadcrumb — like `CHANGELOG: pending`, but one the next session’s Phase
+0 reconcile finds even from a fresh clone. Phase 3D overwrites it to
+`status: complete`. See the block format in `HANDOFFS.md` itself.
 
 **Why this exists:** Ghost sessions — sessions that crash, hit context
 limits, or end without writing notes — leave zero trace. The next
 session has no idea what happened, what was attempted, or what state was
 left behind. By writing a stub FIRST, even a catastrophic failure leaves
 evidence. This stub is overwritten during Phase 3D with the full
-handoff.
+handoff. The `CHANGELOG: pending` marker is a best-effort ledger
+breadcrumb: a session that crashes *before* close-out leaves it in
+place, so the next session’s Phase 0 reconcile (step 6) sees both the
+`git log` gap and the explicit marker. The always-reliable backstop is
+the `git log` gap itself — it catches a crash even in the Phase 3D→3F
+window, after the handoff has overwritten the stub but before the ledger
+entry is written.
 
 **This is a structural control, not a suggestion.** Mandatory close-out
 steps are how clean-delivery streaks don’t collapse: each protocol step
@@ -142,6 +254,12 @@ that gets shaved off makes the next step easier to shave off.
 **⚠ The plan is the deliverable. Do not start implementing it.** Write
 the plan document to `docs/planning/`, commit it, close out.
 Implementation happens in a separate session.
+
+**Set your agent’s deepest available reasoning mode at session start**
+(capability: maximum reasoning depth — e.g. `/effort max` where
+supported). A plan is low-reversibility and high-compounding: its errors
+propagate into every executor session that trusts it
+(`ITERATIVE_METHODOLOGY.md` §Matching Reasoning Effort to Stakes).
 
 **A plan is a deliverable, not a preamble.** When the session’s
 deliverable is a plan (architecture doc, migration plan, multi-phase
@@ -189,6 +307,8 @@ and tend to bundle adjacent phases.
 
 Before closing out a planning session, verify:
 
+Deepest available reasoning mode set at session start
+
 Plan document written with file paths and line numbers
 
 Grep-based inventory completed for all affected symbols (if
@@ -198,7 +318,85 @@ Each phase has explicit completion criteria and verification commands
 
 Each phase marked as “separate session” with a STOP point
 
-Close-out: evaluate predecessor, self-assess, commit, STOP
+Close-out: evaluate predecessor, self-assess, write the `HANDOFFS.md`
+receipt (Phase 3D), record the `CHANGELOG.md` ledger entry (Phase 3F,
+failure mode \#27), commit, STOP
+
+### Vertical Slice Sessions
+
+The unit of “1 and done” is one **intent**, not one layer. When ALL four
+gates below are satisfied, the session’s ONE deliverable may be a
+**verified vertical slice** — one capability end to end (e.g., data +
+service + client + tests) — instead of one horizontal layer. The
+allowance ADDS a gate; it removes no step: Phase 0 orientation, the
+Phase 1B stub, and all Phase 3 close-out steps are unchanged and
+non-negotiable (see FM \#17’s anti-erosion clause).
+
+**Gates — all four, no substitutions:**
+
+- **(a) Pre-declared contract.** The full layer set is enumerated in a
+  plan-mode contract approved BEFORE any code — normally in a prior
+  planning session, which satisfies the gate. The implementing session
+  re-verifies the contract at Orient (state unchanged since approval);
+  drift voids the contract and the slice reverts to a new plan-mode
+  round.
+- **(b) Checkpoint commit at every layer boundary.** The 5-file cap
+  (`SAFEGUARDS.md` §Blast Radius Limits) is *per-commit* and unchanged —
+  a slice may touch more than 5 files across the session, never more
+  than 5 between checkpoint commits.
+- **(c) Full verification at every layer boundary.** The complete
+  build/test matrix plus the exhaustive grep inventory runs at EACH
+  boundary, not once at the end.
+- **(d) Faithful verification, per surface.** “All tests ran” is not
+  automatically faithful: a suite that runs with privileges the
+  production path doesn’t have (e.g., bypassing row-level security), or
+  a layer that hand-maintains a duplicate enum/DTO, passes green while
+  broken. Each surface in the slice must establish that its verification
+  actually exercises the behavior being claimed. Faithfulness is
+  established, never assumed.
+
+**The allowance is evidence-gated, not self-certified.** It holds only
+while the gate (c) artifacts actually land in-session. If a layer
+boundary’s evidence is missing, the session reverts to horizontal scope
+at the last clean checkpoint commit and closes out there. That revert
+still closes out in full: the work that *did* land is an action, so its
+`HANDOFFS.md` receipt and its Phase 3F `CHANGELOG.md` ledger entry are
+owed exactly as in any close-out — mark the reverted remainder
+in-progress, do not silently drop it (failure mode \#27). Declaring that
+high-parallelism verification is available is not the gate; the
+per-boundary artifacts are.
+
+**Recoverability — not verifiability — is the ceiling on slice size.**
+Parallel verification does nothing for crash/reversal recovery, and
+larger slices make it worse: a crash mid-slice strands N layers, not 1.
+The slice must map to ONE reversible intent with per-layer commits.
+
+**Boundaries that stay separate sessions (never collapsible into a
+slice):**
+
+- Irreversible prod/DB migration gates
+- Operator-approval gates (designs, data models, plans)
+- Live verification requiring real accounts or physical devices
+- Cross-toolchain cutover atomicity (two build toolchains flipping at
+  once)
+- The recoverability/reversal-rollback ceiling above
+- Faithful-verification gates that cannot be established in-session
+  (gate d)
+- The plan ↔︎ implementation boundary (FM \#18) — bundling *layers of one
+  slice* is fine; bundling a *plan with its code* is not
+
+**The slice test (FM \#26):** does a single plan-mode contract from a
+prior session enumerate exactly this layer set, all of the same
+capability? If the layers span two capabilities, two platform cutovers,
+or a plan + code — it is not a slice. Split it.
+
+High-parallelism verification introduces its own regression vector:
+sub-agents emit confident-but-wrong claims. Apply adversarial refutation
+to your own agents’ output, not only to the primary work.
+
+*(Adopted via issues
+[\#20](https://github.com/KJ5HST/methodology/issues/20) and
+[\#21](https://github.com/KJ5HST/methodology/issues/21).)*
 
 ------------------------------------------------------------------------
 
@@ -317,7 +515,20 @@ abdication.
 This directly causes the next session to waste time on discovery that
 should have been documented.
 
-#### Evidence requirement
+#### Write the six as a durable receipt
+
+Complete this session’s ```` ```handoff ```` block in `HANDOFFS.md`
+(opened as a `status: pending` stub in 1B): set `status: complete` and
+fill the six requirements as its fields (the sixth *is* `self_score`),
+plus `predecessor_score` from the Phase 3A evaluation.
+`SESSION_NOTES.md` is the transient scratchpad (overwritten next
+session); the `HANDOFFS.md` receipt is the **durable, machine-checkable
+proof the handoff was written** — the canonical-only `bin/check-handoff`
+(copy it into your `bin/` if you want the structural check) asserts its
+presence and completeness, never its quality (a green check is not a
+good handoff — that stays the next session’s 3A score). The dependable
+backstop is Phase 0 reconcile, which catches a skipped receipt at the
+next Orient with no tooling at all.
 
 **Never claim credit for work you didn’t do.** If a plan was provided as
 input, say “Plan was input, not output.” If you didn’t produce a
@@ -352,11 +563,31 @@ as a defect is failure mode \#24 (build-passes-ship-it) in action.
 
 Before committing:
 
+- **Record every action in the authoritative ledger.** Append a dated,
+  source-tagged entry to `CHANGELOG.md` for **each action this session
+  took** — one per commit *and* per non-commit action (release,
+  tag/branch op, PR open, upstream issue close, access grant,
+  decline/grooming decision):
+  `### YYYY-MM-DD · [issue #<N>] | [BL-<N>] | [ad hoc]` + a one-line
+  outcome, newest on top. For a completed backlog item, remove it from
+  `BACKLOG.md` in the same commit. If `CHANGELOG.md` is absent, create
+  it from the bootstrap seed — the only exemptions are a project that
+  records “no CHANGELOG” in `CLAUDE.md` and a session whose diff is
+  empty with no action taken. “Too small to log” is failure mode \#27,
+  not an exception (FM \#17: the ledger records what the session did; it
+  does not authorize a second deliverable).
 - **Remove debug instrumentation added during this session.** Tagged
   debug logs (per `/diagnose` — see
   [`RECOMMENDED_SKILLS.md`](https://github.com/rmsharp/nprcgenekeepr/RECOMMENDED_SKILLS.md))
   make this a single grep; ad-hoc prints make it manual. Either way, do
   not commit instrumentation that was meant to be temporary.
+- **Verify cross-references added or changed this session.** If you
+  added a citation, index entry, glossary term, or cross-reference
+  between files, or modified a numbered set (FMs, principles, phases,
+  anti-patterns, learnings), grep each cited destination to confirm it
+  resolves and grep nearby prose for set-size claims that may have
+  drifted. `git diff` shows the present-side edit, not the missing
+  destination (Learning \#7).
 
 Then commit all changes with a descriptive message.
 
@@ -385,7 +616,7 @@ them.
 | 3 | **Skim documents** | Read 500 lines and retain the gist, not the steps | Follow the checklist step by step, not from memory of the gist. |
 | 4 | **Assume context after compaction** | Think “I remember what I was doing.” Don’t. | Trust SESSION_NOTES.md, not memory. Re-read the files. |
 | 5 | **Equate helpfulness with volume** | Do more because more feels more helpful | Quality \> quantity. One excellent deliverable beats two mediocre ones. |
-| 6 | **Skip close-out** | Self-assessment and prompt updates feel like cleanup, not real work | Close-out is the most valuable phase. It’s how the system improves. |
+| 6 | **Skip close-out** | Self-assessment and prompt updates feel like cleanup, not real work | Close-out is the most valuable phase — it’s how the system improves. It is **not done until the durable `HANDOFFS.md` receipt is written** (Phase 3D): a report you only speak leaves no evidence of its own absence, whereas a missing or `status: pending` receipt is caught at the next Orient’s reconcile. |
 | 7 | **Ask the user to solve process problems** | “What should I do?” instead of reading the docs | Read the docs. Follow the process. Only ask when genuinely blocked on content. |
 | 8 | **Redesign during implementation** | See something to improve and act on it mid-task | Commit first. Note it for a future session. Stay on the approved plan. |
 | 9 | **Task-in-prompt bypass** | User’s first message contains a task, so Phase 0 feels implicitly complete | Phase 0 exists for the USER, not the agent. Complete all 8 steps even when the task is obvious. |
@@ -396,8 +627,8 @@ them.
 | 14 | **Ghost session** | Session crashes, hits context limits, or ends without writing ANY session notes. Next session has zero context. | Phase 1B (Claim the Session) is mandatory — write a stub to SESSION_NOTES.md BEFORE starting technical work. Even catastrophic failures leave a trace. |
 | 15 | **Minimal handoff** | Session writes “Done. Pick next from backlog.” — technically a handoff, functionally useless. Next session starts blind. | Phase 3D has 6 minimum requirements. A handoff missing key files, specific next steps, or gotchas is a protocol violation that will score ≤4/10. |
 | 16 | **False credit / fabrication** | Session claims credit for work it didn’t do, or attributes quotes the user never said. Trust destruction. | Never claim deliverables you didn’t produce. If a plan was input, say so. If you produced nothing, say so. |
-| 17 | **Protocol erosion** | Each session shaves off “just one” protocol step. Individually minor. Over 5-10 sessions, the whole protocol collapses. Scores drift from 9/10 to 1/10. | The protocol is not optional, advisory, or improvable-by-subtraction during a session. Every step exists because a previous session failed without it. If you think a step is unnecessary, that’s the erosion happening. Do the step. |
-| 18 | **Planning-to-implementation bleed** | A session produces a plan, then immediately begins implementing it. Or the next session bundles multiple phases because “the plan is done, implementation is easy.” | A planning session’s deliverable IS the plan. Close out after the plan. The next session implements ONE phase. If a plan has N phases, expect N+1 sessions minimum (1 planning + N implementation). If a session’s commit history shows both “docs: plan” and “feat: implement,” it bundled. |
+| 17 | **Protocol erosion** | Each session shaves off “just one” protocol step. Individually minor. Over 5-10 sessions, the whole protocol collapses. Scores drift from 9/10 to 1/10. | The protocol is not optional, advisory, or improvable-by-subtraction during a session. Every step exists because a previous session failed without it. If you think a step is unnecessary, that’s the erosion happening. Do the step. Citing a “deeper dive” or any high-parallelism mode to skip an orientation, stub, or close-out step — OR to bundle multiple capabilities — is protocol erosion (FM \#17), not the vertical-slice model. The vertical-slice allowance ADDS a gate; it removes no step. Phase 0 orientation, the Phase 1B stub, and all Phase 3 close-out steps are unchanged and non-negotiable. |
+| 18 | **Planning-to-implementation bleed** | A session produces a plan, then immediately begins implementing it. Or the next session bundles multiple phases because “the plan is done, implementation is easy.” | A planning session’s deliverable IS the plan. Close out after the plan. The next session implements ONE phase. If a plan has N phases, expect N+1 sessions minimum (1 planning + N implementation). If a session’s commit history shows both “docs: plan” and “feat: implement,” it bundled. Implementing multiple LAYERS of ONE phase’s pre-declared vertical slice is NOT bundling — bundling is implementing two DIFFERENT capabilities, or a plan + its code. The test: did a single plan-mode contract pre-declare this exact layer set, all of the same capability? |
 | 19 | **Plan-mode bypass** | Plan-mode output arrives in the prompt with “implement.” Session treats it as an implementation task and starts coding, skipping the planning workstream entirely. The plan hasn’t been evidence-verified. | Plan-mode output is a DRAFT. The first session writes it to `docs/planning/` with evidence-based inventory. Implementation is a separate session. If the prompt contains a multi-phase plan and says “implement,” the deliverable is the plan document, not code. |
 | 20 | **Edit from memory** | Modify a file based on memory of what it contains rather than re-reading it. Memory degrades over long sessions; edits silently corrupt content. | Re-read the target section immediately before editing. If you haven’t read the file in the last 5 minutes, read it now. This applies to code AND documents. |
 | 21 | **Greenfield assumption** | Write as if the project has no existing capabilities, infrastructure, or history. Destroys credibility with stakeholders who know what they already have. | Assume existing capabilities unless told otherwise. Read the project’s baseline/current-state documentation during Orient. Frame work as extending, standardizing, or automating what exists — not building from scratch. |
@@ -405,6 +636,8 @@ them.
 | 23 | **Question-as-instruction** | User asks a question or makes an observation; agent treats it as an instruction to modify files. | Present options and wait for direction. A question is not a go-ahead. “How could we improve X?” means discuss, not implement. |
 | 24 | **Build-passes-ship-it** | Session confirms `mvn clean package` / `npm run build` / equivalent succeeds and treats that as verification of correctness. But the deliverable involves runtime behavior (startup, service registration, config resolution, handler dispatch) that only executes when the application starts. Build tools verify compilation, not integration. | If your deliverable changes runtime behavior, launch the application before close-out and verify (Phase 3E). “Build clean” is necessary but not sufficient. A self-assessment that notes “no runtime verification” without treating it as a defect is this failure mode in action. |
 | 25 | **Horizontal slicing** | Plan or implementation structured as horizontal layers: write all tests first, THEN all implementation; or finish all schema changes, THEN all API changes, THEN all UI. Each layer “feels complete” independently but no slice is end-to-end working until the very end. A blocker mid-stack means rework across every prior layer. Symptom in plans: phase names like “Phase 1: schemas / Phase 2: APIs / Phase 3: UI”. Symptom in code: `tests/*` ships green for weeks while `src/*` is empty. | Vertical slices (“tracer bullets”): one feature end-to-end through every layer at once, then the next feature. Each slice ships a working narrow path; rework cost is bounded by one slice. Test: “If I stop here, is something working?” If no — you horizontally sliced. (Pattern named by Matt Pocock’s `/tdd` skill at <https://github.com/mattpocock/skills>; the discipline applies more broadly than TDD.) |
+| 26 | **Mega-session masquerading as a vertical slice** | Under the vertical-slice allowance (§Vertical Slice Sessions), a session bundles two or more DIFFERENT capabilities — or a plan + its implementation, or two platform cutovers — and justifies it as “one vertical slice.” The slice-contract gate is cited as authorization while the actual unit is N intents: a crash or operator reversal rolls back N entangled intents, and an off-CI surface can ship falsely-green because “build-all attested the slice done.” | A slice is ONE capability mapped to ONE pre-declared, operator-approved layer list. Test: does a single plan-mode contract from a prior session enumerate exactly this layer set, all of the same capability? If the layers span two capabilities, two platform cutovers, or a plan + code — it is this failure mode. Split it. (The high-parallelism-era composite of FM \#2 keep-going, \#5 volume, \#8 redesign mid-task, and \#18 planning-to-impl bleed.) |
+| 27 | **Unrecorded action** | Complete an action and commit it, then close out without recording it in the authoritative ledger (`CHANGELOG.md`) because the work already feels captured in the session notes and the commit message. But `SESSION_NOTES.md` is overwritten next session and raw `git log` is not a per-action summary, so the durable record silently never lands. “Too small to log” or “I’ll batch it next time” **is** this failure mode, not an exception. “Action” is broader than a commit — a release, a tag/branch op, a PR open, an upstream issue close, an access grant, or a decline/wontfix/grooming decision all escape a commit-only reflex. | Phase 3F appends one dated, source-tagged entry per action before commit — `[issue #<N>]` · `[BL-<N>]` · `[ad hoc]`, newest on top; for a backlog item, remove it from `BACKLOG.md` in the same commit. Keyed to a mechanical fact, not judgment: *did this session author or retain any commit, or take any non-commit action?* If yes, an entry is owed. If `CHANGELOG.md` is absent, create it from the bootstrap seed — never silently no-op; the ONE opt-out is a project that deletes the file **and** records that decision in `CLAUDE.md`. Two no-ops only: that recorded opt-out, and a session with an empty diff and no action. Anti-erosion (FM \#17): the ledger records what the session did; it does not authorize what it produced — 1-and-done still bounds scope; N blocks = N layers of ONE deliverable, never N deliverables. |
 
 ------------------------------------------------------------------------
 
@@ -419,10 +652,11 @@ ghost sessions and failed deliveries:**
 | No handoff evaluation of predecessor | Failure mode \#10 (skip evaluation) is active | Stop. Write the evaluation before self-assessing |
 | “I’ll just skip the stub” | Failure mode \#14 (ghost session) is imminent | Write the stub. It takes 30 seconds. |
 | Self-assessment not written to file | Failure mode \#6 (skip close-out) is active | Write to SESSION_NOTES.md before summarizing verbally |
+| Commits landed this session but the `HANDOFFS.md` receipt was never completed (still `status: pending`, or absent) | Failure mode \#6 (skip close-out) is active — the handoff report was skipped | Complete the receipt (Phase 3D) before the final commit; otherwise a later Orient reconciles it `status: reconciled` and the skipped report is on the record |
 | Session number gap in SESSION_NOTES.md | Ghost session already happened | Note it. Document what you can infer from git log. |
 | Score dropping session-over-session | Multiple failure modes compounding | Re-read this entire document. Reset to full protocol. |
 | “This step doesn’t apply to my session” | Failure mode \#17 (protocol erosion) is active | The step applies. Do it. Every step exists because a session failed without it. |
-| Plan commit + implementation commit in same session | Failure mode \#18 (planning-to-implementation bleed) is active | The plan was the deliverable. Close out. Implementation is a separate session. |
+| Plan commit + implementation commit in same session | Failure mode \#18 (planning-to-implementation bleed) is active — UNLESS the session is a pre-declared vertical slice whose plan was committed in a PRIOR session | The plan was the deliverable. Close out. Implementation is a separate session. |
 | Session starts coding from plan-mode output | Failure mode \#19 (plan-mode bypass) is active | The plan is a draft. Write it to `docs/planning/` with evidence-based inventory first. |
 | File edited without re-reading it first | Failure mode \#20 (edit from memory) is active | Re-read the file now. Do not edit from memory. |
 | Document describes a blank-slate starting point when existing infrastructure exists | Failure mode \#21 (greenfield assumption) is active | Re-read the project’s baseline documentation. Rewrite to acknowledge what exists. |
@@ -430,6 +664,8 @@ ghost sessions and failed deliveries:**
 | User asks a question and the agent starts modifying files | Failure mode \#23 (question-as-instruction) is active | Stop modifying. Present options. Wait for explicit direction. |
 | Self-assessment notes “no runtime verification” but treats it as incidental | Failure mode \#24 (build-passes-ship-it) is active | Phase 3E was skipped. Launch the application before committing. If verification is impossible in this environment, state that explicitly — do not silently treat build-clean as runtime-clean. |
 | Plan phases or commits map to horizontal layers (all tests, then all impl; all schema, then all API, then all UI) | Failure mode \#25 (horizontal slicing) is active | Restructure as vertical slices: one end-to-end feature at a time. Apply the “if I stop here, does something work?” test to each phase. |
+| Commit history shows two unrelated capabilities in one session | Failure mode \#26 (mega-session masquerading as a vertical slice) is active | Apply the slice test: one prior-session contract, one capability, exactly this layer set. If it fails, close out at the last clean checkpoint commit and split the remainder. |
+| Session authored or retained a commit — or took a release / tag / PR-open / issue-close / access-grant action — but `CHANGELOG.md` was not touched this session | Failure mode \#27 (unrecorded action) is active | Append the owed entry before the final commit. If `CHANGELOG.md` is absent and no `CLAUDE.md` opt-out is recorded, create it from the bootstrap seed. “Too small to log” is the failure mode, not an exception. |
 
 **If you detect 2+ warning signs: STOP.** Re-read this document from the
 top. Do not continue until you’ve re-internalized the protocol. The cost
@@ -455,6 +691,10 @@ instead (see 3C).*
 | 4 | **Verify a plan’s output against its completion criteria — not against session duration or count.** Execution speed is not evidence of plan quality, and “fits in one session” is not a planning goal. A plan whose phases each fit cleanly in one session and produce work that matches the completion criteria is high-quality; a plan that tempts the executor to bundle phases or skip close-out to “finish faster” is not. The “1 and done” rule does not bend for high-quality plans. | Field observation (refined from rmsharp feedback on issue \#7) | When evaluating a plan or judging plan quality. Resist the temptation to read execution speed as plan quality — they are uncorrelated when the protocol holds. |
 | 5 | Code review is a distinct deliverable, not overhead. Reviews that produce actionable plans (exact code snippets, line numbers, implementation order) have higher ROI than vague “this needs improvement” feedback. A review that doesn’t identify specific changes a future session can execute is incomplete. | Field observation | When the session deliverable is a code review. Output an actionable plan, not a critique. |
 | 6 | A plan written from memory of a file read is an assumption-level claim. Reading implementations before estimating complexity catches wrong assumptions early — estimating from a backlog description alone is unreliable. This is a special case of FM \#11 (gaps from memory) and FM \#20 (edit from memory) applied to planning. | Field observation | Before estimating effort or scope for any phase, read the actual implementation file. The backlog description is a hint, not a spec. |
+| 7 | **Cross-reference completeness at self-review.** When a change adds a citation, an index entry, a glossary term, or any cross-reference between files — and especially when it modifies a numbered set (FMs, principles, phases, anti-patterns, learnings) — `git diff` confirms only the present-side edit; the defect is the *absence* on the destination side, which the diff cannot surface. Grep each cited destination to confirm the citation resolves, and grep nearby prose for set-size or named-membership assertions (“N failure modes”, “the three workstreams”) that may have drifted. Bidirectional: a new index entry needs its destination to cite back; a grown numbered set needs its size claims re-counted. | Three v2.6 instances: stale “24 failure modes” count, understated `/diagnose` + `/grill-with-docs` citation rows, aspirational `/init` citation (issue \#19) | When a change touches any cross-file citation, index, glossary term, or numbered set. At self-review, grep destinations and size claims before committing — do not rely on `git diff` alone. |
+| 8 | **A close-out gate is only as strong as the weakest checklist that summarizes close-out.** Session-type procedures (Planning, Review/Audit, Debugging, the vertical-slice revert, and campaign per-session checklists) each restate the close-out in condensed form. An agent following a condensed checklist never re-reads the full phase, so any cross-cutting gate the summary omits is silently exempted for that session type — exactly how an “authoritative” ledger acquires holes. When you add or change a close-out step, reconcile it into *every* checklist that restates close-out, not only the canonical Phase 3/Phase 6 text. This is Learning \#7 applied to procedure summaries rather than citations. | FM \#27 / escape \#8 (CHANGELOG-ledger campaign, S7) | When adding or modifying any close-out or other cross-cutting gate: grep every session-type and campaign checklist that restates close-out and confirm the new step appears in each. |
+| 9 | **A handoff is only dependable when it is a durable, machine-checkable artifact.** A transient narrative — spoken, or written only to the wholesale-overwritten `SESSION_NOTES.md` — leaves no evidence of its own absence, so a skipped close-out report is invisible until a human notices (the failure that motivated the receipt: an agent had to be *prompted* for its report). The fix mirrors the ledger (FM \#27) exactly: **gate-on-write** (a `HANDOFFS.md` receipt whose structure `bin/check-handoff` verifies) **AND reconcile-on-read** (Phase 0 greps for a missing/`status: pending` receipt and backfills it `status: reconciled`) — neither is dependable alone. The honest ceiling is the same too: the check verifies presence and structure, never quality (a green check is not a good handoff), and a session that leaves no commit and no 1B stub still escapes. This is Learning \#8 applied to the report itself, not just the ledger. | Close-out receipt slice (this session) | When adding any close-out artifact or gate: make it a durable, greppable artifact with a write-gate AND a reconcile-on-read backstop — never a transient note or a spoken summary. |
+| 10 | **A review pass scoped to the diff has a blind spot: what the change made stale *outside* it.** Learning \#7 (cross-reference completeness) and Learning \#8 (close-out-gate propagation) are authoring-time self-checks — they catch drift the *author* introduces. But an adversarial review or audit is pointed at the diff by default, so “what did this change make stale elsewhere in the corpus?” is nobody’s job. The v3.3 close-out-receipt work (#52/#53) shipped a clean 6-lens adversarial review, yet left `HOW_TO_USE.md`, the `README.md` repo tree, and three tutorials describing close-out *without* the new receipt — none were in the diff, so no diff-scoped lens looked at them. A human had to ask “has documentation been fully updated?” (fixed in \#54). | Upstream issue \#55 (completeness-critic proposal), motivated by the v3.3 doc-completeness gap fixed in PR \#54 | Promote Learning \#7/#8 from an authoring self-check to a review-time lens: when a change adds, renames, or removes a concept, artifact, file, step, or numbered-set member, grep the *whole corpus* (not just the diff) for file/artifact enumerations, worked examples/tutorials, indexes/cross-references, and count/size claims (“N failure modes”, “the six requirements”) that now lag. See `workstreams/AUDIT_WORKSTREAM.md`’s Verification Checklist for the operative step. |
 
 ------------------------------------------------------------------------
 

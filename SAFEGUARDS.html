@@ -83,8 +83,9 @@
 <th>Why</th>
 </tr></thead><tbody><tr><td><strong>Commit before any multi-file change</strong></td>
 <td>Every disaster becomes a <code>git checkout</code> instead of a multi-hour recovery</td>
-</tr><tr><td><strong>Never touch more than 5 files without committing first</strong></td>
-<td>Forces incremental, recoverable progress</td>
+</tr><tr><td>
+<strong>Never touch more than 5 files without committing first</strong> — the cap is <em>per-commit</em>, not per-session</td>
+<td>Forces incremental, recoverable progress. A pre-declared vertical slice (<code>SESSION_RUNNER.md</code> §Vertical Slice Sessions) may touch more than 5 files across a session, but never more than 5 between checkpoint commits.</td>
 </tr><tr><td><strong>Never refactor across module boundaries without plan mode</strong></td>
 <td>Cross-module refactoring is Architect Mode work, period</td>
 </tr><tr><td><strong>Never delete a file without verifying it’s committed</strong></td>
@@ -224,7 +225,29 @@
 <li>WIP commits: <code>[WIP] [what you're in the middle of]</code>
 </li>
 </ul><p><strong>Checkpoint and WIP commits are not optional luxuries. They are safety nets.</strong></p>
-<hr></div>
+</div>
+<div class="section level3">
+<h3 id="ledger-co-staging-hook-failure-mode-27">Ledger Co-Staging Hook (failure mode #27)<a class="anchor" aria-label="anchor" href="#ledger-co-staging-hook-failure-mode-27"></a></h3>
+<p>An optional <code>pre-commit</code> hook makes the authoritative-ledger rule mechanical: it <strong>refuses a commit that changes tracked content unless <code>CHANGELOG.md</code> is co-staged</strong>, so an action cannot reach git history without a line in the ledger. This is the <em>mechanical</em> form of the Phase 3F close-out gate — the only enforcement available in a repo that has no <code>SESSION_RUNNER.md</code> at its root to run that gate on itself.</p>
+<ul><li>
+<strong>It is the fast path, not the guarantee.</strong> The guarantee is Phase 0 <strong>reconcile-on-read</strong>, which backfills any commit that slipped past the hook. So the hook is deliberately <strong>bypassable</strong> — <code>git commit --no-verify</code> commits without it, and the next session’s Orient re-truths the ledger. Bypass freely for genuine WIP; do not treat the bypass as an escape from FM #27. (A <code>git commit --amend</code> that adds a file without re-staging <code>CHANGELOG.md</code> is also blocked — the ledger line already rides the commit being amended, so use <code>--no-verify</code>.)</li>
+<li>
+<strong>It never blocks a repo that has no ledger.</strong> If <code>CHANGELOG.md</code> is untracked (an adopter mid-bootstrap, or a project that opted out), the hook passes — self-provisioning is the session runner’s job (Phase 0), not the hook’s. It also skips merges, rebases, and cherry-picks, which replay commits already in the ledger’s history.</li>
+<li>
+<strong>Setup is opt-in and per-clone.</strong> <code>git config core.hooksPath .githooks</code> enables it; each clone and CI runner sets it independently. See <a href="BOOTSTRAP.html"><code>BOOTSTRAP.md</code></a> Step 10. The canonical reference implementation is <a href="https://github.com/KJ5HST/methodology/blob/main/.githooks/pre-commit" class="external-link"><code>.githooks/pre-commit</code></a>.</li>
+</ul><p>The hook is a convenience, not a substitute: the SESSION_RUNNER Phase 3F write-gate and Phase 0 reconcile are the primary mechanisms and hold with or without it.</p>
+</div>
+<div class="section level3">
+<h3 id="close-out-completeness-hook-recommended--agent-specific">Close-Out Completeness Hook (recommended — agent-specific)<a class="anchor" aria-label="anchor" href="#close-out-completeness-hook-recommended--agent-specific"></a></h3>
+<p>The <code>HANDOFFS.md</code> receipt and Phase 0 reconcile catch a skipped close-out report <em>durably</em> and <em>at the next Orient</em>. The fastest catch, though, is <em>in-session</em> — the moment the agent tries to end its turn. Git has no session-end hook; only the agent harness does. So, as a <strong>recommendation, not a shipped mechanism</strong> (the methodology recommends; it does not reimplement), an adopter can wire their harness’s session-end / “stop” hook to check the receipt and re-prompt the agent to finish close-out before the turn ends.</p>
+<ul><li>
+<strong>How to check.</strong> Grep <code>HANDOFFS.md</code> for a trailing <code>status: pending</code> (portable), or run the canonical <code>bin/check-handoff</code>. That checker is <strong>canonical-only</strong> — it is not synced into adopter projects; copy it if you want the structural checker, exactly as you copy <code>.githooks/pre-commit</code>. The receipt discipline itself needs no tooling: it is the synced Phase 3D write-step plus Phase 0 reconcile.</li>
+<li>
+<strong>Fast path, not the guarantee</strong> — same status as the ledger co-staging hook. It is agent-specific (each harness names the hook differently; some have none), human-dismissable, and defeated by a crash before the callback fires. The guarantee remains Phase 0 reconcile-on-read.</li>
+<li>
+<strong>Soft-remind, not hard-block</strong> by default — surface the incomplete receipt and let the agent finish it, rather than refusing to stop (which risks a livelock).</li>
+<li>The methodology ships no such hook — it is external harness configuration, in the same class as agent-level memory. See <a href="BOOTSTRAP.html"><code>BOOTSTRAP.md</code></a> Step 10.</li>
+</ul><hr></div>
 </div>
 <div class="section level2">
 <h2 id="what-the-user-should-do">What the User Should Do<a class="anchor" aria-label="anchor" href="#what-the-user-should-do"></a></h2>

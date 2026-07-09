@@ -55,6 +55,25 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-08--update-methodology-to-canonical-v34-session-324">2026-07-08 — Update methodology to canonical v3.4 (Session 324)<a class="anchor" aria-label="anchor" href="#id_2026-07-08--update-methodology-to-canonical-v34-session-324"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> synced this project’s methodology infrastructure from <code>https://github.com/KJ5HST/methodology</code> — local was v2.6 (8 tagged releases stale). Infra/docs sync; <strong>TDD N/A</strong> (no <code>R/</code>/<code>tests/</code>/<code>DESCRIPTION</code> touched). 0 <code>AskUserQuestion</code> gates (the operation is BOOTSTRAP.md’s own documented “tell your agent” command). 0 stakeholder corrections.</li>
+<li>
+<strong>Ran <code>bin/sync --source=local --force</code></strong> (a full, unshallowed local clone of canonical, cross-checked against the user’s own contributor fork <code>rmsharp/methodology</code> — both required after a shallow clone falsely flagged every tracked file as “locally modified”; see <code>PROJECT_LEARNINGS.md</code> Learning 301). Updated 15 existing TRACKED files (<code>SESSION_RUNNER.md</code>, <code>SAFEGUARDS.md</code>, <code>RECOMMENDED_SKILLS.md</code>, <code>methodology_dashboard.py</code>, <code>docs/methodology/ITERATIVE_METHODOLOGY.md</code>, <code>docs/methodology/HOW_TO_USE.md</code>, all 9 <code>docs/methodology/workstreams/*.md</code>); created 3 new TRACKED root files (<code>BOOTSTRAP.md</code>, <code>CLAUDE_TEMPLATE.md</code>, <code>CONTEXT_TEMPLATE.md</code>) and 1 new SEED file (<code>HANDOFFS.md</code>, a durable per-session close-out receipt ledger). <code>--force</code> used only for <code>SESSION_RUNNER.md</code>/<code>RECOMMENDED_SKILLS.md</code>, verified beforehand to hold no project-specific content — their “modified” status traced to a prior session’s (<code>ce7d67797</code>) hand-adoption of not-yet-tagged upstream PR wording, not a customization worth preserving.</li>
+<li>
+<strong>Manually refreshed <code>docs/methodology/README.md</code></strong> (not <code>bin/sync</code>-tracked, but a prior session had mirrored it in as reference documentation) from the current canonical <code>README.md</code>.</li>
+<li>
+<strong><code>CLAUDE.md</code> updated</strong>: failure-mode count bumped #1–25 → #1–27 (new FM #26 “mega-session masquerading as a vertical slice,” FM #27 “unrecorded action”); new note flagging <code>CHANGELOG.md</code>’s ledger-format gap (canonical v3.1+ redefines this file as a dated, source-tagged “Authoritative Action Ledger” — this project’s existing ~30+-session history predates that convention and is deliberately left as-is per BOOTSTRAP.md’s own “reconcile by hand” guidance, not auto-migrated).</li>
+<li>
+<strong><code>.gitignore</code></strong> gained <code>dashboard_history.jsonl</code> (a new generated snapshot-log artifact from the updated <code>methodology_dashboard.py</code> v2.8.0, alongside the existing <code>dashboard.html</code> entry).</li>
+<li>
+<strong>Verification:</strong> re-ran <code>methodology_dashboard.py</code> post-sync — 98/100 health, 0 high-risk flags, v2.8.0 (previously 5 versions behind), unchanged from the pre-sync baseline. Phase 3E runtime smoke test explicitly N/A — no package runtime behavior changed.</li>
+<li>
+<strong>Deliberately deferred (flagged, not silently dropped):</strong> full reformat of <code>CHANGELOG.md</code>’s ~30+ sessions of history into the new source-tagged ledger format — a separate migration task per BOOTSTRAP.md’s own guidance, not bundled into this sync.</li>
+<li>
+<strong>Next session:</strong> either resume the CRAN 2.0.0 plan (Phase 5b, owner-triggered — see S323’s entry below) or, if desired, a dedicated <code>CHANGELOG.md</code> ledger-format migration session.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-08--execute-phase-5a-resync-cran-commentsmd-session-323">2026-07-08 — Execute Phase 5a: resync <code>cran-comments.md</code> (Session 323)<a class="anchor" aria-label="anchor" href="#id_2026-07-08--execute-phase-5a-resync-cran-commentsmd-session-323"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> executed Phase 5a of <code>docs/planning/cran-2.0.0-submission-plan.md</code> — resynced <code>cran-comments.md</code> now that the Phase 4 re-gate (S322) has landed. <strong>Verification/packaging phase; TDD N/A</strong> per the plan’s own classification (doc-only; <code>cran-comments.md</code> is <code>.Rbuildignore</code>d). 0 <code>AskUserQuestion</code> gates (S322’s handoff already fully specified the scope). 0 stakeholder corrections.</li>
