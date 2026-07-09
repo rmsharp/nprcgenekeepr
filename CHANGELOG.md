@@ -15,6 +15,60 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-08 — Execute Phase 4: full local `R CMD check --as-cran` re-gate (Session 322)
+
+- **Deliverable:** executed Phase 4 of
+  `docs/planning/cran-2.0.0-submission-plan.md` — the full local
+  `R CMD check --as-cran` re-gate against commit `2abfc783` (S321),
+  stale since S134/S240/S241 (124 commits). **Verification phase; TDD
+  N/A** per the plan’s own classification (no code fix was needed — the
+  gate came back clean). 0 `AskUserQuestion` gates (the plan’s Phase 4
+  steps were already fully specified). 0 stakeholder corrections.
+- **Result: `Status: 2 NOTEs` = 0 ERROR / 0 WARNING** — the same two
+  pre-known false-positives as S134 (CRAN incoming feasibility for the
+  archived package; local HTML Tidy version — the V8 sub-check that also
+  flagged in S134 is now clean in this environment). Gate timings:
+  examples `[22s/22s]`, tests `[106s/106s]` (up from S134’s 41-43s —
+  expected, 124 commits added +5384 lines to `tests/`), vignette rebuild
+  `[20s/21s]` (one more vignette than S134, `gvaConvergence.Rmd`). No
+  timing flags anywhere.
+- **Pre-check steps:**
+  [`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html)
+  — no-op (library already synchronized);
+  [`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html)
+  — zero diff; `devtools::spell_check()` — one new legitimate word
+  (`erroring`, from Phase 3b’s merged NEWS content) added to
+  `inst/WORDLIST` surgically; `urlchecker::url_check()` — 17/18 URLs OK,
+  one new 403 (`README.md:170`, `thoughtco.com`) confirmed bot-blocking
+  via `curl` with a browser User-Agent + an independent `WebFetch`
+  attempt (both blocked) — same false-positive class as the existing
+  PMC4671785 note, flagged for the Phase 5 `cran-comments.md`
+  pre-explained-NOTEs list; `devtools::run_examples()` — clean; vignette
+  build needed `bit`/`bit64` installed into the renv library first
+  (Learning 92/298(e) recurrence — the same gap S321 hit for
+  `build_readme()` also blocks `build_vignettes()`;
+  `renv.lock`/`DESCRIPTION` diff confirmed empty).
+- **Full clean-regression read:** 0 failed / 0 error / 0 warning, 169
+  skipped (baseline), 3261 total tests. `test_getVersion.R` (7/7) and
+  `test_appUI_version.R` (3/3) green. `packageVersion("nprcgenekeepr")`
+  = 2.0.0; `git diff DESCRIPTION` empty (this phase doesn’t bump
+  version).
+- **Housekeeping:** a stray `Rplots.pdf` byproduct from `run_examples()`
+  (never gitignored) removed before commit; vignette-build byproducts
+  (`doc/`, `vignettes/*.html`/`*.R`) confirmed already gitignored.
+  `cran-comments.md`/`CRAN-SUBMISSION` confirmed untouched (Phase 5, not
+  this session, per the plan’s own no-bundling rule).
+- **Plan updated in place:**
+  `docs/planning/cran-2.0.0-submission-plan.md` Phase 4 STATUS → RE-GATE
+  COMPLETE; Phase 5/5a STATUS notes updated (the `cran-comments.md`
+  resync is now unblocked); §0.6 phase diagram and §9 summary table
+  updated.
+- **Next session:** Phase 5a — resync `cran-comments.md` (update the
+  “Resubmission” section for Dragon \#9’s net end-state, the “R CMD
+  check results” section for this session’s numbers, and add the
+  `thoughtco.com` 403 to the pre-explained-NOTEs list), then Phase 5b
+  (win-builder/R-hub, owner-triggered).
+
 ### 2026-07-08 — Execute Phase 3b: reconcile the accumulated NEWS.Rmd dev-version content into the 2.0.0 entry (Session 321)
 
 - **Deliverable:** executed Phase 3b of
