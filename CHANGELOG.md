@@ -47,6 +47,115 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-09 · \[ad hoc\] S335 HANDOFFS.md receipt commit-sha backfill, closed same-session
+
+- **Deliverable:** Filled in this session’s own `HANDOFFS.md` receipt
+  `commit: pending` placeholder with the real close-out commit sha
+  (`33f943e0`) — the same self-correction the previous four sessions
+  (S331-S334) each needed, but closed within the same session this time
+  rather than left for the next session’s Phase 0 reconcile to catch and
+  backfill.
+- **Change:** A session cannot know its own close-out commit’s sha
+  before making that commit, so the receipt is necessarily written with
+  a placeholder first. This entry and the `HANDOFFS.md` edit it
+  describes land in one follow-up commit, immediately after the
+  close-out commit, closing the gap in-session instead of leaving a
+  `commit: pending` marker for `SESSION_RUNNER.md` Phase 0’s
+  reconcile-on-read to find next time.
+- **Session:** S335 · **Verified:**
+  `git log -1 --format=%H -- HANDOFFS.md` will match this commit with no
+  further gap once committed.
+
+### 2026-07-09 · \[ad hoc\] Phase E of the Document-1 article plan: drafted Section 4 (AI-assisted development process) + T6/F4/F5 (Session 335)
+
+- **Deliverable:** Phase E of
+  `docs/planning/v2-transformation-article-plan.md` — drafted Section 4
+  (“An AI-Assisted Development Process”) of
+  `vignettes/articles/engineering-the-2.0.0-release.qmd` plus table T6
+  (engineering-process metrics) and figures F4 (TDD phase-gate Mermaid
+  diagram) and F5 (self-score trend chart), reading Session 331’s frozen
+  `vignettes/articles/data/process-metrics.csv` and
+  `data/self-score-trend.csv` unchanged.
+  **Documentation/article-drafting session for `vignettes/articles/`
+  support; TDD N/A** — no `R/`/`tests/` package code touched. 0
+  `AskUserQuestion` gates (direct continuation of an already-ratified
+  plan phase, the highest-scrutiny one per the plan’s own dragon \#2). 0
+  stakeholder corrections.
+- **Change:** T6 presents 9 frozen metrics (328 sessions in range, 512
+  total commits, 309 CHANGELOG entries, 305 PROJECT_LEARNINGS entries, 7
+  complete HANDOFFS receipts, 269/2 stakeholder-correction mention
+  split). Both T6 and F5 carry an explicit “Phase A data freeze (Session
+  331)” caption stating the source files are live and had already grown
+  past the frozen snapshot by this session — verified firsthand, not
+  assumed: live `CHANGELOG.md` is 317 entries and live
+  `PROJECT_LEARNINGS.md` is 310, vs. the frozen 309/305. F5 (`ggplot2`
+  line chart) reorders the frozen CSV’s rows by session number — the raw
+  file’s date-only sort left same-day sessions in reverse-numeric order,
+  a stable-sort artifact — without mutating the frozen file, and flags
+  that Sessions 329-330 postdate the range’s own end commit (`8ca8bb24`)
+  despite sharing its calendar date (verified via `git log` timestamps).
+  F4 (Mermaid `stateDiagram-v2`) diagrams the RED→GREEN→REFACTOR cycle
+  annotated with the `AskUserQuestion` phase-gate mechanism from
+  `CLAUDE.md`’s Development Process Contract. Independently re-verified
+  3 claim-map facts rather than trusting the plan’s summary table alone:
+  `SESSION_RUNNER.md`’s failure-mode table has exactly 27 rows, Session
+  324 is genuinely the earliest complete `HANDOFFS.md` receipt, and the
+  Session-325 CHANGELOG ledger-format-resolution date. Cited the
+  4-consecutive-session commit-sha-backfill self-correction pattern
+  (`cc0f7798`/`2278b46f`/`ee690776`/`5f0b81d2`) as concrete,
+  already-real evidence of the ledger mechanism working, rather than a
+  hypothetical claim. Marked Phase E `DONE` in the plan’s §7. Verified
+  via `quarto render`:
+  `@tbl-process-metrics`/`@fig-tdd-cycle`/`@fig-self-score-trend`
+  resolved as “Table 5”/“Figure 4”/“Figure 5”, zero unresolved-ref hits,
+  full-document numbering sequential (Tables 1-5, Figures 1-5). **F4’s
+  first version had a real defect `quarto render`’s exit code could not
+  catch:** a `\n` inside Mermaid transition labels (wrongly modeled on
+  F2’s flowchart `<br/>` syntax) rendered as a literal backslash-n, not
+  a line break — `quarto render` never itself parses embedded Mermaid
+  source (ships to the reader’s browser for client-side rendering).
+  Caught by statically rendering the extracted `.mmd` via
+  `npx -y @mermaid-js/mermaid-cli` and inspecting the actual PNG
+  (`rsvg-convert` was tried first and rejected — it doesn’t support
+  Mermaid’s `foreignObject` label elements and rendered a worse,
+  misleading false defect); fixed by keeping each transition label on
+  one physical line, re-verified via `mermaid-cli`, then re-rendered the
+  full article to confirm.
+- **Also:** Added `PROJECT_LEARNINGS.md` Learning 311 — `quarto render`
+  succeeding on a `.qmd` with a native Mermaid diagram proves nothing
+  about whether the embedded Mermaid syntax parses; it ships raw to the
+  reader’s browser for client-side rendering. Verify any new Mermaid
+  diagram type by statically rendering it with `mermaid-cli` and
+  inspecting the actual image before trusting a green `quarto render`,
+  and don’t substitute `rsvg-convert` for that check (no `foreignObject`
+  support). Updated `CLAUDE.md`’s learning-count pointer (310 → 311
+  learnings, Sessions 1–334+ → 1–335+).
+- **Session:** S335 · **Verified:** `quarto render` output HTML
+  inspected directly for resolved cross-references and correct
+  table/figure numbering; a standalone `mermaid-cli` PNG render caught
+  and confirmed the fix for a real Mermaid label-escaping defect before
+  it reached the committed article; render artifacts cleaned up before
+  staging; direct greps/`git log` checks (not the plan’s summary table
+  alone) for the FM-27 count, the Session-324 receipt start, and the
+  live-vs-frozen CHANGELOG/PROJECT_LEARNINGS drift.
+
+### 2026-07-09 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit 5f0b81d2 — S334 HANDOFFS.md receipt commit-sha backfill
+
+- **Deliverable:** Phase 0 ledger reconcile (this session) found one
+  commit past the `CHANGELOG.md` frontier with no ledger entry:
+  `5f0b81d2` (“docs: S334 – backfill own HANDOFFS.md receipt commit
+  sha”), landed after S334’s own close-out commit (`735a3f2a`) that
+  recorded the entry below.
+- **Change:** `5f0b81d2` replaced the S334 `HANDOFFS.md` receipt’s
+  `commit: pending` placeholder with the real commit sha (`735a3f2a`) —
+  a self-correction of the just-written receipt, not new production
+  work. Same class of action as the `62339088`/`2278b46f`/`cc0f7798`
+  backfills below (S333’s, S332’s, and S331’s equivalent self-fixes).
+- **Session:** this session (backfilling S334’s own commit) ·
+  **Verified:** `git show --stat 5f0b81d2` (single-file, 2-line diff to
+  `HANDOFFS.md`); `git log -1 --format=%H -- HANDOFFS.md` now matches
+  `5f0b81d2` with no further gap.
+
 ### 2026-07-09 · \[ad hoc\] Phase D of the Document-1 article plan: drafted Section 3 (testing at scale) + T5/F3 (Session 334)
 
 - **Deliverable:** Phase D of

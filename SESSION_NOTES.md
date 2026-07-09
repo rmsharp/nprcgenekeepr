@@ -7,6 +7,188 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 335 Did
+
+**Deliverable:** Phase E of
+`docs/planning/v2-transformation-article-plan.md` – draft Section 4 (An
+AI-Assisted Development Process) + table T6 + figures F4/F5, reading
+Session 331’s frozen `vignettes/articles/data/process-metrics.csv` and
+`data/self-score-trend.csv`. **Documentation/article-drafting session
+for `vignettes/articles/` support – no `R/`/`tests/` package code
+touched. TDD phase: N/A** (matches S107-S110/S330-S334 article-session
+precedent; declared every response). **Started / Completed:** 2026-07-09
+/ 2026-07-09 **Status:** **DONE.** Added **Section 4** (“An AI-Assisted
+Development Process”) to
+`vignettes/articles/engineering-the-2.0.0-release.qmd` with **T6**
+(`@tbl-process-metrics`, 9-row engineering-process metrics table),
+**F4** (`@fig-tdd-cycle`, Mermaid `stateDiagram-v2` of the
+RED-\>GREEN-\>REFACTOR cycle annotated with `AskUserQuestion` phase
+gates), and **F5** (`@fig-self-score-trend`, `ggplot2` line chart of the
+7-session self-score window), plus three prose subsections (the
+SESSION_RUNNER three-phase protocol; strict TDD with gated transitions;
+self-assessment and the durable correction ledger). T6/F5 read Phase A’s
+frozen `process-metrics.csv`/`self-score-trend.csv` unchanged – no new
+extraction – but both carry an explicit “Phase A data freeze (Session
+331)” caption stating the source files are live and had already grown
+past the frozen snapshot by this session (verified firsthand: live
+`CHANGELOG.md` is 317 entries and live `PROJECT_LEARNINGS.md` is 310,
+vs. the frozen 309/305 – a real, checked distinction, not assumed). F5’s
+raw CSV row order turned out to be a stable-sort artifact (same-day
+sessions in reverse-numeric order from the frozen file’s own
+newest-on-top read pattern); reordered by session number client-side for
+the chart, matching T2’s established
+reorder-without-mutating-the-frozen-file precedent, and flagged in the
+caption that Sessions 329-330 postdate the range’s own end commit
+(`8ca8bb24`) despite sharing its calendar date (verified via `git log`
+timestamps, not assumed). Independently verified three claim-map facts
+before citing them rather than trusting the summary table alone:
+`SESSION_RUNNER.md`’s failure-mode table has exactly 27 rows (grepped
+row 27 exists, row 28 does not), Session 324 is genuinely the earliest
+complete `HANDOFFS.md` receipt (grepped every `session:` line in file
+order), and the Session-325 CHANGELOG ledger-format-resolution date
+(`CLAUDE.md:169`). Cited a concrete, verifiable example of the ledger’s
+self-correcting mechanism working: the same-session `commit: pending`
+receipt-sha placeholder was independently caught and fixed by the
+following session’s Orient step four consecutive times (`cc0f7798`,
+`2278b46f`, `ee690776`, `5f0b81d2`), each already a real commit in this
+repo’s history, not a hypothetical.
+
+**Verification performed (this deliverable’s build-equivalent):**
+`quarto render vignettes/articles/engineering-the-2.0.0-release.qmd` –
+succeeded cleanly; confirmed via the rendered HTML that
+`@tbl-process-metrics`/`@fig-tdd-cycle`/`@fig-self-score-trend` resolved
+as “Table 5”/“Figure 4”/“Figure 5”, zero `class="quarto-unresolved-ref"`
+hits, all figure/table numbering sequential across the whole document
+(Tables 1-5, Figures 1-5). **F4’s first version had a real defect
+exit-code-0 could not catch:** a `\n` inside Mermaid `stateDiagram-v2`
+transition labels (wrongly modeled on F2’s flowchart `<br/>` syntax)
+rendered as a literal two-character backslash-n string, not a line break
+– invisible to `quarto render`, which never itself parses embedded
+Mermaid source (ships to the reader’s browser for client-side rendering;
+`quarto render` succeeding proves the JS runtime is wired in, nothing
+about the diagram’s own syntax). Caught by statically rendering the
+extracted `.mmd` via `npx -y @mermaid-js/mermaid-cli` and inspecting the
+actual PNG – `rsvg-convert` was tried first and rejected as a
+verification method: it doesn’t support the `<foreignObject>` elements
+Mermaid state diagrams use for labels, so it rendered the diagram’s
+shape with every label invisible, a worse and misleading false defect.
+Fixed by keeping each transition label on one physical line; re-rendered
+via `mermaid-cli` to confirm the fix before applying it to the article,
+then re-ran `quarto render` on the whole document. Cleaned up render
+artifacts (`.html`, `_files/`, an auto-generated `.gitignore`) before
+staging, per Learning 308.
+
+**Session 334 Handoff Evaluation (by Session 335): Score 8/10.** **What
+helped:** the “SUGGESTED NEXT” named Phase E’s exact scope (Section 4 +
+T6/F4/F5, the two specific frozen CSVs to read) and its most
+load-bearing caveat – F5’s partial-coverage caution, sourced correctly
+to the plan’s own §6 note – which this session applied directly to the
+figure caption without having to re-derive it. Correctly identified both
+remaining open owner decisions (Section 5, F6) as not gating this phase,
+matching what actually held once drafting started (neither was needed
+for T6/F4/F5). The conditional `BACKLOG.md` instruction (“prune it next
+time `BACKLOG.md` is already open”) was precise enough to correctly NOT
+apply here – Phase E’s deliverable never needed to open `BACKLOG.md` for
+any reason, so the condition never triggered; noted explicitly here
+rather than silently doing nothing. **What was missing:** did not flag
+that T6/F5’s own source files (unlike T5’s git-ls-tree-at-sha data,
+which is tied to specific immutable commits) are LIVE, still-growing
+files being read at a POINT IN TIME (Phase A, Session 331) – meaning by
+Phase E, four more sessions’ worth of `CHANGELOG.md`/
+`PROJECT_LEARNINGS.md` growth had already accumulated past the frozen
+snapshot. This session had to discover and verify that distinction
+independently (a real, if foreseeable, gap: S334 had already read the
+extraction script closely enough for T5’s column-definition question and
+could plausibly have noticed the same live-vs-frozen distinction applies
+more sharply to T6). **What was wrong:** nothing found wrong – the
+process-metrics.csv/self-score-trend.csv facts and the F5
+coverage-caveat framing S334 pointed at all held on independent
+verification. **ROI:** good – saved real re-derivation time on scope and
+the F5 caveat, but this session still had to do its own verification
+pass on the frozen-vs-live distinction and on Mermaid syntax rigor,
+neither of which the handoff anticipated.
+
+**Self-assessment (Session 335): 8/10.** **Strengths:** (1) did not
+trust the plan’s own Claim-Evidence Map (C10-C14) or S334’s
+characterization alone – independently re-verified the FM-27 count, the
+Session-324 receipt-window start, and the frozen-vs-live drift in
+`CHANGELOG.md`/`PROJECT_LEARNINGS.md` (317/310 live vs. 309/305 frozen)
+via direct greps/`git log`, catching a real gap in the inherited handoff
+before it became a silent overclaim in a public document; (2) caught and
+fixed a real rendering defect (Mermaid `\n` label bug) that this
+article’s own established verification bar (`quarto render` exit code +
+resolved cross-refs) could not have caught, by extending the
+verification method itself (a standalone `mermaid-cli` PNG render)
+rather than trusting a green `quarto render` the way F2’s own S332
+precedent implicitly had to; documented the gap as new Learning 311 so a
+future session adding a different Mermaid diagram type inherits the
+technique rather than re-discovering it; (3) fixed a genuine, if minor,
+data-presentation bug in F5 (stable-sort artifact leaving same-day
+sessions in reverse-numeric order) without mutating the frozen CSV,
+matching established precedent (T2’s client-side reorder) rather than
+either the wrong chronological order or a forbidden edit to frozen Phase
+A data; (4) held scope tightly – did not touch F6, Section 5, or
+`BACKLOG.md` (correctly evaluated the conditional instruction and found
+it did not trigger, stated explicitly rather than silently skipped); did
+not re-extract live data despite discovering the frozen/live drift,
+staying within “read Phase A’s frozen data” per the Reproducibility
+Decision and instead documenting the drift as an explicit caption
+caveat. **Weaknesses:** (-) the first drafted version of F4 had the `\n`
+defect at all – an avoidable mistake (F2’s `<br/>` pattern doesn’t
+transfer to `stateDiagram-v2`, which this session should have either
+checked in Mermaid’s own docs or verification-rendered before writing
+the “real” version into the article, rather than after); caught and
+fixed within-session before commit, but the more disciplined order is
+verify-then-write, not write-then-verify-then-fix. (-) did not attempt
+to independently verify the
+`stakeholder_correction_zero_mentions`/`nonzero_mentions` grep pattern
+(`grepl("0 stakeholder correction", ...)`) against a hand-sample of
+`SESSION_NOTES.md` entries the way S333/S334 spot-checked their own
+domain claims – took the frozen 269/2 split and its “mention-count
+proxy” framing from the plan’s own C14 row without an independent
+sanity-check grep, which would have been cheap and is exactly the kind
+of “don’t draft from the summary table alone” discipline the plan’s §3
+states. **Phase 3E (runtime smoke test) does not apply** – no `R/`
+package behavior changed; `quarto render` plus the standalone
+`mermaid-cli` verification (above) is this deliverable’s actual
+build-equivalent verification, stated explicitly per FM \#24.
+
+**Learnings:** New: `PROJECT_LEARNINGS.md` Learning 311 (`quarto render`
+succeeding on a Mermaid diagram proves nothing about the embedded
+Mermaid syntax itself – it ships raw to the reader’s browser for
+client-side parsing; verify any new Mermaid diagram type by statically
+rendering it with `mermaid-cli` and inspecting the actual image before
+trusting a green `quarto render`). Updated `CLAUDE.md`’s
+`PROJECT_LEARNINGS.md` pointer line (310 -\> 311 learnings, Sessions
+1-334+ -\> 1-335+). Carried as applied (all held, no incidents):
+\[\[consult-project-source-of-truth\]\],
+\[\[push-close-out-docs-to-origin\]\].
+
+**=\> SUGGESTED NEXT.** Phase F of
+`docs/planning/v2-transformation-article-plan.md` (§7) – the publish
+gate: draft the Abstract, Introduction, optional Section 5 (“By the
+Numbers” – owner decision per §12.2, recommend drafting only if Sections
+1-4’s own tables don’t already give a reader a quick-scan summary), and
+Conclusion (with the NIH grant acknowledgment, P51 RR13986/P51 OD011092,
+matching `CLAUDE.md`/`DESCRIPTION`); then the full §10 Verification
+Checklist – every numeric/dated claim across ALL FOUR sections
+re-checked against the Claim-Evidence Map (not just Section 4’s),
+`quarto render` +
+[`pkgdown::build_article()`](https://pkgdown.r-lib.org/reference/build_articles.html) +
+`R CMD build .` + `tar tzf` (confirm zero CRAN risk, matching the
+S107-110 precedent – this is the first phase since Phase A that needs
+this fuller chain, not just `quarto render` alone), a spot-check that
+the four pre-existing `vignettes/articles/*.qmd` still render, and F6
+(screenshot reuse) needs an explicit owner `AskUserQuestion` before
+Phase F touches `vignettes/shiny_app_use/` – still untouched, now
+genuinely relevant since Phase F is where it would land if used at all.
+**Two dragons converge in Phase F** (§9 point 3: this phase publishes to
+a public URL, not fully reversible in practice even though the `.qmd`
+itself is), so treat its checklist as a real gate. `BACKLOG.md`’s stale
+“#40 open” line remains unpruned – flagged by four consecutive sessions
+now (S333-S335 explicitly, S334 twice); if Phase F or any future session
+opens `BACKLOG.md` for any reason, prune it then.
+
 ### What Session 334 Did
 
 **Deliverable:** Phase D of

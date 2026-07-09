@@ -524,6 +524,126 @@ Figure 3: Test-suite growth over the same five checkpoints as <a href="#tbl-tes
 <p>That bar was deliberate, not an oversight. The sub-plan documented, in the same session that closed #39, why an executable suite does not by itself mean the suite validates behavior: <code>navbarPage</code> renders every tab’s static markup into the DOM at boot, hidden by CSS, so the suite’s dominant pattern – navigate to a tab, then <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl()</a></code> a keyword against the whole page body – passes once the app merely boots, regardless of which tab is actually selected. Coverage at the end of 8d was boot-level. A follow-on issue, #40, was filed at that same session to close that specific gap.</p>
 <p>Closing #40 took a further seven-slice pass (8e-1 through 8e-7, Session 37-50, 2026-06-07 to 2026-06-10) that replaced boot-level <code>expect_true(TRUE)</code> tautologies – 41 of them, suite-wide – with assertions tied to the actually-selected pane, fixed a wrong-tab navigation defect in the Summary Statistics family (7 of 8 tests targeted “Genetic Value Analysis” instead of their own tab), and, in its last three slices (8e-6a/b/c), rewired the pedigree-upload, Genetic Value Analysis, and breeding-group E2E blocks to drive the package’s real analytical pipelines end to end rather than asserting against static markup. A final slice, 8e-7 (Session 50), addressed an operational flake rather than a behavioral gap: running all 23 files in one CI process had produced roughly one transient Chrome/driver error per five full-tier runs; partitioning the run into 13 per-module groups, each a fresh R process, capped any single process at three files. Issue #40 closed the following day, 2026-06-11.</p>
 <p>As of 2026-07-09, both issues are closed and the harness the sub-plan describes is the one currently checked in: <code>.github/workflows/shinytest2.yaml</code> runs nightly (07:00 UTC) and on manual dispatch, opts every test in via <code>NPRC_RUN_E2E</code>, and executes the 23-file <code>^(app|e2e)-</code> tier as the 13-group partition 8e-7 added – distinct from <code>R-CMD-check.yaml</code> and <code>test-coverage.yaml</code>, which remain the fast, per-pull-request gate.</p>
+</section></section><section class="level2"><h2 id="sec-methodology">Section 4 – An AI-Assisted Development Process<a class="anchor" aria-label="anchor" href="#sec-methodology"></a>
+</h2>
+<p>Sections 1 through 3 describe <em>what</em> changed between v1.0.8 and v2.0.0. This section describes <em>how</em>: every session in that work was directed by <strong>Claude Code</strong> (Claude CLI) operating under a written protocol – <code>SESSION_RUNNER.md</code>, <code>SAFEGUARDS.md</code>, and this package’s own <code>CLAUDE.md</code> – rather than open-ended prompting. Within the same 512-commit range as Sections 1-3, <strong>328 numbered sessions</strong> (Session 1, <code>6fd87749</code>, 2026-05-30, through Session 328, the exact v2.0.0-submission commit itself, <code>8ca8bb24</code>) account for 502 of those commits; the other 10 predate the methodology – informal module-branch experimentation plus the framework’s own bootstrap commit (<code>299060c0</code>, 2026-04-02).</p>
+<div class="cell">
+<div id="tbl-process-metrics" class="cell quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-tbl"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-process-metrics-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 5: Engineering-process metrics, as extracted at the Phase A data freeze (Session 331, 2026-07-09). <code>CHANGELOG.md</code>, <code>PROJECT_LEARNINGS.md</code>, <code>HANDOFFS.md</code>, and <code>SESSION_NOTES.md</code> are live, append-only files that kept growing in every session after this extraction ran – including the four sessions (331-334) that drafted the rest of this article – so these counts are a snapshot, not this article’s own present state.
+</figcaption><div aria-describedby="tbl-process-metrics-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table cell caption-top" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead><tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Metric</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Count</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Sessions in range (Session 1 -&gt; Session 328)</td>
+<td style="text-align: right;">328</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pre-methodology commits in range</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Session-1-to-range-end commits</td>
+<td style="text-align: right;">502</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Total commits in range</td>
+<td style="text-align: right;">512</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">CHANGELOG.md ledger entries</td>
+<td style="text-align: right;">309</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PROJECT_LEARNINGS.md entries</td>
+<td style="text-align: right;">305</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Complete HANDOFFS.md receipts</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Self-assessments reporting 0 stakeholder corrections</td>
+<td style="text-align: right;">269</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Self-assessments reporting &gt;=1 stakeholder correction</td>
+<td style="text-align: right;">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<section class="level3"><h3 id="a-written-protocol-not-open-ended-prompting">A written protocol, not open-ended prompting<a class="anchor" aria-label="anchor" href="#a-written-protocol-not-open-ended-prompting"></a>
+</h3>
+<p>Each session follows the same three-phase shape. <strong>Orient</strong> reads <code>SAFEGUARDS.md</code> and <code>SESSION_NOTES.md</code>, checks open GitHub issues, runs a project health dashboard (<code>methodology_dashboard.py</code>), and reconciles <code>CHANGELOG.md</code>/<code>HANDOFFS.md</code> against <code>git log</code> for any commit a prior session left unrecorded – then reports what it found and stops for direction; no work begins before the owner responds. <strong>Execute</strong> commits to exactly <strong>one deliverable</strong> per session (“1 and done”) and claims it in <code>SESSION_NOTES.md</code>/<code>HANDOFFS.md</code> before any technical work starts, so a session that crashes mid-task still leaves a trace. <strong>Close out</strong> evaluates the previous session’s handoff, self-assesses against a written score, records new learnings, writes the next session’s handoff, and appends a dated entry to <code>CHANGELOG.md</code> before committing. <code>SESSION_RUNNER.md</code> names the failure to do that last step <strong>“unrecorded action”</strong> – one of 27 named, numbered failure modes the protocol maintains, each added after a session was observed failing that specific way.</p>
+</section><section class="level3"><h3 id="strict-tdd-gated-by-explicit-confirmation">Strict TDD, gated by explicit confirmation<a class="anchor" aria-label="anchor" href="#strict-tdd-gated-by-explicit-confirmation"></a>
+</h3>
+<p>For production R code – not this article’s own drafting sessions, see below – <code>CLAUDE.md</code>’s Development Process Contract requires <strong>strict red-green-refactor TDD</strong>: RED writes only failing tests, no implementation code; GREEN writes the minimum implementation that passes them, no new functionality; REFACTOR improves structure with no behavior change, all tests still passing. <a href="#fig-tdd-cycle" class="quarto-xref">Figure 4</a> diagrams the cycle. What makes it more than a style guideline is the enforcement mechanism: the assistant must declare its current phase at the top of every response, and every phase transition (<code>PRE-RED-&gt;RED</code>, <code>RED-&gt;GREEN</code>, <code>GREEN-&gt;REFACTOR</code>) is gated by a structured <code>AskUserQuestion</code> prompt – not a prose question – with a header of the exact form <code>TDD: &lt;FROM&gt;-&gt;&lt;TO&gt;</code>, an option spelling out the concrete next-phase actions and verification, and an explicit hold/alternative option. Skipping a phase, or writing implementation code during RED, is a declared protocol violation the assistant must acknowledge and correct.</p>
+<div id="fig-tdd-cycle" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-tdd-cycle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p>
+<figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">stateDiagram-v2
+    [*] --&gt; RED: AskUserQuestion gate (PRE-RED -&gt; RED)
+    RED --&gt; GREEN: AskUserQuestion gate (RED -&gt; GREEN)
+    GREEN --&gt; REFACTOR: AskUserQuestion gate (GREEN -&gt; REFACTOR)
+    REFACTOR --&gt; [*]
+
+    note right of RED
+      Write failing tests only.
+      No implementation code.
+    end note
+    note right of GREEN
+      Minimum code to pass.
+      No new functionality, no refactor.
+    end note
+    note right of REFACTOR
+      Improve structure only.
+      No behavior change; tests stay green.
+    end note
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tdd-cycle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 4: The RED -&gt; GREEN -&gt; REFACTOR cycle <code>CLAUDE.md</code>’s Development Process Contract requires for production R code, with an explicit <code>AskUserQuestion</code> confirmation gate at every transition. Documentation and article-drafting sessions – including all four sessions that produced Sections 1-3 and the session that produced this one – are an explicitly declared exception (TDD phase “N/A”, stated at the top of every response) rather than a silent omission.
+</figcaption></figure>
+</div>
+<p>This article’s own drafting sessions illustrate the exception rather than the rule: none touched <code>R/</code> or <code>tests/</code>, so each declared <strong>TDD phase: N/A</strong> explicitly in every response instead of running the cycle against prose it does not apply to – a small instance of the same discipline extending to correctly scoping <em>when</em> a rule applies, not applying it uniformly regardless of fit.</p>
+</section><section class="level3"><h3 id="self-assessment-and-a-durable-correction-ledger">Self-assessment and a durable correction ledger<a class="anchor" aria-label="anchor" href="#self-assessment-and-a-durable-correction-ledger"></a>
+</h3>
+<p><a href="#fig-self-score-trend" class="quarto-xref">Figure 5</a> plots every complete <code>HANDOFFS.md</code> self-assessment score against session, for the sessions with one available.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-self-score-trend" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-self-score-trend-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="engineering-the-2.0.0-release_files/figure-html/fig-self-score-trend-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-self-score-trend-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 5: Session self-assessed scores (0-10 scale, <code>HANDOFFS.md</code>’s <code>self_score</code> field), the 7 sessions with a complete receipt as of the Phase A data freeze. <strong>Partial window, not a trend across the range:</strong> receipts began at Session 324, one session before the <code>CHANGELOG.md</code> ledger-format resolution (Session 325) – these 7 sessions are roughly 2% of the 328-session range, and Sessions 329-330 were committed after the range’s own end commit (<code>8ca8bb24</code>), on the same calendar day. Mean score across the 7: 8.57.
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>The mechanism behind that self-scoring is a durable receipt, not a spoken summary: each session writes a <code>HANDOFFS.md</code> block recording what it did, what is next, key files, gotchas, and its own score, and the <em>next</em> session scores that handoff in turn before starting its own work – visible in <a href="#tbl-process-metrics" class="quarto-xref">Table 5</a> as 7 complete receipts against 328 sessions in range (the receipt requirement itself dates to Session 324). The same append-only discipline extends to <code>CHANGELOG.md</code>, and this article’s own drafting sessions are a live, verifiable example of it working: each of the four sessions that wrote Sections 1-3 closed out with a <code>commit: pending</code> placeholder in its own <code>HANDOFFS.md</code> receipt (a session cannot know its own close-out commit’s sha before making that commit), corrected the placeholder with one small follow-up commit once the sha existed, and – because that follow-up commit landed after the session’s own <code>CHANGELOG.md</code> entry was already written – the <em>following</em> session’s Orient step caught and logged it in turn: <code>cc0f7798</code> (Session 331’s fix, logged by Session 332), <code>2278b46f</code> (Session 332’s fix, logged by Session 333), <code>ee690776</code> (Session 333’s fix, logged by Session 334), and <code>5f0b81d2</code> (Session 334’s fix, logged by this article’s fifth session). Four consecutive sessions produced the same small gap; four consecutive Orient steps caught it.</p>
+<p><code>PROJECT_LEARNINGS.md</code> – 305 dated entries as of the same Phase A freeze, each naming a concrete finding, file, mechanism, and verdict, plus a glossary of named recurring reflexes cited by tag – is this project’s running record of what went wrong and what fixed it. <code>SESSION_RUNNER.md</code> maintains a parallel, numbered catalog of 27 named failure modes at the methodology level – among them “Eager to start” (skipping orientation), “Minimal handoff” (a technically-present but functionally useless handoff), and “Unrecorded action” (the gap the receipt-sha backfills above illustrate) – each added after a session was observed failing that way. Neither catalog is edited to remove an entry once a session outgrows it; corrections accumulate rather than get erased.</p>
+<p><a href="#tbl-process-metrics" class="quarto-xref">Table 5</a>’s stakeholder-correction figures are the least precise numbers in this section, and are presented with that caveat rather than smoothed over: across <code>SESSION_NOTES.md</code>’s self-assessments, 269 explicit mentions report zero stakeholder corrections and 2 report exactly one – 99.3% zero, by mention count. That is a text-mention proxy, not an independently re-verified per-session audit; a session’s own self-assessment is not an external check on itself. Read it as “the sessions that stated a number mostly stated zero,” not as an audited defect rate.</p>
 </section></section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
