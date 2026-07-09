@@ -6,6 +6,137 @@
 
 ## ACTIVE TASK
 
+### What Session 320 Did
+**Deliverable:** Owner directive: "All remaining current issues will not be
+addressed prior to the next CRAN release; current session is to plan for
+that release." Updated `docs/planning/cran-2.0.0-submission-plan.md` in
+place to reconcile it against everything that landed since its last real
+gate (S240-S242) and to scope the release around the deferred-issues
+directive. **Planning-only session -- TDD N/A** (no `R/`, `tests/`,
+`DESCRIPTION`, or `NEWS.Rmd` content changed; matches SESSION_RUNNER's
+Planning Sessions discipline -- the plan is the deliverable, implementation
+is a separate session, FM #18). 2 `AskUserQuestion` gates (roll accumulated
+dev-version content into one release vs. ship 2.0.0 as scoped; version
+number for the merged release).
+**Started / Completed:** 2026-07-08 / 2026-07-08
+**Status:** **DONE.** Plan updated and committed. **0 stakeholder
+corrections.**
+
+**Session 319 Handoff Evaluation (by Session 320): Score 7/10.** S319's
+report was accurate and clean -- confirmed git status, dashboard 98/100,
+and (most useful) carried the standing backlog line "the CRAN thread
+(package ARCHIVED 2025-07-29, owner-run, **HARD STOP**)" that became this
+session's actual starting thread once the owner redirected toward CRAN
+planning. **What helped:** that carried line was the exact seed fact this
+session pulled on -- without it, orientation would have needed to discover
+the CRAN thread's existence from scratch (it's not in GitHub Issues at
+all). **What was missing:** the line was pure boilerplate, unchanged since
+roughly S136 -- it never flagged that the gate it referenced (S134/S240/
+S241) had gone 124 commits stale, or that `NEWS.Rmd` had accumulated a
+350-line unreconciled `(development version)` section. To be fair, this
+wasn't S319's job (S319 was working the orthogonal #103 thread) and the
+staleness is something *this* session's own research had to surface --
+S319 can't be faulted for not investigating a thread it wasn't asked to
+touch. **ROI:** positive but modest -- saved the "does a CRAN thread even
+exist" lookup, contributed nothing toward the actual gap this session found
+(that required a dedicated research fork over CHANGELOG.md/SESSION_NOTES.md/
+NEWS.Rmd/git history).
+
+**Self-assessment (Session 320): 8/10.** Oriented fully (SAFEGUARDS +
+SESSION_NOTES + GH issues + dashboard + git status) before the owner gave
+the CRAN-planning directive. **Strengths:** (1) did not take the existing
+`cran-2.0.0-submission-plan.md`'s phase STATUS blocks at face value --
+before writing anything, checked `CRAN-SUBMISSION` (still 1.0.8), `git tag`
+(no v2.0.0), and `NEWS.Rmd` firsthand, which is what surfaced the
+unreconciled dev-version gap the plan itself didn't flag; (2) used a
+background research fork (`Agent subagent_type: fork`) to trace the CRAN
+history across an 11,000-line `SESSION_NOTES.md` + `CHANGELOG.md` without
+burning main-thread context on raw grep output, then re-verified the
+fork's key claim (the NEWS.Rmd dev-section content) with a firsthand
+`Read` before citing it in the plan, per FM #11; (3) surfaced two owner-
+level decisions (roll-up-vs-split, version number) via `AskUserQuestion`
+rather than defaulting silently, since both materially change what the
+next session (Phase 3b) writes; (4) followed the plan document's own
+established convention (STATUS blockquotes appended in place per session,
+S132 through S242) rather than authoring a competing second plan document
+-- kept one continuous history; (5) caught and fixed two citation-precision
+errors in my own draft (a nonexistent "§5.1" and a misattributed "Dragon
+#1") on a full re-read before treating the plan as done, rather than
+shipping the first draft; (6) quantified the drift precisely (`git diff
+--stat` against the exact last-gate commit `83233265`) rather than saying
+"a lot has changed." **Weaknesses:** (-) did not spot-check whether the 9
+"new exported R/ files since S242" list (§0.4) is fully exhaustive beyond
+the one `git diff --name-status` grep -- explicitly flagged this caveat
+inline in the plan rather than asserting a false completeness, but a more
+thorough session could have cross-checked against NEWS.Rmd's own "New
+features" bullet count; (-) Phase 3E (runtime smoke test) does not apply
+-- no `R/` behavior changed, stated explicitly rather than silently
+skipped, per FM #24.
+
+**Learnings:** New: `PROJECT_LEARNINGS.md` Learning 297 -- a standing
+"owner-blocked / HARD STOP" backlog line can silently outlive the gate
+result it was blocking on, because every OTHER session's unrelated commits
+keep moving the ground it sits on; before trusting a long-dormant gate,
+check how far the tree has drifted since the commit it actually verified,
+not just re-read the carried status line. Also captures: an unshipped
+intermediate version can absorb unbounded later work without anyone
+noticing the gap grow (the #110 direction-reversal specifically), and that
+a planning artifact with its own established amend-in-place convention
+should be extended in place, not forked into a competing document. Carried
+as applied (all held, no incidents): [[consult-project-source-of-truth]],
+[[observation-vs-decision]], [[ascii-only-in-question-options]],
+[[push-close-out-docs-to-origin]].
+
+**=> SUGGESTED NEXT.** Execute **Phase 3b** of
+`docs/planning/cran-2.0.0-submission-plan.md` -- reconcile `NEWS.Rmd`'s
+`# nprcgenekeepr (development version)` section (lines 15-364, ~350 lines)
+into the `# nprcgenekeepr 2.0.0` entry. Start by resolving **Dragon #9**
+first (§0.5): the `runModularApp()`/`runGeneKeepR()` bullet pair must
+collapse to one net-end-state bullet, not a concatenation of both
+directions. Then classify every dev-section bullet Major vs. Minor per
+§6.3's rubric (the plan's §0.4 already groups them by NEWS.Rmd's own
+`Changes` / `New features` / `Documentation` / `Internal changes`
+headers). This is a content-heavy prose session -- TDD N/A for the NEWS
+prose itself, but re-run `test_getVersion*`/`test_appUI_version.R` since
+version-string regen (README/CITATION.cff) touches that surface. **Do
+NOT** re-run the Phase 4 local `--as-cran` gate or touch `cran-comments.md`
+in the same session as Phase 3b -- those are separate phases per the
+plan's own FM #18/#25 discipline (no bundling). Adjacent open backlog
+(unchanged from S315-319, all explicitly deferred past this release per
+the owner's directive this session): issue **#116** Flags column
+(BLOCKED); **#37** exported functions not used by app; **#53** `si.re`
+column-name defect; **#36/#28/#12/#11/#10/#5** older backlog. **E4**
+(rate-of-coancestry Ne) remains DEFERRED.
+
+**Key files (this session).** **Modified:**
+`docs/planning/cran-2.0.0-submission-plan.md` (extensively -- new §0 with
+6 subsections, new Phase 3b, updated STATUS blocks on Phase 3/4/5, updated
+§5 dragons +2, §8 decisions +2, §9 summary table), `CHANGELOG.md` (this
+session's entry), `PROJECT_LEARNINGS.md` (Learning 297), `SESSION_NOTES.md`
+(this handoff). **No `R/`, `tests/`, `DESCRIPTION`, or `NEWS.Rmd` changed**
+-- this was a planning-only session per SESSION_RUNNER's Planning Sessions
+discipline. **Not committed (pre-existing, untouched):** `.DS_Store`
+(modified), `PED_GV_AUDIT_2026-05-30.html` (untracked) -- left alone as
+S308-S319 all have.
+
+**Gotchas for next session.** (1) **Phase 3b is a big prose session** --
+350+ lines to classify and merge; if it can't finish cleanly in one
+session, the plan explicitly allows stopping after classification +
+Dragon #9's resolution and leaving the re-render for a continuation
+(§Phase 3b Session boundary). (2) **Do not run win-builder/R-hub before
+the Phase 3b -> Phase 4 -> Phase 5a-resync sequence lands** -- the current
+`cran-comments.md` states a fact (`runModularApp()` primary) that Phase 3b
+will reverse; running cross-platform checks against a mismatched cover
+note wastes the owner's ~30-min-per-platform budget for nothing (Phase 5
+STATUS note, plan). (3) **Version stays 2.0.0** -- confirmed by the owner
+this session; do not re-litigate unless Phase 3b execution surfaces a
+concrete reason the merged scope no longer fits (state explicitly if so).
+(4) The "9 new exported R/ files since S242" list in plan §0.4 is not
+asserted exhaustive -- confirm file-by-file during Phase 3b execution. (5)
+Issue **#53** (the `si.re` dataset-column defect, plan Phase 4 STATUS
+note) is now explicitly cross-referenced as out-of-scope-but-tracked, not
+a NEW discovery -- check #53 before re-filing.
+
 ### What Session 319 Did
 **Deliverable:** "Finish 103" -- complete issue #103's one remaining
 concretely-scoped item, the internal (`@noRd`) title-voice sweep (Finding 3

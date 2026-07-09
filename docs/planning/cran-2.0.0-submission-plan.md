@@ -2,9 +2,67 @@
 
 **Tracks:** Owner directive (Session 101, 2026-06-16): *"prepare this package for submission to CRAN; version goes to 2.0.0; `NEWS.Rmd` since 1.0.8 reorganized into Major/Minor changes, tightened for package users."*
 **Authored:** Session 101 (2026-06-16), **planning session**. The TDD code-phases (RED/GREEN/REFACTOR) are **inapplicable to this document** — it is a plan. Each implementation phase below is its own strict-TDD session, with its TDD classification stated per phase.
+**Refreshed:** Session 320 (2026-07-08), **planning session** — owner directive: *"All remaining current issues will not be addressed prior to the next CRAN release; current session is to plan for that release."* Reconciles the plan against 124 commits of work landed since the last gate (S240-S242) and scopes the release to exclude all currently-open issues. See **§0** for the full refresh; phases 1-2 unaffected, phase 3 superseded by new **Phase 3b**, phases 4/5a flagged for re-verification, phase 5b unchanged in mechanics but now gated behind 3b/4/5a.
 **Evidence base:** every claim below is from a firsthand source verified this session — a 9-agent research+audit workflow (`wy9xitgt6`: 5 web-research agents over CRAN Policy / Writing R Extensions / r-pkgs.org / the two named skills / CRAN status, + 4 read-only codebase auditors over DESCRIPTION+version-strings, `NEWS.Rmd`, R-CMD-check readiness, and build cruft), **plus a firsthand `WebFetch` of the CRAN package page by the session author** to confirm the archival status the whole plan pivots on. Source URLs and `file:line` evidence are inline and in §10.
 
 > **Scope.** This is the planning deliverable. **No `R/`, `tests/`, `DESCRIPTION`, `NEWS.Rmd`, `.Rbuildignore`, or any package content is changed by writing it.** Implementation happens in the subsequent sessions, ONE phase at a time (FM #18 planning-to-implementation bleed; FM #25 horizontal slicing — do **not** bundle plan + implementation, and do **not** bundle phases). The version bump to 2.0.0 and the NEWS rewrite are the owner's headline asks; they are **Phase 3** here, gated behind the cheaper hygiene fixes and the archival root-cause fix that must precede a real check.
+
+---
+
+## 0. Session 320 refresh (2026-07-08) — scoping the actual next release
+
+**Owner directive (verbatim intent):** "All remaining current issues will not be addressed prior to the next CRAN release; current session is to plan for that release." **Planning-only session — no `R/`, `tests/`, `DESCRIPTION`, or `NEWS.Rmd` content changed by this refresh.**
+
+### 0.1 What changed since the last time this plan was touched
+
+The plan's Phase 4/5a gates were last executed **S240-S242** (2026-06-29), against commit `83233265`. Since then: **124 commits**, **235 files touched under `R/` and `tests/`** (`R/`: +2968/−1977 lines; `tests/`: +5384/−769 lines), **9 new exported `R/` files**, and edits to `vignettes/simulatedKValues.Rmd` (50 lines changed — this is the vignette Phase 2's profiling step, §4, named the "prime suspect" for the archival timing cause). **The Phase 4 local `--as-cran` gate and the Phase 5a `cran-comments.md` numbers are therefore STALE** — they describe a tree that no longer exists. See §0.4.
+
+The accumulating evidence is `NEWS.Rmd`'s `# nprcgenekeepr (development version)` section (lines 15-364 as of this session, verified firsthand) — **350 lines**, larger than the entire 2.0.0 entry it sits on top of. It was never folded into a version bump; `git tag` confirms no `v2.0.0` tag exists and `CRAN-SUBMISSION` still records `Version: 1.0.8` — **nothing between archived 1.0.8 and today has ever shipped to CRAN.**
+
+### 0.2 Owner decisions (this session, `AskUserQuestion`)
+
+| # | Decision | Answer | Why |
+|---|---|---|---|
+| 6 | Roll the unreleased dev-version content into one release, or ship 2.0.0 as originally scoped and treat the rest as a later release? | **Roll everything into one release.** | Nothing has shipped since 1.0.8; splitting would create an intermediate "2.0.0" no user ever sees, for no benefit. |
+| 7 | Version number for the merged release? | **Keep 2.0.0.** | Same reasoning as Decision 1 (original plan): 2.0.0 is "the version that clears the archived 1.0.8" — the full accumulated diff still qualifies, since no intermediate version was ever published. |
+
+### 0.3 Scope: issues explicitly deferred past this release
+
+Per the owner directive, **none** of the currently-open GitHub issues are in scope for this release — the release consists only of what has already landed on `master` plus the release mechanics (NEWS reconciliation, re-gate, submission). Deferred (unchanged, re-addressed in a future session):
+
+| Issue | Title | Note |
+|---|---|---|
+| #116 | Add Flags (genotype/phenotype) column to Genetic Diversity dashboard | Already BLOCKED per S319 handoff |
+| #37 | Exported functions not currently used by app | |
+| #36 | Chimpanzee-specific age pyramid plot settings | |
+| #28 | Timestamped transactional location data for missing-parent identification | |
+| #12 | Pull data from ARMS | |
+| #11 | Pull demographic data from Oracle database | |
+| #10 | Predict future GVA through breeding simulation | |
+| #5 | LabKey query feedback | |
+
+### 0.4 Evidence-based inventory — what the reconciliation must cover
+
+**New exported `R/` files since the S242 gate** (`git diff --name-status 83233265..HEAD -- R/ | grep '^A'`): `applyKinshipOverrides.R`, `checkKinshipOverrides.R`, `readKinshipOverrides.R`, `gvaConvergence.R`, `calcGUSE.R`, `setLabKeyDefaults.R`, `getFileDirectRelatives.R`, `getFocalAnimalPedFromFile.R`, `getSpeciesGestation.R` (plus the `speciesGestation`/`loadSpeciesOverrides` additions noted in NEWS but not necessarily new files — confirm file-by-file in Phase 3b execution, this list is not asserted exhaustive beyond the `git diff --name-status` grep).
+
+**`NEWS.Rmd` dev-section content** (verified firsthand, `NEWS.Rmd:15-364`) groups into the file's own existing headers — `Changes` (~25 bullets: #121, #118 three new Ne/GD estimators, #119 sex-specific breeding ages, a `makeSimPed()` correctness fix, **#110**, the `#13` kinship-overrides feature across ~7 bullets, #95, species-column/gestation-table work closing #73, #114), `New features` (7 bullets — the exported functions above), `Documentation` (1 bullet), `Internal changes` (3 bullets). This structure already mirrors the original plan's Major/Minor split (§6) and should drive the Phase 3b classification directly.
+
+### 0.5 Dragon #9 — issue #110 nets out to nothing; do not list both directions
+
+The 2.0.0 entry's own Major-changes bullet says: *"`runModularApp()` is the new Shiny entry point... `runGeneKeepR()` is now a soft-deprecated alias."* The dev-section directly reverses this: *"`runGeneKeepR()` is again the primary Shiny entry point... `runModularApp()` is now the soft-deprecated alias... This reverses the deprecation direction introduced in 2.0.0."* **Since neither direction ever shipped to CRAN, a user of the actual 2.0.0 release will see only the net end-state** — `runGeneKeepR()` primary, `runModularApp()` a deprecated alias (i.e., unchanged from pre-2.0.0 naming). Phase 3b must **rewrite** this bullet to describe only the end state, not concatenate both bullets in sequence (that would read as a self-contradicting release to a CRAN reviewer and to `NEWS.md` readers — the exact failure the plan's existing Dragon #4 warns about for double-counted changes, now recurring at the direction-reversal level, not just duplicate-mention level).
+
+### 0.6 Updated phase sequence
+
+```
+[hygiene] fix build cruft + DESCRIPTION/doc defects              → Phase 1  ✅ (unaffected by the refresh)
+[ROOT CAUSE] examples/tests/vignettes fast under check            → Phase 2  ✅ (unaffected — but see Phase 4 re-gate note; timing was last MEASURED before 124 commits of new test/example surface)
+[NEW] reconcile dev-version NEWS into the 2.0.0 entry              → Phase 3b  ☐ NEW — next session
+[gate] renv::restore() → full local R CMD check --as-cran          → Phase 4  ◐ RE-GATE REQUIRED (stale since S241)
+[cross-platform] win-builder x3 + R-hub v2 + cran-comments         → Phase 5a/5b  ◐ cran-comments RE-SYNC REQUIRED after Phase 4; win-builder/R-hub still PENDING, owner-run
+[post-acceptance] git tag + GitHub release + dev-version bump      → Phase 6  (unchanged, after CRAN accepts)
+```
+
+Each phase remains its own session with a STOP point (FM #18/#25). **Phase 3b is next** — it is a pure documentation/version-bump session (prose + `DESCRIPTION`/`NEWS.Rmd`/README/CITATION.cff regen), REFACTOR-class like the original Phase 3, with the same TDD caveat: any `getVersion()`-dependent test must stay green, and no runtime logic changes here (the actual behavior changes it documents already shipped in their own sessions).
 
 ---
 
@@ -150,7 +208,9 @@ Each `[...]` is one session with a STOP point. The pipeline is necessarily **mos
 
 ### Phase 3 — `NEWS.Rmd` rewrite (Major/Minor, user-facing) + version bump to 2.0.0  (owner's headline)
 
-> **STATUS: COMPLETE — verified firsthand S139.** `NEWS.Rmd` carries a single `# nprcgenekeepr 2.0.0 (20260618)` section with **Major changes / Minor changes** sub-bullets, re-rendered to `NEWS.md`; `DESCRIPTION:5` = `2.0.0` (bumped S131, `e24a53a2`); `README.md` ("Version 2.0.0") + `CITATION.cff` (`version: 2.0.0`) regenerated; prior version sections untouched. Version-dependent tests green (S138 full regression 0/0).
+> **STATUS: COMPLETE for the June-2026 scope — verified firsthand S139.** `NEWS.Rmd` carries a single `# nprcgenekeepr 2.0.0 (20260618)` section with **Major changes / Minor changes** sub-bullets, re-rendered to `NEWS.md`; `DESCRIPTION:5` = `2.0.0` (bumped S131, `e24a53a2`); `README.md` ("Version 2.0.0") + `CITATION.cff` (`version: 2.0.0`) regenerated; prior version sections untouched. Version-dependent tests green (S138 full regression 0/0).
+>
+> **SUPERSEDED as the full release scope (S320, 2026-07-08).** 124 commits since S242 added a `# nprcgenekeepr (development version)` NEWS section (350 lines, `NEWS.Rmd:15-364`) that was never folded into a version bump. Per owner decision (§0.2), this and the existing 2.0.0 section merge into **one** 2.0.0 release — see **Phase 3b** below, which must run before Phase 4 is re-gated.
 
 - **Deliverable:** the single post-1.0.8 `NEWS` section reorganized into user-facing **Major changes / Minor changes** for **2.0.0**, re-rendered to `NEWS.md`; DESCRIPTION at 2.0.0; README + CITATION.cff regenerated. Full spec in **§6**.
 - **DONE looks like:** `NEWS.Rmd` has one `# nprcgenekeepr 2.0.0 (YYYYMMDD)` section with `- Major changes` / `- Minor changes` sub-bullets matching the project's historical terse style (§6.2), de-duplicated, with breaking changes flagged; `NEWS.md` re-rendered from it; `DESCRIPTION:5` = `2.0.0`; `README.md` + `CITATION.cff` regenerated to 2.0.0; prior version sections untouched.
@@ -159,9 +219,27 @@ Each `[...]` is one session with a STOP point. The pipeline is necessarily **mos
 - **Verify:** `NEWS.md` re-renders cleanly; `news(package="nprcgenekeepr")`-style read shows the 2.0.0 entry; `packageVersion()` = 2.0.0 after install; version-dependent tests green.
 - **Session boundary:** one session. (NEWS rewrite is substantial — if it cannot be done well in one session, split *content rewrite* from *version bump+regenerate*, but keep both before Phase 4.)
 
+### Phase 3b — Reconcile the accumulated `(development version)` NEWS content  (NEW, S320)
+
+> **STATUS: NOT STARTED — this is the next session.**
+
+- **Deliverable:** `NEWS.Rmd`'s `# nprcgenekeepr (development version)` section (`NEWS.Rmd:15-364`) merged into the `# nprcgenekeepr 2.0.0` section, producing one release entry that reflects the full diff since archived 1.0.8. Version stays **2.0.0** (Decision 7, §0.2) — no `DESCRIPTION` edit needed unless Phase 3b execution discovers the merged scope changes the calculus (state explicitly if so; do not silently second-guess §0.2).
+- **DONE looks like:** `NEWS.Rmd` has exactly one `# nprcgenekeepr 2.0.0 (YYYYMMDD)` section (dev-section heading removed, date refreshed to the actual release-prep date), `Major changes` / `Minor changes` sub-bullets covering the union of the old 2.0.0 content and the dev-section content, re-rendered to `NEWS.md`; `README.md`/`CITATION.cff` re-render cleanly (already at 2.0.0, so only the rendered prose/date should move, not the version number).
+- **Steps:**
+  1. Classify every dev-section bullet Major vs. Minor using the same rubric as the original Phase 3 (§6.3): user-visible behavior/API/breaking/new-capability → Major; fixes/deps/docs → Minor; pure-internal → drop from NEWS entirely (§6.3's existing drop-list already covers the pattern — apply the same test to `Internal changes` bullets here, e.g. the `getPedigreeSource()` adapter seam is textbook drop-material; the console-warning-suppression bullet is user-visible and should stay, as Minor).
+  2. **Resolve Dragon #9 (§0.5) first**, before merging anything else: rewrite the `runModularApp()`/`runGeneKeepR()` bullet pair down to the single net end-state bullet. Do not concatenate.
+  3. Merge the `New features` dev-section bullets (7 new exported functions, §0.4) into Major changes, in the same terse-fragment style as the existing entry (§6.2 voice guide).
+  4. De-duplicate against the existing 2.0.0 Major/Minor content the way §6.3/Dragon #4 already required for the first rewrite — check for any bullet that describes the same capability from two angles (e.g. the Genetic Value Analysis tab already got several dev-section bullets on top of the 2.0.0 "GVA tab parity" bullet; these likely merge into an expanded single GVA bullet-group, not a duplicate).
+  5. Re-render `NEWS.Rmd` → `NEWS.md` (`devtools::build_readme()` equivalent / the project's existing NEWS render step); `devtools::build_readme()`; `cffr::cff_write()` (both should be no-ops on `Version:` since it stays 2.0.0, but will refresh embedded dates/prose).
+- **TDD classification:** prose (N/A for testable behavior) + REFACTOR for anything mechanical (README/CITATION.cff regen). No `R/` behavior changes in this phase — the behavior already shipped in the sessions that authored issues #110/#118/#119/#121/#13/#95/#73/#114; this phase only documents it. If classification work surfaces an actual undocumented behavior gap (a dev-section bullet whose described behavior doesn't match current `R/` code), STOP and flag it — do not silently "fix" code during a documentation-merge phase (Two-Mode Problem, SAFEGUARDS.md).
+- **Verify:** `NEWS.md` re-renders cleanly with one 2.0.0 section; `git diff DESCRIPTION` is empty (version unchanged); `test_getVersion*`/`test_appUI_version.R` still green; a read-through confirms no bullet pair says two contradictory things about the same function (the Dragon #9 check).
+- **Session boundary:** one session. This is a content-heavy rewrite (350+ lines to classify and merge) — if it cannot finish cleanly, stop after classification + the Dragon #9 resolution and leave the actual re-render for a continuation session rather than bundling into Phase 4.
+
 ### Phase 4 — Full local `R CMD check --as-cran` gate
 
-> **STATUS: COMPLETE (S134) — true-gate `R CMD check --as-cran` is `Status: 2 NOTEs` = 0 ERROR / 0 WARNING, both NOTEs false-positive.** S134 installed the 4 missing Suggests (`covr`, `shinytest2`, `shinyWidgets`, `spelling`) + `urlchecker` into the renv library, so the check ran a **true gate — no `_R_CHECK_FORCE_SUGGESTS_=false`**. Pre-check: `roxygen2::roxygenise()` produced **zero diff** (`man/`+`NAMESPACE` already in sync); `urlchecker::url_check()` → **all 17 URLs correct**; `spelling::spell_check_package()` reconciled `inst/WORDLIST` (**+35 legitimate terms**, 310→345 lines). Gate timings all comfortable: examples `[19s/19s]`, `--run-donttest [19s/19s]`, tests `[41s/43s]`, vignette rebuild `[15s/16s]`, PDF manual OK. Full clean-regression read **0 failed / 0 error** (863 result rows; 167 skipped = e2e/app via `skip_on_cran`+opt-in gate). **NOTE 1** = CRAN incoming feasibility ("New submission / Package was archived on CRAN") — expected, CRAN-persistent, pre-explain in Phase-5 `cran-comments.md`. **NOTE 2** = "checking HTML version of manual" (`'tidy' not recent enough` + `package 'V8' unavailable` → both sub-checks *skipped*) — a **local-toolchain** NOTE; CRAN's machines have recent HTML Tidy + V8, so it will **not** appear there. **Verified twice** (initial build, then a rebuild after the WORDLIST change — identical result; WORDLIST is consumed only by the `skip_on_cran` spell test, so it is gate-invariant). **NEW FINDING (out of scope — own session):** 5 of the 6 example pedigree datasets (`pedGood`, `pedDuplicateIds`, `pedFemaleSireMaleDam`, `pedMissingBirth`, `pedSameMaleIsSireAndDam`) have a column literally named **`si.re`** (the 6th, `pedInvalidDates`, correctly uses `sire`). Almost certainly a data defect (should be `sire`/`sire_id` to pair with `ego_id`/`dam_id`). `si` was deliberately **left out** of WORDLIST so the flag stays visible; not a CRAN blocker (odd column names are legal). See PROJECT_LEARNINGS Learning 127.
+> **STATUS: COMPLETE (S134) — true-gate `R CMD check --as-cran` is `Status: 2 NOTEs` = 0 ERROR / 0 WARNING, both NOTEs false-positive.** S134 installed the 4 missing Suggests (`covr`, `shinytest2`, `shinyWidgets`, `spelling`) + `urlchecker` into the renv library, so the check ran a **true gate — no `_R_CHECK_FORCE_SUGGESTS_=false`**. Pre-check: `roxygen2::roxygenise()` produced **zero diff** (`man/`+`NAMESPACE` already in sync); `urlchecker::url_check()` → **all 17 URLs correct**; `spelling::spell_check_package()` reconciled `inst/WORDLIST` (**+35 legitimate terms**, 310→345 lines). Gate timings all comfortable: examples `[19s/19s]`, `--run-donttest [19s/19s]`, tests `[41s/43s]`, vignette rebuild `[15s/16s]`, PDF manual OK. Full clean-regression read **0 failed / 0 error** (863 result rows; 167 skipped = e2e/app via `skip_on_cran`+opt-in gate). **NOTE 1** = CRAN incoming feasibility ("New submission / Package was archived on CRAN") — expected, CRAN-persistent, pre-explain in Phase-5 `cran-comments.md`. **NOTE 2** = "checking HTML version of manual" (`'tidy' not recent enough` + `package 'V8' unavailable` → both sub-checks *skipped*) — a **local-toolchain** NOTE; CRAN's machines have recent HTML Tidy + V8, so it will **not** appear there. **Verified twice** (initial build, then a rebuild after the WORDLIST change — identical result; WORDLIST is consumed only by the `skip_on_cran` spell test, so it is gate-invariant). **NEW FINDING (out of scope — own session):** 5 of the 6 example pedigree datasets (`pedGood`, `pedDuplicateIds`, `pedFemaleSireMaleDam`, `pedMissingBirth`, `pedSameMaleIsSireAndDam`) have a column literally named **`si.re`** (the 6th, `pedInvalidDates`, correctly uses `sire`). Almost certainly a data defect (should be `sire`/`sire_id` to pair with `ego_id`/`dam_id`). `si` was deliberately **left out** of WORDLIST so the flag stays visible; not a CRAN blocker (odd column names are legal). See PROJECT_LEARNINGS Learning 127. Tracked as issue #53 — **out of this release's scope** per §0.3 (not one of the 8 currently-open issues listed there because it was filed after; still deferred under the same owner directive).
+>
+> **RE-GATE REQUIRED (S320, 2026-07-08).** This gate describes commit `83233265` (S242). 124 commits and 235 R+test files have changed since, including 9 new exported functions and 50 changed lines in `vignettes/simulatedKValues.Rmd` (Dragon #10, §5). **Must re-run in full after Phase 3b lands** — do not treat the 0/0/2-NOTE result above as still current.
 
 - **Deliverable:** a clean `R CMD check --as-cran` on the built 2.0.0 tarball (0/0/0, or only the three pre-explained NOTEs).
 - **DONE looks like:** `devtools::check(args = "--as-cran", remote = TRUE, manual = TRUE)` → 0 ERROR, 0 WARNING, only the documented false-positive NOTEs (§3.4).
@@ -173,6 +251,8 @@ Each `[...]` is one session with a STOP point. The pipeline is necessarily **mos
 ### Phase 5 — Cross-platform checks + `cran-comments.md` + submission package
 
 > **STATUS: COVER NOTE + RUNBOOK DONE (S135); LOCAL PREP VERIFIED (S136); cross-platform runs PENDING (owner-triggered).** Owner chose scope **A** ("cover note + runbook"). S135 rewrote `cran-comments.md` for the 2.0.0 archived-package resubmission — addresses the 2025-07-29 archival, reports the S134 local gate `0 errors | 0 warnings | 2 notes` with each NOTE explained (NOTE 2 flagged as a local-toolchain artifact absent on CRAN), drops the now-moot NEWS http→https false-positive (verified: no `http://` in `NEWS.md`), and removes the old doubled "Reverse dependencies" block. The file is CRAN-facing-only (no embedded process notes / placeholders). The exact win-builder ×3 + R-hub v2 commands, prerequisites, and submission HARD STOP live in `docs/planning/cran-2.0.0-phase5-runbook.md`. **A 3-lens adversarial verification** (repo fact-check + runbook-command/API + skeptical-CRAN-reviewer) confirmed the facts and caught: the headroom claim is per-example not per-phase (scoped); the timing wording must not imply a structural fix that wasn't made (reworded — the cause does not reproduce, win-builder/R-hub on slower hardware re-confirm before submission); and a **branch/PR correction** — `origin/master` is still **1.1.0.9000** (PR #52 merged only S101-S117, not the 2.0.0 bump) and the long-assumed **"PR #53" does not exist**; `origin/add-methodology` is at 2.0.0 but lacks S133's `withr` fix, so the tree must be pushed before R-hub runs (see Learning 128). **REMAINING (owner):** run the 3 win-builder uploads + R-hub v2, paste real results into `cran-comments.md`, reconcile the misspelled-words list against the real check log, then submit (the upload + email confirmation is the owner's, plan decision #3). **S136 (owner chose "prep + hand off"):** re-verified the branch with `git fetch` + `git rev-list --left-right --count origin/add-methodology...HEAD` → `origin/add-methodology` is **fully in sync** with local HEAD `24175785` (0/0), so the remote already carries the `withr` fix — **the "push before R-hub" prerequisite is already satisfied** (S135's "2 commits behind / push first" caveat is superseded; the branch was pushed after S135's handoff); rebuilt the final tarball via `R CMD build .` (clean → `nprcgenekeepr_2.0.0.tar.gz`, 1.9 MB, vignettes OK; artifact removed, not committed); re-confirmed every cover-note fact firsthand (Version 2.0.0; maintainer `rmsharp@me.com` via the `cre` role; empty `revdep/README.md` Revdeps; the `0/0/2` gate still applies since the code/data/metadata tree is unchanged since the S134 gate); and tightened the runbook (added a copy-paste **Quick sequence**, corrected the §3 branch caveat to "verified current — no push needed", and added a build-confirmation note in §1). The cover note `cran-comments.md` is unchanged (already CRAN-facing-only).
+>
+> **RE-SYNC REQUIRED (S320, 2026-07-08) — do not run win-builder/R-hub against the current cover note yet.** `cran-comments.md`'s "Resubmission" section describes only the original 2.0.0 breaking changes (period-in-ID, `runModularApp()` primary) — the last one is now **factually wrong** post-Phase-3b (Dragon #9, §0.5: `runGeneKeepR()` is primary again). Its "R CMD check results" section reports the stale S134/S240/S241 numbers. **Sequence: Phase 3b → Phase 4 re-gate → THEN update `cran-comments.md`'s Resubmission + R CMD check sections to match → THEN Phase 5b (win-builder/R-hub/submit).** Running win-builder/R-hub before this resync would burn the owner's ~30-min-per-platform budget checking a tarball whose cover note no longer matches its own NEWS.
 
 - **Deliverable:** green win-builder (devel + release + oldrelease) and R-hub v2 results, plus a `cran-comments.md` ready to paste into the submission form. **Spec in §7.**
 - **DONE looks like:** `devtools::check_win_devel()`/`check_win_release()`/`check_win_oldrelease()` emails clean; `rhub::rhub_doctor()` + `rhub::rhub_check()` (the GHA workflow at `.github/workflows/rhub.yaml` already exists) clean on CRAN-relevant platforms; `cran-comments.md` written per §7.
@@ -199,6 +279,8 @@ Each `[...]` is one session with a STOP point. The pipeline is necessarily **mos
 6. **renv library is not materialized** (Learning 92) — `renv::restore()` is a prerequisite for Phases 4-5 (and the only reason Phases 1-2 lean on static checks first).
 7. **Version-bump blast radius is small but has traps** (§3.1): do not bump the `runGenekeepr.R:26` deprecation marker or historical NEWS/inst strings; let `getVersion()`-driven files (README.Rmd, About panel) auto-track.
 8. **Don't run `revdepcheck`** — there are no reverse dependencies (§3.5); record the fact, don't burn a session on it.
+9. **Issue #110 nets out to nothing — don't list both directions of the reversal.** See §0.5. A user of the actual 2.0.0 release never saw the intermediate `runModularApp()`-primary state; the NEWS entry must describe only the end state.
+10. **The archival-timing profile (Phase 2, §4) is now 124 commits and 9 new exported functions stale**, and one of the changed files is `vignettes/simulatedKValues.Rmd` — the plan's own original prime suspect for the archival cause. Phase 4's re-gate (below) is not just a formality; treat its timing table with the same "measure first" discipline as the original Phase 2, not as an assumed-pass rerun.
 
 ---
 
@@ -267,6 +349,8 @@ Rewrite the existing `cran-comments.md` (fixing its doubled "## Reverse dependen
 | 3 | Who submits to CRAN | **Owner** does the web-form upload + email confirmation (Phase 5 STOP) | Outward-facing publish (SAFEGUARDS); maintainer-email confirmation is the maintainer's. |
 | 4 | `secondQuartile` change | Listed under **Minor** with a maintainer-judgment flag | It changes reported numbers — owner may want it under Major. |
 | 5 | Phase grain | **6 phases** as above | Adjustable — Phases 1+ can split if a session can't finish cleanly; do NOT merge Phase 2 (timing) into another. |
+| 6 | Roll accumulated dev-version content into one release, or ship 2.0.0 as originally scoped and treat the rest as a later release? | **Roll into one release** (S320, `AskUserQuestion`) | Nothing has shipped since 1.0.8; an intermediate "2.0.0" no user ever sees provides no benefit. See §0.2. |
+| 7 | Version number for the merged release | **Keep 2.0.0** (S320, `AskUserQuestion`) | Same logic as Decision 1, re-confirmed at 350 lines' more scope: it's still "the version that clears the archived 1.0.8" since nothing intermediate ever shipped. See §0.2. |
 
 ---
 
@@ -276,11 +360,12 @@ Rewrite the existing `cran-comments.md` (fixing its doubled "## Reverse dependen
 |---|---|---|---|---|
 | 1 ✅ | Build cruft + DESCRIPTION + `\value` clean **(DONE: S102 + typo tail S132)** | `R CMD build` + `tar tzf` grep; targeted check | REFACTOR/mechanical | 1 |
 | 2 ✅ | Examples/tests/vignettes fast under `--as-cran` **(MEASURED S133: timing within limits — archival cause already resolved; fixed the lone real CRAN-blocker, an undeclared `withr` test dep)** | `--as-cran` 0 ERROR / 0 WARNING; regression read 0/0 | RED→GREEN (`withr` in Suggests); REFACTOR N/A | 1 |
-| 3 ✅ | NEWS Major/Minor + 2.0.0 bump **(DONE: single 2.0.0 Major/Minor `NEWS` section re-rendered; DESCRIPTION/README/CITATION.cff all at 2.0.0 — verified S139)** | NEWS re-renders; version-tests green | prose + REFACTOR | 1 |
-| 4 ✅ | Clean local `--as-cran` **(DONE: S134 true gate — 4 Suggests installed, `Status: 2 NOTEs` = 0 ERROR / 0 WARNING, both false-positive; WORDLIST +35; roxygenise/URL clean)** | the check log (0/0/2-NOTE explained) | verification | 1 |
+| 3 ✅◑ | NEWS Major/Minor + 2.0.0 bump **(DONE for June scope: S139. SUPERSEDED as full release scope: 350 lines of unreconciled dev-version content — see Phase 3b)** | NEWS re-renders; version-tests green | prose + REFACTOR | 1 |
+| 3b ☐ | **NEW (S320):** reconcile `(development version)` NEWS content into the 2.0.0 entry, resolve Dragon #9 (#110 net-out) | NEWS re-renders to one 2.0.0 section; no contradictory bullet pairs; version-tests green | prose + REFACTOR | 1 — **next session** |
+| 4 ◑ | Clean local `--as-cran` **(gate result from S134/S240/S241 is STALE — 124 commits since; RE-GATE REQUIRED after Phase 3b)** | the check log (0/0/2-NOTE explained, re-confirmed on current tree) | verification | 1 |
 | 5 ◑ | win-builder ×3 + R-hub + cran-comments | platform reports captured | verification/packaging | 1 → owner submits |
-| 5a ✅ | `cran-comments.md` rewrite (§7) + cross-platform **runbook** **(DONE: S135, scope A; adversarially verified)** | cover note CRAN-facing-only; runbook commands verified | verification | 1 |
-| 5b ☐ | win-builder ×3 + R-hub v2 runs + paste results + submit **(PENDING — owner-triggered; `docs/planning/cran-2.0.0-phase5-runbook.md`. S136 verified local prep: branch already current so **no `git push`** before R-hub, final tarball rebuilt clean, runbook tightened with a copy-paste Quick sequence)** | clean platform reports; owner submits | verification/packaging | owner |
+| 5a ✅◑ | `cran-comments.md` rewrite (§7) + cross-platform **runbook** **(DONE for June scope: S135/S136. RE-SYNC REQUIRED: cover note's "Resubmission" section now states a fact Phase 3b will reverse — see Phase 5 STATUS note above)** | cover note CRAN-facing-only; runbook commands verified; **matches the post-3b NEWS/gate numbers** | verification | 1 |
+| 5b ☐ | win-builder ×3 + R-hub v2 runs + paste results + submit **(PENDING — owner-triggered; blocked behind 3b→4→5a-resync landing first, not just owner availability)** | clean platform reports; owner submits | verification/packaging | owner |
 | 6 | tag + GH release + dev bump | CRAN landing page builds | N/A | 1 (post-accept) |
 
 ---
