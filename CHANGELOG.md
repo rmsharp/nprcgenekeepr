@@ -43,6 +43,11 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-09 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit cc0f7798 — S331 HANDOFFS.md receipt commit-sha backfill
+- **Deliverable:** Phase 0 ledger reconcile (Session 332) found one commit past the `CHANGELOG.md` frontier with no ledger entry: `cc0f7798` ("docs: S331 -- backfill own HANDOFFS.md receipt commit shas"), landed after S331's own close-out commit (`046b62d5`) that recorded the entry above.
+- **Change:** `cc0f7798` replaced the S331 `HANDOFFS.md` receipt's `commit: pending` placeholder with the 5 real commit shas for that session's work, and expanded `what_was_done` to list them — a self-correction of the just-written receipt, not new production work.
+- **Session:** S332 (backfilling S331's own commit) · **Verified:** `git show --stat cc0f7798` (single-file, 2-line diff to `HANDOFFS.md`); `git log -1 --format=%H -- HANDOFFS.md` now matches `cc0f7798` with no further gap.
+
 ### 2026-07-09 · [ad hoc] Phase A of the Document-1 article plan: froze the evidence base (Session 331)
 - **Deliverable:** Phase A of `docs/planning/v2-transformation-article-plan.md` — built and froze the evidence-base data files + extraction script for Document 1 (the v1.0.8 → v2.0.0 technical writeup), and completed the plan's §3 Claim-Evidence Map. **Data-extraction/tooling session for `vignettes/articles/` support; TDD N/A** — no `R/`/`tests/` package code touched. 2 `AskUserQuestion` gates (path choice + commit-range-framing ratification, both the owner's call). 0 stakeholder corrections.
 - **Change:** Wrote `vignettes/articles/data-raw/build-document1-evidence.R` (checked-in, reproducible — shells out to `git`/`gh`, parses `CHANGELOG.md`/`PROJECT_LEARNINGS.md`/`HANDOFFS.md`/`SESSION_NOTES.md`), producing 7 frozen CSVs under `vignettes/articles/data/`: `module-inventory.csv`, `migration-phases.csv`, `feature-candidates.csv` (47 closed-issue raw candidates), `testing-growth.csv`, `commit-activity-timeline.csv`, `process-metrics.csv`, `self-score-trend.csv`. Completed the plan's §3 Claim-Evidence Map (14 dated/sha-anchored rows) and marked Phase A `✅ DONE` in §7. Spot-checked 12 extracted numbers by hand against raw sources — all 12 confirmed exactly.
