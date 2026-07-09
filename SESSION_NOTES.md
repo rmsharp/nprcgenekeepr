@@ -135,10 +135,13 @@ sweep might have found something this session didn't specifically check for.
 in-session -- YAML parses via `python`+`yaml.safe_load`, `bash -n` on the extracted
 `run:` block, the `${#groups[@]}` expansion sanity-checked standalone, the new
 coverage test, and a full `testthat::test_dir()` regression read before and after the
-REFACTOR (identical result both times). **True live-runner confirmation (an actual
-triggered `workflow_dispatch` or the nightly schedule) was NOT performed this
-session** -- flagged explicitly per FM #24 rather than silently skipped; the owner was
-asked in the close-out report whether to trigger one now.
+REFACTOR (identical result both times). **Owner approved triggering the live job**:
+`gh workflow run shinytest2.yaml --ref master` dispatched run 29057393786, which
+completed **success** in 18m56s -- all 15 per-module groups green on a real
+GitHub-hosted runner with real Chrome, including the 2 new groups for the previously-
+orphaned files
+(https://github.com/rmsharp/nprcgenekeepr/actions/runs/29057393786). Phase 3E is
+fully confirmed, not just locally verified.
 
 ---
 
