@@ -1,19 +1,87 @@
-# Changelog
+# Changelog — Authoritative Action Ledger
 
 Development / process history for the **nprcgenekeepr** project,
 following the [methodology](https://github.com/rmsharp/methodology)
 model: `BACKLOG.md` holds open work, **this file** holds completed
 history, and `ROADMAP.md` holds the feature inventory and future plans.
+Per canonical v3.1+, this file is the cumulative, append-only record of
+**actions taken** in this repository — the authoritative answer to
+*“what was done here, ever?”* Every session records its actions here at
+close-out (`SESSION_RUNNER.md` Phase 3F); Phase 0 reconciles it against
+`git log` and backfills anything a crashed or out-of-band session
+missed. Taking an action and not recording it is failure mode \#27.
 
 > **Note:** User-facing R-package release notes (the CRAN / pkgdown
 > “Changelog”) live in `NEWS.md` / `NEWS.Rmd`. This file tracks the
 > development *process* and methodology history, not package releases.
 
-Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
+## How to add an entry
+
+At close-out, prepend one entry per action, **newest on top**, directly
+below this section (above `## Legacy history` — never inside it). Key on
+a mechanical fact, not judgment: *did this session author or retain any
+commit, or take any non-commit action?* If yes, an entry is owed — “too
+small to log” is failure mode \#27, not an exception.
+
+**Source tag — exactly one per entry**, so
+`grep -E '\[(issue #|BL-|ad hoc)' CHANGELOG.md` enumerates every logged
+action:
+
+- `[issue #<N>]` — a GitHub issue in this repository.
+- `[BL-<N>]` — a `BACKLOG.md` item. Remove it from `BACKLOG.md` in the
+  same commit.
+- `[ad hoc]` — work with no backlog or issue origin (methodology syncs,
+  planning/audit sessions, release mechanics, decline/wontfix
+  decisions).
+
+**Format** — the `###` header line is the required, greppable unit;
+detail bullets below it (this project’s established
+`**Deliverable:**`/verification-summary style) are expected and
+encouraged:
+
+    ### YYYY-MM-DD · [SOURCE] one-line outcome-focused summary (Session N)
+    - **Deliverable:** ...
+
 When completing work, remove the item from `BACKLOG.md` and add an entry
 here.
 
 ## \[Unreleased\]
+
+### 2026-07-08 · \[ad hoc\] Adopt the canonical Authoritative Action Ledger format going forward (Session 325)
+
+- **Deliverable:** Resolved the ledger-format gap S324 flagged
+  (`CLAUDE.md` Adaptations section) — owner chose “freeze legacy, go
+  forward” over a full 303-entry historical migration or a one-session
+  full rewrite (`AskUserQuestion` scope gate). **Infra/docs; TDD N/A** —
+  no `R/`/`tests/`/`DESCRIPTION` touched. 1 `AskUserQuestion` gate. 0
+  stakeholder corrections.
+- **Change:** This file now carries the “How to add an entry” section
+  above (source-tag rules) and a
+  `## Legacy history (pre-ledger format, Sessions 1-324)` boundary
+  marker below. The 303 existing entries (Sessions 1-324) are unchanged
+  in content and format beneath that marker — no retroactive per-entry
+  source-tag migration was attempted (that would require real judgment
+  across 214 issue-linked, 6 pre-GitHub-era `NEW-`/`PED-`-tagged, and 83
+  unlabeled entries — not a mechanical pass). All entries from this
+  session forward use the canonical `[SOURCE]`-tagged header.
+- **Also:** backfilled `HANDOFFS.md`’s S324 receipt `commit: pending`
+  field to its actual sha, now known.
+- **Session:** S325 · **Verified:** n/a — docs-only. Confirmed
+  `methodology_dashboard.py`’s `_DATED_ENTRY_RE`/freshness checks key
+  only on the `### YYYY-MM-DD` date token (format-agnostic), so this
+  restructure doesn’t change dashboard scoring.
+
+------------------------------------------------------------------------
+
+## Legacy history (pre-ledger format, Sessions 1-324)
+
+> Entries below predate the canonical v3.1+ Authoritative Action Ledger
+> convention adopted in Session 325 above. They use the project’s
+> original dated-subsection format
+> (`### YYYY-MM-DD — <description> (Session N)`, no `[SOURCE]` tag) and
+> are left as-is rather than retroactively migrated — see the Session
+> 325 entry above and `CLAUDE.md`’s Adaptations section for the
+> rationale. Reverse-chronological, as before.
 
 ### 2026-07-08 — Update methodology to canonical v3.4 (Session 324)
 

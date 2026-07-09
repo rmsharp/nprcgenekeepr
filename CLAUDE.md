@@ -240,21 +240,19 @@ Observation 1 — citation gaps correlated with recency, not centrality:
 the metrics missing coverage were consistently the ones added without
 their own citation pass.)
 
-**CHANGELOG.md ledger-format gap (2026-07-08 methodology sync, tracked,
-not yet migrated):** canonical v3.1+ defines `CHANGELOG.md` as an
-“Authoritative Action Ledger” — dated
+**CHANGELOG.md ledger-format resolution (2026-07-08, Session 325 —
+“freeze legacy, go forward”):** canonical v3.1+ defines `CHANGELOG.md`
+as an “Authoritative Action Ledger” — dated
 `### YYYY-MM-DD · [issue #N] | [BL-N] | [ad hoc]` entries, one per
-action, checked by Phase 0’s ledger reconcile and required at Phase 3F
-(FM \#27). This project’s `CHANGELOG.md` predates that convention (dated
-subsections with `**Deliverable:**` prose, no source tag) and holds ~30+
-sessions of real history, so `bin/status` correctly flags it
-`present (stale format)` rather than silently rewriting it (SEED
-disposition — sync never overwrites it). Until a dedicated session
-reconciles the format (BOOTSTRAP.md “Updating an existing project” —
-hand-migrate or reseed), keep recording entries in the existing
-dated-subsection style; do not force single entries into the new tag
-format mid-file, and do not treat the mismatch as FM \#27 in the
-meantime.
+action. This project’s pre-existing ~30+-session history (dated
+subsections, no source tag) was **not** retroactively migrated — owner
+chose (via `AskUserQuestion`) to freeze it as-is rather than run a
+multi-session migration campaign to re-tag 303 already-closed entries.
+`CHANGELOG.md` now has a
+`## Legacy history (pre-ledger format, Sessions 1-324)` marker:
+everything below it is untouched original-format history; everything
+above it (from Session 325 forward) uses the canonical `[SOURCE]`-tagged
+format. New entries always go above the marker, never inside it.
 
 ### Development Process Contract override
 
@@ -270,7 +268,7 @@ workstream **and** the RED→GREEN→REFACTOR gates.
 
 ### Project-specific Learnings
 
-Project institutional memory (Sessions 1–28+; 33 learnings, ~88k chars)
+Project institutional memory (Sessions 1–325+; 302 learnings, ~1.35 MB)
 lives in
 [`PROJECT_LEARNINGS.md`](https://github.com/rmsharp/nprcgenekeepr/PROJECT_LEARNINGS.md)
 — extracted from this file to keep `CLAUDE.md` within its size budget

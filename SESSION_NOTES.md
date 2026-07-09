@@ -7,6 +7,138 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 325 Did
+
+**Deliverable:** Resolve the `CHANGELOG.md` ledger-format gap flagged by
+S324 – adopt the “freeze legacy, go forward” approach (owner-chosen via
+`AskUserQuestion` over a full 303-entry historical migration or a
+one-session full rewrite): mark the existing 303 dated entries (Sessions
+1-324) as a labeled legacy block, leave their content untouched, and
+start recording new entries in the canonical
+`### YYYY-MM-DD · [SOURCE] ...` format from this session forward.
+**Infra/docs; TDD N/A** – no `R/`/`tests/`/`DESCRIPTION` touched. 1
+`AskUserQuestion` scope gate (freeze-legacy vs. full migration campaign
+vs. rushed one-session rewrite). 0 stakeholder corrections. **Started /
+Completed:** 2026-07-08 / 2026-07-08 **Status:** **DONE.**
+`CHANGELOG.md` now opens with a rewritten intro (“Authoritative Action
+Ledger”) + a new “How to add an entry” section (source-tag rules:
+`[issue #<N>]` / `[BL-<N>]` / `[ad hoc]`, format template) copied from
+the actual canonical `starter-kit/CHANGELOG.md` seed (found in the
+user’s local methodology clone, `~/Development/methodology`, not guessed
+from memory). Below that, a
+`## Legacy history (pre-ledger format, Sessions 1-324)` heading + note
+marks the boundary; the 303 original entries below it are byte-for-byte
+unchanged. This session’s own action is the first canonical-format
+entry, above the marker. **0 stakeholder corrections.**
+
+**Why freeze-legacy, not a full migration:** grepped the 303 legacy
+headers before proposing options – 214 already name a GitHub issue
+number (mechanically taggable), 6 use pre-GitHub ticket IDs (`NEW-13`,
+`PED-1`, Sessions 13-18 – not a live BACKLOG.md item or GitHub issue, so
+`[BL-N]` would misrepresent them), and 83 have no identifier at all
+(methodology syncs, CRAN plan phases, audits – `[ad hoc]` only by
+judgment). That 3-way split is what made this campaign-shaped
+(`SESSION_RUNNER.md`’s Multi-session campaign check) rather than a
+same-session mechanical pass, even with no matching `*_CAMPAIGN.md`
+template to formally invoke. Put the choice to the owner via
+`AskUserQuestion` rather than picking unilaterally; owner chose the
+freeze option.
+
+**Session 324 Handoff Evaluation (by Session 325): Score 7/10.** S324’s
+handoff correctly flagged this exact gap in three places (`CLAUDE.md`
+Adaptations section, `SESSION_NOTES.md` SUGGESTED NEXT option (b),
+`HANDOFFS.md` gotchas/next_steps) and described the nature of the
+mismatch (canonical dated/`[SOURCE]`-tagged vs. this project’s
+dated-subsection-prose format) accurately. **What helped:** knowing
+exactly where the gap was documented and why it existed meant no
+re-diagnosis was needed – went straight to deciding scope. **What was
+missing:** the handoff didn’t include the actual canonical target-format
+text (had to locate the user’s local methodology clone and read
+`starter-kit/CHANGELOG.md` directly to get the real seed wording, rather
+than reconstructing it from the paraphrase in `CLAUDE.md`) or the
+entry-count breakdown (issue# vs. ad hoc vs. pre-GitHub ticket IDs) that
+turned out to drive the scope decision – reasonable to not expect, since
+S324’s own deliverable was the sync itself, not this migration. **What
+was wrong:** `HANDOFFS.md`’s S324 receipt left `commit: pending` (the
+sha was knowable after the fact but never backfilled) – fixed this
+session (see Key files). **ROI:** good – the flagged gap and its
+rationale saved real re-diagnosis time; the format lookup and entry
+analysis were left to this session, appropriately, since they were this
+deliverable’s actual work.
+
+**Self-assessment (Session 325): 8/10.** Oriented fully before the user
+gave this task (SAFEGUARDS + SESSION_NOTES + GH issues + dashboard + git
+status + ledger reconcile — both `CHANGELOG.md` and `HANDOFFS.md`
+frontiers equalled HEAD, no ghost sessions). **Strengths:** (1) did not
+default to a mechanical regex rewrite of 303 entries – grepped for how
+many entries actually needed judgment (89/303) before framing the scope
+decision, and put that decision to the owner via `AskUserQuestion`
+rather than picking a path unilaterally
+(\[\[observation-vs-decision\]\]); (2) sourced the exact canonical
+target format from the real `starter-kit/CHANGELOG.md` seed in the
+user’s local methodology clone rather than reconstructing it from
+`CLAUDE.md`’s paraphrase (\[\[consult-project-source-of-truth\]\]); (3)
+read `methodology_dashboard.py`’s
+`_find_changelog`/`_DATED_ENTRY_RE`/`evaluate_changelog_freshness` logic
+*before* restructuring the file, confirming the dashboard’s CHANGELOG
+checks are date-token-only and format-agnostic, so the restructure
+wouldn’t silently regress the health score – verified by re-running the
+dashboard after (98/100 unchanged); (4) claimed the session (Phase 1B
+stub in `SESSION_NOTES.md` + `HANDOFFS.md` pending receipt) before
+touching any file, committed separately from the deliverable commit; (5)
+caught and fixed two small, directly- adjacent stale facts while in
+these files anyway: `HANDOFFS.md`’s S324 `commit: pending` field (now
+`0c3af8b9`), and `CLAUDE.md`’s “Project-specific Learnings” pointer,
+which claimed “Sessions 1-28+; 33 learnings, ~88k chars” against an
+actual 302 learnings / ~1.35 MB (Learning \#7-style
+cross-reference-completeness check, not unrelated scope creep – same
+section of the same file already being edited this session).
+**Weaknesses:** (-) did not restate “TDD Phase: N/A” inline at the top
+of every single response this session, per `CLAUDE.md`’s literal
+enforcement rule – same gap S324 already named for itself; noted here
+rather than silently repeated. (-) Phase 3E (runtime smoke test) does
+not apply – pure `CHANGELOG.md`/`CLAUDE.md`/`HANDOFFS.md` restructuring,
+no `R/` behavior changed; stated explicitly per FM \#24 rather than
+silently skipped.
+
+**Learnings:** New: `PROJECT_LEARNINGS.md` Learning 302 – when a
+stale-format seed file with real accumulated history is flagged for
+reconciliation, count how many entries need a judgment call (not a
+mechanical regex) before assuming it’s a same-session task, and put the
+scope choice to the owner rather than picking unilaterally. Carried as
+applied (all held, no incidents):
+\[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\], \[\[push-close-out-docs-to-origin\]\].
+
+**=\> SUGGESTED NEXT.** Either (a) resume
+`docs/planning/cran-2.0.0-submission-plan.md` Phase 5b – win-builder
+x3 + R-hub v2 cross-platform runs, **owner-triggered, not an agent
+action** (unchanged since S323/S324), or (b) pick up one of the 8 open
+GitHub issues (#116, \#37, \#36, \#28, \#12, \#11, \#10, \#5) — none
+more urgent than another; owner’s call.
+
+**Key files (this session).** **Modified:** `CHANGELOG.md` (new intro +
+“How to add an entry” section + `## Legacy history` boundary marker +
+this session’s own first canonical-format entry, lines 1-61; 303 legacy
+entries below unchanged), `CLAUDE.md` (Adaptations section –
+CHANGELOG-gap note replaced with resolution note; Learnings-pointer
+count corrected), `HANDOFFS.md` (S324 receipt `commit: pending` -\>
+`0c3af8b9`; S325 receipt claimed then completed), `PROJECT_LEARNINGS.md`
+(Learning 302), `SESSION_NOTES.md` (this handoff). **Not committed
+(pre-existing, untouched):** `.DS_Store` (modified),
+`PED_GV_AUDIT_2026-05-30.html` (untracked) – left alone as S308-S325 all
+have.
+
+**Gotchas for next session.** (1) **New `CHANGELOG.md` entries go above
+`## Legacy history`, never inside it** – the marker and its note explain
+why; don’t rewrite or “clean up” the 303 legacy entries below it as a
+side effect of an unrelated session. (2) **Source-tag discipline starts
+now**: every new entry needs exactly one of `[issue #<N>]` / `[BL-<N>]`
+/ `[ad hoc]` in its header, per the file’s own new “How to add an entry”
+section. (3) Neither CRAN Phase 5b nor any of the 8 open issues is more
+urgent than the other right now – next session’s task is fully
+owner’s-choice.
+
 ### What Session 324 Did
 
 **Deliverable:** Update this project’s methodology infrastructure using
