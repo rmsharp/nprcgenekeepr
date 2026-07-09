@@ -1,0 +1,10 @@
+"metric","value"
+"sessions_in_range (Session 1 - S328)",328
+"pre_session1_commits_in_range",10
+"session1_to_range_end_commits",502
+"total_commits_in_range",512
+"changelog_entries_total (all, entire ledger falls in-range)",309
+"project_learnings_total",305
+"handoffs_receipts_complete",7
+"stakeholder_correction_zero_mentions",269
+"stakeholder_correction_nonzero_mentions",2
