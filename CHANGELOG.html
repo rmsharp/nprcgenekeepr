@@ -69,6 +69,17 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-08--ad-hoc-cran-200-phase-5b-readiness-re-verified-zero-drift-session-326">2026-07-08 · [ad hoc] CRAN 2.0.0 Phase 5b readiness re-verified, zero drift (Session 326)<a class="anchor" aria-label="anchor" href="#id_2026-07-08--ad-hoc-cran-200-phase-5b-readiness-re-verified-zero-drift-session-326"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Resumed <code>docs/planning/cran-2.0.0-submission-plan.md</code> Phase 5b per the S325 handoff’s SUGGESTED NEXT. <strong>Verification/packaging; TDD N/A</strong> — no <code>R/</code>/<code>tests/</code>/<code>DESCRIPTION</code> touched. 1 <code>AskUserQuestion</code> scope gate (verify-only vs. live-run vs. attempt-to-trigger the win-builder/R-hub uploads). 0 stakeholder corrections.</li>
+<li>
+<strong>Change:</strong> Put Phase 5b’s scope to the owner first — the dedicated runbook (<code>docs/planning/cran-2.0.0-phase5-runbook.md</code>) frames the cross-platform runs as outward-facing and owner-triggered (needs the owner’s GitHub PAT; win-builder results arrive by email), matching S135/S242/S320/S323/S325 precedent. Owner chose “Verify readiness only.” Confirmed zero drift since the S322 local gate / S323 <code>cran-comments.md</code> resync: no commits touch <code>R/</code>, <code>tests/</code>, or <code>DESCRIPTION</code> since gate commit <code>2abfc783</code>; <code>origin/master</code> and <code>HEAD</code> are <code>0 0</code> apart; <code>DESCRIPTION</code> Version is still <code>2.0.0</code>; <code>cran-comments.md</code> and the Phase 5 runbook both re-read clean; <code>Rscript</code> introspection confirmed no API drift in the installed <code>devtools</code>/<code>rhub</code>/<code>gitcreds</code> versions against the runbook’s function calls.</li>
+<li>
+<strong>Also:</strong> added a verification-status note to the plan document’s Phase 5 status block and its §9 summary table’s Phase 5b row, recording this re-verification. No changes to <code>R/</code>, <code>tests/</code>, <code>DESCRIPTION</code>, <code>NEWS.Rmd</code>/<code>NEWS.md</code>, <code>cran-comments.md</code>, or the runbook itself — all confirmed accurate as-is.</li>
+<li>
+<strong>Session:</strong> S326 · <strong>Verified:</strong> <code>git log --oneline 2abfc783..HEAD -- R/ tests/ DESCRIPTION</code> empty; <code>git rev-list --left-right --count origin/master...HEAD</code> = <code>0 0</code>.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-08--ad-hoc-adopt-the-canonical-authoritative-action-ledger-format-going-forward-session-325">2026-07-08 · [ad hoc] Adopt the canonical Authoritative Action Ledger format going forward (Session 325)<a class="anchor" aria-label="anchor" href="#id_2026-07-08--ad-hoc-adopt-the-canonical-authoritative-action-ledger-format-going-forward-session-325"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> Resolved the ledger-format gap S324 flagged (<code>CLAUDE.md</code> Adaptations section) — owner chose “freeze legacy, go forward” over a full 303-entry historical migration or a one-session full rewrite (<code>AskUserQuestion</code> scope gate). <strong>Infra/docs; TDD N/A</strong> — no <code>R/</code>/<code>tests/</code>/<code>DESCRIPTION</code> touched. 1 <code>AskUserQuestion</code> gate. 0 stakeholder corrections.</li>

@@ -47,6 +47,36 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-08 · \[ad hoc\] CRAN 2.0.0 Phase 5b readiness re-verified, zero drift (Session 326)
+
+- **Deliverable:** Resumed `docs/planning/cran-2.0.0-submission-plan.md`
+  Phase 5b per the S325 handoff’s SUGGESTED NEXT.
+  **Verification/packaging; TDD N/A** — no `R/`/`tests/`/`DESCRIPTION`
+  touched. 1 `AskUserQuestion` scope gate (verify-only vs. live-run
+  vs. attempt-to-trigger the win-builder/R-hub uploads). 0 stakeholder
+  corrections.
+- **Change:** Put Phase 5b’s scope to the owner first — the dedicated
+  runbook (`docs/planning/cran-2.0.0-phase5-runbook.md`) frames the
+  cross-platform runs as outward-facing and owner-triggered (needs the
+  owner’s GitHub PAT; win-builder results arrive by email), matching
+  S135/S242/S320/S323/S325 precedent. Owner chose “Verify readiness
+  only.” Confirmed zero drift since the S322 local gate / S323
+  `cran-comments.md` resync: no commits touch `R/`, `tests/`, or
+  `DESCRIPTION` since gate commit `2abfc783`; `origin/master` and `HEAD`
+  are `0 0` apart; `DESCRIPTION` Version is still `2.0.0`;
+  `cran-comments.md` and the Phase 5 runbook both re-read clean;
+  `Rscript` introspection confirmed no API drift in the installed
+  `devtools`/`rhub`/`gitcreds` versions against the runbook’s function
+  calls.
+- **Also:** added a verification-status note to the plan document’s
+  Phase 5 status block and its §9 summary table’s Phase 5b row,
+  recording this re-verification. No changes to `R/`, `tests/`,
+  `DESCRIPTION`, `NEWS.Rmd`/`NEWS.md`, `cran-comments.md`, or the
+  runbook itself — all confirmed accurate as-is.
+- **Session:** S326 · **Verified:**
+  `git log --oneline 2abfc783..HEAD -- R/ tests/ DESCRIPTION` empty;
+  `git rev-list --left-right --count origin/master...HEAD` = `0 0`.
+
 ### 2026-07-08 · \[ad hoc\] Adopt the canonical Authoritative Action Ledger format going forward (Session 325)
 
 - **Deliverable:** Resolved the ledger-format gap S324 flagged

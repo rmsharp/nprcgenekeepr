@@ -7,6 +7,125 @@ and writes to it before closing out.
 
 ## ACTIVE TASK
 
+### What Session 326 Did
+
+**Deliverable:** CRAN 2.0.0 Phase 5b readiness verification – resume the
+S325 SUGGESTED NEXT option (a). **Verification/packaging; TDD N/A** – no
+`R/`/`tests/`/`DESCRIPTION` touched. 1 `AskUserQuestion` scope gate
+(verify-only vs. live-run vs. attempt-to-trigger the actual
+win-builder/R-hub uploads). 0 stakeholder corrections. **Started /
+Completed:** 2026-07-08 / 2026-07-08 **Status:** **DONE.** Phase 5b
+(win-builder x3 + R-hub v2 + fold results + submit) is outward-facing:
+needs the owner’s GitHub PAT, win-builder results arrive by email to the
+owner, and the dedicated runbook
+(`docs/planning/cran-2.0.0-phase5-runbook.md`) explicitly frames the
+cross-platform runs as “yours to trigger” per SAFEGUARDS – matching how
+S135/S242/S320/S323/S325 all treated this exact phase. Put the scope to
+the owner via `AskUserQuestion` before doing any verification work;
+**owner chose “Verify readiness only.”** Re-checked for drift since S323
+(the last touch to `cran-comments.md`) and S322 (the last local gate):
+`git log --oneline 2abfc783..HEAD -- R/ tests/ DESCRIPTION` is **empty**
+– no package/test/version changes since the S322 gate commit;
+`git rev-list --left-right --count origin/master...HEAD` is **0 0**
+(R-hub’s sync precondition, satisfied); `DESCRIPTION` Version is still
+`2.0.0`; `cran-comments.md` re-read clean, with only the two expected
+win-builder/R-hub placeholders remaining under “Test environments”; the
+Phase 5 runbook re-read clean. Also confirmed no API drift: `Rscript`
+introspection shows `devtools` 2.5.2 / `rhub` 2.0.1 / `gitcreds` 0.1.2
+installed, and every function the runbook calls
+(`devtools::check_win_devel/check_win_release/check_win_oldrelease/build/submit_cran`,
+`rhub::rhub_doctor/rhub_check(platforms=...)`,
+`gitcreds::gitcreds_set()`) exists with a signature matching the
+runbook’s usage. **No code, test, or cover-note change was needed** –
+everything verified accurate as-is. Added a verification-status note to
+`docs/planning/cran-2.0.0-submission-plan.md`’s Phase 5 status block and
+the §9 table’s Phase 5b row recording this re-verification; Phase 5b
+itself is unchanged: still **PENDING, owner-triggered**.
+
+**Session 325 Handoff Evaluation (by Session 326): Score 8/10.** S325’s
+handoff clearly stated the SUGGESTED NEXT options (a)/(b) and that
+neither was more urgent, so this session’s scope choice (resume Phase
+5b) required no re-derivation of state or backlog. **What helped:** the
+direct pointer to `docs/planning/cran-2.0.0-submission-plan.md` meant no
+time spent locating the right document; the “owner’s call, none more
+urgent” framing meant the `AskUserQuestion` in Phase 0 could present
+real, informed options instead of guessing. **What was missing:** S325’s
+handoff didn’t flag that the plan document’s own Phase 5 prose (“fine
+for the agent to run”) and the dedicated runbook’s framing (“yours to
+trigger” per SAFEGUARDS) read as mildly contradictory – this session had
+to read both fully and resolve the ambiguity itself via a direct
+`AskUserQuestion` to the owner. Reasonable gap: S325’s deliverable was
+the CHANGELOG ledger format, unrelated to CRAN mechanics, so it isn’t a
+fair miss. **What was wrong:** nothing found inaccurate. **ROI:** good –
+the handoff’s specificity meant this session spent its time on the
+actual verification work, not on rediscovering scope.
+
+**Self-assessment (Session 326): 8/10.** Oriented fully before receiving
+the task (SAFEGUARDS + SESSION_NOTES + GH issues + dashboard + git
+status + ledger reconcile – both `CHANGELOG.md` and `HANDOFFS.md`
+frontiers checked against `HEAD`; the one post-`CHANGELOG`-frontier
+commit (`2dc378cd`) was confirmed to already be narrated inside the
+existing S325 CHANGELOG entry, not an unrecorded gap). **Strengths:**
+(1) did not assume Phase 5b’s cross-platform runs were mine to execute
+or purely the owner’s by default – read the plan’s Phase 5 spec AND the
+dedicated runbook in full, found the runbook’s explicit SAFEGUARDS
+framing, and put the scope decision to the owner via `AskUserQuestion`
+rather than picking unilaterally (\[\[observation-vs-decision\]\]); (2)
+verified every “still accurate” claim with fresh evidence rather than
+trusting the S320-S325 narrative: an actual `git log` range check for
+R/tests/DESCRIPTION drift, an actual `origin/master` sync check, an
+actual re-read of `cran-comments.md` and the runbook, and actual
+`Rscript` introspection of the devtools/rhub/gitcreds function
+signatures rather than assuming the runbook’s claims still held
+(\[\[consult-project-source-of-truth\]\] applied to verification-session
+evidence-gathering); (3) zero stakeholder corrections. **Weaknesses:**
+(-) on the first attempt, misplaced the `HANDOFFS.md` Phase 1B
+pending-receipt block under the “Three files, three questions, one
+shared key” explanatory heading instead of after the file’s own
+“Receipts go below, newest on top” sentinel comment – caught via a
+follow-up `grep` before committing (no bad content reached a commit),
+but a clean first pass would have avoided the extra edit; noted here
+rather than silently corrected. (-) Phase 3E (runtime smoke test) does
+not apply – pure docs/planning verification, no `R/` behavior changed;
+stated explicitly per FM \#24 rather than silently skipped.
+
+**Learnings:** No new `PROJECT_LEARNINGS.md` entry this session – this
+was a clean application of existing patterns (evidence-based
+verification before any “still accurate” claim; putting a genuine scope
+ambiguity to the owner rather than picking unilaterally), not a new
+discovery. Carried as applied (all held, no incidents):
+\[\[consult-project-source-of-truth\]\],
+\[\[observation-vs-decision\]\], \[\[push-close-out-docs-to-origin\]\].
+
+**=\> SUGGESTED NEXT.** Either (a) the owner runs the Phase 5b runbook
+(`docs/planning/cran-2.0.0-phase5-runbook.md`’s “Quick sequence”)
+whenever ready – folding the real win-builder/R-hub results into
+`cran-comments.md` and submitting is a separate future session – or (b)
+pick up one of the 8 open GitHub issues (#116, \#37, \#36, \#28, \#12,
+\#11, \#10, \#5) – none more urgent than another; owner’s call.
+
+**Key files (this session).** **Modified:**
+`docs/planning/cran-2.0.0-submission-plan.md` (Phase 5 status block + §9
+table’s Phase 5b row – verification-status note added, no other content
+changed), `SESSION_NOTES.md` (this handoff), `HANDOFFS.md` (S326
+receipt), `CHANGELOG.md` (new `[ad hoc]` entry). **Not committed
+(pre-existing, untouched):** `.DS_Store` (modified),
+`PED_GV_AUDIT_2026-05-30.html` (untracked) – left alone as S308-S326 all
+have.
+
+**Gotchas for next session.** (1) **Phase 5b’s actual cross-platform
+runs (win-builder/R-hub) are still owner-only** – do not attempt to
+trigger `devtools::check_win_*()` or `rhub::rhub_check()` without an
+explicit owner request, even though the plan document’s own Phase 5
+prose says “fine for the agent to run”; the runbook’s SAFEGUARDS framing
+and the repeated owner precedent (S135/S242/S320/S323/S325/S326)
+override that reading. (2) When adding a `HANDOFFS.md` receipt, insert
+it directly after the `<!-- Receipts go below, newest on top -->`
+sentinel comment, not under the “Three files, three questions, one
+shared key” heading – that heading’s bullet list is documentation, not
+the receipts ledger (this session’s own near-miss, see Weaknesses
+above).
+
 ### What Session 325 Did
 
 **Deliverable:** Resolve the `CHANGELOG.md` ledger-format gap flagged by
