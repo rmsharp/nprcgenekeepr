@@ -6,6 +6,19 @@
 
 ## ACTIVE TASK
 
+### What Session 325 Did
+**Deliverable:** Resolve the `CHANGELOG.md` ledger-format gap flagged by S324 -- adopt the
+"freeze legacy, go forward" approach (owner-chosen via `AskUserQuestion` over a full 303-entry
+historical migration or a one-session full rewrite): mark the existing 303 dated entries
+(Sessions 1-324) as a labeled legacy block, leave their content untouched, and start recording
+new entries in the canonical `### YYYY-MM-DD · [SOURCE] ...` format from this session forward.
+**Infra/docs; TDD N/A** -- no `R/`/`tests/`/`DESCRIPTION` touched.
+**Started:** 2026-07-08
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 324 Did
 **Deliverable:** Update this project's methodology infrastructure using
 `https://github.com/KJ5HST/methodology` (the user's literal request, matching

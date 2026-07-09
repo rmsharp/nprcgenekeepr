@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S325
+date: 2026-07-08
+status: pending
+self_score: TBD
+predecessor_score: TBD
+active_task: Resolve CHANGELOG.md ledger-format gap (freeze legacy, go forward) -- in progress.
+what_was_done: pending
+next_steps: pending
+key_files: CHANGELOG.md
+gotchas: pending
+runtime_smoke: n/a — docs-only
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S324
 date: 2026-07-08
 status: complete
