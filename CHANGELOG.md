@@ -47,6 +47,32 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-09 · \[ad hoc\] CRAN 2.0.0 submitted to CRAN submission team (Session 329)
+
+- **Deliverable:** Recorded the CRAN 2.0.0 submission milestone.
+  **Documentation of an owner-taken milestone; TDD N/A** — no
+  `R/`/`tests/` touched; `CRAN-SUBMISSION` was auto-written by
+  `devtools`, not hand-edited. 0 `AskUserQuestion` gates. 0 stakeholder
+  corrections.
+- **Change:** The owner ran `devtools::submit_cran()`; the upload
+  succeeded. Verified firsthand via `git diff CRAN-SUBMISSION` (not just
+  the owner’s report alone): `Version: 1.0.8` / `2025-07-26` →
+  `Version: 2.0.0` / `2026-07-09 17:57:22 UTC` /
+  `SHA: 8ca8bb24551a6a95dc4468d8ef5218bd3d3c91e0` — the exact commit
+  submitted, matching `origin/master`’s HEAD at submission time.
+  Committed the updated `CRAN-SUBMISSION` (a legitimate artifact
+  `usethis::use_github_release()` will later consume and delete in Phase
+  6). Updated `docs/planning/cran-2.0.0-submission-plan.md`’s Phase 5
+  status block (new “SUBMITTED” note with the version/date/SHA evidence)
+  and the §9 table’s Phase 5b row (marked partial-complete — submitted,
+  CRAN’s review outcome still pending).
+- **Also:** Added `PROJECT_LEARNINGS.md` Learning 304 — four consecutive
+  sessions (S326–S329) each discovered a file needing attention only
+  after starting the Phase 1B claim, not before; write the claim stub
+  the moment a task is understood, before any exploratory read.
+- **Session:** S329 · **Verified:** `git diff CRAN-SUBMISSION`
+  (machine-written evidence, not a verbal report taken at face value).
+
 ### 2026-07-09 · \[ad hoc\] Fold Phase 5b cross-platform results into cran-comments.md, all clean (Session 328)
 
 - **Deliverable:** Completed Phase 5b’s cross-platform checks and

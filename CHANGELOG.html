@@ -69,6 +69,17 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-09--ad-hoc-cran-200-submitted-to-cran-submission-team-session-329">2026-07-09 · [ad hoc] CRAN 2.0.0 submitted to CRAN submission team (Session 329)<a class="anchor" aria-label="anchor" href="#id_2026-07-09--ad-hoc-cran-200-submitted-to-cran-submission-team-session-329"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Recorded the CRAN 2.0.0 submission milestone. <strong>Documentation of an owner-taken milestone; TDD N/A</strong> — no <code>R/</code>/<code>tests/</code> touched; <code>CRAN-SUBMISSION</code> was auto-written by <code>devtools</code>, not hand-edited. 0 <code>AskUserQuestion</code> gates. 0 stakeholder corrections.</li>
+<li>
+<strong>Change:</strong> The owner ran <code>devtools::submit_cran()</code>; the upload succeeded. Verified firsthand via <code>git diff CRAN-SUBMISSION</code> (not just the owner’s report alone): <code>Version: 1.0.8</code> / <code>2025-07-26</code> → <code>Version: 2.0.0</code> / <code>2026-07-09 17:57:22 UTC</code> / <code>SHA: 8ca8bb24551a6a95dc4468d8ef5218bd3d3c91e0</code> — the exact commit submitted, matching <code>origin/master</code>’s HEAD at submission time. Committed the updated <code>CRAN-SUBMISSION</code> (a legitimate artifact <code>usethis::use_github_release()</code> will later consume and delete in Phase 6). Updated <code>docs/planning/cran-2.0.0-submission-plan.md</code>’s Phase 5 status block (new “SUBMITTED” note with the version/date/SHA evidence) and the §9 table’s Phase 5b row (marked partial-complete — submitted, CRAN’s review outcome still pending).</li>
+<li>
+<strong>Also:</strong> Added <code>PROJECT_LEARNINGS.md</code> Learning 304 — four consecutive sessions (S326–S329) each discovered a file needing attention only after starting the Phase 1B claim, not before; write the claim stub the moment a task is understood, before any exploratory read.</li>
+<li>
+<strong>Session:</strong> S329 · <strong>Verified:</strong> <code>git diff CRAN-SUBMISSION</code> (machine-written evidence, not a verbal report taken at face value).</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-09--ad-hoc-fold-phase-5b-cross-platform-results-into-cran-commentsmd-all-clean-session-328">2026-07-09 · [ad hoc] Fold Phase 5b cross-platform results into cran-comments.md, all clean (Session 328)<a class="anchor" aria-label="anchor" href="#id_2026-07-09--ad-hoc-fold-phase-5b-cross-platform-results-into-cran-commentsmd-all-clean-session-328"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> Completed Phase 5b’s cross-platform checks and populated <code>cran-comments.md</code> with the real results. <strong>Verification/packaging; TDD N/A</strong> — no <code>R/</code>/<code>tests/</code>/<code>DESCRIPTION</code> touched; <code>cran-comments.md</code> is <code>.Rbuildignore</code>d. 0 <code>AskUserQuestion</code> gates (direct continuation of Phase 5b work already in motion). 0 stakeholder corrections.</li>
