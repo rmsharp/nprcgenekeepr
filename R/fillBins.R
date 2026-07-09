@@ -1,8 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' fillBins Fill bins represented by list of two lists \code{males} and
-#' \code{females}.
+#' Fill bins represented by lists of male and female counts
 
 #' @param ageDist dataframe with \code{sex} and \code{age} columns
 #' @param lowerAges integer vector of lower age boundaries; must be the same

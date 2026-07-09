@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' colChange internal function to describe column names transformation
+#' Describe column-name transformations
 #'
 #' @param orgCols character vector with column names to be transformed if
 #' needed.

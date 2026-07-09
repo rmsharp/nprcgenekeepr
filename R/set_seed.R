@@ -43,7 +43,7 @@ gatedSeed <- function(optionName, envName) {
   if (!is.na(seed)) set_seed(seed)
   invisible(NULL)
 }
-#' Wrapper for R.Version
+#' Wrap R.Version
 #'
 #' @return R.Version() output
 #' @noRd

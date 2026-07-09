@@ -1,8 +1,8 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Returns a logical vector with results of stri_detect() for each pattern in
-#' second parameters character vector.
+#' Return a logical vector of stri_detect results for each pattern in the
+#' patterns vector
 #'
 #' @usage str_detect_fixed_all(strings, patterns, ignore_na, ...)
 #' @param strings input vector. This must be an atomic vector and will be

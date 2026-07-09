@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Forms return list of groupAddAssign function
+#' Form the return list for groupAddAssign
 #'
 #' @param savedGroupMembers selected animal group
 #' @param savedScore score of selected group, which is the group having the

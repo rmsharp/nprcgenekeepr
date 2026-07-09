@@ -1,8 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' insertChangedColsTab insert a list of changed columns found by
-#' \code{qcStudbook} in the pedigree file
+#' Insert a list of changed columns found by qcStudbook in the pedigree file
 #'
 #' @param errorLst list of errors and changes made by \code{qcStudbook}
 #' @param pedigreeFileName name of file provided by user on Input tab

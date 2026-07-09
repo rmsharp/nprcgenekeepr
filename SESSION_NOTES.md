@@ -6,6 +6,119 @@
 
 ## ACTIVE TASK
 
+### What Session 319 Did
+**Deliverable:** "Finish 103" -- complete issue #103's one remaining
+concretely-scoped item, the internal (`@noRd`) title-voice sweep (Finding 3
+tail), then close #103. REFACTOR-class, doc-only; **TDD RED/GREEN N/A** -- no
+implementation code, no testable behavior change, matching the established
+#103-stage precedent (S257-S263, S318). 1 `AskUserQuestion` scope/approach
+gate at session start (owner picked "approve all as shown, apply now" over
+editing specific rows first or narrowing scope this session).
+**Started / Completed:** 2026-07-08 / 2026-07-08
+**Status:** **DONE. Issue #103 CLOSED.** All 8 stages of the S244
+roxygen2-harmonization audit roadmap now landed. **0 stakeholder
+corrections.**
+
+**Session 318 Handoff Evaluation (by Session 319): Score 9/10.** S318's
+SUGGESTED NEXT gave the exact remaining item (internal `@noRd` title-voice
+sweep), the file/marker count (72 markers / 62 files), and an explicit
+sizing comparison to Stage 8a -- this session needed zero re-derivation of
+*what* to do, only *how*. **What helped most:** the gotcha "Issue #103 is
+OPEN, not closed -- do not assume it's done from the changelog's 'Stages
+1-8b all landed' language alone" pre-empted exactly the mistake a fresh
+session would make skimming the changelog. **What was slightly off:** the
+72/62 count itself needed re-verification -- S318 correctly flagged it as "a
+raw `@noRd` count, not a titles-needing-change count" and explicitly warned
+the next session would need its own census before estimating effort; that
+census (this session) also caught a genuine parsing bug in a first-pass
+hand-rolled scanner (4 blocks undercounted to empty titles) that S318 had no
+way to anticipate. **ROI:** high -- the handoff saved re-deriving scope and
+correctly flagged the census as unfinished business rather than overstating
+completeness.
+
+**Self-assessment (Session 319): 9/10.** Oriented fully (SAFEGUARDS +
+SESSION_NOTES + GH issues + dashboard + git status) before starting.
+**Strengths:** (1) did not trust a hand-rolled regex census at face value --
+cross-checked against `roxygen2::parse_file()` itself and caught a real bug
+(4 blocks mis-split on an internal blank `#'` line, yielding empty titles)
+before it could corrupt the proposal table; (2) built and presented the full
+44-row old->new proposal table for owner approval BEFORE touching any file
+(observation-vs-decision discipline), rather than applying first and
+reporting after; (3) validated non-trivial proposed rewrites against actual
+function bodies (`getMaxAx.R`'s broken-grammar title, `unknown2NA.R`'s
+row-removal-vs-NA-blanking nuance, `str_detect_fixed_all.R`'s "second
+parameters" typo) rather than mechanically transforming verb forms alone;
+(4) ran the guarded apply as a scripted dry-run first (all 44 matched
+uniquely, 0 skips) before flipping to a real write, and re-ran the same
+parser-based census afterward to prove 0/44 mismatches and the total block
+count held at 72; (5) caught 3 new lint line-length violations introduced by
+wordier rewrites and fixed them (2-line wrap, re-verified 0 mismatches after
+the wrap) rather than leaving lint dirty; (6) surfaced two adjacent defects
+(`getIndianOriginStatus.R`'s mismatched Rd brace, `unknown2NA.R`'s
+description imprecision) without folding fixes into this sweep, keeping the
+diff purely voice-class; (7) ran the full verification stack --
+`devtools::document()` (man/ diff EMPTY, predicted then proved), lint,
+spell check, `devtools::check(cran=TRUE)` (0/0/0), and the fast regression
+read (0 failed/error/warning, 3092 passed) -- before closing the issue.
+**Weaknesses:** (-) did not run a runtime/Shiny-app smoke test (Phase 3E) --
+judged not applicable since every changed function is `@noRd`
+non-user-facing internal documentation with zero behavior change (title text
+only), consistent with how S318's single `@noRd` fix was also not
+runtime-verified; this is a defensible call for a pure-comment change but is
+explicitly recorded here rather than silently skipped, per FM #24.
+
+**Learnings:** New: `PROJECT_LEARNINGS.md` Learning 296 --
+`roxygen2::parse_file()` tolerates a genuine blank line inside a comment run
+as long as no code intervenes; a hand-rolled regex scanner that treats any
+blank line as a block terminator will silently undercount/empty-out titles;
+always parse with the real parser for anything beyond a first-look grep.
+Carried as applied (all held, no incidents):
+[[consult-project-source-of-truth]], [[observation-vs-decision]],
+[[avoid-jargon-use-plain-language]], [[check-status-before-destructive-git]],
+[[avoid-new-lints-r-package]], [[gh-pr-edit-projectcards-workaround]],
+[[regression-read-check-warnings]], [[push-close-out-docs-to-origin]].
+
+**=> SUGGESTED NEXT.** Issue #103 is fully CLOSED -- no #103 follow-on
+remains. Two small surfaced-but-deferred defects for whoever picks them up
+(not urgent, not scope-gated to any issue yet): (1) `getIndianOriginStatus.
+R:14` -- `@return` tag has a mismatched Rd brace (`\code{color_index)` should
+close with `}`); harmless today (roxygen2 still parses the block and the
+title/tags around it) but throws a parse warning on every
+`roxygen2::parse_file()` run and would be worth a 1-line fix + `document()`
+re-gate. (2) `unknown2NA.R`'s title ("Remove IDs having UNKNOWN...") slightly
+overstates its own behavior (only `id`-column rows are removed; `sire`/`dam`
+UNKNOWN values are blanked to `NA`, not removed) -- a content-accuracy nit,
+not a voice defect. Otherwise, adjacent open backlog (unchanged from
+S315-318): issue **#116** Flags column (BLOCKED); **#37** exported functions
+not used by app; **#36/#28/#12/#11/#10/#5** older backlog. **E4**
+(rate-of-coancestry Ne) remains DEFERRED. The CRAN thread (package ARCHIVED
+2025-07-29, owner-run, **HARD STOP**).
+
+**Key files (this session).** **Modified:** 41 `R/` files (44 `@noRd` title
+rewrites -- `autoIdFormat.R` and `modPotentialParents.R` each carry 2 and 3
+of the changes respectively; full list in `CHANGELOG.md`'s 2026-07-08 S319
+entry), `CHANGELOG.md` (this session's entry), `PROJECT_LEARNINGS.md`
+(Learning 296), `SESSION_NOTES.md` (this handoff). **No `man/` or
+`NAMESPACE` changed** (all 44 edited functions are `@noRd`, non-rendering --
+`devtools::document()` confirmed empty diff on both). GitHub: issue #103
+closed with a verification-summary comment. **Not committed (pre-existing,
+untouched):** `.DS_Store` (modified), `PED_GV_AUDIT_2026-05-30.html`
+(untracked) -- left alone as S308-S319 all have.
+
+**Gotchas for next session.** (1) **Issue #103 is now CLOSED** -- all 8
+audit stages landed; do not reopen scope-creep work against it without a new
+issue. (2) A hand-rolled roxygen-block regex scanner is UNSAFE for anything
+beyond a rough first-look count -- it silently undercounts/empties titles
+across a genuine blank line inside a comment run; use
+`roxygen2::parse_file()` directly (read `$tags`, filter by tag name) for any
+census that will drive real edits. (3) `gh issue comment` / `gh issue close`
+both work cleanly on this repo (unlike `gh pr edit`, which fails on the
+deprecated `projectCards` field -- that workaround is PR-specific). (4)
+Owner standing directive (S314): keep monitoring the `warning` column on
+every test run -- checked this session (`devtools::check(cran=TRUE)`: 0
+WARN; fast regression read: 0 warning), still standing, now clean across
+S314-S319.
+
 ### What Session 318 Did
 **Deliverable:** Owner asked whether issue #103 (roxygen2 harmonization, S244
 audit) "may be complete." Verified against the audit's 8-stage roadmap

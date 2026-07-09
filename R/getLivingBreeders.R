@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Ids of the current living breeders in a pedigree
+#' Get IDs of the current living breeders in a pedigree
 #'
 #' Internal helper shared by the demographic effective-size estimators (see
 #' \code{\link{calcNeSexRatio}}). A living breeder is an animal that is living

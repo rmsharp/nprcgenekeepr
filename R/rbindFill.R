@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Append the rows of one dataframe to another.
+#' Append the rows of one dataframe to another
 #'
 #' Part of Pedigree Curation
 #'

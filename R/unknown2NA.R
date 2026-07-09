@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Removing IDs having "UNKNOWN" regardless of case
+#' Remove IDs having UNKNOWN regardless of case
 #'
 #' Someone started entering "unknown" for unknown parents instead of leaving
 #' the field blank in PRIMe.

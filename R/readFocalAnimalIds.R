@@ -31,7 +31,7 @@ readFocalAnimalIds <- function(fileName, sep = ",") {
   as.character(focalAnimals[, 1L])
 }
 
-#' Evaluate an expression, muffling the "cannot open file" warning.
+#' Evaluate an expression, muffling the cannot open file warning
 #'
 #' Runs \code{expr} and suppresses only the \code{"cannot open file '...'"}
 #' warning that \code{\link[utils]{read.csv}} (via \code{\link[base]{file}})

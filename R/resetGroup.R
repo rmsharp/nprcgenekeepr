@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Update or add the "group" field of a Pedigree.
+#' Update or add the group field of a Pedigree
 #'
 #' Part of the pedigree filtering toolset
 #'

@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Assigns parental genotype contributions to an IDs genotype by attributing
+#' Assign parental genotype contributions to an ID's genotype by attributing
 #' alleles to sire or dam
 #'
 #' @param alleles data.frame \code{id, parent, V1 ... Vn}

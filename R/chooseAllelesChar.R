@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Combines two vectors of alleles when alleles are character vectors.
+#' Combine two character-vector allele sets
 #'
 #' Combines two vectors by randomly selecting one allele
 #' or the other at each position. Alleles may be of any class that

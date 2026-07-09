@@ -76,7 +76,7 @@ setAutoIdFormat <- function(format) {
   invisible(old)
 }
 
-#' Literal prefix of an auto-ID format
+#' Get the literal prefix of an auto-ID format
 #'
 #' Returns the literal portion of an auto-ID \code{sprintf} format before its
 #' first \code{"\%"} conversion. For \code{"U\%04d"} this is \code{"U"}; for
@@ -91,7 +91,7 @@ getAutoIdPrefix <- function(format = getAutoIdFormat()) {
   sub("%.*$", "", format)
 }
 
-#' Is an ID an auto-generated unknown ID?
+#' Check whether an ID is an auto-generated unknown ID
 #'
 #' The single detection predicate for placeholder IDs minted for unknown
 #' parents (see \code{\link{addUIds}}). An ID is auto-generated when it begins

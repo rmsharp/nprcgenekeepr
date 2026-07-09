@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Default (no-config) site parameters
+#' Return default (no-config) site parameters
 #'
 #' The single source of truth for the LabKey/site parameters returned by
 #' \code{\link{getSiteInfo}} when no configuration file is present. These are

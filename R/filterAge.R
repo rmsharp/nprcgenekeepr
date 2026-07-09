@@ -1,8 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Removes animal pairs and their kinship values from a dataframe where an
-#' animal is less than the minAge
+#' Remove animal pairs and kinship values where an animal is younger than minAge
 #'
 #' Part of Group Formation
 #' @param kin a dataframe with columns \code{id1}, \code{id2}, and

@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Founder-genome-equivalent degeneracy guard
+#' Guard against founder-genome-equivalent degeneracy
 #'
 #' Part of the Genetic Value Analysis
 #'

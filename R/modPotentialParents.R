@@ -44,7 +44,7 @@ flattenPotentialParents <- function(potentialParents) {
   )
 }
 
-#' First representative species in a pedigree
+#' Get the first representative species in a pedigree
 #'
 #' Returns the first non-\code{NA}, non-empty (whitespace-trimmed) value of the
 #' \code{species} column of \code{ped}. Used to default the gestation window in
@@ -68,7 +68,7 @@ firstPedigreeSpecies <- function(ped) {
   sp[1L]
 }
 
-#' Species-keyed default for the gestation numericInput
+#' Get the species-keyed default for the gestation numericInput
 #'
 #' Maps a pedigree's representative species (see \code{firstPedigreeSpecies})
 #' to a gestation-window default via \code{\link{getSpeciesGestation}}. Falls
@@ -97,7 +97,7 @@ pedigreeGestationDefault <- function(ped, gestationTable = NULL,
   }
 }
 
-#' Override guard for the gestation prefill
+#' Guard the gestation prefill against overrides
 #'
 #' Decides whether the species-keyed default may be written into the gestation
 #' numericInput. A prefill is allowed only when the user has not manually

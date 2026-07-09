@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Convenience function to make the initial available animal list
+#' Make the initial available-animal list
 #'
 #' @param candidates character vector of IDs of the animals available for
 #' use in the group.

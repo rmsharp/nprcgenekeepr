@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Returns \code{TRUE} if every member of the vector is \code{TRUE}.
+#' Return TRUE if every member of the vector is TRUE
 #'
 #' Part of Relations
 #' @param v logical vector

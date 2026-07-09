@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Forms and fills list of animals groups based on provided constraints
+#' Form and fill a list of animal groups based on provided constraints
 #'
 #' @param candidates character vector of IDs of the animals available for
 #' use in the group.

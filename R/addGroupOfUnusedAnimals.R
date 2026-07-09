@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' addGroupOfUnusedAnimals adds a group to the saved groups if needed
+#' Add a group to the saved groups if needed
 #'
 
 #' @param savedGroupMembers list of groups of animals in the form of a vector

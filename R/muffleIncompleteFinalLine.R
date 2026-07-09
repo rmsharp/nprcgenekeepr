@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Evaluate an expression, muffling the "incomplete final line" warning.
+#' Evaluate an expression, muffling the incomplete final line warning
 #'
 #' Runs \code{expr} and suppresses only the
 #' \code{"incomplete final line found by readTableHeader"} warning that

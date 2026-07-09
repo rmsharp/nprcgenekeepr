@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Updates list of available animals by removing the selected animal
+#' Update the list of available animals by removing the selected animal
 #'
 #' @param available list of available animals for each group
 #' @param ids character vector having the selected animal Ids

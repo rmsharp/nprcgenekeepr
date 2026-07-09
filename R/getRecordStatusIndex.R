@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Returns record numbers with selected \code{recordStatus}.
+#' Return record numbers with the selected recordStatus
 #'
 #' @inheritParams reportGV
 #' @param status character vector with value of \code{"added"} or

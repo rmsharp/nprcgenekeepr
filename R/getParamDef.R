@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Get parameter definitions from tokens found in configuration file.
+#' Get parameter definitions from tokens found in configuration file
 #'
 #' @param tokenList list of parameters and their definitions, which are
 #' character vectors

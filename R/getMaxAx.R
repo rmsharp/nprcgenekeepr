@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Set the scale the pyramid plot symmetrically
+#' Compute the symmetric axis scale for the pyramid plot
 #'
 #' Get the maximum of the absolute values of the negative (males) and positive
 #' (female) animal counts and then round that up to the nearest multiple of the

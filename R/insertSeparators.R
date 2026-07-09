@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Inserts "-" between year, month, and day of YYYYMMDD formatted dates.
+#' Insert dashes between year, month, and day of YYYYMMDD dates
 #'
 #' Inserts "-" between year, month, and day of a date string in dates formatted
 #' as YYYYMMDD to form YYYY-MM-DD formatted dates.

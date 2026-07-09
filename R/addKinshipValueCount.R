@@ -1,8 +1,8 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Add to count the number of occurrences of a kinship value seen for a pair of
-#' individuals in one or more simulated pedigrees.
+#' Add to count the number of occurrences of a kinship value seen for a pair
+#' of individuals in one or more simulated pedigrees
 #'
 #' Order of the mating pairs of individual is assumed to be identical among the
 #' three lists \code{cKVC}, \code{kValues}, and

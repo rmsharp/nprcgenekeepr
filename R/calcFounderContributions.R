@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Shared founder-contribution computation for calcFE/calcFG/calcFEFG
+#' Compute shared founder contributions for calcFE, calcFG, and calcFEFG
 #'
 #' Part of the Genetic Value Analysis
 #'
