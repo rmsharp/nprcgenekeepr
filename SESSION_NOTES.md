@@ -12,12 +12,189 @@ Section 2 (new features) + table T4, hand-curating from Session 331's frozen
 `vignettes/articles/data/feature-candidates.csv` (47 raw closed-issue candidates).
 **Documentation/article-drafting session for `vignettes/articles/` support -- no
 `R/`/`tests/` package code touched. TDD phase: N/A** (matches S107-S110/S330-S332
-article-session precedent; declared every response).
-**Started:** 2026-07-09
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
-next session's reconcile.
+article-session precedent; declared every response). Also backfilled one undocumented
+commit (`2278b46f`, S332's own HANDOFFS.md receipt sha fix) into `CHANGELOG.md` during
+this session's Phase 0 reconcile, committed separately as `17333a1f` before this
+deliverable began.
+**Started / Completed:** 2026-07-09 / 2026-07-09
+**Status:** **DONE.** Hand-curated the 47 raw closed-issue candidates down to **13
+(28%)** genuinely feature-shaped items, reading each borderline candidate's actual
+`CHANGELOG.md` entry rather than trusting the frozen CSV's `closedAt` column or issue
+label alone. Excluded pure bug fixes, internal process/tooling items (lint, roxygen
+harmonization, `codecov` config), and -- the real trap -- **issue-hygiene closes of
+functionality that predates the range**: issue #34 ("Integrate `qcStudbook()` in
+`modInput`") closed inside the range but its own CHANGELOG entry says "No code
+changed" -- the real implementation was commit `7da01afe`, one of the plan's own
+§2-flagged pre-methodology commits. Issues #14 and #8 showed the identical
+close-with-caveat-of-pre-existing-behavior pattern and were excluded for the same
+reason. Wrote a new frozen data file, `vignettes/articles/data/feature-highlights.csv`
+(13 curated rows: feature, issue, session range, date, commit sha where a single
+commit anchors the feature, description) -- matching T2/T3's
+read-a-frozen-CSV-via-`kableExtra` generation pattern rather than an inline R
+data.frame literal, consistent with the plan's §8 Reproducibility Decision. Added
+**Section 2** ("New Capabilities in 2.0.0") to
+`vignettes/articles/engineering-the-2.0.0-release.qmd` with **T4** (`@tbl-features`)
+and three prose subsections clustering the 13 features: parent
+identification/species-awareness (5 features: #31/#48/#46/#73/#119), Genetic Value
+Analysis uncertainty (4 features: #9/#76/#82/#118), and two new Shiny
+dashboards/one unlocked module (#112, #47/#49) plus 2 smaller fixes (#35, #44). Fulfilled
+Section 1's own forward-reference (`R/appUI.R`/`R/appServer.R` module-inventory prose:
+"`modGeneticDiversity` and `modPotentialParents` ... Section 2 ... covers them") and
+correctly distinguished `modORIPReporting`'s pre-existing **existence** (built during
+the Section-1 migration, left unmounted) from its **activation** (this section, issues
+#47/#49) rather than overclaiming a third new module. Marked Phase C `DONE` in the
+plan's §7 (mirroring S331/S332's completion-callout convention) and updated its header
+status line.
+
+**Verification performed (this deliverable's build-equivalent):** `quarto render
+vignettes/articles/engineering-the-2.0.0-release.qmd` -- succeeded; confirmed via the
+rendered HTML that `@tbl-features` resolved as "Table 3" with zero
+`class="quarto-unresolved-ref"` hits, and that all 13 curated feature rows appear in
+the output (`grep -c` on each row's feature-name string = 13/13). Cleaned up the render
+artifacts (`.html`, `_files/`, an auto-generated `.gitignore`) before staging, per
+Learning 308. Verified the 3 single-commit citations (`0eeee3f6` #31, `d4320643` #35,
+`14c8e84d` #44) two ways, not one: `git log -1 <sha>` (resolves) AND `git merge-base
+--is-ancestor <sha> HEAD` (is actually reachable from current `HEAD`, not just present
+somewhere in the object database). All other multi-slice feature session ranges
+(#9, #46, #73, #76, #82, #112, #118, #119, #47/#49, #80/#81 wire-in) were sourced by
+directly grepping the actual dated `### YYYY-MM-DD -- ... (Session N)` CHANGELOG
+headers for each session cited, not estimated or carried from the raw CSV's
+`closedAt` column -- matching T3's own established precedent for phases without a
+single quoted sha.
+
+**Session 332 Handoff Evaluation (by Session 333): Score 9/10.** **What helped:** the
+"SUGGESTED NEXT" pointed precisely at Phase C's actual next action (draft Section 2 +
+T4, curate not re-extract `feature-candidates.csv`'s 47 raw candidates) and the
+gotchas list (#1: "`feature-candidates.csv` is 47 RAW closed-issue candidates, not a
+curated features table -- Phase C's actual job is hand-selecting genuinely
+feature-shaped items") named exactly the risk this session had to navigate -- reading
+it before starting the curation pass meant the "not every closed issue is
+article-worthy" framing was already internalized rather than discovered the hard way.
+The key-files list and the T2/T3 generation-pattern precedent (frozen CSV read via
+`kableExtra`) transferred directly to T4's design with zero re-derivation. **What was
+missing:** the handoff correctly flagged the RAW-vs-curated distinction but did not
+anticipate the specific FAILURE MODE within that curation -- that some raw candidates
+would be issue-hygiene closes of functionality that predates the range entirely (issue
+#34's "No code changed"). That gap is not a handoff defect (S332 had no reason to have
+read all 47 candidate issues' individual CHANGELOG entries; that was Phase C's own
+job), but it is the reason this session budgeted extra verification time per candidate
+rather than curating from the CSV's labels/dates alone. **What was wrong:** nothing
+found wrong -- S332's claims about T2/T3's generation pattern, the frozen-data
+reproducibility decision, and the two-new-modules-belong-to-Section-2 footnote all held
+exactly as stated, with zero drift. **ROI:** excellent -- the gotcha list prevented the
+single most consequential mistake this session could have made (accepting the raw 47
+at face value), and having Phase A's `feature-candidates.csv` already frozen and
+correctly scoped (2025-07-26 to 2026-07-09) meant zero re-extraction was needed.
+
+**Self-assessment (Session 333): 8/10.** **Strengths:** (1) did not trust the raw
+candidate list's `closedAt` dates or GitHub labels at face value -- read the actual
+`CHANGELOG.md` entry for every borderline candidate (#34, #14, #8) before including or
+excluding it, catching a real, non-obvious curation trap (issue-hygiene closes of
+pre-range functionality) and promoting it to a new, generalizable Learning (309) rather
+than silently excluding those three and moving on; (2) verified single-commit
+citations two ways (`git log -1` AND `git merge-base --is-ancestor`), not just one;
+(3) sourced every multi-slice feature's session range from a direct grep of the actual
+dated CHANGELOG headers, not from the raw CSV or from estimation; (4) correctly
+distinguished `modORIPReporting`'s pre-existing code (Section 1's migration) from its
+in-this-section activation, avoiding an overclaim of "3 new modules" when only 2 are
+actually new; (5) followed T2/T3's established frozen-CSV-via-`kableExtra` generation
+pattern for T4 rather than inventing a new inline-literal mechanism, keeping the
+article's three data-driven tables mechanically consistent; (6) rendered and inspected
+the actual output HTML for resolved cross-references (not just exit code 0) and cleaned
+render artifacts before staging, per Learning 308; (7) held Phase C's scope boundary
+strictly -- no Section 3/4/5 content, no Abstract/Intro/Conclusion (Phase F), no
+`vignettes/shiny_app_use/` screenshot handling; (8) declared TDD N/A up front and held
+it throughout. **Weaknesses:** (-) the 47->13 curation is inherently a judgment call;
+a stricter reader could argue issue #35 (descendant-inclusive pedigree filtering) reads
+more as completing a documented gap than as a "new capability," or that issue #1
+("Clear Focal Animals" file/text reset) deserved inclusion as a minor UX feature rather
+than exclusion as "just a bug fix" -- flagged here explicitly rather than silently
+decided, matching S332's own precedent for flagging ambiguous completion-criterion
+readings. (-) did not run the `git merge-base --is-ancestor` ancestry check against
+every multi-slice feature's closing/landing commit (only the 3 single-commit citations
+got it) -- consistent with T3's own precedent of citing session/CHANGELOG evidence
+without a sha for phases that have none, but Phase F's own §10 checklist item ("verify
+each sha still resolves in `git log`") should sweep this session's citations too, not
+just T3's. (-) **the first draft of this very handoff's gotcha #1 was itself wrong** --
+it claimed issue #40 was "OPEN, confirmed via this session's own `gh issue list`," but
+that gh issue list (Phase 0, this session) never actually listed #40 at all, and a
+direct `gh issue view 40` check during THIS close-out pass showed it is CLOSED
+(2026-06-11), contradicting a stale `BACKLOG.md` line the draft had trusted instead of
+verifying. Caught and corrected before commit -- a real instance of Learning #20
+(edit/claim from memory) almost recurring inside the close-out phase itself, not just
+production content; left in the record rather than quietly rewritten as if it never
+happened. **Phase 3E (runtime smoke test) does not apply** -- no `R/` package behavior
+changed; `quarto render` (above) is this deliverable's actual build-equivalent
+verification, stated explicitly per FM #24.
+
+**Learnings:** New: `PROJECT_LEARNINGS.md` Learning 309 (a closed GitHub issue's
+`closedAt` date is not evidence the underlying functionality was BUILT in that
+range -- issue-hygiene closes of pre-existing behavior look identical to genuine
+in-range features in a raw closed-issue extraction; read the actual CHANGELOG entry,
+not just the close date/label). Updated `CLAUDE.md`'s `PROJECT_LEARNINGS.md` pointer
+line (308 -> 309 learnings, Sessions 1-332+ -> 1-333+) per Learning #7's
+cross-reference/count discipline. Carried as applied (all held, no incidents):
+[[consult-project-source-of-truth]], [[push-close-out-docs-to-origin]].
+
+**=> SUGGESTED NEXT.** Phase D of `docs/planning/v2-transformation-article-plan.md`
+(§7) -- draft Section 3 (testing at scale) + T5 + F3, reading Session 331's frozen
+`vignettes/articles/data/testing-growth.csv` (test-file counts before/after,
+shinytest2/E2E referencing-file counts) and cross-checking e2e/shinytest2 harness
+status against `docs/planning/phase8-e2e-harness-subplan.md` directly -- **not**
+against `BACKLOG.md`'s stale "#40 is open" characterization (see gotcha #1: #40 is
+actually CLOSED, 2026-06-11). Phases D-E remain reorderable (no hard dependency among Sections 1-4 per §7's
+own note) but Phase F must come last. Two of §12's open owner decisions remain
+untouched and correctly out of this session's scope: optional Section 5 (gates
+Phase F) and F6 screenshot reuse (gates Phase D/E -- **now directly relevant**, since
+Phase D is testing and might want a screenshot of the shinytest2 harness or the app in
+action; needs explicit owner confirmation before `vignettes/shiny_app_use/` is
+touched). Independently, the CRAN 2.0.0 waiting period (from S329) is still open --
+unchanged, not investigated this session. The 8 open GitHub issues (#116, #37, #36,
+#28, #12, #11, #10, #5) and Document 2 planning remain available if the owner prefers
+either instead.
+
+**Key files (this session).** **Written:**
+`vignettes/articles/data/feature-highlights.csv` (new, 13 curated rows). **Modified:**
+`vignettes/articles/engineering-the-2.0.0-release.qmd` (Section 2 + T4 appended),
+`docs/planning/v2-transformation-article-plan.md` (§1 header status line, §7 Phase C
+marked DONE), `PROJECT_LEARNINGS.md` (Learning 309), `CLAUDE.md` (learning-count
+pointer), `CHANGELOG.md` (this session's ledger entry + the Phase-0 backfill entry for
+`2278b46f`), `SESSION_NOTES.md` (this handoff), `HANDOFFS.md` (S333 receipt).
+**Referenced, not modified:** `vignettes/articles/data/feature-candidates.csv` (the 47
+raw candidates, read not edited), `CHANGELOG.md` (grepped extensively for individual
+issue-number session/date evidence, not edited beyond the ledger entries above).
+**Not committed (pre-existing, untouched):** `.DS_Store` (modified),
+`PED_GV_AUDIT_2026-05-30.html` (untracked) -- left alone as S308-S333 all have.
+
+**Gotchas for next session.** (1) **`BACKLOG.md`'s "Up Next" section is STALE on issue
+#40** -- it lists "#40, the open follow-on to the now-complete Phase 8 E2E harness" as
+open, actionable work, but `gh issue view 40 --json state` (checked directly this
+session, not assumed from `BACKLOG.md`'s prose) returns **`CLOSED`** (2026-06-11) --
+the same date `feature-candidates.csv` records. This session's own Phase 0 `gh issue
+list` (8 open issues: #116, #37, #36, #28, #12, #11, #10, #5) already didn't show #40,
+which should have been the first signal; it was not cross-checked against `BACKLOG.md`
+until this close-out pass caught the discrepancy. **Not fixed this session** (a
+`BACKLOG.md` prune is a separate, unscoped action from Phase C's deliverable --
+flagging per SAFEGUARDS.md's mode-switch rule rather than drive-by-editing it). Phase
+D should prune this stale line and re-derive the e2e/shinytest2 harness's true current
+status from `docs/planning/phase8-e2e-harness-subplan.md` + `CHANGELOG.md` directly,
+not from `BACKLOG.md`'s characterization. (2)
+**F6 (screenshot reuse) needs an owner decision before Phase D touches
+`vignettes/shiny_app_use/`** -- still unconfirmed since S330, now directly relevant
+since Phase D/Testing is the next candidate phase per this session's suggested-next.
+(3) **When curating ANY future closed-issue list for this article (Phase D's testing
+issues, Phase E's methodology issues), read each candidate's actual `CHANGELOG.md`
+entry before counting it as "new in range"** -- Learning 309, the #34-style
+issue-hygiene-close trap generalizes to any section still drawing on raw GitHub-issue
+extractions. (4) **`vignettes/articles/data/feature-highlights.csv` is this session's
+curated OUTPUT, not a Phase A artifact** -- unlike the other 7 `data/*.csv` files
+(all Phase A), this one is Phase C's own hand-curated deliverable; a future
+session should not assume it was auto-generated or attempt to regenerate it from a
+script (none exists, deliberately -- curation requires editorial judgment, matching
+T1's "hand-authored, not live calls" precedent). (5) **Phase F's own §10 checklist
+item "verify each sha still resolves in git log" now also covers this session's 3
+single-commit T4 citations** (in addition to S332's already-flagged T3 shas) -- worth
+one combined sweep before Phase F's publish gate, not urgent before Phase D/E.
 
 ### What Session 332 Did
 **Deliverable:** Phase B of `docs/planning/v2-transformation-article-plan.md` -- draft

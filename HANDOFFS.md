@@ -77,19 +77,18 @@ session need this block to continue the work without re-reading the whole repo?*
 ```handoff
 session: S333
 date: 2026-07-09
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Phase C of docs/planning/v2-transformation-article-plan.md -- draft Section 2 (new features) + T4, hand-curating vignettes/articles/data/feature-candidates.csv's 47 raw closed-issue candidates down to genuinely feature-shaped items.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Phase C of docs/planning/v2-transformation-article-plan.md is DONE. Phase D (draft Section 3 -- testing at scale -- + T5/F3, reading testing-growth.csv and cross-checking e2e/shinytest2 status against phase8-e2e-harness-subplan.md, NOT against BACKLOG.md's stale #40-is-open line) is next. Phases D-E remain reorderable; Phase F must come last. 2 open owner decisions from the plan's §12 remain (optional Section 5 at Phase F; F6 screenshot reuse before Phase D/E -- now directly relevant since Phase D is testing). CRAN 2.0.0 waiting period (from S329) is unchanged and independent.
+what_was_done: Hand-curated feature-candidates.csv's 47 raw closed-issue candidates down to 13 (28%) genuinely feature-shaped items, reading each borderline candidate's actual CHANGELOG entry rather than trusting closedAt/labels alone -- caught and excluded 3 issue-hygiene closes of pre-range functionality (#34/#14/#8; #34's own entry says "No code changed"). Wrote vignettes/articles/data/feature-highlights.csv (13 curated rows, T2/T3's frozen-CSV-via-kableExtra pattern). Added Section 2 ("New Capabilities in 2.0.0") + T4 to engineering-the-2.0.0-release.qmd: 3 prose clusters (parent identification/species-awareness x5, GVA uncertainty x4, dashboards/activations x2 + 2 smaller fixes). Fulfilled Section 1's forward-reference to modGeneticDiversity/modPotentialParents; correctly distinguished modORIPReporting's pre-existing code from its in-this-section activation. Marked Phase C DONE in the plan's §7. Verified via quarto render: @tbl-features resolved as Table 3, zero unresolved refs, 13/13 rows present. Verified 3 single-commit citations (0eeee3f6, d4320643, 14c8e84d) both resolve and are ancestors of HEAD. Also backfilled undocumented commit 2278b46f (S332's own receipt sha fix) into CHANGELOG.md during Phase 0 reconcile. Commits: 17333a1f (Phase 0 CHANGELOG backfill), 7cd0f395 (S333 claim stub), 4dcc6869 (article + T4 data), cdda9d35 (plan-doc Phase C DONE), 307c9c77 (learnings+pointer), plus this receipt's own commit (see changelog_ref).
+next_steps: Phase D of the article plan -- draft Section 3 (testing) + T5/F3, from testing-growth.csv. Cross-check e2e/shinytest2 harness status against phase8-e2e-harness-subplan.md + CHANGELOG.md directly -- BACKLOG.md's "#40 is open" line is stale (verified CLOSED 2026-06-11 via gh issue view). Get an owner decision on F6 screenshot reuse before touching vignettes/shiny_app_use/.
+key_files: vignettes/articles/engineering-the-2.0.0-release.qmd (Section 2 + T4 appended), vignettes/articles/data/feature-highlights.csv (new, this session's curated output -- not a Phase A artifact, no regeneration script by design), docs/planning/v2-transformation-article-plan.md (§1/§7 Phase C marked DONE), PROJECT_LEARNINGS.md (Learning 309), CLAUDE.md:177 (learning-count pointer), vignettes/articles/data/feature-candidates.csv (read, not modified -- the 47 raw candidates), BACKLOG.md (read, found stale on #40, not modified -- flagged not fixed, scope discipline)
+gotchas: feature-highlights.csv is Phase C's own hand-curated output, not auto-generated -- do not assume a script produced it. A closed issue's closedAt date is not evidence of in-range work (Learning 309) -- always read the actual CHANGELOG entry for borderline candidates in future curation passes (Phase D/E will face the same raw-closed-issue-list risk). BACKLOG.md's "Up Next" section is stale on issue #40 (claims open, actually CLOSED 2026-06-11) -- not fixed this session (scope discipline), Phase D should prune it. F6 screenshot reuse still needs an explicit owner decision, now directly relevant to Phase D. Phase F's own sha-resolution checklist item should sweep this session's 3 single-commit citations too, not just T3's (S332-flagged).
+runtime_smoke: n/a -- documentation/article-drafting session for vignettes/articles/ support, no R/ package runtime behavior changed; quarto render (output HTML inspected for resolved cross-refs + correct row count) is this deliverable's actual build-equivalent verification, performed and confirmed
+changelog_ref: CHANGELOG.md 2026-07-09 "Phase C of the Document-1 article plan: drafted Section 2 (new features) + T4 (Session 333)"
 commit: pending
 ```
-<!-- prose pending until close-out -->
 
 ```handoff
 session: S332
