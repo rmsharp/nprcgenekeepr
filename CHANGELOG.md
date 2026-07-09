@@ -15,6 +15,39 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-08 — Execute Phase 5a: resync `cran-comments.md` (Session 323)
+
+- **Deliverable:** executed Phase 5a of
+  `docs/planning/cran-2.0.0-submission-plan.md` — resynced
+  `cran-comments.md` now that the Phase 4 re-gate (S322) has landed.
+  **Verification/packaging phase; TDD N/A** per the plan’s own
+  classification (doc-only; `cran-comments.md` is `.Rbuildignore`d). 0
+  `AskUserQuestion` gates (S322’s handoff already fully specified the
+  scope). 0 stakeholder corrections.
+- **Three factual corrections:** (1) the “Resubmission” section’s
+  entry-point claim corrected from the stale
+  [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)-primary
+  wording to the post-Dragon-#9 net end-state
+  ([`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+  remains primary,
+  [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+  a soft-deprecated alias — verified against `NEWS.md:15-16`); (2) NOTE
+  1 gained the new `thoughtco.com` 403 alongside the existing PMC4671785
+  URL, and NOTE 2 dropped the now-stale V8 sub-flag (clean in S322’s
+  re-gate environment); (3) the “Resubmission” section’s own
+  timing-narrative prose — not just the NOTE list — was also stale (it
+  claimed all phases complete “well under a minute,” no longer true once
+  tests grew to ~106s) — reworded to report S322’s actual aggregate
+  numbers (examples ~22s, tests ~106s, vignette-rebuild ~21s) with a
+  “comfortable headroom, no timing flags” framing.
+- **Plan updated in place:**
+  `docs/planning/cran-2.0.0-submission-plan.md` Phase 5 STATUS
+  blockquote → PHASE 5a RESYNC COMPLETE; §0.6 phase diagram and §9
+  summary table (row 5a) updated.
+- **Next session:** Phase 5b — win-builder ×3 + R-hub v2 cross-platform
+  runs, paste results, then submit. **Owner-triggered**, not an agent
+  action, per the plan’s own Phase 5 HARD STOP.
+
 ### 2026-07-08 — Execute Phase 4: full local `R CMD check --as-cran` re-gate (Session 322)
 
 - **Deliverable:** executed Phase 4 of

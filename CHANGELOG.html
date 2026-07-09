@@ -55,6 +55,17 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-08--execute-phase-5a-resync-cran-commentsmd-session-323">2026-07-08 — Execute Phase 5a: resync <code>cran-comments.md</code> (Session 323)<a class="anchor" aria-label="anchor" href="#id_2026-07-08--execute-phase-5a-resync-cran-commentsmd-session-323"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> executed Phase 5a of <code>docs/planning/cran-2.0.0-submission-plan.md</code> — resynced <code>cran-comments.md</code> now that the Phase 4 re-gate (S322) has landed. <strong>Verification/packaging phase; TDD N/A</strong> per the plan’s own classification (doc-only; <code>cran-comments.md</code> is <code>.Rbuildignore</code>d). 0 <code>AskUserQuestion</code> gates (S322’s handoff already fully specified the scope). 0 stakeholder corrections.</li>
+<li>
+<strong>Three factual corrections:</strong> (1) the “Resubmission” section’s entry-point claim corrected from the stale <code><a href="reference/runModularApp.html">runModularApp()</a></code>-primary wording to the post-Dragon-#9 net end-state (<code><a href="reference/runGeneKeepR.html">runGeneKeepR()</a></code> remains primary, <code><a href="reference/runModularApp.html">runModularApp()</a></code> a soft-deprecated alias — verified against <code>NEWS.md:15-16</code>); (2) NOTE 1 gained the new <code>thoughtco.com</code> 403 alongside the existing PMC4671785 URL, and NOTE 2 dropped the now-stale V8 sub-flag (clean in S322’s re-gate environment); (3) the “Resubmission” section’s own timing-narrative prose — not just the NOTE list — was also stale (it claimed all phases complete “well under a minute,” no longer true once tests grew to ~106s) — reworded to report S322’s actual aggregate numbers (examples ~22s, tests ~106s, vignette-rebuild ~21s) with a “comfortable headroom, no timing flags” framing.</li>
+<li>
+<strong>Plan updated in place:</strong> <code>docs/planning/cran-2.0.0-submission-plan.md</code> Phase 5 STATUS blockquote → PHASE 5a RESYNC COMPLETE; §0.6 phase diagram and §9 summary table (row 5a) updated.</li>
+<li>
+<strong>Next session:</strong> Phase 5b — win-builder ×3 + R-hub v2 cross-platform runs, paste results, then submit. <strong>Owner-triggered</strong>, not an agent action, per the plan’s own Phase 5 HARD STOP.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-08--execute-phase-4-full-local-r-cmd-check---as-cran-re-gate-session-322">2026-07-08 — Execute Phase 4: full local <code>R CMD check --as-cran</code> re-gate (Session 322)<a class="anchor" aria-label="anchor" href="#id_2026-07-08--execute-phase-4-full-local-r-cmd-check---as-cran-re-gate-session-322"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> executed Phase 4 of <code>docs/planning/cran-2.0.0-submission-plan.md</code> — the full local <code>R CMD check --as-cran</code> re-gate against commit <code>2abfc783</code> (S321), stale since S134/S240/S241 (124 commits). <strong>Verification phase; TDD N/A</strong> per the plan’s own classification (no code fix was needed — the gate came back clean). 0 <code>AskUserQuestion</code> gates (the plan’s Phase 4 steps were already fully specified). 0 stakeholder corrections.</li>
