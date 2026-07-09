@@ -6,6 +6,13 @@
 
 ## ACTIVE TASK
 
+### What Session 328 Did
+**Deliverable:** Fold the real, clean win-builder x3 + R-hub v2 results into
+`cran-comments.md`'s Test environments section (Phase 5b, IN PROGRESS).
+**Started:** 2026-07-09
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in `CHANGELOG.md` at Phase 3F.
+
 ### What Session 327 Did
 **Deliverable:** Fix a `.Rbuildignore` gap surfaced by an actual win-builder run during Phase
 5b -- 4 top-level files were leaking into the built tarball. **Build-hygiene/config fix;
