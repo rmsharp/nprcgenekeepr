@@ -330,6 +330,120 @@ Table 2: The nine-phase, vertical-slice migration from monolith to modular app,
 </div>
 </div>
 <p><a href="#tbl-phases" class="quarto-xref">Table 2</a> summarizes all nine phases. Phases 1, 2, and 9 are anchored to directly-verified commit shas; phases 3 through 7 are verified only by their <code>CHANGELOG.md</code> session-close-out entries – the source migration plan does not quote a sha for those phases, and this article does not invent one. Phase 8 deserves a specific correction against an earlier, looser characterization of this migration (“phases 1-9 all marked DONE”): it was not a single-session parity phase like its neighbors. It expanded into its own four-session subplan (8a-8d, Session 31-34, issue #39, closed at Session 34) and, after that, a further seven-part hardening pass (8e-1 through 8e-7, Session 37-50, issue #40) – documented in the subplan’s own body text and in <code>CHANGELOG.md</code>, not visible from the migration plan’s phase header alone. Phase 9, by contrast, was the irreversible step: declaring the modular app canonical and deleting the monolith outright, which is why it carries a HIGH risk rating even though it shipped in a single session.</p>
+</section></section><section class="level2"><h2 id="sec-features">Section 2 – New Capabilities in 2.0.0<a class="anchor" aria-label="anchor" href="#sec-features"></a>
+</h2>
+<p>Between the v1.0.8 and v2.0.0 CRAN submissions, 47 GitHub issues closed inside the 512-commit range (2025-07-26 to 2026-07-09). Most of those closes were not new capability: fixes to existing behavior, issue-hygiene closes verifying functionality that already existed before the range (issue #34, for example, found <code><a href="../reference/qcStudbook.html">qcStudbook()</a></code> already integrated into <code>modInput</code> from pre-migration work and simply closed the paper trail years later, with no code change), and internal process items (lint configuration, roxygen documentation harmonization, <code>codecov</code> config consolidation) that belong to no reader-facing section of this article. <a href="#tbl-features" class="quarto-xref">Table 3</a> curates the 13 of 47 (28%) that shipped a capability an analyst or maintainer can actually use – a genuinely new statistic, a new Shiny tab, or a materially different default – each traced to its closing issue number and the session(s) that implemented it.</p>
+<div class="cell">
+<div id="tbl-features" class="cell quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-tbl"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-features-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 3: Curated new capabilities shipped in the v1.0.8 -&gt; v2.0.0 range: 13 of 47 closed GitHub issues judged genuinely feature-shaped, as of 2026-07-09.
+</figcaption><div aria-describedby="tbl-features-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table table cell caption-top" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead><tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Capability</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Issue</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Session(s)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">What it does</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; width: 14em;">Descendant-inclusive pedigree filtering</td>
+<td style="text-align: left;">#35</td>
+<td style="text-align: center;">68-69</td>
+<td style="text-align: left; width: 24em;">The Pedigree Browser's \trim to focal animals\ option now includes descendants as well as ancestors</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 14em;">Configurable auto-generated unknown-ID format</td>
+<td style="text-align: left;">#44 (umbrella of #26/#32/#38)</td>
+<td style="text-align: center;">70-72</td>
+<td style="text-align: left; width: 24em;">Single source-of-truth `getAutoIdFormat()`/`setAutoIdFormat()` (default \U%04d\, byte-identical unconfigured) replaces 8 literal \U\-prefix checks</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 14em;">Gestation-derived parent-candidate window</td>
+<td style="text-align: left;">#31 (umbrella #45)</td>
+<td style="text-align: center;">74</td>
+<td style="text-align: left; width: 24em;">`getPotentialParents()`'s dam-exclusion window is derived from each species' actual gestation length instead of a fixed heuristic</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 14em;">Potential Parents Shiny tab</td>
+<td style="text-align: left;">#48 (umbrella #45)</td>
+<td style="text-align: center;">80-81</td>
+<td style="text-align: left; width: 24em;">New `modPotentialParents` module surfaces `getPotentialParents()` in the app: a sortable candidate-parent table with CSV download</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 14em;">ORIP grant-reporting tab wired in and ONPRC-gated</td>
+<td style="text-align: left;">#47 / #49</td>
+<td style="text-align: center;">83-84</td>
+<td style="text-align: left; width: 24em;">The pre-existing but never-mounted modORIPReporting module (site info, colony summary, genetic-diversity metrics, CSV downloads) is mounted, gated to ONPRC</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 14em;">Species as a first-class pedigree attribute</td>
+<td style="text-align: left;">#46</td>
+<td style="text-align: center;">165-169</td>
+<td style="text-align: left; width: 24em;">A `species` column now drives species-keyed gestation windows and UI defaults, replacing a rhesus-only hardcoded scalar</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 14em;">Mean-kinship correction for animals with an unknown parent</td>
+<td style="text-align: left;">#9 (3 slices)</td>
+<td style="text-align: center;">176-181</td>
+<td style="text-align: left; width: 24em;">Genetic Value Analysis classifies each animal's parentage and corrects mean kinship / demotes both-unknown founders in the displayed rank</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 14em;">Species-configurable reproductive-parameter table + user overrides</td>
+<td style="text-align: left;">#73 (Parts 1-2)</td>
+<td style="text-align: center;">182-189</td>
+<td style="text-align: left; width: 24em;">A 14-species minimum-breeding-age/gestation table backs Genetic Value Analysis and Potential Parents defaults, with per-session user overrides</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 14em;">Genome-uniqueness de-inflation for unknown-origin founders</td>
+<td style="text-align: left;">#76</td>
+<td style="text-align: center;">191-192</td>
+<td style="text-align: left; width: 24em;">Genome uniqueness (gu) reports 0, not an inflated score, for both-unknown-parentage \Undetermined\ founders</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 14em;">Founder genome equivalents reported with sampling uncertainty</td>
+<td style="text-align: left;">#82</td>
+<td style="text-align: center;">208-209</td>
+<td style="text-align: left; width: 24em;">`reportGV()` gains an `fgSE` column alongside `fg`, quantifying the estimate's sampling uncertainty</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 14em;">Genetic Diversity stoplight-heatmap dashboard</td>
+<td style="text-align: left;">#112 (4 slices)</td>
+<td style="text-align: center;">280-283</td>
+<td style="text-align: left; width: 24em;">New `modGeneticDiversity` Shiny tab renders a group x metric red/yellow/green heatmap (proportion-low, origin, production, inbreeding-risk)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 14em;">Species-specific minimum breeding ages, end to end</td>
+<td style="text-align: left;">#119 (5 slices)</td>
+<td style="text-align: center;">303-307</td>
+<td style="text-align: left; width: 24em;">Replaces a single flat minParentAge=2 default with sex- and species-specific minSireAge/minDamAge floors across QC, matching, and the Shiny UI</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 14em;">Effective population size (Ne) estimates</td>
+<td style="text-align: left;">#118 (4 slices)</td>
+<td style="text-align: center;">310-313</td>
+<td style="text-align: left; width: 24em;">New exports (gene diversity, sex-ratio Ne, variance Ne) surface a colony's effective, not just census, population size</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><a href="#tbl-features" class="quarto-xref">Table 3</a> groups into three loose clusters, covered below: parent identification, Genetic Value Analysis uncertainty, and two new Shiny dashboards.</p>
+<section class="level3"><h3 id="parent-identification-grows-principled-and-species-aware">Parent identification grows principled and species-aware<a class="anchor" aria-label="anchor" href="#parent-identification-grows-principled-and-species-aware"></a>
+</h3>
+<p>The single largest cluster of new capability – five of the thirteen curated features – reworked how the package identifies and reasons about parents. It started narrowly: issue #31 replaced a fixed dam-exclusion heuristic in <code><a href="../reference/getPotentialParents.html">getPotentialParents()</a></code> with a window derived from each species’ actual gestation length (Session 74, commit <code>0eeee3f6</code>), and the <strong>Potential Parents</strong> Shiny tab (issue #48, Session 80-81) turned that package-level logic into an app feature for the first time – previously, <code><a href="../reference/getPotentialParents.html">getPotentialParents()</a></code> had no UI at all.</p>
+<p>That work exposed a bigger gap: the package had no first-class notion of species. Issue #46 (Session 165-169) added a <code>species</code> pedigree column and made the gestation window and its UI defaults species-keyed instead of assuming rhesus macaque throughout. Issue #73 (Session 182-189) went further, adding a 14-species reproductive-parameter table (minimum breeding ages, gestation length) with user-configurable overrides, feeding both Genetic Value Analysis and the Potential Parents tab. Issue #119 (Session 303-307, five slices) closed the loop: a single flat <code>minParentAge = 2</code> default – inconsistent with the species-aware breeding-age table introduced for #73 – was replaced end to end with sex- and species-specific <code>minSireAge</code>/<code>minDamAge</code> floors across QC, candidate-matching, and the Shiny UI.</p>
+</section><section class="level3"><h3 id="genetic-value-analysis-becomes-more-honest-about-uncertainty">Genetic Value Analysis becomes more honest about uncertainty<a class="anchor" aria-label="anchor" href="#genetic-value-analysis-becomes-more-honest-about-uncertainty"></a>
+</h3>
+<p>Four features changed what Genetic Value Analysis reports, not by adding a new tab but by making existing statistics more accurate or more explicit about their own limits. Issue #9 (Session 176-181, three slices) stopped animals with an unknown parent from silently inflating their own mean kinship and falsely top-ranking as “unique” founders – their parentage is now classified and the displayed rank corrected accordingly. Issue #76 (Session 191-192), filed as a direct follow-on to #9, carried the same logic to genome uniqueness: a both-unknown-parentage “Undetermined” founder now reports <code>gu = 0</code> instead of a number with no real biological signal behind it. Issue #82 (Session 208-209) added a <code>fgSE</code> column next to <code>fg</code> in <code><a href="../reference/reportGV.html">reportGV()</a></code>’s output, so the founder genome equivalents estimate ships with its own sampling uncertainty rather than a bare point value. Issue #118 (Session 310-313, four slices) added the largest single statistic of the range: effective population size (Ne) estimates, computed three ways (gene diversity, demographic sex-ratio, and variance effective size) – a colony-level number distinct from, and generally smaller than, simple census count.</p>
+</section><section class="level3"><h3 id="two-new-dashboards-and-a-long-dormant-module-unlocked">Two new dashboards, and a long-dormant module unlocked<a class="anchor" aria-label="anchor" href="#two-new-dashboards-and-a-long-dormant-module-unlocked"></a>
+</h3>
+<p>The remaining features are new Shiny surfaces. Issue #112 (Session 280-283, four slices) added the <strong>Genetic Diversity</strong> tab: a <code>modGeneticDiversity</code> module rendering a group x metric red/yellow/green heatmap that combines four independent signals (proportion of low genetic value, Indian-origin status, production status, and inbreeding risk) into one at-a-glance view per breeding group. Issues #47 and #49 (Session 83-84) mounted <code>modORIPReporting</code> – a module that had existed, complete but never wired into the app, since the original Shiny-module migration (<a href="#sec-modules" class="quarto-xref">Section 1</a>) – as an ONPRC-only grant-reporting tab, gated by <code><a href="../reference/shouldShowOripTab.html">shouldShowOripTab()</a></code> so it does not appear for other sites. Together with the Potential Parents tab above, three of the ten modules listed in <a href="#tbl-modules" class="quarto-xref">Table 1</a> trace their existence, or their activation, to this section’s work rather than to the migration itself.</p>
+<p>Two smaller fixes round out the curated set (<a href="#tbl-features" class="quarto-xref">Table 3</a>): issue #35 (Session 68-69) extended the Pedigree Browser’s focal-animal trim to include descendants, not just ancestors; and issue #44 (Session 70-72) replaced eight scattered literal <code>"U"</code>-prefix checks with a single configurable auto-generated-ID format, defaulting to the prior behavior unconfigured.</p>
 </section></section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);

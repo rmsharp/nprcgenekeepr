@@ -47,6 +47,75 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-09 · \[ad hoc\] Phase C of the Document-1 article plan: drafted Section 2 (new features) + T4 (Session 333)
+
+- **Deliverable:** Phase C of
+  `docs/planning/v2-transformation-article-plan.md` — drafted Section 2
+  (“New Capabilities in 2.0.0”) of
+  `vignettes/articles/engineering-the-2.0.0-release.qmd` plus table T4
+  (new-features summary), hand-curating from Session 331’s frozen
+  `vignettes/articles/data/feature-candidates.csv` (47 raw closed-issue
+  candidates). **Documentation/article-drafting session for
+  `vignettes/articles/` support; TDD N/A** — no `R/`/`tests/` package
+  code touched. 0 `AskUserQuestion` gates (direct continuation of an
+  already-ratified plan phase). 0 stakeholder corrections.
+- **Change:** Curated the 47 raw candidates down to **13 (28%)**
+  genuinely feature-shaped items, excluding bug fixes, internal
+  process/tooling closes, and — the real trap — issue-hygiene closes of
+  functionality that predates the range (issue \#34’s own CHANGELOG
+  entry states “No code changed”; the real implementation, commit
+  `7da01afe`, predates the range). Wrote a new frozen data file,
+  `vignettes/articles/data/feature-highlights.csv` (13 rows: feature,
+  issue, session range, date, commit sha where applicable, description),
+  matching T2/T3’s read-a-frozen-CSV-via-`kableExtra` generation
+  pattern. Added Section 2 with three prose clusters: parent
+  identification/species-awareness (5 features: \#31/#48/#46/#73/#119),
+  Genetic Value Analysis uncertainty (4 features: \#9/#76/#82/#118), and
+  new dashboards/module activations (#112, \#47/#49) plus 2 smaller
+  fixes (#35, \#44). Fulfilled Section 1’s own forward-reference to
+  `modGeneticDiversity`/`modPotentialParents`, and correctly
+  distinguished `modORIPReporting`’s pre-existing code (Section 1’s
+  migration) from its in-this-section activation. Marked Phase C
+  `✅ DONE` in the plan’s §7. Verified via `quarto render`:
+  `@tbl-features` resolved as “Table 3” with zero unresolved-ref hits,
+  all 13 rows present in output. Verified the 3 single-commit citations
+  (`0eeee3f6`, `d4320643`, `14c8e84d`) both resolve (`git log -1`) and
+  are ancestors of `HEAD` (`git merge-base --is-ancestor`).
+- **Also:** Added `PROJECT_LEARNINGS.md` Learning 309 — a closed GitHub
+  issue’s `closedAt` date is not evidence the underlying functionality
+  was built in that range; issue-hygiene closes of pre-existing behavior
+  look identical to genuine in-range features in a raw closed-issue
+  extraction, so each candidate’s actual CHANGELOG entry must be read
+  before curating it in. Updated `CLAUDE.md`’s learning-count pointer
+  (308 → 309 learnings, Sessions 1–332+ → 1–333+). Corrected an
+  in-progress handoff-drafting error before commit: an initial gotcha
+  claiming issue \#40 was “OPEN” was wrong — `gh issue view 40` shows
+  CLOSED (2026-06-11) — and also surfaced (not fixed, to avoid scope
+  creep) that `BACKLOG.md`’s “Up Next” section is stale on that same
+  issue.
+- **Session:** S333 · **Verified:** `quarto render` output HTML
+  inspected directly for resolved cross-references and correct row
+  count; render artifacts cleaned up before staging; commit-ancestry
+  checks (`git merge-base --is-ancestor`) on all 3 single-commit
+  citations.
+
+### 2026-07-09 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit 2278b46f — S332 HANDOFFS.md receipt commit-sha backfill
+
+- **Deliverable:** Phase 0 ledger reconcile (Session 333) found one
+  commit past the `CHANGELOG.md` frontier with no ledger entry:
+  `2278b46f` (“docs: S332 – backfill own HANDOFFS.md receipt commit
+  shas”), landed after S332’s own close-out commit (`b051c883`) that
+  recorded the entry below.
+- **Change:** `2278b46f` replaced the S332 `HANDOFFS.md` receipt’s
+  `commit: pending` placeholder with the real commit sha (`b051c883`)
+  and expanded `what_was_done` to list all 6 commits — a self-correction
+  of the just-written receipt, not new production work. Same class of
+  action as the `cc0f7798` backfill below (S331’s equivalent self-fix).
+- **Session:** S333 (backfilling S332’s own commit) · **Verified:**
+  `git show --stat 2278b46f` (single-file, 2-line diff to
+  `HANDOFFS.md`); `git log -1 --format=%H -- HANDOFFS.md` now matches
+  `2278b46f` with no further gap.
+
 ### 2026-07-09 · \[ad hoc\] Phase B of the Document-1 article plan: drafted Section 1 (Shiny modules) + T2/T3/F1/F2 (Session 332)
 
 - **Deliverable:** Phase B of

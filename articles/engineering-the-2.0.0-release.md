@@ -160,3 +160,119 @@ visible from the migration plan’s phase header alone. Phase 9, by
 contrast, was the irreversible step: declaring the modular app canonical
 and deleting the monolith outright, which is why it carries a HIGH risk
 rating even though it shipped in a single session.
+
+## Section 2 – New Capabilities in 2.0.0
+
+Between the v1.0.8 and v2.0.0 CRAN submissions, 47 GitHub issues closed
+inside the 512-commit range (2025-07-26 to 2026-07-09). Most of those
+closes were not new capability: fixes to existing behavior,
+issue-hygiene closes verifying functionality that already existed before
+the range (issue \#34, for example, found
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+already integrated into `modInput` from pre-migration work and simply
+closed the paper trail years later, with no code change), and internal
+process items (lint configuration, roxygen documentation harmonization,
+`codecov` config consolidation) that belong to no reader-facing section
+of this article. [Table 3](#tbl-features) curates the 13 of 47 (28%)
+that shipped a capability an analyst or maintainer can actually use – a
+genuinely new statistic, a new Shiny tab, or a materially different
+default – each traced to its closing issue number and the session(s)
+that implemented it.
+
+| Capability | Issue | Session(s) | What it does |
+|:---|:---|:--:|:---|
+| Descendant-inclusive pedigree filtering | \#35 | 68-69 | The Pedigree Browser's \trim to focal animals\\ option now includes descendants as well as ancestors |
+| Configurable auto-generated unknown-ID format | \#44 (umbrella of \#26/#32/#38) | 70-72 | Single source-of-truth \`getAutoIdFormat()\`/\`setAutoIdFormat()\` (default \U%04d\\ byte-identical unconfigured) replaces 8 literal \U\\prefix checks |
+| Gestation-derived parent-candidate window | \#31 (umbrella \#45) | 74 | \`getPotentialParents()\`'s dam-exclusion window is derived from each species' actual gestation length instead of a fixed heuristic |
+| Potential Parents Shiny tab | \#48 (umbrella \#45) | 80-81 | New \`modPotentialParents\` module surfaces \`getPotentialParents()\` in the app: a sortable candidate-parent table with CSV download |
+| ORIP grant-reporting tab wired in and ONPRC-gated | \#47 / \#49 | 83-84 | The pre-existing but never-mounted modORIPReporting module (site info, colony summary, genetic-diversity metrics, CSV downloads) is mounted, gated to ONPRC |
+| Species as a first-class pedigree attribute | \#46 | 165-169 | A \`species\` column now drives species-keyed gestation windows and UI defaults, replacing a rhesus-only hardcoded scalar |
+| Mean-kinship correction for animals with an unknown parent | \#9 (3 slices) | 176-181 | Genetic Value Analysis classifies each animal's parentage and corrects mean kinship / demotes both-unknown founders in the displayed rank |
+| Species-configurable reproductive-parameter table + user overrides | \#73 (Parts 1-2) | 182-189 | A 14-species minimum-breeding-age/gestation table backs Genetic Value Analysis and Potential Parents defaults, with per-session user overrides |
+| Genome-uniqueness de-inflation for unknown-origin founders | \#76 | 191-192 | Genome uniqueness (gu) reports 0, not an inflated score, for both-unknown-parentage \Undetermined\\ founders |
+| Founder genome equivalents reported with sampling uncertainty | \#82 | 208-209 | \`reportGV()\` gains an \`fgSE\` column alongside \`fg\`, quantifying the estimate's sampling uncertainty |
+| Genetic Diversity stoplight-heatmap dashboard | \#112 (4 slices) | 280-283 | New \`modGeneticDiversity\` Shiny tab renders a group x metric red/yellow/green heatmap (proportion-low, origin, production, inbreeding-risk) |
+| Species-specific minimum breeding ages, end to end | \#119 (5 slices) | 303-307 | Replaces a single flat minParentAge=2 default with sex- and species-specific minSireAge/minDamAge floors across QC, matching, and the Shiny UI |
+| Effective population size (Ne) estimates | \#118 (4 slices) | 310-313 | New exports (gene diversity, sex-ratio Ne, variance Ne) surface a colony's effective, not just census, population size |
+
+Table 3: Curated new capabilities shipped in the v1.0.8 -\> v2.0.0
+range: 13 of 47 closed GitHub issues judged genuinely feature-shaped, as
+of 2026-07-09.
+
+[Table 3](#tbl-features) groups into three loose clusters, covered
+below: parent identification, Genetic Value Analysis uncertainty, and
+two new Shiny dashboards.
+
+### Parent identification grows principled and species-aware
+
+The single largest cluster of new capability – five of the thirteen
+curated features – reworked how the package identifies and reasons about
+parents. It started narrowly: issue \#31 replaced a fixed dam-exclusion
+heuristic in
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+with a window derived from each species’ actual gestation length
+(Session 74, commit `0eeee3f6`), and the **Potential Parents** Shiny tab
+(issue \#48, Session 80-81) turned that package-level logic into an app
+feature for the first time – previously,
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+had no UI at all.
+
+That work exposed a bigger gap: the package had no first-class notion of
+species. Issue \#46 (Session 165-169) added a `species` pedigree column
+and made the gestation window and its UI defaults species-keyed instead
+of assuming rhesus macaque throughout. Issue \#73 (Session 182-189) went
+further, adding a 14-species reproductive-parameter table (minimum
+breeding ages, gestation length) with user-configurable overrides,
+feeding both Genetic Value Analysis and the Potential Parents tab. Issue
+\#119 (Session 303-307, five slices) closed the loop: a single flat
+`minParentAge = 2` default – inconsistent with the species-aware
+breeding-age table introduced for \#73 – was replaced end to end with
+sex- and species-specific `minSireAge`/`minDamAge` floors across QC,
+candidate-matching, and the Shiny UI.
+
+### Genetic Value Analysis becomes more honest about uncertainty
+
+Four features changed what Genetic Value Analysis reports, not by adding
+a new tab but by making existing statistics more accurate or more
+explicit about their own limits. Issue \#9 (Session 176-181, three
+slices) stopped animals with an unknown parent from silently inflating
+their own mean kinship and falsely top-ranking as “unique” founders –
+their parentage is now classified and the displayed rank corrected
+accordingly. Issue \#76 (Session 191-192), filed as a direct follow-on
+to \#9, carried the same logic to genome uniqueness: a
+both-unknown-parentage “Undetermined” founder now reports `gu = 0`
+instead of a number with no real biological signal behind it. Issue \#82
+(Session 208-209) added a `fgSE` column next to `fg` in
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)’s
+output, so the founder genome equivalents estimate ships with its own
+sampling uncertainty rather than a bare point value. Issue \#118
+(Session 310-313, four slices) added the largest single statistic of the
+range: effective population size (Ne) estimates, computed three ways
+(gene diversity, demographic sex-ratio, and variance effective size) – a
+colony-level number distinct from, and generally smaller than, simple
+census count.
+
+### Two new dashboards, and a long-dormant module unlocked
+
+The remaining features are new Shiny surfaces. Issue \#112 (Session
+280-283, four slices) added the **Genetic Diversity** tab: a
+`modGeneticDiversity` module rendering a group x metric red/yellow/green
+heatmap that combines four independent signals (proportion of low
+genetic value, Indian-origin status, production status, and inbreeding
+risk) into one at-a-glance view per breeding group. Issues \#47 and \#49
+(Session 83-84) mounted `modORIPReporting` – a module that had existed,
+complete but never wired into the app, since the original Shiny-module
+migration ([Section 1](#sec-modules)) – as an ONPRC-only grant-reporting
+tab, gated by
+[`shouldShowOripTab()`](https://github.com/rmsharp/nprcgenekeepr/reference/shouldShowOripTab.md)
+so it does not appear for other sites. Together with the Potential
+Parents tab above, three of the ten modules listed in
+[Table 1](#tbl-modules) trace their existence, or their activation, to
+this section’s work rather than to the migration itself.
+
+Two smaller fixes round out the curated set ([Table 3](#tbl-features)):
+issue \#35 (Session 68-69) extended the Pedigree Browser’s focal-animal
+trim to include descendants, not just ancestors; and issue \#44 (Session
+70-72) replaced eight scattered literal `"U"`-prefix checks with a
+single configurable auto-generated-ID format, defaulting to the prior
+behavior unconfigured.
