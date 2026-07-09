@@ -87,7 +87,7 @@ key_files: vignettes/articles/engineering-the-2.0.0-release.qmd (Section 3 + T5/
 gotchas: testing-growth.csv's test_file_count is "all .R files in tests/testthat/", not "test*.R files" -- future sessions citing this column should use the same precise framing, not "test file count" bare. BACKLOG.md's "#40 open" line is stale for the third consecutive flagged session (S333, S334) without a fix -- next session that opens BACKLOG.md for any reason should just prune it. F6 screenshot reuse still needs an owner decision but has not gated either Phase C or Phase D -- likely won't gate Phase E's T6/F4/F5 either (Phase E's dragon is tone/T6-extraction, not screenshots). The 8e-7 CI flake-mitigation number ("~1 error / 5 runs") is sourced to the subplan's own self-report, not independently re-measured -- correctly caveated in the article as subplan-sourced, but note if a future audit wants a stronger source.
 runtime_smoke: n/a -- documentation/article-drafting session for vignettes/articles/ support, no R/ package runtime behavior changed; quarto render (output HTML + PNG inspected directly, one defect caught and fixed) is this deliverable's actual build-equivalent verification, performed and confirmed
 changelog_ref: CHANGELOG.md 2026-07-09 "Phase D of the Document-1 article plan: drafted Section 3 (testing at scale) + T5/F3 (Session 334)"
-commit: pending
+commit: 735a3f2a
 ```
 <free-text prose, self-score breakdown>
 
