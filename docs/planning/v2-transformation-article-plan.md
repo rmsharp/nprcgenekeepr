@@ -6,8 +6,9 @@ and its commit-range framing (§2/§9 dragon #4) via `AskUserQuestion`, Session 
 (§1) via `AskUserQuestion`, Session 332 (2026-07-09) — **Phase B is now DONE** (§7).
 Session 333 (2026-07-09) drafted Section 2 (new features) + T4 — **Phase C is now DONE**
 (§7). Session 334 (2026-07-09) drafted Section 3 (testing at scale) + T5/F3 — **Phase D
-is now DONE** (§7). Phases E-F remain future, separately approved sessions each; no
-phase is bundled with another (FM #26).
+is now DONE** (§7). Session 335 (2026-07-09) drafted Section 4 (AI-assisted development
+process) + T6/F4/F5 — **Phase E is now DONE** (§7). Phase F remains a future, separately
+approved session; no phase is bundled with another (FM #26).
 
 **Workstream:** Adapted `docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md`
 (Phases 2/3/4/6), substituting this repository's own artifacts (`git log`, `CHANGELOG.md`,
@@ -347,7 +348,7 @@ did not attempt a new extraction (stayed within "read Phase A's frozen data," th
 Reproducibility Decision at §5) — flagged explicitly rather than silently omitted.
 **Verification:** same as Phase B.
 
-### Phase E — Draft Section 4 (Claude CLI / methodology) + T6, F4, F5 · risk HIGH 🐉 (see §9)
+### Phase E — Draft Section 4 (Claude CLI / methodology) + T6, F4, F5 · risk HIGH 🐉 (see §9) · ✅ DONE (Session 335)
 **What DONE looks like:** section drafted with T6 fully populated from real extraction
 (not characterization), F4/F5 rendering, tone calibrated to this being a public,
 domain-expert-and-CRAN-reviewer-facing description of an AI-assisted process — factual
@@ -358,6 +359,40 @@ promotional gloss).
 **Verification:** same as Phase B, plus a re-read of `PROJECT_LEARNINGS.md`'s own
 framing to confirm the section doesn't contradict the project's documented failure
 modes / corrections.
+
+**Closed as of Session 335 (2026-07-09):** drafted Section 4 ("An AI-Assisted
+Development Process") in `vignettes/articles/engineering-the-2.0.0-release.qmd`, with
+**T6** (`@tbl-process-metrics`, 9-row engineering-process metrics table from
+`data/process-metrics.csv`), **F4** (`@fig-tdd-cycle`, a Mermaid `stateDiagram-v2` of
+the RED->GREEN->REFACTOR cycle annotated with the `AskUserQuestion` phase gates from
+`CLAUDE.md`'s Development Process Contract), and **F5** (`@fig-self-score-trend`, a
+`ggplot2` line chart of the 7-session self-score window from `data/self-score-trend.csv`,
+re-ordered to true session-chronological order — the frozen CSV's own date-only sort
+left same-day sessions in reverse-numeric order, a presentation-layer fix, not a data
+change). T6/F5 both carry explicit "Phase A data freeze (Session 331)" captions stating
+the source files (`CHANGELOG.md`, `PROJECT_LEARNINGS.md`, `HANDOFFS.md`,
+`SESSION_NOTES.md`) are live and had already grown past the frozen counts by the time
+this session ran (confirmed firsthand: live `CHANGELOG.md` is 317 entries and live
+`PROJECT_LEARNINGS.md` is 310 entries at Session 335, vs. the frozen 309/305) — a
+snapshot-vs-live distinction stated explicitly rather than silently conflated. Re-read
+`PROJECT_LEARNINGS.md`'s own framing (intro + recurring-reflexes glossary) per the
+phase's own verification bar, confirming Section 4's candid tone matches the project's
+established voice rather than contradicting it. Verified via `quarto render`: T6/F4/F5
+all resolved (`Table 5`, `Figure 4`, `Figure 5`), zero unresolved-ref hits. **F4's first
+version had a real defect exit-code-0 could not have caught:** a `\n` inside Mermaid
+transition labels (by incorrect analogy with F2's flowchart `<br/>` syntax) rendered as
+a literal backslash-n string, not a line break, because `stateDiagram-v2` doesn't support
+that escape — invisible to `quarto render`, which never itself parses the embedded
+Mermaid source (it ships to the reader's browser for client-side rendering). Caught by
+statically rendering the extracted `.mmd` via `npx @mermaid-js/mermaid-cli` and
+inspecting the actual PNG (not `rsvg-convert`, which doesn't support Mermaid's
+`<foreignObject>` label elements and would have shown a worse, misleading false
+defect) — fixed by keeping each label on one line and re-verified before commit
+(new Learning 311).
+**Verification:** `quarto render` output HTML inspected for resolved cross-references;
+a standalone `mermaid-cli` PNG render of F4 caught and confirmed the fix for a real
+label-escaping defect; `PROJECT_LEARNINGS.md` re-read per the phase's own bar; render
+artifacts cleaned up before staging.
 
 ### Phase F — Assemble, consolidate, verify, publish · risk MEDIUM (irreversible-ish: public visibility)
 **What DONE looks like:** Abstract, Introduction, optional Section 5, Conclusion
