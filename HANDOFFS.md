@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S327
+date: 2026-07-09
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix a .Rbuildignore gap surfaced by an actual win-builder run during Phase 5b -- 4 top-level files (BOOTSTRAP.md, CONTEXT_TEMPLATE.md, HANDOFFS.md, dashboard_history.jsonl) were leaking into the built tarball.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S326
 date: 2026-07-08
 status: complete

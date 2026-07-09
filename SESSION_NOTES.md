@@ -6,6 +6,13 @@
 
 ## ACTIVE TASK
 
+### What Session 327 Did
+**Deliverable:** Fix a `.Rbuildignore` gap surfaced by an actual win-builder run during Phase
+5b (IN PROGRESS).
+**Started:** 2026-07-09
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in `CHANGELOG.md` at Phase 3F.
+
 ### What Session 326 Did
 **Deliverable:** CRAN 2.0.0 Phase 5b readiness verification -- resume the S325 SUGGESTED NEXT
 option (a). **Verification/packaging; TDD N/A** -- no `R/`/`tests/`/`DESCRIPTION` touched.
