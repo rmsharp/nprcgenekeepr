@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S332
+date: 2026-07-09
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Phase B of docs/planning/v2-transformation-article-plan.md -- draft Section 1 (Shiny modules) + tables T2/T3 + figures F1/F2, reading from S331's frozen vignettes/articles/data/*.csv files.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S331
 date: 2026-07-09
 status: complete

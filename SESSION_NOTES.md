@@ -6,6 +6,20 @@
 
 ## ACTIVE TASK
 
+### What Session 332 Did
+**Deliverable:** Phase B of `docs/planning/v2-transformation-article-plan.md` -- draft
+Section 1 (Shiny modules) prose + tables T2/T3 + figures F1/F2, reading from Session
+331's frozen `vignettes/articles/data/*.csv` files. **Documentation/article-drafting
+session for `vignettes/articles/` support -- no `R/`/`tests/` package code touched. TDD
+phase: N/A** (matches S107-S110/S330/S331 article-session precedent; declared every
+response). Also backfilled one undocumented commit (`cc0f7798`, S331's own HANDOFFS.md
+receipt sha fix) into `CHANGELOG.md` during this session's Phase 0 reconcile, committed
+separately as `6c0eb75f` before this deliverable began.
+**Started:** 2026-07-09
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### What Session 331 Did
 **Deliverable:** Phase A of `docs/planning/v2-transformation-article-plan.md` -- build
 and freeze the evidence-base data files + extraction script(s) for Document 1, and
