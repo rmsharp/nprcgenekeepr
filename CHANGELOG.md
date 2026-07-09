@@ -95,10 +95,12 @@ here.
   session handoff for a future session, mirroring how S336 itself
   flagged the original gap without fixing the workflow.
 - **Phase 3E:** local static verification performed (YAML parses, bash
-  syntax valid, coverage test passes, dynamic count sanity-checked); the
-  actual live GitHub Actions run (`workflow_dispatch`/nightly, real
-  Chrome runner) was **not** triggered in-session — stated explicitly
-  per FM \#24, not silently treated as sufficient.
+  syntax valid, coverage test passes, dynamic count sanity-checked).
+  **Owner approved a live confirmation**:
+  `gh workflow run shinytest2.yaml --ref master` dispatched run
+  [29057393786](https://github.com/rmsharp/nprcgenekeepr/actions/runs/29057393786),
+  completed **success** in 18m56s — all 15 per-module groups green,
+  including the 2 new ones.
 - **Learnings:** New `PROJECT_LEARNINGS.md` Learning 313 (fixing a stale
   count by writing a new count is the same defect with a later
   expiration date; extends Learning \#7/#10’s cross-reference-staleness
