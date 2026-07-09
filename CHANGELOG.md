@@ -47,6 +47,43 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-09 · \[ad hoc\] Fix .Rbuildignore gap surfaced by win-builder NOTE 2 (Session 327)
+
+- **Deliverable:** Fixed a real `.Rbuildignore` gap found when the owner
+  actually ran the Phase 5b runbook. **Build-hygiene/config fix; TDD
+  N/A** — no `R/`/`tests/` touched, verified via `R CMD build .` +
+  `tar tzf`, matching Phase 1’s own classification for this exact class
+  of change. 0 `AskUserQuestion` gates (owner directly instructed the
+  fix after reviewing the finding). 0 stakeholder corrections.
+- **Change:** All three win-builder results (R-devel/release/oldrelease)
+  came back `0 errors | 0 warnings | 2 NOTEs`. NOTE 1 matched
+  `cran-comments.md`’s already-pre-explained content. NOTE 2 was new and
+  real, not the plan’s anticipated local-toolchain note: “Non-standard
+  files/directories found at top level: `BOOTSTRAP.md`
+  `CONTEXT_TEMPLATE.md` `HANDOFFS.md` `dashboard_history.jsonl`” —
+  identical across all three logs (confirmed via `WebFetch` of each
+  `00check.log`). Root cause: all four files were introduced by the
+  Session 324 methodology sync (three new root docs, plus a generated
+  snapshot file that is `.gitignore`d but was never separately
+  `.Rbuildignore`d), after the S322 local gate ran — so that gate never
+  tested against them, and Session 326’s own drift check (scoped to
+  `R/`/`tests/`/`DESCRIPTION`) could not have caught this class of gap
+  either. Added 4 anchored, paren-free lines to `.Rbuildignore`’s
+  existing “Methodology framework files” section, matching its
+  established style. Verified via `R CMD build .` + `tar tzf` grep: the
+  4 files no longer ship; top-level listing is back to the standard set.
+- **Also:** added a correction note to
+  `docs/planning/cran-2.0.0-submission-plan.md`’s Phase 5 status block
+  (honestly flagging that Session 326’s “no change needed” conclusion
+  was incomplete), a new Dragon \#11 in §5 generalizing the lesson (a
+  code-path-scoped drift check cannot see new root-level files;
+  `.gitignore` and `.Rbuildignore` are separate mechanisms), and updated
+  the §9 table’s Phase 5b row. Added `PROJECT_LEARNINGS.md` Learning
+  303.
+- **Session:** S327 · **Verified:** `R CMD build .` then
+  `tar tzf nprcgenekeepr_2.0.0.tar.gz | grep -E "BOOTSTRAP|CONTEXT_TEMPLATE|HANDOFFS|dashboard_history"`
+  — empty. Build artifact removed, not committed.
+
 ### 2026-07-08 · \[ad hoc\] CRAN 2.0.0 Phase 5b readiness re-verified, zero drift (Session 326)
 
 - **Deliverable:** Resumed `docs/planning/cran-2.0.0-submission-plan.md`

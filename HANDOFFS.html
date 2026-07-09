@@ -93,7 +93,20 @@ when it reconstructs a receipt a crashed session never completed — you never w
 <li>
 <strong><code>CHANGELOG.md</code></strong> — the <em>cumulative action ledger</em>: <em>“what was done here, ever?”</em>, append-only.</li>
 </ul><p>The shared key across all three is the commit sha (<code>changelog_ref</code> / <code>commit</code> here). This file <strong>distills</strong> the handoff; it does not copy the scratchpad. The belongs-here test: <em>would the next session need this block to continue the work without re-reading the whole repo?</em></p>
-<hr><!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. --><pre class="handoff"><code>session: S326
+<hr><!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. --><pre class="handoff"><code>session: S327
+date: 2026-07-09
+status: complete
+self_score: 9
+predecessor_score: 7
+active_task: .Rbuildignore gap fixed and verified. Owner needs to re-run the Phase 5b runbook (win-builder x3 + R-hub v2) against the corrected tree before folding results into cran-comments.md and submitting.
+what_was_done: Owner ran the S326-handed-off Phase 5b runbook; all 3 win-builder results came back 0/0/2 NOTEs. NOTE 1 matched cran-comments.md's pre-explained content. NOTE 2 was new and real (not the plan's anticipated local-HTML-manual note): "Non-standard files/directories found at top level: BOOTSTRAP.md, CONTEXT_TEMPLATE.md, HANDOFFS.md, dashboard_history.jsonl" -- confirmed identical across all 3 logs via WebFetch of each 00check.log. Root cause: S324 methodology sync added these (3 tracked root docs + 1 gitignored-but-not-Rbuildignored generated file) after the S322 local gate ran; gitignore and Rbuildignore are separate mechanisms. Fixed: 4 anchored lines added to .Rbuildignore's existing "Methodology framework files" section. Verified: R CMD build . + tar tzf grep -- files no longer ship, top-level listing back to standard set; artifact removed, not committed. Updated the plan doc (Phase 5 status correction note, new Dragon #11, Sec9 table) and added PROJECT_LEARNINGS.md Learning 303. Commit: c1fc47b9 (claim stub: a1dadfd3).
+next_steps: Owner re-runs win-builder x3 against a freshly built tarball (should come back 0/0/1 NOTE now); re-runs rhub::rhub_check() once this fix is pushed (the in-flight run checked the pre-fix tree); folds clean results into cran-comments.md's Test environments section + reconciles the misspelled-words list; then submit_cran() is the owner's HARD STOP action.
+key_files: .Rbuildignore (4 new lines), docs/planning/cran-2.0.0-submission-plan.md (Phase 5 status correction + Dragon #11 + Sec9 row), PROJECT_LEARNINGS.md (Learning 303), SESSION_NOTES.md (S327 handoff), HANDOFFS.md (this receipt)
+gotchas: The 3 completed win-builder runs and the in-flight R-hub run all reflect the PRE-FIX tree -- do not treat them as final; re-run all cross-platform checks after this fix is pushed. Before any future cross-platform run, diff the root-level file listing against .Rbuildignore coverage directly (a git-log-scoped R/tests/DESCRIPTION drift check cannot see new root-level files, per Dragon #11 / Learning 303).
+runtime_smoke: n/a -- build-hygiene/config fix, no R/ package runtime behavior changed; verified via R CMD build + tar tzf per Phase 1's own classification
+changelog_ref: CHANGELOG.md 2026-07-09 "Fix .Rbuildignore gap surfaced by win-builder NOTE 2 (Session 327)"
+commit: c1fc47b9</code></pre>
+<pre class="handoff"><code>session: S326
 date: 2026-07-08
 status: complete
 self_score: 8
