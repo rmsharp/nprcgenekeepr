@@ -6,6 +6,12 @@
 
 ## ACTIVE TASK
 
+### What Session 326 Did
+**Deliverable:** CRAN 2.0.0 Phase 5b readiness verification (IN PROGRESS).
+**Started:** 2026-07-08
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in `CHANGELOG.md` at Phase 3F.
+
 ### What Session 325 Did
 **Deliverable:** Resolve the `CHANGELOG.md` ledger-format gap flagged by S324 -- adopt the
 "freeze legacy, go forward" approach (owner-chosen via `AskUserQuestion` over a full 303-entry

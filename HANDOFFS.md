@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S326
+date: 2026-07-08
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: CRAN 2.0.0 Phase 5b readiness verification -- confirm no drift since the S322 local gate / S323 cran-comments.md resync, confirm runbook tool versions/signatures, hand owner the ready-to-run sequence.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S325
 date: 2026-07-08
 status: complete
