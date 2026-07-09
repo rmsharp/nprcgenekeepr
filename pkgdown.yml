@@ -13,7 +13,7 @@ articles:
   articles/offline-focal-animal-workflow: offline-focal-animal-workflow.html
   simulatedKValues: simulatedKValues.html
   articles/studbook-quality-control: studbook-quality-control.html
-last_built: 2026-07-08T23:35Z
+last_built: 2026-07-09T01:51Z
 urls:
   reference: https://github.com/rmsharp/nprcgenekeepr/reference
   article: https://github.com/rmsharp/nprcgenekeepr/articles

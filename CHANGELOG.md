@@ -15,6 +15,68 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-08 — issue \#103 CLOSED — internal (`@noRd`) title-voice sweep, Stage 8 complete (Session 319)
+
+- **Deliverable (owner = “finish 103”; scope-gate via `AskUserQuestion`
+  = “approve all as shown, apply now”):** complete issue \#103’s one
+  remaining concretely-scoped item — the internal `@noRd` title-voice
+  sweep (Finding 3 tail, deliberately excluded from Stage 8a at S257/258
+  which scoped to *exported* titles only) — then close \#103.
+  **REFACTOR-class, doc-only; TDD RED/GREEN N/A** (no implementation
+  code, no testable behavior change, matching the established
+  \#103-stage precedent). 2 `AskUserQuestion` gates total
+  (scope/approach at session start; none needed after — table approved
+  as-shown). 0 stakeholder corrections.
+- **Authoritative re-census first:** an initial hand-rolled regex census
+  mis-split 4 blocks on an internal blank `#'` line (a genuine blank
+  line inside a roxygen comment run does NOT terminate the block if no
+  code intervenes); switched to
+  [`roxygen2::parse_file()`](https://roxygen2.r-lib.org/reference/parse_package.html)
+  itself as the parser, confirming **72 `@noRd` blocks / 62 files**
+  (matches S318’s count) with correct titles. 28 already conformed to
+  the imperative-voice convention; 44 needed a rewrite (function-name
+  prefixes, descriptive→imperative verb, trailing periods, embedded
+  `\code{}` markup, one gerund, one question-form, one grammar defect in
+  `getMaxAx.R`).
+- **Applied via a guarded per-file script** (paragraph-extraction
+  matched by normalized old-title text, replace, skip+report on
+  non-match) — all 44 matched uniquely on the first pass, 0 skips.
+- **Verify:** re-census post-apply — 72 blocks total, **0/44 title
+  mismatches** against target; `devtools::document()` — **`man/` diff
+  EMPTY** (all 44 are non-rendering `@noRd`); `lintr` found 3 new
+  \>80-char lines from wordier rewrites (`addKinshipValueCount.R`,
+  `getGenoDefinedParentGenotypes.R`, `str_detect_fixed_all.R`) — wrapped
+  across 2 physical `#'` lines each (roxygen2 still joins to one logical
+  title tag), re-lint 0;
+  [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+  — 0 hits touching changed files; **`devtools::check(cran=TRUE)` — 0
+  errors / 0 warnings / 0 notes**; fast regression read — 0 failed / 0
+  error / 0 warning, 3092 passed.
+- **Issue \#103 CLOSED** — all 8 stages of the S244 audit roadmap
+  (`docs/audits/ROXYGEN_HARMONIZATION_AUDIT_2026-06-29.md`) now landed.
+  Closing comment posted with the verification summary.
+- **Landing:** direct commit to `master` (no PR) — zero `man/`/NAMESPACE
+  churn, consistent with the S262/S263/S318 low-churn precedent
+  (PR-for-CI was reserved for Stage 8a/8b’s 42–99-file `man/`-churn
+  sessions).
+- **Surfaced but NOT fixed (out of Finding-3 voice scope,
+  content-accuracy class):** (1) `getIndianOriginStatus.R:14`’s
+  `@return` tag has a mismatched brace (`\code{color_index)` should
+  close with `}`) — pre-existing (confirmed via empty `git diff` on that
+  file this session), unrelated to this sweep; a
+  [`roxygen2::parse_file()`](https://roxygen2.r-lib.org/reference/parse_package.html)
+  parse warning fires on every run of this census script because of
+  it. (2) `unknown2NA.R`’s title (“Remove IDs having UNKNOWN…”) is
+  imprecise — the function removes rows where the animal’s own `id` is
+  `"UNKNOWN"` but only blanks `sire`/`dam` to `NA` rather than removing
+  anything for those columns; left as a minimal voice-only fix per the
+  established “surface, don’t scope-creep into content fixes” precedent
+  (Learning 244(9)).
+- **Files:** 41 `R/` files modified (44 title edits — `autoIdFormat.R`
+  and `modPotentialParents.R` each carry 2 and 3 of the changes
+  respectively); `SESSION_NOTES.md`, `CHANGELOG.md` (this entry). No
+  `man/`, no `NAMESPACE`.
+
 ### 2026-07-08 — issue \#103 — verify harmonization completeness; fix overlooked `set_seed.R` `@returns`-\>`@return` (Finding 1) (Session 318)
 
 - **Deliverable (owner scope-gate via `AskUserQuestion` = “fix the
