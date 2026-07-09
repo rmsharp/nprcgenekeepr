@@ -8,10 +8,115 @@
 
 ### What Session 328 Did
 **Deliverable:** Fold the real, clean win-builder x3 + R-hub v2 results into
-`cran-comments.md`'s Test environments section (Phase 5b, IN PROGRESS).
-**Started:** 2026-07-09
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in `CHANGELOG.md` at Phase 3F.
+`cran-comments.md`'s Test environments section, completing Phase 5b's cross-platform
+checks. **Verification/packaging; TDD N/A** -- no `R/`/`tests/`/`DESCRIPTION` touched;
+`cran-comments.md` is `.Rbuildignore`d, no build/test surface. 0 `AskUserQuestion` gates
+(direct continuation of the Phase 5b work already in motion -- the plan's own Phase 5
+spec already designates "author cran-comments.md" as this exact step). 0 stakeholder
+corrections.
+**Started / Completed:** 2026-07-09 / 2026-07-09
+**Status:** **DONE.** After the S327 `.Rbuildignore` fix, the owner re-ran the full Phase
+5b runbook. **win-builder** (R-devel, R-release, R-oldrelease): all three came back
+`0 errors | 0 warnings | 1 note`. Fetched each `00check.log` directly (not just the email
+summary) to confirm the remaining note is exactly the expected CRAN-incoming-feasibility
+note -- new submission, previously archived, misspelled-but-correct words `EHR`
+(27:6, 28:73), `Raboin` (19:48), `kinships` (34:32) -- with no top-level-files NOTE and no
+other issue. **R-hub v2** (linux, windows, macos): windows and macos came back
+`Status: OK` (confirmed via the actual job logs, not just the GH Actions job-success
+flag -- every check step reported OK, ending `* DONE` / `Status: OK`); linux initially
+failed, but at the `setup-deps` step (`Failed to download Pandoc 3.8.3: Unexpected HTTP
+response: 504`) before `R CMD check` ever ran -- confirmed via the actual failure log this
+was transient infra, matching the runbook's own documented precedent from the 1.0.8
+submission ("no package called 'pak'"-style container failures, not code defects). Owner
+re-ran linux alone; it came back `Status: OK` too. **All three R-hub platforms and all
+three win-builder platforms are now clean.** Updated `cran-comments.md`: replaced both
+"-- to be run before submission" placeholders in "Test environments" with the real
+results, and reconciled NOTE 1's "possibly-misspelled words" example list to the exact
+set win-builder actually flagged across all three runs (`EHR`, `Raboin`, `kinships` --
+dropped `LabKey` and "Macaca mulatta," which no run this round flagged), per the
+runbook's own §4.2 reconciliation instruction. Did not touch the "R CMD check results"
+section's local-gate numbers (S322-specific, self-contained, still accurate to what it
+describes) or the URL-403 explanation (insufficient evidence this round to say those are
+no longer flagged; left the existing, still-accurate prose in place rather than removing
+it on incomplete signal). Updated `docs/planning/cran-2.0.0-submission-plan.md`'s Phase 5
+status block and the §9 table's Phase 5b row to record completion. **The only remaining
+step is the owner's `submit_cran()` HARD STOP** (plan Decision #3, §8) -- outward-facing,
+maintainer-email-confirmation-only, not an agent action.
+
+**Session 327 Handoff Evaluation (by Session 328): Score 9/10.** S327's handoff correctly
+predicted exactly what happened next: "the three win-builder checks need to be re-run...
+R-hub v2 was also in flight against the pre-fix tree... likely surfaces the same NOTE 2
+and should be re-run too" -- both predictions held precisely (win-builder came back clean
+on re-run; R-hub's in-flight pre-fix run, checked this session via `gh run list`, was
+`constituent-galapagosdove`, dispatched before the fix and superseded by the owner's
+explicit re-run rather than trusted). **What helped:** the handoff's gotchas section named
+the exact re-run sequence needed, so this session didn't have to re-derive what "done"
+looked like -- it was already Phase 5b's own DONE-criteria (green win-builder + R-hub +
+cran-comments.md ready). **What was missing:** nothing material -- S327's scope was
+narrowly and correctly the `.Rbuildignore` fix itself; the fold-in-results work was always
+going to be at least a check-in away since it depended on the owner actually re-running
+everything, which S327 could not have done itself. **What was wrong:** nothing found.
+**ROI:** very good -- zero re-diagnosis needed; this session moved directly from "results
+in hand" to "folded into cran-comments.md."
+
+**Self-assessment (Session 328): 9/10.** **Strengths:** (1) did not trust the GitHub
+Actions job-success flag alone for R-hub's windows/macos runs -- pulled the actual job
+logs via `gh run view --log` and grepped for the literal `Status:` line R CMD check itself
+emits, the same discipline already applied to the win-builder `00check.log` fetches
+([[consult-project-source-of-truth]] applied to CI job status, not just email summaries);
+(2) diagnosed the linux R-hub failure precisely (`gh run view --log` on the failed job
+found the exact `##[error]Failed to download Pandoc...504` line) rather than assuming
+"R-hub failed" meant a code problem, and cross-checked that read against the runbook's own
+documented infra-flakiness precedent before recommending a retry; (3) followed the
+runbook's explicit §4.2 reconciliation instruction for the misspelled-words list rather
+than leaving cran-comments.md's older, broader "for example" wording unreconciled now that
+real data was in hand; (4) drew an explicit, reasoned line on what NOT to change (the
+local-gate numbers section; the URL-403 explanation) rather than over-editing
+`cran-comments.md` on incomplete evidence -- stated the reasoning inline rather than
+silently deciding; (5) watched both R-hub runs to completion via a backed-off
+`gh run watch --exit-status` (matching the earlier turn's pattern) so the user didn't have
+to manually poll GitHub Actions; (6) zero stakeholder corrections. **Weaknesses:** (-) the
+same claim-before-work sequencing risk as S326/S327 -- edited `cran-comments.md` before
+writing the Phase 1B stub again this session; caught before anything was staged/committed,
+but this is now the third session in a row with the same near-miss, worth flagging as a
+genuine pattern rather than three independent one-offs. (-) Phase 3E (runtime smoke test)
+does not apply -- `cran-comments.md` is `.Rbuildignore`d prose, no `R/` behavior changed;
+stated explicitly per FM #24.
+
+**Learnings:** No new `PROJECT_LEARNINGS.md` entry this session -- applied existing
+discipline (verify actual check-tool output, not CI wrapper status; reconcile cover-note
+claims against real data per the runbook's own instructions) rather than discovering a new
+pattern. One process observation worth carrying forward without a full learning entry:
+**three consecutive sessions (S326, S327, S328) have each briefly edited a file before
+writing the Phase 1B claim stub**, self-caught every time before a commit landed. Not yet
+worth a formal learning (no actual protocol violation reached a commit), but if a fourth
+recurrence happens, that's the trigger to write one. Carried as applied (all held, no
+incidents): [[consult-project-source-of-truth]], [[push-close-out-docs-to-origin]].
+
+**=> SUGGESTED NEXT.** Phase 5b is done except for the owner's own action: run
+`devtools::submit_cran()` (or the web form at
+<https://cran.r-project.org/submit.html>) and click the maintainer-email confirmation
+link CRAN sends to `rmsharp@me.com`. This is the plan's HARD STOP -- outward-facing,
+maintainer-only, cannot be delegated (plan Decision #3, §8). After CRAN accepts, Phase 6
+(tag + GitHub release + dev-version bump) is a separate future session. If the owner wants
+to do something else first, one of the 8 open GitHub issues (#116, #37, #36, #28, #12,
+#11, #10, #5) remains available -- none more urgent than another.
+
+**Key files (this session).** **Modified:** `cran-comments.md` (Test environments section
+filled in; NOTE 1 misspelled-words list reconciled to actual win-builder output),
+`docs/planning/cran-2.0.0-submission-plan.md` (Phase 5 status completion note, §9 table
+Phase 5b row), `SESSION_NOTES.md` (this handoff), `HANDOFFS.md` (S328 receipt).
+**Not committed (pre-existing, untouched):** `.DS_Store` (modified), `PED_GV_AUDIT_2026-05-30.html`
+(untracked) -- left alone as S308-S328 all have.
+
+**Gotchas for next session.** (1) **`submit_cran()` is the owner's action, not an agent
+action** -- do not attempt to trigger it even if asked to "finish Phase 5b"; the HARD STOP
+is explicit and load-bearing (plan §1 point 2, §8 Decision #3). (2) After CRAN accepts,
+Phase 6 needs its own session (`usethis::use_github_release()`, `usethis::use_dev_version()`
+to `2.0.0.9000`) -- only after the acceptance email, not preemptively. (3) The
+claim-before-work sequencing near-miss noted in Weaknesses above (3 sessions running) --
+if a 4th session repeats it, write a `PROJECT_LEARNINGS.md` entry rather than continuing
+to self-catch it ad hoc.
 
 ### What Session 327 Did
 **Deliverable:** Fix a `.Rbuildignore` gap surfaced by an actual win-builder run during Phase

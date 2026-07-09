@@ -35,14 +35,13 @@ Local `R CMD check --as-cran` (macOS, R 4.6.0) on the built 2.0.0 tarball:
   "New submission" and "Package was archived on CRAN" / "Archived on 2025-07-29
   as issues were not corrected in time." This is expected for the resubmission;
   the timing cause is addressed above. This note also reports possibly-misspelled
-  words in DESCRIPTION (for example "Raboin" -- an author surname -- "EHR",
-  "LabKey", "kinships", and the rhesus-macaque scientific name "Macaca mulatta")
-  and two reference URLs:
+  words in DESCRIPTION -- "EHR", "Raboin" (an author surname), and "kinships" --
+  confirmed as the exact set flagged across all three win-builder runs below.
+  All three are spelled correctly. Two reference URLs,
   <https://pmc.ncbi.nlm.nih.gov/articles/PMC4671785/> and
-  <https://www.thoughtco.com/age-sex-pyramids-and-population-pyramids-1435272>.
-  The words are all spelled correctly, and both URLs return 403 to automated
-  checkers (confirmed via `curl` with a browser user agent and an independent
-  fetch, both blocked) but are reachable in a browser.
+  <https://www.thoughtco.com/age-sex-pyramids-and-population-pyramids-1435272>,
+  return 403 to automated checkers (confirmed via `curl` with a browser user
+  agent and an independent fetch, both blocked) but are reachable in a browser.
 
 * NOTE 2 -- checking HTML version of manual:
   This note does not arise on CRAN's check machines. It appears here only because
@@ -52,8 +51,9 @@ Local `R CMD check --as-cran` (macOS, R 4.6.0) on the built 2.0.0 tarball:
 ## Test environments
 
 * Local: macOS, R 4.6.0 -- `R CMD check --as-cran` (results above)
-* win-builder: R-devel, R-release, R-oldrelease -- to be run before submission
-* R-hub v2: linux, windows, macos -- to be run before submission
+* win-builder: R-devel, R-release, R-oldrelease -- 0 errors | 0 warnings | 1 note
+  each (the CRAN incoming feasibility note above)
+* R-hub v2: linux, windows, macos -- 0 errors | 0 warnings | 0 notes
 
 ## Downstream dependencies
 
