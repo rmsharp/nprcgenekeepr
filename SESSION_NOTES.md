@@ -6,6 +6,21 @@
 
 ## ACTIVE TASK
 
+### What Session 334 Did
+**Deliverable:** Phase D of `docs/planning/v2-transformation-article-plan.md` -- draft
+Section 3 (testing at scale) + table T5 + figure F3, reading Session 331's frozen
+`vignettes/articles/data/testing-growth.csv` and cross-checking e2e/shinytest2 harness
+status against `docs/planning/phase8-e2e-harness-subplan.md` + `CHANGELOG.md` directly
+(IN PROGRESS)
+**Documentation/article-drafting session for `vignettes/articles/` support -- no
+`R/`/`tests/` package code touched. TDD phase: N/A** (matches S107-S110/S330-S333
+article-session precedent).
+**Started:** 2026-07-09
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### What Session 333 Did
 **Deliverable:** Phase C of `docs/planning/v2-transformation-article-plan.md` -- draft
 Section 2 (new features) + table T4, hand-curating from Session 331's frozen

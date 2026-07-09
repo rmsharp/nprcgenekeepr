@@ -75,6 +75,23 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S334
+date: 2026-07-09
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Phase D of docs/planning/v2-transformation-article-plan.md -- draft Section 3 (testing at scale) + T5 + F3 in vignettes/articles/engineering-the-2.0.0-release.qmd, reading vignettes/articles/data/testing-growth.csv and cross-checking e2e/shinytest2 harness status against docs/planning/phase8-e2e-harness-subplan.md + CHANGELOG.md directly (not BACKLOG.md, stale on issue #40).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<in progress>
+
+```handoff
 session: S333
 date: 2026-07-09
 status: complete
