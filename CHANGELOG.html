@@ -69,6 +69,15 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-09--ad-hoc-backfilled-reconcile-on-read-undocumented-commit-cc0f7798--s331-handoffsmd-receipt-commit-sha-backfill">2026-07-09 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit cc0f7798 — S331 HANDOFFS.md receipt commit-sha backfill<a class="anchor" aria-label="anchor" href="#id_2026-07-09--ad-hoc-backfilled-reconcile-on-read-undocumented-commit-cc0f7798--s331-handoffsmd-receipt-commit-sha-backfill"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Phase 0 ledger reconcile (Session 332) found one commit past the <code>CHANGELOG.md</code> frontier with no ledger entry: <code>cc0f7798</code> (“docs: S331 – backfill own HANDOFFS.md receipt commit shas”), landed after S331’s own close-out commit (<code>046b62d5</code>) that recorded the entry above.</li>
+<li>
+<strong>Change:</strong> <code>cc0f7798</code> replaced the S331 <code>HANDOFFS.md</code> receipt’s <code>commit: pending</code> placeholder with the 5 real commit shas for that session’s work, and expanded <code>what_was_done</code> to list them — a self-correction of the just-written receipt, not new production work.</li>
+<li>
+<strong>Session:</strong> S332 (backfilling S331’s own commit) · <strong>Verified:</strong> <code>git show --stat cc0f7798</code> (single-file, 2-line diff to <code>HANDOFFS.md</code>); <code>git log -1 --format=%H -- HANDOFFS.md</code> now matches <code>cc0f7798</code> with no further gap.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-09--ad-hoc-phase-a-of-the-document-1-article-plan-froze-the-evidence-base-session-331">2026-07-09 · [ad hoc] Phase A of the Document-1 article plan: froze the evidence base (Session 331)<a class="anchor" aria-label="anchor" href="#id_2026-07-09--ad-hoc-phase-a-of-the-document-1-article-plan-froze-the-evidence-base-session-331"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> Phase A of <code>docs/planning/v2-transformation-article-plan.md</code> — built and froze the evidence-base data files + extraction script for Document 1 (the v1.0.8 → v2.0.0 technical writeup), and completed the plan’s §3 Claim-Evidence Map. <strong>Data-extraction/tooling session for <code>vignettes/articles/</code> support; TDD N/A</strong> — no <code>R/</code>/<code>tests/</code> package code touched. 2 <code>AskUserQuestion</code> gates (path choice + commit-range-framing ratification, both the owner’s call). 0 stakeholder corrections.</li>
