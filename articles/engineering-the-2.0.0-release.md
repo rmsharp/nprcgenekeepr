@@ -1,5 +1,58 @@
 # Engineering nprcgenekeepr 2.0.0: Modular Architecture, Expanded Capability, and an AI-Assisted Development Process
 
+## Abstract
+
+`nprcgenekeepr` provides genetic tools for primate-colony management –
+studbook quality control, pedigree construction, genetic value analysis,
+and breeding-group formation – as an R package with a Shiny front end
+and an exposed API. Between its two most recent CRAN submissions
+(v1.0.8, 2025-07-25, through v2.0.0, 2026-07-09; 512 non-merge commits),
+the package underwent a substantial modernization. A nine-phase,
+vertical-slice migration retired a long-standing
+duplicate-implementation problem, replacing two independently maintained
+Shiny applications with a single modular one (ten `R/mod*.R` modules,
+4,731 lines including `appUI.R`/`appServer.R`). Thirteen curated new
+capabilities shipped alongside it, spanning species-aware parent
+identification, more honest uncertainty reporting in Genetic Value
+Analysis, and two new Shiny dashboards. The test suite grew from 132 to
+257 files, and its browser-driven end-to-end layer went from
+present-but-inert to executable and behavior-verifying. Every session in
+the effort, including this article’s own drafting, was directed by
+Claude Code (Claude CLI) under a written, enforced development protocol
+– strict red-green-refactor TDD for production code, single-deliverable
+sessions, and a durable, append-only correction ledger – rather than
+open-ended prompting. This article documents that transformation
+quantitatively: every claim traces to a commit, `CHANGELOG.md` entry, or
+frozen extraction, for readers evaluating the package itself, its
+testing rigor, or its AI-assisted development process.
+
+## Introduction
+
+Between its two most recent CRAN submissions – v1.0.8 (`4548aa1b`,
+2025-07-25) and v2.0.0 (`8ca8bb24`, 2026-07-09) – `nprcgenekeepr`
+changed enough to warrant a written account of the work, not just a
+version-number bump. This article documents that transformation for
+domain experts, other primate-center bioinformatics groups, CRAN
+reviewers, and potential contributors: **what** changed, and **how** it
+was built.
+
+Four pillars structure the account. Section 1 describes retiring a
+long-standing duplicate-implementation problem via a nine-phase,
+vertical-slice migration to a modular Shiny architecture. Section 2
+describes the new analysis capabilities that shipped alongside that
+migration. Section 3 describes how the test suite grew and gained an
+executable, behavior-verifying, browser-driven layer. Section 4
+describes the development process itself – every session in this effort,
+including the five sessions that drafted this article, was directed by
+**Claude Code** (Claude CLI) operating under a written, enforced
+protocol rather than open-ended prompting.
+
+**Scope.** Every quantitative or dated claim in this article is bounded
+to the 512 non-merge commits between those two submission commits
+(`4548aa1b`..`8ca8bb24`) – not “since the project began.” As of this
+writing (2026-07-09), CRAN’s review of the v2.0.0 submission is still
+pending; nothing in this article depends on that outcome.
+
 ## Section 1 – From Monolith to Modules: the Shiny Architecture Transformation
 
 For most of its life, `nprcgenekeepr` shipped **two coexisting Shiny
@@ -69,7 +122,7 @@ flowchart TB
 ```
 
 Figure 2: The legacy monolith (`inst/application/`, deleted at Phase 9,
-commit `3db018d1`) versus the modular app now launched by
+commit `24992e0b`) versus the modular app now launched by
 [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
 (default port 6013, as of 2026-07-09).
 [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
@@ -81,15 +134,15 @@ so pre-existing callers keep working.
 The cutover was declared in Phase 9 (Session 35):
 [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
 became the canonical launcher via
-[`lifecycle::deprecate_soft()`](https://lifecycle.r-lib.org/reference/deprecate_soft.html)-aliasing,
-and `inst/application/` – 17 files, including `server.r`, `ui.r`, and
-the eight `uitp*.R` panels – was deleted in that same, standalone commit
-(`3db018d1`, with the alias and orphan cleanup following in
-`24992e0b`/`53a9e5e0`/`a1618c48`). Because deletion was its own commit
-rather than folded into a parity change, reverting the cutover – had the
-modular app proven insufficient – would have been a single `git revert`,
-not an unpicking of nine phases of work. As of 2026-07-09, that revert
-was never needed.
+[`lifecycle::deprecate_soft()`](https://lifecycle.r-lib.org/reference/deprecate_soft.html)-aliasing
+(`3db018d1`), and, in its own standalone commit immediately after,
+`inst/application/` – 17 files, including `server.r`, `ui.r`, and the
+eight `uitp*.R` panels – was deleted outright (`24992e0b`; docs/vignette
+updates and an unrelated fix followed in `53a9e5e0`/`a1618c48`). Because
+deletion was its own commit rather than folded into the alias change,
+reverting the cutover – had the modular app proven insufficient – would
+have been a single `git revert` of `24992e0b`, not an unpicking of nine
+phases of work. As of 2026-07-09, that revert was never needed.
 
 ### The modules today
 
@@ -170,14 +223,14 @@ issue-hygiene closes verifying functionality that already existed before
 the range (issue \#34, for example, found
 [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
 already integrated into `modInput` from pre-migration work and simply
-closed the paper trail years later, with no code change), and internal
-process items (lint configuration, roxygen documentation harmonization,
-`codecov` config consolidation) that belong to no reader-facing section
-of this article. [Table 3](#tbl-features) curates the 13 of 47 (28%)
-that shipped a capability an analyst or maintainer can actually use – a
-genuinely new statistic, a new Shiny tab, or a materially different
-default – each traced to its closing issue number and the session(s)
-that implemented it.
+closed the paper trail about five months later, with no code change),
+and internal process items (lint configuration, roxygen documentation
+harmonization, `codecov` config consolidation) that belong to no
+reader-facing section of this article. [Table 3](#tbl-features) curates
+the 13 of 47 (28%) that shipped a capability an analyst or maintainer
+can actually use – a genuinely new statistic, a new Shiny tab, or a
+materially different default – each traced to its closing issue number
+and the session(s) that implemented it.
 
 | Capability | Issue | Session(s) | What it does |
 |:---|:---|:--:|:---|
@@ -262,7 +315,7 @@ genetic value, Indian-origin status, production status, and inbreeding
 risk) into one at-a-glance view per breeding group. Issues \#47 and \#49
 (Session 83-84) mounted `modORIPReporting` – a module that had existed,
 complete but never wired into the app, since the original Shiny-module
-migration ([Section 1](#sec-modules)) – as an ONPRC-only grant-reporting
+migration ([Section 3](#sec-modules)) – as an ONPRC-only grant-reporting
 tab, gated by
 [`shouldShowOripTab()`](https://github.com/rmsharp/nprcgenekeepr/reference/shouldShowOripTab.md)
 so it does not appear for other sites. Together with the Potential
@@ -279,7 +332,7 @@ behavior unconfigured.
 
 ## Section 3 – Testing at Scale
 
-Growth in features ([Section 2](#sec-features)) is only as trustworthy
+Growth in features ([Section 4](#sec-features)) is only as trustworthy
 as the tests behind it. Across the same v1.0.8 -\> v2.0.0 range, the
 test suite grew from 132 to 257 `.R` files under `tests/testthat/` –
 test files plus the shared helpers, fixtures, and setup script that
@@ -317,7 +370,7 @@ ground the growth claim in five checkpoints rather than just the two
 endpoints: the v1.0.8 CRAN submission (`4548aa1b`, 2025-07-25, before
 this project adopted the SESSION_RUNNER methodology), the start of
 Session 1 (`6fd87749`, 2026-05-30), the two commits bracketing Phase 9
-of the module migration ([Section 1](#sec-modules)), and the v2.0.0 CRAN
+of the module migration ([Section 3](#sec-modules)), and the v2.0.0 CRAN
 submission (`8ca8bb24`, 2026-07-09). The
 shinytest2/AppDriver-referencing count is already 25 files at Session
 1’s start – that scaffold predates this project’s methodology entirely;
@@ -381,10 +434,21 @@ each a fresh R process, capped any single process at three files. Issue
 As of 2026-07-09, both issues are closed and the harness the sub-plan
 describes is the one currently checked in:
 `.github/workflows/shinytest2.yaml` runs nightly (07:00 UTC) and on
-manual dispatch, opts every test in via `NPRC_RUN_E2E`, and executes the
-23-file `^(app|e2e)-` tier as the 13-group partition 8e-7 added –
-distinct from `R-CMD-check.yaml` and `test-coverage.yaml`, which remain
-the fast, per-pull-request gate.
+manual dispatch, opts every test in via `NPRC_RUN_E2E`, and runs the
+13-group per-module partition 8e-7 added – distinct from
+`R-CMD-check.yaml` and `test-coverage.yaml`, which remain the fast,
+per-pull-request gate. That partition was exact against the 23
+`test-{app,e2e}-*.R` files that existed when 8e-7 closed (2026-06-11);
+it has not been kept current since. Two more E2E files were added
+afterward – `test-e2e-potential-parents-module.R` (Session 82, issue
+\#48) and `test-e2e-orip-module.R` (Session 86, issues \#47/#49),
+covering exactly the two new Shiny tabs [Section 4](#sec-features)
+describes – without a matching group added to the workflow. As of this
+writing, the opt-in tier holds 26 files; the 13 groups cover 24 of them,
+and those two never run in CI. This is a real, currently open gap, not a
+stale figure this article repeats uncritically: the workflow file’s own
+header comment still asserts “union = the 23, no overlap, no gap,” which
+was true on 2026-06-11 and is not true now.
 
 ## Section 4 – An AI-Assisted Development Process
 
@@ -481,7 +545,7 @@ stateDiagram-v2
 Figure 4: The RED -\> GREEN -\> REFACTOR cycle `CLAUDE.md`’s Development
 Process Contract requires for production R code, with an explicit
 `AskUserQuestion` confirmation gate at every transition. Documentation
-and article-drafting sessions – including all four sessions that
+and article-drafting sessions – including the three sessions that
 produced Sections 1-3 and the session that produced this one – are an
 explicitly declared exception (TDD phase “N/A”, stated at the top of
 every response) rather than a silent omission.
@@ -553,3 +617,28 @@ That is a text-mention proxy, not an independently re-verified
 per-session audit; a session’s own self-assessment is not an external
 check on itself. Read it as “the sessions that stated a number mostly
 stated zero,” not as an audited defect rate.
+
+## Conclusion
+
+The v1.0.8 -\> v2.0.0 effort retired a long-standing architectural
+liability – two independently maintained Shiny applications drifting out
+of sync – shipped thirteen curated new analysis capabilities, grew the
+test suite from 132 to 257 files while turning its browser-driven layer
+from present-but-inert into executable and behavior-verifying, and did
+all of it under a written, gated development process rather than ad hoc
+iteration.
+
+For maintainers and collaborators, the practical implications are
+concrete. New features have exactly one Shiny implementation to extend,
+not two to keep in sync ([Section 3](#sec-modules)). The `R/mod*.R`
+module boundary is now the unit of both development and testing
+([Section 3](#sec-modules), [Section 5](#sec-testing)). And the
+session-by-session record in `CHANGELOG.md`, `PROJECT_LEARNINGS.md`, and
+`HANDOFFS.md` is a navigable history of *why* each change was made, not
+just *what* changed ([Section 6](#sec-methodology)) – a resource future
+sessions, and future maintainers, can read directly rather than
+reconstruct from commit messages alone.
+
+This work has been supported in part by NIH grants P51 RR13986 to the
+Southwest National Primate Research Center and P51 OD011092 to the
+Oregon National Primate Research Center.

@@ -47,6 +47,97 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-09 · \[ad hoc\] S336 HANDOFFS.md receipt commit-sha backfill, closed same-session
+
+- **Deliverable:** Filled in this session’s own `HANDOFFS.md` receipt
+  `commit: pending` placeholder with the real close-out commit sha
+  (`bca11e5d`) — the same self-correction the previous five sessions
+  (S331-S335) each needed, closed within the same session rather than
+  left for the next session’s Phase 0 reconcile to catch and backfill.
+- **Change:** A session cannot know its own close-out commit’s sha
+  before making that commit, so the receipt is necessarily written with
+  a placeholder first. This entry and the `HANDOFFS.md` edit it
+  describes land in one follow-up commit, immediately after the
+  close-out commit, closing the gap in-session.
+- **Session:** S336 · **Verified:**
+  `git log -1 --format=%H -- HANDOFFS.md` will match this commit with no
+  further gap once committed.
+
+### 2026-07-09 · \[ad hoc\] Phase F of the Document-1 article plan: Abstract/Introduction/Conclusion, full claim audit, full verification chain (Session 336) — plan now fully executed
+
+- **Deliverable:** Phase F (the publish gate) of
+  `docs/planning/v2-transformation-article-plan.md` — drafted the
+  Abstract (200 words), Introduction, and Conclusion (NIH grant
+  acknowledgment, verbatim match to `CLAUDE.md`/`DESCRIPTION`) in
+  `vignettes/articles/engineering-the-2.0.0-release.qmd`; ran the
+  full-document claim-source audit (workstream Phase 6) across all 8
+  sections; ran the complete verification chain.
+  **Documentation/article-drafting session for `vignettes/articles/`
+  support — no `R/`/`tests/` package code touched. TDD phase: N/A**
+  (matches S107-S110/S330-S335 precedent; declared every response). 2
+  `AskUserQuestion` gates at kickoff (Section 5: cut, recommended; F6
+  screenshot reuse: skip, recommended — both owner-confirmed). 0
+  stakeholder corrections.
+- **Change:** Forked two parallel adversarial claim-audit passes (4
+  sections each) that independently re-derived every numeric/dated/sha
+  claim from `git`/`gh`/`grep` rather than trusting the plan’s own
+  Claim-Evidence Map summary column; ~55 distinct claims checked, all 4
+  reported mismatches independently re-verified firsthand before any
+  edit. **Four real defects found and fixed:** (1) Section 1
+  misattributed the `inst/application/` monolith deletion to `3db018d1`
+  (that’s Phase 9 Part 1/3, the
+  [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+  alias commit — the actual deletion, and the source of the article’s
+  “single `git revert`” reversibility claim, is `24992e0b`, Part 2/3, a
+  same-timestamp sibling commit); (2) Section 2 overclaimed issue \#34’s
+  hygiene-close gap as “years later” (`gh issue view`: 2026-01-20 →
+  2026-06-12, about five months); (3) Section 4 overcounted “all four
+  sessions that produced Sections 1-3” (the article file’s own commit
+  history shows exactly three: S332/S333/S334); (4) Section 3’s
+  CI-coverage claim (“the 23-file tier… no gap”) was accurate when Phase
+  8e-7 closed (2026-06-11) but had gone stale — two E2E test files added
+  by later, unrelated sessions (`test-e2e-potential-parents-module.R`,
+  S82, issue \#48; `test-e2e-orip-module.R`, S86, issues \#47/#49 —
+  covering exactly the two new Shiny tabs Section 2 describes) never
+  matched any of the workflow’s 13 hardcoded CI group regexes. Rewrote
+  the passage to state the current, independently-verified figures (26
+  files in the opt-in tier, 24 covered, 2 never executed in CI) instead
+  of repeating the workflow file’s own stale header comment. **This
+  surfaces a real, currently-open CI gap in
+  `.github/workflows/shinytest2.yaml`** — flagged for a future,
+  separately-scoped TDD session (fixing CI config is a different
+  capability, out of scope for a documentation-only session); not fixed
+  here. Full verification chain: `quarto render` (zero unresolved refs,
+  Tables 1-5/Figures 1-5 all resolved sequentially) →
+  `pkgdown::build_article("articles/engineering-the-2.0.0-release")`
+  (clean) → `R CMD build .` + `tar tzf` (confirmed `vignettes/articles/`
+  and its `data/` subfolder absent from the shipping tarball — zero CRAN
+  risk). Spot-check of pre-existing articles found the plan’s own §1/§10
+  inventory stale too — **six** `vignettes/articles/*.qmd` exist, not
+  four (`fg-se-validation.qmd`, `offline-focal-animal-workflow.qmd` were
+  added by later, unrelated sessions after the plan was written) —
+  rendered all six as the more thorough superset, all clean. Marked
+  Phase F `DONE` in the plan’s §7 and ticked all ten §10 Verification
+  Checklist items with evidence; resolved all four §12 open owner
+  decisions in place. **The plan is now fully executed, Phase A through
+  Phase F.**
+- **Also:** Added `PROJECT_LEARNINGS.md` Learning 312 — a full-document,
+  post-hoc claim audit is a structurally different check than N
+  per-section audits: only it re-verifies EARLIER sections’ claims
+  against CURRENT state, catching drift a per-section drafting-time
+  review has no way to see (the CI-gap defect above is the concrete
+  example — true when Section 3 was written, false by the time Phase F
+  ran, purely from unrelated later sessions’ changes elsewhere in the
+  repo). Updated `CLAUDE.md`’s learning-count pointer (311 → 312
+  learnings, Sessions 1–335+ → 1–336+).
+- **Session:** S336 · **Verified:** `quarto render` +
+  [`pkgdown::build_article()`](https://pkgdown.r-lib.org/reference/build_articles.html) +
+  `R CMD build .`/`tar tzf` + all six pre-existing articles re-rendered,
+  all firsthand; every claim-audit finding independently re-derived via
+  direct `git log -1`/`git show --stat`/`gh issue view`/`git ls-tree`
+  commands before editing the article, not taken from the fork reports
+  alone.
+
 ### 2026-07-09 · \[ad hoc\] S335 HANDOFFS.md receipt commit-sha backfill, closed same-session
 
 - **Deliverable:** Filled in this session’s own `HANDOFFS.md` receipt
