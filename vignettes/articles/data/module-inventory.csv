@@ -1,0 +1,11 @@
+"module","responsibility","loc","test_file_count"
+"modBreedingGroups","Breeding Groups",524,4
+"modGeneticDiversity","Genetic Diversity",140,1
+"modGeneticValue","Genetic Value Analysis",523,3
+"modGvAndBgDesc","Genetic Value and Breeding Group Description",56,1
+"modInput","Data Input and Quality Control",716,5
+"modORIPReporting","ORIP Reporting",325,2
+"modPedigree","Pedigree Browser",401,3
+"modPotentialParents","Potential Parents",344,3
+"modPyramid","Age-Sex Pyramid",160,2
+"modSummaryStats","Summary Statistics",921,7
