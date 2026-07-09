@@ -15,6 +15,63 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-08 — Refresh the CRAN 2.0.0 submission plan for the actual next release (Session 320)
+
+- **Deliverable (owner = “all remaining current issues will not be
+  addressed prior to the next CRAN release; current session is to plan
+  for that release”):** planning-only session, updated
+  `docs/planning/cran-2.0.0-submission-plan.md` in place. **TDD N/A** —
+  no `R/`, `tests/`, `DESCRIPTION`, or `NEWS.Rmd` content changed
+  (SESSION_RUNNER Planning Sessions discipline: the plan is the
+  deliverable, implementation is a separate session). 2
+  `AskUserQuestion` gates (roll accumulated dev-version content into one
+  release vs. ship 2.0.0 as originally scoped; version number for the
+  merged release). 0 stakeholder corrections.
+- **Research (via a background fork over an 11,000-line
+  `SESSION_NOTES.md`):** confirmed
+  win-builder/R-hub/`devtools::submit_cran()` have never actually run
+  for 2.0.0 — the plan’s Phase 5b has sat as owner-run “HARD STOP”
+  boilerplate, unchanged, since roughly S136 (~180 sessions). Meanwhile
+  `NEWS.Rmd`’s `# nprcgenekeepr (development version)` section had grown
+  to 350 lines (larger than the 2.0.0 entry itself) covering issues
+  \#110, \#118, \#119, \#121, \#13, \#95, \#73, \#114 and a dozen+ new
+  exported functions, none of it folded into a version bump.
+  `git diff --stat` against the last real gate commit (S242, `83233265`)
+  showed 124 commits / 235 R+test files changed since, including
+  `vignettes/simulatedKValues.Rmd` — the plan’s own original
+  archival-timing “prime suspect.”
+- **Owner decisions:** (1) roll all accumulated work into one release
+  rather than shipping an intermediate 2.0.0 no user would ever see; (2)
+  keep the version at **2.0.0** (nothing has shipped since archived
+  1.0.8, so the full accumulated diff still qualifies as “the version
+  that clears the archive”).
+- **Plan updates:** new `## 0. Session 320 refresh` section
+  (evidence-based inventory of the gap, deferred-issues scope table
+  listing all 8 currently-open issues, Dragon \#9 — issue \#110’s
+  deprecation-direction reversal nets out to nothing and must not be
+  listed as both directions); new **Phase 3b** (reconcile
+  `(development version)` NEWS content into the 2.0.0 entry — not yet
+  started, next session); Phase 4 (local `--as-cran` gate) and Phase 5a
+  (`cran-comments.md`) flagged **RE-GATE REQUIRED** / **RE-SYNC
+  REQUIRED** since both describe a tree 124 commits stale; Phase 5b
+  (win-builder/R-hub/submit) unchanged in mechanics but now explicitly
+  sequenced behind 3b→4→5a-resync, not just owner availability; new
+  Dragon \#10 (timing profile is now stale given the changed vignette).
+- **Scope:** all 8 currently-open GitHub issues (#116, \#37, \#36, \#28,
+  \#12, \#11, \#10, \#5) explicitly deferred past this release — the
+  release consists only of what has already landed on `master` plus
+  release mechanics.
+- **Verification:** doc-only change, no build-equivalent applies;
+  re-read the full updated plan file firsthand to confirm internal
+  consistency (fixed two citation-precision errors — a nonexistent
+  “§5.1” and a misattributed “Dragon \#1” reference — before
+  committing).
+- **Files:** `docs/planning/cran-2.0.0-submission-plan.md` (extensively
+  updated in place — new §0, new Phase 3b, updated Phase 3/4/5 status
+  blocks, updated §5 dragons, §8 decisions, §9 summary table);
+  `SESSION_NOTES.md`, `PROJECT_LEARNINGS.md` (Learning 297),
+  `CHANGELOG.md` (this entry).
+
 ### 2026-07-08 — issue \#103 CLOSED — internal (`@noRd`) title-voice sweep, Stage 8 complete (Session 319)
 
 - **Deliverable (owner = “finish 103”; scope-gate via `AskUserQuestion`
