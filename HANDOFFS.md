@@ -84,6 +84,52 @@ block to continue the work without re-reading the whole repo?*
 ------------------------------------------------------------------------
 
 ``` handoff
+session: S337
+date: 2026-07-09
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: The shinytest2.yaml CI-coverage gap S336 flagged (Learning 312) is FIXED -- all 26 tracked test-{app,e2e}-*.R files now match exactly one of 15 CI groups, guarded by a new regression test. One new cross-deliverable staleness surfaced as a side effect (see gotchas/next_steps): the article's own narration of this gap as "currently open" is now stale.
+what_was_done: Re-verified the gap firsthand (git ls-tree + hand-checked all 13 old regexes against all 26 stripped filenames) before touching anything -- exactly reproduced S336's finding (test-e2e-orip-module.R, test-e2e-potential-parents-module.R uncovered). PRE-RED scope AskUserQuestion (3 options) -> owner picked "regression test + fix". RED: wrote tests/testthat/test_shinytest2_workflow_coverage.R -- parses the groups=(...) bash array out of the YAML text and asserts, via the same grepl-after-stripping-test-/.R transform test_dir(filter=) itself uses, that every tracked file matches exactly one group (gap AND overlap checked); confirmed it failed naming exactly the 2 orphaned files, 0 false positives. GREEN gate approved -> added "^e2e-orip-module" and "^e2e-potential-parents-module" to shinytest2.yaml's groups array (matching the existing single-file group style); re-ran the coverage test (passed) and the full clean regression read (1 pre-existing unrelated failure only -- test_vignettes_no_deprecated_minParentAge.R, confirmed pre-existing and unrelated via a git stash A/B of just my 2 changed files). REFACTOR gate approved -> caught that GREEN's own comment/echo updates ("23"->"26", "13"->"15") reintroduced the exact hardcoded-count staleness class being fixed; removed all hardcoded counts from prose and converted the runtime echo message to `${#groups[@]}` (dynamically computed, cannot drift again). Verified: bash -n syntax-check on the extracted run: block (via python yaml.safe_load), dynamic-count sanity check (printed 15 correctly), lintr on the new file (0 lints), full regression read identical before/after refactor. New PROJECT_LEARNINGS.md Learning 313. Updated CLAUDE.md's learning-count pointer (312->313, Sessions 1-336+ -> 1-337+). Commits: see changelog_ref.
+next_steps: vignettes/articles/engineering-the-2.0.0-release.qmd:487-503 (written by S336) narrates this CI gap as "a real, currently open gap, not a stale figure this article repeats uncritically" -- that is now FALSE as of this session's GREEN commit. A future documentation-workstream session should update that passage (and check @sec-features / T-tables for any other reference to "24 of 26 covered") to state the gap is closed, citing this session's commit. This is a different capability/deliverable from the CI fix itself -- flagged, not fixed here (same discipline S336 used for the original gap). No other CI/E2E work is pending from this session.
+key_files: .github/workflows/shinytest2.yaml:8-27,118-186 (groups array + all count-bearing comments/echo, now count-free/dynamic), tests/testthat/test_shinytest2_workflow_coverage.R (new regression test, full file), PROJECT_LEARNINGS.md (Learning 313), CLAUDE.md:177 (learning-count pointer), vignettes/articles/engineering-the-2.0.0-release.qmd:487-503 (NOT edited -- now stale, flagged above)
+gotchas: The article passage above is now a KNOWN STALE cross-reference as a direct, mechanical side effect of this fix -- do not treat "24 of 26 covered, 2 orphaned" as current fact anywhere in the repo; grep for "24 of\|24 covered\|13 hardcoded\|13-group" before trusting any prose claim about this workflow's coverage. The coverage test parses the YAML by locating `groups=(` and the next line matching `^\s*\)\s*$` -- if the array's bash formatting ever changes shape (e.g. inline `)`), the parser needs updating too; it will fail loudly (0 group regexes extracted -> explicit expect_true failure), not silently pass. True live-runner confirmation (an actual `workflow_dispatch`/nightly GitHub Actions run with real Chrome) was NOT performed this session -- only local static verification (parse + syntax + the new test); flagged per FM #24, not silently treated as equivalent.
+runtime_smoke: local static verification only (YAML parses via python yaml.safe_load, `bash -n` on the extracted run: block, dynamic ${#groups[@]} sanity-checked standalone, full testthat regression read before/after) -- the actual live GitHub Actions job (real Chrome/runner, workflow_dispatch or nightly schedule) was not triggered in-session; stated explicitly as an open verification gap, not silently skipped (FM #24)
+changelog_ref: CHANGELOG.md 2026-07-09 "Fix CI coverage gap in shinytest2.yaml -- 2 orphaned E2E test files now run (Session 337)"
+commit: c22b5e22
+```
+
+**+ (what went right):** full TDD phase-gate discipline – a PRE-RED
+scope question plus all three phase gates (RED/GREEN/REFACTOR), each via
+`AskUserQuestion`, 0 stakeholder corrections. Re-verified the gap
+firsthand (git ls-tree + hand-checked regexes) rather than trusting
+S336’s handoff numbers at face value, even though they turned out exact.
+The RED test mirrors `test_dir(filter=)`’s own matching semantics
+precisely (not an approximation) and checks a STRONGER invariant than
+the minimum ask (overlap, not just gap). Verified the one other failing
+test in the suite was pre-existing and unrelated via a `git stash` A/B
+rather than assuming. Caught, during my OWN REFACTOR review, that
+GREEN’s edit reintroduced the identical hardcoded-count defect class
+being fixed, and corrected it structurally (a computed count) instead of
+just re-updating the literal – this is the session’s most valuable catch
+and it came from taking REFACTOR seriously as a real phase, not a rubber
+stamp. Proactively found and flagged (without touching, correct scope
+discipline) that the fix stales a DIFFERENT already-shipped document.
+
+**- (what could improve):** skipped the Phase 1B claim stub – did not
+write a `SESSION_NOTES.md`/`HANDOFFS.md` stub before starting technical
+work; caught only at close-out. No actual harm this session (it
+completed normally with no crash), but it is a real protocol miss that
+should not recur. Did not perform true live-runner (GitHub Actions
+`workflow_dispatch`) verification – strong local static verification
+instead, flagged explicitly rather than silently treated as equivalent,
+but genuinely not the same confirmation. Found the stale article passage
+because I already knew from S336’s own handoff to look at it, not from
+an independent full-corpus grep sweep for other possible mentions of the
+old counts (README, other planning docs) – a more exhaustive sweep might
+have found something I didn’t check for.
+
+``` handoff
 session: S336
 date: 2026-07-09
 status: complete
