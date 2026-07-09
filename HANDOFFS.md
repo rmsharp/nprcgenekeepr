@@ -87,7 +87,7 @@ key_files: vignettes/articles/engineering-the-2.0.0-release.qmd (Abstract/Introd
 gotchas: REAL, CURRENTLY-OPEN DEFECT (not this session's to fix): .github/workflows/shinytest2.yaml's 13-group E2E CI partition covers 24 of 26 files in the opt-in test-(app|e2e)-*.R tier -- test-e2e-potential-parents-module.R (issue #48, S82) and test-e2e-orip-module.R (issues #47/#49, S86) match none of the 13 hardcoded group regexes and never run in CI. Fix: add 2 group regexes to groups=(...) at shinytest2.yaml:127-141, update the header comment's stale "23...no gap" claim, verify via a live triggered workflow run (a local test_dir(filter=) dry run confirms the regex match but not the job itself). Separately: a full-document claim audit run AFTER each phase individually verified its own section can still find real defects a per-section review has no way to catch (drift from unrelated LATER sessions' changes) -- do not treat a phase's own "DONE, verified" status as exempt from a later cross-document audit.
 runtime_smoke: n/a -- documentation/article-drafting session, no R/ package runtime behavior changed; the full verification chain (quarto render + pkgdown::build_article() + R CMD build ./tar tzf + all 6 pre-existing articles re-rendered) is this deliverable's actual build-equivalent verification, performed and confirmed
 changelog_ref: CHANGELOG.md 2026-07-09 "Phase F of the Document-1 article plan: Abstract/Introduction/Conclusion, full claim audit, full verification chain (Session 336) -- plan now fully executed"
-commit: pending
+commit: bca11e5d
 ```
 <free-text prose>
 
