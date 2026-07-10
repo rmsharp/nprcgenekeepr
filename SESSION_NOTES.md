@@ -6,6 +6,20 @@
 
 ## ACTIVE TASK
 
+### What Session 342 Did
+**Deliverable:** Independently re-verify the 13 remaining Document 1 two-lens-review
+findings (Lens A #2/#3, Lens B #2-12) against the current
+`vignettes/articles/engineering-the-2.0.0-release.qmd`, then finalize
+`docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md` from DRAFT to a closed audit
+report with a prioritized, evidence-backed fix list. (IN PROGRESS)
+**Started:** 2026-07-09
+**Status:** Session claimed. Owner confirmed via `AskUserQuestion`: verify-only this
+session, no article edits (fixes deferred to a follow-on session). Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
+---
+
 ### What Session 341 Did
 **Deliverable:** Backlog curation for S339's still-open Document 1 audit items + Document
 2 planning, plus (owner-directed mid-session) establishing a session-startup
