@@ -6,6 +6,21 @@
 
 ## ACTIVE TASK
 
+### What Session 346 Did
+**Deliverable:** Execute Document 2 plan Phase A —
+`docs/planning/document2-colony-manager-guide-plan.md` §6 Phase A: resolve open
+decisions 1-2 (tab-coverage extent, screenshot-regeneration method) and confirm
+title/slug via `AskUserQuestion`, build the screenshot gap inventory, re-derive
+example-data-dependent numeric claims from `ColonyManagerTutorial.Rmd`. Following the
+adapted `RESEARCH_DOCUMENTATION_WORKSTREAM.md` (IN PROGRESS)
+**Started:** 2026-07-10
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
+---
+
 ### What Session 345 Did
 **Deliverable:** Planned "Document 2" —
 `docs/planning/document2-colony-manager-guide-plan.md`, following
