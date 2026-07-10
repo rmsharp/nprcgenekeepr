@@ -6,6 +6,23 @@
 
 ## ACTIVE TASK
 
+### What Session 343 Did
+**Deliverable:** Fix all 15 confirmed findings from the CLOSED
+`docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md` audit in
+`vignettes/articles/engineering-the-2.0.0-release.qmd`, following the audit's own
+"Recommendations" priority order (2 HIGH factual, 2 MEDIUM with concrete mechanisms,
+1 MEDIUM vocabulary placement, 9 LOW batched as one editorial pass, 1 MINOR/optional).
+(IN PROGRESS)
+**Started:** 2026-07-09
+**Status:** Session claimed. Owner picked this item as priority #1 from the Phase 0
+priorities list. Documentation-workstream fix session (`RESEARCH_DOCUMENTATION_WORKSTREAM.md`),
+matching S336/S339-S342 precedent on this same article. TDD Phase: N/A -- no `R/`/`tests/`
+touched. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
+---
+
 ### What Session 342 Did
 **Deliverable:** Independently re-verified the 13 remaining Document 1 two-lens-review
 findings (Lens A #2/#3, Lens B #2-12) against the current
