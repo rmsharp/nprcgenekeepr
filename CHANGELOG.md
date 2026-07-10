@@ -47,6 +47,24 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-09 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit 04c8de1d — S339 HANDOFFS.md receipt commit-sha backfill
+
+- **Deliverable:** Phase 0 ledger reconcile (this session) found one
+  commit past the `CHANGELOG.md` frontier with no ledger entry:
+  `04c8de1d` (“docs: S339 – backfill own HANDOFFS.md receipt commit
+  sha”), landed after S339’s own close-out commit (`4c39c522`) that
+  recorded the entry below.
+- **Change:** `04c8de1d` replaced the S339 `HANDOFFS.md` receipt’s
+  `commit: pending` placeholder with the real commit sha (`4c39c522`) —
+  a self-correction of the just-written receipt, not new production
+  work. Same class of action as the
+  `5f0b81d2`/`ee690776`/`2278b46f`/`cc0f7798` backfills below (S334’s,
+  S333’s, S332’s, and S331’s equivalent self-fixes).
+- **Session:** this session (backfilling S339’s own commit) ·
+  **Verified:** `git show --stat 04c8de1d` (single-file, 2-line diff to
+  `HANDOFFS.md`); `git log -1 --format=%H -- HANDOFFS.md` now matches
+  `04c8de1d` with no further gap.
+
 ### 2026-07-09 · \[ad hoc\] Two-lens review of Document 1 — partial, findings preserved as DRAFT (Session 339)
 
 - **Deliverable:** Owner asked to review Document 1

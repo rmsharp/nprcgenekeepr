@@ -70,6 +70,15 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-09--ad-hoc-backfilled-reconcile-on-read-undocumented-commit-04c8de1d--s339-handoffsmd-receipt-commit-sha-backfill">2026-07-09 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit 04c8de1d — S339 HANDOFFS.md receipt commit-sha backfill<a class="anchor" aria-label="anchor" href="#id_2026-07-09--ad-hoc-backfilled-reconcile-on-read-undocumented-commit-04c8de1d--s339-handoffsmd-receipt-commit-sha-backfill"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Phase 0 ledger reconcile (this session) found one commit past the <code>CHANGELOG.md</code> frontier with no ledger entry: <code>04c8de1d</code> (“docs: S339 – backfill own HANDOFFS.md receipt commit sha”), landed after S339’s own close-out commit (<code>4c39c522</code>) that recorded the entry below.</li>
+<li>
+<strong>Change:</strong> <code>04c8de1d</code> replaced the S339 <code>HANDOFFS.md</code> receipt’s <code>commit: pending</code> placeholder with the real commit sha (<code>4c39c522</code>) — a self-correction of the just-written receipt, not new production work. Same class of action as the <code>5f0b81d2</code>/<code>ee690776</code>/<code>2278b46f</code>/<code>cc0f7798</code> backfills below (S334’s, S333’s, S332’s, and S331’s equivalent self-fixes).</li>
+<li>
+<strong>Session:</strong> this session (backfilling S339’s own commit) · <strong>Verified:</strong> <code>git show --stat 04c8de1d</code> (single-file, 2-line diff to <code>HANDOFFS.md</code>); <code>git log -1 --format=%H -- HANDOFFS.md</code> now matches <code>04c8de1d</code> with no further gap.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-09--ad-hoc-two-lens-review-of-document-1--partial-findings-preserved-as-draft-session-339">2026-07-09 · [ad hoc] Two-lens review of Document 1 — partial, findings preserved as DRAFT (Session 339)<a class="anchor" aria-label="anchor" href="#id_2026-07-09--ad-hoc-two-lens-review-of-document-1--partial-findings-preserved-as-draft-session-339"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> Owner asked to review Document 1 (<code>vignettes/articles/engineering-the-2.0.0-release.qmd</code>) and separately noted Document 2 (package purpose/how-to-use, <code>docs/planning/v2-transformation-article-plan.md</code>) has never been picked up since S336 named it as a next step. Owner chose to prioritize reviewing Document 1 this session (Document 2 planning remains open). <strong>Session was interrupted by the owner before finishing</strong> — they have material information to add in a future session that will affect the document; report-only scope, no article edits made either way.</li>
