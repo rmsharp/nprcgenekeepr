@@ -87,7 +87,7 @@ key_files: docs/planning/document2-colony-manager-guide-plan.md §3A (both new t
 gotchas: Phase B must replicate the EXACT unknown-filter-then-trim operation order (R/modPedigree.R:329-343) when regenerating the 54-animal focal-trim screenshot/claim -- the reverse order silently gives 87, not 54. Do not reuse the tutorial's original "85 focal animals" claim -- the shipped focalAnimals data object does not reproduce it (gives 962); Phase B/C must pick and record a new focal-ID list. The GVA "Founders are high value by definition" prose is now factually wrong (issue #9 Slice 3 demotes parentage-less "Undetermined" animals to the bottom of the ranking) -- Phase C must rewrite this, not just reshoot the screenshot. A pre-existing, cosmetic-only cross-reference numbering defect in the plan doc (several "§9 dragon"/"§12 decision" mentions that should read "§8"/"§11") was noticed but left unfixed, out of this session's scope -- flag for whoever next substantially edits the plan.
 runtime_smoke: n/a -- planning-adjacent execution session (docs/planning/, BACKLOG.md, PROJECT_LEARNINGS.md, CLAUDE.md, SESSION_NOTES.md, HANDOFFS.md only); no R/ or tests/ files modified (read-only Rscript -e verification calls against the loaded package), no runtime behavior changed. TDD Phase: N/A throughout.
 changelog_ref: CHANGELOG.md 2026-07-10 "Executed Document 2 Phase A: screenshot gap inventory + numeric claims re-derivation (Session 346)"
-commit: pending
+commit: 4941b2e8
 ```
 
 ```handoff

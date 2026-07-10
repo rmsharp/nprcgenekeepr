@@ -43,6 +43,9 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-10 · [ad hoc] S346 HANDOFFS.md receipt commit-sha backfill, closed same-session
+- **Deliverable:** Filled in this session's own `HANDOFFS.md` receipt `commit: pending` placeholder with the real close-out commit sha (`4941b2e8`), matching the S331-S345 precedent of closing this within the same session rather than leaving it for the next session's Phase 0 reconcile.
+
 ### 2026-07-10 · [ad hoc] Executed Document 2 Phase A: screenshot gap inventory + numeric claims re-derivation (Session 346)
 - **Deliverable:** `docs/planning/document2-colony-manager-guide-plan.md` §3A/§6 —
   resolved §11 decisions 1/2/5 (tab coverage = both new tabs; screenshot method =
