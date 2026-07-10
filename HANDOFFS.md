@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S350
+date: 2026-07-10
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix the Excel-upload pedigree-corruption bug -- R/modInput.R's readDataFile() calls readxl::read_excel() with no col_types, so type-guessing from early blank sire/dam rows silently converts alphanumeric sire/dam IDs to NA on later rows.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S349
 date: 2026-07-10
 status: complete

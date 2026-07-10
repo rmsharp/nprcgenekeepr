@@ -6,6 +6,16 @@
 
 ## ACTIVE TASK
 
+### What Session 350 Did
+**Deliverable:** Fix the Excel-upload pedigree-corruption bug (BACKLOG.md item, discovered
+S347) — `R/modInput.R`'s `readDataFile()` calls `readxl::read_excel()` with no `col_types`,
+so type-guessing from early blank sire/dam rows silently converts alphanumeric sire/dam IDs
+to `NA` on later rows. Following `DEVELOPMENT_WORKSTREAM.md`'s one-off-fix path (not a
+campaign) under Strict TDD.
+**Started:** 2026-07-10
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; recorded in `CHANGELOG.md` at Phase 3F.
+
 ### What Session 349 Did
 **Deliverable:** Fixed the CRAN-blocking Policy violation — `appServer()` unconditionally
 wrote `~/nprcgenekeepr.log` (outside `tempdir()`) on every boot, which is why CRAN
