@@ -87,7 +87,7 @@ key_files: BACKLOG.md (removed lines, "Up Next" section), CHANGELOG.md (new [ad 
 gotchas: Before trusting any BACKLOG.md item's "READY"/open framing at face value, spot-check against gh issue/pr state if the item cites a specific issue number -- this exact item survived 3+ prior sessions flagging it stale (visible in CHANGELOG.md history around S330-S334) without anyone actually fixing BACKLOG.md, including a session (S341) whose own deliverable was backlog curation. The "Tracker reconciliation" section's "#1-39" issue-range note (BACKLOG.md, near the bottom) is now also stale (issues run to #116) -- noticed, not fixed, flagged for whoever picks that item up.
 runtime_smoke: n/a -- BACKLOG.md only, no R/ or tests/ touched, no runtime behavior changed.
 changelog_ref: CHANGELOG.md 2026-07-10 "Pruned the stale BACKLOG.md \"issue #40 open\" item (Session 344)"
-commit: pending
+commit: 6bd0d9fb
 ```
 
 ```handoff
