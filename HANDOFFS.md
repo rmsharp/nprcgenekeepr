@@ -75,6 +75,23 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S338
+date: 2026-07-09
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix the stale passage in vignettes/articles/engineering-the-2.0.0-release.qmd:487-503 (S336's narration of the shinytest2.yaml CI coverage gap as "currently open" -- false as of S337's fix, commit c5ccf69b, live run 29057393786). Docs-only; TDD declared N/A per owner-confirmed PRE-RED scope question.
+what_was_done: pending
+next_steps: pending
+key_files: vignettes/articles/engineering-the-2.0.0-release.qmd:487-503
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<free-text prose: pending -- filled at Phase 3D close-out>
+
+```handoff
 session: S337
 date: 2026-07-09
 status: complete

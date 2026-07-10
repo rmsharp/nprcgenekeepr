@@ -6,6 +6,21 @@
 
 ## ACTIVE TASK
 
+### What Session 338 Did
+**Deliverable:** Fix the stale passage in
+`vignettes/articles/engineering-the-2.0.0-release.qmd:487-503` (written by Session 336)
+which narrates the shinytest2.yaml CI coverage gap as "a real, currently open gap" --
+false as of Session 337's fix (commit `c5ccf69b`, confirmed by live GitHub Actions run
+29057393786). Docs-only prose fix; TDD phases declared N/A per PRE-RED scope
+`AskUserQuestion` (owner confirmed). (IN PROGRESS)
+**Started:** 2026-07-09
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded
+in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for
+the next session's reconcile.
+
+---
+
 ### What Session 337 Did
 **Deliverable:** Fix the CI coverage gap in `.github/workflows/shinytest2.yaml` flagged
 by Session 336 / `PROJECT_LEARNINGS.md` Learning 312: the workflow's 13 hardcoded
