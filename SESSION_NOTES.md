@@ -6,6 +6,17 @@
 
 ## ACTIVE TASK
 
+### What Session 344 Did
+**Deliverable:** Prune the stale `BACKLOG.md` "issue #40 open" item (issue #40 is
+CLOSED; the described E2E-strengthening + CI-stability work is fully done) (IN PROGRESS)
+**Started:** 2026-07-10
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
+---
+
 ### What Session 343 Did
 **Deliverable:** Fixed all 15 confirmed findings from the CLOSED
 `docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md` audit in

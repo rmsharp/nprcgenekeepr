@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S344
+date: 2026-07-10
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Prune the stale BACKLOG.md "issue #40 open" item -- issue #40 is CLOSED (merged PR #41, 2026-06-11) and the described E2E-strengthening + CI-stability work is fully done, verified via gh issue view/gh pr view/grep before starting.
+what_was_done: pending
+next_steps: pending
+key_files: BACKLOG.md ("Up Next" section, the #40 item)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S343
 date: 2026-07-10
 status: complete
