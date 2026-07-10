@@ -59,15 +59,19 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       re-scope or close accordingly, not assume "preparation" is still the right verb.
 
 ## Documents (v1.0.8 -> v2.0.0 write-up)
-- [ ] **Execute "Document 2" plan (Phase A)** (READY, Effort M) -- planning session DONE
-      (S345, `docs/planning/document2-colony-manager-guide-plan.md`). Scope decided:
-      port and modernize `ColonyManagerTutorial.Rmd` (currently `.Rbuildignore`d and
-      unpublished, but actively maintained) plus the `_introduction.Rmd`/
-      `_summary_of_major_functions.Rmd` shared source into a new public
-      `vignettes/articles/*.qmd`, not a from-scratch draft. Next: Phase A of the plan's
-      §6 phased breakdown (finalize tab-coverage extent and screenshot-regeneration
-      method via `AskUserQuestion`, build the gap inventory) -- see the plan's §9 open
-      decisions 1-2 before starting.
+- [ ] **Execute "Document 2" plan (Phase B)** (READY, Effort M) -- planning session DONE
+      (S345), **Phase A DONE (S346)**:
+      `docs/planning/document2-colony-manager-guide-plan.md` §3A/§6. Tab coverage
+      includes both new tabs (Genetic Diversity #112, Potential Parents #48);
+      screenshot method is automated (`shinytest2::AppDriver`); title/slug confirmed
+      (`vignettes/articles/colony-manager-guide.qmd`); full 34-screenshot gap inventory
+      + 7-claim numeric re-derivation complete (3 reproduce exactly, 2 removed as
+      not-re-verifiable, 2 deferred to live capture). Next: **Phase B** -- build the
+      checked-in `shinytest2` capture script and regenerate all current-UI screenshots
+      per the gap inventory's per-screenshot disposition (§3A); also delete the 8
+      orphaned pre-rename screenshot duplicates identified this session, after
+      re-confirming zero references. See the plan's §6 Phase B for full completion
+      criteria (risk HIGH -- dragon 1).
 - [ ] **Document 1's Testing-at-Scale section conflates file-count growth with testing
       quality** (READY, Effort S) -- `vignettes/articles/engineering-the-2.0.0-release.qmd`
       §Section 3 (`#sec-testing`, ~L392-455) leads with "the test suite grew from 132 to

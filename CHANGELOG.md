@@ -43,6 +43,18 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-10 · [ad hoc] Executed Document 2 Phase A: screenshot gap inventory + numeric claims re-derivation (Session 346)
+- **Deliverable:** `docs/planning/document2-colony-manager-guide-plan.md` §3A/§6 —
+  resolved §11 decisions 1/2/5 (tab coverage = both new tabs; screenshot method =
+  automated `shinytest2`; title/slug confirmed) via `AskUserQuestion`; built the full
+  34-screenshot gap inventory against the current modular UI (finding real functional
+  changes, not just relabeling, in 4 of 6 covered tabs); re-derived all 7
+  example-data-dependent numeric claims via live `Rscript -e` verification against
+  `data(examplePedigree)` (3 reproduce exactly, 2 not-re-verifiable/removed, 2 deferred
+  to Phase C live capture). Flagged 8 orphaned pre-rename screenshots for Phase B
+  deletion. Updated `BACKLOG.md`'s Document 2 item to point at Phase B. Added
+  `PROJECT_LEARNINGS.md` Learning 319.
+
 ### 2026-07-10 · [ad hoc] S345 HANDOFFS.md receipt commit-sha backfill, closed same-session
 - **Deliverable:** Filled in this session's own `HANDOFFS.md` receipt `commit: pending` placeholder with the real close-out commit sha (`14fd5382`) — the same self-correction previous sessions (S331-S336, S339-S344) each needed, closed within the same session rather than left for the next session's Phase 0 reconcile to catch and backfill.
 

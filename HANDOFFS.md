@@ -77,16 +77,16 @@ session need this block to continue the work without re-reading the whole repo?*
 ```handoff
 session: S346
 date: 2026-07-10
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Execute Document 2 plan Phase A -- docs/planning/document2-colony-manager-guide-plan.md §6 Phase A: resolve open decisions 1-2 (tab-coverage extent, screenshot method), confirm title/slug, build screenshot gap inventory, re-derive example-data-dependent numeric claims.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE. Executed Document 2 plan Phase A -- docs/planning/document2-colony-manager-guide-plan.md §3A/§6: resolved decisions 1/2/5 (tab coverage = both new tabs; screenshot method = automated shinytest2; title/slug confirmed), built the full 34-screenshot gap inventory, re-derived all 7 example-data-dependent numeric claims.
+what_was_done: Resolved §11 decisions 1/2/5 via AskUserQuestion. Read ColonyManagerTutorial.Rmd in full plus all 7 relevant R/mod*.R files (modInput, modPedigree, modPyramid, modGeneticValue, modSummaryStats, modBreedingGroups) to disposition every one of the 34 referenced screenshots against the current modular UI -- found 4 of 6 covered tabs have real functional changes beyond relabeling (new Kinship Overrides feature on GVA, new Harem sex-ratio option on Breeding Groups, a deliberate GVA ranking-algorithm change per issue #9 Slice 3 that makes the tutorial's own "Founders are high value by definition" claim factually wrong). Found and flagged 8 orphaned pre-rename duplicate screenshots (zero references, confirmed via grep) for Phase B deletion. Ran real Rscript -e verification against the shipped data(examplePedigree) for all 7 numeric claims: 3 reproduce exactly (3,694/2,322/1,372 counts; the 54-animal focal trim, contingent on replicating the app's exact unknown-filter-then-trim operation order per R/modPedigree.R:329-343; 332 living animals), 2 verdicted not-re-verifiable/remove (unlisted 85-animal large-focal-group list; inconsistent 3,691-animal/hardware-timing claim), 2 deliberately deferred to live capture in Phase C as stochastic-simulation outputs (GVA row-268 cutover; breeding-group sex-ratio breakdown). Wrote all findings into the plan document in place (new §3A, ✅ DONE blockquote in §6, resolved strikethroughs in §11, updated Status line), matching Document 1's own established Phase-completion convention. Updated BACKLOG.md's Document 2 item to point at Phase B. Added PROJECT_LEARNINGS.md Learning 319 and bumped CLAUDE.md's learnings count. Commit: pending (this receipt's own commit).
+next_steps: Execute Phase B of docs/planning/document2-colony-manager-guide-plan.md -- build the checked-in shinytest2::AppDriver capture script and regenerate all current-UI screenshots per §3A's per-screenshot disposition table; delete the 8 orphaned pre-rename screenshots after re-confirming zero references; spike-test the shinytest2 capture method early in the session since it has been decided but not yet tried against the running app (risk HIGH, dragon 1).
+key_files: docs/planning/document2-colony-manager-guide-plan.md §3A (both new tables), §6 Phase A blockquote, §11 resolved decisions; BACKLOG.md (Document 2 item updated); PROJECT_LEARNINGS.md (Learning 319); CLAUDE.md (learnings count); SESSION_NOTES.md (S346 section, S345 handoff evaluation).
+gotchas: Phase B must replicate the EXACT unknown-filter-then-trim operation order (R/modPedigree.R:329-343) when regenerating the 54-animal focal-trim screenshot/claim -- the reverse order silently gives 87, not 54. Do not reuse the tutorial's original "85 focal animals" claim -- the shipped focalAnimals data object does not reproduce it (gives 962); Phase B/C must pick and record a new focal-ID list. The GVA "Founders are high value by definition" prose is now factually wrong (issue #9 Slice 3 demotes parentage-less "Undetermined" animals to the bottom of the ranking) -- Phase C must rewrite this, not just reshoot the screenshot. A pre-existing, cosmetic-only cross-reference numbering defect in the plan doc (several "§9 dragon"/"§12 decision" mentions that should read "§8"/"§11") was noticed but left unfixed, out of this session's scope -- flag for whoever next substantially edits the plan.
+runtime_smoke: n/a -- planning-adjacent execution session (docs/planning/, BACKLOG.md, PROJECT_LEARNINGS.md, CLAUDE.md, SESSION_NOTES.md, HANDOFFS.md only); no R/ or tests/ files modified (read-only Rscript -e verification calls against the loaded package), no runtime behavior changed. TDD Phase: N/A throughout.
+changelog_ref: CHANGELOG.md 2026-07-10 "Executed Document 2 Phase A: screenshot gap inventory + numeric claims re-derivation (Session 346)"
 commit: pending
 ```
 

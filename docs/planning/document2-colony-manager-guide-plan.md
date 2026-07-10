@@ -7,8 +7,11 @@
 (2026-07-10). Owner then confirmed the content strategy — **port and modernize
 `ColonyManagerTutorial.Rmd`** rather than draft from scratch — via a second
 `AskUserQuestion`, Session 345 (2026-07-10), after this session's research surfaced
-that the target content already exists in two places (§1). **No phase has been
-executed yet; this plan is not yet ratified end-to-end (§12 has open decisions).**
+that the target content already exists in two places (§1). Owner ratified §11
+decisions 1/2/5 (tab-coverage extent, screenshot method, title/slug) via
+`AskUserQuestion`, Session 346 (2026-07-10) — **Phase A is now DONE** (§3A, §6).
+Phases B-D remain future, separately approved sessions each; no phase is bundled with
+another (FM #26).
 
 **Workstream:** Adapted `docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md`
 (Phases 2/3/4/6), matching Document 1's own adaptation
@@ -166,6 +169,72 @@ any section from the summary table alone").
 
 ---
 
+## 3A. Phase A deliverable: Screenshot Gap Inventory and Numeric Claims Re-derivation
+(Session 346, 2026-07-10)
+
+### Screenshot Gap Inventory
+
+Every `readPNG(...)`/`grid.raster(...)` reference in `ColonyManagerTutorial.Rmd` was
+enumerated (34 distinct files in `vignettes/shiny_app_use/`) and cross-checked against
+the current modular UI (`R/appUI.R`, `R/modInput.R`, `R/modPedigree.R`,
+`R/modPyramid.R`, `R/modGeneticValue.R`, `R/modSummaryStats.R`,
+`R/modBreedingGroups.R`) to assign a disposition. **"As-is" means the described control
+still exists under the same label in the same conceptual location; "updated framing"
+means the control exists but the surrounding layout, label, or feature set changed
+enough that a straight re-shoot would misrepresent the current app.**
+
+| Tutorial section | Screenshot(s) | Disposition | Evidence |
+|---|---|---|---|
+| Opening/Input (file-format info) | `opening_screen_top/middle/bottom.png` | **Retire these 3 crops; replace with 2 new captures** (Home tab landing + Input tab's "Input Format" sub-tab) | The tutorial's single long scrolling "opening screen" no longer exists — `R/appUI.R:43-134` now shows a separate Home dashboard tab, and format documentation moved into `R/modInput.R:178-193`'s dedicated "Input Format" sub-tab |
+| Uploading a Pedigree (file examples) | `examplePedigreeTutorial.png`, `examplePedigreeTutorial_with_alleles.png` | Regenerate as-is | Static illustrations of the data file itself (opened in Excel/CSV), not app UI — unaffected by the Shiny-module migration |
+| Uploading a Pedigree (browse control) | `opening_screen_top_red_oval.png`, `input_example_pedigree_xlsx.png` | Regenerate with updated framing | File selection is now a `conditionalPanel` `fileInput` gated on a "File Content" radio choice (`R/modInput.R:80-148`) that didn't exist in the tutorial's single "gray box" |
+| Uploading a Pedigree (min. breeding age) | `input_minParentAgeSequence.png` | Regenerate with updated framing (already flagged stale by the tutorial's own prose, L178-181) | `R/modInput.R:152-157` confirms two separate `textInput`s (`minSireAge`/`minDamAge`), matching issue #119 |
+| Upload/Check | `read_and_check_pedigree.png` | Regenerate as-is | Button label unchanged: `R/modInput.R:167` `"Read and Check Pedigree"` |
+| Pedigree Browser (table/unknown IDs) | `pb_10_rows_display_unknown_ids.png`, `pb_unknown_displayed.png`, `pb_no_unknown_displayed.png` | Regenerate with updated framing | Sequential single-column layout replaced by a 3-column layout (docs / focal-animal input / display options) + `DT` table below, `R/modPedigree.R:29-153` |
+| Pedigree Browser (focal animals, small example) | `pb_focal_animal_text_box.png`, `pb_5_focal_animals_small.png` | Regenerate with updated framing | Same textarea control (`R/modPedigree.R:62-66`), new 3-column surrounding layout. **The underlying "54 animals" number reproduces exactly (N2 below) — keep it.** |
+| Pedigree Browser (large focal group) | `pb_selection_large_focal_group.png`, `pb_select_trim_for_focal_animals.png`, `pb_trimmed_for_focal_animals.png` | Regenerate with updated framing; **new focal-ID list required** | **The "85 animals" number does not reproduce (N3 below)** — the tutorial never records which IDs it used; Phase B/C must pick and explicitly record a new list |
+| Pedigree Browser (clear focal animals) | `pb_cleared_focal_animals_combined.png` (+ `.idraw` source) | Regenerate with updated framing; **Phase B tooling decision** | Original is a hand-composed side-by-side image built from a `.idraw` source file — decide in Phase B whether to keep that hand-composition step or simplify to two plain captures |
+| Pedigree Age Plot | `age_plot.png` | Regenerate with updated framing | `R/modPyramid.R` adds `ageUnit`/`colorScheme`/`showCounts` options and a `tabsetPanel` not described in the tutorial; core pyramid concept unchanged. **"332 living animals" reproduces exactly (N4) — keep it.** |
+| Genetic Value Analysis (run controls) | `gva_calculating.png` | Regenerate with updated framing (mandatory) | Button renamed "Begin Analysis" -> "Run Analysis" (`R/modGeneticValue.R:48`); a new "Kinship Overrides" panel now sits alongside it (`R/modGeneticValue.R:52-82`) — genuinely new functionality absent from the tutorial |
+| Genetic Value Analysis (results table) | `gva_first_high_value.png` | Regenerate with updated framing | "Show entries" replaced by an explicit "Show top N:" `numericInput` + an ID-filter textarea (`R/modGeneticValue.R:108-118`) |
+| Genetic Value Analysis (High/Low Value cutover) | `gva_high_and_low_value.png` | Regenerate with updated framing; **prose must be rewritten, not just re-shot** | The ranking algorithm's treatment of parentage-less ("Undetermined") animals changed (issue #9 Slice 3, `R/modGeneticValue.R:289-301`): they are now demoted to the bottom of the ranking, directly contradicting the tutorial's claim that "Founders... are high value by definition." See N6 below — do not pre-guess a row number. |
+| Summary Statistics | `ss_first_view.png`, `ss_kinship_matrix.png`, `ss_first_order_relationships.png`, `ss_female_founders.png`, `ss_trimmed_all_plots.png`, `ss_export_mean_kinship_coefficient_histogram.png` | Regenerate as-is | Tab title ("Summary Statistics and Plots") and every export button label confirmed unchanged verbatim or near-verbatim: `R/modSummaryStats.R:31,56,66,76,86` |
+| Breeding Group Formation (initial view) | `breeding_group_first_view.png` | Regenerate with updated framing (mandatory — largest structural change of any covered tab) | New third sex-ratio option "Harem (1M:NF)" (`R/modBreedingGroups.R:55-58`, matching the Core Functions "harem group configuration" capability) not in the tutorial; results now shown in a `tabsetPanel` (Groups/Statistics/Group Detail, `R/modBreedingGroups.R:77-96`) replacing a single view. Port must add new prose for the Harem option, not just re-shoot. |
+| Breeding Group Formation (number of groups) | `breeding_group_1.png` | Regenerate with updated framing | "Number of Groups Desired" -> "Number of groups:" (`R/modBreedingGroups.R:51`), same concept |
+| Breeding Group Formation (seeded groups) | `breeding_group_6_infants_with_dam.png`, `breeding_group_first_group_no_kinship_seeds_indicated.png`, `breeding_group_6_seed_grps_grp_6_kinship.png` | Regenerate with updated framing | Checkbox labels essentially unchanged (`R/modBreedingGroups.R:65-70`); now rendered under the new "Groups" sub-tab |
+| Breeding Group Formation (sex ratio) | `breeding_group_sex_ratio_specification.png` | Regenerate with updated framing; **number must be captured live, not pre-computed** | "User specified sex ratio of breeders" -> "Custom" choice alongside the new "Harem" option (`R/modBreedingGroups.R:55-58`). See N7 below. |
+
+**Orphaned screenshots (in `vignettes/shiny_app_use/`, referenced by nothing — zero
+hits searching `R/`, `vignettes/`, `docs/` outside the pkgdown build output):**
+`bg_1.png`, `bg_6_infants_with_dam.png`, `bg_6_seed_grps_grp_6_kinship.png`,
+`bg_first_group_no_kinship_seeds_indicated.png`, `bg_first_view.png`,
+`bg_sex_ratio_specification.png` (6 files — stale pre-rename duplicates of the
+`breeding_group_*` files above), `pb_clear_focal_animal_list.png`,
+`pb_cleared_focal_animal_list.png` (2 files — superseded by
+`pb_cleared_focal_animals_combined.png`). **Recommend deleting all 8 (+ evaluating the
+`.idraw` source's fate) in Phase B**, after Phase B re-confirms zero references at that
+time — not deleted in this planning-adjacent phase per `SAFEGUARDS.md` scope
+discipline.
+
+### Numeric Claims Re-derivation
+
+Every number in `ColonyManagerTutorial.Rmd` tied to the specific example
+pedigree/hardware (dragon 2, §8) was re-derived this session using the currently
+shipped `data(examplePedigree)` (3,694 rows) and current package functions —
+`Rscript -e` commands run 2026-07-10, reproduced in this session's transcript.
+
+| # | Claim (location) | Re-derivation result | Verdict |
+|---|---|---|---|
+| N1 | L288: "reduces from 3,694 to 2,322... 1,372 UNKNOWN animals" | `nrow(examplePedigree)` = 3694; `sum(isGeneratedUnknownId(examplePedigree$id))` = 1372; non-unknown = 2322 | **Reproduces exactly — carry forward unchanged.** |
+| N2 | L328: "You will end up with 54 animals" (focal IDs FJS7RQ, H6T2FF, HEVL3L, I04JZV, S63QDN) | 54, **only** when replicating the app's exact operation order: filter `isGeneratedUnknownId()` rows out first, **then** `trimPedigree(..., removeUninformative = FALSE, addBackParents = FALSE)` ancestors unioned with `getDescendantPedigree()` descendants (`R/modPedigree.R:329-343`). Filtering unknowns *after* trimming instead gives 87, not 54. | **Reproduces exactly given the correct order — carry forward, and state the order explicitly in Phase C's prose** (a plausible-looking but wrong 87 is one operation-order mistake away). |
+| N3 | L379: "a total of 85 focal animals and their relatives" (unlisted "large focal group") | The shipped `focalAnimals` data object (327 ids) gives 962 after the same trim procedure, not 85. The tutorial never records which IDs produced 85. | **Not re-verifiable, remove.** Phase C must pick and explicitly record its own new focal-ID list for this example so the number is reproducible going forward. |
+| N4 | L425: "332 living animals from the entire example pedigree" | `sum(examplePedigree$status == "ALIVE")` = 332 | **Reproduces exactly — carry forward unchanged.** |
+| N5 | L491-493: "1000 iterations... 1 minute 38 seconds... example pedigree of 3,691 animals... MacBook Pro (Mid 2014)..." | 3,691 matches no current subset (3,694 total / 2,322 non-placeholder / 332 living) — a pre-existing inconsistency in the original 2019-2020 text, not something recent changed. Hardware-specific timing is inherently non-portable. | **Not re-verifiable as stated, remove.** Replace the animal count with the verified 3,694/2,322 (matching whichever population Phase C's walkthrough uses) and drop the hardware/timing sentence — or replace with a qualitative note pointing to `gvaConvergence()` (the tutorial's own already-current guidance at L460-477). |
+| N6 | L510-515: "row 268 the values change from High Value to Low Value... Founders... are high value by definition" | Not a fixed fact even in principle: `R/modGeneticValue.R:289-301` (issue #9 Slice 3, D7) shows "Undetermined" (parentage-less, no recorded origin) animals are now deliberately demoted to the **bottom** of the ranking, not treated as automatically high-value. | **Not re-verifiable as stated, must rewrite.** Phase C corrects the prose to describe current demote-to-bottom behavior (cite `R/modGeneticValue.R:289-301`) and captures whatever row number the live run actually shows — do not pre-guess a number in Phase A. |
+| N7 | L741-743: "sex ratio of 2.5 with 6 groups... 5 groups of 20 (14:6)... 1 group of 23 (16:7)" | Depends on `nIterations` and the exact ranked input population, neither pinned down by the tutorial's text; the tab has also gained the new "Harem" mode since this example was written. | **Defer to live capture in Phase C** — do not pre-compute in Phase A. Capture the number together with its Phase B screenshot from one live run, and state the `nIterations`/population choice explicitly in the article (the tutorial never did). |
+
+---
+
 ## 4. Proposed document outline
 
 1. **Abstract / TL;DR** (100-200 words — shorter than Document 1's, since this document
@@ -216,20 +285,43 @@ historical time-series claims.
 Each phase is one session (`SESSION_RUNNER.md` "1 and done"). No phase may be bundled
 with another (FM #26).
 
-### Phase A — Finalize scope, gap inventory, and screenshot method · risk MEDIUM (foundational)
+### Phase A — Finalize scope, gap inventory, and screenshot method · risk MEDIUM (foundational) · ✅ DONE (Session 346)
 
-**What DONE looks like:** (1) `AskUserQuestion` at kickoff resolving §12 decisions 1-2
-(tab coverage extent, screenshot-regeneration method) and confirming the proposed
-title/slug; (2) a completed gap inventory — for every screenshot in
-`vignettes/shiny_app_use/` referenced by `ColonyManagerTutorial.Rmd`, a stated
-disposition (regenerate as-is / regenerate with updated framing / retire because the UI
-element no longer exists); (3) for every numeric claim in `ColonyManagerTutorial.Rmd`
-tied to example-data specifics (row counts, living-animal counts, timing claims), a
-re-derived current value or an explicit "not re-verifiable, remove" verdict.
-**Verification:** the gap inventory and re-derived numbers are the artifact — no render
-yet.
-**Session boundary:** produces the inventory and decisions only; no `.qmd` prose, no
-screenshots yet.
+> **✅ Implemented in Session 346 (2026-07-10), whole phase, no split.** Resolved §11
+> decisions 1/2/5 via `AskUserQuestion`: tab coverage extends to **both** new tabs
+> (Genetic Diversity #112, Potential Parents #48); screenshot method is **automated**
+> (`shinytest2::AppDriver`-driven, checked-in script, manual post-processing only where
+> a specific illustrative point needs it); title/slug confirmed as proposed
+> (`vignettes/articles/colony-manager-guide.qmd`). Completed the Screenshot Gap
+> Inventory (§3A) — all 34 screenshots referenced by `ColonyManagerTutorial.Rmd`
+> individually dispositioned against the current modular UI, plus 8 orphaned
+> pre-rename duplicate screenshots identified for Phase B deletion. Completed the
+> Numeric Claims Re-derivation (§3A) — 7 example-data-dependent claims individually
+> re-derived: 3 reproduce exactly and carry forward unchanged (N1, N2, N4), 2 do not
+> reproduce and are flagged not-re-verifiable/remove (N3, N5), 2 are deferred to live
+> capture in Phase C because they are simulation/algorithm-output artifacts that a
+> pre-computed Phase A number could not actually pin down (N6, N7). **One correction to
+> §1's own framing surfaced by this session's firsthand code reading (not carried
+> forward uncritically):** the Genetic Value Analysis ranking algorithm's treatment of
+> parentage-less "Undetermined" animals has genuinely changed since the tutorial was
+> written (issue #9 Slice 3) — the tutorial's "Founders... are high value by
+> definition" claim is now factually wrong, not merely stale wording; Phase C must
+> rewrite that prose, not just refresh its screenshot. **Next: Phase B** (screenshot
+> regeneration — highest-risk phase, dragon 1).
+>
+> **What DONE looks like (original criteria — all three met):** (1) `AskUserQuestion`
+> at kickoff resolving §11 decisions 1-2 (tab coverage extent, screenshot-regeneration
+> method) and confirming the proposed title/slug; (2) a completed gap inventory — for
+> every screenshot in `vignettes/shiny_app_use/` referenced by
+> `ColonyManagerTutorial.Rmd`, a stated disposition (regenerate as-is / regenerate with
+> updated framing / retire because the UI element no longer exists); (3) for every
+> numeric claim in `ColonyManagerTutorial.Rmd` tied to example-data specifics (row
+> counts, living-animal counts, timing claims), a re-derived current value or an
+> explicit "not re-verifiable, remove" verdict.
+> **Verification:** the gap inventory (§3A table 1) and re-derived numbers (§3A table
+> 2) are the artifact — no render yet, matching the session boundary below.
+> **Session boundary respected:** produced the inventory and decisions only; no `.qmd`
+> prose, no screenshots — those are Phases B/C.
 
 ### Phase B — Regenerate screenshots · risk HIGH 🐉 (see §9 dragon 1)
 
@@ -375,19 +467,14 @@ Before Phase D closes:
 
 ## 11. Open decisions for the owner (not blocking plan approval, but not silently assumed)
 
-1. **Tab-coverage extent (§8 dragon 3).** Should Section 3 cover only the 6 tabs the
-   source tutorial already covers (Input, Pedigree Browser, Age-Sex Pyramid, GVA,
-   Summary Statistics, Breeding Groups), or also the 2 tabs added since
-   (Genetic Diversity #112, Potential Parents #48)? Recommend: include both new tabs —
-   they are core, non-ONPRC-specific public capabilities, and omitting them from a
-   public "how to use it" guide undersells the current package. Resolve at Phase A
-   kickoff.
-2. **Screenshot regeneration method (§8 dragon 1).** Automated (`shinytest2`-driven,
-   reproducible, matches existing E2E infrastructure, but full-viewport rather than
-   curated crops/annotations) vs. manual (preserves the original curated framing, not
-   reproducible/scriptable). Recommend: automated capture as the default, with manual
-   post-processing (crop/annotate) only where a specific illustrative point (e.g., the
-   red-oval highlight) genuinely needs it. Resolve at Phase A kickoff.
+1. ~~**Tab-coverage extent (§8 dragon 3).**~~ **RESOLVED — Session 346
+   (`AskUserQuestion`, 2026-07-10): include both new tabs** (Genetic Diversity #112,
+   Potential Parents #48) alongside the 6 the source tutorial already covers. Budget
+   Phase C accordingly (§8 dragon 3).
+2. ~~**Screenshot regeneration method (§8 dragon 1).**~~ **RESOLVED — Session 346
+   (`AskUserQuestion`, 2026-07-10): automated** (`shinytest2::AppDriver`-driven,
+   checked-in, reproducible), with manual post-processing (crop/annotate) only where a
+   specific illustrative point (e.g., the red-oval highlight) genuinely needs it.
 3. **Fate of `ColonyManagerTutorial.Rmd` after porting (§8 dragon 4).** Retire it (e.g.,
    replace its content with a redirect note to the new public article) once Document 2
    ships, or keep both in parallel? Recommend: retire/redirect, to avoid anti-pattern
@@ -399,8 +486,9 @@ Before Phase D closes:
    own citation is verified live at draft time regardless (§8 dragon 5). Recorded as its
    own `BACKLOG.md` item at this session's close-out; no ordering dependency imposed
    here.
-5. **Article title/slug** — not locked by this plan. Proposed working title:
-   `vignettes/articles/colony-manager-guide.qmd` — "nprcgenekeepr: Purpose, Approach, and
-   a Colony Manager's Guide to Practice." Confirm or rename at Phase A kickoff, matching
-   Document 1's precedent (its own title was confirmed, not assumed, at its Phase B
-   kickoff).
+5. ~~**Article title/slug**~~ **RESOLVED — Session 346 (`AskUserQuestion`, 2026-07-10):
+   confirmed as proposed** — `vignettes/articles/colony-manager-guide.qmd` —
+   "nprcgenekeepr: Purpose, Approach, and a Colony Manager's Guide to Practice."
+
+**Remaining open: decisions 3 and 4 only**, both explicitly deferred (3 to Phase D, 4
+independent of this plan's own timeline) — neither blocks Phase B from starting.

@@ -7,17 +7,128 @@
 ## ACTIVE TASK
 
 ### What Session 346 Did
-**Deliverable:** Execute Document 2 plan Phase A —
-`docs/planning/document2-colony-manager-guide-plan.md` §6 Phase A: resolve open
-decisions 1-2 (tab-coverage extent, screenshot-regeneration method) and confirm
-title/slug via `AskUserQuestion`, build the screenshot gap inventory, re-derive
-example-data-dependent numeric claims from `ColonyManagerTutorial.Rmd`. Following the
-adapted `RESEARCH_DOCUMENTATION_WORKSTREAM.md` (IN PROGRESS)
-**Started:** 2026-07-10
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
-next session's reconcile.
+**Deliverable:** Executed Document 2 plan Phase A —
+`docs/planning/document2-colony-manager-guide-plan.md` §6 Phase A: resolved open
+decisions 1/2/5 (tab-coverage extent, screenshot-regeneration method, title/slug) via
+`AskUserQuestion`, built the full screenshot gap inventory, re-derived every
+example-data-dependent numeric claim from `ColonyManagerTutorial.Rmd`. Following the
+adapted `RESEARCH_DOCUMENTATION_WORKSTREAM.md`.
+**Started/Completed:** 2026-07-10 / 2026-07-10
+**Status:** DONE.
+
+**What happened, in order:** (1) Orientation ran normally; Phase 0 step 6 found the
+`CHANGELOG.md` frontier already at `HEAD` (zero gap) and the one commit past the
+`HANDOFFS.md` frontier was itself the ledger entry documenting the prior action — no
+backfill needed, second consecutive clean reconcile. (2) Owner said "Let's start
+Document 2, Phase A" directly (no priorities-list re-render needed — the choice was
+explicit). (3) Read the full plan (`docs/planning/document2-colony-manager-guide-plan.md`)
+to confirm Phase A's exact 3-part completion criteria. (4) Claimed the session
+(commit `4bf110c4`) before any research. (5) Resolved §11 decisions 1/2/5 via a single
+3-question `AskUserQuestion`: tab coverage includes both new tabs (Genetic Diversity
+#112, Potential Parents #48); screenshot method is automated (`shinytest2::AppDriver`);
+title/slug confirmed as proposed. (6) Read `ColonyManagerTutorial.Rmd` in full (already
+read by S345, but re-read fresh per FM #20/Learning discipline) to enumerate all 34
+referenced screenshots and all 7 example-data-dependent numeric claims. (7)
+Cross-checked every screenshot against the current modular UI by reading
+`R/appUI.R` + all 7 relevant `R/mod*.R` files (`modInput`, `modPedigree`, `modPyramid`,
+`modGeneticValue`, `modSummaryStats`, `modBreedingGroups`), finding substantial
+structural changes beyond cosmetic relabeling in 4 of 6 covered tabs (Input, Pedigree
+Browser, GVA, Breeding Groups) — including two genuinely new features the tutorial
+couldn't have described (Kinship Overrides on the GVA tab; a Harem sex-ratio option on
+Breeding Groups) and one deliberate ranking-algorithm behavior change (issue #9 Slice 3:
+parentage-less "Undetermined" animals are now demoted to the bottom of the GVA ranking,
+contradicting the tutorial's "Founders... are high value by definition" claim). Also
+found 8 orphaned pre-rename duplicate screenshots in `vignettes/shiny_app_use/`
+(confirmed zero references anywhere via `grep`) to flag for Phase B deletion. (8)
+Re-derived all 7 numeric claims by running real `Rscript -e` verification against the
+currently shipped `data(examplePedigree)`: 3 reproduce exactly (3,694/2,322/1,372 row
+counts; the 54-animal focal-trim result — but ONLY when unknown-ID filtering happens
+*before* the ancestor/descendant trim, matching the app's exact operation order,
+`R/modPedigree.R:329-343`; and 332 living animals), 2 do not reproduce and are verdicted
+not-re-verifiable/remove (the unlisted "85 focal animals" large-focal-group example;
+the "3,691 animals"/hardware-timing GVA claim), 2 are deliberately deferred to live
+capture in Phase C rather than pre-computed now, since they are stochastic/rank-order
+simulation outputs that a Phase A number could not actually pin down for whatever
+population Phase C ends up using (the GVA "row 268" cutover; the breeding-group sex-ratio
+breakdown). (9) Wrote all of this into the plan document itself, matching Document 1's
+own established Phase-completion convention exactly (in-place `§3A` new section +
+`✅ DONE` blockquote in `§6` + resolved-decision strikethroughs in `§11` + updated Status
+line at top) rather than a separate output file. (10) Updated `BACKLOG.md`'s Document 2
+item to reflect Phase A DONE and point at Phase B. (11) Added `PROJECT_LEARNINGS.md`
+Learning 319 (operation-order sensitivity in numeric-claim re-derivation; defer
+stochastic-output claims to their live-capture phase) and bumped `CLAUDE.md`'s learnings
+count (318→319, Sessions 1-345+→1-346+).
+
+**Session 345 Handoff Evaluation (by Session 346): Score 9/10.** **What helped:** the
+plan's own dragons list (§8, dragon 2) correctly predicted that numeric claims tied to
+the example pedigree were the highest-risk trap in this exact phase, and named the right
+categories (row counts, living-animal counts, timing claims) — all of which turned out to
+need exactly the re-derivation treatment the dragon anticipated. The §11 open-decisions
+list gave clear, well-reasoned recommended defaults for all three decisions this session
+needed to resolve; the owner accepted all three recommendations, and having them
+pre-articulated (with reasoning) made drafting the `AskUserQuestion` options fast and
+well-grounded rather than invented from scratch. The §3 evidence table's E7/E8 tab-list
+comparison was directly reusable for scoping the gap inventory's tab coverage. **What was
+missing:** nothing S345 could reasonably have been expected to supply — Phase A's own job
+(reading all 7 `mod*.R` files at code level, and actually running R against the shipped
+example data) is inherently deeper verification than a planning session's evidence table
+is meant to provide; S345's evidence table correctly scoped WHAT needed checking, not
+HOW deep. **What was wrong:** one small, pre-existing defect noticed but correctly left
+unfixed (out of this session's scope, `SAFEGUARDS.md` "I also noticed..." discipline):
+the plan's own inline cross-references say "§9 dragon" and "§12 decision" in several
+places (§2, §4, §5, §8 item 3), but Dragons is actually §8 and Open Decisions is actually
+§11 — a numbering-label inconsistency baked in since S345's original draft, cosmetic
+only (never blocked finding the actual content), flagged here for whoever next
+substantially edits this plan document to fix in the same pass, not worth its own
+`BACKLOG.md` item. **ROI:** strongly positive — the plan's dragons and open-decisions
+sections did real predictive work this session relied on directly.
+
+**Self-assessment (Session 346): 8/10.** **Strengths:** (1) did not treat the
+gap-inventory task as a UI-label-diffing exercise — read all 7 relevant `R/mod*.R`
+server/UI files at code level and found that 4 of 6 covered tabs have undergone real
+functional changes (two brand-new features, one deliberate ranking-behavior change),
+not just cosmetic relabeling, which materially changes Phase C's effort estimate and
+must-rewrite-not-just-reshoot list; (2) ran real R code against the live shipped example
+data for every numeric claim rather than asserting plausibility from memory or the
+plan's own summary table, and caught a genuinely subtle correctness trap in doing so —
+the 54-animal trim result depends on the EXACT order unknown-ID filtering and
+ancestor/descendant trimming are applied in, with the wrong order silently producing a
+different, equally plausible 87; (3) correctly distinguished "not reproducible with
+available information" (the unlisted 85-focal-group list; the inconsistent 3,691-animal
+count) from "reproducible in principle but deliberately deferred" (the two
+stochastic-simulation-output claims) rather than lumping all four into one bucket —
+pre-computing the deferred two now would have produced numbers Phase C's own live run
+could easily contradict; (4) followed Document 1's own established in-plan
+Phase-completion convention exactly rather than inventing a new artifact location,
+keeping the project's planning-document conventions consistent across both
+documents' Phase A executions; (5) found and correctly did NOT fix an unrelated,
+pre-existing cross-reference numbering defect in the same file it was editing, flagging
+it explicitly instead of silently correcting it mid-task (`SAFEGUARDS.md` scope
+discipline). **Weaknesses:** (-) did not spike-test that `shinytest2::AppDriver$get_screenshot()`
+actually works cleanly against the current app before writing it into the plan as the
+confirmed Phase B method — the recommendation rests on it being an existing `Suggests`
+dependency already used by the E2E test tier, not a fresh trial run; if Phase B hits
+friction there, this session's confirmed decision may need revisiting, which is a cost
+this session could have avoided with one more `Rscript` call; (-) the cross-reference
+numbering defect noted above (§9/§12 vs. actual §8/§11) was flagged but not raised to the
+owner as an explicit fix-now-or-later choice — a cheap, mechanical fix that a
+one-line `AskUserQuestion` could have resolved cleanly instead of leaving it as a
+narrative flag for "whoever next touches this file."
+**Phase 3E (runtime smoke test):** n/a — `docs/planning/`, `BACKLOG.md`,
+`PROJECT_LEARNINGS.md`, `CLAUDE.md`, `SESSION_NOTES.md`, `HANDOFFS.md` only; no `R/` or
+`tests/` files were modified (only read, and queried via read-only `Rscript -e` calls
+against the installed/loaded package) — no runtime behavior changed. TDD Phase: N/A
+throughout (planning-adjacent execution session, no implementation code).
+
+**Note for the next session:** Phase B (screenshot regeneration) is next — see the
+plan's §6 Phase B for its own completion criteria (risk HIGH, dragon 1). Before starting
+Phase B, spike-test `shinytest2::AppDriver$get_screenshot()` against the running modular
+app early in the session (this session's confirmed method decision has not itself been
+tried yet). The 8 orphaned pre-rename screenshot files (§3A) should be deleted as part of
+Phase B's own scope, after re-confirming zero references at that time. The two
+pre-existing untracked artifacts S345 flagged (`PED_GV_AUDIT_2026-05-30.html`,
+`vignettes/articles/engineering-the-2.0.0-release.html`/`_files/`/`.gitignore`) remain
+untouched, still out of scope for whoever next works in those areas.
 
 ---
 
