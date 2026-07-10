@@ -87,7 +87,7 @@ key_files: vignettes/articles/engineering-the-2.0.0-release.qmd (all 15 fixes ap
 gotchas: kableExtra::kbl() escapes cell content by default -- markdown link syntax inside an R-vector column rendered via kbl() shows as literal text, not a link, unless escape=FALSE (Learning 317); this is why tbl-phases's 2 embedded issue citations are still plain text, a deliberate documented exception, not a miss. The pre-existing test_vignettes_no_deprecated_minParentAge.R failure (article L344, prose describing the now-replaced old default) is unrelated to this session and was NOT one of the 15 audit findings -- do not conflate it with this session's scope if a future session investigates open test failures.
 runtime_smoke: n/a -- vignettes/articles/*.qmd and data/*.csv only, no R/ or tests/ touched, no runtime behavior changed. Ran quarto render (build-equivalent) + full testthat::test_dir() regression read instead, both clean apart from the one confirmed pre-existing, unrelated failure.
 changelog_ref: CHANGELOG.md 2026-07-10 "Fixed all 15 confirmed Document 1 audit findings (Session 343)"
-commit: pending
+commit: 98db4ff7
 ```
 
 ```handoff
