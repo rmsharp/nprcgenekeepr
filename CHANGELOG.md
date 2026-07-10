@@ -43,6 +43,12 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-09 · [ad hoc] Backlog curation for Document 1/2 open items + session-startup priorities-list convention (Session 341)
+- **Deliverable:** Owner redirected "continue with open items from S339" into "place in the backlog the remaining items from S339 and any other items having to do with producing both documents," then separately asked for session startups to present open work as a clear, easily-selectable interface, with a worked example from a sibling project (`~/Development/wsfct`).
+- **Change:** Added `BACKLOG.md` "## Documents (v1.0.8 -> v2.0.0 write-up)" section: (1) close out the Document 1 two-lens review — independently re-confirmed, via direct read of the current article rather than the DRAFT audit's own (now line-stale) text, that Lens A #1 (`runGeneKeepR()` Phase-9 misattribution, now L170-172) and Lens B #1 ("four sessions...wrote Sections 1-3," now L687-688) are still unfixed, and that 13 more findings (Lens A #2/#3, Lens B #2-12) remain unverified; (2) plan "Document 2" (package purpose/how-to-use, deferred since S330, never picked up). Added `CLAUDE.md` "### Additional Phase 0 steps" entry (previously "(none)") documenting a `(READY | BLOCKED | DECISION NEEDED, Effort S|M|L)` tag convention on `BACKLOG.md` items, rendered at Phase 0 step 7 as a numbered, color-marked, tiered "Current priorities" list — a formatting addition to the existing report step, not a change to synced `SESSION_RUNNER.md`. Retrofitted all 6 pre-existing open `BACKLOG.md` items with the tag (CRAN-submission-prep tag checked against this ledger's own S329 entry, not guessed).
+- **Phase 3E:** n/a — `BACKLOG.md`/`CLAUDE.md` only, no `R/`/`tests/` touched.
+- **Session:** S341 · **Verified:** the 2 confirmed-unfixed findings re-checked against the current article file, not trusted from the DRAFT audit's own stale line numbers; CRAN-prep status checked against this file's own S329 entry.
+
 ### 2026-07-09 · [ad hoc] S340 HANDOFFS.md receipt commit-sha backfill, closed same-session
 - **Deliverable:** Filled in this session's own `HANDOFFS.md` receipt `commit: pending` placeholder with the real close-out commit sha (`6dde45cd`) — the same self-correction previous sessions (S331-S336, S339) each needed, closed within the same session rather than left for the next session's Phase 0 reconcile to catch and backfill.
 

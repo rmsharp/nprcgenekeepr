@@ -6,6 +6,93 @@
 
 ## ACTIVE TASK
 
+### What Session 341 Did
+**Deliverable:** Backlog curation for S339's still-open Document 1 audit items + Document
+2 planning, plus (owner-directed mid-session) establishing a session-startup
+"priorities list" convention so open work is easy to select from at Phase 0.
+**Started/Completed:** 2026-07-09 / 2026-07-09
+**Status:** DONE.
+
+**What happened, in order:** (1) Orientation ran normally; owner's first task was
+"continue with open items from S339" -- began re-reading the still-DRAFT
+`docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md` and the current article to plan a
+verification pass. (2) Owner interrupted mid-orientation-for-that-task with a scope
+change: "place in the backlog the remaining items from S339 and any other items having
+to do with producing both documents" -- do NOT do the verification work itself, just
+record it as open work. (3) Read the full current `engineering-the-2.0.0-release.qmd`
+(745 lines, grew from 724 after S340's edits) and independently confirmed, by direct
+read rather than trusting the DRAFT audit's own text, that the audit's two
+already-confirmed-real findings (Lens A #1: `runGeneKeepR()` Phase-9 misattribution;
+Lens B #1: "four sessions...wrote Sections 1-3" contradiction) are **still present and
+unfixed** in the article, now at L170-172 and L687-688 respectively -- the audit file's
+own cited line numbers are stale by roughly 20 lines in the back half of the document.
+(4) Added a new `## Documents (v1.0.8 -> v2.0.0 write-up)` section to `BACKLOG.md` with
+two items: closing out the two-lens review (naming both confirmed-unfixed findings, the
+13 still-unverified findings, and the line-number-staleness gotcha), and planning
+"Document 2" (package purpose/how-to-use, deferred since S330, named again in S336 and
+S339's handoffs, never picked up). (5) Owner sent a second mid-turn redirect: "I want
+session startups to provide a clear easily selected interface for next items," then
+supplied a concrete worked example from a sibling project (`~/Development/wsfct`) --
+a numbered, color-tagged, effort-tagged "Current priorities" list grouped into
+ready/blocked/lower-priority/informational tiers. (6) Added a
+`### Additional Phase 0 steps` entry to `CLAUDE.md` (previously "(none)") documenting
+this exact convention -- a `(READY | BLOCKED | DECISION NEEDED, Effort S|M|L)` tag
+inline on each `BACKLOG.md` item, rendered at Phase 0 step 7 as a numbered priority list
+with color markers, grouped into ready/blocked/lower-priority/informational tiers. Kept
+this as a *formatting* addition to the existing Phase 0 step 7 report -- did not touch
+the synced `SESSION_RUNNER.md` (per this project's own sync-purity convention) and did
+not add, remove, or reorder any protocol step. (7) Retrofitted every existing open
+`BACKLOG.md` item with the new tag: the LabKey-integration remainder and CRAN-prep items
+tagged BLOCKED (the former on live-server access, the latter -- checked against
+`CHANGELOG.md`'s S329 CRAN-submission entry rather than assumed -- on CRAN's own
+pending review, flagged as possibly-stale wording); the E2E-CI issue #40 item and
+NEW-12/XARCH-3 cleanup item tagged READY; the tracker-reconciliation question tagged
+DECISION NEEDED. (8) Rendered a live "Current priorities" list in this session's own
+Phase 3G report as a demonstration of the new convention (see report; not written into
+any file beyond `BACKLOG.md`'s own tags, since the rendering is a Phase-0-time
+composition, not a stored artifact). (9) Did not touch the untracked
+`PED_GV_AUDIT_2026-05-30.html` render artifact noticed during Phase 0 orientation
+(pre-existing, dated 2026-05-30, not produced by this session) -- flagged, not
+auto-cleaned, since Learning 314's cleanup discipline is for artifacts *this session's
+own render* leaves behind, not arbitrary stray files found at Orient.
+
+**Session 340 Handoff Evaluation (by Session 341): Score 9/10.** **What helped:** the
+`next_steps` field named the exact DRAFT audit file, its 13 unverified findings, and
+Document 2's deferred/never-picked-up status -- all of which this session needed
+immediately and got right the first time without rediscovery. **What was missing:**
+S340's handoff described the 13 *unverified* findings but did not separately flag that
+the 2 findings S339 had already independently *confirmed as real* (Lens A #1, Lens B #1)
+were also still sitting unfixed in the article -- this session had to re-derive that
+itself by reading the current file rather than finding it stated. Minor, but a future
+handoff after a partial-audit session should distinguish "still needs verification" from
+"already confirmed, still needs fixing" explicitly, since they carry different
+next-action urgency. **ROI:** high -- the handoff's file pointers and status framing
+were accurate and let this session move straight to work.
+
+**Self-assessment (Session 341): 7/10.** **Strengths:** (1) correctly pivoted scope
+twice in direct response to the owner's mid-turn redirects rather than continuing the
+superseded plan; (2) re-verified the 2 already-confirmed findings against the *current*
+file rather than trusting the DRAFT audit's own (now-stale) line numbers or text, and
+surfaced that staleness explicitly for the next session; (3) checked the CRAN-prep
+item's status against `CHANGELOG.md` before tagging it, rather than guessing BLOCKED or
+READY from the item's one-line title alone; (4) did not perform the S339
+verification/fix work itself, honoring the owner's explicit "place in the backlog"
+scope rather than over-delivering; (5) kept the new Phase 0 convention as an addition to
+`CLAUDE.md`'s customization layer, not an edit to the synced `SESSION_RUNNER.md`.
+**Weaknesses:** (-) did **not** write the Phase 1B claim stub before starting technical
+work (the `BACKLOG.md`/`CLAUDE.md` edits) -- the rapid sequence of mid-turn redirects
+meant this session went straight from "understand the new scope" into editing without
+pausing to commit a claim stub first, a real protocol miss (low blast-radius, docs-only,
+fully reversible, but still a miss); (-) implemented the priorities-list convention's
+exact mechanism (tags + rendering format) from the owner's worked example without a
+confirming `AskUserQuestion` first -- reasonable given how concrete the example was, but
+still a unilateral design call on an artifact that will shape every future session's
+Phase 0 report, and the owner has not yet seen it in action before this session closes.
+**Phase 3E (runtime smoke test):** n/a -- `BACKLOG.md`/`CLAUDE.md` only, no `R/` or
+`tests/` touched, no runtime behavior changed.
+
+---
+
 ### What Session 340 Did
 **Deliverable:** Corrected the Shiny-application-history narrative in Document 1
 (`vignettes/articles/engineering-the-2.0.0-release.qmd`) -- the owner-supplied material
