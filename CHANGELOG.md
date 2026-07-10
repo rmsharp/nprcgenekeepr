@@ -43,6 +43,9 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-10 · [ad hoc] S347 HANDOFFS.md receipt commit-sha backfill, closed same-session
+- **Deliverable:** Filled in this session's own `HANDOFFS.md` receipt `commit: pending` placeholder with the real close-out commit sha (`9d9479ad`), matching the S331-S346 precedent of closing this within the same session rather than leaving it for the next session's Phase 0 reconcile.
+
 ### 2026-07-10 · [ad hoc] Executed Document 2 Phase B: screenshot regeneration + two new bug discoveries (Session 347)
 - **Deliverable:** `docs/planning/document2-colony-manager-guide-plan.md` §6 Phase B —
   built the checked-in `shinytest2::AppDriver` capture script
