@@ -41,16 +41,6 @@
 appServer <- function(input, output, session) {
 
   # ========================================
-  # Initialize Logger
-  # ========================================
-  nprcgenekeeprLog <- file.path(getSiteInfo()$homeDir, "nprcgenekeepr.log")
-  futile.logger::flog.logger(
-    "nprcgenekeepr",
-    futile.logger::INFO,
-    appender = futile.logger::appender.file(nprcgenekeeprLog)
-  )
-
-  # ========================================
   # Shared Reactive Values
   # ========================================
   shared <- reactiveValues(
@@ -113,6 +103,38 @@ appServer <- function(input, output, session) {
 
   # Input and Quality Control Module
   inputResults <- modInputServer("dataInput", config = reactive(shared$config))
+
+  # ========================================
+  # Debug Logging (opt-in via the Input tab's "Debug on" checkbox)
+  # ========================================
+  # CRAN Policy forbids writing outside the R session's temporary directory
+  # during examples/tests/vignettes/loading without explicit interactive
+  # user confirmation, so the file appender is never registered at boot --
+  # only after a user explicitly opts in during a live session by checking
+  # "Debug on" (issue: CRAN archived nprcgenekeepr 2.0.0 over the prior
+  # unconditional write to ~/nprcgenekeepr.log at every appServer() boot).
+  # ignoreNULL = FALSE: input$debugger (and so debugMode()) is NULL until
+  # the client posts its first value, and futile.logger's "nprcgenekeepr"
+  # logger is a process-global registry -- without also resetting on a NULL
+  # first read, a fresh session could silently inherit a stale file appender
+  # left registered by an earlier session in the same R process (e.g. a
+  # multi-session Shiny Server worker, or this package's own test suite).
+  observeEvent(inputResults$debugMode(), {
+    if (isTRUE(inputResults$debugMode())) {
+      nprcgenekeeprLog <- file.path(getSiteInfo()$homeDir, "nprcgenekeepr.log")
+      futile.logger::flog.logger(
+        "nprcgenekeepr",
+        futile.logger::DEBUG,
+        appender = futile.logger::appender.file(nprcgenekeeprLog)
+      )
+    } else {
+      futile.logger::flog.logger(
+        "nprcgenekeepr",
+        futile.logger::INFO,
+        appender = futile.logger::appender.console()
+      )
+    }
+  }, ignoreInit = FALSE, ignoreNULL = FALSE)
 
   # Update shared data when input/QC completes
   # Use tryCatch to prevent errors from blocking reactive graph

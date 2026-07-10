@@ -7,17 +7,168 @@
 ## ACTIVE TASK
 
 ### What Session 349 Did
-**Deliverable:** Fix the CRAN-blocking Policy violation — `appServer()` unconditionally
-writes `~/nprcgenekeepr.log` (outside `tempdir()`) on every boot, which is why CRAN
+**Deliverable:** Fixed the CRAN-blocking Policy violation — `appServer()` unconditionally
+wrote `~/nprcgenekeepr.log` (outside `tempdir()`) on every boot, which is why CRAN
 archived the 2.0.0 submission (owner-forwarded CRAN email, 2026-07-09). Root-cause fix:
-gate the file appender behind the existing, already-tested `inputResults$debugMode`
+gated the file appender behind the existing, already-tested `inputResults$debugMode`
 reactive (the documented "Debug on" checkbox in `modInput.R`) instead of firing
-unconditionally at the top of `appServer()`. Following `DEVELOPMENT_WORKSTREAM.md`'s
-one-off-fix path (not a campaign) under Strict TDD.
-**Started:** 2026-07-10
-**Status:** Session claimed. Work beginning (RED not yet written).
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+unconditionally at the top of `appServer()`. Followed `DEVELOPMENT_WORKSTREAM.md`'s
+one-off-fix path (not a campaign) under Strict TDD, full RED/GREEN/REFACTOR with all
+phase gates.
+**Started/Completed:** 2026-07-10 / 2026-07-10
+**Status:** DONE.
+
+**What happened, in order:** (1) User forwarded a real CRAN email (2026-07-09):
+win-builder/Debian pretest passed with 1 NOTE each, but a CRAN team member's own
+covering note said "This creates ~/nprcgenekeepr.log in violation of the CRAN Policy:
+hence archived." (2) Investigated the root cause via grep + direct reads (not
+assumed): `R/appServer.R`'s former lines 43-51 unconditionally called
+`futile.logger::flog.logger("nprcgenekeepr", INFO, appender =
+appender.file(file.path(getSiteInfo()$homeDir, "nprcgenekeepr.log")))` at the top of
+`appServer()` — `getSiteInfo()$homeDir` traces to `Sys.getenv("HOME")`
+(`getConfigFileName.R`). Confirmed live on this machine: `~/nprcgenekeepr.log`
+(23,648 bytes) already existed, produced purely by this project's own
+`testServer(appServer, ...)` test suite — the exact path CRAN's check exercised.
+(3) Found the behavior is *documented* as opt-in
+(`vignettes/manual_components/_software_development.Rmd`: "When the Debug on
+checkbox is checked... writes to a file... in the user's home directory") but the
+checkbox's already-tested `debugMode` reactive (`modInput.R:170,702`, fully covered
+by `test_modInput.R`) was never read by `appServer.R` — the file-write had gotten
+disconnected from its own documented opt-in gate during the modular rewrite.
+(4) Presented two fix options via `AskUserQuestion` (root-cause: gate on the
+checkbox, vs. minimal: hardcode `tempdir()`); owner chose root-cause. (5) Claimed
+the session (commit `cf79b37c`) before any technical work, per Phase 1B. (6) Posed
+the PRE-RED→RED `AskUserQuestion` with the exact planned test file/assertions;
+owner approved. (7) Wrote 2 RED tests
+(`tests/testthat/test_appServer_logging.R`) using this project's established
+`withr::local_tempdir()`/`withr::local_envvar(c(HOME=tmp))` pattern (matching
+`test_loadSiteConfig.R`/`test_defaultSiteParams.R`) — **ran them and found both
+passed against the UNFIXED code**, a false RED: `futile.logger::appender.file()`
+creates its target file lazily, only on the first WRITE that clears the registered
+threshold, and every in-repo log call site is `flog.debug()` (below the buggy
+code's registered `INFO` threshold), so `session$flushReact()` alone never
+triggered an actual write. Verified this directly via a 3-line `Rscript` probe
+before fixing the tests. Rewrote both tests to force an explicit
+`flog.info(name="nprcgenekeepr")` probe after boot, re-ran, confirmed genuine RED
+(both failed for the right reason: `expect_false(file.exists(logPath))` → actual
+`TRUE`). (8) Posed the RED→GREEN `AskUserQuestion` with the exact implementation
+plan; owner approved. (9) Implemented: removed the unconditional top-of-function
+logger block; added `observeEvent(inputResults$debugMode(), {...}, ignoreInit =
+FALSE)` after `inputResults <- modInputServer(...)`, registering the file appender
+(DEBUG threshold) only when `debugMode()` is `TRUE`, else `appender.console()`
+(INFO). Both RED tests turned green. (10) Ran the fuller verification battery
+myself rather than declaring done at 2 green tests: `test_appServer_server.R` (all
+20 tests green) and 8 other related files individually green — but the FULL-suite
+regression read (`test_dir`) surfaced **4 new warnings** in `test_appServer_server.R`
+absent when that file ran alone — classic test-order global-state leakage.
+Diagnosed via `ListReporter` + direct warning-message capture: "cannot open file
+.../nprcgenekeepr.log: No such file or directory" — a STALE file appender
+(registered by an earlier test pointing at a since-deleted `withr::local_tempdir()`)
+was leaking into a later test's real boot. Root cause: `observeEvent`'s default
+`ignoreNULL = TRUE` was silently skipping my safe-default (console) reset whenever
+`debugMode()`'s first read was `NULL` (before the client posts `input$debugger`'s
+value) — exactly the state during `test_appServer_server.R`'s boot test, which never
+explicitly sets that input. Fixed with `ignoreNULL = FALSE`; added a 3rd RED-turned-
+GREEN test that deliberately pre-poisons the global logger registry then boots with
+a NULL-returning `debugMode` stub, asserting `expect_no_warning()`. Re-ran the full
+suite: 0 new warnings (only the pre-existing, unrelated
+`test_vignettes_no_deprecated_minParentAge.R` failure remained — confirmed via
+`git stash` that it fails identically on unmodified `master`). (11) Posed the
+GREEN→REFACTOR gate; owner agreed no refactor was needed (diff already minimal).
+(12) Ran the decisive end-to-end check: recorded `~/nprcgenekeepr.log`'s real mtime,
+ran the full suite against my actual unmodified `$HOME`, confirmed the mtime was
+**identical** afterward — proof the suite no longer writes there at all, not just
+that 3 targeted unit tests pass. (13) Phase 3E runtime smoke test: wrote a one-off
+script (scratchpad, not committed) launching the REAL modular app via
+`shinytest2::AppDriver` (this project's own established pattern) with `HOME`
+redirected to an isolated tmp dir — confirmed no log file at boot; clicking "Debug
+on" plus a real triggering action (the `goto_input` button) created the file with
+genuine `DEBUG [...] goto_input button clicked` content; app remained fully
+functional after unchecking the box. (14) `devtools::document()`: zero
+man/NAMESPACE delta (all `futile.logger` calls stay `::`-qualified, matching
+existing style). `lintr::lint()`: 0 on both changed files. (15) Updated
+`BACKLOG.md`'s CRAN-submission item with the resolved root cause and the concrete
+next owner action (re-run win-builder/R-hub, resubmit — no version bump required
+since 2.0.0 was archived pre-publication). (16) Added a `NEWS.Rmd` bullet under the
+still-unpublished `2.0.0` entry (this fix is what lets that submission actually
+reach CRAN) and rendered `NEWS.md` (per project convention: edit `.Rmd`, render, not
+hand-edit `.md`) — clean 5-line diff, no byproducts. (17) Added
+`PROJECT_LEARNINGS.md` Learning 322 (the two `futile.logger` gotchas: lazy file
+creation, and `ignoreNULL`'s live production risk beyond test isolation) and
+bumped `CLAUDE.md`'s learnings count (321→322, Sessions 1-348+→1-349+).
+
+**Session 348 Handoff Evaluation (by Session 349): Score 9/10 (on its own terms).**
+S348's handoff was written for a continuation of Document 2 Phase D — this session
+did NOT execute on it, because the user surfaced a new, higher-priority external
+event (the CRAN archival email) that pre-empted the queued backlog entirely. Scoring
+the handoff on what it actually delivered, independent of this session's redirect:
+**What helped (would have, had this session continued Document 2):** exact next
+steps (assemble/audit Abstract-Introduction-Conclusion, claim-source audit, §11
+decision 3, §8 dragon 5, full §9 verification checklist), specific key files with
+section anchors, and a named, actionable gotcha (the `pkgdown::build_article()`
+cache-priming question) rather than a vague "investigate further." **What was
+missing:** nothing — the handoff was structurally complete per all 6 minimum
+requirements. **ROI:** not directly realized this session (the work was never
+started), but the handoff itself was high-quality and would very likely have scored
+well had a normal continuation session picked it up instead.
+
+**Self-assessment (Session 349): 9/10.** **Strengths:** (1) traced the CRAN
+violation to its literal root cause via direct file reads and a live reproduction
+on this machine (the actual `~/nprcgenekeepr.log` already existed here), not
+assumption; (2) found the documented-but-disconnected "Debug on" opt-in behavior
+via the project's own vignette before proposing a fix, leading to a fix that
+restores documented behavior rather than a band-aid; (3) followed strict TDD
+faithfully through every gate, but did NOT treat "2 tests pass" as sufficient
+evidence of RED or GREEN — caught and fixed a false-RED test design flaw before
+GREEN, then caught and fixed a real regression (the `ignoreNULL` leak) via a full-
+suite regression read rather than stopping at the 2 targeted tests, adding a 3rd
+test to lock in the fix; (4) went beyond unit-test-level verification with a real,
+live-browser Phase 3E smoke test (`shinytest2::AppDriver` against the actual
+running app) and a decisive real-`$HOME`-mtime check, rather than declaring the fix
+verified from `testServer()` mocks alone; (5) correctly distinguished the one
+remaining full-suite failure as pre-existing and unrelated via `git stash`
+comparison, rather than either silently ignoring it or wrongly claiming credit/blame
+for it. **Weaknesses:** (-) the first-draft RED tests were flawed (passed against
+unfixed code) because I did not verify `futile.logger`'s lazy-file-creation
+semantics *before* writing assertions — cost one extra round-trip that upfront
+empirical probing of the library would have avoided; (-) similarly, the
+`ignoreNULL` regression was caught only via the full-suite regression read, not
+anticipated during GREEN design — a closer read of `observeEvent`'s documented
+default semantics against the specific "value starts NULL" scenario at design time
+would have been faster than discovering it via a failing regression read; (-) one
+wasted command/timeout cycle attempting an OS-level `HOME=` shell redirect for the
+"decisive check," which broke this dev environment's `renv` bootstrapping
+(unrelated to the fix) before switching to the safer real-mtime-comparison
+approach.
+
+**Phase 3E (runtime smoke test): DONE, live browser.** `shinytest2::AppDriver`
+launched the real modular app (`system.file("shinytest", package="nprcgenekeepr")`
+via `pkgload::load_all()`, this project's established pattern) with `HOME`
+redirected to an isolated tmp dir. Confirmed: (1) no log file at boot (Debug off by
+default); (2) checking "Debug on" + clicking "Go to Input" (the one call site with
+an explicit `flog.debug()`) created the file with real `DEBUG [2026-07-10
+15:55:13] goto_input button clicked` content; (3) app remained fully functional
+(mainNavbar still readable) after unchecking Debug on. TDD Phase: RED→GREEN→(no
+REFACTOR needed, owner-confirmed) throughout, gated by 4 `AskUserQuestion` calls
+(fix approach; PRE-RED→RED; RED→GREEN; GREEN→REFACTOR).
+
+**Note for the next session:** The fix is complete and verified end-to-end; the
+remaining action is an OWNER action, not an agent session: re-run the win-builder /
+R-hub pre-submission checks and resubmit via `devtools::submit_cran()` (no version
+bump required — the prior `2.0.0` attempt was archived before publication). Once
+CRAN publishes, `BACKLOG.md`'s CRAN item should be closed and this project's
+established post-acceptance checklist (see prior CRAN-plan sessions, e.g. S326-329)
+followed. Document 2 Phase D (`docs/planning/document2-colony-manager-guide-plan.md`
+§6 Phase D) remains the next queued documentation deliverable whenever the user
+returns to that workstream — S348's handoff (above) is still fully valid and
+unconsumed. Key files this session touched: `R/appServer.R:41-131` (the fix);
+`tests/testthat/test_appServer_logging.R` (new, 3 tests); `NEWS.Rmd`/`NEWS.md`
+(2.0.0 entry); `BACKLOG.md`/`CHANGELOG.md`/`PROJECT_LEARNINGS.md`/`CLAUDE.md`.
+Gotchas for any future `futile.logger`-touching session: the "nprcgenekeepr" logger
+name is a **process-global registry** — `test_modInput_coverage.R` already manages
+this defensively; any new test that registers a custom appender/threshold for that
+name should reset it or use `withr`-scoped isolation, or it can leak into
+unrelated later tests exactly as this session found.
 
 ### What Session 348 Did
 **Deliverable:** Executed Document 2 plan Phase C —
