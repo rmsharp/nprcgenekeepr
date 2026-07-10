@@ -77,19 +77,34 @@ session need this block to continue the work without re-reading the whole repo?*
 ```handoff
 session: S338
 date: 2026-07-09
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Fix the stale passage in vignettes/articles/engineering-the-2.0.0-release.qmd:487-503 (S336's narration of the shinytest2.yaml CI coverage gap as "currently open" -- false as of S337's fix, commit c5ccf69b, live run 29057393786). Docs-only; TDD declared N/A per owner-confirmed PRE-RED scope question.
-what_was_done: pending
-next_steps: pending
-key_files: vignettes/articles/engineering-the-2.0.0-release.qmd:487-503
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 10
+active_task: DONE. The stale passage in vignettes/articles/engineering-the-2.0.0-release.qmd:487-503 (S336's narration of the shinytest2.yaml CI coverage gap as "currently open") now correctly states the gap was closed by S337 (commit c5ccf69b, live run 29057393786, independently re-verified this session: 15 groups in the current workflow file, run status success/completed).
+what_was_done: PRE-RED scope AskUserQuestion (3 options) -> owner picked "prose fix, TDD N/A". Rewrote qmd:487-503 into two paragraphs: para 1 keeps the historical narrative (gap existed 2026-06-11 through 2026-07-08), para 2 states the S337 resolution (new regression test, 2 added CI groups, count-free workflow comment, confirming live run) with the commit sha and run link. Corpus-grepped .qmd/.Rmd/.md for other stale "23 files/13 groups/24 of 26" references -- only hits were dated ledger/planning docs correctly narrating history, none touched. Verified via `quarto render` (23 chunks, 0 errors); cleaned up untracked .html/_files/.gitignore render artifacts the render left in vignettes/articles/ (see gotchas). Independently re-derived (not just trusted from S337's receipt): current workflow file's groups=(...) array has exactly 15 entries incl. the 2 new ones; `gh run view 29057393786` returns status=completed, conclusion=success; commit c5ccf69b exists with the expected message. New PROJECT_LEARNINGS.md Learning 314. Updated CLAUDE.md's learning-count pointer (313->314, Sessions 1-337+ -> 1-338+). Commits: see changelog_ref.
+next_steps: No CI/testing work pending from this session. The two dated planning docs matched by the staleness grep (docs/planning/phase8e-assertion-strengthening-subplan.md, docs/planning/issue2-gva-iteration-convergence-plan.md) were confirmed historically-dated and out of scope but not read in full -- a future exhaustive corpus sweep could go further, though nothing indicates a live issue there. No other open item from this session.
+key_files: vignettes/articles/engineering-the-2.0.0-release.qmd:487-509 (the rewritten passage), PROJECT_LEARNINGS.md (Learning 314), CLAUDE.md:177 (learning-count pointer)
+gotchas: `quarto render`ing any vignettes/articles/*.qmd leaves untracked .html, _files/, and an auto-written .gitignore (for .quarto/) in that subdirectory -- the top-level .gitignore's vignettes/*.html-style patterns are single-level globs and do NOT match vignettes/articles/*.html. Clean these up before staging; confirmed via `git log --all --oneline -- 'vignettes/articles/*.html'` (empty) that no prior session has ever committed rendered output for any sibling article, so absence is the norm, not an oversight.
+runtime_smoke: n/a -- docs-only prose change, no R/ package runtime behavior touched. Build-equivalent verification (quarto render, 0 errors) performed instead and stated as this deliverable's actual completeness check, per FM #24.
+changelog_ref: CHANGELOG.md 2026-07-09 "Update stale CI-gap narration in the v2.0.0 article (Session 338)"
 commit: pending
 ```
-<free-text prose: pending -- filled at Phase 3D close-out>
+<free-text prose: self-score breakdown>
+
+**+ (what went right):** Asked a PRE-RED scope question before any edit, even for a
+docs-only change, per the TDD contract. Independently re-derived the key figures
+(current CI group count, live-run status, commit existence) rather than trusting
+S337's receipt at face value, even though every one of them held exactly. Preserved
+the article's historical narrative voice instead of just deleting the stale claim.
+Ran the actual build-equivalent (`quarto render`), not just an eyeball diff review.
+Caught a genuine, non-obvious repo-hygiene gotcha (render artifacts escaping the
+top-level `.gitignore` in this subdirectory) and recorded it as a new learning instead
+of silently discarding the evidence. Ran a corpus-wide grep sweep for other stale
+references before declaring done.
+**- (what could improve):** Did not read the two peripheral planning docs
+(`phase8e-assertion-strengthening-subplan.md`, `issue2-gva-iteration-convergence-plan.md`)
+in full -- confirmed historically-dated and out of scope from the matched lines alone,
+which was adequate for this session's narrow deliverable but not an exhaustive read.
 
 ```handoff
 session: S337

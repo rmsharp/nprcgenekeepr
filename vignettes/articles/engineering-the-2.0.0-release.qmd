@@ -487,20 +487,30 @@ Issue #40 closed the following day, 2026-06-11.
 As of 2026-07-09, both issues are closed and the harness the sub-plan
 describes is the one currently checked in: `.github/workflows/shinytest2.yaml`
 runs nightly (07:00 UTC) and on manual dispatch, opts every test in via
-`NPRC_RUN_E2E`, and runs the 13-group per-module partition 8e-7 added --
-distinct from `R-CMD-check.yaml` and `test-coverage.yaml`, which remain the
-fast, per-pull-request gate. That partition was exact against the 23
-`test-{app,e2e}-*.R` files that existed when 8e-7 closed (2026-06-11); it
-has not been kept current since. Two more E2E files were added afterward
--- `test-e2e-potential-parents-module.R` (Session 82, issue #48) and
-`test-e2e-orip-module.R` (Session 86, issues #47/#49), covering exactly
-the two new Shiny tabs @sec-features describes -- without a matching
-group added to the workflow. As of this writing, the opt-in tier holds 26
-files; the 13 groups cover 24 of them, and those two never run in CI.
-This is a real, currently open gap, not a stale figure this article
-repeats uncritically: the workflow file's own header comment still
-asserts "union = the 23, no overlap, no gap," which was true on
-2026-06-11 and is not true now.
+`NPRC_RUN_E2E`, and runs the per-module partition 8e-7 added -- distinct
+from `R-CMD-check.yaml` and `test-coverage.yaml`, which remain the fast,
+per-pull-request gate. That partition was exact against the 23
+`test-{app,e2e}-*.R` files that existed when 8e-7 closed (2026-06-11), but
+was not kept current as the suite grew: two more E2E files were added
+afterward -- `test-e2e-potential-parents-module.R` (Session 82, issue #48)
+and `test-e2e-orip-module.R` (Session 86, issues #47/#49), covering
+exactly the two new Shiny tabs @sec-features describes -- without a
+matching group added to the workflow. By 2026-07-08 the opt-in tier held
+26 files against 13 groups covering only 24 of them, and those two
+orphaned files never ran in CI -- a real gap, not a stale figure this
+article repeated uncritically.
+
+Session 337 (2026-07-09) closed that gap under the same TDD discipline
+this section describes: a new regression test
+(`tests/testthat/test_shinytest2_workflow_coverage.R`) parses the
+workflow's group array and asserts every tracked file matches exactly one
+group; two groups were added for the previously orphaned files; and the
+workflow's header comment was rewritten to state the invariant without a
+hardcoded file/group count, so it cannot go stale the same way again. A
+live `workflow_dispatch` run confirmed the fix on real infrastructure --
+all 15 groups green, including the two new ones
+(run [29057393786](https://github.com/rmsharp/nprcgenekeepr/actions/runs/29057393786),
+commit `c5ccf69b`).
 
 ## Section 4 -- An AI-Assisted Development Process {#sec-methodology}
 

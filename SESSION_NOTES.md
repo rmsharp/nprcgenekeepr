@@ -7,17 +7,91 @@
 ## ACTIVE TASK
 
 ### What Session 338 Did
-**Deliverable:** Fix the stale passage in
+**Deliverable:** Fixed the stale passage in
 `vignettes/articles/engineering-the-2.0.0-release.qmd:487-503` (written by Session 336)
-which narrates the shinytest2.yaml CI coverage gap as "a real, currently open gap" --
+which narrated the shinytest2.yaml CI coverage gap as "a real, currently open gap" --
 false as of Session 337's fix (commit `c5ccf69b`, confirmed by live GitHub Actions run
-29057393786). Docs-only prose fix; TDD phases declared N/A per PRE-RED scope
-`AskUserQuestion` (owner confirmed). (IN PROGRESS)
-**Started:** 2026-07-09
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded
-in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for
-the next session's reconcile.
+29057393786). Docs-only prose fix; TDD phases declared N/A per an owner-confirmed
+PRE-RED scope `AskUserQuestion`.
+**Started/Completed:** 2026-07-09 / 2026-07-09
+**Status:** DONE.
+
+**PRE-RED (scope/approach):** Asked the owner one `AskUserQuestion` (3 options: prose
+fix with TDD N/A [recommended], hold to review the passage together first, or
+"something else") before touching anything. Owner picked the recommended option.
+
+**Execution:** Rewrote lines 487-503 into two paragraphs: the first keeps the
+historical narrative (the gap existed from Phase 8e-7's close on 2026-06-11 through
+2026-07-08, two orphaned E2E files added afterward without a matching CI group), the
+second states the resolution -- Session 337 (2026-07-09) closed it via a new
+regression test, two added CI groups, a count-free workflow comment, and a confirming
+live `workflow_dispatch` run (29057393786, all 15 groups green, commit `c5ccf69b`).
+Corpus-swept (`grep` across `.qmd`/`.Rmd`/`.md`) for any other reference to the old
+"23 files / 13 groups / 24 of 26 covered" figures -- the only other hits are in
+ledger/process files (`CHANGELOG.md`, `HANDOFFS.md`, `SESSION_NOTES.md`,
+`PROJECT_LEARNINGS.md`, two dated planning docs) that correctly narrate history as of
+when each was written; none needed changing.
+
+**Verification:** `quarto render vignettes/articles/engineering-the-2.0.0-release.qmd`
+-- 23 chunks, zero errors. The render produced untracked `.html`, `_files/`, and a
+fresh `.gitignore` in `vignettes/articles/` that the top-level `.gitignore`'s
+single-level `vignettes/*.html` pattern does not cover; confirmed via
+`git log --all --oneline -- 'vignettes/articles/*.html'` (empty) and `git ls-tree` of
+the tracked directory that no prior session ever committed such artifacts for any
+sibling article, then removed them before staging. Reviewed the final `git diff`
+line-by-line before commit.
+
+**Learnings:** New `PROJECT_LEARNINGS.md` Learning 314 -- quarto-rendering a
+`vignettes/articles/*.qmd` file as the docs build-equivalent check leaves untracked
+artifacts one directory level below where the top-level `.gitignore` looks (its
+`vignettes/*.html`-style patterns are single-level globs, not recursive); clean up
+render output before staging, cross-checked via `git log --all` against the specific
+subdirectory rather than assumed from the top-level ignore file alone. Updated
+`CLAUDE.md`'s `PROJECT_LEARNINGS.md` pointer (313 -> 314 learnings, Sessions 1-337+ ->
+1-338+).
+
+**Session 337 Handoff Evaluation (by Session 338): Score 10/10.** **What helped:**
+S337's `HANDOFFS.md` receipt named the exact file/line (`engineering-the-2.0.0-
+release.qmd:487-503`), quoted the exact stale claim, gave the exact fix commit
+(`c5ccf69b`) and live-run confirmation (29057393786), and explicitly flagged this as a
+"different capability/deliverable from the CI fix itself" -- scoping this session
+precisely before it started. Zero rediscovery was needed: every number and reference
+this session cited came directly from that receipt and held on independent spot-check
+(`git log`, the workflow file's current group count). **What was missing:** nothing
+material -- the receipt's `gotchas` field even pre-empted a plausible follow-on
+mistake (treating "24 of 26 covered" as still-current fact anywhere else in the repo),
+which this session's corpus grep explicitly checked and confirmed clear. **What was
+wrong:** nothing. **ROI:** very high -- this was one of the cleanest handoff-to-task
+handoffs in the project's history; the entire scope, fix content, and citations were
+fully pre-specified.
+
+**Self-assessment (Session 338): 9/10.** **Strengths:** (1) asked a PRE-RED scope
+question before any edit, per the TDD contract's requirement that docs-only work
+still gets an explicit scope/approach decision; (2) preserved the article's historical
+narrative voice rather than just deleting the stale claim -- the passage still tells
+the reader the gap existed and for how long, then how it was closed, which fits the
+article's own stated purpose (documenting the AI-assisted development process); (3)
+ran the actual build-equivalent (`quarto render`), not just an eyeball read of the
+prose change; (4) caught and recorded a genuine, non-obvious repo-hygiene gotcha
+(render artifacts escaping the top-level `.gitignore` in this specific subdirectory)
+as a new learning instead of silently `rm -rf`-ing it away; (5) ran a corpus-wide grep
+sweep for other stale references before declaring the fix complete, rather than
+trusting the single flagged location was the only one. **Weaknesses:** (-) did not
+independently re-derive the shinytest2.yaml CI-group count or the live-run result from
+scratch (e.g. re-reading the current workflow file's `groups=(...)` array or
+re-fetching the GitHub Actions run) -- relied on S337's receipt figures, which held on
+the spot-checks performed but a fully independent re-derivation (matching S337's own
+"re-verified firsthand rather than trusting the predecessor" discipline) would have
+been stronger; (-) the two dated planning docs that matched the staleness grep
+pattern (`docs/planning/phase8e-assertion-strengthening-subplan.md`,
+`docs/planning/issue2-gva-iteration-convergence-plan.md`) were read only far enough to
+confirm they're historically-dated and out of scope, not read in full -- adequate for
+this session's narrow deliverable, but a more exhaustive full-corpus sweep could go
+further.
+**Phase 3E (runtime smoke test):** N/A, stated explicitly -- this is a docs-only
+prose change with no `R/` package runtime behavior touched. The build-equivalent
+verification (`quarto render`, zero errors) is this deliverable's actual completeness
+check, per `SAFEGUARDS.md` "Verify the Build Equivalent" for documentation projects.
 
 ---
 
