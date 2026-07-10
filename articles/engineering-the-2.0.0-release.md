@@ -8,20 +8,22 @@ and breeding-group formation – as an R package with a Shiny front end
 and an exposed API. Between its two most recent CRAN submissions
 (v1.0.8, 2025-07-25, through v2.0.0, 2026-07-09; 512 non-merge commits),
 the package underwent a substantial modernization: a nine-phase,
-vertical-slice migration completed a modular Shiny rewrite – begun as an
-unfinished scaffold in December 2025, before this migration itself began
-– and retired the original monolithic Shiny application it was built to
-replace (ten `R/mod*.R` modules, 4,731 lines including
-`appUI.R`/`appServer.R`). Thirteen curated new capabilities shipped
-alongside it, spanning species-aware parent identification, more honest
-uncertainty reporting in Genetic Value Analysis, and two new Shiny
-dashboards. The test suite grew from 132 to 257 files, and its
+vertical-slice migration (each phase shipping a complete, working slice
+of the application rather than a partial layer) completed a modular
+Shiny rewrite – begun as an unfinished scaffold in December 2025, before
+this migration itself began – and retired the original monolithic Shiny
+application it was built to replace (ten `R/mod*.R` modules, 4,731 lines
+including `appUI.R`/`appServer.R`). Thirteen curated new capabilities
+shipped alongside it, spanning species-aware parent identification, more
+accurate uncertainty reporting in Genetic Value Analysis, and two new
+Shiny dashboards. The test suite grew from 132 to 257 files, and its
 browser-driven end-to-end layer went from present-but-inert to
 executable and behavior-verifying. Every session in the effort,
 including this article’s own drafting, was directed by Claude Code
 (Claude CLI) under a written, enforced development protocol – strict
-red-green-refactor TDD for production code, single-deliverable sessions,
-and a durable, append-only correction ledger – rather than open-ended
+red-green-refactor TDD for production code (defined in Section 4,
+[Section 6](#sec-methodology)), single-deliverable sessions, and a
+durable, append-only correction ledger – rather than open-ended
 prompting. This article documents that transformation quantitatively:
 every claim traces to a commit, `CHANGELOG.md` entry, or frozen
 extraction, for readers evaluating the package itself, its testing
@@ -29,13 +31,15 @@ rigor, or its AI-assisted development process.
 
 ## Introduction
 
-Between its two most recent CRAN submissions – v1.0.8 (`4548aa1b`,
-2025-07-25) and v2.0.0 (`8ca8bb24`, 2026-07-09) – `nprcgenekeepr`
-changed enough to warrant a written account of the work, not just a
-version-number bump. This article documents that transformation for
-domain experts, other primate-center bioinformatics groups, CRAN
-reviewers, and potential contributors: **what** changed, and **how** it
-was built.
+Between its two most recent CRAN submissions – v1.0.8
+([`4548aa1b`](https://github.com/rmsharp/nprcgenekeepr/commit/4548aa1b),
+2025-07-25) and v2.0.0
+([`8ca8bb24`](https://github.com/rmsharp/nprcgenekeepr/commit/8ca8bb24),
+2026-07-09) – `nprcgenekeepr` changed enough to warrant a written
+account of the work, not just a version-number bump. This article
+documents that transformation for domain experts, other primate-center
+bioinformatics groups, CRAN reviewers, and potential contributors:
+**what** changed, and **how** it was built.
 
 (v1.0.8 was submitted 2025-07-25 and published on CRAN within about a
 day, but was archived by CRAN on 2025-07-29 – “as issues were not
@@ -62,9 +66,10 @@ protocol rather than open-ended prompting.
 
 **Scope.** Every quantitative or dated claim in this article is bounded
 to the 512 non-merge commits between those two submission commits
-(`4548aa1b`..`8ca8bb24`) – not “since the project began.” As of this
-writing (2026-07-09), CRAN’s review of the v2.0.0 submission is still
-pending; nothing in this article depends on that outcome.
+([`4548aa1b`](https://github.com/rmsharp/nprcgenekeepr/commit/4548aa1b)..[`8ca8bb24`](https://github.com/rmsharp/nprcgenekeepr/commit/8ca8bb24))
+– not “since the project began.” As of this writing (2026-07-09), CRAN’s
+review of the v2.0.0 submission is still pending; nothing in this
+article depends on that outcome.
 
 ## Section 1 – From Monolith to Modules: the Shiny Architecture Transformation
 
@@ -80,10 +85,11 @@ monolith, that the two genuinely began to drift – different tab
 identifiers, different default parameters, a bug fixed in one but not
 the other – which this project’s own architecture audit flagged as its
 single highest-risk finding (XARCH-1) and its single biggest source of
-friction for adding new features. (Issue \#27, open since 2022, tracked
-the long-standing intent to modularize; it predates the drift itself,
-and its own text doesn’t document the friction claim – that judgment is
-the audit’s.)
+friction for adding new features. ([Issue
+\#27](https://github.com/rmsharp/nprcgenekeepr/issues/27), open since
+2022, tracked the long-standing intent to modularize; it predates the
+drift itself, and its own text doesn’t document the friction claim –
+that judgment is the audit’s.)
 
 “Completing the conversion” meant bringing the modular app to full
 feature parity with the monolith, validating it end to end, and then
@@ -96,18 +102,20 @@ Session 22 to Session 35 (2026-06-03 to 2026-06-06).
 ![](engineering-the-2.0.0-release_files/figure-html/fig-commit-pace-1.png)
 
 Figure 1: Commits per month across the full v1.0.8 -\> v2.0.0 range
-(`4548aa1b`..`8ca8bb24`, 512 non-merge commits, as of 2026-07-09). The
-June 2026 spike overlaps the nine-phase modularization migration
-(Session 22-35, 2026-06-03 to 2026-06-06), but June also carried other,
-unrelated work – this chart is overall project pace, not a count of
-module-migration commits alone.
+([`4548aa1b`](https://github.com/rmsharp/nprcgenekeepr/commit/4548aa1b)..[`8ca8bb24`](https://github.com/rmsharp/nprcgenekeepr/commit/8ca8bb24),
+512 non-merge commits, as of 2026-07-09). The June 2026 spike overlaps
+the nine-phase modularization migration (Session 22-35, 2026-06-03 to
+2026-06-06), but June also carried other, unrelated work – this chart is
+overall project pace, not a count of module-migration commits alone.
 
 [Figure 1](#fig-commit-pace) situates the migration inside the wider
-effort: the project moved from occasional, pre-methodology commits in
-late 2025 to a sustained pace once the SESSION_RUNNER methodology took
-hold in Session 1 (2026-05-30), peaking in June 2026 – the same month
-the module migration ran – before settling into a
-testing-and-release-hardening pace in July.
+effort: after a handful of occasional, pre-methodology commits in
+December 2025, the project went fully dormant for three calendar months
+(January-March 2026, visible in the chart as zero-commit bars) before a
+sustained pace began once the SESSION_RUNNER methodology took hold in
+Session 1 (2026-05-30), peaking in June 2026 – the same month the module
+migration ran – and settling into a testing-and-release-hardening pace
+in July.
 
 ### Architecture, before and after
 
@@ -119,8 +127,7 @@ returning a named list of `reactive()` closures;
 [`appServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md)
 wires those returns into one `shared <- reactiveValues(...)` object and
 passes `reactive(shared$...)` down to the modules that need it – an
-explicit, if still informal, module contract (documented as XARCH-2 in
-the migration plan).
+explicit, if still informal, module contract.
 
 ``` mermaid
 flowchart TB
@@ -141,7 +148,9 @@ flowchart TB
 ```
 
 Figure 2: The legacy monolith (`inst/application/`, deleted at Phase 9,
-commit `24992e0b`) versus the modular app now launched by
+commit
+[`24992e0b`](https://github.com/rmsharp/nprcgenekeepr/commit/24992e0b))
+versus the modular app now launched by
 [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
 (default port 6013, as of 2026-07-09).
 [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
@@ -151,17 +160,35 @@ that calls
 so pre-existing callers keep working.
 
 The cutover was declared in Phase 9 (Session 35):
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+became the canonical launcher, with
 [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
-became the canonical launcher via
-[`lifecycle::deprecate_soft()`](https://lifecycle.r-lib.org/reference/deprecate_soft.html)-aliasing
-(`3db018d1`), and, in its own standalone commit immediately after,
-`inst/application/` – 17 files, including `server.r`, `ui.r`, and the
-eight `uitp*.R` panels – was deleted outright (`24992e0b`; docs/vignette
-updates and an unrelated fix followed in `53a9e5e0`/`a1618c48`). Because
-deletion was its own commit rather than folded into the alias change,
-reverting the cutover – had the modular app proven insufficient – would
-have been a single `git revert` of `24992e0b`, not an unpicking of nine
-phases of work. As of 2026-07-09, that revert was never needed.
+deprecated to a
+[`lifecycle::deprecate_soft()`](https://lifecycle.r-lib.org/reference/deprecate_soft.html)-aliased
+call to it
+([`3db018d1`](https://github.com/rmsharp/nprcgenekeepr/commit/3db018d1)),
+and, in its own standalone commit immediately after, `inst/application/`
+– 17 files, including `server.r`, `ui.r`, and the eight `uitp*.R` panels
+– was deleted outright
+([`24992e0b`](https://github.com/rmsharp/nprcgenekeepr/commit/24992e0b);
+docs/vignette updates and an unrelated fix followed in
+[`53a9e5e0`](https://github.com/rmsharp/nprcgenekeepr/commit/53a9e5e0)/[`a1618c48`](https://github.com/rmsharp/nprcgenekeepr/commit/a1618c48)).
+Because deletion was its own commit rather than folded into the alias
+change, reverting the cutover – had the modular app proven insufficient
+– would have been a single `git revert` of
+[`24992e0b`](https://github.com/rmsharp/nprcgenekeepr/commit/24992e0b),
+not an unpicking of nine phases of work. As of 2026-07-09, that revert
+was never needed. The alias direction reversed later, unrelated to this
+migration: [issue
+\#110](https://github.com/rmsharp/nprcgenekeepr/issues/110) (Session
+276, commit
+[`1e64dd5d`](https://github.com/rmsharp/nprcgenekeepr/commit/1e64dd5d))
+made
+[`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+canonical again and soft-deprecated
+[`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+in its place – the state [Figure 2](#fig-architecture)’s caption
+describes as current.
 
 ### The modules today
 
@@ -215,7 +242,9 @@ right; Section 2 (new features) covers them.
 | 9 | Declared the modular app canonical: runGeneKeepR() now launches it directly; inst/application/ (17 files) deleted; runModularApp() became the soft-deprecated alias. | HIGH (irreversible) | 35 | 3db018d1/24992e0b/53a9e5e0/a1618c48 | DONE |
 
 Table 2: The nine-phase, vertical-slice migration from monolith to
-modular app, Session 22 to Session 35 (2026-06-03 to 2026-06-06).
+modular app, Session 22 to Session 35 (2026-06-03 to 2026-06-06). “Risk”
+rates each phase’s reversibility – how costly a rollback would have been
+– not implementation difficulty.
 
 [Table 2](#tbl-phases) summarizes all nine phases. Phases 1, 2, and 9
 are anchored to directly-verified commit shas; phases 3 through 7 are
@@ -226,20 +255,25 @@ against an earlier, looser characterization of this migration (“phases
 1-9 all marked DONE”): it was not a single-session parity phase like its
 neighbors. It expanded into its own four-session subplan (8a-8d, Session
 31-34, issue \#39, closed at Session 34) and, after that, a further
-seven-part hardening pass (8e-1 through 8e-7, Session 37-50, issue \#40)
-– documented in the subplan’s own body text and in `CHANGELOG.md`, not
-visible from the migration plan’s phase header alone. Phase 9, by
-contrast, was the irreversible step: declaring the modular app canonical
-and deleting the monolith outright, which is why it carries a HIGH risk
-rating even though it shipped in a single session.
+seven-part hardening pass (8e-1 through 8e-7, Session 37-50, [issue
+\#40](https://github.com/rmsharp/nprcgenekeepr/issues/40)) – documented
+in the subplan’s own body text and in `CHANGELOG.md`, not visible from
+the migration plan’s phase header alone. Phase 9, by contrast, was the
+irreversible step: declaring the modular app canonical and deleting the
+monolith outright, which is why it carries a HIGH risk rating even
+though it shipped in a single session.
 
 ## Section 2 – New Capabilities in 2.0.0
 
-Between the v1.0.8 and v2.0.0 CRAN submissions, 47 GitHub issues closed
-inside the 512-commit range (2025-07-26 to 2026-07-09). Most of those
-closes were not new capability: fixes to existing behavior,
-issue-hygiene closes verifying functionality that already existed before
-the range (issue \#34, for example, found
+With the modular architecture in place ([Section 3](#sec-modules)), the
+same v1.0.8 -\> v2.0.0 range also shipped new analytical capability,
+covered next. Between the v1.0.8 and v2.0.0 CRAN submissions, 47 GitHub
+issues closed inside the 512-commit range (2025-07-26 to 2026-07-09).
+Most of those closes were not new capability: fixes to existing
+behavior, issue-hygiene closes verifying functionality that already
+existed before the range ([issue
+\#34](https://github.com/rmsharp/nprcgenekeepr/issues/34), for example,
+found
 [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
 already integrated into `modInput` from pre-migration work and simply
 closed the paper trail about five months later, with no code change),
@@ -279,63 +313,78 @@ two new Shiny dashboards.
 
 The single largest cluster of new capability – five of the thirteen
 curated features – reworked how the package identifies and reasons about
-parents. It started narrowly: issue \#31 replaced a fixed dam-exclusion
-heuristic in
+parents. It started narrowly: [issue
+\#31](https://github.com/rmsharp/nprcgenekeepr/issues/31) replaced a
+fixed dam-exclusion heuristic in
 [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
 with a window derived from each species’ actual gestation length
-(Session 74, commit `0eeee3f6`), and the **Potential Parents** Shiny tab
-(issue \#48, Session 80-81) turned that package-level logic into an app
-feature for the first time – previously,
+(Session 74, commit
+[`0eeee3f6`](https://github.com/rmsharp/nprcgenekeepr/commit/0eeee3f6)),
+and the **Potential Parents** Shiny tab ([issue
+\#48](https://github.com/rmsharp/nprcgenekeepr/issues/48), Session
+80-81) turned that package-level logic into an app feature for the first
+time – previously,
 [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
 had no UI at all.
 
 That work exposed a bigger gap: the package had no first-class notion of
-species. Issue \#46 (Session 165-169) added a `species` pedigree column
-and made the gestation window and its UI defaults species-keyed instead
-of assuming rhesus macaque throughout. Issue \#73 (Session 182-189) went
-further, adding a 14-species reproductive-parameter table (minimum
-breeding ages, gestation length) with user-configurable overrides,
-feeding both Genetic Value Analysis and the Potential Parents tab. Issue
-\#119 (Session 303-307, five slices) closed the loop: a single flat
-`minParentAge = 2` default – inconsistent with the species-aware
-breeding-age table introduced for \#73 – was replaced end to end with
-sex- and species-specific `minSireAge`/`minDamAge` floors across QC,
-candidate-matching, and the Shiny UI.
+species. [Issue
+\#46](https://github.com/rmsharp/nprcgenekeepr/issues/46) (Session
+165-169) added a `species` pedigree column and made the gestation window
+and its UI defaults species-keyed instead of assuming rhesus macaque
+throughout. [Issue
+\#73](https://github.com/rmsharp/nprcgenekeepr/issues/73) (Session
+182-189) went further, adding a 14-species reproductive-parameter table
+(minimum breeding ages, gestation length) with user-configurable
+overrides, feeding both Genetic Value Analysis and the Potential Parents
+tab. Issue \#119 (Session 303-307, five slices) closed the loop: a
+single flat `minParentAge = 2` default – inconsistent with the
+species-aware breeding-age table introduced for \#73 – was replaced end
+to end with sex- and species-specific `minSireAge`/`minDamAge` floors
+across QC, candidate-matching, and the Shiny UI.
 
-### Genetic Value Analysis becomes more honest about uncertainty
+### Genetic Value Analysis becomes more accurate about uncertainty
 
 Four features changed what Genetic Value Analysis reports, not by adding
 a new tab but by making existing statistics more accurate or more
-explicit about their own limits. Issue \#9 (Session 176-181, three
-slices) stopped animals with an unknown parent from silently inflating
-their own mean kinship and falsely top-ranking as “unique” founders –
-their parentage is now classified and the displayed rank corrected
-accordingly. Issue \#76 (Session 191-192), filed as a direct follow-on
-to \#9, carried the same logic to genome uniqueness: a
-both-unknown-parentage “Undetermined” founder now reports `gu = 0`
-instead of a number with no real biological signal behind it. Issue \#82
-(Session 208-209) added a `fgSE` column next to `fg` in
+explicit about their own limits. [Issue
+\#9](https://github.com/rmsharp/nprcgenekeepr/issues/9) (Session
+176-181, three slices) stopped animals with an unknown parent from
+silently inflating their own mean kinship and falsely top-ranking as
+“unique” founders – their parentage is now classified and the displayed
+rank corrected accordingly. [Issue
+\#76](https://github.com/rmsharp/nprcgenekeepr/issues/76) (Session
+191-192), filed as a direct follow-on to \#9, carried the same logic to
+genome uniqueness: a both-unknown-parentage “Undetermined” founder now
+reports `gu = 0` instead of a number with no real biological signal
+behind it. [Issue
+\#82](https://github.com/rmsharp/nprcgenekeepr/issues/82) (Session
+208-209) added a `fgSE` column next to `fg` in
 [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)’s
 output, so the founder genome equivalents estimate ships with its own
-sampling uncertainty rather than a bare point value. Issue \#118
-(Session 310-313, four slices) added the largest single statistic of the
-range: effective population size (Ne) estimates, computed three ways
-(gene diversity, demographic sex-ratio, and variance effective size) – a
+sampling uncertainty rather than a bare point value. [Issue
+\#118](https://github.com/rmsharp/nprcgenekeepr/issues/118) (Session
+310-313, four slices) added the largest single statistic of the range:
+effective population size (Ne) estimates, computed three ways (gene
+diversity, demographic sex-ratio, and variance effective size) – a
 colony-level number distinct from, and generally smaller than, simple
 census count.
 
 ### Two new dashboards, and a long-dormant module unlocked
 
-The remaining features are new Shiny surfaces. Issue \#112 (Session
+The remaining features are new Shiny surfaces. [Issue
+\#112](https://github.com/rmsharp/nprcgenekeepr/issues/112) (Session
 280-283, four slices) added the **Genetic Diversity** tab: a
 `modGeneticDiversity` module rendering a group x metric red/yellow/green
 heatmap that combines four independent signals (proportion of low
 genetic value, Indian-origin status, production status, and inbreeding
-risk) into one at-a-glance view per breeding group. Issues \#47 and \#49
-(Session 83-84) mounted `modORIPReporting` – a module that had existed,
-complete but never wired into the app, since the original Shiny-module
-migration ([Section 3](#sec-modules)) – as an ONPRC-only grant-reporting
-tab, gated by
+risk) into one at-a-glance view per breeding group. [Issues
+\#47](https://github.com/rmsharp/nprcgenekeepr/issues/47) and
+[\#49](https://github.com/rmsharp/nprcgenekeepr/issues/49) (Session
+83-84) mounted `modORIPReporting` – a module that had existed, complete
+but never wired into the app, since the original Shiny-module migration
+([Section 3](#sec-modules)) – as an ONPRC-only grant-reporting tab,
+gated by
 [`shouldShowOripTab()`](https://github.com/rmsharp/nprcgenekeepr/reference/shouldShowOripTab.md)
 so it does not appear for other sites. Together with the Potential
 Parents tab above, three of the ten modules listed in
@@ -343,8 +392,10 @@ Parents tab above, three of the ten modules listed in
 this section’s work rather than to the migration itself.
 
 Two smaller fixes round out the curated set ([Table 3](#tbl-features)):
-issue \#35 (Session 68-69) extended the Pedigree Browser’s focal-animal
-trim to include descendants, not just ancestors; and issue \#44 (Session
+[issue \#35](https://github.com/rmsharp/nprcgenekeepr/issues/35)
+(Session 68-69) extended the Pedigree Browser’s focal-animal trim to
+include descendants, not just ancestors; and [issue
+\#44](https://github.com/rmsharp/nprcgenekeepr/issues/44) (Session
 70-72) replaced eight scattered literal `"U"`-prefix checks with a
 single configurable auto-generated-ID format, defaulting to the prior
 behavior unconfigured.
@@ -386,16 +437,20 @@ that subset represents.
 
 [Table 4](#tbl-testing-growth) and [Figure 3](#fig-testing-growth)
 ground the growth claim in five checkpoints rather than just the two
-endpoints: the v1.0.8 CRAN submission (`4548aa1b`, 2025-07-25, before
-this project adopted the SESSION_RUNNER methodology), the start of
-Session 1 (`6fd87749`, 2026-05-30), the two commits bracketing Phase 9
-of the module migration ([Section 3](#sec-modules)), and the v2.0.0 CRAN
-submission (`8ca8bb24`, 2026-07-09). The
-shinytest2/AppDriver-referencing count is already 25 files at Session
-1’s start – that scaffold predates this project’s methodology entirely;
-it was built on the module branch (commit `7da01afe`) during the same
-pre-Session-1 work that produced the modular app itself, but, as the
-next section describes, it did not run.
+endpoints: the v1.0.8 CRAN submission
+([`4548aa1b`](https://github.com/rmsharp/nprcgenekeepr/commit/4548aa1b),
+2025-07-25, before this project adopted the SESSION_RUNNER methodology),
+the start of Session 1
+([`6fd87749`](https://github.com/rmsharp/nprcgenekeepr/commit/6fd87749),
+2026-05-30), the two commits bracketing Phase 9 of the module migration
+([Section 3](#sec-modules)), and the v2.0.0 CRAN submission
+([`8ca8bb24`](https://github.com/rmsharp/nprcgenekeepr/commit/8ca8bb24),
+2026-07-09). The shinytest2/AppDriver-referencing count is already 25
+files at Session 1’s start – that scaffold predates this project’s
+methodology entirely; it was built on the module branch (commit
+[`7da01afe`](https://github.com/rmsharp/nprcgenekeepr/commit/7da01afe))
+during the same pre-Session-1 work that produced the modular app itself,
+but, as the next section describes, it did not run.
 
 ### From a dormant scaffold to an executable, hardened harness
 
@@ -406,7 +461,8 @@ its 23 test files called – `create_app_driver()`, `navigate_to_tab()`,
 would have thrown “could not find function” if the suite had run;
 instead, an opt-in gate added at Session 19 (`create_test_app()`) made
 it skip cleanly by default, so the gap was invisible rather than failing
-loudly. Issue \#39 tracked closing it.
+loudly. [Issue \#39](https://github.com/rmsharp/nprcgenekeepr/issues/39)
+tracked closing it.
 
 A Session 30 planning pass found the gap was larger than the parent
 migration plan’s Phase 8 had assumed – 6 undefined helpers plus one
@@ -419,9 +475,10 @@ browser run, and rewired CI to run the suite on a nightly schedule plus
 manual dispatch rather than per pull request (browser tests are slower
 and more flake-prone than the existing fast unit CI, which remained the
 per-PR gate); 8c and 8d brought the remaining 20 files to
-green-or-clean-skip. Issue \#39 closed at the end of Session 34
-(2026-06-06) on the sub-plan’s own explicit completion bar: **executable
-and CI-green opt-in**, not behavioral validation.
+green-or-clean-skip. [Issue
+\#39](https://github.com/rmsharp/nprcgenekeepr/issues/39) closed at the
+end of Session 34 (2026-06-06) on the sub-plan’s own explicit completion
+bar: **executable and CI-green opt-in**, not behavioral validation.
 
 That bar was deliberate, not an oversight. The sub-plan documented, in
 the same session that closed \#39, why an executable suite does not by
@@ -447,8 +504,9 @@ static markup. A final slice, 8e-7 (Session 50), addressed an
 operational flake rather than a behavioral gap: running all 23 files in
 one CI process had produced roughly one transient Chrome/driver error
 per five full-tier runs; partitioning the run into 13 per-module groups,
-each a fresh R process, capped any single process at three files. Issue
-\#40 closed the following day, 2026-06-11.
+each a fresh R process, capped any single process at three files. [Issue
+\#40](https://github.com/rmsharp/nprcgenekeepr/issues/40) closed the
+following day, 2026-06-11.
 
 As of 2026-07-09, both issues are closed and the harness the sub-plan
 describes is the one currently checked in:
@@ -459,13 +517,14 @@ per-module partition 8e-7 added – distinct from `R-CMD-check.yaml` and
 partition was exact against the 23 `test-{app,e2e}-*.R` files that
 existed when 8e-7 closed (2026-06-11), but was not kept current as the
 suite grew: two more E2E files were added afterward –
-`test-e2e-potential-parents-module.R` (Session 82, issue \#48) and
-`test-e2e-orip-module.R` (Session 86, issues \#47/#49), covering exactly
-the two new Shiny tabs [Section 4](#sec-features) describes – without a
-matching group added to the workflow. By 2026-07-08 the opt-in tier held
-26 files against 13 groups covering only 24 of them, and those two
-orphaned files never ran in CI – a real gap, not a stale figure this
-article repeated uncritically.
+`test-e2e-potential-parents-module.R` (Session 82, [issue
+\#48](https://github.com/rmsharp/nprcgenekeepr/issues/48)) and
+`test-e2e-orip-module.R` (Session 86, [issues
+\#47](https://github.com/rmsharp/nprcgenekeepr/issues/47)/[\#49](https://github.com/rmsharp/nprcgenekeepr/issues/49)),
+covering exactly the two new Shiny tabs [Section 4](#sec-features)
+describes – without a matching group added to the workflow. By
+2026-07-08 the opt-in tier held 26 files against 13 groups covering only
+24 of them, and those two orphaned files never ran in CI.
 
 Session 337 (2026-07-09) closed that gap under the same TDD discipline
 this section describes: a new regression test
@@ -477,7 +536,8 @@ without a hardcoded file/group count, so it cannot go stale the same way
 again. A live `workflow_dispatch` run confirmed the fix on real
 infrastructure – all 15 groups green, including the two new ones (run
 [29057393786](https://github.com/rmsharp/nprcgenekeepr/actions/runs/29057393786),
-commit `c5ccf69b`).
+commit
+[`c5ccf69b`](https://github.com/rmsharp/nprcgenekeepr/commit/c5ccf69b)).
 
 ## Section 4 – An AI-Assisted Development Process
 
@@ -486,11 +546,16 @@ This section describes *how*: every session in that work was directed by
 **Claude Code** (Claude CLI) operating under a written protocol –
 `SESSION_RUNNER.md`, `SAFEGUARDS.md`, and this package’s own `CLAUDE.md`
 – rather than open-ended prompting. Within the same 512-commit range as
-Sections 1-3, **328 numbered sessions** (Session 1, `6fd87749`,
+Sections 1-3, **328 numbered sessions** (Session 1,
+[`6fd87749`](https://github.com/rmsharp/nprcgenekeepr/commit/6fd87749),
 2026-05-30, through Session 328, the exact v2.0.0-submission commit
-itself, `8ca8bb24`) account for 502 of those commits; the other 10
-predate the methodology – informal module-branch experimentation plus
-the framework’s own bootstrap commit (`299060c0`, 2026-04-02).
+itself,
+[`8ca8bb24`](https://github.com/rmsharp/nprcgenekeepr/commit/8ca8bb24))
+account for 502 of those commits; the other 10 predate the methodology –
+informal module-branch experimentation plus the framework’s own
+bootstrap commit
+([`299060c0`](https://github.com/rmsharp/nprcgenekeepr/commit/299060c0),
+2026-04-02).
 
 | Metric                                                 | Count |
 |:-------------------------------------------------------|------:|
@@ -505,12 +570,13 @@ the framework’s own bootstrap commit (`299060c0`, 2026-04-02).
 | Self-assessments reporting \>=1 stakeholder correction |     2 |
 
 Table 5: Engineering-process metrics, as extracted at the Phase A data
-freeze (Session 331, 2026-07-09). `CHANGELOG.md`,
-`PROJECT_LEARNINGS.md`, `HANDOFFS.md`, and `SESSION_NOTES.md` are live,
-append-only files that kept growing in every session after this
-extraction ran – including the four sessions (331-334) that drafted the
-rest of this article – so these counts are a snapshot, not this
-article’s own present state.
+freeze (this project’s term for the point mid-drafting when this
+article’s own numeric extractions were locked, Session 331, 2026-07-09).
+`CHANGELOG.md`, `PROJECT_LEARNINGS.md`, `HANDOFFS.md`, and
+`SESSION_NOTES.md` are live, append-only files that kept growing in
+every session after this extraction ran – including the four sessions
+(331-334) that drafted the rest of this article – so these counts are a
+snapshot, not this article’s own present state.
 
 ### A written protocol, not open-ended prompting
 
@@ -600,29 +666,39 @@ Phase A data freeze. **Partial window, not a trend across the range:**
 receipts began at Session 324, one session before the `CHANGELOG.md`
 ledger-format resolution (Session 325) – these 7 sessions are roughly 2%
 of the 328-session range, and Sessions 329-330 were committed after the
-range’s own end commit (`8ca8bb24`), on the same calendar day. Mean
-score across the 7: 8.57.
+range’s own end commit
+([`8ca8bb24`](https://github.com/rmsharp/nprcgenekeepr/commit/8ca8bb24)),
+on the same calendar day. Mean score across the 7: 8.57.
 
 The mechanism behind that self-scoring is a durable receipt, not a
 spoken summary: each session writes a `HANDOFFS.md` block recording what
-it did, what is next, key files, gotchas, and its own score, and the
-*next* session scores that handoff in turn before starting its own work
-– visible in [Table 5](#tbl-process-metrics) as 7 complete receipts
-against 328 sessions in range (the receipt requirement itself dates to
-Session 324). The same append-only discipline extends to `CHANGELOG.md`,
-and this article’s own drafting sessions are a live, verifiable example
-of it working: each of the four sessions that wrote Sections 1-3 closed
-out with a `commit: pending` placeholder in its own `HANDOFFS.md`
-receipt (a session cannot know its own close-out commit’s sha before
-making that commit), corrected the placeholder with one small follow-up
-commit once the sha existed, and – because that follow-up commit landed
-after the session’s own `CHANGELOG.md` entry was already written – the
-*following* session’s Orient step caught and logged it in turn:
-`cc0f7798` (Session 331’s fix, logged by Session 332), `2278b46f`
-(Session 332’s fix, logged by Session 333), `ee690776` (Session 333’s
-fix, logged by Session 334), and `5f0b81d2` (Session 334’s fix, logged
-by this article’s fifth session). Four consecutive sessions produced the
-same small gap; four consecutive Orient steps caught it.
+it did, what is next, key files, gotchas, and its own `self_score`.
+Separately, the *next* session reads that receipt and records its own
+`predecessor_score` for the handoff’s quality before starting its own
+work – two distinct numbers, not the same score computed twice – visible
+in [Table 5](#tbl-process-metrics) as 7 complete receipts against 328
+sessions in range (the receipt requirement itself dates to Session 324).
+The same append-only discipline extends to `CHANGELOG.md`, and this
+article’s own drafting sessions are a live, verifiable example of it
+working: each of four consecutive sessions in this article’s drafting –
+the three that wrote Sections 1-3 plus the Phase A evidence-freeze
+session immediately before them – closed out with a `commit: pending`
+placeholder in its own `HANDOFFS.md` receipt (a session cannot know its
+own close-out commit’s sha before making that commit), corrected the
+placeholder with one small follow-up commit once the sha existed, and –
+because that follow-up commit landed after the session’s own
+`CHANGELOG.md` entry was already written – the *following* session’s
+Orient step caught and logged it in turn:
+[`cc0f7798`](https://github.com/rmsharp/nprcgenekeepr/commit/cc0f7798)
+(Session 331’s fix, logged by Session 332),
+[`2278b46f`](https://github.com/rmsharp/nprcgenekeepr/commit/2278b46f)
+(Session 332’s fix, logged by Session 333),
+[`ee690776`](https://github.com/rmsharp/nprcgenekeepr/commit/ee690776)
+(Session 333’s fix, logged by Session 334), and
+[`5f0b81d2`](https://github.com/rmsharp/nprcgenekeepr/commit/5f0b81d2)
+(Session 334’s fix, logged by this article’s fifth session). Four
+consecutive sessions produced the same small gap; four consecutive
+Orient steps caught it.
 
 `PROJECT_LEARNINGS.md` – 305 dated entries as of the same Phase A
 freeze, each naming a concrete finding, file, mechanism, and verdict,
@@ -632,9 +708,9 @@ project’s running record of what went wrong and what fixed it.
 failure modes at the methodology level – among them “Eager to start”
 (skipping orientation), “Minimal handoff” (a technically-present but
 functionally useless handoff), and “Unrecorded action” (the gap the
-receipt-sha backfills above illustrate) – each added after a session was
-observed failing that way. Neither catalog is edited to remove an entry
-once a session outgrows it; corrections accumulate rather than get
+receipt-sha backfills above illustrates) – each added after a session
+was observed failing that way. Neither catalog is edited to remove an
+entry once a session outgrows it; corrections accumulate rather than get
 erased.
 
 [Table 5](#tbl-process-metrics)’s stakeholder-correction figures are the

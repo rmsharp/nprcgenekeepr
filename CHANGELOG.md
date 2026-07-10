@@ -47,6 +47,98 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-10 · \[ad hoc\] Fixed all 15 confirmed Document 1 audit findings (Session 343)
+
+- **Deliverable:** Owner picked this as Phase 0 priority \#1: fix all 15
+  confirmed findings from the CLOSED
+  `docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md` two-lens review
+  in `vignettes/articles/engineering-the-2.0.0-release.qmd`, following
+  the audit’s own “Recommendations” priority order.
+- **Change:** **2 HIGH (factual):** A1 — the
+  [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+  Phase-9 misattribution was backwards (Phase 9 made
+  [`runModularApp()`](https://github.com/rmsharp/nprcgenekeepr/reference/runModularApp.md)
+  canonical, deprecating
+  [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md);
+  the reversal back to
+  [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+  canonical was a separate, later commit, issue \#110/`1e64dd5d`,
+  Session 276, never mentioned) — rewrote the passage to state both
+  events correctly and cite the reversal. B1 — the “four sessions…wrote
+  Sections 1-3” internal contradiction — reworded to describe four
+  sessions sharing the receipt-gap pattern (three that wrote Sections
+  1-3 plus the Phase A evidence-freeze session) without misstating who
+  wrote what; kept the correct “three sessions” phrasing elsewhere
+  unchanged. **2 MEDIUM with concrete mechanisms:** A2 — added the three
+  genuine zero-commit months (2026-01/02/03) to
+  `data/commit-activity-timeline.csv` so `fig-commit-pace`’s categorical
+  x-axis now renders the real 3-month gap as visible zero bars (verified
+  visually post-render), plus a prose clause naming it. B10 —
+  hyperlinked all issue-number and commit-sha citations to their GitHub
+  URLs (37 issue links + shas across prose and R-chunk captions;
+  verified every caption-embedded link renders as a real `<a href>` in
+  the rendered HTML, not literal markdown syntax); left the 2 citations
+  embedded inside a `kbl()` table cell string (`tbl-phases`’s
+  `highlight` column, `escape=TRUE` by default) as plain text —
+  hyperlinking there would render as literal brackets, a deliberate,
+  documented scope boundary. **B3 (TDD vocabulary):** added a
+  forward-reference to Section <4/@sec-methodology> at first use in the
+  Abstract. **9 LOW, batched as one editorial pass:** B5 (glossed “Phase
+  A data freeze” at first use), B6 (glossed “vertical-slice” at first
+  use), B2 (grammar: “illustrate” → “illustrates”), B4 (dropped the
+  unglossed internal “XARCH-2” codename), B9 (split the
+  self-score/predecessor-score sentence into two), B11 (added a “Risk”
+  column gloss to `tbl-phases`’s caption), B12 (added a bridging
+  sentence to Section 2), B7 (reworded “more honest” → “more accurate,”
+  Abstract + subsection heading), B8 (reworded the self-referential “not
+  a stale figure this article repeated uncritically” aside to a plain
+  statement). **A3 (optional, fixed anyway per the “all 15”
+  deliverable):** corrected `data/feature-highlights.csv`’s `0eeee3f6`
+  row date (2026-06-14 → 2026-06-13, zero reader-visible impact — the
+  `date` column isn’t rendered in `tbl-features`).
+- **Verification:** `quarto render` succeeded clean (23 chunks, 0
+  errors); visually confirmed the commit-pace chart now shows the
+  3-month gap; confirmed 0 literal `](http` leaks in the rendered HTML
+  (all markdown links, including caption-embedded ones, rendered as real
+  `<a href>` tags); full
+  [`testthat::test_dir()`](https://testthat.r-lib.org/reference/test_dir.html)
+  regression read: 1 failed / 0 error / 0 warning, the sole failure a
+  **pre-existing, unrelated**
+  `test_vignettes_no_deprecated_minParentAge.R` hit (a narrative
+  `minParentAge=` mention in prose describing the now-replaced old
+  default, first flagged by S337, untouched by this session — confirmed
+  via `git diff` showing no change to that line). Corpus swept
+  (`git grep`) for stale echoes of every fixed phrase — none found
+  outside this article and the audit doc’s own historical quotes of the
+  findings. Cleaned up render artifacts
+  (`vignettes/articles/engineering-the-2.0.0-release.html`, `_files/`,
+  auto-written `.gitignore`) before staging, per Learning 314.
+- **Phase 3E:** n/a — `vignettes/articles/` and its `data/*.csv` only;
+  no `R/`/`tests/` touched, no runtime behavior changed. Removed the
+  now-done “Fix Document 1’s 15 confirmed audit findings” item from
+  `BACKLOG.md`.
+- **Session:** S343 · **TDD:** N/A (documentation-workstream fix, no
+  `R/`/`tests/` touched).
+
+### 2026-07-09 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit ebeeb9fd — S342 HANDOFFS.md receipt commit-sha backfill
+
+- **Deliverable:** Phase 0 ledger reconcile (this session) found one
+  commit past the `CHANGELOG.md` frontier with no ledger entry:
+  `ebeeb9fd` (“docs: S342 – backfill own HANDOFFS.md receipt commit
+  sha”), landed after S342’s own close-out commit (`86f0def7`) that
+  recorded the entry below.
+- **Change:** `ebeeb9fd` replaced the S342 `HANDOFFS.md` receipt’s
+  `commit: pending` placeholder with the real commit sha (`86f0def7`) —
+  a self-correction of the just-written receipt, not new production
+  work. Same class of action as the
+  `7c0d680d`/`04c8de1d`/`5f0b81d2`/`ee690776`/`2278b46f`/`cc0f7798`
+  backfills below (S341’s, S339’s, S334’s, S333’s, S332’s, and S331’s
+  equivalent self-fixes).
+- **Session:** this session (backfilling S342’s own commit) ·
+  **Verified:** `git show --stat ebeeb9fd` (single-file, 2-line diff to
+  `HANDOFFS.md`); `git log -1 --format=%H -- HANDOFFS.md` now matches
+  `ebeeb9fd` with no further gap.
+
 ### 2026-07-09 · \[ad hoc\] Closed the Document 1 two-lens review: 13 remaining findings independently verified (Session 342)
 
 - **Deliverable:** Owner picked BACKLOG’s priority \#1 (“Close out the
