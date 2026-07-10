@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S347
+date: 2026-07-10
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Execute Document 2 plan Phase B -- docs/planning/document2-colony-manager-guide-plan.md §6 Phase B: build the checked-in shinytest2::AppDriver capture script, regenerate current-UI screenshots per §3A's gap inventory, delete the 8 orphaned pre-rename screenshots.
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/document2-colony-manager-guide-plan.md §3A, §6 Phase B; vignettes/shiny_app_use/
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S346
 date: 2026-07-10
 status: complete

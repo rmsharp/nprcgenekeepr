@@ -6,6 +6,20 @@
 
 ## ACTIVE TASK
 
+### What Session 347 Did
+**Deliverable:** Execute Document 2 plan Phase B —
+`docs/planning/document2-colony-manager-guide-plan.md` §6 Phase B: build a checked-in
+`shinytest2`-driven capture script and regenerate current-UI screenshots per Phase A's
+gap inventory (§3A); delete the 8 orphaned pre-rename screenshot duplicates after
+re-confirming zero references. Following the adapted
+`RESEARCH_DOCUMENTATION_WORKSTREAM.md`.
+**Started:** 2026-07-10
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
+---
+
 ### What Session 346 Did
 **Deliverable:** Executed Document 2 plan Phase A —
 `docs/planning/document2-colony-manager-guide-plan.md` §6 Phase A: resolved open
