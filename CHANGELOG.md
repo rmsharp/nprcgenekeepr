@@ -47,6 +47,49 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-09 · \[ad hoc\] Two-lens review of Document 1 — partial, findings preserved as DRAFT (Session 339)
+
+- **Deliverable:** Owner asked to review Document 1
+  (`vignettes/articles/engineering-the-2.0.0-release.qmd`) and
+  separately noted Document 2 (package purpose/how-to-use,
+  `docs/planning/v2-transformation-article-plan.md`) has never been
+  picked up since S336 named it as a next step. Owner chose to
+  prioritize reviewing Document 1 this session (Document 2 planning
+  remains open). **Session was interrupted by the owner before
+  finishing** — they have material information to add in a future
+  session that will affect the document; report-only scope, no article
+  edits made either way.
+- **Change:** Forked two independent review agents matching the
+  S109/S110 precedent — Lens A (figure/table-vs-frozen-data fidelity)
+  and Lens B (editorial/narrative quality). Both completed. Lens A found
+  a HIGH-confidence real discrepancy: the article’s own prose
+  misattributes
+  [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+  becoming canonical to the Phase 9 commit (`3db018d1`), which actually
+  made it the *deprecated* alias — it only became canonical later via an
+  unrelated commit (`1e64dd5d`, issue \#110, Session 276) never
+  mentioned in the article — plus two lower-confidence issues. Lens B
+  rated the article 7/10 and found a genuine internal contradiction
+  (line 617 says “three sessions…produced Sections 1-3,” line 668-669
+  says “four sessions…wrote Sections 1-3”) plus 11 smaller findings and
+  explicit praise for several strong passages. This session
+  independently re-verified the single most consequential finding from
+  each lens via direct `git` commands (both confirmed, both diagnosed
+  more precisely than the agent’s own framing) before the owner’s
+  interruption; the remaining 13 findings are agent-reported, not yet
+  independently checked.
+- **Preserved, not lost:** all findings written to new
+  `docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md`, explicitly
+  marked DRAFT — INCOMPLETE, so the ~170K tokens of completed agent work
+  survive the interruption for whichever future session incorporates the
+  owner’s new information and finalizes the review.
+- **Phase 3E:** n/a — no `R/` package runtime behavior touched, no
+  article edits made.
+- **Session:** S339 · **Verified:** both lenses’ top findings
+  independently reproduced via `git show`/`git log`; render artifacts a
+  review agent left in `vignettes/articles/` cleaned up before staging
+  (Learning 314).
+
 ### 2026-07-09 · \[ad hoc\] Update stale CI-gap narration in the v2.0.0 article (Session 338)
 
 - **Deliverable:** Fixed the cross-deliverable staleness S337 flagged in
