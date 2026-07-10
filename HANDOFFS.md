@@ -87,7 +87,7 @@ key_files: docs/planning/document2-colony-manager-guide-plan.md (the deliverable
 gotchas: Do not draft Document 2 as fresh prose -- ColonyManagerTutorial.Rmd + manual_components/*.Rmd are the primary source, per the owner's explicit port/modernize decision. vignettes/shiny_app_use/*.png screenshots are stale (2024-12-16, pre-migration) and must not be reused as-is. Any numeric claim carried from ColonyManagerTutorial.Rmd (row counts, timing claims) is tied to 2019-2020-era example data/hardware and must be re-derived, not copied (plan's dragon 2). Two pre-existing untracked render/audit artifacts were observed but NOT created by or cleaned up in this session (out of scope): PED_GV_AUDIT_2026-05-30.html (repo root) and vignettes/articles/engineering-the-2.0.0-release.html/_files//.gitignore (Learning 314's pattern, timestamped just before this session started).
 runtime_smoke: n/a -- planning/docs-only session (docs/planning/, BACKLOG.md, PROJECT_LEARNINGS.md, CLAUDE.md, SESSION_NOTES.md, HANDOFFS.md); no R/ or tests/ touched, no runtime behavior changed. TDD Phase: N/A throughout.
 changelog_ref: CHANGELOG.md 2026-07-10 "Planned Document 2: port/modernize ColonyManagerTutorial.Rmd (Session 345)"
-commit: pending
+commit: 14fd5382
 ```
 
 ```handoff
