@@ -47,6 +47,50 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-09 · \[ad hoc\] Update stale CI-gap narration in the v2.0.0 article (Session 338)
+
+- **Deliverable:** Fixed the cross-deliverable staleness S337 flagged in
+  its own close-out (`HANDOFFS.md` S337 `next_steps`,
+  `PROJECT_LEARNINGS.md` Learning 313(c)):
+  `vignettes/articles/engineering-the-2.0.0-release.qmd:487-503`
+  (written by S336) narrated the shinytest2.yaml CI-coverage gap as “a
+  real, currently open gap” — true when S336 wrote it, false as of
+  S337’s fix (commit `c5ccf69b`). Docs-only prose edit; TDD phases
+  declared N/A per an owner-confirmed PRE-RED scope `AskUserQuestion`
+  (no `R/` or test code touched).
+- **Change:** Rewrote the passage to state the gap existed from
+  2026-06-11 (Phase 8e-7’s close) through 2026-07-08, then was closed by
+  Session 337 (2026-07-09) — citing the new regression test
+  (`tests/testthat/test_shinytest2_workflow_coverage.R`), the two added
+  CI groups, the count-free/dynamically-computed workflow comment, and
+  the confirming live `workflow_dispatch` run (29057393786, all 15
+  groups green). Corpus-swept for other stale references to the old “23
+  files / 13 groups / 24 of 26 covered” figures (`grep` across
+  `.qmd`/`.Rmd`/`.md`) — the only other hits were in ledger/process
+  files (`CHANGELOG.md`, `HANDOFFS.md`, `SESSION_NOTES.md`,
+  `PROJECT_LEARNINGS.md`, dated planning docs) that correctly narrate
+  history as of the date each was written; none needed changing.
+- **Build-equivalent verification:**
+  `quarto render vignettes/articles/engineering-the-2.0.0-release.qmd` —
+  23 chunks, zero errors. Discovered and recorded as new
+  `PROJECT_LEARNINGS.md` Learning 314: the render produced untracked
+  `.html`/`_files/`/`.gitignore` artifacts in `vignettes/articles/` that
+  the top-level `.gitignore`’s single-level `vignettes/*.html` pattern
+  does not cover (confirmed via `git log --all` that no prior session
+  ever committed such artifacts for any sibling article); manually
+  removed before staging.
+- **Learnings:** New `PROJECT_LEARNINGS.md` Learning 314
+  (quarto-render-leaves-untracked-artifacts-one-level-down gotcha).
+  Updated `CLAUDE.md`’s `PROJECT_LEARNINGS.md` pointer (313 → 314
+  learnings, Sessions 1-337+ → 1-338+).
+- **Phase 3E:** N/A — docs-only prose change, no package runtime
+  behavior touched. Build-equivalent (`quarto render`) is this
+  deliverable’s actual verification, stated explicitly per FM \#24
+  rather than silently treated as a runtime smoke test.
+- **Session:** S338 · **Verified:** `quarto render` clean (0 errors);
+  `git diff` reviewed line-by-line before commit; render artifacts
+  cleaned from working tree.
+
 ### 2026-07-09 · \[ad hoc\] Fix CI coverage gap in shinytest2.yaml — 2 orphaned E2E test files now run (Session 337)
 
 - **Deliverable:** Fixed the CI-coverage gap flagged by
