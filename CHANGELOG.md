@@ -43,6 +43,17 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-10 · [ad hoc] S351 close-out commit (session notes, handoff receipt, learnings)
+- **Deliverable:** Closed out Session 351 (the Breeding Groups Custom sex ratio fix,
+  logged below): wrote the full session writeup + Session 350 handoff evaluation +
+  self-assessment to `SESSION_NOTES.md`, completed the `HANDOFFS.md` receipt to
+  `status: complete` referencing the fix commit directly (no self-referential sha,
+  so no separate backfill commit was needed), added `PROJECT_LEARNINGS.md` Learning
+  324 + a new `[ns-scope-conditional]` glossary reflex, and bumped `CLAUDE.md`'s
+  learnings count. Split close-out into three ≤5-file commits (fix; ledger/backlog/
+  release-notes; notes/handoff/learnings) per `SAFEGUARDS.md`'s per-commit 5-file
+  blast-radius cap.
+
 ### 2026-07-10 · [ad hoc] Fixed Breeding Groups "Custom" sex ratio missing numeric input (Session 351)
 - **Deliverable:** `modBreedingGroupsUI()`'s `sexRatio` radioButtons offered "Custom"
   with no numeric input to specify the ratio; the server's
