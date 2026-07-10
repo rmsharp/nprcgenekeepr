@@ -1,0 +1,764 @@
+---
+title: "Engineering nprcgenekeepr 2.0.0: Modular Architecture, Expanded Capability, and an AI-Assisted Development Process"
+---
+
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(
+  collapse = TRUE, comment = "#>",
+  echo = FALSE, warning = FALSE, message = FALSE
+)
+```
+
+## Abstract {#sec-abstract}
+
+`nprcgenekeepr` provides genetic tools for primate-colony management --
+studbook quality control, pedigree construction, genetic value analysis, and
+breeding-group formation -- as an R package with a Shiny front end and an
+exposed API. Between its two most recent CRAN submissions (v1.0.8,
+2025-07-25, through v2.0.0, 2026-07-09; 512 non-merge commits), the package
+underwent a substantial modernization: a nine-phase, vertical-slice
+migration (each phase shipping a complete, working slice of the
+application rather than a partial layer) completed a modular Shiny
+rewrite -- begun as an unfinished
+scaffold in December 2025, before this migration itself began -- and
+retired the original monolithic Shiny application it was built to replace
+(ten `R/mod*.R` modules, 4,731 lines including `appUI.R`/`appServer.R`). Thirteen
+curated new capabilities shipped alongside it, spanning species-aware parent
+identification, more accurate uncertainty reporting in Genetic Value Analysis,
+and two new Shiny dashboards. The test suite grew from 132 to 257 files, and
+its browser-driven end-to-end layer went from present-but-inert to
+executable and behavior-verifying. Every session in the effort, including
+this article's own drafting, was directed by Claude Code (Claude CLI) under
+a written, enforced development protocol -- strict red-green-refactor TDD
+for production code (defined in Section 4, @sec-methodology), single-deliverable
+sessions, and a durable, append-only correction ledger -- rather than
+open-ended prompting. This article
+documents that transformation quantitatively: every claim traces to a
+commit, `CHANGELOG.md` entry, or frozen extraction, for readers evaluating
+the package itself, its testing rigor, or its AI-assisted development
+process.
+
+## Introduction {#sec-introduction}
+
+Between its two most recent CRAN submissions -- v1.0.8 ([`4548aa1b`](https://github.com/rmsharp/nprcgenekeepr/commit/4548aa1b),
+2025-07-25) and v2.0.0 ([`8ca8bb24`](https://github.com/rmsharp/nprcgenekeepr/commit/8ca8bb24), 2026-07-09) -- `nprcgenekeepr` changed
+enough to warrant a written account of the work, not just a version-number
+bump. This article documents that transformation for domain experts, other
+primate-center bioinformatics groups, CRAN reviewers, and potential
+contributors: **what** changed, and **how** it was built.
+
+(v1.0.8 was submitted 2025-07-25 and published on CRAN within about a
+day, but was archived by CRAN on 2025-07-29 -- "as issues were not
+corrected in time," per CRAN's own archival note, though no corresponding
+problem was found in the published check results. The maintainer did not
+notice the archival until 2026-01-15; by then the originally submitted
+code was no longer current, and -- having just begun using Claude Code
+CLI -- development went directly into the larger modular rewrite that
+became v2.0.0 rather than repairing and resubmitting v1.0.8. This is why
+CRAN and GitHub Releases still list v1.0.7, not v1.0.8, as the package's
+prior public release.)
+
+Four pillars structure the account. Section 1 describes completing a
+modular Shiny rewrite -- begun as an unfinished scaffold before this
+project adopted Claude Code -- via a nine-phase, vertical-slice migration
+that brought it to full parity and retired the original monolith. Section 2
+describes the new analysis capabilities that shipped alongside that
+migration. Section 3 describes how the test suite grew and gained an
+executable, behavior-verifying, browser-driven layer. Section 4 describes
+the development process itself -- every session in this effort, including
+the five sessions that drafted this article, was directed by **Claude
+Code** (Claude CLI) operating under a written, enforced protocol rather
+than open-ended prompting.
+
+**Scope.** Every quantitative or dated claim in this article is bounded to
+the 512 non-merge commits between those two submission commits
+([`4548aa1b`](https://github.com/rmsharp/nprcgenekeepr/commit/4548aa1b)..[`8ca8bb24`](https://github.com/rmsharp/nprcgenekeepr/commit/8ca8bb24)) -- not "since the project began." As of this
+writing (2026-07-09), CRAN's review of the v2.0.0 submission is still
+pending; nothing in this article depends on that outcome.
+
+## Section 1 -- From Monolith to Modules: the Shiny Architecture Transformation {#sec-modules}
+
+For nearly all of its life -- including its last CRAN release, v1.0.7 --
+`nprcgenekeepr` shipped a single Shiny application, `inst/application/`: a
+single `server.r` (1,304 lines) plus a short `ui.r` (53 lines) that
+sourced eight separate `uitp*.R` panel files. In December 2025, before
+this project adopted Claude Code, a module-based rewrite (`R/appUI.R`,
+`R/appServer.R`, and a growing set of `R/mod*.R` files) began by hand as
+an unfinished scaffold, not a second working application. Over the
+following months it grew far enough, alongside the still-active monolith,
+that the two genuinely began to drift -- different tab identifiers,
+different default parameters, a bug fixed in one but not the other --
+which this project's own architecture audit flagged as its single
+highest-risk finding (XARCH-1) and its single biggest source of friction
+for adding new features. ([Issue #27](https://github.com/rmsharp/nprcgenekeepr/issues/27), open since 2022, tracked the
+long-standing intent to modularize; it predates the drift itself, and its
+own text doesn't document the friction claim -- that judgment is the
+audit's.)
+
+"Completing the conversion" meant bringing the modular app to full
+feature parity with the monolith, validating it end to end, and then
+retiring the monolith outright -- not a gradual coexistence, a hard cutover.
+That work ran as a **nine-phase, vertical-slice migration** -- each phase
+one TDD session (RED -> GREEN -> REFACTOR with phase gates), each phase
+leaving a working application behind it -- from Session 22 to Session 35
+(2026-06-03 to 2026-06-06).
+
+```{r}
+#| label: fig-commit-pace
+#| fig-cap: >
+#|   Commits per month across the full v1.0.8 -> v2.0.0 range
+#|   ([`4548aa1b`](https://github.com/rmsharp/nprcgenekeepr/commit/4548aa1b)..[`8ca8bb24`](https://github.com/rmsharp/nprcgenekeepr/commit/8ca8bb24), 512 non-merge commits, as of 2026-07-09). The
+#|   June 2026 spike overlaps the nine-phase modularization migration
+#|   (Session 22-35, 2026-06-03 to 2026-06-06), but June also carried other,
+#|   unrelated work -- this chart is overall project pace, not a count of
+#|   module-migration commits alone.
+#| fig-width: 7
+#| fig-height: 4
+timeline <- read.csv("data/commit-activity-timeline.csv")
+timeline$month <- factor(timeline$month, levels = timeline$month)
+ggplot2::ggplot(timeline, ggplot2::aes(x = month, y = commit_count)) +
+  ggplot2::geom_col(fill = "#3B6E8F") +
+  ggplot2::geom_text(ggplot2::aes(label = commit_count), vjust = -0.4,
+                      size = 3.2) +
+  ggplot2::labs(x = NULL, y = "Commits") +
+  ggplot2::theme_minimal(base_size = 11)
+```
+
+@fig-commit-pace situates the migration inside the wider effort: after a
+handful of occasional, pre-methodology commits in December 2025, the
+project went fully dormant for three calendar months (January-March
+2026, visible in the chart as zero-commit bars) before a sustained pace
+began once the SESSION_RUNNER methodology took hold in Session 1
+(2026-05-30), peaking in June 2026 -- the same month the module
+migration ran -- and settling into a testing-and-release-hardening pace
+in July.
+
+### Architecture, before and after
+
+@fig-architecture contrasts the two designs directly. The monolith's
+`server.r` was a single large reactive block reading and writing shared
+state through ordinary R variables in one scope. The modular app instead
+composes independent `modXServer()` functions, each returning a named
+list of `reactive()` closures; `appServer()` wires those returns into one
+`shared <- reactiveValues(...)` object and passes `reactive(shared$...)`
+down to the modules that need it -- an explicit, if still informal,
+module contract.
+
+::: {#fig-architecture}
+```{mermaid}
+flowchart TB
+  subgraph Before["Before -- inst/application/, port 6012"]
+    direction TB
+    ui1["ui.r (53 lines)<br/>sources 8 uitp*.R panel files"] --> srv1
+    srv1["server.r (1,304 lines)<br/>one monolithic reactive block"]
+  end
+  subgraph After["After -- R/appUI.R + R/appServer.R, port 6013"]
+    direction TB
+    ui2["appUI.R<br/>composes 10 modXXXUI() calls"]
+    srv2["appServer.R<br/>shared reactiveValues()"]
+    mods["10 R/mod*.R modules:<br/>modInput, modPedigree, modPyramid,<br/>modGeneticValue, modSummaryStats,<br/>modBreedingGroups, modGvAndBgDesc,<br/>modORIPReporting, modGeneticDiversity,<br/>modPotentialParents"]
+    ui2 --> mods
+    srv2 --> mods
+    mods -- "reactive() returns" --> srv2
+  end
+```
+
+The legacy monolith (`inst/application/`, deleted at Phase 9, commit
+[`24992e0b`](https://github.com/rmsharp/nprcgenekeepr/commit/24992e0b)) versus the modular app now launched by `runGeneKeepR()`
+(default port 6013, as of 2026-07-09). `runModularApp()` -- the modular
+app's original launcher -- is now a soft-deprecated alias that calls
+`runGeneKeepR()`, so pre-existing callers keep working.
+:::
+
+The cutover was declared in Phase 9 (Session 35): `runModularApp()` became
+the canonical launcher, with `runGeneKeepR()` deprecated to a
+`lifecycle::deprecate_soft()`-aliased call to it ([`3db018d1`](https://github.com/rmsharp/nprcgenekeepr/commit/3db018d1)), and, in its
+own standalone commit immediately after, `inst/application/` -- 17 files,
+including `server.r`, `ui.r`, and the eight `uitp*.R` panels -- was
+deleted outright ([`24992e0b`](https://github.com/rmsharp/nprcgenekeepr/commit/24992e0b); docs/vignette updates and an unrelated fix
+followed in [`53a9e5e0`](https://github.com/rmsharp/nprcgenekeepr/commit/53a9e5e0)/[`a1618c48`](https://github.com/rmsharp/nprcgenekeepr/commit/a1618c48)). Because deletion was its own commit
+rather than folded into the alias change, reverting the cutover -- had
+the modular app proven insufficient -- would have been a single `git
+revert` of [`24992e0b`](https://github.com/rmsharp/nprcgenekeepr/commit/24992e0b), not an unpicking of nine phases of work. As of
+2026-07-09, that revert was never needed. The alias direction reversed
+later, unrelated to this migration: [issue #110](https://github.com/rmsharp/nprcgenekeepr/issues/110) (Session 276, commit
+[`1e64dd5d`](https://github.com/rmsharp/nprcgenekeepr/commit/1e64dd5d)) made `runGeneKeepR()` canonical again and soft-deprecated
+`runModularApp()` in its place -- the state @fig-architecture's caption
+describes as current.
+
+### The modules today
+
+```{r}
+#| label: tbl-modules
+#| tbl-cap: >
+#|   The ten Shiny modules mounted in the modular app, as of 2026-07-09
+#|   (`4,731` total lines across `R/mod*.R`, `R/appUI.R`, and
+#|   `R/appServer.R`).
+modules <- read.csv("data/module-inventory.csv")
+modules <- modules[order(-modules$loc), ]
+kableExtra::kbl(
+  modules,
+  col.names = c("Module", "Responsibility", "Lines of code", "Test files"),
+  align = c("l", "l", "r", "r")
+) |>
+  kableExtra::kable_styling(full_width = FALSE)
+```
+
+@tbl-modules lists all ten `R/mod*.R` files that exist in the package as
+of 2026-07-09; together with `R/appUI.R` and `R/appServer.R` they total
+4,731 lines. Six of the ten -- `modInput`, `modPedigree`, `modPyramid`,
+`modGeneticValue`, `modSummaryStats`, and `modBreedingGroups` -- came out
+of the nine-phase migration itself. `modGvAndBgDesc` was mounted early in
+that migration (Phase 2, Session 23). `modORIPReporting` exists and is
+wired into both `appUI()` and `appServer()`, but only mounts at runtime
+for an ONPRC site configuration (`shouldShowOripTab()`), matching the
+migration plan's explicit decision to keep it unwired-but-undeleted
+rather than build out its functionality. `modGeneticDiversity` and
+`modPotentialParents` are **not** migration artifacts -- they were added
+afterward, as new capabilities in their own right; Section 2 (new
+features) covers them.
+
+### The nine-phase migration
+
+```{r}
+#| label: tbl-phases
+#| tbl-cap: >
+#|   The nine-phase, vertical-slice migration from monolith to modular
+#|   app, Session 22 to Session 35 (2026-06-03 to 2026-06-06). "Risk"
+#|   rates each phase's reversibility -- how costly a rollback would have
+#|   been -- not implementation difficulty.
+phases <- read.csv("data/migration-phases.csv", na.strings = "NA")
+phases$highlight <- c(
+  paste("Founder table added to the Summary Stats tab; kinship download",
+        "moved to the module-internal getKinshipMatrix(); dual-name",
+        "z-score lookup fix."),
+  paste("Mounted the GvAndBgDesc description tab; resolved an HTML-id",
+        "collision with the Genetic Value tab."),
+  paste("Re-exposed the genome-uniqueness threshold selector",
+        "(default 4); added a subset/filter export."),
+  "Genotype-file merge restored for both separate- and common-pedigree input modes.",
+  paste("Breeding Groups: per-group downloads, a per-group kinship view,",
+        "and a group selector (new \"Group Detail\" tab)."),
+  paste("Breeding Groups: seed-group pre-seeding; exposed three",
+        "previously inert controls; corrected a 100x default-iteration",
+        "drift (1000 -> 10)."),
+  paste("Focal-animal / LabKey pedigree build restored (live-EHR path;",
+        "verification was environmentally limited to a mocked seam)."),
+  paste("shinytest2 E2E harness enabled end-to-end -- expanded into a",
+        "4-session subplan (8a-8d, issue #39) plus a 7-part hardening",
+        "pass (8e-1..8e-7, issue #40, Session 37-50)."),
+  paste("Declared the modular app canonical: runGeneKeepR() now launches",
+        "it directly; inst/application/ (17 files) deleted;",
+        "runModularApp() became the soft-deprecated alias.")
+)
+phases$commit_display <- ifelse(
+  is.na(phases$commit_sha), "not quoted in source plan", phases$commit_sha
+)
+kableExtra::kbl(
+  phases[, c("phase", "highlight", "risk", "session", "commit_display",
+             "status")],
+  col.names = c("Phase", "What shipped", "Risk", "Session(s)",
+                "Commit sha", "Status"),
+  align = c("c", "l", "c", "c", "l", "l")
+) |>
+  kableExtra::kable_styling(full_width = FALSE) |>
+  kableExtra::column_spec(2, width = "26em")
+```
+
+@tbl-phases summarizes all nine phases. Phases 1, 2, and 9 are anchored
+to directly-verified commit shas; phases 3 through 7 are verified only by
+their `CHANGELOG.md` session-close-out entries -- the source migration
+plan does not quote a sha for those phases, and this article does not
+invent one. Phase 8 deserves a specific correction against an earlier,
+looser characterization of this migration ("phases 1-9 all marked
+DONE"): it was not a single-session parity phase like its neighbors. It
+expanded into its own four-session subplan (8a-8d, Session 31-34, issue
+#39, closed at Session 34) and, after that, a further seven-part
+hardening pass (8e-1 through 8e-7, Session 37-50, [issue #40](https://github.com/rmsharp/nprcgenekeepr/issues/40)) --
+documented in the subplan's own body text and in `CHANGELOG.md`, not
+visible from the migration plan's phase header alone. Phase 9, by
+contrast, was the irreversible step: declaring the modular app canonical
+and deleting the monolith outright, which is why it carries a HIGH risk
+rating even though it shipped in a single session.
+
+## Section 2 -- New Capabilities in 2.0.0 {#sec-features}
+
+With the modular architecture in place (@sec-modules), the same
+v1.0.8 -> v2.0.0 range also shipped new analytical capability, covered
+next. Between the v1.0.8 and v2.0.0 CRAN submissions, 47 GitHub issues closed
+inside the 512-commit range (2025-07-26 to 2026-07-09). Most of those
+closes were not new capability: fixes to existing behavior, issue-hygiene
+closes verifying functionality that already existed before the range
+([issue #34](https://github.com/rmsharp/nprcgenekeepr/issues/34), for example, found `qcStudbook()` already integrated into
+`modInput` from pre-migration work and simply closed the paper trail about
+five months later, with no code change), and internal process items (lint
+configuration, roxygen documentation harmonization, `codecov` config
+consolidation) that belong to no reader-facing section of this article.
+@tbl-features curates the 13 of 47 (28%) that shipped a capability an
+analyst or maintainer can actually use -- a genuinely new statistic, a
+new Shiny tab, or a materially different default -- each traced to its
+closing issue number and the session(s) that implemented it.
+
+```{r}
+#| label: tbl-features
+#| tbl-cap: >
+#|   Curated new capabilities shipped in the v1.0.8 -> v2.0.0 range: 13
+#|   of 47 closed GitHub issues judged genuinely feature-shaped, as of
+#|   2026-07-09.
+features <- read.csv("data/feature-highlights.csv", na.strings = "NA")
+kableExtra::kbl(
+  features[, c("feature", "issue", "session_range", "description")],
+  col.names = c("Capability", "Issue", "Session(s)", "What it does"),
+  align = c("l", "l", "c", "l")
+) |>
+  kableExtra::kable_styling(full_width = FALSE) |>
+  kableExtra::column_spec(1, width = "14em") |>
+  kableExtra::column_spec(4, width = "24em")
+```
+
+@tbl-features groups into three loose clusters, covered below: parent
+identification, Genetic Value Analysis uncertainty, and two new Shiny
+dashboards.
+
+### Parent identification grows principled and species-aware
+
+The single largest cluster of new capability -- five of the thirteen
+curated features -- reworked how the package identifies and reasons
+about parents. It started narrowly: [issue #31](https://github.com/rmsharp/nprcgenekeepr/issues/31) replaced a fixed
+dam-exclusion heuristic in `getPotentialParents()` with a window derived
+from each species' actual gestation length (Session 74, commit
+[`0eeee3f6`](https://github.com/rmsharp/nprcgenekeepr/commit/0eeee3f6)), and the **Potential Parents** Shiny tab ([issue #48](https://github.com/rmsharp/nprcgenekeepr/issues/48), Session
+80-81) turned that package-level logic into an app feature for the first
+time -- previously, `getPotentialParents()` had no UI at all.
+
+That work exposed a bigger gap: the package had no first-class notion of
+species. [Issue #46](https://github.com/rmsharp/nprcgenekeepr/issues/46) (Session 165-169) added a `species` pedigree column
+and made the gestation window and its UI defaults species-keyed instead
+of assuming rhesus macaque throughout. [Issue #73](https://github.com/rmsharp/nprcgenekeepr/issues/73) (Session 182-189) went
+further, adding a 14-species reproductive-parameter table (minimum
+breeding ages, gestation length) with user-configurable overrides,
+feeding both Genetic Value Analysis and the Potential Parents tab. Issue
+#119 (Session 303-307, five slices) closed the loop: a single flat
+`minParentAge = 2` default -- inconsistent with the species-aware
+breeding-age table introduced for #73 -- was replaced end to end with
+sex- and species-specific `minSireAge`/`minDamAge` floors across QC,
+candidate-matching, and the Shiny UI.
+
+### Genetic Value Analysis becomes more accurate about uncertainty
+
+Four features changed what Genetic Value Analysis reports, not by adding
+a new tab but by making existing statistics more accurate or more
+explicit about their own limits. [Issue #9](https://github.com/rmsharp/nprcgenekeepr/issues/9) (Session 176-181, three
+slices) stopped animals with an unknown parent from silently inflating
+their own mean kinship and falsely top-ranking as "unique" founders --
+their parentage is now classified and the displayed rank corrected
+accordingly. [Issue #76](https://github.com/rmsharp/nprcgenekeepr/issues/76) (Session 191-192), filed as a direct follow-on to
+#9, carried the same logic to genome uniqueness: a both-unknown-parentage
+"Undetermined" founder now reports `gu = 0` instead of a number with no
+real biological signal behind it. [Issue #82](https://github.com/rmsharp/nprcgenekeepr/issues/82) (Session 208-209) added a
+`fgSE` column next to `fg` in `reportGV()`'s output, so the founder
+genome equivalents estimate ships with its own sampling uncertainty
+rather than a bare point value. [Issue #118](https://github.com/rmsharp/nprcgenekeepr/issues/118) (Session 310-313, four
+slices) added the largest single statistic of the range: effective
+population size (Ne) estimates, computed three ways (gene diversity,
+demographic sex-ratio, and variance effective size) -- a colony-level
+number distinct from, and generally smaller than, simple census count.
+
+### Two new dashboards, and a long-dormant module unlocked
+
+The remaining features are new Shiny surfaces. [Issue #112](https://github.com/rmsharp/nprcgenekeepr/issues/112) (Session
+280-283, four slices) added the **Genetic Diversity** tab: a
+`modGeneticDiversity` module rendering a group x metric red/yellow/green
+heatmap that combines four independent signals (proportion of low
+genetic value, Indian-origin status, production status, and inbreeding
+risk) into one at-a-glance view per breeding group. [Issues #47](https://github.com/rmsharp/nprcgenekeepr/issues/47) and [#49](https://github.com/rmsharp/nprcgenekeepr/issues/49)
+(Session 83-84) mounted `modORIPReporting` -- a module that had existed,
+complete but never wired into the app, since the original Shiny-module
+migration (@sec-modules) -- as an ONPRC-only grant-reporting tab, gated
+by `shouldShowOripTab()` so it does not appear for other sites. Together
+with the Potential Parents tab above, three of the ten modules listed in
+@tbl-modules trace their existence, or their activation, to this
+section's work rather than to the migration itself.
+
+Two smaller fixes round out the curated set (@tbl-features): [issue #35](https://github.com/rmsharp/nprcgenekeepr/issues/35)
+(Session 68-69) extended the Pedigree Browser's focal-animal trim to
+include descendants, not just ancestors; and [issue #44](https://github.com/rmsharp/nprcgenekeepr/issues/44) (Session 70-72)
+replaced eight scattered literal `"U"`-prefix checks with a single
+configurable auto-generated-ID format, defaulting to the prior behavior
+unconfigured.
+
+## Section 3 -- Testing at Scale {#sec-testing}
+
+Growth in features (@sec-features) is only as trustworthy as the tests
+behind it. Across the same v1.0.8 -> v2.0.0 range, the test suite grew
+from 132 to 257 `.R` files under `tests/testthat/` -- test files plus the
+shared helpers, fixtures, and setup script that support them -- a 95%
+increase against a 512-commit range that itself roughly doubled the
+package's feature surface. More consequential than the raw count,
+though, is what changed in *kind*: a substantial browser-driven,
+end-to-end test harness went from present-but-inert to executable, and
+then from executable-but-shallow to exercising real data-bearing
+workflows.
+
+```{r}
+#| label: tbl-testing-growth
+#| tbl-cap: >
+#|   Test-suite growth at five checkpoints across the v1.0.8 -> v2.0.0
+#|   range, as of 2026-07-09. "Files in tests/testthat/" counts every
+#|   `.R` file in the directory (test files plus helpers/fixtures/setup);
+#|   "shinytest2/AppDriver-referencing" is the subset that names the
+#|   browser-testing package or its driver class.
+growth <- read.csv("data/testing-growth.csv")
+growth$commit_display <- substr(growth$sha, 1, 8)
+kableExtra::kbl(
+  growth[, c("label", "date", "commit_display", "test_file_count",
+             "shinytest2_referencing_files")],
+  col.names = c("Checkpoint", "Date", "Commit", "Files in tests/testthat/",
+                "shinytest2/AppDriver-referencing"),
+  align = c("l", "c", "l", "r", "r")
+) |>
+  kableExtra::kable_styling(full_width = FALSE)
+```
+
+```{r}
+#| label: fig-testing-growth
+#| fig-cap: >
+#|   Test-suite growth over the same five checkpoints as @tbl-testing-growth.
+#|   The shinytest2/AppDriver-referencing count is near-zero relative to
+#|   the total and is plotted against the same axis for comparison, not
+#|   because it is negligible -- see prose for what that subset represents.
+#| fig-width: 7
+#| fig-height: 4
+growth$label <- factor(growth$label, levels = growth$label)
+growth_long <- data.frame(
+  label = rep(growth$label, 2),
+  count = c(growth$test_file_count, growth$shinytest2_referencing_files),
+  series = rep(c("Files in tests/testthat/", "shinytest2/AppDriver-referencing"),
+               each = nrow(growth))
+)
+ggplot2::ggplot(growth_long, ggplot2::aes(x = label, y = count, color = series,
+                                           group = series)) +
+  ggplot2::geom_line(linewidth = 0.9) +
+  ggplot2::geom_point(size = 2.2) +
+  ggplot2::geom_text(ggplot2::aes(label = count), vjust = -1, size = 3.2,
+                      show.legend = FALSE) +
+  ggplot2::scale_color_manual(values = c("Files in tests/testthat/" = "#3B6E8F",
+                                          "shinytest2/AppDriver-referencing" = "#C9622C")) +
+  ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0.05, 0.12))) +
+  ggplot2::labs(x = NULL, y = "File count", color = NULL) +
+  ggplot2::theme_minimal(base_size = 11) +
+  ggplot2::theme(legend.position = "bottom",
+                 axis.text.x = ggplot2::element_text(angle = 20, hjust = 1))
+```
+
+@tbl-testing-growth and @fig-testing-growth ground the growth claim in
+five checkpoints rather than just the two endpoints: the v1.0.8 CRAN
+submission ([`4548aa1b`](https://github.com/rmsharp/nprcgenekeepr/commit/4548aa1b), 2025-07-25, before this project adopted the
+SESSION_RUNNER methodology), the start of Session 1 ([`6fd87749`](https://github.com/rmsharp/nprcgenekeepr/commit/6fd87749),
+2026-05-30), the two commits bracketing Phase 9 of the module migration
+(@sec-modules), and the v2.0.0 CRAN submission ([`8ca8bb24`](https://github.com/rmsharp/nprcgenekeepr/commit/8ca8bb24), 2026-07-09).
+The shinytest2/AppDriver-referencing count is already 25 files at
+Session 1's start -- that scaffold predates this project's methodology
+entirely; it was built on the module branch (commit [`7da01afe`](https://github.com/rmsharp/nprcgenekeepr/commit/7da01afe)) during
+the same pre-Session-1 work that produced the modular app itself, but,
+as the next section describes, it did not run.
+
+### From a dormant scaffold to an executable, hardened harness
+
+A shinytest2 browser end-to-end suite existed in the tree from early in
+the module migration, but it did not work: the driver helper functions
+its 23 test files called -- `create_app_driver()`,
+`navigate_to_tab()`, `get_html_safe()`, and four others -- were never
+defined. Every call would have thrown "could not find function" if the
+suite had run; instead, an opt-in gate added at Session 19
+(`create_test_app()`) made it skip cleanly by default, so the gap was
+invisible rather than failing loudly. [Issue #39](https://github.com/rmsharp/nprcgenekeepr/issues/39) tracked closing it.
+
+A Session 30 planning pass found the gap was larger than the parent
+migration plan's Phase 8 had assumed -- 6 undefined helpers plus one
+undefined constant, not the 3 the plan named -- and decomposed the work
+into a four-session sub-plan
+(`docs/planning/phase8-e2e-harness-subplan.md`, sub-phases 8a-8d,
+Session 31-34). 8a defined the helpers browser-free; 8b proved Chrome
+and the modular app itself would boot under `shinytest2`, the first-ever
+browser run, and rewired CI to run the suite on a nightly schedule plus
+manual dispatch rather than per pull request (browser tests are slower
+and more flake-prone than the existing fast unit CI, which remained the
+per-PR gate); 8c and 8d brought the remaining 20 files to
+green-or-clean-skip. [Issue #39](https://github.com/rmsharp/nprcgenekeepr/issues/39) closed at the end of Session 34
+(2026-06-06) on the sub-plan's own explicit completion bar: **executable
+and CI-green opt-in**, not behavioral validation.
+
+That bar was deliberate, not an oversight. The sub-plan documented,
+in the same session that closed #39, why an executable suite does not
+by itself mean the suite validates behavior: `navbarPage` renders every
+tab's static markup into the DOM at boot, hidden by CSS, so the
+suite's dominant pattern -- navigate to a tab, then `grepl()` a keyword
+against the whole page body -- passes once the app merely boots,
+regardless of which tab is actually selected. Coverage at the end of
+8d was boot-level. A follow-on issue, #40, was filed at that same
+session to close that specific gap.
+
+Closing #40 took a further seven-slice pass (8e-1 through 8e-7,
+Session 37-50, 2026-06-07 to 2026-06-10) that replaced boot-level
+`expect_true(TRUE)` tautologies -- 41 of them, suite-wide -- with
+assertions tied to the actually-selected pane, fixed a wrong-tab
+navigation defect in the Summary Statistics family (7 of 8 tests
+targeted "Genetic Value Analysis" instead of their own tab), and, in
+its last three slices (8e-6a/b/c), rewired the pedigree-upload,
+Genetic Value Analysis, and breeding-group E2E blocks to drive the
+package's real analytical pipelines end to end rather than asserting
+against static markup. A final slice, 8e-7 (Session 50), addressed an
+operational flake rather than a behavioral gap: running all 23 files in
+one CI process had produced roughly one transient Chrome/driver error
+per five full-tier runs; partitioning the run into 13 per-module groups,
+each a fresh R process, capped any single process at three files.
+[Issue #40](https://github.com/rmsharp/nprcgenekeepr/issues/40) closed the following day, 2026-06-11.
+
+As of 2026-07-09, both issues are closed and the harness the sub-plan
+describes is the one currently checked in: `.github/workflows/shinytest2.yaml`
+runs nightly (07:00 UTC) and on manual dispatch, opts every test in via
+`NPRC_RUN_E2E`, and runs the per-module partition 8e-7 added -- distinct
+from `R-CMD-check.yaml` and `test-coverage.yaml`, which remain the fast,
+per-pull-request gate. That partition was exact against the 23
+`test-{app,e2e}-*.R` files that existed when 8e-7 closed (2026-06-11), but
+was not kept current as the suite grew: two more E2E files were added
+afterward -- `test-e2e-potential-parents-module.R` (Session 82, [issue #48](https://github.com/rmsharp/nprcgenekeepr/issues/48))
+and `test-e2e-orip-module.R` (Session 86, [issues #47](https://github.com/rmsharp/nprcgenekeepr/issues/47)/[#49](https://github.com/rmsharp/nprcgenekeepr/issues/49)), covering
+exactly the two new Shiny tabs @sec-features describes -- without a
+matching group added to the workflow. By 2026-07-08 the opt-in tier held
+26 files against 13 groups covering only 24 of them, and those two
+orphaned files never ran in CI.
+
+Session 337 (2026-07-09) closed that gap under the same TDD discipline
+this section describes: a new regression test
+(`tests/testthat/test_shinytest2_workflow_coverage.R`) parses the
+workflow's group array and asserts every tracked file matches exactly one
+group; two groups were added for the previously orphaned files; and the
+workflow's header comment was rewritten to state the invariant without a
+hardcoded file/group count, so it cannot go stale the same way again. A
+live `workflow_dispatch` run confirmed the fix on real infrastructure --
+all 15 groups green, including the two new ones
+(run [29057393786](https://github.com/rmsharp/nprcgenekeepr/actions/runs/29057393786),
+commit [`c5ccf69b`](https://github.com/rmsharp/nprcgenekeepr/commit/c5ccf69b)).
+
+## Section 4 -- An AI-Assisted Development Process {#sec-methodology}
+
+Sections 1 through 3 describe *what* changed between v1.0.8 and v2.0.0. This
+section describes *how*: every session in that work was directed by
+**Claude Code** (Claude CLI) operating under a written protocol --
+`SESSION_RUNNER.md`, `SAFEGUARDS.md`, and this package's own `CLAUDE.md` --
+rather than open-ended prompting. Within the same 512-commit range as
+Sections 1-3, **328 numbered sessions** (Session 1, [`6fd87749`](https://github.com/rmsharp/nprcgenekeepr/commit/6fd87749), 2026-05-30,
+through Session 328, the exact v2.0.0-submission commit itself, [`8ca8bb24`](https://github.com/rmsharp/nprcgenekeepr/commit/8ca8bb24))
+account for 502 of those commits; the other 10 predate the methodology --
+informal module-branch experimentation plus the framework's own bootstrap
+commit ([`299060c0`](https://github.com/rmsharp/nprcgenekeepr/commit/299060c0), 2026-04-02).
+
+```{r}
+#| label: tbl-process-metrics
+#| tbl-cap: >
+#|   Engineering-process metrics, as extracted at the Phase A data freeze
+#|   (this project's term for the point mid-drafting when this article's
+#|   own numeric extractions were locked, Session 331, 2026-07-09).
+#|   `CHANGELOG.md`, `PROJECT_LEARNINGS.md`,
+#|   `HANDOFFS.md`, and `SESSION_NOTES.md` are live, append-only files that
+#|   kept growing in every session after this extraction ran -- including
+#|   the four sessions (331-334) that drafted the rest of this article --
+#|   so these counts are a snapshot, not this article's own present state.
+metrics <- read.csv("data/process-metrics.csv")
+metrics$label <- c(
+  "Sessions in range (Session 1 -> Session 328)",
+  "Pre-methodology commits in range",
+  "Session-1-to-range-end commits",
+  "Total commits in range",
+  "CHANGELOG.md ledger entries",
+  "PROJECT_LEARNINGS.md entries",
+  "Complete HANDOFFS.md receipts",
+  "Self-assessments reporting 0 stakeholder corrections",
+  "Self-assessments reporting >=1 stakeholder correction"
+)
+kableExtra::kbl(
+  metrics[, c("label", "value")],
+  col.names = c("Metric", "Count"),
+  align = c("l", "r")
+) |>
+  kableExtra::kable_styling(full_width = FALSE)
+```
+
+### A written protocol, not open-ended prompting
+
+Each session follows the same three-phase shape. **Orient** reads
+`SAFEGUARDS.md` and `SESSION_NOTES.md`, checks open GitHub issues, runs a
+project health dashboard (`methodology_dashboard.py`), and reconciles
+`CHANGELOG.md`/`HANDOFFS.md` against `git log` for any commit a prior
+session left unrecorded -- then reports what it found and stops for
+direction; no work begins before the owner responds. **Execute** commits to
+exactly **one deliverable** per session ("1 and done") and claims it in
+`SESSION_NOTES.md`/`HANDOFFS.md` before any technical work starts, so a
+session that crashes mid-task still leaves a trace. **Close out** evaluates
+the previous session's handoff, self-assesses against a written score,
+records new learnings, writes the next session's handoff, and appends a
+dated entry to `CHANGELOG.md` before committing. `SESSION_RUNNER.md` names
+the failure to do that last step **"unrecorded action"** -- one of 27 named,
+numbered failure modes the protocol maintains, each added after a session
+was observed failing that specific way.
+
+### Strict TDD, gated by explicit confirmation
+
+For production R code -- not this article's own drafting sessions, see
+below -- `CLAUDE.md`'s Development Process Contract requires **strict
+red-green-refactor TDD**: RED writes only failing tests, no implementation
+code; GREEN writes the minimum implementation that passes them, no new
+functionality; REFACTOR improves structure with no behavior change, all
+tests still passing. @fig-tdd-cycle diagrams the cycle. What makes it more
+than a style guideline is the enforcement mechanism: the assistant must
+declare its current phase at the top of every response, and every phase
+transition (`PRE-RED->RED`, `RED->GREEN`, `GREEN->REFACTOR`) is gated by a
+structured `AskUserQuestion` prompt -- not a prose question -- with a header
+of the exact form `TDD: <FROM>-><TO>`, an option spelling out the concrete
+next-phase actions and verification, and an explicit hold/alternative
+option. Skipping a phase, or writing implementation code during RED, is a
+declared protocol violation the assistant must acknowledge and correct.
+
+::: {#fig-tdd-cycle}
+```{mermaid}
+stateDiagram-v2
+    [*] --> RED: AskUserQuestion gate (PRE-RED -> RED)
+    RED --> GREEN: AskUserQuestion gate (RED -> GREEN)
+    GREEN --> REFACTOR: AskUserQuestion gate (GREEN -> REFACTOR)
+    REFACTOR --> [*]
+
+    note right of RED
+      Write failing tests only.
+      No implementation code.
+    end note
+    note right of GREEN
+      Minimum code to pass.
+      No new functionality, no refactor.
+    end note
+    note right of REFACTOR
+      Improve structure only.
+      No behavior change; tests stay green.
+    end note
+```
+
+The RED -> GREEN -> REFACTOR cycle `CLAUDE.md`'s Development Process
+Contract requires for production R code, with an explicit `AskUserQuestion`
+confirmation gate at every transition. Documentation and article-drafting
+sessions -- including the three sessions that produced Sections 1-3 and the
+session that produced this one -- are an explicitly declared exception (TDD
+phase "N/A", stated at the top of every response) rather than a silent
+omission.
+:::
+
+This article's own drafting sessions illustrate the exception rather than
+the rule: none touched `R/` or `tests/`, so each declared **TDD phase: N/A**
+explicitly in every response instead of running the cycle against prose it
+does not apply to -- a small instance of the same discipline extending to
+correctly scoping *when* a rule applies, not applying it uniformly
+regardless of fit.
+
+### Self-assessment and a durable correction ledger
+
+@fig-self-score-trend plots every complete `HANDOFFS.md` self-assessment
+score against session, for the sessions with one available.
+
+```{r}
+#| label: fig-self-score-trend
+#| fig-cap: >
+#|   Session self-assessed scores (0-10 scale, `HANDOFFS.md`'s `self_score`
+#|   field), the 7 sessions with a complete receipt as of the Phase A data
+#|   freeze. **Partial window, not a trend across the range:** receipts
+#|   began at Session 324, one session before the `CHANGELOG.md`
+#|   ledger-format resolution (Session 325) -- these 7 sessions are roughly
+#|   2% of the 328-session range, and Sessions 329-330 were committed after
+#|   the range's own end commit ([`8ca8bb24`](https://github.com/rmsharp/nprcgenekeepr/commit/8ca8bb24)), on the same calendar day. Mean
+#|   score across the 7: 8.57.
+#| fig-width: 7
+#| fig-height: 4
+scores <- read.csv("data/self-score-trend.csv")
+scores$session_num <- as.integer(sub("^S", "", scores$session))
+scores <- scores[order(scores$session_num), ]
+scores$session <- factor(scores$session, levels = scores$session)
+ggplot2::ggplot(scores, ggplot2::aes(x = session, y = self_score, group = 1)) +
+  ggplot2::geom_line(linewidth = 0.9, color = "#3B6E8F") +
+  ggplot2::geom_point(size = 2.5, color = "#3B6E8F") +
+  ggplot2::geom_text(ggplot2::aes(label = self_score), vjust = -1.2, size = 3.2) +
+  ggplot2::scale_y_continuous(limits = c(0, 10.5), breaks = seq(0, 10, 2)) +
+  ggplot2::labs(x = NULL, y = "Self-assessed score (0-10)") +
+  ggplot2::theme_minimal(base_size = 11)
+```
+
+The mechanism behind that self-scoring is a durable receipt, not a spoken
+summary: each session writes a `HANDOFFS.md` block recording what it did,
+what is next, key files, gotchas, and its own `self_score`. Separately,
+the *next* session reads that receipt and records its own
+`predecessor_score` for the handoff's quality before starting its own
+work -- two distinct numbers, not the same score computed twice -- visible in
+@tbl-process-metrics as 7 complete receipts against 328 sessions in range
+(the receipt requirement itself dates to Session 324). The same
+append-only discipline extends to `CHANGELOG.md`, and this article's own
+drafting sessions are a live, verifiable example of it working: each of
+four consecutive sessions in this article's drafting -- the three that
+wrote Sections 1-3 plus the Phase A evidence-freeze session immediately
+before them -- closed out with a `commit: pending`
+placeholder in its own `HANDOFFS.md` receipt (a session cannot know its own
+close-out commit's sha before making that commit), corrected the
+placeholder with one small follow-up commit once the sha existed, and --
+because that follow-up commit landed after the session's own `CHANGELOG.md`
+entry was already written -- the *following* session's Orient step caught
+and logged it in turn: [`cc0f7798`](https://github.com/rmsharp/nprcgenekeepr/commit/cc0f7798) (Session 331's fix, logged by
+Session 332), [`2278b46f`](https://github.com/rmsharp/nprcgenekeepr/commit/2278b46f) (Session 332's fix, logged by Session 333),
+[`ee690776`](https://github.com/rmsharp/nprcgenekeepr/commit/ee690776) (Session 333's fix, logged by Session 334), and [`5f0b81d2`](https://github.com/rmsharp/nprcgenekeepr/commit/5f0b81d2)
+(Session 334's fix, logged by this article's fifth session). Four
+consecutive sessions produced the same small gap; four consecutive Orient
+steps caught it.
+
+`PROJECT_LEARNINGS.md` -- 305 dated entries as of the same Phase A freeze,
+each naming a concrete finding, file, mechanism, and verdict, plus a
+glossary of named recurring reflexes cited by tag -- is this project's
+running record of what went wrong and what fixed it. `SESSION_RUNNER.md`
+maintains a parallel, numbered catalog of 27 named failure modes at the
+methodology level -- among them "Eager to start" (skipping orientation),
+"Minimal handoff" (a technically-present but functionally useless handoff),
+and "Unrecorded action" (the gap the receipt-sha backfills above
+illustrates) -- each added after a session was observed failing that way.
+Neither catalog is edited to remove an entry once a session outgrows it;
+corrections accumulate rather than get erased.
+
+@tbl-process-metrics's stakeholder-correction figures are the least precise
+numbers in this section, and are presented with that caveat rather than
+smoothed over: across `SESSION_NOTES.md`'s self-assessments, 269 explicit
+mentions report zero stakeholder corrections and 2 report exactly one --
+99.3% zero, by mention count. That is a text-mention proxy, not an
+independently re-verified per-session audit; a session's own self-assessment
+is not an external check on itself. Read it as "the sessions that stated a
+number mostly stated zero," not as an audited defect rate.
+
+## Conclusion {#sec-conclusion}
+
+The v1.0.8 -> v2.0.0 effort completed a modular Shiny rewrite -- begun as
+an unfinished scaffold only months before this migration, not something
+the project carried for most of its life -- and retired the monolith it
+replaced. Alongside that, it shipped thirteen curated new analysis
+capabilities, grew the test suite from 132 to 257 files while turning its
+browser-driven layer from present-but-inert into executable and
+behavior-verifying, and did all of it under a written, gated development
+process rather than ad hoc iteration.
+
+For maintainers and collaborators, the practical implications are concrete.
+New features have exactly one Shiny implementation to extend, not two to
+keep in sync (@sec-modules). The `R/mod*.R` module boundary is now the unit
+of both development and testing (@sec-modules, @sec-testing). And the
+session-by-session record in `CHANGELOG.md`, `PROJECT_LEARNINGS.md`, and
+`HANDOFFS.md` is a navigable history of *why* each change was made, not
+just *what* changed (@sec-methodology) -- a resource future sessions, and
+future maintainers, can read directly rather than reconstruct from commit
+messages alone.
+
+This work has been supported in part by NIH grants P51 RR13986 to the
+Southwest National Primate Research Center and P51 OD011092 to the Oregon
+National Primate Research Center.

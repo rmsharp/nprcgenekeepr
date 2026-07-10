@@ -22,6 +22,7 @@
     <li><a class="dropdown-item" href="articles/a3manual.html">Genetic Management Tools Manual</a></li>
     <li><a class="dropdown-item" href="articles/age-sex-pyramid.html">Age-Sex Pyramid Plots</a></li>
     <li><a class="dropdown-item" href="articles/breeding-group-formation.html">Forming Breeding Groups</a></li>
+    <li><a class="dropdown-item" href="articles/colony-manager-guide.html">nprcgenekeepr: Purpose, Approach, and a Colony Manager's Guide to Practice</a></li>
     <li><a class="dropdown-item" href="articles/ColonyManagerTutorial.html">GeneKeepR: A Colony Manager's Tutorial</a></li>
     <li><a class="dropdown-item" href="articles/engineering-the-2.0.0-release.html">Engineering nprcgenekeepr 2.0.0: Modular Architecture, Expanded Capability, and an AI-Assisted Development Process</a></li>
     <li><a class="dropdown-item" href="articles/fg-se-validation.html">Validating the Founder-Genome-Equivalent Standard Error</a></li>
@@ -69,6 +70,99 @@
 </div>
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
+<div class="section level3">
+<h3 id="id_2026-07-10--ad-hoc-s348-handoffsmd-receipt-commit-sha-backfill-closed-same-session">2026-07-10 · [ad hoc] S348 HANDOFFS.md receipt commit-sha backfill, closed same-session<a class="anchor" aria-label="anchor" href="#id_2026-07-10--ad-hoc-s348-handoffsmd-receipt-commit-sha-backfill-closed-same-session"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Filled in this session’s own <code>HANDOFFS.md</code> receipt <code>commit: pending</code> placeholder with the real close-out commit sha (<code>2ba6c204</code>), matching the S331-S347 precedent of closing this within the same session rather than leaving it for the next session’s Phase 0 reconcile.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-07-10--ad-hoc-executed-document-2-phase-c-drafted-the-colony-manager-guide-article-two-new-findings-session-348">2026-07-10 · [ad hoc] Executed Document 2 Phase C: drafted the colony-manager-guide article, two new findings (Session 348)<a class="anchor" aria-label="anchor" href="#id_2026-07-10--ad-hoc-executed-document-2-phase-c-drafted-the-colony-manager-guide-article-two-new-findings-session-348"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> <code>docs/planning/document2-colony-manager-guide-plan.md</code> §6 Phase C — drafted <code>vignettes/articles/colony-manager-guide.qmd</code> (Abstract, Introduction, Section 1 adapted from <code>_introduction.Rmd</code>, Section 2 adapted from <code>_summary_of_major_functions.Rmd</code> with an original T1 function-group table and F1 Mermaid pipeline diagram, Section 3 ported/modernized from <code>ColonyManagerTutorial.Rmd</code> using Phase B’s screenshots and Phase A’s re-derived N1/N2/N3/N4 numbers verbatim, Conclusion). Owner resolved two pre-drafting scope decisions via <code>AskUserQuestion</code>: Input-tab narrates CSV with an inline Excel-bug caveat; Breeding-Groups subsection covers None/Harem fully, omits the Custom-ratio numeric demo (N7).</li>
+<li>
+<strong>Extended <code>vignettes/articles/colony-manager-guide-screenshots.R</code></strong> with 2 more capture blocks (owner-approved via <code>AskUserQuestion</code>, after finding Phase A’s tab-coverage decision — both new tabs in scope — had no matching entry in Phase B’s 34-screenshot inventory, since that inventory was built from <code>ColonyManagerTutorial.Rmd</code>’s own figure references, which predate both tabs): <code>genetic_diversity_heatmap.png</code> and <code>potential_parents_results.png</code>. Re-ran the full script; 70/70 steps succeeded.</li>
+<li>
+<strong>A third new finding, recorded to <code>BACKLOG.md</code> (not fixed this session):</strong> the shipped <code>data(examplePedigree)</code> has no <code>fromCenter</code> (colony-origin) column, which <code>modPotentialParentsServer</code> requires — confirmed directly (<code>"fromCenter" %in% names(examplePedigree)</code> is <code>FALSE</code>) — so the Potential Parents tab cannot show populated results against this walkthrough’s standard example data; the article documents the app’s own correctly-degraded warning response instead of fabricating a populated example.</li>
+<li>Corrected two additional stale claims from <code>ColonyManagerTutorial.Rmd</code>, found via firsthand source verification rather than trusting the plan’s summary table: the GVA threshold <code>selectInput</code> now offers 1-5 (default 4), not the tutorial’s stale “0-3”; the results table’s actual column is named <code>value</code>, not “Value Designation” (no <code>colnames=</code> override exists in <code>modGeneticValueServer</code>’s <code>renderDT</code>).</li>
+<li>
+<code>quarto render colony-manager-guide.qmd</code> (isolated) succeeded cleanly — zero missing images, zero unresolved cross-references. Spot-checked Document 1 still renders.</li>
+<li>Updated <code>BACKLOG.md</code> (Document 2 item → Phase D; added the <code>fromCenter</code> finding). Added <code>PROJECT_LEARNINGS.md</code> Learning 321.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-07-10--ad-hoc-s347-handoffsmd-receipt-commit-sha-backfill-closed-same-session">2026-07-10 · [ad hoc] S347 HANDOFFS.md receipt commit-sha backfill, closed same-session<a class="anchor" aria-label="anchor" href="#id_2026-07-10--ad-hoc-s347-handoffsmd-receipt-commit-sha-backfill-closed-same-session"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Filled in this session’s own <code>HANDOFFS.md</code> receipt <code>commit: pending</code> placeholder with the real close-out commit sha (<code>9d9479ad</code>), matching the S331-S346 precedent of closing this within the same session rather than leaving it for the next session’s Phase 0 reconcile.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-07-10--ad-hoc-executed-document-2-phase-b-screenshot-regeneration--two-new-bug-discoveries-session-347">2026-07-10 · [ad hoc] Executed Document 2 Phase B: screenshot regeneration + two new bug discoveries (Session 347)<a class="anchor" aria-label="anchor" href="#id_2026-07-10--ad-hoc-executed-document-2-phase-b-screenshot-regeneration--two-new-bug-discoveries-session-347"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> <code>docs/planning/document2-colony-manager-guide-plan.md</code> §6 Phase B — built the checked-in <code><a href="https://rstudio.github.io/shinytest2/reference/AppDriver.html" class="external-link">shinytest2::AppDriver</a></code> capture script (<code>vignettes/articles/colony-manager-guide-screenshots.R</code>) and regenerated all 34 screenshots per Phase A’s gap inventory (25 kept-name in-place, 4 new, 5 correctly left untouched as non-app-UI spreadsheet illustrations — 3 more identified this session, correcting Phase A’s own disposition for them). Deleted the 8 confirmed- orphaned pre-rename screenshot duplicates after re-confirming zero references.</li>
+<li>
+<strong>Live numeric reproductions confirmed matching Phase A exactly:</strong> 3694 QC’d records (N1), 54-animal focal trim (N2), 962-animal large-focal-group trim (N3, via the shipped <code>focalAnimals</code> example object), 332 living animals (N4).</li>
+<li>
+<strong>Two new production bugs discovered and recorded to <code>BACKLOG.md</code> (not fixed this session, out of Phase B scope):</strong> (1) HIGH priority — <code>R/modInput.R</code>’s <code>readDataFile()</code> silently corrupts sire/dam data on Excel upload (<code><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">readxl::read_excel</a></code> with no <code>col_types</code> infers <code>logical</code> from early blank rows, then nulls every later alphanumeric ID — confirmed 100% of non-blank sire values lost on a round-trip of the shipped example pedigree); this is the same path any real user’s Excel upload goes through. (2) <code><a href="reference/modBreedingGroupsUI.html">modBreedingGroupsUI()</a></code>’s “Custom” sex-ratio option has no accompanying numeric-value input anywhere in the UI, silently behaving like “None”.</li>
+<li>Updated <code>BACKLOG.md</code> (Document 2 item → Phase C; added the two new bug items). Added <code>PROJECT_LEARNINGS.md</code> Learning 320.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-07-10--ad-hoc-s346-handoffsmd-receipt-commit-sha-backfill-closed-same-session">2026-07-10 · [ad hoc] S346 HANDOFFS.md receipt commit-sha backfill, closed same-session<a class="anchor" aria-label="anchor" href="#id_2026-07-10--ad-hoc-s346-handoffsmd-receipt-commit-sha-backfill-closed-same-session"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Filled in this session’s own <code>HANDOFFS.md</code> receipt <code>commit: pending</code> placeholder with the real close-out commit sha (<code>4941b2e8</code>), matching the S331-S345 precedent of closing this within the same session rather than leaving it for the next session’s Phase 0 reconcile.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-07-10--ad-hoc-executed-document-2-phase-a-screenshot-gap-inventory--numeric-claims-re-derivation-session-346">2026-07-10 · [ad hoc] Executed Document 2 Phase A: screenshot gap inventory + numeric claims re-derivation (Session 346)<a class="anchor" aria-label="anchor" href="#id_2026-07-10--ad-hoc-executed-document-2-phase-a-screenshot-gap-inventory--numeric-claims-re-derivation-session-346"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> <code>docs/planning/document2-colony-manager-guide-plan.md</code> §3A/§6 — resolved §11 decisions 1/2/5 (tab coverage = both new tabs; screenshot method = automated <code>shinytest2</code>; title/slug confirmed) via <code>AskUserQuestion</code>; built the full 34-screenshot gap inventory against the current modular UI (finding real functional changes, not just relabeling, in 4 of 6 covered tabs); re-derived all 7 example-data-dependent numeric claims via live <code>Rscript -e</code> verification against <code>data(examplePedigree)</code> (3 reproduce exactly, 2 not-re-verifiable/removed, 2 deferred to Phase C live capture). Flagged 8 orphaned pre-rename screenshots for Phase B deletion. Updated <code>BACKLOG.md</code>’s Document 2 item to point at Phase B. Added <code>PROJECT_LEARNINGS.md</code> Learning 319.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-07-10--ad-hoc-s345-handoffsmd-receipt-commit-sha-backfill-closed-same-session">2026-07-10 · [ad hoc] S345 HANDOFFS.md receipt commit-sha backfill, closed same-session<a class="anchor" aria-label="anchor" href="#id_2026-07-10--ad-hoc-s345-handoffsmd-receipt-commit-sha-backfill-closed-same-session"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Filled in this session’s own <code>HANDOFFS.md</code> receipt <code>commit: pending</code> placeholder with the real close-out commit sha (<code>14fd5382</code>) — the same self-correction previous sessions (S331-S336, S339-S344) each needed, closed within the same session rather than left for the next session’s Phase 0 reconcile to catch and backfill.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-07-10--ad-hoc-planned-document-2-portmodernize-colonymanagertutorialrmd-session-345">2026-07-10 · [ad hoc] Planned Document 2: port/modernize ColonyManagerTutorial.Rmd (Session 345)<a class="anchor" aria-label="anchor" href="#id_2026-07-10--ad-hoc-planned-document-2-portmodernize-colonymanagertutorialrmd-session-345"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> <code>docs/planning/document2-colony-manager-guide-plan.md</code> — one planning document for the long-deferred “Document 2” BACKLOG item (package purpose, how it addresses that purpose, how to put it into use), following <code>RESEARCH_DOCUMENTATION_WORKSTREAM.md</code> (adapted, matching Document 1’s precedent).</li>
+<li>
+<strong>Owner scope decisions (via <code>AskUserQuestion</code>, twice):</strong> (1) article form = new <code>vignettes/articles/*.qmd</code>, audience = primate-center bioinformatics/colony managers;
+<ol start="2" style="list-style-type: decimal"><li>content strategy = <strong>port and modernize <code>ColonyManagerTutorial.Rmd</code></strong> rather than draft from scratch, after this session’s research found the target content already exists.</li>
+</ol></li>
+<li>
+<strong>Discovery that reshaped the plan:</strong> a broader <code>vignettes/</code> sweep (beyond the current public-docs surface) found <code>vignettes/a3manual.Rmd</code> + 13 <code>vignettes/manual_components/*.Rmd</code> (CRAN-shipped, actively maintained, sharing <code>README.Rmd</code>’s own source for Introduction/Summary-of-Functions) and <code>vignettes/ColonyManagerTutorial.Rmd</code> (748 lines, screenshot-illustrated, titled for the exact chosen audience, actively kept in sync with API renames through 2026-07-07 — but <code>.Rbuildignore</code>d and so invisible on CRAN and the pkgdown site; its screenshots, <code>vignettes/shiny_app_use/</code>, last regenerated 2024-12-16, predate the Shiny-module migration Session 22-35).</li>
+<li>
+<strong>Separate finding, flagged not fixed:</strong> <code>inst/_pkgdown.yml</code>’s curated Reference-page grouping is dead configuration (confirmed via <code>pkgdown:::pkgdown_config_path</code>, shadowed by the root <code>_pkgdown.yml</code>; confirmed live on the deployed site via <code>WebFetch</code> — a flat “All functions” list only) and independently stale (64 of 182 current <code>NAMESPACE</code> exports missing from its list).</li>
+<li>
+<strong>BACKLOG.md updated:</strong> replaced the “Plan Document 2” item with an “Execute Document 2 plan (Phase A)” item; added a new item for a user-flagged gap in Document 1’s Testing-at-Scale section (conflates test-file-count growth with actual coverage/ test-case/E2E improvement — no <code>covr</code>/Codecov percentage or test-case count ever cited); added a new item for the <code>inst/_pkgdown.yml</code> dead-config finding.</li>
+<li>
+<strong><code>PROJECT_LEARNINGS.md</code> Learning 318</strong> added (check the full <code>vignettes/</code> tree, not just the public surface, before scoping a new-document plan as fresh drafting); <code>CLAUDE.md</code>’s learnings count bumped 317→318.</li>
+<li>No <code>R/</code>/<code>tests/</code> touched; TDD Phase N/A (planning/documentation session).</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-07-10--ad-hoc-s344-handoffsmd-receipt-commit-sha-backfill-closed-same-session">2026-07-10 · [ad hoc] S344 HANDOFFS.md receipt commit-sha backfill, closed same-session<a class="anchor" aria-label="anchor" href="#id_2026-07-10--ad-hoc-s344-handoffsmd-receipt-commit-sha-backfill-closed-same-session"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Filled in this session’s own <code>HANDOFFS.md</code> receipt <code>commit: pending</code> placeholder with the real close-out commit sha (<code>6bd0d9fb</code>) — the same self-correction previous sessions (S331-S336, S339, S340, S341, S342, S343) each needed, closed within the same session rather than left for the next session’s Phase 0 reconcile to catch and backfill.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-07-10--ad-hoc-pruned-the-stale-backlogmd-issue-40-open-item-session-344">2026-07-10 · [ad hoc] Pruned the stale BACKLOG.md “issue #40 open” item (Session 344)<a class="anchor" aria-label="anchor" href="#id_2026-07-10--ad-hoc-pruned-the-stale-backlogmd-issue-40-open-item-session-344"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Owner picked BACKLOG priority #1 (“Strengthen the shinytest2 E2E assertions + CI stability,” GitHub issue #40). Before claiming the session, verified the premise via <code>gh issue view 40</code> and found it <strong>CLOSED</strong> (2026-06-11) — not open as <code>BACKLOG.md</code> claimed. Reported this to the owner via <code>AskUserQuestion</code> instead of starting phantom work; owner chose to prune the stale item as this session’s deliverable.</li>
+<li>
+<strong>Verified DONE, not assumed:</strong> <code>gh pr view 41</code> confirms PR #41 (issue #40’s work) <code>MERGED</code> 2026-06-11, merge commit <code>0363ffe3</code>, present in <code>git log</code>. Grepped the current test suite for <code>expect_true(TRUE)</code>: the 11 hits are all inside historical <code># REVIVE: was expect_true(TRUE)...</code> comments documenting the fix, zero live tautologies remain. <code>test-e2e-summary-statistics-module.R</code> now targets <code>"Summary Statistics"</code> in all 8 tests (the issue’s “7/8 wrong-tab” defect is fixed). <code>.github/workflows/shinytest2.yaml</code> runs the E2E tier in per-module fresh-process groups (the Chrome process-count flake mitigation) — a later CI-coverage gap in that grouping (2 files unmatched by any group regex) was also independently confirmed already closed, by Session 337 (2026-07-08/09, <code>test_shinytest2_workflow_coverage.R</code> regression guard + 15 green groups). This staleness had been independently flagged — but left unfixed as out-of-scope — by at least 3 prior documentation/audit sessions (the <code>v2-transformation-article-plan.md</code> execution pass, and the article’s own claim-audit passes around S330-S334); this session is the first to actually correct <code>BACKLOG.md</code> itself.</li>
+<li>
+<strong>Change:</strong> Removed the “Strengthen the shinytest2 E2E assertions + CI stability” item (6 lines) from <code>BACKLOG.md</code>’s “Up Next” section — completed work belongs in <code>CHANGELOG.md</code>, not <code>BACKLOG.md</code> (project convention, see file header). Left the adjacent “Tracker reconciliation” section’s now-also-stale “#1–#39” issue-range note untouched — out of this session’s declared scope, noted in <code>SESSION_NOTES.md</code>/<code>HANDOFFS.md</code> for a future session instead of fixed here (SAFEGUARDS.md scope-creep discipline).</li>
+<li>
+<strong>Phase 3E:</strong> n/a — <code>BACKLOG.md</code> only, no <code>R/</code>/<code>tests/</code> touched, no runtime behavior changed.</li>
+<li>
+<strong>Session:</strong> S344 · <strong>TDD:</strong> N/A (documentation-hygiene fix, no <code>R/</code>/<code>tests/</code> touched) · <strong>Verified:</strong> <code>gh issue view 40</code>, <code>gh pr view 41</code>, <code>grep -rn "expect_true(TRUE)"</code> across all <code>test-app-*</code>/<code>test-e2e-*</code> files, <code>grep -n "navigate_to_tab" test-e2e-summary-statistics-module.R</code>, <code>.github/workflows/shinytest2.yaml</code> read directly — no claim taken from <code>BACKLOG.md</code>’s own stale text.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-07-10--ad-hoc-backfilled-reconcile-on-read-undocumented-commit-b94ad328--s343-handoffsmd-receipt-commit-sha-backfill">2026-07-10 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit b94ad328 — S343 HANDOFFS.md receipt commit-sha backfill<a class="anchor" aria-label="anchor" href="#id_2026-07-10--ad-hoc-backfilled-reconcile-on-read-undocumented-commit-b94ad328--s343-handoffsmd-receipt-commit-sha-backfill"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Phase 0 ledger reconcile (this session) found one commit past the <code>CHANGELOG.md</code> frontier with no ledger entry: <code>b94ad328</code> (“docs: S343 – backfill own HANDOFFS.md receipt commit sha”), landed after S343’s own close-out commit (<code>98db4ff7</code>) that recorded the entry below.</li>
+<li>
+<strong>Change:</strong> <code>b94ad328</code> replaced the S343 <code>HANDOFFS.md</code> receipt’s <code>commit: pending</code> placeholder with the real commit sha (<code>98db4ff7</code>) — a self-correction of the just-written receipt, not new production work. Same class of action as the <code>ebeeb9fd</code>/<code>7c0d680d</code>/<code>04c8de1d</code>/<code>5f0b81d2</code>/<code>ee690776</code>/<code>2278b46f</code>/<code>cc0f7798</code> backfills below (S342’s, S341’s, S339’s, S334’s, S333’s, S332’s, and S331’s equivalent self-fixes).</li>
+<li>
+<strong>Session:</strong> this session (backfilling S343’s own commit) · <strong>Verified:</strong> <code>git show --stat b94ad328</code> (single-file, 2-line diff to <code>HANDOFFS.md</code>); <code>git log -1 --format=%H -- HANDOFFS.md</code> now matches <code>b94ad328</code> with no further gap.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="id_2026-07-10--ad-hoc-fixed-all-15-confirmed-document-1-audit-findings-session-343">2026-07-10 · [ad hoc] Fixed all 15 confirmed Document 1 audit findings (Session 343)<a class="anchor" aria-label="anchor" href="#id_2026-07-10--ad-hoc-fixed-all-15-confirmed-document-1-audit-findings-session-343"></a></h3>
 <ul><li>

@@ -1,0 +1,166 @@
+---
+title: "Validating the Founder-Genome-Equivalent Standard Error"
+---
+
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+## Why this article exists {#sec-why}
+
+Founder genome equivalents (`FG`, [Lacy 1989]) summarize how much of a colony's
+founding genetic diversity survives in the living population. Like genome
+uniqueness, `FG` is estimated by a **gene-drop simulation**, so it carries Monte
+Carlo sampling noise that shrinks as the number of iterations grows.
+`calcFGSE()` reports that noise as a standard error, so `FG` can be shown as
+`FG ± SE`.
+
+Unlike genome uniqueness -- a simple average, whose standard error is a column
+variance -- `FG` is a **non-linear function** of the random per-founder retention
+vector `r`:
+
+$$ FG = \left( \sum_f p_f^2 / r_f \right)^{-1}, $$
+
+so its standard error is obtained by the **delta method** (first-order
+linearization), folding in the *within-iteration covariance* among founders. A
+standard error derived this way is only trustworthy if it is **calibrated** --
+the number it reports must match the real run-to-run spread of `FG`. This article
+is the recorded evidence that it is, on a real deep pedigree, **before** the SE is
+surfaced to users. It is the "validate before expose" gate in the
+compute → validate → surface sequence.
+
+## What "calibrated" means here {#sec-checks}
+
+The estimator was put through seven checks at `K = 1000` iterations. Each runs
+`B = 300` independent gene drops (one per seed), so the *measured* spread of the
+`FG` estimates can be compared against the *reported* standard error.
+
+| # | Check | What it verifies | Pass band |
+|---|-------|------------------|-----------|
+| 1 | **Agreement** | `mean(SE)` over the 300 seeds equals `sd(FG)`, the Monte Carlo truth | ratio in [0.92, 1.08] |
+| 2 | **Coverage** | `FG ± 1.96·SE` contains a high-iteration reference `FG` about 95% of the time | [0.93, 0.97] |
+| 3 | **Scaling** | quadrupling iterations (`K → 4K`) halves both the empirical spread and the reported SE | ratio in [1.8, 2.2] |
+| 4 | **Degeneracy** | no run hits the silent-collapse case (a contributing founder retained in zero drops) | fraction = 0 |
+| 5 | **Bootstrap** | an independent column bootstrap of the SE agrees with the delta-method SE | `boot/delta` in [0.85, 1.15] |
+| 6 | **Off-diagonal** | the full (covariance-aware) SE versus the diagonal-only approximation | reported (see below) |
+| 7 | **Reproducibility** | a fixed seed list makes the whole study byte-identical run to run | exact |
+
+The pass bands were specified in advance for this validation study. The agreement
+and coverage bands are calibrated for `B = 300`: the agreement ratio's own
+sampling fluctuation is about `1/sqrt(2(B-1)) ≈ 0.04`, so a calibrated estimator
+sits near 1 with the band roughly two standard errors wide.
+
+## The two pedigrees {#sec-pedigrees}
+
+A standard error can look perfect on an easy pedigree and still be wrong on a hard
+one, so the study runs on two deliberately different pedigrees.
+
+- **`lacy1989Ped`** -- the 7-animal, 3-founder pedigree from Lacy's original
+  paper (`FG = 2.18`). All three founders are well retained (`r` ≈ 0.75) and
+  barely correlated, so this is a fast, fully deterministic **anchor**. It cannot,
+  on its own, exercise founder covariance or thin-retention skew.
+- **`examplePedigree`** (assembled exactly as `reportGV()` analyses it: 704
+  animals, **202 founders**, 327 probands) -- a real **deep, bottlenecked**
+  pedigree. Several founders are retained in well under 10% of drops
+  (minimum `r` ≈ 0.013, i.e. about 13 of 1000 iterations), and the founders'
+  retentions are strongly correlated. This is the pedigree that exercises the
+  covariance term, the skew stratum, and the degeneracy audit -- the checks that
+  matter.
+
+Validating on `lacy1989` alone would *falsely bless* the estimator (check 6 makes
+this concrete).
+
+## Results {#sec-results}
+
+```{r}
+#| label: reproduce
+#| eval: false
+# Reproduce (build-ignored; not run on render). ~7 min, fixed seeds.
+#   Rscript data-raw/fgSEValidation.R
+# Drives the validation harness (tests/testthat/helper-fgSEValidation.R) over
+# B = 300 seeds on each pedigree at K = 1000 and 4000, and records the numbers
+# below in data-raw/fgSEValidation-results.rds.
+```
+
+**`lacy1989Ped`** (`B = 300`, `K = 1000`; reference `FG = 2.1866` at `K = 20000`):
+
+| Check | Value | Band | Verdict |
+|-------|-------|------|---------|
+| Agreement `mean(SE)/sd(FG)` | 1.0076 | [0.92, 1.08] | **PASS** |
+| Coverage | 0.9333 | [0.93, 0.97] | **PASS** |
+| Scaling (empirical / delta) | 1.846 / 2.004 | [1.8, 2.2] | **PASS** |
+| Degeneracy fraction | 0.0000 | = 0 | **PASS** |
+| Bootstrap `boot/delta` (dropped 0.000) | 0.9910 | [0.85, 1.15] | **PASS** |
+| Off-diagonal `full/diag` | 1.001 | reported | -- |
+
+**`examplePedigree`** (`B = 300`, `K = 1000`; reference `FG = 47.836` at `K = 20000`):
+
+| Check | Value | Band | Verdict |
+|-------|-------|------|---------|
+| Agreement `mean(SE)/sd(FG)` | 1.0169 | [0.92, 1.08] | **PASS** |
+| Coverage | 0.9500 | [0.93, 0.97] | **PASS** |
+| Scaling (empirical / delta) | 1.981 / 2.008 | [1.8, 2.2] | **PASS** |
+| Degeneracy fraction | 0.0000 | = 0 | **PASS** |
+| Bootstrap `boot/delta` (dropped 0.000) | 1.0043 | [0.85, 1.15] | **PASS** |
+| Off-diagonal `full/diag` | 0.692 | reported | -- |
+
+Every gating check passes on both pedigrees. On the deep pedigree the agreement
+ratio (1.017) and coverage (0.950) land essentially on their nominal targets, and
+the SE halves cleanly when iterations quadruple. The `lacy1989` empirical-scaling
+(1.846) and coverage (0.9333) sit nearer their band edges -- expected, because with
+only three founders and `B = 300` those two statistics are the noisiest; the
+deep-pedigree figures are the load-bearing evidence.
+
+### The off-diagonal term is not optional {#sec-offdiag}
+
+Check 6 is the reason the full delta method is used rather than a cheaper
+diagonal (independence) approximation. The diagonal form drops the covariance
+between founders; founders compete for a finite pool of descendant gene copies,
+so that covariance is typically negative and the diagonal SE is an **overestimate**.
+
+| Pedigree | full SE | diagonal SE | full / diag |
+|----------|---------|-------------|-------------|
+| `lacy1989Ped` | 0.013961 | 0.013941 | 1.001 |
+| `examplePedigree` | 0.06542 | 0.094498 | 0.692 |
+
+On `lacy1989` the gap is 0.1% -- invisible. On the real pedigree the diagonal SE is
+**45% too large** (`0.0945 / 0.0654`). An estimator validated only on `lacy1989`
+would happily ship the diagonal approximation and overstate the uncertainty by
+nearly half on a real colony. This is exactly why the gate requires a deep
+pedigree, and why `calcFGSE()` uses the covariance-aware influence form.
+
+## Caveats carried forward {#sec-caveats}
+
+- **Finite-iteration bias.** `FG` computed from `K` iterations is a slightly
+  biased estimate of the true `FG` by `O(1/K)` (a Jensen effect of the non-linear
+  `1/r`), which the standard error does not capture. At the default `K = 1000` it
+  is small; it shrinks with more iterations.
+- **Thin-retention founders.** When a contributing founder is retained in only a
+  handful of drops (effective count `K·r` below roughly 5--10), `FG`'s sampling
+  law is right-skewed and the first-order delta SE can under-cover; the column
+  bootstrap (check 5) is the backstop, and the remedy is more iterations. The
+  degeneracy audit (check 4) catches the limiting case where such a founder is
+  retained in *zero* drops -- `calcFGSE()` returns `NA` with a warning there
+  rather than a confident-but-meaningless number.
+- **Independent seeds.** The math assumes the gene-drop iterations are
+  independent. The study uses a distinct seed per replicate; `geneDrop()` draws
+  each iteration column independently.
+
+## Verdict {#sec-verdict}
+
+**PASS.** The founder-genome-equivalent sampling standard error reported by
+`calcFGSE()` is calibrated on both a clean anchor and a real deep, bottlenecked
+pedigree: it matches the Monte Carlo spread of `FG`, covers a high-iteration
+reference at the nominal rate, shrinks as `1/sqrt(K)`, never reports a finite SE
+for a collapsed `FG`, and agrees with an independent bootstrap. The standard
+error is cleared to be surfaced beside `FG` in the reports and the Shiny app.
+
+## References {#sec-references}
+
+Lacy, R.C. (1989) "Analysis of Founder Representation in Pedigrees: Founder
+Equivalents and Founder Genome Equivalents." *Zoo Biology* 8:111--123.
+
+See also `calcFGSE()`, `calcFG()`, `calcFEFG()`, `calcRetention()`, and the
+companion gene-drop convergence diagnostic `gvaConvergence()`.

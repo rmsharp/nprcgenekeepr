@@ -6,6 +6,7 @@ articles:
   a3manual: a3manual.html
   articles/age-sex-pyramid: age-sex-pyramid.html
   articles/breeding-group-formation: breeding-group-formation.html
+  articles/colony-manager-guide: colony-manager-guide.html
   ColonyManagerTutorial: ColonyManagerTutorial.html
   articles/engineering-the-2.0.0-release: engineering-the-2.0.0-release.html
   articles/fg-se-validation: fg-se-validation.html
@@ -14,7 +15,7 @@ articles:
   articles/offline-focal-animal-workflow: offline-focal-animal-workflow.html
   simulatedKValues: simulatedKValues.html
   articles/studbook-quality-control: studbook-quality-control.html
-last_built: 2026-07-10T05:15Z
+last_built: 2026-07-10T19:54Z
 urls:
   reference: https://github.com/rmsharp/nprcgenekeepr/reference
   article: https://github.com/rmsharp/nprcgenekeepr/articles

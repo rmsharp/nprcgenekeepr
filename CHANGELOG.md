@@ -47,6 +47,247 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-10 · \[ad hoc\] S348 HANDOFFS.md receipt commit-sha backfill, closed same-session
+
+- **Deliverable:** Filled in this session’s own `HANDOFFS.md` receipt
+  `commit: pending` placeholder with the real close-out commit sha
+  (`2ba6c204`), matching the S331-S347 precedent of closing this within
+  the same session rather than leaving it for the next session’s Phase 0
+  reconcile.
+
+### 2026-07-10 · \[ad hoc\] Executed Document 2 Phase C: drafted the colony-manager-guide article, two new findings (Session 348)
+
+- **Deliverable:**
+  `docs/planning/document2-colony-manager-guide-plan.md` §6 Phase C —
+  drafted `vignettes/articles/colony-manager-guide.qmd` (Abstract,
+  Introduction, Section 1 adapted from `_introduction.Rmd`, Section 2
+  adapted from `_summary_of_major_functions.Rmd` with an original T1
+  function-group table and F1 Mermaid pipeline diagram, Section 3
+  ported/modernized from `ColonyManagerTutorial.Rmd` using Phase B’s
+  screenshots and Phase A’s re-derived N1/N2/N3/N4 numbers verbatim,
+  Conclusion). Owner resolved two pre-drafting scope decisions via
+  `AskUserQuestion`: Input-tab narrates CSV with an inline Excel-bug
+  caveat; Breeding-Groups subsection covers None/Harem fully, omits the
+  Custom-ratio numeric demo (N7).
+- **Extended `vignettes/articles/colony-manager-guide-screenshots.R`**
+  with 2 more capture blocks (owner-approved via `AskUserQuestion`,
+  after finding Phase A’s tab-coverage decision — both new tabs in scope
+  — had no matching entry in Phase B’s 34-screenshot inventory, since
+  that inventory was built from `ColonyManagerTutorial.Rmd`’s own figure
+  references, which predate both tabs): `genetic_diversity_heatmap.png`
+  and `potential_parents_results.png`. Re-ran the full script; 70/70
+  steps succeeded.
+- **A third new finding, recorded to `BACKLOG.md` (not fixed this
+  session):** the shipped `data(examplePedigree)` has no `fromCenter`
+  (colony-origin) column, which `modPotentialParentsServer` requires —
+  confirmed directly (`"fromCenter" %in% names(examplePedigree)` is
+  `FALSE`) — so the Potential Parents tab cannot show populated results
+  against this walkthrough’s standard example data; the article
+  documents the app’s own correctly-degraded warning response instead of
+  fabricating a populated example.
+- Corrected two additional stale claims from
+  `ColonyManagerTutorial.Rmd`, found via firsthand source verification
+  rather than trusting the plan’s summary table: the GVA threshold
+  `selectInput` now offers 1-5 (default 4), not the tutorial’s stale
+  “0-3”; the results table’s actual column is named `value`, not “Value
+  Designation” (no `colnames=` override exists in
+  `modGeneticValueServer`’s `renderDT`).
+- `quarto render colony-manager-guide.qmd` (isolated) succeeded cleanly
+  — zero missing images, zero unresolved cross-references. Spot-checked
+  Document 1 still renders.
+- Updated `BACKLOG.md` (Document 2 item → Phase D; added the
+  `fromCenter` finding). Added `PROJECT_LEARNINGS.md` Learning 321.
+
+### 2026-07-10 · \[ad hoc\] S347 HANDOFFS.md receipt commit-sha backfill, closed same-session
+
+- **Deliverable:** Filled in this session’s own `HANDOFFS.md` receipt
+  `commit: pending` placeholder with the real close-out commit sha
+  (`9d9479ad`), matching the S331-S346 precedent of closing this within
+  the same session rather than leaving it for the next session’s Phase 0
+  reconcile.
+
+### 2026-07-10 · \[ad hoc\] Executed Document 2 Phase B: screenshot regeneration + two new bug discoveries (Session 347)
+
+- **Deliverable:**
+  `docs/planning/document2-colony-manager-guide-plan.md` §6 Phase B —
+  built the checked-in
+  [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+  capture script
+  (`vignettes/articles/colony-manager-guide-screenshots.R`) and
+  regenerated all 34 screenshots per Phase A’s gap inventory (25
+  kept-name in-place, 4 new, 5 correctly left untouched as non-app-UI
+  spreadsheet illustrations — 3 more identified this session, correcting
+  Phase A’s own disposition for them). Deleted the 8 confirmed- orphaned
+  pre-rename screenshot duplicates after re-confirming zero references.
+- **Live numeric reproductions confirmed matching Phase A exactly:**
+  3694 QC’d records (N1), 54-animal focal trim (N2), 962-animal
+  large-focal-group trim (N3, via the shipped `focalAnimals` example
+  object), 332 living animals (N4).
+- **Two new production bugs discovered and recorded to `BACKLOG.md` (not
+  fixed this session, out of Phase B scope):** (1) HIGH priority —
+  `R/modInput.R`’s `readDataFile()` silently corrupts sire/dam data on
+  Excel upload
+  ([`readxl::read_excel`](https://readxl.tidyverse.org/reference/read_excel.html)
+  with no `col_types` infers `logical` from early blank rows, then nulls
+  every later alphanumeric ID — confirmed 100% of non-blank sire values
+  lost on a round-trip of the shipped example pedigree); this is the
+  same path any real user’s Excel upload goes through. (2)
+  [`modBreedingGroupsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsUI.md)’s
+  “Custom” sex-ratio option has no accompanying numeric-value input
+  anywhere in the UI, silently behaving like “None”.
+- Updated `BACKLOG.md` (Document 2 item → Phase C; added the two new bug
+  items). Added `PROJECT_LEARNINGS.md` Learning 320.
+
+### 2026-07-10 · \[ad hoc\] S346 HANDOFFS.md receipt commit-sha backfill, closed same-session
+
+- **Deliverable:** Filled in this session’s own `HANDOFFS.md` receipt
+  `commit: pending` placeholder with the real close-out commit sha
+  (`4941b2e8`), matching the S331-S345 precedent of closing this within
+  the same session rather than leaving it for the next session’s Phase 0
+  reconcile.
+
+### 2026-07-10 · \[ad hoc\] Executed Document 2 Phase A: screenshot gap inventory + numeric claims re-derivation (Session 346)
+
+- **Deliverable:**
+  `docs/planning/document2-colony-manager-guide-plan.md` §3A/§6 —
+  resolved §11 decisions 1/2/5 (tab coverage = both new tabs; screenshot
+  method = automated `shinytest2`; title/slug confirmed) via
+  `AskUserQuestion`; built the full 34-screenshot gap inventory against
+  the current modular UI (finding real functional changes, not just
+  relabeling, in 4 of 6 covered tabs); re-derived all 7
+  example-data-dependent numeric claims via live `Rscript -e`
+  verification against `data(examplePedigree)` (3 reproduce exactly, 2
+  not-re-verifiable/removed, 2 deferred to Phase C live capture).
+  Flagged 8 orphaned pre-rename screenshots for Phase B deletion.
+  Updated `BACKLOG.md`’s Document 2 item to point at Phase B. Added
+  `PROJECT_LEARNINGS.md` Learning 319.
+
+### 2026-07-10 · \[ad hoc\] S345 HANDOFFS.md receipt commit-sha backfill, closed same-session
+
+- **Deliverable:** Filled in this session’s own `HANDOFFS.md` receipt
+  `commit: pending` placeholder with the real close-out commit sha
+  (`14fd5382`) — the same self-correction previous sessions (S331-S336,
+  S339-S344) each needed, closed within the same session rather than
+  left for the next session’s Phase 0 reconcile to catch and backfill.
+
+### 2026-07-10 · \[ad hoc\] Planned Document 2: port/modernize ColonyManagerTutorial.Rmd (Session 345)
+
+- **Deliverable:**
+  `docs/planning/document2-colony-manager-guide-plan.md` — one planning
+  document for the long-deferred “Document 2” BACKLOG item (package
+  purpose, how it addresses that purpose, how to put it into use),
+  following `RESEARCH_DOCUMENTATION_WORKSTREAM.md` (adapted, matching
+  Document 1’s precedent).
+- **Owner scope decisions (via `AskUserQuestion`, twice):** (1) article
+  form = new `vignettes/articles/*.qmd`, audience = primate-center
+  bioinformatics/colony managers;
+  2.  content strategy = **port and modernize
+      `ColonyManagerTutorial.Rmd`** rather than draft from scratch,
+      after this session’s research found the target content already
+      exists.
+- **Discovery that reshaped the plan:** a broader `vignettes/` sweep
+  (beyond the current public-docs surface) found
+  `vignettes/a3manual.Rmd` + 13 `vignettes/manual_components/*.Rmd`
+  (CRAN-shipped, actively maintained, sharing `README.Rmd`’s own source
+  for Introduction/Summary-of-Functions) and
+  `vignettes/ColonyManagerTutorial.Rmd` (748 lines,
+  screenshot-illustrated, titled for the exact chosen audience, actively
+  kept in sync with API renames through 2026-07-07 — but
+  `.Rbuildignore`d and so invisible on CRAN and the pkgdown site; its
+  screenshots, `vignettes/shiny_app_use/`, last regenerated 2024-12-16,
+  predate the Shiny-module migration Session 22-35).
+- **Separate finding, flagged not fixed:** `inst/_pkgdown.yml`’s curated
+  Reference-page grouping is dead configuration (confirmed via
+  `pkgdown:::pkgdown_config_path`, shadowed by the root `_pkgdown.yml`;
+  confirmed live on the deployed site via `WebFetch` — a flat “All
+  functions” list only) and independently stale (64 of 182 current
+  `NAMESPACE` exports missing from its list).
+- **BACKLOG.md updated:** replaced the “Plan Document 2” item with an
+  “Execute Document 2 plan (Phase A)” item; added a new item for a
+  user-flagged gap in Document 1’s Testing-at-Scale section (conflates
+  test-file-count growth with actual coverage/ test-case/E2E improvement
+  — no `covr`/Codecov percentage or test-case count ever cited); added a
+  new item for the `inst/_pkgdown.yml` dead-config finding.
+- **`PROJECT_LEARNINGS.md` Learning 318** added (check the full
+  `vignettes/` tree, not just the public surface, before scoping a
+  new-document plan as fresh drafting); `CLAUDE.md`’s learnings count
+  bumped 317→318.
+- No `R/`/`tests/` touched; TDD Phase N/A (planning/documentation
+  session).
+
+### 2026-07-10 · \[ad hoc\] S344 HANDOFFS.md receipt commit-sha backfill, closed same-session
+
+- **Deliverable:** Filled in this session’s own `HANDOFFS.md` receipt
+  `commit: pending` placeholder with the real close-out commit sha
+  (`6bd0d9fb`) — the same self-correction previous sessions (S331-S336,
+  S339, S340, S341, S342, S343) each needed, closed within the same
+  session rather than left for the next session’s Phase 0 reconcile to
+  catch and backfill.
+
+### 2026-07-10 · \[ad hoc\] Pruned the stale BACKLOG.md “issue \#40 open” item (Session 344)
+
+- **Deliverable:** Owner picked BACKLOG priority \#1 (“Strengthen the
+  shinytest2 E2E assertions + CI stability,” GitHub issue \#40). Before
+  claiming the session, verified the premise via `gh issue view 40` and
+  found it **CLOSED** (2026-06-11) — not open as `BACKLOG.md` claimed.
+  Reported this to the owner via `AskUserQuestion` instead of starting
+  phantom work; owner chose to prune the stale item as this session’s
+  deliverable.
+- **Verified DONE, not assumed:** `gh pr view 41` confirms PR \#41
+  (issue \#40’s work) `MERGED` 2026-06-11, merge commit `0363ffe3`,
+  present in `git log`. Grepped the current test suite for
+  `expect_true(TRUE)`: the 11 hits are all inside historical
+  `# REVIVE: was expect_true(TRUE)...` comments documenting the fix,
+  zero live tautologies remain. `test-e2e-summary-statistics-module.R`
+  now targets `"Summary Statistics"` in all 8 tests (the issue’s “7/8
+  wrong-tab” defect is fixed). `.github/workflows/shinytest2.yaml` runs
+  the E2E tier in per-module fresh-process groups (the Chrome
+  process-count flake mitigation) — a later CI-coverage gap in that
+  grouping (2 files unmatched by any group regex) was also independently
+  confirmed already closed, by Session 337 (2026-07-08/09,
+  `test_shinytest2_workflow_coverage.R` regression guard + 15 green
+  groups). This staleness had been independently flagged — but left
+  unfixed as out-of-scope — by at least 3 prior documentation/audit
+  sessions (the `v2-transformation-article-plan.md` execution pass, and
+  the article’s own claim-audit passes around S330-S334); this session
+  is the first to actually correct `BACKLOG.md` itself.
+- **Change:** Removed the “Strengthen the shinytest2 E2E assertions + CI
+  stability” item (6 lines) from `BACKLOG.md`’s “Up Next” section —
+  completed work belongs in `CHANGELOG.md`, not `BACKLOG.md` (project
+  convention, see file header). Left the adjacent “Tracker
+  reconciliation” section’s now-also-stale “#1–#39” issue-range note
+  untouched — out of this session’s declared scope, noted in
+  `SESSION_NOTES.md`/`HANDOFFS.md` for a future session instead of fixed
+  here (SAFEGUARDS.md scope-creep discipline).
+- **Phase 3E:** n/a — `BACKLOG.md` only, no `R/`/`tests/` touched, no
+  runtime behavior changed.
+- **Session:** S344 · **TDD:** N/A (documentation-hygiene fix, no
+  `R/`/`tests/` touched) · **Verified:** `gh issue view 40`,
+  `gh pr view 41`, `grep -rn "expect_true(TRUE)"` across all
+  `test-app-*`/`test-e2e-*` files,
+  `grep -n "navigate_to_tab" test-e2e-summary-statistics-module.R`,
+  `.github/workflows/shinytest2.yaml` read directly — no claim taken
+  from `BACKLOG.md`’s own stale text.
+
+### 2026-07-10 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit b94ad328 — S343 HANDOFFS.md receipt commit-sha backfill
+
+- **Deliverable:** Phase 0 ledger reconcile (this session) found one
+  commit past the `CHANGELOG.md` frontier with no ledger entry:
+  `b94ad328` (“docs: S343 – backfill own HANDOFFS.md receipt commit
+  sha”), landed after S343’s own close-out commit (`98db4ff7`) that
+  recorded the entry below.
+- **Change:** `b94ad328` replaced the S343 `HANDOFFS.md` receipt’s
+  `commit: pending` placeholder with the real commit sha (`98db4ff7`) —
+  a self-correction of the just-written receipt, not new production
+  work. Same class of action as the
+  `ebeeb9fd`/`7c0d680d`/`04c8de1d`/`5f0b81d2`/`ee690776`/`2278b46f`/`cc0f7798`
+  backfills below (S342’s, S341’s, S339’s, S334’s, S333’s, S332’s, and
+  S331’s equivalent self-fixes).
+- **Session:** this session (backfilling S343’s own commit) ·
+  **Verified:** `git show --stat b94ad328` (single-file, 2-line diff to
+  `HANDOFFS.md`); `git log -1 --format=%H -- HANDOFFS.md` now matches
+  `b94ad328` with no further gap.
+
 ### 2026-07-10 · \[ad hoc\] Fixed all 15 confirmed Document 1 audit findings (Session 343)
 
 - **Deliverable:** Owner picked this as Phase 0 priority \#1: fix all 15
