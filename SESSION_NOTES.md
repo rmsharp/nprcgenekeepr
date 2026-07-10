@@ -6,6 +6,28 @@
 
 ## ACTIVE TASK
 
+### What Session 339 Did
+**Deliverable:** Two-lens adversarial review (report only, no fixes this session) of
+Document 1 -- `vignettes/articles/engineering-the-2.0.0-release.qmd` -- the "Engineering
+nprcgenekeepr 2.0.0" public pkgdown article drafted across Sessions 330-336
+(`docs/planning/v2-transformation-article-plan.md`) and never given the kind of
+independent review pass two other articles (S109, S110) received. Owner also flagged
+that "Document 2" (package purpose/how-to-use, explicitly deferred at plan time) has
+never been picked up by any session since S336 named it as a next step -- owner chose
+to prioritize the Document 1 review this session; Document 2 planning remains open for
+a future session. Owner-confirmed scope via `AskUserQuestion`: Lens A = figure/table
+fidelity against frozen source data (the "reversed skew" defect class S110 caught).
+Lens B = independent editorial/narrative-quality read (clarity, structure, audience
+fit, tone against dragon #2's "candid not promotional" bar). Docs-only; TDD N/A.
+(IN PROGRESS)
+**Started:** 2026-07-09
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded
+in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for
+the next session's reconcile.
+
+---
+
 ### What Session 338 Did
 **Deliverable:** Fixed the stale passage in
 `vignettes/articles/engineering-the-2.0.0-release.qmd:487-503` (written by Session 336)

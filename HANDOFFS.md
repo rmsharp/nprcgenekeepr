@@ -75,6 +75,23 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S339
+date: 2026-07-09
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Two-lens adversarial review (report only) of Document 1 (vignettes/articles/engineering-the-2.0.0-release.qmd). Lens A: figure/table fidelity vs frozen source data. Lens B: editorial/narrative quality. Owner also flagged Document 2 (package purpose/how-to-use) as never picked up since S336 named it -- deferred to a future session, not this one.
+what_was_done: pending
+next_steps: pending
+key_files: vignettes/articles/engineering-the-2.0.0-release.qmd (full file, 724 lines), vignettes/articles/data/*.csv (frozen evidence base)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<free-text prose: pending -- filled at Phase 3D close-out>
+
+```handoff
 session: S338
 date: 2026-07-09
 status: complete
