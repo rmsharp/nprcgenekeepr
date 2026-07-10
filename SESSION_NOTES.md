@@ -7,16 +7,91 @@
 ## ACTIVE TASK
 
 ### What Session 342 Did
-**Deliverable:** Independently re-verify the 13 remaining Document 1 two-lens-review
+**Deliverable:** Independently re-verified the 13 remaining Document 1 two-lens-review
 findings (Lens A #2/#3, Lens B #2-12) against the current
-`vignettes/articles/engineering-the-2.0.0-release.qmd`, then finalize
-`docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md` from DRAFT to a closed audit
-report with a prioritized, evidence-backed fix list. (IN PROGRESS)
-**Started:** 2026-07-09
-**Status:** Session claimed. Owner confirmed via `AskUserQuestion`: verify-only this
-session, no article edits (fixes deferred to a follow-on session). Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+`vignettes/articles/engineering-the-2.0.0-release.qmd`, then finalized
+`docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md` from DRAFT to a CLOSED audit
+report with a prioritized, evidence-backed fix list.
+**Started/Completed:** 2026-07-09 / 2026-07-09
+**Status:** DONE.
+
+**What happened, in order:** (1) Orientation ran normally; Phase 0 step 6 found one
+undocumented commit past the `CHANGELOG.md` frontier (`7c0d680d`, S341's own
+same-session `HANDOFFS.md` receipt commit-sha backfill) -- backfilled a `[ad hoc]`
+entry and committed it separately (`e146e235`) before the report, matching the
+S331-S334/S339 precedent exactly. (2) Presented the rendered "Current priorities" list
+(S341's new convention, its first live exercise) and the owner picked priority #1:
+close out the Document 1 two-lens review. (3) Read `AUDIT_WORKSTREAM.md` and the full
+DRAFT audit doc to scope the deliverable, then posed the BACKLOG-flagged in-flight
+decision (verify-only vs. verify-and-fix this session) as an explicit
+`AskUserQuestion` before starting technical work -- owner chose verify-only
+(recommended option), keeping the Audit Workstream's own deliverable (a finished
+report) separate from the article-editing workstream that will fix it. (4) Claimed
+the session in `SESSION_NOTES.md`/`HANDOFFS.md` (`status: pending`) and committed the
+claim (`7c4c6f02`) before any verification work, correcting S341's noted miss on this
+exact step. (5) Read the full current 745-line article, then independently
+re-verified all 13 remaining findings: Lens A #2 (commit-pace chart's categorical
+x-axis hides a 3-month zero-commit gap) via `git log --format=%ad --date=format:%Y-%m
+4548aa1b..8ca8bb24` (exact match to the CSV, confirmed the chart defect); Lens A #3
+(`0eeee3f6` date off-by-one) via `git show -s --format=%ad`; Lens B #2 (grammar) and
+#4-#12 (unglossed jargon, missing hyperlinks, structural/editorial nits) via targeted
+`grep -n` against the current file, re-anchoring every location to the post-S340 line
+numbers (drift already flagged by S341/Learning 315). All 13 confirmed real and still
+unfixed -- 0 downgrades, 0 dismissals. (6) Wrote a new "Session 342 -- Independent
+Verification," "Final Findings Summary" (severity-ranked table, all 15 findings), and
+"Recommendations" (priority order) section into the audit doc; updated the header from
+DRAFT to CLOSED. (7) Caught, on a full-document re-read before close-out, that the
+ORIGINAL Lens A/B section headers still said "not independently re-verified" /
+"agent's account" even after the new section asserted full verification -- a
+self-contradiction within the same document -- and fixed those 3 inline labels in
+place (see Learning 316). Also caught and fixed two of this session's own citations
+that were off by one line from what `grep -n` actually returned. (8) Did not touch
+`vignettes/articles/engineering-the-2.0.0-release.qmd` itself -- per the owner's
+verify-only scope decision, no article edits this session; Phase 3E runtime smoke test
+is n/a (docs-only, no `R/`/`tests/` touched). (9) Recorded Learning 316
+(`PROJECT_LEARNINGS.md`) on the self-contradicting-labels failure mode this session
+caught in itself, and corrected the now-stale "315 learnings" count in `CLAUDE.md` to
+316 in the same session that added it (Learning #10's count-claim-drift discipline,
+applied to my own edit rather than someone else's).
+
+**Session 341 Handoff Evaluation (by Session 342): Score 9/10.** **What helped:** the
+`next_steps` field gave two independent, well-scoped pickup points and the priorities-
+list convention (its first live render) made picking between them a one-line decision
+for the owner rather than a re-derivation from `BACKLOG.md` prose. The `key_files`
+field pointed straight at the DRAFT audit doc and both confirmed-unfixed findings'
+current line numbers, both of which were immediately useful. **What was missing:**
+nothing material -- S341's own self-flagged miss (skipping the Phase 1B stub) was a
+process note about S341's own conduct, not a gap in what it told this session; this
+session did not need to rediscover anything S341's handoff should have said but
+didn't. **ROI:** high -- zero time spent re-deriving scope or re-finding the DRAFT
+file.
+
+**Self-assessment (Session 342): 9/10.** **Strengths:** (1) posed the BACKLOG-flagged
+scope decision (verify-only vs. verify-and-fix) as an explicit `AskUserQuestion`
+before starting technical work, rather than assuming either answer -- direct
+application of [[observation-vs-decision]]; (2) independently re-derived every finding
+via `git`/`grep`/CSV comparison rather than trusting the DRAFT audit's own
+agent-authored prose, consistent with this project's Learning #7/#10/312/315 lineage;
+(3) caught the document's own internal self-contradiction (stale "not verified"
+labels coexisting with a new "fully verified" section) on a full re-read before
+close-out, rather than shipping a document that read as finished in one place and
+incomplete in another; (4) corrected the Phase 1B process miss S341 flagged in its own
+self-assessment -- claimed the session and committed the stub before any technical
+work this time; (5) completed the Phase 0 ledger reconcile (backfilling S341's own
+commit-sha-backfill commit) cleanly, as a separate commit, before the orientation
+report. **Weaknesses:** (-) the severity/priority rankings in the "Final Findings
+Summary" table (HIGH/MEDIUM/LOW, and the "Recommendations" priority order) are this
+session's own synthesis judgment, not cross-checked by a second independent reviewer
+or shown to the owner before finalizing -- treat as a first draft the owner may want
+to re-rank, similar to how S341 flagged its own priorities-list design as unreviewed;
+(-) did not use forked sub-agents for this verification pass the way S339's original
+two-lens review did -- reasonable for a follow-up verification of already-identified
+findings (not fresh discovery) but a deliberate scope choice worth naming rather than
+leaving implicit.
+**Phase 3E (runtime smoke test):** n/a -- `docs/audits/`, `PROJECT_LEARNINGS.md`,
+`CLAUDE.md` only; the target article itself was NOT edited this session (owner's
+explicit verify-only scope decision); no `R/` or `tests/` touched, no runtime
+behavior changed.
 
 ---
 

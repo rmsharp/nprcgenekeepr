@@ -77,16 +77,16 @@ session need this block to continue the work without re-reading the whole repo?*
 ```handoff
 session: S342
 date: 2026-07-09
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Independently re-verify the 13 remaining Document 1 two-lens-review findings (Lens A #2/#3, Lens B #2-12) against the current engineering-the-2.0.0-release.qmd, then finalize docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md from DRAFT to a closed audit report. Owner confirmed verify-only scope (no article edits this session) via AskUserQuestion.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Closed docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md -- independently verified the 13 remaining findings (Lens A #2/#3, Lens B #2-12) against the current article; header now CLOSED, not DRAFT.
+what_was_done: Backfilled S341's own undocumented HANDOFFS-sha-backfill commit (7c0d680d) into CHANGELOG.md, committed separately (e146e235), before the Phase 0 report. Owner picked BACKLOG priority #1; AskUserQuestion confirmed verify-only scope (no article edits, fixes deferred). Claimed the session (commit 7c4c6f02) before technical work. Read the full 745-line article and independently re-verified all 13 remaining findings via git log/git show/grep/CSV re-derivation (not the DRAFT's own text): Lens A #2 (commit-pace chart hides a real 3-month zero-commit gap, confirmed via git log --format=%ad --date=format:%Y-%m 4548aa1b..8ca8bb24 exact-matching the CSV), Lens A #3 (0eeee3f6 1-day date mismatch, confirmed via git show, zero reader impact), Lens B #2-12 (grammar error; unglossed "Phase A data freeze"/"vertical-slice"/"XARCH-2"; 1 hyperlink vs 22 plain-text citations; TDD vocab undefined ~500 lines; 4 more editorial/structural nits) -- all 13 confirmed real, still unfixed, 0 downgrades. Wrote a new verification section, a severity-ranked Final Findings Summary (all 15 findings), and priority-ordered Recommendations into the audit doc; changed header DRAFT->CLOSED. Caught and fixed a self-contradiction on full-document re-read: original Lens A/B headers still said "not independently re-verified" after the new section claimed full verification -- fixed 3 inline labels in place (Learning 316, PROJECT_LEARNINGS.md). Updated BACKLOG.md (removed the done verification item, added a new READY fix item) and CHANGELOG.md. Commit: pending.
+next_steps: One clear next step: BACKLOG.md's new "Fix Document 1's 15 confirmed audit findings" item (READY, Effort M) -- follow the audit doc's own "Recommendations" priority order (2 HIGH factual fixes first, then 2 MEDIUM with ready-made mechanisms, then TDD-vocab placement, then batch the 9 LOW findings as one editorial pass, A3 optional/opportunistic). Re-render via quarto and clean render artifacts (Learning 314) after fixing; full corpus sweep for stale echoes after (S340 precedent). Separately, "Plan Document 2" (READY, Effort M) remains open and untouched, deferred since S330.
+key_files: docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md (now CLOSED; "Session 342 -- Independent Verification" L164-273, "Final Findings Summary" table L275-297, "Recommendations" L299-319), vignettes/articles/engineering-the-2.0.0-release.qmd (read in full, NOT edited -- all 15 findings' current locations cited in the audit doc), BACKLOG.md ("## Documents" section, new fix item), PROJECT_LEARNINGS.md (Learning 316), CLAUDE.md (learnings count 315->316).
+gotchas: The audit doc's line-number citations are now current as of this session's re-anchoring (post-S340 drift already corrected) -- but will go stale again if any OTHER session edits the article before the fix session runs; re-anchor again if so (Learning 315). The severity/priority rankings in the Final Findings Summary and Recommendations are this session's own synthesis judgment, not yet shown to the owner or cross-checked by a second reviewer -- treat as a first draft the fix session (or the owner) may want to re-rank. `PED_GV_AUDIT_2026-05-30.html` remains an untouched, pre-existing untracked artifact in the repo root (still flagged, not this session's, not cleaned up).
+runtime_smoke: n/a -- docs/audits/, PROJECT_LEARNINGS.md, CLAUDE.md, BACKLOG.md, CHANGELOG.md only; the article itself was not edited (owner's explicit verify-only scope decision); no R/ or tests/ touched, no runtime behavior changed.
+changelog_ref: CHANGELOG.md 2026-07-09 "Closed the Document 1 two-lens review: 13 remaining findings independently verified (Session 342)"
 commit: pending
 ```
 

@@ -65,22 +65,25 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       re-scope or close accordingly, not assume "preparation" is still the right verb.
 
 ## Documents (v1.0.8 -> v2.0.0 write-up)
-- [ ] **Close out the Document 1 two-lens review** (READY, Effort M -- includes an
-      in-flight decision, see below) (`docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md`,
-      still DRAFT -- INCOMPLETE from S339). Two findings are already independently confirmed real by S339
-      and **still unfixed** as of S340's edits (re-verified 2026-07-09, this session): Lens A #1 --
-      `engineering-the-2.0.0-release.qmd`'s Section 1 prose (currently L170-172) misattributes
-      `runGeneKeepR()` becoming canonical to the Phase 9 commit (`3db018d1`, which actually made it the
-      *deprecated* alias); it only became canonical later via `1e64dd5d`/issue #110/S276, never mentioned
-      in the article. Lens B #1 -- Section 4 (currently L687-688) still says "the four sessions that wrote
-      Sections 1-3" (should describe four sessions sharing the `commit: pending` receipt-gap pattern, not
-      claim all four wrote sections -- only three did, S332/S333/S334). 13 more findings (Lens A #2/#3,
-      Lens B #2-12) are agent-reported only, never independently re-verified -- do that before acting on
-      any of them (this project's standing discipline; see `PROJECT_LEARNINGS.md` Learning #7/#10/312
-      lineage). **Gotcha:** the audit file's own line numbers are stale by ~20 lines in the back half of
-      the document after S340's edits added a footnote -- re-anchor against the current file, don't trust
-      the audit's cited line numbers verbatim. Decide with the owner whether fixes land in the same
-      session as the verification or a following one.
+- [ ] **Fix Document 1's 15 confirmed audit findings** (READY, Effort M) --
+      `docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md` is now **CLOSED** (S342): all
+      15 findings from the two-lens review (2 spot-verified by S339, 13 independently
+      re-verified by S342) are confirmed real, still unfixed in
+      `engineering-the-2.0.0-release.qmd`, and prioritized in the audit doc's own
+      "Recommendations" section -- 2 HIGH (factual: the `runGeneKeepR()` Phase-9
+      misattribution at L170-172, and the "four sessions...wrote Sections 1-3"
+      contradiction at L687-688), 3 MEDIUM (a chart hiding a 3-month zero-commit gap;
+      only 1 hyperlink vs. 22 plain-text issue/commit citations; TDD vocabulary used
+      ~500 lines before being explained), 9 LOW (grammar, unglossed jargon --
+      "Phase A data freeze," "vertical-slice," "XARCH-2" -- and structural/editorial
+      nits, batchable as one editorial pass per the audit doc), 1 MINOR/optional
+      (a 1-day date mismatch in `feature-highlights.csv`, zero reader-visible impact).
+      **Gotcha:** the audit doc's own line-number citations are current as of S342
+      (post-S340's footnote-drift, already re-anchored) -- re-anchor again if any
+      other session edits the article before the fix session runs. Re-render (`quarto
+      render`) after fixing and clean up render artifacts before staging (Learning
+      314); do a full corpus sweep for stale echoes after fixing, per the S340
+      precedent (Learning #7/#10).
 - [ ] **Plan "Document 2"** (READY, Effort M) -- package purpose, how it addresses that
       purpose, and how to put it into use.
       Explicitly deferred out of `docs/planning/v2-transformation-article-plan.md` (S330) to its own future
