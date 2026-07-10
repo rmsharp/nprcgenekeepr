@@ -303,7 +303,7 @@ modInputServer <- function(id, config = NULL) {
         if (fileExt %in% c("xlsx", "xls")) {
           futile.logger::flog.debug("Reading Excel file",
                                     name = "nprcgenekeepr")
-          data <- readxl::read_excel(file$datapath)
+          data <- readExcelPOSIXToCharacter(file$datapath)
         } else if (fileType == "fileTypeText") {
           futile.logger::flog.debug(
             paste0("Reading text file with separator: '", separator, "'"),
