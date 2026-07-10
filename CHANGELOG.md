@@ -43,6 +43,16 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-10 · [ad hoc] S350 close-out commit (session notes, handoff receipt, learnings)
+- **Deliverable:** Closed out Session 350 (the Excel-upload sire/dam corruption fix,
+  logged below): wrote the full session writeup + Session 349 handoff evaluation +
+  self-assessment to `SESSION_NOTES.md`, completed the `HANDOFFS.md` receipt to
+  `status: complete` referencing the fix commit directly (no self-referential sha,
+  so no separate backfill commit was needed), added `PROJECT_LEARNINGS.md` Learning
+  323, and bumped `CLAUDE.md`'s learnings count. Split close-out into two ≤5-file
+  commits (ledger/backlog/release-notes, then notes/handoff/learnings) rather than
+  one bundled commit, per `SAFEGUARDS.md`'s per-commit 5-file blast-radius cap.
+
 ### 2026-07-10 · [ad hoc] Fixed Excel-upload sire/dam pedigree corruption (Session 350)
 - **Deliverable:** `R/modInput.R`'s `readDataFile()` called
   `readxl::read_excel(file$datapath)` with no `col_types`; `readxl` samples early
