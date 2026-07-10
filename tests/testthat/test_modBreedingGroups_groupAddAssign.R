@@ -315,12 +315,15 @@ test_that("modBreedingGroupsServer passes sex ratio to groupAddAssign", {
       geneticValues = NULL
     ),
     {
-      # Request 3:1 female:male ratio
+      # Request 3:1 female:male ratio via the Custom option + its numeric
+      # input (the radioButtons choices are none/harem/custom -- a literal
+      # numeric string is never a real sexRatio value).
       session$setInputs(
         animalSource = "all",
         nGroups = 3,
         maxKinship = 0.25,
-        sexRatio = "3"
+        sexRatio = "custom",
+        customSexRatio = "3"
       )
 
       session$setInputs(formGroups = 1)
@@ -339,6 +342,43 @@ test_that("modBreedingGroupsServer passes sex ratio to groupAddAssign", {
       }
     }
   )
+})
+
+test_that(paste("modBreedingGroupsServer threads the custom numeric sex",
+                 "ratio into groupAddAssign"), {
+  skip_if_not_installed("shiny")
+
+  test_ped <- makeBreedingGroupTestPed(nFounders = 10, nOffspring = 30)
+  recorder <- new.env(parent = emptyenv())
+  recorder$sexRatio <- "UNSET"
+
+  local_mocked_bindings(
+    groupAddAssign = function(..., sexRatio = 0.0) {
+      recorder$sexRatio <- sexRatio
+      list(group = list(character(0L)), score = 0L)
+    }
+  )
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(
+      pedigree = shiny::reactive({ test_ped }),
+      geneticValues = NULL
+    ),
+    {
+      session$setInputs(
+        animalSource = "all",
+        nGroups = 3,
+        maxKinship = 0.25,
+        sexRatio = "custom",
+        customSexRatio = 2.5
+      )
+      session$setInputs(formGroups = 1)
+      session$getReturned()$groups()
+    }
+  )
+
+  expect_equal(recorder$sexRatio, 2.5)
 })
 
 # =============================================================================

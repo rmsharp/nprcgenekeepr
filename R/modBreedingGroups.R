@@ -56,6 +56,19 @@ modBreedingGroupsUI <- function(id) {
                             choices = c(None = "none",
                                         "Harem (1M:NF)" = "harem",
                                         Custom = "custom")),
+               conditionalPanel(
+                 # ns = ns already scopes this panel's input lookups to the
+                 # module namespace client-side, so the condition uses the
+                 # unprefixed field name (sprintf(..., ns("sexRatio")) here
+                 # would double-prefix and never match -- see the sibling
+                 # nTopAnimals panel above, which has that pre-existing bug).
+                 condition = "input.sexRatio == 'custom'",
+                 ns = ns,
+                 numericInput(ns("customSexRatio"),
+                              "Custom ratio (F per M):",
+                              value = 1.0, min = 0.5, max = 20.0,
+                              step = 0.5)
+               ),
                numericInput(ns("minAge"),
                             "Minimum breeding age (years):",
                             value = 1L, min = 0L, max = 40L, step = 0.1),
@@ -193,13 +206,19 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
       applyKinshipOverridesToMatrix(kmat, overrides)
     }
 
-    # Helper: Parse sex ratio from UI input
-    parseSexRatio <- function(sexRatioInput) {
+    # Helper: Parse sex ratio from UI input. "custom" reads its value from
+    # the customSexRatio numeric input rather than parsing the radio choice
+    # string itself.
+    parseSexRatio <- function(sexRatioInput, customSexRatio = NULL) {
       if (is.null(sexRatioInput) || sexRatioInput %in% c("none", "harem")) {
         return(0.0)
       }
-      sexRatioNum <- suppressWarnings(as.numeric(sexRatioInput))
-      if (is.na(sexRatioNum)) 0.0 else sexRatioNum
+      sexRatioNum <- suppressWarnings(as.numeric(customSexRatio))
+      if (is.null(customSexRatio) || is.na(sexRatioNum)) {
+        0.0
+      } else {
+        sexRatioNum
+      }
     }
 
     # Helper: Filter out NA/empty groups from groupAddAssign result
@@ -241,7 +260,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
         threshold <- input$maxKinship
         numGp <- input$nGroups
         harem <- (input$sexRatio == "harem")
-        sexRatio <- parseSexRatio(input$sexRatio)
+        sexRatio <- parseSexRatio(input$sexRatio, input$customSexRatio)
         minAge <- if (!is.null(input$minAge)) input$minAge else 1.0
         iter <- if (!is.null(input$nIterations)) {
           as.integer(input$nIterations)

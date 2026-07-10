@@ -32,6 +32,13 @@ test_that("modBreedingGroupsUI contains expected elements", {
   expect_true(grepl("Statistics", ui_html))
 })
 
+test_that("modBreedingGroupsUI includes a custom sex ratio numeric input", {
+  ui <- modBreedingGroupsUI("test")
+  ui_html <- as.character(ui)
+
+  expect_true(grepl("customSexRatio", ui_html))
+})
+
 test_that("modBreedingGroupsUI uses correct namespace", {
   ui <- modBreedingGroupsUI("myNamespace")
   ui_html <- as.character(ui)
