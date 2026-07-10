@@ -43,6 +43,9 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-10 · [ad hoc] S345 HANDOFFS.md receipt commit-sha backfill, closed same-session
+- **Deliverable:** Filled in this session's own `HANDOFFS.md` receipt `commit: pending` placeholder with the real close-out commit sha (`14fd5382`) — the same self-correction previous sessions (S331-S336, S339-S344) each needed, closed within the same session rather than left for the next session's Phase 0 reconcile to catch and backfill.
+
 ### 2026-07-10 · [ad hoc] Planned Document 2: port/modernize ColonyManagerTutorial.Rmd (Session 345)
 - **Deliverable:** `docs/planning/document2-colony-manager-guide-plan.md` — one planning
   document for the long-deferred "Document 2" BACKLOG item (package purpose, how it
