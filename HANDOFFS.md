@@ -87,7 +87,7 @@ key_files: docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md (new, full findin
 gotchas: The audit file is a DRAFT snapshot of two forked agents' reports plus this session's spot-verification of exactly 2 of the 15 combined findings -- the other 13 are agent-reported, not independently confirmed; do not upgrade their status without checking. `quarto render` (run by one of the review agents while inspecting figures, not by this session directly) again left untracked .html/_files/.gitignore artifacts in vignettes/articles/ -- cleaned up this session, will recur on any future render (Learning 314, not yet structurally fixed at the .gitignore level).
 runtime_smoke: n/a -- no R/ package runtime behavior touched, no article edits made (report-only scope, held even through the interruption).
 changelog_ref: CHANGELOG.md 2026-07-09 "Two-lens review of Document 1 -- partial, findings preserved as DRAFT (Session 339)"
-commit: pending
+commit: 4c39c522
 ```
 <free-text prose: self-score breakdown>
 
