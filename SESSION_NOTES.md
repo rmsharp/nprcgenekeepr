@@ -7,14 +7,82 @@
 ## ACTIVE TASK
 
 ### What Session 340 Did
-**Deliverable:** Correct the Shiny-application-history narrative in Document 1
+**Deliverable:** Corrected the Shiny-application-history narrative in Document 1
 (`vignettes/articles/engineering-the-2.0.0-release.qmd`) -- the owner-supplied material
-information Session 339 was interrupted to wait for. (IN PROGRESS)
-**Started:** 2026-07-09
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
-next session's reconcile.
+information Session 339 was interrupted to wait for.
+**Started/Completed:** 2026-07-09 / 2026-07-09
+**Status:** DONE.
+
+**What happened, in order:** (1) Owner stated the article's "two Shiny applications"
+framing was wrong: the last CRAN release (1.0.7) had no Shiny modules, 1.0.8 "had none
+that were used or working," and the owner had begun migrating code by hand before
+adopting Claude Code CLI. (2) Verified this against git history before touching
+anything: `gh release list` shows no v1.0.8 release ever existed (v1.0.7 is "Latest");
+the commit bumping `DESCRIPTION` to `Version: 1.0.8` is literally titled "1st attempt at
+adding modules" (`6457a3a3`, 2025-12-29); the first Claude-co-authored commit
+(`2b225ff8`) is 2026-01-20, three weeks later; only 4 commits touched `inst/application/`
+between the scaffold's start and its Phase-9 deletion (one of them the deletion itself),
+consistent with a dormant monolith rather than two actively-drifting apps for most of
+the project's life. (3) Asked the owner what actually happened to v1.0.8's CRAN
+submission (unresolvable from the repo alone) -- owner supplied the actual CRAN
+correspondence: submitted 2025-07-25, published within a day, archived by CRAN
+2025-07-29 ("issues were not corrected in time," though the owner found no
+corresponding problem in the check results), discovered by the owner 2026-01-15,
+never resubmitted since the code was by then stale -- development went directly into
+the modular rewrite instead. (4) Drafted exact replacement text for the Abstract,
+Introduction, and Section 1 opening and presented it via two `AskUserQuestion` rounds
+(footnote detail level; overall rewrite scope) before editing -- both confirmed
+"recommended/full" options. (5) Edited: Abstract ("replacing two independently
+maintained Shiny applications" -> "completed a modular Shiny rewrite -- begun as an
+unfinished scaffold in December 2025 ... and retired the original monolithic Shiny
+application"); added a dated CRAN-archival footnote to the Introduction; rewrote
+Section 1's opening (one app through v1.0.7 -> hand-built scaffold Dec 2025, before
+Claude Code -> genuine drift over the following months, per this project's own
+`shiny-module-conversion-plan.md:12` XARCH-1 audit finding -> nine-phase migration);
+softened the issue #27 citation (its body is empty; it only tracked the 2022-era intent
+to modularize, not a documented friction complaint). (6) Full corpus sweep (`grep` for
+"long-standing"/"two coexisting"/"two independently"/"duplicate-implementation"/"drift"/
+"coexist") after the targeted edits found **two more echoes** the owner hadn't flagged --
+the Introduction's "Four pillars" summary and the Conclusion both still said "long-standing
+duplicate-implementation problem" / "two independently maintained Shiny applications
+drifting out of sync" -- fixed both to match. (7) `quarto render`: 23 chunks, 0 errors;
+cleaned up the render's `.html`/`_files/`/`.gitignore` artifacts before staging
+(Learning 314). (8) Did not transcribe the owner's home address/phone visible in the
+forwarded-email screenshot into the article -- irrelevant and inappropriate for a public
+vignette.
+
+**Session 339 Handoff Evaluation (by Session 340): Score 9/10.** **What helped:** the
+`next_steps` field explicitly said "(1) get the owner's promised material information
+first" before touching any of the draft findings -- exactly what this session did,
+in the right order. The DRAFT-marked audit file and the clear "only 2 of 15 findings
+independently verified" gotcha meant this session correctly did not touch or trust the
+other 13 findings while doing unrelated work on the same file. `key_files` pointed
+straight at the article and the two-document planning doc. **What was missing/wrong:**
+nothing -- S339 could not have predicted the specific correction since the owner hadn't
+given it yet, and its own scope (report-only, interrupted) was honestly represented.
+**ROI:** high -- zero time spent rediscovering where things stood.
+
+**Self-assessment (Session 340): 9/10.** **Strengths:** (1) verified the owner's
+correction against git history (tags, releases, DESCRIPTION version-bump commit
+messages, commit dates) before drafting any text, rather than taking a direct
+correction from the project owner at face value; (2) found the real planning-doc
+origin of the "two coexisting apps" framing (`shiny-module-conversion-plan.md`'s own
+XARCH-1 audit) which let the fix land on an accurate nuanced timeline instead of a
+blunt overcorrection; (3) asked before editing, twice, rather than guessing exact
+wording for a factual/historical claim; (4) ran a full corpus grep sweep after the
+targeted edit and caught two additional stale echoes (Introduction summary,
+Conclusion) the owner hadn't named -- Learning #7/#10 class catch; (5) verified the
+render clean and cleaned up artifacts per Learning 314; (6) kept the owner's personal
+contact info out of the public document. **Weaknesses:** (-) did not annotate the
+still-DRAFT `docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md` to note that neither
+of S339's two review lenses (figure/table fidelity; editorial quality) were scoped to
+catch a historical/factual-accuracy issue like this one -- worth flagging explicitly so
+a future session doesn't assume the two-lens review was exhaustive of everything that
+could be wrong with the article; (-) this session's fix is unrelated to and does not
+resolve S339's remaining 13 draft findings (Lens A #2/#3, Lens B #2-12) -- still
+open, still only agent-reported, not independently verified.
+**Phase 3E (runtime smoke test):** `quarto render vignettes/articles/engineering-the-2.0.0-release.qmd`
+-- 23 chunks, 0 errors. Docs-only change; no `R/` package runtime behavior touched.
 
 ---
 

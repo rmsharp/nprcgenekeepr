@@ -77,19 +77,34 @@ session need this block to continue the work without re-reading the whole repo?*
 ```handoff
 session: S340
 date: 2026-07-09
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Correct the Shiny-application-history narrative in Document 1 (engineering-the-2.0.0-release.qmd) -- the owner-supplied material information S339 was interrupted to wait for. Owner confirmed via git-history verification (no v1.0.8 GitHub/CRAN release exists; first module-scaffold commit 6457a3a3 "1st attempt at adding modules" is 2025-12-29, three weeks before the first Claude-co-authored commit 2b225ff8) plus CRAN correspondence (submitted 2025-07-25, archived 2025-07-29 "issues were not corrected in time," discovered by owner 2026-01-15) that the article's "two coexisting Shiny applications for most of its life" framing is wrong: there was one working app (inst/application/) through the v1.0.7 CRAN release; the modular rewrite began as an unfinished hand-built scaffold in Dec 2025, before Claude Code adoption, and only later (per this project's own shiny-module-conversion-plan.md XARCH-1 audit) grew enough to genuinely drift from the monolith.
-what_was_done: pending
-next_steps: pending
-key_files: vignettes/articles/engineering-the-2.0.0-release.qmd (Abstract ~L19-24, Introduction ~L41-46, Section 1 opening ~L67-76 -- all NOT yet edited), docs/planning/shiny-module-conversion-plan.md:12 (source of the "two coexisting apps" XARCH-1 framing, confirms it's real project history not article invention), docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md (S339's still-DRAFT review this session's fix is separate from but related to)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Corrected the Shiny-application-history narrative in Document 1 (engineering-the-2.0.0-release.qmd) -- the owner-supplied material information S339 was interrupted to wait for.
+what_was_done: Verified the owner's correction against git history before editing: no v1.0.8 GitHub/CRAN release exists (gh release list -- v1.0.7 is "Latest"); the DESCRIPTION Version:1.0.8 bump commit is literally titled "1st attempt at adding modules" (6457a3a3, 2025-12-29), three weeks before the first Claude-co-authored commit (2b225ff8, 2026-01-20); only 4 commits touched inst/application/ between scaffold-start and Phase-9 deletion. Owner then supplied the actual CRAN correspondence (submitted 2025-07-25, published within a day, archived 2025-07-29 "issues were not corrected in time," discovered by owner 2026-01-15, never resubmitted). Confirmed via docs/planning/shiny-module-conversion-plan.md:12 that the "two coexisting apps" framing is real project history (its own XARCH-1 audit finding), just wrongly scoped in the article as "for most of its life" rather than the few months before the migration. Drafted exact replacement text, got owner sign-off via two AskUserQuestion rounds, then edited: Abstract, a new dated CRAN-archival footnote in the Introduction, Section 1's opening paragraph, the Introduction's "Four pillars" summary, and the Conclusion (a full grep sweep after the targeted edits caught these last two stale echoes the owner hadn't named). Softened the issue #27 citation (empty body; only tracked the 2022 intent to modularize). quarto render: 23 chunks, 0 errors; cleaned up render artifacts (Learning 314). Commit: pending (this receipt's own commit, see changelog_ref).
+next_steps: S339's DRAFT audit (docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md) still has 13 unverified findings (Lens A #2/#3, Lens B #2-12) -- this session did NOT address or resolve them, only the separate historical-narrative issue the owner raised. A future session should independently re-verify those before acting on them, and should note that neither review lens was scoped to catch factual/historical-accuracy issues like this one (worth naming explicitly, not assuming the two-lens review was exhaustive). Document 2 (package purpose/how-to-use article, deferred since S336) is still not picked up by any session.
+key_files: vignettes/articles/engineering-the-2.0.0-release.qmd (Abstract L14-25, Introduction footnote L49-58, "Four pillars" summary L60-63, Section 1 opening L78-94, Conclusion L722-730 -- all edited this session), docs/planning/shiny-module-conversion-plan.md:12 (source of the real "two coexisting apps" XARCH-1 finding), docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md (S339's still-DRAFT review, unchanged and unresolved by this session)
+gotchas: The article now correctly distinguishes "the two apps drifted" (true, but only for the months just before the migration) from "two coexisting apps for most of its life" (false) -- do not let a future edit collapse that nuance back into a blanket claim. The CRAN-archival footnote paraphrases the owner's private email correspondence; the owner's home address/phone visible in the forwarded screenshot were deliberately excluded and must stay excluded from any future edit of this passage.
+runtime_smoke: n/a -- docs-only change (vignettes/articles/), no R/ package runtime behavior touched.
+changelog_ref: CHANGELOG.md 2026-07-09 "Correct the Shiny-application-history narrative in Document 1 (Session 340)"
 commit: pending
 ```
-<free-text prose: pending>
+<free-text prose: self-score breakdown>
+
+**+ (what went right):** Verified the owner's own correction against git history rather
+than accepting it uncritically (found the exact scaffold-start commit, the exact
+Claude-adoption date, corroborating evidence in the real migration-planning doc).
+Asked before drafting exact wording, twice, for a factual/historical claim rather than
+guessing. Ran a full corpus sweep after the targeted edit and caught two additional
+stale echoes the owner hadn't named (Introduction summary, Conclusion) -- the kind of
+completeness check Learning #7/#10 call for. Verified the render clean and cleaned up
+artifacts per Learning 314. Kept the owner's personal contact info out of the public
+document.
+**- (what could improve):** Did not annotate the still-DRAFT two-lens audit file to
+note explicitly that neither lens was scoped to catch this class of issue -- a fair
+but real gap, since a future session skimming that audit could otherwise assume its
+"DRAFT -- 2/15 findings verified" caveat covers this angle too, when it never was in
+scope for either lens.
 
 ```handoff
 session: S339
