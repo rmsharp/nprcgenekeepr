@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S348
+date: 2026-07-10
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Execute Document 2 plan Phase C -- docs/planning/document2-colony-manager-guide-plan.md §6 Phase C: port and draft Sections 1-3 of vignettes/articles/colony-manager-guide.qmd using Phase A's re-derived numbers and Phase B's screenshots. Owner resolved two pre-drafting scope decisions via AskUserQuestion before claim: Input-tab narrates CSV with an explicit Excel-bug caveat; Breeding-Groups subsection covers None/Harem fully and omits the Custom-ratio numeric demo (N7) pending its bug fix.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S347
 date: 2026-07-10
 status: complete

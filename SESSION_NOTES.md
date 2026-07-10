@@ -6,6 +6,27 @@
 
 ## ACTIVE TASK
 
+### What Session 348 Did
+**Deliverable:** Execute Document 2 plan Phase C —
+`docs/planning/document2-colony-manager-guide-plan.md` §6 Phase C: port and draft
+Sections 1-3 of `vignettes/articles/colony-manager-guide.qmd` (Purpose, Approach, and a
+Colony Manager's Walkthrough), using Phase A's re-derived numbers and Phase B's
+screenshots. Following the adapted `RESEARCH_DOCUMENTATION_WORKSTREAM.md`.
+**Started:** 2026-07-10
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
+**Pre-drafting scope decisions (owner, via `AskUserQuestion`, before claiming):** (1)
+Section 3's Input-tab walkthrough will narrate CSV as the demonstrated upload format
+(matching Phase B's screenshots) with an explicit inline caveat that Excel upload
+currently has a known data-corruption bug (pointer to the `BACKLOG.md` item) — not a
+silent instruction to use Excel. (2) Section 3's Breeding Groups walkthrough will
+describe the two working sex-ratio modes (None, Harem) fully; "Custom" is mentioned as
+an existing option but its numeric demonstration (N7, "sex ratio of 2.5") is omitted
+with a brief note that a worked example follows once the control is fixed
+(`BACKLOG.md` item).
+
 ### What Session 347 Did
 **Deliverable:** Executed Document 2 plan Phase B —
 `docs/planning/document2-colony-manager-guide-plan.md` §6 Phase B: built a checked-in
