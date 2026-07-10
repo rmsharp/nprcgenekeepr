@@ -9,8 +9,11 @@
 `AskUserQuestion`, Session 345 (2026-07-10), after this session's research surfaced
 that the target content already exists in two places (§1). Owner ratified §11
 decisions 1/2/5 (tab-coverage extent, screenshot method, title/slug) via
-`AskUserQuestion`, Session 346 (2026-07-10) — **Phase A is now DONE** (§3A, §6).
-Phases B-D remain future, separately approved sessions each; no phase is bundled with
+`AskUserQuestion`, Session 346 (2026-07-10) — **Phase A DONE** (§3A, §6). **Phase B
+(screenshot regeneration) is now DONE** (Session 347, 2026-07-10) — see §6 Phase B for
+the capture script, corrected dispositions, and two new functional findings (Excel-upload
+data corruption; non-functional Custom sex-ratio control) recorded to `BACKLOG.md`.
+Phases C-D remain future, separately approved sessions each; no phase is bundled with
 another (FM #26).
 
 **Workstream:** Adapted `docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md`
@@ -323,9 +326,100 @@ with another (FM #26).
 > **Session boundary respected:** produced the inventory and decisions only; no `.qmd`
 > prose, no screenshots — those are Phases B/C.
 
-### Phase B — Regenerate screenshots · risk HIGH 🐉 (see §9 dragon 1)
+### Phase B — Regenerate screenshots · risk HIGH 🐉 (see §9 dragon 1) · ✅ DONE (Session 347)
 
-**What DONE looks like:** a checked-in, regeneratable capture script (or a documented
+> **✅ Implemented in Session 347 (2026-07-10), whole phase, no split.** Spike-tested
+> `shinytest2::AppDriver$get_screenshot()` against the running modular app first (per
+> S346's handoff) — it works cleanly; dragon 1's raciness concern was about *client-side
+> stability waits* on long-running computations (GVA, breeding-group formation), not the
+> screenshot mechanism itself, and was resolved with `wait_ = FALSE` / selector-based
+> clicks (`click_element_safe()`, this project's own E2E helper) plus explicit
+> `wait_for_module_ready()` polling — matching the project's established E2E-test
+> convention exactly. Built the checked-in capture script
+> (`vignettes/articles/colony-manager-guide-screenshots.R`), driven against
+> `data(examplePedigree)` via the live modular app. **Filename disposition:** the 25
+> screenshots Phase A dispositioned "regenerate as-is"/"regenerate with updated framing"
+> keep their original filename (replaced in place); 4 NEW filenames were introduced only
+> where Phase A's inventory said "retire" (`home_tab_landing.png`,
+> `input_format_subtab.png` replacing the 3 retired `opening_screen_top/middle/bottom.png`
+> crops; `pb_focal_animals_before_clear.png`/`pb_focal_animals_after_clear.png` replacing
+> the retired hand-composed `pb_cleared_focal_animals_combined.png` + its `.idraw`
+> source — simplified to two plain sequential captures, since this project's toolchain has
+> no crop/annotate tool). **Framing decision (resolves dragon 1's other half):** every
+> screenshot captures the relevant module's whole panel
+> (`#<module>-moduleContainer`, or the full viewport for Home) rather than reproducing the
+> old tutorial's hand-cropped/annotated style — documented in the script's header comment.
+> Deleted the 8 confirmed-orphaned pre-rename duplicate screenshots (§3A) after
+> re-confirming zero references outside this plan document itself.
+>
+> **Two Phase-A dispositions corrected this session, on firsthand evidence (not carried
+> forward uncritically):** (1) `ss_kinship_matrix.png`, `ss_first_order_relationships.png`,
+> and `ss_female_founders.png` are — like `examplePedigreeTutorial.png` — illustrations of
+> an *exported CSV's contents opened in a spreadsheet program*
+> (`ColonyManagerTutorial.Rmd` L549/L564/L580, "The first few rows of such a file are
+> shown below"), not app UI; `shinytest2::AppDriver` cannot produce them and Phase A's
+> "regenerate as-is" disposition for these 3 was a category miss. Left untouched,
+> matching the treatment already given the 2 `examplePedigreeTutorial*` files. (2) the
+> Pedigree Browser table's client-side DT search box
+> (`app$set_inputs("pedigree-pedigreeTable_search", ...)`) is not a bound Shiny input in
+> this table's configuration (confirmed: errors "Unable to find input binding") — so
+> `pb_unknown_displayed.png` captures the same default view as
+> `pb_10_rows_display_unknown_ids.png` rather than a rows-filtered-to-UNKNOWN-only view;
+> documented duplication, not a silent gap.
+>
+> **Two NEW functional findings this session, out of Phase B's scope to fix, recorded to
+> `BACKLOG.md`:** (1) **Excel-upload data corruption (high priority).**
+> `R/modInput.R`'s `readDataFile()` calls `readxl::read_excel(file$datapath)` with no
+> `col_types` argument; `readxl` infers each column's type from an early row sample, sees
+> mostly-blank early sire/dam values, guesses `logical`, then silently converts every
+> later alphanumeric sire/dam ID it cannot parse as logical to `NA`. Confirmed this
+> session on an Excel round-trip of the shipped `data(examplePedigree)`: **2026/2026
+> (100%) of non-blank sire values and 2023/2026 dam values become `NA`**, with 4049
+> `readxl` warnings never surfaced to the user — the pedigree silently becomes almost
+> entirely founders. This is the *same* code path any real user's Excel-format upload
+> goes through, not specific to this script; the CSV path is unaffected (byte-identical
+> round-trip, verified). This script therefore uploads CSV instead of Excel (the
+> tutorial's own acknowledged alternative format) so the captured screenshots reproduce
+> Phase A's confirmed numbers rather than depicting a silently-broken pedigree — Phase C
+> must account for this when drafting Section 3's upload narrative (wait for a fix, or
+> explicitly narrate CSV as the demonstrated format). (2) **Breeding Groups "Custom" sex
+> ratio has no numeric-value input anywhere in `modBreedingGroupsUI()`** — the
+> server's `parseSexRatio(input$sexRatio)` tries `as.numeric("custom")`, which is `NA`
+> and silently falls back to `0.0`, identical to "None". The tutorial's "sex ratio of
+> 2.5" demonstration (N7) cannot currently be reproduced through the UI at all;
+> `breeding_group_sex_ratio_specification.png` shows the option selected (it exists) but
+> not a working numeric demonstration.
+>
+> **Numeric reproductions confirmed live, matching Phase A exactly:** QC Summary
+> reports "Records Processed: 3694, Errors: 0, Warnings: 1" (N1); the 5-focal-animal
+> trim shows "Showing 1 to 15 of **54** entries" (N2, `pb_5_focal_animals_small.png`);
+> the large-focal-group trim — using the shipped `focalAnimals` example object (327 ids)
+> per Phase A's N3 verdict, uploaded via CSV matching the tutorial's own described
+> method — shows "Showing 1 to 15 of **962** entries" (`pb_trimmed_for_focal_animals.png`;
+> this required explicitly keeping Display Unknown IDs unchecked through the large-group
+> sequence too, matching N2's filter-then-trim order — an inconsistency this session
+> caught and fixed after an initial run gave 1,144, not 962); the Age-Sex Pyramid shows
+> "Total on 2026-Jul-10: **332**" (N4, Male=123 + Female=209). N6 (GVA cutover row) and N7
+> (breeding-group sex-ratio split) remain deliberately uncaptured as specific numbers —
+> `gva_high_and_low_value.png` widens "Show top N" to 500 rather than pinning a row
+> number, and N7 cannot currently be captured at all (see the sex-ratio finding above).
+>
+> **Scope-limiting decision (not a gap, a deliberate Phase C handoff):** the 6-seed-group
+> screenshot (`breeding_group_6_infants_with_dam.png`) shows the current UI's dynamic
+> per-group seed textareas with real structure but empty content — hand-picking real
+> infant/dam ID pairs across 6 groups is content-authoring work for whoever drafts
+> Section 3's actual narrative (Phase C), not something to invent sight-unseen in a
+> screenshot-only phase.
+>
+> **What DONE looks like (original criteria — all three met):** (1) checked-in capture
+> script — met; (2) current-UI screenshots for every covered tab — met, all 34 files
+> (25 regenerated in place + 4 new + 5 left untouched as non-app-UI); (3) old-screenshot
+> disposition resolved — met (8 deleted, 4 retired-and-replaced, the rest kept in place).
+> **Verification:** every screenshot visually spot-checked this session (Read tool image
+> review) against expected UI structure and, where numeric, against Phase A's confirmed
+> values — see the reproductions above. **Next: Phase C** (port and draft Sections 1-3).
+>
+> **What DONE looks like:** a checked-in, regeneratable capture script (or a documented
 manual-capture procedure, per Phase A's method decision) produces current-UI screenshots
 for every tab Section 3 will cover, driven against the current modular app and a stated
 example dataset; old screenshots' disposition (replace in place vs. new dated files)

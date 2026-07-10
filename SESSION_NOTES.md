@@ -7,16 +7,149 @@
 ## ACTIVE TASK
 
 ### What Session 347 Did
-**Deliverable:** Execute Document 2 plan Phase B —
-`docs/planning/document2-colony-manager-guide-plan.md` §6 Phase B: build a checked-in
-`shinytest2`-driven capture script and regenerate current-UI screenshots per Phase A's
-gap inventory (§3A); delete the 8 orphaned pre-rename screenshot duplicates after
-re-confirming zero references. Following the adapted
+**Deliverable:** Executed Document 2 plan Phase B —
+`docs/planning/document2-colony-manager-guide-plan.md` §6 Phase B: built a checked-in
+`shinytest2`-driven capture script and regenerated all 34 current-UI screenshots per
+Phase A's gap inventory (§3A); deleted the 8 orphaned pre-rename screenshot duplicates
+after re-confirming zero references. Following the adapted
 `RESEARCH_DOCUMENTATION_WORKSTREAM.md`.
-**Started:** 2026-07-10
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+**Started/Completed:** 2026-07-10 / 2026-07-10
+**Status:** DONE.
+
+**What happened, in order:** (1) Orientation ran normally; Phase 0 step 6 found the
+`CHANGELOG.md`/`HANDOFFS.md` frontiers both already at `HEAD` — clean reconcile, no
+backfill needed. (2) Owner picked priority #1 (this Phase B item) via a bare "1" in
+response to the rendered priorities list. (3) Read the plan's §6 Phase B completion
+criteria and the surrounding context (§3A gap inventory, §8 dragons, §9 verification
+checklist) before claiming. (4) Claimed the session (commit `3075bfbb`) before any
+technical work. (5) Spike-tested `shinytest2::AppDriver$get_screenshot()` against the
+running modular app first, per S346's handoff — it worked cleanly on the first try
+(Home-tab full-viewport capture, visually confirmed). (6) Re-read
+`R/modInput.R`/`modPedigree.R`/`modGeneticValue.R`/`modBreedingGroups.R`/`modPyramid.R`/
+`modSummaryStats.R`/`appUI.R`/`appServer.R` fresh (not from S346's memory) to get exact
+current selectors, module namespace ids, and the `shared$currentPedigree` wiring showing
+all downstream tabs consume Pedigree Browser's FILTERED reactive. (7) Found the
+project's own existing `test-e2e-*-tutorial.R` files already replicate
+`ColonyManagerTutorial.Rmd`'s workflow steps via `shinytest2::AppDriver` — reused their
+established helper functions (`tests/testthat/helper-shinytest2.R`:
+`create_app_driver`/`navigate_to_tab`/`click_element_safe`/`wait_for_module_ready`/
+`upload_and_wait`) by `source()`-ing the helper file, rather than reinventing driver
+mechanics. (8) Wrote the full capture script
+(`vignettes/articles/colony-manager-guide-screenshots.R`) covering all 34 §3A screenshots
+— filename disposition: 25 kept-name in-place regenerations, 4 new files replacing
+retired concepts, 5 correctly left untouched (spreadsheet-content illustrations, not app
+UI — 2 already flagged by Phase A, 3 more found and corrected this session: `ss_kinship_
+matrix.png`/`ss_first_order_relationships.png`/`ss_female_founders.png`). (9) First full
+run: 40/66 steps failed — diagnosed and fixed three distinct bugs: (a) `get_screenshot()`
+refuses to overwrite an existing file (fixed: `unlink()` before capture); (b) a guessed DT
+search-box input binding doesn't exist (`pedigree-pedigreeTable_search`) — removed, fell
+back to a documented duplicate screenshot; (c) `app$click("id")` on a long-running
+computation (1000-iteration GVA, breeding-group formation) blocks on Shiny's ~4s internal
+default and throws, cascading into every subsequent interaction failing the same way
+because the server was still genuinely busy — fixed by switching to `wait_ = FALSE` +
+`click_element_safe()` (selector-based) + explicit long-timeout `wait_for_module_ready()`
+polling, matching this project's own established E2E convention. Second run: 62/64 (2
+non-fatal do_step warnings from a still-settling busy indicator, both self-healed).
+(10) Visual spot-check (Read-tool image review) surfaced a MAJOR previously-unknown bug:
+the 5-focal-animal trim (expected 54 per Phase A's N2) came back as literally 5 animals —
+traced to `readDataFile()`'s `readxl::read_excel()` call (no `col_types`) silently
+nulling 100% of non-blank sire values on an Excel round-trip of the shipped example
+pedigree (readxl infers column type from early blank rows, guesses `logical`, then drops
+every later alphanumeric ID it can't parse). Confirmed this is the SAME path any real
+user's Excel pedigree upload goes through, not specific to this script. Switched the
+capture script to CSV upload (unaffected, byte-identical round-trip) and re-ran; 54/54
+reproduced exactly. (11) A second discrepancy (962 expected per N3, got 1,144) traced to
+this session's OWN scripting inconsistency (`displayUnknownIds` left at the app's `TRUE`
+default for the large-focal-group sequence instead of matching N2/N3's shared
+filter-then-trim order) — fixed via a targeted patch script (no need to re-run the
+expensive full GVA/breeding-groups sequence); 962/962 reproduced exactly after the fix.
+(12) Found a second new functional bug while building the Breeding Groups sex-ratio
+screenshot: the "Custom" sex-ratio radio has no accompanying numeric-value input anywhere
+in `modBreedingGroupsUI()` — `parseSexRatio(input$sexRatio)` silently falls back to 0.0
+(identical to "None"). Not fixed (out of scope); both bugs recorded to `BACKLOG.md` as
+new items, the Excel one flagged HIGH priority (silent production data corruption on the
+package's primary documented upload path, not a documentation-only concern). (13) Deleted
+the 8 confirmed-orphaned pre-rename screenshots after re-confirming zero references
+outside the plan document itself; left `opening_screen_top/middle/bottom.png` and
+`pb_cleared_focal_animals_combined.png`/`.idraw` untouched since `ColonyManagerTutorial.Rmd`
+itself still references them and that file's fate is explicitly Phase D's decision, not
+this session's. (14) Wrote the Phase B `✅ DONE` blockquote into the plan document (§6),
+matching Documents 1/Phase A's established in-plan convention, plus updated the Status
+line at top. (15) Updated `BACKLOG.md`: pointed the Document 2 item at Phase C, added the
+two new bug findings as their own items. (16) Added `PROJECT_LEARNINGS.md` Learning 320
+(in-memory verification vs. full-pipeline verification; the `click()`-vs-`click_element_
+safe()` blocking distinction) and bumped `CLAUDE.md`'s learnings count (319→320, Sessions
+1-346+→1-347+).
+
+**Session 346 Handoff Evaluation (by Session 347): Score 9/10.** **What helped:** the
+explicit instruction to spike-test `get_screenshot()` before committing to the method
+saved real time — it confirmed the mechanism works in under a minute, so this session
+could correctly diagnose the LATER failures (client-side stability-wait timeouts,
+Excel-upload corruption) as separate issues rather than re-doubting the basic screenshot
+mechanism itself. The gotchas list (54-animal operation-order sensitivity; the stale
+85-focal-group number; the "Founders are high value by definition" prose being now
+factually wrong) were all directly actionable and correctly anticipated exactly the traps
+this session had to navigate around. The key_files pointers (§3A tables, §6 Phase B
+criteria) meant zero time spent re-locating the relevant plan sections. **What was
+missing:** nothing S346 could reasonably have been expected to supply — the Excel-upload
+corruption bug and the missing-custom-sex-ratio-input bug are both things only a session
+that actually drives the live app through file upload and every control could discover;
+S346's own scope (planning-adjacent inventory/numeric re-derivation against in-memory
+data, not the live app) was not positioned to find either. **What was wrong:** nothing
+identified as inaccurate. **ROI:** strongly positive — the spike-test instruction and the
+gotchas list together probably saved 20-30 minutes of re-diagnosis this session would
+otherwise have spent re-discovering already-known traps.
+
+**Self-assessment (Session 347): 9/10.** **Strengths:** (1) did not stop at "the
+screenshot mechanism works" (the spike test) — visually inspected the actual CONTENT of
+generated screenshots against Phase A's confirmed numbers (54/962/332) rather than
+treating "no R error thrown" as sufficient verification, and that inspection is what
+surfaced both new bugs; (2) when the first full run failed 40/66, diagnosed root causes
+systematically (three distinct, correctly-isolated failure classes) rather than
+papering over with broader try/catch or arbitrary sleep() calls; (3) when a genuinely
+serious, previously-unknown production bug surfaced (Excel corruption) mid-task, stopped
+and reported it to the user immediately rather than silently working around it and
+mentioning it only in a buried BACKLOG line — matching `SAFEGUARDS.md`'s spirit that a
+significant unplanned discovery deserves surfacing, not just recording; (4) caught and
+fixed its OWN scripting inconsistency (the 1,144-vs-962 discrepancy) by re-deriving the
+expected pipeline order from Phase A's own methodology rather than assuming the app was
+newly broken, then verified the fix via a minimal targeted patch script instead of
+re-running the full multi-minute GVA/breeding-groups sequence unnecessarily; (5) correctly
+scoped the "6 seed groups with real infant/dam pairs" decision as Phase C content-authoring
+work rather than inventing pedigree-genealogy content it wasn't equipped to responsibly
+choose, and said so explicitly rather than silently producing a plausible-looking but
+unverified example. **Weaknesses:** (-) the DT search-box input-binding guess
+(`pedigree-pedigreeTable_search`) was written into the first script draft without first
+confirming via a quick DOM/JS probe that such a binding exists — a 30-second check before
+writing that section would have avoided one of the three first-run failure classes;
+(-) `breeding_group_sex_ratio_specification.png`'s captured state carries over stale
+Group Detail results from the immediately-prior kinship-enabled run rather than a fresh
+state — defensible given the underlying "Custom" control doesn't work anyway, but not
+explicitly chosen as a deliberate framing decision the way other simplifications were.
+
+**Phase 3E (runtime smoke test):** n/a — this session's diff is
+`vignettes/articles/colony-manager-guide-screenshots.R` (new tooling script, not package
+code), regenerated/deleted files under `vignettes/shiny_app_use/`, and doc/planning/
+BACKLOG/CLAUDE.md/PROJECT_LEARNINGS.md updates; no `R/` package source was modified, so no
+package runtime behavior changed. (The two newly-discovered app bugs were diagnosed via
+direct `Rscript`/`AppDriver` probing, not fixed — no code change to smoke-test.) TDD
+Phase: N/A throughout (documentation/tooling session — a screenshot capture script and
+regenerated documentation image assets, not package production code or its test suite).
+
+**Note for the next session:** Phase C (port and draft Sections 1-3,
+`vignettes/articles/colony-manager-guide.qmd`) is next — see the plan's §6 Phase C for its
+own completion criteria (risk MEDIUM, highest claim-density phase). Before drafting
+Section 3's Input-tab narrative, decide how to handle the Excel-upload corruption bug
+(BACKLOG.md item) — wait for a fix, or explicitly narrate CSV as the demonstrated format;
+do not silently instruct readers to upload Excel while the corruption is unfixed. The
+Breeding-Groups "sex ratio of 2.5" demonstration (N7) cannot be captured until the
+missing-custom-ratio-input bug (also in BACKLOG.md) is fixed — Phase C should either wait
+or adjust that subsection's scope. Two Phase-A dispositions were corrected this session
+(§6 Phase B blockquote has full detail): `ss_kinship_matrix.png`/`ss_first_order_
+relationships.png`/`ss_female_founders.png` are spreadsheet-content illustrations, not
+app UI, and were left untouched like the 2 `examplePedigreeTutorial*` files. The
+`pedigree-pedigreeTable_search` DT input binding does not exist — don't rely on it for
+any future capture-script work on this table.
 
 ---
 

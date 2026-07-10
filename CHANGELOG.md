@@ -43,6 +43,28 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-10 · [ad hoc] Executed Document 2 Phase B: screenshot regeneration + two new bug discoveries (Session 347)
+- **Deliverable:** `docs/planning/document2-colony-manager-guide-plan.md` §6 Phase B —
+  built the checked-in `shinytest2::AppDriver` capture script
+  (`vignettes/articles/colony-manager-guide-screenshots.R`) and regenerated all 34
+  screenshots per Phase A's gap inventory (25 kept-name in-place, 4 new, 5 correctly
+  left untouched as non-app-UI spreadsheet illustrations — 3 more identified this
+  session, correcting Phase A's own disposition for them). Deleted the 8 confirmed-
+  orphaned pre-rename screenshot duplicates after re-confirming zero references.
+- **Live numeric reproductions confirmed matching Phase A exactly:** 3694 QC'd records
+  (N1), 54-animal focal trim (N2), 962-animal large-focal-group trim (N3, via the
+  shipped `focalAnimals` example object), 332 living animals (N4).
+- **Two new production bugs discovered and recorded to `BACKLOG.md` (not fixed this
+  session, out of Phase B scope):** (1) HIGH priority — `R/modInput.R`'s
+  `readDataFile()` silently corrupts sire/dam data on Excel upload (`readxl::read_excel`
+  with no `col_types` infers `logical` from early blank rows, then nulls every later
+  alphanumeric ID — confirmed 100% of non-blank sire values lost on a round-trip of the
+  shipped example pedigree); this is the same path any real user's Excel upload goes
+  through. (2) `modBreedingGroupsUI()`'s "Custom" sex-ratio option has no accompanying
+  numeric-value input anywhere in the UI, silently behaving like "None".
+- Updated `BACKLOG.md` (Document 2 item → Phase C; added the two new bug items).
+  Added `PROJECT_LEARNINGS.md` Learning 320.
+
 ### 2026-07-10 · [ad hoc] S346 HANDOFFS.md receipt commit-sha backfill, closed same-session
 - **Deliverable:** Filled in this session's own `HANDOFFS.md` receipt `commit: pending` placeholder with the real close-out commit sha (`4941b2e8`), matching the S331-S345 precedent of closing this within the same session rather than leaving it for the next session's Phase 0 reconcile.
 
