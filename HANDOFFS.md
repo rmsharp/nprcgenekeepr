@@ -77,16 +77,16 @@ session need this block to continue the work without re-reading the whole repo?*
 ```handoff
 session: S344
 date: 2026-07-10
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Prune the stale BACKLOG.md "issue #40 open" item -- issue #40 is CLOSED (merged PR #41, 2026-06-11) and the described E2E-strengthening + CI-stability work is fully done, verified via gh issue view/gh pr view/grep before starting.
-what_was_done: pending
-next_steps: pending
-key_files: BACKLOG.md ("Up Next" section, the #40 item)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 7
+active_task: DONE. Pruned the stale BACKLOG.md "issue #40 open" item -- issue #40 is CLOSED (merged PR #41, 2026-06-11) and the described E2E-strengthening + CI-stability work is fully done.
+what_was_done: Backfilled S343's own undocumented HANDOFFS-sha-backfill commit (b94ad328) into CHANGELOG.md, committed separately (4eb4b463), before the Phase 0 report. Owner picked BACKLOG priority #1 (issue #40 E2E work); before claiming the session, verified via gh issue view 40 (CLOSED, 2026-06-11), gh pr view 41 (MERGED, 0363ffe3), and grep of expect_true(TRUE) across all test-app-*/test-e2e-* files (only historical REVIVE comments remain, zero live tautologies) that the described work is already done -- reported this to the owner via AskUserQuestion instead of starting phantom work; owner chose to prune the stale item. Claimed the session (commit 3bd62024) before any edit. Removed the 6-line stale item from BACKLOG.md's "Up Next" section. Verified via git grep that no other active doc (CLAUDE.md, ROADMAP.md) echoes the stale claim. Added a CHANGELOG.md entry with the full verification chain inline. No R/ or tests/ touched (TDD Phase: N/A).
+next_steps: Two independent paths open, same as S343 left them minus the now-closed #40 item: (1) "Plan Document 2" (READY, Effort M) -- package purpose/how-to-use, deferred since S330, named in S336/S339/S341/S343's handoffs, never picked up. (2) LabKey integration remainder (BLOCKED on live server access), CRAN submission prep (BLOCKED/may be stale -- re-check CRAN status first before assuming "preparation" is still the right verb), NEW-12/XARCH-3 Shiny progress hook (READY, Effort S, small separable cleanup), the Tracker-reconciliation DECISION NEEDED item (also flag while there: its own "#1-39" issue-range note is now stale too, issues run to #116 -- noticed this session, not fixed, out of scope), or one of the 8 open GitHub issues (#116, #37, #36, #28, #12, #11, #10, #5).
+key_files: BACKLOG.md (removed lines, "Up Next" section), CHANGELOG.md (new [ad hoc] entry with full verification chain), SESSION_NOTES.md (S344 section, S343 handoff evaluation)
+gotchas: Before trusting any BACKLOG.md item's "READY"/open framing at face value, spot-check against gh issue/pr state if the item cites a specific issue number -- this exact item survived 3+ prior sessions flagging it stale (visible in CHANGELOG.md history around S330-S334) without anyone actually fixing BACKLOG.md, including a session (S341) whose own deliverable was backlog curation. The "Tracker reconciliation" section's "#1-39" issue-range note (BACKLOG.md, near the bottom) is now also stale (issues run to #116) -- noticed, not fixed, flagged for whoever picks that item up.
+runtime_smoke: n/a -- BACKLOG.md only, no R/ or tests/ touched, no runtime behavior changed.
+changelog_ref: CHANGELOG.md 2026-07-10 "Pruned the stale BACKLOG.md \"issue #40 open\" item (Session 344)"
 commit: pending
 ```
 

@@ -7,13 +7,86 @@
 ## ACTIVE TASK
 
 ### What Session 344 Did
-**Deliverable:** Prune the stale `BACKLOG.md` "issue #40 open" item (issue #40 is
-CLOSED; the described E2E-strengthening + CI-stability work is fully done) (IN PROGRESS)
-**Started:** 2026-07-10
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
-next session's reconcile.
+**Deliverable:** Pruned the stale `BACKLOG.md` "issue #40 open" item — issue #40 is
+CLOSED (merged PR #41, 2026-06-11) and the described E2E-strengthening + CI-stability
+work is fully done.
+**Started/Completed:** 2026-07-10 / 2026-07-10
+**Status:** DONE.
+
+**What happened, in order:** (1) Orientation ran normally; Phase 0 step 6 found one
+undocumented commit past the `CHANGELOG.md` frontier (`b94ad328`, S343's own
+same-session `HANDOFFS.md` receipt commit-sha backfill) -- backfilled a `[ad hoc]`
+entry and committed it separately (`4eb4b463`) before the report, matching the
+S331-S334/S339/S341-S342 precedent exactly. (2) Presented the rendered "Current
+priorities" list; owner picked priority #1: strengthen shinytest2 E2E assertions + CI
+stability (BACKLOG's `issue #40` item). (3) Before claiming the session, verified the
+premise rather than trusting `BACKLOG.md`'s own text (per the "check process history
+before re-running work" discipline): `gh issue view 40` showed **CLOSED** (2026-06-11),
+`gh pr view 41` showed the described work **MERGED** (merge commit `0363ffe3`, in
+`git log`), a grep of `expect_true(TRUE)` across all `test-app-*`/`test-e2e-*` files
+found only historical `# REVIVE: was expect_true(TRUE)...` comments (zero live
+tautologies), `test-e2e-summary-statistics-module.R` now targets the correct tab in
+all 8 tests, and `.github/workflows/shinytest2.yaml` runs the E2E tier in per-module
+fresh-process CI groups (the flake mitigation) with a later CI-coverage gap in that
+grouping also independently confirmed already closed (Session 337, regression-guarded
+by `test_shinytest2_workflow_coverage.R`). This staleness had been flagged by at least
+3 prior sessions (visible in `CHANGELOG.md` history around S330-S334) but none had
+corrected `BACKLOG.md` itself -- not even S341, whose own deliverable was backlog
+curation. (4) Reported this finding to the owner via `AskUserQuestion` instead of
+starting phantom work on already-completed functionality; owner chose "prune the stale
+item" as the redirected deliverable. (5) Claimed the session in `SESSION_NOTES.md`/
+`HANDOFFS.md` (`status: pending`) and committed the claim (`3bd62024`) before any
+edit. (6) Removed the 6-line "Strengthen the shinytest2 E2E assertions + CI stability"
+item from `BACKLOG.md`'s "Up Next" section. Declined to also fix the adjacent "Tracker
+reconciliation" section's now-also-stale "#1-39" issue-range note (issues now run to
+#116) -- out of this session's declared scope; flagged here instead
+(SAFEGUARDS.md scope-creep discipline: "I also noticed..." -> note it, don't act on
+it). (7) Verified: `git grep` across `BACKLOG.md`/`CLAUDE.md`/`ROADMAP.md` for any
+other "#40"/"issue #40" reference found none remaining. No `R/`/`tests/` touched, so no
+build-equivalent/test-suite run needed (TDD Phase: N/A). (8) Added the `CHANGELOG.md`
+entry documenting this action, with the full verification chain inline so a future
+reader doesn't have to re-derive it.
+
+**Session 343 Handoff Evaluation (by Session 344): Score 7/10.** **What helped:**
+`key_files`/`gotchas` were accurate and specific (the `kbl()` escape gotcha, the
+pre-existing unrelated test failure) and cost zero re-verification time; `next_steps`
+gave concrete branches (Document 2 planning, the BACKLOG items including issue #40,
+the 8 open GitHub issues) that structured this session's Phase 0 priorities
+presentation cleanly. **What was missing:** nothing about the deliverable itself --
+S343's own scope (the 15 audit findings) was fully and accurately closed out. **What
+was wrong:** the handoff's `next_steps` repeated "shinytest2 E2E hardening issue #40"
+as a live open option without flagging that this exact claim had already been
+identified as stale in `CHANGELOG.md` history (visible via a `git grep` any session
+could have run) -- not a new mistake by S343 (S343 didn't touch `BACKLOG.md`'s E2E
+item and had no reason to re-verify it for its own unrelated deliverable), but a
+missed opportunity to flag a known landmine for whichever session picked that branch
+next, the way the same handoff correctly flagged the CRAN item as "may be stale --
+re-check first." **ROI:** still positive -- no implementation time was wasted (this
+session verified before starting, not after), only the extra verification step this
+session would have run regardless per its own process discipline.
+
+**Self-assessment (Session 344): 9/10.** **Strengths:** (1) verified the BACKLOG
+item's premise via `gh issue view`/`gh pr view`/direct grep of the actual test files
+and CI workflow *before* claiming the session or writing any TDD-phase declaration for
+implementation work -- caught a false start before it cost anything; (2) surfaced the
+finding to the owner via `AskUserQuestion` with concrete redirect options rather than
+either silently substituting a different task or silently plowing ahead on a false
+premise (both would have been protocol violations -- FM #13/#23 territory); (3) kept
+the corrected deliverable tightly scoped -- removed exactly the stale item, declined to
+also fix the adjacent "#1-39" staleness noticed in the same file, and documented that
+choice rather than leaving it implicit; (4) wrote the `CHANGELOG.md` entry with the
+full verification chain inline (specific commands, specific findings) so a future
+session doesn't have to re-derive "was #40 really done" from scratch again -- directly
+targets the root cause of why this staleness survived 3+ prior flag-and-defer passes.
+**Weaknesses:** (-) did not independently re-verify the Session 337 CI-coverage-gap
+closure claim beyond reading the existing `CHANGELOG.md` entry describing it (relied on
+a prior session's documented verification rather than re-running `gh api` on the
+workflow run) -- reasonable since that sub-claim was incidental context for this
+session's actual deliverable (the `BACKLOG.md` prune), not something this session's
+scope required re-deriving, but worth naming rather than leaving implicit.
+**Phase 3E (runtime smoke test):** n/a -- `BACKLOG.md` only; no `R/` or `tests/`
+touched, no runtime behavior changed. No build-equivalent applicable beyond the direct
+`git grep` sweep confirming no other doc echoes the stale claim.
 
 ---
 

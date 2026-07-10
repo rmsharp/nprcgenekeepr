@@ -51,12 +51,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       measured + per-center query availability/permissions are confirmed; needs a live LabKey server to
       test/observe, and a naive focal-id server filter is incompatible with the client-side
       connected-component walk).
-- [ ] **Strengthen the shinytest2 E2E assertions + CI stability** (READY, Effort L) —
-      GitHub issue **#40**, the open
-      follow-on to the now-complete Phase 8 E2E harness: replace boot-level tautologies with behavioral
-      checks, and harden the full-tier Chrome process-count flake (per-group fresh processes). Coverage
-      goal >80%. (The monolith → Shiny-module conversion campaign — XARCH-1 / issue #27, all 9 phases —
-      is **COMPLETE**; see `CHANGELOG.md` and `docs/planning/shiny-module-conversion-plan.md`.)
 - [ ] **CRAN submission preparation** (BLOCKED -- external, Effort S to re-scope) —
       v2.0.0 was already submitted to CRAN (S329, `devtools::submit_cran()`,
       `CRAN-SUBMISSION` sha `8ca8bb24`); CRAN's review outcome is still pending as of
