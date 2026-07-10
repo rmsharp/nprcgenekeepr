@@ -77,16 +77,16 @@ session need this block to continue the work without re-reading the whole repo?*
 ```handoff
 session: S345
 date: 2026-07-10
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Plan "Document 2" (package purpose, how it addresses that purpose, how to put it into use) -- one planning document to docs/planning/, following RESEARCH_DOCUMENTATION_WORKSTREAM.md (adapted, matching Document 1's precedent).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE. Planned "Document 2" -- docs/planning/document2-colony-manager-guide-plan.md, following RESEARCH_DOCUMENTATION_WORKSTREAM.md (adapted, matching Document 1's precedent).
+what_was_done: Surveyed the public docs surface (README, six vignettes/articles/*.qmd) and got owner sign-off via AskUserQuestion on form (new pkgdown article) + audience (colony-manager/domain-expert). Before drafting, ran a broader vignettes/ sweep and discovered the target content already exists: a3manual.Rmd + 13 manual_components/*.Rmd (CRAN-shipped, actively maintained, shares README's source) and ColonyManagerTutorial.Rmd (748 lines, screenshot-illustrated, titled for the exact chosen audience, .Rbuildignore'd and unpublished, screenshots stale pre-dating the Shiny-module migration). Also confirmed inst/_pkgdown.yml's Reference-page grouping is dead config (shadowed by root _pkgdown.yml, verified via pkgdown:::pkgdown_config_path + a live-site WebFetch) and independently stale (64/182 exports missing). Surfaced this via a second AskUserQuestion; owner chose to port/modernize ColonyManagerTutorial.Rmd rather than draft fresh. Wrote the full plan: discovery + scope decisions, 12-row evidence table, proposed outline/tables/figures, a 4-phase breakdown with completion criteria and dragons, verification checklist, 5 open decisions for the owner. Added 3 BACKLOG.md items (Document-2 plan-executed status, a user-requested item on Document 1's testing section conflating file-count growth with coverage/test-case/E2E improvement, and the pkgdown dead-config finding) -- none fixed this session, out of scope. Added PROJECT_LEARNINGS.md Learning 318 and bumped CLAUDE.md's learnings count. Commit: pending (this receipt's own commit).
+next_steps: Execute Phase A of docs/planning/document2-colony-manager-guide-plan.md -- AskUserQuestion resolving open decisions 1-2 (tab-coverage extent: include Genetic Diversity #112 + Potential Parents #48 or not; screenshot-regeneration method: shinytest2-automated vs. manual), confirm title/slug, build the screenshot gap inventory and re-derive ColonyManagerTutorial.Rmd's example-data-dependent numeric claims against current data. Separately, either of the two other new BACKLOG items (Document-1 testing-section coverage fix, pkgdown dead-config fix) are independent, smaller, Effort-S pickups with no ordering dependency on the Document-2 phases.
+key_files: docs/planning/document2-colony-manager-guide-plan.md (the deliverable, all sections); BACKLOG.md (3 items added/updated); PROJECT_LEARNINGS.md (Learning 318); CLAUDE.md (learnings count); SESSION_NOTES.md (S345 section, S344 handoff evaluation).
+gotchas: Do not draft Document 2 as fresh prose -- ColonyManagerTutorial.Rmd + manual_components/*.Rmd are the primary source, per the owner's explicit port/modernize decision. vignettes/shiny_app_use/*.png screenshots are stale (2024-12-16, pre-migration) and must not be reused as-is. Any numeric claim carried from ColonyManagerTutorial.Rmd (row counts, timing claims) is tied to 2019-2020-era example data/hardware and must be re-derived, not copied (plan's dragon 2). Two pre-existing untracked render/audit artifacts were observed but NOT created by or cleaned up in this session (out of scope): PED_GV_AUDIT_2026-05-30.html (repo root) and vignettes/articles/engineering-the-2.0.0-release.html/_files//.gitignore (Learning 314's pattern, timestamped just before this session started).
+runtime_smoke: n/a -- planning/docs-only session (docs/planning/, BACKLOG.md, PROJECT_LEARNINGS.md, CLAUDE.md, SESSION_NOTES.md, HANDOFFS.md); no R/ or tests/ touched, no runtime behavior changed. TDD Phase: N/A throughout.
+changelog_ref: CHANGELOG.md 2026-07-10 "Planned Document 2: port/modernize ColonyManagerTutorial.Rmd (Session 345)"
 commit: pending
 ```
 

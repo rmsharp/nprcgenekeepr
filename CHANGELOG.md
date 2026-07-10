@@ -43,6 +43,40 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-10 · [ad hoc] Planned Document 2: port/modernize ColonyManagerTutorial.Rmd (Session 345)
+- **Deliverable:** `docs/planning/document2-colony-manager-guide-plan.md` — one planning
+  document for the long-deferred "Document 2" BACKLOG item (package purpose, how it
+  addresses that purpose, how to put it into use), following
+  `RESEARCH_DOCUMENTATION_WORKSTREAM.md` (adapted, matching Document 1's precedent).
+- **Owner scope decisions (via `AskUserQuestion`, twice):** (1) article form = new
+  `vignettes/articles/*.qmd`, audience = primate-center bioinformatics/colony managers;
+  (2) content strategy = **port and modernize `ColonyManagerTutorial.Rmd`** rather than
+  draft from scratch, after this session's research found the target content already
+  exists.
+- **Discovery that reshaped the plan:** a broader `vignettes/` sweep (beyond the current
+  public-docs surface) found `vignettes/a3manual.Rmd` + 13
+  `vignettes/manual_components/*.Rmd` (CRAN-shipped, actively maintained, sharing
+  `README.Rmd`'s own source for Introduction/Summary-of-Functions) and
+  `vignettes/ColonyManagerTutorial.Rmd` (748 lines, screenshot-illustrated, titled for
+  the exact chosen audience, actively kept in sync with API renames through
+  2026-07-07 — but `.Rbuildignore`d and so invisible on CRAN and the pkgdown site; its
+  screenshots, `vignettes/shiny_app_use/`, last regenerated 2024-12-16, predate the
+  Shiny-module migration Session 22-35).
+- **Separate finding, flagged not fixed:** `inst/_pkgdown.yml`'s curated Reference-page
+  grouping is dead configuration (confirmed via `pkgdown:::pkgdown_config_path`, shadowed
+  by the root `_pkgdown.yml`; confirmed live on the deployed site via `WebFetch` — a flat
+  "All functions" list only) and independently stale (64 of 182 current `NAMESPACE`
+  exports missing from its list).
+- **BACKLOG.md updated:** replaced the "Plan Document 2" item with an "Execute Document 2
+  plan (Phase A)" item; added a new item for a user-flagged gap in Document 1's
+  Testing-at-Scale section (conflates test-file-count growth with actual coverage/
+  test-case/E2E improvement — no `covr`/Codecov percentage or test-case count ever
+  cited); added a new item for the `inst/_pkgdown.yml` dead-config finding.
+- **`PROJECT_LEARNINGS.md` Learning 318** added (check the full `vignettes/` tree, not
+  just the public surface, before scoping a new-document plan as fresh drafting); `CLAUDE.md`'s
+  learnings count bumped 317→318.
+- No `R/`/`tests/` touched; TDD Phase N/A (planning/documentation session).
+
 ### 2026-07-10 · [ad hoc] S344 HANDOFFS.md receipt commit-sha backfill, closed same-session
 - **Deliverable:** Filled in this session's own `HANDOFFS.md` receipt `commit: pending` placeholder with the real close-out commit sha (`6bd0d9fb`) — the same self-correction previous sessions (S331-S336, S339, S340, S341, S342, S343) each needed, closed within the same session rather than left for the next session's Phase 0 reconcile to catch and backfill.
 

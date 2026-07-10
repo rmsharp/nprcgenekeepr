@@ -59,12 +59,56 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       re-scope or close accordingly, not assume "preparation" is still the right verb.
 
 ## Documents (v1.0.8 -> v2.0.0 write-up)
-- [ ] **Plan "Document 2"** (READY, Effort M) -- package purpose, how it addresses that
-      purpose, and how to put it into use.
-      Explicitly deferred out of `docs/planning/v2-transformation-article-plan.md` (S330) to its own future
-      planning session per the owner's 2026-07-09 instruction; named as a next step in S336's `HANDOFFS.md`
-      receipt and again in S339's, never picked up by any session since. Needs its own planning session
-      (scope/audience/structure not yet decided) before any drafting begins.
+- [ ] **Execute "Document 2" plan (Phase A)** (READY, Effort M) -- planning session DONE
+      (S345, `docs/planning/document2-colony-manager-guide-plan.md`). Scope decided:
+      port and modernize `ColonyManagerTutorial.Rmd` (currently `.Rbuildignore`d and
+      unpublished, but actively maintained) plus the `_introduction.Rmd`/
+      `_summary_of_major_functions.Rmd` shared source into a new public
+      `vignettes/articles/*.qmd`, not a from-scratch draft. Next: Phase A of the plan's
+      §6 phased breakdown (finalize tab-coverage extent and screenshot-regeneration
+      method via `AskUserQuestion`, build the gap inventory) -- see the plan's §9 open
+      decisions 1-2 before starting.
+- [ ] **Document 1's Testing-at-Scale section conflates file-count growth with testing
+      quality** (READY, Effort S) -- `vignettes/articles/engineering-the-2.0.0-release.qmd`
+      §Section 3 (`#sec-testing`, ~L392-455) leads with "the test suite grew from 132 to
+      257 `.R` files... a 95% increase" as its headline metric and never cites an actual
+      `covr`/Codecov coverage percentage or a test-*case* count, despite the project
+      having a live Codecov badge (`README.md`) and a `test-coverage.yaml` CI workflow
+      the section itself references by filename (L524) without quoting its output. The
+      word "coverage" appears three times in the section, none of them a quantified
+      code-coverage figure -- twice describing E2E *behavioral* coverage ("Coverage at
+      the end of 8d was boot-level") and once naming the CI workflow file. File-count
+      growth is a real but weak proxy: more files can mean more tests, better coverage,
+      or more E2E depth, but doesn't by itself establish any of the three, and the
+      section's own prose (rightly) argues the *kind* of test that improved (E2E
+      dormant-to-executable-to-behavioral) matters more than the count -- it just never
+      backs that argument with the coverage number that would make it load-bearing
+      rather than qualitative. (User-flagged, S345.) Fix: pull an actual `covr::package_coverage()`
+      percentage (or the Codecov API's recorded value) at both endpoint commits
+      (`4548aa1b`, `8ca8bb24`) if reconstructable, or at minimum the current value with
+      an honest "not reconstructable at the v1.0.8 endpoint" caveat if not; consider also
+      citing total test-*case* count (not just file count) alongside the existing file-count
+      table.
+- [ ] **`inst/_pkgdown.yml`'s curated Reference-page grouping is dead configuration**
+      (READY, Effort S) -- discovered during S345's Document-2 planning research.
+      `pkgdown`'s own config resolver (`pkgdown:::pkgdown_config_path`) picks the first
+      existing file from `_pkgdown.yml`, `_pkgdown.yaml`, `pkgdown/_pkgdown.yml`,
+      `pkgdown/_pkgdown.yaml`, `inst/_pkgdown.yml`, `inst/_pkgdown.yaml` in that order;
+      the project's root `_pkgdown.yml` exists (no `reference:` key), so
+      `inst/_pkgdown.yml`'s "Data objects"/"Major Features and Functions"/"Primary
+      interactive functions"/"All exposed functions" grouping is never read. Confirmed
+      live on the deployed site (`https://rmsharp.github.io/nprcgenekeepr/reference/index.html`):
+      a flat "All functions" list only, not the grouped structure `README.md:86-94`
+      describes. Independently, `inst/_pkgdown.yml`'s own lists have drifted from
+      `NAMESPACE` regardless (64 of 182 current exports missing from its "All exposed
+      functions" list, incl. every `mod*Server`/`mod*UI` pair) -- so fixing the shadowing
+      alone is not sufficient; the lists need re-syncing too, or the `reference:` block
+      should be regenerated fresh rather than merely un-shadowed. Fix: either move/merge
+      `inst/_pkgdown.yml`'s `reference:` block into the root `_pkgdown.yml` (re-synced
+      against current `NAMESPACE`), or delete `inst/_pkgdown.yml` if the grouped
+      structure is no longer wanted and update `README.md:86-94` to match whichever is
+      chosen. See `docs/planning/document2-colony-manager-guide-plan.md` §1 for full
+      verification detail.
 
 ## Audit follow-ups
 *(From `PED_GV_AUDIT_2026-05-30.md`; the audit compute/test items are all resolved — see

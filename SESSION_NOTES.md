@@ -7,15 +7,109 @@
 ## ACTIVE TASK
 
 ### What Session 345 Did
-**Deliverable:** Plan "Document 2" (package purpose, how it addresses that purpose,
-and how to put it into use) — one planning document written to `docs/planning/`,
-following `RESEARCH_DOCUMENTATION_WORKSTREAM.md` (adapted, matching Document 1's
-`docs/planning/v2-transformation-article-plan.md` precedent) and the Planning Sessions
-discipline in `SESSION_RUNNER.md`. (IN PROGRESS)
-**Started:** 2026-07-10
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+**Deliverable:** Planned "Document 2" —
+`docs/planning/document2-colony-manager-guide-plan.md`, following
+`RESEARCH_DOCUMENTATION_WORKSTREAM.md` (adapted, matching Document 1's precedent) and
+the Planning Sessions discipline in `SESSION_RUNNER.md`.
+**Started/Completed:** 2026-07-10 / 2026-07-10
+**Status:** DONE.
+
+**What happened, in order:** (1) Orientation ran normally; Phase 0 step 6 found zero
+undocumented commits (`CHANGELOG.md`/`HANDOFFS.md` frontiers both already at `HEAD`,
+`dfa80cab`) — no backfill needed, first clean reconcile in several sessions. (2)
+Presented the rendered "Current priorities" list; owner picked priority #1: Plan
+"Document 2." (3) Claimed the session (commit `ddd7e931`) before any research. (4) Read
+`docs/planning/v2-transformation-article-plan.md` (Document 1's plan, full) and
+`RESEARCH_DOCUMENTATION_WORKSTREAM.md` (full) to establish precedent and discipline. (5)
+Surveyed the current public documentation surface (`README.md`, `DESCRIPTION`,
+`_pkgdown.yml`, the six existing `vignettes/articles/*.qmd`) and asked the owner two
+scope questions via `AskUserQuestion`: article form (new pkgdown article vs. README
+rewrite vs. external paper — owner chose new pkgdown article) and audience
+(colony-manager/domain-expert vs. general R audience vs. both — owner chose
+colony-manager/domain-expert). (6) Before drafting the plan around that answer, ran a
+broader `find vignettes -maxdepth 1` sweep and discovered the target content already
+exists: `vignettes/a3manual.Rmd` + 13 `vignettes/manual_components/*.Rmd` child files (a
+CRAN-shipped, actively-maintained manual sharing README's own source for
+Introduction/Summary-of-Functions) and `vignettes/ColonyManagerTutorial.Rmd` (748 lines,
+screenshot-illustrated, titled for the exact chosen audience, actively kept in sync with
+API renames as recently as 2026-07-07 — but `.Rbuildignore`d and so invisible on both
+CRAN and the pkgdown site; its screenshots, `vignettes/shiny_app_use/`, last touched
+2024-12-16, predate the Shiny-module migration Session 22-35). Also independently
+confirmed (via `pkgdown:::pkgdown_config_path` inspected directly, plus a live-site
+`WebFetch`) that `inst/_pkgdown.yml`'s curated Reference-page grouping is dead
+configuration, shadowed by the root `_pkgdown.yml`, and separately stale (64 of 182
+current exports missing from its list). (7) Surfaced this finding to the owner via a
+second `AskUserQuestion` — "port/modernize `ColonyManagerTutorial.Rmd`" vs. "narrow
+connective-tissue article" vs. "re-scope entirely as an architecture question" — owner
+chose to port/modernize. (8) Read `ColonyManagerTutorial.Rmd` in full, cross-referenced
+its tab coverage against `R/appUI.R`'s current 10-11 tabs (confirmed 2 tabs, Genetic
+Diversity #112 and Potential Parents #48, postdate the tutorial and are uncovered), and
+wrote the full plan
+(`docs/planning/document2-colony-manager-guide-plan.md`) — context/discovery, scope
+decisions, a 12-row evidence table with re-runnable verification commands, proposed
+outline/tables/figures, a 4-phase breakdown (finalize scope+screenshot method / regenerate
+screenshots / port+draft / assemble+verify+publish) with per-phase completion criteria
+and dragons, a verification checklist, and 5 open decisions for the owner (tab-coverage
+extent, screenshot method, `ColonyManagerTutorial.Rmd`'s fate, pkgdown-fix timing,
+title/slug) — none silently assumed. (9) Mid-turn, the owner separately asked to add a
+`BACKLOG.md` item about Document 1's Testing-at-Scale section conflating test-file-count
+growth with actual testing-quality improvement (no `covr`/Codecov percentage or
+test-case count ever cited, despite both being available) — read that section
+(`engineering-the-2.0.0-release.qmd` L392-524) to confirm and precisely ground the
+claim, then added it. (10) Added three `BACKLOG.md` items total: the Document-2
+plan-executed status update, the Document-1 testing-section finding, and the
+`inst/_pkgdown.yml` dead-config finding — none fixed this session, all out of this
+session's declared scope (planning, not implementation), per SAFEGUARDS.md scope
+discipline. (11) Added `PROJECT_LEARNINGS.md` Learning 318 (the "check the full
+`vignettes/` tree, not just the public surface, before scoping a new-document plan"
+pattern, plus the pkgdown-resolver sub-finding) and updated `CLAUDE.md`'s learnings
+count (317→318, Sessions 1-343+→1-345+).
+
+**Session 344 Handoff Evaluation (by Session 345): Score 8/10.** **What helped:**
+`next_steps` correctly named "Plan Document 2" as the top open item, matching what the
+owner picked; `key_files`/`gotchas` were accurate for S344's own scope (the `BACKLOG.md`
+prune). **What was missing:** nothing S344 could reasonably have been expected to
+provide — S344's own deliverable (pruning a stale, unrelated BACKLOG item) gave no
+occasion to survey `vignettes/`'s full tree or flag prior art for Document 2; that
+research was this session's own job, not a gap in the prior handoff. **What was
+wrong:** nothing identified. **ROI:** positive — the priorities list it fed into Phase 0
+was accurate and let this session start immediately on the right item without
+re-deriving the open-items list from scratch.
+
+**Self-assessment (Session 345): 8/10.** **Strengths:** (1) did not draft the plan
+around the first `AskUserQuestion`'s answer alone — ran a broader prior-art sweep before
+committing to "new article, colony-manager audience" as license to draft, catching that
+the target content already substantially exists in two different legacy-vignette forms;
+(2) surfaced that discovery to the owner via a second, scope-reversing
+`AskUserQuestion` with three genuinely distinct options rather than silently either
+re-scoping unilaterally or ignoring the finding and drafting a plan that would have
+badly duplicated existing, actively-maintained content; (3) verified the
+`inst/_pkgdown.yml` shadowing claim against the actual `pkgdown` resolver function and
+the live deployed site, not just the config files' presence — avoided asserting a
+plausible-but-unverified claim; (4) recorded all three out-of-scope findings (Document-2
+plan-executed status, Document-1 testing-section gap, pkgdown dead-config) as concrete,
+evidence-grounded `BACKLOG.md` items rather than letting them evaporate at session end;
+(5) handled the owner's mid-turn `BACKLOG.md` request by first reading the actual
+article section it referred to, rather than transcribing the request verbatim without
+verification. **Weaknesses:** (-) the first `AskUserQuestion` (form + audience) was
+posed before the deeper `vignettes/` sweep, requiring a second question round — a more
+thorough initial sweep (documented as Learning 318) would have let the first question
+already include the "port vs. draft fresh" axis; (-) evidence-gathering for the tab list
+and screenshot dates used targeted `grep`/`git log` queries rather than exhaustive reads
+of every file discussed — appropriate for a planning session's scope and time budget,
+but worth naming rather than leaving implicit.
+**Phase 3E (runtime smoke test):** n/a — `docs/planning/`, `BACKLOG.md`,
+`PROJECT_LEARNINGS.md`, `CLAUDE.md`, `SESSION_NOTES.md`, `HANDOFFS.md` only; no `R/` or
+`tests/` touched, no runtime behavior changed. TDD Phase: N/A throughout (planning/
+documentation session, no implementation code).
+
+**Note for the next session:** two pre-existing untracked artifacts were observed but
+NOT touched (out of this session's scope, neither created by this session): 
+`PED_GV_AUDIT_2026-05-30.html` (a stray render artifact at repo root, dated 2026-05-30,
+source `.md` is tracked) and `vignettes/articles/engineering-the-2.0.0-release.html` +
+`_files/` + a stray `vignettes/articles/.gitignore` (Learning 314's exact pattern,
+timestamped earlier today, 2026-07-10 00:42 — predates this session's own work, not
+generated by it). Neither blocks anything; flagged for whoever next touches those areas.
 
 ---
 
