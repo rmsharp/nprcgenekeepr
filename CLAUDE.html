@@ -200,8 +200,20 @@
 <p><em>Additions and overrides to the base methodology at <code>SESSION_RUNNER.md</code> and <code>SAFEGUARDS.md</code> (synced from <a href="https://github.com/rmsharp/methodology" class="external-link uri">https://github.com/rmsharp/methodology</a>, not project-owned). The base files govern unless explicitly overridden here. <strong>Do not edit the synced files</strong> — put customizations here so <code>bin/sync</code> stays friction-free (see BOOTSTRAP “Updating an existing project”).</em></p>
 <div class="section level3">
 <h3 id="additional-phase-0-steps">Additional Phase 0 steps<a class="anchor" aria-label="anchor" href="#additional-phase-0-steps"></a></h3>
-<p>(none)</p>
-</div>
+<p><strong>Priorities list at Phase 0 step 7 (report findings, 2026-07-09):</strong> render the “open items” portion of the orientation report as a numbered, scannable priority list, not prose – sourced from <code>BACKLOG.md</code>’s per-item <code>(READY | BLOCKED | DECISION NEEDED, Effort S|M|L)</code> tags (and open GitHub issues/PRs not yet mirrored into <code>BACKLOG.md</code>). Format (adapted from a sibling project’s convention):</p>
+<pre><code>Current priorities (from BACKLOG, in the order Session N left them):
+1. [color] Title (READY, Effort M): one-line concrete context + any decision the
+   picking session needs to make first.
+2. [color] Title (BLOCKED -- &lt;what it's blocked on&gt;, Effort L): ...
+3. Lower priority: short comma-separated items with no full write-up.
+4. Informational: open PRs / issues not yet in BACKLOG.md -- untouched, FYI only.</code></pre>
+<ul><li>Color: <span class="emoji" data-emoji="red_circle">🔴</span> reserved for something explicitly NOT a routine session’s pickup (needs its own scoping/planning session first, or is otherwise high-stakes); <span class="emoji" data-emoji="orange_circle">🟠</span> for ready-now, normal-priority items; no marker for “Lower priority”/“Informational” line items.</li>
+<li>
+<code>READY</code> = the next session can start with no unresolved decision. <code>BLOCKED</code> or <code>DECISION NEEDED</code> must name the blocker/decision in the one-line context, not just the tag.</li>
+<li>Effort is a rough S/M/L, not a time estimate – lets the user pick by capacity as well as priority.</li>
+<li>This formats the <em>existing</em> Phase 0 step 7 report; it adds no new <code>SESSION_RUNNER.md</code> step and does not change the mandatory STOP-and-wait-for-the-user after the report.</li>
+<li>Keep the <code>(READY | BLOCKED | DECISION NEEDED, Effort S|M|L)</code> tag inline on each <code>BACKLOG.md</code> item itself (not only in the rendered report), so the tag survives between sessions instead of being reconstructed from memory each time a report is rendered.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="additional-task-to-workstream-mappings">Additional task-to-workstream mappings<a class="anchor" aria-label="anchor" href="#additional-task-to-workstream-mappings"></a></h3>
 <p>(none — but see the Development Process Contract override below.)</p>
@@ -217,7 +229,7 @@
 </div>
 <div class="section level3">
 <h3 id="project-specific-learnings">Project-specific Learnings<a class="anchor" aria-label="anchor" href="#project-specific-learnings"></a></h3>
-<p>Project institutional memory (Sessions 1–338+; 314 learnings, ~1.4 MB) lives in <a href="PROJECT_LEARNINGS.html"><code>PROJECT_LEARNINGS.md</code></a> — extracted from this file to keep <code>CLAUDE.md</code> within its size budget (Claude Code targets ~200 lines / ~25 KB). <strong>Read it when you need prior-session context; append new learnings there, not here.</strong> Base methodology-level learnings remain in <code>SESSION_RUNNER.md</code>.</p>
+<p>Project institutional memory (Sessions 1–342+; 316 learnings, ~1.4 MB) lives in <a href="PROJECT_LEARNINGS.html"><code>PROJECT_LEARNINGS.md</code></a> — extracted from this file to keep <code>CLAUDE.md</code> within its size budget (Claude Code targets ~200 lines / ~25 KB). <strong>Read it when you need prior-session context; append new learnings there, not here.</strong> Base methodology-level learnings remain in <code>SESSION_RUNNER.md</code>.</p>
 </div>
 <div class="section level3">
 <h3 id="project-specific-failure-modes">Project-specific Failure Modes<a class="anchor" aria-label="anchor" href="#project-specific-failure-modes"></a></h3>

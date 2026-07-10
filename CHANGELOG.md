@@ -47,6 +47,98 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-09 · \[ad hoc\] Closed the Document 1 two-lens review: 13 remaining findings independently verified (Session 342)
+
+- **Deliverable:** Owner picked BACKLOG’s priority \#1 (“Close out the
+  Document 1 two-lens review”) and, via `AskUserQuestion`, confirmed a
+  verify-only scope this session (no article edits; fixes deferred to a
+  follow-on session) — resolving the in-flight decision S341 had flagged
+  as open.
+- **Change:** Independently re-verified all 13 remaining findings (Lens
+  A \#2/#3, Lens B \#2-12) from
+  `docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md` against the
+  current `engineering-the-2.0.0-release.qmd`, via direct
+  `git log`/`git show`/`grep`/CSV re-derivation, not the DRAFT’s own
+  agent-authored text: Lens A \#2 (commit-pace chart’s categorical
+  x-axis hides a real 3-month zero-commit gap, Jan-Mar 2026), Lens A \#3
+  (a 1-day date/commit mismatch in `feature-highlights.csv`, zero
+  reader-visible impact), and Lens B \#2-12 (a grammar error; unglossed
+  jargon — “Phase A data freeze” x3, “vertical-slice” x4, “XARCH-2”;
+  only 1 hyperlink against 22 plain-text issue/commit citations; TDD
+  vocabulary used ~500 lines before being explained; and 4 smaller
+  editorial/structural nits) — all 13 confirmed real and still unfixed,
+  0 downgrades. Rewrote the audit doc’s header from DRAFT to CLOSED,
+  added a “Session 342 – Independent Verification,” a severity-ranked
+  “Final Findings Summary” (all 15 findings), and a priority-ordered
+  “Recommendations” section. Caught and fixed a self-contradiction on a
+  full-document re-read: the ORIGINAL Lens A/B section headers still
+  said “not independently re-verified” after the new section asserted
+  full verification — updated those 3 inline labels in place (Learning
+  316). Updated `BACKLOG.md`: removed the now-done verification item,
+  added a new READY “Fix Document 1’s 15 confirmed audit findings” item
+  pointing at the audit doc’s own Recommendations.
+- **Phase 3E:** n/a — `docs/audits/`, `PROJECT_LEARNINGS.md`,
+  `CLAUDE.md`, `BACKLOG.md` only; the target article itself was not
+  edited this session (owner’s explicit verify-only scope decision).
+- **Session:** S342 · **Verified:** commit-pace CSV re-derived exactly
+  via `git log --format=%ad --date=format:%Y-%m 4548aa1b..8ca8bb24`;
+  `0eeee3f6`’s date independently checked via `git show`;
+  hyperlink/citation counts via `grep -c`; every finding’s location
+  re-anchored to the current 745-line file via `grep -n`, not copied
+  from the DRAFT’s own (pre-S340) line numbers.
+
+### 2026-07-09 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit 7c0d680d — S341 HANDOFFS.md receipt commit-sha backfill
+
+- **Deliverable:** Phase 0 ledger reconcile (this session) found one
+  commit past the `CHANGELOG.md` frontier with no ledger entry:
+  `7c0d680d` (“docs: S341 – backfill own HANDOFFS.md receipt commit
+  sha”), landed after S341’s own close-out commit (`f0755ead`) that
+  recorded the entry below.
+- **Change:** `7c0d680d` replaced the S341 `HANDOFFS.md` receipt’s
+  `commit: pending` placeholder with the real commit sha (`f0755ead`) —
+  a self-correction of the just-written receipt, not new production
+  work. Same class of action as the
+  `04c8de1d`/`5f0b81d2`/`ee690776`/`2278b46f`/`cc0f7798` backfills below
+  (S339’s, S334’s, S333’s, S332’s, and S331’s equivalent self-fixes).
+- **Session:** this session (backfilling S341’s own commit) ·
+  **Verified:** `git show --stat 7c0d680d` (single-file, 2-line diff to
+  `HANDOFFS.md`); `git log -1 --format=%H -- HANDOFFS.md` now matches
+  `7c0d680d` with no further gap.
+
+### 2026-07-09 · \[ad hoc\] Backlog curation for Document 1/2 open items + session-startup priorities-list convention (Session 341)
+
+- **Deliverable:** Owner redirected “continue with open items from S339”
+  into “place in the backlog the remaining items from S339 and any other
+  items having to do with producing both documents,” then separately
+  asked for session startups to present open work as a clear,
+  easily-selectable interface, with a worked example from a sibling
+  project (`~/Development/wsfct`).
+- **Change:** Added `BACKLOG.md` “## Documents (v1.0.8 -\> v2.0.0
+  write-up)” section: (1) close out the Document 1 two-lens review —
+  independently re-confirmed, via direct read of the current article
+  rather than the DRAFT audit’s own (now line-stale) text, that Lens A
+  \#1
+  ([`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+  Phase-9 misattribution, now L170-172) and Lens B \#1 (“four
+  sessions…wrote Sections 1-3,” now L687-688) are still unfixed, and
+  that 13 more findings (Lens A \#2/#3, Lens B \#2-12) remain
+  unverified; (2) plan “Document 2” (package purpose/how-to-use,
+  deferred since S330, never picked up). Added `CLAUDE.md` “###
+  Additional Phase 0 steps” entry (previously “(none)”) documenting a
+  `(READY | BLOCKED | DECISION NEEDED, Effort S|M|L)` tag convention on
+  `BACKLOG.md` items, rendered at Phase 0 step 7 as a numbered,
+  color-marked, tiered “Current priorities” list — a formatting addition
+  to the existing report step, not a change to synced
+  `SESSION_RUNNER.md`. Retrofitted all 6 pre-existing open `BACKLOG.md`
+  items with the tag (CRAN-submission-prep tag checked against this
+  ledger’s own S329 entry, not guessed).
+- **Phase 3E:** n/a — `BACKLOG.md`/`CLAUDE.md` only, no `R/`/`tests/`
+  touched.
+- **Session:** S341 · **Verified:** the 2 confirmed-unfixed findings
+  re-checked against the current article file, not trusted from the
+  DRAFT audit’s own stale line numbers; CRAN-prep status checked against
+  this file’s own S329 entry.
+
 ### 2026-07-09 · \[ad hoc\] S340 HANDOFFS.md receipt commit-sha backfill, closed same-session
 
 - **Deliverable:** Filled in this session’s own `HANDOFFS.md` receipt

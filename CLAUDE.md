@@ -221,7 +221,36 @@ BOOTSTRAP “Updating an existing project”).*
 
 ### Additional Phase 0 steps
 
-(none)
+**Priorities list at Phase 0 step 7 (report findings, 2026-07-09):**
+render the “open items” portion of the orientation report as a numbered,
+scannable priority list, not prose – sourced from `BACKLOG.md`’s
+per-item `(READY | BLOCKED | DECISION NEEDED, Effort S|M|L)` tags (and
+open GitHub issues/PRs not yet mirrored into `BACKLOG.md`). Format
+(adapted from a sibling project’s convention):
+
+    Current priorities (from BACKLOG, in the order Session N left them):
+    1. [color] Title (READY, Effort M): one-line concrete context + any decision the
+       picking session needs to make first.
+    2. [color] Title (BLOCKED -- <what it's blocked on>, Effort L): ...
+    3. Lower priority: short comma-separated items with no full write-up.
+    4. Informational: open PRs / issues not yet in BACKLOG.md -- untouched, FYI only.
+
+- Color: 🔴 reserved for something explicitly NOT a routine session’s
+  pickup (needs its own scoping/planning session first, or is otherwise
+  high-stakes); 🟠 for ready-now, normal-priority items; no marker for
+  “Lower priority”/“Informational” line items.
+- `READY` = the next session can start with no unresolved decision.
+  `BLOCKED` or `DECISION NEEDED` must name the blocker/decision in the
+  one-line context, not just the tag.
+- Effort is a rough S/M/L, not a time estimate – lets the user pick by
+  capacity as well as priority.
+- This formats the *existing* Phase 0 step 7 report; it adds no new
+  `SESSION_RUNNER.md` step and does not change the mandatory
+  STOP-and-wait-for-the-user after the report.
+- Keep the `(READY | BLOCKED | DECISION NEEDED, Effort S|M|L)` tag
+  inline on each `BACKLOG.md` item itself (not only in the rendered
+  report), so the tag survives between sessions instead of being
+  reconstructed from memory each time a report is rendered.
 
 ### Additional task-to-workstream mappings
 
@@ -268,7 +297,7 @@ workstream **and** the RED→GREEN→REFACTOR gates.
 
 ### Project-specific Learnings
 
-Project institutional memory (Sessions 1–338+; 314 learnings, ~1.4 MB)
+Project institutional memory (Sessions 1–342+; 316 learnings, ~1.4 MB)
 lives in
 [`PROJECT_LEARNINGS.md`](https://github.com/rmsharp/nprcgenekeepr/PROJECT_LEARNINGS.md)
 — extracted from this file to keep `CLAUDE.md` within its size budget
