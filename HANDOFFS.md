@@ -77,17 +77,17 @@ session need this block to continue the work without re-reading the whole repo?*
 ```handoff
 session: S350
 date: 2026-07-10
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Fix the Excel-upload pedigree-corruption bug -- R/modInput.R's readDataFile() calls readxl::read_excel() with no col_types, so type-guessing from early blank sire/dam rows silently converts alphanumeric sire/dam IDs to NA on later rows.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Fixed the Excel-upload sire/dam pedigree-corruption bug (BACKLOG.md, discovered S347) -- R/modInput.R's readDataFile() called readxl::read_excel(file$datapath) with no col_types, so sample-based column-type guessing defaulted sire/dam to logical (early rows are blank founders) and silently nulled every later alphanumeric ID, with no error shown.
+what_was_done: R/modInput.R:306, readxl::read_excel(file$datapath) -> readExcelPOSIXToCharacter(file$datapath) -- reusing the existing, already-tested internal helper (col_types="text") that getPedigree()/getGenotypes()/readKinshipOverrides() already use for their own Excel reads. 1-line fix, no new logic. Added tests/testthat/test_modInput_excelSireDam.R (2 tests): unit-level readDataFile() non-NA sire/dam count + is.character() checks, and an end-to-end modInputServer integration test via a real getData click asserting the cleaned studbook keeps >1000 non-NA sire values (was 3 before the fix). Verified genuine RED in scratchpad before committing the tests (applying Learning 322's lesson). Full TDD gates: 3 AskUserQuestion phase gates (PRE-RED->RED; RED->GREEN; GREEN->REFACTOR, no refactor needed). Verification: full-suite regression read (NOT_CRAN=true) 1 failed (pre-existing, unrelated, same as S349 confirmed via git stash) / 0 error / 0 warning; all directly-related test files individually clean; lintr 0 on both changed files; devtools::document() zero man/NAMESPACE delta. Updated BACKLOG.md (removed the resolved item; updated Document 2 Phase D's note), added a NEWS.Rmd bullet under the still-unpublished 2.0.0 entry + rendered NEWS.md, added PROJECT_LEARNINGS.md Learning 323, bumped CLAUDE.md's learnings count (322->323).
+next_steps: No follow-up owed for this fix -- complete and verified end-to-end. Orientation-report priorities are otherwise unchanged: CRAN resubmission of v2.0.0 is an OWNER action (re-run win-builder/R-hub, devtools::submit_cran()); Document 2 Phase D (docs/planning/document2-colony-manager-guide-plan.md section 6 Phase D) remains queued, now with one fewer open finding (Excel corruption fixed; Custom sex ratio and missing fromCenter still open); other BACKLOG.md items untouched.
+key_files: R/modInput.R:303-306 (the fix, in full context); tests/testthat/test_modInput_excelSireDam.R (new, 2 tests); R/readExcelPOSIXToCharacter.R (the reused helper); NEWS.Rmd/NEWS.md (2.0.0 entry); BACKLOG.md (item removed); PROJECT_LEARNINGS.md Learning 323 (full detail on the DT-widget introspection dead ends).
+gotchas: For any future Phase-3E session verifying a DT::renderDT table live: do NOT trust app$get_value(output=...) or raw app$get_html(selector) on page 1 to reflect the true full dataset (client-side DT ships the whole dataset but get_value returns only widget dependency metadata, and page 1 can show a default-sorted subset, e.g. genuine founders, giving a false negative) -- drive the app's own download handler instead (app$get_download("<ns>-<downloadId>")) for a decisive check of the real full dataset. Also: this project's test files with a top-level testthat::skip_on_cran() need NOT_CRAN=true set when run via the documented "Fast single-file test" command, or the whole file silently skips (pre-existing project behavior, not new).
+runtime_smoke: DONE, live browser. shinytest2::AppDriver launched the real modular app (system.file("shinytest", package="nprcgenekeepr") via pkgload::load_all()): uploaded the real Excel round-trip file through the actual file input, clicked "Get Data," downloaded the cleaned result via the app's own "Download Cleaned Data" button. Confirmed 3694 rows, 2026 non-NA sire, 2026 non-NA dam -- exact match to source -- including the specific known pairing KRXZ9X -> sire UFQNBA that would have silently become NA before the fix.
+changelog_ref: CHANGELOG.md 2026-07-10 "Fixed Excel-upload sire/dam pedigree corruption (Session 350)"
+commit: 5a9697a8
 ```
 
 ```handoff
