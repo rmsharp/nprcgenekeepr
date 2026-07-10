@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S351
+date: 2026-07-10
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix Breeding Groups "Custom" sex ratio has no numeric input (BACKLOG.md item, discovered S347) -- modBreedingGroupsUI()'s sexRatio radioButtons offers "Custom" but no numeric input exists; parseSexRatio(input$sexRatio) on the literal string "custom" is NA, silently falling back to 0.0 (same as "None").
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S350
 date: 2026-07-10
 status: complete
