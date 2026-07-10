@@ -75,6 +75,23 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S340
+date: 2026-07-09
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Correct the Shiny-application-history narrative in Document 1 (engineering-the-2.0.0-release.qmd) -- the owner-supplied material information S339 was interrupted to wait for. Owner confirmed via git-history verification (no v1.0.8 GitHub/CRAN release exists; first module-scaffold commit 6457a3a3 "1st attempt at adding modules" is 2025-12-29, three weeks before the first Claude-co-authored commit 2b225ff8) plus CRAN correspondence (submitted 2025-07-25, archived 2025-07-29 "issues were not corrected in time," discovered by owner 2026-01-15) that the article's "two coexisting Shiny applications for most of its life" framing is wrong: there was one working app (inst/application/) through the v1.0.7 CRAN release; the modular rewrite began as an unfinished hand-built scaffold in Dec 2025, before Claude Code adoption, and only later (per this project's own shiny-module-conversion-plan.md XARCH-1 audit) grew enough to genuinely drift from the monolith.
+what_was_done: pending
+next_steps: pending
+key_files: vignettes/articles/engineering-the-2.0.0-release.qmd (Abstract ~L19-24, Introduction ~L41-46, Section 1 opening ~L67-76 -- all NOT yet edited), docs/planning/shiny-module-conversion-plan.md:12 (source of the "two coexisting apps" XARCH-1 framing, confirms it's real project history not article invention), docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md (S339's still-DRAFT review this session's fix is separate from but related to)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<free-text prose: pending>
+
+```handoff
 session: S339
 date: 2026-07-09
 status: complete

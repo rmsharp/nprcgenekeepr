@@ -6,6 +6,18 @@
 
 ## ACTIVE TASK
 
+### What Session 340 Did
+**Deliverable:** Correct the Shiny-application-history narrative in Document 1
+(`vignettes/articles/engineering-the-2.0.0-release.qmd`) -- the owner-supplied material
+information Session 339 was interrupted to wait for. (IN PROGRESS)
+**Started:** 2026-07-09
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
+---
+
 ### What Session 339 Did
 **Deliverable:** Two-lens adversarial review (report only, no fixes this session) of
 Document 1 -- `vignettes/articles/engineering-the-2.0.0-release.qmd`. **INTERRUPTED BY
