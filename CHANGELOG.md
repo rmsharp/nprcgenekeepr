@@ -43,6 +43,9 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-10 · [ad hoc] S349 HANDOFFS.md receipt commit-sha backfill, closed same-session
+- **Deliverable:** Filled in this session's own `HANDOFFS.md` receipt `commit: pending` placeholder with the real close-out commit sha (`f7a62aca`), matching the S331-S348 precedent of closing this within the same session rather than leaving it for the next session's Phase 0 reconcile.
+
 ### 2026-07-10 · [ad hoc] Fixed the CRAN Policy violation that archived nprcgenekeepr 2.0.0 (Session 349)
 - **Deliverable:** Owner forwarded CRAN's 2026-07-09 email: the 2.0.0 submission was
   archived because it "creates ~/nprcgenekeepr.log in violation of the CRAN Policy."

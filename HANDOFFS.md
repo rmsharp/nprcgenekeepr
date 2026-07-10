@@ -87,7 +87,7 @@ key_files: R/appServer.R:41-134 (the fix, in full); tests/testthat/test_appServe
 gotchas: The "nprcgenekeepr" futile.logger logger name is a process-global registry -- test_modInput_coverage.R already manages this defensively; any new test that registers a custom appender/threshold for that name should reset it or use withr-scoped isolation, or it will leak into unrelated later tests exactly as this session found (4 warnings in test_appServer_server.R, invisible when that file ran alone). appender.file() creates its target file lazily on first WRITE that clears the threshold, not at registration -- a test asserting non-creation must force a probe write, not just boot-and-check.
 runtime_smoke: DONE, live browser. shinytest2::AppDriver launched the real modular app (system.file("shinytest", package="nprcgenekeepr") via pkgload::load_all()) with HOME redirected to an isolated tmp dir: no log file at boot; checking "Debug on" + clicking "Go to Input" created the file with real DEBUG content; app stayed functional after unchecking.
 changelog_ref: CHANGELOG.md 2026-07-10 "Fixed the CRAN Policy violation that archived nprcgenekeepr 2.0.0 (Session 349)"
-commit: pending
+commit: f7a62aca
 ```
 
 ```handoff
