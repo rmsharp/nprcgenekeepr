@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S349
+date: 2026-07-10
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS. Fix CRAN Policy violation -- appServer() unconditionally writes ~/nprcgenekeepr.log outside tempdir() on every boot (owner-forwarded CRAN archival email, 2026-07-09). Root-cause fix: gate the file appender behind the existing, already-tested inputResults$debugMode reactive instead of firing unconditionally at appServer() boot.
+what_was_done: pending
+next_steps: pending
+key_files: R/appServer.R:41-51 (the unconditional file-appender init to remove/replace); R/modInput.R:170,702 (the "Debug on" checkbox and its already-tested debugMode reactive, currently unread by appServer.R); tests/testthat/test_appServer_server.R (existing testServer(appServer) harness, stub already defaults debugMode = FALSE); vignettes/manual_components/_software_development.Rmd:33-42 (documented opt-in behavior this fix restores).
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S348
 date: 2026-07-10
 status: complete

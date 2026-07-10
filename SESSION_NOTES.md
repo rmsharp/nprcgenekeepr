@@ -6,6 +6,19 @@
 
 ## ACTIVE TASK
 
+### What Session 349 Did
+**Deliverable:** Fix the CRAN-blocking Policy violation — `appServer()` unconditionally
+writes `~/nprcgenekeepr.log` (outside `tempdir()`) on every boot, which is why CRAN
+archived the 2.0.0 submission (owner-forwarded CRAN email, 2026-07-09). Root-cause fix:
+gate the file appender behind the existing, already-tested `inputResults$debugMode`
+reactive (the documented "Debug on" checkbox in `modInput.R`) instead of firing
+unconditionally at the top of `appServer()`. Following `DEVELOPMENT_WORKSTREAM.md`'s
+one-off-fix path (not a campaign) under Strict TDD.
+**Started:** 2026-07-10
+**Status:** Session claimed. Work beginning (RED not yet written).
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### What Session 348 Did
 **Deliverable:** Executed Document 2 plan Phase C —
 `docs/planning/document2-colony-manager-guide-plan.md` §6 Phase C: drafted
