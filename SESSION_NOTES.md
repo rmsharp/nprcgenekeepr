@@ -8,23 +8,107 @@
 
 ### What Session 339 Did
 **Deliverable:** Two-lens adversarial review (report only, no fixes this session) of
-Document 1 -- `vignettes/articles/engineering-the-2.0.0-release.qmd` -- the "Engineering
-nprcgenekeepr 2.0.0" public pkgdown article drafted across Sessions 330-336
-(`docs/planning/v2-transformation-article-plan.md`) and never given the kind of
-independent review pass two other articles (S109, S110) received. Owner also flagged
-that "Document 2" (package purpose/how-to-use, explicitly deferred at plan time) has
-never been picked up by any session since S336 named it as a next step -- owner chose
-to prioritize the Document 1 review this session; Document 2 planning remains open for
-a future session. Owner-confirmed scope via `AskUserQuestion`: Lens A = figure/table
-fidelity against frozen source data (the "reversed skew" defect class S110 caught).
-Lens B = independent editorial/narrative-quality read (clarity, structure, audience
-fit, tone against dragon #2's "candid not promotional" bar). Docs-only; TDD N/A.
-(IN PROGRESS)
+Document 1 -- `vignettes/articles/engineering-the-2.0.0-release.qmd`. **INTERRUPTED BY
+OWNER, NOT DONE.** Owner stated they have material information to add in a future
+session that will affect the document, and asked to close out now rather than
+finalize. This is a legitimate early-close, not a crash -- documented per protocol so
+the next session has full context rather than a gap.
 **Started:** 2026-07-09
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded
-in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for
-the next session's reconcile.
+**Status:** PARTIAL. Both review lenses completed and returned findings; the parent
+session independently re-verified each lens's single most consequential finding
+(confirmed both real) but had not finished verifying the remaining findings or
+synthesizing a final verdict when the owner interrupted. Full findings preserved in
+`docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md`, explicitly marked DRAFT --
+INCOMPLETE (not a finished audit; do not act on it until a future session incorporates
+the owner's new information and re-closes it).
+
+**What happened, in order:** (1) Owner's opening message referenced "an earlier
+session" that planned two documents, one worked on but never reviewed, the second
+never resurfacing as a next step. Investigated `docs/planning/v2-transformation-
+article-plan.md` (Session 330) and confirmed: Document 1 = this engineering article
+(drafted S330-336, closed with a full claim-source audit but never the kind of
+independent quality review two OTHER articles, S109/S110, received); Document 2 =
+package purpose/how-to-use, explicitly deferred to "its own future planning session,"
+named in S336's own `HANDOFFS.md` next_steps, never picked up by S337 or S338, never
+added to `BACKLOG.md`. (2) `AskUserQuestion`: owner chose to prioritize reviewing
+Document 1 this session (Document 2 planning remains open). (3) `AskUserQuestion` on
+review approach: owner chose "two-lens review, report only" -- Lens A (figure/table
+fidelity vs. frozen source data, hunting the "reversed skew" defect class S110 caught)
+and Lens B (editorial/narrative quality, tone-checked against dragon #2's "candid not
+promotional" bar), no fixes this session. (4) Phase 1B claim stub written and
+committed (`744833be`). (5) Forked both lenses as parallel `general-purpose` agents.
+Both completed: **Lens A found 3 issues** -- a HIGH-confidence real discrepancy (the
+article's own architecture-history prose is backwards: it attributes `runGeneKeepR()`
+becoming canonical to the Phase 9 commit `3db018d1`, but that commit actually made it
+the DEPRECATED alias; it only became canonical later via an unrelated commit,
+`1e64dd5d`/issue #110/Session 276, never mentioned in the article), plus a
+medium-confidence chart-axis issue (`fig-commit-pace`'s categorical x-axis hides a
+real 3-month all-zero gap) and a low-confidence cosmetic CSV date mismatch (invisible
+to readers). Everything else checked out on independent re-derivation (module LOC
+totals, test-file-count growth at all 5 checkpoints, self-score-trend mean, etc.).
+**Lens B rated the article 7/10** and found 12 issues, the most significant a genuine
+internal contradiction (line 617 says "three sessions... produced Sections 1-3," line
+668-669 says "four sessions... wrote Sections 1-3" with a 4-commit sha chain), plus a
+grammar error, several unglossed jargon/codename terms, a missing-hyperlinks gap
+against the article's own "every claim traces to..." promise, and explicit praise for
+several genuinely strong passages (the Introduction's Scope paragraph, Section 2's
+curation transparency, Section 4's successful avoidance of AI-hype framing). (6)
+Before trusting either lens's top finding, independently re-verified both firsthand:
+confirmed Lens A's architecture-reversal claim via `git show 3db018d1:R/
+runGenekeepr.R` + `git log --follow` (real, and sharper than the agent's framing --
+also found the article's own caption IS correct for current-state, only the
+attribution-to-Phase-9 is wrong); confirmed Lens B's session-count contradiction via
+direct file reads at both line locations (real, and reached a more precise diagnosis
+than the agent's own suggested fix: line 617's "three" is actually correct, line 669's
+"four... wrote Sections 1-3" is the actual error since S331 did Phase A, not a
+section). (7) Cleaned up `vignettes/articles/` render artifacts one of the review
+agents left behind while inspecting figures (`.html`, `_files/`, an auto-written
+`.gitignore`) -- same class of issue as `PROJECT_LEARNINGS.md` Learning 314,
+confirming that learning's value on its very next relevant session. (8) Was about to
+write the findings into a `docs/audits/*.md` report (checked the project's existing
+audit-file naming convention first) when the owner interrupted to close out, citing
+material information still to come.
+
+**Session 338 Handoff Evaluation (by Session 339): Score 8/10.** **What helped:** the
+`gotchas` field's render-artifact warning (Learning 314) proved immediately reusable
+this session -- one of the review agents left the identical class of untracked
+`.html`/`_files`/`.gitignore` artifacts, and this session recognized and cleaned them
+up on sight rather than rediscovering the issue. **What was missing:** S338's
+`next_steps` correctly scoped down to its own narrow deliverable ("No other open item
+from this session") but didn't re-surface that "Document 2" was still an outstanding,
+never-picked-up item from S336's handoff two sessions earlier -- a fair ding only in
+hindsight, since S338 wasn't asked to survey the whole backlog and its own scope
+discipline was otherwise correct. **What was wrong:** nothing -- every claim in S338's
+receipt held on this session's independent checks. **ROI:** high for the specific
+gotcha it carried forward; neutral (not negative) on the missed Document-2 resurfacing
+since that wasn't really S338's job.
+
+**Self-assessment (Session 339): 7/10 (partial, interrupted).** **Strengths:** (1)
+investigated the owner's reference to "an earlier session" thoroughly before assuming
+scope -- found the actual plan document, the actual next_steps gap, rather than
+guessing; (2) asked two separate, genuinely-the-owner's-call scope questions (which
+thread to prioritize; what the review should check and whether to fix in-session)
+rather than assuming either; (3) matched the project's own established review
+precedent (two-lens, matching S109/S110) instead of inventing a new methodology; (4)
+did not trust either forked agent's top finding at face value -- independently
+re-derived both from git directly, and in both cases reached a MORE precise diagnosis
+than the agent's own framing, not just a rubber-stamp confirmation; (5) recognized and
+cleaned up render artifacts on sight per a learning from two sessions ago; (6) when
+interrupted, did not simply drop the ~170K tokens of completed agent work -- wrote it
+to a durable, clearly-marked-DRAFT file so the next session can pick it up without
+re-running both forks. **Weaknesses:** (-) did not independently re-verify Lens A's
+findings 2/3 or Lens B's findings 2-12 before the interruption -- only the two most
+consequential findings per lens were checked; a future session should not treat the
+remaining findings as confirmed, only as agent-reported; (-) had not yet asked the
+owner, before launching two ~170K-token forked reviews, whether there was any
+additional context they wanted to fold in first -- in hindsight a cheap "anything else
+I should know before I start this" check might have surfaced the material information
+earlier and saved the cost of a review that's now being revisited; not a process
+violation (the PRE-RED-style scope question that WAS asked was appropriately scoped),
+but worth naming as a real cost of the interruption, not free.
+**Phase 3E (runtime smoke test):** N/A -- no `R/` package runtime behavior touched,
+and no changes to the article itself this session (report-only scope, correctly not
+violated even under interruption).
 
 ---
 

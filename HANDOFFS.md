@@ -77,19 +77,35 @@ session need this block to continue the work without re-reading the whole repo?*
 ```handoff
 session: S339
 date: 2026-07-09
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Two-lens adversarial review (report only) of Document 1 (vignettes/articles/engineering-the-2.0.0-release.qmd). Lens A: figure/table fidelity vs frozen source data. Lens B: editorial/narrative quality. Owner also flagged Document 2 (package purpose/how-to-use) as never picked up since S336 named it -- deferred to a future session, not this one.
-what_was_done: pending
-next_steps: pending
-key_files: vignettes/articles/engineering-the-2.0.0-release.qmd (full file, 724 lines), vignettes/articles/data/*.csv (frozen evidence base)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 7
+predecessor_score: 8
+active_task: PARTIAL, INTERRUPTED BY OWNER (not a crash). Two-lens review of Document 1 (engineering-the-2.0.0-release.qmd) ran to completion on both lenses; owner then said material information will be added in a future session that affects the document, and asked to close out now rather than finalize. Findings preserved in docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md, marked DRAFT -- INCOMPLETE.
+what_was_done: Investigated the owner's "earlier session planned two documents" reference -> confirmed via docs/planning/v2-transformation-article-plan.md: Document 1 = this article (drafted S330-336), Document 2 = package purpose/how-to-use (deferred, named in S336's next_steps, never picked up by S337/S338, never in BACKLOG.md). AskUserQuestion -> owner picked reviewing Document 1 this session. Second AskUserQuestion on review approach -> owner picked "two-lens review, report only," matching the S109/S110 precedent. Forked two general-purpose agents in parallel: Lens A (figure/table-vs-frozen-data fidelity) found 3 issues (1 HIGH-confidence real discrepancy: article prose says Phase 9 commit 3db018d1 made runGeneKeepR() canonical, but that commit actually made it the DEPRECATED alias -- it only became canonical later via unrelated commit 1e64dd5d/issue #110/S276, never mentioned in the article; 1 medium-confidence chart-axis issue; 1 low-confidence cosmetic CSV date mismatch, invisible to readers). Lens B (editorial/narrative quality) rated the article 7/10, found 12 issues (most significant: a genuine internal contradiction, line 617 says "three sessions...produced Sections 1-3" vs line 668-669 "four sessions...wrote Sections 1-3"), plus explicit praise for several strong passages. Independently re-verified the single most consequential finding from EACH lens via direct git commands before recording either as confirmed (both held, and in both cases this session's own re-derivation was more precise than the agent's framing). Cleaned up vignettes/articles/ render artifacts one review agent left behind (Learning 314's exact defect class, recognized on sight). Was about to write findings into a docs/audits/ report (checked the project's naming convention first) when interrupted.
+next_steps: DO NOT treat docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md as a finished review -- it is explicitly marked DRAFT/INCOMPLETE. Next session: (1) get the owner's promised material information first; (2) independently re-verify the NOT-yet-checked findings (Lens A #2/#3, Lens B #2-12) before acting on any of them -- only Lens A #1 and Lens B #1 were independently confirmed by this session; (3) decide with the owner whether to fix findings this session or a further one; (4) re-render and clean up render artifacts again after any edit (Learning 314); (5) finalize the audit file's status once resolved. Separately, unrelated to this thread: "Document 2" planning is STILL not picked up by any session -- raise it again if the owner wants it prioritized.
+key_files: docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md (new, full findings, DRAFT), vignettes/articles/engineering-the-2.0.0-release.qmd:150-153 (Lens A Finding 1 location, NOT yet edited), vignettes/articles/engineering-the-2.0.0-release.qmd:617-618,668-669 (Lens B Finding 1 location, NOT yet edited), docs/planning/v2-transformation-article-plan.md (the original two-document plan, confirms Document 1/Document 2 split)
+gotchas: The audit file is a DRAFT snapshot of two forked agents' reports plus this session's spot-verification of exactly 2 of the 15 combined findings -- the other 13 are agent-reported, not independently confirmed; do not upgrade their status without checking. `quarto render` (run by one of the review agents while inspecting figures, not by this session directly) again left untracked .html/_files/.gitignore artifacts in vignettes/articles/ -- cleaned up this session, will recur on any future render (Learning 314, not yet structurally fixed at the .gitignore level).
+runtime_smoke: n/a -- no R/ package runtime behavior touched, no article edits made (report-only scope, held even through the interruption).
+changelog_ref: CHANGELOG.md 2026-07-09 "Two-lens review of Document 1 -- partial, findings preserved as DRAFT (Session 339)"
 commit: pending
 ```
-<free-text prose: pending -- filled at Phase 3D close-out>
+<free-text prose: self-score breakdown>
+
+**+ (what went right):** Investigated the owner's reference thoroughly before assuming
+scope, rather than guessing which "two documents" they meant. Asked two genuinely-the-
+owner's-call scope questions instead of assuming. Matched established project
+precedent (two-lens review) rather than inventing new methodology. Did not trust
+either forked agent's headline finding at face value -- independently re-derived both
+from git, and reached a MORE precise diagnosis than the agent's own framing both
+times. Recognized and cleaned up render artifacts on sight from a two-sessions-old
+learning. When interrupted mid-task, did not let ~170K tokens of completed agent work
+evaporate -- captured it in a durable, explicitly-DRAFT file instead.
+**- (what could improve):** Only 2 of 15 combined findings were independently
+re-verified before the interruption; the remainder are agent-reported only. Did not
+ask the owner, before launching two expensive forked reviews, whether there was
+additional context to fold in first -- a cheap check that might have surfaced the
+owner's material information earlier and avoided reviewing a version of the document
+that's about to change.
 
 ```handoff
 session: S338
