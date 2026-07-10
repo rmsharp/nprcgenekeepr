@@ -81,22 +81,36 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       decision 3), re-verify the pkgdown Reference-page citation live (§8 dragon 5), and
       run the full verification checklist (§9: `pkgdown::build_article()`, `R CMD build .`
       + tarball check, spot-check sibling articles). See the plan's §6 Phase D for full
-      completion criteria. Phase D must account for two remaining new findings below
-      (non-functional Custom sex ratio; example data missing `fromCenter`) when finalizing
-      the article -- the third (Excel-upload corruption) is now **fixed, S350** (see below).
-- [ ] **Breeding Groups "Custom" sex ratio has no way to specify the ratio** (READY,
-      Effort S) -- discovered during S347's Document-2 Phase B screenshot capture.
-      `modBreedingGroupsUI()`'s `sexRatio` radioButtons offers "None"/"Harem
-      (1M:NF)"/"Custom" (`R/modBreedingGroups.R`), but no numeric input for the custom
-      ratio value exists anywhere in the UI (confirmed via grep of the full file). The
-      server's `parseSexRatio(input$sexRatio)` calls `as.numeric(sexRatioInput)` on the
-      literal string `"custom"`, which is `NA` and silently falls back to `0.0` --
-      behaviorally identical to selecting "None". A colony manager selecting "Custom"
-      today gets no ratio control and no indication anything is wrong. Fix: add a
-      `conditionalPanel`-gated `numericInput` (e.g. `customSexRatio`, shown when
-      `sexRatio == "custom"`) and thread its value into `parseSexRatio()`. Blocks Document
-      2 Phase C from faithfully porting `ColonyManagerTutorial.Rmd`'s "sex ratio of 2.5"
-      demonstration (plan doc §3A N7) until fixed.
+      completion criteria. Phase D must account for one remaining new finding below
+      (example data missing `fromCenter`) when finalizing the article -- the other two
+      (Excel-upload corruption; non-functional Custom sex ratio) are now **fixed, S350 /
+      S351** (see below and `CHANGELOG.md`). The Custom-ratio numeric demo (N7), omitted
+      from Section 3's Breeding-Groups subsection per S348's pre-drafting decision, can now
+      be added in Phase D if desired -- the control works end to end as of S351.
+- [ ] **`nTopAnimals` (and any other `ns()`-wrapped) `conditionalPanel` never actually
+      shows/hides** (READY, Effort S) -- discovered live during S351's Phase 3E smoke test
+      while fixing the sibling Custom-sex-ratio control. `modBreedingGroupsUI()`'s
+      `nTopAnimals` panel (`R/modBreedingGroups.R`, condition
+      `sprintf("input['%s'] == 'topRanked'", ns("animalSource"))` + `ns = ns`)
+      double-prefixes the input name: passing `ns = ns` to `conditionalPanel()` already
+      makes Shiny's client-side JS narrow the `input`/`output` scope to the module's
+      unprefixed names (confirmed by reading `shiny.js`'s `_narrowScopeComponent`, which
+      strips the namespace prefix from every scope key), so a condition string built via
+      `ns("animalSource")` looks up a namespaced key that no longer exists in the narrowed
+      scope and always evaluates to `undefined == 'topRanked'` -- `FALSE`. Confirmed live
+      via `shinytest2::AppDriver`: `getComputedStyle(...).display` on the panel's
+      `[data-display-if]` ancestor is `"none"` in EVERY state (`animalSource` = the default
+      `"topRanked"`, `"all"`, and back to `"topRanked"`) -- the "Number of top animals"
+      numeric input is invisible today regardless of selection, including the default
+      state where it's supposed to be visible on page load. S351's own new
+      `customSexRatio` panel avoided this bug by using the correct unprefixed condition
+      (`"input.sexRatio == 'custom'"`, matching `?shiny::conditionalPanel`'s own
+      documented `ns=` usage), so it is NOT itself affected. Grepped all of `R/` for every
+      other `conditionalPanel(` call (S351): `modInput.R`'s 5 panels all already use the
+      correct unprefixed form (`input.fileType == ...`, `input.fileContent == ...`) --
+      `nTopAnimals` is the ONLY instance of the buggy double-prefixed pattern in the
+      package. Fix: change the condition to `"input.animalSource == 'topRanked'"` (or
+      `sprintf("input['%s'] == 'topRanked'", "animalSource")`).
 - [ ] **Shipped example pedigree cannot demonstrate the Potential Parents feature**
       (READY, Effort S) -- discovered during S348's Document-2 Phase C screenshot
       capture. `modPotentialParentsServer()` requires a `fromCenter` (colony-origin)
@@ -151,6 +165,30 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       structure is no longer wanted and update `README.md:86-94` to match whichever is
       chosen. See `docs/planning/document2-colony-manager-guide-plan.md` §1 for full
       verification detail.
+- [ ] **`test_modBreedingGroups.R`/`test_modBreedingGroups_groupAddAssign.R` have
+      intermittently flaky, unseeded stochastic assertions** (READY, Effort S) --
+      discovered during S351's regression verification (not previously documented).
+      At least 3 distinct `test_that()` blocks call `groupAddAssign()` (via
+      `modBreedingGroupsServer`) with no `set.seed()`/`NPRC_BG_SEED` and then assert an
+      EXACT outcome of its random MIS sampling: `test_modBreedingGroups.R:250`
+      ("handles maximum number of groups", asserts `nGroups()==20` from a 50-animal
+      pool), `test_modBreedingGroups.R:1015` ("downloadGroup writes the selected
+      group...", asserts every downloaded row's `Sex` is `M`/`F`), and
+      `test_modBreedingGroups_groupAddAssign.R:744` ("works with examplePedigree
+      subset", asserts `length(groups)==3`). Each failed intermittently (not on every
+      run) when the same file was re-run repeatedly in isolation, and reproduced
+      identically against completely unmodified `master` (confirmed via `git stash`),
+      so this predates S351 and is unrelated to the Custom-sex-ratio fix -- it was
+      encountered only because the full-suite/per-file regression reads this session's
+      close-out requires happened to hit it. Not filed as a GitHub issue; only found via
+      repeated local runs, not yet characterized for rate/trigger (see the project's own
+      `[flake-aware-validation]` reflex, `PROJECT_LEARNINGS.md`, for the discipline this
+      needs: reproduce N times, characterize rate + trigger, before deciding
+      harden-now vs. defer). Fix (either): seed each such test (`set.seed()` or the
+      module's own `NPRC_BG_SEED`/`nprcgenekeepr.bg_seed` determinism hook, already
+      used elsewhere in `test_modBreedingGroups.R`) for a deterministic outcome, or
+      relax the assertions to tolerances `groupAddAssign()`'s own docs justify
+      (MIS sampling over `iter` iterations is not guaranteed to hit an exact count).
 
 ## Audit follow-ups
 *(From `PED_GV_AUDIT_2026-05-30.md`; the audit compute/test items are all resolved — see

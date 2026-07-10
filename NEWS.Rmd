@@ -178,6 +178,11 @@ knitr::opts_chunk$set(echo = TRUE)
     missing value, collapsing the pedigree to near-all-founders with no error
     or warning shown to the user. CSV and tab/comma-delimited text uploads
     were unaffected.
+  - Fixed the Breeding Groups tab's "Custom" sex ratio option: selecting it
+    previously had no numeric input to specify the ratio and silently
+    behaved identically to "None". A numeric "Custom ratio (F per M)" field
+    now appears when "Custom" is selected, and its value is used when
+    forming groups.
 
 # nprcgenekeepr 1.0.8 (20250723)
 - Minor changes

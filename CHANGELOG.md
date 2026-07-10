@@ -43,6 +43,38 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-10 · [ad hoc] Fixed Breeding Groups "Custom" sex ratio missing numeric input (Session 351)
+- **Deliverable:** `modBreedingGroupsUI()`'s `sexRatio` radioButtons offered "Custom"
+  with no numeric input to specify the ratio; the server's
+  `parseSexRatio(input$sexRatio)` called `as.numeric("custom")`, which is `NA` and
+  silently fell back to `0.0` (behaviorally identical to "None"). Added a
+  `conditionalPanel`-gated `numericInput("customSexRatio", ...)` and changed
+  `parseSexRatio()` to read it directly instead of parsing the radio choice string.
+  Strict TDD RED/GREEN/(REFACTOR skipped, owner-confirmed) throughout, 3
+  `AskUserQuestion` phase gates.
+- **Phase 3E caught and this session fixed a second defect in its own new code:**
+  the new `conditionalPanel`'s condition initially copied the sibling
+  `nTopAnimals` panel's pattern (`sprintf("input['%s'] == 'custom'", ns("sexRatio"))`
+  + `ns = ns`), which never actually shows the panel — passing `ns = ns` already
+  narrows Shiny's client-side `input`/`output` scope to unprefixed names, so a
+  condition built via `ns(...)` double-prefixes and always evaluates `FALSE`.
+  Fixed by using the bare `"input.sexRatio == 'custom'"`, matching
+  `?shiny::conditionalPanel`'s own documented example; confirmed live via
+  `shinytest2::AppDriver`. The sibling `nTopAnimals` panel has the identical,
+  already-shipping bug — correctly left unfixed (out of scope) and filed as a new
+  `BACKLOG.md` item instead, grep-confirmed as the only other instance in `R/`.
+- **Verified:** full-suite regression read 1 failed (pre-existing, unrelated,
+  `test_vignettes_no_deprecated_minParentAge.R`, same as S349/S350) / 0 error / 0
+  warning; `lintr::lint()` 0 on both changed files; `devtools::document()` 0 delta;
+  live-browser Phase 3E (`shinytest2::AppDriver`) confirmed the control renders/hides
+  correctly and forms groups with a real Custom ratio value end to end. Also
+  discovered and documented (not fixed — out of scope), 2 pre-existing intermittently
+  flaky, unseeded stochastic `groupAddAssign()` test assertions, confirmed
+  pre-existing via `git stash` against unmodified code.
+- **`BACKLOG.md`:** removed the resolved Custom-sex-ratio item; updated the Document 2
+  Phase D cross-reference; added 2 new discovered items (the `nTopAnimals`
+  `conditionalPanel` bug; the flaky stochastic `groupAddAssign` tests).
+
 ### 2026-07-10 · [ad hoc] S350 close-out commit (session notes, handoff receipt, learnings)
 - **Deliverable:** Closed out Session 350 (the Excel-upload sire/dam corruption fix,
   logged below): wrote the full session writeup + Session 349 handoff evaluation +
