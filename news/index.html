@@ -99,6 +99,7 @@
 <li>The offline focal-animal path no longer prints a benign <code>cannot open file ...</code> console warning when the focal-id list file is missing or unreadable; the classed error it already reported is unchanged.</li>
 <li>Documentation: extensive help-page and dataset-documentation corrections, including the genetic-value <code>@return</code> and parameter descriptions, dataset titles and descriptions, and the <code>@examples</code> for <code><a href="../reference/getPedDirectRelatives.html">getPedDirectRelatives()</a></code>, <code><a href="../reference/cumulateSimKinships.html">cumulateSimKinships()</a></code>, and <code><a href="../reference/getIdsWithOneParent.html">getIdsWithOneParent()</a></code>.</li>
 <li>Documentation: the example configuration file (<code>inst/extdata/example_nprcgenekeepr_config</code>) now documents that <code>lkPedColumns</code> is center-specific: SNPRC uses the flat <code>dam</code>/<code>sire</code> columns (direct columns) while ONPRC uses the <code>Id/parents/dam</code> lookup-traversal form (curated parentage).</li>
+<li>Fixed a CRAN Policy violation: the Shiny application no longer writes a debug log file to the user’s home directory unconditionally at startup. The log file is now created only after a user explicitly enables the Input tab’s “Debug on” checkbox, matching the documented behavior.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">

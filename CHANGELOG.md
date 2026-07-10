@@ -47,6 +47,86 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-10 · \[ad hoc\] S349 HANDOFFS.md receipt commit-sha backfill, closed same-session
+
+- **Deliverable:** Filled in this session’s own `HANDOFFS.md` receipt
+  `commit: pending` placeholder with the real close-out commit sha
+  (`f7a62aca`), matching the S331-S348 precedent of closing this within
+  the same session rather than leaving it for the next session’s Phase 0
+  reconcile.
+
+### 2026-07-10 · \[ad hoc\] Fixed the CRAN Policy violation that archived nprcgenekeepr 2.0.0 (Session 349)
+
+- **Deliverable:** Owner forwarded CRAN’s 2026-07-09 email: the 2.0.0
+  submission was archived because it “creates ~/nprcgenekeepr.log in
+  violation of the CRAN Policy.” Root cause:
+  [`appServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md)
+  (`R/appServer.R`) unconditionally registered a `futile.logger` file
+  appender at `file.path(getSiteInfo()$homeDir, "nprcgenekeepr.log")` on
+  every boot — including every `testServer(appServer, ...)` run in this
+  project’s own suite, which is exactly the path CRAN’s
+  win-builder/Debian check exercised. Confirmed live on this machine:
+  `~/nprcgenekeepr.log` (23,648 bytes) already existed, produced purely
+  by running the test suite. The behavior contradicted
+  `vignettes/manual_components/_software_development.Rmd`’s own
+  documentation (“When the Debug on checkbox is checked… the application
+  writes to a file… in the user’s home directory”) — the checkbox’s
+  already-tested `debugMode` reactive (`modInput.R`) existed but
+  `appServer.R` never read it. Root-cause fix (owner-selected over a
+  minimal tempdir()-only alternative, via `AskUserQuestion`): removed
+  the unconditional top-of-function logger init; added an
+  `observeEvent(inputResults$debugMode(), ...)` that registers the file
+  appender (DEBUG threshold) only when the user explicitly checks “Debug
+  on,” and resets to `appender.console()` (INFO threshold) otherwise —
+  restoring the documented opt-in behavior and satisfying CRAN’s
+  “confirmed by the user in an interactive session” carve-out. Followed
+  Strict TDD throughout (RED/GREEN/REFACTOR, 2 scope/approach
+  `AskUserQuestion` gates + 3 phase-transition gates). Two additional
+  defects were self-caught during verification, before any of it reached
+  GREEN: (1) the first-draft RED tests passed even against the unfixed
+  code, because `futile.logger`’s `appender.file()` creates its target
+  file lazily on the first write that clears the threshold, not at
+  registration — every in-repo call site is `flog.debug()`, below the
+  buggy code’s registered `INFO` threshold, so a naive test using only
+  `session$flushReact()` never actually exercised the violation; fixed
+  by having each test force an explicit
+  `flog.info(name="nprcgenekeepr")` probe. (2) The first GREEN
+  implementation used `observeEvent`’s default `ignoreNULL = TRUE`,
+  which silently skipped the safe-default reset on `debugMode()`’s NULL
+  first read (before the client posts `input$debugger`’s value) — since
+  `futile.logger`’s registry is process-global, this let a fresh session
+  inherit a stale file appender left registered by an earlier session in
+  the same R process; reproduced directly as a real “cannot open file:
+  No such file or directory” warning, and independently surfaced by the
+  full-suite regression read (4 new warnings present only when the file
+  ran as part of the full suite, absent in isolation — classic
+  test-order global- state leakage). Fixed with `ignoreNULL = FALSE`.
+  Added `PROJECT_LEARNINGS.md` Learning 322 documenting both gotchas.
+- **Verify (firsthand):** 3 new tests
+  (`tests/testthat/test_appServer_logging.R`) all green; full-suite
+  regression read (`NOT_CRAN=true`) **1 failed / 0 error / 0 warning**
+  (the 1 failure, `test_vignettes_no_deprecated_minParentAge.R`,
+  confirmed pre-existing and unrelated via `git stash` against
+  unmodified `master`); `lintr::lint()` on both changed files = **0**;
+  `devtools::document()` **zero man/NAMESPACE delta** (all
+  `futile.logger` calls stay `::`-qualified). **Decisive end-to-end
+  check:** recorded `~/nprcgenekeepr.log`’s mtime before and after a
+  full-suite run against the real, unmodified `$HOME` — **identical**,
+  proving the suite no longer writes there at all. **Phase 3E runtime
+  smoke test (live browser,
+  [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+  against the real modular app, HOME redirected to an isolated tmp
+  dir):** no log file at boot; checking “Debug on” plus a real user
+  action (the `goto_input` button) created the file with genuine `DEBUG`
+  content (`DEBUG [...] goto_input button clicked`); app remained fully
+  functional after unchecking it.
+- **Next step (owner action, not this session’s):** re-run the CRAN
+  pre-submission checks (win-builder / R-hub) and resubmit —
+  `Version: 2.0.0` was archived before publication, so no version bump
+  is required for the resubmission itself unless the owner prefers one.
+  Updated `BACKLOG.md`’s CRAN-submission-prep item with this outcome and
+  the concrete next action.
+
 ### 2026-07-10 · \[ad hoc\] S348 HANDOFFS.md receipt commit-sha backfill, closed same-session
 
 - **Deliverable:** Filled in this session’s own `HANDOFFS.md` receipt

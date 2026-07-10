@@ -239,6 +239,11 @@
     `lkPedColumns` is center-specific: SNPRC uses the flat `dam`/`sire`
     columns (direct columns) while ONPRC uses the `Id/parents/dam`
     lookup-traversal form (curated parentage).
+  - Fixed a CRAN Policy violation: the Shiny application no longer
+    writes a debug log file to the user’s home directory unconditionally
+    at startup. The log file is now created only after a user explicitly
+    enables the Input tab’s “Debug on” checkbox, matching the documented
+    behavior.
 
 ## nprcgenekeepr 1.0.8 (20250723)
 

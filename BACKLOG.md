@@ -80,13 +80,20 @@ availability/permissions are confirmed; needs a live LabKey server to
 test/observe, and a naive focal-id server filter is incompatible with
 the client-side connected-component walk).
 
-**CRAN submission preparation** (BLOCKED – external, Effort S to
-re-scope) — v2.0.0 was already submitted to CRAN (S329,
-`devtools::submit_cran()`, `CRAN-SUBMISSION` sha `8ca8bb24`); CRAN’s
-review outcome is still pending as of 2026-07-09 (per the v2.0.0
-article’s own Scope note). This item may be stale – whichever session
-picks it up should first check whether CRAN has responded and re-scope
-or close accordingly, not assume “preparation” is still the right verb.
+**CRAN resubmission of v2.0.0** (READY, Effort S) – CRAN responded
+2026-07-09: the v2.0.0 submission (S329, `devtools::submit_cran()`,
+`CRAN-SUBMISSION` sha `8ca8bb24`) was archived before publication
+because
+[`appServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md)
+unconditionally wrote `~/nprcgenekeepr.log` on every boot, violating
+CRAN Policy. **Fixed in S349** (`R/appServer.R`: the file appender is
+now gated behind the “Debug on” checkbox’s already-tested `debugMode`
+reactive, never written unconditionally; see `CHANGELOG.md` 2026-07-10
+S349 entry for full verification detail incl. a live-browser Phase 3E
+smoke test). Next (owner action): re-run the win-builder / R-hub
+pre-submission checks and resubmit via `devtools::submit_cran()`. No
+version bump is required (the prior 2.0.0 attempt was archived before
+publication) unless the owner prefers one.
 
 ## Documents (v1.0.8 -\> v2.0.0 write-up)
 
