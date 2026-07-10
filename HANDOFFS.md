@@ -87,7 +87,7 @@ key_files: vignettes/articles/engineering-the-2.0.0-release.qmd:487-509 (the rew
 gotchas: `quarto render`ing any vignettes/articles/*.qmd leaves untracked .html, _files/, and an auto-written .gitignore (for .quarto/) in that subdirectory -- the top-level .gitignore's vignettes/*.html-style patterns are single-level globs and do NOT match vignettes/articles/*.html. Clean these up before staging; confirmed via `git log --all --oneline -- 'vignettes/articles/*.html'` (empty) that no prior session has ever committed rendered output for any sibling article, so absence is the norm, not an oversight.
 runtime_smoke: n/a -- docs-only prose change, no R/ package runtime behavior touched. Build-equivalent verification (quarto render, 0 errors) performed instead and stated as this deliverable's actual completeness check, per FM #24.
 changelog_ref: CHANGELOG.md 2026-07-09 "Update stale CI-gap narration in the v2.0.0 article (Session 338)"
-commit: pending
+commit: 195cf2ec
 ```
 <free-text prose: self-score breakdown>
 
