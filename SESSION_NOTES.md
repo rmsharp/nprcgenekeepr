@@ -6,6 +6,19 @@
 
 ## ACTIVE TASK
 
+### What Session 345 Did
+**Deliverable:** Plan "Document 2" (package purpose, how it addresses that purpose,
+and how to put it into use) — one planning document written to `docs/planning/`,
+following `RESEARCH_DOCUMENTATION_WORKSTREAM.md` (adapted, matching Document 1's
+`docs/planning/v2-transformation-article-plan.md` precedent) and the Planning Sessions
+discipline in `SESSION_RUNNER.md`. (IN PROGRESS)
+**Started:** 2026-07-10
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
+---
+
 ### What Session 344 Did
 **Deliverable:** Pruned the stale `BACKLOG.md` "issue #40 open" item — issue #40 is
 CLOSED (merged PR #41, 2026-06-11) and the described E2E-strengthening + CI-stability
