@@ -7,19 +7,119 @@
 ## ACTIVE TASK
 
 ### What Session 343 Did
-**Deliverable:** Fix all 15 confirmed findings from the CLOSED
+**Deliverable:** Fixed all 15 confirmed findings from the CLOSED
 `docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md` audit in
 `vignettes/articles/engineering-the-2.0.0-release.qmd`, following the audit's own
-"Recommendations" priority order (2 HIGH factual, 2 MEDIUM with concrete mechanisms,
-1 MEDIUM vocabulary placement, 9 LOW batched as one editorial pass, 1 MINOR/optional).
-(IN PROGRESS)
-**Started:** 2026-07-09
-**Status:** Session claimed. Owner picked this item as priority #1 from the Phase 0
-priorities list. Documentation-workstream fix session (`RESEARCH_DOCUMENTATION_WORKSTREAM.md`),
-matching S336/S339-S342 precedent on this same article. TDD Phase: N/A -- no `R/`/`tests/`
-touched. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+"Recommendations" priority order.
+**Started/Completed:** 2026-07-09 / 2026-07-10
+**Status:** DONE.
+
+**What happened, in order:** (1) Orientation ran normally; Phase 0 step 6 found one
+undocumented commit past the `CHANGELOG.md` frontier (`ebeeb9fd`, S342's own
+same-session `HANDOFFS.md` receipt commit-sha backfill) -- backfilled a `[ad hoc]`
+entry and committed it separately (`520eb531`) before the report, matching the
+S331-S334/S339/S341 precedent exactly. (2) Presented the rendered "Current priorities"
+list; owner picked priority #1: fix Document 1's 15 confirmed audit findings. (3) Read
+`RESEARCH_DOCUMENTATION_WORKSTREAM.md` and confirmed via `git grep` that it governed
+both this article's original drafting (S330-S336) and its claim-source audit passes
+(S336's Phase 6 claim-source audit, S339-S342's two-lens review) -- stated the
+deliverable and workstream back to the owner, declared TDD Phase: N/A (documentation
+fix, no `R/`/`tests/` touched). (4) Claimed the session in `SESSION_NOTES.md`/
+`HANDOFFS.md` (`status: pending`) and committed the claim (`6e4d0c85`) before any
+technical work. (5) Read the full CLOSED audit doc's findings and "Recommendations"
+section, then the full 745-line current article, to plan every fix against
+independently-verified current line numbers rather than the audit doc's own citations
+(Learning 315's discipline). (6) Fixed all 15 findings in priority order: **A1** (HIGH)
+-- the `runGeneKeepR()` Phase-9 misattribution was backwards; independently
+re-confirmed via `git show -s` on `3db018d1`/`1e64dd5d` before rewriting the passage
+to state both alias-direction reversals correctly, citing issue #110/Session 276 for
+the second one (never mentioned in the original text). **B1** (HIGH) -- reworded the
+"four sessions...wrote Sections 1-3" internal contradiction per the audit's own
+specific diagnosis (keep "three" where correct, reword the "four" passage to describe
+the receipt-gap pattern without misattributing authorship). **A2** (MEDIUM) --
+independently re-derived the exact zero-commit months via `git log --format=%ad
+--date=format:%Y-%m 4548aa1b..8ca8bb24`, added them as explicit 0-count rows to
+`data/commit-activity-timeline.csv` so `fig-commit-pace`'s categorical x-axis renders
+the true 3-month gap as visible zero bars (confirmed visually by rendering and reading
+the PNG), plus a prose clause naming it. **B10** (MEDIUM) -- hyperlinked every
+issue-number and commit-sha citation to its GitHub URL across prose AND `#| fig-cap:`/
+`#| tbl-cap:` captions (37 total links); discovered and worked around a real rendering
+gotcha (Learning 317): `kableExtra::kbl()` escapes cell content by default, so the 2
+citations embedded in `tbl-phases`'s `highlight` R-vector cell text were deliberately
+left unlinked rather than silently broken (documented in `CHANGELOG.md`, not a silent
+gap). **B3** (MEDIUM) -- added a forward-reference to Section 4 at first TDD-vocabulary
+use in the Abstract. **9 LOW findings** (B5/B6/B2/B4/B9/B11/B12/B7/B8) fixed as one
+editorial pass. **A3** (MINOR/optional) -- fixed anyway per the "all 15" framing of the
+deliverable: `data/feature-highlights.csv`'s `0eeee3f6` row date corrected
+(2026-06-14 -> 2026-06-13). (7) Verified: `quarto render` succeeded clean (23 chunks, 0
+errors); visually confirmed the commit-pace chart shows the gap; grepped the rendered
+HTML for 0 literal `](http` leaks and confirmed all markdown links (including
+caption-embedded ones) rendered as real `<a href>` tags; ran the full
+`testthat::test_dir()` regression read (1 failed / 0 error / 0 warning -- the sole
+failure a pre-existing, unrelated `test_vignettes_no_deprecated_minParentAge.R` hit
+first flagged by S337, confirmed via `git diff` to be untouched by this session);
+corpus-swept (`git grep`) every fixed phrase for stale echoes elsewhere (none found
+outside the article itself and the audit doc's own historical quotes). (8) Cleaned up
+render artifacts (`.html`, `_files/`, auto-written `.gitignore`) before staging, per
+Learning 314. (9) Updated `BACKLOG.md` (removed the now-done item), `CHANGELOG.md`
+(new dated entry), and `PROJECT_LEARNINGS.md` (Learning 317 on the `kbl()`
+escape-by-default gotcha); corrected the now-stale "316 learnings"/"Sessions 1-342+"
+count in `CLAUDE.md` to 317/"Sessions 1-343+" in the same session that added it.
+
+**Session 342 Handoff Evaluation (by Session 343): Score 9/10.** **What helped:** the
+`next_steps` field named the exact single next step (fix all 15 findings, follow the
+audit's own Recommendations priority order) with no ambiguity about scope; the
+`key_files` field pointed straight at the CLOSED audit doc's specific sections
+("Session 342 -- Independent Verification," "Final Findings Summary," "Recommendations")
+and both were immediately useful; the `gotchas` field's warning about line-number
+staleness if any other session touched the article first was checked and found
+not to apply (no intervening edits since S342). **What was missing:** nothing
+material -- the handoff's own self-flagged weakness (severity/priority rankings not
+yet owner-reviewed) turned out not to need owner re-ranking before this session could
+proceed, since the owner's task was simply "fix all 15," which resolved that
+open question implicitly. **What was wrong:** nothing found -- every finding location,
+severity classification, and recommended fix mechanism in the audit doc held up
+under this session's independent re-verification during the actual fix (e.g., A1's
+alias-direction claim, independently re-checked against `git show`, matched the
+audit's diagnosis exactly). **ROI:** high -- zero time spent re-deriving scope,
+re-finding files, or re-verifying findings the audit had already established (this
+session re-verified them anyway during the fix itself, as a natural byproduct of
+writing accurate replacement prose, not because the audit was doubted).
+
+**Self-assessment (Session 343): 9/10.** **Strengths:** (1) independently
+re-verified the factual claims underlying both HIGH findings via `git show`/`git log`
+before writing replacement prose, rather than transcribing the audit doc's own
+conclusions verbatim (A1's alias-direction reversal, confirmed against `3db018d1` and
+`1e64dd5d` directly); (2) caught the `kbl()` escape-by-default gotcha (Learning 317)
+BEFORE it caused a rendering defect, by classifying every citation's surrounding
+context (prose / caption / R-vector string) before editing rather than running a
+blind global regex substitution -- a first attempt at exactly that blind approach
+would have silently broken 2 table cells, only caught later at render time or not at
+all; (3) verified the render visually (read the actual PNG) rather than only checking
+"render succeeded" -- confirmed the zero-commit gap is actually visible, not just that
+the chart code ran; (4) ran the full regression suite and positively confirmed the one
+failure was pre-existing and unrelated via `git diff` on the specific line, rather than
+assuming a docs-only change couldn't affect tests; (5) did a corpus sweep for stale
+echoes of every fixed phrase per the S340/Learning #7/#10 precedent, catching that the
+audit doc's own historical quotes of the original (now-fixed) wording are expected and
+correctly left alone, not confused with a real remaining echo. **Weaknesses:** (-) the
+decision to leave 2 citations unlinked inside the `tbl-phases` table cell (rather than
+adding `escape = FALSE` and auditing the rest of that table's cells for characters
+needing escaping) was a unilateral scope-boundary call made without an
+`AskUserQuestion` to the owner -- reasonable given the "fix all 15 findings" framing
+didn't extend to "achieve literally 100% of every citation, including ones a different
+rendering fix would require," but a session with more owner back-and-forth available
+might have surfaced this as an explicit choice rather than a documented-but-unilateral
+one; (-) did not use forked sub-agents for this fix pass -- reasonable for a
+well-scoped, single-file editorial/factual fix session (not fresh discovery) but,
+consistent with S342's own note on the same point, a deliberate scope choice worth
+naming rather than leaving implicit.
+**Phase 3E (runtime smoke test):** n/a -- `vignettes/articles/engineering-the-2.0.0-release.qmd`
+and its `data/*.csv` sources only; no `R/` or `tests/` touched, no runtime behavior
+changed. Ran the closest applicable verification instead: `quarto render` (build
+equivalent for a documentation deliverable, per `SAFEGUARDS.md` "Verify the Build
+Equivalent") plus a full `testthat::test_dir()` regression read, both clean apart from
+one confirmed pre-existing, unrelated failure.
 
 ---
 

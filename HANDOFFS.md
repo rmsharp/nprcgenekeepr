@@ -76,17 +76,17 @@ session need this block to continue the work without re-reading the whole repo?*
 
 ```handoff
 session: S343
-date: 2026-07-09
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Fix all 15 confirmed findings from the CLOSED docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md audit in vignettes/articles/engineering-the-2.0.0-release.qmd, following the audit's own "Recommendations" priority order. Owner picked this as Phase 0 priority #1.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+date: 2026-07-10
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Fixed all 15 confirmed findings from the CLOSED docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md audit in vignettes/articles/engineering-the-2.0.0-release.qmd, following the audit's own "Recommendations" priority order.
+what_was_done: Backfilled S342's own undocumented HANDOFFS-sha-backfill commit (ebeeb9fd) into CHANGELOG.md, committed separately (520eb531), before the Phase 0 report. Owner picked BACKLOG priority #1 (fix all 15 findings). Claimed the session (commit 6e4d0c85) before technical work. Fixed all 15: A1 (HIGH, runGeneKeepR() Phase-9 misattribution -- independently re-verified via git show on 3db018d1/1e64dd5d before rewriting), B1 (HIGH, "four sessions wrote Sections 1-3" contradiction, reworded per the audit's specific diagnosis), A2 (MEDIUM, added the 3 genuine zero-commit months to data/commit-activity-timeline.csv so fig-commit-pace's chart now visibly shows the gap -- confirmed by rendering and reading the PNG), B10 (MEDIUM, hyperlinked 37 issue/commit citations across prose and captions; discovered and documented a kbl()-escape-by-default rendering gotcha -- Learning 317 -- and deliberately left 2 table-cell citations unlinked rather than silently breaking them), B3 (MEDIUM, added a Section-4 forward-reference at first TDD-vocabulary use), 9 LOW findings batched as one editorial pass, A3 (MINOR/optional, fixed anyway per the "all 15" framing: feature-highlights.csv date off-by-one). Verified: quarto render clean (23 chunks, 0 errors), visually confirmed the chart gap, 0 literal markdown-link leaks in rendered HTML, full testthat::test_dir() regression read (1 failed/0 error/0 warning, the 1 failure pre-existing and unrelated, confirmed via git diff), corpus swept for stale echoes (none found). Cleaned up render artifacts (Learning 314). Updated BACKLOG.md, CHANGELOG.md, PROJECT_LEARNINGS.md (Learning 317), CLAUDE.md (learnings count 316->317). Commit: pending.
+next_steps: The article's audit-driven fix work is now complete. Two independent paths open: (1) "Plan Document 2" (READY, Effort M) -- package purpose/how-to-use, deferred since S330, named in S336/S339/S341's handoffs, never picked up. (2) One of the other BACKLOG items (shinytest2 E2E hardening issue #40, LabKey integration remainder BLOCKED on live server access, CRAN submission prep BLOCKED/stale -- re-check CRAN status first) or one of the 8 open GitHub issues (#116, #37, #36, #28, #12, #11, #10, #5). Separately, note (not urgent): test_vignettes_no_deprecated_minParentAge.R has a pre-existing failure (a narrative minParentAge= mention in prose describing the now-replaced old default, first flagged by S337, Session 337's own handoff already deferred it as "a documentation-workstream fix, a different capability" -- still open, still not this session's scope, since it wasn't one of the 15 audit findings).
+key_files: vignettes/articles/engineering-the-2.0.0-release.qmd (all 15 fixes applied, verify via the CHANGELOG.md entry's per-finding breakdown), vignettes/articles/data/commit-activity-timeline.csv (3 new zero-commit rows), vignettes/articles/data/feature-highlights.csv (1-line date fix), docs/audits/DOCUMENT1_TWO_LENS_REVIEW_2026-07-09.md (unchanged -- historical audit record, left as-is), BACKLOG.md ("## Documents" section, fix item removed), PROJECT_LEARNINGS.md (Learning 317), CLAUDE.md (learnings count 316->317).
+gotchas: kableExtra::kbl() escapes cell content by default -- markdown link syntax inside an R-vector column rendered via kbl() shows as literal text, not a link, unless escape=FALSE (Learning 317); this is why tbl-phases's 2 embedded issue citations are still plain text, a deliberate documented exception, not a miss. The pre-existing test_vignettes_no_deprecated_minParentAge.R failure (article L344, prose describing the now-replaced old default) is unrelated to this session and was NOT one of the 15 audit findings -- do not conflate it with this session's scope if a future session investigates open test failures.
+runtime_smoke: n/a -- vignettes/articles/*.qmd and data/*.csv only, no R/ or tests/ touched, no runtime behavior changed. Ran quarto render (build-equivalent) + full testthat::test_dir() regression read instead, both clean apart from the one confirmed pre-existing, unrelated failure.
+changelog_ref: CHANGELOG.md 2026-07-10 "Fixed all 15 confirmed Document 1 audit findings (Session 343)"
 commit: pending
 ```
 

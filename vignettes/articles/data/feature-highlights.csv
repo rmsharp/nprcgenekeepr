@@ -1,7 +1,7 @@
 "feature","issue","session_range","date","commit_sha","sha_verified","description"
 "Descendant-inclusive pedigree filtering","#35","68-69","2026-06-13","d4320643",TRUE,"The Pedigree Browser's \"trim to focal animals\" option now includes descendants as well as ancestors"
 "Configurable auto-generated unknown-ID format","#44 (umbrella of #26/#32/#38)","70-72","2026-06-13","14c8e84d",TRUE,"Single source-of-truth `getAutoIdFormat()`/`setAutoIdFormat()` (default \"U%04d\", byte-identical unconfigured) replaces 8 literal \"U\"-prefix checks"
-"Gestation-derived parent-candidate window","#31 (umbrella #45)","74","2026-06-14","0eeee3f6",TRUE,"`getPotentialParents()`'s dam-exclusion window is derived from each species' actual gestation length instead of a fixed heuristic"
+"Gestation-derived parent-candidate window","#31 (umbrella #45)","74","2026-06-13","0eeee3f6",TRUE,"`getPotentialParents()`'s dam-exclusion window is derived from each species' actual gestation length instead of a fixed heuristic"
 "Potential Parents Shiny tab","#48 (umbrella #45)","80-81","2026-06-15",NA,NA,"New `modPotentialParents` module surfaces `getPotentialParents()` in the app: a sortable candidate-parent table with CSV download"
 "ORIP grant-reporting tab wired in and ONPRC-gated","#47 / #49","83-84","2026-06-15",NA,NA,"The pre-existing but never-mounted modORIPReporting module (site info, colony summary, genetic-diversity metrics, CSV downloads) is mounted, gated to ONPRC"
 "Species as a first-class pedigree attribute","#46","165-169","2026-06-22",NA,NA,"A `species` column now drives species-keyed gestation windows and UI defaults, replacing a rhesus-only hardcoded scalar"
