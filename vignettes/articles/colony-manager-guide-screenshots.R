@@ -2,11 +2,17 @@
 # This file is part of nprcgenekeepr
 #
 # Regenerates the current-UI screenshots in vignettes/shiny_app_use/ that
-# ColonyManagerTutorial.Rmd (and the forthcoming "colony-manager-guide.qmd",
-# Document 2 -- docs/planning/document2-colony-manager-guide-plan.md) rely on.
-# Driven by shinytest2::AppDriver against the live modular GeneKeepR app
+# ColonyManagerTutorial.Rmd (and "colony-manager-guide.qmd", Document 2 --
+# docs/planning/document2-colony-manager-guide-plan.md) rely on. Driven by
+# shinytest2::AppDriver against the live modular GeneKeepR app
 # (inst/shinytest/app.R) and the shipped data(examplePedigree)/data(focalAnimals)
 # example data, per the plan's Phase A gap inventory (plan doc Section 3A).
+#
+# Session 348 (Phase C) addition: two more captures for tabs Phase A's
+# tab-coverage decision put in scope (Genetic Diversity #112, Potential
+# Parents #48) but that were absent from the original 34-file gap inventory,
+# since the source tutorial predates both tabs. See the two new blocks near
+# the end of this script.
 #
 # Usage (repo root):
 #   NOT_CRAN=true Rscript vignettes/articles/colony-manager-guide-screenshots.R
@@ -486,6 +492,44 @@ do_step("select Custom sex ratio (see dragon note above)", {
 })
 shot(app, "breeding_group_sex_ratio_specification.png",
      selector = "#breedingGroups-moduleContainer")
+
+# --------------------------------------------------------------------------
+# Genetic Diversity tab (NEW -- Document 2 Phase C addition, issue #112).
+# Not part of Phase A's 34-screenshot gap inventory (the source tutorial
+# predates this tab, so there was no old screenshot to disposition), but
+# Phase A's tab-coverage decision put this tab in Section 3's scope, and
+# Phase C's drafting session found no screenshot existed for it. The
+# heat map needs formed breeding groups + a completed GVA run + its kinship
+# matrix, all already produced above; selecting "Custom" sex ratio just now
+# did not re-form groups, so shared$breedingGroups is still the
+# kinship-enabled 6-group result.
+# --------------------------------------------------------------------------
+do_step("navigate to Genetic Diversity", {
+  app$set_inputs(mainNavbar = "Genetic Diversity")
+})
+shot(app, "genetic_diversity_heatmap.png",
+     selector = "#geneticDiversity-moduleContainer")
+
+# --------------------------------------------------------------------------
+# Potential Parents tab (NEW -- Document 2 Phase C addition, issue #48).
+# Same rationale as Genetic Diversity above -- in Section 3's scope per
+# Phase A's tab-coverage decision, but never captured. Independent of
+# GVA/Breeding Groups state; needs only the loaded pedigree.
+# modPotentialParentsUI has no `#<module>-moduleContainer` wrapper (unlike
+# every other module), so this captures the full viewport instead of a
+# selector-scoped element.
+# --------------------------------------------------------------------------
+do_step("navigate to Potential Parents", {
+  app$set_inputs(mainNavbar = "Potential Parents")
+})
+do_step("click Find Potential Parents", {
+  click_element_safe(app, "#potentialParents-findParents")
+})
+do_step("wait for potential-parents results", {
+  wait_for_element(app, "#potentialParents-resultsTable", timeout = 15000)
+  app$wait_for_idle(timeout = 15000)
+})
+shot(app, "potential_parents_results.png")
 
 # --------------------------------------------------------------------------
 # Summary

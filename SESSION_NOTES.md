@@ -7,25 +7,192 @@
 ## ACTIVE TASK
 
 ### What Session 348 Did
-**Deliverable:** Execute Document 2 plan Phase C —
-`docs/planning/document2-colony-manager-guide-plan.md` §6 Phase C: port and draft
-Sections 1-3 of `vignettes/articles/colony-manager-guide.qmd` (Purpose, Approach, and a
-Colony Manager's Walkthrough), using Phase A's re-derived numbers and Phase B's
-screenshots. Following the adapted `RESEARCH_DOCUMENTATION_WORKSTREAM.md`.
-**Started:** 2026-07-10
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+**Deliverable:** Executed Document 2 plan Phase C —
+`docs/planning/document2-colony-manager-guide-plan.md` §6 Phase C: drafted
+`vignettes/articles/colony-manager-guide.qmd` (Abstract, Introduction, Sections 1-3,
+Conclusion), Section 3 ported/modernized from `ColonyManagerTutorial.Rmd` using Phase
+B's screenshots and Phase A's re-derived numbers. Following the adapted
+`RESEARCH_DOCUMENTATION_WORKSTREAM.md`.
+**Started/Completed:** 2026-07-10 / 2026-07-10
+**Status:** DONE.
 
-**Pre-drafting scope decisions (owner, via `AskUserQuestion`, before claiming):** (1)
-Section 3's Input-tab walkthrough will narrate CSV as the demonstrated upload format
-(matching Phase B's screenshots) with an explicit inline caveat that Excel upload
-currently has a known data-corruption bug (pointer to the `BACKLOG.md` item) — not a
-silent instruction to use Excel. (2) Section 3's Breeding Groups walkthrough will
-describe the two working sex-ratio modes (None, Harem) fully; "Custom" is mentioned as
-an existing option but its numeric demonstration (N7, "sex ratio of 2.5") is omitted
-with a brief note that a worked example follows once the control is fixed
-(`BACKLOG.md` item).
+**What happened, in order:** (1) Orientation ran normally; Phase 0 step 6 found both
+`CHANGELOG.md` and `HANDOFFS.md` frontiers already at `HEAD` — clean reconcile, no
+backfill needed, third consecutive clean reconcile. (2) Owner picked priority #1 (this
+Phase C item) via a bare "1" in response to the rendered priorities list. (3) Read the
+plan's §6 Phase C completion criteria plus surrounding context (§1 load-bearing
+discovery, §2 scope decisions, §3 evidence base, §3A Phase A's screenshot/numeric
+tables, §4 proposed outline, §8 dragons, §11 open decisions). (4) Surfaced the two
+pre-drafting scope decisions S347's handoff explicitly flagged (Excel-upload narrative,
+Custom-ratio demo) via one `AskUserQuestion` before claiming; owner chose "narrate CSV,
+caveat Excel" and "describe None/Harem, skip Custom demo" for both. (5) Claimed the
+session (commit `98a39a19`) before any drafting. (6) Read all source material fresh,
+not from S345/346/347's summaries: `vignettes/manual_components/_introduction.Rmd`,
+`_summary_of_major_functions.Rmd`, `vignettes/ColonyManagerTutorial.Rmd` (full, 748
+lines), `R/appUI.R`, the capture script, `vignettes/articles/engineering-the-2.0.0-release.qmd`
+(house style), all six existing feature articles' titles, `R/modGeneticDiversity.R`,
+`R/modPotentialParents.R`, and `R/getGeneticDiversityStats.R`. (7) Re-verified several
+claims directly against source rather than trusting the plan's own summary table or
+`ColonyManagerTutorial.Rmd`'s prose, per this workstream's claim-source discipline —
+found and corrected two additional stale claims beyond what Phase A had already
+flagged: the tutorial's "genome uniqueness threshold value between 0-3" is stale
+(`R/modGeneticValue.R`'s `threshold` `selectInput` now offers 1-5, default 4); the
+tutorial's "Value Designation" column name is unverified (no `colnames=` override in
+`modGeneticValueServer`'s `renderDT` — the actual column is named `value`). Also
+verified issue #9/#112/#48's code citations and states directly (`gh issue view`; all
+three CLOSED, confirming the app's current behavior is the shipped fix, not an
+in-progress one) rather than assuming the plan document's citations were still
+accurate. (8) **Found a gap between Phase A's tab-coverage decision and Phase B's own
+completion criteria**: Phase A decided both new tabs (Genetic Diversity #112, Potential
+Parents #48) are in Section 3's scope, but Phase B's 34-screenshot gap inventory was
+built by enumerating `ColonyManagerTutorial.Rmd`'s own figure references, which predates
+both tabs — so neither tab had a screenshot, and Phase B's own "34 files" completion
+criterion closed with no signal of the gap. Surfaced to the owner via `AskUserQuestion`
+(add 2 screenshots now vs. text-only with a BACKLOG follow-up) rather than silently
+picking either path; owner chose to add the screenshots now. (9) Extended the already
+-proven, already-committed capture script
+(`vignettes/articles/colony-manager-guide-screenshots.R`) with two new capture blocks
+reusing its existing `shot()`/`do_step()` helpers and established selectors —
+`genetic_diversity_heatmap.png` (captured against the kinship-enabled 6-group run
+already built up earlier in the same script run) and `potential_parents_results.png`
+(independent of GVA/Breeding-Groups state; `modPotentialParentsUI` has no
+`#<module>-moduleContainer` wrapper unlike every other module, so this one captures the
+full viewport instead). Ran the full script in the background (~this session's longest
+single step); 70/70 steps succeeded, reproducing all 32 prior screenshots plus the 2
+new ones. (10) Visually spot-checked both new screenshots (Read-tool image review, per
+this project's established discipline) and found a second new, non-code finding: the
+Potential Parents results screenshot shows the app's own graceful-degradation warning
+("This dataset has no colony-origin ('fromCenter') field...") rather than populated
+results — confirmed directly (`"fromCenter" %in% names(examplePedigree)` is `FALSE`,
+via `Rscript`) that the shipped example pedigree genuinely lacks the column this
+feature requires, rather than assuming the warning text alone was sufficient evidence.
+Chose to document the app's actual (correct) degraded response honestly in the
+article rather than fabricate a populated example or silently drop the subsection.
+(11) Wrote the full `.qmd` (roughly 510 lines): Abstract and Conclusion written after
+the body per the plan's own outline discipline; Section 1 adapted from
+`_introduction.Rmd` (purpose, Vinson & Raboin 2015 citation, NIH grant acknowledgment);
+Section 2 adapted from `_summary_of_major_functions.Rmd` plus an original-construction
+T1 function-group/tab/article table and an F1 Mermaid pipeline diagram (matching
+Document 1's F2 Mermaid convention); Section 3 walks every one of the 10 unconditional
+tabs using Phase A's N1 (3694→2322/1372 unknown)/N2 (54-animal trim)/N3 (962-animal
+large-focal-group trim via the shipped `focalAnimals` object)/N4 (332 living, 123M/209F)
+numbers verbatim, N5 dropped (hardware-timing claim), N6 deliberately left unpinned
+(no fabricated row number for the stochastic GVA cutover, matching Phase B's own
+`gva_high_and_low_value.png` framing), N7 per the owner's decision. Both callout-boxes
+(Excel-upload defect, Custom-ratio gap) cite the actual defect mechanism, not just "this
+is broken." (12) `quarto render colony-manager-guide.qmd` (isolated) succeeded cleanly
+first try; verified via grep that every image `src` resolves on disk and no
+`@sec-`/`@tbl-`/`@fig-` cross-reference is left unresolved. Made one post-render wording
+fix (a Conclusion sentence implied the two flagged production issues were already filed
+GitHub issues, which they are not — corrected to "two production issues... neither of
+which is yet tracked as a numbered GitHub issue"), then re-rendered clean. Attempted a
+`pkgdown::build_article()` sanity check beyond Phase C's own stated criteria; it errored
+("Can't find article") on a fresh, uninitialized pkgdown cache — not chased further,
+since full pkgdown/tarball verification is explicitly Phase D's job (§9 checklist).
+Spot-checked two unmodified sibling articles per the workstream's Render Verification
+discipline: Document 1 (`engineering-the-2.0.0-release.qmd`) still renders cleanly;
+`studbook-quality-control.qmd` fails on `library(nprcgenekeepr)` — confirmed this is a
+pre-existing environment condition (the package is `pkgload::load_all()`-able but not
+`R CMD INSTALL`ed in this dev environment; `Rscript -e 'library(nprcgenekeepr)'` fails
+identically outside any render), not a regression from this session. (13) Cleaned up
+render byproducts before committing: this session's own `colony-manager-guide.html`/
+`_files/`/`.knit.md`, and a stray `pkgdown/` directory left by the sanity-check attempt
+— left the pre-existing untracked `engineering-the-2.0.0-release.html`/`_files/` and
+`vignettes/articles/.gitignore` alone (present before this session, not authored by it,
+flagged again in this session's close-out rather than unilaterally touched). (14) Wrote
+the Phase C `✅ DONE` blockquote into the plan document (§6) and updated the Status line
+at top, matching Documents 1/Phases A/B's established in-plan convention. (15) Updated
+`BACKLOG.md`: pointed the Document 2 item at Phase D, added the new `fromCenter` finding
+as its own item. (16) Added `PROJECT_LEARNINGS.md` Learning 321 (phase-boundary scope
+gaps; reopening a closed phase's tooling under an explicit owner-approved decision) and
+bumped `CLAUDE.md`'s learnings count (320→321, Sessions 1-347+→1-348+).
+
+**Session 347 Handoff Evaluation (by Session 348): Score 10/10.** **What helped:** the
+handoff named the exact two pre-drafting decisions this session needed to resolve
+before writing Section 3 (Excel-upload narrative, Custom-ratio demo) and gave the
+correct options for each, so the `AskUserQuestion` at claim time could be posed
+precisely rather than discovered mid-draft. The gotchas list (the Excel bug's exact
+shape, the DT search-box non-binding, the `click()`-vs-`click_element_safe()`
+distinction) were all either directly actionable or correctly out of this session's
+path. The key_files pointers (capture script, plan §6 Phase B blockquote, the two
+`R/mod*.R` bug sites) meant zero time spent re-locating anything. **What was missing:**
+nothing S347 could reasonably have been expected to supply — the Phase-A/Phase-B
+tab-coverage-vs-screenshot-inventory gap and the `fromCenter` example-data gap are both
+things only a session that actually drafts prose for the two new tabs (and, for the
+second, actually runs the feature against the shipped data) could discover; S347's own
+scope (screenshot regeneration against the tutorial's existing figure list) was not
+positioned to find either. **What was wrong:** nothing identified as inaccurate. **ROI:**
+strongly positive — resolving both flagged decisions via one `AskUserQuestion` before
+writing a single sentence of Section 3 avoided any need to revise the Input-tab or
+Breeding-Groups narrative after the fact.
+
+**Self-assessment (Session 348): 9/10.** **Strengths:** (1) did not draft Section 3 from
+the plan's own evidence-table summary alone — re-read `ColonyManagerTutorial.Rmd` in
+full and every relevant `R/mod*.R` file fresh, and that direct re-verification caught
+two additional stale claims (the GVA threshold range, the "Value Designation" column
+name) beyond what Phase A had already flagged; (2) when the tab-coverage/screenshot-
+inventory gap surfaced, stopped and asked rather than silently either drafting
+text-only subsections or unilaterally reopening Phase B's already-closed tooling; (3)
+when the Potential Parents screenshot came back showing a warning instead of populated
+results, verified the root cause directly (`Rscript` check of the actual data object)
+rather than assuming the UI text alone was sufficient evidence, and chose to document
+the real degraded state honestly rather than fabricate a populated example; (4) declined
+to invent a specific row number for the GVA High/Low cutover (N6) despite the plan text
+suggesting Phase C should "capture whatever row number the live run actually shows" —
+recognized that Phase B's own screenshot deliberately avoided pinning one (a stochastic,
+run-dependent value) and followed that precedent rather than fabricating false
+precision; (5) verified the render (isolated `quarto render`, image-resolution grep,
+cross-reference grep) rather than treating "no error printed" as sufficient, and caught
+one real wording inaccuracy (the "open GitHub issues" phrasing) on a self-review pass
+before committing. **Weaknesses:** (-) the `pkgdown::build_article()` sanity check was
+attempted beyond what Phase C's own criteria required, produced an unexplained error,
+and consumed time without a clear resolution (correctly triaged as "not this phase's
+job" but a tighter session would have skipped the extra check entirely rather than
+attempt-then-defer); (-) did not independently re-verify N1/N2/N3/N4's underlying
+numbers via a fresh `Rscript` run this session (relied on Phase A/B's own verification
+chain instead) — defensible given this phase's job is drafting from already-verified
+numbers, not re-deriving them a third time, but worth naming as a choice rather than
+leaving implicit.
+
+**Phase 3E (runtime smoke test):** n/a — this session's diff is
+`vignettes/articles/colony-manager-guide.qmd` (new article), a 2-capture extension to
+`vignettes/articles/colony-manager-guide-screenshots.R` (tooling script, not package
+code), 2 new + 12 re-regenerated screenshot PNGs under `vignettes/shiny_app_use/`, and
+doc/planning/BACKLOG/CLAUDE.md/PROJECT_LEARNINGS.md updates; no `R/` package source was
+modified, so no package runtime behavior changed. (The `fromCenter` finding was
+diagnosed via direct `Rscript` probing of `data(examplePedigree)`, not fixed — no code
+change to smoke-test.) TDD Phase: N/A throughout (documentation/tooling session — a
+Quarto article, a capture-script extension, and regenerated documentation image assets,
+not package production code or its test suite).
+
+**Note for the next session:** Phase D (assemble, verify, decide
+`ColonyManagerTutorial.Rmd`'s fate, publish — plan's §6 Phase D) is next. Its job:
+full pass on Abstract/Introduction/Conclusion (this session's versions are first
+drafts, not audited); the full claim-source audit (workstream Phase 6) over the whole
+article; `AskUserQuestion` resolving §11 decision 3 (retire/redirect
+`ColonyManagerTutorial.Rmd` now that its content is public, or keep both); re-verify the
+pkgdown Reference-page citation live before citing it, if the article ends up citing it
+(§8 dragon 5 — this session's draft does NOT cite the Reference page's grouped
+structure, only "the function reference," so this may already be moot, but confirm);
+run the full §9 verification checklist (`pkgdown::build_article()` — this session's
+quick attempt errored on an uninitialized cache and needs a real investigation, not a
+retry; `R CMD build .` + `tar tzf` for the CRAN-risk check; spot-check the six existing
+articles plus Document 1 all still render). Phase D must also account for the THIRD new
+finding this session recorded to `BACKLOG.md` (shipped example pedigree has no
+`fromCenter` column, so Potential Parents cannot show populated results) — decide
+whether to fix the example data before publishing or note the limitation as-is. Key
+files: `vignettes/articles/colony-manager-guide.qmd` (the whole deliverable);
+`docs/planning/document2-colony-manager-guide-plan.md` §6 Phase C blockquote (full
+findings detail), §9 (verification checklist), §11 (decision 3), §12 (dragon 5);
+`BACKLOG.md` (Document 2 item now points to Phase D; 3 bug/gap items). Gotchas: the
+`pkgdown::build_article("colony-manager-guide")` sanity check in this session errored
+"Can't find article" against a freshly-initialized pkgdown cache — Phase D should
+investigate whether this is a cache-priming order issue (e.g. needs `build_site()` or
+an index build first) before assuming the article itself is misconfigured.
+`studbook-quality-control.qmd` (and likely other feature articles that `library()` the
+package rather than `pkgload::load_all()` it) cannot render in this dev environment
+without first `R CMD INSTALL`ing the package — pre-existing, not something Phase D
+introduced or needs to fix, but don't mistake it for a new regression.
 
 ### What Session 347 Did
 **Deliverable:** Executed Document 2 plan Phase B —

@@ -13,7 +13,12 @@ decisions 1/2/5 (tab-coverage extent, screenshot method, title/slug) via
 (screenshot regeneration) is now DONE** (Session 347, 2026-07-10) — see §6 Phase B for
 the capture script, corrected dispositions, and two new functional findings (Excel-upload
 data corruption; non-functional Custom sex-ratio control) recorded to `BACKLOG.md`.
-Phases C-D remain future, separately approved sessions each; no phase is bundled with
+**Phase C (port and draft Sections 1-3) is now DONE** (Session 348, 2026-07-10) — see
+§6 Phase C for the drafted `vignettes/articles/colony-manager-guide.qmd`, the 2-screenshot
+extension to Phase B's capture script (owner-approved), and a third new finding (the
+shipped example pedigree lacks a `fromCenter` column, so Potential Parents cannot be
+demonstrated with populated results) recorded to `BACKLOG.md`.
+Phase D remains a future, separately approved session; no phase is bundled with
 another (FM #26).
 
 **Workstream:** Adapted `docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md`
@@ -429,16 +434,87 @@ resolved per Phase A's inventory.
 `quarto render`/exit-code-0 was only caught by inspecting the actual image).
 **Session boundary:** screenshots only — no article prose yet.
 
-### Phase C — Port and draft Sections 1-3 · risk MEDIUM (highest claim-density phase)
+### Phase C — Port and draft Sections 1-3 · risk MEDIUM (highest claim-density phase) · ✅ DONE (Session 348)
 
-**What DONE looks like:** `vignettes/articles/<slug>.qmd` created with Sections 1-2
-(adapted from `_introduction.Rmd`/`_summary_of_major_functions.Rmd`, T1, F1) and Section
-3 (ported/modernized from `ColonyManagerTutorial.Rmd` using Phase B's screenshots, plus
-new Genetic Diversity and Potential Parents subsections per Phase A's coverage
-decision); every carried-forward numeric claim traces to Phase A's re-derivation, not
-the original tutorial text.
-**Verification:** `quarto render` on the article in isolation; every claim in Section 3
-either matches Phase A's re-derived value or is flagged for the Phase D audit.
+> **✅ Implemented in Session 348 (2026-07-10), whole phase, no split.** Two
+> pre-drafting scope decisions resolved via `AskUserQuestion` before writing began,
+> both per S347's handoff: Section 3's Input-tab narrative uses CSV (matching Phase
+> B's own capture choice) with an explicit inline caveat about the unfixed
+> Excel-upload corruption bug; the Breeding-Groups subsection covers the two working
+> sex-ratio modes (None, Harem) fully and omits N7's "sex ratio of 2.5" numeric
+> demonstration, noting it will follow once the Custom-ratio input is wired up.
+> Wrote `vignettes/articles/colony-manager-guide.qmd`: Abstract, Introduction,
+> Section 1 (adapted from `_introduction.Rmd`), Section 2 (adapted from
+> `_summary_of_major_functions.Rmd`, with T1's function-group/tab/article table and
+> an F1 Mermaid pipeline diagram, both original construction), Section 3 (ported and
+> modernized from `ColonyManagerTutorial.Rmd`, using Phase B's screenshots and Phase
+> A's re-derived N1/N2/N3/N4 numbers verbatim), and Conclusion.
+>
+> **A gap surfaced between Phase A's tab-coverage decision and Phase B's own
+> completion criteria:** Phase A's decision put both new tabs (Genetic Diversity
+> #112, Potential Parents #48) in Section 3's scope, but Phase B's 34-screenshot gap
+> inventory was built by enumerating `ColonyManagerTutorial.Rmd`'s own figure
+> references -- which predates both tabs, so neither could appear in that inventory,
+> and Phase B's own "34 files" completion criterion closed with no screenshot for
+> either. Surfaced to the owner via `AskUserQuestion` rather than silently drafting
+> text-only subsections or silently reopening Phase B's tooling; owner chose to add
+> the captures now. Extended the already-proven, already-committed capture script
+> (`vignettes/articles/colony-manager-guide-screenshots.R`) with two more capture
+> blocks reusing its existing helpers -- `genetic_diversity_heatmap.png` (captured
+> against the kinship-enabled 6-group run already built up earlier in the same
+> script run) and `potential_parents_results.png` (independent of GVA/Breeding-Groups
+> state; `modPotentialParentsUI` has no `#<module>-moduleContainer` wrapper unlike
+> every other module, so this one captures the full viewport instead of a
+> selector-scoped element). Re-running the full script reproduced all 32 prior
+> screenshots (70/70 steps succeeded) and captured both new ones.
+>
+> **A second new finding, this one about the example data itself, not a code
+> bug:** the shipped `data(examplePedigree)` has no `fromCenter` (colony-origin)
+> column, which `modPotentialParentsServer` requires to identify in-colony
+> candidates -- confirmed directly (`"fromCenter" %in% names(examplePedigree)` is
+> `FALSE`), not assumed from the UI's warning text alone. Rather than fabricate a
+> populated example or silently omit the subsection, the article describes and
+> shows the app's own correctly-degraded warning response, framed as a genuinely
+> useful thing for a reader to know about their own data. Recorded as a new
+> `BACKLOG.md` item (add a `fromCenter` column to the shipped example data, or a
+> supplementary example, so this feature can be demonstrated with real results).
+>
+> **Claim-source corrections made firsthand this session, not carried forward
+> uncritically:** (1) the tutorial's "genome uniqueness threshold value between 0-3"
+> is stale -- `R/modGeneticValue.R`'s `threshold` `selectInput` now offers 1-5
+> (default 4); the article cites only the verified default, not the old range. (2)
+> the tutorial's "Value Designation" column name is not verified against the actual
+> DT table (no `colnames=` override in `modGeneticValueServer`'s
+> `renderDT`); the article names the actual `value` column instead. (3) N6 (the GVA
+> High-to-Low-Value cutover row) is deliberately NOT pinned to a specific row number
+> -- it is a property of one stochastic gene-drop run, matching Phase B's own
+> `gva_high_and_low_value.png` framing (widened to top 500 rather than a fixed row);
+> flagged here for the Phase D audit rather than fabricated. (4) the 6-seed-group
+> screenshot is described honestly as showing empty per-group text areas (the
+> control's structure), not populated real infant/dam pairs, since Phase B's capture
+> never populated them and inventing real pairs sight-unseen was explicitly left to
+> whichever session drafts real content -- deferred again here, not resolved, since
+> it is not required by Section 3's own completion criteria.
+>
+> **Verification:** `quarto render colony-manager-guide.qmd` (isolated) succeeded
+> cleanly -- zero missing images (grepped every `src="*.png"` against disk), zero
+> unresolved `@sec-`/`@tbl-`/`@fig-` cross-references, Mermaid diagram embedded.
+> Spot-checked two unmodified siblings: `engineering-the-2.0.0-release.qmd` (Document
+> 1) still renders cleanly; `studbook-quality-control.qmd` fails on `library(nprcgenekeepr)`
+> (the package is not `R CMD INSTALL`ed in this dev environment, only `pkgload::load_all()`-able)
+> -- confirmed pre-existing and unrelated to this session's changes, not a regression
+> (`Rscript -e 'library(nprcgenekeepr)'` fails identically outside any render). A
+> `pkgdown::build_article()` sanity check errored ("Can't find article") on a fresh,
+> uninitialized pkgdown cache -- full pkgdown/`R CMD build`/tarball verification is
+> explicitly Phase D's job (§9 checklist), not re-attempted here. Render byproducts
+> (`.html`, `_files/`, `.knit.md`, the stray `pkgdown/` sanity-check scaffold) were
+> deleted before committing, per the workstream's cleanup discipline.
+> **Session boundary respected:** Sections 1-3 drafted and rendered; Abstract,
+> Introduction, and Conclusion are placeholders/first drafts appropriate to this
+> phase, not the full claim-source audit -- that, plus `ColonyManagerTutorial.Rmd`'s
+> fate (§11 decision 3) and the pkgdown Reference-index citation re-check (§8 dragon
+> 5), remain Phase D's job. **Next: Phase D** (assemble, verify, decide the source
+> tutorial's fate, publish).
 
 ### Phase D — Assemble, verify, decide `ColonyManagerTutorial.Rmd`'s fate, publish · risk MEDIUM (irreversible-ish: public visibility, see §9 dragon 4)
 

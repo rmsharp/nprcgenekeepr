@@ -43,6 +43,39 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-10 · [ad hoc] Executed Document 2 Phase C: drafted the colony-manager-guide article, two new findings (Session 348)
+- **Deliverable:** `docs/planning/document2-colony-manager-guide-plan.md` §6 Phase C —
+  drafted `vignettes/articles/colony-manager-guide.qmd` (Abstract, Introduction,
+  Section 1 adapted from `_introduction.Rmd`, Section 2 adapted from
+  `_summary_of_major_functions.Rmd` with an original T1 function-group table and F1
+  Mermaid pipeline diagram, Section 3 ported/modernized from `ColonyManagerTutorial.Rmd`
+  using Phase B's screenshots and Phase A's re-derived N1/N2/N3/N4 numbers verbatim,
+  Conclusion). Owner resolved two pre-drafting scope decisions via `AskUserQuestion`:
+  Input-tab narrates CSV with an inline Excel-bug caveat; Breeding-Groups subsection
+  covers None/Harem fully, omits the Custom-ratio numeric demo (N7).
+- **Extended `vignettes/articles/colony-manager-guide-screenshots.R`** with 2 more
+  capture blocks (owner-approved via `AskUserQuestion`, after finding Phase A's
+  tab-coverage decision — both new tabs in scope — had no matching entry in Phase B's
+  34-screenshot inventory, since that inventory was built from `ColonyManagerTutorial.Rmd`'s
+  own figure references, which predate both tabs): `genetic_diversity_heatmap.png` and
+  `potential_parents_results.png`. Re-ran the full script; 70/70 steps succeeded.
+- **A third new finding, recorded to `BACKLOG.md` (not fixed this session):** the shipped
+  `data(examplePedigree)` has no `fromCenter` (colony-origin) column, which
+  `modPotentialParentsServer` requires — confirmed directly
+  (`"fromCenter" %in% names(examplePedigree)` is `FALSE`) — so the Potential Parents tab
+  cannot show populated results against this walkthrough's standard example data; the
+  article documents the app's own correctly-degraded warning response instead of
+  fabricating a populated example.
+- Corrected two additional stale claims from `ColonyManagerTutorial.Rmd`, found via
+  firsthand source verification rather than trusting the plan's summary table: the GVA
+  threshold `selectInput` now offers 1-5 (default 4), not the tutorial's stale "0-3";
+  the results table's actual column is named `value`, not "Value Designation" (no
+  `colnames=` override exists in `modGeneticValueServer`'s `renderDT`).
+- `quarto render colony-manager-guide.qmd` (isolated) succeeded cleanly — zero missing
+  images, zero unresolved cross-references. Spot-checked Document 1 still renders.
+- Updated `BACKLOG.md` (Document 2 item → Phase D; added the `fromCenter` finding).
+  Added `PROJECT_LEARNINGS.md` Learning 321.
+
 ### 2026-07-10 · [ad hoc] S347 HANDOFFS.md receipt commit-sha backfill, closed same-session
 - **Deliverable:** Filled in this session's own `HANDOFFS.md` receipt `commit: pending` placeholder with the real close-out commit sha (`9d9479ad`), matching the S331-S346 precedent of closing this within the same session rather than leaving it for the next session's Phase 0 reconcile.
 

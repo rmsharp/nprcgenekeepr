@@ -59,20 +59,26 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       re-scope or close accordingly, not assume "preparation" is still the right verb.
 
 ## Documents (v1.0.8 -> v2.0.0 write-up)
-- [ ] **Execute "Document 2" plan (Phase C)** (READY, Effort M) -- planning session DONE
-      (S345), Phase A DONE (S346), **Phase B DONE (S347)**:
-      `docs/planning/document2-colony-manager-guide-plan.md` §6 Phase B. Checked-in
-      capture script `vignettes/articles/colony-manager-guide-screenshots.R` regenerated
-      all 34 screenshots (25 in place, 4 new, 5 correctly left untouched as non-app-UI
-      spreadsheet illustrations); deleted the 8 confirmed-orphaned pre-rename duplicates.
-      Live numeric reproductions confirmed matching Phase A exactly: 3694 QC'd records
-      (N1), 54-animal focal trim (N2), 962-animal large-focal-group trim (N3, via the
-      shipped `focalAnimals` object), 332 living animals (N4). Next: **Phase C** -- port
-      and draft Sections 1-3 (`vignettes/articles/colony-manager-guide.qmd`) using this
-      phase's screenshots and Phase A's re-derived numbers. See the plan's §6 Phase C for
-      full completion criteria (risk MEDIUM, highest claim-density phase). Phase C must
-      account for two new findings below (Excel-upload corruption; non-functional Custom
-      sex ratio) when drafting Section 3's Input/Breeding-Groups narrative.
+- [ ] **Execute "Document 2" plan (Phase D)** (READY, Effort M) -- planning session DONE
+      (S345), Phase A DONE (S346), Phase B DONE (S347), **Phase C DONE (S348)**:
+      `docs/planning/document2-colony-manager-guide-plan.md` §6 Phase C. Drafted
+      `vignettes/articles/colony-manager-guide.qmd` (Abstract, Introduction, Sections 1-3,
+      Conclusion); Section 3 ported/modernized from `ColonyManagerTutorial.Rmd` using Phase
+      B's screenshots and Phase A's re-derived N1/N2/N3/N4 numbers verbatim. Owner-resolved
+      pre-drafting decisions: Input-tab narrates CSV with an inline Excel-bug caveat;
+      Breeding-Groups subsection covers None/Harem fully, omits the Custom-ratio numeric
+      demo (N7). Extended `colony-manager-guide-screenshots.R` with 2 more captures
+      (owner-approved) for the Genetic Diversity and Potential Parents tabs, which Phase
+      B's tutorial-figure-based inventory had no way to include. `quarto render` of the
+      article in isolation succeeds cleanly (zero missing images, zero unresolved
+      cross-references). Next: **Phase D** -- assemble (Abstract/Introduction/Conclusion
+      full pass), full claim-source audit, decide `ColonyManagerTutorial.Rmd`'s fate (§11
+      decision 3), re-verify the pkgdown Reference-page citation live (§8 dragon 5), and
+      run the full verification checklist (§9: `pkgdown::build_article()`, `R CMD build .`
+      + tarball check, spot-check sibling articles). See the plan's §6 Phase D for full
+      completion criteria. Phase D must account for three new findings below (Excel-upload
+      corruption; non-functional Custom sex ratio; example data missing `fromCenter`) when
+      finalizing the article.
 - [ ] **Excel-upload silently corrupts sire/dam pedigree data** (READY, Effort M) --
       discovered during S347's Document-2 Phase B screenshot capture.
       `R/modInput.R`'s `readDataFile()` calls `readxl::read_excel(file$datapath)` with no
@@ -106,6 +112,19 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `sexRatio == "custom"`) and thread its value into `parseSexRatio()`. Blocks Document
       2 Phase C from faithfully porting `ColonyManagerTutorial.Rmd`'s "sex ratio of 2.5"
       demonstration (plan doc §3A N7) until fixed.
+- [ ] **Shipped example pedigree cannot demonstrate the Potential Parents feature**
+      (READY, Effort S) -- discovered during S348's Document-2 Phase C screenshot
+      capture. `modPotentialParentsServer()` requires a `fromCenter` (colony-origin)
+      column to identify in-colony candidates for animals with unknown parentage;
+      `data(examplePedigree)` has no such column (confirmed:
+      `"fromCenter" %in% names(examplePedigree)` is `FALSE`), so running "Find Potential
+      Parents" against it always shows the app's graceful-degradation warning ("This
+      dataset has no colony-origin ('fromCenter') field...") and an empty results table --
+      correct behavior, not a bug, but it means this walkthrough's standard example data
+      cannot show what a populated result looks like. Fix (either): add a `fromCenter`
+      column to the shipped `examplePedigree`/`focalAnimals` example objects (verify no
+      other documented example or test relies on their current column set first), or add
+      a small supplementary example dataset specifically for demonstrating this feature.
 - [ ] **Document 1's Testing-at-Scale section conflates file-count growth with testing
       quality** (READY, Effort S) -- `vignettes/articles/engineering-the-2.0.0-release.qmd`
       §Section 3 (`#sec-testing`, ~L392-455) leads with "the test suite grew from 132 to
