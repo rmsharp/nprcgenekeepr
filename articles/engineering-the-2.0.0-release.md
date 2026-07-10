@@ -7,24 +7,25 @@ studbook quality control, pedigree construction, genetic value analysis,
 and breeding-group formation – as an R package with a Shiny front end
 and an exposed API. Between its two most recent CRAN submissions
 (v1.0.8, 2025-07-25, through v2.0.0, 2026-07-09; 512 non-merge commits),
-the package underwent a substantial modernization. A nine-phase,
-vertical-slice migration retired a long-standing
-duplicate-implementation problem, replacing two independently maintained
-Shiny applications with a single modular one (ten `R/mod*.R` modules,
-4,731 lines including `appUI.R`/`appServer.R`). Thirteen curated new
-capabilities shipped alongside it, spanning species-aware parent
-identification, more honest uncertainty reporting in Genetic Value
-Analysis, and two new Shiny dashboards. The test suite grew from 132 to
-257 files, and its browser-driven end-to-end layer went from
-present-but-inert to executable and behavior-verifying. Every session in
-the effort, including this article’s own drafting, was directed by
-Claude Code (Claude CLI) under a written, enforced development protocol
-– strict red-green-refactor TDD for production code, single-deliverable
-sessions, and a durable, append-only correction ledger – rather than
-open-ended prompting. This article documents that transformation
-quantitatively: every claim traces to a commit, `CHANGELOG.md` entry, or
-frozen extraction, for readers evaluating the package itself, its
-testing rigor, or its AI-assisted development process.
+the package underwent a substantial modernization: a nine-phase,
+vertical-slice migration completed a modular Shiny rewrite – begun as an
+unfinished scaffold in December 2025, before this migration itself began
+– and retired the original monolithic Shiny application it was built to
+replace (ten `R/mod*.R` modules, 4,731 lines including
+`appUI.R`/`appServer.R`). Thirteen curated new capabilities shipped
+alongside it, spanning species-aware parent identification, more honest
+uncertainty reporting in Genetic Value Analysis, and two new Shiny
+dashboards. The test suite grew from 132 to 257 files, and its
+browser-driven end-to-end layer went from present-but-inert to
+executable and behavior-verifying. Every session in the effort,
+including this article’s own drafting, was directed by Claude Code
+(Claude CLI) under a written, enforced development protocol – strict
+red-green-refactor TDD for production code, single-deliverable sessions,
+and a durable, append-only correction ledger – rather than open-ended
+prompting. This article documents that transformation quantitatively:
+every claim traces to a commit, `CHANGELOG.md` entry, or frozen
+extraction, for readers evaluating the package itself, its testing
+rigor, or its AI-assisted development process.
 
 ## Introduction
 
@@ -36,12 +37,24 @@ domain experts, other primate-center bioinformatics groups, CRAN
 reviewers, and potential contributors: **what** changed, and **how** it
 was built.
 
-Four pillars structure the account. Section 1 describes retiring a
-long-standing duplicate-implementation problem via a nine-phase,
-vertical-slice migration to a modular Shiny architecture. Section 2
-describes the new analysis capabilities that shipped alongside that
-migration. Section 3 describes how the test suite grew and gained an
-executable, behavior-verifying, browser-driven layer. Section 4
+(v1.0.8 was submitted 2025-07-25 and published on CRAN within about a
+day, but was archived by CRAN on 2025-07-29 – “as issues were not
+corrected in time,” per CRAN’s own archival note, though no
+corresponding problem was found in the published check results. The
+maintainer did not notice the archival until 2026-01-15; by then the
+originally submitted code was no longer current, and – having just begun
+using Claude Code CLI – development went directly into the larger
+modular rewrite that became v2.0.0 rather than repairing and
+resubmitting v1.0.8. This is why CRAN and GitHub Releases still list
+v1.0.7, not v1.0.8, as the package’s prior public release.)
+
+Four pillars structure the account. Section 1 describes completing a
+modular Shiny rewrite – begun as an unfinished scaffold before this
+project adopted Claude Code – via a nine-phase, vertical-slice migration
+that brought it to full parity and retired the original monolith.
+Section 2 describes the new analysis capabilities that shipped alongside
+that migration. Section 3 describes how the test suite grew and gained
+an executable, behavior-verifying, browser-driven layer. Section 4
 describes the development process itself – every session in this effort,
 including the five sessions that drafted this article, was directed by
 **Claude Code** (Claude CLI) operating under a written, enforced
@@ -55,16 +68,22 @@ pending; nothing in this article depends on that outcome.
 
 ## Section 1 – From Monolith to Modules: the Shiny Architecture Transformation
 
-For most of its life, `nprcgenekeepr` shipped **two coexisting Shiny
-applications** that implemented the same features twice. The original,
-`inst/application/` – a single `server.r` (1,304 lines) plus a short
-`ui.r` (53 lines) that sourced eight separate `uitp*.R` panel files –
-ran alongside a newer, module-based rewrite (`R/appUI.R`,
-`R/appServer.R`, and a growing set of `R/mod*.R` files). The two had
-already begun to drift: different tab identifiers, different default
-parameters, a bug fixed in one but not the other. Maintaining both was
-tracked as this project’s single biggest source of friction for adding
-new features (issue \#27).
+For nearly all of its life – including its last CRAN release, v1.0.7 –
+`nprcgenekeepr` shipped a single Shiny application, `inst/application/`:
+a single `server.r` (1,304 lines) plus a short `ui.r` (53 lines) that
+sourced eight separate `uitp*.R` panel files. In December 2025, before
+this project adopted Claude Code, a module-based rewrite (`R/appUI.R`,
+`R/appServer.R`, and a growing set of `R/mod*.R` files) began by hand as
+an unfinished scaffold, not a second working application. Over the
+following months it grew far enough, alongside the still-active
+monolith, that the two genuinely began to drift – different tab
+identifiers, different default parameters, a bug fixed in one but not
+the other – which this project’s own architecture audit flagged as its
+single highest-risk finding (XARCH-1) and its single biggest source of
+friction for adding new features. (Issue \#27, open since 2022, tracked
+the long-standing intent to modularize; it predates the drift itself,
+and its own text doesn’t document the friction claim – that judgment is
+the audit’s.)
 
 “Completing the conversion” meant bringing the modular app to full
 feature parity with the monolith, validating it end to end, and then
@@ -630,13 +649,14 @@ stated zero,” not as an audited defect rate.
 
 ## Conclusion
 
-The v1.0.8 -\> v2.0.0 effort retired a long-standing architectural
-liability – two independently maintained Shiny applications drifting out
-of sync – shipped thirteen curated new analysis capabilities, grew the
-test suite from 132 to 257 files while turning its browser-driven layer
-from present-but-inert into executable and behavior-verifying, and did
-all of it under a written, gated development process rather than ad hoc
-iteration.
+The v1.0.8 -\> v2.0.0 effort completed a modular Shiny rewrite – begun
+as an unfinished scaffold only months before this migration, not
+something the project carried for most of its life – and retired the
+monolith it replaced. Alongside that, it shipped thirteen curated new
+analysis capabilities, grew the test suite from 132 to 257 files while
+turning its browser-driven layer from present-but-inert into executable
+and behavior-verifying, and did all of it under a written, gated
+development process rather than ad hoc iteration.
 
 For maintainers and collaborators, the practical implications are
 concrete. New features have exactly one Shiny implementation to extend,

@@ -47,6 +47,56 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-09 · \[ad hoc\] S340 HANDOFFS.md receipt commit-sha backfill, closed same-session
+
+- **Deliverable:** Filled in this session’s own `HANDOFFS.md` receipt
+  `commit: pending` placeholder with the real close-out commit sha
+  (`6dde45cd`) — the same self-correction previous sessions (S331-S336,
+  S339) each needed, closed within the same session rather than left for
+  the next session’s Phase 0 reconcile to catch and backfill.
+
+### 2026-07-09 · \[ad hoc\] Correct the Shiny-application-history narrative in Document 1 (Session 340)
+
+- **Deliverable:** Closed out Session 339’s interrupted two-lens review
+  of `vignettes/articles/engineering-the-2.0.0-release.qmd` by
+  incorporating the owner-supplied material information it was waiting
+  on: the article’s “two coexisting Shiny applications for most of its
+  life” framing was wrong, and the v1.0.8 CRAN-submission story needed
+  explaining.
+- **Verified facts (not assumed):** `gh release list` shows no v1.0.8
+  release ever existed (v1.0.7 is “Latest”); the first commit bumping
+  `DESCRIPTION` to `Version: 1.0.8` is literally titled “1st attempt at
+  adding modules” (`6457a3a3`, 2025-12-29); the first Claude-co-authored
+  commit (`2b225ff8`) is 2026-01-20, three weeks later. Owner then
+  supplied the actual CRAN correspondence: v1.0.8 was submitted
+  2025-07-25, published within a day, archived by CRAN on 2025-07-29
+  (“issues were not corrected in time,” though the owner found no
+  corresponding problem), discovered by the owner on 2026-01-15, and
+  never resubmitted — development went directly into the modular rewrite
+  instead. `docs/planning/shiny-module-conversion-plan.md:12` (the real
+  migration-planning doc, its own XARCH-1 audit finding) independently
+  confirms the “two coexisting apps” state was genuine — but only in the
+  months immediately before the nine-phase migration, not “for most of
+  its life.”
+- **Change:** Rewrote the Abstract, added a dated CRAN-archival footnote
+  to the Introduction, rewrote Section 1’s opening paragraph, and fixed
+  matching stale phrasing in the Introduction’s “Four pillars” summary
+  and the Conclusion — replacing “two independently maintained Shiny
+  applications drifting out of sync” / “long-standing
+  duplicate-implementation problem” with: one working app through
+  v1.0.7, an unfinished hand-built scaffold started in December 2025
+  (before Claude Code adoption), genuine drift emerging only in the
+  following months, closed by the nine-phase migration. Also softened
+  the issue \#27 citation — its body is empty; it only tracked the
+  2022-era intent to modularize, not a documented friction complaint.
+- **Phase 3E:** `quarto render` — 23 chunks, 0 errors; render artifacts
+  (`.html`, `_files/`, `.gitignore`) cleaned before staging (Learning
+  314).
+- **Session:** S340 · **Verified:** full corpus sweep (`grep` for
+  “long-standing”/“two coexisting”/“two
+  independently”/“duplicate-implementation”/“drift”/“coexist”) confirmed
+  no other stale echoes remain.
+
 ### 2026-07-09 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit 04c8de1d — S339 HANDOFFS.md receipt commit-sha backfill
 
 - **Deliverable:** Phase 0 ledger reconcile (this session) found one
