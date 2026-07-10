@@ -81,29 +81,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       decision 3), re-verify the pkgdown Reference-page citation live (§8 dragon 5), and
       run the full verification checklist (§9: `pkgdown::build_article()`, `R CMD build .`
       + tarball check, spot-check sibling articles). See the plan's §6 Phase D for full
-      completion criteria. Phase D must account for three new findings below (Excel-upload
-      corruption; non-functional Custom sex ratio; example data missing `fromCenter`) when
-      finalizing the article.
-- [ ] **Excel-upload silently corrupts sire/dam pedigree data** (READY, Effort M) --
-      discovered during S347's Document-2 Phase B screenshot capture.
-      `R/modInput.R`'s `readDataFile()` calls `readxl::read_excel(file$datapath)` with no
-      `col_types` argument; `readxl` infers each column's type from an early row sample,
-      guesses `logical` because early sire/dam values are blank (unknown/founder rows),
-      then silently converts every later alphanumeric sire/dam ID it cannot parse as
-      logical to `NA`. Confirmed on an Excel round-trip of the shipped
-      `data(examplePedigree)` via `makeExamplePedigreeFile(..., fileType = "excel")`:
-      **2026/2026 (100%) of non-blank sire values and 2023/2026 dam values become `NA`**,
-      with 4049 `readxl` warnings never surfaced to the app user -- the pedigree silently
-      becomes almost entirely founders, with no error pointing at the cause. The CSV path
-      is unaffected (byte-identical round-trip, verified). This is the exact code path
-      any real user's Excel-format pedigree upload goes through via the Input tab, not
-      specific to any test/demo script. Fix: pass an explicit `col_types` (e.g. `"text"`
-      for id/sire/dam, or column-specific types matching the documented pedigree schema)
-      to `readxl::read_excel()`, or `guess_max = Inf`; add a regression test using a
-      pedigree shaped like the shipped example (many blank-parent rows before
-      alphanumeric ones). HIGH priority -- this is silent production data corruption on
-      the package's primary documented upload path (Excel is the tutorial's default
-      format), not a documentation-only issue.
+      completion criteria. Phase D must account for two remaining new findings below
+      (non-functional Custom sex ratio; example data missing `fromCenter`) when finalizing
+      the article -- the third (Excel-upload corruption) is now **fixed, S350** (see below).
 - [ ] **Breeding Groups "Custom" sex ratio has no way to specify the ratio** (READY,
       Effort S) -- discovered during S347's Document-2 Phase B screenshot capture.
       `modBreedingGroupsUI()`'s `sexRatio` radioButtons offers "None"/"Harem

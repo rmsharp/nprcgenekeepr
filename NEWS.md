@@ -177,6 +177,11 @@ R. Mark Sharp, Ph.D.
     at startup. The log file is now created only after a user explicitly
     enables the Input tab's "Debug on" checkbox, matching the documented
     behavior.
+  - Fixed a data-corruption bug: uploading a pedigree as an Excel
+    workbook via the Input tab silently converted every alphanumeric
+    sire/dam ID to a missing value, collapsing the pedigree to
+    near-all-founders with no error or warning shown to the user. CSV
+    and tab/comma-delimited text uploads were unaffected.
 
 # nprcgenekeepr 1.0.8 (20250723)
 

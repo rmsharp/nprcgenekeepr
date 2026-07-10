@@ -43,6 +43,45 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-10 · [ad hoc] Fixed Excel-upload sire/dam pedigree corruption (Session 350)
+- **Deliverable:** `R/modInput.R`'s `readDataFile()` called
+  `readxl::read_excel(file$datapath)` with no `col_types`; `readxl` samples early
+  rows to guess each column's type, defaults sire/dam to `logical` because the
+  earliest rows are blank (founder/unknown-parent rows), then silently converts
+  every later alphanumeric sire/dam ID it cannot parse as logical to `NA` — with no
+  warning surfaced to the app user. Confirmed on a round-trip of the shipped
+  `data(examplePedigree)` via `makeExamplePedigreeFile(..., fileType = "excel")`:
+  100% of the 2026 non-blank sire values and all 2026 non-blank dam values became
+  `NA`, collapsing the pedigree to near-all-founders on the exact code path a real
+  user's Excel upload goes through via the Input tab. The CSV/text-file paths are
+  unaffected (`read.csv`/`read.table` scan the whole column, not a sample). Root-
+  cause fix: reuse the already-existing, already-tested internal helper
+  `readExcelPOSIXToCharacter()` (`R/readExcelPOSIXToCharacter.R`, `col_types =
+  "text"`) that `getPedigree()`, `getGenotypes()`, and `readKinshipOverrides()`
+  already use for their own Excel reads, instead of calling `readxl::read_excel()`
+  directly — a 1-line change, no new logic. Verified date columns still round-trip
+  as parseable `"YYYY-MM-DD"` text and that `qcStudbook()` already coerces them
+  itself via `convertDate()`/`as.Date()`, so no downstream behavior change is
+  needed. Followed `DEVELOPMENT_WORKSTREAM.md`'s one-off-fix path (not a campaign)
+  under Strict TDD, full RED/GREEN/REFACTOR with all phase gates; verified genuine
+  RED in scratchpad before presenting the plan (S349's false-RED lesson applied).
+- **Verify (firsthand):** 2 new tests (`tests/testthat/test_modInput_excelSireDam.R`)
+  both green — unit-level `readDataFile()` non-NA sire/dam count + type check, and
+  an end-to-end `modInputServer` integration test via a real `getData` button click
+  asserting the cleaned studbook keeps >1000 non-NA sire values (was 3 before the
+  fix). Full-suite regression read (`NOT_CRAN=true`) **1 failed / 0 error / 0
+  warning** (the 1 failure, `test_vignettes_no_deprecated_minParentAge.R`, is the
+  same pre-existing, unrelated failure S349 already confirmed via `git stash`).
+  `lintr::lint()` on both changed files = **0**; `devtools::document()` **zero
+  man/NAMESPACE delta** (internal function, no roxygen change). **Phase 3E runtime
+  smoke test (live browser, `shinytest2::AppDriver` against the real modular app):**
+  uploaded the real Excel round-trip file through the actual file input, clicked
+  "Get Data," then downloaded the result via the app's own "Download Cleaned Data"
+  button (the exact artifact a real user gets) — 3694 rows, 2026 non-`NA` sire
+  values, 2026 non-`NA` dam values, all matching the source data exactly, including
+  the specific known pairing `KRXZ9X` → sire `UFQNBA` that would have silently
+  become `NA` before the fix.
+
 ### 2026-07-10 · [ad hoc] S349 HANDOFFS.md receipt commit-sha backfill, closed same-session
 - **Deliverable:** Filled in this session's own `HANDOFFS.md` receipt `commit: pending` placeholder with the real close-out commit sha (`f7a62aca`), matching the S331-S348 precedent of closing this within the same session rather than leaving it for the next session's Phase 0 reconcile.
 
