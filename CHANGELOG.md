@@ -43,6 +43,12 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-11 · [ad hoc] S359 close-out commit (session notes, handoff receipt)
+- **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap in
+  the same session rather than leaving it for the next session's Phase 0 reconcile
+  (mirroring the S349-S358 precedent for self-closing gaps). Records the work
+  commit (`e320f245`) for the CRAN pre-submission gate refresh logged below.
+
 ### 2026-07-11 · [ad hoc] Refreshed local CRAN pre-submission gate for v2.0.0 resubmission (Session 359)
 - **Deliverable:** Owner picked "local prep-only refresh" via `AskUserQuestion` (the
   BACKLOG item's own "Next (owner action)" step covers win-builder/R-hub/
