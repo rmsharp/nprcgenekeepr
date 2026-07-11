@@ -75,6 +75,13 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S361
+date: 2026-07-11
+status: pending
+active_task: Trigger CRAN 2.0.0 Phase 5 win-builder x3 + R-hub v2 checks (docs/planning/cran-2.0.0-phase5-runbook.md Sections 2-3). Excludes devtools::submit_cran() (owner-only, unchanged).
+```
+
+```handoff
 session: S360
 date: 2026-07-11
 status: complete
