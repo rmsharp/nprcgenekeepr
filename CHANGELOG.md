@@ -43,6 +43,12 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-11 · [ad hoc] S356 close-out commit (session notes, handoff receipt, learnings)
+- **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap in the
+  same session rather than leaving it for the next session's Phase 0 reconcile
+  (mirroring the S349-S355 precedent for self-closing gaps). Records the close-out
+  commit (`f597d903`) for the read.csv() audit logged below.
+
 ### 2026-07-11 · [ad hoc] Audited read.csv() call sites for F/T/TRUE/FALSE coercion risk (Session 356)
 - **Deliverable:** Audited "other `read.csv()` calls in `tests/` for the same F/T/TRUE/
   FALSE type-coercion risk that recurred in S355" (`BACKLOG.md`, discovered S355). A
