@@ -47,6 +47,64 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-10 · \[ad hoc\] S352 close-out commit (session notes, handoff receipt)
+
+- **Deliverable:** Closed out Session 352 (the `nTopAnimals`
+  conditionalPanel fix, logged below): wrote the full session writeup +
+  Session 351 handoff evaluation + self-assessment to
+  `SESSION_NOTES.md`, completed the `HANDOFFS.md` receipt to
+  `status: complete` referencing the fix commit (`cc821d9f`) directly.
+  Closes this session’s own `CHANGELOG.md` ledger frontier gap in the
+  same session rather than leaving it for the next session’s Phase 0
+  reconcile (mirroring the S349–S351 precedent for self-closing gaps).
+
+### 2026-07-10 · \[ad hoc\] Fixed nTopAnimals conditionalPanel double-prefix bug (Session 352)
+
+- **Deliverable:**
+  [`modBreedingGroupsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsUI.md)’s
+  `nTopAnimals` panel (`R/modBreedingGroups.R`) used
+  `sprintf("input['%s'] == 'topRanked'", ns("animalSource"))` +
+  `ns = ns` as its `conditionalPanel` condition. Passing `ns = ns`
+  already narrows Shiny’s client-side `input`/`output` scope to
+  unprefixed names, so the `ns(...)`-built condition double-prefixed and
+  always evaluated `FALSE` — the “Number of top animals” numeric input
+  never appeared, in any `animalSource` state, including the default
+  `"topRanked"` state where it should be visible on page load.
+  Discovered live during S351’s Phase 3E smoke test while fixing the
+  sibling Custom-sex-ratio control (`BACKLOG.md` item). Fixed with the
+  bare `"input.animalSource == 'topRanked'"`, matching the already-fixed
+  sibling `sexRatio`/`customSexRatio` panel’s pattern.
+- Strict TDD RED/GREEN/(REFACTOR skipped, owner-confirmed unnecessary),
+  3 `AskUserQuestion` phase gates. RED test added to
+  `tests/testthat/test_modBreedingGroups.R`: greps the rendered UI
+  HTML’s `data-display-if` attribute for the panel’s `conditionalPanel`,
+  asserting the correct unprefixed condition string is present and the
+  double-prefixed namespaced form is absent — scoped to the attribute
+  itself (not the whole HTML) after an initial draft assertion falsely
+  matched the radioButtons widget’s own legitimate namespaced element
+  id. Genuine RED confirmed against unfixed code both in scratchpad and
+  in the committed test file (via `git stash`) before the fix; GREEN
+  confirmed after.
+- **Phase 3E:** live
+  [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+  smoke test against the real modular app (Excel/CSV pedigree loaded via
+  the Input tab, live navigation to the Breeding Groups tab) confirmed
+  the panel’s `[data-display-if]` ancestor reports `display: block` at
+  the default `"topRanked"` state, `display: none` after switching to
+  `"All available"`, and `display: block` again after switching back —
+  correcting the previously-documented always-`none` behavior.
+- Verification: full-suite regression read 1 failed (pre-existing,
+  unrelated, `test_vignettes_no_deprecated_minParentAge.R`, same as
+  S349–S351) / 0 error / 0 warning; all directly-related test files
+  individually clean; `lintr::lint()` 0 on both changed files;
+  `devtools::document()` 0 delta.
+- Removed the resolved `BACKLOG.md` item; added a `NEWS.Rmd` bullet
+  under the still-unpublished 2.0.0 entry and rendered `NEWS.md`. No new
+  `PROJECT_LEARNINGS.md` entry: this fix directly executes the
+  sibling-bug fix Learning 324 already fully documented (root cause,
+  mechanism, and exact fix shape) when it was discovered and correctly
+  left out of scope in S351.
+
 ### 2026-07-10 · \[ad hoc\] S351 close-out commit (session notes, handoff receipt, learnings)
 
 - **Deliverable:** Closed out Session 351 (the Breeding Groups Custom

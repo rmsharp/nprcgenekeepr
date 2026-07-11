@@ -127,38 +127,6 @@ from Section 3’s Breeding-Groups subsection per S348’s pre-drafting
 decision, can now be added in Phase D if desired – the control works end
 to end as of S351.
 
-**`nTopAnimals` (and any other `ns()`-wrapped) `conditionalPanel` never
-actually shows/hides** (READY, Effort S) – discovered live during S351’s
-Phase 3E smoke test while fixing the sibling Custom-sex-ratio control.
-[`modBreedingGroupsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsUI.md)’s
-`nTopAnimals` panel (`R/modBreedingGroups.R`, condition
-`sprintf("input['%s'] == 'topRanked'", ns("animalSource"))` + `ns = ns`)
-double-prefixes the input name: passing `ns = ns` to
-`conditionalPanel()` already makes Shiny’s client-side JS narrow the
-`input`/`output` scope to the module’s unprefixed names (confirmed by
-reading `shiny.js`’s `_narrowScopeComponent`, which strips the namespace
-prefix from every scope key), so a condition string built via
-`ns("animalSource")` looks up a namespaced key that no longer exists in
-the narrowed scope and always evaluates to `undefined == 'topRanked'` –
-`FALSE`. Confirmed live via
-[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html):
-`getComputedStyle(...).display` on the panel’s `[data-display-if]`
-ancestor is `"none"` in EVERY state (`animalSource` = the default
-`"topRanked"`, `"all"`, and back to `"topRanked"`) – the “Number of top
-animals” numeric input is invisible today regardless of selection,
-including the default state where it’s supposed to be visible on page
-load. S351’s own new `customSexRatio` panel avoided this bug by using
-the correct unprefixed condition (`"input.sexRatio == 'custom'"`,
-matching
-[`?shiny::conditionalPanel`](https://rdrr.io/pkg/shiny/man/conditionalPanel.html)’s
-own documented `ns=` usage), so it is NOT itself affected. Grepped all
-of `R/` for every other `conditionalPanel(` call (S351): `modInput.R`’s
-5 panels all already use the correct unprefixed form
-(`input.fileType == ...`, `input.fileContent == ...`) – `nTopAnimals` is
-the ONLY instance of the buggy double-prefixed pattern in the package.
-Fix: change the condition to `"input.animalSource == 'topRanked'"` (or
-`sprintf("input['%s'] == 'topRanked'", "animalSource")`).
-
 **Shipped example pedigree cannot demonstrate the Potential Parents
 feature** (READY, Effort S) – discovered during S348’s Document-2 Phase
 C screenshot capture.

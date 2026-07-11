@@ -254,6 +254,10 @@
     behaved identically to “None”. A numeric “Custom ratio (F per M)”
     field now appears when “Custom” is selected, and its value is used
     when forming groups.
+  - Fixed the Breeding Groups tab’s “Number of top animals” field: it
+    never appeared regardless of the selected animal source, including
+    the default “Top ranked” selection where it is supposed to be
+    visible on page load.
 
 ## nprcgenekeepr 1.0.8 (20250723)
 
