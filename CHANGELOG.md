@@ -43,6 +43,12 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-11 · [ad hoc] S358 close-out commit (session notes, handoff receipt)
+- **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap in the
+  same session rather than leaving it for the next session's Phase 0 reconcile
+  (mirroring the S349-S357 precedent for self-closing gaps). Records the audit/
+  bookkeeping commit (`93c9c207`) for the XARCH-3 audit logged below.
+
 ### 2026-07-11 · [ad hoc] Audited NEW-12/XARCH-3 Shiny-progress-hook BACKLOG item (Session 358)
 - **Deliverable:** Verified firsthand (not trusted from the S21 plan's own text) that
   the "Shiny progress threaded into compute" concern is fully resolved. Swept all 230
