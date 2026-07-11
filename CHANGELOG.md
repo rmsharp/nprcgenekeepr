@@ -43,6 +43,12 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-11 · [ad hoc] S360 close-out commit (session notes, handoff receipt)
+- **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap in
+  the same session rather than leaving it for the next session's Phase 0 reconcile
+  (mirroring the S349-S359 precedent for self-closing gaps). Records the work
+  commit (`67aee91b`) for the AskUserQuestion priorities-picker logged below.
+
 ### 2026-07-11 · [ad hoc] Added AskUserQuestion priorities-picker to Phase 0 (Session 360)
 - **Deliverable:** User-directed methodology customization: extended `CLAUDE.md`'s
   "Additional Phase 0 steps" (the 2026-07-09 priorities-list entry) so that after
