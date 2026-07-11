@@ -43,6 +43,16 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-11 · [ad hoc] S354 close-out commit (session notes, handoff receipt, learnings)
+- **Deliverable:** Closed out Session 354 (the `inst/_pkgdown.yml` dead-config fix, logged
+  below): wrote the full session writeup + Session 353 handoff evaluation +
+  self-assessment to `SESSION_NOTES.md`, completed the `HANDOFFS.md` receipt to
+  `status: complete` referencing the fix commit (`d14cd913`) directly, added
+  `PROJECT_LEARNINGS.md` Learning 326, and bumped `CLAUDE.md`'s learnings count. Closes
+  this session's own `CHANGELOG.md` ledger frontier gap in the same session rather than
+  leaving it for the next session's Phase 0 reconcile (mirroring the S349–S353 precedent
+  for self-closing gaps).
+
 ### 2026-07-11 · [ad hoc] Fixed dead inst/_pkgdown.yml Reference-page config (Session 354)
 - **Deliverable:** `inst/_pkgdown.yml`'s curated 4-group Reference-page structure
   (`BACKLOG.md` item, discovered S345) was dead configuration: pkgdown's config
