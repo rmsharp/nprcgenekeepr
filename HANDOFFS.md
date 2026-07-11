@@ -84,6 +84,22 @@ block to continue the work without re-reading the whole repo?*
 ------------------------------------------------------------------------
 
 ``` handoff
+session: S359
+date: 2026-07-11
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE. Refreshed the local CRAN pre-submission gate for "CRAN resubmission of v2.0.0" (BACKLOG.md item). Local R CMD check --as-cran --timings is green (0 errors/0 warnings/1 note). Found the on-file win-builder/R-hub results predate S349's archival-causing fix and reset them to placeholders. Item stays open -- win-builder/R-hub/submit_cran() remain owner action, unchanged.
+what_was_done: User picked local-prep-only refresh via AskUserQuestion (runbook explicitly frames win-builder/R-hub/submit_cran() as owner-only/outward-facing). R CMD build . + R CMD check --as-cran --timings on current master: 0 errors | 0 warnings | 1 note (down from 2 -- local HTML-manual note no longer reproduces). Slowest example groupAddAssign 1.465s, tests 86s, vignette rebuild 21s. Verified via git merge-base --is-ancestor 8ca8bb24 f7a62aca that the archived-submission sha is an ancestor of S349's fix commit -- the win-builder/R-hub results on file (S328, 2026-07-09) checked pre-fix code, not just old code. git rev-list: 134 commits since (9 touching R/tests/DESCRIPTION/NAMESPACE). Reset cran-comments.md's win-builder/R-hub lines to plain placeholders (file is CRAN-facing-only); put the full ancestry-check reasoning in the runbook instead. Updated BACKLOG.md's CRAN item in place. Added PROJECT_LEARNINGS.md Learning 331, bumped CLAUDE.md's learnings count (330->331). Commits: 19ae5657 (claim), e320f245 (work).
+next_steps: The win-builder/R-hub cross-platform checks + devtools::submit_cran() remain owner-only, outward-facing, unstarted -- next session (or the owner directly) should NOT trigger them without an explicit AskUserQuestion scope confirmation first. When run, fold real results into cran-comments.md's now-placeholder Test-environments lines per the runbook's own §4 step (plain CRAN language, no session/commit references). Other BACKLOG.md items untouched: Document 2 Phase D (READY, Effort M); LabKey integration remainder (BLOCKED); tracker reconciliation (DECISION NEEDED).
+key_files: cran-comments.md (Resubmission/R CMD check results/Test environments sections), docs/planning/cran-2.0.0-phase5-runbook.md (header note + §1 gate callout), BACKLOG.md (CRAN item), CHANGELOG.md (2 entries), PROJECT_LEARNINGS.md Learning 331, CLAUDE.md (learnings count line).
+gotchas: (1) win-builder/R-hub/submit_cran() are owner-only outward-facing actions -- confirm scope via AskUserQuestion before any agent session attempts them. (2) cran-comments.md's win-builder/R-hub lines are now placeholders, not stale-but-real numbers -- do not paste old numbers back in without re-running. (3) git merge-base --is-ancestor <old-sha> <fix-sha> is the mechanical test for "does this on-file result still represent current code" -- reusable whenever a doc claims a commit-pinned result is still valid. (4) The untracked vignettes/articles/*.html render-artifact policy question remains open from prior sessions, untouched, user's call.
+runtime_smoke: n/a -- docs-only session (no R/, tests/, NAMESPACE, or DESCRIPTION changed; local package check was run and reverted, not committed)
+changelog_ref: 2026-07-11 · [ad hoc] Refreshed local CRAN pre-submission gate for v2.0.0 resubmission (Session 359)
+commit: e320f245
+```
+
+``` handoff
 session: S358
 date: 2026-07-11
 status: complete
