@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S353
+date: 2026-07-10
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix "Shipped example pedigree cannot demonstrate the Potential Parents feature" (BACKLOG.md, discovered S348) -- modPotentialParentsServer() requires a fromCenter column that data(examplePedigree) lacks. Approach (add column to existing example data vs. supplementary dataset) TBD via PRE-RED scope decision.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S352
 date: 2026-07-10
 status: complete
