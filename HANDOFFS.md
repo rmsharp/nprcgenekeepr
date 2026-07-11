@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S358
+date: 2026-07-11
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Auditing BACKLOG.md's "NEW-12 / XARCH-3 -- Shiny progress hook" item -- verifying firsthand whether the Shiny-out-of-compute concern is fully resolved (reportGV/groupAddAssign's updateProgress hook, getMinParentAge.R's Phase 9/S35 deletion) or whether a residual leak remains elsewhere in R/.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S357
 date: 2026-07-11
 status: complete
