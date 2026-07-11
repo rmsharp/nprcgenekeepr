@@ -89,7 +89,7 @@ trimmedPed <- trimPedigree(focalAnimals, breederPed)
 length(focalAnimals)  # animals in the population of interest
 #> [1] 327
 dim(trimmedPed)        # those animals plus the ancestors kinship needs
-#> [1] 704  13
+#> [1] 704  14
 ```
 
 ## Running the analysis

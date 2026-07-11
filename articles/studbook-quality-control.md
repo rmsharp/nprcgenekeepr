@@ -70,11 +70,11 @@ ped <- qcStudbook(examplePedigree,
   reportErrors  = FALSE
 )
 dim(ped)
-#> [1] 3694   12
+#> [1] 3694   13
 names(ped)
 #>  [1] "id"           "sire"         "dam"          "sex"          "gen"         
 #>  [6] "birth"        "exit"         "age"          "ancestry"     "origin"      
-#> [11] "status"       "recordStatus"
+#> [11] "status"       "recordStatus" "fromCenter"
 head(ped[, c("id", "sire", "dam", "sex", "gen", "birth", "exit", "age")])
 #>       id sire  dam sex gen      birth       exit age
 #> 1 01WY5E <NA> <NA>   M   0 2005-07-07 2005-08-26 0.1

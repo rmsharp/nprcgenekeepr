@@ -60,6 +60,18 @@ A pedigree object created by `qcStudbook`. Represents pedigree from
 
   – character vector with value of `"added"` or `"original"`.
 
+- fromCenter:
+
+  – logical vector indicating whether the animal was born at the local
+  center (colony-origin), derived from `origin` and `recordStatus`:
+  `TRUE` when `origin` is blank and `recordStatus` is `"original"`;
+  `FALSE` for animals imported from elsewhere (non-blank `origin`) or
+  for synthetic placeholder second-parent rows
+  (`recordStatus == "added"`) whose true origin is not confirmed.
+  Required by
+  [`getPotentialParents`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+  to identify in-colony candidate parents.
+
 ## Usage
 
 ``` r
@@ -68,7 +80,7 @@ data(examplePedigree)
 
 ## Format
 
-An object of class `data.frame` with 3694 rows and 12 columns.
+An object of class `data.frame` with 3694 rows and 13 columns.
 
 ## Examples
 

@@ -227,5 +227,5 @@ ped <- qcStudbook(examplePedigree,
 names(ped)
 #>  [1] "id"           "sire"         "dam"          "sex"          "gen"         
 #>  [6] "birth"        "exit"         "age"          "ancestry"     "origin"      
-#> [11] "status"       "recordStatus"
+#> [11] "status"       "recordStatus" "fromCenter"  
 ```

@@ -49,6 +49,17 @@ recordStatus
 – character vector with value of &quot;added&quot; or
 &quot;original&quot;.
 
+fromCenter
+– logical vector indicating whether the animal was
+born at the local center (colony-origin), derived from origin and
+recordStatus: TRUE when origin is blank and
+recordStatus is &quot;original&quot;; FALSE for animals
+imported from elsewhere (non-blank origin) or for synthetic
+placeholder second-parent rows (recordStatus == &quot;added&quot;) whose
+true origin is not confirmed. Required by
+getPotentialParents to identify in-colony candidate
+parents.
+
 
 
 "><meta property="og:description" content="A pedigree object created by qcStudbook.
@@ -100,6 +111,17 @@ ALIVE, DECEASED, SHIPPED, or UNKNOWN
 recordStatus
 – character vector with value of &quot;added&quot; or
 &quot;original&quot;.
+
+fromCenter
+– logical vector indicating whether the animal was
+born at the local center (colony-origin), derived from origin and
+recordStatus: TRUE when origin is blank and
+recordStatus is &quot;original&quot;; FALSE for animals
+imported from elsewhere (non-blank origin) or for synthetic
+placeholder second-parent rows (recordStatus == &quot;added&quot;) whose
+true origin is not confirmed. Required by
+getPotentialParents to identify in-colony candidate
+parents.
 
 
 
@@ -202,6 +224,17 @@ ALIVE, DECEASED, SHIPPED, or UNKNOWN</p></dd>
 <dd><p>– character vector with value of <code>"added"</code> or
 <code>"original"</code>.</p></dd>
 
+<dt>fromCenter</dt>
+<dd><p>– logical vector indicating whether the animal was
+born at the local center (colony-origin), derived from <code>origin</code> and
+<code>recordStatus</code>: <code>TRUE</code> when <code>origin</code> is blank and
+<code>recordStatus</code> is <code>"original"</code>; <code>FALSE</code> for animals
+imported from elsewhere (non-blank <code>origin</code>) or for synthetic
+placeholder second-parent rows (<code>recordStatus == "added"</code>) whose
+true origin is not confirmed. Required by
+<code><a href="getPotentialParents.html">getPotentialParents</a></code> to identify in-colony candidate
+parents.</p></dd>
+
 
 </dl></div>
 
@@ -212,7 +245,7 @@ ALIVE, DECEASED, SHIPPED, or UNKNOWN</p></dd>
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>An object of class <code>data.frame</code> with 3694 rows and 12 columns.</p>
+    <p>An object of class <code>data.frame</code> with 3694 rows and 13 columns.</p>
     </div>
 
     <div class="section level2">

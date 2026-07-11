@@ -47,6 +47,80 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-10 · \[ad hoc\] S353 close-out commit (session notes, handoff receipt, learnings)
+
+- **Deliverable:** Closed out Session 353 (the `examplePedigree`
+  `fromCenter` fix, logged below): wrote the full session writeup +
+  Session 352 handoff evaluation + self-assessment to
+  `SESSION_NOTES.md`, completed the `HANDOFFS.md` receipt to
+  `status: complete` referencing the fix commit (`1c1a7849`) directly,
+  added `PROJECT_LEARNINGS.md` Learning 325, and bumped `CLAUDE.md`’s
+  learnings count. Closes this session’s own `CHANGELOG.md` ledger
+  frontier gap in the same session rather than leaving it for the next
+  session’s Phase 0 reconcile (mirroring the S349–S352 precedent for
+  self-closing gaps).
+
+### 2026-07-10 · \[ad hoc\] Added fromCenter column to shipped examplePedigree (Session 353)
+
+- **Deliverable:** `data(examplePedigree)` had no `fromCenter`
+  (colony-origin) column, so
+  [`modPotentialParentsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPotentialParentsServer.md)
+  (the Potential Parents tab) always degraded to an empty result on the
+  package’s own example data — correct behavior, but it meant the
+  standard example pedigree could never demonstrate a populated result
+  (`BACKLOG.md` item, discovered S348/Learning 321). Added a new
+  `data-raw/examplePedigree.R` generator script (mirrors
+  `data-raw/rhesusPedigree.R`) deriving `fromCenter` from
+  `examplePedigree`’s existing, documented `origin`/`recordStatus`
+  fields: `TRUE` for a blank origin + a real, non-synthetic `"original"`
+  record; `FALSE` for imported animals (non-blank origin) or synthetic
+  placeholder second-parent rows (`recordStatus == "added"`). Verified
+  via grep first that this could not break the existing “degrades
+  gracefully without fromCenter” coverage — that coverage depends on two
+  OTHER, fully independent fixtures (`inst/extdata/ExamplePedigree.csv`,
+  a hand-crafted synthetic `data.frame`), not `data(examplePedigree)`
+  itself (fix commit `1c1a7849`).
+- Strict TDD RED/GREEN/(REFACTOR skipped, owner-confirmed unnecessary):
+  1 pre-RED scope-decision `AskUserQuestion` plus the PRE-RED→RED and
+  RED→GREEN phase gates. RED tests: new
+  `tests/testthat/test_examplePedigree.R` (structure/type contract:
+  column presence/type/no-NA, exact 2267/1427 derivation split) and 1
+  test appended to `tests/testthat/test_getPotentialParents.R`
+  ([`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+  on `qcStudbook(examplePedigree, ...)` returns exactly 1587 candidates,
+  test commit `d059a15c`). Genuine RED confirmed against unfixed code
+  both in scratchpad and in the committed test files; GREEN confirmed
+  after, including a self-caught `nzchar_linter` lint fix re-verified
+  GREEN.
+- **Self-caught TDD violation, corrected in-session:** wrote
+  `data-raw/examplePedigree.R` before posing the RED→GREEN
+  `AskUserQuestion` gate. Acknowledged per `CLAUDE.md`’s Error Handling
+  rule, did not execute the script, and posed the proper gate before
+  running anything.
+- **Phase 3E:** live
+  [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+  smoke test against the real modular app (example pedigree generated
+  via
+  [`makeExamplePedigreeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeExamplePedigreeFile.md),
+  uploaded through the real Input tab, live navigation to Pedigree
+  Browser then Potential Parents) confirmed the status message “Found
+  candidate parents for 1587 animal(s)…” and a downloaded CSV of exactly
+  1587 rows — matching the unit test’s locked value exactly, an
+  independent live cross-check.
+- Verification: full-suite regression read 1 failed (pre-existing,
+  unrelated, `test_vignettes_no_deprecated_minParentAge.R`, same as
+  S349–S352) / 0 error / 0 warning; all 9 directly-related test files
+  individually clean; `lintr::lint()` 0 on all 4 changed/new files after
+  1 self-caught fix; `devtools::document()` clean 1-file delta
+  (`man/examplePedigree.Rd`, 12→13 columns), 0 NAMESPACE delta.
+- Removed the resolved `BACKLOG.md` item and updated the Document 2
+  Phase D note (all three Phase-C-discovered findings now fixed, not
+  just two); added a `NEWS.Rmd` bullet under the still-unpublished 2.0.0
+  entry and rendered `NEWS.md`. Added `PROJECT_LEARNINGS.md` Learning
+  325 (BACKLOG-item-risk-clause-as-research-task pattern;
+  derive-from-an-existing-documented-field technique) and bumped
+  `CLAUDE.md`’s learnings count (324→325).
+
 ### 2026-07-10 · \[ad hoc\] S352 close-out commit (session notes, handoff receipt)
 
 - **Deliverable:** Closed out Session 352 (the `nTopAnimals`

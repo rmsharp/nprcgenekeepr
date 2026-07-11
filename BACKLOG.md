@@ -118,32 +118,16 @@ re-verify the pkgdown Reference-page citation live (§8 dragon 5), and
 run the full verification checklist (§9:
 [`pkgdown::build_article()`](https://pkgdown.r-lib.org/reference/build_articles.html),
 `R CMD build .` + tarball check, spot-check sibling articles). See the
-plan’s §6 Phase D for full completion criteria. Phase D must account for
-one remaining new finding below (example data missing `fromCenter`) when
-finalizing the article – the other two (Excel-upload corruption;
-non-functional Custom sex ratio) are now **fixed, S350 / S351** (see
-below and `CHANGELOG.md`). The Custom-ratio numeric demo (N7), omitted
-from Section 3’s Breeding-Groups subsection per S348’s pre-drafting
-decision, can now be added in Phase D if desired – the control works end
-to end as of S351.
-
-**Shipped example pedigree cannot demonstrate the Potential Parents
-feature** (READY, Effort S) – discovered during S348’s Document-2 Phase
-C screenshot capture.
-[`modPotentialParentsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPotentialParentsServer.md)
-requires a `fromCenter` (colony-origin) column to identify in-colony
-candidates for animals with unknown parentage; `data(examplePedigree)`
-has no such column (confirmed:
-`"fromCenter" %in% names(examplePedigree)` is `FALSE`), so running “Find
-Potential Parents” against it always shows the app’s
-graceful-degradation warning (“This dataset has no colony-origin
-(‘fromCenter’) field…”) and an empty results table – correct behavior,
-not a bug, but it means this walkthrough’s standard example data cannot
-show what a populated result looks like. Fix (either): add a
-`fromCenter` column to the shipped `examplePedigree`/`focalAnimals`
-example objects (verify no other documented example or test relies on
-their current column set first), or add a small supplementary example
-dataset specifically for demonstrating this feature.
+plan’s §6 Phase D for full completion criteria. All three findings Phase
+C’s screenshot capture surfaced are now **fixed** (Excel-upload
+corruption S350; non-functional Custom sex ratio S351;
+missing-`fromCenter` example data S353 – see below and `CHANGELOG.md`),
+so Phase D can update the Potential Parents subsection to show the
+now-populated result (1,587 candidates) instead of only the
+graceful-degradation screenshot, if desired. The Custom-ratio numeric
+demo (N7), omitted from Section 3’s Breeding-Groups subsection per
+S348’s pre-drafting decision, can also be added in Phase D if desired –
+the control works end to end as of S351.
 
 **Document 1’s Testing-at-Scale section conflates file-count growth with
 testing quality** (READY, Effort S) –

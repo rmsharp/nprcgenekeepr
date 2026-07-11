@@ -103,6 +103,8 @@
 <li>Fixed a data-corruption bug: uploading a pedigree as an Excel workbook via the Input tab silently converted every alphanumeric sire/dam ID to a missing value, collapsing the pedigree to near-all-founders with no error or warning shown to the user. CSV and tab/comma-delimited text uploads were unaffected.</li>
 <li>Fixed the Breeding Groups tab’s “Custom” sex ratio option: selecting it previously had no numeric input to specify the ratio and silently behaved identically to “None”. A numeric “Custom ratio (F per M)” field now appears when “Custom” is selected, and its value is used when forming groups.</li>
 <li>Fixed the Breeding Groups tab’s “Number of top animals” field: it never appeared regardless of the selected animal source, including the default “Top ranked” selection where it is supposed to be visible on page load.</li>
+<li>
+<code>data(examplePedigree)</code> now includes a <code>fromCenter</code> (colony-origin) column, derived from its existing <code>origin</code>/<code>recordStatus</code> fields, so the Potential Parents tab can show a populated result (1,587 candidates) against the package’s own example data instead of only its graceful-degradation message.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
