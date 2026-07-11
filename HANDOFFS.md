@@ -76,18 +76,18 @@ session need this block to continue the work without re-reading the whole repo?*
 
 ```handoff
 session: S354
-date: 2026-07-10
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Fix "inst/_pkgdown.yml's curated Reference-page grouping is dead configuration" (BACKLOG.md, discovered S345) -- pkgdown's config resolver only reads root _pkgdown.yml (confirmed live), so inst/_pkgdown.yml's grouped Reference structure is never used; its lists have also drifted from NAMESPACE (64 missing + 38 stale of 182 exports). Approach (merge+re-sync vs. delete+update README) TBD via PRE-RED scope decision.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+date: 2026-07-11
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE. Fixed "inst/_pkgdown.yml's curated Reference-page grouping is dead configuration" (BACKLOG.md, discovered S345) -- pkgdown's config resolver only reads root _pkgdown.yml, so inst/_pkgdown.yml's grouped Reference structure was never used. Moved the reference: block into root _pkgdown.yml, re-synced against current NAMESPACE, deleted inst/_pkgdown.yml.
+what_was_done: New tests/testthat/test_pkgdown_reference_config.R (4 test_that blocks, pkgdown::as_pkgdown() public API only): root config has a populated reference: block; every current NAMESPACE export is covered by some group; "Data objects" covers every data/ object; inst/_pkgdown.yml no longer exists. Confirmed genuine RED (3 failures + 1 skip) before committing. Fix: root _pkgdown.yml's new reference: block -- "Data objects" 24->25 (added speciesGestation), "Major Features and Functions" unchanged, "Primary interactive functions" 58->56 (dropped addErrTxt [real but non-exported internal helper] and finalRpt [a data object, not a function]), "All exposed functions" rebuilt as the complete current 182-export list (was missing 64 real exports incl. all mod*Server/mod*UI pairs, plus ~34 further stale entries the original BACKLOG research never documented). Deleted inst/_pkgdown.yml (verified committed history first). All 4 tests GREEN. devtools::document(): 0 delta. lintr: 0. Full-suite regression read: 1 failed (pre-existing, unrelated, test_vignettes_no_deprecated_minParentAge.R, same as S349-S353) / 0 error / 0 warning. Local pkgdown::build_reference_index() render succeeded (this deliverable's build-equivalent; no Shiny runtime behavior changed, so no live-browser Phase 3E check applies) -- all 4 group headings render, 204 unique topic links. Updated BACKLOG.md (item removed; Document 2 Phase D note cross-referenced), CHANGELOG.md, PROJECT_LEARNINGS.md Learning 326, CLAUDE.md learnings count (325->326). Commits: c8b68ef9 (claim), a88b8237 (RED test), d14cd913 (GREEN fix).
+next_steps: No follow-up owed for this fix -- complete and verified. Other BACKLOG.md items untouched: CRAN resubmission of v2.0.0 (owner action); Document 2 Phase D (READY, its pkgdown-citation sub-task is now easier per this fix); Document 1 coverage-number gap; flaky stochastic groupAddAssign tests; NEW-12/XARCH-3 cleanup; LabKey integration remainder (blocked); tracker reconciliation (decision needed).
+key_files: _pkgdown.yml:35-268 (root, new reference: block, the fix); inst/_pkgdown.yml (deleted); tests/testthat/test_pkgdown_reference_config.R (new); BACKLOG.md (item removed, Document 2 note updated); PROJECT_LEARNINGS.md Learning 326.
+gotchas: (1) The "All exposed functions" list has NO build-time drift protection -- pkgdown::build_reference_index() does not warn on missing/stale topics, confirmed directly; only the new test catches future drift, so run the suite (not just a pkgdown build) before trusting the Reference page is current. (2) "Primary interactive functions" is still a hand-curated 56-entry SUBSET, not exhaustive -- the mod*Server/mod*UI functions are deliberately NOT in it. (3) Both _pkgdown.yml and inst/_pkgdown.yml are .Rbuildignore'd, so the new test's skip_if_not(file.exists(...)) guards are load-bearing (make it a clean no-op in a built/installed tree), not decorative.
+runtime_smoke: N/A, justified -- no R/ package runtime behavior changed (docs-site config + a new test file only). Build-equivalent substituted per SAFEGUARDS.md's own table: local pkgdown::build_reference_index() render, confirmed all 4 groups render live with 204 unique topic links, no errors.
+changelog_ref: CHANGELOG.md 2026-07-11 "Fixed dead inst/_pkgdown.yml Reference-page config (Session 354)"
+commit: d14cd913
 ```
 
 ```handoff
