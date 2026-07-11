@@ -39,6 +39,28 @@ test_that("modBreedingGroupsUI includes a custom sex ratio numeric input", {
   expect_true(grepl("customSexRatio", ui_html))
 })
 
+test_that("modBreedingGroupsUI's nTopAnimals conditionalPanel condition is unprefixed", {
+  ui <- modBreedingGroupsUI("test")
+  ui_html <- as.character(ui)
+
+  # ns = ns already narrows the client-side input/output scope to
+  # unprefixed names (see the sibling customSexRatio panel's fix,
+  # PROJECT_LEARNINGS Learning 324), so the condition must use the bare
+  # "input.animalSource" field name, never ns("animalSource") -- a
+  # condition built via ns() double-prefixes and never matches, leaving
+  # the panel permanently hidden. Scoped to the data-display-if attribute
+  # itself (not the whole HTML) because the radioButtons widget's own id
+  # legitimately contains the namespaced "test-animalSource" string.
+  displayIfAttrs <- regmatches(
+    ui_html, gregexpr('data-display-if="[^"]*"', ui_html)
+  )[[1]]
+
+  expect_true(any(grepl("input.animalSource == &#39;topRanked&#39;",
+                         displayIfAttrs, fixed = TRUE)))
+  expect_false(any(grepl("test-animalSource", displayIfAttrs,
+                          fixed = TRUE)))
+})
+
 test_that("modBreedingGroupsUI uses correct namespace", {
   ui <- modBreedingGroupsUI("myNamespace")
   ui_html <- as.character(ui)

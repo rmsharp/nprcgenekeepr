@@ -42,8 +42,11 @@ modBreedingGroupsUI <- function(id) {
                                         "Upload list" = "custom",
                                         "All available" = "all")),
                conditionalPanel(
-                 condition = sprintf("input['%s'] == 'topRanked'",
-                                     ns("animalSource")),
+                 # ns = ns already scopes this panel's input lookups to the
+                 # module namespace client-side, so the condition uses the
+                 # unprefixed field name (sprintf(..., ns("animalSource"))
+                 # would double-prefix and never match).
+                 condition = "input.animalSource == 'topRanked'",
                  ns = ns,
                  numericInput(ns("nTopAnimals"), "Number of top animals:",
                               value = 20L, min = 5L, max = 100L)
@@ -60,8 +63,7 @@ modBreedingGroupsUI <- function(id) {
                  # ns = ns already scopes this panel's input lookups to the
                  # module namespace client-side, so the condition uses the
                  # unprefixed field name (sprintf(..., ns("sexRatio")) here
-                 # would double-prefix and never match -- see the sibling
-                 # nTopAnimals panel above, which has that pre-existing bug).
+                 # would double-prefix and never match).
                  condition = "input.sexRatio == 'custom'",
                  ns = ns,
                  numericInput(ns("customSexRatio"),
