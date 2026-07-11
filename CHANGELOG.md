@@ -43,6 +43,33 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-11 · [ad hoc] Fixed intermittently flaky groupAddAssign tests (Session 355)
+- **Deliverable:** Fixed "`test_modBreedingGroups.R`/`test_modBreedingGroups_groupAddAssign.R`
+  have intermittently flaky, unseeded stochastic assertions" (`BACKLOG.md`, discovered S351).
+  Diagnosis found TWO distinct root causes, not the single class BACKLOG originally assumed:
+  (1) `"modBreedingGroupsServer handles maximum number of groups"` and (3)
+  `"modBreedingGroupsServer works with examplePedigree subset"` are genuine unseeded
+  `groupAddAssign()` MIS-sampling count mismatches, empirically reproduced at ~22% and ~10%
+  failure rates respectively (default `iter = 10L`, per the UI, is not enough to always hit
+  the requested group count). (2) `"downloadGroup writes the selected group's annotated
+  members"` is NOT a count mismatch -- it is a base-R `read.csv()` `type.convert()` gotcha:
+  when `groupAddAssign()` forms an all-female group (common, since the algorithm ignores
+  female-female kinship by default), the test's own `read.csv()` call auto-coerces an all-`"F"`
+  Sex column to logical `FALSE`, so `all(df$Sex %in% c("M","F"))` fails (~2% empirically). The
+  actual `downloadHandler`/CSV file content is correct; only the test's naive `read.csv()` type
+  inference is fragile. Fix: seeded (1) and (3) via the module's existing
+  `options(nprcgenekeepr.bg_seed = 1L)` E2E determinism hook (mirrors the file's own established
+  pattern), verified 10/10 deterministic trials each at the exact asserted counts (`nGroups()==20`,
+  `length(groups)==3`). Fixed (2) by adding `colClasses = c("character", "character", "numeric")`
+  to its `read.csv()` call -- robust to whichever group composition randomly forms, no seed
+  needed. Verification: each fixed test re-run 40x via the full file (not filtered) with 0
+  failures across all three; `lintr::lint()` 0 on both changed files; full-suite regression read
+  1 failed (pre-existing, unrelated, `test_vignettes_no_deprecated_minParentAge.R`, same as
+  S349-S354) / 0 error / 0 warning. No production `R/` code changed -- both root causes were
+  entirely within the tests' own setup/assertion code. `GREEN->REFACTOR` gate: owner declined
+  further refactor (the seed-option blocks intentionally mirror the file's existing pattern
+  rather than introducing a new helper).
+
 ### 2026-07-11 · [ad hoc] S354 close-out commit (session notes, handoff receipt, learnings)
 - **Deliverable:** Closed out Session 354 (the `inst/_pkgdown.yml` dead-config fix, logged
   below): wrote the full session writeup + Session 353 handoff evaluation +

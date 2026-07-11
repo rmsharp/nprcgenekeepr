@@ -741,6 +741,16 @@ test_that("modBreedingGroupsServer works with examplePedigree subset", {
   # Take first 30 for faster testing
   test_ped <- nonFounders[1:min(30, nrow(nonFounders)), ]
 
+  # groupAddAssign's MIS sampling (iter = 10 by default, per the UI) is not
+  # guaranteed to hit the requested group count on every unseeded draw over
+  # real (related) pedigree data; pin the RNG via the module's own E2E
+  # determinism hook (see gatedSeed()) so this test is reproducible.
+  # Verified: seed 1L gives length(groups) == 3 on every trial (10/10) for
+  # this exact scenario.
+  old_opts <- options(nprcgenekeepr.bg_seed = 1L)
+  on.exit(options(old_opts), add = TRUE)
+  Sys.unsetenv("NPRC_BG_SEED")
+
   shiny::testServer(
     modBreedingGroupsServer,
     args = list(

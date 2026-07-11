@@ -115,31 +115,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       an honest "not reconstructable at the v1.0.8 endpoint" caveat if not; consider also
       citing total test-*case* count (not just file count) alongside the existing file-count
       table.
-- [ ] **`test_modBreedingGroups.R`/`test_modBreedingGroups_groupAddAssign.R` have
-      intermittently flaky, unseeded stochastic assertions** (READY, Effort S) --
-      discovered during S351's regression verification (not previously documented).
-      At least 3 distinct `test_that()` blocks call `groupAddAssign()` (via
-      `modBreedingGroupsServer`) with no `set.seed()`/`NPRC_BG_SEED` and then assert an
-      EXACT outcome of its random MIS sampling: `test_modBreedingGroups.R:250`
-      ("handles maximum number of groups", asserts `nGroups()==20` from a 50-animal
-      pool), `test_modBreedingGroups.R:1015` ("downloadGroup writes the selected
-      group...", asserts every downloaded row's `Sex` is `M`/`F`), and
-      `test_modBreedingGroups_groupAddAssign.R:744` ("works with examplePedigree
-      subset", asserts `length(groups)==3`). Each failed intermittently (not on every
-      run) when the same file was re-run repeatedly in isolation, and reproduced
-      identically against completely unmodified `master` (confirmed via `git stash`),
-      so this predates S351 and is unrelated to the Custom-sex-ratio fix -- it was
-      encountered only because the full-suite/per-file regression reads this session's
-      close-out requires happened to hit it. Not filed as a GitHub issue; only found via
-      repeated local runs, not yet characterized for rate/trigger (see the project's own
-      `[flake-aware-validation]` reflex, `PROJECT_LEARNINGS.md`, for the discipline this
-      needs: reproduce N times, characterize rate + trigger, before deciding
-      harden-now vs. defer). Fix (either): seed each such test (`set.seed()` or the
-      module's own `NPRC_BG_SEED`/`nprcgenekeepr.bg_seed` determinism hook, already
-      used elsewhere in `test_modBreedingGroups.R`) for a deterministic outcome, or
-      relax the assertions to tolerances `groupAddAssign()`'s own docs justify
-      (MIS sampling over `iter` iterations is not guaranteed to hit an exact count).
-
 ## Audit follow-ups
 *(From `PED_GV_AUDIT_2026-05-30.md`; the audit compute/test items are all resolved — see
 `CHANGELOG.md`. Per-item reachability notes and traps live in `CLAUDE.md` "Project-specific
