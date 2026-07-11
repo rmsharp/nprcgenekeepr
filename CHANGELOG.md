@@ -43,6 +43,24 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-11 · [ad hoc] Audited NEW-12/XARCH-3 Shiny-progress-hook BACKLOG item (Session 358)
+- **Deliverable:** Verified firsthand (not trusted from the S21 plan's own text) that
+  the "Shiny progress threaded into compute" concern is fully resolved. Swept all 230
+  `R/*.R` files for direct `shiny::` coupling or in-place `Progress` construction
+  outside the `mod*.R` Shiny module layer; confirmed `reportGV`/`groupAddAssign`/
+  `geneDrop`/`convertRelationships`/`gvaConvergence` all use the clean injected
+  `updateProgress` callback pattern; re-confirmed `getMinParentAge.R`'s Phase 9/S35
+  deletion; ran the six compute-layer test files standalone (0 Shiny session/
+  `testServer()` involvement, all pass) as behavioral proof beyond the static grep.
+  0 findings requiring a fix. Report:
+  `docs/audits/XARCH3_SHINY_PROGRESS_HOOK_AUDIT_2026-07-11.md`. Removed the BACKLOG.md
+  item (its own stated deliverable is fully answered: no work remains).
+
+### 2026-07-11 · [ad hoc] Claimed session for NEW-12/XARCH-3 Shiny-progress-hook audit (Session 358)
+- **Deliverable:** Phase 1B claim stub in `SESSION_NOTES.md` and a `status: pending`
+  receipt in `HANDOFFS.md` for the BACKLOG.md "NEW-12 / XARCH-3 — Shiny progress hook"
+  audit. Commit `eaa36b8b`.
+
 ### 2026-07-11 · [ad hoc] S357 close-out commit (session notes, handoff receipt)
 - **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap in the
   same session rather than leaving it for the next session's Phase 0 reconcile

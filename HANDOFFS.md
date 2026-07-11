@@ -77,16 +77,16 @@ session need this block to continue the work without re-reading the whole repo?*
 ```handoff
 session: S358
 date: 2026-07-11
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Auditing BACKLOG.md's "NEW-12 / XARCH-3 -- Shiny progress hook" item -- verifying firsthand whether the Shiny-out-of-compute concern is fully resolved (reportGV/groupAddAssign's updateProgress hook, getMinParentAge.R's Phase 9/S35 deletion) or whether a residual leak remains elsewhere in R/.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 6
+active_task: DONE. Audited BACKLOG.md's "NEW-12 / XARCH-3 -- Shiny progress hook" item -- verified firsthand that the Shiny-out-of-compute concern is fully resolved. 0 findings required a fix; BACKLOG item removed.
+what_was_done: Swept all 230 R/*.R files for the defect signature (shiny:: code calls, library(shiny), incProgress/withProgress/Progress$new outside mod*.R). Confirmed reportGV.R/groupAddAssign.R/geneDrop.R/convertRelationships.R/gvaConvergence.R have zero executable shiny:: code (only roxygen @param text) and all use the identical function-or-NULL, is.null()-guarded updateProgress injected-callback pattern; confirmed the only two real Progress-construction sites (modBreedingGroups.R, modGeneticValue.R) are correctly inside Shiny module files; confirmed getMinParentAge.R (the item's one named historical leak) is genuinely deleted, cross-checked against PROJECT_LEARNINGS.md's account of its NAMESPACE @import shiny relocation. Ran the six compute-layer test files standalone (test_reportGV/test_groupAddAssign/test_geneDrop/test_convertRelationships/test_gvaConvergence x2) as behavioral proof: 0 failures, 1 pre-existing CRAN-only skip, none reference shiny/testServer(). Found one out-of-scope match (safeExecute.R -- guarded shiny:: calls, but a different, already-tracked concern under issue #37) and routed it there rather than folding it in. Wrote docs/audits/XARCH3_SHINY_PROGRESS_HOOK_AUDIT_2026-07-11.md (0 FAIL / 9 PASS / 1 out-of-scope observation). Removed the BACKLOG.md item, added 2 CHANGELOG.md entries, PROJECT_LEARNINGS.md Learning 330, bumped CLAUDE.md's learnings count (329->330). Commits: eaa36b8b (claim), <pending -- filled below>.
+next_steps: No follow-up owed -- this audit is complete and the BACKLOG item is closed. Other BACKLOG.md items untouched: CRAN resubmission of v2.0.0 (owner action, READY); Document 2 Phase D (READY, Effort M); LabKey integration remainder (blocked); tracker reconciliation (decision needed). The open policy question about whether vignettes/articles/*.html render artifacts should be tracked remains unresolved -- flagged again at this session's own Phase 0, left untouched, per SAFEGUARDS's "don't touch a previous session's uncommitted state" rule; it's the user's call.
+key_files: docs/audits/XARCH3_SHINY_PROGRESS_HOOK_AUDIT_2026-07-11.md (new, the deliverable); BACKLOG.md (item removed, ~L98-101); PROJECT_LEARNINGS.md Learning 330; R/reportGV.R, R/groupAddAssign.R, R/geneDrop.R, R/convertRelationships.R, R/gvaConvergence.R (read, not modified -- all confirmed clean); R/safeExecute.R (read, not modified -- confirmed out-of-scope/issue #37); R/modBreedingGroups.R:295-339, R/modGeneticValue.R:205-244 (read, confirmed correct Progress-construction sites).
+gotchas: (1) origin/master had fallen one session behind local (S357 didn't push its close-out; S356 had) -- this session pushes its own close-out to origin/master as a fast-forward at Phase 3F, closing that gap too; if local ever runs ahead of origin by more than the current session's own unpushed work, flag it explicitly in the handoff. (2) The updateProgress injected-callback pattern (function-or-NULL, is.null()-guarded, Progress object built only inside mod*.R files) is the project's confirmed clean template for any future compute function needing progress reporting -- copy this shape rather than reaching for shiny:: directly. (3) safeExecute.R's guarded shiny:: calls are a DIFFERENT, already-tracked concern (issue #37's "zero callers ever" retire candidate) -- do not conflate with a future XARCH-3-style audit; see this audit's §4.1. (4) The untracked PED_GV_AUDIT_2026-05-30.html / vignettes/articles/.gitignore / engineering-2.0.0-release.html+_files/ remain an open, unresolved policy question from earlier sessions -- still untouched, still the user's call.
+runtime_smoke: n/a -- zero R/ or tests/ files were changed (only read/grepped/test-run for verification). The deliverable is a new audit report plus BACKLOG/CHANGELOG/PROJECT_LEARNINGS/CLAUDE.md bookkeeping; no runtime behavior exists for it to exercise (matches S356's identical audit-workstream justification).
+changelog_ref: CHANGELOG.md 2026-07-11 "Audited NEW-12/XARCH-3 Shiny-progress-hook BACKLOG item (Session 358)"
 commit: pending
 ```
 

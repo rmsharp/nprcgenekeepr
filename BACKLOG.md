@@ -96,12 +96,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       works end to end as of S351.
 
 ## Audit follow-ups
-*(From `PED_GV_AUDIT_2026-05-30.md`; the audit compute/test items are all resolved — see
+*(From `PED_GV_AUDIT_2026-05-30.md`; all audit follow-up items are now resolved — see
 `CHANGELOG.md`. Per-item reachability notes and traps live in `CLAUDE.md` "Project-specific
 Learnings".)*
-- [ ] **NEW-12 / XARCH-3** (READY, Effort S) — Shiny progress hook. **Mostly resolved** per the S21 plan §8: `reportGV` /
-      `groupAddAssign` are already shiny-free with an injected `updateProgress` hook; the only real leak
-      `getMinParentAge` was a dead orphan (removed in Phase 9, S35). Treat as SEPARABLE cleanup.
+- [ ] (none remaining)
 
 ## Tracker reconciliation (open question for the user)
 - (DECISION NEEDED, Effort S) The remaining audit follow-ups (XARCH-2..8) are **not** GitHub issues; the live tracker is #1–#39.
