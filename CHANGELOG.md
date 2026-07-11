@@ -47,6 +47,161 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-11 · \[ad hoc\] S356 close-out commit (session notes, handoff receipt, learnings)
+
+- **Deliverable:** Closes this session’s own `CHANGELOG.md` ledger
+  frontier gap in the same session rather than leaving it for the next
+  session’s Phase 0 reconcile (mirroring the S349-S355 precedent for
+  self-closing gaps). Records the close-out commit (`f597d903`) for the
+  read.csv() audit logged below.
+
+### 2026-07-11 · \[ad hoc\] Audited read.csv() call sites for F/T/TRUE/FALSE coercion risk (Session 356)
+
+- **Deliverable:** Audited “other
+  [`read.csv()`](https://rdrr.io/r/utils/read.table.html) calls in
+  `tests/` for the same F/T/TRUE/ FALSE type-coercion risk that recurred
+  in S355” (`BACKLOG.md`, discovered S355). A fresh grep (not a reuse of
+  S355’s list) found 27 call sites across 12 files (S355’s own sweep had
+  found “roughly a dozen” across 9 – it missed a whole file,
+  `test_modSummaryStats_coverage.R`). One file audited directly, the
+  other 11 fanned out to independent agents (one per file) via the
+  Workflow tool, each tracing the CSV’s real data origin (R/
+  `downloadHandler` content function or in-test fixture) before
+  verdicting. **Result: 0 vulnerable sites.** 6 `ALREADY-FIXED` (guarded
+  by `colClasses`, three of them since their very first commit), 21
+  `PASS` (no column actually asserted on can ever collapse to an
+  all-T/F-token set). The two `test_modSummaryStats_coverage.R`
+  `ALREADY-FIXED` sites are in fact the *original* Learning 269(e)/S290
+  fix – the module where this defect class was first discovered. Three
+  sites read a fixture with a mixed-sex column that is never actually
+  asserted on (dormant risk, no action needed unless a future edit adds
+  that assertion). Full report:
+  `docs/audits/READCSV_COLCLASSES_AUDIT_2026-07-11.md`. **No code
+  changes** – removed the now-answered `BACKLOG.md` item.
+  `PROJECT_LEARNINGS.md` Learning 328.
+
+### 2026-07-11 · \[ad hoc\] S355 close-out commit (session notes, handoff receipt, learnings)
+
+- **Deliverable:** Closed out Session 355 (the flaky groupAddAssign test
+  fix, logged below): wrote the full session writeup + Session 354
+  handoff evaluation + self-assessment to `SESSION_NOTES.md`, completed
+  the `HANDOFFS.md` receipt to `status: complete` referencing the fix
+  commit (`2aa2e3f6`) directly, added `PROJECT_LEARNINGS.md` Learning
+  327, bumped `CLAUDE.md`’s learnings count, and filed a new
+  `BACKLOG.md` audit item. Closes this session’s own `CHANGELOG.md`
+  ledger frontier gap in the same session rather than leaving it for the
+  next session’s Phase 0 reconcile (mirroring the S349-S354 precedent
+  for self-closing gaps).
+
+### 2026-07-11 · \[ad hoc\] Fixed intermittently flaky groupAddAssign tests (Session 355)
+
+- **Deliverable:** Fixed
+  “`test_modBreedingGroups.R`/`test_modBreedingGroups_groupAddAssign.R`
+  have intermittently flaky, unseeded stochastic assertions”
+  (`BACKLOG.md`, discovered S351). Diagnosis found TWO distinct root
+  causes, not the single class BACKLOG originally assumed:
+  1.  `"modBreedingGroupsServer handles maximum number of groups"`
+      and (3)
+      `"modBreedingGroupsServer works with examplePedigree subset"` are
+      genuine unseeded
+      [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+      MIS-sampling count mismatches, empirically reproduced at ~22% and
+      ~10% failure rates respectively (default `iter = 10L`, per the UI,
+      is not enough to always hit the requested group count). (2)
+      `"downloadGroup writes the selected group's annotated members"` is
+      NOT a count mismatch – it is a base-R
+      [`read.csv()`](https://rdrr.io/r/utils/read.table.html)
+      [`type.convert()`](https://rdrr.io/r/utils/type.convert.html)
+      gotcha: when
+      [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+      forms an all-female group (common, since the algorithm ignores
+      female-female kinship by default), the test’s own
+      [`read.csv()`](https://rdrr.io/r/utils/read.table.html) call
+      auto-coerces an all-`"F"` Sex column to logical `FALSE`, so
+      `all(df$Sex %in% c("M","F"))` fails (~2% empirically). The actual
+      `downloadHandler`/CSV file content is correct; only the test’s
+      naive [`read.csv()`](https://rdrr.io/r/utils/read.table.html) type
+      inference is fragile. Fix: seeded (1) and (3) via the module’s
+      existing `options(nprcgenekeepr.bg_seed = 1L)` E2E determinism
+      hook (mirrors the file’s own established pattern), verified 10/10
+      deterministic trials each at the exact asserted counts
+      (`nGroups()==20`, `length(groups)==3`). Fixed (2) by adding
+      `colClasses = c("character", "character", "numeric")` to its
+      [`read.csv()`](https://rdrr.io/r/utils/read.table.html) call –
+      robust to whichever group composition randomly forms, no seed
+      needed. Verification: each fixed test re-run 40x via the full file
+      (not filtered) with 0 failures across all three; `lintr::lint()` 0
+      on both changed files; full-suite regression read 1 failed
+      (pre-existing, unrelated,
+      `test_vignettes_no_deprecated_minParentAge.R`, same as S349-S354)
+      / 0 error / 0 warning. No production `R/` code changed – both root
+      causes were entirely within the tests’ own setup/assertion code.
+      `GREEN->REFACTOR` gate: owner declined further refactor (the
+      seed-option blocks intentionally mirror the file’s existing
+      pattern rather than introducing a new helper).
+
+### 2026-07-11 · \[ad hoc\] S354 close-out commit (session notes, handoff receipt, learnings)
+
+- **Deliverable:** Closed out Session 354 (the `inst/_pkgdown.yml`
+  dead-config fix, logged below): wrote the full session writeup +
+  Session 353 handoff evaluation + self-assessment to
+  `SESSION_NOTES.md`, completed the `HANDOFFS.md` receipt to
+  `status: complete` referencing the fix commit (`d14cd913`) directly,
+  added `PROJECT_LEARNINGS.md` Learning 326, and bumped `CLAUDE.md`’s
+  learnings count. Closes this session’s own `CHANGELOG.md` ledger
+  frontier gap in the same session rather than leaving it for the next
+  session’s Phase 0 reconcile (mirroring the S349–S353 precedent for
+  self-closing gaps).
+
+### 2026-07-11 · \[ad hoc\] Fixed dead inst/\_pkgdown.yml Reference-page config (Session 354)
+
+- **Deliverable:** `inst/_pkgdown.yml`’s curated 4-group Reference-page
+  structure (`BACKLOG.md` item, discovered S345) was dead configuration:
+  pkgdown’s config resolver only ever reads the first config file it
+  finds, and the project’s root `_pkgdown.yml` (no `reference:` key)
+  shadowed it — confirmed live via
+  `pkgdown::as_pkgdown(".")$meta$reference` (`NULL`) and on the deployed
+  site (a flat “All functions” list, not the grouped structure
+  `README.md:86-94` describes). Independently, `inst/_pkgdown.yml`’s own
+  lists had drifted from `NAMESPACE` regardless of the shadowing bug (64
+  of 182 current exports missing from “All exposed functions”,
+  incl. every `mod*Server`/`mod*UI` pair, plus ~34 further entries
+  naming functions no longer in `NAMESPACE` at all). Owner picked
+  “merge + re-sync into root” over “delete the grouping” via a pre-RED
+  scope-decision `AskUserQuestion`. Moved the `reference:` block into
+  root `_pkgdown.yml`, re-synced: added the 1 missing data object
+  (`speciesGestation`, 24→25); dropped 2 stale entries from “Primary
+  interactive functions” that are not exported functions (`addErrTxt` —
+  real but internal/non-exported; `finalRpt` — a data object, already
+  correctly listed under “Data objects”); rebuilt “All exposed
+  functions” as the complete, current 182-export list. Deleted
+  `inst/_pkgdown.yml`. `README.md:86-94` needed no update (describes the
+  same 4 group names, unchanged). Followed `DEVELOPMENT_WORKSTREAM.md`’s
+  one-off-fix path under Strict TDD, full RED/GREEN/(REFACTOR skipped,
+  owner-confirmed unnecessary) with all phase gates.
+- **Tests:** New `tests/testthat/test_pkgdown_reference_config.R` (4
+  `test_that` blocks, using
+  [`pkgdown::as_pkgdown()`](https://pkgdown.r-lib.org/reference/as_pkgdown.html)’s
+  public API only, no `:::` internals): root config has a populated
+  `reference:` block; every current `NAMESPACE` export is covered by
+  some group; the “Data objects” group covers every `data/` object;
+  `inst/_pkgdown.yml` no longer exists. Guarded with `skip_if_not()`/
+  `skip_if_not_installed()` so it no-ops cleanly in a built/installed
+  tree (both config files are `.Rbuildignore`’d). Confirmed genuine RED
+  against unfixed code (3 failures + 1 skip, all for the right reason)
+  before committing; all 4 GREEN after the fix.
+- **Verification:** `devtools::document()` clean 0-file delta (expected,
+  no roxygen touched). `lintr::lint()`: 0 on the new test file.
+  Full-suite regression read: 1 failed (pre-existing, unrelated,
+  `test_vignettes_no_deprecated_minParentAge.R`, same as S349–S353) / 0
+  error / 0 warning. Build-equivalent check (no Shiny/R runtime behavior
+  changed, so no live-browser Phase 3E smoke test applies): a local
+  [`pkgdown::build_reference_index()`](https://pkgdown.r-lib.org/reference/build_reference.html)
+  render succeeded — all 4 group headings render in the built
+  `reference/index.html`, 204 unique topic links present, no errors.
+- **Commits:** `c8b68ef9` (claim), `a88b8237` (RED test), `d14cd913`
+  (GREEN fix).
+
 ### 2026-07-10 · \[ad hoc\] S353 close-out commit (session notes, handoff receipt, learnings)
 
 - **Deliverable:** Closed out Session 353 (the `examplePedigree`

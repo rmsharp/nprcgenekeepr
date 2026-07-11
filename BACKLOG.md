@@ -114,8 +114,13 @@ which Phase B’s tutorial-figure-based inventory had no way to include.
 missing images, zero unresolved cross-references). Next: **Phase D** –
 assemble (Abstract/Introduction/Conclusion full pass), full claim-source
 audit, decide `ColonyManagerTutorial.Rmd`’s fate (§11 decision 3),
-re-verify the pkgdown Reference-page citation live (§8 dragon 5), and
-run the full verification checklist (§9:
+re-verify the pkgdown Reference-page citation live (§8 dragon 5 – the
+underlying dead-config bug this dragon flagged is now **fixed**, S354:
+root `_pkgdown.yml` carries the grouped `reference:` block and is
+re-synced against current `NAMESPACE`; see below and `CHANGELOG.md`.
+Phase D’s live re-verify is now confirming a real, working grouped
+Reference page, not chasing a still-open bug), and run the full
+verification checklist (§9:
 [`pkgdown::build_article()`](https://pkgdown.r-lib.org/reference/build_articles.html),
 `R CMD build .` + tarball check, spot-check sibling articles). See the
 plan’s §6 Phase D for full completion criteria. All three findings Phase
@@ -155,64 +160,6 @@ commits (`4548aa1b`, `8ca8bb24`) if reconstructable, or at minimum the
 current value with an honest “not reconstructable at the v1.0.8
 endpoint” caveat if not; consider also citing total test-*case* count
 (not just file count) alongside the existing file-count table.
-
-**`inst/_pkgdown.yml`’s curated Reference-page grouping is dead
-configuration** (READY, Effort S) – discovered during S345’s Document-2
-planning research. `pkgdown`’s own config resolver
-(`pkgdown:::pkgdown_config_path`) picks the first existing file from
-`_pkgdown.yml`, `_pkgdown.yaml`, `pkgdown/_pkgdown.yml`,
-`pkgdown/_pkgdown.yaml`, `inst/_pkgdown.yml`, `inst/_pkgdown.yaml` in
-that order; the project’s root `_pkgdown.yml` exists (no `reference:`
-key), so `inst/_pkgdown.yml`’s “Data objects”/“Major Features and
-Functions”/“Primary interactive functions”/“All exposed functions”
-grouping is never read. Confirmed live on the deployed site
-(`https://rmsharp.github.io/nprcgenekeepr/reference/index.html`): a flat
-“All functions” list only, not the grouped structure `README.md:86-94`
-describes. Independently, `inst/_pkgdown.yml`’s own lists have drifted
-from `NAMESPACE` regardless (64 of 182 current exports missing from its
-“All exposed functions” list, incl. every `mod*Server`/`mod*UI` pair) –
-so fixing the shadowing alone is not sufficient; the lists need
-re-syncing too, or the `reference:` block should be regenerated fresh
-rather than merely un-shadowed. Fix: either move/merge
-`inst/_pkgdown.yml`’s `reference:` block into the root `_pkgdown.yml`
-(re-synced against current `NAMESPACE`), or delete `inst/_pkgdown.yml`
-if the grouped structure is no longer wanted and update
-`README.md:86-94` to match whichever is chosen. See
-`docs/planning/document2-colony-manager-guide-plan.md` §1 for full
-verification detail.
-
-**`test_modBreedingGroups.R`/`test_modBreedingGroups_groupAddAssign.R`
-have intermittently flaky, unseeded stochastic assertions** (READY,
-Effort S) – discovered during S351’s regression verification (not
-previously documented). At least 3 distinct `test_that()` blocks call
-[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
-(via `modBreedingGroupsServer`) with no
-[`set.seed()`](https://rdrr.io/r/base/Random.html)/`NPRC_BG_SEED` and
-then assert an EXACT outcome of its random MIS sampling:
-`test_modBreedingGroups.R:250` (“handles maximum number of groups”,
-asserts `nGroups()==20` from a 50-animal pool),
-`test_modBreedingGroups.R:1015` (“downloadGroup writes the selected
-group…”, asserts every downloaded row’s `Sex` is `M`/`F`), and
-`test_modBreedingGroups_groupAddAssign.R:744` (“works with
-examplePedigree subset”, asserts `length(groups)==3`). Each failed
-intermittently (not on every run) when the same file was re-run
-repeatedly in isolation, and reproduced identically against completely
-unmodified `master` (confirmed via `git stash`), so this predates S351
-and is unrelated to the Custom-sex-ratio fix – it was encountered only
-because the full-suite/per-file regression reads this session’s
-close-out requires happened to hit it. Not filed as a GitHub issue; only
-found via repeated local runs, not yet characterized for rate/trigger
-(see the project’s own `[flake-aware-validation]` reflex,
-`PROJECT_LEARNINGS.md`, for the discipline this needs: reproduce N
-times, characterize rate + trigger, before deciding harden-now
-vs. defer). Fix (either): seed each such test
-([`set.seed()`](https://rdrr.io/r/base/Random.html) or the module’s own
-`NPRC_BG_SEED`/`nprcgenekeepr.bg_seed` determinism hook, already used
-elsewhere in `test_modBreedingGroups.R`) for a deterministic outcome, or
-relax the assertions to tolerances
-[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)’s
-own docs justify (MIS sampling over `iter` iterations is not guaranteed
-to hit an exact count).
 
 ## Audit follow-ups
 
