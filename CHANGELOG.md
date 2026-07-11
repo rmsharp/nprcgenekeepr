@@ -43,6 +43,45 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-11 · [ad hoc] Fixed dead inst/_pkgdown.yml Reference-page config (Session 354)
+- **Deliverable:** `inst/_pkgdown.yml`'s curated 4-group Reference-page structure
+  (`BACKLOG.md` item, discovered S345) was dead configuration: pkgdown's config
+  resolver only ever reads the first config file it finds, and the project's root
+  `_pkgdown.yml` (no `reference:` key) shadowed it — confirmed live via
+  `pkgdown::as_pkgdown(".")$meta$reference` (`NULL`) and on the deployed site (a flat
+  "All functions" list, not the grouped structure `README.md:86-94` describes).
+  Independently, `inst/_pkgdown.yml`'s own lists had drifted from `NAMESPACE`
+  regardless of the shadowing bug (64 of 182 current exports missing from "All
+  exposed functions", incl. every `mod*Server`/`mod*UI` pair, plus ~34 further
+  entries naming functions no longer in `NAMESPACE` at all). Owner picked "merge +
+  re-sync into root" over "delete the grouping" via a pre-RED scope-decision
+  `AskUserQuestion`. Moved the `reference:` block into root `_pkgdown.yml`, re-synced:
+  added the 1 missing data object (`speciesGestation`, 24→25); dropped 2 stale
+  entries from "Primary interactive functions" that are not exported functions
+  (`addErrTxt` — real but internal/non-exported; `finalRpt` — a data object, already
+  correctly listed under "Data objects"); rebuilt "All exposed functions" as the
+  complete, current 182-export list. Deleted `inst/_pkgdown.yml`. `README.md:86-94`
+  needed no update (describes the same 4 group names, unchanged). Followed
+  `DEVELOPMENT_WORKSTREAM.md`'s one-off-fix path under Strict TDD, full
+  RED/GREEN/(REFACTOR skipped, owner-confirmed unnecessary) with all phase gates.
+- **Tests:** New `tests/testthat/test_pkgdown_reference_config.R` (4 `test_that`
+  blocks, using `pkgdown::as_pkgdown()`'s public API only, no `:::` internals):
+  root config has a populated `reference:` block; every current `NAMESPACE` export is
+  covered by some group; the "Data objects" group covers every `data/` object;
+  `inst/_pkgdown.yml` no longer exists. Guarded with `skip_if_not()`/
+  `skip_if_not_installed()` so it no-ops cleanly in a built/installed tree (both
+  config files are `.Rbuildignore`'d). Confirmed genuine RED against unfixed code (3
+  failures + 1 skip, all for the right reason) before committing; all 4 GREEN after
+  the fix.
+- **Verification:** `devtools::document()` clean 0-file delta (expected, no roxygen
+  touched). `lintr::lint()`: 0 on the new test file. Full-suite regression read: 1
+  failed (pre-existing, unrelated, `test_vignettes_no_deprecated_minParentAge.R`,
+  same as S349–S353) / 0 error / 0 warning. Build-equivalent check (no Shiny/R
+  runtime behavior changed, so no live-browser Phase 3E smoke test applies): a local
+  `pkgdown::build_reference_index()` render succeeded — all 4 group headings render
+  in the built `reference/index.html`, 204 unique topic links present, no errors.
+- **Commits:** `c8b68ef9` (claim), `a88b8237` (RED test), `d14cd913` (GREEN fix).
+
 ### 2026-07-10 · [ad hoc] S353 close-out commit (session notes, handoff receipt, learnings)
 - **Deliverable:** Closed out Session 353 (the `examplePedigree` `fromCenter` fix, logged
   below): wrote the full session writeup + Session 352 handoff evaluation + self-assessment

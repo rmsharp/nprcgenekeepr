@@ -78,10 +78,15 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       article in isolation succeeds cleanly (zero missing images, zero unresolved
       cross-references). Next: **Phase D** -- assemble (Abstract/Introduction/Conclusion
       full pass), full claim-source audit, decide `ColonyManagerTutorial.Rmd`'s fate (§11
-      decision 3), re-verify the pkgdown Reference-page citation live (§8 dragon 5), and
-      run the full verification checklist (§9: `pkgdown::build_article()`, `R CMD build .`
-      + tarball check, spot-check sibling articles). See the plan's §6 Phase D for full
-      completion criteria. All three findings Phase C's screenshot capture surfaced are now
+      decision 3), re-verify the pkgdown Reference-page citation live (§8 dragon 5 --
+      the underlying dead-config bug this dragon flagged is now **fixed**, S354: root
+      `_pkgdown.yml` carries the grouped `reference:` block and is re-synced against
+      current `NAMESPACE`; see below and `CHANGELOG.md`. Phase D's live re-verify is
+      now confirming a real, working grouped Reference page, not chasing a still-open
+      bug), and run the full verification checklist (§9: `pkgdown::build_article()`,
+      `R CMD build .` + tarball check, spot-check sibling articles). See the plan's §6
+      Phase D for full completion criteria. All three findings Phase C's screenshot
+      capture surfaced are now
       **fixed** (Excel-upload corruption S350; non-functional Custom sex ratio S351;
       missing-`fromCenter` example data S353 -- see below and `CHANGELOG.md`), so Phase D can
       update the Potential Parents subsection to show the now-populated result (1,587
@@ -110,26 +115,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       an honest "not reconstructable at the v1.0.8 endpoint" caveat if not; consider also
       citing total test-*case* count (not just file count) alongside the existing file-count
       table.
-- [ ] **`inst/_pkgdown.yml`'s curated Reference-page grouping is dead configuration**
-      (READY, Effort S) -- discovered during S345's Document-2 planning research.
-      `pkgdown`'s own config resolver (`pkgdown:::pkgdown_config_path`) picks the first
-      existing file from `_pkgdown.yml`, `_pkgdown.yaml`, `pkgdown/_pkgdown.yml`,
-      `pkgdown/_pkgdown.yaml`, `inst/_pkgdown.yml`, `inst/_pkgdown.yaml` in that order;
-      the project's root `_pkgdown.yml` exists (no `reference:` key), so
-      `inst/_pkgdown.yml`'s "Data objects"/"Major Features and Functions"/"Primary
-      interactive functions"/"All exposed functions" grouping is never read. Confirmed
-      live on the deployed site (`https://rmsharp.github.io/nprcgenekeepr/reference/index.html`):
-      a flat "All functions" list only, not the grouped structure `README.md:86-94`
-      describes. Independently, `inst/_pkgdown.yml`'s own lists have drifted from
-      `NAMESPACE` regardless (64 of 182 current exports missing from its "All exposed
-      functions" list, incl. every `mod*Server`/`mod*UI` pair) -- so fixing the shadowing
-      alone is not sufficient; the lists need re-syncing too, or the `reference:` block
-      should be regenerated fresh rather than merely un-shadowed. Fix: either move/merge
-      `inst/_pkgdown.yml`'s `reference:` block into the root `_pkgdown.yml` (re-synced
-      against current `NAMESPACE`), or delete `inst/_pkgdown.yml` if the grouped
-      structure is no longer wanted and update `README.md:86-94` to match whichever is
-      chosen. See `docs/planning/document2-colony-manager-guide-plan.md` §1 for full
-      verification detail.
 - [ ] **`test_modBreedingGroups.R`/`test_modBreedingGroups_groupAddAssign.R` have
       intermittently flaky, unseeded stochastic assertions** (READY, Effort S) --
       discovered during S351's regression verification (not previously documented).
