@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S355
+date: 2026-07-11
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix "test_modBreedingGroups.R/test_modBreedingGroups_groupAddAssign.R have intermittently flaky, unseeded stochastic assertions" (BACKLOG.md, discovered S351).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S354
 date: 2026-07-11
 status: complete
