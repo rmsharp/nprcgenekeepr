@@ -191,6 +191,11 @@ R. Mark Sharp, Ph.D.
     never appeared regardless of the selected animal source, including
     the default "Top ranked" selection where it is supposed to be
     visible on page load.
+  - `data(examplePedigree)` now includes a `fromCenter` (colony-origin)
+    column, derived from its existing `origin`/`recordStatus` fields, so
+    the Potential Parents tab can show a populated result (1,587
+    candidates) against the package's own example data instead of only
+    its graceful-degradation message.
 
 # nprcgenekeepr 1.0.8 (20250723)
 
