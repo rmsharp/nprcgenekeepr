@@ -58,10 +58,20 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       S349** (`R/appServer.R`: the file appender is now gated behind the "Debug on"
       checkbox's already-tested `debugMode` reactive, never written unconditionally;
       see `CHANGELOG.md` 2026-07-10 S349 entry for full verification detail incl. a
-      live-browser Phase 3E smoke test). Next (owner action): re-run the win-builder /
-      R-hub pre-submission checks and resubmit via `devtools::submit_cran()`. No
-      version bump is required (the prior 2.0.0 attempt was archived before
-      publication) unless the owner prefers one.
+      live-browser Phase 3E smoke test). **Local pre-submission gate re-confirmed --
+      S359 (2026-07-11):** `R CMD build .` + `R CMD check --as-cran --timings` on
+      current `master` (134 commits since the archived sha, 9 touching
+      `R/`/`tests/`/`DESCRIPTION`/`NAMESPACE`) -- `0 errors | 0 warnings | 1 note`
+      (the expected incoming-feasibility note only; the local HTML-manual note is
+      gone). **Important:** the win-builder/R-hub results that were on file in
+      `cran-comments.md` predated the S349 fix (captured the day before, on the
+      exact sha that was archived) -- reset to placeholders; see
+      `docs/planning/cran-2.0.0-phase5-runbook.md`'s refreshed top note for the
+      full ancestry check. Next (owner action, unchanged): re-run the win-builder /
+      R-hub pre-submission checks (now genuinely required, not just stale-by-time)
+      and resubmit via `devtools::submit_cran()`. No version bump is required (the
+      prior 2.0.0 attempt was archived before publication) unless the owner
+      prefers one.
 
 ## Documents (v1.0.8 -> v2.0.0 write-up)
 - [ ] **Execute "Document 2" plan (Phase D)** (READY, Effort M) -- planning session DONE

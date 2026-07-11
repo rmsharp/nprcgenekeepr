@@ -5,6 +5,29 @@ rewritten `cran-comments.md`. Authored by Session 135 (2026-06-18); **refreshed 
 Session 242 (2026-06-29)** — submission tooling is now present (was "absent"); the R-hub
 branch caveat is removed (the 2.0.0 code is on `master`, in sync with `origin/master`;
 the old `add-methodology` branch is gone); the local `--as-cran` gate is re-confirmed GREEN.
+**Refreshed again by Session 359 (2026-07-11)** — the local gate was stale (last
+locally confirmed S241/S242, 2026-06-29): re-ran `R CMD build .` + `R CMD check
+--as-cran --timings` on current `master` (`19ae5657`, macOS, R 4.6.1) and got
+`0 errors | 0 warnings | 1 note` (the expected incoming-feasibility note; the
+local HTML-manual note is gone — this machine's Tidy is now current). Slowest
+example 1.465s (`groupAddAssign`), tests 86s, vignette rebuild 21s — all inside
+prior headroom. **More importantly: the win-builder/R-hub results already on file
+in `cran-comments.md` are stale in a way that matters, not just old.** They were
+captured in Session 328 (2026-07-09, commit `8ca8bb24` — the exact commit later
+submitted and archived) — **one day before** Session 349 (2026-07-10, commit
+`f7a62aca`) fixed the CRAN Policy violation (`appServer()` unconditionally
+writing `~/nprcgenekeepr.log`) that caused the archival. `8ca8bb24` is a verified
+git ancestor of `f7a62aca`, so those win-builder/R-hub runs checked the
+*pre-fix* code — they do not attest to the code this resubmission will actually
+carry. §2 and §3 below must be re-run before this resubmission, not merely
+re-pasted from the existing results. (Whether the log-write itself would ever
+surface as a win-builder/R-hub check finding is a separate question — `appServer()`
+launches an interactive Shiny app that automated checks never invoke, so this was
+most likely caught by a human CRAN reviewer, not the check suite. Re-running is
+still owed: the results on file are 134 commits behind current `master` (9 touching
+`R/`/`tests/`/`DESCRIPTION`/`NAMESPACE`) regardless of that specific defect.)
+`cran-comments.md`'s win-builder/R-hub lines have been reset to placeholders
+accordingly.
 
 **Why this is a runbook, not an executed step.** win-builder and R-hub v2 are
 **outward-facing** (they upload the package to external services), need **network**
@@ -84,8 +107,12 @@ is named `nprcgenekeepr_2.0.0.tar.gz`.
 > re-ran `R CMD build .` + `R CMD check --as-cran --timings` on the 2.0.0 tarball after dozens
 > of commits of new work since the original S134 gate and got `0 errors | 0 warnings | 2 notes`
 > (the two documented false-positives); Session 241 re-confirmed it after the README badge
-> fix. The `build` here only produces a fresh artifact to upload — the check result already
-> applies. (macOS, R 4.6.0; tarball ~1.9 MB, vignettes build cleanly.)
+> fix. **Session 359 (2026-07-11) re-confirmed it again** on commit `19ae5657` (134 commits
+> later, 9 touching `R/`/`tests/`/`DESCRIPTION`/`NAMESPACE`, including S349's CRAN-policy
+> log-write fix): `0 errors | 0 warnings | 1 note` — one fewer note than S240/S241 saw, because
+> this machine's HTML Tidy is now current (see `cran-comments.md` for the full breakdown).
+> The `build` here only produces a fresh artifact to upload — the check result already
+> applies. (macOS, R 4.6.1; tarball 2.3 MB, vignettes build cleanly.)
 
 ---
 

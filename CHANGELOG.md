@@ -43,6 +43,39 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-11 · [ad hoc] Refreshed local CRAN pre-submission gate for v2.0.0 resubmission (Session 359)
+- **Deliverable:** Owner picked "local prep-only refresh" via `AskUserQuestion` (the
+  BACKLOG item's own "Next (owner action)" step covers win-builder/R-hub/
+  `submit_cran()`, all confirmed outward-facing/owner-only by
+  `docs/planning/cran-2.0.0-phase5-runbook.md`'s own stated boundary — not
+  triggered this session). Re-ran `R CMD build .` + `R CMD check --as-cran
+  --timings` on current `master` (134 commits since the archived sha `8ca8bb24`,
+  9 touching `R/`/`tests/`/`DESCRIPTION`/`NAMESPACE`, last locally confirmed
+  S241/S242 2026-06-29): `0 errors | 0 warnings | 1 note` (down from 2 — the
+  local HTML-manual note no longer reproduces on this machine's current Tidy).
+  Slowest example 1.465s (`groupAddAssign`), tests 86s, vignette rebuild 21s, all
+  inside prior headroom. **Finding:** the win-builder/R-hub results already on
+  file in `cran-comments.md` were captured in S328 (2026-07-09, commit
+  `8ca8bb24`) — the exact commit later archived, one day *before* S349's
+  2026-07-10 fix (`f7a62aca`) for the CRAN Policy violation that caused the
+  archival. `git merge-base --is-ancestor 8ca8bb24 f7a62aca` confirms the old
+  results checked pre-fix code; they no longer attest to what this resubmission
+  will carry. Reset those lines in `cran-comments.md` to plain placeholders (no
+  session/commit jargon — the file is pasted verbatim into the CRAN submission)
+  and recorded the full ancestry-check reasoning in the runbook instead (which is
+  owner-facing process documentation, not a CRAN artifact). `BACKLOG.md`'s CRAN
+  item updated in place (not removed — win-builder/R-hub/`submit_cran()` remain
+  outstanding, owner action, unchanged). Added `PROJECT_LEARNINGS.md` Learning
+  331, bumped `CLAUDE.md`'s learnings count (330->331). Phase 3E: N/A, justified
+  — no `R/`/`tests/`/runtime-behavior files changed; deliverable is a package
+  check + two doc refreshes.
+
+### 2026-07-11 · [ad hoc] Claimed session for CRAN v2.0.0 pre-submission gate refresh (Session 359)
+- **Deliverable:** Phase 1B claim stub in `SESSION_NOTES.md` and a `status: pending`
+  receipt in `HANDOFFS.md` for the BACKLOG.md "CRAN resubmission of v2.0.0" item's
+  local-prep-only refresh (scope confirmed by the owner via `AskUserQuestion`).
+  Commit `19ae5657`.
+
 ### 2026-07-11 · [ad hoc] S358 close-out commit (session notes, handoff receipt)
 - **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap in the
   same session rather than leaving it for the next session's Phase 0 reconcile
