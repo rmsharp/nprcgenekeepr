@@ -47,6 +47,83 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-11 · \[ad hoc\] S358 close-out commit (session notes, handoff receipt)
+
+- **Deliverable:** Closes this session’s own `CHANGELOG.md` ledger
+  frontier gap in the same session rather than leaving it for the next
+  session’s Phase 0 reconcile (mirroring the S349-S357 precedent for
+  self-closing gaps). Records the audit/ bookkeeping commit (`93c9c207`)
+  for the XARCH-3 audit logged below.
+
+### 2026-07-11 · \[ad hoc\] Audited NEW-12/XARCH-3 Shiny-progress-hook BACKLOG item (Session 358)
+
+- **Deliverable:** Verified firsthand (not trusted from the S21 plan’s
+  own text) that the “Shiny progress threaded into compute” concern is
+  fully resolved. Swept all 230 `R/*.R` files for direct `shiny::`
+  coupling or in-place `Progress` construction outside the `mod*.R`
+  Shiny module layer; confirmed `reportGV`/`groupAddAssign`/
+  `geneDrop`/`convertRelationships`/`gvaConvergence` all use the clean
+  injected `updateProgress` callback pattern; re-confirmed
+  `getMinParentAge.R`’s Phase 9/S35 deletion; ran the six compute-layer
+  test files standalone (0 Shiny session/ `testServer()` involvement,
+  all pass) as behavioral proof beyond the static grep. 0 findings
+  requiring a fix. Report:
+  `docs/audits/XARCH3_SHINY_PROGRESS_HOOK_AUDIT_2026-07-11.md`. Removed
+  the BACKLOG.md item (its own stated deliverable is fully answered: no
+  work remains).
+
+### 2026-07-11 · \[ad hoc\] Claimed session for NEW-12/XARCH-3 Shiny-progress-hook audit (Session 358)
+
+- **Deliverable:** Phase 1B claim stub in `SESSION_NOTES.md` and a
+  `status: pending` receipt in `HANDOFFS.md` for the BACKLOG.md “NEW-12
+  / XARCH-3 — Shiny progress hook” audit. Commit `eaa36b8b`.
+
+### 2026-07-11 · \[ad hoc\] S357 close-out commit (session notes, handoff receipt)
+
+- **Deliverable:** Closes this session’s own `CHANGELOG.md` ledger
+  frontier gap in the same session rather than leaving it for the next
+  session’s Phase 0 reconcile (mirroring the S349-S356 precedent for
+  self-closing gaps). Records the close-out commit (`47e4fb65`) for the
+  Document 1 coverage-fix logged below.
+
+### 2026-07-11 · \[ad hoc\] Fixed Document 1’s Testing-at-Scale file-count/coverage conflation (Session 357)
+
+- **Deliverable:** Fixed “Document 1’s Testing-at-Scale section
+  conflates file-count growth with testing quality” (`BACKLOG.md`,
+  user-flagged S345). Pulled real coverage and test-case numbers into
+  `vignettes/articles/engineering-the-2.0.0-release.qmd` §Section 3 in
+  place of the file-count-only headline metric.
+- **What changed:** Extended
+  `vignettes/articles/data-raw/build-document1-evidence.R`’s T5/F3
+  checkpoint block to add `test_case_count` (`test_that()` blocks,
+  derived from `git show <sha>:<file>` at each of the 5 existing
+  checkpoints – fully offline, cross-checks exactly against the
+  pre-existing `test_file_count` column) and `coverage_pct` (Codecov’s
+  per-commit API,
+  `api.codecov.io/api/v2/github/rmsharp/ repos/nprcgenekeepr/commits/<sha>/`,
+  queried live). Both BACKLOG-named endpoint commits (v1.0.8 `4548aa1b`,
+  v2.0.0 `8ca8bb24`) had a recorded report: coverage 88.62% -\> 99.70%,
+  test cases 283 -\> 1,567 (454%, steeper than the 95% file-count
+  growth). The three intermediate checkpoints (`6fd87749`, `3db018d1`,
+  `a1618c48`) returned a 404 from Codecov’s API (confirmed via its
+  paginated commit list, 541 records back to 2018, these three shas
+  absent throughout) – rendered as an honest “not recorded” table cell
+  plus a prose sentence naming the mechanism, not silently dropped or
+  invented. Regenerated `vignettes/articles/data/testing-growth.csv`
+  from the extended script (not hand-edited) and updated the article’s
+  opening paragraph, `tbl-testing-growth` table/caption, and the
+  paragraph following it accordingly.
+- **Verification:** `quarto render engineering-the-2.0.0-release.qmd`
+  succeeds cleanly twice (before and after a line-length wrap fix to the
+  new R code) with 0 broken cross-references (`?@` artifact grep) and
+  all 5 tables / 5 figures numbering correctly; spot-checked 3
+  unmodified sections’ render output. Re-ran the isolated
+  data-generation block twice, byte-identical output both times. No `R/`
+  or `tests/` files changed – package build-equivalent
+  (`devtools::check()`/`test()`) not re-run, correctly out of scope.
+  `PROJECT_LEARNINGS.md` Learning 329 added; `CLAUDE.md` learnings count
+  bumped 328-\>329; `BACKLOG.md` item removed.
+
 ### 2026-07-11 · \[ad hoc\] S356 close-out commit (session notes, handoff receipt, learnings)
 
 - **Deliverable:** Closes this session’s own `CHANGELOG.md` ledger
