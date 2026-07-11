@@ -44,6 +44,15 @@
 #' ALIVE, DECEASED, SHIPPED, or UNKNOWN}
 #' \item{recordStatus}{-- character vector with value of \code{"added"} or
 #'  \code{"original"}.}
+#' \item{fromCenter}{-- logical vector indicating whether the animal was
+#' born at the local center (colony-origin), derived from \code{origin} and
+#' \code{recordStatus}: \code{TRUE} when \code{origin} is blank and
+#' \code{recordStatus} is \code{"original"}; \code{FALSE} for animals
+#' imported from elsewhere (non-blank \code{origin}) or for synthetic
+#' placeholder second-parent rows (\code{recordStatus == "added"}) whose
+#' true origin is not confirmed. Required by
+#' \code{\link{getPotentialParents}} to identify in-colony candidate
+#' parents.}
 #' }
 #' @examples
 #' library(nprcgenekeepr)

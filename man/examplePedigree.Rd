@@ -5,7 +5,7 @@
 \alias{examplePedigree}
 \title{Example pedigree object (from ExamplePedigree.csv)}
 \format{
-An object of class \code{data.frame} with 3694 rows and 12 columns.
+An object of class \code{data.frame} with 3694 rows and 13 columns.
 }
 \usage{
 data(examplePedigree)
@@ -38,6 +38,15 @@ standardized status codes with the possible values
 ALIVE, DECEASED, SHIPPED, or UNKNOWN}
 \item{recordStatus}{-- character vector with value of \code{"added"} or
 \code{"original"}.}
+\item{fromCenter}{-- logical vector indicating whether the animal was
+born at the local center (colony-origin), derived from \code{origin} and
+\code{recordStatus}: \code{TRUE} when \code{origin} is blank and
+\code{recordStatus} is \code{"original"}; \code{FALSE} for animals
+imported from elsewhere (non-blank \code{origin}) or for synthetic
+placeholder second-parent rows (\code{recordStatus == "added"}) whose
+true origin is not confirmed. Required by
+\code{\link{getPotentialParents}} to identify in-colony candidate
+parents.}
 }
 }
 \examples{
