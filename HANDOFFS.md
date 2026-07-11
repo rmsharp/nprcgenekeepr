@@ -87,7 +87,7 @@ key_files: docs/planning/cran-2.0.0-phase5-runbook.md (read, Sections 2-3 follow
 gotchas: The Windows WriteXLS CI failure will almost certainly also appear in the win-builder/R-hub results now in flight -- expect it, don't treat it as a fresh surprise. An unexplained Windows ERROR blocks devtools::submit_cran() per the acceptance bar. The exact first-red commit (S350 5a9697a8 vs. S351 2ee65618) is undisambiguated -- S350's own CI run is missing from gh run list entirely (likely cancelled by S351's rapid follow-up push under GitHub Actions concurrency-cancellation), not independently confirmed. gh run list is not currently part of any session's routine checks (Phase 0's triad has no CI-status step) -- this is how a real regression sat undetected for 7 sessions; worth considering for a future Phase 0/verification addition.
 runtime_smoke: n/a -- no R/tests/DESCRIPTION/NAMESPACE touched; only docs (BACKLOG.md/SESSION_NOTES.md/HANDOFFS.md/PROJECT_LEARNINGS.md/CLAUDE.md) plus external win-builder/R-hub triggers against already-built/already-committed code
 changelog_ref: CHANGELOG.md 2026-07-11 entries for Session 361 (claim, trigger actions, Windows CI finding, close-out)
-commit: PENDING_FINAL_COMMIT
+commit: 4631d461
 ```
 
 ```handoff
