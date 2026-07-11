@@ -115,6 +115,29 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       an honest "not reconstructable at the v1.0.8 endpoint" caveat if not; consider also
       citing total test-*case* count (not just file count) alongside the existing file-count
       table.
+- [ ] **Audit other `read.csv()` calls in `tests/` for the same F/T/TRUE/FALSE
+      type-coercion risk that recurred in S355** (READY, Effort S) --
+      `PROJECT_LEARNINGS.md` Learning 269(e) (S290) already documented that base R's
+      `read.csv()`/`type.convert()` silently coerces an all-`"F"` (or `"T"`/`"TRUE"`/
+      `"FALSE"`) character column to logical, regardless of source-CSV quoting -- yet the
+      exact same trap recurred in `test_modBreedingGroups.R`'s `downloadGroup` test (fixed
+      S355, see `CHANGELOG.md`), on a different module, undetected until an unseeded random
+      draw happened to form an all-female breeding group (`groupAddAssign()` ignores
+      female-female kinship by default, making single-sex groups a common, valid outcome,
+      not a corner case). A grep for `read.csv(` without `colClasses` across
+      `tests/testthat/*.R` (S355) surfaced roughly a dozen further call sites reading back
+      downloaded/exported CSVs without `colClasses`, none individually confirmed vulnerable
+      this session (scope was the 3 named flaky tests only): `test_getFocalAnimalPed.R:302,545`,
+      `test_modInput.R:762,860`, `test_modInput_coverage.R:258-260`,
+      `test_modGeneticValue.R:1423`, `test_modPedigree_coverage.R:56`,
+      `test_modPotentialParents_coverage.R:79`, `test_modORIPReporting_server.R:177,208,226,242`,
+      `test_species_first_class.R:71`, `test-e2e-orip-module.R:141`,
+      `test-e2e-potential-parents-module.R:119`. Most are likely low-risk (sire/dam/id
+      columns rarely collide with T/F/TRUE/FALSE tokens), but any that read back a
+      Sex-like or other short-categorical-code column share the exact latent risk class.
+      Fix (if confirmed vulnerable): add explicit `colClasses` per Learning 269(e)'s
+      established remedy.
+
 ## Audit follow-ups
 *(From `PED_GV_AUDIT_2026-05-30.md`; the audit compute/test items are all resolved — see
 `CHANGELOG.md`. Per-item reachability notes and traps live in `CLAUDE.md` "Project-specific

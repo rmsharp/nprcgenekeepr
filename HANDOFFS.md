@@ -77,17 +77,17 @@ session need this block to continue the work without re-reading the whole repo?*
 ```handoff
 session: S355
 date: 2026-07-11
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Fix "test_modBreedingGroups.R/test_modBreedingGroups_groupAddAssign.R have intermittently flaky, unseeded stochastic assertions" (BACKLOG.md, discovered S351).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE. Fixed "test_modBreedingGroups.R/test_modBreedingGroups_groupAddAssign.R have intermittently flaky, unseeded stochastic assertions" (BACKLOG.md, discovered S351) -- diagnosis found TWO distinct root causes, not the single class BACKLOG assumed: 2 genuine unseeded groupAddAssign() MIS-sampling count mismatches, plus 1 unrelated base-R read.csv() type-coercion gotcha.
+what_was_done: Reproduced each of the 3 BACKLOG-named test blocks individually (100+ trials each via direct shiny::testServer() loops, NOT_CRAN=true): "handles maximum number of groups" ~22% failure rate, "works with examplePedigree subset" ~10%, both genuine unseeded count mismatches. "downloadGroup writes the selected group's annotated members" (~2% failure) traced to read.csv()'s type.convert() auto-coercing an all-"F" Sex column to logical FALSE when groupAddAssign() forms an all-female group (common -- female-female kinship is ignored by default) -- this exact gotcha was already documented as PROJECT_LEARNINGS.md Learning 269(e) (S290, different module) and recurred here. Fix: options(nprcgenekeepr.bg_seed = 1L) + on.exit() + Sys.unsetenv("NPRC_BG_SEED") before the two count-mismatch tests' testServer() calls (mirrors the file's own established pattern; verified 10/10 deterministic trials each at the exact asserted counts -- the file's own existing seed convention, 42L, was tried first and found to give the WRONG count for one scenario); colClasses = c("character","character","numeric") added to the third test's read.csv() call. No production R/ code changed. Verification: each fixed test re-run 40x via the full file, 0/40 failures each; lintr 0 on both changed files; full-suite regression read 1 failed (pre-existing, unrelated, test_vignettes_no_deprecated_minParentAge.R, same as S349-S354) / 0 error / 0 warning. Updated BACKLOG.md (item removed; new READY/Effort-S audit item added for ~a dozen other unguarded read.csv() call sites in tests/ found via grep, not individually checked this session), CHANGELOG.md, PROJECT_LEARNINGS.md Learning 327, CLAUDE.md learnings count (326->327). Commits: 495ec65c (claim), 2aa2e3f6 (fix).
+next_steps: No follow-up owed for this fix -- complete and verified. New BACKLOG.md item from this session (READY, Effort S): audit ~12 other read.csv() call sites in tests/testthat/*.R (test_getFocalAnimalPed.R:302,545; test_modInput.R:762,860; test_modInput_coverage.R:258-260; test_modGeneticValue.R:1423; test_modPedigree_coverage.R:56; test_modPotentialParents_coverage.R:79; test_modORIPReporting_server.R:177,208,226,242; test_species_first_class.R:71; test-e2e-orip-module.R:141; test-e2e-potential-parents-module.R:119) for the same Learning-269(e) type-coercion risk. Other BACKLOG.md items untouched: CRAN resubmission of v2.0.0 (owner action); Document 2 Phase D (READY); Document 1 coverage-number gap; NEW-12/XARCH-3 cleanup; LabKey integration remainder (blocked); tracker reconciliation (decision needed).
+key_files: tests/testthat/test_modBreedingGroups.R (2 of 3 fixes: seed insert + colClasses fix); tests/testthat/test_modBreedingGroups_groupAddAssign.R (1 seed insert); BACKLOG.md (item removed, audit item added); PROJECT_LEARNINGS.md Learning 327.
+gotchas: (1) groupAddAssign()'s default iter=10L (the UI's nIterations default, not the function's own documented default of 1000L) means any new unseeded test asserting an exact groupAddAssign()-derived count risks the same flakiness -- seed AND verify the seed empirically for that exact scenario (a working seed for one scenario is not guaranteed for another; confirmed directly with 42L). (2) Any new test reading back a downloaded CSV via read.csv() and asserting a column that could plausibly be all-"F"/"T"/"TRUE"/"FALSE" needs explicit colClasses (Learning 269(e), silently recurred once already). (3) Ad hoc Rscript calling testthat::test_file() on a skip_on_cran()-guarded file needs Sys.setenv(NOT_CRAN="true") set FIRST or the whole file silently skips with 0 tests run -- a first repro attempt got a false "not flaky" reading this way. (4) shiny::testServer()'s test-block expression value is discarded, not returned -- capture results via <<- assignment, not as the block's trailing expression.
+runtime_smoke: N/A, justified -- no R/ package runtime behavior changed (test-only fix). Build-equivalent substituted per SAFEGUARDS.md's own table: 40x repeated execution per fixed test (0 failures each) + lintr (0) + full-suite regression read (1 pre-existing unrelated failure / 0 error / 0 warning), all in step 9 of the session writeup.
+changelog_ref: CHANGELOG.md 2026-07-11 "Fixed intermittently flaky groupAddAssign tests (Session 355)"
+commit: 2aa2e3f6
 ```
 
 ```handoff
