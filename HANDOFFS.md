@@ -77,19 +77,32 @@ session need this block to continue the work without re-reading the whole repo?*
 ```handoff
 session: S357
 date: 2026-07-11
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Fix Document 1's Testing-at-Scale section (BACKLOG.md, user-flagged S345) -- add real covr/Codecov coverage % and test_that() case counts to vignettes/articles/engineering-the-2.0.0-release.qmd Section 3 in place of the file-count-only headline metric.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: DONE. Fixed "Document 1's Testing-at-Scale section conflates file-count growth with testing quality" (BACKLOG.md, user-flagged S345). Coverage 88.62%->99.70%, test cases 283->1,567, both pulled from Codecov's live API and git history respectively, not estimated.
+what_was_done: Queried Codecov's per-commit API (api.codecov.io) for both BACKLOG-named endpoint commits: v1.0.8 4548aa1b = 88.62% coverage, v2.0.0 8ca8bb24 = 99.70%. Derived test_that() case counts for all 5 existing growth-table checkpoints from git history (283->1,567 at the same two endpoints), cross-checked exactly against the pre-existing test_file_count column at all 5 points before trusting the new numbers. The 3 intermediate checkpoints 404'd from Codecov; confirmed genuinely absent (not a query error) via the paginated commit-list endpoint (541 records back to 2018) -- rendered as "not recorded" in the table plus a prose sentence naming the mechanism. Extended vignettes/articles/data-raw/build-document1-evidence.R's T5/F3 block (not hand-editing the CSV) so the table stays script-regeneratable; ran the isolated block twice, byte-identical output. Updated engineering-the-2.0.0-release.qmd's opening paragraph, tbl-testing-growth table/caption, and the paragraph after it; left fig-testing-growth untouched (new metrics have a different scale, would distort a file-count-scaled chart). quarto render succeeded cleanly twice (before/after fixing 2 new R lines over the 80-char convention), 0 broken cross-refs, all 5 tables/5 figures numbered correctly document-wide, 3 unmodified sections spot-checked. Removed the BACKLOG.md item, added CHANGELOG.md entry, PROJECT_LEARNINGS.md Learning 329, bumped CLAUDE.md's learnings count (328->329). Commits: 9d31cca2 (claim), e624fc07 (content fix + bookkeeping).
+next_steps: No follow-up owed -- this fix is complete and verified. Other BACKLOG.md items untouched: CRAN resubmission of v2.0.0 (owner action); Document 2 Phase D (READY); NEW-12/XARCH-3 cleanup (READY); LabKey integration remainder (blocked); tracker reconciliation (decision needed). The open policy question about whether vignettes/articles/*.html render artifacts should be tracked (an untracked .gitignore already sits there from an earlier session) remains unresolved -- flagged again at this session's own Phase 0 and left untouched, per SAFEGUARDS's "don't touch a previous session's uncommitted state" rule; it's the user's call, not a technical blocker.
+key_files: vignettes/articles/engineering-the-2.0.0-release.qmd (Section 3, ~L392-495 -- opening paragraph, tbl-testing-growth table+caption, new paragraph after the table); vignettes/articles/data-raw/build-document1-evidence.R (T5/F3 block, ~L108-167); vignettes/articles/data/testing-growth.csv (regenerated, not hand-edited); BACKLOG.md (item removed); PROJECT_LEARNINGS.md Learning 329.
+gotchas: (1) Codecov's per-commit API (api.codecov.io/api/v2/github/rmsharp/repos/nprcgenekeepr/commits/<full-sha>/) is a reusable technique for any future documentation fix needing a real historical metric this project's CI already tracks -- try it before falling back to local recomputation or an "unreconstructable" caveat. If a specific sha 404s, paginate the commit-list endpoint (.../commits/?page_size=100) to confirm it's genuinely absent rather than a one-off query mistake. (2) vignettes/articles/data/*.csv files under this article are frozen, script-generated evidence (data-raw/build-document1-evidence.R) -- extend the script and re-run it, never hand-edit the CSV, or the article's own stated reproducibility guarantee goes stale. (3) This session did substantive investigative work (Codecov queries, git-history pagination) BEFORE writing the Phase 1B claim stub -- none of it was a file edit, but the next session should claim immediately after receiving a task, before any research, to stay unambiguously inside the protocol's "before any technical work" boundary.
+runtime_smoke: n/a -- documentation-only (vignette article + its data-raw generation script + regenerated CSV), zero R/ or tests/ package files changed. The deliverable's own build-equivalent (quarto render) was run twice and verified clean, which is the correct substitute per SAFEGUARDS.md's build-equivalent table.
+changelog_ref: CHANGELOG.md 2026-07-11 "Fixed Document 1's Testing-at-Scale file-count/coverage conflation (Session 357)"
+commit: e624fc07
 ```
-<claim stub -- filled at close-out>
+This session picked BACKLOG priority #3 from its own Phase 0 orientation report and
+closed it cleanly with real, externally-verified numbers rather than the BACKLOG item's
+own permitted fallback ("not reconstructable... with an honest caveat"). Self-score
+8/10: +found the authoritative external source (Codecov API) on the first try for both
+commits that mattered, +cross-verified the new git-derived metric against an
+already-established column before trusting it, +investigated rather than assumed the
+reason 3/5 checkpoints lack a coverage record, +kept the table script-regeneratable
+rather than hand-editing frozen data, +verified the render twice with a document-wide
+cross-reference/numbering check, not just "the chunk ran"; -did a meaningful amount of
+research (two rounds of Codecov queries, git-history digging) before writing the Phase
+1B claim stub, which is a process near-miss even though none of that work touched a
+file. Predecessor (S356) scored 7/10 -- clean ledger/handoff state made orientation
+free, but its task-specific content had no bearing on this session's different BACKLOG
+pick, so most of it went unused rather than being unhelpful.
 
 ```handoff
 session: S356
