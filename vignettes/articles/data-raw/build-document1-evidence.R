@@ -128,6 +128,42 @@ checkpoints$shinytest2_referencing_files <- vapply(checkpoints$sha, function(s) 
     any(grepl("shinytest2|AppDriver", content))
   }, logical(1)))
 }, integer(1))
+checkpoints$test_case_count <- vapply(checkpoints$sha, function(s) {
+  files <- git("ls-tree", "-r", "--name-only", s, "--", "tests/testthat/")
+  files <- files[grepl("\\.R$", files)]
+  sum(vapply(files, function(f) {
+    content <- tryCatch(git("show", paste0(s, ":", f)),
+                         error = function(e) character(0))
+    sum(grepl("test_that\\(", content))
+  }, integer(1)))
+}, integer(1))
+
+# Codecov's per-commit coverage report (api.codecov.io) is keyed by full commit
+# sha and only exists for a commit that had a CI-uploaded report under that
+# exact sha (a push/PR trigger that ran to completion under the current branch
+# tip at the time). Session1-start, Phase9-monolith-deprecated, and
+# Phase9-close have no recorded report (API 404) -- NA is the honest value,
+# not a bug; see the article's table caption for the caveat. Both
+# CRAN-submission endpoints (RANGE_START/RANGE_END) do have recorded reports.
+codecov_coverage_pct <- function(full_sha) {
+  url <- paste0(
+    "https://api.codecov.io/api/v2/github/rmsharp/repos/nprcgenekeepr/commits/",
+    full_sha, "/"
+  )
+  resp <- tryCatch(
+    system2("curl", c("-s", "-m", "15", url), stdout = TRUE, stderr = FALSE),
+    error = function(e) NULL
+  )
+  if (is.null(resp) || length(resp) == 0) return(NA_real_)
+  parsed <- tryCatch(jsonlite::fromJSON(paste(resp, collapse = "\n")),
+                      error = function(e) NULL)
+  cov <- parsed$totals$coverage
+  if (is.null(cov)) NA_real_ else as.numeric(cov)
+}
+full_shas <- vapply(checkpoints$sha, function(s) git("rev-parse", s),
+                     character(1))
+checkpoints$coverage_pct <- vapply(full_shas, codecov_coverage_pct, numeric(1),
+                                    USE.NAMES = FALSE)
 write.csv(checkpoints, file.path(out_dir, "testing-growth.csv"), row.names = FALSE)
 
 # ---- F1: commit-activity timeline (commits per month) -----------------------

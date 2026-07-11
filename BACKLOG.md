@@ -94,27 +94,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Custom-ratio numeric demo (N7), omitted from Section 3's Breeding-Groups subsection per
       S348's pre-drafting decision, can also be added in Phase D if desired -- the control
       works end to end as of S351.
-- [ ] **Document 1's Testing-at-Scale section conflates file-count growth with testing
-      quality** (READY, Effort S) -- `vignettes/articles/engineering-the-2.0.0-release.qmd`
-      §Section 3 (`#sec-testing`, ~L392-455) leads with "the test suite grew from 132 to
-      257 `.R` files... a 95% increase" as its headline metric and never cites an actual
-      `covr`/Codecov coverage percentage or a test-*case* count, despite the project
-      having a live Codecov badge (`README.md`) and a `test-coverage.yaml` CI workflow
-      the section itself references by filename (L524) without quoting its output. The
-      word "coverage" appears three times in the section, none of them a quantified
-      code-coverage figure -- twice describing E2E *behavioral* coverage ("Coverage at
-      the end of 8d was boot-level") and once naming the CI workflow file. File-count
-      growth is a real but weak proxy: more files can mean more tests, better coverage,
-      or more E2E depth, but doesn't by itself establish any of the three, and the
-      section's own prose (rightly) argues the *kind* of test that improved (E2E
-      dormant-to-executable-to-behavioral) matters more than the count -- it just never
-      backs that argument with the coverage number that would make it load-bearing
-      rather than qualitative. (User-flagged, S345.) Fix: pull an actual `covr::package_coverage()`
-      percentage (or the Codecov API's recorded value) at both endpoint commits
-      (`4548aa1b`, `8ca8bb24`) if reconstructable, or at minimum the current value with
-      an honest "not reconstructable at the v1.0.8 endpoint" caveat if not; consider also
-      citing total test-*case* count (not just file count) alongside the existing file-count
-      table.
 
 ## Audit follow-ups
 *(From `PED_GV_AUDIT_2026-05-30.md`; the audit compute/test items are all resolved — see

@@ -392,15 +392,23 @@ unconfigured.
 ## Section 3 -- Testing at Scale {#sec-testing}
 
 Growth in features (@sec-features) is only as trustworthy as the tests
-behind it. Across the same v1.0.8 -> v2.0.0 range, the test suite grew
-from 132 to 257 `.R` files under `tests/testthat/` -- test files plus the
-shared helpers, fixtures, and setup script that support them -- a 95%
-increase against a 512-commit range that itself roughly doubled the
-package's feature surface. More consequential than the raw count,
-though, is what changed in *kind*: a substantial browser-driven,
-end-to-end test harness went from present-but-inert to executable, and
-then from executable-but-shallow to exercising real data-bearing
-workflows.
+behind it, and file-count growth by itself does not establish that --
+more files can mean more tests, deeper coverage, or simply more
+end-to-end scaffolding. Across the same v1.0.8 -> v2.0.0 range, the
+test suite grew from 132 to 257 `.R` files under `tests/testthat/` --
+test files plus the shared helpers, fixtures, and setup script that
+support them -- a 95% increase against a 512-commit range that itself
+roughly doubled the package's feature surface. Two further numbers make
+the coverage claim itself, not just the file count, load-bearing:
+`test_that()` case count grew 283 -> 1,567 (454%, steeper than the
+file-count growth -- files also got denser with assertions, not just
+more numerous), and Codecov's recorded line coverage for the exact
+CRAN-submission commits rose 88.62% -> 99.70% (@tbl-testing-growth;
+source: the Codecov API's per-commit report, `api.codecov.io`, queried
+2026-07-11). More consequential than any of the three counts, though,
+is what changed in *kind*: a substantial browser-driven, end-to-end
+test harness went from present-but-inert to executable, and then from
+executable-but-shallow to exercising real data-bearing workflows.
 
 ```{r}
 #| label: tbl-testing-growth
@@ -409,15 +417,25 @@ workflows.
 #|   range, as of 2026-07-09. "Files in tests/testthat/" counts every
 #|   `.R` file in the directory (test files plus helpers/fixtures/setup);
 #|   "shinytest2/AppDriver-referencing" is the subset that names the
-#|   browser-testing package or its driver class.
+#|   browser-testing package or its driver class; "Test cases" counts
+#|   `test_that()` blocks across those files (both derived from git
+#|   history at each checkpoint's exact commit). "Coverage %" is
+#|   Codecov's recorded line coverage for that exact commit -- Codecov's
+#|   per-commit API has no report for the three intermediate checkpoints
+#|   (a 404, not a zero), so "not recorded" is the honest value there,
+#|   not a gap in the search; see prose below the table.
 growth <- read.csv("data/testing-growth.csv")
 growth$commit_display <- substr(growth$sha, 1, 8)
+growth$coverage_display <- ifelse(is.na(growth$coverage_pct), "not recorded",
+                                   paste0(growth$coverage_pct, "%"))
 kableExtra::kbl(
   growth[, c("label", "date", "commit_display", "test_file_count",
-             "shinytest2_referencing_files")],
+             "shinytest2_referencing_files", "test_case_count",
+             "coverage_display")],
   col.names = c("Checkpoint", "Date", "Commit", "Files in tests/testthat/",
-                "shinytest2/AppDriver-referencing"),
-  align = c("l", "c", "l", "r", "r")
+                "shinytest2/AppDriver-referencing", "Test cases",
+                "Coverage %"),
+  align = c("l", "c", "l", "r", "r", "r", "r")
 ) |>
   kableExtra::kable_styling(full_width = FALSE)
 ```
@@ -464,6 +482,15 @@ Session 1's start -- that scaffold predates this project's methodology
 entirely; it was built on the module branch (commit [`7da01afe`](https://github.com/rmsharp/nprcgenekeepr/commit/7da01afe)) during
 the same pre-Session-1 work that produced the modular app itself, but,
 as the next section describes, it did not run.
+
+Coverage, unlike the file and test-case counts (both derived directly
+from git history), is not reconstructable at all five checkpoints:
+Codecov's per-commit API
+(`api.codecov.io/api/v2/github/rmsharp/repos/nprcgenekeepr/commits/<sha>/`)
+returns a 404 for the three intermediate commits -- no coverage report
+was ever recorded under those exact shas, for reasons this session did
+not trace further. Both CRAN-submission endpoints do have a recorded
+report, which is what the 88.62% -> 99.70% figure above cites.
 
 ### From a dormant scaffold to an executable, hardened harness
 
