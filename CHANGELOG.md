@@ -43,6 +43,24 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-11 · [ad hoc] Audited read.csv() call sites for F/T/TRUE/FALSE coercion risk (Session 356)
+- **Deliverable:** Audited "other `read.csv()` calls in `tests/` for the same F/T/TRUE/
+  FALSE type-coercion risk that recurred in S355" (`BACKLOG.md`, discovered S355). A
+  fresh grep (not a reuse of S355's list) found 27 call sites across 12 files (S355's
+  own sweep had found "roughly a dozen" across 9 -- it missed a whole file,
+  `test_modSummaryStats_coverage.R`). One file audited directly, the other 11 fanned out
+  to independent agents (one per file) via the Workflow tool, each tracing the CSV's
+  real data origin (R/ `downloadHandler` content function or in-test fixture) before
+  verdicting. **Result: 0 vulnerable sites.** 6 `ALREADY-FIXED` (guarded by
+  `colClasses`, three of them since their very first commit), 21 `PASS` (no column
+  actually asserted on can ever collapse to an all-T/F-token set). The two
+  `test_modSummaryStats_coverage.R` `ALREADY-FIXED` sites are in fact the *original*
+  Learning 269(e)/S290 fix -- the module where this defect class was first discovered.
+  Three sites read a fixture with a mixed-sex column that is never actually asserted on
+  (dormant risk, no action needed unless a future edit adds that assertion). Full
+  report: `docs/audits/READCSV_COLCLASSES_AUDIT_2026-07-11.md`. **No code changes** --
+  removed the now-answered `BACKLOG.md` item. `PROJECT_LEARNINGS.md` Learning 328.
+
 ### 2026-07-11 · [ad hoc] S355 close-out commit (session notes, handoff receipt, learnings)
 - **Deliverable:** Closed out Session 355 (the flaky groupAddAssign test fix, logged below):
   wrote the full session writeup + Session 354 handoff evaluation + self-assessment to
