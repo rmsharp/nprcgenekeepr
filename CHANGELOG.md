@@ -47,6 +47,134 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-10 · \[ad hoc\] S351 close-out commit (session notes, handoff receipt, learnings)
+
+- **Deliverable:** Closed out Session 351 (the Breeding Groups Custom
+  sex ratio fix, logged below): wrote the full session writeup + Session
+  350 handoff evaluation + self-assessment to `SESSION_NOTES.md`,
+  completed the `HANDOFFS.md` receipt to `status: complete` referencing
+  the fix commit directly (no self-referential sha, so no separate
+  backfill commit was needed), added `PROJECT_LEARNINGS.md` Learning
+  324 + a new `[ns-scope-conditional]` glossary reflex, and bumped
+  `CLAUDE.md`’s learnings count. Split close-out into three ≤5-file
+  commits (fix; ledger/backlog/ release-notes; notes/handoff/learnings)
+  per `SAFEGUARDS.md`’s per-commit 5-file blast-radius cap.
+
+### 2026-07-10 · \[ad hoc\] Fixed Breeding Groups “Custom” sex ratio missing numeric input (Session 351)
+
+- **Deliverable:**
+  [`modBreedingGroupsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsUI.md)’s
+  `sexRatio` radioButtons offered “Custom” with no numeric input to
+  specify the ratio; the server’s `parseSexRatio(input$sexRatio)` called
+  `as.numeric("custom")`, which is `NA` and silently fell back to `0.0`
+  (behaviorally identical to “None”). Added a `conditionalPanel`-gated
+  `numericInput("customSexRatio", ...)` and changed `parseSexRatio()` to
+  read it directly instead of parsing the radio choice string. Strict
+  TDD RED/GREEN/(REFACTOR skipped, owner-confirmed) throughout, 3
+  `AskUserQuestion` phase gates.
+- **Phase 3E caught and this session fixed a second defect in its own
+  new code:** the new `conditionalPanel`’s condition initially copied
+  the sibling `nTopAnimals` panel’s pattern
+  (`sprintf("input['%s'] == 'custom'", ns("sexRatio"))`
+  - `ns = ns`), which never actually shows the panel — passing `ns = ns`
+    already narrows Shiny’s client-side `input`/`output` scope to
+    unprefixed names, so a condition built via `ns(...)` double-prefixes
+    and always evaluates `FALSE`. Fixed by using the bare
+    `"input.sexRatio == 'custom'"`, matching
+    [`?shiny::conditionalPanel`](https://rdrr.io/pkg/shiny/man/conditionalPanel.html)’s
+    own documented example; confirmed live via
+    [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html).
+    The sibling `nTopAnimals` panel has the identical, already-shipping
+    bug — correctly left unfixed (out of scope) and filed as a new
+    `BACKLOG.md` item instead, grep-confirmed as the only other instance
+    in `R/`.
+- **Verified:** full-suite regression read 1 failed (pre-existing,
+  unrelated, `test_vignettes_no_deprecated_minParentAge.R`, same as
+  S349/S350) / 0 error / 0 warning; `lintr::lint()` 0 on both changed
+  files; `devtools::document()` 0 delta; live-browser Phase 3E
+  ([`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html))
+  confirmed the control renders/hides correctly and forms groups with a
+  real Custom ratio value end to end. Also discovered and documented
+  (not fixed — out of scope), 2 pre-existing intermittently flaky,
+  unseeded stochastic
+  [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+  test assertions, confirmed pre-existing via `git stash` against
+  unmodified code.
+- **`BACKLOG.md`:** removed the resolved Custom-sex-ratio item; updated
+  the Document 2 Phase D cross-reference; added 2 new discovered items
+  (the `nTopAnimals` `conditionalPanel` bug; the flaky stochastic
+  `groupAddAssign` tests).
+
+### 2026-07-10 · \[ad hoc\] S350 close-out commit (session notes, handoff receipt, learnings)
+
+- **Deliverable:** Closed out Session 350 (the Excel-upload sire/dam
+  corruption fix, logged below): wrote the full session writeup +
+  Session 349 handoff evaluation + self-assessment to
+  `SESSION_NOTES.md`, completed the `HANDOFFS.md` receipt to
+  `status: complete` referencing the fix commit directly (no
+  self-referential sha, so no separate backfill commit was needed),
+  added `PROJECT_LEARNINGS.md` Learning 323, and bumped `CLAUDE.md`’s
+  learnings count. Split close-out into two ≤5-file commits
+  (ledger/backlog/release-notes, then notes/handoff/learnings) rather
+  than one bundled commit, per `SAFEGUARDS.md`’s per-commit 5-file
+  blast-radius cap.
+
+### 2026-07-10 · \[ad hoc\] Fixed Excel-upload sire/dam pedigree corruption (Session 350)
+
+- **Deliverable:** `R/modInput.R`’s `readDataFile()` called
+  `readxl::read_excel(file$datapath)` with no `col_types`; `readxl`
+  samples early rows to guess each column’s type, defaults sire/dam to
+  `logical` because the earliest rows are blank (founder/unknown-parent
+  rows), then silently converts every later alphanumeric sire/dam ID it
+  cannot parse as logical to `NA` — with no warning surfaced to the app
+  user. Confirmed on a round-trip of the shipped `data(examplePedigree)`
+  via `makeExamplePedigreeFile(..., fileType = "excel")`: 100% of the
+  2026 non-blank sire values and all 2026 non-blank dam values became
+  `NA`, collapsing the pedigree to near-all-founders on the exact code
+  path a real user’s Excel upload goes through via the Input tab. The
+  CSV/text-file paths are unaffected (`read.csv`/`read.table` scan the
+  whole column, not a sample). Root- cause fix: reuse the
+  already-existing, already-tested internal helper
+  `readExcelPOSIXToCharacter()` (`R/readExcelPOSIXToCharacter.R`,
+  `col_types = "text"`) that
+  [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md),
+  [`getGenotypes()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGenotypes.md),
+  and
+  [`readKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/readKinshipOverrides.md)
+  already use for their own Excel reads, instead of calling
+  [`readxl::read_excel()`](https://readxl.tidyverse.org/reference/read_excel.html)
+  directly — a 1-line change, no new logic. Verified date columns still
+  round-trip as parseable `"YYYY-MM-DD"` text and that
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  already coerces them itself via
+  [`convertDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertDate.md)/[`as.Date()`](https://rdrr.io/r/base/as.Date.html),
+  so no downstream behavior change is needed. Followed
+  `DEVELOPMENT_WORKSTREAM.md`’s one-off-fix path (not a campaign) under
+  Strict TDD, full RED/GREEN/REFACTOR with all phase gates; verified
+  genuine RED in scratchpad before presenting the plan (S349’s false-RED
+  lesson applied).
+- **Verify (firsthand):** 2 new tests
+  (`tests/testthat/test_modInput_excelSireDam.R`) both green —
+  unit-level `readDataFile()` non-NA sire/dam count + type check, and an
+  end-to-end `modInputServer` integration test via a real `getData`
+  button click asserting the cleaned studbook keeps \>1000 non-NA sire
+  values (was 3 before the fix). Full-suite regression read
+  (`NOT_CRAN=true`) **1 failed / 0 error / 0 warning** (the 1 failure,
+  `test_vignettes_no_deprecated_minParentAge.R`, is the same
+  pre-existing, unrelated failure S349 already confirmed via
+  `git stash`). `lintr::lint()` on both changed files = **0**;
+  `devtools::document()` **zero man/NAMESPACE delta** (internal
+  function, no roxygen change). **Phase 3E runtime smoke test (live
+  browser,
+  [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+  against the real modular app):** uploaded the real Excel round-trip
+  file through the actual file input, clicked “Get Data,” then
+  downloaded the result via the app’s own “Download Cleaned Data” button
+  (the exact artifact a real user gets) — 3694 rows, 2026 non-`NA` sire
+  values, 2026 non-`NA` dam values, all matching the source data
+  exactly, including the specific known pairing `KRXZ9X` → sire `UFQNBA`
+  that would have silently become `NA` before the fix.
+
 ### 2026-07-10 · \[ad hoc\] S349 HANDOFFS.md receipt commit-sha backfill, closed same-session
 
 - **Deliverable:** Filled in this session’s own `HANDOFFS.md` receipt
