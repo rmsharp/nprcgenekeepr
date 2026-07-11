@@ -43,6 +43,12 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-11 · [ad hoc] S357 close-out commit (session notes, handoff receipt)
+- **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap in the
+  same session rather than leaving it for the next session's Phase 0 reconcile
+  (mirroring the S349-S356 precedent for self-closing gaps). Records the close-out
+  commit (`47e4fb65`) for the Document 1 coverage-fix logged below.
+
 ### 2026-07-11 · [ad hoc] Fixed Document 1's Testing-at-Scale file-count/coverage conflation (Session 357)
 - **Deliverable:** Fixed "Document 1's Testing-at-Scale section conflates file-count
   growth with testing quality" (`BACKLOG.md`, user-flagged S345). Pulled real coverage
