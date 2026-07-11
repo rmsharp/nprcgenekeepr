@@ -71,6 +71,16 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-11--ad-hoc-s360-close-out-commit-session-notes-handoff-receipt">2026-07-11 · [ad hoc] S360 close-out commit (session notes, handoff receipt)<a class="anchor" aria-label="anchor" href="#id_2026-07-11--ad-hoc-s360-close-out-commit-session-notes-handoff-receipt"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Closes this session’s own <code>CHANGELOG.md</code> ledger frontier gap in the same session rather than leaving it for the next session’s Phase 0 reconcile (mirroring the S349-S359 precedent for self-closing gaps). Records the work commit (<code>67aee91b</code>) for the AskUserQuestion priorities-picker logged below.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-07-11--ad-hoc-added-askuserquestion-priorities-picker-to-phase-0-session-360">2026-07-11 · [ad hoc] Added AskUserQuestion priorities-picker to Phase 0 (Session 360)<a class="anchor" aria-label="anchor" href="#id_2026-07-11--ad-hoc-added-askuserquestion-priorities-picker-to-phase-0-session-360"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> User-directed methodology customization: extended <code>CLAUDE.md</code>’s “Additional Phase 0 steps” (the 2026-07-09 priorities-list entry) so that after the orientation report’s prose priorities list renders, one <code>AskUserQuestion</code> call presents the numbered <code>READY</code>/<code>BLOCKED</code>/<code>DECISION NEEDED</code> items as a structured pick. Design choices recorded inline: one option per numbered item (never the “Lower priority”/“Informational” bundles), capped at 4 (the tool’s max), same order as the report, “+N more” noted if truncated (no silent cap); skipped entirely if fewer than 2 numbered items exist; the harness’s built-in “Other” free-text option (plus a plain prose reply) still lets the user pick anything not listed. Supplements, not replaces, the prose report – adds no new <code>SESSION_RUNNER.md</code> step and does not change the mandatory Phase 0 STOP-and-wait (the question itself is the wait). Not sourced from a <code>BACKLOG.md</code> item or GitHub issue – pure ad hoc, user-directed in conversation. Phase 3E: N/A, justified – <code>CLAUDE.md</code> prose only, no runtime behavior.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-11--ad-hoc-s359-close-out-commit-session-notes-handoff-receipt">2026-07-11 · [ad hoc] S359 close-out commit (session notes, handoff receipt)<a class="anchor" aria-label="anchor" href="#id_2026-07-11--ad-hoc-s359-close-out-commit-session-notes-handoff-receipt"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> Closes this session’s own <code>CHANGELOG.md</code> ledger frontier gap in the same session rather than leaving it for the next session’s Phase 0 reconcile (mirroring the S349-S358 precedent for self-closing gaps). Records the work commit (<code>e320f245</code>) for the CRAN pre-submission gate refresh logged below.</li>

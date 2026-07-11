@@ -214,6 +214,17 @@
 <li>Effort is a rough S/M/L, not a time estimate – lets the user pick by capacity as well as priority.</li>
 <li>This formats the <em>existing</em> Phase 0 step 7 report; it adds no new <code>SESSION_RUNNER.md</code> step and does not change the mandatory STOP-and-wait-for-the-user after the report.</li>
 <li>Keep the <code>(READY | BLOCKED | DECISION NEEDED, Effort S|M|L)</code> tag inline on each <code>BACKLOG.md</code> item itself (not only in the rendered report), so the tag survives between sessions instead of being reconstructed from memory each time a report is rendered.</li>
+</ul><p><strong>Present the priorities list via <code>AskUserQuestion</code> (owner-directed, 2026-07-11):</strong> immediately after rendering the priorities list above, follow it with one <code>AskUserQuestion</code> call so the user can pick with a click instead of free-typing. This <em>supplements</em> the prose list (which still renders in full, unchanged) — it does not replace it, add a new <code>SESSION_RUNNER.md</code> step, or change the mandatory Phase 0 STOP-and-wait-for-the-user: the question itself <strong>is</strong> the wait.</p>
+<ul><li>
+<strong>Which items get an option:</strong> one option per priorities-list item that got its own numbered write-up (the <code>:red_circle:</code>/<code>:orange_circle:</code> <code>READY</code>/<code>BLOCKED</code>/ <code>DECISION NEEDED</code> items) — never the “Lower priority” comma-separated bundle or the “Informational” GitHub-issues line, which stay prose-only (too terse / explicitly not a pickable task). Option <code>label</code> = the item’s short title; <code>description</code> = the same one-line context already written in the prose report (blocker/decision named for <code>BLOCKED</code>/<code>DECISION NEEDED</code> items, not just the tag).</li>
+<li>
+<strong>Cap at 4</strong> (the tool’s max option count), kept in the same order as the rendered list. If more than 4 numbered items exist, keep the first 4 in that order and say so in the prose report (e.g. “+N more below the picker — see the list above”) rather than silently dropping the rest.</li>
+<li>
+<strong>Skip the question if fewer than 2 numbered items exist</strong> (0 or 1) — a forced 2-option pick with nothing real to compare is worse than the plain prose report + wait; fall back to that instead.</li>
+<li>
+<strong>The user is never locked into the listed options:</strong> the harness auto-appends a free-text “Other” choice, and a plain prose reply (ignoring the question entirely) works exactly as it always has.</li>
+<li>
+<code>header</code> stays &lt;=12 chars (e.g. <code>"Next task"</code>); <code>question</code> should ask which item to pick up this session, not restate the tags (those live in each option’s description).</li>
 </ul></div>
 <div class="section level3">
 <h3 id="additional-task-to-workstream-mappings">Additional task-to-workstream mappings<a class="anchor" aria-label="anchor" href="#additional-task-to-workstream-mappings"></a></h3>

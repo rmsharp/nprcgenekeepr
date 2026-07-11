@@ -47,6 +47,34 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-11 · \[ad hoc\] S360 close-out commit (session notes, handoff receipt)
+
+- **Deliverable:** Closes this session’s own `CHANGELOG.md` ledger
+  frontier gap in the same session rather than leaving it for the next
+  session’s Phase 0 reconcile (mirroring the S349-S359 precedent for
+  self-closing gaps). Records the work commit (`67aee91b`) for the
+  AskUserQuestion priorities-picker logged below.
+
+### 2026-07-11 · \[ad hoc\] Added AskUserQuestion priorities-picker to Phase 0 (Session 360)
+
+- **Deliverable:** User-directed methodology customization: extended
+  `CLAUDE.md`’s “Additional Phase 0 steps” (the 2026-07-09
+  priorities-list entry) so that after the orientation report’s prose
+  priorities list renders, one `AskUserQuestion` call presents the
+  numbered `READY`/`BLOCKED`/`DECISION NEEDED` items as a structured
+  pick. Design choices recorded inline: one option per numbered item
+  (never the “Lower priority”/“Informational” bundles), capped at 4 (the
+  tool’s max), same order as the report, “+N more” noted if truncated
+  (no silent cap); skipped entirely if fewer than 2 numbered items
+  exist; the harness’s built-in “Other” free-text option (plus a plain
+  prose reply) still lets the user pick anything not listed.
+  Supplements, not replaces, the prose report – adds no new
+  `SESSION_RUNNER.md` step and does not change the mandatory Phase 0
+  STOP-and-wait (the question itself is the wait). Not sourced from a
+  `BACKLOG.md` item or GitHub issue – pure ad hoc, user-directed in
+  conversation. Phase 3E: N/A, justified – `CLAUDE.md` prose only, no
+  runtime behavior.
+
 ### 2026-07-11 · \[ad hoc\] S359 close-out commit (session notes, handoff receipt)
 
 - **Deliverable:** Closes this session’s own `CHANGELOG.md` ledger

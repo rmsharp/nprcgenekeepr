@@ -252,6 +252,38 @@ open GitHub issues/PRs not yet mirrored into `BACKLOG.md`). Format
   report), so the tag survives between sessions instead of being
   reconstructed from memory each time a report is rendered.
 
+**Present the priorities list via `AskUserQuestion` (owner-directed,
+2026-07-11):** immediately after rendering the priorities list above,
+follow it with one `AskUserQuestion` call so the user can pick with a
+click instead of free-typing. This *supplements* the prose list (which
+still renders in full, unchanged) — it does not replace it, add a new
+`SESSION_RUNNER.md` step, or change the mandatory Phase 0
+STOP-and-wait-for-the-user: the question itself **is** the wait.
+
+- **Which items get an option:** one option per priorities-list item
+  that got its own numbered write-up (the
+  `:red_circle:`/`:orange_circle:` `READY`/`BLOCKED`/ `DECISION NEEDED`
+  items) — never the “Lower priority” comma-separated bundle or the
+  “Informational” GitHub-issues line, which stay prose-only (too terse /
+  explicitly not a pickable task). Option `label` = the item’s short
+  title; `description` = the same one-line context already written in
+  the prose report (blocker/decision named for
+  `BLOCKED`/`DECISION NEEDED` items, not just the tag).
+- **Cap at 4** (the tool’s max option count), kept in the same order as
+  the rendered list. If more than 4 numbered items exist, keep the first
+  4 in that order and say so in the prose report (e.g. “+N more below
+  the picker — see the list above”) rather than silently dropping the
+  rest.
+- **Skip the question if fewer than 2 numbered items exist** (0 or 1) —
+  a forced 2-option pick with nothing real to compare is worse than the
+  plain prose report + wait; fall back to that instead.
+- **The user is never locked into the listed options:** the harness
+  auto-appends a free-text “Other” choice, and a plain prose reply
+  (ignoring the question entirely) works exactly as it always has.
+- `header` stays \<=12 chars (e.g. `"Next task"`); `question` should ask
+  which item to pick up this session, not restate the tags (those live
+  in each option’s description).
+
 ### Additional task-to-workstream mappings
 
 (none — but see the Development Process Contract override below.)

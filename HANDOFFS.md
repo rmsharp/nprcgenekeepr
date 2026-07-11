@@ -84,6 +84,22 @@ block to continue the work without re-reading the whole repo?*
 ------------------------------------------------------------------------
 
 ``` handoff
+session: S360
+date: 2026-07-11
+status: complete
+self_score: 9
+predecessor_score: n/a -- same-conversation continuation of S359, not a cold read
+active_task: DONE. Extended CLAUDE.md's "Additional Phase 0 steps" so the rendered priorities list is followed by one AskUserQuestion call presenting the numbered BACKLOG.md items as a structured pick.
+what_was_done: Added a new sub-entry to CLAUDE.md:191-217, directly after the existing 2026-07-09 priorities-list bullet. Rule: one AskUserQuestion option per numbered READY/BLOCKED/DECISION NEEDED item (never the "Lower priority"/"Informational" bundles), capped at 4 (tool max) in report order with a "+N more" note if truncated (no silent cap), skipped entirely below 2 real items, harness auto-"Other" + plain prose reply still work. Caught and fixed a self-introduced :red_circle:/:orange_circle: shortcode-vs-emoji mismatch against the existing adjacent bullet before committing. Confirmed CLAUDE.md stays within its 25KB byte budget (14.2KB / 241 lines) despite exceeding the softer ~200-line target. Commits: 2fea62cc (claim), 67aee91b (work).
+next_steps: This behavior takes effect starting the NEXT fresh session's Phase 0 -- it did not retroactively apply to this conversation's own already-completed orientation. Watch the "cap at 4, +N more" truncation note actually fires if BACKLOG.md ever grows past 4 numbered items (currently exactly 4, so unexercised). No BACKLOG.md item created for this -- it's a standing process instruction, not trackable work.
+key_files: CLAUDE.md:191-217 (the new AskUserQuestion sub-entry).
+gotchas: (1) Takes effect next fresh session, not retroactively. (2) The 4-item truncation rule is untested against a real >4-item BACKLOG. (3) Same standing items as S359: win-builder/R-hub/submit_cran() owner-only outward-facing, unstarted; untracked vignettes/articles/*.html policy question open, untouched.
+runtime_smoke: n/a -- CLAUDE.md prose only, no runtime behavior
+changelog_ref: 2026-07-11 · [ad hoc] Added AskUserQuestion priorities-picker to Phase 0 (Session 360)
+commit: 67aee91b
+```
+
+``` handoff
 session: S359
 date: 2026-07-11
 status: complete
