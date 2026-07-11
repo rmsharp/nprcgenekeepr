@@ -43,6 +43,44 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-11 · [ad hoc] S361 close-out commit (session notes, handoff receipt)
+- **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap in
+  the same session rather than leaving it for the next session's Phase 0 reconcile
+  (mirroring the S349-S360 precedent for self-closing gaps). Records the trigger/
+  finding work logged below.
+
+### 2026-07-11 · [ad hoc] Triggered CRAN 2.0.0 win-builder x3 + R-hub v2; found an undocumented Windows-only CI regression (Session 361)
+- **Deliverable:** Owner picked "I trigger win-builder + R-hub" via `AskUserQuestion`
+  (explicitly excluding `devtools::submit_cran()`, which stays owner-only).
+  Verified zero drift since S359's local gate first. Ran `devtools::build()`, then
+  dispatched `devtools::check_win_devel()` / `check_win_release()` /
+  `check_win_oldrelease()` (all three uploaded cleanly; results by email to
+  `rmsharp@me.com` ~2026-07-11 18:30). Ran `rhub::rhub_doctor()` (all green) then
+  `rhub::rhub_check(platforms = c("linux", "windows", "macos"))`; confirmed via
+  `gh run list` the dispatch actually started (run 29171440079,
+  `occupational-burro`), not just that the R console returned.
+  **Finding:** that same `gh run list` call surfaced `R-CMD-check.yaml` failing on
+  `windows-latest (release)` on every push since S351 (`b440730c`, 2026-07-10) — 7
+  consecutive red runs, unnoticed until now; `ubuntu-latest`/`macos-latest` pass
+  every time, so S359's macOS-only local `--as-cran` gate structurally could not
+  have caught it. Read the failure log: `test_modInput_excelSireDam.R` fails via
+  `create_wkbk()` (`R/create_wkbk.R:61`) → `WriteXLS::WriteXLS()`, a classic
+  Perl-on-Windows dependency symptom — very likely to also surface in the
+  win-builder/R-hub results just dispatched. Documented root cause, evidence, and
+  two fix options as a new READY `BACKLOG.md` item rather than fixing it this
+  session (SAFEGUARDS mode-switch rule; this session's narrow authorization was
+  triggering only). Cross-referenced from the existing CRAN-resubmission item.
+  Added `PROJECT_LEARNINGS.md` Learning 332 (local single-platform checks can miss
+  a regression CI would catch — `gh run list` as a standing companion check).
+  Bumped `CLAUDE.md`'s learnings/session-count pointer (331→332, 359→361). Phase
+  3E: N/A, justified — no `R/`/`tests/`/`DESCRIPTION`/`NAMESPACE` touched.
+
+### 2026-07-11 · [ad hoc] Claimed session for CRAN 2.0.0 win-builder/R-hub trigger (Session 361)
+- **Deliverable:** Phase 1B claim stub in `SESSION_NOTES.md` and a `status: pending`
+  receipt in `HANDOFFS.md` for triggering the Phase 5 cross-platform checks (scope
+  confirmed by the owner via `AskUserQuestion`, excluding `submit_cran()`). Commit
+  `eb45667c`.
+
 ### 2026-07-11 · [ad hoc] S360 close-out commit (session notes, handoff receipt)
 - **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap in
   the same session rather than leaving it for the next session's Phase 0 reconcile

@@ -7,6 +7,41 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 - [ ] (none in progress)
 
 ## Up Next
+- [ ] **Fix Windows-only `WriteXLS`/`create_wkbk()` test failure blocking CRAN 2.0.0
+      resubmission** (READY, Effort S-M) -- discovered S361 (2026-07-11) while triggering
+      the win-builder/R-hub Phase 5 checks: GitHub Actions' `R-CMD-check.yaml` has been
+      failing on `windows-latest (release)` on **every push since S351**
+      (`b440730c`, 2026-07-10 23:55:55) -- 7 consecutive failing runs (S351/S352/S353/
+      S356/S358/S359/S360), unnoticed because no session checked `gh run list` during
+      that span; `ubuntu-latest` and `macos-latest` pass cleanly every time, so S359's
+      local `--as-cran` gate (macOS only) could not have caught it. Failure:
+      `test_modInput_excelSireDam.R` -- `makeExamplePedigreeFile(fileType = "excel")` ->
+      `create_wkbk()` (`R/create_wkbk.R:61`) -> `WriteXLS::WriteXLS()` errors
+      `cannot open .../WriteXLS/1.csv . No such file or directory` on Windows only
+      (`[ FAIL 2 | WARN 0 | SKIP 205 | PASS 3665 ]`, run
+      https://github.com/rmsharp/nprcgenekeepr/actions/runs/29170463437). `WriteXLS`
+      shells out to a bundled Perl script to convert intermediate CSVs to `.xlsx`; this
+      is a well-known Windows failure mode when Perl isn't on `PATH` or its CSV/Excel-
+      writer modules aren't present on the runner. **Timing/suspect commit:** the failing
+      test file was added/changed by `fix: S350 -- Excel-upload sire/dam pedigree
+      corruption` (`5a9697a8`); S350's own CI run appears to have been superseded by
+      S351's rapid follow-up push (concurrency cancellation), so S350 vs. S351 as the
+      exact first-red commit is not yet disambiguated -- not yet root-caused, not yet
+      fixed. **Session 361 (2026-07-11) also triggered win-builder x3 +
+      `rhub::rhub_check()` (run `occupational-burro`,
+      https://github.com/rmsharp/nprcgenekeepr/actions/runs/29171440079) per the owner's
+      explicit request BEFORE this CI finding surfaced** -- both are very likely to
+      reproduce this same Windows failure (win-builder results by email ~2026-07-11
+      18:30, R-hub via GitHub Actions/email). **Blocks `devtools::submit_cran()`** --
+      an unexplained ERROR on any platform must not ship per the submission plan's
+      acceptance bar (`docs/planning/cran-2.0.0-phase5-runbook.md` §4.3). Fix options to
+      evaluate: (a) make the Excel-writing path Windows-CI-safe (e.g. skip/guard the
+      `fileType = "excel"` test path when Perl/WriteXLS's Windows prerequisites are
+      absent, matching the existing `NPRC_RUN_E2E`-style opt-in pattern already used
+      elsewhere in this suite), or (b) replace the `WriteXLS`-based `create_wkbk()` with
+      a Perl-free Excel writer (e.g. `openxlsx`/`writexl`) so the underlying dependency
+      itself no longer needs Perl on any platform -- the latter also removes a CRAN-time
+      `SystemRequirements: Perl` risk, not just a CI flake.
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE
       (`docs/research/labkey-integration-options-2026-06-19.md`, S143). **Rec #3 (explicit optional
@@ -71,7 +106,13 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       R-hub pre-submission checks (now genuinely required, not just stale-by-time)
       and resubmit via `devtools::submit_cran()`. No version bump is required (the
       prior 2.0.0 attempt was archived before publication) unless the owner
-      prefers one.
+      prefers one. **Win-builder x3 + R-hub triggered -- S361 (2026-07-11):** per
+      owner's explicit scoping (not `submit_cran()`, which stays owner-only).
+      win-builder results by email ~18:30; R-hub run `occupational-burro`
+      (https://github.com/rmsharp/nprcgenekeepr/actions/runs/29171440079). **New
+      blocker found the same session, likely to reproduce in both:** see the
+      "Fix Windows-only `WriteXLS`/`create_wkbk()` test failure" item above --
+      resolve that before folding results into `cran-comments.md` / submitting.
 
 ## Documents (v1.0.8 -> v2.0.0 write-up)
 - [ ] **Execute "Document 2" plan (Phase D)** (READY, Effort M) -- planning session DONE
