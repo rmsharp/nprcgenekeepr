@@ -43,6 +43,15 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-10 · [ad hoc] S353 close-out commit (session notes, handoff receipt, learnings)
+- **Deliverable:** Closed out Session 353 (the `examplePedigree` `fromCenter` fix, logged
+  below): wrote the full session writeup + Session 352 handoff evaluation + self-assessment
+  to `SESSION_NOTES.md`, completed the `HANDOFFS.md` receipt to `status: complete`
+  referencing the fix commit (`1c1a7849`) directly, added `PROJECT_LEARNINGS.md` Learning
+  325, and bumped `CLAUDE.md`'s learnings count. Closes this session's own `CHANGELOG.md`
+  ledger frontier gap in the same session rather than leaving it for the next session's
+  Phase 0 reconcile (mirroring the S349–S352 precedent for self-closing gaps).
+
 ### 2026-07-10 · [ad hoc] Added fromCenter column to shipped examplePedigree (Session 353)
 - **Deliverable:** `data(examplePedigree)` had no `fromCenter` (colony-origin) column, so
   `modPotentialParentsServer()` (the Potential Parents tab) always degraded to an empty
