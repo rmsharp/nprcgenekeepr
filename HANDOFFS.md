@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S359
+date: 2026-07-11
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Refresh the local CRAN pre-submission gate for "CRAN resubmission of v2.0.0" (BACKLOG.md item) -- re-run R CMD build . + R CMD check --as-cran --timings on current master, confirm still green, update cran-comments.md / docs/planning/cran-2.0.0-phase5-runbook.md with current dated result. No outward-facing action this session (win-builder/R-hub/submit_cran() stay owner-only per the runbook).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S358
 date: 2026-07-11
 status: complete
