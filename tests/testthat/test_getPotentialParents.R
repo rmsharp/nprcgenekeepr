@@ -372,3 +372,16 @@ test_that("getPotentialParents minParentAge alias reproduces flat-2 and warns", 
   )
   expect_identical(aliased, potentialParents)
 })
+
+test_that("getPotentialParents finds a populated result using the shipped examplePedigree", {
+  ## Regression coverage for the fix to "Shipped example pedigree cannot
+  ## demonstrate the Potential Parents feature" (BACKLOG.md, S348): the
+  ## SAME example pedigree threaded through Document 2's walkthrough can
+  ## now show a populated result, not only the graceful-degradation state.
+  qcPed <- qcStudbook(nprcgenekeepr::examplePedigree,
+                      minSireAge = 2, minDamAge = 2)
+  pp <- getPotentialParents(
+    ped = qcPed, minSireAge = 2, minDamAge = 2, maxGestationalPeriod = 210L
+  )
+  expect_identical(length(pp), 1587L)
+})
