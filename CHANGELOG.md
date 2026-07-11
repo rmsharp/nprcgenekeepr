@@ -43,6 +43,15 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-10 · [ad hoc] S352 close-out commit (session notes, handoff receipt)
+- **Deliverable:** Closed out Session 352 (the `nTopAnimals` conditionalPanel fix,
+  logged below): wrote the full session writeup + Session 351 handoff evaluation +
+  self-assessment to `SESSION_NOTES.md`, completed the `HANDOFFS.md` receipt to
+  `status: complete` referencing the fix commit (`cc821d9f`) directly. Closes this
+  session's own `CHANGELOG.md` ledger frontier gap in the same session rather than
+  leaving it for the next session's Phase 0 reconcile (mirroring the S349–S351
+  precedent for self-closing gaps).
+
 ### 2026-07-10 · [ad hoc] Fixed nTopAnimals conditionalPanel double-prefix bug (Session 352)
 - **Deliverable:** `modBreedingGroupsUI()`'s `nTopAnimals` panel
   (`R/modBreedingGroups.R`) used
