@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S354
+date: 2026-07-10
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix "inst/_pkgdown.yml's curated Reference-page grouping is dead configuration" (BACKLOG.md, discovered S345) -- pkgdown's config resolver only reads root _pkgdown.yml (confirmed live), so inst/_pkgdown.yml's grouped Reference structure is never used; its lists have also drifted from NAMESPACE (64 missing + 38 stale of 182 exports). Approach (merge+re-sync vs. delete+update README) TBD via PRE-RED scope decision.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S353
 date: 2026-07-10
 status: complete
