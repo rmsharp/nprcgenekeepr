@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S360
+date: 2026-07-11
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Extend CLAUDE.md's "Additional Phase 0 steps" (2026-07-09 priorities-list customization) so the rendered priorities list is followed by an AskUserQuestion presenting BACKLOG.md items as a structured pick. User-directed, ad hoc.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S359
 date: 2026-07-11
 status: complete
