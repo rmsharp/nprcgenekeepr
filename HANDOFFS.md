@@ -77,17 +77,17 @@ session need this block to continue the work without re-reading the whole repo?*
 ```handoff
 session: S356
 date: 2026-07-11
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Audit other read.csv() calls in tests/ for the F/T/TRUE/FALSE type-coercion risk (BACKLOG.md, discovered S355).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE. Audited "other read.csv() calls in tests/ for the same F/T/TRUE/FALSE type-coercion risk that recurred in S355" (BACKLOG.md, discovered S355). Result: 27 sites audited (not S355's estimated ~12), 0 vulnerable, 6 already guarded, 21 safe by column shape.
+what_was_done: Re-verified S355's own grep sweep rather than trusting it -- fresh grep found 27 call sites across 12 files (S355 found ~12 across 9, missing test_modSummaryStats_coverage.R entirely). Hand-audited test_modBreedingGroups.R's 4 sites directly (1 already fixed by S355, 3 PASS -- don't touch Sex column). Ran an 11-agent Workflow parallel fan-out (one per remaining file), each given the exact defect mechanism and instructed to trace real data provenance (R/ downloadHandler content function or test fixture) rather than pattern-match column names -- 0 errors, 96 tool calls, ~422K tokens, ~2.7 min wall-clock. Synthesized all 27 verdicts into docs/audits/READCSV_COLCLASSES_AUDIT_2026-07-11.md per AUDIT_WORKSTREAM.md's report format. Result: 0 FAIL, 6 ALREADY-FIXED (2 of them the original Learning 269(e)/S290 fix site), 21 PASS. 3 sites flagged as dormant risk only (read a mixed-sex fixture column but never assert on it -- no action needed today). Removed the now-answered BACKLOG.md item. Added CHANGELOG.md entry, PROJECT_LEARNINGS.md Learning 328, bumped CLAUDE.md's learnings count (327->328). Commits: 8ad6276c (claim), df5322d2 (audit report + ledger).
+next_steps: No follow-up owed -- this audit is complete with a clean (0-finding) result. If a FUTURE session edits test_modPedigree_coverage.R:56, test_modGeneticValue.R:1423, or test_modORIPReporting_server.R:226 to add an assertion on that fixture's sex/Sex column, add a colClasses guard in the same edit (Learning 269(e)/327/328) -- not needed until then. Other BACKLOG.md items untouched: CRAN resubmission of v2.0.0 (owner action); Document 2 Phase D (READY); Document 1 coverage-number gap; NEW-12/XARCH-3 cleanup; LabKey integration remainder (blocked); tracker reconciliation (decision needed).
+key_files: docs/audits/READCSV_COLCLASSES_AUDIT_2026-07-11.md (the audit report, new); BACKLOG.md (item removed); PROJECT_LEARNINGS.md Learning 328. No R/ or tests/ files touched -- zero code changes.
+gotchas: (1) A predecessor session's own grep-based inventory is a starting point, not verified ground truth -- S355's "roughly a dozen" undercounted by a whole file; always re-run the grep fresh rather than trusting a prior session's count. (2) The audit criterion is NOT "does this read.csv() call have colClasses on its own line" -- multi-line calls can have colClasses on a continuation line (false positive for "unguarded"), and a column matching "sex"-like naming isn't automatically at risk if it's never actually read back and asserted on after the read.csv() call (false positive for "vulnerable"). Trace real provenance, don't pattern-match. (3) Workflow's parallel() fan-out (one agent per file, JSON-schema-constrained output) fits cleanly when each item's verdict is independent and needs multi-step tracing -- used here for the first time in this project's history for an audit task.
+runtime_smoke: n/a -- docs-only (audit report + BACKLOG/CHANGELOG/learnings bookkeeping), zero R/ or tests/ files changed, nothing to runtime-verify.
+changelog_ref: CHANGELOG.md 2026-07-11 "Audited read.csv() call sites for F/T/TRUE/FALSE coercion risk (Session 356)"
+commit: df5322d2
 ```
 
 ```handoff
