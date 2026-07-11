@@ -43,6 +43,16 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-11 · [ad hoc] S355 close-out commit (session notes, handoff receipt, learnings)
+- **Deliverable:** Closed out Session 355 (the flaky groupAddAssign test fix, logged below):
+  wrote the full session writeup + Session 354 handoff evaluation + self-assessment to
+  `SESSION_NOTES.md`, completed the `HANDOFFS.md` receipt to `status: complete` referencing
+  the fix commit (`2aa2e3f6`) directly, added `PROJECT_LEARNINGS.md` Learning 327, bumped
+  `CLAUDE.md`'s learnings count, and filed a new `BACKLOG.md` audit item. Closes this
+  session's own `CHANGELOG.md` ledger frontier gap in the same session rather than leaving
+  it for the next session's Phase 0 reconcile (mirroring the S349-S354 precedent for
+  self-closing gaps).
+
 ### 2026-07-11 · [ad hoc] Fixed intermittently flaky groupAddAssign tests (Session 355)
 - **Deliverable:** Fixed "`test_modBreedingGroups.R`/`test_modBreedingGroups_groupAddAssign.R`
   have intermittently flaky, unseeded stochastic assertions" (`BACKLOG.md`, discovered S351).
