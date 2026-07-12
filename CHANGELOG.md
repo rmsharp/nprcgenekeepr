@@ -43,6 +43,57 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-11 · [ad hoc] Fixed Windows-only `WriteXLS`/`create_wkbk()` CI flakiness via `openxlsx` (Session 363)
+- **Deliverable:** Root-caused and fixed the `R-CMD-check.yaml` `windows-latest`
+  regression S361/S362 diagnosed but did not fix. Owner-directed via the Phase 0
+  priorities picker, then an `AskUserQuestion` choosing the root-cause fix
+  (`WriteXLS`→`openxlsx`) over the narrower test-guard option, then a TDD gate
+  `AskUserQuestion` approving REFACTOR-only (no new observable behavior). Captured
+  a pre-change reference from the current `WriteXLS`-based implementation, then
+  swapped `R/create_wkbk.R`'s `WriteXLS()` call for `openxlsx::write.xlsx(...,
+  colWidths = "auto")`; explicitly returns `TRUE` on success (openxlsx's own
+  return value is a workbook object, not `TRUE`, which would have silently broken
+  the function's documented `@return` contract). Updated `DESCRIPTION` Imports
+  (dropped `WriteXLS`, added `openxlsx`), the roxygen `@importFrom`, regenerated
+  `NAMESPACE`, and `renv::snapshot()`'d the dependency change. Updated
+  `test_readKinshipOverrides.R`'s `skip_if_not_installed("WriteXLS")` to
+  `"openxlsx"` (its real dependency now). A first-pass synthetic identical-proof
+  (character/numeric columns only) passed cleanly, but the full `devtools::check()`
+  surfaced 2 real failures in `test_modInput_excelSireDam.R` (untouched by this
+  session): `openxlsx` writes `Date` columns as native date-formatted numeric
+  cells, but this package's own `readxl::read_excel(col_types = "text")` read
+  path returns such a cell's raw serial number as text, not its rendered date
+  string — silently corrupting `birth`/`exit` on read and collapsing
+  `qcStudbook()`'s output to `NULL`. Fixed by explicitly coercing `Date`/`POSIXct`
+  columns to `character` before writing, matching `WriteXLS`'s apparent original
+  behavior; re-verified with a strengthened synthetic proof (incl. a `Date`
+  column and an `NA`) plus the full suite. Added a `NEWS.Rmd` "Minor changes"
+  bullet (new dependency, Perl requirement removed) and re-rendered `NEWS.md`.
+  Added `PROJECT_LEARNINGS.md` Learning 334 + a new `[cross-library-file-format-
+  proof]` glossary entry generalizing the gotcha (a synthetic identical-proof for
+  a cross-library file-format swap must cover every real column type class, not
+  just a hand-picked sample). Bumped `CLAUDE.md`'s learnings/session-count
+  pointer (333→334, 362→363). **Verification:** `devtools::check(args =
+  "--as-cran")` — 0 errors | 0 warnings | 0 notes. Full clean regression read
+  (`NOT_CRAN=true`, `pkgload::load_all` + `test_dir(reporter="silent")`): 1
+  failed | 0 error | 0 warning | 3771 passed | 167 skipped — the 1 failure
+  (`test_vignettes_no_deprecated_minParentAge.R`) is pre-existing and unrelated
+  (confirmed via `git log`/`git blame` unchanged since S357, `e624fc07`),
+  documented as a new `BACKLOG.md` item per the mode-switch rule, not fixed.
+  Removed the resolved `BACKLOG.md` item; updated the CRAN-resubmission item's
+  stale cross-reference to point at this fix. Phase 3E: the full `testthat.R`
+  run inside `devtools::check()` includes live `shiny::testServer()` exercises
+  of the affected Excel-upload path (`test_modInput_excelSireDam.R`,
+  `test_readKinshipOverrides.R`), which is this change's runtime surface —
+  treated as the runtime smoke test; no separate `runGeneKeepR()` launch needed
+  since no app-startup/wiring code changed.
+
+### 2026-07-11 · [ad hoc] Claimed session to fix Windows WriteXLS CI flakiness (Session 363)
+- **Deliverable:** Phase 1B claim stub in `SESSION_NOTES.md` and a `status: pending`
+  receipt in `HANDOFFS.md` for fixing the Windows-only `WriteXLS`/`create_wkbk()`
+  CI flakiness (BACKLOG.md item, fix option (b): replace `WriteXLS` with
+  `openxlsx`). Commit `8ac1c5c8`.
+
 ### 2026-07-11 · [ad hoc] S362 close-out commit (session notes, handoff receipt)
 - **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap in
   the same session rather than leaving it for the next session's Phase 0 reconcile

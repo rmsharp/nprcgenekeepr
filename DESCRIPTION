@@ -47,14 +47,14 @@ Imports:
     lifecycle,
     lubridate,
     Matrix,
+    openxlsx,
     plotrix,
     readxl,
     Rlabkey (>= 3.2.0),
     sessioninfo,
     shiny,
     stringi,
-    utils,
-    WriteXLS
+    utils
 Suggests:
     covr,
     dplyr,

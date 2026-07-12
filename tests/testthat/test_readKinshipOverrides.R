@@ -32,7 +32,7 @@ test_that("readKinshipOverrides output validates with checkKinshipOverrides", {
 ## Issue #111 coverage backfill: the Excel (.xls/.xlsx) branch (line 37) was
 ## never reached because both existing tests use .csv files.
 test_that("readKinshipOverrides reads an id1,id2,kinship Excel file", {
-  skip_if_not_installed("WriteXLS")
+  skip_if_not_installed("openxlsx")
   xf <- tempfile(fileext = ".xlsx")
   on.exit(unlink(xf), add = TRUE)
   df <- data.frame(id1 = c("F1", "F3"), id2 = c("F2", "F4"),

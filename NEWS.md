@@ -131,6 +131,10 @@ R. Mark Sharp, Ph.D.
     as the lower hinge (`fivenum()[2]`) instead of duplicating `min`.
   - New dependencies: `bslib`, `DT`, and `ggplot2` (Imports);
     `shinytest2` (Suggests).
+  - `create_wkbk()` now writes `.xlsx` files with `openxlsx` instead of
+    `WriteXLS`, removing the package's Perl requirement (`WriteXLS`
+    shelled out to a bundled Perl script). Output and behavior are
+    otherwise unchanged.
   - Replaced the magrittr pipe (`%>%`) with the base R native pipe
     (`|>`) in vignettes and examples; `magrittr` is no longer used.
   - `getPedMaxAge()` now returns `NA` instead of `-Inf` when a pedigree
