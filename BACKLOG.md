@@ -15,17 +15,10 @@ inconsistent module contract) and XARCH-5 (string-column-keyed pipeline, no
 validated seam) are STILL OPEN and owner-directed to GitHub issues #122 and #123
 respectively -- track them there, not here. XARCH-4 (sex-code literal
 centralization) is now also fully RESOLVED -- S367 (2026-07-12): see
-`CHANGELOG.md`. XARCH-6/8 are PARTIALLY resolved; their narrower remaining gaps
-(not the original full-scope recommendations, which are already partly
-superseded) are tracked below.*
-- [ ] **XARCH-6 remainder: `qcStudbook()`/`modInput.R` multi-call redundancy**
-      (READY, Effort S) -- `runQcStudbook()`/`processQcStudbookResult()` already
-      give most callers one clean contract. `modInput.R:485-525` still calls
-      `qcStudbook()` directly AND separately calls `runQcStudbook()` (which itself
-      calls `qcStudbook()` twice) -- three `qcStudbook()` invocations per QC run.
-      Already flagged as known "future polish" in
-      `docs/planning/shiny-module-conversion-plan.md:85,343`. See audit doc §3
-      XARCH-6.
+`CHANGELOG.md`. XARCH-6 (`qcStudbook()`/`modInput.R` multi-call redundancy) is
+now also fully RESOLVED -- S368 (2026-07-12): see `CHANGELOG.md`. XARCH-8 is
+PARTIALLY resolved; its narrower remaining gap (not the original full-scope
+recommendation, which is already partly superseded) is tracked below.*
 - [ ] **XARCH-8 remainder: fold column-list functions into `getSiteInfo()`**
       (READY, Effort S) -- the dangerous duplicate-config-parser half is already
       fixed (issue #50, S85: `appServer.R` now goes through `loadSiteConfig()` ->

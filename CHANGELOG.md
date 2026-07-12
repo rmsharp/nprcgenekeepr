@@ -43,6 +43,44 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-12 · [ad hoc] Implemented BACKLOG.md's XARCH-6 remainder: de-duplicated qcStudbook() calls (Session 368)
+- **Deliverable:** `runQcStudbook()` now returns the raw first-pass `errorLst`
+  alongside its existing `cleaned`/`qcResult` fields (all 3 return paths), so
+  `modInput.R` no longer needs its own separate `qcStudbook()` call to get the
+  raw `errorLst` for dynamic tab display — it reuses `runQcStudbook()`'s own
+  already-computed `errorLst` instead. Removes 1 of 3 `qcStudbook()`
+  invocations per clean-pedigree QC run (2 of 2 on an errored one). Strict TDD
+  RED (`tests/testthat/test_modInput_qcStudbook.R`: 2 call-count assertions
+  via a delegating `local_mocked_bindings` mock — capture-then-call-through,
+  not a stub, so real QC output stays intact for downstream assertions — plus
+  1 `errorLst`-content regression guard that already passed at RED, locking in
+  behavior GREEN must not break; commit `c07ea356`) → GREEN (`R/runQcStudbook.R`,
+  `R/modInput.R`, `man/runQcStudbook.Rd`, and an update to
+  `tests/testthat/test_modInput_sexSpecificAge.R`'s call-threading test, which
+  had asserted directly on the now-removed call site; commit `a78c81b9`) →
+  REFACTOR (reviewed: diff already minimal and single-purpose, nothing to
+  change — matches the S367 XARCH-4 precedent). Full regression: 0 failed/0
+  error/0 warning (169 skipped, baseline). `lintr::lint()` clean on all 4
+  changed source/test files after fixing one new line-length violation
+  introduced by the edit itself. Phase 3E: live-launched the app (HTTP 200,
+  zero server-log errors, Input module rendered) combined with the
+  `shiny::testServer`-based tests that exercise the exact changed reactive
+  code through real CSV uploads. Excluded an unrelated stale-doc regeneration
+  (`man/filterPairs.Rd`, a leftover from S367's XARCH-4 GREEN phase never
+  running `devtools::document()`) from this commit — reverted via
+  `git checkout -- man/filterPairs.Rd`, flagged in `SESSION_NOTES.md` gotchas
+  rather than silently absorbed. Removed the XARCH-6 bullet from `BACKLOG.md`'s
+  Architecture follow-ups section and updated its intro paragraph. Added
+  `PROJECT_LEARNINGS.md` Learning 339, bumped `CLAUDE.md`'s pointer
+  (338→339, 367→368).
+
+### 2026-07-12 · [ad hoc] Session 368 claim (XARCH-6 qcStudbook call-count redundancy)
+- **Deliverable:** Claimed the session per Phase 1B — `SESSION_NOTES.md` stub
+  + `HANDOFFS.md` `status: pending` receipt. Written retroactively after
+  PRE-RED research and RED-test authoring had already begun (a self-caught
+  ordering miss, corrected before the RED commit landed — see
+  `PROJECT_LEARNINGS.md` Learning 339(d)). Commit `e4652a4b`.
+
 ### 2026-07-12 · [ad hoc] S367 close-out commits (session notes, handoff receipt, learning 338)
 - **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap
   in the same session rather than leaving it for the next session's Phase 0
