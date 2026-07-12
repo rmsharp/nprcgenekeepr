@@ -43,6 +43,29 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-12 · [ad hoc] Regenerated stale man/filterPairs.Rd via standalone devtools::document() (Session 370)
+- **Deliverable:** `man/filterPairs.Rd`'s `\usage{}` line now matches the live
+  `filterPairs()` signature (`ignore = list(c(sexCodes[["female"]],
+  sexCodes[["female"]])))`) instead of the stale literal
+  `list(c("F", "F"))` left over from S367's default-arg change. Pure
+  generated-doc regen -- `R/filterPairs.R` untouched, no behavior change
+  (`sexCodes[["female"]]` resolves to `"F"`, identical to before).
+- **Verification:** `devtools::document()` run standalone (no other pending
+  roxygen edit) touched only `man/filterPairs.Rd`; confirmed via
+  `git status`/`git diff`. `identical(formals(filterPairs)$ignore,
+  quote(list(c(sexCodes[["female"]], sexCodes[["female"]]))))` == `TRUE`.
+  Full regression: 0 failed/0 error/0 warning (169 skipped, baseline
+  unchanged). TDD N/A (docs-only, no `R/`/`tests/` source touched). Phase 3E
+  runtime smoke: n/a -- docs-only, no runtime path touched.
+- Removed the now-resolved item from `BACKLOG.md`'s Architecture
+  follow-ups section (now fully empty). See `PROJECT_LEARNINGS.md`
+  Learning 341.
+
+### 2026-07-12 · [ad hoc] S370 claimed session for man/filterPairs.Rd regen
+- **Deliverable:** Phase 1B claim stub (`SESSION_NOTES.md`) + `HANDOFFS.md`
+  `status: pending` receipt committed (`2ebe2161`) before any doc-regen work,
+  per `BACKLOG.md`'s tiny XS item.
+
 ### 2026-07-12 · [ad hoc] S369 close-out commits (backlog, learning 340, session notes, handoff receipt)
 - **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap
   in the same session rather than leaving it for the next session's Phase 0
