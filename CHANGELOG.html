@@ -71,6 +71,11 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-11--ad-hoc-confirmed-the-writexlsopenxlsx-fix-on-live-github-actions-windows-latest-ci-session-363">2026-07-11 · [ad hoc] Confirmed the WriteXLS→openxlsx fix on live GitHub Actions <code>windows-latest</code> CI (Session 363)<a class="anchor" aria-label="anchor" href="#id_2026-07-11--ad-hoc-confirmed-the-writexlsopenxlsx-fix-on-live-github-actions-windows-latest-ci-session-363"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Pushed this session’s commits to <code>origin/master</code> and watched (not just triggered) the <code>R-CMD-check.yaml</code> run it caused (run <code>29174654150</code>) rather than treating the local <code>--as-cran</code> pass as sufficient — this is the actual runner that had been red for 7 consecutive sessions (S351-S360). <strong>Confirmed <code>windows-latest (release)</code> passed in 11m48s</strong>, along with all three Linux jobs and macOS; zero failures across the full matrix. Updated <code>SESSION_NOTES.md</code> and the <code>HANDOFFS.md</code> receipt with the live confirmation.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-11--ad-hoc-s363-close-out-commit-session-notes-handoff-receipt">2026-07-11 · [ad hoc] S363 close-out commit (session notes, handoff receipt)<a class="anchor" aria-label="anchor" href="#id_2026-07-11--ad-hoc-s363-close-out-commit-session-notes-handoff-receipt"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> Closes this session’s own <code>CHANGELOG.md</code> ledger frontier gap in the same session rather than leaving it for the next session’s Phase 0 reconcile (mirroring the S349-S362 precedent for self-closing gaps). Records the fix work logged below. Commit <code>a425a637</code>.</li>

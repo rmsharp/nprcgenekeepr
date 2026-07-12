@@ -47,6 +47,18 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-11 · \[ad hoc\] Confirmed the WriteXLS→openxlsx fix on live GitHub Actions `windows-latest` CI (Session 363)
+
+- **Deliverable:** Pushed this session’s commits to `origin/master` and
+  watched (not just triggered) the `R-CMD-check.yaml` run it caused (run
+  `29174654150`) rather than treating the local `--as-cran` pass as
+  sufficient — this is the actual runner that had been red for 7
+  consecutive sessions (S351-S360). **Confirmed
+  `windows-latest (release)` passed in 11m48s**, along with all three
+  Linux jobs and macOS; zero failures across the full matrix. Updated
+  `SESSION_NOTES.md` and the `HANDOFFS.md` receipt with the live
+  confirmation.
+
 ### 2026-07-11 · \[ad hoc\] S363 close-out commit (session notes, handoff receipt)
 
 - **Deliverable:** Closes this session’s own `CHANGELOG.md` ledger
