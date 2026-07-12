@@ -552,6 +552,134 @@ test_that("modInputServer merges an uploaded genotype file in separate mode", {
   )
 })
 
+# ============================================================================
+# XARCH-6: qcStudbook call-count redundancy -- modInput.R made its own direct
+# qcStudbook() call to capture the raw errorLst for dynamic-tab display, then
+# immediately called runQcStudbook() which re-runs that identical first-pass
+# call internally. Fixing this means runQcStudbook() must expose the raw
+# errorLst it already computes so modInput.R stops calling qcStudbook() a
+# second time itself.
+# ============================================================================
+
+test_that("modInputServer invokes qcStudbook exactly twice per QC run on a clean pedigree (XARCH-6)", {
+  skip_if_not_installed("shiny")
+
+  realQcStudbook <- nprcgenekeepr::qcStudbook
+  callCount <- 0L
+  local_mocked_bindings(
+    qcStudbook = function(...) {
+      callCount <<- callCount + 1L
+      realQcStudbook(...)
+    }
+  )
+
+  temp_file <- tempfile(fileext = ".csv")
+  data("pedGood", package = "nprcgenekeepr")
+  write.csv(pedGood, temp_file, row.names = FALSE)
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(
+        fileContent = "pedFile",
+        fileType = "fileTypeExcel",
+        minSireAge = "2.0",
+        minDamAge = "2.0"
+      )
+      session$setInputs(
+        pedigreeFileOne = list(name = basename(temp_file), datapath = temp_file)
+      )
+      session$setInputs(getData = 1)
+
+      result <- session$getReturned()
+      expect_true(is.data.frame(result$cleanedStudbook()))
+    }
+  )
+
+  unlink(temp_file)
+  # Two calls: runQcStudbook()'s own first pass (errors) + second pass
+  # (cleaned data). A clean pedigree with no errors always takes both passes.
+  expect_equal(callCount, 2L)
+})
+
+test_that("modInputServer invokes qcStudbook exactly once per QC run on an errored pedigree (XARCH-6)", {
+  skip_if_not_installed("shiny")
+
+  realQcStudbook <- nprcgenekeepr::qcStudbook
+  callCount <- 0L
+  local_mocked_bindings(
+    qcStudbook = function(...) {
+      callCount <<- callCount + 1L
+      realQcStudbook(...)
+    }
+  )
+
+  temp_file <- tempfile(fileext = ".csv")
+  data("pedFemaleSireMaleDam", package = "nprcgenekeepr")
+  write.csv(pedFemaleSireMaleDam, temp_file, row.names = FALSE)
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(
+        fileContent = "pedFile",
+        fileType = "fileTypeExcel",
+        minSireAge = "2.0",
+        minDamAge = "2.0"
+      )
+      session$setInputs(
+        pedigreeFileOne = list(name = basename(temp_file), datapath = temp_file)
+      )
+      session$setInputs(getData = 1)
+
+      result <- session$getReturned()
+      qcSummary <- result$qcSummary()
+      expect_true(qcSummary$errors > 0)
+    }
+  )
+
+  unlink(temp_file)
+  # One call: runQcStudbook()'s first pass detects errors and returns early,
+  # never reaching its second pass.
+  expect_equal(callCount, 1L)
+})
+
+test_that("modInputServer's errorLst reactive still exposes the raw qcStudbook errorLst once the redundant call is removed (XARCH-6)", {
+  skip_if_not_installed("shiny")
+
+  temp_file <- tempfile(fileext = ".csv")
+  data("pedFemaleSireMaleDam", package = "nprcgenekeepr")
+  write.csv(pedFemaleSireMaleDam, temp_file, row.names = FALSE)
+
+  shiny::testServer(
+    modInputServer,
+    args = list(config = NULL),
+    {
+      session$setInputs(
+        fileContent = "pedFile",
+        fileType = "fileTypeExcel",
+        minSireAge = "2.0",
+        minDamAge = "2.0"
+      )
+      session$setInputs(
+        pedigreeFileOne = list(name = basename(temp_file), datapath = temp_file)
+      )
+      session$setInputs(getData = 1)
+
+      result <- session$getReturned()
+      errorLst <- result$errorLst()
+
+      expect_true(inherits(errorLst, "nprcgenekeeprErr"))
+      expect_true("s1" %in% errorLst$femaleSires)
+      expect_true("d1" %in% errorLst$maleDams)
+    }
+  )
+
+  unlink(temp_file)
+})
+
 test_that("modInputServer degrades gracefully on a malformed genotype file", {
   skip_if_not_installed("shiny")
 
