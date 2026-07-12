@@ -481,22 +481,11 @@ modInputServer <- function(id, config = NULL) {
       sireAge <- parseOptionalAge(input$minSireAge)
       damAge <- parseOptionalAge(input$minDamAge)
 
-      # Get raw errorLst for dynamic tab display
-      rawErrorLst <- tryCatch({
-        qcStudbook(
-          rawData,
-          minSireAge = sireAge, minDamAge = damAge,
-          reportChanges = TRUE,
-          reportErrors = TRUE
-        )
-      }, error = function(e) {
-        getEmptyErrorLst()
-      }, warning = function(w) {
-        getEmptyErrorLst()
-      })
-      storedErrorLst(rawErrorLst)
-
-      # Run QC
+      # Run QC. runQcStudbook()'s first pass already computes the raw
+      # errorLst needed for dynamic tab display (XARCH-6: modInput previously
+      # made its own separate qcStudbook() call to get it, duplicating this
+      # same first pass) -- so it is taken from qcResult$errorLst below
+      # instead of via a second qcStudbook() invocation.
       qcResult <- tryCatch({
         runQcStudbook(
           rawData,
@@ -523,6 +512,10 @@ modInputServer <- function(id, config = NULL) {
           )
         )
       })
+      storedErrorLst(
+        if (is.null(qcResult$errorLst)) getEmptyErrorLst()
+        else qcResult$errorLst
+      )
 
       # Store results in expected format. genotypeData() exposes the
       # id/first/second extract (getGVGenotype() returns NULL when the cleaned

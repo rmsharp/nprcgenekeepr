@@ -41,6 +41,11 @@ A list with the following components:
 column names, added generation numbers, etc. NULL if errors were found.
 \item \code{qcResult} - Result from \code{processQcStudbookResult}
 containing errors, warnings, changedCols, hasErrors, and hasChangedCols.
+\item \code{errorLst} - The raw \code{nprcgenekeeprErr} list from
+\code{qcStudbook}'s first pass (the same object \code{qcResult} was
+derived from), exposed so callers that need the raw fields (e.g.
+\code{femaleSires}, \code{failedDatabaseConnection}) do not have to
+call \code{qcStudbook} a second time themselves.
 }
 }
 \description{

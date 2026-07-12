@@ -30,6 +30,11 @@
 #'     column names, added generation numbers, etc. NULL if errors were found.
 #'   \item \code{qcResult} - Result from \code{processQcStudbookResult}
 #'     containing errors, warnings, changedCols, hasErrors, and hasChangedCols.
+#'   \item \code{errorLst} - The raw \code{nprcgenekeeprErr} list from
+#'     \code{qcStudbook}'s first pass (the same object \code{qcResult} was
+#'     derived from), exposed so callers that need the raw fields (e.g.
+#'     \code{femaleSires}, \code{failedDatabaseConnection}) do not have to
+#'     call \code{qcStudbook} a second time themselves.
 #' }
 #'
 #' @seealso \code{\link{qcStudbook}} for the underlying QC function
@@ -94,7 +99,8 @@ runQcStudbook <- function(ped,
 
   # Handle empty pedigree - return as-is with no errors
   if (nrow(ped) == 0L) {
-    return(list(cleaned = ped, qcResult = getEmptyQcResult()))
+    return(list(cleaned = ped, qcResult = getEmptyQcResult(),
+                errorLst = getEmptyErrorLst()))
   }
 
   # First pass: check for errors
@@ -184,7 +190,7 @@ runQcStudbook <- function(ped,
 
   # If there are errors, return NULL for cleaned data
   if (qcResult$hasErrors) {
-    return(list(cleaned = NULL, qcResult = qcResult))
+    return(list(cleaned = NULL, qcResult = qcResult, errorLst = errorLst))
   }
 
   # Second pass: get the cleaned data (no error reporting needed)
@@ -233,5 +239,5 @@ runQcStudbook <- function(ped,
     name = "nprcgenekeepr"
   )
 
-  list(cleaned = cleanedPed, qcResult = qcResult)
+  list(cleaned = cleanedPed, qcResult = qcResult, errorLst = errorLst)
 }

@@ -6,7 +6,9 @@
 ## Dam Age"; a blank field means "use the species+sex breeding-age table
 ## default" (parsed to NULL and passed to the sex-specific callees). These
 ## tests drive the two-field UX, the parsing helper, the exposed reactives, and
-## the threading of the parsed floors into qcStudbook()/runQcStudbook().
+## the threading of the parsed floors into runQcStudbook() (XARCH-6, S368:
+## modInput.R no longer calls qcStudbook() directly -- runQcStudbook() is the
+## sole QC callee, and its own errorLst is reused for dynamic tab display).
 
 # --- parseOptionalAge(): blank/invalid -> NULL, number -> numeric -----------
 
@@ -122,11 +124,6 @@ test_that("getData threads parsed sire/dam floors into the QC callees", {
 
   captured <- new.env()
   testthat::local_mocked_bindings(
-    qcStudbook = function(sb, minSireAge = NULL, minDamAge = NULL, ...) {
-      captured$qcSire <- minSireAge
-      captured$qcDam <- minDamAge
-      getEmptyErrorLst()
-    },
     runQcStudbook = function(sb, minSireAge = NULL, minDamAge = NULL, ...) {
       captured$runSire <- minSireAge
       captured$runDam <- minDamAge
@@ -135,7 +132,8 @@ test_that("getData threads parsed sire/dam floors into the QC callees", {
         qcResult = list(
           errors = data.frame(), warnings = data.frame(),
           changedCols = NULL, hasChangedCols = FALSE
-        )
+        ),
+        errorLst = getEmptyErrorLst()
       )
     },
     .package = "nprcgenekeepr"
@@ -147,8 +145,6 @@ test_that("getData threads parsed sire/dam floors into the QC callees", {
     session$setInputs(pedigreeFileOne = list(name = basename(path),
                                              datapath = path))
     session$setInputs(getData = 1)
-    expect_equal(captured$qcSire, 4)
-    expect_equal(captured$qcDam, 2.5)
     expect_equal(captured$runSire, 4)
     expect_equal(captured$runDam, 2.5)
   })
@@ -161,18 +157,16 @@ test_that("getData passes NULL floors to the QC callees when fields are blank", 
 
   captured <- new.env()
   testthat::local_mocked_bindings(
-    qcStudbook = function(sb, minSireAge = NULL, minDamAge = NULL, ...) {
-      captured$qcSire <- minSireAge
-      captured$qcDam <- minDamAge
-      getEmptyErrorLst()
-    },
     runQcStudbook = function(sb, minSireAge = NULL, minDamAge = NULL, ...) {
+      captured$runSire <- minSireAge
+      captured$runDam <- minDamAge
       list(
         cleaned = sb,
         qcResult = list(
           errors = data.frame(), warnings = data.frame(),
           changedCols = NULL, hasChangedCols = FALSE
-        )
+        ),
+        errorLst = getEmptyErrorLst()
       )
     },
     .package = "nprcgenekeepr"
@@ -184,7 +178,7 @@ test_that("getData passes NULL floors to the QC callees when fields are blank", 
     session$setInputs(pedigreeFileOne = list(name = basename(path),
                                              datapath = path))
     session$setInputs(getData = 1)
-    expect_null(captured$qcSire)
-    expect_null(captured$qcDam)
+    expect_null(captured$runSire)
+    expect_null(captured$runDam)
   })
 })
