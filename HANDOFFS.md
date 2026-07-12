@@ -87,7 +87,7 @@ key_files: cran-comments.md (Test environments section + misspelled-words note),
 gotchas: The exact R-hub windows-job step that emits the non-fatal WriteXLS diagnostic is still undisambiguated (example re-run vs. vignette rebuild vs. something else) -- pin this down if a future session wants full certainty before fixing the underlying flakiness. cran-comments.md is pasted verbatim into the actual CRAN submission -- keep it CRAN-facing-only, no session/commit jargon, no investigation narrative (that goes in the runbook). The WriteXLS CI-hygiene item's severity was downgraded but it is NOT resolved -- don't let "no longer blocking" read as "no longer needed."
 runtime_smoke: n/a -- no R/tests/DESCRIPTION/NAMESPACE touched; docs only (cran-comments.md, runbook, BACKLOG.md, PROJECT_LEARNINGS.md, CLAUDE.md, SESSION_NOTES.md, HANDOFFS.md); no devtools::submit_cran() or other outward-facing action taken
 changelog_ref: CHANGELOG.md 2026-07-11 entries for Session 362 (claim, results-processing/correction, close-out)
-commit: PENDING_FINAL_COMMIT
+commit: 27a2ab31
 ```
 
 ```handoff

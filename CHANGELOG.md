@@ -47,7 +47,7 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 - **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap in
   the same session rather than leaving it for the next session's Phase 0 reconcile
   (mirroring the S349-S361 precedent for self-closing gaps). Records the results-
-  processing/correction work logged below.
+  processing/correction work logged below. Commit `27a2ab31`.
 
 ### 2026-07-11 · [ad hoc] Processed CRAN 2.0.0 win-builder/R-hub results; corrected S361's Windows-blocker prediction (Session 362)
 - **Deliverable:** User pasted the three win-builder completion emails
