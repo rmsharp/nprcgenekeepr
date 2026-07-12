@@ -75,6 +75,13 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S362
+date: 2026-07-11
+status: pending
+active_task: Fold win-builder x3 + R-hub v2 results into cran-comments.md; correct S361's finding that the Windows WriteXLS CI failure would likely block these external checks (it did not).
+```
+
+```handoff
 session: S361
 date: 2026-07-11
 status: complete
