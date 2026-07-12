@@ -75,6 +75,20 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S372
+date: 2026-07-12
+status: pending
+active_task: Architecture plan for GitHub issue #122 (XARCH-2 -- implicit/inconsistent module contract across mod*Server return shapes). Deliverable is docs/planning/issue122-module-contract-plan.md following ARCHITECTURE_WORKSTREAM.md. Planning only -- no R/ or tests/ code this session (SAFEGUARDS.md gates cross-module refactoring behind plan mode; FM #18 keeps plan and implementation in separate sessions).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S371
 date: 2026-07-12
 status: complete
