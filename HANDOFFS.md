@@ -84,6 +84,82 @@ block to continue the work without re-reading the whole repo?*
 ------------------------------------------------------------------------
 
 ``` handoff
+session: S368
+date: 2026-07-12
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- BACKLOG.md's XARCH-6 remainder (qcStudbook() call-count redundancy) implemented and closed out. XARCH-8 remainder is now the only item left in "Architecture follow-ups."
+what_was_done: Read modInput.R:484-525/runQcStudbook.R/processQcStudbookResult.R to find the exact redundancy: modInput.R's own direct qcStudbook() call (for the raw errorLst) duplicated runQcStudbook()'s internal first pass -- 3 calls per clean-pedigree run, 2 per errored run. TDD RED: 3 tests appended to test_modInput_qcStudbook.R -- 2 call-count assertions via a delegating local_mocked_bindings mock (capture the real qcStudbook, wrap to count-and-delegate, preserving real QC output) confirming 3-vs-2 and 2-vs-1 off-by-one; 1 errorLst-content regression guard that already passed at RED (13ce0186-style precedent; commit c07ea356). Caught a Phase 1B gap here (claim stub not yet written despite PRE-RED research + RED already done) -- corrected by committing the claim stub as its own commit (e4652a4b) ahead of RED. TDD GREEN: runQcStudbook() now returns errorLst at all 3 return paths; modInput.R's standalone qcStudbook() call removed, storedErrorLst() now sourced from qcResult$errorLst. Full regression surfaced a real fallout in test_modInput_sexSpecificAge.R (stale assertions on the now-removed call) -- fixed to assert only on runQcStudbook()'s captured args. Reverted an unrelated stale-doc regen (man/filterPairs.Rd, S367 leftover) via git checkout rather than absorbing it. Fixed one new lint. Commit a78c81b9 (4 files). REFACTOR: reviewed, nothing to change. Phase 3E: live app launch (HTTP 200, 0 log errors, Input module rendered) + the 3 new testServer tests exercising real CSV uploads. Removed BACKLOG.md's XARCH-6 bullet, updated its intro. Added PROJECT_LEARNINGS.md Learning 339, bumped CLAUDE.md pointer (338->339, 367->368), added 2 CHANGELOG.md entries.
+next_steps: Pick up XARCH-8 remainder (fold getRequiredCols()/getPossibleCols()/getIncludeColumns() into getSiteInfo()) next -- READY, Effort S, now the only item in BACKLOG.md's Architecture follow-ups section. Separately: (a) regenerate man/filterPairs.Rd for real (S367's stale default-arg doc, currently reverted not fixed); (b) decide whether to file the ~11 other bare-sex-literal files (S367 finding) as a BACKLOG.md item or GitHub issue; (c) the untracked vignettes/articles/*.html / PED_GV_AUDIT_2026-05-30.html policy question remains open (S358-S368).
+key_files: R/runQcStudbook.R (errorLst added to all 3 return paths + @return bullet), R/modInput.R:484-517 (standalone qcStudbook() call removed), man/runQcStudbook.Rd (regenerated), tests/testthat/test_modInput_qcStudbook.R (3 new tests), tests/testthat/test_modInput_sexSpecificAge.R (call-threading test updated to new contract)
+gotchas: man/filterPairs.Rd was regenerated stale by this session's devtools::document() run (S367 leftover, never fixed there) -- reverted via git checkout, NOT fixed; will keep resurfacing until someone regenerates it for real. The ~11-file wider bare-sex-literal pattern (S367 finding) is still not in BACKLOG.md. No headless-browser tool installed -- Phase 3E used the same live-launch + testServer substitution as S367. test_modInput_qcStudbook.R's new call-count tests are hardcoded to modInputServer's exact call pattern -- if that pattern changes again, update the expected counts rather than deleting the tests.
+runtime_smoke: Live-launched appUI()/appServer via shiny::runApp() in a callr::r_bg() background process on a scratch port -- HTTP 200, 0 error-like lines in the captured server log, Input module rendered. Combined with 3 new shiny::testServer tests driving real CSV uploads (pedGood, pedFemaleSireMaleDam) through the delegating mock and asserting real errorLst() content. No headless-browser screenshot (tool unavailable, same judgment call as S367).
+changelog_ref: CHANGELOG.md 2026-07-12 "Implemented BACKLOG.md's XARCH-6 remainder: de-duplicated qcStudbook() calls (Session 368)"
+commit: a78c81b9
+```
+
+Implemented BACKLOG.md’s XARCH-6 remainder end to end under strict TDD,
+including an in-session self-correction of a Phase 1B ordering miss
+before it reached the RED commit. Self-score 8/10: +designed a
+delegating mock (capture-then-call-through) so call-count RED tests
+could assert an exact count without sacrificing real QC output for
+downstream assertions; +added a regression-guard test for errorLst
+content that already passed at RED, protecting against a fix that
+removes the redundant call but routes the wrong errorLst; +ran the full
+regression suite after GREEN rather than assuming a clean removal,
+caught a real fallout in test_modInput_sexSpecificAge.R and fixed it to
+the new correct contract; +identified and excluded an unrelated
+stale-doc regeneration (man/filterPairs.Rd) from this commit instead of
+silently absorbing or silently ignoring it; +caught and fixed a new lint
+before calling GREEN done. -Missed Phase 1B’s claim-before-any-
+technical-work rule – PRE-RED research and RED-test authoring both
+happened before the claim stub was written; self-caught before the RED
+commit landed, but a real ordering miss, not a stylistic nit. -Did not
+attempt a headless-browser install for Phase 3E, repeating S367’s same
+judgment call rather than escalating it to a settled decision. -Left the
+filterPairs.Rd staleness as a gotcha rather than filing it as its own
+tiny BACKLOG.md item.
+
+``` handoff
+session: S367
+
+```handoff
+session: S367
+date: 2026-07-12
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- BACKLOG.md's XARCH-4 remainder (sex-code literal centralization) implemented and closed out. XARCH-6/8 remainders are now the only items left in "Architecture follow-ups."
+what_was_done: Fresh whole-repo grep found ~11 more files beyond the ticket's own 6-file scope with the same bare M/F/H/U literal pattern; posed a dedicated pre-RED AskUserQuestion (owner chose the narrow 6-file scope). Claimed (9c6749c5). TDD RED: tests/testthat/test_sexCodes.R -- a constant-value test plus a structural findBareSexCodeLiterals() scan test (skips roxygen #' lines from v1) asserting zero bare literals across the 6 files; confirmed both fail for the right reason (13ce0186). TDD GREEN: added R/sexCodes.R (internal @noRd constant male/female/hermaphrodite/unknown -> M/F/H/U) and routed getPotentialSires.R, calculateSexRatio.R, fillBins.R, filterPairs.R, modBreedingGroups.R, modSummaryStats.R through it; split into 2 commits under the 5-file cap (3a02990a, b64c4481). Full regression: 0 failed/0 error/0 warning. Fixed one new lint (fillBins.R:31 line length) before finishing GREEN. REFACTOR: reviewed, nothing to change. Removed BACKLOG.md's XARCH-4 bullet, updated its intro. Added PROJECT_LEARNINGS.md Learning 338, bumped CLAUDE.md pointer (337->338, 366->367), added 2 CHANGELOG.md entries.
+next_steps: Pick up XARCH-6 remainder (qcStudbook()/modInput.R multi-call redundancy) or XARCH-8 remainder (fold column-list functions into getSiteInfo()) next -- both READY, Effort S, now the only items in BACKLOG.md's Architecture follow-ups section. Separately, decide whether to file the ~11 other files with the same bare-sex-literal pattern (calcNeSexRatio.R, getKinshipWithMaleStatus.R, getPotentialParents.R, getSexRatioWithAdditions.R, getProductionStatus.R, getSpeciesMinBreedingAge.R, modORIPReporting.R, modPyramid.R, reportGV.R, resolveBreedingAge.R, groupAddAssign.R's default arg) as a new BACKLOG.md item or GitHub issue -- currently undocumented anywhere except this receipt and SESSION_NOTES.md.
+key_files: R/sexCodes.R (new constant), R/getPotentialSires.R:22, R/calculateSexRatio.R:80-81, R/fillBins.R:27-34, R/filterPairs.R:34-36, R/modBreedingGroups.R:330,443-444, R/modSummaryStats.R:797,807 (all: literal -> sexCodes[[...]] ), tests/testthat/test_sexCodes.R (new)
+gotchas: The ~11-file wider pattern is real but deliberately out of scope -- do not assume it was missed. test_sexCodes.R's scan is hardcoded to exactly the 6 files this session touched -- extend its file list rather than duplicating the scanner if more files get centralized later. No headless-browser tool (chromium-cli/Playwright) is installed in this environment -- Phase 3E used a live app launch + existing shiny::testServer coverage instead; a future UI-heavy change should install one or budget the same substitution.
+runtime_smoke: Live-launched runGeneKeepR() via pkgload::load_all() on a scratch port -- HTTP 200, zero server-log errors, Breeding Groups/Summary Statistics modules rendered with their download handlers present. Combined with existing shiny::testServer tests that read real founders-download CSV content and render groupStats through the full reactive pipeline. No headless-browser screenshot (tool unavailable, not installed -- judged disproportionate for this change's risk level).
+changelog_ref: CHANGELOG.md 2026-07-12 "Implemented BACKLOG.md's XARCH-4 remainder: centralized sex-code literals (Session 367)"
+commit: b64c4481
+```
+
+Implemented BACKLOG.md’s XARCH-4 remainder end to end under strict TDD,
+including a dedicated pre-RED scope decision when a fresh whole-repo
+grep found ~11 more files with the same bare-literal pattern beyond the
+ticket’s named 6. Self-score 9/10: +ratified the ticket’s own scope
+against current source rather than trusting it (Learning 336’s pattern,
+generalized to a single item and captured fresh as Learning 338);
++designed the RED-phase structural scan test to skip roxygen prose from
+its first version rather than discovering the false-positive later
+(applying Learning 335 proactively); +caught and fixed a new lint
+violation the edit itself introduced before calling GREEN done;
++combined an actual live app launch with existing shiny::testServer
+coverage for Phase 3E rather than silently treating “tests passed” as
+sufficient for a Shiny-module-server change. -Did not attempt to install
+a headless-browser tool for a true click-through screenshot – judged
+disproportionate for a low-risk, already-well-covered refactor, but a
+judgment call worth a second opinion rather than settled policy. -Did
+not check whether the ~11 out-of-scope files already have their own test
+coverage, which would help whoever picks up that future item size it.
+
+``` handoff
 session: S366
 date: 2026-07-12
 status: complete

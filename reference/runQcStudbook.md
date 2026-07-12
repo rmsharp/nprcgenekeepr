@@ -62,6 +62,12 @@ A list with the following components:
 - `qcResult` - Result from `processQcStudbookResult` containing errors,
   warnings, changedCols, hasErrors, and hasChangedCols.
 
+- `errorLst` - The raw `nprcgenekeeprErr` list from `qcStudbook`'s first
+  pass (the same object `qcResult` was derived from), exposed so callers
+  that need the raw fields (e.g. `femaleSires`,
+  `failedDatabaseConnection`) do not have to call `qcStudbook` a second
+  time themselves.
+
 ## See also
 
 [`qcStudbook`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)

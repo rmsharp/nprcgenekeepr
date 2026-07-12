@@ -110,6 +110,11 @@ included in the qcResult.</p></dd>
 column names, added generation numbers, etc. NULL if errors were found.</p></li>
 <li><p><code>qcResult</code> - Result from <code>processQcStudbookResult</code>
 containing errors, warnings, changedCols, hasErrors, and hasChangedCols.</p></li>
+<li><p><code>errorLst</code> - The raw <code>nprcgenekeeprErr</code> list from
+<code>qcStudbook</code>'s first pass (the same object <code>qcResult</code> was
+derived from), exposed so callers that need the raw fields (e.g.
+<code>femaleSires</code>, <code>failedDatabaseConnection</code>) do not have to
+call <code>qcStudbook</code> a second time themselves.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
