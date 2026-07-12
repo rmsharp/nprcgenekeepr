@@ -10,25 +10,6 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Up Next
 
-**Fix `test_vignettes_no_deprecated_minParentAge.R` false-positive match
-in `vignettes/articles/engineering-the-2.0.0-release.qmd`** (READY,
-Effort S) – discovered S363 (2026-07-11) as an incidental full-suite
-regression-read finding, unrelated to that session’s
-`WriteXLS`-\>`openxlsx` deliverable (mode-switch rule: documented, not
-fixed). The checker does a grep-style scan for the deprecated
-`minParentAge` parameter name anywhere in vignette source;
-`engineering-the-2.0.0-release.qmd:344` mentions it only in historical
-narrative prose (“a single flat `minParentAge = 2` default … was
-replaced end to end with … `minSireAge`/`minDamAge`”), not a live call –
-confirmed via `git log`/`git blame` unchanged since S357 (`e624fc07`),
-predating S363 entirely. Fix options to evaluate: (a) narrow the
-checker’s regex to match an actual `minParentAge\s*=` call/argument
-pattern rather than the bare identifier, or (b) reword the historical
-sentence in the `.qmd` to avoid the literal parameter name (e.g. “the
-deprecated flat minimum-age default”). Option (a) is likely more robust
-long-term (won’t re-trip on other historical narrative mentions
-elsewhere).
-
 **Act on the LabKey integration research recommendations** (BLOCKED –
 remainder needs a live LabKey server to test/observe, Effort M) —
 research pass DONE

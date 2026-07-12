@@ -84,6 +84,22 @@ block to continue the work without re-reading the whole repo?*
 ------------------------------------------------------------------------
 
 ``` handoff
+session: S364
+date: 2026-07-11
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- test_vignettes_no_deprecated_minParentAge.R's chunk-blind false positive on vignettes/articles/engineering-the-2.0.0-release.qmd:344 fixed by making the checker chunk-aware. devtools::check(--as-cran): 0 errors/0 warnings/0 notes. Full regression read: 0 failed/0 error/0 warning, 3775 passed (up from 3771).
+what_was_done: Three AskUserQuestion gates (priorities pick; fix-approach scope -- chose narrow-the-checker over reword-the-prose; TDD PRE-RED->RED with the 3-fixture plan previewed). Claimed (c122fae2). Added 3 test_that blocks to test_vignettes_no_deprecated_minParentAge.R calling a not-yet-existing findDeprecatedMinParentAgeOffenders() against synthetic withr::local_tempfile() fixtures (in-chunk call/out-of-chunk prose/inline backtick span); confirmed RED (4/4 failing, including the original real false positive). Asked RED->GREEN gate; created tests/testthat/helper-vignette-minParentAge-scan.R with a fence-tracking findDeprecatedMinParentAgeOffenders() that only applies the deprecated-pattern regex between ```{r}/```{R} and closing ``` fences; updated the original test's inline loop to call it and corrected its header comment (which had already claimed a chunk-aware scope it never implemented). Confirmed GREEN (4/4 pass). Asked GREEN->REFACTOR gate; lintr::lint() on both files: no lints found, nothing to change. Committed the fix (87c521d8, 2 files). Removed the resolved BACKLOG.md item, added PROJECT_LEARNINGS.md Learning 335 + a new [chunk-scoped-checker] glossary entry, bumped CLAUDE.md's pointer (334->335, 363->364), added 2 CHANGELOG.md entries (caught and fixed an incorrect [BL-1] source tag before committing -- this repo's actual practice is [ad hoc] uniformly). Committed (b1702a41, 4 files). Split close-out into claim/fix/ledger-docs/handoff commits (each <=5 files), correcting rather than repeating S363's 13-file bundled-commit precedent. At self-assessment, ran an additional corpus-wide old-regex-vs-new-helper comparison across every vignettes/**/*.{Rmd,qmd} file: old scan matched exactly 1 line anywhere (the fixed false positive), new scan matches 0 -- confirms no other true positive was silently missed.
+next_steps: Standing open items unchanged: LabKey remainder (BLOCKED), CRAN resubmission (READY, remaining step is owner-only devtools::submit_cran() + email click), Document 2 Phase D (READY), tracker reconciliation (DECISION NEEDED), the untracked vignettes/articles/*.html / PED_GV_AUDIT_2026-05-30.html policy question (still open, untouched since S363).
+key_files: tests/testthat/helper-vignette-minParentAge-scan.R (new -- findDeprecatedMinParentAgeOffenders()), tests/testthat/test_vignettes_no_deprecated_minParentAge.R (calls the helper, corrected header comment, 3 new test_that blocks), BACKLOG.md (resolved item removed), PROJECT_LEARNINGS.md Learning 335 + [chunk-scoped-checker], CLAUDE.md (pointer), CHANGELOG.md
+gotchas: The fence-tracker only recognizes backtick ```{r}/```{R} ... ``` fences (matches this corpus's actual style, confirmed by the corpus-wide comparison) -- no ~~~-style fences, non-R engines, or nested/malformed fences; a deliberate user-approved scope boundary, not an oversight, but would need extending for a future vignette using a different fence style. This repo's CHANGELOG.md source-tag practice is [ad hoc] for BACKLOG-item resolutions too, despite the documented [BL-<N>] format -- BACKLOG.md items here have no numeric IDs, so [BL-<N>] has never actually been used.
+runtime_smoke: n/a in the traditional sense -- test-infrastructure-only change (no R/ production code, app startup, or wiring touched). The change's own runtime surface is devtools::check()'s testthat.R run (and standalone test_file() runs before it), which directly exercises the fixed test both ways.
+changelog_ref: CHANGELOG.md 2026-07-11 entries for Session 364 (claim, fix work)
+commit: 87c521d8
+```
+
+``` handoff
 session: S363
 date: 2026-07-11
 status: complete

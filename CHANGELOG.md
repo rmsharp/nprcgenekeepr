@@ -47,6 +47,52 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-11 · \[ad hoc\] Fixed `test_vignettes_no_deprecated_minParentAge.R`’s chunk-blind false positive (Session 364)
+
+- **Deliverable:** Made the vignette checker chunk-aware so it stops
+  flagging historical narrative prose as a live deprecated call.
+  Owner-directed via the Phase 0 priorities picker, then an
+  `AskUserQuestion` choosing to narrow the checker’s scan over rewording
+  the flagged prose. Extracted the scan into a new
+  `findDeprecatedMinParentAgeOffenders()` helper
+  (`tests/testthat/helper-vignette-minParentAge-scan.R`) that only
+  applies the `minParentAge[[:space:]]*=[^=]` regex to lines strictly
+  inside a ```` ```{r}/```{R} ```` … ```` ``` ```` fence, not the whole
+  file. Standard TDD: RED (3 synthetic
+  [`withr::local_tempfile()`](https://withr.r-lib.org/reference/with_tempfile.html)
+  fixtures — an in-chunk call must flag, out-of-chunk prose with `=`
+  must not, an inline backtick span must not — all failing against the
+  not-yet-existing helper) → GREEN (the fence-tracking implementation) →
+  REFACTOR (reviewed via `lintr::lint()`: already clean, no duplicated
+  regex logic, no changes needed). Updated the original test’s inline
+  scan loop to call the new helper and corrected its header comment to
+  describe the actual (now chunk-scoped) behavior. Added
+  `PROJECT_LEARNINGS.md` Learning 335 + a new `[chunk-scoped-checker]`
+  glossary entry generalizing the gotcha for any future vignette-source
+  content guard of this shape. Bumped `CLAUDE.md`’s
+  learnings/session-count pointer (334→335, 363→364). Removed the
+  resolved `BACKLOG.md` item. **Verification:**
+  `devtools::check(args = "--as-cran")` — 0 errors \| 0 warnings \| 0
+  notes. Full clean regression read (`NOT_CRAN=true`,
+  [`pkgload::load_all`](https://pkgload.r-lib.org/reference/load_all.html) +
+  `test_dir(reporter="silent")`): 0 failed \| 0 error \| 0 warning \|
+  3775 passed (up from S363’s 3771 — the 3 new fixtures plus the
+  now-passing original assertion) \| 167 skipped. Phase 3E: this is a
+  test-infrastructure-only change (no `R/`/app runtime code touched); no
+  separate
+  [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
+  smoke test applicable — `devtools::check()`’s own `testthat.R` run is
+  the change’s actual runtime surface. No NEWS entry (no user-facing
+  package behavior changed). Commit `87c521d8`.
+
+### 2026-07-11 · \[ad hoc\] Claimed session to fix `minParentAge` vignette-checker false positive (Session 364)
+
+- **Deliverable:** Phase 1B claim stub in `SESSION_NOTES.md` and a
+  `status: pending` receipt in `HANDOFFS.md` for fixing
+  `test_vignettes_no_deprecated_minParentAge.R`’s false-positive match
+  (`BACKLOG.md` item, fix option (a): narrow the checker). Commit
+  `c122fae2`.
+
 ### 2026-07-11 · \[ad hoc\] Confirmed the WriteXLS→openxlsx fix on live GitHub Actions `windows-latest` CI (Session 363)
 
 - **Deliverable:** Pushed this session’s commits to `origin/master` and
