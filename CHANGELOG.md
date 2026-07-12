@@ -47,6 +47,66 @@ here.
 
 ## \[Unreleased\]
 
+### 2026-07-12 · \[ad hoc\] S369 close-out commits (backlog, learning 340, session notes, handoff receipt)
+
+- **Deliverable:** Closes this session’s own `CHANGELOG.md` ledger
+  frontier gap in the same session rather than leaving it for the next
+  session’s Phase 0 reconcile. Records the two close-out commits
+  (`70466d76`: ledger/learnings/ backlog; `105b6196`: session notes +
+  handoff receipt) that finalized this session’s `HANDOFFS.md` receipt
+  (`status: pending` → `complete`) and `SESSION_NOTES.md` handoff.
+
+### 2026-07-12 · \[ad hoc\] Implemented BACKLOG.md’s XARCH-8 remainder: folded column-list functions into getSiteInfo() (Session 369)
+
+- **Deliverable:**
+  [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)
+  now returns 3 new fields – `requiredCols`, `possibleCols`,
+  `includeColumns` – sourced from
+  [`getRequiredCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getRequiredCols.md)/[`getPossibleCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md)/[`getIncludeColumns()`](https://github.com/rmsharp/nprcgenekeepr/reference/getIncludeColumns.md),
+  added to BOTH return branches (config-file-present and no-config
+  defaults). Additive only: no existing field changed, no signature
+  change. This is the narrower remainder the 2026-07-11 reconciliation
+  audit scoped out of the original XARCH-8 finding’s full
+  “merged-profile precedence” redesign (already excluded from tracking).
+  Strict TDD RED (`tests/testthat/test_getSiteInfo.R`: updated the
+  exact-name-enumeration test to include the 3 new fields, plus 2 new
+  tests asserting [`identical()`](https://rdrr.io/r/base/identical.html)
+  to the 3 source functions on both the no-config branch and a
+  real-config-file branch manufactured via the same
+  [`withr::local_tempdir()`](https://withr.r-lib.org/reference/with_tempfile.html)/`file.copy(example_nprcgenekeepr_config, ...)`
+  pattern `test_loadSiteConfig.R` established for issue \#50; commit
+  `8243b7d3`, all 7 assertions confirmed failing for the predicted
+  reason before implementation) → GREEN (`R/getSiteInfo.R` + regenerated
+  `man/getSiteInfo.Rd`; commit `bd6ca077`) → REFACTOR (reviewed: the
+  3-line addition duplicated identically in both branches matches every
+  other field in
+  [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md),
+  already duplicated verbatim between branches – nothing to
+  restructure). Full regression: 0 failed/0 error/0 warning (169
+  skipped, baseline). `lintr::lint()` clean on both changed files. Phase
+  3E: live-launched the modular app via
+  [`callr::r_bg()`](https://callr.r-lib.org/reference/r_bg.html) +
+  [`shiny::runApp()`](https://rdrr.io/pkg/shiny/man/runApp.html) on a
+  scratch port (HTTP 200, zero error-like server-log lines, Input tab
+  rendered), plus a direct `load_all()` call confirming
+  `getSiteInfo()$requiredCols`/ `possibleCols`/`includeColumns` are
+  [`identical()`](https://rdrr.io/r/base/identical.html) to their source
+  functions’ live output. Excluded an unrelated stale-doc regeneration
+  (`man/filterPairs.Rd`, recurring a third session running from S367’s
+  un-regenerated default-arg change) from this commit – reverted via
+  `git checkout -- man/filterPairs.Rd`; filed as its own tiny
+  `BACKLOG.md` item this time (Effort XS) rather than only a handoff
+  note. Removed the XARCH-8 bullet from `BACKLOG.md`’s Architecture
+  follow-ups section (now empty) and updated its intro paragraph. Added
+  `PROJECT_LEARNINGS.md` Learning 340, bumped `CLAUDE.md`’s pointer
+  (339→340, 368→369).
+
+### 2026-07-12 · \[ad hoc\] Session 369 claim (XARCH-8 getSiteInfo column-fold remainder)
+
+- **Deliverable:** Claimed the session per Phase 1B – `SESSION_NOTES.md`
+  stub + `HANDOFFS.md` `status: pending` receipt, committed before any
+  RED-test authoring (commit `04198b41`).
+
 ### 2026-07-12 · \[ad hoc\] S368 close-out commits (backlog, learning 339, session notes, handoff receipt)
 
 - **Deliverable:** Closes this session’s own `CHANGELOG.md` ledger

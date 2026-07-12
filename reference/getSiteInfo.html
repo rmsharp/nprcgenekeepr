@@ -80,6 +80,12 @@ To allow testing, if <code>center</code> is "ONPRC" baseUrl is
 <li><p><code>folderPath</code> – If <code>center</code> is "SNPRC", folderPath is
 "/SNPRC". If <code>center</code> is "ONPRC", folderPath is "/ONPRC"</p></li>
 <li><p><code>queryName</code> – is "demographics"</p></li>
+<li><p><code>requiredCols</code> – the required studbook columns, from
+<code><a href="getRequiredCols.html">getRequiredCols</a></code></p></li>
+<li><p><code>possibleCols</code> – the possible studbook columns, from
+<code><a href="getPossibleCols.html">getPossibleCols</a></code></p></li>
+<li><p><code>includeColumns</code> – the superset of report-inclusion columns,
+from <code><a href="getIncludeColumns.html">getIncludeColumns</a></code></p></li>
 </ol></div>
 
     <div class="section level2">
@@ -139,6 +145,20 @@ To allow testing, if <code>center</code> is "ONPRC" baseUrl is
 <span class="r-out co"><span class="r-pr">#&gt;</span> $configFile</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/home/runner/.nprcgenekeepr_config"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $requiredCols</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "id"    "sire"  "dam"   "sex"   "birth"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $possibleCols</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "id"           "sire"         "dam"          "sex"          "species"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "gen"          "birth"        "exit"         "death"        "age"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "ancestry"     "population"   "origin"       "status"       "condition"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "departure"    "spf"          "vasxOvx"      "pedNum"       "first"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [21] "second"       "first_name"   "second_name"  "recordStatus"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $includeColumns</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "id"          "sex"         "age"         "birth"       "exit"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "population"  "condition"   "origin"      "first_name"  "second_name"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">getSiteInfo</span><span class="op">(</span>expectConfigFile <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $center</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ONPRC"</span>
@@ -191,6 +211,20 @@ To allow testing, if <code>center</code> is "ONPRC" baseUrl is
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $configFile</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/home/runner/.nprcgenekeepr_config"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $requiredCols</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "id"    "sire"  "dam"   "sex"   "birth"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $possibleCols</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "id"           "sire"         "dam"          "sex"          "species"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "gen"          "birth"        "exit"         "death"        "age"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "ancestry"     "population"   "origin"       "status"       "condition"   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "departure"    "spf"          "vasxOvx"      "pedNum"       "first"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [21] "second"       "first_name"   "second_name"  "recordStatus"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $includeColumns</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "id"          "sex"         "age"         "birth"       "exit"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "population"  "condition"   "origin"      "first_name"  "second_name"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>

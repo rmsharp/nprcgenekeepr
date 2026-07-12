@@ -37,6 +37,15 @@ Currently this returns the following character strings in a named list.
 
 5.  `queryName` – is "demographics"
 
+6.  `requiredCols` – the required studbook columns, from
+    [`getRequiredCols`](https://github.com/rmsharp/nprcgenekeepr/reference/getRequiredCols.md)
+
+7.  `possibleCols` – the possible studbook columns, from
+    [`getPossibleCols`](https://github.com/rmsharp/nprcgenekeepr/reference/getPossibleCols.md)
+
+8.  `includeColumns` – the superset of report-inclusion columns, from
+    [`getIncludeColumns`](https://github.com/rmsharp/nprcgenekeepr/reference/getIncludeColumns.md)
+
 ## Examples
 
 ``` r
@@ -95,6 +104,20 @@ suppressWarnings(getSiteInfo())
 #> $configFile
 #> [1] "/home/runner/.nprcgenekeepr_config"
 #> 
+#> $requiredCols
+#> [1] "id"    "sire"  "dam"   "sex"   "birth"
+#> 
+#> $possibleCols
+#>  [1] "id"           "sire"         "dam"          "sex"          "species"     
+#>  [6] "gen"          "birth"        "exit"         "death"        "age"         
+#> [11] "ancestry"     "population"   "origin"       "status"       "condition"   
+#> [16] "departure"    "spf"          "vasxOvx"      "pedNum"       "first"       
+#> [21] "second"       "first_name"   "second_name"  "recordStatus"
+#> 
+#> $includeColumns
+#>  [1] "id"          "sex"         "age"         "birth"       "exit"       
+#>  [6] "population"  "condition"   "origin"      "first_name"  "second_name"
+#> 
 getSiteInfo(expectConfigFile = FALSE)
 #> $center
 #> [1] "ONPRC"
@@ -147,5 +170,19 @@ getSiteInfo(expectConfigFile = FALSE)
 #> 
 #> $configFile
 #> [1] "/home/runner/.nprcgenekeepr_config"
+#> 
+#> $requiredCols
+#> [1] "id"    "sire"  "dam"   "sex"   "birth"
+#> 
+#> $possibleCols
+#>  [1] "id"           "sire"         "dam"          "sex"          "species"     
+#>  [6] "gen"          "birth"        "exit"         "death"        "age"         
+#> [11] "ancestry"     "population"   "origin"       "status"       "condition"   
+#> [16] "departure"    "spf"          "vasxOvx"      "pedNum"       "first"       
+#> [21] "second"       "first_name"   "second_name"  "recordStatus"
+#> 
+#> $includeColumns
+#>  [1] "id"          "sex"         "age"         "birth"       "exit"       
+#>  [6] "population"  "condition"   "origin"      "first_name"  "second_name"
 #> 
 ```

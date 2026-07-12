@@ -84,6 +84,44 @@ block to continue the work without re-reading the whole repo?*
 ------------------------------------------------------------------------
 
 ``` handoff
+session: S369
+date: 2026-07-12
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- BACKLOG.md's XARCH-8 remainder (fold getRequiredCols()/getPossibleCols()/getIncludeColumns() into getSiteInfo()) implemented and closed out. BACKLOG.md's Architecture follow-ups section is now empty except for a new tiny man/filterPairs.Rd item.
+what_was_done: Read the original TECH_DEBT_AUDIT_2026-05-30.md XARCH-8 entry and the 2026-07-11 reconciliation audit's narrower disposition (merged-profile redesign excluded; only the column-list fold remains). Confirmed via grep that getRequiredCols()/getPossibleCols()/getIncludeColumns() are referenced nowhere from getSiteInfo(). Wrote the Phase 1B claim stub and committed it (04198b41) BEFORE any RED-test authoring (deliberately checked against S368's Learning 339(d) process miss -- held this time). TDD RED: updated test_getSiteInfo.R's exact-name-enumeration test (17->20 fields) plus 2 new identical()-based tests covering BOTH of getSiteInfo()'s independent return branches (no-config via expectConfigFile=FALSE, and a real config file manufactured via the same withr::local_tempdir()+file.copy(example_nprcgenekeepr_config) pattern test_loadSiteConfig.R established for issue #50). All 7 assertions failed for the predicted reason before implementation (commit 8243b7d3). TDD GREEN: added requiredCols/possibleCols/includeColumns to both return branches of R/getSiteInfo.R plus 3 roxygen @return bullets; devtools::document() regenerated man/getSiteInfo.Rd plus, for a THIRD consecutive session, the unrelated stale man/filterPairs.Rd (S367 leftover) -- reverted via git checkout, this time filed as its own BACKLOG.md item rather than only a handoff note. Full regression 0 failed/0 error/0 warning (169 skipped, baseline); lintr clean (commit bd6ca077). REFACTOR: reviewed, nothing to restructure (duplication matches the file's existing convention). Phase 3E: live-launched the app via callr::r_bg()+shiny::runApp() with stdout/stderr file redirection (HTTP 200, 0 error-like log lines, Input tab rendered) plus a direct load_all() smoke confirming the new fields are identical() to their live source functions. Updated BACKLOG.md, added PROJECT_LEARNINGS.md Learning 340, bumped CLAUDE.md pointer (339->340, 368->369), added 2 CHANGELOG.md entries.
+next_steps: No XARCH remainders left in BACKLOG.md. Pick from: (a) the new tiny man/filterPairs.Rd BACKLOG.md item (Effort XS -- one devtools::document() run, docs-only commit); (b) CRAN resubmission (READY, Effort S, but owner-only: devtools::submit_cran() + email confirmation); (c) Document 2 Phase D (READY, Effort M); (d) LabKey remainder (BLOCKED). Also worth a real decision (not another per-session substitution): the headless-browser-tool gap, now 3 sessions running (S367/S368/S369).
+key_files: R/getSiteInfo.R (requiredCols/possibleCols/includeColumns added to both return branches + 3 @return bullets), man/getSiteInfo.Rd (regenerated), tests/testthat/test_getSiteInfo.R (exact-name-enumeration test updated; 2 new tests covering both return branches)
+gotchas: man/filterPairs.Rd staleness recurred a 3rd time (S367 origin, S368 and S369 both reverted+flagged) -- now filed as BACKLOG.md item (Effort XS), pick it up with a single devtools::document() run. Headless-browser tool still absent from this environment -- same substitution as S367/S368. test_getSiteInfo.R's 2 new tests hardcode the withr::local_tempdir()+file.copy(example_nprcgenekeepr_config) pattern -- if that example config file's schema changes, update the fixture, not just the assertions.
+runtime_smoke: Live-launched appUI()/appServer via shiny::runApp() in a callr::r_bg() background process (stdout/stderr file redirection, not in-process sink() which produced an empty log on first attempt) -- HTTP 200, stderr contained only expected startup lines (no errors), Input tab rendered. Combined with a direct load_all() confirmation that getSiteInfo()'s 3 new fields are identical() to their live source functions, plus the 2 new RED-turned-GREEN tests exercising both return branches.
+changelog_ref: CHANGELOG.md 2026-07-12 "Implemented BACKLOG.md's XARCH-8 remainder: folded column-list functions into getSiteInfo() (Session 369)"
+commit: bd6ca077
+```
+
+Implemented BACKLOG.md’s XARCH-8 remainder end to end under strict TDD,
+deliberately re-checking S368’s own Phase 1B process-miss finding and
+holding the correct ordering this time. Self-score 9/10: +read both the
+original tech-debt-audit’s full recommendation and the reconciliation
+audit’s narrower disposition before scoping RED, so tests targeted
+exactly the scoped remainder; +recognized getSiteInfo()‘s two
+independent return branches each needed independent RED coverage rather
+than relying on the no-config branch alone; +diagnosed and fixed a dead-
+end live-launch attempt (in-process sink() producing an empty log)
+rather than declaring Phase 3E impossible; +went beyond “app didn’t
+crash” by directly confirming the new fields’ live values match their
+source functions; +escalated the 3rd-recurring man/filterPairs.Rd
+staleness from a handoff gotcha to an actual BACKLOG.md item, closing a
+gap S368 had explicitly self-flagged; +stayed within the 5-file
+blast-radius cap on every commit. -The first live-launch attempt wasted
+a debugging cycle because the working callr::r_bg() smoke-test script
+from prior sessions was never saved verbatim, only described in prose –
+a future session should save the working script itself. -Did not
+escalate the headless-browser-tool gap to a settled decision, despite
+noting it is now a 3-session-running repeated judgment call in its own
+right.
+
+``` handoff
 session: S368
 date: 2026-07-12
 status: complete
