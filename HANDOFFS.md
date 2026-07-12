@@ -77,18 +77,34 @@ session need this block to continue the work without re-reading the whole repo?*
 ```handoff
 session: S367
 date: 2026-07-12
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Implement BACKLOG.md's XARCH-4 remainder -- centralize scattered M/F/U/H sex-code literals into a single source of truth. Just claimed; work not yet started.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- BACKLOG.md's XARCH-4 remainder (sex-code literal centralization) implemented and closed out. XARCH-6/8 remainders are now the only items left in "Architecture follow-ups."
+what_was_done: Fresh whole-repo grep found ~11 more files beyond the ticket's own 6-file scope with the same bare M/F/H/U literal pattern; posed a dedicated pre-RED AskUserQuestion (owner chose the narrow 6-file scope). Claimed (9c6749c5). TDD RED: tests/testthat/test_sexCodes.R -- a constant-value test plus a structural findBareSexCodeLiterals() scan test (skips roxygen #' lines from v1) asserting zero bare literals across the 6 files; confirmed both fail for the right reason (13ce0186). TDD GREEN: added R/sexCodes.R (internal @noRd constant male/female/hermaphrodite/unknown -> M/F/H/U) and routed getPotentialSires.R, calculateSexRatio.R, fillBins.R, filterPairs.R, modBreedingGroups.R, modSummaryStats.R through it; split into 2 commits under the 5-file cap (3a02990a, b64c4481). Full regression: 0 failed/0 error/0 warning. Fixed one new lint (fillBins.R:31 line length) before finishing GREEN. REFACTOR: reviewed, nothing to change. Removed BACKLOG.md's XARCH-4 bullet, updated its intro. Added PROJECT_LEARNINGS.md Learning 338, bumped CLAUDE.md pointer (337->338, 366->367), added 2 CHANGELOG.md entries.
+next_steps: Pick up XARCH-6 remainder (qcStudbook()/modInput.R multi-call redundancy) or XARCH-8 remainder (fold column-list functions into getSiteInfo()) next -- both READY, Effort S, now the only items in BACKLOG.md's Architecture follow-ups section. Separately, decide whether to file the ~11 other files with the same bare-sex-literal pattern (calcNeSexRatio.R, getKinshipWithMaleStatus.R, getPotentialParents.R, getSexRatioWithAdditions.R, getProductionStatus.R, getSpeciesMinBreedingAge.R, modORIPReporting.R, modPyramid.R, reportGV.R, resolveBreedingAge.R, groupAddAssign.R's default arg) as a new BACKLOG.md item or GitHub issue -- currently undocumented anywhere except this receipt and SESSION_NOTES.md.
+key_files: R/sexCodes.R (new constant), R/getPotentialSires.R:22, R/calculateSexRatio.R:80-81, R/fillBins.R:27-34, R/filterPairs.R:34-36, R/modBreedingGroups.R:330,443-444, R/modSummaryStats.R:797,807 (all: literal -> sexCodes[[...]] ), tests/testthat/test_sexCodes.R (new)
+gotchas: The ~11-file wider pattern is real but deliberately out of scope -- do not assume it was missed. test_sexCodes.R's scan is hardcoded to exactly the 6 files this session touched -- extend its file list rather than duplicating the scanner if more files get centralized later. No headless-browser tool (chromium-cli/Playwright) is installed in this environment -- Phase 3E used a live app launch + existing shiny::testServer coverage instead; a future UI-heavy change should install one or budget the same substitution.
+runtime_smoke: Live-launched runGeneKeepR() via pkgload::load_all() on a scratch port -- HTTP 200, zero server-log errors, Breeding Groups/Summary Statistics modules rendered with their download handlers present. Combined with existing shiny::testServer tests that read real founders-download CSV content and render groupStats through the full reactive pipeline. No headless-browser screenshot (tool unavailable, not installed -- judged disproportionate for this change's risk level).
+changelog_ref: CHANGELOG.md 2026-07-12 "Implemented BACKLOG.md's XARCH-4 remainder: centralized sex-code literals (Session 367)"
+commit: b64c4481
 ```
+Implemented BACKLOG.md's XARCH-4 remainder end to end under strict TDD, including a
+dedicated pre-RED scope decision when a fresh whole-repo grep found ~11 more files
+with the same bare-literal pattern beyond the ticket's named 6. Self-score 9/10:
++ratified the ticket's own scope against current source rather than trusting it
+(Learning 336's pattern, generalized to a single item and captured fresh as
+Learning 338); +designed the RED-phase structural scan test to skip roxygen prose
+from its first version rather than discovering the false-positive later (applying
+Learning 335 proactively); +caught and fixed a new lint violation the edit itself
+introduced before calling GREEN done; +combined an actual live app launch with
+existing shiny::testServer coverage for Phase 3E rather than silently treating
+"tests passed" as sufficient for a Shiny-module-server change. -Did not attempt to
+install a headless-browser tool for a true click-through screenshot -- judged
+disproportionate for a low-risk, already-well-covered refactor, but a judgment call
+worth a second opinion rather than settled policy. -Did not check whether the ~11
+out-of-scope files already have their own test coverage, which would help whoever
+picks up that future item size it.
 
 ```handoff
 session: S366
