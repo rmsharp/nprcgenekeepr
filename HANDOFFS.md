@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S368
+date: 2026-07-12
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: BACKLOG.md's XARCH-6 remainder -- collapse modInput.R's redundant qcStudbook() invocation (its own direct call plus runQcStudbook()'s internal duplicate first pass) down to one clean call through runQcStudbook()'s existing contract.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S367
 date: 2026-07-12
 status: complete
