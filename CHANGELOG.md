@@ -43,6 +43,34 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-12 · [ad hoc] Implemented BACKLOG.md's XARCH-4 remainder: centralized sex-code literals (Session 367)
+- **Deliverable:** Added `R/sexCodes.R` (internal, `@noRd` constant:
+  `male`/`female`/`hermaphrodite`/`unknown` → `M`/`F`/`H`/`U`) and routed the
+  6 files named in the BACKLOG item's remainder through it instead of bare
+  string-literal comparisons: `getPotentialSires.R`, `calculateSexRatio.R`,
+  `fillBins.R`, `filterPairs.R`, `modBreedingGroups.R`, `modSummaryStats.R`.
+  Strict TDD RED (`tests/testthat/test_sexCodes.R`: a constant-value test plus
+  a structural `findBareSexCodeLiterals()` scan test that skips roxygen `#'`
+  lines, so legitimate doc-example literals never block GREEN — commit
+  `13ce0186`) → GREEN (2 commits under the 5-file cap: `3a02990a` constant +
+  3 sites, `b64c4481` remaining 3 sites) → REFACTOR (reviewed: nothing to
+  change, diff already minimal). A dedicated pre-RED `AskUserQuestion` scope
+  gate confirmed staying within the ticket's original 6 files rather than
+  expanding to ~11 more files a fresh whole-repo grep found with the same
+  bare-literal pattern (owner-directed; those files are left for a future
+  item, not silently fixed or silently dropped — see `PROJECT_LEARNINGS.md`
+  Learning 338). Full regression suite: 0 failed/0 error/0 warning. Runtime
+  smoke test: live-launched `runGeneKeepR()` (HTTP 200, Breeding
+  Groups/Summary Statistics modules render, no server-log errors); the exact
+  changed reactive paths (founders-download CSV content, `groupStats`) are
+  additionally covered by existing `shiny::testServer`-based tests with real
+  value assertions. Removed the XARCH-4 bullet from `BACKLOG.md`'s
+  Architecture follow-ups section.
+
+### 2026-07-12 · [ad hoc] Session 367 claim (XARCH-4 sex-code centralization)
+- **Deliverable:** Claimed the session per Phase 1B — `SESSION_NOTES.md` stub
+  + `HANDOFFS.md` `status: pending` receipt. Commit `9c6749c5`.
+
 ### 2026-07-12 · [ad hoc] S366 close-out commit (session notes, handoff receipt)
 - **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap
   in the same session rather than leaving it for S367's Phase 0 reconcile.
