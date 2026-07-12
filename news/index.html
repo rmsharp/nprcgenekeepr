@@ -84,6 +84,8 @@
 <li>
 <code><a href="../reference/summarizeKinshipValues.html">summarizeKinshipValues()</a></code> now reports the <code>secondQuartile</code> column as the lower hinge (<code>fivenum()[2]</code>) instead of duplicating <code>min</code>.</li>
 <li>New dependencies: <code>bslib</code>, <code>DT</code>, and <code>ggplot2</code> (Imports); <code>shinytest2</code> (Suggests).</li>
+<li>
+<code><a href="../reference/create_wkbk.html">create_wkbk()</a></code> now writes <code>.xlsx</code> files with <code>openxlsx</code> instead of <code>WriteXLS</code>, removing the package’s Perl requirement (<code>WriteXLS</code> shelled out to a bundled Perl script). Output and behavior are otherwise unchanged.</li>
 <li>Replaced the magrittr pipe (<code>%&gt;%</code>) with the base R native pipe (<code>|&gt;</code>) in vignettes and examples; <code>magrittr</code> is no longer used.</li>
 <li>
 <code><a href="../reference/getPedMaxAge.html">getPedMaxAge()</a></code> now returns <code>NA</code> instead of <code>-Inf</code> when a pedigree has no non-missing ages, so the age-sex pyramid plot renders cleanly instead of deriving a spurious <code>-Inf</code> axis bound. (<a href="https://github.com/rmsharp/nprcgenekeepr/issues/121">#121</a>)</li>

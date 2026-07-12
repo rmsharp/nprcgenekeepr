@@ -10,62 +10,24 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Up Next
 
-**Fix Windows-only
-`WriteXLS`/[`create_wkbk()`](https://github.com/rmsharp/nprcgenekeepr/reference/create_wkbk.md)
-CI flakiness in `R-CMD-check.yaml`** (READY, Effort S-M – downgraded
-from “blocks CRAN resubmission” by S362, see below) – discovered S361
-(2026-07-11) while triggering the win-builder/R-hub Phase 5 checks:
-GitHub Actions’ `R-CMD-check.yaml` has been failing on
-`windows-latest (release)` on **every push since S351** (`b440730c`,
-2026-07-10 23:55:55) – 7 consecutive failing runs
-(S351/S352/S353/S356/S358/S359/S360), unnoticed because no session
-checked `gh run list` during that span; `ubuntu-latest` and
-`macos-latest` pass cleanly every time, so S359’s local `--as-cran` gate
-(macOS only) could not have caught it. Failure:
-`test_modInput_excelSireDam.R` –
-`makeExamplePedigreeFile(fileType = "excel")` -\>
-[`create_wkbk()`](https://github.com/rmsharp/nprcgenekeepr/reference/create_wkbk.md)
-(`R/create_wkbk.R:61`) -\>
-[`WriteXLS::WriteXLS()`](https://rdrr.io/pkg/WriteXLS/man/WriteXLS.html)
-errors `cannot open .../WriteXLS/1.csv . No such file or directory` on
-Windows only (`[ FAIL 2 | WARN 0 | SKIP 205 | PASS 3665 ]`, run
-<https://github.com/rmsharp/nprcgenekeepr/actions/runs/29170463437>).
-`WriteXLS` shells out to a bundled Perl script to convert intermediate
-CSVs to `.xlsx`; this is a well-known Windows failure mode when Perl
-isn’t on `PATH` or its CSV/Excel- writer modules aren’t present on the
-runner. **Timing/suspect commit:** the failing test file was
-added/changed by
-`fix: S350 -- Excel-upload sire/dam pedigree corruption` (`5a9697a8`);
-S350’s own CI run appears to have been superseded by S351’s rapid
-follow-up push (concurrency cancellation), so S350 vs. S351 as the exact
-first-red commit is not yet disambiguated – not yet root-caused, not yet
-fixed. **S361 predicted this would “very likely” also block the
-win-builder/R-hub checks it had just triggered – S362 (2026-07-11)
-checked the actual results and found that prediction did NOT hold:**
-win-builder came back **0 errors \| 0 warnings** on all three R versions
-(verbatim `00check.log` confirms `checking tests ... OK` with no failure
-output on Windows Server 2022); R-hub’s windows(R-devel) job finished
-`Status: OK, [ FAIL 0 | WARN 1 | SKIP 220 | PASS 3013 ]` – though its
-raw log DOES still show the same `WriteXLS` “cannot open …csv”
-diagnostic text, appearing non-fatally (not disambiguated which step).
-Full detail in `docs/planning/cran-2.0.0-phase5-runbook.md`’s refreshed
-top note. **Conclusion: this is a real, reproducible flakiness specific
-to GitHub-hosted Windows CI runners (both
-`r-lib/actions/check-r-package` and `r-hub/actions/run-check` share that
-runner family) – not present on CRAN’s own win-builder infrastructure,
-and NOT currently blocking CRAN 2.0.0 resubmission.** Still worth fixing
-as a CI-hygiene issue (`R-CMD-check.yaml` has been red for 7+ sessions,
-which could mask a real regression next time) and to remove the
-`SystemRequirements: Perl`-adjacent risk long-term. Fix options to
-evaluate: (a) make the Excel-writing test path Windows-CI-safe
-(e.g. retry-on-transient- failure, or skip/guard `fileType = "excel"`
-when Perl/WriteXLS’s Windows prerequisites are absent, matching the
-existing `NPRC_RUN_E2E`-style opt-in pattern already used elsewhere in
-this suite), or (b) replace the `WriteXLS`-based
-[`create_wkbk()`](https://github.com/rmsharp/nprcgenekeepr/reference/create_wkbk.md)
-with a Perl-free Excel writer (e.g. `openxlsx`/`writexl`) so the
-underlying dependency no longer needs Perl on any platform – the latter
-also removes the risk outright rather than working around it.
+**Fix `test_vignettes_no_deprecated_minParentAge.R` false-positive match
+in `vignettes/articles/engineering-the-2.0.0-release.qmd`** (READY,
+Effort S) – discovered S363 (2026-07-11) as an incidental full-suite
+regression-read finding, unrelated to that session’s
+`WriteXLS`-\>`openxlsx` deliverable (mode-switch rule: documented, not
+fixed). The checker does a grep-style scan for the deprecated
+`minParentAge` parameter name anywhere in vignette source;
+`engineering-the-2.0.0-release.qmd:344` mentions it only in historical
+narrative prose (“a single flat `minParentAge = 2` default … was
+replaced end to end with … `minSireAge`/`minDamAge`”), not a live call –
+confirmed via `git log`/`git blame` unchanged since S357 (`e624fc07`),
+predating S363 entirely. Fix options to evaluate: (a) narrow the
+checker’s regex to match an actual `minParentAge\s*=` call/argument
+pattern rather than the bare identifier, or (b) reword the historical
+sentence in the `.qmd` to avoid the literal parameter name (e.g. “the
+deprecated flat minimum-age default”). Option (a) is likely more robust
+long-term (won’t re-trip on other historical narrative mentions
+elsewhere).
 
 **Act on the LabKey integration research recommendations** (BLOCKED –
 remainder needs a live LabKey server to test/observe, Effort M) —
@@ -171,9 +133,12 @@ on slower hardware, not a failure). R-hub (`occupational-burro`,
 <https://github.com/rmsharp/nprcgenekeepr/actions/runs/29171440079>):
 `Status: OK` on linux/windows/macos, 0 test failures. The Windows
 `WriteXLS` CI failure S361 flagged as a likely blocker did NOT reproduce
-on either external check (see the corrected “Fix Windows-only
-`WriteXLS`” item above – it’s a GitHub-Actions-runner-specific flake,
-not present on CRAN’s own win-builder infrastructure). Results folded
+on either external check – it was a GitHub-Actions-runner-specific
+flake, not present on CRAN’s own win-builder infrastructure.
+**Root-caused and fixed S363 (2026-07-11):**
+[`create_wkbk()`](https://github.com/rmsharp/nprcgenekeepr/reference/create_wkbk.md)
+now writes `.xlsx` via `openxlsx` instead of `WriteXLS`, removing the
+Perl-on-Windows dependency entirely; see `CHANGELOG.md`. Results folded
 into `cran-comments.md`’s “Test environments” section. **Pre-submission
 gate is now clean across every environment actually run this cycle.**
 Next (owner action, unchanged): `devtools::submit_cran()`, then click
