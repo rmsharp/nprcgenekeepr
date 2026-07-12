@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S366
+date: 2026-07-12
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Move BACKLOG.md's "Architecture follow-ups" (XARCH-4/6/8 remainder) items to the top of the backlog, ahead of "Up Next"/"Documents"/"Audit follow-ups".
+what_was_done: pending
+next_steps: pending
+key_files: BACKLOG.md
+gotchas: pending
+runtime_smoke: n/a -- docs-only, no runtime surface.
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S365
 date: 2026-07-11
 status: complete
