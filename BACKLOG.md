@@ -22,18 +22,11 @@ also fully RESOLVED – S367 (2026-07-12): see `CHANGELOG.md`. XARCH-6
 ([`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)/`modInput.R`
 multi-call redundancy) is now also fully RESOLVED – S368 (2026-07-12):
 see `CHANGELOG.md`. XARCH-8’s narrower remaining gap is now also fully
-RESOLVED – S369 (2026-07-12): see `CHANGELOG.md`. No items remain in
-this section.* - \[ \] **Regenerate `man/filterPairs.Rd` for real**
-(READY, Effort XS) –
-[`filterPairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/filterPairs.md)’s
-default arg was changed (S367, `"F"` -\> `sexCodes[["female"]]`) but
-`devtools::document()` was never run afterward to commit the regenerated
-doc. Every session since that has run `devtools::document()` for an
-unrelated roxygen edit (S368, S369) has seen this file regenerate as an
-unrelated diff and reverted it via `git checkout` rather than fix it,
-per FM \#8 (stay on task). Now recurred 3 sessions running – the fix is
-one `devtools::document()` run with no other roxygen edit needed,
-committed on its own as a docs-only change.
+RESOLVED – S369 (2026-07-12): see `CHANGELOG.md`. The
+`man/filterPairs.Rd` staleness this recurring collateral regen left
+behind (S367 origin, flagged S368/S369) is now also RESOLVED – S370
+(2026-07-12): see `CHANGELOG.md`. No items remain in this section.* - \[
+\] (none remaining)
 
 ## Up Next
 

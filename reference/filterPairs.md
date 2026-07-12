@@ -5,7 +5,11 @@ Part of Group Formation
 ## Usage
 
 ``` r
-filterPairs(kin, ped, ignore = list(c("F", "F")))
+filterPairs(
+  kin,
+  ped,
+  ignore = list(c(sexCodes[["female"]], sexCodes[["female"]]))
+)
 ```
 
 ## Arguments

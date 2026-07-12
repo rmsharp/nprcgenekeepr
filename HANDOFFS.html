@@ -95,7 +95,20 @@ when it reconstructs a receipt a crashed session never completed — you never w
 <li>
 <strong><code>CHANGELOG.md</code></strong> — the <em>cumulative action ledger</em>: <em>“what was done here, ever?”</em>, append-only.</li>
 </ul><p>The shared key across all three is the commit sha (<code>changelog_ref</code> / <code>commit</code> here). This file <strong>distills</strong> the handoff; it does not copy the scratchpad. The belongs-here test: <em>would the next session need this block to continue the work without re-reading the whole repo?</em></p>
-<hr><!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. --><pre class="handoff"><code>session: S369
+<hr><!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. --><pre class="handoff"><code>session: S370
+date: 2026-07-12
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- BACKLOG.md's tiny man/filterPairs.Rd regen item implemented and closed out. BACKLOG.md's Architecture follow-ups section is now genuinely fully empty (S369 had left a self-contradicting intro claiming this while still listing the item; fixed).
+what_was_done: Confirmed the drift was cosmetic-only (sexCodes[["female"]] resolves to "F", identical to the stale literal) before acting. Wrote and committed the Phase 1B claim stub (2ebe2161) before any further action. Ran devtools::document() standalone (deliberately with no other roxygen edit pending) -- git diff confirmed exactly one file changed, man/filterPairs.Rd, only the \usage{} line. This directly tested (not just applied) the Learning 339(c)/340(d) diagnosis that the 3-session collateral-regen recurrence was a bundling artifact, not a devtools::document() property -- confirmed true, recorded as Learning 341. Verified fidelity via identical(formals(filterPairs)$ignore, quote(list(c(sexCodes[["female"]], sexCodes[["female"]])))) == TRUE. Full regression 0 failed/0 error/0 warning (169 skipped, baseline unchanged). Removed the resolved BACKLOG.md bullet and fixed its intro paragraph's stale "No items remain" self-contradiction. Added PROJECT_LEARNINGS.md Learning 341, bumped CLAUDE.md pointer (340-&gt;341, 369-&gt;370), added 2 CHANGELOG.md entries.
+next_steps: BACKLOG.md's Architecture follow-ups section is now fully empty -- no doc-regen or XARCH remainders left. Pick from: (a) CRAN resubmission (READY, Effort S, but owner-only: devtools::submit_cran() + email confirmation); (b) Document 2 Phase D (READY, Effort M); (c) LabKey remainder (BLOCKED, needs live LabKey server). Also still worth a real decision, not another per-session substitution: the headless-browser-tool gap (S367/S368/S369); and the untracked vignettes/articles/*.html / PED_GV_AUDIT_2026-05-30.html policy question, open since S358 (see PROJECT_LEARNINGS.md Learning 308).
+key_files: man/filterPairs.Rd (regenerated \usage{} line only), BACKLOG.md (resolved bullet removed, intro paragraph fixed), PROJECT_LEARNINGS.md Learning 341, CLAUDE.md (pointer)
+gotchas: BACKLOG.md's Architecture follow-ups section is now durably empty -- don't expect another item there without a fresh audit. No other man/*.Rd staleness was audited (correctly out of scope for this dedicated tiny item; a broader sweep would be its own future task if warranted).
+runtime_smoke: n/a -- docs-only. No production source or runtime-loaded path changed; man/filterPairs.Rd is rendered documentation only (?filterPairs, pkgdown), not loaded by any Shiny runtime path. Explicit determination per FM #24, not a default skip.
+changelog_ref: CHANGELOG.md 2026-07-12 "Regenerated stale man/filterPairs.Rd via standalone devtools::document() (Session 370)"
+commit: 0b85750c</code></pre>
+<pre class="handoff"><code>session: S369
 date: 2026-07-12
 status: complete
 self_score: 9
