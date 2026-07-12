@@ -43,6 +43,13 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-11 · [ad hoc] S365 close-out commit (session notes, handoff receipt)
+- **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap
+  in the same session rather than leaving it for S366's Phase 0 reconcile.
+  Records the close-out commit (`c71a9f5a`) that finalized this session's
+  `HANDOFFS.md` receipt (`status: pending` → `complete`) and appended this
+  session's full handoff to `SESSION_NOTES.md`.
+
 ### 2026-07-11 · [ad hoc] Resolved BACKLOG.md's XARCH tracker-reconciliation decision (Session 365)
 - **Deliverable:** Re-verified all 8 XARCH-1..8 architecture findings
   (`TECH_DEBT_AUDIT_2026-05-30.md`) against current source rather than trusting
