@@ -43,6 +43,14 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-12 · [ad hoc] S367 close-out commits (session notes, handoff receipt, learning 338)
+- **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap
+  in the same session rather than leaving it for the next session's Phase 0
+  reconcile. Records the two close-out commits (`cc2fbf83`: ledger/learnings/
+  backlog; `0679bfe6`: session notes + handoff receipt) that finalized this
+  session's `HANDOFFS.md` receipt (`status: pending` → `complete`) and
+  `SESSION_NOTES.md` handoff.
+
 ### 2026-07-12 · [ad hoc] Implemented BACKLOG.md's XARCH-4 remainder: centralized sex-code literals (Session 367)
 - **Deliverable:** Added `R/sexCodes.R` (internal, `@noRd` constant:
   `male`/`female`/`hermaphrodite`/`unknown` → `M`/`F`/`H`/`U`) and routed the
