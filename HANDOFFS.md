@@ -75,6 +75,22 @@ session need this block to continue the work without re-reading the whole repo?*
 <!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. -->
 
 ```handoff
+session: S363
+date: 2026-07-11
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS -- fix the Windows-only WriteXLS/create_wkbk() CI flakiness in R-CMD-check.yaml by replacing WriteXLS with openxlsx (BACKLOG.md fix option b). TDD gate approved: REFACTOR-only (no new observable behavior).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S362
 date: 2026-07-11
 status: complete
