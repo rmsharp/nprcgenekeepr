@@ -77,16 +77,47 @@ session need this block to continue the work without re-reading the whole repo?*
 ```handoff
 session: S372
 date: 2026-07-12
-status: pending
-active_task: Architecture plan for GitHub issue #122 (XARCH-2 -- implicit/inconsistent module contract across mod*Server return shapes). Deliverable is docs/planning/issue122-module-contract-plan.md following ARCHITECTURE_WORKSTREAM.md. Planning only -- no R/ or tests/ code this session (SAFEGUARDS.md gates cross-module refactoring behind plan mode; FM #18 keeps plan and implementation in separate sessions).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 7
+active_task: DONE -- architecture plan for GitHub issue #122 (XARCH-2, module contract) written and committed. Planning only; implementation is 5 separate sessions, one per phase, starting with Phase 1. No R/ or tests/ code touched (verified: git diff --stat -- R/ tests/ is empty).
+what_was_done: Wrote docs/planning/issue122-module-contract-plan.md (676 lines, commit 12e30f80) following ARCHITECTURE_WORKSTREAM.md. Research pass: 25 agents (10 module readers, 6 adversarial claim-verifiers, 8 symbol grep-inventories, 1 completeness critic), every citation re-derived from current source since the issue's line refs predate S367-S370. All 4 of issue #122's claims re-verified CONFIRMED -- but the issue understates the problem and overstates the fix, and the plan says so with evidence. (1) The disease is a PUBLIC-API defect, not the internal style issue the issue describes: reportGV() (exported, NAMESPACE:171) emits indivMeanKin/gu while makeGeneticSummaryTable() (exported, NAMESPACE:129) consumes meanKinship/genomeUniqueness, so makeGeneticSummaryTable(reportGV(ped)$report) returns an all-NA table with no error and no warning -- REPRODUCED BY EXECUTION. (2) modBreedingGroups' kinship-reuse branch is unreachable dead code, not "redundant" (R/modBreedingGroups.R:193 column-name-tests a data frame for "kinship" -- never TRUE). (3) The issue's own fix is a trap: threading GV's kinship matrix into the consumers would silently rescope Summary Stats to the focal subset; measured against qcPed, the matrices are bit-identical on the default path and divergent only when focal animals are entered. (4) ~40 deparse() source-grep tests structurally pin the very tryCatch error-swallowing the issue asks us to remove. (5) loadSiteConfig() -> shared$config -> {modInput, modPedigree} is dead end to end -- both modules ignore the param; not in the issue, it sat in the gap between two of its findings. Plan proposes a backward-compatible alternative (canonical = reportGV's vocabulary + a tolerant internal normalizer) that fixes strictly more and breaks NO exported contract -- deliberate, given v2.0.0 is mid-CRAN-resubmission. 5 phases, one session each, per-phase completion criteria + verification commands + 6 dragons. Also: PROJECT_LEARNINGS.md Learning 343, CLAUDE.md pointer (342->343, 371->372), BACKLOG.md Architecture section (Phase 1 + issue #123), CHANGELOG.md entry.
+next_steps: Pick up PHASE 1 of the plan (BACKLOG.md, READY, Effort S) -- it fixes the reproduced user-facing bug, is purely additive, breaks no exported contract, and touches no Shiny module. Add one internal @noRd normalizer (R/normalizeGvReport.R) and make makeGeneticSummaryTable() tolerant of BOTH column vocabularies; RED test is that makeGeneticSummaryTable(data.frame(id=1:3, indivMeanKin=..., gu=...)) currently yields an all-N/A table. See the plan's §6 Phase 1 for completion criteria and verification commands. READ §7 (Dragons) FIRST regardless of which phase is picked. Phases 2-5 follow in order, one session each. Separately unchanged: CRAN resubmission (READY, owner-only), Document 2 Phase D (READY, Effort M), LabKey remainder (BLOCKED), and GitHub issue #123 (XARCH-5) which needs its own planning session.
+key_files: docs/planning/issue122-module-contract-plan.md (the deliverable). Evidence: R/modGeneticValue.R:470-482 (the rename closure), :232 (the population guard that never fires), :489-492 (the kinship reactive); R/modBreedingGroups.R:193 (the dead reuse branch); R/modSummaryStats.R:363 (its ONLY tryCatch -- and the branch Phase 2 deletes); R/makeGeneticSummaryTable.R:33-41 (the all-NA fallthrough); R/reportGV.R:52-60 (the documented @return), :134,:140 (proband filtering); R/appServer.R:64,105,281 (the dead config chain), :313 (discarded 12-reactive return + its nolint); R/modInput.R:245,266 and R/modPedigree.R:171,198 (dead config params); tests/testthat/test_modErrorHandling.R:180-192,240-246 (the deparse pins); NAMESPACE:129,136,171.
+gotchas: (1) DRAGON 2 is the biggest hidden constraint in this codebase for ANY refactor -- ~40 tests deparse() a server function and grepl() its SOURCE TEXT. test_modErrorHandling.R:186-192 asserts deparse(modSummaryStatsServer) contains "tryCatch", and that module has exactly ONE, inside the branch Phase 2 deletes. Run `rg -n 'deparse\((appServer|mod[A-Za-z]+Server)\)' tests/testthat/` BEFORE touching a module body. When one goes red, rewrite it to assert behavior -- do not preserve the anti-pattern to keep it green. (2) The affected-file test baseline is CLEAN (0 failed/0 error/0 warning) -- the project's usual test-app-*/test-e2e-* noise caveat does NOT apply to this blast radius, so per-phase verification can demand a literal zero. Still check the warning column (S313). (3) The dead shared$config chain is a DOMAIN question, not a code question -- was site config supposed to reach modInput/modPedigree? It may be a latent missing feature, not dead code. ASK before deleting (plan §10 decision 1). (4) Do NOT "tidy" appServer.R:375-376's unwrapped gestationTable read into an eager one -- it is a load-bearing lazy promise (Dragon 4; R/modPotentialParents.R:237-240 documents why). (5) The plan deliberately breaks no exported contract because v2.0.0 is mid-CRAN-resubmission; if a future session reopens the "rename at source" option, it must not land before the resubmission completes.
+runtime_smoke: n/a -- planning document only. No R/ source, test, config, or runtime-loaded path changed (git diff --stat -- R/ tests/ is empty), so there is no runtime behavior to verify. Explicit determination per FM #24, not a default skip. The plan itself mandates a live Phase 3E smoke test for its own Phases 2 and 4, which do change runtime wiring.
+changelog_ref: CHANGELOG.md 2026-07-12 "[issue #122] Architecture plan for XARCH-2 (implicit/inconsistent module contract) (Session 372)"
+commit: 12e30f80
 ```
+
+**Report (Phase 3G).** Deliverable: a 676-line architecture plan for issue #122, committed as
+`12e30f80`. The session's real work was refusing to take the issue at face value: all four of its
+claims re-verified TRUE, and its recommendation would still have broken the exported API of a
+package sitting mid-CRAN-resubmission. Following it literally — "standardize column names at the
+source, in `reportGV()`" — would rename the documented `@return` of an exported function, break a
+deliberately-pinned contract test, and change the user's downloaded CSV. The plan proposes the
+inverse (adopt `reportGV()`'s vocabulary as canonical; add a tolerant normalizer), which fixes
+strictly more and breaks strictly less.
+
+The most valuable find was one the issue never mentions: the two exported functions
+`reportGV()` and `makeGeneticSummaryTable()` disagree about what the genetic-value columns are
+called, so composing them returns an **all-`NA` table with no error** — reproduced by execution,
+not inferred. The module-contract mess is what keeps that hidden.
+
+**+/- self-score (9/10).** **+** Treated the issue as a hypothesis and verified its prescription
+separately from its claims; reproduced the user-facing bug rather than asserting it; caught myself
+copying "make `modInput` the reference implementation" from the issue unverified, then disproved it
+(dead `config` param, `@return` documenting 6 of 10 elements); verified every `file:line` in the
+plan resolves; held the plan/implementation boundary with zero `R/` edits. **−** I drafted Dragon 1
+into the plan from one sub-agent's prose **without running the experiment** — precisely the
+documentation-level-verification failure the plan itself warns against. Two verifiers had
+contradicted each other and the completeness critic had to catch it and actually run both paths.
+The plan is right because an adversarial pass caught me, not because I was careful. Learning 343(d).
+
+**Predecessor (S371): 7/10.** Accurate, honest, real gotchas — but its `next_steps` listed only the
+three `BACKLOG.md` items and never surfaced GitHub issues #122/#123, even though `BACKLOG.md` itself
+delegates the open XARCH findings to them. The owner went straight to #122 via "Other." A handoff's
+job is to answer "what next?", and this one had a blind spot exactly where the work actually was.
 
 ```handoff
 session: S371

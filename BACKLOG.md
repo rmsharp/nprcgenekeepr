@@ -109,6 +109,29 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       maintainer-email confirmation link -- both still owner-only per SAFEGUARDS
       and the runbook's HARD STOP.
 
+## Architecture (issue #122 / XARCH-2 -- module contract)
+- [ ] **Execute the issue #122 module-contract plan, Phase 1** (READY, Effort S) --
+      planning session DONE (S372): `docs/planning/issue122-module-contract-plan.md`.
+      **Phase 1 fixes a real, reproduced user-facing bug:** `reportGV()` (exported)
+      emits `indivMeanKin`/`gu` while `makeGeneticSummaryTable()` (exported) consumes
+      `meanKinship`/`genomeUniqueness`, so `makeGeneticSummaryTable(reportGV(ped)$report)`
+      silently returns an **all-`NA` table** -- no error, no warning. Phase 1 adds one
+      internal `@noRd` normalizer and makes `makeGeneticSummaryTable()` tolerant of both
+      vocabularies. Additive; **breaks no exported contract** (deliberate -- v2.0.0 is
+      mid-CRAN resubmission); touches no module. See the plan's §6 Phase 1 for completion
+      criteria + verification commands.
+      **Read the plan's §7 (Dragons) first** -- two will bite on contact in later phases:
+      the GV/consumer kinship matrices are *scope*-different, not *value*-different
+      (Dragon 1, measured); and ~40 `deparse()` source-grep tests **structurally pin the
+      very `tryCatch` error-swallowing the issue asks us to remove** (Dragon 2), so
+      Phases 2 and 4 turn them red by design.
+      Phases 2-5 (shared full-pedigree kinship + dead-branch removal; vocabulary collapse;
+      dead-surface pruning incl. the dead `shared$config` chain; contract note + guard
+      test) each remain **one session**, in order.
+- [ ] **Issue #123 (XARCH-5, string-column-keyed pipeline, no validated seam)** (DECISION
+      NEEDED -- needs its own planning session; Effort L) -- related to #122 but
+      explicitly **out of scope** of the S372 plan. Track on GitHub.
+
 ## Documents (v1.0.8 -> v2.0.0 write-up)
 - [ ] **Execute "Document 2" plan (Phase D)** (READY, Effort M) -- planning session DONE
       (S345), Phase A DONE (S346), Phase B DONE (S347), **Phase C DONE (S348)**:

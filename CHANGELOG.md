@@ -43,6 +43,43 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-12 · [issue #122] Architecture plan for XARCH-2 (implicit/inconsistent module contract) (Session 372)
+- **Deliverable:** `docs/planning/issue122-module-contract-plan.md` (676 lines,
+  commit `12e30f80`) -- an `ARCHITECTURE_WORKSTREAM.md` plan for GitHub issue
+  #122, the typed-module-contract work `docs/planning/shiny-module-conversion-plan.md`
+  §5 deferred ("deferred to a separate issue after the monolith is gone").
+  **Planning only** -- no `R/` or `tests/` code touched (FM #18; SAFEGUARDS
+  gates cross-module refactoring behind plan mode). TDD N/A.
+- **Research:** 10 module readers + 6 adversarial claim-verifiers + 8 symbol-level
+  grep inventories + 1 completeness critic, every citation re-derived from current
+  source (the issue's line refs predate S367-S370).
+- **All 4 issue claims re-verified CONFIRMED -- but the issue understates the
+  problem and overstates the fix:**
+  - **The disease is a public-API defect, not a style issue.** `reportGV()`
+    (exported) emits `indivMeanKin`/`gu`; `makeGeneticSummaryTable()` (exported)
+    consumes `meanKinship`/`genomeUniqueness`. Composing them -- the natural
+    `makeGeneticSummaryTable(reportGV(ped)$report)` -- returns an **all-`NA` table
+    with no error and no warning.** Reproduced by execution.
+  - **`modBreedingGroups`' kinship-reuse branch is unreachable dead code**, not
+    merely "redundant": `R/modBreedingGroups.R:193` column-name-tests a data frame
+    for `"kinship"`, which can never be TRUE.
+  - **The issue's own fix is a trap.** Threading GV's kinship matrix into the
+    consumers would silently rescope Summary Stats to the focal subset. Measured
+    against `qcPed`: the matrices are **bit-identical on the default path**,
+    divergent only when focal animals are entered.
+  - **~40 `deparse()` source-grep tests structurally pin the very `tryCatch`
+    error-swallowing the issue asks us to remove** (`test_modErrorHandling.R:186-192`
+    et al.) -- they turn red by design, and were invisible to any behavioral
+    test search.
+  - **`loadSiteConfig()` -> `shared$config` -> `{modInput, modPedigree}` is dead
+    end to end** -- both modules declare a `config` param and never read it. Not in
+    the issue; it sat in the gap between two of its findings.
+- **Proposes** a backward-compatible alternative (canonical = `reportGV`'s
+  vocabulary + a tolerant internal normalizer) that fixes strictly more and breaks
+  **no exported contract** -- a deliberate constraint, given v2.0.0 is mid-CRAN
+  resubmission. 5 phases, one session each, with per-phase completion criteria,
+  verification commands, and 6 dragons.
+
 ### 2026-07-12 · [ad hoc] S371 close-out commits (ledger/learnings/pointer, session notes, handoff receipt)
 - **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier
   gap in the same session rather than leaving it for the next session's
