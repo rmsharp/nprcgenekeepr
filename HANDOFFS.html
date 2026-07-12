@@ -95,7 +95,20 @@ when it reconstructs a receipt a crashed session never completed — you never w
 <li>
 <strong><code>CHANGELOG.md</code></strong> — the <em>cumulative action ledger</em>: <em>“what was done here, ever?”</em>, append-only.</li>
 </ul><p>The shared key across all three is the commit sha (<code>changelog_ref</code> / <code>commit</code> here). This file <strong>distills</strong> the handoff; it does not copy the scratchpad. The belongs-here test: <em>would the next session need this block to continue the work without re-reading the whole repo?</em></p>
-<hr><!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. --><pre class="handoff"><code>session: S370
+<hr><!-- Receipts go below, newest on top. Delete the seed-sentinel line above when you add the first one. --><pre class="handoff"><code>session: S371
+date: 2026-07-12
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- S358-flagged vignette-files/PED_GV_AUDIT.html policy question resolved and closed out. Also pushed 5 unpushed S370 close-out commits to origin/master (lightweight sync action, done first during Phase 0).
+what_was_done: Traced provenance before proposing options: git log confirmed PED_GV_AUDIT_2026-05-30.md is tracked but its root .html was never tracked and has no generating script anywhere in the repo; ls on all 8 vignettes/articles/*.qmd siblings confirmed 7/8 carry zero rendered output in the tree (only the S332-flagged engineering-the-2.0.0-release.html/_files survive, Learning 308). Posed 2 scope decisions via one AskUserQuestion call with evidence-backed recommendations; both resolved to the recommended option. Claimed the session (a929e6a9) before touching any file. Deleted PED_GV_AUDIT_2026-05-30.html and vignettes/articles/engineering-the-2.0.0-release.html+_files/; extended vignettes/articles/.gitignore with *.html/*_files/ (previously only /.quarto/), closing Learning 308(b)'s diagnosed root cause (top-level .gitignore's single-level vignettes/*.html glob doesn't reach articles/) rather than just the symptom. Verified via git check-ignore -v against both render-output paths (match) and the 3 tracked source types .qmd/_quarto.yml/.R (correctly no match). Committed (d57d1938). Added PROJECT_LEARNINGS.md Learning 342, bumped CLAUDE.md pointer (341-&gt;342, 370-&gt;371), added 1 CHANGELOG.md entry. Committed (9183aeb9). Also pushed 5 unpushed S370 close-out commits to origin/master (88736aa1..ebe7ceb3, fast-forward) at the user's explicit request, before this deliverable was picked.
+next_steps: Vignette-files/PED_GV_AUDIT.html policy question is now fully resolved -- won't resurface. Pick from: (a) CRAN resubmission (READY, Effort S, but owner-only: devtools::submit_cran() + email confirmation); (b) Document 2 Phase D (READY, Effort M); (c) LabKey remainder (BLOCKED, needs live LabKey server). Also still worth a real decision, not another per-session substitution: the headless-browser-tool gap (S367/S368/S369).
+key_files: vignettes/articles/.gitignore (extended with *.html/*_files/), PROJECT_LEARNINGS.md Learning 342, CLAUDE.md (pointer), CHANGELOG.md (1 entry)
+gotchas: A stray "4" message arrived mid-turn during this session's Phase 0 with no resolvable referent -- flagged to the user but never resolved to a concrete meaning; if it meant something specific, it's still unaddressed. vignettes/articles/.gitignore now covers *.html/*_files/ -- future quarto renders in that directory should no longer leave stray untracked output requiring Learning 308(c)'s manual cleanup; if one still does, that's a signal to revisit the pattern, not to reapply manual cleanup by rote.
+runtime_smoke: n/a -- docs/repo-hygiene only, no R/ package runtime behavior or runtime-loaded path changed
+changelog_ref: CHANGELOG.md 2026-07-12 "Resolved the S358-flagged vignette-files/PED_GV_AUDIT.html policy question (Session 371)"
+commit: d57d1938</code></pre>
+<pre class="handoff"><code>session: S370
 date: 2026-07-12
 status: complete
 self_score: 9
