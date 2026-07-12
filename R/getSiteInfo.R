@@ -20,6 +20,12 @@
 #'   \item \code{folderPath} -- If \code{center} is "SNPRC", folderPath is
 #'   "/SNPRC". If \code{center} is "ONPRC", folderPath is "/ONPRC"
 #'   \item \code{queryName} -- is "demographics"
+#'   \item \code{requiredCols} -- the required studbook columns, from
+#'   \code{\link{getRequiredCols}}
+#'   \item \code{possibleCols} -- the possible studbook columns, from
+#'   \code{\link{getPossibleCols}}
+#'   \item \code{includeColumns} -- the superset of report-inclusion columns,
+#'   from \code{\link{getIncludeColumns}}
 #' }
 #'
 #' @export
@@ -52,7 +58,10 @@ getSiteInfo <- function(expectConfigFile = TRUE) {
       user = sysInfo[["user"]],
       effective_user = sysInfo[["effective_user"]],
       homeDir = config[["homeDir"]],
-      configFile = config[["configFile"]]
+      configFile = config[["configFile"]],
+      requiredCols = getRequiredCols(),
+      possibleCols = getPossibleCols(),
+      includeColumns = getIncludeColumns()
     )
   } else {
     if (expectConfigFile) {
@@ -81,7 +90,10 @@ getSiteInfo <- function(expectConfigFile = TRUE) {
       user = sysInfo[["user"]],
       effective_user = sysInfo[["effective_user"]],
       homeDir = config[["homeDir"]],
-      configFile = config[["configFile"]]
+      configFile = config[["configFile"]],
+      requiredCols = getRequiredCols(),
+      possibleCols = getPossibleCols(),
+      includeColumns = getIncludeColumns()
     )
   }
 }
