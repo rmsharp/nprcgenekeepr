@@ -31,7 +31,9 @@
 #' ped
 #' kin[kin$id1 == "C", ]
 #' kinMM[kinMM$id1 == "C", ]
-filterPairs <- function(kin, ped, ignore = list(c("F", "F"))) {
+filterPairs <- function(kin, ped,
+                         ignore = list(c(sexCodes[["female"]],
+                                         sexCodes[["female"]]))) {
   if (length(ignore) == 0L) {
     return(kin)
   }

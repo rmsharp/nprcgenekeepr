@@ -327,7 +327,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
               ped = ped,
               currentGroups = currentGroups,
               threshold = threshold,
-              ignore = list(c("F", "F")),
+              ignore = list(c(sexCodes[["female"]], sexCodes[["female"]])),
               minAge = minAge,
               iter = iter,
               numGp = numGp,
@@ -440,8 +440,8 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
         data.frame(
           Group = i,
           Total = length(groupIds),
-          Males = sum(sexes == "M", na.rm = TRUE),
-          Females = sum(sexes == "F", na.rm = TRUE),
+          Males = sum(sexes == sexCodes[["male"]], na.rm = TRUE),
+          Females = sum(sexes == sexCodes[["female"]], na.rm = TRUE),
           stringsAsFactors = FALSE
         )
       })

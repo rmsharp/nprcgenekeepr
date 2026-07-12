@@ -794,7 +794,7 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
       content = function(file) {
         req(pedigree())
         ped <- pedigree()
-        males <- ped[ped$sex == "M" & isFounder(ped), ]
+        males <- ped[ped$sex == sexCodes[["male"]] & isFounder(ped), ]
         write.csv(males, file, row.names = FALSE)
       }
     )
@@ -804,7 +804,7 @@ modSummaryStatsServer <- function(id, geneticValues, pedigree,
       content = function(file) {
         req(pedigree())
         ped <- pedigree()
-        females <- ped[ped$sex == "F" & isFounder(ped), ]
+        females <- ped[ped$sex == sexCodes[["female"]] & isFounder(ped), ]
         write.csv(females, file, row.names = FALSE)
       }
     )
