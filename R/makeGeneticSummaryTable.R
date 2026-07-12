@@ -6,11 +6,16 @@
 #' Generates an HTML table displaying summary statistics (Min, Q1, Mean,
 #' Median, Q3, Max) for mean kinship and genome uniqueness values.
 #'
-#' @param geneticValues data.frame containing genetic value columns:
+#' @param geneticValues data.frame containing genetic value columns, in
+#'   either of two accepted vocabularies:
 #'   \itemize{
-#'     \item \code{meanKinship} - Mean kinship coefficients
-#'     \item \code{genomeUniqueness} - Genome uniqueness values
+#'     \item \code{meanKinship} / \code{genomeUniqueness} (the legacy names),
+#'       or
+#'     \item \code{indivMeanKin} / \code{gu} (\code{reportGV}'s own
+#'       \code{$report} column names)
 #'   }
+#'   Both are normalized internally, so \code{reportGV(ped)$report} may be
+#'   passed directly.
 #'
 #' @return Character string containing HTML table markup.
 #'
@@ -29,8 +34,10 @@ makeGeneticSummaryTable <- function(geneticValues) {
     return("<p>No genetic value data available</p>")
   }
 
+  geneticValues <- normalizeGvReport(geneticValues)
+
   # Calculate summary statistics for mean kinship
-  mk <- geneticValues$meanKinship
+  mk <- geneticValues$indivMeanKin
   mkSum <- if (!is.null(mk) && length(mk) > 0L) {
     summary(mk, na.rm = TRUE)
   } else {
@@ -38,7 +45,7 @@ makeGeneticSummaryTable <- function(geneticValues) {
   }
 
   # Calculate summary statistics for genome uniqueness
-  gu <- geneticValues$genomeUniqueness
+  gu <- geneticValues$gu
   guSum <- if (!is.null(gu) && length(gu) > 0L) {
     summary(gu, na.rm = TRUE)
   } else {

@@ -31,3 +31,26 @@ test_that("makeGeneticSummaryTable formats real statistics without 'N/A'", {
   expect_false(grepl("N/A", html, fixed = TRUE))
   expect_true(grepl("0.3000", html, fixed = TRUE))
 })
+
+## Issue #122 (XARCH-2) Phase 1: reportGV()'s own vocabulary (indivMeanKin/gu)
+## must also work, not just the renamed meanKinship/genomeUniqueness. Before
+## the fix, makeGeneticSummaryTable(reportGV(ped)$report) silently returns an
+## all-N/A table with no error or warning.
+
+test_that("makeGeneticSummaryTable accepts reportGV()'s own indivMeanKin/gu vocabulary", {
+  gv <- data.frame(id = 1:3, indivMeanKin = c(.1, .2, .3), gu = c(.9, .8, .7))
+  html <- makeGeneticSummaryTable(gv)
+  expect_false(grepl("N/A", html, fixed = TRUE))
+})
+
+test_that("makeGeneticSummaryTable is vocabulary-agnostic: same values, identical HTML", {
+  legacy <- data.frame(
+    meanKinship = c(0.1, 0.2, 0.3, 0.4, 0.5),
+    genomeUniqueness = c(0.9, 0.8, 0.7, 0.6, 0.5)
+  )
+  canonical <- data.frame(
+    indivMeanKin = c(0.1, 0.2, 0.3, 0.4, 0.5),
+    gu = c(0.9, 0.8, 0.7, 0.6, 0.5)
+  )
+  expect_identical(makeGeneticSummaryTable(legacy), makeGeneticSummaryTable(canonical))
+})

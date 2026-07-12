@@ -7,11 +7,16 @@
 makeGeneticSummaryTable(geneticValues)
 }
 \arguments{
-\item{geneticValues}{data.frame containing genetic value columns:
+\item{geneticValues}{data.frame containing genetic value columns, in
+either of two accepted vocabularies:
 \itemize{
-\item \code{meanKinship} - Mean kinship coefficients
-\item \code{genomeUniqueness} - Genome uniqueness values
-}}
+\item \code{meanKinship} / \code{genomeUniqueness} (the legacy names),
+or
+\item \code{indivMeanKin} / \code{gu} (\code{reportGV}'s own
+\code{$report} column names)
+}
+Both are normalized internally, so \code{reportGV(ped)$report} may be
+passed directly.}
 }
 \value{
 Character string containing HTML table markup.
