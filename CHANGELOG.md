@@ -43,6 +43,12 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-11 · [ad hoc] S363 close-out commit (session notes, handoff receipt)
+- **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier gap in
+  the same session rather than leaving it for the next session's Phase 0 reconcile
+  (mirroring the S349-S362 precedent for self-closing gaps). Records the fix work
+  logged below. Commit `a425a637`.
+
 ### 2026-07-11 · [ad hoc] Fixed Windows-only `WriteXLS`/`create_wkbk()` CI flakiness via `openxlsx` (Session 363)
 - **Deliverable:** Root-caused and fixed the `R-CMD-check.yaml` `windows-latest`
   regression S361/S362 diagnosed but did not fix. Owner-directed via the Phase 0

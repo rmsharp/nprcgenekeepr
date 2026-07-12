@@ -87,7 +87,7 @@ key_files: R/create_wkbk.R (WriteXLS->openxlsx swap, explicit TRUE return, Date/
 gotchas: The fix is locally verified only (macOS) -- the actual windows-latest CI run is the real confirmation, not yet observed this session. The pre-existing vignette-checker failure is unrelated and NOT fixed -- don't assume it was introduced by this session. openxlsx's write.xlsx() return value is NOT TRUE/FALSE like WriteXLS's was -- any future edit to create_wkbk() must keep the explicit `TRUE` at the end or the documented @return contract silently breaks again. Any other df_list write path added in the future that includes Date/POSIXct columns needs the same explicit as.character() coercion -- openxlsx's native date-cell typing does not survive this package's col_types="text" read path.
 runtime_smoke: devtools::check()'s full testthat.R run exercises the affected Excel-upload path live via shiny::testServer() (test_modInput_excelSireDam.R, test_readKinshipOverrides.R) -- this IS the change's runtime surface, and is what caught then confirmed the fix. No separate runGeneKeepR() launch needed -- no app-startup/wiring code changed.
 changelog_ref: CHANGELOG.md 2026-07-11 entries for Session 363 (claim, fix work, close-out)
-commit: pending
+commit: a425a637
 ```
 
 ```handoff
