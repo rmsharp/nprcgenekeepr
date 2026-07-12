@@ -43,6 +43,17 @@ When completing work, remove the item from `BACKLOG.md` and add an entry here.
 
 ## [Unreleased]
 
+### 2026-07-12 · [ad hoc] S371 close-out commits (ledger/learnings/pointer, session notes, handoff receipt)
+- **Deliverable:** Closes this session's own `CHANGELOG.md` ledger frontier
+  gap in the same session rather than leaving it for the next session's
+  Phase 0 reconcile. Records the close-out commits (`9183aeb9`: ledger
+  entry + `PROJECT_LEARNINGS.md` Learning 342 + `CLAUDE.md` pointer bump;
+  `1a6a2c0f`: session notes handoff write-up + `HANDOFFS.md` receipt,
+  `status: pending` -> `complete`) that finalized this session's handoff.
+  Also pushed 5 unpushed S370 close-out commits to `origin/master`
+  (`88736aa1..ebe7ceb3`, fast-forward) at the user's explicit request
+  during Phase 0, before this deliverable was picked up.
+
 ### 2026-07-12 · [ad hoc] Resolved the S358-flagged vignette-files/PED_GV_AUDIT.html policy question (Session 371)
 - **Deliverable:** Deleted `PED_GV_AUDIT_2026-05-30.html` (repo root) -- a stale
   `pandoc`-rendered copy of the already-tracked `PED_GV_AUDIT_2026-05-30.md`,
