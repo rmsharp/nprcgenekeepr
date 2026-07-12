@@ -71,6 +71,33 @@
 <div class="section level2">
 <h2 id="unreleased">[Unreleased]<a class="anchor" aria-label="anchor" href="#unreleased"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-07-12--ad-hoc-s372-close-out-commits-ledger-learnings-backlog-handoff-receipt">2026-07-12 · [ad hoc] S372 close-out commits (ledger, learnings, backlog, handoff receipt)<a class="anchor" aria-label="anchor" href="#id_2026-07-12--ad-hoc-s372-close-out-commits-ledger-learnings-backlog-handoff-receipt"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> Closes this session’s own <code>CHANGELOG.md</code> ledger frontier gap in the same session rather than leaving it for the next session’s Phase 0 reconcile. Records the close-out commit (<code>919e2d37</code>: this ledger entry + <code>PROJECT_LEARNINGS.md</code> Learning 343 + <code>CLAUDE.md</code> pointer bump + <code>BACKLOG.md</code> Architecture section + <code>SESSION_NOTES.md</code>/<code>HANDOFFS.md</code> handoff, <code>status: pending</code> -&gt; <code>complete</code>) that finalized the Session 372 handoff.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-07-12--issue-122-architecture-plan-for-xarch-2-implicitinconsistent-module-contract-session-372">2026-07-12 · [issue #122] Architecture plan for XARCH-2 (implicit/inconsistent module contract) (Session 372)<a class="anchor" aria-label="anchor" href="#id_2026-07-12--issue-122-architecture-plan-for-xarch-2-implicitinconsistent-module-contract-session-372"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> <code>docs/planning/issue122-module-contract-plan.md</code> (676 lines, commit <code>12e30f80</code>) – an <code>ARCHITECTURE_WORKSTREAM.md</code> plan for GitHub issue #122, the typed-module-contract work <code>docs/planning/shiny-module-conversion-plan.md</code> §5 deferred (“deferred to a separate issue after the monolith is gone”). <strong>Planning only</strong> – no <code>R/</code> or <code>tests/</code> code touched (FM #18; SAFEGUARDS gates cross-module refactoring behind plan mode). TDD N/A.</li>
+<li>
+<strong>Research:</strong> 10 module readers + 6 adversarial claim-verifiers + 8 symbol-level grep inventories + 1 completeness critic, every citation re-derived from current source (the issue’s line refs predate S367-S370).</li>
+<li>
+<strong>All 4 issue claims re-verified CONFIRMED – but the issue understates the problem and overstates the fix:</strong>
+<ul><li>
+<strong>The disease is a public-API defect, not a style issue.</strong> <code><a href="reference/reportGV.html">reportGV()</a></code> (exported) emits <code>indivMeanKin</code>/<code>gu</code>; <code><a href="reference/makeGeneticSummaryTable.html">makeGeneticSummaryTable()</a></code> (exported) consumes <code>meanKinship</code>/<code>genomeUniqueness</code>. Composing them – the natural <code>makeGeneticSummaryTable(reportGV(ped)$report)</code> – returns an <strong>all-<code>NA</code> table with no error and no warning.</strong> Reproduced by execution.</li>
+<li>
+<strong><code>modBreedingGroups</code>’ kinship-reuse branch is unreachable dead code</strong>, not merely “redundant”: <code>R/modBreedingGroups.R:193</code> column-name-tests a data frame for <code>"kinship"</code>, which can never be TRUE.</li>
+<li>
+<strong>The issue’s own fix is a trap.</strong> Threading GV’s kinship matrix into the consumers would silently rescope Summary Stats to the focal subset. Measured against <code>qcPed</code>: the matrices are <strong>bit-identical on the default path</strong>, divergent only when focal animals are entered.</li>
+<li>
+<strong>~40 <code><a href="https://rdrr.io/r/base/deparse.html" class="external-link">deparse()</a></code> source-grep tests structurally pin the very <code>tryCatch</code> error-swallowing the issue asks us to remove</strong> (<code>test_modErrorHandling.R:186-192</code> et al.) – they turn red by design, and were invisible to any behavioral test search.</li>
+<li>
+<strong><code><a href="reference/loadSiteConfig.html">loadSiteConfig()</a></code> -&gt; <code>shared$config</code> -&gt; <code>{modInput, modPedigree}</code> is dead end to end</strong> – both modules declare a <code>config</code> param and never read it. Not in the issue; it sat in the gap between two of its findings.</li>
+</ul></li>
+<li>
+<strong>Proposes</strong> a backward-compatible alternative (canonical = <code>reportGV</code>’s vocabulary + a tolerant internal normalizer) that fixes strictly more and breaks <strong>no exported contract</strong> – a deliberate constraint, given v2.0.0 is mid-CRAN resubmission. 5 phases, one session each, with per-phase completion criteria, verification commands, and 6 dragons.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-07-12--ad-hoc-s371-close-out-commits-ledgerlearningspointer-session-notes-handoff-receipt">2026-07-12 · [ad hoc] S371 close-out commits (ledger/learnings/pointer, session notes, handoff receipt)<a class="anchor" aria-label="anchor" href="#id_2026-07-12--ad-hoc-s371-close-out-commits-ledgerlearningspointer-session-notes-handoff-receipt"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> Closes this session’s own <code>CHANGELOG.md</code> ledger frontier gap in the same session rather than leaving it for the next session’s Phase 0 reconcile. Records the close-out commits (<code>9183aeb9</code>: ledger entry + <code>PROJECT_LEARNINGS.md</code> Learning 342 + <code>CLAUDE.md</code> pointer bump; <code>1a6a2c0f</code>: session notes handoff write-up + <code>HANDOFFS.md</code> receipt, <code>status: pending</code> -&gt; <code>complete</code>) that finalized this session’s handoff. Also pushed 5 unpushed S370 close-out commits to <code>origin/master</code> (<code>88736aa1..ebe7ceb3</code>, fast-forward) at the user’s explicit request during Phase 0, before this deliverable was picked up.</li>
