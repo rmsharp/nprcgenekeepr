@@ -19,6 +19,7 @@
 #' getPotentialSires(ids, ped, minAge = 1L)
 getPotentialSires <- function(ids, ped, minAge = 1L) {
   ped <- ped[!is.na(ped$birth), ]
-  ped$id[ped$id %in% ids & ped$sex == "M" & getCurrentAge(ped$birth) >= minAge &
+  ped$id[ped$id %in% ids & ped$sex == sexCodes[["male"]] &
+    getCurrentAge(ped$birth) >= minAge &
     !is.na(ped$birth)]
 }

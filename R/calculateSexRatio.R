@@ -77,7 +77,8 @@ calculateSexRatio <- function(ids, ped, additionalMales = 0L,
         ratio <- 0.0
       }
     }
-  } else if (length(ped$sex[ped$id %in% ids & ped$sex == "M"]) == 0L) {#no males
+  } else if (length(ped$sex[ped$id %in% ids &
+    ped$sex == sexCodes[["male"]]]) == 0L) {#no males
     if (additionalMales > 0L) {
       ratio <- getSexRatioWithAdditions(
         ids, ped, additionalMales,

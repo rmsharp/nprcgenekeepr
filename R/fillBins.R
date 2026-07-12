@@ -24,11 +24,13 @@ fillBins <- function(ageDist, lowerAges, upperAges = NULL) {
   maleBins <- integer(0L)
   femaleBins <- integer(0L)
   for (bin in seq_along(lowerAges)) {
-    maleBins <- c(maleBins, nrow(ageDist[ageDist$sex == "M" &
+    maleBins <- c(maleBins, nrow(ageDist[
+      ageDist$sex == sexCodes[["male"]] &
       ageDist$age >= lowerAges[bin] &
       ageDist$age < upperAges[bin] &
       !is.na(ageDist$age), ]))
-    femaleBins <- c(femaleBins, nrow(ageDist[ageDist$sex == "F" &
+    femaleBins <- c(femaleBins, nrow(ageDist[
+      ageDist$sex == sexCodes[["female"]] &
       ageDist$age >= lowerAges[bin] &
       ageDist$age < upperAges[bin] &
       !is.na(ageDist$age), ]))
